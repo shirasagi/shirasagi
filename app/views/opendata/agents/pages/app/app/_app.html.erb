@@ -42,14 +42,14 @@
         <% if @tab_display =="tab_url" %>
           <div id="tab-url">
             <header><h1><%= I18n.t("opendata.labels.public_url") %></h1></header>
-            <p><%= auto_link paragraph(@cur_page.appurl), html: { target: "_blank" } %></p>
+            <p><%= auto_link paragraph(@cur_page.appurl), html: { target: "_blank", rel: "noopener" } %></p>
           </div>
         <% else %>
           <% if @tab_display == "tab_html" %>
             <div id="tab-play">
               <header><h1><%= I18n.t("opendata.labels.execute") %></h1></header>
               <div class="fullscreen">
-                <%= link_to I18n.t("opendata.labels.execute_fullscreen"), @cur_page.full_screen_url, :target=>["_blank"] %>
+                <%= link_to I18n.t("opendata.labels.execute_fullscreen"), @cur_page.full_screen_url, target: "_blank", rel: "noopener" %>
               </div>
               <div class="frame">
                 <iframe class="frmPlay" src="" style="width: 100%; height: 100%"></iframe>
@@ -60,7 +60,7 @@
               <% @html_src.each do |h| %>
                 <div id="html-<%= h.id %>" class="frame">
                   <div class="app-filename"><%= h.filename %></div>
-                  <iframe class="frmHtml" src="<%= "#{@cur_page.file_text_url}#{URI.escape(h.filename)}" %>"></iframe>
+                  <iframe class="frmHtml" src="<%= "#{@cur_page.file_text_url}#{Addressable::URI.escape(h.filename)}" %>"></iframe>
                 </div>
               <% end %>
             </div>
@@ -69,7 +69,7 @@
               <% @css_src.each do |c| %>
                 <div id="css-<%= c.id %>" class="frame">
                   <div class="app-filename"><%= c.filename %></div>
-                  <iframe class="frmCss" src="<%= "#{@cur_page.file_text_url}#{URI.escape(c.filename)}" %>"></iframe>
+                  <iframe class="frmCss" src="<%= "#{@cur_page.file_text_url}#{Addressable::URI.escape(c.filename)}" %>"></iframe>
                 </div>
               <% end %>
             </div>
@@ -78,7 +78,7 @@
               <% @js_src.each do |j| %>
                 <div id="js-<%= j.id %>" class="frame">
                   <div class="app-filename"><%= j.filename %></div>
-                  <iframe class="frmJs" src="<%= "#{@cur_page.file_text_url}#{URI.escape(j.filename)}" %>"></iframe>
+                  <iframe class="frmJs" src="<%= "#{@cur_page.file_text_url}#{Addressable::URI.escape(j.filename)}" %>"></iframe>
                 </div>
               <% end %>
             </div>

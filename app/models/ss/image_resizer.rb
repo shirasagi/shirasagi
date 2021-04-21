@@ -16,22 +16,6 @@ class SS::ImageResizer
     return false unless file.image?
     return false unless resizing
 
-    list = Magick::ImageList.new(file.path)
-    width, height = resizing
-    modified = false
-    list.each do |image|
-      if image.columns > width || image.rows > height
-        image.resize_to_fit! width, height
-        modified = true
-      end
-    end
-
-    if modified
-      binary = list.to_blob
-      Fs.binwrite(file.path, binary)
-      file.update_attribute(:size, binary.length)
-    end
-
-    true
+    file.shrink_image_to(*resizing)
   end
 end

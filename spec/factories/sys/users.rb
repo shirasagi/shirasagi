@@ -3,6 +3,7 @@ FactoryBot.define do
     name "sys_user"
     email "sys@example.jp"
     in_password "pass"
+    deletion_lock_state "locked"
     #sys_role_ids
   end
 

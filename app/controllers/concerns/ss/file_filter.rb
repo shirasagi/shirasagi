@@ -18,13 +18,14 @@ module SS::FileFilter
     @item = @model.new get_params
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
-    if @item.in_files
+    if @item.in_files.present?
       def @item.to_json
-        saved_files.to_json
+        saved_files.to_json({ methods: %i[humanized_name image? basename extname url thumb_url] })
       end
       render_create @item.save_files, location: { action: :index }
     else
-      render_create @item.save
+      @item.errors.add :in_files, :blank
+      render_create false
     end
   end
 
@@ -59,12 +60,17 @@ module SS::FileFilter
     set_item
     set_last_modified
 
+    if @item.image? && request.xhr?
+      render file: "view", layout: "ss/ajax"
+      return
+    end
+
     if Fs.mode == :file && Fs.file?(@item.path)
       send_file @item.path, type: @item.content_type, filename: @item.filename,
-        disposition: :inline, x_sendfile: true
+                disposition: :inline, x_sendfile: true
     else
-      send_data @item.read, type: @item.content_type, filename: @item.filename,
-        disposition: :inline
+      send_enum @item.to_io, type: @item.content_type, filename: @item.filename,
+                disposition: :inline
     end
   end
 
@@ -77,19 +83,23 @@ module SS::FileFilter
         send_file @item.thumb.path, type: @item.thumb.content_type, filename: @item.thumb.filename,
           disposition: :inline, x_sendfile: true
       else
-        send_data @item.thumb.read, type: @item.thumb.content_type, filename: @item.thumb.filename,
+        send_enum @item.thumb.to_io, type: @item.thumb.content_type, filename: @item.thumb.filename,
           disposition: :inline
       end
     else
-      require 'rmagick'
-      image = Magick::Image.from_blob(@item.read).shift
-      image = image.resize_to_fit 120, 90 if image.columns > 120 || image.rows > 90
+      converter = SS::ImageConverter.open(@item.path)
+      converter.resize_to_fit!
 
-      send_data image.to_blob, type: @item.content_type, filename: @item.filename, disposition: :inline
+      send_enum converter.to_enum, type: @item.content_type, filename: @item.filename, disposition: :inline
+      converter = nil
     end
   rescue => e
     raise if e.to_s.numeric?
     raise "500"
+  ensure
+    if converter
+      converter.close rescue nil
+    end
   end
 
   def download
@@ -100,7 +110,7 @@ module SS::FileFilter
       send_file @item.path, type: @item.content_type, filename: @item.download_filename,
         disposition: :attachment, x_sendfile: true
     else
-      send_data @item.read, type: @item.content_type, filename: @item.download_filename,
+      send_enum @item.to_io, type: @item.content_type, filename: @item.download_filename,
         disposition: :attachment
     end
   end
@@ -113,5 +123,17 @@ module SS::FileFilter
 
     resizer = SS::ImageResizer.new get_params
     render_update resizer.resize(@item), { file: :resize }
+  end
+
+  def contrast_ratio
+    foreground_color = params[:f].to_s
+    background_color = params[:b].to_s
+
+    raise "400" if foreground_color.blank? || background_color.blank?
+
+    ret = SS::ColorContrast.from_css_color(foreground_color, background_color)
+    raise "400" if ret.blank?
+
+    render json: { contrast_ratio: ret, contrast_ratio_human: ret.round(2).to_s }
   end
 end

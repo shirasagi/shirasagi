@@ -1,0 +1,98 @@
+ja:
+  translate:
+    main: 自動翻訳
+    text_cache: 翻訳テキスト
+    site_setting: 設定
+    lang: 言語
+    update_state: ステータス
+    ignore_character: '0123456789-'
+    views:
+      show_original: 原文を表示
+      select_lang: 言語を選択
+      api: API
+      api_request_word_limit: APIリクエスト文字数制限
+
+    options:
+      update_state:
+        auto: 自動登録
+        manually: 手動登録
+
+    notice:
+      not_set_api: "翻訳APIが設定されていません。"
+      api_request_count: "※実際のリクエスト数および課金文字数については、APIの利用状況を確認してください。"
+
+    apis:
+      langs:
+        index: 言語を選択する
+        search: 言語を検索
+        select: 言語を設定する
+
+  errors:
+    messages:
+      unsupported_lang: ': %{name} は選択しているAPIでは利用できません。'
+      duplicate_hexdigest: '%{original_text}（%{source} から %{target} への翻訳） は既に登録されています。'
+
+  modules:
+    translate: 自動翻訳
+
+  cms:
+    parts:
+      translate/tool: 翻訳ツール
+
+  mongoid:
+    models:
+      translate/part/tool: 翻訳ツール
+    attributes:
+      translate/text_cache:
+        api: API
+        original_text: 翻訳前テキスト
+        text: 翻訳先テキスト
+        source: 翻訳前言語コード
+        target: 翻訳先言語コード
+        update_state: ステータス
+      translate/lang:
+        name: 名称
+        code: 言語コード
+        mock_code: "開発用API"
+        microsoft_translator_text_code: "Microsoft API"
+        google_translation_code: "Google API"
+        accept_languages: "Accept-Language"
+        in_file: ファイル
+
+  tooltip:
+    ss/addon/translate/site_setting:
+      translate_api:
+        - 翻訳に使用するAPIを設定します。
+      translate_state:
+        - 翻訳機能の有効/無効を設定します。
+      translate_source_id:
+        - 翻訳元となる言語コードを選択します。
+      translate_target_ids:
+        - 翻訳先となる言語コードを選択します。
+      translate_api_request_word_limit:
+        - 文字数上限を設定します。
+        - 翻訳時にAPIリクエスト文字数が設定した上限を超える場合、翻訳を停止してエラーを表示します。
+      translate_api_limit_exceeded_html:
+        - リクエスト文字数超過時に表示するHTMLを設定します。
+    translate/text_cache:
+      original_text:
+        - 翻訳前テキストを入力します。
+      text:
+        - 翻訳先テキストを入力します。
+      source:
+        - 翻訳前言語コードを入力します。
+      target:
+        - 翻訳先言語コードを入力します。
+    translate/lang:
+      code:
+        - 言語コードを入力します。
+      name:
+        - 名称を入力します。
+      mock_code:
+        - 開発用APIの言語コードを入力します。
+      microsoft_translator_text_code:
+        - Microsoft Translator Text APIの言語コードを入力します。
+      google_translation_code:
+        - Google Translation APIの言語コードを入力します。
+      accept_languages:
+        - Accept-Language の言語コードを入力します。

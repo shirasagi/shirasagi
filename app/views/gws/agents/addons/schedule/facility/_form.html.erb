@@ -109,7 +109,7 @@
 
   var query = function() {
     var s = requiredParams();
-    if ($.isEmptyObject(s)) {
+    if (SS.isEmptyObject(s)) {
       return false;
     }
     $.extend(s, optionalParams());
@@ -201,7 +201,7 @@
 
   var changeVisibility = function() {
     var s = requiredParams();
-    if ($.isEmptyObject(s)) {
+    if (SS.isEmptyObject(s)) {
       $('.btn-confirm-facility-reservation').hide();
     } else {
       $('.btn-confirm-facility-reservation').show();

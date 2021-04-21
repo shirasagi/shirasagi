@@ -3,7 +3,7 @@
 
 puts "Please input site_name: site=[site_host]" or exit if ENV['site'].blank?
 
-@site = SS::Site.where(host: ENV['site']).first
+@site = Cms::Site.where(host: ENV['site']).first
 puts "Site not found: #{ENV['site']}" or exit unless @site
 link_url = "http://#{@site.domains.first}"
 
@@ -36,9 +36,18 @@ def save_ss_files(path, data)
   file = Fs::UploadedFile.create_from_file(path)
   file.original_filename = data[:filename] if data[:filename].present?
 
-  item = SS::File.new(cond)
+  item = SS::File.find_or_initialize_by(cond)
+  return item if item.persisted?
+
   item.in_file = file
-  item.name = data[:name] if data[:name].present?
+  if data[:name].present?
+    name = data[:name]
+    if !name.include?(".") && data[:filename].include?(".")
+      name = "#{name}#{::File.extname(data[:filename])}"
+    end
+    item.name = name
+  end
+  item.cur_user = @user
   item.save
 
   item
@@ -52,9 +61,10 @@ def save_layout(data)
   cond = { site_id: @site._id, filename: data[:filename] }
   html = File.read("layouts/" + data[:filename]) rescue nil
 
-  item = Cms::Layout.find_or_create_by(cond)
+  item = Cms::Layout.find_or_initialize_by(cond)
   item.attributes = data.merge html: html
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -79,14 +89,15 @@ def save_part(data)
   loop_html  ||= File.read("parts/" + data[:filename].sub(/\.html$/, ".loop_html")) rescue nil
   lower_html ||= File.read("parts/" + data[:filename].sub(/\.html$/, ".lower_html")) rescue nil
 
-  item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_create_by(cond)
+  item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_initialize_by(cond)
   item.html = html if html
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
 
   item.attributes = data
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -118,14 +129,15 @@ def save_node(data)
   lower_html ||= File.read("nodes/" + data[:filename] + ".lower_html") rescue nil
   summary_html ||= File.read("nodes/" + data[:filename] + ".summary_html") rescue nil
 
-  item = data[:route].sub("/", "/node/").camelize.constantize.unscoped.find_or_create_by(cond)
+  item = data[:route].sub("/", "/node/").camelize.constantize.unscoped.find_or_initialize_by(cond)
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
   item.summary_html = summary_html if summary_html
 
   item.attributes = data
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -194,12 +206,13 @@ def save_page(data)
   summary_html ||= File.read("pages/" + data[:filename].sub(/\.html$/, "") + ".summary_html") rescue nil
 
   route = data[:route].presence || 'cms/page'
-  item = route.camelize.constantize.find_or_create_by(cond)
+  item = route.camelize.constantize.find_or_initialize_by(cond)
   item.html = html if html
   item.summary_html = summary_html if summary_html
 
   item.attributes = data
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -278,6 +291,9 @@ service_page.html += "<p>本文を入力してください。本文を入力し�
 service_page.html += "<p class=\"clearfix\">回り込みを解除します。</p>"
 service_page.update
 
+save_page route: "cms/page", name: "お探しのページは見つかりません。 404 Not Found", filename: "404.html",
+  layout_id: layouts["general"].id
+
 ## -------------------------------------
 def save_editor_template(data)
   puts data[:name]
@@ -339,3 +355,10 @@ if @site.subdir.present?
   ENV["site"]=@site.host
   Rake::Task['cms:set_subdir_url'].invoke
 end
+
+## -------------------------------------
+puts "# translate_lang"
+item = Translate::Lang.new
+item.cur_site = @site
+item.in_file = Fs::UploadedFile.create_from_file("#{Rails.root}/db/seeds/demo/translate/lang.csv")
+item.import_csv

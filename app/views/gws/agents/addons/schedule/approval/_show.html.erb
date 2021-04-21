@@ -38,7 +38,7 @@
   <tbody>
     <% @item.approval_members.each do |member| %>
     <tr>
-      <td><%= member.long_name %></td>
+      <td><%= gws_public_user_long_name(member.long_name) %></td>
       <td>
         <% approval = @item.approval_member(member) %>
         <% if member == @cur_user %>

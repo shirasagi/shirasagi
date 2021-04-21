@@ -34,9 +34,9 @@ class History::Backup
       return false
     end
 
+    data = restore_data(data, opts)
     data.delete("_id")
     data.delete("state")
-    data = restore_data(data, opts)
 
     begin
       query.update_many('$set' => data)

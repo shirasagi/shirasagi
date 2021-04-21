@@ -58,4 +58,59 @@ describe "sys_groups", type: :feature, dbscope: :example do
       expect(current_path).to eq index_path
     end
   end
+
+  context "gws_use" do
+    before { login_sys_user }
+
+    context "on root group" do
+      let(:name) { unique_id }
+
+      it do
+        visit index_path
+        click_on I18n.t("ss.links.new")
+        within "form#item-form" do
+          expect(page).to have_no_css("select[name='item[gws_use]']")
+
+          fill_in "item[name]", with: name
+          click_on I18n.t('ss.buttons.save')
+        end
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+        visit index_path
+        click_on name
+        click_on I18n.t("ss.links.edit")
+        within "form#item-form" do
+          expect(page).to have_css("select[name='item[gws_use]']")
+
+          select I18n.t("ss.options.gws_use.enabled"), from: "item[gws_use]"
+          click_on I18n.t('ss.buttons.save')
+        end
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      end
+    end
+
+    context "on child group" do
+      let(:name) { "#{item.name}/#{unique_id}" }
+
+      it do
+        # ensure that item is created
+        item
+
+        visit index_path
+        click_on I18n.t("ss.links.new")
+        within "form#item-form" do
+          expect(page).to have_no_css("select[name='item[gws_use]']")
+
+          fill_in "item[name]", with: name
+          click_on I18n.t('ss.buttons.save')
+        end
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+        visit index_path
+        click_on name
+        click_on I18n.t("ss.links.edit")
+        expect(page).to have_no_css("select[name='item[gws_use]']")
+      end
+    end
+  end
 end

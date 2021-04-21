@@ -1,14 +1,15 @@
 class Member::Agents::Nodes::PhotoController < ApplicationController
   include Cms::NodeFilter::View
 
-  model Member::Photo
+  helper Member::PhotoHelper
 
-  helper Cms::ListHelper
+  model Member::Photo
 
   private
 
   def pages
-    @model.site(@cur_site).and_public(@cur_date).listable
+    @model.site(@cur_site).and_public(@cur_date).
+      where(@cur_node.condition_hash).listable
   end
 
   public

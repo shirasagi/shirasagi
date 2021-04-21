@@ -1,64 +1,16 @@
-<%= jquery do %>
-
-  var reload;
-  reload = function () {
-    if ($("#task-form .state").html().match(/(ready|running)/)) {
-      $.ajax({
-        url: "<%= url_for(action: :index, format: :json) %>",
-        success: function (data) {
-          var closed, started;
-          started = data["started"] + "";
-          closed = data["closed"] + "";
-          $("#task-form .state").html(data["state"]);
-          $("#task-form .count").html(data["current_count"] + " / " + data["total_count"]);
-          $("#task-form .started").html(started.replace(/\..*/, "").replace("T", " "));
-          $("#task-form .closed").html(closed.replace(/\..*/, "").replace("T", " "));
-          $("#task-form .log").val(data["head_logs"].join("\n"));
-          if (data["state"] === "stop") {
-            $("#task-form .stop-button").hide();
-            $("#task-form .run-button").show();
-          }
-        }
-      });
-    }
-  };
-  setInterval(reload, 10000);
-
-<% end %>
-
-<div class="main-box">
 <%= form_tag({ action: :run }, { id: "task-form" }) do |f| %>
+  <%= render "ss/tasks/box", task: @item, show_current_count: true, url: url_for(action: :index, format: :json) %>
 
-<dl class="info">
-  <dt><%= @item.t :state %></dt>
-  <dd class="state"><%= @item.send :state %></dd>
+  <footer class="send">
+    <% hide = (@item.running? || @item.state == "ready") ? nil : "display: none;" %>
+    <div class="stop-button" style="<%= hide %>">
+      <%= submit_tag t("ss.buttons.stop"), name: "stop", class: "btn-primary stop" %>
+      <%= submit_tag t("ss.buttons.reset"), name: "reset", class: "btn-default", onclick: "return confirm('#{t("ss.tasks.confirm_reset")}')" %>
+    </div>
 
-  <dt><%= @item.t :current_count %></dt>
-  <dd class="count"><%= @item.send :current_count %> / <%= @item.send :total_count %></dd>
-
-  <dt><%= @item.t :started %></dt>
-  <dd class="started"><%= tryb { @item.started.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
-
-  <dt><%= @item.t :closed %></dt>
-  <dd class="closed"><%= tryb { @item.closed.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
-</dl>
-
-<div class="logs">
-  <textarea class="log" readonly="readonly"><%= @item.head_logs.join("\n") %></textarea>
-</div>
-
-<footer class="send">
-  <% hide = (@item.running? || @item.state == "ready") ? nil : "display: none;" %>
-  <div class="stop-button" style="<%= hide %>">
-    <%= submit_tag t("ss.buttons.stop"), name: "stop", class: "btn-primary stop" %>
-    <%= submit_tag t("ss.buttons.reset"), name: "reset", class: "btn-default", onclick: "return confirm('#{t("ss.tasks.confirm_reset")}')" %>
-  </div>
-
-  <% hide = hide.present? ? "" : "display: none;" %>
-  <div class="run-button" style="<%= hide %>">
-    <%= submit_tag t("ss.buttons.run"), class: "btn-primary save" %>
-  </div>
-</footer>
-
+    <% hide = hide.present? ? "" : "display: none;" %>
+    <div class="run-button" style="<%= hide %>">
+      <%= submit_tag t("ss.buttons.run"), class: "btn-primary save" %>
+    </div>
+  </footer>
 <% end %>
-</div>

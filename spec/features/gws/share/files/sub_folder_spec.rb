@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true, js: true do
+describe "gws_share_files", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let!(:root_folder) { create :gws_share_folder }
   let!(:folder1) { create :gws_share_folder, name: "#{root_folder.name}/#{unique_id}" }
@@ -20,7 +20,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true, js:
       click_on I18n.t("ss.links.new")
       within "form#item-form" do
         within "#addon-basic" do
-          click_on I18n.t('ss.buttons.upload')
+          wait_cbox_open do
+            click_on I18n.t('ss.buttons.upload')
+          end
         end
       end
       wait_for_cbox do
@@ -44,7 +46,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true, js:
       click_on I18n.t("ss.links.new")
       within "form#item-form" do
         within "#addon-basic" do
-          click_on I18n.t('ss.buttons.upload')
+          wait_cbox_open do
+            click_on I18n.t('ss.buttons.upload')
+          end
         end
       end
       wait_for_cbox do
@@ -67,7 +71,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true, js:
       click_on I18n.t("ss.links.new")
       within "form#item-form" do
         within "#addon-basic" do
-          click_on I18n.t('ss.buttons.upload')
+          wait_cbox_open do
+            click_on I18n.t('ss.buttons.upload')
+          end
         end
       end
       wait_for_cbox do

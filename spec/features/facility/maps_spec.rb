@@ -67,4 +67,169 @@ describe "facility_maps", type: :feature do
       expect(current_path).to eq index_path
     end
   end
+
+  context "set center and zoom" do
+    before { login_cms_user }
+    before do
+      visit new_path
+      within "form#item-form" do
+        fill_in "item[name]", with: "sample"
+        fill_in "item[basename]", with: "sample"
+        click_button I18n.t("ss.buttons.save")
+      end
+    end
+
+    it "#center position" do
+      visit edit_path
+      expect(item.center_setting).to eq "auto"
+      expect(item.set_center_position).to eq nil
+      within "form" do
+        find("input[name='item[center_setting]'][value='designated_location']").set(true)
+        fill_in "item[set_center_position]", with: "34.067035,134.589971"
+        click_on I18n.t("ss.buttons.save")
+      end
+      item.reload
+      expect(item.center_setting).to eq "designated_location"
+      expect(item.set_center_position).to eq "34.067035,134.589971"
+    end
+
+    it "#center position validation" do
+      visit edit_path
+      within "form" do
+        fill_in "item[set_center_position]", with: "90,134.589971"
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).not_to have_css("#errorExplanation")
+
+      visit edit_path
+      within "form" do
+        fill_in "item[set_center_position]", with: "90.1,134.589971"
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).to have_css("#errorExplanation")
+
+      visit edit_path
+      within "form" do
+        fill_in "item[set_center_position]", with: "-90,134.589971"
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).not_to have_css("#errorExplanation")
+
+      visit edit_path
+      within "form" do
+        fill_in "item[set_center_position]", with: "-90.1,134.589971"
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).to have_css("#errorExplanation")
+
+      visit edit_path
+      within "form" do
+        fill_in "item[set_center_position]", with: "34.067035,180"
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).not_to have_css("#errorExplanation")
+
+      visit edit_path
+      within "form" do
+        fill_in "item[set_center_position]", with: "34.067035,180.1"
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).to have_css("#errorExplanation")
+
+      visit edit_path
+      within "form" do
+        fill_in "item[set_center_position]", with: "34.067035,-180"
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).not_to have_css("#errorExplanation")
+
+      visit edit_path
+      within "form" do
+        fill_in "item[set_center_position]", with: "34.067035,-180.1"
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).to have_css("#errorExplanation")
+
+      visit edit_path
+      within "form" do
+        fill_in "item[set_center_position]", with: "134.589971,34.067035"
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).to have_css("#errorExplanation")
+
+      visit edit_path
+      within "form" do
+        fill_in "item[set_center_position]", with: "34.067035"
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).to have_css("#errorExplanation")
+
+      visit edit_path
+      within "form" do
+        fill_in "item[set_center_position]", with: "34.067035,134.589971,34.067035"
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).to have_css("#errorExplanation")
+
+      visit edit_path
+      within "form" do
+        fill_in "item[set_center_position]", with: "latitude,longitude"
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).to have_css("#errorExplanation")
+
+      visit edit_path
+      within "form" do
+        fill_in "item[set_center_position]", with: "34.067abc035,134.589971"
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).to have_css("#errorExplanation")
+    end
+
+    it "#zoom level" do
+      visit edit_path
+      expect(item.zoom_setting).to eq "auto"
+      expect(item.set_zoom_level).to eq nil
+      within "form" do
+        find("input[name='item[zoom_setting]'][value='designated_level']").set(true)
+        fill_in "item[set_zoom_level]", with: 10
+        click_on I18n.t("ss.buttons.save")
+      end
+      item.reload
+      expect(item.zoom_setting).to eq "designated_level"
+      expect(item.set_zoom_level).to eq 10
+    end
+
+    it "#zoom level border value" do
+      visit edit_path
+      within "form" do
+        fill_in "item[set_zoom_level]", with: 0
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).to have_css("#errorExplanation")
+
+      visit edit_path
+      within "form" do
+        fill_in "item[set_zoom_level]", with: 1
+        click_on I18n.t("ss.buttons.save")
+      end
+      item.reload
+      expect(item.set_zoom_level).to eq 1
+
+      visit edit_path
+      within "form" do
+        fill_in "item[set_zoom_level]", with: 21
+        click_on I18n.t("ss.buttons.save")
+      end
+      item.reload
+      expect(item.set_zoom_level).to eq 21
+
+      visit edit_path
+      within "form" do
+        fill_in "item[set_zoom_level]", with: 22
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).to have_css("#errorExplanation")
+    end
+  end
 end

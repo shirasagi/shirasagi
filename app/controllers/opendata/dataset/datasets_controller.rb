@@ -2,7 +2,6 @@ class Opendata::Dataset::DatasetsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
   include Workflow::PageFilter
-  helper Opendata::FormHelper
 
   model Opendata::Dataset
 

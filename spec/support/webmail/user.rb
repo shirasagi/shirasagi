@@ -61,7 +61,8 @@ def create_webmail_users
 
   admin = Webmail::User.create! name: "webmail-admin", uid: "admin", email: "admin@example.jp", in_password: "pass",
     group_ids: [g11.id], webmail_role_ids: [admin_role.id],
-    organization_id: g00.id, organization_uid: "org-admin"
+    organization_id: g00.id, organization_uid: "org-admin",
+    deletion_lock_state: "locked"
 
   user = Webmail::User.create! name: "webmail-user", uid: "user", email: "user@example.jp", in_password: "pass",
     group_ids: [g11.id], webmail_role_ids: [user_role.id],

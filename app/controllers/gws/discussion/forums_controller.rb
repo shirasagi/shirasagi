@@ -17,7 +17,7 @@ class Gws::Discussion::ForumsController < ApplicationController
   end
 
   def set_crumbs
-    @crumbs << [I18n.t('modules.gws/discussion'), gws_discussion_forums_path]
+    @crumbs << [ @cur_site.menu_discussion_label || I18n.t('modules.gws/discussion'), gws_discussion_forums_path ]
   end
 
   def set_item

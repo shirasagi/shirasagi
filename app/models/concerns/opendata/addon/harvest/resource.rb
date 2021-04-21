@@ -25,6 +25,20 @@ module Opendata::Addon::Harvest::Resource
     before_save :set_revision_id
   end
 
+  def data_url
+    if source_url.present?
+      # a resource referencing other site's resource
+      source_url
+    elsif respond_to?(:original_url) && original_url.present?
+      # a url resource
+      original_url
+    elsif file
+      file.full_url
+    else
+      ""
+    end
+  end
+
   def reset_harvest_attributes
     self.harvest_importer = nil
     self.harvest_importer_id = nil

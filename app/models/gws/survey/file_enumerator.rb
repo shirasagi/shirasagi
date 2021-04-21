@@ -16,12 +16,13 @@ class Gws::Survey::FileEnumerator < Enumerator
 
   def headers
     terms = []
+    if !@cur_form.anonymous?
+      terms << Gws::Survey::File.t(:updated)
+      terms << Gws::User.t(:name)
+      terms << Gws::User.t(:organization_uid)
+    end
     @cur_form.columns.each do |column|
       terms << column.name
-    end
-    if !@cur_form.anonymous?
-      terms << Gws::User.t(:name)
-      terms << Gws::Survey::File.t(:updated)
     end
     terms
   end
@@ -30,6 +31,12 @@ class Gws::Survey::FileEnumerator < Enumerator
 
   def enum_record(yielder, item)
     terms = []
+    if !@cur_form.anonymous?
+      terms << I18n.l(item.updated)
+      terms << item.user_name
+      terms << (item.user.organization_uid.presence || item.user_uid)
+    end
+
     @cur_form.columns.order_by(order: 1, name: 1).each do |column|
       column_value = item.column_values.where(column_id: column.id).first
       if column_value.blank?
@@ -56,16 +63,6 @@ class Gws::Survey::FileEnumerator < Enumerator
       end
 
       terms << term
-    end
-
-    if !@cur_form.anonymous?
-      if item.anonymous?
-        terms << nil
-        terms << nil
-      else
-        terms << item.user_long_name
-        terms << I18n.l(item.updated)
-      end
     end
 
     yielder << encode(terms.to_csv)

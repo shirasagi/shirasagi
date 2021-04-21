@@ -1,10 +1,12 @@
 source 'https://rubygems.org'
 
 gem 'rails', '~> 5.2.0'
+gem 'sprockets', '< 4.0'
+gem 'sass'
 gem 'sassc-rails'
 gem 'uglifier'
 gem 'coffee-rails'
-gem 'therubyracer', platforms: :ruby
+gem 'mini_racer'
 gem 'jbuilder'
 gem 'sdoc', group: :doc
 
@@ -29,45 +31,51 @@ gem 'jquery-ui-rails'
 gem 'marked-rails'
 gem 'momentjs-rails'
 
-# Additional
+# Additional (alphabetical order)
+gem 'addressable', require: 'addressable/uri'
+gem 'bootsnap', require: false
 gem 'browser'
 gem 'clam_scan'
 gem 'diff-lcs'
 gem 'diffy'
 gem 'dynamic_form'
 gem 'fast_blank'
+gem 'fastimage'
 gem 'fullcalendar.io-rails', '~> 2.6.0'
+gem 'google-cloud-translate', '2.0.0'
 gem 'holiday_japan'
+gem 'http_accept_language'
 gem 'icalendar'
 gem 'kaminari'
 gem 'kaminari-mongoid'
 gem 'kramdown'
+gem 'kramdown-parser-gfm'
+gem 'liquid'
 gem 'mail-iso-2022-jp'
+gem 'marcel'
+gem 'mini_magick'
 gem 'net-ldap'
 gem 'non-stupid-digest-assets'
 gem 'oj'
-gem 'open_uri_redirections'
 gem 'rails_autolink'
-gem 'rmagick'
+gem 'retriable'
 gem 'romaji'
-gem 'simple_captcha2', require: 'simple_captcha'
-gem 'ungarbled'
-gem 'rubyzip'
-gem 'thinreports'
-gem 'bootsnap', require: false
-gem 'addressable', require: 'addressable/uri'
 gem 'roo'
 #gem 'roo-xls', git: "https://github.com/roo-rb/roo-xls.git"
-gem 'liquid'
+gem 'rubyzip'
+gem 'simple_captcha2', require: 'simple_captcha'
+gem 'thinreports'
+gem 'ungarbled'
 
 # OAuth
-gem 'oauth2', git: 'https://github.com/oauth-xx/oauth2.git' #'~> 1.5.0'
+gem 'oauth2'
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-github'
-gem 'omniauth-google-oauth2', git: 'https://github.com/zquestz/omniauth-google-oauth2.git'
+gem 'omniauth-google-oauth2'
 gem 'omniauth-twitter'
 gem 'omniauth-yahoojp'
+gem 'omniauth-rails_csrf_protection'
 
 # SNS
 gem 'twitter'
@@ -94,7 +102,8 @@ gem 'elasticsearch'
 group :development, :test do
   gem 'dotenv-rails'
   gem 'capybara', require: false
-  gem 'coveralls', require: false
+  gem 'coveralls_reborn', require: false
+  gem 'debase', require: false
   gem 'factory_bot_rails', require: false
   gem 'fuubar', require: false
   gem 'guard', require: false
@@ -112,11 +121,13 @@ group :development, :test do
   gem 'rspec-rails', require: false
   gem 'rubocop', require: false
   gem 'rubocop-performance', require: false
+  gem 'ruby-debug-ide', require: false
   gem 'scss_lint', require: false
   gem 'selenium-webdriver', require: false
   gem 'simplecov', require: false
   gem 'simplecov-csv', require: false
   gem 'simplecov-html', require: false
+  gem 'simplecov_json_formatter', require: false
   gem 'spring', '~> 2.0.2', require: false
   gem 'test-queue', require: false
   gem 'timecop', require: false
@@ -132,5 +143,6 @@ end
 
 group :test do
   gem 'docker-api'
+  gem 'rspec-retry', require: false
   gem 'webmock'
 end

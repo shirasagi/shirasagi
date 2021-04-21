@@ -18,6 +18,7 @@ class Cms::PublicNoticesController < ApplicationController
     @items = @model.site(@cur_site).and_public.
       target_to(@cur_user).
       search(params[:s]).
+      reorder(notice_severity: 1, released: -1).
       page(params[:page]).per(50)
   end
 

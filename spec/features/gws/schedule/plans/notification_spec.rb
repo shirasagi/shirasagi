@@ -2,11 +2,14 @@ require 'spec_helper'
 
 describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
+  let!(:member_group) { create :gws_group, name: "#{site.name}/group-#{unique_id}" }
   let!(:member_user) do
-    create :gws_user, group_ids: gws_user.group_ids,
+    create :gws_user, group_ids: gws_user.group_ids + [ member_group.id ],
      notice_schedule_user_setting: "notify",
-     send_notice_mail_address: "#{unique_id}@example.jp"
+     send_notice_mail_addresses: "#{unique_id}@example.jp"
   end
+  let!(:member_cg_by_user) { create :gws_custom_group, member_ids: [ member_user.id ], member_group_ids: [] }
+  let!(:member_cg_by_group) { create :gws_custom_group, member_ids: [], member_group_ids: [ member_group.id ] }
   let(:item) { create :gws_schedule_plan, member_ids: [gws_user.id, member_user.id] }
   let(:plan_name) { "name-#{unique_id}" }
   let(:notice_path) do
@@ -35,6 +38,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
   after { ActionMailer::Base.deliveries.clear }
 
   context "#create plan" do
+    let(:select_target) { %i[user group cg_by_user cg_by_group].sample }
     let(:notice_path) do
       url_helper = Rails.application.routes.url_helpers
       url_helper.gws_schedule_plan_path(site: site, id: Gws::Schedule::Plan.first)
@@ -46,17 +50,19 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: plan_name
         select I18n.t("ss.options.state.#{notify_state}"), from: "item_notify_state" rescue nil
-        within "#addon-gws-agents-addons-member" do
-          click_on I18n.t("ss.apis.users.index")
-        end
       end
-      wait_for_cbox do
-        click_on member_user.long_name
+
+      if select_target == :group
+        gws_select_member_group(member_group)
+      elsif select_target == :cg_by_user
+        gws_select_member_custom_group(member_cg_by_user)
+      elsif select_target == :cg_by_group
+        gws_select_member_custom_group(member_cg_by_group)
+      else # select_target == :user
+        gws_select_member(member_user)
       end
+
       within "form#item-form" do
-        within "#addon-gws-agents-addons-member" do
-          expect(page).to have_css(".ajax-selected", text: member_user.name)
-        end
         click_on I18n.t("ss.buttons.save")
       end
       wait_for_notice I18n.t('ss.notice.saved')
@@ -87,7 +93,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         expect(notice.text).to be_blank
         expect(notice.html).to be_blank
         expect(notice.format).to eq "text"
-        expect(notice.seen).to be_blank
+        expect(notice.user_settings).to be_blank
         expect(notice.state).to eq "public"
         expect(notice.send_date).to be_present
         expect(notice.url).to eq notice_path
@@ -119,7 +125,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         expect(ActionMailer::Base.deliveries.length).to eq 1
         mail = ActionMailer::Base.deliveries.first
         expect(mail.from.first).to eq site.sender_address
-        expect(mail.bcc.first).to eq member_user.send_notice_mail_address
+        expect(mail.bcc.first).to eq member_user.send_notice_mail_addresses.first
         expect(mail.subject).to eq I18n.t("gws_notification.gws/schedule/plan.subject", name: plan_name)
         expect(mail.decoded.to_s).to include(mail.subject)
         expect(mail.decoded.to_s).to include(mail_url)
@@ -193,7 +199,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         expect(notice.text).to be_blank
         expect(notice.html).to be_blank
         expect(notice.format).to eq "text"
-        expect(notice.seen).to be_blank
+        expect(notice.user_settings).to be_blank
         expect(notice.state).to eq "public"
         expect(notice.send_date).to be_present
         expect(notice.url).to eq notice_path
@@ -228,7 +234,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         expect(ActionMailer::Base.deliveries.length).to eq 1
         mail = ActionMailer::Base.deliveries.first
         expect(mail.from.first).to eq site.sender_address
-        expect(mail.bcc.first).to eq member_user.send_notice_mail_address
+        expect(mail.bcc.first).to eq member_user.send_notice_mail_addresses.first
         expect(mail.subject).to eq I18n.t("gws_notification.gws/schedule/plan.subject", name: plan_name)
         expect(mail.decoded.to_s).to include(mail.subject)
         expect(mail.decoded.to_s).to include(mail_url)
@@ -308,7 +314,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         expect(notice.text).to be_blank
         expect(notice.html).to be_blank
         expect(notice.format).to eq "text"
-        expect(notice.seen).to be_blank
+        expect(notice.user_settings).to be_blank
         expect(notice.state).to eq "public"
         expect(notice.send_date).to be_present
         expect(notice.url).to be_blank
@@ -343,7 +349,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         expect(ActionMailer::Base.deliveries.length).to eq 1
         mail = ActionMailer::Base.deliveries.first
         expect(mail.from.first).to eq site.sender_address
-        expect(mail.bcc.first).to eq member_user.send_notice_mail_address
+        expect(mail.bcc.first).to eq member_user.send_notice_mail_addresses.first
         expect(mail.subject).to eq I18n.t("gws_notification.gws/schedule/plan/destroy.subject", name: item.name)
         expect(mail.decoded.to_s).to include(item.name)
         expect(mail.decoded.to_s).to include(mail_url)
@@ -495,7 +501,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         expect(notice.text).to be_blank
         expect(notice.html).to be_blank
         expect(notice.format).to eq "text"
-        expect(notice.seen).to be_blank
+        expect(notice.user_settings).to be_blank
         expect(notice.state).to eq "public"
         expect(notice.send_date).to be_present
         expect(notice.url).to eq notice_path
@@ -531,7 +537,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         expect(ActionMailer::Base.deliveries.length).to eq 1
         mail = ActionMailer::Base.deliveries.first
         expect(mail.from.first).to eq site.sender_address
-        expect(mail.bcc.first).to eq member_user.send_notice_mail_address
+        expect(mail.bcc.first).to eq member_user.send_notice_mail_addresses.first
         expect(mail.subject).to eq I18n.t("gws_notification.gws/schedule/plan/undo_delete.subject", name: item.name)
         expect(mail.decoded.to_s).to include(item.name)
         expect(mail.decoded.to_s).to include(mail_url)

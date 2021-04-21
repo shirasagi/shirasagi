@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe "article_pages", type: :feature, dbscope: :example, tmpdir: true, js: true, fragile: true do
-  let(:site) { cms_site }
-  let(:article_node) { create :article_node_page, cur_site: site }
+describe "article_pages", type: :feature, dbscope: :example, js: true do
+  let!(:site) { cms_site }
+  let!(:article_node) { create :article_node_page, cur_site: site }
   let(:html) do
     html = []
     html << "<p>ああああ</p>"
@@ -11,9 +11,9 @@ describe "article_pages", type: :feature, dbscope: :example, tmpdir: true, js: t
     html << "<p><a href=\"http://example.jp/file\">添付ファイル (PDF: 36kB)</a></p>"
     html.join("\n")
   end
-  let(:article_page) { create :article_page, cur_site: site, cur_node: article_node, html: html }
+  let!(:article_page) { create :article_page, cur_site: site, cur_node: article_node, html: html }
 
-  let(:od_site) { create :cms_site, name: unique_id, host: unique_id, domains: "#{unique_id}.example.jp" }
+  let!(:od_site) { create :cms_site, name: unique_id, host: unique_id, domains: "#{unique_id}.example.jp" }
   let!(:dataset_node) { create :opendata_node_dataset, cur_site: od_site }
   let!(:category_node) { create :opendata_node_category, cur_site: od_site }
   let!(:search_dataset) { create :opendata_node_search_dataset, cur_site: od_site }
@@ -24,10 +24,7 @@ describe "article_pages", type: :feature, dbscope: :example, tmpdir: true, js: t
 
     file = tmp_ss_file(contents: '0123456789', user: cms_user)
 
-    path = Rails.root.join("spec", "fixtures", "ss", "logo.png")
-    Fs::UploadedFile.create_from_file(path, basename: "spec") do |file|
-      create :opendata_license, cur_site: od_site, default_state: 'default', in_file: file
-    end
+    create :opendata_license, cur_site: od_site, default_state: 'default'
 
     article_page.cur_user = cms_user
     article_page.file_ids = [ file.id ]
@@ -52,16 +49,16 @@ describe "article_pages", type: :feature, dbscope: :example, tmpdir: true, js: t
       #
       click_on I18n.t('ss.links.edit')
 
+      ensure_addon_opened('#addon-cms-agents-addons-opendata_ref-dataset')
       within '#addon-cms-agents-addons-opendata_ref-dataset' do
-        find('.addon-head h2').click
         # wait for appearing select
         expect(page).to have_css('a.ajax-box', text: I18n.t('cms.apis.opendata_ref.datasets.index'))
         # choose 'item_opendata_dataset_state_public'
         find('input#item_opendata_dataset_state_public').click
       end
       click_on I18n.t('ss.buttons.publish_save')
+      wait_for_notice I18n.t('ss.notice.saved')
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
       article_page.reload
       expect(article_page.state).to eq 'public'
       expect(article_page.opendata_dataset_state).to eq 'public'
@@ -118,8 +115,10 @@ describe "article_pages", type: :feature, dbscope: :example, tmpdir: true, js: t
       click_on I18n.t('ss.buttons.draft_save')
       expect(page).to have_css('#alertExplanation h2', text: I18n.t('cms.alert'), wait: 60)
       click_on I18n.t('ss.buttons.ignore_alert')
+      wait_for_notice I18n.t('ss.notice.saved')
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
       article_page.reload
       expect(article_page.state).to eq 'closed'
       expect(article_page.opendata_dataset_state).to eq 'public'

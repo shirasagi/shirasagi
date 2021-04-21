@@ -12,7 +12,6 @@ describe "sns_connection", type: :feature, dbscope: :example do
       expect(current_path).to eq index_path
       expect(page).to have_css('dt', text: I18n.t("sys.remote_addr"))
       expect(page).to have_css('dt', text: I18n.t("sys.user_agent"))
-      expect(page).to have_css('dt', text: I18n.t("sys.server_name"))
     end
   end
 end

@@ -53,7 +53,7 @@ class Jmaxml::Filter
     return if trigger.blank?
     trigger = trigger["_type"].constantize.find(trigger.id)
 
-    xmldoc = REXML::Document.new(page.xml)
+    xmldoc = REXML::Document.new(page.weather_xml)
     context[:xmldoc] = xmldoc
 
     trigger.verify(page, context) do

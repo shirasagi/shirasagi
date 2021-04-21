@@ -64,11 +64,13 @@ class Gws::Survey::Form
 
     def search_keyword(params)
       return all if params[:keyword].blank?
+
       all.keyword_in(params[:keyword], :name, :description)
     end
 
     def search_category(params)
       return all if params.blank? || params[:category_id].blank?
+
       all.where(category_ids: params[:category_id].to_i)
     end
 
@@ -82,6 +84,7 @@ class Gws::Survey::Form
 
     def search_answer_state(params)
       return all if params.blank? || params[:answered_state].blank?
+
       case params[:answered_state]
       when 'answered'
         all.and_answered(params[:user])
@@ -107,6 +110,7 @@ class Gws::Survey::Form
     return false if state != 'public'
     return false if release_date && release_date > now
     return false if close_date && close_date <= now
+
     true
   end
 
@@ -143,6 +147,10 @@ class Gws::Survey::Form
     end
 
     true
+  end
+
+  def new_flag?
+    (release_date.presence || created) > Time.zone.now - site.survey_new_days.day
   end
 
   def new_clone(opts = {})

@@ -1,0 +1,8 @@
+<nav class="mod-navi">
+  <h2><%= t("translate.main") %></h2>
+  <h3><%= link_to t("translate.text_cache"), cms_translate_text_caches_path %></h3>
+  <h3><%= link_to t("translate.site_setting"), cms_translate_site_setting_path %></h3>
+  <h3><%= link_to t("translate.lang"), cms_translate_langs_path %></h3>
+</nav>
+
+<%= render partial: "cms/main/conf_navi" %>

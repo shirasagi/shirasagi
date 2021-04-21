@@ -3,6 +3,10 @@ class Gws::Task
 
   belongs_to :group, class_name: 'Gws::Group'
 
-  # override site scope
-  scope :site, ->(site) { where(group_id: site.id) }
+  class << self
+    # override site scope
+    def site(site)
+      where(group_id: site.id)
+    end
+  end
 end

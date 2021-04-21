@@ -12,7 +12,7 @@ FactoryBot.define do
     contact_email { "#{unique_id}@example.jp" }
     contact_tel "03-4389-8714"
     contact_fax "03-4389-8715"
-    contact_link_url { "#{unique_id}@example.jp" }
+    contact_link_url { /#{unique_id}/ }
     contact_link_name { unique_id.to_s }
     ldap_dn { "ou=group,dc=example,dc=jp" }
   end

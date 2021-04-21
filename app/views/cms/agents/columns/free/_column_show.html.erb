@@ -3,9 +3,35 @@
   <%= text_area_tag "mod-cms-body", value.value, id: nil, class: "column-free-html", style: "height: 400px;" %>
 
   <% if value.files.present? %>
-    <div style="margin-top: 10px;">
+    <div id="selected-files">
       <% value.files.each do |file| %>
-        <%= link_to file.name, file.url %><br>
+        <div class="file-view" data-file-id="<%= file.id %>">
+          <%= link_to file.url, class: :thumb, target: "_blank", rel: "noopener" do %>
+            <% if file.image? %>
+              <%= image_tag file.thumb_url, alt: file.name %>
+            <% else %>
+              <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
+            <% end %>
+            <div class="properties">
+              <span><%= I18n.t("sns.filename") %>: <%= file.name %></span><br>
+              <% if file.image? %>
+                <% width, height = file.image_dimension %>
+                <span><%= t("sns.w_h") %>: <%= width %> x <%= height %></span><br>
+              <% end %>
+              <span><%= t("sns.size") %>: <%= number_to_human_size(file.size) %></span><br>
+              <span><%= t("sns.datetime") %>: <%= file.updated.strftime("%Y/%m/%d %H:%M") %></span><br>
+              <% if file.user.present? %>
+                <span><%= t("sns.user") %>: <%= file.user.name %></span><br>
+              <% end %>
+            </div>
+          <% end %>
+
+          <div class="name">
+            <label>
+              <%= file.name %>
+            </label><br />
+          </div>
+        </div>
       <% end %>
     </div>
   <% end %>

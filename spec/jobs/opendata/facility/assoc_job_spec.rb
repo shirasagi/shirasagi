@@ -11,10 +11,7 @@ describe Opendata::Facility::AssocJob, dbscope: :example, js: true do
   let!(:category_node) { create :opendata_node_category, cur_site: od_site }
 
   before do
-    path = Rails.root.join("spec", "fixtures", "ss", "logo.png")
-    Fs::UploadedFile.create_from_file(path, basename: "spec") do |file|
-      create :opendata_license, cur_site: od_site, in_file: file
-    end
+    create :opendata_license, cur_site: od_site
   end
 
   describe "#perform" do
@@ -24,8 +21,8 @@ describe Opendata::Facility::AssocJob, dbscope: :example, js: true do
       expect(Job::Log.site(site).count).to eq 0
       expect(Job::Log.site(od_site).count).to eq 1
       Job::Log.site(od_site).first.tap do |log|
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       expect(Opendata::Dataset.site(site).count).to eq 0

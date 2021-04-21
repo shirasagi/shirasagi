@@ -43,7 +43,7 @@
   <% end %>
 
   // hide categories
-  $(".categories a[data-class=other]").click(function() {
+  $(".categories a[data-class=other]").on("click", function() {
   var type;
   type = $(this).attr("class");
   $(".categories a." + type).show();

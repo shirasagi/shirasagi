@@ -2,7 +2,17 @@ require 'spec_helper'
 
 describe "article_pages", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
-  let(:layout) { create_cms_layout }
+  let(:part) { create :cms_part_free, html: '<meta name="foo" content="bar" />' }
+  let(:layout_html) do
+    html = []
+    html << "<html><head>"
+    html << "{{ part \"#{part.filename.sub(/\..*/, '')}\" }}"
+    html << "</head><body><br><br><br><div id=\"main\" class=\"page\">"
+    html << "{{ yield }}"
+    html << "</div></body></html>"
+    html.join("\n")
+  end
+  let(:layout) { create :cms_layout, html: layout_html }
   let(:node) { create(:article_node_page, cur_site: site, layout_id: layout.id) }
 
   before { login_cms_user }
@@ -31,6 +41,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within "#main" do
+          expect(page).to have_no_selector('.ss-preview-part')
           expect(page).to have_css("#ss-preview-content-begin", visible: false)
           expect(page).to have_no_css("#ss-preview-form-start", visible: false)
           expect(page).to have_css(".ss-preview-page[data-page-id='#{item.id}'][data-page-route='article/page']")
@@ -78,10 +89,77 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within "#main" do
+          expect(page).to have_no_selector('.ss-preview-part')
           expect(page).to have_css("#ss-preview-content-begin", visible: false)
           expect(page).to have_css("#ss-preview-form-start[data-form-id='#{form.id}']", visible: false)
           selector = ".ss-preview-column[data-page-id='#{item.id}'][data-column-id='#{column_value1.id}']"
           expect(page).to have_css(selector, text: column_value1.value)
+        end
+      end
+    end
+
+    context "with login and closed page" do
+      let(:text) { unique_id }
+      let(:html) { "<p>#{text}</p>" }
+      let!(:item) { create(:article_page, cur_site: site, cur_node: node, layout_id: layout.id, html: html, state: 'closed') }
+
+      it do
+        visit sns_mypage_path
+        first('.dropdown-toggle').click
+        click_link I18n.t('ss.logout')
+
+        visit cms_preview_path(site: site, path: item.preview_path)
+        within "form" do
+          fill_in "item[email]", with: Cms::User.first.email
+          fill_in "item[password]", with: "pass"
+          click_button I18n.t('ss.login')
+        end
+
+        within "#ss-preview" do
+          within ".ss-preview-wrap-column-edit-mode" do
+            expect(page).to have_button(I18n.t("cms.inplace_edit"))
+            expect(page).to have_button(I18n.t("ss.buttons.new"))
+            expect(page).to have_link(I18n.t("cms.draft_page"))
+            expect(page).to have_button(I18n.t("workflow.buttons.approve"))
+            expect(page).to have_button(I18n.t("ss.buttons.publish"))
+          end
+          within ".ss-preview-wrap-column-mode-change" do
+            expect(page).to have_button(I18n.t("ss.links.pc"))
+            expect(page).to have_button(I18n.t("ss.links.mobile"))
+            expect(page).to have_button(I18n.t("cms.layout"))
+            expect(page).to have_button(I18n.t("ss.links.back_to_administration"))
+          end
+        end
+
+        within "#main" do
+          expect(page).to have_no_selector('.ss-preview-part')
+          expect(page).to have_css("#ss-preview-content-begin", visible: false)
+          expect(page).to have_no_css("#ss-preview-form-start", visible: false)
+          expect(page).to have_css(".ss-preview-page[data-page-id='#{item.id}'][data-page-route='article/page']")
+          expect(page).to have_css(".ss-preview-page .body", text: text)
+        end
+
+        page.accept_confirm do
+          click_button I18n.t('ss.buttons.publish')
+        end
+
+        wait_for_ajax
+        expect(page).to have_css('div.ss-preview-notice-wrap', text: I18n.t('ss.notice.published'))
+
+        within "#ss-preview" do
+          within ".ss-preview-wrap-column-edit-mode" do
+            expect(page).to have_button(I18n.t("cms.inplace_edit"))
+            expect(page).to have_button(I18n.t("ss.buttons.new"))
+            expect(page).to have_link(I18n.t("cms.draft_page"))
+            expect(page).to have_no_button(I18n.t("workflow.buttons.approve"))
+            expect(page).to have_no_button(I18n.t("ss.buttons.publish"))
+          end
+          within ".ss-preview-wrap-column-mode-change" do
+            expect(page).to have_button(I18n.t("ss.links.pc"))
+            expect(page).to have_button(I18n.t("ss.links.mobile"))
+            expect(page).to have_button(I18n.t("cms.layout"))
+            expect(page).to have_button(I18n.t("ss.links.back_to_administration"))
+          end
         end
       end
     end
@@ -136,6 +214,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within "#main" do
+          expect(page).to have_no_selector('.ss-preview-part')
           expect(page).to have_css("#ss-preview-content-begin", visible: false)
           expect(page).to have_no_css("#ss-preview-form-start", visible: false)
           expect(page).to have_no_css(".ss-preview-page")
@@ -172,6 +251,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within "#main" do
+          expect(page).to have_no_selector('.ss-preview-part')
           expect(page).to have_css("#ss-preview-content-begin", visible: false)
           expect(page).to have_no_css("#ss-preview-form-start", visible: false)
           expect(page).to have_no_css(".ss-preview-page")

@@ -8,8 +8,6 @@ module Workflow::Addon
 
       define_model_callbacks :merge_branch
 
-      field :master_id, type: Integer
-
       belongs_to :master, foreign_key: "master_id", class_name: self.to_s
       has_many :branches, foreign_key: "master_id", class_name: self.to_s, dependent: :destroy
 
@@ -22,6 +20,8 @@ module Workflow::Addon
 
       define_method(:master?) { master.blank? }
       define_method(:branch?) { master.present? }
+
+      index({ master_id: 1 })
     end
 
     def new_clone?
@@ -80,29 +80,28 @@ module Workflow::Addon
       end
     end
 
-    def clone_file(f)
-      attributes = Hash[f.attributes]
-      attributes.select!{ |k| f.fields.key?(k) }
+    def clone_file(source_file)
+      attributes = Hash[source_file.attributes]
+      attributes.select!{ |k| source_file.fields.key?(k) }
 
-      file = SS::File.new(attributes)
-      file.id = nil
-      file.in_file = f.uploaded_file
-      file.user_id = @cur_user.id if @cur_user
-
-      file.save validate: false
+      attributes["user_id"] = @cur_user.id if @cur_user
+      attributes["_id"] = nil
+      file = SS::File.create_empty!(attributes, validate: false) do |new_file|
+        ::FileUtils.copy(source_file.path, new_file.path)
+      end
 
       if respond_to?(:html) && html.present?
         html = self.html
-        html.gsub!("=\"#{f.url}\"", "=\"#{file.url}\"")
-        html.gsub!("=\"#{f.thumb_url}\"", "=\"#{file.thumb_url}\"")
+        html.gsub!("=\"#{source_file.url}\"", "=\"#{file.url}\"")
+        html.gsub!("=\"#{source_file.thumb_url}\"", "=\"#{file.thumb_url}\"")
         self.html = html
       end
 
       if respond_to?(:body_parts) && body_parts.present?
         self.body_parts = body_parts.map do |html|
           html = html.to_s
-          html = html.gsub("=\"#{f.url}\"", "=\"#{file.url}\"")
-          html = html.gsub("=\"#{f.thumb_url}\"", "=\"#{file.thumb_url}\"")
+          html = html.gsub("=\"#{source_file.url}\"", "=\"#{file.url}\"")
+          html = html.gsub("=\"#{source_file.thumb_url}\"", "=\"#{file.thumb_url}\"")
           html
         end
       end
@@ -122,7 +121,7 @@ module Workflow::Addon
     def merge(branch)
       Rails.logger.warn(
         'DEPRECATION WARNING:' \
-        ' merge is deprecated and will be removed in future version (user merge_branch instead).'
+        ' merge is deprecated and will be removed in future version (use merge_branch instead).'
       )
       self.in_branch = branch
       self.merge_branch
@@ -146,7 +145,9 @@ module Workflow::Addon
         self.attributes = attributes
         self.master_id = nil
         self.allow_other_user_files if respond_to?(:allow_other_user_files)
+        clone_thumb
       end
+      self.skip_history_trash = true if self.respond_to?(:skip_history_trash)
       self.save
     end
 

@@ -1,4 +1,6 @@
 <%
+  return unless SS.config.cms.tag
+
   addon ||= local_assigns.fetch(:addon, {})
   addon[:display_body] = "hide"
 

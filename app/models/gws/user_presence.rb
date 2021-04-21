@@ -14,6 +14,7 @@ class Gws::UserPresence
   field :memo, type: String, default: ""
   field :sync_available_state, type: String, default: "disabled"
   field :sync_unavailable_state, type: String, default: "disabled"
+  field :sync_timecard_state, type: String, default: "enabled"
   permit_params :state, :plan, :memo
 
   validates :state, inclusion: { in: ::SS.config.gws["presence"]["state"].map(&:keys).flatten }
@@ -55,11 +56,25 @@ class Gws::UserPresence
     ]
   end
 
+  def sync_timecard_state_options
+    [
+      [I18n.t('ss.options.state.disabled'), "disabled"],
+      [I18n.t('ss.options.state.enabled'), "enabled"]
+    ]
+  end
+
   def sync_available_enabled?
+    return false if SS.config.gws.dig("presence", "sync_available", "disable")
     sync_available_state == "enabled"
   end
 
   def sync_unavailable_enabled?
+    return false if SS.config.gws.dig("presence", "sync_available", "disable")
     sync_unavailable_state == "enabled"
+  end
+
+  def sync_timecard_enabled?
+    return false if SS.config.gws.dig("presence", "sync_timecard", "disable")
+    sync_timecard_state == "enabled"
   end
 end

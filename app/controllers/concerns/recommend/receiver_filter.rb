@@ -7,7 +7,6 @@ module Recommend::ReceiverFilter
     access_url = params[:access_url]
     target_id = params[:target_id]
     target_class = params[:target_class]
-    remote_addr = request.env["HTTP_X_REAL_IP"] || request.remote_ip
     user_agent = request.user_agent
 
     if token && !Recommend::History::Log.site(@cur_site).where(token: token).first
@@ -22,7 +21,11 @@ module Recommend::ReceiverFilter
     )
     log.save if log.class.enable_access_logging?(@cur_site)
 
-    cookies.permanent["_ss_recommend"] = log.token
+    cookie_value = { value: log.token, http_only: true }
+    cookie_value[:same_site] = SS.config.ss.session["same_site"] if !SS.config.ss.session["same_site"].nil?
+    cookie_value[:secure] = SS.config.ss.session["secure"] if !SS.config.ss.session["secure"].nil?
+
+    cookies.permanent["_ss_recommend"] = cookie_value
 
     head :ok
   end

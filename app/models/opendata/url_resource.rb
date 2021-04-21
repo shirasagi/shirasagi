@@ -15,6 +15,7 @@ class Opendata::UrlResource
   permit_params :name, :text, :license_id, :original_url, :crawl_update
 
   before_validation :validate_original_url, if: -> { original_url.present? }
+  after_validation :destroy_download_temp_file, if: -> { @download_temp_file }
 
   validates :original_url, presence: true
   validates :original_updated, presence: true
@@ -24,17 +25,13 @@ class Opendata::UrlResource
   after_save -> { dataset.save(validate: false) }
   after_destroy -> { dataset.save(validate: false) }
 
-  def download_url
-    dataset.url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/download"
+  class << self
+    def context_path
+      "/url_resource"
+    end
   end
 
-  def download_full_url
-    dataset.full_url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/download"
-  end
-
-  def context_path
-    "/url_resource"
-  end
+  delegate :context_path, to: :class
 
   def crawl_update_options
     [
@@ -50,12 +47,16 @@ class Opendata::UrlResource
     puts self.original_url
 
     last_modified = Timeout.timeout(time_out) do
-      uri = URI.parse(self.original_url)
-      uri.open(proxy: true) { |url_file| url_file.last_modified }
+      url = ::URI.parse(self.original_url) rescue nil
+      break nil if url.blank?
+
+      url.open(proxy: true) { |url_file| url_file.last_modified }
     end
 
     if last_modified.blank?
       last_modified = Time.zone.now
+    else
+      last_modified = last_modified.in_time_zone
     end
 
     if self.crawl_update == "none"
@@ -136,17 +137,22 @@ class Opendata::UrlResource
           self.original_updated = last_modified
           self.filename = ::File.basename(uri.path) if self.filename.blank?
 
-          ss_file = SS::File.new
-          ss_file.in_file = ActionDispatch::Http::UploadedFile.new(tempfile: temp_file,
+          @download_temp_file = SS::File.new
+          @download_temp_file.in_file = ActionDispatch::Http::UploadedFile.new(tempfile: temp_file,
                                                                    filename: self.filename,
                                                                    type: 'application/octet-stream')
-          ss_file.site_id = dataset.site_id
-          ss_file.model = self.class.to_s.underscore
+          @download_temp_file.site_id = dataset.site_id
+          @download_temp_file.model = self.class.to_s.underscore
 
-          ss_file.content_type = self.format = self.filename.sub(/.*\./, "").upcase
-          ss_file.filename = self.filename
-          ss_file.save
-          send("file_id=", ss_file.id)
+          @download_temp_file.content_type = self.format = self.filename.sub(/.*\./, "").upcase
+          @download_temp_file.filename = self.filename
+          @download_temp_file.owner_item = dataset
+
+          if @download_temp_file.save
+            self.file.destroy if file
+            self.file_id = @download_temp_file.id
+          end
+
           self.crawl_state = "same"
         end
       rescue Timeout::Error => e
@@ -166,11 +172,12 @@ class Opendata::UrlResource
     require 'timeout'
     require 'nkf'
 
+    url = ::URI.parse(original_url) rescue nil
+    return if url.blank?
+
     temp_file.binmode
     Timeout.timeout(time_out) do
-      uri = URI.parse(original_url)
-      uri.open(proxy: true) do |data|
-
+      url.open(proxy: true) do |data|
         data.binmode
         temp_file.write(data.read)
         temp_file.rewind
@@ -179,12 +186,17 @@ class Opendata::UrlResource
         content_disposition = "Content-Disposition: attachment; filename= " if content_disposition.blank?
         self.filename = NKF.nkf "-w", content_disposition.match(/filename=(\"?)(.+)\1/)[2].to_s
 
-        if data.last_modified.blank?
+        if data.meta["last-modified"].blank?
           break Time.zone.now
         else
-          break data.last_modified
+          break data.meta["last-modified"].in_time_zone
         end
       end
     end
+  end
+
+  def destroy_download_temp_file
+    return if self.errors.blank?
+    @download_temp_file.destroy
   end
 end

@@ -82,6 +82,7 @@ ja:
       accept: 参加する
       reject: 辞退する
       address_search: 住所検索
+      detail_search: 詳細検索
     links:
       profile: プロフィール編集
       leave: 退会
@@ -130,7 +131,7 @@ ja:
       member/blog/blog_setting: ブログ設定
       member/blog/page_setting: ブログ設定
       member/photo/body: フォト
-      member/photo/category: カテゴリ
+      member/photo/category: カテゴリー
       member/photo/location: 地域
       member/photo/map: 地図
       member/photo/spot: フォト
@@ -138,6 +139,7 @@ ja:
       member/photo/slide: フォトスライド
       member/photo/license: ライセンス
       member/photo/license_setting: ライセンス
+      member/photo/search/page_list: 一覧表示
       member/registration/sender_address: 送信者設定
       member/registration/notice: メール通知
       member/registration/confirmation: 登録確認
@@ -249,11 +251,13 @@ ja:
         image: 画像
         image_id: 画像
         caption: キャプション
-        photo_categories: カテゴリ
+        photo_categories: カテゴリー
         photo_locations: 地域
         map_points: 地図
         contributor: 投稿者
         keyword: キーワード
+        set_center_position: 中心位置
+        set_zoom_level: ズームレベル
       member/addon/photo/license:
         license_name: ライセンス
       member/addon/photo/license_setting:
@@ -366,18 +370,18 @@ ja:
         <h2>メールアドレスの確認</h2>
         %{sender_email} から登録案内メールを %{email} に送りました。
         メールに記載の案内を読み、登録を完了してください。
-        しばらく待ってもメールが届かない場合は、%{sender_email} からのメールが着信拒否されていないか確認の上、<a href="%{resend_url}" target="_blank">こちら</a>から登録案内メールを再送信してください。
+        しばらく待ってもメールが届かない場合は、%{sender_email} からのメールが着信拒否されていないか確認の上、<a href="%{resend_url}" target="_blank" rel="noopener">こちら</a>から登録案内メールを再送信してください。
       complete_html: |-
         会員登録が完了しました
         登録したメールアドレスとパスワードで、<a href="%{redirect_url}">ログイン</a>してください。
     reset_password:
       link_text_html: |-
-        パスワードをお忘れの場合は、<a href="%{reset_password_url}" target="_blank">こちら</a>のリンクからパスワードを再設定してください。
+        パスワードをお忘れの場合は、<a href="%{reset_password_url}" target="_blank" rel="noopener">こちら</a>のリンクからパスワードを再設定してください。
       description: |-
         ご登録されている以下のメールアドレスにパスワードの再設定用のURLをお送りします。
       sent_email: |-
         %{sender_email} からパスワード再設定の案内を送りました。
-        しばらく待ってもメールが届かない場合は、%{sender_email} からのメールが着信拒否されていないか確認の上、<a href="%{resend_url}" target="_blank">こちら</a>からパスワード再設定案内メールを再送信してください。
+        しばらく待ってもメールが届かない場合は、%{sender_email} からのメールが着信拒否されていないか確認の上、<a href="%{resend_url}" target="_blank" rel="noopener">こちら</a>からパスワード再設定案内メールを再送信してください。
     confirm_password:
       title: パスワードの変更
       password_changed: |-
@@ -398,7 +402,7 @@ ja:
       password_short_downcase: "は英小文字（a-z）を%{count}文字以上含むようにしてください。"
       password_short_digit: "は数字（0-9）を%{count}文字以上含むようにしてください。"
       password_short_symbol: "は記号を%{count}文字以上含むようにしてください。"
-      password_contains_prohibited_chars: "は使用禁止文字が含まれています。"
+      password_contains_prohibited_chars: "に使用禁止文字（%{prohibited_chars}）が含まれています。"
       password_min_change_chars: "は以前のものから%{count}文字以上違う文字を含むようにしてください。"
       password_alphabet_only: に英字のみの文字は使用できません。
       password_numeric_only: に数字のみの文字は使用できません。
@@ -530,12 +534,39 @@ ja:
       caption:
         - 画像のキャプションを設定します。
       photo_categories:
-        - 画像のカテゴリを設定します。
+        - 画像のカテゴリーを設定します。
       photo_locations:
         - 画像の地域を設定します。
       license_name:
         - ライセンスを設定します。
-        - フォルダーに設定したテキストが表示されます。
+      center_setting:
+        - 地図の中心位置を設定できます。
+        - 「自動」の場合
+        - マーカーを設置していない場合、デフォルトの中心座標が地図の中央に設定されます。
+        - マーカーが1個の場合は、マーカーの座標が地図の中央に設定されます。
+        - マーカーが2個以上の場合は、全てのマーカーの中心が地図の中央に設定されます。
+        -
+        - 「指定位置」の場合
+        - 「現在の中心に位置をコピー」を選択することで現在表示されている地図の中心座標を取得できます。
+        - 座標を直接入力し中心位置を設定する場合は、入力欄にカンマ(,)区切りで緯度経度を入力します。
+        - 例:33.8957612,133.6806607
+      zoom_setting:
+        - ズームレベルを設定できます。
+        - 「自動」の場合
+        - マーカーが0～1個の場合、デフォルトのズームレベルが設定されます。
+        - マーカーが2個以上の場合、全てのマーカーが地図上に表示されるように調節されます。
+        -
+        - 「指定レベル」の場合
+        - ズームレベルは入力した数値に設定されます。
+        - 「現在のズームレベルをコピー」を選択することで現在表示されている地図のズームレベルを取得できます。
+        - GoogleMapでは1から21の範囲で設定してください。
+        - OpenLayersでは1から18の範囲で設定してください。
+        - OpenStreetMapでは1から18の範囲で設定してください。
+    member/addon/photo/license_setting:
+      license_free:
+        - フォトページを「誰でも利用可」にて公開した際に表示するHTMLを入力します。
+      license_not_free:
+        - フォトページを「許可が必要」にて公開した際に表示するHTMLを入力します。
     member/addon/photo/slide:
       node_url:
         - フォトフォルダーのURLを設定します。

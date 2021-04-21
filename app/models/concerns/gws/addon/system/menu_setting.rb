@@ -6,7 +6,7 @@ module Gws::Addon::System::MenuSetting
 
   included do
     %w(portal notice reminder presence schedule todo attendance bookmark memo board faq qna report workflow circular monitor
-       survey share shared_address personal_address staff_record links discussion contrast).each do |name|
+       survey share shared_address personal_address staff_record links discussion).each do |name|
       define_menu_setting(name)
     end
     define_menu_setting('contrast', default_state: 'hide')

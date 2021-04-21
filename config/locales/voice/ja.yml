@@ -4,14 +4,12 @@ ja:
     error_file: エラー一覧
     synthesis_fail:
       empty_source: 読み上げる文字列がありません。
-      no_open_jtalk: Open JTalk がインストールされていません。
+      no_open_jtalk: "%{path}: Open JTalk がインストールされていません。"
       open_jtalk: Open JTalk エラーが発生しました。
-      no_sox: Sox がインストールされていません。
+      no_sox: "#{path}: Sox がインストールされていません。"
       sox: Sox エラーが発生しました。
       no_lame: Lame がインストールされていません。
       lame: Lame エラーが発生しました。
-    messages:
-      no_audio_solution: '<span>更新してください</span>再生するにはブラウザを更新するか、<a href="http://get.adobe.com/flashplayer/" target="_blank">Flash Player</a>を更新してください。'
 
   modules:
     voice: 読み上げ
@@ -26,8 +24,6 @@ ja:
         error: エラー
         updated: 作成日時
         play: 再生
-      voice/lockable:
-        lock_until: ロック期限日時
 
   tooltip:
     voice/file:

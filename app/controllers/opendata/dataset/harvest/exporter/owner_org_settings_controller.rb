@@ -2,8 +2,6 @@ class Opendata::Dataset::Harvest::Exporter::OwnerOrgSettingsController < Applica
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  helper Opendata::FormHelper
-
   model Opendata::Harvest::Exporter::OwnerOrgSetting
 
   before_action :set_exporter

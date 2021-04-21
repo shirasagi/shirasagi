@@ -57,4 +57,28 @@ module Cms::NodeHelper
       %(<span class="state state-closed">#{t("ss.state.closed")}</span>)
     end.html_safe
   end
+
+  def cms_syntax_check_enabled?(options = nil)
+    if options && options.fetch(:column, false) && @cur_column
+      check = @cur_column.syntax_check_enabled?
+      return check unless check
+    end
+
+    if @cur_node && @cur_node.respond_to?(:syntax_check_enabled?)
+      check = @cur_node.syntax_check_enabled?
+      return check unless check
+    end
+
+    if @cur_site
+      check = @cur_site.syntax_check_enabled?
+      return check unless check
+    end
+
+    if options && options.fetch(:parent, false) && @item && @item.parent && @item.parent.respond_to?(:syntax_check_enabled?)
+      check = @item.parent.syntax_check_enabled?
+      return check unless check
+    end
+
+    check
+  end
 end

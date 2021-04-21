@@ -181,6 +181,14 @@ SS_Preview = (function () {
     SS_Preview.instance.bindToWorkflowCommentForm(updateType);
   };
 
+  SS_Preview.openNewWindow = function (path) {
+    var a = document.createElement("a");
+    a.href = path;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.click();
+  };
+
   SS_Preview.prototype.initialize = function(opts) {
     this.$el = $(this.el);
     this.$datePicker = this.$el.find(".ss-preview-date");
@@ -264,10 +272,26 @@ SS_Preview = (function () {
       });
     });
 
+    this.$el.on("click", "#ss-preview-btn-workflow-start", function () {
+      var before = self.inplaceMode;
+      if (self.inplaceMode) {
+        self.toggleInplaceMode().always(function () {
+          if (before === self.inplaceMode) {
+            return;
+          }
+          if (!window.history.pushState) {
+            return;
+          }
+          window.history.pushState(null, null, window.location.pathname);
+        });
+      }
+    });
+
     $(document).on("click", ".ss-preview-btn-open-path", function () {
       var path = $(this).data("path");
       if (path) {
-        window.open(path, "_blank")
+        // window.open(path, "_blank")
+        SS_Preview.openNewWindow(path);
       }
     });
 
@@ -356,7 +380,8 @@ SS_Preview = (function () {
 
     var path = this.layouts[0].path;
     button.on('click', function() {
-      window.open(path, '_blank');
+      // window.open(path, '_blank');
+      SS_Preview.openNewWindow(path);
     });
   };
 
@@ -978,7 +1003,8 @@ SS_Preview = (function () {
       return;
     }
 
-    window.open(part.path, "_blank");
+    // window.open(part.path, "_blank");
+    SS_Preview.openNewWindow(part.path);
   };
 
   //
@@ -1003,13 +1029,14 @@ SS_Preview = (function () {
       var action = updateType + "_update";
       var url = SS_Preview.workflowPath.pages.replace(":id", SS_Preview.item.pageId);
       url += "/" + action;
+      var path = SS_Preview.request_path || location.pathname;
 
       $.ajax({
         type: "POST",
         url: url,
         data: {
           remand_comment: remandComment,
-          url: SS_Preview.request_path,
+          url: path,
           forced_update_option: true
         },
         success: function (data) {

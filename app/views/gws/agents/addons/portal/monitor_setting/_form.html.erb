@@ -1,0 +1,6 @@
+<% return unless Gws.module_usable?(:monitor, @cur_site, @cur_user) %>
+
+<dl class="see">
+  <dt><%= @model.t :portal_monitor_state %><%= @model.tt :portal_monitor_state %></dt>
+  <dd><%= f.select :portal_monitor_state, @item.portal_monitor_state_options %></dd>
+</dl>

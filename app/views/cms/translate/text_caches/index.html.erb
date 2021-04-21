@@ -1,0 +1,40 @@
+<section class="main-box">
+  <div class="list-head">
+    <%= render file: "_search" %>
+  </div>
+
+  <div class="translate-text-chaches">
+    <% if @cur_site.translate_api.present? %>
+      <div class="api">
+        <%= "#{@cur_site.label(:translate_api)} - #{@items.size}#{I18n.t("ss.units.count")}" %>
+      </div>
+
+      <table class="index text-chaches">
+        <thead>
+          <tr>
+            <th><%= @model.t :original_text %></th>
+            <th><%= @model.t :text %></th>
+            <th style="width: 80px;"><%= t("translate.lang") %></th>
+            <th style="width: 102px;"><%= @model.t :update_state %></th>
+            <th style="width: 144px;"><%= @model.t :updated %></th>
+          </tr>
+        </thead>
+        <tbody>
+        <% @items.each do |item| %>
+          <tr>
+            <td><%= link_to item.original_text, cms_translate_text_cach_path(id: item.id) %></td>
+            <td><%= item.text %></td>
+            <td><%= item.target %></td>
+            <td><%= item.label :update_state %></td>
+            <td><%= item.updated.strftime('%Y/%m/%d %H:%M') %></td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <div class="api"><%= t("translate.notice.not_set_api") %></div>
+    <% end %>
+  </div>
+</section>
+
+<%= paginate @items if @items.try(:current_page) %>

@@ -30,7 +30,7 @@ this.SS_Addon_Markdown = (function () {
     $("." + this.toolbar).append("<span class='" + this.options + "'></span>");
     $("." + this.container).append("<div class='" + this.preview + " markdown-body'>preview</div>");
     this.renderForm($("." + this.type).val());
-    return $("." + this.type).change(function () {
+    return $("." + this.type).on("change", function () {
       return SS_Addon_Markdown.renderForm($(this).val());
     });
   };
@@ -50,7 +50,7 @@ this.SS_Addon_Markdown = (function () {
 
   SS_Addon_Markdown.renderFormMarkdown = function () {
     $("." + this.options).append("<input type='button' class='btn " + this.previewButton + "' value='" + this.previewLabel + "' />");
-    $("." + this.options).append("<a href='" + this.helpUrl + "' class='" + this.helpButton + "' target='_blank'>" + this.helpLabel + "</a>");
+    $("." + this.options).append("<a href='" + this.helpUrl + "' class='" + this.helpButton + "' target='_blank' rel='noopener'>" + this.helpLabel + "</a>");
     return $("." + this.previewButton).on('click', function () {
       var text;
       $(this).toggleClass('active');

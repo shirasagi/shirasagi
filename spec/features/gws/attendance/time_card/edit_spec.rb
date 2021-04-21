@@ -146,6 +146,29 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
   context 'edit enter' do
     let(:cell_type) { "enter" }
     include_context "edit time cell"
+
+    context "when reason remains blank" do
+      it do
+        within "table.time-card" do
+          within "tr.current" do
+            first("td.#{cell_type}").click
+          end
+        end
+        within '.cell-toolbar' do
+          click_on I18n.t('ss.buttons.edit')
+        end
+        wait_for_cbox do
+          select '8時', from: 'cell[in_hour]'
+          select '32分', from: 'cell[in_minute]'
+          click_on I18n.t('ss.buttons.save')
+        end
+
+        within "#cboxLoadedContent form.cell-edit" do
+          error = "#{I18n.t("activemodel.attributes.gws/attendance/time_edit.in_reason")}#{I18n.t("errors.messages.blank")}"
+          expect(page).to have_css("#errorExplanation", text: error)
+        end
+      end
+    end
   end
 
   context 'edit leave' do

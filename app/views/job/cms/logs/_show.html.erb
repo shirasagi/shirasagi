@@ -1,4 +1,6 @@
 <%
+  limit = SS.config.job.head_logs || 1_000
+
   def head_file(path, n)
     open(path) do |f|
       text = ''
@@ -17,11 +19,29 @@
   <dt><%= @model.t :class_name %></dt>
   <dd><%= t(@item.class_name.underscore, scope: "job.models") %></dd>
 
+  <% if @ss_mode.nil? %>
+    <dt><%= @model.t :site_id %></dt>
+    <dd><%= @item.site.try { |site| site.name } %></dd>
+  <% end %>
+
+  <dt><%= @model.t :hostname %></dt>
+  <dd><%= @item.process_id %> @ <%= @item.hostname %>(<%= @item.ip_address %>)</dd>
+
   <dt><%= @model.t :started %></dt>
-  <dd class="datetime"><%= @item.started ? @item.started.strftime("%Y/%m/%d %H:%M") : @item.started %></dd>
+  <dd class="datetime">
+    <%= @item.started.try do |time| %>
+      <%= content_tag("time", I18n.l(time, format: :picker), datetime: time.iso8601, title: time.iso8601) %>
+      <%= link_to(t("ss.buttons.copy"), "#", class: "clipboard-copy-button", data: { text: time.iso8601 }) %>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :closed %></dt>
-  <dd class="datetime"><%= @item.closed ? @item.closed.strftime("%Y/%m/%d %H:%M") : @item.closed %></dd>
+  <dd class="datetime">
+    <%= @item.closed.try do |time| %>
+      <%= content_tag("time", I18n.l(time, format: :picker), datetime: time.iso8601, title: time.iso8601) %>
+      <%= link_to(t("ss.buttons.copy"), "#", class: "clipboard-copy-button", data: { text: time.iso8601 }) %>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :state %></dt>
   <dd><%= t(@item.state, scope: "job.state") %></dd>
@@ -32,7 +52,6 @@
   <dt><%= @model.t :logs %></dt>
   <% if ::File.exists?(@item.file_path) %>
   <dd>
-    <% limit = 1000 %>
     <%= t('job.log_notice', count: limit) %>
     <%= text_area_tag :logs, head_file(@item.file_path, limit), readonly: true, style: "height: 400px" %>
     <%= link_to(t('job.download_log'), { action: :download }, { class: :btn }) %>
@@ -42,3 +61,7 @@
   <% end %>
   </dd>
 </dl>
+
+<%= jquery do %>
+  SS_Clipboard.renderCopy();
+<% end %>

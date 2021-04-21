@@ -5,12 +5,14 @@ class Opendata::Resource
   include Opendata::Addon::RdfStore
   include Opendata::Addon::CmsRef::AttachmentFile
   include Opendata::Addon::Harvest::Resource
-  include Opendata::Addon::ZipDataset
+
+  DOWNLOAD_CACHE_LIFETIME = 10.minutes
 
   attr_accessor :workflow, :status
 
   embedded_in :dataset, class_name: "Opendata::Dataset", inverse_of: :resource
   field :order, type: Integer, default: 0
+  field :downloaded_count_cache, type: Hash
 
   permit_params :name, :text, :format, :license_id, :source_url, :order
 
@@ -26,47 +28,59 @@ class Opendata::Resource
   before_validation :set_format
 
   after_save :save_dataset
+  after_destroy :compression_dataset
 
-  def context_path
-    "/resource"
+  class << self
+    def context_path
+      "/resource"
+    end
   end
 
-  def create_download_history(request, downloaded)
+  delegate :context_path, to: :class
+
+  def create_download_history(remote_addr, user_agent, downloaded)
     Opendata::ResourceDownloadHistory.create_history(
       site: dataset.site,
       dataset: dataset,
       resource: self,
-      request: request,
-      downloaded: downloaded
+      remote_addr: remote_addr,
+      user_agent: user_agent,
+      downloaded: downloaded,
+      downloaded_by: "single"
     )
   end
 
-  def create_bulk_download_history(request, downloaded)
-    Opendata::ResourceBulkDownloadHistory.create_history(
+  def create_bulk_download_history(remote_addr, user_agent, downloaded)
+    Opendata::ResourceDownloadHistory.create_history(
       site: dataset.site,
       dataset: dataset,
       resource: self,
-      request: request,
-      downloaded: downloaded
+      remote_addr: remote_addr,
+      user_agent: user_agent,
+      downloaded: downloaded,
+      downloaded_by: "bulk"
     )
   end
 
-  def create_dataset_download_history(request, downloaded)
-    Opendata::ResourceDatasetDownloadHistory.create_history(
+  def create_dataset_download_history(remote_addr, user_agent, downloaded)
+    Opendata::ResourceDownloadHistory.create_history(
       site: dataset.site,
       dataset: dataset,
       resource: self,
-      request: request,
-      downloaded: downloaded
+      remote_addr: remote_addr,
+      user_agent: user_agent,
+      downloaded: downloaded,
+      downloaded_by: "dataset"
     )
   end
 
-  def create_preview_history(request, previewed)
+  def create_preview_history(remote_addr, user_agent, previewed)
     Opendata::ResourcePreviewHistory.create_history(
       site: dataset.site,
       dataset: dataset,
       resource: self,
-      request: request,
+      remote_addr: remote_addr,
+      user_agent: user_agent,
       previewed: previewed
     )
   end
@@ -74,6 +88,36 @@ class Opendata::Resource
   def order
     value = self[:order].to_i
     value < 0 ? 0 : value
+  end
+
+  def downloaded_count
+    # 日付が変わってすぐに履歴がレポート化されるわけではない。
+    # このようなことから、日付が変わってすぐにページが書き出されると、ダウンロード数が減ってしまう可能性がある。
+    # これを防止するために、苦肉の策ではあるが、直前のダウンロード数をデータベースに保存しておいてい、
+    # ダウンロード数が増加した場合にのみ、ダウンロード数を更新するようにする。
+    # 追加で、ダウンロード数をデータベースへ保存するに際して、ついでにキャッシュ化し、負荷の低減を図るものとする。
+    now = Time.zone.at(Time.zone.now.to_i) # beginning_of_second
+
+    if downloaded_count_cache.present?
+      lifetime = downloaded_count_cache["created"].in_time_zone + DOWNLOAD_CACHE_LIFETIME
+      return downloaded_count_cache["value"] if lifetime >= now
+    end
+
+    report_criteria = Opendata::ResourceDownloadReport.site(dataset.site)
+    report_criteria = report_criteria.where(dataset_id: dataset.id, resource_filename: filename)
+    counts = report_criteria.pluck(*Opendata::Resource::ReportModel::DAY_COUNT_FIELDS).flatten.compact
+    count = counts.sum
+
+    history_criteria = Opendata::ResourceDownloadHistory.site(dataset.site)
+    history_criteria = history_criteria.gte(downloaded: now.beginning_of_day)
+    history_criteria = history_criteria.where(resource_id: id)
+    count += history_criteria.count
+
+    # downloaded count never decreases previous count
+    return downloaded_count_cache["value"] if downloaded_count_cache.present? && count < downloaded_count_cache["value"]
+
+    self.set(downloaded_count_cache: { "value" => count, "created" => now }) if persisted?
+    count
   end
 
   private
@@ -120,5 +164,9 @@ class Opendata::Resource
       self.filename = nil
       self.file.destroy if file
     end
+  end
+
+  def compression_dataset
+    dataset.compression_dataset
   end
 end

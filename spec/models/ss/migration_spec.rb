@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'fileutils'
 require "ss/migration/base"
 
-RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
+RSpec.describe SS::Migration, type: :model, dbscope: :example do
   def migration_file(filepath, depend_on: nil)
     dirpath = ::File.dirname(filepath)
     ::FileUtils.mkdir_p(dirpath) if !Dir.exists?(dirpath)
@@ -22,6 +22,16 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
 
   describe 'DIR constant' do
     it { expect(described_class::DIR.to_s).to match(/.*\/lib\/migrations$/) }
+  end
+
+  context 'unique timestamp' do
+    let(:latest_version) { described_class.latest_version }
+    let(:timestamps) { described_class.filepaths_to_apply.map { |path| described_class.take_timestamp(path) } }
+
+    it do
+      expect(latest_version).to eq "00000000000000"
+      expect(timestamps).to match_array timestamps.uniq
+    end
   end
 
   context 'with migrations' do

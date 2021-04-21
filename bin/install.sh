@@ -46,7 +46,7 @@ else
 fi
 export PATH="$PATH:$RVM_HOME/bin"
 source $RVM_HOME/scripts/rvm
-rvm install 2.6.3
+rvm install 2.6.3 --disable-binary
 rvm use 2.6.3 --default
 gem install bundler
 
@@ -229,10 +229,14 @@ proxy_cache_lock_timeout 5s;
 EOF
 
 cat <<EOF | sudo tee /etc/nginx/conf.d/header.conf
+map \$http_x_forwarded_proto \$thescheme {
+    default \$scheme;
+    https https;
+}
 proxy_set_header Host \$host;
 proxy_set_header X-Real-IP \$remote_addr;
 proxy_set_header Remote-Addr \$remote_addr;
-proxy_set_header X-Forwarded-Proto \$scheme;
+proxy_set_header X-Forwarded-Proto \$thescheme;
 proxy_set_header X-Forwarded-Host \$http_host;
 proxy_set_header X-Forwarded-Server \$host;
 proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;

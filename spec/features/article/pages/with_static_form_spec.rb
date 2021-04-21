@@ -26,7 +26,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
     create(:cms_column_check_box, cur_site: site, cur_form: form, order: 7)
   end
   let!(:column8) do
-    create(:cms_column_file_upload, cur_site: site, cur_form: form, order: 8, file_type: "image")
+    create(:cms_column_file_upload, cur_site: site, cur_form: form, required: "required", order: 8, file_type: "image")
   end
   let(:name) { unique_id }
   let(:column1_value) { unique_id }
@@ -45,8 +45,10 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
   let(:column6_value2) { column6.select_options.sample }
   let(:column7_value2) { column7.select_options.sample }
   let(:column8_image_text2) { unique_id }
+  let!(:body_layout) { create(:cms_body_layout) }
 
   before do
+    cms_role.add_to_set(permissions: %w(read_cms_body_layouts))
     node.st_form_ids = [ form.id ]
     node.save!
   end
@@ -59,6 +61,9 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       # Create
       #
       visit new_article_page_path(site: site, cid: node)
+      expect(page).to have_selector('#item_body_layout_id')
+      expect(page).to have_no_selector('div.required')
+      expect(page).to have_no_selector('div.column-with-errors')
 
       within 'form#item-form' do
         fill_in 'item[name]', with: name
@@ -66,6 +71,9 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         find('.btn-form-change').click
 
         expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
+        expect(page).to have_no_selector('#item_body_layout_id', visible: true)
+        expect(page).to have_selector('div.required')
+        expect(page).to have_no_selector('div.column-with-errors')
 
         within ".column-value-cms-column-textfield" do
           fill_in "item[column_values][][in_wrap][value]", with: column1_value
@@ -88,6 +96,24 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         within ".column-value-cms-column-checkbox" do
           first(:field, name: "item[column_values][][in_wrap][values][]", with: column7_value).click
         end
+        click_on I18n.t('ss.buttons.draft_save')
+      end
+      click_on I18n.t('ss.buttons.ignore_alert')
+      expect(page).to have_no_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_selector('#errorExplanation ul li', count: 1)
+      msg = I18n.t("mongoid.attributes.cms/column/value/file_upload.file_id") + I18n.t("errors.messages.blank")
+      msg = I18n.t("cms.column_value_error_template", name: column8.name, error: msg)
+      expect(page).to have_selector('#errorExplanation', text: msg)
+      expect(page).to have_selector('div.column-with-errors')
+
+      within 'form#item-form' do
+        expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
+        expect(page).to have_no_selector('#item_body_layout_id', visible: true)
+        expect(page).to have_selector('div.required')
+
+        within ".column-value-cms-column-textfield" do
+          fill_in "item[column_values][][in_wrap][value]", with: column1_value
+        end
         within ".column-value-cms-column-fileupload" do
           fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text
           click_on I18n.t("ss.links.upload")
@@ -103,8 +129,10 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t('ss.buttons.draft_save')
       end
-      click_on I18n.t('ss.buttons.ignore_alert')
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+      expect(page).to have_no_selector('div.column-with-errors')
+
       expect(Article::Page.all.count).to eq 1
       Article::Page.all.first.tap do |item|
         expect(item.name).to eq name
@@ -125,6 +153,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       # Update
       #
       visit article_pages_path(site: site, cid: node)
+      expect(page).to have_no_selector('#item_body_layout_id', visible: true)
+
       click_on name
       click_on I18n.t('ss.links.edit')
       within 'form#item-form' do
@@ -166,6 +196,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t('ss.buttons.draft_save')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
       expect(Article::Page.all.count).to eq 1
       Article::Page.all.first.tap do |item|
         expect(item.name).to eq name

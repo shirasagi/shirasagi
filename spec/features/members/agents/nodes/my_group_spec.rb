@@ -152,7 +152,7 @@ describe 'members/agents/nodes/my_group', type: :feature, dbscope: :example, js:
           expect(page.find("input[name='group']", visible: false).value).not_to be_nil
 
           fill_in "item[name]", with: invitee_name
-          expect(page).to have_css(".colum dd", text: invitee_email)
+          expect(page).to have_css(".column dd", text: invitee_email)
 
           fill_in "item[kana]", with: invitee_kana
           fill_in "item[tel]", with: invitee_tel

@@ -1,3 +1,5 @@
+<% limit = SS.config.job.head_logs || 1_000 %>
+
 <%= jquery do %>
   if ($(".state").html().match(/(ready|running)/)) {
     $(".reset-state").show();
@@ -38,10 +40,20 @@
   <dd><%= @item.interrupt %></dd>
 
   <dt><%= @model.t :started %></dt>
-  <dd><%= tryb { @item.started.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <dd>
+    <%= @item.started.try do |time| %>
+      <%= content_tag("time", I18n.l(time, format: :picker), datetime: time.iso8601, title: time.iso8601) %>
+      <%= link_to(t("ss.buttons.copy"), "#", class: "clipboard-copy-button", data: { text: time.iso8601 }) %>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :closed %></dt>
-  <dd><%= tryb { @item.closed.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <dd>
+    <%= @item.closed.try do |time| %>
+      <%= content_tag("time", I18n.l(time, format: :picker), datetime: time.iso8601, title: time.iso8601) %>
+      <%= link_to(t("ss.buttons.copy"), "#", class: "clipboard-copy-button", data: { text: time.iso8601 }) %>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :total_count %></dt>
   <dd><%= @item.total_count %></dd>
@@ -51,7 +63,6 @@
 
   <dt><%= @model.t :logs %></dt>
   <dd>
-    <% limit = 1000 %>
     <%= t('job.log_notice', count: limit) %>
     <%= text_area_tag :logs, safe_join(@item.head_logs(limit), "\n"), readonly: true, style: "height: 400px" %>
     <% if ::File.exists?(@item.log_file_path) %>
@@ -59,3 +70,7 @@
     <% end %>
   </dd>
 </dl>
+
+<%= jquery do %>
+  SS_Clipboard.renderCopy();
+<% end %>

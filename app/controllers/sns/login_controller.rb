@@ -2,7 +2,7 @@ class Sns::LoginController < ApplicationController
   include Sns::BaseFilter
   include Sns::LoginFilter
 
-  skip_before_action :logged_in?, only: [:login, :remote_login, :status]
+  skip_before_action :logged_in?, only: [:login, :remote_login, :status, :redirect]
 
   layout "ss/login"
   navi_view nil
@@ -33,7 +33,13 @@ class Sns::LoginController < ApplicationController
       password = SS::Crypt.decrypt(password, type: encryption_type) rescue nil
     end
 
-    @item = SS::User.authenticate(email_or_uid, password) rescue false
+    @item = begin
+      if @cur_organization
+        SS::User.organization_authenticate(@cur_organization, email_or_uid, password) rescue nil
+      else
+        SS::User.authenticate(email_or_uid, password) rescue nil
+      end
+    end
     @item = nil if @item && (@item.disabled? || @item.locked?)
     @item = @item.try_switch_user || @item if @item
 

@@ -2,7 +2,7 @@
     Gws_Schedule_Plan.renderForm({ maxDate: "<%= @cur_site.schedule_max_at.strftime('%Y/%m/%d') %>" });
     Gws_Schedule_Plan.renderAlldayForm();
 
-    $("#item_end_at, #item_end_on").change(function(){
+    $("#item_end_at, #item_end_on").on("change", function(){
       Gws_Schedule_Plan.transferEnd2Start();
     });
 <% end %>

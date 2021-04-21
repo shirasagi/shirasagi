@@ -22,13 +22,13 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
     it "#count" do
       visit node_cms.full_url
       expect(page).to have_css(".ads-banners")
-      expect(page).to have_selector(".banners span a", text: item1.name)
+      expect(page).to have_selector(".banners span a img[alt='#{item1.name}']")
 
       expect(page).to have_css(".ads-banners")
-      expect(page).to have_selector('.banners span a[rel="nofollow"]', text: item2.name)
+      expect(page).to have_selector(".banners span a[rel='nofollow'] img[alt='#{item2.name}']")
 
-      click_on item1.name
-      expect(page).to have_selector(".banners span a", text: item1.name)
+      first(".banners span a img[alt='#{item1.name}']").click
+      expect(page).to have_selector(".banners span a img[alt='#{item1.name}']")
 
       # wait for counting accesses by using img tag which is processed asynchronously.
       sleep 1
@@ -45,13 +45,13 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
     it "#count" do
       visit cms_preview_path(site: site, path: "#{node_cms.filename}/")
       expect(page).to have_css(".ads-banners")
-      expect(page).to have_selector(".banners span a", text: item1.name)
+      expect(page).to have_selector(".banners span a img[alt='#{item1.name}']")
 
       expect(page).to have_css(".ads-banners")
-      expect(page).to have_selector('.banners span a[rel="nofollow"]', text: item2.name)
+      expect(page).to have_selector(".banners span a[rel='nofollow'] img[alt='#{item2.name}']")
 
-      click_on item1.name
-      expect(page).to have_selector(".banners span a", text: item1.name)
+      first(".banners span a img[alt='#{item1.name}']").click
+      expect(page).to have_selector(".banners span a img[alt='#{item1.name}']")
 
       # wait for counting accesses by using img tag which is processed asynchronously.
       sleep 1

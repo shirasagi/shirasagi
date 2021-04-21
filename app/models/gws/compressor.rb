@@ -45,8 +45,16 @@ class Gws::Compressor
 
     Zip::File.open(path, Zip::File::CREATE) do |zip|
       items.each do |item|
-        filename = item.download_filename
-        filename = filename.sub(/(\.[^.]+)$/, ".#{item.id}" + '\\1') if filenames.include?(filename)
+        filename = ::File.basename(item.download_filename)
+        if filenames.include?(filename)
+          filename_without_ext = ::File.basename(filename, ".*")
+          extname = ::File.extname(filename)
+
+          filename = "#{filename_without_ext}_#{item.id}"
+          if extname.present?
+            filename += extname
+          end
+        end
         filenames << filename
         zip.add(NKF::nkf('-sx --cp932', filename), item.path) if ::File.exist?(item.path)
       end

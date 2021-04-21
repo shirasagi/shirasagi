@@ -12,10 +12,6 @@ module Member::LoginFilter
 
   private
 
-  def remote_addr
-    request.env["HTTP_X_REAL_IP"] || request.remote_addr
-  end
-
   def logged_in?(opts = {})
     if @cur_member
       set_last_logged_in
@@ -39,6 +35,8 @@ module Member::LoginFilter
 
   def set_member(member, timestamp = Time.zone.now.to_i)
     if @cur_site
+      reset_session
+      form_authenticity_token
       session[session_member_key] = {
         "member_id" => member.id,
         "remote_addr" => remote_addr,
@@ -69,11 +67,6 @@ module Member::LoginFilter
   def member_login_path
     return false unless member_login_node
     "#{member_login_node.url}login.html"
-  end
-
-  def redirect_url
-    return "/" unless member_login_node
-    member_login_node.redirect_url || "/"
   end
 
   def translate_redirect_option(opts)

@@ -1,7 +1,6 @@
 class Opendata::Dataset::ResourcesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
-  helper Opendata::FormHelper
 
   model Opendata::Resource
 

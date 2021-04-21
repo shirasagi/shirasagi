@@ -9,6 +9,7 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
   let(:page_html) do
     html = []
     html << '<div id="content">'
+    html << '<span class="percent-escaped-url">http%3A%2F%2F127.0.0.1%3A3000</span>'
     html << '<nav class="ss-adobe-reader">'
     html << '  <div>PDFファイルをご覧いただくためには、Adobe Readerのプラグイン（無償）が必要となります。'
     html << '  お持ちでない場合は、お使いの機種とスペックに合わせたプラグインをインストールしてください。</div>'
@@ -21,7 +22,7 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
     html << '</footer>'
     html.join("\n")
   end
-  let(:item) { create :article_page, cur_site: site, cur_node: node, layout_id: layout.id, html: page_html }
+  let(:item) { create :article_page, cur_site: site, cur_node: node, layout_id: layout.id, name: '&times;×', html: page_html }
 
   describe "kana public filter" do
     it do
@@ -44,6 +45,8 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
         expect(page).to have_css('ruby', text: '無償(むしょう)')
         expect(page).to have_css('ruby', text: '必要(ひつよう)')
         expect(page).to have_css('ruby', text: '場合(ばあい)')
+        expect(page).to have_css('.percent-escaped-url', text: 'http%3A%2F%2F127.0.0.1%3A3000')
+        expect(page).to have_content('PDFファイルをご覧(ごらん)いただくためには、')
       end
     end
 
@@ -153,6 +156,92 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
     it do
       visit kana_url
       expect(page).to have_css('ruby', text: '大鷺県(だいさぎけん)')
+    end
+  end
+
+  context "with kana-marks" do
+    let(:kana_url) { item.full_url.sub(node.url, SS.config.kana.location + node.url) }
+
+    before do
+      site.auto_description = 'enabled'
+      site.auto_keywords = 'enabled'
+      site.save!
+
+      item.html = [
+        "<!-- write-kana --><div>上部</div><!-- end-write-kana -->",
+        item.html,
+        "<div>下部</div>"
+      ].join
+      item.save!
+
+      FileUtils.rm_rf(item.path)
+    end
+
+    it do
+      visit kana_url
+      expect(page).to have_no_css('ruby', text: '無償(むしょう)')
+      expect(page).to have_no_css('ruby', text: '必要(ひつよう)')
+      expect(page).to have_no_css('ruby', text: '場合(ばあい)')
+      expect(page).to have_css('ruby', text: '上部(じょうぶ)')
+      expect(page).to have_no_css('ruby', text: '下部(かぶ)')
+    end
+  end
+
+  context "with skip-marks" do
+    let(:kana_url) { item.full_url.sub(node.url, SS.config.kana.location + node.url) }
+
+    before do
+      site.auto_description = 'enabled'
+      site.auto_keywords = 'enabled'
+      site.save!
+
+      item.html = [
+          "<!-- skip-kana --><div>上部</div><!-- end-skip-kana -->",
+          item.html,
+          "<div>下部</div>"
+      ].join
+      item.save!
+
+      FileUtils.rm_rf(item.path)
+    end
+
+    it do
+      visit kana_url
+      expect(page).to have_css('ruby', text: '無償(むしょう)')
+      expect(page).to have_css('ruby', text: '必要(ひつよう)')
+      expect(page).to have_css('ruby', text: '場合(ばあい)')
+      expect(page).to have_no_css('ruby', text: '上部(じょうぶ)')
+      expect(page).to have_css('ruby', text: '下部(かぶ)')
+    end
+  end
+
+  context "with write-marks and skip-marks" do
+    let(:kana_url) { item.full_url.sub(node.url, SS.config.kana.location + node.url) }
+
+    before do
+      site.auto_description = 'enabled'
+      site.auto_keywords = 'enabled'
+      site.save!
+
+      item.html = [
+          "<!-- write-kana -->",
+          "<!-- skip-kana --><div>上部</div><!-- end-skip-kana -->",
+          item.html,
+          "<!-- end-write-kana -->",
+          "<div>下部</div>"
+      ].join
+      item.save!
+
+      FileUtils.rm_rf(item.path)
+    end
+
+    it do
+      visit kana_url
+      expect(page).to have_css('ruby', text: '無償(むしょう)')
+      expect(page).to have_css('ruby', text: '必要(ひつよう)')
+      expect(page).to have_css('ruby', text: '場合(ばあい)')
+      expect(page).to have_no_css('ruby', text: '上部(じょうぶ)')
+      expect(page).to have_no_css('ruby', text: '下部(かぶ)')
     end
   end
 end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_workflow_files", type: :feature, dbscope: :example, tmpdir: true, js: true do
+describe "gws_workflow_files", type: :feature, dbscope: :example, js: true do
   context "crud along with approve path" do
     let(:site) { gws_site }
     let(:user) { gws_user }
@@ -24,18 +24,24 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, tmpdir: true, 
       within "form#item-form" do
         fill_in "item[name]", with: item_name
         fill_in "item[text]", with: item_text
-        click_on I18n.t("ss.buttons.upload")
+        wait_cbox_open do
+          click_on I18n.t("ss.buttons.upload")
+        end
       end
       wait_for_cbox do
         within "article.file-view" do
-          find("a.thumb").click
+          wait_cbox_close do
+            click_on file.name
+          end
         end
       end
       within "form#item-form" do
+        expect(page).to have_content(file.name)
         click_on I18n.t("ss.buttons.save")
       end
 
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(Gws::Workflow::File.site(site).count).to eq 1
       item = Gws::Workflow::File.site(site).first
       expect(item.name).to eq item_name
@@ -54,6 +60,7 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, tmpdir: true, 
       end
 
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(Gws::Workflow::File.site(site).count).to eq 1
       item = Gws::Workflow::File.site(site).first
       expect(item.name).to eq item_name2

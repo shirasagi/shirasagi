@@ -38,12 +38,14 @@ module Cms::Content
 
     validate :validate_name, if: ->{ name.present? }
 
+    after_destroy :remove_private_dir
+
     scope :filename, ->(name) { where filename: name.sub(/^\//, "") }
     scope :node, ->(node, target = nil) {
       if target == 'descendant'
-        node ? where(filename: /^#{node.filename}\//) : where({})
+        node ? where(filename: /^#{::Regexp.escape(node.filename)}\//) : where({})
       else #current
-        node ? where(filename: /^#{node.filename}\//, depth: node.depth + 1) : where(depth: 1)
+        node ? where(filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1) : where(depth: 1)
       end
     }
     scope :and_public, ->(date = nil) {
@@ -116,6 +118,42 @@ module Cms::Content
       end
       criteria
     end
+
+    def public_list(opts = {})
+      site = opts[:site]
+      parent_item = opts[:node] || opts[:part] || opts[:parent]
+      date = opts[:date]
+
+      # condition_hash
+      if parent_item && parent_item.respond_to?(:condition_hash)
+        # list addon included
+        condition_hash = parent_item.condition_hash(opts.slice(*Cms::Addon::List::Model::WELL_KONWN_CONDITION_HASH_OPTIONS))
+        ids = self.unscoped.where(condition_hash).distinct(:id)
+        return self.none if ids.blank?
+
+        criteria = all.in(id: ids)
+        criteria = criteria.hint({ _id: 1 })
+
+        # criteria.count does not use hint
+        def criteria.count(options = {}, &block)
+          options = options.symbolize_keys
+          options[:hint] = { _id: 1 }
+          super(options, &block)
+        end
+      end
+
+      # default criteria (no list addon included)
+      criteria = self.all.site(site) if criteria.blank?
+
+      # and_public
+      criteria = criteria.and_public(date)
+
+      criteria
+    end
+
+    def private_root
+      "#{SS::Application.private_root}/#{self.collection_name}"
+    end
   end
 
   def name_for_index
@@ -151,6 +189,16 @@ module Cms::Content
 
   def json_url
     site.url + filename.sub(/(\/|\.html)?$/, ".json")
+  end
+
+  def private_dir
+    return if new_record?
+    self.class.private_root + "/" + id.to_s.split(//).join("/") + "/_"
+  end
+
+  def private_file(basename)
+    return if new_record?
+    "#{private_dir}/#{basename}"
   end
 
   def date
@@ -253,11 +301,11 @@ module Cms::Content
   def validate_filename
     if @basename
       return errors.add :basename, :empty if @basename.blank?
-      errors.add :basename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+(#{fix_extname})?$/
-      errors.add :basename, :invalid if basename !~ /^[\w\-]+(#{fix_extname})?$/
+      errors.add :basename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+(#{::Regexp.escape(fix_extname || "")})?$/
+      errors.add :basename, :invalid if basename !~ /^[\w\-]+(#{::Regexp.escape(fix_extname || "")})?$/
     else
       return errors.add :filename, :empty if filename.blank?
-      errors.add :filename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+(#{fix_extname})?$/
+      errors.add :filename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+(#{::Regexp.escape(fix_extname || "")})?$/
     end
 
     self.filename = filename.sub(/\..*$/, "") + fix_extname if fix_extname && basename.present?
@@ -283,5 +331,9 @@ module Cms::Content
     if name.length > max_name_length
       errors.add :name, :too_long, { count: max_name_length }
     end
+  end
+
+  def remove_private_dir
+    ::FileUtils.rm_rf private_dir
   end
 end

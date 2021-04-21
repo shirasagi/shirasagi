@@ -3,7 +3,7 @@
 
 puts "Please input site_name: site=[site_host]" or exit if ENV['site'].blank?
 
-@site = SS::Site.where(host: ENV['site']).first
+@site = Cms::Site.where(host: ENV['site']).first
 puts "Site not found: #{ENV['site']}" or exit unless @site
 link_url = "http://#{@site.domains.first}"
 
@@ -27,9 +27,19 @@ def save_ss_files(path, data)
   file = Fs::UploadedFile.create_from_file(path)
   file.original_filename = data[:filename] if data[:filename].present?
 
-  item = SS::File.new(cond)
+  item = SS::File.find_or_initialize_by(cond)
+  return item if item.persisted?
+
   item.in_file = file
-  item.save!
+  if data[:name].present?
+    name = data[:name]
+    if !name.include?(".") && data[:filename].include?(".")
+      name = "#{name}#{::File.extname(data[:filename])}"
+    end
+    item.name = name
+  end
+  item.cur_user = @user
+  item.save
 
   item
 end
@@ -42,9 +52,10 @@ def save_layout(data)
   cond = { site_id: @site._id, filename: data[:filename] }
   html = File.read("layouts/" + data[:filename]) rescue nil
 
-  item = Cms::Layout.find_or_create_by(cond)
+  item = Cms::Layout.find_or_initialize_by(cond)
   item.attributes = data.merge html: html
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -172,14 +183,15 @@ def save_part(data)
   loop_html  = File.read("parts/" + data[:filename].sub(/\.html$/, ".loop_html")) rescue nil
   lower_html = File.read("parts/" + data[:filename].sub(/\.html$/, ".lower_html")) rescue nil
 
-  item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_create_by(cond)
+  item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_initialize_by(cond)
   item.html = html if html
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
 
   item.attributes = data
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -238,14 +250,15 @@ def save_node(data)
   lower_html = File.read("nodes/" + data[:filename] + ".lower_html") rescue nil
   summary_html = File.read("nodes/" + data[:filename] + ".summary_html") rescue nil
 
-  item = data[:route].sub("/", "/node/").camelize.constantize.unscoped.find_or_create_by(cond)
+  item = data[:route].sub("/", "/node/").camelize.constantize.unscoped.find_or_initialize_by(cond)
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
   item.summary_html = summary_html if summary_html
 
   item.attributes = data
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -295,9 +308,9 @@ save_node route: "category/page", name: "妊娠中", filename: "age/pregnancy",
   layout_id: layouts["folder"].id, sort: "order", limit: 50, order: 10
 save_node route: "category/page", name: "0歳児(赤ちゃん)", filename: "age/zero",
   layout_id: layouts["folder"].id, sort: "order", limit: 50, order: 20
-save_node route: "category/page", name: "1～2歳児", filename: "age/one",
+save_node route: "category/page", name: "1#{I18n.t("ss.wave_dash")}2歳児", filename: "age/one",
   layout_id: layouts["folder"].id, sort: "order", limit: 50, order: 30
-save_node route: "category/page", name: "3～5歳児", filename: "age/three",
+save_node route: "category/page", name: "3#{I18n.t("ss.wave_dash")}5歳児", filename: "age/three",
   layout_id: layouts["folder"].id, sort: "order", limit: 50, order: 40
 save_node route: "category/page", name: "小学生から", filename: "age/primary",
   layout_id: layouts["folder"].id, sort: "order", limit: 50, order: 50
@@ -332,11 +345,11 @@ categories = Hash[*array.flatten]
 
 ## article
 save_node route: "article/page", filename: "docs", name: "記事", shortcut: "show",
-  layout_id: layouts["folder"].id, sort: "order", limit: 50, order: 60
+  layout_id: layouts["folder"].id, page_layout_id: layouts["docs"].id, order: 60, sort: "order", limit: 50
 
 ## faq
-save_node route: "faq/page", filename: "faq/docs", name: "よくある質問記事", shortcut: "show",
-  st_category_ids: [categories["faq"].id], layout_id: layouts["folder"].id, limit: 50, order: 110
+save_node route: "faq/page", filename: "faq/docs", name: "よくある質問記事", order: 110, shortcut: "show",
+  st_category_ids: [categories["faq"].id], layout_id: layouts["folder"].id, limit: 50
 save_node route: "faq/search", filename: "faq/search", name: "よくある質問検索",
   st_category_ids: [categories["faq"].id], layout_id: layouts["folder"].id, limit: 100
 
@@ -517,12 +530,13 @@ def save_page(data)
   summary_html ||= File.read("pages/" + data[:filename].sub(/\.html$/, "") + ".summary_html") rescue nil
 
   route = data[:route].presence || 'cms/page'
-  item = route.camelize.constantize.unscoped.find_or_create_by(cond)
+  item = route.camelize.constantize.unscoped.find_or_initialize_by(cond)
   item.html = html if html
   item.summary_html = summary_html if summary_html
 
   item.attributes = data
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -544,7 +558,7 @@ article1 = save_page route: "article/page", filename: "docs/page1.html", name: "
 article2 = save_page route: "article/page", filename: "docs/page2.html", name: "お知らせ情報が入ります。お知らせ情報が入ります。",
   layout_id: layouts["docs"].id, category_ids: [categories["news"].id]
 
-file = save_ss_files "ss_files/article/dummy.jpg", filename: "dummy.jpg", model: "article/page"
+file = save_ss_files "ss_files/article/dummy.jpg", filename: "dummy1.jpg", model: "article/page"
 article3 = save_page route: "article/page", filename: "docs/page3.html", name: "お知らせ情報が入ります。",
   layout_id: layouts["docs"].id, category_ids: [categories["news"].id], file_ids: [file.id],
   map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ], related_page_ids: [article1.id, article2.id],
@@ -553,7 +567,7 @@ article3 = save_page route: "article/page", filename: "docs/page3.html", name: "
 article3.html = article3.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 article3.update
 
-file = save_ss_files "ss_files/article/dummy.jpg", filename: "dummy.jpg", model: "article/page"
+file = save_ss_files "ss_files/article/dummy.jpg", filename: "dummy2.jpg", model: "article/page"
 article4 = save_page route: "article/page", filename: "docs/page4.html", name: "子育てサークルにさんかしませんか？",
   layout_id: layouts["docs"].id, category_ids: [categories["topics"].id], file_ids: [file.id],
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
@@ -668,7 +682,7 @@ save_page route: "sitemap/page", filename: "sitemap/index.html", name: "サイ�
   sitemap_deny_urls: %w(ads css img js relation slide sub-menu)
 
 puts "# cms pages"
-file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy.jpg", model: "facility/image"
+file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy1.jpg", model: "facility/file"
 page1 = save_page route: "cms/page", filename: "know/pregnancy/procedure.html", name: "妊娠した時の手続き",
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
@@ -680,7 +694,7 @@ page1 = save_page route: "cms/page", filename: "know/pregnancy/procedure.html", 
 page1.html = page1.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page1.update
 
-file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy.jpg", model: "facility/image"
+file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy2.jpg", model: "facility/file"
 page2 = save_page route: "cms/page", filename: "know/pregnancy/exploration.html", name: "妊婦健康診査",
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
@@ -692,7 +706,7 @@ page2 = save_page route: "cms/page", filename: "know/pregnancy/exploration.html"
 page2.html = page2.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page2.update
 
-file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy.jpg", model: "facility/image"
+file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy3.jpg", model: "facility/file"
 page3 = save_page route: "cms/page", filename: "know/pregnancy/born.html", name: "赤ちゃんが生まれたら",
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
@@ -703,7 +717,7 @@ page3 = save_page route: "cms/page", filename: "know/pregnancy/born.html", name:
 page3.html = page3.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page3.update
 
-file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy.jpg", model: "facility/image"
+file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy4.jpg", model: "facility/file"
 page4 = save_page route: "cms/page", filename: "know/pregnancy/birth.html", name: "出生届",
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
@@ -715,7 +729,7 @@ page4 = save_page route: "cms/page", filename: "know/pregnancy/birth.html", name
 page4.html = page4.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page4.update
 
-file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy.jpg", model: "facility/image"
+file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy5.jpg", model: "facility/file"
 page5 = save_page route: "cms/page", filename: "know/pregnancy/lump-sum.html", name: "出産育児一時金",
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
@@ -787,3 +801,10 @@ if @site.subdir.present?
   ENV["site"]=@site.host
   Rake::Task['cms:set_subdir_url'].invoke
 end
+
+## -------------------------------------
+puts "# translate_lang"
+item = Translate::Lang.new
+item.cur_site = @site
+item.in_file = Fs::UploadedFile.create_from_file("#{Rails.root}/db/seeds/demo/translate/lang.csv")
+item.import_csv

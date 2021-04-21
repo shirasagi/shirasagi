@@ -8,6 +8,9 @@ class Gws::Board::TopicsController < ApplicationController
 
   navi_view "gws/board/main/navi"
 
+  self.destroy_notification_actions = [:soft_delete]
+  self.destroy_all_notification_actions = [:soft_delete_all]
+
   private
 
   def fix_params
@@ -21,12 +24,16 @@ class Gws::Board::TopicsController < ApplicationController
   end
 
   def items
+    base_criteria = @model.site(@cur_site).topic
     if @mode == 'editable'
-      @model.site(@cur_site).topic.allow(:read, @cur_user, site: @cur_site).without_deleted
+      base_criteria.allow(:read, @cur_user, site: @cur_site).without_deleted
     elsif @mode == 'trash'
-      @model.site(@cur_site).topic.allow(:trash, @cur_user, site: @cur_site).only_deleted
+      base_criteria.allow(:trash, @cur_user, site: @cur_site).only_deleted
     else
-      @model.site(@cur_site).topic.and_public.readable(@cur_user, site: @cur_site).without_deleted
+      conditions = @model.member_conditions(@cur_user)
+      conditions += @model.readable_conditions(@cur_user, site: @cur_site)
+      conditions << @model.allow_condition(:read, @cur_user, site: @cur_site)
+      base_criteria.and_public.without_deleted.where("$and" => [{ "$or" => conditions }])
     end
   end
 
@@ -36,7 +43,13 @@ class Gws::Board::TopicsController < ApplicationController
     elsif @mode == 'trash'
       @item.allowed?(:trash, @cur_user, site: @cur_site) && @item.deleted.present?
     else
-      (@item.allowed?(:read, @cur_user, site: @cur_site) || @item.readable?(@cur_user)) && @item.deleted.blank?
+      return false if @item.deleted.present?
+
+      return true if @item.allowed?(:read, @cur_user, site: @cur_site)
+      return true if @item.readable?(@cur_user, site: @cur_site)
+      return true if @item.member?(@cur_user)
+
+      false
     end
   end
 
@@ -60,6 +73,7 @@ class Gws::Board::TopicsController < ApplicationController
 
   def show
     raise '403' unless readable?
+
     render file: "show_#{@item.mode}"
   end
 
@@ -90,7 +104,22 @@ class Gws::Board::TopicsController < ApplicationController
   def print
     set_item
     raise '403' unless readable?
+
     render file: "print_#{@item.mode}", layout: 'ss/print'
+  end
+
+  def soft_delete
+    set_item unless @item
+    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+
+    if request.get?
+      render
+      return
+    end
+
+    @item.notification_noticed_at = nil
+    @item.deleted = Time.zone.now
+    render_destroy @item.save
   end
 
   def undo_delete
@@ -102,6 +131,7 @@ class Gws::Board::TopicsController < ApplicationController
       return
     end
 
+    @item.notification_noticed_at = nil
     @item.deleted = nil
 
     render_opts = {}

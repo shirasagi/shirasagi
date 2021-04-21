@@ -19,7 +19,8 @@ module SS::Model::Group
     field :activation_date, type: DateTime
     field :expiration_date, type: DateTime
     field :domains, type: SS::Extensions::Words
-    permit_params :name, :order, :activation_date, :expiration_date, :domains
+    field :gws_use, type: String
+    permit_params :name, :order, :activation_date, :expiration_date, :domains, :gws_use
 
     default_scope -> { order_by(order: 1, name: 1) }
 
@@ -28,6 +29,7 @@ module SS::Model::Group
     validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
     validates :activation_date, datetime: true
     validates :expiration_date, datetime: true
+    validates :gws_use, inclusion: { in: %w(enabled disabled), allow_blank: true }
     validate :validate_name
     validate :validate_domains, if: ->{ domains.present? }
 
@@ -36,6 +38,13 @@ module SS::Model::Group
     }
     scope :organizations, ->{
       where(:name.not => /\//)
+    }
+    scope :and_gws_use, ->{
+      conditions = [
+        { :gws_use.exists => false },
+        { :gws_use.ne => "disabled" },
+      ]
+      where("$and" => [{ "$or" => conditions }])
     }
   end
 
@@ -85,10 +94,12 @@ module SS::Model::Group
     end
     nil
   end
+  alias organization root
 
   def root?
     id == root.id
   end
+  alias organization? root?
 
   def descendants
     self.class.where(name: /^#{::Regexp.escape(name)}\//)
@@ -138,6 +149,14 @@ module SS::Model::Group
 
   def domain_editable?
     !new_record? && !name_was.to_s.include?('/')
+  end
+
+  def gws_use_options
+    %w(disabled enabled).map { |v| [ I18n.t("ss.options.gws_use.#{v}"), v ] }
+  end
+
+  def gws_use?
+    gws_use.blank? || gws_use != "disabled"
   end
 
   # Cast

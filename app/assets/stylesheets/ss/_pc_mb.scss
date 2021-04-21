@@ -348,16 +348,43 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   border-bottom: $border-gray4;
   background: $black2;
   font-size: 14px;
-  h1 {
+  .application-name {
     float: left;
+    color: $white;
+    font-size: $px21;
     a {
       display: block;
+      color: $white;
+    }
+    a:hover {
+      text-decoration: none;
     }
     .ss-logo-wrap {
+      position: relative;
       width: 210px;
-      padding: 8px 15px 5px;
+      height: 49px;
+    }
+    img {
+      max-width: 210px;
+      max-height: 49px;
+      display: block;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      position: absolute;
+      margin: auto;
     }
     .ss-logo-application-name {
+      display: block;
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      top: 50%;
+      -webkit-transform: translateY(-50%);
+      transform: translateY(-50%);
+    }
+    img + .ss-logo-application-name {
       display: none;
     }
   }
@@ -1725,7 +1752,6 @@ dl.mod-cms-parent_crumbs {
   dd { margin-bottom: 10px; }
 }
 .tooltip {
-  position: relative;
   display: inline-block;
   width: 16px;
   height: 16px;
@@ -1736,63 +1762,21 @@ dl.mod-cms-parent_crumbs {
   color: $white;
   text-align: center;
   cursor: pointer;
-  ul {
-    position: absolute;
+  .tooltip-content {
     display: none;
-    left: -220px;
-    width: 30em;
-    padding: 15px;
-    border: $border-gray4;
-    line-height: 1.6;
-    z-index: 100;
-    background: $white;
-    @include box-shadow(0 1px 6px $gray4);
-    color: $black;
+  }
+}
+.tippy-tooltip {
+  &.ss-tooltip-theme {
     font-size: 90%;
     font-weight: normal;
     text-align: left;
-    cursor: auto;
-    @include mb {
-      left: -70px;
-      width: 20em;
+    .tippy-content {
+      padding: 15px;
     }
-    &:before {
-      content: "";
-      position: absolute;
-      left: 215px;
-      bottom: -12px;
-      width: 0;
-      height: 0;
-      border-left: 12px solid transparent;
-      border-right: 12px solid transparent;
-      border-top: 12px solid $gray4;
-      @include mb {
-        left: 65px;
-      }
-    }
-    &:after {
-      content: "";
-      position: absolute;
-      left: 215px;
-      bottom: -19px;
-      width: 0;
-      height: 0;
-      border-left: 12px solid transparent;
-      border-right: 12px solid transparent;
-      border-top: 12px solid $white;
-      @include mb {
-        left: 65px;
-      }
-    }
-    &.tooltip-bottom:before {
-      top: -13px;
-      border-top: 0;
-      border-bottom: 12px solid $gray4;
-    }
-    &.tooltip-bottom:after {
-      top: -12px;
-      border-top: 0;
-      border-bottom: 12px solid $white;
+    ul {
+      margin: 0;
+      padding: 0;
     }
   }
 }
@@ -1821,6 +1805,13 @@ footer.send {
 }
 .field_with_errors {
   display: inline;
+}
+.column-with-errors {
+  border: 1px solid #e00;
+}
+.required {
+  color: #e00;
+  font-weight: bold;
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -1913,6 +1904,19 @@ footer.send {
     &:hover {
       background-color: #eee;
       text-decoration: none;
+      .properties {
+        display: block;
+        text-align: left;
+        padding: 10px;
+        background: $white;
+        line-height: 20px;
+        color: $black;
+        border: 5px solid $gray4;
+      }
+    }
+    .properties {
+      position: absolute;
+      display: none;
     }
     img {
       vertical-align: middle;
@@ -2056,6 +2060,17 @@ footer.send {
   .add-marker {
     @include btn-orange;
     margin: 10px 0 28px;
+  }
+}
+.map-position {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 5px 0;
+  .center-position {
+    padding-right: 10px;
+    .center-input {
+      width: 260px;
+    }
   }
 }
 #map-canvas {
@@ -2539,7 +2554,7 @@ input[type=email], input[type=number], input[type=tel] {
   }
 }
 input[type=number] {
-  width: 12em;
+  width: 12em !important;
 }
 input.alnum {
   // scss-lint:disable PropertySpelling
@@ -2555,14 +2570,14 @@ input.filename {
   ime-mode: disabled;
 }
 input.datetime {
-  width: 12em;
+  width: 12em !important;
   text-align: center;
   @include mb {
     text-align: left;
   }
 }
 input.date {
-  width: 9em;
+  width: 9em !important;
   text-align: center;
   @include mb {
     text-align: left;
@@ -2693,6 +2708,21 @@ form .CodeMirror {
   }
   p, ul {
     color: #822;
+  }
+}
+#errorLinkChecker {
+  li {
+    padding: 1px;
+  }
+  .success {
+    color: #2f7e42;
+  }
+  .failure {
+    color: #e00;
+  }
+  .message {
+    margin-top: 1px;
+    margin-left: 38px;
   }
 }
 .field_with_errors {
@@ -3153,8 +3183,7 @@ body.ss-ajax-in-iframe {
   }
 }
 .column-value .column-value-header .column-value-header-group:first-child {
-  @include display-flex;
-  @include align-items(center);
+  display: block;
 }
 .addon-view .column-value {
   padding: 10px 15px;
@@ -3383,5 +3412,60 @@ body.ss-ajax-in-iframe {
     &.seen:hover, &.unseen:hover {
       background-color: #fbeee8;
     }
+  }
+}
+
+#ss-file-view {
+  .toolbar-container {
+    margin-bottom: 10px;
+  }
+  .minicolors-theme-default {
+    .minicolors-swatch {
+      top: 5px;
+    }
+  }
+  canvas {
+    border: $border-gray4;
+  }
+  .btn-active {
+    @include btn-active;
+  }
+}
+
+.ss-file-field {
+  background: #f2f2f2;
+
+  .btn-file-upload.cboxElement {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .btn.dropdown-toggle {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-left: -1px;
+    padding-left: .5rem;
+    padding-right: .5rem;
+  }
+  .dropdown-menu {
+    padding: 4px;
+    border: $border-gray4;
+    @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
+    background: $white;
+    white-space: nowrap;
+    a {
+      display: block;
+      padding: 5px 10px;
+      background-image: none;
+    }
+  }
+}
+
+.ss-popup {
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: $gray3;
+
+  &:hover {
+    cursor: help;
   }
 }

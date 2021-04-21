@@ -2,5 +2,5 @@
 
 <dl class="see mod-facility-opendata-assoc">
   <dt><%= @model.t :opendata_site_ids %></dt>
-  <dd><%= br @item.opendata_sites.pluck(:host).join("\n") %></dd>
+  <dd><%= br @item.opendata_sites.pluck(:host) %></dd>
 </dl>

@@ -48,8 +48,8 @@ RSpec.describe Ckan::Part::Status, type: :model, dbscope: :example do
 
     before do
       stub_request(:get, "#{status.ckan_url}/api/3/action/package_list").
-        with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Ruby'}).
-        to_return(:status => http_status, :body => body, :headers => {})
+        with(headers: {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Ruby'}).
+        to_return(status: http_status, body: body, headers: {})
     end
 
     subject { status.value }

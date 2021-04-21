@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true, js: true do
+describe "gws_share_files", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let!(:folder) { create :gws_share_folder }
   let!(:category) { create :gws_share_category }
@@ -24,7 +24,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true, js:
       end
       within "form#item-form" do
         within "#addon-basic" do
-          click_on I18n.t('ss.buttons.upload')
+          wait_cbox_open do
+            click_on I18n.t('ss.buttons.upload')
+          end
         end
       end
       wait_for_cbox do

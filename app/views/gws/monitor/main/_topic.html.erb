@@ -10,7 +10,7 @@
       </span>
     </h2>
     <nav class="meta">
-      <span class="user"><%= @item.contributor_name.presence || @item.user_long_name %></span>
+      <span class="user"><%= gws_public_user_long_name(@item.contributor_name.presence || @item.user_long_name) %></span>
       <span class="datetime"><%= @model.t(:due_date) %>: <%= tryb { @item.due_date.strftime("%Y/%m/%d %H:%M") } %></span>
       <span class="datetime"><%= @model.t(:released) %>: <%= tryb { @item.released.strftime("%Y/%m/%d %H:%M") } %></span>
     </nav>
@@ -27,14 +27,14 @@
       </span>
       <% @item.files.each do |file| %>
         <span id="file-<%= file.id %>" class="<%= @cur_site.monitor_files_break == 'horizontal' ? 'd-inline-block mr-1' : 'd-block' %>">
-          <%= link_to(file.url, class: "icon-#{file.extname}", target: '_blank') do %>
+          <%= link_to(file.url, class: "icon-#{file.extname}", target: '_blank', rel: "noopener") do %>
             <img src="/assets/img/gws/ic-file.png" alt="" />
             <%= file.humanized_name %>
           <% end %>
         </span>
       <% end %>
       <span id="file-all" class="d-block">
-        <%= link_to({ action: 'all_topic_files' }, target: '_blank') do %>
+        <%= link_to({ action: 'all_topic_files' }, target: '_blank', rel: "noopener") do %>
           <i class="material-icons">file_download</i>
           <%= t('gws/monitor.topic.file_download') %>
         <% end rescue nil %>

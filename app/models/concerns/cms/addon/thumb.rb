@@ -6,7 +6,7 @@ module Cms::Addon
 
     included do
       attr_accessor :in_thumb
-      belongs_to_file :thumb
+      belongs_to_file2 :thumb
       permit_params :in_thumb
       validate :validate_thumb, if: ->{ in_thumb.present? }
 

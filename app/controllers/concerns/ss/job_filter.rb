@@ -8,7 +8,7 @@ module SS::JobFilter
   def index
     respond_to do |format|
       format.html { render file: "ss/tasks/index" }
-      format.json { render json: @item.to_json(methods: :head_logs) }
+      format.json { render file: "ss/tasks/index", content_type: json_content_type, locals: { item: @item } }
     end
   end
 
@@ -36,12 +36,20 @@ module SS::JobFilter
   end
 
   def stop
-    @item.update_attributes interrupt: "stop"
+    @item.update interrupt: "stop"
     redirect_to({ action: :index }, { notice: t("ss.tasks.interrupted") })
   end
 
   def reset
     @item.destroy
     redirect_to({ action: :index }, { notice: t("ss.notice.deleted") })
+  end
+
+  def download_logs
+    # unable to download
+    raise "404" unless @item.respond_to?(:log_file_path)
+
+    send_file @item.log_file_path, type: 'text/plain', filename: "#{@item.id}.log",
+              disposition: :attachment, x_sendfile: true
   end
 end

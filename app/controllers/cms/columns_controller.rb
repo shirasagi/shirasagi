@@ -66,16 +66,15 @@ class Cms::ColumnsController < ApplicationController
     items
   end
 
-  def set_model
-    model = self.class.model_class
+  def set_column_model
+    raise "404" if params[:type].blank?
 
-    if params[:type].present?
-      models = Cms::Column.route_options.collect do |k, v|
-        v.sub('/', '/column/').classify.constantize
-      end
-      model = models.find { |m| m.to_s == params[:type].sub('/', '/column/').classify }
-      raise '404' unless model
+    type = params[:type].sub('/', '/column/').classify
+    models = Cms::Column.route_options.collect do |k, v|
+      v.sub('/', '/column/').classify.constantize
     end
+    model = models.find { |m| m.to_s == type }
+    raise '404' unless model
 
     @model = model
   end
@@ -97,14 +96,14 @@ class Cms::ColumnsController < ApplicationController
   end
 
   def new
-    set_model
+    set_column_model
     raise '403' unless @cur_form.allowed?(:edit, @cur_user, site: @cur_site)
 
     @item = @model.new pre_params.merge(fix_params)
   end
 
   def create
-    set_model
+    set_column_model
     raise '403' unless @cur_form.allowed?(:edit, @cur_user, site: @cur_site)
 
     @item = @model.new get_params

@@ -5,8 +5,11 @@ module Member::Addon::Blog
 
     included do
       field :html, type: String, metadata: { unicode: :nfc }
+      field :contains_urls, type: Array, default: []
       permit_params :html
       validates :html, presence: true
+
+      before_validation :set_contains_urls
 
       if respond_to?(:template_variable_handler)
         template_variable_handler('img.src', :template_variable_handler_img_src)
@@ -40,6 +43,11 @@ module Member::Addon::Blog
         img_source = ::File.dirname(url) + '/' + img_source
       end
       img_source
+    end
+
+    def set_contains_urls
+      return if html.blank?
+      self.contains_urls = html.scan(/(?:href|src)="(.*?)"/).flatten.uniq
     end
   end
 end

@@ -1,0 +1,17 @@
+<%
+  @s = OpenStruct.new params[:s]
+
+  @target_options = @cur_site.translate_targets.map { |item| [item.label, item.code] }
+  @target_options.unshift([t("translate.lang"),""])
+
+  @update_options = t("translate.options.update_state").map { |k, v| [v, k] }
+  @update_options.unshift([t("translate.update_state"),""])
+%>
+<div class="list-head-search">
+  <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
+    <%= f.select :target, @target_options %>
+    <%= f.select :update_state, @update_options %>
+    <%= f.text_field :keyword, style: "width: 300px;" %>
+    <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+  <% end %>
+</div>

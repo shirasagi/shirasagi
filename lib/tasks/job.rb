@@ -10,8 +10,11 @@ module Tasks
       private
 
       def setup_logger
-        Rails.logger = Logger.new(STDOUT)
-        Rails.logger.level = Logger::DEBUG
+        Rails.logger ||= begin
+          logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
+          logger.level = Logger::DEBUG
+          logger
+        end
       end
 
       def install_signal_handlers

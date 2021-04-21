@@ -6,5 +6,5 @@
 
 <dl class="see mod-cms-opendata-license">
   <dt><%= @model.t :opendata_license_ids %></dt>
-  <dd><%= br @item.opendata_licenses.pluck(:name).join("\n") %></dd>
+  <dd><%= br @item.opendata_licenses.pluck(:name) %></dd>
 </dl>

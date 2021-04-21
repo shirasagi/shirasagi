@@ -86,6 +86,7 @@ class Cms::Apis::FormsController < ApplicationController
       return
     end
 
+    @page.link_check_user = @cur_user
     @page.valid?(:link)
     if @page.column_link_errors.blank?
       head :no_content

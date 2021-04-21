@@ -2,7 +2,7 @@ module Chorg::Model::Revision
   extend ActiveSupport::Concern
   extend SS::Translation
   include SS::Document
-  include Voice::Lockable
+  include SS::Lockable
   include SS::Relation::File
 
   included do

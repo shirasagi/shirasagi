@@ -1,0 +1,24 @@
+<%= form_tag({ action: :run }, { id: "task-form" }) do |f| %>
+  <% if @cur_site.generate_locked? %>
+    <div class="main-box">
+      <dl class="see">
+        <dd class="wide"><%= @cur_site.t(:generate_locked) %></dd>
+      </dl>
+    </div>
+  <% end %>
+
+  <%= render "ss/tasks/box", task: @item, show_current_count: true, url: url_for(action: :index, format: :json) %>
+
+  <footer class="send">
+    <% hide = (@item.running? || @item.state == "ready") ? nil : "display: none;" %>
+    <div class="stop-button" style="<%= hide %>">
+      <%= submit_tag t("ss.buttons.stop"), name: "stop", class: "btn-primary stop" %>
+      <%= submit_tag t("ss.buttons.reset"), name: "reset", class: "btn-default", onclick: "return confirm('#{t("ss.tasks.confirm_reset")}')" %>
+    </div>
+
+    <% hide = hide.present? && !@cur_site.generate_locked? ? "" : "display: none;" %>
+    <div class="run-button" style="<%= hide %>">
+      <%= submit_tag t("ss.buttons.run"), class: "btn-primary save" %>
+    </div>
+  </footer>
+<% end %>

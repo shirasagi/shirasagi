@@ -3,8 +3,7 @@ class Article::Agents::Parts::PageController < ApplicationController
   helper Cms::ListHelper
 
   def index
-    @items = Article::Page.site(@cur_site).and_public(@cur_date).
-      where(@cur_part.condition_hash(cur_main_path: @cur_main_path)).
+    @items = Article::Page.public_list(site: @cur_site, part: @cur_part, date: @cur_date, request_dir: @cur_main_path).
       order_by(@cur_part.sort_hash).
       limit(@cur_part.limit)
   end

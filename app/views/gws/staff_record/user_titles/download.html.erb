@@ -1,0 +1,23 @@
+<%= form_for :item, url: { action: :download }, html: { method: :post } do |f| %>
+  <%= error_messages_for :item %>
+
+  <section class="main-box">
+    <header><h2><%= t("ss.download") %></h2></header>
+
+    <dl class="see">
+      <dt><%= @model.t :in_csv_encoding %><%= @model.tt :in_csv_encoding %></dt>
+      <dd>
+        <% %w(Shift_JIS UTF-8).each do |encoding| %>
+          <label>
+            <%= radio_button_tag "#{f.object_name}[in_csv_encoding]", encoding, encoding == 'Shift_JIS', { id: nil } %>
+            <%= t("ss.options.csv_encoding.#{encoding}") %>
+          </label>
+        <% end %>
+      </dd>
+    </dl>
+  </section>
+
+  <footer class="send">
+    <%= f.submit t("ss.download"), class: :save %>
+  </footer>
+<% end %>

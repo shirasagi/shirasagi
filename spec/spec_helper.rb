@@ -23,27 +23,41 @@ require 'support/ss/capybara_support'
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 
+def ci?
+  ENV["CI"] == "true"
+end
+
 def travis?
-  ENV["CI"] == "true" && ENV["TRAVIS"] == "true"
+  ci? && ENV["TRAVIS"] == "true"
 end
 
 def analyze_coverage?
-  travis? || ENV["ANALYZE_COVERAGE"] != "disabled"
+  ci? || ENV["ANALYZE_COVERAGE"] != "disabled"
 end
 
 if analyze_coverage?
   require 'simplecov'
-  require 'simplecov-csv'
 
-  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
-    SimpleCov::Formatter::HTMLFormatter,
-    SimpleCov::Formatter::CSVFormatter
-  ])
   if travis?
     require 'coveralls'
     Coveralls.wear!
+
+    require 'simplecov_json_formatter'
+    formatters = [
+      Coveralls::SimpleCov::Formatter,
+      SimpleCov::Formatter::JSONFormatter
+    ]
+  else
+    require 'simplecov-csv'
+    require 'simplecov-html'
+
+    formatters = [
+      SimpleCov::Formatter::CSVFormatter,
+      SimpleCov::Formatter::HTMLFormatter
+    ]
   end
 
+  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(formatters)
   SimpleCov.start do
     add_filter 'spec/'
     add_filter 'vendor/bundle'
@@ -83,6 +97,7 @@ RSpec.configure do |config|
   #     --seed 1234
   #config.order = "random"
   config.order = "order"
+  Kernel.srand config.seed
 
   config.include Rails.application.routes.url_helpers
   config.include Capybara::DSL
@@ -98,7 +113,7 @@ RSpec.configure do |config|
   end
 
   # fragile specs are ignored when rspec is executing in Travis CI.
-  if ENV["CI"] == "true" && ENV["TRAVIS"] == "true"
+  if ci?
     config.filter_run_excluding(fragile: true)
   end
 
@@ -126,13 +141,50 @@ RSpec.configure do |config|
     config.ignore_hidden_elements = false
     config.default_max_wait_time = (ENV["CAPYBARA_MAX_WAIT_TIME"] || 10).to_i
   end
+
+  if ci? || ENV["rspec_retry"].present?
+    require 'rspec/retry'
+
+    config.verbose_retry = true
+    config.display_try_failure_messages = true
+    config.around :each, :js do |example|
+      example.run_with_retry retry: 3
+    end
+
+    # callback to be run between retries
+    config.retry_callback = proc do |ex|
+      # run some additional clean up task - can be filtered by example metadata
+      if ex.metadata[:js]
+        Capybara.reset!
+      end
+    end
+
+    puts "[RSpec] enabled rspec retry"
+  end
 end
 
-def unique_id
-  num = Time.zone.now.to_f.to_s.delete('.').to_i
-  # add random value to work with `Timecop.freeze`
-  num += rand(0xffff)
-  num.to_s(36)
+ALPHABETS = ("a".."z").to_a.freeze
+
+def unique_id(size = 5)
+  s = ALPHABETS.sample + Random.bytes(size).unpack1("H*")
+  s.downcase!
+  s
+end
+
+def unique_tel
+  "99-#{Array.new(4) { rand(0..9 ) }.join}-#{Array.new(4) { rand(0..9 ) }.join}"
+end
+
+def unique_domain
+  "#{unique_id}.example.jp"
+end
+
+def unique_url
+  "#{%w(http https).sample}://#{unique_domain}/#{unique_id}/"
+end
+
+def unique_email
+  "#{unique_id}@example.jp"
 end
 
 def ss_japanese_text(length: 10, separator: '')

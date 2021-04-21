@@ -39,9 +39,16 @@ module Chorg::Addon::EntityLog
     ::FileUtils.rm_f(entity_log_path)
   end
 
+  def overwrite_fields
+    %w(contact_tel contact_fax contact_email contact_link_url contact_link_name)
+  end
+
   def store_entity_changes(entity)
     if entity.persisted?
       changes = entity.changes.except('_id', 'created', 'updated')
+      overwrite_fields.each do |k|
+        changes[k] ||= [entity[k], entity[k]] if entity.respond_to?(k)
+      end
       hash = { 'id' => entity.id.to_s, 'model' => entity.class.name, 'changes' => changes }
     else
       creates = entity.attributes.except('_id', 'created', 'updated')

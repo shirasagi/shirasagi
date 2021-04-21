@@ -1,4 +1,7 @@
-<% return if @item.tags.blank? %>
+<%
+  return unless SS.config.cms.tag
+  return if @item.tags.blank?
+%>
 
 <dl class="see mod-cms-tag">
   <dt><%= @model.t :tags %></dt>

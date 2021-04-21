@@ -8,6 +8,7 @@ module Member::Addon
       permit_params file_ids: []
 
       before_save :save_files
+      after_save :put_contains_urls_logs
       after_destroy :destroy_files
 
       #after_save :generate_public_files, if: ->{ public? }
@@ -33,6 +34,10 @@ module Member::Addon
           next
         else
           file.update(site_id: site_id, model: model_name.i18n_key, owner_item: self, state: state)
+          item = create_history_log(file)
+          item.action = "update"
+          item.behavior = "attachment"
+          item.save
         end
         ids << file.id
       end
@@ -41,7 +46,12 @@ module Member::Addon
       del_ids = file_ids_was.to_a - ids
       del_ids.each do |id|
         file = SS::File.where(id: id).first
+        file.cur_user = @cur_user if file.respond_to?(:cur_user=) && @cur_user
         file.destroy if file
+        item = create_history_log(file)
+        item.action = "destroy"
+        item.behavior = "attachment"
+        item.save
       end
     end
 
@@ -58,6 +68,43 @@ module Member::Addon
     def remove_public_files
       files.each do |file|
         file.remove_public_file
+      end
+    end
+
+    def create_history_log(file)
+      site_id = nil
+      user_id = nil
+      site_id = @cur_site.id if @cur_site.present?
+      user_id = @cur_user.id if @cur_user.present?
+      History::Log.new(
+        site_id: site_id,
+        user_id: user_id,
+        session_id: Rails.application.current_session_id,
+        request_id: Rails.application.current_request_id,
+        controller: self.model_name.i18n_key,
+        url: file.try(:url),
+        page_url: Rails.application.current_path_info,
+        ref_coll: file.try(:collection_name)
+      )
+    end
+
+    def put_contains_urls_logs
+      add_contains_urls = self.contains_urls - self.contains_urls_was.to_a
+      add_contains_urls.each do |file|
+        item = create_history_log(file)
+        item.url = file
+        item.action = "update"
+        item.behavior = "paste"
+        item.save
+      end
+
+      del_contains_urls = self.contains_urls_was.to_a - self.contains_urls
+      del_contains_urls.each do |file|
+        item = create_history_log(file)
+        item.url = file
+        item.action = "destroy"
+        item.behavior = "paste"
+        item.save
       end
     end
   end

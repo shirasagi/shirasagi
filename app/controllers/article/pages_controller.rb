@@ -71,7 +71,7 @@ class Article::PagesController < ApplicationController
     if request.get?
       respond_to do |format|
         format.html { render }
-        format.json { render json: @task.to_json(methods: :head_logs) }
+        format.json { render file: "ss/tasks/index", content_type: json_content_type, locals: { item: @task } }
       end
       return
     end
@@ -80,6 +80,11 @@ class Article::PagesController < ApplicationController
       file = params[:item].try(:[], :file)
       if file.nil? || ::File.extname(file.original_filename) != ".csv"
         raise I18n.t("errors.messages.invalid_csv")
+      end
+      if !Article::Page::Importer.valid_encoding?(file.to_io, Encoding::UTF_8)
+        if !Article::Page::Importer.valid_encoding?(file.to_io, Encoding::SJIS)
+          raise I18n.t("errors.messages.unsupported_encoding")
+        end
       end
       if !Article::Page::Importer.valid_csv?(file)
         raise I18n.t("errors.messages.malformed_csv")

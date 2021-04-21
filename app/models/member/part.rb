@@ -18,15 +18,8 @@ module Member::Part
 
     default_scope ->{ where(route: "member/blog_page") }
 
-    def condition_hash(opts = {})
-      cond = []
-      # cids = []
-      # cond_url = []
-
-      cond << { filename: /^#{parent.filename}\// }
-      #cids << id
-      #cond_url = conditions
-      { '$or' => cond }
+    def condition_hash(options = {})
+      super(options.reverse_merge(bind: :descendants, category: false))
     end
   end
 

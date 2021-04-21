@@ -2,26 +2,24 @@ module SS
   module TmpDir
     module_function
 
-    def created_tmpdir
-      @created_tmpdir
+    def tmpdir
+      @tmpdir ||= ::Dir.mktmpdir
     end
 
-    def created_tmpdir=(value)
-      @created_tmpdir = value
+    def tmpdir=(value)
+      @tmpdir = value
     end
 
-    def before_example
-      ::SS::TmpDir.created_tmpdir ||= ::Dir.mktmpdir
-    end
+    def cleanup_tmpdir
+      tmpdir = @tmpdir
+      @tmpdir = nil
+      return if tmpdir.blank?
 
-    def after_example
-      tmpdir = ::SS::TmpDir.created_tmpdir
-      ::SS::TmpDir.created_tmpdir = nil
-      ::FileUtils.rm_rf(tmpdir) if tmpdir
+      ::FileUtils.rm_rf(tmpdir)
     end
 
     def tmpfile(options = {}, &block)
-      tmpfile = "#{::SS::TmpDir.created_tmpdir}/#{unique_id}"
+      tmpfile = "#{::SS::TmpDir.tmpdir}/#{unique_id}"
       tmpfile = "#{tmpfile}#{options[:extname]}" if options[:extname]
       mode = options[:binary] ? "wb" : "w"
       mode = "#{mode}:#{options[:encoding]}" if options[:encoding]
@@ -30,113 +28,73 @@ module SS
       tmpfile
     end
 
-    def tmp_ss_file(options = {})
-      options = options.dup
-      contents = options[:contents]
+    def tmp_ss_file(*args)
+      options = args.extract_options!.dup
+      file_model = args.first || constantize_file_model(options[:model]) || SS::File
+      contents = options.delete(:contents)
+      binary = options.delete(:binary)
 
-      if contents.respond_to?(:path)
-        source_file = contents.path
-      elsif contents.present? && (::File.exists?(contents) rescue false)
-        source_file = contents
-      else
-        source_file = tmpfile(binary: options.delete(:binary)) { |file| file.write contents }
+      site = options.delete(:site)
+      user = options.delete(:user)
+      node = options.delete(:node)
+
+      basename = options.delete(:basename) || extract_basename_from_contents(contents) || "spec"
+      attr = { model: options.delete(:model) || "ss/temp_file", name: basename, filename: basename }
+      attr[:site_id] = site.id if site
+      if user
+        attr[:cur_user] = user
+        attr[:user_id] = user.id
       end
-
-      ss_file = SS::File.new(model: options.delete(:model) || "ss/temp_file")
-      ss_file.site_id = options[:site].id if options[:site]
-      ss_file.user_id = options[:user].id if options[:user]
-      options.delete(:site)
-      options.delete(:user)
-
-      basename = options.delete(:basename) || "spec"
-      content_type = options.delete(:content_type) || "application/octet-stream"
-      Fs::UploadedFile.create_from_file(source_file, basename: basename, content_type: content_type) do |f|
-        ss_file.in_file = f
-        ss_file.save!
-        ss_file.in_file = nil
+      attr[:node_id] = node.id if node
+      attr[:content_type] = options.delete(:content_type) || ::Fs.content_type(basename, "application/octet-stream")
+      file_model.create_empty!(attr.update(options)) do |ss_file|
+        write_contents_to(ss_file, contents, binary)
       end
-      ss_file.reload
-      ss_file
     end
 
-    def tmp_ss_link_file(options = {})
-      options = options.dup
-      contents = options[:contents]
-
+    def extract_basename_from_contents(contents)
       if contents.respond_to?(:path)
-        source_file = contents.path
+        ::File.basename(contents.path)
       elsif contents.present? && (::File.exists?(contents) rescue false)
-        source_file = contents
-      else
-        source_file = tmpfile(binary: options.delete(:binary)) { |file| file.write contents }
+        ::File.basename(contents)
       end
-
-      ss_file = SS::LinkFile.new(model: options.delete(:model) || "ss/temp_file")
-      ss_file.site_id = options[:site].id if options[:site]
-      ss_file.user_id = options[:user].id if options[:user]
-      options.delete(:site)
-      options.delete(:user)
-
-      basename = options.delete(:basename) || "spec"
-      content_type = options.delete(:content_type) || "application/octet-stream"
-      Fs::UploadedFile.create_from_file(source_file, basename: basename, content_type: content_type) do |f|
-        ss_file.in_file = f
-        ss_file.save!
-        ss_file.in_file = nil
-      end
-      ss_file.reload
-      ss_file
     end
 
-    def tmp_file(options = {})
-      options = options.dup
-      contents = options[:contents]
+    def constantize_file_model(model)
+      return if model.blank?
 
+      klass = model.classify.constantize
+      return unless klass.ancestors.include?(SS::Model::File)
+
+      klass
+    rescue LoadError
+      nil
+    end
+
+    def write_contents_to(ss_file, contents, binary)
       if contents.respond_to?(:path)
-        source_file = contents.path
+        ::FileUtils.copy_file(contents.path, ss_file.path)
       elsif contents.present? && (::File.exists?(contents) rescue false)
-        source_file = contents
+        ::FileUtils.copy_file(contents, ss_file.path)
+      elsif binary
+        ::File.binwrite(ss_file.path, contents)
       else
-        source_file = tmpfile(binary: options.delete(:binary)) { |file| file.write contents }
+        ::File.write(ss_file.path, contents)
       end
-
-      ss_file = SS::TempFile.new(model: options.delete(:model) || "ss/temp_file")
-      ss_file.site_id = options[:site].id if options[:site]
-      ss_file.user_id = options[:user].id if options[:user]
-      options.delete(:site)
-      options.delete(:user)
-
-      basename = options.delete(:basename) || "spec"
-      content_type = options.delete(:content_type) || "application/octet-stream"
-      Fs::UploadedFile.create_from_file(source_file, basename: basename, content_type: content_type) do |f|
-        ss_file.in_file = f
-        ss_file.save!
-        ss_file.in_file = nil
-      end
-      ss_file.reload
-      ss_file
     end
 
     module Support
       def self.extended(obj)
-        obj.before(:example) do
-          ::SS::TmpDir.before_example
-        end
-
         obj.after(:example) do
-          ::SS::TmpDir.after_example
+          ::SS::TmpDir.cleanup_tmpdir
         end
 
         obj.class_eval do
-          define_method(:tmpdir) do
-            ::SS::TmpDir.created_tmpdir
-          end
-
-          delegate :created_tmpdir, :tmpfile, :tmp_ss_file, :tmp_ss_link_file, :tmpfile, to: ::SS::TmpDir
+          delegate :tmpdir, :cleanup_tmpdir, :tmpfile, :tmp_ss_file, to: ::SS::TmpDir
         end
       end
     end
   end
 end
 
-RSpec.configuration.extend(SS::TmpDir::Support, tmpdir: true)
+RSpec.configuration.extend(SS::TmpDir::Support)

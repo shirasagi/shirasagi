@@ -3,7 +3,7 @@
   <dd><%= @item.name %></dd>
 
   <dt><%= @model.t :url %></dt>
-  <dd><%= link_to @item.url, @item.url %></dd>
+  <dd><%= link_to @item.url, sns_redirect_path(ref: @item.url) %></dd>
 
   <dt><%= @model.t :bookmark_model %></dt>
   <dd><%= @item.label :bookmark_model %></dd>

@@ -8,8 +8,8 @@ namespace :cms do
       true
     end
 
-    task feed_all: :environment do
-      ::Tasks::Cms::Base.with_site(ENV['site']) do |site|
+    task :feed_all, [:site] => :environment do |task, args|
+      ::Tasks::Cms::Base.with_site(args[:site] || ENV['site']) do |site|
         break unless es_validator.call(site)
 
         pages = Cms::Page.site(site).and_public
@@ -19,19 +19,34 @@ namespace :cms do
           job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site)
           job.perform_now(action: 'index', id: page.id.to_s)
         end
+
+        Cms::PageIndexQueue.site(site).where(action: 'release').destroy_all
       end
     end
 
-    task feed_releases: :environment do
-      ::Tasks::Cms::Base.with_site(ENV['site']) do |site|
+    task :feed_releases, [:site] => :environment do |task, args|
+      ::Tasks::Cms::Base.with_site(args[:site] || ENV['site']) do |site|
         break unless es_validator.call(site)
 
-        items = Cms::PageRelease.site(site).active.unindexed.order_by(created: 1)
-        items.each do |item|
+        ids = Cms::PageIndexQueue.site(site).order_by(created: -1).pluck(:id)
+        del = []
+
+        ids.each do |id|
+          next if del.include?(id)
+          item = Cms::PageIndexQueue.where(id: id).first
+          next unless item
+
           puts "- #{item.filename}"
-          next if site.elasticsearch_deny.include?(item.filename)
+          if site.elasticsearch_deny.include?(item.filename)
+            item.destroy
+            next
+          end
+
+          del += item.old_queues.pluck(:id)
+          item.old_queues.destroy_all
+
           job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site)
-          job.perform_now(action: 'index', id: item.page_id.to_s, release_id: item.id.to_s)
+          job.perform_now(action: item.job_action, id: item.page_id.to_s, queue_id: item.id.to_s)
         end
       end
     end
@@ -62,7 +77,8 @@ namespace :cms do
         mappings = ::File.read(Rails.root.join('vendor', 'elasticsearch', 'mappings.json'))
         mappings = JSON.parse(mappings)
 
-        puts site.elasticsearch_client.indices.create(index: "s#{site.id}", body: { settings: settings, mappings: mappings}).to_json
+        body = { settings: settings, mappings: mappings }
+        puts site.elasticsearch_client.indices.create(index: "s#{site.id}", body: body).to_json
       end
     end
 

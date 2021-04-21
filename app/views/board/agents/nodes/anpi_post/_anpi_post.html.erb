@@ -2,7 +2,7 @@
   <header>
     <h2 class="title"><%= item.name %></h2>
   </header>
-  <div class="body"><%= item.modified_text %></div>
+  <div class="body"><%= item.sanitized_text %></div>
   <div class="date"><%= t("board.views.date") %><%= I18n.l(item.updated, format: :long) %>
   </div>
   <div class="poster">
@@ -24,9 +24,9 @@
     <% if @cur_node.show_email? && item.email.present? %>
     <span class="email"><%= @model.t :email %>: <%= item.email %></span>
     <% end %>
-    <% if @cur_node.show_email? %>
+    <% if @cur_node.show_email? && item.member.present? %>
     <span class="member"><%= @model.t :member_id %>: <%= mail_to item.member.email, "#{item.member.name} <#{item.member.email}>", class: "email" %></span>
-    <% else %>
+    <% elsif !@cur_node.show_email? && item.member.present? %>
     <span class="member"><%= @model.t :member_id %>: <%= item.member.name %></span>
     <% end %>
   </div>

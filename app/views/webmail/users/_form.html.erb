@@ -1,7 +1,12 @@
 <%= jquery do %>
-  $("#random-password").click(function() {
+  $("#random-password").on("click", function() {
     $("#item_in_password").attr({ type: 'text' }).val(SS.randomPassword());
   });
+  SS_Validation.url = "<%= sys_apis_validation_path %>";
+  SS_Validation.model = "<%= @model.to_s %>";
+  SS_Validation.id = "<%= params[:id] %>";
+  SS_Validation.labels = <%== @model.labels.to_json %>;
+  SS_Validation.render();
 <% end %>
 
 <dl class="see mod-sys-user">
@@ -60,6 +65,9 @@
 
   <dt><%= @model.t :lock_state %><%= @model.tt :lock_state %></dt>
   <dd><%= f.select :lock_state, @item.lock_state_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :deletion_lock_state %><%= @model.tt :deletion_lock_state %></dt>
+  <dd><%= f.select :deletion_lock_state, @item.deletion_lock_state_options, include_blank: true %></dd>
 
   <dt><%= @model.t :organization_id %><%= @model.tt :organization_id %></dt>
   <dd><%= f.select :organization_id, @item.organization_id_options(Gws::Group.roots.state("enabled")), include_blank: true %></dd>

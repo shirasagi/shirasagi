@@ -13,14 +13,35 @@ production: &production
   # JavaScripts on management pages.
   javascripts: ["ss/script"]
 
+  # history backups max age
+  history_max_age: 20
+
+  # history backups max age
+  keep_history_backup_after_destroyed: 14.days
+
   session:
     key: '_ss_session'
+    same_site: 'Lax'
     # uncomment blow setting if you have been running SHIRASAGI with full https
     # secure: true
+
+  disable_permission_level: true
+
+  # how to paste file by
+  #   filename: physical name. this means paste file with only alpha-nums.
+  #   name: logical name. this means paste file with japanese text.
+  file_url_with: filename
+
+  # how to publish file by
+  #   cp: copy file
+  #   ln_s: create symbolic link
+  publish_file_with: cp
 
 test:
   <<: *production
   disable: false
+  file_url_with: filename
+  publish_file_with: cp
 
 development:
   <<: *production

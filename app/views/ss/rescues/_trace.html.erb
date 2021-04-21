@@ -1,0 +1,87 @@
+<% names = traces.keys %>
+
+<div id="traces">
+  <div class="cms-tabs">
+    <% names.each do |name| %>
+      <%= link_to "##{name.downcase.gsub(/\s/, '-')}", class: (name == trace_to_show) ? 'current' : nil do %>
+        <span class="tab-name"><%= name %></span>
+      <% end %>
+    <% end %>
+  </div>
+  <% traces.each do |name, trace| %>
+    <div id="<%= name.downcase.gsub(/\s/, '-') %>" class="frame <%="hide" if name != trace_to_show %>">
+      <pre><code><% trace.each do |frame| %><a class="trace-frames" data-frame-id="<%= frame[:id] %>" href="#"><%= frame[:trace] %></a><br><% end %></code></pre>
+    </div>
+  <% end %>
+
+  <script type="text/javascript">
+    var el = document.getElementById("traces");
+    var tabs = el.querySelectorAll(".cms-tabs a");
+
+    var closeFrames = function() {
+      var frames = el.getElementsByClassName("frame");
+      for (var i = 0; i < frames.length; i++) {
+        frames[i].classList.add("hide")
+      }
+    };
+
+    var deactivateTabs = function() {
+      for (var i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove("current");
+      }
+    };
+
+    var onClickTab = function(e) {
+      e.preventDefault();
+
+      var href = this.getAttribute("href");
+      if (! href) {
+        return;
+      }
+
+      closeFrames();
+      el.querySelector(href).classList.remove("hide");
+
+      deactivateTabs();
+      this.classList.add("current");
+    };
+
+    for (var i = 0; i < tabs.length; i++) {
+      tabs[i].addEventListener('click', onClickTab);
+    }
+
+    var traceFrames = document.getElementsByClassName('trace-frames');
+    var selectedFrame = document.getElementById('frame-source-0');
+    var currentSource = document.querySelector(".source:not(.hide)");
+
+    var changeSourceExtract = function(frame_id) {
+      var el = document.getElementById('frame-source-' + frame_id);
+      if (currentSource) {
+        currentSource.classList.add("hide");
+      }
+      if (el) {
+        el.classList.remove("hide");
+        currentSource = el;
+      }
+    };
+
+    // Add click listeners for all stack frames
+    for (var i = 0; i < traceFrames.length; i++) {
+      traceFrames[i].addEventListener('click', function(e) {
+        e.preventDefault();
+        var target = e.target;
+        var frame_id = target.dataset.frameId;
+
+        if (selectedFrame) {
+          selectedFrame.classList.remove("selected");
+        }
+
+        target.classList.add("selected");
+        selectedFrame = target;
+
+        // Change the extracted source code
+        changeSourceExtract(frame_id);
+      });
+    }
+  </script>
+</div>

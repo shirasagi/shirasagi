@@ -6,6 +6,9 @@ production: &production
   location: /kana
   mecab_indexer: /usr/local/libexec/mecab/mecab-dict-index
   mecab_dicdir: /usr/local/lib/mecab/dic/ipadic
+  converter:
+    kana-marks: [ "write-kana", "end-write-kana" ]
+    skip-marks: [ "skip-kana", "end-skip-kana" ]
 
 test:
   <<: *production

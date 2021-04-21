@@ -2,8 +2,6 @@ class Opendata::Dataset::Harvest::ExportersController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  helper Opendata::FormHelper
-
   model Opendata::Harvest::Exporter
 
   navi_view "opendata/main/navi"

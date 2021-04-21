@@ -5,10 +5,14 @@ module Kana::PublicFilter
     after_action :render_kana, if: ->{ filters.include?(:kana) }
   end
 
+  def kana_path?
+    filter_include?(:kana)
+  end
+
   private
 
   def set_request_path_with_kana
-    return if @cur_main_path !~ /^#{SS.config.kana.location}\//
+    return unless @cur_main_path.match?(/^#{SS.config.kana.location}\//)
     @cur_main_path.sub!(/^#{SS.config.kana.location}\//, "/")
     filters << :kana
   end

@@ -21,7 +21,7 @@ ja:
     site: サイト
     user: ユーザー
     group: グループ
-    test: テスト
+    diag: 診断
     db_tool: DBツール
     role: 権限/ロール
     menu_settings: メニュー設定
@@ -59,10 +59,14 @@ ja:
         index: サイトを選択する
         search: サイトを検索
         select: サイトを設定する
+      postal_codes:
+        index: 郵便番号を選択する
+      prefecture_codes:
+        index: 市町村コードを選択する
     postal_code: 郵便番号
     postal_code_normalize_city: 以下に掲載がない場合
     import_official_japan_postal_service_csv: 日本郵政CSVの取り込み
-    prefecture_code: 地域コード
+    prefecture_code: 市町村コード
     password_effective_period: パスワードの有効期限
     password_constraint: パスワードの制約
     password_change_constraint: パスワード変更時の制約
@@ -71,6 +75,15 @@ ja:
     prompts:
       char: 文字
       count: 回
+    notices:
+      saml_metadata_uri_md: 本 URL へアクセスすることでシラサギ側のメタデータをダウンロードすることができます。ダウンロードしたメタデータを認証基板側へインポートしてください。
+      saml_init_uri_md:
+        - Init uri にアクセスすると、シラサギ側では SAML によるシングル・サインオン処理を開始します。業務端末や他システムへは Init uri を設定してください。
+        - "`?ref=` パラメータをつけることでログイン後に表示する画面を設定することができます。例えば `?ref=/.g1` をつけることでログイン後にグループウェアを表示することができます。"
+      open_id_init_uri_md:
+        - Init uri にアクセスすると、シラサギ側では OpenID Connect によるシングル・サインオン処理を開始します。業務端末や他システムへは Init uri を設定してください。
+        - "`?ref=` パラメータをつけることでログイン後に表示する画面を設定することができます。例えば `?ref=/.g1` をつけることでログイン後にグループウェアを表示することができます。"
+      open_id_redirect_uri_md: 認証基板側のコールバックURLなどへ Redirect uri を設定してください。
 
   sys_role:
     edit_sys_sites: サイトの管理
@@ -94,19 +107,22 @@ ja:
       sys/notice: システムのお知らせ
       sys/postal_code: 郵便番号
       sys/mail_log: メールログ
+      sys/prefecture_code: 市町村コード
     errors:
       models:
         sys/setting:
-          password_min_length_short: "は、英大文字〜記号を合計した文字数より少ない文字数が設定されています。%{count}以上に設定してください。"
+          password_min_length_short: "は、英大文字～記号を合計した文字数より少ない文字数が設定されています。%{count}以上に設定してください。"
     attributes:
       sys/setting:
         menu_file_state: ファイル
         menu_connection_state: 接続情報
       sys/notice:
-        html: 本文
         name: お知らせ見出し
         notice_severity: 種別
         notice_target: 表示場所
+      sys/addon/body:
+        html: 本文
+        markdown: 本文（Markdown）
       sys/addon/role:
         sys_role_ids: ロール
       sys/model/auth:
@@ -186,6 +202,7 @@ ja:
     sys/addon/role:
       sys_role_ids:
         - ユーザーのロール/権限を指定します。
+
     sys/model/auth:
       name:
         - 認証の名前を設定します。
@@ -239,13 +256,13 @@ ja:
         - ここで指定した文字数以上のパスワードを設定しなければならなくなります。
         - 例えば「8」を設定すると、パスワードの長さは 8 文字以上でなければならなくなります。
       password_min_upcase_length:
-        - 英大文（A〜Z）の最低文字数を設定します。
+        - 英大文（A～Z）の最低文字数を設定します。
         - 例えば「2」を設定すると、最低でも 2 文字の英大文字をパスワードに含まなければならなくなります。
       password_min_downcase_length:
-        - 英小文字（a〜z）の最低文字数を設定します。
+        - 英小文字（a～z）の最低文字数を設定します。
         - 例えば「2」を設定すると、最低でも 2 文字の英小文字をパスワードに含まなければならなくなります。
       password_min_digit_length:
-        - 数字（0〜9）の最低文字数を設定します。
+        - 数字（0～9）の最低文字数を設定します。
         - 例えば「2」を設定すると、最低でも 2 文字の数字をパスワードに含まなければならなくなります。
       password_min_symbol_length:
         - 記号の最低文字数を設定します。
@@ -265,9 +282,23 @@ ja:
         - 「要求する」を選択した場合、IdP はユーザーを常に認証します。
         - 「要求しない」を選択した場合、IdP はセッションが存在する場合はセッションからの ID 情報を応答し、セッションが存在しない場合はユーザーを認証します。
 
+    sys/notice:
+      name:
+        - お知らせ見出しを入力します。
+      notice_severity:
+        - 「重要なお知らせ」の場合、チェックをつけます。
+        - 「重要なお知らせ」にチェックをつけた場合、コンテンツ内の先頭に目立つ色で表示されます。
+      notice_target:
+        - お知らせを掲載する場所を選択します。複数の場所を選択することができます。
+        - 「ログイン画面」を選択した場合、ログイン画面でもお知らせが表示されます。
+        - 「CMS管理画面」を選択した場合、CMSの管理画面にお知らせが表示されます。
+        - 「グループウェア」を選択した場合、グループウェア利用時にお知らせが表示されます。
+        - 「ウェブメール」を選択した場合、ウェブメール利用時にお知らせが表示されます。
+        - 「システム管理画面」を選択した場合、システムの管理画面にお知らせが表示されます。
+
   job:
     models:
       sys/site_copy_job: サイト複製
       sys/postal_code/import_job: 郵便番号インポート
       sys/postal_code/official_csv_import_job: 日本郵便CSVインポート
-      sys/prefecture_code/import_job: 地域コードインポート
+      sys/prefecture_code/import_job: 市町村コードインポート

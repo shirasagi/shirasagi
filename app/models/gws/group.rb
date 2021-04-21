@@ -1,11 +1,15 @@
 class Gws::Group
   include SS::Model::Group
+  include SS::Relation::File
   include Gws::Referenceable
   include Gws::SitePermission
+  include Gws::Addon::Notice::GroupSetting
   include Gws::Addon::Schedule::GroupSetting
   include Gws::Addon::Facility::GroupSetting
   include Gws::Addon::Attendance::GroupSetting
   include Gws::Addon::Memo::GroupSetting
+  include Gws::Addon::Report::GroupSetting
+  include Gws::Addon::Workflow::GroupSetting
   include Gws::Addon::Circular::GroupSetting
   include Gws::Addon::Monitor::GroupSetting
   include Gws::Addon::Survey::GroupSetting
@@ -19,11 +23,14 @@ class Gws::Group
   include Gws::Addon::System::FileSetting
   include Gws::Addon::System::MenuSetting
   include Gws::Addon::System::NoticeSetting
+  include Gws::Addon::System::LogoSetting
   include Gws::Addon::System::LogSetting
   include Gws::Addon::System::GroupSetting
+  include Gws::Addon::System::UserSetting
   include Gws::Addon::System::DesktopSetting
   include Gws::Addon::History
   include Gws::Addon::Import::Group
+  include Gws::Addon::SiteUsage
 
   set_permission_name "gws_groups", :edit
 

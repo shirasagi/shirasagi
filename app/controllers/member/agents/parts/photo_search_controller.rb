@@ -13,7 +13,7 @@ class Member::Agents::Parts::PhotoSearchController < ApplicationController
       location_ids: [],
       category_ids: [],
       locations: [],
-      categories: [],
+      categories: []
     }
   end
 end

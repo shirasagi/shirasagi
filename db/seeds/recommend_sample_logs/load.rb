@@ -2,7 +2,7 @@ puts "Please input site_name: site=[site_host]" or exit if ENV['site'].blank?
 puts "Please input clients: clients=[number of clients]" or exit if ENV['clients'].blank?
 puts "Please input logs: logs=[number of 1 person's logs]" or exit if ENV['logs'].blank?
 
-@site = SS::Site.where(host: ENV['site']).first
+@site = Cms::Site.where(host: ENV['site']).first
 puts "Site not found: #{ENV['site']}" or exit unless @site
 
 @clients = ENV['clients'].to_i

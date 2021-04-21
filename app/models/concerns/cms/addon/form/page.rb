@@ -17,6 +17,8 @@ module Cms::Addon::Form::Page
     # default validation `validates_associated :column_values` is not suitable for column_values.
     # So, specific validation should be defined.
     validate :validate_column_values
+
+    attr_accessor :link_check_user
     validate :validate_column_links, on: :link
 
     before_save :cms_form_page_delete_unlinked_files
@@ -41,6 +43,31 @@ module Cms::Addon::Form::Page
     end
   end
 
+  def render_html(registers = nil)
+    return html if form.blank?
+
+    registers ||= {
+      cur_site: site,
+      cur_path: url,
+      cur_page: self
+    }
+
+    form.render_html(self, registers).html_safe
+  end
+
+  def form_files
+    files = []
+    column_values.each do |value|
+      if value.respond_to?(:file_id) && value.file
+        files << value.file
+      end
+      if value.respond_to?(:files) && value.files.present?
+        files += value.files.to_a
+      end
+    end
+    files
+  end
+
   private
 
   def validate_column_values
@@ -61,12 +88,13 @@ module Cms::Addon::Form::Page
   end
 
   def validate_column_links
-    @column_link_errors = []
+    @column_link_errors = {}
 
     column_values.each do |column_value|
+      column_value.link_check_user = link_check_user
       column_value.valid?(:link)
       if column_value.link_errors.present?
-        @column_link_errors += column_value.link_errors
+        @column_link_errors.merge!(column_value.link_errors)
       end
     end
   end
@@ -93,10 +121,12 @@ module Cms::Addon::Form::Page
   end
 
   def column_values_was
+    return [] if new_record?
+
     docs = attribute_was("column_values")
 
     if docs.present?
-      docs = docs.map do |doc|
+      docs = docs.select(&:present?).map do |doc|
         type = doc["_type"] || doc[:_type]
         effective_kass = type.camelize.constantize rescue Cms::Column::Value::Base
         Mongoid::Factory.build(Cms::Column::Value::Base, doc.slice(*effective_kass.fields.keys.map(&:to_s)))
@@ -107,6 +137,8 @@ module Cms::Addon::Form::Page
   end
 
   def cms_form_page_delete_unlinked_files
+    return if new_record?
+
     file_ids_is = []
     self.column_values.each do |column_value|
       file_ids_is += column_value.all_file_ids
@@ -123,7 +155,16 @@ module Cms::Addon::Form::Page
 
     unlinked_file_ids = file_ids_was - file_ids_is
     unlinked_file_ids.each_slice(20) do |file_ids|
-      SS::File.in(id: file_ids).destroy_all
+      unlinked_files = SS::File.in(id: file_ids).to_a
+      unlinked_files.each do |unlinked_file|
+        next if self.id != unlinked_file.owner_item_id
+
+        if [ self, unlinked_file ].all? { |obj| obj.respond_to?(:skip_history_trash) }
+          unlinked_file.skip_history_trash = skip_history_trash
+        end
+        unlinked_file.cur_user = @cur_user
+        unlinked_file.destroy
+      end
     end
   end
 

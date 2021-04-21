@@ -8,7 +8,7 @@ module Cms::PublicFilter::OpenGraph
         [ 'og:url', ->() { @cur_item.full_url } ],
         [ 'og:site_name', @cur_site.name ],
         [ 'og:title', ->() { @window_name } ],
-        [ 'og:description', ->() { twitter_description } ],
+        [ 'og:description', ->() { @cur_item.try(:description) } ],
         [ 'og:image', ->() { opengraph_image_urls } ],
       ]
     end
@@ -36,9 +36,8 @@ module Cms::PublicFilter::OpenGraph
 
   def opengraph_image_urls
     urls = extract_image_urls
-    if urls.blank?
-      urls << @cur_site.opengraph_defaul_image_url if @cur_site.opengraph_defaul_image_url.present?
-    end
+    urls = [ @cur_site.opengraph_defaul_image_url ] if urls.blank? && @cur_site.opengraph_defaul_image_url.present?
+    urls.uniq! if urls.present?
     urls
   end
 end

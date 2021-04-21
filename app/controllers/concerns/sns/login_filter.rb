@@ -3,12 +3,14 @@ module Sns::LoginFilter
 
   included do
     protect_from_forgery except: :remote_login
+    before_action :set_organization
     after_action :user_logged_in, only: [:login]
     after_action :user_logged_out, only: [:logout]
     skip_before_action :verify_authenticity_token, raise: false unless SS.config.env.protect_csrf
     prepend_view_path "app/views/sns/login"
     layout "ss/login"
     navi_view nil
+    helper_method :default_logged_in_path
   end
 
   private
@@ -21,16 +23,6 @@ module Sns::LoginFilter
     SS.config.sns.logged_in_page
   end
 
-  def login_success
-    if params[:ref].blank?
-      redirect_to default_logged_in_path
-    elsif params[:ref] =~ /^\/[^\/]/
-      redirect_to URI.parse(params[:ref].to_s).path
-    else
-      render "sns/login/redirect"
-    end
-  end
-
   def render_login(user, email_or_uid, opts = {})
     alert = opts.delete(:alert).presence || t("sns.errors.invalid_login")
 
@@ -39,7 +31,7 @@ module Sns::LoginFilter
       set_user user, opts
 
       respond_to do |format|
-        format.html { login_success }
+        format.html { redirect(true) }
         format.json { head :no_content }
       end
     else
@@ -53,12 +45,44 @@ module Sns::LoginFilter
     end
   end
 
+  def set_organization
+    return if @cur_organization.present?
+
+    organizations = SS::Group.organizations.where(domains: request_host)
+    return if organizations.size != 1
+
+    @cur_organization = organizations.first
+  end
+
   def user_logged_in
     @cur_user.logged_in if @cur_user
   end
 
   def user_logged_out
     @cur_user.logged_out if @cur_user
+  end
+
+  def normalize_url(url)
+    return unless url.respond_to?(:scheme)
+    return unless %w(http https).include?(url.scheme)
+
+    url.fragment = nil
+    url.query = nil
+    url
+  end
+
+  def back_to_url
+    back_to = params[:back_to].to_s
+    return default_logged_in_path if back_to.blank?
+
+    @request_url ||= URI.parse(request.url)
+    back_to_url = URI.join(@request_url, back_to) rescue nil
+    return default_logged_in_path if back_to_url.blank?
+
+    back_to_url = normalize_url(back_to_url)
+    return default_logged_in_path if back_to_url.blank? || !myself_url?(back_to_url)
+
+    back_to_url.to_s
   end
 
   public
@@ -71,5 +95,38 @@ module Sns::LoginFilter
       format.html { redirect_to login_path_by_cookie }
       format.json { head :no_content }
     end
+  end
+
+  def redirect(login = false)
+    ref = params[:ref].to_s
+    if ref.blank?
+      redirect_to back_to_url
+      return
+    end
+
+    @request_url = URI.parse(request.url)
+    @url = URI.join(@request_url, ref) rescue nil
+    if @url.blank?
+      redirect_to back_to_url
+      return
+    end
+
+    @url = normalize_url(@url)
+    if @url.blank?
+      redirect_to back_to_url
+      return
+    end
+
+    if trusted_url?(@url)
+      redirect_to @url.to_s
+      return
+    end
+
+    if login
+      redirect_to back_to_url
+      return
+    end
+
+    render file: "redirect"
   end
 end

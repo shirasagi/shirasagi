@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Ldap::SyncJob, dbscope: :example do
-  let(:group) { create(:cms_group, name: unique_id, ldap_dn: "dc=city,dc=shirasagi,dc=jp") }
+  let(:group) { create(:cms_group, name: unique_id, ldap_dn: "dc=example,dc=jp") }
   let(:item) { create(:ldap_import) }
   subject { Ldap::SyncJob.bind(site_id: cms_site) }
 
@@ -12,8 +12,8 @@ describe Ldap::SyncJob, dbscope: :example do
 
       expect(Job::Log.count).to eq 1
       Job::Log.first.tap do |log|
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
     end
   end

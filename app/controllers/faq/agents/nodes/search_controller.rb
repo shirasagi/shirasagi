@@ -7,7 +7,7 @@ class Faq::Agents::Nodes::SearchController < ApplicationController
   before_action :accept_cors_request, only: [:rss]
 
   def pages
-    Faq::Page.site(@cur_site).and_public(@cur_date)
+    Faq::Page.public_list(site: @cur_site, node: @cur_node, date: @cur_date)
   end
 
   def index
@@ -15,18 +15,17 @@ class Faq::Agents::Nodes::SearchController < ApplicationController
       redirect_to @cur_node.url
       return
     end
-    @category = params[:category]
-    @keyword = params[:keyword]
+    @category = params[:category].try { |cate| cate.numeric? ? cate.to_i : nil }
+    @keyword = params[:keyword].to_s
     @url = mobile_path? ? ::File.join(@cur_site.mobile_url, @cur_node.filename) : @cur_node.url
 
     @query = {}
-    @query[:category] = @category.blank? ? {} : { :category_ids.in => [@category.to_i] }
+    @query[:category] = @category.blank? ? {} : { :category_ids.in => [ @category ] }
     @query[:keyword] = @keyword.blank? ? {} : @keyword.split(/[\s　]+/).uniq.compact.map(&method(:make_query))
 
     @items = pages.
       and(@query[:category]).
       and(@query[:keyword]).
-      and(@cur_node.condition_hash).
       order_by(@cur_node.sort_hash).
       page(params[:page]).
       per(@cur_node.limit)

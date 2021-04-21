@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpdir: true, js: true do
+describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
 
   before do
@@ -19,11 +19,15 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
 
         within "form#item-form" do
           fill_in "item[name]", with: name
-          click_on I18n.t("ss.buttons.upload")
+          wait_cbox_open do
+            click_on I18n.t("ss.buttons.upload")
+          end
         end
         wait_for_cbox do
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-          click_on I18n.t("ss.buttons.attach")
+          wait_cbox_close do
+            click_on I18n.t("ss.buttons.attach")
+          end
         end
         within "form#item-form" do
           expect(page).to have_content("logo.png")
@@ -32,6 +36,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
 
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(page).to have_css(".file-view .name", text: "logo.png")
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         visit gws_workflow_files_path(site: site, state: "all")
         click_on name
@@ -42,6 +47,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
 
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(page).to have_css(".file-view .name", text: "logo.png")
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         expect(Gws::Workflow::File.site(site).count).to eq 2
         expect(Gws::Workflow::File.site(site).where(name: name_with_prefix)).to be_present
@@ -56,11 +62,15 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
 
           within "form#item-form" do
             fill_in "item[name]", with: name
-            click_on I18n.t("ss.buttons.upload")
+            wait_cbox_open do
+              click_on I18n.t("ss.buttons.upload")
+            end
           end
           wait_for_cbox do
             attach_file "item[in_files][]", file_path
-            click_on I18n.t("ss.buttons.attach")
+            wait_cbox_close do
+              click_on I18n.t("ss.buttons.attach")
+            end
           end
           within "form#item-form" do
             expect(page).to have_content(::File.basename(file_path))
@@ -70,6 +80,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
           end
 
           expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
           expect(Gws::Workflow::File.site(site).count).to eq 1
 
           visit gws_workflow_files_path(site: site, state: "all")
@@ -80,6 +91,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
           end
 
           expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
           expect(Gws::Workflow::File.site(site).count).to eq 2
           expect(Gws::Workflow::File.site(site).where(name: name_with_prefix)).to be_present
           Gws::Workflow::File.site(site).where(name: name_with_prefix).first.tap do |item|

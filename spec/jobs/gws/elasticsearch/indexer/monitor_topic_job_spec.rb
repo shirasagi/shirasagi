@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Gws::Elasticsearch::Indexer::MonitorTopicJob, dbscope: :example, tmpdir: true do
+describe Gws::Elasticsearch::Indexer::MonitorTopicJob, dbscope: :example do
   let(:site) { create(:gws_group) }
   let(:user) { gws_user }
   let(:file_path) { Rails.root.join('spec', 'fixtures', 'ss', 'logo.png') }
@@ -45,8 +45,8 @@ describe Gws::Elasticsearch::Indexer::MonitorTopicJob, dbscope: :example, tmpdir
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(requests.length).to eq 2
@@ -85,8 +85,8 @@ describe Gws::Elasticsearch::Indexer::MonitorTopicJob, dbscope: :example, tmpdir
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(requests.length).to eq 2
@@ -122,8 +122,8 @@ describe Gws::Elasticsearch::Indexer::MonitorTopicJob, dbscope: :example, tmpdir
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(requests.length).to eq 2
@@ -157,8 +157,8 @@ describe Gws::Elasticsearch::Indexer::MonitorTopicJob, dbscope: :example, tmpdir
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(requests.length).to eq 2

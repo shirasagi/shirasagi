@@ -13,7 +13,7 @@ this.SS_SearchUI = (function () {
     tr = $("<tr />").attr("data-id", id);//attr
     input = self.anchorAjaxBox.closest("dl").find(".hidden-ids").clone(false);
     input = input.val(id).removeClass("hidden-ids");
-    a = $('<a class="deselect btn" href="#"><%= I18n.t "ss.buttons.delete" %></a>').on("click", self.deselect);
+    a = $('<a class="deselect btn" href="#"><%= I18n.t "ss.buttons.delete" %></a>');
     tr.append($('<td />').append(input).append(name));
     tr.append($('<td />').append(a));
     self.anchorAjaxBox.closest("dl").find(".ajax-selected tbody").prepend(tr);
@@ -68,7 +68,7 @@ this.SS_SearchUI = (function () {
     var self;
     self = this;
     return $(".ajax-selected").each(function () {
-      $(this).find("a.deselect").on("click", self.deselect);
+      $(this).on("click", ".deselect", self.deselect);
       if ($(this).find("a.deselect").size() === 0) {
         return $(this).hide();
       }
@@ -129,11 +129,9 @@ this.SS_SearchUI = (function () {
         return true;
       }
     });
-    $.each(options.submit_on_changes || ["#s_group"], function() {
-      $el.find(this).on("change", function (ev) {
-        self.selectItems($el);
-        return $el.find("form.search").submit();
-      });
+    $el.find("#s_group").on("change", function (ev) {
+      self.selectItems($el);
+      return $el.find("form.search").submit();
     });
     $el.find(".submit-on-change").on("change", function (ev) {
       self.selectItems($el);

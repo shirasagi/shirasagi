@@ -1,6 +1,3 @@
-<%= code_editor ".mod-cms-pagegrouplist .html", mode: :html %>
-<%= jquery do %> Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html'); <% end %>
-
 <dl class="see mod-cms-pagegrouplist">
   <dt><%= @model.t :condition_groups %><%= @model.tt :condition_groups %></dt>
   <dd>
@@ -25,26 +22,6 @@
       </tbody>
     </table>
   </dd>
-
-  <dt><%= @model.t :conditions %><%= @model.tt :conditions %></dt>
-  <dd><%= f.text_area :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
-
-  <dt><%= @model.t :sort %><%= @model.tt :sort %></dt>
-  <dd><%= f.select :sort, @item.sort_options, include_blank: " " %></dd>
-
-  <dt><%= @model.t :limit %><%= @model.tt :limit %></dt>
-  <dd><%= f.number_field :limit %></dd>
-
-  <dt><%= @model.t :upper_html %><%= @model.tt :upper_html %></dt>
-  <dd><%= f.text_area :upper_html, class: :html %></dd>
-
-  <dt><%= @model.t :loop_html %><%= @model.tt :loop_html %></dt>
-  <dd><%= f.select :loop_setting_id, ancestral_loop_settings, include_blank: t('cms.input_directly') %></dd>
-  <dd><%= f.text_area :loop_html, class: :html, style: "height: 100px;" %></dd>
-
-  <dt><%= @model.t :lower_html %><%= @model.tt :lower_html %></dt>
-  <dd><%= f.text_area :lower_html, class: :html %></dd>
-
-  <dt><%= @model.t :new_days %><%= @model.tt :new_days %></dt>
-  <dd><%= f.number_field :new_days %> <%= t "datetime.prompts.day" %></dd>
 </dl>
+
+<%= render "cms/agents/addons/page_list/form", local_assigns %>

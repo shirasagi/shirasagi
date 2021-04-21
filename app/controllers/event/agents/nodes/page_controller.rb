@@ -9,14 +9,14 @@ class Event::Agents::Nodes::PageController < ApplicationController
   before_action :set_calendar_year_month, only: [:index]
 
   def index
-    @items = Cms::Page.site(@cur_site).and_public(@cur_date).
-      where(@cur_node.condition_hash).
+    @items = Cms::Page.public_list(site: @cur_site, node: @cur_node, date: @cur_date).
       where('event_dates.0' => { "$exists" => true })
 
+    disp_cur_display = I18n.t("event.options.event_display.#{@cur_display || "table"}")
     if @year_presented
-      @cur_node.window_name ||= "#{@cur_node.name} #{I18n.l(@date, format: :long_month)}"
+      @cur_node.window_name = "#{@cur_node.name} #{disp_cur_display} #{I18n.l(@date, format: :long_month)}"
     else
-      @cur_node.window_name = @cur_node.name
+      @cur_node.window_name = "#{@cur_node.name} #{disp_cur_display}"
     end
 
     respond_to do |format|
@@ -42,8 +42,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
     @date  = Date.new(@year, @month, @day)
     raise "404" if !within_one_year?(@date)
 
-    @items = Cms::Page.site(@cur_site).and_public(@cur_date).
-      where(@cur_node.condition_hash).
+    @items = Cms::Page.public_list(site: @cur_site, node: @cur_node, date: @cur_date).
       where(event_dates: @date)
 
     respond_to do |format|

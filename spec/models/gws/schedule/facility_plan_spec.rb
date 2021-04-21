@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Gws::Schedule::Plan, type: :model, dbscope: :example, tmpdir: true do
+RSpec.describe Gws::Schedule::Plan, type: :model, dbscope: :example do
   let(:site) { gws_site }
 
   describe "facility_plan_with_max_hour" do

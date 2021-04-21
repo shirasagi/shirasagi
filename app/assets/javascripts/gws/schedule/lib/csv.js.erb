@@ -12,10 +12,10 @@ Gws_Schedule_Csv.render = function (el) {
 
 Gws_Schedule_Csv.prototype.render = function () {
   var self = this;
-  this.$el.find('.import-confirm').click(function(){
+  this.$el.find('.import-confirm').on("click", function(){
     self.$importMode.val('confirm');
   });
-  this.$el.find('.import-save').click(function(){
+  this.$el.find('.import-save').on("click", function(){
     self.$importMode.val('save');
   });
   this.$el.find('#import_form').ajaxForm({
@@ -30,11 +30,11 @@ Gws_Schedule_Csv.prototype.render = function () {
       self.renderError(data);
     }
   });
-//  this.$el.find('.download-csv-template').click(function() {
+//  this.$el.find('.download-csv-template').on("click", function() {
 //    setTimeout(function() { self.showCsvDescription(); }, 0);
 //    return true;
 //  });
-  this.$el.find('.show-csv-description').click(function() {
+  this.$el.find('.show-csv-description').on("click", function() {
     self.showCsvDescription();
   });
 }

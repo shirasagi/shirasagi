@@ -1,7 +1,7 @@
 class Member::Photo
   include Cms::Model::Page
   include Cms::Reference::Member
-  # include Workflow::Addon::Approver
+  include Workflow::Addon::Approver
   include Member::Addon::Photo::Body
   include Member::Addon::Photo::Category
   include Member::Addon::Photo::Location
@@ -15,6 +15,8 @@ class Member::Photo
   before_save :seq_filename, if: ->{ basename.blank? }
 
   default_scope ->{ where(route: "member/photo") }
+  validate :center_position_validate, if: -> { set_center_position.present? }
+  validate :zoom_level_validate, if: -> { set_zoom_level.present? }
 
   field :listable_state, type: String, default: "public"
   field :slideable_state, type: String, default: "closed"
@@ -60,6 +62,27 @@ class Member::Photo
     self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
   end
 
+  def center_position_validate
+    latlon = set_center_position.split(',')
+    if latlon.length == 2
+      lat = latlon[0]
+      lon = latlon[1]
+      if !lat.numeric? || !lon.numeric?
+        self.errors.add :set_center_position, :invalid_latlon
+      elsif lat.to_f.floor < -90 || lat.to_f.ceil > 90 || lon.to_f.floor < -180 || lon.to_f.ceil > 180
+        self.errors.add :set_center_position, :invalid_latlon
+      end
+    else
+      self.errors.add :set_center_position, :invalid_latlon
+    end
+  end
+
+  def zoom_level_validate
+    if set_zoom_level <= 0 || set_zoom_level > 21
+      self.errors.add :set_zoom_level, :invalid_zoom_level
+    end
+  end
+
   class << self
     def contents_search(params = {})
       criteria = self.where({})
@@ -75,11 +98,11 @@ class Member::Photo
       end
 
       if params[:location_ids].present?
-        criteria = criteria.in(photo_location_ids: params[:location_ids])
+        criteria = criteria.in(photo_location_ids: params[:location_ids].select(&:numeric?).map(&:to_i))
       end
 
       if params[:category_ids].present?
-        criteria = criteria.in(photo_category_ids: params[:category_ids])
+        criteria = criteria.in(photo_category_ids: params[:category_ids].select(&:numeric?).map(&:to_i))
       end
 
       criteria

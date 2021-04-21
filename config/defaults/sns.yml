@@ -11,6 +11,15 @@ production: &production
   # Session Lifetime in seconds
   session_lifetime: 1800
 
+  # which kind of urls are allowed
+  #
+  # restricted: restrict to only allow trusted urls
+  # any: any urls are allowed. this means there are no securities.
+  url_type: restricted
+
+  # trusted_urls are list of external url which can transfer without confirmation
+  trusted_urls: []
+
 test:
   <<: *production
 

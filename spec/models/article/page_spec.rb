@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Article::Page, dbscope: :example, tmpdir: true do
+describe Article::Page, dbscope: :example do
   let(:node) { create :article_node_page }
 
   describe "#attributes" do
@@ -118,9 +118,15 @@ describe Article::Page, dbscope: :example, tmpdir: true do
     let(:node) { create :article_node_page, cur_site: site }
 
     before do
+      # to generate keywords and description from html set these attributes
+      site.auto_keywords = 'enabled'
+      site.auto_description = 'enabled'
+
+      # facebook setting
       site.opengraph_type = 'article'
       site.facebook_app_id = unique_id
       site.facebook_page_url = "https://www.facebook.com/pages/#{unique_id}"
+
       site.save!
     end
 
@@ -130,7 +136,10 @@ describe Article::Page, dbscope: :example, tmpdir: true do
       end
       let(:item) do
         h = html + "<img src=\"#{file.url}\">"
-        create(:article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id, html: h)
+        create(
+          :article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id,
+          keywords: nil, description: nil, html: h
+        )
       end
       let(:description) do
         ApplicationController.helpers.sanitize(item.html, tags: []).squish.truncate(200)
@@ -170,7 +179,10 @@ describe Article::Page, dbscope: :example, tmpdir: true do
 
     context "with opengraph_defaul_image_url" do
       let(:item) do
-        create(:article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id, html: html)
+        create(
+          :article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id,
+          keywords: nil, description: nil, html: html
+        )
       end
       let(:description) do
         ApplicationController.helpers.sanitize(item.html, tags: []).squish.truncate(200)
@@ -222,7 +234,10 @@ describe Article::Page, dbscope: :example, tmpdir: true do
       end
       let(:item) do
         h = html + "<img src=\"#{file1.url}\"><img src=\"#{file0.url}\">"
-        create(:article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id, html: h)
+        create(
+          :article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id,
+          keywords: nil, description: nil, html: h
+        )
       end
       let(:description) do
         ApplicationController.helpers.sanitize(item.html, tags: []).squish.truncate(200)
@@ -276,8 +291,14 @@ describe Article::Page, dbscope: :example, tmpdir: true do
     let(:html) { "   <p>あ。&rarr;い</p>\r\n   " }
 
     before do
+      # to generate keywords and description from html set these attributes
+      site.auto_keywords = 'enabled'
+      site.auto_description = 'enabled'
+
+      # twitter setting
       site.twitter_card = 'summary_large_image'
       site.twitter_username = unique_id
+
       site.save!
     end
 
@@ -287,7 +308,10 @@ describe Article::Page, dbscope: :example, tmpdir: true do
       end
       let(:item) do
         h = html + "<img src=\"#{file.url}\">"
-        create(:article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id, html: h)
+        create(
+          :article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id,
+          keywords: nil, description: nil, html: h
+        )
       end
       let(:description) do
         ApplicationController.helpers.sanitize(item.html, tags: []).squish.truncate(200)
@@ -319,7 +343,10 @@ describe Article::Page, dbscope: :example, tmpdir: true do
 
     context "with opengraph_defaul_image_url" do
       let(:item) do
-        create(:article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id, html: html)
+        create(
+          :article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id,
+          keywords: nil, description: nil, html: html
+        )
       end
       let(:description) do
         ApplicationController.helpers.sanitize(item.html, tags: []).squish.truncate(200)
@@ -363,7 +390,10 @@ describe Article::Page, dbscope: :example, tmpdir: true do
       end
       let(:item) do
         h = html + "<img src=\"#{file1.url}\"><img src=\"#{file0.url}\">"
-        create(:article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id, html: h)
+        create(
+          :article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id,
+          keywords: nil, description: nil, html: h
+        )
       end
       let(:description) do
         ApplicationController.helpers.sanitize(item.html, tags: []).squish.truncate(200)
@@ -509,15 +539,14 @@ describe Article::Page, dbscope: :example, tmpdir: true do
       end
 
       context "with Cms::Model::Page" do
-        let!(:cate1) { create :category_node_page }
-        let!(:cate2) { create :category_node_page }
+        let!(:cate1) { create :category_node_page, name: "z", order: 10 }
+        let!(:cate2) { create :category_node_page, name: "y", order: 20 }
         let!(:page) { create :article_page, cur_node: node, category_ids: [ cate1.id, cate2.id ] }
 
         it do
           # Cms::Model::Page
           expect(subject.categories.length).to eq 2
-          expect(subject.categories[0].id).to eq cate1.id
-          expect(subject.categories[1].id).to eq cate2.id
+          expect(subject.categories.map(&:id)).to include(cate1.id, cate2.id)
         end
       end
 
@@ -656,7 +685,7 @@ describe Article::Page, dbscope: :example, tmpdir: true do
           create(
             :article_page, cur_node: node, contact_state: "show", contact_charge: unique_id,
             contact_tel: "0000", contact_fax: "9999", contact_email: "#{unique_id}@example.jp",
-            contact_link_url: "https://#{unique_id}.example.jp/", contact_link_name: unique_id,
+            contact_link_url: "/#{unique_id}/", contact_link_name: unique_id,
             contact_group: group1
           )
         end
@@ -731,6 +760,211 @@ describe Article::Page, dbscope: :example, tmpdir: true do
           expect(subject.values.length).to eq 1
           expect(subject.values[0].value).to eq page.column_values[0].value
         end
+      end
+    end
+  end
+
+  context "when release plan is given" do
+    let(:body) { Array.new(rand(2..5)) { unique_id }.join("\n") }
+    let(:current) { Time.zone.now.beginning_of_minute }
+    let(:release_date) { current + 1.day }
+    let(:close_date) { release_date + 1.day }
+    subject do
+      create(
+        :article_page, cur_node: node, state: "public", released: current, html: body,
+        release_date: release_date, close_date: close_date
+      )
+    end
+
+    describe "release plan lifecycle" do
+      it do
+        # before release date, state is "ready" even though page is created as "public"
+        expect(subject.state).to eq "ready"
+        expect(subject.released).to eq current
+        expect(subject.release_date).to eq release_date
+        expect(subject.close_date).to eq close_date
+
+        # just before release date
+        Timecop.freeze(release_date - 1.second) do
+          job = Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id)
+          expect { job.perform_now }.to output.to_stdout
+        end
+
+        subject.reload
+        expect(subject.state).to eq "ready"
+        expect(subject.released).to eq current
+        expect(subject.release_date).to eq release_date
+        expect(subject.close_date).to eq close_date
+
+        # at release date
+        Timecop.freeze(release_date) do
+          job = Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id)
+          expect { job.perform_now }.to output(include(subject.full_url + "\n")).to_stdout
+        end
+
+        subject.reload
+        expect(subject.state).to eq "public"
+        expect(subject.released).to eq current
+        expect(subject.release_date).to be_nil
+        expect(subject.close_date).to eq close_date
+
+        # just before close date
+        Timecop.freeze(close_date - 1.second) do
+          job = Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id)
+          expect { job.perform_now }.to output.to_stdout
+        end
+
+        subject.reload
+        expect(subject.state).to eq "public"
+        expect(subject.released).to eq current
+        expect(subject.release_date).to be_nil
+        expect(subject.close_date).to eq close_date
+
+        # at close date
+        Timecop.freeze(close_date) do
+          job = Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id)
+          expect { job.perform_now }.to output(include(subject.full_url + "\n")).to_stdout
+        end
+
+        subject.reload
+        expect(subject.state).to eq "closed"
+        expect(subject.released).to eq current
+        # finally, both release_date and close_data are nil, only release_date leaves
+        expect(subject.release_date).to be_nil
+        expect(subject.close_date).to be_nil
+      end
+    end
+
+    describe ".and_public" do
+      it do
+        # ensure that subject is created
+        subject.reload
+
+        # without specific date to and_public
+        expect(described_class.and_public.count).to eq 0
+        # just before release date
+        expect(described_class.and_public(release_date - 1.second).count).to eq 0
+        # at release date
+        expect(described_class.and_public(release_date).count).to eq 1
+        # just before close date
+        expect(described_class.and_public(close_date - 1.second).count).to eq 1
+        # at close date
+        expect(described_class.and_public(close_date).count).to eq 0
+
+        # at release date
+        Timecop.freeze(release_date) do
+          job = Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id)
+          expect { job.perform_now }.to output(include(subject.full_url + "\n")).to_stdout
+
+          subject.reload
+
+          # without specific date to and_public
+          expect(described_class.and_public.count).to eq 1
+          # at release date
+          expect(described_class.and_public(release_date).count).to eq 1
+          # just before close date
+          expect(described_class.and_public(close_date - 1.second).count).to eq 1
+          # at close date
+          expect(described_class.and_public(close_date).count).to eq 0
+
+          # PAST is unknown because release date is set to nil, so that page is detected as public
+          expect(described_class.and_public(release_date - 1.second).count).to eq 1
+        end
+
+        # at close date
+        Timecop.freeze(close_date) do
+          job = Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id)
+          expect { job.perform_now }.to output(include(subject.full_url + "\n")).to_stdout
+
+          subject.reload
+
+          # without specific date to and_public
+          expect(described_class.and_public.count).to eq 0
+          # at close date
+          expect(described_class.and_public(close_date).count).to eq 0
+
+          # PAST is unknown because release date is set to nil, so that page is detected as closed
+          expect(described_class.and_public(release_date - 1.second).count).to eq 0
+          expect(described_class.and_public(release_date).count).to eq 0
+          expect(described_class.and_public(close_date - 1.second).count).to eq 0
+        end
+      end
+    end
+
+    describe "consistency of `#public?` and `.and_public`" do
+      it do
+        # just before release date
+        Timecop.freeze(release_date - 1.second) do
+          subject.reload
+          expect(described_class.and_public.count).to eq 0
+          expect(subject.public?).to be_falsey
+        end
+
+        # at release date
+        Timecop.freeze(release_date) do
+          # before page is released
+          subject.reload
+          expect(described_class.and_public.count).to eq 0
+          expect(subject.public?).to be_falsey
+
+          job = Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id)
+          expect { job.perform_now }.to output(include(subject.full_url + "\n")).to_stdout
+
+          # after page was released
+          subject.reload
+          expect(described_class.and_public.count).to eq 1
+          expect(described_class.and_public.first).to eq subject
+          expect(subject.public?).to be_truthy
+        end
+
+        # at close date
+        Timecop.freeze(close_date) do
+          # before page is closed
+          subject.reload
+          expect(described_class.and_public.count).to eq 1
+          expect(described_class.and_public.first).to eq subject
+          expect(subject.public?).to be_truthy
+
+          job = Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id)
+          expect { job.perform_now }.to output(include(subject.full_url + "\n")).to_stdout
+
+          # after page was closed
+          subject.reload
+          expect(described_class.and_public.count).to eq 0
+          expect(subject.public?).to be_falsey
+        end
+      end
+    end
+  end
+
+  describe ".enum_csv" do
+    let!(:item) { create :article_page, cur_node: node }
+    subject do
+      described_class.all.enum_csv(encoding: "UTF-8", form: nil, cur_user: cms_user, cur_site: cms_site, cur_node: node).to_a
+    end
+
+    context "usual case" do
+      it do
+        expect(subject.length).to eq 2
+        expect(subject[0]).to include(described_class.t(:filename), described_class.t(:name), described_class.t(:body_part))
+        expect(subject[1]).to include(item.basename, item.name)
+      end
+    end
+
+    context "all references or arrays are set null" do
+      before do
+        # some functions are set nil to reference or array fields.
+        # this causes "undefined method" error.
+        item.set(
+          layout_id: nil, body_layout_id: nil, form_id: nil, body_parts: nil, category_ids: nil, event_dates: nil,
+          related_page_ids: nil, related_page_sort: nil, parent_crumb_urls: nil, contact_group_id: nil, group_ids: nil
+        )
+      end
+
+      it do
+        expect(subject.length).to eq 2
+        expect(subject[0]).to include(described_class.t(:filename), described_class.t(:name), described_class.t(:body_part))
+        expect(subject[1]).to include(item.basename, item.name)
       end
     end
   end

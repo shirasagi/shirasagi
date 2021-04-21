@@ -137,7 +137,8 @@ this.Link_Checker = (function () {
       }
 
       if (link[0] === "#") {
-        self.addMessage(link, $html.find(link).length !== 0);
+        var code = ($html.find(link).length != 0) ? 200 : 0;
+        self.addMessage(link, { code: code });
       } else {
         if (/^\//.test(link)) {
           link = Link_Checker.rootUrl + link.slice(1);
@@ -147,7 +148,7 @@ this.Link_Checker = (function () {
     });
 
     if (links.length === 0) {
-      if ($.isEmptyObject(this.links)) {
+      if (SS.isEmptyObject(this.links)) {
         this.resultBox.showMessage("<p>" + Link_Checker.message["noLinks"] + "</p>");
       } else {
         this.resultBox.showResult(this.links);
@@ -162,14 +163,15 @@ this.Link_Checker = (function () {
       url: Link_Checker.url,
       cache: false,
       data: JSON.stringify({
-        "url": links
+        "url": links,
+        "root_url": Link_Checker.rootUrl
       }),
       contentType: 'application/json',
       dataType: "json",
       crossDomain: true,
       success: function (res, status) {
-        $.each(res, function(link, code) {
-          self.addMessage(link, code === 200);
+        $.each(res, function(link, result) {
+          self.addMessage(link, result);
         });
 
         self.resultBox.showResult(self.links);
@@ -202,6 +204,8 @@ this.Link_Checker = (function () {
     var formData = this.form.getFormData($("#" + Form_Preview.form_id));
     formData.append("route", Form_Preview.page_route);
 
+    var status = "ok";
+
     $.ajax({
       type: "POST",
       url: self.form.form_link_check_path,
@@ -212,26 +216,20 @@ this.Link_Checker = (function () {
       success: function(data) {
         if (!data || data.length === 0) {
           self.resultBox.showMessage("<p>" + Link_Checker.message["noLinks"] + "</p>");
-          defer.resolve({ status: "ok" });
+          defer.resolve({ status: status });
           return;
         }
 
-        result = "ok";
+        $.each(data, function(link, result) {
+          self.addMessage(link, result);
 
-        $.each(data, function() {
-          var link = this[0];
-          var status = this[1];
-
-          var msg = '<span class="' + status + '">' + Link_Checker.message[status] + '</span>';
-          self.addMessage(link, null, msg);
-
-          if (status === "failure") {
-            result = "failed";
+          if (result["code"] != 200) {
+            status = "failed";
           }
         })
 
         self.resultBox.showResult(self.links);
-        defer.resolve({ status: result });
+        defer.resolve({ status: status });
       },
       error: function(xhr, status, error) {
         var msg = Link_Checker.message["linkCheckerError"] + ": " + self.form.form_link_check_path;
@@ -255,16 +253,28 @@ this.Link_Checker = (function () {
     this.resultBox.showChecking();
   };
 
-  Link_Checker.prototype.addMessage = function (link, state, msg) {
-    if (! msg) {
-      if (state) {
-        msg = '<span class="success">' + Link_Checker.message["success"] + '</span>';
-      } else {
-        msg = '<span class="failure">' + Link_Checker.message["failure"] + '</span>';
-        this.linkErrorCount++;
-      }
+  Link_Checker.prototype.addMessage = function (link, result) {
+    var code = result["code"];
+    var message = result["message"];
+    var state = (code == 200);
+    var html = "";
+
+    if (state) {
+      html += '<span class="success">' + Link_Checker.message["success"] + '</span> ';
+      html += '<span class="url">' + link + '</span> ';
+    } else {
+      html += '<span class="failure">' + Link_Checker.message["failure"] + '</span> ';
+      html += '<span class="url">' + link + '</span> ';
+      this.linkErrorCount++;
     }
-    this.links[link] = link + " " + msg;
+
+    if (message) {
+      html += '<div class="message detail">'
+      html += message;
+      html += '</div>'
+    }
+
+    this.links[link] = html;
   };
 
   return Link_Checker;

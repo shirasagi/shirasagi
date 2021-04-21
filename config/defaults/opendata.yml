@@ -31,6 +31,7 @@ production: &production
         - スポット名
     pdf:
       page_limit: 3
+      parse_command: "timeout 20 ruby bin/extract_pdf_base64.rb"
 
   harvest:
     importer_api:
@@ -44,6 +45,9 @@ production: &production
     host: 127.0.0.1
     port: 3030
     dataset: opendata
+
+  history:
+    save_days: 14
 
 test:
   <<: *production

@@ -88,7 +88,7 @@ module Gws::Presence::Users::ApiFilter
       raise "403" unless Gws::UserPresence.allowed?(:manage_all, @cur_user, site: @cur_site)
     end
 
-    @item = @user.user_presence(@cur_site) || Gws::UserPresence.new
+    @item = @user.user_presence(@cur_site)
     @item.cur_site = @cur_site
     @item.cur_user = @user
 

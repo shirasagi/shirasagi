@@ -9,7 +9,7 @@ module History::Model::Data
     index({ created: -1 })
     index({ ref_coll: 1, "data._id" => 1, created: -1 })
 
-    cattr_reader(:max_age) { 20 }
+    cattr_reader(:max_age) { SS.config.ss.history_max_age || 20 }
 
     field :version, type: String, default: SS.version
     field :ref_coll, type: String
@@ -21,13 +21,19 @@ module History::Model::Data
     validates :data, presence: true
   end
 
+  module ClassMethods
+    def root
+      "#{SS::Application.private_root}/trash"
+    end
+  end
+
   def coll
     collection.database[ref_coll]
   end
 
   def model
-    models = Mongoid.models.reject { |m| m.to_s.start_with?('Mongoid::') }
-    models.find{ |m| m.to_s == ref_class }
+    return if ref_class.blank? || ref_class.start_with?('Mongoid::')
+    @model ||= ref_class.constantize rescue nil
   end
 
   private
@@ -70,7 +76,9 @@ module History::Model::Data
       end
     end
     model.fields.each do |k, field|
-      next if data[k].blank?
+      next if %w(_id state).include?(k)
+      data[k] = nil if data[k].blank?
+      next if data[k].nil?
 
       if field.type == SS::Extensions::ObjectIds
         klass = field.options[:metadata][:elem_class].constantize
@@ -102,9 +110,9 @@ module History::Model::Data
 
     return if file.blank?
 
-    path = "#{Rails.root}/private/trash/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}"
+    path = "#{History::Trash.root}/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}"
 
-    return unless File.exist?(path)
+    return file.id unless File.exist?(path)
 
     FileUtils.mkdir_p(File.dirname(file.path))
     FileUtils.cp(path, file.path)

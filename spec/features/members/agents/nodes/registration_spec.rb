@@ -177,7 +177,7 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
 
       within "form" do
         expect(page.find("input[name='item[name]']", visible: false).value).to eq name
-        expect(page).to have_css(".colum dd", text: email)
+        expect(page).to have_css(".column dd", text: email)
         fill_in "item[in_password]", with: password
         fill_in "item[in_password_again]", with: password
         expect(page.find("input[name='item[kana]']", visible: false).value).to eq kana

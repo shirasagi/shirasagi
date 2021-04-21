@@ -14,6 +14,12 @@ class Gws::Discussion::TodosController < ApplicationController
 
   private
 
+  # override Gws::BaseFilter#set_gws_assets
+  def set_gws_assets
+    super
+    javascript("gws/calendar")
+  end
+
   def set_forum
     raise "403" unless Gws::Discussion::Forum.allowed?(:read, @cur_user, site: @cur_site)
     @forum = Gws::Discussion::Forum.find(params[:forum_id])
@@ -22,9 +28,9 @@ class Gws::Discussion::TodosController < ApplicationController
   end
 
   def set_crumbs
-    @crumbs << [t('modules.gws/discussion'), gws_discussion_forums_path]
-    @crumbs << [@forum.name, gws_discussion_forum_topics_path]
-    @crumbs << ["TODO", gws_discussion_forum_todos_path]
+    @crumbs << [ @cur_site.menu_discussion_label || t('modules.gws/discussion'), gws_discussion_forums_path ]
+    @crumbs << [ @forum.name, gws_discussion_forum_topics_path ]
+    @crumbs << [ t('modules.gws/schedule/todo'), gws_discussion_forum_todos_path ]
   end
 
   def pre_params
@@ -75,7 +81,7 @@ class Gws::Discussion::TodosController < ApplicationController
     @item.name = "[#{@forum.name}]"
     #@item.member_ids = @forum.member_ids
     #@item.member_custom_group_ids = @forum.member_custom_group_ids
-    @item.member_ids = @forum.discussion_member_ids
+    @item.member_ids = @forum.overall_members.pluck(:id)
   end
 
   def print

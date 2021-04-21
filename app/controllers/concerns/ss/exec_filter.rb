@@ -8,7 +8,7 @@ module SS::ExecFilter
   def index
     respond_to do |format|
       format.html { render file: "ss/tasks/index" }
-      format.json { render json: @item.to_json(methods: :head_logs) }
+      format.json { render file: "ss/tasks/index", content_type: json_content_type, locals: { item: @item } }
     end
   end
 
@@ -17,7 +17,7 @@ module SS::ExecFilter
     return reset if params[:reset]
     return redirect_to({ action: :index }) if @item.running?
 
-    @item.update_attributes state: "ready"
+    @item.update state: "ready"
 
     SS::RakeRunner.run_async *task_command
 
@@ -25,7 +25,7 @@ module SS::ExecFilter
   end
 
   def stop
-    @item.update_attributes interrupt: "stop"
+    @item.update interrupt: "stop"
     redirect_to({ action: :index }, { notice: t("ss.tasks.interrupted") })
   end
 

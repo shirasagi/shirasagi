@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "sns_user_files", type: :feature, dbscope: :example, tmpdir: true do
+describe "sns_user_files", type: :feature, dbscope: :example do
   let(:user) { ss_user }
   let(:item) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", user: user, model: 'ss/user_file') }
   let(:index_path) { sns_user_files_path user.id }
@@ -51,6 +51,26 @@ describe "sns_user_files", type: :feature, dbscope: :example, tmpdir: true do
         click_button I18n.t('ss.buttons.delete')
       end
       expect(current_path).to eq index_path
+    end
+  end
+
+  context "when validation error occurred" do
+    before { login_ss_user }
+
+    it "#new" do
+      visit new_path
+      within "form#item-form" do
+        click_button I18n.t('ss.buttons.save')
+      end
+      expect(status_code).to eq 200
+      expect(page).to have_css("form#item-form")
+
+      within "form#item-form" do
+        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
+        click_button I18n.t('ss.buttons.save')
+      end
+      expect(status_code).to eq 200
+      expect(page).to have_no_css("form#item-form")
     end
   end
 end

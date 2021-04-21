@@ -1,4 +1,4 @@
-this.Gws_Schedule_Calendar = (function () {
+this.Gws_Schedule_Calendar = (function ($) {
   function Gws_Schedule_Calendar() {
   }
 
@@ -16,10 +16,10 @@ this.Gws_Schedule_Calendar = (function () {
     }
     params = this.defaultParams(selector, opts);
     if (opts['restUrl']) {
-      $.extend(true, params, this.editableParams(opts));
+      $.extend(true, params, this.editableParams(selector, opts));
     }
     if (opts['restUrl']) {
-      $.extend(true, params, this.tapMenuParams(opts));
+      $.extend(true, params, this.tapMenuParams(selector, opts));
     }
     $.extend(true, params, opts);
     $(selector).fullCalendar(params);
@@ -53,7 +53,7 @@ this.Gws_Schedule_Calendar = (function () {
       var data, wrap;
       wrap = $(this);
       data = $(this).find('.calendar-text-popup').prop('outerHTML');
-      return wrap.find('.calendar-text-link').click(function () {
+      return wrap.find('.calendar-text-link').on("click", function () {
         Gws_Popup.render($(this), $(data).show());
         return false;
       });
@@ -96,6 +96,13 @@ this.Gws_Schedule_Calendar = (function () {
 
             return $(this).toggleClass("fc-state-active");
           }
+        },
+        reload: {
+          text: "<%= I18n.t('ss.buttons.reload') %>",
+          icon: "gws-schedule-calendar-reload",
+          click: function (e) {
+            $(selector).fullCalendar('refetchEvents');
+          }
         }
       },
       contentHeight: 'auto',
@@ -106,7 +113,7 @@ this.Gws_Schedule_Calendar = (function () {
       fixedWeekCount: false,
       slotEventOverlap: false,
       header: {
-        left: 'today prev next title',
+        left: 'today prev next title reload',
         right: 'withAbsence withTodo month,basicWeek,agendaDay withListView'
       },
       lang: 'ja',
@@ -163,7 +170,7 @@ this.Gws_Schedule_Calendar = (function () {
     return "calendar[path]=" + location.pathname + "&calendar[view]=" + view.name + "&calendar[viewFormat]=" + format + "&calendar[viewTodo]=" + todo + "&calendar[viewAttendance]=" + attendance;
   };
 
-  Gws_Schedule_Calendar.tapMenuParams = function (opts) {
+  Gws_Schedule_Calendar.tapMenuParams = function (selector, opts) {
     var url;
     url = opts['restUrl'];
     return {
@@ -196,7 +203,7 @@ this.Gws_Schedule_Calendar = (function () {
           } else {
             $(".tap-menu").css("top", event.pageY - 5).css("left", event.pageX - 5).show();
           }
-          $(".tap-menu a").click(function () {
+          $(".tap-menu a").on("click", function () {
             var cal;
             if ($(this).data('view')) {
               cal = view.calendar.getCalendar();
@@ -206,7 +213,7 @@ this.Gws_Schedule_Calendar = (function () {
               return false;
             }
           });
-          return $(".tap-menu").mouseleave(function () {
+          return $(".tap-menu").on("mouseleave", function () {
             return $(".tap-menu").remove();
           });
         }
@@ -214,7 +221,7 @@ this.Gws_Schedule_Calendar = (function () {
     };
   };
 
-  Gws_Schedule_Calendar.editableParams = function (opts) {
+  Gws_Schedule_Calendar.editableParams = function (selector, opts) {
     var url;
     url = opts['restUrl'];
     return {
@@ -305,7 +312,7 @@ this.Gws_Schedule_Calendar = (function () {
   };
 
   Gws_Schedule_Calendar.overrideAddLink = function (selector) {
-    return $('.add-plan').click(function (ev) {
+    return $('.add-plan').on("click", function (ev) {
       var date, href, now, start, state, view;
       now = new Date;
       date = $(selector).fullCalendar('getDate');
@@ -334,5 +341,4 @@ this.Gws_Schedule_Calendar = (function () {
 
   return Gws_Schedule_Calendar;
 
-})();
-
+})($jQuery1);

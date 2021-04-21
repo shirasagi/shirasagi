@@ -2,7 +2,7 @@
   cms_form = nil
 %>
 <% head_for(self) do %>
-  <%= stylesheet_link_tag("cms/preview/main") %>
+  <%= stylesheet_link_tag("cms/preview/main", media: "all") %>
   <%= javascript_include_tag("cms/preview/main") %>
   <script>
     <% if rendered %>
@@ -50,7 +50,7 @@
     <% end %>
 
     <% if @cur_site.subdir.present? %>
-      SS_Preview.preview_path = <%== @cur_site.subdir.to_json %>;
+      SS_Preview.preview_path = <%== "/#{@cur_site.subdir}".to_json %>;
     <% end %>
     SS_Preview.mobile_path = <%== @cur_site.mobile_path.to_json %>;
     <% if @preview_page %>

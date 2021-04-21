@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cms::Elasticsearch::Indexer::PageReleaseJob, dbscope: :example, tmpdir: true, es: true do
+describe Cms::Elasticsearch::Indexer::PageReleaseJob, dbscope: :example, es: true do
   let(:site) { cms_site }
   let(:user) { cms_user }
   let(:node) { create(:article_node_page, cur_site: site) }
@@ -16,6 +16,28 @@ describe Cms::Elasticsearch::Indexer::PageReleaseJob, dbscope: :example, tmpdir:
     end
   end
 
+  describe 'feed_all' do
+    it do
+      expect(page.status).to eq 'public'
+
+      # index
+      pages = Cms::Page.site(site).and_public
+      pages.each do |page|
+        job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site)
+        job.perform_now(action: 'index', id: page.id.to_s)
+      end
+      expect(Job::Log.last.logs).to include(/INFO -- : .* Completed Job/)
+      expect(Job::Log.count).to eq 1
+      expect(Cms::PageRelease.all.size).to eq 1
+      expect(Cms::PageIndexQueue.all.size).to eq 1
+
+      # remove queues
+      Cms::PageIndexQueue.site(site).where(action: 'release').destroy_all
+      expect(Cms::PageRelease.all.size).to eq 1
+      expect(Cms::PageIndexQueue.all.size).to eq 0
+    end
+  end
+
   describe 'feed_releases' do
     it do
       # release
@@ -24,59 +46,86 @@ describe Cms::Elasticsearch::Indexer::PageReleaseJob, dbscope: :example, tmpdir:
 
       releases = Cms::PageRelease.all.order_by(created: -1).entries
       releases.first.tap do |release|
-        expect(release.state).to eq 'active'
+        queue = Cms::PageIndexQueue.first
         expect(release.action).to eq 'release'
-        expect(release.es_state).to eq nil
+        expect(release.filename).to eq queue.filename
+        expect(release.action).to eq queue.action
+        expect(release.page_id).to eq queue.page_id
       end
       expect(releases.size).to eq 1
+      expect(Cms::PageIndexQueue.all.size).to eq 1
 
       # index / release
 
-      items = Cms::PageRelease.site(site).active.unindexed.order_by(created: 1)
-      items.each do |item|
-        job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site)
-        job.perform_now(action: 'index', id: item.page_id.to_s, release_id: item.id.to_s)
-      end
-      expect(Job::Log.first.logs).to include(include("INFO -- : Completed Job"))
-      expect(Job::Log.count).to eq 1
+      item = Cms::PageIndexQueue.site(site).order_by(created: -1).first
+      expect(item.job_action).to eq 'index'
 
-      releases = Cms::PageRelease.all.order_by(created: -1).entries
-      releases.first.tap do |release|
-        expect(release.state).to eq 'active'
-        expect(release.action).to eq 'release'
-        expect(release.es_state).to eq 'indexed'
-      end
-      expect(releases.size).to eq 1
+      job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site)
+      job.perform_now(action: item.job_action, id: item.page_id.to_s, queue_id: item.id.to_s)
+      expect(Job::Log.last.logs).to include(/INFO -- : .* Completed Job/)
+      expect(Job::Log.count).to eq 1
+      expect(Cms::PageRelease.all.size).to eq 1
+      expect(Cms::PageIndexQueue.all.size).to eq 0
 
       # close
 
-      page.update_attributes(state: 'closed')
+      page.update(state: 'closed')
 
       releases = Cms::PageRelease.all.order_by(created: -1).entries
       releases.first.tap do |release|
-        expect(release.state).to eq 'active'
         expect(release.action).to eq 'close'
-        expect(release.es_state).to eq nil
       end
       expect(releases.size).to eq 2
+      expect(Cms::PageIndexQueue.all.size).to eq 1
 
       # index / close
 
-      items = Cms::PageRelease.site(site).active.unindexed.order_by(created: 1)
-      items.each do |item|
-        job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site)
-        job.perform_now(action: 'index', id: item.page_id.to_s, release_id: item.id.to_s)
-      end
-      expect(Job::Log.first.logs).to include(include("INFO -- : Completed Job"))
+      item = Cms::PageIndexQueue.site(site).order_by(created: 1).first
+      expect(item.job_action).to eq 'delete'
+
+      job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site)
+      job.perform_now(action: item.job_action, id: item.page_id.to_s, queue_id: item.id.to_s)
+      expect(Job::Log.last.logs).to include(/INFO -- : .* Completed Job/)
       expect(Job::Log.count).to eq 2
+      expect(Cms::PageRelease.all.size).to eq 2
+      expect(Cms::PageIndexQueue.all.size).to eq 0
+
+      # index / release
+
+      page.update(state: 'public')
+
+      item = Cms::PageIndexQueue.site(site).order_by(created: -1).first
+      expect(item.job_action).to eq 'index'
+
+      job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site)
+      job.perform_now(action: item.job_action, id: item.page_id.to_s, queue_id: item.id.to_s)
+      expect(Job::Log.last.logs).to include(/INFO -- : .* Completed Job/)
+      expect(Job::Log.count).to eq 3
+      expect(Cms::PageRelease.all.size).to eq 3
+      expect(Cms::PageIndexQueue.all.size).to eq 0
+
+      # close
+
+      page.destroy
 
       releases = Cms::PageRelease.all.order_by(created: -1).entries
       releases.first.tap do |release|
-        expect(release.state).to eq 'active'
         expect(release.action).to eq 'close'
-        expect(release.es_state).to eq 'indexed'
       end
-      expect(releases.size).to eq 2
+      expect(releases.size).to eq 4
+      expect(Cms::PageIndexQueue.all.size).to eq 1
+
+      # index / close
+
+      item = Cms::PageIndexQueue.site(site).order_by(created: 1).first
+      expect(item.job_action).to eq 'delete'
+
+      job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site)
+      job.perform_now(action: item.job_action, id: item.page_id.to_s, queue_id: item.id.to_s)
+      expect(Job::Log.last.logs).to include(/INFO -- : .* Completed Job/)
+      expect(Job::Log.count).to eq 4
+      expect(Cms::PageRelease.all.size).to eq 4
+      expect(Cms::PageIndexQueue.all.size).to eq 0
     end
   end
 end

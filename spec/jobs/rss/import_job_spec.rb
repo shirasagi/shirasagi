@@ -1,12 +1,22 @@
 require 'spec_helper'
 
-describe Rss::ImportJob, dbscope: :example, http_server: true do
-  http.default port: 56_273
-  http.default doc_root: Rails.root.join("spec", "fixtures", "rss")
+describe Rss::ImportJob, dbscope: :example do
+  before do
+    WebMock.reset!
+
+    chain = stub_request(:get, url)
+    chain = chain.to_return(status: 200, body: ::File.read(Rails.root.join("spec", "fixtures", "rss", path)), headers: {})
+    if respond_to?(:path2)
+      chain = chain.to_return(status: 200, body: ::File.read(Rails.root.join("spec", "fixtures", "rss", path2)), headers: {})
+    end
+    chain.to_return(status: 404)
+  end
+
+  after { WebMock.reset! }
 
   context "when importing rdf" do
     let(:path) { "sample-rdf.xml" }
-    let(:url) { "http://127.0.0.1:#{http.port}/#{path}" }
+    let(:url) { "http://#{unique_domain}/#{path}" }
     let(:site) { cms_site }
     let(:node) { create :rss_node_page, site: site, rss_url: url }
     let(:user) { cms_user }
@@ -20,7 +30,7 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
 
   context "when importing rss" do
     let(:path) { "sample-rss.xml" }
-    let(:url) { "http://127.0.0.1:#{http.port}/#{path}" }
+    let(:url) { "http://#{unique_domain}/#{path}" }
     let(:site) { cms_site }
     let(:node) { create :rss_node_page, site: site, rss_url: url }
     let(:user) { cms_user }
@@ -34,7 +44,7 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
 
   context "when importing atom" do
     let(:path) { "sample-atom.xml" }
-    let(:url) { "http://127.0.0.1:#{http.port}/#{path}" }
+    let(:url) { "http://#{unique_domain}/#{path}" }
     let(:site) { cms_site }
     let(:node) { create :rss_node_page, site: site, rss_url: url }
     let(:user) { cms_user }
@@ -49,34 +59,41 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
   describe ".import_jobs" do
     context "rss_refresh_method is auto" do
       let(:path) { "sample-rdf.xml" }
-      let(:url) { "http://127.0.0.1:#{http.port}/#{path}" }
+      let(:url) { "http://#{unique_domain}/#{path}" }
       let(:site) { cms_site }
       let(:user) { cms_user }
       let(:refresh_method) { Rss::Node::Page::RSS_REFRESH_METHOD_AUTO }
       let!(:node) { create :rss_node_page, site: site, rss_url: url, rss_refresh_method: refresh_method }
 
       it do
-        expect { described_class.register_jobs(site, user) }.to change { enqueued_jobs.count }.by(1)
+        described_class.perform_jobs(site, user)
+
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        end
       end
     end
 
     context "rss_refresh_method is manual" do
       let(:path) { "sample-rdf.xml" }
-      let(:url) { "http://127.0.0.1:#{http.port}/#{path}" }
+      let(:url) { "http://#{unique_domain}/#{path}" }
       let(:site) { cms_site }
       let(:user) { cms_user }
       let(:refresh_method) { Rss::Node::Page::RSS_REFRESH_METHOD_MANUAL }
       let!(:node) { create :rss_node_page, site: site, rss_url: url, rss_refresh_method: refresh_method }
 
       it do
-        expect { described_class.register_jobs(site, user) }.to change { enqueued_jobs.count }.by(0)
+        described_class.perform_jobs(site, user)
+        expect(Job::Log.count).to eq 0
       end
     end
   end
 
   context "when rss_max_docs is 3" do
     let(:path) { "sample-rdf.xml" }
-    let(:url) { "http://127.0.0.1:#{http.port}/#{path}" }
+    let(:url) { "http://#{unique_domain}/#{path}" }
     let(:site) { cms_site }
     let(:node) { create :rss_node_page, site: site, rss_url: url, rss_max_docs: 3 }
     let(:user) { cms_user }
@@ -84,12 +101,13 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
 
     it do
       expect { described_class.bind(bindings).perform_now }.to change { Rss::Page.count }.from(0).to(3)
+      expect(History::Trash.all.count).to eq 0
     end
   end
 
   context "when rss is not changed" do
     let(:path) { "sample-rdf.xml" }
-    let(:url) { "http://127.0.0.1:#{http.port}/#{path}" }
+    let(:url) { "http://#{unique_domain}/#{path}" }
     let(:site) { cms_site }
     let(:node) { create :rss_node_page, site: site, rss_url: url }
     let(:user) { cms_user }
@@ -98,8 +116,6 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
     it do
       described_class.bind(bindings).perform_now
       expect(Rss::Page.count).to eq 5
-
-      http.options real_path: "/sample-rdf.xml"
 
       described_class.bind(bindings).perform_now
       # expected count is 5.
@@ -130,12 +146,15 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
       expect(doc5).not_to be_nil
       expect(doc5.name).to eq '記事5'
       expect(doc5.released).to eq Time.zone.parse('2015-06-08T10:00:00+09:00')
+
+      expect(History::Trash.all.count).to eq 0
     end
   end
 
   context "when rss is updated" do
     let(:path) { "sample-rdf.xml" }
-    let(:url) { "http://127.0.0.1:#{http.port}/#{path}" }
+    let(:path2) { "sample-rdf-2.xml" }
+    let(:url) { "http://#{unique_domain}/#{path}" }
     let(:site) { cms_site }
     let(:node) { create :rss_node_page, site: site, rss_url: url }
     let(:user) { cms_user }
@@ -144,12 +163,12 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
     it do
       described_class.bind(bindings).perform_now
       expect(Rss::Page.count).to eq 5
-
-      http.options real_path: "/sample-rdf-2.xml"
+      expect(History::Trash.all.count).to eq 0
 
       described_class.bind(bindings).perform_now
       # expected count is 3, 1 added, 3 deleted, 1 updated.
       expect(Rss::Page.count).to eq 3
+      expect(History::Trash.all.count).to eq 0
 
       # doc1 is updated.
       doc1 = Rss::Page.where(rss_link: "http://example.jp/rdf/1.html").first
@@ -178,7 +197,8 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
 
   context "when first rss and last rss was deleted" do
     let(:path) { "sample-rdf.xml" }
-    let(:url) { "http://127.0.0.1:#{http.port}/#{path}" }
+    let(:path2) { "sample-rdf-3.xml" }
+    let(:url) { "http://#{unique_domain}/#{path}" }
     let(:site) { cms_site }
     let(:node) { create :rss_node_page, site: site, rss_url: url }
     let(:user) { cms_user }
@@ -187,12 +207,14 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
     it do
       described_class.bind(bindings).perform_now
       expect(Rss::Page.count).to eq 5
+      expect(History::Trash.all.count).to eq 0
 
-      http.options real_path: "/sample-rdf-3.xml"
+      # http.options real_path: "/sample-rdf-3.xml"
 
       described_class.bind(bindings).perform_now
       # expected count is 3, 2 deleted.
       expect(Rss::Page.count).to eq 3
+      expect(History::Trash.all.count).to eq 0
 
       # doc1 is deleted.
       doc1 = Rss::Page.where(rss_link: "http://example.jp/rdf/1.html").first

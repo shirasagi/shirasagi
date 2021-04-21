@@ -20,7 +20,7 @@ describe Voice::OpenJtalk do
         })
       tmp = Tempfile::new(['voice', '.wav'], '/tmp')
 
-      talk.build(site.id, [ 'apple' ], tmp.path)
+      talk.build(site.id, %w(apple), tmp.path)
       expect(tmp.stat.size).to satisfy { |v| v > 20_000 }
     end
 
@@ -31,7 +31,7 @@ describe Voice::OpenJtalk do
       talk = Voice::OpenJtalk.new(config)
       tmp = Tempfile::new(['voice', '.wav'], '/tmp')
 
-      talk.build(site.id, [ 'apple' ], tmp.path)
+      talk.build(site.id, %w(apple), tmp.path)
       expect(tmp.stat.size).to satisfy { |v| v > 20_000 }
     end
 

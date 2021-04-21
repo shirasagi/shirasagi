@@ -15,5 +15,5 @@
   <dd><%= @item.send :fax %></dd>
 
   <dt><%= @model.t :related_url %></dt>
-  <dd><%= link_to(@item.related_url, @item.related_url, target: "_blank") if @item.related_url.present? %></dd>
+  <dd><%= link_to(@item.related_url, @item.related_url, target: "_blank", rel: "noopener") if @item.related_url.present? %></dd>
 </dl>

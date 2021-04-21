@@ -37,6 +37,7 @@ ja:
       result: 一覧表示
     sidebar:
       click_marker: 地図上で確認
+      no_marker: マーカーはありません
     buttons:
       add_info: 項目を追加する
       del_info: 削除
@@ -49,7 +50,6 @@ ja:
       start: 施設情報の更新処理を開始しました。
       invalid_file: CSV形式のファイルを選択してください。
       log: インポートログ
-      confirm: 既に登録されている施設情報をすべて削除しインポートを行います。更新処理を開始してよろしいですか？
 
   modules:
     facility: 施設
@@ -71,6 +71,7 @@ ja:
       facility/category: 施設の種類
       facility/category_setting: 施設の種類
       facility/opendata_assoc: オープンデータ連携
+      facility/node_list: リスト表示
 
   cms:
     nodes:
@@ -102,7 +103,10 @@ ja:
         field: 項目名
         value: 内容
         map_points: 座標
-        groups: 管理グループ
+        location_ids: 施設の地域
+        category_ids: 施設の種類
+        group_ids: 管理グループ
+        service_ids: 施設の用途
       facility/node/search:
         search_html: 検索HTML
         map_html: 地図HTML
@@ -146,7 +150,7 @@ ja:
         - 左欄項目の内容を設定します。
     facility/addon/image_info:
       image_alt:
-        - 画像のALT属性（代替え文）を記入します。
+        - 画像のALT属性（代替文）を記入します。
       image_comment:
         - 画像の説明文を記入します。
       image_thumb_size:
@@ -179,7 +183,7 @@ ja:
         - "検索結果の地図部分のHTMLを記述することが可能です。以下のテンプレートが使用できます。"
         - "#{canvas} 地図を表示します。"
         - "#{sidebar} 地図と連動するサイドバーを表示します。"
-        - "#{filters} 種類の絞り込み、地域フォーカスを表示します。"
+        - "#{filters} 種類を絞り込んで表示します。"
     facility/addon/pointer_image:
       image:
         - 施設検索結果の地図表示時に表示するポインタ画像を設定します。

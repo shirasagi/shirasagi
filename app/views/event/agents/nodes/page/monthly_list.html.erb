@@ -3,25 +3,29 @@
 <%== @cur_node.upper_html %>
 
 <% if @cur_node.st_categories.present? %>
-  <nav class="event-pages-filter">
+  <nav class="event-pages-filter" aria-label="<%= t("event.category_filter") %>">
     <ul>
       <li class="all">
         <%= link_to t("event.filter_all"), "#", class: "clicked", "data-id" => "all" %>
       </li>
       <% @cur_node.st_categories.order_by(order: 1).each do |cate| %>
         <li class="<%= cate.basename %>">
-          <%= link_to cate.name, "#", "data-id" => cate.id %>
+          <%= link_to cate.name, "##{cate.id}", "data-id" => cate.id, role: "button" %>
         </li>
       <% end %>
     </ul>
   </nav>
 <% end %>
 
-<nav class="event-date">
+<nav class="event-date" aria-label="<%= t("event.calendar") %>">
   <h2 class="<%= event_h1_class @month %>"><%= "#{@year}#{t_date('year')}#{@month}#{t_date('month')}" %></h2>
   <% unless @cur_node.event_display.to_s.end_with?('only') %>
-    <span class="list current"><%= link_to_monthly Date.new(@year, @month, 1), name: I18n.t("event.options.event_display.list"), display: 'list' %></span>
-    <span class="table"><%= link_to_monthly Date.new(@year, @month, 1), name: I18n.t("event.options.event_display.table"), display: 'table' %></span>
+    <span class="list current">
+      <%= link_to_monthly Date.new(@year, @month, 1), name: I18n.t("event.options.event_display.list"), display: 'list', style: true %>
+    </span>
+    <span class="table">
+      <%= link_to_monthly Date.new(@year, @month, 1), name: I18n.t("event.options.event_display.table"), display: 'table', style: true %>
+    </span>
   <% end %>
   <ul>
     <li class="prev"><%= link_to_monthly Date.new(@year, @month, 1).advance(days: -1), display: params[:display] %></li>
@@ -43,9 +47,10 @@
     <dd class="holiday"><%= HolidayJapan.name date %></dd>
     <% end %>
 
-    <% if pages.blank? %>
-    <dd class="no-event"><%= t("event.no_event") %></dd>
+    <% if pages.blank? && @cur_node.substitute_html.present? %>
+      <dd class="no-event"><%= sanitize @cur_node.substitute_html.html_safe %></dd>
     <% end %>
+
     <% pages.each do |page, categories| %>
     <% page = page.becomes_with_route %>
     <dd class="page" data-id="<%= categories.pluck(:id).join(" ") %>">

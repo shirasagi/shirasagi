@@ -1,6 +1,7 @@
 class Gws::SitesController < ApplicationController
   include Gws::BaseFilter
   include SS::CrudFilter
+  helper SS::DatetimeHelper
 
   model Gws::Group
 

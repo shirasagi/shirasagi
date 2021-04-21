@@ -27,6 +27,14 @@ class Cms::UsersController < ApplicationController
     raise e
   end
 
+  def set_selected_items
+    ids = params[:ids]
+    raise "400" unless ids
+    ids = ids.split(",") if ids.is_a?(String)
+    @selected_items = @items = @model.unscoped.in(id: ids)
+    raise "400" unless @items.present?
+  end
+
   public
 
   def index
@@ -55,7 +63,7 @@ class Cms::UsersController < ApplicationController
 
   def destroy
     raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    render_destroy @item.disable
+    render_destroy @item.disabled? ? @item.destroy : @item.disable
   end
 
   def destroy_all
@@ -63,7 +71,8 @@ class Cms::UsersController < ApplicationController
   end
 
   def download
-    csv = @model.unscoped.site(@cur_site, state: 'all').allow(:read, @cur_user, site: @cur_site, node: @cur_node).order_by(_id: 1).to_csv(site: @cur_site)
+    csv = @model.unscoped.site(@cur_site, state: 'all').allow(:read, @cur_user, site: @cur_site, node: @cur_node).
+      order_by(_id: 1).to_csv(site: @cur_site)
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "cms_users_#{Time.zone.now.to_i}.csv"
   end
 

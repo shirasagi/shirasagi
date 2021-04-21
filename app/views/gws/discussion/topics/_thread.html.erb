@@ -1,4 +1,4 @@
-<div class="addon-view">
+<div class="addon-view" id="topic-<%= topic.id %>">
   <div class="addon-head">
     <h2><%= link_to topic.name, gws_discussion_forum_topic_comments_path(forum_id: @forum.id, topic_id: topic.id) %></h2>
   </div>
@@ -6,7 +6,7 @@
     <header>
       <div class="contributor">
         <span class="no"><%= "1." %></span>
-        <%= topic.contributor_name %>
+        <%= gws_public_user_long_name(topic.contributor_name) %>
       </div>
       <div class="datetime updated">
         <%= topic.updated.strftime("%Y/%m/%d %H:%M") %>
@@ -20,7 +20,7 @@
       <% topic.files.each do |file| %>
       <span id="file-<%= file.id %>">
       <img src="/assets/img/gws/ic-file.png" alt="" />
-        <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
+        <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank', rel: "noopener" %>
       </span>
       <% end %>
     </div>
@@ -39,11 +39,11 @@
     <div style="background: #f2f2f2; padding-bottom: 12px; border-left: hidden; border-right: hidden;"></div>
   <% end %>
   <% comments.each_with_index do |comment, i| %>
-    <div class="addon-body">
+    <div class="addon-body" id="comment-<%= comment.id %>">
       <header>
         <div class="contributor">
           <span class="no"><%= "#{offset + i + 2}." %></span>
-          <%= comment.contributor_name %>
+          <%= gws_public_user_long_name(comment.contributor_name) %>
         </div>
         <div class="datetime updated">
           <%= comment.updated.strftime("%Y/%m/%d %H:%M") %>
@@ -57,7 +57,7 @@
         <% comment.files.each do |file| %>
           <span id="file-<%= file.id %>">
             <img src="/assets/img/gws/ic-file.png" alt="" />
-            <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
+            <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank', rel: "noopener" %>
           </span>
         <% end %>
       </div>
@@ -142,7 +142,7 @@
           <%= f.hidden_field(:contributor_id) %>
           <%= f.hidden_field(:contributor_name) %>
 
-          <% show_radio_button.call('Gws::User', @cur_user.id, @cur_user.long_name, true) %>
+          <% show_radio_button.call('Gws::User', @cur_user.id, gws_public_user_long_name(@cur_user.long_name), true) %>
           <% @cur_user.groups.in_group(@cur_site).active.each do |group| %>
             <% show_radio_button.call('Gws::Group', group.id, group.section_name, false) %>
           <% end %>

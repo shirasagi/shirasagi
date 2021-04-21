@@ -28,7 +28,7 @@ class Recommend::History::Log
   end
 
   def content
-    filename = path.sub(/^#{site.url}/, "")
+    filename = path.sub(/^#{::Regexp.escape(site.url)}/, "")
     page = Cms::Page.site(site).where(filename: filename).first
     return page if page
 
@@ -43,6 +43,15 @@ class Recommend::History::Log
     def enable_access_logging?(site)
       SS.config.recommend.disable.blank?
       # Recommend::Part::Base.site(site).present?
+    end
+
+    def exclude_paths(paths)
+      return all if paths.blank?
+
+      paths = paths.select(&:present?)
+      return all if paths.blank?
+
+      all.where(path: { "$nin" => paths })
     end
 
     def to_config(opts = {})

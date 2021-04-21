@@ -16,12 +16,11 @@
         <% end %>
       <% else %>
         <% if column.input_type =~ /upload_file/ %>
-          <% @answer.data.each do |ans|  %>
-            <% if ans.column_id == column.id %>
-              <%= hidden_field_tag "#{f.object_name}[#{column.id}]", ans.values[0] if ans.values[0] %>
-            <% end %>
+          <% file_data = @answer.find_data(column) %>
+          <% if file_data && file_data.values.try(:[], 0) %>
+            <%= hidden_field_tag "#{f.object_name}[#{column.id}]", file_data.values[0] %>
+            <%= file_data.values[2] %>
           <% end %>
-          <%= tryb { data.original_filename } || tryb { data.name } if data %><br />
         <% else %>
           <%= f.hidden_field column.id, value: data %><%=br data %>
           <% if column.input_confirm == "enabled" %>
@@ -67,14 +66,27 @@
       <% elsif column.input_type =~ /upload_file/ %>
         <% opt = {id: "#{f.object_name}_#{column.id}" } %>
         <% opt.merge!(column.additional_attr_to_h) %>
-        <%= file_field_tag "#{f.object_name}[#{column.id}]", opt %>
+        <% file_data = @answer.find_data(column) %>
+        <% if file_data && file_data.values.try(:[], 0) %>
+          <%= hidden_field_tag "#{f.object_name}[#{column.id}]", file_data.values[0] if file_data.values[0] %>
+          <%= file_field_tag "#{f.object_name}[#{column.id}]", opt %><br />
+          <%= file_data.values[2] %>
+        <% else %>
+          <%= file_field_tag "#{f.object_name}[#{column.id}]", opt %><br />
+        <% end %>
       <% end %>
     <% end %>
-    <% if column.input_confirm == "enabled" && !confirm %>
-      <p><%= t "inquiry.confirm_input_description", name: column.name %></p>
-      <% opt = { value: "" } %>
-      <%= f.send(column.input_type, "#{column.id}_confirm", opt) %>
-    <% end %>
+  <% end %>
+  <% if column.input_confirm == "enabled" && !confirm %>
+    <fieldset class="column">
+      <legend><%= f.label "#{column.id}_confirm" , "#{t("inquiry.confirm_input", name: column.name)}" %>
+      <span class="required"><%= "#{t("inquiry.required_field")}" %></span></legend>
+      <div class = "fields">
+        <p><%= t "inquiry.confirm_input_description", name: column.name %></p>
+        <% opt = { value: "" } %>
+        <%= f.send(column.input_type, "#{column.id}_confirm", opt) %>
+      </div>
+    </fieldset>
   <% end %>
 <% end %>
 </div>

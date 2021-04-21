@@ -14,22 +14,20 @@ class Uploader::File
 
   def save
     return false unless valid?
-    @binary = self.class.remove_exif(binary) if binary.present? && exif_image?
-    begin
-      if saved_path && path != saved_path # persisted AND path chenged
-        Fs.binwrite(saved_path, binary) unless directory?
-        Fs.mv(saved_path, path)
-      else
-        directory? ? Fs.mkdir_p(path) : Fs.binwrite(path, binary)
-      end
-      @saved_path = @path
-      compile_scss if @css
-      compile_coffee if @js
-      return true
-    rescue => e
-      errors.add :path, ":" + e.message
-      return false
+    @binary = self.class.remove_exif(binary) if binary && exif_image?
+    if saved_path && path != saved_path # persisted AND path chenged
+      Fs.binwrite(saved_path, binary) unless directory?
+      Fs.mv(saved_path, path)
+    else
+      directory? ? Fs.mkdir_p(path) : Fs.binwrite(path, binary)
     end
+    @saved_path = @path
+    compile_scss if @css
+    compile_coffee if @js
+    return true
+  rescue => e
+    errors.add :path, ":" + e.message
+    return false
   end
 
   def destroy
@@ -74,11 +72,13 @@ class Uploader::File
   end
 
   def image?
-    content_type.to_s.start_with?('image/')
+    return SS::ImageConverter.image?(StringIO.new(@binary)) if @binary
+    ::Fs.to_io(path) { |io| SS::ImageConverter.image?(io) }
   end
 
   def exif_image?
-    image? && ext =~ /^(jpe?g|tiff?)$/i
+    return SS::ImageConverter.exif_image?(StringIO.new(@binary)) if @binary
+    ::Fs.to_io(path) { |io| SS::ImageConverter.exif_image?(io) }
   end
 
   def link
@@ -130,17 +130,16 @@ class Uploader::File
 
   class << self
     def remove_exif(binary)
-      list = Magick::ImageList.new
-      list.from_blob(binary)
-      list.each do |image|
+      SS::ImageConverter.read(binary) do |converter|
         case SS.config.env.image_exif_option
         when "auto_orient"
-          image.auto_orient!
+          converter.auto_orient!
         when "strip"
-          image.strip!
+          converter.strip!
         end
+
+        converter.to_io.read
       end
-      list.to_blob
     rescue
       # ImageMagick doesn't able to handle all image formats. There ara some formats causing unsupported handler exception.
       # Not all image formats have exif. Some formats link svg or ico haven't exif.

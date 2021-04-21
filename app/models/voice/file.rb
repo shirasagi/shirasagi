@@ -9,7 +9,7 @@ class Voice::File
   include SS::Reference::Site
   include Cms::SitePermission
   include Voice::Downloadable
-  include Voice::Lockable
+  include SS::Lockable
 
   store_in_default_post
   set_permission_name "cms_tools", :use

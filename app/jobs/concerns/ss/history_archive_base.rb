@@ -29,7 +29,9 @@ module SS::HistoryArchiveBase
     end
   end
 
-  def perform
+  def perform(*args)
+    @options = args.extract_options!
+
     prepare_workdir
 
     select_histories
@@ -48,7 +50,7 @@ module SS::HistoryArchiveBase
   private
 
   def prepare_workdir
-    @work_dir = Rails.root.join('tmp', Process.pid.to_s)
+    @work_dir = Rails.root.join('tmp', [ Process.pid, rand(1_000_000) ].join('.'))
     ::FileUtils.mkdir_p(@work_dir)
   end
 
@@ -109,7 +111,7 @@ module SS::HistoryArchiveBase
         filename = "#{num_year}-#{::File.basename(zip_file)}"
 
         start_at, end_at = self.class.range_of_week(num_year, num_week)
-        name = "#{start_at.strftime('%Y年%1m月%1d日')}〜#{end_at.strftime('%Y年%1m月%1d日')}.zip"
+        name = "#{start_at.strftime('%Y年%1m月%1d日')}#{I18n.t("ss.dash")}#{end_at.strftime('%Y年%1m月%1d日')}.zip"
 
         create_empty_archive_file(name, filename) do |file|
           ::FileUtils.cp(zip_file, file.path)

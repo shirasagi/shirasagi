@@ -10,7 +10,7 @@ module Facility::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
-    include Cms::Addon::NodeList
+    include Facility::Addon::NodeList
     include Facility::Addon::CategorySetting
     include Facility::Addon::ServiceSetting
     include Facility::Addon::LocationSetting
@@ -70,7 +70,7 @@ module Facility::Node
       private
 
       def attributes_to_row(item, additional_columns, opts)
-        maps = Facility::Map.site(item.site).where(filename: /^#{item.filename}\//, depth: item.depth + 1)
+        maps = Facility::Map.site(item.site).where(filename: /^#{::Regexp.escape(item.filename)}\//, depth: item.depth + 1)
         points = maps.map{ |m| m.map_points }.flatten.map{ |m| m[:loc].join(",") }
 
         row = []
@@ -111,17 +111,8 @@ module Facility::Node
 
     default_scope ->{ where(route: "facility/search") }
 
-    def condition_hash
-      cond = []
-
-      cond << { filename: /^#{filename}\// } if conditions.blank?
-      conditions.each do |url|
-        node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
-        next unless node
-        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
-      end
-
-      { '$or' => cond }
+    def condition_hash(options = {})
+      super(options.reverse_merge(bind: :descendants, category: false, default_location: :only_blank))
     end
   end
 
@@ -137,20 +128,8 @@ module Facility::Node
 
     default_scope ->{ where(route: "facility/category") }
 
-    def condition_hash
-      cond = []
-      cids = []
-
-      cids << id
-      conditions.each do |url|
-        node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
-        next unless node
-        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
-        cids << node.id
-      end
-      cond << { :category_ids.in => cids } if cids.present?
-
-      { '$or' => cond }
+    def condition_hash(options = {})
+      super(options.reverse_merge(category: :category_ids))
     end
   end
 
@@ -165,20 +144,8 @@ module Facility::Node
 
     default_scope ->{ where(route: "facility/service") }
 
-    def condition_hash
-      cond = []
-      cids = []
-
-      cids << id
-      conditions.each do |url|
-        node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
-        next unless node
-        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
-        cids << node.id
-      end
-      cond << { :service_ids.in => cids } if cids.present?
-
-      { '$or' => cond }
+    def condition_hash(options = {})
+      super(options.reverse_merge(category: :service_ids))
     end
   end
 
@@ -195,20 +162,8 @@ module Facility::Node
 
     default_scope ->{ where(route: "facility/location") }
 
-    def condition_hash
-      cond = []
-      cids = []
-
-      cids << id
-      conditions.each do |url|
-        node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
-        next unless node
-        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
-        cids << node.id
-      end
-      cond << { :location_ids.in => cids } if cids.present?
-
-      { '$or' => cond }
+    def condition_hash(options = {})
+      super(options.reverse_merge(category: :location_ids))
     end
   end
 end

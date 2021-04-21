@@ -5,8 +5,7 @@ describe Opendata::Resource, dbscope: :example do
   let!(:node_search_dataset) { create(:opendata_node_search_dataset) }
   let(:node) { create(:opendata_node_dataset) }
   let(:dataset) { create(:opendata_dataset, cur_node: node) }
-  let(:license_logo_file) { upload_file(Rails.root.join("spec", "fixtures", "ss", "logo.png")) }
-  let(:license) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
+  let(:license) { create(:opendata_license, cur_site: site) }
   let(:content_type) { "application/vnd.ms-excel" }
 
   def upload_file(file, content_type = nil)
@@ -154,8 +153,7 @@ describe Opendata::Resource, dbscope: :example do
       ::FileUtils.rm_rf tmpdir
     end
 
-    # its(:url) { is_expected.to end_with("/#{URI.escape("index - コピー.html")}") }
-    its(:url) { is_expected.to end_with("/#{SS::FilenameUtils.convert("index - コピー.html", id: subject.file_id)}") }
-    its(:full_url) { is_expected.to end_with("/#{SS::FilenameUtils.convert("index - コピー.html", id: subject.file_id)}") }
+    its(:url) { is_expected.to end_with("/#{Addressable::URI.encode_component(subject.file.filename)}") }
+    its(:full_url) { is_expected.to end_with("/#{Addressable::URI.encode_component(subject.file.filename)}") }
   end
 end

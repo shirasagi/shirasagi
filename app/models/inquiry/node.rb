@@ -13,11 +13,11 @@ module Inquiry::Node
     include Inquiry::Addon::Captcha
     include Inquiry::Addon::Notice
     include Inquiry::Addon::Reply
-    include Inquiry::Addon::ReleasePlan
-    include Inquiry::Addon::ReceptionPlan
     include Inquiry::Addon::Aggregation
     include Inquiry::Addon::Faq
     include Cms::Addon::ForMemberNode
+    include Inquiry::Addon::ReleasePlan
+    include Inquiry::Addon::ReceptionPlan
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
@@ -40,34 +40,17 @@ module Inquiry::Node
   class Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
-    include Cms::Addon::ForMemberNode
-    include Cms::Addon::Release
     include Cms::Addon::Meta
     include Cms::Addon::NodeList
+    include Cms::Addon::ForMemberNode
+    include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
     default_scope ->{ where(route: "inquiry/node") }
 
-    def condition_hash(opts = {})
-      cond = []
-      cond << { filename: /^#{filename}\//, depth: depth + 1 }
-
-      conditions.each do |url|
-        # regex
-        if /\/\*$/.match?(url)
-          filename = url.sub(/\/\*$/, "")
-          cond << { filename: /^#{filename}\// }
-          next
-        end
-
-        node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
-        next unless node
-
-        cond << { filename: node.filename }
-      end
-
-      { '$or' => cond }
+    def condition_hash(options = {})
+      super(options.reverse_merge(category: false))
     end
   end
 end

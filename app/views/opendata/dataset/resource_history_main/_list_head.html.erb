@@ -1,0 +1,67 @@
+<%
+  now = Time.zone.now.beginning_of_day
+  threshold = Opendata::ResourceDownloadHistoryArchiveJob.threshold_day(now, Opendata::ResourceDownloadHistoryArchiveJob.effective_save_days.days)
+  next_day = @cur_ymd + 1.day
+  prev_day = @cur_ymd - 1.day
+
+  btn_today_attr = { name: "btn-today", type: "button", class: %w(btn btn-opendata) }
+  btn_next_attr = { name: "btn-next", type: "button", class: %w(btn btn-opendata) }
+  btn_prev_attr = { name: "btn-prev", type: "button", class: %w(btn btn-opendata) }
+
+  if now.to_date == @cur_ymd.to_date
+    btn_next_attr[:disabled] = "disabled"
+    btn_today_attr[:class] << "btn-active"
+  else
+    btn_today_attr[:data] = { href: url_for(ymd: now.strftime('%Y%m%d')) }
+  end
+
+  if now < next_day
+    btn_next_attr[:disabled] = "disabled"
+    btn_next_attr[:class] << "btn-disabled"
+  else
+    btn_next_attr[:data] = { href: url_for(ymd: next_day.strftime('%Y%m%d')) }
+  end
+
+  if prev_day < threshold
+    btn_prev_attr[:disabled] = "disabled"
+    btn_prev_attr[:class] << "btn-disabled"
+  else
+    btn_prev_attr[:data] = { href: url_for(ymd: prev_day.strftime('%Y%m%d')) }
+  end
+%>
+<div class="list-head">
+  <div class="list-head-action">
+    <div class="btn-group">
+      <%= button_tag(t('gws.history.days.today'), btn_today_attr) %>
+    </div>
+
+    <div class="btn-group">
+      <%= button_tag(t('gws.history.days.next_day'), btn_next_attr) %>
+      <%= text_field_tag(:ymd, @cur_ymd.strftime('%Y/%m/%d'), class: 'datetime js-date', data: { min_date: threshold.strftime('%Y/%m/%d'), max_date: 0}) %>
+      <%= button_tag(t('gws.history.days.prev_day'), btn_prev_attr) %>
+    </div>
+
+    <div class="btn-group">
+      <%= button_tag("CSV", name: "download", type: "button", class: %w(btn btn-opendata btn-download), data: { href: url_for(action: :download, s: params[:s].try(:to_unsafe_h) ) }) %>
+    </div>
+  </div>
+
+  <%= render file: "_search" %>
+</div>
+
+<%= jquery do %>
+  $('.list-head input[name=ymd]').datetimepicker({
+    onChangeDateTime: function(dp, $input) {
+      var ymd = $input.val();
+      ymd = ymd.replace(/\//g, '');
+
+      var url = '<%= url_for(action: :index, ymd: ':ymd') %>';
+      url = url.replace(':ymd', ymd);
+
+      location.href = url;
+    }
+  });
+  $('.list-head button[data-href]').on("click", function() {
+    location.href = $(this).data("href");
+  });
+<% end %>

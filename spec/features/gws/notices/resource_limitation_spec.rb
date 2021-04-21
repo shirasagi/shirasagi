@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_notices", type: :feature, dbscope: :example, tmpdir: true, js: true do
+describe "gws_notices", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let!(:folder) { create(:gws_notice_folder) }
   let(:notice_name) { unique_id }
@@ -23,13 +23,13 @@ describe "gws_notices", type: :feature, dbscope: :example, tmpdir: true, js: tru
       fill_in 'item[text]', with: notice_text
 
       within '#addon-gws-agents-addons-file' do
-        click_on I18n.t('ss.links.upload')
+        wait_cbox_open do
+          click_on I18n.t('ss.links.upload')
+        end
       end
     end
-    wait_for_cbox do
-      expect(page).to have_content(notice_file.name)
-      # click_on notice_file.name
-      first("a[data-id=\"#{notice_file.id}\"]").click
+    wait_cbox_close do
+      click_on notice_file.name
     end
     within 'form#item-form' do
       click_on I18n.t('ss.buttons.save')

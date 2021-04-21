@@ -10,7 +10,7 @@
       </dt>
       <dd>
         <% if @item.public? %>
-          <%= link_to @item.full_url, @item.full_url, target: :_blank %>
+          <%= link_to @item.full_url, @item.full_url, target: :_blank, rel: "noopener" %>
         <% else %>
           <%= @item.name %>
         <% end %>
@@ -21,7 +21,7 @@
   <%= render "ss/crud/addon", addon: { id: "addon-basic", head: @item.t("check_links_errors") } do %>
     <dl class="see">
       <dd class="wide">
-        <%=br @item.check_links_errors.join("\n") %>
+        <%=br @item.check_links_errors %>
       </dd>
       <dd class="wide" style="color: red;">
         <%= @item.t("check_links_errors_remark") %>

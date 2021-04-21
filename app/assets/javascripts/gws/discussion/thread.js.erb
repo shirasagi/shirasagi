@@ -7,7 +7,7 @@ this.Gws_Discussion_Thread = (function () {
     var appendSelectedFile = function (selected, fileId, humanizedName) {
       var span = $('<span></span>');
       var img = $('<img src="/assets/img/gws/ic-file.png" alt="" />');
-      var a = $('<a target="_blank"></a>');
+      var a = $('<a target="_blank" rel="noopener"></a>');
       var input = $('<input type="hidden" name="item[file_ids][]" class="file-id" />');
       var icon = $("<i class=\"material-icons md-18 md-inactive deselect\">close</i>");
 

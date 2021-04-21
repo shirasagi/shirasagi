@@ -14,7 +14,13 @@ class Webmail::PartFile
   end
 
   def extname
-    ::File.extname(part.filename)
+    return "" if part.filename.blank?
+
+    ret = ::File.extname(part.filename)
+    return "" if ret.blank?
+
+    ret = ret[1..-1] if ret.start_with?(".")
+    ret
   end
 
   def size
@@ -33,6 +39,10 @@ class Webmail::PartFile
   end
 
   alias thumb_url url
+
+  def humanized_name
+    "#{::File.basename(part.filename, ".*")} (#{extname.upcase} #{part.part.size.to_s(:human_size)})"
+  end
 
   def read
     effective_part = part

@@ -8,4 +8,7 @@
 
   <dt><%= @model.t :map_api_key %><%= @model.tt :map_api_key %></dt>
   <dd><%= f.text_field :map_api_key %></dd>
+
+  <dt><%= @model.t :map_api_layer %><%= @model.tt :map_api_layer %></dt>
+  <dd><%= f.select :map_api_layer, @item.map_api_layer_options, include_blank: true %></dd>
 </dl>

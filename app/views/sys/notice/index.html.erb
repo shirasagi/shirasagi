@@ -1,0 +1,21 @@
+<% @index_title = proc do |item| %>
+  <%
+    title_css_classes = %w(title)
+    title_css_classes << "notice-severity-high" if item.notice_severity == @model::NOTICE_SEVERITY_HIGH
+  %>
+  <%= link_to item.name, { action: :show, id: item }, class: title_css_classes %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <% if item.notice_severity == @model::NOTICE_SEVERITY_HIGH %>
+    <span class="severity label"><%= t "cms.important_notice" %></span>
+  <% end %>
+  <% if item.notice_target.select(&:present?).present? %>
+    <span class="target"><%= item.notice_target.map { |val| item.disp_notice_target val }.select(&:present?).join(", ") %></span>
+  <% end %>
+  <span class="state"><%= t "ss.state.#{item.state}" %></span>
+<% end %>
+
+<%= render file: "ss/crud/index" %>

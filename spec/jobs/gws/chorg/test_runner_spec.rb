@@ -19,8 +19,8 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1
       Gws::Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       expect(Gws::Group.where(name: changeset.destinations.first['name']).first).to be_nil
@@ -49,8 +49,8 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1
       Gws::Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       expect(Gws::Group.where(id: group.id).first).not_to be_nil
@@ -61,7 +61,9 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
       expect(task.entity_logs.count).to eq 1
       expect(task.entity_logs[0]['model']).to eq 'Gws::Group'
       expect(task.entity_logs[0]['id']).to eq group.id.to_s
-      expect(task.entity_logs[0]['changes']).to include('name')
+      expect(task.entity_logs[0]['changes']).to include(
+        'name', 'contact_tel', 'contact_fax', 'contact_email', 'contact_link_url', 'contact_link_name'
+      )
     end
   end
 
@@ -87,8 +89,8 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1
       Gws::Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       expect(Gws::Group.where(id: group1.id).first).not_to be_nil
@@ -131,8 +133,8 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1
       Gws::Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       # check for not changed

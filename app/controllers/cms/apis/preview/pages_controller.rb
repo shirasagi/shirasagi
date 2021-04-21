@@ -55,6 +55,7 @@ class Cms::Apis::Preview::PagesController < ApplicationController
     location = nil
     if @item.try(:branch?) && @item.state == "public"
       location = cms_preview_path(path: @item.master.url[1..-1])
+      @item.skip_history_trash = true if @item.respond_to?(:skip_history_trash)
       @item.delete
     end
 

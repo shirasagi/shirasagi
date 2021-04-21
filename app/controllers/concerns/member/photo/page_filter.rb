@@ -1,6 +1,6 @@
 module Member::Photo::PageFilter
   extend ActiveSupport::Concern
-  include Cms::CrudFilter
+  include Cms::PageFilter
 
   private
 
@@ -8,7 +8,7 @@ module Member::Photo::PageFilter
     if @cur_node
       raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
       @items = @model.site(@cur_site).node(@cur_node).
-        allow(:read, @cur_user).
+        allow(:read, @cur_user, site: @cur_site).
         search(params[:s]).
         where(cond).
         order_by(updated: -1).

@@ -28,11 +28,11 @@ class Opendata::Appfile
   after_destroy -> { app.save(validate: false) }
 
   def url
-    get_app_url(app, "/appfile/#{id}/#{URI.escape(filename)}")
+    get_app_url(app, "/appfile/#{id}/#{Addressable::URI.escape(filename)}")
   end
 
   def full_url
-    get_app_full_url(app, "/appfile/#{id}/#{URI.escape(filename)}")
+    get_app_full_url(app, "/appfile/#{id}/#{Addressable::URI.escape(filename)}")
   end
 
   def content_url
@@ -82,14 +82,13 @@ class Opendata::Appfile
       attributes = Hash[file.attributes]
       attributes.select!{ |k| file.fields.key?(k) }
 
-      clone_file = SS::File.new(attributes)
-      clone_file.id = nil
-      clone_file.in_file = file.uploaded_file
-      clone_file.user_id = @cur_user.id if @cur_user
+      attributes["user_id"] = @cur_user.id if @cur_user
+      attributes["_id"] = nil
+      clone_file = SS::File.create_empty!(attributes, validate: false) do |new_file|
+        ::FileUtils.copy(file.path, new_file.path)
+      end
       clone_file.owner_item = _parent
-
       clone_file.save(validate: false)
-
       self.file = clone_file
     end
 
@@ -126,7 +125,7 @@ class Opendata::Appfile
       criteria = self.where({})
       return criteria if params.blank?
 
-      criteria = criteria.where(filename: /#{params[:keyword]}/) if params[:keyword].present?
+      criteria = criteria.where(filename: /#{::Regexp.escape(params[:keyword])}/) if params[:keyword].present?
 
       criteria
     end

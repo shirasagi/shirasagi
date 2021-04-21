@@ -5,23 +5,22 @@ module Event::Addon
     include Cms::Addon::List::Model
 
     def sort_options
-      [
-        [I18n.t('event.options.sort.name'), 'name'],
-        [I18n.t('event.options.sort.filename'), 'filename'],
-        [I18n.t('event.options.sort.created'), 'created'],
-        [I18n.t('event.options.sort.updated_1'), 'updated -1'],
-        [I18n.t('event.options.sort.released_1'), 'released -1'],
-        [I18n.t('event.options.sort.order'), 'order'],
-        [I18n.t('event.options.sort.event_dates'), 'event_dates'],
-        [I18n.t('event.options.sort.unfinished_event_dates'), 'unfinished_event_dates'],
-        [I18n.t('event.options.sort.event_dates_today'), 'event_dates_today'],
-        [I18n.t('event.options.sort.event_dates_tomorrow'), 'event_dates_tomorrow'],
-        [I18n.t('event.options.sort.event_dates_week'), 'event_dates_week'],
-        [I18n.t('event.options.sort.event_deadline'), 'event_deadline']
-      ]
+      %w(
+        name filename created updated_desc released_desc order order_desc
+        event_dates unfinished_event_dates finished_event_dates event_dates_today event_dates_tomorrow event_dates_week
+        event_deadline
+      ).map do |k|
+        description = I18n.t("event.sort_options.#{k}.description", default: [ "cms.sort_options.#{k}.description".to_sym, nil ])
+
+        [
+          I18n.t("event.sort_options.#{k}.title".to_sym, default: "cms.sort_options.#{k}.title".to_sym),
+          k.sub("_desc", " -1"),
+          "data-description" => description
+        ]
+      end
     end
 
-    def condition_hash(opts = {})
+    def condition_hash(options = {})
       h = super
       today = Time.zone.today
       case sort
@@ -29,6 +28,8 @@ module Event::Addon
         { "$and" => [ h, { "event_dates.0" => { "$exists" => true } } ] }
       when "unfinished_event_dates"
         { "$and" => [ h, { "event_dates" => { "$elemMatch" => { "$gte" => today } } } ] }
+      when "finished_event_dates"
+        { "$and" => [ h, { "event_dates" => { "$elemMatch" => { "$lt" => today } } } ] }
       when "event_dates_today"
         { "$and" => [ h, { "event_dates" => { "$eq" => today } } ] }
       when "event_dates_tomorrow"
@@ -44,10 +45,18 @@ module Event::Addon
     def sort_hash
       return { released: -1 } if sort.blank?
 
-      if sort =~ /event_dates/
-        { "event_dates.0" => 1 }
+      if sort.include?("event_dates")
+        event_dates_sort_hash
       else
         { sort.sub(/ .*/, "") => (/-1$/.match?(sort) ? -1 : 1) }
+      end
+    end
+
+    def event_dates_sort_hash
+      if sort == "finished_event_dates"
+        { "event_dates.0" => -1 }
+      else
+        { "event_dates.0" => 1 }
       end
     end
   end

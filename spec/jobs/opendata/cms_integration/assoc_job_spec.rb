@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Opendata::CmsIntegration::AssocJob, dbscope: :example, tmpdir: true do
+describe Opendata::CmsIntegration::AssocJob, dbscope: :example do
   let(:site) { cms_site }
   let(:article_node) { create :article_node_page, cur_site: site }
   let(:html) do
@@ -29,10 +29,7 @@ describe Opendata::CmsIntegration::AssocJob, dbscope: :example, tmpdir: true do
     article_page.opendata_dataset_state = 'public'
     article_page.save!
 
-    path = Rails.root.join("spec", "fixtures", "ss", "logo.png")
-    Fs::UploadedFile.create_from_file(path, basename: "spec") do |file|
-      create :opendata_license, cur_site: od_site, in_file: file
-    end
+    create :opendata_license, cur_site: od_site
   end
 
   describe "#perform" do
@@ -43,8 +40,8 @@ describe Opendata::CmsIntegration::AssocJob, dbscope: :example, tmpdir: true do
       expect(Job::Log.site(site).count).to eq 0
       expect(Job::Log.site(od_site).count).to eq 1
       Job::Log.site(od_site).first.tap do |log|
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       expect(Opendata::Dataset.site(site).count).to eq 0

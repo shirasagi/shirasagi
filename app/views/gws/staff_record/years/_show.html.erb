@@ -33,8 +33,15 @@
       <% end %>
     </span>
     <% end %>
+    <% if Gws::StaffRecord::UserTitle.allowed?(:read, @cur_user, site: @cur_site) %>
+    <span>
+      <%= link_to gws_staff_record_user_titles_path(year: @item.id) do %>
+        <%= t('mongoid.models.gws/staff_record/title_ids') %> (<%= number_with_delimiter @item.yearly_user_titles.size %>)
+      <% end %>
+    </span>
+    <% end %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <%= link_to(t('gws/staff_record.links.copy_situation'), copy_situation_gws_staff_record_year_path, class: 'btn') %>
+      <%= link_to(t('gws/staff_record.links.copy_situation'), copy_situation_gws_staff_record_year_path, class: 'btn') %>
     <% end %>
   </dd>
 </dl>

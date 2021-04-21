@@ -1,0 +1,20 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to(t('ss.links.show'), { action: :show, id: item }) %>
+<% end %>
+
+<% @index_title = proc do |item| %>
+  <%= link_to(item.humanized_name, { action: :show, id: item }, class: 'title') %>
+<% end %>
+
+<div class="opendata-resource-histories">
+  <div class="cms-tabs">
+    <%= link_to opendata_dataset_history_downloads_main_path do %>
+      <span class="tab-name"><%= t("opendata.histories.download_histories") %></span>
+    <% end %>
+    <%= link_to opendata_dataset_history_download_archives_path, class: 'current' do %>
+      <span class="tab-name"><%= t("opendata.histories.download_history_archives") %></span>
+    <% end %>
+  </div>
+
+  <%= render file: 'cms/crud/index' %>
+</div>

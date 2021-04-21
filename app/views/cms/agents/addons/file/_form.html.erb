@@ -1,42 +1,3 @@
-<%= jquery do %>
-window.insertContent = function(cont) {
-  if ((typeof tinymce) != "undefined") {
-    tinymce.get(Cms_Form.editorId).execCommand("mceInsertContent", false, cont);
-  }
-  else if (typeof CKEDITOR != "undefined") {
-    CKEDITOR.instances[Cms_Form.editorId].insertHtml(cont);
-  }
-};
-window.deleteContent = function(id) {
-  $(".file-view").each(function() {
-    if (id == $(this).find(".file-id").attr("value")) {
-      if (!confirm('<%= I18n.t('ss.confirm.in_use') %>')) {
-        return;
-      }
-      $(this).remove();
-    }
-  });
-};
-
-var options = {};
-<% if @cur_node %>
-options.selectUrl = function(id) {
-  return "/.s<%= @cur_site.id %>/cms/apis/node<%= @cur_node.id %>/cms/temp_files/" + id  + "/select";
-};
-options.uploadUrl = function() {
-  return "/.s<%= @cur_site.id %>/cms/apis/node<%= @cur_node.id %>/cms/temp_files.json";
-};
-<% else %>
-options.selectUrl = function(id) {
-  return "/.s<%= @cur_site.id %>/cms/apis/temp_files/" + id  + "/select";
-};
-options.uploadUrl = function() {
-  return "/.s<%= @cur_site.id %>/cms/apis/temp_files.json";
-};
-<% end %>
-var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, options);
-<% end %>
-
 <%
   addon ||= local_assigns.fetch(:addon, {})
   if @item.respond_to?(:form) && @item.form.present?
@@ -48,7 +9,6 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, o
 <dl class="see">
   <dd class="wide">
     <%= f.hidden_field "file_ids[]", value: "" %>
-
     <% if @cur_site.file_resizing.present? %>
       <% opts = { "id" => "file-resizing", "data-label" => @cur_site.t(:file_resizing_label, size: @cur_site.file_resizing.join("x")) } %>
       <%= hidden_field_tag "file_resizing", @cur_site.file_resizing.join(","), opts %>
@@ -62,8 +22,8 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, o
       <% end %>
     </span>
     <span class="upload-menu-select">
-      <%= link_to t("sns.user_file"), sns_apis_user_files_path(@cur_user), class: "ajax-box btn" %>
-      <%= link_to t("cms.file"), cms_apis_files_path, class: "ajax-box btn" %>
+      <%= link_to t("sns.user_file"), cms_apis_user_files_path(cid: @cur_node || '-'), class: "ajax-box btn" %>
+      <%= link_to t("cms.file"), cms_apis_files_path(cid: @cur_node || '-'), class: "ajax-box btn" %>
     </span>
     <div class="upload-drop-area">
       <span class="upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
@@ -71,38 +31,32 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, o
 
     <div id="selected-files">
       <% @item.files.each do |file| %>
-        <div class="file-view">
-
-          <%= link_to file.url, class: :thumb, target: "_blank" do %>
-            <% if file.image? %>
-              <%= image_tag file.thumb_url, alt: file.name %>
-            <% else %>
-              <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
-            <% end %>
-          <% end %>
-
-          <div class="name">
-            <label>
-              <%#= f.check_box "file_ids[]", {}, file.id %>
-              <%#= f.hidden_field "file_ids[]", {}, file.id, class: "file-id" %>
-              <input type="hidden" name="item[file_ids][]" value="<%= file.id %>" class="file-id" />
-              <%= file.name %>
-            </label><br />
-          </div>
-
-          <div class="action">
-            <% content = link_to file.humanized_name, file.url, class: "icon-#{file.extname}" %>
-            <%= link_to t("sns.file_attach"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;" %>
-            <% if file.image? %>
-              <% content = image_tag file.url, alt: file.name %>
-              <%= link_to t("sns.image_paste"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;" %>
-              <% content = link_to(file.url, alt: file.name, class: "ajax-box") { image_tag(file.thumb_url, alt: file.name) } %>
-              <%= link_to t("sns.thumb_paste"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;" %>
-            <% end %>
-            <%= link_to t("ss.buttons.delete"), "#", onclick: "deleteContent('#{file.id}'); return false;" %>
-          </div>
-        </div>
+        <%= render "ss/crud/ajax_files/file_view", file: file %>
       <% end %>
     </div>
   </dd>
 </dl>
+
+<%= jquery do %>
+  var $el = $("#<%= addon[:id] %>");
+
+  var options = {};
+  options.selectUrl = function(id) {
+    var selectUrlTemplate = "<%= @cur_node ? select_cms_apis_node_temp_file_path(id: ":id") : select_cms_apis_temp_file_path(id: ":id") %>";
+    return selectUrlTemplate.replace(":id", id);
+  };
+  options.uploadUrl = function() {
+    var uploadUrlTemplate = "<%= @cur_node ? cms_apis_node_temp_files_path(format: "json") : cms_apis_temp_files_path(format: "json") %>";
+    return uploadUrlTemplate;
+  };
+  var tempFile = new SS_Addon_TempFile($el.find(".upload-drop-area"), <%= @cur_user.id %>, options);
+
+  <%
+    file_view_options = {
+      viewPath: view_cms_apis_content_file_path(id: ":id"),
+      confirmationOnDelete: t('ss.confirm.delete'),
+      inUseConfirmation: t('ss.confirm.in_use')
+    }
+  %>
+  SS_FileView.renderFileView($el, <%== file_view_options.to_json %>);
+<% end %>

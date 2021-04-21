@@ -3,7 +3,7 @@
 
 puts "Please input site_name: site=[site_host]" or exit if ENV['site'].blank?
 
-@site = SS::Site.where(host: ENV['site']).first
+@site = Cms::Site.where(host: ENV['site']).first
 puts "Site not found: #{ENV['site']}" or exit unless @site
 
 require "#{Rails.root}/db/seeds/cms/users"
@@ -27,9 +27,10 @@ def save_layout(data)
   cond = { site_id: @site._id, filename: data[:filename] }
   html = File.read("layouts/" + data[:filename]) rescue nil
 
-  item = Cms::Layout.find_or_create_by(cond)
+  item = Cms::Layout.find_or_initialize_by(cond)
   item.attributes = data.merge html: html
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -84,14 +85,15 @@ def save_node(data)
   lower_html = File.read("nodes/" + data[:filename] + ".lower_html") rescue nil
   summary_html = File.read("nodes/" + data[:filename] + ".summary_html") rescue nil
 
-  item = data[:route].sub("/", "/node/").camelize.constantize.unscoped.find_or_create_by(cond)
+  item = data[:route].sub("/", "/node/").camelize.constantize.unscoped.find_or_initialize_by(cond)
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
   item.summary_html = summary_html if summary_html
 
   item.attributes = data
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -122,8 +124,9 @@ inquiry_node = save_node route: "inquiry/form", filename: "inquiry",
   inquiry_html: inquiry_html, inquiry_sent_html: inquiry_sent_html,
   reply_state: "disabled",
   reply_subject: "シラサギ株式会社へのお問い合わせを受け付けました。",
-  reply_upper_text: "以下の内容でお問い合わせを受け付けました。",
-  reply_lower_text: "以上。"
+  reply_upper_text: "",
+  reply_content_state: "static",
+  reply_lower_text: ""
 
 def save_inquiry_column(data)
   puts data[:name]
@@ -182,14 +185,15 @@ def save_part(data)
   loop_html  = File.read("parts/" + data[:filename].sub(/\.html$/, ".loop_html")) rescue nil
   lower_html = File.read("parts/" + data[:filename].sub(/\.html$/, ".lower_html")) rescue nil
 
-  item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_create_by(cond)
+  item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_initialize_by(cond)
   item.html = html if html
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
 
   item.attributes = data
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -245,12 +249,13 @@ def save_page(data)
   summary_html = File.read("pages/" + data[:filename].sub(/\.html$/, "") + ".summary_html") rescue nil
 
   route = data[:route].presence || 'cms/page'
-  item = route.camelize.constantize.find_or_create_by(cond)
+  item = route.camelize.constantize.find_or_initialize_by(cond)
   item.html = html if html
   item.summary_html = summary_html if summary_html
 
   item.attributes = data
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -313,6 +318,8 @@ save_page route: "cms/page", name: "人材紹介サービス", filename: "produc
   order: 10, layout_id: layouts["product"].id
 save_page route: "cms/page", name: "販売促進支援", filename: "product/solution/sales.html",
   order: 20, layout_id: layouts["product"].id
+save_page route: "cms/page", name: "お探しのページは見つかりません。 404 Not Found", filename: "404.html",
+  layout_id: layouts["one"].id
 
 ## -------------------------------------
 puts "# max file size"
@@ -363,3 +370,10 @@ if @site.subdir.present?
   ENV["site"]=@site.host
   Rake::Task['cms:set_subdir_url'].invoke
 end
+
+## -------------------------------------
+puts "# translate_lang"
+item = Translate::Lang.new
+item.cur_site = @site
+item.in_file = Fs::UploadedFile.create_from_file("#{Rails.root}/db/seeds/demo/translate/lang.csv")
+item.import_csv

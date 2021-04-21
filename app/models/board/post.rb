@@ -19,6 +19,8 @@ class Board::Post
   permit_params :captcha, :captcha_key
 
   validates :poster, presence: true
+  validates :email, email: true
+  validates :poster_url, url: true
   validates :node_id, presence: true
 
   validate :validate_text, if: -> { (cur_node || node).text_size_limit != 0 }
@@ -44,9 +46,9 @@ class Board::Post
 
   def validate_banned_words
     cur_node.banned_words.each do |word|
-      errors.add :name, :invalid_word, word: word if name =~ /#{word}/
-      errors.add :text, :invalid_word, word: word if text =~ /#{word}/
-      errors.add :poster, :invalid_word, word: word if poster =~ /#{word}/
+      errors.add :name, :invalid_word, word: word if name.match?(/#{word}/)
+      errors.add :text, :invalid_word, word: word if text.match?(/#{word}/)
+      errors.add :poster, :invalid_word, word: word if poster.match?(/#{word}/)
     end
   end
 
@@ -54,14 +56,6 @@ class Board::Post
     if %r{https?://[\w/:%#\$&\?\(\)~\.=\+\-]+}.match?(text)
       errors.add :text, I18n.t('board.errors.not_allow_urls')
     end
-  end
-
-  def modified_text
-    text = self.text
-    text.gsub!(%r{https?://[\w/:%#\$&\?\(\)~\.=\+\-]+}) do |href|
-      "<a href=\"#{href}\">#{href}</a>"
-    end
-    text.gsub(/(\r\n?)|(\n)/, "<br />").html_safe
   end
 
   def file_previewable?(file, user:, member:)

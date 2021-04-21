@@ -7,16 +7,8 @@ module Opendata::Addon::ZipDataset
     after_destroy :remove_dataset_zip
   end
 
-  def dataset
-    if self.is_a?(Opendata::Dataset)
-      return self
-    elsif self.is_a?(Opendata::Resource)
-      return self.dataset
-    end
-  end
-
   def zip_path
-    "#{Rails.root}/private/opendata/datasets/#{dataset.id.to_s.split("").join("/")}/_/opendata-datasets-#{dataset.id}.zip"
+    "#{Rails.root}/private/opendata/datasets/#{id.to_s.split("").join("/")}/_/opendata-datasets-#{id}.zip"
   end
 
   def zip_exists?
@@ -28,15 +20,14 @@ module Opendata::Addon::ZipDataset
   end
 
   def compression_dataset
-    ::FileUtils.rm_rf(zip_path)
+    ::FileUtils.rm_rf(zip_path) if zip_exists?
     ::FileUtils.mkdir_p(::File.dirname(zip_path))
-
-    return if dataset.resources.blank?
+    return if resources.blank?
 
     begin
       Timeout.timeout(60) do
         files = []
-        dataset.resources.each do |resource|
+        resources.each do |resource|
           if resource.source_url.present?
             name = "#{resource.name.gsub(/[#{Regexp.escape('¥/:*?\"<>|.')}]/, "_")}-#{resource.id}.txt"
             file = Tempfile.open(name)
@@ -44,7 +35,7 @@ module Opendata::Addon::ZipDataset
             file.rewind
             files << [name, file]
           else
-            name = resource.file.name.split(".").join("-#{resource.id}.").to_s
+            name = resource.filename.split(".").join("-#{resource.id}.").to_s
             files << [name, resource.file]
           end
         end
@@ -56,7 +47,7 @@ module Opendata::Addon::ZipDataset
         end
       end
     rescue Timeout::Error => e
-      message = "compression time out\n" + dataset.resources.map(&:full_url).join("\n")
+      message = "compression time out\n" + resources.map(&:full_url).join("\n")
       name = "resource-#{uuid}.txt"
 
       file = Tempfile.open(name)
@@ -72,7 +63,7 @@ module Opendata::Addon::ZipDataset
   end
 
   def remove_dataset_zip
-    FileUtils.rm_rf(zip_path) if zip_exists?
+    ::FileUtils.rm_rf(zip_path) if zip_exists?
   rescue => e
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
   end

@@ -10,7 +10,7 @@ module SS::Relation::Thumb
     after_save :destroy_thumbs, if: -> { in_file || resizing }
     after_save :save_thumbs, if: -> { disable_thumb.blank? && image? }
 
-    thumb_size [120, 90]
+    thumb_size [SS::ImageConverter::DEFAULT_THUMB_WIDTH, SS::ImageConverter::DEFAULT_THUMB_HEIGHT]
   end
 
   module ClassMethods
@@ -72,24 +72,31 @@ module SS::Relation::Thumb
     thumbs_resizing = thumbs_resizing.invert.invert # delete duplicate values
 
     thumbs_resizing.each do |name, size|
-      file = thumbs_was.delete(size)
-      if file
-        if state_changed? || filename_changed? || site_id_changed?
-          file.update(site_id: site_id, filename: filename, owner_item: self, state: state)
+      file = thumbs_was[size]
+      begin
+        if file
+          if state_changed? || filename_changed? || site_id_changed?
+            file.update!(site_id: site_id, filename: filename, owner_item: self, state: state)
+          end
+          file.set(image_size_name: name) if name != file.image_size_name
+        else
+          file = SS::ThumbFile.new
+          file.in_file         = uploaded_file
+          file.resizing        = size
+          file.original_id     = id
+          file.state           = state
+          file.filename        = file.in_file.original_filename
+          file.image_size      = size
+          file.image_size_name = name
+          file.user_id         = user_id
+          file.site_id         = site_id if respond_to?(:site_id)
+          file.save!
         end
-        file.set(image_size_name: name) if name != file.image_size_name
-      else
-        file = SS::ThumbFile.new
-        file.in_file         = uploaded_file
-        file.resizing        = size
-        file.original_id     = id
-        file.state           = state
-        file.filename        = file.in_file.original_filename
-        file.image_size      = size
-        file.image_size_name = name
-        file.user_id         = user_id
-        file.site_id         = site_id if respond_to?(:site_id)
-        file.save
+
+        # remove from thumbs_was only if thumbnail file is created successfully
+        thumbs_was.delete(size)
+      rescue => e
+        Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       end
     end
 

@@ -3,7 +3,7 @@
   <dd class="wide"><%= l(@cur_month.to_date, format: :attendance_year_month) %>のタイムカード</dd>
   <dd class="wide">
     <% @target_users.each do |user| %>
-      <label><%= check_box_tag "#{f.object_name}[user_ids][]", user.id, true, { id: nil } %><%= user.long_name %></label>
+      <label><%= check_box_tag "#{f.object_name}[user_ids][]", user.id, true, { id: nil } %><%= gws_public_user_long_name(user.long_name) %></label>
     <% end %>
   </dd>
 </dl>

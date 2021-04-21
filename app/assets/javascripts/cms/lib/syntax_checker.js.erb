@@ -63,7 +63,6 @@ this.Syntax_Checker = (function () {
     this.$elBody.append(ul);
 
     this.moveLast();
-    SS_Tooltips.render(".detail");
 
     $(window).trigger('resize');
 
@@ -71,11 +70,8 @@ this.Syntax_Checker = (function () {
   };
 
   ResultBox.prototype.appendMessage = function (ul, checks, errors) {
-    var results, self;
-    var correct, detail, li, message, code, column;
-
-    results = [];
-    self = this;
+    var self = this;
+    var correct, li, message, code, column;
 
     var errorHash = {};
 
@@ -109,10 +105,10 @@ this.Syntax_Checker = (function () {
           li = ul.find('> ul:last li:last');
           message = $('<span class="message detail">' + error["msg"] + '</span>');
           if (error["detail"]) {
-            detail = $('<ul>').appendTo(message);
+            var tooltip = $('<div class="tooltip">!</div>').appendTo(message);
+            var detail = $('<ul class="tooltip-content">').appendTo(tooltip);
             $.each(error["detail"], function () {
-              detail.append("<li>" + this + "</li>");
-              detail.hide();
+              detail.append("<li>" + this + "<br></li>");
             });
           }
           li.append(message);
@@ -121,14 +117,15 @@ this.Syntax_Checker = (function () {
           if (error["correctContent"]) {
             correct = $('<a href="#" class="correct">' + "<%= I18n.t('cms.auto_correct.link') %>" + '</a>');
             correct.on("click", function (e) {
-              var setContent, getContent, correctContent, type;
+              var setContent, getContent, correctContent, resolve, type;
 
               correctContent = error["correctContent"];
               setContent = check["setContent"];
               getContent = check["getContent"];
+              resolve = check["resolve"];
               type = check["type"];
 
-              setContent(correctContent(id, { content: getContent(), type: type }, error));
+              setContent(correctContent(id, { content: getContent(), resolve: resolve, type: type }, error));
               $(self.form.addonSelector).find("button.syntax-check").trigger("click");
 
               return false;
@@ -328,7 +325,8 @@ this.Syntax_Checker = (function () {
     checkLinkText: "<%= I18n.t('errors.messages.check_link_text') %>",
     checkObjectText: "<%= I18n.t('errors.messages.check_object_text') %>",
     checkEmbeddedMedia: "<%= I18n.t('errors.messages.check_embedded_media') %>",
-    replaceWord: "<%= I18n.t('errors.messages.replace_word') %>"
+    replaceWord: "<%= I18n.t('errors.messages.replace_word') %>",
+    altIsIncludedInFilename: "<%= I18n.t('errors.messages.alt_is_included_in_filename') %>"
   };
   Syntax_Checker.detail = {
     notSetImgAlt: <%= I18n.t('errors.messages.syntax_check_detail.set_img_alt').to_json %>,
@@ -345,7 +343,8 @@ this.Syntax_Checker = (function () {
     checkInterwordSpace: <%= I18n.t('errors.messages.syntax_check_detail.check_interword_space').to_json %>,
     checkLinkText: <%= I18n.t('errors.messages.syntax_check_detail.check_link_text').to_json %>,
     checkObjectText: <%= I18n.t('errors.messages.syntax_check_detail.check_object_text').to_json %>,
-    checkEmbeddedMedia: <%= I18n.t('errors.messages.syntax_check_detail.check_embedded_media').to_json %>
+    checkEmbeddedMedia: <%= I18n.t('errors.messages.syntax_check_detail.check_embedded_media').to_json %>,
+    altIsIncludedInFilename: <%= I18n.t('errors.messages.syntax_check_detail.alt_is_included_in_filename').to_json %>
   };
   Syntax_Checker.mediaExtensions = [
     "aac", "aif", "aiff", "au", "avi", "flac", "flv", "mid",
@@ -398,7 +397,7 @@ this.Syntax_Checker = (function () {
           return chars.push(c);
         }
       });
-      if (!$.isEmptyObject(chars)) {
+      if (!SS.isEmptyObject(chars)) {
         Syntax_Checker.errors.push(
           {
             id: id,
@@ -448,7 +447,7 @@ this.Syntax_Checker = (function () {
 
     $.each(array, function(idx, html) {
       chars = html.match(/[｡-ﾟ]/g);
-      if (!$.isEmptyObject(chars)) {
+      if (!SS.isEmptyObject(chars)) {
         Syntax_Checker.errors.push(
           {
             id: id,
@@ -537,7 +536,7 @@ this.Syntax_Checker = (function () {
       for (k in words) {
         v = words[k];
         c = html.match(RegExp("" + k.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1'), "g"));
-        if (!$.isEmptyObject(c)) {
+        if (!SS.isEmptyObject(c)) {
           Syntax_Checker.errors.push(
             {
               id: id,
@@ -555,12 +554,13 @@ this.Syntax_Checker = (function () {
     });
   };
   Syntax_Checker.correctReplaceWords = function (id, content, error) {
-    var key, value, array, ret;
+    var key, value, array, ret, regexp, alt;
 
     array = Syntax_Checker.formatContent(content);
     key = error["replaceKey"];
     value = error["replaceValue"];
     ret = [];
+    regexp = RegExp("" + key.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1', "g"));
 
     if (!(key || value)) {
       return;
@@ -572,12 +572,13 @@ this.Syntax_Checker = (function () {
         return this.nodeType === 3;
       }).each(function () {
         var text;
-        text = this.textContent.replace(RegExp("" + key.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1'), "g"), function (c) {
-          return value;
-        });
-        return this.textContent = text;
+        text = this.textContent.replace(regexp, value);
+        this.textContent = text;
       });
-
+      html.find("img[alt]").each(function () {
+        alt = $(this).attr("alt").replace(regexp, value);
+        $(this).attr("alt", alt);
+      });
       ret.push(html.html());
     });
 
@@ -606,13 +607,13 @@ this.Syntax_Checker = (function () {
           dates = $.merge(dates, d);
         }
       });
-      if ($.isEmptyObject(dates)) {
+      if (SS.isEmptyObject(dates)) {
         return;
       }
       dates = $.grep(dates, function (date) {
         return Syntax_Checker.isValidDate(new Date(date));
       });
-      if (!$.isEmptyObject(dates)) {
+      if (!SS.isEmptyObject(dates)) {
         Syntax_Checker.errors.push(
           {
             id: id,
@@ -666,8 +667,10 @@ this.Syntax_Checker = (function () {
 
     $.each(array, function(idx, html) {
       $(html).find('img').each(function () {
-        var alt, errors;
-        alt = $(this).attr('alt');
+        var alt = this.alt;
+        if (alt) {
+          alt = $.trim(alt);
+        }
         if (!alt) {
           Syntax_Checker.errors.push(
             {
@@ -677,6 +680,23 @@ this.Syntax_Checker = (function () {
               ele: this,
               msg: Syntax_Checker.message["notSetImgAlt"],
               detail: Syntax_Checker.detail["notSetImgAlt"]
+            }
+          );
+        }
+
+        var src = this.src;
+        if (src) {
+          src = $.trim(src);
+        }
+        if (alt && src && src.toLowerCase().includes(alt.toLowerCase())) {
+          Syntax_Checker.errors.push(
+            {
+              id: id,
+              idx: idx,
+              code: Syntax_Checker.outerHtmlSummary(this),
+              ele: this,
+              msg: Syntax_Checker.message["altIsIncludedInFilename"],
+              detail: Syntax_Checker.detail["altIsIncludedInFilename"]
             }
           );
         }

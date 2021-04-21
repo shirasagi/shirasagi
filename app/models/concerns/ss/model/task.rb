@@ -2,19 +2,18 @@ module SS::Model::Task
   extend ActiveSupport::Concern
   extend SS::Translation
   include SS::Document
-  # include SS::Reference::Site
+  include SS::Reference::Site
   include SS::Reference::User
-
-  attr_accessor :log_buffer
 
   included do
     store_in collection: "ss_tasks"
     store_in_repl_master
 
-    attr_accessor :cur_site
+    self.site_required = false
+
+    attr_accessor :log_buffer
 
     seqid :id
-    belongs_to :site, class_name: "SS::Site"
     field :name, type: String
     # field :command, type: String
     field :state, type: String, default: "stop"
@@ -24,16 +23,12 @@ module SS::Model::Task
     field :total_count, type: Integer, default: 0
     field :current_count, type: Integer, default: 0
 
-    before_validation :set_site_id, if: ->{ @cur_site }
-
     validates :name, presence: true
     validates :state, presence: true
     validates :started, datetime: true
     validates :closed, datetime: true
 
     after_initialize :init_variables
-
-    scope :site, ->(site) { where(site_id: site.id) }
   end
 
   class Interrupt < StandardError
@@ -58,6 +53,28 @@ module SS::Model::Task
       end
       task.close
     end
+
+    def search(params)
+      all.search_keyword(params).search_site(params).search_state(params)
+    end
+
+    def search_keyword(params)
+      return all if params.blank || params[:keyword].blank?
+
+      all.keyword_in(params[:keyword], :name)
+    end
+
+    def search_site(params)
+      return all if params.blank || params[:site_id].blank?
+
+      all.where(site_id: params[:site_id])
+    end
+
+    def search_state(params)
+      return all if params.blank || params[:state].blank?
+
+      all.where(state: params[:state])
+    end
   end
 
   def count(other = 1)
@@ -75,8 +92,8 @@ module SS::Model::Task
     self.log_buffer = 50
   end
 
-  def running?
-    state == "running"
+  def running?(limit = 1.day)
+    state == "running" && (started.presence || updated) + limit > Time.zone.now
   end
 
   def start
@@ -142,11 +159,11 @@ module SS::Model::Task
     []
   end
 
-  def head_logs(n = 1_000)
+  def head_logs(num_logs = 1_000)
     if log_file_path && ::File.exists?(log_file_path)
       texts = []
       ::File.open(log_file_path) do |f|
-        n.times do
+        num_logs.times do
           line = f.gets || break
           texts << line.chomp
         end
@@ -182,10 +199,6 @@ module SS::Model::Task
   end
 
   private
-
-  def set_site_id
-    self.site_id ||= @cur_site.id
-  end
 
   def change_state(state, attrs = {})
     self.started       = attrs[:started]

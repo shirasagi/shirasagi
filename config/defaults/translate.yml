@@ -1,0 +1,39 @@
+# translate
+
+production: &production
+  location: /translate
+
+  api_options:
+    google_translation: "Google Translation API"
+    microsoft_translator_text: "Microsoft Translator Text API"
+  #  mock: "開発用API"
+
+  mock:
+    array_size_limit: 100
+    text_size_limit: 4000
+    contents_size_limit: 4000
+    interval: 0
+    processor: "loopback"
+
+  microsoft_translator_text:
+    key: ""
+    url: 'https://api.cognitive.microsofttranslator.com/translate?api-version=3.0'
+    array_size_limit: 100
+    text_size_limit: 4000
+    contents_size_limit: 4000
+    interval: 0.2
+
+  google_translation:
+    project_id: ""
+    credentials: ""
+    location_id: "global"
+    array_size_limit: 100
+    text_size_limit: 20000
+    contents_size_limit: 20000
+    interval: 0.2
+
+test:
+  <<: *production
+
+development:
+  <<: *production

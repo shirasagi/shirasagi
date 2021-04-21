@@ -25,14 +25,15 @@ class Chat::Agents::Nodes::BotController < ApplicationController
   public
 
   def index
+    @cur_node = @cur_node.becomes_with_route
     @intents = Chat::Intent.site(@cur_site).
       where(node_id: @cur_node.id).
-      order_by(order: 1, updated: -1).
+      order_by(order: 1, name: 1, updated: -1).
       intents(params[:text])
     if params[:question] == 'success'
-      @results = [{ response: @cur_node.becomes_with_route.chat_success }]
+      @results = [{ response: @cur_node.chat_success }]
     elsif params[:question] == 'retry'
-      @results = [{ response: @cur_node.becomes_with_route.chat_retry }]
+      @results = [{ response: @cur_node.chat_retry }]
     elsif params[:text].present?
       @site_search_node = Cms::Node::SiteSearch.site(@cur_site).and_public(@cur_date).first
       if @site_search_node.present?
@@ -41,8 +42,8 @@ class Chat::Agents::Nodes::BotController < ApplicationController
       end
       if @intents.present?
         @results = @intents.collect do |intent|
-          response = intent.response.presence || @cur_node.becomes_with_route.response_template
-          question = @cur_node.becomes_with_route.question.presence if intent.question == 'enabled'
+          response = intent.response.presence || @cur_node.response_template
+          question = @cur_node.question.presence if intent.question == 'enabled'
           url = uri.try(:to_s) if intent.site_search == 'enabled'
           {
             id: intent.id, suggests: intent.suggest.presence, response: response, 'siteSearchUrl' => url,
@@ -50,10 +51,10 @@ class Chat::Agents::Nodes::BotController < ApplicationController
           }
         end
       else
-        @results = [{ response: @cur_node.becomes_with_route.exception_text, 'siteSearchUrl' => uri.try(:to_s) }]
+        @results = [{ response: @cur_node.exception_text, 'siteSearchUrl' => uri.try(:to_s) }]
       end
     else
-      @results = [{ suggests: @cur_node.becomes_with_route.first_suggest.presence, response: @cur_node.becomes_with_route.first_text }]
+      @results = [{ suggests: @cur_node.first_suggest.presence, response: @cur_node.first_text }]
     end
   end
 end

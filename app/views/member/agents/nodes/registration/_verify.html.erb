@@ -4,17 +4,17 @@
 <%= f.hidden_field_tag("token", params[:token]) %>
 <%= f.hidden_field_tag("group", params[:group]) if params[:group].present? %>
 
-<dl class="colum name">
+<dl class="column name">
   <dt><%= @item.class.t :name %><span class="required"><%= t("ss.required_field") %></span></dt>
   <dd><%= f.text_field :name %><%= remarks :name %></dd>
 </dl>
 
-<dl class="colum email">
+<dl class="column email">
   <dt><%= @item.class.t :email %></dt>
   <dd><%= @item.email %></dd>
 </dl>
 
-<dl class="colum password">
+<dl class="column password">
   <dt><%= @item.t :in_password %><span class="required"><%= t("ss.required_field") %></span></dt>
   <dd><%= f.password_field :in_password %><%= remarks :in_password %></dd>
 
@@ -22,7 +22,7 @@
   <dd><%= f.password_field :in_password_again %><%= remarks :in_password_again %></dd>
 </dl>
 
-<dl class="colum kana">
+<dl class="column kana">
   <dt>
     <%= @item.class.t :kana %>
     <% if @cur_node.kana_required? %>
@@ -32,7 +32,7 @@
   <dd><%= f.text_field :kana %><%= remarks :kana %></dd>
 </dl>
 
-<dl class="colum organization-name">
+<dl class="column organization-name">
   <dt>
     <%= @item.class.t :organization_name %>
     <% if @cur_node.organization_name_required? %>
@@ -42,7 +42,7 @@
   <dd><%= f.text_field :organization_name %><%= remarks :organization_name %></dd>
 </dl>
 
-<dl class="colum job">
+<dl class="column job">
   <dt>
     <%= @item.class.t :job %>
     <% if @cur_node.job_required? %>
@@ -52,7 +52,7 @@
   <dd><%= f.text_field :job %><%= remarks :job %></dd>
 </dl>
 
-<dl class="colum tel">
+<dl class="column tel">
   <dt>
     <%= @item.class.t :tel %>
     <% if @cur_node.tel_required? %>
@@ -62,7 +62,7 @@
   <dd><%= f.text_field :tel %><%= remarks :tel %></dd>
 </dl>
 
-<dl class="colum postal-code">
+<dl class="column postal-code">
   <dt>
     <%= @item.class.t :postal_code %>
     <% if @cur_node.postal_code_required? %>
@@ -77,7 +77,7 @@
   </dd>
 </dl>
 
-<dl class="colum addr">
+<dl class="column addr">
   <dt>
     <%= @item.class.t :addr %>
     <% if @cur_node.addr_required? %>
@@ -87,7 +87,7 @@
   <dd><%= f.text_field :addr %><%= remarks :addr %></dd>
 </dl>
 
-<dl class="colum sex">
+<dl class="column sex">
   <dt>
     <%= @item.class.t :sex %>
     <% if @cur_node.sex_required? %>
@@ -104,7 +104,7 @@
   </dd>
 </dl>
 
-<dl class="colum birthday">
+<dl class="column birthday">
   <dt>
     <%= @item.class.t :birthday %>
     <% if @cur_node.birthday_required? %>

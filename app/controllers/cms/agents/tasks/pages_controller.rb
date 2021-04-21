@@ -1,12 +1,16 @@
 class Cms::Agents::Tasks::PagesController < ApplicationController
   include Cms::PublicFilter::Page
+  include SS::RescueWith
 
   PER_BATCH = 100
 
-  public
-
   def generate
     @task.log "# #{@site.name}"
+
+    if @site.generate_locked?
+      @task.log(@site.t(:generate_locked))
+      return
+    end
 
     pages = Cms::Page.site(@site).and_public
     pages = pages.node(@node) if @node
@@ -14,10 +18,12 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
     @task.total_count = ids.size
 
     ids.each do |id|
-      @task.count
-      page = Cms::Page.site(@site).and_public.where(id: id).first
-      next unless page
-      @task.log page.url if page.becomes_with_route.generate_file
+      rescue_with do
+        @task.count
+        page = Cms::Page.site(@site).and_public.where(id: id).first
+        next unless page
+        @task.log page.url if page.becomes_with_route.generate_file(release: false)
+      end
     end
   end
 
@@ -29,12 +35,14 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
     ids   = pages.pluck(:id)
 
     ids.each do |id|
-      page = Cms::Page.site(@site).where(id: id).first
-      next unless page
-      page = page.becomes_with_route
-      if !page.update
-        @task.log page.url
-        @task.log page.errors.full_messages.join("/")
+      rescue_with do
+        page = Cms::Page.site(@site).where(id: id).first
+        next unless page
+        page = page.becomes_with_route
+        if !page.update
+          @task.log page.url
+          @task.log page.errors.full_messages.join("/")
+        end
       end
     end
   end
@@ -53,11 +61,13 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
     @task.total_count = ids.size
 
     ids.each do |id|
-      @task.count
-      page = Cms::Page.site(@site).or(cond).where(id: id).first
-      next unless page
-      @task.log page.full_url
-      release_page page.becomes_with_route
+      rescue_with do
+        @task.count
+        page = Cms::Page.site(@site).or(cond).where(id: id).first
+        next unless page
+        @task.log page.full_url
+        release_page page.becomes_with_route
+      end
     end
   end
 
@@ -74,6 +84,7 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
 
     if page.save
       if page.try(:branch?) && page.state == "public"
+        page.skip_history_trash = true if page.respond_to?(:skip_history_trash)
         page.delete
       end
     elsif @task
@@ -86,8 +97,10 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
     @task.total_count = pages.size
 
     pages.order_by(id: 1).find_each(batch_size: PER_BATCH) do |page|
-      @task.count
-      @task.log page.path if Fs.rm_rf page.path
+      rescue_with do
+        @task.count
+        @task.log page.path if Fs.rm_rf page.path
+      end
     end
   end
 end

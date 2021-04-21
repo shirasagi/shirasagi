@@ -1,37 +1,6 @@
 <% controller.javascript "/assets/js/jquery.colorbox.js" %>
 <% controller.stylesheet "/assets/css/colorbox/colorbox.css" %>
 
-<%= jquery do %>
-SS.renderAjaxBox({ fixed: true, width: "90%", height: "90%" });
-window.insertContent = function(cont) {
-  if ((typeof tinymce) != "undefined") {
-    tinymce.get("item_html").execCommand("mceInsertContent", false, cont);
-  }
-  else if (typeof CKEDITOR != "undefined") {
-    CKEDITOR.instances.item_html.insertHtml(cont);
-  }
-};
-window.deleteContent = function(id) {
-  if ((typeof tinymce) != "undefined") {
-    data = tinymce.get("item_html").getContent();
-  }
-  else if ((typeof CKEDITOR) != "undefined") {
-    data = CKEDITOR.instances.item_html.getData();
-  }
-  file = 'fs/' + id.split('').join('/') + '/_/';
-  $(".file-view").each(function() {
-    if (id == $(this).find(".file-id").attr("value")) {
-      if (data.indexOf(file) > 0) {
-        if (!confirm('<%= I18n.t('ss.confirm.in_use') %>')) {
-          return;
-        }
-      }
-      $(this).remove();
-    }
-  });
-};
-<% end %>
-
 <dl class="column">
   <dd class="wide">
     <%= f.hidden_field "file_ids[]", value: "" %>
@@ -39,38 +8,31 @@ window.deleteContent = function(id) {
 
     <div id="selected-files">
       <% @item.files.each do |file| %>
-        <div class="file-view">
-
-          <%= link_to file.url, class: :thumb, target: "_blank" do %>
-            <% if file.image? %>
-              <%= image_tag file.thumb_url, alt: file.name %>
-            <% else %>
-              <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
-            <% end %>
-          <% end %>
-
-          <div class="name">
-            <label>
-              <%#= f.check_box "file_ids[]", {}, file.id %>
-              <%#= f.hidden_field "file_ids[]", {}, file.id, class: "file-id" %>
-              <input type="hidden" name="item[file_ids][]" value="<%= file.id %>" class="file-id" />
-              <%= file.name %>
-            </label><br />
-          </div>
-
-          <div class="action">
-            <% content = link_to file.humanized_name, file.url, class: "icon-#{file.extname}" %>
-            <%= link_to t("sns.file_attach"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;" %>
-            <% if file.image? %>
-              <% content = image_tag file.url, alt: file.name %>
-              <%= link_to t("sns.image_paste"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;" %>
-              <% content = link_to(file.url, alt: file.name, class: "ajax-box") { image_tag(file.thumb_url, alt: file.name) } %>
-              <%= link_to t("sns.thumb_paste"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;" %>
-            <% end %>
-            <%= link_to t("ss.buttons.delete"), "#", onclick: "deleteContent('#{file.id}'); return false;" %>
-          </div>
-        </div>
+        <%= render "ss/crud/ajax_files/file_view", file: file, show_properties: false %>
       <% end %>
     </div>
   </dd>
 </dl>
+
+<%= jquery do %>
+  SS.renderAjaxBox({ fixed: true, width: "90%", height: "90%" });
+
+  var insertContent = function(cont) {
+    if ((typeof tinymce) != "undefined") {
+      tinymce.get("item_html").execCommand("mceInsertContent", false, cont);
+    } else if (typeof CKEDITOR != "undefined") {
+      CKEDITOR.instances.item_html.insertHtml(cont);
+    }
+  };
+
+  var getContent = function() {
+    if ((typeof tinymce) != "undefined") {
+      return tinymce.get("item_html").getContent();
+    } else if ((typeof CKEDITOR) != "undefined") {
+      return CKEDITOR.instances.item_html.getData();
+    }
+    return null;
+  };
+
+  SS_FileView.renderFileView($(document.body), { confirmationOnDelete: <%== I18n.t('ss.confirm.delete').to_json %>, inUseConfirmation: <%== I18n.t('ss.confirm.in_use').to_json %>, insertContent: insertContent, getContent: getContent });
+<% end %>

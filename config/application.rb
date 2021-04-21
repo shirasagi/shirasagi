@@ -18,7 +18,7 @@ require "sprockets/railtie"
 Bundler.require(*Rails.groups)
 
 module SS
-  mattr_reader(:version) { "1.12.1" }
+  mattr_reader(:version) { "1.14-rc" }
 
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
@@ -43,33 +43,41 @@ module SS
     Dir["#{config.root}/config/routes/**/routes.rb"].sort.each do |file|
       config.paths["config/routes.rb"] << file
     end
-    Dir["#{config.root}/config/routes/*/routes_end.rb"].sort.each do |file|
+    Dir["#{config.root}/config/routes/**/routes_end.rb"].sort.reverse_each do |file|
       config.paths["config/routes.rb"] << file
     end
+    config.paths["config/routes.rb"] << "#{config.root}/config/routes_end.rb"
 
     config.paths["config/initializers"] << "#{config.root}/config/after_initializers"
 
     config.middleware.use Mongoid::QueryCache::Middleware
 
-    attr_reader :current_env
+    cattr_accessor(:private_root, instance_accessor: false) { "#{Rails.root}/private" }
 
     def call(*args, &block)
-      @current_env = args.first
+      save_current_env = Thread.current["ss.env"]
+      save_current_request = Thread.current["ss.request"]
+      Thread.current["ss.env"] = args.first
+      Thread.current["ss.request"] = nil
       super
     ensure
-      @current_env = nil
-      @current_request = nil
+      Thread.current["ss.env"] = save_current_env
+      Thread.current["ss.request"] = save_current_request
+    end
+
+    def current_env
+      Thread.current["ss.env"]
     end
 
     def current_request
-      return if @current_env.nil?
-      @current_request ||= ActionDispatch::Request.new(@current_env)
+      return if current_env.nil?
+      Thread.current["ss.request"] ||= ActionDispatch::Request.new(current_env)
     end
 
     def current_session_id
-      return unless @current_env
+      return unless current_env
 
-      session = @current_env[Rack::RACK_SESSION]
+      session = current_env[Rack::RACK_SESSION]
       return unless session
 
       session.id
@@ -81,6 +89,45 @@ module SS
       else
         nil
       end
+    end
+
+    def current_controller
+      return if current_request.nil?
+      current_request.params[:controller]
+    end
+
+    def current_path_info
+      return if current_env.nil?
+      current_env["PATH_INFO"]
+    end
+
+    def hostname
+      @hostname ||= begin
+        hostname! rescue nil
+      end
+    end
+
+    def hostname!
+      require "socket"
+      Socket.gethostname
+    end
+
+    def ip_address
+      @ip_address ||= begin
+        ip_address! rescue nil
+      end
+    end
+
+    def ip_address!
+      require "socket"
+
+      udp = UDPSocket.new
+      # クラスBの先頭アドレス,echoポート 実際にはパケットは送信されない。
+      udp.connect("128.0.0.0", 7)
+      address = Socket.unpack_sockaddr_in(udp.getsockname)[1]
+      address
+    ensure
+      udp.close rescue nil
     end
   end
 

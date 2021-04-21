@@ -12,7 +12,7 @@ module Cms::PageFilter
   def set_item
     super
     return unless @cur_node
-    return if (@item.filename =~ /^#{@cur_node.filename}\//) && (@item.depth == @cur_node.depth + 1)
+    return if (@item.filename =~ /^#{::Regexp.escape(@cur_node.filename)}\//) && (@item.depth == @cur_node.depth + 1)
     raise "404"
   end
 
@@ -26,9 +26,11 @@ module Cms::PageFilter
       params[:layout_id] = layout_id if layout_id.present?
 
       if n.respond_to?(:st_forms) && n.st_form_ids.include?(n.st_form_default_id)
-        default_form = n.st_form_default
-        if default_form.present? && default_form.allowed?(:read, @cur_user, site: @cur_site)
-          params[:form_id] = default_form.id
+        if @model.fields.key?("form_id")
+          default_form = n.st_form_default
+          if default_form.present? && default_form.allowed?(:read, @cur_user, site: @cur_site)
+            params[:form_id] = default_form.id
+          end
         end
       end
     end
@@ -39,7 +41,7 @@ module Cms::PageFilter
   def set_items
     @items = @model.site(@cur_site).node(@cur_node)
       .allow(:read, @cur_user)
-      .order_by(updated: -1)
+      .custom_order(params.dig(:s, :sort) || 'updated_desc')
   end
 
   def set_contains_urls_items
@@ -109,6 +111,7 @@ module Cms::PageFilter
     if result && @item.try(:branch?) && @item.state == "public"
       location = { action: :index }
       @item.file_ids = nil if @item.respond_to?(:file_ids)
+      @item.skip_history_trash = true if @item.respond_to?(:skip_history_trash)
       @item.destroy
     end
 

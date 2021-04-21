@@ -1,12 +1,15 @@
 <%= jquery do %>
-Gws_Discussion_Thread.render(<%= @cur_user.id %>);
-<% if @cur_site.discussion_unseen_interval.present? %>
-Gws_Discussion_Unseen.renderUnseen(
-  "<%= gws_discussion_apis_unseen_path(id: @topic.id) %>",
-  <%= @cur_site.discussion_unseen_interval %>,
-  <%= @topic.descendants_updated.to_i %>
-);
-<% end %>
+  Gws_Discussion_Thread.render(<%= @cur_user.id %>);
+  <% if @cur_site.discussion_unseen_interval.present? %>
+  Gws_Discussion_Unseen.renderUnseen(
+    "<%= gws_discussion_apis_unseen_path(id: @topic.id) %>",
+    <%= @cur_site.discussion_unseen_interval %>,
+    <%= @topic.descendants_updated.to_i %>
+  );
+  <% end %>
+
+  var highlighter = new Gws_Elasticsearch_Highlighter();
+  highlighter.render();
 <% end %>
 
 <p class="gws-discussion-unseen" style="display: none; padding-bottom: 10px;">

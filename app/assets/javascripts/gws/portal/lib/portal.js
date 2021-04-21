@@ -1,5 +1,5 @@
 function Gws_Portal(selector, settings) {
-  options = {
+  var options = {
     autogenerate_stylesheet: true,
     resize: {
       enabled: true,
@@ -14,6 +14,9 @@ function Gws_Portal(selector, settings) {
     this.readonly = true;
     options['resize'] = { enabled: false };
     options['draggable'] = { enabled: false, handle: 'disable' };
+  }
+  if (settings && settings['max_rows']) {
+    options['max_rows'] = settings['max_rows'];
   }
 
   this.el = $(selector);
@@ -30,13 +33,16 @@ Gws_Portal.prototype.addItems = function(items) {
 Gws_Portal.prototype.addItem = function(item) {
   var id = item._id.$oid;
 
-  li = this.gs.add_widget(
+  var li = this.gs.add_widget(
     '<li class="portlet-item" data-id="' + id + '"></li>',
     item.grid_data.size_x,
     item.grid_data.size_y,
     item.grid_data.col,
     item.grid_data.row
   );
+  if (! li) {
+    return;
+  }
   li.data('id', id);
 
   var html = this.el.find(".portlet-html[data-id='" + id + "']");
@@ -61,14 +67,14 @@ Gws_Portal.prototype.autoResizeItem = function(widget, height) {
 Gws_Portal.prototype.setSerializeEvent = function(selector) {
   var _this = this;
   _this.updateUrl = $(selector).data('href');
-  $(selector).click(function() {
+  $(selector).on("click", function() {
     _this.serialize();
   });
 };
 
 Gws_Portal.prototype.setResetEvent = function(selector) {
   var _this = this;
-  $(selector).click(function() {
+  $(selector).on("click", function() {
     var list = [];
     _this.el.find(".portlet-item").each(function(index) {
       list.push($(this).clone());

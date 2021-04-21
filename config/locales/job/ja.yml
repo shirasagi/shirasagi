@@ -30,6 +30,7 @@ ja:
       running: 実行中
       completed: 完了
       failed: 失敗
+      ready: 実行待ち
     queue_adapter_errors:
       header: ActiveJob の設定を確認してください。
       body: 次の項目を確認してください。
@@ -46,6 +47,8 @@ ja:
       job/log: ジョブ実行履歴
       job/task: タスク
     attributes:
+      job/log:
+        site_id: サイト
       job/task:
         node_id: フォルダー
         group_id: グループ

@@ -5,7 +5,7 @@ function Service_Quota(selector) {
 
 Service_Quota.prototype.render = function() {
   var _this = this;
-  this.reloadButton.click(function() {
+  this.reloadButton.on("click", function() {
     _this.reloadQuota();
   });
 };

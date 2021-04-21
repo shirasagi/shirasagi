@@ -7,6 +7,33 @@ class ApplicationController < ActionController::Base
   # before_action -> { FileUtils.touch "#{Rails.root}/Gemfile" } if Rails.env.to_s == "development"
   before_action :set_cache_buster
 
+  class CloseableChunkedBody < Rack::Chunked::Body
+    def initialize(*args)
+      super
+      @closed = false
+    end
+
+    def each(&block)
+      super
+    ensure
+      unless @closed
+        close
+        @closed = true
+      end
+    end
+
+    def close
+      return unless @body.respond_to?(:close)
+
+      if @body.method(:close).arity == 0
+        @body.close
+      else
+        # Tempfile support
+        @body.close(true)
+      end
+    end
+  end
+
   def new_agent(controller_name)
     agent = SS::Agent.new controller_name
     agent.controller.params  = params
@@ -36,12 +63,12 @@ class ApplicationController < ActionController::Base
 
     # nginx doc: Setting this to "no" will allow unbuffered responses suitable for Comet and HTTP streaming applications
     headers['X-Accel-Buffering'] = 'no'
-    headers['Cache-Control'] = 'no-cache'
+    headers['Cache-Control'] = 'no-store'
     headers['Transfer-Encoding'] = 'chunked'
     headers.delete('Content-Length')
 
     # output csv by streaming
-    self.response_body = Rack::Chunked::Body.new(enum)
+    self.response_body = CloseableChunkedBody.new(enum)
   end
 
   def send_file_headers!(options)
@@ -54,8 +81,19 @@ class ApplicationController < ActionController::Base
     name = ::Regexp.last_match[1]
     filename = ::Regexp.last_match[2]
 
+    if browser.ie?("<= 11") && ie11_attachment_mime_types.include?(options[:type])
+      name = "attachment"
+    end
     encoded = ERB::Util.url_encode(filename)
-    headers['Content-Disposition'] = "#{name}; filename*=UTF-8''#{encoded}" if encoded != filename
+
+    headers['Content-Disposition'] = "#{name}; filename*=UTF-8''#{encoded}"
+  end
+
+  def ie11_attachment_mime_types
+    @_ie11_attachment_mime_types ||= begin
+      mime_types = SS.config.ie11.dig("content_disposition", "attachment", "mime_type_map")
+      mime_types ? mime_types.values.flatten : []
+    end
   end
 
   def ss_send_file(file, opts = {})
@@ -65,6 +103,10 @@ class ApplicationController < ActionController::Base
     else
       send_data Fs.binread(file), opts
     end
+  end
+
+  def json_content_type
+    (browser.ie? && browser.version.to_i <= 9) ? "text/plain" : "application/json"
   end
 
   private
@@ -82,7 +124,7 @@ class ApplicationController < ActionController::Base
   end
 
   def remote_addr
-    request.env["HTTP_X_REAL_IP"] || request.remote_addr
+    request.env["HTTP_X_REAL_IP"].presence || request.remote_addr
   end
 
   def pc_browser?
@@ -117,4 +159,27 @@ class ApplicationController < ActionController::Base
       response.headers["Expires"] = "-1"
     end
   end
+
+  def trusted_url?(url)
+    return true if Sys::TrustedUrlValidator.url_type == 'any'
+
+    url = ::Addressable::URI.parse(url.to_s)
+
+    known_trusted_urls = []
+    if @cur_site.present? && @cur_site.respond_to?(:domain_with_subdir)
+      domain_with_subdir = @cur_site.domain_with_subdir
+      if domain_with_subdir.present?
+        known_trusted_urls << "//#{domain_with_subdir}"
+      end
+    end
+
+    Sys::TrustedUrlValidator.valid_url?(url, known_trusted_urls)
+  end
+  helper_method :trusted_url?
+
+  def trusted_url!(url)
+    raise "untrusted url" unless trusted_url?(url)
+    url
+  end
+  helper_method :trusted_url!
 end

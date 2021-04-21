@@ -9,6 +9,11 @@ class Gws::Chorg::Task
 
   scope :group, ->(group) { where(group_id: group.id) }
   scope :and_revision, ->(revision) { where(revision_id: revision.id) }
-  # override scope
-  scope :site, ->(group) { group(group) }
+
+  class << self
+    # override scope
+    def site(group)
+      group(group)
+    end
+  end
 end

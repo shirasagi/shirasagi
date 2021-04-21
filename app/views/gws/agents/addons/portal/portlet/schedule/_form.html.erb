@@ -1,6 +1,14 @@
 <dl class="see">
   <dt><%= @model.t :schedule_member_ids %><%= @model.tt :schedule_member_ids %></dt>
   <dd>
+    <% @item.schedule_member_mode_options.each do |label, value| %>
+      <label class="mr-2">
+        <%= f.radio_button :schedule_member_mode, value %>
+        <%= label %>
+      </label>
+    <% end %>
+  </dd>
+  <dd>
     <%= f.hidden_field "schedule_member_ids[]", value: "", class: "hidden-ids" %>
     <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "btn ajax-box" %>
   </dd>
@@ -8,9 +16,9 @@
     <table class="index ajax-selected">
       <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
       <tbody>
-        <% @item.find_schedule_members(@portal).each do |user| %>
+        <% @item.schedule_members.each do |user| %>
         <tr data-id="<%= user.id %>">
-          <td><%= f.hidden_field "schedule_member_ids[]", value: user.id, id: nil %> <%= user.long_name %></td>
+          <td><%= f.hidden_field "schedule_member_ids[]", value: user.id, id: nil %> <%= gws_public_user_long_name(user.long_name) %></td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
         <% end %>

@@ -10,7 +10,7 @@
       var tr;
       tr = $(this);
       tr.find("input[type=checkbox]:enabled").off();
-      tr.find("input[type=checkbox]:enabled").change(function () {
+      tr.find("input[type=checkbox]:enabled").on("change", function () {
         if (tbody.find("input[type=checkbox]:enabled").length === tbody.find("input[type=checkbox]:checked:enabled").length) {
           $(thead).find("input[type=checkbox]:enabled").prop("checked", true);
         } else {
@@ -20,7 +20,7 @@
     });
 
     thead.find("input[type=checkbox]:enabled").off();
-    thead.find("input[type=checkbox]:enabled").change(function () {
+    thead.find("input[type=checkbox]:enabled").on("change", function () {
       var chkbox, i, len, ref, results;
       ref = tbody.find("input[type=checkbox]:enabled");
       results = [];
@@ -58,11 +58,11 @@
             <%= check_box_tag("page_ids[]", item.id, false, (editable ? {} : {disabled: true})) %>
           </td>
           <% if readable %>
-            <td><%= link_to item.name, item.private_show_path, target: "_blank" %></td>
+            <td><%= link_to item.name, item.private_show_path, target: "_blank", rel: "noopener" %></td>
           <% else %>
             <td><%= item.name %></td>
           <% end %>
-          <td><%= link_to item.filename, "#{@cur_site.full_url}#{item.filename}", target: "_blank" %></td>
+          <td><%= link_to item.filename, "#{@cur_site.full_url}#{item.filename}", target: "_blank", rel: "noopener" %></td>
         </tr>
       <% end %>
       </tbody>
@@ -91,11 +91,11 @@
             <%= check_box_tag("part_ids[]", item.id, false, (editable ? {} : {disabled: true})) %>
           </td>
           <% if readable %>
-            <td><%= link_to item.name, item.private_show_path, target: "_blank" %></td>
+            <td><%= link_to item.name, item.private_show_path, target: "_blank", rel: "noopener" %></td>
           <% else %>
             <td><%= item.name %></td>
           <% end %>
-          <td><%= link_to item.filename, "#{@cur_site.full_url}#{item.filename}", target: "_blank" %></td>
+          <td><%= link_to item.filename, "#{@cur_site.full_url}#{item.filename}", target: "_blank", rel: "noopener" %></td>
         </tr>
       <% end %>
       </tbody>
@@ -124,11 +124,11 @@
             <%= check_box_tag("layout_ids[]", item.id, false, (editable ? {} : {disabled: true})) %>
           </td>
           <% if readable %>
-            <td><%= link_to item.name, item.private_show_path, target: "_blank" %></td>
+            <td><%= link_to item.name, item.private_show_path, target: "_blank", rel: "noopener" %></td>
           <% else %>
             <td><%= item.name %></td>
           <% end %>
-          <td><%= link_to item.filename, "#{@cur_site.full_url}#{item.filename}", target: "_blank" %></td>
+          <td><%= link_to item.filename, "#{@cur_site.full_url}#{item.filename}", target: "_blank", rel: "noopener" %></td>
         </tr>
       <% end %>
       </tbody>

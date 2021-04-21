@@ -9,7 +9,6 @@ class Gws::Share::File
   include Gws::Addon::Share::History
 
   field :folder_id, type: Integer
-  field :deleted, type: DateTime
   field :memo, type: String
   permit_params :folder_id, :deleted, :memo
 
@@ -18,7 +17,6 @@ class Gws::Share::File
   #validates :category_ids, presence: true
   validates :folder_id, presence: true
   validate :validate_size
-  validates :deleted, datetime: true
 
   # indexing to elasticsearch via companion object
   around_save ::Gws::Elasticsearch::Indexer::ShareFileJob.callback
@@ -30,10 +28,6 @@ class Gws::Share::File
     where('$and' => [
         { '$or' => [{ deleted: nil }, { :deleted.gt => date }] }
     ])
-  }
-
-  scope :deleted, -> {
-    where(:deleted.exists => true)
   }
 
   scope :custom_order, ->(key) {
@@ -66,6 +60,14 @@ class Gws::Share::File
 
       criteria
     end
+
+    def deleted
+      Rails.logger.warn(
+        'DEPRECATION WARNING:' \
+        ' deleted is deprecated and will be removed in future version (use only_deleted instead).'
+      )
+      only_deleted
+    end
   end
 
   def remove_public_file
@@ -97,6 +99,10 @@ class Gws::Share::File
     %w(filename_asc filename_desc updated_desc updated_asc created_desc created_asc).map do |k|
       [I18n.t("ss.options.sort.#{k}"), k]
     end
+  end
+
+  def new_flag?
+    created > Time.zone.now - site.share_new_days.day
   end
 
   private

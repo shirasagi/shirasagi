@@ -5,7 +5,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
 
   # check_mobile_html_size at addon body
   context "check_mobile_html_size" do
-    it "on click check_size_button html_size too big", fragile: true do
+    it "on click check_size_button html_size too big" do
       site.mobile_size = 1_024
       site.save!
 
@@ -21,7 +21,6 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
     end
 
     it "on click check_size_button html_size ok" do
-
       html_text = "<p>あいうえおカキクケコ</p>"
 
       login_cms_user
@@ -39,7 +38,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
     let(:file) { create(:ss_file, filename: "logo.png") }
     let(:test_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
 
-    it "mobile_size 1", fragile: true do
+    it "mobile_size 1" do
       site.mobile_state = "enabled"
       site.mobile_size = 1_024
       site.save!
@@ -74,7 +73,6 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
     end
 
     it "many same files in html" do
-
       site.mobile_state = "enabled"
       site.mobile_size = 20 * 1_024
       site.save!
@@ -99,19 +97,16 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
       expect(page).to have_selector "#errorMobileChecker p", text: I18n.t('errors.messages.mobile_size_check_size')
     end
 
-    it "many different files in html", fragile: true do
-
+    it "many different files in html" do
       site.mobile_state = "enabled"
       site.mobile_size = 6 * 1_024
       site.save!
       site.reload
 
-      file2 = Cms::File.new model: "cms/file", site_id: site.id
-      file_path = Rails.root.join("spec", "fixtures", "ss", "file", "keyvisual.jpg")
-      Fs::UploadedFile.create_from_file(file_path, basename: "spec") do |test_file|
-        file2.in_file = test_file
-        file2.save!
-      end
+      file2 = tmp_ss_file(
+        Cms::File, site: site, user: cms_user, model: "cms/file",
+        contents: "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+      )
 
       html_text = ""
       html_text += "<img src=\"/fs/#{file.id}/_/logo.png\">"

@@ -1,7 +1,7 @@
 require 'spec_helper'
 require Rails.root.join('lib/generators/ss_migration/ss_migration_generator.rb')
 
-describe SsMigrationGenerator, dbscope: :example, tmpdir: true do
+describe SsMigrationGenerator, dbscope: :example do
   before do
     SS::Migration.class_eval { remove_const :DIR }
     SS::Migration::DIR = Rails.root.join "#{tmpdir}/lib/migrations"

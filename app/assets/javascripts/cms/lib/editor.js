@@ -88,7 +88,7 @@ this.Cms_Editor_CKEditor = (function () {
   function Cms_Editor_CKEditor() {
   }
 
-  Cms_Editor_CKEditor.render = function (selector, opts) {
+  Cms_Editor_CKEditor.render = function (selector, opts, js_opts) {
     //Render CKEditor
     if (opts == null) {
       opts = {};
@@ -122,6 +122,29 @@ this.Cms_Editor_CKEditor = (function () {
         text['controlStyle'] = "display: none";
         text['label'] = "";
         return text['default'] = "";
+      }
+    });
+
+    // fix. CKEditor Paste Dialog: github.com/ckeditor/ckeditor4/issues/469
+    CKEDITOR.on('instanceReady', function (ev) {
+      ev.editor.on("beforeCommandExec", function(event) {
+        // Show the paste dialog for the paste buttons and right-click paste
+        if (event.data.name === "paste") {
+          event.editor._.forcePasteDialog = true;
+        }
+        // Don't show the paste dialog for Ctrl+Shift+V
+        if (event.data.name === "pastetext" && event.data.commandData.from === "keystrokeHandler") {
+          event.cancel();
+        }
+      });
+
+      if (js_opts && js_opts.openHref) {
+        $(ev.editor.document.$).on("click", function (ev2) {
+          if (typeof ev2.target.href != 'undefined') {
+            var param = jQuery.param({ ref: ev2.target.href });
+            window.open(js_opts.openHref + "?" + param);
+          }
+        });
       }
     });
   };

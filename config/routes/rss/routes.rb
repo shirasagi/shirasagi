@@ -19,10 +19,7 @@ Rails.application.routes.draw do
 
   node "rss" do
     get "page/(index.:format)" => "public#index", cell: "nodes/page"
-
     get "weather_xml/(index.:format)" => "public#index", cell: "nodes/weather_xml"
-    get "weather_xml/subscriber(.:format)" => "public#confirmation", cell: "nodes/weather_xml"
-    post "weather_xml/subscriber(.:format)" => "public#subscription", cell: "nodes/weather_xml"
   end
 
   page "rss" do

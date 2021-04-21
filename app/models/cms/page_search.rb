@@ -44,6 +44,10 @@ class Cms::PageSearch
     line
   end
 
+  def root_owned?(user)
+    true
+  end
+
   class << self
     def search(params)
       criteria = self.where({})

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpdir: true, js: true do
+describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: true do
   context "approve file" do
     let(:site) { gws_site }
     let(:admin) { gws_user }
@@ -29,11 +29,11 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
       site.save!
 
       gws_user.notice_workflow_email_user_setting = "notify"
-      gws_user.send_notice_mail_address = "#{unique_id}@example.jp"
+      gws_user.send_notice_mail_addresses = "#{unique_id}@example.jp"
       gws_user.save!
 
       user1.notice_workflow_email_user_setting = "notify"
-      user1.send_notice_mail_address = "#{unique_id}@example.jp"
+      user1.send_notice_mail_addresses = "#{unique_id}@example.jp"
       user1.save!
 
       ActionMailer::Base.deliveries.clear
@@ -84,7 +84,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
       expect(notice1.text).to be_blank
       expect(notice1.html).to be_blank
       expect(notice1.format).to eq "text"
-      expect(notice1.seen).to be_blank
+      expect(notice1.user_settings).to be_blank
       expect(notice1.state).to eq "public"
       expect(notice1.send_date).to be_present
       expect(notice1.url).to eq "/.g#{site.id}/workflow/files/all/#{item.id}"
@@ -99,7 +99,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
         expect(notice.text).to be_blank
         expect(notice.html).to be_blank
         expect(notice.format).to eq "text"
-        expect(notice.seen).to be_blank
+        expect(notice.user_settings).to be_blank
         expect(notice.state).to eq "public"
         expect(notice.send_date).to be_present
         expect(notice.url).to eq "/.g#{site.id}/workflow/files/all/#{item.id}"
@@ -111,7 +111,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
       expect(ActionMailer::Base.deliveries.length).to eq 1
       ActionMailer::Base.deliveries.last.tap do |mail|
         expect(mail.from.first).to eq site.sender_address
-        expect(mail.bcc.first).to eq user1.send_notice_mail_address
+        expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
         expect(mail.subject).to eq I18n.t("gws_notification.gws/workflow/file.request", name: item.name)
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice1.id}"
         expect(mail.decoded.to_s).to include(mail.subject, url)
@@ -175,7 +175,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
       expect(notice3.text).to be_blank
       expect(notice3.html).to be_blank
       expect(notice3.format).to eq "text"
-      expect(notice3.seen).to be_blank
+      expect(notice3.user_settings).to be_blank
       expect(notice3.state).to eq "public"
       expect(notice3.send_date).to be_present
       expect(notice3.url).to eq "/.g#{site.id}/workflow/files/all/#{item.id}"
@@ -186,7 +186,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
       expect(ActionMailer::Base.deliveries.length).to eq 2
       ActionMailer::Base.deliveries.last.tap do |mail|
         expect(mail.from.first).to eq site.sender_address
-        expect(mail.bcc.first).to eq gws_user.send_notice_mail_address
+        expect(mail.bcc.first).to eq gws_user.send_notice_mail_addresses.first
         expect(mail.subject).to eq I18n.t("gws_notification.gws/workflow/file.approve", name: item.name)
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice3.id}"
         expect(mail.decoded.to_s).to include(mail.subject, url)

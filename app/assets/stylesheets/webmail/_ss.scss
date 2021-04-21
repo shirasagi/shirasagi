@@ -196,17 +196,26 @@ li.webmail-accounts {
     font-weight: bold;
     padding-bottom: 8px;
     .head {
-      height: 20px;
+      @include display-flex;
       position: relative;
-      .field { position: absolute; }
-      .from, .to { left: 82px; }
-      .title { left: 286px; }
-      .datetime { right: 128px; }
-      .size { right: 14px; }
+      height: 1.2em;
+      margin-left: 82px;
+      .field { display: inline-block; }
+      .from, .to { width: 194px; }
+      .title { width: calc(100% - 425px); }
+      .datetime { width: 10em; }
+      .size {
+        width: 95px;
+        text-align: right;
+      }
     }
   }
   .info {
     @include truncate;
+    @include display-flex;
+    @include mb {
+      display: block;
+    }
     .field {
       display: inline-block;
       overflow: hidden;
@@ -219,8 +228,8 @@ li.webmail-accounts {
       padding-right: 5px;
     }
     .title {
-      width: calc(100% - 380px);
-      width: -webkit-calc(100% - 380px);
+      width: calc(100% - 400px);
+      width: -webkit-calc(100% - 400px);
       padding-right: 5px;
       font-size: 100%;
       @include mb {
@@ -228,11 +237,11 @@ li.webmail-accounts {
       }
     }
     .datetime {
-      width: 110px;
+      width: 10em;
       font-weight: normal;
     }
     .size {
-      width: 50px;
+      width: 95px;
       font-weight: normal;
       text-align: right;
     }

@@ -6,7 +6,7 @@
 
       <dt><%= @model.t :basename %></dt>
       <dd><%= @item.send :basename %></dd>
-      <dd><%= @item.public? ? link_to(@item.full_url, @item.full_url, target: "_blank") : @item.full_url %></dd>
+      <dd><%= @item.public? ? link_to(@item.full_url, @item.full_url, target: "_blank", rel: "noopener") : @item.full_url %></dd>
     </dl>
   <% end %>
 </div>
@@ -27,12 +27,12 @@
         <% if item.allowed?(:read, @cur_user, site: @cur_site, node: item.parent) %>
         <nav class="tap-menu">
           <%= link_to t("cms.content"), item.private_show_path %>
-          <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank %>
+          <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank, rel: "noopener" %>
           <% if @cur_site.mobile_enabled? %>
-            <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank %>
-            <%= link_to(t('ss.links.mobile_preview'), cms_mobile_preview_path(path: item.preview_path), target: :_blank) %>
+            <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank, rel: "noopener" %>
+            <%= link_to(t('ss.links.mobile_preview'), cms_preview_path(path: item.mobile_preview_path), target: :_blank, rel: "noopener") %>
           <% else %>
-            <%= link_to t('ss.links.preview'), cms_preview_path(path: item.preview_path), target: :_blank %>
+            <%= link_to t('ss.links.preview'), cms_preview_path(path: item.preview_path), target: :_blank, rel: "noopener" %>
           <% end %>
         </nav>
         <% end %>

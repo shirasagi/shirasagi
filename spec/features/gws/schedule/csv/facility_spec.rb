@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_schedule_csv", type: :feature, dbscope: :example, tmpdir: true, js: true do
+describe "gws_schedule_csv", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:user) { gws_user }
   let!(:facility) { create :gws_facility_item }

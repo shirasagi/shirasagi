@@ -1,7 +1,6 @@
 class Opendata::Dataset::PublicEntityController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
-  helper Opendata::FormHelper
 
   model Opendata::PublicEntityDataset
 

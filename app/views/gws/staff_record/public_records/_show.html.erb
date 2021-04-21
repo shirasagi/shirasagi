@@ -14,28 +14,28 @@
     </tr>
   </table>
 
-  <br />
+  <br/>
 
   <table class="index data-table">
     <thead>
-      <th style="width: 10%">No</th>
-      <th style="width: 18%"><%= @model.t :divide_duties %></th>
-      <th style="width: 15%"><%= @model.t :title_name %></th>
-      <th style="width: 12%"><%= @model.t :name %></th>
-      <th style="width: 10%"><%= @model.t :tel_ext %></th>
-      <th><%= @model.t :remark %></th>
+    <th style="width: 10%">No</th>
+    <th style="width: 18%"><%= @model.t :divide_duties %></th>
+    <th style="width: 15%"><%= @model.t :title_ids %></th>
+    <th style="width: 12%"><%= @model.t :name %></th>
+    <th style="width: 10%"><%= @model.t :tel_ext %></th>
+    <th><%= @model.t :remark %></th>
     </thead>
     <tbody>
-      <% @items.each do |item| %>
+    <% @items.each do |item| %>
       <tr>
         <td></td>
         <td><%= br item.send :divide_duties %></td>
-        <td><%= item.send :title_name %></td>
+        <td><%= tryb { item.title(@cur_site).name } %></td>
         <td><%= item.send :name %></td>
         <td><%= item.send :tel_ext %></td>
         <td><%= item.send :remark %></td>
       </tr>
-      <% end %>
+    <% end %>
     </tbody>
   </table>
 </div>

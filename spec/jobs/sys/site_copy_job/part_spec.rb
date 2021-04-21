@@ -38,7 +38,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
       log = Job::Log.first
       expect(log.logs).not_to include(include('WARN'))
       expect(log.logs).not_to include(include('ERROR'))
-      expect(log.logs).to include(include('INFO -- : Completed Job'))
+      expect(log.logs).to include(/INFO -- : .* Completed Job/)
     end
   end
 end

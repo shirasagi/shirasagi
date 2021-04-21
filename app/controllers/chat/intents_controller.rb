@@ -23,13 +23,12 @@ class Chat::IntentsController < ApplicationController
   public
 
   def index
-    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     set_items
     @items = @items.in(category_ids: params.dig(:s, :category_id).try(:to_i)) if params.dig(:s, :category_id).present?
     @items = @items.allow(:read, @cur_user, site: @cur_site).
       where(node_id: @cur_node.id).
       search(params[:s]).
-      order_by(order: 1, updated: -1).
+      order_by(order: 1, name: 1, updated: -1).
       page(params[:page]).
       per(50)
   end
@@ -38,7 +37,7 @@ class Chat::IntentsController < ApplicationController
     csv = @model.site(@cur_site).
       allow(:read, @cur_user, site: @cur_site).
       where(node_id: @cur_node).
-      order_by(order: 1, updated: -1).csv
+      order_by(order: 1, name: 1, updated: -1).csv
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "chat_intents_#{Time.zone.now.to_i}.csv"
   end
 

@@ -1,0 +1,31 @@
+<% addon ||= local_assigns.fetch(:addon, {}) %>
+
+<dl class="see">
+  <dt><%= @model.t :conditions %><%= @model.tt :conditions %></dt>
+  <dd><%= f.text_area :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
+
+  <dt><%= @model.t :sort %><%= @model.tt :sort %></dt>
+  <dd>
+    <%= f.select :sort, @item.sort_options, include_blank: " " %>
+    <span class="sort-description hide"></span>
+  </dd>
+</dl>
+
+<% if @model.use_new_days %>
+  <dl class="see">
+    <dt><%= @model.t :new_days %><%= @model.tt :new_days %></dt>
+    <dd class="short"><%= f.number_field :new_days %> <span class="postfix"><%= t "datetime.prompts.day" %></span></dd>
+  </dl>
+<% end %>
+
+<%= jquery do %>
+  var $addon = $("<%= "##{addon[:id]}" %>");
+  $addon.find("select[name='item[sort]']").on("change", function() {
+    var $selected = $(this).find("option:selected");
+    if (!$selected[0] || !$selected.data("description")) {
+      $addon.find(".sort-description").html("").addClass("hide");
+    } else {
+      $addon.find(".sort-description").html($selected.data("description")).removeClass("hide");
+    }
+  }).trigger("change");
+<% end %>

@@ -27,6 +27,7 @@ module Cms::Addon
     def summary
       return summary_html if summary_html.present?
       return nil unless respond_to?(:html)
+      html = self.try(:render_html).presence || self.html
       ApplicationController.helpers.sanitize(html.presence || '', tags: []).squish.truncate(120)
     end
 
@@ -49,6 +50,7 @@ module Cms::Addon
     def set_description
       return if description.present?
       return unless respond_to?(:html)
+      html = self.try(:render_html).presence || self.html
       self.description = ApplicationController.helpers.
         sanitize(html.to_s, tags: []).squish.truncate(60)
     end

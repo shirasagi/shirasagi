@@ -1,22 +1,26 @@
 require 'spec_helper'
 
-# rubocop:disable Layout/FirstParameterIndentation
-describe Opendata::UrlResource, dbscope: :example, http_server: true do
-  # http.default port: 33_190
-  http.default doc_root: Rails.root.join("spec", "fixtures", "opendata")
-
+describe Opendata::UrlResource, dbscope: :example do
   let(:site) { cms_site }
   let!(:node_search_dataset) { create(:opendata_node_search_dataset) }
   let(:node) { create(:opendata_node_dataset) }
   let(:dataset) { create(:opendata_dataset, cur_node: node) }
-  let(:license_logo_file) { Fs::UploadedFile.create_from_file(Rails.root.join("spec", "fixtures", "ss", "logo.png")) }
-  let(:license) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
+  let(:license) { create(:opendata_license, cur_site: site) }
+
+  before { WebMock.reset! }
+  after { WebMock.reset! }
 
   context "check attributes with typical url resource" do
-    subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+    let(:url) { "http://#{unique_domain}/#{unique_id}/shift_jis.csv" }
+    let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
     before do
+      stub_request(:get, url).
+        to_return(status: 200, body: ::File.binread(csv_path), headers: { "Last-Modified" => Time.zone.now.httpdate })
+
       subject.license_id = license.id
-      subject.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
+      subject.original_url = url
       subject.crawl_update = "none"
       subject.save!
     end
@@ -56,12 +60,17 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
   end
 
   context "when last_modified is not given" do
-    subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+    let(:url) { "http://#{unique_domain}/#{unique_id}/shift_jis.csv" }
+    let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
     before do
+      stub_request(:get, url).
+        to_return(status: 200, body: ::File.binread(csv_path), headers: {})
+
       subject.license_id = license.id
-      subject.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
+      subject.original_url = url
       subject.crawl_update = "none"
-      http.options last_modified: nil
     end
 
     it do
@@ -77,10 +86,16 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
 
   describe "#parse_tsv" do
     context "when shift_jis csv is given" do
-      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+      let(:url) { "http://#{unique_domain}/#{unique_id}/shift_jis.csv" }
+      let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
+      subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
       before do
+        stub_request(:get, url).
+          to_return(status: 200, body: ::File.binread(csv_path), headers: {})
+
         subject.license_id = license.id
-        subject.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
+        subject.original_url = url
         subject.crawl_update = "none"
         subject.save!
       end
@@ -96,10 +111,16 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
     end
 
     context "when euc-jp csv is given" do
-      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+      let(:url) { "http://#{unique_domain}/#{unique_id}/euc-jp.csv" }
+      let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/euc-jp.csv" }
+      subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
       before do
+        stub_request(:get, url).
+          to_return(status: 200, body: ::File.binread(csv_path), headers: {})
+
         subject.license_id = license.id
-        subject.original_url = "http://#{http.addr}:#{http.port}/euc-jp.csv"
+        subject.original_url = url
         subject.crawl_update = "none"
         subject.save!
       end
@@ -115,10 +136,16 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
     end
 
     context "when utf-8 csv is given" do
-      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+      let(:url) { "http://#{unique_domain}/#{unique_id}/utf-8.csv" }
+      let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/utf-8.csv" }
+      subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
       before do
+        stub_request(:get, url).
+          to_return(status: 200, body: ::File.binread(csv_path), headers: {})
+
         subject.license_id = license.id
-        subject.original_url = "http://#{http.addr}:#{http.port}/utf-8.csv"
+        subject.original_url = url
         subject.crawl_update = "none"
         subject.save!
       end
@@ -135,23 +162,30 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
   end
 
   describe "#do_crawl" do
-    context "when crawl_update is auto" do
-      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
-      before do
-        subject.license_id = license.id
-        subject.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
-        subject.crawl_update = "auto"
-        subject.save!
+    let(:url) { "http://#{unique_domain}/#{unique_id}/shift_jis.csv" }
+    let(:csv_path1) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
+    let(:csv_path2) { "#{Rails.root}/spec/fixtures/opendata/shift_jis-2.csv" }
+    let(:now) { Time.zone.now.beginning_of_minute }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
 
-        # below code is curious but this rounds milli seconds
-        @now = Time.zone.at(Time.zone.now.to_i)
-        http.options real_path: "/shift_jis-2.csv", last_modified: @now
-      end
+    before do
+      stub_request(:get, url).
+        to_return(status: 200, body: ::File.binread(csv_path1), headers: { "Last-Modified" => (now - 1.hour).httpdate }).
+        to_return(status: 200, body: ::File.binread(csv_path2), headers: { "Last-Modified" => now.httpdate })
+
+      subject.license_id = license.id
+      subject.original_url = url
+      subject.crawl_update = crawl_update
+      subject.save!
+    end
+
+    context "when crawl_update is auto" do
+      let(:crawl_update) { "auto" }
 
       it do
         expect { subject.do_crawl }.to \
-          change(subject, :original_updated).to(@now).and \
-          change(subject, :file_id).by(1)
+          change(subject, :original_updated).to(now).and \
+            change(subject, :file_id).by(1)
 
         csv = subject.parse_tsv
         expect(csv).not_to be_nil
@@ -163,22 +197,12 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
     end
 
     context "when crawl_update is none" do
-      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
-      before do
-        subject.license_id = license.id
-        subject.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
-        subject.crawl_update = "none"
-        subject.save!
-
-        # below code is curious but this rounds milli seconds
-        @now = Time.zone.at(Time.zone.now.to_i)
-        http.options real_path: "/shift_jis-2.csv", last_modified: @now
-      end
+      let(:crawl_update) { "none" }
 
       it do
         expect { subject.do_crawl }.to \
-          change(subject, :original_updated).to(@now).and \
-          change(subject, :crawl_state).from("same").to("updated")
+          change(subject, :original_updated).to(now).and \
+            change(subject, :crawl_state).from("same").to("updated")
 
         csv = subject.parse_tsv
         expect(csv).not_to be_nil
@@ -188,15 +212,17 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
         expect(csv[2]).to eq %w(新宿 43901)
       end
     end
+  end
 
+  describe "#path" do
     context "when uri.path is /" do
-      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+      subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
       before do
         subject.license_id = license.id
-        subject.original_url = "http://#{http.addr}:#{http.port}/"
+        subject.original_url = "http://#{unique_domain}/"
         subject.crawl_update = "none"
         subject.original_updated = nil
-        http.options last_modified: nil
       end
 
       it do
@@ -205,13 +231,17 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
     end
 
     context "when uri.path is invalid" do
-      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+      let(:url) { "http://#{unique_domain}/#{unique_id}/notfound.csv" }
+      subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
       before do
+        stub_request(:get, url).
+          to_return(status: 404, body: "not found", headers: {})
+
         subject.license_id = license.id
-        subject.original_url = "http://#{http.addr}:#{http.port}/notfound.csv"
+        subject.original_url = url
         subject.crawl_update = "none"
         subject.original_updated = nil
-        http.options last_modified: nil
       end
 
       it do
@@ -243,16 +273,22 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
   end
 
   context "ttl file", fuseki: true do
+    let(:url) { "http://#{unique_domain}/#{unique_id}/test-1.ttl" }
+    let(:ttl_path) { "#{Rails.root}/spec/fixtures/opendata/test-1.ttl" }
+
     before do
+      stub_request(:get, url).
+        to_return(status: 200, body: ::File.binread(ttl_path), headers: { "Last-Modified" => Time.zone.now.httpdate })
+
       create(:opendata_node_sparql)
     end
 
     context "when ttl file is succeeded to send to fuseki server", fuseki: true do
-      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+      subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
 
       before do
         subject.license_id = license.id
-        subject.original_url = "http://#{http.addr}:#{http.port}/test-1.ttl"
+        subject.original_url = url
         subject.crawl_update = "none"
       end
 
@@ -266,11 +302,11 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
     end
 
     context "when ttl file is failed to send to fuseki server", fuseki: true do
-      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+      subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
 
       before do
         subject.license_id = license.id
-        subject.original_url = "http://#{http.addr}:#{http.port}/test-1.ttl"
+        subject.original_url = url
         subject.crawl_update = "none"
       end
 

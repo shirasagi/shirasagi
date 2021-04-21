@@ -107,8 +107,7 @@ Rails.application.routes.draw do
     resources :word_dictionaries, concerns: [:deletion, :template]
     resources :forms, concerns: [:deletion] do
       resources :init_columns, concerns: [:deletion]
-      resources :columns, concerns: [:deletion], except: [:new, :create]
-      resources :columns, path: 'columns/:type', only: [:new, :create], as: 'columns_type'
+      resources :columns, concerns: [:deletion]
     end
     resources :notices, concerns: [:deletion, :copy]
     resources :public_notices, concerns: [:deletion, :copy]
@@ -120,6 +119,7 @@ Rails.application.routes.draw do
       get :download, on: :member
       get :resize, on: :member
       post :resize, on: :member
+      get :contrast_ratio, on: :collection
     end
 
     resources :page_searches, concerns: :deletion do
@@ -127,14 +127,24 @@ Rails.application.routes.draw do
       delete :search, on: :member, action: :destroy_all_pages
     end
 
+    namespace "translate" do
+      get "/" => redirect { |p, req| "#{req.path}/text_caches" }, as: :main
+      resources :text_caches, concerns: :deletion
+      resources :langs, concerns: [:deletion, :download, :import]
+      resource :site_setting
+    end
+
     get "check_links" => "check_links#index"
     post "check_links" => "check_links#run"
     get "generate_nodes" => "generate_nodes#index"
     post "generate_nodes" => "generate_nodes#run"
+    get "generate_nodes/download_logs" => "generate_nodes#download_logs"
     get "generate_pages" => "generate_pages#index"
     post "generate_pages" => "generate_pages#run"
+    get "generate_pages/download_logs" => "generate_pages#download_logs"
     get "import" => "import#import"
     post "import" => "import#import"
+    get "import/download_logs" => "import#download_logs"
     get "command" => "command#command"
     post "command" => "command#command"
     get "all_contents(.:format)" => redirect { |p, req| "#{req.path}/download_all" }, as: "all_contents"
@@ -148,6 +158,7 @@ Rails.application.routes.draw do
     delete "search_contents/pages" => "search_contents/pages#destroy_all"
     get "search_contents/:id/download" => "page_search_contents#download", as: "download_page_search_contents"
     delete "search_contents/:id" => "search_contents/pages#destroy_all_pages"
+    resource :generate_lock
 
     resources :check_links_pages, only: [:show, :index]
     resources :check_links_nodes, only: [:show, :index]
@@ -162,6 +173,7 @@ Rails.application.routes.draw do
       get "contents/html" => "contents/html#index"
       get "members" => "members#index"
       get "sites" => "sites#index"
+      put "reload_site_usages" => "site_usages#reload"
       get "users" => "users#index"
       get "node_tree/:id" => "node_tree#index", as: :node_tree
       get "forms" => "forms#index"
@@ -170,18 +182,28 @@ Rails.application.routes.draw do
       get "forms/:id/columns/:column_id/new" => "forms#new_column", as: :form_column_new
       match "forms/:id/html" => "forms#html", as: :form_html, via: %i[post put]
       match "forms/:id/link_check" => "forms#link_check", as: :form_link_check, via: %i[post put]
+      post "validation" => "validation#validate"
 
-      resources :files, concerns: :deletion do
+      resources :files, path: ":cid/files", concerns: :deletion do
         get :select, on: :member
         get :view, on: :member
         get :thumb, on: :member
         get :download, on: :member
+        get :contrast_ratio, on: :collection
+      end
+      resources :user_files, path: ":cid/user_files", concerns: :deletion do
+        get :select, on: :member
+        get :view, on: :member
+        get :thumb, on: :member
+        get :download, on: :member
+        get :contrast_ratio, on: :collection
       end
       resources :temp_files, concerns: :deletion do
         get :select, on: :member
         get :view, on: :member
         get :thumb, on: :member
         get :download, on: :member
+        get :contrast_ratio, on: :collection
       end
       namespace :node, path: "node:cid/cms", cid: /\w+/ do
         resources :temp_files, concerns: :deletion do
@@ -189,7 +211,12 @@ Rails.application.routes.draw do
           get :view, on: :member
           get :thumb, on: :member
           get :download, on: :member
+          get :contrast_ratio, on: :collection
         end
+      end
+      resources :content_files, only: [] do
+        get :view, on: :member
+        get :contrast_ratio, on: :collection
       end
       namespace "opendata_ref" do
         get "datasets:cid" => "datasets#index", as: 'datasets'
@@ -231,6 +258,10 @@ Rails.application.routes.draw do
           delete :lock, on: :member, action: :unlock
         end
       end
+
+      namespace "translate" do
+        get "langs" => "langs#index"
+      end
     end
   end
 
@@ -243,10 +274,13 @@ Rails.application.routes.draw do
     get "/" => redirect { |p, req| "#{req.path}/nodes" }, as: :main
     get "generate_nodes" => "generate_nodes#index"
     post "generate_nodes" => "generate_nodes#run"
+    get "generate_nodes/download_logs" => "generate_nodes#download_logs"
     get "generate_pages" => "generate_pages#index"
     post "generate_pages" => "generate_pages#run"
+    get "generate_pages/download_logs" => "generate_pages#download_logs"
     get "import" => "import#import"
     post "import" => "import#import"
+    get "import/download_logs" => "import#download_logs"
     get "command" => "command#command"
     post "command" => "command#command"
     get "copy_nodes" => "copy_nodes#index", as: :copy
@@ -257,8 +291,8 @@ Rails.application.routes.draw do
     resources :max_file_sizes, concerns: :deletion
     resources :nodes, concerns: :deletion
     resources :pages, concerns: [:deletion, :copy, :move, :lock, :command, :contains_urls]
-    resources :import_pages, concerns: [:deletion, :copy, :move, :convert, :index_state, :index_state_deletion]
-    resources :import_nodes, concerns: [:deletion, :copy, :move]
+    resources :import_pages, concerns: [:deletion, :convert]
+    resources :import_nodes, concerns: [:deletion]
     get "/group_pages" => redirect { |p, req| "#{req.path.sub(/\/group_pages$/, "")}/nodes" }
     resources :parts, concerns: :deletion
     resources :layouts, concerns: :deletion
@@ -297,6 +331,12 @@ Rails.application.routes.draw do
   page "cms" do
     get "page/:filename.:format" => "public#index", cell: "pages/page"
     get "import_page/:filename.:format" => "public#index", cell: "pages/import_page"
+  end
+
+  unless Rails.env.development?
+    namespace "cms", path: ".s:site" do
+      match "*private_path" => "catch_all#index", via: :all
+    end
   end
 
   match "*public_path" => "cms/public#index", public_path: /[^\.].*/,

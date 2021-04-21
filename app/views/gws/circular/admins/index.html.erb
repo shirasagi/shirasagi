@@ -23,9 +23,9 @@
           <%= link_to t('ss.links.delete'), action: :soft_delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 
           <% if item.try(:image) %>
-            <%= link_to image_tag(item.image.thumb_url), item.image.url, {class: "thumb", target: "_blank"} %>
+            <%= link_to image_tag(item.image.thumb_url), item.image.url, {class: "thumb", target: "_blank", rel: "noopener"} %>
           <% elsif item.try(:image?) %>
-            <%= link_to image_tag(item.thumb_url), item.url, {class: "thumb", target: "_blank"} %>
+            <%= link_to image_tag(item.thumb_url), item.url, {class: "thumb", target: "_blank", rel: "noopener"} %>
           <% end %>
         </nav>
 
@@ -33,13 +33,14 @@
         <div class="info">
           <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
           <%= link_to title, {action: :show, id: item}, class: "title" %>
+          <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
 
           <div class="meta">
             <span class="id">#<%= item.id %></span>
-            <span class="datetime"><%= @model.t(:due_date) %>: <%= tryb { item.due_date.strftime('%Y/%m/%d %H:%M') } %></span>
+            <span class="datetime"><%= @model.t(:due_date) %>: <%= tryb { item.due_date.strftime('%Y/%m/%d') } %></span>
             <span class="datetime"><%= @model.t(:updated) %>: <%= item.updated.strftime('%Y/%m/%d %H:%M') %></span>
             <span class="datetime"><%= @model.t(:created) %>: <%= item.created.strftime('%Y/%m/%d %H:%M') %></span>
-            <span><%= item.user_long_name %></span>
+            <span><%= gws_public_user_long_name(item.user_long_name) %></span>
             <span class="state"><%= item.label(:state) %></span>
             <span class="gws-share-categories">
               <% item.categories.compact.each do |category| %>

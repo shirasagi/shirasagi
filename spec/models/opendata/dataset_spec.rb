@@ -324,12 +324,9 @@ describe Opendata::Dataset, dbscope: :example do
     context "CSV Resource" do
       let(:file) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv") }
       let(:content_type) { "application/vnd.ms-excel" }
-      let(:license_logo_file) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
 
       before do
-        license = Fs::UploadedFile.create_from_file(license_logo_file, basename: "spec") do |uploaded_file|
-          create(:opendata_license, cur_site: node.site, in_file: uploaded_file)
-        end
+        license = create(:opendata_license, cur_site: node.site)
 
         dataset = create(:opendata_dataset, cur_node: node)
         resource = dataset.resources.new(attributes_for(:opendata_resource))
@@ -355,8 +352,7 @@ describe Opendata::Dataset, dbscope: :example do
 
     let!(:site) { cms_site }
     let!(:user) { cms_user }
-    let(:license_logo_file) { upload_file(Rails.root.join("spec", "fixtures", "ss", "logo.png")) }
-    let(:license) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
+    let(:license) { create(:opendata_license, cur_site: site) }
     let(:org_dataset) do
       dataset = create(:opendata_dataset, dataset_attributes)
       dataset.instance_variable_set(:@cur_node, node)
@@ -382,7 +378,7 @@ describe Opendata::Dataset, dbscope: :example do
         area_ids: [1],
         point: 1,
         text: "text",
-        tags: ["tag"],
+        tags: %w(tag),
         member_id: 1,
         dataset_group_ids: [1],
         contact_state: "hide",
@@ -390,9 +386,9 @@ describe Opendata::Dataset, dbscope: :example do
         contact_tel: "0000-00-00000",
         contact_fax: "0000-00-00001",
         contact_email: "test@example.jp",
-        contact_link_url: "http://example.jp",
+        contact_link_url: "/#{unique_id}/",
         contact_link_name: "test link",
-        contact_group_id: 1,
+        contact_group_id: 1
       }
     end
 
@@ -419,7 +415,7 @@ describe Opendata::Dataset, dbscope: :example do
         downloaded: 0
       }
       expect_reset_fields.each { |k, v| expect(target.send(k)).to eq(v) }
-      expect_copy_fields = dataset_attributes.reject { |k, v| expect_reset_fields.keys.include?(k) }
+      expect_copy_fields = dataset_attributes.reject { |k, v| expect_reset_fields.key?(k) }
       expect_copy_fields.each { |k, v| expect(subject.send(k)).to eq(v) }
     end
 
@@ -480,6 +476,7 @@ describe Opendata::Dataset, dbscope: :example do
           updated: Time.zone.yesterday,
           license_id: license.id,
           in_file: upload_file(file, "application/json"),
+          filename: "test.json",
           original_url: "http://test@example.jp/test.json",
           original_updated: Time.zone.yesterday,
           crawl_state: "same",

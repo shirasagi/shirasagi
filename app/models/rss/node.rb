@@ -22,7 +22,7 @@ module Rss::Node
     private
 
     def purge_pages
-      Rss::Page.limit_docs(@cur_site, self, rss_max_docs)
+      Rss::Page.limit_docs((@cur_site || site), self, rss_max_docs)
     end
   end
 
@@ -30,7 +30,7 @@ module Rss::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
-    include Rss::Addon::PubSubHubbub
+    include Rss::Addon::Import
     include Rss::Addon::AnpiMailSetting
     include Jmaxml::Addon::Filter
     include Cms::Addon::PageList
@@ -39,6 +39,8 @@ module Rss::Node
     include History::Addon::Backup
 
     default_scope ->{ where(route: "rss/weather_xml") }
+    self.weather_xml = true
+    self.default_rss_max_docs = 100
 
     after_save :purge_pages, if: ->{ @db_changes && @db_changes["rss_max_docs"] }
 
@@ -61,7 +63,7 @@ module Rss::Node
     private
 
     def purge_pages
-      Rss::Page.limit_docs(@cur_site, self, rss_max_docs)
+      Rss::Page.limit_docs((@cur_site || site), self, rss_max_docs)
     end
   end
 end

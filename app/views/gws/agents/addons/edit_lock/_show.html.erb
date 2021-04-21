@@ -1,6 +1,6 @@
 <% if @item.locked? && !@item.lock_owned? %>
   <dl class="see">
-    <dd class="wide"><%= t("errors.messages.locked", user: @item.lock_owner.long_name) %></dd>
+    <dd class="wide"><%= t("errors.messages.locked", user: gws_public_user_long_name(@item.lock_owner.long_name)) %></dd>
     <% if @item.allowed?(:unlock, @cur_user, site: @cur_site, node: @cur_node) %>
     <dd class="wide">
       <%= form_for :item, url: { action: :unlock }, html: { id: "item-form", method: :delete, multipart: true } do |f| %>

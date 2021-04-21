@@ -64,15 +64,15 @@ describe Gws::HistoryArchiveJob, dbscope: :example do
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(Gws::HistoryArchiveFile.site(site).count).to eq 1
         Gws::HistoryArchiveFile.site(site).first.tap do |archive_file|
           expect(archive_file.model).to eq 'gws/history_archive_file'
           expect(archive_file.state).to eq 'closed'
-          expect(archive_file.name).to eq '2017年7月30日〜2017年8月5日.zip'
+          expect(archive_file.name).to eq '2017年7月30日ー2017年8月5日.zip'
           expect(archive_file.filename).to eq '2017-week-30.zip'
           expect(archive_file.size).to be > 0
           expect(archive_file.content_type).to eq 'application/zip'
@@ -112,15 +112,15 @@ describe Gws::HistoryArchiveJob, dbscope: :example do
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(Gws::HistoryArchiveFile.site(site).reorder(filename: 1, id: 1).count).to eq 2
         Gws::HistoryArchiveFile.site(site).reorder(filename: 1, id: 1).first.tap do |archive_file|
           expect(archive_file.model).to eq 'gws/history_archive_file'
           expect(archive_file.state).to eq 'closed'
-          expect(archive_file.name).to eq '2015年12月27日〜2015年12月31日.zip'
+          expect(archive_file.name).to eq '2015年12月27日ー2015年12月31日.zip'
           expect(archive_file.filename).to eq '2015-week-52.zip'
           expect(archive_file.size).to be > 0
           expect(archive_file.content_type).to eq 'application/zip'
@@ -128,7 +128,7 @@ describe Gws::HistoryArchiveJob, dbscope: :example do
         Gws::HistoryArchiveFile.site(site).reorder(filename: 1, id: 1).last.tap do |archive_file|
           expect(archive_file.model).to eq 'gws/history_archive_file'
           expect(archive_file.state).to eq 'closed'
-          expect(archive_file.name).to eq '2016年1月1日〜2016年1月2日.zip'
+          expect(archive_file.name).to eq '2016年1月1日ー2016年1月2日.zip'
           expect(archive_file.filename).to eq '2016-week-00.zip'
           expect(archive_file.size).to be > 0
           expect(archive_file.content_type).to eq 'application/zip'

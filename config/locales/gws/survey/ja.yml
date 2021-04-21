@@ -99,6 +99,7 @@ ja:
         notification_noticed_at: 通知日時
       gws/addon/survey/group_setting:
         survey_default_due_date: 回答期限日初期値
+        survey_new_days: 新着表示期間
       gws/survey/answer_state:
         answered_users_hash: 回答状況
 
@@ -143,6 +144,8 @@ ja:
       survey_default_due_date:
         - 回答期限日時の初期値を、今日から数えて何日後かで入力します。
         - 初期値は 7 日後です。
+      survey_new_days:
+        - 新着表示期間を入力します。
 
   gws_notification:
     gws/survey/form:

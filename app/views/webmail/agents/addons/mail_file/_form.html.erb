@@ -18,11 +18,7 @@ window.deleteContent = function(id) {
   });
 };
 
-var options = {};
-options.uploadUrl = function() {
-  return "/.u" + <%= @cur_user.id %> + "/apis/temp_files.json?unnormalize=true";
-};
-var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, options);
+var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>);
 <% end %>
 
 <%= hidden_field_tag 'file_size', 'true', { id: 'show-file-size' } %>
@@ -30,10 +26,10 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, o
   <dd class="wide">
     <%= f.hidden_field "file_ids[]", value: "" %>
     <span class="upload-menu-new">
-      <%= link_to t('ss.links.upload'), sns_apis_temp_files_path(@cur_user, unnormalize: true, file_size: true), class: "ajax-box btn" %>
+      <%= link_to t('ss.links.upload'), sns_apis_temp_files_path(@cur_user, file_size: true), class: "ajax-box btn" %>
     </span>
     <span class="upload-menu-select">
-      <%= link_to t("sns.user_file"), sns_apis_user_files_path(@cur_user, unnormalize: true, file_size: true), class: "ajax-box btn" %>
+      <%= link_to t("sns.user_file"), sns_apis_user_files_path(@cur_user, file_size: true), class: "ajax-box btn" %>
     </span>
     <div class="upload-drop-area">
       <span class="upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
@@ -41,7 +37,7 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, o
 
     <div id="selected-files">
       <% @item.ref_files.each do |part| %>
-        <div class="file-view">
+        <div class="file-view" data-file-id="<%= part.try(:id) %>">
           <%= link_to(parts_webmail_mail_path(webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index, mailbox: @mailbox, section: part.section), target: part.link_target, class: :thumb) do %>
             <% if part.image? %>
               <%= image_tag parts_webmail_mail_path(webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index, mailbox: @mailbox, section: part.section), alt: part.filename %>
@@ -66,8 +62,8 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, o
       <% end %>
 
       <% @item.files.each do |file| %>
-        <div class="file-view">
-          <%= link_to file.url, class: :thumb, target: "_blank" do %>
+        <div class="file-view" data-file-id="<%= file.try(:id) %>">
+          <%= link_to file.url, class: :thumb, target: "_blank", rel: "noopener" do %>
             <% if file.image? %>
               <%= image_tag file.thumb_url, alt: file.name %>
             <% else %>

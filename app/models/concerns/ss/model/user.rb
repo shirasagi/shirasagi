@@ -53,6 +53,9 @@ module SS::Model::User
     # 利用停止
     field :lock_state, type: String
 
+    # 削除ロック
+    field :deletion_lock_state, type: String, default: "unlocked"
+
     belongs_to :organization, class_name: "SS::Group"
     belongs_to :switch_user, class_name: "SS::User"
 
@@ -60,7 +63,7 @@ module SS::Model::User
 
     permit_params :name, :kana, :uid, :email, :tel, :tel_ext, :type, :login_roles, :remark, group_ids: []
     permit_params :account_start_date, :account_expiration_date, :session_lifetime
-    permit_params :restriction, :lock_state
+    permit_params :restriction, :lock_state, :deletion_lock_state
     permit_params :organization_id, :organization_uid, :switch_user_id
 
     validates :name, presence: true, length: { maximum: 40 }
@@ -69,7 +72,7 @@ module SS::Model::User
     validates :uid, uniqueness: true, if: ->{ uid.present? }
     validates :email, email: true, length: { maximum: 80 }
     validates :email, uniqueness: true, if: ->{ email.present? }
-    validates :email, presence: true, if: ->{ uid.blank? }
+    validates :email, presence: true, if: ->{ uid.blank? && organization_uid.blank? }
     validates :last_loggedin, datetime: true
     validates :account_start_date, datetime: true
     validates :account_expiration_date, datetime: true
@@ -115,7 +118,10 @@ module SS::Model::User
     def authenticate(id, password)
       return nil if id.blank? || password.blank?
 
-      user = uid_or_email(id).first
+      users = uid_or_email(id)
+      return nil if users.size != 1
+
+      user = users.first
       return nil unless user
 
       auth_methods.each do |method|
@@ -141,11 +147,13 @@ module SS::Model::User
     def organization_authenticate(organization, id, password)
       return nil if id.blank? || password.blank?
 
-      user = self.where(
+      users = self.where(
         organization_id: organization.id,
         '$or' => [{ uid: id }, { email: id }, { organization_uid: id }]
-      ).first
+      )
+      return nil if users.size != 1
 
+      user = users.first
       return user if user.send(:dbpasswd_authenticate, password)
       nil
     end
@@ -194,6 +202,12 @@ module SS::Model::User
     def type_options
       [ [ t(TYPE_SNS), TYPE_SNS ], [ t(TYPE_LDAP), TYPE_LDAP ] ]
     end
+
+    def labels
+      %w(uid email organization_uid organization_id).collect do |key|
+        [key, t(key)]
+      end.to_h
+    end
   end
 
   def email_address
@@ -233,6 +247,14 @@ module SS::Model::User
     !enabled?
   end
 
+  def deletion_locked?
+    deletion_lock_state == 'locked'
+  end
+
+  def deletion_unlocked?
+    deletion_lock_state == 'unlocked'
+  end
+
   def locked?
     lock_state == 'locked'
   end
@@ -242,11 +264,11 @@ module SS::Model::User
   end
 
   def lock
-    update_attributes(lock_state: 'locked')
+    update(lock_state: 'locked')
   end
 
   def unlock
-    update_attributes(lock_state: 'unlocked')
+    update(lock_state: 'unlocked')
   end
 
   def root_groups
@@ -268,6 +290,12 @@ module SS::Model::User
   def lock_state_options
     %w(unlocked locked).map do |v|
       [ I18n.t("ss.options.user_lock_state.#{v}"), v ]
+    end
+  end
+
+  def deletion_lock_state_options
+    %w(unlocked locked).map do |v|
+      [ I18n.t("ss.options.user_deletion_lock_state.#{v}"), v ]
     end
   end
 
@@ -311,6 +339,12 @@ module SS::Model::User
     return self if is_a?(Gws::User)
     @gws_user ||= is_a?(Gws::User) ? self : Gws::User.find(id)
   end
+
+  def ss_user
+    return self if is_a?(SS::User)
+    @sys_user ||= is_a?(SS::User) ? self : SS::User.find(id)
+  end
+  alias sys_user ss_user
 
   def webmail_user
     @webmail_user ||= begin

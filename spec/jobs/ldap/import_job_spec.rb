@@ -8,15 +8,15 @@ describe Ldap::ImportJob, dbscope: :example, ldap: true do
 
         expect(Job::Log.count).to eq 1
         log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("FATAL -- : Failed Job"))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/FATAL -- : .* Failed Job/)
         expect(log.logs).to include(include("Net::LDAP::BindingInformationInvalidError"))
       end
     end
 
     context "when ldap connection is set" do
       let(:group) do
-        create(:cms_group, name: unique_id, ldap_dn: "dc=city,dc=shirasagi,dc=jp")
+        create(:cms_group, name: unique_id, ldap_dn: "dc=example,dc=jp")
       end
       let(:site) do
         create(:cms_site, name: unique_id, host: unique_id, domains: ["#{unique_id}.example.jp"],

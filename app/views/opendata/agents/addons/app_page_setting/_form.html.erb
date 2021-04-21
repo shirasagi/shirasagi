@@ -9,10 +9,12 @@
       <% title = @item.tab_title(option) %>
       <% id = "#{f.object_name}_show_tabs_#{option}" %>
       <fieldset>
-        <label for="<%= "#{f.object_name}_show_tabs_#{option}" %>">
-          <%= check_box_tag "#{f.object_name}[show_tabs][]", option, check, { id: id } %>
-          <%= t("opendata.sort_options.#{option}") %>
-        </label>
+        <legend>
+          <label for="<%= "#{f.object_name}_show_tabs_#{option}" %>">
+            <%= check_box_tag "#{f.object_name}[show_tabs][]", option, check, { id: id } %>
+            <%= t("opendata.sort_options.#{option}") %>
+          </label>
+        </legend>
         <%= text_field_tag "#{f.object_name}[tab_titles][#{option}]", title, class: [ :tab_titles, "tab_title_#{option}" ] %>
       </fieldset>
     <% end %>

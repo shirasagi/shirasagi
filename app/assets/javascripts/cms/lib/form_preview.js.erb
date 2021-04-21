@@ -24,7 +24,7 @@ this.Form_Preview = (function () {
       } else {
         errors.push("<%= I18n.t('errors.messages.set_filename') %>");
       }
-      if (!$.isEmptyObject(errors)) {
+      if (!SS.isEmptyObject(errors)) {
         alert(errors.join("\n"));
         return false;
       }

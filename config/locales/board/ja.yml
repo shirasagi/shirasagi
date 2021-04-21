@@ -19,7 +19,7 @@ ja:
       post_gpf: Google Person Finderに安否情報を提供する
       search_person: 人を探す
       gpf: Google Person Finder
-      gpf_delete_info_html: "Google Person Finderに提供した安否情報を削除するには、<a target=\"_blank\" href=\"%{url}\">Google Person Finder 登録情報</a>にアクセスし削除してください。"
+      gpf_delete_info_html: "Google Person Finderに提供した安否情報を削除するには、<a href=\"%{url}\" target=\"_blank\" rel=\"noopener\">Google Person Finder 登録情報</a>にアクセスし削除してください。"
 
     buttons:
       search_person: 人を探す
@@ -113,6 +113,7 @@ ja:
     attributes:
       cms/addon/captcha:
         captcha: 画像認証
+        captcha_test: 認証画像の表示確認
       board/post:
         poster: 投稿者
         poster_name: お名前

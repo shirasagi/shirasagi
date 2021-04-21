@@ -26,14 +26,12 @@ class Gws::Circular::Post
 
   field :name, type: String
   field :due_date, type: DateTime
-  field :deleted, type: DateTime
   field :state, type: String, default: 'public'
 
   permit_params :name, :due_date, :deleted
 
   validates :name, presence: true
   validates :due_date, presence: true
-  validates :deleted, datetime: true
   validate :validate_attached_file_size
 
   after_save :send_notification
@@ -144,6 +142,10 @@ class Gws::Circular::Post
 
   def deleted?
     deleted.present? && deleted <= Time.zone.now
+  end
+
+  def new_flag?
+    created > Time.zone.now - site.circular_new_days.day
   end
 
   # def custom_group_member?(user)

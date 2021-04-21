@@ -41,6 +41,13 @@ Cms_TemplateForm.bind = function(el, options) {
   }
 };
 
+Cms_TemplateForm.createElementFromHTML = function(html) {
+  var div = document.createElement('div');
+  div.innerHTML = html.trim();
+
+  return div.firstChild;
+};
+
 Cms_TemplateForm.prototype.render = function() {
   // this.changeForm();
 
@@ -51,6 +58,9 @@ Cms_TemplateForm.prototype.render = function() {
 };
 
 Cms_TemplateForm.prototype.changeForm = function() {
+  if (Cms_Form.addonSelector == ".mod-body-part-html") {
+    return false;
+  }
   var formId = this.$formSelect.val();
   if (formId) {
     if (!this.selectedFormId || this.selectedFormId !== formId) {
@@ -99,7 +109,11 @@ Cms_TemplateForm.prototype.showError = function(msg) {
 Cms_TemplateForm.prototype.activateForm = function() {
   this.$formPage.removeClass('hide');
   $('#addon-cms-agents-addons-body').addClass('hide');
+  $("#addon-cms-agents-addons-body_part").addClass('hide');
   $('#addon-cms-agents-addons-file').addClass('hide');
+  $("#addon-cms-agents-addons-form-page").removeClass('hide');
+  $("#item_body_layout_id").parent('dd').prev('dt').addClass('hide');
+  $("#item_body_layout_id").parent('dd').addClass('hide');
   Cms_Form.addonSelector = "#addon-cms-agents-addons-form-page .addon-body";
   Cms_Form.activateSyntaxChecks();
 };
@@ -108,7 +122,11 @@ Cms_TemplateForm.prototype.deactivateForm = function() {
   this.$formPageBody.html('');
   this.$formPage.addClass('hide');
   $('#addon-cms-agents-addons-body').removeClass('hide');
+  $("#addon-cms-agents-addons-body_part").addClass('hide');
   $('#addon-cms-agents-addons-file').removeClass('hide');
+  $("#addon-cms-agents-addons-form-page").addClass('hide');
+  $("#item_body_layout_id").parent('dd').prev('dt').removeClass('hide');
+  $("#item_body_layout_id").parent('dd').removeClass('hide');
   Cms_Form.addonSelector = ".mod-cms-body";
   Cms_Form.activateSyntaxChecks();
 };
@@ -153,17 +171,26 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
     $this.closest("fieldset").attr("disabled", true);
     $this.css('cursor', "wait");
     $this.closest(".column-value-palette").find(".column-value-palette-error").addClass("hide").html("");
+    // $this.trigger("ss:columnAdding");
     $.ajax({
       url: Cms_TemplateForm.paths.formColumn.replace(/:formId/, formId).replace(/:columnId/, columnId),
       success: function(data, status, xhr) {
+        var newColumnElement = Cms_TemplateForm.createElementFromHTML(data);
         var $palette = $this.closest(".column-value-palette");
-        $palette.before(data);
-        var $inserted = $palette.prev(".column-value");
-        // SS.render();
-        SS.renderAjaxBox();
-        SS.renderDateTimePicker();
-        Cms_Form.activateSyntaxChecks();
+        $palette.before(newColumnElement);
         self.resetOrder();
+
+        // To wait completely rendered DOM and executed javascript,
+        // use "setTimeout" to consume events in browser.
+        setTimeout(function() {
+          SS.renderAjaxBox();
+          SS.renderDateTimePicker();
+          Cms_Form.activateSyntaxChecks();
+
+          setTimeout(function() {
+            $this.trigger("ss:columnAdded", newColumnElement);
+          }, 0);
+        }, 0);
       },
       error: function(xhr, status, error) {
         $this.closest(".column-value-palette").find(".column-value-palette-error").html(error).removeClass("hide");
@@ -413,6 +440,10 @@ Cms_TemplateForm.prototype.remove = function($evTarget) {
 
   var self = this;
   $columnValue.addClass("column-value-deleting").fadeOut(Cms_TemplateForm.duration).queue(function() {
+    var id = $columnValue.find(".column-value-body .html").attr("id");
+    if (id) {
+      CKEDITOR.instances[id].destroy();
+    }
     $columnValue.remove();
     self.resetOrder();
     Cms_Form.activateSyntaxChecks();

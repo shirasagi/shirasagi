@@ -14,12 +14,16 @@
           if source.dig('file', 'extname').present?
             title = "#{title} (#{source.dig('file', 'extname').upcase} #{number_to_human_size(source.dig('file', 'size'))})"
           end
-          date = source['released']
+          date = source['released'].presence.try { |time| Time.zone.parse(time) rescue nil }
+          date ||= source['updated'].presence.try { |time| Time.zone.parse(time) rescue nil }
+          date ||= source['created'].presence.try { |time| Time.zone.parse(time) rescue nil }
         %>
         <h2><%= link_to title, source['url'], class: 'title' %></h2>
         <div class="meta">
           <span class="url"><%= @cur_site.full_url + hit['_id'] %></span>
-          <time datetime="<%= date %>"><%= I18n.l(Time.zone.parse(date), format: :long) %></time>
+          <% if date %>
+            <time datetime="<%= date.iso8601 %>"><%= I18n.l(date, format: :long) %></time>
+          <% end %>
         </div>
       </header>
     </article>

@@ -22,7 +22,7 @@
   }
 }
 
-#task-form {
+.task-box {
   .info {
     margin: 0 0 15px;
     dt, dd {
@@ -43,6 +43,19 @@
       height: 300px;
       background-color: #eee;
     }
+  }
+  .controller {
+    margin-top: 5px;
+    width: 100%;
+    @include display-flex(flex);
+    @include align-items(center);
+  }
+
+  .auto-reload {
+    @include flex-grow(2);
+    @include display-flex(inline-flex);
+    @include justify-content(flex-end);
+    @include align-items(center);
   }
 }
 
@@ -69,7 +82,7 @@
     @include border-radius(3px);
     font-size: 90%;
     font-weight: normal;
-    &.state-public, &.state-closed, &.state-ready, &.state-request, &.state-edit, &.state-remand {
+    &.state-public, &.state-closed, &.state-ready, &.state-request, &.state-edit, &.state-remand, &.state-deletion-locked {
       color: #fff;
     }
     &.state-public {
@@ -89,6 +102,9 @@
     }
     &.state-remand {
       background-color: #895b8a;
+    }
+    &.state-deletion-locked {
+      background-color: #6c757d;
     }
   }
 }

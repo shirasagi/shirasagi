@@ -1,0 +1,57 @@
+<%= jquery do %>
+var chageApi = function(ele) {
+  var val = $(ele).val();
+  $(".translate-api.api").hide();
+  if (val) {
+    $(".translate-api." + val).show();
+  }
+};
+$(".translate-api .select-api").on("change", function(){ chageApi(this) });
+chageApi($(".translate-api .select-api"));
+<% end %>
+
+<dl class="see translate-api" style="margin-bottom: 15px;">
+  <dt><%= @model.t :translate_api %><%= @model.tt :translate_api %></dt>
+  <dd><%= f.select :translate_api, @item.translate_api_options, { include_blank: true }, { class: "select-api" } %></dd>
+</dl>
+
+<dl class="see translate-api api mock">
+  <dt><%= @model.t :translate_mock_api_request_count %><%= @model.tt :translate_mock_request_count %></dt>
+  <dd><%= f.number_field :translate_mock_api_request_count, min: 0 %></dd>
+
+  <dt><%= @model.t :translate_mock_api_request_word_count %><%= @model.tt :translate_mock_request_word_count %></dt>
+  <dd><%= f.number_field :translate_mock_api_request_word_count, min: 0 %></dd>
+</dl>
+
+<dl class="see translate-api api microsoft_translator_text">
+  <dt><%= @model.t :translate_microsoft_api_key %></dt>
+  <dd><%= f.text_field :translate_microsoft_api_key %></dd>
+
+  <dt><%= @model.t :translate_microsoft_api_request_count %><%= @model.tt :translate_microsoft_api_request_count %></dt>
+  <dd><%= f.number_field :translate_microsoft_api_request_count, min: 0 %></dd>
+
+  <dt><%= @model.t :translate_microsoft_api_request_word_count %><%= @model.tt :translate_microsoft_api_request_word_count %></dt>
+  <dd><%= f.number_field :translate_microsoft_api_request_word_count, min: 0 %></dd>
+</dl>
+
+<dl class="see translate-api api google_translation">
+  <dt><%= @model.t :translate_google_api_project_id %></dt>
+  <dd><%= f.text_field :translate_google_api_project_id %></dd>
+
+  <dt><%= @model.t :translate_google_api_credential_file_id %></dt>
+  <dd><%= f.file_field :in_translate_google_api_credential_file %></dd>
+  <% if @item.translate_google_api_credential_file %>
+    <dd>
+      <label>
+        <%= f.check_box :rm_translate_google_api_credential_file %>
+        <%= t "ss.buttons.delete" %>(<%= @item.translate_google_api_credential_file.filename %>)
+      </label>
+    </dd>
+  <% end %>
+
+  <dt><%= @model.t :translate_google_api_request_count %></dt>
+  <dd><%= f.number_field :translate_google_api_request_count %></dd>
+
+  <dt><%= @model.t :translate_google_api_request_word_count, min: 0 %></dt>
+  <dd><%= f.number_field :translate_google_api_request_word_count, min: 0 %></dd>
+</dl>

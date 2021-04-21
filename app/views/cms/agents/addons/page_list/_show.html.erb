@@ -3,10 +3,21 @@
 
 <dl class="see">
   <dt><%= @model.t :conditions %></dt>
-  <dd><%=br @item.conditions.join("\n") %></dd>
+  <dd><%=br @item.conditions %></dd>
 
   <dt><%= @model.t :sort %></dt>
-  <dd><%= @item.label :sort %></dd>
+  <dd>
+    <%=
+      @item.value_setting_for(:sort).try do |setting|
+        description = setting[2].try { |hash| hash["data-description"] }
+        if description.present?
+          content_tag(:span, setting[0], class: "ss-popup", title: description, "data-ss-popup-inline" => true, "data-ss-popup-html" => description, role: "button")
+        else
+          setting[0]
+        end
+      end
+    %>
+  </dd>
 
   <dt><%= @model.t :limit %></dt>
   <dd><%= @item.limit %></dd>
@@ -43,15 +54,19 @@
       <% end %>
     </dd>
 
-    <dt><%= @model.t :no_items_display_state %></dt>
-    <dd><%= @item.label :no_items_display_state %></dd>
+    <% if @model.use_no_items_display %>
+      <dt><%= @model.t :no_items_display_state %></dt>
+      <dd><%= @item.label :no_items_display_state %></dd>
+    <% end %>
 
-    <dt><%= @model.t :substitute_html %></dt>
-    <dd>
-      <% if @item.substitute_html.present? %>
-        <%= text_area_tag :substitute_html, @item.substitute_html, class: "html" %>
-      <% end %>
-    </dd>
+    <% if @model.use_substitute_html %>
+      <dt><%= @model.t :substitute_html %></dt>
+      <dd>
+        <% if @item.substitute_html.present? %>
+          <%= text_area_tag :substitute_html, @item.substitute_html, class: "html" %>
+        <% end %>
+      </dd>
+    <% end %>
   <% end %>
 
   <% if @model.use_new_days %>
@@ -59,3 +74,7 @@
     <dd><%= @item.new_days %> <%= t "datetime.prompts.day" %></dd>
   <% end %>
 </dl>
+
+<%= jquery do %>
+  SS_Popup.render();
+<% end %>

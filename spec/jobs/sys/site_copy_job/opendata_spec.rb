@@ -30,10 +30,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
       end
 
       before do
-        license_logo = Rails.root.join("spec", "fixtures", "ss", "logo.png")
-        license = Fs::UploadedFile.create_from_file(license_logo, basename: "spec") do |file|
-          create(:opendata_license, cur_site: site, in_file: file)
-        end
+        license = create(:opendata_license, cur_site: site)
 
         file_path = Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv")
         Fs::UploadedFile.create_from_file(file_path, basename: "spec") do |file|
@@ -61,7 +58,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         Job::Log.first.tap do |log|
           expect(log.logs).not_to include(include('WARN'))
           expect(log.logs).not_to include(include('ERROR'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         dest_site = Cms::Site.find_by(host: target_host_host)
@@ -187,7 +184,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         Job::Log.first.tap do |log|
           expect(log.logs).not_to include(include('WARN'))
           expect(log.logs).not_to include(include('ERROR'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(app1.id).to be < dataset.id
@@ -324,7 +321,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         Job::Log.first.tap do |log|
           expect(log.logs).not_to include(include('WARN'))
           expect(log.logs).not_to include(include('ERROR'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         dest_site = Cms::Site.find_by(host: target_host_host)

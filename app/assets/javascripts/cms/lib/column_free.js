@@ -172,6 +172,6 @@ Cms_Column_Free.prototype.insertImage = function($fileView) {
 
 Cms_Column_Free.prototype.insertThumb = function($fileView) {
   var $img = $("<img/>", { src: $fileView.data("thumb-url"), alt: $fileView.data("name") });
-  var $a = $("<a/>", { href: $fileView.data("url"), class: "ajax-box", target: "_blank" }).html($img);
+  var $a = $("<a/>", { href: $fileView.data("url"), class: "ajax-box", target: "_blank", rel: "noopener" }).html($img);
   this.insertContent($a.prop('outerHTML'));
 };

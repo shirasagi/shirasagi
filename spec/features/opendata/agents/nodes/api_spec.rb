@@ -1,9 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_agents_nodes_api", dbscope: :example, http_server: true do
-  # http.default port: 33_190
-  http.default doc_root: Rails.root.join("spec", "fixtures", "opendata")
-
+describe "opendata_agents_nodes_api", dbscope: :example do
   let!(:node) { create_once :opendata_node_api, name: "opendata_api" }
   let!(:node_area) { create :opendata_node_area }
 
@@ -22,21 +19,25 @@ describe "opendata_agents_nodes_api", dbscope: :example, http_server: true do
   let!(:node_search_dataset) { create_once :opendata_node_search_dataset, filename: "dataset/search" }
   let!(:page_dataset_01) do
     create(:opendata_dataset, cur_node: node_dataset, dataset_group_ids: [node_dataset_group_01.id],
-                              area_ids: [ node_area.id ], tags: ["TEST_1"])
+                              area_ids: [ node_area.id ], tags: %w(TEST_1))
   end
   let!(:page_dataset_02) do
     create(:opendata_dataset, cur_node: node_dataset, dataset_group_ids: [node_dataset_group_02.id],
-                              area_ids: [ node_area.id ], tags: ["TEST_2"])
+                              area_ids: [ node_area.id ], tags: %w(TEST_2))
   end
 
+  let(:dataset_resource_url) { "http://#{unique_domain}/#{unique_id}/shift_jis.csv" }
   let(:dataset_resource_file_path) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv") }
   let(:dataset_resource) { page_dataset_01.resources.new(attributes_for(:opendata_resource)) }
   let(:dataset_url_resource) { page_dataset_01.url_resources.new(attributes_for(:opendata_url_resource)) }
 
-  let(:license_logo_file) { Fs::UploadedFile.create_from_file(Rails.root.join("spec", "fixtures", "ss", "logo.png")) }
-  let(:license) { create(:opendata_license, cur_site: cms_site, in_file: license_logo_file) }
+  let(:license) { create(:opendata_license, cur_site: cms_site) }
 
   before do
+    WebMock.reset!
+    body = ::File.binread(dataset_resource_file_path)
+    stub_request(:get, dataset_resource_url).
+      to_return(status: 200, body: body, headers: { "Last-Modified" => Time.zone.now.httpdate })
 
     Fs::UploadedFile.create_from_file(dataset_resource_file_path, basename: "spec") do |f|
       dataset_resource.in_file = f
@@ -47,11 +48,12 @@ describe "opendata_agents_nodes_api", dbscope: :example, http_server: true do
     end
 
     dataset_url_resource.license_id = license.id
-    dataset_url_resource.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
+    dataset_url_resource.original_url = dataset_resource_url
     dataset_url_resource.crawl_update = "none"
     dataset_url_resource.save!
-
   end
+
+  after { WebMock.reset! }
 
   context "api" do
 

@@ -5,7 +5,8 @@ module Gws::Addon::Board::NotifySetting
 
   included do
     field :subscribed_users_readable_state, type: String, default: "admin"
-    permit_params :subscribed_users_readable_state
+    field :notification_noticed_at, type: DateTime
+    permit_params :subscribed_users_readable_state, :notification_noticed_at
   end
 
   def subscribed_users_readable_state_options
@@ -26,7 +27,7 @@ module Gws::Addon::Board::NotifySetting
       #end
 
       role_ids = Gws::Role.site(site).all_in(
-        permissions: %w(read_other_gws_board_posts edit_other_gws_board_posts delete_other_gws_board_posts)
+        permissions: %w(read_other_gws_board_topics edit_other_gws_board_topics delete_other_gws_board_topics)
       ).pluck(:id)
 
       conds = []

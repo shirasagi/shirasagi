@@ -5,13 +5,13 @@ module SS::Model::File
   include SS::Reference::User
   include SS::FileFactory
   include SS::ExifGeoLocation
+  include SS::FileUsageAggregation
   include History::Addon::Trash
   include ActiveSupport::NumberHelper
 
-  attr_accessor :in_file, :resizing, :unnormalize
+  attr_accessor :in_file, :resizing
 
   included do
-    cattr_accessor(:root, instance_accessor: false) { "#{Rails.root}/private/files" }
     store_in collection: "ss_files"
 
     seqid :id
@@ -31,7 +31,8 @@ module SS::Model::File
     permit_params :in_file, :state, :name, :filename, :resizing, :in_data_url
 
     before_validation :set_filename, if: ->{ in_file.present? }
-    before_validation :normalize_filename, if: -> { !unnormalize }
+    before_validation :normalize_name
+    before_validation :normalize_filename
 
     validates :model, presence: true
     validates :state, presence: true
@@ -46,9 +47,24 @@ module SS::Model::File
     before_destroy :remove_file
 
     default_scope ->{ order_by name: 1 }
+
+    if Rails.env.test?
+      define_method(:url) { SS.config.ss.file_url_with == "name" ? url_with_name : url_with_filename }
+      define_method(:full_url) { SS.config.ss.file_url_with == "name" ? full_url_with_name : full_url_with_filename }
+    elsif SS.config.ss.file_url_with == "name"
+      define_method(:url) { url_with_name }
+      define_method(:full_url) { full_url_with_name }
+    else
+      define_method(:url) { url_with_filename }
+      define_method(:full_url) { full_url_with_filename }
+    end
   end
 
   module ClassMethods
+    def root
+      "#{SS::Application.private_root}/files"
+    end
+
     def resizing_options
       [
         [320, 240], [240, 320], [640, 480], [480, 640], [800, 600], [600, 800],
@@ -74,26 +90,39 @@ module SS::Model::File
     "#{self.class.root}/ss_files/" + id.to_s.split(//).join("/") + "/_/#{id}"
   end
 
-  def public_path
+  def public_dir
     return if site.blank? || !site.respond_to?(:root_path)
-    "#{site.root_path}/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
+    "#{site.root_path}/fs/" + id.to_s.split(//).join("/") + "/_"
   end
 
-  def url
+  def public_path
+    public_dir.try { |dir| "#{dir}/#{filename}" }
+  end
+
+  def url_with_filename
     "/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
   end
 
-  def download_url
-    "/fs/" + id.to_s.split(//).join("/") + "/_/download/#{filename}"
+  def url_with_name
+    if SS::FilenameUtils.url_safe_japanese?(name)
+      "/fs/" + id.to_s.split(//).join("/") + "/_/#{Addressable::URI.encode_component(name)}"
+    else
+      url_with_filename
+    end
   end
 
-  def view_url
-    "/fs/" + id.to_s.split(//).join("/") + "/_/view/#{filename}"
-  end
-
-  def full_url
+  def full_url_with_filename
     return if site.blank? || !site.respond_to?(:full_root_url)
     "#{site.full_root_url}fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
+  end
+
+  def full_url_with_name
+    return if site.blank? || !site.respond_to?(:full_root_url)
+    if SS::FilenameUtils.url_safe_japanese?(name)
+      "#{site.full_root_url}fs/" + id.to_s.split(//).join("/") + "/_/#{Addressable::URI.encode_component(name)}"
+    else
+      full_url_with_filename
+    end
   end
 
   def thumb_url
@@ -152,28 +181,39 @@ module SS::Model::File
   end
 
   def humanized_name
-    "#{name.sub(/\.[^\.]+$/, '')} (#{extname.upcase} #{number_to_human_size(size)})"
+    "#{::File.basename(name, ".*")} (#{extname.upcase} #{number_to_human_size(size)})"
   end
 
   def download_filename
-    name.include?('.') ? name : "#{name}.#{extname}"
+    return name if name.include?('.') && !name.end_with?(".")
+
+    name_without_ext = ::File.basename(name, ".*")
+    ext = ::File.extname(filename)
+    return name_without_ext if ext.blank? || ext == "."
+
+    name_without_ext + ext
   end
 
   def basename
-    filename.to_s.sub(/.*\//, "")
+    filename.present? ? ::File.basename(filename) : ""
   end
 
   def extname
-    return "" unless filename.to_s.include?('.')
-    filename.to_s.sub(/.*\W/, "")
+    return "" if filename.blank?
+
+    ret = ::File.extname(filename)
+    return "" if ret.blank?
+
+    ret = ret[1..-1] if ret.start_with?(".")
+    ret
   end
 
   def image?
-    content_type.to_s.start_with?('image/')
+    to_io { |io| SS::ImageConverter.image?(io) }
   end
 
   def exif_image?
-    image? && filename =~ /\.(jpe?g|tiff?)$/i
+    to_io { |io| SS::ImageConverter.exif_image?(io) }
   end
 
   def viewable?
@@ -192,8 +232,8 @@ module SS::Model::File
     Fs.exists?(path) ? Fs.binread(path) : nil
   end
 
-  def to_io
-    Fs.exists?(path) ? Fs.to_io(path) : nil
+  def to_io(&block)
+    Fs.exists?(path) ? Fs.to_io(path, &block) : nil
   end
 
   def uploaded_file(&block)
@@ -201,34 +241,46 @@ module SS::Model::File
   end
 
   def generate_public_file
-    return if site.blank?
-    return if !basename.ascii_only?
-    return if Fs.exists?(public_path) && Fs.cmp(path, public_path)
+    dir = public_dir
+    return if dir.blank?
 
-    Fs.mkdir_p(::File.dirname(public_path))
-    Fs.cp(path, public_path)
+    SS::FilePublisher.publish(self, dir)
   end
 
   def remove_public_file
-    Fs.rm_rf(public_path) if public_path
+    dir = public_dir
+    return if dir.blank?
+
+    SS::FilePublisher.depublish(self, dir)
   end
 
-  def copy(opts = {})
-    copy = SS::TempFile.new
+  COPY_SKIP_ATTRS = %w(_id id model file_id group_ids permission_level category_ids owner_item_id owner_item_type).freeze
 
+  def copy(opts = {})
+    model = opts[:cur_node].present? ? Cms::TempFile : SS::TempFile
+
+    copy_attrs = {}
     self.attributes.each do |key, val|
-      next if key =~ /^(id|file_id)$/
-      next if key =~ /^(group_ids|permission_level|category_ids)$/
-      copy.send("#{key}=", val) unless copy.send(key)
+      next if COPY_SKIP_ATTRS.include?(key)
+      copy_attrs[key] = val if model.fields.key?(key)
     end
 
-    copy.in_file = self.uploaded_file
-    copy.state = "public"
-    copy.name = self.name
-    copy.unnormalize = true if opts[:unnormalize].present?
-    copy.save
-    copy.in_file.delete
-    copy
+    # forcibly overwrite by opts
+    copy_attrs["site"] = opts[:cur_site] if opts[:cur_site].present?
+    if opts[:cur_user].present?
+      copy_attrs["cur_user"] = opts[:cur_user]
+      copy_attrs["user"] = opts[:cur_user]
+    end
+    if opts[:cur_node].present?
+      copy_attrs["cur_node"] = opts[:cur_node]
+      copy_attrs["node"] = opts[:cur_node]
+    end
+
+    model.create_empty!(copy_attrs) do |new_file|
+      ::FileUtils.copy(self.path, new_file.path)
+      # to create thumbnail call "#save!"
+      new_file.save!
+    end
   end
 
   COPY_REQUIRED_MODELS = %w(cms/file ss/user_file).freeze
@@ -236,6 +288,29 @@ module SS::Model::File
   def copy_if_necessary(opts = {})
     return self if !COPY_REQUIRED_MODELS.include?(self.model)
     copy(opts)
+  end
+
+  def image_dimension
+    return unless Fs.exists?(path)
+    return unless image?
+
+    ::FastImage.size(path) rescue nil
+  end
+
+  def shrink_image_to(width, height)
+    return false unless image?
+
+    cur_width, cur_height = image_dimension
+    return false if cur_width.nil? || cur_height.nil?
+    return true if cur_width <= width && cur_height <= height
+
+    SS::ImageConverter.open(path) do |converter|
+      converter.resize_to_fit!(width, height)
+      ::Fs.upload(path, converter.to_io)
+    end
+
+    self.update(size: ::Fs.size(path))
+    true
   end
 
   private
@@ -258,9 +333,12 @@ module SS::Model::File
     self.content_type = ::SS::MimeType.find(in_file.original_filename, in_file.content_type)
   end
 
+  def normalize_name
+    self.name = SS::FilenameUtils.convert_to_url_safe_japanese(name) if self.name.present?
+  end
+
   def normalize_filename
-    self.name     = self.name.unicode_normalize(:nfkc) if self.name.present?
-    self.filename = self.filename.unicode_normalize(:nfkc) if self.filename.present?
+    self.filename = SS::FilenameUtils.normalize(self.filename)
   end
 
   def multibyte_filename_disabled?
@@ -284,45 +362,31 @@ module SS::Model::File
     return false if errors.present?
     return if in_file.blank?
 
-    if image?
-      list = Magick::ImageList.new
-      list.from_blob(in_file.read)
-      extract_geo_location(list) if exif_image?
-      list.each do |image|
-        if exif_image?
-          case SS.config.env.image_exif_option
-          when "auto_orient"
-            image.auto_orient!
-          when "strip"
-            image.strip!
-          end
-        end
-
-        next unless resizing
-        width, height = resizing
-        image.resize_to_fit! width, height if image.columns > width || image.rows > height
-      end
-      binary = list.to_blob
-    else
-      binary = in_file.read
-    end
-    in_file.rewind
-
     dir = ::File.dirname(path)
     Fs.mkdir_p(dir) unless Fs.exists?(dir)
-    Fs.binwrite(path, binary)
-    self.size = binary.length
+
+    SS::ImageConverter.attach(in_file, ext: ::File.extname(in_file.original_filename)) do |converter|
+      converter.apply_defaults!(resizing: resizing)
+      Fs.upload(path, converter.to_io)
+      self.geo_location = converter.geo_location
+    end
+
+    self.size = Fs.size(path)
   end
 
   def create_history_trash
+    return if model.to_s.include?('temp_file') || model.to_s.include?('thumb_file')
+    return if owner_item_type.to_s.start_with?('Gws', 'Sns', 'SS', 'Sys', 'Webmail')
+
     backup = History::Trash.new
     backup.ref_coll = collection_name
     backup.ref_class = self.class.to_s
     backup.data = attributes
     backup.site = self.site
-    backup.save
+    backup.user = @cur_user
+    return unless backup.save
     return unless File.exists?(path)
-    trash_path = "#{Rails.root}/private/trash/#{path.sub(/.*\/(ss_files\/)/, '\\1')}"
+    trash_path = "#{History::Trash.root}/#{path.sub(/.*\/(ss_files\/)/, '\\1')}"
     FileUtils.mkdir_p(File.dirname(trash_path))
     FileUtils.cp(path, trash_path)
   end

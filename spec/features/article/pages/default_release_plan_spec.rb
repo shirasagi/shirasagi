@@ -8,7 +8,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
     before { login_cms_user }
 
-    context "with site setting", fragile: true do
+    context "with site setting" do
       before do
         site.default_release_plan_state = 'enabled'
         site.default_release_days_after = 3
@@ -28,18 +28,18 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             fill_in "item[name]", with: "sample"
             click_on I18n.t('ss.links.input')
             fill_in "item[basename]", with: "sample"
-            find('#addon-cms-agents-addons-meta .toggle-head h2').click
+            ensure_addon_opened('#addon-cms-agents-addons-meta')
             fill_in "item[keywords]", with: "sample"
             fill_in "item[description]", with: "sample"
-            click_button "公開保存"
+            click_button I18n.t("ss.buttons.publish_save")
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
+          wait_for_notice I18n.t('ss.notice.saved')
 
           expect(Article::Page.count).to eq 1
-          page = Article::Page.first
-          expect(page.state).to eq "ready"
-          expect(page.release_date).to eq Time.zone.parse("2016/04/15 00:00")
-          expect(page.close_date).to eq Time.zone.parse("2016/07/21 00:00")
+          item = Article::Page.first
+          expect(item.state).to eq "ready"
+          expect(item.release_date).to eq Time.zone.parse("2016/04/15 00:00")
+          expect(item.close_date).to eq Time.zone.parse("2016/07/21 00:00")
         end
       end
     end
@@ -64,19 +64,21 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             fill_in "item[name]", with: "sample"
             click_on I18n.t('ss.links.input')
             fill_in "item[basename]", with: "sample"
-            find('#addon-cms-agents-addons-meta .toggle-head h2').click
+            ensure_addon_opened('#addon-cms-agents-addons-meta')
             fill_in "item[keywords]", with: "sample"
             fill_in "item[description]", with: "sample"
-            click_button "下書き保存"
+            click_button I18n.t("ss.buttons.draft_save")
           end
-          click_button "警告を無視する"
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
+          click_button I18n.t("ss.buttons.ignore_alert")
+          wait_for_notice I18n.t('ss.notice.saved')
 
           expect(Article::Page.count).to eq 1
-          page = Article::Page.first
-          expect(page.state).to eq "closed"
-          expect(page.release_date).to eq Time.zone.parse("2016/04/15 00:00")
-          expect(page.close_date).to eq Time.zone.parse("2016/07/21 00:00")
+          item = Article::Page.first
+          expect(item.state).to eq "closed"
+          expect(item.release_date).to eq Time.zone.parse("2016/04/15 00:00")
+          expect(item.close_date).to eq Time.zone.parse("2016/07/21 00:00")
+
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
         end
       end
     end
@@ -101,18 +103,18 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             fill_in "item[name]", with: "sample"
             click_on I18n.t('ss.links.input')
             fill_in "item[basename]", with: "sample"
-            find('#addon-cms-agents-addons-meta .toggle-head h2').click
+            ensure_addon_opened('#addon-cms-agents-addons-meta')
             fill_in "item[keywords]", with: "sample"
             fill_in "item[description]", with: "sample"
-            click_button "公開保存"
+            click_button I18n.t("ss.buttons.publish_save")
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
+          wait_for_notice I18n.t('ss.notice.saved')
 
           expect(Article::Page.count).to eq 1
-          page = Article::Page.first
-          expect(page.state).to eq "ready"
-          expect(page.release_date).to eq Time.zone.parse("2016/04/16 00:00")
-          expect(page.close_date).to eq Time.zone.parse("2016/06/22 00:00")
+          item = Article::Page.first
+          expect(item.state).to eq "ready"
+          expect(item.release_date).to eq Time.zone.parse("2016/04/16 00:00")
+          expect(item.close_date).to eq Time.zone.parse("2016/06/22 00:00")
         end
       end
     end
@@ -144,18 +146,18 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             fill_in "item[name]", with: "sample"
             click_on I18n.t('ss.links.input')
             fill_in "item[basename]", with: "sample"
-            find('#addon-cms-agents-addons-meta .toggle-head h2').click
+            ensure_addon_opened('#addon-cms-agents-addons-meta')
             fill_in "item[keywords]", with: "sample"
             fill_in "item[description]", with: "sample"
-            click_button "公開保存"
+            click_button I18n.t("ss.buttons.publish_save")
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
+          wait_for_notice I18n.t('ss.notice.saved')
 
           expect(Article::Page.count).to eq 1
-          page = Article::Page.first
-          expect(page.state).to eq "ready"
-          expect(page.release_date).to eq Time.zone.parse("2016/04/16 00:00")
-          expect(page.close_date).to eq Time.zone.parse("2016/06/22 00:00")
+          item = Article::Page.first
+          expect(item.state).to eq "ready"
+          expect(item.release_date).to eq Time.zone.parse("2016/04/16 00:00")
+          expect(item.close_date).to eq Time.zone.parse("2016/06/22 00:00")
         end
       end
     end

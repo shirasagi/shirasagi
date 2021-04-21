@@ -100,7 +100,14 @@ class Cms::Agents::Nodes::ArchiveController < ApplicationController
   end
 
   def redirect_to_archive_index
-    redirect_to "#{@cur_site.full_url}#{@cur_main_path[1..-1].sub('/index.html', '')}/#{Time.zone.now.strftime('%Y%m')}"
+    archive_path = "#{@cur_main_path[1..-1].sub('/index.html', '')}/#{Time.zone.now.strftime('%Y%m')}"
+    render_url = "#{@cur_site.full_url}#{archive_path}"
+
+    if preview_path?
+      render_url = "#{cms_preview_path(site: @cur_site, path: @cur_main_path[1..-1].sub('/index.html', ''))}/#{Time.zone.now.strftime('%Y%m')}"
+    end
+
+    redirect_to render_url
   end
 
   # def rss

@@ -2,6 +2,7 @@ class Gws::Portal::Group::SettingsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Portal::PortalFilter
+  include Gws::Portal::GroupPortalFilter
 
   model Gws::Portal::GroupSetting
 
@@ -15,11 +16,8 @@ class Gws::Portal::Group::SettingsController < ApplicationController
   private
 
   def set_crumbs
-    if @cur_site.id.to_s == params[:group].to_s
-      @crumbs << [t("gws/portal.root_portal"), gws_portal_group_path]
-    else
-      @crumbs << [t("gws/portal.group_portal"), gws_portal_group_path]
-    end
+    set_portal_setting
+    @crumbs << [@portal.name, gws_portal_group_path]
     @crumbs << [t("gws/portal.links.settings"), action: :show]
   end
 

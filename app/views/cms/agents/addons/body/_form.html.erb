@@ -2,11 +2,7 @@
   source_cleaner_conf = Cms::SourceCleanerTemplate.site(@cur_site).and_public.to_config
   replace_words_conf = Cms::WordDictionary.site(@cur_site).to_config
 
-  syntax_check = true
-  syntax_check = @cur_site.syntax_check_enabled? if syntax_check
-  if @cur_node && @cur_node.respond_to?(:syntax_check_enabled?)
-    syntax_check = @cur_node.syntax_check_enabled? if syntax_check
-  end
+  syntax_check = cms_syntax_check_enabled?
 
   addon ||= local_assigns.fetch(:addon, {})
   if @item.respond_to?(:form) && @item.form.present?
@@ -90,20 +86,13 @@
   </dl>
 
   <%= jquery do %>
-    var insertContent = function(cont) {
-      if (typeof tinymce !== "undefined") {
-        tinymce.get(Cms_Form.editorId).execCommand("mceInsertContent", false, cont);
-      } else if (typeof CKEDITOR !== "undefined") {
-        CKEDITOR.instances[Cms_Form.editorId].insertHtml(cont);
-      }
-    };
-
+    var hostUrl = "<%= @cur_site.url %>";
     $('#addon-cms-agents-addons-body a.ajax-box.related-pages').data('on-select', function ($item) {
       var data = $item.closest("[data-id]");
-      var href = "/" + data.find(".filename").text();
+      var href = hostUrl + data.find(".filename").text();
       var label = data.find(".select-item").text();
       var text = "<a href='" + href + "'>" + label + '</a>';
-      insertContent(text);
+      SS_FileView.insertContent(text);
     });
   <% end %>
 

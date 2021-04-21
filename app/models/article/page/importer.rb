@@ -122,6 +122,7 @@ class Article::Page::Importer
       item.body_layout = value.present? ? Cms::BodyLayout.site(site).where(name: value).first : nil
     end
     importer.simple_column :order
+    importer.simple_column :redirect_link
     importer.simple_column :form_id do |row, item, head, value|
       item.form = value.present? ? node.st_forms.where(name: value).first : nil
     end
@@ -166,7 +167,7 @@ class Article::Page::Importer
     end
     column_name = "#{model.t(:related_pages)}#{model.t(:related_page_sort)}"
     importer.simple_column :related_page_sort, name: column_name do |row, item, head, value|
-      item.related_page_sort = from_label(value, item.related_page_sort_options)
+      item.related_page_sort = from_label(value, item.related_page_sort_options, item.related_page_sort_compat_options)
     end
   end
 

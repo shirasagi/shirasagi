@@ -7,7 +7,7 @@
   <% end %>
 
   <dt><%= @model.t :conditions %></dt>
-  <dd><%=br @item.conditions.join("\n") %></dd>
+  <dd><%=br @item.conditions %></dd>
 
   <dt><%= @model.t :upper_html %></dt>
   <dd>
@@ -20,6 +20,13 @@
   <dd>
     <% if @item.lower_html.present? %>
     <%= text_area_tag :lower_html, @item.lower_html, class: "html" %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :substitute_html %></dt>
+  <dd>
+    <% if @item.substitute_html.present? %>
+      <%= text_area_tag :substitute_html, @item.substitute_html, class: "html" %>
     <% end %>
   </dd>
 

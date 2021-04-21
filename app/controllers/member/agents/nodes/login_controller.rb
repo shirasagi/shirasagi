@@ -21,8 +21,9 @@ class Member::Agents::Nodes::LoginController < ApplicationController
       remote_addr: remote_addr,
       user_agent: request.user_agent)
 
-    ref = URI::decode(params[:ref] || flash[:ref] || "")
-    ref = redirect_url if ref.blank?
+    ref = @cur_node.make_trusted_full_url(params[:ref] || flash[:ref])
+    ref = @cur_node.redirect_full_url if ref.blank?
+    ref = @cur_site.full_url if ref.blank?
     flash.discard(:ref)
 
     redirect_to ref

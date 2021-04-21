@@ -4,7 +4,7 @@
     <h1><%= mod[:name] %></h1>
     <div>
       <% mod[:items].each do |name, path| %>
-      <%= link_to name, "?route=#{path}", target: "_self" %>
+      <%= link_to name, trusted_url!("#{params[:base_url]}?route=#{path}"), target: "_self" %>
       <% end %>
     </div>
   </article>

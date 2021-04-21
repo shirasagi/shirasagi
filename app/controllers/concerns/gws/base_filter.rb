@@ -9,6 +9,8 @@ module Gws::BaseFilter
 
     helper Gws::LayoutHelper
     helper Gws::Presence::UserHelper
+    helper Gws::PublicUserProfile
+    helper Gws::ReadableSettingHelper
 
     before_action :validate_gws
     before_action :set_gws_assets
@@ -70,11 +72,11 @@ module Gws::BaseFilter
   end
 
   # override SS::BaseFilter#rescue_action
-  def rescue_action(e)
-    if e.to_s =~ /^\d+$/
-      status = e.to_s.to_i
+  def rescue_action(exception)
+    if exception.to_s.numeric?
+      status = exception.to_s.to_i
     else
-      status = ActionDispatch::ExceptionWrapper.status_code_for_exception(e.class.name)
+      status = ActionDispatch::ExceptionWrapper.status_code_for_exception(exception.class.name)
     end
 
     if status >= 500
@@ -87,7 +89,7 @@ module Gws::BaseFilter
       Gws::History.send(
         history_method, :controller, @cur_user, @cur_site,
         path: request.path, controller: self.class.name.underscore, action: action_name,
-        message: "#{e.class} (#{e.message})"
+        message: "#{exception.class} (#{exception.message})"
       ) rescue nil
     end
 
@@ -95,7 +97,7 @@ module Gws::BaseFilter
   end
 
   def set_crumbs
-    #
+    # override by subclass if necessary
   end
 
   def current_site

@@ -13,11 +13,11 @@ module Cms::PublicFilter
     before_action :parse_path
     before_action :set_preview_params
     before_action :compile_scss
-    before_action :x_sendfile, unless: ->{ filter_include?(:mobile) || filter_include?(:kana) || @preview }
+    before_action :x_sendfile, unless: ->{ filter_include?(:mobile) || filter_include?(:kana) || filter_include?(:translate) || @preview }
   end
 
   def index
-    if @cur_path =~ /\.p[1-9]\d*\.html$/
+    if @cur_path.match?(/\.p[1-9]\d*\.html$/)
       page = @cur_path.sub(/.*\.p(\d+)\.html$/, '\\1')
       params[:page] = page.to_i
       @cur_path.sub!(/\.p\d+\.html$/, ".html")
@@ -75,14 +75,14 @@ module Cms::PublicFilter
   end
 
   def deny_path
-    raise "404" if @cur_path =~ /^\/sites\/.\//
+    raise "404" if @cur_path.match?(/^\/sites\/.\//)
   end
 
   def parse_path
     @cur_path.sub!(/\/$/, "/index.html")
     @cur_main_path.sub!(/\/$/, "/index.html")
     @html = @cur_main_path.sub(/\.\w+$/, ".html")
-    @file = File.join(@cur_site.root_path, @cur_path)
+    @file = File.join(@cur_site.path, @cur_main_path)
   end
 
   def set_preview_params
@@ -96,8 +96,8 @@ module Cms::PublicFilter
   end
 
   def compile_scss
-    return if @cur_path !~ /\.css$/
-    return if @cur_path =~ /\/_[^\/]*$/
+    return unless @cur_path.match?(/\.css$/)
+    return if @cur_path.match?(/\/_[^\/]*$/)
     return unless Fs.exists? @scss = @file.sub(/\.css$/, ".scss")
 
     css_mtime = Fs.exists?(@file) ? Fs.stat(@file).mtime : 0
@@ -204,7 +204,10 @@ module Cms::PublicFilter
   end
 
   def send_page(page)
-    if response.content_type == "text/html" && page.layout
+    if page.view_layout == "cms/redirect" && !mobile_path?
+      @redirect_link = trusted_url!(page.redirect_link)
+      render html: "", layout: "cms/redirect"
+    elsif response.content_type == "text/html" && page.layout
       render html: render_layout(page.layout).html_safe, layout: (request.xhr? ? false : "cms/page")
     else
       @_response_body = response.body
@@ -212,13 +215,17 @@ module Cms::PublicFilter
   end
 
   def page_not_found
+    request.env["action_dispatch.show_exceptions"] = false if @preview
     raise "404"
   end
 
   def rescue_action(exception = nil)
-    return render_error(exception, status: exception.to_s.to_i) if exception.to_s.numeric?
-    return render_error(exception, status: 404) if exception.is_a? Mongoid::Errors::DocumentNotFound
-    return render_error(exception, status: 404) if exception.is_a? ActionController::RoutingError
+    if !@preview
+      return render_error(exception, status: exception.to_s.to_i) if exception.to_s.numeric?
+      return render_error(exception, status: 404) if exception.is_a? Mongoid::Errors::DocumentNotFound
+      return render_error(exception, status: 404) if exception.is_a? ActionController::RoutingError
+    end
+
     raise exception
   end
 

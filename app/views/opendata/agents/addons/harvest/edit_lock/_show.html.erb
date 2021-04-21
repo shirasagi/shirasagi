@@ -3,7 +3,7 @@
 <dl class="see">
   <dd class="wide">
     <% source_url = @item.harvest_source_url.present? ? @item.harvest_source_url : @item.harvest_importer.source_url %>
-    <%= link_to @item.harvest_importer.name, source_url, target: "_blank" %>
+    <%= link_to @item.harvest_importer.name, source_url, target: "_blank", rel: "noopener" %>
     <%= t("opendata.messages.harvest_imported_dataset") %>
   </dd>
 </dl>

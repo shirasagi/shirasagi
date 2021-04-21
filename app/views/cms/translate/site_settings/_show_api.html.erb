@@ -1,0 +1,47 @@
+<dl class="see">
+  <dt><%= @model.t :translate_api %></dt>
+  <dd><%= @item.label :translate_api %></dd>
+
+  <% if @item.translate_api == "mock" %>
+
+  <dt><%= @model.t :translate_mock_api_request_count %><%= @model.tt :translate_mock_api_request_count %></dt>
+  <dd><%= @item.translate_mock_api_request_count %></dd>
+
+  <dt><%= @model.t :translate_mock_api_request_word_count %><%= @model.tt :translate_mock_api_request_word_count %></dt>
+  <dd><%= @item.translate_mock_api_request_word_count %></dd>
+
+  <% elsif @item.translate_api == "microsoft_translator_text" %>
+
+  <dt><%= @model.t :translate_microsoft_api_key %></dt>
+  <dd><%= @item.translate_microsoft_api_key %></dd>
+
+  <dt><%= @model.t :translate_microsoft_api_request_count %><%= @model.tt :translate_microsoft_api_request_count %></dt>
+  <dd><%= @item.translate_microsoft_api_request_count %></dd>
+
+  <dt><%= @model.t :translate_microsoft_api_request_word_count %><%= @model.tt :translate_microsoft_api_request_word_count %></dt>
+  <dd><%= @item.translate_microsoft_api_request_word_count %></dd>
+
+  <% elsif @item.translate_api == "google_translation" %>
+
+  <dt><%= @model.t :translate_google_api_project_id %></dt>
+  <dd><%= @item.translate_google_api_project_id %></dd>
+
+  <dt><%= @model.t :translate_google_api_credential_file_id %></dt>
+  <dd>
+    <% if @item.translate_google_api_credential_file %>
+      <%= @item.translate_google_api_credential_file.name %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :translate_google_api_request_count %></dt>
+  <dd><%= @item.translate_google_api_request_count %></dd>
+
+  <dt><%= @model.t :translate_google_api_request_word_count %></dt>
+  <dd><%= @item.translate_google_api_request_word_count %></dd>
+
+  <% end %>
+</dl>
+
+<% if @item.translate_api.present? %>
+<div class="notice-request-count"><%= t("translate.notice.api_request_count") %></div>
+<% end %>

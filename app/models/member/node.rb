@@ -22,6 +22,45 @@ module Member::Node
     include History::Addon::Backup
 
     default_scope ->{ where(route: "member/login") }
+
+    def redirect_full_url
+      return if redirect_url.blank?
+
+      ret = make_full_url(redirect_url)
+      return if ret.blank?
+      return unless trusted?(ret)
+
+      ret.to_s
+    end
+
+    def make_trusted_full_url(ref)
+      return if ref.blank?
+
+      full_url = make_full_url(URI::decode(ref))
+      return if full_url.blank?
+
+      # normalize full url
+      full_url.fragment = nil
+      full_url.query = nil
+
+      # trusted?
+      return unless trusted?(full_url)
+
+      full_url.to_s
+    end
+
+    private
+
+    def make_full_url(path)
+      site_root_url = URI.parse(site.full_root_url)
+      URI.join(site_root_url, path) rescue nil
+    end
+
+    def trusted?(full_url)
+      return false if full_url.blank?
+
+      %w(http https).include?(full_url.scheme) && full_url.to_s.start_with?(site.full_url)
+    end
   end
 
   class Mypage
@@ -37,7 +76,7 @@ module Member::Node
 
     def children
       Member::Node::Base.and_public.
-        where(site_id: site_id, filename: /^#{filename}\//, depth: depth + 1).
+        where(site_id: site_id, filename: /^#{::Regexp.escape(filename)}\//, depth: depth + 1).
         order_by(order: 1)
     end
   end
@@ -118,7 +157,7 @@ module Member::Node
     end
 
     def layout_options
-      Member::BlogLayout.site(site).where(filename: /^#{filename}\//).
+      Member::BlogLayout.site(site).where(filename: /^#{::Regexp.escape(filename)}\//).
         map { |item| [item.name, item.id] }
     end
   end
@@ -139,7 +178,7 @@ module Member::Node
     before_validation ->{ self.page_layout = layout }
 
     def pages
-      Member::BlogPage.site(site).where(filename: /^#{filename}\//, depth: depth + 1).and_public
+      Member::BlogPage.site(site).where(filename: /^#{::Regexp.escape(filename)}\//, depth: depth + 1).and_public
     end
 
     def file_previewable?(file, user:, member:)
@@ -169,20 +208,8 @@ module Member::Node
       super
     end
 
-    def condition_hash
-      cond = []
-      cids = []
-
-      cids << id
-      conditions.each do |url|
-        node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
-        next unless node
-        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
-        cids << node.id
-      end
-      cond << { :blog_page_location_ids.in => cids } if cids.present?
-
-      { '$or' => cond }
+    def condition_hash(options = {})
+      super(options.reverse_merge(category: :blog_page_location_ids))
     end
   end
 
@@ -196,8 +223,6 @@ module Member::Node
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
-    self.use_liquid = false
-
     default_scope ->{ where(route: "member/photo") }
   end
 
@@ -205,14 +230,23 @@ module Member::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
-    include Cms::Addon::PageList
+    include Member::Addon::Photo::Search::PageList
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
-    self.use_liquid = false
-
     default_scope ->{ where(route: "member/photo_search") }
+
+    def condition_hash(options = {})
+      if conditions.present?
+        # 指定されたフォルダー内のページが対象
+        super
+      else
+        # サイト内の全ページが対象
+        default_site = options[:site] || @cur_site || self.site
+        { site_id: default_site.id }
+      end
+    end
   end
 
   class PhotoSpot
@@ -223,8 +257,6 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
-
-    self.use_liquid = false
 
     default_scope ->{ where(route: "member/photo_spot") }
   end
@@ -238,24 +270,10 @@ module Member::Node
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
-    self.use_liquid = false
-
     default_scope ->{ where(route: "member/photo_category") }
 
-    def condition_hash
-      cond = []
-      cids = []
-
-      cids << id
-      conditions.each do |url|
-        node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
-        next unless node
-        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
-        cids << node.id
-      end
-      cond << { :photo_category_ids.in => cids } if cids.present?
-
-      { '$or' => cond }
+    def condition_hash(options = {})
+      super(options.reverse_merge(category: :photo_category_ids))
     end
   end
 
@@ -268,24 +286,10 @@ module Member::Node
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
-    self.use_liquid = false
-
     default_scope ->{ where(route: "member/photo_location") }
 
-    def condition_hash
-      cond = []
-      cids = []
-
-      cids << id
-      conditions.each do |url|
-        node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
-        next unless node
-        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
-        cids << node.id
-      end
-      cond << { :photo_location_ids.in => cids } if cids.present?
-
-      { '$or' => cond }
+    def condition_hash(options = {})
+      super(options.reverse_merge(category: :photo_location_ids))
     end
   end
 

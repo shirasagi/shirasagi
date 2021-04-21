@@ -8,7 +8,7 @@ describe Event::Page::ImportJob, dbscope: :example do
   end
   let!(:layout) { create(:cms_layout, site: site, name: "イベントカレンダー") }
   let!(:node) { create(:event_node_page, site: site, filename: "calendar", group_ids: [ group.id ]) }
-  let(:role) { create(:cms_role_admin, site_id: site.id, permissions: ['import_private_event_pages']) }
+  let(:role) { create(:cms_role_admin, site_id: site.id, permissions: %w(import_private_event_pages)) }
   let(:user) { create(:cms_user, uid: unique_id, name: unique_id, group_ids: [ group.id ], role: role) }
 
   let!(:file_path) { "#{::Rails.root}/spec/fixtures/event/import_job/event_pages.csv" }
@@ -25,8 +25,8 @@ describe Event::Page::ImportJob, dbscope: :example do
 
       it do
         log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
 
         items = Event::Page.site(site).where(filename: /^#{node.filename}\//, depth: 2)
         expect(items.count).to be 4

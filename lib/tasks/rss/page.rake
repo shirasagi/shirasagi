@@ -3,13 +3,15 @@ namespace :rss do
     ::Tasks::Cms.each_sites do |site|
       if ENV.key?("node")
         ::Tasks::Cms.with_node(site, ENV["node"]) do |node|
-          Rss::ImportJob.register_job(site, node)
+          Rss::ImportJob.perform_job(site, node)
         end
       else
-        Rss::ImportJob.register_jobs(site)
+        Rss::ImportJob.perform_jobs(site)
       end
     end
+  end
 
-    Rake::Task["job:run"].invoke
+  task pull_weather_xml: :environment do
+    Rss::ImportWeatherXmlAllJob.perform_now
   end
 end

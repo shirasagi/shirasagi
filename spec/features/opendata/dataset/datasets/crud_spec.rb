@@ -135,7 +135,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
             let(:dataset_read_only_role) do
               create(:cms_role,
                 name: "dataset_read_only_role",
-                permissions: ["read_other_opendata_datasets"])
+                permissions: %w(read_other_opendata_datasets))
             end
 
             it { expect(page).to have_no_link '複製する' }

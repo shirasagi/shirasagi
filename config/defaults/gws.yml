@@ -13,6 +13,9 @@ production: &production
   # JavaScripts on gws pages.
   javascripts: ["gws/script"]
 
+  canonical_scheme: http
+  canonical_domain: replace-me.example.jp
+
   history:
     save_days: 90
     severity: info
@@ -59,7 +62,17 @@ production: &production
       - model: faq
       - model: qna
 
+    # Default organization portlets
+    organization_portlets:
+      - model: schedule
+        schedule_member_mode: current_user
+      - model: monitor
+      - model: board
+      - model: faq
+      - model: qna
+
     portlet_settings:
+      max_rows: 50
       ad:
         image_limit: 5
 
@@ -135,6 +148,8 @@ production: &production
   memo:
     disable_unsend: true
     disable_mail_forward: false
+    max_notice_mail_address_count: 10
+    max_foward_mail_address_count: 10
 
   popup_notice:
     # Default search condition in popup / unseen, seen
@@ -161,13 +176,47 @@ production: &production
       leave: none
       dayoff: none
       '': none
+    reset:
+      available: ''
+      unavailable: ''
+      leave: ''
+      dayoff: ''
+    sync_available:
+      disable: false
+      presence_logged_in:
+        reset:
+          - unavailable
+          - leave
+          - dayoff
+        enter: available
+      presence_logged_out:
+        reset:
+          - available
+          - leave
+          - dayoff
+        leave: unavailable
+    sync_timecard:
+      disable: true
+      presence_punch:
+        enter: available
+        leave: leave
 
   share:
     max_history_count: 20
 
+  readable_setting:
+    setting_range: 'select'
+    group_ids: [ "cur_group" ]
+
 test:
   <<: *production
   disable: false
+  memo:
+    disable_unsend: false
+    disable_mail_forward: false
+    max_notice_mail_address_count: 3
+    max_foward_mail_address_count: 3
+  readable_setting:
 
 development:
   <<: *production

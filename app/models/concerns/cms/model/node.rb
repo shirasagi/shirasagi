@@ -2,6 +2,7 @@ module Cms::Model::Node
   extend ActiveSupport::Concern
   extend SS::Translation
   include Cms::Content
+  include Cms::RedirectPage
   include Cms::Reference::Layout
   include Cms::Reference::PageLayout
   include Cms::Reference::StCategory
@@ -48,7 +49,7 @@ module Cms::Model::Node
         if self.respond_to?(:condition_hash)
           criteria = criteria.where(self.condition_hash)
         else
-          criteria = criteria.where({ filename: /^#{self.filename}\//, depth: self.depth + 1 })
+          criteria = criteria.where({ filename: /^#{::Regexp.escape(self.filename)}\//, depth: self.depth + 1 })
         end
         criteria = criteria.reorder(self.sort_hash) if self.respond_to?(:sort_hash)
         criteria.to_a.map(&:becomes_with_route)
@@ -61,7 +62,7 @@ module Cms::Model::Node
         if self.respond_to?(:condition_hash)
           criteria = criteria.where(self.condition_hash)
         else
-          criteria = criteria.where({ filename: /^#{self.filename}\//, depth: self.depth + 1 })
+          criteria = criteria.where({ filename: /^#{::Regexp.escape(self.filename)}\//, depth: self.depth + 1 })
         end
         criteria = criteria.reorder(self.sort_hash) if self.respond_to?(:sort_hash)
         criteria.to_a.map(&:becomes_with_route)
@@ -95,6 +96,10 @@ module Cms::Model::Node
     site.subdir ? "#{site.subdir}/#{filename}/" : "#{filename}/"
   end
 
+  def mobile_preview_path
+    ::File.join((site.subdir ? site.subdir : ""), site.mobile_location, filename, "/").gsub(/^\//, '')
+  end
+
   def parents
     dirs = self.class.split_path(filename)
     dirs.pop
@@ -102,7 +107,7 @@ module Cms::Model::Node
   end
 
   def nodes
-    Cms::Node.where(site_id: site_id, filename: /^#{filename}\//)
+    Cms::Node.where(site_id: site_id, filename: /^#{::Regexp.escape(filename)}\//)
   end
 
   def children(cond = {})
@@ -114,15 +119,15 @@ module Cms::Model::Node
   end
 
   def pages
-    Cms::Page.where(site_id: site_id, filename: /^#{filename}\//)
+    Cms::Page.where(site_id: site_id, filename: /^#{::Regexp.escape(filename)}\//)
   end
 
   def parts
-    Cms::Part.where(site_id: site_id, filename: /^#{filename}\//)
+    Cms::Part.where(site_id: site_id, filename: /^#{::Regexp.escape(filename)}\//)
   end
 
   def layouts
-    Cms::Layout.where(site_id: site_id, filename: /^#{filename}\//)
+    Cms::Layout.where(site_id: site_id, filename: /^#{::Regexp.escape(filename)}\//)
   end
 
   def route_options
@@ -205,7 +210,7 @@ module Cms::Model::Node
   end
 
   def remove_all
-    dst = path.sub("#{Rails.root}/public", "#{Rails.root}/private/trash")
+    dst = path.sub("#{Rails.root}/public", History::Trash.root)
     Fs.rm_rf(dst) if Fs.exists?(dst)
     Fs.mkdir_p(File.dirname(dst))
     Fs.mv(path, dst) if Fs.exists?(path)
@@ -254,8 +259,8 @@ module Cms::Model::Node
 
     src, dst = @db_changes["filename"]
     %w(nodes pages parts layouts).each do |name|
-      send(name).where(filename: /^#{src}\//).each do |item|
-        dst_filename = item.filename.sub(/^#{src}\//, "#{dst}\/")
+      send(name).where(filename: /^#{::Regexp.escape(src)}\//).each do |item|
+        dst_filename = item.filename.sub(/^#{::Regexp.escape(src)}\//, "#{dst}/")
         item.set(filename: dst_filename, depth: dst_filename.scan("/").size + 1)
       end
     end
@@ -274,7 +279,7 @@ module Cms::Model::Node
     date = issuer.try(:cur_date) || Time.zone.now
     Cms::Page.site(issuer.site).
       and_public(date).
-      or({ filename: /^#{filename}\//, depth: depth + 1 }, { category_ids: id }).
+      or({ filename: /^#{::Regexp.escape(filename)}\//, depth: depth + 1 }, { category_ids: id }).
       count.to_s
   end
 

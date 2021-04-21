@@ -1,17 +1,10 @@
 <nav class="main-navi">
-  <% if @cur_site.menu_portal_visible? %>
-    <h2><%= link_to @cur_site.menu_portal_label || t('modules.gws/portal'), "#{gws_portal_path}/", class: "icon-portal" %></h2>
-    <div class="child-menu">
-      <% @cur_user.groups.in_group(@cur_site).each do |group| %>
-        <% next if group.id == @cur_site.id %>
-        <h3><%= link_to group.trailing_name, gws_portal_group_path(group: group) %></h3>
-      <% end %>
-      <h3><%= link_to t('gws/portal.tabs.root_portal'), gws_portal_group_path(group: @cur_site) %></h3>
-    </div>
+  <% if @cur_site.menu_portal_visible? && @cur_user.gws_role_permit_any?(@cur_site, :use_gws_portal_user_settings, :use_gws_portal_group_settings, :use_gws_portal_organization_settings) %>
+    <h2><%= link_to @cur_site.menu_portal_label || t('modules.gws/portal'), gws_portal_path, class: "icon-portal" %></h2>
   <% end %>
 
   <% if @cur_site.menu_notice_visible? && Gws.module_usable?(:notice, @cur_site, @cur_user) %>
-    <h2><%= link_to @cur_site.menu_notice_label || t('modules.gws/notice'), gws_notice_readables_path(folder_id: '-', category_id: '-'), class: "icon-notice" %></h2>
+    <h2><%= link_to @cur_site.menu_notice_label || t('modules.gws/notice'), gws_notice_main_path, class: "icon-notice" %></h2>
   <% end %>
 
   <% if @cur_site.menu_schedule_visible? && Gws.module_usable?(:schedule, @cur_site, @cur_user) %>
@@ -119,6 +112,9 @@
       <% if Gws::StaffRecord::Seating.allowed?(:read, @cur_user, site: @cur_site) %>
         <h3 class="management"><%= link_to t('mongoid.models.gws/staff_record/seating'), gws_staff_record_seatings_path(year: @cur_year.id) %></h3>
       <% end %>
+      <% if Gws::StaffRecord::UserTitle.allowed?(:read, @cur_user, site: @cur_site) %>
+        <h3 class="management"><%= link_to t('mongoid.models.gws/staff_record/title_ids'), gws_staff_record_user_titles_path(year: @cur_year.id) %></h3>
+      <% end %>
     <% end %>
   </nav>
 <% end %>
@@ -128,7 +124,7 @@
     <nav class="mod-navi">
       <h2><%= link_to @cur_site.menu_links_label || t('mongoid.models.gws/link'), gws_public_links_path %></h2>
       <% @links.each do |item| %>
-      <h3><%= link_to item.name, gws_public_link_path(id: item) %></h3>
+        <h3><%= link_to item.name, gws_public_link_path(id: item) %></h3>
       <% end %>
     </nav>
   <% end %>

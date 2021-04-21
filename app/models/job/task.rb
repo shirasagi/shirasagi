@@ -18,11 +18,14 @@ class Job::Task
 
   before_validation :set_name
 
-  # overwrite `site` scope
-  overwrite_scope :site, ->(site) { where(site_id: (site.nil? ? nil : site.id)) }
   scope :group, ->(group) { where(group_id: (group.nil? ? nil : group.id)) }
 
   class << self
+    # overwrite `site` scope
+    def site(site)
+      where(site_id: (site.nil? ? nil : site.id))
+    end
+
     def enqueue(entity)
       model = Job::Task.new(entity)
       yield model if block_given?
@@ -31,10 +34,11 @@ class Job::Task
     end
 
     def dequeue(name)
+      now = Time.zone.now
       criteria = Job::Task.where(pool: name, started: nil)
-      criteria = criteria.lte(at: Time.zone.now)
+      criteria = criteria.lte(at: now)
       criteria = criteria.asc(:priority)
-      criteria.find_one_and_update({ '$set' => { started: Time.zone.now }}, return_document: :after)
+      criteria.find_one_and_update({ '$set' => { started: now.utc }}, return_document: :after)
     end
   end
 

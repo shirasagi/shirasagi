@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Gws::Schedule::Plan, type: :model, dbscope: :example, tmpdir: true do
+RSpec.describe Gws::Schedule::Plan, type: :model, dbscope: :example do
   describe "plan" do
     context "blank params" do
       subject { Gws::Schedule::Plan.new(cur_site: gws_site, cur_user: gws_user).valid? }
@@ -122,6 +122,90 @@ RSpec.describe Gws::Schedule::Plan, type: :model, dbscope: :example, tmpdir: tru
         subject.file_ids = [ file.id ]
         expect(subject.valid?).to be_falsey
         expect(subject.errors.empty?).to be_falsey
+      end
+    end
+  end
+
+  describe "history trash" do
+    let!(:site) { gws_site }
+    let(:user) { gws_user }
+    let!(:site2) { cms_site }
+
+    let(:start_on) { Date.new 2010, 1, 1 }
+    let(:end_on) { Date.new 2010, 1, 1 }
+
+    context "when destroy gws schedule plan" do
+      let(:file) { tmp_ss_file(contents: '0123456789', site: site2, user: user) }
+      subject { create :gws_schedule_plan, start_on: start_on, end_on: end_on, cur_site: site, cur_user: user }
+
+      it do
+        subject.file_ids = [ file.id ]
+        subject.destroy
+        expect(History::Trash.count).to eq 0
+      end
+    end
+  end
+
+  describe "#reminder_url" do
+    let(:item) { create :gws_schedule_plan }
+    subject { item.reminder_url }
+
+    it do
+      expect(subject).to be_a(Array)
+      expect(subject.length).to eq 2
+      expect(subject[0]).to eq "gws_schedule_plan_path"
+      expect(subject[1]).to be_a(Hash)
+
+      path = Rails.application.routes.url_helpers.send(subject[0], subject[1])
+      expect(path).to eq "/.g#{item.site_id}/schedule/plans/#{item.id}"
+    end
+  end
+
+  describe "#subscribed_users" do
+    let!(:group1) { create :gws_group, name: "#{gws_site.name}/group-#{unique_id}" }
+    let!(:group2) { create :gws_group, name: "#{gws_site.name}/group-#{unique_id}" }
+    let!(:user1) { create :gws_user, group_ids: [ group1.id ], gws_role_ids: gws_user.gws_role_ids }
+    let!(:user2) { create :gws_user, group_ids: [ group2.id ], gws_role_ids: gws_user.gws_role_ids }
+    let!(:cg_by_user) { create :gws_custom_group, member_ids: [ user1.id ], member_group_ids: [] }
+    let!(:cg_by_group) { create :gws_custom_group, member_ids: [], member_group_ids: [ group2.id ] }
+
+    context "with member_ids" do
+      subject { create :gws_schedule_plan, member_ids: [ user1.id ], member_group_ids: [], member_custom_group_ids: [] }
+
+      it do
+        expect(subject.subscribed_users).to be_present
+        expect(subject.subscribed_users.pluck(:id)).to include user1.id
+        expect(subject.subscribed_users.pluck(:id)).not_to include user2.id
+      end
+    end
+
+    context "with member_group_ids" do
+      subject { create :gws_schedule_plan, member_ids: [], member_group_ids: [ group2.id ], member_custom_group_ids: [] }
+
+      it do
+        expect(subject.subscribed_users).to be_present
+        expect(subject.subscribed_users.pluck(:id)).not_to include user1.id
+        expect(subject.subscribed_users.pluck(:id)).to include user2.id
+      end
+    end
+
+    context "with member_custom_group_ids contains users" do
+      subject { create :gws_schedule_plan, member_ids: [], member_group_ids: [], member_custom_group_ids: [ cg_by_user.id ] }
+
+      it do
+        expect(subject.subscribed_users).to be_present
+        expect(subject.subscribed_users.pluck(:id)).to include user1.id
+        expect(subject.subscribed_users.pluck(:id)).not_to include user2.id
+      end
+    end
+
+    context "with member_custom_group_ids contains groups" do
+      subject { create :gws_schedule_plan, member_ids: [], member_group_ids: [], member_custom_group_ids: [ cg_by_group.id ] }
+
+      it do
+        expect(subject.subscribed_users).to be_present
+        expect(subject.subscribed_users.pluck(:id)).not_to include user1.id
+        expect(subject.subscribed_users.pluck(:id)).to include user2.id
       end
     end
   end

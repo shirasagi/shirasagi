@@ -82,4 +82,25 @@ describe "cms_agents_parts_page", type: :feature, dbscope: :example do
       expect(page).to have_no_selector("a[href='/mobile/item.html']")
     end
   end
+
+  context "request_dir" do
+    let!(:item) { create :cms_page, cur_node: node }
+    let(:node2) { create :cms_node, layout_id: layout.id }
+    let!(:item2) { create :cms_page, cur_node: node2 }
+
+    before do
+      part.conditions = [ "\#{request_dir}" ]
+      part.save!
+    end
+
+    it do
+      visit "#{node.full_url}/index.html"
+      expect(page).to have_css(".parts", text: item.name)
+      expect(page).to have_no_css(".parts", text: item2.name)
+
+      visit "#{node2.full_url}/index.html"
+      expect(page).to have_no_css(".parts", text: item.name)
+      expect(page).to have_css(".parts", text: item2.name)
+    end
+  end
 end

@@ -3,6 +3,7 @@ SS_Workflow = function (el, options) {
   this.options = options;
 
   var pThis = this;
+  pThis.updateDisabled = false;
 
   this.$el.on("click", ".update-item", function (e) {
     pThis.updateItem($(this));
@@ -151,7 +152,7 @@ SS_Workflow.prototype = {
     var pThis = this;
     var updatetype = $this.attr("updatetype");
     var approvers = this.collectApprovers();
-    if ($.isEmptyObject(approvers) && updatetype === "request") {
+    if (SS.isEmptyObject(approvers) && updatetype === "request") {
       alert(this.options.errors.not_select);
       return;
     }
@@ -175,6 +176,13 @@ SS_Workflow.prototype = {
     }
     var circulations = this.collectCirculations();
     var workflow_file_ids = this.collectFileIds();
+
+    if (pThis.updateDisabled) {
+      return false;
+    }
+    pThis.updateDisabled = true;
+    $this.prop("disabled", true);
+
     $.ajax({
       type: "POST",
       url: uri,
@@ -197,6 +205,8 @@ SS_Workflow.prototype = {
       success: function (data) {
         if (data.workflow_alert) {
           alert(data.workflow_alert);
+          pThis.updateDisabled = false;
+          $this.prop("disabled", false);
           return;
         }
 
@@ -225,6 +235,8 @@ SS_Workflow.prototype = {
         catch (ex) {
           alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
         }
+        pThis.updateDisabled = false;
+        $this.prop("disabled", false);
       }
     });
   },
@@ -495,4 +507,81 @@ SS_WorkflowRerouteBox.prototype = {
 
     this.$el.find('input[name=selected_user_id]').val(id);
   }
+};
+
+SS_WorkflowApprover = function (options) {
+  this.options = options;
+  this.render();
+};
+
+SS_WorkflowApprover.prototype.render = function () {
+  var self = this;
+
+  $("#addon-workflow-agents-addons-approver").remove();
+
+  var state = $("#item_state").parent();
+  state.prev().remove();
+  state.remove();
+
+  if (self.options.close_confirmation) {
+    $(".save").attr("data-close-confirmation", self.options.close_confirmation);
+    if (self.options.contain_links_path) {
+      $(".save").attr("data-contain-links-path", self.options.contain_links_path);
+    }
+  }
+
+  if (self.options.release === "allowed") {
+    $(".save").val(self.options.draft_save);
+    $("<input />").attr("type", "submit")
+      .attr("name", "publish_save")
+      .attr("value", self.options.publish_save)
+      .attr("class", "publish_save")
+      .insertAfter("#item-form input.save");
+  }
+
+  if (self.options.workflow_state === "request") {
+    $("<input />").attr("type", "hidden")
+      .attr("name", "item[workflow_cancel_request]")
+      .attr("value", true)
+      .appendTo("#item-form");
+  }
+
+  $(".save").on("click", function (ev) {
+    self.onClickSave();
+    return true;
+  });
+
+  $(".publish_save").on("click", function (e) {
+    self.onPublishSaveClicked();
+    return true;
+  });
+
+  Form_Save_Event.render();
+};
+
+SS_WorkflowApprover.prototype.onClickSave = function () {
+  var self = this;
+
+  self.addOrUpdateInput("item[state]", "closed");
+  self.addOrUpdateInput("item[workflow_reset]", null);
+};
+
+SS_WorkflowApprover.prototype.onPublishSaveClicked = function () {
+  var self = this;
+
+  self.addOrUpdateInput("item[state]", "public");
+  self.addOrUpdateInput("item[workflow_reset]", "1");
+};
+
+SS_WorkflowApprover.prototype.addOrUpdateInput = function (name, value) {
+  var $input = $("#item-form").find("input[name='" + name + "']");
+  if ($input.length > 0) {
+    $input.val(value);
+    return;
+  }
+
+  $("<input />").attr("type", "hidden")
+    .attr("name", name)
+    .attr("value", value)
+    .appendTo("#item-form");
 };

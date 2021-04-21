@@ -5,24 +5,35 @@ module Cms::Addon
     include Cms::Addon::List::Model
 
     included do
+      self.use_no_items_display = false
+      self.use_substitute_html = false
+      self.use_liquid = false
+
       embeds_ids :condition_groups, class_name: "SS::Group"
       permit_params condition_group_ids: []
     end
 
-    def condition_hash(opts = {})
-      cond = conditions.present? ? super : {}
-      cond.merge :group_ids.in => condition_groups.map(&:id)
+    def condition_hash(options = {})
+      if conditions.present?
+        # 指定されたフォルダー内のページが対象
+        cond = super
+      else
+        # サイト内の全ページが対象
+        default_site = options[:site] || @cur_site || self.site
+        cond = { site_id: default_site.id }
+      end
+
+      cond.merge(:group_ids.in => condition_groups.active.pluck(:id))
     end
 
     def sort_options
-      [
-        [I18n.t('cms.options.sort.name'), 'name'],
-        [I18n.t('cms.options.sort.filename'), 'filename'],
-        [I18n.t('cms.options.sort.created'), 'created'],
-        [I18n.t('cms.options.sort.updated_1'), 'updated -1'],
-        [I18n.t('cms.options.sort.released_1'), 'released -1'],
-        [I18n.t('cms.options.sort.order'), 'order'],
-      ]
+      %w(name filename created updated_desc released_desc order order_desc).map do |k|
+        [
+          I18n.t("cms.sort_options.#{k}.title"),
+          k.sub("_desc", " -1"),
+          "data-description" => I18n.t("cms.sort_options.#{k}.description", default: nil)
+        ]
+      end
     end
 
     def sort_hash

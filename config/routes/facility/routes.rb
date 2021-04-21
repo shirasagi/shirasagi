@@ -8,12 +8,13 @@ Rails.application.routes.draw do
   end
 
   concern :download do
-    get :download, :on => :collection
+    get :download, on: :collection
   end
 
   concern :import do
-    get :import, :on => :collection
-    post :import, :on => :collection
+    get :import, on: :collection
+    post :import, on: :collection
+    get :download_logs, on: :collection
   end
 
   content "facility" do
@@ -62,6 +63,7 @@ Rails.application.routes.draw do
         get :view, on: :member
         get :thumb, on: :member
         get :download, on: :member
+        get :contrast_ratio, on: :collection
       end
     end
   end

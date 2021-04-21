@@ -15,7 +15,7 @@ describe "opendata_categories", type: :feature, dbscope: :example, js: true do
     it "without auth" do
       login_ss_user
       visit opendata_categories_path(site, node)
-      expect(page).to have_css('h1', text: '403 Forbidden')
+      expect(page).to have_title('403 Forbidden')
     end
   end
 
@@ -57,7 +57,7 @@ describe "opendata_categories", type: :feature, dbscope: :example, js: true do
 
       # update
       click_on I18n.t('ss.links.edit')
-      find('#addon-cms-agents-addons-meta .toggle-head h2').click
+      ensure_addon_opened("#addon-cms-agents-addons-meta")
       fill_in 'item[keywords]', with: keywords.join(' ')
       click_on I18n.t('ss.buttons.save')
       wait_for_ajax

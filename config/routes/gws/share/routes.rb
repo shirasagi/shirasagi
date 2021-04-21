@@ -13,8 +13,8 @@ Rails.application.routes.draw do
   end
 
   concern :lock do
-    get :lock, :on => :member
-    delete :lock, action: :unlock, :on => :member
+    get :lock, on: :member
+    delete :lock, action: :unlock, on: :member
   end
 
   gws "share" do

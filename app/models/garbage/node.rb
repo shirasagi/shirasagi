@@ -18,6 +18,11 @@ module Garbage::Node
     include History::Addon::Backup
 
     default_scope ->{ where(route: "garbage/node") }
+
+    def sort_hash
+      return { name: 1 } if sort.blank?
+      super
+    end
   end
 
   class Page
@@ -45,17 +50,13 @@ module Garbage::Node
 
     default_scope ->{ where(route: "garbage/search") }
 
-    def condition_hash
-      cond = []
+    def condition_hash(options = {})
+      super(options.reverse_merge(bind: :descendants, category: false, default_location: :only_blank))
+    end
 
-      cond << { filename: /^#{filename}\// } if conditions.blank?
-      conditions.each do |url|
-        node = Cms::Node.site(cur_site || site).filename(url).first
-        next unless node
-        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
-      end
-
-      { '$or' => cond }
+    def sort_hash
+      return { name: 1 } if sort.blank?
+      super
     end
   end
 
@@ -70,20 +71,9 @@ module Garbage::Node
 
     default_scope ->{ where(route: "garbage/category") }
 
-    def condition_hash
-      cond = []
-      cids = []
-
-      cids << id
-      conditions.each do |url|
-        node = Cms::Node.site(cur_site || site).filename(url).first
-        next unless node
-        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
-        cids << node.id
-      end
-      cond << { :category_ids.in => cids } if cids.present?
-
-      { '$or' => cond }
+    def sort_hash
+      return { name: 1 } if sort.blank?
+      super
     end
   end
 end

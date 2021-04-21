@@ -28,7 +28,7 @@ node = save_node route: "chat/bot", filename: "chatbot", name: "チャットボ�
                  question: '問題は解決しましたか？',
                  chat_success: '<p>ありがとうございます！また何かございましたらお気軽にご質問ください！</p>',
                  chat_retry: '<p>解決できず申し訳ございません。次はご満足いただけるように頑張ります。<br />
-お問い合わせが必要にな場合は<a href="/inquiry/" target="_blank">問い合わせフォーム</a>よりご連絡ください。</p>'
+お問い合わせが必要にな場合は<a href="/inquiry/" target="_blank" rel="noopener">問い合わせフォーム</a>よりご連絡ください。</p>'
 
 save_part route: "chat/bot", filename: "bot.part.html", name: "チャットボット", chat_path: 'chatbot'
 

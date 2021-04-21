@@ -1,6 +1,6 @@
 <%= form_for(:item, url: @cur_part.search_url, method: "get", html: { class: 'event-search' }) do %>
   <fieldset class="keyword">
-    <label for="search_keyword"><%= t("event.keyword") %></label>
+    <legend><%= t("event.keyword") %></legend>
     <%= text_field_tag :search_keyword, nil, class: "keyword" %>
   </fieldset>
 

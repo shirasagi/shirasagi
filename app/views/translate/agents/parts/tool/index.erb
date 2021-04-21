@@ -1,0 +1,33 @@
+<%
+  return "" if !@cur_site.translate_enabled?
+
+  id = "translate-tool-#{@cur_part.id}"
+  options = @cur_part.translate_target_options(@translate_target)
+  selected = @translate_target.try(:code)
+
+  body = select_tag("lang", options_for_select(options, selected), class: "translate", id: id)
+  if @preferred_lang.present? && @cur_site.translate_source.code != @preferred_lang.code
+    convertor = Translate::Convertor.new(@cur_site, @cur_site.translate_source, @preferred_lang)
+    body = convertor.convert(body)
+  end
+  body.sub!('class="translate"', 'class="notranslate"')
+%>
+
+<%= jquery do %>
+SS_Translate.siteUrl = "<%= @cur_site.url %>";
+SS_Translate.translateUrl = "<%= @cur_site.translate_url %>";
+$("#<%= id %>").on("change", function () {
+  var target = $(this).val();
+  if (target) {
+    url = SS_Kana.url(location.pathname, false);
+    url = SS_Translate.url(url, false);
+    url = SS_Translate.url(url, target);
+    location.href = url;
+  } else {
+    url = SS_Kana.url(location.pathname, false);
+    url = SS_Translate.url(location.pathname, false);
+    location.href = url;
+  }
+});
+<% end %>
+<%== body %>

@@ -49,7 +49,7 @@ Gws_Category_Navi.prototype.render = function(items) {
     var icon = '<i class="material-icons md-18 md-dark">&#xE14C;</i>';
     toggle.after('<a class="ml-1" href="' + toggle.attr('href') + '">' + icon + '</a>');
   }
-  toggle.click(function() {
+  toggle.on("click", function() {
     return false;
   });
 };

@@ -1,4 +1,5 @@
 <dl class="see">
   <dt><%= @item.t :schedule_member_ids %></dt>
-  <dd><%=br @item.find_schedule_members(@portal).map(&:long_name).join("\n") %></dd>
+  <dd><%= @item.label(:schedule_member_mode) || t("gws/schedule.options.member_mode.default") %></dd>
+  <dd><%= br gws_public_user_long_names(@item.find_schedule_members(@portal).map(&:long_name)) %></dd>
 </dl>

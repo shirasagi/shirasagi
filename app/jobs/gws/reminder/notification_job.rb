@@ -1,20 +1,18 @@
 class Gws::Reminder::NotificationJob < Gws::ApplicationJob
-  def now
-    @now ||= Time.zone.now.beginning_of_minute
-  end
+  def perform(*args)
+    options = args.extract_options!
+    options = options.with_indifferent_access
+    @now = Time.zone.now.beginning_of_minute
+    @from = options[:from].try { |time| Time.zone.parse(time.to_s) } || @now - 10.minutes
+    @to = options[:to].try { |time| Time.zone.parse(time.to_s) } || @now + 1.minute
 
-  def perform(opts = {})
-    from = opts[:from] || now - 10.minutes
-    to = opts[:to] || now
     send_count = 0
-    reminder_ids = Gws::Reminder.site(site).notify_between(from, to).pluck(:id)
-    reminder_ids.each do |reminder_id|
-      item = Gws::Reminder.find(reminder_id)
+    each_reminder do |item|
       mail = Gws::Reminder::Mailer.notify_mail(site, item)
       next if mail.blank?
 
       item.notifications.each do |notification|
-        next if notification.notify_at < from || notification.notify_at > to
+        next if notification.notify_at < @from || notification.notify_at > @to
 
         if notification.state == "mail"
           Rails.logger.info("#{mail.to.first}: リマインダー通知（メール送信）")
@@ -43,5 +41,16 @@ class Gws::Reminder::NotificationJob < Gws::ApplicationJob
     end
     Rails.logger.info("#{send_count} 件の通知を送りました")
     puts_history(:info, "#{send_count} 件の通知を送りました")
+  end
+
+  private
+
+  def each_reminder(&block)
+    criteria = Gws::Reminder.site(site).notify_between(@from, @to)
+    all_ids = criteria.pluck(:id)
+    all_ids.each_slice(20) do |ids|
+      items = criteria.in(id: ids).to_a
+      items.each(&block)
+    end
   end
 end

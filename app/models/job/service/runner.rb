@@ -1,4 +1,6 @@
 class Job::Service::Runner
+  include SS::RescueWith
+
   def initialize
     @lock = Mutex.new
     @condition = ConditionVariable.new
@@ -56,16 +58,5 @@ class Job::Service::Runner
     end
 
     nil
-  end
-
-  def rescue_with(exception_classes: [Exception], ensure_p: nil)
-    begin
-      yield
-    rescue *exception_classes => e
-      Rails.logger.fatal("Failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-      nil
-    ensure
-      ensure_p.call if ensure_p
-    end
   end
 end

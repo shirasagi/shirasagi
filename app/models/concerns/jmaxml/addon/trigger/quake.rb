@@ -54,7 +54,7 @@ module Jmaxml::Addon::Trigger::Quake
     last_page = last_page_criteria.order_by(id: -1).first
     return if last_page.blank?
 
-    xmldoc = REXML::Document.new(last_page.xml)
+    xmldoc = REXML::Document.new(last_page.weather_xml)
     region_eq_infos = extract_earth_quake_info(context.site, xmldoc)
     return false if region_eq_infos.blank?
 
@@ -91,7 +91,7 @@ module Jmaxml::Addon::Trigger::Quake
           pref_code: pref_code,
           area_name: area_name,
           area_code: area_code,
-          area_max_int: area_max_int,
+          area_max_int: area_max_int
         }
       end
     end

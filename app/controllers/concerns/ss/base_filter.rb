@@ -2,6 +2,7 @@ module SS::BaseFilter
   extend ActiveSupport::Concern
   include SS::AuthFilter
   include SS::LayoutFilter
+  include SS::ExceptionFilter
   include History::LogFilter
 
   included do
@@ -63,7 +64,10 @@ module SS::BaseFilter
   end
 
   def login_path_by_cookie
-    cookies[:login_path].presence || sns_login_path
+    path = cookies[:login_path].presence
+    return path if path.present? && trusted_url?(path)
+
+    sns_login_path
   end
 
   def logged_in?
@@ -95,11 +99,12 @@ module SS::BaseFilter
     respond_to do |format|
       format.html do
         login_path = login_path_by_cookie
-        ref = request.env["REQUEST_URI"]
-        if ref == login_path || params[:action] == "login"
+        ref = request.env["REQUEST_URI"].to_s
+        ref = '' if ref.present? && !trusted_url?(ref)
+        if ref.blank? || ref == login_path || params[:action] == "login"
           redirect_to login_path
         else
-          redirect_to "#{login_path}?ref=" + CGI.escape(ref.to_s)
+          redirect_to "#{login_path}?#{{ ref: ref }.to_query}"
         end
       end
       format.json { render json: :error, status: :unauthorized }
@@ -108,6 +113,8 @@ module SS::BaseFilter
 
   def set_user(user, opts = {})
     if opts[:session]
+      reset_session
+      form_authenticity_token
       session[:user] = {
         "user_id" => user.id,
         "remote_addr" => remote_addr,
@@ -116,8 +123,7 @@ module SS::BaseFilter
       }
       session[:user]["password"] = SS::Crypt.encrypt(opts[:password]) if opts[:password].present?
     end
-    login_path = opts[:login_path] || request_path
-    cookies[:login_path] = { :value => login_path, :expires => 7.days.from_now }
+    set_login_path_to_cookie(opts[:login_path] || request_path)
     session[:logout_path] = opts[:logout_path]
     redirect_to sns_mypage_path if opts[:redirect]
     @cur_user = user
@@ -142,40 +148,20 @@ module SS::BaseFilter
     @logout_path = session[:logout_path].presence
   end
 
-  def rescue_action(e)
-    begin
-      # below codes may cause "invalid byte sequence in UTF-8" error or other errors in some cases.
-      # So, it is required to wrap around begin, rescue and end.
-      if e.to_s =~ /^\d+$/
-        status = e.to_s.to_i
-        file = error_html_file(status)
-        return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
-      end
-
-      return render_job_size_limit(e) if e.is_a?(Job::SizeLimitPerUserExceededError)
-    rescue
+  def set_login_path_to_cookie(path)
+    if path.blank?
+      cookies.delete(:login_path)
+      return
     end
 
-    raise e
+    value = { value: path, http_only: true }
+    value[:same_site] = SS.config.ss.session["same_site"] if !SS.config.ss.session["same_site"].nil?
+    value[:secure] = SS.config.ss.session["secure"] if !SS.config.ss.session["secure"].nil?
+
+    cookies[:login_path] = value
   end
 
-  def error_html_file(status)
-    file = "#{Rails.public_path}/.error_pages/#{status}.html"
-    Fs.exists?(file) ? file : "#{Rails.public_path}/.error_pages/500.html"
-  end
-
-  def render_job_size_limit(error)
-    referer_uri = URI.parse(request.referer)
-    begin
-      if @item.present?
-        @item.errors.add(:base, error.to_s)
-        flash[:notice] = error.to_s
-        render(Rails.application.routes.recognize_path(referer_uri.path))
-      else
-        redirect_to(referer_uri.path, notice: error.to_s)
-      end
-    rescue ActionView::MissingTemplate
-      redirect_to(referer_uri.path, notice: error.to_s)
-    end
+  def rescue_action(exception)
+    render_exception!(exception)
   end
 end

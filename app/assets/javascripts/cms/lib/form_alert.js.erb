@@ -17,13 +17,14 @@ this.Form_Alert = (function () {
       var resolved = function(html) {
         var promise = Form_Alert.asyncValidate(form, submit, { html: html });
         promise.done(function() {
-          if (! $.isEmptyObject(Form_Alert.alerts)) {
+          if (! SS.isEmptyObject(Form_Alert.alerts)) {
             Form_Alert.showAlert(form, submit);
             return;
           }
 
           $(submit).off(".form_alert");
-          $(submit).trigger("click");
+          // To protected from bubbling events within a event wraps trigger "click" with setTimeout
+          setTimeout(function() { $(submit).trigger("click"); }, 0);
         });
       };
 
@@ -152,7 +153,7 @@ this.Form_Alert = (function () {
       addonName = '<%= I18n.t("cms.confirm.close") %>';
       msg = null;
       if ($(submit).attr("data-contain-links-path")) {
-        msg = '<a href="' + $(submit).attr("data-contain-links-path") + '" target="_blank">' + '<%= I18n.t("cms.confirm.check_contains_urls") %>' + '</a>';
+        msg = '<a href="' + $(submit).attr("data-contain-links-path") + '" target="_blank" rel="noopener">' + '<%= I18n.t("cms.confirm.check_contains_urls") %>' + '</a>';
       }
       return Form_Alert.add(addonName, null, msg);
     }
@@ -185,7 +186,7 @@ this.Form_Alert = (function () {
       results.push($(form).find(addonIds.join(",")).find("input,textarea").not(excludes.join(",")).each(function () {
         var addonName, fieldName, val;
         val = $(this).val();
-        if (val && !$.isEmptyObject(val.match(RegExp("" + k.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1'), "g")))) {
+        if (val && !SS.isEmptyObject(val.match(RegExp("" + k.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1'), "g")))) {
           $(this).closest("dl").show();
           addonName = $(this).closest(".addon-view").find(".addon-head").text();
           fieldName = Form_Alert.justText($(this).closest("dd").prev("dt"));

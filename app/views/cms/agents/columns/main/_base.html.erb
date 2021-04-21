@@ -10,7 +10,7 @@
 
   @extra_bodies = []
 %>
-<div id="<%= id %>" class="column-value column-value-<%= column._type.parameterize %>">
+<div id="<%= id %>" class="column-value column-value-<%= column._type.parameterize %> <%= 'column-with-errors' if value.try(:errors).present? %>">
   <div class="column-value-header">
     <div class="column-value-header-group">
       <label <% if controller %>class="sortable-handle"<% end %>>
@@ -21,13 +21,14 @@
       </label>
       <% if !show && column.tooltips.present? %>
         <div class="tooltip">?
-          <ul>
+          <ul class="tooltip-content">
             <% column.tooltips.each do |tooltip| %>
               <li><%= tooltip %><br></li>
             <% end %>
           </ul>
         </div>
       <% end %>
+      <%= required_label if column.required? %>
     </div>
 
     <% if show %>

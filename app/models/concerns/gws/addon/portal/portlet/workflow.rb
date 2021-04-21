@@ -6,7 +6,7 @@ module Gws::Addon::Portal::Portlet
     set_addon_type :gws_portlet
 
     included do
-      field :workflow_state, type: String
+      field :workflow_state, type: String, default: "all"
       permit_params :workflow_state
     end
 

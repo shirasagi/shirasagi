@@ -10,14 +10,16 @@ def save_node(data)
   lower_html ||= File.read("nodes/" + data[:filename] + ".lower_html") rescue nil
   summary_html ||= File.read("nodes/" + data[:filename] + ".summary_html") rescue nil
 
-  item = data[:route].sub("/", "/node/").camelize.constantize.unscoped.find_or_create_by(cond)
+  item = data[:route].sub("/", "/node/").camelize.constantize.unscoped.find_or_initialize_by(cond)
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
   item.summary_html = summary_html if summary_html
 
   item.attributes = data
-  item.update
+  item.cur_site ||= @site
+  item.cur_user ||= @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -229,8 +231,9 @@ inquiry_sent_html = File.read("nodes/inquiry.inquiry_sent_html") rescue nil
                           inquiry_html: inquiry_html, inquiry_sent_html: inquiry_sent_html,
                           reply_state: "disabled",
                           reply_subject: "シラサギ市へのお問い合わせを受け付けました。",
-                          reply_upper_text: "以下の内容でお問い合わせを受け付けました。",
-                          reply_lower_text: "以上。",
+                          reply_upper_text: "",
+                          reply_content_state: "static",
+                          reply_lower_text: "",
                           aggregation_state: "disabled"
 
 ## feedback
@@ -245,30 +248,32 @@ feedback_sent_html = File.read("nodes/feedback.inquiry_sent_html") rescue nil
 ## public comment
 save_node route: "inquiry/node", filename: "comment", name: "パブリックコメント",
           upper_html: "パブリックコメント一覧です。"
-@inquiry_comment_1 = save_node route: "inquiry/form", filename: "comment/comment01", name: "シラサギ市政について",
-                               from_name: "シラサギサンプルサイト",
-                               inquiry_captcha: "enabled", notice_state: "disabled",
-                               inquiry_html: inquiry_html,
-                               inquiry_sent_html: "<p>パブリックコメントを受け付けました。</p>",
-                               reply_state: "disabled",
-                               reply_subject: "シラサギ市へのお問い合わせを受け付けました。",
-                               reply_upper_text: "以下の内容でお問い合わせを受け付けました。",
-                               reply_lower_text: "以上。",
-                               aggregation_state: "enabled",
-                               reception_start_date: Time.zone.now.beginning_of_month,
-                               reception_close_date: Time.zone.now.end_of_month
-@inquiry_comment_2 = save_node route: "inquiry/form", filename: "comment/comment02", name: "シラサギ市都市計画について",
-                               from_name: "シラサギサンプルサイト",
-                               inquiry_captcha: "enabled", notice_state: "disabled",
-                               inquiry_html: inquiry_html,
-                               inquiry_sent_html: "<p>パブリックコメントを受け付けました。</p>",
-                               reply_state: "disabled",
-                               reply_subject: "シラサギ市へのお問い合わせを受け付けました。",
-                               reply_upper_text: "以下の内容でお問い合わせを受け付けました。",
-                               reply_lower_text: "以上。",
-                               aggregation_state: "enabled",
-                               reception_start_date: Time.zone.now.prev_month.beginning_of_month,
-                               reception_close_date: Time.zone.now.prev_month.end_of_month
+@inquiry_comment1 = save_node route: "inquiry/form", filename: "comment/comment01", name: "シラサギ市政について",
+                              from_name: "シラサギサンプルサイト",
+                              inquiry_captcha: "enabled", notice_state: "disabled",
+                              inquiry_html: inquiry_html,
+                              inquiry_sent_html: "<p>パブリックコメントを受け付けました。</p>",
+                              reply_state: "disabled",
+                              reply_subject: "シラサギ市へのお問い合わせを受け付けました。",
+                              reply_upper_text: "",
+                              reply_content_state: "static",
+                              reply_lower_text: "",
+                              aggregation_state: "enabled",
+                              reception_start_date: Time.zone.now.beginning_of_month,
+                              reception_close_date: Time.zone.now.end_of_month
+@inquiry_comment2 = save_node route: "inquiry/form", filename: "comment/comment02", name: "シラサギ市都市計画について",
+                              from_name: "シラサギサンプルサイト",
+                              inquiry_captcha: "enabled", notice_state: "disabled",
+                              inquiry_html: inquiry_html,
+                              inquiry_sent_html: "<p>パブリックコメントを受け付けました。</p>",
+                              reply_state: "disabled",
+                              reply_subject: "シラサギ市へのお問い合わせを受け付けました。",
+                              reply_upper_text: "",
+                              reply_content_state: "static",
+                              reply_lower_text: "",
+                              aggregation_state: "enabled",
+                              reception_start_date: Time.zone.now.prev_month.beginning_of_month,
+                              reception_close_date: Time.zone.now.prev_month.end_of_month
 
 ## ezine
 def save_ezine_column(data)

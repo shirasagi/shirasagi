@@ -10,7 +10,7 @@ describe "opendata_agents_nodes_my_dataset", type: :feature, dbscope: :example, 
     create :opendata_node_search_dataset, cur_site: site, cur_node: node_dataset, layout_id: layout.id
   end
 
-  let!(:upper_html) { '<a href="new/">新規作成</a><table class="opendata-datasets datasets"><tbody>' }
+  let!(:upper_html) { "<a href=\"new/\">#{I18n.t("ss.links.new")}</a><table class=\"opendata-datasets datasets\"><tbody>" }
   let!(:node_mypage) { create :opendata_node_mypage, cur_site: site, layout_id: layout.id, filename: "mypage" }
   let!(:node_my_dataset) do
     create :opendata_node_my_dataset, cur_site: site, cur_node: node_mypage, layout_id: layout.id, upper_html: upper_html
@@ -64,7 +64,7 @@ describe "opendata_agents_nodes_my_dataset", type: :feature, dbscope: :example, 
     fill_in "item_name", with: item_name
     fill_in "item_text", with: item_text
     check category.name
-    click_button "公開保存"
+    click_button I18n.t("ss.buttons.publish_save")
 
     within "table.opendata-datasets" do
       expect(page).to have_content item_name
@@ -78,12 +78,12 @@ describe "opendata_agents_nodes_my_dataset", type: :feature, dbscope: :example, 
       expect(page).to have_content category.name
     end
 
-    click_link "編集"
+    click_link I18n.t("ss.buttons.edit")
     within "form#item-form" do
       fill_in "item_name", with: item_name2
     end
 
-    click_button "公開保存"
+    click_button I18n.t("ss.buttons.publish_save")
 
     within "table.opendata-dataset" do
       expect(page).to have_content item_name2
@@ -105,8 +105,7 @@ describe "opendata_agents_nodes_my_dataset", type: :feature, dbscope: :example, 
     let(:resource_name) { unique_id }
     let(:resource_format) { 'PNG' }
     let(:resource_text) { unique_id }
-    let(:license_file) { Fs::UploadedFile.create_from_file(resource_file, basename: "spec") }
-    let!(:license) { create :opendata_license, cur_site: site, in_file: license_file }
+    let!(:license) { create :opendata_license, cur_site: site }
     let(:remand_comment) { unique_id }
 
     before do
@@ -133,23 +132,23 @@ describe "opendata_agents_nodes_my_dataset", type: :feature, dbscope: :example, 
       fill_in "item_name", with: item_name
       fill_in "item_text", with: item_text
       check category.name
-      click_button "非公開保存"
+      click_button I18n.t("ss.buttons.closed_save")
 
       click_link item_name
-      click_link 'リソースを管理する'
+      click_link I18n.t("opendata.manage_resources")
       click_link I18n.t('ss.links.new')
       attach_file "item[in_file]", resource_file
       fill_in "item[name]", with: resource_name
       fill_in "item[format]", with: resource_format
       select license.name, from: "item[license_id]"
       fill_in "item[text]", with: resource_text
-      click_button '公開申請'
+      click_button I18n.t("ss.buttons.request")
 
       expect(page).to have_css("#ss-notice", text: I18n.t('ss.notice.saved'))
 
       visit index_url
       click_link item_name
-      expect(page).to have_css(".status .input", text: "申請")
+      expect(page).to have_css(".status .input", text: I18n.t("ss.options.state.request"))
 
       expect(Opendata::Dataset.count).to eq 1
       Opendata::Dataset.first.tap do |dataset|
@@ -159,7 +158,7 @@ describe "opendata_agents_nodes_my_dataset", type: :feature, dbscope: :example, 
       expect(ActionMailer::Base.deliveries.length).to eq 1
       ActionMailer::Base.deliveries.first.tap do |mail|
         expect(mail.to.first).to eq cms_user.email
-        expect(mail.subject).to eq "[承認申請]#{item_name} - #{site.name}"
+        expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item_name} - #{site.name}"
         expect(mail.body.multipart?).to be_falsey
         expect(mail.body.raw_source).to include(member.name)
         expect(mail.body.raw_source).to include(item_name)
@@ -173,12 +172,13 @@ describe "opendata_agents_nodes_my_dataset", type: :feature, dbscope: :example, 
       end
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: remand_comment
-        click_on "承認"
+        click_on I18n.t("workflow.buttons.approve")
       end
 
+      login_opendata_member(site, node_login, member)
       visit index_url
       click_link item_name
-      expect(page).to have_css(".status .input", text: "公開")
+      expect(page).to have_css(".status .input", text: I18n.t("ss.options.state.public"))
       expect(page).to have_css(".workflow-comment .input", text: remand_comment)
     end
   end

@@ -19,13 +19,6 @@ class Ezine::Agents::Nodes::FormController < ApplicationController
       where(state: "public").order_by(order: 1)
   end
 
-  def get_params
-    fix_fields = permit_fields + [ in_data: @columns.map{ |c| c.id.to_s } ]
-    params.require(:item).permit(fix_fields).merge(fix_params)
-  rescue
-    raise "400"
-  end
-
   public
 
   def confirm

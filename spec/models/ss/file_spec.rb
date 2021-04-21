@@ -6,18 +6,61 @@ describe SS::File, dbscope: :example do
     its(:valid?) { is_expected.to be_falsey }
   end
 
-  context "with valid item" do
-    subject { create :ss_file }
+  context "with 'filename' as SS.config.ss.file_url_with" do
+    let(:base_of_name) { ss_japanese_text }
+    let(:name) { "#{base_of_name}.png" }
+    subject { create :ss_file, name: name }
+
+    before do
+      @save_file_url_with = SS.config.ss.file_url_with
+      SS.config.replace_value_at(:ss, :file_url_with, "filename")
+    end
+
+    after do
+      SS.config.replace_value_at(:ss, :file_url_with, @save_file_url_with)
+    end
+
     its(:valid?) { is_expected.to be_truthy }
     its(:path) { is_expected.to eq "#{SS::File.root}/ss_files/#{subject.id}/_/#{subject.id}" }
-    its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{subject.name}" }
-    its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/thumb/#{subject.name}" }
+    its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{subject.filename}" }
+    its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/thumb/#{subject.filename}" }
     its(:public?) { is_expected.to be_falsey }
+    its(:public_dir) { is_expected.to be_nil }
     its(:public_path) { is_expected.to be_nil }
     its(:full_url) { is_expected.to be_nil }
-    its(:name) { is_expected.to eq 'logo.png' }
-    its(:humanized_name) { is_expected.to eq 'logo (PNG 11.5KB)' }
-    its(:download_filename) { is_expected.to eq 'logo.png' }
+    its(:name) { is_expected.to eq name }
+    its(:humanized_name) { is_expected.to eq "#{base_of_name} (PNG 11.5KB)" }
+    its(:download_filename) { is_expected.to eq "#{base_of_name}.png" }
+    its(:basename) { is_expected.to eq 'logo.png' }
+    its(:extname) { is_expected.to eq 'png' }
+    its(:image?) { is_expected.to be_truthy }
+  end
+
+  context "with 'name' as SS.config.ss.file_url_with" do
+    let(:base_of_name) { ss_japanese_text }
+    let(:name) { "#{base_of_name}.png" }
+    subject { create :ss_file, name: name }
+
+    before do
+      @save_file_url_with = SS.config.ss.file_url_with
+      SS.config.replace_value_at(:ss, :file_url_with, "name")
+    end
+
+    after do
+      SS.config.replace_value_at(:ss, :file_url_with, @save_file_url_with)
+    end
+
+    its(:valid?) { is_expected.to be_truthy }
+    its(:path) { is_expected.to eq "#{SS::File.root}/ss_files/#{subject.id}/_/#{subject.id}" }
+    its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{CGI.escape(subject.name)}" }
+    its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/thumb/#{subject.filename}" }
+    its(:public?) { is_expected.to be_falsey }
+    its(:public_dir) { is_expected.to be_nil }
+    its(:public_path) { is_expected.to be_nil }
+    its(:full_url) { is_expected.to be_nil }
+    its(:name) { is_expected.to eq name }
+    its(:humanized_name) { is_expected.to eq "#{base_of_name} (PNG 11.5KB)" }
+    its(:download_filename) { is_expected.to eq "#{base_of_name}.png" }
     its(:basename) { is_expected.to eq 'logo.png' }
     its(:extname) { is_expected.to eq 'png' }
     its(:image?) { is_expected.to be_truthy }
@@ -25,17 +68,30 @@ describe SS::File, dbscope: :example do
 
   context "with item related to site" do
     let(:site) { ss_site }
-    subject { create :ss_file, site_id: site.id }
+    let(:base_of_name) { ss_japanese_text }
+    let(:name) { "#{base_of_name}.png" }
+    subject { create :ss_file, site_id: site.id, name: name }
+
+    before do
+      @save_file_url_with = SS.config.ss.file_url_with
+      SS.config.replace_value_at(:ss, :file_url_with, "name")
+    end
+
+    after do
+      SS.config.replace_value_at(:ss, :file_url_with, @save_file_url_with)
+    end
+
     its(:valid?) { is_expected.to be_truthy }
     its(:path) { is_expected.to eq "#{SS::File.root}/ss_files/#{subject.id}/_/#{subject.id}" }
-    its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{subject.name}" }
-    its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/thumb/#{subject.name}" }
+    its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{CGI.escape(subject.name)}" }
+    its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/thumb/#{subject.filename}" }
     its(:public?) { is_expected.to be_falsey }
+    its(:public_dir) { is_expected.to eq "#{site.root_path}/fs/#{subject.id}/_" }
     its(:public_path) { is_expected.to eq "#{site.root_path}/fs/#{subject.id}/_/#{subject.filename}" }
-    its(:full_url) { is_expected.to eq "http://#{site.domain}/fs/#{subject.id}/_/#{subject.filename}" }
-    its(:name) { is_expected.to eq 'logo.png' }
-    its(:humanized_name) { is_expected.to eq 'logo (PNG 11.5KB)' }
-    its(:download_filename) { is_expected.to eq 'logo.png' }
+    its(:full_url) { is_expected.to eq "http://#{site.domain}/fs/#{subject.id}/_/#{CGI.escape(subject.name)}" }
+    its(:name) { is_expected.to eq name }
+    its(:humanized_name) { is_expected.to eq "#{base_of_name} (PNG 11.5KB)" }
+    its(:download_filename) { is_expected.to eq name }
     its(:basename) { is_expected.to eq 'logo.png' }
     its(:extname) { is_expected.to eq 'png' }
     its(:image?) { is_expected.to be_truthy }
@@ -44,17 +100,30 @@ describe SS::File, dbscope: :example do
   context "with item related to sub-dir site" do
     let(:site0) { ss_site }
     let(:site1) { create(:ss_site_subdir, domains: site0.domains, parent_id: site0.id) }
-    subject { create :ss_file, site_id: site1.id }
+    let(:base_of_name) { ss_japanese_text }
+    let(:name) { "#{base_of_name}.png" }
+    subject { create :ss_file, site_id: site1.id, name: name }
+
+    before do
+      @save_file_url_with = SS.config.ss.file_url_with
+      SS.config.replace_value_at(:ss, :file_url_with, "name")
+    end
+
+    after do
+      SS.config.replace_value_at(:ss, :file_url_with, @save_file_url_with)
+    end
+
     its(:valid?) { is_expected.to be_truthy }
     its(:path) { is_expected.to eq "#{SS::File.root}/ss_files/#{subject.id}/_/#{subject.id}" }
-    its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{subject.name}" }
-    its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/thumb/#{subject.name}" }
+    its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{CGI.escape(subject.name)}" }
+    its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/thumb/#{subject.filename}" }
     its(:public?) { is_expected.to be_falsey }
+    its(:public_dir) { is_expected.to eq "#{site0.root_path}/fs/#{subject.id}/_" }
     its(:public_path) { is_expected.to eq "#{site0.root_path}/fs/#{subject.id}/_/#{subject.filename}" }
-    its(:full_url) { is_expected.to eq "http://#{site0.domain}/fs/#{subject.id}/_/#{subject.filename}" }
-    its(:name) { is_expected.to eq 'logo.png' }
-    its(:humanized_name) { is_expected.to eq 'logo (PNG 11.5KB)' }
-    its(:download_filename) { is_expected.to eq 'logo.png' }
+    its(:full_url) { is_expected.to eq "http://#{site0.domain}/fs/#{subject.id}/_/#{CGI.escape(subject.name)}" }
+    its(:name) { is_expected.to eq name }
+    its(:humanized_name) { is_expected.to eq "#{base_of_name} (PNG 11.5KB)" }
+    its(:download_filename) { is_expected.to eq name }
     its(:basename) { is_expected.to eq 'logo.png' }
     its(:extname) { is_expected.to eq 'png' }
     its(:image?) { is_expected.to be_truthy }
@@ -185,47 +254,7 @@ describe SS::File, dbscope: :example do
   end
 
   describe "shirasagi-1066" do
-    let(:single_frame_image) { "#{::Rails.root}/spec/fixtures/ss/file/keyvisual.jpg" }
     let(:multi_frame_image) { "#{::Rails.root}/spec/fixtures/ss/file/keyvisual.gif" }
-
-    context "when save single frame image" do
-      subject do
-        file = SS::File.new model: "article/page"
-        Fs::UploadedFile.create_from_file(single_frame_image) do |f|
-          file.in_file = f
-          file.save!
-          file.in_file = nil
-        end
-        file.reload
-        file
-      end
-
-      it "#save_file" do
-        list = Magick::ImageList.new
-        list.from_blob(subject.read)
-        expect(list.size).to eq 1
-      end
-    end
-
-    context "when save single frame image with resizing" do
-      subject do
-        file = SS::File.new model: "article/page"
-        Fs::UploadedFile.create_from_file(single_frame_image) do |f|
-          file.in_file = f
-          file.resizing = [320, 240]
-          file.save!
-          file.in_file = nil
-        end
-        file.reload
-        file
-      end
-
-      it "#save_file" do
-        list = Magick::ImageList.new
-        list.from_blob(subject.read)
-        expect(list.size).to eq 1
-      end
-    end
 
     context "when save multi frame image" do
       subject do
@@ -240,9 +269,9 @@ describe SS::File, dbscope: :example do
       end
 
       it "#save_file" do
-        list = Magick::ImageList.new
-        list.from_blob(subject.read)
-        expect(list.size).to eq 5
+        image = MiniMagick::Image.open(subject.path)
+        expect(image.frames.size).to eq 5
+        image.destroy!
       end
     end
 
@@ -260,9 +289,9 @@ describe SS::File, dbscope: :example do
       end
 
       it "#save_file" do
-        list = Magick::ImageList.new
-        list.from_blob(subject.read)
-        expect(list.size).to eq 5
+        image = MiniMagick::Image.open(subject.path)
+        expect(image.frames.size).to eq 5
+        image.destroy!
       end
     end
   end
@@ -315,6 +344,35 @@ describe SS::File, dbscope: :example do
         expect(copy.size).to eq src.size
         expect(copy.model).to eq "ss/temp_file"
         expect(copy.thumb.id).not_to eq src.thumb.id
+      end
+    end
+
+    context "when a file copies from one user to other user and specific node" do
+      let(:site) { create(:cms_site, name: unique_id, host: unique_id, domains: "#{unique_id}.example.jp") }
+      let(:group) { create(:cms_group, name: unique_id) }
+      let(:user1) { create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", group_ids: [ group.id ]) }
+      let(:user2) { create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", group_ids: [ group.id ]) }
+      let(:node) { create(:article_node_page, cur_site: site) }
+      let(:src) do
+        tmp_ss_file(
+          Cms::File,
+          site: site, user: user1, model: "cms/file", contents: "#{Rails.root}/spec/fixtures/ss/logo.png",
+          group_ids: user1.group_ids
+        )
+      end
+
+      it do
+        copy = src.copy(cur_user: user2, cur_site: site, cur_node: node)
+
+        expect(copy).to be_a(Cms::TempFile)
+        expect(copy.id).not_to eq src.id
+        expect(copy.name).to eq src.name
+        expect(copy.filename).to eq src.filename
+        expect(copy.content_type).to eq src.content_type
+        expect(copy.size).to eq src.size
+        expect(copy.model).to eq "ss/temp_file"
+        expect(copy.user_id).to eq user2.id
+        expect(copy.node_id).to eq node.id
       end
     end
   end
@@ -418,6 +476,164 @@ describe SS::File, dbscope: :example do
         expect(subject.url).to eq file.url
         expect(subject.thumb_url).to be_blank
         expect(subject.image?).to be_falsey
+      end
+    end
+  end
+
+  describe "#download_filename" do
+    context "when name is with ext" do
+      subject { tmp_ss_file(contents: '0123456789', basename: "text.txt") }
+
+      its(:download_filename) { is_expected.to eq "text.txt" }
+    end
+
+    context "when name is without ext" do
+      subject { tmp_ss_file(contents: '0123456789', basename: "text") }
+
+      its(:download_filename) { is_expected.to eq "text" }
+    end
+
+    context "when name ends with period" do
+      subject { tmp_ss_file(contents: '0123456789', basename: "text.") }
+
+      its(:download_filename) { is_expected.to eq "text" }
+    end
+  end
+
+  describe "#image_dimension" do
+    context "when image file is given" do
+      let(:ss_file) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg") }
+
+      it do
+        expect(ss_file.image_dimension).to eq [ 712, 210 ]
+      end
+    end
+
+    context "when non-image file is given" do
+      let(:ss_file) { tmp_ss_file(contents: "0123", content_type: "application/octet-stream") }
+
+      it do
+        expect(ss_file.image_dimension).to be_nil
+      end
+    end
+
+    context "when actual file is not existed (this is like that a file is isolated by anti-virus softwares)" do
+      let(:ss_file) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg") }
+
+      before do
+        ::FileUtils.rm_f(ss_file.path)
+      end
+
+      it do
+        expect(ss_file.image_dimension).to be_nil
+      end
+    end
+
+    context "when actual file is replaced by directory" do
+      let(:ss_file) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg") }
+
+      before do
+        ::FileUtils.rm_f(ss_file.path)
+        ::FileUtils.mkdir_p(ss_file.path)
+      end
+
+      it do
+        expect(ss_file.image_dimension).to be_nil
+      end
+    end
+  end
+
+  describe "#shrink_image_to" do
+    let(:ss_file) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg") }
+
+    before do
+      expect(ss_file.image_dimension).to eq [ 712, 210 ]
+    end
+
+    context "shrink" do
+      it do
+        prev_size = ss_file.size
+        expect(ss_file.shrink_image_to(100, 100)).to be_truthy
+
+        ss_file.reload
+        expect(ss_file.size).to be < prev_size
+        expect(ss_file.image_dimension).to eq [ 100, 29 ]
+      end
+    end
+
+    context "expand" do
+      it do
+        prev_size = ss_file.size
+        expect(ss_file.shrink_image_to(1000, 1000)).to be_truthy
+
+        ss_file.reload
+        expect(ss_file.size).to eq prev_size
+        expect(ss_file.image_dimension).to eq [ 712, 210 ]
+      end
+    end
+  end
+
+  describe "#url" do
+    subject { create :ss_file }
+
+    before do
+      @save_file_url_with = SS.config.ss.file_url_with
+      SS.config.replace_value_at(:ss, :file_url_with, "name")
+    end
+
+    after do
+      SS.config.replace_value_at(:ss, :file_url_with, @save_file_url_with)
+    end
+
+    context "when '+' is given to name" do
+      it do
+        subject.name = "a+b.txt"
+        # '+' is not escaped
+        expect(subject.url).to eq "/fs/#{subject.id}/_/a+b.txt"
+      end
+    end
+
+    context "when ' ' is given to name" do
+      it do
+        subject.name = "a b.txt"
+        # ' ' is escaped with percent encoding
+        expect(subject.url).to eq "/fs/#{subject.id}/_/a%20b.txt"
+      end
+    end
+
+    context "when '@' is given to name" do
+      it do
+        subject.name = "a@b.txt"
+        # '@' is not escaped
+        expect(subject.url).to eq "/fs/#{subject.id}/_/a@b.txt"
+      end
+    end
+
+    context "when rfc3986's unreserved symbol is given to name" do
+      let(:rfc3986_unreserved_symbols) { %w(- . _ ~) }
+
+      it do
+        # unreserved symbols are not escaped
+        subject.name = "a#{rfc3986_unreserved_symbols.join}b.txt"
+        expect(subject.url).to eq "/fs/#{subject.id}/_/#{subject.name}"
+      end
+    end
+
+    context "when rfc3986's sub-delims symbol is given to name" do
+      let(:rfc3986_sub_delims) { %w(! $ & ' ( ) * + , ; =) }
+      let(:filesystem_unsafe_on_windows) { %w(\\ / : * ? " < > |) }
+
+      it do
+        # sub delims are not escaped
+        subject.name = "a#{(rfc3986_sub_delims - filesystem_unsafe_on_windows).join}b.txt"
+        expect(subject.url).to eq "/fs/#{subject.id}/_/#{subject.name}"
+      end
+    end
+
+    context "when unsafe chars is given to name" do
+      it do
+        subject.name = "a/b.txt"
+        expect(subject.url).to eq "/fs/#{subject.id}/_/#{subject.filename}"
       end
     end
   end

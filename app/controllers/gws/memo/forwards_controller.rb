@@ -29,16 +29,7 @@ class Gws::Memo::ForwardsController < ApplicationController
   end
 
   def set_crumbs
-    @crumbs << [@cur_site.menu_memo_label || t('mongoid.models.gws/memo/message'), gws_memo_messages_path ]
-    @crumbs << [t('mongoid.models.gws/memo/forward'), gws_memo_forwards_path ]
-  end
-
-  public
-
-  def index
-    @items = @model.user(@cur_user).
-      site(@cur_site).
-      search(params[:s]).
-      page(params[:page]).per(50)
+    @crumbs << [ @cur_site.menu_memo_label || t('mongoid.models.gws/memo/message'), gws_memo_messages_path ]
+    @crumbs << [ t('mongoid.models.gws/memo/forward'), gws_memo_forwards_path ]
   end
 end

@@ -2,13 +2,19 @@ production: &production
   # Map Api
   #   googlemaps - use googlemaps v3
   #   openlayers - use openlayers3
+  #   open_street_map - use OpenStreetMap
   api: googlemaps
   api_key:
   language: ja
   region: jp
   layers:
-    - source: "XYZ"
-      url: "http://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png"
+    - name: '国土地理院地図'
+      source: "XYZ"
+      url: "https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png"
+      projection: "EPSG:3857"
+    - name: 'OpenStreetMap'
+      source: "OSM"
+      url: "https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       projection: "EPSG:3857"
 
   # Map Addon Center Location
@@ -18,6 +24,12 @@ production: &production
 
   # Max Number of Markers in Map Addon
   map_max_point_form: 10
+
+  # Google Maps Addon Zoom Level
+  googlemaps_zoom_level: 13
+
+  # Openlayers Addon Zoom Level
+  openlayers_zoom_level: 10
 
 test:
   <<: *production

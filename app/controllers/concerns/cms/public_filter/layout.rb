@@ -72,13 +72,17 @@ module Cms::PublicFilter::Layout
     body
   end
 
+
   def render_layout(layout)
     @cur_layout = layout
     @cur_item   = @cur_page || @cur_node
     @cur_item.window_name ||= @cur_item.name
 
+    @count_pages = params[:page] if params[:page].numeric?
+    @current_page = "#{@count_pages}#{t("cms.count_pages")} - " if @count_pages
+
     @window_name = @cur_site.name
-    @window_name = "#{@cur_item.window_name} - #{@cur_site.name}" if @cur_item.filename != 'index.html'
+    @window_name = "#{@cur_item.window_name} - #{@current_page} #{@cur_site.name}" if @cur_item.filename != 'index.html'
 
     @cur_layout.keywords    = @cur_item.keywords if @cur_item.respond_to?(:keywords)
     @cur_layout.description = @cur_item.description if @cur_item.respond_to?(:description)
@@ -102,6 +106,8 @@ module Cms::PublicFilter::Layout
       response.body = %(#{notice_html}#{response.body})
     end
 
+    html = render_kana_tool(html)
+    html = render_theme_tool(html)
     html = render_template_variables(html)
     html.sub!(/(\{\{ yield \}\}|<\/ yield \/>)/) do
       body = []
@@ -109,7 +115,9 @@ module Cms::PublicFilter::Layout
         body << "<div id=\"ss-preview-content-begin\" class=\"ss-preview-hide\"></div>"
       end
 
+      body << "<!-- layout_yield -->"
       body << response.body
+      body << "<!-- /layout_yield -->"
 
       if @preview && !html.include?("ss-preview-content-begin")
         body << "<div id=\"ss-preview-content-end\" class=\"ss-preview-hide\"></div>"
@@ -147,7 +155,6 @@ module Cms::PublicFilter::Layout
       ERB::Util.html_escape(@cur_item.parent ? @cur_item.parent.name : "")
     end
 
-    date = nil
     template = %w(
       #\{
       (?<time>|time\.)
@@ -160,11 +167,12 @@ module Cms::PublicFilter::Layout
     html.gsub!(::Regexp.compile(template)) do
       matchdata = ::Regexp.last_match
       if matchdata[:item] == 'released'
-        item = @cur_item.released
+        released ||= ERB::Util.html_escape(@cur_item.released)
+        date = released
       else
-        item = @cur_item.updated
+        updated ||= ERB::Util.html_escape(@cur_item.updated)
+        date = updated
       end
-      date ||= ERB::Util.html_escape(item)
       datetime = matchdata[:datetime]
       convert_date = date_convert(date, matchdata[:format].to_sym, datetime)
       if matchdata[:time].present?
@@ -178,7 +186,7 @@ module Cms::PublicFilter::Layout
     html
   end
 
-  def render_layout_parts(html)
+  def render_layout_parts(html, opts = {})
     return html if html.blank?
 
     # TODO: deprecated </ />
@@ -196,12 +204,16 @@ module Cms::PublicFilter::Layout
     return html.gsub(/\{\{ part "(.*?)" \}\}/) do
       path = $1
       part = @parts[path]
-      part ? render_layout_part(part) : ''
+      part ? render_layout_part(part, opts) : ''
     end
   end
 
-  def render_layout_part(part)
-    previewable = @preview && part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+  def render_layout_part(part, opts = {})
+    if !opts[:previewable].nil?
+      previewable = opts[:previewable] && part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+    else
+      previewable = @preview && part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+    end
     html = []
     if previewable
       if part.parent
@@ -226,6 +238,20 @@ module Cms::PublicFilter::Layout
       html << "</div>"
     end
     html.join
+  end
+
+  def render_kana_tool(html)
+    label = try(:kana_path?) ? I18n.t("cms.links.ruby_off") : I18n.t("cms.links.ruby_on")
+    html.gsub(/(<.+? id="ss-kana".*?>)(.*?)(<\/.+?>)/) do
+      "#{$1}#{label}#{$3}"
+    end
+  end
+
+  def render_theme_tool(html)
+    template = Cms::ThemeTemplate.template(@cur_site)
+    html.gsub(/(<.+? id="ss-theme".*?>)(.*?)(<\/.+?>)/) do
+      "#{$1}#{template}#{$3}"
+    end
   end
 
   def date_convert(date, format = nil, datetime = nil)
@@ -280,6 +306,7 @@ module Cms::PublicFilter::Layout
 
       @javascript_config["site_url"] = @cur_site.url
       @javascript_config["kana_url"] = @cur_site.kana_url
+      @javascript_config["translate_url"] = @cur_site.translate_url
 
       conf = Cms::ThemeTemplate.to_config(site: @cur_site, preview_path: preview_path?)
       @javascript_config.merge!(conf)

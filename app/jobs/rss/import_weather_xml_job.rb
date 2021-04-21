@@ -1,6 +1,12 @@
 require 'rss'
 
 class Rss::ImportWeatherXmlJob < Rss::ImportBase
+  include Job::SS::TaskFilter
+  include Rss::Downloadable
+
+  self.task_class = Cms::Task
+  self.task_name = "rss:import_weather_xml"
+
   def initialize(*args)
     super
     set_model Rss::WeatherXmlPage
@@ -8,18 +14,38 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
   private
 
-  def before_import(file, *args)
+  def before_import(*args)
+    @options = args.extract_options!.with_indifferent_access
     @weather_xml_page = nil
     super
 
-    @cur_file = Rss::TempFile.with_repl_master.where(site_id: site.id, id: file).first
-    return unless @cur_file
+    updates = @options[:seed_cache] != "use"
 
-    @items = Rss::Wrappers.parse(@cur_file)
+    urls = SS.config.rss.weather_xml["urls"]
+    urls.map!(&:strip)
+    urls.select!(&:present?)
+
+    @items = Enumerator.new do |y|
+      urls.each do |url|
+        xml_text = download_with_cache(url, updates: updates)
+        next if xml_text.blank?
+
+        rss = ::Rss::Wrappers.parse_from_rss_source(xml_text)
+        next if rss.blank?
+
+        @task.log "found #{rss.count} entries to import"
+
+        rss.each do |item|
+          y << item
+        end
+      end
+    end
+
     @imported_pages = []
   end
 
   def after_import
+    save_imported_urls
     execute_weather_xml_filters
 
     super
@@ -29,50 +55,46 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
   def gc_rss_tempfile
     return if rand(100) >= 20
-    Rss::TempFile.with_repl_master.lt(updated: 2.weeks.ago).destroy_all
+
+    expires_in = SS.config.rss.weather_xml["expires_in"].try { |threshold| SS::Duration.parse(threshold) rescue nil }
+    expires_in ||= 3.days
+    threshold = Time.zone.now - expires_in
+    Rss::TempFile.with_repl_master.lt(updated: threshold).destroy_all
+    remove_old_cache(threshold)
   end
 
-  def import_rss_item(*args)
-    page = super
-    return page if page.nil? || page.invalid?
-
-    content = download(page.rss_link)
-    return page if content.nil?
-
-    page.event_id = extract_event_id(content) rescue nil
-    page.xml = content
-    page.save!
-
-    if content.include?('<InfoKind>震度速報</InfoKind>')
-      process_earthquake(page)
+  def import_rss_item(rss_item)
+    if rss_imported?(rss_item.link, rss_item.released)
+      @task.log "already imported #{rss_item.link}, so ignores to import"
+      return
     end
 
-    @imported_pages << page
+    page = nil
+    elapsed = Benchmark.realtime do
+      page = super
+      return page if page.nil? || page.invalid?
+
+      content = download_with_cache(page.rss_link)
+      return page if content.nil?
+
+      page.event_id = extract_event_id(content) rescue nil
+      page.save!
+      page.save_weather_xml(content)
+
+      if content.include?('<InfoKind>震度速報</InfoKind>')
+        process_earthquake(page)
+      end
+
+      @imported_pages << page
+    end
+
+    @task.log "imported #{page.try(:rss_link)} in #{elapsed} seconds"
+
     page
   end
 
+  # override Rss::ImportBase#remove_unimported_pages to reduce destroy call
   def remove_unimported_pages
-    return if @rss_links.blank? || @min_released.blank? || @max_released.blank?
-
-    criteria = model.site(site).node(node)
-    criteria = criteria.between(released: @min_released..@max_released)
-    criteria = criteria.nin(rss_link: @rss_links)
-    criteria.each do |item|
-      item.destroy
-      put_history_log(item, :destroy)
-    end
-  end
-
-  def download(url)
-    uri = URI.parse(url)
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true if uri.scheme == 'https'
-    req = Net::HTTP::Get.new(uri.path)
-    res = http.request(req)
-    return nil if res.code != '200'
-    res.body.force_encoding('UTF-8')
-  rescue => e
-    Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
   end
 
   def extract_event_id(xml)
@@ -103,7 +125,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     return if node.my_anpi_post.blank?
     return if node.anpi_mail.blank?
 
-    xmldoc = REXML::Document.new(page.xml)
+    xmldoc = REXML::Document.new(page.weather_xml)
     status = REXML::XPath.first(xmldoc, '/Report/Control/Status/text()').to_s.strip
     return if status != Jmaxml::Status::NORMAL
 
@@ -140,7 +162,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
           pref_code: pref_code,
           area_name: area_name,
           area_code: area_code,
-          area_max_int: area_max_int,
+          area_max_int: area_max_int
         }
       end
     end
@@ -186,7 +208,44 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
   def execute_weather_xml_filters
     return if @imported_pages.blank?
-    ids = @imported_pages.select { |item| !item.destroyed? }.map(&:id)
-    Rss::ExecuteWeatherXmlFiltersJob.bind(site_id: site.id, node_id: node.id).perform_later(ids)
+    Rss::ExecuteWeatherXmlFiltersJob.bind(site_id: site.id, node_id: node.id).perform_now(@imported_pages.map(&:id))
+  end
+
+  def rss_imported?(url, date)
+    @imported_logs ||= begin
+      logs = []
+      log_dir = ::File.join(self.class.data_cache_dir, node.id.to_s)
+      ::Dir.glob(%w(imported_*.log.gz), base: log_dir).each do |file_path|
+        file_path = ::File.expand_path(file_path, log_dir)
+        json = ::Zlib::GzipReader.open(file_path) { |gz| gz.read }
+
+        logs += JSON.parse(json)
+      end
+
+      logs.map! { |imported_url, imported_date| [ imported_url, Time.zone.parse(imported_date) ] }
+      logs
+    end
+
+    @imported_logs.find { |imported_url, imported_date| imported_url == url && imported_date.to_i == date.to_i }
+  end
+
+  def save_imported_urls
+    return if @imported_pages.blank?
+
+    urls_with_date = @imported_pages.map { |page| [ page.rss_link, page.released ] }
+
+    # いわゆる「ログ」に相当する情報なので、DB ではなくファイルに保存したい。
+    # 古い情報には意味がない。気象庁からは 24 時間以上前の情報は配信されていないみたい。
+    # data_cache_dir に保存するのが良さそうな気がする。
+
+    now = Time.zone.now
+    log_dir = ::File.join(self.class.data_cache_dir, node.id.to_s)
+    log_file = ::File.join(log_dir, "imported_#{now.to_f.to_s.sub(".", "_")}.log.gz")
+    tmp_log_file = ::File.join(log_dir, ".imported_#{now.to_f.to_s.sub(".", "_")}.log.gz")
+    ::FileUtils.mkdir_p(log_dir) unless ::Dir.exists?(log_dir)
+
+    # DISK FULL などにより不完全なファイルが作成されることを防止するために、作業ファイルに保存後、作業ファイルを移動するようにする。
+    ::Zlib::GzipWriter.open(tmp_log_file) { |gz| gz.write(urls_with_date.to_json) }
+    ::FileUtils.move(tmp_log_file, log_file, force: true)
   end
 end

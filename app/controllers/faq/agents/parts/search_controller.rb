@@ -6,8 +6,13 @@ class Faq::Agents::Parts::SearchController < ApplicationController
 
   def index
     @search_node = @cur_part.search_node.present? ? @cur_part.search_node : @cur_part.parent
-    @search_node = @search_node.becomes_with_route if @search_node
+    if @search_node.blank?
+      head :ok
+      return
+    end
+
+    @search_node = @search_node.becomes_with_route rescue @search_node
     @url = mobile_path? ? ::File.join(@cur_site.mobile_url, @search_node.filename) : @search_node.url
-    @search_node.blank? ? "" : render
+    render
   end
 end

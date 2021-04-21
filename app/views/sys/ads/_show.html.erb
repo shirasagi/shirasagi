@@ -1,12 +1,16 @@
 <dl class="see">
-  <dt class="depth-1"><%= @model.t :time %></dt>
-  <dd class="depth-1">
-    <%= @item.time %>
-    <span><%= t("datetime.prompts.second") %></span>
+  <dt><%= @model.t :time %></dt>
+  <dd>
+    <% if @item.time %>
+      <%= @item.time.to_s(:delimited) %>
+      <span><%= t("datetime.prompts.second") %></span>
+    <% end %>
   </dd>
-  <dt class="depth-1"><%= @model.t :width %></dt>
-  <dd class="depth-1">
-    <%= @item.width %>
-    <span>px</span>
+  <dt><%= @model.t :width %></dt>
+  <dd>
+    <% if @item.width %>
+      <%= @item.width.to_s(:delimited) %>
+      <span>px</span>
+    <% end %>
   </dd>
 </dl>
