@@ -4,6 +4,7 @@ class SS::Captcha
   seqid :id
   field :captcha_key, type: String
   field :captcha_text, type: String
+  field :image_path, type: String
 
   index({ created: 1 }, { expire_after_seconds: 3600 })
 end

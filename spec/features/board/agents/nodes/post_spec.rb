@@ -47,6 +47,7 @@ describe 'board_agents_nodes_anpi_post', type: :feature, dbscope: :example do
     it "success to post" do
       visit index_url
       expect(status_code).to eq 200
+      expect(page).to have_selector("img[src$=\"#{SS::Captcha.first.image_path}\"]")
       within 'div.board-post-form' do
         within 'div.columns' do
           fill_in "item[name]", with: "test_name"
@@ -66,6 +67,7 @@ describe 'board_agents_nodes_anpi_post', type: :feature, dbscope: :example do
     it "fail to post with blank at required" do
       visit index_url
       expect(status_code).to eq 200
+      expect(page).to have_selector("img[src$=\"#{SS::Captcha.first.image_path}\"]")
       within 'div.board-post-form' do
         within 'div.columns' do
           fill_in "item[name]", with: ""
@@ -92,6 +94,7 @@ describe 'board_agents_nodes_anpi_post', type: :feature, dbscope: :example do
     it "success to reply" do
       visit index_url
       expect(status_code).to eq 200
+      expect(page).to have_selector("img[src$=\"#{SS::Captcha.first.image_path}\"]")
       within 'div.board-post-form' do
         within 'div.columns' do
           fill_in "item[name]", with: "Re"
@@ -111,6 +114,7 @@ describe 'board_agents_nodes_anpi_post', type: :feature, dbscope: :example do
     it "fail to reply with blank at required" do
       visit index_url
       expect(status_code).to eq 200
+      expect(page).to have_selector("img[src$=\"#{SS::Captcha.first.image_path}\"]")
       within 'div.board-post-form' do
         within 'div.columns' do
           fill_in "item[name]", with: ""
@@ -137,6 +141,7 @@ describe 'board_agents_nodes_anpi_post', type: :feature, dbscope: :example do
     it "success to delete" do
       visit index_url
       expect(status_code).to eq 200
+      expect(page).to have_selector("img[src$=\"#{SS::Captcha.first.image_path}\"]")
       within 'div.board-post-form' do
         within 'div.columns' do
           fill_in "item[delete_key]", with: "pass"
@@ -153,6 +158,7 @@ describe 'board_agents_nodes_anpi_post', type: :feature, dbscope: :example do
     it "faild to delete with blank at required" do
       visit index_url
       expect(status_code).to eq 200
+      expect(page).to have_selector("img[src$=\"#{SS::Captcha.first.image_path}\"]")
       within 'div.board-post-form' do
         within 'div.columns' do
           fill_in "item[delete_key]", with: ""

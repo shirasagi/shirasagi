@@ -40,7 +40,9 @@ module SS::CaptchaFilter
   end
 
   def create_captcha_data
-    SS::Captcha.create(captcha_key: session[:captcha_key], captcha_text: @captcha_text)
+    SS::Captcha.create(
+      captcha_key: session[:captcha_key], captcha_text: @captcha_text, image_path: @image_path
+    )
   end
 
   def get_captcha
