@@ -71,7 +71,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           expect(find('#item_8')['value']).to eq '1'
         end
         within 'div.simple-captcha' do
-          fill_in "answer[captcha_answer]", with: SS::CaptchaBase::Captcha.first.captcha_text
+          fill_in "answer[captcha_answer]", with: SS::Captcha.first.captcha_text
         end
         within 'footer.send' do
           click_button I18n.t('inquiry.submit')
@@ -293,7 +293,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           expect(find('#item_7_2')['value']).to eq '申請について'
         end
         within 'div.simple-captcha' do
-          fill_in "answer[captcha_answer]", with: SS::CaptchaBase::Captcha.first.captcha_text
+          fill_in "answer[captcha_answer]", with: SS::Captcha.first.captcha_text
         end
         # mobile モードの場合 <footer> タグが <div> タグに置換されているはず
         within 'div.tag-footer' do

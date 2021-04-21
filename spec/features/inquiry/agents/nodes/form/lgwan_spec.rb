@@ -82,7 +82,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           expect(page).to have_no_selector('input#item_8')
         end
         within 'div.simple-captcha' do
-          fill_in "answer[captcha_answer]", with: SS::CaptchaBase::Captcha.first.captcha_text
+          fill_in "answer[captcha_answer]", with: SS::Captcha.first.captcha_text
         end
         within 'footer.send' do
           click_button I18n.t('inquiry.submit')

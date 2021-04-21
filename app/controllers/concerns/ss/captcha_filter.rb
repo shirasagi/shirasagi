@@ -6,6 +6,9 @@ module SS::CaptchaFilter
   end
 
   def generate_captcha
+    delete_tmp_dir
+    session[:tmp_dir] = Dir.mktmpdir
+
     MiniMagick::Tool::Convert.new do |convert|
       @captcha_text = sprintf("%04d", rand(10000))
       convert.size "100x28"
@@ -17,7 +20,9 @@ module SS::CaptchaFilter
       convert.gravity "Center"
       convert.implode "0.2"
       convert << "label:#{@captcha_text}"
-      convert << "tmp/captcha.jpeg"
+      convert << "#{session[:tmp_dir]}/captcha.jpeg"
+
+      @tmp_dir_captcha = "#{session[:tmp_dir]}/captcha.jpeg"
     end
 
     generate_key
@@ -26,15 +31,19 @@ module SS::CaptchaFilter
   end
 
   def generate_key
-    random_key = (Time.now.to_f * 1_000_000_000).to_s
-    session[:captcha_key] = Digest::SHA1.hexdigest(random_key)
+    session[:captcha_key] = sprintf("%05d", rand(100000))
   end
 
   def generate_image_path
-    @image_path = `base64 tmp/captcha.jpeg`
+    binary_data = File.read(@tmp_dir_captcha)
+    @image_path = Base64.strict_encode64(binary_data)
   end
 
   def create_captcha_data
-    SS::CaptchaBase::Captcha.create(captcha_key: session[:captcha_key], captcha_text: @captcha_text)
+    SS::Captcha.create(captcha_key: session[:captcha_key], captcha_text: @captcha_text)
+  end
+
+  def delete_tmp_dir
+    FileUtils.remove_entry_secure session[:tmp_dir] rescue nil
   end
 end
