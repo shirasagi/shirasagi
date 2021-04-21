@@ -88,21 +88,21 @@
 <%= jquery do %>
   $(document).ready( function () {
     var table = $('#lowvision').DataTable({
-      lengthMenu: [ [5, 10, 25, -1], [5, 10, 25, "全て"] ],
+      lengthMenu: [ <%== t("cms.cms/michecker.data_table.length_menu").keys.to_json %>, <%== t("cms.cms/michecker.data_table.length_menu").values.to_json %> ],
       scrollY: "300px",
       scrollX: true,
       scrollCollapse: true,
       oLanguage: {
-        sLengthMenu : "表示　_MENU_　件",
+        sLengthMenu : <%== t("cms.cms/michecker.data_table.language_length_menu").to_json %>,
         oPaginate: {
-          sNext: "次へ",
-          sPrevious: "前へ"
+          sNext: <%== t("cms.cms/michecker.data_table.language_paginate_next").to_json %>,
+          sPrevious: <%== t("cms.cms/michecker.data_table.language_paginate_previous").to_json %>
         },
-        sInfo: "_TOTAL_ 件中 _START_件から_END_件 を表示しています",
-        sSearch: "検索 ",
-        sZeroRecords: "表示するデータがありません",
-        sInfoEmpty: "0 件中 0件 を表示しています",
-        sInfoFiltered: "全 _MAX_ 件から絞り込み"
+        sInfo: <%== t("cms.cms/michecker.data_table.language_info").to_json %>,
+        sSearch: <%== t("cms.cms/michecker.data_table.language_search").to_json %>,
+        sZeroRecords: <%== t("cms.cms/michecker.data_table.language_zero_records").to_json %>,
+        sInfoEmpty: <%== t("cms.cms/michecker.data_table.language_info_empty").to_json %>,
+        sInfoFiltered: <%== t("cms.cms/michecker.data_table.language_info_filtered").to_json %>
       }
     });
     $('a.toggle-vis').on( 'click', function (e) {

@@ -43,11 +43,10 @@ describe "michecker", type: :feature, dbscope: :example, js: true, michecker: tr
 
       switch_to_window(windows.last)
       within ".michecker-head" do
-        expect(page).to have_content("実行準備が整いました。", wait: 60)
+        expect(page).to have_content(I18n.t("cms.cms/michecker.prepared"), wait: 60)
         click_on I18n.t('cms.cms/michecker.start')
-        # expect { click_on I18n.t('cms.cms/michecker.start') }.to output(include("miChecker による検証が完了しました。\n")).to_stderr
 
-        expect(page).to have_content("miChecker による検証が完了しました。結果を確認してください。", wait: 60)
+        expect(page).to have_content(I18n.t("cms.cms/michecker.michecker_completed"), wait: 60)
       end
 
       expect(performed_jobs.size).to eq 1
@@ -59,12 +58,12 @@ describe "michecker", type: :feature, dbscope: :example, js: true, michecker: tr
 
       select I18n.t("cms.cms/michecker.accessibility"), from: "report-type"
       within ".michecker-report__accessibility" do
-        expect(page).to have_content "種別"
+        expect(page).to have_content I18n.t('cms.cms/michecker/report.type')
       end
 
       select I18n.t("cms.cms/michecker.lowvision"), from: "report-type"
       within ".michecker-report__low-vision" do
-        expect(page).to have_content "種別"
+        expect(page).to have_content I18n.t('cms.cms/michecker/report.type')
       end
 
       expect(Cms::Michecker::Result.all.count).to eq 1

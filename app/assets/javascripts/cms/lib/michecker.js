@@ -14,13 +14,13 @@ this.Cms_Michecker = (function () {
   }
 
   Cms_Michecker.messages = {
-    prepared: "実行準備が整いました。",
-    micheckerStarted: "miChecker の実行を待機中",
-    micheckerFailedToStart: "miChecker を開始できませんでした。",
-    micheckerUnknownError: "miChecker 実行時にエラーが発生しました。管理画面へ戻り、タスク・マネージャーからエラーを確認してください。",
-    micheckerCompleted: "miChecker による検証が完了しました。結果を確認してください。",
-    accessibilityReportLoadError: "アクセシビリティ検証結果の読み込みに失敗しました。",
-    lowVisionReportLoadError: "視覚化結果の読み込みに失敗しました。"
+    prepared: null,
+    micheckerStarted: null,
+    micheckerFailedToStart: null,
+    micheckerUnknownError: null,
+    micheckerCompleted: null,
+    accessibilityReportLoadError: null,
+    lowVisionReportLoadError: null
   }
 
   Cms_Michecker.lastNoneEmptyLog = function(logs) {

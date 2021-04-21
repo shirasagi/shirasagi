@@ -383,6 +383,27 @@ ja:
       loading: プレビューをロード中です
       accessibility: アクセシビリティ検証
       lowvision: 視覚化
+      prepared: "実行準備が整いました。"
+      michecker_started: "miChecker の実行を待機中"
+      michecker_failed_to_start: "miChecker を開始できませんでした。"
+      michecker_unknown_error: "miChecker 実行時にエラーが発生しました。管理画面へ戻り、タスク・マネージャーからエラーを確認してください。"
+      michecker_completed: "miChecker による検証が完了しました。結果を確認してください。"
+      accessibility_report_load_error: "アクセシビリティ検証結果の読み込みに失敗しました。"
+      low_vision_report_load_error: "視覚化結果の読み込みに失敗しました。"
+      data_table:
+        length_menu:
+          5: 5
+          10: 10
+          25: 25
+          -1: 全て
+        language_length_menu: "表示 _MENU_ 件"
+        language_paginate_next: "次へ"
+        language_paginate_previous: "前へ"
+        language_info: "_TOTAL_ 件中 _START_ 件から _END_ 件を表示しています"
+        language_search: "検索 "
+        language_zero_records: "表示するデータがありません"
+        language_info_empty: "0 件中 0 件を表示しています"
+        language_info_filtered: "全 _MAX_ 件から絞り込み"
     cms/michecker/report:
       type: 種別
       all: すべての項目

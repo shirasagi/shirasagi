@@ -32,7 +32,16 @@
     </div>
   </div>
 </div>
+
 <%= jquery do %>
+  Cms_Michecker.messages.prepared = <%== t("cms.cms/michecker.prepared").to_json %>;
+  Cms_Michecker.messages.micheckerStarted = <%== t("cms.cms/michecker.michecker_started").to_json %>;
+  Cms_Michecker.messages.micheckerFailedToStart = <%== t("cms.cms/michecker.michecker_failed_to_start").to_json %>;
+  Cms_Michecker.messages.micheckerUnknownError = <%== t("cms.cms/michecker.michecker_unknown_error").to_json %>;
+  Cms_Michecker.messages.micheckerCompleted = <%== t("cms.cms/michecker.michecker_completed").to_json %>;
+  Cms_Michecker.messages.accessibilityReportLoadError = <%== t("cms.cms/michecker.accessibility_report_load_error").to_json %>;
+  Cms_Michecker.messages.lowVisionReportLoadError = <%== t("cms.cms/michecker.low_vision_report_load_error").to_json %>;
+
   var michecker = new Cms_Michecker("#ss-michecker");
   $("#resize").resizable({
     handles: 's'
