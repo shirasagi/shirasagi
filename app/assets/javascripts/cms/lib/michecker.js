@@ -76,7 +76,7 @@ this.Cms_Michecker = (function () {
 
     this.$reportSelector.addClass("hide");
     this.$reportAccessibility.addClass("hide");
-    this.$notice.html(Cms_Michecker.messages.micheckerStarted + " " + SS.loading).removeClass("hide");
+    this.$notice.html(SS.loading).removeClass("hide");
 
     var self = this;
     $.ajax({
@@ -132,6 +132,8 @@ this.Cms_Michecker = (function () {
     });
 
     setTimeout(checkJobStatus, 5000);
+
+    this.$notice.html(Cms_Michecker.messages.micheckerStarted + " " + SS.loading).removeClass("hide");
   };
 
   Cms_Michecker.prototype.onMicheckerFailedToStart = function() {
