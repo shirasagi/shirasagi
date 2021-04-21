@@ -9,7 +9,7 @@ class Board::Agents::Nodes::PostController < ApplicationController
   before_action :set_topic, only: [:new_reply, :reply]
   before_action :set_item, only: [:delete, :destroy]
   after_action :generate, only: [:create, :reply, :destroy]
-  before_action :generate_captcha, only: [:new, :new_reply], if: ->{ @cur_node.captcha_enabled? }
+  before_action :generate_captcha, only: [:new, :new_reply, :delete], if: ->{ @cur_node.captcha_enabled? }
 
   private
 
@@ -94,13 +94,15 @@ class Board::Agents::Nodes::PostController < ApplicationController
     raise "404" unless @item.delete_key.present?
     @item.delete_key = ""
     @item.attributes = get_params
+    @item.attributes = get_captcha
 
-    if @item.valid_with_captcha?(@cur_node)
-      if @item.delete_key_was == @item.delete_key
+    if @cur_node.captcha_enabled?
+      if @item.valid_with_captcha? && @item.delete_key_was == @item.delete_key
         render_destroy @item.destroy, location: "#{@cur_node.url}sent", render: :delete
         return
       else
-        @item.errors.add :base, t("board.errors.not_same_delete_key")
+        @item.errors.add :base, t("board.errors.not_same_delete_key") unless @item.delete_key_was == @item.delete_key
+        generate_captcha
       end
     end
 
