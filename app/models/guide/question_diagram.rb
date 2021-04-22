@@ -138,22 +138,4 @@ class Guide::QuestionDiagram
       0
     end
   end
-
-  #def transitions
-  #  @roots.each do |point|
-  #    transitions_(point, 1)
-  #  end
-  #end
-
-  #def transitions_(point, depth)
-  #  if point.transitions.keys.present?
-  #    puts "#{"-" * depth}#{point.transitions.keys.join(", ")}"
-  #  end
-  #
-  #  point.transitions.each do |key, next_points|
-  #    next_points.each do |next_point|
-  #      transitions_(next_point, depth + 1)
-  #    end
-  #  end
-  #end
 end
