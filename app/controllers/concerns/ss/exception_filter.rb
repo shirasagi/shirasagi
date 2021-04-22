@@ -51,7 +51,9 @@ module SS::ExceptionFilter
     ActiveSupport::Deprecation.silence do
       logger.fatal "  "
       logger.fatal "#{exception.class} (#{exception.message}):"
-      logger.fatal exception.annoted_source_code.join(separator) if exception.respond_to?(:annoted_source_code)
+      if exception.respond_to?(:annoted_source_code) && exception.annoted_source_code.present?
+        logger.fatal exception.annoted_source_code.join(separator)
+      end
       logger.fatal "  "
       logger.fatal trace.join(separator)
     end
