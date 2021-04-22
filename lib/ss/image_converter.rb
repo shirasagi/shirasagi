@@ -236,7 +236,7 @@ class SS::ImageConverter
   def geo_location
     extract_geo_location(@image) if @image
   rescue => e
-    logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     nil
   end
 
