@@ -15,9 +15,9 @@
           <% title = (question.question_type == "choices") ? edge.value : question.name %>
           <li>
             <% if answer.include?(edge.transition) %>
-              <span class="answer-state applicable">該当</span>
+              <span class="answer-state applicable"><%= t("guide.labels.applicable") %></span>
             <% else %>
-              <span class="answer-state not-applicable">非該当</span>
+              <span class="answer-state not-applicable"><%= t("guide.labels.not_applicable") %></span>
             <% end %>
             <span class="value"><%= title %></span>
           </li>

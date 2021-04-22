@@ -12,10 +12,10 @@ SS_SearchUI.modal({
 <div id="procedures-modal">
   <div class="cms-guide-tabs">
     <%= link_to guide_apis_procedures_path, class: "current", onclick: "return false;" do %>
-      <span class="tab-name"><%= "手続き" %></span>
+      <span class="tab-name"><%= t("guide.procedure") %></span>
     <% end %>
     <%= link_to guide_apis_questions_path, class: "ajax-box ajax-in-box" do %>
-      <span class="tab-name"><%= "質問" %></span>
+      <span class="tab-name"><%= t("guide.question") %></span>
     <% end %>
   </div>
 
@@ -33,7 +33,7 @@ SS_SearchUI.modal({
       <% if @multi %>
         <th class="checkbox"><input type="checkbox" /></th>
       <% end %>
-      <th class="name"><%= "手続き" %></th>
+      <th class="name"><%= t("guide.procedure") %></th>
     </tr>
     </thead>
     <tbody class="items">

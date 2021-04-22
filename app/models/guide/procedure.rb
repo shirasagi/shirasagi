@@ -22,7 +22,7 @@ class Guide::Procedure < Guide::Diagram::Point
   end
 
   def name_with_type
-    "[手続き] #{name}"
+    I18n.t("guide.labels.procedure_name", name: name)
   end
 
   class << self

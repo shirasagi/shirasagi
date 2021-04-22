@@ -20,7 +20,7 @@ class Guide::Question < Guide::Diagram::Point
   end
 
   def name_with_type
-    "[質問] #{name}"
+    I18n.t("guide.labels.question_name", name: name)
   end
 
   class << self

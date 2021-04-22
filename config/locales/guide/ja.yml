@@ -24,11 +24,21 @@ ja:
       show_procedure: 全ての手続きを確認する
       show_result: 手続きを確認する
       start_guide: ガイドを開始する
+    labels:
+      result: "【結果】%{name}"
+      question_name: "[質問] %{name}"
+      procedure_name: "[手続き] %{name}"
+      applicable: 該当
+      not_applicable: 非該当
+      root_question: 質問（別の質問に設定されていないもの）
+      choices: 選択肢
     views:
+      choose_yes_no: 次の項目に該当しますか？
       procedures_needed: "%{count}件の手続きが必要です。"
       procedures_others: "そのほか下記に該当する方は、それぞれの窓口にお問い合わせください"
       your-answers: あなたの回答
       all_procedure: 全ての手続き
+      input_choices_question: 選択肢の質問を入力
     options:
       question_type:
         yes_no: 'はい・いいえ'

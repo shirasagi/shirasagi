@@ -70,7 +70,7 @@ class Guide::Agents::Nodes::GuideController < ApplicationController
   end
 
   def result
-    @cur_node.name = "【結果】#{@cur_node.name}"
+    @cur_node.name = I18n.t("guide.labels.result", name: @cur_node.name)
 
     @diagram = ::Guide::QuestionDiagram.new @cur_node
     @diagram.input_answers(@answers)
@@ -79,7 +79,7 @@ class Guide::Agents::Nodes::GuideController < ApplicationController
   end
 
   def answer
-    @cur_node.name = "【結果】#{@cur_node.name}"
+    @cur_node.name = I18n.t("guide.labels.result", name: @cur_node.name)
 
     @diagram = ::Guide::QuestionDiagram.new @cur_node
     @diagram.input_answers(@answers)
@@ -87,7 +87,7 @@ class Guide::Agents::Nodes::GuideController < ApplicationController
   end
 
   def procedure
-    @cur_node.name = "【結果】#{@cur_node.name}"
+    @cur_node.name = I18n.t("guide.labels.result", name: @cur_node.name)
 
     @diagram = ::Guide::QuestionDiagram.new @cur_node
     @procedures = @diagram.all_procedures

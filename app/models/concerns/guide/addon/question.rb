@@ -45,7 +45,7 @@ module Guide::Addon
         next if edge.valid?
 
         edge.errors.full_messages.each do |msg|
-          self.errors.add :base, "選択肢 #{i + 1} : #{msg}"
+          self.errors.add :base, "#{I18n.t("guide.labels.choices")} #{i + 1} : #{msg}"
         end
       end
       return if errors.present?

@@ -9,7 +9,7 @@
 
   <% @item.edges.each_with_index do |edge, no| %>
     <% if @item.question_type == "choices" %>
-      <dt><%= "選択肢#{no + 1}" %></dt>
+      <dt><%= "#{t("guide.labels.choices")}#{no + 1}" %></dt>
       <dd><%= edge.value %></dd>
     <% else %>
       <dt><%= edge.value %></dt>
