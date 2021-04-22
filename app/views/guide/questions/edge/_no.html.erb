@@ -12,7 +12,7 @@
       <tbody>
         <% edge.points.each do |point| %>
           <tr data-id="<%= point.id %>">
-            <td><%= hidden_field_tag "item[in_edges][][point_ids][]", point.id %> <%= point.name %></td>
+            <td><%= hidden_field_tag "item[in_edges][][point_ids][]", point.id %> <%= point.name_with_type %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
         <% end %>
