@@ -151,6 +151,10 @@ module Cms::Addon
       :contact_fax, :contact_email, :contact_link_url, :contact_link_name
     ].freeze
 
+    COLUMN_VALUES_FIELDS = [
+      :value, :text, :link_url, :link_label, :lists
+    ].freeze
+
     included do
       field :search_name, type: String
       field :search_filename, type: String
@@ -252,7 +256,14 @@ module Cms::Addon
       def search_keyword
         return if @item.search_keyword.blank?
 
-        conds = PageSearch::KEYWORD_FIELDS.map { |field| { field => /#{::Regexp.escape(@item.search_keyword)}/ } }
+        conds = KEYWORD_FIELDS.map { |field| { field => /#{::Regexp.escape(@item.search_keyword)}/ } }
+        conds << {
+          column_values: {
+            "$elemMatch" => {
+              "$or"=> COLUMN_VALUES_FIELDS.map { |key| { key => { "$in" => [/#{::Regexp.escape(@item.search_keyword)}/] } } }
+            }
+          }
+        }
         @criteria = @criteria.where("$and" => [{ "$or" => conds }])
       end
 
