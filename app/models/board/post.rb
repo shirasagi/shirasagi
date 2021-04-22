@@ -23,10 +23,10 @@ class Board::Post
   validates :poster_url, url: true
   validates :node_id, presence: true
 
-  validate :validate_text, if: -> { (cur_node || node).text_size_limit != 0 }
-  validate :validate_delete_key, if: ->{(cur_node || node).deletable_post?}
-  validate :validate_banned_words, if: -> { (cur_node || node).banned_words.present? }
-  validate :validate_deny_url, if: -> { (cur_node || node).deny_url? }
+  validate :validate_text, if: -> { node.text_size_limit != 0 }
+  validate :validate_delete_key, if: ->{ user.nil? && node.deletable_post? }
+  validate :validate_banned_words, if: -> { node.banned_words.present? }
+  validate :validate_deny_url, if: -> { node.deny_url? }
 
   def valid_with_captcha?(node)
     node.captcha_enabled? ? super() : true
