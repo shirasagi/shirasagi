@@ -9,6 +9,12 @@ describe "urgency_layouts", type: :feature, dbscope: :example do
 
   let!(:item) { create :cms_page, name: "index", filename: "index.html" }
 
+  before do
+    # see: https://github.com/shirasagi/shirasagi/issues/3895
+    site.mobile_state = %w(enabled disabled).sample
+    site.save!
+  end
+
   describe "apply urgency layout and vice versa" do
     before { login_cms_user }
 
