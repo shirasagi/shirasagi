@@ -44,19 +44,23 @@ module Job::SS::Binding::Task
     end
 
     ret = nil
+    state = SS::Task::STATE_STOP
     begin
       require 'benchmark'
       time = Benchmark.realtime { ret = yield }
       task.log sprintf("# %d sec\n\n", time)
+      state = SS::Task::STATE_COMPLETED
     rescue Interrupt => e
       task.log "-- #{e}"
       #@task.log e.backtrace.join("\n")
+      state = SS::Task::STATE_INTERRUPTED
     rescue StandardError => e
       task.log "-- Error"
       task.log e.to_s
       task.log e.backtrace.join("\n")
+      state = SS::Task::STATE_FAILED
     ensure
-      task.close
+      task.close(state)
     end
     ret
   end
