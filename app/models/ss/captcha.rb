@@ -1,8 +1,6 @@
 class SS::Captcha
   include SS::Document
 
-  seqid :id
-  field :captcha_key, type: String
   field :captcha_text, type: String
   field :image_path, type: String
 
