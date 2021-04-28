@@ -37,8 +37,8 @@ describe "cms_generate_pages", type: :feature, dbscope: :example do
         end
       end
       task = Cms::Task.where(name: "cms:generate_pages", site_id: site.id, node_id: node.id).first
-      expect(task.started).to be >= start_at if task.state != "stop"
-      expect(task.state).to satisfy { |v| %w(running stop).include?(v) }
+      expect(task.started).to be >= start_at if task.state != "completed"
+      expect(task.state).to satisfy { |v| %w(running completed).include?(v) }
     end
   end
 end
