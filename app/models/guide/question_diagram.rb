@@ -34,7 +34,7 @@ class Guide::QuestionDiagram
 
       @questions << point
 
-      transitions = answer.kind_of?(Array) ? answer : [answer]
+      transitions = answer.is_a?(Array) ? answer : [answer]
       transitions.each do |transition|
         next_points = point.transitions[transition].to_a
 
@@ -84,11 +84,10 @@ class Guide::QuestionDiagram
           point.transitions[edge.transition] << build_diagram(next_point)
         end
       end
-      point
     else
       @all_procedures[point.id] = point
-      point
     end
+    point
   end
 
   def calc_longest_length(point)
