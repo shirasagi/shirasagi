@@ -8,9 +8,13 @@ module Cms::Addon::List
     included do
       cattr_accessor(:use_no_items_display, instance_accessor: false) { true }
       cattr_accessor(:use_substitute_html, instance_accessor: false) { true }
+      cattr_accessor(:use_upper_html, instance_accessor: false) { true }
+      cattr_accessor(:use_lower_html, instance_accessor: false) { true }
+      cattr_accessor(:use_loop_html, instance_accessor: false) { true }
       cattr_accessor(:use_new_days, instance_accessor: false) { true }
-      cattr_accessor(:use_liquid, instance_accessor: false) { true }
       cattr_accessor(:default_limit, instance_accessor: false) { 20 }
+      cattr_accessor(:use_liquid, instance_accessor: false) { true }
+      cattr_accessor(:use_sort, instance_accessor: false) { true }
       attr_accessor :cur_date
 
       field :conditions, type: SS::Extensions::Words
