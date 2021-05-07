@@ -2,9 +2,16 @@
   <dt><%= t("gws/presence.sync_state") %></dt>
   <dd></dd>
 
-  <dt class="depth-2"><%= @item.t :sync_available_state %><%= @item.tt :sync_available_state %></dt>
-  <dd><%= f.select :sync_available_state, @item.sync_available_state_options %></dd>
+  <% if !SS.config.gws.dig("presence", "sync_available", "disable") %>
+    <dt class="depth-2"><%= @item.t :sync_available_state %><%= @item.tt :sync_available_state %></dt>
+    <dd><%= f.select :sync_available_state, @item.sync_available_state_options %></dd>
 
-  <dt class="depth-2"><%= @item.t :sync_unavailable_state %><%= @item.tt :sync_unavailable_state %></dt>
-  <dd><%= f.select :sync_unavailable_state, @item.sync_unavailable_state_options %></dd>
+    <dt class="depth-2"><%= @item.t :sync_unavailable_state %><%= @item.tt :sync_unavailable_state %></dt>
+    <dd><%= f.select :sync_unavailable_state, @item.sync_unavailable_state_options %></dd>
+  <% end %>
+
+  <% if !SS.config.gws.dig("presence", "sync_timecard", "disable") %>
+    <dt class="depth-2"><%= @item.t :sync_timecard_state %><%= @item.tt :sync_timecard_state %></dt>
+    <dd><%= f.select :sync_timecard_state, @item.sync_timecard_state_options %></dd>
+  <% end %>
 </dl>

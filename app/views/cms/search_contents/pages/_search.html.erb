@@ -1,4 +1,5 @@
 <%= form_for :item, url: { action: :index }, html: { class: "search-pages", multipart: true, method: :post } do |f| %>
+<div class="search-contents-form">
   <%= render file: "cms/agents/addons/page_search/_form.html.erb", locals: { f: f } %>
 
   <footer class="send">
@@ -11,4 +12,5 @@
       <%= f.button t("ss.buttons.download"), name: "download", class: "download btn-primary" %>
     <% end %>
   </footer>
+</div>
 <% end %>

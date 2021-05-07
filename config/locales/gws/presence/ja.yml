@@ -31,6 +31,7 @@ ja:
         send_message: メッセージ
         sync_available_state: 在席
         sync_unavailable_state: 離席
+        sync_timecard_state: タイムカードの打刻
       gws/addon/presence/delegator_setting:
         presence_editable_title_ids: 編集可能な役職
 
@@ -46,6 +47,11 @@ ja:
         - 設定を有効にすることで、ログイン時にステータスが離席の場合、在席に更新します。
       sync_unavailable_state:
         - 設定を有効にすることで、ログアウト時にステータスが在席の場合、離席に更新します。
+      sync_timecard_state:
+        - 設定を有効にすることで、タイムカード打刻時に、ステータスを更新します。
+        - ""
+        - 出勤を打刻：ステータスを出勤に更新
+        - 退勤を打刻：ステータスを退勤に更新
     gws/addon/presence/group_setting:
       presence_notification_state:
         - 在席状況の確認通知を設定します。
