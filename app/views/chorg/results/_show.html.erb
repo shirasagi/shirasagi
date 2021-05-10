@@ -31,7 +31,7 @@
   </div>
 </section>
 
-<% if @item.state != 'stop' %>
+<% if @item.state != 'completed' %>
   <%= jquery do %>
     $('button[name=interrupt]').on('click', function() {
       $.ajax({

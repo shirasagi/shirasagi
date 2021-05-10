@@ -67,6 +67,7 @@
 
 <%= jquery do %>
   var $el = $("#task-box-<%= task.id %>");
+  var $form = $el.closest("#task-form");
 
   var formatCount = function(current, total) {
     if (total && total > 0) {
@@ -96,9 +97,9 @@
         $el.find(".started").html(formatTime(data["started"]));
         $el.find(".closed").html(formatTime(data["closed"]));
         $el.find(".log").val(data["head_logs"].join("\n"));
-        if (data["state"] === "stop") {
-          $el.find(".stop-button").hide();
-          $el.find(".run-button").show();
+        if (data["state"] === "completed") {
+          $form.find(".stop-button").hide();
+          $form.find(".run-button").show();
         }
 
         if ($el.find(".log").val()) {
