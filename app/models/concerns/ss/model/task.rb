@@ -5,6 +5,13 @@ module SS::Model::Task
   include SS::Reference::Site
   include SS::Reference::User
 
+  STATE_STOP = "stop".freeze
+  STATE_READY = "ready".freeze
+  STATE_RUNNING = "running".freeze
+  STATE_COMPLETED = "completed".freeze
+  STATE_FAILED = "failed".freeze
+  STATE_INTERRUPTED = "interrupted".freeze
+
   included do
     store_in collection: "ss_tasks"
     store_in_repl_master
@@ -16,7 +23,7 @@ module SS::Model::Task
     seqid :id
     field :name, type: String
     # field :command, type: String
-    field :state, type: String, default: "stop"
+    field :state, type: String, default: STATE_STOP
     field :interrupt, type: String
     field :started, type: DateTime
     field :closed, type: DateTime
@@ -39,19 +46,24 @@ module SS::Model::Task
       task = self.find_or_create_by(cond)
       return false unless task.start
 
+      state = STATE_STOP
       begin
         require 'benchmark'
         time = Benchmark.realtime { yield task }
         task.log sprintf("# %d sec\n\n", time)
+        state = STATE_COMPLETED
       rescue Interrupt => e
         task.log "-- #{e}"
         # task.log e.backtrace.join("\n")
+        state = STATE_INTERRUPTED
       rescue StandardError => e
         task.log "-- Error"
         task.log e.to_s
         task.log e.backtrace.join("\n")
+        state = STATE_FAILED
+      ensure
+        task.close(state)
       end
-      task.close
     end
 
     def search(params)
@@ -93,7 +105,7 @@ module SS::Model::Task
   end
 
   def running?(limit = 1.day)
-    state == "running" && (started.presence || updated) + limit > Time.zone.now
+    state == STATE_RUNNING && (started.presence || updated) + limit > Time.zone.now
   end
 
   def start
@@ -102,7 +114,7 @@ module SS::Model::Task
       return false
     end
 
-    change_state("running", { started: Time.zone.now })
+    change_state(STATE_RUNNING, { started: Time.zone.now })
   end
 
   def ready
@@ -110,7 +122,7 @@ module SS::Model::Task
       Rails.logger.info "already running."
       return false
     end
-    if state == "ready"
+    if state == STATE_READY
       Rails.logger.info "already ready."
       return false
     end
@@ -119,12 +131,12 @@ module SS::Model::Task
       return false
     end
 
-    change_state("ready")
+    change_state(STATE_READY)
   end
 
-  def close
+  def close(state = STATE_STOP)
     self.closed = Time.zone.now
-    self.state  = "stop"
+    self.state  = state
     result = save
 
     if result && @log_file

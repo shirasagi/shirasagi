@@ -47,7 +47,7 @@ describe Cms::Node::GenerateJob, dbscope: :example do
 
         expect(Cms::Task.count).to eq 2
         Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_nodes').first.tap do |task|
-          expect(task.state).to eq 'stop'
+          expect(task.state).to eq 'completed'
           expect(task.started).not_to be_nil
           expect(task.closed).not_to be_nil
           expect(task.total_count).to eq 0
@@ -94,7 +94,7 @@ describe Cms::Node::GenerateJob, dbscope: :example do
         expect { ::Icalendar::Calendar.parse(::File.read("#{node.path}/index.ics")) }.not_to raise_error
 
         Cms::Task.where(site_id: site.id, node_id: node.id, name: 'cms:generate_nodes').first.tap do |task|
-          expect(task.state).to eq 'stop'
+          expect(task.state).to eq 'completed'
         end
       end
     end
