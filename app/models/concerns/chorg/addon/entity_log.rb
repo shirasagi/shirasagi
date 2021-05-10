@@ -4,28 +4,41 @@ module Chorg::Addon::EntityLog
 
   included do
     after_destroy :delete_entity_log
-    has_one :cached_entity_logs, class_name: "Chorg::EntityLogCache", dependent: :destroy, inverse_of: :task
   end
 
   def entity_log_path
     "#{SS::File.root}/chorg_tasks/" + id.to_s.split(//).join("/") + "/_/entity_logs.log"
   end
 
-  def cache_entity_log
-    return if cached_entity_logs.present?
+  def entity_sites_path
+    "#{SS::File.root}/chorg_tasks/" + id.to_s.split(//).join("/") + "/_/entity_sites.log"
+  end
 
-    Chorg::EntityLogCache.destroy_all
-    item = Chorg::EntityLogCache.new
+  def entity_logs
+    @entity_logs ||= begin
+      logs = []
+      if ::File.exists?(entity_log_path)
+        ::File.foreach(entity_log_path) do |line|
+          logs << JSON.parse(line)
+        end
+      end
+      logs
+    end
+  end
 
-    file_logs = []
-    if ::File.exists?(entity_log_path)
-      ::File.foreach(entity_log_path) do |line|
-        file_logs << JSON.parse(line)
+  def entity_sites
+    @entity_sites ||= begin
+      if ::File.exists?(entity_sites_path)
+        JSON.parse(Fs.read(entity_sites_path))
+      else
+        create_entity_sites
       end
     end
+  end
 
+  def create_entity_sites
     sites = {}
-    file_logs.each_with_index do |item, i|
+    entity_logs.each_with_index do |item, i|
       # sites
       site = item["site"]
       if site
@@ -72,70 +85,8 @@ module Chorg::Addon::EntityLog
       sites[entity_site]["models"][entity_model]["items"][entity_index]["model_label"] = model_label
       sites[entity_site]["models"][entity_model]["items"][entity_index]["class_label"] = class_label
     end
-
-    item.task = self
-    item.logs = file_logs
-    item.sites = sites
-    item.save!
-  end
-
-  def entity_logs
-    cache_entity_log
-    cached_entity_logs.logs
-  end
-
-  def create_entity_log_sites_zip(base_url)
-    root_path = "#{Rails.root}/soshiki_#{Time.zone.now.to_i}"
-
-    entity_log_sites.each do |entity_site, sites|
-      label = sites["label"]
-      models = sites["models"]
-
-      models.each do |entity_model, model|
-        items = model["items"]
-
-        path = ::File.join(root_path, label)
-        Fs.mkdir_p(path)
-
-        csv = items_to_csv(items, base_url, entity_site, entity_model)
-        Fs.write(::File.join(path, "#{entity_model}.csv"), csv)
-      end
-    end
-  end
-
-  def items_to_csv(items, base_url, entity_site, entity_model)
-    url_helper = Rails.application.routes.url_helpers
-    rid = revision.id
-    type = (name == "chorg:main_task") ? "main" : "test"
-
-    csv = CSV.generate do |line|
-      line << %w(model name url mypage_url)
-      items.each do |entity_index, item|
-        url = ::File.join(
-          base_url,
-          url_helper.show_entity_chorg_entity_logs_path(
-            site: site.id, rid: rid, type: type,
-            entity_site: entity_site,
-            entity_model: entity_model,
-            entity_index: entity_index
-        ))
-        mypage_url = (item["mypage_url"].present? ? ::File.join(base_url, item["mypage_url"]) : "")
-
-        row = []
-        row << item["model"]
-        row << item["name"]
-        row << url
-        row << mypage_url
-        line << row
-      end
-    end
-    csv = "\uFEFF".freeze + csv
-    csv
-  end
-
-  def entity_log_sites
-    cache_entity_log
-    cached_entity_logs.sites
+    Fs.write(entity_sites_path, sites.to_json)
+    sites
   end
 
   def create_entity_log_sites_zip(site, user, base_url)
@@ -145,7 +96,7 @@ module Chorg::Addon::EntityLog
     root_path = ::File.join(output_dir, revision.name)
     Fs.mkdir_p(root_path)
 
-    entity_log_sites.each do |entity_site, sites|
+    entity_sites.each do |entity_site, sites|
       label = sites["label"]
       models = sites["models"]
 
@@ -213,13 +164,13 @@ module Chorg::Addon::EntityLog
 
   def init_entity_logs
     ::FileUtils.rm_f(entity_log_path)
+    ::FileUtils.rm_f(entity_sites_path)
+
     dirname = ::File.dirname(entity_log_path)
     ::FileUtils.mkdir_p(dirname) if !Dir.exists?(dirname)
 
     @entity_log_file = ::File.open(entity_log_path, 'w')
     @entity_log_file.sync = true
-
-    cached_entity_logs.destroy if cached_entity_logs
   end
 
   def finalize_entity_logs
@@ -228,6 +179,7 @@ module Chorg::Addon::EntityLog
 
   def delete_entity_log
     ::FileUtils.rm_f(entity_log_path)
+    ::FileUtils.rm_f(entity_sites_path)
   end
 
   def overwrite_fields

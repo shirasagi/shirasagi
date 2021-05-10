@@ -1,27 +1,11 @@
-<% def render_creates(creates) %>
-  <% return if creates.blank? %>
-  <% creates.sort_by { |k, v| k }.each do |k, v| %>
-    <tr>
-      <th style="white-space: nowrap;"><%= k %></th>
-      <td colspan="2"><%= v %></td>
-    </tr>
-  <% end %>
-<% end %>
-
-<% def render_changes(changes, prefix = nil) %>
+<% def render_changes(changes) %>
   <% return if changes.blank? %>
   <% changes.sort_by { |k, v| k }.each do |k, v| %>
-    <% if v[0].is_a?(Hash) %>
-      <% v.each_with_index do |h, i| %>
-        <% render_changes(h, "#{k}.#{i}") %>
-      <% end %>
-    <% else %>
-      <tr>
-        <th style="white-space: nowrap;"><%= [prefix, k].compact.join(".") %></th>
-        <td><%= v[0] %></td>
-        <td><%= v[1] %></td>
-      </tr>
-    <% end %>
+    <tr>
+      <th><%= k %></th>
+      <td><%= v[0] %></td>
+      <td><%= v[1] %></td>
+    </tr>
   <% end %>
 <% end %>
 

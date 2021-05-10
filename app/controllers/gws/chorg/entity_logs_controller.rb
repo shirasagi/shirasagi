@@ -49,14 +49,14 @@ class Gws::Chorg::EntityLogsController < ApplicationController
   end
 
   def show_models
-    @entity_site = @cur_task.entity_log_sites[params[:entity_site]]
+    @entity_site = @cur_task.entity_sites[params[:entity_site]]
     raise "404" unless @entity_site
 
     @items = @entity_site["models"]
   end
 
   def show_entities
-    @entity_site = @cur_task.entity_log_sites[params[:entity_site]]
+    @entity_site = @cur_task.entity_sites[params[:entity_site]]
     raise "404" unless @entity_site
 
     @entity_model = @entity_site["models"][params[:entity_model]]
@@ -66,7 +66,7 @@ class Gws::Chorg::EntityLogsController < ApplicationController
   end
 
   def show_entity
-    @entity_site = @cur_task.entity_log_sites[params[:entity_site]]
+    @entity_site = @cur_task.entity_sites[params[:entity_site]]
     raise "404" unless @entity_site
 
     @entity_model = @entity_site["models"][params[:entity_model]]
