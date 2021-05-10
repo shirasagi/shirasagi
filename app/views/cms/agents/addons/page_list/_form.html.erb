@@ -32,24 +32,36 @@
 
   $addon.find("select[name='item[loop_format]']").on("change", changeLoopFormat);
   <% end %>
+
+  <% if @model == Cms::Node::Archive %>
+    $("#item_archive_view").change(function() {
+      var selected_val = $("#item_archive_view").val();
+      if (selected_val === "calendar") {
+        $(".loop-format-shirasagi, .loop-format-liquid, .new-days, .sort, .limit, .loop_format").addClass("hide");
+
+      } else {
+        $(".loop-format-shirasagi, .loop-format-liquid, .new-days, .sort, .limit, .loop_format").removeClass("hide");
+      }
+    });
+  <% end %>
 <% end %>
 
 <dl class="see">
   <dt><%= @model.t :conditions %><%= @model.tt :conditions %></dt>
   <dd><%= f.text_area :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
 
-  <dt><%= @model.t :sort %><%= @model.tt :sort %></dt>
-  <dd>
+  <dt class="sort"><%= @model.t :sort %><%= @model.tt :sort %></dt>
+  <dd class="sort">
     <%= f.select :sort, @item.sort_options, include_blank: " " %>
     <span class="sort-description hide"></span>
   </dd>
 
-  <dt><%= @model.t :limit %><%= @model.tt :limit %></dt>
-  <dd><%= f.number_field :limit %></dd>
+  <dt class="limit"><%= @model.t :limit %><%= @model.tt :limit %></dt>
+  <dd class="limit"><%= f.number_field :limit %></dd>
 
   <% if @model.use_liquid %>
-    <dt><%= @model.t :loop_format %><%= @model.tt :loop_format %></dt>
-    <dd><%= f.select :loop_format, @item.loop_format_options %></dd>
+    <dt class="loop_format"><%= @model.t :loop_format %><%= @model.tt :loop_format %></dt>
+    <dd class="loop_format"><%= f.select :loop_format, @item.loop_format_options %></dd>
   <% end %>
 </dl>
 
@@ -83,7 +95,7 @@
 <% end %>
 
 <% if @model.use_new_days %>
-  <dl class="see">
+  <dl class="see new-days">
     <dt><%= @model.t :new_days %><%= @model.tt :new_days %></dt>
     <dd class="short"><%= f.number_field :new_days %> <span class="postfix"><%= t "datetime.prompts.day" %></span></dd>
   </dl>
