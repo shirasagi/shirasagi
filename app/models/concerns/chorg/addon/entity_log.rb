@@ -193,16 +193,18 @@ module Chorg::Addon::EntityLog
   end
 
   def embedded_array_changes(entity)
-    return {} if !entity.respond_to?(:column_values)
-
     hash = {}
     embedded_array_fields.each do |field_name|
       next if !entity.respond_to?(field_name)
 
-      changes = entity.send(field_name).map(&:changes)
-      next if !changes.select(&:present?).first
+      embedded_array = entity.send(field_name).map(&:changes)
+      next if !embedded_array.select(&:present?).first
 
-      hash[field_name] = changes
+      embedded_array.each_with_index do |embedded, idx|
+        embedded.each do |key, changes|
+          hash["#{field_name}.#{idx}.#{key}"] = changes
+        end
+      end
     end
     hash
   end
