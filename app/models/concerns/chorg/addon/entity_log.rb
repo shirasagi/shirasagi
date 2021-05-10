@@ -85,7 +85,11 @@ module Chorg::Addon::EntityLog
       sites[entity_site]["models"][entity_model]["items"][entity_index]["model_label"] = model_label
       sites[entity_site]["models"][entity_model]["items"][entity_index]["class_label"] = class_label
     end
-    Fs.write(entity_sites_path, sites.to_json)
+
+    if state == "completed"
+      Fs.write(entity_sites_path, sites.to_json)
+    end
+
     sites
   end
 
