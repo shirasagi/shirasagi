@@ -1,4 +1,4 @@
-<div id="task-form">
+<section class="task-box" id="task-box-<%= @item.id %>">
   <dl class="info">
     <dt><%= @item.t :state %></dt>
     <dd class="state">
@@ -22,7 +22,12 @@
   <div class="logs">
     <textarea class="log" readonly="readonly"><%= @item.logs.join("\n") %></textarea>
   </div>
-</div>
+  <div class="controller">
+    <% if @item.respond_to?(:log_file_path) && SS::User.allowed?(:edit, @cur_user) %>
+      <%= link_to(t('job.download_log'), download_job_sys_task_path(id: @item), { class: "btn", target: "_blank", rel: "noopener" }) %>
+    <% end %>
+  </div>
+</section>
 
 <% if @item.state != 'stop' %>
   <%= jquery do %>
