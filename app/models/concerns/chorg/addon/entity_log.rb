@@ -109,10 +109,6 @@ module Chorg::Addon::EntityLog
     ::FileUtils.rm_f(entity_sites_path)
   end
 
-  def overwrite_fields
-    %w(contact_tel contact_fax contact_email contact_link_url contact_link_name)
-  end
-
   def embedded_array_fields
     @_embedded_array_fields ||= begin
       SS.config.chorg.embedded_array_fields.presence || []
