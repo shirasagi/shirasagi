@@ -89,79 +89,6 @@ module Chorg::Addon::EntityLog
     sites
   end
 
-  def create_entity_log_sites_zip(site, user, base_url)
-    output_zip = SS::DownloadJobFile.new(user, "entity_logs-#{Time.zone.now.to_i}.zip")
-    output_dir = output_zip.path.sub(::File.extname(output_zip.path), "")
-
-    root_path = ::File.join(output_dir, revision.name)
-    Fs.mkdir_p(root_path)
-
-    entity_sites.each do |entity_site, sites|
-      label = sites["label"]
-      models = sites["models"]
-
-      models.each do |entity_model, model|
-        items = model["items"]
-
-        path = ::File.join(root_path, label)
-        Fs.mkdir_p(path)
-
-        csv = items_to_csv(site, items, base_url, entity_site, entity_model)
-        Fs.write(::File.join(path, "#{entity_model}.csv"), csv)
-      end
-    end
-
-    Zip::File.open(output_zip.path, Zip::File::CREATE) do |zip|
-      Dir.glob("#{root_path}/**/*").each do |file|
-        name = file.gsub("#{root_path}/", "")
-        zip.add(name.encode('cp932', invalid: :replace, undef: :replace, replace: "_"), file)
-      end
-    end
-    output_zip.path
-  end
-
-  def items_to_csv(site, items, base_url, entity_site, entity_model)
-    url_helper = Rails.application.routes.url_helpers
-    rid = revision.id
-    type = (name == "chorg:main_task") ? "main" : "test"
-
-    csv = CSV.generate do |line|
-      line << %w(区分1 区分2 タイトル ID 操作 確認URL 管理URL)
-      items.each do |entity_index, item|
-        url = ::File.join(
-          base_url,
-          url_helper.show_entity_chorg_entity_logs_path(
-            site: site.id, rid: rid, type: type,
-            entity_site: entity_site,
-            entity_model: entity_model,
-            entity_index: entity_index
-        ))
-        mypage_url = (item["mypage_url"].present? ? ::File.join(base_url, item["mypage_url"]) : "")
-
-        change_label = ""
-        if item['creates']
-          change_label = I18n.t('chorg.views.chorg/entity_log.options.operation.creates')
-        elsif item['changes']
-          change_label = I18n.t('chorg.views.chorg/entity_log.options.operation.changes')
-        elsif item['deletes']
-          change_label = I18n.t('chorg.views.chorg/entity_log.options.operation.deletes')
-        end
-
-        row = []
-        row << item["model_label"]
-        row << item["class_label"]
-        row << item["name"]
-        row << item["id"]
-        row << change_label
-        row << url
-        row << mypage_url
-        line << row
-      end
-    end
-    csv = "\uFEFF".freeze + csv
-    csv
-  end
-
   def init_entity_logs
     ::FileUtils.rm_f(entity_log_path)
     ::FileUtils.rm_f(entity_sites_path)
@@ -211,6 +138,17 @@ module Chorg::Addon::EntityLog
 
   def entity_model(entity)
     (entity.try(:base_model) || entity.class).name
+  end
+
+  def entity_log_url(entity_site, entity_model, entity_index)
+    url_helper = Rails.application.routes.url_helpers
+    type = (name =~ /main_task$/) ? "main" : "test"
+    url_helper.show_entity_chorg_entity_logs_path(
+      site: revision.site_id, rid: revision.id, type: type,
+      entity_site: entity_site,
+      entity_model: entity_model,
+      entity_index: entity_index
+    )
   end
 
   def store_entity_changes(entity, site)

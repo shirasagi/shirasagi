@@ -21,7 +21,7 @@ Rails.application.routes.draw do
       post :reset, on: :member
     end
 
-    resources :entity_logs, path: 'revisions/:rid/:type/entity_logs', only: [:index, :show] do
+    resources :entity_logs, path: 'revisions/:rid/:type/entity_logs', only: [:show] do
       get :show_models, on: :collection, path: 'show_models/:entity_site'
       get :show_entities, on: :collection, path: 'show_entities/:entity_site/:entity_model'
       get :show_entity, on: :collection, path: 'show_entity/:entity_site/:entity_model/:entity_index'

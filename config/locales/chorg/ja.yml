@@ -2,6 +2,15 @@ ja:
   chorg:
     revision: 組織変更
     changeset: 組織変更内容
+    entity_log:
+      headers:
+        - 区分1
+        - 区分2
+        - タイトル
+        - ID
+        - 操作
+        - 確認URL
+        - 管理URL
     views:
       revisions/edit: &revisions_edit
         add: 新設

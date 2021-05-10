@@ -38,12 +38,6 @@ class Gws::Chorg::EntityLogsController < ApplicationController
 
   public
 
-  def index
-    @items = @cur_task.entity_logs
-    @items ||= []
-    @items = Kaminari.paginate_array(@items).page(params[:page]).per(50)
-  end
-
   def show
     render
   end
@@ -77,8 +71,11 @@ class Gws::Chorg::EntityLogsController < ApplicationController
   end
 
   def download
-    path = @cur_task.create_entity_log_sites_zip(@cur_site, @cur_user, request.base_url)
-    send_file path, type: SS::MimeType.find("zip", "application/zip"), filename: ::File.basename(path),
+    exporter = ::Chorg::EntityLog::Exporter.new(@cur_task, @cur_site, request.base_url)
+    exporter.create_zip(@cur_user)
+    send_file exporter.path,
+      filename: exporter.filename,
+      type: SS::MimeType.find("zip", "application/zip"),
       disposition: :attachment, x_sendfile: true
   end
 end
