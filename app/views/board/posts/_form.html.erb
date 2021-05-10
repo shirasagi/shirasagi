@@ -19,11 +19,11 @@
 </dl>
 
 <%= jquery do %>
-  $('body').addClass('no-wysiwyg');
-<% end %>
+  var config = { childList: true };
+  var invisibleElement = document.getElementById('selected-files');
+  var observer = new MutationObserver(function(){
+    $('.action-attach').remove()
+  });
 
-<style>
-  body.no-wysiwyg .action-attach{ display: none; }
-  body.no-wysiwyg .action-paste{ display: none; }
-  body.no-wysiwyg .action-thumb{ display: none; }
-</style>
+  observer.observe(invisibleElement, config);
+<% end %>
