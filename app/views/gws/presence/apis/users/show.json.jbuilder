@@ -1,6 +1,6 @@
 json.items do
   json.array!(@items) do |item|
-    user_presence = item.user_presence(@cur_site) || Gws::UserPresence.new
+    user_presence = item.user_presence(@cur_site)
 
     json.id item.id
     json.name item.name

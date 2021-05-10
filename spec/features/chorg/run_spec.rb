@@ -55,7 +55,7 @@ describe "chorg_run", type: :feature, dbscope: :example do
 
       expect(Chorg::Task.count).to eq 1
       Chorg::Task.first.tap do |task|
-        expect(task.state).to eq 'stop'
+        expect(task.state).to eq 'completed'
         expect(task.entity_logs.count).to eq 1
         expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
         expect(task.entity_logs[0]['creates']).to include({ 'name' => changeset.destinations.first["name"] })
@@ -87,7 +87,7 @@ describe "chorg_run", type: :feature, dbscope: :example do
 
         expect(Chorg::Task.count).to eq 1
         Chorg::Task.first.tap do |task|
-          expect(task.state).to eq 'stop'
+          expect(task.state).to eq 'completed'
           expect(task.entity_logs.count).to eq 2
           expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
           expect(task.entity_logs[0]['creates']).to include({ 'name' => changeset.destinations.first["name"] })
@@ -142,7 +142,7 @@ describe "chorg_run", type: :feature, dbscope: :example do
 
       expect(Chorg::Task.count).to eq 1
       Chorg::Task.first.tap do |task|
-        expect(task.state).to eq 'stop'
+        expect(task.state).to eq 'completed'
         expect(task.entity_logs.count).to eq 1
         expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
         expect(task.entity_logs[0]['creates']).to include({ 'name' => changeset.destinations.first["name"] })
@@ -174,7 +174,7 @@ describe "chorg_run", type: :feature, dbscope: :example do
 
         expect(Chorg::Task.count).to eq 1
         Chorg::Task.first.tap do |task|
-          expect(task.state).to eq 'stop'
+          expect(task.state).to eq 'completed'
           expect(task.entity_logs.count).to eq 2
           expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
           expect(task.entity_logs[0]['creates']).to include({ 'name' => changeset.destinations.first["name"] })

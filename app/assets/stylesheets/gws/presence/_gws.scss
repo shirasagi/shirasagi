@@ -71,10 +71,10 @@
       background: $white;
     }
     th.name {
-      width: 18%;
+      width: 25%;
     }
     th.presence-plan {
-      width: 32%;
+      width: 25%;
     }
     th.presence-memo {
       width: 40%;
@@ -85,10 +85,11 @@
     td {
       background: none;
       .group-name {
+        width: calc(100% - 60px);
         display: inline-block;
         vertical-align: middle;
         overflow: hidden;
-        white-space: nowrap;
+        white-space: normal;
         text-overflow: ellipsis;
       }
       .presence-state, .select-presence-state {
@@ -123,8 +124,10 @@
     .no-overflow {
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
     }
+  }
+  td:first-child .no-overflow {
+    white-space: normal;
   }
   &.group-users {
     .list-head {

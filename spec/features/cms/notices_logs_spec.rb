@@ -18,6 +18,7 @@ describe "cms_notices", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
       visit edit_path
+      ensure_addon_opened("#addon-cms-agents-addons-file")
       within "#addon-cms-agents-addons-file" do
         wait_cbox_open do
           click_on I18n.t("ss.buttons.upload")

@@ -54,7 +54,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(user.group_ids).to eq [ new_group1.id ]
 
         task.reload
-        expect(task.state).to eq 'stop'
+        expect(task.state).to eq 'completed'
         expect(task.entity_logs.count).to eq 7
 
         expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
@@ -141,7 +141,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(user.group_ids).to eq [ new_group1.id ]
 
         task.reload
-        expect(task.state).to eq 'stop'
+        expect(task.state).to eq 'completed'
         expect(task.entity_logs.count).to eq 4
         expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
         expect(task.entity_logs[0]['class']).to eq 'Cms::Group'

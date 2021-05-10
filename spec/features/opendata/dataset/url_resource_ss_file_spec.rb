@@ -12,8 +12,11 @@ describe "opendata_url_resource", dbscope: :example, js: true do
   let(:filename) { "file-#{unique_id}.csv" }
   let(:original_url) { "http://#{unique_domain}/#{filename}" }
   let(:text) { "text-#{unique_id}" }
+  let(:now) { Time.zone.now.beginning_of_hour }
 
   def download_url_resource(path = nil)
+    clear_downloads
+
     visit opendata_dataset_path(site: site, cid: node, id: dataset)
     within "#addon-opendata-agents-addons-url_resource" do
       click_button I18n.t("opendata.manage_url_resources")
@@ -34,21 +37,20 @@ describe "opendata_url_resource", dbscope: :example, js: true do
     end
   end
 
-  def stub_url_resource(path = nil)
+  def stub_url_resource(path, last_modified)
     WebMock.reset!
 
-    path ||= csv_path
     headers = {
       "Content-Type" => "text/csv",
       "Content-Disposition" => "attachment; filename=\"#{filename}\"",
-      "Last-Modified" => Time.zone.now.httpdate
+      "Last-Modified" => last_modified.utc.httpdate
     }
     stub_request(:get, original_url).to_return(status: 200, body: ::File.binread(path), headers: headers)
   end
 
   context "basic crud" do
     before do
-      stub_url_resource
+      stub_url_resource(csv_path, now)
       login_cms_user
     end
 
@@ -90,6 +92,14 @@ describe "opendata_url_resource", dbscope: :example, js: true do
       dataset.reload
       expect(dataset.url_resources.count).to eq 1
       expect(SS::File.where(filename: filename).count).to eq 1
+      SS::File.where(filename: filename).first.tap do |file|
+        expect(file.name).to eq filename
+        expect(file.filename).to eq filename
+        expect(file.content_type).to eq "text/comma-separated-values"
+        expect(file.size).to eq ::File.size(csv_path)
+        expect(file.read).to eq ::File.binread(csv_path)
+        expect(file.owner_item_id).to eq dataset.id
+      end
 
       download_url_resource
 
@@ -111,6 +121,14 @@ describe "opendata_url_resource", dbscope: :example, js: true do
       dataset.reload
       expect(dataset.url_resources.count).to eq 1
       expect(SS::File.where(filename: filename).count).to eq 1
+      SS::File.where(filename: filename).first.tap do |file|
+        expect(file.name).to eq filename
+        expect(file.filename).to eq filename
+        expect(file.content_type).to eq "text/comma-separated-values"
+        expect(file.size).to eq ::File.size(csv_path)
+        expect(file.read).to eq ::File.binread(csv_path)
+        expect(file.owner_item_id).to eq dataset.id
+      end
 
       download_url_resource
 
@@ -134,10 +152,10 @@ describe "opendata_url_resource", dbscope: :example, js: true do
     after { WebMock.reset! }
 
     it do
-      Timecop.travel(Time.zone.now) do
+      Timecop.travel(now) do
         login_cms_user
 
-        stub_url_resource
+        stub_url_resource(csv_path, now)
 
         expect(dataset.url_resources.count).to eq 0
         expect(SS::File.where(filename: filename).count).to eq 0
@@ -158,29 +176,53 @@ describe "opendata_url_resource", dbscope: :example, js: true do
         dataset.reload
         expect(dataset.url_resources.count).to eq 1
         expect(SS::File.where(filename: filename).count).to eq 1
+        SS::File.where(filename: filename).first.tap do |file|
+          expect(file.name).to eq filename
+          expect(file.filename).to eq filename
+          expect(file.content_type).to eq "text/comma-separated-values"
+          expect(file.size).to eq ::File.size(csv_path)
+          expect(file.read).to eq ::File.binread(csv_path)
+          expect(file.owner_item_id).to eq dataset.id
+        end
 
         download_url_resource
 
         # do crawl
-        stub_url_resource(csv_path2)
+        stub_url_resource(csv_path2, now)
         dataset.url_resources.each(&:do_crawl)
 
         dataset.reload
         expect(dataset.url_resources.count).to eq 1
         expect(SS::File.where(filename: filename).count).to eq 1
+        SS::File.where(filename: filename).first.tap do |file|
+          expect(file.name).to eq filename
+          expect(file.filename).to eq filename
+          expect(file.content_type).to eq "text/comma-separated-values"
+          expect(file.size).to eq ::File.size(csv_path)
+          expect(file.read).to eq ::File.binread(csv_path)
+          expect(file.owner_item_id).to eq dataset.id
+        end
 
         download_url_resource
       end
 
-      Timecop.travel(Time.zone.now.tomorrow) do
+      Timecop.travel(now.tomorrow) do
         login_cms_user
 
-        stub_url_resource(csv_path2)
+        stub_url_resource(csv_path2, now.tomorrow)
         dataset.url_resources.each(&:do_crawl)
 
         dataset.reload
         expect(dataset.url_resources.count).to eq 1
         expect(SS::File.where(filename: filename).count).to eq 1
+        SS::File.where(filename: filename).first.tap do |file|
+          expect(file.name).to eq filename
+          expect(file.filename).to eq filename
+          expect(file.content_type).to eq "text/comma-separated-values"
+          expect(file.size).to eq ::File.size(csv_path2)
+          expect(file.read).to eq ::File.binread(csv_path2)
+          expect(file.owner_item_id).to eq dataset.id
+        end
 
         download_url_resource(csv_path2)
       end

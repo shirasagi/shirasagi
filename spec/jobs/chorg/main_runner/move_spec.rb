@@ -51,7 +51,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page.contact_link_name).to eq changeset.destinations.first["contact_link_name"]
 
         task.reload
-        expect(task.state).to eq 'stop'
+        expect(task.state).to eq 'completed'
         expect(task.entity_logs.count).to eq 2
         expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
         expect(task.entity_logs[0]['class']).to eq 'Cms::Group'
@@ -111,7 +111,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page.contact_link_name).to eq group.contact_link_name
 
           task.reload
-          expect(task.state).to eq 'stop'
+          expect(task.state).to eq 'completed'
           expect(task.entity_logs.count).to eq 1
           expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
           expect(task.entity_logs[0]['id']).to eq group.id.to_s
@@ -170,7 +170,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page.contact_link_name).to eq changeset.destinations.first["contact_link_name"]
 
         task.reload
-        expect(task.state).to eq 'stop'
+        expect(task.state).to eq 'completed'
         expect(task.entity_logs.count).to eq 2
         expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
         expect(task.entity_logs[0]['class']).to eq 'Cms::Group'
@@ -229,7 +229,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page.contact_link_name).to eq changeset.destinations.first["contact_link_name"]
 
           task.reload
-          expect(task.state).to eq 'stop'
+          expect(task.state).to eq 'completed'
           expect(task.entity_logs.count).to eq 2
           expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
           expect(task.entity_logs[0]['class']).to eq 'Cms::Group'

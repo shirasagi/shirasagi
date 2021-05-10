@@ -25,7 +25,7 @@ module Voice::Downloadable
 
         html = f.read if status_code == '200'
         html.force_encoding("utf-8") if html
-        page_identity = make_page_identity(html, f.meta['etag'], f.last_modified)
+        page_identity = make_page_identity(html, f.meta['etag'].presence, f.meta["last-modified"].presence)
 
         page = {
           html: html,

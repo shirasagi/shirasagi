@@ -2,26 +2,24 @@ module SS
   module TmpDir
     module_function
 
-    def created_tmpdir
-      @created_tmpdir
+    def tmpdir
+      @tmpdir ||= ::Dir.mktmpdir
     end
 
-    def created_tmpdir=(value)
-      @created_tmpdir = value
+    def tmpdir=(value)
+      @tmpdir = value
     end
 
-    def before_example
-      ::SS::TmpDir.created_tmpdir ||= ::Dir.mktmpdir
-    end
+    def cleanup_tmpdir
+      tmpdir = @tmpdir
+      @tmpdir = nil
+      return if tmpdir.blank?
 
-    def after_example
-      tmpdir = ::SS::TmpDir.created_tmpdir
-      ::SS::TmpDir.created_tmpdir = nil
-      ::FileUtils.rm_rf(tmpdir) if tmpdir
+      ::FileUtils.rm_rf(tmpdir)
     end
 
     def tmpfile(options = {}, &block)
-      tmpfile = "#{::SS::TmpDir.created_tmpdir}/#{unique_id}"
+      tmpfile = "#{::SS::TmpDir.tmpdir}/#{unique_id}"
       tmpfile = "#{tmpfile}#{options[:extname]}" if options[:extname]
       mode = options[:binary] ? "wb" : "w"
       mode = "#{mode}:#{options[:encoding]}" if options[:encoding]
@@ -87,20 +85,12 @@ module SS
 
     module Support
       def self.extended(obj)
-        obj.before(:example) do
-          ::SS::TmpDir.before_example
-        end
-
         obj.after(:example) do
-          ::SS::TmpDir.after_example
+          ::SS::TmpDir.cleanup_tmpdir
         end
 
         obj.class_eval do
-          define_method(:tmpdir) do
-            ::SS::TmpDir.created_tmpdir
-          end
-
-          delegate :created_tmpdir, :tmpfile, :tmp_ss_file, to: ::SS::TmpDir
+          delegate :tmpdir, :cleanup_tmpdir, :tmpfile, :tmp_ss_file, to: ::SS::TmpDir
         end
       end
     end

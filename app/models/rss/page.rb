@@ -11,4 +11,6 @@ class Rss::Page
 
   store_in_repl_master
   default_scope ->{ where(route: "rss/page") }
+
+  skip_callback(:destroy, :before, :create_history_trash)
 end

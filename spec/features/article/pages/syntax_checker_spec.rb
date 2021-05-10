@@ -114,7 +114,9 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within ".column-value-palette" do
-          click_on column1.name
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column1.name
+          end
         end
         within ".column-value-cms-column-free" do
           fill_in_ckeditor "item[column_values][][in_wrap][value]", with: html1
@@ -132,7 +134,9 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within ".column-value-palette" do
-          click_on column1.name
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column1.name
+          end
         end
         within ".column-value-cms-column-free" do
           fill_in_ckeditor "item[column_values][][in_wrap][value]", with: html2
@@ -150,7 +154,9 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within ".column-value-palette" do
-          click_on column1.name
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column1.name
+          end
         end
         within ".column-value-cms-column-free" do
           fill_in_ckeditor "item[column_values][][in_wrap][value]", with: html3
@@ -168,7 +174,9 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within ".column-value-palette" do
-          click_on column1.name
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column1.name
+          end
         end
         within ".column-value-cms-column-free" do
           fill_in_ckeditor "item[column_values][][in_wrap][value]", with: html4
@@ -186,7 +194,9 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within ".column-value-palette" do
-          click_on column1.name
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column1.name
+          end
         end
         within ".column-value-cms-column-free" do
           fill_in_ckeditor "item[column_values][][in_wrap][value]", with: html5
@@ -204,7 +214,9 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within ".column-value-palette" do
-          click_on column1.name
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column1.name
+          end
         end
         within ".column-value-cms-column-free" do
           fill_in_ckeditor "item[column_values][][in_wrap][value]", with: html6
@@ -284,7 +296,9 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within ".column-value-palette" do
-          click_on column1.name
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column1.name
+          end
         end
         within ".column-value-cms-column-free" do
           fill_in_ckeditor "item[column_values][][in_wrap][value]", with: html1
@@ -305,7 +319,9 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within ".column-value-palette" do
-          click_on column1.name
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column1.name
+          end
         end
         within ".column-value-cms-column-free" do
           fill_in_ckeditor "item[column_values][][in_wrap][value]", with: html2
@@ -325,7 +341,9 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within ".column-value-palette" do
-          click_on column1.name
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column1.name
+          end
         end
         within ".column-value-cms-column-free" do
           fill_in_ckeditor "item[column_values][][in_wrap][value]", with: html3
@@ -341,7 +359,9 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within ".column-value-palette" do
-          click_on column2.name
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column2.name
+          end
         end
         within ".column-value-cms-column-list" do
           fill_in "item[column_values][][in_wrap][lists][]", with: html1
@@ -362,7 +382,9 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within ".column-value-palette" do
-          click_on column2.name
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column2.name
+          end
         end
         within ".column-value-cms-column-list" do
           fill_in "item[column_values][][in_wrap][lists][]", with: html2
@@ -382,7 +404,9 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within ".column-value-palette" do
-          click_on column2.name
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column2.name
+          end
         end
         within ".column-value-cms-column-list" do
           fill_in "item[column_values][][in_wrap][lists][]", with: html3

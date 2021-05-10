@@ -101,6 +101,7 @@ describe Rss::ImportJob, dbscope: :example do
 
     it do
       expect { described_class.bind(bindings).perform_now }.to change { Rss::Page.count }.from(0).to(3)
+      expect(History::Trash.all.count).to eq 0
     end
   end
 
@@ -145,6 +146,8 @@ describe Rss::ImportJob, dbscope: :example do
       expect(doc5).not_to be_nil
       expect(doc5.name).to eq '記事5'
       expect(doc5.released).to eq Time.zone.parse('2015-06-08T10:00:00+09:00')
+
+      expect(History::Trash.all.count).to eq 0
     end
   end
 
@@ -160,10 +163,12 @@ describe Rss::ImportJob, dbscope: :example do
     it do
       described_class.bind(bindings).perform_now
       expect(Rss::Page.count).to eq 5
+      expect(History::Trash.all.count).to eq 0
 
       described_class.bind(bindings).perform_now
       # expected count is 3, 1 added, 3 deleted, 1 updated.
       expect(Rss::Page.count).to eq 3
+      expect(History::Trash.all.count).to eq 0
 
       # doc1 is updated.
       doc1 = Rss::Page.where(rss_link: "http://example.jp/rdf/1.html").first
@@ -202,12 +207,14 @@ describe Rss::ImportJob, dbscope: :example do
     it do
       described_class.bind(bindings).perform_now
       expect(Rss::Page.count).to eq 5
+      expect(History::Trash.all.count).to eq 0
 
       # http.options real_path: "/sample-rdf-3.xml"
 
       described_class.bind(bindings).perform_now
       # expected count is 3, 2 deleted.
       expect(Rss::Page.count).to eq 3
+      expect(History::Trash.all.count).to eq 0
 
       # doc1 is deleted.
       doc1 = Rss::Page.where(rss_link: "http://example.jp/rdf/1.html").first

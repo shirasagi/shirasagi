@@ -31,6 +31,11 @@ class Gws::Portal::GroupSetting
   end
 
   def default_portlets(settings = [])
-    Gws::Portal::GroupPortlet.default_portlets(settings.presence || SS.config.gws['portal']['group_portlets'])
+    settings = settings.presence
+    settings ||= SS.config.gws['portal']['organization_portlets'].presence if site_id == portal_group_id
+    settings ||= SS.config.gws['portal']['group_portlets'].presence
+    return [] if settings.blank?
+
+    Gws::Portal::GroupPortlet.default_portlets(settings)
   end
 end

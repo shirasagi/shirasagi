@@ -62,6 +62,15 @@ production: &production
       - model: faq
       - model: qna
 
+    # Default organization portlets
+    organization_portlets:
+      - model: schedule
+        schedule_member_mode: current_user
+      - model: monitor
+      - model: board
+      - model: faq
+      - model: qna
+
     portlet_settings:
       max_rows: 50
       ad:
@@ -171,6 +180,30 @@ production: &production
       leave: none
       dayoff: none
       '': none
+    reset:
+      available: ''
+      unavailable: ''
+      leave: ''
+      dayoff: ''
+    sync_available:
+      disable: false
+      presence_logged_in:
+        reset:
+          - unavailable
+          - leave
+          - dayoff
+        enter: available
+      presence_logged_out:
+        reset:
+          - available
+          - leave
+          - dayoff
+        leave: unavailable
+    sync_timecard:
+      disable: true
+      presence_punch:
+        enter: available
+        leave: leave
 
   share:
     max_history_count: 20

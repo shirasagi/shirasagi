@@ -131,10 +131,10 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
       user_id: user_id,
       session_id: Rails.application.current_session_id,
       request_id: Rails.application.current_request_id,
-      controller: self.model_name.i18n_key,
+      controller: Rails.application.current_controller,
       url: file.try(:url),
       page_url: Rails.application.current_path_info,
-      ref_coll: file.try(:collection_name)
+      ref_coll: file.try(:collection_name).to_s
     )
   end
 
@@ -145,7 +145,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
       item.url = file
       item.action = "update"
       item.behavior = "paste"
-      item.ref_coll = ":ss_files"
+      item.ref_coll = "ss_files"
       item.save
     end
 
@@ -155,7 +155,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
       item.url = file
       item.action = "destroy"
       item.behavior = "paste"
-      item.ref_coll = ":ss_files"
+      item.ref_coll = "ss_files"
       item.save
     end
   end

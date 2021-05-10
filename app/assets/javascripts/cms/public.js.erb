@@ -11,6 +11,7 @@
 //= require ss/lib/module
 //= require ss/lib/mobile
 //= require ss/lib/clipboard
+//= require ss/lib/file_view
 //= require chat/lib/bot
 //= require cms/lib/editor
 //= require ads/lib/banner
@@ -565,7 +566,6 @@ this.SS_VoiceController = (function () {
     var timestamp = (new Date).getTime();
 
     template = template.replace(new RegExp(":TIMESTAMP:", 'g'), timestamp);
-    template = template.replace(new RegExp(":URL:", 'g'), url);
     return template;
   };
 

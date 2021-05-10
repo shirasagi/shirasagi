@@ -64,7 +64,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
       expect(Cms::Task.site(site).count).to eq 1
       Cms::Task.site(site).first.tap do |task|
         expect(task.name).to eq "rss:import_weather_xml"
-        expect(task.state).to eq "stop"
+        expect(task.state).to eq "completed"
         expect(task.interrupt).to be_blank
         expect(task.started).to be_present
         expect(task.closed).to be_present
@@ -137,7 +137,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
       expect(Cms::Task.site(site).count).to eq 1
       Cms::Task.site(site).first.tap do |task|
         expect(task.name).to eq "rss:import_weather_xml"
-        expect(task.state).to eq "stop"
+        expect(task.state).to eq "completed"
         expect(task.interrupt).to be_blank
         expect(task.started).to be_present
         expect(task.closed).to be_present
@@ -228,7 +228,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
       expect(Cms::Task.site(site).where(name: "ezine:deliver").count).to eq 1
       Cms::Task.site(site).where(name: "rss:import_weather_xml").first.tap do |task|
         expect(task.name).to eq "rss:import_weather_xml"
-        expect(task.state).to eq "stop"
+        expect(task.state).to eq "completed"
         expect(task.interrupt).to be_blank
         expect(task.started).to be_present
         expect(task.closed).to be_present
@@ -317,7 +317,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
       expect(Cms::Task.site(site).count).to eq 1
       Cms::Task.site(site).first.tap do |task|
         expect(task.name).to eq "rss:import_weather_xml"
-        expect(task.state).to eq "stop"
+        expect(task.state).to eq "completed"
         expect(task.interrupt).to be_blank
         expect(task.started).to be_present
         expect(task.closed).to be_present
@@ -436,7 +436,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
         expect(Cms::Task.site(site).where(name: "ezine:deliver").count).to eq 1
         Cms::Task.site(site).where(name: "rss:import_weather_xml").first.tap do |task|
           expect(task.name).to eq "rss:import_weather_xml"
-          expect(task.state).to eq "stop"
+          expect(task.state).to eq "completed"
           expect(task.interrupt).to be_blank
           expect(task.started).to be_present
           expect(task.closed).to be_present
@@ -534,7 +534,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
         expect(Cms::Task.site(site).count).to eq 1
         Cms::Task.site(site).first.tap do |task|
           expect(task.name).to eq "rss:import_weather_xml"
-          expect(task.state).to eq "stop"
+          expect(task.state).to eq "completed"
           expect(task.interrupt).to be_blank
           expect(task.started).to be_present
           expect(task.closed).to be_present

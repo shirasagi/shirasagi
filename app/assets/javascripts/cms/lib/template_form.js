@@ -41,6 +41,13 @@ Cms_TemplateForm.bind = function(el, options) {
   }
 };
 
+Cms_TemplateForm.createElementFromHTML = function(html) {
+  var div = document.createElement('div');
+  div.innerHTML = html.trim();
+
+  return div.firstChild;
+};
+
 Cms_TemplateForm.prototype.render = function() {
   // this.changeForm();
 
@@ -164,19 +171,25 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
     $this.closest("fieldset").attr("disabled", true);
     $this.css('cursor', "wait");
     $this.closest(".column-value-palette").find(".column-value-palette-error").addClass("hide").html("");
+    // $this.trigger("ss:columnAdding");
     $.ajax({
       url: Cms_TemplateForm.paths.formColumn.replace(/:formId/, formId).replace(/:columnId/, columnId),
       success: function(data, status, xhr) {
+        var newColumnElement = Cms_TemplateForm.createElementFromHTML(data);
         var $palette = $this.closest(".column-value-palette");
-        $palette.before(data);
+        $palette.before(newColumnElement);
         self.resetOrder();
 
-        // To wait completely rendered DOM which is added dynamically,
-        // use "setTimeout" to comsume events in browser.
+        // To wait completely rendered DOM and executed javascript,
+        // use "setTimeout" to consume events in browser.
         setTimeout(function() {
           SS.renderAjaxBox();
           SS.renderDateTimePicker();
           Cms_Form.activateSyntaxChecks();
+
+          setTimeout(function() {
+            $this.trigger("ss:columnAdded", newColumnElement);
+          }, 0);
         }, 0);
       },
       error: function(xhr, status, error) {

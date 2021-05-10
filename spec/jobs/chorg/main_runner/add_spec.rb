@@ -25,7 +25,7 @@ describe Chorg::MainRunner, dbscope: :example do
       expect(Cms::Group.where(name: changeset.destinations.first["name"]).first).not_to be_nil
 
       task.reload
-      expect(task.state).to eq 'stop'
+      expect(task.state).to eq 'completed'
       expect(task.entity_logs.count).to eq 2
       expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
       expect(task.entity_logs[0]['creates']).to include({ 'name' => changeset.destinations.first["name"] })

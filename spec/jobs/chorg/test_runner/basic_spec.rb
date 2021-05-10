@@ -26,7 +26,7 @@ describe Chorg::TestRunner, dbscope: :example do
       expect(Cms::Group.where(name: changeset.destinations.first["name"]).first).to be_nil
 
       task.reload
-      expect(task.state).to eq 'stop'
+      expect(task.state).to eq 'completed'
       expect(task.entity_logs.count).to eq 2
       expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
       expect(task.entity_logs[0]['class']).to eq 'Cms::Group'
@@ -74,7 +74,7 @@ describe Chorg::TestRunner, dbscope: :example do
         expect(page.contact_link_name).to eq group.contact_link_name
 
         task.reload
-        expect(task.state).to eq 'stop'
+        expect(task.state).to eq 'completed'
         expect(task.entity_logs.count).to eq 2
         expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
         expect(task.entity_logs[0]['class']).to eq 'Cms::Group'
@@ -140,7 +140,7 @@ describe Chorg::TestRunner, dbscope: :example do
         expect(user2.group_ids).to eq [group2.id]
 
         task.reload
-        expect(task.state).to eq 'stop'
+        expect(task.state).to eq 'completed'
         expect(task.entity_logs.count).to eq 5
         expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
         expect(task.entity_logs[0]['class']).to eq 'Cms::Group'
@@ -189,7 +189,7 @@ describe Chorg::TestRunner, dbscope: :example do
       expect(Cms::Group.where(id: group.id).first).not_to be_nil
 
       task.reload
-      expect(task.state).to eq 'stop'
+      expect(task.state).to eq 'completed'
       expect(task.entity_logs.count).to eq 1
       expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
       expect(task.entity_logs[0]['class']).to eq 'Cms::Group'

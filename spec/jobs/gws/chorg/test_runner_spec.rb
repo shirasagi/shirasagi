@@ -26,7 +26,7 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
       expect(Gws::Group.where(name: changeset.destinations.first['name']).first).to be_nil
 
       task.reload
-      expect(task.state).to eq 'stop'
+      expect(task.state).to eq 'completed'
       expect(task.entity_logs.count).to eq 1
       expect(task.entity_logs[0]['model']).to eq 'Gws::Group'
       expect(task.entity_logs[0]['creates']).to include({ 'name' => changeset.destinations.first['name'] })
@@ -57,7 +57,7 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
       expect(Gws::Group.where(id: group.id).first.name).to eq changeset.sources.first['name']
 
       task.reload
-      expect(task.state).to eq 'stop'
+      expect(task.state).to eq 'completed'
       expect(task.entity_logs.count).to eq 1
       expect(task.entity_logs[0]['model']).to eq 'Gws::Group'
       expect(task.entity_logs[0]['id']).to eq group.id.to_s
@@ -104,7 +104,7 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
       expect(user2.group_ids).to eq [group2.id]
 
       task.reload
-      expect(task.state).to eq 'stop'
+      expect(task.state).to eq 'completed'
       expect(task.entity_logs.count).to eq 3
       expect(task.entity_logs[0]['model']).to eq 'Gws::Group'
       expect(task.entity_logs[0]['creates']).to include('name')
@@ -141,7 +141,7 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
       expect(Gws::Group.where(id: group.id).first).not_to be_nil
 
       task.reload
-      expect(task.state).to eq 'stop'
+      expect(task.state).to eq 'completed'
       expect(task.entity_logs.count).to eq 1
       expect(task.entity_logs[0]['model']).to eq 'Gws::Group'
       expect(task.entity_logs[0]['id']).to eq group.id.to_s

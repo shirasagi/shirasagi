@@ -69,7 +69,7 @@ module Fs::File
     end
 
     def cp(src, dest)
-      ::FileUtils.cp(src, dest)
+      ::FileUtils.cp(src, dest, preserve: true)
     end
 
     def cmp(src, dest)

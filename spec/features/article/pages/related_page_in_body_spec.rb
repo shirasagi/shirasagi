@@ -12,6 +12,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     it "#new" do
       visit new_path
 
+      ensure_addon_opened('#addon-cms-agents-addons-body')
       within '#addon-cms-agents-addons-body' do
         wait_cbox_open do
           click_link I18n.t('cms.apis.related_pages.index')
@@ -19,7 +20,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       wait_for_cbox do
-        click_link item.name
+        wait_cbox_close do
+          click_link item.name
+        end
       end
 
       within "form#item-form" do
@@ -28,6 +31,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
       wait_for_notice I18n.t("ss.notice.saved")
 
+      expect(Article::Page.all.count).to eq 2
       Article::Page.where(name: 'sample').first.tap do |article_page|
         expect(article_page.html).to include(item.url)
       end
@@ -49,6 +53,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       it "#new" do
         visit new_path
 
+        ensure_addon_opened('#addon-cms-agents-addons-body')
         within '#addon-cms-agents-addons-body' do
           wait_cbox_open do
             click_link I18n.t('cms.apis.related_pages.index')
@@ -56,7 +61,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         wait_for_cbox do
-          click_link item.name
+          wait_cbox_close do
+            click_link item.name
+          end
         end
 
         within "form#item-form" do
@@ -65,6 +72,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         wait_for_notice I18n.t("ss.notice.saved")
 
+        expect(Article::Page.all.count).to eq 2
         Article::Page.where(name: 'sample').first.tap do |article_page|
           expect(article_page.html).to include(item.url)
         end

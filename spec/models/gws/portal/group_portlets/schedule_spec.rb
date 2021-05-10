@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 describe Gws::Portal::GroupPortlet, type: :model, dbscope: :example do
-  let!(:portal) { create :gws_portal_group_setting, cur_user: gws_user }
+  let!(:portal) { create :gws_portal_group_setting, cur_user: gws_user, cur_group: gws_user.groups.first }
   let!(:portlet) { create :gws_portal_group_portlet, :gws_portal_schedule_portlet, cur_user: gws_user, setting: portal }
 
   describe "#find_schedule_members" do
     subject { portlet.find_schedule_members(portal).map(&:id) }
 
-    context "without schedule_members" do
+    context "without schedule_members (default)" do
       it do
         expect(subject.length).to eq 2
         expect(subject).to include(gws_user.id)
@@ -26,6 +26,35 @@ describe Gws::Portal::GroupPortlet, type: :model, dbscope: :example do
       it do
         expect(subject.length).to eq 1
         expect(subject).to include(user.id)
+      end
+    end
+
+    context "with current_user" do
+      let!(:user) { create(:gws_user, group_ids: gws_user.group_ids) }
+
+      before do
+        portlet.schedule_member_mode = "current_user"
+        portlet.save!
+      end
+
+      it do
+        expect(subject.length).to eq 1
+        expect(subject).to include(gws_user.id)
+      end
+    end
+
+    context "with under_current_group" do
+      let!(:user) { create(:gws_user, group_ids: gws_user.group_ids) }
+
+      before do
+        portlet.schedule_member_mode = "under_current_group"
+        portlet.save!
+      end
+
+      it do
+        expected_users = Gws::User.all.site(portal.cur_group)
+        expect(subject.length).to eq expected_users.count
+        expect(subject).to include(*expected_users.pluck(:id))
       end
     end
   end
