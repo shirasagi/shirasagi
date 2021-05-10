@@ -2,8 +2,10 @@
   <dl class="info">
     <dt><%= @item.t :state %></dt>
     <dd class="state">
-      <%= @item.state %>
-      <% if @item.state != 'stop' %>
+      <% if @item.state %>
+        <%= t("job.state.#{@item.state}") %>
+      <% end %>
+      <% if @item.state != 'completed' %>
         <%= button_tag t("ss.buttons.stop"), name: 'interrupt', type: 'button', class: 'btn' %>
         <%= button_tag t("ss.buttons.reset"), name: 'reset', type: 'reset', class: 'btn' %>
       <% end %>
