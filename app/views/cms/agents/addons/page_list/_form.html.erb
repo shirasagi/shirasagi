@@ -34,15 +34,18 @@
   <% end %>
 
   <% if @model == Cms::Node::Archive %>
-    $("#item_archive_view").change(function() {
-      var selected_val = $("#item_archive_view").val();
-      if (selected_val === "calendar") {
+    var changeArchiveView = function() {
+      var selectedVal = $("#item_archive_view").val();
+      if (selectedVal === "calendar") {
         $(".loop-format-shirasagi, .loop-format-liquid, .new-days, .sort, .limit, .loop_format").addClass("hide");
-
       } else {
         $(".loop-format-shirasagi, .loop-format-liquid, .new-days, .sort, .limit, .loop_format").removeClass("hide");
       }
-    });
+    }
+
+    changeArchiveView();
+
+    $("#item_archive_view").on("change", changeArchiveView);
   <% end %>
 <% end %>
 
