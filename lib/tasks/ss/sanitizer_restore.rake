@@ -15,6 +15,7 @@ namespace :ss do
       if file.nil?
         Fs.rm_rf(path)
         puts "#{filename}: removed"
+        next
       end
 
       if file.sanitizer_restore_file(path)
