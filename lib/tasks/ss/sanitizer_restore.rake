@@ -1,7 +1,6 @@
 namespace :ss do
-  # directory: sanitizer_output/
-  # input: {ID}_{TIMESTAMP}.ext
-  # output: {ID}_{FILENAME}_{PID}_marked.ext
+  # input: sanitizer_input/{ID}_{TIMESTAMP}.ext
+  # output: sanitizer_output/{ID}_{FILENAME}_{PID}_marked.ext
   task sanitizer_restore: :environment do
     return unless SS.config.ss.sanitizer_output
 
