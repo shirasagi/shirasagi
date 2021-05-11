@@ -1,6 +1,7 @@
 <% file ||= @item %>
 
 <div id="file-<%= file.id %>" class="file-view" data-id="<%= file.id %>" data-file-id="<%= file.id %>">
+  <%= sanitizer_status(file) %>
   <%= link_to file.url, class: :thumb, target: "_blank", rel: "noopener" do %>
     <% if file.image? %>
       <%= image_tag file.thumb_url, alt: file.name %>

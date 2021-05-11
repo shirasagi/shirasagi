@@ -37,6 +37,13 @@ production: &production
   #   ln_s: create symbolic link
   publish_file_with: cp
 
+  # Upload restriction (restricted, sanitizer)
+  upload_policy:
+
+  # Sanitizer directories
+  sanitizer_input: 'sanitizer_input'
+  sanitizer_output: 'sanitizer_output'
+
 test:
   <<: *production
   disable: false

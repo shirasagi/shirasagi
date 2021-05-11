@@ -18,6 +18,7 @@
           <div class="file-view">
             <% page = Cms::Page.in(file_ids: file.id).first %>
             <% next if page.nil? %>
+            <%= sanitizer_status(file) %>
             <%= link_to cms_page_path(id: page.id), class: :thumb, target: "_blank", rel: "noopener" do %>
               <% if file.image? %>
                 <%= image_tag file.thumb_url, alt: file.name %>

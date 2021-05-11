@@ -284,6 +284,11 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   .files {
     margin-bottom: 30px;
     span {
+      a.disable-css {
+        padding: 0 !important;
+        background: none !important;
+        vertical-align: baseline !important;
+      }
       a {
         padding-left: 30px;
         vertical-align: middle;
@@ -1665,6 +1670,14 @@ dl.see {
         }
       }
     }
+    label {
+      display: inline-block;
+      margin-right: 1rem;
+      vertical-align: middle;
+    }
+    > .sanitizer-wait {
+      margin-left: 10px;
+    }
     @include mb {
       select + input[type="text"] {
         width: 60% !important;
@@ -1672,13 +1685,6 @@ dl.see {
       input + button {
         margin-top: 10px;
       }
-    }
-    label {
-      display: inline-block;
-      margin-right: 1rem;
-      vertical-align: middle;
-    }
-    @include mb {
       .prefix, .postfix {
         display: block;
         margin: 5px 0;
@@ -1841,6 +1847,7 @@ footer.send {
 
 // -------------------------------------------------------------------------------------------------
 // addon
+
 #addon-cms-agents-addons-file .see, .addon-view .see, .mod-workflow-approve .upload, .column-value {
   .upload-menu-select {
     float: right;
@@ -1890,14 +1897,19 @@ footer.send {
   clear: both;
 }
 .file-view {
+  position: relative;
   width: 164px;
   margin: 0 28px 20px 0;
   @include mb {
     margin: 0 10px 10px 0;
   }
+  .sanitizer-wait {
+    position: absolute;
+  }
   .thumb {
     display: block !important;
     min-height: 110px;
+    overflow: hidden;
     border: 5px solid $gray4;
     text-align: center;
     line-height: 110px;
@@ -2848,6 +2860,17 @@ form .CodeMirror {
     &.on  .material-icons { color: #f70; }
     &.off .material-icons { color: #bbb; }
   }
+}
+
+// -------------------------------------------------------------------------------------------------
+// Sanitizer
+
+.sanitizer-wait {
+  display: inline-block;
+  padding: 0 4px;
+  background: rgba(0,60,120,.8);
+  color: #fff;
+  font-weight: bold;
 }
 
 // -------------------------------------------------------------------------------------------------

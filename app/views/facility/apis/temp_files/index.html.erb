@@ -34,6 +34,7 @@
 <div class="index user-files">
   <% @items.each do |item| %>
   <article class="file-view" id="user-file<%= item.id %>" data-file-id="<%= item.id %>">
+    <%= sanitizer_status(item) %>
     <a class="thumb select" href="<%= url_for action: :select, id: item %>">
       <% if item.image? %>
       <img src="<%= url_for(action: :thumb, id: item, _: item.updated.to_i) %>" alt="<%= item.basename %>" />

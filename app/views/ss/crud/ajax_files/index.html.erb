@@ -84,6 +84,13 @@ if (onSelect) {
       }
       $("#selected-files").prepend(data);
       $.colorbox.close();
+    },
+    error: function(xhr, status, data) {
+      if (xhr.responseJSON && Array.isArray(xhr.responseJSON)) {
+        alert(["== Error =="].concat(xhr.responseJSON).join("\n"));
+      } else {
+        alert(["== Error =="].concat(xhr.statusText).join("\n"));
+      }
     }
   });
 }
@@ -117,6 +124,7 @@ SS_SearchUI.modal();
 <div class="index user-files">
   <% @items.each do |item| %>
   <article class="file-view" id="user-file<%= item.id %>" data-file-id="<%= item.id %>">
+    <%= sanitizer_status(item) %>
     <%
       opts = { action: :select, id: item }
       opts[:file_size] = true if params[:file_size].present?

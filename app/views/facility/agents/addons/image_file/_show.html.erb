@@ -5,6 +5,7 @@
     <% if @item.image.present? %>
     <div id="selected-files">
         <div class="file-view" data-file-id="<%= @item.image.id %>">
+          <%= sanitizer_status(@item.image) %>
           <%= link_to @item.image.url, class: :thumb, target: "_blank", rel: "noopener" do %>
             <% if @item.image.image? %>
               <%= image_tag @item.image.thumb_url, alt: @item.image.basename %>

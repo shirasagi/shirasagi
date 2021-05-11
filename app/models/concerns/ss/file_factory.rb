@@ -14,11 +14,7 @@ module SS::FileFactory
       end
       item.name = ::File.basename(item.filename) if item.name.blank? && item.filename.present?
       item.size = 0
-      if options.fetch(:validate, true)
-        item.save!
-      else
-        item.save(validate: false)
-      end
+      item.save!(validate: options.fetch(:validate, true))
 
       # `in_file` を指定していないので before_save でエラーが発生するが、
       # 空のファイルを作成するのが目的なので、そのエラーは無視して安全。
