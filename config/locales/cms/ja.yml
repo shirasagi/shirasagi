@@ -525,9 +525,11 @@ ja:
       cms/site: サイト
       cms/user: ユーザー
       cms/member: メンバー
+      cms/group: グループ
       cms/node: フォルダー
       cms/node/node: フォルダーリスト
       cms/node/page: ページリスト
+      cms/node/group_page: グループ別ページリスト
       cms/page: ページ
       cms/part: パーツ
       cms/part/free: HTML記述

@@ -3,13 +3,16 @@ module Chorg::PrimitiveRunner
   include Chorg::Context
   include Chorg::Loggable
   include Chorg::MongoidSupport
+  include Gws::Chorg::NoticeSupport
 
   def run_primitive_chorg
+    execute_before(@item.changesets)
     Chorg::Model::Changeset::TYPES.each do |type|
       # put_log("==#{type}==")
       task.log("==#{I18n.t("chorg.views.revisions/edit.#{type}")}==")
       with_inc_depth { @item.send("#{type}_changesets").each(&method("execute_#{type}")) }
     end
+    execute_after(@item.changesets)
   end
 
   private
@@ -133,5 +136,13 @@ module Chorg::PrimitiveRunner
       delete_group_ids << source_group.id
       inc_counter(:delete, :success)
     end
+  end
+
+  def execute_before(changesets)
+    execute_before_gws_notice(changesets)
+  end
+
+  def execute_after(changesets)
+    execute_after_gws_notice(changesets)
   end
 end

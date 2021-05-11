@@ -1,4 +1,12 @@
 <nav class="nav-menu">
-  <%= link_to t('ss.links.back_to_show'), controller: :revisions, action: :show, id: @cur_revision %>
-  <%= link_to t('ss.links.back_to_index'), controller: :revisions, action: :index %>
+  <% if params[:action] == "show_models" %>
+    <%= link_to t('ss.links.back'), { controller: :revisions, action: :show, id: @cur_revision } %>
+  <% elsif params[:action] == "show_entities" %>
+    <%= link_to t('ss.links.back'), { action: :show_models } %>
+  <% elsif params[:action] == "show_entity" %>
+    <%= link_to t('ss.links.back'), { action: :show_entities } %>
+  <% else %>
+    <%= link_to t('ss.links.back_to_show'), controller: :revisions, action: :show, id: @cur_revision %>
+    <%= link_to t('ss.links.back_to_index'), controller: :revisions, action: :index %>
+  <% end %>
 </nav>

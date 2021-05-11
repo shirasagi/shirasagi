@@ -1,0 +1,21 @@
+<dl class="see mod-chorg-entity_log">
+  <dt class="wide"><%= @entity_site["label"] %></dt>
+  <dd class="wide">
+    <table class="index">
+      <thead>
+      <tr>
+        <th><%= "区分" %></th>
+        <th><%= "更新件数" %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @items.each do |key, item| %>
+        <tr>
+          <td><%= link_to item["label"], { action: :show_entities, entity_model: key } %></td>
+          <td><%= "#{item["count"]}件" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

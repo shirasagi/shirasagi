@@ -6,6 +6,7 @@ module Chorg::Runner::Base
       @config = self.class.config_p.call
       @models = @config.models.map(&:constantize).freeze
       build_exclude_fields(@config.exclude_fields)
+      @embedded_array_fields = @config.embedded_array_fields.presence || []
     end
   end
 
@@ -62,6 +63,10 @@ module Chorg::Runner::Base
     {}
   end
 
+  def target_site(entity)
+    nil
+  end
+
   def update_all
     return if substituter.empty?
     with_entity_updates(@models, substituter, models_scope) do |entity, updates|
@@ -71,28 +76,13 @@ module Chorg::Runner::Base
       with_inc_depth do
         updates = updates.select { |k, v| v.present? }
         updates.each do |k, new_value|
-          old_value = entity[k]
           put_log("property #{k} has these changes:")
           with_inc_depth do
-            if new_value.is_a?(String)
-              Diffy::Diff.new(old_value, new_value, diff: "-U 3").to_s.each_line do |line|
-                next if /No newline at end of file/i =~ line
-                put_log(line.chomp.to_s)
-              end
-            elsif new_value.is_a?(Array)
-              convert_to_group_names(old_value - new_value).each do |name|
-                put_log("-#{name}")
-              end
-              convert_to_group_names(new_value - old_value).each do |name|
-                put_log("+#{name}")
-              end
+            if new_value.is_a?(Chorg::EmbeddedArray)
+              put_embedded_array_log(entity, new_value)
             else
-              convert_to_group_names([old_value]).each do |name|
-                put_log("-#{name}")
-              end
-              convert_to_group_names([new_value]).each do |name|
-                put_log("+#{name}")
-              end
+              old_value = entity[k]
+              put_field_log(old_value, new_value)
             end
           end
         end
@@ -102,14 +92,68 @@ module Chorg::Runner::Base
     end
   end
 
+  def put_embedded_array_log(entity, embedded_array)
+    embedded_values = entity.send(embedded_array.field_name)
+    embedded_array.update_array.each_with_index do |updates, i|
+      updates.each do |k, new_value|
+        put_log("embedded[#{i}]")
+        with_inc_depth do
+          put_log("#{k}:")
+          old_value = embedded_values[i][k]
+          put_field_log(old_value, new_value)
+        end
+      end
+    end
+  end
+
+  def put_string_field_log(old_value, new_value)
+    Diffy::Diff.new(old_value, new_value, diff: "-U 3").to_s.each_line do |line|
+      next if /No newline at end of file/i =~ line
+      put_log(line.chomp.to_s)
+    end
+  end
+
+  def put_array_field_log(old_value, new_value)
+    if new_value.select { |value| value && value.is_a?(String) }.first
+      with_inc_depth do
+        new_value.each_with_index do |value, i|
+          put_log("[#{i}]")
+          put_string_field_log(old_value[i], value)
+        end
+      end
+    else
+      convert_to_group_names(old_value - new_value).each do |name|
+        put_log("-#{name}")
+      end
+      convert_to_group_names(new_value - old_value).each do |name|
+        put_log("+#{name}")
+      end
+    end
+  end
+
+  def put_field_log(old_value, new_value)
+    if new_value.is_a?(String)
+      put_string_field_log(old_value, new_value)
+    elsif new_value.is_a?(Array)
+      put_array_field_log(old_value, new_value)
+    else
+      convert_to_group_names([old_value]).each do |name|
+        put_log("-#{name}")
+      end
+      convert_to_group_names([new_value]).each do |name|
+        put_log("+#{name}")
+      end
+    end
+  end
+
   def entity_title(entity)
     title = ''
     if entity.respond_to?(:name)
-      title << entity.name
+      title << entity.name.to_s
     end
     if entity.respond_to?(:url)
       title << '('
-      title << entity.url
+      title << entity.url.to_s
       title << ')'
     end
     title

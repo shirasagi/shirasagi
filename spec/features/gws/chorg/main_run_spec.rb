@@ -105,20 +105,6 @@ describe "gws_chorg", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("chorg.menus.revisions.production_execute")
       click_on "結果"
       expect(page).to have_content("[新設] 成功: 1, 失敗: 0")
-
-      within "#addon-chorg-agents-addons-entity_log" do
-        click_on I18n.t('chorg.views.chorg/entity_log.more')
-      end
-
-      within first(".list-item") do
-        expect(page).to have_css(".title", text: I18n.t("mongoid.models.ss/group"))
-        click_on I18n.t("mongoid.models.ss/group")
-      end
-
-      wait_for_cbox do
-        expect(page).to have_css(".index", text: changeset0.destinations[0]["name"])
-        click_on I18n.t("ss.buttons.close")
-      end
     end
   end
 end
