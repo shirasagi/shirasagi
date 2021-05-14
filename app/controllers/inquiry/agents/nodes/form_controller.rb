@@ -9,7 +9,6 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   before_action :check_aggregation_state, only: :results, if: ->{ !@preview }
   before_action :set_columns, only: [:new, :confirm, :create, :sent, :results]
   before_action :set_answer, only: [:new, :confirm, :create]
-  before_action :generate_captcha, only: [:confirm], if: ->{ @cur_node.captcha_enabled? }
 
   private
 
@@ -92,7 +91,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       return
     end
 
-    if @cur_node.captcha_enabled?
+    if @cur_node.captcha_enabled? && get_captcha[:captcha_error].nil?
       return if render_pre_page?(@answer, :confirm, false)
     end
 

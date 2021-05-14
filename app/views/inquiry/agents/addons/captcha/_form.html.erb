@@ -5,11 +5,6 @@
       $(".simple-captcha").toggle();
     });
   });
-
-  var $el = $(".simple-captcha");
-  $el.find("img").on("error", function() {
-  $(this).closest(".image").html('<%= I18n.t('simple_captcha.captcha_error') %>');
-  });
 <% end %>
 
 <dl class="see mod-inquiry-captcha">
@@ -19,7 +14,7 @@
   <dd>
     <button type="button"><%= I18n.t('simple_captcha.captcha_button') %></button>
     <div class='simple-captcha'>
-      <div class='image'><%= simple_captcha_options[:image] %></div>
+      <div class='image'><%= show_captcha(show_error: true) %></div>
     </div>
   </dd>
 </dl>
