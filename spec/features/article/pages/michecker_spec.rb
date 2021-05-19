@@ -71,7 +71,7 @@ describe "michecker", type: :feature, dbscope: :example, js: true, michecker: tr
         expect(result.target_type).to eq "page"
         expect(result.target_class).to eq item.class.name
         expect(result.target_id).to eq item.id.to_s
-        expect(result.state).to eq "stop"
+        expect(result.state).to eq "completed"
         expect(result.michecker_last_job_id).to be_present
         expect(result.michecker_last_result).to eq 0
         expect(result.michecker_last_executed_at).to be_present
