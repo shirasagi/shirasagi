@@ -1,0 +1,17 @@
+<div class="guide-node-form">
+  <div class="all-procedure"><%= t("guide.views.all_procedure") %></div>
+  <div class="guide-nodes nodes">
+    <%= render_procedure_list(@procedures) %>
+  </div>
+
+  <% if @cur_node.procedures.present? %>
+  <div class="other-procedures"><%= t("guide.views.procedures_others") %></div>
+  <div class="guide-nodes nodes">
+    <%= render_procedure_list(@cur_node.procedures) %>
+  </div>
+  <% end %>
+
+  <div class="show-result">
+    <div class="show-answer"><%= link_to t('guide.links.show_result'), "#{@cur_node.url}result/#{@condition}#{@cur_node.guide_url_fragment}" %></div>
+  </div>
+</div>

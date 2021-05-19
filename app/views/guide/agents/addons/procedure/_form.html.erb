@@ -1,0 +1,18 @@
+<%= code_editor "##{addon[:id]} .html", mode: :html %>
+
+<dl class="see mod-guide-procedure">
+  <dt><%= @model.t :html %><%= @model.tt :html %></dt>
+  <dd><%= f.text_area :html, class: :html %></dd>
+
+  <dt><%= @model.t :procedure_location %><%= @model.tt :procedure_location %></dt>
+  <dd><%= f.text_area :procedure_location %></dd>
+
+  <dt><%= @model.t :belongings %><%= @model.tt :belongings %></dt>
+  <dd><%= f.text_area :belongings %></dd>
+
+  <dt><%= @model.t :procedure_applicant %><%= @model.tt :procedure_applicant %></dt>
+  <dd><%= f.text_area :procedure_applicant %></dd>
+
+  <dt><%= @model.t :remarks %><%= @model.tt :remarks %></dt>
+  <dd><%= f.text_area :remarks %></dd>
+</dl>

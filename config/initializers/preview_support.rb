@@ -38,4 +38,25 @@ module SS
     module_function :preview_path?
     module_function :embed_preview_path
   end
+
+  module PreviewRedirecting
+    extend ActiveSupport::Concern
+
+    def redirect_to(options = {}, response_status = {})
+      super
+      if PreviewSupport.preview?(request)
+        save_location = self.location
+        self.location = SS::PreviewSupport.embed_preview_path(request, save_location)
+        if save_location != location
+          self.response_body = <<HTML
+          <html><body>You are being <a href=\"#{ERB::Util.unwrapped_html_escape(location)}\">redirected</a>.</body></html>
+HTML
+        end
+      end
+    end
+  end
+end
+
+ActiveSupport.on_load(:action_controller) do
+  include SS::PreviewRedirecting
 end
