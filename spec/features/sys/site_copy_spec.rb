@@ -14,6 +14,7 @@ describe 'sys_site_copy', type: :feature, dbscope: :example do
     let(:target_host_name) { unique_id }
     let(:target_host_host) { unique_id }
     let(:target_host_domain) { "#{unique_id}.example.jp" }
+    let(:target_host_subdir) { unique_id }
 
     before do
       login_sys_user
@@ -26,6 +27,8 @@ describe 'sys_site_copy', type: :feature, dbscope: :example do
         fill_in 'item[target_host_name]', with: target_host_name
         fill_in 'item[target_host_host]', with: target_host_host
         fill_in 'item[target_host_domains]', with: target_host_domain
+        fill_in 'item[target_host_subdir]', with: target_host_subdir
+        select site.name
 
         check 'item_copy_contents_pages'
         check 'item_copy_contents_files'
@@ -54,6 +57,8 @@ describe 'sys_site_copy', type: :feature, dbscope: :example do
         expect(task.target_host_name).to eq target_host_name
         expect(task.target_host_host).to eq target_host_host
         expect(task.target_host_domains).to include target_host_domain
+        expect(task.target_host_subdir).to eq target_host_subdir
+        expect(task.target_host_parent_id).to eq site.id
         expect(task.source_site_id).to eq site.id
         expect(task.copy_contents).to include('pages')
         expect(task.copy_contents).to include('files')
