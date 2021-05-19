@@ -12,7 +12,8 @@
   <dd><%= @item.email %></dd>
 
   <dt><%= @model.t :poster_url %></dt>
-  <dd><%= @item.poster_url %></dd>
+
+  <dd><%= link_to @item.poster_url, @item.poster_url, target: :_blank if @item.poster_url.present? %></dd>
 
   <dt><%= @model.t :delete_key %></dt>
   <dd><%= @item.delete_key %></dd>

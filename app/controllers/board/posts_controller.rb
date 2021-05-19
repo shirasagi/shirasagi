@@ -14,7 +14,7 @@ class Board::PostsController < ApplicationController
   private
 
   def fix_params
-    { cur_site: @cur_site, cur_node: @cur_node, cur_user: @cur_user, topic: @topic, parent: @topic }
+    { cur_site: @cur_site, cur_node: @cur_node, cur_user: @cur_user, parent: @topic }
   end
 
   def check_node_permission
