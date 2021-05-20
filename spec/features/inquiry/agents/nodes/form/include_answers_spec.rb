@@ -59,7 +59,6 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       end
 
       expect(status_code).to eq 200
-      expect(page).to have_selector("img[src$=\"#{SS::Captcha.first.image_path}\"]")
       within 'div.inquiry-form' do
         within 'div.columns' do
           expect(find('#item_1')['value']).to eq 'シラサギ太郎'
@@ -192,7 +191,6 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       end
 
       expect(status_code).to eq 200
-      expect(page).to have_selector("img[src$=\"#{SS::Captcha.first.image_path}\"]")
       within 'div.inquiry-form' do
         within 'div.columns' do
           expect(find('#item_1')['value']).to eq 'シラサギ太郎'
@@ -234,7 +232,6 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       end
 
       expect(status_code).to eq 200
-      expect(page).to have_selector("img[src$=\"#{SS::Captcha.first.image_path}\"]")
       within 'div.inquiry-form' do
         within 'div.columns' do
           expect(find('#item_1')['value']).to eq 'シラサギ太郎'
@@ -281,7 +278,6 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       end
 
       expect(status_code).to eq 200
-      expect(page).to have_selector("img[src$=\"#{SS::Captcha.first.image_path}\"]")
       # mobile モードの場合、/mobile/ で始まるはず
       expect(current_path).to start_with "#{site.mobile_location}/#{node.filename}/"
       # mobile モードの場合、form の action は /mobile/ で始まる
@@ -351,7 +347,6 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       end
 
       expect(status_code).to eq 200
-      expect(page).to have_selector("img[src$=\"#{SS::Captcha.first.image_path}\"]")
       within 'div.inquiry-form' do
         within 'div.columns' do
           expect(find('#item_1')['value']).to eq 'シラサギ太郎'
@@ -393,7 +388,6 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       end
 
       expect(status_code).to eq 200
-      expect(page).to have_selector("img[src$=\"#{SS::Captcha.first.image_path}\"]")
       within 'div.inquiry-form' do
         within 'div.columns' do
           expect(find('#item_1')['value']).to eq 'シラサギ太郎'

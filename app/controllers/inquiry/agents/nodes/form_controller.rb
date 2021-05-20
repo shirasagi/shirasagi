@@ -92,7 +92,10 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     end
 
     if @cur_node.captcha_enabled? && get_captcha[:captcha_error].nil?
-      return if render_pre_page?(@answer, :confirm, false)
+      unless is_captcha_valid?(@answer)
+        render action: :confirm
+        return
+      end
     end
 
     @answer.save
@@ -126,7 +129,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   end
 
   def results
-    @cur_node.name = "#{@cur_node.name}　#{I18n.t("inquiry.result")}"
+    @cur_node.name = "#{@cur_node.name} #{I18n.t("inquiry.result")}"
     @aggregation = @cur_node.aggregate_select_columns
     render action: :results
   end

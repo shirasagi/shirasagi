@@ -1,4 +1,4 @@
-module SS::CaptchaBase
+module SS::Captchable
   extend ActiveSupport::Concern
 
   included do

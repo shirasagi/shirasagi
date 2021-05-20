@@ -2,8 +2,9 @@ class SS::Captcha
   include SS::Document
 
   field :captcha_text, type: String
-  field :image_path, type: String
   field :captcha_error, type: String
+
+  attr_accessor(:image_path)
 
   index({ created: 1 }, { expire_after_seconds: 3600 })
 
@@ -37,9 +38,11 @@ class SS::Captcha
       end
 
       cur_captcha = SS::Captcha.create(
-        captcha_text: captcha_text, image_path: image_path,
-        captcha_error: "#{exception.try(:class)}#{exception.try(:message)}"
+        captcha_text: captcha_text, captcha_error: "#{exception.try(:class)}#{exception.try(:message)}"
       )
+      cur_captcha.image_path = image_path
+
+      cur_captcha
     end
   end
 end

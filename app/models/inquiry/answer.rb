@@ -2,7 +2,7 @@ class Inquiry::Answer
   include SS::Document
   include SS::Reference::Site
   include Inquiry::Addon::Answer::Body
-  include SS::CaptchaBase
+  include SS::Captchable
 
   attr_accessor :cur_node
 

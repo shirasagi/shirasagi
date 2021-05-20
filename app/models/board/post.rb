@@ -5,7 +5,6 @@ class Board::Post
   include SS::Reference::User
   include Board::Addon::File
   include Board::Addon::PostPermission
-  # include SimpleCaptcha::ModelHelpers
   include Fs::FilePreviewable
 
   store_in_repl_master
@@ -15,7 +14,6 @@ class Board::Post
   field :delete_key, type: String
   permit_params :poster, :email, :poster_url, :delete_key
 
-  # apply_simple_captcha
   permit_params :captcha, :captcha_key
 
   validates :poster, presence: true

@@ -1,9 +1,7 @@
 <%= jquery do %>
-  $(function(){
-    $(".simple-captcha").css("display", "none");
-    $("button").on("click", function(){
-      $(".simple-captcha").toggle();
-    });
+  $(".simple-captcha").hide()
+  $("button").on("click", function(){
+    $(".simple-captcha").toggle();
   });
 
   var $el = $(".simple-captcha");
@@ -19,7 +17,7 @@
   <dd>
     <button type="button"><%= I18n.t('simple_captcha.captcha_button') %></button>
     <div class='simple-captcha'>
-      <div class='image'><%= show_captcha(show_error: true) %></div>
+      <div class='image'><%= show_captcha(show_specific_error: true) %></div>
     </div>
   </dd>
 </dl>

@@ -62,7 +62,10 @@ class Board::Agents::Nodes::PostController < ApplicationController
   def create
     @item = @model.new get_params
     if @cur_node.captcha_enabled? && get_captcha[:captcha_error].nil?
-      return if render_pre_page?(@item, :new, false)
+      unless is_captcha_valid?(@item)
+        render action: :new
+        return
+      end
     end
 
     render_create @item.save, location: "#{@cur_node.url}sent", render: :new
@@ -76,7 +79,10 @@ class Board::Agents::Nodes::PostController < ApplicationController
   def reply
     @item = @model.new get_params
     if @cur_node.captcha_enabled? && get_captcha[:captcha_error].nil?
-      return if render_pre_page?(@item, :new_reply, false)
+      unless is_captcha_valid?(@item)
+        render action: :new_reply
+        return
+      end
     end
 
     render_create @item.save, location: "#{@cur_node.url}sent", render: :new_reply
@@ -93,10 +99,23 @@ class Board::Agents::Nodes::PostController < ApplicationController
     raise "404" unless @item.delete_key.present?
     @item.delete_key = ""
     @item.attributes = get_params
-    @item.attributes = get_captcha
+
+    # if get_captcha[:captcha_error].present? && @item.delete_key_was == @item.delete_key
+    #   render_destroy @item.destroy, location: "#{@cur_node.url}sent", render: :delete
+    #   return
+    # elsif get_captcha[:captcha_error].present?
+    #   @item.errors.add :base, t("board.errors.not_same_delete_key") unless @item.delete_key_was == @item.delete_key
+    # end
 
     if @cur_node.captcha_enabled? && get_captcha[:captcha_error].nil?
-      if @item.valid_with_captcha? && @item.delete_key_was == @item.delete_key
+      if is_captcha_valid?(@item) && @item.delete_key_was == @item.delete_key
+        render_destroy @item.destroy, location: "#{@cur_node.url}sent", render: :delete
+        return
+      else
+        @item.errors.add :base, t("board.errors.not_same_delete_key") unless @item.delete_key_was == @item.delete_key
+      end
+    else
+      if @item.delete_key_was == @item.delete_key
         render_destroy @item.destroy, location: "#{@cur_node.url}sent", render: :delete
         return
       else

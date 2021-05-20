@@ -70,7 +70,6 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       end
 
       expect(status_code).to eq 200
-      expect(page).to have_selector("img[src$=\"#{SS::Captcha.first.image_path}\"]")
       within 'div.inquiry-form' do
         within 'div.columns' do
           expect(find('#item_1')['value']).to eq 'シラサギ太郎'
@@ -160,7 +159,6 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       end
 
       expect(status_code).to eq 200
-      expect(page).to have_selector("img[src$=\"#{SS::Captcha.first.image_path}\"]")
       within 'div.inquiry-form' do
         within 'div.columns' do
           expect(find('#item_1')['value']).to eq 'シラサギ太郎'
@@ -200,7 +198,6 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       end
 
       expect(status_code).to eq 200
-      expect(page).to have_selector("img[src$=\"#{SS::Captcha.first.image_path}\"]")
       within 'div.inquiry-form' do
         within 'div.columns' do
           expect(find('#item_1')['value']).to eq 'シラサギ太郎'

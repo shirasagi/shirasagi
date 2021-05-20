@@ -9,9 +9,9 @@ module SS::CaptchaFilter
     @cur_captcha = SS::Captcha.generate_captcha
     session[:captcha_id] = @cur_captcha.id
 
-    if @cur_captcha.image_path.present? && options.present?
+    if @cur_captcha.captcha_text.present? && options.present?
       return "<img src=\"data:image/jpeg;base64,#{@cur_captcha.image_path}\">".html_safe
-    elsif @cur_captcha.image_path.present?
+    elsif @cur_captcha.captcha_text.present?
       h = []
       h << '<div class="simple-captcha">'
       h << '  <div class="image">'
@@ -28,12 +28,14 @@ module SS::CaptchaFilter
       return h.join("\n").html_safe
     end
 
-    if options.fetch(:show_error, false)
+    if options.fetch(:show_specific_error, false)
       h = []
       h << "<p>#{t "simple_captcha.captcha_error"}</p>"
       h << "<p>#{@cur_captcha.captcha_error}</p>"
 
       return h.join("\n").html_safe
+    else
+      return "<p>#{t "simple_captcha.captcha_error"}</p>".html_safe
     end
 
     return
@@ -49,14 +51,8 @@ module SS::CaptchaFilter
     captcha
   end
 
-  def render_pre_page?(obj, render_opt, rendered)
-    obj.attributes = get_captcha
-
-    unless obj.valid_with_captcha?
-      render render_opt
-      rendered = true
-    end
-
-    rendered
+  def is_captcha_valid?(item)
+    item.attributes = get_captcha
+    return item.valid_with_captcha?
   end
 end
