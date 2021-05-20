@@ -100,13 +100,6 @@ class Board::Agents::Nodes::PostController < ApplicationController
     @item.delete_key = ""
     @item.attributes = get_params
 
-    # if get_captcha[:captcha_error].present? && @item.delete_key_was == @item.delete_key
-    #   render_destroy @item.destroy, location: "#{@cur_node.url}sent", render: :delete
-    #   return
-    # elsif get_captcha[:captcha_error].present?
-    #   @item.errors.add :base, t("board.errors.not_same_delete_key") unless @item.delete_key_was == @item.delete_key
-    # end
-
     if @cur_node.captcha_enabled? && get_captcha[:captcha_error].nil?
       if is_captcha_valid?(@item) && @item.delete_key_was == @item.delete_key
         render_destroy @item.destroy, location: "#{@cur_node.url}sent", render: :delete

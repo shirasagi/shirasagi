@@ -5,7 +5,6 @@ class Inquiry::Answer
   include SS::Captchable
   include Cms::Addon::GroupPermission
 
-
   attr_accessor :cur_node
 
   store_in_default_post
