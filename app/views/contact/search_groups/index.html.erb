@@ -15,7 +15,9 @@
 
     $("#item_contact_tel").val(tel);
     $("#item_contact_fax").val(fax);
-    $("#item_contact_email").val(email);
+    <% if @cur_site.inquiry_form.blank? %>
+      $("#item_contact_email").val(email);
+    <% end %>
     $("#item_contact_link_url").val(link_url);
     $("#item_contact_link_name").val(link_name);
 

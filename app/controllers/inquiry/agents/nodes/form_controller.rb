@@ -74,18 +74,45 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     @answer.set_data(@data)
   end
 
+  def set_group
+    return if params[:group].blank?
+
+    @group = Cms::Group.site(@cur_site).where(id: params[:group]).first
+    raise "404" if @group.blank?
+    raise "404" if @cur_node.notify_mail_enabled? && @group.contact_email.blank?
+  end
+
+  def set_page
+    return if params[:page].blank?
+
+    @page = Cms::Page.site(@cur_site).and_public.where(id: params[:page]).first
+    raise "404" if @page.blank?
+  end
+
   public
 
   def new
+    set_group
+    set_page
+    if @group || @page
+      raise "404" if @cur_site.inquiry_form != @cur_node
+    end
+    if @group && @page
+      raise "404" if @page.contact_group_id != @group.id
+    end
   end
 
   def confirm
+    set_group
+    set_page
     if !@answer.valid?
       render action: :new
     end
   end
 
   def create
+    set_group
+    set_page
     if !@answer.valid? || params[:submit].blank?
       render action: :new
       return
@@ -100,9 +127,21 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       end
     end
 
+    @answer.group_ids = @group ? [ @group.id ] : @cur_node.group_ids
+
+    if @page
+      @answer.inquiry_page_url = @page.url
+      @answer.inquiry_page_name = @page.name
+    end
+
     @answer.save
     if @cur_node.notify_mail_enabled?
-      @to.each { |notice_email| Inquiry::Mailer.notify_mail(@cur_site, @cur_node, @answer, notice_email).deliver_now }
+      if @group.present? && @group.contact_email.present?
+        notice_email = @group.contact_email
+        Inquiry::Mailer.notify_mail(@cur_site, @cur_node, @answer, notice_email).deliver_now if notice_email.present?
+      else
+        @to.each { |notice_email| Inquiry::Mailer.notify_mail(@cur_site, @cur_node, @answer, notice_email).deliver_now }
+      end
     end
     if @cur_node.reply_mail_enabled?
       # `try` method doesn't work as you think because mail is an instance of Delegator.
@@ -119,6 +158,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
         query[:ref] = @answer.source_url
       end
     end
+    query[:group] = @group.id if @group
     query = query.to_query
 
     url = "#{@cur_node.url}sent.html"
@@ -127,6 +167,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   end
 
   def sent
+    set_group
     render action: :sent
   end
 
