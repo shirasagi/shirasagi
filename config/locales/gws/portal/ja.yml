@@ -155,6 +155,7 @@ ja:
       gws/addon/portal/portlet/reminder:
         reminder_filter: 表示範囲
       gws/addon/portal/portlet/schedule:
+        schedule_member_mode: 表示モード
         schedule_member_ids: 表示ユーザー
       gws/addon/portal/portlet/todo:
         todo_state: 表示状態
@@ -232,3 +233,11 @@ ja:
       portal_link_state:
         - リンク集を表示するか、しないかを選択します。
         - 「表示」を選択した場合、リンク集はサイドメニューの下部に表示されます。
+    gws/addon/portal/portlet/schedule:
+      schedule_member_ids:
+        - スケジュール・ポートレットに表示するユーザーを選択します。
+        -
+        - "<b>既定</b>: 既定のユーザーの予定を表示します。個人ポートレットの場合はその個人の予定を、部課ポートレットの場合は部課直下のユーザーの予定を表示します。"
+        - "<b>現在のユーザー</b>: ログイン中のユーザー（自分自身）の予定を表示します。"
+        - "<b>現在のグループ下のユーザー</b>: 自グループ（自所属）のユーザーの予定を表示します。"
+        - "<b>特定のユーザー</b>: 以下で指定されたユーザーの予定を表示します。"

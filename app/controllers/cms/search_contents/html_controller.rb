@@ -72,6 +72,7 @@ class Cms::SearchContents::HtmlController < ApplicationController
   def replace_html_with_string(string, replacement)
     @pages = @pages.select do |item|
       update_html_fields(item) { |html| html.gsub(string, replacement) }
+      update_column_values_fields(item) { |html| html.gsub(string, replacement) }
     end
 
     @parts = @parts.select do |item|
@@ -89,6 +90,7 @@ class Cms::SearchContents::HtmlController < ApplicationController
 
     @pages = @pages.select do |item|
       update_html_fields(item) { |html| html.gsub(src_path, dest_path) }
+      update_column_values_fields(item) { |html| html.gsub(src_path, dest_path) }
     end
 
     @parts = @parts.select do |item|
@@ -105,6 +107,7 @@ class Cms::SearchContents::HtmlController < ApplicationController
 
     @pages = @pages.select do |item|
       update_html_fields(item) { |html| html.gsub(regexp, replacement) }
+      update_column_values_fields(item) { |html| html.gsub(regexp, replacement) }
     end
 
     @parts = @parts.select do |item|
@@ -123,7 +126,7 @@ class Cms::SearchContents::HtmlController < ApplicationController
   end
 
   def update_html_fields(item)
-    item = item.becomes_with_route if item.try(:route)
+    item = item.becomes_with_route if item.respond_to?(:becomes_with_route)
 
     attributes = {}
     HTML_FIELDS.each do |field|
@@ -131,12 +134,32 @@ class Cms::SearchContents::HtmlController < ApplicationController
       html = yield item.send(field)
       attributes[field] = html if item.send(field) != html
     end
+    item.set(attributes) if attributes.present?
+    true
+  end
 
-    if attributes.present?
-      item.set(attributes)
-      true
-    else
-      false
+  def update_column_values_fields(item)
+    item = item.becomes_with_route if item.respond_to?(:becomes_with_route)
+
+    item.column_values.each do |column_value|
+      attributes = {}
+      COLUMN_VALUES_FIELDS.each do |field|
+        next if !column_value.respond_to?(field)
+
+        old_value = column_value.send(field)
+        next if old_value.blank?
+
+        if old_value.is_a?(String)
+          new_value = yield old_value
+          attributes[field] = new_value if new_value != old_value
+        elsif old_value.is_a?(Array)
+          old_value = old_value.map(&:to_s)
+          new_value = old_value.map { |v| yield v }
+          attributes[field] = new_value if new_value != old_value
+        end
+      end
+      column_value.set(attributes) if attributes.present?
     end
+    true
   end
 end

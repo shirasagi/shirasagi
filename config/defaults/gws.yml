@@ -62,6 +62,15 @@ production: &production
       - model: faq
       - model: qna
 
+    # Default organization portlets
+    organization_portlets:
+      - model: schedule
+        schedule_member_mode: current_user
+      - model: monitor
+      - model: board
+      - model: faq
+      - model: qna
+
     portlet_settings:
       max_rows: 50
       ad:
@@ -74,6 +83,7 @@ production: &production
       - "Gws::Circular::Category"
       - "Gws::Circular::Post"
       - "Gws::CustomGroup"
+      - "Gws::Discussion::Post"
       - "Gws::Facility::Category"
       - "Gws::Facility::Item"
       - "Gws::Faq::Category"
@@ -117,6 +127,8 @@ production: &production
       - "Gws::Workflow::File"
       - "Gws::Workflow::Form"
       - "Gws::Workflow::Route"
+    exclude_validation_models:
+      - "Gws::Schedule::Plan"
     exclude_fields:
       - "filename"
       - "state"
@@ -128,6 +140,7 @@ production: &production
       - "workflow_comment"
       - "url"
       - "/_url$/"
+      - "text"
     ids_fields:
       - "_id"
       - "id"
@@ -167,6 +180,30 @@ production: &production
       leave: none
       dayoff: none
       '': none
+    reset:
+      available: ''
+      unavailable: ''
+      leave: ''
+      dayoff: ''
+    sync_available:
+      disable: false
+      presence_logged_in:
+        reset:
+          - unavailable
+          - leave
+          - dayoff
+        enter: available
+      presence_logged_out:
+        reset:
+          - available
+          - leave
+          - dayoff
+        leave: unavailable
+    sync_timecard:
+      disable: true
+      presence_punch:
+        enter: available
+        leave: leave
 
   share:
     max_history_count: 20

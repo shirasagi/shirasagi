@@ -37,14 +37,14 @@ module SS::AuthFilter
     return nil unless token
     return nil unless token.enabled?
 
-    @login_path = token.login_path
-    @logout_path = token.logout_path
+    login_path = token.login_path
+    logout_path = token.logout_path
     user = token.user
     token.destroy
     return nil if user.blank?
     return nil if user.disabled?
 
-    user
+    [ user, login_path, logout_path ]
   end
 
   def set_last_logged_in(timestamp = Time.zone.now.to_i)

@@ -10,8 +10,10 @@ describe 'gws_presence_users', type: :feature, dbscope: :example do
     before { login_gws_user }
 
     it "both state disabled" do
-      visit user_setting_path
+      visit index_path
+      expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq ""
 
+      visit user_setting_path
       click_link I18n.t("ss.links.edit")
 
       within "form#item-form" do
@@ -19,7 +21,6 @@ describe 'gws_presence_users', type: :feature, dbscope: :example do
         select I18n.t("ss.options.state.disabled"), from: 'item[sync_unavailable_state]'
         click_button I18n.t("ss.buttons.save")
       end
-      expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq ""
 
       visit sns_logout_path
       expect(current_path).to eq sns_login_path
@@ -30,8 +31,15 @@ describe 'gws_presence_users', type: :feature, dbscope: :example do
     end
 
     it "both state enabled" do
-      visit user_setting_path
+      visit index_path
+      expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq ""
 
+      find(".editable-users").click_on gws_user.name
+      find('.editable-users span', text: presence_states["available"]).click
+      wait_for_ajax
+      expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq "available"
+
+      visit user_setting_path
       click_link I18n.t("ss.links.edit")
 
       within "form#item-form" do
@@ -39,7 +47,6 @@ describe 'gws_presence_users', type: :feature, dbscope: :example do
         select I18n.t("ss.options.state.enabled"), from: 'item[sync_unavailable_state]'
         click_button I18n.t("ss.buttons.save")
       end
-      expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq "available"
 
       visit sns_logout_path
       expect(current_path).to eq sns_login_path
@@ -50,8 +57,15 @@ describe 'gws_presence_users', type: :feature, dbscope: :example do
     end
 
     it "sync_available_state enabled" do
-      visit user_setting_path
+      visit index_path
+      expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq ""
 
+      find(".editable-users").click_on gws_user.name
+      find('.editable-users span', text: presence_states["available"]).click
+      wait_for_ajax
+      expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq "available"
+
+      visit user_setting_path
       click_link I18n.t("ss.links.edit")
 
       within "form#item-form" do
@@ -59,7 +73,6 @@ describe 'gws_presence_users', type: :feature, dbscope: :example do
         select I18n.t("ss.options.state.disabled"), from: 'item[sync_unavailable_state]'
         click_button I18n.t("ss.buttons.save")
       end
-      expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq "available"
 
       visit sns_logout_path
       expect(current_path).to eq sns_login_path
@@ -70,8 +83,15 @@ describe 'gws_presence_users', type: :feature, dbscope: :example do
     end
 
     it "sync_unavailable_state enabled" do
-      visit user_setting_path
+      visit index_path
+      expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq ""
 
+      find(".editable-users").click_on gws_user.name
+      find('.editable-users span', text: presence_states["available"]).click
+      wait_for_ajax
+      expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq "available"
+
+      visit user_setting_path
       click_link I18n.t("ss.links.edit")
 
       within "form#item-form" do
@@ -79,14 +99,6 @@ describe 'gws_presence_users', type: :feature, dbscope: :example do
         select I18n.t("ss.options.state.enabled"), from: 'item[sync_unavailable_state]'
         click_button I18n.t("ss.buttons.save")
       end
-      expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq ""
-      visit index_path
-
-      find(".editable-users").click_on gws_user.name
-      find('.editable-users span', text: presence_states["available"]).click
-      wait_for_ajax
-
-      expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq "available"
 
       visit sns_logout_path
       expect(current_path).to eq sns_login_path

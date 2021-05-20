@@ -76,10 +76,9 @@ describe Cms::Page::GenerateJob, dbscope: :example do
       expect(File.exist?(ss_file2.public_path)).to be_truthy
       expect(File.exist?(ss_file3.public_path)).to be_truthy
       expect(File.exist?(ss_file4.public_path)).to be_truthy
-
       expect(Cms::Task.count).to eq 2
       Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_pages').first.tap do |task|
-        expect(task.state).to eq 'stop'
+        expect(task.state).to eq 'completed'
         expect(task.started).not_to be_nil
         expect(task.closed).not_to be_nil
         expect(task.total_count).to eq 2
@@ -132,7 +131,7 @@ describe Cms::Page::GenerateJob, dbscope: :example do
         expect(task.state).to eq 'ready'
       end
       Cms::Task.where(site_id: site.id, node_id: node.id, name: 'cms:generate_pages').first.tap do |task|
-        expect(task.state).to eq 'stop'
+        expect(task.state).to eq 'completed'
         expect(task.started).not_to be_nil
         expect(task.closed).not_to be_nil
         expect(task.total_count).to eq 2
@@ -183,7 +182,7 @@ describe Cms::Page::GenerateJob, dbscope: :example do
 
       expect(Cms::Task.count).to eq 2
       Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_pages').first.tap do |task|
-        expect(task.state).to eq 'stop'
+        expect(task.state).to eq 'completed'
         expect(task.started).not_to be_nil
         expect(task.closed).not_to be_nil
         expect(task.total_count).to eq 0

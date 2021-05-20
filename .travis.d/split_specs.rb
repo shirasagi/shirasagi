@@ -12,7 +12,14 @@ OptionParser.new do |opt|
   opt.parse!(ARGV)
 end
 
-spec_files = Dir.glob("#{ARGV.first || "spec"}/**/*.rb")
+count = `find spec -name '*.rb' | fgrep -v spec/factories/ | fgrep -v spec/support/ | fgrep -v _spec.rb | wc -l`
+count = count.strip.to_i
+if count > 1
+  puts "there are spec files which aren't ended with \"_spec.rb\""
+  exit!
+end
+
+spec_files = Dir.glob("#{ARGV.first || "spec"}/**/*_spec.rb")
 excludes.each do |exclude|
   spec_files.reject! { |file| file.include?(exclude) }
 end

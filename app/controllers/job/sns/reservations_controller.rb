@@ -1,6 +1,6 @@
 class Job::Sns::ReservationsController < ApplicationController
-  include Sns::BaseFilter
-  include Sns::CrudFilter
+  include ::Sns::BaseFilter
+  include ::Sns::CrudFilter
   include Job::TasksFilter
 
   model Job::Task

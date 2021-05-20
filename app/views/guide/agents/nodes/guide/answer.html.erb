@@ -1,0 +1,32 @@
+<div class="guide-node-form">
+  <div class="guide-nodes nodes">
+    <div class="your-answers"><%= t("guide.views.your-answers") %></div>
+    <ul>
+      <% @diagram.questions.each_with_index do |question, no| %>
+        <% answer = @answers[no].to_a %>
+
+        <% if question.question_type == "choices" %>
+          <% edges = question.edges %>
+        <% elsif question.question_type == "yes_no" %>
+          <% edges = [question.edges.first] %>
+        <% end %>
+
+        <% edges.each do |edge| %>
+          <% title = (question.question_type == "choices") ? edge.value : question.name %>
+          <li>
+            <% if answer.include?(edge.transition) %>
+              <span class="answer-state applicable"><%= t("guide.labels.applicable") %></span>
+            <% else %>
+              <span class="answer-state not-applicable"><%= t("guide.labels.not_applicable") %></span>
+            <% end %>
+            <span class="value"><%= title %></span>
+          </li>
+        <% end %>
+
+      <% end %>
+    </ul>
+  </div>
+  <div class="show-result">
+    <div class="show-answer"><%= link_to t('guide.links.show_result'), "#{@cur_node.url}result/#{@condition}#{@cur_node.guide_url_fragment}" %></div>
+  </div>
+</div>

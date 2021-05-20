@@ -168,6 +168,14 @@ class Gws::Circular::Post
     end
   end
 
+  def becomes_with_topic
+    if self["post_id"].present?
+      ::Gws::Circular::Comment.find(id)
+    else
+      self
+    end
+  end
+
   private
 
   def validate_attached_file_size

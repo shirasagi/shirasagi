@@ -1,0 +1,11 @@
+<div class="question-nav"><%= t("guide.views.choose_yes_no") %></div>
+<div class="question"><%= @question.name %></div>
+
+<% @question.edges.each do |edge| %>
+  <%= hidden_field_tag "answers[#{@no}][]", edge.transition %>
+<% end %>
+
+<footer class="send">
+  <%= f.submit t("guide.links.applicable"), name: :submit %>
+  <%= f.submit t("guide.links.not_applicable"), name: :submit %>
+</footer>

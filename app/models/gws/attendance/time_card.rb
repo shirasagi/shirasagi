@@ -104,6 +104,9 @@ class Gws::Attendance::TimeCard
 
     record.send("#{field_name}=", now)
     self.histories.create(date: date, field_name: field_name, action: 'set', time: now)
+
+    # change gws user's presence
+    @cur_user.presence_punch((@cur_site || site), field_name) if @cur_user
     record.save
   end
 

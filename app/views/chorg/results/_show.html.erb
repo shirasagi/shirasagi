@@ -1,9 +1,11 @@
-<div id="task-form">
+<section class="task-box" id="task-box-<%= @item.id %>">
   <dl class="info">
     <dt><%= @item.t :state %></dt>
     <dd class="state">
-      <%= @item.state %>
-      <% if @item.state != 'stop' %>
+      <% if @item.state %>
+        <%= t("job.state.#{@item.state}") %>
+      <% end %>
+      <% if @item.state != 'completed' %>
         <%= button_tag t("ss.buttons.stop"), name: 'interrupt', type: 'button', class: 'btn' %>
         <%= button_tag t("ss.buttons.reset"), name: 'reset', type: 'reset', class: 'btn' %>
       <% end %>
@@ -22,9 +24,14 @@
   <div class="logs">
     <textarea class="log" readonly="readonly"><%= @item.logs.join("\n") %></textarea>
   </div>
-</div>
+  <div class="controller">
+    <% if @item.respond_to?(:log_file_path) && SS::User.allowed?(:edit, @cur_user) %>
+      <%= link_to(t('job.download_log'), download_job_sys_task_path(id: @item), { class: "btn", target: "_blank", rel: "noopener" }) %>
+    <% end %>
+  </div>
+</section>
 
-<% if @item.state != 'stop' %>
+<% if @item.state != 'completed' %>
   <%= jquery do %>
     $('button[name=interrupt]').on('click', function() {
       $.ajax({

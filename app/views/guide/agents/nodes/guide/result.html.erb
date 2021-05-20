@@ -1,0 +1,27 @@
+<div class="guide-node-form">
+  <% if @cur_node.loop_format_shirasagi? && @cur_node.upper_html.present? %>
+    <%== @cur_node.upper_html %>
+  <% end %>
+
+  <div class="procedure-count"><%= t("guide.views.procedures_needed", count: @procedures.count) %></div>
+  <div class="guide-nodes nodes">
+    <%= render_procedure_list(@procedures) %>
+  </div>
+
+  <% if @cur_node.procedures.present? %>
+  <div class="other-procedures"><%= t("guide.views.procedures_others") %></div>
+  <div class="guide-nodes nodes">
+    <%= render_procedure_list(@cur_node.procedures) %>
+  </div>
+  <% end %>
+
+  <% if @cur_node.loop_format_shirasagi? && @cur_node.lower_html.present? %>
+    <%== @cur_node.lower_html.html_safe %>
+  <% end %>
+
+  <div class="show-result">
+    <div class="show-answer"><%= link_to t('guide.links.show_answer'), "#{@cur_node.url}answer/#{@condition}#{@cur_node.guide_url_fragment}" %></div>
+    <div class="show-procedure"><%= link_to t('guide.links.show_procedure'), "#{@cur_node.url}procedure/#{@condition}#{@cur_node.guide_url_fragment}" %></div>
+  </div>
+  <div class="back-to-first"><%= link_to t('guide.links.back_to_first'), "#{@cur_node.url}#{@cur_node.guide_url_fragment}" %></div>
+</div>

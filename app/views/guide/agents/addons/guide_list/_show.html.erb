@@ -1,0 +1,44 @@
+<% addon ||= local_assigns.fetch(:addon, {}) %>
+<%= code_editor "##{addon[:id]} .html", mode: :html, readonly: true %>
+
+<dl class="see">
+  <dt><%= @model.t :guide_index_html %></dt>
+  <dd>
+    <% if @item.guide_index_html.present? %>
+      <%= text_area_tag :guide_index_html, @item.guide_index_html, class: "html" %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :guide_url_fragment %></dt>
+  <dd><%= @item.guide_url_fragment %></dd>
+
+  <% if @item.loop_format_liquid? %>
+    <dt><%= @model.t :loop_liquid %></dt>
+    <dd>
+      <% if @item.loop_liquid.present? %>
+        <%= text_area_tag :loop_liquid, @item.loop_liquid, class: "html", style: "height: 100px;"  %>
+      <% end %>
+    </dd>
+  <% else %>
+    <dt><%= @model.t :upper_html %></dt>
+    <dd>
+      <% if @item.upper_html.present? %>
+        <%= text_area_tag :upper_html, @item.upper_html, class: "html" %>
+      <% end %>
+    </dd>
+
+    <dt><%= @model.t :loop_html %></dt>
+    <dd>
+      <% if @item.loop_html.present? %>
+        <%= text_area_tag :loop_html, @item.loop_html, class: "html", style: "height: 100px;"  %>
+      <% end %>
+    </dd>
+
+    <dt><%= @model.t :lower_html %></dt>
+    <dd>
+      <% if @item.lower_html.present? %>
+        <%= text_area_tag :lower_html, @item.lower_html, class: "html" %>
+      <% end %>
+    </dd>
+  <% end %>
+</dl>

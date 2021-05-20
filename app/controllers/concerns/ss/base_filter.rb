@@ -2,6 +2,7 @@ module SS::BaseFilter
   extend ActiveSupport::Concern
   include SS::AuthFilter
   include SS::LayoutFilter
+  include SS::ExceptionFilter
   include History::LogFilter
 
   included do
@@ -75,11 +76,14 @@ module SS::BaseFilter
       return @cur_user
     end
 
-    @cur_user = get_user_by_access_token
+    @cur_user, login_path, logout_path = get_user_by_access_token
     if @cur_user
-      redirct = request.fullpath.sub(/(\?|&)access_token=.*/, '')
-      set_user(@cur_user, session: true, login_path: @login_path, logout_path: @logout_path)
-      return redirect_to(redirct)
+      set_user(@cur_user, session: true, login_path: login_path, logout_path: logout_path)
+
+      # persistent session to database by redirecting to self path
+      redirect = SS::AccessToken.remove_access_token_from_query(request.fullpath)
+      redirect_to redirect
+      return
     end
 
     @cur_user = get_user_by_session
@@ -106,12 +110,13 @@ module SS::BaseFilter
           redirect_to "#{login_path}?#{{ ref: ref }.to_query}"
         end
       end
-      format.json { render json: :error, status: :unauthorized }
+      format.any { render json: :error, status: :unauthorized }
     end
   end
 
   def set_user(user, opts = {})
     if opts[:session]
+      old_session_id = session.id
       reset_session
       form_authenticity_token
       session[:user] = {
@@ -121,6 +126,7 @@ module SS::BaseFilter
         "last_logged_in" => Time.zone.now.to_i
       }
       session[:user]["password"] = SS::Crypt.encrypt(opts[:password]) if opts[:password].present?
+      Rails.logger.info("renew session: old id=#{old_session_id}, new id=#{session.id}")
     end
     set_login_path_to_cookie(opts[:login_path] || request_path)
     session[:logout_path] = opts[:logout_path]
@@ -162,52 +168,5 @@ module SS::BaseFilter
 
   def rescue_action(exception)
     render_exception!(exception)
-  end
-
-  def render_exception!(exception)
-    if exception.is_a?(Job::SizeLimitPerUserExceededError)
-      render_job_size_limit(exception)
-      return
-    end
-
-    backtrace_cleaner = request.get_header("action_dispatch.backtrace_cleaner")
-    wrapper = ::ActionDispatch::ExceptionWrapper.new(backtrace_cleaner, exception)
-    if exception.is_a?(RuntimeError) && exception.message.numeric?
-      status_code = Integer(exception.message)
-    else
-      status_code = wrapper.status_code
-    end
-
-    @ss_rescue = { status: status_code }
-    @wrapper = wrapper if Rails.env.development?
-
-    if @ss_mode == :cms && !@cur_site
-      @ss_mode = nil
-    elsif @ss_mode == :gws && !@cur_site
-      @ss_mode = nil
-    end
-
-    render(
-      file: "ss/rescues/index", layout: @cur_user ? "ss/base" : "ss/login", status: status_code,
-      type: request.xhr? ? "text/plain" : "text/html", formats: request.xhr? ? :text : :html
-    )
-  rescue => e
-    Rails.logger.info("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-    raise exception
-  end
-
-  def render_job_size_limit(error)
-    referer_uri = URI.parse(request.referer)
-    begin
-      if @item.present?
-        @item.errors.add(:base, error.to_s)
-        flash[:notice] = error.to_s
-        render(Rails.application.routes.recognize_path(referer_uri.path))
-      else
-        redirect_to(referer_uri.path, notice: error.to_s)
-      end
-    rescue ActionView::MissingTemplate
-      redirect_to(referer_uri.path, notice: error.to_s)
-    end
   end
 end

@@ -206,6 +206,7 @@ ja:
       ruby_on: ふりがなをつける
       ruby_off: ふりがなをはずす
       back_to_contents: コンテンツへ戻る
+      michecker: miChecker で確認する
     move_page:
       confirm: 確認
       message: '"%{source}"へのリンクが含まれるページ'
@@ -377,6 +378,45 @@ ja:
       cms/youtube: YouTube埋め込み
       cms/free: 自由入力
       cms/table: 表
+    cms/michecker:
+      start: miChecker を実行し結果を確認する
+      loading: プレビューをロード中です
+      accessibility: アクセシビリティ検証
+      lowvision: 視覚化
+      prepared: "実行準備が整いました。"
+      michecker_started: "miChecker の実行を待機中"
+      michecker_failed_to_start: "miChecker を開始できませんでした。"
+      michecker_unknown_error: "miChecker 実行時にエラーが発生しました。管理画面へ戻り、タスク・マネージャーからエラーを確認してください。"
+      michecker_completed: "miChecker による検証が完了しました。結果を確認してください。"
+      accessibility_report_load_error: "アクセシビリティ検証結果の読み込みに失敗しました。"
+      low_vision_report_load_error: "視覚化結果の読み込みに失敗しました。"
+      data_table:
+        length_menu:
+          5: 5
+          10: 10
+          25: 25
+          -1: 全て
+        language_length_menu: "表示 _MENU_ 件"
+        language_paginate_next: "次へ"
+        language_paginate_previous: "前へ"
+        language_info: "_TOTAL_ 件中 _START_ 件から _END_ 件を表示しています"
+        language_search: "検索 "
+        language_zero_records: "表示するデータがありません"
+        language_info_empty: "0 件中 0 件を表示しています"
+        language_info_filtered: "全 _MAX_ 件から絞り込み"
+    cms/michecker/report:
+      type: 種別
+      all: すべての項目
+      error: 問題あり
+      warning: 問題の可能性大
+      caution: 要判断箇所
+      notice: 手動確認
+      download: CSVダウンロード
+      display_column: 表示列
+    cms/michecker/task:
+      start: miChecker による検証を開始します。
+      success: miChecker による検証が完了しました。
+      failed: miChecker による検証が失敗しました。
 
   cms_role:
     edit_cms_sites: サイトの管理
@@ -460,6 +500,7 @@ ja:
     edit_other_cms_forms: 定型フォームの管理（全て）
     delete_private_cms_forms: 定型フォームの削除（所有）
     delete_other_cms_forms: 定型フォームの削除（全て）
+    use_cms_michecker: micheckerの利用
 
   modules:
     cms: 標準機能
@@ -525,9 +566,11 @@ ja:
       cms/site: サイト
       cms/user: ユーザー
       cms/member: メンバー
+      cms/group: グループ
       cms/node: フォルダー
       cms/node/node: フォルダーリスト
       cms/node/page: ページリスト
+      cms/node/group_page: グループ別ページリスト
       cms/page: ページ
       cms/part: パーツ
       cms/part/free: HTML記述
@@ -566,6 +609,7 @@ ja:
       cms/column/youtube: YouTube埋め込み
       cms/column/free: 自由入力
       cms/column/table: 表
+      cms/michecker/result: miChecker結果
     errors:
       models:
         cms/content:
@@ -960,6 +1004,41 @@ ja:
         value: 表
       cms/addon/redirect_link:
         redirect_link: リダイレクトURL
+      cms/michecker/result:
+        target_type: 種別
+        target_id: ID
+        target_class: モデル
+        michecker_last_executed_at: 最終実行日時
+        michecker_last_result: 最終実行結果
+        html_checker_report_filepath: アクセシビリティ検証結果
+        low_vision_report_filepath: 視覚化検証結果
+        low_vision_source_filepath: 視覚化検証元画像
+        low_vision_result_filepath: 視覚化検証画像
+
+  activemodel:
+    attributes:
+      cms/michecker/base:
+        severity: 重度指数
+        severityStr: 重度指数名
+        description: 内容
+        evaluationItem_tableDataMetrics0: 知覚可能
+        evaluationItem_tableDataMetrics1: 操作可能
+        evaluationItem_tableDataMetrics2: 理解可能
+        evaluationItem_tableDataMetrics3: 堅牢
+        evaluationItem_tableDataGuideline0: WCAG 2.0
+        evaluationItem_tableDataGuideline1: Section508
+        evaluationItem_tableDataGuideline2: JIS
+        evaluationItem_tableDataTechniques: 達成方法
+      cms/michecker/accessibility:
+        highlightTargetPaths: 指摘箇所
+      cms/michecker/low_vision:
+        iconTooltip: 種類
+        severityLV: 深刻度
+        foreground: 前景色
+        background: 背景色
+        x: X座標
+        y: Y座標
+        area: 面積
 
   errors:
     messages:
@@ -2077,3 +2156,4 @@ ja:
       cms/import_files_job: ページ/フォルダー取り込み
       cms/role/import_job: 権限インポート
       cms/all_contents_import_job: 全コンテンツ一括設定
+      cms/michecker_job: miChecker

@@ -4,7 +4,13 @@ module Chorg::MongoidSupport
   include Chorg::Loggable
 
   def update(entity, hash)
-    hash.select { |k, v| v.present? }.each { |k, v| entity[k] = v }
+    hash.select { |k, v| v.present? }.each do |k, v|
+      if v.respond_to?(:update_entity)
+        v.update_entity(entity)
+      else
+        entity[k] = v
+      end
+    end
     entity
   end
 
@@ -35,8 +41,24 @@ module Chorg::MongoidSupport
         entity = entity.try(:becomes_with_route) || entity
         entity = entity.try(:becomes_with_topic) || entity
         entity.try(:cur_site=, @cur_site)
-        entity.try(:cur_user=, @cur_user) if @cur_user.present?
         entity.try(:allow_other_user_files)
+
+        entity_user = (entity.try(:user) || @cur_user)
+        entity_user.try(:cur_site=, @cur_site)
+        entity.try(:cur_user=, entity_user)
+
+        entity.try(:skip_sns_post=, true)
+        def entity.post_to_line; end
+        def entity.post_to_twitter; end
+
+        entity.try(:skip_assoc_opendata=, true)
+        def entity.invoke_opendata_job(action); end
+
+        entity.instance_variable_set("@base_model", model)
+        def entity.base_model
+          return @base_model
+        end
+
         entity.move_changes
         yield entity
       end
@@ -75,8 +97,14 @@ module Chorg::MongoidSupport
   end
 
   def updatable_field?(key, val)
+    supported_field_types = [
+      String,
+      Array,
+      SS::Extensions::Lines,
+      SS::Extensions::Words
+    ]
     field_type = val.options[:type]
-    return false unless String == field_type
+    return false if !supported_field_types.include?(field_type)
 
     @exclude_fields.each do |filter|
       if filter.is_a?(::Regexp)
@@ -100,15 +128,49 @@ module Chorg::MongoidSupport
     target_fields_cache[1]
   end
 
+  # exclude html field when cms form present
+  def skip_target_field?(entity, field_name)
+    return false if field_name != "html"
+    form = entity.try(:form)
+    form.class == Cms::Form
+  end
+
   def with_updates(entity, substituter)
     updates = {}
     target_fields(entity).each do |k, _|
+      next if skip_target_field?(entity, k)
+
       v = entity[k]
       new_value = substituter.call(k, v, entity.try(:contact_group_id))
       updates[k] = new_value if v != new_value
     end
+    updates = updates.merge(collect_embedded_array_updates(entity))
 
     yield updates
+  end
+
+  def collect_embedded_array_updates(entity)
+    hash = {}
+    @embedded_array_fields.each do |field_name|
+      next if !entity.respond_to?(field_name)
+
+      embedded_values = entity.send(field_name)
+      next if embedded_values.blank?
+
+      array = embedded_values.map do |embedded_entity|
+        updates = {}
+        target_fields(embedded_entity).each do |k, _|
+          v = embedded_entity[k]
+          new_value = substituter.call(k, v, entity.try(:contact_group_id))
+          updates[k] = new_value if v != new_value
+        end
+        updates
+      end
+      next if !array.select(&:present?).first
+
+      hash[field_name] = Chorg::EmbeddedArray.new(field_name, array)
+    end
+    hash
   end
 
   def delete_groups(group_ids)

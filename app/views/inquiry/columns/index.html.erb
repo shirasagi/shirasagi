@@ -20,9 +20,9 @@
         <td class="checkbox">
           <input type="checkbox" name="ids[]" value="<%= item.id %>" />
           <nav class="tap-menu">
-            <%= link_to t('ss.links.show'), action: :show, id: item if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
-            <%= link_to t('ss.links.edit'), action: :edit, id: item if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-            <%= link_to t('ss.links.delete'), action: :delete, id: item if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+            <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+            <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+            <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
           </nav>
         </td>
         <td><%= link_to item.name, action: :show, id: item %></td>

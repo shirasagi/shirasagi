@@ -74,18 +74,18 @@ describe Rss::ImportWeatherXmlAllJob, dbscope: :example do
       expect(SS::Task.where(site_id: site2.id).count).to eq 1
       SS::Task.where(site_id: nil).first.tap do |task|
         expect(task.name).to eq "rss:import_weather_xml_all"
-        expect(task.state).to eq "stop"
+        expect(task.state).to eq "completed"
         expect(task.interrupt).to be_blank
         expect(task.started).to be_present
         expect(task.closed).to be_present
       end
       SS::Task.where(site_id: site1.id).first.tap do |task|
         expect(task.name).to eq "rss:import_weather_xml"
-        expect(task.state).to eq "stop"
+        expect(task.state).to eq "completed"
       end
       SS::Task.where(site_id: site2.id).first.tap do |task|
         expect(task.name).to eq "rss:import_weather_xml"
-        expect(task.state).to eq "stop"
+        expect(task.state).to eq "completed"
       end
 
       expect(@stab_seed1).to have_been_requested.times(1)
@@ -146,18 +146,18 @@ describe Rss::ImportWeatherXmlAllJob, dbscope: :example do
       expect(SS::Task.where(site_id: site2.id).count).to eq 1
       SS::Task.where(site_id: nil).first.tap do |task|
         expect(task.name).to eq "rss:import_weather_xml_all"
-        expect(task.state).to eq "stop"
+        expect(task.state).to eq "completed"
         expect(task.interrupt).to be_blank
         expect(task.started).to be_present
         expect(task.closed).to be_present
       end
       SS::Task.where(site_id: site1.id).first.tap do |task|
         expect(task.name).to eq "rss:import_weather_xml"
-        expect(task.state).to eq "stop"
+        expect(task.state).to eq "completed"
       end
       SS::Task.where(site_id: site2.id).first.tap do |task|
         expect(task.name).to eq "rss:import_weather_xml"
-        expect(task.state).to eq "stop"
+        expect(task.state).to eq "completed"
       end
 
       expect(@stab_seed1).to have_been_requested.times(1)
@@ -212,18 +212,18 @@ describe Rss::ImportWeatherXmlAllJob, dbscope: :example do
       expect(SS::Task.where(site_id: site2.id).count).to eq 1
       SS::Task.where(site_id: nil).first.tap do |task|
         expect(task.name).to eq "rss:import_weather_xml_all"
-        expect(task.state).to eq "stop"
+        expect(task.state).to eq "completed"
         expect(task.interrupt).to be_blank
         expect(task.started).to be_present
         expect(task.closed).to be_present
       end
       SS::Task.where(site_id: site1.id).first.tap do |task|
         expect(task.name).to eq "rss:import_weather_xml"
-        expect(task.state).to eq "stop"
+        expect(task.state).to eq "completed"
       end
       SS::Task.where(site_id: site2.id).first.tap do |task|
         expect(task.name).to eq "rss:import_weather_xml"
-        expect(task.state).to eq "stop"
+        expect(task.state).to eq "completed"
       end
 
       expect(@stab_seed1).to have_been_requested.times(3)

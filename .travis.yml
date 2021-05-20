@@ -53,10 +53,11 @@ env:
 before_install:
   - if [ -n "$DOCKER_USERNAME" ]; then echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin; fi
   - docker info
-  - docker pull mongo:4.2
+  - docker pull mongo:4.4
   - docker pull osixia/openldap
   - docker pull shirasagi/mail
-  - docker run --name mongo -d -p 27017:27017 mongo:4.2
+  - docker pull shirasagi/michecker
+  - docker run --name mongo -d -p 27017:27017 mongo:4.4
   - docker run --name test_mail -d -p 10143:143 -p 10587:587 shirasagi/mail
   - docker ps -a
 

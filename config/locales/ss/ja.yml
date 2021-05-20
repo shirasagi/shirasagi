@@ -50,6 +50,7 @@ ja:
       seen: 既読一覧
       trash: ゴミ箱
     links:
+      add: 追加する
       cms: サイト管理
       gws: グループ
       new: 新規作成
@@ -422,6 +423,7 @@ ja:
       ss/release: 公開設定
       ss/generate_lock: 書き出し停止
       ss/partner_site: 提携サイト設定
+      ss/inquiry_setting: お問い合わせフォーム設定
 
   activemodel:
     attributes:
@@ -760,6 +762,8 @@ ja:
         user_settings: ユーザー別設定
       ss/addon/partner_setting:
         partner_site_ids: 提携サイト
+      ss/addon/inquiry_setting:
+        inquiry_form_id: お問い合わせフォーム
 
   tooltip:
     ss/model/user:
@@ -1102,6 +1106,10 @@ ja:
         - 市町村名（漢字）を設定します。
       city_kana:
         - 市町村名（カナ）を設定します。
+
+    ss/addon/inquiry_setting:
+      inquiry_form_id:
+        - グループ共通のお問い合わせフォームを設定します。
 
     ss:
       contrast_ratio:

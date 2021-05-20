@@ -1,0 +1,7 @@
+<dl class="see">
+  <dt><%= @model.t :target_class %></dt>
+  <dd><%= I18n.t(@item.target_class.underscore, scope: "mongoid.models", default: @item.target_class) %></dd>
+
+  <dt><%= @model.t :target_id %></dt>
+  <dd><%= @item.target_id %></dd>
+</dl>

@@ -36,13 +36,44 @@ class Chorg::EntityLogsController < ApplicationController
 
   public
 
-  def index
-    @items = @cur_task.entity_logs
-    @items ||= []
-    @items = Kaminari.paginate_array(@items).page(params[:page]).per(50)
-  end
-
   def show
     render
+  end
+
+  def show_models
+    @entity_site = @cur_task.entity_sites[params[:entity_site]]
+    raise "404" unless @entity_site
+
+    @items = @entity_site["models"]
+  end
+
+  def show_entities
+    @entity_site = @cur_task.entity_sites[params[:entity_site]]
+    raise "404" unless @entity_site
+
+    @entity_model = @entity_site["models"][params[:entity_model]]
+    raise "404" unless @entity_model
+
+    @items = @entity_model["items"]
+  end
+
+  def show_entity
+    @entity_site = @cur_task.entity_sites[params[:entity_site]]
+    raise "404" unless @entity_site
+
+    @entity_model = @entity_site["models"][params[:entity_model]]
+    raise "404" unless @entity_model
+
+    @item = @entity_model["items"][params[:entity_index]]
+    raise "404" unless @item
+  end
+
+  def download
+    exporter = ::Chorg::EntityLog::Exporter.new(@cur_task, @cur_site, request.base_url)
+    exporter.create_zip(@cur_user)
+    send_file exporter.path,
+      filename: exporter.filename,
+      type: SS::MimeType.find("zip", "application/zip"),
+      disposition: :attachment, x_sendfile: true
   end
 end

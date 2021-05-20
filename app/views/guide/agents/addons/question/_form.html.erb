@@ -1,0 +1,143 @@
+<%= jquery do %>
+var toggleQuestionEdges = function() {
+var type = $('[name="item[question_type]"]:checked').val();
+  $(".question-edges").hide();
+  $(".question-edges." + type).show();
+};
+var setEdgeNo = function() {
+  $(".question-edges.choices .edge .no").each(function(idx) {
+    $(this).text(idx + 1);
+  });
+};
+var deselectEdge = function() {
+  var edge = $(this).closest(".edge");
+  var v1 = edge.find('input[name="item[in_edges][][value]"]').val();
+  var v2 = edge.find(".ajax-selected tbody tr").length > 0;
+
+  if (v1 || v2) {
+    if (!confirm("<%= t("ss.confirm.delete") %>")) {
+      return false;
+    }
+  }
+
+  if ($(".question-edges.choices .edge").length == 1) {
+    edge.find('input[name="item[in_edges][][value]"]').val("");
+    edge.find(".ajax-selected tbody tr").remove();
+    edge.find(".ajax-selected").hide();
+  } else {
+    edge.remove();
+  }
+
+  setEdgeNo();
+  return false;
+};
+
+// toggle
+$('[name="item[question_type]"]').on("change", toggleQuestionEdges);
+toggleQuestionEdges();
+
+// append checkbox edge
+$('.add-edge').on("click", function() {
+  if ($(".question-edges.choices .edge").length >= 10) {
+    return false;
+  }
+
+  var edge = $(".question-edges.choices .edge:first").clone(false);
+
+  // colorbox
+  var params = {
+    fixed: true,
+    width: "90%",
+    height: "90%"
+  };
+  edge.find(".ajax-box").colorbox(params);
+  edge.find(".deselect-edge").on("click", deselectEdge);
+
+  edge.find('input[name="item[in_edges][][value]"]').val("");
+  edge.find(".ajax-selected tbody tr").remove();
+  edge.find(".ajax-selected").hide();
+
+  $(".question-edges.choices .edge:last").after(edge);
+
+  setEdgeNo();
+  return false;
+});
+
+// deselect edge
+$(".deselect-edge").on("click", deselectEdge);
+
+<% end %>
+<%
+  def yes_in_edge
+    @item.in_edges.select do |in_edge|
+      in_edge[:question_type] == "yes_no" && in_edge[:value] == I18n.t("guide.links.applicable")
+    end.first
+  end
+
+  def no_in_edge
+    @item.in_edges.select do |in_edge|
+      in_edge[:question_type] == "yes_no" && in_edge[:value] == I18n.t("guide.links.not_applicable")
+    end.first
+  end
+
+  def checkbox_in_edges
+    @item.in_edges.select { |in_edge| in_edge[:question_type] == "choices" }
+  end
+
+  def load_in_edges
+    return if @item.in_edges
+    @item.in_edges = @item.edges.map do |edge|
+      OpenStruct.new(
+        question_type: edge.question_type,
+        value: edge.value,
+        point_ids: edge.point_ids
+      )
+    end
+  end
+
+  load_in_edges
+%>
+
+<dl class="see">
+  <dt><%= @model.t :question_type %></dt>
+  <dd>
+    <% t("guide.options.question_type").each do |key, type| %>
+      <label>
+        <%= f.radio_button(:question_type, key) %>
+        <%= type %>
+      </label>
+    <% end %>
+  </dd>
+</dl>
+
+<div  class="question-edges yes_no">
+  <%= render partial: "edge/yes", locals: { f: f, in_edge: yes_in_edge } %>
+  <%= render partial: "edge/no", locals: { f: f, in_edge: no_in_edge } %>
+</div>
+
+<div class="question-edges choices">
+  <dl class="see">
+    <dt><%= @model.t :check_type %></dt>
+    <dd>
+      <% t("guide.options.check_type").each do |key, type| %>
+        <label>
+          <%= f.radio_button(:check_type, key) %>
+          <%= type %>
+        </label>
+      <% end %>
+    </dd>
+  </dl>
+
+  <% if checkbox_in_edges.present? %>
+    <% checkbox_in_edges.each_with_index do |edge, no| %>
+      <%= render partial: "edge/choices", locals: { f: f, in_edge: edge, no: no + 1 } %>
+    <% end %>
+  <% else %>
+    <%= render partial: "edge/choices", locals: { f: f, in_edge: nil, no: 1 } %>
+  <% end %>
+
+  <dl class="see">
+    <dt></dt>
+    <dd><%= button_tag t("ss.links.add"), { type: :button, class: "add-edge btn" } %></dd>
+  </dl>
+</div>

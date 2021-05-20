@@ -29,9 +29,13 @@ module SS::Model::Site
     permit_params :mypage_scheme, :mypage_domain
     validates :name, presence: true, length: { maximum: 40 }
     validates :host, uniqueness: true, presence: true, length: { minimum: 3, maximum: 16 }
-    validates :domains, domain: true
+    validates :domains, presence: true, domain: true
+    validates :subdir, presence: true, if: -> { parent.present? }
+    validates :parent_id, presence: true, if: -> { subdir.present? }
 
     validate :validate_domains, if: ->{ domains.present? }
+
+    after_save :move_public_file
 
     def domain
       cur_domain || domains[0]
@@ -124,6 +128,31 @@ module SS::Model::Site
 
       if self.class.ne(id: id).any_in(domains_with_subdir: domains_with_subdir).exists?
         errors.add :domains_with_subdir, :duplicate
+      end
+    end
+
+    def move_public_file
+      src_site = self.dup
+      src_site.host = host_was
+      src_site.subdir = subdir_was
+      src_site.parent_id = parent_id_was
+
+      return if src_site.host.blank?
+      return if path == src_site.path
+      return if Fs.exists?(path)
+      return if !Fs.exists?(src_site.path)
+
+      if path.include?(src_site.path)
+        temp_path = src_site.path.sub(self.class.root, "#{self.class.root}/temp")
+        Fs.mkdir_p(File.dirname(temp_path))
+        Fs.mv(src_site.path, src_site.path.sub(self.class.root, "#{self.class.root}/temp"))
+        FileUtils.rmdir(File.dirname(src_site.path), parents: true) if Dir.empty?(File.dirname(src_site.path))
+        Fs.mkdir_p(File.dirname(path))
+        FileUtils.rmdir(path, parents: true) if Fs.exists?(path) && Dir.empty?(path)
+        Fs.mv(temp_path, path) if Fs.exists?(temp_path)
+      else
+        Fs.mkdir_p(File.dirname(path))
+        Fs.mv(src_site.path, path)
       end
     end
 

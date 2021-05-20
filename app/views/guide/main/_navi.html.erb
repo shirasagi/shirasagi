@@ -1,0 +1,8 @@
+<%= node_navi :guide do %>
+  <% if Guide::Question.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+    <h3><%= link_to t("guide.question"), guide_questions_path %></h3>
+  <% end %>
+  <% if Guide::Procedure.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+    <h3><%= link_to t("guide.procedure"), guide_procedures_path %></h3>
+  <% end %>
+<% end %>

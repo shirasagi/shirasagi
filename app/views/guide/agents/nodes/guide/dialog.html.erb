@@ -1,0 +1,32 @@
+<%
+  def before_url
+    @condition.present? ? "#{@cur_node.url}dialog.html?condition=#{@before_condition}" : @cur_node.url
+  end
+%>
+<nav class="guide-node-header">
+  <div class="links">
+    <%= link_to t("guide.links.back_to_before"), "#{before_url}#{@cur_node.guide_url_fragment}" %>
+    <%= link_to t("guide.links.back_to_first"), "#{@cur_node.url}#{@cur_node.guide_url_fragment}" %>
+  </div>
+  <div class="progress">
+    <span class="evaluated-length"><%= @evaluated_length + 1 %></span>
+    <span class="longest-length"><%= @longest_length %></span>
+  </div>
+</nav>
+
+<%= form_for :item, url: "#{@cur_node.url}dialog.html#{@cur_node.guide_url_fragment}", html: { method: "GET", enforce_utf8: false } do |f| %>
+  <div class="guide-node-form">
+    <%= hidden_field_tag :question, @question.id %>
+    <%= hidden_field_tag :condition, @condition %>
+
+    <% if @question.question_type == "choices" %>
+      <% if @question.check_type == "single" %>
+        <%= render partial: "radiobutton", locals: { f: f } %>
+      <% else %>
+        <%= render partial: "checkbox", locals: { f: f } %>
+      <% end %>
+    <% else %>
+      <%= render partial: "yes_no", locals: { f: f } %>
+    <% end %>
+  </div>
+<% end %>

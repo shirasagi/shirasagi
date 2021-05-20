@@ -1,6 +1,6 @@
 class Job::Sns::LogsController < ApplicationController
-  include Sns::BaseFilter
-  include Sns::CrudFilter
+  include ::Sns::BaseFilter
+  include ::Sns::CrudFilter
   include Job::LogsFilter
 
   navi_view "job/sns/main/navi"

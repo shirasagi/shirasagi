@@ -19,7 +19,7 @@
     <tbody>
 
     <% @manageable_users.each do |item| %>
-      <% user_presence = item.user_presence(@cur_site) || Gws::UserPresence.new %>
+      <% user_presence = item.user_presence(@cur_site) %>
       <tr data-id="<%= item.id %>" class="editable">
         <td class="presence-state-toggle">
           <div class="no-overflow">
@@ -48,7 +48,7 @@
 
     <% if @manageable %>
       <% @group_users.each do |item| %>
-        <% user_presence = item.user_presence(@cur_site) || Gws::UserPresence.new %>
+        <% user_presence = item.user_presence(@cur_site) %>
         <tr data-id="<%= item.id %>" class="editable">
           <td class="presence-state-toggle">
             <div class="no-overflow">
@@ -76,7 +76,7 @@
       <% end %>
     <% else %>
       <% @group_users.each do |item| %>
-        <% user_presence = item.user_presence(@cur_site) || Gws::UserPresence.new %>
+        <% user_presence = item.user_presence(@cur_site) %>
         <tr data-id="<%= item.id %>">
           <td class="no-overflow">
             <span class="presence-state <%= user_presence.state_style %>">

@@ -3,8 +3,8 @@ require 'spec_helper'
 describe 'members/agents/nodes/login', type: :feature, dbscope: :example, js: true do
   describe "ss-2724" do
     let(:root_site) { cms_site }
-    let(:site1) { create(:cms_site_subdir, domains: root_site.domains) }
-    let(:site2) { create(:cms_site_subdir, domains: root_site.domains) }
+    let(:site1) { create(:cms_site_subdir, domains: root_site.domains, parent_id: root_site.id) }
+    let(:site2) { create(:cms_site_subdir, domains: root_site.domains, parent_id: root_site.id) }
 
     let(:site1_layout) { create_cms_layout(cur_site: site1) }
     let(:site2_layout) { create_cms_layout(cur_site: site2) }
