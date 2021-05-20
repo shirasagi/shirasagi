@@ -475,7 +475,7 @@ GEM
     rdoc (6.1.1)
     regexp_parser (1.7.0)
     retriable (3.1.2)
-    rexml (3.2.4)
+    rexml (3.2.5)
     rly (0.2.3)
     romaji (0.2.4)
       rake (>= 0.8.0)
