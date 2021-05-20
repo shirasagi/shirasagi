@@ -5,7 +5,6 @@ module Cms::Addon
 
     included do
       field :line_auto_post, type: String, metadata: { branch: false }
-      field :line_edit_auto_post, type: String, metadata: { branch: false }
       field :line_posted, type: Array, default: [], metadata: { branch: false }
       field :line_post_error,  type: String, metadata: { branch: false }
 
@@ -16,16 +15,12 @@ module Cms::Addon
       validate :validate_line_title, if: -> { name.present? && line_auto_post == "active" }
       validate :validate_line_text_message, if: -> { line_text_message.present? }
 
-      permit_params :line_auto_post, :line_edit_auto_post, :line_text_message, :line_post_format
+      permit_params :line_auto_post, :line_text_message, :line_post_format
 
       after_save :post_line_bot
     end
 
     def line_auto_post_options
-      %w(expired active).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
-    end
-
-    def line_edit_auto_post_options
       %w(expired active).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
     end
 
@@ -37,7 +32,7 @@ module Cms::Addon
       self.site = site || @cur_site
       return false if !site.line_token_enabled?
       return false if line_auto_post != "active"
-      return false if line_posted.present? && line_edit_auto_post != "active"
+      return false if line_posted.present?
       true
     end
 

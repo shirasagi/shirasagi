@@ -4,11 +4,10 @@ module Cms::SnsHelper
 
     site = @item.site
     item = (@item.respond_to?(:master) && @item.master) ? @item.master : @item
-    line_posted = item.line_posted.present?
 
     return false if !site.line_token_enabled?
     return false if @item.line_auto_post != "active"
-    return false if line_posted && @item.line_edit_auto_post != "active"
+    return false if item.line_posted.present?
     true
   end
 

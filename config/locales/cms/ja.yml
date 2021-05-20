@@ -809,7 +809,6 @@ ja:
       cms/addon/node_line_post_setting:
         node_line_auto_post: LINE投稿
         node_line_post_format: 投稿形式
-        node_line_edit_auto_post: 編集時に自動投稿
       cms/addon/import/page:
         in_file: ファイル
       cms/addon/import/group:
@@ -1035,7 +1034,6 @@ ja:
         line_text_message: LINEメッセージ
         line_text_message_placeholder: "○月○日、○○○イベントが行われます。詳しくは、市ホームページをご覧ください。\n※全角45文字以内\n※改行はしないでください"
         line_posted: 投稿日時
-        line_edit_auto_post: 編集時に自動投稿
         line_post_error: 投稿エラー
 
   activemodel:
@@ -2150,8 +2148,6 @@ ja:
         -
         - ・LINEメッセージのみ
         - LINEメッセージと記事へのリンクをカルーセル形式で投稿します。
-      node_line_edit_auto_post:
-        - 有効に設定すると公開記事を編集時にLINE投稿をおこないます。
 
     cms/addon/line_poster:
       line_auto_post:
@@ -2169,8 +2165,6 @@ ja:
         - LINEメッセージと記事へのリンクをカルーセル形式で投稿します。
       line_text_message:
         - LINEに投稿するメッセージを入力します。
-      line_edit_auto_post:
-        - 有効に設定すると公開記事を編集時にLINE投稿をおこないます。
 
   all_content:
     page_id: ページID
