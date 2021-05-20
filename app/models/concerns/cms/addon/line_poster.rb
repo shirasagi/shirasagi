@@ -20,7 +20,7 @@ module Cms::Addon
 
       permit_params :line_auto_post, :line_text_message, :line_post_format
 
-      after_save :post_line_bot
+      after_save :post_to_line
     end
 
     def line_auto_post_options
@@ -28,7 +28,7 @@ module Cms::Addon
     end
 
     def line_post_format_options
-      %w(thumb_carousel body_carousel message_only_carousel).map { |v| [I18n.t("cms.options.line_post_format_options.#{v}"), v] }
+      %w(thumb_carousel body_carousel message_only_carousel).map { |v| [I18n.t("cms.options.line_post_format.#{v}"), v] }
     end
 
     def line_post_enabled?
@@ -81,48 +81,58 @@ module Cms::Addon
       end
     end
 
-    def post_line_bot
+    def post_to_line
       return unless public?
       return unless public_node?
-      return if @posted_line_bot
+      return if @posted_to_line
 
-      post_to_line if line_post_enabled?
+      execute_post_to_line if line_post_enabled?
 
-      @posted_line_bot = true
+      @posted_to_line = true
     end
 
-    def post_to_line
-      self.site = site || @cur_site
-      client = line_client
-      messages = []
+    def execute_post_to_line
+      Cms::SnsPostLog::Line.create_with(self) do |log|
+        begin
+          posted_at = Time.zone.now
+          log.created = posted_at
+          log.action = "broadcast"
 
-      if line_post_format == "thumb_carousel"
-        if thumb
-          messages << line_message_carousel(thumb.full_url)
-        else
-          raise I18n.t("errors.messages.thumb_is_blank")
+          client = line_client
+          messages = []
+          if line_post_format == "thumb_carousel"
+            if thumb
+              messages << line_message_carousel(thumb.full_url)
+            else
+              raise I18n.t("errors.messages.thumb_is_blank")
+            end
+          elsif line_post_format == "body_carousel"
+            img_url = first_img_full_url
+            if img_url
+              messages << line_message_carousel(img_url)
+            else
+              raise I18n.t("errors.messages.not_found_file_url_in_body")
+            end
+          elsif line_post_format == "message_only_carousel"
+            messages << line_message_carousel
+          end
+          raise "messages blank" if messages.blank?
+          log.messages = messages
+
+          res = client.broadcast(messages)
+          log.response_code = res.code
+          log.response_body = res.body
+          raise "#{res.code} #{res.body}" if res.code != "200"
+
+          self.add_to_set(line_posted: posted_at)
+          self.unset(:line_post_error)
+          log.state = "success"
+        rescue => e
+          Rails.logger.fatal("post_to_line failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+          log.error_message = "post_to_twitter failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
+          self.set(line_post_error: "#{e.class} (#{e.message})")
         end
-      elsif line_post_format == "body_carousel"
-        img_url = first_img_full_url
-        if img_url
-          messages << line_message_carousel(img_url)
-        else
-          raise I18n.t("errors.messages.not_found_file_url_in_body")
-        end
-      elsif line_post_format == "message_only_carousel"
-        messages << line_message_carousel
       end
-
-      raise "messages blank" if messages.blank?
-
-      res = client.broadcast(messages)
-      raise "#{res.code} #{res.body}" if res.code != "200"
-
-      self.add_to_set(line_posted: Time.zone.now)
-      self.unset(:line_post_error)
-    rescue => e
-      Rails.logger.fatal("post_to_line failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-      self.set(line_post_error: "#{e.class} (#{e.message})")
     end
 
     def line_message_carousel(thumb_url = nil)

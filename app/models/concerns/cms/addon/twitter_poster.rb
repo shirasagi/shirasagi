@@ -24,7 +24,7 @@ module Cms::Addon
                     :twitter_post_id,
                     :twitter_user_id
 
-      after_save :post_sns
+      after_save :post_to_twitter
       after_remove_file :delete_sns
     end
 
@@ -71,54 +71,56 @@ module Cms::Addon
 
     private
 
-    def post_sns
+    def post_to_twitter
       return unless public?
       return unless public_node?
-      return if @posted_sns
+      return if @posted_to_twitter
 
-      # tweet
-      post_to_twitter if twitter_post_enabled?
+      execute_post_to_twitter if twitter_post_enabled?
 
-      @posted_sns = true
+      @posted_to_twitter = true
     end
 
-    def post_to_twitter
-      tweet = "#{name}｜#{full_url}"
-      client = connect_twitter
-      media_files = []
-      # 画像の添付を収集
-      attached_files.each do |file|
-        next if !file.image?
-        media_files << ::File.new(file.path)
-        break if media_files.length >= TWITTER_MAX_MEDIA_COUNT
-      end
-      if media_files.present?
-        # 画像の添付があれば update_with_media を用いて投稿
-        twitter_param = client.update_with_media(tweet, media_files)
-      else
-        # 画像の添付がなければ update を用いて投稿
-        twitter_param = client.update(tweet)
-      end
-      # 戻り値から投稿IDを取得し、DBに保存
-      twitter_id = twitter_param.id
-      # URLを表示するためにスクリーンネームを取得し、DBに保存
-      user_screen_id = client.user.screen_name
-      self.set(twitter_post_id: twitter_id, twitter_user_id: user_screen_id)
-      self.add_to_set(
-        twitter_posted: {
-          twitter_post_id: twitter_id.to_s,
-          twitter_user_id: user_screen_id,
-          posted_at: Time.zone.now
-        }
-      )
-      self.unset(:twitter_post_error)
-    rescue => e
-      Rails.logger.fatal("post_to_twitter failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-      self.set(twitter_post_error: "#{e.class} (#{e.message})")
-    ensure
-      if media_files.present?
-        media_files.each do |file|
-          file.close rescue nil
+    def execute_post_to_twitter
+      Cms::SnsPostLog::Twitter.create_with(self) do |log|
+        begin
+          posted_at = Time.zone.now
+          log.created = posted_at
+
+          message = "#{name}｜#{full_url}"
+          client = connect_twitter
+          media_files = tweet_media_files
+
+          if media_files.present?
+            # 画像の添付があれば update_with_media を用いて投稿
+            log.action = "update_with_media"
+            log.message = message
+            log.media_files = media_files.map(&:path)
+            tweet = client.update_with_media(message, media_files)
+          else
+            # 画像の添付がなければ update を用いて投稿
+            log.action = "update"
+            log.message = message
+            tweet = client.update(message)
+          end
+          twitter_id = tweet.id
+          user_screen_id = client.user.screen_name
+          log.response_tweet = tweet.to_h.to_json
+
+          self.set(twitter_post_id: twitter_id, twitter_user_id: user_screen_id)
+          self.add_to_set(
+            twitter_posted: {
+              twitter_post_id: twitter_id.to_s,
+              twitter_user_id: user_screen_id,
+              posted_at: Time.zone.now
+            }
+          )
+          self.unset(:twitter_post_error)
+          log.state = "success"
+        rescue => e
+          Rails.logger.fatal("post_to_twitter failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+          log.error_message = "post_to_twitter failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
+          self.set(twitter_post_error: "#{e.class} (#{e.message})")
         end
       end
     end
@@ -135,17 +137,39 @@ module Cms::Addon
 
     def delete_sns_from_twitter
       return if twitter_posted.blank?
+      Cms::SnsPostLog::Twitter.create_with(self) do |log|
+        posted_at = Time.zone.now
+        log.created = posted_at
+        log.state = "error"
 
-      client = connect_twitter
-      twitter_posted.to_a.each do |posted|
-        post_id = posted[:twitter_post_id]
-        deleted_tweets = client.destroy_status(post_id) rescue nil
-        self.add_to_set(deleted_twitter_posted: posted) if deleted_tweets.present?
+        begin
+          log.action = "destroy_status"
+          client = connect_twitter
+
+          twitter_posted.to_a.each do |posted|
+            post_id = posted[:twitter_post_id]
+            log.destroy_post_ids << post_id
+            deleted_tweets = client.destroy_status(post_id) rescue nil
+            self.add_to_set(deleted_twitter_posted: posted) if deleted_tweets.present?
+          end
+          self.unset(:twitter_post_id, :twitter_user_id, :twitter_posted, :twitter_post_error)
+          log.state = "success"
+        rescue => e
+          Rails.logger.fatal("delete_sns_from_twitter failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+          log.error_message = "post_to_twitter failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
+          self.set(twitter_post_error: "#{e.class} (#{e.message})")
+        end
       end
-      self.unset(:twitter_post_id, :twitter_user_id, :twitter_posted, :twitter_post_error)
-    rescue => e
-      Rails.logger.fatal("delete_sns_from_twitter failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-      self.set(twitter_post_error: "#{e.class} (#{e.message})")
+    end
+
+    def tweet_media_files
+      media_files = []
+      attached_files.each do |file|
+        next if !file.image?
+        media_files << ::File.new(file.path)
+        break if media_files.length >= TWITTER_MAX_MEDIA_COUNT
+      end
+      media_files
     end
   end
 end

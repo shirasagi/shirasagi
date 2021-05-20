@@ -13,6 +13,6 @@ module Cms::Addon::NodeLinePostSetting
   end
 
   def node_line_post_format_options
-    I18n.t("cms.options.line_post_format_options").map { |k, v| [v, k] }
+    I18n.t("cms.options.line_post_format").map { |k, v| [v, k] }
   end
 end

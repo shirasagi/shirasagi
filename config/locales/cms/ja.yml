@@ -330,7 +330,7 @@ ja:
         left: 左
         center: 中央
         right: 右
-      line_post_format_options:
+      line_post_format:
         thumb_carousel: サムネイル画像とLINEメッセージ
         body_carousel: 本文内の最初の画像とLINEメッセージ
         message_only_carousel: LINEメッセージ
