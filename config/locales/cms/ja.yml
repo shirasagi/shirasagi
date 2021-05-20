@@ -538,8 +538,8 @@ ja:
       cms/import/body: 本文
       cms/edit_lock: 排他制御
       cms/sns_share: SNS共有
-      cms/sns_poster: SNS自動投稿設定
-      cms/node_auto_post_setting: SNS自動投稿設定
+      cms/twitter_poster: Twitter連携
+      cms/node_twitter_post_setting: Twitter連携設定
       cms/node_line_post_setting: LINE連携設定
       cms/captcha: 認証
       cms/body_layout_html: HTML
@@ -795,14 +795,15 @@ ja:
       cms/addon/sns_share:
         sns_share_states: 表示
         sns_share_orders: 並び順
-      cms/addon/sns_poster:
-        sns_poster: SNS自動投稿設定
-        twitter_auto_post: Twitter自動投稿
+      cms/addon/twitter_poster:
+        twitter_auto_post: Twitter投稿
+        twitter_url: TweetURL
+        twitter_posted_at: 投稿日時
         sns_auto_delete: 非公開時に投稿を削除
         twitter_post_error: 投稿エラー
-      cms/addon/node_auto_post_setting:
+      cms/addon/node_twitter_post_setting:
         node_auto_post_setting: SNS自動投稿設定
-        node_twitter_auto_post: Twitter自動投稿
+        node_twitter_auto_post: Twitter投稿
         node_sns_auto_delete: 非公開時に投稿を削除
       cms/addon/node_line_post_setting:
         node_line_auto_post: LINE投稿

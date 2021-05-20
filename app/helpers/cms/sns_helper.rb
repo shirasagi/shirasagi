@@ -1,5 +1,5 @@
 module Cms::SnsHelper
-  def line_post_confirm?
+  def show_line_post_confirm?
     return false if !@item.class.include?(Cms::Addon::LinePoster)
 
     site = @item.site
@@ -11,8 +11,8 @@ module Cms::SnsHelper
     true
   end
 
-  def twitter_post_confirm?
-    return false if !@item.class.include?(Cms::Addon::SnsPoster)
+  def show_twitter_post_confirm?
+    return false if !@item.class.include?(Cms::Addon::TwitterPoster)
 
     item = (@item.respond_to?(:master) && @item.master) ? @item.master : @item
 
@@ -23,10 +23,10 @@ module Cms::SnsHelper
 
   def render_sns_post_confirm
     messages = []
-    if line_post_confirm?
+    if show_line_post_confirm?
       messages << t("cms.confirm.line_post_enabled")
     end
-    if twitter_post_confirm?
+    if show_twitter_post_confirm?
       messages << t("cms.confirm.twitter_post_enabled")
     end
 

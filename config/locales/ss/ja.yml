@@ -409,7 +409,6 @@ ja:
       ss/facebook_setting: Facebook設定
       ss/twitter_setting: Twitter設定
       ss/line_setting: Line設定
-      ss/site_auto_post_setting: SNS自動投稿設定
       ss/approve_setting: 承認設定
       ss/editor_setting: エディタ設定
       ss/mail_setting: メール設定
@@ -640,9 +639,6 @@ ja:
       ss/addon/line_setting:
         line_channel_secret: チャンネルシークレット
         line_channel_access_token: チャンネルアクセストークン
-      ss/addon/site_auto_post_setting:
-        site_twitter_auto_post: Twitter自動投稿
-        site_sns_auto_delete: 非公開時に投稿を削除
       ss/addon/file_setting:
         file_resizing: 添付ファイルリサイズ
         file_resizing_width: 幅
@@ -1045,11 +1041,6 @@ ja:
       line_channel_access_token:
         - Lineのチャンネルアクセストークンを設定します。
         - Lineとの連携に必須です。
-    ss/addon/site_auto_post_setting:
-      site_twitter_auto_post:
-        - Twitterへの自動投稿の設定を行います。
-      site_sns_auto_delete:
-        - 記事非公開時にSNSへ投稿した内容を削除します。
     ss/addon/file_setting:
       file_resizing:
         - ページの添付ファイル（アップロード）のリサイズにてデフォルトサイズを設定できます。

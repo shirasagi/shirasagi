@@ -1,4 +1,4 @@
-module Cms::Addon::NodeAutoPostSetting
+module Cms::Addon::NodeTwitterPostSetting
   extend ActiveSupport::Concern
   extend SS::Addon
 

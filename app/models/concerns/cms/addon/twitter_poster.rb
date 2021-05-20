@@ -1,5 +1,5 @@
 module Cms::Addon
-  module SnsPoster
+  module TwitterPoster
     extend ActiveSupport::Concern
     include Cms::Content
     extend SS::Addon
@@ -139,7 +139,7 @@ module Cms::Addon
         deleted_tweets = client.destroy_status(post_id) rescue nil
         self.add_to_set(deleted_twitter_posted: posted) if deleted_tweets.present?
       end
-      self.unset(:twitter_post_id, :twitter_user_id, :twitter_posted, :twitter_post_error) rescue nil
+      self.unset(:twitter_post_id, :twitter_user_id, :twitter_posted, :twitter_post_error)
     rescue => e
       Rails.logger.fatal("delete_sns_from_twitter failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       self.set(twitter_post_error: "#{e.class} (#{e.message})")
