@@ -2,7 +2,7 @@
   <% @item.data.each do |data| %>
     <dt><%= tryb { data.column.name } || "Unknown Name" %></dt>
     <% if data.column && data.column.input_type =~ /upload_file/ %>
-      <dd><%= link_to data.value, inquiry_path(params[:site], params[:cid], params[:id], data.values[0]) %></dd>
+      <dd><%= link_to data.value, { action: :download_afile, fid: data.values[0] } %></dd>
     <% else %>
       <dd><%= br sanitize(data.value, tags: []) %></dd>
     <% end %>
@@ -30,5 +30,21 @@
   <% if @item.source_name.present? %>
     <dt><%= @model.t :source_name %></dt>
     <dd><%= @item.source_name %></dd>
+  <% end %>
+
+  <% if @item.inquiry_page_url.present? %>
+    <dt><%= @model.t :inquiry_page_url %></dt>
+    <dd>
+      <% if @item.inquiry_page_content.try(:public?) %>
+        <%= link_to(@item.inquiry_page_content.full_url, @item.inquiry_page_content.full_url, target: "_blank") %>
+      <% else %>
+        <%= @item.inquiry_page_url %>
+      <% end %>
+    </dd>
+  <% end %>
+
+  <% if @item.inquiry_page_name.present? %>
+    <dt><%= @model.t :inquiry_page_name %></dt>
+    <dd><%= @item.inquiry_page_name %></dd>
   <% end %>
 </dl>

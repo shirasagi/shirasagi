@@ -1,6 +1,7 @@
 module Cms::PageFilter
   extend ActiveSupport::Concern
   include Cms::CrudFilter
+  include Cms::MicheckerFilter
 
   included do
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :move, :copy, :contains_urls]

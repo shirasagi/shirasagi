@@ -53,11 +53,13 @@
   <dt><%= @model.t :conditions %><%= @model.tt :conditions %></dt>
   <dd><%= f.text_area :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
 
-  <dt class="sort"><%= @model.t :sort %><%= @model.tt :sort %></dt>
-  <dd class="sort">
-    <%= f.select :sort, @item.sort_options, include_blank: " " %>
-    <span class="sort-description hide"></span>
-  </dd>
+  <% if @model.use_sort %>
+    <dt class="sort"><%= @model.t :sort %><%= @model.tt :sort %></dt>
+    <dd class="sort">
+      <%= f.select :sort, @item.sort_options, include_blank: " " %>
+      <span class="sort-description hide"></span>
+    </dd>
+  <% end %>
 
   <dt class="limit"><%= @model.t :limit %><%= @model.tt :limit %></dt>
   <dd class="limit"><%= f.number_field :limit %></dd>
@@ -69,15 +71,21 @@
 </dl>
 
 <dl class="see loop-format-shirasagi">
-  <dt><%= @model.t :upper_html %><%= @model.tt :upper_html %></dt>
-  <dd><%= f.text_area :upper_html, class: :html %></dd>
+  <% if @model.use_upper_html %>
+    <dt><%= @model.t :upper_html %><%= @model.tt :upper_html %></dt>
+    <dd><%= f.text_area :upper_html, class: :html %></dd>
+  <% end %>
 
-  <dt><%= @model.t :loop_html %><%= @model.tt :loop_html %></dt>
-  <dd><%= f.select :loop_setting_id, ancestral_loop_settings, include_blank: t('cms.input_directly') %></dd>
-  <dd><%= f.text_area :loop_html, class: :html, style: "height: 100px;" %></dd>
+  <% if @model.use_loop_html %>
+    <dt><%= @model.t :loop_html %><%= @model.tt :loop_html %></dt>
+    <dd><%= f.select :loop_setting_id, ancestral_loop_settings, include_blank: t('cms.input_directly') %></dd>
+    <dd><%= f.text_area :loop_html, class: :html, style: "height: 100px;" %></dd>
+  <% end %>
 
-  <dt><%= @model.t :lower_html %><%= @model.tt :lower_html %></dt>
-  <dd><%= f.text_area :lower_html, class: :html %></dd>
+  <% if @model.use_lower_html %>
+    <dt><%= @model.t :lower_html %><%= @model.tt :lower_html %></dt>
+    <dd><%= f.text_area :lower_html, class: :html %></dd>
+  <% end %>
 
   <% if @model.use_no_items_display %>
     <dt><%= @model.t :no_items_display_state %><%= @model.tt :no_items_display_state %></dt>

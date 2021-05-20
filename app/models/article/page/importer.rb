@@ -180,7 +180,7 @@ class Article::Page::Importer
       item.contact_state = from_label(value, item.contact_state_options)
     end
     importer.simple_column :contact_group do |row, item, head, value|
-      item.contact_group = SS::Group.where(name: value).first
+      item.contact_group = Cms::Group.where(name: value).first
     end
     importer.simple_column :contact_charge
     importer.simple_column :contact_tel

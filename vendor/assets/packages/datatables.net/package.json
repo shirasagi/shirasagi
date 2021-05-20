@@ -1,0 +1,58 @@
+{
+  "_from": "datatables.net@1.10.21",
+  "_id": "datatables.net@1.10.21",
+  "_inBundle": false,
+  "_integrity": "sha512-/bSZtxmf3GTpYcvEmwZ8q26I1yhSx8qklR2B+s1K8+/51UW/zc2zTYwJMqr/Z+iCYixAc00ildj4g2x0Qamolw==",
+  "_location": "/datatables.net",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "datatables.net@1.10.21",
+    "name": "datatables.net",
+    "escapedName": "datatables.net",
+    "rawSpec": "1.10.21",
+    "saveSpec": null,
+    "fetchSpec": "1.10.21"
+  },
+  "_requiredBy": [
+    "/datatables.net-dt"
+  ],
+  "_resolved": "https://registry.npmjs.org/datatables.net/-/datatables.net-1.10.21.tgz",
+  "_shasum": "f1d35c8e5c3eb7f5caef39e80cd5b836a8c77103",
+  "_spec": "datatables.net@1.10.21",
+  "_where": "/Users/yujihirai/datatables/node_modules/datatables.net-dt",
+  "author": {
+    "name": "SpryMedia Ltd",
+    "url": "http://datatables.net"
+  },
+  "bugs": {
+    "url": "https://datatables.net/forums"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "jquery": ">=1.7"
+  },
+  "deprecated": false,
+  "description": "DataTables for jQuery ",
+  "files": [
+    "js/**/*.js"
+  ],
+  "homepage": "https://datatables.net",
+  "keywords": [
+    "filter",
+    "sort",
+    "DataTables",
+    "jQuery",
+    "table",
+    "DataTables"
+  ],
+  "license": "MIT",
+  "main": "js/jquery.dataTables.js",
+  "name": "datatables.net",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DataTables/Dist-DataTables.git"
+  },
+  "version": "1.10.21"
+}

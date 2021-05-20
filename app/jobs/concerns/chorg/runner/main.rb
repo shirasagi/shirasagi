@@ -5,14 +5,18 @@ module Chorg::Runner::Main
 
   def save_or_collect_errors(entity)
     if entity.valid?
-      task.store_entity_changes(entity)
+      put_log("save : #{entity.class}(#{entity.id})")
+      task.store_entity_changes(entity, target_site(entity))
       entity.save
       true
+    elsif exclude_validation_model?(entity)
+      put_log("save (skip validate) : #{entity.class}(#{entity.id})")
+      task.store_entity_changes(entity, target_site(entity))
+      entity.save!(validate: false)
+      true
     else
-      entity.errors.full_messages.each do |message|
-        put_error(message.to_s)
-      end
-      task.store_entity_errors(entity)
+      put_error("save failed : #{entity.class}(#{entity.id}) #{entity.errors.full_messages.join(", ")}")
+      task.store_entity_errors(entity, target_site(entity))
       false
     end
   rescue ScriptError, StandardError => e
@@ -21,7 +25,7 @@ module Chorg::Runner::Main
   end
 
   def delete_entity(entity)
-    task.store_entity_deletes(entity)
+    task.store_entity_deletes(entity, target_site(entity))
     if @item.disable_if_possible? && (user_like?(entity) || group_like?(entity))
       entity.disable
     else
@@ -37,6 +41,15 @@ module Chorg::Runner::Main
       new_ids = substituter.call(:group_ids, user.group_ids, to_id)
       if old_ids != new_ids
         user.group_ids = new_ids
+
+        if user.try(:gws_main_group_ids).present?
+          user.gws_main_group_ids.each do |k, v|
+            if v == from_id
+              user.gws_main_group_ids[k] = to_id
+            end
+          end
+        end
+
         save_or_collect_errors(user)
         new_names = user.groups.pluck(:name).join(",")
         put_log("moved user's group name=#{user.name}, from=#{old_names}, to=#{new_names}")
@@ -50,6 +63,15 @@ module Chorg::Runner::Main
 
   def group_like?(entity)
     entity.class.ancestors.include?(SS::Model::Group)
+  end
+
+  def exclude_validation_model?(entity)
+    @exclude_validation_models ||= begin
+      SS.config.gws.chorg["exclude_validation_models"].map { |model| model.constantize }
+    rescue
+      []
+    end
+    @exclude_validation_models.include?(entity.class)
   end
 
   def import_user_csv

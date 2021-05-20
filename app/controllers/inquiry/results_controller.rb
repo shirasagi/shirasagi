@@ -19,17 +19,21 @@ class Inquiry::ResultsController < ApplicationController
 
   def set_aggregation
     @cur_node = @cur_node.becomes_with_route
+    raise "403" if @cur_node.route != "inquiry/form"
     @columns = @cur_node.columns.order_by(order: 1)
-    @answer_count = @cur_node.answers.count
+    @answer_count = @cur_node.answers.site(@cur_site).allow(:read, @cur_user).count
 
     options = params[:s] || {}
     options[:site] = @cur_site
     options[:node] = @cur_node
+    options[:user] = @cur_user
+    @answer_data_opts = options
     @aggregation = @cur_node.aggregate_select_columns(options)
   end
 
   def check_permission
-    raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+    return if @cur_site.inquiry_form_id != @cur_node.id
+    raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
   end
 
   public

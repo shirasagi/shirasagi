@@ -11,6 +11,15 @@
   <% if @model == ::Chorg::Revision %>
     <dt><%= @model.t :content_csv_file_id %></dt>
     <dd><%= tryb { @item.content_csv_file.humanized_name } %></dd>
+
+    <dt><%= @model.t :target_site_ids %></dt>
+    <dd>
+      <% if @item.target_sites.present? %>
+        <%=br @item.target_sites.map(&:name).join("\n") %>
+      <% else %>
+        <%= t("chorg.labels.all_sites") %>
+      <% end %>
+    </dd>
   <% end %>
 
   <dt><%= @model.t :delete_method %></dt>

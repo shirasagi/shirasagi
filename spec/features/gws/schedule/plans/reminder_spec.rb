@@ -12,6 +12,8 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
   let(:show_path) { gws_schedule_plan_path site, plan }
 
   before do
+    ActionMailer::Base.deliveries.clear
+
     # メール転送を有効にする
     user = gws_user
     user.notice_schedule_user_setting = "notify"
@@ -167,7 +169,6 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         expect(notification.notify_at).to eq plan.start_at - notification.interval.minutes
         expect(notification.base_time).to be_blank
         expect(notification.delivered_at).to eq Time.zone.at(0)
-        puts "notification.notify_at=#{notification.notify_at}"
       end
 
       #

@@ -10,6 +10,15 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
   def set_params
   end
 
+  def rescue_p
+    Proc.new do |exception|
+      exception_backtrace(exception) do |message|
+        @task.log message
+        Rails.logger.error message
+      end
+    end
+  end
+
   public
 
   def generate
@@ -27,7 +36,7 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
     ids   = nodes.pluck(:id)
 
     ids.each do |id|
-      rescue_with do
+      rescue_with(rescue_p: rescue_p) do
         node = Cms::Node.site(@site).and_public.where(id: id).first
         next unless node
         next unless node.public?
@@ -54,7 +63,7 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
     ids   = pages.pluck(:id)
 
     ids.each do |id|
-      rescue_with do
+      rescue_with(rescue_p: rescue_p) do
         @task.count
         page = Cms::Page.where(id: id).first
         next unless page
@@ -67,7 +76,7 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
     pages = node.pages.and_public
 
     pages.order_by(id: 1).find_each(batch_size: PER_BATCH) do |page|
-      rescue_with do
+      rescue_with(rescue_p: rescue_p) do
         @task.count
         @task.log page.url if page.becomes_with_route.generate_file
       end

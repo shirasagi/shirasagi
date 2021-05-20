@@ -14,6 +14,19 @@ class Gws::Chorg::Runner < Gws::ApplicationJob
   MAIN = 'main'.freeze
   TEST = 'test'.freeze
 
+  def models_scope
+    {}
+  end
+
+  def target_site(entity)
+    site = entity.try(:site)
+    if site && site.class.include?(SS::Model::Group)
+      site
+    else
+      super
+    end
+  end
+
   def self.job_class(type)
     case type
     when MAIN then

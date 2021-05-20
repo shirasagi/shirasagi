@@ -1,4 +1,7 @@
 <div class="cms-pages pages">
+<nav class="event-date">
+  <h2 class="<%= event_h1_class @month %>"><%= "#{@year}#{t_date('year')}#{@month}#{t_date('month')}" %></h2>
+</nav>
 <%= render_page_list %>
 </div>
 

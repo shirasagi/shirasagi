@@ -52,7 +52,7 @@ module Job::TasksFilter
 
   def reset_state
     set_item
-    @item.state = 'stop'
+    @item.state = SS::Task::STATE_STOP
     if @item.save
       respond_to do |format|
         format.html { redirect_to({ action: :index }, { notice: I18n.t('job.notice.reseted_state') }) }

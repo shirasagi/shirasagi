@@ -11,7 +11,7 @@ module Contact::Addon
       field :contact_email, type: String
       field :contact_link_url, type: String
       field :contact_link_name, type: String
-      belongs_to :contact_group, class_name: "SS::Group"
+      belongs_to :contact_group, class_name: "Cms::Group"
 
       validates :contact_link_url, "sys/trusted_url" => true
 
@@ -43,13 +43,15 @@ module Contact::Addon
     end
 
     def contact_present?
-      [contact_charge,
-       contact_tel,
-       contact_fax,
-       contact_email,
-       contact_link_url,
-       contact_link_name
-      ].map(&:present?).any?
+      %i[
+        contact_charge
+        contact_tel
+        contact_fax
+        contact_email
+        contact_link_url
+        contact_link_name
+        contact_group
+      ].any? { |m| send(m).present? }
     end
 
     def contact_link

@@ -1,0 +1,37 @@
+<dl class="see mod-chorg-entity_log">
+  <dt class="wide">
+    <%= @entity_site["label"] %> / <%= @entity_model["label"] %>
+  </dt>
+  <dd class="wide">
+    <table class="index">
+      <thead>
+        <tr>
+          <th><%= "区分1" %></th>
+          <th><%= "区分2" %></th>
+          <th><%= "タイトル" %></th>
+          <th><%= "ID" %></th>
+          <th><%= "操作" %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @items.each do |key, item| %>
+          <tr>
+            <td><%= item["model_label"] %></td>
+            <td><%= item["class_label"] %></td>
+            <td><%= link_to item["title"], { action: :show_entity, entity_index: key } %></td>
+            <td><%= item["id"] %></td>
+            <td>
+              <% if item['creates'] %>
+                <%= t('chorg.views.chorg/entity_log.options.operation.creates') %>
+              <% elsif item['changes'] %>
+                <%= t('chorg.views.chorg/entity_log.options.operation.changes') %>
+              <% elsif item['deletes'] %>
+                <%= t('chorg.views.chorg/entity_log.options.operation.deletes') %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

@@ -137,6 +137,9 @@ class Cms::PreviewController < ApplicationController
         m
       end
     end
+    body.gsub!(/<form.*?method="get".*?>/) do |m|
+      m.sub(/action="/, "action=\"#{preview_url}")
+    end
 
     if rendered = options[:rendered]
       case rendered[:type]
@@ -146,6 +149,8 @@ class Cms::PreviewController < ApplicationController
         merge_node_paths(options)
       end
     end
+
+    return body if params.key?("no-controller")
 
     body.sub!(/<body.*?>/im) do
       ::Regexp.last_match[0] + render_to_string(partial: "tool", locals: options)

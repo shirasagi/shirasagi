@@ -147,4 +147,105 @@ describe "sys_sites", type: :feature, dbscope: :example do
       expect(SS::Site.all.count).to eq 0
     end
   end
+
+  describe "move" do
+    let!(:site1) { create(:sys_site, name: unique_id, host: unique_id, domains: unique_domain) }
+    let!(:site2) { create(:sys_site, name: unique_id, host: unique_id, domains: unique_domain) }
+    let!(:node1) { create :article_node_page, site_id: site1.id }
+    let!(:node2) { create :article_node_page, site_id: site2.id }
+    let!(:page1) { create :article_page, site_id: site1.id, cur_node: node1 }
+    let!(:page2) { create :article_page, site_id: site2.id, cur_node: node2 }
+
+    before { login_sys_user }
+
+    context "when host is changed" do
+      it do
+        visit sys_sites_path
+        click_on site1.name
+        expect(status_code).to eq 200
+
+        click_on I18n.t("ss.links.edit")
+        within "form#item-form" do
+          fill_in "item[host]", with: unique_id
+          click_on I18n.t('ss.buttons.save')
+        end
+
+        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        page1.reload
+        page2.reload
+        expect(Fs.exists?(page1.path)).to be_truthy
+        expect(Fs.exists?(page2.path)).to be_truthy
+      end
+    end
+
+    context "when subdir and parent_id is changed" do
+      it do
+        visit sys_sites_path
+        click_on site2.name
+        expect(status_code).to eq 200
+
+        click_on I18n.t("ss.links.edit")
+        within "form#item-form" do
+          fill_in "item[subdir]", with: unique_id
+          select site1.name
+          click_on I18n.t('ss.buttons.save')
+        end
+
+        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        page1.reload
+        page2.reload
+        expect(Fs.exists?(page1.path)).to be_truthy
+        expect(Fs.exists?(page2.path)).to be_truthy
+
+        click_on I18n.t("ss.links.edit")
+        within "form#item-form" do
+          fill_in "item[subdir]", with: ''
+          select ''
+          click_on I18n.t('ss.buttons.save')
+        end
+
+        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        page1.reload
+        page2.reload
+        expect(Fs.exists?(page1.path)).to be_truthy
+        expect(Fs.exists?(page2.path)).to be_truthy
+      end
+    end
+
+    context "when host, subdir and parent_id is changed" do
+      it do
+        visit sys_sites_path
+        click_on site2.name
+        expect(status_code).to eq 200
+
+        click_on I18n.t("ss.links.edit")
+        within "form#item-form" do
+          fill_in "item[host]", with: unique_id
+          fill_in "item[subdir]", with: unique_id
+          select site1.name
+          click_on I18n.t('ss.buttons.save')
+        end
+
+        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        page1.reload
+        page2.reload
+        expect(Fs.exists?(page1.path)).to be_truthy
+        expect(Fs.exists?(page2.path)).to be_truthy
+
+        click_on I18n.t("ss.links.edit")
+        within "form#item-form" do
+          fill_in "item[host]", with: unique_id
+          fill_in "item[subdir]", with: ''
+          select ''
+          click_on I18n.t('ss.buttons.save')
+        end
+
+        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        page1.reload
+        page2.reload
+        expect(Fs.exists?(page1.path)).to be_truthy
+        expect(Fs.exists?(page2.path)).to be_truthy
+      end
+    end
+  end
 end

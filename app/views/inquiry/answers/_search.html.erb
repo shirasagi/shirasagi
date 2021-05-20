@@ -11,6 +11,9 @@
 %>
 <div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
+    <% if @cur_user.cms_role_permit_any?(@cur_site, "read_other_inquiry_answers") %>
+      <%= select_tag("s[group]", options_for_select(@groups.to_options, @group.try(:id)), include_blank: t("inquiry.group")) %>
+    <% end %>
     <span style="margin-right: 10px;">
       <%= f.select :year, @years, include_blank: true %>
       <%= f.select :month, @months, include_blank: t("ads.yearly") %>
@@ -18,6 +21,6 @@
     <%= f.text_field :keyword, style: "width: 200px;" %>
     <%= f.select :state, @state_options %>
     <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
-    <input type="button" value="<%= t('ss.buttons.reset') %>" onclick="location.href='?'" class="btn", type: :reset />
+    <input type="reset" value="<%= t('ss.buttons.reset') %>" onclick="location.href='?'" class="btn" />
   <% end %>
 </div>

@@ -31,7 +31,7 @@
           $("#task-form .started").html(started.replace(/\..*/, "").replace("T", " "));
           $("#task-form .closed").html(closed.replace(/\..*/, "").replace("T", " "));
           $("#task-form .log").val(data.logs.join("\n"));
-          if (data["state"] == "stop") {
+          if (data["state"] === "completed") {
             $("#task-form .reset-state").hide();
           }
         }

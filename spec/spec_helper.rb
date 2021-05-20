@@ -140,6 +140,9 @@ RSpec.configure do |config|
   Capybara.configure do |config|
     config.ignore_hidden_elements = false
     config.default_max_wait_time = (ENV["CAPYBARA_MAX_WAIT_TIME"] || 10).to_i
+
+    # to test michecker, it is needed to bind globally to access server within docker container.
+    config.server_host = "0.0.0.0"
   end
 
   if ci? || ENV["rspec_retry"].present?

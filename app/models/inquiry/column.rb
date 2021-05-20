@@ -3,6 +3,7 @@ class Inquiry::Column
   include SS::Reference::Site
   include Cms::SitePermission
   include Inquiry::Addon::InputSetting
+  include Cms::Addon::GroupPermission
 
   INPUT_TYPE_VALIDATION_HANDLERS = [
     [ :email_field, :validate_email_field ].freeze,
@@ -11,6 +12,8 @@ class Inquiry::Column
     [ :check_box, :validate_check_box ].freeze,
     [ :upload_file, :validate_upload_file ].freeze,
   ].freeze
+
+  set_permission_name "inquiry_columns"
 
   seqid :id
   field :node_id, type: Integer
@@ -27,7 +30,10 @@ class Inquiry::Column
   validates :node_id, :state, :name, :max_upload_file_size, presence: true
 
   def answer_data(opts = {})
-    node.answers.search(opts).
+    answers = node.answers
+    answers = answers.site(opts[:site]) if opts[:site].present?
+    answers = answers.allow(:read, opts[:user]) if opts[:user].present?
+    answers.search(opts).
       map { |ans| ans.data.entries.select { |data| data.column_id == id } }.flatten
   end
 

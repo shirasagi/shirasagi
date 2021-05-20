@@ -1,0 +1,6 @@
+<% return if @item.inquiry_form.blank? %>
+<dl class="see mod-ss-inquiry-setting">
+  <dt><%= @model.t :inquiry_form_id %></dt>
+  <dd><%= @item.inquiry_form.name %></dd>
+  <dd><%= link_to @item.inquiry_form.full_url, @item.inquiry_form.full_url, target: "_blank", rel: "noopener" %></dd>
+</dl>

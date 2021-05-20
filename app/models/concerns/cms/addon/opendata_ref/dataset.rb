@@ -3,6 +3,7 @@ module Cms::Addon::OpendataRef::Dataset
   extend ActiveSupport::Concern
 
   included do
+    attr_accessor :skip_assoc_opendata
     field :opendata_dataset_state, type: String, default: 'none'
     embeds_ids :opendata_datasets, class_name: "Opendata::Dataset", metadata: { on_copy: :clear }
 
@@ -28,6 +29,7 @@ module Cms::Addon::OpendataRef::Dataset
   private
 
   def invoke_opendata_job(action)
+    return if skip_assoc_opendata.present?
     return if opendata_dataset_state.blank?
 
     parent = self.parent
