@@ -6,13 +6,14 @@ module Cms::Addon
     included do
       field :line_auto_post, type: String, metadata: { branch: false }
       field :line_posted, type: Array, default: [], metadata: { branch: false }
-      field :line_post_error,  type: String, metadata: { branch: false }
+      field :line_post_error, type: String, metadata: { branch: false }
 
       field :line_text_message, type: String, metadata: { branch: false }
       field :line_post_format, type: String, metadata: { branch: false }
 
-      validates :line_text_message, presence: true, if: -> { line_auto_post == "active" }
-      validate :validate_line_title, if: -> { name.present? && line_auto_post == "active" }
+      validates :line_text_message, presence: true, if: -> { line_post_enabled? }
+      validates :thumb_id, presence: true, if: -> { line_post_enabled? && line_post_format == "thumb_carousel" }
+      validate :validate_line_title, if: -> { line_post_enabled? && name.present? }
       validate :validate_line_text_message, if: -> { line_text_message.present? }
 
       permit_params :line_auto_post, :line_text_message, :line_post_format
@@ -29,9 +30,10 @@ module Cms::Addon
     end
 
     def line_post_enabled?
-      self.site = site || @cur_site
-      return false if !site.line_token_enabled?
+      line_token_enabled = (site || @cur_site).try(:line_token_enabled?)
+      return false if !line_token_enabled
       return false if line_auto_post != "active"
+      return false if respond_to?(:branch?) && branch?
       return false if line_posted.present?
       true
     end
@@ -42,6 +44,20 @@ module Cms::Addon
         config.channel_secret = site.line_channel_secret
         config.channel_token = site.line_channel_access_token
       end
+    end
+
+    def first_img_url
+      body = nil
+      body = html if respond_to?(:html)
+      body = column_values.map(&:to_html).join("\n") if respond_to?(:form) && form
+      SS::Html.extract_img_src(body, site.full_root_url)
+    end
+
+    def first_img_full_url
+      img_url = first_img_url
+      return if img_url.blank?
+      img_url = ::File.join(site.full_root_url, img_url) if img_url.start_with?('/')
+      img_url
     end
 
     private
@@ -83,13 +99,9 @@ module Cms::Addon
           raise I18n.t("errors.messages.thumb_is_blank")
         end
       elsif line_post_format == "body_carousel"
-        body = nil
-        body = html if respond_to?(:html)
-        body = column_values.map(&:to_html).join("\n") if respond_to?(:form) && form
-        file_url = SS::Html.extract_img_src(body)
-        if file_url
-          file_url = ::File.join(site.full_root_url, file_url)
-          messages << line_message_carousel(file_url)
+        img_url = first_img_full_url
+        if img_url
+          messages << line_message_carousel(img_url)
         else
           raise I18n.t("errors.messages.not_found_file_url_in_body")
         end
@@ -119,7 +131,7 @@ module Cms::Addon
             "label": I18n.t("cms.visit_article"),
             "uri": full_url
           }
-        ],
+        ]
       }
 
       if thumb_url.present?
@@ -132,7 +144,7 @@ module Cms::Addon
         "altText": name,
         "template": {
           "type": "carousel",
-          "columns": [column],
+          "columns": [column]
         }
       }
     end
