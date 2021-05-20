@@ -4,6 +4,8 @@ module Cms::Addon
     extend SS::Addon
 
     included do
+      attr_accessor :skip_line_post
+
       field :line_auto_post, type: String
       field :line_posted, type: Array, default: [], metadata: { branch: false }
       field :line_post_error, type: String, metadata: { branch: false }
@@ -30,8 +32,10 @@ module Cms::Addon
     end
 
     def line_post_enabled?
-      line_token_enabled = (site || @cur_site).try(:line_token_enabled?)
-      return false if !line_token_enabled
+      token_enabled = (site || @cur_site).try(:line_token_enabled?)
+
+      return false if !token_enabled
+      return false if skip_line_post.present?
       return false if line_auto_post != "active"
       return false if respond_to?(:branch?) && branch?
       return false if line_posted.present?

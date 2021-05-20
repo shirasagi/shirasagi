@@ -9,7 +9,7 @@ module Cms::Addon
     TWITTER_MAX_MEDIA_COUNT = 4
 
     included do
-      attr_accessor :skip_sns_post
+      attr_accessor :skip_twitter_post
 
       field :twitter_auto_post,      type: String
       field :twitter_user_id,        type: String, metadata: { branch: false }
@@ -50,8 +50,11 @@ module Cms::Addon
     end
 
     def twitter_post_enabled?
-      return false if skip_sns_post.present?
-      return false unless use_twitter_post?
+      token_enabled = (site || @cur_site).try(:twitter_token_enabled?)
+
+      return false if !token_enabled
+      return false if skip_twitter_post.present?
+      return false if !use_twitter_post?
       return false if respond_to?(:branch?) && branch?
       return false if twitter_posted.present?
       true
