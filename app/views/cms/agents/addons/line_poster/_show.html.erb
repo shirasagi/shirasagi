@@ -11,9 +11,6 @@
     <dt><%= @model.t :line_text_message %></dt>
     <dd><%=br @item.line_text_message %></dd>
 
-    <dt><%= @model.t :line_edit_auto_post %></dt>
-    <dd><%= @item.label :line_edit_auto_post %></dd>
-
     <dt><%= @model.t :line_posted %></dt>
     <dd><%= tryb { @item.line_posted.first.strftime("%Y/%m/%d %H:%M") } %></dd>
 
