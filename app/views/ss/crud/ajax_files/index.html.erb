@@ -18,7 +18,9 @@ if ($cboxContent.length) {
 
 SS.ajaxForm("form.user-file", {
   success: function(data) {
-    $("#cboxLoadedContent").load("<%= url_for(action: :index, file_size: params[:file_size]) %>", function() {
+    $("<div />").load("<%= url_for(action: :index, file_size: params[:file_size]) %>", function(data, status) {
+      $.colorbox.prep($(this).contents());
+
       if (!Array.isArray(data) || data.length == 0) {
         return;
       }

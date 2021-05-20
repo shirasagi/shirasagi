@@ -8,7 +8,9 @@ if ($element) {
 
 SS.ajaxForm("form.user-file", {
   success: function(data) {
-    $("#cboxLoadedContent").load("<%= url_for(action: :index) %>", function() {
+    $("<div />").load("<%= url_for(action: :index) %>", function(data, status) {
+      $.colorbox.prep($(this).contents());
+
       if (!Array.isArray(data) || data.length == 0) return;
 
       $.each(data, function(index, file) {
