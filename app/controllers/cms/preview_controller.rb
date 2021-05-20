@@ -150,6 +150,8 @@ class Cms::PreviewController < ApplicationController
       end
     end
 
+    return body if params.key?("no-controller")
+
     body.sub!(/<body.*?>/im) do
       ::Regexp.last_match[0] + render_to_string(partial: "tool", locals: options)
     end

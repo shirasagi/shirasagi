@@ -1,0 +1,42 @@
+<dl class="see">
+  <dt><%= @model.t :target_class %></dt>
+  <dd><%= I18n.t(@item.target_class.underscore, scope: "mongoid.models", default: @item.target_class) %></dd>
+
+  <dt><%= @model.t :target_id %></dt>
+  <dd><%= @item.target_id %></dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><span class="state"><%= @item.state %></span></dd>
+
+  <dt><%= @model.t :michecker_last_executed_at %></dt>
+  <dd>
+    <%= @item.michecker_last_executed_at.try { |time| I18n.l(time, format: :picker) } %>
+    <% if @item.started && @item.closed %>
+      in
+      <%= (@item.closed - @item.started).to_f %><%= t("datetime.prompts.second") %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :michecker_last_result %></dt>
+  <dd><%= @item.michecker_last_result %></dd>
+
+  <% if ::Fs.exists?(@item.html_checker_report_filepath) %>
+    <dt><%= @model.t :html_checker_report_filepath %></dt>
+    <dd><%= link_to t("ss.links.download"), url_for(action: :result, type: "accessibility_report", _: @item.updated.to_i, format: "csv"), class: "btn btn-html-checker-report" %></dd>
+  <% end %>
+
+  <% if ::Fs.exists?(@item.low_vision_report_filepath) %>
+    <dt><%= @model.t :low_vision_report_filepath %></dt>
+    <dd><%= link_to t("ss.links.download"), url_for(action: :result, type: "lowvision_report", _: @item.updated.to_i, format: "csv"), class: "btn btn-low-vision-report" %></dd>
+  <% end %>
+
+  <% if ::Fs.exists?(@item.low_vision_source_filepath) %>
+    <dt><%= @model.t :low_vision_source_filepath %></dt>
+    <dd><%= image_tag(url_for(action: :result, type: "lowvision_source", _: @item.updated.to_i, format: "jpeg"), alt: ::File.basename(@item.low_vision_source_filepath), class: "img-low-vision-source") %></dd>
+  <% end %>
+
+  <% if ::Fs.exists?(@item.low_vision_result_filepath) %>
+    <dt><%= @model.t :low_vision_result_filepath %></dt>
+    <dd><%= image_tag(url_for(action: :result, type: "lowvision_result", _: @item.updated.to_i, format: "jpeg"), alt: ::File.basename(@item.low_vision_result_filepath), class: "img-low-vision-result") %></dd>
+  <% end %>
+</dl>

@@ -11,6 +11,7 @@
  *= require tippy.js/dist/tippy.css
  *= require tippy.js/themes/light.css
  *= require tippy.js/themes/light-border.css
+ *= require datatables.net-dt/css/jquery.dataTables.css
  */
 
 // base
@@ -28,6 +29,7 @@
 @import "sns/ss";
 @import "cms/ss";
 @import "cms/column";
+@import "cms/michecker";
 
 // modules
 @import "ads/ss";

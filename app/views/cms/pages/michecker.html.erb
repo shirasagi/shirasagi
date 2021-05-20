@@ -1,0 +1,49 @@
+<div class="michecker" id="ss-michecker">
+  <div class="michecker__main" id="resize">
+    <iframe class="michecker__main-content" src="<%= cms_preview_path(path: @item.url[1..-1], "no-controller" => true) %>" frameborder="none"></iframe>
+  </div>
+  <div class="michecker__footer">
+    <div class="michecker-head">
+      <h5>miChecker</h5>
+      <button type="button" class="btn btn-michecker-start" disabled="disabled" data-href="<%= url_for(action: "michecker_start", format: "json") %>">
+        <%= t('cms.cms/michecker.start') %>
+      </button>
+
+      <div class="michecker-notice">
+        <%= t('cms.cms/michecker.loading') %> <%= loading %>
+      </div>
+    </div>
+
+    <div class="michecker-report__selector hide">
+      <select name="report-type">
+        <option value="accessibility" data-href="<%= url_for(action: "michecker_result", type: "accessibility_report", format: "html") %>">
+          <%= t('cms.cms/michecker.accessibility') %>
+        </option>
+        <option value="low-vision" data-href="<%= url_for(action: "michecker_result", type: "lowvision_report", format: "html") %>">
+          <%= t('cms.cms/michecker.lowvision') %>
+        </option>
+      </select>
+    </div>
+
+    <div class="michecker-report__accessibility hide">
+    </div>
+
+    <div class="michecker-report__low-vision hide">
+    </div>
+  </div>
+</div>
+
+<%= jquery do %>
+  Cms_Michecker.messages.prepared = <%== t("cms.cms/michecker.prepared").to_json %>;
+  Cms_Michecker.messages.micheckerStarted = <%== t("cms.cms/michecker.michecker_started").to_json %>;
+  Cms_Michecker.messages.micheckerFailedToStart = <%== t("cms.cms/michecker.michecker_failed_to_start").to_json %>;
+  Cms_Michecker.messages.micheckerUnknownError = <%== t("cms.cms/michecker.michecker_unknown_error").to_json %>;
+  Cms_Michecker.messages.micheckerCompleted = <%== t("cms.cms/michecker.michecker_completed").to_json %>;
+  Cms_Michecker.messages.accessibilityReportLoadError = <%== t("cms.cms/michecker.accessibility_report_load_error").to_json %>;
+  Cms_Michecker.messages.lowVisionReportLoadError = <%== t("cms.cms/michecker.low_vision_report_load_error").to_json %>;
+
+  var michecker = new Cms_Michecker("#ss-michecker");
+  $("#resize").resizable({
+    handles: 's'
+  });
+<% end %>

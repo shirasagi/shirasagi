@@ -15,13 +15,28 @@ class SS::AccessToken
     where token: token.to_s
   }
 
+  class << self
+    def new_token
+      SecureRandom.urlsafe_base64(12)
+    end
+
+    def remove_access_token_from_query(fullpath)
+      return fullpath if fullpath.blank?
+
+      fullpath = fullpath.sub(/(&)?access_token=[\w\-_=]*/, '')
+      fullpath = fullpath.sub("?&", "?")
+      fullpath = fullpath[0..-2] if fullpath.ends_with?("?")
+      fullpath
+    end
+  end
+
   def enabled?
     return false if expiration_date.blank?
-    return expiration_date > Time.zone.now
+    expiration_date > Time.zone.now
   end
 
   def create_token
-    self.token = SecureRandom.urlsafe_base64(12)
+    self.token = self.class.new_token
     self.expiration_date = 5.minutes.from_now
   end
 end

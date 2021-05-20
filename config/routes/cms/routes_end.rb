@@ -63,6 +63,12 @@ Rails.application.routes.draw do
     delete :lock, action: :unlock, on: :member
   end
 
+  concern :michecker do
+    get :michecker, on: :member
+    post :michecker_start, on: :member
+    get :michecker_result, on: :member
+  end
+
   namespace "cms", path: ".s:site" do
     get "/" => "main#index", as: :main
     match "logout" => "login#logout", as: :logout, via: [:get]
@@ -94,7 +100,7 @@ Rails.application.routes.draw do
       get :routes, on: :collection
     end
 
-    resources :pages, concerns: [:deletion, :copy, :move, :command, :lock, :contains_urls]
+    resources :pages, concerns: [:deletion, :copy, :move, :command, :lock, :contains_urls, :michecker]
     resources :layouts, concerns: :deletion
     resources :body_layouts, concerns: :deletion
     resources :editor_templates, concerns: [:deletion, :template]
