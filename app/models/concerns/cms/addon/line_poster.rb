@@ -13,9 +13,9 @@ module Cms::Addon
       field :line_text_message, type: String
       field :line_post_format, type: String
 
-      validates :line_text_message, presence: true, if: -> { line_post_enabled? }
-      validates :thumb_id, presence: true, if: -> { line_post_enabled? && line_post_format == "thumb_carousel" }
-      validate :validate_line_title, if: -> { line_post_enabled? && name.present? }
+      validates :line_text_message, presence: true, if: -> { line_auto_post == "active" }
+      validates :thumb_id, presence: true, if: -> { line_auto_post == "active" && line_post_format == "thumb_carousel" }
+      validate :validate_line_title, if: -> { line_auto_post == "active" && name.present? }
       validate :validate_line_text_message, if: -> { line_text_message.present? }
 
       permit_params :line_auto_post, :line_text_message, :line_post_format
