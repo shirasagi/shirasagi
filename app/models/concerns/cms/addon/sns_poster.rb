@@ -15,13 +15,11 @@ module Cms::Addon
       field :twitter_user_id,     type: String, metadata: { branch: false }
       field :twitter_post_id,     type: String, metadata: { branch: false }
       field :sns_auto_delete,     type: String
-      field :edit_auto_post,      type: String
       field :twitter_posted,      type: Array, default: [], metadata: { branch: false }
       field :twitter_post_error,  type: String, metadata: { branch: false }
 
       permit_params :twitter_auto_post,
                     :sns_auto_delete,
-                    :edit_auto_post,
                     :twitter_post_id,
                     :twitter_user_id
 
@@ -37,20 +35,12 @@ module Cms::Addon
       %w(expired active).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
     end
 
-    def edit_auto_post_options
-      %w(expired active).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
-    end
-
     def use_twitter_post?
       twitter_auto_post == "active"
     end
 
     def sns_auto_delete_enabled?
       sns_auto_delete == "active"
-    end
-
-    def edit_auto_post_enabled?
-      edit_auto_post == "active"
     end
 
     def twitter_url(post_id, user_id)
@@ -62,7 +52,6 @@ module Cms::Addon
       return false if skip_sns_post.present?
       return false unless use_twitter_post?
       return false if respond_to?(:branch?) && branch?
-      return true if edit_auto_post_enabled?
       return false if twitter_posted.present?
       true
     end

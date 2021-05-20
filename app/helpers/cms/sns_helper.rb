@@ -15,10 +15,9 @@ module Cms::SnsHelper
     return false if !@item.class.include?(Cms::Addon::SnsPoster)
 
     item = (@item.respond_to?(:master) && @item.master) ? @item.master : @item
-    twitter_posted = item.twitter_posted.present?
 
     return false if !@item.use_twitter_post?
-    return false if twitter_posted && !@item.edit_auto_post_enabled?
+    return false if item.twitter_posted.present?
     true
   end
 

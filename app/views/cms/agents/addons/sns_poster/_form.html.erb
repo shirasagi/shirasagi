@@ -6,7 +6,6 @@
 
   twitter_auto_post = @item.twitter_auto_post.presence || @cur_node.try(:node_twitter_auto_post).presence || @cur_site.try(:site_twitter_auto_post).presence
   sns_auto_delete = @item.sns_auto_delete.presence || @cur_node.try(:node_sns_auto_delete).presence || @cur_site.try(:site_sns_auto_delete).presence
-  edit_auto_post = @item.edit_auto_post.presence || @cur_node.try(:node_edit_auto_post).presence || @cur_site.try(:site_edit_auto_post).presence
 %>
 
 <dl class="see mod-cms-sns_poster">
@@ -17,7 +16,4 @@
 
   <dt><%= @model.t :sns_auto_delete %><%= @model.tt :sns_auto_delete %></dt>
   <dd><%=  f.select :sns_auto_delete, @item.sns_auto_delete_options, :selected => sns_auto_delete %></dd>
-
-  <dt><%= @model.t :edit_auto_post %><%= @model.tt :edit_auto_post %></dt>
-  <dd><%= f.select :edit_auto_post, @item.edit_auto_post_options, :selected => edit_auto_post %></dd>
 </dl>

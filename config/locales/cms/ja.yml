@@ -799,13 +799,11 @@ ja:
         sns_poster: SNS自動投稿設定
         twitter_auto_post: Twitter自動投稿
         sns_auto_delete: 非公開時に投稿を削除
-        edit_auto_post: 編集時に自動投稿
         twitter_post_error: 投稿エラー
       cms/addon/node_auto_post_setting:
         node_auto_post_setting: SNS自動投稿設定
         node_twitter_auto_post: Twitter自動投稿
         node_sns_auto_delete: 非公開時に投稿を削除
-        node_edit_auto_post: 編集時に自動投稿
       cms/addon/node_line_post_setting:
         node_line_auto_post: LINE投稿
         node_line_post_format: 投稿形式
