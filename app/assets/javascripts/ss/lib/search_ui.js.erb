@@ -65,14 +65,33 @@ this.SS_SearchUI = (function () {
   };
 
   SS_SearchUI.render = function () {
-    var self;
-    self = this;
-    return $(".ajax-selected").each(function () {
-      $(this).on("click", ".deselect", self.deselect);
-      if ($(this).find("a.deselect").size() === 0) {
-        return $(this).hide();
+    var self = this;
+
+    $(".ajax-selected").each(function () {
+      var $ajaxSelected = $(this);
+
+      $ajaxSelected.on("click", ".deselect", self.deselect);
+      if ($ajaxSelected.find("a.deselect").size() === 0) {
+        $ajaxSelected.hide();
       }
     });
+
+    $(document)
+      .on("cbox_load", self.onColorBoxLoaded)
+      .on("cbox_cleanup", self.onColorBoxCleanedUp);
+  };
+
+  SS_SearchUI.onColorBoxLoaded = function (ev) {
+    if (!SS_SearchUI.anchorAjaxBox) {
+      // ファイル選択ダイアログの「編集」ボタンのクリックなどで別のモーダルが表示される場合がある。
+      // 別のモーダルからキャンセルなどで戻ってきた際に、元々の anchor を利用したい。
+      // そこで、初回表示時の anchor を記憶しておく。
+      SS_SearchUI.anchorAjaxBox = $.colorbox.element();
+    }
+  };
+
+  SS_SearchUI.onColorBoxCleanedUp = function (ev) {
+    SS_SearchUI.anchorAjaxBox = null;
   };
 
   SS_SearchUI.modal = function (options) {
@@ -81,10 +100,7 @@ this.SS_SearchUI = (function () {
     }
 
     var self = this;
-
     var colorbox = options.colorbox || $.colorbox;
-    self.anchorAjaxBox = options.anchor || colorbox.element();
-
     var $el = options.$el || $("#ajax-box");
 
     var isSameWindow = (window == $el[0].ownerDocument.defaultView)
