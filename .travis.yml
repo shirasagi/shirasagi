@@ -1,5 +1,5 @@
 language: ruby
-dist: trusty
+dist: focal
 sudo: false
 rvm:
   - 2.6.3
