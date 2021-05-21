@@ -58,9 +58,10 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
     expires_in = SS.config.rss.weather_xml["expires_in"].try { |threshold| SS::Duration.parse(threshold) rescue nil }
     expires_in ||= 3.days
-    threshold = Time.zone.now - expires_in
+    threshold = Time.zone.now.beginning_of_minute - expires_in
     Rss::TempFile.with_repl_master.lt(updated: threshold).destroy_all
     remove_old_cache(threshold)
+    remove_old_imported_urls(threshold)
   end
 
   def import_rss_item(rss_item)
@@ -240,12 +241,22 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
     now = Time.zone.now
     log_dir = ::File.join(self.class.data_cache_dir, node.id.to_s)
-    log_file = ::File.join(log_dir, "imported_#{now.to_f.to_s.sub(".", "_")}.log.gz")
-    tmp_log_file = ::File.join(log_dir, ".imported_#{now.to_f.to_s.sub(".", "_")}.log.gz")
+    basename = "imported_#{now.to_f.to_s.sub(".", "_")}.log.gz"
+    log_file = ::File.join(log_dir, basename)
+    tmp_log_file = ::File.join(log_dir, "." + basename)
     ::FileUtils.mkdir_p(log_dir) unless ::Dir.exists?(log_dir)
 
     # DISK FULL などにより不完全なファイルが作成されることを防止するために、作業ファイルに保存後、作業ファイルを移動するようにする。
     ::Zlib::GzipWriter.open(tmp_log_file) { |gz| gz.write(urls_with_date.to_json) }
     ::FileUtils.move(tmp_log_file, log_file, force: true)
+  end
+
+  def remove_old_imported_urls(threshold)
+    log_dir = ::File.join(self.class.data_cache_dir, node.id.to_s)
+
+    ::Dir.glob(%w(imported_*.log.gz), base: log_dir).each do |file_path|
+      file_path = ::File.expand_path(file_path, log_dir)
+      ::FileUtils.rm_f(file_path) if ::File.mtime(file_path) < threshold
+    end
   end
 end
