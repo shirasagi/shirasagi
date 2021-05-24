@@ -79,6 +79,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
           end
 
+          login_cms_user
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_no_css("dd", text: "https://twitter.com/user_screen_id/status/twitter_id")
@@ -146,6 +147,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
           end
 
+          login_cms_user
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_css("dd", text: "https://twitter.com/user_screen_id/status/twitter_id")
@@ -226,6 +228,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
           end
 
+          login_cms_user
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_css("dd", text: "https://twitter.com/user_screen_id/status/twitter_id")
