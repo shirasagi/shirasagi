@@ -335,6 +335,12 @@ ja:
         thumb_carousel: サムネイル画像とLINEメッセージ
         body_carousel: 本文内の最初の画像とLINEメッセージ
         message_only_carousel: LINEメッセージ
+      sns_post_log_type:
+        twitter: Twitter投稿
+        line: LINE投稿
+      sns_post_log_state:
+        success: 成功
+        error: エラー
     sns_share:
       fb_like: Facebook いいね！
       fb_share: Facebook シェア
@@ -1035,6 +1041,11 @@ ja:
         line_text_message_placeholder: "○月○日、○○○イベントが行われます。詳しくは、市ホームページをご覧ください。\n※全角45文字以内\n※改行はしないでください"
         line_posted: 投稿日時
         line_post_error: 投稿エラー
+      cms/sns_post_log/base:
+        name: タイトル
+        type: 投稿SNS
+        state: ステータス
+        page_id: 連携ページ
 
   activemodel:
     attributes:

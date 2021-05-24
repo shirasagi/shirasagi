@@ -118,7 +118,7 @@ module Cms::Addon
           log.state = "success"
         rescue => e
           Rails.logger.fatal("post_to_twitter failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-          log.error_message = "post_to_twitter failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
+          log.error = "post_to_twitter failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
           self.set(twitter_post_error: "#{e.class} (#{e.message})")
         end
       end
