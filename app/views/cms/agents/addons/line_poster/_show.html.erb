@@ -12,7 +12,21 @@
     <dd><%=br @item.line_text_message %></dd>
 
     <dt><%= @model.t :line_posted %></dt>
-    <dd><%= tryb { @item.line_posted.first.strftime("%Y/%m/%d %H:%M") } %></dd>
+    <dd>
+      <%= tryb { @item.line_posted.first.strftime("%Y/%m/%d %H:%M") } %>
+      <% if @item.line_posted.present? %>
+        <%= jquery do %>
+          $(".reset-sns-post").on("click", function() {
+            if (!confirm("<%= I18n.t('ss.confirm.reset_posted') %>")) {
+              return false;
+            }
+          });
+        <% end %>
+        <div style="margin-top: 5px;">
+          <%= link_to t("ss.links.reset_posted"), cms_apis_line_reset_path(id: @item), class: "btn reset-sns-post", method: :post %>
+        </div>
+      <% end %>
+    </dd>
 
     <% if @item.line_post_error.present? %>
       <dt class="depth-2"><%= @model.t :line_post_error %></dt>

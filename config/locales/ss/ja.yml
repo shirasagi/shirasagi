@@ -103,6 +103,7 @@ ja:
       send_email: メールを作成する
       send_message: メッセージを作成する
       copy_email_address: メールアドレスをコピー
+      reset_posted: 未投稿に戻す
     buttons:
       save: 保存
       new: 新規作成
@@ -173,6 +174,7 @@ ja:
       send: 送信してよろしいですか？
       publish: 公開してよろしいですか？
       depublish: 非公開にしてよろしいですか？
+      reset_posted: 未投稿状態に戻してもよろしいですか？
     notice:
       saved: 保存しました。
       deleted: 削除しました。
@@ -205,6 +207,7 @@ ja:
       unset_seen_all: 未読にしました。
       set_star_all: スターをつけました。
       unset_star_all: スターをはずしました。
+      reset_posted: 未投稿に戻しました。
 
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
