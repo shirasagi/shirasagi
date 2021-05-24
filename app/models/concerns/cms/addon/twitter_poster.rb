@@ -16,7 +16,6 @@ module Cms::Addon
       field :twitter_post_id,        type: String, metadata: { branch: false }
       field :sns_auto_delete,        type: String
       field :twitter_posted,         type: Array, default: [], metadata: { branch: false }
-      field :deleted_twitter_posted, type: Array, default: [], metadata: { branch: false }
       field :twitter_post_error,     type: String, metadata: { branch: false }
 
       permit_params :twitter_auto_post,
@@ -149,8 +148,7 @@ module Cms::Addon
           twitter_posted.to_a.each do |posted|
             post_id = posted[:twitter_post_id]
             log.destroy_post_ids << post_id
-            deleted_tweets = client.destroy_status(post_id) rescue nil
-            self.add_to_set(deleted_twitter_posted: posted) if deleted_tweets.present?
+            client.destroy_status(post_id) rescue nil
           end
           self.unset(:twitter_post_id, :twitter_user_id, :twitter_posted, :twitter_post_error)
           log.state = "success"
