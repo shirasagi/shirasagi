@@ -26,6 +26,10 @@ this.SS = (function () {
 
   SS.debug = false;
 
+  SS.confirm = {
+    delete: "<%= I18n.t 'ss.confirm.delete' %>"
+  };
+
   // $.isEmptyObject には IE11 で非互換がある。
   //
   //                            | Chrome 84 | IE 11  |
@@ -211,13 +215,16 @@ this.SS = (function () {
     });
   };
 
-  SS.ajaxForm = function (elem, params) {
-    var defaults;
-    if (params == null) {
+  SS.ajaxForm = function (elem, selector, params) {
+    if (typeof selector !== "string") {
+      params = params || selector;
+      selector = undefined;
+    }
+    if (!params) {
       params = {};
     }
     elem = $(elem);
-    defaults = {
+    var defaults = {
       url: elem.attr("action") + ".json",
       dataType: "json",
       success: function () {
@@ -226,17 +233,21 @@ this.SS = (function () {
         alert(["== Error =="].concat(data.responseJSON).join("\n"));
       }
     };
-    elem.on("submit", function (e) {
+    elem.on("submit", selector, function (e) {
       $(this).ajaxSubmit($.extend(true, defaults, params));
       e.preventDefault();
     });
   };
 
-  SS.ajax = function (elem, params) {
-    if (params == null) {
+  SS.ajax = function (elem, selector, params) {
+    if (typeof selector !== "string") {
+      params = params || selector;
+      selector = undefined;
+    }
+    if (!params) {
       params = {};
     }
-    return $(elem).on("click", function (e) {
+    return $(elem).on("click", selector, function (e) {
       var defaults, self;
       self = $(this);
       defaults = {
@@ -257,13 +268,18 @@ this.SS = (function () {
     });
   };
 
-  SS.ajaxDelete = function (elem, params) {
-    if (params == null) {
+  SS.ajaxDelete = function (elem, selector, params) {
+    if (typeof selector !== "string") {
+      params = params || selector;
+      selector = undefined;
+    }
+    if (!params) {
       params = {};
     }
-    return $(elem).on("click", function (e) {
+
+    $(elem).on("click", selector, function (e) {
       var defaults, self;
-      if (!confirm("<%= I18n.t 'ss.confirm.delete' %>")) {
+      if (!confirm(SS.confirm.delete)) {
         return false;
       }
       self = $(this);
@@ -273,15 +289,15 @@ this.SS = (function () {
         url: self.attr("href") + ".json",
         dataType: "json",
         beforeSend: function () {
-          return self.html(SS.loading);
+          self.html(SS.loading);
         },
         success: function () {
           if (self.data("remove")) {
-            return $(self.data("remove")).remove();
+            $(self.data("remove")).remove();
           }
         },
         error: function (data, status) {
-          return alert(["== Error =="].concat(data.responseJSON).join("\n"));
+          alert(["== Error =="].concat(data.responseJSON).join("\n"));
         }
       };
       $.ajax($.extend(true, defaults, params));
