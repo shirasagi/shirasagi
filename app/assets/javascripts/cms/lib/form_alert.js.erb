@@ -168,7 +168,7 @@ this.Form_Alert = (function () {
       messages = f();
     }
 
-    addonName = "投稿連携"
+    addonName = '<%= I18n.t("cms.sns_post") %>';
     $.each(messages, function() {
       Form_Alert.add(addonName, null, this);
     });
