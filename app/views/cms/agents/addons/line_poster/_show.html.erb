@@ -14,7 +14,7 @@
     <dt><%= @model.t :line_posted %></dt>
     <dd>
       <%= tryb { @item.line_posted.first.strftime("%Y/%m/%d %H:%M") } %>
-      <% if @item.line_posted.present? %>
+      <% if @item.allowed?(:release, @cur_user, site: @cur_site) && @item.line_posted.present? %>
         <%= jquery do %>
           $(".reset-sns-post").on("click", function() {
             if (!confirm("<%= I18n.t('ss.confirm.reset_posted') %>")) {
