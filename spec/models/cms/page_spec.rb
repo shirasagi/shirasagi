@@ -1,14 +1,19 @@
 require 'spec_helper'
 
-describe Cms::Page do
-  subject(:model) { Cms::Page }
-  subject(:factory) { :cms_page }
+describe Cms::Page, type: :model, dbscope: :example do
+  describe "factory" do
+    let(:factory) { :cms_page }
+    it_behaves_like "mongoid#save"
+  end
 
-  it_behaves_like "mongoid#save"
-  it_behaves_like "mongoid#find"
+  describe ".first" do
+    subject { create :cms_page }
+    let(:model) { subject.class }
+    it_behaves_like "mongoid#find"
+  end
 
   describe "#attributes" do
-    subject(:item) { model.last }
+    subject(:item) { create :cms_page }
     let(:show_path) { Rails.application.routes.url_helpers.cms_page_path(site: subject.site, id: subject) }
 
     it { expect(item.becomes_with_route).not_to eq nil }
@@ -76,7 +81,7 @@ describe Cms::Page do
   end
 
   describe "#name_for_index" do
-    let(:item) { model.last }
+    let(:item) { create :cms_page }
     subject { item.name_for_index }
 
     context "the value is set" do
@@ -135,6 +140,53 @@ describe Cms::Page do
         expect(subject).to be_invalid
         expect(subject.errors[:redirect_link].length).to eq 1
         expect(subject.errors[:redirect_link]).to include(I18n.t("errors.messages.trusted_url"))
+      end
+    end
+  end
+
+  context "database access" do
+    let(:site) { cms_site }
+
+    before do
+      create :cms_page, cur_site: site
+      expect(Cms::Page.all.count).to eq 1
+    end
+
+    context "without cur_site" do
+      it do
+        page = Cms::Page.all.first
+
+        case rand(0..6)
+        when 0
+          expect { page.path }.to change { MongoAccessCounter.succeeded_count }.by(1)
+        when 1
+          expect { page.url }.to change { MongoAccessCounter.succeeded_count }.by(1)
+        when 2
+          expect { page.full_url }.to change { MongoAccessCounter.succeeded_count }.by(1)
+        when 3
+          expect { page.json_path }.to change { MongoAccessCounter.succeeded_count }.by(1)
+        when 4
+          expect { page.json_url }.to change { MongoAccessCounter.succeeded_count }.by(1)
+        when 5
+          expect { page.preview_path }.to change { MongoAccessCounter.succeeded_count }.by(1)
+        when 6
+          expect { page.mobile_preview_path }.to change { MongoAccessCounter.succeeded_count }.by(1)
+        end
+      end
+    end
+
+    context "with cur_site" do
+      it do
+        page = Cms::Page.all.first
+        page.cur_site = site
+
+        expect { page.path }.to change { MongoAccessCounter.succeeded_count }.by(0)
+        expect { page.url }.to change { MongoAccessCounter.succeeded_count }.by(0)
+        expect { page.full_url }.to change { MongoAccessCounter.succeeded_count }.by(0)
+        expect { page.json_path }.to change { MongoAccessCounter.succeeded_count }.by(0)
+        expect { page.json_url }.to change { MongoAccessCounter.succeeded_count }.by(0)
+        expect { page.preview_path }.to change { MongoAccessCounter.succeeded_count }.by(0)
+        expect { page.mobile_preview_path }.to change { MongoAccessCounter.succeeded_count }.by(0)
       end
     end
   end

@@ -95,7 +95,7 @@ describe Cms::Node::Page, dbscope: :example do
     end
   end
 
-  context "database access of #url" do
+  context "database access" do
     let(:site) { cms_site }
 
     before do
@@ -103,18 +103,122 @@ describe Cms::Node::Page, dbscope: :example do
       expect(Cms::Node::Page.all.count).to eq 1
     end
 
-    context "without cur_site" do
-      it do
-        node = Cms::Node::Page.all.first
-        expect { node.url }.to change { MongoAccessCounter.succeeded_count }.by(1)
+    describe "#path" do
+      context "without cur_site" do
+        it do
+          node = Cms::Node::Page.all.first
+          expect { node.path }.to change { MongoAccessCounter.succeeded_count }.by(1)
+        end
+      end
+
+      context "with cur_site" do
+        it do
+          node = Cms::Node::Page.all.first
+          node.cur_site = site
+          expect { node.path }.to change { MongoAccessCounter.succeeded_count }.by(0)
+        end
       end
     end
 
-    context "with cur_site" do
-      it do
-        node = Cms::Node::Page.all.first
-        node.cur_site = site
-        expect { node.url }.to change { MongoAccessCounter.succeeded_count }.by(0)
+    describe "#url" do
+      context "without cur_site" do
+        it do
+          node = Cms::Node::Page.all.first
+          expect { node.url }.to change { MongoAccessCounter.succeeded_count }.by(1)
+        end
+      end
+
+      context "with cur_site" do
+        it do
+          node = Cms::Node::Page.all.first
+          node.cur_site = site
+          expect { node.url }.to change { MongoAccessCounter.succeeded_count }.by(0)
+        end
+      end
+    end
+
+    describe "#full_url" do
+      context "without cur_site" do
+        it do
+          node = Cms::Node::Page.all.first
+          expect { node.full_url }.to change { MongoAccessCounter.succeeded_count }.by(1)
+        end
+      end
+
+      context "with cur_site" do
+        it do
+          node = Cms::Node::Page.all.first
+          node.cur_site = site
+          expect { node.full_url }.to change { MongoAccessCounter.succeeded_count }.by(0)
+        end
+      end
+    end
+
+    describe "#json_path" do
+      context "without cur_site" do
+        it do
+          node = Cms::Node::Page.all.first
+          expect { node.json_path }.to change { MongoAccessCounter.succeeded_count }.by(1)
+        end
+      end
+
+      context "with cur_site" do
+        it do
+          node = Cms::Node::Page.all.first
+          node.cur_site = site
+          expect { node.json_path }.to change { MongoAccessCounter.succeeded_count }.by(0)
+        end
+      end
+    end
+
+    describe "#json_url" do
+      context "without cur_site" do
+        it do
+          node = Cms::Node::Page.all.first
+          expect { node.json_url }.to change { MongoAccessCounter.succeeded_count }.by(1)
+        end
+      end
+
+      context "with cur_site" do
+        it do
+          node = Cms::Node::Page.all.first
+          node.cur_site = site
+          expect { node.json_url }.to change { MongoAccessCounter.succeeded_count }.by(0)
+        end
+      end
+    end
+
+    describe "#preview_path" do
+      context "without cur_site" do
+        it do
+          node = Cms::Node::Page.all.first
+          expect { node.preview_path }.to change { MongoAccessCounter.succeeded_count }.by(1)
+        end
+      end
+
+      context "with cur_site" do
+        it do
+          node = Cms::Node::Page.all.first
+          node.cur_site = site
+          expect { node.preview_path }.to change { MongoAccessCounter.succeeded_count }.by(0)
+        end
+      end
+    end
+
+    describe "#mobile_preview_path" do
+      context "without cur_site" do
+        it do
+          node = Cms::Node::Page.all.first
+          expect { node.mobile_preview_path }.to change { MongoAccessCounter.succeeded_count }.by(1)
+        end
+      end
+
+      context "with cur_site" do
+        it do
+          node = Cms::Node::Page.all.first
+          node.cur_site = site
+          expect { node.mobile_preview_path }.to change { MongoAccessCounter.succeeded_count }.by(0)
+        end
       end
     end
   end
