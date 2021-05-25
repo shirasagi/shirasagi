@@ -172,23 +172,23 @@ module Cms::Content
   end
 
   def path
-    "#{site.path}/#{filename}"
+    "#{(@cur_site || site).path}/#{filename}"
   end
 
   def url
-    "#{site.url}#{filename}"
+    "#{(@cur_site || site).url}#{filename}"
   end
 
   def full_url
-    "#{site.full_url}#{filename}"
+    "#{(@cur_site || site).full_url}#{filename}"
   end
 
   def json_path
-    "#{site.path}/" + filename.sub(/(\/|\.html)?$/, ".json")
+    "#{(@cur_site || site).path}/" + filename.sub(/(\/|\.html)?$/, ".json")
   end
 
   def json_url
-    site.url + filename.sub(/(\/|\.html)?$/, ".json")
+    (@cur_site || site).url + filename.sub(/(\/|\.html)?$/, ".json")
   end
 
   def private_dir
@@ -319,13 +319,13 @@ module Cms::Content
     backup.data = attributes
     backup.data.delete(:lock_until)
     backup.data.delete(:lock_owner_id)
-    backup.site = self.site
+    backup.site = @cur_site || self.site
     backup.user = @cur_user
     backup.save
   end
 
   def validate_name
-    max_name_length = @cur_site.try(:max_name_length).to_i
+    max_name_length = (@cur_site || site).try(:max_name_length).to_i
 
     return if max_name_length <= 0
     if name.length > max_name_length
