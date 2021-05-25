@@ -13,7 +13,7 @@ module Member::AjaxFileFilter
 
   def set_member
     @cur_member = Cms::Member.find params[:member]
-    @cur_site = @cur_member.site
+    @cur_site = SS.current_site = @cur_member.site
   end
 
   def logged_in?

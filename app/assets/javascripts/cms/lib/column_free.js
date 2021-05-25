@@ -136,6 +136,9 @@ Cms_Column_Free.prototype.selectFile = function($item) {
       self.addFile(html);
     },
     error: function(xhr, status, error) {
+      if (xhr.responseJSON && Array.isArray(xhr.responseJSON)) {
+        return alert(["== Error =="].concat(xhr.responseJSON).join("\n"));
+      }
       $fileView.html(error);
     },
     complete: function() {

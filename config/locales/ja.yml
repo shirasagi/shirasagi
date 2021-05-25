@@ -143,6 +143,7 @@ ja:
       other_than: "は%{count}以外の値にしてください。"
       email: は有効な電子メールアドレスを入力してください。
       domain: は有効なドメインを入力してください。
+      image: は画像ファイルを入力してください。
       invalid_updated: "同じ画面で複数回保存しようとしています。この画面に入力中の内容は保存されていない可能性がありますので、変更箇所を別途保存して編集をやり直してください。"
       too_large_file: "%{filename}(%{size}) のサイズが大きすぎます（制限値: %{limit}）。"
       file_count: "ファイル数（%{size}）が多すぎます（制限値: %{limit}）。"
@@ -165,6 +166,7 @@ ja:
       not_found_webmail_role: "ウェブメール権限「%{name}」が見つかりません。"
       not_found_main_group: "グループ（主）「%{name}」が見つかりません。"
       not_found_user_title: "役職コード「%{code}」が見つかりません。"
+      upload_restricted: ご利用の環境ではファイルをアップロードできません。
       url: は有効なURLを入力してください。
       invalid_latlon: |-
         の正しい座標をカンマ(,)区切りで入力してください。

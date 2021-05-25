@@ -219,6 +219,8 @@ ja:
       import:
         blank_file: ファイルを入力してください。
         invalid_file_type: 不正なファイル形式です。
+      sanitizer:
+        wait: ファイルを無害化しています。しばらく時間をおいてから再度お試しください。
     apis:
       groups:
         index: グループを選択する
@@ -377,6 +379,15 @@ ja:
       gws_use:
         disabled: 使用しない
         enabled: 使用する
+      upload_policy:
+        default_none: 既定 (制限なし)
+        default_sanitizer: 既定 (無害化)
+        default_restricted: 既定 (アップロード拒否)
+        sanitizer: 無害化
+        restricted: アップロード拒否
+      sanitizer_state:
+        wait: 無害化中
+        complete: 無害化済
 
     tasks:
       started: 開始しました。
@@ -490,6 +501,7 @@ ja:
         mypage_domain: マイページドメイン
         group_ids: グループ
         domains_with_subdir: サブディレクトリを含めたドメイン
+        upload_policy: アップロード制限
       ss/model/user:
         name: 氏名
         kana: カナ
@@ -545,6 +557,7 @@ ja:
         expiration_date: 有効期限（終了）
         domains: ドメイン
         gws_use: グループウェアの使用
+        upload_policy: アップロード制限
       ss/user_group_history:
         created: 異動日時
         cms_site_id: CMSサイト
@@ -766,6 +779,9 @@ ja:
         inquiry_form_id: お問い合わせフォーム
 
   tooltip:
+    ss/model/site:
+      upload_policy:
+        - ファイルアップロード時の動作を設定します。
     ss/model/user:
       name:
         - ユーザーの名称を入力します。
@@ -833,6 +849,8 @@ ja:
       gws_use:
         - グループウェアを使用するかどうかを指定します。
         - 既定では、グループウェアを使用します。
+      upload_policy:
+        - ファイルアップロード時の動作を設定します。
     ss/document:
       title:
         - ページのタイトルに利用し、ブラウザのタイトルバーに表示されます。

@@ -43,7 +43,7 @@ class Webmail::LoginController < ApplicationController
     @item = SS::User.authenticate(email_or_uid, password) rescue false
     @item = nil if @item && !@item.enabled?
     @item = @item.try_switch_user || @item if @item
-    @cur_user = @item
+    @cur_user = SS.current_user = @item
 
     render_login @item, email_or_uid, session: true, password: password, logout_path: webmail_logout_path
   end

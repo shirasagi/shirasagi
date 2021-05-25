@@ -246,7 +246,8 @@ module ApplicationHelper
     return nil unless file
 
     content_tag(:div, class: "file-view", data: { "file-id" => file.id }) do
-      link_to(file.url, target: "_blank", rel: "noopener") do
+      output_buffer << sanitizer_status(file)
+      output_buffer << link_to(file.url, target: "_blank", rel: "noopener") do
         output_buffer << content_tag(:div, class: "thumb") do
           if file.image?
             image_tag(file.thumb_url, alt: file.basename)
@@ -279,5 +280,11 @@ module ApplicationHelper
 
   def required_label
     %(<div class="required">&lt;#{I18n.t('ss.required')}&gt;</div>).html_safe
+  end
+
+  def sanitizer_status(item)
+    return if item.sanitizer_state != 'wait'
+    h = %(<div class="sanitizer-status sanitizer-#{item.sanitizer_state}">#{item.label :sanitizer_state}</div>)
+    h.html_safe
   end
 end

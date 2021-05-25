@@ -13,6 +13,7 @@ class Fs::FilesController < ApplicationController
   def set_user
     @cur_user, _login_path, _logout_path = get_user_by_access_token
     @cur_user ||= get_user_by_session
+    SS.current_user = @cur_user
   end
 
   def set_item

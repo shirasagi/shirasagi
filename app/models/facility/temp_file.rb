@@ -9,6 +9,7 @@ class Facility::TempFile
   private
 
   def validate_image
-    errors.add :in_file, :invalid unless image?
+    return if SS.config.ss.sanitizer_input
+    errors.add :in_file, :image unless image?
   end
 end

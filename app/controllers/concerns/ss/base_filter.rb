@@ -77,6 +77,7 @@ module SS::BaseFilter
     end
 
     @cur_user, login_path, logout_path = get_user_by_access_token
+    SS.current_user = @cur_user
     if @cur_user
       set_user(@cur_user, session: true, login_path: login_path, logout_path: logout_path)
 
@@ -86,7 +87,7 @@ module SS::BaseFilter
       return
     end
 
-    @cur_user = get_user_by_session
+    @cur_user = SS.current_user = get_user_by_session
     if @cur_user
       set_last_logged_in
       return @cur_user
@@ -131,13 +132,13 @@ module SS::BaseFilter
     set_login_path_to_cookie(opts[:login_path] || request_path)
     session[:logout_path] = opts[:logout_path]
     redirect_to sns_mypage_path if opts[:redirect]
-    @cur_user = user
+    @cur_user = SS.current_user = user
   end
 
   def unset_user(opt = {})
     session[:user] = nil
     redirect_to login_path_by_cookie if opt[:redirect]
-    @cur_user = nil
+    @cur_user = SS.current_user = nil
   end
 
   def check_api_user
