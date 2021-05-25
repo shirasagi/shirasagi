@@ -96,6 +96,8 @@ module Cms::ListHelper
       end
 
       @items.each do |item|
+        item.cur_site = @cur_site if item.respond_to?(:cur_site=) && item.site_id == @cur_site.id
+
         ih = cur_item.render_loop_html(item, html: loop_html)
         ih.gsub!('#{current}', current_url?(item.url).to_s)
         h << ih
