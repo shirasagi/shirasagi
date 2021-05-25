@@ -21,7 +21,7 @@ module Chat::Addon
       permit_params :first_text, :first_suggest, :exception_text, :response_template, :question, :chat_success, :chat_retry
       permit_params :set_location, :radius
 
-      validates :radius, :numericality => { :greater_than_or_equal_to => 0 }
+      validates :radius, :numericality => { greater_than_or_equal_to: 0, allow_blank: true }
     end
   end
 end
