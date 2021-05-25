@@ -8,8 +8,10 @@ module SS::Config
 
     def replace_value_at(name, key, value)
       config = SS.config.send(name).to_h
+      old = config[key]
       config[key] = value
       replace_at(name, config)
+      old
     end
 
     private

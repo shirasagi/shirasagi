@@ -139,20 +139,20 @@ module SS
     @_ss_config ||= "SS::Config".constantize.setup
   end
 
-  def self.current_user
-    Thread.current["ss.user"]
-  end
-
-  def self.current_user=(user)
-    Thread.current["ss.user"] = user
-  end
-
   def self.current_site
     Thread.current["ss.site"]
   end
 
   def self.current_site=(site)
     Thread.current["ss.site"] = site
+  end
+
+  def self.current_user
+    Thread.current["ss.user"]
+  end
+
+  def self.current_user=(user)
+    Thread.current["ss.user"] = user
   end
 
   def self.current_organization
