@@ -94,4 +94,28 @@ describe Cms::Node::Page, dbscope: :example do
       end
     end
   end
+
+  context "database access of #url" do
+    let(:site) { cms_site }
+
+    before do
+      create :cms_node_page, cur_site: site
+      expect(Cms::Node::Page.all.count).to eq 1
+    end
+
+    context "without cur_site" do
+      it do
+        node = Cms::Node::Page.all.first
+        expect { node.url }.to change { MongoAccessCounter.succeeded_count }.by(1)
+      end
+    end
+
+    context "with cur_site" do
+      it do
+        node = Cms::Node::Page.all.first
+        node.cur_site = site
+        expect { node.url }.to change { MongoAccessCounter.succeeded_count }.by(0)
+      end
+    end
+  end
 end
