@@ -150,7 +150,7 @@ class Uploader::File
   private
 
   def validate_upload_policy
-    return unless %w(restricted sanitizer).include?(SS.config.ss.upload_policy)
+    return unless %w(restricted sanitizer).include?(SS::UploadPolicy.upload_policy)
     errors.add :base, :upload_restricted
   end
 

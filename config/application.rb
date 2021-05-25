@@ -63,8 +63,9 @@ module SS
     ensure
       Thread.current["ss.env"] = save_current_env
       Thread.current["ss.request"] = save_current_request
-      Thread.current["ss.user"] = nil
       Thread.current["ss.site"] = nil
+      Thread.current["ss.user"] = nil
+      Thread.current["ss.organization"] = nil
     end
 
     def current_env

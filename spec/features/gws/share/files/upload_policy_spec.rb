@@ -125,7 +125,8 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
 
     before do
       @save_config = SS.config.ss.upload_policy
-      SS.config.replace_value_at(:ss, :upload_policy, 'restricted')
+      SS.config.replace_value_at(:ss, :upload_policy, 'sanitizer')
+      site.upload_policy = 'restricted'
     end
 
     after do

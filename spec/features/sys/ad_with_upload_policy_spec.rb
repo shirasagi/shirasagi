@@ -71,7 +71,8 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
 
     before do
       @save_config = SS.config.ss.upload_policy
-      SS.config.replace_value_at(:ss, :upload_policy, 'restricted')
+      SS.config.replace_value_at(:ss, :upload_policy, 'sanitizer')
+      site.upload_policy = 'restricted'
     end
 
     after do

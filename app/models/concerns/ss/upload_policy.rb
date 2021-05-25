@@ -26,12 +26,12 @@ module SS::UploadPolicy
   private
 
   def validate_upload_policy
-    return unless SS.config.ss.upload_policy == 'restricted'
+    return unless SS::UploadPolicy.upload_policy == 'restricted'
     errors.add :base, :upload_restricted
   end
 
   def sanitizer_save_file
-    return false unless SS.config.ss.upload_policy == 'sanitizer'
+    return false unless SS::UploadPolicy.upload_policy == 'sanitizer'
     return false unless in_file.kind_of?(ActionDispatch::Http::UploadedFile)
     return false if try(:original_id)
 
@@ -45,16 +45,19 @@ module SS::UploadPolicy
   end
 
   def remove_sanitizer_file
-    Fs.rm_rf(sanitizer_input_path) if SS.config.ss.upload_policy == 'sanitizer'
+    Fs.rm_rf(sanitizer_input_path) if SS::UploadPolicy.upload_policy == 'sanitizer'
   end
 
   module_function
 
   def upload_policy
     return nil if SS.config.ss.upload_policy.blank?
-    return SS.current_site.upload_policy || SS.config.ss.upload_policy if SS.current_site
-    return SS.current_organization.upload_policy || SS.config.ss.upload_policy if SS.current_organization
-    SS.config.ss.upload_policy
+
+    default = SS.config.ss.upload_policy
+    return SS.current_site.upload_policy || default if SS.current_site
+    return SS.current_organization.upload_policy || default if SS.current_organization
+    return SS.current_user.organization.try(:upload_policy) || default if SS.current_user
+    return default
   end
 
   def upload_policy_options
