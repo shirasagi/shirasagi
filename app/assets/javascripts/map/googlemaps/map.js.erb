@@ -67,7 +67,7 @@ this.Googlemaps_Map = (function () {
     default_zoom = options.default_zoom || Googlemaps_Map.defaultZoom
 
     var mapOptions = {
-      center: new google.maps.LatLng(this.center[0], this.center[1]),
+      center: new google.maps.LatLng(this.center[1], this.center[0]),
       zoom: Googlemaps_Map.getZoom(),
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       panControl: false,
@@ -98,7 +98,7 @@ this.Googlemaps_Map = (function () {
   Googlemaps_Map.resize = function () {
     google.maps.event.trigger(this.map, "resize");
     if (!this.resized) {
-      this.map.setCenter(new google.maps.LatLng(this.center[0], this.center[1]));
+      this.map.setCenter(new google.maps.LatLng(this.center[1], this.center[0]));
       if (this.form) {
         this.form.renderMarkers();
       }
@@ -126,17 +126,17 @@ this.Googlemaps_Map = (function () {
       var marker_html, name, text;
       if (value["image"]) {
         Googlemaps_Map.markers[id]["marker"] = new google.maps.Marker({
-          position: new google.maps.LatLng(value["loc"][0], value["loc"][1]),
+          position: new google.maps.LatLng(value["loc"][1], value["loc"][0]),
           icon: value["image"],
           map: Googlemaps_Map.map
         });
       } else {
         Googlemaps_Map.markers[id]["marker"] = new google.maps.Marker({
-          position: new google.maps.LatLng(value["loc"][0], value["loc"][1]),
+          position: new google.maps.LatLng(value["loc"][1], value["loc"][0]),
           map: Googlemaps_Map.map
         });
       }
-      markerBounds.extend(new google.maps.LatLng(value["loc"][0], value["loc"][1]));
+      markerBounds.extend(new google.maps.LatLng(value["loc"][1], value["loc"][0]));
       if (value["html"]) {
         marker_html = value["html"];
         Googlemaps_Map.markers[id]["window"] = new google.maps.InfoWindow({
