@@ -58,6 +58,27 @@ this.Openlayers_Map_Form = (function () {
     ele.val(lat.toFixed(6) + "," + lon.toFixed(6));
   };
 
+  Openlayers_Map_Form.prototype.validateLoc = function (loc) {
+    var lat, latlon, lon;
+    if (!loc) {
+      return false;
+    }
+    latlon = loc.split(',');
+    lat = parseFloat(latlon[0]);
+    lon = parseFloat(latlon[1]);
+    if (!(lat && !isNaN(lat))) {
+      return false;
+    }
+    if (!(lon && !isNaN(lon))) {
+      return false;
+    }
+    if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   Openlayers_Map_Form.prototype.render = function () {
     this.initMap();
     this.renderMarkers();
@@ -279,10 +300,21 @@ this.Openlayers_Map_Form = (function () {
     return false;
   };
 
+  Openlayers_Map_Form.prototype.removeClickMarker = function () {
+    var feature, source;
+    if (this.clickMarkerId) {
+      feature = this.getMarker(this.clickMarkerId);
+      source = this.markerLayer.getSource();
+      source.removeFeature(feature);
+      this.clickMarkerId = null;
+      $(".mod-map .clicked").val("");
+    }
+  };
+
   Openlayers_Map_Form.prototype.renderEvents = function () {
     this.map.on('click', (function (_this) {
       return function (e) {
-        var feature, pos, source;
+        var feature, pos;
         feature = _this.map.forEachFeatureAtPixel(e.pixel, function (feature, layer) {
           return feature;
         });
@@ -290,11 +322,8 @@ this.Openlayers_Map_Form = (function () {
           _this.showPopup(e, feature);
           return;
         }
-        if (_this.clickMarkerId) {
-          feature = _this.getMarker(_this.clickMarkerId);
-          source = _this.markerLayer.getSource();
-          source.removeFeature(feature);
-        }
+
+        _this.removeClickMarker();
         pos = ol.proj.transform(e.coordinate, "EPSG:3857", "EPSG:4326");
         while (pos[0] < 180) {
           pos[0] += 360;
@@ -350,7 +379,7 @@ this.Openlayers_Map_Form = (function () {
       return function (e) {
         var ele;
         ele = e.target;
-        _this.createMarker($(ele).closest("dd.marker"));
+        _this.clickSetMarker($(ele).closest("dd.marker"));
         return false;
       };
     })(this));
@@ -367,14 +396,7 @@ this.Openlayers_Map_Form = (function () {
     });
     $(".mod-map .marker-loc-input").on('focus', (function (_this) {
       return function (e) {
-        var feature, source;
-        if (_this.clickMarkerId) {
-          feature = _this.getMarker(_this.clickMarkerId);
-          source = _this.markerLayer.getSource();
-          source.removeFeature(feature);
-          _this.clickMarkerId = null;
-          return $(".mod-map .clicked").val("");
-        }
+        _this.removeClickMarker();
       };
     })(this));
     $(".mod-map .select-marker-image").on("click", (function (_this) {
@@ -417,7 +439,7 @@ this.Openlayers_Map_Form = (function () {
       })(this));
       cln.find(".set-marker").on('click', (function (_this) {
         return function () {
-          return _this.createMarker(cln);
+          return _this.clickSetMarker(cln);
         };
       })(this));
       cln.find(".marker-name").on('keypress', (function (_this) {
@@ -435,14 +457,7 @@ this.Openlayers_Map_Form = (function () {
       });
       cln.find(".marker-loc-input").on('focus', (function (_this) {
         return function (e) {
-          var feature, source;
-          if (_this.clickMarkerId) {
-            feature = _this.getMarker(_this.clickMarkerId);
-            source = _this.markerLayer.getSource();
-            source.removeFeature(feature);
-            _this.clickMarkerId = null;
-            return $(".mod-map .clicked").val("");
-          }
+          _this.removeClickMarker();
         };
       })(this));
 
@@ -469,23 +484,31 @@ this.Openlayers_Map_Form = (function () {
     }
   };
 
-  Openlayers_Map_Form.prototype.createMarker = function (ele) {
-    var dataId, loc, opts, image;
-    loc = null;
+  Openlayers_Map_Form.prototype.clickSetMarker = function (ele) {
+    var loc;
+
     if ($(".mod-map .clicked").val() !== "") {
       loc = $(".mod-map .clicked").val();
+      this.removeClickMarker();
     } else if (ele.find(".marker-loc-input").val() !== "") {
-      if (Map_Form.validateLoc(ele.find(".marker-loc-input"))) {
-        loc = ele.find(".marker-loc-input").val();
-      } else {
-        alert("<%= I18n.t('map.alert.invalid_location').join('\n') %>");
-      }
-    }
-    if (!loc) {
+      loc = ele.find(".marker-loc-input").val();
+    } else {
       return;
     }
+    this.createMarker(ele, loc);
+  };
+
+  Openlayers_Map_Form.prototype.createMarker = function (ele, loc) {
+    var dataId, opts, image;
+
+    if (!this.validateLoc(loc)) {
+      alert("<%= I18n.t('map.alert.invalid_location').join('\n') %>");
+      return;
+    }
+
     ele.find(".marker-loc").val(loc);
     ele.find(".marker-loc-input").val(loc);
+
     dataId = parseInt(ele.attr("data-id"));
     this.removeMarker(dataId);
 
@@ -561,16 +584,10 @@ this.Openlayers_Map_Form = (function () {
   };
 
   Openlayers_Map_Form.prototype.openMarkerImages = function (marker) {
+    var markers = $(marker).closest(".marker-setting")
     var images = $(marker).find(".images");
 
-    if (this.clickMarkerId) {
-      var feature = this.getMarker(this.clickMarkerId);
-      var source = this.markerLayer.getSource();
-      source.removeFeature(feature);
-      this.clickMarkerId = null;
-      $(".mod-map .clicked").val("");
-    }
-
+    markers.find(".marker .images").hide();
     images.show();
     $("body").not(this).one("click", function (e) {
       images.hide();
@@ -581,12 +598,24 @@ this.Openlayers_Map_Form = (function () {
     var marker = $(image).closest(".marker");
     var images = $(image).closest(".images");
     var url = $(image).find('img').andSelf("img").attr("src");
+    var loc;
 
     images.hide();
     marker.find('[name="item[map_points][][image]"]').val(url);
-    if (marker.find('[name="item[map_points][][loc_]"]').val()) {
-      marker.find(".set-marker").trigger("click");
+
+    loc = marker.find(".marker-loc-input").val();
+    if (loc) {
+      this.createMarker(marker, loc);
+      return false;
     }
+
+    loc = $(".mod-map .clicked").val();
+    if (loc) {
+      this.removeClickMarker();
+      this.createMarker(marker, loc);
+      return false;
+    }
+
     return false;
   };
 

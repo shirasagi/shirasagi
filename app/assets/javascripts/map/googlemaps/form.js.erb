@@ -24,9 +24,12 @@ this.Map_Form = (function () {
     return new google.maps.LatLng(parseFloat(latlon[0]), parseFloat(latlon[1]));
   };
 
-  Map_Form.validateLoc = function (ele) {
+  Map_Form.validateLoc = function (loc) {
     var lat, latlon, lon;
-    latlon = ele.val().split(',');
+    if (!loc) {
+      return false;
+    }
+    latlon = loc.split(',');
     lat = parseFloat(latlon[0]);
     lon = parseFloat(latlon[1]);
     if (!(lat && !isNaN(lat))) {
@@ -203,19 +206,19 @@ this.Map_Form = (function () {
 
   Map_Form.createMarker = function (ele) {
     var dataId, loc;
-    loc = null;
+
     if ($(".mod-map .clicked").val() !== "") {
       loc = $(".mod-map .clicked").val();
     } else if (ele.find(".marker-loc-input").val() !== "") {
-      if (Map_Form.validateLoc(ele.find(".marker-loc-input"))) {
-        loc = ele.find(".marker-loc-input").val();
-      } else {
-        alert("<%= I18n.t('map.alert.invalid_location').join('\n') %>");
-      }
-    }
-    if (!loc) {
+      loc = ele.find(".marker-loc-input").val();
+    } else {
       return;
     }
+    if (!Map_Form.validateLoc(loc)) {
+      alert("<%= I18n.t('map.alert.invalid_location').join('\n') %>");
+      return;
+    }
+
     ele.find(".marker-loc").val(loc);
     ele.find(".marker-loc-input").val(loc);
     dataId = parseInt(ele.attr("data-id"));
