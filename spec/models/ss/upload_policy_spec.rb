@@ -12,8 +12,7 @@ describe SS::UploadPolicy, dbscope: :example do
 
   context "empty setting" do
     before do
-      @save_config = SS.config.ss.upload_policy
-      SS.config.replace_value_at(:ss, :upload_policy, nil)
+      @save_config = SS.config.replace_value_at(:ss, :upload_policy, nil)
     end
 
     after do
@@ -33,8 +32,7 @@ describe SS::UploadPolicy, dbscope: :example do
 
   context "sanitizer setting" do
     before do
-      @save_config = SS.config.ss.upload_policy
-      SS.config.replace_value_at(:ss, :upload_policy, 'sanitizer')
+      @save_config = SS.config.replace_value_at(:ss, :upload_policy, 'sanitizer')
     end
 
     after do

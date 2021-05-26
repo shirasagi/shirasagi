@@ -9,8 +9,7 @@ describe "cms_files_with_upload_policy", type: :feature, dbscope: :example, js: 
     before { login_cms_user }
 
     before do
-      @save_config = SS.config.ss.upload_policy
-      SS.config.replace_value_at(:ss, :upload_policy, 'sanitizer')
+      @save_config = SS.config.replace_value_at(:ss, :upload_policy, 'sanitizer')
       Fs.mkdir_p(SS.config.ss.sanitizer_input)
       Fs.mkdir_p(SS.config.ss.sanitizer_output)
     end
@@ -79,9 +78,8 @@ describe "cms_files_with_upload_policy", type: :feature, dbscope: :example, js: 
     before { login_cms_user }
 
     before do
-      @save_config = SS.config.ss.upload_policy
-      SS.config.replace_value_at(:ss, :upload_policy, 'sanitizer')
-      site.upload_policy = 'restricted'
+      @save_config = SS.config.replace_value_at(:ss, :upload_policy, 'sanitizer')
+      site.update_attributes(upload_policy: 'restricted')
     end
 
     after do
