@@ -1,6 +1,9 @@
 require 'spec_helper'
 
 describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: true do
+  let(:user) { sys_user }
+  let(:group) { create(:gws_group) }
+
   context "sanitizer setting" do
     before { login_sys_user }
 
@@ -70,7 +73,8 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
 
     before do
       @save_config = SS.config.replace_value_at(:ss, :upload_policy, 'sanitizer')
-      site.update_attributes(upload_policy: 'restricted')
+      user.update_attributes(organization_id: group.id)
+      group.update_attributes(upload_policy: 'restricted')
     end
 
     after do
