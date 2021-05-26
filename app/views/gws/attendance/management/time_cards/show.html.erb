@@ -17,6 +17,7 @@
     {
       now: <%== Time.zone.now.rfc2822.to_json %>,
       editable: <%== %i[manage_private manage_all].find { |priv| Gws::Attendance::TimeCard.allowed?(priv, @cur_user, site: @cur_site) }.present?.to_json %>,
+      punchUrl: false,
       timeUrl: <%== url_for(action: :time, day: ':day', type: ':type').to_json %>,
       memoUrl: <%== url_for(action: :memo, day: ':day').to_json %>
     }
