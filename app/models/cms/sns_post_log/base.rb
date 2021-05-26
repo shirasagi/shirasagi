@@ -20,7 +20,7 @@ class Cms::SnsPostLog::Base
 
   default_scope -> { order_by(created: -1) }
 
-  index({ created: -1 }, { expire_after_seconds: 2.weeks })
+  index({ created: -1 })
 
   def type
     "base"

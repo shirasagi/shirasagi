@@ -54,6 +54,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           expect(capture.update.tweet).to eq nil
           expect(capture.update_with_media.count).to eq 0
           expect(capture.update_with_media.tweet).to eq nil
+          expect(Cms::SnsPostLog::Twitter.count).to eq 0
         end
       end
     end
@@ -94,6 +95,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           expect(capture.update.tweet).to include(item.full_url)
           expect(capture.update_with_media.count).to eq 0
           expect(capture.update_with_media.tweet).to eq nil
+          expect(Cms::SnsPostLog::Twitter.count).to eq 1
         end
       end
 
@@ -134,6 +136,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           expect(capture.update.tweet).to include(item.full_url)
           expect(capture.update_with_media.count).to eq 0
           expect(capture.update_with_media.tweet).to eq nil
+          expect(Cms::SnsPostLog::Twitter.count).to eq 1
 
           # second post
           visit show_path
@@ -165,6 +168,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           expect(capture.update.tweet).to include(item.full_url)
           expect(capture.update_with_media.count).to eq 0
           expect(capture.update_with_media.tweet).to eq nil
+          expect(Cms::SnsPostLog::Twitter.count).to eq 1
         end
       end
     end

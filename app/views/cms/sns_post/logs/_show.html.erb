@@ -8,6 +8,9 @@
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.name %></dd>
 
+  <dt><%= @model.t :created %></dt>
+  <dd><%= tryb{ @item.created.strftime('%Y/%m/%d %H:%M') } %></dd>
+
   <dt><%= @model.t :type %></dt>
   <dd><%= @item.type %></dd>
 
@@ -15,8 +18,14 @@
   <dd><%= @item.label(:state) %></dd>
 
   <% if @item.page %>
+    <% page = @item.page.becomes_with_route %>
     <dt><%= @model.t :page_id %></dt>
-    <dd><%= "#{@item.page.name} \##{@item.page_id}" %></dd>
+
+    <% if page.allowed?(:read, @cur_user, site: @cur_site) %>
+      <dd><%= link_to page.name, page.private_show_path %></dd>
+    <% else %>
+      <dd><%= page.name %></dd>
+    <% end %>
   <% end %>
 
   <% if @item.error.present? %>

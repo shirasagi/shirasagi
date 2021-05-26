@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "article_pages twitter post", type: :feature, dbscope: :example, js: true do
+describe "article_pages line post", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) { create :article_node_page }
   let(:item) { create :article_page, cur_node: node, state: "closed" }
@@ -15,39 +15,32 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
   context "approve and publish" do
     before do
-      site.twitter_username = unique_id
-      site.twitter_consumer_key = unique_id
-      site.twitter_consumer_secret = unique_id
-      site.twitter_access_token = unique_id
-      site.twitter_access_token_secret = unique_id
+      site.line_channel_secret = unique_id
+      site.line_channel_access_token = unique_id
       site.save!
     end
 
     context "post none" do
       it "#edit" do
-        capture_twitter_rest_client do |capture|
+        capture_line_bot_client do |capture|
           # edit
           login_cms_user
           visit edit_path
 
-          ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
-          within "#addon-cms-agents-addons-twitter_poster" do
+          ensure_addon_opened("#addon-cms-agents-addons-line_poster")
+          within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("select option[selected]", text: I18n.t("ss.options.state.expired"))
-            select I18n.t("ss.options.state.expired"), from: "item[twitter_auto_post]"
+            select I18n.t("ss.options.state.expired"), from: "item[line_auto_post]"
+            select I18n.t("cms.options.line_post_format.message_only_carousel"), from: "item[line_post_format]"
+            fill_in "item[line_text_message]", with: line_text_message
           end
           within "form#item-form" do
             click_on I18n.t("ss.buttons.draft_save")
           end
           expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-
-          visit show_path
-          within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_no_css("dd", text: "https://twitter.com/user_screen_id/status/twitter_id")
-          end
-          expect(capture.update.count).to eq 0
-          expect(capture.update.tweet).to eq nil
-          expect(capture.update_with_media.count).to eq 0
-          expect(capture.update_with_media.tweet).to eq nil
+          expect(capture.broadcast.count).to eq 0
+          expect(capture.broadcast.messages).to eq nil
+          expect(Cms::SnsPostLog::Line.count).to eq 0
 
           # send request
           within ".mod-workflow-request" do
@@ -69,7 +62,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           login_user user1
           visit show_path
           within ".mod-workflow-approve" do
-            expect(page).to have_no_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
+            expect(page).to have_no_css(".sns-post-confirm", text: I18n.t("cms.confirm.line_post_enabled"))
             click_on I18n.t("workflow.buttons.approve")
           end
           within "#addon-workflow-agents-addons-approver" do
@@ -79,43 +72,38 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
           end
 
-          login_cms_user
           visit show_path
-          within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_no_css("dd", text: "https://twitter.com/user_screen_id/status/twitter_id")
+          within "#addon-cms-agents-addons-line_poster" do
+            have_css("dd", text: line_text_message)
           end
-          expect(capture.update.count).to eq 0
-          expect(capture.update.tweet).to eq nil
-          expect(capture.update_with_media.count).to eq 0
-          expect(capture.update_with_media.tweet).to eq nil
+          expect(capture.broadcast.count).to eq 0
+          expect(capture.broadcast.messages).to eq nil
+          expect(Cms::SnsPostLog::Line.count).to eq 0
         end
       end
     end
 
-    context "post message" do
+    context "post message_only_carousel" do
       it "#edit" do
-        capture_twitter_rest_client do |capture|
+        capture_line_bot_client do |capture|
           # edit
           login_cms_user
           visit edit_path
 
-          ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
-          within "#addon-cms-agents-addons-twitter_poster" do
+          ensure_addon_opened("#addon-cms-agents-addons-line_poster")
+          within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("select option[selected]", text: I18n.t("ss.options.state.expired"))
-            select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
+            select I18n.t("ss.options.state.active"), from: "item[line_auto_post]"
+            select I18n.t("cms.options.line_post_format.message_only_carousel"), from: "item[line_post_format]"
+            fill_in "item[line_text_message]", with: line_text_message
           end
           within "form#item-form" do
             click_on I18n.t("ss.buttons.draft_save")
           end
           expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-
-          within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_no_css("dd", text: "https://twitter.com/user_screen_id/status/twitter_id")
-          end
-          expect(capture.update.count).to eq 0
-          expect(capture.update.tweet).to eq nil
-          expect(capture.update_with_media.count).to eq 0
-          expect(capture.update_with_media.tweet).to eq nil
+          expect(capture.broadcast.count).to eq 0
+          expect(capture.broadcast.messages).to eq nil
+          expect(Cms::SnsPostLog::Line.count).to eq 0
 
           # send request
           within ".mod-workflow-request" do
@@ -137,7 +125,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           login_user user1
           visit show_path
           within ".mod-workflow-approve" do
-            expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
+            expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.line_post_enabled"))
             click_on I18n.t("workflow.buttons.approve")
           end
           within "#addon-workflow-agents-addons-approver" do
@@ -147,22 +135,23 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
           end
 
-          login_cms_user
           visit show_path
-          within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("dd", text: "https://twitter.com/user_screen_id/status/twitter_id")
+          within "#addon-cms-agents-addons-line_poster" do
+            have_css("dd", text: line_text_message)
           end
-          expect(capture.update.count).to eq 1
-          expect(capture.update.tweet).to include(item.name)
-          expect(capture.update.tweet).to include(item.full_url)
-          expect(capture.update_with_media.count).to eq 0
-          expect(capture.update_with_media.tweet).to eq nil
+          expect(capture.broadcast.count).to eq 1
+          expect(capture.broadcast.messages.dig(0, :template, :type)).to eq "carousel"
+          expect(capture.broadcast.messages.dig(0, :altText)).to eq item.name
+          expect(capture.broadcast.messages.dig(0, :template, :columns, 0, :title)).to eq item.name
+          expect(capture.broadcast.messages.dig(0, :template, :columns, 0, :text)).to eq line_text_message
+          expect(capture.broadcast.messages.dig(0, :template, :columns, 0, :actions, 0, :uri)).to eq item.full_url
+          expect(Cms::SnsPostLog::Line.count).to eq 1
         end
       end
 
       # with branch page
       it "#edit" do
-        capture_twitter_rest_client do |capture|
+        capture_line_bot_client do |capture|
           # create branch
           login_cms_user
           visit show_path
@@ -175,23 +164,20 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           # edit
           click_on I18n.t("ss.links.edit")
-          ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
-          within "#addon-cms-agents-addons-twitter_poster" do
+          ensure_addon_opened("#addon-cms-agents-addons-line_poster")
+          within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("select option[selected]", text: I18n.t("ss.options.state.expired"))
-            select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
+            select I18n.t("ss.options.state.active"), from: "item[line_auto_post]"
+            select I18n.t("cms.options.line_post_format.message_only_carousel"), from: "item[line_post_format]"
+            fill_in "item[line_text_message]", with: line_text_message
           end
           within "form#item-form" do
             click_on I18n.t("ss.buttons.draft_save")
           end
           expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-
-          within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_no_css("dd", text: "https://twitter.com/user_screen_id/status/twitter_id")
-          end
-          expect(capture.update.count).to eq 0
-          expect(capture.update.tweet).to eq nil
-          expect(capture.update_with_media.count).to eq 0
-          expect(capture.update_with_media.tweet).to eq nil
+          expect(capture.broadcast.count).to eq 0
+          expect(capture.broadcast.messages).to eq nil
+          expect(Cms::SnsPostLog::Line.count).to eq 0
 
           # send request
           within ".mod-workflow-request" do
@@ -218,7 +204,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           end
 
           within ".mod-workflow-approve" do
-            expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
+            expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.line_post_enabled"))
             click_on I18n.t("workflow.buttons.approve")
           end
           within "#addon-workflow-agents-addons-approver" do
@@ -228,16 +214,17 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
           end
 
-          login_cms_user
           visit show_path
-          within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("dd", text: "https://twitter.com/user_screen_id/status/twitter_id")
+          within "#addon-cms-agents-addons-line_poster" do
+            have_css("dd", text: line_text_message)
           end
-          expect(capture.update.count).to eq 1
-          expect(capture.update.tweet).to include(item.name)
-          expect(capture.update.tweet).to include(item.full_url)
-          expect(capture.update_with_media.count).to eq 0
-          expect(capture.update_with_media.tweet).to eq nil
+          expect(capture.broadcast.count).to eq 1
+          expect(capture.broadcast.messages.dig(0, :template, :type)).to eq "carousel"
+          expect(capture.broadcast.messages.dig(0, :altText)).to eq item.name
+          expect(capture.broadcast.messages.dig(0, :template, :columns, 0, :title)).to eq item.name
+          expect(capture.broadcast.messages.dig(0, :template, :columns, 0, :text)).to eq line_text_message
+          expect(capture.broadcast.messages.dig(0, :template, :columns, 0, :actions, 0, :uri)).to eq item.full_url
+          expect(Cms::SnsPostLog::Line.count).to eq 1
         end
       end
     end
