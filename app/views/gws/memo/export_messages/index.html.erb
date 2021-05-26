@@ -15,7 +15,6 @@ $('a.ajax-box').data('on-select', function($item) {
   a     = $('<a class="deselect btn" href="#"><%= I18n.t "ss.buttons.delete" %></a>').on("click", SS_SearchUI.deselect);
 
   var icon = $('<i class="material-icons md-15">&#xE226;</i>');
-  console.log(attachments);
   if (!attachments) {
     icon.css("visibility","hidden");
   }

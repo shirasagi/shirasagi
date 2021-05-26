@@ -15,7 +15,6 @@
 
 <%= jquery do %>
   $("#addon-basic a.ajax-box").data("on-select", function($item) {
-    console.log("on select");
     var $dataEl = $item.closest("[data-id]");
     var id = $dataEl.data("id");
     var name = $dataEl.data("name");
