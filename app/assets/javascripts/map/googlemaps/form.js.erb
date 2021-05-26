@@ -8,7 +8,7 @@ this.Map_Form = (function () {
 
   Map_Form.dataID = 0;
 
-  Map_Form.clickIcon = "//maps.google.com/mapfiles/ms/icons/blue-dot.png";
+  Map_Form.clickIcon = '/assets/img/map-marker-click.png';
 
   Map_Form.clickMarker = null;
 
@@ -112,7 +112,7 @@ this.Map_Form = (function () {
         return Map_Form.clearPointForm(cln);
       });
       cln.find(".set-marker").on('click', function () {
-        return Map_Form.createMarker(cln);
+        return Map_Form.clickSetMarker(cln);
       });
       cln.find(".marker-name").on('keypress', function (e) {
         if (e.which === 13) {
@@ -131,6 +131,22 @@ this.Map_Form = (function () {
           return $(".mod-map .clicked").val("");
         }
       });
+
+      cln.find(".images").hide();
+      cln.find(".select-marker-image").on("click", function (e) {
+        var marker = $(e.target).closest(".marker");
+        Map_Form.openMarkerImages(marker);
+        return false;
+      });
+      cln.find(".marker-thumb").html($('<img src="' + Googlemaps_Map.markerIcon + '">'));
+      cln.find(".images .image").on("click", function (e) {
+        Map_Form.selectMarkerImage(e.target);
+        Map_Form.setMarkerThumb($(e.target).closest(".marker"));
+        return false;
+      });
+      //cln.find(".marker-setting .marker").each(function () {
+      //  Map_Form.setMarkerThumb(this);
+      //});
     }
     if ($(".mod-map dd.marker").length === Map_Form.maxPointForm) {
       $(".mod-map dd .add-marker").parent().hide();
@@ -204,16 +220,76 @@ this.Map_Form = (function () {
     $(".mod-map dd .add-marker").parent().show();
   };
 
-  Map_Form.createMarker = function (ele) {
-    var dataId, loc;
+  Map_Form.openMarkerImages = function (marker) {
+    var markers = $(marker).closest(".marker-setting")
+    var images = $(marker).find(".images");
 
+    markers.find(".marker .images").hide();
+    images.show();
+    $("body").not(this).one("click", function (e) {
+      images.hide();
+    });
+  };
+
+  Map_Form.selectMarkerImage = function (image) {
+    var marker = $(image).closest(".marker");
+    var images = $(image).closest(".images");
+    var url = $(image).find('img').andSelf("img").attr("src");
+    var loc;
+
+    images.hide();
+    marker.find('[name="item[map_points][][image]"]').val(url);
+
+    loc = marker.find(".marker-loc-input").val();
+    if (loc) {
+      Map_Form.createMarker(marker, loc);
+      return false;
+    }
+
+    loc = $(".mod-map .clicked").val();
+    if (loc) {
+      Map_Form.removeClickMarker();
+      Map_Form.createMarker(marker, loc);
+      return false;
+    }
+
+    return false;
+  };
+
+  Map_Form.setMarkerThumb = function (marker) {
+    var thumb = $(marker).find(".marker-thumb");
+    var url = $(marker).find('[name="item[map_points][][image]"]').val();
+
+    if (url) {
+      $(thumb).html($('<img src="' + url + '">'));
+    } else {
+      $(thumb).html($('<img src="' + Googlemaps_Map.markerIcon + '">'));
+    }
+  };
+
+  Map_Form.clickSetMarker = function (ele) {
+    var loc;
     if ($(".mod-map .clicked").val() !== "") {
       loc = $(".mod-map .clicked").val();
+      Map_Form.removeClickMarker();
     } else if (ele.find(".marker-loc-input").val() !== "") {
       loc = ele.find(".marker-loc-input").val();
     } else {
       return;
     }
+    Map_Form.createMarker(ele, loc);
+  };
+
+  Map_Form.removeClickMarker = function () {
+    if (Map_Form.clickMarker) {
+      $(".mod-map .clicked").val("");
+      Map_Form.clickMarker.setMap(null);
+    }
+  };
+
+  Map_Form.createMarker = function (ele, loc) {
+    var dataId, opts, image;
+
     if (!Map_Form.validateLoc(loc)) {
       alert("<%= I18n.t('map.alert.invalid_location').join('\n') %>");
       return;
@@ -225,15 +301,21 @@ this.Map_Form = (function () {
     if (Googlemaps_Map.markers[dataId]) {
       Googlemaps_Map.markers[dataId].setMap(null);
     }
-    Googlemaps_Map.markers[dataId] = new google.maps.Marker({
+
+    image = ele.find('[name="item[map_points][][image]"]').val();
+    opts = {
       position: Map_Form.getMapLoc(ele.find(".marker-loc")),
       map: Googlemaps_Map.map
-    });
-    Map_Form.attachMessage(dataId);
-    if (Map_Form.clickMarker) {
-      $(".mod-map .clicked").val("");
-      return Map_Form.clickMarker.setMap(null);
     }
+    if (image) {
+      opts["icon"] = image;
+    } else {
+      opts["icon"] = Googlemaps_Map.markerIcon;
+    }
+
+    Googlemaps_Map.markers[dataId] = new google.maps.Marker(opts);
+    Map_Form.attachMessage(dataId);
+    Map_Form.removeClickMarker();
   };
 
   Map_Form.renderMarkers = function () {
@@ -252,10 +334,19 @@ this.Map_Form = (function () {
       $(this).attr("data-id", Map_Form.dataID);
       if ($(this).find(".marker-loc").val() !== "") {
         var loc = Map_Form.getMapLoc($(this).find(".marker-loc"));
-        Googlemaps_Map.markers[Map_Form.dataID] = new google.maps.Marker({
+        var image = $(this).find('[name="item[map_points][][image]"]').val();
+        var opts = {};
+
+        opts = {
           position: loc,
           map: Googlemaps_Map.map
-        });
+        }
+        if (image) {
+          opts["icon"] = image;
+        } else {
+          opts["icon"] = Googlemaps_Map.markerIcon;
+        }
+        Googlemaps_Map.markers[Map_Form.dataID] = new google.maps.Marker(opts);
         Map_Form.attachMessage(Map_Form.dataID);
         markerBounds.extend(loc);
       }
@@ -301,7 +392,7 @@ this.Map_Form = (function () {
       return false;
     });
     $(".mod-map .set-marker").on('click', function (e) {
-      Map_Form.createMarker($(this).closest("dd.marker"));
+      Map_Form.clickSetMarker($(this).closest("dd.marker"));
       return false;
     });
     $(".mod-map .location-search button").on('click', function (e) {
@@ -325,11 +416,24 @@ this.Map_Form = (function () {
         return false;
       }
     });
-    return $(".mod-map .marker-loc-input").on('focus', function (e) {
+    $(".mod-map .marker-loc-input").on('focus', function (e) {
       if (Map_Form.clickMarker !== null) {
         Map_Form.clickMarker.setMap(null);
         return $(".mod-map .clicked").val("");
       }
+    });
+    $(".mod-map .select-marker-image").on("click", function (e) {
+      var marker = $(e.target).closest(".marker");
+      Map_Form.openMarkerImages(marker);
+      return false;
+    });
+    $(".mod-map .images .image").on("click", function (e) {
+      Map_Form.selectMarkerImage(e.target);
+      Map_Form.setMarkerThumb($(e.target).closest(".marker"));
+      return false;
+    });
+    $(".mod-map .marker-setting .marker").each(function () {
+      Map_Form.setMarkerThumb(this);
     });
   };
 

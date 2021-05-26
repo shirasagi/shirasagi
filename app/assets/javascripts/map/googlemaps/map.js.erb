@@ -15,6 +15,8 @@ this.Googlemaps_Map = (function () {
 
   Googlemaps_Map.markers = null;
 
+  Googlemaps_Map.markerIcon = '/assets/img/map-marker.png';
+
   Googlemaps_Map.openedInfo = null;
 
   Googlemaps_Map.resized = null;
@@ -123,19 +125,18 @@ this.Googlemaps_Map = (function () {
     Googlemaps_Map.markers = markers;
     markerBounds = new google.maps.LatLngBounds();
     $.each(Googlemaps_Map.markers, function (id, value) {
-      var marker_html, name, text;
+      var marker_html, name, text, image, opts;
+
+      opts = {
+        position: new google.maps.LatLng(value["loc"][0], value["loc"][1]),
+        map: Googlemaps_Map.map
+      };
       if (value["image"]) {
-        Googlemaps_Map.markers[id]["marker"] = new google.maps.Marker({
-          position: new google.maps.LatLng(value["loc"][0], value["loc"][1]),
-          icon: value["image"],
-          map: Googlemaps_Map.map
-        });
+        opts["icon"] = value["image"];
       } else {
-        Googlemaps_Map.markers[id]["marker"] = new google.maps.Marker({
-          position: new google.maps.LatLng(value["loc"][0], value["loc"][1]),
-          map: Googlemaps_Map.map
-        });
+        opts["icon"] = Googlemaps_Map.markerIcon;
       }
+      Googlemaps_Map.markers[id]["marker"] = new google.maps.Marker(opts);
       markerBounds.extend(new google.maps.LatLng(value["loc"][0], value["loc"][1]));
       if (value["html"]) {
         marker_html = value["html"];
