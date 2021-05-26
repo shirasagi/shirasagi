@@ -6,8 +6,26 @@ this.SS_AjaxFile = (function () {
     this.render();
   }
 
+  SS_AjaxFile.additionalFileResigings = [];
+  SS_AjaxFile.firesEvents = false;
+
   SS_AjaxFile.errors = {
     entityTooLarge: "request entity is too large"
+  }
+
+  SS_AjaxFile.addFileResizing = function() {
+    for (var i = 0; i < arguments.length; i++) {
+      var argument = arguments[i];
+      if (argument.default) {
+        for (var j = 0; j < SS_AjaxFile.additionalFileResigings.length; j++) {
+          if (SS_AjaxFile.additionalFileResigings[j].default) {
+            SS_AjaxFile.additionalFileResigings[j].default = false;
+          }
+        }
+      }
+
+      SS_AjaxFile.additionalFileResigings.push(argument);
+    }
   }
 
   SS_AjaxFile.defaultFileSelectHandler = function() {
@@ -85,13 +103,21 @@ this.SS_AjaxFile = (function () {
       return false;
     });
 
-    SS.ajaxDelete(self.$el, ".user-files .delete");
+    self.$el.on("click", ".user-files .delete", function(ev) {
+      self.deleteFile(ev.target);
 
-    var resizing = $('#file-resizing').val();
-    if (resizing) {
-      var label = $('#file-resizing').attr('data-label');
-      var option = $('<option>').val(resizing).text(label).prop('selected', true);
-      $('select.image-size').append(option);
+      ev.preventDefault();
+      return false;
+    });
+
+    for (var i = 0; i < SS_AjaxFile.additionalFileResigings.length; i++) {
+      var fileResizing = SS_AjaxFile.additionalFileResigings[i];
+      var option = $('<option />').val(fileResizing.value).text(fileResizing.label);
+      if (fileResizing.default) {
+        option.prop('selected', true)
+      }
+
+      self.$el.find('form.user-file .image-size').append(option);
     }
   };
 
@@ -107,7 +133,16 @@ this.SS_AjaxFile = (function () {
       }
 
       self.$el.find("form.user-file [type='file']").val(null).trigger("change");
-      self.$el.find("form.user-file .image-size").val(null).trigger("change");
+
+      var defaultImageSize = null;
+      for (var i = 0; i < SS_AjaxFile.additionalFileResigings.length; i++) {
+        var fileResizing = SS_AjaxFile.additionalFileResigings[i];
+        if (fileResizing.default) {
+          defaultImageSize = fileResizing.value;
+          break;
+        }
+      }
+      self.$el.find("form.user-file .image-size").val(defaultImageSize).trigger("change");
 
       if (submitted === "attach") {
         self.attachFiles(data);
@@ -145,6 +180,14 @@ this.SS_AjaxFile = (function () {
 
   SS_AjaxFile.prototype.selectFiles = function() {
     if (SS_SearchUI.anchorAjaxBox) {
+      if (SS_AjaxFile.firesEvents) {
+        var event = $.Event("ss:ajaxFileSelected");
+        SS_SearchUI.anchorAjaxBox.trigger(event, [ arguments ]);
+        if (event.isDefaultPrevented()) {
+          return;
+        }
+      }
+
       var handler = SS_SearchUI.anchorAjaxBox.data('on-select');
       if (handler) {
         $.each(arguments, function() {
@@ -156,6 +199,41 @@ this.SS_AjaxFile = (function () {
     }
 
     SS_AjaxFile.defaultFileSelectHandler.apply(SS_AjaxFile, arguments);
+  };
+
+  SS_AjaxFile.prototype.deleteFile = function(el) {
+    if (!confirm(SS.confirm.delete)) {
+      return false;
+    }
+
+    var $el = $(el);
+    $.ajax({
+      type: "POST",
+      data: "_method=delete",
+      url: $el.attr("href") + ".json",
+      dataType: "json",
+      beforeSend: function () {
+        $el.html(SS.loading);
+      },
+      success: function () {
+        var $target;
+        if ($el.data("remove")) {
+          $target = $($el.data("remove"));
+        } else {
+          $target = $el.closest(".file-view")
+        }
+
+        $target.slideUp("fast", function() {
+          $target.remove();
+          if (SS_AjaxFile.firesEvents && SS_SearchUI.anchorAjaxBox) {
+            SS_SearchUI.anchorAjaxBox.trigger("ss:ajaxFileRemoved");
+          }
+        });
+      },
+      error: function (data, status) {
+        alert(["== Error =="].concat(data.responseJSON).join("\n"));
+      }
+    });
   };
 
   return SS_AjaxFile;
