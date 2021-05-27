@@ -4,45 +4,25 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
   let(:site){ cms_site }
   let!(:node) { create :article_node_page, cur_site: site }
   let!(:item) { create(:article_page, cur_site: site, cur_node: node) }
-
-  let(:basename) { "#{unique_id}.png" }
-  let!(:file) do
-    tmp_ss_file(
-      Cms::TempFile, user: cms_user, site: site, node: node, basename: basename,
-      contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
-    )
-  end
+  let(:filename) { "#{unique_id}.png" }
 
   before do
     login_cms_user
-
-    visit article_pages_path(site: site, cid: node)
-    click_on I18n.t("ss.links.new")
-
-    within "#item-form #addon-cms-agents-addons-file" do
-      wait_cbox_open do
-        click_on I18n.t("ss.buttons.upload")
-      end
-    end
-
-    within "#ajax-box" do
-      page.execute_script("SS_AjaxFile.firesEvents = true;")
-    end
   end
 
   shared_examples "file dialog is" do
     context "click" do
       it do
         within "#ajax-box" do
-          expect(page).to have_css('.file-view', text: basename)
+          expect(page).to have_css('.file-view', text: filename)
           wait_event_to_fire "ss:ajaxFileSelected", "#addon-cms-agents-addons-file .ajax-box" do
-            click_on basename
+            click_on filename
           end
         end
 
         within "#item-form #addon-cms-agents-addons-file" do
           within '#selected-files' do
-            expect(page).to have_css('.name', text: basename)
+            expect(page).to have_css('.name', text: filename)
           end
         end
       end
@@ -52,7 +32,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       it do
         within "#ajax-box" do
           within ".file-view[data-file-id='#{file.id}']" do
-            expect(page).to have_css(".name", text: basename)
+            expect(page).to have_css(".name", text: filename)
             click_on I18n.t("ss.buttons.edit")
           end
         end
@@ -67,7 +47,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       it do
         within "#ajax-box" do
           within ".file-view[data-file-id='#{file.id}']" do
-            expect(page).to have_css(".name", text: basename)
+            expect(page).to have_css(".name", text: filename)
             wait_event_to_fire "ss:ajaxFileRemoved", "#addon-cms-agents-addons-file .ajax-box" do
               page.accept_confirm do
                 click_on I18n.t("ss.buttons.delete")
@@ -121,59 +101,112 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
     end
   end
 
-  context "default" do
-    it_behaves_like "file dialog is"
-  end
-
-  context "after file is saved" do
+  shared_examples "several operations on file dialog" do
     before do
+      visit article_pages_path(site: site, cid: node)
+      click_on I18n.t("ss.links.new")
+
+      within "#item-form #addon-cms-agents-addons-file" do
+        wait_cbox_open do
+          click_on button_label
+        end
+      end
+
       within "#ajax-box" do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-        click_button I18n.t("ss.buttons.save")
-        expect(page).to have_css('.file-view', text: 'logo.png')
+        page.execute_script("SS_AjaxFile.firesEvents = true;")
       end
     end
 
-    it_behaves_like "file dialog is"
-  end
-
-  context "after edit dialog is canceled" do
-    before do
-      within "#ajax-box" do
-        within ".file-view[data-file-id='#{file.id}']" do
-          expect(page).to have_css(".name", text: basename)
-          click_on I18n.t("ss.buttons.edit")
-        end
-      end
-
-      within "#ajax-box" do
-        expect(page).to have_css(".ss-image-edit-canvas")
-        within "#ajax-form" do
-          click_on I18n.t("ss.buttons.cancel")
-        end
-      end
+    context "default" do
+      it_behaves_like "file dialog is"
     end
 
-    it_behaves_like "file dialog is"
-  end
-
-  context "after edit dialog is saved" do
-    before do
-      within "#ajax-box" do
-        within ".file-view[data-file-id='#{file.id}']" do
-          expect(page).to have_css(".name", text: basename)
-          click_on I18n.t("ss.buttons.edit")
+    context "after file is saved" do
+      before do
+        within "#ajax-box" do
+          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
+          click_button I18n.t("ss.buttons.save")
+          expect(page).to have_css('.file-view', text: 'logo.png')
         end
       end
 
-      within "#ajax-box" do
-        expect(page).to have_css(".ss-image-edit-canvas")
-        within "#ajax-form" do
-          click_on I18n.t("ss.buttons.save")
-        end
-      end
+      it_behaves_like "file dialog is"
     end
 
-    it_behaves_like "file dialog is"
+    context "after edit dialog is canceled" do
+      before do
+        within "#ajax-box" do
+          within ".file-view[data-file-id='#{file.id}']" do
+            expect(page).to have_css(".name", text: filename)
+            click_on I18n.t("ss.buttons.edit")
+          end
+        end
+
+        within "#ajax-box" do
+          expect(page).to have_css(".ss-image-edit-canvas")
+          within "#ajax-form" do
+            click_on I18n.t("ss.buttons.cancel")
+          end
+        end
+      end
+
+      it_behaves_like "file dialog is"
+    end
+
+    context "after edit dialog is saved" do
+      before do
+        within "#ajax-box" do
+          within ".file-view[data-file-id='#{file.id}']" do
+            expect(page).to have_css(".name", text: filename)
+            click_on I18n.t("ss.buttons.edit")
+          end
+        end
+
+        within "#ajax-box" do
+          expect(page).to have_css(".ss-image-edit-canvas")
+          within "#ajax-form" do
+            click_on I18n.t("ss.buttons.save")
+          end
+        end
+      end
+
+      it_behaves_like "file dialog is"
+    end
+  end
+
+  context "with cms/temp_file" do
+    let!(:file) do
+      tmp_ss_file(
+        Cms::TempFile, user: cms_user, site: site, node: node, basename: filename,
+        contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
+      )
+    end
+    let(:button_label) { I18n.t("ss.buttons.upload") }
+
+    it_behaves_like "several operations on file dialog"
+  end
+
+  context "with ss/user_file" do
+    let!(:file) do
+      tmp_ss_file(
+        SS::UserFile, model: "ss/user_file", user: cms_user, basename: filename,
+        contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
+      )
+    end
+    let(:button_label) { I18n.t("sns.user_file") }
+
+    it_behaves_like "several operations on file dialog"
+  end
+
+  context "with cms/file" do
+    let!(:file) do
+      tmp_ss_file(
+        Cms::File, model: "cms/file", user: cms_user, site: site, basename: filename,
+        contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
+      )
+    end
+    let(:button_label) { I18n.t("cms.file") }
+
+    it_behaves_like "several operations on file dialog"
   end
 end

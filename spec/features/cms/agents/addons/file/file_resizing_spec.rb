@@ -13,16 +13,14 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
     login_cms_user
   end
 
-  context "save, edit, cancel and click" do
+  shared_examples "file resizing is" do
     it do
-      expect(SS::File.all.count).to eq 0
-
       visit article_pages_path(site: site, cid: node)
       click_on I18n.t("ss.links.new")
 
       within "#item-form #addon-cms-agents-addons-file" do
         wait_cbox_open do
-          click_on I18n.t("ss.buttons.upload")
+          click_on button_label
         end
       end
 
@@ -64,8 +62,80 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           expect(page).to have_css('.name', text: 'keyvisual.jpg')
         end
       end
+    end
+  end
 
+  context "with cms/temp_file" do
+    let(:button_label) { I18n.t("ss.buttons.upload") }
+
+    before do
+      expect(SS::File.all.count).to eq 0
+    end
+
+    it_behaves_like "file resizing is"
+
+    after do
       expect(SS::File.all.count).to eq 2
+      expect(SS::File.all.where(model: "ss/temp_file").count).to eq 1
+      expect(SS::File.all.where(model: "ss/thumb_file").count).to eq 1
+      SS::File.all.where(model: "ss/temp_file").first.tap do |file|
+        dimension = file.image_dimension
+        expect(dimension).to be_present
+        expect(dimension[0]).to be <= file_resizing[0]
+        expect(dimension[1]).to be <= file_resizing[1]
+      end
+    end
+  end
+
+  context "with ss/user_file" do
+    let(:button_label) { I18n.t("sns.user_file") }
+
+    before do
+      expect(SS::File.all.count).to eq 0
+    end
+
+    it_behaves_like "file resizing is"
+
+    after do
+      expect(SS::File.all.count).to eq 4
+      expect(SS::File.all.where(model: "ss/user_file").count).to eq 1
+      expect(SS::File.all.where(model: "ss/temp_file").count).to eq 1
+      expect(SS::File.all.where(model: "ss/thumb_file").count).to eq 2
+      SS::File.all.where(model: "ss/user_file").first.tap do |file|
+        dimension = file.image_dimension
+        expect(dimension).to be_present
+        expect(dimension[0]).to be <= file_resizing[0]
+        expect(dimension[1]).to be <= file_resizing[1]
+      end
+      SS::File.all.where(model: "ss/temp_file").first.tap do |file|
+        dimension = file.image_dimension
+        expect(dimension).to be_present
+        expect(dimension[0]).to be <= file_resizing[0]
+        expect(dimension[1]).to be <= file_resizing[1]
+      end
+    end
+  end
+
+  context "with cms/file" do
+    let(:button_label) { I18n.t("cms.file") }
+
+    before do
+      expect(SS::File.all.count).to eq 0
+    end
+
+    it_behaves_like "file resizing is"
+
+    after do
+      expect(SS::File.all.count).to eq 3
+      expect(SS::File.all.where(model: "cms/file").count).to eq 1
+      expect(SS::File.all.where(model: "ss/temp_file").count).to eq 1
+      expect(SS::File.all.where(model: "ss/thumb_file").count).to eq 1
+      SS::File.all.where(model: "cms/file").first.tap do |file|
+        dimension = file.image_dimension
+        expect(dimension).to be_present
+        expect(dimension[0]).to be <= file_resizing[0]
+        expect(dimension[1]).to be <= file_resizing[1]
+      end
       SS::File.all.where(model: "ss/temp_file").first.tap do |file|
         dimension = file.image_dimension
         expect(dimension).to be_present
