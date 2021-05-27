@@ -8,7 +8,7 @@
   <%= error_messages_for :item, header_message: false %>
   <%= render partial: "form", locals: { f: f, reply: false }  %>
   <% if @cur_node.captcha_enabled? %>
-    <%= show_simple_captcha(object: :item, code_type: 'numeric', input_html: { required: nil }) %>
+    <%= show_captcha %>
   <% end %>
   <footer class="send">
     <%= f.submit "投稿" %>

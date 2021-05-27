@@ -1,6 +1,7 @@
 class Board::Agents::Nodes::PostController < ApplicationController
   include Cms::NodeFilter::View
   include Cms::PublicFilter::Crud
+  include SS::CaptchaFilter
 
   model Board::Post
 
@@ -60,8 +61,14 @@ class Board::Agents::Nodes::PostController < ApplicationController
 
   def create
     @item = @model.new get_params
-    render_create @item.valid_with_captcha?(@cur_node) && @item.save,
-                  location: "#{@cur_node.url}sent", render: :new
+    if @cur_node.captcha_enabled? && get_captcha[:captcha_error].nil?
+      unless is_captcha_valid?(@item)
+        render action: :new
+        return
+      end
+    end
+
+    render_create @item.save, location: "#{@cur_node.url}sent", render: :new
   end
 
   def new_reply
@@ -71,8 +78,14 @@ class Board::Agents::Nodes::PostController < ApplicationController
 
   def reply
     @item = @model.new get_params
-    render_create @item.valid_with_captcha?(@cur_node) && @item.save,
-                  location: "#{@cur_node.url}sent", render: :new_reply
+    if @cur_node.captcha_enabled? && get_captcha[:captcha_error].nil?
+      unless is_captcha_valid?(@item)
+        render action: :new_reply
+        return
+      end
+    end
+
+    render_create @item.save, location: "#{@cur_node.url}sent", render: :new_reply
   end
 
   def delete
@@ -87,12 +100,19 @@ class Board::Agents::Nodes::PostController < ApplicationController
     @item.delete_key = ""
     @item.attributes = get_params
 
-    if @item.valid_with_captcha?(@cur_node)
+    if @cur_node.captcha_enabled? && get_captcha[:captcha_error].nil?
+      if is_captcha_valid?(@item) && @item.delete_key_was == @item.delete_key
+        render_destroy @item.destroy, location: "#{@cur_node.url}sent", render: :delete
+        return
+      else
+        @item.errors.add :base, t("board.errors.not_same_delete_key") unless @item.delete_key_was == @item.delete_key
+      end
+    else
       if @item.delete_key_was == @item.delete_key
         render_destroy @item.destroy, location: "#{@cur_node.url}sent", render: :delete
         return
       else
-        @item.errors.add :base, t("board.errors.not_same_delete_key")
+        @item.errors.add :base, t("board.errors.not_same_delete_key") unless @item.delete_key_was == @item.delete_key
       end
     end
 
