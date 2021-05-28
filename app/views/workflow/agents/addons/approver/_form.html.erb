@@ -19,6 +19,7 @@
 <%= jquery do %>
   var workflowApprover = new SS_WorkflowApprover(<%== js_options.to_json %>);
 
+  <% if @ss_mode == :cms %>
   var linePostConfirm = function() {
     var linePostEnabled, lineTokenEnabled, linePosted, lineAutoPost;
 
@@ -63,4 +64,5 @@
     }
     return messages;
   });
+  <% end %>
 <% end %>
