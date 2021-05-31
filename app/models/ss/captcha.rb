@@ -26,9 +26,9 @@ class SS::Captcha
 
         create_captcha_data(captcha_text, "#{dir}/captcha.jpeg", nil)
       end
-    rescue => e
-      Rails.logger.fatal("generate_captcha failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-      create_captcha_data(nil, nil, e)
+    #rescue => e
+    #  Rails.logger.fatal("generate_captcha failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    #  create_captcha_data(nil, nil, e)
     end
 
     def create_captcha_data(captcha_text, tmp_dir_captcha, exception)
