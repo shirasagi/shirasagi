@@ -38,11 +38,7 @@ this.Map_Form = (function () {
     if (!(lon && !isNaN(lon))) {
       return false;
     }
-    if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
-      return true;
-    } else {
-      return false;
-    }
+    return Googlemaps_Map.validateLatLon(lat, lon);
   };
 
   Map_Form.attachMessage = function (id) {

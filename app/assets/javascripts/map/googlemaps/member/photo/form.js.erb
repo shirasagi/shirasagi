@@ -10,7 +10,7 @@ this.Member_Photo_Form = (function () {
 
   Member_Photo_Form.dataID = 0;
 
-  Member_Photo_Form.clickIcon = "//maps.google.com/mapfiles/ms/icons/blue-dot.png";
+  Member_Photo_Form.clickIcon = '/assets/img/map-marker.png';
 
   Member_Photo_Form.clickMarker = null;
 
@@ -87,7 +87,8 @@ this.Member_Photo_Form = (function () {
       }
       Googlemaps_Map.markers[dataId] = new google.maps.Marker({
         position: Member_Photo_Form.getMapLoc($(".mod-map .marker-loc")),
-        map: Googlemaps_Map.map
+        map: Googlemaps_Map.map,
+        icon: Member_Photo_Form.clickIcon
       });
       Member_Photo_Form.attachMessage(dataId);
     }
@@ -113,7 +114,8 @@ this.Member_Photo_Form = (function () {
         loc = Member_Photo_Form.getMapLoc($(this).find(".marker-loc"));
         Googlemaps_Map.markers[Member_Photo_Form.dataID] = new google.maps.Marker({
           position: loc,
-          map: Googlemaps_Map.map
+          map: Googlemaps_Map.map,
+          icon: Member_Photo_Form.clickIcon
         });
         Member_Photo_Form.attachMessage(Member_Photo_Form.dataID);
         markerBounds.extend(loc);
