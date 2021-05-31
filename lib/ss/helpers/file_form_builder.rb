@@ -1,5 +1,6 @@
 module SS::Helpers::FileFormBuilder
   extend ActiveSupport::Concern
+  include ActionView::Helpers::FormTagHelper
 
   def ss_file_field(method, options = {})
     ss_mode = @template.instance_variable_get(:"@ss_mode")
