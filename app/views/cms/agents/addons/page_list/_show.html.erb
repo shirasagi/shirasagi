@@ -5,7 +5,7 @@
   <dt><%= @model.t :conditions %></dt>
   <dd><%=br @item.conditions %></dd>
 
-  <% if @item.archive_view == "list" %>
+  <% if @item.try(:archive_view) == "list" %>
     <dt><%= @model.t :sort %></dt>
     <dd>
       <%=
