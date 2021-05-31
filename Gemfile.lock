@@ -270,6 +270,7 @@ GEM
       railties (>= 3.2.16)
     js_cookie_rails (2.2.0)
       railties (>= 3.1)
+    json (2.5.1)
     json-jwt (1.11.0)
       activesupport (>= 4.2)
       aes_key_wrap
@@ -373,6 +374,9 @@ GEM
       oauth2 (~> 1.1)
       omniauth (>= 1.1.1)
       omniauth-oauth2 (>= 1.6)
+    omniauth-line (0.1.0)
+      json (>= 2.3.0)
+      omniauth-oauth2 (~> 1.3)
     omniauth-oauth (1.1.0)
       oauth
       omniauth (~> 1.0)
@@ -713,6 +717,7 @@ DEPENDENCIES
   omniauth-facebook
   omniauth-github
   omniauth-google-oauth2
+  omniauth-line
   omniauth-rails_csrf_protection
   omniauth-twitter
   omniauth-yahoojp

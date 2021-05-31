@@ -17,6 +17,7 @@ module Member::Node
     include Member::Addon::YahooJpOauthV2
     include Member::Addon::GoogleOauth
     include Member::Addon::GithubOauth
+    include Member::Addon::LineOauth
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
