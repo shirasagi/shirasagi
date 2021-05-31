@@ -3,7 +3,6 @@ require 'spec_helper'
 describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true do
   let(:site){ cms_site }
   let!(:node) { create :article_node_page, cur_site: site }
-  let!(:item) { create(:article_page, cur_site: site, cur_node: node) }
   let(:filename) { "#{unique_id}.png" }
 
   before do
@@ -15,8 +14,10 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       it do
         within "#ajax-box" do
           expect(page).to have_css('.file-view', text: filename)
-          wait_event_to_fire "ss:ajaxFileSelected", "#addon-cms-agents-addons-thumb .ajax-box" do
-            click_on filename
+          wait_cbox_close do
+            wait_event_to_fire "ss:ajaxFileSelected", "#addon-cms-agents-addons-thumb .ajax-box" do
+              click_on filename
+            end
           end
         end
 

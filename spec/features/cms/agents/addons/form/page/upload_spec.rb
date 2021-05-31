@@ -2,7 +2,11 @@ require 'spec_helper'
 
 describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true do
   let(:site){ cms_site }
-  let!(:node) { create :article_node_page, cur_site: site }
+  let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'entry', group_ids: cms_user.group_ids) }
+  let!(:column1) do
+    create(:cms_column_file_upload, cur_site: site, cur_form: form, required: "optional", file_type: "video", order: 1)
+  end
+  let!(:node) { create :article_node_page, cur_site: site, st_form_ids: [ form.id ], st_form_default_id: form.id }
   let(:filename) { "#{unique_id}.png" }
 
   before do
@@ -15,14 +19,14 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         within "#ajax-box" do
           expect(page).to have_css('.file-view', text: filename)
           wait_cbox_close do
-            wait_event_to_fire "ss:ajaxFileSelected", "#addon-cms-agents-addons-file .ajax-box" do
+            wait_event_to_fire "ss:ajaxFileSelected", "#addon-cms-agents-addons-form-page .ajax-box" do
               click_on filename
             end
           end
         end
 
-        within "#item-form #addon-cms-agents-addons-file" do
-          within '#selected-files' do
+        within "#addon-cms-agents-addons-form-page .column-value-cms-column-fileupload" do
+          within '.file-view' do
             expect(page).to have_css('.name', text: filename)
           end
         end
@@ -49,7 +53,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         within "#ajax-box" do
           within ".file-view[data-file-id='#{file.id}']" do
             expect(page).to have_css(".name", text: filename)
-            wait_event_to_fire "ss:ajaxFileRemoved", "#addon-cms-agents-addons-file .ajax-box" do
+            wait_event_to_fire "ss:ajaxFileRemoved", "#addon-cms-agents-addons-form-page .ajax-box" do
               page.accept_confirm do
                 click_on I18n.t("ss.buttons.delete")
               end
@@ -68,14 +72,14 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           click_button I18n.t("ss.buttons.save")
           expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
           wait_cbox_close do
-            wait_event_to_fire "ss:ajaxFileSelected", "#addon-cms-agents-addons-file .ajax-box" do
+            wait_event_to_fire "ss:ajaxFileSelected", "#addon-cms-agents-addons-form-page .ajax-box" do
               click_on 'keyvisual.jpg'
             end
           end
         end
 
-        within "#item-form #addon-cms-agents-addons-file" do
-          within '#selected-files' do
+        within "#addon-cms-agents-addons-form-page .column-value-cms-column-fileupload" do
+          within '.file-view' do
             expect(page).to have_css('.name', text: 'keyvisual.jpg')
           end
         end
@@ -87,14 +91,14 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         within "#ajax-box" do
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
           wait_cbox_close do
-            wait_event_to_fire "ss:ajaxFileSelected", "#addon-cms-agents-addons-file .ajax-box" do
+            wait_event_to_fire "ss:ajaxFileSelected", "#addon-cms-agents-addons-form-page .ajax-box" do
               click_button I18n.t("ss.buttons.attach")
             end
           end
         end
 
-        within "#item-form #addon-cms-agents-addons-file" do
-          within '#selected-files' do
+        within "#addon-cms-agents-addons-form-page .column-value-cms-column-fileupload" do
+          within '.file-view' do
             expect(page).to have_css('.name', text: 'keyvisual.jpg')
           end
         end
@@ -107,9 +111,16 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       visit article_pages_path(site: site, cid: node)
       click_on I18n.t("ss.links.new")
 
-      within "#item-form #addon-cms-agents-addons-file" do
-        wait_cbox_open do
-          click_on button_label
+      within "#addon-cms-agents-addons-form-page" do
+        within ".column-value-palette" do
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column1.name
+          end
+        end
+        within ".column-value-cms-column-fileupload" do
+          wait_cbox_open do
+            click_on button_label
+          end
         end
       end
 
@@ -175,12 +186,9 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
     end
   end
 
-  context "with cms/temp_file" do
+  context "with ss/temp_file" do
     let!(:file) do
-      tmp_ss_file(
-        Cms::TempFile, user: cms_user, site: site, node: node, basename: filename,
-        contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
-      )
+      tmp_ss_file(user: cms_user, site: site, basename: filename, contents: "#{Rails.root}/spec/fixtures/ss/logo.png")
     end
     let(:button_label) { I18n.t("ss.buttons.upload") }
 
