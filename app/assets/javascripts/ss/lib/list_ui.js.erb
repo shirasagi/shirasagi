@@ -25,7 +25,7 @@ this.SS_ListUI = (function () {
       });
       list.on("mouseup", function (e) {
         var menu, offset, relX, relY;
-        if ($(e.target).is('a') || $(e.target).closest('a,label').length) {
+        if ($(e.target).is('a') || $(e.target).closest('a,label').length || !window.getSelection().isCollapsed) {
           return;
         }
         menu = list.find(".tap-menu");

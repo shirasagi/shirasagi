@@ -57,6 +57,13 @@ if (onSelect) {
       }
       $("#selected-files").append(data);
       $.colorbox.close();
+    },
+    error: function(xhr, status, data) {
+      if (xhr.responseJSON && Array.isArray(xhr.responseJSON)) {
+        alert(["== Error =="].concat(xhr.responseJSON).join("\n"));
+      } else {
+        alert(["== Error =="].concat(xhr.statusText).join("\n"));
+      }
     }
   });
 }
@@ -89,6 +96,7 @@ SS_SearchUI.modal();
 <div class="index user-files">
   <% @items.each do |item| %>
   <article class="file-view" id="user-file<%= item.id %>" data-file-id="<%= item.id %>">
+    <%= sanitizer_status(item) %>
     <a class="thumb select" href="<%= url_for action: :select, id: item %>" data-id="<%= item.id %>" data-humanized-name="<%= item.humanized_name %>">
       <% if item.image? %>
       <img src="<%= url_for(action: :thumb, id: item, _: item.updated.to_i) %>" alt="<%= item.basename %>" />

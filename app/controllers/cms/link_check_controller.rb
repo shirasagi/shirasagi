@@ -12,7 +12,7 @@ class Cms::LinkCheckController < ApplicationController
   private
 
   def set_user
-    @cur_user = get_user_by_session
+    @cur_user = SS.current_user = get_user_by_session
   end
 
   public

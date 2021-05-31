@@ -8,6 +8,7 @@
   end
 %>
 <div class="file-view" data-file-id="<%= item.id %>" data-name="<%= item.name %>" data-humanized-name="<%= item.humanized_name %>" data-url="<%= @item.url %>" data-thumb-url="<%= item.thumb_url %>" data-extname="<%= item.extname %>">
+  <%= sanitizer_status(item) %>
   <%= link_to file_path.call(item), class: :thumb, target: "_blank", rel: "noopener" do %>
     <% if item.image? %>
       <img src="<%= thumb_path.call(item) %>" alt="<%= item.basename %>" />

@@ -11,6 +11,10 @@ class Sys::SitesController < ApplicationController
 
   private
 
+  def permit_fields
+    super + [:upload_policy]
+  end
+
   def set_crumbs
     @crumbs << [t("sys.site"), sys_sites_path]
   end

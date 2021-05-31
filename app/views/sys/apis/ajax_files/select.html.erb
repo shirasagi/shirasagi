@@ -1,4 +1,5 @@
 <div class="file-view" data-file-id="<%= @item.id %>" data-humanized-name="<%= @item.humanized_name %>">
+  <%= sanitizer_status(@item) %>
   <a class="thumb" href="<%= view_sys_apis_temp_file_path(user: @cur_user.id, id: @item) %>" target="_blank" rel="noopener">
     <% if @item.image? %>
     <img src="<%= thumb_sys_apis_temp_file_path(user: @cur_user.id, id: @item, _: @item.updated.to_i) %>" alt="<%= @item.basename %>" />

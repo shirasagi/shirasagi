@@ -12,7 +12,7 @@ class Cms::LoginController < ApplicationController
     organizations = SS::Group.organizations.in(id: @cur_site.root_groups.map(&:id)).where(domains: request_host)
     return if organizations.size != 1
 
-    @cur_organization = organizations.first
+    @cur_organization = SS.current_organization = organizations.first
   end
 
   def default_logged_in_path

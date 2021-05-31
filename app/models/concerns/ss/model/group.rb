@@ -20,6 +20,7 @@ module SS::Model::Group
     field :expiration_date, type: DateTime
     field :domains, type: SS::Extensions::Words
     field :gws_use, type: String
+    field :upload_policy, type: String
     permit_params :name, :order, :activation_date, :expiration_date, :domains, :gws_use
 
     default_scope -> { order_by(order: 1, name: 1) }
@@ -157,6 +158,10 @@ module SS::Model::Group
 
   def gws_use?
     gws_use.blank? || gws_use != "disabled"
+  end
+
+  def upload_policy_options
+    SS::UploadPolicy.upload_policy_options
   end
 
   # Cast

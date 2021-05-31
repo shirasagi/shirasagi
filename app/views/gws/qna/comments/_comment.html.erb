@@ -36,6 +36,7 @@ end
         <span id="file-<%= file.id %>">
           <img src="/assets/img/gws/ic-file.png" alt="" />
           <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank', rel: "noopener" %>
+          <%= sanitizer_status(file) %>
         </span>
       <% end %>
     </div>

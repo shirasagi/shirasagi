@@ -28,6 +28,7 @@
         <span id="file-<%= file.id %>" class="<%= @cur_site.monitor_files_break == 'horizontal' ? 'd-inline-block mr-1' : 'd-block' %>">
           <img src="/assets/img/gws/ic-file.png" alt="" />
           <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank', rel: "noopener" %>
+          <%= sanitizer_status(file) %>
         </span>
         <% end %>
       </div>

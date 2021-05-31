@@ -18,6 +18,8 @@
 /tmp
 /private
 /public/sites
+/sanitizer_input
+/sanitizer_output
 
 # YARD
 /doc

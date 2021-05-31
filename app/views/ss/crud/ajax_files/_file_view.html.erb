@@ -4,6 +4,7 @@
 %>
 
 <div id="file-<%= file.id %>" class="file-view" data-file-id="<%= file.id %>" data-name="<%= file.name %>" data-humanized-name="<%= file.humanized_name %>" data-url="<%= file.url %>" data-thumb-url="<%= file.thumb_url %>" data-extname="<%= file.extname %>">
+  <%= sanitizer_status(file) %>
   <%= link_to url, class: :thumb, target: "_blank", rel: "noopener" do %>
     <% if file.image? %>
       <%= image_tag thumb_url, alt: file.name %>
