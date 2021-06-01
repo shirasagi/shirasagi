@@ -38,7 +38,7 @@
   </div>
   <% licenses = Opendata::License.in(site_id: @cur_node.becomes_with_route.try(:opendata_site_ids)).and_public.pluck(:name, :id) if @cur_node.present? %>
   <% page = @page.presence || @item %>
-  <% if @cur_node.present? %>
+  <% if @cur_node.present? && @cur_node.becomes_with_route.try(:opendata_sites).present? %>
     <dl class="od-resource-file-meta">
       <dt><%= t('cms.opendata_ref/resource.license_id') %></dt>
       <dd>
