@@ -73,6 +73,8 @@ class Cms::Node
     include History::Addon::Backup
 
     default_scope ->{ where(route: "cms/archive") }
+
+    self.use_archive_html = false
   end
 
   class GroupPage
