@@ -17,6 +17,7 @@ class SS::Captcha
           convert.background "white"
           convert.fill "darkblue"
           convert.wave "1x88"
+          convert.font "C059-Bold"
           convert.implode "0.2"
           convert.pointsize "22"
           convert.gravity "Center"
