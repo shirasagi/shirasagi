@@ -3,25 +3,73 @@
   addon ||= local_assigns.fetch(:addon, {})
 %>
 
-<div class="see mod-ss-addon-file">
-  <%= f.hidden_field "file_ids[]", value: "" %>
-  <span class="upload-menu-new">
-    <%= link_to t('ss.links.upload'), sys_apis_temp_files_path(@cur_user), class: "ajax-box btn" %>
-  </span>
-
-  <div id="selected-files">
-    <% @item.files.each do |file| %>
-      <%= render "ss/crud/ajax_files/file_view", file: file, show_properties: false, show_attach: false do %>
-        <br>
-        <label>URL</label>
-        <input type="text" name="item[link_urls][<%= file.id %>]" value="<%= file.link_url %>" >
+<% render_file_view = proc do |file_id, file_humanized_name, file_url, file_thumb_url, file_is_image, file_extname, file_link_url| %>
+  <tr id="file-<%= file_id %>" class="file-view" data-file-id="<%= file_id %>" data-humanized-name="<%= file_humanized_name %>" data-url="<%= file_url %>" data-thumb-url="<%= file_thumb_url %>" data-extname="<%= file_extname %>">
+    <td class="column-thumb">
+      <%= link_to file_url, class: :thumb, target: "_blank", rel: "noopener", title: file_humanized_name do %>
+        <% if file_is_image %>
+          <img alt="<%= file_humanized_name %>" src="<%= file_thumb_url %>">
+        <% else %>
+          <span class="ext icon-<%= file_extname %>"><%= file_extname %></span>
+        <% end %>
       <% end %>
-    <% end %>
-  </div>
-</div>
+
+      <%= f.hidden_field "file_ids[]", value: file_id, id: nil %>
+      <%= link_to t("ss.buttons.delete"), "#file-#{file_id}", class: "deselect btn" %>
+    </td>
+    <td class="column-url">
+      <input type="text" name="item[link_urls][<%= file_id %>]" value="<%= file_link_url %>" class="link-url"><br/>
+    </td>
+  </tr>
+<% end %>
+
+<dl class="see ss-addon-link_file">
+  <dt class="wide"></dt>
+  <dd class="wide">
+    <%= f.hidden_field "file_ids[]", value: "", id: nil %>
+
+    <span class="upload-menu-new">
+      <%= link_to t('ss.links.upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn" %>
+    </span>
+    <div class="upload-drop-area">
+      <span class="upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
+    </div>
+
+    <table class="index ajax-selected">
+      <tbody>
+      <% @item.files.each do |file| %>
+        <% render_file_view.call(file.id, file.humanized_name, file.url, file.thumb_url, file.image?, file.extname, file.link_url) %>
+      <% end %>
+      </tbody>
+    </table>
+
+    <script type="text/html" class="template">
+      <% render_file_view.call(":file_id", ":file_humanized_name", ":file_url", ":file_thumb_url", true, ":file_extname", ":file_link_url") %>
+    </script>
+  </dd>
+</dl>
 
 <%= jquery do %>
   var $el = $("#<%= addon[:id] %>");
   var tempFile = new SS_Addon_TempFile($el.find(".upload-drop-area"), <%= @cur_user.id %>);
-  SS_FileView.renderFileView($el);
+
+  var template = $el.find(".template").html();
+  $el.find(".ajax-box").data("on-select", function($item) {
+    $.colorbox.close();
+
+    var $data = $item.closest("[data-id]");
+    if (!$data[0]) {
+      return;
+    }
+
+    var html = template.replace(/:file_id/g, $data.data("id"));
+    html = html.replace(/:file_humanized_name/g, $data.data("humanized-name"));
+    html = html.replace(/:file_url/g, $data.data("url"));
+    html = html.replace(/:file_thumb_url/g, $data.data("thumb-url"));
+    html = html.replace(/:file_extname/g, $data.data("extname"));
+    html = html.replace(/:file_link_url/g, "");
+
+    $el.find(".ajax-selected tbody").append(html);
+    $el.find(".ajax-selected").show().trigger("change");
+  });
 <% end %>
