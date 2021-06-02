@@ -159,7 +159,7 @@ this.SS_AjaxFile = (function () {
 
     var elements = [];
     $.each(data, function(index, file) {
-      var item = self.$el.find(".user-files .select[data-id='" + file._id + "']");
+      var item = self.$el.find(".user-files [data-id='" + file._id + "'] .select");
       elements.push(item);
     });
 
