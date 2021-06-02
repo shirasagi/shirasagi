@@ -229,10 +229,6 @@ proxy_cache_lock_timeout 5s;
 EOF
 
 cat <<EOF | sudo tee /etc/nginx/conf.d/header.conf
-map \$http_x_forwarded_proto \$thescheme {
-    default \$scheme;
-    https https;
-}
 proxy_set_header Host \$host;
 proxy_set_header X-Real-IP \$remote_addr;
 proxy_set_header Remote-Addr \$remote_addr;
@@ -256,6 +252,10 @@ location = /apple-touch-icon-precomposed.png { expires 1h; access_log off; log_n
 EOF
 
 cat <<EOF | sudo tee /etc/nginx/conf.d/virtual.conf
+map \$http_x_forwarded_proto \$thescheme {
+    default \$scheme;
+    https https;
+}
 server {
     include conf.d/server/shirasagi.conf;
     server_name ${SS_HOSTNAME};
