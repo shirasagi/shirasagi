@@ -3,26 +3,6 @@
   addon ||= local_assigns.fetch(:addon, {})
 %>
 
-<% render_file_view = proc do |file_id, file_humanized_name, file_url, file_thumb_url, file_is_image, file_extname, file_link_url| %>
-  <tr id="file-<%= file_id %>" class="file-view" data-file-id="<%= file_id %>" data-humanized-name="<%= file_humanized_name %>" data-url="<%= file_url %>" data-thumb-url="<%= file_thumb_url %>" data-extname="<%= file_extname %>">
-    <td class="column-thumb">
-      <%= link_to file_url, class: :thumb, target: "_blank", rel: "noopener", title: file_humanized_name do %>
-        <% if file_is_image %>
-          <img alt="<%= file_humanized_name %>" src="<%= file_thumb_url %>">
-        <% else %>
-          <span class="ext icon-<%= file_extname %>"><%= file_extname %></span>
-        <% end %>
-      <% end %>
-
-      <%= f.hidden_field "file_ids[]", value: file_id, id: nil %>
-      <%= link_to t("ss.buttons.delete"), "#file-#{file_id}", class: "deselect btn" %>
-    </td>
-    <td class="column-url">
-      <input type="text" name="item[link_urls][<%= file_id %>]" value="<%= file_link_url %>" class="link-url"><br/>
-    </td>
-  </tr>
-<% end %>
-
 <dl class="see ss-addon-link_file">
   <dt class="wide"></dt>
   <dd class="wide">
@@ -38,13 +18,13 @@
     <table class="index ajax-selected">
       <tbody>
       <% @item.files.each do |file| %>
-        <% render_file_view.call(file.id, file.humanized_name, file.url, file.thumb_url, file.image?, file.extname, file.link_url) %>
+        <%= render "ss/agents/addons/link_file/file_view", f: f, file_id: file.id, file_humanized_name: file.humanized_name, file_url: file.url, file_thumb_url: file.thumb_url, file_is_image: file.image?, file_extname: file.extname, file_link_url: file.link_url %>
       <% end %>
       </tbody>
     </table>
 
     <script type="text/html" class="template">
-      <% render_file_view.call(":file_id", ":file_humanized_name", ":file_url", ":file_thumb_url", true, ":file_extname", ":file_link_url") %>
+      <%= render "ss/agents/addons/link_file/file_view", f: f, file_id: ":file_id", file_humanized_name: ":file_humanized_name", file_url: ":file_url", file_thumb_url: ":file_thumb_url", file_is_image: true, file_extname: ":file_extname", file_link_url: ":file_link_url" %>
     </script>
   </dd>
 </dl>
@@ -68,8 +48,13 @@
     html = html.replace(/:file_thumb_url/g, $data.data("thumb-url"));
     html = html.replace(/:file_extname/g, $data.data("extname"));
     html = html.replace(/:file_link_url/g, "");
+    var $html = $(html);
+    if (!$data.data("image?")) {
+      $html.find(".column-thumb .thumb img").remove();
+      $html.find(".column-thumb .thumb").append($("<span />", { class: "ext icon-" + $data.data("extname") }).html($data.data("extname")));
+    }
 
-    $el.find(".ajax-selected tbody").append(html);
+    $el.find(".ajax-selected tbody").append($html);
     $el.find(".ajax-selected").show().trigger("change");
   });
 <% end %>
