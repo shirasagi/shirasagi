@@ -11,7 +11,7 @@ class SS::Captcha
   class << self
     def generate_captcha
       Dir.mktmpdir do |dir|
-        captcha_text = sprintf("%04d", rand(10_000))
+        captcha_text = format("%04d", rand(10_000))
         MiniMagick::Tool::Convert.new do |convert|
           convert.size "100x28"
           convert.background "white"
@@ -28,8 +28,8 @@ class SS::Captcha
         create_captcha_data(captcha_text, "#{dir}/captcha.jpeg", nil)
       end
     rescue => e
-     Rails.logger.fatal("generate_captcha failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-     create_captcha_data(nil, nil, e)
+      Rails.logger.fatal("generate_captcha failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      create_captcha_data(nil, nil, e)
     end
 
     def create_captcha_data(captcha_text, tmp_dir_captcha, exception)
