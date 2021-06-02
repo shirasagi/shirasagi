@@ -8,7 +8,7 @@ module Cms::Addon::List
     included do
       cattr_accessor(:use_no_items_display, instance_accessor: false) { true }
       cattr_accessor(:use_substitute_html, instance_accessor: false) { true }
-      cattr_accessor(:use_archive_html, instance_accessor: false) { true }
+      cattr_accessor(:use_no_archive_html, instance_accessor: false) { true }
       cattr_accessor(:use_upper_html, instance_accessor: false) { true }
       cattr_accessor(:use_lower_html, instance_accessor: false) { true }
       cattr_accessor(:use_loop_html, instance_accessor: false) { true }

@@ -74,7 +74,7 @@ class Cms::Node
 
     default_scope ->{ where(route: "cms/archive") }
 
-    self.use_archive_html = false
+    self.use_no_archive_html = false
   end
 
   class GroupPage
