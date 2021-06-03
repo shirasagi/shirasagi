@@ -13,14 +13,14 @@ class SS::Captcha
       Dir.mktmpdir do |dir|
         captcha_text = format("%04d", rand(10_000))
         MiniMagick::Tool::Convert.new do |convert|
-          convert.size "100x28"
-          convert.background "white"
-          convert.fill "darkblue"
-          convert.wave "1x88"
-          convert.font "C059-Bold"
-          convert.implode "0.2"
-          convert.pointsize "22"
-          convert.gravity "Center"
+          convert.size SS.config.cms.captcha["image_size"] ||= "100x28"
+          convert.background SS.config.cms.captcha["background"] ||= "white"
+          convert.fill SS.config.cms.captcha["fill"] ||= "darkblue"
+          convert.wave SS.config.cms.captcha["wave"] ||= "1x88"
+          convert.font SS.config.cms.captcha["font"] ||= "NimbusSans-Bold"
+          convert.implode SS.config.cms.captcha["implode"] ||= "0.2"
+          convert.pointsize SS.config.cms.captcha["pointsize"] ||= "22"
+          convert.gravity SS.config.cms.captcha["gravity"] ||= "Center"
           convert << "label:#{captcha_text}"
           convert << "#{dir}/captcha.jpeg"
         end
