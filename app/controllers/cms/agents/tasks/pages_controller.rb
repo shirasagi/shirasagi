@@ -15,27 +15,46 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
     end
   end
 
+  def each_page(&block)
+    criteria = Cms::Page.site(@site).and_public
+    criteria = criteria.node(@node) if @node
+    all_ids = criteria.pluck(:id)
+    @task.total_count = all_ids.size
+
+    all_ids.each_slice(PER_BATCH) do |ids|
+      criteria.in(id: ids).to_a.each(&block)
+      @task.count(ids.length)
+    end
+  end
+
+  def each_page_with_rescue(&block)
+    each_page do |page|
+      rescue_with(rescue_p: rescue_p) do
+        yield page
+      end
+    end
+  end
+
   public
 
   def generate
     @task.log "# #{@site.name}"
+    @task.performance.header(name: "generate page performance log at #{Time.zone.now.iso8601}")
+    @task.performance.collect_site(@site) do
+      if @site.generate_locked?
+        @task.log(@site.t(:generate_locked))
+        return
+      end
 
-    if @site.generate_locked?
-      @task.log(@site.t(:generate_locked))
-      return
-    end
-
-    pages = Cms::Page.site(@site).and_public
-    pages = pages.node(@node) if @node
-    ids   = pages.pluck(:id)
-    @task.total_count = ids.size
-
-    ids.each do |id|
-      rescue_with(rescue_p: rescue_p) do
-        @task.count
-        page = Cms::Page.site(@site).and_public.where(id: id).first
+      each_page_with_rescue do |page|
         next unless page
-        @task.log page.url if page.becomes_with_route.generate_file(release: false)
+
+        @task.performance.collect_page(page) do
+          page = page.becomes_with_route
+          result = page.generate_file(release: false, task: @task)
+
+          @task.log page.url if result
+        end
       end
     end
   end

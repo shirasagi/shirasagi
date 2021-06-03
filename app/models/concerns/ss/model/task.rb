@@ -139,9 +139,16 @@ module SS::Model::Task
     self.state  = state
     result = save
 
-    if result && @log_file
-      @log_file.close
-      @log_file = nil
+    if result
+      if @log_file
+        @log_file.close
+        @log_file = nil
+      end
+
+      if @performance
+        @performance.close
+        @performance = nil
+      end
     end
 
     result
@@ -208,6 +215,10 @@ module SS::Model::Task
       agent.controller.instance_variable_set :"@#{k}", v
     end
     agent.invoke action
+  end
+
+  def performance
+    @performance ||= SS::Task::PerformanceCollector.new(self)
   end
 
   private

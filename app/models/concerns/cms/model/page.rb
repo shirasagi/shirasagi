@@ -59,7 +59,9 @@ module Cms::Model::Page
     return false unless public_node?
     return false if site.generate_locked?
     run_callbacks :generate_file do
-      updated = Cms::Agents::Tasks::PagesController.new.generate_page(self)
+      controller = Cms::Agents::Tasks::PagesController.new
+      controller.instance_variable_set(:@task, opts[:task]) if opts[:task].present?
+      updated = controller.generate_page(self)
       Cms::PageRelease.release(self) if opts[:release] != false
       updated
     end
