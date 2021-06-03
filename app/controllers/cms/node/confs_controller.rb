@@ -1,7 +1,6 @@
 class Cms::Node::ConfsController < ApplicationController
   include Cms::BaseFilter
   include Cms::NodeFilter
-  include SS::CaptchaFilter
 
   model Cms::Node
 

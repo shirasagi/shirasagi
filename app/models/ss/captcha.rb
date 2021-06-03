@@ -11,12 +11,13 @@ class SS::Captcha
   class << self
     def generate_captcha
       Dir.mktmpdir do |dir|
-        captcha_text = sprintf("%04d", rand(10_000))
+        captcha_text = format("%04d", rand(10_000))
         MiniMagick::Tool::Convert.new do |convert|
           convert.size "100x28"
           convert.background "white"
           convert.fill "darkblue"
           convert.wave "1x88"
+          convert.font "C059-Bold"
           convert.implode "0.2"
           convert.pointsize "22"
           convert.gravity "Center"

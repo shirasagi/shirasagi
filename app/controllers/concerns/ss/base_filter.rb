@@ -3,6 +3,7 @@ module SS::BaseFilter
   include SS::AuthFilter
   include SS::LayoutFilter
   include SS::ExceptionFilter
+  include SS::CaptchaFilter
   include History::LogFilter
 
   included do
