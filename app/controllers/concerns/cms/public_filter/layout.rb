@@ -55,14 +55,14 @@ module Cms::PublicFilter::Layout
 
       body.gsub!('#{part_name}', ERB::Util.html_escape(part.name))
 
-      if body =~ /\#\{part_parent[^}]*?_name\}/
+      if /\#{part_parent[^}]*?_name}/.match?(body)
         part_parent = part.parent || part
         body.gsub!('#{part_parent_name}', ERB::Util.html_escape(part_parent.name))
         part_parent = part_parent.parent || part_parent
         body.gsub!('#{part_parent.parent_name}', ERB::Util.html_escape(part_parent.name))
       end
 
-      if body =~ /\#\{[^}]*?parent_name\}/
+      if /\#{[^}]*?parent_name}/.match?(body)
         parent = Cms::Node.site(@cur_site).filename(@cur_main_path.to_s.sub(/^\//, "").sub(/\/[\w\-\.]*?$/, "")).first
         if parent
           body.gsub!('#{parent_name}', ERB::Util.html_escape(parent.name))
@@ -77,57 +77,16 @@ module Cms::PublicFilter::Layout
 
   def render_layout(layout)
     layout_perf_log(layout) do
-      @cur_layout = layout
-      @cur_item   = @cur_page || @cur_node
-      @cur_item.window_name ||= @cur_item.name
+      init_render_layout_context(layout)
 
-      @count_pages = params[:page] if params[:page].numeric?
-      @current_page = "#{@count_pages}#{t("cms.count_pages")} - " if @count_pages
-
-      @window_name = @cur_site.name
-      @window_name = "#{@cur_item.window_name} - #{@current_page} #{@cur_site.name}" if @cur_item.filename != 'index.html'
-
-      @cur_layout.keywords    = @cur_item.keywords if @cur_item.respond_to?(:keywords)
-      @cur_layout.description = @cur_item.description if @cur_item.respond_to?(:description)
-
-      @parts = {}
-
-      body = @cur_layout.body.to_s
-
-      body = body.sub(/<body.*?>/) do |m|
-        m = m.sub(/ class="/, %( class="#{body_class(@cur_main_path)} )     ) if m =~ / class="/
-        m = m.sub(/<body/,    %(<body class="#{body_class(@cur_main_path)}")) unless m =~ / class="/
-        m = m.sub(/<body/,    %(<body id="#{body_id(@cur_main_path)}")      ) unless m =~ / id="/
-        m
-      end
-
-      html = render_conditional_tag(body)
+      html = @cur_layout.body.to_s
+      html = render_body_class(html)
+      html = render_conditional_tag(html)
       html = render_layout_parts(html)
-
-      if notice
-        notice_html   = %(<div id="ss-notice"><div class="wrap">#{notice}</div></div>)
-        response.body = %(#{notice_html}#{response.body})
-      end
-
       html = render_kana_tool(html)
       html = render_theme_tool(html)
       html = render_template_variables(html)
-      html.sub!(/(\{\{ yield \}\}|<\/ yield \/>)/) do
-        body = []
-        if @preview && !html.include?("ss-preview-content-begin")
-          body << "<div id=\"ss-preview-content-begin\" class=\"ss-preview-hide\"></div>"
-        end
-
-        body << "<!-- layout_yield -->"
-        body << response.body
-        body << "<!-- /layout_yield -->"
-
-        if @preview && !html.include?("ss-preview-content-begin")
-          body << "<div id=\"ss-preview-content-end\" class=\"ss-preview-hide\"></div>"
-        end
-
-        body.join
-      end
+      html = render_yield(html)
 
       html = html.sub(/<title>(.*?)<\/title>(\r|\n)*/) do
         @window_name = ::Regexp.last_match(1)
@@ -147,6 +106,32 @@ module Cms::PublicFilter::Layout
       end
 
       html
+    end
+  end
+
+  def init_render_layout_context(layout)
+    @cur_layout = layout
+    @cur_item   = @cur_page || @cur_node
+    @cur_item.window_name ||= @cur_item.name
+
+    @count_pages = params[:page] if params[:page].numeric?
+    @current_page = "#{@count_pages}#{t("cms.count_pages")} - " if @count_pages
+
+    @window_name = @cur_site.name
+    @window_name = "#{@cur_item.window_name} - #{@current_page} #{@cur_site.name}" if @cur_item.filename != 'index.html'
+
+    @cur_layout.keywords    = @cur_item.keywords if @cur_item.respond_to?(:keywords)
+    @cur_layout.description = @cur_item.description if @cur_item.respond_to?(:description)
+
+    @parts = {}
+  end
+
+  def render_body_class(html)
+    html.sub(/<body.*?>/) do |m|
+      m = m.sub(/ class="/, %( class="#{body_class(@cur_main_path)} )     ) if m =~ / class="/
+      m = m.sub(/<body/,    %(<body class="#{body_class(@cur_main_path)}")) unless m =~ / class="/
+      m = m.sub(/<body/,    %(<body id="#{body_id(@cur_main_path)}")      ) unless m =~ / id="/
+      m
     end
   end
 
@@ -242,6 +227,30 @@ module Cms::PublicFilter::Layout
       html << "</div>"
     end
     html.join
+  end
+
+  def render_yield(html)
+    html.sub!(/(\{\{ yield \}\}|<\/ yield \/>)/) do
+      body = []
+      if @preview && !html.include?("ss-preview-content-begin")
+        body << "<div id=\"ss-preview-content-begin\" class=\"ss-preview-hide\"></div>"
+      end
+
+      body << "<!-- layout_yield -->"
+      if notice
+        body << %(<div id="ss-notice"><div class="wrap">#{notice}</div></div>)
+      end
+      body << response.body
+      body << "<!-- /layout_yield -->"
+
+      if @preview && !html.include?("ss-preview-content-begin")
+        body << "<div id=\"ss-preview-content-end\" class=\"ss-preview-hide\"></div>"
+      end
+
+      body.join
+    end
+
+    html
   end
 
   def render_kana_tool(html)

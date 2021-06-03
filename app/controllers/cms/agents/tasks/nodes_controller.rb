@@ -11,7 +11,7 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
   end
 
   def rescue_p
-    Proc.new do |exception|
+    proc do |exception|
       exception_backtrace(exception) do |message|
         @task.log message
         Rails.logger.error message
