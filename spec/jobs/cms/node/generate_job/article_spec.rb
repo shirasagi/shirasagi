@@ -33,7 +33,7 @@ describe Cms::Node::GenerateJob, dbscope: :example do
         # and there are no `logs` field
         expect(task[:logs]).to be_nil
         # performance logs are saved
-        expect(::File.exists?(task.log_file_path.sub(".log", "") + "-performance.log.gz")).to be_truthy
+        expect(::File.exists?(task.perf_log_file_path)).to be_truthy
       end
       Cms::Task.where(site_id: site.id, node_id: node.id, name: 'cms:generate_nodes').first.tap do |task|
         expect(task.state).to eq 'ready'
@@ -107,7 +107,7 @@ describe Cms::Node::GenerateJob, dbscope: :example do
         # and there are no `logs` field
         expect(task[:logs]).to be_nil
         # performance logs are saved
-        expect(::File.exists?(task.log_file_path.sub(".log", "") + "-performance.log.gz")).to be_truthy
+        expect(::File.exists?(task.perf_log_file_path)).to be_truthy
       end
       Cms::Task.where(site_id: site.id, node_id: node.id, name: 'cms:generate_nodes').first.tap do |task|
         expect(task.state).to eq 'ready'

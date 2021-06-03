@@ -170,6 +170,11 @@ module SS::Model::Task
     @log_file_path ||= "#{SS::File.root}/ss_tasks/" + id.to_s.split(//).join("/") + "/_/#{id}.log"
   end
 
+  def perf_log_file_path
+    return if log_file_path.blank?
+    log_file_path.sub(".log", "") + "-performance.log.gz"
+  end
+
   def logs
     if log_file_path && ::File.exists?(log_file_path)
       return ::File.readlines(log_file_path, chomp: true) rescue []

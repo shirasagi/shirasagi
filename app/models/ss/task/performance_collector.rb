@@ -51,10 +51,9 @@ class SS::Task
       @log_file.finish
       @temp_file.close
 
-      log_filepath = @task.log_file_path
-      log_filepath = log_filepath.sub(".log", "") + "-performance.log.gz"
-
-      ::FileUtils.cp(@temp_file.path, log_filepath, preserve: true)
+      if !::File.empty?(@temp_file.path)
+        ::FileUtils.cp(@temp_file.path, @task.perf_log_file_path, preserve: true)
+      end
     ensure
       if @subscriber
         ::ActiveSupport::Notifications.unsubscribe(@subscriber)
