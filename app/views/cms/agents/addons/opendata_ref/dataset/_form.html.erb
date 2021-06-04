@@ -54,20 +54,18 @@
           <%= t('cms.options.opendata_dataset.none') %>
         </label>
       </li>
-      <% if false %>
-        <li>
-          <label>
-            <%= f.radio_button :opendata_dataset_state, 'public' %>
-            <%= t('cms.options.opendata_dataset.public') %>
-          </label>
-        </li>
-        <li>
-          <label>
-            <%= f.radio_button :opendata_dataset_state, 'closed' %>
-            <%= t('cms.options.opendata_dataset.closed') %>
-          </label>
-        </li>
-      <% end %>
+      <li>
+        <label>
+          <%= f.radio_button :opendata_dataset_state, 'public' %>
+          <%= t('cms.options.opendata_dataset.public') %>
+        </label>
+      </li>
+      <li>
+        <label>
+          <%= f.radio_button :opendata_dataset_state, 'closed' %>
+          <%= t('cms.options.opendata_dataset.closed') %>
+        </label>
+      </li>
       <li>
         <label>
           <%= f.radio_button :opendata_dataset_state, 'existance' %>
