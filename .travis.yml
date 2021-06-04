@@ -26,6 +26,7 @@ addons:
     packages:
       - imagemagick
       - graphicsmagick
+      - gsfonts
       - sox
       - libsox-dev
       - lame
