@@ -25,8 +25,7 @@ addons:
   apt:
     packages:
       - imagemagick
-      - ghostscript
-      - libmagick++-dev
+      - graphicsmagick
       - sox
       - libsox-dev
       - lame
