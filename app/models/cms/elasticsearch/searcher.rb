@@ -40,7 +40,7 @@ class Cms::Elasticsearch::Searcher
   def search
     query = {}
     query[:bool] = {}
-    query[:bool][:must] = { simple_query_string: { query: keyword, fields: [field_name], default_operator: 'AND' } }
+    query[:bool][:must] = { simple_query_string: { query: keyword, fields: [field_name].flatten, default_operator: 'AND' } }
 
     query[:bool][:filter] = {}
     query[:bool][:filter][:bool] = {}

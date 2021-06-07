@@ -73,9 +73,17 @@ class Cms::Elasticsearch::Indexer::PageReleaseJob < Cms::ApplicationJob
 
   def item_text
     if Fs.exists?(item.path)
-      ApplicationController.helpers.sanitize(Fs.read(item.path).presence || '', tags: [])
+      html = Fs.read(item.path)
     else
-      ApplicationController.helpers.sanitize(item.html.presence || '', tags: [])
+      html = item.html
     end
+    config = SS.config.cms.elasticsearch
+    site_search_marks = config['site-search-marks']
+    if html =~ /<!--[^>]*?\s#{site_search_marks[0]}\s[^>]*?-->(.*)<!--[^>]*?\s#{site_search_marks[1]}\s[^>]*?-->/im
+      html = $1
+    elsif html =~ /<\s*body[^>]*>(.*)<\/\s*body\s*>/im
+      html = $1
+    end
+    ApplicationController.helpers.sanitize(html.presence || '', tags: [])
   end
 end

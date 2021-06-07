@@ -1,7 +1,15 @@
-<% return if @result.blank? %>
+<%
+  return if @result.blank?
+  case @result['hits']['total']
+  when Integer
+    count = @result['hits']['total']
+  when Hash
+    count = @result['hits']['total']['value']
+  end
+%>
 
 <div class="search-stats">
-  <%= I18n.t('gws/elasticsearch.format.search_results_count', count: @result['hits']['total'], from: @item.from + 1, to: @item.from + @item.size, took: @result['took'] / 1000.0) %>
+  <%= I18n.t('gws/elasticsearch.format.search_results_count', count: count, from: @item.from + 1, to: @item.from + @item.size, took: @result['took'] / 1000.0) %>
 </div>
 
 <div class="cms-site-search-pages pages">
@@ -14,16 +22,19 @@
           if source.dig('file', 'extname').present?
             title = "#{title} (#{source.dig('file', 'extname').upcase} #{number_to_human_size(source.dig('file', 'size'))})"
           end
-          date = source['released'].presence.try { |time| Time.zone.parse(time) rescue nil }
-          date ||= source['updated'].presence.try { |time| Time.zone.parse(time) rescue nil }
-          date ||= source['created'].presence.try { |time| Time.zone.parse(time) rescue nil }
+          date = source['released']
+          url = Addressable::URI.join((Cms::Site.where(id: source['site_id']).first.presence || @cur_site).full_root_url, source['url']).to_s
+          filename = (Cms::Site.where(id: source['site_id']).first.presence || @cur_site).full_url + hit['_id']
+          if source['title'].present?
+            title = source['title']
+            date = source['timestamp']
+            url = filename = source['url']
+          end
         %>
-        <h2><%= link_to title, Addressable::URI.join((Cms::Site.where(id: source['site_id']).first.presence || @cur_site).full_root_url, source['url']).to_s, class: 'title' %></h2>
+        <h2><%= link_to title, url, class: 'title' %></h2>
         <div class="meta">
-          <span class="url"><%= (Cms::Site.where(id: source['site_id']).first.presence || @cur_site).full_url + hit['_id'] %></span>
-          <% if date %>
-            <time datetime="<%= date.iso8601 %>"><%= I18n.l(date, format: :long) %></time>
-          <% end %>
+          <span class="url"><%= filename %></span>
+          <time datetime="<%= date %>"><%= I18n.l(Time.zone.parse(date), format: :long) %></time>
         </div>
       </header>
     </article>
