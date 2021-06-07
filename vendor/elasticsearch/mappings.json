@@ -1,50 +1,45 @@
 {
-  "_default_": {
-    "_all": {
-      "enabled": false
+  "properties": {
+    "id": { "type": "keyword" },
+    "url": { "type": "keyword" },
+    "name": { "type": "text", "analyzer": "my_ja_analyzer", "copy_to": "text_index" },
+    "mode": { "type": "keyword" },
+    "text": { "type": "text", "analyzer": "my_ja_analyzer", "copy_to": "text_index" },
+    "categories": { "type": "keyword" },
+    "release_date": { "type": "date", "format": "strict_date_optional_time||epoch_millis" },
+    "close_date": { "type": "date", "format": "strict_date_optional_time||epoch_millis" },
+    "released": { "type": "date", "format": "strict_date_optional_time||epoch_millis" },
+    "state": { "type": "keyword" },
+    "user_name" : { "type": "text", "analyzer": "my_ja_analyzer", "copy_to": "text_index" },
+    "user_ids": { "type": "integer" },
+    "group_ids": { "type": "integer" },
+    "custom_group_ids": { "type": "integer" },
+    "permission_level": { "type": "integer" },
+    "member_ids": { "type": "integer" },
+    "member_custom_group_ids": { "type": "integer" },
+    "readable_member_ids": { "type": "integer" },
+    "readable_group_ids": { "type": "integer" },
+    "readable_custom_group_ids": { "type": "integer" },
+    "updated": { "type": "date", "format": "strict_date_optional_time||epoch_millis" },
+    "created": { "type": "date", "format": "strict_date_optional_time||epoch_millis" },
+    "text_index" : { "type": "text", "analyzer": "my_ja_analyzer" },
+    "data" : { "type": "text", "index" : "false", "store" : "false" },
+    "file" : {
+      "properties" : {
+        "extname": { "type": "keyword" },
+        "size": { "type": "integer" }
+      }
     },
-    "properties": {
-      "id": { "type": "keyword" },
-      "url": { "type": "string" },
-      "name": { "type": "text", "analyzer": "my_ja_analyzer", "copy_to": "text_index" },
-      "mode": { "type": "keyword" },
-      "text": { "type": "text", "analyzer": "my_ja_analyzer", "copy_to": "text_index" },
-      "categories": { "type": "keyword" },
-      "release_date": { "type": "date", "format": "strict_date_optional_time||epoch_millis" },
-      "close_date": { "type": "date", "format": "strict_date_optional_time||epoch_millis" },
-      "released": { "type": "date", "format": "strict_date_optional_time||epoch_millis" },
-      "state": { "type": "keyword" },
-      "user_name" : { "type": "text", "analyzer": "my_ja_analyzer", "copy_to": "text_index" },
-      "user_ids": { "type": "integer" },
-      "group_ids": { "type": "integer" },
-      "custom_group_ids": { "type": "integer" },
-      "permission_level": { "type": "integer" },
-      "member_ids": { "type": "integer" },
-      "member_custom_group_ids": { "type": "integer" },
-      "readable_member_ids": { "type": "integer" },
-      "readable_group_ids": { "type": "integer" },
-      "readable_custom_group_ids": { "type": "integer" },
-      "updated": { "type": "date", "format": "strict_date_optional_time||epoch_millis" },
-      "created": { "type": "date", "format": "strict_date_optional_time||epoch_millis" },
-      "text_index" : { "type": "text", "analyzer": "my_ja_analyzer" },
-      "data" : { "type": "text", "index" : "no", "store" : "no" },
-      "file" : {
-        "properties" : {
-          "extname": { "type": "keyword" },
-          "size": { "type": "integer" }
-        }
-      },
-      "site_id": { "type": "integer" },
-      "attachment": {
-        "properties" : {
-          "date" : { "type": "date", "format": "strict_date_optional_time||epoch_millis" },
-          "content_type" : { "type": "keyword" },
-          "author" : { "type": "text", "analyzer": "my_ja_analyzer" },
-          "language" : { "type": "keyword" },
-          "title" : { "type": "text", "analyzer": "my_ja_analyzer", "copy_to": "text_index" },
-          "content" : { "type": "text", "analyzer": "my_ja_analyzer", "copy_to": "text_index" },
-          "content_length" : { "type": "integer" }
-        }
+    "site_id": { "type": "integer" },
+    "attachment": {
+      "properties" : {
+        "date" : { "type": "date", "format": "strict_date_optional_time||epoch_millis" },
+        "content_type" : { "type": "keyword" },
+        "author" : { "type": "text", "analyzer": "my_ja_analyzer" },
+        "language" : { "type": "keyword" },
+        "title" : { "type": "text", "analyzer": "my_ja_analyzer", "copy_to": "text_index" },
+        "content" : { "type": "text", "analyzer": "my_ja_analyzer", "copy_to": "text_index" },
+        "content_length" : { "type": "integer" }
       }
     }
   }
