@@ -172,16 +172,6 @@ module Cms::Model::Page
     end
   end
 
-  def attached_files
-    if self.class.include?(Cms::Addon::Form::Page) && self.form
-      self.form_files.to_a
-    elsif self.class.include?(Cms::Addon::File)
-      self.files.to_a
-    else
-      []
-    end
-  end
-
   private
 
   def fix_extname
