@@ -90,7 +90,7 @@ module Cms::Elasticsearch::Indexer::Base
   end
 
   def index_type
-    @index_type ||= model.collection_name
+    @index_type ||= '_doc'
   end
 
   def index_item_id

@@ -22,7 +22,7 @@
         <div class="meta">
           <span class="url"><%= (Cms::Site.where(id: source['site_id']).first.presence || @cur_site).full_url + hit['_id'] %></span>
           <% if date %>
-            <time datetime="<%= date %>"><%= I18n.l(Time.zone.parse(date), format: :long) %></time>
+            <time datetime="<%= date.iso8601 %>"><%= I18n.l(date, format: :long) %></time>
           <% end %>
         </div>
       </header>
