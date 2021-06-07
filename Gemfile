@@ -98,6 +98,9 @@ gem 'unf'
 gem 'faraday'
 gem 'elasticsearch'
 
+# line
+gem 'line-bot-api'
+
 group :development, :test do
   gem 'dotenv-rails'
   gem 'capybara', require: false

@@ -297,6 +297,7 @@ GEM
       kramdown (~> 2.0)
     levenshtein (0.2.2)
     libv8 (7.3.492.27.1)
+    line-bot-api (1.19.0)
     link_header (0.0.8)
     liquid (4.0.1)
     listen (3.1.5)
@@ -692,6 +693,7 @@ DEPENDENCIES
   kramdown
   kramdown-parser-gfm
   levenshtein
+  line-bot-api
   liquid
   mail-iso-2022-jp
   marcel

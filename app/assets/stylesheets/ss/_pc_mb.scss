@@ -3492,3 +3492,17 @@ body.ss-ajax-in-iframe {
     cursor: help;
   }
 }
+
+.sns-post-confirm {
+  background: #f3f3f3;
+  padding: 2px;
+  border-radius: 4px;
+  h2 {
+    font-weight: bold;
+    margin-top: 5px;
+    margin-left: 10px;
+  }
+  ul li {
+    list-style: inherit;
+  }
+}
