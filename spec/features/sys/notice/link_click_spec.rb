@@ -31,14 +31,14 @@ describe "sys_notice", type: :feature, dbscope: :example, js: true do
         click_on notice.name
 
         new_window = nil
-        within_frame find("iframe.cke_wysiwyg_frame") do
+        within_frame find("iframe.ss-notice-frame") do
           new_window = window_opened_by { click_on notice0.name }
         end
 
         # new window (tab) is opened and pdf is show
         expect(new_window).to be_present
         within_window new_window do
-          within_frame find("iframe.cke_wysiwyg_frame") do
+          within_frame find("iframe.ss-notice-frame") do
             expect(page).to have_css(".heading", text: heading)
           end
         end
@@ -56,14 +56,14 @@ describe "sys_notice", type: :feature, dbscope: :example, js: true do
         click_on notice.name
 
         new_window = nil
-        within_frame find("iframe.cke_wysiwyg_frame") do
+        within_frame find("iframe.ss-notice-frame") do
           new_window = window_opened_by { click_on notice0.name }
         end
 
         # new window (tab) is opened and pdf is show
         expect(new_window).to be_present
         within_window new_window do
-          within_frame find("iframe.cke_wysiwyg_frame") do
+          within_frame find("iframe.ss-notice-frame") do
             expect(page).to have_css(".heading", text: heading)
           end
         end
@@ -83,14 +83,14 @@ describe "sys_notice", type: :feature, dbscope: :example, js: true do
         click_on notice.name
 
         new_window = nil
-        within_frame find("iframe.cke_wysiwyg_frame") do
+        within_frame find("iframe.ss-notice-frame") do
           new_window = window_opened_by { click_on notice0.name }
         end
 
         # new window (tab) is opened and pdf is show
         expect(new_window).to be_present
         within_window new_window do
-          within_frame find("iframe.cke_wysiwyg_frame") do
+          within_frame find("iframe.ss-notice-frame") do
             expect(page).to have_css(".heading", text: heading)
           end
         end
@@ -110,14 +110,14 @@ describe "sys_notice", type: :feature, dbscope: :example, js: true do
         click_on notice.name
 
         new_window = nil
-        within_frame find("iframe.cke_wysiwyg_frame") do
+        within_frame find("iframe.ss-notice-frame") do
           new_window = window_opened_by { click_on notice0.name }
         end
 
         # new window (tab) is opened and pdf is show
         expect(new_window).to be_present
         within_window new_window do
-          within_frame find("iframe.cke_wysiwyg_frame") do
+          within_frame find("iframe.ss-notice-frame") do
             expect(page).to have_css(".heading", text: heading)
           end
         end
