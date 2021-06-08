@@ -1,4 +1,9 @@
 <section class="main-box">
   <header><h2><%= @item.name %></h2></header>
-  <iframe src="<%= url_for(action: :frame_content) %>" frameborder="0" class="ss-notice-frame" title="<%= @item.name %>" tabindex="0" allowtransparency="true"></iframe>
+  <% if false %>
+    <iframe src="<%= url_for(action: :frame_content) %>" frameborder="0" class="ss-notice-frame" title="<%= @item.name %>" tabindex="0" allowtransparency="true"></iframe>
+  <% end %>
+  <div class="ss-notice-wrap">
+    <%= sanitize(@item.html) %>
+  </div>
 </section>
