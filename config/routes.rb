@@ -55,8 +55,12 @@ Rails.application.routes.draw do
     match "login"  => "login#login", as: :login, via: [:get, :post]
     match "remote_login" => "login#remote_login", as: :remote_login, via: [:get, :post]
     get   "redirect" => "login#redirect", as: :redirect
-    resources :public_notices, only: [:index, :show]
-    resources :sys_notices, only: [:index, :show]
+    resources :public_notices, only: [:index, :show] do
+      get :frame_content, on: :member
+    end
+    resources :sys_notices, only: [:index, :show] do
+      get :frame_content, on: :member
+    end
     get   "status" => "login#status", as: :login_status
     get   "auth_token" => "auth_token#index", as: :auth_token
     get   "cms" => "mypage#cms"

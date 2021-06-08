@@ -1,5 +1,4 @@
 <section class="main-box">
   <header><h2><%= @item.name %></h2></header>
-  <%= html_editor "#notice-body", { height: "400px", readonly: true, templates: false }, { openHref: sns_redirect_path } %>
-  <%= text_area_tag "notice-body", sanitize(@item.html), style: "height: 400px;" %>
+  <iframe src="<%= url_for(action: :frame_content) %>" frameborder="0" class="ss-notice-frame" title="<%= @item.name %>" tabindex="0" allowtransparency="true"></iframe>
 </section>

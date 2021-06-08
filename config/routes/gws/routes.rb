@@ -45,7 +45,9 @@ Rails.application.routes.draw do
       match :import, on: :collection, via: %i[get post]
     end
     resources :roles, concerns: [:deletion, :download, :import]
-    resources :sys_notices, only: [:index, :show]
+    resources :sys_notices, only: [:index, :show] do
+      get :frame_content, on: :member
+    end
     resources :links, concerns: [:deletion]
     resources :public_links, only: [:index, :show]
     resources :histories, only: [:index]
