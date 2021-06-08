@@ -31,7 +31,7 @@ var dataTypeOption = function () {
   }
 };
 var successAttach = function (data) {
-  $("#cboxLoadedContent").load("<%= url_for(action: :index, file_size: params[:file_size]) %>", function() {
+  $("#cboxLoadedContent").load("<%= url_for(action: :index, file_size: params[:file_size], owner_item_id: params[:owner_item_id], owner_item_type: params[:owner_item_type]) %>", function() {
     if (!Array.isArray(data) || data.length == 0) {
       return;
     }
@@ -68,7 +68,7 @@ var successAttach = function (data) {
   });
 };
 var successSave = function (data) {
-  $("#cboxLoadedContent").load("<%= url_for(action: :index, file_size: params[:file_size], similar_files: params[:similar_files]) %>");
+  $("#cboxLoadedContent").load("<%= url_for(action: :index, file_size: params[:file_size], similar_files: params[:similar_files], owner_item_id: params[:owner_item_id], owner_item_type: params[:owner_item_type]) %>");
 };
 var successSimilarFiles = function (data) {
   var html = $(data);
@@ -206,6 +206,8 @@ SS_SearchUI.modal();
       opts = { action: :select, id: item }
       opts[:unnormalize] = true if params[:unnormalize].present?
       opts[:file_size] = true if params[:file_size].present?
+      opts[:owner_item_id] = params[:owner_item_id] if params[:owner_item_id].present?
+      opts[:owner_item_type] = params[:owner_item_type] if params[:owner_item_type].present?
     %>
     <a class="select" href="<%= url_for opts %>" title="<%= item.humanized_name %>" data-id="<%= item.id %>" data-humanized-name="<%= item.humanized_name %>">
       <div class="thumb">

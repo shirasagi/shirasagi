@@ -14,6 +14,7 @@
     switch($(this).val()) {
       case 'public' :
         $("#addon-cms-agents-addons-opendata_ref-category").show();
+        $("#addon-cms-agents-addons-opendata_ref-area").show();
         $("#addon-cms-agents-addons-opendata_ref-dataset_group").show();
         $("#addon-cms-agents-addons-opendata_ref-license").hide();
         $(".od-resource-file-meta").show();
@@ -21,6 +22,7 @@
         break;
       case 'closed' :
         $("#addon-cms-agents-addons-opendata_ref-category").show();
+        $("#addon-cms-agents-addons-opendata_ref-area").show();
         $("#addon-cms-agents-addons-opendata_ref-dataset_group").show();
         $("#addon-cms-agents-addons-opendata_ref-license").hide();
         $(".od-resource-file-meta").show();
@@ -28,6 +30,7 @@
         break;
       case 'existance' :
         $("#addon-cms-agents-addons-opendata_ref-category").hide();
+        $("#addon-cms-agents-addons-opendata_ref-area").hide();
         $("#addon-cms-agents-addons-opendata_ref-dataset_group").hide();
         $("#addon-cms-agents-addons-opendata_ref-license").hide();
         $(".od-resource-file-meta").show();
@@ -35,6 +38,7 @@
         break;
       default :
         $("#addon-cms-agents-addons-opendata_ref-category").hide();
+        $("#addon-cms-agents-addons-opendata_ref-area").hide();
         $("#addon-cms-agents-addons-opendata_ref-dataset_group").hide();
         $("#addon-cms-agents-addons-opendata_ref-license").hide();
         $(".od-resource-file-meta").hide();

@@ -1971,6 +1971,26 @@ footer.send {
   }
 }
 
+#addon-cms-agents-addons-file .file-view,#addon-cms-agents-addons-form-page .file-view,.column-value-cms-column-free .file-view {
+  width: 240px;
+  .od-resource-file-meta {
+    width: 240px;
+    display: inline-block;
+    margin: 16px 0;
+    dt {
+      font-weight: bold;
+      margin: 8px 0 4px;
+    }
+    dd {
+      margin: 0;
+      margin: 4px 0 16px;
+      select, input, a, table {
+        margin: 4px 0;
+      }
+    }
+  }
+}
+
 #addon-cms-agents-addons-form-page .file-view,.column-value-cms-column-free .file-view {
   width: 240px;
   .od-resource-file-meta {

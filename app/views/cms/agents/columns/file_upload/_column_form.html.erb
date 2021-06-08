@@ -10,7 +10,7 @@
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
   <span class="upload-menu-new">
     <% if opendata_assoced %>
-      <%= link_to t('ss.links.upload'), cms_apis_node_temp_files_path(cid: @cur_node, similar_files: 1), class: "ajax-box btn btn-file-upload" %>
+      <%= link_to t('ss.links.upload'), cms_apis_node_temp_files_path(cid: @cur_node, similar_files: 1, owner_item_id: @item.id, owner_item_type: @model.to_s), class: "ajax-box btn btn-file-upload" %>
     <% elsif @cur_node %>
       <%= link_to t('ss.links.upload'), cms_apis_node_temp_files_path(cid: @cur_node), class: "ajax-box btn btn-file-upload" %>
     <% else %>

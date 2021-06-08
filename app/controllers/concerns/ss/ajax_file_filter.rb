@@ -19,6 +19,8 @@ module SS::AjaxFileFilter
     @item = @item.copy(
       cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node
     )
+    @page = Cms::Page.find_or_initialize_by(id: params[:owner_item_id])
+    @page = @page.becomes_with_route(params[:owner_item_type].underscore) if params[:owner_item_type].present?
 
     render file: :select, layout: !request.xhr?
   end
@@ -35,6 +37,8 @@ module SS::AjaxFileFilter
 
   def select
     set_item
+    @page = Cms::Page.find_or_initialize_by(id: params[:owner_item_id])
+    @page = @page.becomes_with_route(params[:owner_item_type].underscore) if params[:owner_item_type].present?
     render file: :select, layout: !request.xhr?
   end
 end
