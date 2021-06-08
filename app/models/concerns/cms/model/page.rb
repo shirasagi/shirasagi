@@ -19,6 +19,8 @@ module Cms::Model::Page
 
     #text_index :name, :html
 
+    self.default_released_type = "same_as_updated"
+
     attr_accessor :window_name
 
     field :route, type: String, default: ->{ "cms/page" }
@@ -41,16 +43,12 @@ module Cms::Model::Page
     end
   end
 
-  def date
-    released || super
-  end
-
   def preview_path
     site.subdir ? "#{site.subdir}/#{filename}" : filename
   end
 
   def mobile_preview_path
-    ::File.join((site.subdir ? site.subdir : ""), site.mobile_location, filename).gsub(/^\//, '')
+    ::File.join((site.subdir.presence || ""), site.mobile_location, filename)
   end
 
   def generate_file(opts = {})

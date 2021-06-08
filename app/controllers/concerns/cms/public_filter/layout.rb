@@ -167,7 +167,7 @@ module Cms::PublicFilter::Layout
     html.gsub!(::Regexp.compile(template)) do
       matchdata = ::Regexp.last_match
       if matchdata[:item] == 'released'
-        released ||= ERB::Util.html_escape(@cur_item.released)
+        released ||= ERB::Util.html_escape(@cur_item.date)
         date = released
       else
         updated ||= ERB::Util.html_escape(@cur_item.updated)
