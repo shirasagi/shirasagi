@@ -75,7 +75,9 @@ module Cms::PublicFilter::Layout
     end
   end
 
-  def render_layout(layout)
+  def render_layout(layout, content: nil)
+    content ||= response.body
+
     layout_perf_log(layout) do
       init_render_layout_context(layout)
 
@@ -86,7 +88,7 @@ module Cms::PublicFilter::Layout
       html = render_kana_tool(html)
       html = render_theme_tool(html)
       html = render_template_variables(html)
-      html = render_yield(html)
+      html = render_yield(html, content)
 
       html = html.sub(/<title>(.*?)<\/title>(\r|\n)*/) do
         @window_name = ::Regexp.last_match(1)
@@ -229,7 +231,7 @@ module Cms::PublicFilter::Layout
     html.join
   end
 
-  def render_yield(html)
+  def render_yield(html, content)
     html.sub!(/(\{\{ yield \}\}|<\/ yield \/>)/) do
       body = []
       if @preview && !html.include?("ss-preview-content-begin")
@@ -240,7 +242,7 @@ module Cms::PublicFilter::Layout
       if notice
         body << %(<div id="ss-notice"><div class="wrap">#{notice}</div></div>)
       end
-      body << response.body
+      body << content
       body << "<!-- /layout_yield -->"
 
       if @preview && !html.include?("ss-preview-content-begin")
