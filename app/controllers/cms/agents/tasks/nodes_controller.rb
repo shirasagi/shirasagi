@@ -74,15 +74,8 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
         next unless node.public_node?
 
         @task.performance.collect_node(node) do
-          cont = node.route.sub("/", "/agents/tasks/node/").camelize.pluralize
-          cname = cont + "Controller"
-
-          agent = SS::Agent.new cont rescue nil
-          next if agent.blank? || agent.controller.class.to_s != cname
-          agent.controller.instance_variable_set :@task, @task
-          agent.controller.instance_variable_set :@site, @site
-          agent.controller.instance_variable_set :@node, node
-          agent.invoke :generate
+          cont = node.route.sub("/", "/agents/tasks/node/").pluralize
+          SS::Agent.invoke_action(cont, :generate, task: @task, site: @site, node: node)
         end
       end
     end

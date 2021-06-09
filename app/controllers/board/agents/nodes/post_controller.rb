@@ -39,11 +39,7 @@ class Board::Agents::Nodes::PostController < ApplicationController
 
   def generate
     return unless @item.errors.empty?
-
-    agent = SS::Agent.new Board::Agents::Tasks::Node::PostsController
-    agent.controller.instance_variable_set :@cur_node, @cur_node
-    agent.controller.instance_variable_set :@node, @cur_node
-    agent.invoke(:generate)
+    SS::Agent.invoke_action "board/agents/tasks/node/posts", :generate, cur_node: @cur_node, node: @cur_node
   end
 
   public
