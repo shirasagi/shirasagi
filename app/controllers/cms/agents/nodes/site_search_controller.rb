@@ -3,6 +3,7 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
   helper Cms::ListHelper
 
   before_action :set_setting
+  before_action :save_search_history
 
   model Cms::Elasticsearch::Searcher
 
@@ -13,6 +14,19 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
       setting_model = Cms::Elasticsearch::Setting::Page
       setting_model.new(cur_site: @cur_site, cur_user: @cur_user)
     end
+  end
+
+  def save_search_history
+    keyword = get_params[:keyword].to_s.strip.gsub(/　/, " ")
+    return if keyword.blank?
+
+    history_log = Cms::SiteSearch::History::Log.new(
+      site: @cur_site,
+      query: { keyword: keyword },
+      remote_addr: remote_addr,
+      user_agent: request.user_agent
+    )
+    history_log.save
   end
 
   def fix_params

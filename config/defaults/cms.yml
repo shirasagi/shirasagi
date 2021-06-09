@@ -143,9 +143,6 @@ production: &production
     site-search-marks: [ "use-site-search", "end-use-site-search" ]
     indexes:
       - s1
-      - s2
-      - s3
-      - s4
       - fess.search
 
   # basic_auth: [ 'user', 'pass' ]
