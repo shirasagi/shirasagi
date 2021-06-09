@@ -25,7 +25,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
         all(".question-edges .edge a", text: I18n.t("ss.links.select"))[0].click
       end
       wait_for_cbox do
-        within ".cms-guide-tabs" do
+        within ".cms-modal-tabs" do
           expect(page).to have_css("a.current .tab-name", text: I18n.t("guide.procedure"))
         end
         expect(page).to have_link procedure1.name
@@ -37,7 +37,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
         all(".question-edges .edge a", text: I18n.t("ss.links.select"))[0].click
       end
       wait_for_cbox do
-        within ".cms-guide-tabs" do
+        within ".cms-modal-tabs" do
           click_on I18n.t("guide.question")
         end
         expect(page).to have_css("a.current .tab-name", text: I18n.t("guide.procedure"))
@@ -50,7 +50,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
         all(".question-edges .edge a", text: I18n.t("ss.links.select"))[1].click
       end
       wait_for_cbox do
-        within ".cms-guide-tabs" do
+        within ".cms-modal-tabs" do
           expect(page).to have_css("a.current .tab-name", text: I18n.t("guide.procedure"))
         end
 
@@ -64,7 +64,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
         all(".question-edges .edge a", text: I18n.t("ss.links.select"))[1].click
       end
       wait_for_cbox do
-        within ".cms-guide-tabs" do
+        within ".cms-modal-tabs" do
           click_on I18n.t("guide.question")
         end
         find('.list-head .checkbox input').set(true)
