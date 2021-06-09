@@ -74,6 +74,15 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
         next unless node.public_node?
 
         @task.performance.collect_node(node) do
+          # ex: "article/page" => "article/agents/nodes/page"
+          cont = node.route.sub("/", "/agents/nodes/")
+          next if SS::Agent.invoke_action(
+            cont, :generate,
+            task: @task, cur_site: @site, cur_node: node,
+            cur_path: "#{node.url}index.html", cur_main_path: "#{node.url.sub(@site.url, "/")}index.html"
+          )
+
+          # ex: "article/page" => "article/agents/tasks/node/pages"
           cont = node.route.sub("/", "/agents/tasks/node/").pluralize
           SS::Agent.invoke_action(cont, :generate, task: @task, site: @site, node: node)
         end
