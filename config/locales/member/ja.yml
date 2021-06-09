@@ -13,6 +13,7 @@ ja:
       yahoojp_v2: Yahoo! JAPAN ID（V2）でログイン
       google_oauth2: Google アカウントでログイン
       github: GitHub アカウントでログイン
+      line: LINE アカウントでログイン
     options:
       form_auth: &disabled_enabled
         disabled: 無効
@@ -28,6 +29,8 @@ ja:
       google_oauth2_oauth:
         <<: *disabled_enabled
       github_oauth:
+        <<: *disabled_enabled
+      line_oauth:
         <<: *disabled_enabled
       sex:
         male: 男性
@@ -124,6 +127,7 @@ ja:
       member/yahoo_jp_oauth_v2: Yahoo! OAuth V2 認証
       member/google_oauth: Google OAuth 認証
       member/github_oauth: GitHub OAuth 認証
+      member/line_oauth: LINE OAuth 認証
       member/file: ファイル
       member/blog/body: 本文
       member/blog/genre: ジャンル
@@ -221,6 +225,9 @@ ja:
         github_oauth: OAuth 認証
         github_client_id: Client ID
         github_client_secret: Client Secret
+      member/addon/line_oauth:
+        line_oauth: OAuth 認証
+        line_client_id: Channel ID
       member/activity_log:
         activity_type: 種別
         remote_addr: リモートアドレス
