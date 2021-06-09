@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "article_pages", type: :feature, dbscope: :example, js: true do
+xdescribe "article_pages", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
   let!(:article_node) { create :article_node_page, cur_site: site }
   let(:html) do
