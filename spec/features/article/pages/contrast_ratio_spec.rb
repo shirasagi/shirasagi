@@ -241,8 +241,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         context "with newly added file" do
-          let!(:file3) { create :cms_temp_file, cur_user: user, site: site, name: unique_id }
-          let!(:file4) { create :cms_temp_file, cur_user: user, site: site, name: unique_id }
+          let!(:file3) { create :cms_temp_file, cur_user: user, site: site, node: node, name: unique_id }
+          let!(:file4) { create :cms_temp_file, cur_user: user, site: site, node: node, name: unique_id }
 
           it do
             visit edit_article_page_path(site: site, cid: node, id: item)
