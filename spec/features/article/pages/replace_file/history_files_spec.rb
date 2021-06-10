@@ -53,6 +53,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
           wait_for_notice "差し替え保存しました。"
         end
+        wait_for_ajax
 
         replaced_page = item.class.find(item.id)
         replaced_file = replaced_page.attached_files.first
@@ -141,6 +142,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
           wait_for_notice "差し替え保存しました。"
         end
+        wait_for_ajax
 
         replaced_page = item.class.find(item.id)
         replaced_file = replaced_page.attached_files.first
