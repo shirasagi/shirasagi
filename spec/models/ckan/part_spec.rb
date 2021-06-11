@@ -4,7 +4,7 @@ RSpec.describe Ckan::Part::Status, type: :model, dbscope: :example do
   describe "validation" do
     subject { @status.valid? }
 
-    before { @status = build :ckan_part_status }
+    before { @status = build :ckan_part_status, cur_site: cms_site }
     it { is_expected.to be_truthy }
 
     describe "ckan_url" do
@@ -44,7 +44,7 @@ RSpec.describe Ckan::Part::Status, type: :model, dbscope: :example do
     before { WebMock.reset! }
     after { WebMock.reset! }
 
-    let(:status) { build :ckan_part_status }
+    let(:status) { build :ckan_part_status, cur_site: cms_site }
 
     before do
       stub_request(:get, "#{status.ckan_url}/api/3/action/package_list").
@@ -60,7 +60,7 @@ RSpec.describe Ckan::Part::Status, type: :model, dbscope: :example do
       it { is_expected.to eq 5 }
 
       describe "ckan_value_cache update" do
-        let(:status) { create :ckan_part_status, ckan_value_cache: 4 }
+        let(:status) { create :ckan_part_status, cur_site: cms_site, ckan_value_cache: 4 }
 
         it "updates ckan_value_cache" do
           expect { subject }.to change {

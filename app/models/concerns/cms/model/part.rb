@@ -69,10 +69,10 @@ module Cms::Model::Part
     options = args.extract_options!
     methods = []
     if parent.blank?
-      options = options.merge(site: site || cur_site, id: self)
+      options = options.merge(site: cur_site || site, id: self)
       methods << "cms_#{model}_path"
     else
-      options = options.merge(site: site || cur_site, cid: parent, id: self)
+      options = options.merge(site: cur_site || site, cid: parent, id: self)
       methods << "node_#{model}_path"
     end
 
