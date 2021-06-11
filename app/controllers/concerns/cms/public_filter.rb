@@ -156,6 +156,12 @@ module Cms::PublicFilter
         if node = find_node(@cur_main_path)
           y << proc { render_and_send_node(node) }
         end
+
+        if @preview && Fs.file?(@file)
+          y << proc do
+            x_sendfile
+          end
+        end
       end
     end
   end
