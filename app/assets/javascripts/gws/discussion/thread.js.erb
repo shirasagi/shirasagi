@@ -34,10 +34,10 @@ this.Gws_Discussion_Thread = (function () {
     };
 
     $('a.ajax-box').data('on-select', function ($item) {
-      var fileId, humanizedName, selected;
-      selected = $.colorbox.element().closest(".comment-files").find(".selected-files");
-      fileId = $item.data('id');
-      humanizedName = $item.data('humanized-name');
+      var selected = $.colorbox.element().closest(".comment-files").find(".selected-files");
+      var $data = $item.closest('[data-id]');
+      var fileId = $data.data('id');
+      var humanizedName = $data.data('humanized-name');
       appendSelectedFile(selected, fileId, humanizedName);
       return $.colorbox.close();
     });

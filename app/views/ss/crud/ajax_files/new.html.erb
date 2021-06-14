@@ -4,7 +4,9 @@ $('#ajax-form').ajaxForm({
   url: "<%= url_for action: :create, format: :json %>",
   dataType: 'json',
   success: function(data) {
-    $('#cboxLoadedContent').load("<%= url_for action: :index %>");
+    $("<div />").load("<%= url_for action: :index %>", function(data, status) {
+      $.colorbox.prep($(this).contents());
+    });
   },
   error: function(data, status, err) {
     resp = eval(data.responseText);
