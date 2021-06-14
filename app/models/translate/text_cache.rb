@@ -5,6 +5,7 @@ class Translate::TextCache
   include Cms::SitePermission
 
   set_permission_name "cms_tools", :use
+  store_in_repl_master
 
   index({ updated: -1 })
   index({ site_id: 1, hexdigest: 1 })
