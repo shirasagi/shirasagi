@@ -85,19 +85,23 @@ module Cms::Model::Node
   end
 
   def url
-    "#{site.url}#{filename}/"
+    "#{(@cur_site || site).url}#{filename}/"
   end
 
   def full_url
-    "#{site.full_url}#{filename}/"
+    "#{(@cur_site || site).full_url}#{filename}/"
   end
 
   def preview_path
-    site.subdir ? "#{site.subdir}/#{filename}/" : "#{filename}/"
+    (@cur_site || site).then do |s|
+      s.subdir ? "#{s.subdir}/#{filename}/" : "#{filename}/"
+    end
   end
 
   def mobile_preview_path
-    ::File.join((site.subdir ? site.subdir : ""), site.mobile_location, filename, "/").gsub(/^\//, '')
+    (@cur_site || site).then do |s|
+      ::File.join(s.subdir || "", s.mobile_location, filename, "/").gsub(/^\//, '')
+    end
   end
 
   def parents
@@ -143,22 +147,23 @@ module Cms::Model::Node
 
   def validate_destination_filename(dst)
     dst_dir = ::File.dirname(dst).sub(/^\.$/, "")
+    (@cur_site || site).then do |s|
+      return errors.add :filename, :empty if dst.blank?
+      return errors.add :filename, :invalid if dst !~ /^([\w\-]+\/)*[\w\-]+(#{::Regexp.escape(fix_extname || "")})?$/
 
-    return errors.add :filename, :empty if dst.blank?
-    return errors.add :filename, :invalid if dst !~ /^([\w\-]+\/)*[\w\-]+(#{::Regexp.escape(fix_extname || "")})?$/
+      return errors.add :base, :same_filename if filename == dst
+      return errors.add :filename, :taken if Cms::Node.site(s).where(filename: dst).first
+      return errors.add :base, :exist_physical_file if Fs.exists?("#{s.path}/#{dst}")
 
-    return errors.add :base, :same_filename if filename == dst
-    return errors.add :filename, :taken if Cms::Node.site(site).where(filename: dst).first
-    return errors.add :base, :exist_physical_file if Fs.exists?("#{site.path}/#{dst}")
+      if dst_dir.present?
+        dst_parent = Cms::Node.site(s).where(filename: dst_dir).first
 
-    if dst_dir.present?
-      dst_parent = Cms::Node.site(site).where(filename: dst_dir).first
+        return errors.add :base, :not_found_parent_node if dst_parent.blank?
+        return errors.add :base, :subnode_of_itself if filename == dst_parent.filename
 
-      return errors.add :base, :not_found_parent_node if dst_parent.blank?
-      return errors.add :base, :subnode_of_itself if filename == dst_parent.filename
-
-      allowed = dst_parent.allowed?(:read, @cur_user, site: @cur_site)
-      return errors.add :base, :not_have_parent_read_permission unless allowed
+        allowed = dst_parent.allowed?(:read, @cur_user, site: s)
+        return errors.add :base, :not_have_parent_read_permission unless allowed
+      end
     end
   end
 
@@ -250,8 +255,8 @@ module Cms::Model::Node
     return unless @db_changes["filename"]
     return unless @db_changes["filename"][0]
 
-    src = "#{site.path}/#{@db_changes['filename'][0]}"
-    dst = "#{site.path}/#{@db_changes['filename'][1]}"
+    src = "#{(@cur_site || site).path}/#{@db_changes['filename'][0]}"
+    dst = "#{(@cur_site || site).path}/#{@db_changes['filename'][1]}"
     dst_dir = ::File.dirname(dst)
 
     Fs.mkdir_p dst_dir unless Fs.exists?(dst_dir)
@@ -277,7 +282,7 @@ module Cms::Model::Node
 
   def template_variable_handler_pages_count(name, issuer)
     date = issuer.try(:cur_date) || Time.zone.now
-    Cms::Page.site(issuer.site).
+    Cms::Page.site(issuer.cur_site || issuer.site).
       and_public(date).
       or({ filename: /^#{::Regexp.escape(filename)}\//, depth: depth + 1 }, { category_ids: id }).
       count.to_s

@@ -26,6 +26,10 @@ this.SS = (function () {
 
   SS.debug = false;
 
+  SS.confirm = {
+    delete: "<%= I18n.t 'ss.confirm.delete' %>"
+  };
+
   // $.isEmptyObject には IE11 で非互換がある。
   //
   //                            | Chrome 84 | IE 11  |
@@ -211,13 +215,16 @@ this.SS = (function () {
     });
   };
 
-  SS.ajaxForm = function (elem, params) {
-    var defaults;
-    if (params == null) {
+  SS.ajaxForm = function (elem, selector, params) {
+    if (typeof selector !== "string") {
+      params = params || selector;
+      selector = undefined;
+    }
+    if (!params) {
       params = {};
     }
     elem = $(elem);
-    defaults = {
+    var defaults = {
       url: elem.attr("action") + ".json",
       dataType: "json",
       success: function () {
@@ -226,7 +233,7 @@ this.SS = (function () {
         alert(["== Error =="].concat(data.responseJSON).join("\n"));
       }
     };
-    elem.on("submit", function (e) {
+    elem.on("submit", selector, function (e) {
       var options;
 
       if ($.isFunction(params)) {
@@ -240,11 +247,15 @@ this.SS = (function () {
     });
   };
 
-  SS.ajax = function (elem, params) {
-    if (params == null) {
+  SS.ajax = function (elem, selector, params) {
+    if (typeof selector !== "string") {
+      params = params || selector;
+      selector = undefined;
+    }
+    if (!params) {
       params = {};
     }
-    return $(elem).on("click", function (e) {
+    return $(elem).on("click", selector, function (e) {
       var defaults, self;
       self = $(this);
       defaults = {
@@ -265,13 +276,18 @@ this.SS = (function () {
     });
   };
 
-  SS.ajaxDelete = function (elem, params) {
-    if (params == null) {
+  SS.ajaxDelete = function (elem, selector, params) {
+    if (typeof selector !== "string") {
+      params = params || selector;
+      selector = undefined;
+    }
+    if (!params) {
       params = {};
     }
-    return $(elem).on("click", function (e) {
+
+    $(elem).on("click", selector, function (e) {
       var defaults, self;
-      if (!confirm("<%= I18n.t 'ss.confirm.delete' %>")) {
+      if (!confirm(SS.confirm.delete)) {
         return false;
       }
       self = $(this);
@@ -281,15 +297,15 @@ this.SS = (function () {
         url: self.attr("href") + ".json",
         dataType: "json",
         beforeSend: function () {
-          return self.html(SS.loading);
+          self.html(SS.loading);
         },
         success: function () {
           if (self.data("remove")) {
-            return $(self.data("remove")).remove();
+            $(self.data("remove")).remove();
           }
         },
         error: function (data, status) {
-          return alert(["== Error =="].concat(data.responseJSON).join("\n"));
+          alert(["== Error =="].concat(data.responseJSON).join("\n"));
         }
       };
       $.ajax($.extend(true, defaults, params));
@@ -518,12 +534,12 @@ this.SS = (function () {
 
   SS.renderFileUpload = function() {
     $(".ss-file-field .btn-file-upload").each(function() {
-      var $this = $(this);
-      if ($this.data("on-select")) {
+      var $uploadBtn = $(this);
+      if ($uploadBtn.data("on-select")) {
         return;
       }
 
-      var $container = $this.closest(".ss-file-field")
+      var $container = $uploadBtn.closest(".ss-file-field")
       var onSelect = function($item) {
         $.colorbox.close();
 
@@ -540,22 +556,17 @@ this.SS = (function () {
         $container.find(".upload-drop-notice").addClass("hide");
       };
 
-      $this.data("on-select", onSelect);
-
-      var $a = $("<a/>", { href: "#", class: "hide" });
-      $a.data("on-select", onSelect);
-      $a.colorbox({ width: "90%", height: "90%", fixed: true });
+      $uploadBtn.data("on-select", onSelect);
 
       $container.find(".dropdown-item").on("click", function(ev) {
         ev.preventDefault();
 
-        var $this = $(this);
-        var href = $this.attr("href");
+        var $el = $(this);
+        var href = $el.attr("href");
 
-        $a.attr("href", href);
-        $a.colorbox({ open: true });
+        $uploadBtn.attr("href", href).text($el.text()).trigger("click");
 
-        var $dropdown = $this.closest(".dropdown")
+        var $dropdown = $el.closest(".dropdown")
         $dropdown.removeClass('active');
         $dropdown.find(".dropdown-menu").removeClass('active');
 
@@ -605,7 +616,7 @@ this.SS = (function () {
           formData.append('item[in_files][]', files[j]);
         }
 
-        var uploadUrl = $this.attr("href");
+        var uploadUrl = $uploadBtn.attr("href");
         $.ajax({
           url: uploadUrl,
           type: "POST",

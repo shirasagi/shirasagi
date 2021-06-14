@@ -4,7 +4,7 @@ RSpec.describe Ckan::Node::Page, type: :model, dbscope: :example do
   describe "validation" do
     subject { @page.valid? }
 
-    before { @page = build :ckan_node_page }
+    before { @page = build :ckan_node_page, cur_site: cms_site }
     it { is_expected.to be_truthy }
 
     describe "ckan_url" do
@@ -59,7 +59,7 @@ RSpec.describe Ckan::Node::Page, type: :model, dbscope: :example do
     before { WebMock.reset! }
     after { WebMock.reset! }
 
-    let(:page) { build :ckan_node_page }
+    let(:page) { build :ckan_node_page, cur_site: cms_site }
 
     before do
       stub_request(:get, "#{page.ckan_url}/api/3/action/package_search?rows=10&sort=metadata_modified%20desc").
@@ -77,7 +77,7 @@ RSpec.describe Ckan::Node::Page, type: :model, dbscope: :example do
       describe "ckan_json_cache update" do
         let(:old_json) { "{\"success\":true,\"result\":{\"results\":[1,2,3,4]}}" }
         let(:new_json) { body }
-        let(:page) { create :ckan_node_page, ckan_json_cache: old_json }
+        let(:page) { create :ckan_node_page, cur_site: cms_site, ckan_json_cache: old_json }
 
         it "updates ckan_json_cache" do
           expect { subject }.to change {

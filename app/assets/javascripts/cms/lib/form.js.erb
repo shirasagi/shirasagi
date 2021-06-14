@@ -29,6 +29,7 @@ this.Cms_Form = (function () {
     // handle Form_Alert
     Form_Alert.addValidation(Form_Alert.clonedName);
     Form_Alert.addValidation(Form_Alert.closeConfirmation);
+    Form_Alert.addValidation(Form_Alert.snsPostConfirmation);
     if(Cms_Form.options.check.syntax) {
       Form_Alert.addAsyncValidation(Form_Alert.asyncValidateSyntaxCheck);
     }

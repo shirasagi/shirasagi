@@ -1,15 +1,15 @@
 <% @tap_menu = proc do |item| %>
-  <%
-    if params.dig(:s, :target) == 'descendant'
-      show_path = item.private_show_path
-      edit_path = File.join(show_path, 'edit')
-      delete_path = File.join(show_path, 'delete')
-    else
-      show_path = url_for(action: :show, id: item.id)
-      edit_path = url_for(action: :edit, id: item.id)
-      delete_path = url_for(action: :delete, id: item.id)
-    end
-  %>
+    <%
+      if params.dig(:s, :target) == 'descendant'
+        show_path = item.private_show_path
+        edit_path = File.join(show_path, 'edit')
+        delete_path = File.join(show_path, 'delete')
+      else
+        show_path = url_for(action: :show, id: item.id)
+        edit_path = url_for(action: :edit, id: item.id)
+        delete_path = url_for(action: :delete, id: item.id)
+      end
+    %>
   <%= link_to t('ss.links.show'), show_path if item.allowed?(:read, @cur_user, site: @cur_site) %>
   <%= link_to t('ss.links.edit'), edit_path if item.allowed?(:edit, @cur_user, site: @cur_site) %>
   <%= link_to t('ss.links.delete'), delete_path if item.allowed?(:delete, @cur_user, site: @cur_site) %>

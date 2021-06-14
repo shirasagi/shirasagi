@@ -23,8 +23,9 @@
       return;
     }
 
-    var fileId = $item.data('id');
-    var humanizedName = $item.data('humanized-name');
+    var $data = $item.closest('[data-id]');
+    var fileId = $data.data('id');
+    var humanizedName = $data.data('humanized-name');
     if (! fileId || ! humanizedName) {
       return;
     }

@@ -186,7 +186,10 @@ module Workflow::Addon
       master.cur_user = @cur_user
       master.cur_site = @cur_site
       master.in_branch = self
-      master.merge_branch
+      if !master.merge_branch
+        Rails.logger.error("merge_branch : master save failed #{master.errors.full_messages.join(",")}")
+      end
+
       master.generate_file
     end
 

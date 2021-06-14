@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe Ckan::Agents::Nodes::PageController, type: :feature, dbscope: :example do
-  let(:site)   { cms_site }
-  let(:layout) { create_cms_layout }
+  let!(:site)   { cms_site }
+  let!(:layout) { create_cms_layout }
   let(:status) { 200 }
   let(:body) { File.read "#{Rails.root}/spec/fixtures/ckan/package_search.json" }
 
@@ -16,7 +16,7 @@ describe Ckan::Agents::Nodes::PageController, type: :feature, dbscope: :example 
   end
 
   context 'default loop html' do
-    let(:node) { create :ckan_node_page, cur_site: site, layout_id: layout.id }
+    let!(:node) { create :ckan_node_page, cur_site: site, layout_id: layout.id }
 
     it do
       visit node.full_url

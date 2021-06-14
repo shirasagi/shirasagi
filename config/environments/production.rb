@@ -10,8 +10,19 @@ Rails.application.configure do
   # Rake tasks automatically ignore this option for performance.
   config.eager_load = true
 
+  # enable eager loading in production
+  config.enable_dependency_loading = true
+
   # Don't include all helpers
   config.action_controller.include_all_helpers = false
+
+  # CSRF
+  config.action_controller.per_form_csrf_tokens = false
+  config.action_controller.forgery_protection_origin_check = false
+
+  # action view
+  config.action_view.automatically_disable_submit_tag = false
+  config.action_view.form_with_generates_remote_forms = false
 
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false

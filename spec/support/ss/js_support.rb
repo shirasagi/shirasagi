@@ -25,11 +25,11 @@ module SS
     end
 
     HOOK_EVENT_COMPLETION = <<~SCRIPT.freeze
-      (function(promiseId, eventName) {
+      (function(promiseId, eventName, selector) {
         var defer = $.Deferred();
-        $(document).one(eventName, function() { defer.resolve(true); });
+        $(selector || document).one(eventName, function() { defer.resolve(true); });
         window.SS[promiseId] = defer.promise();
-      })(arguments[0], arguments[1]);
+      })(arguments[0], arguments[1], arguments[2]);
     SCRIPT
 
     WAIT_EVENT_COMPLETION = <<~SCRIPT.freeze
@@ -220,9 +220,9 @@ module SS
     rescue => _e
     end
 
-    def wait_event_to_fire(event_name)
+    def wait_event_to_fire(event_name, selector = nil)
       promise_id = "promise_#{unique_id}"
-      page.execute_script(HOOK_EVENT_COMPLETION, promise_id, event_name)
+      page.execute_script(HOOK_EVENT_COMPLETION, promise_id, event_name, selector)
 
       # do operations which fire events
       ret = yield

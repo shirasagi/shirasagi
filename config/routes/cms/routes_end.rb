@@ -140,6 +140,10 @@ Rails.application.routes.draw do
       resource :site_setting
     end
 
+    namespace "sns_post" do
+      resources :logs, only: [:index, :show, :destroy], concerns: [:deletion]
+    end
+
     get "check_links" => "check_links#index"
     post "check_links" => "check_links#run"
     get "generate_nodes" => "generate_nodes#index"
@@ -270,6 +274,8 @@ Rails.application.routes.draw do
       namespace "translate" do
         get "langs" => "langs#index"
       end
+
+      post "sns_poster/:id/line_reset" => "sns_poster#line_reset", as: :line_reset
     end
   end
 

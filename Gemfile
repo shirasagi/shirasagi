@@ -74,6 +74,7 @@ gem 'omniauth-github'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-twitter'
 gem 'omniauth-yahoojp'
+gem 'omniauth-line'
 gem 'omniauth-rails_csrf_protection'
 
 # SNS
@@ -97,6 +98,9 @@ gem 'unf'
 # elasticsearch
 gem 'faraday'
 gem 'elasticsearch'
+
+# line
+gem 'line-bot-api'
 
 group :development, :test do
   gem 'dotenv-rails'

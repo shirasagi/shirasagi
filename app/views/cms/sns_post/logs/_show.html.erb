@@ -1,0 +1,63 @@
+<%
+  def try_parse_json(json)
+    JSON.parse(json) rescue json
+  end
+%>
+
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :created %></dt>
+  <dd><%= tryb{ @item.created.strftime('%Y/%m/%d %H:%M') } %></dd>
+
+  <dt><%= @model.t :type %></dt>
+  <dd><%= @item.type %></dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= @item.label(:state) %></dd>
+
+  <% if @item.page %>
+    <% page = @item.page.becomes_with_route %>
+    <dt><%= @model.t :page_id %></dt>
+
+    <% if page.allowed?(:read, @cur_user, site: @cur_site) %>
+      <dd><%= link_to page.name, page.private_show_path %></dd>
+    <% else %>
+      <dd><%= page.name %></dd>
+    <% end %>
+  <% end %>
+
+  <% if @item.error.present? %>
+    <dt><%= @model.t :error %></dt>
+    <dd><%= @item.error %></dd>
+  <% end %>
+
+  <dt><%= @model.t :action %></dt>
+  <dd><%= @item.action %></dd>
+
+  <% if @item.type == "line" %>
+    <dt><%= @model.t :messages %></dt>
+    <dd><%= @item.messages %></dd>
+
+    <dt><%= @model.t :response_code %></dt>
+    <dd><%= @item.response_code %></dd>
+
+    <dt><%= @model.t :response_body %></dt>
+    <dd><%= try_parse_json(@item.response_body) %></dd>
+  <% end %>
+
+  <% if @item.type == "twitter" %>
+    <dt><%= @model.t :message %></dt>
+    <dd><%= @item.message %></dd>
+
+    <dt><%= @model.t :media_files %></dt>
+    <dd><%= @item.media_files %></dd>
+
+    <dt><%= @model.t :response_tweet %></dt>
+    <dd><%= try_parse_json(@item.response_tweet) %></dd>
+
+    <dt><%= @model.t :destroy_post_ids %></dt>
+    <dd><%= @item.destroy_post_ids %></dd>
+  <% end %>
+</dl>

@@ -103,6 +103,7 @@ ja:
       send_email: メールを作成する
       send_message: メッセージを作成する
       copy_email_address: メールアドレスをコピー
+      reset_posted: 未投稿に戻す
     buttons:
       save: 保存
       new: 新規作成
@@ -176,6 +177,7 @@ ja:
       send: 送信してよろしいですか？
       publish: 公開してよろしいですか？
       depublish: 非公開にしてよろしいですか？
+      reset_posted: 未投稿状態に戻してもよろしいですか？
     notice:
       saved: 保存しました。
       deleted: 削除しました。
@@ -209,6 +211,7 @@ ja:
       unset_seen_all: 未読にしました。
       set_star_all: スターをつけました。
       unset_star_all: スターをはずしました。
+      reset_posted: 未投稿に戻しました。
 
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
@@ -423,7 +426,7 @@ ja:
       ss/kana_setting: かな設定
       ss/facebook_setting: Facebook設定
       ss/twitter_setting: Twitter設定
-      ss/site_auto_post_setting: SNS自動投稿設定
+      ss/line_setting: Line設定
       ss/approve_setting: 承認設定
       ss/editor_setting: エディタ設定
       ss/mail_setting: メール設定
@@ -653,10 +656,9 @@ ja:
         twitter_consumer_secret: コンシューマーシークレット
         twitter_access_token: アクセストークン
         twitter_access_token_secret: トークンシークレット
-      ss/addon/site_auto_post_setting:
-        site_twitter_auto_post: Twitter自動投稿
-        site_sns_auto_delete: 非公開時に投稿を削除
-        site_edit_auto_post: 編集時に自動投稿
+      ss/addon/line_setting:
+        line_channel_secret: チャンネルシークレット
+        line_channel_access_token: チャンネルアクセストークン
       ss/addon/file_setting:
         file_resizing: 添付ファイルリサイズ
         file_resizing_width: 幅
@@ -1057,13 +1059,13 @@ ja:
       twitter_access_token_secret:
         - アクセストークンシークレット(Access Token Secret)を設定します。
         - Twitterへの自動投稿に必須です。
-    ss/addon/site_auto_post_setting:
-      site_twitter_auto_post:
-        - Twitterへの自動投稿の設定を行います。
-      site_sns_auto_delete:
-        - 記事非公開時にSNSへ投稿した内容を削除します。
-      site_edit_auto_post:
-        - 記事編集時の自動投稿の設定を行います。
+    ss/addon/line_setting:
+      line_channel_secret:
+        - Lineのチャンネルシークレットを設定します。
+        - Lineとの連携に必須です。
+      line_channel_access_token:
+        - Lineのチャンネルアクセストークンを設定します。
+        - Lineとの連携に必須です。
     ss/addon/file_setting:
       file_resizing:
         - ページの添付ファイル（アップロード）のリサイズにてデフォルトサイズを設定できます。

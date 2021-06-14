@@ -15,7 +15,7 @@
   <% td_classes << field_name %>
   <% td_classes << (date.day >= 16 ? 'top' : nil) %>
   <% mode = "edit" %>
-  <% mode = "punch" if record.try(:find_latest_history, field_name).blank? && Time.zone.now.beginning_of_day == date %>
+  <% mode = "punch" if local_assigns.fetch(:punchable, true) && record.try(:find_latest_history, field_name).blank? && Time.zone.now.beginning_of_day == date %>
   <td class="<%= td_classes.join(' ') %>" data-day="<%= date.day %>" data-type="<%= field_name %>" data-mode="<%= mode %>">
     <%= format_time(date, record.try(field_name)) %>
     <% render_reason.call(record.try(:find_latest_history, field_name)) %>

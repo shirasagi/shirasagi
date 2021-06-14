@@ -34,9 +34,12 @@ class Gws::Schedule::PlansController < ApplicationController
     #   member(@cur_user).
     #   search(params[:s])
 
+    todo_search = OpenStruct.new(params[:s])
+    todo_search.category_id = nil if todo_search.category_id.present?
+
     @todos = Gws::Schedule::Todo.site(@cur_site).without_deleted.
       member(@cur_user).
-      search(params[:s])
+      search(todo_search)
   end
 
   def download

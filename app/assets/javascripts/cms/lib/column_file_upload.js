@@ -110,7 +110,8 @@ Cms_Column_FileUpload.prototype.selectFile = function($item) {
 
   $.colorbox.close();
 
-  var fileId = $item.data('id');
+  var $data = $item.closest('[data-id]');
+  var fileId = $data.data('id');
   if (! fileId) {
     return;
   }

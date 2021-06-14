@@ -5,7 +5,8 @@ class Article::Page
   include Workflow::Addon::Branch
   include Workflow::Addon::Approver
   include Cms::Addon::Meta
-  include Cms::Addon::SnsPoster
+  include Cms::Addon::TwitterPoster
+  include Cms::Addon::LinePoster
   include Gravatar::Addon::Gravatar
   include Cms::Addon::Thumb
   include Cms::Addon::RedirectLink
