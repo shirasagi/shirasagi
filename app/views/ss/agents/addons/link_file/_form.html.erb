@@ -3,25 +3,58 @@
   addon ||= local_assigns.fetch(:addon, {})
 %>
 
-<div class="see mod-ss-addon-file">
-  <%= f.hidden_field "file_ids[]", value: "" %>
-  <span class="upload-menu-new">
-    <%= link_to t('ss.links.upload'), sys_apis_temp_files_path(@cur_user), class: "ajax-box btn" %>
-  </span>
+<dl class="see ss-addon-link_file">
+  <dt class="wide"></dt>
+  <dd class="wide">
+    <%= f.hidden_field "file_ids[]", value: "", id: nil %>
 
-  <div id="selected-files">
-    <% @item.files.each do |file| %>
-      <%= render "ss/crud/ajax_files/file_view", file: file, show_properties: false, show_attach: false do %>
-        <br>
-        <label>URL</label>
-        <input type="text" name="item[link_urls][<%= file.id %>]" value="<%= file.link_url %>" >
+    <span class="upload-menu-new">
+      <%= link_to t('ss.links.upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn" %>
+    </span>
+    <div class="upload-drop-area">
+      <span class="upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
+    </div>
+
+    <table class="index ajax-selected">
+      <tbody>
+      <% @item.files.each do |file| %>
+        <%= render "ss/agents/addons/link_file/file_view", f: f, file_id: file.id, file_humanized_name: file.humanized_name, file_url: file.url, file_thumb_url: file.thumb_url, file_is_image: file.image?, file_extname: file.extname, file_link_url: file.link_url %>
       <% end %>
-    <% end %>
-  </div>
-</div>
+      </tbody>
+    </table>
+
+    <script type="text/html" class="template">
+      <%= render "ss/agents/addons/link_file/file_view", f: f, file_id: ":file_id", file_humanized_name: ":file_humanized_name", file_url: ":file_url", file_thumb_url: ":file_thumb_url", file_is_image: true, file_extname: ":file_extname", file_link_url: ":file_link_url" %>
+    </script>
+  </dd>
+</dl>
 
 <%= jquery do %>
   var $el = $("#<%= addon[:id] %>");
   var tempFile = new SS_Addon_TempFile($el.find(".upload-drop-area"), <%= @cur_user.id %>);
-  SS_FileView.renderFileView($el);
+
+  var template = $el.find(".template").html();
+  $el.find(".ajax-box").data("on-select", function($item) {
+    $.colorbox.close();
+
+    var $data = $item.closest("[data-id]");
+    if (!$data[0]) {
+      return;
+    }
+
+    var html = template.replace(/:file_id/g, $data.data("id"));
+    html = html.replace(/:file_humanized_name/g, $data.data("humanized-name"));
+    html = html.replace(/:file_url/g, $data.data("url"));
+    html = html.replace(/:file_thumb_url/g, $data.data("thumb-url"));
+    html = html.replace(/:file_extname/g, $data.data("extname"));
+    html = html.replace(/:file_link_url/g, "");
+    var $html = $(html);
+    if (!$data.data("image?")) {
+      $html.find(".column-thumb .thumb img").remove();
+      $html.find(".column-thumb .thumb").append($("<span />", { class: "ext icon-" + $data.data("extname") }).html($data.data("extname")));
+    }
+
+    $el.find(".ajax-selected tbody").append($html);
+    $el.find(".ajax-selected").show().trigger("change");
+  });
 <% end %>

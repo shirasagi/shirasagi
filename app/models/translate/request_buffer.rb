@@ -126,7 +126,9 @@ class Translate::RequestBuffer
       sleep @interval
     end
 
-    @site.update!
+    if !SS.config.cms.enable_lgwan
+      @site.update!
+    end
 
     @caches.each do |cache|
       if cache.text.blank?

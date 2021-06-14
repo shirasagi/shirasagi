@@ -15,3 +15,27 @@
     margin: 14px 0 0;
   }
 }
+
+// -------------------------------------------------------------------------------------------------
+// LinkFile
+
+.ss-addon-link_file {
+  .ajax-selected {
+    margin-top: 10px;
+  }
+
+  .column-thumb {
+    width: 120px;
+  }
+  .column-actions {
+    width: 100px;
+  }
+
+  .thumb {
+    border: none;
+  }
+
+  .link-url {
+    width: 100%;
+  }
+}

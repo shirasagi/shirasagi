@@ -2,7 +2,9 @@
 
   SS.ajaxForm("form.user-file", {
     success: function () {
-      $("#cboxLoadedContent").load("<%= url_for(action: :index) %>");
+      $("<div />").load("<%= url_for(action: :index) %>", function(data, status) {
+        $.colorbox.prep($(this).contents());
+      });
     }
   });
 

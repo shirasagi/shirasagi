@@ -44,18 +44,22 @@ module Cms::Model::Page
   end
 
   def preview_path
-    site.subdir ? "#{site.subdir}/#{filename}" : filename
+    (@cur_site || site).then do |s|
+      s.subdir ? "#{s.subdir}/#{filename}" : filename
+    end
   end
 
   def mobile_preview_path
-    ::File.join((site.subdir.presence || ""), site.mobile_location, filename)
+    (@cur_site || site).then do |s|
+      ::File.join(s.subdir || "", s.mobile_location, filename).gsub(/^\//, '')
+    end
   end
 
   def generate_file(opts = {})
     return false unless serve_static_file?
     return false unless public?
     return false unless public_node?
-    return false if site.generate_locked?
+    return false if (@cur_site || site).generate_locked?
     run_callbacks :generate_file do
       updated = Cms::Agents::Tasks::PagesController.new.generate_page(self)
       Cms::PageRelease.release(self) if opts[:release] != false
@@ -74,8 +78,8 @@ module Cms::Model::Page
     return unless @db_changes["filename"]
     return unless @db_changes["filename"][0]
 
-    src = "#{site.path}/#{@db_changes['filename'][0]}"
-    dst = "#{site.path}/#{@db_changes['filename'][1]}"
+    src = "#{(@cur_site || site).path}/#{@db_changes['filename'][0]}"
+    dst = "#{(@cur_site || site).path}/#{@db_changes['filename'][1]}"
     dst_dir = ::File.dirname(dst)
 
     run_callbacks :rename_file do
@@ -93,11 +97,11 @@ module Cms::Model::Page
     return errors.add :base, :branch_page_can_not_move if self.try(:branch?)
 
     return errors.add :base, :same_filename if filename == dst
-    return errors.add :filename, :taken if Cms::Page.site(site).where(filename: dst).first
-    return errors.add :base, :exist_physical_file if Fs.exists?("#{site.path}/#{dst}")
+    return errors.add :filename, :taken if Cms::Page.site(@cur_site || site).where(filename: dst).first
+    return errors.add :base, :exist_physical_file if Fs.exists?("#{(@cur_site || site).path}/#{dst}")
 
     if dst_dir.present?
-      dst_parent = Cms::Node.site(site).where(filename: dst_dir).first
+      dst_parent = Cms::Node.site(@cur_site || site).where(filename: dst_dir).first
 
       return errors.add :base, :not_found_parent_node if dst_parent.blank?
 
@@ -131,10 +135,10 @@ module Cms::Model::Page
     options = args.extract_options!
     methods = []
     if parent.blank?
-      options = options.merge(site: site || cur_site, id: self)
+      options = options.merge(site: cur_site || site, id: self)
       methods << "cms_#{model}_path"
     else
-      options = options.merge(site: site || cur_site, cid: parent, id: self)
+      options = options.merge(site: cur_site || site, cid: parent, id: self)
       if respond_to?(:route)
         route = self.route
         route = /cms\//.match?(route) ? "node_page" : route.tr("/", "_")

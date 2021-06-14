@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "sys_ad", type: :feature, dbscope: :example, js: true do
   context "basic crud" do
-    let(:ss_file) { tmp_ss_file(SS::TempFile, contents: "#{Rails.root}/spec/fixtures/ss/logo.png", user: SS::User.find(1)) }
+    let(:ss_file) { tmp_ss_file(basename: "#{unique_id}.png", contents: "#{Rails.root}/spec/fixtures/ss/logo.png", user: sys_user) }
     let(:time) { rand(1..10) }
     let(:width) { rand(1..100) }
     let(:url) { "http://example.com" }
@@ -24,7 +24,7 @@ describe "sys_ad", type: :feature, dbscope: :example, js: true do
 
       wait_for_cbox do
         expect(page).to have_content(ss_file.name)
-        find("a[data-id='#{ss_file.id}']").click
+        click_on ss_file.name
       end
 
       within "form#item-form" do

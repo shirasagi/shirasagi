@@ -25,7 +25,7 @@ $("#<%= id %>").on("change", function () {
     location.href = url;
   } else {
     url = SS_Kana.url(location.pathname, false);
-    url = SS_Translate.url(location.pathname, false);
+    url = SS_Translate.url(url, false);
     location.href = url;
   }
 });
