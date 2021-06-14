@@ -85,6 +85,10 @@ module Cms::Model::Part
     nil
   end
 
+  def root_owned?(user)
+    true
+  end
+
   private
 
   def fix_extname
