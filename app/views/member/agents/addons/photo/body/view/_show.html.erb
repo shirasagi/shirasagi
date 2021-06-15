@@ -1,6 +1,6 @@
 <dl class="column photo-body">
   <dt><%= @model.t :image_id %></dt>
-  <dd><%= image_tag @item.image.thumb_url %></dd>
+  <dd><%= image_tag @item.image.thumb_url %><%= sanitizer_status(@item.image) %></dd>
 </dl>
 
 <dl class="column">

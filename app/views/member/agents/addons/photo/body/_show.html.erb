@@ -4,6 +4,7 @@
     <a href="<%= @item.image.url%>" target="_blank" rel="noopener">
       <%= image_tag @item.image.thumb_url %>
     </a>
+    <%= sanitizer_status(@item.image) %>
   </dd>
 
   <dt><%= @model.t :caption %></dt>

@@ -42,6 +42,13 @@ module Member::AjaxFileFilter
   end
 
   def set_item
+    # TODO:
+    unless @items
+      set_member
+      logged_in?
+      set_items
+    end
+
     @item ||= begin
       item = @items.find(params[:id])
       item.attributes = fix_params
