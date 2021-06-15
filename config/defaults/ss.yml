@@ -43,7 +43,7 @@ production: &production
   # Sanitizer directories
   sanitizer_input: sanitizer_input
   sanitizer_output: sanitizer_output
-  sanitizer_wait_image: public/assets/img/dummy.png
+  sanitizer_wait_image: public/assets/img/sanitizer-wait.png
 
 test:
   <<: *production

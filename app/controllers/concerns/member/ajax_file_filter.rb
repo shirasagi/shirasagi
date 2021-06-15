@@ -4,24 +4,23 @@ module Member::AjaxFileFilter
 
   included do
     layout "member/ajax"
-    before_action :set_member
-    before_action :logged_in?
     before_action :set_items
   end
 
   private
 
+  def logged_in?
+    set_member
+
+    ## required self
+    member = get_member_by_session
+    raise "404" unless member
+    raise "404" if @cur_member.id != member.id
+  end
+
   def set_member
     @cur_member = Cms::Member.find params[:member]
     @cur_site = SS.current_site = @cur_member.site
-  end
-
-  def logged_in?
-    member = get_member_by_session
-
-    ## required self
-    raise "404" unless member
-    raise "404" if @cur_member.id != member.id
   end
 
   def set_last_modified
@@ -42,12 +41,7 @@ module Member::AjaxFileFilter
   end
 
   def set_item
-    # TODO:
-    unless @items
-      set_member
-      logged_in?
-      set_items
-    end
+    set_items
 
     @item ||= begin
       item = @items.find(params[:id])

@@ -40,9 +40,8 @@ module SS::UploadPolicy
     self.sanitizer_state = 'wait'
     self.size = in_file.size
 
-    # TODO:
-    dummy_file = Fs::UploadedFile.create_from_file(SS.config.ss.sanitizer_wait_image)
-    SS::ImageConverter.attach(dummy_file, ext: ::File.extname(in_file.original_filename)) do |converter|
+    wait_file = Fs::UploadedFile.create_from_file(SS.config.ss.sanitizer_wait_image)
+    SS::ImageConverter.attach(wait_file, ext: ::File.extname(in_file.original_filename)) do |converter|
       converter.apply_defaults!(resizing: resizing)
       Fs.upload(path, converter.to_io)
       self.geo_location = converter.geo_location
