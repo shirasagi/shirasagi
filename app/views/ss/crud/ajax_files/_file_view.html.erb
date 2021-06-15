@@ -57,9 +57,9 @@
     <% end %>
   </div>
 
-  <% if @cur_node && @cur_node.becomes_with_route.try(:opendata_sites).present? %>
-    <% licenses = Opendata::License.in(site_id: @cur_node.becomes_with_route.try(:opendata_site_ids)).and_public.pluck(:name, :id) %>
-    <% page = @page.presence || @item %>
+  <% licenses = Opendata::License.in(site_id: @cur_node.becomes_with_route.try(:opendata_site_ids)).and_public.pluck(:name, :id) if @cur_node.present? %>
+  <% page = @page.presence || @item %>
+  <% if @cur_node && @cur_node.becomes_with_route.try(:opendata_sites).present? && page.respond_to?(:opendata_resources) %>
     <dl class="od-resource-file-meta">
       <dt><%= t('cms.opendata_ref/resource.license_id') %></dt>
       <dd>

@@ -1,6 +1,6 @@
 <%= jquery do %>
   SS_AjaxFile.errors.entityTooLarge = "<%= I18n.t('errors.messages.request_entity_too_large') %>";
-  new SS_AjaxFile(null, { indexPath: "<%= url_for(action: :index, file_size: params[:file_size]) %>" });
+  new SS_AjaxFile(null, { indexPath: "<%= url_for(action: :index, file_size: params[:file_size], owner_item_id: params[:owner_item_id], owner_item_type: params[:owner_item_type]) %>" });
   SS_SearchUI.modal();
 <% end %>
 
