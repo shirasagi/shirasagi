@@ -1,1 +1,1 @@
-<%= render "ss/crud/ajax_files/file_view", file: @item, show_properties: false, file_url: ->(file) { view_member_apis_temp_file_path(member: @cur_member.id, id: file) }, file_thumb_url: ->(file) { thumb_member_apis_temp_file_path(member: @cur_member.id, id: file, _: file.updated.to_i) } %>
+<%= render "ss/crud/ajax_files/file_view", file: @item, show_properties: false %>
