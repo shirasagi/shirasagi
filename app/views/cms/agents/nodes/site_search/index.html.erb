@@ -35,15 +35,15 @@
 new Cms_Site_Search_History("<%= ".cms-site-search .search-form" %>", "<%= @cur_node.full_url %>");
 <% end %>
 <div class="cms-site-search">
-  <%= form_for :s, url: @cur_node.url, html: { method: :get, class: 'search-form' } do |f| %>
+  <%= form_for :s, url: @cur_node.url, html: { method: :get, class: 'search-form' }, "aria-label" => t("cms.search_form") do |f| %>
 
     <div class="site-search-keyword">
       <%= f.text_field :keyword, autocomplete: "off" %>
       <ul class="site-search-history" style="display: none;"></ul>
     </div>
 
-    <%= select_tag 'target', options_for_select([[t('ss.search_on', name: @cur_site.name), 'inside'], [t('ss.search_on', name: SS::Config.cms.elasticsearch['label']), 'outside']], selected: params[:target]) %>
-    <input type="submit" value="<%= t('ss.buttons.search') %>" />
+    <%= select_tag 'target', options_for_select([[t('ss.search_on', name: @cur_site.name), 'inside'], [t('ss.search_on', name: SS::Config.cms.elasticsearch['label']), 'outside']], selected: params[:target]), "aria-label" => t("cms.search_target") %>
+    <input type="submit" value="<%= t('cms.search_button') %>" />
   <% end %>
 
   <% if @result.present? %>

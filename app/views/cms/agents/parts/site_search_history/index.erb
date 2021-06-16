@@ -10,6 +10,6 @@ new Cms_Site_Search_History("#<%= "site-search-history-part-#{@cur_part.id}" %>"
     <input type="text" title="サイト内検索" placeholder="<%= @cur_part.placeholder %>" class="text" id="search-box" size="40" name="s[keyword]" autocomplete="off">
     <ul class="site-search-history" style="display: none;"></ul>
   </div>
-  <button type="submit" id="search-button"><img src="<%= @cur_site.url %>img/search.svg" width="16" alt="検索"></button>
+  <button type="submit" id="search-button"><%= t "cms.search_button" %></button>
 </form>
 <%== @cur_part.lower_html if @cur_part.lower_html.present? %>

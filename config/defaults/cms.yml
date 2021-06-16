@@ -139,10 +139,14 @@ production: &production
     class_categories: 'item-'
 
   elasticsearch:
-    label: shirasagiの関連サイト全て
+    label: 関連サイト全て
     site-search-marks: [ "use-site-search", "end-use-site-search" ]
     indexes:
       - s1
+      - s2
+      - s3
+      - s4
+      - s5
       - fess.search
 
   # basic_auth: [ 'user', 'pass' ]
