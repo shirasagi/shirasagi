@@ -41,8 +41,8 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
       wait_cbox_close do
         find(".select").click
       end
-      within '#selected-files' do
-        expect(page).to have_css('.name', text: 'keyvisual.jpg')
+      within '.column-thumb' do
+        expect(page).to have_css('.name', text: SS::File.find_by(name: 'keyvisual.jpg').humanized_name)
         expect(page).to have_css('.sanitizer-wait', text: I18n.t('ss.options.sanitizer_state.wait'))
       end
       within "form#item-form" do
@@ -73,8 +73,8 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
 
     before do
       @save_config = SS.config.replace_value_at(:ss, :upload_policy, 'sanitizer')
-      user.update_attributes(organization_id: group.id)
-      group.update_attributes(upload_policy: 'restricted')
+      user.update(organization_id: group.id)
+      group.update(upload_policy: 'restricted')
     end
 
     after do
