@@ -15,11 +15,19 @@ Rails.application.configure do
   # Don't include all helpers
   config.action_controller.include_all_helpers = false
 
+  # CSRF
+  config.action_controller.per_form_csrf_tokens = false
+  config.action_controller.forgery_protection_origin_check = false
+
   # Configure public file server for tests with Cache-Control for performance.
   config.public_file_server.enabled = true
   config.public_file_server.headers = {
     'Cache-Control' => "public, max-age=#{1.hour.to_i}"
   }
+
+  # action view
+  config.action_view.automatically_disable_submit_tag = false
+  config.action_view.form_with_generates_remote_forms = false
 
   # Show full error reports and disable caching.
   config.consider_all_requests_local       = true
