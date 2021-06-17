@@ -55,9 +55,9 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
         @s.index = @cur_site.elasticsearch_sites.collect { |site| "s#{site.id}" }.join(",")
       end
 
-      if params[:target] == 'outside'
-        indexes = @cur_site.elasticsearch_indexes.presence || SS::Config.cms.elasticsearch['indexes']
-        @s.index = [@s.index, indexes].flatten.join(",")
+      if params[:target] == 'outside' && @cur_site.elasticsearch_outside_enabled?
+        indexes = @cur_site.elasticsearch_indexes.presence || [@s.index, "fess.search"]
+        @s.index = [indexes].flatten.join(",")
       end
 
       @s.field_name = %w(text_index content title)

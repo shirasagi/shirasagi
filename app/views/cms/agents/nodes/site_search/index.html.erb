@@ -42,7 +42,9 @@ new Cms_Site_Search_History("<%= ".cms-site-search .search-form" %>", "<%= @cur_
       <ul class="site-search-history" style="display: none;"></ul>
     </div>
 
-    <%= select_tag 'target', options_for_select([[t('ss.search_on', name: @cur_site.name), 'inside'], [t('ss.search_on', name: SS::Config.cms.elasticsearch['label']), 'outside']], selected: params[:target]), "aria-label" => t("cms.search_target") %>
+    <% if @cur_site.elasticsearch_outside_enabled? %>
+      <%= select_tag 'target', options_for_select([[t('ss.search_on', name: @cur_site.name), 'inside'], [t('ss.search_on', name: SS::Config.cms.elasticsearch['label']), 'outside']], selected: params[:target]), "aria-label" => t("cms.search_target") %>
+    <% end %>
     <input type="submit" value="<%= t('cms.search_button') %>" />
   <% end %>
 

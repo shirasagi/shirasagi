@@ -38,4 +38,7 @@
 
   <dt><%= @model.t :elasticsearch_indexes %><%= @model.tt :elasticsearch_indexes %></dt>
   <dd><%= f.text_field :elasticsearch_indexes %></dd>
+
+  <dt><%= @model.t :elasticsearch_outside %><%= @model.tt :elasticsearch_outside %></dt>
+  <dd><%= f.select :elasticsearch_outside, @item.elasticsearch_outside_options %></dd>
 </dl>
