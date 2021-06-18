@@ -7,12 +7,14 @@ this.Openlayers_Member_Photo_Form = (function () {
     this.canvas = canvas;
     this.opts = opts;
 
-    // TODO validate zoom
-    this.zoom = opts["zoom"];
+    if (opts["zoom"] && this.validateZoom(opts["zoom"])) {
+      this.zoom = opts["zoom"];
+    }
     this.defaultZoom = Openlayers_Map.defaultZoom;
 
-    // TODO validate center
-    this.center = opts["center"];
+    if (opts["center"] && this.validateLatLon(opts["center"][0], opts["center"][1])) {
+      this.center = opts["center"];
+    }
     this.defaultCenter = Openlayers_Map.defaultCenter;
 
     // reverse lat lon
@@ -330,6 +332,22 @@ this.Openlayers_Member_Photo_Form = (function () {
       // set manually or default options
       this.setCenter(this.getCenter());
       this.setZoom(this.getZoom());
+    }
+  };
+
+  Openlayers_Member_Photo_Form.prototype.validateZoom = function (zoom) {
+    if (zoom >= 3 && zoom <= 18) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  Openlayers_Member_Photo_Form.prototype.validateLatLon = function (lat, lon) {
+    if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+      return true;
+    } else {
+      return false;
     }
   };
 
