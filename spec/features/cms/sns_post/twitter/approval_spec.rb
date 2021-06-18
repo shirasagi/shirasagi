@@ -11,6 +11,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
   let(:show_path) { article_page_path site.id, node, item }
   let(:edit_path) { edit_article_page_path site.id, node, item }
 
+  let(:approve_comment) { "approve-#{unique_id}" }
   let(:line_text_message) { unique_id }
 
   context "approve and publish" do
@@ -39,8 +40,10 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             click_on I18n.t("ss.buttons.draft_save")
           end
           expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
           visit show_path
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_no_css("dd", text: "https://twitter.com/user_screen_id/status/twitter_id")
           end
@@ -54,12 +57,16 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            click_on I18n.t("workflow.search_approvers.index")
+            wait_cbox_open do
+              click_on I18n.t("workflow.search_approvers.index")
+            end
           end
 
           wait_for_cbox do
             expect(page).to have_content(user1.long_name)
-            click_on user1.long_name
+            wait_cbox_close do
+              click_on user1.long_name
+            end
           end
           within ".mod-workflow-request" do
             click_on I18n.t("workflow.buttons.request")
@@ -71,10 +78,12 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           visit show_path
           within ".mod-workflow-approve" do
             expect(page).to have_no_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
+            fill_in "remand[comment]", with: approve_comment
             click_on I18n.t("workflow.buttons.approve")
           end
           within "#addon-workflow-agents-addons-approver" do
             expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
+            expect(page).to have_css(".index", text: approve_comment)
           end
           within "#addon-cms-agents-addons-release" do
             expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
@@ -110,6 +119,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             click_on I18n.t("ss.buttons.draft_save")
           end
           expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_no_css("dd", text: "https://twitter.com/user_screen_id/status/twitter_id")
@@ -124,12 +134,16 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            click_on I18n.t("workflow.search_approvers.index")
+            wait_cbox_open do
+              click_on I18n.t("workflow.search_approvers.index")
+            end
           end
 
           wait_for_cbox do
             expect(page).to have_content(user1.long_name)
-            click_on user1.long_name
+            wait_cbox_close do
+              click_on user1.long_name
+            end
           end
           within ".mod-workflow-request" do
             click_on I18n.t("workflow.buttons.request")
@@ -141,10 +155,12 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           visit show_path
           within ".mod-workflow-approve" do
             expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
+            fill_in "remand[comment]", with: approve_comment
             click_on I18n.t("workflow.buttons.approve")
           end
           within "#addon-workflow-agents-addons-approver" do
             expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
+            expect(page).to have_css(".index", text: approve_comment)
           end
           within "#addon-cms-agents-addons-release" do
             expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
@@ -175,6 +191,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_link item.name
             click_on item.name
           end
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
           expect(page).to have_link I18n.t("ss.links.edit")
 
           # edit
@@ -188,6 +205,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             click_on I18n.t("ss.buttons.draft_save")
           end
           expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_no_css("dd", text: "https://twitter.com/user_screen_id/status/twitter_id")
@@ -202,12 +220,16 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            click_on I18n.t("workflow.search_approvers.index")
+            wait_cbox_open do
+              click_on I18n.t("workflow.search_approvers.index")
+            end
           end
 
           wait_for_cbox do
             expect(page).to have_content(user1.long_name)
-            click_on user1.long_name
+            wait_cbox_close do
+              click_on user1.long_name
+            end
           end
           within ".mod-workflow-request" do
             click_on I18n.t("workflow.buttons.request")
@@ -224,10 +246,12 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           within ".mod-workflow-approve" do
             expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
+            fill_in "remand[comment]", with: approve_comment
             click_on I18n.t("workflow.buttons.approve")
           end
           within "#addon-workflow-agents-addons-approver" do
             expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
+            expect(page).to have_css(".index", text: approve_comment)
           end
           within "#addon-cms-agents-addons-release" do
             expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
