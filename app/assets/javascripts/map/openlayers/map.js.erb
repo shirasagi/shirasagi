@@ -23,13 +23,17 @@ this.Openlayers_Map = (function () {
     this.markerFeature = null;
     this.markerLayer = null;
     this.popup = null;
-    this.markerIcon = '/assets/img/map-marker.png';
+    this.markerIcon = Openlayers_Map.markerIcon;
     this.render();
   }
 
   Openlayers_Map.defaultCenter = <%= SS.config.map.map_center %>;
 
   Openlayers_Map.defaultZoom = <%= SS.config.map.openlayers_zoom_level %>;
+
+  Openlayers_Map.markerIcon = "<%= SS.config.map.dig("map_marker_images", "openlayers", "default", "marker") %>";
+
+  Openlayers_Map.clickIcon = "<%= SS.config.map.dig("map_marker_images", "openlayers", "default", "click") %>";
 
   Openlayers_Map.prototype.getCenter = function () {
     return (this.center ? this.center : this.defaultCenter);
@@ -249,7 +253,7 @@ this.Openlayers_Map = (function () {
 
     for (id = 0; id < markers.length; id++) {
       marker = markers[id];
-      iconSrc = '/assets/img/map-marker.png';
+      iconSrc = this.markerIcon;
       if (marker['image']) {
         iconSrc = marker['image'];
       }

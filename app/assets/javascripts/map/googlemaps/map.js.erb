@@ -16,7 +16,9 @@ this.Googlemaps_Map = (function () {
 
   Googlemaps_Map.markers = null;
 
-  Googlemaps_Map.markerIcon = '/assets/img/map-marker.png';
+  Googlemaps_Map.markerIcon = "<%= SS.config.map.dig("map_marker_images", "googlemaps", "default", "marker") %>";
+
+  Googlemaps_Map.clickIcon = "<%= SS.config.map.dig("map_marker_images", "googlemaps", "default", "click") %>";
 
   Googlemaps_Map.openedInfo = null;
 

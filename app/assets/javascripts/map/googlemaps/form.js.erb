@@ -8,8 +8,6 @@ this.Map_Form = (function () {
 
   Map_Form.dataID = 0;
 
-  Map_Form.clickIcon = '/assets/img/map-marker-click.png';
-
   Map_Form.clickMarker = null;
 
   Map_Form.setMapLoc = function (ele, lat, lon) {
@@ -360,7 +358,7 @@ this.Map_Form = (function () {
       }
       return Map_Form.clickMarker = new google.maps.Marker({
         position: new google.maps.LatLng(event.latLng.lat(), event.latLng.lng()),
-        icon: Map_Form.clickIcon,
+        icon: Googlemaps_Map.clickIcon,
         map: Googlemaps_Map.map
       });
     });

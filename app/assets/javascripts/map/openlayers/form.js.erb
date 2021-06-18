@@ -34,8 +34,8 @@ this.Openlayers_Map_Form = (function () {
     this.maxPointForm = opts['max_point_form'] || 10;
     this.deleteMessage = "<%= I18n.t('map.confirm.delete_marker') %>";
     this.dataID = 0;
-    this.markerIcon = '/assets/img/map-marker.png';
-    this.clickIcon = '/assets/img/map-marker-click.png';
+    this.markerIcon = Openlayers_Map.markerIcon;
+    this.clickIcon = Openlayers_Map.clickIcon;
     this.clickMarkerId = null;
     this.render();
   }

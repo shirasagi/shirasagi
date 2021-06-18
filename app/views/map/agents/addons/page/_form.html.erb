@@ -58,7 +58,7 @@
           <%= hidden_field_tag "item[map_points][][image]", "" %>
           <span class="marker-thumb"></span>
         </p>
-        <%== render_marker_image_form(site: @cur_site) %>
+        <%== render_marker_picker(site: @cur_site) %>
         <p>
           <%= text_field_tag "item[map_points][][loc_]", nil, class: "marker-loc-input loc", placeholder: @item.t(:marker_loc) %>
         </p>
@@ -82,7 +82,7 @@
           <%= hidden_field_tag "item[map_points][][image]", point[:image] %>
           <span class="marker-thumb"></span>
         </p>
-        <%== render_marker_image_form(site: @cur_site) %>
+        <%== render_marker_picker(site: @cur_site) %>
         <p>
           <%= text_field_tag "item[map_points][][loc_]", point[:loc].join(","), class: "marker-loc-input loc", placeholder: @item.t(:marker_loc) %>
         </p>

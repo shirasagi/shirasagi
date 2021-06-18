@@ -29,8 +29,8 @@ this.Openlayers_Member_Photo_Form = (function () {
     this.deleteMessage = "<%= I18n.t('map.confirm.delete_marker') %>";
     this.setExifMessage = "<%= I18n.t('map.confirm.find_exif') %>";
     this.dataID = 0;
-    this.markerIcon = '/assets/img/map-marker.png';
-    this.clickIcon = '/assets/img/map-marker-click.png';
+    this.markerIcon = Openlayers_Map.markerIcon;
+    this.clickIcon = Openlayers_Map.clickIcon;
     this.clickMarkerId = null;
     this.render();
   }
