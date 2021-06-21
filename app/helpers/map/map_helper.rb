@@ -10,11 +10,15 @@ module Map::MapHelper
     opts[:api] || map_setting[:api] || SS.config.map.api
   end
 
+  def effective_layers(opts = {})
+    return unless opts[:site]
+    opts[:site].map_effective_layers
+  end
+
   def include_map_api(opts = {})
     return "" unless map_enabled?(opts)
 
     api = default_map_api(opts)
-
     if api == 'openlayers'
       include_openlayers_api
     else
@@ -55,12 +59,7 @@ module Map::MapHelper
       # set default values
       map_options[:readonly] = true
       map_options[:markers] = markers if markers.present?
-
-      if opts[:site].try(:map_api_layer).present?
-        map_options[:layers] = SS.config.map.layers.select { |layer| layer['name'] == opts[:site].map_api_layer }
-      else
-        map_options[:layers] = [SS.config.map.layers.first]
-      end
+      map_options[:layers] = effective_layers(opts)
 
       s << 'var canvas = $("' + selector + '")[0];'
       s << "var opts = #{map_options.to_json};"
@@ -92,12 +91,7 @@ module Map::MapHelper
       map_options[:readonly] = true
       map_options[:markers] = markers if markers.present?
       map_options[:max_point_form] = max_point_form if max_point_form.present?
-
-      if opts[:site].try(:map_api_layer).present?
-        map_options[:layers] = SS.config.map.layers.select { |layer| layer['name'] == opts[:site].map_api_layer }
-      else
-        map_options[:layers] = [SS.config.map.layers.first]
-      end
+      map_options[:layers] = effective_layers(opts)
 
       # 初回アドオン表示後に地図を描画しないと、クリックした際にマーカーがずれてしまう
       s << '  var canvas = $("' + selector + '")[0];'
@@ -130,13 +124,7 @@ module Map::MapHelper
     case default_map_api(opts)
     when 'openlayers'
       include_openlayers_api
-
-      if opts[:site].try(:map_api_layer).present?
-        layers = SS.config.map.layers.select { |layer| layer['name'] == opts[:site].map_api_layer }
-      else
-        layers = [SS.config.map.layers.first]
-      end
-
+      layers = effective_layers(opts)
       s << 'var opts = {'
       s << '  readonly: true,'
       s << '  markers: ' + markers.to_json + ',' if markers.present?
@@ -170,12 +158,7 @@ module Map::MapHelper
       # set default values
       map_options[:readonly] = true
       map_options[:markers] = markers if markers.present?
-
-      if opts[:site].try(:map_api_layer).present?
-        map_options[:layers] = SS.config.map.layers.select { |layer| layer['name'] == opts[:site].map_api_layer }
-      else
-        map_options[:layers] = [SS.config.map.layers.first]
-      end
+      map_options[:layers] = effective_layers(opts)
 
       s << 'var canvas = $("' + selector + '")[0];'
       s << "var opts = #{map_options.to_json};"
