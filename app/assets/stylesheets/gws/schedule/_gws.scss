@@ -245,14 +245,8 @@
 }
 
 // Form
-.gws-schedule-plan {
-  .dates-field {
-    display: none;
-  }
-  .minicolors-swatches .minicolors-swatch {
-    width: 29px;
-    height: 29px;
-  }
+.gws-schedule-plan .dates-field {
+  display: none;
 }
 .gws-schedule-repeat-submit {
   padding: 20px;

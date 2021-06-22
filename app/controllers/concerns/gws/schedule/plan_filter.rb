@@ -8,7 +8,6 @@ module Gws::Schedule::PlanFilter
     before_action :check_schedule_visible
     before_action :set_file_addon_state
     before_action :set_items
-    before_action :set_color_codes, only: %i[new edit copy]
   end
 
   private
@@ -81,10 +80,6 @@ module Gws::Schedule::PlanFilter
     ) rescue nil
   end
 
-  def set_color_codes
-    @color_codes = SS.config.minicolors_swatches.color_codes
-  end
-
   public
 
   def index
@@ -113,7 +108,6 @@ module Gws::Schedule::PlanFilter
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
     saved = @item.save
-    set_color_codes unless saved
     render_create saved, location: redirection_url
     send_approval_mail if saved && @item.approval_present?
   end
@@ -126,7 +120,6 @@ module Gws::Schedule::PlanFilter
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
     saved = @item.update
-    set_color_codes unless saved
     render_update saved, location: redirection_url
     send_approval_mail if saved && @item.approval_present?
   end
