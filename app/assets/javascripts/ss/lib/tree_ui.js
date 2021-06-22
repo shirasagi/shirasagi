@@ -27,6 +27,23 @@ this.SS_TreeUI = (function () {
     return img.addClass("closed");
   };
 
+  SS_TreeUI.openSelectedGroupsTree = function (current_tr) {
+    for (i = 0; i < parseInt(current_tr.attr("data-depth")); i++) {
+      var tr = current_tr.prevAll('tr[data-depth=' + i.toString() + ']:first');
+      var img = tr.find(".toggle:first");
+      tr.nextAll("tr").each(function () {
+        var subordinated_depth = parseInt($(this).attr("data-depth"));
+        if (i >= subordinated_depth) {
+          return false;
+        }
+        if ((i + 1) === subordinated_depth) {
+          $(this).show();
+        }
+      });
+      SS_TreeUI.openImage(img);
+    }
+  }
+
   function SS_TreeUI(tree, opts) {
     if (opts == null) {
       opts = {}
@@ -37,6 +54,7 @@ this.SS_TreeUI = (function () {
     var root = [];
     var expand_all = opts["expand_all"];
     var collapse_all = opts["collapse_all"];
+    var expand_group = opts["expand_group"];
 
     this.tree.find("tbody tr").each(function () {
       return root.push(parseInt($(this).attr("data-depth")));
@@ -97,6 +115,8 @@ this.SS_TreeUI = (function () {
       SS_TreeUI.openImage(this.tree.find("tbody tr img"));
     } else if (collapse_all) {
       SS_TreeUI.closeImage(this.tree.find("tbody tr img"));
+    } else if (expand_group && $("tbody tr.current").attr("data-depth") !== "0") {
+      SS_TreeUI.openSelectedGroupsTree(this.tree.find("tbody tr.current"));
     } else {
       this.tree.find("tr[data-depth='" + root + "'] img").trigger("click");
     }

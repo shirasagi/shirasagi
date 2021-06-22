@@ -11,7 +11,7 @@ class Gws::Presence::UsersController < ApplicationController
   end
 
   def set_group
-    @groups = @cur_site.root.to_a + @cur_site.root.descendants.active.to_a
+    @groups = @cur_site.root.descendants_and_self.active.tree_sort
     @custom_groups = Gws::CustomGroup.site(@cur_site).member(@cur_user)
   end
 
