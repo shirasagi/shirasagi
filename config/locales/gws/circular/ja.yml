@@ -59,6 +59,9 @@ ja:
         updated_desc: 最終更新日(新着順)
         due_date_asc:  回覧期限日時(昇順)
         due_date_desc: 回覧期限日時(降順)
+      browsing_authority:
+        all: 全ての回覧者に閲覧可
+        author_or_commenter: 回覧作成者と自分のみ閲覧可
   modules:
     gws/circular: 回覧板
     addons:
@@ -122,6 +125,7 @@ ja:
       gws/circular/comment:
         name: タイトル
         text: コメント
+        browsing_authority: 公開範囲
       gws/addon/circular/group_setting:
         circular_default_due_date: 回覧期限日初期値
         circular_max_member: 回覧人数制限
@@ -144,6 +148,8 @@ ja:
     gws/circular/comment:
       name: タイトルです
       text: コメントです
+      browsing_authority:
+        - コメントを公開する範囲を設定します。
     gws/addon/circular/group_setting:
       circular_default_due_date:
         - 回覧期限日時の初期値を、今日から数えて何日後かで入力します。
