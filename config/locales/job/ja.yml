@@ -13,6 +13,7 @@ ja:
     view_diff: 差分を見る
     restore: 復元する
     download_log: ログのダウンロード
+    download_perf_log: 性能ログのダウンロード
     log_notice: 最大 %{count} 件を表示しています。
     confirm:
       restore: 復元してよろしいですか？

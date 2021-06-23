@@ -3,11 +3,7 @@ module Cms::GeneratorFilter::Rss
 
   private
 
-  def generate_node_rss(node, opts = {})
-    path = opts[:url] || "#{node.filename}/index.html"
-    return if Cms::Page.site(node.site).and_public.filename(path).first
-    return unless node.serve_static_file?
-
+  def _generate_node_rss(node, opts = {})
     @cur_path   = opts[:url] || "#{node.url}rss.xml"
     @cur_site   = node.site
     @csrf_token = false
@@ -39,5 +35,15 @@ module Cms::GeneratorFilter::Rss
 
     file = opts[:file] || "#{node.path}/rss.xml"
     write_file node, html, file: file
+  end
+
+  def generate_node_rss(node, opts = {})
+    path = opts[:url] || "#{node.filename}/index.html"
+    return if Cms::Page.site(node.site).and_public.filename(path).first
+    return unless node.serve_static_file?
+
+    node_perf_log(node, rss: 1) do
+      _generate_node_rss(node, opts)
+    end
   end
 end

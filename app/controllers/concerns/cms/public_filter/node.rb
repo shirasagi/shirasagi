@@ -97,8 +97,10 @@ module Cms::PublicFilter::Node
   end
 
   def generate_node_with_pagination(node, opts = {})
-    if generate_node(node, cache: node.filename)
-      @task.log "#{node.url}index.html" if @task
+    node_perf_log(node, page: 1) do
+      if generate_node(node, cache: node.filename)
+        @task.log "#{node.url}index.html" if @task
+      end
     end
 
     max = opts[:max] || 9999
@@ -106,9 +108,10 @@ module Cms::PublicFilter::Node
 
     2.upto(max) do |i|
       file = "#{node.path}/index.p#{i}.html"
-
-      if generate_node(node, file: file, params: { page: i }, cache: node.filename)
-        @task.log "#{node.url}index.p#{i}.html" if @task
+      node_perf_log(node, page: i) do
+        if generate_node(node, file: file, params: { page: i }, cache: node.filename)
+          @task.log "#{node.url}index.p#{i}.html" if @task
+        end
       end
 
       if !@exists

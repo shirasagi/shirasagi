@@ -5,6 +5,7 @@ module Cms::PublicFilter::Layout
   include Cms::PublicFilter::OpenGraph
   include Cms::PublicFilter::TwitterCard
   include Cms::PublicFilter::ConditionalTag
+  include Cms::PublicFilter::PerfLog
 
   included do
     helper_method :render_layout_parts
@@ -36,44 +37,79 @@ module Cms::PublicFilter::Layout
   end
 
   def render_part(part, opts = {})
-    return part.html if part.route == "cms/free"
+    part_perf_log(part) do
+      return part.html if part.route == "cms/free"
 
-    path = "/.s#{@cur_site.id}/parts/#{part.route}"
-    spec = recognize_agent path, method: "GET"
-    return unless spec
+      path = "/.s#{@cur_site.id}/parts/#{part.route}"
+      spec = recognize_agent path, method: "GET"
+      return unless spec
 
-    @cur_part = part
-    controller = part.route.sub(/\/.*/, "/agents/#{spec[:cell]}")
+      @cur_part = part
+      controller = part.route.sub(/\/.*/, "/agents/#{spec[:cell]}")
 
-    agent = new_agent controller
-    agent.controller.params.merge! spec
-    agent.controller.request = ActionDispatch::Request.new(request.env.merge("REQUEST_METHOD" => "GET"))
-    resp = agent.render spec[:action]
-    body = resp.body
+      agent = new_agent controller
+      agent.controller.params.merge! spec
+      agent.controller.request = ActionDispatch::Request.new(request.env.merge("REQUEST_METHOD" => "GET"))
+      resp = agent.render spec[:action]
+      body = resp.body
 
-    body.gsub!('#{part_name}', ERB::Util.html_escape(part.name))
+      body.gsub!('#{part_name}', ERB::Util.html_escape(part.name))
 
-    if body =~ /\#\{part_parent[^}]*?_name\}/
-      part_parent = part.parent || part
-      body.gsub!('#{part_parent_name}', ERB::Util.html_escape(part_parent.name))
-      part_parent = part_parent.parent || part_parent
-      body.gsub!('#{part_parent.parent_name}', ERB::Util.html_escape(part_parent.name))
-    end
-
-    if body =~ /\#\{[^}]*?parent_name\}/
-      parent = Cms::Node.site(@cur_site).filename(@cur_main_path.to_s.sub(/^\//, "").sub(/\/[\w\-\.]*?$/, "")).first
-      if parent
-        body.gsub!('#{parent_name}', ERB::Util.html_escape(parent.name))
-        body.gsub!('#{parent.parent_name}', ERB::Util.html_escape(parent.parent ? parent.parent.name : parent.name))
+      if /\#{part_parent[^}]*?_name}/.match?(body)
+        part_parent = part.parent || part
+        body.gsub!('#{part_parent_name}', ERB::Util.html_escape(part_parent.name))
+        part_parent = part_parent.parent || part_parent
+        body.gsub!('#{part_parent.parent_name}', ERB::Util.html_escape(part_parent.name))
       end
-    end
 
-    @cur_part = nil
-    body
+      if /\#{[^}]*?parent_name}/.match?(body)
+        parent = Cms::Node.site(@cur_site).filename(@cur_main_path.to_s.sub(/^\//, "").sub(/\/[\w\-\.]*?$/, "")).first
+        if parent
+          body.gsub!('#{parent_name}', ERB::Util.html_escape(parent.name))
+          body.gsub!('#{parent.parent_name}', ERB::Util.html_escape(parent.parent ? parent.parent.name : parent.name))
+        end
+      end
+
+      @cur_part = nil
+      body
+    end
   end
 
-
   def render_layout(layout)
+    layout_perf_log(layout) do
+      init_render_layout_context(layout)
+
+      html = @cur_layout.body.to_s
+      html = render_body_class(html)
+      html = render_conditional_tag(html)
+      html = render_layout_parts(html)
+      html = render_kana_tool(html)
+      html = render_theme_tool(html)
+      html = render_template_variables(html)
+      html = render_yield(html)
+
+      html = html.sub(/<title>(.*?)<\/title>(\r|\n)*/) do
+        @window_name = ::Regexp.last_match(1)
+        ''
+      end
+
+      html = html.sub(/<meta[^>]*charset=[^>]*>/) { '' }
+
+      previewable = @preview && @cur_layout.allowed?(:read, @cur_user, site: @cur_site)
+      if previewable
+        layout_info = {
+          id: @cur_layout.id, name: @cur_layout.name, filename: @cur_layout.filename,
+          path: cms_layout_path(site: @cur_site, id: @cur_layout)
+        }
+        data_attrs = layout_info.map { |k, v| "data-layout-#{k}=\"#{CGI.escapeHTML(v.to_s)}\"" }
+        html = html.sub(/<body/, %(<body #{data_attrs.join(" ")}))
+      end
+
+      html
+    end
+  end
+
+  def init_render_layout_context(layout)
     @cur_layout = layout
     @cur_item   = @cur_page || @cur_node
     @cur_item.window_name ||= @cur_item.name
@@ -88,62 +124,15 @@ module Cms::PublicFilter::Layout
     @cur_layout.description = @cur_item.description if @cur_item.respond_to?(:description)
 
     @parts = {}
+  end
 
-    body = @cur_layout.body.to_s
-
-    body = body.sub(/<body.*?>/) do |m|
+  def render_body_class(html)
+    html.sub(/<body.*?>/) do |m|
       m = m.sub(/ class="/, %( class="#{body_class(@cur_main_path)} )     ) if m =~ / class="/
       m = m.sub(/<body/,    %(<body class="#{body_class(@cur_main_path)}")) unless m =~ / class="/
       m = m.sub(/<body/,    %(<body id="#{body_id(@cur_main_path)}")      ) unless m =~ / id="/
       m
     end
-
-    html = render_conditional_tag(body)
-    html = render_layout_parts(html)
-
-    if notice
-      notice_html   = %(<div id="ss-notice"><div class="wrap">#{notice}</div></div>)
-      response.body = %(#{notice_html}#{response.body})
-    end
-
-    html = render_kana_tool(html)
-    html = render_theme_tool(html)
-    html = render_template_variables(html)
-    html.sub!(/(\{\{ yield \}\}|<\/ yield \/>)/) do
-      body = []
-      if @preview && !html.include?("ss-preview-content-begin")
-        body << "<div id=\"ss-preview-content-begin\" class=\"ss-preview-hide\"></div>"
-      end
-
-      body << "<!-- layout_yield -->"
-      body << response.body
-      body << "<!-- /layout_yield -->"
-
-      if @preview && !html.include?("ss-preview-content-begin")
-        body << "<div id=\"ss-preview-content-end\" class=\"ss-preview-hide\"></div>"
-      end
-
-      body.join
-    end
-
-    html = html.sub(/<title>(.*?)<\/title>(\r|\n)*/) do
-      @window_name = ::Regexp.last_match(1)
-      ''
-    end
-
-    html = html.sub(/<meta[^>]*charset=[^>]*>/) { '' }
-
-    previewable = @preview && @cur_layout.allowed?(:read, @cur_user, site: @cur_site)
-    if previewable
-      layout_info = {
-        id: @cur_layout.id, name: @cur_layout.name, filename: @cur_layout.filename,
-        path: cms_layout_path(site: @cur_site, id: @cur_layout)
-      }
-      data_attrs = layout_info.map { |k, v| "data-layout-#{k}=\"#{CGI.escapeHTML(v.to_s)}\"" }
-      html = html.sub(/<body/, %(<body #{data_attrs.join(" ")}))
-    end
-
-    html
   end
 
   def render_template_variables(html)
@@ -238,6 +227,30 @@ module Cms::PublicFilter::Layout
       html << "</div>"
     end
     html.join
+  end
+
+  def render_yield(html)
+    html.sub!(/(\{\{ yield \}\}|<\/ yield \/>)/) do
+      body = []
+      if @preview && !html.include?("ss-preview-content-begin")
+        body << "<div id=\"ss-preview-content-begin\" class=\"ss-preview-hide\"></div>"
+      end
+
+      body << "<!-- layout_yield -->"
+      if notice
+        body << %(<div id="ss-notice"><div class="wrap">#{notice}</div></div>)
+      end
+      body << response.body
+      body << "<!-- /layout_yield -->"
+
+      if @preview && !html.include?("ss-preview-content-begin")
+        body << "<div id=\"ss-preview-content-end\" class=\"ss-preview-hide\"></div>"
+      end
+
+      body.join
+    end
+
+    html
   end
 
   def render_kana_tool(html)
