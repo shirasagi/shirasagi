@@ -1,0 +1,21 @@
+<%= form_for :item, url: { action: params[:action] }, html: { method: :post, id: "task-form" } do |f| %>
+  <%= error_messages_for :item %>
+
+  <section class="main-box">
+    <header><h2><%= t("guide.labels.#{params[:action]}") %></h2></header>
+    <div class="main-body">
+      <dl class="see">
+        <dt><%= t("ss.file") %><%= tt('cms/csv_import_base.file') %></dt>
+        <dd>
+          <%= f.hidden_field "item[in_file]", value: "" %>
+          <%= f.file_field :in_file %>
+        </dd>
+      </dl>
+    </div>
+  </section>
+
+  <footer class="send">
+    <%= f.submit t("ss.import"), class: "save", onclick: "return confirm('#{t("ss.confirm.import")}')" %>
+    <%= f.button t("ss.buttons.cancel"), class: "btn-default", onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+  </footer>
+<% end %>

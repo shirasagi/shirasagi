@@ -18,8 +18,9 @@ module Guide::Addon
 
       before_validation :set_check_type, if: ->{ question_type == "yes_no" }
 
-      validates :question_type, presence: true
-      validates :check_type, presence: true
+      validates :question_type, inclusion: { in: %w(yes_no choices) }
+      validates :check_type, inclusion: { in: %w(single multiple) }
+
       validate :validate_in_edges, if: ->{ in_edges.present? }
 
       after_save :set_referenced_questions
@@ -42,6 +43,7 @@ module Guide::Addon
       # validate
       with_type.each_with_index do |in_edge, i|
         edge = ::Guide::Diagram::Edge.new(in_edge)
+        edge.parent = self
         next if edge.valid?
 
         edge.errors.full_messages.each do |msg|
