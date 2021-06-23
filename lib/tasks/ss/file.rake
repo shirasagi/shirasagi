@@ -31,24 +31,4 @@ namespace :ss do
       end
     end
   end
-
-  task set_pages_attached_file_attributes: :environment do
-    ids = Cms::Page.pluck(:id)
-    ids.each do |id|
-      item = Cms::Page.find(id).becomes_with_route rescue nil
-      next unless item
-      next unless item.class.include?(Cms::AttachedFiles)
-      next if item.attached_files.blank?
-
-      puts "#{id} #{item.name}"
-
-      attrs = item.attached_files.map do |file|
-        attr = Cms::AttachedFileAttribute.new
-        attr.page_id = item.id
-        attr.initialize_from_file(file)
-        attr
-      end
-      item.set(attached_file_attributes: attrs)
-    end
-  end
 end

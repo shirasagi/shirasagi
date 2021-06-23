@@ -31,16 +31,10 @@
       Cms_Column_FileUpload.userId = <%= @cur_user.id %>;
       Cms_Column_FileUpload.fileUploadPath = <%== cms_apis_temp_files_path(format: "json").to_json %>
       Cms_Column_FileUpload.fileSelectPath = <%== cms_apis_form_temp_file_select_path(id: ":fileId", node: params[:cid], owner_item_id: @item.id, owner_item_type: @model.to_s).to_json %>;
-      <% if @cur_node %>
-      Cms_Column_FileUpload.fileSearchPath = "<%== drop_and_search_cms_apis_node_temp_files_path %>";
-      <% end %>
 
       Cms_Column_Free.userId = <%= @cur_user.id %>;
       Cms_Column_Free.fileUploadPath = <%== cms_apis_temp_files_path(format: "json").to_json %>;
       Cms_Column_Free.fileSelectPath = <%== cms_apis_form_temp_file_select_path(id: ":fileId", form: "free", node: params[:cid], owner_item_id: @item.id, owner_item_type: @model.to_s).to_json %>;
-      <% if @cur_node %>
-      Cms_Column_Free.fileSearchPath = "<%== drop_and_search_cms_apis_node_temp_files_path %>";
-      <% end %>
 
       Cms_TemplateForm.userId = <%= @cur_user.id %>;
       Cms_TemplateForm.confirms.delete = <%== t("ss.confirm.delete").to_json %>;

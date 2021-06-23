@@ -1861,29 +1861,18 @@ footer.send {
       margin-bottom: 10px;
     }
   }
-  .upload-drop-area, .column-value-upload-drop-area, .upload-drop-and-search-area, .column-value-upload-drop-and-search-area {
+  .upload-drop-area, .column-value-upload-drop-area {
     clear: both;
     margin-top: 10px;
     padding-top: 15px;
     padding-bottom: 15px;
     @include border-radius(3px);
   }
-  .upload-drop-area, .upload-drop-and-search-area {
+  .upload-drop-area {
     background: $gray1;
   }
-  .column-value-upload-drop-area, .column-value-upload-drop-and-search-area {
+  .column-value-upload-drop-area {
     background: $white;
-  }
-  .drop-and-search {
-    .upload-drop-area, .column-value-upload-drop-area {
-      display: inline-block;
-      width: 60%;
-    }
-    .upload-drop-and-search-area, .column-value-upload-drop-and-search-area {
-      display: inline-block;
-      margin-left: 5px;
-      width: 36%;
-    }
   }
   .upload-drop-notice, .column-value-upload-drop-notice {
     display: inline-block;

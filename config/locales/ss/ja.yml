@@ -187,7 +187,6 @@ ja:
       posted: 投稿しました。
       initialized: 初期化しました。
       file_droppable: ファイルをドロップすることでアップロードできます。
-      file_droppable_and_search: 検索はこちらにドロップしてください。
       uploading: アップロードしています。
       lock_user_all: 利用を停止しました。
       unlock_user_all: 利用停止を解除しました。
