@@ -12,6 +12,8 @@
 //= require ss/lib/mobile
 //= require ss/lib/clipboard
 //= require ss/lib/file_view
+//= require ss/lib/search_ui
+//= require ss/lib/ajax_file
 //= require chat/lib/bot
 //= require cms/lib/editor
 //= require ads/lib/banner
@@ -43,9 +45,10 @@ $(function () {
     SS_Recommend.render();
   }
   $(".ss-part").each(function () {
-    return SS.renderPart($(this));
+    SS.renderPart($(this));
   });
-  return SS.renderDateTimePicker();
+  SS.renderDateTimePicker();
+  SS_SearchUI.render();
 });
 
 this.SS_Kana = (function () {
