@@ -1,8 +1,16 @@
 <%
   group = @group || @custom_group
-  opts = group ? { expand_all: true } : { expand_all: true }
+  opts = { expand_group: true } if group
 %>
-<%= jquery do %>SS_TreeUI.render(".tree-groups .index.groups", <%== opts.to_json %>);<% end %>
+<%= jquery do %>
+var tree = SS_TreeUI.render(".tree-groups .index.groups", <%== opts.to_json %>);
+$(".expand-all").on("click", function() {
+  tree.expandAll();
+});
+$(".collapse-all").on("click", function() {
+  tree.collapseAll();
+});
+<% end %>
 
 <div id="content-navi" class="presence-groups">
   <h2 class="content-navi-title">
@@ -17,6 +25,12 @@
     <div class="tree-groups">
       <table class="index groups">
         <tbody class="items">
+        <tr data-depth="0">
+          <td>
+            <button class="btn expand-all"><%= t('gws/presence.operations.expand_all') %></button>
+            <button class="btn collapse-all"><%= t('gws/presence.operations.collapse_all') %></button>
+          </td>
+        </tr>
         <% @groups.each do |item| %>
           <tr data-id="<%= item.id %>" class="list-item <%= (item.id == group.try(:id)) ? "current" : "" %>" data-depth="<%= item.depth %>">
             <td class="expandable"><%= link_to item.trailing_name, gws_presence_group_users_path(group: item.id) %></td>

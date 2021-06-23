@@ -68,6 +68,16 @@
     <% if ::File.exists?(@item.log_file_path) %>
       <%= link_to(t('job.download_log'), { action: :download }, { class: :btn }) %>
     <% end %>
+    <% if ::File.exists?(@item.perf_log_file_path) %>
+      <% link = link_to(t('job.download_perf_log'), { action: :download_perf }, { class: :btn }) rescue nil %>
+      <% if link %>
+        <% if Rails.env.development? %>
+          <%= link %>
+        <% else %>
+          <!--<%= link %>-->
+        <% end %>
+      <% end %>
+    <% end %>
   </dd>
 </dl>
 

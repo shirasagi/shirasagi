@@ -1,0 +1,11 @@
+<dl class="see addon-gws-circular-browsing_authority">
+  <dt><%= @model.t :browsing_authority %><%= @model.tt :browsing_authority %></dt>
+  <dd>
+    <% @item.browsing_authority_options.each do |label, value| %>
+      <label class="mr-2">
+        <%= f.radio_button :browsing_authority, value %>
+        <%= label %>
+      </label>
+    <% end %>
+  </dd>
+</dl>

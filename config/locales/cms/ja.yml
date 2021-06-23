@@ -331,6 +331,11 @@ ja:
         left: 左
         center: 中央
         right: 右
+      released_type:
+        fixed: 手動入力
+        same_as_updated: 更新日
+        same_as_created: 作成日
+        same_as_first_released: 初公開日
       line_post_format:
         thumb_carousel: サムネイル画像とLINEメッセージ
         body_carousel: 本文内の最初の画像とLINEメッセージ

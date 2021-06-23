@@ -29,7 +29,7 @@ class Inquiry::Agents::Tasks::Node::FormsController < ApplicationController
     html.gsub!(/<\s*input\s+type="hidden"\s+name="authenticity_token"\s+value=".+?"\s*\/>/, '')
 
     file = opts[:file] || "#{node.path}/index.html"
-    write_file node, html, file: file
+    Fs.write_data_if_modified file, html
   end
 
   def generate

@@ -33,6 +33,17 @@
 
   .thumb {
     border: none;
+    max-width: 150px;
+    line-height: unset;
+
+    .name {
+      margin: 0;
+      padding: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-wrap: nowrap;
+    }
   }
 
   .link-url {

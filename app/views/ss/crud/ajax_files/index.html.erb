@@ -25,6 +25,10 @@
       data_hash[:size] = number_to_human_size(item.size) rescue nil
       data_hash[:updated] = item.updated.to_i rescue nil
       data_hash[:user_name] = item.user.name if item.user.present?
+      if item.sanitizer_state
+        data_hash[:sanitizer_state] = item.sanitizer_state
+        data_hash[:sanitizer_state_label] = item.label(:sanitizer_state)
+      end
     %>
     <%= content_tag(:article, class: "file-view", id: "user-file#{item.id}", data: data_hash) do %>
       <%= sanitizer_status(item) %>

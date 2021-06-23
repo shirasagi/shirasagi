@@ -43,7 +43,7 @@
   </article>
 
   <div class="comments">
-    <% @item.comments.each_with_index do |comment, i| %>
+    <% @item.browsable_comments.each_with_index do |comment, i| %>
       <aside class="comment" id="post-<%= comment.id %>">
         <header>
           <h2><%= comment.name %></h2>

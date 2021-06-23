@@ -85,7 +85,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             fill_in "item[line_text_message]", with: line_text_message
           end
           within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+            wait_cbox_open do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
           end
           wait_for_cbox do
             have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
@@ -117,7 +119,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             fill_in "item[line_text_message]", with: line_text_message
           end
           within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+            wait_cbox_open do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
           end
           wait_for_cbox do
             have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
@@ -155,11 +159,15 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           end
 
           within "#addon-cms-agents-addons-thumb" do
-            first(".btn-file-upload").click
+            wait_cbox_open do
+              first(".btn-file-upload").click
+            end
           end
           wait_for_cbox do
             expect(page).to have_css(".file-view", text: file.name)
-            first("a[data-id='#{file.id}']").click
+            wait_cbox_close do
+              click_on file.name
+            end
           end
 
           ensure_addon_opened("#addon-cms-agents-addons-line_poster")
@@ -171,7 +179,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           end
 
           within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+            wait_cbox_open do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
           end
           wait_for_cbox do
             have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
@@ -197,11 +207,15 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
         capture_line_bot_client do |capture|
           visit edit_path
           within "#addon-cms-agents-addons-thumb" do
-            first(".btn-file-upload").click
+            wait_cbox_open do
+              first(".btn-file-upload").click
+            end
           end
           wait_for_cbox do
             expect(page).to have_css(".file-view", text: file.name)
-            first("a[data-id='#{file.id}']").click
+            wait_cbox_close do
+              click_on file.name
+            end
           end
 
           ensure_addon_opened("#addon-cms-agents-addons-line_poster")
@@ -212,7 +226,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             fill_in "item[line_text_message]", with: line_text_message
           end
           within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+            wait_cbox_open do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
           end
           wait_for_cbox do
             have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
@@ -269,7 +285,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             fill_in "item[line_text_message]", with: line_text_message
           end
           within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+            wait_cbox_open do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
           end
           wait_for_cbox do
             have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
@@ -318,7 +336,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             fill_in "item[line_text_message]", with: line_text_message
           end
           within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+            wait_cbox_open do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
           end
           wait_for_cbox do
             have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))

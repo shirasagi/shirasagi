@@ -19,6 +19,8 @@ module Cms::Model::Page
 
     #text_index :name, :html
 
+    self.default_released_type = "same_as_updated"
+
     attr_accessor :window_name
 
     field :route, type: String, default: ->{ "cms/page" }
@@ -41,10 +43,6 @@ module Cms::Model::Page
     end
   end
 
-  def date
-    released || super
-  end
-
   def preview_path
     (@cur_site || site).then do |s|
       s.subdir ? "#{s.subdir}/#{filename}" : filename
@@ -63,7 +61,9 @@ module Cms::Model::Page
     return false unless public_node?
     return false if (@cur_site || site).generate_locked?
     run_callbacks :generate_file do
-      updated = Cms::Agents::Tasks::PagesController.new.generate_page(self)
+      controller = Cms::Agents::Tasks::PagesController.new
+      controller.instance_variable_set(:@task, opts[:task]) if opts[:task].present?
+      updated = controller.generate_page(self)
       Cms::PageRelease.release(self) if opts[:release] != false
       updated
     end

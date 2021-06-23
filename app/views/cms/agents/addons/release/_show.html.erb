@@ -3,5 +3,11 @@
   <dd><%= @item.label :state %></dd>
 
   <dt><%= @model.t :released %></dt>
-  <dd><%= tryb{@item.send(:released).strftime("%Y/%m/%d %H:%M")} %></dd>
+    <dd>
+    <% if !@item.respond_to?(:released_type) || @item.released_type == "fixed" %>
+      <%= tryb { I18n.l(@item.released, format: :long) } %>
+    <% else %>
+      <%= @item.date.try { |time| "(" + I18n.l(time, format: :long) + ")" } %>
+    <% end %>
+  </dd>
 </dl>

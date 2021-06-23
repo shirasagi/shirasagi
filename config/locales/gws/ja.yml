@@ -162,6 +162,7 @@ ja:
       gws/user/public_duty: 事務分掌
       gws/link: リンク
       gws/site_usage: 使用量
+      gws/circular/browsing_authority: 閲覧権限
 
   mongoid:
     models:

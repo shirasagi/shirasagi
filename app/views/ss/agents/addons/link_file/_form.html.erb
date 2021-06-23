@@ -53,6 +53,9 @@
       $html.find(".column-thumb .thumb img").remove();
       $html.find(".column-thumb .thumb").append($("<span />", { class: "ext icon-" + $data.data("extname") }).html($data.data("extname")));
     }
+    if ($data.data("sanitizer-state")) {
+      $html.find(".column-thumb").prepend($("<div />", { class: "sanitizer-status sanitizer-" + $data.data("sanitizer-state") }).html($data.data("sanitizer-state-label")));
+    }
 
     $el.find(".ajax-selected tbody").append($html);
     $el.find(".ajax-selected").show().trigger("change");

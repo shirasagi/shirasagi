@@ -14,6 +14,9 @@ module Cms::Content
   attr_accessor :cur_node, :basename
 
   included do
+    cattr_accessor(:default_released_type, instance_accessor: false)
+    self.default_released_type = "fixed"
+
     seqid :id
     field :state, type: String, default: "public"
     field :name, type: String
@@ -22,10 +25,11 @@ module Cms::Content
     field :depth, type: Integer
     field :order, type: Integer, default: 0
     field :released, type: DateTime
+    field :released_type, type: String, default: ->{ self.class.default_released_type }
     field :first_released, type: DateTime
     field :md5, type: String
 
-    permit_params :state, :name, :index_name, :filename, :basename, :order, :released, :route
+    permit_params :state, :name, :index_name, :filename, :basename, :order, :released, :released_type, :route
 
     validates :state, presence: true
     validates :name, presence: true
@@ -71,6 +75,7 @@ module Cms::Content
       export :order
       export :date
       export :released
+      export :released_type
       export :updated
       export :created
       export :parent do
@@ -202,7 +207,16 @@ module Cms::Content
   end
 
   def date
-    updated || created
+    case released_type
+    when "fixed"
+      self[:released] || first_released || updated || created
+    when "same_as_created"
+      created
+    when "same_as_first_released"
+      first_released || updated || created
+    else # same_as_updated
+      updated || created
+    end
   end
 
   def public?
@@ -272,6 +286,12 @@ module Cms::Content
     return false unless public_node?
     return false if try(:for_member_enabled?) && member.blank?
     true
+  end
+
+  def released_type_options
+    %w(fixed same_as_updated same_as_created same_as_first_released).map do |v|
+      [ I18n.t("cms.options.released_type.#{v}"), v ]
+    end
   end
 
   private

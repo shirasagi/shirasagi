@@ -5,6 +5,7 @@ FactoryBot.define do
     name { unique_id.to_s }
     filename { "#{unique_id}.html" }
     route "cms/page"
+    released_type "fixed"
   end
 
   factory :cms_page, class: Cms::Page, traits: [:cms_page] do

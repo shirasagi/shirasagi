@@ -2676,6 +2676,10 @@ form .CodeMirror {
   .minicolors-swatch {
     top: 2px;
   }
+  .minicolors-swatches .minicolors-swatch {
+    width: 29px;
+    height: 29px;
+  }
 }
 //multislelct
 @include mb {

@@ -139,9 +139,16 @@ module SS::Model::Task
     self.state  = state
     result = save
 
-    if result && @log_file
-      @log_file.close
-      @log_file = nil
+    if result
+      if @log_file
+        @log_file.close
+        @log_file = nil
+      end
+
+      if @performance
+        @performance.close
+        @performance = nil
+      end
     end
 
     result
@@ -161,6 +168,11 @@ module SS::Model::Task
   def log_file_path
     return if new_record?
     @log_file_path ||= "#{SS::File.root}/ss_tasks/" + id.to_s.split(//).join("/") + "/_/#{id}.log"
+  end
+
+  def perf_log_file_path
+    return if log_file_path.blank?
+    log_file_path.sub(".log", "") + "-performance.log.gz"
   end
 
   def logs
@@ -208,6 +220,10 @@ module SS::Model::Task
       agent.controller.instance_variable_set :"@#{k}", v
     end
     agent.invoke action
+  end
+
+  def performance
+    @performance ||= SS::Task::PerformanceCollector.new(self)
   end
 
   private
