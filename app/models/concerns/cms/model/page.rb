@@ -19,6 +19,8 @@ module Cms::Model::Page
 
     #text_index :name, :html
 
+    self.default_released_type = "same_as_updated"
+
     attr_accessor :window_name
 
     field :route, type: String, default: ->{ "cms/page" }
@@ -39,10 +41,6 @@ module Cms::Model::Page
         categories.and_public.order_by(order: 1, name: 1)
       end
     end
-  end
-
-  def date
-    released || super
   end
 
   def preview_path
