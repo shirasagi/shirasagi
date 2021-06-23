@@ -38,6 +38,6 @@ module Event::GeneratorFilter::Ical
     end
 
     file = opts[:file] || "#{node.path}/index.ics"
-    write_file node, html, file: file
+    Fs.write_data_if_modified file, html
   end
 end

@@ -93,7 +93,7 @@ module Cms::PublicFilter::Node
     end
 
     file = opts[:file] || "#{node.path}/index.html"
-    write_file node, html, file: file
+    Fs.write_data_if_modified file, html
   end
 
   def generate_node_with_pagination(node, opts = {})

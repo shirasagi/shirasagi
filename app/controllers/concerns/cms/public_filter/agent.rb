@@ -14,24 +14,26 @@ module Cms::PublicFilter::Agent
     spec[:cell] ? spec : nil
   end
 
-  def write_file(item, data, opts = {})
-    file = opts[:file] || item.path
-
-    # data_md5 = Digest::MD5.hexdigest(data)
-    # if data_md5 != item.md5
-    #   item.class.where(id: item.id).update_all md5: data_md5
-    # end
-
-    # updated = true
-    # if Fs.exists?(file)
-    #   updated = false if data_md5 == Digest::MD5.hexdigest(Fs.read(file))
-    # end
-
-    updated = true
-    if Fs.exists?(file)
-      updated = false if data == Fs.read(file)
-    end
-
-    updated ? Fs.write(file, data) : nil
-  end
+  # use Fs.write_data_if_modified
+  #
+  # def write_file(item, data, opts = {})
+  #   file = opts[:file] || item.path
+  #
+  #   # data_md5 = Digest::MD5.hexdigest(data)
+  #   # if data_md5 != item.md5
+  #   #   item.class.where(id: item.id).update_all md5: data_md5
+  #   # end
+  #
+  #   # updated = true
+  #   # if Fs.exists?(file)
+  #   #   updated = false if data_md5 == Digest::MD5.hexdigest(Fs.read(file))
+  #   # end
+  #
+  #   updated = true
+  #   if Fs.exists?(file)
+  #     updated = false if data == Fs.read(file)
+  #   end
+  #
+  #   updated ? Fs.write(file, data) : nil
+  # end
 end
