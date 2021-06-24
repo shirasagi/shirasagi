@@ -83,7 +83,7 @@ GEM
     ast (2.4.0)
     autosize-rails (1.18.17)
       rails (>= 3.1)
-    bindata (2.4.4)
+    bindata (2.4.10)
     binding_of_caller (0.8.0)
       debug_inspector (>= 0.0.1)
     bootsnap (1.4.6)
