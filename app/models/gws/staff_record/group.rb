@@ -33,7 +33,31 @@ class Gws::StaffRecord::Group
   private
 
   def export_fields
-    %w(id name order seating_chart_url)
+    fields = %w(
+      id name seating_chart_url order
+      readable_setting_range readable_group_ids readable_member_ids
+      group_ids user_ids
+    )
+    unless SS.config.ss.disable_permission_level
+      fields << "permission_level"
+    end
+
+    fields
+  end
+
+  def export_convert_item(item, data)
+    # readable_setting_range
+    data[4] = item.label(:readable_setting_range)
+    # readable_group_ids
+    data[5] = Gws::Group.site(@cur_site).in(id: data[5]).active.pluck(:name).join("\n")
+    # readable_member_ids
+    data[6] = Gws::User.site(@cur_site).in(id: data[6]).active.pluck(:uid).join("\n")
+    # group_ids
+    data[7] = Gws::Group.site(@cur_site).in(id: data[7]).active.pluck(:name).join("\n")
+    # user_ids
+    data[8] = Gws::User.site(@cur_site).in(id: data[8]).active.pluck(:uid).join("\n")
+
+    data
   end
 
   def import_find_item(data)
