@@ -29,7 +29,8 @@ class Sns::Apis::ReplaceFilesController < ApplicationController
   def items_json
     [@item, @item.thumb].compact.map do |item|
       attr = item.attributes
-      attr.merge!({ "url" => item.url, "updated_to_i" => item.updated.to_i })
+      attr["url"] = item.url
+      attr["updated_to_i"] = item.updated.to_i
       attr
     end.to_json
   end
@@ -52,13 +53,13 @@ class Sns::Apis::ReplaceFilesController < ApplicationController
     result = @item.update
     SS::ReplaceTempFile.user(@cur_user).destroy_all if result
 
-    render_update result, notice: "差し替え保存しました。"
+    render_update result, notice: I18n.t('ss.notice.replace_saved')
   end
 
   def confirm
     if request.get?
       @dst_file = SS::ReplaceTempFile.user(@cur_user).first
-      redirect_to({ action: :edit })unless @dst_file
+      redirect_to({ action: :edit }) unless @dst_file
       return
     end
 
@@ -76,7 +77,7 @@ class Sns::Apis::ReplaceFilesController < ApplicationController
     raise "403" unless @owner_item.allowed?(:edit, @cur_user, site: @site)
     @item = SS::HistoryFile.find(params[:source])
 
-    render_update @item.restore, notice: "復元しました。"
+    render_update @item.restore, notice: I18n.t('history.notice.restored')
   end
 
   def destroy

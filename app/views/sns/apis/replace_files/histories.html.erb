@@ -1,10 +1,10 @@
 <%= jquery do %>
 
-var loading = $(SS.loading).hide();
-$("#ajax-box").after(loading);
+var $loading = $(SS.loading).hide();
+$("#ajax-box").after($loading);
 
 $("#ajax-box .restore").on("click", function() {
-  if (!confirm("ファイルを復元してもよろしいですか？")) {
+  if (!confirm("<%= t('ss.confirm.restore_file') %>")) {
     return false;
   }
 
@@ -15,7 +15,7 @@ $("#ajax-box .restore").on("click", function() {
     dataType: 'json',
     beforeSend: function() {
       $("#ajax-box").hide();
-      loading.show();
+      $loading.show();
     },
     success: function(data) {
       var size = data.length;
@@ -31,7 +31,7 @@ $("#ajax-box .restore").on("click", function() {
     },
     error: function(data, status, err) {
       $("#ajax-box").show();
-      loading.hide();
+      $loading.hide();
 
       resp = eval(data.responseText);
       alert(resp.join("\n"));
@@ -42,7 +42,7 @@ $("#ajax-box .restore").on("click", function() {
 });
 
 $("#ajax-box .destroy").on("click", function() {
-  if (!confirm("ファイル履歴を削除してもよろしいですか？")) {
+  if (!confirm("<%= t('ss.confirm.delete_file_histories') %>")) {
     return false;
   }
 
@@ -53,14 +53,14 @@ $("#ajax-box .destroy").on("click", function() {
     dataType: 'json',
     beforeSend: function() {
       $("#ajax-box").hide();
-      loading.show();
+      $loading.show();
     },
     success: function(data) {
       $("#cboxLoadedContent").load("<%= url_for(action: :histories) %>");
     },
     error: function(data, status, err) {
       $("#ajax-box").show();
-      loading.hide();
+      $loading.hide();
 
       resp = eval(data.responseText);
       alert(resp.join("\n"));
@@ -80,17 +80,17 @@ $("#ajax-box .destroy").on("click", function() {
 <div class="cms-modal-tabs">
   <% action = (params[:source] == "confirm") ? { action: :confirm } : { action: :edit } %>
   <%= link_to(action, { class: "ajax-box" }) do %>
-    <span class="tab-name"><%= "差し替え" %></span>
+    <span class="tab-name"><%= t('ss.buttons.replace_file') %></span>
   <% end %>
   <%= link_to({ action: :histories }, { class: "current", onclick: "return false;" }) do %>
-    <span class="tab-name"><%= "ファイル履歴" %></span>
+    <span class="tab-name"><%= t('ss.buttons.file_histories') %></span>
   <% end %>
 </div>
 
 <% if branch_page? %>
-  <div style="padding: 10px; border: 1px solid #ddd;">差し替えページのため、履歴はありません。</div>
+  <div style="padding: 10px; border: 1px solid #ddd;"><%= t('ss.info.branch_pages_history_is_blank') %></div>
 <% elsif @item.history_files.blank? %>
-  <div style="padding: 10px; border: 1px solid #ddd;">履歴はありません。</div>
+  <div style="padding: 10px; border: 1px solid #ddd;"><%= t('ss.info.history_is_blank') %></div>
 <% else %>
   <table class="index">
     <thead>
@@ -108,7 +108,7 @@ $("#ajax-box .destroy").on("click", function() {
         <td><%= item.created.strftime("%Y/%m/%d %H:%M") %></td>
         <td><%= number_to_human_size item.size %></td>
         <td>
-          <%= link_to "復元", { action: :restore, source: item.id }, class: "restore" %>
+          <%= link_to t('history.buttons.restore'), { action: :restore, source: item.id }, class: "restore" %>
           |
           <%= link_to t("ss.links.download"), { action: :download, source: item.id } %>
           |

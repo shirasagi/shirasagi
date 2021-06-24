@@ -42,16 +42,16 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           # upload file and confirmation
           within "form#ajax-form" do
             attach_file "item[in_file]", after_csv
-            click_button "確認画面へ"
+            click_button I18n.t('inquiry.confirm')
             wait_for_ajax
           end
 
           # replace file
           within "form#ajax-form" do
             fill_in "item[name]", with: "replaced"
-            click_button "差し替え保存"
+            click_button I18n.t('ss.buttons.replace_save')
           end
-          wait_for_notice "差し替え保存しました。"
+          wait_for_notice I18n.t('ss.notice.replace_saved')
         end
         wait_for_ajax
 
@@ -82,17 +82,17 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(all("tr").size).to eq 5
           within all("tr").last do
             expect(page).to have_css("td", text: "before_csv.csv")
-            expect(page).to have_css("a", text: "復元")
+            expect(page).to have_css("a", text: I18n.t('history.buttons.restore'))
             expect(page).to have_css("a", text: I18n.t("ss.links.download"))
             expect(page).to have_css("a", text: I18n.t("ss.buttons.delete"))
 
             page.accept_confirm do
-              click_on "復元"
+              click_on I18n.t('history.buttons.restore')
             end
           end
         end
 
-        wait_for_notice "復元しました。"
+        wait_for_notice I18n.t('history.notice.restored')
 
         replaced_page = item.class.find(item.id)
         replaced_file = replaced_page.attached_files.first
@@ -131,16 +131,16 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           # upload file and confirmation
           within "form#ajax-form" do
             attach_file "item[in_file]", after_csv
-            click_button "確認画面へ"
+            click_button I18n.t('inquiry.confirm')
             wait_for_ajax
           end
 
           # replace file
           within "form#ajax-form" do
             fill_in "item[name]", with: "replaced"
-            click_button "差し替え保存"
+            click_button I18n.t('ss.buttons.replace_save')
           end
-          wait_for_notice "差し替え保存しました。"
+          wait_for_notice I18n.t('ss.notice.replace_saved')
         end
         wait_for_ajax
 
@@ -165,7 +165,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(all("tr").size).to eq 3
           within all("tr").last do
             expect(page).to have_css("td", text: "before_csv.csv")
-            expect(page).to have_css("a", text: "復元")
+            expect(page).to have_css("a", text: I18n.t('history.buttons.restore'))
             expect(page).to have_css("a", text: I18n.t("ss.links.download"))
             expect(page).to have_css("a", text: I18n.t("ss.buttons.delete"))
 

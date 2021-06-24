@@ -1,14 +1,14 @@
 <%= jquery do %>
 
-var loading = $(SS.loading).hide();
-$("#ajax-box").after(loading);
+var $loading = $(SS.loading).hide();
+$("#ajax-box").after($loading);
 
 $('#ajax-form').ajaxForm({
   url: "<%= url_for action: :update %>",
   dataType: 'json',
   beforeSend: function() {
     $("#ajax-box").hide();
-    loading.show();
+    $loading.show();
   },
   success: function(data) {
     var size = data.length;
@@ -24,7 +24,7 @@ $('#ajax-form').ajaxForm({
   },
   error: function(data, status, err) {
     $("#ajax-box").show();
-    loading.hide();
+    $loading.hide();
 
     resp = eval(data.responseText);
     alert(resp.join("\n"));
@@ -46,10 +46,10 @@ $("#ajax-box .back-to-edit").on("click", function() {
 
 <div class="cms-modal-tabs">
   <%= link_to({ action: :confirm }, { class: "current", onclick: "return false;" }) do %>
-    <span class="tab-name"><%= "差し替え" %></span>
+    <span class="tab-name"><%= t('ss.buttons.replace_file') %></span>
   <% end %>
   <%= link_to({ action: :histories, source: :confirm }, { class: "ajax-box" }) do %>
-    <span class="tab-name"><%= "ファイル履歴" %></span>
+    <span class="tab-name"><%= t('ss.buttons.file_histories') %></span>
   <% end %>
 </div>
 
@@ -62,7 +62,7 @@ $("#ajax-box .back-to-edit").on("click", function() {
       <dd>
         <div class="" style="display: flex;">
           <article class="file-view before">
-            <div>差し替え前</div>
+            <div><%= t('ss.before_replace') %></div>
             <a class="thumb select" href="<%= @dst_file.url %>" target="_blank">
               <% if @item.image? %>
                 <img src="<%= @item.thumb_url %>" alt="<%= @item.basename %>" />
@@ -79,7 +79,7 @@ $("#ajax-box .back-to-edit").on("click", function() {
             padding-right: 10px;">trending_flat</div>
 
           <article class="file-view after">
-            <div>差し替え後</div>
+            <div><%= t('ss.after_replace') %></div>
             <a class="thumb select" href="<%= @dst_file.url %>" target="_blank">
               <% if @dst_file.image? %>
                 <img src="<%= @dst_file.thumb_url %>" alt="<%= @dst_file.basename %>" />
@@ -98,7 +98,7 @@ $("#ajax-box .back-to-edit").on("click", function() {
     </dl>
 
     <footer class="send">
-      <%= f.submit "差し替え保存", class: "btn-primary save" %>
+      <%= f.submit t('ss.buttons.replace_save'), class: "btn-primary save" %>
       <%= link_to(t("ss.buttons.cancel"), { action: :edit }, { class: "btn-default back-to-edit" }) %>
     </footer>
 

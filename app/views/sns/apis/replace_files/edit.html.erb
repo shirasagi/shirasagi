@@ -1,21 +1,21 @@
 <%= jquery do %>
 
-var loading = $(SS.loading).hide();
-$("#ajax-box").after(loading);
+var $loading = $(SS.loading).hide();
+$("#ajax-box").after($loading);
 
 $('#ajax-form').ajaxForm({
   type: "post",
   dataType: 'json',
   beforeSend: function() {
     $("#ajax-box").hide();
-    loading.show();
+    $loading.show();
   },
   success: function(data) {
     $("#cboxLoadedContent").load("<%= url_for(action: :confirm) %>");
   },
   error: function(data, status, err) {
     $("#ajax-box").show();
-    loading.hide();
+    $loading.hide();
 
     resp = eval(data.responseText);
     alert(resp.join("\n"));
@@ -26,10 +26,10 @@ $('#ajax-form').ajaxForm({
 
 <div class="cms-modal-tabs">
   <%= link_to({ action: :edit }, { class: "current", onclick: "return false;" }) do %>
-    <span class="tab-name"><%= "差し替え" %></span>
+    <span class="tab-name"><%= t('ss.buttons.replace_file') %></span>
   <% end %>
   <%= link_to({ action: :histories }, { class: "ajax-box" }) do %>
-    <span class="tab-name"><%= "ファイル履歴" %></span>
+    <span class="tab-name"><%= t('ss.buttons.file_histories') %></span>
   <% end %>
 </div>
 
@@ -48,7 +48,7 @@ $('#ajax-form').ajaxForm({
   </dl>
 
   <footer class="send">
-    <%= f.submit "確認画面へ", class: "btn-primary save" %>
+    <%= f.submit t('inquiry.confirm'), class: "btn-primary save" %>
     <%= link_to(t("ss.buttons.cancel"), "", { class: "btn-default", onclick: '$.colorbox.close(); return false;' }) %>
   </footer>
 

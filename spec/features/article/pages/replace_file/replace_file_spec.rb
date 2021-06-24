@@ -59,7 +59,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         # upload file and confirmation (cancel)
         within "form#ajax-form" do
           attach_file "item[in_file]", after_csv
-          click_button "確認画面へ"
+          click_button I18n.t('inquiry.confirm')
           wait_for_ajax
         end
 
@@ -78,7 +78,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         # upload file and confirmation
         within "form#ajax-form" do
           attach_file "item[in_file]", after_csv
-          click_button "確認画面へ"
+          click_button I18n.t('inquiry.confirm')
           wait_for_ajax
         end
 
@@ -93,9 +93,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css('.file-view.before', text: file.humanized_name)
           expect(page).to have_css('.file-view.after', text: temp_file.humanized_name)
           fill_in "item[name]", with: "replaced"
-          click_button "差し替え保存"
+          click_button I18n.t('ss.buttons.replace_save')
         end
-        wait_for_notice "差し替え保存しました。"
+        wait_for_notice I18n.t('ss.notice.replace_saved')
 
         expect(SS::ReplaceTempFile.count).to eq 0
 
@@ -162,7 +162,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         # upload file and confirmation (cancel)
         within "form#ajax-form" do
           attach_file "item[in_file]", after_csv
-          click_button "確認画面へ"
+          click_button I18n.t('inquiry.confirm')
           wait_for_ajax
         end
 
@@ -181,7 +181,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         # upload file and confirmation
         within "form#ajax-form" do
           attach_file "item[in_file]", after_csv
-          click_button "確認画面へ"
+          click_button I18n.t('inquiry.confirm')
           wait_for_ajax
         end
 
@@ -196,9 +196,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css('.file-view.before', text: file.humanized_name)
           expect(page).to have_css('.file-view.after', text: temp_file.humanized_name)
           fill_in "item[name]", with: "replaced"
-          click_button "差し替え保存"
+          click_button I18n.t('ss.buttons.replace_save')
         end
-        wait_for_notice "差し替え保存しました。"
+        wait_for_notice I18n.t('ss.notice.replace_saved')
 
         expect(SS::ReplaceTempFile.count).to eq 0
 
@@ -266,7 +266,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         # upload file and confirmation (cancel)
         within "form#ajax-form" do
           attach_file "item[in_file]", after_csv
-          click_button "確認画面へ"
+          click_button I18n.t('inquiry.confirm')
           wait_for_ajax
         end
 
@@ -285,7 +285,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         # upload file and confirmation
         within "form#ajax-form" do
           attach_file "item[in_file]", after_csv
-          click_button "確認画面へ"
+          click_button I18n.t('inquiry.confirm')
           wait_for_ajax
         end
 
@@ -300,9 +300,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css('.file-view.before', text: file.humanized_name)
           expect(page).to have_css('.file-view.after', text: temp_file.humanized_name)
           fill_in "item[name]", with: "replaced"
-          click_button "差し替え保存"
+          click_button I18n.t('ss.buttons.replace_save')
         end
-        wait_for_notice "差し替え保存しました。"
+        wait_for_notice I18n.t('ss.notice.replace_saved')
 
         expect(SS::ReplaceTempFile.count).to eq 0
 
@@ -370,7 +370,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         # upload file and confirmation (cancel)
         within "form#ajax-form" do
           attach_file "item[in_file]", after_image
-          click_button "確認画面へ"
+          click_button I18n.t('inquiry.confirm')
           wait_for_ajax
         end
 
@@ -389,7 +389,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         # upload file and confirmation
         within "form#ajax-form" do
           attach_file "item[in_file]", after_image
-          click_button "確認画面へ"
+          click_button I18n.t('inquiry.confirm')
           wait_for_ajax
         end
 
@@ -404,9 +404,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css('.file-view.before', text: file.humanized_name)
           expect(page).to have_css('.file-view.after', text: temp_file.humanized_name)
           fill_in "item[name]", with: "replaced"
-          click_button "差し替え保存"
+          click_button I18n.t('ss.buttons.replace_save')
         end
-        wait_for_notice "差し替え保存しました。"
+        wait_for_notice I18n.t('ss.notice.replace_saved')
 
         expect(SS::ReplaceTempFile.count).to eq 0
 
