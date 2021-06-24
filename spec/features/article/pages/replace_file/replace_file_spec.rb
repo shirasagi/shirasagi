@@ -12,7 +12,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'entry', group_ids: [cms_group.id]) }
   let!(:column1) { create(:cms_column_free, cur_site: site, cur_form: form, required: "optional", order: 1) }
   let!(:column2) { create(:cms_column_file_upload, cur_site: site, cur_form: form, required: "optional", order: 2) }
-  let!(:column3) { create(:cms_column_file_upload, cur_site: site, cur_form: form, file_type: 'image', required: "optional", order: 3) }
+  let!(:column3) do
+    create(:cms_column_file_upload, cur_site: site, cur_form: form, file_type: 'image', required: "optional", order: 3)
+  end
 
   let(:before_csv) { "#{Rails.root}/spec/fixtures/ss/replace_file/before_csv.csv" }
   let(:after_csv) { "#{Rails.root}/spec/fixtures/ss/replace_file/after_csv.csv" }
