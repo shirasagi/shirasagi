@@ -70,4 +70,27 @@ class Gws::StaffRecord::Group
   def import_new_item(data)
     self.class.new(data.merge(year_id: year_id))
   end
+
+  def import_convert_data(data)
+    # readable_group_ids
+    case data[:readable_setting_range]
+    when I18n.t("gws.options.readable_setting_range.public")
+      readable_setting_range = "public"
+    when I18n.t("gws.options.readable_setting_range.select")
+      readable_setting_range = "select"
+    else # I18n.t("gws.options.readable_setting_range.private")
+      readable_setting_range = "private"
+    end
+    data[:readable_setting_range] = readable_setting_range
+    # readable_group_ids
+    data[:readable_group_ids] = Gws::Group.site(@cur_site).active.in(name: data[:readable_group_ids].split(/\R/)).pluck(:id)
+    # readable_member_ids
+    data[:readable_member_ids] = Gws::User.site(@cur_site).active.in(uid: data[:readable_member_ids].split(/\R/)).pluck(:id)
+    # group_ids
+    data[:group_ids] = Gws::Group.site(@cur_site).active.in(name: data[:group_ids].split(/\R/)).pluck(:id)
+    # user_ids
+    data[:user_ids] = Gws::User.site(@cur_site).active.in(uid: data[:user_ids].split(/\R/)).pluck(:id)
+
+    data
+  end
 end
