@@ -47,6 +47,15 @@ class Gws::StaffRecord::UserTitle
     self.class.new(data.merge(year_id: year_id))
   end
 
+  def import_convert_data(data)
+    # group_ids
+    data[:group_ids] = Gws::Group.site(@cur_site).active.in(name: data[:group_ids].split(/\R/)).pluck(:id)
+    # user_ids
+    data[:user_ids] = Gws::User.site(@cur_site).active.in(uid: data[:user_ids].split(/\R/)).pluck(:id)
+
+    data
+  end
+
   def export_fields
     fields = %w(
       id code name remark order
