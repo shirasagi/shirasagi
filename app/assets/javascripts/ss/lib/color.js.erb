@@ -22,7 +22,7 @@ this.SS_Color = (function () {
           + $(swatches).outerHeight(true)
           + parseInt($(slider).css('top'));
 
-        $(slider).css('top', `${top}px`);
+        $(slider).css('top', top.toString() + 'px');
       } else {
         self.minicolors();
       }
