@@ -2068,6 +2068,28 @@ footer.send {
         }
       }
     }
+    .images {
+      padding: 2px;
+      max-width: 256px; position: absolute; background: #fff;
+      border: 1px solid #d0d0d0;
+      box-shadow: 0 1px 6px #d0d0d0;
+      .image {
+        padding: 2px;
+        display: inline-block;
+        border-radius: 3px;
+        &:hover {
+          background: #d6d6d6;
+        }
+      }
+    }
+    .marker-thumb {
+      display: inline-block;
+      height: 20px;
+      vertical-align: middle;
+      img {
+        height: 100%;
+      }
+    }
   }
   .add-marker {
     @include btn-orange;

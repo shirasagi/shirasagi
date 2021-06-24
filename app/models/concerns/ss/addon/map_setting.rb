@@ -18,9 +18,16 @@ module SS::Addon
     end
 
     def map_api_layer_options
-      SS.config.map.layers.select { |layer| layer['name'].present? }.collect do |layer|
-        [layer['name'], layer['name']]
-      end
+      map_layers.keys.map { |k| [k, k] }
+    end
+
+    def map_layers
+      @_map_layers ||= SS.config.map.layers.map { |layer| [layer["name"], layer] }.to_h
+    end
+
+    def map_effective_layers
+      layer = map_layers[map_api_layer] || map_layers[map_layers.keys.first]
+      [layer]
     end
 
     def map_setting

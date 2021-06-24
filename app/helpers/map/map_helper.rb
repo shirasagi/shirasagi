@@ -10,11 +10,15 @@ module Map::MapHelper
     opts[:api] || map_setting[:api] || SS.config.map.api
   end
 
+  def effective_layers(opts = {})
+    return unless opts[:site]
+    opts[:site].map_effective_layers
+  end
+
   def include_map_api(opts = {})
     return "" unless map_enabled?(opts)
 
     api = default_map_api(opts)
-
     if api == 'openlayers'
       include_openlayers_api
     else
@@ -55,12 +59,7 @@ module Map::MapHelper
       # set default values
       map_options[:readonly] = true
       map_options[:markers] = markers if markers.present?
-      if opts[:site].try(:map_api_layer).present?
-        map_options[:layers] = SS.config.map.layers.select { |layer| layer['name'] == opts[:site].map_api_layer }
-      else
-        map_options[:layers] = [SS.config.map.layers.first]
-      end
-      map_options[:default_zoom] = SS.config.map.openlayers_zoom_level
+      map_options[:layers] = effective_layers(opts)
 
       s << 'var canvas = $("' + selector + '")[0];'
       s << "var opts = #{map_options.to_json};"
@@ -78,7 +77,6 @@ module Map::MapHelper
   def render_map_form(selector, opts = {})
     return "" unless map_enabled?(opts)
 
-    center = opts[:center] || SS.config.map.map_center
     max_point_form = opts[:max_point_form] || SS.config.map.map_max_point_form
     map_options = opts[:map] || {}
     markers = opts[:markers]
@@ -91,15 +89,9 @@ module Map::MapHelper
 
       # set default values
       map_options[:readonly] = true
-      map_options[:center] = center.reverse if center.present?
-      if opts[:site].try(:map_api_layer).present?
-        map_options[:layers] = SS.config.map.layers.select { |layer| layer['name'] == opts[:site].map_api_layer }
-      else
-        map_options[:layers] = [SS.config.map.layers.first]
-      end
-      map_options[:max_point_form] = max_point_form if max_point_form.present?
       map_options[:markers] = markers if markers.present?
-      map_options[:default_zoom] = SS.config.map.openlayers_zoom_level
+      map_options[:max_point_form] = max_point_form if max_point_form.present?
+      map_options[:layers] = effective_layers(opts)
 
       # 初回アドオン表示後に地図を描画しないと、クリックした際にマーカーがずれてしまう
       s << '  var canvas = $("' + selector + '")[0];'
@@ -107,10 +99,8 @@ module Map::MapHelper
       s << '  var map = new Openlayers_Map_Form(canvas, opts);'
     else
       include_googlemaps_api(opts)
-      map_options[:default_zoom] = SS.config.map.googlemaps_zoom_level
 
       # 初回アドオン表示後に地図を描画しないと、ズームが 2 に初期設定されてしまう。
-      s << "  Googlemaps_Map.center = #{center.to_json};" if center.present?
       s << "  Map_Form.maxPointForm = #{max_point_form.to_json};" if max_point_form.present?
       s << '  Googlemaps_Map.setForm(Map_Form);'
       s << "  Googlemaps_Map.load(#{selector.to_json}, #{map_options.to_json});"
@@ -128,23 +118,15 @@ module Map::MapHelper
   def render_facility_search_map(selector, opts = {})
     return "" unless map_enabled?(opts)
 
-    center = opts[:center] || SS.config.map.map_center
     markers = opts[:markers]
 
     s = []
     case default_map_api(opts)
     when 'openlayers'
       include_openlayers_api
-
-      if opts[:site].try(:map_api_layer).present?
-        layers = SS.config.map.layers.select { |layer| layer['name'] == opts[:site].map_api_layer }
-      else
-        layers = [SS.config.map.layers.first]
-      end
-
+      layers = effective_layers(opts)
       s << 'var opts = {'
       s << '  readonly: true,'
-      s << '  center:' + center.reverse.to_json + ',' if center.present?
       s << '  markers: ' + markers.to_json + ',' if markers.present?
       s << '  layers: ' + layers.to_json + ','
       s << '};'
@@ -152,7 +134,6 @@ module Map::MapHelper
     else
       include_googlemaps_api(opts)
 
-      s << 'Googlemaps_Map.center = ' + center.to_json + ';' if center.present?
       s << 'var opts = {'
       s << '  markers: ' + (markers.try(:to_json) || '[]') + ','
       s << '};'
@@ -165,7 +146,6 @@ module Map::MapHelper
   def render_member_photo_form_map(selector, opts = {})
     return "" unless map_enabled?(opts)
 
-    center = opts[:center] || SS.config.map.map_center
     map_options = opts[:map] || {}
     markers = opts[:markers]
 
@@ -177,14 +157,8 @@ module Map::MapHelper
 
       # set default values
       map_options[:readonly] = true
-      map_options[:center] = center.reverse if center.present?
       map_options[:markers] = markers if markers.present?
-      if opts[:site].try(:map_api_layer).present?
-        map_options[:layers] = SS.config.map.layers.select { |layer| layer['name'] == opts[:site].map_api_layer }
-      else
-        map_options[:layers] = [SS.config.map.layers.first]
-      end
-      map_options[:default_zoom] = SS.config.map.openlayers_zoom_level
+      map_options[:layers] = effective_layers(opts)
 
       s << 'var canvas = $("' + selector + '")[0];'
       s << "var opts = #{map_options.to_json};"
@@ -193,9 +167,7 @@ module Map::MapHelper
     else
       include_googlemaps_api(opts)
       controller.javascript "/assets/js/exif-js.js"
-      map_options[:default_zoom] = SS.config.map.openlayers_zoom_level
 
-      s << 'Googlemaps_Map.center = ' + center.to_json + ';' if center.present?
       s << 'Googlemaps_Map.setForm(Member_Photo_Form);'
       s << "Googlemaps_Map.load(\"" + selector + "\", #{map_options.to_json});"
       s << 'Googlemaps_Map.renderMarkers();'
@@ -214,6 +186,25 @@ module Map::MapHelper
     h << %(<p class="show">#{link_to t('ss.links.show'), item.url}</p>)
     h << %(</div>)
 
+    h.join("\n")
+  end
+
+  def map_marker_picker_images(opts = {})
+    api = default_map_api(opts)
+    if %w(openlayers open_street_map).include?(api)
+      SS.config.map.dig("map_marker_images", "openlayers", "picker")
+    else
+      SS.config.map.dig("map_marker_images", "googlemaps", "picker")
+    end
+  end
+
+  def render_marker_picker(opts = {})
+    h = []
+    h << %w(<div class="images" style="display: none;">)
+    map_marker_picker_images(opts).each do |key, url|
+      h << "<div class=\"image\">#{image_tag(url)}</div>"
+    end
+    h << %(</div>)
     h.join("\n")
   end
 end
