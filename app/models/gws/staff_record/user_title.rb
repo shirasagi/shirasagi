@@ -48,10 +48,24 @@ class Gws::StaffRecord::UserTitle
   end
 
   def export_fields
-    %w(
-      id created updated deleted text_index code name remark order group_id
-      permission_level group_ids user_ids custom_group_ids user_uid user_name user_group_id user_group_name user_id
-      site_id year_code year_name year_id
+    fields = %w(
+      id code name remark order
+      group_ids user_ids
     )
+
+    unless SS.config.ss.disable_permission_level
+      fields << "permission_level"
+    end
+
+    fields
+  end
+
+  def export_convert_item(item, data)
+    # group_ids
+    data[5] = Gws::Group.site(@cur_site).in(id: data[5]).active.pluck(:name).join("\n")
+    # user_ids
+    data[6] = Gws::User.site(@cur_site).in(id: data[6]).active.pluck(:uid).join("\n")
+
+    data
   end
 end
