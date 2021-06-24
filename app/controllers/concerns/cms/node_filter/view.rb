@@ -20,7 +20,9 @@ module Cms::NodeFilter::View
 
   def set_model
     @model = self.class.model_class
-    controller.instance_variable_set :@model, @model
+    if controller
+      controller.instance_variable_set :@model, @model
+    end
   end
 
   def render_with_pagination(items)

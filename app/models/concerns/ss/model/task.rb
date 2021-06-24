@@ -214,12 +214,10 @@ module SS::Model::Task
   end
 
   def process(controller, action, params = {})
-    agent = SS::Agent.new controller
-    agent.controller.instance_variable_set :@task, self
-    params.each do |k, v|
-      agent.controller.instance_variable_set :"@#{k}", v
+    if !controller.is_a?(String)
+      controller = controller.name.underscore.sub('_controller', '')
     end
-    agent.invoke action
+    SS::Agent.invoke_action(controller, action, params.merge(task: self))
   end
 
   def performance
