@@ -4,7 +4,8 @@ FactoryBot.define do
     cur_user { gws_user }
 
     name { "name-#{unique_id}" }
-    url { 'http://example.jp' }
-    remark { "remark-#{unique_id}" }
+    url { "/#{unique_id}/#{unique_id}.html" }
+    remark { Array.new(2) { "remark-#{unique_id}" }.join("\n") }
+    order { rand(1..100) }
   end
 end
