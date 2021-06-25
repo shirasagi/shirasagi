@@ -93,6 +93,47 @@ describe Cms::Part::Free, type: :model, dbscope: :example do
       end
     end
   end
+
+  context "database access" do
+    let(:site) { cms_site }
+
+    before do
+      create :cms_part_free, cur_site: site
+      expect(Cms::Part::Free.all.count).to eq 1
+    end
+
+    context "without cur_site" do
+      it do
+        part = Cms::Part::Free.all.first
+
+        case rand(0..4)
+        when 0
+          expect { part.path }.to change { MongoAccessCounter.succeeded_count }.by(1)
+        when 1
+          expect { part.url }.to change { MongoAccessCounter.succeeded_count }.by(1)
+        when 2
+          expect { part.full_url }.to change { MongoAccessCounter.succeeded_count }.by(1)
+        when 3
+          expect { part.json_path }.to change { MongoAccessCounter.succeeded_count }.by(1)
+        when 4
+          expect { part.json_url }.to change { MongoAccessCounter.succeeded_count }.by(1)
+        end
+      end
+    end
+
+    context "with cur_site" do
+      it do
+        part = Cms::Part::Free.all.first
+        part.cur_site = site
+
+        expect { part.path }.to change { MongoAccessCounter.succeeded_count }.by(0)
+        expect { part.url }.to change { MongoAccessCounter.succeeded_count }.by(0)
+        expect { part.full_url }.to change { MongoAccessCounter.succeeded_count }.by(0)
+        expect { part.json_path }.to change { MongoAccessCounter.succeeded_count }.by(0)
+        expect { part.json_url }.to change { MongoAccessCounter.succeeded_count }.by(0)
+      end
+    end
+  end
 end
 
 describe Cms::Part::Node, type: :model, dbscope: :example do

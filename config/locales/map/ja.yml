@@ -26,6 +26,7 @@ ja:
       add: 追加
       add_center: 現在の中心に位置をコピー
       add_zoom: 現在のズームレベルをコピー
+      select_image: 色を選択
     confirm:
       delete_marker: マーカーを削除してよろしいですか？
       find_exif: 画像に位置情報が含まれています。位置情報を地図に設定しますか？

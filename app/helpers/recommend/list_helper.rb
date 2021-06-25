@@ -9,7 +9,9 @@ module Recommend::ListHelper
     display_list = []
     displayed = 0
     @items.each do |item|
+      item.cur_site = @cur_site if item.respond_to?(:cur_site=) && item.site_id == @cur_site.id
       next if display_list.index(item.path)
+
       content = item.content
       next unless content
       next unless content.public?

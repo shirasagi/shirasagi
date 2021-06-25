@@ -9,10 +9,6 @@
 <dl class="see">
   <dd class="wide">
     <%= f.hidden_field "file_ids[]", value: "" %>
-    <% if @cur_site.file_resizing.present? %>
-      <% opts = { "id" => "file-resizing", "data-label" => @cur_site.t(:file_resizing_label, size: @cur_site.file_resizing.join("x")) } %>
-      <%= hidden_field_tag "file_resizing", @cur_site.file_resizing.join(","), opts %>
-    <% end %>
 
     <span class="upload-menu-new">
       <% if @cur_node %>
@@ -59,4 +55,13 @@
     }
   %>
   SS_FileView.renderFileView($el, <%== file_view_options.to_json %>);
+
+  <% if @cur_site.file_resizing.present? %>
+    <%
+      label = @cur_site.t(:file_resizing_label, size: @cur_site.file_resizing.join("x"))
+      value = @cur_site.file_resizing.join(",")
+      opts = { label: label, value: value, default: true }
+    %>
+    SS_AjaxFile.addFileResizing(<%== opts.to_json %>);
+  <% end %>
 <% end %>

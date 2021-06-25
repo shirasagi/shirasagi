@@ -28,4 +28,9 @@
 
   <dt><%= @model.t :partner_site_ids %></dt>
   <dd><%=br @item.partner_sites.order_by(host: 1).pluck(:name) %></dd>
+
+  <% if SS.config.ss.upload_policy.present? %>
+  <dt><%= @model.t :upload_policy %></dt>
+  <dd><%= @item.label :upload_policy %></dd>
+  <% end %>
 </dl>

@@ -389,7 +389,7 @@ SS_Workflow.prototype = {
   onUploadFileSelected: function($item) {
     var pThis = this;
     $.ajax({
-      url: this.fileSelectViewUrl($item.data("id")),
+      url: this.fileSelectViewUrl($item.closest("[data-id]").data("id")),
       success: function(data, status, xhr) {
         pThis.renderFileHtml(data);
       },

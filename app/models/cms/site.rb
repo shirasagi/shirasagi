@@ -9,7 +9,7 @@ class Cms::Site
   include SS::Addon::KanaSetting
   include SS::Addon::FacebookSetting
   include SS::Addon::TwitterSetting
-  include SS::Addon::SiteAutoPostSetting
+  include SS::Addon::LineSetting
   include SS::Addon::FileSetting
   include SS::Addon::MailSetting
   include SS::Addon::ApproveSetting

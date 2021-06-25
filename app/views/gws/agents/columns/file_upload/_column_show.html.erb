@@ -16,6 +16,7 @@
       </span>
       <span class="filename" style="display: table-cell; vertical-align: middle; padding: 4px">
         <%= link_to(file.humanized_name, file.url) %>
+        <%= sanitizer_status(file) if file %>
       </span>
       <span class="postfix" style="display: table-cell; text-align: center; vertical-align: middle; padding: 4px"><%= column.postfix_label %></span>
     </div>

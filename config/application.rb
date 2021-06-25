@@ -63,6 +63,9 @@ module SS
     ensure
       Thread.current["ss.env"] = save_current_env
       Thread.current["ss.request"] = save_current_request
+      Thread.current["ss.site"] = nil
+      Thread.current["ss.user"] = nil
+      Thread.current["ss.organization"] = nil
     end
 
     def current_env
@@ -134,6 +137,30 @@ module SS
   def self.config
     # lazy loading
     @_ss_config ||= "SS::Config".constantize.setup
+  end
+
+  def self.current_site
+    Thread.current["ss.site"]
+  end
+
+  def self.current_site=(site)
+    Thread.current["ss.site"] = site
+  end
+
+  def self.current_user
+    Thread.current["ss.user"]
+  end
+
+  def self.current_user=(user)
+    Thread.current["ss.user"] = user
+  end
+
+  def self.current_organization
+    Thread.current["ss.organization"]
+  end
+
+  def self.current_organization=(group)
+    Thread.current["ss.organization"] = group
   end
 end
 

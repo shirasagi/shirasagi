@@ -32,7 +32,7 @@ Rails.application.routes.draw do
     end
 
     namespace "apis" do
-      resources :ad_files, only: [] do
+      resources :ad_files, path: 'ads', only: [] do
         get :select, on: :member
       end
     end

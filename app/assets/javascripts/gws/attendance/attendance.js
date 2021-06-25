@@ -158,7 +158,7 @@ Gws_Attendance.prototype.onClickCell = function($cell, urlTemplate) {
   }
 
   var showsToolbar = false;
-  if (mode === "punch" && punchable) {
+  if (mode === "punch" && punchable && this.options.punchUrl) {
     var url = this.options.punchUrl;
     url = url.replace(':type', type);
 

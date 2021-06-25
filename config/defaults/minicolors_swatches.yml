@@ -1,0 +1,18 @@
+production: &production
+  color_codes:
+    - '#dc143c' # crimson
+    - '#ff0000' # red
+    - '#ffa500' # orange
+    - '#ffff00' # yellow
+    - '#adff2f' # greenyellow
+    - '#008000' # green
+    - '#bce2e8' # deepskyblue
+    - '#0000ff' # blue
+    - '#800080' # purple
+    - '#000000' # black
+
+test:
+  <<: *production
+
+development:
+  <<: *production

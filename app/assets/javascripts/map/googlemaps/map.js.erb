@@ -6,14 +6,19 @@ this.Googlemaps_Map = (function () {
 
   Googlemaps_Map.form = null;
 
-  Googlemaps_Map.center = [36.204824, 138.252924];
+  Googlemaps_Map.center = null; // null means auto
 
-  Googlemaps_Map.defaultZoom = 13;
+  Googlemaps_Map.zoom = null; // null means auto
 
-  // -1 means auto
-  Googlemaps_Map.zoom = -1;
+  Googlemaps_Map.defaultCenter = <%= SS.config.map.map_center %>;
+
+  Googlemaps_Map.defaultZoom = <%= SS.config.map.googlemaps_zoom_level %>;
 
   Googlemaps_Map.markers = null;
+
+  Googlemaps_Map.markerIcon = "<%= SS.config.map.dig("map_marker_images", "googlemaps", "default", "marker") %>";
+
+  Googlemaps_Map.clickIcon = "<%= SS.config.map.dig("map_marker_images", "googlemaps", "default", "click") %>";
 
   Googlemaps_Map.openedInfo = null;
 
@@ -42,32 +47,24 @@ this.Googlemaps_Map = (function () {
   };
 
   Googlemaps_Map.load = function (selector, options) {
-    set_center_position = options.set_center_position
-    if (set_center_position) {
-      set_center_position = set_center_position.split(',').map(Number);
-      var lat, lon;
-      lat = set_center_position[0];
-      lon = set_center_position[1];
-      if (!(lat && !isNaN(lat))) {
-        set_center_position = null;
-      }
-      if (!(lon && !isNaN(lon))) {
-        set_center_position = null;
-      }
-      if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
-        set_center_position
-      } else {
-        set_center_position = null;
-      }
+    if (!options) {
+      options = {}
     }
-    set_zoom_level = options.set_zoom_level
-    if (options && options.zoom) {
-      Googlemaps_Map.zoom = options.zoom;
-    }
-    default_zoom = options.default_zoom || Googlemaps_Map.defaultZoom
 
+    if (options["zoom"]) {
+      if (Googlemaps_Map.validateZoom(options["zoom"])) {
+        Googlemaps_Map.zoom = options["zoom"];
+      }
+    }
+    if (options["center"]) {
+      if (Googlemaps_Map.validateLatLon(options["center"][0], options["center"][1])) {
+        Googlemaps_Map.center = options["center"];
+      }
+    }
+
+    var center = Googlemaps_Map.getCenter();
     var mapOptions = {
-      center: new google.maps.LatLng(this.center[0], this.center[1]),
+      center: new google.maps.LatLng(center[0], center[1]),
       zoom: Googlemaps_Map.getZoom(),
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       panControl: false,
@@ -87,18 +84,19 @@ this.Googlemaps_Map = (function () {
     Googlemaps_Map.map = new google.maps.Map($(selector).get(0), mapOptions);
   };
 
-  Googlemaps_Map.getZoom = function () {
-    if (Googlemaps_Map.zoom >= 0) {
-      return Googlemaps_Map.zoom;
-    }
+  Googlemaps_Map.getCenter = function () {
+    return (Googlemaps_Map.center ? Googlemaps_Map.center : Googlemaps_Map.defaultCenter);
+  }
 
-    return Googlemaps_Map.defaultZoom;
+  Googlemaps_Map.getZoom = function () {
+    return (Googlemaps_Map.zoom ? Googlemaps_Map.zoom : Googlemaps_Map.defaultZoom);
   }
 
   Googlemaps_Map.resize = function () {
     google.maps.event.trigger(this.map, "resize");
     if (!this.resized) {
-      this.map.setCenter(new google.maps.LatLng(this.center[0], this.center[1]));
+      var center = Googlemaps_Map.getCenter();
+      this.map.setCenter(new google.maps.LatLng(center[0], center[1]));
       if (this.form) {
         this.form.renderMarkers();
       }
@@ -123,19 +121,18 @@ this.Googlemaps_Map = (function () {
     Googlemaps_Map.markers = markers;
     markerBounds = new google.maps.LatLngBounds();
     $.each(Googlemaps_Map.markers, function (id, value) {
-      var marker_html, name, text;
+      var marker_html, name, text, image, opts;
+
+      opts = {
+        position: new google.maps.LatLng(value["loc"][1], value["loc"][0]),
+        map: Googlemaps_Map.map
+      };
       if (value["image"]) {
-        Googlemaps_Map.markers[id]["marker"] = new google.maps.Marker({
-          position: new google.maps.LatLng(value["loc"][1], value["loc"][0]),
-          icon: value["image"],
-          map: Googlemaps_Map.map
-        });
+        opts["icon"] = value["image"];
       } else {
-        Googlemaps_Map.markers[id]["marker"] = new google.maps.Marker({
-          position: new google.maps.LatLng(value["loc"][1], value["loc"][0]),
-          map: Googlemaps_Map.map
-        });
+        opts["icon"] = Googlemaps_Map.markerIcon;
       }
+      Googlemaps_Map.markers[id]["marker"] = new google.maps.Marker(opts);
       markerBounds.extend(new google.maps.LatLng(value["loc"][1], value["loc"][0]));
       if (value["html"]) {
         marker_html = value["html"];
@@ -200,47 +197,53 @@ this.Googlemaps_Map = (function () {
   };
 
   Googlemaps_Map.adjustMarkerBounds = function(pointCount, bounds) {
-    if (pointCount <= 0 && !set_center_position && !set_zoom_level) {
-      Googlemaps_Map.map.setCenter(new google.maps.LatLng(Googlemaps_Map.center[0], Googlemaps_Map.center[1]));
-      Googlemaps_Map.map.setZoom(default_zoom);
-      return;
-    }
+    if (pointCount > 0) {
+      // marker exists
+      // set manually options or do fit
+      var manuallyAdjust = false;
 
-    if (pointCount <= 0 && !set_center_position && set_zoom_level) {
-      Googlemaps_Map.map.setCenter(new google.maps.LatLng(Googlemaps_Map.center[0], Googlemaps_Map.center[1]));
-      Googlemaps_Map.map.setZoom(set_zoom_level);
-      return;
-    }
+      if (Googlemaps_Map.center) {
+        var center = Googlemaps_Map.getCenter();
+        Googlemaps_Map.map.setCenter(new google.maps.LatLng(center[0], center[1]));
+        manuallyAdjust = true;
+      }
 
-    if (pointCount == 1 && !set_center_position && !set_zoom_level) {
-      Googlemaps_Map.map.setCenter(bounds.getCenter());
-      Googlemaps_Map.map.setZoom(default_zoom);
-      return;
-    }
+      if (Googlemaps_Map.zoom) {
+        Googlemaps_Map.map.setZoom(Googlemaps_Map.getZoom());
+        manuallyAdjust = true;
+      }
 
-    if (pointCount <= 2 && !set_center_position && !set_zoom_level) {
-      Googlemaps_Map.map.setCenter(bounds.getCenter());
-      Googlemaps_Map.map.fitBounds(bounds);
-      return;
+      if (!manuallyAdjust) {
+        google.maps.event.addListenerOnce(Googlemaps_Map.map, "idle", function(){
+          if (Googlemaps_Map.map.getZoom() > Googlemaps_Map.getZoom()) {
+            Googlemaps_Map.map.setZoom(Googlemaps_Map.getZoom());
+          }
+        })
+        Googlemaps_Map.map.fitBounds(bounds);
+      }
+    } else {
+      // marker not exists
+      // set manually or default options
+      var center = Googlemaps_Map.getCenter();
+      Googlemaps_Map.map.setCenter(new google.maps.LatLng(center[0], center[1]));
+      Googlemaps_Map.map.setZoom(Googlemaps_Map.getZoom());
     }
+  };
 
-    if (set_center_position && set_zoom_level) {
-      Googlemaps_Map.map.setCenter(new google.maps.LatLng(set_center_position[0], set_center_position[1]));
-      Googlemaps_Map.map.setZoom(set_zoom_level);
-      return;
+  Googlemaps_Map.validateZoom = function (zoom) {
+    if (zoom >= 1 && zoom <= 21) {
+      return true;
+    } else {
+      return false;
     }
+  };
 
-    if (set_center_position && !set_zoom_level) {
-      Googlemaps_Map.map.setCenter(new google.maps.LatLng(set_center_position[0], set_center_position[1]));
-      Googlemaps_Map.map.setZoom(default_zoom);
-      return;
+  Googlemaps_Map.validateLatLon = function (lat, lon) {
+    if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+      return true;
+    } else {
+      return false;
     }
-
-    if (!set_center_position && set_zoom_level) {
-      Googlemaps_Map.map.setCenter(bounds.getCenter());
-      Googlemaps_Map.map.setZoom(set_zoom_level);
-      return;
-    };
   };
 
   return Googlemaps_Map;

@@ -12,36 +12,32 @@ this.Openlayers_Map_Form = (function () {
     this.clonePointForm = bind(this.clonePointForm, this);
     this.canvas = canvas;
     this.opts = opts;
-    default_zoom = this.opts.default_zoom || Openlayers_Map.defaultZoom
-    pointCount = this.opts.markers ? this.opts.markers.length : 0
-    set_center_position = this.opts.set_center_position
-    if (set_center_position) {
-      set_center_position = set_center_position.split(',').map(Number);
-      set_center_position = [set_center_position[1], set_center_position[0]];
-      var lat, lon;
-      lat = set_center_position[1];
-      lon = set_center_position[0];
-      if (!(lat && !isNaN(lat))) {
-        set_center_position = null;
-      }
-      if (!(lon && !isNaN(lon))) {
-        set_center_position = null;
-      }
-      if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
-        set_center_position
-      } else {
-        set_center_position = null;
-      }
+
+    if (opts["zoom"] && this.validateZoom(opts["zoom"])) {
+      this.zoom = opts["zoom"];
     }
-    set_zoom_level = this.opts.set_zoom_level
+    this.defaultZoom = Openlayers_Map.defaultZoom;
+
+    if (opts["center"] && this.validateLatLon(opts["center"][0], opts["center"][1])) {
+      this.center = opts["center"];
+    }
+    this.defaultCenter = Openlayers_Map.defaultCenter;
+
+    // reverse lat lon
+    if (this.center) {
+      this.center = this.center.reverse();
+    }
+    this.defaultCenter = this.defaultCenter.reverse();
+
     this.markerFeature = null;
     this.markerLayer = null;
+
     this.popup = null;
-    this.maxPointForm = 10;
+    this.maxPointForm = opts['max_point_form'] || 10;
     this.deleteMessage = "<%= I18n.t('map.confirm.delete_marker') %>";
     this.dataID = 0;
-    this.markerIcon = '/assets/img/map-marker.png';
-    this.clickIcon = '/assets/img/map-marker-click.png';
+    this.markerIcon = Openlayers_Map.markerIcon;
+    this.clickIcon = Openlayers_Map.clickIcon;
     this.clickMarkerId = null;
     this.render();
   }
@@ -56,6 +52,43 @@ this.Openlayers_Map_Form = (function () {
     lat = Math.ceil(lat * Math.pow(10, 6)) / Math.pow(10, 6);
     lon = Math.ceil(lon * Math.pow(10, 6)) / Math.pow(10, 6);
     ele.val(lat.toFixed(6) + "," + lon.toFixed(6));
+  };
+
+  Openlayers_Map_Form.prototype.validateLoc = function (loc) {
+    var lat, latlon, lon;
+    if (!loc) {
+      return false;
+    }
+    latlon = loc.split(',');
+    lat = parseFloat(latlon[0]);
+    lon = parseFloat(latlon[1]);
+    if (!(lat && !isNaN(lat))) {
+      return false;
+    }
+    if (!(lon && !isNaN(lon))) {
+      return false;
+    }
+    if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  Openlayers_Map_Form.prototype.getCenter = function () {
+    return (this.center ? this.center : this.defaultCenter);
+  };
+
+  Openlayers_Map_Form.prototype.getZoom = function () {
+    return (this.zoom ? this.zoom : this.defaultZoom);
+  };
+
+  Openlayers_Map_Form.prototype.setCenter = function (pos) {
+    return this.map.getView().setCenter(ol.proj.transform(pos, 'EPSG:4326', 'EPSG:3857'));
+  };
+
+  Openlayers_Map_Form.prototype.setZoom = function (level) {
+    return this.map.getView().setZoom(level);
   };
 
   Openlayers_Map_Form.prototype.render = function () {
@@ -86,11 +119,8 @@ this.Openlayers_Map_Form = (function () {
   };
 
   Openlayers_Map_Form.prototype.initMap = function () {
-    var center, layerOpts;
-    center = this.opts['center'] || [138.252924, 36.204824];
-    if (set_center_position) {
-      center = set_center_position
-    }
+    var layerOpts;
+
     layerOpts = this.opts['layers'];
     layerOpts || (layerOpts = [
       {
@@ -99,8 +129,8 @@ this.Openlayers_Map_Form = (function () {
         projection: "EPSG:3857"
       }
     ]);
-    this.maxPointForm = this.opts['max_point_form'] || 10;
-    return this.map = new ol.Map({
+
+    this.map = new ol.Map({
       target: this.canvas,
       renderer: ['canvas', 'dom'],
       layers: this.createLayers(layerOpts),
@@ -111,10 +141,10 @@ this.Openlayers_Map_Form = (function () {
       }),
       view: new ol.View({
         projection: "EPSG:3857",
-        center: ol.proj.transform(center, "EPSG:4326", "EPSG:3857"),
+        center: ol.proj.transform(this.getCenter(), "EPSG:4326", "EPSG:3857"),
         minZoom: 3,
         maxZoom: 18,
-        zoom: this.opts['zoom'] || 10
+        zoom: this.getZoom()
       }),
       logo: false
     });
@@ -155,18 +185,23 @@ this.Openlayers_Map_Form = (function () {
   };
 
   Openlayers_Map_Form.prototype.renderMarkers = function () {
-    return $(".mod-map dd.marker").each((function (_this) {
+    $(".mod-map dd.marker").each((function (_this) {
       return function (i, e) {
-        var loc;
+        var loc, image, opts;
         $(e).attr("data-id", _this.dataID);
-        if ($(e).find(".marker-loc").val() !== "") {
+        if ($(e).find(".marker-loc").val()) {
           loc = _this.getMapLoc($(e).find(".marker-loc"));
-          _this.setMarker(loc, {
-            id: parseInt(_this.dataID)
-          });
+          image = $(e).find('[name="item[map_points][][image]"]').val();
+
+          opts = {}
+          opts["id"] = parseInt(_this.dataID);
+          if (image) {
+            opts["image"] = image;
+          }
+          _this.setMarker(loc, opts);
         }
         //Map_Form.attachMessage(Map_Form.dataID)
-        return _this.dataID += 1;
+        _this.dataID += 1;
       };
     })(this));
   };
@@ -234,14 +269,11 @@ this.Openlayers_Map_Form = (function () {
     feature.setStyle(style);
     if (!this.markerLayer) {
       this.markerLayer = new ol.layer.Vector({
-        source: new ol.source.Vector({
-          features: [feature]
-        })
+        source: new ol.source.Vector()
       });
       this.map.addLayer(this.markerLayer);
-    } else {
-      this.markerLayer.getSource().addFeature(feature);
     }
+    this.markerLayer.getSource().addFeature(feature);
     return feature;
   };
 
@@ -274,10 +306,21 @@ this.Openlayers_Map_Form = (function () {
     return false;
   };
 
+  Openlayers_Map_Form.prototype.removeClickMarker = function () {
+    var feature, source;
+    if (this.clickMarkerId) {
+      feature = this.getMarker(this.clickMarkerId);
+      source = this.markerLayer.getSource();
+      source.removeFeature(feature);
+      this.clickMarkerId = null;
+      $(".mod-map .clicked").val("");
+    }
+  };
+
   Openlayers_Map_Form.prototype.renderEvents = function () {
     this.map.on('click', (function (_this) {
       return function (e) {
-        var feature, pos, source;
+        var feature, pos;
         feature = _this.map.forEachFeatureAtPixel(e.pixel, function (feature, layer) {
           return feature;
         });
@@ -285,11 +328,8 @@ this.Openlayers_Map_Form = (function () {
           _this.showPopup(e, feature);
           return;
         }
-        if (_this.clickMarkerId) {
-          feature = _this.getMarker(_this.clickMarkerId);
-          source = _this.markerLayer.getSource();
-          source.removeFeature(feature);
-        }
+
+        _this.removeClickMarker();
         pos = ol.proj.transform(e.coordinate, "EPSG:3857", "EPSG:4326");
         while (pos[0] < 180) {
           pos[0] += 360;
@@ -344,7 +384,7 @@ this.Openlayers_Map_Form = (function () {
       return function (e) {
         var ele;
         ele = e.target;
-        _this.createMarker($(ele).closest("dd.marker"));
+        _this.clickSetMarker($(ele).closest("dd.marker"));
         return false;
       };
     })(this));
@@ -361,17 +401,32 @@ this.Openlayers_Map_Form = (function () {
     });
     $(".mod-map .marker-loc-input").on('focus', (function (_this) {
       return function (e) {
-        var feature, source;
-        if (_this.clickMarkerId) {
-          feature = _this.getMarker(_this.clickMarkerId);
-          source = _this.markerLayer.getSource();
-          source.removeFeature(feature);
-          _this.clickMarkerId = null;
-          return $(".mod-map .clicked").val("");
-        }
+        _this.removeClickMarker();
       };
     })(this));
-    return $(".location-search").hide();
+    $(".mod-map .select-marker-image").on("click", (function (_this) {
+      return function (e) {
+        var marker;
+        marker = $(e.target).closest(".marker");
+        _this.openMarkerImages(marker);
+        return false;
+      };
+    })(this));
+
+    $(".mod-map .images .image").on("click", (function (_this) {
+      return function (e) {
+        _this.selectMarkerImage(e.target);
+        _this.setMarkerThumb($(e.target).closest(".marker"));
+        return false;
+      };
+    })(this));
+
+    var _this = this;
+    $(".mod-map .marker-setting .marker").each(function () {
+      _this.setMarkerThumb(this);
+    });
+
+    $(".location-search").hide();
   };
 
   Openlayers_Map_Form.prototype.clonePointForm = function () {
@@ -389,7 +444,7 @@ this.Openlayers_Map_Form = (function () {
       })(this));
       cln.find(".set-marker").on('click', (function (_this) {
         return function () {
-          return _this.createMarker(cln);
+          return _this.clickSetMarker(cln);
         };
       })(this));
       cln.find(".marker-name").on('keypress', (function (_this) {
@@ -407,14 +462,25 @@ this.Openlayers_Map_Form = (function () {
       });
       cln.find(".marker-loc-input").on('focus', (function (_this) {
         return function (e) {
-          var feature, source;
-          if (_this.clickMarkerId) {
-            feature = _this.getMarker(_this.clickMarkerId);
-            source = _this.markerLayer.getSource();
-            source.removeFeature(feature);
-            _this.clickMarkerId = null;
-            return $(".mod-map .clicked").val("");
-          }
+          _this.removeClickMarker();
+        };
+      })(this));
+
+      cln.find(".images").hide();
+      cln.find(".select-marker-image").on("click", (function (_this) {
+        return function (e) {
+          var marker;
+          marker = $(e.target).closest(".marker");
+          _this.openMarkerImages(marker);
+          return false;
+        };
+      })(this));
+      cln.find(".marker-thumb").html($('<img src="' + this.markerIcon + '">'));
+      cln.find(".images .image").on("click", (function (_this) {
+        return function (e) {
+          _this.selectMarkerImage(e.target);
+          _this.setMarkerThumb($(e.target).closest(".marker"));
+          return false;
         };
       })(this));
     }
@@ -423,28 +489,41 @@ this.Openlayers_Map_Form = (function () {
     }
   };
 
-  Openlayers_Map_Form.prototype.createMarker = function (ele) {
-    var dataId, loc;
-    loc = null;
+  Openlayers_Map_Form.prototype.clickSetMarker = function (ele) {
+    var loc;
+
     if ($(".mod-map .clicked").val() !== "") {
       loc = $(".mod-map .clicked").val();
+      this.removeClickMarker();
     } else if (ele.find(".marker-loc-input").val() !== "") {
-      if (Map_Form.validateLoc(ele.find(".marker-loc-input"))) {
-        loc = ele.find(".marker-loc-input").val();
-      } else {
-        alert("<%= I18n.t('map.alert.invalid_location').join('\n') %>");
-      }
-    }
-    if (!loc) {
+      loc = ele.find(".marker-loc-input").val();
+    } else {
       return;
     }
+    this.createMarker(ele, loc);
+  };
+
+  Openlayers_Map_Form.prototype.createMarker = function (ele, loc) {
+    var dataId, opts, image;
+
+    if (!this.validateLoc(loc)) {
+      alert("<%= I18n.t('map.alert.invalid_location').join('\n') %>");
+      return;
+    }
+
     ele.find(".marker-loc").val(loc);
     ele.find(".marker-loc-input").val(loc);
+
     dataId = parseInt(ele.attr("data-id"));
     this.removeMarker(dataId);
-    return this.setMarker(this.getMapLoc(ele.find(".marker-loc")), {
-      id: dataId
-    });
+
+    opts = {}
+    opts["id"] = dataId;
+    image = ele.find('[name="item[map_points][][image]"]').val();
+    if (image) {
+      opts["image"] = image;
+    }
+    this.setMarker(this.getMapLoc(ele.find(".marker-loc")), opts);
   };
 
   Openlayers_Map_Form.prototype.clearPointForm = function (ele) {
@@ -470,42 +549,92 @@ this.Openlayers_Map_Form = (function () {
   };
 
   Openlayers_Map_Form.prototype.resize = function () {
-    var extent;
-    if (pointCount == 1 && !set_center_position && !set_zoom_level) {
-      extent = this.markerLayer.getSource().getExtent();
+    if (!this.markerLayer) {
+      return;
+    }
+
+    var markerLength = this.markerLayer.getSource().getFeatures().length;
+    if (markerLength >= 0) {
+      // marker exists
+      // set manually options and do fit
+      var extent = this.markerLayer.getSource().getExtent();
       this.map.getView().fit(extent, this.map.getSize());
-      this.map.getView().setZoom(default_zoom);
-      return;
+      this.map.getView().setZoom(this.getZoom());
+
+      if (this.center) {
+        this.setCenter(this.getCenter());
+      }
+      if (this.zoom) {
+        this.setZoom(this.getZoom());
+      }
+    } else {
+      // marker not exists
+      // set manually or default options
+      this.setCenter(this.getCenter());
+      this.setZoom(this.getZoom());
+    }
+  };
+
+  Openlayers_Map_Form.prototype.openMarkerImages = function (marker) {
+    var markers = $(marker).closest(".marker-setting")
+    var images = $(marker).find(".images");
+
+    markers.find(".marker .images").hide();
+    images.show();
+    $("body").not(this).one("click", function (e) {
+      images.hide();
+    });
+  };
+
+  Openlayers_Map_Form.prototype.selectMarkerImage = function (image) {
+    var marker = $(image).closest(".marker");
+    var images = $(image).closest(".images");
+    var url = $(image).find('img').andSelf("img").attr("src");
+    var loc;
+
+    images.hide();
+    marker.find('[name="item[map_points][][image]"]').val(url);
+
+    loc = marker.find(".marker-loc-input").val();
+    if (loc) {
+      this.createMarker(marker, loc);
+      return false;
     }
 
-    if (pointCount == 1 && !set_center_position && set_zoom_level) {
-      extent = this.markerLayer.getSource().getExtent();
-      this.map.getView().fit(extent, this.map.getSize());
-      this.map.getView().setZoom(set_zoom_level);
-      return;
+    loc = $(".mod-map .clicked").val();
+    if (loc) {
+      this.removeClickMarker();
+      this.createMarker(marker, loc);
+      return false;
     }
 
-    if (pointCount >= 2 && !set_center_position && !set_zoom_level) {
-      extent = this.markerLayer.getSource().getExtent();
-      this.map.getView().fit(extent, this.map.getSize());
-      return;
-    }
+    return false;
+  };
 
-    if (pointCount >= 2 && !set_center_position && set_zoom_level) {
-      extent = this.markerLayer.getSource().getExtent();
-      this.map.getView().fit(extent, this.map.getSize());
-      this.map.getView().setZoom(set_zoom_level);
-      return;
-    }
+  Openlayers_Map_Form.prototype.setMarkerThumb = function (marker) {
+    var thumb = $(marker).find(".marker-thumb");
+    var url = $(marker).find('[name="item[map_points][][image]"]').val();
 
-    if (set_zoom_level) {
-      this.map.getView().setZoom(set_zoom_level);
-      return;
+    if (url) {
+      $(thumb).html($('<img src="' + url + '">'));
+    } else {
+      $(thumb).html($('<img src="' + this.markerIcon + '">'));
     }
+  };
 
-    if (!set_zoom_level) {
-      this.map.getView().setZoom(default_zoom);
-      return;
+  Openlayers_Map_Form.prototype.validateZoom = function (zoom) {
+    if (zoom >= 3 && zoom <= 18) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  Openlayers_Map_Form.prototype.validateLatLon = function (lat, lon) {
+    if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+      return true;
+    } else {
+      return false;
     }
   };
 

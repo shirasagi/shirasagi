@@ -64,12 +64,6 @@ Rails.application.routes.draw do
       get "postal_codes" => "postal_codes#index"
       get "prefecture_codes" => "prefecture_codes#index"
       post "validation" => "validation#validate"
-      resources :temp_files, concerns: :deletion do
-        get :select, on: :member
-        get :view, on: :member
-        get :thumb, on: :member
-        get :download, on: :member
-      end
     end
 
     namespace "db" do

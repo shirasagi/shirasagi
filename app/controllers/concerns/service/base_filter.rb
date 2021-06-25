@@ -63,7 +63,7 @@ module Service::BaseFilter
       return @cur_user
     end
 
-    @cur_user = get_user_by_session
+    @cur_user = SS.current_user = get_user_by_session
     if @cur_user
       set_last_logged_in
       return @cur_user
@@ -91,7 +91,7 @@ module Service::BaseFilter
       end
     end
     redirect_to service_main_path if opts[:redirect]
-    @cur_user = user
+    @cur_user = SS.current_user = user
   end
 
   def rescue_action(exception)

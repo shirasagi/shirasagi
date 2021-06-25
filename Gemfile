@@ -63,7 +63,6 @@ gem 'romaji'
 gem 'roo'
 #gem 'roo-xls', git: "https://github.com/roo-rb/roo-xls.git"
 gem 'rubyzip'
-gem 'simple_captcha2', require: 'simple_captcha'
 gem 'thinreports'
 gem 'ungarbled'
 
@@ -75,6 +74,7 @@ gem 'omniauth-github'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-twitter'
 gem 'omniauth-yahoojp'
+gem 'omniauth-line'
 gem 'omniauth-rails_csrf_protection'
 
 # SNS
@@ -98,6 +98,9 @@ gem 'unf'
 # elasticsearch
 gem 'faraday'
 gem 'elasticsearch'
+
+# line
+gem 'line-bot-api'
 
 group :development, :test do
   gem 'dotenv-rails'

@@ -24,4 +24,9 @@
   <dt><%= @model.t :gws_use %></dt>
   <dd><%= @item.label :gws_use %></dd>
   <% end %>
+
+  <% if @item.root? && SS.config.ss.upload_policy.present? %>
+  <dt><%= @model.t :upload_policy %></dt>
+  <dd><%= @item.label :upload_policy %></dd>
+  <% end %>
 </dl>

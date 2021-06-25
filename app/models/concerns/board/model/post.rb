@@ -4,6 +4,7 @@ module Board::Model::Post
   include SS::Document
   include SS::Reference::Site
   include Board::TextSanitizer
+  include SS::Captchable
 
   included do
     store_in collection: "board_posts"

@@ -9,8 +9,8 @@
   <dd><%= f.select :state, @item.state_options %></dd>
 
   <dt><%= @model.t :text_color %><%= @model.tt :text_color %></dt>
-  <dd><%= f.text_field :text_color, class: 'js-color' %></dd>
+  <dd><%= f.text_field :text_color, class: 'js-color', 'data-clear' => 1, 'data-swatches' => 1 %></dd>
 
   <dt><%= @model.t :color %><%= @model.tt :color %></dt>
-  <dd><%= f.text_field :color, class: 'js-color' %></dd>
+  <dd><%= f.text_field :color, class: 'js-color', 'data-clear' => 1, 'data-swatches' => 1 %></dd>
 </dl>

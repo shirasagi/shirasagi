@@ -11,6 +11,10 @@
         <% inner_html = image_tag(file.url, width: @portlet.effective_ad_width) %>
         <% if file.link_url %>
           <%= link_to inner_html, sns_redirect_path(ref: file.link_url), target: "_blank", rel: "noopener" %>
+        <% elsif file.sanitizer_state == 'wait' %>
+          <div class="mx-2 my-2">
+            <%= sanitizer_status(file) %>
+          </div>
         <% else %>
           <%= inner_html %>
         <% end %>

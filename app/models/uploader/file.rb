@@ -4,9 +4,9 @@ class Uploader::File
   attr_accessor :path, :binary, :site
   attr_reader :saved_path, :is_dir
 
+  validate :validate_upload_policy, if: ->{ binary.present? }
   validates :path, presence: true
   validates :filename, length: { maximum: 2000 }
-
   validate :validate_filename
   validate :validate_scss
   validate :validate_coffee
@@ -148,6 +148,11 @@ class Uploader::File
   end
 
   private
+
+  def validate_upload_policy
+    return unless %w(restricted sanitizer).include?(SS::UploadPolicy.upload_policy)
+    errors.add :base, :upload_restricted
+  end
 
   def validate_filename
     if directory?

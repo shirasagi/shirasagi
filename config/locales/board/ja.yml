@@ -123,6 +123,7 @@ ja:
         poster_url: URL
         delete_key: 削除キー
         in_files: ファイル
+        captcha: 画像認証
       board/addon/list:
         mode: 表示形式
       board/addon/post_setting:

@@ -9,9 +9,13 @@ module SS::MicheckerSupport
 
   def init
     Docker::Image.get(SS::MicheckerSupport.docker_image_id)
+  rescue Excon::Error::Socket => e
+    Rails.logger.info("[Michecker Spec] #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    puts("[Michecker Spec] failed to initialize: the docker daemon may not be running")
+    RSpec.configuration.filter_run_excluding(michecker: true)
   rescue => e
+    Rails.logger.info("[Michecker Spec] #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     puts("[Michecker Spec] failed to initialize")
-    puts("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     RSpec.configuration.filter_run_excluding(michecker: true)
   end
 end

@@ -58,6 +58,6 @@ module Cms::PublicFilter::Page
       html = response.body
     end
 
-    write_file page, html
+    Fs.write_data_if_modified page.path, html
   end
 end

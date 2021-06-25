@@ -1,7 +1,7 @@
 module Event::IcalHelper
 
   # see "iana-token" BNF in https://tools.ietf.org/html/rfc5545
-  NONE_IANA_TOKENS_RE = /[^0-9A-Za-z-]+/
+  NONE_IANA_TOKENS_RE = /[^0-9A-Za-z-]+/.freeze
 
   def event_to_ical(items, options = {})
     site = options[:site] || @cur_site
@@ -27,6 +27,7 @@ module Event::IcalHelper
       next unless item.respond_to?(:event_dates)
       next if item.event_dates.blank?
 
+      item.cur_site = @cur_site if item.respond_to?(:cur_site=) && item.site_id == @cur_site.id
       calendar.event do |event|
         create_event(site, node, item, event)
       end

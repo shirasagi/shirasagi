@@ -17,7 +17,7 @@
     </dl>
   </div>
 
-  <%= show_simple_captcha(object: :item, code_type: 'numeric', input_html: { required: nil }) %>
+  <%= show_captcha %>
   <footer class="send">
     <%= f.submit t("ss.buttons.delete") %>
     <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{@cur_node.url}'; return false;" %>

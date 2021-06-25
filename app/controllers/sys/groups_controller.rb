@@ -10,6 +10,10 @@ class Sys::GroupsController < ApplicationController
 
   private
 
+  def permit_fields
+    super + [:upload_policy]
+  end
+
   def set_crumbs
     @crumbs << [t("sys.group"), sys_groups_path]
   end

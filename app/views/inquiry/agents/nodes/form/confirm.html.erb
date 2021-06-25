@@ -20,7 +20,7 @@
     <% end %>
     <%= hidden_field_tag "#{f.object_name}[source_url]", @answer.source_url %>
     <% if @cur_node.captcha_enabled? %>
-      <%= show_simple_captcha(object: :answer, code_type: 'numeric', input_html: { required: nil }) %>
+      <%= show_captcha %>
     <% end %>
     <%= hidden_field_tag "group", @group.id if @group %>
     <%= hidden_field_tag "page", @page.id if @page %>
