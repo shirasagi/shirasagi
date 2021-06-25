@@ -42,7 +42,6 @@ gem 'dynamic_form'
 gem 'fast_blank'
 gem 'fastimage'
 gem 'fullcalendar.io-rails', '~> 2.6.0'
-gem 'geocoder'
 gem 'google-cloud-translate', '2.0.0'
 gem 'holiday_japan'
 gem 'http_accept_language'
@@ -99,9 +98,6 @@ gem 'unf'
 # elasticsearch
 gem 'faraday'
 gem 'elasticsearch'
-
-# line
-gem 'line-bot-api'
 
 group :development, :test do
   gem 'dotenv-rails'

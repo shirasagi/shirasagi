@@ -19,7 +19,7 @@ this.Facility_Search = (function () {
       }, 'fast');
     };
     //setup map
-    Googlemaps_Map.load(selector);
+    Googlemaps_Map.load(selector, opts);
     //setup markers
     overrided = Googlemaps_Map.attachMessage;
     Googlemaps_Map.attachMessage = function (id) {
