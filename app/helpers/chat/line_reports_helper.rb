@@ -1,5 +1,4 @@
 module Chat::LineReportsHelper
-
   def link_to_monthly(date)
     @year  = date.year
     @month = date.month

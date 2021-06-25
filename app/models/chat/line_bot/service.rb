@@ -73,21 +73,25 @@ class Chat::LineBot::Service
 
   def reply_confirm(event)
     if event['postback']['data'].split(',')[0] == 'yes'
-      add_confirm_yes = Chat::LineBot::ExistsPhrase.site(@cur_site).where(node_id: @cur_node.id).find_by(name: postback_intent(event).name)
+      add_confirm_yes = Chat::LineBot::ExistsPhrase.site(@cur_site).
+        where(node_id: @cur_node.id).
+        find_by(name: postback_intent(event).name)
       add_confirm_yes.confirm_yes += 1
       add_confirm_yes.save
       client.reply_message(event["replyToken"], {
-        "type": "text",
-        "text": @cur_node.chat_success.gsub(%r{</?[^>]+?>}, "")
-      })
+                             "type": "text",
+                             "text": @cur_node.chat_success.gsub(%r{</?[^>]+?>}, "")
+                           })
     elsif event['postback']['data'].split(',')[0] == 'no'
-      add_confirm_no = Chat::LineBot::ExistsPhrase.site(@cur_site).where(node_id: @cur_node.id).find_by(name: postback_intent(event).name)
+      add_confirm_no = Chat::LineBot::ExistsPhrase.site(@cur_site).
+        where(node_id: @cur_node.id).
+        find_by(name: postback_intent(event).name)
       add_confirm_no.confirm_no += 1
       add_confirm_no.save
       client.reply_message(event["replyToken"], {
-        "type": "text",
-        "text": @cur_node.chat_retry.gsub(%r{</?[^>]+?>}, "")
-      })
+                             "type": "text",
+                              "text": @cur_node.chat_retry.gsub(%r{</?[^>]+?>}, "")
+                           })
     elsif event['postback']['data'].split(',')[0] == 'facility'
       client.reply_message(event["replyToken"], show_facilities(event))
     elsif event['postback']['data'].split(',')[0] == 'event'
@@ -96,27 +100,26 @@ class Chat::LineBot::Service
   end
 
   def exists_phrase(event)
-    begin
-      phrase = Chat::LineBot::ExistsPhrase.site(@cur_site).where(node_id: @cur_node.id).find_by(name: phrase(event).name)
-      phrase.frequency += 1
-      phrase.save
-    rescue
-      phrase = Chat::LineBot::ExistsPhrase.create(site_id: @cur_site.id, node_id: @cur_node.id, name: phrase(event).name)
-      phrase.frequency += 1
-      phrase.save
-    end
+    phrase = Chat::LineBot::ExistsPhrase.site(@cur_site).where(node_id: @cur_node.id).find_by(name: phrase(event).name)
+    phrase.frequency += 1
+    phrase.save
+  rescue
+    phrase = Chat::LineBot::ExistsPhrase.create(site_id: @cur_site.id, node_id: @cur_node.id, name: phrase(event).name)
+    phrase.frequency += 1
+    phrase.save
+
   end
 
   def record_phrase(event)
-    begin
-      phrase = Chat::LineBot::RecordPhrase.site(@cur_site).where(node_id: @cur_node.id).find_by(name: event.message["text"])
-      phrase.frequency += 1
-      phrase.save
-    rescue
-      phrase = Chat::LineBot::RecordPhrase.create(site_id: @cur_site.id, node_id: @cur_node.id, name: event.message["text"])
-      phrase.frequency += 1
-      phrase.save
-    end
+
+    phrase = Chat::LineBot::RecordPhrase.site(@cur_site).where(node_id: @cur_node.id).find_by(name: event.message["text"])
+    phrase.frequency += 1
+    phrase.save
+  rescue
+    phrase = Chat::LineBot::RecordPhrase.create(site_id: @cur_site.id, node_id: @cur_node.id, name: event.message["text"])
+    phrase.frequency += 1
+    phrase.save
+
   end
 
   def record_date
@@ -124,7 +127,9 @@ class Chat::LineBot::Service
   end
 
   def session_user(event)
-    @session = Chat::LineBot::Session.new(site_id: @cur_site.id, node_id: @cur_node.id, line_user_id: event['source']['userId'], date_created: Date.today)
+    @session = Chat::LineBot::Session.new(
+      site_id: @cur_site.id, node_id: @cur_node.id, line_user_id: event['source']['userId'], date_created: Time.zone.today
+    )
     @session.save
   end
 
@@ -136,7 +141,7 @@ class Chat::LineBot::Service
         @cur_node.response_template.gsub(%r{</?[^>]+?>}, "")
       end
     else
-      I18n.t("chat.line_bot.service.choices") + "#{templates.length + 1}"
+      I18n.t("chat.line_bot.service.choices") + (templates.length + 1).to_s
     end
   end
 
@@ -184,7 +189,7 @@ class Chat::LineBot::Service
         @cur_node.response_template.gsub(%r{</?[^>]+?>}, "")
       end
     else
-      I18n.t("chat.line_bot.service.choices") + "#{templates.length + 1}"
+      I18n.t("chat.line_bot.service.choices") + (templates.length + 1).to_s
     end
   end
 
@@ -314,20 +319,20 @@ class Chat::LineBot::Service
 
   def send_location(event)
     client.reply_message(event["replyToken"], {
-      "type": "template",
-      "altText": I18n.t("chat.line_bot.service.send_location"),
-      "template": {
-        "type": "buttons",
-        "text": I18n.t("chat.line_bot.service.send_location"),
-        "actions": [
-          {
-            "type": "uri",
-            "label": I18n.t("chat.line_bot.service.set_location"),
-            "uri": "line://nv/location"
-          }
-        ]
-      }
-    })
+                           "type": "template",
+                           "altText": I18n.t("chat.line_bot.service.send_location"),
+                           "template": {
+                             "type": "buttons",
+                             "text": I18n.t("chat.line_bot.service.send_location"),
+                             "actions": [
+                               {
+                                 "type": "uri",
+                                 "label": I18n.t("chat.line_bot.service.set_location"),
+                                 "uri": "line://nv/location"
+                               }
+                             ]
+                           }
+                         })
   end
 
   def select_info(event)
@@ -380,7 +385,9 @@ class Chat::LineBot::Service
     @markers = @facilities.map do |item|
       points = item.map_points.map do |point|
         point[:facility_url] = item.url
-        point[:distance] = ::Geocoder::Calculations.distance_between(@loc, [point[:loc][0], point[:loc][1]], units: :km) rescue 0.0
+        point[:distance] = ::Geocoder::Calculations.distance_between(
+          @loc, [point[:loc][0], point[:loc][1]], units: :km
+        ) rescue 0.0
         point[:state] = Facility::Node::Page.site(@cur_site).in_path(point[:facility_url]).first.state
         point
       end
@@ -398,9 +405,9 @@ class Chat::LineBot::Service
     search_facilities(event)
     if @facilities.empty?
       client.reply_message(event['replyToken'], {
-        "type": "text",
-        "text": I18n.t("chat.line_bot.service.no_facility")
-      })
+                             "type": "text",
+                             "text": I18n.t("chat.line_bot.service.no_facility")
+                           })
     else
       columns = []
       domain = @cur_site.domains.first
@@ -467,7 +474,9 @@ class Chat::LineBot::Service
     @markers = @events.map do |item|
       points = item.map_points.map do |point|
         point[:event_url] = item.url
-        point[:distance] = ::Geocoder::Calculations.distance_between(@loc, [point[:loc][0], point[:loc][1]], units: :km) rescue 0.0
+        point[:distance] = ::Geocoder::Calculations.distance_between(
+          @loc, [point[:loc][0], point[:loc][1]], units: :km
+        ) rescue 0.0
         point[:state] = item.state
         point[:event_id] = item.id
         point
@@ -477,30 +486,31 @@ class Chat::LineBot::Service
 
     @facility_points = []
     Event::Page.site(@cur_site).and_public.map do |event|
-      if event.facility_ids.present? && event.map_points.blank?
-        item = Facility::Node::Page.site(@cur_site).and_public.find(event.facility_ids).first
-        maps = Facility::Map.site(@cur_site).and_public.
-          where(filename: /\A#{::Regexp.escape(item.filename)}\//, depth: item.depth + 1).
-          where(
-            map_points: {
-              "$elemMatch" => {
-                "loc" => {
-                  "$geoWithin" => { "$centerSphere" => [ @loc, @radius / EARTH_RADIUS_KM ] }
-                }
+      next unless event.facility_ids.present? && event.map_points.blank?
+      item = Facility::Node::Page.site(@cur_site).and_public.find(event.facility_ids).first
+      maps = Facility::Map.site(@cur_site).and_public.
+        where(filename: /\A#{::Regexp.escape(item.filename)}\//, depth: item.depth + 1).
+        where(
+          map_points: {
+            "$elemMatch" => {
+              "loc" => {
+                "$geoWithin" => { "$centerSphere" => [ @loc, @radius / EARTH_RADIUS_KM ] }
               }
             }
-          ).to_a
-        maps.each do |map|
-          points = map.map_points.map do |point|
-            point[:event_url] = event.url
-            point[:distance] = ::Geocoder::Calculations.distance_between(@loc, [point[:loc][0], point[:loc][1]], units: :km) rescue 0.0
-            point[:state] = event.state
-            point[:event_id] = event.id
-            point
-          end
-          @facility_points << points.flatten
-          @facility_points.flatten!
+          }
+        ).to_a
+      maps.each do |map|
+        points = map.map_points.map do |point|
+          point[:event_url] = event.url
+          point[:distance] = ::Geocoder::Calculations.distance_between(
+            @loc, [point[:loc][0], point[:loc][1]], units: :km
+          ) rescue 0.0
+          point[:state] = event.state
+          point[:event_id] = event.id
+          point
         end
+        @facility_points << points.flatten
+        @facility_points.flatten!
       end
     end
     @markers << @facility_points
@@ -516,9 +526,9 @@ class Chat::LineBot::Service
     search_events(event)
     if @markers.empty?
       client.reply_message(event['replyToken'], {
-        "type": "text",
-        "text": I18n.t("chat.line_bot.service.no_event")
-      })
+                             "type": "text",
+                             "text": I18n.t("chat.line_bot.service.no_event")
+                           })
     else
       columns = []
       domain = @cur_site.domains.first
