@@ -3,6 +3,7 @@ class Gws::Circular::Comment
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
+  include Gws::Addon::Circular::BrowsingAuthority
   include Gws::Addon::GroupPermission
 
   store_in collection: "gws_circular_posts"

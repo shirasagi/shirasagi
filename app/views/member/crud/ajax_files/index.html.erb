@@ -1,43 +1,7 @@
 <%= jquery do %>
-
-  SS.ajaxForm("form.user-file", {
-    success: function () {
-      $("#cboxLoadedContent").load("<%= url_for(action: :index) %>");
-    }
-  });
-
-  SS.ajax(".user-files .select", {
-    success: function (data) {
-      var dataFileId = $('<div>' + data + '</div>').find("[data-file-id]").attr("data-file-id");
-      if (dataFileId) {
-        $("#selected-files .file-view[data-file-id='" + dataFileId + "']").remove();
-      }
-      $("#selected-files").append(data);
-      $.colorbox.close();
-    }
-  });
-
-  SS.ajaxDelete(".user-files .delete");
-
-  var $el = $("#ajax-box");
-  $el.find(".pagination a").on("click", function (ev) {
-    $el.find(".pagination").html(SS.loading);
-
-    $.ajax({
-      url: $(this).attr("href"),
-      type: "GET",
-      success: function (data) {
-        $el.closest("#cboxLoadedContent").html(data);
-      },
-      error: function (data, status) {
-        $el.find(".pagination").html("== Error ==");
-      }
-    });
-
-    ev.preventDefault();
-    return false;
-  });
-
+  SS_AjaxFile.errors.entityTooLarge = "<%= I18n.t('errors.messages.request_entity_too_large') %>";
+  new SS_AjaxFile(null, { indexPath: "<%= url_for(action: :index, file_size: params[:file_size]) %>" });
+  SS_SearchUI.modal();
 <% end %>
 
 <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
@@ -56,6 +20,7 @@
 <div class="index user-files">
   <% @items.each do |item| %>
   <article class="file-view" id="user-file<%= item.id %>" data-file-id="<%= item.id %>">
+    <%= sanitizer_status(item) %>
     <a class="thumb select" href="<%= url_for action: :select, id: item %>">
       <% if item.image? %>
       <img src="<%= url_for(action: :thumb, id: item, _: item.updated.to_i) %>" alt="<%= item.basename %>" />

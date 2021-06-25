@@ -248,4 +248,44 @@ describe Fs do
       expect(grid_fs.glob("#{tmpdir}/spec/**/*")).to eq [ "#{tmpdir}/spec/fs/logo.png"[1..-1] ]
     end
   end
+
+  describe '.same_data?' do
+    it do
+      expect(Fs.same_data?("#{Rails.root}/spec/fixtures/ss/logo.png", data)).to be_truthy
+
+      expect(Fs.same_data?("#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif", data)).to be_falsey
+      expect(Fs.same_data?("#{Rails.root}/spec/fixtures/ss/#{unique_id}.png", data)).to be_falsey
+    end
+  end
+
+  describe ".write_data_if_modified" do
+    context "when binary is given" do
+      it do
+        path = "#{tmpdir}/spec/fs/#{unique_id}.png"
+
+        expect(Fs.exists?(path)).to be_falsey
+        expect(Fs.write_data_if_modified(path, data)).to be_truthy
+        expect(Fs.exists?(path)).to be_truthy
+
+        # 2nd attempt
+        expect(Fs.write_data_if_modified(path, data)).to be_falsey
+        expect(Fs.exists?(path)).to be_truthy
+      end
+    end
+
+    context "when text is given" do
+      it do
+        data = "<html></html>"
+        path = "#{tmpdir}/spec/fs/#{unique_id}.html"
+
+        expect(Fs.exists?(path)).to be_falsey
+        expect(Fs.write_data_if_modified(path, data)).to be_truthy
+        expect(Fs.exists?(path)).to be_truthy
+
+        # 2nd attempt
+        expect(Fs.write_data_if_modified(path, data)).to be_falsey
+        expect(Fs.exists?(path)).to be_truthy
+      end
+    end
+  end
 end

@@ -18,4 +18,51 @@
 %>
 <%= jquery do %>
   var workflowApprover = new SS_WorkflowApprover(<%== js_options.to_json %>);
+
+  <% if @ss_mode == :cms %>
+  var linePostConfirm = function() {
+    var linePostEnabled, lineTokenEnabled, linePosted, lineAutoPost;
+
+    linePostEnabled = <%== @item.class.include?(Cms::Addon::LinePoster) %>;
+    lineTokenEnabled = <%== @cur_site.line_token_enabled? %>
+    lineAutoPost = $('[name="item[line_auto_post]"]').length && ($('[name="item[line_auto_post]"]').val() == "active");
+
+    <% item = (@item.respond_to?(:master) && @item.master) ? @item.master : @item %>
+    linePosted = <%== item.respond_to?(:line_posted) && item.line_posted.present? %>;
+
+    if (!linePostEnabled) { return false; }
+    if (!lineTokenEnabled) { return false; }
+    if (!lineAutoPost) { return false; }
+    if (linePosted) { return false; }
+    return true;
+  };
+
+  var twitterPostConfirm = function() {
+    var twitterPostEnabled, twitterAutoPost, twitterPosted, editAutoPost;
+
+    twitterPostEnabled = <%== @item.class.include?(Cms::Addon::TwitterPoster) %>;
+    twitterAutoPost = $('[name="item[twitter_auto_post]"]').length && ($('[name="item[twitter_auto_post]"]').val() == "active");
+
+    <% item = (@item.respond_to?(:master) && @item.master) ? @item.master : @item %>
+    twitterPosted = <%== item.respond_to?(:twitter_posted) && item.twitter_posted.present? %>;
+
+    if (!twitterPostEnabled) { return false; }
+    if (!twitterAutoPost) { return false; }
+    if (twitterPosted) { return false; }
+    return true;
+  };
+
+  $(".publish_save").data("sns-post-confirmation", function() {
+    var messages
+
+    messages = [];
+    if (linePostConfirm()) {
+      messages.push("<%= t("cms.confirm.line_post_enabled") %>")
+    }
+    if (twitterPostConfirm()) {
+      messages.push("<%= t("cms.confirm.twitter_post_enabled") %>")
+    }
+    return messages;
+  });
+  <% end %>
 <% end %>

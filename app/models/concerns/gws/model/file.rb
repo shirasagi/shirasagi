@@ -5,6 +5,7 @@ module Gws::Model::File
   include SS::Reference::User
   include SS::FileFactory
   include SS::ExifGeoLocation
+  include SS::UploadPolicy
   include ActiveSupport::NumberHelper
 
   attr_accessor :in_file, :resizing
@@ -35,6 +36,7 @@ module Gws::Model::File
     validates :filename, presence: true, if: ->{ in_file.blank? && in_files.blank? }
     validates :content_type, presence: true
     validate :validate_filename, if: -> { filename.present? }
+    validate :validate_upload_policy, if: ->{ in_file.present? }
     validates_with SS::FileSizeValidator, if: ->{ size.present? }
 
     before_save :mangle_filename
@@ -232,6 +234,8 @@ module Gws::Model::File
     Fs.mkdir_p(dir) unless Fs.exists?(dir)
 
     run_callbacks(:_save_file) do
+      return if sanitizer_save_file
+
       SS::ImageConverter.attach(in_file, ext: ::File.extname(in_file.original_filename)) do |converter|
         converter.apply_defaults!(resizing: resizing)
         Fs.upload(path, converter.to_io)

@@ -20,6 +20,7 @@ module SS::Model::Site
     field :https, type: String, default: "disabled"
     field :mypage_scheme, type: String, default: 'http'
     field :mypage_domain, type: String
+    field :upload_policy, type: String
     embeds_ids :groups, class_name: "SS::Group"
     belongs_to :parent, class_name: "SS::Site"
 
@@ -115,6 +116,10 @@ module SS::Model::Site
         %w(http http),
         %w(https https),
       ]
+    end
+
+    def upload_policy_options
+      SS::UploadPolicy.upload_policy_options
     end
 
     private

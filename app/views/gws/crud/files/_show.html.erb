@@ -5,7 +5,7 @@
   <% end %>
 
   <dt><%= @model.t :filename %></dt>
-  <dd><%= @item.send :name %></dd>
+  <dd><%= @item.send :name %><%= sanitizer_status(@item) %></dd>
 
   <dt><%= @model.t :download %></dt>
   <dd><%= link_to t('ss.links.download'), { action: :download }, { class: "btn" } %></dd>

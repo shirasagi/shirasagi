@@ -13,6 +13,8 @@ module Opendata::ListHelper
       h << capture(&block)
     else
       @items.each do |item|
+        item.cur_site = @cur_site if item.respond_to?(:cur_site=) && item.site_id == @cur_site.id
+
         if cur_item.loop_setting.present?
           ih = item.render_template(cur_item.loop_setting.html, self)
         elsif cur_item.loop_html.present?

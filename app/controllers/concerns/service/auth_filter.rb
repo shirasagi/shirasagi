@@ -28,6 +28,6 @@ module Service::AuthFilter
   def unset_user(opt = {})
     session[:service_account] = nil
     redirect_to service_login_path if opt[:redirect]
-    @cur_user = nil
+    @cur_user = SS.current_user = nil
   end
 end

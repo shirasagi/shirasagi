@@ -83,7 +83,7 @@ GEM
     ast (2.4.0)
     autosize-rails (1.18.17)
       rails (>= 3.1)
-    bindata (2.4.4)
+    bindata (2.4.10)
     binding_of_caller (0.8.0)
       debug_inspector (>= 0.0.1)
     bootsnap (1.4.6)
@@ -271,6 +271,7 @@ GEM
       railties (>= 3.2.16)
     js_cookie_rails (2.2.0)
       railties (>= 3.1)
+    json (2.5.1)
     json-jwt (1.11.0)
       activesupport (>= 4.2)
       aes_key_wrap
@@ -298,7 +299,7 @@ GEM
       kramdown (~> 2.0)
     levenshtein (0.2.2)
     libv8 (7.3.492.27.1)
-    line-bot-api (1.13.0)
+    line-bot-api (1.19.0)
     link_header (0.0.8)
     liquid (4.0.1)
     listen (3.1.5)
@@ -374,6 +375,9 @@ GEM
       oauth2 (~> 1.1)
       omniauth (>= 1.1.1)
       omniauth-oauth2 (>= 1.6)
+    omniauth-line (0.1.0)
+      json (>= 2.3.0)
+      omniauth-oauth2 (~> 1.3)
     omniauth-oauth (1.1.0)
       oauth
       omniauth (~> 1.0)
@@ -556,8 +560,6 @@ GEM
       faraday (~> 0.9)
       jwt (>= 1.5, < 3.0)
       multi_json (~> 1.10)
-    simple_captcha2 (0.4.3)
-      rails (>= 4.1)
     simple_oauth (0.3.1)
     simplecov (0.20.0)
       docile (~> 1.1)
@@ -717,6 +719,7 @@ DEPENDENCIES
   omniauth-facebook
   omniauth-github
   omniauth-google-oauth2
+  omniauth-line
   omniauth-rails_csrf_protection
   omniauth-twitter
   omniauth-yahoojp
@@ -747,7 +750,6 @@ DEPENDENCIES
   scss_lint
   sdoc
   selenium-webdriver
-  simple_captcha2
   simplecov
   simplecov-csv
   simplecov-html

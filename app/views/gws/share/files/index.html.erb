@@ -12,6 +12,7 @@
 <% end %>
 
 <% @index_title = proc do |item| %>
+  <%= sanitizer_status(item) %>
   <% opts = params[:folder] ? { id: item, folder: params[:folder] } : { id: item } %>
   <%= link_to opts.merge(action: :show), class: "title" do %>
     <i class="material-icons md-18 md-dark title-icon">&#xE24D;</i>

@@ -1,7 +1,7 @@
 class Inquiry::Agents::Nodes::FormController < ApplicationController
   include Cms::NodeFilter::View
-  include SimpleCaptcha::ControllerHelpers
   include Cms::ForMemberFilter::Node
+  include SS::CaptchaFilter
   helper Inquiry::FormHelper
 
   before_action :check_release_state, only: [:new, :confirm, :create, :sent, :results], if: ->{ !@preview }
@@ -118,10 +118,8 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       return
     end
 
-    if @cur_node.captcha_enabled?
-      @answer.captcha = params[:answer].try(:[], :captcha)
-      @answer.captcha_key = params[:answer].try(:[], :captcha_key)
-      unless @answer.valid_with_captcha?
+    if @cur_node.captcha_enabled? && get_captcha[:captcha_error].nil?
+      unless is_captcha_valid?(@answer)
         render action: :confirm
         return
       end
@@ -172,7 +170,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   end
 
   def results
-    @cur_node.name = "#{@cur_node.name}　#{I18n.t("inquiry.result")}"
+    @cur_node.name = "#{@cur_node.name} #{I18n.t("inquiry.result")}"
     @aggregation = @cur_node.aggregate_select_columns
     render action: :results
   end

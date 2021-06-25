@@ -3,6 +3,7 @@ require "open3"
 class Voice::MainController < ApplicationController
   before_action :purge_pending_tasks
   before_action :check_voice_disable
+  before_action :check_bot_access
   before_action :set_url
   before_action :lock_voice_file
 
@@ -16,6 +17,12 @@ class Voice::MainController < ApplicationController
   def check_voice_disable
     # raise "404" if SS.config.voice.disable
     if SS.config.voice.disable
+      head :not_found
+    end
+  end
+
+  def check_bot_access
+    if browser.bot?
       head :not_found
     end
   end

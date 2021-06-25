@@ -1,15 +1,4 @@
-<%
-  if @item.center_setting == "designated_location" && @item.set_center_position.present?
-
-    set_center_position = @item.set_center_position
-  end
-
-  if @item.zoom_setting == "designated_level" && @item.set_zoom_level.present?
-    set_zoom_level = @item.set_zoom_level
-  end
-%>
-
-<%= render_member_photo_form_map "#map-canvas", site: @cur_site, markers: @item.map_points, map: { zoom: @item.map_zoom_level, set_center_position: set_center_position, set_zoom_level: set_zoom_level }, preview: @preview %>
+<%= render_member_photo_form_map "#map-canvas", site: @cur_site, map: @item.map_options, markers: @item.map_points %>
 
 <div class="mod-map">
   <%= f.hidden_field :map_zoom_level %>

@@ -25,7 +25,8 @@ addons:
   apt:
     packages:
       - imagemagick
-      - libmagick++-dev
+      - graphicsmagick
+      - gsfonts
       - sox
       - libsox-dev
       - lame
@@ -60,6 +61,7 @@ before_install:
   - docker run --name mongo -d -p 27017:27017 mongo:4.4
   - docker run --name test_mail -d -p 10143:143 -p 10587:587 shirasagi/mail
   - docker ps -a
+  - fc-list || true
 
 install: # bash .travis.d/install.sh
   - bash .travis.d/exec.sh install 20-mecab

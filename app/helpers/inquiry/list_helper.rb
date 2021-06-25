@@ -17,28 +17,30 @@ module Inquiry::ListHelper
     ih << "</thead>"
     ih << "<tbody>"
     @items.each do |item|
+      item.cur_site = @cur_site if item.respond_to?(:cur_site=)
+
       ih << "<tr>"
       ih << "<td>"
       name = item.index_name.presence || item.name
       if item.reception_enabled?
-        ih << "#{link_to name, item.url}"
+        ih << link_to(name, item.url)
       else
-        ih << "#{name}"
+        ih << name
       end
       ih << "</td>"
       ih << "<td>"
       if item.reception_start_date.present?
-        ih << "#{item.reception_start_date.strftime(t("date.formats.long"))}"
-        ih << "#{t "inquiry.from"}"
-        ih << "#{item.reception_close_date.strftime(t("date.formats.long"))}"
+        ih << item.reception_start_date.strftime(t("date.formats.long"))
+        ih << t("inquiry.from")
+        ih << item.reception_close_date.strftime(t("date.formats.long"))
       end
       ih << "</td>"
       if show_aggregation
         ih << "<td>"
         if item.aggregation_enabled?
-          ih << "#{link_to t("inquiry.aggregate"), "#{item.url}results.html"}"
+          ih << link_to(t("inquiry.aggregate"), "#{item.url}results.html")
         else
-          ih << "#{t("inquiry.aggregate")}"
+          ih << t("inquiry.aggregate")
         end
         ih << "</td>"
       end
@@ -87,6 +89,8 @@ module Inquiry::ListHelper
         h << default_loop_html
       else
         @items.each do |item|
+          item.cur_site = @cur_site if item.respond_to?(:cur_site=) && item.site_id == @cur_site.id
+
           ih = cur_item.render_loop_html(item, html: loop_html)
           ih.gsub!('#{current}', current_url?(item.url).to_s)
           h << ih

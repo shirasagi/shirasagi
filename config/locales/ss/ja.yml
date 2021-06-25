@@ -103,6 +103,7 @@ ja:
       send_email: メールを作成する
       send_message: メッセージを作成する
       copy_email_address: メールアドレスをコピー
+      reset_posted: 未投稿に戻す
     buttons:
       save: 保存
       new: 新規作成
@@ -173,6 +174,7 @@ ja:
       send: 送信してよろしいですか？
       publish: 公開してよろしいですか？
       depublish: 非公開にしてよろしいですか？
+      reset_posted: 未投稿状態に戻してもよろしいですか？
     notice:
       saved: 保存しました。
       deleted: 削除しました。
@@ -205,6 +207,7 @@ ja:
       unset_seen_all: 未読にしました。
       set_star_all: スターをつけました。
       unset_star_all: スターをはずしました。
+      reset_posted: 未投稿に戻しました。
 
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
@@ -219,6 +222,8 @@ ja:
       import:
         blank_file: ファイルを入力してください。
         invalid_file_type: 不正なファイル形式です。
+      sanitizer:
+        wait: ファイルを無害化しています。しばらく時間をおいてから再度お試しください。
     apis:
       groups:
         index: グループを選択する
@@ -377,6 +382,15 @@ ja:
       gws_use:
         disabled: 使用しない
         enabled: 使用する
+      upload_policy:
+        default_none: 既定 (制限なし)
+        default_sanitizer: 既定 (無害化)
+        default_restricted: 既定 (アップロード拒否)
+        sanitizer: 無害化
+        restricted: アップロード拒否
+      sanitizer_state:
+        wait: 無害化中
+        complete: 無害化済
 
     tasks:
       started: 開始しました。
@@ -409,7 +423,6 @@ ja:
       ss/facebook_setting: Facebook設定
       ss/twitter_setting: Twitter設定
       ss/line_setting: Line設定
-      ss/site_auto_post_setting: SNS自動投稿設定
       ss/approve_setting: 承認設定
       ss/editor_setting: エディタ設定
       ss/mail_setting: メール設定
@@ -491,6 +504,7 @@ ja:
         mypage_domain: マイページドメイン
         group_ids: グループ
         domains_with_subdir: サブディレクトリを含めたドメイン
+        upload_policy: アップロード制限
       ss/model/user:
         name: 氏名
         kana: カナ
@@ -546,6 +560,7 @@ ja:
         expiration_date: 有効期限（終了）
         domains: ドメイン
         gws_use: グループウェアの使用
+        upload_policy: アップロード制限
       ss/user_group_history:
         created: 異動日時
         cms_site_id: CMSサイト
@@ -640,10 +655,6 @@ ja:
       ss/addon/line_setting:
         line_channel_secret: チャンネルシークレット
         line_channel_access_token: チャンネルアクセストークン
-      ss/addon/site_auto_post_setting:
-        site_twitter_auto_post: Twitter自動投稿
-        site_sns_auto_delete: 非公開時に投稿を削除
-        site_edit_auto_post: 編集時に自動投稿
       ss/addon/file_setting:
         file_resizing: 添付ファイルリサイズ
         file_resizing_width: 幅
@@ -770,6 +781,9 @@ ja:
         inquiry_form_id: お問い合わせフォーム
 
   tooltip:
+    ss/model/site:
+      upload_policy:
+        - ファイルアップロード時の動作を設定します。
     ss/model/user:
       name:
         - ユーザーの名称を入力します。
@@ -837,6 +851,8 @@ ja:
       gws_use:
         - グループウェアを使用するかどうかを指定します。
         - 既定では、グループウェアを使用します。
+      upload_policy:
+        - ファイルアップロード時の動作を設定します。
     ss/document:
       title:
         - ページのタイトルに利用し、ブラウザのタイトルバーに表示されます。
@@ -1046,13 +1062,6 @@ ja:
       line_channel_access_token:
         - Lineのチャンネルアクセストークンを設定します。
         - Lineとの連携に必須です。
-    ss/addon/site_auto_post_setting:
-      site_twitter_auto_post:
-        - Twitterへの自動投稿の設定を行います。
-      site_sns_auto_delete:
-        - 記事非公開時にSNSへ投稿した内容を削除します。
-      site_edit_auto_post:
-        - 記事編集時の自動投稿の設定を行います。
     ss/addon/file_setting:
       file_resizing:
         - ページの添付ファイル（アップロード）のリサイズにてデフォルトサイズを設定できます。

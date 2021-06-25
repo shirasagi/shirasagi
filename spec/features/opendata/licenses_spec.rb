@@ -32,7 +32,7 @@ describe "opendata_licenses", type: :feature, dbscope: :example, js: true do
         wait_for_cbox do
           # click_on file.name
           expect(page).to have_css(".file-view", text: file.name)
-          first("a[data-id='#{file.id}']").click
+          click_on file.name
         end
         within "form#item-form" do
           expect(page).to have_css(".humanized-name", text: file.humanized_name)

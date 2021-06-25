@@ -56,6 +56,7 @@ class Cms::Apis::FormsController < ApplicationController
 
   def select_temp_file
     @item = SS::File.find(params[:id])
+    return render(json: [I18n.t('ss.errors.sanitizer.wait')], status: 500) if @item.sanitizer_state == 'wait'
     @item = @item.copy_if_necessary
     @form = params[:form].present? ? params[:form] : "upload"
     render layout: false

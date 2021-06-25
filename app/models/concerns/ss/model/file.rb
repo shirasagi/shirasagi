@@ -6,6 +6,7 @@ module SS::Model::File
   include SS::FileFactory
   include SS::ExifGeoLocation
   include SS::FileUsageAggregation
+  include SS::UploadPolicy
   include History::Addon::Trash
   include ActiveSupport::NumberHelper
 
@@ -39,6 +40,7 @@ module SS::Model::File
     validates :filename, presence: true, if: ->{ in_file.blank? && in_files.blank? }
     validates :content_type, presence: true, if: ->{ in_file.blank? && in_files.blank? }
     validate :validate_filename, if: ->{ filename.present? }
+    validate :validate_upload_policy, if: ->{ in_file.present? }
     validates_with SS::FileSizeValidator, if: ->{ size.present? }
 
     before_save :mangle_filename
@@ -364,6 +366,8 @@ module SS::Model::File
 
     dir = ::File.dirname(path)
     Fs.mkdir_p(dir) unless Fs.exists?(dir)
+
+    return if sanitizer_save_file
 
     SS::ImageConverter.attach(in_file, ext: ::File.extname(in_file.original_filename)) do |converter|
       converter.apply_defaults!(resizing: resizing)

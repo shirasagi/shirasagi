@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       resources :editables, concerns: [:soft_deletion], except: [:destroy] do
         match :move, on: :member, via: [:get, :post]
         match :create_my_folder, on: :collection, via: [:get, :post]
+        get :copy, on: :member
       end
     end
 

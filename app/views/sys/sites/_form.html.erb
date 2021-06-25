@@ -72,4 +72,9 @@
       </tbody>
     </table>
   </dd>
+
+  <% if SS.config.ss.upload_policy.present? %>
+  <dt><%= @model.t :upload_policy %><%= @model.tt :upload_policy %></dt>
+  <dd><%= f.select :upload_policy, @item.upload_policy_options %></dd>
+  <% end %>
 </dl>

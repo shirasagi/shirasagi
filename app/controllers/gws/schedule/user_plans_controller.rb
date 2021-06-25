@@ -41,8 +41,11 @@ class Gws::Schedule::UserPlansController < ApplicationController
       member(@user).
       search(params[:s])
 
+    todo_search = OpenStruct.new(params[:s])
+    todo_search.category_id = nil if todo_search.category_id.present?
+
     @todos = Gws::Schedule::Todo.site(@cur_site).without_deleted.
       member(@user).
-      search(params[:s])
+      search(todo_search)
   end
 end

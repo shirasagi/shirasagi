@@ -4,7 +4,8 @@ class Cms::Node
   include Cms::Addon::NodeSetting
   include Cms::Addon::EditorSetting
   include Cms::Addon::GroupPermission
-  include Cms::Addon::NodeAutoPostSetting
+  include Cms::Addon::NodeTwitterPostSetting
+  include Cms::Addon::NodeLinePostSetting
   include Cms::Addon::ForMemberNode
 
   index({ site_id: 1, filename: 1 }, { unique: true })
@@ -20,7 +21,8 @@ class Cms::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
     include Cms::Addon::EditorSetting
-    include Cms::Addon::NodeAutoPostSetting
+    include Cms::Addon::NodeTwitterPostSetting
+    include Cms::Addon::NodeLinePostSetting
     include Cms::Addon::NodeList
     include Cms::Addon::ChildList
     include Cms::Addon::ForMemberNode
@@ -36,7 +38,8 @@ class Cms::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
     include Cms::Addon::EditorSetting
-    include Cms::Addon::NodeAutoPostSetting
+    include Cms::Addon::NodeTwitterPostSetting
+    include Cms::Addon::NodeLinePostSetting
     include Event::Addon::PageList
     include Cms::Addon::Form::Node
     include Cms::Addon::Release
@@ -73,6 +76,8 @@ class Cms::Node
     include History::Addon::Backup
 
     default_scope ->{ where(route: "cms/archive") }
+
+    self.use_no_archive_html = false
   end
 
   class GroupPage

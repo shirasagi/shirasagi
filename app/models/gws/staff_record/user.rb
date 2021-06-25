@@ -136,13 +136,15 @@ class Gws::StaffRecord::User
     %w(
       id name code order kana multi_section section_name title_ids tel_ext
       charge_name charge_address charge_tel divide_duties remark staff_records_view divide_duties_view
-      group_ids user_ids permission_level
+      group_ids user_ids
     )
   end
 
   def export_convert_item(item, data)
     # multi_section
     data[5] = item.label(:multi_section)
+    # title_ids
+    data[7] = item.titles.pluck(:code).join("\n")
     # staff_records_view
     data[14] = item.label(:staff_records_view)
     # divide_duties_views
@@ -156,14 +158,25 @@ class Gws::StaffRecord::User
   end
 
   def import_convert_data(data)
+    # multi_section
     regular = I18n.t("gws/staff_record.options.multi_section.regular")
     data[:multi_section] = (data[:multi_section] == regular) ? 'regular' : 'plural'
 
+    # title_ids
+    user_titles = Gws::StaffRecord::UserTitle.site(@cur_site)
+    user_titles = user_titles.where(year_id: self.year_id)
+    user_titles = user_titles.in(code: data[:title_ids])
+    data[:title_ids] = user_titles.pluck(:id)
+
+    # staff_records_view
     show = I18n.t("ss.options.state.show")
     data[:staff_records_view] = (data[:staff_records_view] == show) ? 'show' : 'hide'
+    # divide_duties_views
     data[:divide_duties_view] = (data[:divide_duties_view] == show) ? 'show' : 'hide'
 
+    # group_ids
     data[:group_ids] = Gws::Group.site(@cur_site).active.in(name: data[:group_ids]).pluck(:id)
+    # user_ids
     data[:user_ids] = Gws::User.site(@cur_site).active.in(uid: data[:user_ids]).pluck(:id)
 
     data

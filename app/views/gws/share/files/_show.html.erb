@@ -15,7 +15,7 @@
   <% end %>
 
   <dt><%= @model.t :filename %></dt>
-  <dd><%= @item.send :name %></dd>
+  <dd><%= @item.send :name %><%= sanitizer_status(@item) %></dd>
 
   <dt><%= @model.t :file_size %></dt>
   <dd><%= tryb { @item.number_to_human_size(@item.size)} %></dd>

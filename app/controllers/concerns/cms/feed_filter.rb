@@ -4,8 +4,8 @@ module Cms::FeedFilter
 
   private
 
-  def render_rss(node, items)
-    rss = RSS::Maker.make("2.0") do |rss|
+  def _render_rss(node, items)
+    RSS::Maker.make("2.0") do |rss|
       summary = nil
       %w(description name).each do |m|
         summary = node.send(m) if summary.blank? && node.respond_to?(m)
@@ -37,7 +37,10 @@ module Cms::FeedFilter
         end
       end
     end
+  end
 
+  def render_rss(node, items)
+    rss = _render_rss(node, items)
     render xml: rss.to_xml, content_type: "application/rss+xml"
   end
 
