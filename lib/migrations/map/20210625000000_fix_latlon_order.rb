@@ -1,7 +1,7 @@
-class SS::Migration20200318000000
+class SS::Migration20210625000000
   include SS::Migration::Base
 
-  depends_on "20200204000001"
+  depends_on "20210622000000"
 
   def change
     ids = Cms::Page.pluck(:id)
@@ -18,10 +18,8 @@ class SS::Migration20200318000000
           lat = map_point["loc"][0]
           lon = map_point["loc"][1]
           map_point["loc"] = [lon, lat] if lat < lon
-          map_point
-        else
-          map_point
         end
+        map_point
       end
       item.set(map_points: map_points)
     end

@@ -1,7 +1,7 @@
 require 'spec_helper'
-require Rails.root.join("lib/migrations/map/20200318000000_fix_latlon_order.rb")
+require Rails.root.join("lib/migrations/map/20210625000000_fix_latlon_order.rb")
 
-RSpec.describe SS::Migration20200318000000, dbscope: :example do
+RSpec.describe SS::Migration20210625000000, dbscope: :example do
   let(:node)   { create :facility_node_search, layout_id: layout.id, filename: "node" }
   let(:item) { create :facility_node_page, filename: "node/item" }
   let!(:map1) do
