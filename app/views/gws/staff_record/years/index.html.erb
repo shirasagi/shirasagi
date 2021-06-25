@@ -4,7 +4,10 @@
 
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
-  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <% if item.updated %>
+    <%# 滅多なことでは updated は nil にはならないが、過去の電子職員録のインポートで nil になる可能性があるので nil チェックを入れてから表示する %>
+    <span class="datetime"><%= I18n.l(item.updated, format: :picker) %></span>
+  <% end %>
 
   <% if Gws::StaffRecord::Group.allowed?(:read, @cur_user, site: @cur_site) %>
     <span>
