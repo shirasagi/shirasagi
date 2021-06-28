@@ -79,3 +79,4 @@ jobs:
         allow_open_jtalk: 1
         LDAP_TEST: enable
         ANALYZE_COVERAGE: disabled
+        TZ: "Asia/Tokyo"
