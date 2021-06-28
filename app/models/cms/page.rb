@@ -51,10 +51,4 @@ class Cms::Page
       end
     end
   end
-
-  def new_size_input
-    html = self.try(:render_html).presence || self.try(:html)
-    file_bytesize = SS::File.where(owner_item_type: self.class.name, owner_item_id: self.id).sum(:size)
-    self.set(size: html.try(:bytesize).to_i + file_bytesize)
-  end
 end
