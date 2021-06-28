@@ -20,5 +20,16 @@ module Map::Addon
         end
       end
     end
+
+    def map_options
+      options = {}
+      if center_setting == "designated_location" && set_center_position.present?
+        options[:center] = set_center_position.split(",").map(&:to_f)
+      end
+      if zoom_setting == "designated_level" && set_zoom_level.present?
+        options[:zoom] = set_zoom_level
+      end
+      options
+    end
   end
 end

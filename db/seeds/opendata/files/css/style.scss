@@ -850,6 +850,13 @@ textarea {
     float: left;
     margin-right: $item-margin;
   }
+  .fb-like {
+    margin: 0 0 0 -15px;
+  }
+  .fb-share {
+    margin-right: 5px;
+    margin-top: -1px;
+  }
 }
 // -----------------------------------------------------------------------------
 // count
@@ -932,9 +939,7 @@ textarea {
     }
   }
 }
-.opendata-search-apps {
-  border: 2px solid $green;
-}
+
 .opendata-search-ideas-form {
   border: 2px solid $yellow;
 }

@@ -138,7 +138,7 @@ this.Board_Map = (function () {
       opts = {};
     }
     if (!this.markerFeature) {
-      src = '/assets/img/map-marker.png';
+      src = Googlemaps_Map.markerIcon;
       if (this.opts['image']) {
         src = this.opts['image'];
       }
@@ -177,7 +177,7 @@ this.Board_Map = (function () {
     if (opts == null) {
       opts = {};
     }
-    src = '/assets/img/map-marker.png';
+    src = Googlemaps_Map.markerIcon;
     if (opts['image']) {
       src = opts['image'];
     }

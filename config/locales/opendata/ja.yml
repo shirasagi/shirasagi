@@ -211,6 +211,8 @@ ja:
       comment_invite_start: コメントしたい場合には
       comment_invite_end: してください
       not_exist: 存在しません
+      no_related_dataset: 関連データセットはありません。
+      no_related_app: 関連アプリはありません。
       not_data: 該当するデータは登録されていません
       delete_comment: コメントは削除されました
       request_comment: コメントは承認待ちです
