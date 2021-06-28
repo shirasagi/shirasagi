@@ -163,7 +163,6 @@ this.Googlemaps_Map = (function () {
         Googlemaps_Map.attachMessage(id);
       }
     });
-
     Googlemaps_Map.adjustMarkerBounds(Googlemaps_Map.markers.length, markerBounds);
   };
 
@@ -173,6 +172,7 @@ this.Googlemaps_Map = (function () {
       suppressInfoWindows: true,
       preserveViewport: false
     });
+    Googlemaps_Map.kmlLayer.setMap(Googlemaps_Map.map);
   };
 
   Googlemaps_Map.setGeoJson = function (url) {
