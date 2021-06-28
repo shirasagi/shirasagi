@@ -18,10 +18,30 @@ describe "opendata_agents_pages_idea", type: :feature, dbscope: :example, js: tr
   end
   let(:index_path) { page_idea.url }
 
+  def wait_ajax_html_loaded(points: "0", comments: true, related_datasets: true, related_apps: true)
+    ret = yield
+
+    if points
+      expect(page).to have_css(".point .count .number", text: points)
+    end
+    if comments
+      expect(page).to have_css("#idea-comments .info-wrap .comments")
+    end
+    if related_datasets
+      expect(page).to have_css("#related_dataset .dataset", text: I18n.t("opendata.labels.no_related_dataset"))
+    end
+    if related_apps
+      expect(page).to have_css("#related_app .app", text: I18n.t("opendata.labels.no_related_app"))
+    end
+
+    ret
+  end
+
   context "without login" do
     it do
-      visit index_path
-      wait_for_ajax
+      wait_ajax_html_loaded(points: "1") do
+        visit index_path
+      end
       expect(current_path).to eq index_path
 
       expect(page).to have_css("header .id", text: page_idea.id.to_s)
@@ -66,8 +86,9 @@ describe "opendata_agents_pages_idea", type: :feature, dbscope: :example, js: tr
     end
 
     it do
-      visit index_path
-      wait_for_ajax
+      wait_ajax_html_loaded(points: nil) do
+        visit index_path
+      end
 
       expect(page).to have_css("header .id", text: page_idea.id.to_s)
       expect(page).to have_css("header .name", text: page_idea.name)
@@ -111,8 +132,9 @@ describe "opendata_agents_pages_idea", type: :feature, dbscope: :example, js: tr
     end
 
     it do
-      visit index_path
-      wait_for_ajax
+      wait_ajax_html_loaded(points: "1", related_datasets: false, related_apps: false) do
+        visit index_path
+      end
 
       expect(page).to have_css("header .id", text: page_idea.id.to_s)
       expect(page).to have_css("header .name", text: page_idea.name)
