@@ -165,7 +165,9 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
     if logged_in?
       cond = { site_id: @cur_site.id, member_id: @cur_member.id, dataset_id: @dataset.id }
       Opendata::DatasetFavorite.find_or_create_by(cond)
-      redirect_to @dataset.url
+
+      location = (@dataset.url =~ /^\//) ? @dataset.url : "/"
+      redirect_to location
     end
   end
 end

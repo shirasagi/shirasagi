@@ -51,6 +51,9 @@ describe "opendata_agents_nodes_my_favorite_dataset", type: :feature, dbscope: :
       within ".mypage-content .dataset-favorite" do
         click_on I18n.t("opendata.links.add_favorite")
       end
+      within ".mypage-content .dataset-favorite" do
+        expect(page).to have_css("a", text: I18n.t("opendata.links.registered_favorite"))
+      end
 
       visit index_url
       within "table.opendata-datasets" do

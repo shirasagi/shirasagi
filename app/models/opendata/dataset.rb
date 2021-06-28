@@ -145,7 +145,8 @@ class Opendata::Dataset
 
   class << self
     def to_dataset_path(path)
-      suffix = %w(/point.html /point/members.html /apps/show.html /ideas/show.html /favorite.html).find { |suffix| path.end_with? suffix }
+      api_paths = %w(/point.html /point/members.html /apps/show.html /ideas/show.html /favorite.html)
+      suffix = api_paths.find { |api_path| path.end_with? api_path }
       return path if suffix.blank?
       path[0..(path.length - suffix.length - 1)] + '.html'
     end
