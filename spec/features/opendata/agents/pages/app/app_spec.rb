@@ -28,6 +28,22 @@ describe "opendata_agents_pages_app", type: :feature, dbscope: :example, js: tru
     logout_opendata_member(site, node_login)
   end
 
+  def wait_ajax_html_loaded(points: "0", ideas: true, executed: "0")
+    ret = yield
+
+    if points
+      expect(page).to have_css(".point .count .number", text: points)
+    end
+    if ideas
+      expect(page).to have_css(".app-ideas .detail .app-ideas")
+    end
+    if executed
+      expect(page).to have_css("#executed", text: executed)
+    end
+
+    ret
+  end
+
   context "show url app" do
     let!(:node_search_dataset) { create(:opendata_node_search_dataset, cur_site: site, layout_id: layout.id) }
     let(:node_ds) { create :opendata_node_dataset, cur_site: site, basename: "opendata_dataset1", layout_id: layout.id }
@@ -40,7 +56,9 @@ describe "opendata_agents_pages_app", type: :feature, dbscope: :example, js: tru
 
     context "with default options" do
       it do
-        visit app.full_url
+        wait_ajax_html_loaded(executed: nil) do
+          visit app.full_url
+        end
         expect(current_path).to eq app.url
         expect(page).to have_css("h1.name", text: app.name)
         expect(page).to have_css(".side-right .point .count")
@@ -72,7 +90,9 @@ describe "opendata_agents_pages_app", type: :feature, dbscope: :example, js: tru
       end
 
       it do
-        visit app.full_url
+        wait_ajax_html_loaded(points: nil, executed: nil) do
+          visit app.full_url
+        end
         expect(current_path).to eq app.url
         expect(page).to have_css("h1.name", text: app.name)
         expect(page).to have_no_css(".side-right .point", visible: false)
@@ -91,7 +111,9 @@ describe "opendata_agents_pages_app", type: :feature, dbscope: :example, js: tru
       end
 
       it do
-        visit app.full_url
+        wait_ajax_html_loaded(executed: nil) do
+          visit app.full_url
+        end
         expect(current_path).to eq app.url
         expect(page).to have_css("h1.name", text: app.name)
         expect(page).to have_css(".detail #tabs .names #url")
@@ -114,7 +136,9 @@ describe "opendata_agents_pages_app", type: :feature, dbscope: :example, js: tru
       end
 
       it do
-        visit app.full_url
+        wait_ajax_html_loaded(ideas: false, executed: nil) do
+          visit app.full_url
+        end
         expect(current_path).to eq app.url
         expect(page).to have_css("h1.name", text: app.name)
         expect(page).to have_css(".detail #tabs .names #url")
@@ -138,7 +162,9 @@ describe "opendata_agents_pages_app", type: :feature, dbscope: :example, js: tru
       end
 
       it do
-        visit app.full_url
+        wait_ajax_html_loaded(ideas: false, executed: nil) do
+          visit app.full_url
+        end
         expect(current_path).to eq app.url
         expect(page).to have_css("h1.name", text: app.name)
         expect(page).to have_no_css(".detail #tabs .names")
@@ -168,7 +194,9 @@ describe "opendata_agents_pages_app", type: :feature, dbscope: :example, js: tru
 
     context "with default options" do
       it do
-        visit app.full_url
+        wait_ajax_html_loaded do
+          visit app.full_url
+        end
         expect(current_path).to eq app.url
         expect(page).to have_css("h1.name", text: app.name)
         expect(page).to have_css(".side-right .point .count")
@@ -206,7 +234,9 @@ describe "opendata_agents_pages_app", type: :feature, dbscope: :example, js: tru
       end
 
       it do
-        visit app.full_url
+        wait_ajax_html_loaded(points: nil) do
+          visit app.full_url
+        end
         expect(current_path).to eq app.url
         expect(page).to have_css("h1.name", text: app.name)
         expect(page).to have_no_css(".side-right .point", visible: false)
@@ -225,7 +255,9 @@ describe "opendata_agents_pages_app", type: :feature, dbscope: :example, js: tru
       end
 
       it do
-        visit app.full_url
+        wait_ajax_html_loaded do
+          visit app.full_url
+        end
         expect(current_path).to eq app.url
         expect(page).to have_css("h1.name", text: app.name)
         expect(page).to have_no_css(".detail #tabs .names #dataset", visible: false)
@@ -246,7 +278,9 @@ describe "opendata_agents_pages_app", type: :feature, dbscope: :example, js: tru
       end
 
       it do
-        visit app.full_url
+        wait_ajax_html_loaded(ideas: false) do
+          visit app.full_url
+        end
         expect(current_path).to eq app.url
         expect(page).to have_css("h1.name", text: app.name)
         expect(page).to have_css(".detail #tabs .names #dataset")
@@ -268,7 +302,9 @@ describe "opendata_agents_pages_app", type: :feature, dbscope: :example, js: tru
       end
 
       it do
-        visit app.full_url
+        wait_ajax_html_loaded(ideas: false, executed: "1") do
+          visit app.full_url
+        end
         expect(current_path).to eq app.url
         expect(page).to have_css("h1.name", text: app.name)
         expect(page).to have_no_css(".detail #tabs .names #dataset", visible: false)
