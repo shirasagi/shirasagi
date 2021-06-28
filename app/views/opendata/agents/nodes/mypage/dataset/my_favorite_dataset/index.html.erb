@@ -13,7 +13,7 @@
       <tr>
         <td class="released"><%= @model.t :released %></td>
         <td class="name"><%= t('opendata.labels.dataset_name') %></td>
-        <td class="remove-favorite"></td>
+        <td class="favorite"></td>
       </tr>
       <% @items.each do |item| %>
         <tr>
@@ -25,7 +25,7 @@
               <%= item.name %>
             <% end %>
           </td>
-          <td class="remove-favorite">
+          <td class="favorite">
             <%= link_to t("opendata.labels.delete_favorite_dataset"), ::File.join(@cur_node.url, item.id.to_s, "remove"), class: "remove-favorite", method: "post" %>
           </td>
         </tr>
