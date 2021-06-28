@@ -12,6 +12,16 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
   let(:csv_path) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv") }
   let!(:license) { create(:opendata_license, cur_site: site) }
 
+  def wait_ajax_html_loaded
+    ret = yield
+
+    expect(page).to have_css(".point .count .number", text: "0")
+    expect(page).to have_css(".dataset-apps .detail .dataset-apps")
+    expect(page).to have_css(".dataset-ideas .detail .dataset-ideas")
+
+    ret
+  end
+
   context "public" do
     before do
       # a resource
@@ -61,7 +71,9 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
     end
 
     it "#index" do
-      visit page_dataset.full_url
+      wait_ajax_html_loaded do
+        visit page_dataset.full_url
+      end
 
       within "div#dataset-tabs-#{node_dataset.id}" do
         within "article#cms-tab-#{node_dataset.id}-0-view" do
@@ -124,7 +136,9 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
       end
 
       # Download resource1
-      visit page_dataset.full_url
+      wait_ajax_html_loaded do
+        visit page_dataset.full_url
+      end
 
       now = Time.zone.now.beginning_of_minute
       Timecop.freeze(now) do
@@ -156,7 +170,9 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
       end
 
       # Download resource2
-      visit page_dataset.full_url
+      wait_ajax_html_loaded do
+        visit page_dataset.full_url
+      end
       Timecop.freeze(now) do
         within ".resource[data-uuid='#{@rs2.uuid}']" do
           click_on I18n.t("opendata.labels.downloaded")
@@ -167,7 +183,9 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
       expect(Opendata::ResourceDownloadHistory.where(resource_id: @rs2.id).count).to eq 1
 
       # Download url resource1
-      visit page_dataset.full_url
+      wait_ajax_html_loaded do
+        visit page_dataset.full_url
+      end
       Timecop.freeze(now) do
         within ".url-resource[data-uuid='#{@urs1.uuid}']" do
           click_on I18n.t("opendata.labels.downloaded")
@@ -177,7 +195,9 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
       expect(Opendata::ResourceDownloadHistory.count).to eq 2
 
       # Download count is not increased because page renders with cached count
-      visit page_dataset.full_url
+      wait_ajax_html_loaded do
+        visit page_dataset.full_url
+      end
       within ".resource[data-uuid='#{@rs1.uuid}']" do
         expect(page).to have_css(".info .download-count", text: "0#{I18n.t("opendata.labels.time")}")
       end
@@ -187,7 +207,9 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
 
       Timecop.freeze(now + Opendata::Resource::DOWNLOAD_CACHE_LIFETIME + 1.minute) do
         # time passes and then download count cache is expired. so, download count is increased
-        visit page_dataset.full_url
+        wait_ajax_html_loaded do
+          visit page_dataset.full_url
+        end
         within ".resource[data-uuid='#{@rs1.uuid}']" do
           expect(page).to have_css(".info .download-count", text: "1#{I18n.t("opendata.labels.time")}")
         end
