@@ -146,7 +146,8 @@ production: &production
     #    n: if item's count is above n, deletes items in a job. otherwise delete items on the fly.
     in_job: 35
 
-  # 北海道庁: 移動後の URL 変更を有効にする
+  # 移動後の URL 変更を有効にする
+  # enable url replace after move.
   replace_urls_after_move: true
 
   # basic_auth: [ 'user', 'pass' ]
