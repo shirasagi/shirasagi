@@ -156,6 +156,7 @@ ja:
       restoring_share_file_from_trash: 共有ファイルに復元されます。
       generate_locked: 書き出しを停止しました。
       generate_unlocked: 書き出しの停止を解除しました。
+      over_content_quota: 使用容量を超過しているフォルダがあります。
     apis:
       categories:
         index: カテゴリーを選択する
@@ -586,6 +587,7 @@ ja:
       cms/site_search/keyword: 注目ワード
       cms/site_search/history: 履歴
       cms/line_poster: LINE連携
+      cms/content_quota: 容量制限
 
   mongoid:
     models:
@@ -1056,6 +1058,8 @@ ja:
         type: 投稿SNS
         state: ステータス
         page_id: 連携ページ
+      cms/addon/content_quota:
+        content_quota: 容量制限
 
   activemodel:
     attributes:
@@ -2186,6 +2190,13 @@ ja:
         - LINEメッセージと記事へのリンクをカルーセル形式で投稿します。
       line_text_message:
         - LINEに投稿するメッセージを入力します。
+
+    cms/addon/content_quota:
+      content_quota:
+        - フォルダーの合計容量の上限を入力します。
+        - 合計容量が超えた場合、警告が表示されます。
+        - 未設定である場合、警告は表示されません。
+        - 初期値は 未設定 です。
 
   all_content:
     page_id: ページID

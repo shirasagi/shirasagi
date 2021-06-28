@@ -44,12 +44,4 @@
   <% end %>
 </nav>
 
-<nav class="mod-navi" style="max-height: 250px; overflow: auto;">
-  <% Cms::Node.site(@cur_site).in(group_ids: @cur_user.group_ids).where(shortcut: 'show').each do |node| %>
-    <h2><%= node.name %></h2>
-    <div class="ss-quota-bar">
-      <div class="label"><%= Cms::Page.site(@cur_site).where(filename: /^#{::Regexp.escape(node.filename)}\//).sum(:size).to_s(:human_size) %></div>
-      <div class="usage" style="width: <%= 0 %>%"></div>
-    </div>
-  <% end %>
-</nav>
+<%= render partial: 'cms/agents/addons/content_quota/navi' %>
