@@ -177,10 +177,14 @@ class Gws::StaffRecord::User
     data[:multi_section] = (data[:multi_section] == regular) ? 'regular' : 'plural'
 
     # title_ids
-    user_titles = Gws::StaffRecord::UserTitle.site(@cur_site)
-    user_titles = user_titles.where(year_id: self.year_id)
-    user_titles = user_titles.in(code: data[:title_ids].split(/\R/))
-    data[:title_ids] = user_titles.pluck(:id)
+    if data[:title_ids].present?
+      user_titles = Gws::StaffRecord::UserTitle.site(@cur_site)
+      user_titles = user_titles.where(year_id: self.year_id)
+      user_titles = user_titles.in(code: data[:title_ids].split(/\R/))
+      data[:title_ids] = user_titles.pluck(:id)
+    else
+      data[:title_ids] = []
+    end
 
     # staff_records_view
     show = I18n.t("ss.options.state.show")
@@ -199,14 +203,30 @@ class Gws::StaffRecord::User
     end
     data[:readable_setting_range] = readable_setting_range
     # readable_group_ids
-    data[:readable_group_ids] = Gws::Group.site(@cur_site).active.in(name: data[:readable_group_ids].split(/\R/)).pluck(:id)
+    if group_ids = data[:readable_group_ids]
+      data[:readable_group_ids] = Gws::Group.site(@cur_site).active.in(name: group_ids.split(/\R/)).pluck(:id)
+    else
+      data[:readable_group_ids] = []
+    end
     # readable_member_ids
-    data[:readable_member_ids] = Gws::User.site(@cur_site).active.in(uid: data[:readable_member_ids].split(/\R/)).pluck(:id)
+    if user_ids = :readable_member_ids
+      data[:readable_member_ids] = Gws::User.site(@cur_site).active.in(uid: user_ids.split(/\R/)).pluck(:id)
+    else
+      data[:readable_member_ids] = []
+    end
 
     # group_ids
-    data[:group_ids] = Gws::Group.site(@cur_site).active.in(name: data[:group_ids].split(/\R/)).pluck(:id)
+    if group_ids = data[:group_ids]
+      data[:group_ids] = Gws::Group.site(@cur_site).active.in(name: group_ids.split(/\R/)).pluck(:id)
+    else
+      data[:group_ids] = []
+    end
     # user_ids
-    data[:user_ids] = Gws::User.site(@cur_site).active.in(uid: data[:user_ids].split(/\R/)).pluck(:id)
+    if user_ids = data[:user_ids]
+      data[:user_ids] = Gws::User.site(@cur_site).active.in(uid: user_ids.split(/\R/)).pluck(:id)
+    else
+      data[:user_ids] = []
+    end
 
     data
   end
