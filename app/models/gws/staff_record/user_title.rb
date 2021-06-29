@@ -47,11 +47,42 @@ class Gws::StaffRecord::UserTitle
     self.class.new(data.merge(year_id: year_id))
   end
 
+  def import_convert_data(data)
+    # group_ids
+    if group_ids = data[:group_ids]
+      data[:group_ids] = Gws::Group.site(@cur_site).active.in(name: group_ids.split(/\R/)).pluck(:id)
+    else
+      data[:group_ids] = []
+    end
+    # user_ids
+    if user_ids = data[:user_ids]
+      data[:user_ids] = Gws::User.site(@cur_site).active.in(uid: user_ids.split(/\R/)).pluck(:id)
+    else
+      data[:user_ids] = []
+    end
+
+    data
+  end
+
   def export_fields
-    %w(
-      id created updated deleted text_index code name remark order group_id
-      permission_level group_ids user_ids custom_group_ids user_uid user_name user_group_id user_group_name user_id
-      site_id year_code year_name year_id
+    fields = %w(
+      id code name remark order
+      group_ids user_ids
     )
+
+    unless SS.config.ss.disable_permission_level
+      fields << "permission_level"
+    end
+
+    fields
+  end
+
+  def export_convert_item(item, data)
+    # group_ids
+    data[5] = Gws::Group.site(@cur_site).in(id: data[5]).active.pluck(:name).join("\n")
+    # user_ids
+    data[6] = Gws::User.site(@cur_site).in(id: data[6]).active.pluck(:uid).join("\n")
+
+    data
   end
 end
