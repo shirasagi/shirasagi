@@ -69,8 +69,8 @@ module SS
     SCRIPT
 
     WAIT_CKEDITOR_READY_SCRIPT = <<~SCRIPT.freeze
-      (function(selector, resolve) {
-        var ckeditor = $(selector).ckeditor().editor;
+      (function(element, resolve) {
+        var ckeditor = $(element).ckeditor().editor;
         if (!ckeditor) {
           console.log("ckeditor is not available");
           resolve(false);
@@ -108,8 +108,8 @@ module SS
     SCRIPT
 
     HOOK_CKEDITOR_EVENT_COMPLETION = <<~SCRIPT.freeze
-      (function(promiseId, selector, eventName) {
-        var ckeditor = $(selector).ckeditor().editor;
+      (function(promiseId, element, eventName) {
+        var ckeditor = $(element).ckeditor().editor;
         var defer = $.Deferred();
         ckeditor.once(eventName, function(ev) { defer.resolve(true); ev.removeListener(); });
         window.SS[promiseId] = defer.promise();
@@ -285,8 +285,8 @@ module SS
     # Usage
     #   wait_for_ckeditor_event "item[html]"
     #
-    def wait_ckeditor_ready(locator)
-      page.evaluate_async_script(WAIT_CKEDITOR_READY_SCRIPT, "[name=\"#{locator}\"]")
+    def wait_ckeditor_ready(element)
+      page.evaluate_async_script(WAIT_CKEDITOR_READY_SCRIPT, element)
     end
 
     # CKEditor に html を設定する
@@ -303,7 +303,7 @@ module SS
       options[:visible] = :all
       element = find(:fillable_field, locator, options)
 
-      ret = wait_ckeditor_ready(locator)
+      ret = wait_ckeditor_ready(element)
       expect(ret).to be_truthy
       ret = page.evaluate_async_script(FILL_CKEDITOR_SCRIPT, element, with)
       expect(ret).to be_truthy
@@ -317,11 +317,13 @@ module SS
     #   end
     #
     def wait_for_ckeditor_event(locator, event_name)
-      ret = wait_ckeditor_ready(locator)
+      element = find(:fillable_field, locator)
+
+      ret = wait_ckeditor_ready(element)
       expect(ret).to be_truthy
 
       promise_id = "promise_#{unique_id}"
-      page.execute_script(HOOK_CKEDITOR_EVENT_COMPLETION, promise_id, "[name=\"#{locator}\"]", event_name)
+      page.execute_script(HOOK_CKEDITOR_EVENT_COMPLETION, promise_id, element, event_name)
 
       # do operations which fire events
       ret = yield
