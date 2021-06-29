@@ -49,13 +49,15 @@ class Gws::StaffRecord::UserTitle
 
   def import_convert_data(data)
     # group_ids
-    if group_ids = data[:group_ids]
+    group_ids = data[:group_ids]
+    if group_ids
       data[:group_ids] = Gws::Group.site(@cur_site).active.in(name: group_ids.split(/\R/)).pluck(:id)
     else
       data[:group_ids] = []
     end
     # user_ids
-    if user_ids = data[:user_ids]
+    user_ids = data[:user_ids]
+    if user_ids
       data[:user_ids] = Gws::User.site(@cur_site).active.in(uid: user_ids.split(/\R/)).pluck(:id)
     else
       data[:user_ids] = []

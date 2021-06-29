@@ -85,25 +85,29 @@ class Gws::StaffRecord::Seating
     end
     data[:readable_setting_range] = readable_setting_range
     # readable_group_ids
-    if group_ids = data[:readable_group_ids]
+    group_ids = data[:readable_group_ids]
+    if group_ids
       data[:readable_group_ids] = Gws::Group.site(@cur_site).active.in(name: group_ids.split(/\R/)).pluck(:id)
     else
       data[:readable_group_ids] = []
     end
     # readable_member_ids
-    if user_ids = data[:readable_member_ids]
+    user_ids = data[:readable_member_ids]
+    if user_ids
       data[:readable_member_ids] = Gws::User.site(@cur_site).active.in(uid: user_ids.split(/\R/)).pluck(:id)
     else
       data[:readable_member_ids] = []
     end
     # group_ids
-    if group_ids = data[:group_ids]
+    group_ids = data[:group_ids]
+    if group_ids
       data[:group_ids] = Gws::Group.site(@cur_site).active.in(name: group_ids.split(/\R/)).pluck(:id)
     else
       data[:group_ids] = []
     end
     # user_ids
-    if user_ids = data[:user_ids]
+    user_ids = data[:user_ids]
+    if user_ids
       data[:user_ids] = Gws::User.site(@cur_site).active.in(uid: user_ids.split(/\R/)).pluck(:id)
     else
       data[:user_ids] = []
