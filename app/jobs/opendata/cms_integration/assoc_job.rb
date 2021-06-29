@@ -45,6 +45,7 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
     return if dataset.blank?
     # dataset is alread closed
     return if dataset.state == 'closed'
+    return if dataset.resources.present?
     # auto association is disabled
     if dataset.assoc_method != 'auto'
       Rails.logger.info("#{dataset.name}: auto association is disabled")
@@ -60,9 +61,11 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
     page_html = get_page_html
     if page_html.blank?
       Rails.logger.warn("#{@cur_page.name}: html is blank")
-      return
+      #return # support for form page
     end
-    if @cur_page.files.blank?
+
+    files = @cur_page.attached_files
+    if files.blank?
       Rails.logger.warn("#{@cur_page.name}: no files are attached")
       return
     end
@@ -77,7 +80,7 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
       end
     end
 
-    @cur_page.files.each do |file|
+    files.each do |file|
       state = @cur_page.opendata_resources_state(file)
       case state
       when 'none'
@@ -98,10 +101,12 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
   end
 
   def get_page_html
-    if @cur_page.body_layout.present?
-      @page_html ||= @cur_page.body_parts.join
+    if @cur_page.class.include?(Cms::Addon::Form::Page) && @cur_page.form
+      ""
+    elsif @cur_page.body_layout.present?
+      @page_html ||= @cur_page.body_parts.join.to_s
     else
-      @page_html ||= @cur_page.html
+      @page_html ||= @cur_page.html.to_s
     end
   end
 
@@ -124,6 +129,9 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
       assoc_site_id: @cms_site.id,
       assoc_node_id: @cms_node.id,
       assoc_page_id: @cur_page.id,
+      assoc_site_ids: [@cms_site.id],
+      assoc_node_ids: [@cms_node.id],
+      assoc_page_ids: [@cur_page.id],
       state: @cur_page.opendata_dataset_state.presence == 'public' ? 'public' : 'closed'
     }
     attributes[:contact_charge] = @cur_page.contact_charge if @cur_page.respond_to?(:contact_charge)
@@ -141,14 +149,18 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
   end
 
   def update_dataset_by_page(dataset)
-    dataset.name = @cur_page.name
-    dataset.text = convert_to_text(get_page_html)
-    dataset.category_ids = find_category_ids(@cur_page)
-    dataset.area_ids = find_area_ids(@cur_page)
-    dataset.dataset_group_ids = find_dataset_group_ids(@cur_page)
+    dataset.name = @cur_page.name if @cur_page.opendata_dataset_state.presence != 'existance'
+    dataset.text = convert_to_text(get_page_html) if @cur_page.opendata_dataset_state.presence != 'existance'
+    dataset.category_ids = find_category_ids(@cur_page) if @cur_page.opendata_dataset_state.presence != 'existance'
+    dataset.area_ids = find_area_ids(@cur_page) if @cur_page.opendata_dataset_state.presence != 'existance'
+    dataset.dataset_group_ids = find_dataset_group_ids(@cur_page) if @cur_page.opendata_dataset_state.presence != 'existance'
     dataset.assoc_site_id = @cms_site.id
     dataset.assoc_node_id = @cms_node.id
     dataset.assoc_page_id = @cur_page.id
+    dataset.assoc_site_ids = (dataset.resources.distinct(:assoc_site_id) << @cms_site.id).compact.uniq.sort
+    dataset.assoc_node_ids = (dataset.resources.distinct(:assoc_node_id) << @cms_node.id).compact.uniq.sort
+    dataset.assoc_page_ids = (dataset.resources.distinct(:assoc_page_id) << @cur_page.id).compact.uniq.sort
+    dataset.state = @cur_page.opendata_dataset_state.presence == 'public' ? 'public' : 'closed'
 
     # https://jira.mongodb.org/browse/MONGOID-4544
     # dataset.touch
@@ -163,9 +175,10 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
 
   def create_resource(dataset, file)
     license_id = find_license(file).id
+    text = @cur_page.opendata_resources_text(file)
 
     resource = dataset.resources.new
-    resource.associate_resource_with_file!(@cur_page, file, license_id)
+    resource.associate_resource_with_file!(@cur_page, file, license_id, text)
 
     @file_goes_to << [ file.filename, dataset.id, resource.id ]
     Rails.logger.info("#{file.name}: resource is created in #{dataset.name}")
@@ -173,6 +186,7 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
 
   def update_resources(dataset, resources, file)
     license_id = find_license(file).id
+    text = @cur_page.opendata_resources_text(file)
 
     resources.each do |resource|
       if resource.assoc_method != 'auto'
@@ -180,7 +194,7 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
         next
       end
 
-      resource.update_resource_with_file!(@cur_page, file, license_id)
+      resource.update_resource_with_file!(@cur_page, file, license_id, text)
 
       @file_goes_to << [ file.filename, dataset.id, resource.id ]
       Rails.logger.info("#{file.name}: resource is updated in #{dataset.name}")
@@ -202,7 +216,12 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
         end
       end
 
+      dataset.state = 'closed' if dataset.resources.blank?
+
+      def dataset.compression_dataset; end
       dataset.save!
+      dataset.remove_file
+      dataset
     end
   end
 

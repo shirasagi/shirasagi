@@ -3,7 +3,7 @@ module Cms::Addon::OpendataRef::Site
   extend ActiveSupport::Concern
 
   included do
-    embeds_ids :opendata_sites, class_name: "Cms::Site", metadata: { on_copy: :clear }
+    embeds_ids :opendata_sites, class_name: "Cms::Site", metadata: { on_copy: :clear, branch: false }
     permit_params opendata_site_ids: []
   end
 end

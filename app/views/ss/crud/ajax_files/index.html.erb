@@ -1,6 +1,6 @@
 <%= jquery do %>
   SS_AjaxFile.errors.entityTooLarge = "<%= I18n.t('errors.messages.request_entity_too_large') %>";
-  new SS_AjaxFile(null, { indexPath: "<%= url_for(action: :index, file_size: params[:file_size]) %>" });
+  new SS_AjaxFile(null, { indexPath: "<%= url_for(action: :index, file_size: params[:file_size], owner_item_id: params[:owner_item_id], owner_item_type: params[:owner_item_type]) %>" });
   SS_SearchUI.modal();
 <% end %>
 
@@ -35,8 +35,10 @@
       <%
         opts = { action: :select, id: item }
         opts[:file_size] = true if params[:file_size].present?
+        opts[:owner_item_id] = params[:owner_item_id] if params[:owner_item_id].present?
+        opts[:owner_item_type] = params[:owner_item_type] if params[:owner_item_type].present?
       %>
-      <a class="select" href="<%= url_for opts %>" title="<%= item.humanized_name %>">
+      <a class="select" href="<%= url_for opts %>" title="<%= item.humanized_name %>" data-humanized-name="<%= item.humanized_name %>">
         <div class="thumb">
           <% if item.image? %>
             <img src="<%= url_for(action: :thumb, id: item, _: item.updated.to_i) %>" alt="<%= item.humanized_name %>"/>

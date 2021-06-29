@@ -5,6 +5,7 @@ module SS::Model::File
   include SS::Reference::User
   include SS::FileFactory
   include SS::ExifGeoLocation
+  include SS::CsvHeader
   include SS::FileUsageAggregation
   include SS::UploadPolicy
   include History::Addon::Trash
@@ -260,6 +261,7 @@ module SS::Model::File
 
   def copy(opts = {})
     model = opts[:cur_node].present? ? Cms::TempFile : SS::TempFile
+    model = opts[:model].constantize if opts[:model].present?
 
     copy_attrs = {}
     self.attributes.each do |key, val|
@@ -276,6 +278,9 @@ module SS::Model::File
     if opts[:cur_node].present?
       copy_attrs["cur_node"] = opts[:cur_node]
       copy_attrs["node"] = opts[:cur_node]
+    end
+    if opts[:copy_attrs].present?
+      copy_attrs.merge!(opts[:copy_attrs])
     end
 
     model.create_empty!(copy_attrs) do |new_file|
@@ -363,6 +368,11 @@ module SS::Model::File
     errors.add :in_file, :blank if new_record? && in_file.blank?
     return false if errors.present?
     return if in_file.blank?
+
+    if csv_or_xlsx?
+      extract_csv_headers(in_file)
+      in_file.rewind
+    end
 
     dir = ::File.dirname(path)
     Fs.mkdir_p(dir) unless Fs.exists?(dir)
