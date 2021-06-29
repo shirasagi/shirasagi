@@ -68,6 +68,27 @@ module SS
       })(arguments[0], arguments[1]);
     SCRIPT
 
+    WAIT_CKEDITOR_READY_SCRIPT = <<~SCRIPT.freeze
+      (function(selector, resolve) {
+        var ckeditor = $(selector).ckeditor().editor;
+        if (!ckeditor) {
+          console.log("ckeditor is not available");
+          resolve(false);
+          return;
+        }
+        if (ckeditor.status === "ready") {
+          console.log("ckeditor is ready");
+          resolve(true);
+          return;
+        }
+
+        ckeditor.once("instanceReady", function() {
+          console.log("ckeditor gets ready");
+          setTimeout(function() { resolve(true); }, 0);
+        });
+      })(arguments[0], arguments[1]);
+    SCRIPT
+
     FILL_CKEDITOR_SCRIPT = <<~SCRIPT.freeze
       (function(element, text, resolve) {
         var ckeditor = CKEDITOR.instances[element.id];
@@ -77,15 +98,10 @@ module SS
         }
 
         var callback = function() {
-          resolve(true);
+          setTimeout(function() {
+            resolve(true);
+          }, 0);
         };
-
-        if (ckeditor.status !== "ready") {
-          ckeditor.once("instanceReady", function() {
-            ckeditor.setData(text, { callback: callback });
-          });
-          return;
-        }
 
         ckeditor.setData(text, { callback: callback });
       })(arguments[0], arguments[1], arguments[2]);
@@ -265,6 +281,14 @@ module SS
       true
     end
 
+    #
+    # Usage
+    #   wait_for_ckeditor_event "item[html]"
+    #
+    def wait_ckeditor_ready(locator)
+      page.evaluate_async_script(WAIT_CKEDITOR_READY_SCRIPT, "[name=\"#{locator}\"]")
+    end
+
     # CKEditor に html を設定する
     #
     # CKEditor の setData メソッドを用いて HTML を設定する。
@@ -279,6 +303,8 @@ module SS
       options[:visible] = :all
       element = find(:fillable_field, locator, options)
 
+      ret = wait_ckeditor_ready(locator)
+      expect(ret).to be_truthy
       ret = page.evaluate_async_script(FILL_CKEDITOR_SCRIPT, element, with)
       expect(ret).to be_truthy
     end
@@ -291,6 +317,9 @@ module SS
     #   end
     #
     def wait_for_ckeditor_event(locator, event_name)
+      ret = wait_ckeditor_ready(locator)
+      expect(ret).to be_truthy
+
       promise_id = "promise_#{unique_id}"
       page.execute_script(HOOK_CKEDITOR_EVENT_COMPLETION, promise_id, "[name=\"#{locator}\"]", event_name)
 
