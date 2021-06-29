@@ -188,7 +188,10 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
 
   context "with ss/temp_file" do
     let!(:file) do
-      tmp_ss_file(user: cms_user, site: site, basename: filename, contents: "#{Rails.root}/spec/fixtures/ss/logo.png")
+      tmp_ss_file(
+        Cms::TempFile, user: cms_user, site: site, node: node, basename: filename,
+        contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
+      )
     end
     let(:button_label) { I18n.t("ss.buttons.upload") }
 
