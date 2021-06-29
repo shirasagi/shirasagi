@@ -29,6 +29,7 @@ ja:
     count: 件
     image: 施設写真
     map: 地図
+    notice: お知らせ
     edit_page: 施設情報を編集する
     select_location: 地域を選択
     empty: 上記の条件では施設が見つかりませんでした。
@@ -42,6 +43,7 @@ ja:
       add_info: 項目を追加する
       del_info: 削除
       del_info_confirm: 項目を削除してよろしいですか？
+      notices: お知らせ一覧
     submit:
       search: この条件で検索する
       reset: 検索条件をリセットする
@@ -72,6 +74,7 @@ ja:
       facility/category_setting: 施設の種類
       facility/opendata_assoc: オープンデータ連携
       facility/node_list: リスト表示
+      facility/notice: お知らせ
 
   cms:
     nodes:

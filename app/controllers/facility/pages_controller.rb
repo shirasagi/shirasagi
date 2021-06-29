@@ -62,5 +62,7 @@ class Facility::PagesController < ApplicationController
     end
     @summary_image = [ pages.shift ].compact
     @images = pages
+
+    @items = @item.notices.and_public.limit(@item.notice_limit)
   end
 end
