@@ -32,8 +32,8 @@ describe Cms::Page::MoveJob, dbscope: :example do
 
     it do
       log = Job::Log.first
-      expect(log.logs).to include(include("INFO -- : Started Job"))
-      expect(log.logs).to include(include("INFO -- : Completed Job"))
+      expect(log.logs).to include(/INFO -- : .* Started Job/)
+      expect(log.logs).to include(/INFO -- : .* Completed Job/)
 
       item1.reload
       item2.reload
