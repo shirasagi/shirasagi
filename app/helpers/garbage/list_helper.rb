@@ -16,6 +16,7 @@ module Garbage::ListHelper
     ih << "  <tbody>"
 
     @items.each do |item|
+      item.cur_site = @cur_site if item.respond_to?(:cur_site=) && item.site_id == @cur_site.id
       name = item.index_name.presence || item.name
       ih << "<tr>"
       ih << "  <td>#{link_to(name, item.url)}</td>"

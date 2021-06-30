@@ -1,0 +1,26 @@
+<% f ||= nil %>
+<tr id="file-<%= file_id %>" class="file-view" data-file-id="<%= file_id %>" data-humanized-name="<%= file_humanized_name %>" data-url="<%= file_url %>" data-thumb-url="<%= file_thumb_url %>" data-extname="<%= file_extname %>">
+  <td class="column-thumb">
+    <%= link_to file_url, class: :thumb, target: "_blank", rel: "noopener", title: file_humanized_name do %>
+      <% if file_is_image %>
+        <img alt="<%= file_humanized_name %>" src="<%= file_thumb_url %>">
+      <% else %>
+        <span class="ext icon-<%= file_extname %>"><%= file_extname %></span>
+      <% end %>
+      <div class="name"><%= file_humanized_name %></div>
+    <% end %>
+
+    <% if f %>
+      <%= f.hidden_field "file_ids[]", value: file_id, id: nil %>
+      <%= link_to t("ss.buttons.delete"), "#file-#{file_id}", class: "deselect btn" %>
+    <% end %>
+  </td>
+  <td class="column-url">
+    <%= local_assigns[:file_sanitizer_status] %>
+    <% if f %>
+      <input type="text" name="item[link_urls][<%= file_id %>]" value="<%= file_link_url %>" class="link-url">
+    <% else %>
+      <%= link_to file_link_url, sns_redirect_path(ref: file_link_url, back_to: url_for(action: :show)) %>
+    <% end %>
+  </td>
+</tr>

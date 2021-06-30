@@ -251,4 +251,32 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
       expect(page).to have_content(usage2)
     end
   end
+
+  context "search" do
+    let!(:folder1) { create(:gws_notice_folder) }
+    let!(:folder2) { create(:gws_notice_folder) }
+
+    it do
+      visit gws_notice_folders_path(site: site)
+      expect(page).to have_css(".list-item", count: 2)
+      expect(page).to have_css(".list-items", text: folder1.name)
+      expect(page).to have_css(".list-items", text: folder2.name)
+
+      within ".index-search" do
+        fill_in "s[keyword]", with: folder1.name
+        click_on I18n.t("ss.buttons.search")
+      end
+      expect(page).to have_css(".list-item", count: 1)
+      expect(page).to have_css(".list-items", text: folder1.name)
+      expect(page).to have_no_css(".list-items", text: folder2.name)
+
+      within ".index-search" do
+        fill_in "s[keyword]", with: folder2.name
+        click_on I18n.t("ss.buttons.search")
+      end
+      expect(page).to have_css(".list-item", count: 1)
+      expect(page).to have_no_css(".list-items", text: folder1.name)
+      expect(page).to have_css(".list-items", text: folder2.name)
+    end
+  end
 end

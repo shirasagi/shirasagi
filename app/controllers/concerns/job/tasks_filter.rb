@@ -74,4 +74,11 @@ module Job::TasksFilter
     send_file @item.log_file_path, type: 'text/plain', filename: "#{@item.id}.log",
               disposition: :attachment, x_sendfile: true
   end
+
+  def download_perf
+    set_item
+    raise '404' if !::File.exists?(@item.perf_log_file_path)
+    send_file @item.perf_log_file_path, type: 'application/gzip', filename: "#{@item.id}-performance.log.gz",
+              disposition: :attachment, x_sendfile: true
+  end
 end

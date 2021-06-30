@@ -1,6 +1,7 @@
 class Chat::Agents::Nodes::BotController < ApplicationController
   include Cms::PartFilter::View
 
+  protect_from_forgery except: [:line]
   after_action :create_chat_history
 
   private
@@ -56,5 +57,15 @@ class Chat::Agents::Nodes::BotController < ApplicationController
     else
       @results = [{ suggests: @cur_node.first_suggest.presence, response: @cur_node.first_text }]
     end
+  end
+
+  def line
+    service = Chat::LineBot::Service.new(cur_site: @cur_site, cur_node: @cur_node, request: request)
+    unless service.valid?
+      head :bad_request
+      return
+    end
+    service.call
+    head :ok
   end
 end

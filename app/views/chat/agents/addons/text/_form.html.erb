@@ -20,4 +20,10 @@
 
   <dt><%= @model.t :chat_retry %><%= @model.tt :chat_retry %></dt>
   <dd><%= f.text_area :chat_retry, class: 'html' %></dd>
+
+  <dt><%= @model.t :set_location %><%= @model.tt :set_location %></dt>
+  <dd><%= f.text_field :set_location %></dd>
+
+  <dt><%= @model.t :radius %><%= @model.tt :radius %></dt>
+  <dd><%= f.number_field :radius, min: 0 %></dd>
 </dl>

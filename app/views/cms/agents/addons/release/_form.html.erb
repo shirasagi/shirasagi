@@ -8,5 +8,21 @@
   <dd><%= f.select :state, @item.state_options %></dd>
 
   <dt><%= @model.t :released %><%= @model.tt :released %></dt>
-  <dd><%= f.text_field :released, class: "datetime js-datetime", value: tryb { @item.released.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <dd>
+    <% if @item.respond_to?(:released_type) %>
+      <%= f.select :released_type, @item.released_type_options %>
+    <% end %>
+    <%= f.text_field :released, class: "datetime js-datetime", value: tryb { @item.released.strftime("%Y/%m/%d %H:%M") } %>
+  </dd>
 </dl>
+
+<%= jquery do %>
+  var $el = $("#" + <%== addon[:id].to_json %>);
+  $el.find("[name='item[released_type]']").on("change", function() {
+    if ($(this).val() === "fixed") {
+      $el.find("[name='item[released]']").removeClass("hide");
+    } else {
+      $el.find("[name='item[released]']").addClass("hide");
+    }
+  }).trigger("change");
+<% end %>

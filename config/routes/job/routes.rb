@@ -55,6 +55,7 @@ Rails.application.routes.draw do
     resources :tasks, only: [:index, :show, :destroy], concerns: [:deletion] do
       post :reset_state, on: :member
       get :download, on: :member
+      get :download_perf, on: :member
     end
 
     resources :reservations, only: [:index, :show, :destroy], concerns: [:deletion]

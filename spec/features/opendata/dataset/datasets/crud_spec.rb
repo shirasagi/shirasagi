@@ -255,7 +255,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
       it do
         visit show_path
         within 'div#addon-opendata-agents-addons-category' do
-          expect(page).to have_content("#{category_root.name}/#{category1.name}")
+          expect(page).to have_content(category1.name)
         end
         within 'div#addon-opendata-agents-addons-area' do
           expect(page).to have_content(area1.name)
@@ -283,7 +283,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
       it do
         visit show_path
         within 'div#addon-opendata-agents-addons-category' do
-          expect(page).to have_content("#{category_root.name}/#{category1.name}")
+          expect(page).to have_content(category1.name)
         end
         within 'div#addon-opendata-agents-addons-area' do
           expect(page).to have_content(area1.name)
@@ -292,7 +292,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
         visit edit_path
         within 'div#addon-opendata-agents-addons-category dd.disallowed-categories' do
           expect(page).to have_content('閲覧が許可されていない分野')
-          expect(page).to have_content("#{category_root.name}/#{category1.name}")
+          expect(page).to have_content(category1.name)
         end
         within 'div#addon-opendata-agents-addons-area dd.disallowed-areas' do
           expect(page).to have_content('閲覧が許可されていない地域')

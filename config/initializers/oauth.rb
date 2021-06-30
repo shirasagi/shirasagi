@@ -24,5 +24,6 @@ if SS.config.oauth.prefix_path
     }
     provider ::Oauth::GoogleOauth2, { scope: "userinfo.email, userinfo.profile, plus.me" }
     provider ::Oauth::Github
+    provider ::Oauth::Line
   end
 end

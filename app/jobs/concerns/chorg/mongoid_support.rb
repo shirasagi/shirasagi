@@ -47,7 +47,8 @@ module Chorg::MongoidSupport
         entity_user.try(:cur_site=, @cur_site)
         entity.try(:cur_user=, entity_user)
 
-        entity.try(:skip_sns_post=, true)
+        entity.try(:skip_twitter_post=, true)
+        entity.try(:skip_line_post=, true)
         def entity.post_to_line; end
         def entity.post_to_twitter; end
 

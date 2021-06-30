@@ -1924,6 +1924,7 @@ footer.send {
         line-height: 20px;
         color: $black;
         border: 5px solid $gray4;
+        z-index: 1000;
       }
     }
     .properties {
@@ -1955,6 +1956,46 @@ footer.send {
     a {
       @include btn;
       margin-bottom: 5px;
+    }
+  }
+}
+
+#addon-cms-agents-addons-file .file-view,#addon-cms-agents-addons-form-page .file-view,.column-value-cms-column-free .file-view {
+  width: 240px;
+  .od-resource-file-meta {
+    width: 240px;
+    display: inline-block;
+    margin: 16px 0;
+    dt {
+      font-weight: bold;
+      margin: 8px 0 4px;
+    }
+    dd {
+      margin: 0;
+      margin: 4px 0 16px;
+      select, input, a, table {
+        margin: 4px 0;
+      }
+    }
+  }
+}
+
+#addon-cms-agents-addons-form-page .file-view,.column-value-cms-column-free .file-view {
+  width: 240px;
+  .od-resource-file-meta {
+    width: 240px;
+    display: inline-block;
+    margin: 16px 0;
+    dt {
+      font-weight: bold;
+      margin: 8px 0 4px;
+    }
+    dd {
+      margin: 0;
+      margin: 4px 0 16px;
+      select, input, a, table {
+        margin: 4px 0;
+      }
     }
   }
 }
@@ -2066,6 +2107,28 @@ footer.send {
         @include mb {
           width: 100%;
         }
+      }
+    }
+    .images {
+      padding: 2px;
+      max-width: 256px; position: absolute; background: #fff;
+      border: 1px solid #d0d0d0;
+      box-shadow: 0 1px 6px #d0d0d0;
+      .image {
+        padding: 2px;
+        display: inline-block;
+        border-radius: 3px;
+        &:hover {
+          background: #d6d6d6;
+        }
+      }
+    }
+    .marker-thumb {
+      display: inline-block;
+      height: 20px;
+      vertical-align: middle;
+      img {
+        height: 100%;
       }
     }
   }
@@ -2513,6 +2576,12 @@ table.form-index.sortable-index {
     &:after { display: none; }
   }
 }
+.th-lock thead th {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
 
 // -------------------------------------------------------------------------------------------------
 // form
@@ -2634,6 +2703,10 @@ form .CodeMirror {
   }
   .minicolors-swatch {
     top: 2px;
+  }
+  .minicolors-swatches .minicolors-swatch {
+    width: 29px;
+    height: 29px;
   }
 }
 //multislelct
@@ -2979,7 +3052,6 @@ form .CodeMirror {
     img {
       vertical-align: top;
       min-height: 110px;
-      width: 100%;
     }
     .ext {
       display: block;
@@ -3490,5 +3562,19 @@ body.ss-ajax-in-iframe {
 
   &:hover {
     cursor: help;
+  }
+}
+
+.sns-post-confirm {
+  background: #f3f3f3;
+  padding: 2px;
+  border-radius: 4px;
+  h2 {
+    font-weight: bold;
+    margin-top: 5px;
+    margin-left: 10px;
+  }
+  ul li {
+    list-style: inherit;
   }
 }

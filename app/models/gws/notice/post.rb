@@ -4,6 +4,7 @@ class Gws::Notice::Post
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::Reference::Notice::Folder
+  include Gws::Notice::Cloneable
   include Gws::Addon::Contributor
   include SS::Addon::Markdown
   include Gws::Addon::File
@@ -29,7 +30,7 @@ class Gws::Notice::Post
   field :severity, type: String
   field :total_file_size, type: Integer
 
-  permit_params :name, :severity
+  permit_params :name, :severity, :in_clone_file
 
   validates :name, presence: true, length: { maximum: 80 }
   validate :validate_body_size

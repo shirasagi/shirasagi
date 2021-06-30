@@ -3,7 +3,7 @@ module Cms::Addon::OpendataRef::Area
   extend ActiveSupport::Concern
 
   included do
-    embeds_ids :opendata_areas, class_name: "Opendata::Node::Area", metadata: { on_copy: :clear }
+    embeds_ids :opendata_areas, class_name: "Opendata::Node::Area", metadata: { on_copy: :clear, branch: false }
     permit_params opendata_area_ids: []
   end
 end

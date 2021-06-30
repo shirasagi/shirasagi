@@ -98,7 +98,8 @@ module Gws::Attendance::TimeCardFilter
     end
 
     if result
-      location = crud_redirect_url || url_for(action: :index)
+      location = crud_redirect_url || { action: :index }
+      location = url_for(location) if location.is_a?(Hash)
       notice = t('ss.notice.saved')
 
       flash[:notice] = notice

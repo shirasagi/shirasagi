@@ -2,16 +2,36 @@ this.SS_Color = (function () {
   function SS_Color() {
   }
 
+  SS_Color.swatches = <%= SS.config.minicolors_swatches.color_codes %>;
+
   SS_Color.render = function () {
-    return $(".js-color").each(function () {
-      var btn, sel;
-      sel = $(this);
-      sel.minicolors();
-      if (sel.data('clear')) {
+    $(".js-color").each(function () {
+      var self, warp, slider, swatches, panel, btn, top;
+      self = $(this);
+
+      if (self.data("swatches")) {
+        self.minicolors({ swatches: SS_Color.swatches });
+
+        warp = self.closest(".minicolors");
+        slider = $(warp).find('.minicolors-slider');
+        swatches = $(warp).find('ul.minicolors-swatches');
+        panel = $(warp).find(".minicolors-panel");
+
+        $(panel).prepend(swatches);
+        top = $(warp).find('li.minicolors-swatch.minicolors-sprite').outerHeight(true) * 2
+          + $(swatches).outerHeight(true)
+          + parseInt($(slider).css('top'));
+
+        $(slider).css('top', top.toString() + 'px');
+      } else {
+        self.minicolors();
+      }
+
+      if (self.data('clear')) {
         btn = $("<input type='button' class='btn' value='<%= I18n.t('ss.buttons.clear') %>' />").uniqueId();
-        $(sel).after(btn).after(' ');
-        return $('#' + btn.attr('id')).on("click", function () {
-          return $(sel).minicolors('value', {
+        $(self).after(btn).after(' ');
+        $('#' + btn.attr('id')).on("click", function () {
+          $(self).minicolors('value', {
             color: 'transparent'
           });
         });

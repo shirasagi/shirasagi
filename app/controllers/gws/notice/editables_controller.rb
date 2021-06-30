@@ -9,7 +9,7 @@ class Gws::Notice::EditablesController < ApplicationController
   before_action :set_category
   before_action :set_search_params
   before_action :set_items
-  before_action :set_item, only: [:show, :edit, :update, :soft_delete, :move]
+  before_action :set_item, only: [:show, :edit, :update, :soft_delete, :move, :copy]
   before_action :set_selected_items, only: [:destroy_all, :soft_delete_all]
   before_action :set_default_readable_setting, only: [:new]
 
@@ -112,7 +112,7 @@ class Gws::Notice::EditablesController < ApplicationController
   end
 
   def create
-    if !@folder.member?(@cur_user)
+    if !params[:copy] && !@folder.member?(@cur_user)
       redirect_to({ action: :index }, { notice: t('gws/notice.notice.not_a_member_in_this_folder') })
       return
     end
@@ -151,5 +151,12 @@ class Gws::Notice::EditablesController < ApplicationController
       render: { file: :create_my_folder }
     }
     render_create false, render_opts
+  end
+
+  def copy
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
+    @item = @item.new_clone
+    render file: :new
   end
 end

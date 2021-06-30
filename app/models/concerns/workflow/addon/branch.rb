@@ -15,6 +15,8 @@ module Workflow::Addon
 
       validate :validate_master_lock, if: ->{ branch? }
 
+      before_merge_branch :merge_file_histories rescue nil
+
       before_save :seq_clone_filename, if: ->{ new_clone? && basename.blank? }
       after_save :merge_to_master
 
@@ -86,6 +88,7 @@ module Workflow::Addon
 
       attributes["user_id"] = @cur_user.id if @cur_user
       attributes["_id"] = nil
+      attributes["master_id"] = source_file.id
       file = SS::File.create_empty!(attributes, validate: false) do |new_file|
         ::FileUtils.copy(source_file.path, new_file.path)
       end
@@ -151,6 +154,30 @@ module Workflow::Addon
       self.save
     end
 
+    def merge_file_histories
+      return unless in_branch
+
+      in_branch.attached_files.each do |file|
+        master_file = file.master
+
+        # update history files
+        if master_file
+          master_file.save_history_file
+          file.history_file_ids = master_file.history_file_ids
+          master_file.history_file_ids = []
+        end
+
+        # update owner item
+        file.owner_item = self
+
+        # update file's master
+        file.master = nil
+        file.save!
+
+        master_file.save! if master_file
+      end
+    end
+
     def merge_to_master
       return unless branch?
       return unless state == "public"
@@ -159,7 +186,10 @@ module Workflow::Addon
       master.cur_user = @cur_user
       master.cur_site = @cur_site
       master.in_branch = self
-      master.merge_branch
+      if !master.merge_branch
+        Rails.logger.error("merge_branch : master save failed #{master.errors.full_messages.join(",")}")
+      end
+
       master.generate_file
     end
 

@@ -941,7 +941,10 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
     margin-right: 15px;
   }
   .fb {
-    margin-top: -6px;
+    margin-top: -5px;
+  }
+  .fb-like {
+      margin: 0;
   }
 }
 // -----------------------------------------------------------------------------
@@ -4125,9 +4128,6 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
         &:hover {
           opacity: .7;
         }
-      }
-      .chat-dismiss {
-        margin-left: 10px;
       }
     }
     .chat-finish {

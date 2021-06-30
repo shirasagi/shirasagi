@@ -5,49 +5,54 @@ this.Openlayers_Map = (function () {
     }
     this.canvas = canvas;
     this.opts = opts;
-    default_zoom = this.opts.default_zoom || Openlayers_Map.defaultZoom
-    pointCount = this.opts.markers ? this.opts.markers.length : 0
-    set_center_position = this.opts.set_center_position
 
-    if (set_center_position) {
-      set_center_position = set_center_position.split(',').map(Number);
-      set_center_position = [set_center_position[1], set_center_position[0]];
-      var lat, lon;
-      lat = set_center_position[1];
-      lon = set_center_position[0];
-      if (!(lat && !isNaN(lat))) {
-        set_center_position = null;
-      }
-      if (!(lon && !isNaN(lon))) {
-        set_center_position = null;
-      }
-      if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
-        set_center_position
-      } else {
-        set_center_position = null;
-      }
+    if (opts["zoom"] && this.validateZoom(opts["zoom"])) {
+      this.zoom = opts["zoom"];
     }
-    set_zoom_level = this.opts.set_zoom_level
-    if (! this.opts.zoom) {
-      this.opts.zoom = Openlayers_Map.defaultZoom;
+    this.defaultZoom = Openlayers_Map.defaultZoom;
+
+    if (opts["center"] && this.validateLatLon(opts["center"][0], opts["center"][1])) {
+      this.center = opts["center"];
     }
+    this.defaultCenter = Openlayers_Map.defaultCenter;
+
+    // reverse lat lon
+    if (this.center) {
+      this.center = this.center.reverse();
+    }
+    this.defaultCenter = this.defaultCenter.reverse();
+
     this.markerFeature = null;
     this.markerLayer = null;
     this.popup = null;
-    this.markerIcon = '/assets/img/map-marker.png';
+    this.markerIcon = Openlayers_Map.markerIcon;
     this.render();
   }
 
-  Openlayers_Map.defaultZoom = 10;
+  Openlayers_Map.defaultCenter = <%= SS.config.map.map_center %>;
+
+  Openlayers_Map.defaultZoom = <%= SS.config.map.openlayers_zoom_level %>;
+
+  Openlayers_Map.markerIcon = "<%= SS.config.map.dig("map_marker_images", "openlayers", "default", "marker") %>";
+
+  Openlayers_Map.clickIcon = "<%= SS.config.map.dig("map_marker_images", "openlayers", "default", "click") %>";
+
+  Openlayers_Map.prototype.getCenter = function () {
+    return (this.center ? this.center : this.defaultCenter);
+  };
+
+  Openlayers_Map.prototype.getZoom = function () {
+    return (this.zoom ? this.zoom : this.defaultZoom);
+  };
 
   Openlayers_Map.prototype.render = function () {
     this.initMap();
     this.initPopup();
-    if (this.opts['markers']) {
-      this.renderMarkers(this.opts['markers']);
+    if (this.opts["markers"]) {
+      this.renderMarkers(this.opts["markers"]);
     }
     this.resize();
-    return this.renderEvents();
+    this.renderEvents();
   };
 
   Openlayers_Map.prototype.createLayers = function (layerOpts) {
@@ -70,11 +75,8 @@ this.Openlayers_Map = (function () {
   };
 
   Openlayers_Map.prototype.initMap = function () {
-    var center, layerOpts;
-    center = this.opts['center'] || [138.252924, 36.204824];
-    if (set_center_position) {
-      center = set_center_position
-    }
+    var layerOpts;
+
     layerOpts = this.opts['layers'];
     layerOpts || (layerOpts = [
       {
@@ -83,7 +85,7 @@ this.Openlayers_Map = (function () {
         projection: "EPSG:3857"
       }
     ]);
-    return this.map = new ol.Map({
+    this.map = new ol.Map({
       target: this.canvas,
       renderer: ['canvas', 'dom'],
       layers: this.createLayers(layerOpts),
@@ -94,9 +96,9 @@ this.Openlayers_Map = (function () {
       }),
       view: new ol.View({
         projection: "EPSG:3857",
-        center: ol.proj.transform(center, "EPSG:4326", "EPSG:3857"),
+        center: ol.proj.transform(this.getCenter(), "EPSG:4326", "EPSG:3857"),
         maxZoom: 18,
-        zoom: this.opts['zoom']
+        zoom: this.getZoom()
       }),
       logo: true
     });
@@ -127,7 +129,7 @@ this.Openlayers_Map = (function () {
         return _this.map.getTarget().style.cursor = cursor;
       };
     })(this));
-    return this.popup.find('.closer').on('click', (function (_this) {
+    this.popup.find('.closer').on('click', (function (_this) {
       return function (e) {
         _this.popupOverlay.setPosition(void 0);
         $(_this).blur();
@@ -145,11 +147,11 @@ this.Openlayers_Map = (function () {
     }
     this.popup.find('.content').html(markerHtml);
     this.popup.show();
-    return this.popupOverlay.setPosition(coordinate);
+    this.popupOverlay.setPosition(coordinate);
   };
 
   Openlayers_Map.prototype.renderEvents = function () {
-    return this.map.on('click', (function (_this) {
+    this.map.on('click', (function (_this) {
       return function (e) {
         var feature;
         feature = _this.map.forEachFeatureAtPixel(e.pixel, function (feature, layer) {
@@ -249,11 +251,11 @@ this.Openlayers_Map = (function () {
   };
 
   Openlayers_Map.prototype.renderMarkers = function (markers) {
-    var feature, iconSrc, id, marker, markerHtml, name, pos, ref, ref1, ref2, results, style, text;
-    results = [];
+    var feature, iconSrc, id, marker, markerHtml, name, pos, ref, ref1, ref2, style, text;
+
     for (id = 0; id < markers.length; id++) {
       marker = markers[id];
-      iconSrc = '/assets/img/map-marker.png';
+      iconSrc = this.markerIcon;
       if (marker['image']) {
         iconSrc = marker['image'];
       }
@@ -273,7 +275,7 @@ this.Openlayers_Map = (function () {
           }
         });
       }
-      pos = [marker['loc'][1], marker['loc'][0]];
+      pos = [marker['loc'][0], marker['loc'][1]];
       feature = new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.transform(pos, "EPSG:4326", "EPSG:3857")),
         markerId: (ref = marker['id']) != null ? ref : id,
@@ -284,59 +286,38 @@ this.Openlayers_Map = (function () {
       feature.setStyle(style);
       if (!this.markerLayer) {
         this.markerLayer = new ol.layer.Vector({
-          source: new ol.source.Vector({
-            features: [feature]
-          })
+          source: new ol.source.Vector()
         });
-        results.push(this.map.addLayer(this.markerLayer));
-      } else {
-        results.push(this.markerLayer.getSource().addFeature(feature));
+        this.map.addLayer(this.markerLayer)
       }
+      this.markerLayer.getSource().addFeature(feature)
     }
-    return results;
   };
 
   Openlayers_Map.prototype.resize = function () {
-    var extent;
     if (!this.markerLayer) {
       return;
     }
 
-    if (pointCount == 1 && !set_center_position && !set_zoom_level) {
-      extent = this.markerLayer.getSource().getExtent();
+    var markerLength = this.markerLayer.getSource().getFeatures().length;
+    if (markerLength >= 0) {
+      // marker exists
+      // set manually options and do fit
+      var extent = this.markerLayer.getSource().getExtent();
       this.map.getView().fit(extent, this.map.getSize());
-      this.map.getView().setZoom(default_zoom);
-      return;
-    }
+      this.map.getView().setZoom(this.getZoom());
 
-    if (pointCount == 1 && !set_center_position && set_zoom_level) {
-      extent = this.markerLayer.getSource().getExtent();
-      this.map.getView().fit(extent, this.map.getSize());
-      this.map.getView().setZoom(set_zoom_level);
-      return;
-    }
-
-    if (pointCount >= 2 && !set_center_position && !set_zoom_level) {
-      extent = this.markerLayer.getSource().getExtent();
-      this.map.getView().fit(extent, this.map.getSize());
-      return;
-    }
-
-    if (pointCount >= 2 && !set_center_position && set_zoom_level) {
-      extent = this.markerLayer.getSource().getExtent();
-      this.map.getView().fit(extent, this.map.getSize());
-      this.map.getView().setZoom(set_zoom_level);
-      return;
-    }
-
-    if (set_zoom_level) {
-      this.map.getView().setZoom(set_zoom_level);
-      return;
-    }
-
-    if (!set_zoom_level) {
-      this.map.getView().setZoom(default_zoom);
-      return;
+      if (this.center) {
+        this.setCenter(this.getCenter());
+      }
+      if (this.zoom) {
+        this.setZoom(this.getZoom());
+      }
+    } else {
+      // marker not exists
+      // set manually or default options
+      this.setCenter(this.getCenter());
+      this.setZoom(this.getZoom());
     }
   };
 
@@ -384,6 +365,22 @@ this.Openlayers_Map = (function () {
       source: vectorSource
     });
   }
+
+  Openlayers_Map.prototype.validateZoom = function (zoom) {
+    if (zoom >= 3 && zoom <= 18) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  Openlayers_Map.prototype.validateLatLon = function (lat, lon) {
+    if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   return Openlayers_Map;
 })();

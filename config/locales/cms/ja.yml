@@ -73,6 +73,7 @@ ja:
     source_cleaner: ソースクリーニング
     source_cleaner_template: ソースクリーニング
     syntax_check: アクセシビリティチェック
+    sns_post: SNS投稿連携
     theme_template: Theme切り替え
     user: ユーザー
     view_page: 公開画面
@@ -112,6 +113,7 @@ ja:
     column_youtube_auto_width:
       enabled: 画面幅に合わせる
       disabled: 画面幅に合わせない
+    visit_article: 記事を見る
 
     adobe_reader:
       remark:
@@ -147,6 +149,9 @@ ja:
       contains_urls_exists: このページへのリンク、関連記事、添付ファイルが以下のページに含まれています。
       contains_urls_not_found: このページへのリンク、関連記事、添付ファイルが含まれているページは見つかりませんでした。
       check_accessibility_manually: "セマンティックなマークアップであるか確認してください。\nコントラスト比に問題がないか確認してください。"
+      when_publish: 公開時の注意
+      line_post_enabled: LINE連携が有効になっています。連携しない場合は、設定を解除してください。
+      twitter_post_enabled: Twitter投稿が有効になっています。連携しない場合は、設定を解除してください。
     notices:
       import_with_entry_form_is_not_supported: 次のフォームでは本文ブロックは出力されません。
       restoring_public_content_from_trash: 非公開で復元されます。復元後、内容を確認うえ、公開してください。
@@ -329,7 +334,21 @@ ja:
         left: 左
         center: 中央
         right: 右
-
+      released_type:
+        fixed: 手動入力
+        same_as_updated: 更新日
+        same_as_created: 作成日
+        same_as_first_released: 初公開日
+      line_post_format:
+        thumb_carousel: サムネイル画像とLINEメッセージ
+        body_carousel: 本文内の最初の画像とLINEメッセージ
+        message_only_carousel: LINEメッセージ
+      sns_post_log_type:
+        twitter: Twitter投稿
+        line: LINE投稿
+      sns_post_log_state:
+        success: 成功
+        error: エラー
     sns_share:
       fb_like: Facebook いいね！
       fb_share: Facebook シェア
@@ -535,8 +554,9 @@ ja:
       cms/import/body: 本文
       cms/edit_lock: 排他制御
       cms/sns_share: SNS共有
-      cms/sns_poster: SNS自動投稿設定
-      cms/node_auto_post_setting: SNS自動投稿設定
+      cms/twitter_poster: Twitter連携
+      cms/node_twitter_post_setting: Twitter連携設定
+      cms/node_line_post_setting: LINE連携設定
       cms/captcha: 認証
       cms/body_layout_html: HTML
       cms/default_release_plan: 公開予約の既定値
@@ -565,6 +585,9 @@ ja:
       cms/column/select_like: 選択
       cms/redirect_link: リンクページ
       cms/site_search/history: 履歴
+      cms/site_search/keyword: 注目ワード
+      cms/site_search/history: 履歴
+      cms/line_poster: LINE連携
 
   mongoid:
     models:
@@ -796,17 +819,19 @@ ja:
       cms/addon/sns_share:
         sns_share_states: 表示
         sns_share_orders: 並び順
-      cms/addon/sns_poster:
-        sns_poster: SNS自動投稿設定
-        twitter_auto_post: Twitter自動投稿
+      cms/addon/twitter_poster:
+        twitter_auto_post: Twitter投稿
+        twitter_url: TweetURL
+        twitter_posted_at: 投稿日時
         sns_auto_delete: 非公開時に投稿を削除
-        edit_auto_post: 編集時に自動投稿
         twitter_post_error: 投稿エラー
-      cms/addon/node_auto_post_setting:
+      cms/addon/node_twitter_post_setting:
         node_auto_post_setting: SNS自動投稿設定
-        node_twitter_auto_post: Twitter自動投稿
+        node_twitter_auto_post: Twitter投稿
         node_sns_auto_delete: 非公開時に投稿を削除
-        node_edit_auto_post: 編集時に自動投稿
+      cms/addon/node_line_post_setting:
+        node_line_auto_post: LINE投稿
+        node_line_post_format: 投稿形式
       cms/addon/import/page:
         in_file: ファイル
       cms/addon/import/group:
@@ -1030,6 +1055,18 @@ ja:
         low_vision_report_filepath: 視覚化検証結果
         low_vision_source_filepath: 視覚化検証元画像
         low_vision_result_filepath: 視覚化検証画像
+      cms/addon/line_poster:
+        line_auto_post: LINE投稿
+        line_post_format: 投稿形式
+        line_text_message: LINEメッセージ
+        line_text_message_placeholder: "○月○日、○○○イベントが行われます。詳しくは、市ホームページをご覧ください。\n※全角45文字以内\n※改行はしないでください"
+        line_posted: 投稿日時
+        line_post_error: 投稿エラー
+      cms/sns_post_log/base:
+        name: タイトル
+        type: 投稿SNS
+        state: ステータス
+        page_id: 連携ページ
 
   activemodel:
     attributes:
@@ -1151,6 +1188,8 @@ ja:
           - 設定している代替テキストが妥当かどうか確認してください。
       thums_is_not_an_image: には画像ファイルを指定してください。
       unsupported_encoding: 対応していない文字コードです。
+      thumb_is_blank: サムネイル画像が登録されていません。
+      not_found_file_url_in_body: 本文内の画像が見つかりませんでした。
 
     template:
       no_errors: エラーは見つかりませんでした。
@@ -2126,6 +2165,38 @@ ja:
       file:
         - インポートするファイルを設定します。
         - ファイルはUTF-8またはShift_JISでエンコードされている必要があります。
+
+    cms/addon/node_line_post_setting:
+      node_line_auto_post:
+        - 有効に設定すると公開時にLINE投稿をおこないます。
+      node_line_post_format:
+        - 投稿形式を選択します。
+        -
+        - ・サムネイル画像とLINEメッセージ
+        - サムネイル画像とLINEメッセージおよび記事へのリンクをカルーセル形式で投稿します。
+        -
+        - ・本文内の最初の画像とLINEメッセージ
+        - 本文内の最初の画像とLINEメッセージおよび記事へのリンクをカルーセル形式で投稿します。
+        -
+        - ・LINEメッセージのみ
+        - LINEメッセージと記事へのリンクをカルーセル形式で投稿します。
+
+    cms/addon/line_poster:
+      line_auto_post:
+        - 有効に設定すると公開時にLINE投稿をおこないます。
+      line_post_format:
+        - 投稿形式を選択します。
+        -
+        - ・サムネイル画像とLINEメッセージ
+        - サムネイル画像とLINEメッセージおよび記事へのリンクをカルーセル形式で投稿します。
+        -
+        - ・本文内の最初の画像とLINEメッセージ
+        - 本文内の最初の画像とLINEメッセージおよび記事へのリンクをカルーセル形式で投稿します。
+        -
+        - ・LINEメッセージのみ
+        - LINEメッセージと記事へのリンクをカルーセル形式で投稿します。
+      line_text_message:
+        - LINEに投稿するメッセージを入力します。
 
   all_content:
     page_id: ページID

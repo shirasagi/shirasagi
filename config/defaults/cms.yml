@@ -156,6 +156,16 @@ production: &production
     disable: false
     generate_lock_until: 1.hour
 
+  captcha:
+    image_size: 100x28
+    background: white
+    fill: darkblue
+    wave: 1x88
+    font: NimbusSans-Bold
+    implode: 0.2
+    pointsize: 22
+    gravity: Center
+
 test:
   <<: *production
 

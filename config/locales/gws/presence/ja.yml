@@ -6,6 +6,9 @@ ja:
       register_reminder: リマインダーを登録
     links:
       all_groups: 全てのユーザー
+    operations:
+      expand_all: すべて展開
+      collapse_all: すべて閉じる
 
   modules:
     gws/presence: 在席管理

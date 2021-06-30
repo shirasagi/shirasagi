@@ -24,13 +24,13 @@ this.Chat_Chart = (function() {
         },
         options: {
           responsive: true,
-          scales: {
-            yAxes: [{
-              ticks: {
-                stepSize: 1
-              },
-            }],
-          }
+          // scales: {
+          //   yAxes: [{
+          //     ticks: {
+          //       stepSize: 1
+          //     },
+          //   }],
+          // }
         }
       });
     });

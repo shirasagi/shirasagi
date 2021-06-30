@@ -176,6 +176,14 @@ class Gws::Circular::Post
     end
   end
 
+  def browsable_comments
+    return comments if user == @cur_user
+    comments.or(
+      { browsing_authority: nil },
+      { browsing_authority: "all" },
+      { browsing_authority: "author_or_commenter", user: @cur_user })
+  end
+
   private
 
   def validate_attached_file_size
