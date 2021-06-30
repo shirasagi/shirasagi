@@ -1,12 +1,24 @@
 <%
   def has_more?
     return false if @result.blank?
-    @s.from != 0 || @result['hits']['total'] > @s.size
+    return true if @s.from != 0
+    case @result['hits']['total']
+    when Integer
+      @result['hits']['total'] > @s.size
+    when Hash
+      @result['hits']['total']['value'] > @s.size
+    end
   end
 
   def to_kaminari
-    total_pages = @result['hits']['total'] / @s.size
-    total_pages += 1 if (@result['hits']['total'] % @s.size) != 0
+    case @result['hits']['total']
+    when Integer
+      total_pages = @result['hits']['total'] / @s.size
+      total_pages += 1 if (@result['hits']['total'] % @s.size) != 0
+    when Hash
+      total_pages = @result['hits']['total']['value'] / @s.size
+      total_pages += 1 if (@result['hits']['total']['value'] % @s.size) != 0
+    end
 
     current_page = @s.from / @s.size + 1
 
@@ -19,11 +31,21 @@
     )
   end
 %>
-
+<%= jquery do %>
+new Cms_Site_Search_History("<%= ".cms-site-search .search-form" %>", "<%= @cur_node.full_url %>");
+<% end %>
 <div class="cms-site-search">
-  <%= form_for :s, url: @cur_node.url, html: { method: :get, class: 'search-form' } do |f| %>
-    <%= f.text_field :keyword %>
-    <input type="submit" value="<%= t('ss.buttons.search') %>" />
+  <%= form_for :s, url: @cur_node.url, html: { method: :get, class: 'search-form' }, "aria-label" => t("cms.search_form") do |f| %>
+
+    <div class="site-search-keyword">
+      <%= f.text_field :keyword, autocomplete: "off" %>
+      <ul class="site-search-history" style="display: none;"></ul>
+    </div>
+
+    <% if @cur_site.elasticsearch_outside_enabled? %>
+      <%= select_tag 'target', options_for_select([[t('ss.search_on', name: @cur_site.name), 'inside'], [t('ss.search_on', name: SS::Config.cms.elasticsearch['label']), 'outside']], selected: params[:target]), "aria-label" => t("cms.search_target") %>
+    <% end %>
+    <input type="submit" value="<%= t('cms.search_button') %>" />
   <% end %>
 
   <% if @result.present? %>
