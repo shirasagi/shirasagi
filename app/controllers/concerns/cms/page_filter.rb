@@ -6,7 +6,6 @@ module Cms::PageFilter
   included do
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :move, :copy, :contains_urls]
     before_action :set_contains_urls_items, only: [:contains_urls, :edit, :delete]
-    before_action :check_permission, only: [:edit, :delete]
   end
 
   private
@@ -231,14 +230,5 @@ module Cms::PageFilter
     end
 
     render_update true, location: { action: :index }, render: { file: :index }
-  end
-
-  def check_permission
-    @delete_alert_flg = true
-    @edit_alert_flg = true
-    login_user = @cur_user.cms_user
-
-    @delete_alert_flg = false if login_user.cms_role_permit_any?(@cur_site, %w(delete_cms_ignore_alert)) || @contains_urls.empty?
-    @edit_alert_flg = false if login_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_alert)) || @contains_urls.empty?
   end
 end

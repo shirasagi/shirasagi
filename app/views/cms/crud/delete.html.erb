@@ -1,10 +1,11 @@
+<% delete_alert_enabled = !@cur_user.cms_role_permit_any?(@cur_site, %w(delete_cms_ignore_alert)) && @contains_urls.present? %>
 <%= form_for :item, url: { action: :show }, html: { method: :delete, multipart: true } do |f| %>
 <%= error_messages_for :item %>
 
 <div class="addon-views">
   <%
     head = t("ss.confirm.delete")
-    if @delete_alert_flg
+    if delete_alert_enabled
       head = "#{head}<br>#{t("ss.confirm.contains_url_expect")}".html_safe
     end
   %>
@@ -14,7 +15,7 @@
     <% contains_urls_path = url_for(action: 'contains_urls') rescue nil %>
     <% if contains_urls_path && @contains_urls.present? %>
       <dl class="see">
-        <% if @delete_alert_flg %>
+        <% if delete_alert_enabled %>
           <%= render file: "cms/crud/contains_urls" %>
         <% else %>
           <dt><%= link_to t("cms.confirm.check_contains_urls"), contains_urls_path, target: "_blank", rel: "noopener" %></dt>
@@ -26,7 +27,7 @@
 </div>
 
 <footer class="send">
-  <% unless @delete_alert_flg %>
+  <% unless delete_alert_enabled %>
     <%= f.submit t("ss.buttons.delete"), class: 'btn-danger delete' %>
   <% end %>
   <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
