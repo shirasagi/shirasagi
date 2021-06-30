@@ -46,6 +46,13 @@ if analyze_coverage?
   ]
   if ci?
     require 'simplecov-lcov'
+
+    # coveralls requires consolidated file "lcov.info"
+    SimpleCov::Formatter::LcovFormatter.config do |config|
+      config.report_with_single_file = true
+      config.lcov_file_name = "lcov.info"
+    end
+
     formatters << SimpleCov::Formatter::LcovFormatter
   end
 
