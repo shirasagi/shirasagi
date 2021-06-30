@@ -10,7 +10,7 @@
   <h3><%= link_to t("cms.search_contents_files"), cms_search_contents_files_path %></h3>
   <% end %>
 
-  <% if Cms::Sitemap.allowed?(:use, @cur_user, site: @cur_site) %>
+  <% if SS.config.cms.cms_sitemap && SS.config.cms.cms_sitemap['disable'].blank? && Cms::Sitemap.allowed?(:use, @cur_user, site: @cur_site) %>
   <h3><%= link_to t("cms.search_contents_sitemap"), cms_search_contents_sitemap_path %></h3>
   <% end %>
 </nav>

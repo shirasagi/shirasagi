@@ -11,6 +11,8 @@ class Cms::SearchContents::SitemapController < ApplicationController
   end
 
   def check_permission
+    raise "403" if SS.config.cms.cms_sitemap.blank?
+    raise "403" if SS.config.cms.cms_sitemap['disable'].present?
     raise "403" unless Cms::Sitemap.allowed?(:use, @cur_user, site: @cur_site)
   end
 

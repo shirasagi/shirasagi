@@ -164,7 +164,7 @@ Rails.application.routes.draw do
     post "search_contents/html" => "search_contents/html#update"
     match "search_contents/pages" => "search_contents/pages#index", via: [:get, :post]
     match "search_contents/files" => "search_contents/files#index", via: [:get, :post]
-    match "search_contents/sitemap" => "search_contents/sitemap#index", via: [:get, :post]
+    get "search_contents/sitemap" => "search_contents/sitemap#index"
     get "search_contents/sitemap/download_all(.:format)" => "search_contents/sitemap#download_all", as: "folder_csv_download"
     get "search_contents/:id" => "page_search_contents#show", as: "page_search_contents"
     delete "search_contents/pages" => "search_contents/pages#destroy_all"
