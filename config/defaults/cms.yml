@@ -138,14 +138,6 @@ production: &production
     class: ''
     class_categories: 'item-'
 
-  destroy_all:
-    # specify how to delete items
-    #
-    #   -1: always deletes items on the fly.
-    #    0: always deletes items in a job.
-    #    n: if item's count is above n, deletes items in a job. otherwise delete items on the fly.
-    in_job: 35
-
   # 移動後の URL 変更を有効にする
   # enable url replace after move.
   replace_urls_after_move: true
@@ -169,8 +161,6 @@ production: &production
 
 test:
   <<: *production
-  destroy_all:
-    in_job: -1
   replace_urls_after_move: false
 
 development:

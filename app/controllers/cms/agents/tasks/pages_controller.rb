@@ -143,6 +143,15 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
     or_conds = []
     or_conds += Cms::ApiFilter::Contents::HTML_FIELDS.map { |field| { field => /=\"#{::Regexp.escape(@src)}/ } }
     or_conds += Cms::ApiFilter::Contents::ARRAY_FIELDS.map { |field| { field => /\A#{::Regexp.escape(@src)}/ } }
+    or_conds << {
+      column_values: {
+        "$elemMatch" => {
+          "$or" => Cms::ApiFilter::Contents::COLUMN_VALUES_FIELDS.map do |key|
+            { key => { "$in" => [/#{::Regexp.escape(@src)}/] } }
+          end
+        }
+      }
+    }
 
     [Cms::Page, Cms::Part, Cms::Layout].each do |klass|
       criteria = klass.site(@site).where("$and" => [{ "$or" => or_conds }])
