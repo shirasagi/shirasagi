@@ -23,10 +23,6 @@
 <% if @item.assoc_page_id.present? %>
   <dt><%= @model.t :assoc_page_id %></dt>
   <dd>
-    <% if @item.assoc_page.present? %>
-      <%= @item.assoc_page.name %>
-    <% else %>
-      <%= t('opendata.association_is_removed') %>
-    <% end %>
+    <%= @item.assoc_pages.pluck(:name).join(',') %>
   </dd>
 <% end %>

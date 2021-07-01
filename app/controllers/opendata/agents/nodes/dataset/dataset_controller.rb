@@ -5,10 +5,12 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
   include Opendata::Dataset::DatasetFilter
   helper Opendata::UrlHelper
 
-  before_action :set_dataset, only: [:show_point, :add_point, :point_members]
+  before_action :set_dataset, only: [:show_point, :show_favorite, :add_point, :point_members]
   before_action :set_apps, only: [:show_apps]
   before_action :set_ideas, only: [:show_ideas]
   skip_before_action :logged_in?
+
+  protect_from_forgery except: [:add_favorite]
 
   private
 
@@ -142,5 +144,28 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
       page(params[:page]).
       per(20)
     render layout: "opendata/ajax"
+  end
+
+  def show_favorite
+    @cur_node.layout = nil
+    logged_in?(redirect: false)
+
+    if @cur_member
+      cond = { site_id: @cur_site.id, member_id: @cur_member.id, dataset_id: @dataset.id }
+      @favorite = Opendata::DatasetFavorite.where(cond).first
+    end
+  end
+
+  def add_favorite
+    @dataset = Opendata::Dataset.site(@cur_site).where(id: params[:dataset]).first
+
+    raise "404" unless @dataset
+    raise '404' if !@preview && !@dataset.public?
+
+    if logged_in?
+      cond = { site_id: @cur_site.id, member_id: @cur_member.id, dataset_id: @dataset.id }
+      Opendata::DatasetFavorite.find_or_create_by(cond)
+      redirect_to URI.parse(@dataset.url).path
+    end
   end
 end

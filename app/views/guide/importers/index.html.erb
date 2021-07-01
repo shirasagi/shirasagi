@@ -1,0 +1,26 @@
+<div class="main-box">
+  <div class="guide-importer">
+    <%= t("guide.notice.import_summary") %>
+  </div>
+  <div class="guide-importer">
+    <h2>1. <%= t("guide.labels.import_procedures") %></h2>
+    <%= link_to t("ss.buttons.download"), { action: :download_procedures } %>
+    |
+    <%= link_to t("ss.buttons.import"), { action: :import_procedures } %>
+  </div>
+  <div class="guide-importer">
+    <h2>2. <%= t("guide.labels.import_questions") %></h2>
+    <%= link_to t("ss.buttons.download"), { action: :download_questions } %>
+    |
+    <%= link_to t("ss.buttons.import"), { action: :import_questions } %>
+  </div>
+  <div class="guide-importer">
+    <h2>3. <%= t("guide.labels.import_transitions") %></h2>
+    <%= link_to t("ss.buttons.download"), { action: :download_transitions } %>
+    |
+    <%= link_to t("ss.buttons.import"), { action: :import_transitions } %>
+  </div>
+  <div class="guide-template">
+    <%= link_to t("ss.links.download_template"), { action: :download_template } %>
+  </div>
+</div>

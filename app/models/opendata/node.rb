@@ -110,6 +110,7 @@ module Opendata::Node
     include Opendata::Addon::ListNodeSetting
     include Cms::Addon::Meta
     include Opendata::DatasetChildNode
+    include Opendata::DatasetBulkDownload
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
@@ -125,6 +126,16 @@ module Opendata::Node
     include History::Addon::Backup
 
     default_scope ->{ where(route: "opendata/dataset_map") }
+  end
+
+  class DatasetGraph
+    include Cms::Model::Node
+    include Cms::Addon::Meta
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "opendata/dataset_graph") }
   end
 
   class Sparql
@@ -268,6 +279,20 @@ module Opendata::Node
     self.use_liquid = false
 
     default_scope ->{ where(route: "opendata/my_dataset") }
+  end
+
+  class MyFavoriteDataset
+    include Cms::Model::Node
+    include Cms::Addon::NodeSetting
+    include Cms::Addon::Meta
+    include Cms::Addon::PageList
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    self.use_liquid = false
+
+    default_scope ->{ where(route: "opendata/my_favorite_dataset") }
   end
 
   class MyApp

@@ -31,8 +31,9 @@ ja:
       harvest_import_datasets: データセットをインポートする
       harvest_destroy_datasets: 関連するデータセットを削除する
       dataset_map_search_datasets: データセットを探す
-      dataset_map_datasets_limit: 最大１０件までデータセットを選択できます。
       deleted: 削除済み
+      add_favorite: マイリストに登録する
+      registered_favorite: マイリストに登録済み
     search_datasets:
       index: データセットを選択する
       search: データセットを検索
@@ -40,7 +41,7 @@ ja:
       deselect: 削除
       name: データセット名
       bluk_download: 一括ダウンロード
-      download: "ダウンロード(%{size}件)"
+      download: "一括ダウンロード(%{size}件)"
     search_dataset_groups:
       index: データセットグループを選択する
       search: データセットグループを検索
@@ -58,13 +59,16 @@ ja:
       source_url: "リンクを登録する際にURLを入力してください。ファイルを設定した場合は入力の必要はありません。"
       resource_preview_error: リソースをプレビューできませんでした。
       bulk_download_exceeded_filesize: "検索結果の一括ダウンロードサイズが大きすぎます。\n一括ダウンロードのサイズは、%{size}までを想定しています。\n申し訳ありませんが、個別にダウンロードしていただくか、検索条件を変更してください。"
+      mypage_bulk_download_exceeded_filesize: "一括ダウンロードサイズが大きすぎます。\n一括ダウンロードのサイズは、%{size}までを想定しています。\n申し訳ありませんが、個別にダウンロードをお願いします。"
       recreate_rdf: "次のリソースに関連する RDF が作成されています。"
+      remove_favorite: 登録解除しました。
+      select_datasets_limit: 最大１０件までデータセットを選択できます。
+      dataset_graph_select_resource: 「データセットを探す」よりデータセットを検索して、リソースを選択するとグラフが表示されます。
     export:
       subject: '[オープンデータ/データセット] エクスポートが完了しました。'
       notify_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n%{link}"
       start_message: "エクスポート処理を開始しました。"
-      export_message: "エクスポート処理が完了次第、ログインユーザーのメールアドレスにダウンロードリンクが通知されます。"
-      emtpy_email_message: "ログインユーザーにメールアドレスが設定されていません。"
+      export_message: "登録されている全データセットをエクスポートします。\nエクスポートを押下すると、エクスポート処理が完了次第、実行したユーザー宛に通知が送られ、データをダウンロードできます。"
     notify_update_plan:
       subject: 更新予定のデータセット
     reports:
@@ -173,6 +177,7 @@ ja:
       idea_name: アイデア名
       resource_name: リソース名
       comment_count: コメント数
+      create_datetime: 登録日時
       update_datetime: 更新日時
       executed_count: 実行回数
       downloaded_count: 合計ダウンロード数
@@ -195,6 +200,7 @@ ja:
       delete: 削除
       edit_profile: プロフィールの編集
       delete_account: アカウントの削除
+      delete_favorite_dataset: リストから削除
       downloaded: ダウンロード
       preview: プレビュー
       add_comment: コメントを投稿
@@ -213,6 +219,7 @@ ja:
       not_exist: 存在しません
       no_related_dataset: 関連データセットはありません。
       no_related_app: 関連アプリはありません。
+      no_favorite_datasets: 登録はありません。
       not_data: 該当するデータは登録されていません
       delete_comment: コメントは削除されました
       request_comment: コメントは承認待ちです
@@ -241,6 +248,7 @@ ja:
       external_link: 外部リンク
       list_view: 一覧表示
       map_view: 地図表示
+      graph_view: グラフ表示
       not_found_dataset: データセットがみつかりません。
       and_condition: AND条件
       convert_setting: コンバート設定
@@ -346,6 +354,10 @@ ja:
     anti_bot_method_options:
       set_nofollow: "ダウンロードやプレビューなどの <a> タグに rel=\"nofollow\" をつける"
       use_button_for_bulk_download: "一括ダウンロードに <button> タグを用いる"
+    graph_types:
+      bar: 棒グラフ
+      line: 線グラフ
+      pie: 円グラフ
 
     # Web API
     api:
@@ -439,6 +451,7 @@ ja:
       opendata/node_area: "都道府県 市区町村"
       opendata/pref_code: 地域コード
       opendata/counter_html: レイアウト
+      opendata/graph: グラフプレビュー表示
 
   cms:
     nodes:
@@ -452,6 +465,7 @@ ja:
       opendata/search_dataset_group: データセットグループ検索
       opendata/search_dataset: データセット検索
       opendata/dataset_map: データセット地図
+      opendata/dataset_graph: データセットグラフ
       opendata/sparql: SPARQL
       opendata/api: API
       opendata/app: アプリ
@@ -464,6 +478,7 @@ ja:
       opendata/member: メンバー
       opendata/my_profile: マイプロフィール
       opendata/my_dataset: マイデータセット
+      opendata/my_favorite_dataset: マイリストデータセット
       opendata/my_app: マイアプリ
       opendata/my_idea: マイアイデア
     parts:
@@ -771,6 +786,9 @@ ja:
         assoc_site_id: 連携サイト
         assoc_node_id: 連携フォルダー
         assoc_page_id: 連携ページ
+        assoc_site_ids: 連携サイト
+        assoc_node_ids: 連携フォルダー
+        assoc_page_ids: 連携ページ
         assoc_method: 連携確認方法
       opendata/addon/cms_ref/attachment_file:
         assoc_site_id: 連携サイト
@@ -826,6 +844,9 @@ ja:
         resource_name: リソース名
         resource_filename: リソースファイル名
         resource_format: リソースフォーマット
+      opendata/addon/graph:
+        preview_graph_state: グラフ表示
+        preview_graph_types: グラフ種別
 
   activemodel:
     models:
@@ -1085,7 +1106,11 @@ ja:
         - Bot 対策方法を選択します。
         - "&lt;a&gt; タグに rel=\"nofollow\" をつけると、Bot はリンクを辿らなくなります（ただし、紳士的な Bot のみ）。"
         - "通常の Bot ではボタンをクリックしないので、一括ダウンロードに &lt;button&gt; タグを用いるようにすると、Bot が辿らなくなります。"
-
+    opendata/addon/graph:
+      preview_graph_state:
+        - プレビューにてグラフ表示を有効にするか設定します。
+      preview_graph_types:
+        - グラフ表示する種別を選択します。
   job:
     models:
       opendata/csv2rdf_converter/job: RDF変換ジョブ

@@ -90,7 +90,7 @@ module Cms::Elasticsearch::Indexer::Base
   end
 
   def index_type
-    @index_type ||= model.collection_name
+    @index_type ||= '_doc'
   end
 
   def index_item_id
@@ -151,6 +151,5 @@ module Cms::Elasticsearch::Indexer::Base
     yield
   rescue klass => e
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-    puts_history(:warn, "#{e.class} (#{e.message})")
   end
 end

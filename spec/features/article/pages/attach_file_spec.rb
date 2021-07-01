@@ -204,15 +204,23 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
 
           within "form#item-form" do
-            within "#addon-cms-agents-addons-file" do
-              within ".file-view" do
-                wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
+            wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
+              within "#addon-cms-agents-addons-file" do
+                within ".file-view" do
                   click_on I18n.t("sns.file_attach")
                 end
-                wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
+              end
+            end
+            wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
+              within "#addon-cms-agents-addons-file" do
+                within ".file-view" do
                   click_on I18n.t("sns.image_paste")
                 end
-                wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
+              end
+            end
+            wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
+              within "#addon-cms-agents-addons-file" do
+                within ".file-view" do
                   click_on I18n.t("sns.thumb_paste")
                 end
               end

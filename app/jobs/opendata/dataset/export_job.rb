@@ -19,7 +19,7 @@ class Opendata::Dataset::ExportJob < Cms::ApplicationJob
 
     FileUtils.rm_rf(@output_dir)
 
-    create_notify_mail
+    create_notify_message
   end
 
   def write_file(path, data)
@@ -29,7 +29,7 @@ class Opendata::Dataset::ExportJob < Cms::ApplicationJob
   end
 
   def export_datasets
-    csv = @items.to_csv.encode("cp932", invalid: :replace, undef: :replace)
+    csv = @items.to_csv.encode("cp932", invalid: :replace, undef: :replace, replace: "_")
     path = "datasets.csv"
     write_file(path, csv)
   end
@@ -42,18 +42,18 @@ class Opendata::Dataset::ExportJob < Cms::ApplicationJob
       next if item.nil?
       next if item.resources.blank?
 
-      csv = resources_to_csv(item.resources).encode("cp932", invalid: :replace, undef: :replace)
+      csv = resources_to_csv(item.resources).encode("cp932", invalid: :replace, undef: :replace, replace: "_")
       path = "#{item.id}/resources.csv"
       write_file(path, csv)
 
       item.resources.each do |resource|
         if resource.file.present?
-          path = "#{item.id}/#{resource.id}/#{resource.file.name}"
+          path = "#{item.id}/#{resource.id}/#{resource.filename}"
           write_file(path, resource.file.read)
         end
 
         if resource.tsv.present?
-          path = "#{item.id}/#{resource.id}/#{resource.tsv.name}"
+          path = "#{item.id}/#{resource.id}/tsv/#{resource.tsv.filename}"
           write_file(path, resource.tsv.read)
         end
       end
@@ -62,7 +62,10 @@ class Opendata::Dataset::ExportJob < Cms::ApplicationJob
 
   def resources_to_csv(resources)
     CSV.generate do |data|
-      headers = %w(id name format license_id text order file_id source_url tsv_id).map { |k| Opendata::Resource.t(k) }
+      headers = %w(
+        id name format license_id text order file_id source_url tsv_id
+        preview_graph_state preview_graph_types
+      ).map { |k| Opendata::Resource.t(k) }
 
       data << headers
       resources.each do |item|
@@ -73,19 +76,28 @@ class Opendata::Dataset::ExportJob < Cms::ApplicationJob
         line << item.license.try(:name)
         line << item.text
         line << item.order
-        line << item.file.try(:name)
+        line << item.filename
         line << item.source_url
-        line << item.tsv.try(:name)
+        line << item.tsv.try(:filename)
+        line << (item.label :preview_graph_state)
+        line << item.preview_graph_types.map { |type| I18n.t("opendata.graph_types.#{type}") }.join("\n")
         data << line
       end
     end
   end
 
-  def create_notify_mail
-    args = {}
-    args[:site] = site
-    args[:t_uid] = user.id
-    args[:link] = ::File.join(@root_url, @output_zip.url)
-    Opendata::Mailer.export_datasets_mail(args).deliver_now rescue nil
+  def create_notify_message
+    link = ::File.join(@root_url, @output_zip.url)
+
+    item = SS::Notification.new
+    item.cur_group = site
+    item.cur_user = user
+    item.member_ids = [user.id]
+    item.format = "text"
+    item.send_date = Time.zone.now
+
+    item.subject = I18n.t("opendata.export.subject")
+    item.text = I18n.t("opendata.export.notify_message", link: link)
+    item.save!
   end
 end
