@@ -10,18 +10,40 @@ class Opendata::Agents::Nodes::Dataset::DatasetMapController < ApplicationContro
     @items.each do |item|
       resources = []
       item.resources.each_with_index do |resource, idx|
-        resource.map_resources.each do |map_resource|
-          key = "#{item.id}_#{idx}_#{map_resource["sheet"]}"
-          name = resource.tsv_present? ? resource.name : "#{resource.name} [#{map_resource["sheet"]}]"
+        resource.file.site = @cur_site if resource.file
+
+        if resource.kml_present? || resource.geojson_present?
+          key = "#{item.id}_#{idx}"
+          name = resource.name
 
           @map_points[item.id] ||= {}
-          @map_points[item.id][key] = map_resource["map_points"]
+          @map_points[item.id][key] = {
+            format: resource.format,
+            url: resource.full_url
+          }
 
           resources << {
             resource: resource,
-            key: "#{item.id}_#{idx}_#{map_resource["sheet"]}",
+            key: key,
             name: name
           }
+        else
+          resource.map_resources.each do |map_resource|
+            key = "#{item.id}_#{idx}_#{map_resource["sheet"]}"
+            name = resource.tsv_present? ? resource.name : "#{resource.name} [#{map_resource["sheet"]}]"
+
+            @map_points[item.id] ||= {}
+            @map_points[item.id][key] =  {
+              format: resource.format,
+              points: map_resource["map_points"]
+            }
+
+            resources << {
+              resource: resource,
+              key: key,
+              name: name
+            }
+          end
         end
       end
 
@@ -48,8 +70,20 @@ class Opendata::Agents::Nodes::Dataset::DatasetMapController < ApplicationContro
       @items = @model.site(@cur_site)
     end
 
-    @items = @items.and_public.elem_match(resources: { :map_resources.nin => [[], nil] }).search(params[:s]).
-      order_by(updated: -1).page(params[:page]).per(10)
+    @items = @items.and_public.where({
+      "resources" => {
+        "$elemMatch" => {
+          "$or" => [
+            { "map_resources" => {"$nin" => [[], nil] } },
+            { "format" => "KML" },
+            { "format" => "GEOJSON" }
+          ]
+        }
+      }
+    }).search(params[:s]).
+      order_by(updated: -1).
+      page(params[:page]).
+      per(10)
 
     set_map_points
 

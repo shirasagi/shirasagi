@@ -30,12 +30,18 @@ this.Openlayers_Dataset_Map = (function () {
       $(this).on("click", function () {
 
         Openlayers_Dataset_Map.map.removeMarkers();
+        Openlayers_Dataset_Map.map.removeloadedLayers();
         $(".dataset-search .selected-item .set-markers:checked").each(function () {
-          var markers = $(this).data("map_points");
-          Openlayers_Dataset_Map.map.renderMarkers(markers);
-          Openlayers_Dataset_Map.map.resize();
+          var map_points = $(this).data("map_points");
 
-          //console.info($(this).parent("label").text(), markers);
+          if (map_points["points"]) {
+            Openlayers_Dataset_Map.map.renderMarkers(map_points["points"]);
+          } else if (map_points["format"] == "KML") {
+            Openlayers_Dataset_Map.map.loadLayer(map_points["url"], ol.format.KML);
+          } else if (map_points["format"] == "GEOJSON") {
+            Openlayers_Dataset_Map.map.loadLayer(map_points["url"], ol.format.GeoJSON);
+          }
+          Openlayers_Dataset_Map.map.resize();
         });
       });
     });
@@ -45,9 +51,17 @@ this.Openlayers_Dataset_Map = (function () {
       $(this).closest(".selected-item").remove();
 
       Openlayers_Dataset_Map.map.removeMarkers();
+      Openlayers_Dataset_Map.map.removeloadedLayers();
       $(".selected-item .set-markers:checked").each(function () {
-        var markers = $(this).data("map_points");
-        Openlayers_Dataset_Map.map.renderMarkers(markers);
+        var map_points = $(this).data("map_points");
+
+        if (map_points["points"]) {
+          Openlayers_Dataset_Map.map.renderMarkers(map_points["points"]);
+        } else if (map_points["format"] == "KML") {
+          Openlayers_Dataset_Map.map.loadLayer(map_points["url"], ol.format.KML);
+        } else if (map_points["format"] == "GEOJSON") {
+          Openlayers_Dataset_Map.map.loadLayer(map_points["url"], ol.format.GeoJSON);
+        }
         Openlayers_Dataset_Map.map.resize();
       });
 
@@ -93,7 +107,7 @@ this.Openlayers_Dataset_Map = (function () {
     // select item event
     $(".search-ui a.select-item").on("click", function (e) {
       var tr = $(this).closest("tr");
-      article = Openlayers_Dataset_Map.selectItem(tr);
+      var article = Openlayers_Dataset_Map.selectItem(tr);
 
       $.colorbox.close();
       $(article).find(".set-markers").trigger("click");

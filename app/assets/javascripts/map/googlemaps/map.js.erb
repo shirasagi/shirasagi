@@ -173,6 +173,7 @@ this.Googlemaps_Map = (function () {
       suppressInfoWindows: true,
       preserveViewport: false
     });
+    Googlemaps_Map.kmlLayer.setMap(Googlemaps_Map.map);
   };
 
   Googlemaps_Map.setGeoJson = function (url) {
