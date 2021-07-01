@@ -2082,22 +2082,27 @@ footer.send {
       font-weight: bold;
       margin-bottom: 10px;
     }
-    dd {
+    dd.marker {
       float: left;
+      width: 260px;
       margin-left: 0;
-      margin-right: 28px;
+      margin-right: 6px;
+      margin-top: 6px;
+      padding-bottom: 18px;
+      border-radius: 6px;
       @include mb {
         float: none;
         margin: 0;
       }
       p {
         margin-top: 10px;
+        margin-left: 10px;
       }
-      &.marker {
-        padding-bottom: 18px;
+      &.active {
+        background: #ffebbd;
       }
       .marker-name,.marker-text,.marker-loc-input {
-        width: 260px;
+        width: 240px;
         @include mb {
           width: 100%;
         }

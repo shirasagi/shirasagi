@@ -86,7 +86,7 @@ this.Member_Photo_Form = (function () {
       Googlemaps_Map.markers[dataId] = new google.maps.Marker({
         position: Member_Photo_Form.getMapLoc($(".mod-map .marker-loc")),
         map: Googlemaps_Map.map,
-        icon: Googlemaps_Map.clickIcon
+        icon: Googlemaps_Map.markerIcon
       });
       Member_Photo_Form.attachMessage(dataId);
     }
@@ -113,7 +113,7 @@ this.Member_Photo_Form = (function () {
         Googlemaps_Map.markers[Member_Photo_Form.dataID] = new google.maps.Marker({
           position: loc,
           map: Googlemaps_Map.map,
-          icon: Googlemaps_Map.clickIcon
+          icon: Googlemaps_Map.markerIcon
         });
         Member_Photo_Form.attachMessage(Member_Photo_Form.dataID);
         markerBounds.extend(loc);

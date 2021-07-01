@@ -435,6 +435,7 @@ this.Openlayers_Map_Form = (function () {
       cln = $(".mod-map dd.marker:last").clone(false).insertAfter($(".mod-map dd.marker:last"));
       cln.attr("data-id", this.dataID);
       this.dataID += 1;
+      cln.removeClass("active");
       cln.find("input,textarea").val("");
       cln.find(".marker-name").val("");
       cln.find(".clear-marker").on('click', (function (_this) {
@@ -513,7 +514,7 @@ this.Openlayers_Map_Form = (function () {
 
     ele.find(".marker-loc").val(loc);
     ele.find(".marker-loc-input").val(loc);
-
+    ele.addClass("active");
     dataId = parseInt(ele.attr("data-id"));
     this.removeMarker(dataId);
 
@@ -530,6 +531,7 @@ this.Openlayers_Map_Form = (function () {
     var dataId;
     if (ele.find(".marker-loc").val() !== "") {
       if (confirm(this.deleteMessage)) {
+        ele.removeClass("active");
         dataId = parseInt(ele.attr("data-id"));
         this.removeMarker(dataId);
         ele.find("input,textarea").val("");
@@ -538,6 +540,7 @@ this.Openlayers_Map_Form = (function () {
         }
       }
     } else {
+      ele.removeClass("active");
       dataId = parseInt(ele.attr("data-id"));
       this.removeMarker(dataId);
       ele.find("input,textarea").val("");

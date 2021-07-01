@@ -266,6 +266,10 @@ ja:
         keyword: キーワード
         set_center_position: 中心位置
         set_zoom_level: ズームレベル
+      member/addon/photo/map:
+        marker_name: マーカー名
+        marker_text: 説明
+        marker_loc: 座標
       member/addon/photo/license:
         license_name: ライセンス
       member/addon/photo/license_setting:
