@@ -21,7 +21,6 @@ module Opendata::Addon::ZipDataset
 
   def compression_dataset
     ::FileUtils.rm_rf(zip_path) if zip_exists?
-    ::FileUtils.mkdir_p(::File.dirname(zip_path))
     return if resources.blank?
 
     name_util = SS::FilenameUtils.new
@@ -40,6 +39,7 @@ module Opendata::Addon::ZipDataset
           end
         end
 
+        ::FileUtils.mkdir_p(::File.dirname(zip_path))
         Zip::File.open(zip_path, Zip::File::CREATE) do |zip|
           files.each do |name, file|
             zip.add(name.encode('cp932', invalid: :replace, undef: :replace), file.path)
@@ -54,6 +54,7 @@ module Opendata::Addon::ZipDataset
       file.puts(message)
       file.rewind
 
+      ::FileUtils.mkdir_p(::File.dirname(zip_path))
       Zip::File.open(zip_path, Zip::File::CREATE) do |zip|
         zip.add(name, file.path)
       end

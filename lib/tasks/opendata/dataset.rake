@@ -15,7 +15,7 @@ namespace :opendata do
     )
   end
 
-  task save_map_resources: :environment do
+  task set_map_resources: :environment do
     puts "Please input site: site=[www]" or exit if ENV['site'].blank?
     site = ::Cms::Site.where(host: ENV['site']).first
     ids = ::Opendata::Dataset.site(site).pluck(:id)
@@ -31,6 +31,20 @@ namespace :opendata do
           resource.set(map_resources: resource.map_resources)
         end
       end
+    end
+  end
+
+  task compression_dataset: :environment do
+    puts "Please input site: site=[www]" or exit if ENV['site'].blank?
+    site = ::Cms::Site.where(host: ENV['site']).first
+    ids = ::Opendata::Dataset.site(site).pluck(:id)
+
+    ids.each do |id|
+      item = ::Opendata::Dataset.find(id) rescue nil
+      next unless item
+      next unless item.public?
+      puts item.name
+      item.compression_dataset
     end
   end
 
