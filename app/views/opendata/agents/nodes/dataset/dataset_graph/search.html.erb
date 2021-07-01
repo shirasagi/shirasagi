@@ -1,0 +1,94 @@
+<%= jquery do %>
+Opendata_Dataset_Graph.modal();
+var cboxLoad = function() {
+  var url = $(this).attr("href");
+  $.ajax({
+    url: url,
+    type: "GET",
+    success: function (data) {
+      $("#cboxLoadedContent").html(data);
+    },
+    error: function (data, status) {
+      $("#cboxLoadedContent").html("== Error ==");
+    }
+  });
+  return false;
+};
+$("#ajax-box .pagination a").on("click", cboxLoad);
+$("#ajax-box .submitters a").on("click", cboxLoad);
+<% end %>
+<%
+  @s = OpenStruct.new params[:s]
+%>
+<div class="search-ui-form">
+  <%= form_for :s, url: "#{@cur_node.url}search.html", html: { method: "GET", class: :search } do |f| %>
+    <%= f.text_field :keyword %>
+    <div class="submitters">
+      <%= f.submit t("ss.buttons.search"), class: :btn %>
+      <%= link_to t("ss.buttons.reset"), "#{@cur_node.url}search.html", class: :btn %>
+    </div>
+  <% end %>
+</div>
+
+<table class="index search-ui">
+  <thead class="list-head">
+  <tr>
+    <th class="checkbox"><input type="checkbox" /></th>
+    <th class="no"><%= @model.t :no %></th>
+    <th class="name"><%= t("opendata.dataset") %></th>
+    <th class="rescures"><%= t("opendata.resource") %></th>
+    <th class="updated-date"><%= @model.t :updated_date %></th>
+  </tr>
+  </thead>
+  <tbody class="items">
+  <% @datasets.each do |item, resources| %>
+    <tr data-id="<%= item.id %>" class="list-item">
+      <td class="checkbox">
+        <label for="<%= "ch-d-#{item.id}" %>">
+          <input type="checkbox" name="ids[]" value="<%= item.id %>" class="set-dataset", id="<%= "ch-d-#{item.id}" %>" />
+        </label>
+      </td>
+      <td class="no">
+        <label for="<%= "ch-d-#{item.id}" %>"><%= sprintf("%010d", item.id) %></label>
+      </td>
+      <td class="name">
+        <%= link_to item.name, "#", class: "select-item" %>
+
+        <!-- append section -->
+        <article style="display: none;" class="selected-item" data-id="<%= item.id %>">
+          <header>
+            <span class="dataset-no"><%= sprintf("%010d", item.id) %></span>
+            <span class="dataset-name">
+              <%= link_to item.name, item.url, target: "_blank" %>
+            </span>
+            <%= button_tag t('ss.buttons.delete'), type: 'button', class: %w(btn deselect) %>
+          </header>
+          <ul>
+            <% resources.each do |resource| %>
+              <li>
+                <label>
+                  <%= check_box_tag("resource_id", resource[:key], nil, class: "set-graph", "data-url": resource[:url]) %>
+                  <span class="resource-name"><%= resource[:name] %></span>
+                </label>
+              </li>
+            <% end %>
+          </ul>
+        </article>
+
+      </td>
+      <td class="rescures">
+        <%= resources.map { |r| r[:resource].name }.join(", ") %>
+      </td>
+      <td class="updated">
+        <%= item.updated.strftime("%Y/%m/%d") %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<div class="search-ui-select" style="display: none;">
+  <%= button_tag t("opendata.search_datasets.index"), { type: :button, class: "select-items btn" } %>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

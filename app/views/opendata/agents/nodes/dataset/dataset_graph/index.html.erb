@@ -4,8 +4,7 @@
 %>
 
 <%= jquery do %>
-var opts = { "center": <%== SS.config.map.map_center.reverse.to_json %> };
-Openlayers_Dataset_Map.render("#map-canvas", opts);
+Opendata_Dataset_Graph.render(".resource-graph canvas.graph", ".resource-graph .graph-controller");
 <% end %>
 
 <div class="dataset-search">
@@ -15,6 +14,10 @@ Openlayers_Dataset_Map.render("#map-canvas", opts);
   <section class="selected-dataset"></section>
   <div class="datasets-limit"><%= t("opendata.notice.select_datasets_limit") %></div>
 </div>
-<div class="dataset-map">
-  <div id="map-canvas" style="height: 600px;"></div>
+<div class="resource-graph">
+  <div class="first-notice"><%= t("opendata.notice.dataset_graph_select_resource") %></div>
+  <div class="graph-warp">
+    <div class="graph-controller" style="display: none;"></div>
+    <canvas class="graph"></canvas>
+  </div>
 </div>

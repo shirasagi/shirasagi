@@ -61,6 +61,8 @@ module Opendata::Dataset::ResourceFilter
 
     if @data.blank?
       raise "404"
+    elsif @item.preview_graph_enabled?
+      graph_content
     elsif @map_markers.present?
       render file: :map_content
     else
@@ -102,6 +104,24 @@ module Opendata::Dataset::ResourceFilter
 
   def image_content
     render :image_content, layout: 'cms/ajax'
+  end
+
+  def graph_content
+    if @item.preview_graph_types.include?(params[:type])
+      @type = params[:type]
+    else
+      @type = @item.preview_graph_types.first
+    end
+
+    if @item.format != "CSV"
+      raise "404"
+    else
+      render "graph/#{@type}_content", layout: 'cms/ajax'
+    end
+  end
+
+  def pie_graph_content
+    render "graph/pie_content", layout: 'cms/ajax'
   end
 
   public

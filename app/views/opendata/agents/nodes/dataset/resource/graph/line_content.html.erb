@@ -1,0 +1,89 @@
+<%
+  limit = 100
+  graph = @item.extract_preview_graph("line")
+%>
+<%= jquery do %>
+$(".resource-content .tab.list a").on("click", function() {
+  $(".resource-content .tab.list").addClass("current");
+  $(".resource-content .tab.graph").removeClass("current");
+
+  $(".resource-content .resource-list").show();
+  $(".resource-content .resource-graph").hide();
+  return false;
+});
+$(".resource-content .tab.graph a").on("click", function() {
+  $(".resource-content .tab.list").removeClass("current");
+  $(".resource-content .tab.graph").addClass("current");
+
+  $(".resource-content .resource-list").hide();
+  $(".resource-content .resource-graph").show();
+  return false;
+});
+
+var canvas = $("#ajax-box canvas.graph");
+var controller = $("#ajax-box .graph-controller");
+var graph = new Opendata_Graph(canvas, controller);
+
+var name = <%== @item.name.to_json %>;
+var labels = <%== graph.labels.to_json %>;
+var datasets = <%== graph.datasets.to_json %>;
+graph.render("line", name, labels, datasets);
+
+var types = <%== @item.preview_graph_types.to_json %>;
+var headers = <%== graph.headers.to_json %>;
+graph.renderController(types, headers, function(type) {
+  var url = "<%= request.path %>";
+  url += "?type=" + type + "&graph=1";
+
+  graph.destroy();
+  $.ajax({
+    url: url,
+    type: "GET",
+    success: function (data) {
+      $("#cboxLoadedContent").html(data);
+    },
+    error: function (data, status) {
+      $("#cboxLoadedContent").html("== Error ==");
+    }
+  });
+  return false;
+});
+<% end %>
+
+<div class="resource-content">
+  <nav class="tabs">
+    <ul>
+      <li class="tab list <%= params[:graph] ? "" : "current" %>">
+        <a href="#"><%= t("opendata.labels.list_view") %></a>
+      </li>
+      <li class="tab graph <%= params[:graph] ? "current" : "" %>">
+        <a href="#"><%= t("opendata.labels.graph_view") %></a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="resource-list" style="<%= params[:graph] ? "display: none;" : "" %>">
+    <table class="cells" summary="<%= @item.name %>">
+      <tbody>
+      <% @data.slice(0, limit + 1).each do |line| %>
+        <tr>
+          <% line.each do |col| %>
+            <td><%= col %></td>
+          <% end %>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+
+    <% if @data.size > limit %>
+      <div><%= limit %><%= t("opendata.labels.count_display") %></div>
+    <% end %>
+  </div>
+
+  <div class="resource-graph" style="<%= params[:graph] ? "" : "display: none;" %>">
+    <div class="graph-warp">
+      <div class="graph-controller" style="display: none;"></div>
+      <canvas class="graph"></canvas>
+    </div>
+  </div>
+</div>
