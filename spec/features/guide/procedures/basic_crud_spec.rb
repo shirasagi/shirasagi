@@ -23,6 +23,7 @@ describe "guide_procedures", type: :feature, dbscope: :example, js: true do
       visit new_path
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
+        fill_in "item[id_name]", with: "0.sample"
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -47,6 +48,7 @@ describe "guide_procedures", type: :feature, dbscope: :example, js: true do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
+        fill_in "item[name]", with: "0.modify"
         fill_in "item[link_url]", with: "https://modify.example.jp"
         fill_in_code_mirror "item[html]", with: "<p>modify_html</p>"
         fill_in "item[procedure_location]", with: "modify_location1"

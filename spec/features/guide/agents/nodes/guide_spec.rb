@@ -41,17 +41,17 @@ describe "guide_agents_nodes_guide", type: :feature, dbscope: :example, js: true
     end
 
     context "diagram" do
-      let!(:procedure1) { create :guide_procedure, cur_site: site, cur_node: node, name: "procedure1", order: 10 }
-      let!(:procedure2) { create :guide_procedure, cur_site: site, cur_node: node, name: "procedure2", order: 20 }
-      let!(:procedure3) { create :guide_procedure, cur_site: site, cur_node: node, name: "procedure3", order: 30 }
-      let!(:procedure4) { create :guide_procedure, cur_site: site, cur_node: node, name: "procedure4", order: 40 }
-      let!(:procedure5) { create :guide_procedure, cur_site: site, cur_node: node, name: "procedure5", order: 50 }
+      let!(:procedure1) { create :guide_procedure, cur_site: site, cur_node: node, name: "procedure1", id_name: "0.procedure1", order: 10 }
+      let!(:procedure2) { create :guide_procedure, cur_site: site, cur_node: node, name: "procedure2", id_name: "1.procedure2", order: 20 }
+      let!(:procedure3) { create :guide_procedure, cur_site: site, cur_node: node, name: "procedure3", id_name: "2.procedure3", order: 30 }
+      let!(:procedure4) { create :guide_procedure, cur_site: site, cur_node: node, name: "procedure4", id_name: "3.procedure4", order: 40 }
+      let!(:procedure5) { create :guide_procedure, cur_site: site, cur_node: node, name: "procedure5", id_name: "4.procedure5", order: 50 }
 
-      let!(:question1) { create :guide_question, cur_site: site, cur_node: node, name: "question1", order: 10, in_edges: in_edges(procedure1) }
-      let!(:question2) { create :guide_question, cur_site: site, cur_node: node, name: "question2", order: 20, in_edges: in_edges(procedure2) }
-      let!(:question3) { create :guide_question, cur_site: site, cur_node: node, name: "question3", order: 30, in_edges: in_edges(procedure3) }
-      let!(:question4) { create :guide_question, cur_site: site, cur_node: node, name: "question4", order: 40, in_edges: in_edges(procedure4) }
-      let!(:question5) { create :guide_question, cur_site: site, cur_node: node, name: "question5", order: 50, in_edges: in_edges(procedure5) }
+      let!(:question1) { create :guide_question, cur_site: site, cur_node: node, name: "question1", id_name: "0.question1", order: 10, in_edges: in_edges(procedure1) }
+      let!(:question2) { create :guide_question, cur_site: site, cur_node: node, name: "question2", id_name: "1.question2", order: 20, in_edges: in_edges(procedure2) }
+      let!(:question3) { create :guide_question, cur_site: site, cur_node: node, name: "question3", id_name: "2.question3", order: 30, in_edges: in_edges(procedure3) }
+      let!(:question4) { create :guide_question, cur_site: site, cur_node: node, name: "question4", id_name: "3.question4", order: 40, in_edges: in_edges(procedure4) }
+      let!(:question5) { create :guide_question, cur_site: site, cur_node: node, name: "question5", id_name: "4.question5", order: 50, in_edges: in_edges(procedure5) }
 
       def in_edges(point)
         [
