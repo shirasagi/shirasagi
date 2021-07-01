@@ -26,4 +26,10 @@ class Cms::PublicNoticesController < ApplicationController
     raise "403" unless @model.site(@cur_site).and_public.target_to(@cur_user).find(@item.id)
     render
   end
+
+  def frame_content
+    set_item
+    raise "403" unless @model.site(@cur_site).and_public.target_to(@cur_user).find(@item.id)
+    render file: "sns/public_notices/frame_content", layout: false
+  end
 end

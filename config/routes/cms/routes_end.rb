@@ -116,8 +116,12 @@ Rails.application.routes.draw do
       resources :columns, concerns: [:deletion]
     end
     resources :notices, concerns: [:deletion, :copy]
-    resources :public_notices, concerns: [:deletion, :copy]
-    resources :sys_notices, only: [:index, :show]
+    resources :public_notices, concerns: [:deletion, :copy] do
+      get :frame_content, on: :member
+    end
+    resources :sys_notices, only: [:index, :show] do
+      get :frame_content, on: :member
+    end
 
     resources :files, concerns: [:deletion, :template] do
       get :view, on: :member
