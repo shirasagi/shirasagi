@@ -12,6 +12,8 @@ describe "opendata_dataset_resources", type: :feature, dbscope: :example do
     let(:resource_file_path1) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
     let(:resource_file_path2) { "#{Rails.root}/spec/fixtures/opendata/shift_jis-2.csv" }
     let(:resource_file_path3) { "#{Rails.root}/spec/fixtures/opendata/shift_jis-3.csv" }
+    let(:resource_file_path4) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
+    let(:resource_file_path5) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
     let(:new_path) { new_opendata_dataset_resource_path site, node, dataset.id }
 
     before { login_cms_user }
@@ -53,22 +55,25 @@ describe "opendata_dataset_resources", type: :feature, dbscope: :example do
     describe "#new resource" do
       it do
         new_resource(resource_file_path1)
-        expect(extract_filenames).to match_array %w(shift_jis-1.csv)
+        expect(extract_filenames).to match_array ["shift_jis.csv"]
 
         new_resource(resource_file_path2)
-        expect(extract_filenames).to match_array %w(shift_jis-1.csv shift_jis-2-2.csv)
+        expect(extract_filenames).to match_array ["shift_jis.csv", "shift_jis-2.csv"]
 
         new_resource(resource_file_path3)
-        expect(extract_filenames).to match_array %w(shift_jis-1.csv shift_jis-2-2.csv shift_jis-3-3.csv)
+        expect(extract_filenames).to match_array ["shift_jis.csv", "shift_jis-2.csv", "shift_jis-3.csv"]
 
-        delete_resource("shift_jis.csv")
-        expect(extract_filenames).to match_array %w(shift_jis-2-2.csv shift_jis-3-3.csv)
+        new_resource(resource_file_path4)
+        expect(extract_filenames).to match_array ["shift_jis.csv", "shift_jis-2.csv", "shift_jis-3.csv", "shift_jis (1).csv"]
+
+        new_resource(resource_file_path5)
+        expect(extract_filenames).to match_array ["shift_jis.csv", "shift_jis-2.csv", "shift_jis-3.csv", "shift_jis (1).csv", "shift_jis (2).csv"]
 
         delete_resource("shift_jis-2.csv")
-        expect(extract_filenames).to match_array %w(shift_jis-3-3.csv)
+        expect(extract_filenames).to match_array ["shift_jis.csv", "shift_jis-3.csv", "shift_jis (1).csv", "shift_jis (2).csv"]
 
         delete_resource("shift_jis-3.csv")
-        expect(::File.exists?(dataset.zip_path)).to be_falsey
+        expect(extract_filenames).to match_array ["shift_jis.csv", "shift_jis (1).csv", "shift_jis (2).csv"]
       end
     end
 
@@ -77,7 +82,7 @@ describe "opendata_dataset_resources", type: :feature, dbscope: :example do
         new_resource(resource_file_path1)
         new_resource(resource_file_path2)
         new_resource(resource_file_path3)
-        expect(extract_filenames).to match_array %w(shift_jis-1.csv shift_jis-2-2.csv shift_jis-3-3.csv)
+        expect(extract_filenames).to match_array ["shift_jis.csv", "shift_jis-2.csv", "shift_jis-3.csv"]
 
         zip_path = dataset.zip_path
         visit delete_opendata_dataset_path(site, node, dataset)
