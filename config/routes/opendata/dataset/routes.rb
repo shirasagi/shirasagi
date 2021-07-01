@@ -178,6 +178,8 @@ Rails.application.routes.draw do
     get "dataset/:dataset/point/members.html" => "public#point_members", cell: "nodes/dataset/dataset", format: false
     get "dataset/:dataset/apps/show.:format" => "public#show_apps", cell: "nodes/dataset/dataset", format: false
     get "dataset/:dataset/ideas/show.:format" => "public#show_ideas", cell: "nodes/dataset/dataset", format: false
+    get "dataset/:dataset/favorite.:format" => "public#show_favorite", cell: "nodes/dataset/dataset", format: false
+    post "dataset/:dataset/favorite.:format" => "public#add_favorite", cell: "nodes/dataset/dataset", format: false
 
     get "dataset/datasets/search(.:format)" => "public#datasets_search", cell: "nodes/dataset/dataset"
 
@@ -189,7 +191,7 @@ Rails.application.routes.draw do
     get "search_dataset/rss.xml" => "public#rss", cell: "nodes/dataset/search_dataset"
     match "search_dataset/bulk_download" => "public#bulk_download", cell: "nodes/dataset/search_dataset", via: [:get, :post]
     match "search_dataset/dataset_download/:id" => "public#dataset_download", cell: "nodes/dataset/search_dataset",
-          via: [:get, :post]
+      via: [:get, :post]
   end
 
   part "opendata" do

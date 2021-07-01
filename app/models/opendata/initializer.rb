@@ -23,6 +23,7 @@ module Opendata
     Cms::Node.plugin "opendata/member"
     Cms::Node.plugin "opendata/my_profile"
     Cms::Node.plugin "opendata/my_dataset"
+    Cms::Node.plugin "opendata/my_favorite_dataset"
     Cms::Node.plugin "opendata/my_app"
     Cms::Node.plugin "opendata/my_idea"
 

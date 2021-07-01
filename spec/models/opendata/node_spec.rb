@@ -104,6 +104,14 @@ describe Opendata::Node::MyDataset do
   it_behaves_like "mongoid#find"
 end
 
+describe Opendata::Node::MyFavoriteDataset do
+  subject(:model) { Opendata::Node::MyFavoriteDataset }
+  subject(:factory) { :opendata_node_my_favorite_dataset }
+
+  it_behaves_like "mongoid#save"
+  it_behaves_like "mongoid#find"
+end
+
 describe Opendata::Node::MyApp do
   subject(:model) { Opendata::Node::MyApp }
   subject(:factory) { :opendata_node_my_app }
