@@ -306,8 +306,10 @@ this.Openlayers_Map = (function () {
       // set manually options and do fit
       var extent = this.markerLayer.getSource().getExtent();
       this.map.getView().fit(extent, this.map.getSize());
-      this.map.getView().setZoom(this.getZoom());
 
+      if (markerLength == 1) {
+        this.map.getView().setZoom(this.getZoom());
+      }
       if (this.center) {
         this.setCenter(this.getCenter());
       }
