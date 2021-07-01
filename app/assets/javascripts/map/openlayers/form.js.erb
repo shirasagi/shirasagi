@@ -18,16 +18,10 @@ this.Openlayers_Map_Form = (function () {
     }
     this.defaultZoom = Openlayers_Map.defaultZoom;
 
-    if (opts["center"] && this.validateLatLon(opts["center"][0], opts["center"][1])) {
+    if (opts["center"] && this.validateLatLon(opts["center"][1], opts["center"][0])) {
       this.center = opts["center"];
     }
-    this.defaultCenter = Openlayers_Map.defaultCenter;
-
-    // reverse lat lon
-    if (this.center) {
-      this.center = this.center.reverse();
-    }
-    this.defaultCenter = this.defaultCenter.reverse();
+    this.defaultCenter = Openlayers_Map.defaultCenter.reverse();
 
     this.markerFeature = null;
     this.markerLayer = null;
@@ -55,13 +49,13 @@ this.Openlayers_Map_Form = (function () {
   };
 
   Openlayers_Map_Form.prototype.validateLoc = function (loc) {
-    var lat, latlon, lon;
+    var lat, lonlat, lon;
     if (!loc) {
       return false;
     }
-    latlon = loc.split(',');
-    lat = parseFloat(latlon[0]);
-    lon = parseFloat(latlon[1]);
+    lonlat = loc.split(',');
+    lat = parseFloat(lonlat[1]);
+    lon = parseFloat(lonlat[0]);
     if (!(lat && !isNaN(lat))) {
       return false;
     }
@@ -370,7 +364,7 @@ this.Openlayers_Map_Form = (function () {
         var latlng = ol.proj.transform(_this.map.getView().getCenter(), 'EPSG:3857', 'EPSG:4326');
         var lat = Math.floor((latlng[1] * 1000000)) / 1000000;
         var lng = Math.floor((latlng[0] * 1000000)) / 1000000;
-        $(".center-input").val(lat + "," + lng);
+        $(".center-input").val(lng + "," + lat);
         return false;
       };
     })(this));

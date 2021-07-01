@@ -378,7 +378,7 @@ this.Map_Form = (function () {
       var latlng = Googlemaps_Map.map.getCenter();
       var lat = Math.floor((latlng.lat() * 1000000)) / 1000000;
       var lng = Math.floor((latlng.lng() * 1000000)) / 1000000;
-      $(".center-input").val(lat + "," + lng);
+      $(".center-input").val(lng + "," + lat);
       return false;
     });
     $(".mod-map .set-zoom-level").on('click', function () {

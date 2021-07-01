@@ -11,16 +11,10 @@ this.Openlayers_Map = (function () {
     }
     this.defaultZoom = Openlayers_Map.defaultZoom;
 
-    if (opts["center"] && this.validateLatLon(opts["center"][0], opts["center"][1])) {
+    if (opts["center"] && this.validateLatLon(opts["center"][1], opts["center"][0])) {
       this.center = opts["center"];
     }
-    this.defaultCenter = Openlayers_Map.defaultCenter;
-
-    // reverse lat lon
-    if (this.center) {
-      this.center = this.center.reverse();
-    }
-    this.defaultCenter = this.defaultCenter.reverse();
+    this.defaultCenter = Openlayers_Map.defaultCenter.reverse();
 
     this.markerFeature = null;
     this.markerLayer = null;

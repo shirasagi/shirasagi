@@ -12,16 +12,10 @@ this.Openlayers_Member_Photo_Form = (function () {
     }
     this.defaultZoom = Openlayers_Map.defaultZoom;
 
-    if (opts["center"] && this.validateLatLon(opts["center"][0], opts["center"][1])) {
+    if (opts["center"] && this.validateLatLon(opts["center"][1], opts["center"][0])) {
       this.center = opts["center"];
     }
-    this.defaultCenter = Openlayers_Map.defaultCenter;
-
-    // reverse lat lon
-    if (this.center) {
-      this.center = this.center.reverse();
-    }
-    this.defaultCenter = this.defaultCenter.reverse();
+    this.defaultCenter = Openlayers_Map.defaultCenter.reverse();
 
     this.markerFeature = null;
     this.markerLayer = null;
@@ -234,7 +228,7 @@ this.Openlayers_Member_Photo_Form = (function () {
         var latlng = ol.proj.transform(_this.map.getView().getCenter(), 'EPSG:3857', 'EPSG:4326');
         var lat = Math.floor((latlng[1] * 1000000)) / 1000000;
         var lng = Math.floor((latlng[0] * 1000000)) / 1000000;
-        $(".center-input").val(lat + "," + lng);
+        $(".center-input").val(lng + "," + lat);
         return false;
       };
     })(this));
