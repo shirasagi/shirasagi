@@ -65,7 +65,7 @@ module Opendata::DatasetSearchable
         words = params[:name].split(/[\s　]+/).uniq.compact.map { |w| /#{::Regexp.escape(w)}/i }
         all.all_in name: words
       else
-        all.keyword_in params[:keyword], :name
+        all.keyword_in (params[:keyword].presence || params[:name]), :name
       end
     end
 

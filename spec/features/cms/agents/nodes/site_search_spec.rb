@@ -47,7 +47,7 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
                   url: "http://example.jp/#{name2}",
                   created: Time.zone.now,
                   updated: Time.zone.now,
-                  released: nil
+                  released: Time.zone.now
                 }
               }
             ]

@@ -138,6 +138,17 @@ production: &production
     class: ''
     class_categories: 'item-'
 
+  elasticsearch:
+    label: 関連サイト全て
+    site-search-marks: [ "use-site-search", "end-use-site-search" ]
+    indexes:
+      - s1
+      - s2
+      - s3
+      - s4
+      - s5
+      - fess.search
+
   # 移動後の URL 変更を有効にする
   # enable url replace after move.
   replace_urls_after_move: true

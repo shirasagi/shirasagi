@@ -9,6 +9,10 @@ SS::Application.routes.draw do
 
   concern :download do
     get :download, on: :collection
+    get :download_record_phrases, on: :collection
+    get :download_exists_phrases, on: :collection
+    get :download_sessions, on: :collection
+    get :download_used_times, on: :collection
   end
 
   concern :import do
@@ -27,11 +31,13 @@ SS::Application.routes.draw do
     resources :intents, concerns: [:deletion, :download, :import]
     resources :categories, concerns: :deletion
     resources :histories, concerns: [:deletion, :download], only: [:index, :show, :destroy]
+    resources :line_reports, concerns: [:download], only: [:index]
     get 'report' => 'report#index'
   end
 
   node "chat" do
     get "bot/(index.:format)" => "public#index", cell: "nodes/bot"
+    post "bot/line" => "public#line", cell: "nodes/bot"
   end
 
   part "chat" do

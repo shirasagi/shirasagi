@@ -10,11 +10,7 @@
       </div>
 
       <footer class="send">
-        <% if @cur_user.email.present? %>
-          <%= f.submit t("ss.export"), class: "btn btn-primary" %>
-        <% else %>
-          <%= f.submit t("ss.export"), class: "btn btn-primary", onclick: 'alert("' + t("opendata.export.emtpy_email_message") +'"); return false;' %>
-        <% end %>
+        <%= f.submit t("ss.export"), class: "btn btn-primary" %>
       </footer>
     </div>
   </div>

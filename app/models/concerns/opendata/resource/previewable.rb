@@ -110,14 +110,41 @@ module Opendata::Resource::Previewable
       next if line[lat_index].blank? || line[lon_index].blank?
 
       name = name_index ? line[name_index] : ""
-      lat = line[lat_index].to_f
-      lon = line[lon_index].to_f
+      lat = format_coordinate(line[lat_index].to_s)
+      lon = format_coordinate(line[lon_index].to_s)
 
+      next if lat.nil? || lon.nil?
       next if lat < -90.0 || lat > 90.0
       next if lon < -180.0 || lat > 180.0
 
       map_points << { "name" => name, "loc" => [ lat, lon ] }
     end
     map_points
+  end
+
+  def format_coordinate(coordinate)
+    # dms
+    if coordinate =~ /^([^\d]+)?([\d\.]+)[\°度]([\d\.]+)[\'分]([\d\.]+)[\"秒]([^\d]+)?$/
+      d = $2.to_f
+      m = $3.to_f / 60
+      s = $4.to_f / 3600
+      return d + m + s
+    end
+
+    # dm
+    if coordinate =~ /^([^\d]+)?([\d\.]+)[\°度]([\d\.]+)[\'分]([^\d]+)?$/
+      d = $2.to_f
+      m = $3.to_f / 60
+      return d + m
+    end
+
+    # d
+    if coordinate =~ /^([^\d]+)?([\d\.]+)([^\d]+)?$/
+      d = $2.to_f
+      return d
+    end
+
+    # unknown format
+    return nil
   end
 end

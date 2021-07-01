@@ -89,6 +89,11 @@ FactoryBot.define do
     filename { "mydataset-#{unique_id}" }
   end
 
+  factory :opendata_node_my_favorite_dataset, class: Opendata::Node::MyFavoriteDataset, traits: [:cms_node] do
+    route "opendata/my_favorite_dataset"
+    filename { "myfavorite-#{unique_id}" }
+  end
+
   factory :opendata_node_my_app, class: Opendata::Node::MyApp, traits: [:cms_node] do
     route "opendata/my_app"
     filename { "myapp-#{unique_id}" }

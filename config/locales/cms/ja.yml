@@ -56,12 +56,15 @@ ja:
     preview_site: サイトプレビュー
     role: 権限/ロール
     root_menu: メインメニュー
+    search_button: 検索
     search_contents: サイト内検索
     search_contents_condition: "検索条件: %{condition}"
     search_contents_count: "%{count} 件の検索結果"
     search_contents_html: HTML検索と置換
     search_contents_pages: ページ検索
     search_contents_files: ファイル一覧
+    search_form: サイト検索フォーム
+    search_target: サイト検索範囲を選択してください
     show_link_to_part: パーツのリンクを表示
     site: サイト
     site_config: サイト設定
@@ -382,6 +385,7 @@ ja:
       cms/sns_share: SNSシェアボタン
       cms/calendar_nav: アーカイブナビ(カレンダー)
       cms/monthly_nav: アーカイブナビ（月次）
+      cms/site_search_history: サイト内検索(検索履歴)
     columns:
       cms/text_field: 一行入力
       cms/date_field: 日付入力
@@ -580,6 +584,7 @@ ja:
       cms/column/text_like: 制約条件
       cms/column/select_like: 選択
       cms/redirect_link: リンクページ
+      cms/site_search/history: 履歴
       cms/site_search/keyword: 注目ワード
       cms/site_search/history: 履歴
       cms/line_poster: LINE連携
@@ -734,6 +739,13 @@ ja:
         name: タイトル
         description: 説明
         order: 並び順
+      cms/addon/site_search/history:
+        upper_html:
+          - 上部HTMLを入力します。
+        lower_html:
+          - 下部HTMLを入力します。
+        placeholder:
+          - プレースホルダーを入力します。
       cms/command:
         name: タイトル
         description: 説明
@@ -914,6 +926,10 @@ ja:
         child_loop_html: ループHTML
         child_upper_html: 上部HTML
         child_lower_html: 下部HTML
+      cms/addon/site_search/history:
+        upper_html: 上部HTML
+        lower_html: 下部HTML
+        placeholder: プレースホルダー
       cms/form:
         name: 名前
         order: 並び順

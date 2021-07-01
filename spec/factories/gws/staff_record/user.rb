@@ -18,5 +18,7 @@ FactoryBot.define do
     charge_tel { "charge_tel-#{unique_id}" }
     divide_duties { Array.new(2) { "divide_duties-#{unique_id}" }.join("\n") }
     remark { Array.new(2) { "remark-#{unique_id}" }.join("\n") }
+    staff_records_view { %w(show hide).sample }
+    divide_duties_view { %w(show hide).sample }
   end
 end

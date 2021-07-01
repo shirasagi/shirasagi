@@ -70,6 +70,16 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
             ::FileUtils.copy(source_file.path, new_file.path)
           end
           clone_file.owner_item = _parent
+
+          # history_files
+          if @merge_values
+            clone_file.master_id = nil
+            clone_file.history_file_ids = source_file.history_file_ids
+          else
+            clone_file.master_id = source_file.id
+            clone_file.history_file_ids = []
+          end
+
           clone_file.save(validate: false)
           result = clone_file
 
@@ -77,7 +87,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
 
           cloned_file_ids << clone_file.id
 
-          cloned_value = self.value
+          cloned_value = self.value.to_s
           cloned_value.gsub!("=\"#{source_file.url}\"", "=\"#{clone_file.url}\"")
           cloned_value.gsub!("=\"#{source_file.thumb_url}\"", "=\"#{clone_file.thumb_url}\"")
           self.value = cloned_value

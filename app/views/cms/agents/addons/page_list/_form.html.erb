@@ -50,8 +50,10 @@
 <% end %>
 
 <dl class="see">
-  <dt><%= @model.t :conditions %><%= @model.tt :conditions %></dt>
-  <dd><%= f.text_area :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
+  <% if @model.use_conditions %>
+    <dt><%= @model.t :conditions %><%= @model.tt :conditions %></dt>
+    <dd><%= f.text_area :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
+  <% end %>
 
   <% if @model.use_sort %>
     <dt class="sort"><%= @model.t :sort %><%= @model.tt :sort %></dt>

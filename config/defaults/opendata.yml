@@ -33,6 +33,9 @@ production: &production
       page_limit: 3
       parse_command: "timeout 20 ruby bin/extract_pdf_base64.rb"
 
+  assoc_job:
+    perform: later
+
   harvest:
     importer_api:
       - ckan

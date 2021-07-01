@@ -20,7 +20,7 @@ describe "opendata_agents_nodes_url_resource", dbscope: :example do
 
   let!(:license) { create(:opendata_license, cur_site: site) }
   let!(:original_url) do
-    "http://www.esri.cao.go.jp/jp/sna/data/data_list/sokuhou/files/2014/qe143_2/__icsFiles/afieldfile/2014/12/09/gaku-mg1432.csv"
+    "https://www.esri.cao.go.jp/jp/sna/data/data_list/sokuhou/files/2014/qe143_2/__icsFiles/afieldfile/2014/12/09/gaku-mg1432.csv"
   end
   let!(:url_resource) { create_url_resource(dataset, license, original_url) }
   let(:download_path) { url_resource.download_url }

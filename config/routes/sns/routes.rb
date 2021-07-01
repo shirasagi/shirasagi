@@ -63,6 +63,15 @@ Rails.application.routes.draw do
         get :download, on: :member
         get :contrast_ratio, on: :collection
       end
+
+      resources :replace_files, only: [:index, :edit, :update] do
+        get :confirm, on: :member
+        post :confirm, on: :member
+        get :histories, on: :member
+        get :download, on: :member
+        post :restore, on: :member
+        post :destroy, on: :member
+      end
     end
   end
 end

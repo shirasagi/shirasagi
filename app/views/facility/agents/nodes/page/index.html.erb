@@ -60,6 +60,11 @@ $(window).on("load", function() {
   </div>
 <% end %>
 
+<% if @items.present? %>
+  <h2><%= t("facility.notice") %></h2>
+  <%= render_page_list %>
+<% end %>
+
 <% if @merged_map.present? %>
   <% @cur_page = @merged_map %>
   <%= render file: "map/agents/addons/page/view/index" %>

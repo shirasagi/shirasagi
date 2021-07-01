@@ -234,7 +234,15 @@ this.SS = (function () {
       }
     };
     elem.on("submit", selector, function (e) {
-      $(this).ajaxSubmit($.extend(true, defaults, params));
+      var options;
+
+      if ($.isFunction(params)) {
+        options = params();
+      } else {
+        options = params;
+      }
+
+      $(this).ajaxSubmit($.extend(true, defaults, options));
       e.preventDefault();
     });
   };

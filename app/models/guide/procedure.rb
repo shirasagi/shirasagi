@@ -7,13 +7,6 @@ class Guide::Procedure < Guide::Diagram::Point
   set_permission_name "guide_procedures"
 
   seqid :id
-  field :name, type: String
-  field :order, type: Integer, default: 0
-
-  permit_params :name
-  permit_params :order
-
-  validates :name, presence: true
 
   default_scope -> { order_by(order: 1, name: 1) }
 
