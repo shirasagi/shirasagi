@@ -7,13 +7,16 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
   let!(:item) { create :gws_share_file, folder_id: folder.id, category_ids: [category.id], memo: "test" }
   let(:index_path) { gws_share_folder_files_path site, folder }
 
-  before { login_gws_user }
+  before do
+    clear_downloads
+    login_gws_user
+  end
 
   describe "download all" do
     context "when zip file is created on the fly" do
       it do
         visit index_path
-        find('.list-head label.check input').set(true)
+        find('.list-head label.check input').click
         page.accept_confirm do
           find('.download-all').click
         end

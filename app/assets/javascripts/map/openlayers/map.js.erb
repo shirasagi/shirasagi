@@ -26,6 +26,7 @@ this.Openlayers_Map = (function () {
     this.markerLayer = null;
     this.popup = null;
     this.markerIcon = Openlayers_Map.markerIcon;
+    this.loadedLayers = [];
     this.render();
   }
 
@@ -275,7 +276,7 @@ this.Openlayers_Map = (function () {
           }
         });
       }
-      pos = [marker['loc'][1], marker['loc'][0]];
+      pos = [marker['loc'][0], marker['loc'][1]];
       feature = new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.transform(pos, "EPSG:4326", "EPSG:3857")),
         markerId: (ref = marker['id']) != null ? ref : id,
@@ -361,10 +362,11 @@ this.Openlayers_Map = (function () {
       //strategy: ol.loadingstrategy.bbox
     });
     var layer = new ol.layer.Vector({
-      map: this.map,
       source: vectorSource
     });
-  }
+    this.map.addLayer(layer);
+    this.loadedLayers.push(layer);
+  };
 
   Openlayers_Map.prototype.validateZoom = function (zoom) {
     if (zoom >= 3 && zoom <= 18) {
@@ -380,6 +382,13 @@ this.Openlayers_Map = (function () {
     } else {
       return false;
     }
+  };
+
+  Openlayers_Map.prototype.removeloadedLayers = function () {
+    var _self = this;
+    $.each(this.loadedLayers, function () {
+      _self.map.removeLayer(this);
+    });
   };
 
   return Openlayers_Map;

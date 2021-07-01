@@ -128,6 +128,16 @@ module Opendata::Node
     default_scope ->{ where(route: "opendata/dataset_map") }
   end
 
+  class DatasetGraph
+    include Cms::Model::Node
+    include Cms::Addon::Meta
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "opendata/dataset_graph") }
+  end
+
   class Sparql
     include Cms::Model::Node
     include Cms::Addon::NodeSetting

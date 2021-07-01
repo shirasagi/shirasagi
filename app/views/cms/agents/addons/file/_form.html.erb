@@ -12,14 +12,18 @@
 
     <span class="upload-menu-new">
       <% if @cur_node %>
-        <%= link_to t('ss.links.upload'), cms_apis_node_temp_files_path(cid: @cur_node), class: "ajax-box btn" %>
+        <% if @cur_node.becomes_with_route.try(:opendata_sites).present? %>
+          <%= link_to t('ss.links.upload'), cms_apis_node_temp_files_path(cid: @cur_node, similar_files: 1, owner_item_id: @item.id, owner_item_type: @model.to_s), class: "ajax-box btn" %>
+        <% else %>
+          <%= link_to t('ss.links.upload'), cms_apis_node_temp_files_path(cid: @cur_node), class: "ajax-box btn" %>
+        <% end %>
       <% else %>
         <%= link_to t('ss.links.upload'), cms_apis_temp_files_path, class: "ajax-box btn" %>
       <% end %>
     </span>
     <span class="upload-menu-select">
-      <%= link_to t("sns.user_file"), cms_apis_user_files_path(cid: @cur_node || '-'), class: "ajax-box btn" %>
-      <%= link_to t("cms.file"), cms_apis_files_path(cid: @cur_node || '-'), class: "ajax-box btn" %>
+      <%= link_to t("sns.user_file"), cms_apis_user_files_path(cid: @cur_node || '-', owner_item_id: @item.id, owner_item_type: @model.to_s), class: "ajax-box btn" %>
+      <%= link_to t("cms.file"), cms_apis_files_path(cid: @cur_node || '-', owner_item_id: @item.id, owner_item_type: @model.to_s), class: "ajax-box btn" %>
     </span>
     <div class="upload-drop-area">
       <span class="upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
@@ -38,11 +42,11 @@
 
   var options = {};
   options.selectUrl = function(id) {
-    var selectUrlTemplate = "<%= @cur_node ? select_cms_apis_node_temp_file_path(id: ":id") : select_cms_apis_temp_file_path(id: ":id") %>";
+    var selectUrlTemplate = "<%= @cur_node ? select_cms_apis_node_temp_file_path(id: ":id", owner_item_id: @item.id, owner_item_type: @model.to_s) : select_cms_apis_temp_file_path(id: ":id") %>";
     return selectUrlTemplate.replace(":id", id);
   };
   options.uploadUrl = function() {
-    var uploadUrlTemplate = "<%= @cur_node ? cms_apis_node_temp_files_path(format: "json") : cms_apis_temp_files_path(format: "json") %>";
+    var uploadUrlTemplate = "<%= @cur_node ? cms_apis_node_temp_files_path(format: "json", owner_item_id: @item.id, owner_item_type: @model.to_s) : cms_apis_temp_files_path(format: "json") %>";
     return uploadUrlTemplate;
   };
   var tempFile = new SS_Addon_TempFile($el.find(".upload-drop-area"), <%= @cur_user.id %>, options);

@@ -124,7 +124,7 @@ this.Googlemaps_Map = (function () {
       var marker_html, name, text, image, opts;
 
       opts = {
-        position: new google.maps.LatLng(value["loc"][0], value["loc"][1]),
+        position: new google.maps.LatLng(value["loc"][1], value["loc"][0]),
         map: Googlemaps_Map.map
       };
       if (value["image"]) {
@@ -133,7 +133,7 @@ this.Googlemaps_Map = (function () {
         opts["icon"] = Googlemaps_Map.markerIcon;
       }
       Googlemaps_Map.markers[id]["marker"] = new google.maps.Marker(opts);
-      markerBounds.extend(new google.maps.LatLng(value["loc"][0], value["loc"][1]));
+      markerBounds.extend(new google.maps.LatLng(value["loc"][1], value["loc"][0]));
       if (value["html"]) {
         marker_html = value["html"];
         Googlemaps_Map.markers[id]["window"] = new google.maps.InfoWindow({
@@ -173,6 +173,7 @@ this.Googlemaps_Map = (function () {
       suppressInfoWindows: true,
       preserveViewport: false
     });
+    Googlemaps_Map.kmlLayer.setMap(Googlemaps_Map.map);
   };
 
   Googlemaps_Map.setGeoJson = function (url) {

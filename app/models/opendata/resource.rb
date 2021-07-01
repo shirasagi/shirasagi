@@ -2,6 +2,7 @@ class Opendata::Resource
   include SS::Document
   include Opendata::Resource::Model
   include Opendata::Resource::Previewable
+  include Opendata::Addon::Graph
   include Opendata::Addon::RdfStore
   include Opendata::Addon::CmsRef::AttachmentFile
   include Opendata::Addon::Harvest::Resource

@@ -8,7 +8,7 @@ describe "facility_agents_nodes_search", type: :feature, dbscope: :example, js: 
     let(:item) { create :facility_node_page, filename: "node/item" }
     let!(:map) do
       create :facility_map, filename: "node/item/#{unique_id}",
-             map_points: [{"name" => item.name, "loc" => [34.067035, 134.589971], "text" => unique_id}]
+             map_points: [{"name" => item.name, "loc" => [134.589971, 34.067035], "text" => unique_id}]
     end
 
     it "#index" do
@@ -104,7 +104,7 @@ describe "facility_agents_nodes_search", type: :feature, dbscope: :example, js: 
     let(:item) { create :facility_node_page, filename: "item_node/item" }
     let!(:map) do
       create :facility_map, filename: "item_node/item/#{unique_id}",
-             map_points: [{"name" => item.name, "loc" => [34.067035, 134.589971], "text" => unique_id}]
+             map_points: [{"name" => item.name, "loc" => [134.589971, 34.067035], "text" => unique_id}]
     end
 
     it "#index" do

@@ -65,6 +65,7 @@ Rails.application.routes.draw do
     resources :search_datasets, concerns: :deletion, module: :dataset
     resources :search_dataset_groups, concerns: :deletion, module: :dataset
     resources :dataset_maps, concerns: :deletion, module: :dataset
+    resources :dataset_graphs, concerns: :deletion, module: :dataset
 
     scope "report", as: "dataset_report" do
       get "/" => redirect { |p, req| "#{req.path}/downloads" }, as: :main
@@ -151,6 +152,9 @@ Rails.application.routes.draw do
     get "dataset_area/*name/" => "public#index", cell: "nodes/dataset/dataset_area", name: /[^\.]+/
     get "dataset_map/" => "public#index", cell: "nodes/dataset/dataset_map"
     get "dataset_map/search.html" => "public#search", cell: "nodes/dataset/dataset_map"
+    get "dataset_graph/" => "public#index", cell: "nodes/dataset/dataset_graph"
+    get "dataset_graph/search.html" => "public#search", cell: "nodes/dataset/dataset_graph"
+    get "dataset_graph/graph/:dataset_id/:id.json" => "public#graph", cell: "nodes/dataset/dataset_graph"
 
     get "dataset/(index.:format)" => "public#index", cell: "nodes/dataset/dataset"
     get "dataset/rss.xml" => "public#rss", cell: "nodes/dataset/dataset"

@@ -1924,6 +1924,7 @@ footer.send {
         line-height: 20px;
         color: $black;
         border: 5px solid $gray4;
+        z-index: 1000;
       }
     }
     .properties {
@@ -1955,6 +1956,46 @@ footer.send {
     a {
       @include btn;
       margin-bottom: 5px;
+    }
+  }
+}
+
+#addon-cms-agents-addons-file .file-view,#addon-cms-agents-addons-form-page .file-view,.column-value-cms-column-free .file-view {
+  width: 240px;
+  .od-resource-file-meta {
+    width: 240px;
+    display: inline-block;
+    margin: 16px 0;
+    dt {
+      font-weight: bold;
+      margin: 8px 0 4px;
+    }
+    dd {
+      margin: 0;
+      margin: 4px 0 16px;
+      select, input, a, table {
+        margin: 4px 0;
+      }
+    }
+  }
+}
+
+#addon-cms-agents-addons-form-page .file-view,.column-value-cms-column-free .file-view {
+  width: 240px;
+  .od-resource-file-meta {
+    width: 240px;
+    display: inline-block;
+    margin: 16px 0;
+    dt {
+      font-weight: bold;
+      margin: 8px 0 4px;
+    }
+    dd {
+      margin: 0;
+      margin: 4px 0 16px;
+      select, input, a, table {
+        margin: 4px 0;
+      }
     }
   }
 }
@@ -2535,6 +2576,12 @@ table.form-index.sortable-index {
     &:after { display: none; }
   }
 }
+.th-lock thead th {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
 
 // -------------------------------------------------------------------------------------------------
 // form
@@ -3005,7 +3052,6 @@ form .CodeMirror {
     img {
       vertical-align: top;
       min-height: 110px;
-      width: 100%;
     }
     .ext {
       display: block;
@@ -3531,4 +3577,11 @@ body.ss-ajax-in-iframe {
   ul li {
     list-style: inherit;
   }
+}
+
+.guide-importer {
+  margin-bottom: 10px;
+}
+.guide-template {
+  margin-top: 20px;
 }

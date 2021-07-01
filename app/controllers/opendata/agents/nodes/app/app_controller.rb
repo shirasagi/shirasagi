@@ -141,10 +141,7 @@ class Opendata::Agents::Nodes::App::AppController < ApplicationController
     if @app.present? && Mongoid::Config.clients[:default_post].blank?
       exec = @app.executed.to_i
       @app.executed = exec + 1
-      res = @app.save(validate: false)
-      if !res
-        @app.executed = exec
-      end
+      @app.set(executed: @app.executed)
     end
     render :show_executed
   end

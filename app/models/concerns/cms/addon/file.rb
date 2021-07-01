@@ -17,7 +17,6 @@ module Cms::Addon
 
       after_generate_file :generate_public_files if respond_to?(:after_generate_file)
       after_remove_file :remove_public_files if respond_to?(:after_remove_file)
-      after_merge_branch :update_owner_item_of_files rescue nil
     end
 
     def allow_other_user_files

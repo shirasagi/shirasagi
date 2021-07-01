@@ -7,6 +7,14 @@
     thumb_path = proc { |item| item.thumb_url }
   end
 %>
+<%= jquery do %>
+  $(".od-resource-file-meta").hide();
+  $("input[name='item[opendata_dataset_state]']").each(function() {
+    if ($(this).prop("checked")) {
+      $(this).trigger('change');
+    }
+  });
+<% end %>
 <div class="file-view" data-file-id="<%= item.id %>" data-humanized-name="<%= item.humanized_name %>">
   <%= sanitizer_status(item) %>
   <%= link_to file_path.call(item), class: :thumb, target: "_blank", rel: "noopener" do %>
@@ -28,4 +36,22 @@
   <div class="action">
     <%= link_to t("ss.buttons.delete"), "#", class: "action-delete btn-file-delete" %>
   </div>
+  <% licenses = Opendata::License.in(site_id: @cur_node.becomes_with_route.try(:opendata_site_ids)).and_public.pluck(:name, :id) if @cur_node.present? %>
+  <% page = @page.presence || @item %>
+  <% if @cur_node.present? && @cur_node.becomes_with_route.try(:opendata_sites).present? && page.respond_to?(:opendata_resources) %>
+    <dl class="od-resource-file-meta">
+      <dt><%= t('cms.opendata_ref/resource.license_id') %></dt>
+      <dd>
+        <%= select_tag "item[opendata_resources][#{item.id}][license_ids]", options_for_select(licenses, page.opendata_resources_licenses(item).first.try(:id)), include_blank: true %>
+      </dd>
+
+      <dt><%= t('cms.opendata_ref/resource.text') %></dt>
+      <dd><%= text_area_tag "item[opendata_resources][#{item.id}][text]", page.opendata_resources_text(item) %></dd>
+
+      <dt><%= t('cms.opendata_ref/resource.state') %></dt>
+      <dd>
+        <%= select_tag "item[opendata_resources][#{item.id}][state]", options_for_select(page.opendata_resource_state_options, page.opendata_resources_state(item)), class: 'od-resource-file-state', data: { 'file-id' => item.id } %>
+      </dd>
+    </dl>
+  <% end %>
 </div>

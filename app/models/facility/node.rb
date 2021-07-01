@@ -31,10 +31,16 @@ module Facility::Node
     include Facility::Addon::Category
     include Facility::Addon::Service
     include Facility::Addon::Location
+    include Facility::Addon::Notice
+    include Cms::Addon::Form::Node
     include Cms::Addon::Release
     include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+
+    self.use_no_items_display = false
+    self.use_substitute_html = false
+    self.use_conditions = false
 
     default_scope ->{ where(route: "facility/page") }
 

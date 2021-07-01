@@ -34,9 +34,9 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.attach")
         end
       end
-      within "#addon-cms-agents-addons-file" do
-        expect(page).to have_css(".file-view", text: "keyvisual.jpg")
-        wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
+      wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
+        within "#addon-cms-agents-addons-file" do
+          expect(page).to have_css(".file-view", text: "keyvisual.jpg")
           click_on I18n.t("sns.file_attach")
         end
       end

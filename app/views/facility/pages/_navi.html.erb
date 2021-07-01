@@ -5,6 +5,7 @@
   <h3><%= link_to t("facility.page"), facility_page_path(cid: @item.parent.id, id: @item.id) %></h3>
   <% end %>
   <h3><%= link_to t("facility.image"), facility_images_path(cid: @item.id) %></h3>
+  <h3><%= link_to t("facility.notice"), facility_notices_path(cid: @item.id) %></h3>
   <h3><%= link_to t("facility.map"), facility_maps_path(cid: @item.id) %></h3>
 <% else %>
   <h3><%= link_to t("facility.page"), facility_pages_path %></h3>
