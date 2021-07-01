@@ -7,8 +7,8 @@ module Guide::Addon
       field :link_url, type: String
       field :html, type: String
       field :procedure_location, type: String
-      field :belongings, type: SS::Extensions::Words
-      field :procedure_applicant, type: SS::Extensions::Words
+      field :belongings, type: SS::Extensions::Lines
+      field :procedure_applicant, type: SS::Extensions::Lines
       field :remarks, type: String
 
       permit_params :link_url

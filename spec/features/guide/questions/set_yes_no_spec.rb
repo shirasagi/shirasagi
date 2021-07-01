@@ -5,11 +5,11 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
   let(:node)   { create :guide_node_guide, filename: "guide" }
   let(:item) { create(:guide_question, cur_site: site, cur_node: node) }
 
-  let!(:procedure1) { create :guide_procedure, cur_site: site, cur_node: node, name: "procedure1", order: 10 }
-  let!(:procedure2) { create :guide_procedure, cur_site: site, cur_node: node, name: "procedure2", order: 20 }
+  let!(:procedure1) { create :guide_procedure, cur_site: site, cur_node: node, name: "procedure1", id_name: "0.procedure1", order: 10 }
+  let!(:procedure2) { create :guide_procedure, cur_site: site, cur_node: node, name: "procedure2", id_name: "1.procedure1", order: 20 }
 
-  let!(:question1) { create :guide_question, cur_site: site, cur_node: node, name: "question1", order: 10, in_edges: [] }
-  let!(:question2) { create :guide_question, cur_site: site, cur_node: node, name: "question2", order: 20, in_edges: [] }
+  let!(:question1) { create :guide_question, cur_site: site, cur_node: node, name: "question1", id_name: "0.question1", order: 10, in_edges: [] }
+  let!(:question2) { create :guide_question, cur_site: site, cur_node: node, name: "question2", id_name: "1.question2", order: 20, in_edges: [] }
 
   let(:index_path) { guide_questions_path site.id, node }
   let(:new_path) { new_guide_question_path site.id, node }
@@ -21,6 +21,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
       visit new_path
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
+        fill_in "item[id_name]", with: "0.sample"
         choose "item_question_type_yes_no"
         all(".question-edges .edge a", text: I18n.t("ss.links.select"))[0].click
       end
