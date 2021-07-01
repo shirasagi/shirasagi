@@ -1,8 +1,5 @@
 <% return "" if @cur_node.becomes_with_route.try(:opendata_site_ids).blank? %>
-<%
-  addon ||= local_assigns.fetch(:addon, {})
-  addon[:display_body] = "hide"
-%>
+<% return "" if @item.respond_to?(:master?) && !@item.master? %>
 <style type="text/css">
   .mod-cms-opendata-dataset ul { padding: 0px; }
   .mod-cms-opendata-dataset li { margin: 10px 0px; }
@@ -11,6 +8,45 @@
     vertical-align: middle;
   }
 </style>
+
+<%= jquery do %>
+  $("input[name='item[opendata_dataset_state]']").on("change", function(){
+    switch($(this).val()) {
+      case 'public' :
+        $("#addon-cms-agents-addons-opendata_ref-category").show();
+        $("#addon-cms-agents-addons-opendata_ref-area").show();
+        $("#addon-cms-agents-addons-opendata_ref-dataset_group").show();
+        $("#addon-cms-agents-addons-opendata_ref-license").hide();
+        $(".od-resource-file-meta").show();
+        $("option[value='same']").text("<%= I18n.t("cms.options.opendata_resource.same") %>");
+        break;
+      case 'closed' :
+        $("#addon-cms-agents-addons-opendata_ref-category").show();
+        $("#addon-cms-agents-addons-opendata_ref-area").show();
+        $("#addon-cms-agents-addons-opendata_ref-dataset_group").show();
+        $("#addon-cms-agents-addons-opendata_ref-license").hide();
+        $(".od-resource-file-meta").show();
+        $("option[value='same']").text("<%= I18n.t("cms.options.opendata_resource.same") %>");
+        break;
+      case 'existance' :
+        $("#addon-cms-agents-addons-opendata_ref-category").hide();
+        $("#addon-cms-agents-addons-opendata_ref-area").hide();
+        $("#addon-cms-agents-addons-opendata_ref-dataset_group").hide();
+        $("#addon-cms-agents-addons-opendata_ref-license").hide();
+        $(".od-resource-file-meta").show();
+        $("option[value='same']").text("<%= I18n.t("cms.options.opendata_resource.existance") %>");
+        break;
+      default :
+        $("#addon-cms-agents-addons-opendata_ref-category").hide();
+        $("#addon-cms-agents-addons-opendata_ref-area").hide();
+        $("#addon-cms-agents-addons-opendata_ref-dataset_group").hide();
+        $("#addon-cms-agents-addons-opendata_ref-license").hide();
+        $(".od-resource-file-meta").hide();
+        $("option[value='same']").text("<%= I18n.t("cms.options.opendata_resource.same") %>");
+    }
+  });
+  $("input[name='item[opendata_dataset_state]']:checked").trigger('change');
+<% end %>
 
 <dl class="see mod-cms-opendata-dataset">
   <dt><%= @model.t :opendata_dataset_state %><%= @model.tt :opendata_dataset_state %></dt>

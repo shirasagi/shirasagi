@@ -133,11 +133,17 @@ class Gws::StaffRecord::User
   end
 
   def export_fields
-    %w(
+    fields = %w(
       id name code order kana multi_section section_name title_ids tel_ext
       charge_name charge_address charge_tel divide_duties remark staff_records_view divide_duties_view
+      readable_setting_range readable_group_ids readable_member_ids
       group_ids user_ids
     )
+    unless SS.config.ss.disable_permission_level
+      fields << "permission_level"
+    end
+
+    fields
   end
 
   def export_convert_item(item, data)
@@ -149,10 +155,18 @@ class Gws::StaffRecord::User
     data[14] = item.label(:staff_records_view)
     # divide_duties_views
     data[15] = item.label(:divide_duties_view)
+
+    # readable_setting_range
+    data[16] = item.label(:readable_setting_range)
+    # readable_group_ids
+    data[17] = Gws::Group.site(@cur_site).in(id: data[17]).active.pluck(:name).join("\n")
+    # readable_member_ids
+    data[18] = Gws::User.site(@cur_site).in(id: data[18]).active.pluck(:uid).join("\n")
+
     # group_ids
-    data[16] = Gws::Group.site(@cur_site).in(id: data[16]).active.pluck(:name).join("\n")
+    data[19] = Gws::Group.site(@cur_site).in(id: data[19]).active.pluck(:name).join("\n")
     # user_ids
-    data[17] = Gws::User.site(@cur_site).in(id: data[17]).active.pluck(:uid).join("\n")
+    data[20] = Gws::User.site(@cur_site).in(id: data[20]).active.pluck(:uid).join("\n")
 
     data
   end
@@ -163,10 +177,14 @@ class Gws::StaffRecord::User
     data[:multi_section] = (data[:multi_section] == regular) ? 'regular' : 'plural'
 
     # title_ids
-    user_titles = Gws::StaffRecord::UserTitle.site(@cur_site)
-    user_titles = user_titles.where(year_id: self.year_id)
-    user_titles = user_titles.in(code: data[:title_ids])
-    data[:title_ids] = user_titles.pluck(:id)
+    if data[:title_ids].present?
+      user_titles = Gws::StaffRecord::UserTitle.site(@cur_site)
+      user_titles = user_titles.where(year_id: self.year_id)
+      user_titles = user_titles.in(code: data[:title_ids].split(/\R/))
+      data[:title_ids] = user_titles.pluck(:id)
+    else
+      data[:title_ids] = []
+    end
 
     # staff_records_view
     show = I18n.t("ss.options.state.show")
@@ -174,10 +192,45 @@ class Gws::StaffRecord::User
     # divide_duties_views
     data[:divide_duties_view] = (data[:divide_duties_view] == show) ? 'show' : 'hide'
 
+    # readable_group_ids
+    case data[:readable_setting_range]
+    when I18n.t("gws.options.readable_setting_range.public")
+      readable_setting_range = "public"
+    when I18n.t("gws.options.readable_setting_range.select")
+      readable_setting_range = "select"
+    else # I18n.t("gws.options.readable_setting_range.private")
+      readable_setting_range = "private"
+    end
+    data[:readable_setting_range] = readable_setting_range
+    # readable_group_ids
+    group_ids = data[:readable_group_ids]
+    if group_ids
+      data[:readable_group_ids] = Gws::Group.site(@cur_site).active.in(name: group_ids.split(/\R/)).pluck(:id)
+    else
+      data[:readable_group_ids] = []
+    end
+    # readable_member_ids
+    user_ids = data[:readable_member_ids]
+    if user_ids
+      data[:readable_member_ids] = Gws::User.site(@cur_site).active.in(uid: user_ids.split(/\R/)).pluck(:id)
+    else
+      data[:readable_member_ids] = []
+    end
+
     # group_ids
-    data[:group_ids] = Gws::Group.site(@cur_site).active.in(name: data[:group_ids]).pluck(:id)
+    group_ids = data[:group_ids]
+    if group_ids
+      data[:group_ids] = Gws::Group.site(@cur_site).active.in(name: group_ids.split(/\R/)).pluck(:id)
+    else
+      data[:group_ids] = []
+    end
     # user_ids
-    data[:user_ids] = Gws::User.site(@cur_site).active.in(uid: data[:user_ids]).pluck(:id)
+    user_ids = data[:user_ids]
+    if user_ids
+      data[:user_ids] = Gws::User.site(@cur_site).active.in(uid: user_ids.split(/\R/)).pluck(:id)
+    else
+      data[:user_ids] = []
+    end
 
     data
   end

@@ -23,6 +23,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
       visit new_path
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
+        fill_in "item[id_name]", with: "0.sample"
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -38,6 +39,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
+        fill_in "item[id_name]", with: "0.modify"
         choose "item_question_type_choices"
         choose "item_check_type_single"
         fill_in "item[in_edges][][value]", with: "answer1"

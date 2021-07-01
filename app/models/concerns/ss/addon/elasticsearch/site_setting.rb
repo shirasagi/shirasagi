@@ -5,8 +5,11 @@ module SS::Addon::Elasticsearch::SiteSetting
   included do
     field :elasticsearch_hosts, type: SS::Extensions::Words
     field :elasticsearch_deny, type: SS::Extensions::Lines, default: '404.html'
+    field :elasticsearch_indexes, type: SS::Extensions::Words
+    field :elasticsearch_outside, type: String, default: 'disabled'
+    embeds_ids :elasticsearch_sites, class_name: "Cms::Site"
 
-    permit_params :elasticsearch_hosts, :elasticsearch_deny
+    permit_params :elasticsearch_hosts, :elasticsearch_deny, :elasticsearch_indexes, :elasticsearch_outside, elasticsearch_site_ids: []
 
     after_save :deny_elasticsearch_paths, if: ->{ @db_changes["elasticsearch_deny"] }
   end
@@ -22,6 +25,14 @@ module SS::Addon::Elasticsearch::SiteSetting
   def elasticsearch_client
     return unless elasticsearch_enabled?
     @elasticsearch_client ||= Elasticsearch::Client.new(hosts: elasticsearch_hosts, logger: Rails.logger)
+  end
+
+  def elasticsearch_outside_options
+    %w(disabled enabled).map { |m| [ I18n.t("ss.options.state.#{m}"), m ] }.to_a
+  end
+
+  def elasticsearch_outside_enabled?
+    elasticsearch_outside == 'enabled'
   end
 
   private

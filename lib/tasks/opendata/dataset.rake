@@ -1,5 +1,4 @@
 namespace :opendata do
-
   task notify_dataset_plan: :environment do
     puts "Please input site: site=[www]" or exit if ENV['site'].blank?
     site = ::Cms::Site.where(host: ENV['site']).first
@@ -14,6 +13,39 @@ namespace :opendata do
       importer_id: ENV['importer'],
       exporter_id: ENV['exporter']
     )
+  end
+
+  task set_map_resources: :environment do
+    puts "Please input site: site=[www]" or exit if ENV['site'].blank?
+    site = ::Cms::Site.where(host: ENV['site']).first
+    ids = ::Opendata::Dataset.site(site).pluck(:id)
+
+    ids.each do |id|
+      item = ::Opendata::Dataset.find(id) rescue nil
+      next unless item
+
+      item.resources.each do |resource|
+        if resource.tsv_present? || resource.xls_present?
+          puts "#{item.name} - #{resource.name}"
+          resource.send(:save_map_resources)
+          resource.set(map_resources: resource.map_resources)
+        end
+      end
+    end
+  end
+
+  task compression_dataset: :environment do
+    puts "Please input site: site=[www]" or exit if ENV['site'].blank?
+    site = ::Cms::Site.where(host: ENV['site']).first
+    ids = ::Opendata::Dataset.site(site).pluck(:id)
+
+    ids.each do |id|
+      item = ::Opendata::Dataset.find(id) rescue nil
+      next unless item
+      next unless item.public?
+      puts item.name
+      item.compression_dataset
+    end
   end
 
   namespace :harvest do

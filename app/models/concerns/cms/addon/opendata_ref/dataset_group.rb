@@ -3,7 +3,7 @@ module Cms::Addon::OpendataRef::DatasetGroup
   extend ActiveSupport::Concern
 
   included do
-    embeds_ids :opendata_dataset_groups, class_name: "Opendata::DatasetGroup", metadata: { on_copy: :clear }
+    embeds_ids :opendata_dataset_groups, class_name: "Opendata::DatasetGroup", metadata: { on_copy: :clear, branch: false }
     permit_params opendata_dataset_group_ids: []
   end
 end

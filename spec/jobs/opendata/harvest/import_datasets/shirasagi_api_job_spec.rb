@@ -3,8 +3,8 @@ require 'spec_helper'
 describe Opendata::Harvest::ImportDatasetsJob, dbscope: :example do
   let!(:site) { cms_site }
   let!(:node) { create(:opendata_node_dataset, name: "datasets") }
+  let!(:node_search) { create :opendata_node_search_dataset, cur_site: site }
   let!(:importer) { create(:opendata_harvest_importer, cur_node: node, api_type: "shirasagi_api") }
-
   let!(:license) { create(:opendata_license, cur_site: site, uid: "cc-by") }
 
   context "with empty package list" do

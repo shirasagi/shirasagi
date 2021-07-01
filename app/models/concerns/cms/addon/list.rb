@@ -16,6 +16,7 @@ module Cms::Addon::List
       cattr_accessor(:default_limit, instance_accessor: false) { 20 }
       cattr_accessor(:use_liquid, instance_accessor: false) { true }
       cattr_accessor(:use_sort, instance_accessor: false) { true }
+      cattr_accessor(:use_conditions, instance_accessor: false) { true }
       attr_accessor :cur_date
 
       field :conditions, type: SS::Extensions::Words

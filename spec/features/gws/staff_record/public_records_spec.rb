@@ -8,7 +8,12 @@ describe "gws_staff_record_public_records", type: :feature, dbscope: :example do
   context "with item" do
     let(:year) { create :gws_staff_record_year }
     let(:section) { create :gws_staff_record_group, year_id: year.id }
-    let!(:item) { create :gws_staff_record_user, year_id: year.id, section_name: section.name }
+    let!(:item) do
+      create(
+        :gws_staff_record_user, year_id: year.id, section_name: section.name,
+        staff_records_view: "show", divide_duties_view: "show"
+      )
+    end
 
     it do
       visit gws_staff_record_public_records_path(site)

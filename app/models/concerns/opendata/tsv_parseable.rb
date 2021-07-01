@@ -2,9 +2,7 @@ module Opendata::TsvParseable
   extend ActiveSupport::Concern
 
   def tsv_present?
-    if try(:tsv) || %w(CSV TSV).index(try(:format).try(:upcase))
-      true
-    end
+    (try(:tsv) || %w(CSV TSV).index(try(:format).try(:upcase))) ? true : false
   end
 
   def xls_present?

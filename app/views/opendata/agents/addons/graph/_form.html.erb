@@ -1,0 +1,15 @@
+<dl class="see mod-opendata-graph">
+  <dt><%= @item.t :preview_graph_state %><%= @item.tt :preview_graph_state %></dt>
+  <dd><%= f.select :preview_graph_state, @item.preview_graph_state_options %></dd>
+
+  <dt><%= @item.t :preview_graph_types %><%= @item.tt :preview_graph_types %></dt>
+  <dd>
+    <%= hidden_field_tag "item[preview_graph_types][]", "", id: nil %>
+    <% %w(bar line pie).each do |type| %>
+      <label>
+        <%= check_box_tag 'item[preview_graph_types][]', type, @item.preview_graph_types.include?(type) %>
+        <%= t("opendata.graph_types.#{type}") %>
+      </label>
+    <% end %>
+  </dd>
+</dl>

@@ -58,6 +58,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         # choose 'item_opendata_dataset_state_public'
         find('input#item_opendata_dataset_state_public').click
       end
+      within '#addon-cms-agents-addons-file' do
+        select Opendata::License.first.name, from: "item_opendata_resources_#{article_page.file_ids.first}_license_ids"
+        select I18n.t("cms.options.opendata_resource.same"), from: "item_opendata_resources_#{article_page.file_ids.first}_state"
+      end
       click_on I18n.t('ss.buttons.publish_save')
       wait_for_notice I18n.t('ss.notice.saved')
 
@@ -122,7 +126,30 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       article_page.reload
       expect(article_page.file_ids - save_file_ids).to eq article_page.file_ids
 
-      # still association is held.
+      expect(Opendata::Dataset.site(od_site).count).to eq 1
+      Opendata::Dataset.site(od_site).first.tap do |dataset|
+        expect(dataset.name).to eq article_page.name
+        expect(dataset.state).to eq 'closed'
+        expect(dataset.parent.id).to eq dataset_node.id
+        expect(dataset.assoc_site_id).to eq article_page.site.id
+        expect(dataset.assoc_node_id).to eq article_page.parent.id
+        expect(dataset.assoc_page_id).to eq article_page.id
+        expect(dataset.assoc_method).to eq 'auto'
+        expect(dataset.resources.count).to eq 0
+      end
+
+      visit article_pages_path(site, article_node)
+      click_on article_page.name
+
+      within '#addon-cms-agents-addons-opendata_ref-resource' do
+        select Opendata::License.first.name, from: "item_opendata_resources_#{article_page.file_ids.first}_license_id"
+        select I18n.t("cms.options.opendata_resource.same"), from: "item_opendata_resources_#{article_page.file_ids.first}_state"
+        click_button I18n.t('ss.buttons.save')
+      end
+
+      wait_for_ajax
+
+      expect(Job::Log.count).to eq 6
       expect(Opendata::Dataset.site(od_site).count).to eq 1
       Opendata::Dataset.site(od_site).first.tap do |dataset|
         expect(dataset.name).to eq article_page.name

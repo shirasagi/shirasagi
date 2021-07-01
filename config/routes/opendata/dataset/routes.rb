@@ -30,8 +30,7 @@ Rails.application.routes.draw do
     get 'export_datasets' => 'dataset/export_datasets#index'
     put 'export_datasets' => 'dataset/export_datasets#export'
     get 'start_export_datasets' => 'dataset/export_datasets#start_export'
-    get 'import_datasets' => 'dataset/import_datasets#index'
-    put 'import_datasets' => 'dataset/import_datasets#import'
+    match 'import_datasets' => 'dataset/import_datasets#import', via: [:get, :put]
     resources :datasets, concerns: [:deletion, :copy, :command], module: :dataset do
 
       get "search" => "datasets/search#index", on: :collection
@@ -65,6 +64,7 @@ Rails.application.routes.draw do
     resources :search_datasets, concerns: :deletion, module: :dataset
     resources :search_dataset_groups, concerns: :deletion, module: :dataset
     resources :dataset_maps, concerns: :deletion, module: :dataset
+    resources :dataset_graphs, concerns: :deletion, module: :dataset
 
     scope "report", as: "dataset_report" do
       get "/" => redirect { |p, req| "#{req.path}/downloads" }, as: :main
@@ -151,6 +151,9 @@ Rails.application.routes.draw do
     get "dataset_area/*name/" => "public#index", cell: "nodes/dataset/dataset_area", name: /[^\.]+/
     get "dataset_map/" => "public#index", cell: "nodes/dataset/dataset_map"
     get "dataset_map/search.html" => "public#search", cell: "nodes/dataset/dataset_map"
+    get "dataset_graph/" => "public#index", cell: "nodes/dataset/dataset_graph"
+    get "dataset_graph/search.html" => "public#search", cell: "nodes/dataset/dataset_graph"
+    get "dataset_graph/graph/:dataset_id/:id.json" => "public#graph", cell: "nodes/dataset/dataset_graph"
 
     get "dataset/(index.:format)" => "public#index", cell: "nodes/dataset/dataset"
     get "dataset/rss.xml" => "public#rss", cell: "nodes/dataset/dataset"
@@ -174,6 +177,8 @@ Rails.application.routes.draw do
     get "dataset/:dataset/point/members.html" => "public#point_members", cell: "nodes/dataset/dataset", format: false
     get "dataset/:dataset/apps/show.:format" => "public#show_apps", cell: "nodes/dataset/dataset", format: false
     get "dataset/:dataset/ideas/show.:format" => "public#show_ideas", cell: "nodes/dataset/dataset", format: false
+    get "dataset/:dataset/favorite.:format" => "public#show_favorite", cell: "nodes/dataset/dataset", format: false
+    post "dataset/:dataset/favorite.:format" => "public#add_favorite", cell: "nodes/dataset/dataset", format: false
 
     get "dataset/datasets/search(.:format)" => "public#datasets_search", cell: "nodes/dataset/dataset"
 
@@ -185,7 +190,7 @@ Rails.application.routes.draw do
     get "search_dataset/rss.xml" => "public#rss", cell: "nodes/dataset/search_dataset"
     match "search_dataset/bulk_download" => "public#bulk_download", cell: "nodes/dataset/search_dataset", via: [:get, :post]
     match "search_dataset/dataset_download/:id" => "public#dataset_download", cell: "nodes/dataset/search_dataset",
-          via: [:get, :post]
+      via: [:get, :post]
   end
 
   part "opendata" do

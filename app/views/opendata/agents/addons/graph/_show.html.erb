@@ -1,0 +1,7 @@
+<dl class="see mod-opendata-graph">
+  <dt><%= @item.t :preview_graph_state %></dt>
+  <dd><%= @item.label :preview_graph_state %></dd>
+
+  <dt><%= @item.t :preview_graph_types %></dt>
+  <dd><%=br @item.preview_graph_types.map { |type| t("opendata.graph_types.#{type}") }.join("\n") %></dd>
+</dl>

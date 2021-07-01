@@ -76,7 +76,7 @@
       </dd>
     <% end %>
     <% @item.map_points.each do |point| %>
-      <dd class="marker">
+      <dd class="marker active">
         <p>
           <%= link_to t("map.buttons.select_image"), "", class: "btn select-marker-image" %>
           <%= hidden_field_tag "item[map_points][][image]", point[:image] %>
@@ -107,6 +107,6 @@
 
 <% else %>
 
-<%== render file: "app/views/map/agents/addons/page/_form_no_api", locals: { f: f } %>
+<%== render file: "app/views/map/agents/addons/page/lgwan/_form", locals: { f: f } %>
 
 <% end %>

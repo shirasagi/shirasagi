@@ -28,10 +28,13 @@ Rails.application.routes.draw do
 
     resources :images, concerns: :deletion
     resources :maps, concerns: :deletion
+    resources :notices, concerns: :deletion
   end
 
   node "facility" do
     get "page/(index.:format)" => "public#index", cell: "nodes/page"
+    get "page/notices/(index.:format)" => "public#notices", cell: "nodes/page"
+    get "page/notices/rss.xml" => "public#rss", cell: "nodes/page", format: "xml"
     get "node/(index.:format)" => "public#index", cell: "nodes/node"
     get "category/(index.:format)" => "public#index", cell: "nodes/category"
     get "service/(index.:format)" => "public#index", cell: "nodes/service"
@@ -46,6 +49,7 @@ Rails.application.routes.draw do
   page "facility" do
     get "image/:filename.:format" => "public#index", cell: "pages/image"
     get "map/:filename.:format" => "public#index", cell: "pages/map"
+    get "notice/:filename.:format" => "public#index", cell: "pages/notice"
   end
 
   namespace "facility", path: ".s:site/facility" do
