@@ -50,8 +50,8 @@ class Cms::Apis::FormsController < ApplicationController
 
   def new_column
     @item = Cms::Form.site(@cur_site).find(params[:id])
+    @cur_node = Cms::Node.find(params[:node]).becomes_with_route rescue nil
     @cur_column = @item.columns.find(params[:column_id])
-    @cur_node = Cms::Node.site(@cur_site).find params[:cid]
     render layout: false
   end
 
@@ -59,6 +59,9 @@ class Cms::Apis::FormsController < ApplicationController
     @item = SS::File.find(params[:id])
     return render(json: [I18n.t('ss.errors.sanitizer.wait')], status: 500) if @item.sanitizer_state == 'wait'
     @item = @item.copy_if_necessary
+    @cur_node = Cms::Node.find(params[:node]).becomes_with_route rescue nil
+    @page = Cms::Page.find_or_initialize_by(id: params[:owner_item_id])
+    @page = @page.becomes_with_route(params[:owner_item_type].underscore)
     @form = params[:form].presence || "upload"
     render layout: false
   end

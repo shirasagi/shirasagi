@@ -27,16 +27,22 @@ describe "member_photos", type: :feature, dbscope: :example, js: true do
       within ".mod-workflow-request" do
         select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
         click_on I18n.t("workflow.buttons.select")
-        click_on I18n.t("workflow.search_approvers.index")
+        wait_cbox_open do
+          click_on I18n.t("workflow.search_approvers.index")
+        end
       end
-      within "#cboxLoadedContent" do
+      wait_for_cbox do
         expect(page).to have_content(user.long_name)
-        click_on user.long_name
+        wait_cbox_close do
+          click_on user.long_name
+        end
       end
       within ".mod-workflow-request" do
         fill_in "workflow[comment]", with: workflow_comment
         click_on I18n.t("workflow.buttons.request")
       end
+      expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(workflow_comment)}/)
       expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user.uid)}/)
 
       item.reload

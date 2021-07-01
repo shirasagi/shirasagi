@@ -71,6 +71,26 @@
   <% end %>
 <% end %>
 
+<% if @items.present? %>
+  <%= render "ss/crud/addon", addon: { head: t("facility.notice") } do %>
+    <table class="index" style="margin-bottom: 5px;">
+      <% @items.each do |item| %>
+        <tr>
+          <th><%= I18n.l item.date, format: :long %></th>
+          <td>
+            <% if item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+              <%= link_to item.name, item.private_show_path %>
+            <% else %>
+              <%= item.name %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+    <%= link_to t("facility.buttons.notices"), facility_notices_path(cid: @item.id), class: "btn icon-page" %>
+  <% end %>
+<% end %>
+
 <% if @merged_map.present? && default_map_api(site: @cur_site).present? %>
   <%= render "ss/crud/addon", addon: { head: t("map.map") } do %>
     <% @cur_page = @merged_map %>

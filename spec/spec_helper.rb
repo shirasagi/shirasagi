@@ -37,24 +37,23 @@ end
 
 if analyze_coverage?
   require 'simplecov'
+  require 'simplecov-csv'
+  require 'simplecov-html'
 
-  if travis?
-    require 'coveralls'
-    Coveralls.wear!
+  formatters = [
+    SimpleCov::Formatter::CSVFormatter,
+    SimpleCov::Formatter::HTMLFormatter
+  ]
+  if ci?
+    require 'simplecov-lcov'
 
-    require 'simplecov_json_formatter'
-    formatters = [
-      Coveralls::SimpleCov::Formatter,
-      SimpleCov::Formatter::JSONFormatter
-    ]
-  else
-    require 'simplecov-csv'
-    require 'simplecov-html'
+    # coveralls requires consolidated file "lcov.info"
+    SimpleCov::Formatter::LcovFormatter.config do |config|
+      config.report_with_single_file = true
+      config.lcov_file_name = "lcov.info"
+    end
 
-    formatters = [
-      SimpleCov::Formatter::CSVFormatter,
-      SimpleCov::Formatter::HTMLFormatter
-    ]
+    formatters << SimpleCov::Formatter::LcovFormatter
   end
 
   SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(formatters)

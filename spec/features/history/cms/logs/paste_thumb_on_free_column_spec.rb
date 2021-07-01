@@ -121,9 +121,9 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css('.list-item', count: 3)
 
       visit edit_path
-      within ".column-value-cms-column-free" do
-        expect(page).to have_css(".file-view", text: "keyvisual.jpg")
-        wait_for_ckeditor_event "item[column_values][][in_wrap][value]", "afterInsertHtml" do
+      wait_for_ckeditor_event "item[column_values][][in_wrap][value]", "afterInsertHtml" do
+        within ".column-value-cms-column-free" do
+          expect(page).to have_css(".file-view", text: "keyvisual.jpg")
           click_on I18n.t("sns.thumb_paste")
         end
       end

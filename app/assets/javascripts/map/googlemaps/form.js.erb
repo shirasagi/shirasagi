@@ -19,7 +19,7 @@ this.Map_Form = (function () {
   Map_Form.getMapLoc = function (ele) {
     var latlon;
     latlon = ele.val().split(',');
-    return new google.maps.LatLng(parseFloat(latlon[0]), parseFloat(latlon[1]));
+    return new google.maps.LatLng(parseFloat(latlon[1]), parseFloat(latlon[0]));
   };
 
   Map_Form.validateLoc = function (loc) {
@@ -28,8 +28,8 @@ this.Map_Form = (function () {
       return false;
     }
     latlon = loc.split(',');
-    lat = parseFloat(latlon[0]);
-    lon = parseFloat(latlon[1]);
+    lat = parseFloat(latlon[1]);
+    lon = parseFloat(latlon[0]);
     if (!(lat && !isNaN(lat))) {
       return false;
     }
@@ -100,6 +100,7 @@ this.Map_Form = (function () {
       cln = $(".mod-map dd.marker:last").clone(false).insertAfter($(".mod-map dd.marker:last"));
       cln.attr("data-id", Map_Form.dataID);
       Map_Form.dataID += 1;
+      cln.removeClass("active");
       cln.find("input,textarea").val("");
       cln.find(".marker-name").val("");
       cln.find(".clear-marker").on('click', function () {
@@ -150,6 +151,7 @@ this.Map_Form = (function () {
   Map_Form.clearPointForm = function (ele) {
     if (ele.find(".marker-loc").val() !== "") {
       if (confirm(Map_Form.deleteMessage)) {
+        ele.removeClass("active");
         if (Googlemaps_Map.markers[parseInt(ele.attr("data-id"))]) {
           Googlemaps_Map.markers[parseInt(ele.attr("data-id"))].setMap(null);
         }
@@ -159,53 +161,10 @@ this.Map_Form = (function () {
         }
       }
     } else {
+      ele.removeClass("active");
       if (Googlemaps_Map.markers[parseInt(ele.attr("data-id"))]) {
         Googlemaps_Map.markers[parseInt(ele.attr("data-id"))].setMap(null);
       }
-      ele.find("input,textarea").val("");
-      if ($(".mod-map dd.marker").length > 1) {
-        ele.remove();
-      }
-    }
-    $(".mod-map dd .add-marker").parent().show();
-  };
-
-  Map_Form.clonePointFormNoApi = function () {
-    var cln;
-    if ($(".mod-map dd.marker").length < Map_Form.maxPointForm) {
-      cln = $(".mod-map dd.marker:last").clone(false).insertAfter($(".mod-map dd.marker:last"));
-      cln.attr("data-id", Map_Form.dataID);
-      Map_Form.dataID += 1;
-      cln.find("input,textarea").val("");
-      cln.find(".marker-name").val("");
-      cln.find(".clear-marker").on('click', function () {
-        return Map_Form.clearPointFormNoApi(cln);
-      });
-      cln.find(".marker-name").on('keypress', function (e) {
-        if (e.which === 13) {
-          return false;
-        }
-      });
-      cln.find(".marker-loc-input").on('keypress', function (e) {
-        if (e.which === 13) {
-          return false;
-        }
-      });
-    }
-    if ($(".mod-map dd.marker").length === Map_Form.maxPointForm) {
-      $(".mod-map dd .add-marker").parent().hide();
-    }
-  };
-
-  Map_Form.clearPointFormNoApi = function (ele) {
-    if (ele.find(".marker-loc-input").val() !== "") {
-      if (confirm(Map_Form.deleteMessage)) {
-        ele.find("input,textarea").val("");
-        if ($(".mod-map dd.marker").length > 1) {
-          ele.remove();
-        }
-      }
-    } else {
       ele.find("input,textarea").val("");
       if ($(".mod-map dd.marker").length > 1) {
         ele.remove();
@@ -291,6 +250,7 @@ this.Map_Form = (function () {
 
     ele.find(".marker-loc").val(loc);
     ele.find(".marker-loc-input").val(loc);
+    ele.addClass("active");
     dataId = parseInt(ele.attr("data-id"));
     if (Googlemaps_Map.markers[dataId]) {
       Googlemaps_Map.markers[dataId].setMap(null);
@@ -352,7 +312,7 @@ this.Map_Form = (function () {
 
   Map_Form.renderEvents = function () {
     google.maps.event.addListener(Googlemaps_Map.map, 'click', function (event) {
-      Map_Form.setMapLoc($(".mod-map .clicked"), event.latLng.lat(), event.latLng.lng());
+      Map_Form.setMapLoc($(".mod-map .clicked"), event.latLng.lng(), event.latLng.lat());
       if (Map_Form.clickMarker !== null) {
         Map_Form.clickMarker.setMap(null);
       }

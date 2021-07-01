@@ -2,7 +2,7 @@ class Opendata::Dataset::ImportDatasetsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  model Opendata::DatasetImporter
+  model Opendata::Dataset
 
   navi_view "opendata/main/navi"
   menu_view nil
@@ -13,40 +13,53 @@ class Opendata::Dataset::ImportDatasetsController < ApplicationController
     { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
   end
 
-  public
-
-  def index
-    raise "403" unless Opendata::Dataset.allowed?(:import, @cur_user, site: @cur_site, node: @cur_node)
-
-    @model.new
+  def set_task
+    @task = Cms::Task.find_or_create_by name: task_name, site_id: @cur_site.id, node_id: @cur_node.id
   end
+
+  def task_name
+    "opendata:import_datasets"
+  end
+
+  public
 
   def import
     raise "403" unless Opendata::Dataset.allowed?(:import, @cur_user, site: @cur_site, node: @cur_node)
 
+    set_task
+
     @item = @model.new
 
-    file = params.dig(:item, :in_file)
-    if file.nil?
-      @item.errors.add :in_file, :blank
-      render file: :index
-      return
-    end
-    if ::File.extname(file.original_filename) != ".zip"
-      @item.errors.add :in_file, :invalid_file_type
-      render file: :index
+    if request.get?
+      respond_to do |format|
+        format.html { render }
+        format.json { render file: "ss/tasks/index", content_type: json_content_type, locals: { item: @task } }
+      end
       return
     end
 
-    # save csv to use in job
-    ss_file = SS::File.new
-    ss_file.in_file = file
-    ss_file.model = "opendata/import"
-    ss_file.save
+    begin
+      file = params.dig(:item, :file)
+      if file.nil? || ::File.extname(file.original_filename) != ".zip"
+        raise I18n.t("errors.messages.invalid_zip")
+      end
 
-    # call job
-    Opendata::Dataset::ImportJob.bind(site_id: @cur_site, node_id: @cur_node).perform_later(ss_file.id)
+      # save csv to use in job
+      ss_file = SS::File.new
+      ss_file.in_file = file
+      ss_file.model = "opendata/import"
+      ss_file.save
 
-    render_create true, location: { action: :import }, notice: I18n.t("ss.notice.started_import")
+      # call job
+      Opendata::Dataset::ImportJob.bind(site_id: @cur_site, node_id: @cur_node).perform_later(ss_file.id)
+    rescue => e
+      @item.errors.add :base, e.to_s
+    end
+
+    if @item.errors.present?
+      render
+    else
+      redirect_to({ action: :import }, { notice: I18n.t("ss.notice.started_import") })
+    end
   end
 end

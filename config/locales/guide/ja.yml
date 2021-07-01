@@ -3,6 +3,8 @@ ja:
     guide: 目的別ガイド
     question: 質問
     procedure: 手続き
+    transition: 選択肢
+    importer: インポート
     apis:
       questions:
         index: 質問項目を選択する
@@ -32,6 +34,9 @@ ja:
       not_applicable: 非該当
       root_question: 質問（別の質問に設定されていないもの）
       choices: 選択肢
+      import_procedures: 手続きのインポート
+      import_questions: 質問のインポート
+      import_transitions: 選択肢のインポート
     views:
       choose_yes_no: 次の項目に該当しますか？
       procedures_needed: "%{count}件の手続きが必要です。"
@@ -39,6 +44,8 @@ ja:
       your-answers: あなたの回答
       all_procedure: 全ての手続き
       input_choices_question: 選択肢の質問を入力
+    notice:
+      import_summary: 以下の順番にインポートを実施してください。
     options:
       question_type:
         yes_no: 'はい・いいえ'
@@ -46,6 +53,12 @@ ja:
       check_type:
         multiple: 複数選択（チェックボックス）
         single: 一択（ラジオボタン）
+    errors:
+      not_found_procedure: "手続きが見つかりませんでした。(%{id})"
+      not_found_question: "質問が見つかりませんでした。(%{id})"
+      not_found_transition: "選択肢が見つかりませんでした。(%{id})"
+      save_faild: "保存に失敗しました。%{message}"
+      already_registered: "[質問] %{name} は別の質問の選択肢に設定されています。"
 
   cms_role:
     read_guide_questions: 質問の閲覧
@@ -82,7 +95,8 @@ ja:
         order: 並び順
         question_id: 質問
       guide/procedure:
-        name: タイトル
+        name: 表示名
+        id_name: 管理名
         link_url: リンク URL
         html: 概要
         procedure_location: 手続き場所
@@ -91,11 +105,12 @@ ja:
         remarks: 備考
         order: 並び順
       guide/question:
-        name: タイトル
+        name: 表示名
+        id_name: 管理名
         select_options: 選択肢
-        order: 並び順
         question_type: 質問の形式
         check_type: 選択肢の形式
+        order: 並び順
       guide/addon/genre:
         genre_ids: ジャンル
       guide/addon/question:
@@ -120,7 +135,10 @@ ja:
   tooltip:
     guide/question:
       name:
-        - タイトルを入力します。
+        - 表示用のタイトルを入力します。
+      id_name:
+        - 管理用のタイトルを入力します。
+        - この目的別ガイド内で重複しない名称を入力する必要があります。
       question:
         - 質問を入力します。
       select_options:
@@ -133,7 +151,10 @@ ja:
         - 並び順を入力します。
     guide/procedure:
       name:
-        - タイトルを入力します。
+        - 表示用のタイトルを入力します。
+      id_name:
+        - 管理用のタイトルを入力します。
+        - この目的別ガイド内で重複しない名称を入力する必要があります。
       link_url:
         - リンク URL を入力します。
       html:

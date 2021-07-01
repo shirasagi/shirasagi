@@ -56,6 +56,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         # choose 'item_opendata_dataset_state_public'
         find('input#item_opendata_dataset_state_public').click
       end
+      within '#addon-cms-agents-addons-file' do
+        select Opendata::License.first.name, from: "item_opendata_resources_#{article_page.file_ids.first}_license_ids"
+        select I18n.t("cms.options.opendata_resource.same"), from: "item_opendata_resources_#{article_page.file_ids.first}_state"
+      end
       click_on I18n.t('ss.buttons.publish_save')
       wait_for_notice I18n.t('ss.notice.saved')
 

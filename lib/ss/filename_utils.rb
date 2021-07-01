@@ -39,6 +39,25 @@ class SS::FilenameUtils
   # ピリオド直前の連続する記号にマッチする正規表現（削除する目的で利用する）
   RE4 = /([^\.])(#{(FILESYSTEM_AND_URL_SAFE_SYMBOLS - [")"]).map { |s| ::Regexp.escape(s) }.join("|")})+\./.freeze
 
+  attr_accessor :duplicate_filenames
+
+  def initialize
+    @duplicate_filenames = []
+  end
+
+  def format_duplicates(filename)
+    while @duplicate_filenames.include?(filename)
+      extname = ::File.extname(filename)
+      filename = filename.sub(/( \((\d+)\))?#{extname}$/) do
+        index = $2.to_i
+        index += 1
+        " (#{index})#{extname}"
+      end
+    end
+    @duplicate_filenames << filename
+    filename
+  end
+
   class << self
     def convert_by_sequence(filename, opts)
       id = opts[:id]

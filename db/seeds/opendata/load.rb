@@ -5,7 +5,7 @@ puts "Please input site_name: site=[site_host]" or exit if ENV['site'].blank?
 
 @site = Cms::Site.where(host: ENV['site']).first
 puts "Site not found: #{ENV['site']}" or exit unless @site
-link_url = "http://#{@site.domains.first}"
+link_url = "/"
 
 require "#{Rails.root}/db/seeds/cms/users"
 require "#{Rails.root}/db/seeds/cms/workflow"

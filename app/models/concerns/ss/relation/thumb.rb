@@ -75,7 +75,7 @@ module SS::Relation::Thumb
       file = thumbs_was[size]
       begin
         if file
-          if state_changed? || filename_changed? || site_id_changed?
+          if state_changed? || filename_changed? || site_id_changed? || size_changed?
             file.update!(site_id: site_id, filename: filename, owner_item: self, state: state)
           end
           file.set(image_size_name: name) if name != file.image_size_name

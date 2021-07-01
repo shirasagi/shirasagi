@@ -35,8 +35,8 @@ production: &production
   map_marker_images:
     googlemaps:
       default:
-        marker: "/assets/img/map-marker.png"
-        click: "/assets/img/map-marker-click.png"
+        marker: "/assets/img/googlemaps/marker1.png"
+        click: "/assets/img/googlemaps/marker17.png"
       picker:
         marker1: "/assets/img/googlemaps/marker1.png"
         marker2: "/assets/img/googlemaps/marker2.png"
@@ -56,8 +56,8 @@ production: &production
         marker16: "/assets/img/googlemaps/marker16.png"
     openlayers:
       default:
-        marker: "/assets/img/map-marker.png"
-        click: "/assets/img/map-marker-click.png"
+        marker: "/assets/img/googlemaps/marker1.png"
+        click: "/assets/img/googlemaps/marker17.png"
       picker:
         marker1: "/assets/img/openlayers/marker1.png"
         marker2: "/assets/img/openlayers/marker2.png"

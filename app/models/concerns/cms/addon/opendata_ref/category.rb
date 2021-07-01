@@ -3,7 +3,7 @@ module Cms::Addon::OpendataRef::Category
   extend ActiveSupport::Concern
 
   included do
-    embeds_ids :opendata_categories, class_name: "Opendata::Node::Category", metadata: { on_copy: :clear }
+    embeds_ids :opendata_categories, class_name: "Opendata::Node::Category", metadata: { on_copy: :clear, branch: false }
     permit_params opendata_category_ids: []
   end
 end
