@@ -24,19 +24,19 @@ module Opendata::Addon::ZipDataset
     ::FileUtils.mkdir_p(::File.dirname(zip_path))
     return if resources.blank?
 
+    name_util = SS::FilenameUtils.new
     begin
       Timeout.timeout(60) do
         files = []
         resources.each do |resource|
           if resource.source_url.present?
-            name = "#{resource.name.gsub(/[#{Regexp.escape('¥/:*?\"<>|.')}]/, "_")}-#{resource.id}.txt"
+            name = "#{resource.name.gsub(/[#{Regexp.escape('¥/:*?\"<>|.')}]/, "_")}.txt"
             file = Tempfile.open(name)
             file.puts(resource.source_url)
             file.rewind
-            files << [name, file]
+            files << [name_util.format_duplicates(name), file]
           else
-            name = resource.filename.split(".").join("-#{resource.id}.").to_s
-            files << [name, resource.file]
+            files << [name_util.format_duplicates(resource.filename), resource.file]
           end
         end
 
