@@ -21,7 +21,7 @@ describe Cms::Addon::Form::Page, dbscope: :example do
     context "with Cms::Column::Value::UrlField" do
       # create(:cms_column_url_field, cur_site: cms_site, cur_form: form, order: 1, html_tag: '')
       let!(:column1) { create(:cms_column_url_field, cur_site: cms_site, cur_form: form, order: 1, html_tag: 'a') }
-      let(:url1) { "http://#{unique_id}.example.jp/#{unique_id}/" }
+      let(:url1) { "/#{unique_id}/" }
       let!(:form_column1) { column1.value_type.new(column: column1, value: "外部リンク,#{url1}") }
       let!(:column2) { create(:cms_column_url_field, cur_site: cms_site, cur_form: form, order: 2, html_tag: 'a') }
       let(:url2) { "/docs/page3.html" }
@@ -36,7 +36,7 @@ describe Cms::Addon::Form::Page, dbscope: :example do
 
     context "with Cms::Column::Value::UrlField2" do
       let!(:column1) { create(:cms_column_url_field2, cur_site: cms_site, cur_form: form, order: 1) }
-      let(:url1) { "http://#{unique_id}.example.jp/#{unique_id}/" }
+      let(:url1) { "/#{unique_id}/" }
       let!(:form_column1) { column1.value_type.new(column: column1, link_url: url1, link_label: "外部リンク") }
       let!(:column2) { create(:cms_column_url_field2, cur_site: cms_site, cur_form: form, order: 2) }
       let(:url2) { "/docs/page4.html" }
@@ -55,14 +55,14 @@ describe Cms::Addon::Form::Page, dbscope: :example do
       let!(:form_column1) { column1.value_type.new(column: column1, value: html) }
 
       let!(:column2) { create(:cms_column_url_field, cur_site: cms_site, cur_form: form, order: 2, html_tag: 'a') }
-      let(:url1) { "http://#{unique_id}.example.jp/#{unique_id}/" }
+      let(:url1) { "/#{unique_id}/" }
       let!(:form_column2) { column2.value_type.new(column: column2, value: "外部リンク,#{url1}") }
       let!(:column3) { create(:cms_column_url_field, cur_site: cms_site, cur_form: form, order: 3, html_tag: 'a') }
       let(:url2) { "/docs/page3.html" }
       let!(:form_column3) { column3.value_type.new(column: column3, value: "関連記事リンク3,#{url2}") }
 
       let!(:column4) { create(:cms_column_url_field2, cur_site: cms_site, cur_form: form, order: 4) }
-      let(:url3) { "http://#{unique_id}.example.jp/#{unique_id}/" }
+      let(:url3) { "/#{unique_id}/" }
       let!(:form_column4) { column4.value_type.new(column: column4, link_url: url3, link_label: "外部リンク") }
       let!(:column5) { create(:cms_column_url_field2, cur_site: cms_site, cur_form: form, order: 5) }
       let(:url4) { "/docs/page4.html" }
