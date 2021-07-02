@@ -9,23 +9,18 @@ describe "cms_notices", type: :feature, dbscope: :example, js: true do
   end
   let!(:item) { create(:cms_notice, site: site, cur_user: user, html: html, file_ids: [ file.id ]) }
 
-  context "when <a> within ckeditor's iframe is clicked" do
+  context "when <a> is clicked" do
     before { login_cms_user }
 
     it do
       visit cms_public_notice_path(site: site, id: item)
 
-      new_window = nil
-      within_frame find("iframe.ss-notice-frame") do
-        new_window = window_opened_by { click_on file.humanized_name }
+      within ".ss-notice-wrap" do
+        click_on file.humanized_name
       end
 
-      # new window (tab) is opened and pdf is show
-      expect(new_window).to be_present
-      within_window new_window do
-        # expect(page).to have_css("embed[type='application/pdf']")
-        expect(page).to have_css("body")
-      end
+      # expect(page).to have_css("embed[type='application/pdf']")
+      expect(page).to have_css("body")
     end
   end
 end
