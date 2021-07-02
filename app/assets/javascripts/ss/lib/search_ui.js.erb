@@ -21,8 +21,7 @@ this.SS_SearchUI = (function () {
   };
 
   SS_SearchUI.select = function (item) {
-    var selector;
-    selector = this.anchorAjaxBox.data('on-select');
+    var selector = this.anchorAjaxBox.data('on-select');
     if (selector) {
       return selector(item);
     } else {
@@ -36,9 +35,9 @@ this.SS_SearchUI = (function () {
     }
     var self = this;
     $el.find(".items input:checkbox").filter(":checked").each(function () {
-      return self.select($(this));
+      self.select($(this));
     });
-    return self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
+    self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
   };
 
   SS_SearchUI.deselect = function (e) {
@@ -168,9 +167,11 @@ this.SS_SearchUI = (function () {
       if (!SS.disableClick($(this))) {
         return false;
       }
+      // self.select() を呼び出した際にダイアログが閉じられ self.anchorAjaxBox が null となる可能性があるので、事前に退避しておく。
+      var ajaxBox = self.anchorAjaxBox;
       //append newly selected item
       self.select($(this));
-      self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
+      ajaxBox.closest("dl").find(".ajax-selected").show();
       ev.preventDefault();
       colorbox.close();
       return false;
@@ -180,14 +181,16 @@ this.SS_SearchUI = (function () {
       if (!SS.disableClick($(this))) {
         return false;
       }
-      self.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").each(function () {
+      // self.select() を呼び出した際にダイアログが閉じられ self.anchorAjaxBox が null となる可能性があるので、事前に退避しておく。
+      var ajaxBox = self.anchorAjaxBox;
+      ajaxBox.closest("dl").find(".ajax-selected tr[data-id]").each(function () {
         if ($(this).find("input[value]").length) {
           return $(this).remove();
         }
       });
       //append newly selected item
       self.select($(this));
-      self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
+      ajaxBox.closest("dl").find(".ajax-selected").show();
       ev.preventDefault();
       colorbox.close();
       return false;

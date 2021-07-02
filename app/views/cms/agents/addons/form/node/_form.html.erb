@@ -38,8 +38,6 @@
   var template = $("#addon-cms-agents-addons-form-node .form-template").html();
 
   $("#addon-cms-agents-addons-form-node a.ajax-box").data("on-select", function($item) {
-    $.colorbox.close();
-
     var $data = $item.closest("[data-id]");
     var formId = $data.data('id');
     var formName = $data.data("name") || $data.find(".select-item").text() || $item.text() || $data.text();
