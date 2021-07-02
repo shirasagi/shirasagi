@@ -24,24 +24,17 @@ describe "sys_notice", type: :feature, dbscope: :example, js: true do
   #   gws_user
   # end
 
-  context "when <a> within ckeditor's iframe is clicked" do
+  context "when <a> is clicked" do
     context "on login" do
       it do
         visit sns_login_path
         click_on notice.name
 
-        new_window = nil
-        within_frame find("iframe.ss-notice-frame") do
-          new_window = window_opened_by { click_on notice0.name }
+        within ".ss-notice-wrap" do
+          click_on notice0.name
         end
 
-        # new window (tab) is opened and pdf is show
-        expect(new_window).to be_present
-        within_window new_window do
-          within_frame find("iframe.ss-notice-frame") do
-            expect(page).to have_css(".heading", text: heading)
-          end
-        end
+        expect(page).to have_css(".heading", text: heading)
       end
     end
 
@@ -55,18 +48,11 @@ describe "sys_notice", type: :feature, dbscope: :example, js: true do
         visit sns_mypage_path
         click_on notice.name
 
-        new_window = nil
-        within_frame find("iframe.ss-notice-frame") do
-          new_window = window_opened_by { click_on notice0.name }
+        within ".ss-notice-wrap" do
+          click_on notice0.name
         end
 
-        # new window (tab) is opened and pdf is show
-        expect(new_window).to be_present
-        within_window new_window do
-          within_frame find("iframe.ss-notice-frame") do
-            expect(page).to have_css(".heading", text: heading)
-          end
-        end
+        expect(page).to have_css(".heading", text: heading)
       end
     end
 
@@ -82,18 +68,11 @@ describe "sys_notice", type: :feature, dbscope: :example, js: true do
         visit cms_contents_path(site: cms_site)
         click_on notice.name
 
-        new_window = nil
-        within_frame find("iframe.ss-notice-frame") do
-          new_window = window_opened_by { click_on notice0.name }
+        within ".ss-notice-wrap" do
+          click_on notice0.name
         end
 
-        # new window (tab) is opened and pdf is show
-        expect(new_window).to be_present
-        within_window new_window do
-          within_frame find("iframe.ss-notice-frame") do
-            expect(page).to have_css(".heading", text: heading)
-          end
-        end
+        expect(page).to have_css(".heading", text: heading)
       end
     end
 
@@ -109,18 +88,11 @@ describe "sys_notice", type: :feature, dbscope: :example, js: true do
         visit gws_portal_path(site: gws_site)
         click_on notice.name
 
-        new_window = nil
-        within_frame find("iframe.ss-notice-frame") do
-          new_window = window_opened_by { click_on notice0.name }
+        within ".ss-notice-wrap" do
+          click_on notice0.name
         end
 
-        # new window (tab) is opened and pdf is show
-        expect(new_window).to be_present
-        within_window new_window do
-          within_frame find("iframe.ss-notice-frame") do
-            expect(page).to have_css(".heading", text: heading)
-          end
-        end
+        expect(page).to have_css(".heading", text: heading)
       end
     end
   end

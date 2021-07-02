@@ -24,10 +24,8 @@ describe "sys_notice", type: :feature, dbscope: :example, js: true do
 
         click_on notice0.name
       end
-      within_frame(first(".main-box .ss-notice-frame")) do
-        within ".cke_editable" do
-          expect(page).to have_content(ApplicationController.helpers.sanitize(notice0.html, tags: []))
-        end
+      within ".ss-notice-wrap" do
+        expect(page).to have_content(ApplicationController.helpers.sanitize(notice0.html, tags: []))
       end
     end
   end
@@ -48,10 +46,8 @@ describe "sys_notice", type: :feature, dbscope: :example, js: true do
 
         click_on notice0.name
       end
-      within_frame(first(".main-box .ss-notice-frame")) do
-        within ".cke_editable" do
-          expect(page).to have_content(ApplicationController.helpers.sanitize(notice0.html, tags: []))
-        end
+      within ".ss-notice-wrap" do
+        expect(page).to have_content(ApplicationController.helpers.sanitize(notice0.html, tags: []))
       end
     end
   end
@@ -74,10 +70,8 @@ describe "sys_notice", type: :feature, dbscope: :example, js: true do
 
         click_on notice0.name
       end
-      within_frame(first(".main-box .ss-notice-frame")) do
-        within ".cke_editable" do
-          expect(page).to have_content(ApplicationController.helpers.sanitize(notice0.html, tags: []))
-        end
+      within ".ss-notice-wrap" do
+        expect(page).to have_content(ApplicationController.helpers.sanitize(notice0.html, tags: []))
       end
     end
   end
@@ -100,10 +94,8 @@ describe "sys_notice", type: :feature, dbscope: :example, js: true do
 
         click_on notice0.name
       end
-      within_frame(first(".main-box .ss-notice-frame")) do
-        within ".cke_editable" do
-          expect(page).to have_content(ApplicationController.helpers.sanitize(notice0.html, tags: []))
-        end
+      within ".ss-notice-wrap" do
+        expect(page).to have_content(ApplicationController.helpers.sanitize(notice0.html, tags: []))
       end
     end
   end
@@ -126,10 +118,8 @@ describe "sys_notice", type: :feature, dbscope: :example, js: true do
 
         click_on notice0.name
       end
-      within_frame(first(".main-box .ss-notice-frame")) do
-        within ".cke_editable" do
-          expect(page).to have_content(ApplicationController.helpers.sanitize(notice0.html, tags: []))
-        end
+      within ".ss-notice-wrap" do
+        expect(page).to have_content(ApplicationController.helpers.sanitize(notice0.html, tags: []))
       end
     end
   end
