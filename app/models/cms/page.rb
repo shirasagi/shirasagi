@@ -39,6 +39,8 @@ class Cms::Page
   # rss
   index({ released: 1, id: 1 })
 
+  after_save :new_size_input, if: ->{ @db_changes }
+
   class << self
     def routes
       pages = ::Mongoid.models.select { |model| model.ancestors.include?(Cms::Model::Page) }

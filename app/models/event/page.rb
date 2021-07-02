@@ -30,5 +30,7 @@ class Event::Page
 
   set_permission_name "event_pages"
 
+  after_save :new_size_input, if: ->{ @db_changes }
+
   default_scope ->{ where(route: "event/page") }
 end

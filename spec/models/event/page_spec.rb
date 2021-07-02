@@ -104,4 +104,46 @@ describe Event::Page, dbscope: :example do
       it { expect(subject.selector.to_h).to include("event_dates" => {"$gte"=>Time.zone.today.to_s}) }
     end
   end
+
+  describe ".new_size_input" do
+    let!(:form) { create(:cms_form, cur_site: cms_site, state: 'public', sub_type: 'static') }
+    let!(:file) do
+      SS::File.create_empty!(
+        cur_user: cms_user, site_id: cms_site.id, model: "event/page", filename: "logo.png", content_type: 'image/png'
+      ) do |file|
+        ::FileUtils.cp("#{Rails.root}/spec/fixtures/ss/logo.png", file.path)
+      end
+    end
+    let!(:column1) { create(:cms_column_free, cur_form: form, order: 1) }
+    let!(:column2) { create(:cms_column_file_upload, cur_form: form, order: 1, file_type: 'image', html_tag: "a+img") }
+    let!(:html_size) { html.bytesize }
+    let!(:file_size) { File.size(file.path) }
+
+    context "with html only" do
+      let!(:html) { "<h1>SHIRASAGI</h1>" }
+      let!(:item) { create :event_page, cur_node: node, html: html }
+
+      it do
+        expect(item.size).to eq html_size
+      end
+    end
+
+    context "with file only" do
+      let!(:item) { create :event_page, cur_node: node, file_ids: [file.id] }
+      it do
+        expect(item.size).to eq file_size
+      end
+    end
+
+    context "with html and file" do
+      let!(:html) { "<h1>SHIRASAGI</h1>" }
+      let!(:item) { create :event_page, cur_node: node, html: html, file_ids: [file.id] }
+
+      it do
+        expect(item.size).to eq html_size + file_size
+      end
+    end
+
+  end
+
 end

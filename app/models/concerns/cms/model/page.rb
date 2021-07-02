@@ -24,6 +24,7 @@ module Cms::Model::Page
     attr_accessor :window_name
 
     field :route, type: String, default: ->{ "cms/page" }
+    field :size, type: Integer
 
     embeds_ids :categories, class_name: "Cms::Node"
 
@@ -32,6 +33,7 @@ module Cms::Model::Page
     after_save :rename_file, if: ->{ @db_changes }
     after_save :generate_file, if: ->{ @db_changes }
     after_save :remove_file, if: ->{ @db_changes && @db_changes["state"] && !public? }
+    after_save :new_size_input, if: ->{ @db_changes }
     after_destroy :remove_file
 
     template_variable_handler(:categories, :template_variable_handler_categories)
@@ -179,6 +181,12 @@ module Cms::Model::Page
     else
       []
     end
+  end
+
+  def new_size_input
+    html = self.try(:render_html).presence || self.try(:html)
+    file_bytesize = SS::File.where(owner_item_type: self.class.name, owner_item_id: self.id).sum(:size)
+    self.set(size: html.try(:bytesize).to_i + file_bytesize)
   end
 
   private

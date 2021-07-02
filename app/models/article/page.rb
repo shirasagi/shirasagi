@@ -34,6 +34,8 @@ class Article::Page
   include Article::Export
   include Cms::Addon::ForMemberPage
 
+  after_save :new_size_input, if: ->{ @db_changes }
+
   set_permission_name "article_pages"
 
   default_scope ->{ where(route: "article/page") }

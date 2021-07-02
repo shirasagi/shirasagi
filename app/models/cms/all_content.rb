@@ -15,6 +15,7 @@ class Cms::AllContent
     %w(conditions),
     %w(sort),
     %w(limit),
+    %w(size),
     %w(upper_html),
     %w(loop_setting_id to_loop_setting),
     %w(loop_html),

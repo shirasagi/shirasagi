@@ -170,6 +170,9 @@ production: &production
     pointsize: 22
     gravity: Center
 
+  cms_sitemap:
+    disable: true
+
 test:
   <<: *production
   replace_urls_after_move: false

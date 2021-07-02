@@ -1,0 +1,9 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+
+<dl class="see">
+  <dt><%= @model.t :content_quota %><%= @model.tt :content_quota %></dt>
+  <dd class="short"><%= f.number_field :content_quota, min: 0 %> <span class="postfix"><%= t('ss.units.mega_byte') %></span></dd>
+</dl>

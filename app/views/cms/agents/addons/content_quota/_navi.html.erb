@@ -1,0 +1,35 @@
+<nav class="mod-navi" style="max-height: 250px; overflow: auto;">
+  <% Cms::Node.site(@cur_site).in(group_ids: @cur_user.group_ids).where(shortcut: 'show').each do |node| %>
+    <% node = node.becomes_with_route %>
+    <% next if !node.respond_to?(:content_quota) || node.content_quota_model.blank? %>
+    <h2><%= node.name %></h2>
+    <div class="ss-quota-bar">
+      <div class="label"><%= node.content_quota_label %></div>
+      <div class="usage <%= node.content_quota_model.over? ? 'over-threshold' : '' %>" style="width: <%= node.content_quota_model.percentage %>%"></div>
+    </div>
+  <% end %>
+
+  <%= jquery do %>
+    if (sessionStorage.getItem("ss_quota_checked_site_<%= @cur_site.id %>")) {
+      var date = new Date();
+      date.setHours(date.getHours() - 1)
+      if (date < sessionStorage.getItem("ss_quota_checked_site_<%= @cur_site.id %>")) {
+        return false;
+      }
+    }
+    var text = [];
+    $('div.over-threshold').each(function() {
+      var name = $(this).parent('div').prev('h2').text();
+      var label = $(this).parent('div').find('div.label').text();
+      text.push(name + ' ' + label);
+    });
+    if (text.length) {
+      text.unshift('');
+      text.unshift('<%= t('cms.notices.over_content_quota') %>');
+      alert(text.join("\n"));
+      sessionStorage.setItem("ss_quota_checked_site_<%= @cur_site.id %>", Date.now());
+    } else {
+      sessionStorage.removeItem("ss_quota_checked_site_<%= @cur_site.id %>")
+    }
+  <% end %>
+</nav>

@@ -25,6 +25,7 @@ class Cms::Node
     include Cms::Addon::NodeLinePostSetting
     include Cms::Addon::NodeList
     include Cms::Addon::ChildList
+    include Cms::Addon::ContentQuota
     include Cms::Addon::ForMemberNode
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
@@ -42,6 +43,7 @@ class Cms::Node
     include Cms::Addon::NodeLinePostSetting
     include Event::Addon::PageList
     include Cms::Addon::Form::Node
+    include Cms::Addon::ContentQuota
     include Cms::Addon::Release
     include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::MaxFileSizeSetting

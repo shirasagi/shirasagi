@@ -65,6 +65,7 @@ ja:
     search_contents_files: ファイル一覧
     search_form: サイト検索フォーム
     search_target: サイト検索範囲を選択してください
+    search_contents_sitemap: サイトマップ
     show_link_to_part: パーツのリンクを表示
     site: サイト
     site_config: サイト設定
@@ -160,6 +161,7 @@ ja:
       restoring_share_file_from_trash: 共有ファイルに復元されます。
       generate_locked: 書き出しを停止しました。
       generate_unlocked: 書き出しの停止を解除しました。
+      over_content_quota: 使用容量を超過しているフォルダがあります。
     apis:
       categories:
         index: カテゴリーを選択する
@@ -217,6 +219,7 @@ ja:
       ruby_off: ふりがなをはずす
       back_to_contents: コンテンツへ戻る
       michecker: miChecker で確認する
+      download: フォルダ容量をCSVダウンロードする
     move_page:
       confirm: 確認
       message: '"%{source}"へのリンクが含まれるページ'
@@ -528,6 +531,7 @@ ja:
     use_cms_michecker: micheckerの利用
     delete_cms_ignore_alert: 警告を無視して削除する
     edit_cms_ignore_alert: 警告を無視して非公開保存する
+    use_cms_sitemap: フォルダ容量のCSVダウンロード
 
   modules:
     cms: 標準機能
@@ -592,6 +596,7 @@ ja:
       cms/site_search/keyword: 注目ワード
       cms/site_search/history: 履歴
       cms/line_poster: LINE連携
+      cms/content_quota: 容量制限
 
   mongoid:
     models:
@@ -677,6 +682,8 @@ ja:
         files: ファイル
         category_ids: カテゴリー
         categories: カテゴリー
+        size: 容量
+        full_url: 記事URL
       cms/model/part:
         name: パーツ名
         route: パーツ属性
@@ -1071,6 +1078,8 @@ ja:
         type: 投稿SNS
         state: ステータス
         page_id: 連携ページ
+      cms/addon/content_quota:
+        content_quota: 容量制限
 
   activemodel:
     attributes:
@@ -2202,6 +2211,13 @@ ja:
       line_text_message:
         - LINEに投稿するメッセージを入力します。
 
+    cms/addon/content_quota:
+      content_quota:
+        - フォルダーの合計容量の上限を入力します。
+        - 合計容量が超えた場合、警告が表示されます。
+        - 未設定である場合、警告は表示されません。
+        - 初期値は 未設定 です。
+
   all_content:
     page_id: ページID
     node_id: フォルダーID
@@ -2234,6 +2250,23 @@ ja:
     updated: 更新日時
     status: 公開状態
     file_size: 静的ファイル容量
+    size: 容量
+
+  folder_size:
+    name: タイトル
+    index_name: 一覧用タイトル
+    filename: フォルダー名
+    layout: レイアウト
+    depth: フォルダ階層
+    order: 並び順
+    keywords: キーワード
+    description: 概要
+    summary_html: サマリー
+    status: ステータス
+    released: 公開日時
+    group_names: 管理グループ
+    permission_level: 権限レベル
+    size: 容量
 
   job:
     models:
