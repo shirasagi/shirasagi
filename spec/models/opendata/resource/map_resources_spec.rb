@@ -34,9 +34,9 @@ describe Opendata::Resource, dbscope: :example do
         expect(map_points[1]["name"]).to eq "title2"
         expect(map_points[2]["name"]).to eq "title3"
 
-        expect(map_points[0]["loc"]).to eq [34.12015208, 134.5429637]
-        expect(map_points[1]["loc"]).to eq [34.12545418, 134.5510452]
-        expect(map_points[2]["loc"]).to eq [33.6617971, 134.3112753]
+        expect(map_points[0]["loc"]).to eq [134.5429637, 34.12015208]
+        expect(map_points[1]["loc"]).to eq [134.5510452, 34.12545418]
+        expect(map_points[2]["loc"]).to eq [134.3112753, 33.6617971]
       end
     end
 
@@ -60,9 +60,9 @@ describe Opendata::Resource, dbscope: :example do
         expect(map_points[1]["name"]).to eq "title2"
         expect(map_points[2]["name"]).to eq "title3"
 
-        expect(map_points[0]["loc"]).to eq [34.12015208, 134.5429637]
-        expect(map_points[1]["loc"]).to eq [34.12545418, 134.5510452]
-        expect(map_points[2]["loc"]).to eq [33.6617971, 134.3112753]
+        expect(map_points[0]["loc"]).to eq [134.5429637, 34.12015208]
+        expect(map_points[1]["loc"]).to eq [134.5510452, 34.12545418]
+        expect(map_points[2]["loc"]).to eq [134.3112753, 33.6617971]
       end
     end
 
@@ -86,9 +86,9 @@ describe Opendata::Resource, dbscope: :example do
         expect(map_points[1]["name"]).to eq "title2"
         expect(map_points[2]["name"]).to eq "title3"
 
-        expect(map_points[0]["loc"]).to eq [33.87858333333333, 134.38966666666667]
-        expect(map_points[1]["loc"]).to eq [33.888527777777774, 134.40200000000002]
-        expect(map_points[2]["loc"]).to eq [33.88502777777778, 134.41666666666669]
+        expect(map_points[0]["loc"]).to eq [134.38966666666667, 33.87858333333333]
+        expect(map_points[1]["loc"]).to eq [134.40200000000002, 33.888527777777774]
+        expect(map_points[2]["loc"]).to eq [134.41666666666669, 33.88502777777778]
       end
     end
 
@@ -112,9 +112,9 @@ describe Opendata::Resource, dbscope: :example do
         expect(map_points[1]["name"]).to eq "title2"
         expect(map_points[2]["name"]).to eq "title3"
 
-        expect(map_points[0]["loc"]).to eq [33.87858333333333, 134.38966666666667]
-        expect(map_points[1]["loc"]).to eq [33.888527777777774, 134.40200000000002]
-        expect(map_points[2]["loc"]).to eq [33.88502777777778, 134.41666666666669]
+        expect(map_points[0]["loc"]).to eq [134.38966666666667, 33.87858333333333]
+        expect(map_points[1]["loc"]).to eq [134.40200000000002, 33.888527777777774]
+        expect(map_points[2]["loc"]).to eq [134.41666666666669, 33.88502777777778]
       end
     end
   end
