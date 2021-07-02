@@ -156,7 +156,7 @@ module Cms::PageFilter
         location = { cid: node.id, action: :move, source: @source, link_check: true }
       end
 
-      render_update @item.move(destination), location: location, render: { file: :move }
+      render_update @item.move(destination), location: location, render: { file: :move }, notice: t('ss.notice.moved')
     end
   end
 

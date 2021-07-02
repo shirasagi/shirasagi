@@ -56,14 +56,14 @@ describe "faq_pages", type: :feature, js: true do
       visit move_path
       within "form" do
         fill_in "destination", with: "docs/destination"
-        click_button I18n.t('ss.buttons.save')
+        click_button I18n.t('ss.buttons.move')
       end
       expect(current_path).to eq move_path
       expect(page).to have_css("form#item-form h2", text: "docs/destination.html")
 
       within "form" do
         fill_in "destination", with: "docs/sample"
-        click_button I18n.t('ss.buttons.save')
+        click_button I18n.t('ss.buttons.move')
       end
       expect(current_path).to eq move_path
       expect(page).to have_css("form#item-form h2", text: "docs/sample.html")

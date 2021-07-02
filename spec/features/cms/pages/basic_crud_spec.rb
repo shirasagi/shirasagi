@@ -55,7 +55,7 @@ describe "cms/pages", type: :feature, dbscope: :example do
       visit move_cms_page_path(site.id, item)
       within "form" do
         fill_in "destination", with: "destination"
-        click_button I18n.t("ss.buttons.save")
+        click_button I18n.t("ss.buttons.move")
       end
       expect(status_code).to eq 200
       expect(page).to have_css("form#item-form h2", text: "destination.html")
@@ -67,7 +67,7 @@ describe "cms/pages", type: :feature, dbscope: :example do
       visit move_cms_page_path(site.id, item)
       within "form" do
         fill_in "destination", with: "sample"
-        click_button I18n.t("ss.buttons.save")
+        click_button I18n.t("ss.buttons.move")
       end
       expect(status_code).to eq 200
       expect(page).to have_css("form#item-form h2", text: "sample.html")
