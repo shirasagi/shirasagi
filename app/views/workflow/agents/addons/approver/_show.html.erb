@@ -42,7 +42,7 @@
             <% if @ss_mode == :cms %>
             <div class="checkbox">
               <label>
-                <%= check_box_tag 'forced-update', true, @cur_site.forced_update == "enabled", class: 'forced' %><%= t("errors.messages.forced_update") %>
+                <%= check_box_tag 'forced-update', true, @cur_site.forced_update == "disabled", class: 'forced' %><%= t("errors.messages.forced_update") %>
               </label>
             </div>
             <% end %>

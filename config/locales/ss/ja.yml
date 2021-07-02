@@ -1099,7 +1099,7 @@ ja:
     ss/addon/approve_setting:
       forced_update:
         - メールアドレスが設定されていない場合の承認について設定します。
-        - 設定すると実行時の注意を無視します。
+        - 無効に設定すると実行時の注意を無視します。
       close_confirmation:
         - 下書き保存時の警告表示を設定します。
     ss/model/max_file_size:
