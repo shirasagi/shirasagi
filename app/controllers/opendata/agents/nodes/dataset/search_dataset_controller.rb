@@ -2,6 +2,8 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
   include Cms::NodeFilter::View
   helper Opendata::UrlHelper
 
+  protect_from_forgery except: [:dataset_download, :bulk_download]
+
   private
 
   def pages
