@@ -10,6 +10,7 @@ module Cms::Addon::Form::Page
                 after_add: :update_column_values_updated, after_remove: :update_column_values_updated,
                 extend: Cms::Extensions::ColumnValuesRelation
     field :column_values_updated, type: DateTime
+    field :form_contains_urls, type: Array, default: []
 
     permit_params :form_id, column_values: [ :_type, :column_id, :order, :alignment, in_wrap: {} ]
     accepts_nested_attributes_for :column_values
@@ -20,6 +21,8 @@ module Cms::Addon::Form::Page
 
     attr_accessor :link_check_user
     validate :validate_column_links, on: :link
+
+    before_validation :set_form_contains_urls
 
     before_save :cms_form_page_delete_unlinked_files
 
@@ -185,5 +188,23 @@ module Cms::Addon::Form::Page
         file.save
       end
     end
+  end
+
+  def set_form_contains_urls
+    form_contains_urls = []
+
+    column_values.select{ |c| c[:_type] == 'Cms::Column::Value::Free' }.each do |column_value|
+      form_contains_urls << column_value.contains_urls
+    end
+
+    column_values.select{ |c| c[:_type] == 'Cms::Column::Value::UrlField' }.each do |column_value|
+      form_contains_urls << column_value.link
+    end
+
+    column_values.select{ |c| c[:_type] == 'Cms::Column::Value::UrlField2' }.each do |column_value|
+      form_contains_urls << column_value.link_url
+    end
+
+    self.form_contains_urls = form_contains_urls.flatten.uniq
   end
 end

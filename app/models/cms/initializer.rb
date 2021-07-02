@@ -114,6 +114,8 @@ module Cms
     if SS.config.michecker && SS.config.michecker['disable'].blank?
       Cms::Role.permission :use_cms_michecker
     end
+    Cms::Role.permission :delete_cms_ignore_alert
+    Cms::Role.permission :edit_cms_ignore_alert
 
     SS::File.model "cms/editor_template", SS::File
     SS::File.model "cms/file", Cms::File

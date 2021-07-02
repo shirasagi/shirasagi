@@ -13,6 +13,7 @@
   <% if source_cleaner_conf[:source_cleaner].present? || source_cleaner_conf[:source_cleaner_site_setting].present? %>
     <% @buttons << :source_cleaner %>
   <% end %>
+  <% @buttons << :related_pages %>
 
   <%= jquery do %>
     <% if source_cleaner_conf[:source_cleaner].present? || source_cleaner_conf[:source_cleaner_site_setting].present? %>
@@ -129,5 +130,24 @@
 
   <%= jquery do %>
     Cms_Column_Free.render(<%== "##{id}".to_json %>, <%== { objectName: f.object_name, editorId: "##{editor_id}" }.to_json %>);
+
+    var hostUrl = "<%= @cur_site.url %>";
+
+    var insertContent = function(unique_id, cont) {
+      if (typeof tinymce !== "undefined") {
+        tinymce.get(Cms_Form.editorId).execCommand("mceInsertContent", false, cont);
+      } else if (typeof CKEDITOR !== "undefined") {
+        CKEDITOR.instances["column-value-" + unique_id + "-html"].insertHtml(cont);
+      }
+    };
+
+    $('#addon-cms-agents-addons-form-page a.ajax-box.related-pages').data('on-select', function ($item) {
+      var data = $item.closest("[data-id]");
+      var href = hostUrl + data.find(".filename").text();
+      var label = data.find(".select-item").text();
+      var text = "<a href='" + href + "'>" + label + '</a>';
+      var unique_id = $('#unique_id').val();
+      insertContent(unique_id, text);
+    });
   <% end %>
 <% end %>

@@ -62,7 +62,7 @@ class Cms::Apis::FormsController < ApplicationController
     @cur_node = Cms::Node.find(params[:node]).becomes_with_route rescue nil
     @page = Cms::Page.find_or_initialize_by(id: params[:owner_item_id])
     @page = @page.becomes_with_route(params[:owner_item_type].underscore)
-    @form = params[:form].present? ? params[:form] : "upload"
+    @form = params[:form].presence || "upload"
     render layout: false
   end
 

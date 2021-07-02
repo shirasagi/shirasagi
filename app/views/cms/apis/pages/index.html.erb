@@ -10,6 +10,7 @@
 <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
   <%= hidden_field_tag("layout", params[:layout]) %>
   <%= hidden_field_tag("single", params[:single]) %>
+  <%= hidden_field_tag("unique_id", params[:unique_id]) %>
   <dl class="see">
     <%= render 'node_dropdown_tree', f: f %>
 

@@ -146,6 +146,7 @@ ja:
       convert_to_cms_page: 固定ページに変換してよろしいですか？
       converted_html: 取り込んだHTMLはWYSIWYGエディタ内に展開される為、HTMLが変換される可能性があります。
       check_contains_urls: このページへのリンクを確認する。
+      check_linked_url_list: リンクを貼っているページを確認する
       contains_urls_exists: このページへのリンク、関連記事、添付ファイルが以下のページに含まれています。
       contains_urls_not_found: このページへのリンク、関連記事、添付ファイルが含まれているページは見つかりませんでした。
       check_accessibility_manually: "セマンティックなマークアップであるか確認してください。\nコントラスト比に問題がないか確認してください。"
@@ -525,6 +526,8 @@ ja:
     delete_private_cms_forms: 定型フォームの削除（所有）
     delete_other_cms_forms: 定型フォームの削除（全て）
     use_cms_michecker: micheckerの利用
+    delete_cms_ignore_alert: 警告を無視して削除する
+    edit_cms_ignore_alert: 警告を無視して非公開保存する
 
   modules:
     cms: 標準機能

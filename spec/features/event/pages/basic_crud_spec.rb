@@ -9,6 +9,7 @@ describe "event_pages", type: :feature, js: true do
   subject(:show_path) { event_page_path site.id, node, item }
   subject(:edit_path) { edit_event_page_path site.id, node, item }
   subject(:delete_path) { delete_event_page_path site.id, node, item }
+  subject(:delete_path2) { delete_event_page_path site.id, node, item2 }
   subject(:move_path) { move_event_page_path site.id, node, item }
   subject(:copy_path) { copy_event_page_path site.id, node, item }
   subject(:import_path) { import_event_pages_path site.id, node }
@@ -80,10 +81,12 @@ describe "event_pages", type: :feature, js: true do
 
     it "#delete" do
       visit delete_path
+      expect(page).to have_css(".delete")
       within "form" do
-        click_button I18n.t('ss.buttons.delete')
+        click_on I18n.t("ss.buttons.delete")
       end
       expect(current_path).to eq index_path
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
     end
 
     it "#contains_urls" do
@@ -101,6 +104,61 @@ describe "event_pages", type: :feature, js: true do
         end
       end
       expect(page).to have_content I18n.t("ss.notice.started_import")
+    end
+  end
+end
+
+describe "event_pages", type: :feature, js: true do
+  subject(:site) { cms_site }
+  subject(:node) { create_once :event_node_page, filename: "docs", name: "event" }
+  let!(:item2) { create(:event_page, cur_node: node) }
+  let!(:html) { "<p><a href=\"#{item2.url}\">関連記事リンク1</a></p>" }
+  let!(:item3) { create(:event_page, cur_node: node, html: html) }
+  subject(:edit_path) { edit_event_page_path site.id, node, item3 }
+  subject(:edit_path2) { edit_event_page_path site.id, node, item2 }
+
+  before { login_cms_user }
+
+  context "#draft_save" do
+    let(:user) { cms_user }
+
+    it "permited and contains_urls" do
+      visit edit_path2
+      within "form" do
+        click_on I18n.t("ss.buttons.draft_save")
+      end
+      expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
+    end
+
+    it "permited and not contains_urls" do
+      visit edit_path
+      within "form" do
+        click_on I18n.t("ss.buttons.draft_save")
+      end
+      expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
+    end
+
+    it "not permited and contains_urls" do
+      role = user.cms_roles[0]
+      role.update(permissions: %w(edit_private_event_pages edit_other_event_pages
+                                  release_private_event_pages release_other_event_pages))
+      visit edit_path2
+      within "form" do
+        click_on I18n.t("ss.buttons.draft_save")
+      end
+      expect(page).not_to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
+      expect(page).to have_css(".errorExplanation", text: I18n.t('ss.confirm.contains_url_expect'))
+    end
+
+    it "not permited and not contains_urls" do
+      role = user.cms_roles[0]
+      role.update(permissions: %w(edit_private_event_pages edit_other_event_pages
+                                  release_private_event_pages release_other_event_pages))
+      visit edit_path
+      within "form" do
+        click_on I18n.t("ss.buttons.draft_save")
+      end
+      expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
     end
   end
 end
