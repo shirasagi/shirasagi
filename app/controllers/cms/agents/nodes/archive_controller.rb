@@ -28,10 +28,10 @@ class Cms::Agents::Nodes::ArchiveController < ApplicationController
       @range = from..to
     when 8
       # year/month/day is specified
-      year = ymd[0..3].to_i
-      month = ymd[4..5].to_i
+      @year = ymd[0..3].to_i
+      @month = ymd[4..5].to_i
       day = ymd[6..7].to_i
-      from = Time.zone.local(year, month, day)
+      from = Time.zone.local(@year, @month, day)
       to = from + 1.day - 1.second
       @range = from..to
     else
