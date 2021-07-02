@@ -51,7 +51,7 @@ describe "member_photos", type: :feature, dbscope: :example do
   context "set center and zoom" do
     before { login_cms_user }
     before do
-    visit new_path
+      visit new_path
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         attach_file "item[in_image]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
@@ -66,102 +66,102 @@ describe "member_photos", type: :feature, dbscope: :example do
       expect(item.set_center_position).to eq nil
       within "form" do
         find("input[name='item[center_setting]'][value='designated_location']").set(true)
-        fill_in "item[set_center_position]", with: "34.067035,134.589971"
+        fill_in "item[set_center_position]", with: "134.589971,34.067035"
         click_on I18n.t("ss.buttons.save")
       end
       item.reload
       expect(item.center_setting).to eq "designated_location"
-      expect(item.set_center_position).to eq "34.067035,134.589971"
+      expect(item.set_center_position).to eq "134.589971,34.067035"
     end
 
     it "#center position validation" do
       visit edit_path
       within "form" do
-        fill_in "item[set_center_position]", with: "90,134.589971"
+        fill_in "item[set_center_position]", with: "134.589971,90"
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).not_to have_css("#errorExplanation")
 
       visit edit_path
       within "form" do
-        fill_in "item[set_center_position]", with: "90.1,134.589971"
+        fill_in "item[set_center_position]", with: "134.589971,90.1"
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css("#errorExplanation")
 
       visit edit_path
       within "form" do
-        fill_in "item[set_center_position]", with: "-90,134.589971"
+        fill_in "item[set_center_position]", with: "134.589971,-90"
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).not_to have_css("#errorExplanation")
 
       visit edit_path
       within "form" do
-        fill_in "item[set_center_position]", with: "-90.1,134.589971"
+        fill_in "item[set_center_position]", with: "134.589971,-90.1"
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css("#errorExplanation")
 
       visit edit_path
       within "form" do
-        fill_in "item[set_center_position]", with: "34.067035,180"
+        fill_in "item[set_center_position]", with: "180,34.067035"
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).not_to have_css("#errorExplanation")
 
       visit edit_path
       within "form" do
-        fill_in "item[set_center_position]", with: "34.067035,180.1"
+        fill_in "item[set_center_position]", with: "180.1,34.067035"
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css("#errorExplanation")
 
       visit edit_path
       within "form" do
-        fill_in "item[set_center_position]", with: "34.067035,-180"
+        fill_in "item[set_center_position]", with: "-180,34.067035"
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).not_to have_css("#errorExplanation")
 
       visit edit_path
       within "form" do
-        fill_in "item[set_center_position]", with: "34.067035,-180.1"
+        fill_in "item[set_center_position]", with: "-180.1,34.067035"
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css("#errorExplanation")
 
       visit edit_path
       within "form" do
-        fill_in "item[set_center_position]", with: "134.589971,34.067035"
+        fill_in "item[set_center_position]", with: "34.067035,134.589971"
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css("#errorExplanation")
 
       visit edit_path
       within "form" do
-        fill_in "item[set_center_position]", with: "34.067035"
+        fill_in "item[set_center_position]", with: "134.589971"
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css("#errorExplanation")
 
       visit edit_path
       within "form" do
-        fill_in "item[set_center_position]", with: "34.067035,134.589971,34.067035"
+        fill_in "item[set_center_position]", with: "134.589971,34.067035,134.589971"
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css("#errorExplanation")
 
       visit edit_path
       within "form" do
-        fill_in "item[set_center_position]", with: "latitude,longitude"
+        fill_in "item[set_center_position]", with: "longitude,latitude"
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css("#errorExplanation")
 
       visit edit_path
       within "form" do
-        fill_in "item[set_center_position]", with: "34.067abc035,134.589971"
+        fill_in "item[set_center_position]", with: "134.589971,34.067abc035"
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css("#errorExplanation")

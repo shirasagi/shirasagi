@@ -63,10 +63,10 @@ class Member::Photo
   end
 
   def center_position_validate
-    latlon = set_center_position.split(',')
-    if latlon.length == 2
-      lat = latlon[0]
-      lon = latlon[1]
+    lonlat = set_center_position.split(',')
+    if lonlat.length == 2
+      lat = lonlat[1]
+      lon = lonlat[0]
       if !lat.numeric? || !lon.numeric?
         self.errors.add :set_center_position, :invalid_latlon
       elsif lat.to_f.floor < -90 || lat.to_f.ceil > 90 || lon.to_f.floor < -180 || lon.to_f.ceil > 180

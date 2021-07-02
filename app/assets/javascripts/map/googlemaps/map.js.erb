@@ -57,8 +57,8 @@ this.Googlemaps_Map = (function () {
       }
     }
     if (options["center"]) {
-      if (Googlemaps_Map.validateLatLon(options["center"][0], options["center"][1])) {
-        Googlemaps_Map.center = options["center"];
+      if (Googlemaps_Map.validateLatLon(options["center"][1], options["center"][0])) {
+        Googlemaps_Map.center = options["center"].reverse();
       }
     }
 
