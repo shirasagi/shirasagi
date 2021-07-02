@@ -1,7 +1,7 @@
 <% value ||= nil %>
 <% files = value.try(:files) %>
 <% controller ||= false %>
-<% source_cleaner_conf = Cms::SourceCleanerTemplate.site(@cur_site).and_public.to_config %>
+<% source_cleaner_conf = Cms::SourceCleanerTemplate.site(@cur_site).and_public.to_config(site: @cur_site) %>
 <% page = @page.presence || @item %>
 <% opendata_assoced = @cur_node && @cur_node.becomes_with_route.try(:opendata_sites).present? && page.respond_to?(:opendata_resources) %>
 <% licenses = Opendata::License.in(site_id: @cur_node.becomes_with_route.try(:opendata_site_ids)).and_public.pluck(:name, :id) if opendata_assoced %>
@@ -10,15 +10,16 @@
   <%= text_area_tag("#{f.object_name}[][in_wrap][value]", value.try(:value), column.form_options.merge(id: editor_id, class: "html", style: "height: 400px;")) %>
   <%= html_editor "##{editor_id}", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
 
-  <% if source_cleaner_conf[:source_cleaner].present? %>
+  <% if source_cleaner_conf[:source_cleaner].present? || source_cleaner_conf[:source_cleaner_site_setting].present? %>
     <% @buttons << :source_cleaner %>
   <% end %>
 
   <%= jquery do %>
-    <% if source_cleaner_conf[:source_cleaner].present? %>
+    <% if source_cleaner_conf[:source_cleaner].present? || source_cleaner_conf[:source_cleaner_site_setting].present? %>
       if (!Cms_Source_Cleaner.config) {
         Cms_Source_Cleaner.config = <%= raw source_cleaner_conf.to_json %>
       }
+      Cms_Source_Cleaner.confirms.clean = <%== t("cms.confirm.source_clean").to_json %>;
       Cms_Source_Cleaner.render(<%== "##{id}-source-cleaner".to_json %>, <%== { editor: editor_id }.to_json %>);
     <% end %>
 
