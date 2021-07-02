@@ -16,7 +16,7 @@ describe "cms_notices", type: :feature, dbscope: :example, js: true do
       visit cms_public_notice_path(site: site, id: item)
 
       new_window = nil
-      within_frame find("iframe.cke_wysiwyg_frame") do
+      within_frame find("iframe.ss-notice-frame") do
         new_window = window_opened_by { click_on file.humanized_name }
       end
 

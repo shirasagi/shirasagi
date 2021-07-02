@@ -25,6 +25,8 @@ this.Cms_Source_Cleaner = (function (superClass) {
 
   Cms_Source_Cleaner.config = {};
 
+  Cms_Source_Cleaner.confirms = { clean: null };
+
   Cms_Source_Cleaner.render = function (el, options) {
     if (!el) {
       el = ".source-cleaner";
@@ -34,6 +36,9 @@ this.Cms_Source_Cleaner = (function (superClass) {
     }
 
     $(el).on("click", function () {
+      if (!confirm(Cms_Source_Cleaner.confirms.clean)) {
+        return;
+      }
       var html = Cms_Source_Cleaner.getEditorHtml(options.editor);
       html = Cms_Source_Cleaner.cleanUp(html);
       return Cms_Source_Cleaner.setEditorHtml(html, { id: options.editor });
@@ -47,7 +52,7 @@ this.Cms_Source_Cleaner = (function (superClass) {
         "tag": this.removeTag,
         "attribute": this.removeAttribute,
         "string": this.removeString,
-        "regexp": this.removeRegex
+        "regexp": this.removeRegexp
       },
       "replace": {
         "tag": this.replaceTag,
@@ -73,6 +78,31 @@ this.Cms_Source_Cleaner = (function (superClass) {
         e = _error;
         console.warn(action_type, target_type, e);
       }
+    }
+    if (Cms_Source_Cleaner.config["source_cleaner_site_setting"]['unwrap_tag_state'] == 'enabled') {
+      html = this.unwrapTag(html, {
+        "value": 'font'
+      });
+      html = this.unwrapTagWithoutAttributes(html, {
+        "value": 'div'
+      });
+      html = this.unwrapTagWithoutAttributes(html, {
+        "value": 'span'
+      });
+    }
+    if (Cms_Source_Cleaner.config["source_cleaner_site_setting"]['remove_tag_state'] == 'enabled') {
+      html = this.removeTagWithoutText(html, {
+        "value": 'p'
+      });
+      html = this.removeTagWithoutText(html, {
+        "value": 'div'
+      });
+      html = this.removeTagWithoutText(html, {
+        "value": 'span'
+      });
+    }
+    if (Cms_Source_Cleaner.config["source_cleaner_site_setting"]['remove_class_state'] == 'enabled') {
+      html = this.removeMsoClass(html, {});
     }
     return html;
   };
@@ -157,6 +187,50 @@ this.Cms_Source_Cleaner = (function (superClass) {
 
   Cms_Source_Cleaner.regexpEscape = function (s) {
     return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+  };
+
+  Cms_Source_Cleaner.unwrapTag = function (html, opts) {
+    var ret, value;
+    value = opts["value"];
+    ret = $('<div>' + html + '</div>');
+    $(ret).find(value).each(function() {
+      $(this).contents().unwrap();
+    });
+    return ret.html();
+  };
+
+  Cms_Source_Cleaner.unwrapTagWithoutAttributes = function (html, opts) {
+    var ret, value;
+    value = opts["value"];
+    ret = $('<div>' + html + '</div>');
+    $(ret).find(value).each(function() {
+      if (!this.attributes.length) {
+        $(this).contents().unwrap();
+      }
+    });
+    return ret.html();
+  };
+
+  Cms_Source_Cleaner.removeTagWithoutText = function (html, opts) {
+    var ret, value;
+    value = opts["value"];
+    ret = $('<div>' + html + '</div>');
+    $(ret).find(value).each(function() {
+      if (!$.trim($(this).text()).length) {
+        $(this).remove();
+      }
+    });
+    return ret.html();
+  };
+
+  Cms_Source_Cleaner.removeMsoClass = function (html, opts) {
+    var ret, value;
+    value = opts["value"];
+    ret = $('<div>' + html + '</div>');
+    $(ret).find("*").removeClass(function(index, className) {
+      return (className.match(/\bmso\S+/gi) || []).join(' ');
+    });
+    return ret.html();
   };
 
   return Cms_Source_Cleaner;

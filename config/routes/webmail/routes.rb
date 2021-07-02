@@ -122,7 +122,9 @@ Rails.application.routes.draw do
       get :start_export, on: :collection
     end
 
-    resources :sys_notices, only: [:index, :show]
+    resources :sys_notices, only: [:index, :show] do
+      get :frame_content, on: :member
+    end
 
     namespace "apis" do
       get ":webmail_mode-:account/recent" => "imap#recent",

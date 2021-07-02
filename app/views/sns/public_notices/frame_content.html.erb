@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <title><%= @item.name %></title>
+  <link type="text/css" rel="stylesheet" href="/assets/js/ckeditor/contents.css">
+  <link type="text/css" rel="stylesheet" href="/assets/js/ckeditor/plugins/tableselection/styles/tableselection.css">
+</head>
+<body contenteditable="false" class="cke_editable cke_editable_themed cke_contents_ltr cke_show_borders" spellcheck="false">
+  <%= sanitize(@item.html) %>
+</body>
+
+<%= javascript_tag(defer: true) do %>
+  var linkTemplate = <%== sns_redirect_path(ref: "_ref_").to_json %>
+  var viaSnsRedirect = function(ev) {
+    var href = encodeURIComponent(this.href);
+    href = linkTemplate.replace("_ref_", href);
+    window.open(href);
+
+    ev.preventDefault();
+    return false;
+  };
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var anchors = document.querySelectorAll("a[href]");
+    for (var i = 0; i < anchors.length; i++) {
+      var anchor = anchors.item(i);
+      anchor.addEventListener("click", viaSnsRedirect);
+    }
+  }, false);
+<% end %>
+</html>

@@ -1,6 +1,7 @@
 <% show ||= false %>
 <% controller ||= false %>
 <% id = value.try(:id) || BSON::ObjectId.new %>
+<% unique_id = id %>
 <% id = "column-value-#{id}" %>
 <%
   @buttons = []
@@ -84,6 +85,17 @@
           <%= button_tag t("cms.form_check"), { type: :button, class: "btn form-check" } %>
         <% when :source_cleaner %>
           <%= button_tag t("cms.source_cleaner"), { type: :button, class: "btn", id: "#{id}-source-cleaner" } %>
+        <% when :related_pages %>
+          <% if !@inplace_mode %>
+            <%
+              page_params = {}
+              page_params[:unique_id] = unique_id
+              if @cur_node
+                page_params[:s] = { node: @cur_node }
+              end
+            %>
+            <%= link_to t("cms.apis.related_pages.index"), cms_apis_pages_path(page_params), class: "btn ajax-box related-pages" %>
+          <% end %>
         <% when String %>
           <%= button %>
         <% end %>

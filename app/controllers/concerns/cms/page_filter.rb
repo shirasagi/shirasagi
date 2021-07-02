@@ -52,6 +52,7 @@ module Cms::PageFilter
     cond = []
     if @item.respond_to?(:url) && @item.respond_to?(:full_url)
       cond << { contains_urls: { '$in' => [ @item.url, @item.full_url ] } }
+      cond << { form_contains_urls: { '$in' => [ @item.url, @item.full_url ] } }
     end
 
     if @item.respond_to?(:files) && @item.files.present?
@@ -155,7 +156,7 @@ module Cms::PageFilter
         location = { cid: node.id, action: :move, source: @source, link_check: true }
       end
 
-      render_update @item.move(destination), location: location, render: { file: :move }
+      render_update @item.move(destination), location: location, render: { file: :move }, notice: t('ss.notice.moved')
     end
   end
 

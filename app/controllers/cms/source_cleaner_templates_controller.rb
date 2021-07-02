@@ -5,6 +5,7 @@ class Cms::SourceCleanerTemplatesController < ApplicationController
 
   model Cms::SourceCleanerTemplate
   navi_view "cms/main/conf_navi"
+  navi_view "cms/source_cleaner/main/navi"
 
   private
 

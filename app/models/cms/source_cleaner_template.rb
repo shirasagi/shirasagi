@@ -51,6 +51,13 @@ class Cms::SourceCleanerTemplate
         h[:source_cleaner][idx]["replaced_value"] = item.replaced_value
       end
 
+      if opts[:site].present?
+        h[:source_cleaner_site_setting] = {}
+        h[:source_cleaner_site_setting]['unwrap_tag_state'] = opts[:site].source_cleaner_unwrap_tag_state
+        h[:source_cleaner_site_setting]['remove_tag_state'] = opts[:site].source_cleaner_remove_tag_state
+        h[:source_cleaner_site_setting]['remove_class_state'] = opts[:site].source_cleaner_remove_class_state
+      end
+
       h
     end
   end

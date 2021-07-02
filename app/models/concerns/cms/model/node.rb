@@ -171,10 +171,15 @@ module Cms::Model::Node
     validate_destination_filename(dst)
     return false unless errors.empty?
 
+    src = url
     self.cur_node = nil
     self.filename = dst
     self.basename = nil
-    save
+    result = save
+    if result && SS.config.cms.replace_urls_after_move
+      Cms::Page::MoveJob.bind(site_id: @cur_site, user_id: @cur_user).perform_later(src: src, dst: url)
+    end
+    result
   end
 
   # returns admin side show path

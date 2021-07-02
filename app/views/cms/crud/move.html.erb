@@ -42,7 +42,7 @@ if (confirm) {
     <dl class="see" style="display: none;">
       <dt class="wide">
         <%= t("cms.move_page.message", source: @source) %>
-        <% if Cms::Site.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <% if Cms::Site.allowed?(:edit, @cur_user, site: @cur_site) && !SS.config.cms.replace_urls_after_move %>
           <span style="float: right; padding-right: 25px;"><%= link_to t("cms.move_page.link_to_replace"), cms_search_contents_html_path %></span>
         <% end %>
       </dt>
@@ -62,7 +62,7 @@ if (confirm) {
   </section>
 
   <footer class="send">
-    <%= f.submit t("ss.buttons.save"), class: "btn-primary" %>
+    <%= f.submit t("ss.buttons.move"), class: "btn-primary" %>
     <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;", class: "btn-default" %>
   </footer>
 

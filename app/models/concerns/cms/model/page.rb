@@ -123,6 +123,7 @@ module Cms::Model::Page
     end
     return false unless errors.empty?
 
+    src = url
     self.cur_node = nil
     self.filename = dst
     self.basename = nil
@@ -130,7 +131,11 @@ module Cms::Model::Page
       remove_attribute(:lock_owner_id) if has_attribute?(:lock_owner_id)
       remove_attribute(:lock_until) if has_attribute?(:lock_until)
     end
-    save
+    result = save
+    if result && SS.config.cms.replace_urls_after_move
+      Cms::Page::MoveJob.bind(site_id: @cur_site, user_id: @cur_user).perform_later(src: src, dst: url)
+    end
+    result
   end
 
   # returns admin side show path

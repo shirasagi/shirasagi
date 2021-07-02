@@ -137,15 +137,6 @@ this.Cms_Editor_CKEditor = (function () {
           event.cancel();
         }
       });
-
-      if (js_opts && js_opts.openHref) {
-        $(ev.editor.document.$).on("click", function (ev2) {
-          if (typeof ev2.target.href != 'undefined') {
-            var param = jQuery.param({ ref: ev2.target.href });
-            window.open(js_opts.openHref + "?" + param);
-          }
-        });
-      }
     });
   };
 
