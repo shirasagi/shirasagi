@@ -3,7 +3,6 @@ SS_Workflow = function (el, options) {
   this.options = options;
 
   var pThis = this;
-  pThis.updateDisabled = false;
 
   this.$el.on("click", ".update-item", function (e) {
     pThis.updateItem($(this));
@@ -67,7 +66,16 @@ SS_Workflow = function (el, options) {
     ".mod-workflow-approve .upload-drop-area", this.options.user_id,
     { select: function(files, dropArea) { pThis.onDropFile(files, dropArea); } }
   );
+
+  // complete initialization, so now update-item is clickable
+  $(".update-item").each(function() {
+    this.disabled = false;
+  });
+  SS_Workflow.updateDisabled = false;
 };
+
+// 初期化が完了するまで update を無効にしておきたいので、クラス変数として定義する。
+SS_Workflow.updateDisabled = true;
 
 SS_Workflow.prototype = {
   collectApprovers: function() {
@@ -177,10 +185,10 @@ SS_Workflow.prototype = {
     var circulations = this.collectCirculations();
     var workflow_file_ids = this.collectFileIds();
 
-    if (pThis.updateDisabled) {
+    if (SS_Workflow.updateDisabled) {
       return false;
     }
-    pThis.updateDisabled = true;
+    SS_Workflow.updateDisabled = true;
     $this.prop("disabled", true);
 
     $.ajax({
@@ -205,8 +213,8 @@ SS_Workflow.prototype = {
       success: function (data) {
         if (data.workflow_alert) {
           alert(data.workflow_alert);
-          pThis.updateDisabled = false;
           $this.prop("disabled", false);
+          SS_Workflow.updateDisabled = false;
           return;
         }
 
@@ -235,8 +243,8 @@ SS_Workflow.prototype = {
         catch (ex) {
           alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
         }
-        pThis.updateDisabled = false;
         $this.prop("disabled", false);
+        SS_Workflow.updateDisabled = false;
       }
     });
   },
