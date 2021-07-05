@@ -32,14 +32,20 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         # original file upload
         within "form#item-form" do
           within "#addon-cms-agents-addons-file" do
-            click_on I18n.t("ss.buttons.upload")
+            wait_cbox_open do
+              click_on I18n.t("ss.buttons.upload")
+            end
           end
         end
 
         wait_for_cbox do
           attach_file "item[in_files][]", before_csv
-          click_button I18n.t("ss.buttons.attach")
-          wait_for_ajax
+          wait_cbox_close do
+            click_button I18n.t("ss.buttons.attach")
+          end
+        end
+        within "#addon-cms-agents-addons-file" do
+          expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
         end
         click_on I18n.t("ss.buttons.publish_save")
         wait_for_notice I18n.t('ss.notice.saved')
@@ -49,49 +55,49 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         # open replace file dialog
         within "#addon-cms-agents-addons-file" do
           expect(page).to have_css('.file-view', text: file.name)
-          click_on I18n.t("ss.buttons.replace_file")
+          wait_cbox_open do
+            click_on I18n.t("ss.buttons.replace_file")
+          end
         end
 
         wait_for_cbox do
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.replace_file"))
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.file_histories"))
-        end
-        expect(SS::ReplaceTempFile.count).to eq 0
 
-        # upload file and confirmation (cancel)
-        within "form#ajax-form" do
+          expect(SS::ReplaceTempFile.count).to eq 0
+
+          # upload file and confirmation (cancel)
           attach_file "item[in_file]", after_csv
           click_button I18n.t('inquiry.confirm')
-          wait_for_ajax
-        end
 
-        temp_file = SS::ReplaceTempFile.first
-        expect(SS::ReplaceTempFile.count).to eq 1
-        expect(temp_file.filename).not_to eq file.filename
-        expect(temp_file.name).not_to eq file.name
-        expect(temp_file.state).to eq "closed"
+          expect(page).to have_css('.file-view.before', text: ::File.basename(before_csv, ".*"))
+          expect(page).to have_css('.file-view.after', text: ::File.basename(after_csv, ".*"))
 
-        within "form#ajax-form" do
+          temp_file = SS::ReplaceTempFile.first
+          expect(SS::ReplaceTempFile.count).to eq 1
+          expect(temp_file.filename).not_to eq file.filename
+          expect(temp_file.name).not_to eq file.name
+          expect(temp_file.state).to eq "closed"
+
           expect(page).to have_css('.file-view.before', text: file.humanized_name)
           expect(page).to have_css('.file-view.after', text: temp_file.humanized_name)
           click_on I18n.t("ss.buttons.cancel")
-        end
 
-        # upload file and confirmation
-        within "form#ajax-form" do
+          # upload file and confirmation
+          expect(page).to have_css("input[type='submit'][value='#{I18n.t('inquiry.confirm')}']")
           attach_file "item[in_file]", after_csv
           click_button I18n.t('inquiry.confirm')
-          wait_for_ajax
-        end
 
-        temp_file = SS::ReplaceTempFile.first
-        expect(SS::ReplaceTempFile.count).to eq 1
-        expect(temp_file.filename).not_to eq file.filename
-        expect(temp_file.name).not_to eq file.name
-        expect(temp_file.state).to eq "closed"
+          expect(page).to have_css('.file-view.before', text: ::File.basename(before_csv, ".*"))
+          expect(page).to have_css('.file-view.after', text: ::File.basename(after_csv, ".*"))
 
-        # replace file and
-        within "form#ajax-form" do
+          temp_file = SS::ReplaceTempFile.first
+          expect(SS::ReplaceTempFile.count).to eq 1
+          expect(temp_file.filename).not_to eq file.filename
+          expect(temp_file.name).not_to eq file.name
+          expect(temp_file.state).to eq "closed"
+
+          # replace file and
           expect(page).to have_css('.file-view.before', text: file.humanized_name)
           expect(page).to have_css('.file-view.after', text: temp_file.humanized_name)
           fill_in "item[name]", with: "replaced"
@@ -105,7 +111,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(replaced_page.attached_files.size).to eq 1
 
         replaced_file = replaced_page.attached_files.first
-        expect(replaced_file.filename).to eq "before_csv.csv"
+        expect(replaced_file.filename).to eq ::File.basename(before_csv)
         expect(replaced_file.name).to eq "replaced"
         expect(replaced_file.state).to eq "public"
         expect(::FileUtils.cmp(replaced_file.path, after_csv)).to be true
@@ -114,8 +120,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(replaced_file.history_files.size).to eq 1
         history_file = replaced_file.history_files.first
 
-        expect(history_file.filename).to eq "before_csv.csv"
-        expect(history_file.name).to eq "before_csv.csv"
+        expect(history_file.filename).to eq ::File.basename(before_csv)
+        expect(history_file.name).to eq ::File.basename(before_csv)
         expect(history_file.state).to eq "closed"
         expect(::FileUtils.cmp(history_file.path, before_csv)).to be true
       end
@@ -133,16 +139,24 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within ".column-value-palette" do
-          click_on column1.name
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column1.name
+          end
         end
 
         within ".column-value-cms-column-free" do
-          click_on I18n.t("ss.buttons.upload")
+          wait_cbox_open do
+            click_on I18n.t("ss.buttons.upload")
+          end
         end
         wait_for_cbox do
           attach_file "item[in_files][]", before_csv
-          click_button I18n.t("ss.buttons.attach")
-          wait_for_ajax
+          wait_cbox_close do
+            click_button I18n.t("ss.buttons.attach")
+          end
+        end
+        within ".column-value-cms-column-free" do
+          expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
         end
         click_on I18n.t("ss.buttons.publish_save")
         wait_for_notice I18n.t('ss.notice.saved')
@@ -152,49 +166,49 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         # open replace file dialog
         within ".column-value-cms-column-free" do
           expect(page).to have_css('.file-view', text: file.name)
-          click_on I18n.t("ss.buttons.replace_file")
+          wait_cbox_open do
+            click_on I18n.t("ss.buttons.replace_file")
+          end
         end
 
         wait_for_cbox do
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.replace_file"))
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.file_histories"))
-        end
-        expect(SS::ReplaceTempFile.count).to eq 0
 
-        # upload file and confirmation (cancel)
-        within "form#ajax-form" do
+          expect(SS::ReplaceTempFile.count).to eq 0
+
+          # upload file and confirmation (cancel)
           attach_file "item[in_file]", after_csv
           click_button I18n.t('inquiry.confirm')
-          wait_for_ajax
-        end
 
-        temp_file = SS::ReplaceTempFile.first
-        expect(SS::ReplaceTempFile.count).to eq 1
-        expect(temp_file.filename).not_to eq file.filename
-        expect(temp_file.name).not_to eq file.name
-        expect(temp_file.state).to eq "closed"
+          expect(page).to have_css('.file-view.before', text: ::File.basename(before_csv, ".*"))
+          expect(page).to have_css('.file-view.after', text: ::File.basename(after_csv, ".*"))
 
-        within "form#ajax-form" do
+          temp_file = SS::ReplaceTempFile.first
+          expect(SS::ReplaceTempFile.count).to eq 1
+          expect(temp_file.filename).not_to eq file.filename
+          expect(temp_file.name).not_to eq file.name
+          expect(temp_file.state).to eq "closed"
+
           expect(page).to have_css('.file-view.before', text: file.humanized_name)
           expect(page).to have_css('.file-view.after', text: temp_file.humanized_name)
           click_on I18n.t("ss.buttons.cancel")
-        end
 
-        # upload file and confirmation
-        within "form#ajax-form" do
+          # upload file and confirmation
+          expect(page).to have_css("input[type='submit'][value='#{I18n.t('inquiry.confirm')}']")
           attach_file "item[in_file]", after_csv
           click_button I18n.t('inquiry.confirm')
-          wait_for_ajax
-        end
 
-        temp_file = SS::ReplaceTempFile.first
-        expect(SS::ReplaceTempFile.count).to eq 1
-        expect(temp_file.filename).not_to eq file.filename
-        expect(temp_file.name).not_to eq file.name
-        expect(temp_file.state).to eq "closed"
+          expect(page).to have_css('.file-view.before', text: ::File.basename(before_csv, ".*"))
+          expect(page).to have_css('.file-view.after', text: ::File.basename(after_csv, ".*"))
 
-        # replace file and
-        within "form#ajax-form" do
+          temp_file = SS::ReplaceTempFile.first
+          expect(SS::ReplaceTempFile.count).to eq 1
+          expect(temp_file.filename).not_to eq file.filename
+          expect(temp_file.name).not_to eq file.name
+          expect(temp_file.state).to eq "closed"
+
+          # replace file and
           expect(page).to have_css('.file-view.before', text: file.humanized_name)
           expect(page).to have_css('.file-view.after', text: temp_file.humanized_name)
           fill_in "item[name]", with: "replaced"
@@ -236,17 +250,25 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within ".column-value-palette" do
-          click_on column2.name
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column2.name
+          end
         end
 
         within ".column-value-cms-column-fileupload" do
           fill_in "item[column_values][][in_wrap][file_label]", with: "label"
-          click_on I18n.t("ss.buttons.upload")
+          wait_cbox_open do
+            click_on I18n.t("ss.buttons.upload")
+          end
         end
         wait_for_cbox do
           attach_file "item[in_files][]", before_csv
-          click_button I18n.t("ss.buttons.attach")
-          wait_for_ajax
+          wait_cbox_close do
+            click_button I18n.t("ss.buttons.attach")
+          end
+        end
+        within ".column-value-cms-column-fileupload" do
+          expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
         end
         click_on I18n.t("ss.buttons.publish_save")
         wait_for_notice I18n.t('ss.notice.saved')
@@ -256,49 +278,50 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         # open replace file dialog
         within ".column-value-cms-column-fileupload" do
           expect(page).to have_css('.file-view', text: file.name)
-          click_on I18n.t("ss.buttons.replace_file")
+          wait_cbox_open do
+            click_on I18n.t("ss.buttons.replace_file")
+          end
         end
 
         wait_for_cbox do
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.replace_file"))
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.file_histories"))
-        end
-        expect(SS::ReplaceTempFile.count).to eq 0
 
-        # upload file and confirmation (cancel)
-        within "form#ajax-form" do
+          expect(SS::ReplaceTempFile.count).to eq 0
+
+          # upload file and confirmation (cancel)
           attach_file "item[in_file]", after_csv
           click_button I18n.t('inquiry.confirm')
-          wait_for_ajax
-        end
 
-        temp_file = SS::ReplaceTempFile.first
-        expect(SS::ReplaceTempFile.count).to eq 1
-        expect(temp_file.filename).not_to eq file.filename
-        expect(temp_file.name).not_to eq file.name
-        expect(temp_file.state).to eq "closed"
+          expect(page).to have_css('.file-view.before', text: ::File.basename(before_csv, ".*"))
+          expect(page).to have_css('.file-view.after', text: ::File.basename(after_csv, ".*"))
 
-        within "form#ajax-form" do
+          temp_file = SS::ReplaceTempFile.first
+          expect(SS::ReplaceTempFile.count).to eq 1
+          expect(temp_file.filename).not_to eq file.filename
+          expect(temp_file.name).not_to eq file.name
+          expect(temp_file.state).to eq "closed"
+
           expect(page).to have_css('.file-view.before', text: file.humanized_name)
           expect(page).to have_css('.file-view.after', text: temp_file.humanized_name)
-          click_on I18n.t("ss.buttons.cancel")
-        end
 
-        # upload file and confirmation
-        within "form#ajax-form" do
+          click_on I18n.t("ss.buttons.cancel")
+
+          # upload file and confirmation
+          expect(page).to have_css("input[type='submit'][value='#{I18n.t('inquiry.confirm')}']")
           attach_file "item[in_file]", after_csv
           click_button I18n.t('inquiry.confirm')
-          wait_for_ajax
-        end
 
-        temp_file = SS::ReplaceTempFile.first
-        expect(SS::ReplaceTempFile.count).to eq 1
-        expect(temp_file.filename).not_to eq file.filename
-        expect(temp_file.name).not_to eq file.name
-        expect(temp_file.state).to eq "closed"
+          expect(page).to have_css('.file-view.before', text: ::File.basename(before_csv, ".*"))
+          expect(page).to have_css('.file-view.after', text: ::File.basename(after_csv, ".*"))
 
-        # replace file and
-        within "form#ajax-form" do
+          temp_file = SS::ReplaceTempFile.first
+          expect(SS::ReplaceTempFile.count).to eq 1
+          expect(temp_file.filename).not_to eq file.filename
+          expect(temp_file.name).not_to eq file.name
+          expect(temp_file.state).to eq "closed"
+
+          # replace file and
           expect(page).to have_css('.file-view.before', text: file.humanized_name)
           expect(page).to have_css('.file-view.after', text: temp_file.humanized_name)
           fill_in "item[name]", with: "replaced"
@@ -312,7 +335,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(replaced_page.attached_files.size).to eq 1
 
         replaced_file = replaced_page.attached_files.first
-        expect(replaced_file.filename).to eq "before_csv.csv"
+        expect(replaced_file.filename).to eq ::File.basename(before_csv)
         expect(replaced_file.name).to eq "replaced"
         expect(replaced_file.state).to eq "public"
         expect(::FileUtils.cmp(replaced_file.path, after_csv)).to be true
@@ -321,8 +344,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(replaced_file.history_files.size).to eq 1
         history_file = replaced_file.history_files.first
 
-        expect(history_file.filename).to eq "before_csv.csv"
-        expect(history_file.name).to eq "before_csv.csv"
+        expect(history_file.filename).to eq ::File.basename(before_csv)
+        expect(history_file.name).to eq ::File.basename(before_csv)
         expect(history_file.state).to eq "closed"
         expect(::FileUtils.cmp(history_file.path, before_csv)).to be true
       end
@@ -340,17 +363,25 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within ".column-value-palette" do
-          click_on column3.name
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column3.name
+          end
         end
 
         within ".column-value-cms-column-fileupload" do
           fill_in "item[column_values][][in_wrap][file_label]", with: "label"
-          click_on I18n.t("ss.buttons.upload")
+          wait_cbox_open do
+            click_on I18n.t("ss.buttons.upload")
+          end
         end
         wait_for_cbox do
           attach_file "item[in_files][]", before_image
-          click_button I18n.t("ss.buttons.attach")
-          wait_for_ajax
+          wait_cbox_close do
+            click_button I18n.t("ss.buttons.attach")
+          end
+        end
+        within ".column-value-cms-column-fileupload" do
+          expect(page).to have_css('.file-view', text: ::File.basename(before_image))
         end
         click_on I18n.t("ss.buttons.publish_save")
         wait_for_notice I18n.t('ss.notice.saved')
@@ -360,49 +391,49 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         # open replace file dialog
         within ".column-value-cms-column-fileupload" do
           expect(page).to have_css('.file-view', text: file.name)
-          click_on I18n.t("ss.buttons.replace_file")
+          wait_cbox_open do
+            click_on I18n.t("ss.buttons.replace_file")
+          end
         end
 
         wait_for_cbox do
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.replace_file"))
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.file_histories"))
-        end
-        expect(SS::ReplaceTempFile.count).to eq 0
 
-        # upload file and confirmation (cancel)
-        within "form#ajax-form" do
+          expect(SS::ReplaceTempFile.count).to eq 0
+
+          # upload file and confirmation (cancel)
           attach_file "item[in_file]", after_image
           click_button I18n.t('inquiry.confirm')
-          wait_for_ajax
-        end
 
-        temp_file = SS::ReplaceTempFile.first
-        expect(SS::ReplaceTempFile.count).to eq 1
-        expect(temp_file.filename).not_to eq file.filename
-        expect(temp_file.name).not_to eq file.name
-        expect(temp_file.state).to eq "closed"
+          expect(page).to have_css('.file-view.before', text: ::File.basename(before_image, ".*"))
+          expect(page).to have_css('.file-view.after', text: ::File.basename(after_image, ".*"))
 
-        within "form#ajax-form" do
+          temp_file = SS::ReplaceTempFile.first
+          expect(SS::ReplaceTempFile.count).to eq 1
+          expect(temp_file.filename).not_to eq file.filename
+          expect(temp_file.name).not_to eq file.name
+          expect(temp_file.state).to eq "closed"
+
           expect(page).to have_css('.file-view.before', text: file.humanized_name)
           expect(page).to have_css('.file-view.after', text: temp_file.humanized_name)
           click_on I18n.t("ss.buttons.cancel")
-        end
 
-        # upload file and confirmation
-        within "form#ajax-form" do
+          # upload file and confirmation
+          expect(page).to have_css("input[type='submit'][value='#{I18n.t('inquiry.confirm')}']")
           attach_file "item[in_file]", after_image
           click_button I18n.t('inquiry.confirm')
-          wait_for_ajax
-        end
 
-        temp_file = SS::ReplaceTempFile.first
-        expect(SS::ReplaceTempFile.count).to eq 1
-        expect(temp_file.filename).not_to eq file.filename
-        expect(temp_file.name).not_to eq file.name
-        expect(temp_file.state).to eq "closed"
+          expect(page).to have_css('.file-view.before', text: ::File.basename(before_image, ".*"))
+          expect(page).to have_css('.file-view.after', text: ::File.basename(after_image, ".*"))
 
-        # replace file and
-        within "form#ajax-form" do
+          temp_file = SS::ReplaceTempFile.first
+          expect(SS::ReplaceTempFile.count).to eq 1
+          expect(temp_file.filename).not_to eq file.filename
+          expect(temp_file.name).not_to eq file.name
+          expect(temp_file.state).to eq "closed"
+
+          # replace file and
           expect(page).to have_css('.file-view.before', text: file.humanized_name)
           expect(page).to have_css('.file-view.after', text: temp_file.humanized_name)
           fill_in "item[name]", with: "replaced"
@@ -416,7 +447,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(replaced_page.attached_files.size).to eq 1
 
         replaced_file = replaced_page.attached_files.first
-        expect(replaced_file.filename).to eq "keyvisual.jpg"
+        expect(replaced_file.filename).to eq ::File.basename(after_image)
         expect(replaced_file.name).to eq "replaced"
         expect(replaced_file.state).to eq "public"
         #expect(::FileUtils.cmp(replaced_file.path, after_image)).to be true
@@ -425,8 +456,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(replaced_file.history_files.size).to eq 1
         history_file = replaced_file.history_files.first
 
-        expect(history_file.filename).to eq "keyvisual.gif"
-        expect(history_file.name).to eq "keyvisual.gif"
+        expect(history_file.filename).to eq ::File.basename(before_image)
+        expect(history_file.name).to eq ::File.basename(before_image)
         expect(history_file.state).to eq "closed"
         #expect(::FileUtils.cmp(history_file.path, before_csv)).to be true
       end

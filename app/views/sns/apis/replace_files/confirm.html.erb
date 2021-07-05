@@ -1,47 +1,5 @@
 <%= jquery do %>
-
-var $loading = $(SS.loading).hide();
-$("#ajax-box").after($loading);
-
-$('#ajax-form').ajaxForm({
-  url: "<%= url_for action: :update %>",
-  dataType: 'json',
-  beforeSend: function() {
-    $("#ajax-box").hide();
-    $loading.show();
-  },
-  success: function(data) {
-    var size = data.length;
-    $.each(data, function(k, v){
-      var url = v["url"] + "?_update=" + v["updated_to_i"];
-      $.get(url, function () {
-        size -= 1;
-        if (size == 0) {
-          location.reload();
-        }
-      });
-    });
-  },
-  error: function(data, status, err) {
-    $("#ajax-box").show();
-    $loading.hide();
-
-    resp = eval(data.responseText);
-    alert(resp.join("\n"));
-  }
-});
-
-$('#ajax-box [name="item[in_file]"]').on("change", function(ev) {
-  if (this.files && this.files[0]) {
-    $('#ajax-box [name="item[name]"]').val(this.files[0].name);
-  }
-});
-
-$("#ajax-box .back-to-edit").on("click", function() {
-  $("#cboxLoadedContent").load("<%= url_for(action: :edit) %>");
-  return false;
-});
-
+  SS_ReplaceFile.instance().renderConfirm("<%= url_for action: :update %>", "<%= url_for(action: :edit) %>");
 <% end %>
 
 <div class="cms-modal-tabs">
@@ -99,7 +57,7 @@ $("#ajax-box .back-to-edit").on("click", function() {
 
     <footer class="send">
       <%= f.submit t('ss.buttons.replace_save'), class: "btn-primary save" %>
-      <%= link_to(t("ss.buttons.cancel"), { action: :edit }, { class: "btn-default back-to-edit" }) %>
+      <%= link_to(t("ss.buttons.cancel"), { action: :edit }, { class: "ajax-box btn-default back-to-edit" }) %>
     </footer>
 
   <% end %>
