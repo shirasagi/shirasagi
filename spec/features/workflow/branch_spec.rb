@@ -15,8 +15,14 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
     click_button I18n.t('workflow.create_branch')
 
     # show branch
-    click_link old_name
-    expect(page).to have_css('.see.branch', text: I18n.t('workflow.branch_message'))
+    within "#addon-workflow-agents-addons-branch" do
+      expect(page).to have_css('.see.branch', text: old_name)
+      click_link old_name
+    end
+    within "#addon-workflow-agents-addons-branch" do
+      expect(page).to have_css('.see.branch', text: I18n.t('workflow.branch_message'))
+    end
+    expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
     # draft save
     click_on I18n.t('ss.links.edit')
@@ -53,6 +59,12 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
       click_on I18n.t('ss.buttons.publish_save')
     end
     wait_for_notice I18n.t('ss.notice.saved')
+
+    if item.route == "cms/page"
+      within "#content-navi" do
+        expect(page).to have_css(".tree-item", text: "refresh")
+      end
+    end
 
     # master was replaced
     item.class.all.each do |pub|

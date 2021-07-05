@@ -66,7 +66,7 @@ SS_TreeNavi.prototype.renderChildren = function(item) {
 
 SS_TreeNavi.prototype.renderItems = function(data) {
   var _this = this;
-  return $.map(data, function(item) {
+  var ret = $.map(data, function(item) {
     var is_open = item.is_current || item.is_parent
     var mark = is_open ? _this.openMark : _this.closeMark;
     var cls = is_open ? ['is-open is-cache'] : ['is-close'];
@@ -78,6 +78,19 @@ SS_TreeNavi.prototype.renderItems = function(data) {
       '<a class="item-name" href="' + item.url + '">' + item.name.replace('<','') + '</a>' +
       '</div>';
   });
+
+  var $refresh = $("<a />", { class: "item-name", href: "#" });
+  $refresh.html($("<span />", { class: "material-icons" }).text("refresh"));
+  $refresh.on("click", function(ev) {
+    _this.refresh();
+
+    ev.preventDefault();
+    return false;
+  });
+
+  ret.push($("<div />", { class: "tree-item content-navi-refresh" }).html($refresh));
+
+  return ret;
 };
 
 SS_TreeNavi.prototype.registerEvents = function() {
