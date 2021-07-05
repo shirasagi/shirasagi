@@ -1,0 +1,30 @@
+<dl class="see mod-garbage-collection">
+  <dt><%= @model.t :center %></dt>
+  <dd><%=br @item.send :center %></dd>
+
+  <% if @item.garbage_type.present? %>
+    <dt class="field"><%= @item.t :field %></dt>
+    <dd class="wide">
+      <table class="index garbage-type form-index">
+        <thead>
+          <tr>
+            <th style="width: 140px;"><%= @item.t :field %></th>
+            <th style="width: 120px;"><%= @item.t :value %></th>
+            <th style="width: 140px;"><%= @item.t :view %></th>
+            <th><%= @item.t :remarks %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @item.garbage_type.each do |item| %>
+            <tr>
+              <td><%= item["field"] %></td>
+              <td><%= item["value"] %></td>
+              <td><%= item["view"] %></td>
+              <td><%= item["remarks"] %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </dd>
+  <% end %>
+</dl>

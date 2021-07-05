@@ -4,6 +4,7 @@
   <tr>
     <th><%= t('garbage.category.name') %></th>
     <th><%= t('garbage.collection') %></th>
+    <th><%= t('garbage.remarks') %></th>
   </tr>
   </thead>
   <tbody>
@@ -11,6 +12,7 @@
     <tr>
       <td><%= item[:field] %></td>
       <td><%= item[:view] %></td>
+      <td><%= item[:remarks] %></td>
     </tr>
   <% end %>
   </tbody>

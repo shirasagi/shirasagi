@@ -1,5 +1,5 @@
 module Garbage::Addon
-  module Center
+  module K5374::Center
     extend ActiveSupport::Concern
     extend SS::Addon
 

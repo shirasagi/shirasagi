@@ -76,7 +76,7 @@ module Garbage::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
     include Cms::Addon::NodeList
-    include Garbage::Addon::Description
+    include Garbage::Addon::K5374::Description
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
@@ -94,6 +94,7 @@ module Garbage::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
     include Cms::Addon::NodeList
+    include Garbage::Addon::CategorySetting
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
@@ -105,7 +106,7 @@ module Garbage::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
-    include Garbage::Addon::Collection
+    include Garbage::Addon::K5374::Collection
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
@@ -129,7 +130,7 @@ module Garbage::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
-    include Garbage::Addon::Center
+    include Garbage::Addon::K5374::Center
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup

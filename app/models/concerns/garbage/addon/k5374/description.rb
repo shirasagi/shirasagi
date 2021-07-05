@@ -1,5 +1,5 @@
 module Garbage::Addon
-  module Description
+  module K5374::Description
     extend ActiveSupport::Concern
     extend SS::Addon
 
