@@ -136,26 +136,4 @@ module Garbage::Node
 
     default_scope ->{ where(route: "garbage/center") }
   end
-
-  class RemarkList
-    include Cms::Model::Node
-    include Cms::Addon::NodeSetting
-    include Cms::Addon::Meta
-    include Cms::Addon::NodeList
-    include Cms::Addon::GroupPermission
-    include History::Addon::Backup
-
-    default_scope ->{ where(route: "garbage/remark_list") }
-  end
-
-  class Remark
-    include Cms::Model::Node
-    include Cms::Addon::NodeSetting
-    include Garbage::Addon::Remark
-    include Cms::Addon::Release
-    include Cms::Addon::GroupPermission
-    include History::Addon::Backup
-
-    default_scope ->{ where(route: "garbage/remark") }
-  end
 end

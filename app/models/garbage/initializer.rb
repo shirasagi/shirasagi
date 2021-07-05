@@ -9,7 +9,5 @@ module Garbage
     Cms::Node.plugin "garbage/area"
     Cms::Node.plugin "garbage/center_list"
     Cms::Node.plugin "garbage/center"
-    Cms::Node.plugin "garbage/remark_list"
-    Cms::Node.plugin "garbage/remark"
   end
 end

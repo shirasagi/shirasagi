@@ -33,7 +33,6 @@ ja:
     rest_start: 休止開始日
     rest_end: 休止終了日
     remarks: 備考
-    remark_id: ID
     attention: 注意事項
     import:
       invalid_file: CSV形式のファイルを選択してください。
@@ -93,9 +92,6 @@ ja:
       garbage/node/category:
         style: スタイル
         bgcolor: 背景色
-      garbage/node/remark:
-        remark_id: ID
-        attention: 注意事項
 
   job:
     models:
@@ -103,7 +99,6 @@ ja:
       garbage/area_import_job: 地区インポート
       garbage/category_import_job: カテゴリーインポート
       garbage/center_import_job: センターインポート
-      garbage/remark_import_job: 備考インポート
 
   tooltip:
     garbage/node/node:
@@ -156,8 +151,3 @@ ja:
         - 5374アプリで分別区分の表示を設定します。
       bgcolor:
         - 5374アプリで分別区分の背景色を設定します。
-    garbage/node/remark:
-      remark_id:
-        - 5374アプリで注意事項を表示する対象を設定します。
-      attention:
-        - 5374アプリで表示する注意事項を設定します。
