@@ -11,7 +11,7 @@ ja:
       index: 分別区分を設定する
       search: ゴミ品目の分別区分を検索
       select: 分別区分を選択
-    category_list: カテゴリーリスト
+    category_list: 分別区分リスト
     result: 検索結果
     count: 件の品目がヒットしました。
     first_to_last: 件の品目を表示しています。
@@ -28,8 +28,8 @@ ja:
     area: 地区
     area_name: 地名
     collection: 収集日
-    center: センター
-    center_name: センター名
+    center: 回収センター
+    center_name: 回収センター名
     rest_start: 休止開始日
     rest_end: 休止終了日
     remarks: 備考
@@ -58,13 +58,13 @@ ja:
     nodes:
       garbage/page: ゴミ品目
       garbage/node: ゴミ品目リスト
-      garbage/category_list: カテゴリーリスト
-      garbage/category: ゴミ品目カテゴリー
+      garbage/category_list: ゴミ分別区分リスト
+      garbage/category: ゴミ分別区分
       garbage/search: ゴミ品目検索
-      garbage/area_list: 地区リスト
-      garbage/area: 地区
-      garbage/center_list: センターリスト
-      garbage/center: センター
+      garbage/area_list: ゴミ地区リスト
+      garbage/area: ゴミ地区
+      garbage/center_list: ゴミ回収センターリスト
+      garbage/center: ゴミ回収センター
 
   mongoid:
     attributes:
@@ -73,10 +73,10 @@ ja:
         remark: 出し方・ワンポイント
         kana: ふりがな
         field: 項目名
-        category_ids: カテゴリー
+        category_ids: 分別区分
       garbage/node/area:
         name: 地名
-        center: センター
+        center: 回収センター
         field: 分別区分
         value: 収集日(5374)
         view: 収集日(公開画面)
@@ -95,9 +95,9 @@ ja:
   job:
     models:
       garbage/import_job: ゴミ品目インポート
-      garbage/area_import_job: 地区インポート
-      garbage/category_import_job: カテゴリーインポート
-      garbage/center_import_job: センターインポート
+      garbage/area_import_job: ゴミ地区インポート
+      garbage/category_import_job: ゴミ分別区分インポート
+      garbage/center_import_job: ゴミ回収センターインポート
 
   tooltip:
     garbage/node/node:
@@ -124,7 +124,7 @@ ja:
 
     garbage/node/area:
       center:
-        - センターを設定します。
+        - ゴミ回収センターを設定します。
       field:
         - ゴミの分別区分を設定します。
       value:
@@ -142,9 +142,9 @@ ja:
         - 公開画面でのゴミの回収日を設定します
     garbage/node/center:
       rest_start:
-        - センターの休止開始日を設定します。
+        - ゴミ回収センターの休止開始日を設定します。
       rest_end:
-        - センターの休止終了日を設定します。
+        - ゴミ回収センターの休止終了日を設定します。
     garbage/node/category:
       style:
         - 5374アプリで分別区分の表示を設定します。

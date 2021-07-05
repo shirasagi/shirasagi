@@ -35,6 +35,6 @@ class Garbage::Agents::Tasks::Node::CenterListsController < ApplicationControlle
     csv.encode("UTF-8", invalid: :replace, undef: :replace)
 
     file = "#{node.path}/center.csv"
-    write_file node, csv, file: file
+    Fs.write(file, csv)
   end
 end

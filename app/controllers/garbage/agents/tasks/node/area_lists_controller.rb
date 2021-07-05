@@ -31,6 +31,7 @@ class Garbage::Agents::Tasks::Node::AreaListsController < ApplicationController
       data << headers
 
       items.each do |item|
+        next if item.garbage_type.blank?
         row = []
         row << item.name
         row << item.center
@@ -48,10 +49,9 @@ class Garbage::Agents::Tasks::Node::AreaListsController < ApplicationController
     end
 
     csv = "\uFEFF" + csv
-
     csv.encode("UTF-8", invalid: :replace, undef: :replace)
 
     file = "#{node.path}/area_days.csv"
-    write_file node, csv, file: file
+    Fs.write(file, csv)
   end
 end

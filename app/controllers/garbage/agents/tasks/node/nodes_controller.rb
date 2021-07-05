@@ -45,6 +45,6 @@ class Garbage::Agents::Tasks::Node::NodesController < ApplicationController
     csv.encode("UTF-8", invalid: :replace, undef: :replace)
 
     file = "#{node.path}/target.csv"
-    write_file node, csv, file: file
+    Fs.write(file, csv)
   end
 end
