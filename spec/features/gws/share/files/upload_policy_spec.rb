@@ -67,6 +67,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       expect(file.sanitizer_state).to eq 'wait'
       expect(Fs.exists?(file.path)).to be_truthy
       expect(Fs.exists?(file.sanitizer_input_path)).to be_truthy
+      expect(FileTest.size(file.path)).to eq 2048
 
       # show
       click_on file.name
@@ -77,6 +78,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       Fs.mv file.sanitizer_input_path, output_path
       file.sanitizer_restore_file(output_path)
       expect(file.sanitizer_state).to eq 'complete'
+      expect(FileTest.size(file.path)).to be > 2048
 
       click_on I18n.t('ss.links.back_to_index')
       expect(page).to have_no_css('.list-items .sanitizer-wait')
@@ -96,6 +98,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       file.reload
       file_path = file.path
       sanitizer_input_path = file.sanitizer_input_path
+      expect(FileTest.size(file.path)).to eq 2048
 
       # soft delete
       click_on I18n.t("ss.links.delete")

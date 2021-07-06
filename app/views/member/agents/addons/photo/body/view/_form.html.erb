@@ -5,7 +5,7 @@
 
 <% if @item.image %>
 <dl class="column">
-  <dd><%= image_tag @item.image.thumb_url %></dd>
+  <dd><%= image_tag @item.image.thumb_url %><%= sanitizer_status(@item.image) %></dd>
 </dl>
 <% end %>
 

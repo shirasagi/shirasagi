@@ -35,11 +35,17 @@ module SS::UploadPolicy
     return false unless in_file.kind_of?(ActionDispatch::Http::UploadedFile)
     return false if try(:original_id)
 
-    Fs.write(path, '')
     Fs.rm_rf(sanitizer_input_path) if Fs.exists?(sanitizer_input_path)
     Fs.upload(sanitizer_input_path, in_file.path)
     self.sanitizer_state = 'wait'
     self.size = in_file.size
+
+    wait_file = Fs::UploadedFile.create_from_file(SS.config.ss.sanitizer_wait_image)
+    SS::ImageConverter.attach(wait_file, ext: ::File.extname(in_file.original_filename)) do |converter|
+      converter.apply_defaults!(resizing: resizing)
+      Fs.upload(path, converter.to_io)
+      self.geo_location = converter.geo_location
+    end
 
     return true
   end
@@ -61,7 +67,9 @@ module SS::UploadPolicy
   end
 
   def upload_policy_options
-    values = ["default_#{self.upload_policy}", 'sanitizer', 'restricted']
-    values.map { |v| [ I18n.t("ss.options.upload_policy.#{v}"), v ] }
+    default = SS.config.ss.upload_policy
+    values = [[I18n.t("ss.options.upload_policy.default_#{default}"), nil]]
+    values += ['sanitizer', 'restricted'].map { |v| [ I18n.t("ss.options.upload_policy.#{v}"), v ] }
+    values
   end
 end

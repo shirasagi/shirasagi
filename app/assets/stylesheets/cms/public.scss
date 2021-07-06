@@ -31,9 +31,18 @@
 }
 
 .sanitizer-wait {
-  position: absolute;
-  padding: 10px 15px;
+  display: inline-block;
+  padding: 4px 10px;
   background: rgba(0,60,120,.8);
   color: #fff;
   font-weight: bold;
+}
+.file-view {
+  position: relative;
+}
+.file-view .sanitizer-wait {
+  position: absolute;
+}
+dd > .sanitizer-wait {
+  margin-left: 10px;
 }
