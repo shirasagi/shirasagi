@@ -135,7 +135,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         within 'form#item-form' do
           select form.name, from: 'item[form_id]'
-          find('.btn-form-change').click
+          wait_event_to_fire("ss:formActivated") do
+            find('.btn-form-change').click
+          end
         end
 
         within ".column-value-palette" do
@@ -246,7 +248,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         within 'form#item-form' do
           select form.name, from: 'item[form_id]'
-          find('.btn-form-change').click
+          wait_event_to_fire("ss:formActivated") do
+            find('.btn-form-change').click
+          end
         end
 
         within ".column-value-palette" do
@@ -359,7 +363,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         within 'form#item-form' do
           select form.name, from: 'item[form_id]'
-          find('.btn-form-change').click
+          wait_event_to_fire("ss:formActivated") do
+            find('.btn-form-change').click
+          end
         end
 
         within ".column-value-palette" do
