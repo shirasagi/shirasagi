@@ -10,20 +10,17 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
   before { login_cms_user }
 
   def create_branch
-    expect(item.branch?).to be_falsey
-    expect(item.branches).to be_blank
-
     # create_branch
     visit show_path
     within "#addon-workflow-agents-addons-branch" do
       click_button I18n.t('workflow.create_branch')
 
       # wait branch created
-      expect(page).to have_css('.see.master', text: old_name)
+      expect(page).to have_css('.see.branch', text: old_name)
       click_link old_name
     end
     within "#addon-workflow-agents-addons-branch" do
-      expect(page).to have_css('.see.branch', text: I18n.t('workflow.branch_message'))
+      expect(page).to have_css('.see.master', text: I18n.t('workflow.branch_message'))
     end
     expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
@@ -44,13 +41,13 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
     expect(branch.state).to eq "closed"
     expect(master.branches.first.id).to eq(branch.id)
 
-    branch_url = show_path.sub(/\/\d+$/, "/#{branch.id}")
-    publish_branch(branch_url)
+    publish_branch(branch)
   end
 
-  def publish_branch(branch_url)
+  def publish_branch(branch)
+    branch_url = show_path.sub(/\/\d+$/, "/#{branch.id}")
     visit branch_url
-    expect(page).to have_css('.see.branch', text: I18n.t('workflow.branch_message'))
+    expect(page).to have_css('.see.master', text: I18n.t('workflow.branch_message'))
     expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
     # publish branch

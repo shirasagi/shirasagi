@@ -2,7 +2,7 @@
   return "" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
   addon ||= local_assigns.fetch(:addon, {})
   @items = @item.branch? ? [@item.master] : @item.branches
-  css_class = @item.branch? ? "branch" : "master"
+  css_class = @item.branch? ? "master" : "branch"
 %>
 
 <%= jquery do %>
