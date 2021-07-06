@@ -10,13 +10,16 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
   before { login_cms_user }
 
   def create_branch
+    expect(item.branch?).to be_falsey
+    expect(item.branches).to be_blank
+
     # create_branch
     visit show_path
-    click_button I18n.t('workflow.create_branch')
-
-    # show branch
     within "#addon-workflow-agents-addons-branch" do
-      expect(page).to have_css('.see.branch', text: old_name)
+      click_button I18n.t('workflow.create_branch')
+
+      # wait branch created
+      expect(page).to have_css('.see.master', text: old_name)
       click_link old_name
     end
     within "#addon-workflow-agents-addons-branch" do

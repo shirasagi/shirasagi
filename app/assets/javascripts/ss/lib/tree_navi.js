@@ -27,7 +27,7 @@ SS_TreeNavi.prototype.refresh = function() {
       _this.el.html(loading);
     },
     success: function(data) {
-      _this.el.append(_this.renderItems(data.items));
+      _this.el.append(_this.renderItems(data.items, true));
     },
     error: function(xhr, status, error) {
       _this.showError(xhr, status, error);
@@ -52,7 +52,7 @@ SS_TreeNavi.prototype.renderChildren = function(item) {
       item.after(loading);
     },
     success: function(data) {
-      item.after(_this.renderItems(data.items));
+      item.after(_this.renderItems(data.items, false));
     },
     error: function(xhr, status, error) {
       _this.showError(xhr, status, error);
@@ -64,7 +64,7 @@ SS_TreeNavi.prototype.renderChildren = function(item) {
   return false;
 };
 
-SS_TreeNavi.prototype.renderItems = function(data) {
+SS_TreeNavi.prototype.renderItems = function(data, roots) {
   var _this = this;
   var ret = $.map(data, function(item) {
     var is_open = item.is_current || item.is_parent
@@ -79,16 +79,18 @@ SS_TreeNavi.prototype.renderItems = function(data) {
       '</div>';
   });
 
-  var $refresh = $("<a />", { class: "item-name", href: "#" });
-  $refresh.html($("<span />", { class: "material-icons" }).text("refresh"));
-  $refresh.on("click", function(ev) {
-    _this.refresh();
+  if (roots) {
+    var $refresh = $("<a />", { class: "item-name", href: "#" });
+    $refresh.html($("<span />", { class: "material-icons" }).text("refresh"));
+    $refresh.on("click", function(ev) {
+      _this.refresh();
 
-    ev.preventDefault();
-    return false;
-  });
+      ev.preventDefault();
+      return false;
+    });
 
-  ret.push($("<div />", { class: "tree-item content-navi-refresh" }).html($refresh));
+    ret.push($("<div />", { class: "tree-item content-navi-refresh" }).html($refresh));
+  }
 
   return ret;
 };
