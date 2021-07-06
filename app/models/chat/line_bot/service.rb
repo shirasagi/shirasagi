@@ -231,14 +231,16 @@ class Chat::LineBot::Service
   end
 
   def res(event)
+    templates = []
     template =
       {
         "type": "text",
         "text": phrase(event).response.gsub(%r{</?[^>]+?>}, "")
       }
-    template << site_search(event) if phrase(event).site_search == "enabled" && site_search?
-    template << question(event) if phrase(event).question == "enabled" && question?
-    template
+    templates << template
+    templates << site_search(event) if phrase(event).site_search == "enabled" && site_search?
+    templates << question(event) if phrase(event).question == "enabled" && question?
+    templates
   end
 
   def question?
