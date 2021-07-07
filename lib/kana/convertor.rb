@@ -19,8 +19,14 @@ module Kana::Convertor
       html = html.tr("\u00A0", " ")
 
       text = html.gsub(/[\r\n\t]/, " ")
-      text.gsub!(/(.*<!--[^>]*?\s#{kana_marks[0]}\s[^>]*?-->)(.*)(<!--[^>]*?\s#{kana_marks[1]}\s[^>]*?-->.*)/im) do |m|
-        [Array.new($1.bytes.length, "\r").join, $2, Array.new($3.bytes.length, "\r").join].join
+      text.gsub!(/<!--[^>]*?\s#{kana_marks[1]}\s[^>]*?-->.*?<!--[^>]*?\s#{kana_marks[0]}\s[^>]*?-->/im) do |m|
+        Array.new(m.bytes.length, "\r").join
+      end
+      text.gsub!(/.*?<!--[^>]*?\s#{kana_marks[0]}\s[^>]*?-->/im) do |m|
+        Array.new(m.bytes.length, "\r").join
+      end
+      text.gsub!(/<!--[^>]*?\s#{kana_marks[1]}\s[^>]*?-->.*/im) do |m|
+        Array.new(m.bytes.length, "\r").join
       end
       tags = %w(head ruby script style)
       text.gsub!(/<!\[CDATA\[.*?\]\]>/m) { |m| mpad(m) }
@@ -29,7 +35,7 @@ module Kana::Convertor
       text.gsub!(/<.*?>/m) { |m| mpad(m) }
       text.gsub!(/\\u003c.*?\\u003e/m) { |m| mpad(m) } #<>
       text.gsub!(/%[^%]{2}/m, '   ')
-      text.gsub!(/<!--[^>]*?\s#{skip_marks[0]}\s[^>]*?-->(.*)<!--[^>]*?\s#{skip_marks[1]}\s[^>]*?-->/im) do |m|
+      text.gsub!(/<!--[^>]*?\s#{skip_marks[0]}\s[^>]*?-->(.*?)<!--[^>]*?\s#{skip_marks[1]}\s[^>]*?-->/im) do |m|
         Array.new(m.bytes.length, "\r").join
       end
       text.gsub!(/[ -\/:-@\[-`\{-~]/m, "\r")
