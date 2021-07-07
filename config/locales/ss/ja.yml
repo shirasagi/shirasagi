@@ -437,7 +437,7 @@ ja:
       ss/kana_setting: かな設定
       ss/facebook_setting: Facebook設定
       ss/twitter_setting: Twitter設定
-      ss/line_setting: Line設定
+      ss/line_setting: LINE設定
       ss/approve_setting: 承認設定
       ss/editor_setting: エディタ設定
       ss/mail_setting: メール設定
@@ -668,8 +668,8 @@ ja:
         twitter_access_token: アクセストークン
         twitter_access_token_secret: トークンシークレット
       ss/addon/line_setting:
-        line_channel_secret: チャンネルシークレット
-        line_channel_access_token: チャンネルアクセストークン
+        line_channel_secret: チャネルシークレット
+        line_channel_access_token: チャネルアクセストークン
       ss/addon/file_setting:
         file_resizing: 添付ファイルリサイズ
         file_resizing_width: 幅
@@ -1079,10 +1079,10 @@ ja:
         - Twitterへの自動投稿に必須です。
     ss/addon/line_setting:
       line_channel_secret:
-        - Lineのチャンネルシークレットを設定します。
+        - Lineのチャネルシークレットを設定します。
         - Lineとの連携に必須です。
       line_channel_access_token:
-        - Lineのチャンネルアクセストークンを設定します。
+        - Lineのチャネルアクセストークンを設定します。
         - Lineとの連携に必須です。
     ss/addon/file_setting:
       file_resizing:
