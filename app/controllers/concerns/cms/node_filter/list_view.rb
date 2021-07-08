@@ -95,7 +95,7 @@ module Cms::NodeFilter::ListView
       return true
     end
 
-    all_pages = pages.order_by(@cur_node.sort_hash).to_a
+    all_pages = SS::SortEmulator.new(pages).order_by_array(@cur_node.sort_hash)
     if all_pages.blank?
       generate_empty_files
       cleanup_index_files(1)
