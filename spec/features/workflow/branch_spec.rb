@@ -78,6 +78,10 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
   context "cms page" do
     let(:item) { create :cms_page, filename: "page.html", name: old_name, index_name: old_index_name }
     let(:show_path) { cms_page_path site, item }
+
+    before { puts_log_stdout(true) }
+    after { puts_log_stdout(false) }
+
     it { create_branch }
   end
 
