@@ -201,7 +201,7 @@ module Map::MapHelper
   def render_marker_picker(opts = {})
     h = []
     h << %w(<div class="images" style="display: none;">)
-    map_marker_picker_images(opts).each do |key, url|
+    map_marker_picker_images(opts).each do |url|
       h << "<div class=\"image\">#{image_tag(url)}</div>"
     end
     h << %(</div>)
