@@ -4,9 +4,8 @@ module Garbage::Addon
     extend SS::Addon
 
     included do
-      field :rest_start, type: String
-      field :rest_end, type: String
-
+      field :rest_start, type: DateTime
+      field :rest_end, type: DateTime
       permit_params :rest_start, :rest_end
     end
   end

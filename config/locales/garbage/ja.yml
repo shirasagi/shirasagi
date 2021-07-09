@@ -40,7 +40,7 @@ ja:
       kana: "例: あ"
       value: "例: 月1"
       view: "例: 毎週月曜日"
-      remark: "例: 一部地域で収集曜日が異なります。"
+      remark: "例: 一部地域で曜日が異なります。"
     view: "(公開画面)"
 
   modules:
@@ -50,9 +50,9 @@ ja:
       garbage/additional_info: 追加情報
       garbage/category: ゴミの分別区分
       garbage/category_setting: ゴミの分別区分
-      garbage/k5374/center: 5374連携 センター
-      garbage/k5374/description: k5374連携 スタイル設定
-      garbage/k5374/collection: 5374連携 収集日
+      garbage/k5374/center: 5374連携：センター
+      garbage/k5374/description: 5374連携：スタイル設定
+      garbage/k5374/collection: 5374連携：収集日
 
   cms:
     nodes:
@@ -91,6 +91,29 @@ ja:
       garbage/node/category:
         style: スタイル
         bgcolor: 背景色
+
+  activemodel:
+    attributes:
+      garbage/k5374/area_days_exporter:
+        name: 地名
+        center: センター
+        id: ID
+        remark: 注意事項
+      garbage/k5374/target_exporter:
+        category: label
+        name: name
+        remark: notice
+        kana: furigana
+      garbage/k5374/description_exporter:
+        name: label
+        sublabel: sublabel
+        description: description
+        style: style
+        bgcolor: bgcolor
+      garbage/k5374/center_exporter:
+        name: 名称
+        rest_start: 休止開始日
+        rest_end: 休止終了日
 
   job:
     models:
