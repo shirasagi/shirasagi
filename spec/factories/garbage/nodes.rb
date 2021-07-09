@@ -38,12 +38,4 @@ FactoryBot.define do
   factory :garbage_node_center_list, class: Garbage::Node::CenterList, traits: [:cms_node] do
     route "garbage/center_list"
   end
-
-  factory :garbage_node_remark, class: Garbage::Node::Remark, traits: [:cms_node] do
-    route "garbage/remark"
-  end
-
-  factory :garbage_node_remark_list, class: Garbage::Node::RemarkList, traits: [:cms_node] do
-    route "garbage/remark_list"
-  end
 end

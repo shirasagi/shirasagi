@@ -30,23 +30,17 @@ class Garbage::CategoryListsController < ApplicationController
 
     csv = CSV.generate do |data|
       data << [
-        @model.t("name"),
-        "sublabel",
-        "description",
-        @model.t("style"),
-        @model.t("bgcolor"),
-        @model.t("basename"),
-        @model.t("layout"),
-        @model.t("groups")
+        @model.t(:filename),
+        @model.t(:name),
+        @model.t(:index_name),
+        @model.t(:layout),
+        @model.t(:groups)
       ]
       items.each do |item|
         row = []
-        row << item.name
-        row << nil
-        row << nil
-        row << item.style
-        row << item.bgcolor
         row << item.basename
+        row << item.name
+        row << item.index_name
         row << item.layout.try(:name)
         row << item.groups.pluck(:name).join("_n")
         data << row
@@ -54,9 +48,8 @@ class Garbage::CategoryListsController < ApplicationController
     end
 
     csv = "\uFEFF" + csv
-
-    send_data csv.encode("UTF-8", invalid: :replace, undef: :replace),
-              filename: "description.csv"
+    send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
+              filename: "garbage_categories_#{Time.zone.now.strftime("%Y_%m%d_%H%M")}.csv"
   end
 
   public

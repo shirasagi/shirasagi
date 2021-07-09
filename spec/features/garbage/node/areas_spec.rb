@@ -14,6 +14,7 @@ describe "garbage_node_areas", type: :feature, dbscope: :example, js: true do
     create(
       :garbage_node_area_list,
       filename: "search/list",
+      st_category_ids: [category1.id, category2.id]
     )
   end
 
@@ -111,39 +112,6 @@ describe "garbage_node_areas", type: :feature, dbscope: :example, js: true do
       expect(page).to have_content item.garbage_type.first[:field]
       expect(page).to have_content item.garbage_type.first[:value]
       expect(page).to have_content item.garbage_type.first[:view]
-
-      visit edit_path
-      within "form#item-form" do
-        find(".add-info").click
-        all("#item_garbage_type__field").last.select category2.name
-        all("#item_garbage_type__value").last.set "火"
-        all("#item_garbage_type__view").last.set "毎週火曜日"
-        click_button I18n.t('ss.buttons.save')
-      end
-      item.reload
-      expect(item.garbage_type.length).to eq 2
-      expect(page).to have_content item.garbage_type.last[:field]
-      expect(page).to have_content item.garbage_type.last[:value]
-      expect(page).to have_content item.garbage_type.last[:view]
-
-      visit edit_path
-      accept_confirm do
-        first(".clear").click
-      end
-      click_button I18n.t('ss.buttons.save')
-      item.reload
-      expect(item.garbage_type.length).to eq 1
-      expect(page).to have_content category2.name
-      expect(page).to have_content "火"
-      expect(page).to have_content "毎週火曜日"
-
-      visit edit_path
-      accept_confirm do
-        first(".clear").click
-      end
-      click_button I18n.t('ss.buttons.save')
-      item.reload
-      expect(item.garbage_type.length).to eq 0
     end
   end
 end

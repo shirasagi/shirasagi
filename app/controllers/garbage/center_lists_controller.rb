@@ -28,26 +28,27 @@ class Garbage::CenterListsController < ApplicationController
   def send_csv(items)
     require "csv"
 
-    headers = %w(name rest_start rest_end basename layout groups)
-    headers.map! { |key| @model.t(key) }
     csv = CSV.generate do |data|
-      data << headers
+      data << [
+        @model.t(:filename),
+        @model.t(:name),
+        @model.t(:index_name),
+        @model.t(:layout),
+        @model.t(:groups)
+      ]
       items.each do |item|
         row = []
-        row << item.name
-        row << item.rest_start
-        row << item.rest_end
         row << item.basename
+        row << item.name
+        row << item.index_name
         row << item.layout.try(:name)
         row << item.groups.pluck(:name).join("_n")
         data << row
       end
     end
 
-    csv = "\uFEFF" + csv
-
-    send_data csv.encode("UTF-8", invalid: :replace, undef: :replace),
-              filename: "center.csv"
+    send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
+              filename: "garbage_centers_#{Time.zone.now.strftime("%Y_%m%d_%H%M")}.csv"
   end
 
   public

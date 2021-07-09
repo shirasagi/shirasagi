@@ -29,42 +29,26 @@ class Garbage::AreaListsController < ApplicationController
     require "csv"
 
     csv = CSV.generate do |data|
-      headers = [
-        @model.t("name"),
-        @model.t("center")
+      data << [
+        @model.t(:filename),
+        @model.t(:name),
+        @model.t(:index_name),
+        @model.t(:layout),
+        @model.t(:groups)
       ]
-      items.first.garbage_type.each do |type|
-        headers << type[:field]
-      end
-      headers << @model.t(:filename)
-      headers << @model.t(:layout)
-      headers << @model.t(:groups)
-      items.first.garbage_type.each do |type|
-        headers << type[:field] + t('garbage.view')
-      end
-      data << headers
-
       items.each do |item|
         row = []
-        row << item.name
-        row << item.center
-        item.garbage_type.each do |type|
-          row << type[:value]
-        end
         row << item.basename
+        row << item.name
+        row << item.index_name
         row << item.layout.try(:name)
         row << item.groups.pluck(:name).join("_n")
-        item.garbage_type.each do |type|
-          row << type[:view]
-        end
         data << row
       end
     end
 
-    csv = "\uFEFF" + csv
-
-    send_data csv.encode("UTF-8", invalid: :replace, undef: :replace),
-              filename: "area_days.csv"
+    send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
+              filename: "garbage_areas_#{Time.zone.now.strftime("%Y_%m%d_%H%M")}.csv"
   end
 
   public
