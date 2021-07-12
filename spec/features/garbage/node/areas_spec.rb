@@ -91,7 +91,7 @@ describe "garbage_node_areas", type: :feature, dbscope: :example, js: true do
       visit import_path
 
       within "form#task-form" do
-        attach_file "item[file]", "#{Rails.root}/spec/fixtures/garbage/garbage_pages.csv"
+        attach_file "item[file]", "#{Rails.root}/spec/fixtures/garbage/garbage_areas.csv"
         page.accept_confirm do
           click_on I18n.t("ss.links.import")
         end

@@ -35,20 +35,23 @@ describe Garbage::ImportJob, dbscope: :example do
         expect(log.logs).to include(/INFO -- : .* Started Job/)
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
 
-        item1 = Garbage::Node::Page.find_by(filename: "garbage/item1")
+        item1 = Garbage::Node::Page.site(site).find_by(filename: "garbage/item1")
         expect(item1.name).to eq "name1"
+        expect(item1.index_name).to eq "index_name1"
         expect(item1.layout_id).to eq layout.id
         expect(item1.categories.pluck(:name)).to match [category1.name]
         expect(item1.groups.pluck(:name)).to match [group.name]
 
-        item2 = Garbage::Node::Page.find_by(filename: "garbage/item2")
+        item2 = Garbage::Node::Page.site(site).find_by(filename: "garbage/item2")
         expect(item2.name).to eq "name2"
+        expect(item2.index_name).to eq "index_name2"
         expect(item2.layout_id).to eq layout.id
         expect(item2.categories.pluck(:name)).to match [category2.name]
         expect(item2.groups.pluck(:name)).to match [group.name]
 
-        item3 = Garbage::Node::Page.find_by(filename: "garbage/item3")
+        item3 = Garbage::Node::Page.site(site).find_by(filename: "garbage/item3")
         expect(item3.name).to eq "name3"
+        expect(item3.index_name).to eq "index_name3"
         expect(item3.layout_id).to eq layout.id
         expect(item3.categories.pluck(:name)).to match [category3.name]
         expect(item3.groups.pluck(:name)).to match [group.name]
