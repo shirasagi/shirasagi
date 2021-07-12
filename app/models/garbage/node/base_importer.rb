@@ -1,4 +1,4 @@
-class Garbage::Node::Importer
+class Garbage::Node::BaseImporter
   include Cms::CsvImportBase
 
   self.required_headers = [ ::Garbage::Node::Page.t(:filename) ]
@@ -13,7 +13,6 @@ class Garbage::Node::Importer
 
   def import(file, opts = {})
     @task = opts[:task]
-
     put_log("import start #{file.filename}")
     import_csv(file)
   end
@@ -21,7 +20,6 @@ class Garbage::Node::Importer
   private
 
   def model
-    ::Garbage::Node::Page
   end
 
   def put_log(message)
@@ -61,24 +59,11 @@ class Garbage::Node::Importer
   end
 
   def set_page_attributes(row, item)
-    item.name   = row[model.t("name")].to_s.strip
-    item.index_name   = row[model.t("index_name")].to_s.strip
-    item.layout = Cms::Layout.site(site).where(name: row[model.t("layout")].to_s.strip).first
-    item.remark = row[model.t("remark")].to_s.strip
-    item.order  = row[model.t("order")].to_s.strip
-    item.kana  = row[model.t("kana")].to_s.strip
-
-    set_page_categories(row, item)
+    item.name       = row[model.t("name")].to_s.strip
+    item.index_name = row[model.t("index_name")].to_s.strip
+    item.layout     = Cms::Layout.site(site).where(name: row[model.t("layout")].to_s.strip).first
     set_page_groups(row, item)
-
     item
-  end
-
-  def set_page_categories(row, item)
-    @st_categories ||= node.becomes_with_route.st_categories.map{ |c| [c.name, c.id] }.to_h
-    categories = row[model.t("category_ids")].to_s.strip
-    category_ids = item.category_ids << @st_categories[categories]
-    item.category_ids = category_ids
   end
 
   def set_page_groups(row, item)

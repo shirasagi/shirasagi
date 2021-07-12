@@ -1,4 +1,4 @@
-﻿フォルダー名,品目名,一覧用タイトル,レイアウト,分別区分,出し方・ワンポイント,管理グループ
-item1,name1,index_name1,layout,c1,,group
-item2,name2,index_name2,layout,c2,,group
-item3,name3,index_name3,layout,c3,one point,group
+﻿フォルダー名,品目名,一覧用タイトル,レイアウト,分別区分,ふりがな,出し方・ワンポイント,管理グループ
+item1,name1,index_name1,layout,c1,kana1,,group
+item2,name2,index_name2,layout,c2,kana2,,group
+item3,name3,index_name3,layout,c3,kana3,one point,group

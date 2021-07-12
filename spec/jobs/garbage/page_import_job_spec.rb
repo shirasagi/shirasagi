@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Garbage::ImportJob, dbscope: :example do
+describe Garbage::PageImportJob, dbscope: :example do
   let!(:site) { cms_site }
   let!(:group) { create :ss_group, name: 'group' }
   let!(:layout) { create :cms_layout, name: 'layout' }
@@ -41,6 +41,8 @@ describe Garbage::ImportJob, dbscope: :example do
         expect(item1.layout_id).to eq layout.id
         expect(item1.categories.pluck(:name)).to match [category1.name]
         expect(item1.groups.pluck(:name)).to match [group.name]
+        expect(item1.kana).to eq "kana1"
+        expect(item1.remark).to eq nil
 
         item2 = Garbage::Node::Page.site(site).find_by(filename: "garbage/item2")
         expect(item2.name).to eq "name2"
@@ -48,6 +50,8 @@ describe Garbage::ImportJob, dbscope: :example do
         expect(item2.layout_id).to eq layout.id
         expect(item2.categories.pluck(:name)).to match [category2.name]
         expect(item2.groups.pluck(:name)).to match [group.name]
+        expect(item2.kana).to eq "kana2"
+        expect(item2.remark).to eq nil
 
         item3 = Garbage::Node::Page.site(site).find_by(filename: "garbage/item3")
         expect(item3.name).to eq "name3"
@@ -55,6 +59,7 @@ describe Garbage::ImportJob, dbscope: :example do
         expect(item3.layout_id).to eq layout.id
         expect(item3.categories.pluck(:name)).to match [category3.name]
         expect(item3.groups.pluck(:name)).to match [group.name]
+        expect(item3.kana).to eq "kana3"
         expect(item3.remark).to eq "one point"
       end
     end

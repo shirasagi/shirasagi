@@ -37,7 +37,6 @@ ja:
     import:
       invalid_file: CSV形式のファイルを選択してください。
     placeholder:
-      kana: "例: あ"
       value: "例: 月1"
       view: "例: 毎週月曜日"
       remark: "例: 一部地域で曜日が異なります。"
@@ -117,7 +116,7 @@ ja:
 
   job:
     models:
-      garbage/import_job: ゴミ品目インポート
+      garbage/page_import_job: ゴミ品目インポート
       garbage/area_import_job: ゴミ地区インポート
       garbage/category_import_job: ゴミ分別区分インポート
       garbage/center_import_job: ゴミ回収センターインポート
@@ -134,9 +133,9 @@ ja:
 
     garbage/node/page:
       kana:
-        - ふりがなを設定します。
-        - 品目名を平仮名にしたときの1文字目を、平仮名で入力してください。
-        - 品目名が「鉛筆」の場合、「え」と入力します。
+        - ふりがなを入力します。
+      remark:
+        - 出し方・ワンポイントを入力します。
 
     garbage/node/search:
       loop_html: *garbage_node_loop_html

@@ -33,7 +33,8 @@ class Garbage::K5374::TargetExporter < Garbage::K5374::BaseExporter
     @targets = []
     nodes.each do |node|
       node.categories.each do |cate|
-        @targets << [cate.name, node.name, node.remark, node.kana]
+        first_kana = node.kana.present? ? node.kana[0] : ""
+        @targets << [cate.name, node.name, node.remark, first_kana]
       end
     end
   end
