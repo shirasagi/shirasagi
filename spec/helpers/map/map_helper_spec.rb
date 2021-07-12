@@ -127,7 +127,7 @@ RSpec.describe Map::MapHelper, type: :helper do
       before { SS.config.replace_value_at(:map, :api, "googlemaps") }
 
       it 'render_map' do
-        expect(map).to include('Googlemaps_Map.load("#map-canvas", {})')
+        expect(map).to include('Googlemaps_Map.load("#map-canvas", {"showGoogleMapsSearch":false})')
       end
 
       it 'render_map_form' do
@@ -147,7 +147,7 @@ RSpec.describe Map::MapHelper, type: :helper do
       before { SS.config.replace_value_at(:map, :api, "openlayers") }
 
       it 'render_map' do
-        expect(map_g).to include('Googlemaps_Map.load("#map-canvas", {})')
+        expect(map_g).to include('Googlemaps_Map.load("#map-canvas", {"showGoogleMapsSearch":true})')
       end
 
       it 'render_map_form' do
