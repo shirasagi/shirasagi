@@ -15,6 +15,11 @@ module Map::MapHelper
     opts[:site].map_effective_layers
   end
 
+  def show_google_maps_search(opts = {})
+    return false unless opts[:site]
+    opts[:site].show_google_maps_search_enabled?
+  end
+
   def include_map_api(opts = {})
     return "" unless map_enabled?(opts)
 
@@ -60,12 +65,14 @@ module Map::MapHelper
       map_options[:readonly] = true
       map_options[:markers] = markers if markers.present?
       map_options[:layers] = effective_layers(opts)
+      map_options[:showGoogleMapsSearch] = show_google_maps_search(opts)
 
       s << 'var canvas = $("' + selector + '")[0];'
       s << "var opts = #{map_options.to_json};"
       s << 'var map = new Openlayers_Map(canvas, opts);'
     else
       include_googlemaps_api(opts)
+      map_options[:showGoogleMapsSearch] = show_google_maps_search(opts)
 
       s << "Googlemaps_Map.load(\"" + selector + "\", #{map_options.to_json});"
       s << 'Googlemaps_Map.setMarkers(' + markers.to_json + ');' if markers.present?
@@ -92,6 +99,7 @@ module Map::MapHelper
       map_options[:markers] = markers if markers.present?
       map_options[:max_point_form] = max_point_form if max_point_form.present?
       map_options[:layers] = effective_layers(opts)
+      map_options[:showGoogleMapsSearch] = show_google_maps_search(opts)
 
       # 初回アドオン表示後に地図を描画しないと、クリックした際にマーカーがずれてしまう
       s << '  var canvas = $("' + selector + '")[0];'
@@ -99,6 +107,7 @@ module Map::MapHelper
       s << '  var map = new Openlayers_Map_Form(canvas, opts);'
     else
       include_googlemaps_api(opts)
+      map_options[:showGoogleMapsSearch] = show_google_maps_search(opts)
 
       # 初回アドオン表示後に地図を描画しないと、ズームが 2 に初期設定されてしまう。
       s << "  Map_Form.maxPointForm = #{max_point_form.to_json};" if max_point_form.present?

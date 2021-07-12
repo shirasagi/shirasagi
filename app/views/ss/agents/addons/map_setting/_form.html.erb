@@ -11,4 +11,7 @@
 
   <dt><%= @model.t :map_api_layer %><%= @model.tt :map_api_layer %></dt>
   <dd><%= f.select :map_api_layer, @item.map_api_layer_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :show_google_maps_search %><%= @model.tt :show_google_maps_search %></dt>
+  <dd><%= f.select :show_google_maps_search, @item.show_google_maps_search_options %></dd>
 </dl>

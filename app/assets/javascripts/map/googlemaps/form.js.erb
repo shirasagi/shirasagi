@@ -45,9 +45,11 @@ this.Map_Form = (function () {
         Googlemaps_Map.openedInfo.close();
       }
       $('dd[data-id = "' + id + '"]').each(function () {
-        var marker_html, name, text;
+        var marker_html, name, text, loc;
+        marker_html = "";
         name = $(this).find(".marker-name").val();
         text = $(this).find(".marker-text").val();
+        loc = $(this).find(".marker-loc-input").val();
         if (name !== "" || text !== "") {
           marker_html = '<div class="marker-info">';
           if (name !== "") {
@@ -62,12 +64,20 @@ this.Map_Form = (function () {
               }
             });
           }
+        }
+
+        if (loc) {
+          loc = loc.split(",");
+          marker_html += Googlemaps_Map.getMapsSearchHtml(loc[1], loc[0]);
+        }
+        if (marker_html) {
           Googlemaps_Map.openedInfo = new google.maps.InfoWindow({
             content: marker_html,
             maxWidth: 260
           });
           Googlemaps_Map.openedInfo.open(Googlemaps_Map.markers[id].getMap(), Googlemaps_Map.markers[id]);
         }
+
         return false;
       });
     });
