@@ -48,7 +48,7 @@ class Garbage::CategoryListsController < ApplicationController
     end
 
     csv = "\uFEFF" + csv
-    send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
+    send_data csv.encode("UTF-8", invalid: :replace, undef: :replace),
               filename: "garbage_categories_#{Time.zone.now.strftime("%Y_%m%d_%H%M")}.csv"
   end
 

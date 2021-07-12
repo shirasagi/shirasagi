@@ -13,7 +13,6 @@ class Garbage::Node::CategoryImporter
 
   def import(file, opts = {})
     @task = opts[:task]
-
     put_log("import start #{file.filename}")
     import_csv(file)
   end
@@ -33,11 +32,12 @@ class Garbage::Node::CategoryImporter
   end
 
   def import_csv(file)
-    table = CSV.read(file.path, headers: true, encoding: 'BOM|UTF-8')
-    table.each_with_index do |row, i|
+    i = 0
+    self.class.each_csv(file) do |row|
       begin
-        name = update_row(row)
-        put_log("update #{i + 1}: #{name}")
+        i += 1
+        item = update_row(row)
+        put_log("update #{i + 1}: #{item.name}") if item.present?
       rescue => e
         put_log("error  #{i + 1}: #{e}")
       end
@@ -53,19 +53,16 @@ class Garbage::Node::CategoryImporter
     raise I18n.t('errors.messages.auth_error') unless item.allowed?(:import, user, site: site, node: node)
 
     if item.save
-      name = item.name
+      item
     else
       raise item.errors.full_messages.join(", ")
     end
-
-    return name
   end
 
   def set_page_attributes(row, item)
-    item.name    = row[model.t("name")].to_s.strip
-    item.style = row[model.t("style")].to_s.strip
-    item.bgcolor = row[model.t("bgcolor")].to_s.strip
-    item.layout = Cms::Layout.site(site).where(name: row[model.t("layout")].to_s.strip).first
+    item.name       = row[model.t("name")].to_s.strip
+    item.index_name = row[model.t("index_name")].to_s.strip
+    item.layout     = Cms::Layout.site(site).where(name: row[model.t("layout")].to_s.strip).first
     set_page_groups(row, item)
     item
   end

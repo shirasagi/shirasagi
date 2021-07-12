@@ -33,11 +33,12 @@ class Garbage::Node::Importer
   end
 
   def import_csv(file)
-    table = CSV.read(file.path, headers: true, encoding: 'BOM|UTF-8')
-    table.each_with_index do |row, i|
+    i = 0
+    self.class.each_csv(file) do |row|
       begin
-        name = update_row(row)
-        put_log("update #{i + 1}: #{name}")
+        i += 1
+        item = update_row(row)
+        put_log("update #{i + 1}: #{item.name}") if item.present?
       rescue => e
         put_log("error  #{i + 1}: #{e}")
       end
@@ -53,12 +54,10 @@ class Garbage::Node::Importer
     raise I18n.t('errors.messages.auth_error') unless item.allowed?(:import, user, site: site, node: node)
 
     if item.save
-      name = item.name
+      item
     else
       raise item.errors.full_messages.join(", ")
     end
-
-    return name
   end
 
   def set_page_attributes(row, item)

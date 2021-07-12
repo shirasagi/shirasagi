@@ -52,18 +52,18 @@ describe "garbage_agents_nodes_center", type: :feature, dbscope: :example, js: t
     it "#index" do
       visit item1.url
       expect(page).to have_css("table.columns td", text: item1.name)
-      expect(page).to have_css("table.columns td", text: item1.rest_start)
-      expect(page).to have_css("table.columns td", text: item1.rest_end)
+      expect(page).to have_css("table.columns td", text: item1.rest_start.strftime('%Y/%m/%d'))
+      expect(page).to have_css("table.columns td", text: item1.rest_end.strftime('%Y/%m/%d'))
 
       visit item2.url
       expect(page).to have_css("table.columns td", text: item2.name)
-      expect(page).to have_css("table.columns td", text: item2.rest_start)
-      expect(page).to have_css("table.columns td", text: item2.rest_end)
+      expect(page).to have_css("table.columns td", text: item2.rest_start.strftime('%Y/%m/%d'))
+      expect(page).to have_css("table.columns td", text: item2.rest_end.strftime('%Y/%m/%d'))
 
       visit item3.url
       expect(page).to have_css("table.columns td", text: item3.name)
-      expect(page).to have_css("table.columns td", text: item3.rest_start)
-      expect(page).to have_css("table.columns td", text: item3.rest_end)
+      expect(page).to have_css("table.columns td", text: item3.rest_start.strftime('%Y/%m/%d'))
+      expect(page).to have_css("table.columns td", text: item3.rest_end.strftime('%Y/%m/%d'))
     end
   end
 
