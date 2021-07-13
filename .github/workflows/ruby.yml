@@ -7,11 +7,7 @@
 
 name: Ruby
 
-on:
-  push:
-    branches: [ master, main ]
-  pull_request:
-    branches: [ master, main ]
+on: [push, pull_request]
 
 jobs:
   test:
