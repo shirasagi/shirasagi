@@ -45,22 +45,22 @@ this.Map_Form = (function () {
         Googlemaps_Map.openedInfo.close();
       }
       $('dd[data-id = "' + id + '"]').each(function () {
-        var marker_html, name, text, loc;
-        marker_html = "";
+        var markerHtml, name, text, loc;
+        markerHtml = "";
         name = $(this).find(".marker-name").val();
         text = $(this).find(".marker-text").val();
         loc = $(this).find(".marker-loc-input").val();
         if (name !== "" || text !== "") {
-          marker_html = '<div class="marker-info">';
+          markerHtml = '<div class="marker-info">';
           if (name !== "") {
-            marker_html += '<p>' + name + '</p>';
+            markerHtml += '<p>' + name + '</p>';
           }
           if (text !== "") {
             $.each(text.split(/[\r\n]+/), function () {
               if (this.match(/^https?:\/\//)) {
-                return marker_html += '<p><a href="' + this + '">' + this + '</a></p>';
+                return markerHtml += '<p><a href="' + this + '">' + this + '</a></p>';
               } else {
-                return marker_html += '<p>' + this + '</p>';
+                return markerHtml += '<p>' + this + '</p>';
               }
             });
           }
@@ -68,11 +68,11 @@ this.Map_Form = (function () {
 
         if (loc) {
           loc = loc.split(",");
-          marker_html += Googlemaps_Map.getMapsSearchHtml(loc[1], loc[0]);
+          markerHtml += Googlemaps_Map.getMapsSearchHtml(loc[1], loc[0]);
         }
-        if (marker_html) {
+        if (markerHtml) {
           Googlemaps_Map.openedInfo = new google.maps.InfoWindow({
-            content: marker_html,
+            content: markerHtml,
             maxWidth: 260
           });
           Googlemaps_Map.openedInfo.open(Googlemaps_Map.markers[id].getMap(), Googlemaps_Map.markers[id]);
