@@ -30,8 +30,11 @@ class Garbage::NodesController < ApplicationController
       data << [
         @model.t(:filename),
         @model.t(:name),
+        @model.t(:index_name),
         @model.t(:layout),
+        @model.t(:order),
         @model.t(:category_ids),
+        @model.t(:kana),
         @model.t(:remark),
         @model.t(:groups)
       ]
@@ -39,15 +42,19 @@ class Garbage::NodesController < ApplicationController
         row = []
         row << item.basename
         row << item.name
+        row << item.index_name
         row << item.layout.try(:name)
+        row << item.order
         row << item.categories.pluck(:name).join("\n")
+        row << item.kana
         row << item.remark
         row << item.groups.pluck(:name).join("_n")
         data << row
       end
     end
 
-    send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
+    csv = "\uFEFF" + csv
+    send_data csv.encode("UTF-8", invalid: :replace, undef: :replace),
               filename: "garbage_pages_#{Time.zone.now.strftime("%Y_%m%d_%H%M")}.csv"
   end
 
@@ -77,7 +84,7 @@ class Garbage::NodesController < ApplicationController
       if file.nil? || ::File.extname(file.original_filename) != ".csv"
         raise I18n.t("facility.import.invalid_file")
       end
-      if !Garbage::Node::Importer.valid_csv?(file)
+      if !Garbage::Node::PageImporter.valid_csv?(file)
         raise I18n.t("errors.messages.malformed_csv")
       end
 
@@ -88,7 +95,7 @@ class Garbage::NodesController < ApplicationController
       ss_file.save
 
       # call job
-      Garbage::ImportJob.bind(site_id: @cur_site, node_id: @cur_node, user_id: @cur_user).perform_later(ss_file.id)
+      Garbage::PageImportJob.bind(site_id: @cur_site, node_id: @cur_node, user_id: @cur_user).perform_later(ss_file.id)
     rescue => e
       @item.errors.add :base, e.to_s
     end

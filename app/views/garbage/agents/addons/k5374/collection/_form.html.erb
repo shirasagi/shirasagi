@@ -1,0 +1,40 @@
+<%= jquery do %>
+  var sort = new SS_SortableForm('.mod-garbage-collection .garbage-type', { limit: 10 });
+  sort.renderItems(<%== @item.garbage_type.to_json %>);
+<% end %>
+<%
+  begin
+    list_node = @cur_node.becomes_with_route
+    category_options = list_node.st_categories.pluck(:name)
+  rescue
+    return
+  end
+%>
+<dl class="see mod-garbage-collection">
+  <dt><%= @model.t :center %><%= @model.tt :center %></dt>
+  <dd><%= f.text_field :center %></dd>
+</dl>
+
+<dl class="see mod-garbage-collection">
+  <dt class="field"><%= @item.t :field %></dt>
+  <dd class="wide">
+    <table class="index garbage-type form-index">
+      <thead>
+        <tr>
+          <th style="width: 140px;"><%= @item.t :field %><%= @item.tt :field %></th>
+          <th style="width: 120px;"><%= @item.t :value %><%= @item.tt :value %></th>
+          <th style="width: 140px;"><%= @item.t :view %><%= @item.tt :view %></th>
+          <th><%= @item.t :remarks %><%= @item.tt :remarks %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-base="true">
+          <td><%= select_tag "item[garbage_type][][field]", options_for_select(category_options), include_blank: true %></td>
+          <td><%= text_field_tag "item[garbage_type][][value]", nil, placeholder: t('garbage.placeholder.value') %></td>
+          <td><%= text_field_tag "item[garbage_type][][view]", nil, placeholder: t('garbage.placeholder.view') %></td>
+          <td><%= text_field_tag "item[garbage_type][][remarks]", nil, placeholder: t('garbage.placeholder.remark') %></td>
+        </tr>
+      </tbody>
+    </table>
+  </dd>
+</dl>

@@ -1,4 +1,7 @@
 <dl class="see mod-garbage-body">
+  <dt><%= @model.t :kana %></dt>
+  <dd><%=br @item.send :kana %></dd>
+
   <dt><%= @model.t :remark %></dt>
   <dd><%=br @item.send :remark %></dd>
 </dl>

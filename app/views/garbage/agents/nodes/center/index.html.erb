@@ -1,0 +1,17 @@
+<table class="columns column">
+  <caption><%= @cur_node.name %></caption>
+  <thead>
+  <tr>
+    <th><%= t('garbage.center_name') %></th>
+    <th><%= t('garbage.rest_start') %></th>
+    <th><%= t('garbage.rest_end') %></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td><%= @cur_node.name %></td>
+    <td><%= tryb{ @cur_node.rest_start.strftime('%Y/%m/%d') } %></td>
+    <td><%= tryb{ @cur_node.rest_end.strftime('%Y/%m/%d') } %></td>
+    </tr>
+    </tbody>
+</table>

@@ -12,6 +12,7 @@ function SS_SortableForm(selector, opts) {
     '<button class="btn action-insert" type="button"><i class="material-icons md-13">&#xE145;</i></button> ' +
     '<button class="btn action-remove" type="button"><i class="material-icons md-13">&#xE15B;</i></button>' +
     '</td>');
+  this.body.find('tr').find('select,option').removeClass("blank-value");
 
   this.base = this.body.find('tr[data-base]').last().clone();
   this.el.find('tbody').sortable({ handle: '.sortable-handle' });
