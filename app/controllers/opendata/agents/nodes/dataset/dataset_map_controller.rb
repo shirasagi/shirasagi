@@ -25,7 +25,8 @@ class Opendata::Agents::Nodes::Dataset::DatasetMapController < ApplicationContro
           resources << {
             resource: resource,
             key: key,
-            name: name
+            name: name,
+            type: "layer"
           }
         else
           resource.map_resources.each do |map_resource|
@@ -41,7 +42,8 @@ class Opendata::Agents::Nodes::Dataset::DatasetMapController < ApplicationContro
             resources << {
               resource: resource,
               key: key,
-              name: name
+              name: name,
+              type: "marker"
             }
           end
         end

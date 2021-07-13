@@ -17,8 +17,10 @@ var cboxLoad = function() {
 $("#ajax-box .pagination a").on("click", cboxLoad);
 $("#ajax-box .submitters a").on("click", cboxLoad);
 <% end %>
-
-<% @s = OpenStruct.new params[:s] %>
+<%
+  @s = OpenStruct.new params[:s]
+  @marker_options = map_marker_picker_images
+%>
 <div class="search-ui-form">
   <%= form_for :s, url: "#{@cur_node.url}search.html", html: { method: "GET", class: :search } do |f| %>
     <%= f.text_field :keyword %>
@@ -69,6 +71,13 @@ $("#ajax-box .submitters a").on("click", cboxLoad);
                   <%= check_box_tag("resource_id", resource[:key], nil, class: "set-markers") %>
                   <span class="resource-name"><%= resource[:name] %></span>
                 </label>
+                <% if resource[:type] == "marker" %>
+                  <div class="marker-image-form">
+                    <%= link_to t("map.buttons.select_image"), "", class: "btn select-marker-image" %>
+                    <%== render_marker_picker(site: @cur_site) %>
+                    <span class="marker-thumb"></span>
+                  </div>
+                <% end %>
               </li>
             <% end %>
           </ul>

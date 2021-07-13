@@ -16,6 +16,11 @@ this.Openlayers_Map = (function () {
     }
     this.defaultCenter = Openlayers_Map.defaultCenter.reverse();
 
+    this.showGoogleMapsSearch = false;
+    if (opts["showGoogleMapsSearch"]) {
+      this.showGoogleMapsSearch = opts["showGoogleMapsSearch"];
+    }
+
     this.markerFeature = null;
     this.markerLayer = null;
     this.popup = null;
@@ -171,7 +176,7 @@ this.Openlayers_Map = (function () {
   };
 
   Openlayers_Map.prototype.setMarker = function (loc, opts) {
-    var feature, iconSrc, pos, ref, ref1, ref2, style;
+    var feature, iconSrc, pos, style;
     if (opts == null) {
       opts = {};
     }
@@ -181,12 +186,12 @@ this.Openlayers_Map = (function () {
     }
     style = this.createMarkerStyle(iconSrc);
     pos = [loc[1], loc[0]];
+
     feature = new ol.Feature({
       geometry: new ol.geom.Point(ol.proj.transform(pos, "EPSG:4326", "EPSG:3857")),
-      markerId: (ref = opts['id']) != null ? ref : null,
-      markerHtml: (ref1 = opts['html']) != null ? ref1 : null,
-      category: (ref2 = opts['category']) != null ? ref2 : null,
-      iconSrc: iconSrc
+      markerId: opts['id'],
+      markerHtml: opts['html'],
+      category: opts['category']
     });
     feature.setStyle(style);
     if (!this.markerLayer) {
@@ -246,7 +251,7 @@ this.Openlayers_Map = (function () {
   };
 
   Openlayers_Map.prototype.renderMarkers = function (markers) {
-    var feature, iconSrc, id, marker, markerHtml, name, pos, ref, ref1, ref2, style, text;
+    var feature, iconSrc, id, marker, markerHtml, name, pos, style, text;
 
     for (id = 0; id < markers.length; id++) {
       marker = markers[id];
@@ -255,28 +260,33 @@ this.Openlayers_Map = (function () {
         iconSrc = marker['image'];
       }
       style = this.createMarkerStyle(iconSrc);
-      markerHtml = "";
+
       name = marker['name'];
       text = marker['text'];
+      pos = [marker['loc'][0], marker['loc'][1]];
+
+      markerHtml = "";
       if (name) {
         markerHtml += '<p>' + name + '</p>';
       }
       if (text) {
         $.each(text.split(/[\r\n]+/), function () {
           if (this.match(/^https?:\/\//)) {
-            return markerHtml += '<p><a href="' + this + '">' + this + '</a></p>';
+            markerHtml += '<p><a href="' + this + '">' + this + '</a></p>';
           } else {
-            return markerHtml += '<p>' + this + '</p>';
+            markerHtml += '<p>' + this + '</p>';
           }
         });
       }
-      pos = [marker['loc'][0], marker['loc'][1]];
+      if (this.showGoogleMapsSearch) {
+        markerHtml += Googlemaps_Map.getMapsSearchHtml(pos[1], pos[0]);
+      }
+
       feature = new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.transform(pos, "EPSG:4326", "EPSG:3857")),
-        markerId: (ref = marker['id']) != null ? ref : id,
-        markerHtml: (ref1 = marker['html']) != null ? ref1 : markerHtml,
-        category: (ref2 = marker['category']) != null ? ref2 : null,
-        iconSrc: iconSrc
+        markerId: marker['id'],
+        markerHtml: markerHtml,
+        category: marker['category']
       });
       feature.setStyle(style);
       if (!this.markerLayer) {

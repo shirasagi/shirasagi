@@ -26,19 +26,22 @@ this.Googlemaps_Map = (function () {
 
   Googlemaps_Map.kmlLayer = null;
 
+  Googlemaps_Map.showGoogleMapsSearch = false;
+
+  Googlemaps_Map.mapsSearchUrl = "https://www.google.co.jp/maps/search/";
+
   Googlemaps_Map.attachMessage = function (id) {
-    google.maps.event.addListener(Googlemaps_Map.markers[id]["marker"], 'click', function (event)
-    {
+    google.maps.event.addListener(Googlemaps_Map.markers[id]["marker"], 'click', function (event) {
       if (Googlemaps_Map.openedInfo) {
         Googlemaps_Map.openedInfo.close();
       }
       if (Googlemaps_Map.markers[id]["window"]) {
         Googlemaps_Map.markers[id]["window"].open(Googlemaps_Map.markers[id]["marker"].getMap(), Googlemaps_Map.markers[id]["marker"]);
       }
-      return Googlemaps_Map.openedInfo = Googlemaps_Map.markers[id]["window"];
+      Googlemaps_Map.openedInfo = Googlemaps_Map.markers[id]["window"];
     });
     return google.maps.event.addListener(Googlemaps_Map.markers[id]["window"], 'closeclick', function (event) {
-      return Googlemaps_Map.openedInfo = null;
+      Googlemaps_Map.openedInfo = null;
     });
   };
 
@@ -60,6 +63,9 @@ this.Googlemaps_Map = (function () {
       if (Googlemaps_Map.validateLatLon(options["center"][1], options["center"][0])) {
         Googlemaps_Map.center = options["center"].reverse();
       }
+    }
+    if (options["showGoogleMapsSearch"]) {
+      Googlemaps_Map.showGoogleMapsSearch = true;
     }
 
     var center = Googlemaps_Map.getCenter();
@@ -121,7 +127,7 @@ this.Googlemaps_Map = (function () {
     Googlemaps_Map.markers = markers;
     markerBounds = new google.maps.LatLngBounds();
     $.each(Googlemaps_Map.markers, function (id, value) {
-      var marker_html, name, text, image, opts;
+      var name, text, opts;
 
       opts = {
         position: new google.maps.LatLng(value["loc"][1], value["loc"][0]),
@@ -134,31 +140,35 @@ this.Googlemaps_Map = (function () {
       }
       Googlemaps_Map.markers[id]["marker"] = new google.maps.Marker(opts);
       markerBounds.extend(new google.maps.LatLng(value["loc"][1], value["loc"][0]));
+
+      var markerHtml = "";
       if (value["html"]) {
-        marker_html = value["html"];
-        Googlemaps_Map.markers[id]["window"] = new google.maps.InfoWindow({
-          content: marker_html
-        });
-        Googlemaps_Map.attachMessage(id);
+        markerHtml = value["html"];
       } else if (value["name"] || value["text"]) {
         name = value["name"];
         text = value["text"];
-        marker_html = '<div class="marker-info">';
+        markerHtml = '<div class="marker-info">';
         if (name && name !== "") {
-          marker_html += '<p>' + name + '</p>';
+          markerHtml += '<p>' + name + '</p>';
           if (text && text !== "") {
             $.each(text.split(/[\r\n]+/), function () {
               if (this.match(/^https?:\/\//)) {
-                return marker_html += '<p><a href="' + this + '">' + this + '</a></p>';
+                return markerHtml += '<p><a href="' + this + '">' + this + '</a></p>';
               } else {
-                return marker_html += '<p>' + this + '</p>';
+                return markerHtml += '<p>' + this + '</p>';
               }
             });
           }
         }
-        marker_html += '</div>';
+        markerHtml += '</div>';
+      }
+
+      if (Googlemaps_Map.showGoogleMapsSearch) {
+        markerHtml += Googlemaps_Map.getMapsSearchHtml(value["loc"][1], value["loc"][0]);
+      }
+      if (markerHtml) {
         Googlemaps_Map.markers[id]["window"] = new google.maps.InfoWindow({
-          content: marker_html
+          content: markerHtml
         });
         Googlemaps_Map.attachMessage(id);
       }
@@ -245,6 +255,11 @@ this.Googlemaps_Map = (function () {
     } else {
       return false;
     }
+  };
+
+  Googlemaps_Map.getMapsSearchHtml = function(lat, lng) {
+    var url = Googlemaps_Map.mapsSearchUrl + lat + "," + lng;
+    return '<p><a href="' + url + '">' + "<%= I18n.t("map.links.google_maps_search") %>" + '</a></p>';
   };
 
   return Googlemaps_Map;
