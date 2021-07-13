@@ -20,6 +20,13 @@ class Cms::PublicHelper::Paginator < Kaminari::Helpers::Paginator
     end
   end
 
+  def query_params
+    @query_params ||= begin
+      query_string = @template.controller.request.query_string rescue nil
+      query_string.present? ? Rack::Utils.parse_nested_query(query_string) : {}
+    end
+  end
+
   module PageUrlFor
     extend ActiveSupport::Concern
 
@@ -37,6 +44,7 @@ class Cms::PublicHelper::Paginator < Kaminari::Helpers::Paginator
       params.reverse_merge!(@template.url_options)
 
       params[:path] = path
+      params[:params] = @paginator.query_params
 
       ActionDispatch::Http::URL.path_for(params)
     end
