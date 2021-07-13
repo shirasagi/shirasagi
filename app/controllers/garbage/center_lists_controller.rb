@@ -34,6 +34,7 @@ class Garbage::CenterListsController < ApplicationController
         @model.t(:name),
         @model.t(:index_name),
         @model.t(:layout),
+        @model.t(:order),
         @model.t(:groups)
       ]
       items.each do |item|
@@ -42,6 +43,7 @@ class Garbage::CenterListsController < ApplicationController
         row << item.name
         row << item.index_name
         row << item.layout.try(:name)
+        row << item.order
         row << item.groups.pluck(:name).join("_n")
         data << row
       end

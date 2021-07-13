@@ -32,6 +32,7 @@ class Garbage::NodesController < ApplicationController
         @model.t(:name),
         @model.t(:index_name),
         @model.t(:layout),
+        @model.t(:order),
         @model.t(:category_ids),
         @model.t(:kana),
         @model.t(:remark),
@@ -43,6 +44,7 @@ class Garbage::NodesController < ApplicationController
         row << item.name
         row << item.index_name
         row << item.layout.try(:name)
+        row << item.order
         row << item.categories.pluck(:name).join("\n")
         row << item.kana
         row << item.remark
