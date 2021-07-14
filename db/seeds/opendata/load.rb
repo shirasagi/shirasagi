@@ -620,6 +620,7 @@ dataset5 = save_data filename: "dataset/5.html", name: "サンプルデータ【
 save_resource(dataset1, name: "サンプルリソース", filename: "sample.txt", license_id: license_cc_by.id)
 save_resource(dataset2, name: "年齢別人口", filename: "population.csv", license_id: license_cc_by.id,
               preview_graph_state: "enabled", preview_graph_types: %w(bar line pie))
+save_resource(dataset3, name: "shirasagibridge.kml", filename: "shirasagibridge.kml", license_id: license_cc_by.id)
 save_resource(dataset5, name: "sample.csv", filename: "sample.csv", license_id: license_cc_by.id)
 save_resource(dataset5, name: "sample2.xlsx", filename: "sample2.xlsx", license_id: license_cc_by.id)
 
