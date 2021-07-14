@@ -630,6 +630,26 @@ textarea {
       list-style: none;
       li {
         margin-bottom: 12px;
+        .images {
+          @include display-flex;
+          flex-wrap: wrap;
+          z-index: 9999;
+          padding: 2px;
+          position: absolute;
+          background: #fff;
+          border: 1px solid #d0d0d0;
+          display: flex;
+          width: 260px;
+          .image {
+            padding: 2px;
+          }
+        }
+        .marker-thumb {
+          vertical-align: text-bottom;
+          img {
+            width: 12px;
+          }
+        }
       }
     }
     .deselect {
