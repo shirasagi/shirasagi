@@ -5,9 +5,9 @@
 
   opts = {}
   if @favorite
-    opts[:class] = "add-favorite"
-  else
     opts[:class] = "add-favorite registered"
+  else
+    opts[:class] = "add-favorite"
     opts[:method] = "post"
   end
   if @preview || @favorite
