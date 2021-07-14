@@ -88,6 +88,12 @@ module Opendata::UrlHelper
     build_path(node.url, options)
   end
 
+  def my_favorite_dataset_path(options = {})
+    node = Opendata::Node::MyFavoriteDataset.site(@cur_site).first
+    return unless node
+    build_path(node.url, options)
+  end
+
   def my_dataset_path(options = {})
     node = Opendata::Node::MyDataset.site(@cur_site).first
     raise "mydataset is disabled since Opendata::Node::MyDataset is not registered" unless node

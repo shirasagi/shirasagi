@@ -18,7 +18,11 @@ class Opendata::Agents::Nodes::Mypage::MypageController < ApplicationController
 
   def index
     if view_context.dataset_enabled?
-      redirect_to view_context.my_dataset_path
+      if view_context.my_favorite_dataset_path
+        redirect_to view_context.my_favorite_dataset_path
+      else
+        redirect_to view_context.my_dataset_path
+      end
     elsif view_context.app_enabled?
       redirect_to view_context.my_app_path
     elsif view_context.idea_enabled?
