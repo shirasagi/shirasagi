@@ -11,6 +11,9 @@ require "#{Rails.root}/db/seeds/cms/users"
 require "#{Rails.root}/db/seeds/cms/workflow"
 require "#{Rails.root}/db/seeds/cms/members"
 
+@site.map_api = "openlayers"
+@site.update
+
 Dir.chdir @root = File.dirname(__FILE__)
 
 ## -------------------------------------
