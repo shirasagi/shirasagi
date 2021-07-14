@@ -6,14 +6,26 @@ module SS
 
       def enable
         @enabled = true
+        tmp_file_path = "#{SS::TmpDir.tmpdir}/#{unique_id}.log"
+        @tmp_file = ::File.open(tmp_file_path, "w+")
       end
 
-      def disable
+      def disable(puts_to_console)
         @enabled = false
+        if @tmp_file
+          if puts_to_console
+            @tmp_file.rewind
+            IO.copy_stream(@tmp_file, STDOUT)
+          end
+
+          @tmp_file.close rescue nil
+        end
+
+        @tmp_file = nil
       end
 
       def add(*args, &block)
-        if @enabled
+        if @enabled && @tmp_file
           severity, message, progname = *args
           severity ||= ::Logger::Severity::UNKNOWN
           if message.nil?
@@ -24,7 +36,7 @@ module SS
               progname = nil
             end
           end
-          puts format_message(severity, message, progname)
+          @tmp_file.puts format_message(severity, message, progname)
         end
       end
 
@@ -35,11 +47,19 @@ module SS
 
     mattr_accessor :stdout_logger
 
-    def puts_log_stdout(enables)
-      if enables
-        SS::LogSupport.stdout_logger.enable
-      else
-        SS::LogSupport.stdout_logger.disable
+    def self.extended(obj)
+      js = obj.metadata[:js]
+
+      obj.before do
+        if js
+          SS::LogSupport.stdout_logger.enable
+        end
+      end
+
+      obj.after do
+        if js
+          SS::LogSupport.stdout_logger.disable(RSpec.current_example.display_exception.present?)
+        end
       end
     end
 
@@ -55,8 +75,9 @@ module SS
   end
 end
 
-RSpec.configuration.include(SS::LogSupport)
-
-RSpec.configuration.before(:suite) do
-  SS::LogSupport.install_stdout_logger
+if ci? || true
+  RSpec.configuration.extend(SS::LogSupport)
+  RSpec.configuration.before(:suite) do
+    SS::LogSupport.install_stdout_logger
+  end
 end
