@@ -1252,7 +1252,7 @@ article.body {
 .map-page, .inquiry-nodes, .columns,
 .blog-center .blog, .mypage-show article,
 .cke_editable,
-.body--anpi-ezine-anpi article.body, .body--anpi-ezine-event article.body {
+.body--anpi-ezine-anpi article.body, .body--anpi-ezine-event article.body, .tourist-spot, body[class*="body--institution-shisetsu-"] article.body {
   article {
     h2 {
       padding: 0;
@@ -4425,5 +4425,29 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
   @include mb {
     padding: 0 15px 15px;
     box-sizing: border-box;
+  }
+}
+
+.body--institution-shisetsu #main > article[class*="item-"] {
+  &:last-child {
+    margin-bottom: 20px;
+  }
+  header {
+    border-bottom: 1px solid #ccc;
+    padding: 9px 12px;
+    time {
+      display: inline-block;
+    }
+    h2 {
+      display: inline;
+      border-bottom: none;
+    }
+  }
+}
+body[class*="body--institution-shisetsu-"] .map .body {
+  width: 100%;
+  h2 {
+    color: $text;
+    border-bottom: none;
   }
 }

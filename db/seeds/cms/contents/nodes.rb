@@ -368,7 +368,8 @@ save_node route: "facility/page", filename: "institution/shisetsu/library", name
           related_url: @link_url,
           category_ids: facility_categories.values.map(&:id),
           location_ids: facility_locations.values.map(&:id),
-          service_ids: facility_services.values.map(&:id)
+          service_ids: facility_services.values.map(&:id),
+          st_form_ids: [@form.id, @form_4.id], st_form_default_id: @form_4.id
 
 save_node route: "key_visual/image", filename: "key_visual", name: "キービジュアル"
 
