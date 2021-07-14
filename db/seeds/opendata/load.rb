@@ -205,14 +205,16 @@ if SS.config.cms.enable_lgwan.blank?
 
   save_node filename: "mypage", name: "マイページ", route: "opendata/mypage",
             layout_id: layouts["mypage-top"].id
-  save_node filename: "mypage/profile", name: "プロフィール", route: "opendata/my_profile",
-            layout_id: layouts["mypage-page"].id
+  save_node filename: "mypage/favorite", name: "マイリスト", route: "opendata/my_favorite_dataset",
+            layout_id: layouts["mypage-page"].id, order: 10
   save_node filename: "mypage/dataset", name: "データカタログ", route: "opendata/my_dataset",
-            layout_id: layouts["mypage-page"].id
+            layout_id: layouts["mypage-page"].id, order: 20
   save_node filename: "mypage/app", name: "アプリマーケット", route: "opendata/my_app",
-            layout_id: layouts["mypage-page"].id
+            layout_id: layouts["mypage-page"].id, order: 30
   save_node filename: "mypage/idea", name: "アイデアボックス", route: "opendata/my_idea",
-            layout_id: layouts["mypage-page"].id
+            layout_id: layouts["mypage-page"].id, order: 40
+  save_node filename: "mypage/profile", name: "プロフィール", route: "opendata/my_profile",
+            layout_id: layouts["mypage-page"].id, order: 50
 end
 
 save_node filename: "bunya", name: "分野", route: "cms/node"
