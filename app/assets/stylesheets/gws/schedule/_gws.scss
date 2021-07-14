@@ -610,6 +610,9 @@
   .fc-event {
     color: #333 !important;
   }
+  .fc-event .fc-content {
+    white-space: normal !important;
+  }
   .fc-day-grid-event, .fc-timeline-event {
     border-bottom: 1px solid #555;
     padding: 1px 0;
