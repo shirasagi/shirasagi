@@ -22,8 +22,8 @@ class Cms::PublicHelper::Paginator < Kaminari::Helpers::Paginator
 
   def query_params
     @query_params ||= begin
-      query_string = @template.controller.request.query_string rescue nil
-      query_string.present? ? Rack::Utils.parse_nested_query(query_string) : {}
+      query_string = @template.controller.request.query_parameters rescue nil
+      query_string || {}
     end
   end
 
