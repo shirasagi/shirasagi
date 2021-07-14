@@ -172,6 +172,8 @@ save_node filename: "dataset/chiiki/shirasagi/nishi", name: "西区", route: "op
   layout_id: layouts["chiiki"].id
 save_node filename: "dataset/map", name: "地図", route: "opendata/dataset_map",
   layout_id: layouts["dataset-map"].id
+save_node filename: "graph", name: "オープンデータグラフ", route: "opendata/dataset_graph",
+  layout_id: layouts["dataset-map"].id
 save_node filename: "dataset/search_group", name: "データセットグループ検索", route: "opendata/search_dataset_group",
   layout_id: layouts["dataset-bunya"].id
 save_node filename: "dataset/search", name: "データセット検索", route: "opendata/search_dataset",
@@ -566,7 +568,7 @@ def save_data(data)
   item
 end
 
-def save_resource(dataset, data)
+def save_resource(dataset, data, attrs = {})
   puts data[:name]
   cond = { name: data[:name] }
 
@@ -574,34 +576,52 @@ def save_resource(dataset, data)
   data.delete :filename
   Fs::UploadedFile.create_from_file(path) do |file|
     item = dataset.resources.where(cond).first || dataset.resources.new
+    item.attributes = attrs if attrs.present?
     item.in_file = file
     item.update! data
     puts item.errors.full_messages unless item.save
   end
 end
 
-datasets = []
-1.step(5) do |i|
-  dataset = save_data filename: "dataset/#{i}.html", name: "サンプルデータ【#{i}】", route: "opendata/dataset",
-    layout_id: layouts["dataset-page"].id, text: "サンプルデータ【#{i}】", member_id: @member_1.id, tags: %w(タグ),
-    category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
-    dataset_group_ids: Opendata::DatasetGroup.site(@site).pluck(:_id).sample(1),
-    area_ids: Opendata::Node::Area.site(@site).pluck(:_id).sample(1)
-  if i == 1
-    save_resource(dataset, name: "サンプルリソース", filename: "sample.txt", license_id: license_cc_by.id)
-  elsif i == 5
-    save_resource(dataset, name: "sample.csv", filename: "sample.csv", license_id: license_cc_by.id)
-    save_resource(dataset, name: "sample2.xlsx", filename: "sample2.xlsx", license_id: license_cc_by.id)
-  end
-  datasets << dataset
-end
+dataset1 = save_data filename: "dataset/1.html", name: "サンプルデータ【1】", route: "opendata/dataset",
+                     layout_id: layouts["dataset-page"].id, text: "サンプルデータ【1】", member_id: @member_1.id, tags: %w(タグ),
+                     category_ids: Opendata::Node::Category.site(@site).pluck(:id).sample(1),
+                     dataset_group_ids: Opendata::DatasetGroup.site(@site).pluck(:id).sample(1),
+                     area_ids: Opendata::Node::Area.site(@site).pluck(:id).sample(1)
 
-dataset5 = datasets[4]
-dataset5.add_to_set(
-  estat_category_ids: [
-    estat_categories["estat-bunya/estat1/estat101"].id, estat_categories["estat-bunya/estat5/estat501"].id
-  ]
-)
+dataset2 = save_data filename: "dataset/2.html", name: "サンプルデータ【2】", route: "opendata/dataset",
+                     layout_id: layouts["dataset-page"].id, text: "サンプルデータ【2】", member_id: @member_1.id, tags: %w(タグ),
+                     category_ids: Opendata::Node::Category.site(@site).pluck(:id).sample(1),
+                     dataset_group_ids: Opendata::DatasetGroup.site(@site).pluck(:id).sample(1),
+                     area_ids: Opendata::Node::Area.site(@site).pluck(:id).sample(1)
+
+dataset3 = save_data filename: "dataset/3.html", name: "サンプルデータ【3】", route: "opendata/dataset",
+                     layout_id: layouts["dataset-page"].id, text: "サンプルデータ【3】", member_id: @member_1.id, tags: %w(タグ),
+                     category_ids: Opendata::Node::Category.site(@site).pluck(:id).sample(1),
+                     dataset_group_ids: Opendata::DatasetGroup.site(@site).pluck(:id).sample(1),
+                     area_ids: Opendata::Node::Area.site(@site).pluck(:id).sample(1)
+
+dataset4 = save_data filename: "dataset/4.html", name: "サンプルデータ【4】", route: "opendata/dataset",
+                     layout_id: layouts["dataset-page"].id, text: "サンプルデータ【4】", member_id: @member_1.id, tags: %w(タグ),
+                     category_ids: Opendata::Node::Category.site(@site).pluck(:id).sample(1),
+                     dataset_group_ids: Opendata::DatasetGroup.site(@site).pluck(:id).sample(1),
+                     area_ids: Opendata::Node::Area.site(@site).pluck(:id).sample(1)
+
+dataset5 = save_data filename: "dataset/5.html", name: "サンプルデータ【5】", route: "opendata/dataset",
+                     layout_id: layouts["dataset-page"].id, text: "サンプルデータ【5】", member_id: @member_1.id, tags: %w(タグ),
+                     category_ids: Opendata::Node::Category.site(@site).pluck(:id).sample(1),
+                     estat_category_ids: [
+                       estat_categories["estat-bunya/estat1/estat101"].id,
+                       estat_categories["estat-bunya/estat5/estat501"].id
+                     ],
+                     dataset_group_ids: Opendata::DatasetGroup.site(@site).pluck(:id).sample(1),
+                     area_ids: Opendata::Node::Area.site(@site).pluck(:id).sample(1)
+
+save_resource(dataset1, name: "サンプルリソース", filename: "sample.txt", license_id: license_cc_by.id)
+save_resource(dataset2, name: "年齢別人口", filename: "population.csv", license_id: license_cc_by.id,
+              preview_graph_state: "enabled", preview_graph_types: %w(bar line pie))
+save_resource(dataset5, name: "sample.csv", filename: "sample.csv", license_id: license_cc_by.id)
+save_resource(dataset5, name: "sample2.xlsx", filename: "sample2.xlsx", license_id: license_cc_by.id)
 
 ## -------------------------------------
 puts "# opendata apps"

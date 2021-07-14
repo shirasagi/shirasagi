@@ -655,9 +655,6 @@ textarea {
   #ajax-box {
     .submitters {
       text-align: center;
-    }
-    .submitters {
-      text-align: center;
       margin: 20px 0 0;
     }
     .btn {
@@ -690,6 +687,18 @@ textarea {
   margin-top: $item-margin;
   .btn {
     text-decoration: none;
+  }
+  a.btn {
+    text-decoration: none;
+    padding: 4px;
+    border: solid 1px #767676;
+    border-radius: 3px;
+    color: black;
+    background: #efefef;
+    vertical-align: middle;
+    &:hover {
+      border: solid 1px black;
+    }
   }
 }
 #ajax-box, .resource-content {
@@ -748,6 +757,25 @@ textarea {
     }
     .graph-controller .chartjs-render-monitor {
       height: 300px !important;
+    }
+  }
+}
+.graph-warp {
+  width: 740px;
+  height: 400px;
+}
+.resource-graph {
+  overflow-x: scroll;
+  max-width: 740px;
+  margin: 0 auto;
+}
+.graph-controller {
+  text-align: right;
+  margin: 10px;
+  .graph-types {
+    margin-bottom: 5px;
+    button {
+      margin: 0 0 0 5px;
     }
   }
 }
@@ -1375,6 +1403,13 @@ div.categories, nav.categories {
 .dataset-favorite a {
   @include btn-black;
   margin-bottom: 10px;
+  background: #383838 url(../img/favorite_star.png) no-repeat 8px center;
+  background-size: 15px;
+  &.registered {
+    background: white url(../img/favorite_star_b.png) no-repeat 8px center;
+    background-size: 15px;
+    color: black;
+  }
 }
 .app .one {
   h1.name {
