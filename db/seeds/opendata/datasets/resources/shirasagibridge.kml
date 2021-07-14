@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+<Style id="LineStyle1">
+  <LineStyle>
+  <color>96000000</color>
+  <width>25</width>
+  </LineStyle>
+</Style>
+<Placemark>
+<name>シラサギ</name>
+<styleUrl>#LineStyle1</styleUrl>
+<LineString>
+<coordinates>134.58487272961068,34.089165474772614 134.57937956554818,34.079284488183454</coordinates>
+</LineString>
+</Placemark>
+</Document>
+</kml>

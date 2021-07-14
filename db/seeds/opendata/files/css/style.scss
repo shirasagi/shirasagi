@@ -67,7 +67,9 @@ textarea {
   padding: 12px;
   line-height: 1.4;
 }
-
+.bulk-download input {
+  margin: 20px 20px 10px;
+}
 // -----------------------------------------------------------------------------
 // layout
 #page {
@@ -559,11 +561,12 @@ textarea {
 
 // -----------------------------------------------------------------------------
 // opendata-map
-.opendatamap a {
+.opendatamap a, .opendatagraph a, .settings a {
   @include btn-black;
   width: 100%;
   text-align: center;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 .body--dataset-map #wrap {
   width: 100%;
@@ -652,9 +655,6 @@ textarea {
   #ajax-box {
     .submitters {
       text-align: center;
-    }
-    .submitters {
-      text-align: center;
       margin: 20px 0 0;
     }
     .btn {
@@ -688,6 +688,18 @@ textarea {
   .btn {
     text-decoration: none;
   }
+  a.btn {
+    text-decoration: none;
+    padding: 4px;
+    border: solid 1px #767676;
+    border-radius: 3px;
+    color: black;
+    background: #efefef;
+    vertical-align: middle;
+    &:hover {
+      border: solid 1px black;
+    }
+  }
 }
 #ajax-box, .resource-content {
   font-size: 87.5%;
@@ -719,6 +731,55 @@ textarea {
     width: 20px;
   }
 }
+// -----------------------------------------------------------------------------
+// graph
+.body--graph {
+  #main {
+    width: 1040px;
+    margin: 0 auto;
+    border: 1px solid #d5d5d5;
+    @include display-flex;
+    .dataset-search {
+      border: none;
+      border-right: 1px solid #d5d5d5;
+      height: auto;
+      max-height: 100%;
+      width: 300px;
+      overflow-y: scroll;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    .resource-graph {
+      .first-notice {
+        margin-top: 10px;
+        margin-left: 10px;
+      }
+    }
+    .graph-controller .chartjs-render-monitor {
+      height: 300px !important;
+    }
+  }
+}
+.graph-warp {
+  width: 740px;
+  height: 400px;
+}
+.resource-graph {
+  overflow-x: scroll;
+  max-width: 740px;
+  margin: 0 auto;
+}
+.graph-controller {
+  text-align: right;
+  margin: 10px;
+  .graph-types {
+    margin-bottom: 5px;
+    button {
+      margin: 0 0 0 5px;
+    }
+  }
+}
+
 // -----------------------------------------------------------------------------
 // foot
 #foot {
@@ -913,6 +974,17 @@ textarea {
     @include btn-black;
   }
 }
+.opendata-search-datasets-form {
+  display: block;
+  label {
+    input {
+      width: auto;
+    }
+    td {
+      text-align: left;
+    }
+  }
+}
 .opendata-search-datasets, .opendata-search-groups,
 .opendata-search-apps,
 .opendata-search-ideas {
@@ -947,7 +1019,7 @@ textarea {
   float: right;
   margin-right: 15px;
 }
-.download-all, .download a {
+.download-all, .download a, .bulk-download input {
   @include btn-black;
   &:hover {
     color: $white;
@@ -1326,6 +1398,17 @@ div.categories, nav.categories {
   margin-bottom: $box-margin;
   a {
     @include btn-black;
+  }
+}
+.dataset-favorite a {
+  @include btn-black;
+  margin-bottom: 10px;
+  background: #383838 url(../img/favorite_star.png) no-repeat 8px center;
+  background-size: 15px;
+  &.registered {
+    background: white url(../img/favorite_star_b.png) no-repeat 8px center;
+    background-size: 15px;
+    color: black;
   }
 }
 .app .one {
@@ -2311,6 +2394,17 @@ div.categories, nav.categories {
   a {
     position: relative;
     padding: 8px 10px 5px 40px;
+  }
+  .favorite:after {
+    content: "";
+    position: absolute;
+    top: 7px;
+    left: 14px;
+    display: block;
+    width: 25px;
+    height: 25px;
+    background: url(../img/favorite_star.png) no-repeat left center;
+    background-size: 25px;
   }
   .dataset:after {
     content: "";

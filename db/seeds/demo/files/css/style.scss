@@ -944,7 +944,7 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
     margin-top: -5px;
   }
   .fb-like {
-      margin: 0;
+    margin: 0;
   }
 }
 // -----------------------------------------------------------------------------
@@ -1252,7 +1252,7 @@ article.body {
 .map-page, .inquiry-nodes, .columns,
 .blog-center .blog, .mypage-show article,
 .cke_editable,
-.body--anpi-ezine-anpi article.body, .body--anpi-ezine-event article.body {
+.body--anpi-ezine-anpi article.body, .body--anpi-ezine-event article.body, .tourist-spot, body[class*="body--institution-shisetsu-"] article.body {
   article {
     h2 {
       padding: 0;
@@ -4154,5 +4154,300 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
         }
       }
     }
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+// guideslist
+//.service-guides {
+.yield-wrap {
+  padding: 0 20px 32px;
+  border-radius: 18px;
+  #doc-header {
+    padding: 20px 0 0;
+    .dhead {
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      line-height: 1.6;
+    }
+  }
+}
+.guide-node-form {
+  .question {
+    margin: 16px 0;
+    padding: 10px 0;
+    border-top: 1px dotted #888;
+    border-bottom: 1px dotted #888;
+    font-size: $px16;
+    font-weight: bold;
+  }
+  ul li {
+    margin: 0 10px 16px 0;
+    padding-left: 1.25em;
+    text-indent: -1.6em;
+  }
+  footer.send {
+    text-align: center;
+    input[type="submit"] {
+      min-width: 137px;
+    }
+  }
+}
+.guide-nodes {
+  padding: 16px 0;
+  font-weight: normal;
+}
+.other-procedures {
+  margin: 64px 0 16px;
+  padding-top: 16px;
+  border-top: 1px dotted #888;
+  font-weight: bold;
+  font-size: $px14;
+  font-weight: normal;
+  color: $text;
+}
+.guide-node-form {
+  .procedure-count {
+    padding: 12px 0;
+    border-top: none;
+    border-bottom: none;
+    color: $text;
+  }
+  .all-procedure {
+    padding-top: 12px;
+    border-top: none;
+    border-bottom: none;
+  }
+  .guide-lists {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-top: none;
+    border-bottom: 1px solid rgba(10, 89, 45, 0.5);
+    color: $text;
+    h2 {
+      position: relative;
+      padding: 0 15px 0 10px;
+      font-size: $px18;
+      cursor: pointer;
+      @include transition(0.3s);
+      &:hover, &:focus {
+        opacity: 0.7;
+      }
+      &:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 10px;
+        margin: auto;
+        width: 5px;
+        height: 5px;
+        border-top: 2px solid #000;
+        border-right: 2px solid #000;
+        transform: rotate(135deg);
+      }
+      &.toggle-arrow:after {
+        content: "";
+        transform: rotate(315deg);
+      }
+    }
+  }
+  .procedure-wrap {
+    display: none;
+    border-top: none;
+    border-bottom: none;
+    color: $text;
+  }
+  dl.procedure {
+    margin: 10px 0;
+    padding: 12px 10px;
+    @include border-radius(6px);
+    &.active {
+      display: block;
+    }
+    dt {
+      font-weight: bold;
+      word-break: break-word;
+    }
+    dd {
+      padding-bottom: 10px;
+      font-weight: normal;
+      &:last-of-type {
+        padding-bottom: 0;
+      }
+    }
+  }
+  .show-answer, .show-procedure {
+    margin-bottom: 20px;
+    text-align: center;
+    a {
+      display: inline-block;
+      min-width: 200px;
+      box-sizing: border-box;
+      @include btn-org;
+      text-decoration: none;
+      color: #000;
+    }
+  }
+  .back-to-index,
+  .back-to-first {
+    padding: 8px 0;
+    text-align: center;
+    a {
+      position: relative;
+      display: inline-block;
+      min-width: 200px;
+      box-sizing: border-box;
+      padding: 8px 24px 8px 54px;
+      border-radius: 10px;
+      font-size: $px14;
+      font-weight: bold;
+      text-decoration: none;
+      transition-duration: 0.3s;
+      box-sizing: border-box;
+      &:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 24px;
+        width: 100%;
+        height: 100%;
+        background: url(../img/ic-arrow-g-fback.svg) no-repeat left center;
+      }
+      &:hover {
+        &:before {
+          content: "";
+          background: url(../img/ic-arrow-g-fback-w.svg) no-repeat left center;
+        }
+      }
+    }
+  }
+  .back-to-first {
+    a {
+      @include btn-org;
+      color: #000;
+      font-weight: normal;
+    }
+  }
+  footer.send {
+    padding-top: 20px;
+  }
+  .close-btn {
+    width: 180px;
+    margin: 0 auto;
+    padding: 5px 0px;
+    border-radius: 6px;
+    text-align: center;
+    color: #fff;
+    box-sizing: border-box;
+    @include transition(0.3s);
+    cursor: pointer;
+    span {
+      padding-right: 5px;
+      font-size: $px25;
+      line-height: 1em;
+      vertical-align: -0.05em;
+    }
+  }
+  .print-btn {
+    display: block;
+    width: 100%;
+    margin-bottom: 30px;
+    padding: 8px;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 6px;
+    border: 1px solid #dadada;
+    background: #dadada;
+    box-sizing: border-box;
+  }
+  .your-answers {
+    padding-bottom: 12px;
+  }
+  .answer-state {
+    float: left;
+    display: inline-block;
+    min-width: 50px;
+    margin-right: 10px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    text-align: center;
+    &.not-applicable {
+      background: #b2b2b2;
+    }
+    &.applicable {
+      background: -webkit-linear-gradient(top, #007acd, #0069cc);
+      color: $t-white;
+    }
+  }
+  .guide-nodes ul li {
+    margin: 0 10px 24px 0;
+    padding-left: 0;
+    text-indent: 0;
+    .value {
+      display: inline-block;
+      margin-top: 5px;
+      font-weight: normal;
+    }
+  }
+  .send input {
+    @include btn-org;
+  }
+  ul li {
+    list-style: none !important;
+
+  }
+}
+.guide-node-header {
+  .links {
+    @include display-flex;
+    @include justify-content(space-between);
+    margin-bottom: 10px;
+    a {
+      @include btn-org;
+      text-decoration: none;
+      color: #000;
+    }
+  }
+  .progress {
+    font-size: $px18;
+    text-align: center;
+    font-weight: bold;
+    .evaluated-length:after {
+      content: "/";
+      margin-left: 5px;
+    }
+  }
+}
+.body--purpose-guide #main {
+  @include mb {
+    padding: 0 15px 15px;
+    box-sizing: border-box;
+  }
+}
+
+.body--institution-shisetsu #main > article[class*="item-"] {
+  &:last-child {
+    margin-bottom: 20px;
+  }
+  header {
+    border-bottom: 1px solid #ccc;
+    padding: 9px 12px;
+    time {
+      display: inline-block;
+    }
+    h2 {
+      display: inline;
+      border-bottom: none;
+    }
+  }
+}
+body[class*="body--institution-shisetsu-"] .map .body {
+  width: 100%;
+  h2 {
+    color: $text;
+    border-bottom: none;
   }
 }

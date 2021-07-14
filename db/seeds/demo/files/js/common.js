@@ -68,4 +68,12 @@ $(function() {
     $('.chat-close').show();
   });
 
+  $('.guide-nodes .guide-lists h2').click(function(){
+    $(this).next().slideToggle();
+    $(this).toggleClass('toggle-arrow');
+  });
+  $('.guide-nodes .guide-lists .close-btn').click(function(){
+    $(this).parent().slideToggle();
+    $(this).toggleClass('toggle-arrow');
+  });
 });
