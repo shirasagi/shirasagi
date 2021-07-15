@@ -153,7 +153,9 @@ describe "cms_form_preview", type: :feature, dbscope: :example do
           select layout.name, from: 'item[layout_id]'
 
           select form.name, from: 'item[form_id]'
-          find('.btn-form-change').click
+          wait_event_to_fire("ss:formActivated") do
+            find('.btn-form-change').click
+          end
 
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
 

@@ -61,7 +61,9 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         fill_in 'item[name]', with: name
         select form.name, from: 'item[form_id]'
-        find('.btn-form-change').click
+        wait_event_to_fire("ss:formActivated") do
+          find('.btn-form-change').click
+        end
 
         expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
 

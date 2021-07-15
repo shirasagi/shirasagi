@@ -1462,6 +1462,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
 #content-navi {
   @include box;
   float: left;
+  position: relative;
   width: 30%;
   padding: 10px;
   .content-navi-title {
@@ -1475,6 +1476,11 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       background: #f25a38;
       content: " ";
     }
+  }
+  .content-navi-refresh {
+    position: absolute;
+    top: 4px;
+    right: 4px;
   }
 }
 #content-navi + .index, #content-navi ~ .content-main {
@@ -2116,7 +2122,7 @@ footer.send {
     }
     .images {
       padding: 2px;
-      max-width: 256px; position: absolute; background: #fff;
+      max-width: 248px; position: absolute; background: #fff;
       border: 1px solid #d0d0d0;
       box-shadow: 0 1px 6px #d0d0d0;
       .image {

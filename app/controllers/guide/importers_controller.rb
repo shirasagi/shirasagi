@@ -73,7 +73,7 @@ class Guide::ImportersController < ApplicationController
   end
 
   def download_template
-    path = ::File.join(Rails.root, "spec/fixtures/guide/guide_template.zip")
+    path = ::File.join(Rails.root, "spec/fixtures/guide/guide_templates.zip")
     send_file path, disposition: :attachment, x_sendfile: true
   end
 end

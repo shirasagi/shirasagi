@@ -21,39 +21,53 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         # original file upload
         within "form#item-form" do
           within "#addon-cms-agents-addons-file" do
-            click_on I18n.t("ss.buttons.upload")
+            wait_cbox_open do
+              click_on I18n.t("ss.buttons.upload")
+            end
           end
         end
 
         wait_for_cbox do
           attach_file "item[in_files][]", before_csv
-          click_button I18n.t("ss.buttons.attach")
-          wait_for_ajax
+          wait_cbox_close do
+            click_button I18n.t("ss.buttons.attach")
+          end
+        end
+        within "#addon-cms-agents-addons-file" do
+          expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
         end
         click_on I18n.t("ss.buttons.publish_save")
         wait_for_notice I18n.t('ss.notice.saved')
 
-        5.times.each do
+        5.times.each do |index|
+          page.execute_script("SS.clearNotice();")
+
           # open replace file dialog
           within "#addon-cms-agents-addons-file" do
+            if index == 0
+              expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
+            else
+              expect(page).to have_css('.file-view', text: "replaced")
+            end
+
             click_on I18n.t("ss.buttons.replace_file")
           end
 
           # upload file and confirmation
-          within "form#ajax-form" do
+          wait_for_cbox do
+            expect(page).to have_css("input[type='submit'][value='#{I18n.t('inquiry.confirm')}']")
             attach_file "item[in_file]", after_csv
             click_button I18n.t('inquiry.confirm')
-            wait_for_ajax
-          end
 
-          # replace file
-          within "form#ajax-form" do
+            expect(page).to have_css('.file-view.before')
+            expect(page).to have_css('.file-view.after', text: ::File.basename(after_csv, ".*"))
+
+            # replace file
             fill_in "item[name]", with: "replaced"
             click_button I18n.t('ss.buttons.replace_save')
           end
           wait_for_notice I18n.t('ss.notice.replace_saved')
         end
-        wait_for_ajax
 
         replaced_page = item.class.find(item.id)
         replaced_file = replaced_page.attached_files.first
@@ -62,36 +76,36 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(replaced_file.history_files.size).to eq 5
         history_file = replaced_file.history_files.last
 
-        expect(history_file.filename).to eq "before_csv.csv"
-        expect(history_file.name).to eq "before_csv.csv"
+        expect(history_file.filename).to eq ::File.basename(before_csv)
+        expect(history_file.name).to eq ::File.basename(before_csv)
         expect(history_file.state).to eq "closed"
         expect(::FileUtils.cmp(history_file.path, before_csv)).to be true
 
         # show history files and restore
-        visit show_path
         within "#addon-cms-agents-addons-file" do
-          click_on I18n.t("ss.buttons.replace_file")
+          expect(page).to have_css('.file-view', text: "replaced")
+          wait_cbox_open do
+            click_on I18n.t("ss.buttons.replace_file")
+          end
         end
 
         wait_for_cbox do
           click_on I18n.t("ss.buttons.file_histories")
-          wait_for_ajax
-        end
 
-        within "#ajax-box table.index tbody" do
-          expect(all("tr").size).to eq 5
-          within all("tr").last do
-            expect(page).to have_css("td", text: "before_csv.csv")
-            expect(page).to have_css("a", text: I18n.t('history.buttons.restore'))
-            expect(page).to have_css("a", text: I18n.t("ss.links.download"))
-            expect(page).to have_css("a", text: I18n.t("ss.buttons.delete"))
+          within "table.index tbody" do
+            expect(all("tr").size).to eq 5
+            within all("tr").last do
+              expect(page).to have_css("td", text: "before_csv.csv")
+              expect(page).to have_css("a", text: I18n.t('history.buttons.restore'))
+              expect(page).to have_css("a", text: I18n.t("ss.links.download"))
+              expect(page).to have_css("a", text: I18n.t("ss.buttons.delete"))
 
-            page.accept_confirm do
-              click_on I18n.t('history.buttons.restore')
+              page.accept_confirm do
+                click_on I18n.t('history.buttons.restore')
+              end
             end
           end
         end
-
         wait_for_notice I18n.t('history.notice.restored')
 
         replaced_page = item.class.find(item.id)
@@ -110,75 +124,85 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         # original file upload
         within "form#item-form" do
           within "#addon-cms-agents-addons-file" do
-            click_on I18n.t("ss.buttons.upload")
+            wait_cbox_open do
+              click_on I18n.t("ss.buttons.upload")
+            end
           end
         end
 
         wait_for_cbox do
           attach_file "item[in_files][]", before_csv
-          click_button I18n.t("ss.buttons.attach")
-          wait_for_ajax
+          wait_cbox_close do
+            click_button I18n.t("ss.buttons.attach")
+          end
+        end
+        within "#addon-cms-agents-addons-file" do
+          expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
         end
         click_on I18n.t("ss.buttons.publish_save")
         wait_for_notice I18n.t('ss.notice.saved')
 
-        3.times.each do
+        3.times.each do |index|
+          page.execute_script("SS.clearNotice();")
+
           # open replace file dialog
           within "#addon-cms-agents-addons-file" do
+            if index == 0
+              expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
+            else
+              expect(page).to have_css('.file-view', text: "replaced")
+            end
+
             click_on I18n.t("ss.buttons.replace_file")
           end
 
           # upload file and confirmation
-          within "form#ajax-form" do
+          wait_for_cbox do
+            expect(page).to have_css("input[type='submit'][value='#{I18n.t('inquiry.confirm')}']")
             attach_file "item[in_file]", after_csv
             click_button I18n.t('inquiry.confirm')
-            wait_for_ajax
-          end
 
-          # replace file
-          within "form#ajax-form" do
+            expect(page).to have_css('.file-view.before')
+            expect(page).to have_css('.file-view.after', text: ::File.basename(after_csv, ".*"))
+
+            # replace file
             fill_in "item[name]", with: "replaced"
             click_button I18n.t('ss.buttons.replace_save')
           end
           wait_for_notice I18n.t('ss.notice.replace_saved')
         end
-        wait_for_ajax
-
-        replaced_page = item.class.find(item.id)
-        replaced_file = replaced_page.attached_files.first
-
-        # history files
-        expect(replaced_file.history_files.size).to eq 3
 
         # show history files and destroy
         visit show_path
         within "#addon-cms-agents-addons-file" do
-          click_on I18n.t("ss.buttons.replace_file")
+          expect(page).to have_css('.file-view', text: "replaced")
+          wait_cbox_open do
+            click_on I18n.t("ss.buttons.replace_file")
+          end
         end
 
         wait_for_cbox do
           click_on I18n.t("ss.buttons.file_histories")
-          wait_for_ajax
-        end
 
-        within "#ajax-box table.index tbody" do
-          expect(all("tr").size).to eq 3
-          within all("tr").last do
-            expect(page).to have_css("td", text: "before_csv.csv")
-            expect(page).to have_css("a", text: I18n.t('history.buttons.restore'))
-            expect(page).to have_css("a", text: I18n.t("ss.links.download"))
-            expect(page).to have_css("a", text: I18n.t("ss.buttons.delete"))
+          within "table.index tbody" do
+            expect(all("tr").size).to eq 3
+            within all("tr").last do
+              expect(page).to have_css("td", text: "before_csv.csv")
+              expect(page).to have_css("a", text: I18n.t('history.buttons.restore'))
+              expect(page).to have_css("a", text: I18n.t("ss.links.download"))
+              expect(page).to have_css("a", text: I18n.t("ss.buttons.delete"))
 
-            page.accept_confirm do
-              click_on I18n.t("ss.buttons.delete")
+              wait_event_to_fire "ss:ajaxRemoved", "#addon-cms-agents-addons-file .replace-file .ajax-box" do
+                page.accept_confirm do
+                  click_on I18n.t("ss.buttons.delete")
+                end
+              end
             end
           end
-        end
 
-        wait_for_ajax
-
-        within "#ajax-box table.index tbody" do
-          expect(all("tr").size).to eq 2
+          within "table.index tbody" do
+            expect(all("tr").size).to eq 2
+          end
         end
       end
     end

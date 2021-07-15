@@ -1,27 +1,5 @@
 <%= jquery do %>
-
-var $loading = $(SS.loading).hide();
-$("#ajax-box").after($loading);
-
-$('#ajax-form').ajaxForm({
-  type: "post",
-  dataType: 'json',
-  beforeSend: function() {
-    $("#ajax-box").hide();
-    $loading.show();
-  },
-  success: function(data) {
-    $("#cboxLoadedContent").load("<%= url_for(action: :confirm) %>");
-  },
-  error: function(data, status, err) {
-    $("#ajax-box").show();
-    $loading.hide();
-
-    resp = eval(data.responseText);
-    alert(resp.join("\n"));
-  }
-});
-
+  SS_ReplaceFile.instance().renderEdit("<%= url_for(action: :confirm) %>");
 <% end %>
 
 <div class="cms-modal-tabs">
