@@ -17,7 +17,7 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
   end
 
   def index_item_id
-    "message-#{@id}"
+    "#{index_type}-message-#{@id}"
   end
 
   def enum_es_docs
@@ -29,6 +29,7 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
 
   def convert_to_doc
     doc = {}
+    doc[:collection_name] = index_type
     doc[:url] = url_helpers.gws_memo_message_path(site: site, folder: REDIRECT, id: item, anchor: "message-#{item.id}")
     doc[:name] = item.subject
     doc[:mode] = item.format
@@ -61,11 +62,12 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
     doc[:updated] = item.updated.try(:iso8601)
     doc[:created] = item.created.try(:iso8601)
 
-    [ "message-#{item.id}", doc ]
+    [ "#{index_type}-message-#{item.id}", doc ]
   end
 
   def convert_file_to_doc(file)
     doc = {}
+    doc[:collection_name] = index_type
     doc[:url] = url_helpers.gws_memo_message_path(site: site, folder: REDIRECT, id: item, anchor: "file-#{file.id}")
     doc[:name] = file.name
     # doc[:categories] = item.categories.pluck(:name)

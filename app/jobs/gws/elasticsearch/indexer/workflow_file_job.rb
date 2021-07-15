@@ -42,7 +42,7 @@ class Gws::Elasticsearch::Indexer::WorkflowFileJob < Gws::ApplicationJob
   private
 
   def index_item_id
-    "workflow-#{@id}"
+    "#{index_type}-workflow-#{@id}"
   end
 
   def enum_es_docs
@@ -54,6 +54,7 @@ class Gws::Elasticsearch::Indexer::WorkflowFileJob < Gws::ApplicationJob
 
   def convert_to_doc
     doc = {}
+    doc[:collection_name] = index_type
     doc[:url] = url_helpers.gws_workflow_file_path(site: site, state: 'all', id: item)
     doc[:name] = item.name
     doc[:mode] = item.form.present? ? 'form' : 'standard'
@@ -78,11 +79,12 @@ class Gws::Elasticsearch::Indexer::WorkflowFileJob < Gws::ApplicationJob
     doc[:updated] = item.updated.try(:iso8601)
     doc[:created] = item.created.try(:iso8601)
 
-    [ "workflow-#{item.id}", doc ]
+    [ "#{index_type}-workflow-#{item.id}", doc ]
   end
 
   def convert_file_to_doc(file)
     doc = {}
+    doc[:collection_name] = index_type
     doc[:url] = url_helpers.gws_workflow_file_path(site: site, state: 'all', id: item, anchor: "file-#{file.id}")
     doc[:name] = file.name
     # doc[:categories] = item.categories.pluck(:name)

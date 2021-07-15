@@ -94,7 +94,7 @@ module Gws::Elasticsearch::Indexer::Base
   end
 
   def index_item_id
-    "post-#{@id}"
+    "#{index_type}-post-#{@id}"
   end
 
   def remove_file_ids
@@ -110,7 +110,7 @@ module Gws::Elasticsearch::Indexer::Base
 
     enum_es_docs.each do |id, doc|
       index_params = {
-        index: index_name, type: index_type, id: id, body: doc
+        index: index_name, id: id, body: doc
       }
       index_params[:pipeline] = 'attachment' if id.start_with?('file-')
       with_rescue(Elasticsearch::Transport::Transport::ServerError) do
@@ -121,7 +121,7 @@ module Gws::Elasticsearch::Indexer::Base
     if remove_file_ids.present?
       remove_file_ids.each do |id|
         with_rescue(Elasticsearch::Transport::Transport::ServerError) do
-          es_client.delete(index: index_name, type: index_type, id: "file-#{id}")
+          es_client.delete(index: index_name, id: "file-#{id}")
         end
       end
     end
@@ -135,13 +135,13 @@ module Gws::Elasticsearch::Indexer::Base
     return unless es_client
 
     with_rescue(Elasticsearch::Transport::Transport::ServerError) do
-      es_client.delete(index: index_name, type: index_type, id: index_item_id)
+      es_client.delete(index: index_name, id: index_item_id)
     end
 
     if remove_file_ids.present?
       remove_file_ids.uniq.each do |id|
         with_rescue(Elasticsearch::Transport::Transport::ServerError) do
-          es_client.delete(index: index_name, type: index_type, id: "file-#{id}")
+          es_client.delete(index: index_name, id: "file-#{id}")
         end
       end
     end

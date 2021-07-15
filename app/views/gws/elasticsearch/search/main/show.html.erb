@@ -1,12 +1,24 @@
 <%
   def has_more?
     return false if @result.blank?
-    @s.from != 0 || @result['hits']['total'] > @s.size
+    return true if @s.from != 0
+    case @result['hits']['total']
+    when Integer
+      @result['hits']['total'] > @s.size
+    when Hash
+      @result['hits']['total']['value'] > @s.size
+    end
   end
 
   def to_kaminari
-    total_pages = @result['hits']['total'] / @s.size
-    total_pages += 1 if (@result['hits']['total'] % @s.size) != 0
+    case @result['hits']['total']
+    when Integer
+      total_pages = @result['hits']['total'] / @s.size
+      total_pages += 1 if (@result['hits']['total'] % @s.size) != 0
+    when Hash
+      total_pages = @result['hits']['total']['value'] / @s.size
+      total_pages += 1 if (@result['hits']['total']['value'] % @s.size) != 0
+    end
 
     current_page = @s.from / @s.size + 1
 
