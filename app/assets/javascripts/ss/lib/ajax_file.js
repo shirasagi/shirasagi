@@ -226,7 +226,7 @@ this.SS_AjaxFile = (function () {
         $target.slideUp("fast", function() {
           $target.remove();
           if (SS_AjaxFile.firesEvents && SS_SearchUI.anchorAjaxBox) {
-            SS_SearchUI.anchorAjaxBox.trigger("ss:ajaxFileRemoved");
+            SS_SearchUI.anchorAjaxBox.trigger("ss:ajaxRemoved");
           }
         });
       },

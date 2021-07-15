@@ -53,7 +53,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         within "#ajax-box" do
           within ".file-view[data-file-id='#{file.id}']" do
             expect(page).to have_css(".name", text: filename)
-            wait_event_to_fire "ss:ajaxFileRemoved", "#addon-cms-agents-addons-form-page .ajax-box" do
+            wait_event_to_fire "ss:ajaxRemoved", "#addon-cms-agents-addons-form-page .ajax-box" do
               page.accept_confirm do
                 click_on I18n.t("ss.buttons.delete")
               end

@@ -106,7 +106,9 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         within 'form#item-form' do
           fill_in 'item[name]', with: name
           select form.name, from: 'item[form_id]'
-          find('.btn-form-change').click
+          wait_event_to_fire("ss:formActivated") do
+            find('.btn-form-change').click
+          end
 
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
           expect(page).to have_no_selector('#item_body_layout_id', visible: true)
@@ -431,7 +433,9 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         within 'form#item-form' do
           fill_in 'item[name]', with: name
           select form.name, from: 'item[form_id]'
-          find('.btn-form-change').click
+          wait_event_to_fire("ss:formActivated") do
+            find('.btn-form-change').click
+          end
 
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
 
@@ -760,7 +764,9 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         within 'form#item-form' do
           fill_in 'item[name]', with: name
           select form.name, from: 'item[form_id]'
-          find('.btn-form-change').click
+          wait_event_to_fire("ss:formActivated") do
+            find('.btn-form-change').click
+          end
 
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
           click_on I18n.t('ss.buttons.draft_save')

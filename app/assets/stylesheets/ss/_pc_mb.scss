@@ -1462,6 +1462,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
 #content-navi {
   @include box;
   float: left;
+  position: relative;
   width: 30%;
   padding: 10px;
   .content-navi-title {
@@ -1475,6 +1476,11 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       background: #f25a38;
       content: " ";
     }
+  }
+  .content-navi-refresh {
+    position: absolute;
+    top: 4px;
+    right: 4px;
   }
 }
 #content-navi + .index, #content-navi ~ .content-main {

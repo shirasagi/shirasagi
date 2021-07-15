@@ -58,7 +58,7 @@ Cms_TemplateForm.prototype.render = function() {
 };
 
 Cms_TemplateForm.prototype.changeForm = function() {
-  if (Cms_Form.addonSelector == ".mod-body-part-html") {
+  if (Cms_Form.addonSelector === ".mod-body-part-html") {
     return false;
   }
   var formId = this.$formSelect.val();
@@ -77,7 +77,7 @@ Cms_TemplateForm.prototype.changeForm = function() {
 Cms_TemplateForm.prototype.loadAndActivateForm = function(formId) {
   var pThis = this;
 
-  this.$formChangeBtn.attr('disabled', true);
+  this.$formChangeBtn.prop('disabled', true);
   $.ajax({
     url: Cms_TemplateForm.paths.formUrlTemplate.replace(':id', formId),
     type: 'GET',
@@ -90,7 +90,7 @@ Cms_TemplateForm.prototype.loadAndActivateForm = function(formId) {
       pThis.activateForm();
     },
     complete: function() {
-      pThis.$formChangeBtn.attr('disabled', false);
+      pThis.$formChangeBtn.prop('disabled', false);
     }
   });
 };
@@ -116,6 +116,8 @@ Cms_TemplateForm.prototype.activateForm = function() {
   $("#item_body_layout_id").parent('dd').addClass('hide');
   Cms_Form.addonSelector = "#addon-cms-agents-addons-form-page .addon-body";
   Cms_Form.activateSyntaxChecks();
+
+  this.$formChangeBtn.trigger("ss:formActivated");
 };
 
 Cms_TemplateForm.prototype.deactivateForm = function() {
@@ -129,6 +131,8 @@ Cms_TemplateForm.prototype.deactivateForm = function() {
   $("#item_body_layout_id").parent('dd').removeClass('hide');
   Cms_Form.addonSelector = ".mod-cms-body";
   Cms_Form.activateSyntaxChecks();
+
+  this.$formChangeBtn.trigger("ss:formDeactivated");
 };
 
 Cms_TemplateForm.prototype.bind = function(el, options) {
@@ -168,7 +172,7 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
     var formId = $this.data("form-id");
     var columnId = $this.data("column-id");
 
-    $this.closest("fieldset").attr("disabled", true);
+    $this.closest("fieldset").prop("disabled", true);
     $this.css('cursor', "wait");
     $this.closest(".column-value-palette").find(".column-value-palette-error").addClass("hide").html("");
     // $this.trigger("ss:columnAdding");
@@ -197,7 +201,7 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
       },
       complete: function(xhr, status) {
         $this.css('cursor', "pointer");
-        $this.closest("fieldset").attr("disabled", false);
+        $this.closest("fieldset").prop("disabled", false);
       }
     });
   });

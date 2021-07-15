@@ -8,7 +8,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
   let(:index_path) { history_cms_trashes_path(site: site.id) }
   let(:node_path) { article_pages_path(site: site.id, cid: node.id) }
   let(:page_path) { article_page_path(site: site.id, cid: node.id, id: page_item.id) }
-  let(:new_filename) { "#{unique_id}.html"}
+  let(:new_filename) { "#{unique_id}.html" }
 
   context "with auth" do
     before { login_cms_user }
