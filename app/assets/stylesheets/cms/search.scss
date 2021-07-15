@@ -135,6 +135,7 @@
     .cms-site-search {
         padding: 0 15px;
         .search-form {
+            position: relative;
             width: 100%;
             height: 78px;
             border: none;
@@ -162,11 +163,12 @@
 
             }
             input[type="submit"] {
+                position: absolute;
+                top: 0;
+                right: 0;
                 padding: 4px 10px;
                 border-radius: 0;
                 -webkit-appearance: none;
-                float: right;
-                margin-top: -82px;
                 line-height: 33px;
             }
             select#target {
