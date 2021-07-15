@@ -56,7 +56,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example do
         expect(requests.length).to eq 2
         requests.first.tap do |request|
           expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/message-#{message.id}")
+          expect(request['uri']['path']).to end_with("/gws_memo_messages-message-#{message.id}")
           body = JSON.parse(request['body'])
           expect(body['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#message-#{message.id}"
           expect(body['name']).to eq message.subject
@@ -107,7 +107,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example do
         expect(requests.length).to eq 2
         requests.first.tap do |request|
           expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/message-#{message.id}")
+          expect(request['uri']['path']).to end_with("/gws_memo_messages-message-#{message.id}")
           body = JSON.parse(request['body'])
           expect(body['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#message-#{message.id}"
           expect(body['name']).to eq message.subject
@@ -158,7 +158,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example do
         expect(requests.length).to eq 2
         requests.first.tap do |request|
           expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/message-#{message.id}")
+          expect(request['uri']['path']).to end_with("/gws_memo_messages-message-#{message.id}")
           body = JSON.parse(request['body'])
           expect(body['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#message-#{message.id}"
           expect(body['name']).to eq message.subject
@@ -211,7 +211,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example do
         expect(requests.length).to eq 2
         requests.first.tap do |request|
           expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/message-#{message.id}")
+          expect(request['uri']['path']).to end_with("/gws_memo_messages-message-#{message.id}")
           body = JSON.parse(request['body'])
           expect(body['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#message-#{message.id}"
           expect(body['name']).to eq message.subject
@@ -262,7 +262,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example do
         expect(requests.length).to eq 2
         requests.first.tap do |request|
           expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/message-#{message.id}")
+          expect(request['uri']['path']).to end_with("/gws_memo_messages-message-#{message.id}")
           body = JSON.parse(request['body'])
           expect(body['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#message-#{message.id}"
           expect(body['name']).to eq message.subject
@@ -318,7 +318,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example do
       expect(requests.length).to eq 2
       requests.first.tap do |request|
         expect(request['method']).to eq 'delete'
-        expect(request['uri']['path']).to end_with("/message-#{message.id}")
+        expect(request['uri']['path']).to end_with("/gws_memo_messages-message-#{message.id}")
         expect(request['body']).to be_blank
       end
       requests.second.tap do |request|
@@ -398,7 +398,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example do
         expect(requests.length).to eq 2
         requests.first.tap do |request|
           expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/message-#{message.id}")
+          expect(request['uri']['path']).to end_with("/gws_memo_messages-message-#{message.id}")
           body = JSON.parse(request['body'])
           expect(body['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#message-#{message.id}"
           expect(body['name']).to eq message.subject
@@ -460,7 +460,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example do
         expect(requests.length).to eq 2
         requests.first.tap do |request|
           expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/message-#{message.id}")
+          expect(request['uri']['path']).to end_with("/gws_memo_messages-message-#{message.id}")
           body = JSON.parse(request['body'])
           expect(body['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#message-#{message.id}"
           expect(body['name']).to eq message.subject
@@ -509,7 +509,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example do
         expect(requests.length).to eq 2
         requests.first.tap do |request|
           expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/message-#{message.id}")
+          expect(request['uri']['path']).to end_with("/gws_memo_messages-message-#{message.id}")
           body = JSON.parse(request['body'])
           expect(body['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#message-#{message.id}"
           expect(body['name']).to eq message.subject
@@ -569,7 +569,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example do
         expect(requests.length).to eq 2
         requests.first.tap do |request|
           expect(request['method']).to eq 'delete'
-          expect(request['uri']['path']).to end_with("/message-#{message.id}")
+          expect(request['uri']['path']).to end_with("/gws_memo_messages-message-#{message.id}")
           expect(request['body']).to be_blank
         end
         requests.second.tap do |request|
@@ -604,7 +604,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example do
         expect(requests.length).to eq 2
         requests.first.tap do |request|
           expect(request['method']).to eq 'delete'
-          expect(request['uri']['path']).to end_with("/message-#{message.id}")
+          expect(request['uri']['path']).to end_with("/gws_memo_messages-message-#{message.id}")
           expect(request['body']).to be_blank
         end
         requests.second.tap do |request|
