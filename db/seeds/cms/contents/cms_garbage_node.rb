@@ -3,7 +3,7 @@ puts "# cms_garbage_node"
 garbage_search = save_node(route: "garbage/search", filename: "garbage", name: "ゴミ品目検索", layout_id: @layouts["garbage"].id)
 garbage_list = save_node(route: "garbage/node", filename: "garbage/list", name: "ゴミ品目一覧", layout_id: @layouts["garbage"].id)
 
-save_node route: "cms/node", filename: "garbage/category", name: "品目カテゴリー", layout_id: @layouts["garbage"].id
+save_node route: "garbage/category_list", filename: "garbage/category", name: "品目カテゴリー", layout_id: @layouts["garbage"].id
 garbage_categories = [
   save_node(
     route: "garbage/category", filename: "garbage/category/c1", name: "燃えないゴミ",
