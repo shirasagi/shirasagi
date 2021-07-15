@@ -105,7 +105,9 @@
             }
         }
         select#target {
-            margin: 0 5px;
+            padding-left: 10px;
+            height: 31px;
+            width: 220px;
         }
     }
 
@@ -164,13 +166,15 @@
                 border-radius: 0;
                 -webkit-appearance: none;
                 float: right;
-                margin-top: -41px;
+                margin-top: -82px;
                 line-height: 33px;
             }
             select#target {
-                margin: 5px;
+                margin-top: 10px;
+                width: 100%;
+                display: block;
+                border-radius: 3px;
                 padding: 5px;
-                width: 180px;
             }
         }
     }
