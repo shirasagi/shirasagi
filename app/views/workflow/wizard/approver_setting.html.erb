@@ -172,7 +172,7 @@ end
     <div class="checkbox">
       <label>
         <% force = @cur_site.forced_update rescue nil %>
-        <% if force == "enabled" %>
+        <% if force == "disabled" %>
         <%= check_box_tag 'forced-request', true, true, class: 'forced' %><%= t("errors.messages.forced_update") %>
         <% else %>
         <%= check_box_tag 'forced-request', true, false, class: 'forced' %><%= t("errors.messages.forced_update") %>
