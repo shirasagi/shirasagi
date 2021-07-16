@@ -24,10 +24,11 @@ describe "gws_elasticsearch_search", type: :feature, dbscope: :example, js: true
           hits: {
             total: 1,
             hits: [{
-              _index: "#{site.id}",
-              _type: 'gws_board_posts',
-              _id: "post-1",
+              _index: site.id.to_s,
+              _type: '_doc',
+              _id: "gws_board_posts-post-1",
               _source: {
+                collection_name: 'gws_board_posts',
                 name: name,
                 url: "http://example.jp/#{name}",
                 updated: Time.zone.now,

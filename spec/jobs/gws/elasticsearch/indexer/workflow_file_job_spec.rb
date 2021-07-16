@@ -48,7 +48,7 @@ describe Gws::Elasticsearch::Indexer::WorkflowFileJob, dbscope: :example do
         expect(requests.length).to eq 2
         requests.first.tap do |request|
           expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/workflow-#{workflow.id}")
+          expect(request['uri']['path']).to end_with("/gws_workflow_files-workflow-#{workflow.id}")
           body = JSON.parse(request['body'])
           expect(body['url']).to eq "/.g#{site.id}/workflow/files/all/#{workflow.id}"
         end
@@ -85,7 +85,7 @@ describe Gws::Elasticsearch::Indexer::WorkflowFileJob, dbscope: :example do
         expect(requests.length).to eq 2
         requests.first.tap do |request|
           expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/workflow-#{workflow.id}")
+          expect(request['uri']['path']).to end_with("/gws_workflow_files-workflow-#{workflow.id}")
           body = JSON.parse(request['body'])
           expect(body['url']).to eq "/.g#{site.id}/workflow/files/all/#{workflow.id}"
         end
@@ -119,7 +119,7 @@ describe Gws::Elasticsearch::Indexer::WorkflowFileJob, dbscope: :example do
         expect(requests.length).to eq 2
         requests.first.tap do |request|
           expect(request['method']).to eq 'delete'
-          expect(request['uri']['path']).to end_with("/workflow-#{workflow.id}")
+          expect(request['uri']['path']).to end_with("/gws_workflow_files-workflow-#{workflow.id}")
         end
         # file was removed from topic
         requests.second.tap do |request|
@@ -152,7 +152,7 @@ describe Gws::Elasticsearch::Indexer::WorkflowFileJob, dbscope: :example do
         expect(requests.length).to eq 2
         requests.first.tap do |request|
           expect(request['method']).to eq 'delete'
-          expect(request['uri']['path']).to end_with("/workflow-#{workflow.id}")
+          expect(request['uri']['path']).to end_with("/gws_workflow_files-workflow-#{workflow.id}")
         end
         # file was removed from topic
         requests.second.tap do |request|

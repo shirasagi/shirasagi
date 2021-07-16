@@ -36,7 +36,7 @@ class Gws::Elasticsearch::Indexer::ReportFileJob < Gws::ApplicationJob
   private
 
   def index_item_id
-    "report-#{@id}"
+    "#{index_type}-report-#{@id}"
   end
 
   def enum_es_docs
@@ -48,6 +48,7 @@ class Gws::Elasticsearch::Indexer::ReportFileJob < Gws::ApplicationJob
 
   def convert_to_doc
     doc = {}
+    doc[:collection_name] = index_type
     doc[:url] = url_helpers.gws_report_file_path(site: site, state: REDIRECT, id: item)
     doc[:name] = item.name
     doc[:mode] = 'form'
@@ -75,11 +76,12 @@ class Gws::Elasticsearch::Indexer::ReportFileJob < Gws::ApplicationJob
     doc[:updated] = item.updated.try(:iso8601)
     doc[:created] = item.created.try(:iso8601)
 
-    [ "report-#{item.id}", doc ]
+    [ "#{index_type}-report-#{item.id}", doc ]
   end
 
   def convert_file_to_doc(file)
     doc = {}
+    doc[:collection_name] = index_type
     doc[:url] = url_helpers.gws_report_file_path(site: site, state: REDIRECT, id: item, anchor: "file-#{file.id}")
     doc[:name] = file.name
     # doc[:categories] = item.categories.pluck(:name)

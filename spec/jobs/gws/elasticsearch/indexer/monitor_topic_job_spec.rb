@@ -52,7 +52,7 @@ describe Gws::Elasticsearch::Indexer::MonitorTopicJob, dbscope: :example do
         expect(requests.length).to eq 2
         requests.first.tap do |request|
           expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/post-#{topic.id}")
+          expect(request['uri']['path']).to end_with("/gws_monitor_posts-post-#{topic.id}")
           body = JSON.parse(request['body'])
           expect(body['url']).to eq "/.g#{site.id}/monitor/-/topics/#{topic.id}#post-#{topic.id}"
         end
@@ -92,7 +92,7 @@ describe Gws::Elasticsearch::Indexer::MonitorTopicJob, dbscope: :example do
         expect(requests.length).to eq 2
         requests.first.tap do |request|
           expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/post-#{topic.id}")
+          expect(request['uri']['path']).to end_with("/gws_monitor_posts-post-#{topic.id}")
           body = JSON.parse(request['body'])
           expect(body['url']).to eq "/.g#{site.id}/monitor/-/topics/#{topic.id}#post-#{topic.id}"
         end
@@ -129,7 +129,7 @@ describe Gws::Elasticsearch::Indexer::MonitorTopicJob, dbscope: :example do
         expect(requests.length).to eq 2
         requests.first.tap do |request|
           expect(request['method']).to eq 'delete'
-          expect(request['uri']['path']).to end_with("/post-#{topic.id}")
+          expect(request['uri']['path']).to end_with("/gws_monitor_posts-post-#{topic.id}")
         end
         requests.second.tap do |request|
           expect(request['method']).to eq 'delete'
@@ -164,7 +164,7 @@ describe Gws::Elasticsearch::Indexer::MonitorTopicJob, dbscope: :example do
         expect(requests.length).to eq 2
         requests.first.tap do |request|
           expect(request['method']).to eq 'delete'
-          expect(request['uri']['path']).to end_with("/post-#{topic.id}")
+          expect(request['uri']['path']).to end_with("/gws_monitor_posts-post-#{topic.id}")
         end
         requests.second.tap do |request|
           expect(request['method']).to eq 'delete'
