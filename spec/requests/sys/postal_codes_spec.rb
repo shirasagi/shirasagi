@@ -14,12 +14,8 @@ describe Sys::PostalCodesController, type: :request, dbscope: :example do
     }
   end
   before do
-    Sys::PostalCodesController.allow_forgery_protection = false
     post login_path, params: correct_login_params
     SS.config.replace_value_at(:env, :json_datetime_format, "%Y/%m/%d %H:%M:%S")
-  end
-  after do
-    Sys::PostalCodesController.allow_forgery_protection = true
   end
   describe 'GET #index' do
     context 'When postal_code is nothing' do
