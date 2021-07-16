@@ -170,7 +170,7 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
       item.html = [
         "<!-- write-kana --><div>上部</div><!-- end-write-kana -->",
         item.html,
-        "<div>下部</div>"
+        "<!-- write-kana --><div>下部</div><!-- end-write-kana -->"
       ].join
       item.save!
 
@@ -183,7 +183,7 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
       expect(page).to have_no_css('ruby', text: '必要(ひつよう)')
       expect(page).to have_no_css('ruby', text: '場合(ばあい)')
       expect(page).to have_css('ruby', text: '上部(じょうぶ)')
-      expect(page).to have_no_css('ruby', text: '下部(かぶ)')
+      expect(page).to have_css('ruby', text: '下部(かぶ)')
     end
   end
 
@@ -198,7 +198,7 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
       item.html = [
           "<!-- skip-kana --><div>上部</div><!-- end-skip-kana -->",
           item.html,
-          "<div>下部</div>"
+          "<!-- skip-kana --><div>下部</div><!-- end-skip-kana -->"
       ].join
       item.save!
 
@@ -211,7 +211,7 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
       expect(page).to have_css('ruby', text: '必要(ひつよう)')
       expect(page).to have_css('ruby', text: '場合(ばあい)')
       expect(page).to have_no_css('ruby', text: '上部(じょうぶ)')
-      expect(page).to have_css('ruby', text: '下部(かぶ)')
+      expect(page).to have_no_css('ruby', text: '下部(かぶ)')
     end
   end
 
