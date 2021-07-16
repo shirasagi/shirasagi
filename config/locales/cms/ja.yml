@@ -951,6 +951,9 @@ ja:
         st_form_ids: 定型フォーム設定
       cms/addon/form/page:
         form_id: 定型フォーム
+        column_values: 定型フォーム値
+        column_values_updated: 定型フォーム更新日
+        form_contains_urls: 定型フォームURL一覧
       cms/init_column:
         name: 名前
         order: 並び順

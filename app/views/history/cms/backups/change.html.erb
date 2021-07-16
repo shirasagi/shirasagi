@@ -8,6 +8,7 @@
     <% diff = @item.data.merge(@data).sort %>
     <% diff.each do |k, v| %>
     <% value = @item.data[k] %>
+    <% next if %w(workflow_current_circulation_level workflow_circulations workflow_circulation_attachment_uses).include?(k) %>
     <% next if @data[k] == value %>
     <% value ||= '' if @data[k].is_a?(String) %>
     <tr>

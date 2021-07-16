@@ -113,13 +113,17 @@ ja:
     attributes:
       workflow/addon/approver:
         workflow_user_id: 申請者
+        workflow_member_id: 申請メンバー
         workflow_state: 承認状態
         workflow_comment: 申請コメント
         workflow_pull_up: 引き上げ承認
         workflow_on_remand: 差し戻し時
         workflow_approvers: 承認者
         workflow_required_counts: 必要承認数
+        workflow_approver_attachment_uses: 承認者によるファイル追加
+        workflow_current_circulation_level: 現在の回覧ステップ
         workflow_circulations: 回覧者
+        workflow_circulation_attachment_uses: 回覧者によるファイル追加
         approved: 承認日時
         comment: 差し戻しコメント
         approver_comment: 承認者コメント
