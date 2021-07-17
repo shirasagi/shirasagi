@@ -18,6 +18,6 @@
     <% if todos.blank? %>
       <li class="list-item"><%= t("gws/discussion.notice.no_todos") %></li>
     <% end %>
-    <li class="list-item"><%= link_to t("gws/discussion.links.todo.index"), gws_discussion_forum_todos_path %></li>
   </ul>
+  <div class="list-foot"><%= link_to t("gws/discussion.links.todo.index"), gws_discussion_forum_todos_path %></div>
 <% end %>

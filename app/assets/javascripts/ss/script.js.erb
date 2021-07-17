@@ -130,7 +130,7 @@ $(function () {
       var $this = $(this);
       var href = $this.attr('href');
       if (path.match(new RegExp('^' + href.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1') + '(\/|$)')) || crumbs.indexOf(href) !== -1) {
-        if (hrefLength < href.length) {
+        if (path === href + '/' || hrefLength < href.length) {
           matchedElement = this;
           hrefLength = href.length;
         }

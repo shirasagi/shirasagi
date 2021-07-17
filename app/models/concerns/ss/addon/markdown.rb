@@ -18,7 +18,8 @@ module SS::Addon
       if text_type == 'markdown'
         SS::Addon::Markdown.text_to_html(text)
       else
-        ERB::Util.h(text).gsub(/(\r\n?)|(\n)/, "<br />").html_safe
+        html = ERB::Util.h(text).gsub(/(\r\n?)|(\n)/, "<br />")
+        ApplicationController.helpers.auto_link(html).html_safe
       end
     end
 
