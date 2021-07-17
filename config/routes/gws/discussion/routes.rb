@@ -36,9 +36,10 @@ Rails.application.routes.draw do
   end
 
   gws 'discussion' do
-    get '/' => redirect { |p, req| "#{req.path}/-/forums" }, as: :main
+    get '/' => redirect { |p, req| "#{req.path}/-/portal" }, as: :main
 
     scope path: ':mode' do
+      get 'portal' => 'portal#index', as: :portal
       resources :forums, concerns: [:soft_deletion, :copy], except: [:destroy] do
         resources :topics, concerns: [:deletion_topics, :copy] do
           get :all, on: :collection

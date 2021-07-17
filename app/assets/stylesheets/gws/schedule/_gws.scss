@@ -813,7 +813,18 @@ dl.gws-schedule-repeat {
 
 .gws-schedule-todo-achievement-bar {
   display: inline-block;
-  width: 6em;
+  margin-top: 2px;
+  width: 5em;
+  line-height: 13px;
+  .usage {
+    height: 15px;
+  }
+}
+.list-items .list-item .meta span.gws-schedule-todo-achievement-bar {
+  float: left;
+  .label {
+    &:before, &:after { content: none; }
+  }
 }
 
 .gws-schedule-todo-index {

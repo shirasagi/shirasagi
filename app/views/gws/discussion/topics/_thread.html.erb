@@ -4,6 +4,24 @@
   </div>
   <div class="addon-body">
     <header>
+      <%
+        menu = []
+        if topic.allowed?(:edit, @cur_user, site: @cur_site)
+          menu << link_to(t("gws/discussion.links.topic.edit"), edit_gws_discussion_forum_topic_path(forum_id: topic.forum_id, id: topic.id))
+        end
+        if topic.allowed?(:edit, @cur_user, site: @cur_site)
+          menu << link_to(t("gws/discussion.links.topic.copy"), copy_gws_discussion_forum_topic_path(forum_id: topic.forum_id, id: topic.id))
+        end
+        if topic.allowed?(:delete, @cur_user, site: @cur_site)
+          menu << link_to(t("gws/discussion.links.topic.delete"), delete_gws_discussion_forum_topic_path(forum_id: topic.forum_id, id: topic.id))
+        end
+      %>
+      <div class="dropdown gws-board-item-menu">
+        <div class="dropdown-toggle">
+          <i class="material-icons md-20">more_horiz</i>
+        </div>
+        <div class="dropdown-menu dropdown-menu--white"><%= safe_join(menu) %></div>
+      </div>
       <div class="contributor">
         <span class="no"><%= "1." %></span>
         <%= gws_public_user_long_name(topic.contributor_name) %>
@@ -13,7 +31,11 @@
       </div>
     </header>
     <div class="markdown-body">
-      <%= topic.html %>
+      <% if limit > 0 %>
+        <%= br topic.text.truncate(120) %>
+      <% else %>
+        <%= topic.html %>
+      <% end %>
     </div>
     <% if topic.files.present? %>
     <div class="files">
@@ -40,8 +62,21 @@
     <div style="background: #f2f2f2; padding-bottom: 12px; border-left: hidden; border-right: hidden;"></div>
   <% end %>
   <% comments.each_with_index do |comment, i| %>
-    <div class="addon-body" id="comment-<%= comment.id %>">
+    <div class="addon-body discussion-comment" id="comment-<%= comment.id %>">
       <header>
+        <%
+          menu = []
+          menu << link_to(t("ss.links.edit"), edit_gws_discussion_forum_topic_comment_path(forum_id: @forum, topic_id: topic, id: comment))
+          menu << link_to(t("ss.links.delete"), delete_gws_discussion_forum_topic_comment_path(forum_id: @forum, topic_id: topic, id: comment))
+        %>
+        <% if !topic.permanently? && menu.present? %>
+          <div class="dropdown gws-board-item-menu">
+            <div class="dropdown-toggle">
+              <i class="material-icons md-20">more_horiz</i>
+            </div>
+            <div class="dropdown-menu dropdown-menu--white"><%= safe_join(menu) %></div>
+          </div>
+        <% end %>
         <div class="contributor">
           <span class="no"><%= "#{offset + i + 2}." %></span>
           <%= gws_public_user_long_name(comment.contributor_name) %>
@@ -64,16 +99,6 @@
         <% end %>
       </div>
       <% end %>
-      <div class="menu">
-        <% if !topic.permanently? %>
-          <% if comment.allowed?(:edit, @cur_user, site: @cur_site) %>
-            <%= link_to t("ss.links.edit"), edit_gws_discussion_forum_topic_comment_path(forum_id: @forum.id, topic_id: topic.id, id: comment.id), class: 'btn primary' %>
-          <% end %>
-          <% if comment.allowed?(:delete, @cur_user, site: @cur_site) %>
-            <%= link_to t("ss.links.delete"), delete_gws_discussion_forum_topic_comment_path(forum_id: @forum.id, topic_id: topic.id, id: comment.id), class: 'btn primary' %>
-          <% end %>
-        <% end %>
-      </div>
     </div>
   <% end %>
 
@@ -86,11 +111,11 @@
   %>
   <% if (children_size + 1) >= @cur_site.discussion_comment_limit %>
     <div class="addon-body reply-menu">
-        <%= t("gws/discussion.notice.comment_limit", limit: @cur_site.discussion_comment_limit) %>
-        <span>
-          <%= link_to t("gws/discussion.links.topic.show"), gws_discussion_forum_topic_comments_path(forum_id: @forum.id, topic_id: topic.id) %>
-        </span>
-      </div>
+      <%= t("gws/discussion.notice.comment_limit", limit: @cur_site.discussion_comment_limit) %>
+      <span>
+        <%= link_to t("gws/discussion.links.topic.show"), gws_discussion_forum_topic_comments_path(forum_id: @forum.id, topic_id: topic.id) %>
+      </span>
+    </div>
   <% else %>
     <% if reply_menu %>
       <div class="addon-body reply-menu">
@@ -116,7 +141,7 @@
             <%= f.select :text_type, topic.text_type_options, {}, { value: 'plain', class: "ss-addon-markdown-type" } %>
           </div>
           <div class="ss-addon-markdown-content">
-            <%= f.text_area :text, value: "", class: "markdown", style: "height: 240px;", required: true %>
+            <%= f.text_area :text, value: "", class: "markdown", style: "height: 160px;", required: true %>
           </div>
         </div>
 
@@ -157,9 +182,9 @@
         <%= hidden_field_tag "item[user_ids][]", @cur_user.id %>
 
         <!-- menu -->
-        <div class="menu">
-          <%= f.submit t("ss.links.reply"), class: 'btn primary' %>
-        </div>
+        <footer class="send">
+          <%= f.submit t("gws/discussion.links.topic.reply"), class: 'btn-primary' %>
+        </footer>
       </div>
     <% end %>
   <% end %>

@@ -18,6 +18,33 @@
   font-weight: bold;
   &:after { content: "New!"; }
 }
+.gws-board-item-menu {
+  float: right;
+  top: -3px;
+  margin-left: 8px;
+  .dropdown-toggle {
+    color: #999;
+  }
+  .dropdown-toggle:hover {
+    color: #000;
+  }
+  .dropdown-menu {
+    position: absolute;
+    right: 0;
+    z-index: 100;
+    padding: 5px 0;
+    border: $border-gray4;
+    background: $white;
+    @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
+    a {
+      display: block;
+      padding: 5px 15px;
+      line-height: 1.8;
+      white-space: nowrap;
+      &:hover { background: $gray1; }
+    }
+  }
+}
 
 // show
 .gws-board {

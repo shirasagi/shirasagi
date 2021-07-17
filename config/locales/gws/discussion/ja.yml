@@ -4,13 +4,17 @@ ja:
     topics: スレッド
     members: 参加者
     navi:
+      portal:
+        comment: 新着コメント (スレッド別)
+        topic: 新着スレッド (作成日順)
+        forum: 新着会議室 (作成日順)
       forum:
         readable: 会議室一覧
       topic:
         portal: 会議室ポータル
         readable: スレッド一覧
       todo:
-        readable: ToDo一覧
+        readable: ToDo
     links:
       forum:
         back_to_index: 会議室一覧へ戻る
@@ -21,8 +25,8 @@ ja:
         copy: スレッドを複製する
         delete: スレッドを削除する
         index: スレッド一覧を見る
-        show: 全ての投稿を見る
-        reply: コメントを投稿する
+        show: 全てのコメントを見る
+        reply: 投稿する
       todo:
         index: ToDo一覧を見る
       member:

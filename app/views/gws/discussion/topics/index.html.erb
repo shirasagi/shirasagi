@@ -12,8 +12,6 @@
   highlighter.render();
 <% end %>
 
-<h2 class="gws-discussion-topic"><%= @forum.name %></h2>
-
 <p class="gws-discussion-unseen" style="display: none;">
   <%= link_to t("gws/discussion.notice.reload"), { action: :index } %>
 </p>
@@ -42,11 +40,11 @@
 
 <div class="gws-discussion-navi">
   <% if @cur_user.gws_role_permit_any?(@cur_site, :use_private_gws_schedule_todos) %>
-    <%= render "todo", head: t("gws/schedule.tabs.my_todo"), css_class: %w(gws-discussion-navi-list my-todo), todos: @todos %>
-    <%= render "todo", head: t("gws/schedule.tabs.manageable_todo"), css_class: %w(gws-discussion-navi-list manageable-todo), todos: @manageable_todos %>
+    <%= render "todo", head: t("gws/schedule.tabs.my_todo"), css_class: %w(gws-discussion-navi-item my-todo), todos: @todos %>
+    <%= render "todo", head: t("gws/schedule.tabs.manageable_todo"), css_class: %w(gws-discussion-navi-item manageable-todo), todos: @manageable_todos %>
   <% end %>
 
-  <%= render "ss/crud/addon", addon: { head: t("gws/discussion.topics"), class: "gws-discussion-navi-list", toggle: true } do %>
+  <%= render "ss/crud/addon", addon: { head: t("gws/discussion.topics"), class: "gws-discussion-navi-item", toggle: true } do %>
     <ul class="list-items">
       <% @recent_items.each do |item| %>
         <li class="list-item">
@@ -64,8 +62,8 @@
       <% if @recent_items.blank? %>
         <li class="list-item"><%= t("gws/discussion.notice.no_recents") %></li>
       <% end %>
-      <li class="list-item"><%= link_to t("gws/discussion.links.topic.index"), { action: :all } %></li>
     </ul>
+    <div class="list-foot"><%= link_to t("gws/discussion.links.topic.index"), { action: :all } %></div>
   <% end %>
 
   <%= render "ss/crud/addon", addon: { head: t("gws/discussion.members"), toggle: true } do %>
