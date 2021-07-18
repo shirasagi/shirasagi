@@ -178,7 +178,7 @@ module Workflow::Approver
 
     if workflow_completed_at?(level)
       copy.each do |approver|
-        if approver[:level] == level && approver[:user_id] != user_id && approver[:state] == WORKFLOW_STATE_REQUEST
+        if approver[:level] == level && approver[:state] == WORKFLOW_STATE_REQUEST
           approver[:state] = WORKFLOW_STATE_OTHER_APPROVED
           approver[:comment] = ''
         end
