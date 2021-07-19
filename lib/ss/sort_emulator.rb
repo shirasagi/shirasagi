@@ -1,21 +1,41 @@
 class SS::SortEmulator
-  attr_reader :criteria
+  extend Forwardable
+  include Enumerable
 
-  def initialize(criteria)
+  attr_reader :criteria, :sort_hash
+
+  def initialize(criteria, sort_hash)
     @criteria = criteria
+    @sort_hash = sort_hash
   end
 
-  def order_by_array(sort_hash)
-    begin
-      @criteria.order_by(sort_hash).to_a
-    rescue Mongo::Error::OperationFailure => e
-      Rails.logger.error(e.to_s)
-      Rails.logger.error("fall back to ruby sort : #{@criteria.marshal_dump}")
-      @criteria.reorder(id: 1).to_a.sort { |lhs, rhs| page_sort_proc(sort_hash, lhs, rhs) }
+  def_delegators :@criteria, :count, :exists?
+
+  def length
+    @criteria.count
+  end
+
+  def empty?
+    !@criteria.exists?
+  end
+
+  def each(&block)
+    if sort_hash.keys.length == 1 && !sort_hash.keys.first.include?(".")
+      generic_ruby_sort(&block)
+    else
+      mongo_sort(&block)
     end
   end
 
   private
+
+  def generic_ruby_sort(&block)
+    @criteria.reorder(id: 1).to_a.sort { |lhs, rhs| page_sort_proc(sort_hash, lhs, rhs) }.each(&block)
+  end
+
+  def mongo_sort(&block)
+    @criteria.order_by(sort_hash).to_a.each(&block)
+  end
 
   def normalize_sort_direction(direction)
     case direction
@@ -47,10 +67,10 @@ class SS::SortEmulator
   def page_sort_proc(sort_hash, lhs, rhs)
     cmp = 0
 
-    sort_hash.each_with_index do |sort, index|
-      _field, direction = *sort
-      lhs_val = lhs.send(_field)
-      rhs_val = rhs.send(_field)
+    sort_hash.each_with_index do |sort, _index|
+      field, direction = *sort
+      lhs_val = lhs.send(field)
+      rhs_val = rhs.send(field)
 
       if normalize_sort_direction(direction) > 0
         cmp = compare_value_asc(lhs_val, rhs_val)
