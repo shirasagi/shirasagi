@@ -20,10 +20,10 @@ class SS::SortEmulator
   end
 
   def each(&block)
-    if sort_hash.keys.length == 1 && !sort_hash.keys.first.include?(".")
-      generic_ruby_sort(&block)
-    else
+    if sort_hash.keys.length != 1 || sort_hash.keys.first.include?(".") || sort_hash.keys.first.include?("$")
       mongo_sort(&block)
+    else
+      generic_ruby_sort(&block)
     end
   end
 
