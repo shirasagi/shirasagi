@@ -14,7 +14,7 @@ class SS::FileSizeValidator < ActiveModel::Validator
   def validate_limit(record, file)
     filename = file.original_filename
     ext = filename.sub(/.*\./, "").downcase
-    limit_size = SS::MaxFileSize.find_size(ext)
+    limit_size = SS::MaxFileSize.in(action: ['validation', nil]).find_size(ext)
 
     return true if file.size <= limit_size
 

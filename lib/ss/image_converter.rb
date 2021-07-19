@@ -96,6 +96,7 @@ class SS::ImageConverter
     end
 
     resize_to_fit!(*options[:resizing]) if options[:resizing].present?
+    quality!(options[:quality]) if options[:quality].present?
 
     self
   end
@@ -115,6 +116,11 @@ class SS::ImageConverter
     height = args.shift || DEFAULT_THUMB_HEIGHT
 
     @commands << [ :_resize, width, height ]
+    self
+  end
+
+  def quality!(quality)
+    @commands << [ :quality, quality ]
     self
   end
 

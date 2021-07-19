@@ -18,19 +18,34 @@ module SS::Model::MaxFileSize
     field :name, type: String
     field :extensions, type: SS::Extensions::Words
     field :size, type: Integer
+    field :action, type: String
+    field :max_width, type: Integer
+    field :max_height, type: Integer
+    field :quality, type: Integer, default: 85
     field :order, type: Integer
     field :state, type: String
 
-    permit_params :name, :extensions, :order, :state, :size
+    permit_params :name, :extensions, :order, :state, :size, :action, :max_width, :max_height, :quality
     permit_params :in_size_mb
 
     before_validation :set_size, if: ->{ in_size_mb }
+    validates :action, inclusion: { in: %w(validation resize), allow_blank: true }
+    validates :max_width, presence: true, if: -> { action == 'resize' }
+    validates :max_height, presence: true, if: -> { action == 'resize' }
+    validates :quality, presence: true, if: -> { action == 'resize' }
+    validates :quality, numericality: {
+      only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 100, allow_blank: true
+    }
     before_save :normalize_extensions
   end
 
   module ClassMethods
+    def find_by_ext(ext)
+      where(state: STATE_ENABLED, :extensions.in => [ext.downcase, '*']).order_by(order: 1, name: 1, _id: -1).first
+    end
+
     def find_size(ext)
-      item = where(state: STATE_ENABLED, :extensions.in => [ext.downcase, '*']).order_by(order: 1, name: 1, _id: -1).first
+      item = find_by_ext(ext)
       return item.size if item.present?
 
       find_default_limit_size(ext)
@@ -41,6 +56,11 @@ module SS::Model::MaxFileSize
       limit_size ||= SS.config.env.max_filesize
       limit_size ||= MAX_FILE_SIZE
       limit_size
+    end
+
+    def find_quality(ext)
+      item = find_by_ext(ext)
+      item.quality if item.present?
     end
 
     def search(params)
@@ -59,6 +79,10 @@ module SS::Model::MaxFileSize
 
   def state_options
     STATES.map { |v| [ I18n.t("ss.options.state.#{v}"), v ] }.to_a
+  end
+
+  def action_options
+    %w(validation resize).collect { |v| [I18n.t("ss.options.action.#{v}"), v] }
   end
 
   private

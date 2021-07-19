@@ -5,6 +5,16 @@
       @item.in_size_mb = @item.size / (1_024 * 1_024)
    end
  %>
+<%= jquery do %>
+  $('#item_action').on('change', function() {
+    if ($(this).val() == 'resize') {
+      $('.resize').show();
+    } else {
+      $('.resize').hide();
+    }
+  });
+  $('#item_action').trigger("change");
+<% end %>
 <dl class="see">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
@@ -14,6 +24,18 @@
 
   <dt><%= @model.t :size %><%= @model.tt :size %></dt>
   <dd><%= f.number_field :in_size_mb %> <%= t "ss.units.mega_byte" %></dd>
+
+  <dt><%= @model.t :action %><%= @model.tt :action %></dt>
+  <dd><%= f.select :action, @item.action_options, include_blank: true %></dd>
+
+  <dt class="resize"><%= @model.t :max_width %><%= @model.tt :max_width %></dt>
+  <dd class="resize"><%= f.number_field :max_width %></dd>
+
+  <dt class="resize"><%= @model.t :max_height %><%= @model.tt :max_height %></dt>
+  <dd class="resize"><%= f.number_field :max_height %></dd>
+
+  <dt class="resize"><%= @model.t :quality %><%= @model.tt :quality %></dt>
+  <dd class="resize"><%= f.number_field :quality, in: 0..100 %></dd>
 
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>

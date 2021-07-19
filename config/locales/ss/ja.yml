@@ -406,6 +406,9 @@ ja:
       sanitizer_state:
         wait: 無害化中
         complete: 無害化済
+      action:
+        validation: 制限
+        resize: リサイズ
 
     tasks:
       started: 開始しました。
@@ -693,6 +696,10 @@ ja:
         name: 名前
         extensions: 拡張子
         size: 制限サイズ
+        action: 動作
+        max_width: 横幅
+        max_height: 縦幅
+        quality: 品質
         order: 並び順
         state: 状態
       ss/model/postal_code:
@@ -1114,6 +1121,19 @@ ja:
         - 拡張子の大文字小文字は区別されずどちらも制限対象となります
       size:
         - 最大ファイルサイズをMB単位で設定可能です
+      action:
+        - 最大ファイルサイズを超過した場合の動作を設定します
+        -
+        - "制限: 最大ファイルサイズを超過するファイルを制限します"
+        - "リサイズ: 画像ファイルのサイズ、横幅、縦幅が超過する場合、リサイズを実行します"
+      max_width:
+        - 画像ファイルの横幅を設定可能です
+      max_height:
+        - 画像ファイルの縦幅を設定可能です
+      quality:
+        - 画像ファイルの品質を0から100の間で設定可能です
+        - 最大ファイルサイズを超過した場合、品質に基づいて画像を圧縮します
+        - 品質が高い程劣化が少ないです
       order:
         - 並び順を設定します
       state:

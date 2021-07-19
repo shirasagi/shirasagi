@@ -243,7 +243,7 @@ module Gws::Model::File
       return if sanitizer_save_file
 
       SS::ImageConverter.attach(in_file, ext: ::File.extname(in_file.original_filename)) do |converter|
-        converter.apply_defaults!(resizing: resizing)
+        converter.apply_defaults!(resizing: resizing_with_max_file_size, quality: quality)
         Fs.upload(path, converter.to_io)
         self.geo_location = converter.geo_location
       end
@@ -263,5 +263,28 @@ module Gws::Model::File
     return unless @db_changes["filename"][0]
 
     remove_public_file if site
+  end
+
+  def resizing_with_max_file_size
+    max_file_sizes = [SS::MaxFileSize.where(action: 'resize').find_by_ext(extname)]
+    size = resizing || []
+    max_file_sizes.reject(&:blank?).each do |max_file_size|
+      if size.present?
+        max_file_size.max_width = size[0] if max_file_size.max_width > size[0]
+        max_file_size.max_height = size[1] if max_file_size.max_height > size[1]
+      end
+      size = [max_file_size.max_width, max_file_size.max_height]
+    end
+    size
+  end
+
+  def quality
+    quality = []
+    max_file_sizes = [SS::MaxFileSize.where(action: 'resize').find_by_ext(extname)]
+    max_file_sizes.reject(&:blank?).each do |max_file_size|
+      next if size <= max_file_size.try(:size)
+      quality << max_file_size.try(:quality)
+    end
+    quality.reject(&:blank?).min
   end
 end
