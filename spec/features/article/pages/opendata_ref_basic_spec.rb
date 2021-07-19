@@ -40,7 +40,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
     end
 
-    it do
+    it 'public' do
       visit article_pages_path(site, article_node)
       click_on article_page.name
 
@@ -113,6 +113,242 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       article_page.reload
       expect(article_page.state).to eq 'closed'
       expect(article_page.opendata_dataset_state).to eq 'public'
+
+      expect(Opendata::Dataset.site(od_site).count).to eq 1
+      Opendata::Dataset.site(od_site).first.tap do |dataset|
+        expect(dataset.name).to eq article_page.name
+        expect(dataset.parent.id).to eq dataset_node.id
+        expect(dataset.state).to eq 'closed'
+        expect(dataset.text).to include('ああああ')
+        expect(dataset.text).to include('いいい')
+        expect(dataset.text).to include('添付ファイル (PDF: 36kB)')
+        expect(dataset.text).not_to include('<p>')
+        expect(dataset.text).not_to include('<a>')
+        expect(dataset.text).not_to include('&nbsp;')
+        expect(dataset.assoc_site_id).to eq article_page.site.id
+        expect(dataset.assoc_node_id).to eq article_page.parent.id
+        expect(dataset.assoc_page_id).to eq article_page.id
+        expect(dataset.resources.count).to eq 0
+      end
+    end
+
+    it 'closed' do
+      visit article_pages_path(site, article_node)
+      click_on article_page.name
+
+      #
+      # activate opendata integration
+      #
+      click_on I18n.t('ss.links.edit')
+
+      ensure_addon_opened('#addon-cms-agents-addons-opendata_ref-dataset')
+      within '#addon-cms-agents-addons-opendata_ref-dataset' do
+        # wait for appearing select
+        expect(page).to have_css('a.ajax-box', text: I18n.t('cms.apis.opendata_ref.datasets.index'))
+        # choose 'item_opendata_dataset_state_closed'
+        find('input#item_opendata_dataset_state_closed').click
+      end
+      within '#addon-cms-agents-addons-file' do
+        select Opendata::License.first.name, from: "item_opendata_resources_#{article_page.file_ids.first}_license_ids"
+        select I18n.t("cms.options.opendata_resource.same"), from: "item_opendata_resources_#{article_page.file_ids.first}_state"
+      end
+      click_on I18n.t('ss.buttons.publish_save')
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      article_page.reload
+      expect(article_page.state).to eq 'public'
+      expect(article_page.opendata_dataset_state).to eq 'closed'
+
+      expect(Opendata::Dataset.site(od_site).count).to eq 1
+      Opendata::Dataset.site(od_site).first.tap do |dataset|
+        expect(dataset.name).to eq article_page.name
+        expect(dataset.parent.id).to eq dataset_node.id
+        expect(dataset.state).to eq 'closed'
+        expect(dataset.text).to include('ああああ')
+        expect(dataset.text).to include('いいい')
+        expect(dataset.text).to include('添付ファイル (PDF: 36kB)')
+        expect(dataset.text).not_to include('<p>')
+        expect(dataset.text).not_to include('<a>')
+        expect(dataset.text).not_to include('&nbsp;')
+        expect(dataset.assoc_site_id).to eq article_page.site.id
+        expect(dataset.assoc_node_id).to eq article_page.parent.id
+        expect(dataset.assoc_page_id).to eq article_page.id
+        expect(dataset.assoc_method).to eq 'auto'
+        expect(dataset.resources.count).to eq 1
+        dataset.resources.first.tap do |resource|
+          file = article_page.files.first
+          expect(resource.name).to eq file.name
+          expect(resource.content_type).to eq file.content_type
+          expect(resource.file_id).not_to eq file.id
+          expect(resource.license_id).not_to be_nil
+          expect(resource.assoc_site_id).to eq article_page.site.id
+          expect(resource.assoc_node_id).to eq article_page.parent.id
+          expect(resource.assoc_page_id).to eq article_page.id
+          expect(resource.assoc_filename).to eq file.filename
+          expect(resource.assoc_method).to eq 'auto'
+        end
+      end
+
+      #
+      # close an article page
+      #
+      visit article_pages_path(site, article_node)
+      click_on article_page.name
+      click_on I18n.t('ss.links.edit')
+
+      click_on I18n.t('ss.buttons.draft_save')
+      expect(page).to have_css('#alertExplanation h2', text: I18n.t('cms.alert'), wait: 60)
+      click_on I18n.t('ss.buttons.ignore_alert')
+      wait_for_notice I18n.t('ss.notice.saved')
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+      article_page.reload
+      expect(article_page.state).to eq 'closed'
+      expect(article_page.opendata_dataset_state).to eq 'closed'
+
+      expect(Opendata::Dataset.site(od_site).count).to eq 1
+      Opendata::Dataset.site(od_site).first.tap do |dataset|
+        expect(dataset.name).to eq article_page.name
+        expect(dataset.parent.id).to eq dataset_node.id
+        expect(dataset.state).to eq 'closed'
+        expect(dataset.text).to include('ああああ')
+        expect(dataset.text).to include('いいい')
+        expect(dataset.text).to include('添付ファイル (PDF: 36kB)')
+        expect(dataset.text).not_to include('<p>')
+        expect(dataset.text).not_to include('<a>')
+        expect(dataset.text).not_to include('&nbsp;')
+        expect(dataset.assoc_site_id).to eq article_page.site.id
+        expect(dataset.assoc_node_id).to eq article_page.parent.id
+        expect(dataset.assoc_page_id).to eq article_page.id
+        expect(dataset.resources.count).to eq 0
+      end
+    end
+
+    it 'existance' do
+      visit article_pages_path(site, article_node)
+      click_on article_page.name
+
+      #
+      # activate opendata integration
+      #
+      click_on I18n.t('ss.links.edit')
+
+      ensure_addon_opened('#addon-cms-agents-addons-opendata_ref-dataset')
+      within '#addon-cms-agents-addons-opendata_ref-dataset' do
+        # wait for appearing select
+        expect(page).to have_css('a.ajax-box', text: I18n.t('cms.apis.opendata_ref.datasets.index'))
+        # choose 'item_opendata_dataset_state_public'
+        find('input#item_opendata_dataset_state_public').click
+      end
+      within '#addon-cms-agents-addons-file' do
+        select Opendata::License.first.name, from: "item_opendata_resources_#{article_page.file_ids.first}_license_ids"
+        select I18n.t("cms.options.opendata_resource.same"), from: "item_opendata_resources_#{article_page.file_ids.first}_state"
+      end
+      click_on I18n.t('ss.buttons.publish_save')
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      article_page.reload
+      expect(article_page.state).to eq 'public'
+      expect(article_page.opendata_dataset_state).to eq 'public'
+
+      expect(Opendata::Dataset.site(od_site).count).to eq 1
+      Opendata::Dataset.site(od_site).first.tap do |dataset|
+        expect(dataset.name).to eq article_page.name
+        expect(dataset.parent.id).to eq dataset_node.id
+        expect(dataset.state).to eq 'public'
+        expect(dataset.text).to include('ああああ')
+        expect(dataset.text).to include('いいい')
+        expect(dataset.text).to include('添付ファイル (PDF: 36kB)')
+        expect(dataset.text).not_to include('<p>')
+        expect(dataset.text).not_to include('<a>')
+        expect(dataset.text).not_to include('&nbsp;')
+        expect(dataset.assoc_site_id).to eq article_page.site.id
+        expect(dataset.assoc_node_id).to eq article_page.parent.id
+        expect(dataset.assoc_page_id).to eq article_page.id
+        expect(dataset.assoc_method).to eq 'auto'
+        expect(dataset.resources.count).to eq 1
+        dataset.resources.first.tap do |resource|
+          file = article_page.files.first
+          expect(resource.name).to eq file.name
+          expect(resource.content_type).to eq file.content_type
+          expect(resource.file_id).not_to eq file.id
+          expect(resource.license_id).not_to be_nil
+          expect(resource.assoc_site_id).to eq article_page.site.id
+          expect(resource.assoc_node_id).to eq article_page.parent.id
+          expect(resource.assoc_page_id).to eq article_page.id
+          expect(resource.assoc_filename).to eq file.filename
+          expect(resource.assoc_method).to eq 'auto'
+        end
+      end
+
+      click_on I18n.t('ss.links.edit')
+
+      ensure_addon_opened('#addon-cms-agents-addons-opendata_ref-dataset')
+      within '#addon-cms-agents-addons-opendata_ref-dataset' do
+        # wait for appearing select
+        expect(page).to have_css('a.ajax-box', text: I18n.t('cms.apis.opendata_ref.datasets.index'))
+        # choose 'item_opendata_dataset_state_public'
+        find('input#item_opendata_dataset_state_existance').click
+        wait_cbox_open do
+          find('a', text: I18n.t('cms.apis.opendata_ref.datasets.index')).click
+        end
+      end
+      wait_cbox_close do
+        click_on Opendata::Dataset.site(od_site).first.name
+      end
+      click_on I18n.t('ss.buttons.publish_save')
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      article_page.reload
+      expect(article_page.state).to eq 'public'
+      expect(article_page.opendata_dataset_state).to eq 'existance'
+
+      expect(Opendata::Dataset.site(od_site).count).to eq 1
+      Opendata::Dataset.site(od_site).first.tap do |dataset|
+        expect(dataset.name).to eq article_page.name
+        expect(dataset.parent.id).to eq dataset_node.id
+        expect(dataset.state).to eq 'public'
+        expect(dataset.text).to include('ああああ')
+        expect(dataset.text).to include('いいい')
+        expect(dataset.text).to include('添付ファイル (PDF: 36kB)')
+        expect(dataset.text).not_to include('<p>')
+        expect(dataset.text).not_to include('<a>')
+        expect(dataset.text).not_to include('&nbsp;')
+        expect(dataset.assoc_site_id).to eq article_page.site.id
+        expect(dataset.assoc_node_id).to eq article_page.parent.id
+        expect(dataset.assoc_page_id).to eq article_page.id
+        expect(dataset.assoc_method).to eq 'auto'
+        expect(dataset.resources.count).to eq 1
+        dataset.resources.first.tap do |resource|
+          file = article_page.files.first
+          expect(resource.name).to eq file.name
+          expect(resource.content_type).to eq file.content_type
+          expect(resource.file_id).not_to eq file.id
+          expect(resource.license_id).not_to be_nil
+          expect(resource.assoc_site_id).to eq article_page.site.id
+          expect(resource.assoc_node_id).to eq article_page.parent.id
+          expect(resource.assoc_page_id).to eq article_page.id
+          expect(resource.assoc_filename).to eq file.filename
+          expect(resource.assoc_method).to eq 'auto'
+        end
+      end
+
+      #
+      # close an article page
+      #
+      visit article_pages_path(site, article_node)
+      click_on article_page.name
+      click_on I18n.t('ss.links.edit')
+
+      click_on I18n.t('ss.buttons.draft_save')
+      expect(page).to have_css('#alertExplanation h2', text: I18n.t('cms.alert'), wait: 60)
+      click_on I18n.t('ss.buttons.ignore_alert')
+      wait_for_notice I18n.t('ss.notice.saved')
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+      article_page.reload
+      expect(article_page.state).to eq 'closed'
+      expect(article_page.opendata_dataset_state).to eq 'existance'
 
       expect(Opendata::Dataset.site(od_site).count).to eq 1
       Opendata::Dataset.site(od_site).first.tap do |dataset|
