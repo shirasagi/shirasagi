@@ -14,7 +14,7 @@ class Cms::FileSizeValidator < ActiveModel::Validator
   def validate_limit(record, file)
     filename = file.original_filename
     ext = filename.sub(/.*\./, "").downcase
-    limit_size = Cms::MaxFileSize.site(record.site).node(record.cur_node).in(action: ['validation', nil]).find_size(ext)
+    limit_size = Cms::MaxFileSize.site(record.site).node(record.cur_node).find_size(ext)
 
     return true if file.size <= limit_size
 

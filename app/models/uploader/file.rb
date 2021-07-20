@@ -16,9 +16,9 @@ class Uploader::File
     return false unless valid?
     @binary = self.class.remove_exif(binary) if binary && exif_image?
     if binary && image?
-      max_file_size = SS::MaxFileSize.where(action: 'resize').find_by_ext(ext.sub('.', ''))
+      max_file_size = SS::ImageResize.find_by_ext(ext.sub('.', ''))
       if max_file_size.present?
-        if binary.size >= SS::MaxFileSize.where(action: 'resize').find_size(ext.sub('.', ''))
+        if binary.size >= SS::ImageResize.find_size(ext.sub('.', ''))
           quality = max_file_size.try(:quality)
         end
         @binary = SS::ImageConverter.read(binary) do |converter|
@@ -218,7 +218,7 @@ class Uploader::File
 
   def validate_size
     return if directory?
-    limit_size = SS::MaxFileSize.in(action: ['validation', nil]).find_size(ext.sub('.', ''))
+    limit_size = SS::MaxFileSize.find_size(ext.sub('.', ''))
     return if binary.size <= limit_size
     self.errors.add :base, :too_large_file, filename: filename,
       size: ActiveSupport::NumberHelper.number_to_human_size(binary.size),

@@ -15,6 +15,15 @@
   <dt><%= @model.t :size %><%= @model.tt :size %></dt>
   <dd><%= f.number_field :in_size_mb %> <%= t "ss.units.mega_byte" %></dd>
 
+  <dt><%= @model.t :max_width %><%= @model.tt :max_width %></dt>
+  <dd><%= f.number_field :max_width %></dd>
+
+  <dt><%= @model.t :max_height %><%= @model.tt :max_height %></dt>
+  <dd><%= f.number_field :max_height %></dd>
+
+  <dt><%= @model.t :quality %><%= @model.tt :quality %></dt>
+  <dd><%= f.number_field :quality, in: 0..100 %></dd>
+
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
 
