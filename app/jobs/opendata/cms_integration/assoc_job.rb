@@ -160,7 +160,7 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
     dataset.assoc_site_ids = (dataset.resources.distinct(:assoc_site_id) << @cms_site.id).compact.uniq.sort
     dataset.assoc_node_ids = (dataset.resources.distinct(:assoc_node_id) << @cms_node.id).compact.uniq.sort
     dataset.assoc_page_ids = (dataset.resources.distinct(:assoc_page_id) << @cur_page.id).compact.uniq.sort
-    dataset.state = ::Regexp.last_match[0] if @cur_page.opendata_dataset_state.presence =~ /public|closed/
+    dataset.state = @cur_page.opendata_dataset_state if %w(public closed).include?(@cur_page.opendata_dataset_state)
 
     # https://jira.mongodb.org/browse/MONGOID-4544
     # dataset.touch
