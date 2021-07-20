@@ -418,11 +418,11 @@ module SS::Model::File
   end
 
   def resizing_with_max_file_size
+    size = resizing || []
     max_file_sizes = [SS::MaxFileSize.where(action: 'resize').find_by_ext(extname)]
-    if self.class.include?(Cms::Reference::Node)
+    if self.class.include?(Cms::Reference::Node) && cur_node.present?
       max_file_sizes << Cms::MaxFileSize.site(site).node(cur_node).where(action: 'resize').find_by_ext(extname)
     end
-    size = resizing || []
     max_file_sizes.reject(&:blank?).each do |max_file_size|
       if size.present?
         max_file_size.max_width = size[0] if max_file_size.max_width > size[0]
@@ -436,7 +436,7 @@ module SS::Model::File
   def quality
     quality = []
     max_file_sizes = [SS::MaxFileSize.where(action: 'resize').find_by_ext(extname)]
-    if self.class.include?(Cms::Reference::Node)
+    if self.class.include?(Cms::Reference::Node) && cur_node.present?
       max_file_sizes << Cms::MaxFileSize.site(site).node(cur_node).where(action: 'resize').find_by_ext(extname)
     end
     max_file_sizes.reject(&:blank?).each do |max_file_size|

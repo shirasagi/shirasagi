@@ -266,8 +266,8 @@ module Gws::Model::File
   end
 
   def resizing_with_max_file_size
-    max_file_sizes = [SS::MaxFileSize.where(action: 'resize').find_by_ext(extname)]
     size = resizing || []
+    max_file_sizes = [SS::MaxFileSize.where(action: 'resize').find_by_ext(extname)]
     max_file_sizes.reject(&:blank?).each do |max_file_size|
       if size.present?
         max_file_size.max_width = size[0] if max_file_size.max_width > size[0]
