@@ -40,7 +40,21 @@ class SS::SortEmulator
   end
 
   def generic_ruby_sort(&block)
-    @criteria.reorder(id: 1).to_a.sort { |lhs, rhs| page_sort_proc(sort_hash, lhs, rhs) }.each(&block)
+    model_class = @criteria.klass
+    selector = @criteria.selector
+    all_id_with_values = model_class.all.where(selector).reorder(id: 1).pluck(:id, *sort_hash.keys)
+    all_id_with_values.sort! { |lhs, rhs| page_id_sort_proc(lhs, rhs) }
+
+    if @criteria.options.present? && @criteria.options.limit.present?
+      all_id_with_values = all_id_with_values.take(@criteria.options.limit)
+    end
+
+    all_id_with_values.each_slice(100) do |id_with_values|
+      ids = id_with_values.map { |id, *_val| id }
+      items = model_class.unscoped.in(id: ids).to_a
+      items.sort_by! { |item| ids.index(item.id) }
+      items.each(&block)
+    end
   end
 
   def mongo_sort(&block)
@@ -74,13 +88,13 @@ class SS::SortEmulator
     end
   end
 
-  def page_sort_proc(sort_hash, lhs, rhs)
+  def page_id_sort_proc(lhs, rhs)
     cmp = 0
 
-    sort_hash.each_with_index do |sort, _index|
-      field, direction = *sort
-      lhs_val = lhs.send(field)
-      rhs_val = rhs.send(field)
+    sort_hash.each_with_index do |sort, index|
+      _field, direction = *sort
+      lhs_val = lhs[index + 1]
+      rhs_val = rhs[index + 1]
 
       if normalize_sort_direction(direction) > 0
         cmp = compare_value_asc(lhs_val, rhs_val)
