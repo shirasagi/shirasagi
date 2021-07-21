@@ -30,7 +30,7 @@ ratings:
   - "**.rb"
   - "**.coffee"
   - "**.css"
-exclude_paths:
+exclude_patterns:
 - bin/**/*
 - private/**/*
 - public/**/*
