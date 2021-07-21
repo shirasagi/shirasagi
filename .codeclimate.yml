@@ -24,12 +24,6 @@ plugins:
     enabled: true
     config:
       file: .scss-lint.yml
-ratings:
-  paths:
-  - Gemfile.lock
-  - "**.rb"
-  - "**.coffee"
-  - "**.css"
 exclude_patterns:
 - bin/**/*
 - private/**/*
