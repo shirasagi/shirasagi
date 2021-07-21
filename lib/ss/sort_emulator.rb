@@ -2,11 +2,22 @@ class SS::SortEmulator
   extend Forwardable
   include Enumerable
 
+  BATCH_SIZE = 100
+
   attr_reader :criteria, :sort_hash
 
   def initialize(criteria, sort_hash)
     @criteria = criteria
     @sort_hash = sort_hash
+
+    if @criteria.is_a?(Mongoid::Document)
+      # this means "all"
+      @model_class = @criteria
+      @selector = @criteria.all.selector
+    else
+      @model_class = @criteria.klass
+      @selector = @criteria.selector
+    end
   end
 
   def_delegators :@criteria, :count, :exists?
@@ -40,25 +51,28 @@ class SS::SortEmulator
   end
 
   def generic_ruby_sort(&block)
-    model_class = @criteria.klass
-    selector = @criteria.selector
-    all_id_with_values = model_class.all.where(selector).reorder(id: 1).pluck(:id, *sort_hash.keys)
+    all_id_with_values = @model_class.all.where(@selector).reorder(id: 1).pluck(:id, *sort_hash.keys)
     all_id_with_values.sort! { |lhs, rhs| page_id_sort_proc(lhs, rhs) }
 
     if @criteria.options.present? && @criteria.options.limit.present?
       all_id_with_values = all_id_with_values.take(@criteria.options.limit)
     end
 
-    all_id_with_values.each_slice(100) do |id_with_values|
+    all_id_with_values.each_slice(BATCH_SIZE) do |id_with_values|
       ids = id_with_values.map { |id, *_val| id }
-      items = model_class.unscoped.in(id: ids).to_a
+      items = @model_class.unscoped.in(id: ids).to_a
       items.sort_by! { |item| ids.index(item.id) }
       items.each(&block)
     end
   end
 
   def mongo_sort(&block)
-    @criteria.order_by(sort_hash).to_a.each(&block)
+    all_ids = @criteria.order_by(sort_hash).pluck(:id)
+    all_ids.each_slice(BATCH_SIZE) do |ids|
+      items = @model_class.unscoped.in(id: ids).to_a
+      items.sort_by! { |item| ids.index(item.id) }
+      items.each(&block)
+    end
   end
 
   def normalize_sort_direction(direction)

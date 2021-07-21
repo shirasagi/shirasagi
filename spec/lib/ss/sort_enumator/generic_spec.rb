@@ -59,8 +59,11 @@ describe SS::SortEmulator, dbscope: :example do
 
   context "with filename" do
     let!(:node) { create :cms_node_page, cur_site: site, sort: sort }
-    let!(:page1) { create :cms_page, cur_site: site, cur_node: node, filename: "filename-#{rand(1..10)}" }
-    let!(:page2) { create :cms_page, cur_site: site, cur_node: node, filename: "filename-#{rand(1..10)}" }
+    let(:numbers) { (1..10).to_a }
+    let(:num1) { numbers.sample }
+    let(:num2) { (numbers - [ num1 ]).sample }
+    let!(:page1) { create :cms_page, cur_site: site, cur_node: node, filename: "filename-#{num1.to_s.rjust(3, "0")}" }
+    let!(:page2) { create :cms_page, cur_site: site, cur_node: node, filename: "filename-#{num2.to_s.rjust(3, "0")}" }
     let(:criteria) { Cms::Page.all }
 
     context "with asc" do
