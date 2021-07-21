@@ -20,14 +20,24 @@ class SS::SortEmulator
   end
 
   def each(&block)
-    if sort_hash.keys.length != 1 || sort_hash.keys.first.include?(".") || sort_hash.keys.first.include?("$")
-      mongo_sort(&block)
-    else
+    if able_to_sort_by_ruby?
       generic_ruby_sort(&block)
+    else
+      mongo_sort(&block)
     end
   end
 
   private
+
+  def able_to_sort_by_ruby?
+    return false if sort_hash.keys.length != 1
+
+    key = sort_hash.keys.first
+    key = key.to_s unless key.is_a?(String)
+    return false if key.include?(".") || key.include?("$")
+
+    true
+  end
 
   def generic_ruby_sort(&block)
     @criteria.reorder(id: 1).to_a.sort { |lhs, rhs| page_sort_proc(sort_hash, lhs, rhs) }.each(&block)
