@@ -1,6 +1,6 @@
 <%
   js_options = {}
-  if @cur_site.close_confirmation_enabled? && @item.persisted? && (@item.state == "public")
+  if @cur_site.try(:close_confirmation_enabled?) && @item.persisted? && (@item.state == "public")
     js_options[:close_confirmation] = true
     contains_urls_path = url_for(action: 'contains_urls') rescue nil
     if contains_urls_path && @contains_urls.present?

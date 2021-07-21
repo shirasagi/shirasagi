@@ -114,7 +114,6 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(page).to have_no_selector('#item_body_layout_id', visible: true)
           click_on I18n.t('ss.buttons.draft_save')
         end
-        click_on I18n.t('ss.buttons.ignore_alert')
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
@@ -243,7 +242,6 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
           click_on I18n.t('ss.buttons.draft_save')
         end
-        # click_on I18n.t('ss.buttons.ignore_alert')
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
@@ -342,7 +340,6 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
           click_on I18n.t('ss.buttons.draft_save')
         end
-        # click_on I18n.t('ss.buttons.ignore_alert')
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
@@ -395,7 +392,6 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
           click_on I18n.t('ss.buttons.draft_save')
         end
-        # click_on I18n.t('ss.buttons.ignore_alert')
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
@@ -547,7 +543,6 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
           click_on I18n.t('ss.buttons.draft_save')
         end
-        click_on I18n.t('ss.buttons.ignore_alert')
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
@@ -646,7 +641,6 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
           click_on I18n.t('ss.buttons.draft_save')
         end
-        # click_on I18n.t('ss.buttons.ignore_alert')
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
@@ -699,7 +693,6 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
           click_on I18n.t('ss.buttons.draft_save')
         end
-        # click_on I18n.t('ss.buttons.ignore_alert')
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
@@ -771,7 +764,6 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
           click_on I18n.t('ss.buttons.draft_save')
         end
-        click_on I18n.t('ss.buttons.ignore_alert')
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
@@ -800,8 +792,6 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
           click_on I18n.t('ss.buttons.draft_save')
         end
-
-        # click_on I18n.t('ss.buttons.ignore_alert')
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         # wait for completion of "/.s:site/workflow:cid/wizard/:id"
         expect(page).to have_css("#addon-workflow-agents-addons-approver", text: I18n.t("workflow.request"))

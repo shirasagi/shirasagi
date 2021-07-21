@@ -238,7 +238,6 @@ describe "cms_form_preview", type: :feature, dbscope: :example do
         sleep 0.5
 
         click_on I18n.t('ss.buttons.draft_save')
-        click_on I18n.t("ss.buttons.ignore_alert")
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 

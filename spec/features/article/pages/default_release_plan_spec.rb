@@ -69,7 +69,6 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             fill_in "item[description]", with: "sample"
             click_button I18n.t("ss.buttons.draft_save")
           end
-          click_button I18n.t("ss.buttons.ignore_alert")
           wait_for_notice I18n.t('ss.notice.saved')
 
           expect(Article::Page.count).to eq 1
