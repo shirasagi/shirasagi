@@ -32,6 +32,11 @@ ja:
       find_exif: 画像に位置情報が含まれています。位置情報を地図に設定しますか？
     links:
       google_maps_search: Googleマップで見る
+    coordinate:
+      delimiters:
+        degree: "°度"
+        minutes: "'分"
+        seconds: '"秒'
 
   modules:
     map: 地図
