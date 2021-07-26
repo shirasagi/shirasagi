@@ -19,6 +19,7 @@ ja:
       key_visual/image: 画像管理
     parts:
       key_visual/slide: スライドショー
+      key_visual/swiper_slide: スライドショー2
 
   cms_role:
     read_other_key_visual_images: 画像の閲覧（全て）
