@@ -81,7 +81,7 @@ describe SS::SortEmulator, dbscope: :example do
       end
 
       context "with desc" do
-        let(:ruby) { described_class.new(criteria, { "released" => 1 }) }
+        let(:ruby) { described_class.new(criteria, { "released" => -1 }) }
         let(:mongo) { criteria.reorder(created: -1) }
 
         it_behaves_like "sort enumerator (released) is"

@@ -32,7 +32,13 @@ class SS::SortEmulator
 
   def each(&block)
     if able_to_sort_by_ruby?
-      generic_ruby_sort(&block)
+      key = sort_hash.keys.first
+      key = key.to_s unless key.is_a?(String)
+      if key == "released"
+        released_ruby_sort(&block)
+      else
+        generic_ruby_sort(&block)
+      end
     else
       mongo_sort(&block)
     end
@@ -50,10 +56,7 @@ class SS::SortEmulator
     true
   end
 
-  def generic_ruby_sort(&block)
-    all_id_with_values = @model_class.all.where(@selector).reorder(id: 1).pluck(:id, *sort_hash.keys)
-    all_id_with_values.sort! { |lhs, rhs| page_id_sort_proc(lhs, rhs) }
-
+  def _ruby_sort(all_id_with_values, &block)
     if @criteria.options.present? && @criteria.options.limit.present?
       all_id_with_values = all_id_with_values.take(@criteria.options.limit)
     end
@@ -64,6 +67,21 @@ class SS::SortEmulator
       items.sort_by! { |item| ids.index(item.id) }
       items.each(&block)
     end
+  end
+
+  def generic_ruby_sort(&block)
+    all_id_with_values = @model_class.all.where(@selector).reorder(id: 1).pluck(:id, *sort_hash.keys)
+    all_id_with_values.sort! { |lhs, rhs| page_id_sort_proc(lhs, rhs) }
+
+    _ruby_sort(all_id_with_values, &block)
+  end
+
+  def released_ruby_sort(&block)
+    pluck_fields = %i[id released_type released updated created first_released]
+    all_id_with_values = @model_class.all.where(@selector).reorder(id: 1).pluck(*pluck_fields)
+    all_id_with_values.sort! { |lhs, rhs| released_sort_proc(lhs, rhs) }
+
+    _ruby_sort(all_id_with_values, &block)
   end
 
   def mongo_sort(&block)
@@ -125,5 +143,41 @@ class SS::SortEmulator
     end
 
     cmp
+  end
+
+  def released_sort_proc(lhs, rhs)
+    lhs_id, lhs_released_type, lhs_released, lhs_updated, lhs_created, lhs_first_released = *lhs
+    rhs_id, rhs_released_type, rhs_released, rhs_updated, rhs_created, rhs_first_released = *rhs
+
+    lhs_val = choose_date_value(lhs_released_type, lhs_released, lhs_updated, lhs_created, lhs_first_released)
+    rhs_val = choose_date_value(rhs_released_type, rhs_released, rhs_updated, rhs_created, rhs_first_released)
+
+    _field, direction = *sort_hash.first
+    direction = normalize_sort_direction(direction)
+    if direction > 0
+      cmp = compare_value_asc(lhs_val, rhs_val)
+    else
+      cmp = compare_value_asc(rhs_val, lhs_val)
+    end
+
+    if cmp == 0
+      # fallback: compare ids
+      cmp = compare_value_asc(lhs_id, rhs_id)
+    end
+
+    cmp
+  end
+
+  def choose_date_value(released_type, released, updated, created, first_released)
+    case released_type
+    when "same_as_updated"
+      updated
+    when "same_as_created"
+      created
+    when "same_as_first_released"
+      first_released
+    else # "fixed"
+      released
+    end
   end
 end
