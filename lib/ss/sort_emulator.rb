@@ -149,8 +149,8 @@ class SS::SortEmulator
     lhs_id, lhs_released_type, lhs_released, lhs_updated, lhs_created, lhs_first_released = *lhs
     rhs_id, rhs_released_type, rhs_released, rhs_updated, rhs_created, rhs_first_released = *rhs
 
-    lhs_val = choose_date_value(lhs_released_type, lhs_released, lhs_updated, lhs_created, lhs_first_released)
-    rhs_val = choose_date_value(rhs_released_type, rhs_released, rhs_updated, rhs_created, rhs_first_released)
+    lhs_val = Cms.cms_page_date(lhs_released_type, lhs_released, lhs_updated, lhs_created, lhs_first_released)
+    rhs_val = Cms.cms_page_date(rhs_released_type, rhs_released, rhs_updated, rhs_created, rhs_first_released)
 
     _field, direction = *sort_hash.first
     direction = normalize_sort_direction(direction)
@@ -166,18 +166,5 @@ class SS::SortEmulator
     end
 
     cmp
-  end
-
-  def choose_date_value(released_type, released, updated, created, first_released)
-    case released_type
-    when "same_as_updated"
-      updated
-    when "same_as_created"
-      created
-    when "same_as_first_released"
-      first_released
-    else # "fixed"
-      released
-    end
   end
 end

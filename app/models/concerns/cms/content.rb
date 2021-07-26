@@ -215,16 +215,7 @@ module Cms::Content
   end
 
   def date
-    case released_type
-    when "fixed"
-      self[:released] || first_released || updated || created
-    when "same_as_created"
-      created
-    when "same_as_first_released"
-      first_released || updated || created
-    else # same_as_updated
-      updated || created
-    end
+    Cms.cms_page_date(released_type, self[:released], updated, created, first_released)
   end
 
   def public?
