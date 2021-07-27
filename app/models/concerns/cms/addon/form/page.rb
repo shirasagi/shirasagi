@@ -48,6 +48,7 @@ module Cms::Addon::Form::Page
 
   def render_html(registers = nil)
     return html if form.blank?
+    return nil if site.blank?
 
     registers ||= {
       cur_site: site,
@@ -69,6 +70,10 @@ module Cms::Addon::Form::Page
       end
     end
     files
+  end
+
+  def html_bytesize
+    render_html.to_s.bytesize
   end
 
   private
