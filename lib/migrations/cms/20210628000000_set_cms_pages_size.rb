@@ -8,6 +8,7 @@ class SS::Migration20210628000000
     all_ids = criteria.pluck(:id)
     all_ids.each_slice(20) do |ids|
       criteria.in(id: ids).to_a.each do |page|
+        next unless page.site
         page.try(:new_size_input)
       end
     end

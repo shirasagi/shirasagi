@@ -7,5 +7,9 @@ module Faq::Addon
       field :question, type: String
       permit_params :question
     end
+
+    def html_bytesize
+      super + question.to_s.bytesize
+    end
   end
 end
