@@ -26,6 +26,7 @@ module History::Addon
     def save_backup
       return if @skip_history_backup
 
+      reload
       max_age = History::Backup.max_age
       current = current_backup
       before = before_backup
