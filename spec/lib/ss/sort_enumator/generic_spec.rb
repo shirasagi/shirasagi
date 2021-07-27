@@ -152,7 +152,9 @@ describe SS::SortEmulator, dbscope: :example do
     let(:criteria) { Cms::Page.all }
 
     before do
-      page4.unset(:released)
+      # released が未設定の場合 updated や created へフォールバックするので、
+      # Mongo ソート結果と Ruby ソート結果とを一致させるために updated と created とを未設定にする。
+      page4.unset(:released, :updated, :created, :first_released)
     end
 
     context "with asc" do
