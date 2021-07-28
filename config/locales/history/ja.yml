@@ -34,6 +34,9 @@ ja:
       target:
         restore: 復元する
         unrestore: 復元しない
+      action:
+        save: 保存
+        replace_urls: リンク追従による更新
     behavior:
       paste: 本文貼付
       attachment: 添付ファイル
@@ -67,11 +70,7 @@ ja:
         behavior: 動作
         save_term: 保存期間
         user_ids: ユーザー
-      history/backup:
-        version: バージョン
-        ref_coll: 保存コレクション
-        data: 保存データ
-      history/trash:
+      history/model/data:
         version: バージョン
         ref_coll: 保存コレクション
         ref_class: 保存クラス
@@ -79,6 +78,7 @@ ja:
         parent: 親フォルダー
         children: 配下のコンテンツ
         state: ステータス
+        action: アクション
 
   job:
     models:

@@ -4,7 +4,7 @@ module History::Addon
     extend ActiveSupport::Concern
 
     included do
-      attr_accessor :skip_history_backup
+      attr_accessor :skip_history_backup, :history_backup_action
       after_save :save_backup, if: -> { @db_changes.present? }
       before_destroy :destroy_backups
     end
@@ -36,6 +36,7 @@ module History::Addon
       backup.ref_coll  = collection_name
       backup.ref_class = self.class.to_s
       backup.data      = attributes
+      backup.action = history_backup_action if history_backup_action.present?
 
       backup.state     = 'current'
       current.state = 'before' if current

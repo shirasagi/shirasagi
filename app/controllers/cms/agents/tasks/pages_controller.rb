@@ -201,6 +201,7 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
           @task.log item.full_url
           item.cur_site = @site
           item.cur_user = @user
+          item.history_backup_action = 'replace_urls'
           if !item.save
             @task.log "error: " + item.errors.full_messages.join(', ')
           end
