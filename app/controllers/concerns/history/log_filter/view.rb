@@ -42,7 +42,7 @@ module History::LogFilter::View
     @items = @model.where(cond)
     @items = @items.in(user: user_ids) if user_ids.present?
     @items = @items.where(created: { "$gte" => from }) if from
-    @items = @items.sort(created: 1, id: 1)
+    @items = @items.reorder(created: 1)
     send_csv @items
   end
 

@@ -5,7 +5,7 @@ class History::Log
   # include SS::Reference::Site
 
   store_in_repl_master
-  index({ created: -1 })
+  index(created: 1)
 
   attr_accessor :save_term
 
