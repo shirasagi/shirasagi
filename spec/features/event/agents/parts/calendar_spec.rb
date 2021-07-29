@@ -7,7 +7,7 @@ describe "event_agents_parts_calendar", type: :feature, dbscope: :example do
   let(:part)   { create :event_part_calendar, filename: "node/part" }
 
   context "public" do
-    let!(:item) { create :event_page, filename: "node/item" }
+    let!(:item) { create :event_page, filename: "node/item", event_dates: [Time.zone.now.beginning_of_day + rand(1..7).days] }
 
     before do
       Capybara.app_host = "http://#{site.domain}"
