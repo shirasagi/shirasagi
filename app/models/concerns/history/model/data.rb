@@ -16,6 +16,7 @@ module History::Model::Data
     field :ref_class, type: String
     field :data, type: Hash
     field :state, type: String
+    field :action, type: String, default: 'save'
 
     validates :ref_coll, presence: true
     validates :data, presence: true

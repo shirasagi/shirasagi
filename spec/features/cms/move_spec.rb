@@ -4,6 +4,15 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
   subject(:site) { cms_site }
   subject(:index_path) { cms_pages_path site.id }
 
+  around do |example|
+    save_config = SS.config.cms.replace_urls_after_move
+    SS::Config.replace_value_at(:cms, 'replace_urls_after_move', true)
+    perform_enqueued_jobs do
+      example.run
+    end
+    SS::Config.replace_value_at(:cms, 'replace_urls_after_move', save_config)
+  end
+
   context "with auth", js: true do
     let(:page_html) { '<a href="/A/B/C/">/A/B/C/</a>' }
     let(:page2_html) { '<a href="/page.html">page.html</a>' }
@@ -29,7 +38,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
     it "#move" do
       item = Cms::Page.where(filename: "page.html").first
       move_page_path = move_cms_page_path(site.id, item)
-      expect(Fs.exists?("#{site.path}/page.html")).to eq(true)
+      expect(Fs.exists?("#{site.path}/page.html")).to be_truthy
 
       visit move_page_path
       within "form" do
@@ -40,12 +49,22 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
       #expect(current_path).to eq move_page_path
       expect(page).to have_css("form#item-form h2", text: "A/page.html")
 
-      expect(Fs.exists?("#{site.path}/page.html")).to eq(false)
-      expect(Fs.exists?("#{site.path}/A/page.html")).to eq(true)
+      expect(Fs.exists?("#{site.path}/page.html")).to be_falsy
+      expect(Fs.exists?("#{site.path}/A/page.html")).to be_truthy
+
+      expect(Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+      end
+
+      item = Cms::Page.where(filename: "A/B/C/page2.html").first
+      visit cms_page_path(site.id, item)
+      expect(page).to have_selector('span', text: I18n.t('history.options.action.replace_urls'), count: 1)
 
       item = Cms::Node.where(filename: "A/B/C").first
       move_node_path = move_node_conf_path(site.id, item)
-      expect(Fs.exists?("#{site.path}/A/B/C/page2.html")).to eq(true)
+      expect(Fs.exists?("#{site.path}/A/B/C/page2.html")).to be_truthy
 
       visit move_node_path
       within "form" do
@@ -56,8 +75,18 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
       expect(current_path).to eq move_node_path
       expect(page).to have_css("form#item-form h2", text: "D/E")
 
-      expect(Fs.exists?("#{site.path}/A/B/C/page2.html")).to eq(false)
-      expect(Fs.exists?("#{site.path}/D/E/page2.html")).to eq(true)
+      expect(Fs.exists?("#{site.path}/A/B/C/page2.html")).to be_falsy
+      expect(Fs.exists?("#{site.path}/D/E/page2.html")).to be_truthy
+
+      expect(Job::Log.count).to eq 2
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+      end
+
+      item = Cms::Page.where(filename: "A/page.html").first
+      visit cms_page_path(site.id, item)
+      expect(page).to have_selector('span', text: I18n.t('history.options.action.replace_urls'), count: 1)
 
       visit move_page_path
       within "form" do
@@ -67,8 +96,18 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
       #expect(current_path).to eq move_page_path
       expect(page).to have_css("form#item-form h2", text: "D/E/page.html")
 
-      expect(Fs.exists?("#{site.path}/A/page.html")).to eq(false)
-      expect(Fs.exists?("#{site.path}/D/E/page.html")).to eq(true)
+      expect(Fs.exists?("#{site.path}/A/page.html")).to be_falsy
+      expect(Fs.exists?("#{site.path}/D/E/page.html")).to be_truthy
+
+      expect(Job::Log.count).to eq 3
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+      end
+
+      item = Cms::Page.where(filename: "D/E/page2.html").first
+      visit cms_page_path(site.id, item)
+      expect(page).to have_selector('span', text: I18n.t('history.options.action.replace_urls'), count: 2)
 
       visit move_node_path
       within "form" do
@@ -78,10 +117,24 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
       expect(current_path).to eq move_node_path
       expect(page).to have_css("form#item-form h2", text: "A/B/C")
 
-      expect(Fs.exists?("#{site.path}/D/E/page.html")).to eq(false)
-      expect(Fs.exists?("#{site.path}/D/E/page2.html")).to eq(false)
-      expect(Fs.exists?("#{site.path}/A/B/C/page.html")).to eq(true)
-      expect(Fs.exists?("#{site.path}/A/B/C/page2.html")).to eq(true)
+      expect(Fs.exists?("#{site.path}/D/E/page.html")).to be_falsy
+      expect(Fs.exists?("#{site.path}/D/E/page2.html")).to be_falsy
+      expect(Fs.exists?("#{site.path}/A/B/C/page.html")).to be_truthy
+      expect(Fs.exists?("#{site.path}/A/B/C/page2.html")).to be_truthy
+
+      expect(Job::Log.count).to eq 4
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+      end
+
+      item = Cms::Page.where(filename: "A/B/C/page.html").first
+      visit cms_page_path(site.id, item)
+      expect(page).to have_selector('span', text: I18n.t('history.options.action.replace_urls'), count: 2)
+
+      item = Cms::Page.where(filename: "A/B/C/page2.html").first
+      visit cms_page_path(site.id, item)
+      expect(page).to have_selector('span', text: I18n.t('history.options.action.replace_urls'), count: 3)
     end
   end
 end
