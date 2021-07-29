@@ -8,6 +8,13 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
   let(:node_filename) { 'base' }
   let(:cate_name1) { unique_id }
   let(:opendata_cate_name1) { unique_id }
+  let(:all_pages) { Cms::Page.site(site).to_a }
+
+  def all_pages
+    criteria = Cms::Page.site(site)
+    criteria = yield(criteria) if block_given?
+    criteria.pluck(:name)
+  end
 
   before do
     node = create(:cms_node_page, name: node_name, filename: node_filename)
@@ -334,5 +341,69 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
     click_button I18n.t('ss.buttons.search')
     expect(page).to have_css(".search-count", text: I18n.t("cms.search_contents_count", count: 1))
     expect(page).to have_css("div.info a.title", text: "[TEST]B")
+  end
+
+  it "search with sort options" do
+    visit pages_index_path
+
+    # sort by name
+    within "form.search-pages" do
+      select I18n.t("cms.sort_options.name.title"), from: "item[search_sort]"
+      click_button I18n.t('ss.buttons.search')
+    end
+    expect(page).to have_css(".search-count", text: I18n.t("cms.search_contents_count", count: 5))
+
+    names = all("div.info a.title").map(&:text)
+    expect(names).to eq all_pages { |criteria| criteria.reorder(name: 1) }
+
+    # sort by filename
+    within "form.search-pages" do
+      select I18n.t("cms.sort_options.filename.title"), from: "item[search_sort]"
+      click_button I18n.t('ss.buttons.search')
+    end
+    expect(page).to have_css(".search-count", text: I18n.t("cms.search_contents_count", count: 5))
+
+    names = all("div.info a.title").map(&:text)
+    expect(names).to eq all_pages { |criteria| criteria.reorder(filename: 1) }
+
+    # sort by creared
+    within "form.search-pages" do
+      select I18n.t("cms.sort_options.created.title"), from: "item[search_sort]"
+      click_button I18n.t('ss.buttons.search')
+    end
+    expect(page).to have_css(".search-count", text: I18n.t("cms.search_contents_count", count: 5))
+
+    names = all("div.info a.title").map(&:text)
+    expect(names).to eq all_pages { |criteria| criteria.reorder(created: 1) }
+
+    # sort by updated
+    within "form.search-pages" do
+      select I18n.t("cms.sort_options.updated_desc.title"), from: "item[search_sort]"
+      click_button I18n.t('ss.buttons.search')
+    end
+    expect(page).to have_css(".search-count", text: I18n.t("cms.search_contents_count", count: 5))
+
+    names = all("div.info a.title").map(&:text)
+    expect(names).to eq all_pages { |criteria| criteria.reorder(updated: -1) }
+
+    # sort by released
+    within "form.search-pages" do
+      select I18n.t("cms.sort_options.released_desc.title"), from: "item[search_sort]"
+      click_button I18n.t('ss.buttons.search')
+    end
+    expect(page).to have_css(".search-count", text: I18n.t("cms.search_contents_count", count: 5))
+
+    names = all("div.info a.title").map(&:text)
+    expect(names).to eq all_pages { |criteria| criteria.reorder(released: -1) }
+
+    # sort by approved
+    within "form.search-pages" do
+      select I18n.t("cms.sort_options.approved_desc.title"), from: "item[search_sort]"
+      click_button I18n.t('ss.buttons.search')
+    end
+    expect(page).to have_css(".search-count", text: I18n.t("cms.search_contents_count", count: 5))
+
+    names = all("div.info a.title").map(&:text)
+    expect(names).to eq all_pages { |criteria| criteria.reorder(approved: -1) }
   end
 end
