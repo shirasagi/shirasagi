@@ -32,7 +32,15 @@
 
           <div class="meta">
             <span class="id">#<%= item.id %></span>
-            <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+            <% if item.try(:updated) %>
+              <span class="datetime"><%= t("ss.views.index.updated", updated: item.updated.strftime("%Y/%m/%d %H:%M")) %></span>
+            <% end %>
+            <% if item.try(:released) %>
+              <span class="datetime"><%= t("ss.views.index.released", released: item.released.strftime("%Y/%m/%d %H:%M")) %></span>
+            <% end %>
+            <% if item.try(:approved) %>
+              <span class="datetime"><%= t("ss.views.index.approved", approved: item.approved.strftime("%Y/%m/%d %H:%M")) %></span>
+            <% end %>
             <span class="filename"><%= item.filename %></span>
             <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
             <% if item.user %>

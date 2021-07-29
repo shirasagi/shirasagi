@@ -47,6 +47,7 @@ ja:
       index:
         updated: "更新日時：%{updated}"
         released: "公開日時：%{released}"
+        approved: "承認日時：%{approved}"
     navi:
       readable: 閲覧一覧
       editable: 管理一覧
