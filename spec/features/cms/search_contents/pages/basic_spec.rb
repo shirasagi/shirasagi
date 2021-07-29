@@ -8,7 +8,6 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
   let(:node_filename) { 'base' }
   let(:cate_name1) { unique_id }
   let(:opendata_cate_name1) { unique_id }
-  let(:all_pages) { Cms::Page.site(site).to_a }
 
   def all_pages
     criteria = Cms::Page.site(site)
