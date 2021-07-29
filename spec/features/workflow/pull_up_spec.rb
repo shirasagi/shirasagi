@@ -58,9 +58,24 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
         expect(item.state).to eq "closed"
         expect(item.workflow_comment).to eq workflow_comment
         expect(item.workflow_approvers.count).to eq 3
-        expect(item.workflow_approvers[0]).to eq({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
-        expect(item.workflow_approvers[1]).to eq({level: 2, user_id: user2.id, editable: '', state: 'pending', comment: ''})
-        expect(item.workflow_approvers[2]).to eq({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: ''})
+        item.workflow_approvers[0].tap do |workflow_approver|
+          expected = {
+            level: 1, user_id: user1.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_REQUEST, comment: ''
+          }
+          expect(workflow_approver).to eq(expected)
+        end
+        item.workflow_approvers[1].tap do |workflow_approver|
+          expected = {
+            level: 2, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_PENDING, comment: ''
+          }
+          expect(workflow_approver).to eq(expected)
+        end
+        item.workflow_approvers[2].tap do |workflow_approver|
+          expected = {
+            level: 3, user_id: user3.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_PENDING, comment: ''
+          }
+          expect(workflow_approver).to eq(expected)
+        end
 
         expect(Sys::MailLog.count).to eq 3
 
@@ -80,12 +95,25 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
         item.reload
         expect(item.workflow_state).to eq "approve"
         expect(item.state).to eq "public"
-        expect(item.workflow_approvers[0]).to \
-          include({level: 1, user_id: user1.id, editable: '', state: 'other_pulled_up', comment: ''})
-        expect(item.workflow_approvers[1]).to \
-          include({level: 2, user_id: user2.id, editable: '', state: 'other_pulled_up', comment: ''})
-        expect(item.workflow_approvers[2]).to \
-          include({level: 3, user_id: user3.id, editable: '', state: 'approve', comment: approve_comment3})
+        item.workflow_approvers[0].tap do |workflow_approver|
+          expected = {
+            level: 1, user_id: user1.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_OTHER_PULLED_UP, comment: ''
+          }
+          expect(workflow_approver).to eq(expected)
+        end
+        item.workflow_approvers[1].tap do |workflow_approver|
+          expected = {
+            level: 2, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_OTHER_PULLED_UP, comment: ''
+          }
+          expect(workflow_approver).to eq(expected)
+        end
+        item.workflow_approvers[2].tap do |workflow_approver|
+          expected = {
+            level: 3, user_id: user3.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
+            comment: approve_comment3, file_ids: nil
+          }
+          expect(workflow_approver).to eq(expected)
+        end
 
         expect(Sys::MailLog.count).to eq 4
       end
@@ -114,9 +142,24 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
         expect(item.state).to eq "closed"
         expect(item.workflow_comment).to eq workflow_comment
         expect(item.workflow_approvers.count).to eq 3
-        expect(item.workflow_approvers[0]).to eq({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
-        expect(item.workflow_approvers[1]).to eq({level: 2, user_id: user2.id, editable: '', state: 'pending', comment: ''})
-        expect(item.workflow_approvers[2]).to eq({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: ''})
+        item.workflow_approvers[0].tap do |workflow_approver|
+          expected = {
+            level: 1, user_id: user1.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_REQUEST, comment: ''
+          }
+          expect(workflow_approver).to eq(expected)
+        end
+        item.workflow_approvers[1].tap do |workflow_approver|
+          expected = {
+            level: 2, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_PENDING, comment: ''
+          }
+          expect(workflow_approver).to eq(expected)
+        end
+        item.workflow_approvers[2].tap do |workflow_approver|
+          expected = {
+            level: 3, user_id: user3.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_PENDING, comment: ''
+          }
+          expect(workflow_approver).to eq(expected)
+        end
 
         expect(Sys::MailLog.count).to eq 3
 
@@ -136,12 +179,25 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
         item.reload
         expect(item.workflow_state).to eq "request"
         expect(item.state).to eq "closed"
-        expect(item.workflow_approvers[0]).to \
-          include({level: 1, user_id: user1.id, editable: '', state: 'other_pulled_up', comment: ''})
-        expect(item.workflow_approvers[1]).to \
-          include({level: 2, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment2})
-        expect(item.workflow_approvers[2]).to \
-          include({level: 3, user_id: user3.id, editable: '', state: 'request', comment: ''})
+        item.workflow_approvers[0].tap do |workflow_approver|
+          expected = {
+            level: 1, user_id: user1.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_OTHER_PULLED_UP, comment: ''
+          }
+          expect(workflow_approver).to eq(expected)
+        end
+        item.workflow_approvers[1].tap do |workflow_approver|
+          expected = {
+            level: 2, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
+            comment: approve_comment2, file_ids: nil
+          }
+          expect(workflow_approver).to eq(expected)
+        end
+        item.workflow_approvers[2].tap do |workflow_approver|
+          expected = {
+            level: 3, user_id: user3.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_REQUEST, comment: ''
+          }
+          expect(workflow_approver).to eq(expected)
+        end
 
         expect(Sys::MailLog.count).to eq 4
       end
@@ -175,9 +231,24 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
         expect(item.state).to eq "closed"
         expect(item.workflow_comment).to eq workflow_comment
         expect(item.workflow_approvers.count).to eq 3
-        expect(item.workflow_approvers[0]).to eq({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
-        expect(item.workflow_approvers[1]).to eq({level: 2, user_id: user2.id, editable: '', state: 'pending', comment: ''})
-        expect(item.workflow_approvers[2]).to eq({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: ''})
+        item.workflow_approvers[0].tap do |workflow_approver|
+          expected = {
+            level: 1, user_id: user1.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_REQUEST, comment: ''
+          }
+          expect(workflow_approver).to eq(expected)
+        end
+        item.workflow_approvers[1].tap do |workflow_approver|
+          expected = {
+            level: 2, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_PENDING, comment: ''
+          }
+          expect(workflow_approver).to eq(expected)
+        end
+        item.workflow_approvers[2].tap do |workflow_approver|
+          expected = {
+            level: 3, user_id: user3.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_PENDING, comment: ''
+          }
+          expect(workflow_approver).to eq(expected)
+        end
 
         expect(Sys::MailLog.count).to eq 3
 
@@ -197,12 +268,25 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
         item.reload
         expect(item.workflow_state).to eq "approve"
         expect(item.state).to eq "public"
-        expect(item.workflow_approvers[0]).to \
-          include({level: 1, user_id: user1.id, editable: '', state: 'other_pulled_up', comment: ''})
-        expect(item.workflow_approvers[1]).to \
-          include({level: 2, user_id: user2.id, editable: '', state: 'other_pulled_up', comment: ''})
-        expect(item.workflow_approvers[2]).to \
-          include({level: 3, user_id: user3.id, editable: '', state: 'approve', comment: approve_comment3})
+        item.workflow_approvers[0].tap do |workflow_approver|
+          expected = {
+            level: 1, user_id: user1.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_OTHER_PULLED_UP, comment: ''
+          }
+          expect(workflow_approver).to eq(expected)
+        end
+        item.workflow_approvers[1].tap do |workflow_approver|
+          expected = {
+            level: 2, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_OTHER_PULLED_UP, comment: ''
+          }
+          expect(workflow_approver).to eq(expected)
+        end
+        item.workflow_approvers[2].tap do |workflow_approver|
+          expected = {
+            level: 3, user_id: user3.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
+            comment: approve_comment3, file_ids: nil
+          }
+          expect(workflow_approver).to eq(expected)
+        end
 
         expect(Sys::MailLog.count).to eq 4
       end
@@ -231,9 +315,24 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
         expect(item.state).to eq "closed"
         expect(item.workflow_comment).to eq workflow_comment
         expect(item.workflow_approvers.count).to eq 3
-        expect(item.workflow_approvers[0]).to eq({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
-        expect(item.workflow_approvers[1]).to eq({level: 2, user_id: user2.id, editable: '', state: 'pending', comment: ''})
-        expect(item.workflow_approvers[2]).to eq({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: ''})
+        item.workflow_approvers[0].tap do |workflow_approver|
+          expected = {
+            level: 1, user_id: user1.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_REQUEST, comment: ''
+          }
+          expect(workflow_approver).to eq(expected)
+        end
+        item.workflow_approvers[1].tap do |workflow_approver|
+          expected = {
+            level: 2, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_PENDING, comment: ''
+          }
+          expect(workflow_approver).to eq(expected)
+        end
+        item.workflow_approvers[2].tap do |workflow_approver|
+          expected = {
+            level: 3, user_id: user3.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_PENDING, comment: ''
+          }
+          expect(workflow_approver).to eq(expected)
+        end
 
         expect(Sys::MailLog.count).to eq 3
 
@@ -253,12 +352,27 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
         item.reload
         expect(item.workflow_state).to eq "request"
         expect(item.state).to eq "closed"
-        expect(item.workflow_approvers[0]).to \
-          include({level: 1, user_id: user1.id, editable: '', state: 'other_pulled_up', comment: ''})
-        expect(item.workflow_approvers[1]).to \
-          include({level: 2, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment2})
-        expect(item.workflow_approvers[2]).to \
-          include({level: 3, user_id: user3.id, editable: '', state: 'request', comment: ''})
+        item.workflow_approvers[0].tap do |workflow_approver|
+          expected = {
+            level: 1, user_id: user1.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_OTHER_PULLED_UP,
+            comment: ''
+          }
+          expect(workflow_approver).to eq(expected)
+        end
+        item.workflow_approvers[1].tap do |workflow_approver|
+          expected = {
+            level: 2, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
+            comment: approve_comment2, file_ids: nil
+          }
+          expect(workflow_approver).to eq(expected)
+        end
+        item.workflow_approvers[2].tap do |workflow_approver|
+          expected = {
+            level: 3, user_id: user3.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_REQUEST,
+            comment: ''
+          }
+          expect(workflow_approver).to eq(expected)
+        end
 
         expect(Sys::MailLog.count).to eq 4
       end

@@ -375,7 +375,7 @@ save_node route: "key_visual/image", filename: "key_visual", name: "キービジ
 
 ## guide
 @guide_node = save_node route: "guide/guide", filename: "purpose-guide", name: "移住目的別ガイド",
-  layout_id: @layouts["one"].id, guide_index_html: "移住に必要な手続きをご案内をいたします。"
+  layout_id: @layouts["one"].id, guide_index_html: "移住に必要な手続きをご案内いたします。"
 
 ## inquiry
 def save_inquiry_column(data)
