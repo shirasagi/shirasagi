@@ -43,11 +43,15 @@ describe Cms::Page::MoveJob, dbscope: :example do
       expect(item1.html).not_to include(src)
       expect(item1.html).to include(dst)
       expect(item1.html).to include(node.url)
+      expect(item1.backups.count).to eq 2
+      expect(item1.backups.first.action).to eq 'replace_urls'
       expect(item2.url).not_to include(src)
       expect(item2.url).to include(dst)
       expect(item2.html).not_to include(src)
       expect(item2.html).to include(dst)
       expect(item2.html).to include(item1.url)
+      expect(item2.backups.count).to eq 2
+      expect(item2.backups.first.action).to eq 'replace_urls'
     end
   end
 end
