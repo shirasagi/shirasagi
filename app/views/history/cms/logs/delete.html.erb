@@ -5,8 +5,8 @@
   <header><h2><%= t("ss.confirm.delete") %></h2></header>
 
   <dl class="see">
-    <dt><%= @item.t :save_term %><%= @model.tt :save_term %></dt>
-    <dd><%= f.select :save_term, @item.delete_term_options %></dd>
+    <dt><%= @item.class.human_attribute_name :delete_term %></dt>
+    <dd><%= f.select :delete_term, @item.delete_term_options %></dd>
   </dl>
 </section>
 

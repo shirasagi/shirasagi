@@ -53,6 +53,18 @@ ja:
     addons:
       history/backup: 更新履歴
 
+  activemodel:
+    models:
+      history/download_param: ダウンロードパラメーター
+      history/delete_param: 削除パラメーター
+    attributes:
+      history/download_param:
+        encoding: 文字コード
+        save_term: 保存期間
+        user_ids: ユーザー
+      history/delete_param:
+        delete_term: 期間
+
   mongoid:
     models:
       history/log: 操作履歴
@@ -68,8 +80,6 @@ ja:
         path: URL
         page_url: ページURL
         behavior: 動作
-        save_term: 保存期間
-        user_ids: ユーザー
       history/model/data:
         version: バージョン
         ref_coll: 保存コレクション

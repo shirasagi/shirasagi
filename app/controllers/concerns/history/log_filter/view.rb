@@ -15,14 +15,17 @@ module History::LogFilter::View
   end
 
   def delete
-    @item = @model.new
+    @item = History::DeleteParam.new
   end
 
   def destroy
-    from = @model.term_to_date params[:item][:save_term]
-    raise "500" if from == false
+    item = History::DeleteParam.new params.require(:item).permit(:delete_term)
+    if item.invalid?
+      render
+      return
+    end
 
-    num  = @model.where(cond).where(created: { "$lt" => from }).destroy_all
+    num = @model.where(cond).lt(created: item.delete_term_in_time).destroy_all
 
     coll = @model.collection
     coll.client.command({ compact: coll.name })
@@ -31,44 +34,30 @@ module History::LogFilter::View
   end
 
   def download
-    @item = @model.new
+    @item = History::DownloadParam.new
     return if request.get?
 
-    from = @model.term_to_date params[:item][:save_term]
-    user_ids = params.dig(:item, :user_ids)
-    user_ids.reject!(&:blank?) if user_ids.present?
-    raise "500" if from == false
+    @item.attributes = params.require(:item).permit(:encoding, :save_term, user_ids: [])
+    if @item.invalid?
+      render
+      return
+    end
 
-    @items = @model.where(cond)
-    @items = @items.in(user: user_ids) if user_ids.present?
-    @items = @items.where(created: { "$gte" => from }) if from
-    @items = @items.reorder(created: 1)
-    send_csv @items
+    items = @model.where(cond)
+    items = items.in(user: @item.user_ids) if @item.user_ids.present? && @item.user_ids.any?(&:present?)
+    @item.save_term_in_time.try do |from|
+      items = items.gte(created: from)
+    end
+    items = items.reorder(created: 1)
+
+    enumerable = items.enum_csv(cur_site: @cur_site, encoding: @item.encoding)
+    filename = "history_logs_#{Time.zone.now.to_i}.csv"
+
+    response.status = 200
+    send_enum enumerable, type: enumerable.content_type, filename: filename
   end
 
   private
-
-  def send_csv(items)
-    require "csv"
-
-    csv = CSV.generate do |data|
-      header = %w(created user_name model_name action path session_id request_id)
-      data << header.collect { |k| History::Log.t(k) }
-      items.each do |item|
-        line = []
-        line << item.created.strftime("%Y-%m-%d %H:%M")
-        line << item.user_label
-        line << item.target_label
-        line << item.action
-        line << item.url
-        line << item.session_id
-        line << item.request_id
-        data << line
-      end
-    end
-
-    send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "history_logs_#{Time.zone.now.to_i}.csv"
-  end
 
   def render_destroy(result, opts = {})
     location = opts[:location].presence || { action: :index }
