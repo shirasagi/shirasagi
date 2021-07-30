@@ -1,6 +1,8 @@
 ja:
   key_visual:
     image: 画像
+    pixel: ピクセル
+    human_pixel: "%{count}ピクセル"
     controls:
       start: 再生
       stop: 停止
@@ -8,6 +10,14 @@ ja:
       link_target:
         self: 同じタブで表示
         blank: 別のタブで表示
+      autoplay:
+        disabled: 自動再生しない
+        enabled: 自動再生する（手動で開始）
+        started: 自動再生する（自動的に開始）
+      pagination_style:
+        none: なし
+        disc: ディスク
+        number: スライド番号
 
   modules:
     key_visual: キービジュアル
@@ -47,8 +57,14 @@ ja:
         in_file: 画像
       key_visual/addon/swiper_setting:
         link_target: リンク表示
-        kv_speed: スライド時間
+        kv_speed: スライド切替時間
+        kv_autoplay: 自動再生
         kv_pause: 静止時間
+        kv_space: スライド間隔
+        kv_navigation: ページ送り
+        kv_pagination_style: ページネーション
+        kv_thumbnail: サムネイル画像
+        kv_thumbnail_count: サムネイル数
 
   tooltip:
     key_visual/image:
@@ -75,6 +91,20 @@ ja:
       link_target:
         - リンクの表示形式を設定します。
       kv_speed:
-        - 1回あたりのスライドにかかる時間をミリ秒で設定します。既定値は 500 ミリ秒です。
+        - 次のスライドへの切り替えにかかる時間を設定します。既定値は 500 ミリ秒です。
+        - 小さな値を設定すると素早くとスライドし、大きな値を設定するとゆっくりとスライドします。
+      kv_space:
+        - スライドとスライドとの間隔をピクセル数で設定します。規定値は 0 ピクセルです。
+      kv_autoplay:
+        - 自動再生するかどうかを選択します。
+        - 自動再生する場合、自動的に開始するか手動で開始するかを選択します。
       kv_pause:
-        - 静止時間をミリ秒で設定します。既定値は 4,000 ミリ秒です。
+        - 自動再生使用時のスライドの静止時間をミリ秒で設定します。既定値は 4,000 ミリ秒です。
+      kv_navigation:
+        - ページ送りを表示するかどうを選択します。
+      kv_pagination_style:
+        - ページネーションの種類を選択します。
+      kv_thumbnail:
+        - サムネイル画像を表示するかどうを選択します。
+      kv_thumbnail_count:
+        - サムネイル画像を表示する場合、一画面に表示するサムネイル数を設定します。既定値は 4 です。

@@ -3,8 +3,26 @@
   <dd><%= f.select :link_target, @item.link_target_options %></dd>
 
   <dt><%= @model.t :kv_speed %><%= @model.tt :kv_speed %></dt>
-  <dd><%= f.number_field :kv_speed %><%= I18n.t("datetime.prompts.milli_second") %></dd>
+  <dd><%= f.number_field :kv_speed, placeholder: KeyVisual::Part::SwiperSlide::DEFAULT_KV_SPEED %><%= I18n.t("datetime.prompts.milli_second") %></dd>
+
+  <dt><%= @model.t :kv_space %><%= @model.tt :kv_space %></dt>
+  <dd><%= f.number_field :kv_space, placeholder: 0 %><%= I18n.t("key_visual.pixel") %></dd>
+
+  <dt><%= @model.t :kv_autoplay %><%= @model.tt :kv_autoplay %></dt>
+  <dd><%= f.select :kv_autoplay, @item.kv_autoplay_options %></dd>
 
   <dt><%= @model.t :kv_pause %><%= @model.tt :kv_pause %></dt>
-  <dd><%= f.number_field :kv_pause %><%= I18n.t("datetime.prompts.milli_second") %></dd>
+  <dd><%= f.number_field :kv_pause, placeholder: KeyVisual::Part::SwiperSlide::DEFAULT_KV_PAUSE %><%= I18n.t("datetime.prompts.milli_second") %></dd>
+
+  <dt><%= @model.t :kv_navigation %><%= @model.tt :kv_navigation %></dt>
+  <dd><%= f.select :kv_navigation, @item.kv_navigation_options %></dd>
+
+  <dt><%= @model.t :kv_pagination_style %><%= @model.tt :kv_pagination_style %></dt>
+  <dd><%= f.select :kv_pagination_style, @item.kv_pagination_style_options %></dd>
+
+  <dt><%= @model.t :kv_thumbnail %><%= @model.tt :kv_thumbnail %></dt>
+  <dd><%= f.select :kv_thumbnail, @item.kv_thumbnail_options %></dd>
+
+  <dt><%= @model.t :kv_thumbnail_count %><%= @model.tt :kv_thumbnail_count %></dt>
+  <dd><%= f.number_field :kv_thumbnail_count, placeholder: KeyVisual::Part::SwiperSlide::DEFAULT_KV_THUMBNAIL_COUNT %></dd>
 </dl>
