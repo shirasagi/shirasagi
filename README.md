@@ -77,8 +77,8 @@ gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
 ### Ruby(RVM) のインストール
 
 ```
-# curl -sSL https://rvm.io/mpapis.asc | gpg --import -
-# curl -sSL https://rvm.io/pkuczynski.asc | gpg --import -
+# \curl -sSL https://rvm.io/mpapis.asc | gpg --import -
+# \curl -sSL https://rvm.io/pkuczynski.asc | gpg --import -
 # \curl -sSL https://get.rvm.io | sudo bash -s stable
 # source /etc/profile
 # rvm install 2.6.3 --disable-binary

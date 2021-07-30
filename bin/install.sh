@@ -7,7 +7,7 @@ PORT_CHILD=8002
 PORT_OPEND=8003
 PORT_LPSPL=8004
 
-# selinux 
+# selinux
 sudo sed -i "s/\(^SELINUX=\).*/\1disabled/" /etc/selinux/config
 sudo setenforce 0
 
@@ -31,9 +31,9 @@ sudo yum -y install \
 
 for i in $(seq 1 3)
 do
-  curl -sSL https://rvm.io/mpapis.asc | gpg --import - ; RET1=$?
-  curl -sSL https://rvm.io/pkuczynski.asc | gpg --import - ; RET2=$?
-  if [ ${RET1} -eq 0 -o ${RET2} -eq 0 ]; then
+  \curl -sSL https://rvm.io/mpapis.asc | gpg --import - ; RET1=$?
+  \curl -sSL https://rvm.io/pkuczynski.asc | gpg --import - ; RET2=$?
+  if [ ${RET1} -eq ${RET2} ]; then
     break
   fi
   sleep 5s
