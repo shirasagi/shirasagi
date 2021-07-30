@@ -23,7 +23,7 @@ class Event::Agents::Parts::CalendarController < ApplicationController
     if y.present? && m.present? && Date.valid_date?(y.to_i, m.to_i, 1)
       @year = y.to_i
       @month = m.to_i
-      @day = Time.zone.today.day.to_i
+      @day = 1
     elsif cur_page.blank?
       @cur_main_path.sub(/\..+?$/, "").scan(/(\d{4})(\d{2})(\d{2})?$/).each do |y, m, d|
         d = 1 unless d
