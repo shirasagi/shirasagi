@@ -1,0 +1,10 @@
+<dl class="see mod-key_visual-pagelist">
+  <dt><%= @model.t :link_target %><%= @model.tt :link_target %></dt>
+  <dd><%= f.select :link_target, @item.link_target_options %></dd>
+
+  <dt><%= @model.t :kv_speed %><%= @model.tt :kv_speed %></dt>
+  <dd><%= f.number_field :kv_speed %><%= I18n.t("datetime.prompts.milli_second") %></dd>
+
+  <dt><%= @model.t :kv_pause %><%= @model.tt :kv_pause %></dt>
+  <dd><%= f.number_field :kv_pause %><%= I18n.t("datetime.prompts.milli_second") %></dd>
+</dl>

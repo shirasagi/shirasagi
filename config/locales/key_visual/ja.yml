@@ -13,12 +13,13 @@ ja:
     key_visual: キービジュアル
     addons:
       key_visual/page_list: リスト表示
+      key_visual/swiper_setting: スライド設定
 
   cms:
     nodes:
       key_visual/image: 画像管理
     parts:
-      key_visual/slide: スライドショー
+      key_visual/slide: スライドショー（非推奨）
       key_visual/swiper_slide: スライドショー2
 
   cms_role:
@@ -44,6 +45,10 @@ ja:
         link_url: リンクURL
         file_id: 画像
         in_file: 画像
+      key_visual/addon/swiper_setting:
+        link_target: リンク表示
+        kv_speed: スライド時間
+        kv_pause: 静止時間
 
   tooltip:
     key_visual/image:
@@ -66,3 +71,10 @@ ja:
         - 大きな値を設定すると画像がゆっくりスライドします。
       kv_pause:
         - 静止時間を設定します。既定値は 4000 ミリ秒です。
+    key_visual/addon/swiper_setting:
+      link_target:
+        - リンクの表示形式を設定します。
+      kv_speed:
+        - 1回あたりのスライドにかかる時間をミリ秒で設定します。既定値は 500 ミリ秒です。
+      kv_pause:
+        - 静止時間をミリ秒で設定します。既定値は 4,000 ミリ秒です。

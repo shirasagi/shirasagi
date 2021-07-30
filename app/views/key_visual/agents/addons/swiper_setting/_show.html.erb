@@ -1,0 +1,18 @@
+<dl class="see mod-key_visual-pagelist">
+  <dt><%= @model.t :link_target %></dt>
+  <dd><%= @item.label :link_target %></dd>
+
+  <dt><%= @model.t :kv_speed %></dt>
+  <dd>
+    <% if @item.kv_speed.present? %>
+      <%= number_with_delimiter(@item.kv_speed) %><%= I18n.t("datetime.prompts.milli_second") %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :kv_pause %></dt>
+  <dd>
+    <% if @item.kv_pause.present? %>
+      <%= number_with_delimiter(@item.kv_pause) %><%= I18n.t("datetime.prompts.milli_second") %>
+    <% end %>
+  </dd>
+</dl>
