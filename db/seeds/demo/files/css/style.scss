@@ -3918,64 +3918,7 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
     }
   }
 }
-// -----------------------------------------------------------------------------
-// search
-.cms-site-search {
-  @include mb {
-    padding: 0 15px;
-  }
-  .search-form {
-    @include display-flex;
-    @include justify-content(space-between);
-    width: 20em;
-    margin-bottom: 30px;
-    border: $border-hgry;
-    @include mb {
-      border-radius: 0;
-    }
-  }
-  #s_keyword {
-    width: 80%;
-    padding: 5px;
-    border: 0;
-    color: $text;
-    @include mb {
-      width: 80%;
-      @include border-radius(0);
-    }
-  }
-  input[type="submit"] {
-    padding: 5px 10px;
-    margin: 0;
-    border: 0;
-    background: #333;
-    color: $t-white;
-    @include mb {
-      padding: 4px 10px;
-      border-radius: 0;
-      -webkit-appearance: none;
-    }
-  }
-  .search-result {
-    margin-bottom: 30px;
-    .search-stats {
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: $border-hgry;
-    }
-    .cms-site-search-pages {
-      .item {
-        margin-bottom: 20px;
-        h2 {
-          font-size: $px16;
-        }
-      }
-      .meta .url {
-        display: block;
-      }
-    }
-  }
-}
+
 
 // -----------------------------------------------------------------------------
 // chat
