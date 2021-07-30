@@ -56,7 +56,7 @@
   <% if SS.config.voice.disable.blank? && Voice::File.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t("voice.file"), voice_files_path %></h3>
   <% end %>
-  <% if true %>
+  <% if Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h3><%= link_to t("cms.sns_post"), cms_sns_post_logs_path %></h3>
   <% end %>
   <% if SS.config.recommend.disable.blank? && Recommend::History::Log.allowed?(:read, @cur_user, site: @cur_site) %>
