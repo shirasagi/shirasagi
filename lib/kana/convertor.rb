@@ -38,6 +38,15 @@ module Kana::Convertor
       text.gsub!(/<!--[^>]*?\s#{skip_marks[0]}\s[^>]*?-->(.*?)<!--[^>]*?\s#{skip_marks[1]}\s[^>]*?-->/im) do |m|
         Array.new(m.bytes.length, "\r").join
       end
+      if SS.config.kana["skip_attributes"].present?
+        SS.config.kana["skip_attributes"].each do |tag, attributes|
+          text.gsub!(/<\s*#{::Regexp.escape(tag)}[^>]*>/im) do |m|
+            m.gsub(/#{::Regexp.union(attributes)}\s*=\s*['"]([^'"]*)['"]/im) do |m|
+              Array.new(m.bytes.length, "\r").join
+            end
+          end
+        end
+      end
       text.gsub!(/[ -\/:-@\[-`\{-~]/m, "\r")
 
       byte = html.bytes
