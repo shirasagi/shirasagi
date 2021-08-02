@@ -66,7 +66,7 @@ module SS::Model::JobLog
 
       started_at = Time.zone.local(ymd[0..3].to_i, ymd[4..5].to_i, ymd[6..7].to_i)
       end_at = started_at.end_of_day
-      from = term_to_date(params[:term] || 'day', end_at)
+      from = History.term_to_date(params[:term] || '1.day', end_at)
 
       all.gte(updated: from).lte(updated: end_at)
     end
@@ -78,15 +78,23 @@ module SS::Model::JobLog
   end
 
   def save_term_options
-    %w(day month year all_save).map do |v|
-      [ I18n.t("history.save_term.#{v}"), v ]
+    options1 = %w(1.day 1.month 1.year).map do |v|
+      [ I18n.t("ss.options.duration.#{v.sub('.', '_')}"), v ]
     end
+    options2 = %w(all_save).map do |v|
+      [ I18n.t("job.save_term.#{v}"), v ]
+    end
+    options1 + options2
   end
 
   def delete_term_options
-    %w(6.months 3.months 2.months month 2.weeks week all_delete).map do |v|
-      [ I18n.t("history.save_term.#{v.sub('.', '_')}"), v ]
+    options1 = %w(6.months 3.months 2.months 1.month 2.weeks 1.week).map do |v|
+      [ I18n.t("ss.options.duration.#{v.sub('.', '_')}"), v ]
     end
+    options2 = %w(all_delete).map do |v|
+      [ I18n.t("job.save_term.#{v}"), v ]
+    end
+    options1 + options2
   end
 
   def start_label
@@ -127,34 +135,6 @@ module SS::Model::JobLog
     end
 
     self[:logs]
-  end
-
-  module ClassMethods
-    def term_to_date(name, date = Time.zone.now)
-      num, unit = name.to_s.split('.')
-      if unit.blank?
-        unit, num = num, unit
-      end
-      num = 1 if !num.numeric?
-      num = num.to_i
-
-      case unit.singularize
-      when "year"
-        date - num.years
-      when "month"
-        date - num.months
-      when "week"
-        date - num.weeks
-      when "day"
-        date - num.days
-      when "all_delete"
-        date
-      when "all_save"
-        nil
-      else
-        raise "malformed term: #{name}"
-      end
-    end
   end
 
   private

@@ -87,7 +87,7 @@ module Job::LogsFilter
     # show condition input form if request is get.
     return if request.get?
 
-    from = @model.term_to_date params[:item][:save_term]
+    from = History.term_to_date params[:item][:save_term]
     raise "400" if from == false
 
     cond = {}
@@ -103,7 +103,7 @@ module Job::LogsFilter
     return if request.get?
 
     begin
-      from = @model.term_to_date params[:item][:save_term]
+      from = History.term_to_date params[:item][:save_term]
       unless from
         redirect_to({ action: :index }, { notice: t("ss.notice.canceled") })
         return

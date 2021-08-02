@@ -62,7 +62,7 @@ describe "job_cms_logs", type: :feature, dbscope: :example do
       expect(status_code).to eq 200
 
       within "form" do
-        select I18n.t("history.save_term.all_delete"), from: "item_save_term"
+        select I18n.t("history.options.duration.all_delete"), from: "item_save_term"
         click_button I18n.t("ss.buttons.delete")
       end
       expect(status_code).to eq 200

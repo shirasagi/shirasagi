@@ -407,6 +407,15 @@ ja:
       sanitizer_state:
         wait: 無害化中
         complete: 無害化済
+      duration:
+        "1_day": １日
+        "1_week": １週間
+        "2_weeks": ２週間
+        "1_month": １ヶ月
+        "2_months": ２ヶ月
+        "3_months": ３ヶ月
+        "6_months": ６ヶ月
+        "1_year": １年
 
     tasks:
       started: 開始しました。

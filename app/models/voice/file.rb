@@ -24,7 +24,7 @@ class Voice::File
     if params.present?
       save_term = params[:keyword]
       if save_term.present?
-        from = History::Log.term_to_date save_term
+        from = History.term_to_date save_term
         criteria = criteria.lt(created: from) if from
       end
 
@@ -52,10 +52,10 @@ class Voice::File
 
     def save_term_options
       [
-        [I18n.t(:"history.save_term.day"), "day"],
-        [I18n.t(:"history.save_term.month"), "month"],
-        [I18n.t(:"history.save_term.year"), "year"],
-        [I18n.t(:"history.save_term.all_save"), "all_save"],
+        [I18n.t("ss.options.duration.1_day"), "1.day"],
+        [I18n.t("ss.options.duration.1_month"), "1.month"],
+        [I18n.t("ss.options.duration.1_year"), "1.year"],
+        [I18n.t("history.options.duration.all_save"), "all_save"],
       ]
     end
 

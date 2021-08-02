@@ -49,7 +49,7 @@ describe "history_sys_logs", type: :feature, dbscope: :example do
 
       visit index_path
       click_on I18n.t('ss.links.delete')
-      select I18n.t("history.save_term.all_delete"), from: 'item[delete_term]'
+      select I18n.t("history.options.duration.all_delete"), from: 'item[delete_term]'
       click_on I18n.t('ss.buttons.delete')
       expect(page).to have_css('.list-item', count: 1)
     end
