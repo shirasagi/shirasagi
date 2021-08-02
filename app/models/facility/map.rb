@@ -12,7 +12,13 @@ class Facility::Map
   validate :center_position_validate, if: -> { set_center_position.present? }
   validate :zoom_level_validate, if: -> { set_zoom_level.present? }
 
+  after_save :save_facility
+
   private
+
+  def save_facility
+    parent.becomes_with_route.save rescue nil
+  end
 
   def serve_static_file?
     false

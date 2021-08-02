@@ -32,6 +32,7 @@ module Facility::Node
     include Facility::Addon::Service
     include Facility::Addon::Location
     include Facility::Addon::Notice
+    include Facility::Page::Search
     include Cms::Addon::Form::Node
     include Cms::Addon::Release
     include Cms::Addon::DefaultReleasePlan
