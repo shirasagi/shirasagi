@@ -67,4 +67,12 @@ module KeyVisual::Addon::SwiperSetting
       [ I18n.t("ss.options.state.#{v}"), v ]
     end
   end
+
+  def js_option
+    {
+      speed: kv_speed || DEFAULT_KV_SPEED, space: kv_space, autoplay: kv_autoplay, pause: kv_pause || DEFAULT_KV_PAUSE,
+      navigation: kv_navigation, nagivation_style: kv_pagination_style,
+      thumbnail: kv_thumbnail, thumbnail_count: kv_thumbnail_count || DEFAULT_KV_THUMBNAIL_COUNT
+    }
+  end
 end

@@ -1,47 +1,47 @@
 <% wrap_id = "key_visual-swiper_slide-#{@cur_part.id}" %>
 
-<div class="ss-swiper-wrap" id="<%= wrap_id %>">
+<div class="ss-swiper-slide" id="<%= wrap_id %>">
   <%= sanitize(@cur_part.upper_html) if @cur_part.upper_html.present? %>
 
-  <div class="swiper-container ss-swiper-main">
-    <div class="swiper-wrapper">
+  <div class="swiper-container ss-swiper-slide-container ss-swiper-slide-main">
+    <div class="swiper-wrapper ss-swiper-slide-wrapper">
       <% @items.each do |item| %>
         <% file = item.file %>
         <% next unless file %>
 
-        <div class="swiper-slide">
+        <div class="swiper-slide ss-swiper-slide-item">
           <% if item.link_url.present? %>
-            <a href="<%= item.link_url %>" <%== target %>><%= image_tag file.url, alt: item.name %></a>
+            <a href="<%= item.link_url %>" <%== target %>><%= image_tag file.url, alt: item.name, class: "ss-swiper-slide-image" %></a>
           <% else %>
-            <%= image_tag file.url, alt: item.name %>
+            <%= image_tag file.url, alt: item.name, class: "ss-swiper-slide-image" %>
           <% end %>
         </div>
       <% end %>
     </div>
     <% if @cur_part.kv_navigation == "show" %>
-      <div class="swiper-button-next"></div>
-      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next ss-swiper-slide-button-next"></div>
+      <div class="swiper-button-prev ss-swiper-slide-button-prev"></div>
     <% end %>
     <% if @cur_part.kv_pagination_style == "disc" || @cur_part.kv_pagination_style == "number" %>
-      <div class="swiper-pagination"></div>
+      <div class="swiper-pagination ss-swiper-slide-pagination"></div>
     <% end %>
 
     <% if @cur_part.kv_autoplay == "enabled" || @cur_part.kv_autoplay == "started" %>
-      <div class="ss-swiper-controller">
-        <button type="button" class="ss-swiper-play"><%= t('key_visual.controls.start') %></button>
-        <button type="button" class="ss-swiper-stop"><%= t('key_visual.controls.stop') %></button>
+      <div class="ss-swiper-slide-controller">
+        <button type="button" class="ss-swiper-slide-play"><%= t('key_visual.controls.start') %></button>
+        <button type="button" class="ss-swiper-slide-stop"><%= t('key_visual.controls.stop') %></button>
       </div>
     <% end %>
   </div>
   <% if @cur_part.kv_thumbnail == "show" %>
-    <div thumbsSlider="" class="swiper-container ss-swiper-thumbnail">
-      <div class="swiper-wrapper">
+    <div thumbsSlider="" class="swiper-container ss-swiper-slide-container ss-swiper-slide-thumbnail">
+      <div class="swiper-wrapper ss-swiper-slide-wrapper">
         <% @items.each do |item| %>
           <% file = item.file %>
           <% next unless file %>
 
-          <div class="swiper-slide">
-            <%= image_tag file.url, alt: item.name %>
+          <div class="swiper-slide ss-swiper-slide-item">
+            <%= image_tag file.url, alt: item.name, class: "ss-swiper-slide-image" %>
           </div>
         <% end %>
       </div>
@@ -51,156 +51,7 @@
   <%= sanitize(@cur_part.lower_html) if @cur_part.lower_html.present? %>
 </div>
 
-<style>
-    .ss-swiper-wrap {
-        position: relative;
-        width: 100%;
-        height: 400px;
-    }
-
-    .swiper-container {
-        width: 100%;
-        height: 100%;
-    }
-
-    .swiper-slide {
-        text-align: center;
-        font-size: 18px;
-        background: #fff;
-
-        /* Center slide text vertically */
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: -webkit-flex;
-        display: flex;
-        -webkit-box-pack: center;
-        -ms-flex-pack: center;
-        -webkit-justify-content: center;
-        justify-content: center;
-        -webkit-box-align: center;
-        -ms-flex-align: center;
-        -webkit-align-items: center;
-        align-items: center;
-    }
-
-    .swiper-slide img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .swiper-container {
-        width: 100%;
-        height: 300px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .swiper-slide {
-        background-size: cover;
-        background-position: center;
-    }
-
-    .ss-swiper-main {
-        height: 80%;
-        width: 100%;
-    }
-
-    .ss-swiper-thumbnail {
-        height: 20%;
-        box-sizing: border-box;
-        padding: 10px 0;
-    }
-
-    .ss-swiper-thumbnail .swiper-slide {
-        width: 25%;
-        height: 100%;
-        opacity: 0.4;
-    }
-
-    .ss-swiper-thumbnail .swiper-slide-thumb-active {
-        opacity: 1;
-    }
-
-    .swiper-slide img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-</style>
-
-<script defer>
-  <% if @cur_part.kv_thumbnail == "show" %>
-    <%
-      if @cur_part.kv_thumbnail_count.numeric? && @cur_part.kv_thumbnail_count > 0
-        thumbnail_count = @cur_part.kv_thumbnail_count
-      else
-        thumbnail_count = KeyVisual::Part::SwiperSlide::DEFAULT_KV_THUMBNAIL_COUNT
-      end
-      thumbnail_slider_option = {
-        loop: true,
-        slidesPerView: thumbnail_count,
-        freeMode: true,
-        watchSlidesVisibility: true,
-        watchSlidesProgress: true
-      }
-      if @cur_part.kv_space.numeric? && @cur_part.kv_space > 0
-        thumbnail_slider_option[:spaceBetween] = @cur_part.kv_space / thumbnail_count
-      end
-    %>
-    var swiper = new Swiper("#<%= wrap_id %> .ss-swiper-thumbnail", <%== thumbnail_slider_option.to_json %>);
-  <% end %>
-
-  <%
-    main_slider_option = {
-      loop: true,
-      speed: @cur_part.kv_speed || KeyVisual::Part::SwiperSlide::DEFAULT_KV_SPEED
-    }
-
-    if @cur_part.kv_autoplay == "enabled" || @cur_part.kv_autoplay == "started"
-      main_slider_option[:autoplay] = {
-        delay: @cur_part.kv_pause || KeyVisual::Part::SwiperSlide::DEFAULT_KV_PAUSE,
-        disableOnInteraction: false,
-      }
-    end
-
-    if @cur_part.kv_space.numeric? && @cur_part.kv_space > 0
-      main_slider_option[:spaceBetween] = @cur_part.kv_space
-    end
-
-    if @cur_part.kv_navigation == "show"
-      main_slider_option[:navigation] = {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev"
-      }
-    end
-
-    if @cur_part.kv_pagination_style == "disc" || @cur_part.kv_pagination_style == "number"
-      main_slider_option[:pagination] = {
-        el: '.swiper-pagination',
-        clickable: true
-      }
-    end
-  %>
-
-  var mainSliderOption = <%== main_slider_option.to_json %>;
-  <% if @cur_part.kv_pagination_style == "number" %>
-    mainSliderOption.pagination.renderBullet = function(index, className) {
-      return '<span class="' + className + '">' + (index + 1) + '</span>';
-    };
-  <% end %>
-  <% if @cur_part.kv_thumbnail == "show" %>
-    mainSliderOption.thumbs = { swiper: swiper };
-  <% end %>
-  var swiper2 = new Swiper("#<%= wrap_id %> .ss-swiper-main", mainSliderOption);
-
-  <% if @cur_part.kv_autoplay == "enabled" || @cur_part.kv_autoplay == "started" %>
-    $("#<%= wrap_id %> .ss-swiper-play").on("click", function() { swiper2.autoplay.start(); });
-    $("#<%= wrap_id %> .ss-swiper-stop").on("click", function() { swiper2.autoplay.stop(); });
-  <% end %>
-  <% if @cur_part.kv_autoplay == "enabled" %>
-    swiper2.autoplay.stop();
-  <% end %>
-</script>
+<%= jquery do %>
+  var slide = new KeyVisual_SwiperSlide("#<%= wrap_id %>", <%== @cur_part.js_option.to_json %>);
+  KeyVisual_SwiperSlide.instances["#<%= wrap_id %>"] = slide;
+<% end %>
