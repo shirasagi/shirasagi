@@ -1,5 +1,6 @@
 // this file is included with '@import'.
 // So, we have to use '@import' because "require" in comment doesn't work.
+@import "compass-mixins/lib/compass";
 @import "swiper/dist/css/swiper";
 
 .ss-swiper-slide {
@@ -10,8 +11,6 @@
 .ss-swiper-slide-container {
   width: 100%;
   height: 100%;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .ss-swiper-slide-main {
@@ -21,12 +20,15 @@
 
 .ss-swiper-slide-thumbnail {
   height: 20%;
-  box-sizing: border-box;
+}
+
+.ss-swiper-slide-item {
+  @include display-flex;
+  @include justify-content(center);
+  @include align-items(center);
 }
 
 .ss-swiper-slide-thumbnail .ss-swiper-slide-item {
-  width: 25%;
-  height: 100%;
   opacity: .4;
 }
 
@@ -34,33 +36,8 @@
   opacity: 1;
 }
 
-.ss-swiper-slide-item {
-  text-align: center;
-  font-size: 18px;
-  background-color: #fff;
-  background-size: cover;
-  background-position: center;
-
-  /* Center slide text vertically */
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  -webkit-align-items: center;
-  align-items: center;
-}
-
 .ss-swiper-slide-image {
-  display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 .ss-swiper-slide-controller {
