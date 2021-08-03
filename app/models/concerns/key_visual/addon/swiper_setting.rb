@@ -35,12 +35,18 @@ module KeyVisual::Addon::SwiperSetting
 
     permit_params :link_target, :kv_speed, :kv_space, :kv_autoplay, :kv_pause, :kv_navigation, :kv_pagination_style
     permit_params :kv_thumbnail, :kv_thumbnail_count
+
+    validates :link_target, inclusion: { in: %w(_blank), allow_blank: true }
+    validates :kv_autoplay, inclusion: { in: %w(disabled enabled started), allow_blank: true }
+    validates :kv_navigation, inclusion: { in: %w(hide show), allow_blank: true }
+    validates :kv_pagination_style, inclusion: { in: %w(none disc number), allow_blank: true }
+    validates :kv_thumbnail, inclusion: { in: %w(hide show), allow_blank: true }
   end
 
   def link_target_options
     [
       [I18n.t('key_visual.options.link_target.self'), ''],
-      [I18n.t('key_visual.options.link_target.blank'), 'blank'],
+      [I18n.t('key_visual.options.link_target.blank'), '_blank'],
     ]
   end
 
@@ -71,7 +77,7 @@ module KeyVisual::Addon::SwiperSetting
   def js_option
     {
       speed: kv_speed || DEFAULT_KV_SPEED, space: kv_space, autoplay: kv_autoplay, pause: kv_pause || DEFAULT_KV_PAUSE,
-      navigation: kv_navigation, nagivation_style: kv_pagination_style,
+      navigation: kv_navigation, pagination_style: kv_pagination_style,
       thumbnail: kv_thumbnail, thumbnail_count: kv_thumbnail_count || DEFAULT_KV_THUMBNAIL_COUNT
     }
   end

@@ -5,6 +5,7 @@ class KeyVisual::Agents::Parts::SwiperSlideController < ApplicationController
     @node = @cur_part.parent
     return head :ok unless @node
 
-    @items = KeyVisual::Image.site(@cur_site).node(@node).and_public(@cur_date).order_by(order: 1)
+    @items = KeyVisual::Image.site(@cur_site).node(@node).and_public(@cur_date)
+    @items = @items.order_by(order: 1).limit(@cur_part.limit)
   end
 end

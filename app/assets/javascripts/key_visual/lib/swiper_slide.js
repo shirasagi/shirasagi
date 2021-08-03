@@ -51,7 +51,7 @@ this.KeyVisual_SwiperSlide = (function () {
 
     if (self.options.pagination_style === "number") {
       mainSliderOption.pagination.renderBullet = function (index, className) {
-        return '<span class="' + className + '">' + (index + 1) + '</span>';
+        return '<span class="' + className + ' ss-swiper-slide-pagination-bullet-number">' + (index + 1) + '</span>';
       };
     }
 
@@ -60,13 +60,26 @@ this.KeyVisual_SwiperSlide = (function () {
     }
 
     self.swiper = new Swiper(self.el.querySelector(".ss-swiper-slide-main"), mainSliderOption);
+    self.swiper.on("transitionEnd", function() { self.triggerEvent("transitionEnd"); });
 
     if (self.options.autoplay === "enabled" || self.options.autoplay === "started") {
-      self.el.querySelector(".ss-swiper-slide-play").addEventListener("click", function() {
+      var playButton = self.el.querySelector(".ss-swiper-slide-play");
+      playButton.addEventListener("click", function() {
         self.swiper.autoplay.start();
       });
-      self.el.querySelector(".ss-swiper-slide-stop").addEventListener("click", function() {
+      var stopButton = self.el.querySelector(".ss-swiper-slide-stop")
+      stopButton.addEventListener("click", function() {
         self.swiper.autoplay.stop();
+      });
+      self.swiper.on("autoplayStart", function() {
+        playButton.setAttribute("aria-pressed", true);
+        stopButton.setAttribute("aria-pressed", false);
+        self.triggerEvent("autoplayStart");
+      });
+      self.swiper.on("autoplayStop", function() {
+        playButton.setAttribute("aria-pressed", false);
+        stopButton.setAttribute("aria-pressed", true);
+        self.triggerEvent("autoplayStop");
       });
     }
     if (self.options.autoplay === "enabled") {
@@ -90,6 +103,14 @@ this.KeyVisual_SwiperSlide = (function () {
     }
 
     return new Swiper(self.el.querySelector(".ss-swiper-slide-thumbnail"), thumbnailSliderOption);
+  };
+
+  KeyVisual_SwiperSlide.prototype.triggerEvent = function(eventName) {
+    var self = this;
+
+    var ev = document.createEvent('Event');
+    ev.initEvent(eventName, true, true);
+    self.el.dispatchEvent(ev);
   };
 
   return KeyVisual_SwiperSlide;
