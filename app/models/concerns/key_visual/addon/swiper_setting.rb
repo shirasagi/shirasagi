@@ -75,10 +75,14 @@ module KeyVisual::Addon::SwiperSetting
   end
 
   def js_option
-    {
+    option = {
       speed: kv_speed || DEFAULT_KV_SPEED, space: kv_space, autoplay: kv_autoplay, pause: kv_pause || DEFAULT_KV_PAUSE,
       navigation: kv_navigation, pagination_style: kv_pagination_style,
       thumbnail: kv_thumbnail, thumbnail_count: kv_thumbnail_count || DEFAULT_KV_THUMBNAIL_COUNT
     }
+    if Rails.env.test?
+      option[:test] = true
+    end
+    option
   end
 end

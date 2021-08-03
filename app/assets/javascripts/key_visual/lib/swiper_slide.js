@@ -60,7 +60,11 @@ this.KeyVisual_SwiperSlide = (function () {
     }
 
     self.swiper = new Swiper(self.el.querySelector(".ss-swiper-slide-main"), mainSliderOption);
-    self.swiper.on("transitionEnd", function() { self.triggerEvent("transitionEnd"); });
+    if (self.options.test) {
+      self.swiper.on("transitionEnd", function () {
+        self.triggerEvent("transitionEnd");
+      });
+    }
 
     if (self.options.autoplay === "enabled" || self.options.autoplay === "started") {
       var playButton = self.el.querySelector(".ss-swiper-slide-play");
@@ -74,12 +78,16 @@ this.KeyVisual_SwiperSlide = (function () {
       self.swiper.on("autoplayStart", function() {
         playButton.setAttribute("aria-pressed", true);
         stopButton.setAttribute("aria-pressed", false);
-        self.triggerEvent("autoplayStart");
+        if (self.options.test) {
+          self.triggerEvent("autoplayStart");
+        }
       });
       self.swiper.on("autoplayStop", function() {
         playButton.setAttribute("aria-pressed", false);
         stopButton.setAttribute("aria-pressed", true);
-        self.triggerEvent("autoplayStop");
+        if (self.options.test) {
+          self.triggerEvent("autoplayStop");
+        }
       });
     }
     if (self.options.autoplay === "enabled") {
