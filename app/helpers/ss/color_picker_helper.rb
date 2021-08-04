@@ -3,6 +3,9 @@ module SS::ColorPickerHelper
     html_options = html_options.deep_stringify_keys
     html_options['data-clear'] = 1 if options.fetch(:clear, true)
     html_options['data-swatches'] = 1 if options.fetch(:swatches, true)
+    if options.fetch(:random, true)
+      html_options['data-random'] = SS::RandomColor.default_generator.take(8).map(&:to_rgb).map(&:to_s)
+    end
 
     html_options['class'] = Array(html_options['class']) + %w(js-color)
 
@@ -13,6 +16,9 @@ module SS::ColorPickerHelper
     html_options = html_options.deep_stringify_keys
     html_options['data-clear'] = 1 if options.fetch(:clear, true)
     html_options['data-swatches'] = 1 if options.fetch(:swatches, true)
+    if options.fetch(:random, true)
+      html_options['data-random'] = SS::RandomColor.default_generator.take(8).map(&:to_rgb).map(&:to_s)
+    end
 
     html_options['class'] = Array(html_options['class']) + %w(js-color)
 

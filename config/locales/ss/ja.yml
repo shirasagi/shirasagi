@@ -134,7 +134,7 @@ ja:
       import: インポート
       convert: 変換
       unlock_and_edit_forcibly: 強制的にロックを解除し編集する
-      random_password: ランダム生成
+      random_gen: ランダム生成
       copy: コピー
       paste: 貼り付け
       attach: 添付

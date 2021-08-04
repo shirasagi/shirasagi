@@ -34,6 +34,20 @@ this.SS_Color = (function () {
           self.minicolors('value', { color: 'transparent' });
         });
       }
+      if (self.data('random')) {
+        var randomColor = self.data('random').split(' ');
+        var randomIndex = 0;
+        var btn = $("<input type='button' class='btn' value='<%= I18n.t('ss.buttons.random_gen') %>' />");
+        self.after(btn).after(' ');
+        btn.on("click", function () {
+          var nextColor = randomColor[randomIndex];
+          randomIndex++;
+          if (randomIndex >= randomColor.length) {
+            randomIndex = 0;
+          }
+          self.minicolors('value', { color: nextColor });
+        });
+      }
     });
   };
 
