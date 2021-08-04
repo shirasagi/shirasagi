@@ -15,7 +15,7 @@
 
       <span class="btn-group toolbar-foreground-color">
         <label><%= t("ss.color") %></label>
-        <%= text_field_tag("foreground-color", "#000000", class: 'js-color') %>
+        <%= ss_color_picker_tag "foreground-color", "#000000", clear: false, swatches: false %>
         <%= button_tag(type: "button", name: "btn-foreground-color-picker", class: "btn btn-color-picker") do %>
           <i class="material-icons md-18">&#xe3b8;</i>
         <% end %>
@@ -23,7 +23,7 @@
 
       <span class="btn-group toolbar-background-color">
         <label><%= t("ss.bg_color") %></label>
-        <%= text_field_tag("background-color", "#ffffff", class: 'js-color') %>
+        <%= ss_color_picker_tag "background-color", "#ffffff", clear: false, swatches: false %>
         <%= button_tag(type: "button", name: "btn-background-color-picker", class: "btn btn-color-picker") do %>
           <i class="material-icons md-18">&#xe3b8;</i>
         <% end %>
