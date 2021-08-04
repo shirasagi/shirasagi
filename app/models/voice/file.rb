@@ -22,12 +22,6 @@ class Voice::File
     criteria = self.where({})
 
     if params.present?
-      save_term = params[:keyword]
-      if save_term.present?
-        from = History.term_to_date save_term
-        criteria = criteria.lt(created: from) if from
-      end
-
       keyword = params[:keyword]
       criteria = criteria.keyword_in keyword, :url if keyword.present?
 
@@ -48,15 +42,6 @@ class Voice::File
     def root
       return test_root if Rails.env.test?
       ::File.join(Rails.root, "private", "files")
-    end
-
-    def save_term_options
-      [
-        [I18n.t("ss.options.duration.1_day"), "1.day"],
-        [I18n.t("ss.options.duration.1_month"), "1.month"],
-        [I18n.t("ss.options.duration.1_year"), "1.year"],
-        [I18n.t("history.options.duration.all_save"), "all_save"],
-      ]
     end
 
     private
