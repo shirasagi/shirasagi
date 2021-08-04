@@ -57,6 +57,15 @@ this.Gws_Schedule_View = (function ($) {
     });
   };
 
+  return Gws_Schedule_View;
+
+})($jQuery1);
+
+(function ($) {
+  // datetimepicker プラグイン は jQuery3 にだけ存在する。
+  // このプラグインを jQuery1 へ組み込んでも jQuery3 の側と競合するのかうまく動作しない。少なくとも言語が英語になってしまう。
+  // そこで、Gws_Schedule_View.crenderSideCalendars() のみ jQuery3 で動作させる。
+  // Gws_Schedule_View.crenderSideCalendars() は fullcalendar の機能を利用しないため、jQuery3 で動作させても問題ない。
   Gws_Schedule_View.crenderSideCalendars = function (name, date) {
     var h, i, j;
     h = ("<div class='" + name + "'>") + "<div class='xdsoft_datetimepicker controller'>" + "<button type='button' class='xdsoft_prev' />" + "<button type='button' class='xdsoft_next' />" + "</div></div>";
@@ -105,7 +114,4 @@ this.Gws_Schedule_View = (function ($) {
       return results;
     });
   };
-
-  return Gws_Schedule_View;
-
-})($jQuery1);
+})($jQuery3);
