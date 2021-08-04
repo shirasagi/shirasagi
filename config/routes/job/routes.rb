@@ -17,12 +17,7 @@ Rails.application.routes.draw do
       get :download, on: :member
     end
 
-    resources :logs, only: [:index, :show], path: ':ymd/logs', as: :daily_logs do
-      get :batch_destroy, on: :collection
-      post :batch_destroy, on: :collection
-      match :download_all, on: :collection, via: %i[get post]
-      get :download, on: :member
-    end
+    resources :logs, only: [:index, :show], path: ':ymd/logs', as: :daily_logs
 
     resources :tasks, only: [:index, :show, :destroy], concerns: [:deletion] do
       post :reset_state, on: :member
@@ -45,12 +40,7 @@ Rails.application.routes.draw do
       get :download, on: :member
     end
 
-    resources :logs, only: [:index, :show], path: ':ymd/logs', as: :daily_logs do
-      get :batch_destroy, on: :collection
-      post :batch_destroy, on: :collection
-      match :download_all, on: :collection, via: %i[get post]
-      get :download, on: :member
-    end
+    resources :logs, only: [:index, :show], path: ':ymd/logs', as: :daily_logs
 
     resources :tasks, only: [:index, :show, :destroy], concerns: [:deletion] do
       post :reset_state, on: :member

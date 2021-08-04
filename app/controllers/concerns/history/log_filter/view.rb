@@ -16,6 +16,7 @@ module History::LogFilter::View
 
   def delete
     @item = History::DeleteParam.new
+    @item.delete_term = '1.month'
   end
 
   def destroy
@@ -35,6 +36,7 @@ module History::LogFilter::View
 
   def download
     @item = History::DownloadParam.new
+    @item.save_term = '1.day'
     return if request.get?
 
     @item.attributes = params.require(:item).permit(:encoding, :save_term, user_ids: [])

@@ -16,7 +16,7 @@
     </dd>
 
     <dt><%= @item.class.human_attribute_name :save_term %></dt>
-    <dd><%= f.select :save_term, @item.save_term_options %></dd>
+    <dd><%= f.select :save_term, @item.save_term_options, include_blank: t("history.options.duration.all_save") %></dd>
 
     <% if @ss_mode == :cms %>
       <dt><%= @item.class.human_attribute_name :user_ids %></dt>

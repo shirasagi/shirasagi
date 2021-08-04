@@ -1,8 +1,15 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
-    <%= link_to t('ss.links.download'), action: :download_all %>
-    <%= link_to t('ss.links.delete'), action: :batch_destroy %>
+    <%= link_to t('ss.links.download'), action: :download_all, ref: request.fullpath %>
+    <%= link_to t('ss.links.delete'), action: :batch_destroy, ref: request.fullpath %>
   <% else %>
-    <%= link_to t('ss.links.back_to_index'), action: :index %>
+    <%
+      if params[:ref].present? && Sys::TrustedUrlValidator.myself_url?(params[:ref].to_s)
+        back_url = ::Addressable::URI.parse(params[:ref].to_s).path
+      else
+        back_url = url_for(action: :index)
+      end
+    %>
+    <%= link_to t('ss.links.back_to_index'), back_url %>
   <% end %>
 </nav>

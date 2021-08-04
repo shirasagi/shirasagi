@@ -6,7 +6,7 @@
 
   <dl class="see">
     <dt><%= @item.class.human_attribute_name :delete_term %></dt>
-    <dd><%= f.select :delete_term, @item.delete_term_options %></dd>
+    <dd><%= f.select :delete_term, @item.delete_term_options, include_blank: t("history.options.duration.all_delete") %></dd>
   </dl>
 </section>
 

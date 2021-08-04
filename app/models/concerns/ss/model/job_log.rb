@@ -37,8 +37,6 @@ module SS::Model::JobLog
     validates :class_name, presence: true
 
     after_destroy :destroy_files
-
-    scope :term, ->(from) { where(:created.lt => from) }
   end
 
   module ClassMethods
@@ -58,7 +56,7 @@ module SS::Model::JobLog
     end
 
     def search_ymd(params)
-      return all if params[:term] == 'all_save'
+      return all if params[:term].blank? || params[:term] == 'all_save'
       return all if params[:ymd].blank?
 
       ymd = params[:ymd]
@@ -66,7 +64,7 @@ module SS::Model::JobLog
 
       started_at = Time.zone.local(ymd[0..3].to_i, ymd[4..5].to_i, ymd[6..7].to_i)
       end_at = started_at.end_of_day
-      from = History.term_to_date(params[:term] || '1.day', end_at)
+      from = end_at - SS::Duration.parse(params[:term])
 
       all.gte(updated: from).lte(updated: end_at)
     end
@@ -78,23 +76,15 @@ module SS::Model::JobLog
   end
 
   def save_term_options
-    options1 = %w(1.day 1.month 1.year).map do |v|
+    %w(1.day 1.month 1.year).map do |v|
       [ I18n.t("ss.options.duration.#{v.sub('.', '_')}"), v ]
     end
-    options2 = %w(all_save).map do |v|
-      [ I18n.t("job.save_term.#{v}"), v ]
-    end
-    options1 + options2
   end
 
   def delete_term_options
-    options1 = %w(6.months 3.months 2.months 1.month 2.weeks 1.week).map do |v|
+    %w(6.months 3.months 2.months 1.month 2.weeks 1.week).map do |v|
       [ I18n.t("ss.options.duration.#{v.sub('.', '_')}"), v ]
     end
-    options2 = %w(all_delete).map do |v|
-      [ I18n.t("job.save_term.#{v}"), v ]
-    end
-    options1 + options2
   end
 
   def start_label

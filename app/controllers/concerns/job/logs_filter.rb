@@ -30,7 +30,7 @@ module Job::LogsFilter
     @log_criteria ||= begin
       criteria = @model.all
       criteria = criteria.site(@cur_site) if @cur_site
-      criteria = criteria.search_ymd(ymd: @ymd, term: params.dig(:item, :save_term)) if @ymd.present?
+      criteria = criteria.search_ymd(ymd: @ymd, term: '1.day') if @ymd.present?
       criteria
     end
   end
@@ -83,44 +83,44 @@ module Job::LogsFilter
   end
 
   def download_all
-    @item = @model.new
+    @item = @model.new(save_term: "1.day")
     # show condition input form if request is get.
     return if request.get?
 
-    from = History.term_to_date params[:item][:save_term]
-    raise "400" if from == false
+    save_term = params.require(:item).permit(:save_term)[:save_term]
 
-    cond = {}
-    cond[:updated] = { "$gte" => from } if @ymd.blank? && from
+    @items = log_criteria
+    if @ymd.blank? && save_term.present?
+      from = Time.zone.now - SS::Duration.parse(save_term)
+      @items = @items.gte(updated: from)
+    end
+    @items = @items.reorder(closed: 1)
 
-    @items = log_criteria.where(cond).sort(closed: 1)
     send_csv @items
+  rescue
+    raise "400"
   end
 
   def batch_destroy
     @item = @model.new
+    @item.save_term = "6.months"
     # show condition input form if request is get.
     return if request.get?
 
-    begin
-      from = History.term_to_date params[:item][:save_term]
-      unless from
-        redirect_to({ action: :index }, { notice: t("ss.notice.canceled") })
-        return
-      end
+    save_term = params.require(:item).permit(:save_term)[:save_term]
 
-      num = log_criteria.term(from).destroy_all
-
-      compact
-
-      render_destroy num
-    rescue
-      raise "400"
+    items = log_criteria
+    if save_term.present?
+      from = Time.zone.now - SS::Duration.parse(save_term)
+      items = items.lt(created: from)
     end
-  end
+    num = items.destroy_all
 
-  def delete_term_options
-    @model.delete_term_options
+    compact
+
+    render_destroy num
+  rescue
+    raise "400"
   end
 
   private
