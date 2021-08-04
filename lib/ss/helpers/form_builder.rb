@@ -1,6 +1,7 @@
 module SS::Helpers
   class FormBuilder < ActionView::Helpers::FormBuilder
     include SS::Helpers::FileFormBuilder
+    include SS::Helpers::ColorPickerBuilder
 
     def hidden_field(method, options = {})
       return super if method !~ /\[/
