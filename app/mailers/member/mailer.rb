@@ -5,7 +5,7 @@ class Member::Mailer < ActionMailer::Base
     return if @node.blank?
     sender = Cms.sender_address(@node, @node.cur_site || @node.site)
 
-    mail from: sender, to: @node.notice_email
+    mail from: sender, to: @node.notice_email, message_id: Cms.generate_message_id(@node.cur_site || @node.site)
   end
 
   # 会員登録に対して確認メールを配信する。
@@ -17,7 +17,7 @@ class Member::Mailer < ActionMailer::Base
     return if @node.blank?
     sender = Cms.sender_address(@node, @node.cur_site || @node.site)
 
-    mail from: sender, to: member.email
+    mail from: sender, to: member.email, message_id: Cms.generate_message_id(@node.cur_site || @node.site)
   end
 
   # パスワードの再設定メールを配信する。
@@ -29,7 +29,7 @@ class Member::Mailer < ActionMailer::Base
     return if @node.blank?
     sender = Cms.sender_address(@node, @node.cur_site || @node.site)
 
-    mail from: sender, to: member.email
+    mail from: sender, to: member.email, message_id: Cms.generate_message_id(@node.cur_site || @node.site)
   end
 
   # 登録完了通知メールを配信する。
@@ -41,7 +41,7 @@ class Member::Mailer < ActionMailer::Base
     return if @node.blank?
     sender = Cms.sender_address(@node, @node.cur_site || @node.site)
 
-    mail from: sender, to: member.email
+    mail from: sender, to: member.email, message_id: Cms.generate_message_id(@node.cur_site || @node.site)
   end
 
   # グループ招待メールを配信する。
@@ -64,7 +64,7 @@ class Member::Mailer < ActionMailer::Base
     end
     body << "\n"
 
-    mail from: from, to: to, subject: subject, body: body
+    mail from: from, to: to, subject: subject, body: body, message_id: Cms.generate_message_id(@node.cur_site || @node.site)
   end
 
   # 会員招待メールを配信する。
@@ -86,6 +86,6 @@ class Member::Mailer < ActionMailer::Base
     end
     body << "\n"
 
-    mail from: from, to: to, subject: subject, body: body
+    mail from: from, to: to, subject: subject, body: body, message_id: Cms.generate_message_id(@node.cur_site || @node.site)
   end
 end

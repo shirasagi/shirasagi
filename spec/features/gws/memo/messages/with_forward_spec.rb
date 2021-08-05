@@ -94,6 +94,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           if target != 'dl.see.bcc'
             expect(mail.body.raw_source).to include(recipient.name + "\n")
           end
+          expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
         end
       end
     end

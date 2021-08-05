@@ -198,4 +198,14 @@ module Cms
 
     DEFAULT_SENDER_ADDRESS
   end
+
+  def self.generate_message_id(site)
+    # see: mail/fields/message_id_field.rb#generate_message_id
+    if site.present? && site.respond_to?(:domain) && site.domain.present?
+      domain = site.domain
+    end
+    domain ||= "replace-me.example.jp"
+
+    "<#{::Mail.random_tag}@#{domain}.mail>"
+  end
 end

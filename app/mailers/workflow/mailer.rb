@@ -14,7 +14,7 @@ class Workflow::Mailer < ActionMailer::Base
     to_email = format_email(@to_user)
     return nil if from_email.blank? || to_email.blank?
 
-    mail from: from_email, to: to_email
+    mail from: from_email, to: to_email, message_id: Cms.generate_message_id(@site)
   end
 
   def self.send_request_mails(args)
@@ -39,7 +39,7 @@ class Workflow::Mailer < ActionMailer::Base
     to_email = format_email(@to_user)
     return nil if from_email.blank? || to_email.blank?
 
-    mail from: from_email, to: to_email
+    mail from: from_email, to: to_email, message_id: Cms.generate_message_id(@site)
   end
 
   def self.send_approve_mails(args)
@@ -65,7 +65,7 @@ class Workflow::Mailer < ActionMailer::Base
     to_email = format_email(@to_user)
     return nil if from_email.blank? || to_email.blank?
 
-    mail from: from_email, to: to_email
+    mail from: from_email, to: to_email, message_id: Cms.generate_message_id(@site)
   end
 
   def self.send_remand_mails(args)

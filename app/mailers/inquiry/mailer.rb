@@ -26,7 +26,7 @@ class Inquiry::Mailer < ActionMailer::Base
     @answer_data = @answer_data.join("\n")
 
     from = Cms.sender_address(node, site)
-    mail(from: from, to: notice_email)
+    mail(from: from, to: notice_email, message_id: Cms.generate_message_id(@node.cur_site || @node.site))
   end
 
   def reply_mail(site, node, answer)
@@ -43,6 +43,6 @@ class Inquiry::Mailer < ActionMailer::Base
       end
     end
     return nil if reply_email_address.blank?
-    mail(from: from, to: reply_email_address)
+    mail(from: from, to: reply_email_address, message_id: Cms.generate_message_id(@node.cur_site || @node.site))
   end
 end
