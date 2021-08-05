@@ -14,7 +14,7 @@ textarea {
   <dt><%= @model.t :order %><%= @model.tt :order %><%= required_label %></dt>
   <dd><%= f.number_field :order %></dd>
 
-  <dt><%= @model.t :label_ja %><%= @model.tt :label_ja %></dt>
+  <dt><%= @model.t :label_ja %><%= @model.tt :label_ja %><%= required_label %></dt>
   <dd><%= text_field_tag "item[labels][ja]", @item.labels.try(:[], "ja") %></dd>
 
   <dt><%= @model.t :label_en %><%= @model.tt :label_en %></dt>
