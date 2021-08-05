@@ -207,6 +207,7 @@ Rails.application.routes.draw do
 
       resources :files, path: ":cid/files", concerns: :deletion do
         get :select, on: :member
+        get :selected_files, on: :collection
         get :view, on: :member
         get :thumb, on: :member
         get :download, on: :member
@@ -214,6 +215,7 @@ Rails.application.routes.draw do
       end
       resources :user_files, path: ":cid/user_files", concerns: :deletion do
         get :select, on: :member
+        get :selected_files, on: :collection
         get :view, on: :member
         get :thumb, on: :member
         get :download, on: :member
@@ -221,6 +223,7 @@ Rails.application.routes.draw do
       end
       resources :temp_files, concerns: :deletion do
         get :select, on: :member
+        get :selected_files, on: :collection
         get :view, on: :member
         get :thumb, on: :member
         get :download, on: :member
@@ -229,6 +232,7 @@ Rails.application.routes.draw do
       namespace :node, path: "node:cid/cms", cid: /\w+/ do
         resources :temp_files, concerns: :deletion do
           get :select, on: :member
+          get :selected_files, on: :collection
           get :view, on: :member
           get :thumb, on: :member
           get :download, on: :member

@@ -34,6 +34,7 @@ Rails.application.routes.draw do
     namespace "apis" do
       resources :ad_files, path: 'ads', only: [] do
         get :select, on: :member
+        get :selected_files, on: :collection
       end
     end
   end

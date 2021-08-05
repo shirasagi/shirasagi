@@ -40,4 +40,13 @@ class Cms::Apis::UserFilesController < ApplicationController
   def select
     select_with_clone
   end
+
+  def selected_files
+    @select_ids = params[:select_ids].to_a
+    set_items
+    @items = @items.
+      in(id: @select_ids).
+      order_by(filename: 1)
+    render file: :index
+  end
 end

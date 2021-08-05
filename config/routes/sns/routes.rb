@@ -50,6 +50,7 @@ Rails.application.routes.draw do
     namespace "apis" do
       resources :temp_files, concerns: :deletion do
         get :select, on: :member
+        get :selected_files, on: :collection
         get :view, on: :member
         get :thumb, on: :member
         get :download, on: :member
@@ -58,6 +59,7 @@ Rails.application.routes.draw do
 
       resources :user_files, concerns: :deletion do
         get :select, on: :member
+        get :selected_files, on: :collection
         get :view, on: :member
         get :thumb, on: :member
         get :download, on: :member

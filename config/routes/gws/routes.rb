@@ -79,6 +79,8 @@ Rails.application.routes.draw do
 
       resources :files, concerns: :deletion do
         get :select, on: :member
+        get :selected_files, on: :collection
+
         get :view, on: :member
         get :thumb, on: :member
         get :download, on: :member
