@@ -38,24 +38,9 @@ module Kana::Convertor
       text.gsub!(/<!--[^>]*?\s#{skip_marks[0]}\s[^>]*?-->(.*?)<!--[^>]*?\s#{skip_marks[1]}\s[^>]*?-->/im) do |m|
         Array.new(m.bytes.length, "\r").join
       end
-      if SS.config.kana["disable_kana_attributes"].blank?
-        SS.config.kana["kana_attributes"].each do |tag, attributes|
-          text.gsub!(/<\s*#{::Regexp.escape(tag)}[^>]*>/im) do |m|
-            m.gsub(/(?!.*#{::Regexp.union(attributes)}).*\s*=\s*['"]([^'"]*)['"]/im) do |m|
-              Array.new(m.bytes.length, "\r").join
-            end
-          end
-        end
-        text.gsub!(/<\s*(?!.*#{::Regexp.union(SS.config.kana["kana_attributes"].keys)}).*[^>]*>/im) do |m|
-          m.gsub(/\s*=\s*['"]([^'"]*)['"]/im) do |m|
-            Array.new(m.bytes.length, "\r").join
-          end
-        end
-      else
-        text.gsub!(/<\s*[^>]*>/im) do |m|
-          m.gsub(/\s*=\s*['"]([^'"]*)['"]/im) do |m|
-            Array.new(m.bytes.length, "\r").join
-          end
+      text.gsub!(/<\s*[^>]*>/im) do |m|
+        m.gsub(/\s*=\s*['"]([^'"]*)['"]/im) do |m|
+          Array.new(m.bytes.length, "\r").join
         end
       end
       text.gsub!(/[ -\/:-@\[-`\{-~]/m, "\r")
