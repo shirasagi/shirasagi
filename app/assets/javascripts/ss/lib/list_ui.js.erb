@@ -47,12 +47,17 @@ this.SS_ListUI = (function () {
       if (this.classList.contains("btn-list-head-action")) {
         return;
       }
+      // for backward compatibility
       this.dataset.ssButtonToAction = "";
       this.dataset.ssButtonToMethod = "delete";
       this.dataset.ssConfirmation = "<%= I18n.t('ss.confirm.delete') %>";
       this.classList.add("btn-list-head-action");
     });
     $el.find(".list-head [data-ss-list-head-method]").each(function() {
+      if (this.classList.contains("btn-list-head-action")) {
+        return;
+      }
+      // for backward compatibility
       if (this.dataset.ssListHeadAction) {
         this.dataset.ssButtonToAction = this.dataset.ssListHeadAction;
         delete this.dataset.ssListHeadAction;
