@@ -3,7 +3,7 @@ class Member::Mailer < ActionMailer::Base
     @member = member
     @node = Member::Node::Registration.site(member.site).and_public.first
     return if @node.blank?
-    sender = "#{@node.sender_name} <#{@node.sender_email}>"
+    sender = Cms.sender_address(@node, @node.cur_site || @node.site)
 
     mail from: sender, to: @node.notice_email
   end
@@ -15,7 +15,7 @@ class Member::Mailer < ActionMailer::Base
     @member = member
     @node = Member::Node::Registration.site(member.site).and_public.first
     return if @node.blank?
-    sender = "#{@node.sender_name} <#{@node.sender_email}>"
+    sender = Cms.sender_address(@node, @node.cur_site || @node.site)
 
     mail from: sender, to: member.email
   end
@@ -27,7 +27,7 @@ class Member::Mailer < ActionMailer::Base
     @member = member
     @node = Member::Node::Registration.site(member.site).and_public.first
     return if @node.blank?
-    sender = "#{@node.sender_name} <#{@node.sender_email}>"
+    sender = Cms.sender_address(@node, @node.cur_site || @node.site)
 
     mail from: sender, to: member.email
   end
@@ -39,7 +39,7 @@ class Member::Mailer < ActionMailer::Base
     @member = member
     @node = Member::Node::Registration.site(member.site).and_public.first
     return if @node.blank?
-    sender = "#{@node.sender_name} <#{@node.sender_email}>"
+    sender = Cms.sender_address(@node, @node.cur_site || @node.site)
 
     mail from: sender, to: member.email
   end
@@ -48,7 +48,7 @@ class Member::Mailer < ActionMailer::Base
   #
   # @param [Cms::Member] member
   def group_invitation_mail(node, group, sender, recipent)
-    from = "#{node.sender_name} <#{node.sender_email}>"
+    from = Cms.sender_address(node, node.cur_site || node.site)
     to = recipent.email
     subject = node.group_invitation_subject
     body = Member::Renderer::GroupInvitation.render_template(
@@ -71,7 +71,7 @@ class Member::Mailer < ActionMailer::Base
   #
   # @param [Cms::Member] member
   def member_invitation_mail(node, group, sender, recipent)
-    from = "#{node.sender_name} <#{node.sender_email}>"
+    from = Cms.sender_address(node, node.cur_site || node.site)
     to = recipent.email
     subject = node.member_invitation_subject
     body = Member::Renderer::MemberInvitation.render_template(

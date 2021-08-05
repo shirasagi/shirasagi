@@ -25,7 +25,7 @@ class Inquiry::Mailer < ActionMailer::Base
     end
     @answer_data = @answer_data.join("\n")
 
-    from = "#{node.from_name} <#{node.from_email}>"
+    from = Cms.sender_address(node, site)
     mail(from: from, to: notice_email)
   end
 
@@ -34,7 +34,7 @@ class Inquiry::Mailer < ActionMailer::Base
     @subject = node.reply_subject
     @node = node
     reply_email_address = nil
-    from = "#{node.from_name} <#{node.from_email}>"
+    from = Cms.sender_address(node, site)
 
     answer.data.each do |data|
       if data.column.input_type == "email_field"
