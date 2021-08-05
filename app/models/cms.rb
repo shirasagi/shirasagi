@@ -205,6 +205,7 @@ module Cms
       domain = site.domain
     end
     domain ||= "replace-me.example.jp"
+    domain = domain.sub(/:.*$/, '') if domain.include?(":")
 
     "<#{::Mail.random_tag}@#{domain}.mail>"
   end

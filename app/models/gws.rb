@@ -138,6 +138,7 @@ module Gws
       domain = site.canonical_domain
     end
     domain ||= SS.config.gws.canonical_domain
+    domain = domain.sub(/:.*$/, '') if domain.include?(":")
 
     "<#{::Mail.random_tag}@#{domain}.mail>"
   end
