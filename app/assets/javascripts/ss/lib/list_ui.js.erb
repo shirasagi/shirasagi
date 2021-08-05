@@ -25,7 +25,7 @@ this.SS_ListUI = (function () {
       });
       list.on("mouseup", function (e) {
         var menu, offset, relX, relY;
-        if ($(e.target).is('a') || $(e.target).closest('a,label').length || !window.getSelection().isCollapsed) {
+        if ($(e.target).is('a') || $(e.target).closest('a,label').length) {
           return;
         }
         menu = list.find(".tap-menu");
@@ -43,172 +43,41 @@ this.SS_ListUI = (function () {
         return $el.find(".tap-menu").hide();
       });
     });
-    $el.find(".list-head .destroy-all").on("click", function () {
-      var checked, form, i, id, len, token;
-      token = $('meta[name="csrf-token"]').attr('content');
-      checked = $el.find(".list-item input:checkbox:checked").map(function () {
-        return $(this).val();
-      });
-      if (checked.length === 0) {
-        return false;
+    $el.find(".list-head .destroy-all").each(function() {
+      if (this.classList.contains("btn-list-head-action")) {
+        return;
       }
-      if (!confirm("<%= I18n.t('ss.confirm.delete') %>")) {
-        return false;
-      }
-      form = $("<form/>", {
-        action: "",
-        method: "post"
-      });
-      form.append($("<input/>", {
-        name: "_method",
-        value: "delete",
-        type: "hidden"
-      }));
-      form.append($("<input/>", {
-        name: "authenticity_token",
-        value: token,
-        type: "hidden"
-      }));
-      for (i = 0, len = checked.length; i < len; i++) {
-        id = checked[i];
-        form.append($("<input/>", {
-          name: "ids[]",
-          value: id,
-          type: "hidden"
-        }));
-      }
-      return form.appendTo(document.body).submit();
+      this.dataset.ssButtonToAction = "";
+      this.dataset.ssButtonToMethod = "delete";
+      this.dataset.ssConfirmation = "<%= I18n.t('ss.confirm.delete') %>";
+      this.classList.add("btn-list-head-action");
     });
-    $el.find(".list-head .set-tag-all").on("click", function () {
-      var checked, form, i, id, len, tag, token;
-      token = $('meta[name="csrf-token"]').attr('content');
-      checked = $el.find(".list-item input:checkbox:checked").map(function () {
-        return $(this).val();
-      });
-      tag = $el.find(".list-head .tag").val();
-      if (checked.length === 0) {
-        return false;
+    $el.find(".list-head [data-ss-list-head-method]").each(function() {
+      if (this.dataset.ssListHeadAction) {
+        this.dataset.ssButtonToAction = this.dataset.ssListHeadAction;
+        delete this.dataset.ssListHeadAction;
       }
-      if (!tag) {
-        return false;
+      if (this.dataset.ssListHeadMethod) {
+        this.dataset.ssButtonToMethod = this.dataset.ssListHeadMethod;
+        delete this.dataset.ssListHeadMethod;
       }
-      if (!confirm("<%= I18n.t('ss.confirm.set_tag') %>")) {
-        return false;
-      }
-      form = $("<form/>", {
-        action: "pages/tag",
-        method: "post"
-      });
-      form.append($("<input/>", {
-        name: "authenticity_token",
-        value: token,
-        type: "hidden"
-      }));
-      form.append($("<input/>", {
-        name: "tag",
-        value: tag,
-        type: "hidden"
-      }));
-      for (i = 0, len = checked.length; i < len; i++) {
-        id = checked[i];
-        form.append($("<input/>", {
-          name: "ids[]",
-          value: id,
-          type: "hidden"
-        }));
-      }
-      return form.appendTo(document.body).submit();
+      this.classList.add("btn-list-head-action");
     });
-    $el.find(".list-head .reset-tag-all").on("click", function () {
-      var checked, form, i, id, len, tag, token;
-      token = $('meta[name="csrf-token"]').attr('content');
-      checked = $el.find(".list-item input:checkbox:checked").map(function () {
-        return $(this).val();
-      });
-      tag = $el.find(".list-head .tag").val();
-      if (checked.length === 0) {
-        return false;
-      }
-      if (!tag) {
-        return false;
-      }
-      if (!confirm("<%= I18n.t('ss.confirm.reset_tag') %>")) {
-        return false;
-      }
-      form = $("<form/>", {
-        action: "pages/tag",
-        method: "post"
-      });
-      form.append($("<input/>", {
-        name: "_method",
-        value: "delete",
-        type: "hidden"
-      }));
-      form.append($("<input/>", {
-        name: "authenticity_token",
-        value: token,
-        type: "hidden"
-      }));
-      form.append($("<input/>", {
-        name: "tag",
-        value: tag,
-        type: "hidden"
-      }));
-      for (i = 0, len = checked.length; i < len; i++) {
-        id = checked[i];
-        form.append($("<input/>", {
-          name: "ids[]",
-          value: id,
-          type: "hidden"
-        }));
-      }
-      return form.appendTo(document.body).submit();
-    });
-    $el.find(".list-head [data-ss-list-head-method]").on("click", function () {
-      var action, checked, confirmation, form, i, id, key, len, method, params, value;
-      method = $(this).data('ss-list-head-method') || 'post';
-      action = $(this).data('ss-list-head-action') || '';
-      params = {
-        authenticity_token: $('meta[name="csrf-token"]').attr('content')
-      };
-      method = method.toString().toLowerCase();
-      if (method === 'delete' || method === 'patch') {
-        params._method = method;
-        method = 'post';
-      }
-      checked = $el.find(".list-item input:checkbox:checked").map(function () {
-        return $(this).val();
-      });
-      if (checked.length === 0) {
-        return false;
-      }
-      confirmation = $(this).data('ss-confirmation') || '';
-      if (confirmation) {
-        if (!confirm(confirmation)) {
+    $el.find(".list-head .btn-list-head-action").each(function () {
+      $(this).on("ss:beforeSend", function(ev) {
+        var checked = $el.find(".list-item input:checkbox:checked").map(function () {
+          return $(this).val();
+        });
+        if (checked.length === 0) {
+          ev.preventDefault();
           return false;
         }
-      }
-      form = $("<form/>", {
-        action: action,
-        method: method
+
+        for (var i = 0, len = checked.length; i < len; i++) {
+          var id = checked[i];
+          ev.$form.append($("<input/>", { name: "ids[]", value: id, type: "hidden" }));
+        }
       });
-      for (key in params) {
-        value = params[key];
-        form.append($("<input/>", {
-          name: key,
-          value: value,
-          type: "hidden"
-        }));
-      }
-      for (i = 0, len = checked.length; i < len; i++) {
-        id = checked[i];
-        form.append($("<input/>", {
-          name: "ids[]",
-          value: id,
-          type: "hidden"
-        }));
-      }
-      return form.appendTo(document.body).submit();
     });
   };
 
