@@ -73,18 +73,27 @@ module Cms::NodeFilter::ListView
   public
 
   def index
-    @items = pages.
-      order_by(@cur_node.sort_hash).
-      page(params[:page]).
-      per(@cur_node.limit)
+    # release 順に並べるには Ruby でソートするしか（現時点では）方法がない
+    @items = SS::SortEmulator.new(pages, @cur_node.sort_hash)
+
+    if params[:page].numeric?
+      page = params[:page].to_i
+    else
+      page = 1
+    end
+    limit = @cur_node.limit
+    offset = limit * (page - 1)
+    total_count = @items.length
+
+    @items = @items.drop(offset).take(@cur_node.limit)
+    @items = Kaminari.paginate_array(@items, limit: limit, offset: offset, total_count: total_count)
 
     render_with_pagination @items
   end
 
   def rss
-    @items = pages.
-      order_by(@cur_node.sort_hash).
-      limit(@cur_node.limit)
+    @items = SS::SortEmulator.new(pages, @cur_node.sort_hash)
+    @items = @items.take(@cur_node.limit)
 
     render_rss @cur_node, @items
   end
