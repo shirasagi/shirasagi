@@ -187,7 +187,7 @@ save_node route: "cms/node", filename: "use", name: "ご利用案内"
 
 ## article
 save_node route: "article/page", filename: "docs", name: "記事", shortcut: "show",
-          st_form_ids: [@form.id, @form_2.id, @form_3.id, @form_4.id, @form_5.id], st_form_default_id: @form_4.id
+          st_form_ids: [@form.id, @form2.id, @form3.id, @form4.id, @form5.id], st_form_default_id: @form4.id
 
 ## archive
 save_node route: "cms/archive", filename: "docs/archive", name: "アーカイブ", layout_id: @layouts["pages"].id, conditions: %w(docs)
@@ -376,7 +376,7 @@ save_node route: "facility/page", filename: "institution/shisetsu/library", name
           category_ids: facility_categories.values.map(&:id),
           location_ids: facility_locations.values.map(&:id),
           service_ids: facility_services.values.map(&:id),
-          st_form_ids: [@form.id, @form_4.id], st_form_default_id: @form_4.id
+          st_form_ids: [@form.id, @form4.id], st_form_default_id: @form4.id
 
 save_node route: "key_visual/image", filename: "key_visual", name: "キービジュアル"
 

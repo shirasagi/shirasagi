@@ -36,21 +36,21 @@ module Opendata::Addon::ExportPublicEntityFormat
       st_estat_categories = node.st_estat_categories.presence || node.default_st_estat_categories
       st_estat_categories = st_estat_categories.map { |cate| cate.children.and_public.sort(order: 1).to_a }.flatten
 
-      st_categories_1 = {}
-      st_categories_2 = {}
+      st_categories1 = {}
+      st_categories2 = {}
       st_categories.each do |cate|
-        st_categories_1[cate.filename] = cate.name
+        st_categories1[cate.filename] = cate.name
         cate.children.and_public.sort(order: 1).each do |child|
-          st_categories_2[child.filename] = child.name
+          st_categories2[child.filename] = child.name
         end
       end
 
-      st_estat_categories_1 = {}
-      st_estat_categories_2 = {}
+      st_estat_categories1 = {}
+      st_estat_categories2 = {}
       st_estat_categories.each do |cate|
-        st_estat_categories_1[cate.filename] = cate.name
+        st_estat_categories1[cate.filename] = cate.name
         cate.children.and_public.sort(order: 1).each do |child|
-          st_estat_categories_2[child.filename] = child.name
+          st_estat_categories2[child.filename] = child.name
         end
       end
 
@@ -74,10 +74,10 @@ module Opendata::Addon::ExportPublicEntityFormat
           end
 
           cate1 = category_filenames.map do |filename, parent|
-            st_categories_1[filename] || st_categories_1[parent]
+            st_categories1[filename] || st_categories1[parent]
           end.compact.uniq.join("\n")
 
-          cate2 = category_filenames.map { |filename, _| st_categories_2[filename] }.compact.join("\n")
+          cate2 = category_filenames.map { |filename, _| st_categories2[filename] }.compact.join("\n")
 
           estat_category_filenames = dataset.estat_categories.pluck(:filename).map do |filename|
             parent = filename.index("/") ? ::File.dirname(filename) : nil
@@ -85,10 +85,10 @@ module Opendata::Addon::ExportPublicEntityFormat
           end
 
           cate3 = estat_category_filenames.map do |filename, parent|
-            st_estat_categories_1[filename] || st_estat_categories_1[parent]
+            st_estat_categories1[filename] || st_estat_categories1[parent]
           end.compact.uniq.join("\n")
 
-          cate4 = estat_category_filenames.map { |filename, _| st_estat_categories_2[filename] }.compact.join("\n")
+          cate4 = estat_category_filenames.map { |filename, _| st_estat_categories2[filename] }.compact.join("\n")
 
           resources = dataset.resources.to_a
 
