@@ -11,6 +11,11 @@ Rails.application.routes.draw do
     post :reset, on: :collection
   end
 
+  concern :file_api do
+    get :select, on: :member
+    get :selected_files, on: :collection
+  end
+
   gws "portal" do
     namespace :user, path: 'u-:user' do
       get '/' => 'portal#show'
@@ -32,10 +37,7 @@ Rails.application.routes.draw do
     end
 
     namespace "apis" do
-      resources :ad_files, path: 'ads', only: [] do
-        get :select, on: :member
-        get :selected_files, on: :collection
-      end
+      resources :ad_files, path: 'ads', only: [], concerns: :file_api
     end
   end
 end

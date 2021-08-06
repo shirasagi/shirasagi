@@ -5,6 +5,14 @@ Rails.application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
+  concern :file_api do
+    get :select, on: :member
+    get :selected_files, on: :collection
+    get :view, on: :member
+    get :thumb, on: :member
+    get :download, on: :member
+  end
+
   namespace "sns", path: ".u" do
     get "/" => redirect { |p, req| "#{req.path}/user_profile" }, as: :cur_user
     get "connection" => "connection#index", as: :connection
@@ -12,10 +20,7 @@ Rails.application.routes.draw do
     resource :user_profile, as: :cur_user_profile, only: [:show]
     resource :user_account, as: :cur_user_account
 
-    resources :user_files, concerns: :deletion, as: :cur_user_files do
-      get :view, on: :member
-      get :thumb, on: :member
-      get :download, on: :member
+    resources :user_files, concerns: [:deletion, :file_api], as: :cur_user_files do
       get :resize, on: :member
       post :resize, on: :member
       get :contrast_ratio, on: :collection
@@ -39,33 +44,17 @@ Rails.application.routes.draw do
     resource :user_profile, only: [:show]
     resource :user_account
 
-    resources :user_files, concerns: :deletion do
-      get :view, on: :member
-      get :thumb, on: :member
-      get :download, on: :member
-    end
+    resources :user_files, concerns: [:deletion, :file_api]
     get "download_job_files/:filename(/:name)" => "download_job_files#index",
       filename: %r{[^\/]+}, name: %r{[^\/]+}, format: false, as: :download_job_files
 
     namespace "apis" do
-      resources :temp_files, concerns: :deletion do
-        get :select, on: :member
-        get :selected_files, on: :collection
-        get :view, on: :member
-        get :thumb, on: :member
-        get :download, on: :member
+      resources :temp_files, concerns: [:deletion, :file_api] do
         get :contrast_ratio, on: :collection
       end
-
-      resources :user_files, concerns: :deletion do
-        get :select, on: :member
-        get :selected_files, on: :collection
-        get :view, on: :member
-        get :thumb, on: :member
-        get :download, on: :member
+      resources :user_files, concerns: [:deletion, :file_api] do
         get :contrast_ratio, on: :collection
       end
-
       resources :replace_files, only: [:index, :edit, :update] do
         get :confirm, on: :member
         post :confirm, on: :member
