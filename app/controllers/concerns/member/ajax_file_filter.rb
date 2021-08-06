@@ -66,6 +66,14 @@ module Member::AjaxFileFilter
     render file: :select, layout: !request.xhr?
   end
 
+  def selected_files
+    @select_ids = params[:select_ids].to_a
+    @items = @items.
+      in(id: @select_ids).
+      order_by(filename: 1)
+    render file: :index
+  end
+
   def show
     render
   end

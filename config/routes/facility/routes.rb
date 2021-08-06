@@ -17,6 +17,14 @@ Rails.application.routes.draw do
     get :download_logs, on: :collection
   end
 
+  concern :file_api do
+    get :select, on: :member
+    get :selected_files, on: :collection
+    get :view, on: :member
+    get :thumb, on: :member
+    get :download, on: :member
+  end
+
   content "facility" do
     get "/" => redirect { |p, req| "#{req.path}/searches" }, as: :main
     resources :pages, concerns: [:deletion, :download, :import]
@@ -62,11 +70,7 @@ Rails.application.routes.draw do
 
   namespace "facility", path: ".u:user/facility", module: "facility", servicer: /\d+/ do
     namespace "apis" do
-      resources :temp_files, concerns: :deletion do
-        get :select, on: :member
-        get :view, on: :member
-        get :thumb, on: :member
-        get :download, on: :member
+      resources :temp_files, concerns: [:deletion, :file_api] do
         get :contrast_ratio, on: :collection
       end
     end

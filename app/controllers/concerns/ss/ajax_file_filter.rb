@@ -41,4 +41,14 @@ module SS::AjaxFileFilter
     @page = @page.becomes_with_route(params[:owner_item_type].underscore) if params[:owner_item_type].present?
     render file: :select, layout: !request.xhr?
   end
+
+  def selected_files
+    @select_ids = params[:select_ids].to_a
+    @items = @model
+    @items = @items.site(@cur_site) if @cur_site
+    @items = @items.allow(:read, @cur_user).
+      in(id: @select_ids).
+      order_by(filename: 1)
+    render file: :index
+  end
 end

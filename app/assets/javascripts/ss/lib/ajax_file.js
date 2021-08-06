@@ -123,8 +123,19 @@ this.SS_AjaxFile = (function () {
 
   SS_AjaxFile.prototype.submitSuccess = function(submitted, data) {
     var self = this;
+    var loadUrl = (submitted === "attach") ? self.options.selectedFilesPath : self.options.indexPath;
+    var indexOptions = self.options.pathOptions || {};
 
-    $("<div />").load(self.options.indexPath, function () {
+    if (submitted === "attach" && Array.isArray(data)) {
+      var select_ids = $.map(data, function(v) { return v._id });
+      indexOptions = Object.assign(indexOptions, { select_ids: select_ids });
+    }
+
+    if (Object.keys(indexOptions).length) {
+      loadUrl += "?" + $.param(indexOptions);
+    }
+
+    $("<div />").load(loadUrl, function () {
       var $userFiles = $(this).find(".user-files");
       if ($userFiles[0]) {
         // TODO: 差分だけをアニメーションつきで insert するとかっこよくなる
