@@ -11,16 +11,16 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
   let!(:group) { create :gws_group, name: "root" }
 
   let!(:group1) { create :gws_group, name: "root/group1" }
-  let!(:group1_1) { create :gws_group, name: "root/group1/sub_group1" }
-  let!(:group1_2) { create :gws_group, name: "root/group1/sub_group2" }
+  let!(:group1_sub1) { create :gws_group, name: "root/group1/sub_group1" }
+  let!(:group1_sub2) { create :gws_group, name: "root/group1/sub_group2" }
 
   let!(:group2) { create :gws_group, name: "root/group2" }
-  let!(:group2_1) { create :gws_group, name: "root/group2/sub_group1" }
-  let!(:group2_2) { create :gws_group, name: "root/group2/sub_group2" }
+  let!(:group2_sub1) { create :gws_group, name: "root/group2/sub_group1" }
+  let!(:group2_sub2) { create :gws_group, name: "root/group2/sub_group2" }
 
   let!(:group3) { create :gws_group, name: "root/group3" }
-  let!(:group3_1) { create :gws_group, name: "root/group3/sub_group1" }
-  let!(:group3_2) { create :gws_group, name: "root/group3/sub_group2" }
+  let!(:group3_sub1) { create :gws_group, name: "root/group3/sub_group1" }
+  let!(:group3_sub2) { create :gws_group, name: "root/group3/sub_group2" }
 
   # folders
   let!(:folder) { create(:gws_notice_folder, cur_site: site, name: "root", member_group_ids: [group.id], group_ids: [group.id]) }
@@ -30,15 +30,15 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
            cur_site: site, name: "root/group1",
            member_group_ids: [group1.id], group_ids: [group1.id])
   end
-  let!(:folder1_1) do
+  let!(:folder1_sub1) do
     create(:gws_notice_folder,
            cur_site: site, name: "root/group1/sub_group1",
-           member_group_ids: [group1_1.id], group_ids: [group1_1.id])
+           member_group_ids: [group1_sub1.id], group_ids: [group1_sub1.id])
   end
-  let!(:folder1_2) do
+  let!(:folder1_sub2) do
     create(:gws_notice_folder,
            cur_site: site, name: "root/group1/sub_group2",
-           member_group_ids: [group1_2.id], group_ids: [group1_2.id])
+           member_group_ids: [group1_sub2.id], group_ids: [group1_sub2.id])
   end
 
   let!(:folder2) do
@@ -46,15 +46,15 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
            cur_site: site, name: "root/group2",
            member_group_ids: [group2.id], group_ids: [group2.id])
   end
-  let!(:folder2_1) do
+  let!(:folder2_sub1) do
     create(:gws_notice_folder,
            cur_site: site, name: "root/group2/sub_group1",
-           member_group_ids: [group2_1.id], group_ids: [group2_1.id])
+           member_group_ids: [group2_sub1.id], group_ids: [group2_sub1.id])
   end
-  let!(:folder2_2) do
+  let!(:folder2_sub2) do
     create(:gws_notice_folder,
            cur_site: site, name: "root/group2/sub_group2",
-           member_group_ids: [group2_2.id], group_ids: [group2_2.id])
+           member_group_ids: [group2_sub2.id], group_ids: [group2_sub2.id])
   end
 
   let!(:folder3) do
@@ -62,31 +62,31 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
            cur_site: site, name: "root/group3",
            member_group_ids: [group3.id], group_ids: [group3.id])
   end
-  let!(:folder3_1) do
+  let!(:folder3_sub1) do
     create(:gws_notice_folder,
            cur_site: site, name: "root/group3/sub_group1",
-           member_group_ids: [group3_1.id], group_ids: [group3_1.id])
+           member_group_ids: [group3_sub1.id], group_ids: [group3_sub1.id])
   end
-  let!(:folder3_2) do
+  let!(:folder3_sub2) do
     create(:gws_notice_folder, cur_site: site,
            name: "root/group3/sub_group2",
-           member_group_ids: [group3_2.id], group_ids: [group3_2.id])
+           member_group_ids: [group3_sub2.id], group_ids: [group3_sub2.id])
   end
 
   # notices
   let!(:post) { create(:gws_notice_post, cur_site: site, folder: folder, name: "post") }
 
   let!(:post1) { create(:gws_notice_post, cur_site: site, folder: folder1, name: "post1") }
-  let!(:post1_1) { create(:gws_notice_post, cur_site: site, folder: folder1_1, name: "post1_1") }
-  let!(:post1_2) { create(:gws_notice_post, cur_site: site, folder: folder1_2, name: "post1_2") }
+  let!(:post1_sub1) { create(:gws_notice_post, cur_site: site, folder: folder1_sub1, name: "post1_sub1") }
+  let!(:post1_sub2) { create(:gws_notice_post, cur_site: site, folder: folder1_sub2, name: "post1_sub2") }
 
   let!(:post2) { create(:gws_notice_post, cur_site: site, folder: folder2, name: "post2") }
-  let!(:post2_1) { create(:gws_notice_post, cur_site: site, folder: folder2_1, name: "post2_1") }
-  let!(:post2_2) { create(:gws_notice_post, cur_site: site, folder: folder2_2, name: "post2_2") }
+  let!(:post2_sub1) { create(:gws_notice_post, cur_site: site, folder: folder2_sub1, name: "post2_sub1") }
+  let!(:post2_sub2) { create(:gws_notice_post, cur_site: site, folder: folder2_sub2, name: "post2_sub2") }
 
   let!(:post3) { create(:gws_notice_post, cur_site: site, folder: folder3, name: "post3") }
-  let!(:post3_1) { create(:gws_notice_post, cur_site: site, folder: folder3_1, name: "post3_1") }
-  let!(:post3_2) { create(:gws_notice_post, cur_site: site, folder: folder3_2, name: "post3_2") }
+  let!(:post3_sub1) { create(:gws_notice_post, cur_site: site, folder: folder3_sub1, name: "post3_sub1") }
+  let!(:post3_sub2) { create(:gws_notice_post, cur_site: site, folder: folder3_sub2, name: "post3_sub2") }
 
   def group_to_hash(group)
     { id: group.id, name: group.name }.stringify_keys
@@ -142,46 +142,46 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
       end
 
       folder1.reload
-      folder1_1.reload
-      folder1_2.reload
+      folder1_sub1.reload
+      folder1_sub2.reload
 
       expect(folder1.name).to eq "root/group2"
-      expect(folder1_1.name).to eq "root/group2/sub_group1"
-      expect(folder1_2.name).to eq "root/group2/sub_group2"
+      expect(folder1_sub1.name).to eq "root/group2/sub_group1"
+      expect(folder1_sub2.name).to eq "root/group2/sub_group2"
 
       expect(folder1.notices.map(&:name)).to match_array %w(post1)
-      expect(folder1_1.notices.map(&:name)).to match_array %w(post1_1)
-      expect(folder1_2.notices.map(&:name)).to match_array %w(post1_2)
+      expect(folder1_sub1.notices.map(&:name)).to match_array %w(post1_sub1)
+      expect(folder1_sub2.notices.map(&:name)).to match_array %w(post1_sub2)
 
       expect(folder1.member_groups.map(&:name)).to match_array %w(root/group2)
       expect(folder1.groups.map(&:name)).to match_array %w(root/group2)
 
       folder2.reload
-      folder2_1.reload
-      folder2_2.reload
+      folder2_sub1.reload
+      folder2_sub2.reload
 
       expect(folder2.name).to match(/^backup\/group2_\d+$/)
-      expect(folder2_1.name).to match(/^backup\/group2_\d+\/sub_group1$/)
-      expect(folder2_2.name).to match(/^backup\/group2_\d+\/sub_group2$/)
+      expect(folder2_sub1.name).to match(/^backup\/group2_\d+\/sub_group1$/)
+      expect(folder2_sub2.name).to match(/^backup\/group2_\d+\/sub_group2$/)
 
       expect(folder2.notices.map(&:name)).to match_array %w(post2)
-      expect(folder2_1.notices.map(&:name)).to match_array %w(post2_1)
-      expect(folder2_2.notices.map(&:name)).to match_array %w(post2_2)
+      expect(folder2_sub1.notices.map(&:name)).to match_array %w(post2_sub1)
+      expect(folder2_sub2.notices.map(&:name)).to match_array %w(post2_sub2)
 
       expect(folder2.member_groups.map(&:name)).to match_array %w(root/group2)
       expect(folder2.groups.map(&:name)).to match_array %w(root/group2)
 
       folder3.reload
-      folder3_1.reload
-      folder3_2.reload
+      folder3_sub1.reload
+      folder3_sub2.reload
 
       expect(folder3.name).to eq "root/group3"
-      expect(folder3_1.name).to eq "root/group3/sub_group1"
-      expect(folder3_2.name).to eq "root/group3/sub_group2"
+      expect(folder3_sub1.name).to eq "root/group3/sub_group1"
+      expect(folder3_sub2.name).to eq "root/group3/sub_group2"
 
       expect(folder3.notices.map(&:name)).to match_array %w(post3)
-      expect(folder3_1.notices.map(&:name)).to match_array %w(post3_1)
-      expect(folder3_2.notices.map(&:name)).to match_array %w(post3_2)
+      expect(folder3_sub1.notices.map(&:name)).to match_array %w(post3_sub1)
+      expect(folder3_sub2.notices.map(&:name)).to match_array %w(post3_sub2)
     end
   end
 
@@ -207,43 +207,43 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
       end
 
       folder1.reload
-      folder1_1.reload
-      folder1_2.reload
+      folder1_sub1.reload
+      folder1_sub2.reload
 
       expect(folder1.name).to match(/^backup\/group1_\d+$/)
-      expect(folder1_1.name).to match(/^backup\/group1_\d+\/sub_group1$/)
-      expect(folder1_2.name).to match(/^backup\/group1_\d+\/sub_group2$/)
+      expect(folder1_sub1.name).to match(/^backup\/group1_\d+\/sub_group1$/)
+      expect(folder1_sub2.name).to match(/^backup\/group1_\d+\/sub_group2$/)
 
       expect(folder1.notices.map(&:name)).to match_array %w()
-      expect(folder1_1.notices.map(&:name)).to match_array %w()
-      expect(folder1_2.notices.map(&:name)).to match_array %w()
+      expect(folder1_sub1.notices.map(&:name)).to match_array %w()
+      expect(folder1_sub2.notices.map(&:name)).to match_array %w()
 
       folder2.reload
-      folder2_1.reload
-      folder2_2.reload
+      folder2_sub1.reload
+      folder2_sub2.reload
 
       expect(folder2.name).to eq "root/group2"
-      expect(folder2_1.name).to eq "root/group2/sub_group1"
-      expect(folder2_2.name).to eq "root/group2/sub_group2"
+      expect(folder2_sub1.name).to eq "root/group2/sub_group1"
+      expect(folder2_sub2.name).to eq "root/group2/sub_group2"
 
-      expect(folder2.notices.map(&:name)).to match_array %w(post2 post1 post1_1 post1_2)
-      expect(folder2_1.notices.map(&:name)).to match_array %w(post2_1)
-      expect(folder2_2.notices.map(&:name)).to match_array %w(post2_2)
+      expect(folder2.notices.map(&:name)).to match_array %w(post2 post1 post1_sub1 post1_sub2)
+      expect(folder2_sub1.notices.map(&:name)).to match_array %w(post2_sub1)
+      expect(folder2_sub2.notices.map(&:name)).to match_array %w(post2_sub2)
 
       expect(folder2.member_groups.map(&:name)).to match_array %w(root/group1 root/group2)
       expect(folder2.groups.map(&:name)).to match_array %w(root/group1 root/group2)
 
       folder3.reload
-      folder3_1.reload
-      folder3_2.reload
+      folder3_sub1.reload
+      folder3_sub2.reload
 
       expect(folder3.name).to eq "root/group3"
-      expect(folder3_1.name).to eq "root/group3/sub_group1"
-      expect(folder3_2.name).to eq "root/group3/sub_group2"
+      expect(folder3_sub1.name).to eq "root/group3/sub_group1"
+      expect(folder3_sub2.name).to eq "root/group3/sub_group2"
 
       expect(folder3.notices.map(&:name)).to match_array %w(post3)
-      expect(folder3_1.notices.map(&:name)).to match_array %w(post3_1)
-      expect(folder3_2.notices.map(&:name)).to match_array %w(post3_2)
+      expect(folder3_sub1.notices.map(&:name)).to match_array %w(post3_sub1)
+      expect(folder3_sub2.notices.map(&:name)).to match_array %w(post3_sub2)
     end
   end
 
@@ -277,43 +277,43 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
       end
 
       folder1.reload
-      folder1_1.reload
-      folder1_2.reload
+      folder1_sub1.reload
+      folder1_sub2.reload
 
       expect(folder1.name).to match(/^backup\/group1_\d+$/)
-      expect(folder1_1.name).to match(/^backup\/group1_\d+\/sub_group1$/)
-      expect(folder1_2.name).to match(/^backup\/group1_\d+\/sub_group2$/)
+      expect(folder1_sub1.name).to match(/^backup\/group1_\d+\/sub_group1$/)
+      expect(folder1_sub2.name).to match(/^backup\/group1_\d+\/sub_group2$/)
 
       expect(folder1.notices.map(&:name)).to match_array %w()
-      expect(folder1_1.notices.map(&:name)).to match_array %w()
-      expect(folder1_2.notices.map(&:name)).to match_array %w()
+      expect(folder1_sub1.notices.map(&:name)).to match_array %w()
+      expect(folder1_sub2.notices.map(&:name)).to match_array %w()
 
       folder2.reload
-      folder2_1.reload
-      folder2_2.reload
+      folder2_sub1.reload
+      folder2_sub2.reload
 
       expect(folder2.name).to match(/^backup\/group2_\d+$/)
-      expect(folder2_1.name).to match(/^backup\/group2_\d+\/sub_group1$/)
-      expect(folder2_2.name).to match(/^backup\/group2_\d+\/sub_group2$/)
+      expect(folder2_sub1.name).to match(/^backup\/group2_\d+\/sub_group1$/)
+      expect(folder2_sub2.name).to match(/^backup\/group2_\d+\/sub_group2$/)
 
       expect(folder2.notices.map(&:name)).to match_array %w()
-      expect(folder2_1.notices.map(&:name)).to match_array %w()
-      expect(folder2_2.notices.map(&:name)).to match_array %w()
+      expect(folder2_sub1.notices.map(&:name)).to match_array %w()
+      expect(folder2_sub2.notices.map(&:name)).to match_array %w()
 
       folder3.reload
-      folder3_1.reload
-      folder3_2.reload
+      folder3_sub1.reload
+      folder3_sub2.reload
 
       expect(folder3.name).to eq "root/group3"
-      expect(folder3_1.name).to eq "root/group3/sub_group1"
-      expect(folder3_2.name).to eq "root/group3/sub_group2"
+      expect(folder3_sub1.name).to eq "root/group3/sub_group1"
+      expect(folder3_sub2.name).to eq "root/group3/sub_group2"
 
       expect(folder3.notices.map(&:name)).to match_array %w(post3)
-      expect(folder3_1.notices.map(&:name)).to match_array %w(post3_1)
-      expect(folder3_2.notices.map(&:name)).to match_array %w(post3_2)
+      expect(folder3_sub1.notices.map(&:name)).to match_array %w(post3_sub1)
+      expect(folder3_sub2.notices.map(&:name)).to match_array %w(post3_sub2)
 
       folder4 = Gws::Notice::Folder.site(site).find_by(name: "root/group4")
-      expect(folder4.notices.map(&:name)).to match_array %w(post1 post1_1 post1_2 post2 post2_1 post2_2)
+      expect(folder4.notices.map(&:name)).to match_array %w(post1 post1_sub1 post1_sub2 post2 post2_sub1 post2_sub2)
       expect(folder4.readable_setting_range).to eq "public"
       expect(folder4.member_groups.map(&:name)).to match_array %w(root/group1 root/group2 root/group4)
       expect(folder4.groups.map(&:name)).to match_array %w(root/group1 root/group2 root/group4)
@@ -345,42 +345,42 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
       end
 
       folder1.reload
-      folder1_1.reload
-      folder1_2.reload
+      folder1_sub1.reload
+      folder1_sub2.reload
 
       expect(folder1.name).to eq "root/group4"
-      expect(folder1_1.name).to eq "root/group4/sub_group1"
-      expect(folder1_2.name).to eq "root/group4/sub_group2"
+      expect(folder1_sub1.name).to eq "root/group4/sub_group1"
+      expect(folder1_sub2.name).to eq "root/group4/sub_group2"
       expect(folder1.member_groups.map(&:name)).to match_array %w(root/group1 root/group4 root/group5)
       expect(folder1.groups.map(&:name)).to match_array %w(root/group1 root/group4 root/group5)
 
       expect(folder1.notices.map(&:name)).to match_array %w(post1)
-      expect(folder1_1.notices.map(&:name)).to match_array %w(post1_1)
-      expect(folder1_2.notices.map(&:name)).to match_array %w(post1_2)
+      expect(folder1_sub1.notices.map(&:name)).to match_array %w(post1_sub1)
+      expect(folder1_sub2.notices.map(&:name)).to match_array %w(post1_sub2)
 
       folder2.reload
-      folder2_1.reload
-      folder2_2.reload
+      folder2_sub1.reload
+      folder2_sub2.reload
 
       expect(folder2.name).to eq "root/group2"
-      expect(folder2_1.name).to eq "root/group2/sub_group1"
-      expect(folder2_2.name).to eq "root/group2/sub_group2"
+      expect(folder2_sub1.name).to eq "root/group2/sub_group1"
+      expect(folder2_sub2.name).to eq "root/group2/sub_group2"
 
       expect(folder2.notices.map(&:name)).to match_array %w(post2)
-      expect(folder2_1.notices.map(&:name)).to match_array %w(post2_1)
-      expect(folder2_2.notices.map(&:name)).to match_array %w(post2_2)
+      expect(folder2_sub1.notices.map(&:name)).to match_array %w(post2_sub1)
+      expect(folder2_sub2.notices.map(&:name)).to match_array %w(post2_sub2)
 
       folder3.reload
-      folder3_1.reload
-      folder3_2.reload
+      folder3_sub1.reload
+      folder3_sub2.reload
 
       expect(folder3.name).to eq "root/group3"
-      expect(folder3_1.name).to eq "root/group3/sub_group1"
-      expect(folder3_2.name).to eq "root/group3/sub_group2"
+      expect(folder3_sub1.name).to eq "root/group3/sub_group1"
+      expect(folder3_sub2.name).to eq "root/group3/sub_group2"
 
       expect(folder3.notices.map(&:name)).to match_array %w(post3)
-      expect(folder3_1.notices.map(&:name)).to match_array %w(post3_1)
-      expect(folder3_2.notices.map(&:name)).to match_array %w(post3_2)
+      expect(folder3_sub1.notices.map(&:name)).to match_array %w(post3_sub1)
+      expect(folder3_sub2.notices.map(&:name)).to match_array %w(post3_sub2)
 
       folder5 = Gws::Notice::Folder.site(site).find_by(name: "root/group5")
       expect(folder5.notices.map(&:name)).to match_array %w()
@@ -411,40 +411,40 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
       end
 
       folder1.reload
-      folder1_1.reload
-      folder1_2.reload
+      folder1_sub1.reload
+      folder1_sub2.reload
 
       expect(folder1.name).to match(/^backup\/group1_\d+$/)
-      expect(folder1_1.name).to match(/^backup\/group1_\d+\/sub_group1$/)
-      expect(folder1_2.name).to match(/^backup\/group1_\d+\/sub_group2$/)
+      expect(folder1_sub1.name).to match(/^backup\/group1_\d+\/sub_group1$/)
+      expect(folder1_sub2.name).to match(/^backup\/group1_\d+\/sub_group2$/)
 
       expect(folder1.notices.map(&:name)).to match_array %w(post1)
-      expect(folder1_1.notices.map(&:name)).to match_array %w(post1_1)
-      expect(folder1_2.notices.map(&:name)).to match_array %w(post1_2)
+      expect(folder1_sub1.notices.map(&:name)).to match_array %w(post1_sub1)
+      expect(folder1_sub2.notices.map(&:name)).to match_array %w(post1_sub2)
 
       folder2.reload
-      folder2_1.reload
-      folder2_2.reload
+      folder2_sub1.reload
+      folder2_sub2.reload
 
       expect(folder2.name).to eq "root/group2"
-      expect(folder2_1.name).to eq "root/group2/sub_group1"
-      expect(folder2_2.name).to eq "root/group2/sub_group2"
+      expect(folder2_sub1.name).to eq "root/group2/sub_group1"
+      expect(folder2_sub2.name).to eq "root/group2/sub_group2"
 
       expect(folder2.notices.map(&:name)).to match_array %w(post2)
-      expect(folder2_1.notices.map(&:name)).to match_array %w(post2_1)
-      expect(folder2_2.notices.map(&:name)).to match_array %w(post2_2)
+      expect(folder2_sub1.notices.map(&:name)).to match_array %w(post2_sub1)
+      expect(folder2_sub2.notices.map(&:name)).to match_array %w(post2_sub2)
 
       folder3.reload
-      folder3_1.reload
-      folder3_2.reload
+      folder3_sub1.reload
+      folder3_sub2.reload
 
       expect(folder3.name).to eq "root/group3"
-      expect(folder3_1.name).to eq "root/group3/sub_group1"
-      expect(folder3_2.name).to eq "root/group3/sub_group2"
+      expect(folder3_sub1.name).to eq "root/group3/sub_group1"
+      expect(folder3_sub2.name).to eq "root/group3/sub_group2"
 
       expect(folder3.notices.map(&:name)).to match_array %w(post3)
-      expect(folder3_1.notices.map(&:name)).to match_array %w(post3_1)
-      expect(folder3_2.notices.map(&:name)).to match_array %w(post3_2)
+      expect(folder3_sub1.notices.map(&:name)).to match_array %w(post3_sub1)
+      expect(folder3_sub2.notices.map(&:name)).to match_array %w(post3_sub2)
     end
   end
 end
