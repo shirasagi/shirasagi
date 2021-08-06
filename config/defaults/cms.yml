@@ -175,7 +175,6 @@ production: &production
 
 test:
   <<: *production
-  replace_urls_after_move: false
 
 development:
   <<: *production

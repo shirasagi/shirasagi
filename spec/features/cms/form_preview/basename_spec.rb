@@ -12,11 +12,12 @@ describe "cms_form_preview", type: :feature, dbscope: :example do
 
     before do
       login_cms_user
+      @save_config = SS.config.cms.replace_urls_after_move
       SS::Config.replace_value_at(:cms, :replace_urls_after_move, true)
     end
 
     after do
-      SS::Config.replace_value_at(:cms, :replace_urls_after_move, false)
+      SS::Config.replace_value_at(:cms, :replace_urls_after_move, @save_config)
     end
 
     context "pc form preview", js: true do
