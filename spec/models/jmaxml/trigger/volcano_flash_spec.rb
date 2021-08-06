@@ -21,8 +21,8 @@ describe Jmaxml::Trigger::VolcanoFlash, dbscope: :example do
       subject { create(:jmaxml_trigger_volcano_flash) }
 
       before do
-        region1 = create(:jmaxml_forecast_region_2042900)
-        region2 = create(:jmaxml_forecast_region_2043200)
+        region1 = create(:jmaxml_forecast_region_c2042900)
+        region2 = create(:jmaxml_forecast_region_c2043200)
         subject.target_region_ids = [ region1.id, region2.id ]
         subject.save!
       end
@@ -63,8 +63,8 @@ describe Jmaxml::Trigger::VolcanoFlash, dbscope: :example do
       subject { create(:jmaxml_trigger_volcano_flash) }
 
       before do
-        region1 = create(:jmaxml_forecast_region_2042900)
-        region2 = create(:jmaxml_forecast_region_2043200)
+        region1 = create(:jmaxml_forecast_region_c2042900)
+        region2 = create(:jmaxml_forecast_region_c2043200)
         subject.target_region_ids = [ region1.id, region2.id ]
         subject.save!
       end

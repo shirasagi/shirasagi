@@ -71,7 +71,7 @@ describe "jmaxml/water_level_stations", type: :feature, dbscope: :example do
   end
 
   context 'search' do
-    let!(:region) { create :jmaxml_water_level_station_85050900020300042 }
+    let!(:region) { create :jmaxml_water_level_station_c85050900020300042 }
 
     before { login_cms_user }
 

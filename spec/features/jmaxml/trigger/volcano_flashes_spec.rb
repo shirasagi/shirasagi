@@ -6,7 +6,7 @@ describe "jmaxml/trigger/volcano_flashes", type: :feature, dbscope: :example, js
   let(:index_path) { jmaxml_trigger_bases_path(site, node) }
 
   context "basic crud" do
-    let!(:region) { create(:jmaxml_forecast_region_0110000) }
+    let!(:region) { create(:jmaxml_forecast_region_c0110000) }
     let(:model) { Jmaxml::Trigger::VolcanoFlash }
     let(:name1) { unique_id }
     let(:name2) { unique_id }
