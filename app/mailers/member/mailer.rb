@@ -64,7 +64,7 @@ class Member::Mailer < ActionMailer::Base
     end
     body << "\n"
 
-    mail from: from, to: to, subject: subject, body: body, message_id: Cms.generate_message_id(@node.cur_site || @node.site)
+    mail from: from, to: to, subject: subject, body: body, message_id: Cms.generate_message_id(node.cur_site || node.site)
   end
 
   # 会員招待メールを配信する。
@@ -86,6 +86,6 @@ class Member::Mailer < ActionMailer::Base
     end
     body << "\n"
 
-    mail from: from, to: to, subject: subject, body: body, message_id: Cms.generate_message_id(@node.cur_site || @node.site)
+    mail from: from, to: to, subject: subject, body: body, message_id: Cms.generate_message_id(node.cur_site || node.site)
   end
 end

@@ -7,7 +7,7 @@ class Opendata::Mailer < ActionMailer::Base
     @url       = args[:url]
     @resource_name = I18n.t("opendata.labels.#{@item.route.sub(/^.+?\//, "")}")
 
-    mail from: @to_user.email, to: @to_user.email, message_id: Cms.generate_message_id(@node.cur_site || @node.site)
+    mail from: @to_user.email, to: @to_user.email, message_id: Cms.generate_message_id(args[:site])
   end
 
   def request_idea_comment_mail(args)
@@ -18,7 +18,7 @@ class Opendata::Mailer < ActionMailer::Base
     @comment   = args[:comment]
     @url       = args[:url]
 
-    mail from: @to_user.email, to: @to_user.email, message_id: Cms.generate_message_id(@node.cur_site || @node.site)
+    mail from: @to_user.email, to: @to_user.email, message_id: Cms.generate_message_id(args[:site])
   end
 
   def export_datasets_mail(args)
@@ -26,7 +26,7 @@ class Opendata::Mailer < ActionMailer::Base
     @subject = "#{I18n.t('opendata.export.subject')} - #{args[:site].name}"
     @link    = args[:link]
 
-    mail from: @to_user.email, to: @to_user.email, message_id: Cms.generate_message_id(@node.cur_site || @node.site)
+    mail from: @to_user.email, to: @to_user.email, message_id: Cms.generate_message_id(args[:site])
   end
 
   def notify_dataset_update_plan(site, datasets)
@@ -34,6 +34,6 @@ class Opendata::Mailer < ActionMailer::Base
     @datasets = datasets
     @site = site
 
-    mail from: site.sender_address, to: site.sender_address, message_id: Cms.generate_message_id(@node.cur_site || @node.site)
+    mail from: site.sender_address, to: site.sender_address, message_id: Cms.generate_message_id(site)
   end
 end
