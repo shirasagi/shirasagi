@@ -27,7 +27,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
   end
   let!(:category) { create :gws_report_category, cur_site: site }
   let!(:form) { create :gws_report_form, cur_site: site, category_ids: [ category.id ], state: "public" }
-  let!(:column1_1) do
+  let!(:column1) do
     create(:gws_column_text_field, cur_site: site, form: form, order: 10, required: "optional", input_type: "text")
   end
 

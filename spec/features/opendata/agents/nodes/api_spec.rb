@@ -14,22 +14,22 @@ describe "opendata_agents_nodes_api", dbscope: :example do
   let(:resource_search_path) { "#{node.url}1/resource_search" }
 
   let!(:node_dataset) { create_once :opendata_node_dataset }
-  let!(:node_dataset_group_01) { create(:opendata_dataset_group, cur_site: cms_site, categories: [ OpenStruct.new({ _id: 1 }) ]) }
-  let!(:node_dataset_group_02) { create(:opendata_dataset_group, cur_site: cms_site, categories: [ OpenStruct.new({ _id: 2 }) ]) }
+  let!(:node_dataset_group1) { create(:opendata_dataset_group, cur_site: cms_site, categories: [ OpenStruct.new({ _id: 1 }) ]) }
+  let!(:node_dataset_group2) { create(:opendata_dataset_group, cur_site: cms_site, categories: [ OpenStruct.new({ _id: 2 }) ]) }
   let!(:node_search_dataset) { create_once :opendata_node_search_dataset, filename: "dataset/search" }
-  let!(:page_dataset_01) do
-    create(:opendata_dataset, cur_node: node_dataset, dataset_group_ids: [node_dataset_group_01.id],
+  let!(:page_dataset1) do
+    create(:opendata_dataset, cur_node: node_dataset, dataset_group_ids: [node_dataset_group1.id],
                               area_ids: [ node_area.id ], tags: %w(TEST_1))
   end
-  let!(:page_dataset_02) do
-    create(:opendata_dataset, cur_node: node_dataset, dataset_group_ids: [node_dataset_group_02.id],
+  let!(:page_dataset2) do
+    create(:opendata_dataset, cur_node: node_dataset, dataset_group_ids: [node_dataset_group2.id],
                               area_ids: [ node_area.id ], tags: %w(TEST_2))
   end
 
   let(:dataset_resource_url) { "http://#{unique_domain}/#{unique_id}/shift_jis.csv" }
   let(:dataset_resource_file_path) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv") }
-  let(:dataset_resource) { page_dataset_01.resources.new(attributes_for(:opendata_resource)) }
-  let(:dataset_url_resource) { page_dataset_01.url_resources.new(attributes_for(:opendata_url_resource)) }
+  let(:dataset_resource) { page_dataset1.resources.new(attributes_for(:opendata_resource)) }
+  let(:dataset_url_resource) { page_dataset1.url_resources.new(attributes_for(:opendata_url_resource)) }
 
   let(:license) { create(:opendata_license, cur_site: cms_site) }
 
@@ -107,7 +107,7 @@ describe "opendata_agents_nodes_api", dbscope: :example do
         visit tag_list_path
         expect(status_code).to eq 200
 
-        visit "#{tag_list_path}?query=#{page_dataset_01.tags[0]}"
+        visit "#{tag_list_path}?query=#{page_dataset1.tags[0]}"
         expect(status_code).to eq 200
 
         visit "#{tag_list_path}?query=NO_TAG"
@@ -119,7 +119,7 @@ describe "opendata_agents_nodes_api", dbscope: :example do
       page.driver.browser.with_session("public") do |session|
         session.env("HTTP_X_FORWARDED_HOST", cms_site.domain)
 
-        visit "#{package_show_path}?id=#{page_dataset_01.name}"
+        visit "#{package_show_path}?id=#{page_dataset1.name}"
         expect(status_code).to eq 200
 
         visit "#{package_show_path}?id=NO_DATASET"
@@ -132,7 +132,7 @@ describe "opendata_agents_nodes_api", dbscope: :example do
       page.driver.browser.with_session("public") do |session|
         session.env("HTTP_X_FORWARDED_HOST", cms_site.domain)
 
-        visit "#{tag_show_path}?id=#{page_dataset_01.tags[0]}"
+        visit "#{tag_show_path}?id=#{page_dataset1.tags[0]}"
         expect(status_code).to eq 200
 
         visit "#{tag_show_path}?id=NO_TAG"
@@ -145,7 +145,7 @@ describe "opendata_agents_nodes_api", dbscope: :example do
       page.driver.browser.with_session("public") do |session|
         session.env("HTTP_X_FORWARDED_HOST", cms_site.domain)
 
-        visit "#{group_show_path}?id=#{node_dataset_group_01.id}"
+        visit "#{group_show_path}?id=#{node_dataset_group1.id}"
         expect(status_code).to eq 200
 
         visit "#{group_show_path}?id=NO_DATASET_GROUP"
@@ -222,10 +222,7 @@ describe "opendata_agents_nodes_api", dbscope: :example do
         visit "#{resource_search_path}?limit=-50"
         visit "#{resource_search_path}?offset=b"
         visit "#{resource_search_path}?offset=-10"
-
       end
     end
-
   end
-
 end

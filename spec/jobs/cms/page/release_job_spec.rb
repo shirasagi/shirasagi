@@ -12,15 +12,15 @@ describe Cms::Page::ReleaseJob, dbscope: :example do
       site_id: site.id
     )
   end
-  let!(:user_1) { create(:cms_test_user, group: cms_group, role: role) }
-  let!(:user_2) { create(:cms_test_user, group: cms_group, role: role) }
+  let!(:user1) { create(:cms_test_user, group: cms_group, role: role) }
+  let!(:user2) { create(:cms_test_user, group: cms_group, role: role) }
   let!(:node)   { create :article_node_page, cur_site: site, layout_id: layout.id }
 
   let(:file) do
-    tmp_ss_file site: site, cur_user: user_1, contents: "#{Rails.root}/spec/fixtures/ss/logo.png", model: "article/page"
+    tmp_ss_file site: site, cur_user: user1, contents: "#{Rails.root}/spec/fixtures/ss/logo.png", model: "article/page"
   end
   let!(:item) do
-    create :article_page, cur_user: user_1, cur_site: site, cur_node: node, layout_id: layout.id, file_ids: [ file.id ],
+    create :article_page, cur_user: user1, cur_site: site, cur_node: node, layout_id: layout.id, file_ids: [ file.id ],
            html: "<a href=\"#{file.url}\">#{file.humanized_name}</a>"
   end
 
@@ -56,10 +56,10 @@ describe Cms::Page::ReleaseJob, dbscope: :example do
       expect(History::Trash.all.count).to eq 0
 
       # Workflow::PagesController request_update
-      item.workflow_user_id = user_1.id
+      item.workflow_user_id = user1.id
       item.workflow_state = "request"
       item.workflow_approvers = [
-        { level: 1, user_id: user_2.id, state: "pending", comment: "" }
+        { level: 1, user_id: user2.id, state: "pending", comment: "" }
       ]
       item.workflow_required_counts = [ false ]
       item.save!

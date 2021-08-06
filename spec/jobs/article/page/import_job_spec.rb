@@ -347,32 +347,32 @@ describe Article::Page::ImportJob, dbscope: :example do
       let!(:site2) { create :cms_site, name: "another", host: "another", domains: "another.localhost.jp" }
       let!(:node) { create :article_node_page }
 
-      let!(:cate0_1) { create(:category_node_node, name: "cate1", filename: "A") } # cate1
-      let!(:cate0_2) { create(:category_node_node, name: "cate2", filename: "A/B") } # cate1/cate2
-      let!(:cate0_3) { create(:category_node_page, name: "cate3", filename: "A/B/C") } # cate1/cate2/cate3
+      let!(:cate1_depth1) { create(:category_node_node, name: "cate1", filename: "A") } # cate1
+      let!(:cate1_depth2) { create(:category_node_node, name: "cate2", filename: "A/B") } # cate1/cate2
+      let!(:cate1_depth3) { create(:category_node_page, name: "cate3", filename: "A/B/C") } # cate1/cate2/cate3
 
-      let!(:cate1_1) { create(:category_node_node, name: "cate1", filename: "D") } # cate1
-      let!(:cate1_2) { create(:category_node_node, name: "cate2", filename: "D/E") } # cate1/cate2
-      let!(:cate1_3) { create(:category_node_page, name: "cate3", filename: "D/E/F") } # cate1/cate2/cate3
-      let!(:cate1_4) { create(:category_node_node, name: "cate3", filename: "G") } # cate3
+      let!(:cate2_depth1) { create(:category_node_node, name: "cate1", filename: "D") } # cate1
+      let!(:cate2_depth2) { create(:category_node_node, name: "cate2", filename: "D/E") } # cate1/cate2
+      let!(:cate2_depth3) { create(:category_node_page, name: "cate3", filename: "D/E/F") } # cate1/cate2/cate3
+      let!(:cate2_depth4) { create(:category_node_node, name: "cate3", filename: "G") } # cate3
 
-      let!(:cate2_1) { create(:category_node_node, name: "cate4", filename: "H") } # cate4
-      let!(:cate2_2) { create(:category_node_node, name: "cate5", filename: "H/I") } # cate4/cate5
-      let!(:cate2_3) { create(:category_node_page, name: "cate6", filename: "H/I/J") } # cate4/cate5/cate6
+      let!(:cate3_depth1) { create(:category_node_node, name: "cate4", filename: "H") } # cate4
+      let!(:cate3_depth2) { create(:category_node_node, name: "cate5", filename: "H/I") } # cate4/cate5
+      let!(:cate3_depth3) { create(:category_node_page, name: "cate6", filename: "H/I/J") } # cate4/cate5/cate6
 
       let!(:facility1) { create(:facility_node_category, name: "cate1", filename: "K") } # cate1
       let!(:facility2) { create(:facility_node_category, name: "cate2", filename: "L/M") } # cate1/cate2
       let!(:facility3) { create(:facility_node_category, name: "cate3", filename: "N/O/P") } # cate1/cate2/cate3
 
-      let!(:another_cate0_1) do
+      let!(:another_cate1_depth1) do
         # cate1
         create(:category_node_node, cur_site: site2, name: "cate1", filename: "A")
       end
-      let!(:another_cate0_2) do
+      let!(:another_cate1_depth2) do
         # cate1/cate2
         create(:category_node_node, cur_site: site2, name: "cate2", filename: "A/B")
       end
-      let!(:another_cate0_3) do
+      let!(:another_cate1_depth3) do
         # cate1/cate2/cate3
         create(:category_node_page, cur_site: site2, name: "cate3", filename: "A/B/C")
       end
@@ -402,10 +402,10 @@ describe Article::Page::ImportJob, dbscope: :example do
         page5 = Article::Page.site(site).find_by(name: "page5")
         page6 = Article::Page.site(site).find_by(name: "page6")
 
-        expect(page1.category_ids).to match_array [cate0_3.id, cate1_3.id]
-        expect(page2.category_ids).to match_array [cate0_3.id, cate1_3.id, cate0_2.id, cate1_2.id, cate0_1.id, cate1_1.id]
-        expect(page3.category_ids).to match_array [cate2_3.id]
-        expect(page4.category_ids).to match_array [cate2_2.id, cate1_4.id]
+        expect(page1.category_ids).to match_array [cate1_depth3.id, cate2_depth3.id]
+        expect(page2.category_ids).to match_array [cate1_depth3.id, cate2_depth3.id, cate1_depth2.id, cate2_depth2.id, cate1_depth1.id, cate2_depth1.id]
+        expect(page3.category_ids).to match_array [cate3_depth3.id]
+        expect(page4.category_ids).to match_array [cate3_depth2.id, cate2_depth4.id]
         expect(page5.category_ids).to match_array []
         expect(page6.category_ids).to match_array []
       end
