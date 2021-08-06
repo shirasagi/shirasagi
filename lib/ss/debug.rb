@@ -41,8 +41,8 @@ module SS
         "\n#{str}#{indent(lev - 1)}"
       end
 
-      def scan_each(k, v, lev)
-        "#{indent(lev)}#{k} \t=> #{dump(v, lev + 1)}\n"
+      def scan_each(key, value, lev)
+        "#{indent(lev)}#{key} \t=> #{dump(value, lev + 1)}\n"
       end
     end
   end
