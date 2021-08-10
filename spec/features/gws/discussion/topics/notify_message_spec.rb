@@ -81,7 +81,7 @@ describe "gws_discussion_topics_notify_message", type: :feature, dbscope: :examp
       expect(mail.subject).to eq notification.subject
       url = "#{SS.config.gws.canonical_scheme}://#{SS.config.gws.canonical_domain}/.g#{site.id}/memo/notices/#{notification.id}"
       expect(mail.decoded.to_s).to include(mail.subject, url)
-      expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
+      expect(mail.message_id).to end_with("@#{SS.config.gws.canonical_domain}.mail")
     end
 
     it "with enabled closed" do

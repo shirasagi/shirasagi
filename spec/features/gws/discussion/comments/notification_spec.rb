@@ -66,7 +66,7 @@ describe "gws_discussion_comments", type: :feature, dbscope: :example, js: true 
       expect(mail.subject).to eq notification.subject
       url = "#{SS.config.gws.canonical_scheme}://#{SS.config.gws.canonical_domain}/.g#{site.id}/memo/notices/#{notification.id}"
       expect(mail.decoded.to_s).to include(mail.subject, url)
-      expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
+      expect(mail.message_id).to end_with("@#{SS.config.gws.canonical_domain}.mail")
     end
   end
 end
