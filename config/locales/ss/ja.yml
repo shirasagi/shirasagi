@@ -112,6 +112,7 @@ ja:
       closed_save: 非公開にする
     buttons:
       save: 保存
+      saving: 保存中
       new: 新規作成
       draft_save: 下書き保存
       closed_save: 非公開保存
@@ -127,6 +128,7 @@ ja:
       reset: リセット
       clear: クリア
       send: 送信
+      sending: 送信中
       run: 実行
       stop: 停止
       toggle: 折りたたみ表示
@@ -144,6 +146,7 @@ ja:
       split: 分割
       integrate: 統合
       upload: アップロード
+      uploading: アップロード中
       download: ダウンロード
       add: 追加
       print: 印刷

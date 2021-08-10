@@ -1,6 +1,6 @@
 <% @crud_buttons = proc do |f| %>
-  <%= f.submit t("ss.buttons.send"), class: 'btn-primary save js-send' %>
-  <%= f.submit t("ss.buttons.draft_save"), class: 'btn-default js-save' %>
+  <%= f.submit t("ss.buttons.send"), class: 'btn-primary save js-send', data: { disable_with: t("ss.buttons.saving") } %>
+  <%= f.submit t("ss.buttons.draft_save"), class: 'btn-default js-save', data: { disable_with: t("ss.buttons.saving") } %>
 <% end %>
 
 <%= render file: "ss/crud/new" %>
