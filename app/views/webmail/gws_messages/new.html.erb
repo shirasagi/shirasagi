@@ -8,7 +8,7 @@
 <% end %>
 
 <% @crud_buttons = proc do |f| %>
-  <%= f.submit t('ss.buttons.send'), class: 'btn-primary save js-send', data: { disable_with: t("ss.buttons.saving") } %>
+  <%= f.submit t('ss.buttons.send'), class: 'btn-primary save js-send', data: { disable_with: t("ss.buttons.sending") } %>
   <%= f.button t('ss.buttons.cancel'), class: 'btn-default', type: :reset,
         onclick: "location.href='#{webmail_mail_path(webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index, mailbox: params[:mailbox])}'; return false;" %>
 <% end %>
