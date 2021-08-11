@@ -2177,11 +2177,16 @@ ja:
     cms/addon/redirect_link:
       redirect_link:
         - ページを別URLにリダイレクトする際に入力します。
-
     cms/csv_import_base:
       file:
         - インポートするファイルを設定します。
         - ファイルはUTF-8またはShift_JISでエンコードされている必要があります。
+
+    cms/addon/twitter_poster:
+      twitter_auto_post:
+        - 有効に設定すると公開時にTwitter投稿をおこないます。
+      sns_auto_delete:
+        - 有効に設定すると非公開にTwitter投稿を削除します。
 
     cms/addon/node_line_post_setting:
       node_line_auto_post:
