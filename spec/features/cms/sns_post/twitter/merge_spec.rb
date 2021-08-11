@@ -151,7 +151,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("select option[selected]", text: I18n.t("ss.options.state.active"))
+            expect(page).to have_css("select option[selected]", text: I18n.t("ss.options.state.expired"))
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
           end
           within "form#item-form" do

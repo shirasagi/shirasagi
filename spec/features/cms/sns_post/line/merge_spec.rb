@@ -155,7 +155,8 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           ensure_addon_opened("#addon-cms-agents-addons-line_poster")
           within "#addon-cms-agents-addons-line_poster" do
-            expect(page).to have_css("select option[selected]", text: I18n.t("ss.options.state.active"))
+            expect(page).to have_css("select option[selected]", text: I18n.t("ss.options.state.expired"))
+            select I18n.t("ss.options.state.active"), from: "item[line_auto_post]"
             fill_in "item[line_text_message]", with: "modified"
           end
           within "form#item-form" do
