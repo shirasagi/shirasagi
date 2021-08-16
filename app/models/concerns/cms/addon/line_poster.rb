@@ -111,18 +111,9 @@ module Cms::Addon
           client = line_client
           messages = []
           if line_post_format == "thumb_carousel"
-            if thumb
-              messages << line_message_carousel(thumb.full_url)
-            else
-              raise I18n.t("errors.messages.thumb_is_blank")
-            end
+            messages << line_message_carousel(thumb.try(:full_url))
           elsif line_post_format == "body_carousel"
-            img_url = first_img_full_url
-            if img_url
-              messages << line_message_carousel(img_url)
-            else
-              raise I18n.t("errors.messages.not_found_file_url_in_body")
-            end
+            messages << line_message_carousel(first_img_full_url)
           elsif line_post_format == "message_only_carousel"
             messages << line_message_carousel
           end
