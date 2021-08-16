@@ -161,13 +161,9 @@ module Cms::Addon
     end
 
     def tweet_media_files
-      media_files = []
-      attached_files.each do |file|
-        next if !file.image?
-        media_files << ::File.new(file.path)
-        break if media_files.length >= TWITTER_MAX_MEDIA_COUNT
-      end
-      media_files
+      media_files = attached_files.select(&:image?).take(TWITTER_MAX_MEDIA_COUNT)
+      media_files << thumb if media_files.blank? && thumb
+      media_files.map { |file| ::File.new(file.path) }
     end
   end
 end
