@@ -64,7 +64,7 @@ module Cms::Addon
       img_url
     end
 
-    def reset_line_posted
+    def reset_line_posted!
       return if line_posted.blank?
       Cms::SnsPostLog::Line.create_with(self) do |log|
         log.created = Time.zone.now

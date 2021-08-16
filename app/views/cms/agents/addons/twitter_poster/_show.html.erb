@@ -1,6 +1,6 @@
 <% return "" unless @cur_site.twitter_token_enabled? %>
 
-<dl class="see">
+<dl class="see mod-cms-twitter_poster">
   <dt><%= @model.t :twitter_auto_post %></dt>
   <dd><%= @item.label :twitter_auto_post %></dd>
 
@@ -8,7 +8,8 @@
     <dt><%= @model.t :twitter_post_format %></dt>
     <dd><%= @item.label :twitter_post_format %></dd>
 
-    <% @item.twitter_posted.to_a.each do |posted| %>
+    <% posted = @item.twitter_posted.to_a.first %>
+    <% if posted %>
       <dt><%= @item.t :twitter_url %></dt>
       <dd>
         <a href="<%= @item.twitter_url(posted[:twitter_post_id], posted[:twitter_user_id]) %>" target="_blank" rel="noopener">
@@ -17,7 +18,21 @@
       </dd>
 
       <dt><%= @item.t :twitter_posted_at %></dt>
-      <dd><%= tryb { posted[:posted_at].strftime("%Y/%m/%d %H:%M") } %></dd>
+      <dd>
+        <%= tryb { posted[:posted_at].strftime("%Y/%m/%d %H:%M") } %>
+        <% if @item.allowed?(:release, @cur_user, site: @cur_site) %>
+          <%= jquery do %>
+            $(".mod-cms-twitter_poster .reset-twitter-post").on("click", function() {
+              if (!confirm("<%= I18n.t('ss.confirm.reset_posted') %>")) {
+                return false;
+              }
+            });
+          <% end %>
+          <div style="margin-top: 5px;">
+            <%= link_to t("ss.links.reset_posted"), cms_apis_twitter_reset_path(id: @item), class: "btn reset-twitter-post", method: :post %>
+          </div>
+        <% end %>
+      </dd>
     <% end %>
 
     <% if @item.twitter_post_error.present? %>

@@ -8,7 +8,7 @@
   twitter_post_format = @item.twitter_post_format.presence || @cur_node.try(:node_twitter_post_format).presence || "thumb_and_page"
 %>
 
-<dl class="see mod-cms-sns_poster">
+<dl class="see mod-cms-twitter_poster">
   <dt><%= @model.t :twitter_auto_post %><%= @model.tt :twitter_auto_post %></dt>
   <dd><%=  f.select :twitter_auto_post, @item.twitter_auto_post_options, :selected => twitter_auto_post %></dd>
 

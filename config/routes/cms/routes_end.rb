@@ -277,6 +277,7 @@ Rails.application.routes.draw do
       end
 
       post "sns_poster/:id/line_reset" => "sns_poster#line_reset", as: :line_reset
+      post "sns_poster/:id/twitter_reset" => "sns_poster#twitter_reset", as: :twitter_reset
     end
   end
 
