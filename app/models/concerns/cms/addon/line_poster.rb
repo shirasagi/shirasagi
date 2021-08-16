@@ -69,7 +69,7 @@ module Cms::Addon
       Cms::SnsPostLog::Line.create_with(self) do |log|
         log.created = Time.zone.now
         log.action = "reset_line_posted"
-        self.set(line_posted: [])
+        self.set(line_auto_post: "expired", line_posted: [])
         log.state = "success"
       end
     end

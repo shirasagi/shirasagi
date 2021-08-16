@@ -63,10 +63,10 @@ module Cms::Addon
 
     def reset_twitter_posted!
       return if twitter_posted.blank?
-      Cms::SnsPostLog::Line.create_with(self) do |log|
+      Cms::SnsPostLog::Twitter.create_with(self) do |log|
         log.created = Time.zone.now
         log.action = "reset_twitter_posted"
-        self.set(twitter_posted: [])
+        self.set(twitter_auto_post: "expired", twitter_posted: [])
         log.state = "success"
       end
     end

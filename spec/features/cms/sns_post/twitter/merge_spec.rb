@@ -59,7 +59,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
       end
     end
 
-    context "post message" do
+    context "post page" do
       it "#edit" do
         capture_twitter_rest_client do |capture|
           visit show_path
@@ -76,6 +76,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_css("select option[selected]", text: I18n.t("ss.options.state.expired"))
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
+            select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
           end
           within "form#item-form" do
             click_on I18n.t("ss.buttons.publish_save")
@@ -117,6 +118,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_css("select option[selected]", text: I18n.t("ss.options.state.expired"))
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
+            select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
           end
           within "form#item-form" do
             click_on I18n.t("ss.buttons.publish_save")
