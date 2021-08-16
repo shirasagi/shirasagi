@@ -51,6 +51,8 @@ class History::Log
     end
 
     def create_log!(request, response, options)
+      item             = options[:item]
+
       log              = new
       log.session_id   = request.session.id
       log.request_id   = request.uuid
@@ -60,8 +62,8 @@ class History::Log
       log.cur_user     = options[:cur_user]
       log.user_id      = options[:cur_user].id if options[:cur_user]
       log.site_id      = options[:cur_site].id if options[:cur_site]
-      log.ref_coll     = options[:item].try(:collection_name) if options[:item]
-      log.filename     = options[:item].data[:filename] if options[:item].try(:ref_coll) == "ss_files"
+      log.ref_coll     = item.collection_name if item
+      log.filename     = item.data[:filename] if item.try(:ref_coll) == "ss_files"
 
       if options[:action] == "undo_delete"
         log.behavior = "restore"
@@ -69,12 +71,8 @@ class History::Log
         log.behavior = "delete"
       end
 
-      options[:item].tap do |item|
-        if item && item.try(:new_record?)
-          log.target_id    = item.id
-          log.target_class = item.class
-        end
-      end
+      log.target_id    = item.id    if item
+      log.target_class = item.class if item || !item.try(:new_record?)
 
       log.save!
     end
