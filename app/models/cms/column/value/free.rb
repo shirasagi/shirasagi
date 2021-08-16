@@ -131,28 +131,18 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
     end
   end
 
-  def create_history_log(file)
-    site_id = nil
-    user_id = nil
+  def build_history_log(file)
     site_id = self._parent.cur_site.id if self._parent.cur_site.present?
     user_id = self._parent.cur_user.id if self._parent.cur_user.present?
-    History::Log.new(
-      site_id: site_id,
-      user_id: user_id,
-      session_id: Rails.application.current_session_id,
-      request_id: Rails.application.current_request_id,
-      controller: Rails.application.current_controller,
-      url: file.try(:url),
-      page_url: Rails.application.current_path_info,
-      ref_coll: file.try(:collection_name).to_s
-    )
+
+    History::Log.build_file_log(file, site_id: site_id, user_id: user_id)
   end
 
   def put_contains_urls_logs
     add_contains_urls = self._parent.value_contains_urls - self._parent.value_contains_urls_was.to_a
-    add_contains_urls.each do |file|
-      item = create_history_log(file)
-      item.url = file
+    add_contains_urls.each do |file_url|
+      item = build_history_log(nil)
+      item.url = file_url
       item.action = "update"
       item.behavior = "paste"
       item.ref_coll = "ss_files"
@@ -160,9 +150,9 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
     end
 
     del_contains_urls = self._parent.value_contains_urls_was.to_a - self._parent.value_contains_urls
-    del_contains_urls.each do |file|
-      item = create_history_log(file)
-      item.url = file
+    del_contains_urls.each do |file_url|
+      item = build_history_log(nil)
+      item.url = file_url
       item.action = "destroy"
       item.behavior = "paste"
       item.ref_coll = "ss_files"

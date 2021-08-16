@@ -96,5 +96,26 @@ class History::Log
 
       exporter.enum(all, options)
     end
+
+    def build_file_log(file, options)
+      log = History::Log.new
+
+      log.site_id = options[:site_id] || SS::Application.current_site.try(:id)
+      log.user_id = options[:user_id] || SS::Application.current_user.try(:id)
+
+      if file
+        log.url = file.url
+        log.ref_coll = file.collection_name
+        log.target_class = file.class.name
+        log.target_id = file.id.to_s
+      end
+
+      log.session_id = options[:session_id] || Rails.application.current_session_id
+      log.request_id = options[:request_id] || Rails.application.current_request_id
+      log.controller = options[:controller] || Rails.application.current_controller
+      log.page_url = options[:page_url] || Rails.application.current_path_info
+
+      log
+    end
   end
 end
