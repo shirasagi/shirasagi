@@ -345,6 +345,10 @@ ja:
         same_as_updated: 更新日
         same_as_created: 作成日
         same_as_first_released: 初公開日
+      twitter_post_format:
+        thumb_and_page: サムネイル画像とページ
+        files_and_page: 本文内の画像とページ
+        page_only: ページ
       line_post_format:
         thumb_carousel: サムネイル画像とLINEメッセージ
         body_carousel: 本文内の最初の画像とLINEメッセージ
@@ -833,14 +837,13 @@ ja:
         sns_share_orders: 並び順
       cms/addon/twitter_poster:
         twitter_auto_post: Twitter投稿
+        twitter_post_format: 投稿形式
         twitter_url: TweetURL
         twitter_posted_at: 投稿日時
-        sns_auto_delete: 非公開時に投稿を削除
         twitter_post_error: 投稿エラー
       cms/addon/node_twitter_post_setting:
-        node_auto_post_setting: SNS自動投稿設定
         node_twitter_auto_post: Twitter投稿
-        node_sns_auto_delete: 非公開時に投稿を削除
+        node_twitter_post_format: 投稿形式
       cms/addon/node_line_post_setting:
         node_line_auto_post: LINE投稿
         node_line_post_format: 投稿形式
@@ -2174,6 +2177,74 @@ ja:
       list_type:
         - 種類を選択します。
 
+    cms/addon/node_twitter_post_setting:
+      node_twitter_auto_post:
+        - 有効に設定すると公開時にTwitter投稿をおこないます。
+      node_twitter_post_format:
+        - 投稿形式を選択します。
+        -
+        - ・サムネイル画像とページ
+        - サムネイル画像とページタイトルおよびリンクを投稿します。
+        -
+        - ・本文内の画像とページ
+        - 本文内の画像とページタイトルおよびリンクを投稿します。
+        - 画像は最大４件表示されます。
+        -
+        - ・ページ
+        - ページタイトルおよびリンクを投稿します。
+        - ページをOGPで表示する場合は、こちらを選択してください。
+
+    cms/addon/node_line_post_setting:
+      node_line_auto_post:
+        - 有効に設定すると公開時にLINE投稿をおこないます。
+      node_line_post_format:
+        - 投稿形式を選択します。
+        -
+        - ・サムネイル画像とLINEメッセージ
+        - サムネイル画像とLINEメッセージおよび記事へのリンクをカルーセル形式で投稿します。
+        -
+        - ・本文内の最初の画像とLINEメッセージ
+        - 本文内の最初の画像とLINEメッセージおよび記事へのリンクをカルーセル形式で投稿します。
+        -
+        - ・LINEメッセージのみ
+        - LINEメッセージと記事へのリンクをカルーセル形式で投稿します。
+
+    cms/addon/twitter_poster:
+      twitter_auto_post:
+        - 有効に設定すると公開時にTwitter投稿をおこないます。
+      twitter_post_format:
+        - 投稿形式を選択します。
+        -
+        - ・サムネイル画像とページ
+        - サムネイル画像とページタイトルおよびリンクを投稿します。
+        -
+        - ・本文内の画像とページ
+        - 本文内の画像とページタイトルおよびリンクを投稿します。
+        - 画像は最大４件表示されます。
+        -
+        - ・ページ
+        - ページタイトルおよびリンクを投稿します。
+        - ページをOGPで表示する場合は、こちらを選択してください。
+
+    cms/addon/line_poster:
+      line_auto_post:
+        - 有効に設定すると公開時にLINE投稿をおこないます。
+      line_post_format:
+        - 投稿形式を選択します。
+        -
+        - ・サムネイル画像とLINEメッセージ
+        - サムネイル画像とLINEメッセージおよび記事へのリンクをカルーセル形式で投稿します。
+        -
+        - ・本文内の最初の画像とLINEメッセージ
+        - 本文内の最初の画像とLINEメッセージおよび記事へのリンクをカルーセル形式で投稿します。
+        -
+        - ・LINEメッセージのみ
+        - LINEメッセージと記事へのリンクをカルーセル形式で投稿します。
+      line_text_message:
+        - LINEに投稿するメッセージを入力します。
+      line_edit_auto_post:
+        - 有効に設定すると公開記事を編集時にLINE投稿をおこないます。
+
     cms/addon/redirect_link:
       redirect_link:
         - ページを別URLにリダイレクトする際に入力します。
@@ -2181,12 +2252,6 @@ ja:
       file:
         - インポートするファイルを設定します。
         - ファイルはUTF-8またはShift_JISでエンコードされている必要があります。
-
-    cms/addon/twitter_poster:
-      twitter_auto_post:
-        - 有効に設定すると公開時にTwitter投稿をおこないます。
-      sns_auto_delete:
-        - 有効に設定すると非公開にTwitter投稿を削除します。
 
     cms/addon/node_line_post_setting:
       node_line_auto_post:

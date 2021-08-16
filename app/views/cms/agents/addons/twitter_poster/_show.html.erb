@@ -4,25 +4,27 @@
   <dt><%= @model.t :twitter_auto_post %></dt>
   <dd><%= @item.label :twitter_auto_post %></dd>
 
-  <% @item.twitter_posted.to_a.each do |posted| %>
-    <dt><%= @item.t :twitter_url %></dt>
-    <dd>
-      <a href="<%= @item.twitter_url(posted[:twitter_post_id], posted[:twitter_user_id]) %>" target="_blank" rel="noopener">
-        <%= @item.twitter_url(posted[:twitter_post_id], posted[:twitter_user_id]) %>
-      </a>
-    </dd>
+  <% if @item.twitter_auto_post == "active" %>
+    <dt><%= @model.t :twitter_post_format %></dt>
+    <dd><%= @item.label :twitter_post_format %></dd>
 
-    <dt><%= @item.t :twitter_posted_at %></dt>
-    <dd><%= tryb { posted[:posted_at].strftime("%Y/%m/%d %H:%M") } %></dd>
+    <% @item.twitter_posted.to_a.each do |posted| %>
+      <dt><%= @item.t :twitter_url %></dt>
+      <dd>
+        <a href="<%= @item.twitter_url(posted[:twitter_post_id], posted[:twitter_user_id]) %>" target="_blank" rel="noopener">
+          <%= @item.twitter_url(posted[:twitter_post_id], posted[:twitter_user_id]) %>
+        </a>
+      </dd>
+
+      <dt><%= @item.t :twitter_posted_at %></dt>
+      <dd><%= tryb { posted[:posted_at].strftime("%Y/%m/%d %H:%M") } %></dd>
+    <% end %>
+
+    <% if @item.twitter_post_error.present? %>
+      <dt class="depth-2"><%= @model.t :twitter_post_error %></dt>
+      <dd class="depth-2">
+        <div class="errorExplanation"><%= br @item.twitter_post_error %></div>
+      </dd>
+    <% end %>
   <% end %>
-
-  <% if @item.twitter_post_error.present? %>
-    <dt class="depth-2"><%= @model.t :twitter_post_error %></dt>
-    <dd class="depth-2">
-      <div class="errorExplanation"><%= br @item.twitter_post_error %></div>
-    </dd>
-  <% end %>
-
-  <dt><%= @model.t :sns_auto_delete %></dt>
-  <dd><%= @item.label :sns_auto_delete %></dd>
 </dl>

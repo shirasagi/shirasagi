@@ -684,6 +684,9 @@ ja:
       ss/addon/line_setting:
         line_channel_secret: チャネルシークレット
         line_channel_access_token: チャネルアクセストークン
+      ss/addon/site_auto_post_setting:
+        site_twitter_auto_post: Twitter自動投稿
+        site_edit_auto_post: 編集時に自動投稿
       ss/addon/file_setting:
         file_resizing: 添付ファイルリサイズ
         file_resizing_width: 幅

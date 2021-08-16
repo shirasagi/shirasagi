@@ -6,11 +6,9 @@
 %>
 
 <dl class="see mod-ss-node-auto-post-setting">
-  <% if @cur_site.twitter_token_enabled? %>
   <dt><%= @model.t :node_twitter_auto_post %><%= @model.tt :node_twitter_auto_post %></dt>
   <dd><%= f.select :node_twitter_auto_post, @item.node_twitter_auto_post_options, include_blank: true %></dd>
-  <% end %>
 
-  <dt><%= @model.t :node_sns_auto_delete %><%= @model.tt :node_sns_auto_delete %></dt>
-  <dd><%= f.select :node_sns_auto_delete, @item.node_sns_auto_delete_options, include_blank: true %></dd>
+  <dt><%= @model.t :node_twitter_post_format %><%= @model.tt :node_twitter_post_format %></dt>
+  <dd><%= f.select :node_twitter_post_format, @item.node_twitter_post_format_options, include_blank: true %></dd>
 </dl>

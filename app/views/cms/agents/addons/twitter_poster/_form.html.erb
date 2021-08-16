@@ -5,15 +5,13 @@
   addon[:display_body] = "hide"
 
   twitter_auto_post = @item.twitter_auto_post.presence || @cur_node.try(:node_twitter_auto_post).presence || "expired"
-  sns_auto_delete = @item.sns_auto_delete.presence || @cur_node.try(:node_sns_auto_delete).presence || "expired"
+  twitter_post_format = @item.twitter_post_format.presence || @cur_node.try(:node_twitter_post_format).presence || "thumb_and_page"
 %>
 
 <dl class="see mod-cms-sns_poster">
-  <% if @cur_site.twitter_token_enabled? %>
   <dt><%= @model.t :twitter_auto_post %><%= @model.tt :twitter_auto_post %></dt>
   <dd><%=  f.select :twitter_auto_post, @item.twitter_auto_post_options, :selected => twitter_auto_post %></dd>
-  <% end %>
 
-  <dt><%= @model.t :sns_auto_delete %><%= @model.tt :sns_auto_delete %></dt>
-  <dd><%=  f.select :sns_auto_delete, @item.sns_auto_delete_options, :selected => sns_auto_delete %></dd>
+  <dt><%= @model.t :twitter_post_format %><%= @model.tt :twitter_post_format %></dt>
+  <dd><%=  f.select :twitter_post_format, @item.twitter_post_format_options, selected: twitter_post_format %></dd>
 </dl>

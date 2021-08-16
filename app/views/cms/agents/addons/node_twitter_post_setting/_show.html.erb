@@ -1,11 +1,9 @@
 <% return "" unless @cur_site.twitter_token_enabled? %>
 
 <dl class="see mod-ss-node-auto-post-setting">
-  <% if @cur_site.twitter_token_enabled? %>
   <dt><%= @model.t :node_twitter_auto_post %></dt>
   <dd><%= @item.label :node_twitter_auto_post %></dd>
-  <% end %>
 
-  <dt><%= @model.t :node_sns_auto_delete %></dt>
-  <dd><%= @item.label :node_sns_auto_delete %></dd>
+  <dt><%= @model.t :node_twitter_post_format %></dt>
+  <dd><%= @item.label :node_twitter_post_format %></dd>
 </dl>

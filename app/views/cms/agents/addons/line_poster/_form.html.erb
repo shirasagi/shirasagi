@@ -9,14 +9,12 @@
 %>
 
 <dl class="see mod-cms-line_poster">
-  <% if @cur_site.line_token_enabled? %>
-    <dt><%= @model.t :line_auto_post %><%= @model.tt :line_auto_post %></dt>
-    <dd><%= f.select :line_auto_post, @item.line_auto_post_options, selected: line_auto_post %></dd>
+  <dt><%= @model.t :line_auto_post %><%= @model.tt :line_auto_post %></dt>
+  <dd><%= f.select :line_auto_post, @item.line_auto_post_options, selected: line_auto_post %></dd>
 
-    <dt><%= @model.t :line_post_format %><%= @model.tt :line_post_format %></dt>
-    <dd><%= f.select :line_post_format, @item.line_post_format_options, selected: line_post_format %></dd>
+  <dt><%= @model.t :line_post_format %><%= @model.tt :line_post_format %></dt>
+  <dd><%= f.select :line_post_format, @item.line_post_format_options, selected: line_post_format %></dd>
 
-    <dt><%= @model.t :line_text_message %><%= @model.tt :line_text_message %></dt>
-    <dd><%= f.text_area :line_text_message, placeholder: (@item.t :line_text_message_placeholder) %></dd>
-  <% end %>
+  <dt><%= @model.t :line_text_message %><%= @model.tt :line_text_message %></dt>
+  <dd><%= f.text_area :line_text_message, placeholder: (@item.t :line_text_message_placeholder) %></dd>
 </dl>
