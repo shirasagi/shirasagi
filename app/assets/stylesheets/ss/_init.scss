@@ -103,8 +103,8 @@ $border-white: 1px solid $white;
   }
   nav {
     position: relative;
-    float: right;
     margin: 12px;
+    float: right;
     color: $gray3;
     @include mb {
       @include clear;
@@ -165,8 +165,8 @@ $border-white: 1px solid $white;
     text-decoration: none;
   }
   @include mb {
-    font-size: $px14;
     padding: 5px 12px;
+    font-size: $px14;
   }
 }
 @mixin btn-orange {
@@ -184,8 +184,8 @@ $border-white: 1px solid $white;
     text-decoration: none;
   }
   @include mb {
-    font-size: $px14;
     padding: 5px 12px;
+    font-size: $px14;
   }
 }
 @mixin btn-red {
@@ -205,8 +205,8 @@ $border-white: 1px solid $white;
   }
   @include mb {
     min-width: 0;
-    font-size: $px12;
     padding: 5px 12px;
+    font-size: $px12;
   }
 }
 @mixin btn-active {

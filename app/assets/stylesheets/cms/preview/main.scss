@@ -8,13 +8,13 @@
 // -------------------------------------------------------------------------------------------------
 // preview
 #ss-preview {
+  box-sizing: border-box;
   width: 100%;
   padding: 15px;
   background-color: #323232;
-  font-size: .8rem;
-  font-family: $font-base;
   color: #fff;
-  box-sizing: border-box;
+  font-family: $font-base;
+  font-size: .8rem;
   .ss-preview-dropdown ,#ss-preview-btn-select-draft-page {
     display: inline-block;
     color: #000;
@@ -24,11 +24,11 @@
   button, select, #ss-preview-btn-select-draft-page, input,
   #ss-preview-btn-select-draft-page, .ss-preview-part-list {
     @include btn;
-    margin: 0;
+    box-sizing: border-box;
     width: auto;
     height: auto;
     min-height: 2.6em;
-    box-sizing: border-box;
+    margin: 0;
     @include mb {
       padding: 6px 8px;
     }
@@ -39,30 +39,30 @@
     @include justify-content(center);
     @include align-items(center);
     label {
+      box-sizing: border-box;
       height: 29px;
       margin: 0;
       padding: 4px 12px;
-      background: #d9d9d9;
-      border-radius: 3px 0 0 3px;
-      box-sizing: border-box;
       border: 0;
+      border-radius: 3px 0 0 3px;
+      background: #d9d9d9;
     }
     #ss-preview-btn-select-node {
       @include btn;
-      height: 29px;
-      border-radius: 0;
-      border: 1px solid #bbb;
-      border-left: 0;
-      border-right: 0;
-      font-size: 100%;
       box-sizing: border-box;
+      height: 29px;
+      border: 1px solid #bbb;
+      border-right: 0;
+      border-left: 0;
+      border-radius: 0;
+      font-size: 100%;
       text-decoration: none;
     }
   }
   #ss-preview-btn-create-new-page {
     height: 29px;
-    border-radius: 0 3px 3px 0;
     border: 1px solid #bbb;
+    border-radius: 0 3px 3px 0;
   }
   .ss-preview-part-list {
     height: 2.6em;
@@ -75,10 +75,10 @@
     border: 1px solid #b23a3d;
     background: #e13026;
     @include background-image(linear-gradient(top, #e13026, #b23a3d));
+    color: #fff;
     *zoom: 1;
     filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFE13026', endColorstr='#FFB23A3D');
     filter: none \9;
-    color: #fff;
     &:hover {
       background: #b23a3d;
     }
@@ -122,22 +122,22 @@
     margin-bottom: 10px;
   }
   #ss-preview-date {
-    border-radius: 3px 0 0 3px;
     border-right: 0;
+    border-radius: 3px 0 0 3px;
     @include mb {
+      box-sizing: border-box;
       width: 100px;
       padding: 6px 3px;
-      box-sizing: border-box;
     }
   }
   .ss-preview-btn-pc {
-    border-radius: 0;
     border: 1px solid #bbb;
     border-right: 0;
+    border-radius: 0;
   }
   .ss-preview-btn-mobile {
-    border-radius: 0 3px 3px 0;
     border: 1px solid #bbb;
+    border-radius: 0 3px 3px 0;
   }
   .ss-preview-wrap-column ~ .ss-preview-wrap-column {
     padding-left: 10px;
@@ -202,26 +202,26 @@
 
 #ss-preview-overlay {
   position: absolute;
-  border: 1px solid #000;
-  border-left: 3px solid #000;
   margin: 0 0 0 -5px;
   padding: 3px 5px 0 0;
+  border: 1px solid #000;
+  border-left: 3px solid #000;
   @include transition(.18s);
   pointer-events: none;
   .ss-preview-overlay-tool {
+    @include display-flex;
     position: absolute;
-    left: -3px;
+    z-index: 999;
     bottom: 100%;
+    left: -3px;
+    box-sizing: border-box;
+    @include align-items(center);
+    @include flex-wrap(wrap);
     max-width: 100%;
     margin: 0;
     padding: 0 5px;
-    box-sizing: border-box;
-    @include display-flex;
-    @include align-items(center);
-    @include flex-wrap(wrap);
     background-color: rgba(0, 0, 0, .8);
     pointer-events: none;
-    z-index: 999;
     @include mb {
       display: block;
     }
@@ -239,10 +239,10 @@
       vertical-align: top;
     }
     .ss-preview-btn-group {
+      z-index: 101;
       padding: 5px 5px 5px 0;
       font-size: .8rem;
       pointer-events: auto;
-      z-index: 101;
       button, select, input {
         position: relative;
         z-index: 10;
@@ -251,11 +251,11 @@
     .ss-preview-overlay-btn-group-edit:before {
       content: "";
       position: absolute;
+      z-index: 0;
       top: 0;
       right: 0;
       bottom: 0;
       left: 0;
-      z-index: 0;
     }
   }
   * {
@@ -263,8 +263,8 @@
   }
   .ss-preview-overlay-name {
     margin-right: 1rem;
-    font-size: .8em;
     color: #fff;
+    font-size: .8em;
   }
 }
 
@@ -295,14 +295,14 @@
 }
 
 #ss-preview-form-palette {
+  width: 100%;
   margin-top: 8px;
   margin-bottom: 8px;
-  width: 100%;
 }
 div.ss-preview-dialog {
-  padding: 10px;
-  box-sizing: border-box;
   z-index: 1000;
+  box-sizing: border-box;
+  padding: 10px;
   #ss-preview-dialog-frame {
     margin-top: 10px;
     padding: 10px;
@@ -379,25 +379,25 @@ table.index {
   border: 1px solid #dcdcdc;
   .checkbox {
     width: 38px;
-    text-align: center;
     padding-right: 0;
+    text-align: center;
   }
   th, td {
     padding: 6px 18px;
     font-size: $px13;
     a {
-      font-size: $px13;
       color: #f25a38;
+      font-size: $px13;
       text-decoration: none;
     }
   }
   thead {
     th {
       padding-right: 0;
-      text-align: left;
       border-bottom: 1px solid #dcdcdc;
       background: #f2f2f2;
       color: #999;
+      text-align: left;
     }
   }
   tbody {
@@ -419,10 +419,10 @@ table.index {
     @include clear;
   }
   dt {
-    zoom: 1;
-    float: left;
     min-width: 180px;
     padding: 5px 0;
+    float: left;
+    zoom: 1;
     color: #a0522d;
     font-weight: bold;
   }
@@ -431,12 +431,12 @@ table.index {
     padding: 5px 0;
     input[type=text] {
       @include box-sizing(border-box);
-      border: 1px solid #d0d0d0;
-      @include border-radius(3px);
       @include box-sizing("inset 0 1px 3px #dcdcdc");
-      vertical-align: middle;
       width: 80%;
       padding: 6px;
+      border: 1px solid #d0d0d0;
+      @include border-radius(3px);
+      vertical-align: middle;
     }
   }
   .btn {
@@ -445,97 +445,96 @@ table.index {
   .dropdown-container {
     display: none;
     position: absolute;
-    overflow: auto;
+    z-index: 101;
     width: 70%;
     max-height: 70%;
     margin-top: 2px;
-    -webkit-box-shadow: 1px 2px 4px #888;
+    overflow: auto;
     -moz-box-shadow: 1px 2px 4px #888;
+    -webkit-box-shadow: 1px 2px 4px #888;
     box-shadow: 1px 2px 4px #888;
     font-weight: normal;
-    z-index: 101;
   }
 }
 .mod-workflow-request {
   dt {
     .tooltip {
-      position: relative;
       display: inline-block;
+      position: relative;
       width: 16px;
       height: 16px;
       margin-left: 5px;
-      line-height: 1.1;
       @include border-radius(8px);
       background: #f25a38;
       color: #fff;
+      line-height: 1.1;
       text-align: center;
       cursor: pointer;
       ul {
-        position: absolute;
         display: none;
+        position: absolute;
+        z-index: 100;
         top: 30px;
         left: -25px;
         width: 30em;
         padding: 15px;
-        border: 1px solid #d0d0d0;
-        line-height: 1.6;
-        z-index: 100;
         list-style: none;
+        border: 1px solid #d0d0d0;
         background: #fff;
-        -webkit-box-shadow: 0 1px 6px #d0d0d0;
         -moz-box-shadow: 0 1px 6px #d0d0d0;
+        -webkit-box-shadow: 0 1px 6px #d0d0d0;
         box-shadow: 0 1px 6px #d0d0d0;
         color: #000;
         font-size: 90%;
         font-weight: normal;
+        line-height: 1.6;
         text-align: left;
+        cursor: auto;
         @include mb {
           width: 15em;
         }
-        cursor: auto;
         &:before {
           content: "";
           position: absolute;
-          left: 215px;
           top: -13px;
           left: 20px;
           width: 0;
           height: 0;
-          border-left: 12px solid transparent;
           border-right: 12px solid transparent;
           border-bottom: 12px solid #d0d0d0;
+          border-left: 12px solid transparent;
           background-color: #fff;
         }
         &:after {
           content: "";
           position: absolute;
-          left: 215px;
           top: -12px;
+          left: 215px;
           width: 0;
           height: 0;
-          border-left: 12px solid transparent;
           border-right: 12px solid transparent;
           border-bottom: 12px solid #fff;
+          border-left: 12px solid transparent;
         }
       }
     }
   }
   dd {
     select {
+      max-width: 100%;
+      height: 2.4em;
+      padding: 0 4px;
       @include box-sizing(border-box);
       border: 1px solid #d0d0d0;
       @include border-radius(3px);
       @include box-shadow(inset 0 1px 3px #dcdcdc);
       vertical-align: middle;
-      height: 2.4em;
-      max-width: 100%;
-      padding: 0 4px;
     }
     .btn {
       @include btn;
       box-sizing: border-box;
-      padding: 8px 12px;
       height: 2.7em;
+      padding: 8px 12px;
       text-decoration: none;
     }
     .buttons button {
