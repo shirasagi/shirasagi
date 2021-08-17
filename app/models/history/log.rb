@@ -71,8 +71,8 @@ class History::Log
         log.behavior = "delete"
       end
 
-      log.target_id    = item.id    if item
-      log.target_class = item.class if item || !item.try(:new_record?)
+      log.target_class = item.class    if item
+      log.target_id    = item.try(:id) if item.respond_to?(:new_record?) && !item.try(:new_record?)
 
       log.save!
     end
