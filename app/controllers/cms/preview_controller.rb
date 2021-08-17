@@ -51,6 +51,7 @@ class Cms::PreviewController < ApplicationController
     @cur_path.sub!(/^#{cms_preview_path}(\d+)?/, "")
     @cur_path = "index.html" if @cur_path.blank?
     @cur_path = URI.decode(@cur_path)
+    @cur_main_path = @cur_path.sub(@cur_site.url, "/")
   end
 
   def set_form_data
@@ -64,6 +65,8 @@ class Cms::PreviewController < ApplicationController
 
     page = Cms::Page.site(@cur_site).find(id) rescue Cms::Page.new(route: route)
     page = page.becomes_with_route
+
+    node = Cms::Node.site(@cur_site).where(filename: path).first
 
     preview_item.delete("id")
     column_values = preview_item.delete("column_values")
@@ -89,7 +92,7 @@ class Cms::PreviewController < ApplicationController
     page.layout_id = nil if @cur_layout.nil?
     page.body_layout_id = nil if @cur_body_layout.nil?
 
-    @cur_node = page.cur_node = Cms::Node.site(@cur_site).where(filename: path).first
+    @cur_node = page.cur_node = node
     page.valid?
     @cur_page = page
     @preview_page = page

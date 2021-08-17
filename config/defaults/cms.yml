@@ -120,11 +120,13 @@ production: &production
   # Session Lifetime in seconds
   session_lifetime: 1800
 
-  # check_links job's timeout
+  # check_links settings
   check_links:
     html_request_timeout: 10
     head_request_timeout: 5
     max_redirection: 20
+    report_max_age: 5
+    check_mobile_path: true
 
   close_days_before: 7
   max_term_form: 10

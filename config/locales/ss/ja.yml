@@ -5,6 +5,8 @@ ja:
     management: 管理
     download: ダウンロード
     file: ファイル
+    page: ページ
+    node: フォルダー
     group_users: 所属ユーザー
     image: 画像
     import: インポート
@@ -38,6 +40,7 @@ ja:
     replace: 差し替え
     before_replace: 差し替え前
     after_replace: 差し替え後
+    broken_link: リンク切れ
 
     views:
       login/login:

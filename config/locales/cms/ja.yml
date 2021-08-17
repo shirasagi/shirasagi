@@ -6,6 +6,8 @@ ja:
     body_layout: 本文レイアウト
     calendar_view: カレンダー表示
     check_links: リンクチェック実行結果
+    check_links_reports: レポート
+    check_links_ignore_urls: 除外設定
     check_links_nodes: フォルダー
     check_links_pages: ページ
     count_pages: ページ目
@@ -163,6 +165,11 @@ ja:
       generate_locked: 書き出しを停止しました。
       generate_unlocked: 書き出しの停止を解除しました。
       over_content_quota: 使用容量を超過しているフォルダがあります。
+      check_links_report:
+        - "%{time} 時点でのレポートです。"
+        - "リンク切れを修正した場合、再度リンクチェックを実行し、新しいレポートを作成してください。"
+      check_links_report_annotation: ※リンクチェックの実行タイミングや通信先サーバーの負荷状況によっては誤検出の場合があります。
+      check_links_report_created: "%{time} 時点"
     apis:
       categories:
         index: カテゴリーを選択する
@@ -221,6 +228,7 @@ ja:
       back_to_contents: コンテンツへ戻る
       michecker: miChecker で確認する
       download: フォルダ容量をCSVダウンロードする
+      check_preview: プレビューで確認する
     move_page:
       confirm: 確認
       message: '"%{source}"へのリンクが含まれるページ'
@@ -537,6 +545,11 @@ ja:
     delete_cms_ignore_alert: 警告を無視して削除する
     edit_cms_ignore_alert: 警告を無視して非公開保存する
     use_cms_sitemap: フォルダ容量のCSVダウンロード
+    read_cms_check_links_reports: リンクチェックレポートの閲覧
+    delete_cms_check_links_reports: リンクチェックレポートの削除
+    read_other_cms_check_links_errors: リンクチェックエラーの閲覧（全て）
+    read_private_cms_check_links_errors: リンクチェックエラーの閲覧（所有）
+    edit_cms_check_links_ignore_urls: リンクチェックエラー例外の管理
 
   modules:
     cms: 標準機能
@@ -602,6 +615,7 @@ ja:
       cms/site_search/history: 履歴
       cms/line_poster: LINE連携
       cms/content_quota: 容量制限
+      cms/check_links: リンクチェック実行結果
 
   mongoid:
     models:
@@ -652,6 +666,8 @@ ja:
       cms/column/free: 自由入力
       cms/column/table: 表
       cms/michecker/result: miChecker結果
+      cms/michecker_task: miCheckerタスク
+      cms/check_links/error/base: エラー情報
     errors:
       models:
         cms/content:
@@ -1092,6 +1108,16 @@ ja:
         page_id: 連携ページ
       cms/addon/content_quota:
         content_quota: 容量制限
+      cms/check_links/error/base:
+        ref: パス
+        ref_url: URL
+        name: タイトル
+        filename: ファイル名
+        urls: リンク切れ
+        content: 検出対象
+        group_ids: 管理グループ
+      cms/check_links/ignore_url:
+        name: 除外URL
 
   activemodel:
     attributes:
@@ -2274,6 +2300,10 @@ ja:
         - 合計容量が超えた場合、警告が表示されます。
         - 未設定である場合、警告は表示されません。
         - 初期値は 未設定 です。
+
+    cms/check_links/ignore_url:
+      name:
+        - 除外URLを入力します。
 
   all_content:
     page_id: ページID
