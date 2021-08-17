@@ -100,8 +100,8 @@ class History::Log
     def build_file_log(file, options)
       log = History::Log.new
 
-      log.site_id = options[:site_id] || SS::Application.current_site.try(:id)
-      log.user_id = options[:user_id] || SS::Application.current_user.try(:id)
+      log.site_id = options[:site_id] || SS.current_site.try(:id)
+      log.user_id = options[:user_id] || SS.current_user.try(:id)
 
       if file
         log.url = file.url
