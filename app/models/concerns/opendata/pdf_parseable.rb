@@ -9,8 +9,6 @@ module Opendata::PdfParseable
     parse_command = SS.config.opendata.preview["pdf"]["parse_command"]
     parse_command += " \"#{file.path}\" \"#{limit}\""
 
-    dump(parse_command)
-
     output, error, status = Open3.capture3(parse_command)
     raise Timeout::Error.new if status.exitstatus == 124
 
