@@ -71,6 +71,12 @@ jobs:
         sed -i "s#/usr/local/bin/sox#/usr/bin/sox#" config/voice.yml
         sed -i "s#/usr/local/bin/lame#/usr/bin/lame#" config/voice.yml
         diff -u config/defaults/voice.yml config/voice.yml || true
+    - name: Prepare ImageMagick-6 policy
+      run: |
+        cd /etc/ImageMagick-6
+        sudo sed -i "s#<policy domain=\"coder\" rights=\"none\" pattern=\"PDF\" />#<policy domain=\"coder\" rights=\"read|write\" pattern=\"PDF\" />#" policy.xml
+        echo "### /etc/ImageMagick-6  policy.xml ###"
+        cat policy.xml
     - name: Running Docker Containers
       run: docker ps -a
     - name: Run tests

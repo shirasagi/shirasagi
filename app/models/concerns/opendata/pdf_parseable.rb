@@ -11,6 +11,7 @@ module Opendata::PdfParseable
 
     output, error, status = Open3.capture3(parse_command)
     raise Timeout::Error.new if status.exitstatus == 124
+    Rails.logger.error("extract pdf base64 : #{error}") if error.present?
 
     if output.present?
       output.split("\n").map do |base64|
