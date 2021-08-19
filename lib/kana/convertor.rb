@@ -20,28 +20,27 @@ module Kana::Convertor
 
       text = html.gsub(/[\r\n\t]/, " ")
       text.gsub!(/<!--[^>]*?\s#{kana_marks[1]}\s[^>]*?-->.*?<!--[^>]*?\s#{kana_marks[0]}\s[^>]*?-->/im) do |m|
-        Array.new(m.bytes.length, "\r").join
+        "\r" * m.bytes.length
       end
       text.gsub!(/.*?<!--[^>]*?\s#{kana_marks[0]}\s[^>]*?-->/im) do |m|
-        Array.new(m.bytes.length, "\r").join
+        "\r" * m.bytes.length
       end
       text.gsub!(/<!--[^>]*?\s#{kana_marks[1]}\s[^>]*?-->.*/im) do |m|
-        Array.new(m.bytes.length, "\r").join
+        "\r" * m.bytes.length
       end
       tags = %w(head ruby script style)
       text.gsub!(/<!\[CDATA\[.*?\]\]>/m) { |m| mpad(m) }
       text.gsub!(/<!--.*?-->/m) { |m| mpad(m) }
       tags.each { |t| text.gsub!(/<#{t}( [^>]*\/>|[^\w].*?<\/#{t}>)/m) { |m| mpad(m) } }
-      text.gsub!(/<.*?>/m) { |m| mpad(m) }
+      text.gsub!(/<.*?>/m) do |m|
+        mpad(m).gsub(/\s*=\s*['"]([^'"]*)['"]/im) do |m|
+          "\r" * m.bytes.length
+        end
+      end
       text.gsub!(/\\u003c.*?\\u003e/m) { |m| mpad(m) } #<>
       text.gsub!(/%[^%]{2}/m, '   ')
       text.gsub!(/<!--[^>]*?\s#{skip_marks[0]}\s[^>]*?-->(.*?)<!--[^>]*?\s#{skip_marks[1]}\s[^>]*?-->/im) do |m|
-        Array.new(m.bytes.length, "\r").join
-      end
-      text.gsub!(/<\s*[^>]*>/im) do |m|
-        m.gsub(/\s*=\s*['"]([^'"]*)['"]/im) do |m|
-          Array.new(m.bytes.length, "\r").join
-        end
+        "\r" * m.bytes.length
       end
       text.gsub!(/[ -\/:-@\[-`\{-~]/m, "\r")
 
