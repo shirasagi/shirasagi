@@ -1,0 +1,6 @@
+<% return unless @item.node.kintone_app_enabled? %>
+
+<dl class="see mod-kintone_app-column">
+  <dt><%= @model.t :kintone_field_code %></dt>
+  <dd><%= @item.kintone_field_code %></dd>
+</dl>

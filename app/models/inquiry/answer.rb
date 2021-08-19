@@ -2,6 +2,7 @@ class Inquiry::Answer
   include SS::Document
   include SS::Reference::Site
   include Inquiry::Addon::Answer::Body
+  include Inquiry::Addon::KintoneApp::Answer
   include SS::Captchable
   include Cms::Addon::GroupPermission
 

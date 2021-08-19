@@ -1,0 +1,14 @@
+<% return unless @item.node.kintone_app_enabled? %>
+
+<dl class="see mod-kintone_app-answer">
+  <dt><%= @model.t :kintone_record_key %></dt>
+  <dd><%= @item.kintone_record_key %></dd>
+
+  <dt><%= @model.t :kintone_revision %></dt>
+  <dd><%= @item.kintone_revision %></dd>
+
+  <% if @item.kintone_update_error_message.present? %>
+  <dt><%= @model.t :kintone_update_error_message %></dt>
+  <dd><%= @item.kintone_update_error_message %></dd>
+  <% end %>
+</dl>

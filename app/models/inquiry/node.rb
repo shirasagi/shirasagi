@@ -15,6 +15,7 @@ module Inquiry::Node
     include Inquiry::Addon::Reply
     include Inquiry::Addon::Aggregation
     include Inquiry::Addon::Faq
+    include Inquiry::Addon::KintoneApp::Setting
     include Cms::Addon::ForMemberNode
     include Cms::Addon::ReleasePlan
     include Inquiry::Addon::ReceptionPlan

@@ -87,6 +87,9 @@ ja:
       inquiry/feedback_setting: フィードバック設定
       inquiry/faq: FAQ
       inquiry/answer/body: 回答
+      inquiry/kintone_app/setting: kintoneアプリ
+      inquiry/kintone_app/column: kintoneアプリ
+      inquiry/kintone_app/answer: kintoneアプリ
 
   cms:
     nodes:
@@ -187,6 +190,20 @@ ja:
         upper_html: 上部HTML
         lower_html: 下部HTML
         feedback_confirmation: 確認画面
+
+      inquiry/addon/kintone_app/setting:
+        kintone_app_activation: 連携
+        kintone_app_domain: ドメイン
+        kintone_app_api_token: APIトークン
+        kintone_app_key: アプリID
+
+      inquiry/addon/kintone_app/column:
+        kintone_field_code: フィールドコード
+
+      inquiry/addon/kintone_app/answer:
+        kintone_record_key: レコードID
+        kintone_revision: レコードrevision
+        kintone_update_error_message: エラーメッセージ
 
   simple_captcha:
     placeholder: ""
@@ -315,6 +332,19 @@ ja:
       faq_id:
         - FAQのフォルダーを選択します。
         - 回答データからFAQのページを作成できます。
+    inquiry/addon/kintone_app/setting:
+      kintone_app_activation:
+        - 連携を有効にすると、フォーム投稿完了時に回答データを kintone アプリに登録します。
+        - 質問項目のフィールドコードを kintone アプリに合わせて適切に設定する必要があります。
+      kintone_app_domain:
+        - kintone アプリのドメインを入力します。
+      kintone_app_api_token:
+        - kintone アプリのAPIトークンを入力します。
+      kintone_app_key:
+        - kintone アプリのIDを入力します。
+
+    inquiry/addon/kintone_app/column:
+      kintone_field_code: kintone アプリのフィールドコードを入力します。
 
   errors:
     messages:

@@ -3,6 +3,7 @@ class Inquiry::Column
   include SS::Reference::Site
   include Cms::SitePermission
   include Inquiry::Addon::InputSetting
+  include Inquiry::Addon::KintoneApp::Column
   include Cms::Addon::GroupPermission
 
   INPUT_TYPE_VALIDATION_HANDLERS = [

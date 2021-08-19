@@ -142,11 +142,16 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
         @to.each { |notice_email| Inquiry::Mailer.notify_mail(@cur_site, @cur_node, @answer, notice_email).deliver_now }
       end
     end
+
     if @cur_node.reply_mail_enabled?
       # `try` method doesn't work as you think because mail is an instance of Delegator.
       # see: http://tech.misoca.jp/entry/2015/12/04/110000
       mail = Inquiry::Mailer.reply_mail(@cur_site, @cur_node, @answer)
       mail.deliver_now if mail.present?
+    end
+
+    if @cur_node.kintone_app_enabled?
+      @answer.update_kintone_record
     end
 
     query = {}

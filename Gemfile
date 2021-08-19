@@ -108,6 +108,9 @@ gem 'elasticsearch'
 # line
 gem 'line-bot-api'
 
+# kintone
+gem 'kintone', git: "https://github.com/jue58/kintone.git"
+
 group :development, :test do
   gem 'brakeman', require: false
   gem 'dotenv-rails'

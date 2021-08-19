@@ -1,0 +1,18 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+
+<dl class="see mod-kintone_app-setting">
+  <dt><%= @model.t :kintone_app_activation %><%= @model.tt :kintone_app_activation %></dt>
+  <dd><%= f.select :kintone_app_activation, @item.kintone_app_activation_options %></dd>
+
+  <dt><%= @model.t :kintone_app_domain %><%= @model.tt :kintone_app_domain %></dt>
+  <dd><%= f.text_field :kintone_app_domain %></dd>
+
+  <dt><%= @model.t :kintone_app_api_token %><%= @model.tt :kintone_app_api_token %></dt>
+  <dd><%= f.text_field :kintone_app_api_token %></dd>
+
+  <dt><%= @model.t :kintone_app_key %><%= @model.tt :kintone_app_key %></dt>
+  <dd><%= f.text_field :kintone_app_key %></dd>
+</dl>

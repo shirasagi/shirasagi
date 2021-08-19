@@ -1,0 +1,15 @@
+# well known basic basic authentication
+
+production: &production
+  credentials: []
+
+  #credentials:
+  #  - domain: "sample.example.jp"
+  #    user: "user"
+  #    password: "password"
+
+test:
+  <<: *production
+
+development:
+  <<: *production

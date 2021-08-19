@@ -1,0 +1,15 @@
+<% return unless @item.kintone_app_enabled? %>
+
+<dl class="see mod-kintone_app-setting">
+  <dt><%= @model.t :kintone_app_activation %></dt>
+  <dd><%= @item.label :kintone_app_activation %></dd>
+
+  <dt><%= @model.t :kintone_app_domain %></dt>
+  <dd><%= @item.kintone_app_domain %></dd>
+
+  <dt><%= @model.t :kintone_app_api_token %></dt>
+  <dd><%= @item.kintone_app_api_token %></dd>
+
+  <dt><%= @model.t :kintone_app_key %></dt>
+  <dd><%= @item.kintone_app_key %></dd>
+</dl>
