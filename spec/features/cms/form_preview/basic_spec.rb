@@ -1,6 +1,15 @@
 require 'spec_helper'
 
 describe "cms_form_preview", type: :feature, dbscope: :example do
+  before do
+    @save_config = SS.config.cms.replace_urls_after_move
+    SS::Config.replace_value_at(:cms, :replace_urls_after_move, false)
+  end
+
+  after do
+    SS::Config.replace_value_at(:cms, :replace_urls_after_move, @save_config)
+  end
+
   context "with article page" do
     let(:site) { cms_site }
     let(:node) { create :article_node_page, cur_site: site }
