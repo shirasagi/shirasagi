@@ -2,8 +2,7 @@ require 'spec_helper'
 
 describe "cms_form_preview", type: :feature, dbscope: :example do
   before do
-    @save_config = SS.config.cms.replace_urls_after_move
-    SS::Config.replace_value_at(:cms, :replace_urls_after_move, false)
+    @save_config = SS::Config.replace_value_at(:cms, :replace_urls_after_move, false)
   end
 
   after do
