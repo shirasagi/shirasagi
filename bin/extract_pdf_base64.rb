@@ -3,7 +3,7 @@
 path = ARGV[0]
 limit = ARGV[1].to_i
 
-require "mini_magick"
+require 'mini_magick'
 require 'base64'
 
 images = []
