@@ -62,7 +62,7 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
 
     if item.route == "cms/page"
       within "#content-navi" do
-        expect(page).to have_css(".tree-item", text: "refresh")
+        expect(page).to have_css(".material-icons", text: "refresh")
       end
     end
 
