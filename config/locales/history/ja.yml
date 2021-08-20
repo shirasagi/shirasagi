@@ -9,17 +9,6 @@ ja:
     backup_version: バックアップ時のバージョン
     current_state: 現在の状態
     before_state: 変更前の状態
-    save_term:
-      day: １日
-      week: １週間
-      2_weeks: ２週間
-      month: １ヶ月
-      2_months: ２ヶ月
-      3_months: ３ヶ月
-      6_months: ６ヶ月
-      year: １年
-      all_save: すべて保存
-      all_delete: すべて削除
     view_diff: 差分を見る
     compare_before_state: 変更前の状態と比較
     restore: 復元する
@@ -37,6 +26,9 @@ ja:
       action:
         save: 保存
         replace_urls: リンク追従による更新
+      duration:
+        all_save: すべて保存
+        all_delete: すべて削除
     behavior:
       paste: 本文貼付
       attachment: 添付ファイル
@@ -53,6 +45,18 @@ ja:
     addons:
       history/backup: 更新履歴
 
+  activemodel:
+    models:
+      history/download_param: ダウンロードパラメーター
+      history/delete_param: 削除パラメーター
+    attributes:
+      history/download_param:
+        encoding: 文字コード
+        save_term: 保存期間
+        user_ids: ユーザー
+      history/delete_param:
+        delete_term: 期間
+
   mongoid:
     models:
       history/log: 操作履歴
@@ -68,8 +72,6 @@ ja:
         path: URL
         page_url: ページURL
         behavior: 動作
-        save_term: 保存期間
-        user_ids: ユーザー
       history/model/data:
         version: バージョン
         ref_coll: 保存コレクション

@@ -5,9 +5,7 @@ class History::Log
   # include SS::Reference::Site
 
   store_in_repl_master
-  index({ created: -1 })
-
-  attr_accessor :save_term
+  index(created: 1)
 
   field :session_id, type: String
   field :request_id, type: String
@@ -28,23 +26,6 @@ class History::Log
   validates :action, presence: true
 
   scope :site, ->(site) { where(site_id: site.id) }
-
-  def save_term_options
-    [
-      [I18n.t(:"history.save_term.day"), "day"],
-      [I18n.t(:"history.save_term.month"), "month"],
-      [I18n.t(:"history.save_term.year"), "year"],
-      [I18n.t(:"history.save_term.all_save"), "all_save"],
-    ]
-  end
-
-  def delete_term_options
-    [
-      [I18n.t(:"history.save_term.year"), "year"],
-      [I18n.t(:"history.save_term.month"), "month"],
-      [I18n.t(:"history.save_term.all_delete"), "all_delete"],
-    ]
-  end
 
   def user_label
     user ? "#{user.name}(#{user_id})" : user_id
@@ -79,7 +60,7 @@ class History::Log
       log.cur_user     = options[:cur_user]
       log.user_id      = options[:cur_user].id if options[:cur_user]
       log.site_id      = options[:cur_site].id if options[:cur_site]
-      log.ref_coll     = options[:item].collection_name if options[:item]
+      log.ref_coll     = options[:item].try(:collection_name) if options[:item]
       log.filename     = options[:item].data[:filename] if options[:item].try(:ref_coll) == "ss_files"
 
       if options[:action] == "undo_delete"
@@ -98,24 +79,24 @@ class History::Log
       log.save!
     end
 
-    def term_to_date(name)
-      case name.to_s
-      when "year"
-        Time.zone.now - 1.year
-      when "month"
-        # n = Time.zone.now
-        # Time.local n.year, n.month, 1, 0, 0, 0
-        Time.zone.now - 1.month
-      when "day"
-        # Time.zone.today.to_time
-        Time.zone.now - 1.day
-      when "all_delete"
-        Time.zone.now
-      when "all_save"
-        nil
-      else
-        false
+    def enum_csv(options)
+      exporter = SS::Csv.draw(:export, context: self) do |drawer|
+        drawer.column :created
+        drawer.column :user_name do
+          drawer.body { |item| item.user_label }
+        end
+        drawer.column :model_name do
+          drawer.body { |item| item.target_label }
+        end
+        drawer.column :action
+        drawer.column :path do
+          drawer.body { |item| item.url }
+        end
+        drawer.column :session_id
+        drawer.column :request_id
       end
+
+      exporter.enum(all, options)
     end
   end
 end
