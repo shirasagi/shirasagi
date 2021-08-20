@@ -1,0 +1,28 @@
+name: reviewdog
+on:
+  pull_request:
+    branches: [ master, main ]
+jobs:
+  rubocop:
+    name: runner / reviewdog
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v1
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.6
+        bundler-cache: true
+    - name: rubocop
+      uses: reviewdog/action-rubocop@v1
+      with:
+        rubocop_version: gemfile
+        github_token: ${{ secrets.github_token }}
+        reporter: github-pr-review # Default is github-pr-check
+    - name: brakeman
+      uses: reviewdog/action-brakeman@v1
+      with:
+        brakeman_version: 4.3.1 # Gemfile.lock のバージョンと合わせる
+        github_token: ${{ secrets.github_token }}
+        reporter: github-pr-review # Default is github-pr-check
