@@ -1,9 +1,8 @@
 require 'spec_helper'
 
-describe "cms_form_preview", type: :feature, dbscope: :example do
+describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
   before do
-    @save_config = SS.config.cms.replace_urls_after_move
-    SS::Config.replace_value_at(:cms, :replace_urls_after_move, true)
+    @save_config = SS::Config.replace_value_at(:cms, :replace_urls_after_move, true)
   end
 
   after do
@@ -21,7 +20,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example do
 
     before { login_cms_user }
 
-    context "pc form preview", js: true do
+    context "pc form preview" do
       it do
         visit edit_path
 
@@ -32,13 +31,12 @@ describe "cms_form_preview", type: :feature, dbscope: :example do
         page.first("#addon-cms-agents-addons-body .preview").click
 
         switch_to_window(windows.last)
-        sleep 0.5
 
-        expect(page.html.include?('<h2>見出し2</h2>')).to be_truthy
-        expect(page.html.include?('<p>内容が入ります。</p>')).to be_truthy
-        expect(page.html.include?('<h3>見出し3</h3>')).to be_truthy
-        expect(page.html.include?('<p>内容が入ります。内容が入ります。</p>')).to be_truthy
-        expect(page.html.include?('<header><h2>カテゴリー</h2></header>')).to be_truthy
+        expect(page).to have_css("h2", text: "見出し2")
+        expect(page).to have_css("p", text: "内容が入ります。")
+        expect(page).to have_css("h3", text: "見出し3")
+        expect(page).to have_css("p", text: "内容が入ります。内容が入ります。")
+        expect(page).to have_css("header h2", text: "カテゴリー")
       end
     end
   end
@@ -52,7 +50,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example do
 
     before { login_cms_user }
 
-    context "pc form preview", js: true do
+    context "pc form preview" do
       it do
         visit edit_path
 
@@ -63,12 +61,12 @@ describe "cms_form_preview", type: :feature, dbscope: :example do
         page.first("#addon-cms-agents-addons-body .preview").click
 
         switch_to_window(windows.last)
-        sleep 0.5
 
-        expect(page.html.include?('<h2>見出し2</h2>')).to be_truthy
-        expect(page.html.include?('<p>内容が入ります。</p>')).to be_truthy
-        expect(page.html.include?('<h3>見出し3</h3>')).to be_truthy
-        expect(page.html.include?('<p>内容が入ります。内容が入ります。</p>')).to be_truthy
+        expect(page).to have_css("h2", text: "見出し2")
+        expect(page).to have_css("p", text: "内容が入ります。")
+        expect(page).to have_css("h3", text: "見出し3")
+        expect(page).to have_css("p", text: "内容が入ります。内容が入ります。")
+        expect(page).to have_no_css("header h2", text: "カテゴリー")
       end
     end
   end
@@ -135,6 +133,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example do
     let(:column12_caption) { unique_id }
     let(:column13_youtube_id) { unique_id }
     let(:column13_url) { "https://www.youtube.com/watch?v=#{column13_youtube_id}" }
+    let(:column13_embed_url) { "https://www.youtube.com/embed/#{column13_youtube_id}" }
 
     before { login_cms_user }
     before do
@@ -142,7 +141,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example do
       node.save!
     end
 
-    context "pc form preview", js: true do
+    context "pc form preview" do
       it do
         #
         # Create
@@ -222,52 +221,49 @@ describe "cms_form_preview", type: :feature, dbscope: :example do
         page.first("#addon-cms-agents-addons-form-page .preview").click
 
         switch_to_window(windows.last)
-        sleep 0.5
 
-        expect(page.html.include?(column1_value)).to be_truthy
-        expect(page.html.include?(I18n.l(column2_value.to_date, format: :long))).to be_truthy
-        expect(page.html.include?(column3_value)).to be_truthy
-        expect(page.html.include?(column4_value)).to be_truthy
-        expect(page.html.include?(column5_value)).to be_truthy
-        expect(page.html.include?(column6_value)).to be_truthy
-        expect(page.html.include?(column7_value)).to be_truthy
-        expect(page.html.include?(column8_image_text)).to be_truthy
-        expect(page.html.include?(column9_value)).to be_truthy
-        expect(page.html.include?(column10_head)).to be_truthy
-        expect(page.html.include?(column10_text)).to be_truthy
-        expect(page.html.include?(column11_list)).to be_truthy
-        expect(page.html.include?(column12_caption)).to be_truthy
-        expect(page.html.include?(column13_youtube_id)).to be_truthy
+        expect(page).to have_css("div", text: column1_value)
+        expect(page).to have_css("div", text: I18n.l(column2_value.to_date, format: :long))
+        expect(page).to have_css("div", text: column3_value)
+        expect(page).to have_css("div", text: column4_value)
+        expect(page).to have_css("div", text: column5_value)
+        expect(page).to have_css("div", text: column6_value)
+        expect(page).to have_css("div", text: column7_value)
+        expect(page).to have_css("img[alt=\"#{column8_image_text}\"]")
+        expect(page).to have_css("div", text: column9_value)
+        expect(page).to have_css("h1", text: column10_text)
+        expect(page).to have_css("div", text: column11_list)
+        expect(page).to have_css("div", text: column12_caption)
+        expect(page).to have_css("iframe[src=\"#{column13_embed_url}\"]")
 
         switch_to_window(windows.first)
-        sleep 0.5
 
-        click_on I18n.t('ss.buttons.draft_save')
+        within "form#item-form" do
+          click_on I18n.t('ss.buttons.draft_save')
+        end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
-        expect(Article::Page.all.count).to eq 1
+        expect(Article::Page.count).to eq 1
 
         click_on I18n.t('ss.links.edit')
         page.first("#addon-cms-agents-addons-form-page .preview").click
 
         switch_to_window(windows.last)
-        sleep 0.5
 
-        expect(page.html.include?(column1_value)).to be_truthy
-        expect(page.html.include?(I18n.l(column2_value.to_date, format: :long))).to be_truthy
-        expect(page.html.include?(column3_value)).to be_truthy
-        expect(page.html.include?(column4_value)).to be_truthy
-        expect(page.html.include?(column5_value)).to be_truthy
-        expect(page.html.include?(column6_value)).to be_truthy
-        expect(page.html.include?(column7_value)).to be_truthy
-        expect(page.html.include?(column8_image_text)).to be_truthy
-        expect(page.html.include?(column9_value)).to be_truthy
-        expect(page.html.include?(column10_head)).to be_truthy
-        expect(page.html.include?(column10_text)).to be_truthy
-        expect(page.html.include?(column11_list)).to be_truthy
-        expect(page.html.include?(column12_caption)).to be_truthy
-        expect(page.html.include?(column13_youtube_id)).to be_truthy
+        expect(page).to have_css("div", text: column1_value)
+        expect(page).to have_css("div", text: I18n.l(column2_value.to_date, format: :long))
+        expect(page).to have_css("div", text: column3_value)
+        expect(page).to have_css("div", text: column4_value)
+        expect(page).to have_css("div", text: column5_value)
+        expect(page).to have_css("div", text: column6_value)
+        expect(page).to have_css("div", text: column7_value)
+        expect(page).to have_css("img[alt=\"#{column8_image_text}\"]")
+        expect(page).to have_css("div", text: column9_value)
+        expect(page).to have_css("h1", text: column10_text)
+        expect(page).to have_css("div", text: column11_list)
+        expect(page).to have_css("div", text: column12_caption)
+        expect(page).to have_css("iframe[src=\"#{column13_embed_url}\"]")
       end
     end
   end

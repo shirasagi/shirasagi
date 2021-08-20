@@ -2,10 +2,7 @@
   <dt><%= @model.t :reply_state %></dt>
   <dd>
     <%= @item.label :reply_state %>
-    <%
-      node = @cur_node.becomes_with_route
-      if node.try(:reply_mail_enabled?) && !node.email_column_exists?
-    %>
+    <% if @item.try(:reply_mail_enabled?) && !@item.email_column_exists? %>
       <div class="email-column-not-exists"><%=br t("inquiry.email_column_not_exists") %></div>
     <% end %>
   </dd>
