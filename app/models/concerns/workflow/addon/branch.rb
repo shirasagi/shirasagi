@@ -70,6 +70,7 @@ module Workflow::Addon
 
       if item.is_a?(Cms::Addon::LinePoster)
         item.line_auto_post = "expired"
+        item.line_edit_auto_post = "disabled"
       end
 
       if item.is_a?(Cms::Addon::Form::Page)

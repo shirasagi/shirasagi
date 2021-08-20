@@ -850,6 +850,7 @@ ja:
       cms/addon/node_line_post_setting:
         node_line_auto_post: LINE投稿
         node_line_post_format: 投稿形式
+        node_line_edit_auto_post: 再投稿
       cms/addon/import/page:
         in_file: ファイル
       cms/addon/import/group:
@@ -1082,6 +1083,7 @@ ja:
         line_text_message: LINEメッセージ
         line_text_message_placeholder: "○月○日、○○○イベントが行われます。詳しくは、市ホームページをご覧ください。\n※全角45文字以内\n※改行はしないでください"
         line_posted: 投稿日時
+        line_edit_auto_post: 再投稿
         line_post_error: 投稿エラー
       cms/sns_post_log/base:
         name: タイトル
@@ -2203,6 +2205,9 @@ ja:
     cms/addon/node_line_post_setting:
       node_line_auto_post:
         - 有効に設定すると公開時にLINE投稿をおこないます。
+      node_line_edit_auto_post:
+        - 有効に設定すると再度公開した際にLINE投稿をおこないます。
+        - この設定は再投稿が完了した際に、自動的に無効に戻ります。
       node_line_post_format:
         - 投稿形式を選択します。
         -
@@ -2238,6 +2243,9 @@ ja:
     cms/addon/line_poster:
       line_auto_post:
         - 有効に設定すると公開時にLINE投稿をおこないます。
+      line_edit_auto_post:
+        - 有効に設定すると再度公開した際にLINE投稿をおこないます。
+        - この設定は再投稿が完了した際に、自動的に無効に戻ります。
       line_post_format:
         - 投稿形式を選択します。
         -
@@ -2251,8 +2259,6 @@ ja:
         - LINEメッセージと記事へのリンクをカルーセル形式で投稿します。
       line_text_message:
         - LINEに投稿するメッセージを入力します。
-      line_edit_auto_post:
-        - 有効に設定すると公開記事を編集時にLINE投稿をおこないます。
 
     cms/addon/redirect_link:
       redirect_link:
@@ -2262,6 +2268,7 @@ ja:
         - インポートするファイルを設定します。
         - ファイルはUTF-8またはShift_JISでエンコードされている必要があります。
 
+<<<<<<< HEAD
     cms/addon/node_line_post_setting:
       node_line_auto_post:
         - 有効に設定すると公開時にLINE投稿をおこないます。

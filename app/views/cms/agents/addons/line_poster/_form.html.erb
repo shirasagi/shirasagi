@@ -6,6 +6,7 @@
 
   line_auto_post = @item.line_auto_post.presence || @cur_node.try(:node_line_auto_post).presence || "expired"
   line_post_format = @item.line_post_format.presence || @cur_node.try(:node_line_post_format).presence || "thumb_carousel"
+  line_edit_auto_post = @item.line_edit_auto_post.presence || @cur_node.try(:node_line_edit_auto_post).presence || "disabled"
 %>
 
 <dl class="see mod-cms-line_poster">
@@ -17,4 +18,7 @@
 
   <dt><%= @model.t :line_text_message %><%= @model.tt :line_text_message %></dt>
   <dd><%= f.text_area :line_text_message, placeholder: (@item.t :line_text_message_placeholder) %></dd>
+
+  <dt><%= @model.t :line_edit_auto_post %><%= @model.tt :line_edit_auto_post %></dt>
+  <dd><%= f.select :line_edit_auto_post, @item.line_edit_auto_post_options, selected: line_edit_auto_post %></dd>
 </dl>

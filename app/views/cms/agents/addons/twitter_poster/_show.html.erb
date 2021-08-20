@@ -4,7 +4,7 @@
   <dt><%= @model.t :twitter_auto_post %></dt>
   <dd><%= @item.label :twitter_auto_post %></dd>
 
-  <% if @item.twitter_auto_post == "active" %>
+  <% if @item.use_twitter_post? %>
     <dt><%= @model.t :twitter_post_format %></dt>
     <dd><%= @item.label :twitter_post_format %></dd>
 
