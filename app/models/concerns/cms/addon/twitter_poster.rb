@@ -76,16 +76,6 @@ module Cms::Addon
       end
     end
 
-    def reset_twitter_posted!
-      return if twitter_posted.blank?
-      Cms::SnsPostLog::Twitter.create_with(self) do |log|
-        log.created = Time.zone.now
-        log.action = "reset_twitter_posted"
-        self.set(twitter_auto_post: "expired", twitter_posted: [])
-        log.state = "success"
-      end
-    end
-
     private
 
     def post_to_twitter
