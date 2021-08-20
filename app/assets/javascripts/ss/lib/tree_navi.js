@@ -89,7 +89,7 @@ SS_TreeNavi.prototype.renderItems = function(data, roots) {
       return false;
     });
 
-    ret.push($("<div />", { class: "tree-item content-navi-refresh" }).html($refresh));
+    ret.push($("<div />", { class: "content-navi-refresh" }).html($refresh));
   }
 
   return ret;
