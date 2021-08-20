@@ -149,6 +149,9 @@ $border-white: 1px solid $white;
     background: #ebecec;
     text-decoration: none;
   }
+  &:disabled, &.btn-disabled {
+    @include btn-disabled;
+  }
 }
 @mixin btn-gray-l {
   display: inline-block;
@@ -163,6 +166,9 @@ $border-white: 1px solid $white;
   &:hover {
     background: #ebecec;
     text-decoration: none;
+  }
+  &:disabled, &.btn-disabled {
+    @include btn-disabled;
   }
   @include mb {
     font-size: $px14;
@@ -183,6 +189,9 @@ $border-white: 1px solid $white;
     background: #f2a950;
     text-decoration: none;
   }
+  &:disabled, &.btn-disabled {
+    @include btn-disabled;
+  }
   @include mb {
     font-size: $px14;
     padding: 5px 12px;
@@ -202,6 +211,9 @@ $border-white: 1px solid $white;
   &:hover {
     background: #b23a3d;
     text-decoration: none;
+  }
+  &:disabled, &.btn-disabled {
+    @include btn-disabled;
   }
   @include mb {
     min-width: 0;
@@ -232,6 +244,12 @@ $border-white: 1px solid $white;
   background: #f2d150;
   @include background-image(linear-gradient(top, #f2d150, #f2a950));
   @include filter-gradient(#f2d150, #f2a950, vertical);
+}
+@mixin btn-disabled {
+  border: 1px solid transparent;
+  background: #d8d8d8;
+  color: #888;
+  cursor: default;
 }
 
 @mixin truncate {

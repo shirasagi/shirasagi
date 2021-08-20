@@ -539,11 +539,12 @@ SS_WorkflowApprover.prototype.render = function () {
   }
 
   if (self.options.release === "allowed") {
-    $(".save").val(self.options.draft_save);
+    $(".save").val(self.options.draft_save).attr("data-disable-with", self.options.disable_with);
     $("<input />").attr("type", "submit")
       .attr("name", "publish_save")
       .attr("value", self.options.publish_save)
       .attr("class", "publish_save")
+      .attr("data-disable-with", self.options.disable_with)
       .insertAfter("#item-form input.save");
   }
 
