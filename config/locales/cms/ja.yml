@@ -837,13 +837,16 @@ ja:
         sns_share_orders: 並び順
       cms/addon/twitter_poster:
         twitter_auto_post: Twitter投稿
+        twitter_edit_auto_post: 再投稿
         twitter_post_format: 投稿形式
-        twitter_url: TweetURL
+        twitter_posted: Twitter投稿履歴
+        twitter_posted_url: TweetURL
         twitter_posted_at: 投稿日時
         twitter_post_error: 投稿エラー
       cms/addon/node_twitter_post_setting:
         node_twitter_auto_post: Twitter投稿
         node_twitter_post_format: 投稿形式
+        node_twitter_edit_auto_post: 再投稿
       cms/addon/node_line_post_setting:
         node_line_auto_post: LINE投稿
         node_line_post_format: 投稿形式
@@ -2180,6 +2183,9 @@ ja:
     cms/addon/node_twitter_post_setting:
       node_twitter_auto_post:
         - 有効に設定すると公開時にTwitter投稿をおこないます。
+      node_twitter_edit_auto_post:
+        - 有効に設定すると再度公開した際にTwitter投稿をおこないます。
+        - この設定は再投稿が完了した際に、自動的に無効に戻ります。
       node_twitter_post_format:
         - 投稿形式を選択します。
         -
@@ -2212,6 +2218,9 @@ ja:
     cms/addon/twitter_poster:
       twitter_auto_post:
         - 有効に設定すると公開時にTwitter投稿をおこないます。
+      twitter_edit_auto_post:
+        - 有効に設定すると再度公開した際にTwitter投稿をおこないます。
+        - この設定は再投稿が完了した際に、自動的に無効に戻ります。
       twitter_post_format:
         - 投稿形式を選択します。
         -

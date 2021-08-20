@@ -6,6 +6,7 @@
 
   twitter_auto_post = @item.twitter_auto_post.presence || @cur_node.try(:node_twitter_auto_post).presence || "expired"
   twitter_post_format = @item.twitter_post_format.presence || @cur_node.try(:node_twitter_post_format).presence || "thumb_and_page"
+  twitter_edit_auto_post = @item.twitter_edit_auto_post.presence || @cur_node.try(:node_twitter_edit_auto_post).presence || "disabled"
 %>
 
 <dl class="see mod-cms-twitter_poster">
@@ -14,4 +15,7 @@
 
   <dt><%= @model.t :twitter_post_format %><%= @model.tt :twitter_post_format %></dt>
   <dd><%=  f.select :twitter_post_format, @item.twitter_post_format_options, selected: twitter_post_format %></dd>
+
+  <dt><%= @model.t :twitter_edit_auto_post %><%= @model.tt :twitter_edit_auto_post %></dt>
+  <dd><%=  f.select :twitter_edit_auto_post, @item.twitter_edit_auto_post_options, :selected => twitter_edit_auto_post %></dd>
 </dl>

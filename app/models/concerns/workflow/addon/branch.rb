@@ -65,6 +65,7 @@ module Workflow::Addon
 
       if item.is_a?(Cms::Addon::TwitterPoster)
         item.twitter_auto_post = "expired"
+        item.twitter_edit_auto_post = "disabled"
       end
 
       if item.is_a?(Cms::Addon::LinePoster)

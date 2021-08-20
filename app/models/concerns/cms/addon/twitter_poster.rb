@@ -13,11 +13,12 @@ module Cms::Addon
 
       field :twitter_auto_post, type: String
       field :twitter_post_format, type: String
+      field :twitter_edit_auto_post, type: String
 
       field :twitter_posted, type: Array, default: [], metadata: { branch: false }
       field :twitter_post_error, type: String, metadata: { branch: false }
 
-      permit_params :twitter_auto_post, :twitter_post_format, :twitter_post_id, :twitter_user_id
+      permit_params :twitter_auto_post, :twitter_edit_auto_post, :twitter_post_format, :twitter_post_id, :twitter_user_id
 
       validates :thumb_id, presence: true, if: -> { twitter_auto_post == "active" && twitter_post_format == "thumb_and_page" }
 
@@ -32,8 +33,16 @@ module Cms::Addon
       I18n.t("cms.options.twitter_post_format").map { |k, v| [v, k] }
     end
 
+    def twitter_edit_auto_post_options
+      %w(disabled enabled).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
+    end
+
     def use_twitter_post?
       twitter_auto_post == "active"
+    end
+
+    def twitter_edit_auto_post_enabled?
+      twitter_edit_auto_post == "enabled"
     end
 
     def twitter_url(post_id, user_id)
@@ -48,7 +57,13 @@ module Cms::Addon
       return false if skip_twitter_post.present?
       return false if !use_twitter_post?
       return false if respond_to?(:branch?) && branch?
-      return false if twitter_posted.present?
+
+      if twitter_edit_auto_post_enabled?
+        # 再編集が有効の為、すでに投稿済みかをチェックしない。
+      else
+        return false if twitter_posted.present?
+      end
+
       true
     end
 
@@ -113,10 +128,10 @@ module Cms::Addon
             twitter_posted: {
               twitter_post_id: twitter_id.to_s,
               twitter_user_id: user_screen_id,
-              posted_at: Time.zone.now
+              posted_at: posted_at
             }
           )
-          self.unset(:twitter_post_error)
+          self.unset(:twitter_edit_auto_post, :twitter_post_error) #編集時に投稿をリセット
           log.state = "success"
         rescue => e
           Rails.logger.fatal("post_to_twitter failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
