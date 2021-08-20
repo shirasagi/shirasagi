@@ -7,6 +7,7 @@ class Cms::Extensions::HtmlAttributes < String
 
   class << self
     def demongoize(object)
+      return nil if object.nil?
       self.new object
     end
   end
