@@ -179,7 +179,7 @@ array = Category::Node::Base.where(site_id: @site._id).map { |m| [m.filename, m]
 save_node route: "cms/node", filename: "use", name: "ご利用案内"
 
 ## article
-save_node route: "article/page", filename: "docs", name: "記事", shortcut: "show", group_ids: [3],
+save_node route: "article/page", filename: "docs", name: "記事", shortcut: "show", group_ids: [3], content_quota: 50,
           st_form_ids: [@form.id, @form_2.id, @form_3.id, @form_4.id, @form_5.id], st_form_default_id: @form_4.id
 
 ## archive
