@@ -711,6 +711,7 @@ ja:
         route: パーツ属性
         mobile_view: 携帯向け表示
         ajax_view: 動的表示
+        ajax_view_expire_seconds: 動的表示キャッシュ
       cms/layout:
         name: レイアウト名
       cms/addon/layout_html:
@@ -1536,6 +1537,8 @@ ja:
         - 携帯画面で表示するか否かを選択します。
       ajax_view:
         - パーツを動的に表示するか否かを選択します。
+      ajax_view_expire_seconds:
+        - 秒数を入力すると動的表示をキャッシュします。
 
     cms/addon/list/model:
       conditions:

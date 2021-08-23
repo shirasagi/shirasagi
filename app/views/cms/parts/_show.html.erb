@@ -17,6 +17,9 @@ file = "#{Rails.root}/app/views/" + @item.route.sub('/', '/agents/parts/') + "/e
 
   <dt><%= @model.t :ajax_view %></dt>
   <dd><%= @item.label :ajax_view %></dd>
+
+  <dt><%= @model.t :ajax_view_expire_seconds %></dt>
+  <dd><%= @item.ajax_view_expire_seconds %><%= t("datetime.prompts.second") if @item.ajax_view_expire_seconds.present? %></dd>
 </dl>
 
 <%= render file: file if File.exists?(file) %>

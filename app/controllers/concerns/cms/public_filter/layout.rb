@@ -6,6 +6,7 @@ module Cms::PublicFilter::Layout
   include Cms::PublicFilter::TwitterCard
   include Cms::PublicFilter::ConditionalTag
   include Cms::PublicFilter::PerfLog
+  include Cms::PublicFilter::PartCache
 
   included do
     helper_method :render_layout_parts
@@ -44,34 +45,36 @@ module Cms::PublicFilter::Layout
       spec = recognize_agent path, method: "GET"
       return unless spec
 
-      @cur_part = part
-      controller = part.route.sub(/\/.*/, "/agents/#{spec[:cell]}")
+      fetch_part_cache(part) do
+        @cur_part = part
+        controller = part.route.sub(/\/.*/, "/agents/#{spec[:cell]}")
 
-      agent = new_agent controller
-      agent.controller.params.merge! spec
-      agent.controller.request = ActionDispatch::Request.new(request.env.merge("REQUEST_METHOD" => "GET"))
-      resp = agent.render spec[:action]
-      body = resp.body
+        agent = new_agent controller
+        agent.controller.params.merge! spec
+        agent.controller.request = ActionDispatch::Request.new(request.env.merge("REQUEST_METHOD" => "GET"))
+        resp = agent.render spec[:action]
+        body = resp.body
 
-      body.gsub!('#{part_name}', ERB::Util.html_escape(part.name))
+        body.gsub!('#{part_name}', ERB::Util.html_escape(part.name))
 
-      if /\#{part_parent[^}]*?_name}/.match?(body)
-        part_parent = part.parent || part
-        body.gsub!('#{part_parent_name}', ERB::Util.html_escape(part_parent.name))
-        part_parent = part_parent.parent || part_parent
-        body.gsub!('#{part_parent.parent_name}', ERB::Util.html_escape(part_parent.name))
-      end
-
-      if /\#{[^}]*?parent_name}/.match?(body)
-        parent = Cms::Node.site(@cur_site).filename(@cur_main_path.to_s.sub(/^\//, "").sub(/\/[\w\-\.]*?$/, "")).first
-        if parent
-          body.gsub!('#{parent_name}', ERB::Util.html_escape(parent.name))
-          body.gsub!('#{parent.parent_name}', ERB::Util.html_escape(parent.parent ? parent.parent.name : parent.name))
+        if /\#{part_parent[^}]*?_name}/.match?(body)
+          part_parent = part.parent || part
+          body.gsub!('#{part_parent_name}', ERB::Util.html_escape(part_parent.name))
+          part_parent = part_parent.parent || part_parent
+          body.gsub!('#{part_parent.parent_name}', ERB::Util.html_escape(part_parent.name))
         end
-      end
 
-      @cur_part = nil
-      body
+        if /\#{[^}]*?parent_name}/.match?(body)
+          parent = Cms::Node.site(@cur_site).filename(@cur_main_path.to_s.sub(/^\//, "").sub(/\/[\w\-\.]*?$/, "")).first
+          if parent
+            body.gsub!('#{parent_name}', ERB::Util.html_escape(parent.name))
+            body.gsub!('#{parent.parent_name}', ERB::Util.html_escape(parent.parent ? parent.parent.name : parent.name))
+          end
+        end
+
+        @cur_part = nil
+        body
+      end
     end
   end
 
