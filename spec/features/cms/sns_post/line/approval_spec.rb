@@ -306,6 +306,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           visit show_path
           within ".mod-workflow-approve" do
             expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.line_post_enabled"))
+            fill_in "remand[comment]", with: approve_comment
             click_on I18n.t("workflow.buttons.approve")
           end
           within "#addon-workflow-agents-addons-approver" do
@@ -374,6 +375,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           visit show_path
           within ".mod-workflow-approve" do
             expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.line_post_enabled"))
+            fill_in "remand[comment]", with: approve_comment
             click_on I18n.t("workflow.buttons.approve")
           end
           within "#addon-workflow-agents-addons-approver" do
@@ -437,6 +439,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           visit show_path
           within ".mod-workflow-approve" do
             expect(page).to have_no_css(".sns-post-confirm", text: I18n.t("cms.confirm.line_post_enabled"))
+            fill_in "remand[comment]", with: approve_comment
             click_on I18n.t("workflow.buttons.approve")
           end
           within "#addon-workflow-agents-addons-approver" do
@@ -514,6 +517,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           within ".mod-workflow-approve" do
             expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.line_post_enabled"))
+            fill_in "remand[comment]", with: approve_comment
             click_on I18n.t("workflow.buttons.approve")
           end
           within "#addon-workflow-agents-addons-approver" do
@@ -591,6 +595,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           within ".mod-workflow-approve" do
             expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.line_post_enabled"))
+            fill_in "remand[comment]", with: approve_comment
             click_on I18n.t("workflow.buttons.approve")
           end
           within "#addon-workflow-agents-addons-approver" do
@@ -663,6 +668,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           within ".mod-workflow-approve" do
             expect(page).to have_no_css(".sns-post-confirm", text: I18n.t("cms.confirm.line_post_enabled"))
+            fill_in "remand[comment]", with: approve_comment
             click_on I18n.t("workflow.buttons.approve")
           end
           within "#addon-workflow-agents-addons-approver" do
