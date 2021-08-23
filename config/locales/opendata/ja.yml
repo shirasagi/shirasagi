@@ -1123,3 +1123,5 @@ ja:
       opendata/notify_dataset_plan_job: データセット更新通知ジョブ
       opendata/dataset/export_job: データセットエクスポートジョブ
       opendata/dataset/import_job: データセットインポートジョブ
+      opendata/resource_download_history_update_job: リソースダウンロード履歴更新ジョブ
+      opendata/resource_preview_history_update_job: リソースプレビュー履歴更新ジョブ

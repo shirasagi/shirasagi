@@ -36,6 +36,20 @@ module Tasks
         実行してよろしいですか？ [y|N]:
       PROMPT
 
+      ALL_DOWNLOAD_HISTORY_UPDATE_PROMPT = <<~PROMPT.freeze
+        ダウンロード履歴の情報を最新の情報に更新します。
+        溜まっているダウンロード履歴の件数によって処理に要する時間が長くなり、
+        場合によっては1日以上の時間を要する場合がありますが、
+        実行してよろしいですか？ [y|N]:
+      PROMPT
+
+      ALL_PREVIEW_HISTORY_UPDATE_PROMPT = <<~PROMPT.freeze
+        プレビュー履歴の情報を最新の情報に更新します。
+        溜まっているプレビュー履歴の件数によって処理に要する時間が長くなり、
+        場合によっては1日以上の時間を要する場合がありますが、
+        実行してよろしいですか？ [y|N]:
+      PROMPT
+
       def generate_all_download_report(site)
         confirm = ask(ALL_DOWNLOAD_REPORT_PROMPT)
         return unless confirm.match?(/^[yY]/)
@@ -113,6 +127,24 @@ module Tasks
         end
 
         # last
+        job.perform_now
+      end
+
+      def update_all_download_history
+        confirm = ask(ALL_DOWNLOAD_HISTORY_UPDATE_PROMPT)
+        return unless confirm.match?(/^[yY]/)
+
+        job = ::Opendata::ResourceDownloadHistoryUpdateJob
+
+        job.perform_now
+      end
+
+      def update_all_preview_history
+        confirm = ask(ALL_PREVIEW_HISTORY_UPDATE_PROMPT)
+        return unless confirm.match?(/^[yY]/)
+
+        job = ::Opendata::ResourcePreviewHistoryUpdateJob
+
         job.perform_now
       end
 

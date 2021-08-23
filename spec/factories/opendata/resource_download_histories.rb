@@ -16,4 +16,10 @@ FactoryBot.define do
     remote_addr { "10.0.0.#{rand(0..255)}" }
     user_agent { "ua-#{unique_id}" }
   end
+
+  factory :opendata_resource_download_history_invalid, class: Opendata::ResourceDownloadHistory do
+    dataset_id { rand(10.20) }
+    resource_id { rand(20..30) }
+    downloaded { Time.zone.now }
+  end
 end

@@ -134,6 +134,14 @@ namespace :opendata do
   end
 
   namespace :history do
+    task update_all_download: :environment do
+      ::Tasks::Opendata.update_all_download_history
+    end
+
+    task update_all_preview: :environment do
+      ::Tasks::Opendata.update_all_preview_history
+    end
+
     task :archive_download, [:site] => :environment do |_task, args|
       ::Tasks::Cms.with_site(args[:site] || ENV['site']) do |site|
         Opendata::ResourceDownloadHistoryArchiveJob.bind(site_id: site.id).perform_now
