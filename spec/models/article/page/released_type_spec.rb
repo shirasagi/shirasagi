@@ -18,7 +18,7 @@ describe Article::Page, dbscope: :example do
     let(:first_released) { created + 2.days }
     let(:released) { first_released + 2.days }
     let(:updated) { released + 3.days }
-    let!(:item) { create :article_page, cur_node: node }
+    let!(:item) { create :article_page, cur_node: node, state: "public" }
 
     before do
       item.set(created: created, first_released: first_released, released: released, updated: updated)
@@ -91,7 +91,16 @@ describe Article::Page, dbscope: :example do
         expect(item.created).to eq created
         expect(item.updated).to eq updated
         expect(item.first_released).to eq first_released
-        expect(item.released).to eq released
+        case released_type
+        when "same_as_updated"
+          expect(item.released).to eq updated
+        when "same_as_created"
+          expect(item.released).to eq created
+        when "same_as_first_released"
+          expect(item.released).to eq first_released
+        else # fixed
+          expect(item.released).to eq released
+        end
 
         html = ::File.read(item.path)
         html.include?(expected_date)

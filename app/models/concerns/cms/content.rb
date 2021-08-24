@@ -35,7 +35,7 @@ module Cms::Content
     validates :name, presence: true
     validates :filename, uniqueness: { scope: :site_id }, length: { maximum: 200 }
     validates :released, datetime: true
-    after_validation :set_released, if: -> { public? }
+    after_validation :update_released, if: -> { public? }
     before_validation :set_filename
     before_validation :validate_filename
     after_validation :set_depth, if: ->{ filename.present? }
@@ -308,10 +308,29 @@ module Cms::Content
     self.depth = filename.scan("/").size + 1
   end
 
-  def set_released
-    now = Time.zone.now
-    self.released ||= now
+  def update_released(now = nil)
+    now ||= Time.zone.now
     self.first_released ||= now
+
+    case released_type
+    when "same_as_updated"
+      if changed?
+        # #updated とは少なくともミリ秒での誤差があるので、厳密には違うが、だいたいあっている。
+        self.released = now
+      end
+    when "same_as_created"
+      if persisted?
+        self.released = self.created
+      else
+        # #created とは少なくともミリ秒での誤差があるので、厳密には少し違うがだいたいあっている。
+        # そして、次に更新する際にミリ秒レベルで同期されるのでよしとする。
+        self.released = now
+      end
+    when "same_as_first_released"
+      self.released = self.first_released
+    else # "fixed"
+      self.released ||= now
+    end
   end
 
   def fix_extname
