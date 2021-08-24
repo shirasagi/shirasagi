@@ -3,7 +3,12 @@ puts "# nodes"
 def save_node(data)
   return if SS.config.cms.enable_lgwan && data[:route].start_with?('member/')
   puts data[:name]
-  cond = { site_id: @site._id, filename: data[:filename], route: data[:route] }
+  cond = {
+    site_id: @site._id,
+    filename: data[:filename],
+    route: data[:route],
+    group_ids: SS::Group.pluck(:id)
+  }
 
   upper_html ||= File.read("nodes/" + data[:filename] + ".upper_html") rescue nil
   loop_html ||= File.read("nodes/" + data[:filename] + ".loop_html") rescue nil
@@ -15,6 +20,9 @@ def save_node(data)
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
   item.summary_html = summary_html if summary_html
+  if data[:route] == "article/page" || data[:route] == "cms/node"
+    item.content_quota = 50
+  end
 
   item.attributes = data
   item.cur_site ||= @site
@@ -179,7 +187,7 @@ array = Category::Node::Base.where(site_id: @site._id).map { |m| [m.filename, m]
 save_node route: "cms/node", filename: "use", name: "ご利用案内"
 
 ## article
-save_node route: "article/page", filename: "docs", name: "記事", shortcut: "show", group_ids: [3], content_quota: 50,
+save_node route: "article/page", filename: "docs", name: "記事", shortcut: "show",
           st_form_ids: [@form.id, @form_2.id, @form_3.id, @form_4.id, @form_5.id], st_form_default_id: @form_4.id
 
 ## archive
