@@ -13,4 +13,6 @@ class Rss::Page
   default_scope ->{ where(route: "rss/page") }
 
   skip_callback(:destroy, :before, :create_history_trash)
+
+  self.default_released_type = "fixed"
 end
