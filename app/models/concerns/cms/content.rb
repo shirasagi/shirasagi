@@ -54,7 +54,7 @@ module Cms::Content
 
     def node(node, target = nil)
       if target == 'descendant'
-        node ? all.where(filename: /^#{::Regexp.escape(node.filename)}\//) : all.none
+        node ? all.where(filename: /^#{::Regexp.escape(node.filename)}\//) : all
       else #current
         node ? all.where(filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1) : all.where(depth: 1)
       end
