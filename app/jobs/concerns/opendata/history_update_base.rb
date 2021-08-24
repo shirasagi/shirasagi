@@ -3,33 +3,39 @@ module Opendata::HistoryUpdateBase
 
   def perform(*args)
     @options = args.extract_options!
-    ids = items.pluck(:id)
-    ids.each_with_index do |id, idx|
-      put_log("update #{model} : #{idx + 1} / #{ids.count}")
+    count = 0
+    all_ids = items.pluck(:id)
+    all_ids.each_slice(100) do |ids|
+      items.in(id: ids).to_a.each do |item|
+        count += 1
+        put_log("update #{model} : #{count} / #{all_ids.count}")
 
-      item = model.find(id) rescue nil
-      next unless item
+        dataset = Opendata::Dataset.find(item.dataset_id) rescue nil
+        resource = dataset.resources.where(id: item.resource_id).first if dataset.present?
+        site = item.site.presence || dataset.try(:site).presence || resource.try(:site)
+        item_attributes = {}
+        item_attributes[:site_id] = site.try(:id)
 
-      dataset = Opendata::Dataset.find(item.dataset_id) rescue nil
-      resource = dataset.resources.where(id: item.resource_id).first if dataset.present?
-      site = item.site.presence || dataset.try(:site).presence || resource.try(:site)
-      item.set(site_id: site.try(:id)) if site.present?
+        if dataset.present?
+          item_attributes.merge({
+            dataset_name: dataset.name,
+            dataset_areas: dataset.areas.order_by(order: 1).pluck(:name),
+            dataset_categories: dataset.categories.order_by(order: 1).pluck(:name),
+            dataset_estat_categories: dataset.estat_categories.order_by(order: 1).pluck(:name),
+            full_url: dataset.full_url
+          })
 
-      next unless dataset
-      item.set({
-        dataset_name: dataset.name,
-        dataset_areas: dataset.areas.order_by(order: 1).pluck(:name),
-        dataset_categories: dataset.categories.order_by(order: 1).pluck(:name),
-        dataset_estat_categories: dataset.estat_categories.order_by(order: 1).pluck(:name),
-        full_url: dataset.full_url
-      })
+          if resource.present?
+            item_attributes.merge({
+              resource_name: resource.name,
+              resource_filename: resource.filename,
+              resource_source_url: resource.source_url
+            })
+          end
+        end
 
-      next unless resource
-      item.set({
-        resource_name: resource.name,
-        resource_filename: resource.filename,
-        resource_source_url: resource.source_url
-      })
+        item.set(item_attributes)
+      end
     end
   end
 
