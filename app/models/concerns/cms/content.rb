@@ -44,68 +44,34 @@ module Cms::Content
 
     after_destroy :remove_private_dir
 
-    scope :filename, ->(name) { where filename: name.sub(/^\//, "") }
-    scope :node, ->(node, target = nil) {
+    export_liquid_methods
+  end
+
+  module ClassMethods
+    def filename(name)
+      all.where(filename: name.sub(/^\//, ""))
+    end
+
+    def node(node, target = nil)
       if target == 'descendant'
-        node ? where(filename: /^#{::Regexp.escape(node.filename)}\//) : where({})
+        node ? all.where(filename: /^#{::Regexp.escape(node.filename)}\//) : all.none
       else #current
-        node ? where(filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1) : where(depth: 1)
+        node ? all.where(filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1) : all.where(depth: 1)
       end
-    }
-    scope :and_public, ->(date = nil) {
+    end
+
+    def and_public(date = nil)
       if date.nil?
-        where state: "public"
+        all.where(state: "public")
       else
         date = date.dup
-        where("$and" => [
+        all.where("$and" => [
           { "$or" => [ { state: "public", :released.lte => date }, { :release_date.lte => date } ] },
           { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
         ])
       end
-    }
-
-    liquidize do
-      export :id
-      export :name
-      export :index_name
-      export :url
-      export :full_url
-      export :basename
-      export :filename
-      export :order
-      export :date
-      export :released
-      export :released_type
-      export :updated
-      export :created
-      export :parent do
-        p = self.parent
-        p == false ? nil : p
-      end
-      export :css_class do |context|
-        issuer = context.registers[:cur_part] || context.registers[:cur_node]
-        template_variable_handler_class("class", issuer)
-      end
-      export :new? do |context|
-        issuer = context.registers[:cur_part] || context.registers[:cur_node]
-        issuer.respond_to?(:in_new_days?) && issuer.in_new_days?(self.date)
-      end
-      export :current? do |context|
-        # ApplicationHelper#current_url?
-        cur_path = context.registers[:cur_path]
-        next false if cur_path.blank?
-
-        current = cur_path.sub(/\?.*/, "")
-        next false if current.delete("/").blank?
-        next true if self.url.sub(/\/index\.html$/, "/") == current.sub(/\/index\.html$/, "/")
-        next true if current =~ /^#{::Regexp.escape(url)}(\/|\?|$)/
-
-        false
-      end
     end
-  end
 
-  module ClassMethods
     def split_path(path)
       last = nil
       dirs = path.split('/').map { |n| last = last ? "#{last}/#{n}" : n }
@@ -158,6 +124,48 @@ module Cms::Content
 
     def private_root
       "#{SS::Application.private_root}/#{self.collection_name}"
+    end
+
+    def export_liquid_methods
+      liquidize do
+        export :id
+        export :name
+        export :index_name
+        export :url
+        export :full_url
+        export :basename
+        export :filename
+        export :order
+        export :date
+        export :released
+        export :released_type
+        export :updated
+        export :created
+        export :parent do
+          p = self.parent
+          p == false ? nil : p
+        end
+        export :css_class do |context|
+          issuer = context.registers[:cur_part] || context.registers[:cur_node]
+          template_variable_handler_class("class", issuer)
+        end
+        export :new? do |context|
+          issuer = context.registers[:cur_part] || context.registers[:cur_node]
+          issuer.respond_to?(:in_new_days?) && issuer.in_new_days?(self.date)
+        end
+        export :current? do |context|
+          # ApplicationHelper#current_url?
+          cur_path = context.registers[:cur_path]
+          next false if cur_path.blank?
+
+          current = cur_path.sub(/\?.*/, "")
+          next false if current.delete("/").blank?
+          next true if self.url.sub(/\/index\.html$/, "/") == current.sub(/\/index\.html$/, "/")
+          next true if current =~ /^#{::Regexp.escape(url)}(\/|\?|$)/
+
+          false
+        end
+      end
     end
   end
 
