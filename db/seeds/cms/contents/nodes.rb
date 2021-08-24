@@ -28,7 +28,6 @@ def save_node(data)
   item.cur_site ||= @site
   item.cur_user ||= @user
   item.save
-  item.add_to_set group_ids: @site.group_ids
 
   item
 end
