@@ -25,19 +25,10 @@ module Inquiry::Node
     has_many :columns, class_name: "Inquiry::Column"
     has_many :answers, class_name: "Inquiry::Answer"
 
-    after_validation :set_released, if: -> { public? }
     default_scope ->{ where(route: "inquiry/form") }
 
     def serve_static_file?
       (site.try(:inquiry_form_id) == id) ? false : super
-    end
-
-    private
-
-    def set_released
-      now = Time.zone.now
-      self.released ||= now
-      self.first_released ||= now
     end
   end
 
