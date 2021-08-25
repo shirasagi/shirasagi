@@ -336,7 +336,7 @@ module Cms::Content
       end
     when "same_as_first_released"
       self.released = self.first_released
-    else # "fixed"
+    else # nil or "fixed"
       self.released ||= now
     end
   end
