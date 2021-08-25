@@ -3,10 +3,6 @@ ja:
     cms/addon/sns_poster:
       twitter_auto_post:
         - Twitterへの自動投稿の設定を行います。
-      sns_auto_delete:
-        - 記事非公開時にSNSへ投稿した内容を削除します。
     cms/addon/node_auto_post_setting:
       node_twitter_auto_post:
         - Twitterへの自動投稿の設定を行います。
-      node_sns_auto_delete:
-        - 記事非公開時にSNSへ投稿した内容を削除します。

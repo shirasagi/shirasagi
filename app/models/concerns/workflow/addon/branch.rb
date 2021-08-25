@@ -63,6 +63,16 @@ module Workflow::Addon
         item.lock_until = nil
       end
 
+      if item.is_a?(Cms::Addon::TwitterPoster)
+        item.twitter_auto_post = "expired"
+        item.twitter_edit_auto_post = "disabled"
+      end
+
+      if item.is_a?(Cms::Addon::LinePoster)
+        item.line_auto_post = "expired"
+        item.line_edit_auto_post = "disabled"
+      end
+
       if item.is_a?(Cms::Addon::Form::Page)
         item.copy_column_values(self)
       end

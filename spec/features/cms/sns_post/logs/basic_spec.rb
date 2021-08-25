@@ -41,6 +41,7 @@ describe "cms_pages sns post", type: :feature, dbscope: :example, js: true do
             ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
             within "#addon-cms-agents-addons-twitter_poster" do
               select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
+              select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
             end
             within "form#item-form" do
               click_on I18n.t("ss.buttons.publish_save")

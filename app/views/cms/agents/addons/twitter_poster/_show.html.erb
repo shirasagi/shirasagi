@@ -1,28 +1,43 @@
 <% return "" unless @cur_site.twitter_token_enabled? %>
 
-<dl class="see">
+<dl class="see mod-cms-twitter_poster">
   <dt><%= @model.t :twitter_auto_post %></dt>
   <dd><%= @item.label :twitter_auto_post %></dd>
 
-  <% @item.twitter_posted.to_a.each do |posted| %>
-    <dt><%= @item.t :twitter_url %></dt>
+  <% if @item.use_twitter_post? %>
+    <dt><%= @model.t :twitter_post_format %></dt>
+    <dd><%= @item.label :twitter_post_format %></dd>
+
+    <% if @item.twitter_edit_auto_post_enabled? %>
+      <dt><%= @model.t :twitter_edit_auto_post %></dt>
+      <dd><%= @item.label :twitter_edit_auto_post %></dd>
+    <% end %>
+
+    <% if @item.twitter_posted.present? %>
+    <dt><%= @item.t :twitter_posted %></dt>
     <dd>
-      <a href="<%= @item.twitter_url(posted[:twitter_post_id], posted[:twitter_user_id]) %>" target="_blank" rel="noopener">
-        <%= @item.twitter_url(posted[:twitter_post_id], posted[:twitter_user_id]) %>
-      </a>
+      <table class="index">
+        <thead>
+          <th><%= @item.t :twitter_posted_at %></th>
+          <th><%= @item.t :twitter_posted_url %></th>
+        </thead>
+        <% @item.twitter_posted.reverse.take(5).each do |posted| %>
+          <tbody>
+            <td><%= tryb { posted[:posted_at].strftime("%Y/%m/%d %H:%M") } %></td>
+            <td>
+              <a href="<%= @item.twitter_url(posted[:twitter_post_id], posted[:twitter_user_id]) %>" target="_blank" rel="noopener">
+                <%= @item.twitter_url(posted[:twitter_post_id], posted[:twitter_user_id]) %>
+              </a>
+            </td>
+          </tbody>
+        <% end %>
+      </table>
     </dd>
+    <% end %>
 
-    <dt><%= @item.t :twitter_posted_at %></dt>
-    <dd><%= tryb { posted[:posted_at].strftime("%Y/%m/%d %H:%M") } %></dd>
+    <% if @item.twitter_post_error.present? %>
+      <dt><%= @model.t :twitter_post_error %></dt>
+      <dd><div class="errorExplanation"><%= br @item.twitter_post_error %></div></dd>
+    <% end %>
   <% end %>
-
-  <% if @item.twitter_post_error.present? %>
-    <dt class="depth-2"><%= @model.t :twitter_post_error %></dt>
-    <dd class="depth-2">
-      <div class="errorExplanation"><%= br @item.twitter_post_error %></div>
-    </dd>
-  <% end %>
-
-  <dt><%= @model.t :sns_auto_delete %></dt>
-  <dd><%= @item.label :sns_auto_delete %></dd>
 </dl>
