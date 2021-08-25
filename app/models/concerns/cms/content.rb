@@ -322,7 +322,7 @@ module Cms::Content
 
     case released_type
     when "same_as_updated"
-      if changed?
+      if changed? && record_timestamps
         # #updated とは少なくともミリ秒での誤差があるので、厳密には違うが、だいたいあっている。
         self.released = now
       end
