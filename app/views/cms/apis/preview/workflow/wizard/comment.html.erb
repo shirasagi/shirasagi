@@ -1,3 +1,7 @@
+<% if params[:update_type] == "approve" %>
+  <%== render_sns_post_confirm rescue nil %>
+<% end %>
+
 <dl class="see">
   <dt class="wide"><%= t("workflow.buttons.#{params[:update_type]}") %><%= t("workflow.comment") %></dt>
   <dd class="wide"><textarea name="comment"></textarea></dd>

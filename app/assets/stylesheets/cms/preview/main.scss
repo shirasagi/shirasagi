@@ -577,3 +577,15 @@ table.index {
     font-weight: bold;
   }
 }
+
+.sns-post-confirm {
+  h2 {
+    font-weight: bold;
+    color: #a0522d;
+    font-size: $px13;
+  }
+  li {
+    font-size: $px12;
+  }
+  margin-bottom: 10px;
+}
