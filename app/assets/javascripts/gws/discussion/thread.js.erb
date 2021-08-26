@@ -55,7 +55,7 @@ this.Gws_Discussion_Thread = (function () {
       }
     };
 
-    new SS_Addon_TempFile(".comment-files .upload-drop-area", user, options);
+    new SS_Addon_TempFile($(this).find(".comment-files .upload-drop-area"), user, options);
 
     // reply
     $(".open-reply").on('click', function () {
