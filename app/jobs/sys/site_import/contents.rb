@@ -40,6 +40,7 @@ module Sys::SiteImport::Contents
               @ss_files_map[file_id]
             end
             @ss_files_url.each do |src, dst|
+              next if column_value.value.blank?
               column_value.value = column_value.value.gsub(src, dst)
             end
           end
