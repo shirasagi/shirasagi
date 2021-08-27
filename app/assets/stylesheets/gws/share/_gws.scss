@@ -12,6 +12,8 @@
 }
 
 .gws-share-file-folder-navi {
+  position: relative;
+
   .toolbar {
     .material-icons {
       font-size: 18px;
@@ -26,6 +28,12 @@
 
   .folder-name {
     word-break: break-all;
+  }
+
+  .content-navi-refresh {
+    position: absolute;
+    top: 4px;
+    right: 4px;
   }
 }
 
