@@ -19,6 +19,26 @@ describe 'gws_schedule_plans', type: :feature, dbscope: :example, js: true do
 
       within ".gws-schedule-tool-calendars" do
         expect(page).to have_css(".xdsoft_month", text: now.strftime("%1m月"))
+
+        within all(".xdsoft_calendar")[0] do
+          first('[data-date="1"]', text: "1").click
+        end
+        expect(page).to have_css(".xdsoft_month", text: now.strftime("%1m月"))
+
+        within all(".xdsoft_calendar")[1] do
+          first('[data-date="1"]', text: "1").click
+        end
+        expect(page).to have_css(".xdsoft_month", text: now.advance(months: 1).strftime("%1m月"))
+
+        within all(".xdsoft_calendar")[2] do
+          first('[data-date="1"]', text: "1").click
+        end
+        expect(page).to have_css(".xdsoft_month", text: now.advance(months: 2).strftime("%1m月"))
+
+        within all(".xdsoft_calendar")[3] do
+          first('[data-date="1"]', text: "1").click
+        end
+        expect(page).to have_css(".xdsoft_month", text: now.advance(months: 3).strftime("%1m月"))
       end
     end
   end
