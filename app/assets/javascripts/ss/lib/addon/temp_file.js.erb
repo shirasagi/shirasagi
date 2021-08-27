@@ -66,22 +66,22 @@ this.SS_Addon_TempFile = (function () {
   SS_Addon_TempFile.prototype.render = function() {
     var _this = this;
 
-    this.selector.on("dragenter", function(ev) {
+    $(document).on("dragenter", this.selector, function(ev) {
       $(this).addClass('file-dragenter');
       return false;
     });
 
-    this.selector.on("dragleave", function(ev) {
+    $(document).on("dragleave", this.selector, function(ev) {
       $(this).removeClass('file-dragenter');
       return false;
     });
 
-    this.selector.on("dragover", function(ev) {
+    $(document).on("dragover", this.selector, function(ev) {
       $(this).addClass('file-dragenter');
       return false;
     });
 
-    this.selector.on("drop", function(ev) {
+    $(document).on("drop", this.selector, function(ev) {
       var dropArea = ev.target;
       var token = $('meta[name="csrf-token"]').attr('content');
       var formData = new FormData();
