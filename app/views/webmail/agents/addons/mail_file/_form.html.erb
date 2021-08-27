@@ -18,7 +18,7 @@ window.deleteContent = function(id) {
   });
 };
 
-var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>);
+var tempFile = new SS_Addon_TempFile($(this).find(".upload-drop-area"), <%= @cur_user.id %>);
 <% end %>
 
 <%= hidden_field_tag 'file_size', 'true', { id: 'show-file-size' } %>
