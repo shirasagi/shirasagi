@@ -612,8 +612,9 @@ this.SS = (function () {
         var token = $('meta[name="csrf-token"]').attr('content');
         var formData = new FormData();
         formData.append('authenticity_token', token);
-        if ($container.find('#file-resizing').val()) {
-          formData.append('item[resizing]', $container.find('#file-resizing').val());
+        var defaultFileResizing = SS_AjaxFile.defaultFileResizing();
+        if (defaultFileResizing) {
+          formData.append('item[resizing]', defaultFileResizing);
         }
         for (var j = 0, len = files.length; j < len; j++) {
           formData.append('item[in_files][]', files[j]);

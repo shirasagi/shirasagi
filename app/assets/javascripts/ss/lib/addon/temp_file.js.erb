@@ -113,9 +113,6 @@ this.SS_Addon_TempFile = (function () {
     var token = $('meta[name="csrf-token"]').attr('content');
     var formData = new FormData();
     formData.append('authenticity_token', token);
-//    if ($('#file-resizing').val()) {
-//      formData.append('item[resizing]', $('#file-resizing').val());
-//    }
     var defaultFileResizing = SS_AjaxFile.defaultFileResizing();
     if (defaultFileResizing) {
       formData.append('item[resizing]', defaultFileResizing);
