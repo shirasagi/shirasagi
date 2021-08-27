@@ -137,7 +137,7 @@ this.SS_Addon_TempFile = (function () {
         _this.$selector.removeClass('file-dragenter');
         if (request.status === 200 || request.status === 201) {
           var files = JSON.parse(request.response);
-          _this.select(files);
+          _this.select(files, _this.$selector);
         } else if (request.status === 413) {
           alert(["== Error =="].concat("<%= I18n.t('errors.messages.request_entity_too_large') %>").join("\n"));
         } else {
