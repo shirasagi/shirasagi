@@ -36,4 +36,5 @@
   };
 
   var tempFile = new SS_Addon_TempFile("#item-form .upload-drop-area", <%== @cur_user.id.to_json %>);
+  SS_FileView.renderFileView($("#addon-basic"));
 <% end %>
