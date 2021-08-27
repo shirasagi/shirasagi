@@ -28,6 +28,16 @@ this.SS_AjaxFile = (function () {
     }
   }
 
+  SS_AjaxFile.defaultFileResizing = function () {
+    for (var i = 0; i < SS_AjaxFile.additionalFileResigings.length; i++) {
+      if (SS_AjaxFile.additionalFileResigings[i].default) {
+        return SS_AjaxFile.additionalFileResigings[i].value;
+      }
+    }
+
+    return null;
+  };
+
   SS_AjaxFile.defaultFileSelectHandler = function() {
     var promisses = [];
     var fileViews = [];

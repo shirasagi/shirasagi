@@ -21,7 +21,7 @@ this.SS_Addon_TempFile = (function () {
 
   SS_Addon_TempFile.renderDrop = function (selector, userId) {
     return new SS_Addon_TempFile(selector, userId, {});
-  }
+  };
 
   SS_Addon_TempFile.prototype.select = function (files) {
     var sorted_name_and_datas = [];
@@ -113,8 +113,12 @@ this.SS_Addon_TempFile = (function () {
     var token = $('meta[name="csrf-token"]').attr('content');
     var formData = new FormData();
     formData.append('authenticity_token', token);
-    if ($('#file-resizing').val()) {
-      formData.append('item[resizing]', $('#file-resizing').val());
+//    if ($('#file-resizing').val()) {
+//      formData.append('item[resizing]', $('#file-resizing').val());
+//    }
+    var defaultFileResizing = SS_AjaxFile.defaultFileResizing();
+    if (defaultFileResizing) {
+      formData.append('item[resizing]', defaultFileResizing);
     }
     var files = ev.originalEvent.dataTransfer.files;
     if (files.length === 0) {
