@@ -63,7 +63,7 @@ SS_Workflow = function (el, options) {
   });
 
   this.tempFile = new SS_Addon_TempFile(
-    this.$el.find(".mod-workflow-approve .upload-drop-area"), this.options.user_id,
+    ".mod-workflow-approve .upload-drop-area", this.options.user_id,
     { select: function(files, dropArea) { pThis.onDropFile(files, dropArea); } }
   );
 
