@@ -4,6 +4,7 @@ jobs:
   reviewdog:
     name: reviewdog
     runs-on: ubuntu-latest
+    if: ${{ github.repository == 'shirasagi/shirasagi' }}
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v2
