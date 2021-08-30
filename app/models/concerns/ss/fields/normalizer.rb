@@ -64,6 +64,6 @@ module SS::Fields::Normalizer
   end
 
   def boolean_field?(field_def)
-    field_def.type == Mongoid::Boolean || field_def.type == Boolean
+    field_def.type == ::Mongoid::Boolean
   end
 end
