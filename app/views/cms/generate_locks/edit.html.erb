@@ -19,8 +19,8 @@
 
 <% if Cms::GenerateLock.allowed?(:edit, @cur_user, site: @cur_site) %>
   <footer class="send">
-    <%= f.submit(@model.t(:generate_lock), name: "lock", class: "btn btn-primary btn-generate-lock") %>
-    <%= f.submit(@model.t(:generate_unlock), name: "unlock", class: "btn btn-default btn-generate-lock") %>
+    <%= f.submit(@model.t(:generate_lock), name: "lock", class: "btn btn-primary btn-generate-lock", data: { disable_with: @model.t(:generate_lock) }) %>
+    <%= f.submit(@model.t(:generate_unlock), name: "unlock", class: "btn btn-default btn-generate-lock", data: { disable_with: @model.t(:generate_unlock) }) %>
   </footer>
 <% end %>
 
