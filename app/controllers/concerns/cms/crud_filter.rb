@@ -101,7 +101,18 @@ module Cms::CrudFilter
   end
 
   def destroy_all
-    render_destroy_all(destroy_items, location: request.path)
+    raise "400" if @selected_items.blank?
+
+    if params[:destroy_all]
+      @selected_items.destroy_all
+      render_destroy_all true
+      return
+    end
+
+    respond_to do |format|
+      format.html { render "cms/crud/destroy_all" }
+      format.json { head json: errors }
+    end
   end
 
   def disable_all

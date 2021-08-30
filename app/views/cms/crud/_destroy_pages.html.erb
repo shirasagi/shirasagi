@@ -1,0 +1,41 @@
+<%
+  cond = []
+  contains_urls = []
+
+  if item.respond_to?(:url) && item.respond_to?(:full_url)
+    cond << { contains_urls: { '$in' => [ item.url, item.full_url ] } }
+    cond << { form_contains_urls: { '$in' => [ item.url, item.full_url ] } }
+  end
+
+  if item.respond_to?(:files) && item.files.present?
+    cond << { contains_urls: { '$in' => item.files.map(&:url) } }
+  end
+
+  if item.respond_to?(:related_page_ids)
+    cond << { related_page_ids: { '$in' => [ item.id ] } }
+  end
+
+  if cond.present?
+    contains_urls = Cms::Page.site(@cur_site).where(:id.ne => item.id).or(cond).
+      page(params[:page]).per(50)
+  end
+%>
+
+<% if contains_urls.blank? %>
+  <%= f.hidden_field_tag 'ids[]', item.id.to_s %>
+<% end %>
+
+<li class="list-item">
+  <div class="info">
+    <%= link_to item.name, { action: :show, id: item }, class: "title", target: "_blank", rel: "noopener" %>
+    <div class="meta">
+      <%= render "cms/crud/destroy_info", item: item %>
+      <% if contains_urls.present? %>
+        <%= link_to t("ss.confirm.contains_links_in_file"), { action: :contains_urls, id: item },
+          class: :contains_urls, target: :_blank, rel: "noopener" rescue nil %>
+      <% else %>
+        <%= t("ss.confirm.not_contains_links_in_file") %>
+      <% end %>
+    </div>
+  </div>
+</li>

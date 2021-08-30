@@ -1,0 +1,12 @@
+<li class="list-item">
+  <div class="info">
+    <%= f.hidden_field_tag 'ids[]', item.id.to_s %>
+    <%= link_to item.name, { action: :show, id: item }, class: "title", target: "_blank", rel: "noopener" %>
+    <div class="meta">
+      <%= render "cms/crud/destroy_info", item: item %>
+      <% if item.try(:tags) %>
+        <span class="tags"><%= item.tags.join(",") %></span>
+      <% end %>
+    </div>
+  </div>
+</li>

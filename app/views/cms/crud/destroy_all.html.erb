@@ -1,0 +1,35 @@
+<%= form_with url: request.url, method: :delete do |f| %>
+  <%= hidden_field_tag "destroy_all", true %>
+  <div class="addon-views"></div>
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head">
+        <h2><%= t("ss.confirm.target_to_delete") %></h2>
+      </div>
+      <div class="addon-body">
+        <div class="index">
+          <ul class="list-items">
+            <% @selected_items.each do |item| %>
+              <% if params[:controller] =~ /article\/page|cms\/page/ %>
+                <%= render "cms/crud/destroy_pages", item: item, f: f %>
+              <% else %>
+                <%= render "cms/crud/destroy_others", item: item, f: f %>
+              <% end %>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <footer class="send">
+      <%= f.submit t("ss.buttons.delete"), class: "destroy-all" %>
+      <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{request.url}'; return false;" %>
+    </footer>
+  </div>
+<% end %>
+
+<%= jquery do %>
+  $(".destroy-all").on("click", function () {
+    if (!confirm("<%= I18n.t('ss.confirm.delete') %>")) {
+      return false;
+    }
+  });
+<% end %>
