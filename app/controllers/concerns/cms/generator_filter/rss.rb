@@ -27,7 +27,7 @@ module Cms::GeneratorFilter::Rss
       raise e
     end
 
-    if response.content_type == "text/html" && node.layout
+    if response.media_type == "text/html" && node.layout
       html = render_to_string html: render_layout(node.layout).html_safe, layout: "cms/page"
     else
       html = response.body
