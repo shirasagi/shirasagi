@@ -13,7 +13,7 @@
     <% hide = (@item.running? || @item.state == "ready") ? nil : "display: none;" %>
     <div class="stop-button" style="<%= hide %>">
       <%= submit_tag t("ss.buttons.stop"), name: "stop", class: "btn-primary stop" %>
-      <%= submit_tag t("ss.buttons.reset"), name: "reset", class: "btn-default", onclick: "return confirm('#{t("ss.tasks.confirm_reset")}')" %>
+      <%= submit_tag t("ss.buttons.reset"), name: "reset", class: "btn-default", data: { confirm: t("ss.tasks.confirm_reset"), disable_with: t("ss.buttons.reset") } %>
     </div>
 
     <% hide = hide.present? && !@cur_site.generate_locked? ? "" : "display: none;" %>

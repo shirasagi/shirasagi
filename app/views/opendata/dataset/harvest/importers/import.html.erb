@@ -13,7 +13,7 @@
   </section>
 
   <footer class="send">
-    <%= f.submit t("ss.buttons.run"), class: :save, onclick: "return confirm('#{t("ss.tasks.confirm_start")}')" %>
+    <%= f.submit t("ss.buttons.run"), class: :save, data: { confirm: t("ss.tasks.confirm_start"), disable_with: t("ss.buttons.running") } %>
     <%= f.button t("ss.buttons.cancel"), class: 'btn-default', onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
   </footer>
 <% end %>
