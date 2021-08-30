@@ -1,5 +1,5 @@
 class Rdf::Builders::BaseBuilder
-  include Context
+  include Rdf::Builders::Context
 
   def call(predicate, objects)
     if handler = handlers[predicate]
