@@ -121,6 +121,7 @@ ja:
       cancel: キャンセル
       edit: 編集
       delete: 削除
+      deleting: 削除中
       search: 検索
       replace: 置換
       replace_all: 全置換
@@ -129,10 +130,13 @@ ja:
       send: 送信
       sending: 送信中
       run: 実行
+      running: 実行中
       stop: 停止
       toggle: 折りたたみ表示
       move: 移動
+      moving: 移動中
       import: インポート
+      importing: インポート中
       convert: 変換
       unlock_and_edit_forcibly: 強制的にロックを解除し編集する
       random_password: ランダム生成
