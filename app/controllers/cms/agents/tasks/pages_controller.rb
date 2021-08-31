@@ -88,14 +88,14 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
       { state: "public", close_date: { "$lte" => time } }
     ]
 
-    pages = Cms::Page.site(@site).or(cond)
+    pages = Cms::Page.site(@site).where("$or" => cond)
     ids   = pages.pluck(:id)
     @task.total_count = ids.size
 
     ids.each do |id|
       rescue_with(rescue_p: rescue_p) do
         @task.count
-        page = Cms::Page.site(@site).or(cond).where(id: id).first
+        page = Cms::Page.site(@site).where("$or" => cond).where(id: id).first
         next unless page
         @task.log page.full_url
         release_page page.becomes_with_route
