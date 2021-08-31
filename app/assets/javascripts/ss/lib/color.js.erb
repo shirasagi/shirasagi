@@ -6,7 +6,7 @@ this.SS_Color = (function () {
 
   SS_Color.render = function () {
     $(".js-color").each(function () {
-      var self, warp, slider, swatches, panel, btn, top;
+      var self, warp, slider, swatches, panel, top;
       self = $(this);
 
       if (self.data("swatches")) {
@@ -17,23 +17,35 @@ this.SS_Color = (function () {
         swatches = $(warp).find('ul.minicolors-swatches');
         panel = $(warp).find(".minicolors-panel");
 
-        $(panel).prepend(swatches);
-        top = $(warp).find('li.minicolors-swatch.minicolors-sprite').outerHeight(true) * 2
-          + $(swatches).outerHeight(true)
-          + parseInt($(slider).css('top'));
+        panel.prepend(swatches);
+        top = warp.find('li.minicolors-swatch.minicolors-sprite').outerHeight(true) * 2
+          + swatches.outerHeight(true)
+          + parseInt(slider.css('top'));
 
-        $(slider).css('top', top.toString() + 'px');
+        slider.css('top', top.toString() + 'px');
       } else {
         self.minicolors();
       }
 
       if (self.data('clear')) {
-        btn = $("<input type='button' class='btn' value='<%= I18n.t('ss.buttons.clear') %>' />").uniqueId();
-        $(self).after(btn).after(' ');
-        $('#' + btn.attr('id')).on("click", function () {
-          $(self).minicolors('value', {
-            color: 'transparent'
-          });
+        var btn = $("<input type='button' class='btn' value='<%= I18n.t('ss.buttons.clear') %>' />");
+        self.after(btn).after(' ');
+        btn.on("click", function () {
+          self.minicolors('value', { color: 'transparent' });
+        });
+      }
+      if (self.data('random')) {
+        var randomColor = self.data('random').split(' ');
+        var randomIndex = 0;
+        var btn = $("<input type='button' class='btn' value='<%= I18n.t('ss.buttons.random_gen') %>' />");
+        self.after(btn).after(' ');
+        btn.on("click", function () {
+          var nextColor = randomColor[randomIndex];
+          randomIndex++;
+          if (randomIndex >= randomColor.length) {
+            randomIndex = 0;
+          }
+          self.minicolors('value', { color: nextColor });
         });
       }
     });

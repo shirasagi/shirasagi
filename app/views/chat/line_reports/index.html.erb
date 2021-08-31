@@ -1,17 +1,17 @@
 <%
-  gen = SS::HslGenerator.new(@cur_node.id).to_enum
+  gen = SS::RandomColor.new(@cur_node.id)
 
   @dates = (@current_month_date..@current_month_end_date).to_a
   @session_counts = @dates.collect do |date|
     @sessions.gte(date_created: date).lt(date_created: date.tomorrow).count
   end
-  sessions = [@dates, @session_counts, gen.next]
+  sessions = [@dates, @session_counts, gen.next.to_s]
 
   @hours = (0..23).to_a
   @used_times_counts = @hours.collect do |hour|
     @used_times.gte(hour: hour).lt(hour: hour + 1).count
   end
-  used_times = [@hours, @used_times_counts, gen.next]
+  used_times = [@hours, @used_times_counts, gen.next.to_s]
 
 %>
 <%= jquery do %>
