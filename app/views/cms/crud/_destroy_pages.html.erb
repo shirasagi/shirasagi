@@ -21,11 +21,14 @@
   end
 %>
 
-<% if contains_urls.blank? %>
-  <%= f.hidden_field_tag 'ids[]', item.id.to_s %>
-<% end %>
-
 <li class="list-item">
+  <label class="check">
+    <% if contains_urls.blank? %>
+      <%= f.check_box_tag 'ids[]', item.id.to_s, checked: true %>
+    <% else %>
+      <%= f.check_box_tag "ids[]", item.id, false, {disabled: true} %>
+    <% end %>
+  </label>
   <div class="info">
     <%= link_to item.name, { action: :show, id: item }, class: "title", target: "_blank", rel: "noopener" %>
     <div class="meta">
