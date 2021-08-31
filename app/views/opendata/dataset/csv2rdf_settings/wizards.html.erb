@@ -11,7 +11,7 @@
     <% if next_url? %>
       <%= f.submit t("opendata.buttons.next"), class: "save btn-primary" %>
     <% else %>
-      <%= f.submit t("opendata.buttons.build"), class: "save btn-primary" %>
+      <%= f.submit t("opendata.buttons.build"), class: "save btn-primary", data: { disable_with: t("opendata.buttons.build") } %>
     <% end %>
     <%= f.button t("opendata.buttons.back"), type: :reset, class: "btn-default", onclick: "location.href='#{prev_url}'; return false;" %>
   </footer>

@@ -8,7 +8,7 @@
   </div>
 
   <footer class="send">
-    <%= f.submit t("ldap.buttons.sync"), class: 'btn-primary sync' %>
+    <%= f.submit t("ldap.buttons.sync"), class: 'btn-primary sync', data: { disable_with: t("ldap.buttons.sync") } %>
     <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
   </footer>
 <% end %>

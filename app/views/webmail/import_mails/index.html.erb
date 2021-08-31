@@ -11,7 +11,7 @@
         </dl>
       </div>
       <footer class="send">
-        <%= f.submit t("ss.import"), class: :save %>
+        <%= f.submit t("ss.import"), class: :save, data: { disable_with: t("ss.buttons.importing") } %>
       </footer>
     </div>
   </div>

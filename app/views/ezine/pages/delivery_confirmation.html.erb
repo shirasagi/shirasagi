@@ -3,7 +3,7 @@
     <%= render partial: 'deliver_form' %>
 
     <footer class="send">
-      <%= f.submit t('ezine.buttons.deliver'), name: :deliver, class: "save" %>
+      <%= f.submit t('ezine.buttons.deliver'), name: :deliver, class: "save", data: { disable_with: t('ezine.buttons.deliver') } %>
     </footer>
   <% end %>
 </div>
