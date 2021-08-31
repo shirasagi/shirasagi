@@ -28,13 +28,16 @@ Cms_Branch.prototype.createBranch = function() {
     data: { authenticity_token: token },
     beforeSend: function () {
       self.$result.addClass("wide").show().html(SS.loading);
+      self.$el.find(".create-branch").prop("disabled", true);
     },
     success: function (data) {
       self.$result.removeClass("wide").html(data).find("a").removeClass();
+      self.$el.find(".create-branch").prop("disabled", false);
       self.toggleCreateBranchButton();
     },
     error: function (data, status) {
       self.$result.html("<div class=\"errorExplanation\">" + ["== Error =="].concat(data.responseJSON).join("\n") + "</div>");
+      self.$el.find(".create-branch").prop("disabled", false);
     }
   });
 };

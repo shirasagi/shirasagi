@@ -22,7 +22,7 @@
 
       <footer class="send text-left">
         <%= f.button t("ss.buttons.confirm"), class: 'btn-default import-confirm' %>
-        <%= f.submit t("ss.import"), class: 'save import-save', data: { confirm: I18n.t("ss.confirm.import") } %>
+        <%= f.submit t("ss.buttons.import"), class: 'save import-save', data: { confirm: t("ss.confirm.import") } %>
       </footer>
     <% end %>
   <% end %>

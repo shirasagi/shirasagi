@@ -14,7 +14,7 @@
   <%= render "ss/tasks/box", task: @task, url: url_for(action: :import, format: :json) %>
 
   <footer class="send">
-    <%= f.submit t("ss.import"), class: "save", onclick: "return confirm('#{t("ss.confirm.import")}')" %>
+    <%= f.submit t("ss.buttons.import"), class: "save", data: { confirm: t("ss.confirm.import"), disable_with: t("ss.buttons.importing") } %>
     <%= f.button t("ss.buttons.cancel"), class: "btn-default", onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
   </footer>
 <% end %>
