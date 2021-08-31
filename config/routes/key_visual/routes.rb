@@ -18,6 +18,7 @@ Rails.application.routes.draw do
 
   part "key_visual" do
     get "slide" => "public#index", cell: "parts/slide"
+    get "swiper_slide" => "public#index", cell: "parts/swiper_slide"
   end
 
   page "key_visual" do
