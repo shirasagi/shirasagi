@@ -81,6 +81,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         expect(mail.subject).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
         expect(mail.decoded.to_s).to include(mail.subject, url)
+        expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
 
         # #3786: https://github.com/shirasagi/shirasagi/issues/3786
         Gws::Board::NotificationJob.bind(site_id: site.id).perform_now
@@ -131,6 +132,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           expect(mail.subject).to eq notice.subject
           url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
           expect(mail.decoded.to_s).to include(mail.subject, url)
+          expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
 
           # #3786: https://github.com/shirasagi/shirasagi/issues/3786
           Gws::Board::NotificationJob.bind(site_id: site.id).perform_now
@@ -176,6 +178,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           expect(mail.subject).to eq notice.subject
           url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
           expect(mail.decoded.to_s).to include(mail.subject, url)
+          expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
 
           # #3786: https://github.com/shirasagi/shirasagi/issues/3786
           Gws::Board::NotificationJob.bind(site_id: site.id).perform_now
@@ -253,6 +256,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           expect(mail.subject).to eq notice.subject
           url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
           expect(mail.decoded.to_s).to include(mail.subject, url)
+          expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
 
           # #3786: https://github.com/shirasagi/shirasagi/issues/3786
           Gws::Board::NotificationJob.bind(site_id: site.id).perform_now
@@ -301,6 +305,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           expect(mail.subject).to eq notice.subject
           url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
           expect(mail.decoded.to_s).to include(mail.subject, url)
+          expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
 
           # #3786: https://github.com/shirasagi/shirasagi/issues/3786
           Gws::Board::NotificationJob.bind(site_id: site.id).perform_now

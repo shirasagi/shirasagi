@@ -15,7 +15,7 @@ class Gws::Reminder::Mailer < ActionMailer::Base
       model: I18n.t("mongoid.models.#{reminder.model}"),
       name: @item.name)
 
-    mail(from: from, to: to, subject: subject)
+    mail(from: from, to: to, subject: subject, message_id: Gws.generate_message_id(site))
   end
 
   def format_email(user)

@@ -10,11 +10,11 @@ class Workflow::Mailer < ActionMailer::Base
     @comment   = args[:comment]
     @site      = args[:site]
 
-    from_email = format_email(@from_user) || site_sender(@site) || system_sender
+    from_email = format_email(@from_user) || site_sender(@site) || Cms::DEFAULT_SENDER_ADDRESS
     to_email = format_email(@to_user)
     return nil if from_email.blank? || to_email.blank?
 
-    mail from: from_email, to: to_email
+    mail from: from_email, to: to_email, message_id: Cms.generate_message_id(@site)
   end
 
   def self.send_request_mails(args)
@@ -35,11 +35,11 @@ class Workflow::Mailer < ActionMailer::Base
     @subject   = "[#{I18n.t('workflow.mail.subject.approve')}]#{@page.name} - #{@site.name}"
     @url       = make_full_url(args[:url])
 
-    from_email = format_email(@from_user) || site_sender(@site) || system_sender
+    from_email = format_email(@from_user) || site_sender(@site) || Cms::DEFAULT_SENDER_ADDRESS
     to_email = format_email(@to_user)
     return nil if from_email.blank? || to_email.blank?
 
-    mail from: from_email, to: to_email
+    mail from: from_email, to: to_email, message_id: Cms.generate_message_id(@site)
   end
 
   def self.send_approve_mails(args)
@@ -61,11 +61,11 @@ class Workflow::Mailer < ActionMailer::Base
     @url       = make_full_url(args[:url])
     @comment   = args[:comment]
 
-    from_email = format_email(@from_user) || site_sender(@site) || system_sender
+    from_email = format_email(@from_user) || site_sender(@site) || Cms::DEFAULT_SENDER_ADDRESS
     to_email = format_email(@to_user)
     return nil if from_email.blank? || to_email.blank?
 
-    mail from: from_email, to: to_email
+    mail from: from_email, to: to_email, message_id: Cms.generate_message_id(@site)
   end
 
   def self.send_remand_mails(args)
@@ -93,10 +93,6 @@ class Workflow::Mailer < ActionMailer::Base
   def site_sender(site)
     return if site.blank?
     site.sender_address
-  end
-
-  def system_sender
-    SS.config.mail.default_from
   end
 
   def make_full_url(url)

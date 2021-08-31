@@ -1,2 +1,2 @@
 <% message.subject = "[#{Gws::Report::File.model_name.human}] 「#{@item.name}」が届きました。" %>
-<%= Rails.application.routes.url_helpers.gws_report_file_path(site: @item.site, state: 'inbox', id: @item) %>
+<%= Rails.application.routes.url_helpers.gws_report_file_path(site: @site, state: 'inbox', id: @item) %>
