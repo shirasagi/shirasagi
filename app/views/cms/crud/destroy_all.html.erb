@@ -25,11 +25,3 @@
     </footer>
   </div>
 <% end %>
-
-<%= jquery do %>
-  $(".destroy-all").on("click", function () {
-    if (!confirm("<%= I18n.t('ss.confirm.delete') %>")) {
-      return false;
-    }
-  });
-<% end %>

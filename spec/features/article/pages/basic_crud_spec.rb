@@ -119,6 +119,25 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
       end
+
+      it "delete all and contains_urls" do
+        visit index_path
+
+        find('.list-head input[type="checkbox"]').set(true)
+        within ".list-head-action" do
+          page.accept_alert do
+            click_button I18n.t('ss.buttons.delete')
+          end
+        end
+
+        expect(page).to have_content I18n.t('ss.confirm.contains_links_in_file')
+        expect(page).to have_content I18n.t('ss.confirm.target_to_delete')
+        click_button I18n.t('ss.buttons.delete')
+
+        wait_for_ajax
+
+        expect(page).to have_content File.basename(item.filename)
+      end
     end
 
     it "#contains_urls" do

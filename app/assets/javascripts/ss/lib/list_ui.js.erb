@@ -52,6 +52,9 @@ this.SS_ListUI = (function () {
       if (checked.length === 0) {
         return false;
       }
+      if (!confirm("<%= I18n.t('ss.confirm.delete') %>")) {
+        return false;
+      }
       form = $("<form/>", {
         action: "",
         method: "post"
