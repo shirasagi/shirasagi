@@ -215,6 +215,8 @@ module SS::Document
   end
 
   def value_setting_for(name, options = {})
+    return unless respond_to?("#{name}_options")
+
     opts  = send("#{name}_options")
     opts += send("#{name}_private_options") if respond_to?("#{name}_private_options")
     value = options.key?(:value) ? options[:value] : send(name)
