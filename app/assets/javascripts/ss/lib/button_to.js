@@ -50,10 +50,11 @@ SS_ButtonTo.invokeAction = function(ev) {
   if (confirmation) {
     if (!confirm(confirmation)) {
       ev.preventDefault();
-      return false;
+      return;
     }
   }
 
   ev.preventDefault();
+  $button.prop("disabled", true)
   $form.appendTo(document.body).submit();
 };
