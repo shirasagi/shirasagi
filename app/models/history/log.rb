@@ -34,11 +34,11 @@ class History::Log
   def target_label
     if target_class.present?
       model  = target_class.to_s.underscore
-      label  = I18n.t :"mongoid.models.#{model}", default: model
+      label  = I18n.t("mongoid.models.#{model}", default: model)
       label += "(#{target_id})" if target_id.present?
     else
       model = controller.singularize
-      label = I18n.t :"mongoid.models.#{model}", default: model
+      label = I18n.t("mongoid.models.#{model}", default: model)
     end
     label
   end
