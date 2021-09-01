@@ -99,6 +99,9 @@ this.SS_AjaxFile = (function () {
         },
         error: function (xhr, status, error) {
           self.submitError(xhr);
+        },
+        complete: function (xhr, status) {
+          $.rails.enableFormElements($form);
         }
       };
 
