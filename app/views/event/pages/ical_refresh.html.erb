@@ -8,7 +8,7 @@
 </div>
 
 <footer class="send">
-  <%= f.submit t("rss.buttons.import"), class: :save, data: { disable_with: t("rss.buttons.import") } %>
+  <%= f.submit t("rss.buttons.import"), class: :save %>
   <%= f.button t("ss.buttons.cancel"), type: :reset, class: 'btn-default', onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
 </footer>
 <% end %>

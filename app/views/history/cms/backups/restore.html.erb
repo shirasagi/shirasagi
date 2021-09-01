@@ -19,7 +19,7 @@
 <% end %>
 
 <footer class="send">
-  <%= f.submit t("history.buttons.restore"), class: 'btn-primary save', data: { disable_with: t("history.buttons.restore") } %>
+  <%= f.submit t("history.buttons.restore"), class: 'btn-primary save' %>
   <%= f.button t("ss.buttons.cancel"), type: :reset, class: 'btn-default', onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
 </footer>
 

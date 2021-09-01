@@ -14,7 +14,7 @@ $('.btn.apply-filter').on("click", function(){
 <dl class="see">
   <dd class="wide">
     <%= f.select_tag :mailbox, options_for_select(@item.mailbox_options), class: 'apply-mailbox', include_blank: '' %>
-    <%= f.submit t("webmail.links.apply"), class: 'btn apply-filter', data: { disable_with: t("webmail.links.apply") } %>
+    <%= f.submit t("webmail.links.apply"), class: 'btn apply-filter' %>
   </dd>
 </dl>
 <% end %>

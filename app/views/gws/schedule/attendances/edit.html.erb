@@ -21,7 +21,7 @@
     <% if @crud_buttons %>
       <% @crud_buttons.call f %>
     <% else %>
-      <%= f.submit t("ss.buttons.save"), class: 'btn-primary save' %>
+      <%= f.submit t("ss.buttons.save"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.saving") } %>
       <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "$.colorbox.close(); return false;" %>
     <% end %>
   </footer>

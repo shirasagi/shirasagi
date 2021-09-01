@@ -31,7 +31,7 @@
 </div>
 
 <footer class="send">
-  <%= f.submit t("rdf.vocabs.import"), class: "save", data: { disable_with: t("ss.buttons.importing") } %>
+  <%= f.submit t("rdf.vocabs.import"), class: "save" %>
   <%= f.button t("ss.buttons.cancel"), class: "btn-default", type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
 </footer>
 <% end %>

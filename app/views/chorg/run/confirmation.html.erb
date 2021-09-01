@@ -39,7 +39,7 @@
   </section>
 
   <footer class="send">
-    <%= f.submit t("chorg.views.run/confirmation.#{params[:type]}.run_button"), class: "btn-primary save", data: { disable_with: t("chorg.views.run/confirmation.#{params[:type]}.run_button") } %>
+    <%= f.submit t("chorg.views.run/confirmation.#{params[:type]}.run_button"), class: "btn-primary save" %>
     <%= f.button t("ss.buttons.cancel"), type: :reset, class: "btn-default",
       onclick: "location.href='#{url_for(controller: :revisions, action: :show, id: @cur_revision)}'; return false;" %>
   </footer>
