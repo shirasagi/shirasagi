@@ -18,4 +18,7 @@
   </footer>
 <% end %>
 
-<%= jquery do %> SS.confirmUnloading(); <% end %>
+<%= jquery do %>
+  SS.confirmUnloading();
+  SS.enableFormElementsAfterSubmit("#item-form");
+<% end %>
