@@ -1,8 +1,9 @@
 <%
+  template_path = @item.route.sub('/', '/agents/nodes/') + "/edit/_form"
+  file_path = "#{Rails.root}/app/views/#{template_path}.html.erb"
+%>
 
-file = "#{Rails.root}/app/views/" + @item.route.sub('/', '/agents/nodes/') + "/edit/_form.html.erb"
-
-%><dl class="see">
+<dl class="see">
   <dt><%= @model.t :route %><%= @model.tt :route %></dt>
   <dd><%= f.hidden_field :route %>
     <%= @item.label :route %> &nbsp;
@@ -30,4 +31,4 @@ file = "#{Rails.root}/app/views/" + @item.route.sub('/', '/agents/nodes/') + "/e
   <dd><%= f.select :layout_id, ancestral_layouts(@item, @item.layout), include_blank: " " %></dd>
 </dl>
 
-<%= render file: file, locals: { f: f } if File.exists?(file) %>
+<%= render template: template_path, locals: { f: f } if File.exists?(file_path) %>

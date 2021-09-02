@@ -3,7 +3,7 @@
 
   <div class="addon-views">
     <div class="addon-view" id="addon-basic">
-      <%= render file: "_#{params[:action]}", locals: { f: f } %>
+      <%= render template: "_#{params[:action]}", locals: { f: f } %>
     </div>
   </div>
 

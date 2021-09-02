@@ -3,4 +3,4 @@
   <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 <% end %>
 
-<%= render file: 'gws/crud/index' %>
+<%= render template: 'gws/crud/index' %>

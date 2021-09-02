@@ -3,7 +3,7 @@
 
 <div class="addon-views">
   <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t("rss.confirm.import") } do %>
-    <%= render file: "_ical_refresh" %>
+    <%= render template: "_ical_refresh" %>
   <% end %>
 </div>
 

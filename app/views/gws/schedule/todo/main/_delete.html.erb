@@ -4,4 +4,4 @@
 <%= hidden_field_tag 'calendar[viewTodo]', params.dig(:calendar, :viewTodo) %>
 <%= hidden_field_tag 'calendar[viewAttendance]', params.dig(:calendar, :viewAttendance) %>
 
-<%= render file: "ss/crud/_delete" %>
+<%= render "ss/crud/delete" %>

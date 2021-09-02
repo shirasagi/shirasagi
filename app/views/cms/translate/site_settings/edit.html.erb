@@ -9,7 +9,7 @@
       addon_options[:id] = "addon-basic"
       addon_options[:head] = @addon_basic_name || t("ss.basic_info")
     %>
-    <% buf = render file: "_form", locals: { f: f, addon: addon_options } %>
+    <% buf = render template: "_form", locals: { f: f, addon: addon_options } %>
     <%= render "ss/crud/addon", addon: addon_options do %>
       <%= buf %>
     <% end %>
@@ -21,7 +21,7 @@
       addon_options[:id] = "addon-basic"
       addon_options[:head] = I18n.t("translate.views.api")
     %>
-    <% buf = render file: "_form_api", locals: { f: f, addon: addon_options } %>
+    <% buf = render template: "_form_api", locals: { f: f, addon: addon_options } %>
     <%= render "ss/crud/addon", addon: addon_options do %>
       <%= buf %>
     <% end %>
@@ -33,7 +33,7 @@
       addon_options[:id] = "addon-basic"
       addon_options[:head] = I18n.t("translate.views.api_request_word_limit")
     %>
-    <% buf = render file: "_form_api_limit", locals: { f: f, addon: addon_options } %>
+    <% buf = render template: "_form_api_limit", locals: { f: f, addon: addon_options } %>
     <%= render "ss/crud/addon", addon: addon_options do %>
       <%= buf %>
     <% end %>

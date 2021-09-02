@@ -62,9 +62,9 @@
 
 <% case @s.type %>
 <% when "month" %>
-  <%= render file: "_monthly" %>
+  <%= render template: "_monthly" %>
 <% when "year" %>
-  <%= render file: "_yearly" %>
+  <%= render template: "_yearly" %>
 <% else %>
-  <%= render file: "_daily" %>
+  <%= render template: "_daily" %>
 <% end %>

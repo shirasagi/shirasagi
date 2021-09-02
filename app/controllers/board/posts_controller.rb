@@ -58,7 +58,7 @@ class Board::PostsController < ApplicationController
   def reply
     @item = @model.new get_params
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
-    render_create @item.save, location: { action: :index }, render: { file: :new_reply }
+    render_create @item.save, location: { action: :index }, render: { template: "new_reply" }
   end
 
   def download

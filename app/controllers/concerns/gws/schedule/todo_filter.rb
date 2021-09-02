@@ -109,9 +109,9 @@ module Gws::Schedule::TodoFilter
 
   def popup
     if item_readable?
-      render file: 'popup', layout: false
+      render template: 'popup', layout: false
     else
-      render file: 'app/views/gws/schedule/plans/popup_hidden', layout: false
+      render template: 'gws/schedule/plans/popup_hidden', layout: false
     end
   end
 
@@ -253,6 +253,6 @@ module Gws::Schedule::TodoFilter
   def copy
     set_item
     @item = @item.new_clone
-    render file: :new
+    render template: "new"
   end
 end

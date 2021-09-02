@@ -209,7 +209,7 @@ module Cms::PageFilter
 
       task.run_with(rejected: rejected) do
         task.log "# 移動"
-        render_update @item.move(destination), location: location, render: { file: :move }, notice: t('ss.notice.moved')
+        render_update @item.move(destination), location: location, render: { template: "move" }, notice: t('ss.notice.moved')
       end
     end
   end
@@ -233,7 +233,7 @@ module Cms::PageFilter
 
       @item.attributes = get_params
       @copy = @item.new_clone
-      render_update @copy.save, location: { action: :index }, render: { file: :copy }
+      render_update @copy.save, location: { action: :index }, render: { template: "copy" }
     end
   end
 
@@ -279,7 +279,7 @@ module Cms::PageFilter
       end
     end
 
-    render_update true, location: { action: :index }, render: { file: :index }
+    render_update true, location: { action: :index }, render: { template: "index" }
   end
 
   def reset_tag_all
@@ -294,6 +294,6 @@ module Cms::PageFilter
       end
     end
 
-    render_update true, location: { action: :index }, render: { file: :index }
+    render_update true, location: { action: :index }, render: { template: "index" }
   end
 end

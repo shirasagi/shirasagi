@@ -38,7 +38,7 @@ class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
     result = @item.save
 
     if !result
-      render file: :edit, status: :unprocessable_entity
+      render template: "edit", status: :unprocessable_entity
       return
     end
 
@@ -84,7 +84,7 @@ class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
       flash["cms.preview.notice"] = I18n.t("workflow.notice.created_branch_page")
       render json: { location: location }, status: :ok, content_type: json_content_type
     else
-      render file: :edit, status: :unprocessable_entity
+      render template: "edit", status: :unprocessable_entity
     end
   end
 

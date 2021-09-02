@@ -29,7 +29,7 @@ class Opendata::Dataset::ExportDatasetsController < ApplicationController
     unless Opendata::Dataset::ExportJob.check_size_limit_per_user?(@cur_user.id)
       @item = @model.new
       @item.errors.add(:base, t('job.notice.size_limit_exceeded'))
-      render file: :index
+      render template: "index"
       return
     end
 

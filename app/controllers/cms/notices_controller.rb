@@ -41,6 +41,6 @@ class Cms::NoticesController < ApplicationController
 
     @item.attributes = get_params
     @copy = @item.new_clone
-    render_update @copy.save, location: { action: :index }, render: { file: :copy }
+    render_update @copy.save, location: { action: :index }, render: { template: "copy" }
   end
 end

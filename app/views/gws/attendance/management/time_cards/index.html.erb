@@ -34,7 +34,7 @@
   <% end %>
 </div>
 
-<%= render file: 'gws/crud/index' %>
+<%= render template: 'gws/crud/index' %>
 
 <%= jquery do %>
   var baseUrl = <%== url_for({ action: :index, year_month: ':YEAR_MONTH' }).to_json %>;

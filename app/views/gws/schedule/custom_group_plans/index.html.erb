@@ -14,7 +14,7 @@ Gws_Schedule_Integration.render();
     <% if @cur_site.schedule_custom_group_extra_state == "creator_name" %>
       <span class="group-creator"><%= gws_public_user_long_name(@group.user_long_name) %></span>
     <% end %>
-    <nav><%= render file: '_search' %></nav>
+    <nav><%= render template: '_search' %></nav>
   </header>
 
   <div class="calendar" id="calendar-controller"></div>

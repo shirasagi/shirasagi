@@ -43,7 +43,7 @@ class Jmaxml::TsunamiRegionsController < ApplicationController
   def import
     @item = OpenStruct.new
     if request.get?
-      render file: 'rss/main/import'
+      render template: 'rss/main/import'
       return
     end
 

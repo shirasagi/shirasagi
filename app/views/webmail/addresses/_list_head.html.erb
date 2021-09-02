@@ -25,7 +25,7 @@
   <label class="check"><input type="checkbox" /></label>
 
   <div class="list-head-action webmail-address-head">
-    <%= render file: "_list_head_tags" %>
+    <%= render template: "_list_head_tags" %>
     <div class="list-head-action-destroy">
       <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn", method: "delete", confirm: t('ss.confirm.delete') %>
     </div>
@@ -41,5 +41,5 @@
     </div>
   </div>
 
-  <%= render file: "_search" %>
+  <%= render template: "_search" %>
 </div>

@@ -148,7 +148,7 @@ class Gws::Notice::EditablesController < ApplicationController
   rescue => e
     logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     render_opts = {
-      render: { file: :create_my_folder }
+      render: { template: "create_my_folder" }
     }
     render_create false, render_opts
   end
@@ -157,6 +157,6 @@ class Gws::Notice::EditablesController < ApplicationController
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
     @item = @item.new_clone
-    render file: :new
+    render template: "new"
   end
 end

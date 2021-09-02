@@ -27,7 +27,7 @@ module SS::ExceptionFilter
     end
 
     render(
-      file: "ss/rescues/index", layout: @cur_user ? "ss/base" : "ss/login", status: status_code,
+      template: "ss/rescues/index", layout: @cur_user ? "ss/base" : "ss/login", status: status_code,
       type: request.xhr? ? "text/plain" : "text/html", formats: request.xhr? ? :text : :html
     )
   rescue => e

@@ -11,7 +11,7 @@ module Category::IntegrationFilter
 
     return if request.get?
     @item.attributes = get_params
-    render_create @item.category_split, location: redirect_url, render: { file: :split }
+    render_create @item.category_split, location: redirect_url, render: { template: "split" }
   end
 
   def integrate
@@ -22,6 +22,6 @@ module Category::IntegrationFilter
 
     return if request.get?
     @item.attributes = get_params
-    render_create @item.category_integrate, location: redirect_url, render: { file: :integrate }
+    render_create @item.category_integrate, location: redirect_url, render: { template: "integrate" }
   end
 end

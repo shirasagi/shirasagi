@@ -29,8 +29,8 @@ class Cms::Node::GenerateNodesController < ApplicationController
 
   def index
     respond_to do |format|
-      format.html { render file: 'cms/generate_nodes/index' }
-      format.json { render file: "ss/tasks/index", content_type: json_content_type, locals: { item: @item } }
+      format.html { render template: 'cms/generate_nodes/index' }
+      format.json { render template: "ss/tasks/index", content_type: json_content_type, locals: { item: @item } }
     end
   end
 end

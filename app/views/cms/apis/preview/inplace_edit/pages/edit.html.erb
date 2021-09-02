@@ -7,7 +7,7 @@
   <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
 
   <div class="addon-views">
-    <%= render file: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
+    <%= render template: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
   </div>
 
   <%= error_messages_for :item %>

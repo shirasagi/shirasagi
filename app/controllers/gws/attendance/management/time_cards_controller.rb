@@ -140,7 +140,7 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
 
     @item = @model.new params.require(:item).permit(@model.permitted_fields).merge(fix_params)
     if @item.invalid?
-      render_update false, render: { file: :download }
+      render_update false, render: { template: "download" }
       return
     end
 
@@ -171,7 +171,7 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
 
     safe_params = params.require(:item).permit(user_ids: [])
     user_ids = Gws::User.in(id: safe_params[:user_ids]).active.pluck(:id)
-    render_update @items.in(user_id: user_ids).lock_all, location: { action: :index }, render: { file: :lock }
+    render_update @items.in(user_id: user_ids).lock_all, location: { action: :index }, render: { template: "lock" }
   end
 
   def unlock
@@ -191,6 +191,6 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
 
     safe_params = params.require(:item).permit(user_ids: [])
     user_ids = Gws::User.in(id: safe_params[:user_ids]).active.pluck(:id)
-    render_update @items.in(user_id: user_ids).unlock_all, location: { action: :index }, render: { file: :unlock }
+    render_update @items.in(user_id: user_ids).unlock_all, location: { action: :index }, render: { template: "unlock" }
   end
 end

@@ -7,8 +7,8 @@
     addon_options[:head] = t("ss.basic_info") if addons.size > 0
   %>
   <%= render "ss/crud/addon", addon: addon_options do %>
-    <%= render file: "_show" %>
+    <%= render template: "_show" %>
   <% end %>
-  <%= render file: "_column_show" %>
-  <%= render file: "_addons_show", locals: { addons: addons } if addons.size > 0 %>
+  <%= render template: "_column_show" %>
+  <%= render template: "_addons_show", locals: { addons: addons } if addons.size > 0 %>
 </div>
