@@ -8,19 +8,18 @@ class Cms::PageExporter
     drawer = SS::Csv.draw(:export, context: self) do |drawer|
       draw_basic(drawer)
       draw_meta(drawer)
-      if mode_faq?
-        draw_faq(drawer)
-      end
+      draw_faq(drawer) if mode_faq?
       if has_form
         draw_form(drawer, options[:form])
       else
         draw_body(drawer)
       end
+      draw_event_body(drawer) if mode_event?
       draw_category(drawer)
-      draw_event(drawer)
+      draw_event_date(drawer)
       draw_related_pages(drawer)
-      draw_crumb(drawer)
-      draw_contact(drawer)
+      draw_crumb(drawer) unless mode_event?
+      draw_contact(drawer) unless mode_event?
       draw_released(drawer)
       draw_groups(drawer)
       draw_state(drawer)
@@ -30,6 +29,8 @@ class Cms::PageExporter
       options = options.dup
       if mode_faq?
         options[:model] = Faq::Page
+      elsif mode_event?
+        options[:model] = Event::Page
       else
         options[:model] = Article::Page
       end
@@ -46,6 +47,10 @@ class Cms::PageExporter
 
   def mode_faq?
     mode == "faq"
+  end
+
+  def mode_event?
+    mode == "event"
   end
 
   def draw_basic(drawer)
@@ -99,13 +104,22 @@ class Cms::PageExporter
     end
   end
 
+  def draw_event_body(drawer)
+    drawer.column :schedule
+    drawer.column :venue
+    drawer.column :content
+    drawer.column :related_url
+    drawer.column :cost
+    drawer.column :contact
+  end
+
   def draw_category(drawer)
     drawer.column :categories do
       drawer.body { |item| category_name_tree(item).join("\n") }
     end
   end
 
-  def draw_event(drawer)
+  def draw_event_date(drawer)
     drawer.column :event_name
     drawer.column :event_dates
     drawer.column :event_deadline
