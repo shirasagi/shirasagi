@@ -5,23 +5,17 @@ class Cms::PageExporter
 
   class << self
     def category_name_tree(item)
-      return unless item.respond_to?(:categories)
+      return [] unless item.respond_to?(:categories)
 
-      id_list = item.categories.where(route: /^category\//).pluck(:id)
-
-      ct_list = []
-      id_list.each do |id|
-        name_list = []
-        filename_str = []
-        filename_array = Cms::Node.where(id: id).pluck(:filename).first.split(/\//)
-        filename_array.each do |filename|
-          filename_str << filename
-          node = Cms::Node.where(site_id: item.site_id, filename: filename_str.join("/")).first
-          name_list << node.name if node
+      triplets = Cms::Node.in(id: item.category_ids).pluck(:id, :site_id, :filename)
+      triplets.map do |id, site_id, filename|
+        filename_parts = filename.split('/')
+        filenames = filename_parts.length.times.map do |i|
+          filename_parts[0..i].join('/')
         end
-        ct_list << name_list.join("/")
+
+        Cms::Node.where(site_id: site_id).in(filename: filenames).pluck(:depth, :name).sort_by { |depth, name| depth }.map { |depth, name| name }.join("/")
       end
-      ct_list.sort
     end
   end
 
