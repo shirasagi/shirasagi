@@ -10,11 +10,13 @@ class Cms::PageExporter
       triplets = Cms::Node.in(id: item.category_ids).pluck(:id, :site_id, :filename)
       triplets.map do |id, site_id, filename|
         filename_parts = filename.split('/')
-        filenames = filename_parts.length.times.map do |i|
+        filenames = Array.new(filename_parts.length) do |i|
           filename_parts[0..i].join('/')
         end
 
-        Cms::Node.where(site_id: site_id).in(filename: filenames).pluck(:depth, :name).sort_by { |depth, name| depth }.map { |depth, name| name }.join("/")
+        Cms::Node.where(site_id: site_id).in(filename: filenames).pluck(:depth, :name)
+                 .sort_by { |depth, name| depth }
+                 .map { |depth, name| name }.join("/")
       end
     end
   end

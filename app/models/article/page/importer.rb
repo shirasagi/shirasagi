@@ -34,13 +34,11 @@ class Article::Page::Importer
   def import_csv(file)
     i = 0
     self.class.each_csv(file) do |row|
-      begin
-        i += 1
-        item = update_row(row)
-        put_log("update #{i + 1}: #{item.name}") if item.present?
-      rescue => e
-        put_log("error  #{i + 1}: #{e}")
-      end
+      i += 1
+      item = update_row(row)
+      put_log("update #{i + 1}: #{item.name}") if item.present?
+    rescue => e
+      put_log("error  #{i + 1}: #{e}")
     end
   end
 

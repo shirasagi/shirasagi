@@ -14,9 +14,11 @@ describe Faq::Page::ImportJob, dbscope: :example do
   let!(:category_1) { create(:category_node_node, site: site, filename: "faq", name: "よくある質問") }
   let!(:category_2) { create(:category_node_page, site: site, filename: "faq/c1", name: "くらし・手続き") }
   let!(:category_3) { create(:category_node_page, site: site, filename: "faq/c2", name: "子育て・教育") }
-  let!(:node_1) { create(:faq_node_page, site: site, filename: "faq/docs", st_category_ids: [category_1.id], group_ids: [ group2.id ]) }
+  let!(:node_1) do
+    create(:faq_node_page, site: site, filename: "faq/docs", st_category_ids: [category_1.id], group_ids: [ group2.id ])
+  end
   let!(:node_2) { create(:faq_node_page, site: site, filename: "faq/docs2", group_ids: [ group2.id ]) }
-  let(:role) { create(:cms_role_admin, site_id: site.id, permissions: ['import_private_faq_pages']) }
+  let(:role) { create(:cms_role_admin, site_id: site.id, permissions: %w(import_private_faq_pages)) }
   let(:user) { create(:cms_user, uid: unique_id, name: unique_id, group_ids: [ group2.id ], role: role) }
   let!(:related_page) { create(:article_page, site: site, filename: "docs/page27.html", name: "関連ページ") }
 
@@ -44,7 +46,7 @@ describe Faq::Page::ImportJob, dbscope: :example do
         expect(item.index_name).to eq "一覧用タイトル"
         expect(item.layout.try(:name)).to eq "FAQ"
         expect(item.order).to be 10
-        expect(item.keywords).to match_array ["キーワード"]
+        expect(item.keywords).to match_array %w(キーワード)
         expect(item.description).to eq "概要"
         expect(item.summary).to eq "サマリー"
         expect(item.question).to eq "<p>休日や夜間でも戸籍の届出は可能でしょうか。</p>"
@@ -92,7 +94,7 @@ describe Faq::Page::ImportJob, dbscope: :example do
         expect(item.index_name).to eq "一覧用タイトル"
         expect(item.layout.try(:name)).to eq "FAQ"
         expect(item.order).to be 10
-        expect(item.keywords).to match_array ["キーワード"]
+        expect(item.keywords).to match_array %w(キーワード)
         expect(item.description).to eq "概要"
         expect(item.summary).to eq "サマリー"
         expect(item.question).to eq "<p>休日や夜間でも戸籍の届出は可能でしょうか。</p>"

@@ -34,12 +34,10 @@ class Faq::Page::Importer
   def import_csv(file)
     table = CSV.read(file.path, headers: true, encoding: 'SJIS:UTF-8')
     table.each_with_index do |row, i|
-      begin
-        item = update_row(row)
-        put_log("update #{i + 1}: #{item.name}")
-      rescue => e
-        put_log("error  #{i + 1}: #{e}")
-      end
+      item = update_row(row)
+      put_log("update #{i + 1}: #{item.name}")
+    rescue => e
+      put_log("error  #{i + 1}: #{e}")
     end
   end
 
