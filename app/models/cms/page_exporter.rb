@@ -3,6 +3,28 @@ class Cms::PageExporter
 
   attr_accessor :mode, :site, :criteria
 
+  class << self
+    def category_name_tree(item)
+      return unless item.respond_to?(:categories)
+
+      id_list = item.categories.where(route: /^category\//).pluck(:id)
+
+      ct_list = []
+      id_list.each do |id|
+        name_list = []
+        filename_str = []
+        filename_array = Cms::Node.where(id: id).pluck(:filename).first.split(/\//)
+        filename_array.each do |filename|
+          filename_str << filename
+          node = Cms::Node.where(site_id: item.site_id, filename: filename_str.join("/")).first
+          name_list << node.name if node
+        end
+        ct_list << name_list.join("/")
+      end
+      ct_list.sort
+    end
+  end
+
   def enum_csv(options = {})
     has_form = options[:form].present?
     drawer = SS::Csv.draw(:export, context: self) do |drawer|
@@ -115,7 +137,7 @@ class Cms::PageExporter
 
   def draw_category(drawer)
     drawer.column :categories do
-      drawer.body { |item| category_name_tree(item).join("\n") }
+      drawer.body { |item| self.class.category_name_tree(item).join("\n") }
     end
   end
 
@@ -340,25 +362,5 @@ class Cms::PageExporter
   def find_column_value(item, form, column)
     return if item.form_id != form.id
     item.column_values.where(column_id: column.id).first
-  end
-
-  def category_name_tree(item)
-    return unless item.respond_to?(:categories)
-
-    id_list = item.categories.where(route: /^category\//).pluck(:id)
-
-    ct_list = []
-    id_list.each do |id|
-      name_list = []
-      filename_str = []
-      filename_array = Cms::Node.where(id: id).pluck(:filename).first.split(/\//)
-      filename_array.each do |filename|
-        filename_str << filename
-        node = Cms::Node.site(site).where(filename: filename_str.join("/")).first
-        name_list << node.name if node
-      end
-      ct_list << name_list.join("/")
-    end
-    ct_list.sort
   end
 end

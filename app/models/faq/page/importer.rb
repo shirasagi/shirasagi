@@ -144,6 +144,8 @@ class Faq::Page::Importer
     item.contact_link_name = value(row, :contact_link_name)
 
     # released
+    released_type = label_value(item, row, :released_type)
+    item.released_type = released_type
     item.released = value(row, :released)
     item.release_date = value(row, :release_date)
     item.close_date = value(row, :close_date)
@@ -151,7 +153,9 @@ class Faq::Page::Importer
     # groups
     group_names = ary_value(row, :groups)
     item.group_ids = SS::Group.in(name: group_names).pluck(:id)
-    item.permission_level = value(row, :permission_level)
+    unless SS.config.ss.disable_permission_level
+      item.permission_level = value(row, :permission_level)
+    end
 
     # state
     state = label_value(item, row, :state)

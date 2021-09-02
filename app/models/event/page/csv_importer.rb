@@ -131,6 +131,7 @@ class Event::Page::CsvImporter
     # event
     item.event_name = value(row, :event_name)
     item.event_dates = value(row, :event_dates)
+    item.event_deadline = value(row, :event_deadline)
 
     # related pages
     page_names = ary_value(row, :related_pages)
@@ -140,6 +141,8 @@ class Event::Page::CsvImporter
     item.parent_crumb_urls = value(row, :parent_crumb)
 
     # released
+    released_type = label_value(item, row, :released_type)
+    item.released_type = released_type
     item.released = value(row, :released)
     item.release_date = value(row, :release_date)
     item.close_date = value(row, :close_date)
@@ -147,7 +150,9 @@ class Event::Page::CsvImporter
     # groups
     group_names = ary_value(row, :groups)
     item.group_ids = SS::Group.in(name: group_names).pluck(:id)
-    item.permission_level = value(row, :permission_level)
+    unless SS.config.ss.disable_permission_level
+      item.permission_level = value(row, :permission_level)
+    end
 
     # state
     state = label_value(item, row, :state)
