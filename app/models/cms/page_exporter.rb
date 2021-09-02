@@ -1,13 +1,16 @@
 class Cms::PageExporter
   include ActiveModel::Model
 
-  attr_accessor :site, :criteria
+  attr_accessor :mode, :site, :criteria
 
   def enum_csv(options = {})
     has_form = options[:form].present?
     drawer = SS::Csv.draw(:export, context: self) do |drawer|
       draw_basic(drawer)
       draw_meta(drawer)
+      if mode_faq?
+        draw_faq(drawer)
+      end
       if has_form
         draw_form(drawer, options[:form])
       else
@@ -25,13 +28,25 @@ class Cms::PageExporter
 
     if !options.key?(:model)
       options = options.dup
-      options[:model] = Article::Page
+      if mode_faq?
+        options[:model] = Faq::Page
+      else
+        options[:model] = Article::Page
+      end
     end
 
     drawer.enum(criteria, options)
   end
 
   private
+
+  def mode_default?
+    mode.nil? || mode == "default"
+  end
+
+  def mode_faq?
+    mode == "faq"
+  end
 
   def draw_basic(drawer)
     drawer.column :filename do
@@ -42,13 +57,15 @@ class Cms::PageExporter
     drawer.column :layout do
       drawer.body { |item| Cms::Layout.where(id: item.layout_id).pluck(:name).first }
     end
-    drawer.column :body_layout_id do
-      drawer.body { |item| Cms::BodyLayout.where(id: item.body_layout_id).pluck(:name).first }
-    end
-    drawer.column :form_id do
-      drawer.body do |item|
-        if item.respond_to?(:form)
-          item.form.try(:name)
+    if mode_default?
+      drawer.column :body_layout_id do
+        drawer.body { |item| Cms::BodyLayout.where(id: item.body_layout_id).pluck(:name).first }
+      end
+      drawer.column :form_id do
+        drawer.body do |item|
+          if item.respond_to?(:form)
+            item.form.try(:name)
+          end
         end
       end
     end
@@ -66,12 +83,18 @@ class Cms::PageExporter
     drawer.column :summary_html
   end
 
+  def draw_faq(drawer)
+    drawer.column :question
+  end
+
   def draw_body(drawer)
     drawer.column :html
-    drawer.column :body_part do
-      drawer.body do |item|
-        next if !item.respond_to?(:body_parts) || item.body_parts.blank?
-        item.body_parts.map { |body| body.to_s.gsub("\t", '    ') }.join("\t")
+    if mode_default?
+      drawer.column :body_part do
+        drawer.body do |item|
+          next if !item.respond_to?(:body_parts) || item.body_parts.blank?
+          item.body_parts.map { |body| body.to_s.gsub("\t", '    ') }.join("\t")
+        end
       end
     end
   end
