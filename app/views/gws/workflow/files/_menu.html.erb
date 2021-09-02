@@ -14,7 +14,7 @@
         <%= link_to(t('ss.links.new'), new_gws_workflow_form_file_path(form_id: 'default')) %>
       <% end %>
     <% end %>
-  <% elsif params[:action] =~ /new|create|lock/ %>
+  <% elsif params[:action] =~ /new|create|lock|destroy_all/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /edit|update|delete|move|copy|soft_delete|request_cancel/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
