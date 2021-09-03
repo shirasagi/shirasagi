@@ -136,7 +136,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         wait_for_ajax
 
-        expect(page).to have_content File.basename(item.filename)
+        expect(page).to have_content File.basename(item2.filename)
       end
     end
 

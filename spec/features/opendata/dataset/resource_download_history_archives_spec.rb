@@ -67,7 +67,9 @@ describe Opendata::Dataset::ResourceDownloadHistoryArchivesController, type: :fe
           click_on I18n.t("ss.links.delete")
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+
+      expect(page).to have_content I18n.t('ss.confirm.target_to_delete')
+      click_button I18n.t('ss.buttons.delete')
 
       expect { archive1.reload }.to raise_error Mongoid::Errors::DocumentNotFound
     end

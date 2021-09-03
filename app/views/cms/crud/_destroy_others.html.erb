@@ -1,7 +1,10 @@
 <li class="list-item">
+  <label class="check">
+    <%= f.check_box_tag 'ids[]', item.id.to_s, checked: true %>
+  </label>
   <div class="info">
     <%= f.hidden_field_tag 'ids[]', item.id.to_s %>
-    <%= link_to item.name, { action: :show, id: item }, class: "title", target: "_blank", rel: "noopener" %>
+    <%= link_to item.try(:name), { action: :show, id: item }, class: "title", target: "_blank", rel: "noopener" %>
     <div class="meta">
       <%= render "cms/crud/destroy_info", item: item %>
       <% if item.try(:tags) %>

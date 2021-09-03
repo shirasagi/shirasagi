@@ -80,7 +80,10 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
           click_button I18n.t('ss.links.delete')
         end
       end
-      wait_for_notice I18n.t('ss.notice.deleted')
+
+      expect(page).to have_content I18n.t('ss.confirm.target_to_delete')
+      click_button I18n.t('ss.buttons.delete')
+
       expect(current_path).to eq index_path
       expect(page).to have_no_css('a.title', text: page_item.name)
       expect(page).to have_no_css('a.title', text: file.name)
