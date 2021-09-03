@@ -21,6 +21,8 @@ module SS
   mattr_reader(:version) { "1.14.2" }
 
   class Application < Rails::Application
+    config.middleware.delete ActionDispatch::HostAuthorization
+
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
 
