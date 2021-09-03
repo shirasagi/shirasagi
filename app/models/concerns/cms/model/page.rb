@@ -200,6 +200,25 @@ module Cms::Model::Page
     self.set(size: (html_bytesize + owned_files_bytesize))
   end
 
+  def get_cond
+    cond = []
+
+    if self.respond_to?(:url) && self.respond_to?(:full_url)
+      cond << { contains_urls: { '$in' => [ self.url, self.full_url ] } }
+      cond << { form_contains_urls: { '$in' => [ self.url, self.full_url ] } }
+    end
+
+    if self.respond_to?(:files) && self.files.present?
+      cond << { contains_urls: { '$in' => self.files.map(&:url) } }
+    end
+
+    if self.respond_to?(:related_page_ids)
+      cond << { related_page_ids: { '$in' => [ self.id ] } }
+    end
+
+    cond
+  end
+
   private
 
   def fix_extname

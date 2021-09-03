@@ -1,22 +1,6 @@
 <%
-  cond = []
-  contains_urls = []
-
-  if item.respond_to?(:url) && item.respond_to?(:full_url)
-    cond << { contains_urls: { '$in' => [ item.url, item.full_url ] } }
-    cond << { form_contains_urls: { '$in' => [ item.url, item.full_url ] } }
-  end
-
-  if item.respond_to?(:files) && item.files.present?
-    cond << { contains_urls: { '$in' => item.files.map(&:url) } }
-  end
-
-  if item.respond_to?(:related_page_ids)
-    cond << { related_page_ids: { '$in' => [ item.id ] } }
-  end
-
-  if cond.present?
-    contains_urls = Cms::Page.site(@cur_site).where(:id.ne => item.id).or(cond).
+  if item.get_cond.present?
+    contains_urls = Cms::Page.site(@cur_site).where(:id.ne => item.id).or(item.get_cond).
       page(params[:page]).per(50)
   end
 %>
