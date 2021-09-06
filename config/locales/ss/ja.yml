@@ -192,6 +192,7 @@ ja:
       delete_file_histories: ファイル履歴を削除してもよろしいですか？
       contains_url_expect: このページにリンクを貼っているページがあるため、処理を中断します。貼っているリンクを全て解除してから操作を続行してください。
       contains_links_in_file: このページに対して、リンクを貼っている他のページがあるため削除できません
+      contains_links_in_file_ignoring_alert: 被リンクを確認の上、チェックボックスをクリックして削除してください。
       not_contains_links_in_file: 被リンクがないので削除できます。
       target_to_delete: 削除対象の確認
     notice:

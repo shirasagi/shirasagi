@@ -120,23 +120,40 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
       end
 
-      it "delete all and contains_urls" do
-        visit index_path
+      it "destroy_all not permited and contains_urls" do
+        role = user.cms_roles[0]
+        role_permissions = role.permissions.map do |permission|
+          next if permission == "delete_cms_ignore_alert"
+          permission
+        end
+        role.update(permissions: role_permissions.compact)
 
+        visit index_path
         find('.list-head input[type="checkbox"]').set(true)
         within ".list-head-action" do
           page.accept_alert do
             click_button I18n.t('ss.buttons.delete')
           end
         end
-
         expect(page).to have_content I18n.t('ss.confirm.contains_links_in_file')
         expect(page).to have_content I18n.t('ss.confirm.target_to_delete')
         click_button I18n.t('ss.buttons.delete')
-
         wait_for_ajax
 
         expect(page).to have_content File.basename(item2.filename)
+      end
+
+      it "destroy_all & check contain_urls" do
+        visit index_path
+        find('.list-head input[type="checkbox"]').set(true)
+        within ".list-head-action" do
+          page.accept_alert do
+            click_button I18n.t('ss.buttons.delete')
+          end
+        end
+        wait_for_ajax
+
+        expect(page).to have_css('.contains-urls', text: I18n.t('ss.confirm.contains_links_in_file_ignoring_alert'))
       end
     end
 
