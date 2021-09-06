@@ -1,14 +1,14 @@
 class SS::Addon::Name
   def initialize(mod, params = {})
     @klass = mod
-    underscore = mod.to_s.underscore.sub("addon/", "")
-    @name = I18n.t("modules.addons.#{underscore}", default: underscore.titleize)
-    @path = underscore.sub("/", "/agents/addons/")
+    @module_name = mod.to_s.underscore.sub("addon/", "")
+    @name = I18n.t("modules.addons.#{@module_name}", default: @module_name.titleize)
+    @path = @module_name.sub("/", "/agents/addons/")
     @id = @path.tr('/', '-')
     @type = params[:type]
   end
 
-  attr_reader :klass, :name, :path, :type, :id
+  attr_reader :klass, :module_name, :name, :path, :type, :id
 
   def controller_file
     file = "#{Rails.root}/app/controllers/#{self.path}_controller.rb"
