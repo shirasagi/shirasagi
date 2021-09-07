@@ -9,7 +9,7 @@
       <%= f.button t("ss.buttons.save"), name: "save", class: "save btn-default", data: { disable_with: t("ss.buttons.saving") } %>
     <% end %>
     <% if @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) && @item.search_condition? %>
-      <%= f.button t("ss.buttons.download"), name: "download", class: "download btn-primary" %>
+      <%= f.button t("ss.buttons.download"), name: "download", class: "download btn-primary", data: { disable: '' } %>
     <% end %>
   </footer>
 </div>
