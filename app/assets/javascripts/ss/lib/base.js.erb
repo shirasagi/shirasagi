@@ -675,14 +675,25 @@ this.SS = (function () {
     }
   };
 
-  SS.enableFormElementsAfterSubmit = function (el) {
-    var $el = $(el || document);
-    $el.on("submit", function (ev) {
+  SS.timeoutAfterSubmit = function() {
+    $(document).on("submit", "form", function (ev) {
       var $form = $(ev.target);
       setTimeout(function () {
-        $.rails.enableFormElements($form);
+        $form.trigger("ss:timeoutSubmit");
       }, 500);
     });
+  };
+
+  SS.enableFormElementsOnTimeoutSubmit = function() {
+    $(document).on("ss:timeoutSubmit", function (ev) {
+      var $form = $(ev.target);
+      $.rails.enableFormElements($form);
+    });
+  };
+
+  SS.enableFormElementsAfterSubmit = function () {
+    SS.timeoutAfterSubmit();
+    SS.enableFormElementsOnTimeoutSubmit();
   };
 
   SS.debugLog = function () {
