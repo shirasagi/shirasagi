@@ -50,6 +50,69 @@ module Tasks
         実行してよろしいですか？ [y|N]:
       PROMPT
 
+      def check_report_and_archives
+        warn = []
+
+        if ::Opendata::ResourceDownloadHistory.where(site_id: nil).present?
+          warn << <<~WARN
+              古いダウンロード履歴が存在しています。
+              下記のコマンドを実行してください。
+
+                bundle exec rake opendata:report:update_all_download_history
+
+          WARN
+        end
+        if ::Opendata::ResourcePreviewHistory.where(site_id: nil).present?
+          warn << <<~WARN
+              古いプレビュー履歴が存在しています。
+              下記のコマンドを実行してください。
+
+                bundle exec rake opendata:report:update_all_preview_history
+
+          WARN
+        end
+        each_opendata_site do |site|
+          if ::Opendata::ResourceDownloadHistory.site(site).present? && ::Opendata::ResourceDownloadReport.site(site).blank?
+            warn << <<~WARN
+              #{site.name}にダウンロード数レポートが存在しません。
+              下記のコマンドを実行してください。
+
+                bundle exec rake opendata:report:generate_all_download site=#{site.host}
+                bundle exec rake opendata:history:archive_all_download site=#{site.host}
+
+            WARN
+          end
+          if ::Recommend::History::Log.site(site).present? && ::Opendata::DatasetAccessReport.site(site).blank?
+            warn << <<~WARN
+              #{site.name}にアクセス数レポートが存在しません。
+              下記のコマンドを実行してください。
+
+                bundle exec rake opendata:report:generate_all_access site=#{site.host}
+
+            WARN
+          end
+          if ::Opendata::ResourcePreviewHistory.site(site).present? && ::Opendata::ResourcePreviewReport.site(site).blank?
+            warn << <<~WARN
+              #{site.name}にプレビュー数レポートが存在しません。
+              下記のコマンドを実行してください。
+
+                bundle exec rake opendata:report:generate_all_preview site=#{site.host}
+                bundle exec rake opendata:history:archive_all_preview site=#{site.host}
+
+            WARN
+          end
+        end
+
+        return if warn.blank?
+
+        warn << <<~WARN
+          詳細は下記の URL を参照してください。
+          https://shirasagi.github.io/updation/opendata_report.html
+        WARN
+
+        puts(warn)
+      end
+
       def generate_all_download_report(site)
         confirm = ask(ALL_DOWNLOAD_REPORT_PROMPT)
         return unless confirm.match?(/^[yY]/)

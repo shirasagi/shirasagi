@@ -48,6 +48,10 @@ namespace :opendata do
     end
   end
 
+  task check_report_and_archives: :environment do
+    ::Tasks::Opendata.check_report_and_archives
+  end
+
   namespace :harvest do
     task exporter_dataset_purge: :environment do
       puts "Please input site: site=[www]" or exit if ENV['site'].blank?
