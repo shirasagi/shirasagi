@@ -30,6 +30,8 @@ this.SS = (function () {
     delete: "<%= I18n.t 'ss.confirm.delete' %>"
   };
 
+  SS.defaultTimeoutMillis = 2000;
+
   // $.isEmptyObject には IE11 で非互換がある。
   //
   //                            | Chrome 84 | IE 11  |
@@ -678,22 +680,38 @@ this.SS = (function () {
   SS.timeoutAfterSubmit = function() {
     $(document).on("submit", "form", function (ev) {
       var $form = $(ev.target);
+      var timeout = $form.data("ss-timeout") || SS.defaultTimeoutMillis;
+
       setTimeout(function () {
-        $form.trigger("ss:timeoutSubmit");
-      }, 2000);
+        $form.trigger("ss:submitTimeout");
+      }, timeout);
     });
   };
 
   SS.enableFormElementsOnTimeoutSubmit = function() {
-    $(document).on("ss:timeoutSubmit", function (ev) {
+    $(document).on("ss:submitTimeout", function (ev) {
       var $form = $(ev.target);
       $.rails.enableFormElements($form);
     });
   };
 
-  SS.enableFormElementsAfterSubmit = function () {
+  SS.enableDoubleClickGuard = function () {
     SS.timeoutAfterSubmit();
     SS.enableFormElementsOnTimeoutSubmit();
+
+    $(document).on("click", ".ss-dc-guard", function(ev) {
+      var $element = $(ev.target);
+      var timeout = $element.data("ss-timeout") || SS.defaultTimeoutMillis;
+
+      $.rails.disableFormElement($element);
+      setTimeout(function () {
+        $element.trigger("ss:clickTimeout");
+      }, timeout);
+    });
+    $(document).on("ss:clickTimeout", function (ev) {
+      var $element = $(ev.target);
+      $.rails.enableFormElement($element);
+    });
   };
 
   SS.debugLog = function () {
