@@ -17,20 +17,20 @@ module Opendata::HistoryUpdateBase
         item_attributes[:site_id] = site.try(:id)
 
         if dataset.present?
-          item_attributes.merge({
+          item_attributes.merge!(
             dataset_name: dataset.name,
             dataset_areas: dataset.areas.order_by(order: 1).pluck(:name),
             dataset_categories: dataset.categories.order_by(order: 1).pluck(:name),
             dataset_estat_categories: dataset.estat_categories.order_by(order: 1).pluck(:name),
             full_url: dataset.full_url
-          })
+          )
 
           if resource.present?
-            item_attributes.merge({
+            item_attributes.merge!(
               resource_name: resource.name,
               resource_filename: resource.filename,
               resource_source_url: resource.source_url
-            })
+            )
           end
         end
 
