@@ -695,23 +695,27 @@ this.SS = (function () {
     });
   };
 
+  SS.onDoubleClickGuardClick = function(ev) {
+    var $element = $(ev.target);
+    var timeout = $element.data("ss-timeout") || SS.defaultTimeoutMillis;
+
+    $.rails.disableFormElement($element);
+    setTimeout(function () {
+      $element.trigger("ss:clickTimeout");
+    }, timeout);
+  };
+
+  SS.onClickTimeout = function(ev) {
+    var $element = $(ev.target);
+    $.rails.enableFormElement($element);
+  };
+
   SS.enableDoubleClickGuard = function () {
     SS.timeoutAfterSubmit();
     SS.enableFormElementsOnTimeoutSubmit();
 
-    $(document).on("click", ".ss-dc-guard", function(ev) {
-      var $element = $(ev.target);
-      var timeout = $element.data("ss-timeout") || SS.defaultTimeoutMillis;
-
-      $.rails.disableFormElement($element);
-      setTimeout(function () {
-        $element.trigger("ss:clickTimeout");
-      }, timeout);
-    });
-    $(document).on("ss:clickTimeout", function (ev) {
-      var $element = $(ev.target);
-      $.rails.enableFormElement($element);
-    });
+    $(document).on("click", ".ss-dc-guard", SS.onDoubleClickGuardClick);
+    $(document).on("ss:clickTimeout", SS.onClickTimeout);
   };
 
   SS.debugLog = function () {
