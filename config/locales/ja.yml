@@ -177,6 +177,7 @@ ja:
       invalid_zoom_level: |-
         は1~21の範囲で設定してください。
       trusted_url: は信頼できるURLを入力してください。
+      other_task_is_running: 他の処理が実行中です。
     template:
       body: 次の項目を確認してください。
       header:
