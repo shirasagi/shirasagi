@@ -17,6 +17,18 @@ module Cms::PageFilter
     raise "404"
   end
 
+  def default_form(node)
+    return if !node.respond_to?(:st_forms)
+    return if !node.st_form_ids.include?(node.st_form_default_id)
+    return if !@model.fields.key?("form_id")
+
+    default_form = node.st_form_default
+    return if default_form.blank?
+    return if !default_form.allowed?(:read, @cur_user, site: @cur_site)
+
+    default_form
+  end
+
   def pre_params
     params = {}
 
@@ -26,13 +38,8 @@ module Cms::PageFilter
       layout_id = n.page_layout_id || n.layout_id
       params[:layout_id] = layout_id if layout_id.present?
 
-      if n.respond_to?(:st_forms) && n.st_form_ids.include?(n.st_form_default_id)
-        if @model.fields.key?("form_id")
-          default_form = n.st_form_default
-          if default_form.present? && default_form.allowed?(:read, @cur_user, site: @cur_site)
-            params[:form_id] = default_form.id
-          end
-        end
+      default_form(n).try do |form|
+        params[:form_id] = form.id
       end
     end
 
