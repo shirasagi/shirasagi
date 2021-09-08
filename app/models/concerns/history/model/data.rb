@@ -43,7 +43,7 @@ module History::Model::Data
     model.relations.each do |k, relation|
       case relation.class.to_s
       when Mongoid::Association::Referenced::HasMany.to_s
-        if relation.dependent.present? && opts[:create_by_trash].present?
+        if relation.dependent.present? && opts[:create_by_trash].present? && data['_id'].present?
           History::Trash.where(ref_class: relation.class_name, "data.#{relation.foreign_key}" => data['_id']).restore!(opts)
         end
       when Mongoid::Association::Embedded::EmbedsMany.to_s
