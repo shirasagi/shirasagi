@@ -55,19 +55,19 @@ module Tasks
 
         if ::Opendata::ResourceDownloadHistory.where(site_id: nil).present?
           warn << <<~WARN
-              古いダウンロード履歴が存在しています。
-              下記のコマンドを実行してください。
+            古いダウンロード履歴が存在しています。
+            下記のコマンドを実行してください。
 
-                bundle exec rake opendata:report:update_all_download_history
+              bundle exec rake opendata:report:update_all_download_history
 
           WARN
         end
         if ::Opendata::ResourcePreviewHistory.where(site_id: nil).present?
           warn << <<~WARN
-              古いプレビュー履歴が存在しています。
-              下記のコマンドを実行してください。
+            古いプレビュー履歴が存在しています。
+            下記のコマンドを実行してください。
 
-                bundle exec rake opendata:report:update_all_preview_history
+              bundle exec rake opendata:report:update_all_preview_history
 
           WARN
         end
@@ -91,16 +91,15 @@ module Tasks
 
             WARN
           end
-          if ::Opendata::ResourcePreviewHistory.site(site).present? && ::Opendata::ResourcePreviewReport.site(site).blank?
-            warn << <<~WARN
-              #{site.name}にプレビュー数レポートが存在しません。
-              下記のコマンドを実行してください。
+          next if ::Opendata::ResourcePreviewHistory.site(site).blank? || ::Opendata::ResourcePreviewReport.site(site).present?
+          warn << <<~WARN
+            #{site.name}にプレビュー数レポートが存在しません。
+            下記のコマンドを実行してください。
 
-                bundle exec rake opendata:report:generate_all_preview site=#{site.host}
-                bundle exec rake opendata:history:archive_all_preview site=#{site.host}
+              bundle exec rake opendata:report:generate_all_preview site=#{site.host}
+              bundle exec rake opendata:history:archive_all_preview site=#{site.host}
 
-            WARN
-          end
+          WARN
         end
 
         return if warn.blank?
