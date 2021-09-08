@@ -114,7 +114,7 @@ module SS::Model::Task
       return false
     end
 
-    change_state(STATE_RUNNING, { started: Time.zone.now })
+    change_state(STATE_RUNNING, started: Time.zone.now, if_states: [ STATE_STOP, STATE_READY, STATE_COMPLETED, STATE_FAILED ])
   end
 
   def ready
@@ -131,7 +131,7 @@ module SS::Model::Task
       return false
     end
 
-    change_state(STATE_READY)
+    change_state(STATE_READY, if_states: [ STATE_STOP, STATE_COMPLETED, STATE_FAILED ])
   end
 
   def close(state = STATE_STOP)
@@ -227,9 +227,15 @@ module SS::Model::Task
   private
 
   def change_state(state, attrs = {})
+    raise "first of all, you must save." if new_record?
+
+    criteria = self.class.where(id: id, state: { "$in" => attrs[:if_states] })
+    task = criteria.find_one_and_update({ '$set' => { state: state }}, return_document: :after)
+    return false if task.blank?
+
+    self.reload
     self.started       = attrs[:started]
     self.closed        = nil
-    self.state         = state
     self.interrupt     = nil
     self.total_count   = 0
     self.current_count = 0
