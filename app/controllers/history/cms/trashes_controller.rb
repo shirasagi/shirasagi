@@ -58,20 +58,4 @@ class History::Cms::TrashesController < ApplicationController
     @item.children.restore!(get_params) if params.dig(:item, :children) == 'restore' && @item.ref_coll == 'cms_nodes' && result
     render_update result, render_opts
   end
-
-  def undo_delete_all
-    set_selected_items
-    entries = @items.entries
-    @items = []
-
-    entries.each do |item|
-      if item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
-        next if item.restore!
-      else
-        item.errors.add :base, :auth_error
-      end
-      @items << item
-    end
-    render_destroy_all(entries.size != @items.size, notice: t('ss.notice.restored'))
-  end
 end
