@@ -50,12 +50,15 @@ class History::Cms::TrashesController < ApplicationController
     render_opts[:render] = { file: :undo_delete }
     render_opts[:notice] = t('ss.notice.restored')
 
-    if @item.ref_coll == "ss_files"
-      result = @item.file_restore!(file_params)
+    job_class = History::Trash::RestoreJob.bind(site_id: @cur_site, user_id: @cur_user)
+    error_messages = job_class.perform_now(@item.id.to_s, restore_params: get_params.to_unsafe_h, file_params: { cur_group: @cur_group.id })
+    if error_messages.present?
+      @item.errors.messages[:base] += error_messages
+      result = false
     else
-      result = @item.restore!(get_params)
+      result = true
     end
-    @item.children.restore!(get_params) if params.dig(:item, :children) == 'restore' && @item.ref_coll == 'cms_nodes' && result
+
     render_update result, render_opts
   end
 end

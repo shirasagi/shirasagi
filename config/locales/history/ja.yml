@@ -88,3 +88,4 @@ ja:
       history/history_log/purge_job: 操作履歴削除
       history/backup/sweep_job: 更新履歴掃除
       history/backup/restore_job: 更新履歴復元
+      history/trash/restore_job: ゴミ箱復元
