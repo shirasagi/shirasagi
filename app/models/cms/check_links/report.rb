@@ -9,7 +9,8 @@ class Cms::CheckLinks::Report
   seqid :id
   field :name, type: String
 
-  has_many :link_errors, foreign_key: "report_id", class_name: "Cms::CheckLinks::Error::Base", dependent: :destroy, inverse_of: :report
+  has_many :link_errors, foreign_key: "report_id", class_name: "Cms::CheckLinks::Error::Base",
+    dependent: :destroy, inverse_of: :report
 
   before_save :set_name
 

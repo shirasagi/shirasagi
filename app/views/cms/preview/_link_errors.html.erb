@@ -19,7 +19,7 @@
   error_urls = @error_urls.map { |url| CGI.unescape_html(url) }
 %>
 <%= jquery do %>
-  var linkErrors = <%== error_urls %>;
+  var linkErrors = <%== error_urls.to_json %>;
   var previewPath = "<%= cms_preview_path(path: "") %>";
   var fullUrl = "<%= @cur_site.full_url.sub(/\/$/, "") %>";
   var curDir = "<%= cur_dir %>"

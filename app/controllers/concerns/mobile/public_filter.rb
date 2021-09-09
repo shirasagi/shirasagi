@@ -39,8 +39,14 @@ module Mobile::PublicFilter
     body.gsub!(/href="#{@cur_site.url}#{location}\//, "data-href-replaced=\"#{@cur_site.url}#{location}/")
     body.gsub!(/action="#{@cur_site.url}#{location}\//, "data-action-replaced=\"#{@cur_site.url}#{location}/")
     site_urls.each do |site_url|
-      body.gsub!(/href="#{site_url}(?!#{location}\/)(?!#{location}\/)(?!(fs\/|\.mypage\/redirect))/, "data-href-replaced=\"#{site_url}#{location}/")
-      body.gsub!(/action="#{site_url}(?!#{location}\/)(?!#{location}\/)(?!(fs\/|\.mypage\/redirect))/, "data-action-replaced=\"#{site_url}#{location}/")
+      body.gsub!(
+        /href="#{site_url}(?!#{location}\/)(?!#{location}\/)(?!(fs\/|\.mypage\/redirect))/,
+        "data-href-replaced=\"#{site_url}#{location}/"
+      )
+      body.gsub!(
+        /action="#{site_url}(?!#{location}\/)(?!#{location}\/)(?!(fs\/|\.mypage\/redirect))/,
+        "data-action-replaced=\"#{site_url}#{location}/"
+      )
     end
     body.gsub!("data-href-replaced=\"", "href=\"")
     body.gsub!("data-action-replaced=\"", "action=\"")

@@ -56,13 +56,17 @@ class Cms::CheckLinks::Error::Base
       criteria
     end
 
+    def csv_headers
+      %w(name filename ref_url group_ids)
+    end
+
     def enum_csv
       criteria = self.all
       max_urls = criteria.pluck(:urls).map(&:size).max
       Enumerator.new do |y|
-        headers = %w(name filename ref_url group_ids).map { |k| self.t(k) }
+        headers = csv_headers.map { |k| self.t(k) }
         headers += (1..max_urls).map { |i| "#{I18n.t("ss.broken_link")}#{i}" }
-        y << (headers.to_csv).encode("SJIS", invalid: :replace, undef: :replace)
+        y << headers.to_csv.encode("SJIS", invalid: :replace, undef: :replace)
         criteria.each do |item|
           line = []
           line << item.name
@@ -72,7 +76,7 @@ class Cms::CheckLinks::Error::Base
           item.urls.each do |url|
             line << url
           end
-          y << (line.to_csv).encode("SJIS", invalid: :replace, undef: :replace)
+          y << line.to_csv.encode("SJIS", invalid: :replace, undef: :replace)
         end
       end
     end

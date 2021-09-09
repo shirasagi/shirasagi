@@ -18,8 +18,8 @@ describe "cms/check_links/nodes", type: :feature, dbscope: :example, js: true, r
   let(:index_path) { cms_check_links_reports_path site.id }
   let(:node_count) { "#{I18n.t("ss.node")}1#{I18n.t("ss.units.count")}" }
   let(:link_count) { "#{I18n.t("ss.broken_link")}1#{I18n.t("ss.units.count")}" }
-  let(:index_error_label) { I18n.t("cms.notices.check_links_report_created", time: index.latest_check_links_report.created.strftime("%Y/%m/%d %H:%M")) }
-  let(:page1_error_label) { I18n.t("cms.notices.check_links_report_created", time: docs_page1.latest_check_links_report.created.strftime("%Y/%m/%d %H:%M")) }
+  let(:index_report_created) { index.latest_check_links_report.created }
+  let(:page1_error_label) { docs_page1.latest_check_links_report.created }
 
   def generate_nodes
     Cms::Node::GenerateJob.bind(site_id: site).perform_now
@@ -31,6 +31,10 @@ describe "cms/check_links/nodes", type: :feature, dbscope: :example, js: true, r
 
   def latest_report
     Cms::CheckLinks::Report.site(site).first
+  end
+
+  def report_label(time)
+    I18n.t("cms.notices.check_links_report_created", time: time.strftime("%Y/%m/%d %H:%M"))
   end
 
   def visit_latest_report_nodes
@@ -74,7 +78,7 @@ describe "cms/check_links/nodes", type: :feature, dbscope: :example, js: true, r
 
       within "#addon-cms-agents-addons-check_links" do
         expect(page).to have_text(link_count)
-        expect(page).to have_text(index_error_label)
+        expect(page).to have_text(report_label(index_report_created))
       end
 
       visit_latest_report_nodes
