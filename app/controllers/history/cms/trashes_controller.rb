@@ -18,6 +18,11 @@ class History::Cms::TrashesController < ApplicationController
     { cur_user: @cur_user, cur_group: @cur_group }
   end
 
+  def set_task
+    task_name = "#{@item.ref_coll}:#{@item.data["_id"]}"
+    @task ||= SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site, name: task_name)
+  end
+
   public
 
   def index
@@ -45,13 +50,22 @@ class History::Cms::TrashesController < ApplicationController
       return
     end
 
+    set_task
+    if !@task.ready
+      @item.errors.add :base, :other_task_is_running
+      render
+      return
+    end
+
     render_opts = {}
     render_opts[:location] = { action: :index }
     render_opts[:render] = { file: :undo_delete }
     render_opts[:notice] = t('ss.notice.restored')
 
     job_class = History::Trash::RestoreJob.bind(site_id: @cur_site, user_id: @cur_user)
-    error_messages = job_class.perform_now(@item.id.to_s, restore_params: get_params.to_unsafe_h, file_params: { cur_group: @cur_group.id })
+    error_messages = job_class.perform_now(
+      @item.id.to_s, restore_params: get_params.to_unsafe_h, file_params: { cur_group: @cur_group.id }
+    )
     if error_messages.present?
       @item.errors.messages[:base] += error_messages
       result = false

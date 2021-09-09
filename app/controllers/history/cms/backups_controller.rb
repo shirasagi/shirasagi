@@ -19,6 +19,11 @@ class History::Cms::BackupsController < ApplicationController
     raise "404" unless @data = @item.get
   end
 
+  def set_task
+    task_name = "#{@item.ref_coll}:#{@item.data["_id"]}"
+    @task ||= SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site, name: task_name)
+  end
+
   public
 
   def show
@@ -30,6 +35,13 @@ class History::Cms::BackupsController < ApplicationController
   end
 
   def update
+    set_task
+    if !@task.ready
+      @item.errors.add :base, :other_task_is_running
+      render action: :restore
+      return
+    end
+
     job_class = History::Backup::RestoreJob.bind(site_id: @cur_site, user_id: @cur_user)
     result = job_class.perform_now(@item.id.to_s)
 
