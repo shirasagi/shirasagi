@@ -1,3 +1,5 @@
+require 'benchmark'
+
 module Job::SS::TaskFilter
   extend ActiveSupport::Concern
 
@@ -20,30 +22,15 @@ module Job::SS::TaskFilter
 
   def ready
     @task = self.class.task_class.order_by(id: 1).find_or_create_by(task_cond)
-    unless @task.start
-      Rails.logger.info("task #{@task.name} is already started")
-      return
-    end
-
-    ret = nil
-    state = SS::Task::STATE_STOP
-    begin
-      require 'benchmark'
+    @task.start_with(rejected: method(:start_rejected)) do
+      ret = nil
       time = Benchmark.realtime { ret = yield }
       @task.log sprintf("# %d sec\n\n", time)
-      state = SS::Task::STATE_COMPLETED
-    rescue Interrupt => e
-      @task.log "-- #{e}"
-      # @task.log e.backtrace.join("\n")
-      state = SS::Task::STATE_INTERRUPTED
-    rescue StandardError => e
-      @task.log "-- Error"
-      @task.log e.to_s
-      @task.log e.backtrace.join("\n")
-      state = SS::Task::STATE_FAILED
-    ensure
-      @task.close(state)
+      ret
     end
-    ret
+  end
+
+  def start_rejected
+    Rails.logger.info("task #{@task.name} is already started")
   end
 end

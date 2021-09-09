@@ -44,26 +44,7 @@ module SS::Model::Task
   module ClassMethods
     def ready(cond, &block)
       task = self.find_or_create_by(cond)
-      return false unless task.start
-
-      state = STATE_STOP
-      begin
-        require 'benchmark'
-        time = Benchmark.realtime { yield task }
-        task.log sprintf("# %d sec\n\n", time)
-        state = STATE_COMPLETED
-      rescue Interrupt => e
-        task.log "-- #{e}"
-        # task.log e.backtrace.join("\n")
-        state = STATE_INTERRUPTED
-      rescue StandardError => e
-        task.log "-- Error"
-        task.log e.to_s
-        task.log e.backtrace.join("\n")
-        state = STATE_FAILED
-      ensure
-        task.close(state)
-      end
+      task.start_with(rejected: ->{ false }, &block)
     end
 
     def search(params)
@@ -114,7 +95,8 @@ module SS::Model::Task
       return false
     end
 
-    change_state(STATE_RUNNING, started: Time.zone.now, if_states: [ STATE_STOP, STATE_READY, STATE_COMPLETED, STATE_FAILED ])
+    if_states = [ STATE_STOP, STATE_READY, STATE_COMPLETED, STATE_FAILED, STATE_INTERRUPTED ]
+    change_state(STATE_RUNNING, started: Time.zone.now, if_states: if_states)
   end
 
   def ready
@@ -131,7 +113,7 @@ module SS::Model::Task
       return false
     end
 
-    change_state(STATE_READY, if_states: [ STATE_STOP, STATE_COMPLETED, STATE_FAILED ])
+    change_state(STATE_READY, if_states: [ STATE_STOP, STATE_COMPLETED, STATE_FAILED, STATE_INTERRUPTED ])
   end
 
   def close(state = STATE_STOP)
@@ -152,6 +134,34 @@ module SS::Model::Task
     end
 
     result
+  end
+
+  def start_with(resolved: nil, rejected: nil, &block)
+    ret = nil
+    if !start
+      ret = rejected.call if rejected
+      return ret
+    end
+
+    resolved ||= block
+
+    begin
+      ret = resolved.call
+    rescue Interrupt => e
+      log "-- #{e}"
+      close(STATE_INTERRUPTED)
+      raise
+    rescue StandardError => e
+      log "-- Error"
+      log e.to_s
+      log e.backtrace.join("\n")
+      close(STATE_FAILED)
+      raise
+    else
+      close(STATE_COMPLETED)
+    end
+
+    ret
   end
 
   def clear_log(msg = nil)

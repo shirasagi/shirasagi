@@ -164,13 +164,15 @@ module Cms::PageFilter
       end
 
       task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site, name: "#{@item.collection_name}:#{@item.id}")
-      if !task.start
+
+      rejected = -> do
         @item.errors.add :base, :other_task_is_running
-        return
+        render
       end
 
-      render_update @item.move(destination), location: location, render: { file: :move }, notice: t('ss.notice.moved')
-      task.close(SS::Task::STATE_COMPLETED) if task
+      task.start_with(rejected: rejected) do
+        render_update @item.move(destination), location: location, render: { file: :move }, notice: t('ss.notice.moved')
+      end
     end
   end
 
@@ -182,15 +184,17 @@ module Cms::PageFilter
     end
 
     task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site, name: "#{@item.collection_name}:#{@item.id}")
-    if !task.start
+
+    rejected = -> do
       @item.errors.add :base, :other_task_is_running
-      return
+      render
     end
 
-    @item.attributes = get_params
-    @copy = @item.new_clone
-    render_update @copy.save, location: { action: :index }, render: { file: :copy }
-    task.close(SS::Task::STATE_COMPLETED) if task
+    task.start_with(rejected: rejected) do
+      @item.attributes = get_params
+      @copy = @item.new_clone
+      render_update @copy.save, location: { action: :index }, render: { file: :copy }
+    end
   end
 
   def command
