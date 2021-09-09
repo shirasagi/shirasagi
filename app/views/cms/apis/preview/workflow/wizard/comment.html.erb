@@ -8,7 +8,7 @@
 </dl>
 
 <footer class="send">
-  <%= submit_tag(t("workflow.buttons.#{params[:update_type]}"), class: 'btn-primary save') %>
+  <%= submit_tag(t("workflow.buttons.#{params[:update_type]}"), class: 'btn-primary save ss-dc-guard', data: { ss_timeout: 60_000 }) %>
   <%= button_tag(t("ss.buttons.cancel"), type: :reset, class: 'btn-default') %>
 </footer>
 
