@@ -12,6 +12,8 @@ module SS::Model::Task
   STATE_FAILED = "failed".freeze
   STATE_INTERRUPTED = "interrupted".freeze
 
+  RUN_EXPIRATION = 2.hours
+
   included do
     store_in collection: "ss_tasks"
     store_in_repl_master
@@ -85,7 +87,8 @@ module SS::Model::Task
     self.log_buffer = 50
   end
 
-  def running?(limit = 1.day)
+  def running?(limit = nil)
+    limit ||= RUN_EXPIRATION
     state == STATE_RUNNING && (started.presence || updated) + limit > Time.zone.now
   end
 
@@ -239,20 +242,25 @@ module SS::Model::Task
   def change_state(state, attrs = {})
     raise "first of all, you must save." if new_record?
 
-    criteria = self.class.where(id: id, state: { "$in" => attrs[:if_states] })
-    task = criteria.find_one_and_update({ '$set' => { state: state }}, return_document: :after)
+    expired_at = attrs[:started].try { |time| time.in_time_zone } || Time.zone.now
+    expired_at -= RUN_EXPIRATION
+
+    cond = [
+      { state: { "$in" => attrs[:if_states] } },
+      { updated: { "$lt" => expired_at } }
+    ]
+    updates = {
+      state: state, started: attrs[:started].try { |time| time.in_time_zone.utc }, closed: nil, interrupt: nil,
+      total_count: 0, current_count: 0
+    }
+
+    criteria = self.class.where(id: id, "$and" => [{ "$or" => cond }])
+    task = criteria.find_one_and_update({ '$set' => updates }, return_document: :after)
     return false if task.blank?
 
     self.reload
-    self.started       = attrs[:started]
-    self.closed        = nil
-    self.interrupt     = nil
-    self.total_count   = 0
-    self.current_count = 0
-    result = save
+    clear_log
 
-    clear_log if result
-
-    result
+    true
   end
 end

@@ -10,11 +10,11 @@ describe SS::Task, dbscope: :example do
         expect(subject.running?).to be_truthy
       end
 
-      Timecop.freeze(now + 1.day - 1.second) do
+      Timecop.freeze(now + SS::Task::RUN_EXPIRATION - 1.second) do
         expect(subject.running?).to be_truthy
       end
 
-      Timecop.freeze(now + 1.day) do
+      Timecop.freeze(now + SS::Task::RUN_EXPIRATION) do
         expect(subject.running?).to be_falsey
       end
     end
