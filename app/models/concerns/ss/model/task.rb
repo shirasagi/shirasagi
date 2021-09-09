@@ -87,6 +87,11 @@ module SS::Model::Task
     self.log_buffer = 50
   end
 
+  def ready?(limit = nil)
+    limit ||= RUN_EXPIRATION
+    state == STATE_READY && (started.presence || updated) + limit > Time.zone.now
+  end
+
   def running?(limit = nil)
     limit ||= RUN_EXPIRATION
     state == STATE_RUNNING && (started.presence || updated) + limit > Time.zone.now
@@ -107,7 +112,7 @@ module SS::Model::Task
       Rails.logger.info "already running."
       return false
     end
-    if state == STATE_READY
+    if ready?
       Rails.logger.info "already ready."
       return false
     end
@@ -154,7 +159,7 @@ module SS::Model::Task
       log "-- #{e}"
       close(STATE_INTERRUPTED)
       raise
-    rescue StandardError => e
+    rescue Exception => e
       log "-- Error"
       log e.to_s
       log e.backtrace.join("\n")
@@ -247,7 +252,7 @@ module SS::Model::Task
 
     cond = [
       { state: { "$in" => attrs[:if_states] } },
-      { updated: { "$lt" => expired_at } }
+      { updated: { "$lte" => expired_at } }
     ]
     updates = {
       state: state, started: attrs[:started].try { |time| time.in_time_zone.utc }, closed: nil, interrupt: nil,
