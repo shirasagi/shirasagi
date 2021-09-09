@@ -1,6 +1,6 @@
 module SS
   module TranslateSupport
-    include SS::FilterSupport
+    extend SS::FilterSupport
 
     def translate?(request)
       filters = request.env["ss.filters"] rescue nil

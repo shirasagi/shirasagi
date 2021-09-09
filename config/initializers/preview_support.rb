@@ -1,6 +1,6 @@
 module SS
   module PreviewSupport
-    include SS::FilterSupport
+    extend SS::FilterSupport
 
     def preview?(request)
       filters = request.env["ss.filters"] rescue nil

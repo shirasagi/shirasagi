@@ -1,6 +1,6 @@
 module SS
   module MobileSupport
-    include SS::FilterSupport
+    extend SS::FilterSupport
 
     def mobile?(request)
       filters = request.env["ss.filters"] rescue nil
