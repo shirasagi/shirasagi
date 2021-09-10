@@ -236,7 +236,7 @@ describe SS::Task, dbscope: :example do
     end
   end
 
-  describe "#start_with" do
+  describe "#run_with" do
     let(:state) { described_class::STATE_STOP }
     subject! { described_class.create!(name: unique_id, state: state) }
 
@@ -245,7 +245,7 @@ describe SS::Task, dbscope: :example do
         resolved = false
         rejected = false
 
-        subject.start_with(rejected: ->{ rejected = true }) do
+        subject.run_with(rejected: ->{ rejected = true }) do
           resolved = true
         end
 
@@ -266,7 +266,7 @@ describe SS::Task, dbscope: :example do
         resolved = false
         rejected = false
 
-        subject.start_with(resolved: ->{ resolved = true }, rejected: ->{ rejected = true })
+        subject.run_with(resolved: ->{ resolved = true }, rejected: ->{ rejected = true })
 
         expect(resolved).to be_truthy
         expect(rejected).to be_falsey
@@ -287,7 +287,7 @@ describe SS::Task, dbscope: :example do
         resolved = false
         rejected = false
 
-        subject.start_with(resolved: ->{ resolved = true }, rejected: ->{ rejected = true })
+        subject.run_with(resolved: ->{ resolved = true }, rejected: ->{ rejected = true })
 
         expect(resolved).to be_falsey
         expect(rejected).to be_truthy
@@ -298,7 +298,7 @@ describe SS::Task, dbscope: :example do
 
     context "when standard error occurred" do
       it do
-        expectation = expect { subject.start_with { raise ArgumentError } }
+        expectation = expect { subject.run_with { raise ArgumentError } }
         expectation.to raise_error(ArgumentError).and output(include("ArgumentError\n")).to_stdout
 
         expect(subject.state).to eq "failed"
@@ -312,7 +312,7 @@ describe SS::Task, dbscope: :example do
 
     context "when interrupt occurred" do
       it do
-        expectation = expect { subject.start_with { raise described_class::Interrupt } }
+        expectation = expect { subject.run_with { raise described_class::Interrupt } }
         expectation.to raise_error(described_class::Interrupt).and output(include("Interrupt\n")).to_stdout
 
         expect(subject.state).to eq "interrupted"
@@ -326,7 +326,7 @@ describe SS::Task, dbscope: :example do
 
     context "when non-standard error occurred" do
       it do
-        expectation = expect { subject.start_with { raise NotImplementedError } }
+        expectation = expect { subject.run_with { raise NotImplementedError } }
         expectation.to raise_error(NotImplementedError).and output(include("NotImplementedError\n")).to_stdout
 
         expect(subject.state).to eq "failed"
