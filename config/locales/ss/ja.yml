@@ -1198,3 +1198,4 @@ ja:
   job:
     models:
       ss/public_file_remover_job: 公開済みファイル削除ジョブ
+      ss/task_sweep_job: タスク削除ジョブ
