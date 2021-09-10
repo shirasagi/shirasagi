@@ -8,6 +8,8 @@ class History::Trash::RestoreJob < Cms::ApplicationJob
     file_params[:cur_group] = Cms::Group.find(cur_group_id)
     file_params[:cur_user] = user
 
+    task.log "# #{I18n.t("mongoid.models.history/trash")} #{I18n.t("history.buttons.restore")}"
+
     if @item.ref_coll == "ss_files"
       result = @item.file_restore!(file_params)
     else

@@ -2,6 +2,7 @@ class History::Backup::RestoreJob < Cms::ApplicationJob
   include Job::SS::TaskFilter
 
   def perform(object_id)
+    task.log "# #{I18n.t("modules.addons.history/backup")} #{I18n.t("history.buttons.restore")}"
     @item.restore
   end
 

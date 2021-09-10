@@ -119,7 +119,10 @@ module Cms::PageFilter
       task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site.id, name: "#{@item.collection_name}:#{@item.master_id}")
       rejected = -> { @item.errors.add :base, :other_task_is_running }
       guard = ->(&block) do
-        task.run_with(rejected: rejected, &block)
+        task.run_with(rejected: rejected) do
+          task.log "# #{I18n.t("workflow.branch_page")} #{I18n.t("ss.buttons.publish_save")}"
+          block.call
+        end
       end
     else
       # this means "no guard"
@@ -186,6 +189,7 @@ module Cms::PageFilter
       end
 
       task.run_with(rejected: rejected) do
+        task.log "# 移動"
         render_update @item.move(destination), location: location, render: { file: :move }, notice: t('ss.notice.moved')
       end
     end
@@ -206,6 +210,8 @@ module Cms::PageFilter
     end
 
     task.run_with(rejected: rejected) do
+      task.log "# ページの複製"
+
       @item.attributes = get_params
       @copy = @item.new_clone
       render_update @copy.save, location: { action: :index }, render: { file: :copy }
