@@ -57,14 +57,12 @@ class History::Cms::TrashesController < ApplicationController
       return
     end
 
-    render_opts = {}
-    render_opts[:location] = { action: :index }
-    render_opts[:render] = { file: :undo_delete }
-    render_opts[:notice] = t('ss.notice.restored')
+    restore_params = get_params
+    restore_params = restore_params.to_unsafe_h if restore_params.respond_to?(:to_unsafe_h)
 
     job_class = History::Trash::RestoreJob.bind(site_id: @cur_site, user_id: @cur_user)
     error_messages = job_class.perform_now(
-      @item.id.to_s, restore_params: get_params.to_unsafe_h, file_params: { cur_group: @cur_group.id }
+      @item.id.to_s, restore_params: restore_params, file_params: { cur_group: @cur_group.id }
     )
     if error_messages.present?
       @item.errors.messages[:base] += error_messages
@@ -72,6 +70,11 @@ class History::Cms::TrashesController < ApplicationController
     else
       result = true
     end
+
+    render_opts = {}
+    render_opts[:location] = { action: :index }
+    render_opts[:render] = { file: :undo_delete }
+    render_opts[:notice] = t('ss.notice.restored')
 
     render_update result, render_opts
   end
