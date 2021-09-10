@@ -28,6 +28,7 @@ module Cms::Model::Node
 
     after_save :rename_children, if: ->{ @db_changes }
     after_save :remove_files_recursively, if: ->{ remove_files_recursively? }
+    after_save :update_page_index_queues, if: ->{ @db_changes }
     after_destroy :remove_all
     after_destroy :destroy_children
 
@@ -217,6 +218,22 @@ module Cms::Model::Node
   def remove_files_recursively
     remove_owned_files
     remove_children_recursively
+  end
+
+  def update_page_index_queues
+    if remove_files_recursively?
+      pages.each do |page|
+        Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site).
+          perform_now(action: 'delete', id: page.id.to_s)
+      end
+      Cms::PageIndexQueue.site(site).in(id: pages.pluck(:id)).where(action: 'release').destroy_all
+    else
+      pages.and_public.each do |page|
+        next unless page.public_node?
+
+        Cms::PageRelease.release(page)
+      end
+    end
   end
 
   def remove_all

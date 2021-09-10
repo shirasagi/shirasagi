@@ -14,6 +14,8 @@ namespace :cms do
 
         pages = Cms::Page.site(site).and_public
         pages.each do |page|
+          next unless page.public_node?
+
           puts "- #{page.filename}"
           next if site.elasticsearch_deny.include?(page.filename)
           job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site)
