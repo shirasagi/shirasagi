@@ -75,7 +75,7 @@
           <% end %>
 
           <% if page.allowed?(:release, @cur_user, site: @cur_site) && !page.workflow_requested? %>
-            <button type="button" id="ss-preview-btn-publish" class="ss-preview-btn ss-preview-btn-outline ss-dc-guard" data-ss-timeout="60000"><%= t("ss.buttons.publish") %></button>
+            <button type="button" id="ss-preview-btn-publish" class="ss-preview-btn ss-preview-btn-outline ss-dc-guard"><%= t("ss.buttons.publish") %></button>
           <% end %>
         </div>
       <% end %>
