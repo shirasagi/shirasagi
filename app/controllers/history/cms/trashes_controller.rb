@@ -57,12 +57,16 @@ class History::Cms::TrashesController < ApplicationController
       return
     end
 
-    restore_params = get_params
-    restore_params = restore_params.to_unsafe_h if restore_params.respond_to?(:to_unsafe_h)
+    if @item.ref_coll == "ss_files"
+      file_params = { cur_group: @cur_group.id }
+    else
+      restore_params = get_params
+      restore_params = restore_params.to_unsafe_h if restore_params.respond_to?(:to_unsafe_h)
+    end
 
     job_class = History::Trash::RestoreJob.bind(site_id: @cur_site, user_id: @cur_user)
     error_messages = job_class.perform_now(
-      @item.id.to_s, restore_params: restore_params, file_params: { cur_group: @cur_group.id }
+      @item.id.to_s, restore_params: restore_params, file_params: file_params
     )
     if error_messages.present?
       @item.errors.messages[:base] += error_messages
