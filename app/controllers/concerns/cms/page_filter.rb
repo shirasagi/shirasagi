@@ -119,7 +119,7 @@ module Cms::PageFilter
       task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site.id, name: "#{@item.collection_name}:#{@item.master_id}")
       rejected = -> { @item.errors.add :base, :other_task_is_running }
       guard = ->(&block) do
-        task.start_with(rejected: rejected, &block)
+        task.run_with(rejected: rejected, &block)
       end
     else
       # this means "no guard"
@@ -185,7 +185,7 @@ module Cms::PageFilter
         render
       end
 
-      task.start_with(rejected: rejected) do
+      task.run_with(rejected: rejected) do
         render_update @item.move(destination), location: location, render: { file: :move }, notice: t('ss.notice.moved')
       end
     end
@@ -205,7 +205,7 @@ module Cms::PageFilter
       render
     end
 
-    task.start_with(rejected: rejected) do
+    task.run_with(rejected: rejected) do
       @item.attributes = get_params
       @copy = @item.new_clone
       render_update @copy.save, location: { action: :index }, render: { file: :copy }

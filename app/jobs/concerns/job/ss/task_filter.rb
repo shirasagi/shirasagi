@@ -22,7 +22,7 @@ module Job::SS::TaskFilter
 
   def ready
     @task = self.class.task_class.order_by(id: 1).find_or_create_by(task_cond)
-    @task.start_with(rejected: method(:start_rejected)) do
+    @task.run_with(rejected: method(:start_rejected)) do
       ret = nil
       time = Benchmark.realtime { ret = yield }
       @task.log sprintf("# %d sec\n\n", time)

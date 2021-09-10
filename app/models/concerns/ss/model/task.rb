@@ -46,7 +46,7 @@ module SS::Model::Task
   module ClassMethods
     def ready(cond, &block)
       task = self.find_or_create_by(cond)
-      task.start_with(rejected: ->{ false }, &block)
+      task.run_with(rejected: ->{ false }, &block)
     end
 
     def search(params)
@@ -144,7 +144,7 @@ module SS::Model::Task
     result
   end
 
-  def start_with(resolved: nil, rejected: nil, &block)
+  def run_with(resolved: nil, rejected: nil, &block)
     ret = nil
     if !start
       ret = rejected.call if rejected

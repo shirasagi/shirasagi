@@ -49,7 +49,7 @@ class Cms::Apis::Preview::PagesController < ApplicationController
       task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site.id, name: "#{@item.collection_name}:#{@item.master_id}")
       rejected = -> { @item.errors.add :base, :other_task_is_running }
       guard = ->(&block) do
-        task.start_with(rejected: rejected, &block)
+        task.run_with(rejected: rejected, &block)
       end
     else
       # this means "no guard"
