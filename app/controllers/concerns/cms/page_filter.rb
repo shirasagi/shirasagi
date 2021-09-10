@@ -64,8 +64,8 @@ module Cms::PageFilter
     end
 
     if cond.present?
-      @contains_urls = Cms::Page.site(@cur_site).where(:id.ne => @item.id).or(cond).
-        page(params[:page]).per(50)
+      @contains_urls = Cms::Page.site(@cur_site).
+        where(:id.ne => @item.id).or(cond)
     end
   end
 
@@ -199,6 +199,8 @@ module Cms::PageFilter
 
   def contains_urls
     raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+
+    @results = @contains_urls.page(params[:page]).per(50)
     render
   end
 

@@ -13,7 +13,7 @@
 
 <div class="index">
   <div class="list-head">
-    <% if @contains_urls.present? %>
+    <% if @results.present? %>
       <%= t("cms.confirm.contains_urls_exists")%>
     <% else %>
       <%= t("cms.confirm.contains_urls_not_found")%>
@@ -21,7 +21,7 @@
   </div>
 
   <ul class="list-items">
-    <% @contains_urls.each do |item| %>
+    <% @results.each do |item| %>
       <li class="list-item">
 
         <% if item.allowed?(:read, @cur_user, site: @cur_site, node: item.parent) %>
