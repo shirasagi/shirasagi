@@ -72,14 +72,15 @@ module Cms::PageFilter
   end
 
   def deny_update_with_contains_urls
-    raise "403" if !@cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_alert)) &&
-                   @contains_urls.and_public.to_a.index { |page| page.public_node? }.present? &&
-                   @item.public? && params.dig(:item, :state) != 'public'
+    return unless @cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_alert))
+    return unless @item.public?
+    return if params.dig(:item, :state) == 'public'
+
+    raise "403"
   end
 
   def deny_destroy_with_contains_urls
-    raise "403" if !@cur_user.cms_role_permit_any?(@cur_site, %w(delete_cms_ignore_alert)) &&
-                   @contains_urls.and_public.to_a.index { |page| page.public_node? }.present?
+    raise "403" unless @cur_user.cms_role_permit_any?(@cur_site, %w(delete_cms_ignore_alert))
   end
 
   public
