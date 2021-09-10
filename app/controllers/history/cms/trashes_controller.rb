@@ -20,7 +20,7 @@ class History::Cms::TrashesController < ApplicationController
 
   def set_task
     task_name = "#{@item.ref_coll}:#{@item.data["_id"]}"
-    @task ||= SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site, name: task_name)
+    @task ||= SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site.id, name: task_name)
   end
 
   public
