@@ -115,7 +115,22 @@ module Cms::PageFilter
       @item.state = "ready" if @item.try(:release_date).present?
     end
 
-    result = @item.update
+    if @item.state_changed? && @item.state == "public" && @item.try(:master_id).present?
+      task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site.id, name: "#{@item.collection_name}:#{@item.master_id}")
+      rejected = -> { @item.errors.add :base, :other_task_is_running }
+      guard = ->(&block) do
+        task.start_with(rejected: rejected, &block)
+      end
+    else
+      # this means "no guard"
+      guard = ->(&block) { block.call }
+    end
+
+    result = nil
+    guard.call do
+      result = @item.save
+    end
+
     location = nil
     if result && @item.try(:branch?) && @item.state == "public"
       location = { action: :index }
@@ -163,7 +178,7 @@ module Cms::PageFilter
         location = { cid: node.id, action: :move, source: @source, link_check: true }
       end
 
-      task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site, name: "#{@item.collection_name}:#{@item.id}")
+      task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site.id, name: "#{@item.collection_name}:#{@item.id}")
 
       rejected = -> do
         @item.errors.add :base, :other_task_is_running
@@ -183,7 +198,7 @@ module Cms::PageFilter
       return
     end
 
-    task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site, name: "#{@item.collection_name}:#{@item.id}")
+    task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site.id, name: "#{@item.collection_name}:#{@item.id}")
 
     rejected = -> do
       @item.errors.add :base, :other_task_is_running

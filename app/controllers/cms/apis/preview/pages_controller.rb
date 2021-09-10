@@ -45,7 +45,21 @@ class Cms::Apis::Preview::PagesController < ApplicationController
     else
       @item.state = "public"
     end
-    result = @item.save
+    if @item.state_changed? && @item.state == "public" && @item.try(:master_id).present?
+      task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site.id, name: "#{@item.collection_name}:#{@item.master_id}")
+      rejected = -> { @item.errors.add :base, :other_task_is_running }
+      guard = ->(&block) do
+        task.start_with(rejected: rejected, &block)
+      end
+    else
+      # this means "no guard"
+      guard = ->(&block) { block.call }
+    end
+
+    result = nil
+    guard.call do
+      result = @item.save
+    end
 
     if !result
       render json: @item.errors.full_messages, status: :unprocessable_entity

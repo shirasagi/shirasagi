@@ -53,18 +53,27 @@ class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
       return
     end
 
-    @item.cur_site = @cur_site
-    @item.cur_node = @item.parent if @item.parent
-    @item.cur_user = @cur_user
-    copy = @item.new_clone
-    copy.master = @item
-    result = copy.save
+    copy = nil
+    result = nil
+    task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site.id, name: "#{@item.collection_name}:#{@item.id}")
+    rejected = -> { @item.errors.add :base, :other_task_is_running }
+    task.start_with(rejected: rejected) do
+      @item.cur_site = @cur_site
+      @item.cur_node = @item.parent if @item.parent
+      @item.cur_user = @cur_user
+      copy = @item.new_clone
+      copy.master = @item
+      result = copy.save
+    end
+
     if result
       path_params = { path: copy.filename, anchor: "inplace" }
       path_params[:preview_date] = params[:preview_date].to_s if params[:preview_date].present?
       location = cms_preview_path(path_params)
     else
-      @item.errors.messages[:base] += copy.errors.full_messages
+      if copy && copy.errors.present?
+        @item.errors.messages[:base] += copy.errors.full_messages
+      end
     end
 
     render_save_as_branch result, location
