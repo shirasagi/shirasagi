@@ -50,6 +50,9 @@ class History::Cms::BackupsController < ApplicationController
     else
       render action: :restore
     end
+  rescue Job::SizeLimitPerUserExceededError => _e
+    @item.errors.add :base, :other_task_is_running
+    render action: :restore
   end
 
   def change
