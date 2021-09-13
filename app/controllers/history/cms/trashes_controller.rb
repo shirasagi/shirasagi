@@ -81,5 +81,8 @@ class History::Cms::TrashesController < ApplicationController
     render_opts[:notice] = t('ss.notice.restored')
 
     render_update result, render_opts
+  rescue Job::SizeLimitPerUserExceededError => _e
+    @item.errors.add :base, :other_task_is_running
+    render
   end
 end
