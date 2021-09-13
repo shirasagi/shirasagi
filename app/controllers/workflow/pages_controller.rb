@@ -301,7 +301,7 @@ class Workflow::PagesController < ApplicationController
       end
 
       task.run_with(rejected: rejected) do
-        task.log "# 差し替えページの作成"
+        task.log "# #{I18n.t("workflow.branch_page")} #{I18n.t("ss.buttons.new")}"
 
         copy = @item.new_clone
         copy.master = @item
