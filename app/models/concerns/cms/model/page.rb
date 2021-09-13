@@ -200,7 +200,7 @@ module Cms::Model::Page
     self.set(size: (html_bytesize + owned_files_bytesize))
   end
 
-  def get_cond
+  def get_linking_page
     cond = []
 
     if self.respond_to?(:url) && self.respond_to?(:full_url)
@@ -213,10 +213,15 @@ module Cms::Model::Page
     end
 
     if self.respond_to?(:related_page_ids)
-      cond << { related_page_ids: { '$in' => [ self.id ] } }
+      cond << { related_page_ids: self.id }
     end
 
     cond
+  end
+  module ClassMethods
+    def linking_page(item)
+      where(:id.ne => item.id).where("$and" => [{ "$or" => item.get_linking_page }])
+    end
   end
 
   private

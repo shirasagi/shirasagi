@@ -1,7 +1,6 @@
 <%
-  if item.get_cond.present?
-    contains_urls = Cms::Page.site(@cur_site).where(:id.ne => item.id).or(item.get_cond).
-      page(params[:page]).per(50)
+  if item.get_linking_page.present?
+    contains_urls = Cms::Page.site(@cur_site).linking_page(item)
   end
 
   delete_alert_enabled = @cur_user.cms_role_permit_any?(@cur_site, %w(delete_cms_ignore_alert)) && contains_urls.present?

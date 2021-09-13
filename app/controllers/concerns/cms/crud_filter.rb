@@ -104,8 +104,7 @@ module Cms::CrudFilter
     raise "400" if @selected_items.blank?
 
     if params[:destroy_all]
-      @selected_items.destroy_all
-      render_destroy_all true
+      render_destroy_all(destroy_items, location: request.path)
       return
     end
 

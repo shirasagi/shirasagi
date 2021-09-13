@@ -198,6 +198,7 @@ ja:
     notice:
       saved: 保存しました。
       deleted: 削除しました。
+      unable_to_delete: '%{items} を削除できませんでした。'
       copied: 複製しました。
       started_import: インポートを開始しました。
       sent: 送信しました。
