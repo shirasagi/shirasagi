@@ -169,7 +169,11 @@ module SS::CrudFilter
 
   def render_destroy_all(result, opts = {})
     location = opts[:location].presence || crud_redirect_url || { action: :index }
-    notice = result ? { notice: opts[:notice].presence || t("ss.notice.deleted") } : { notice: t("ss.notice.unable_to_delete", items: @items.pluck(:name).join("、")) }
+    if result
+      notice = { notice: opts[:notice].presence || t("ss.notice.deleted") }
+    else
+      notice = { notice: t("ss.notice.unable_to_delete", items: @items.pluck(:name).join("、")) }
+    end
     errors = @items.map { |item| [item.id, item.errors.full_messages] }
 
     respond_to do |format|
