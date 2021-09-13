@@ -1681,7 +1681,7 @@ dl.see {
       margin-right: 1rem;
       vertical-align: middle;
     }
-    > .sanitizer-wait {
+    > .sanitizer-status {
       margin-left: 10px;
     }
     @include mb {
@@ -1910,7 +1910,7 @@ footer.send {
   @include mb {
     margin: 0 10px 10px 0;
   }
-  .sanitizer-wait {
+  .sanitizer-status {
     position: absolute;
   }
   .thumb {
@@ -2952,12 +2952,15 @@ form .CodeMirror {
 // -------------------------------------------------------------------------------------------------
 // Sanitizer
 
-.sanitizer-wait {
+.sanitizer-status {
   display: inline-block;
   padding: 0 4px;
   background: rgba(0, 60, 120, .8);
   color: #fff;
   font-weight: bold;
+}
+.sanitizer-complete {
+  background: rgba(0, 60, 120, .8);
 }
 
 // -------------------------------------------------------------------------------------------------
