@@ -94,6 +94,90 @@ module Cms::PageFilter
     raise "403"
   end
 
+  def draft_save
+    raise ArgumentError if %w(ready public).include?(@item.state)
+
+    result = @item.save
+
+    if !result && @item.is_a?(Cms::Addon::EditLock)
+      # So, edit lock must be held
+      unless @item.acquire_lock
+        location = { action: :lock }
+      end
+    end
+
+    render_update result, location: location
+  end
+
+  def publish_save
+    raise ArgumentError if !%w(ready public).include?(@item.state)
+
+    @item.state = "ready" if @item.try(:release_date).present?
+
+    result = nil
+    if @item.try(:master_id).present?
+      task = SS::Task.find_or_create_for_model(@item.master, site: @cur_site)
+      rejected = -> { @item.errors.add :base, :other_task_is_running }
+      task.run_with(rejected: rejected) do
+        task.log "# #{I18n.t("workflow.branch_page")} #{I18n.t("ss.buttons.publish_save")}"
+        result = @item.save
+      end
+    else
+      result = @item.save
+    end
+
+    location = nil
+    if result && @item.try(:branch?) && @item.state == "public"
+      location = { action: :index }
+      @item.file_ids = nil if @item.respond_to?(:file_ids)
+      @item.skip_history_trash = true if @item.respond_to?(:skip_history_trash)
+      @item.destroy
+    end
+
+    # If page is failed to update, page is going to show in edit mode with update errors
+    if !result && @item.is_a?(Cms::Addon::EditLock)
+      # So, edit lock must be held
+      unless @item.acquire_lock
+        location = { action: :lock }
+      end
+    end
+
+    render_update result, location: location
+  end
+
+  def save_as_branch
+    if @item.branches.present?
+      @item.errors.add :base, :branch_is_already_existed
+      render_update false
+      return
+    end
+
+    copy = nil
+    result = nil
+    SS::Task.find_or_create_for_model(@item, site: @cur_site).tap do |task|
+      rejected = -> { @item.errors.add :base, :other_task_is_running }
+      task.run_with(rejected: rejected) do
+        task.log "# #{I18n.t("workflow.branch_page")} #{I18n.t("ss.buttons.new")}"
+        @item.cur_site = @cur_site
+        @item.cur_node = @item.parent if @item.parent
+        @item.cur_user = @cur_user
+        copy = @item.new_clone
+        copy.master = @item
+        result = copy.save
+      end
+    end
+
+    render_opts = {}
+    if result
+      render_opts[:location] = url_for(action: :show, id: copy)
+      render_opts[:notice] = I18n.t("workflow.notice.created_branch_page")
+    elsif copy && copy.errors.present?
+      @item.errors.messages[:base] += copy.errors.full_messages
+    end
+
+    render_update result, render_opts
+  end
+
   public
 
   def index
@@ -124,51 +208,20 @@ module Cms::PageFilter
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
-    # if params.dig(:item, :column_values).present? && @item.form.present?
-    #   new_column_values = @item.build_column_values(params.dig(:item, :column_values))
-    #   @item.update_column_values(new_column_values)
-    # end
-    if @item.state == "public"
-      raise "403" unless @item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node)
-      @item.state = "ready" if @item.try(:release_date).present?
+
+    if !%w(ready public).include?(@item.state)
+      draft_save
+      return
     end
 
-    if @item.state_changed? && @item.state == "public" && @item.try(:master_id).present?
-      task = SS::Task.find_or_create_for_model(@item.master, site: @cur_site)
-      rejected = -> { @item.errors.add :base, :other_task_is_running }
-      guard = ->(&block) do
-        task.run_with(rejected: rejected) do
-          task.log "# #{I18n.t("workflow.branch_page")} #{I18n.t("ss.buttons.publish_save")}"
-          block.call
-        end
-      end
-    else
-      # this means "no guard"
-      guard = ->(&block) { block.call }
+    if !@item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node)
+      raise "403" unless @item.is_a?(Workflow::Addon::Branch)
+
+      save_as_branch
+      return
     end
 
-    result = nil
-    guard.call do
-      result = @item.save
-    end
-
-    location = nil
-    if result && @item.try(:branch?) && @item.state == "public"
-      location = { action: :index }
-      @item.file_ids = nil if @item.respond_to?(:file_ids)
-      @item.skip_history_trash = true if @item.respond_to?(:skip_history_trash)
-      @item.destroy
-    end
-
-    # If page is failed to update, page is going to show in edit mode with update errors
-    if !result && @item.is_a?(Cms::Addon::EditLock)
-      # So, edit lock must be held
-      unless @item.acquire_lock
-        location = { action: :lock }
-      end
-    end
-
-    render_update result, location: location
+    publish_save
   end
 
   def move
