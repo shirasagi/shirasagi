@@ -55,6 +55,5 @@ SS_ButtonTo.invokeAction = function(ev) {
   }
 
   ev.preventDefault();
-  $button.prop("disabled", true)
   $form.appendTo(document.body).submit();
 };

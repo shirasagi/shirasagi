@@ -40,8 +40,8 @@
 <dl class="see request-setting">
   <dd>
     <div class="buttons">
-      <%= button_tag t("workflow.buttons.restart"), {updatetype: :restart, class: "update-item btn-primary"} %>
-      <%= button_tag t("workflow.buttons.cancel"), {class: "workflow-route-cancel btn-default"} %>
+      <%= button_tag t("workflow.buttons.restart"), { updatetype: :restart, class: "update-item btn-primary", data: { disable: '' } } %>
+      <%= button_tag t("workflow.buttons.cancel"), { class: "workflow-route-cancel btn-default" } %>
     </div>
   </dd>
 </dl>

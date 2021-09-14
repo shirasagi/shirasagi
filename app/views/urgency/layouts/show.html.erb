@@ -9,7 +9,7 @@
     <% if selected_layout? %>
       <%= f.submit t('urgency.selected_layout'), disabled: true %>
     <% else %>
-      <%= f.submit t('urgency.switch_layout'), class: :save, data: { confirm: t('urgency.confirm_message'), disable_with: t('urgency.selected_layout') } %>
+      <%= f.submit t('urgency.switch_layout'), class: :save, data: { confirm: t('urgency.confirm_message') } %>
     <% end %>
   <% end %>
 </footer>

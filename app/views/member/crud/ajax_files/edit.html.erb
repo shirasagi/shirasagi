@@ -21,7 +21,7 @@ $('#ajax-form').ajaxForm({
 <%= render file: '_form', locals: { f: f } %>
 
 <footer class="send">
-  <%= f.submit t("ss.buttons.save"), class: "btn-primary save" %>
+  <%= f.submit t("ss.buttons.save"), class: "btn-primary save", data: { disable_with: t("ss.buttons.saving") } %>
   <%= link_to(t("ss.buttons.cancel"), { action: :index }, { class: %w(btn-default ajax-box) }) %>
 </footer>
 

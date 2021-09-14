@@ -31,7 +31,7 @@
 
   <footer class="send">
     <div>
-      <%= submit_tag t("ss.buttons.save"), name: :save %>
+      <%= submit_tag t("ss.buttons.save"), name: :save, data: { disable_with: t("ss.buttons.saving") } %>
     </div>
   </footer>
 <% end %>

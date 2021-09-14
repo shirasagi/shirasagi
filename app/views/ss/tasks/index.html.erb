@@ -5,12 +5,12 @@
     <% hide = (@item.running? || @item.state == "ready") ? nil : "display: none;" %>
     <div class="stop-button" style="<%= hide %>">
       <%= submit_tag t("ss.buttons.stop"), name: "stop", class: "btn-primary stop" %>
-      <%= submit_tag t("ss.buttons.reset"), name: "reset", class: "btn-default", data: { confirm: t("ss.tasks.confirm_reset"), disable_with: t("ss.buttons.reset") } %>
+      <%= submit_tag t("ss.buttons.reset"), name: "reset", class: "btn-default", data: { confirm: t("ss.tasks.confirm_reset") } %>
     </div>
 
     <% hide = hide.present? ? "" : "display: none;" %>
     <div class="run-button" style="<%= hide %>">
-      <%= submit_tag t("ss.buttons.run"), class: "btn-primary save" %>
+      <%= submit_tag t("ss.buttons.run"), class: "btn-primary save", data: { disable_with: t("ss.buttons.running") } %>
     </div>
   </footer>
 <% end %>
