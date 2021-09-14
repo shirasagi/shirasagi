@@ -51,6 +51,9 @@ class Ldap::ServerController < ApplicationController
   rescue Net::LDAP::Error => e
     @errors = [ e.to_s ]
     render
+  rescue Errno::ECONNREFUSED => e
+    @errors = [ t("ldap.errors.connection_refused") ]
+    render
   end
 
   def group
