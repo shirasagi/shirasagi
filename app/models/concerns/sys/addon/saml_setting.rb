@@ -55,8 +55,8 @@ module Sys::Addon
       settings = idp_metadata_parser.parse(in_metadata.read)
       self.entity_id = settings.idp_entity_id
       self.name_id_format = settings.name_identifier_format
-      self.sso_url = settings.idp_sso_target_url
-      self.slo_url = settings.idp_slo_target_url
+      self.sso_url = settings.idp_sso_target_url || settings.idp_sso_service_url
+      self.slo_url = settings.idp_slo_target_url || settings.idp_slo_service_url
       self.x509_cert = SS::Crypt.encrypt(Base64.decode64(settings.idp_cert))
     end
 
