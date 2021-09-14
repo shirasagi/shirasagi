@@ -55,7 +55,7 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
       visit show_path
       expect(current_path).not_to eq sns_login_path
 
-      click_link "詳細を見る"
+      click_link I18n.t("ss.links.show")
       expect(current_path).to eq page_path
     end
 
@@ -84,6 +84,20 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
 
       click_button I18n.t('history.buttons.restore')
       expect(current_path).to eq show_path
+
+      expect(Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        expect(log.class_name).to eq "History::Backup::RestoreJob"
+        expect(log.args.first).to eq backup_item.id.to_s
+      end
+
+      expect(SS::Task.count).to eq 1
+      SS::Task.first.tap do |task|
+        expect(task.name).to eq "cms_pages:#{page_item.id}"
+        expect(task.state).to eq "completed"
+      end
 
       click_link I18n.t('ss.links.show')
       expect(current_path).to eq page_path

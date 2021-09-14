@@ -70,7 +70,7 @@ describe "history_cms_backups able to restore only closed page", type: :feature,
       click_link I18n.l(backup_item1.created)
       expect(current_path).not_to eq sns_login_path
 
-      expect(page).not_to have_link("復元する")
+      expect(page).not_to have_link(I18n.t("history.restore"))
     end
 
     it "#restore at closed page" do
@@ -85,10 +85,10 @@ describe "history_cms_backups able to restore only closed page", type: :feature,
       click_link I18n.l(backup_item2.created)
       expect(current_path).not_to eq sns_login_path
 
-      click_link "復元する"
+      click_link I18n.t("history.restore")
       expect(current_path).to eq restore2_path
 
-      click_button "復元"
+      click_button I18n.t("history.buttons.restore")
       expect(current_path).to eq show2_path
 
       click_link "詳細を見る"

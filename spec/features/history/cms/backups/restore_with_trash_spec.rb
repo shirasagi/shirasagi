@@ -43,7 +43,7 @@ describe "history_cms_backups restore with trash", type: :feature, dbscope: :exa
       visit show_path
       expect(current_path).not_to eq sns_login_path
 
-      click_link "詳細を見る"
+      click_link I18n.t("ss.links.show")
       expect(current_path).to eq page_path
     end
 
@@ -58,13 +58,13 @@ describe "history_cms_backups restore with trash", type: :feature, dbscope: :exa
       click_link I18n.l(backup_item.created)
       expect(current_path).not_to eq sns_login_path
 
-      click_link "復元する"
+      click_link I18n.t("history.restore")
       expect(current_path).to eq restore_path
 
-      click_button "復元"
+      click_button I18n.t("history.buttons.restore")
       expect(current_path).to eq show_path
 
-      click_link "詳細を見る"
+      click_link I18n.t("ss.links.show")
       expect(current_path).to eq page_path
 
       basic_values = page.all("#addon-basic dd").map(&:text)

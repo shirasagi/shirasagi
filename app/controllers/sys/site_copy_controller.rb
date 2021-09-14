@@ -49,6 +49,11 @@ class Sys::SiteCopyController < ApplicationController
   def run
     set_item
     @item.attributes = get_params
+    unless @item.save
+      render
+      return
+    end
+
     if @item.ready
       Sys::SiteCopyJob.perform_later
 

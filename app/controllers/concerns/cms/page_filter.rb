@@ -17,6 +17,18 @@ module Cms::PageFilter
     raise "404"
   end
 
+  def default_form(node)
+    return if !node.respond_to?(:st_forms)
+    return if !node.st_form_ids.include?(node.st_form_default_id)
+    return if !@model.fields.key?("form_id")
+
+    default_form = node.st_form_default
+    return if default_form.blank?
+    return if !default_form.allowed?(:read, @cur_user, site: @cur_site)
+
+    default_form
+  end
+
   def pre_params
     params = {}
 
@@ -26,13 +38,8 @@ module Cms::PageFilter
       layout_id = n.page_layout_id || n.layout_id
       params[:layout_id] = layout_id if layout_id.present?
 
-      if n.respond_to?(:st_forms) && n.st_form_ids.include?(n.st_form_default_id)
-        if @model.fields.key?("form_id")
-          default_form = n.st_form_default
-          if default_form.present? && default_form.allowed?(:read, @cur_user, site: @cur_site)
-            params[:form_id] = default_form.id
-          end
-        end
+      default_form(n).try do |form|
+        params[:form_id] = form.id
       end
     end
 
@@ -108,7 +115,26 @@ module Cms::PageFilter
       @item.state = "ready" if @item.try(:release_date).present?
     end
 
-    result = @item.update
+    if @item.state_changed? && @item.state == "public" && @item.try(:master_id).present?
+      task_name = "#{@item.collection_name}:#{@item.master_id}"
+      task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site.id, name: task_name)
+      rejected = -> { @item.errors.add :base, :other_task_is_running }
+      guard = ->(&block) do
+        task.run_with(rejected: rejected) do
+          task.log "# #{I18n.t("workflow.branch_page")} #{I18n.t("ss.buttons.publish_save")}"
+          block.call
+        end
+      end
+    else
+      # this means "no guard"
+      guard = ->(&block) { block.call }
+    end
+
+    result = nil
+    guard.call do
+      result = @item.save
+    end
+
     location = nil
     if result && @item.try(:branch?) && @item.state == "public"
       location = { action: :index }
@@ -156,7 +182,17 @@ module Cms::PageFilter
         location = { cid: node.id, action: :move, source: @source, link_check: true }
       end
 
-      render_update @item.move(destination), location: location, render: { file: :move }, notice: t('ss.notice.moved')
+      task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site.id, name: "#{@item.collection_name}:#{@item.id}")
+
+      rejected = -> do
+        @item.errors.add :base, :other_task_is_running
+        render
+      end
+
+      task.run_with(rejected: rejected) do
+        task.log "# 移動"
+        render_update @item.move(destination), location: location, render: { file: :move }, notice: t('ss.notice.moved')
+      end
     end
   end
 
@@ -167,9 +203,20 @@ module Cms::PageFilter
       return
     end
 
-    @item.attributes = get_params
-    @copy = @item.new_clone
-    render_update @copy.save, location: { action: :index }, render: { file: :copy }
+    task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site.id, name: "#{@item.collection_name}:#{@item.id}")
+
+    rejected = -> do
+      @item.errors.add :base, :other_task_is_running
+      render
+    end
+
+    task.run_with(rejected: rejected) do
+      task.log "# ページの複製"
+
+      @item.attributes = get_params
+      @copy = @item.new_clone
+      render_update @copy.save, location: { action: :index }, render: { file: :copy }
+    end
   end
 
   def command
