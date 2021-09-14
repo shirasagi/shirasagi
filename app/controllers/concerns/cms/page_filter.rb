@@ -208,7 +208,7 @@ module Cms::PageFilter
       end
 
       task.run_with(rejected: rejected) do
-        task.log "# 移動"
+        task.log "# #{I18n.t("ss.buttons.move")}"
         render_update @item.move(destination), location: location, render: { template: "move" }, notice: t('ss.notice.moved')
       end
     end
@@ -229,7 +229,7 @@ module Cms::PageFilter
     end
 
     task.run_with(rejected: rejected) do
-      task.log "# ページの複製"
+      task.log "# #{I18n.t("ss.links.copy")}"
 
       @item.attributes = get_params
       @copy = @item.new_clone
