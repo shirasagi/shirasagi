@@ -1811,7 +1811,7 @@ footer.send {
       margin: 0 4px 4px;
     }
   }
-  input.publish_save, input.save, button.save, input.delete {
+  input.publish_save, input.branch_save, input.save, button.save, input.delete {
     @include btn-red;
   }
 }

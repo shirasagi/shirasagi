@@ -120,6 +120,7 @@ ja:
       closed_save: 非公開保存
       publish: 公開
       publish_save: 公開保存
+      close_save: 取下保存
       ignore_alert: 警告を無視する
       cancel: キャンセル
       edit: 編集

@@ -538,13 +538,37 @@ SS_WorkflowApprover.prototype.render = function () {
     }
   }
 
-  if (self.options.release === "allowed") {
-    $(".save").val(self.options.draft_save).attr("data-disable-with", self.options.disable_with);
+  if (self.options.draft_save) {
+    $(".save")
+      .val(self.options.draft_save)
+      .attr("data-disable-with", null)
+      .attr("data-disable", "")
+      .on("click", function (_ev) {
+        self.onClickSave();
+        return true;
+      });
+  }
+  if (self.options.branch_save) {
     $("<input />").attr("type", "submit")
+      .val(self.options.branch_save)
+      .attr("name", "branch_save")
+      .attr("class", "branch_save")
+      .attr("data-disable", "")
+      .on("click", function (_ev) {
+        return true;
+      })
+      .insertAfter("#item-form input.save");
+  }
+  if (self.options.publish_save) {
+    $("<input />").attr("type", "submit")
+      .val(self.options.publish_save)
       .attr("name", "publish_save")
-      .attr("value", self.options.publish_save)
       .attr("class", "publish_save")
-      .attr("data-disable-with", self.options.disable_with)
+      .attr("data-disable", "")
+      .on("click", function (_ev) {
+        self.onPublishSaveClicked();
+        return true;
+      })
       .insertAfter("#item-form input.save");
   }
 
@@ -554,16 +578,6 @@ SS_WorkflowApprover.prototype.render = function () {
       .attr("value", true)
       .appendTo("#item-form");
   }
-
-  $(".save").on("click", function (ev) {
-    self.onClickSave();
-    return true;
-  });
-
-  $(".publish_save").on("click", function (e) {
-    self.onPublishSaveClicked();
-    return true;
-  });
 
   Form_Save_Event.render();
 };
