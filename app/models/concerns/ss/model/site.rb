@@ -128,12 +128,7 @@ module SS::Model::Site
 
     def same_domain_site_from_path(path)
       sites = same_domain_sites.sort_by { |site| site.url.count("/") }.reverse
-      sites.each do |site|
-        if path =~ /^#{site.url}/
-          return site
-        end
-      end
-      return nil
+      sites.find { |site| path.start_with?(site.url) }
     end
 
     private

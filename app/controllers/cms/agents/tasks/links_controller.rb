@@ -156,8 +156,9 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
       # scan layout_yield offset
       html.scan(/<!-- layout_yield -->(.*?)<!-- \/layout_yield -->/m)
-      yield_start, yield_end = [html.size, 0]
       yield_start, yield_end = Regexp.last_match.offset(0) if Regexp.last_match
+      yield_start ||= html.size
+      yield_end ||= 0
 
       # remove href in comment
       html.gsub!(/<!--.*?-->/m) { |m| " " * m.size }
