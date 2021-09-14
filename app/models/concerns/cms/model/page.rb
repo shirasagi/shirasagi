@@ -200,7 +200,7 @@ module Cms::Model::Page
     self.set(size: (html_bytesize + owned_files_bytesize))
   end
 
-  def get_linking_page
+  def get_linking_cond
     cond = []
 
     if self.respond_to?(:url) && self.respond_to?(:full_url)
@@ -219,8 +219,8 @@ module Cms::Model::Page
     cond
   end
   module ClassMethods
-    def linking_page(item)
-      where(:id.ne => item.id).where("$and" => [{ "$or" => item.get_linking_page }])
+    def and_linking_pages(item)
+      where(:id.ne => item.id).where("$and" => [{ "$or" => item.get_linking_cond }])
     end
   end
 

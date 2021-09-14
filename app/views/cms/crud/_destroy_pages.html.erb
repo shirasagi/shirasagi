@@ -1,6 +1,6 @@
 <%
-  if item.get_linking_page.present?
-    contains_urls = Cms::Page.site(@cur_site).linking_page(item)
+  if item.get_linking_cond.present?
+    contains_urls = Cms::Page.site(@cur_site).and_linking_pages(item)
   end
 
   delete_alert_enabled = @cur_user.cms_role_permit_any?(@cur_site, %w(delete_cms_ignore_alert)) && contains_urls.present?
