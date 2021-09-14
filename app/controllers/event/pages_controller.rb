@@ -33,9 +33,15 @@ class Event::PagesController < ApplicationController
   def download
     criteria = @model.site(@cur_site).node(@cur_node)
     criteria = criteria.allow(:read, @cur_user, site: @cur_site, node: @cur_node)
-    csv = criteria.to_csv.encode("SJIS", invalid: :replace, undef: :replace)
+
+    exporter = Cms::PageExporter.new(mode: "event", site: @cur_site, criteria: criteria)
+    enumerable = exporter.enum_csv(encoding: "Shift_JIS")
+
     filename = @model.to_s.tableize.gsub(/\//, "_")
-    send_data csv, filename: "#{filename}_#{Time.zone.now.to_i}.csv"
+    filename = "#{filename}_#{Time.zone.now.to_i}.csv"
+
+    response.status = 200
+    send_enum enumerable, type: enumerable.content_type, filename: filename
   end
 
   def import

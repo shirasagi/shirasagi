@@ -664,6 +664,7 @@ ja:
               youtube_id_can_not_get: からYouTubeIDが取得できませんでした。
     attributes:
       cms/content:
+        released_type: 公開日時種別
         released: 公開日時
         name: タイトル
         keyword: キーワード
@@ -779,6 +780,7 @@ ja:
         editor_css_path: スタイルシートパス
         syntax_check: アクセシビリティチェック
       cms/addon/release:
+        released_type: 公開日時種別
         released: 公開日時
       cms/addon/release_plan:
         release_date: 公開開始日時(予約)

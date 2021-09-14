@@ -1,23 +1,43 @@
 class Cms::PageExporter
   include ActiveModel::Model
 
-  attr_accessor :site, :criteria
+  attr_accessor :mode, :site, :criteria
+
+  class << self
+    def category_name_tree(item)
+      return [] unless item.respond_to?(:categories)
+
+      triplets = Cms::Node.in(id: item.category_ids).pluck(:id, :site_id, :filename)
+      triplets.map do |id, site_id, filename|
+        filename_parts = filename.split('/')
+        filenames = Array.new(filename_parts.length) do |i|
+          filename_parts[0..i].join('/')
+        end
+
+        Cms::Node.where(site_id: site_id).in(filename: filenames).pluck(:depth, :name)
+                 .sort_by { |depth, name| depth }
+                 .map { |depth, name| name }.join("/")
+      end
+    end
+  end
 
   def enum_csv(options = {})
     has_form = options[:form].present?
     drawer = SS::Csv.draw(:export, context: self) do |drawer|
       draw_basic(drawer)
       draw_meta(drawer)
+      draw_faq(drawer) if mode_faq?
       if has_form
         draw_form(drawer, options[:form])
       else
         draw_body(drawer)
       end
+      draw_event_body(drawer) if mode_event?
       draw_category(drawer)
-      draw_event(drawer)
+      draw_event_date(drawer)
       draw_related_pages(drawer)
-      draw_crumb(drawer)
-      draw_contact(drawer)
+      draw_crumb(drawer) unless mode_event?
+      draw_contact(drawer) unless mode_event?
       draw_released(drawer)
       draw_groups(drawer)
       draw_state(drawer)
@@ -25,13 +45,31 @@ class Cms::PageExporter
 
     if !options.key?(:model)
       options = options.dup
-      options[:model] = Article::Page
+      if mode_faq?
+        options[:model] = Faq::Page
+      elsif mode_event?
+        options[:model] = Event::Page
+      else
+        options[:model] = Article::Page
+      end
     end
 
     drawer.enum(criteria, options)
   end
 
   private
+
+  def mode_default?
+    mode.nil? || mode == "default"
+  end
+
+  def mode_faq?
+    mode == "faq"
+  end
+
+  def mode_event?
+    mode == "event"
+  end
 
   def draw_basic(drawer)
     drawer.column :filename do
@@ -42,13 +80,15 @@ class Cms::PageExporter
     drawer.column :layout do
       drawer.body { |item| Cms::Layout.where(id: item.layout_id).pluck(:name).first }
     end
-    drawer.column :body_layout_id do
-      drawer.body { |item| Cms::BodyLayout.where(id: item.body_layout_id).pluck(:name).first }
-    end
-    drawer.column :form_id do
-      drawer.body do |item|
-        if item.respond_to?(:form)
-          item.form.try(:name)
+    if mode_default?
+      drawer.column :body_layout_id do
+        drawer.body { |item| Cms::BodyLayout.where(id: item.body_layout_id).pluck(:name).first }
+      end
+      drawer.column :form_id do
+        drawer.body do |item|
+          if item.respond_to?(:form)
+            item.form.try(:name)
+          end
         end
       end
     end
@@ -66,23 +106,38 @@ class Cms::PageExporter
     drawer.column :summary_html
   end
 
+  def draw_faq(drawer)
+    drawer.column :question
+  end
+
   def draw_body(drawer)
     drawer.column :html
-    drawer.column :body_part do
-      drawer.body do |item|
-        next if !item.respond_to?(:body_parts) || item.body_parts.blank?
-        item.body_parts.map { |body| body.to_s.gsub("\t", '    ') }.join("\t")
+    if mode_default?
+      drawer.column :body_part do
+        drawer.body do |item|
+          next if !item.respond_to?(:body_parts) || item.body_parts.blank?
+          item.body_parts.map { |body| body.to_s.gsub("\t", '    ') }.join("\t")
+        end
       end
     end
   end
 
+  def draw_event_body(drawer)
+    drawer.column :schedule
+    drawer.column :venue
+    drawer.column :content
+    drawer.column :related_url
+    drawer.column :cost
+    drawer.column :contact
+  end
+
   def draw_category(drawer)
     drawer.column :categories do
-      drawer.body { |item| category_name_tree(item).join("\n") }
+      drawer.body { |item| self.class.category_name_tree(item).join("\n") }
     end
   end
 
-  def draw_event(drawer)
+  def draw_event_date(drawer)
     drawer.column :event_name
     drawer.column :event_dates
     drawer.column :event_deadline
@@ -303,25 +358,5 @@ class Cms::PageExporter
   def find_column_value(item, form, column)
     return if item.form_id != form.id
     item.column_values.where(column_id: column.id).first
-  end
-
-  def category_name_tree(item)
-    return unless item.respond_to?(:categories)
-
-    id_list = item.categories.where(route: /^category\//).pluck(:id)
-
-    ct_list = []
-    id_list.each do |id|
-      name_list = []
-      filename_str = []
-      filename_array = Cms::Node.where(id: id).pluck(:filename).first.split(/\//)
-      filename_array.each do |filename|
-        filename_str << filename
-        node = Cms::Node.site(site).where(filename: filename_str.join("/")).first
-        name_list << node.name if node
-      end
-      ct_list << name_list.join("/")
-    end
-    ct_list.sort
   end
 end
