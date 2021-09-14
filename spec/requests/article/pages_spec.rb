@@ -216,7 +216,11 @@ describe "Article::PagesController", type: :request, dbscope: :example do
           expect(body).to include "2016/07/06 01:01"
           expect(body).to include "2016/07/06 02:02"
           expect(body).to include "02:02,シラサギ市/企画政策部/政策課"
-          expect(body).to include "政策課,1"
+          if SS.config.ss.disable_permission_level
+            expect(body).to include "政策課,非公開"
+          else
+            expect(body).to include "政策課,1,非公開"
+          end
         end
       end
     end
