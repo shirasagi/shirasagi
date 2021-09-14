@@ -178,8 +178,7 @@ class Workflow::PagesController < ApplicationController
       end
     end
     if @item.state_changed? && @item.state == "public" && @item.try(:master_id).present?
-      task_name = "#{@item.collection_name}:#{@item.master_id}"
-      task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site.id, name: task_name)
+      task = SS::Task.find_or_create_for_model(@item.master, site: @cur_site)
       rejected = -> { @item.errors.add :base, :other_task_is_running }
       guard = ->(&block) do
         task.run_with(rejected: rejected) do
@@ -291,7 +290,7 @@ class Workflow::PagesController < ApplicationController
 
     @item.cur_node = @item.parent
     if @item.branches.blank?
-      task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site.id, name: "#{@item.collection_name}:#{@item.id}")
+      task = SS::Task.find_or_create_for_model(@item, site: @cur_site)
 
       result = nil
       rejected = -> do
