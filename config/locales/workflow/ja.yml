@@ -82,6 +82,7 @@ ja:
       request_cancel: 申請を取り消してもよろしいですか？
       set_seen: 既読にしてもよろしいですか？
       unset_seen: 未読にしてもよろしいですか？
+      would_you_edit_branch: 差し替えページが作成されています。差し替えページを編集しますか？
     notice:
       request_cancelled: 申請を取り消しました。
       approver_file_droppable: ファイル追加ボタンをクリックするか、ここにファイルをドロップしてください。
