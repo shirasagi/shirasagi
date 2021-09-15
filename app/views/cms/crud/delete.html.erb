@@ -1,10 +1,20 @@
-<% delete_alert_enabled = !@cur_user.cms_role_permit_any?(@cur_site, %w(delete_cms_ignore_alert)) && @contains_urls.try(:and_public).present? %>
+<%
+  delete_alert_enabled = !@cur_user.cms_role_permit_any?(@cur_site, %w(delete_cms_ignore_alert)) && @contains_urls.try(:and_public).present?
+
+  unable_to_delete_master_page = false
+  if @item.try(:master?) && @item.branches.present?
+    unable_to_delete_master_page = true
+  end
+%>
 <%= form_for :item, url: { action: :show }, html: { method: :delete, multipart: true } do |f| %>
 <%= error_messages_for :item %>
 
 <div class="addon-views">
   <%
     head = t("ss.confirm.delete")
+    if unable_to_delete_master_page
+      head = "#{head}<br>#{t("workflow.confirm.unable_to_delete_master_page")}".html_safe
+    end
     if delete_alert_enabled
       head = "#{head}<br>#{t("ss.confirm.contains_url_expect")}".html_safe
     end
@@ -27,7 +37,7 @@
 </div>
 
 <footer class="send">
-  <% unless delete_alert_enabled %>
+  <% if !unable_to_delete_master_page && !delete_alert_enabled %>
     <%= f.submit t("ss.buttons.delete"), class: 'btn-danger delete', data: { disable_with: t("ss.buttons.deleting") } %>
   <% end %>
   <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
