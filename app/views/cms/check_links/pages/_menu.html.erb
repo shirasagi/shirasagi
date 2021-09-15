@@ -1,0 +1,10 @@
+<% if params[:action] == "index" %>
+  <nav class="nav-menu">
+    <%= link_to t('ss.links.back'), cms_check_links_reports_path, class: "back-to-index" %>
+    <%= link_to t('ss.links.download'), { action: :download } %>
+  </nav>
+<% elsif params[:action] == "show" %>
+  <nav class="nav-menu">
+    <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
+  </nav>
+<% end %>

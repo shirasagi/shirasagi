@@ -3604,3 +3604,24 @@ body.ss-ajax-in-iframe {
   margin-top: 5px;
   color: #f00;
 }
+
+table.check-links-erros {
+  table-layout: fixed;
+  th, td {
+    padding: 6px 9px;
+    &.name {
+      width: 30%;
+    }
+    &.url, &.groups {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    &.state {
+      width: 100px;
+    }
+    &.preview {
+      width: 300px;
+    }
+  }
+}

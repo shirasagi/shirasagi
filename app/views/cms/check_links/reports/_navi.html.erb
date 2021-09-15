@@ -1,0 +1,10 @@
+<nav class="mod-navi">
+  <h2><%= t "cms.check_links" %></h2>
+
+  <h3><%= link_to t("cms.check_links_reports"), cms_check_links_reports_path %></h3>
+  <% if Cms::CheckLinks::IgnoreUrl.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t("cms.check_links_ignore_urls"), cms_check_links_ignore_urls_path %></h3>
+  <% end %>
+</nav>
+
+<%= render partial: "cms/main/navi" %>
