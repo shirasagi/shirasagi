@@ -152,8 +152,6 @@ this.Gws_Schedule_Calendar = (function ($) {
         if (attendance.length) {
           if (attendance.hasClass('fc-state-active')) {
             $('.fc .fc-event-user-attendance-absence').show();
-          } else {
-            $('.fc .fc-event-user-attendance-absence').hide();
           }
         }
         Gws_Schedule_Calendar.updateNoPlanVisibility(view.el.closest(".fc"));
