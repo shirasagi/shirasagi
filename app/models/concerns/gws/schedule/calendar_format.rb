@@ -3,7 +3,7 @@ module Gws::Schedule::CalendarFormat
 
   # event options
   # http://fullcalendar.io/docs/event_data/Event_Object/
-  def calendar_format(user, site)
+  def calendar_format(user, site, opts = {})
     data = { id: id.to_s, start: start_at, end: end_at, allDay: allday? }
 
     #data[:readable] = allowed?(:read, user, site: site)
@@ -52,7 +52,7 @@ module Gws::Schedule::CalendarFormat
       data[:className] += ' fc-event-private'
     end
 
-    if attendance_check_plan?
+    if attendance_check_plan? && opts[:controller] != "gws/schedule/facility_plans"
       if contains_unknown_attendance?
         data[:className] += ' fc-event-unknown-attendance'
       end
