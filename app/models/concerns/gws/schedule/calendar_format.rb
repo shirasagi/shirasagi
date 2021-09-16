@@ -52,7 +52,7 @@ module Gws::Schedule::CalendarFormat
       data[:className] += ' fc-event-private'
     end
 
-    if attendance_check_plan? && opts[:controller] != "gws/schedule/facility_plans"
+    if attendance_check_plan? && opts.fetch(:attendance_classes, true)
       if contains_unknown_attendance?
         data[:className] += ' fc-event-unknown-attendance'
       end
