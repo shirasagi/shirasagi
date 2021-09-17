@@ -146,6 +146,10 @@ class Cms::ColumnsController < ApplicationController
   end
 
   def destroy_all
+    if form_is_in_use?
+      redirect_to url_for(action: :index), notice: t("errors.messages.unable_to_delete_all_columns_if_form_is_in_use")
+      return
+    end
     raise '403' unless @cur_form.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
 
     entries = @items.entries
