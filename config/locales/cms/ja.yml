@@ -612,7 +612,6 @@ ja:
       cms/redirect_link: リンクページ
       cms/site_search/history: 履歴
       cms/site_search/keyword: 注目ワード
-      cms/site_search/history: 履歴
       cms/line_poster: LINE連携
       cms/content_quota: 容量制限
       cms/check_links: リンクチェック実行結果
