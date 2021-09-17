@@ -68,7 +68,7 @@ module Cms::Model::Part
     ajax_view == "enabled" && ajax_view_expire_seconds.to_i > 0
   end
 
-  def private_cache_key
+  def ajax_view_cache_key
     "ss-part/#{cache_key}"
   end
 

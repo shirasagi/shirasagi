@@ -17,7 +17,7 @@ module Cms::PublicFilter::PartCache
   end
 
   def read_part_cache(part)
-    key = part.private_cache_key
+    key = part.ajax_view_cache_key
 
     return false if !Rails.cache.exist?(key)
     body = Rails.cache.read(key)
@@ -29,7 +29,7 @@ module Cms::PublicFilter::PartCache
   end
 
   def write_part_cache(part, body)
-    key = part.private_cache_key
+    key = part.ajax_view_cache_key
     expire_seconds = part.ajax_view_expire_seconds.to_i
 
     if Rails.cache.write(key, body.to_s, expires_in: expire_seconds.seconds)
