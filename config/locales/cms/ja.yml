@@ -771,13 +771,6 @@ ja:
         name: タイトル
         description: 説明
         order: 並び順
-      cms/addon/site_search/history:
-        upper_html:
-          - 上部HTMLを入力します。
-        lower_html:
-          - 下部HTMLを入力します。
-        placeholder:
-          - プレースホルダーを入力します。
       cms/command:
         name: タイトル
         description: 説明
@@ -2305,6 +2298,14 @@ ja:
     cms/check_links/ignore_url:
       name:
         - 除外URLを入力します。
+
+    cms/addon/site_search/history:
+      upper_html:
+        - 上部HTMLを入力します。
+      lower_html:
+        - 下部HTMLを入力します。
+      placeholder:
+        - プレースホルダーを入力します。
 
   all_content:
     page_id: ページID
