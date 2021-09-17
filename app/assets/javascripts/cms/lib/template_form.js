@@ -56,6 +56,15 @@ Cms_TemplateForm.prototype.render = function() {
   this.$formChangeBtn.on('click', function() {
     pThis.changeForm();
   });
+  this.$formSelect.on('change', function() {
+    setTimeout(function() {
+      if (confirm(Cms_TemplateForm.confirms.changeForm)) {
+        pThis.changeForm();
+      } else {
+        pThis.$formSelect.val(pThis.$formIdInput.val());
+      }
+    }, 13);
+  });
 };
 
 Cms_TemplateForm.prototype.changeForm = function() {
