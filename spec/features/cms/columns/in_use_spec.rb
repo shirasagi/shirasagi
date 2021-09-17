@@ -38,7 +38,8 @@ describe Cms::FormsController, type: :feature, dbscope: :example, js: true do
         within "form" do
           click_on I18n.t("ss.buttons.delete")
         end
-        expect(page).to have_css('#errorExplanation', text: I18n.t('errors.messages.unable_to_delete_in_use_column_without_confirmation'))
+        message = I18n.t('errors.messages.unable_to_delete_in_use_column_without_confirmation')
+        expect(page).to have_css('#errorExplanation', text: message)
 
         expect { column.reload }.not_to raise_error
       end
