@@ -24,6 +24,34 @@ class Cms::FormsController < ApplicationController
     @form_is_in_use = Cms::Page.site(@cur_site).where(form_id: @item.id).present?
   end
 
+  def destroy_items
+    raise "400" if @selected_items.blank?
+
+    entries = @selected_items.entries
+    @items = []
+
+    entries.each do |item|
+      item.cur_user = @cur_user if item.respond_to?(:cur_user)
+
+      if !item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+        item.errors.add :base, :auth_error
+        @items << item
+        next
+      end
+
+      if Cms::Page.site(@cur_site).where(form_id: item.id).present?
+        item.errors.add :base, :unable_to_delete_all_columns_if_form_is_in_use
+        @items << item
+        next
+      end
+
+      next if item.destroy
+      @items << item
+    end
+
+    entries.size != @items.size
+  end
+
   public
 
   def update
