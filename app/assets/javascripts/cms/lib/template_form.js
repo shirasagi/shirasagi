@@ -1,7 +1,8 @@
 Cms_TemplateForm = function(options) {
   this.options = options;
   this.$formChangeBtn = $('#addon-basic .btn-form-change');
-  this.$formSelect = $('#addon-basic select[name="item[form_id]"]');
+  this.$formSelect = $('#addon-basic .form-change');
+  this.$formIdInput = $('#addon-basic [name="item[form_id]"]');
   this.$formPage = $('#addon-cms-agents-addons-form-page');
   this.$formPageBody = this.$formPage.find('.addon-body');
   this.selectedFormId = null;
@@ -67,7 +68,7 @@ Cms_TemplateForm.prototype.changeForm = function() {
       this.loadAndActivateForm(formId);
       this.selectedFormId = formId;
     } else {
-      this.activateForm();
+      this.activateForm(formId);
     }
   } else {
     this.deactivateForm();
@@ -83,11 +84,11 @@ Cms_TemplateForm.prototype.loadAndActivateForm = function(formId) {
     type: 'GET',
     success: function(html) {
       pThis.loadForm(html);
-      pThis.activateForm();
+      pThis.activateForm(formId);
     },
     error: function(xhr, status, error) {
       pThis.showError(error);
-      pThis.activateForm();
+      pThis.activateForm(formId);
     },
     complete: function() {
       pThis.$formChangeBtn.prop('disabled', false);
@@ -106,7 +107,7 @@ Cms_TemplateForm.prototype.showError = function(msg) {
   this.$formPageBody.html('<p>' + msg + '</p>');
 };
 
-Cms_TemplateForm.prototype.activateForm = function() {
+Cms_TemplateForm.prototype.activateForm = function(formId) {
   this.$formPage.removeClass('hide');
   $('#addon-cms-agents-addons-body').addClass('hide');
   $("#addon-cms-agents-addons-body_part").addClass('hide');
@@ -117,6 +118,7 @@ Cms_TemplateForm.prototype.activateForm = function() {
   Cms_Form.addonSelector = "#addon-cms-agents-addons-form-page .addon-body";
   Cms_Form.activateSyntaxChecks();
 
+  this.$formIdInput.val(formId);
   this.$formChangeBtn.trigger("ss:formActivated");
 };
 
@@ -132,6 +134,7 @@ Cms_TemplateForm.prototype.deactivateForm = function() {
   Cms_Form.addonSelector = ".mod-cms-body";
   Cms_Form.activateSyntaxChecks();
 
+  this.$formIdInput.val('');
   this.$formChangeBtn.trigger("ss:formDeactivated");
 };
 
