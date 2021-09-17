@@ -37,15 +37,27 @@ new Cms_Site_Search_History("<%= ".cms-site-search .search-form" %>", "<%= @cur_
 <div class="cms-site-search">
   <%= form_for :s, url: @cur_node.url, html: { method: :get, class: 'search-form' }, "aria-label" => t("cms.search_form") do |f| %>
 
-    <div class="site-search-keyword">
-      <%= f.text_field :keyword, autocomplete: "off", title: (t "cms.search_contents"), placeholder: (t "cms.search_contents"), size: 40 %>
+    <dl class="site-search-keyword">
+      <dt><%= f.label(:keyword, t("cms.search_contents")) %></dt>
+      <dd><%= f.text_field :keyword, autocomplete: "off", title: (t "cms.search_contents"), placeholder: (t "cms.search_contents"), size: 40 %></dd>
       <ul class="site-search-history" style="display: none;"></ul>
-    </div>
+    </dl>
+
+    <dl class="site-search-categories">
+      <dt><%= f.label(:category_id, t("category.node")) %></dt>
+      <dd><%= f.select(:category_id, options_from_collection_for_select( @categories, :id, :name, params.dig(:s, :category_id)), include_blank: "", "aria-label" => t("category.node")) %></dd>
+    </dl>
 
     <% if @cur_site.elasticsearch_outside_enabled? %>
-      <%= select_tag 'target', options_for_select([[t('ss.search_on', name: @cur_site.name), 'inside'], [t('ss.search_on', name: SS::Config.cms.elasticsearch['label']), 'outside']], selected: params[:target]), "aria-label" => t("cms.search_target") %>
+      <dl class="site-search-target">
+        <dt><%= f.label(:target, t("cms.search_target")) %></dt>
+        <dd><%= select_tag 'target', options_for_select([[t('ss.search_on', name: @cur_site.name), 'inside'], [t('ss.search_on', name: SS::Config.cms.elasticsearch['label']), 'outside']], selected: params[:target]), "aria-label" => t("cms.search_target") %></dd>
+      </dl>
     <% end %>
-    <input type="submit" value="<%= t('cms.search_button') %>" />
+
+    <div class="send">
+      <input type="submit" value="<%= t('cms.search_button') %>" />
+    </div>
   <% end %>
 
   <% if @result.present? %>

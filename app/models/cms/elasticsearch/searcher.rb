@@ -4,10 +4,10 @@ class Cms::Elasticsearch::Searcher
 
   DEFAULT_FIELD_NAME = 'text_index'.freeze
 
-  attr_accessor :setting, :keyword
+  attr_accessor :setting, :keyword, :category_id
   attr_writer :index, :type, :field_name, :from, :size
 
-  permit_params :keyword
+  permit_params :keyword, :category_id
 
   def index
     @index ||= "s#{setting.cur_site.id}"
@@ -40,7 +40,11 @@ class Cms::Elasticsearch::Searcher
   def search
     query = {}
     query[:bool] = {}
-    query[:bool][:must] = { simple_query_string: { query: keyword, fields: [field_name].flatten, default_operator: 'AND' } }
+    query[:bool][:must] = [{ simple_query_string: { query: keyword, fields: [field_name].flatten, default_operator: 'AND' } }]
+
+    if category_id.present?
+      query[:bool][:must] << { term: { category_ids: category_id } }
+    end
 
     query[:bool][:filter] = {}
     query[:bool][:filter][:bool] = {}

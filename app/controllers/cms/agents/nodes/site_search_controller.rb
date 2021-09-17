@@ -3,6 +3,7 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
   helper Cms::ListHelper
 
   before_action :set_setting
+  before_action :set_categories
   before_action :save_search_history
 
   model Cms::Elasticsearch::Searcher
@@ -16,13 +17,23 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
     end
   end
 
+  def set_categories
+    @categories ||= begin
+      category_ids = Cms::Page.site(@cur_site).and_public.pluck(:category_ids).flatten
+      Category::Node::Base.site(@cur_site).and_public.in(id: category_ids)
+    end
+  end
+
   def save_search_history
     keyword = get_params[:keyword].to_s.strip.gsub(/　/, " ")
     return if keyword.blank?
 
+    query = { keyword: keyword }
+    query[:category_id] = get_params[:category_id] if get_params[:category_id].present?
+
     history_log = Cms::SiteSearch::History::Log.new(
       site: @cur_site,
-      query: { keyword: keyword },
+      query: query,
       remote_addr: remote_addr,
       user_agent: request.user_agent
     )
@@ -34,7 +45,7 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
   end
 
   def permit_fields
-    [:keyword, :target]
+    [:keyword, :target, :category_id]
   end
 
   def get_params
