@@ -404,6 +404,7 @@ ja:
       cms/calendar_nav: アーカイブナビ(カレンダー)
       cms/monthly_nav: アーカイブナビ（月次）
       cms/site_search_history: サイト内検索(検索履歴)
+      cms/history_list: 閲覧履歴
     columns:
       cms/text_field: 一行入力
       cms/date_field: 日付入力
@@ -616,6 +617,7 @@ ja:
       cms/line_poster: LINE連携
       cms/content_quota: 容量制限
       cms/check_links: リンクチェック実行結果
+      cms/history_list: 閲覧履歴
 
   mongoid:
     models:
@@ -634,6 +636,7 @@ ja:
       cms/part/page: ページリスト
       cms/part/tabs: 新着タブ
       cms/part/crumb: パンくずリスト
+      cms/part/history_list: 閲覧履歴
       cms/layout: レイアウト
       cms/body_layout: レイアウト
       cms/workflow/route: 承認経路
