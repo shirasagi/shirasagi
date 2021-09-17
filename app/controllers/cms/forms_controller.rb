@@ -26,8 +26,17 @@ class Cms::FormsController < ApplicationController
 
   public
 
-  def column_form
-    set_item
+  def update
+    @item.attributes = get_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+    if @item.state == "closed" && form_is_in_use?
+      @item.errors.add :base, :unable_to_close_form_if_form_is_in_use
+      render_update false
+      return
+    end
+
+    render_update @item.update
   end
 
   def delete
@@ -38,5 +47,9 @@ class Cms::FormsController < ApplicationController
   def destroy
     raise "404" if form_is_in_use?
     super
+  end
+
+  def column_form
+    set_item
   end
 end
