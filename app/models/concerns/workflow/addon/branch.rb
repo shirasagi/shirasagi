@@ -119,6 +119,7 @@ module Workflow::Addon
         end
       end
 
+      file.sanitizer_copy_file
       file
     end
 

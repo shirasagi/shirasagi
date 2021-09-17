@@ -71,6 +71,7 @@ module SS::Addon
           file.state = "public"
 
           file.save validate: false
+          file.sanitizer_copy_file
           ids[f.id] = file.id
         end
         self.file_ids = ids.values

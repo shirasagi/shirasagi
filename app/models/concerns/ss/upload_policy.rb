@@ -2,6 +2,7 @@ module SS::UploadPolicy
   extend ActiveSupport::Concern
 
   included do
+    attr_accessor :force_sanitize
     field :sanitizer_state, type: String
     before_destroy :remove_sanitizer_file
   end
@@ -23,6 +24,15 @@ module SS::UploadPolicy
     true
   end
 
+  def sanitizer_copy_file
+    dump "copy_file #{path}"
+
+    Fs.rm_rf(sanitizer_input_path) if Fs.exists?(sanitizer_input_path)
+    Fs.upload(sanitizer_input_path, path)
+    self.sanitizer_state = 'wait'
+    save(validate: false)
+  end
+
   private
 
   def validate_upload_policy
@@ -32,21 +42,13 @@ module SS::UploadPolicy
 
   def sanitizer_save_file
     return false unless SS::UploadPolicy.upload_policy == 'sanitizer'
-    return false unless in_file.kind_of?(ActionDispatch::Http::UploadedFile)
+    return false unless force_sanitize || in_file.kind_of?(ActionDispatch::Http::UploadedFile)
     return false if try(:original_id)
 
     Fs.rm_rf(sanitizer_input_path) if Fs.exists?(sanitizer_input_path)
     Fs.upload(sanitizer_input_path, in_file.path)
     self.sanitizer_state = 'wait'
     self.size = in_file.size
-
-    wait_file = Fs::UploadedFile.create_from_file(SS.config.ss.sanitizer_wait_image)
-    SS::ImageConverter.attach(wait_file, ext: ::File.extname(in_file.original_filename)) do |converter|
-      converter.apply_defaults!(resizing: resizing)
-      Fs.upload(path, converter.to_io)
-      self.geo_location = converter.geo_location
-    end
-
     return true
   end
 

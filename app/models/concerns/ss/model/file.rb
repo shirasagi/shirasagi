@@ -377,7 +377,7 @@ module SS::Model::File
     dir = ::File.dirname(path)
     Fs.mkdir_p(dir) unless Fs.exists?(dir)
 
-    return if sanitizer_save_file
+    sanitizer_save_file
 
     SS::ImageConverter.attach(in_file, ext: ::File.extname(in_file.original_filename)) do |converter|
       converter.apply_defaults!(resizing: resizing)

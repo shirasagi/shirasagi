@@ -48,6 +48,7 @@ class Sns::Apis::ReplaceFilesController < ApplicationController
     @item.attributes = get_params
     @item.in_file = SS::ReplaceTempFile.find(@item.in_file).uploaded_file
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    @item.force_sanitize = true
     raise "403" unless @owner_item.allowed?(:edit, @cur_user, site: @site)
 
     result = @item.update

@@ -78,6 +78,7 @@ class Cms::Notice
         file.owner_item = self if file.respond_to?(:owner_item=)
 
         file.save validate: false
+        file.sanitizer_copy_file
         ids[f.id] = file.id
 
         html = self.html

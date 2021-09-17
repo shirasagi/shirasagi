@@ -81,6 +81,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
           end
 
           clone_file.save(validate: false)
+          clone_file.sanitizer_copy_file
           result = clone_file
 
           next unless result
