@@ -81,9 +81,10 @@ module Event::IcalHelper
   end
 
   def set_start_and_end(item, event)
-    event_dates = item.get_event_dates
+    event_dates = item.event_dates
     return if event_dates.blank?
 
+    event_dates = event_dates.clustered
     event_range = event_dates.first
     event.dtstart = ::Icalendar::Values::Date.new(event_range.first.to_date)
 
