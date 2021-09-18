@@ -119,6 +119,7 @@ module SS::Relation::File
   def _save_relation(name, opts)
     file = relation_file(name, opts)
     file.save
+    file.try(:sanitizer_copy_file)
     send("#{name}=", file)
   end
 

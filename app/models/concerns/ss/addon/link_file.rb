@@ -120,6 +120,7 @@ module SS::Addon
         ss_file.owner_item = self
         ss_file.state = "public"
         ss_file.save
+        ss_file.sanitizer_copy_file
 
         add_ids << ss_file.id
       end

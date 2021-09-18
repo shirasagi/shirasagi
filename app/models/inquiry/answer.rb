@@ -118,6 +118,7 @@ class Inquiry::Answer
           ss_file.site_id = cur_site.id
           ss_file.state = "closed"
           ss_file.model = "inquiry/temp_file"
+          ss_file.skip_sanitize_file if client_name != :default
           ss_file.save
           ss_file
         end

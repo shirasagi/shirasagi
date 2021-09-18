@@ -50,14 +50,16 @@ describe "member_apis_temp_files", type: :feature, dbscope: :example, js: true d
       expect(file.sanitizer_state).to eq 'wait'
       expect(Fs.exists?(file.path)).to be_truthy
       expect(Fs.exists?(file.sanitizer_input_path)).to be_truthy
-      expect(FileTest.size(file.path)).to eq 2048
+      expect(FileUtils.cmp(file.path, file.sanitizer_input_path)).to be_truthy
 
       # restore
+      Fs.rm_rf file.path
       output_path = "#{SS.config.ss.sanitizer_output}/#{file.id}_filename_100_marked.#{file.extname}"
       Fs.mv file.sanitizer_input_path, output_path
       file.sanitizer_restore_file(output_path)
       expect(file.sanitizer_state).to eq 'complete'
-      expect(FileTest.size(file.path)).to be > 2048
+      expect(Fs.exists?(file.path)).to be_truthy
+      expect(Fs.exists?(output_path)).to be_falsey
     end
   end
 

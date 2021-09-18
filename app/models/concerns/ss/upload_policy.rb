@@ -2,7 +2,6 @@ module SS::UploadPolicy
   extend ActiveSupport::Concern
 
   included do
-    attr_accessor :force_sanitize
     field :sanitizer_state, type: String
     before_destroy :remove_sanitizer_file
   end
@@ -15,22 +14,33 @@ module SS::UploadPolicy
     %w(wait complete).map { |v| [ I18n.t("ss.options.sanitizer_state.#{v}"), v ] }
   end
 
-  def sanitizer_restore_file(output_path)
-    self.sanitizer_state = 'complete'
-    self.in_file = Fs::UploadedFile.create_from_file(output_path)
-    return false unless save
+  def force_sanitize_file
+    @force_sanitize_file = true
+  end
 
-    Fs.rm_rf(output_path)
-    true
+  def skip_sanitize_file
+    @skip_sanitize_file = true
   end
 
   def sanitizer_copy_file
-    dump "copy_file #{path}"
+    return false unless SS::UploadPolicy.upload_policy == 'sanitizer'
+    return false if @skip_sanitize_file
 
     Fs.rm_rf(sanitizer_input_path) if Fs.exists?(sanitizer_input_path)
     Fs.upload(sanitizer_input_path, path)
     self.sanitizer_state = 'wait'
     save(validate: false)
+  end
+
+  def sanitizer_restore_file(output_path)
+    self.sanitizer_state = 'complete'
+    self.in_file = Fs::UploadedFile.create_from_file(output_path)
+    return false unless save(validate: false)
+
+    try(:generate_public_file) if try(:public?)
+
+    Fs.rm_rf(output_path)
+    true
   end
 
   private
@@ -42,13 +52,14 @@ module SS::UploadPolicy
 
   def sanitizer_save_file
     return false unless SS::UploadPolicy.upload_policy == 'sanitizer'
-    return false unless force_sanitize || in_file.kind_of?(ActionDispatch::Http::UploadedFile)
+    return false unless @force_sanitize_file || in_file.kind_of?(ActionDispatch::Http::UploadedFile)
+    return false if @skip_sanitize_file
     return false if try(:original_id)
 
     Fs.rm_rf(sanitizer_input_path) if Fs.exists?(sanitizer_input_path)
-    Fs.upload(sanitizer_input_path, in_file.path)
+    Fs.upload(sanitizer_input_path, path)
     self.sanitizer_state = 'wait'
-    self.size = in_file.size
+
     return true
   end
 

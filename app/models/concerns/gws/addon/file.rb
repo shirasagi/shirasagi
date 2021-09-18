@@ -116,6 +116,7 @@ module Gws::Addon
         ss_file.owner_item = self
         ss_file.in_file = file
         ss_file.save
+        ss_file.sanitizer_copy_file
 
         add_ids << ss_file.id
       end

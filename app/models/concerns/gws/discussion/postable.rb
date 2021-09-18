@@ -134,6 +134,7 @@ module Gws::Discussion::Postable
         file.user_id = @cur_user.id if @cur_user
 
         file.save!
+        file.sanitizer_copy_file
         file_ids << file.id
       end
       post.file_ids = file_ids

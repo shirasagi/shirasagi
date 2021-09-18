@@ -91,6 +91,8 @@ class Gws::Column::Value::FileUpload < Gws::Column::Value::Base
       file.owner_item = _parent
 
       file.save validate: false
+      file.sanitizer_copy_file
+
       ids[f.id] = file.id
     end
     self.file_ids = ids.values

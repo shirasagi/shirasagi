@@ -56,15 +56,18 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
       expect(Fs.exists?(file.sanitizer_input_path)).to be_truthy
 
       # restore
+      Fs.rm_rf file.path
       output_path = "#{SS.config.ss.sanitizer_output}/#{file.id}_filename_100_marked.#{file.extname}"
       Fs.mv file.sanitizer_input_path, output_path
       file.sanitizer_restore_file(output_path)
       expect(file.sanitizer_state).to eq 'complete'
+      expect(Fs.exists?(file.path)).to be_truthy
+      expect(Fs.exists?(output_path)).to be_falsey
 
       visit sys_ad_path
-      expect(page).to have_no_css('.list-items .sanitizer-wait')
+      expect(page).to have_css('#selected-files .sanitizer-complete')
       click_on I18n.t("ss.links.edit")
-      expect(page).to have_no_css('.sanitizer-wait')
+      expect(page).to have_css('.index.ajax-selected .sanitizer-complete')
     end
   end
 

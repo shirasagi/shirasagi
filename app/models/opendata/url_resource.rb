@@ -149,6 +149,7 @@ class Opendata::UrlResource
           @download_temp_file.owner_item = dataset
 
           if @download_temp_file.save
+            @download_temp_file.sanitizer_copy_file
             self.file.destroy if file
             self.file_id = @download_temp_file.id
           end
