@@ -6,6 +6,8 @@ module Cms::Model::Page
   include Cms::Reference::Layout
 
   included do
+    include Cms::Model::PageDiscriminatorRetrieval
+
     class_variable_set(:@@_show_path, nil)
 
     define_model_callbacks :generate_file

@@ -4,6 +4,8 @@ module Cms::Model::Part
   include Cms::Content
 
   included do
+    include Cms::Model::PartDiscriminatorRetrieval
+
     store_in collection: "cms_parts"
     set_permission_name "cms_parts"
 

@@ -11,6 +11,8 @@ module Cms::Model::Node
   include Facility::Reference::Location
 
   included do
+    include Cms::Model::NodeDiscriminatorRetrieval
+
     store_in collection: "cms_nodes"
     set_permission_name "cms_nodes"
 
