@@ -14,6 +14,9 @@ describe "voice_main", type: :feature, dbscope: :example do
       Fs.binwrite(output, IO.binread("#{Rails.root}/spec/fixtures/voice/voice-disabled.wav"))
       true
     end
+
+    # explicitly set user-agent to pass bot detection
+    page.driver.header('User-Agent', 'shirasagi rspec')
   end
   after { WebMock.reset! }
 
