@@ -14,7 +14,6 @@ module SS::AjaxFileFilter
 
   def select_with_clone
     set_item
-    return render(json: [I18n.t('ss.errors.sanitizer.wait')], status: 500) if @item.sanitizer_state == 'wait'
 
     @item = @item.copy(
       cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node
