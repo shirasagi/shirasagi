@@ -268,10 +268,18 @@ module Cms::Model::Node
     Fs.mv src, dst if Fs.exists?(src)
 
     src, dst = @db_changes["filename"]
-    %w(nodes pages parts layouts).each do |name|
-      send(name).where(filename: /^#{::Regexp.escape(src)}\//).each do |item|
-        dst_filename = item.filename.sub(/^#{::Regexp.escape(src)}\//, "#{dst}/")
-        item.set(filename: dst_filename, depth: dst_filename.scan("/").size + 1)
+    [ Cms::Node, Cms::Page, Cms::Part, Cms::Layout ].each do |model|
+      criteria = model.unscoped
+      criteria = criteria.site(@cur_site)
+      criteria = criteria.where(filename: /^#{::Regexp.escape(src)}\//)
+
+      all_ids = criteria.pluck(:id)
+      all_ids.each_slice(20) do |ids|
+        criteria.in(id: ids).to_a.each do |item|
+          item = item.becomes_with_route if item.respond_to?(:becomes_with_route)
+          dst_filename = item.filename.sub(/^#{::Regexp.escape(src)}\//, "#{dst}/")
+          item.set(filename: dst_filename, depth: dst_filename.scan("/").size + 1)
+        end
       end
     end
   end
