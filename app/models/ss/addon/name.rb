@@ -15,18 +15,15 @@ class SS::Addon::Name
     File.exists?(file) ? path : nil
   end
 
-  def show_file
-    file = "#{Rails.root}/app/views/#{path}/_show.html.erb"
-    File.exists?(file) ? file : nil
+  def show_partial_path
+    "#{path}/show" if File.exists?("#{Rails.root}/app/views/#{path}/_show.html.erb")
   end
 
-  def form_file
-    file = "#{Rails.root}/app/views/#{path}/_form.html.erb"
-    File.exists?(file) ? file : nil
+  def form_partial_path
+    "#{path}/form" if File.exists?("#{Rails.root}/app/views/#{path}/_form.html.erb")
   end
 
-  def view_file
-    file = "#{Rails.root}/app/views/#{path}/view/index.html.erb"
-    File.exists?(file) ? file : nil
+  def view_template_path
+    "#{path}/view/index" if File.exists?("#{Rails.root}/app/views/#{path}/view/index.html.erb")
   end
 end
