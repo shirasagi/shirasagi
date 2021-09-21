@@ -9,8 +9,6 @@ FactoryBot.define do
   end
 
   factory :cms_page, class: Cms::Page, traits: [:cms_page] do
-    #
-
     factory :cms_page_basename_invalid do
       basename { "pa/ge.html" }
     end

@@ -8,7 +8,7 @@ FactoryBot.define do
   end
 
   factory :cms_role, class: Cms::Role, traits: [:cms_role] do
-    permissions { ["release_private_cms_pages"] }
+    permissions { %w(release_private_cms_pages) }
   end
 
   factory :cms_role_admin, class: Cms::Role do

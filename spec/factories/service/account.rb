@@ -9,6 +9,6 @@ FactoryBot.define do
     account { "text-#{unique_id}" }
     in_password { "text-#{unique_id}" }
     name { "text-#{unique_id}" }
-    roles { ['administrator'] }
+    roles { %w(administrator) }
   end
 end

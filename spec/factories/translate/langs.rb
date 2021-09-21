@@ -21,7 +21,6 @@ FactoryBot.define do
     accept_languages { %w(en) }
   end
 
-
   factory :translate_lang_ko, class: Translate::Lang, traits: [:translate_lang] do
     name { "韓国語" }
     code { "ko" }
