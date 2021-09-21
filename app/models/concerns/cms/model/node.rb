@@ -270,7 +270,7 @@ module Cms::Model::Node
     src, dst = @db_changes["filename"]
     [ Cms::Node, Cms::Page, Cms::Part, Cms::Layout ].each do |model|
       criteria = model.unscoped
-      criteria = criteria.site(@cur_site)
+      criteria = criteria.site(@cur_site || site)
       criteria = criteria.where(filename: /^#{::Regexp.escape(src)}\//)
 
       all_ids = criteria.pluck(:id)
