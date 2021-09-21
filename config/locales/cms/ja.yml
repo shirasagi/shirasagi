@@ -216,9 +216,9 @@ ja:
           search: データセットを検索
           select: データセットを設定する
       forms:
-        index: 定形フォームを選択する
-        search: 定形フォームを検索
-        select: 定形フォームを設定する
+        index: 定型フォームを選択する
+        search: 定型フォームを検索
+        select: 定型フォームを設定する
     auto_correct:
       link: 自動修正
       notice: アクセシビリティチェック（保存時に自動で修正されます）
@@ -1237,8 +1237,8 @@ ja:
       thumb_is_blank: サムネイル画像が登録されていません。
       not_found_file_url_in_body: 本文内の画像が見つかりませんでした。
       unable_to_delete_in_use_column_without_confirmation: 同意がないため削除できません。
-      unable_to_delete_all_columns_if_form_is_in_use: 定形フォームが使用中のため一括削除することはできません。
-      unable_to_close_form_if_form_is_in_use: 定形フォームが使用中のため非公開にすることはできません。
+      unable_to_delete_all_columns_if_form_is_in_use: 定型フォームが使用中のため一括削除することはできません。
+      unable_to_close_form_if_form_is_in_use: 定型フォームが使用中のため非公開にすることはできません。
 
     template:
       no_errors: エラーは見つかりませんでした。
