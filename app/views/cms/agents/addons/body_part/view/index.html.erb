@@ -7,7 +7,7 @@ addons = @cur_page.body_layout.body_layout_addons
 html.gsub!(/\{\{ addon "(.+?)" \}\}/) do |m|
   name = $1
   addon = addons[name]
-  addon ? render(file: addon.view_file) : m
+  addon ? render(template: addon.view_template_path) : m
 end
 html.gsub!(/\{\{ yield (\d+?) \}\}/) do
   n = $1.to_i

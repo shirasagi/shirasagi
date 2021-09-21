@@ -12,7 +12,7 @@ module Cms::Addon
       addons = {}
       Cms::Page.addons.each do |addon|
         route = addon.module_name
-        next unless addon.view_file
+        next unless addon.view_template_path
         next if %w(cms/body cms/body_part cms/form/page).include?(route)
         addons[route] = addon
       end
