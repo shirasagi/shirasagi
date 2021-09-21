@@ -2,10 +2,10 @@
 <% addons.each do |addon| %>
   <% buf = nil %>
   <% if addon.klass == SS::Addon::Notification::Reply %>
-     <% buf = render file: @item.reply_addon_show_file if @item.reply_addon_show_file %>
+     <% buf = render @item.reply_addon_show_partial_path if @item.reply_addon_show_partial_path %>
      <% addon_name = @item.reply_addon_name %>
   <% else %>
-     <% buf = render file: addon.show_file if addon.show_file %>
+     <% buf = render addon.show_partial_path if addon.show_partial_path %>
      <% addon_name = addon.name %>
   <% end %>
 

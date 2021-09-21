@@ -11,8 +11,8 @@ module Cms::Addon
     def body_layout_addons
       addons = {}
       Cms::Page.addons.each do |addon|
-        route = addon.instance_variable_get("@name")
-        next unless addon.view_file
+        route = addon.module_name
+        next unless addon.view_template_path
         next if %w(cms/body cms/body_part cms/form/page).include?(route)
         addons[route] = addon
       end
