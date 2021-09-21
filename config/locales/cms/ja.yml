@@ -125,7 +125,7 @@ ja:
         - PDFファイルをご覧いただくためには、Adobe Readerのプラグイン（無償）が必要となります。
         - お持ちでない場合は、お使いの機種とスペックに合わせたプラグインをインストールしてください。
         - </div>
-        - <a href="http://get.adobe.com/jp/reader/">Adobe Readerをダウンロードする</a>
+        - <a href="https://get.adobe.com/jp/reader/">Adobe Readerをダウンロードする</a>
     all_content:
       download_tab: 一覧出力
       download_head: 全コンテンツ一覧出力
@@ -612,7 +612,6 @@ ja:
       cms/redirect_link: リンクページ
       cms/site_search/history: 履歴
       cms/site_search/keyword: 注目ワード
-      cms/site_search/history: 履歴
       cms/line_poster: LINE連携
       cms/content_quota: 容量制限
       cms/check_links: リンクチェック実行結果
@@ -772,13 +771,6 @@ ja:
         name: タイトル
         description: 説明
         order: 並び順
-      cms/addon/site_search/history:
-        upper_html:
-          - 上部HTMLを入力します。
-        lower_html:
-          - 下部HTMLを入力します。
-        placeholder:
-          - プレースホルダーを入力します。
       cms/command:
         name: タイトル
         description: 説明
@@ -2306,6 +2298,14 @@ ja:
     cms/check_links/ignore_url:
       name:
         - 除外URLを入力します。
+
+    cms/addon/site_search/history:
+      upper_html:
+        - 上部HTMLを入力します。
+      lower_html:
+        - 下部HTMLを入力します。
+      placeholder:
+        - プレースホルダーを入力します。
 
   all_content:
     page_id: ページID

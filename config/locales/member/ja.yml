@@ -460,10 +460,10 @@ ja:
         - 有効にした場合、Yahoo! JAPAN アカウントでログインすることができます。
       yahoojp_client_id:
         - Yahoo! JAPAN でアプリケーションを作成した際に付与される「アプリケーションID」を設定します。
-        - Yahoo! JAPAN でアプリケーションを作成するには、http://developer.yahoo.co.jp/ にブラウザでアクセスします。
+        - Yahoo! JAPAN でアプリケーションを作成するには、https://developer.yahoo.co.jp/ にブラウザでアクセスします。
       yahoojp_client_secret:
         - Yahoo! JAPAN でアプリケーションを作成した際に付与される「シークレット」を設定します。
-        - Yahoo! JAPAN でアプリケーションを作成するには、http://developer.yahoo.co.jp/ にブラウザでアクセスします。
+        - Yahoo! JAPAN でアプリケーションを作成するには、https://developer.yahoo.co.jp/ にブラウザでアクセスします。
     member/addon/google_oauth:
       google_oauth2_oauth:
         - Google による OAuth 認証を有効にするかどうかを指定します。
