@@ -130,7 +130,9 @@ RSpec.configure do |config|
 
   config.before(:example, type: :feature) do |example|
     page.reset!
-    # puts '# ' + example.metadata[:full_description]
+    unless example.metadata[:file_path].ends_with?('_spec.rb')
+      puts %(Filename does not end with "_spec.rb": #{example.metadata[:file_path]})
+    end
   end
 
   config.after(:example, type: :feature) do
