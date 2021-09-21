@@ -52,9 +52,8 @@ describe Faq::Page::ImportJob, dbscope: :example do
         expect(item.question).to eq "<p>休日や夜間でも戸籍の届出は可能でしょうか。</p>"
         expect(Cms::PageExporter.category_name_tree(item)).to match_array ["よくある質問/くらし・手続き", "よくある質問/子育て・教育"]
         expect(item.event_name).to eq "イベントタイトル"
-        expect(item.event_dates).to eq %w(
-          2016/09/08 2016/09/09 2016/09/10 2016/09/14 2016/09/15 2016/09/16
-        ).map { |d| d.in_time_zone.to_date }
+        event_dates = %w(2016/09/08 2016/09/09 2016/09/10 2016/09/14 2016/09/15 2016/09/16).map { |d| d.in_time_zone.to_date }
+        expect(item.event_dates).to eq event_dates
         expect(item.related_page_ids).to match_array [related_page.id]
         expect(item.parent_crumb_urls).to match_array ["/faq/kurashi/"]
         expect(item.label(:contact_state)).to eq "表示"
@@ -103,9 +102,8 @@ describe Faq::Page::ImportJob, dbscope: :example do
         expect(item.html).to eq "<p>可能です。</p>"
         expect(Cms::PageExporter.category_name_tree(item)).to match_array ["よくある質問/子育て・教育"]
         expect(item.event_name).to eq "イベントタイトル"
-        expect(item.event_dates).to eq %w(
-          2016/09/08 2016/09/09 2016/09/10 2016/09/14 2016/09/15 2016/09/16
-        ).map { |d| d.in_time_zone.to_date }
+        event_dates = %w(2016/09/08 2016/09/09 2016/09/10 2016/09/14 2016/09/15 2016/09/16).map { |d| d.in_time_zone.to_date }
+        expect(item.event_dates).to eq event_dates
         expect(item.related_page_ids).to match_array [related_page.id]
         expect(item.parent_crumb_urls).to match_array ["/faq/kurashi/"]
         expect(item.label(:contact_state)).to eq "表示"

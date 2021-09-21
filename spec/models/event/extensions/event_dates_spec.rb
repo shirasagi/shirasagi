@@ -142,7 +142,7 @@ describe Event::Extensions::EventDates, type: :model, dbscope: :example do
       end
 
       context "when not-Date string is given" do
-        subject { described_class.mongoize([ "hello" ]) }
+        subject { described_class.mongoize(%w(hello)) }
 
         it do
           expect(subject).to be_a(Array)
