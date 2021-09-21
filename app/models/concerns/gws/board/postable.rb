@@ -160,7 +160,7 @@ module Gws::Board::Postable
 
   # topic(root_post)を設定
   def set_topic_id
-    self.topic = root_post.becomes(Gws::Board::Topic)
+    self.topic = root_post.becomes_with(Gws::Board::Topic)
   end
 
   # コメントを許可しているか検証
