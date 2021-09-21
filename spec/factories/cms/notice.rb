@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :cms_notice, class: Cms::Notice do
     transient do
-      site nil
+      site { nil }
     end
 
     cur_site { site || cms_site }
