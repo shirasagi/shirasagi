@@ -45,7 +45,7 @@ describe Event::Page::ImportJob, dbscope: :example do
           2016/09/07 2016/09/08 2016/09/09 2016/09/10 2016/09/11 2016/09/12 2016/09/13
           2016/09/14 2016/09/15 2016/09/16 2016/09/17 2016/09/18 2016/09/19 2016/09/20
           2016/09/21 2016/09/22 2016/09/23 2016/09/24 2016/09/25 2016/09/26 2016/09/27
-        ).join("\r\n")
+        ).map { |d| d.in_time_zone.to_date }
         expect(item.event_deadline).to eq "2016/8/13".in_time_zone
         expect(item.released_type).to eq "fixed"
         expect(item.released.try(:strftime, "%Y/%m/%d %H:%M")).to eq "2016/09/07 19:11"

@@ -7,7 +7,9 @@ describe "event_agents_parts_calendar", type: :feature, dbscope: :example do
   let(:part)   { create :event_part_calendar, filename: "node/part" }
 
   context "public" do
-    let!(:item) { create :event_page, filename: "node/item", event_dates: [Time.zone.now.beginning_of_day + rand(1..7).days] }
+    let(:today) { Time.zone.today }
+    let(:event_date) { today.day > 15 ? today - rand(1..7).days : today + rand(1..7).days }
+    let!(:item) { create :event_page, filename: "node/item", event_dates: [ event_date ] }
 
     before do
       Capybara.app_host = "http://#{site.domain}"
@@ -17,7 +19,7 @@ describe "event_agents_parts_calendar", type: :feature, dbscope: :example do
       visit node.url
       expect(status_code).to eq 200
       expect(page).to have_css(".event-calendar")
-      expect(page).to have_css("a", text: item.event_dates[8..9].to_i)
+      expect(page).to have_css("a", text: event_date.day)
       expect(page).to have_no_css("div.event")
     end
 
@@ -31,7 +33,7 @@ describe "event_agents_parts_calendar", type: :feature, dbscope: :example do
         visit node.url
         expect(status_code).to eq 200
         expect(page).to have_css(".event-calendar")
-        expect(page).to have_css("a", text: item.event_dates[8..9].to_i)
+        expect(page).to have_css("a", text: event_date.day)
         expect(page).to have_no_css("div.event")
       end
     end
@@ -46,7 +48,7 @@ describe "event_agents_parts_calendar", type: :feature, dbscope: :example do
         visit node.url
         expect(status_code).to eq 200
         expect(page).to have_css(".event-calendar")
-        expect(page).to have_css("a", text: item.event_dates[8..9].to_i)
+        expect(page).to have_css("a", text: event_date.day)
         expect(page).to have_css("div.event", text: item.event_name)
       end
     end
