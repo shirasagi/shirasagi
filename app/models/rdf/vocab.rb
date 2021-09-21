@@ -76,9 +76,12 @@ class Rdf::Vocab
       keyword = params[:keyword]
       if keyword.present?
         keyword = keyword.split(/[\s　]+/).uniq.compact.map { |w| /\Q#{::Regexp.escape(w)}\E/i } if keyword.is_a?(String)
-        criteria = criteria.or({ "labels.ja" => { "$all" => keyword } },
-                               { "labels.en" => { "$all" => keyword } },
-                               { "labels.invariant" => { "$all" => keyword } })
+        conditions = [
+          { "labels.ja" => { "$all" => keyword } },
+          { "labels.en" => { "$all" => keyword } },
+          { "labels.invariant" => { "$all" => keyword } }
+        ]
+        criteria = criteria.where("$or" => conditions)
       end
 
       criteria

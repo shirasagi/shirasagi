@@ -73,7 +73,7 @@ module Cms::PageFilter
     end
 
     if cond.present?
-      @contains_urls = Cms::Page.site(@cur_site).where(:id.ne => @item.id).or(cond).
+      @contains_urls = Cms::Page.site(@cur_site).where(:id.ne => @item.id).where("$or" => cond).
         page(params[:page]).per(50)
     end
   end

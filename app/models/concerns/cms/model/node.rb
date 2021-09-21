@@ -295,10 +295,13 @@ module Cms::Model::Node
 
   def template_variable_handler_pages_count(name, issuer)
     date = issuer.try(:cur_date) || Time.zone.now
-    Cms::Page.site(issuer.cur_site || issuer.site).
-      and_public(date).
-      or({ filename: /^#{::Regexp.escape(filename)}\//, depth: depth + 1 }, { category_ids: id }).
-      count.to_s
+    criteria = Cms::Page.site(issuer.cur_site || issuer.site)
+    criteria = criteria.and_public(date)
+    criteria = criteria.where("$or" => [
+      { filename: /^#{::Regexp.escape(filename)}\//, depth: depth + 1 },
+      { category_ids: id }
+    ])
+    criteria.count.to_s
   end
 
   def remove_owned_files
