@@ -89,7 +89,7 @@ class Gws::Workflow::WizardController < ApplicationController
       workflow_approver[:user_id]
     end
 
-    group_ids = @cur_site.descendants.active.in_group(@group).pluck(:id)
+    group_ids = @cur_site.descendants_and_self.active.in_group(@group).pluck(:id)
     criteria = @item.approver_user_class.site(@cur_site)
     criteria = criteria.active
     criteria = criteria.in(group_ids: group_ids)
