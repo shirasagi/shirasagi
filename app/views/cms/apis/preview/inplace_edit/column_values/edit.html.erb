@@ -32,7 +32,7 @@
   <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
 
   <%= f.fields_for :column_values do |g| %>
-    <%= render file: @cur_column.column_form_path, locals: { f: g, column: @cur_column, value: @cur_column_value, controller: false } %>
+    <%= render @cur_column.column_form_partial_path, f: g, column: @cur_column, value: @cur_column_value, controller: false %>
 
     <%= error_messages_for :cur_column_value %>
     <%= render "cms/apis/preview/inplace_edit/main/link_errors", errors: @cur_column_value.link_errors %>

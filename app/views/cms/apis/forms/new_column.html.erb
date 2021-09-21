@@ -1,7 +1,7 @@
 <% html = nil %>
 <% form_for(:item) do |f| %>
   <% f.fields_for :column_values do |g| %>
-    <% html = capture { render file: @cur_column.column_form_path, locals: { f: g, column: @cur_column, value: nil, controller: true } } %>
+    <% html = capture { render @cur_column.column_form_partial_path, f: g, column: @cur_column, value: nil, controller: true } %>
   <% end %>
 <% end %>
 <%= html %>
