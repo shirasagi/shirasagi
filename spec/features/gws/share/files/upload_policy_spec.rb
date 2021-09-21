@@ -9,15 +9,11 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
     before { login_gws_user }
 
     before do
-      @save_config = SS.config.replace_value_at(:ss, :upload_policy, 'sanitizer')
-      Fs.mkdir_p(SS.config.ss.sanitizer_input)
-      Fs.mkdir_p(SS.config.ss.sanitizer_output)
+      upload_policy_before_settings('sanitizer')
     end
 
     after do
-      Fs.rm_rf(SS.config.ss.sanitizer_input)
-      Fs.rm_rf(SS.config.ss.sanitizer_output)
-      SS.config.replace_value_at(:ss, :upload_policy, @save_config)
+      upload_policy_after_settings
     end
 
     it do
@@ -67,23 +63,22 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       expect(file.sanitizer_state).to eq 'wait'
       expect(Fs.exists?(file.path)).to be_truthy
       expect(Fs.exists?(file.sanitizer_input_path)).to be_truthy
-      expect(FileTest.size(file.path)).to eq 2048
+      expect(Fs.cmp(file.path, file.sanitizer_input_path)).to be_truthy
 
       # show
       click_on file.name
       expect(page).to have_css('.sanitizer-wait', text: I18n.t('ss.options.sanitizer_state.wait'))
 
       # restore
-      output_path = "#{SS.config.ss.sanitizer_output}/#{file.id}_filename_100_marked.#{file.extname}"
-      Fs.mv file.sanitizer_input_path, output_path
-      file.sanitizer_restore_file(output_path)
+      output_path = sanitizer_mock_restore(file)
       expect(file.sanitizer_state).to eq 'complete'
-      expect(FileTest.size(file.path)).to be > 2048
+      expect(Fs.exists?(file.path)).to be_truthy
+      expect(Fs.exists?(output_path)).to be_falsey
 
       click_on I18n.t('ss.links.back_to_index')
-      expect(page).to have_no_css('.list-items .sanitizer-wait')
+      expect(page).to have_css('.list-items .sanitizer-complete')
       click_on file.name
-      expect(page).to have_no_css('.sanitizer-wait')
+      expect(page).to have_css('.sanitizer-complete')
 
       # update
       click_on I18n.t("ss.links.edit")
@@ -98,7 +93,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       file.reload
       file_path = file.path
       sanitizer_input_path = file.sanitizer_input_path
-      expect(FileTest.size(file.path)).to eq 2048
+      expect(Fs.cmp(file.path, file.sanitizer_input_path)).to be_truthy
 
       # soft delete
       click_on I18n.t("ss.links.delete")
@@ -126,12 +121,12 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
     before { login_gws_user }
 
     before do
-      @save_config = SS.config.replace_value_at(:ss, :upload_policy, 'sanitizer')
+      upload_policy_before_settings('sanitizer')
       site.update_attributes(upload_policy: 'restricted')
     end
 
     after do
-      SS.config.replace_value_at(:ss, :upload_policy, @save_config)
+      upload_policy_after_settings
     end
 
     it do

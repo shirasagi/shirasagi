@@ -8,15 +8,11 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
     before { login_sys_user }
 
     before do
-      @save_config = SS.config.replace_value_at(:ss, :upload_policy, 'sanitizer')
-      Fs.mkdir_p(SS.config.ss.sanitizer_input)
-      Fs.mkdir_p(SS.config.ss.sanitizer_output)
+      upload_policy_before_settings('sanitizer')
     end
 
     after do
-      Fs.rm_rf(SS.config.ss.sanitizer_input)
-      Fs.rm_rf(SS.config.ss.sanitizer_output)
-      SS.config.replace_value_at(:ss, :upload_policy, @save_config)
+      upload_policy_after_settings
     end
 
     it do
@@ -56,15 +52,15 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
       expect(Fs.exists?(file.sanitizer_input_path)).to be_truthy
 
       # restore
-      output_path = "#{SS.config.ss.sanitizer_output}/#{file.id}_filename_100_marked.#{file.extname}"
-      Fs.mv file.sanitizer_input_path, output_path
-      file.sanitizer_restore_file(output_path)
+      output_path = sanitizer_mock_restore(file)
       expect(file.sanitizer_state).to eq 'complete'
+      expect(Fs.exists?(file.path)).to be_truthy
+      expect(Fs.exists?(output_path)).to be_falsey
 
       visit sys_ad_path
-      expect(page).to have_no_css('.list-items .sanitizer-wait')
+      expect(page).to have_css('#selected-files .sanitizer-complete')
       click_on I18n.t("ss.links.edit")
-      expect(page).to have_no_css('.sanitizer-wait')
+      expect(page).to have_css('.index.ajax-selected .sanitizer-complete')
     end
   end
 
@@ -72,13 +68,13 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
     before { login_sys_user }
 
     before do
-      @save_config = SS.config.replace_value_at(:ss, :upload_policy, 'sanitizer')
+      upload_policy_before_settings('sanitizer')
       user.update(organization_id: group.id)
       group.update(upload_policy: 'restricted')
     end
 
     after do
-      SS.config.replace_value_at(:ss, :upload_policy, @save_config)
+      upload_policy_after_settings
     end
 
     it do
