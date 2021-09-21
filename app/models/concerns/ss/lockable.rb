@@ -12,7 +12,7 @@ module SS::Lockable
       lock_for ||= 5.minutes
       lock_timeout = now + lock_for
       criteria = item.class.where(id: item.id)
-      criteria = criteria.lt(lock_until: now)
+      criteria = criteria.lt(lock_until: now.utc)
       criteria.find_one_and_update({ '$set' => { lock_until: lock_timeout.utc }}, return_document: :after)
     end
 

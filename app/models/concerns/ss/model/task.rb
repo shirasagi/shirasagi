@@ -252,7 +252,7 @@ module SS::Model::Task
 
     cond = [
       { state: { "$in" => attrs[:if_states] } },
-      { updated: { "$lte" => expired_at } }
+      { updated: { "$lte" => expired_at.utc } }
     ]
     updates = {
       state: state, started: attrs[:started].try { |time| time.in_time_zone.utc }, closed: nil, interrupt: nil,

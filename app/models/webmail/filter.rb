@@ -148,7 +148,7 @@ class Webmail::Filter
 
     count
   rescue Net::IMAP::ResponseError => e
-    self.set(filter_error_at: Time.zone.now, filter_errors: [ NKF.nkf("-w", e.to_s) ])
+    self.set(filter_error_at: Time.zone.now.utc, filter_errors: [ NKF.nkf("-w", e.to_s) ])
     false
   end
 
