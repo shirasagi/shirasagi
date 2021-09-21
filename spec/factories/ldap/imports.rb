@@ -1,9 +1,9 @@
 FactoryBot.define do
   factory :ldap_import, class: Ldap::Import do
     cur_site { ss_site }
-    group_count 3
-    user_count 2
-    ldap [ { type: "group", dn: "ou=001企画政策部, dc=example, dc=jp", name: "001企画政策部" },
+    group_count { 3 }
+    user_count { 2 }
+    ldap { [ { type: "group", dn: "ou=001企画政策部, dc=example, dc=jp", name: "001企画政策部" },
            { type: "group", dn: "ou=001001政策課, ou=001企画政策部, dc=example, dc=jp",
              name: "001001政策課", parent_dn: "ou=001企画政策部, dc=example, dc=jp" },
            { type: "group", dn: "ou=001002広報課, ou=001企画政策部, dc=example, dc=jp",
@@ -13,6 +13,6 @@ FactoryBot.define do
              parent_dn: "ou=001001政策課, ou=001企画政策部, dc=example, dc=jp" },
            { type: "user", dn: "uid=user1, ou=001001政策課, ou=001企画政策部, dc=example, dc=jp",
              name: "鈴木 茂", uid: "user1", email: "user1@example.jp",
-             parent_dn: "ou=001001政策課, ou=001企画政策部, dc=example, dc=jp" } ]
+             parent_dn: "ou=001001政策課, ou=001企画政策部, dc=example, dc=jp" } ] }
   end
 end

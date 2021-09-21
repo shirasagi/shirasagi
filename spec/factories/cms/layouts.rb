@@ -11,7 +11,7 @@ FactoryBot.define do
     #
 
     factory :cms_layout_basename_invalid do
-      basename "lay/out"
+      basename { "lay/out" }
     end
   end
 end
