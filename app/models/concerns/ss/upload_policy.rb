@@ -3,7 +3,7 @@ module SS::UploadPolicy
 
   included do
     field :sanitizer_state, type: String
-    before_destroy :remove_sanitizer_file
+    before_destroy :sanitizer_remove_file
   end
 
   def sanitizer_input_path
@@ -14,12 +14,31 @@ module SS::UploadPolicy
     %w(wait complete).map { |v| [ I18n.t("ss.options.sanitizer_state.#{v}"), v ] }
   end
 
-  def sanitizer_restore_file(output_path)
-    self.sanitizer_state = 'complete'
-    self.in_file = Fs::UploadedFile.create_from_file(output_path)
-    return false unless save
+  def sanitizer_skip
+    @sanitizer_skip = true
+  end
 
+  def sanitizer_copy_file
+    return false unless SS::UploadPolicy.upload_policy == 'sanitizer'
+    return false if @sanitizer_skip
+    return false if try(:original_id)
+    return false if errors.present?
+
+    ::FileUtils.rm_f(sanitizer_input_path) if FileTest.exist?(sanitizer_input_path)
+    ::FileUtils.copy(path, sanitizer_input_path) if FileTest.exist?(path)
+
+    set(sanitizer_state: 'wait') unless sanitizer_state == 'wait'
+  end
+
+  def sanitizer_restore_file(output_path)
+    self.in_file = Fs::UploadedFile.create_from_file(output_path)
+    self.sanitizer_state = 'complete'
+    sanitizer_skip
+    return false unless save(validate: false)
+
+    try(:generate_public_file) if try(:public?)
     Fs.rm_rf(output_path)
+
     true
   end
 
@@ -32,33 +51,23 @@ module SS::UploadPolicy
 
   def sanitizer_save_file
     return false unless SS::UploadPolicy.upload_policy == 'sanitizer'
-    return false unless in_file.kind_of?(ActionDispatch::Http::UploadedFile)
+    return false unless in_file
+    return false if @sanitizer_skip
     return false if try(:original_id)
 
-    Fs.rm_rf(sanitizer_input_path) if Fs.exists?(sanitizer_input_path)
-    Fs.upload(sanitizer_input_path, in_file.path)
+    ::FileUtils.rm_f(sanitizer_input_path) if FileTest.exist?(sanitizer_input_path)
+    ::FileUtils.copy(path, sanitizer_input_path) if FileTest.exist?(path)
+
     self.sanitizer_state = 'wait'
-    self.size = in_file.size
-
-    wait_file = Fs::UploadedFile.create_from_file(SS.config.ss.sanitizer_wait_image)
-    SS::ImageConverter.attach(wait_file, ext: ::File.extname(in_file.original_filename)) do |converter|
-      converter.apply_defaults!(resizing: resizing)
-      Fs.upload(path, converter.to_io)
-      self.geo_location = converter.geo_location
-    end
-
-    return true
   end
 
-  def remove_sanitizer_file
-    Fs.rm_rf(sanitizer_input_path) if SS::UploadPolicy.upload_policy == 'sanitizer'
+  def sanitizer_remove_file
+    ::FileUtils.rm_f(sanitizer_input_path) if SS::UploadPolicy.upload_policy == 'sanitizer'
   end
 
   module_function
 
   def upload_policy
-    return nil if SS.config.ss.upload_policy.blank?
-
     default = SS.config.ss.upload_policy
     return SS.current_site.upload_policy || default if SS.current_site
     return SS.current_organization.upload_policy || default if SS.current_organization

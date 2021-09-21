@@ -125,6 +125,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
       end
 
       clone_file.save(validate: false)
+      clone_file.sanitizer_copy_file
       self.file = clone_file
     end
 
