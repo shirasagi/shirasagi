@@ -520,6 +520,8 @@ GEM
       unicode-display_width (>= 1.4.0, < 1.7)
     rubocop-performance (1.4.0)
       rubocop (>= 0.71.0)
+    rubocop-rspec (1.41.0)
+      rubocop (>= 0.68.1)
     ruby-debug-ide (0.7.2)
       rake (>= 0.8.1)
     ruby-progressbar (1.10.1)
@@ -733,6 +735,7 @@ DEPENDENCIES
   rspec-retry
   rubocop
   rubocop-performance
+  rubocop-rspec
   ruby-debug-ide
   ruby-saml
   rubyzip
