@@ -11,6 +11,10 @@ FactoryBot.define do
     portlet_model { "schedule" }
   end
 
+  trait :gws_portal_notice_portlet do
+    portlet_model { "notice" }
+  end
+
   trait :gws_portal_ad_portlet do
     portlet_model { "ad" }
     ad_width { rand(300..400) }
