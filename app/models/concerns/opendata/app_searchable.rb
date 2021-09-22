@@ -57,7 +57,7 @@ module Opendata::AppSearchable
 
     def search_name(params)
       return all if params.blank? || params[:name].blank?
-      all.keyword_in params[:keyword], :name
+      all.keyword_in(params[:keyword].presence || params[:name], :name)
     end
 
     def search_tag(params)
