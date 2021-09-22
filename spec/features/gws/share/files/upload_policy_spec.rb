@@ -121,7 +121,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
     before { login_gws_user }
 
     before do
-      upload_policy_before_settings('sanitizer')
+      # upload_policy_before_settings('sanitizer')
       site.update_attributes(upload_policy: 'restricted')
     end
 

@@ -58,7 +58,7 @@ describe "member_apis_temp_files", type: :feature, dbscope: :example, js: true d
 
   context "restricted setting" do
     before do
-      upload_policy_before_settings('sanitizer')
+      # upload_policy_before_settings('sanitizer')
       site.update_attributes(upload_policy: 'restricted')
     end
 

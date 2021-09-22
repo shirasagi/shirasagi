@@ -74,7 +74,7 @@ describe "cms_files_with_upload_policy", type: :feature, dbscope: :example, js: 
     before { login_cms_user }
 
     before do
-      upload_policy_before_settings('sanitizer')
+      # upload_policy_before_settings('sanitizer')
       site.update_attributes(upload_policy: 'restricted')
     end
 

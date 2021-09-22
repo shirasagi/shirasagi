@@ -68,7 +68,7 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
     before { login_sys_user }
 
     before do
-      upload_policy_before_settings('sanitizer')
+      # upload_policy_before_settings('sanitizer')
       user.update(organization_id: group.id)
       group.update(upload_policy: 'restricted')
     end
