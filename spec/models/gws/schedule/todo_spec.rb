@@ -38,7 +38,9 @@ RSpec.describe Gws::Schedule::Todo, type: :model, dbscope: :example do
 
     it do
       # 無関係のユーザーが指定された場合
-      result = subject.calendar_format(user2, site)
+      opts = {}
+      opts[:cur_user] = user1
+      result = subject.calendar_format(user2, site, opts)
       expect(result).to be_present
       expect(result[:readable]).to be_falsey
       expect(result[:editable]).to be_falsey
@@ -54,7 +56,9 @@ RSpec.describe Gws::Schedule::Todo, type: :model, dbscope: :example do
 
       it do
         # 管理者が指定された場合
-        result = subject.calendar_format(user1, site)
+        opts = {}
+        opts[:cur_user] = user1
+        result = subject.calendar_format(user1, site, opts)
         expect(result).to be_present
         expect(result[:readable]).to be_truthy
         expect(result[:editable]).to be_truthy
@@ -72,7 +76,9 @@ RSpec.describe Gws::Schedule::Todo, type: :model, dbscope: :example do
 
       it do
         # 管理者が指定された場合
-        result = subject.calendar_format(user1, site)
+        opts = {}
+        opts[:cur_user] = user1
+        result = subject.calendar_format(user1, site, opts)
         expect(result).to be_present
         expect(result[:readable]).to be_truthy
         expect(result[:editable]).to be_truthy
@@ -90,7 +96,9 @@ RSpec.describe Gws::Schedule::Todo, type: :model, dbscope: :example do
 
       it do
         # 管理者が指定された場合
-        result = subject.calendar_format(user1, site)
+        opts = {}
+        opts[:cur_user] = user1
+        result = subject.calendar_format(user1, site, opts)
         expect(result).to be_present
         expect(result[:readable]).to be_truthy
         expect(result[:editable]).to be_truthy
@@ -108,7 +116,9 @@ RSpec.describe Gws::Schedule::Todo, type: :model, dbscope: :example do
 
       it do
         # 管理者が指定された場合
-        result = subject.calendar_format(user1, site)
+        opts = {}
+        opts[:cur_user] = user1
+        result = subject.calendar_format(user1, site, opts)
         expect(result).to be_present
         expect(result[:readable]).to be_truthy
         expect(result[:editable]).to be_truthy
@@ -126,7 +136,9 @@ RSpec.describe Gws::Schedule::Todo, type: :model, dbscope: :example do
 
       it do
         # 閲覧者が指定された場合（管理はできない）
-        result = subject.calendar_format(user1, site)
+        opts = {}
+        opts[:cur_user] = user1
+        result = subject.calendar_format(user1, site, opts)
         expect(result).to be_present
         expect(result[:readable]).to be_truthy
         expect(result[:editable]).to be_falsey
@@ -144,7 +156,9 @@ RSpec.describe Gws::Schedule::Todo, type: :model, dbscope: :example do
 
       it do
         # 閲覧者が指定された場合（管理はできない）
-        result = subject.calendar_format(user1, site)
+        opts = {}
+        opts[:cur_user] = user1
+        result = subject.calendar_format(user1, site, opts)
         expect(result).to be_present
         expect(result[:readable]).to be_truthy
         expect(result[:editable]).to be_falsey
@@ -162,7 +176,9 @@ RSpec.describe Gws::Schedule::Todo, type: :model, dbscope: :example do
 
       it do
         # 閲覧者が指定された場合（管理はできない）
-        result = subject.calendar_format(user1, site)
+        opts = {}
+        opts[:cur_user] = user1
+        result = subject.calendar_format(user1, site, opts)
         expect(result).to be_present
         expect(result[:readable]).to be_truthy
         expect(result[:editable]).to be_falsey
@@ -180,7 +196,9 @@ RSpec.describe Gws::Schedule::Todo, type: :model, dbscope: :example do
 
       it do
         # 閲覧者が指定された場合（管理はできない）
-        result = subject.calendar_format(user1, site)
+        opts = {}
+        opts[:cur_user] = user1
+        result = subject.calendar_format(user1, site, opts)
         expect(result).to be_present
         expect(result[:readable]).to be_truthy
         expect(result[:editable]).to be_falsey
@@ -197,7 +215,9 @@ RSpec.describe Gws::Schedule::Todo, type: :model, dbscope: :example do
 
       it do
         # 参加者が指定された場合（管理はできない）
-        result = subject.calendar_format(user1, site)
+        opts = {}
+        opts[:cur_user] = user1
+        result = subject.calendar_format(user1, site, opts)
         expect(result).to be_present
         expect(result[:readable]).to be_truthy
         expect(result[:editable]).to be_falsey
@@ -214,7 +234,9 @@ RSpec.describe Gws::Schedule::Todo, type: :model, dbscope: :example do
 
       it do
         # 参加者が指定された場合（管理はできない）
-        result = subject.calendar_format(user1, site)
+        opts = {}
+        opts[:cur_user] = user1
+        result = subject.calendar_format(user1, site, opts)
         expect(result).to be_present
         expect(result[:readable]).to be_truthy
         expect(result[:editable]).to be_falsey
@@ -231,7 +253,9 @@ RSpec.describe Gws::Schedule::Todo, type: :model, dbscope: :example do
 
       it do
         # 参加者が指定された場合（管理はできない）
-        result = subject.calendar_format(user1, site)
+        opts = {}
+        opts[:cur_user] = user1
+        result = subject.calendar_format(user1, site, opts)
         expect(result).to be_present
         expect(result[:readable]).to be_truthy
         expect(result[:editable]).to be_falsey
@@ -248,7 +272,9 @@ RSpec.describe Gws::Schedule::Todo, type: :model, dbscope: :example do
 
       it do
         # 参加者が指定された場合（管理はできない）
-        result = subject.calendar_format(user1, site)
+        opts = {}
+        opts[:cur_user] = user1
+        result = subject.calendar_format(user1, site, opts)
         expect(result).to be_present
         expect(result[:readable]).to be_truthy
         expect(result[:editable]).to be_falsey

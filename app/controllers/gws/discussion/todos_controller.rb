@@ -92,10 +92,12 @@ class Gws::Discussion::TodosController < ApplicationController
   def events
     @start_at = params[:s][:start].to_date
     @end_at = params[:s][:end].to_date
+    opts = {}
+    opts[:cur_user] = @cur_user
 
     set_items
     @todos = @items.map do |todo|
-      result = todo.calendar_format(@cur_user, @cur_site)
+      result = todo.calendar_format(@cur_user, @cur_site, opts)
       result[:restUrl] = gws_discussion_forum_todos_path(site: @cur_site.id)
       result
     end

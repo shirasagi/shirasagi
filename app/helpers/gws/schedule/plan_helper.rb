@@ -21,17 +21,18 @@ module Gws::Schedule::PlanHelper
   end
 
   def calendar_format(plans, opts = {})
-    if opts[:user]
-      user = Gws::User.find(opts[:user].to_i)
+    user = @cur_user
+    if request.url.include?("/schedule/plans/")
+      opts[:user] = @cur_user
     else
-      user = @cur_user
+      user = get_gws_user(opts[:user].to_i)
     end
     events = plans.map { |m| m.calendar_format(user, @cur_site, opts) }
     return events unless opts[:holiday]
 
     events += calendar_holidays opts[:holiday][0], opts[:holiday][1]
     events += group_holidays opts[:holiday][0], opts[:holiday][1]
-    events += calendar_todos(opts[:holiday][0], opts[:holiday][1])
+    events += calendar_todos(opts[:holiday][0], opts[:holiday][1], opts)
     events
   end
 
@@ -47,13 +48,22 @@ module Gws::Schedule::PlanHelper
     end
   end
 
-  def calendar_todos(start_at, end_at)
+  def calendar_todos(start_at, end_at, opts)
     return [] if @todos.blank?
 
+    user = get_gws_user(opts[:user_id])
     @todos.map do |todo|
-      result = todo.calendar_format(@cur_user, @cur_site)
+      result = todo.calendar_format(user, @cur_site, opts)
       result[:restUrl] = gws_schedule_todo_readables_path(category: Gws::Schedule::TodoCategory::ALL.id)
       result
+    end
+  end
+
+  def get_gws_user(user_id)
+    if user_id
+      user = Gws::User.find(user_id)
+    else
+      user = @cur_user
     end
   end
 end
