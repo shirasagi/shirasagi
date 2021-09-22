@@ -35,11 +35,6 @@ describe Opendata::Idea, dbscope: :example do
   subject { base_criteria.search(search_params).pluck(:id) }
 
   describe ".search" do
-    # context 'with no option' do
-    #   subject { base_criteria.search }
-    #   it { expect(subject.count).to eq 3 }
-    # end
-
     context 'with nil' do
       let(:search_params) { nil }
       it { expect(subject.length).to eq 3 }
@@ -113,6 +108,52 @@ describe Opendata::Idea, dbscope: :example do
     context 'with tag' do
       let(:search_params) { { tag: [ tag1, tag2, tag3 ].sample } }
       it { expect(subject.length).to eq 2 }
+    end
+
+    context 'with area_id' do
+      let!(:area1) { create :opendata_node_area }
+      let!(:area2) { create :opendata_node_area }
+      let(:search_params) { { area_id: area1.id.to_s } }
+
+      before do
+        idea1.update(area_ids: [ area1.id ])
+        idea2.update(area_ids: [ area2.id ])
+      end
+
+      it { expect(subject.length).to eq 1 }
+    end
+
+    context 'with category_id' do
+      let!(:category1) { create :opendata_node_category }
+      let!(:category2) { create :opendata_node_category }
+      let(:search_params) { { site: cms_site, category_id: category2.id.to_s } }
+
+      before do
+        idea1.update(category_ids: [ category1.id ])
+        idea2.update(category_ids: [ category2.id ])
+      end
+
+      it { expect(subject.length).to eq 1 }
+    end
+
+    context 'with poster' do
+      let!(:member1) { create :cms_member }
+      let!(:member2) { create :cms_member }
+
+      before do
+        idea1.update(workflow_member_id: member1.id)
+        idea2.update(workflow_member_id: member2.id)
+      end
+
+      context 'with "member"' do
+        let(:search_params) { { poster: "member" } }
+        it { expect(subject.length).to eq 2 }
+      end
+
+      context 'with "admin"' do
+        let(:search_params) { { poster: "admin" } }
+        it { expect(subject.length).to eq 1 }
+      end
     end
 
     context 'with composite params' do
