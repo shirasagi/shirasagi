@@ -33,6 +33,10 @@ module Gws::Addon::Portal::Portlet
       if category_ids.present?
         search[:category_ids] = category_ids
       end
+      folder_ids = notice_folders.readable(user, site: portal.site).pluck(:id)
+      if folder_ids.present?
+        search[:folder_ids] = folder_ids
+      end
       if notice_browsed_state.present?
         search[:user] = user
         search[:browsed_state] = notice_browsed_state
