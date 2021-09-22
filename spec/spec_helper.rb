@@ -130,6 +130,7 @@ RSpec.configure do |config|
 
   config.before(:example, type: :feature) do |example|
     page.reset!
+    # puts '# ' + example.metadata[:full_description]
   end
 
   config.after(:example, type: :feature) do
