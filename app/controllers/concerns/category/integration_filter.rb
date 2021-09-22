@@ -1,8 +1,6 @@
 module Category::IntegrationFilter
   extend ActiveSupport::Concern
 
-  public
-
   def split
     set_item
     @item = @item.becomes_with_route

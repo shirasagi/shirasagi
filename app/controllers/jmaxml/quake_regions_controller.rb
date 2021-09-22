@@ -30,10 +30,10 @@ class Jmaxml::QuakeRegionsController < ApplicationController
     set_items
     @items = @items.order_by(order: 1, id: 1)
 
+    enum = SS::CsvConverter.enum_csv(@items, %w(code name yomi order state))
     filename = "quake_regions_#{Time.zone.now.to_i}.csv"
     response.status = 200
-    send_enum SS::CsvConverter.enum_csv(@items, %w(code name yomi order state)),
-      type: 'text/csv; charset=Shift_JIS', filename: filename
+    send_enum enum, type: 'text/csv; charset=Shift_JIS', filename: filename
   end
 
   def import

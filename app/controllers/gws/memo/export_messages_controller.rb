@@ -57,6 +57,5 @@ class Gws::Memo::ExportMessagesController < ApplicationController
   end
 
   def start_export
-    #
   end
 end

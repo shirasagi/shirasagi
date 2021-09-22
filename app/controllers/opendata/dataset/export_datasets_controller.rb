@@ -39,6 +39,5 @@ class Opendata::Dataset::ExportDatasetsController < ApplicationController
   end
 
   def start_export
-    #
   end
 end
