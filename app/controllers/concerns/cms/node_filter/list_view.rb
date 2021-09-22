@@ -73,7 +73,6 @@ module Cms::NodeFilter::ListView
   public
 
   def index
-    # release 順に並べるには Ruby でソートするしか（現時点では）方法がない
     @items = SS::SortEmulator.new(pages, @cur_node.sort_hash)
 
     if params[:page].numeric?

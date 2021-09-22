@@ -32,13 +32,7 @@ class SS::SortEmulator
 
   def each(&block)
     if able_to_sort_by_ruby?
-      key = sort_hash.keys.first
-      key = key.to_s unless key.is_a?(String)
-      if key == "released"
-        released_ruby_sort(&block)
-      else
-        generic_ruby_sort(&block)
-      end
+      generic_ruby_sort(&block)
     else
       mongo_sort(&block)
     end
@@ -72,14 +66,6 @@ class SS::SortEmulator
   def generic_ruby_sort(&block)
     all_id_with_values = @model_class.all.where(@selector).reorder(id: 1).pluck(:id, *sort_hash.keys)
     all_id_with_values.sort! { |lhs, rhs| page_id_sort_proc(lhs, rhs) }
-
-    _ruby_sort(all_id_with_values, &block)
-  end
-
-  def released_ruby_sort(&block)
-    pluck_fields = %i[id released_type released updated created first_released]
-    all_id_with_values = @model_class.all.where(@selector).reorder(id: 1).pluck(*pluck_fields)
-    all_id_with_values.sort! { |lhs, rhs| released_sort_proc(lhs, rhs) }
 
     _ruby_sort(all_id_with_values, &block)
   end
@@ -140,29 +126,6 @@ class SS::SortEmulator
     if cmp == 0
       # fallback: compare ids
       cmp = compare_value_asc(lhs[0], rhs[0])
-    end
-
-    cmp
-  end
-
-  def released_sort_proc(lhs, rhs)
-    lhs_id, lhs_released_type, lhs_released, lhs_updated, lhs_created, lhs_first_released = *lhs
-    rhs_id, rhs_released_type, rhs_released, rhs_updated, rhs_created, rhs_first_released = *rhs
-
-    lhs_val = Cms.cms_page_date(lhs_released_type, lhs_released, lhs_updated, lhs_created, lhs_first_released)
-    rhs_val = Cms.cms_page_date(rhs_released_type, rhs_released, rhs_updated, rhs_created, rhs_first_released)
-
-    _field, direction = *sort_hash.first
-    direction = normalize_sort_direction(direction)
-    if direction > 0
-      cmp = compare_value_asc(lhs_val, rhs_val)
-    else
-      cmp = compare_value_asc(rhs_val, lhs_val)
-    end
-
-    if cmp == 0
-      # fallback: compare ids
-      cmp = compare_value_asc(lhs_id, rhs_id)
     end
 
     cmp
