@@ -69,6 +69,7 @@ module SS::UploadPolicy
 
   def upload_policy
     default = SS.config.ss.upload_policy
+    return nil unless default
     return SS.current_site.upload_policy || default if SS.current_site
     return SS.current_organization.upload_policy || default if SS.current_organization
     return SS.current_user.organization.try(:upload_policy) || default if SS.current_user
