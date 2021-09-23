@@ -188,7 +188,7 @@ describe "voice_main", type: :feature, dbscope: :example, open_jtalk: true do
       let(:path) { "#{unique_id}.html" }
       let(:url) { "http://#{voice_site.domain}/#{path}" }
 
-      it "returns 202, and then returns 200" do
+      it "returns 404" do
         visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
         expect(status_code).to eq 404
       end
