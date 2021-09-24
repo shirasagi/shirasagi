@@ -61,6 +61,12 @@ module Gws::Schedule::CalendarFormat
       attendance_state = attendance.try(:attendance_state) || 'unknown'
 
       data[:className] += " fc-event-user-attendance-#{attendance_state}"
+
+      if attendance_state == "absence"
+        return data[:readble], data[:editable] = false if opts[:cur_user] != user
+
+        data[:className] += ' hide'
+      end
     end
 
     if approval_check_plan?

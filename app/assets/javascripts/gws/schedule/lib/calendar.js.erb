@@ -82,6 +82,13 @@ this.Gws_Schedule_Calendar = (function ($) {
         withAbsence: {
           text: "<%= I18n.t('gws/schedule.calendar.buttonText.withAbsence') %>",
           click: function (e) {
+            $(".fc-event-user-attendance-absence").each(function() {
+              if ($(this).hasClass('hide')) {
+                $(this).removeClass('hide')
+              } else {
+                $(this).addClass('hide')
+              }
+            });
             $('.fc-event-user-attendance-absence').toggle(!$(this).hasClass('fc-state-active'));
             $(this).toggleClass("fc-state-active");
             return Gws_Schedule_Calendar.updateNoPlanVisibility($(this).closest(".fc"));
