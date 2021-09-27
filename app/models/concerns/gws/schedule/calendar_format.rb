@@ -63,7 +63,7 @@ module Gws::Schedule::CalendarFormat
       data[:className] += " fc-event-user-attendance-#{attendance_state}"
 
       if attendance_state == "absence"
-        return data[:readble], data[:editable] = false if opts[:cur_user] != user
+        return nil if opts[:cur_user] != user
 
         data[:className] += ' hide'
       end

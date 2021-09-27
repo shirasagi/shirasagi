@@ -28,6 +28,7 @@ module Gws::Schedule::PlanHelper
       user = get_gws_user(opts[:user].to_i)
     end
     events = plans.map { |m| m.calendar_format(user, @cur_site, opts) }
+    events.compact!
     return events unless opts[:holiday]
 
     events += calendar_holidays opts[:holiday][0], opts[:holiday][1]
