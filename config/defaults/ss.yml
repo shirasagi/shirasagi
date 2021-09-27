@@ -45,6 +45,9 @@ production: &production
   sanitizer_output: sanitizer_output
   sanitizer_wait_image: public/assets/img/sanitizer-wait-ja.png
 
+  # history log saving days
+  history_log_saving_days: 90
+
 test:
   <<: *production
   disable: false

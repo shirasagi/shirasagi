@@ -42,7 +42,7 @@ module SS::HistoryArchiveBase
 
     register_archives
 
-    destroy_histories
+    # destroy_histories
   ensure
     finalize_workdir
   end

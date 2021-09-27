@@ -11,4 +11,7 @@ namespace :ss do
       end
     end
   end
-end
+
+#   history_archive_job = Sys::HistoryArchiveJob.bind(site_id: site, user_id: user)
+#   history_archive_job.perform_now
+# end
