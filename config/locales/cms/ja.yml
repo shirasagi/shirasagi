@@ -171,6 +171,7 @@ ja:
         - "リンク切れを修正した場合、再度リンクチェックを実行し、新しいレポートを作成してください。"
       check_links_report_annotation: ※リンクチェックの実行タイミングや通信先サーバーの負荷状況によっては誤検出の場合があります。
       check_links_report_created: "%{time} 時点"
+      confirm_column_deletion_whose_form_is_in_use: "定型フォームは利用中のため入力項目を削除するとページが正しく表示されなくなる場合があります。それでも削除する場合はチェックしてください。"
     apis:
       categories:
         index: カテゴリーを選択する
@@ -1236,6 +1237,9 @@ ja:
       unsupported_encoding: 対応していない文字コードです。
       thumb_is_blank: サムネイル画像が登録されていません。
       not_found_file_url_in_body: 本文内の画像が見つかりませんでした。
+      unable_to_delete_in_use_column_without_confirmation: 同意がないため削除できません。
+      unable_to_delete_all_columns_if_form_is_in_use: 定型フォームが使用中のため一括削除することはできません。
+      unable_to_close_form_if_form_is_in_use: 定型フォームが使用中のため非公開にすることはできません。
 
     template:
       no_errors: エラーは見つかりませんでした。
