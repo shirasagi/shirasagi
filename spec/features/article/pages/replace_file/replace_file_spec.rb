@@ -134,9 +134,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within 'form#item-form' do
-          select form.name, from: 'item[form_id]'
           wait_event_to_fire("ss:formActivated") do
-            find('.btn-form-change').click
+            page.accept_confirm(I18n.t("cms.confirm.change_form")) do
+              select form.name, from: 'in_form_id'
+            end
           end
         end
 
@@ -247,9 +248,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within 'form#item-form' do
-          select form.name, from: 'item[form_id]'
           wait_event_to_fire("ss:formActivated") do
-            find('.btn-form-change').click
+            page.accept_confirm(I18n.t("cms.confirm.change_form")) do
+              select form.name, from: 'in_form_id'
+            end
           end
         end
 
@@ -362,9 +364,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within 'form#item-form' do
-          select form.name, from: 'item[form_id]'
           wait_event_to_fire("ss:formActivated") do
-            find('.btn-form-change').click
+            page.accept_confirm(I18n.t("cms.confirm.change_form")) do
+              select form.name, from: 'in_form_id'
+            end
           end
         end
 
