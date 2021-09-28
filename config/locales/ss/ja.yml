@@ -38,6 +38,7 @@ ja:
     replace: 差し替え
     before_replace: 差し替え前
     after_replace: 差し替え後
+    disable_image_resizes: 自動画像リサイズを無効にする
 
     views:
       login/login:

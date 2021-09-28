@@ -59,6 +59,7 @@ module SS::FileFactory
       item.cur_group = cur_group if respond_to?(:cur_group)
       item.in_file = file
       item.resizing = resizing
+      item.disable_image_resizes = disable_image_resizes
       if item.save
         self.saved_files << item
         next

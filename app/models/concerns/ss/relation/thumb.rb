@@ -83,6 +83,7 @@ module SS::Relation::Thumb
           file = SS::ThumbFile.new
           file.in_file         = uploaded_file
           file.resizing        = size
+          file.disable_image_resizes = disable_image_resizes
           file.original_id     = id
           file.state           = state
           file.filename        = file.in_file.original_filename

@@ -535,6 +535,10 @@ ja:
     delete_cms_ignore_alert: 警告を無視して削除する
     edit_cms_ignore_alert: 警告を無視して非公開保存する
     use_cms_sitemap: フォルダ容量のCSVダウンロード
+    read_cms_image_resizes: 画像リサイズの閲覧
+    edit_cms_image_resizes: 画像リサイズの編集
+    delete_cms_image_resizes: 画像リサイズの削除
+    disable_cms_image_resizes: 画像リサイズの無効化
 
   modules:
     cms: 標準機能

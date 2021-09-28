@@ -119,6 +119,10 @@ module Cms
     if SS.config.cms.cms_sitemap && SS.config.cms.cms_sitemap['disable'].blank?
       Cms::Role.permission :use_cms_sitemap
     end
+    Cms::Role.permission :read_cms_image_resizes
+    Cms::Role.permission :edit_cms_image_resizes
+    Cms::Role.permission :delete_cms_image_resizes
+    Cms::Role.permission :disable_cms_image_resizes
 
     SS::File.model "cms/editor_template", SS::File
     SS::File.model "cms/file", Cms::File

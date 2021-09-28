@@ -1,3 +1,8 @@
+<%
+  disable_image_resizes = SS::ImageResize.allowed?(:disable, @cur_user) && SS::ImageResize.present?
+  disable_image_resizes ||= @cur_node.present? && Cms::ImageResize.allowed?(:disable, @cur_user, site: @cur_site, node: @cur_node) && Cms::ImageResize.site(@cur_site).node(@cur_node).present?
+%>
+
 <%= jquery do %>
   SS_AjaxFile.errors.entityTooLarge = "<%= I18n.t('errors.messages.request_entity_too_large') %>";
   new SS_AjaxFile(null, { indexPath: "<%= url_for(action: :index, file_size: params[:file_size], owner_item_id: params[:owner_item_id], owner_item_type: params[:owner_item_type]) %>" });
@@ -11,6 +16,12 @@
     <div class="search-ui-form">
       <%= f.file_field :in_files, multiple: :multiple, required: :required %>
       <%= f.select :resizing, @model.resizing_options, { include_blank: t("ss.resize_image") }, { class: "image-size" } %>
+      <% if disable_image_resizes %>
+        <label>
+          <%= f.check_box :disable_image_resizes, {}, true, false %>
+          <%= t("ss.disable_image_resizes") %>
+        </label>
+      <% end %>
       <%= f.submit t("ss.buttons.attach"), class: "save btn", style: "margin-left: 10px;", "data-submitted": "attach" %>
       <%= f.submit t("ss.buttons.save"), class: "save btn", style: "margin-left: 10px;", "data-submitted": "save" %>
     </div>

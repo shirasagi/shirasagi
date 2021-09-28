@@ -9,7 +9,7 @@ module Gws::Model::File
   include SS::CsvHeader
   include ActiveSupport::NumberHelper
 
-  attr_accessor :in_file, :resizing
+  attr_accessor :in_file, :resizing, :disable_image_resizes
 
   included do
     store_in collection: "ss_files"
@@ -26,7 +26,7 @@ module Gws::Model::File
 
     attr_accessor :in_data_url
 
-    permit_params :in_file, :state, :name, :filename, :resizing, :in_data_url
+    permit_params :in_file, :state, :name, :filename, :resizing, :disable_image_resizes, :in_data_url
 
     before_validation :set_filename, if: ->{ in_file.present? }
     before_validation :normalize_name
@@ -267,7 +267,10 @@ module Gws::Model::File
 
   def resizing_with_max_file_size
     size = resizing || []
-    max_file_sizes = [SS::ImageResize.find_by_ext(extname)]
+    max_file_sizes = []
+    if user.blank? || !SS::ImageResize.allowed?(:disable, user) || disable_image_resizes.blank?
+      max_file_sizes << SS::ImageResize.find_by_ext(extname)
+    end
     max_file_sizes.reject(&:blank?).each do |max_file_size|
       if size.present?
         max_file_size.max_width = size[0] if max_file_size.max_width > size[0]
@@ -280,7 +283,10 @@ module Gws::Model::File
 
   def quality
     quality = []
-    max_file_sizes = [SS::ImageResize.find_by_ext(extname)]
+    max_file_sizes = []
+    if user.blank? || !SS::ImageResize.allowed?(:disable, user) || disable_image_resizes.blank?
+      max_file_sizes << SS::ImageResize.find_by_ext(extname)
+    end
     max_file_sizes.reject(&:blank?).each do |max_file_size|
       next if size <= max_file_size.try(:size)
       quality << max_file_size.try(:quality)

@@ -11,7 +11,7 @@ module SS::Model::File
   include History::Addon::Trash
   include ActiveSupport::NumberHelper
 
-  attr_accessor :in_file, :resizing
+  attr_accessor :in_file, :resizing, :disable_image_resizes
 
   included do
     store_in collection: "ss_files"
@@ -30,7 +30,7 @@ module SS::Model::File
 
     attr_accessor :in_data_url
 
-    permit_params :in_file, :state, :name, :filename, :resizing, :in_data_url
+    permit_params :in_file, :state, :name, :filename, :resizing, :disable_image_resizes, :in_data_url
 
     before_validation :set_filename, if: ->{ in_file.present? }
     before_validation :normalize_name
@@ -419,9 +419,14 @@ module SS::Model::File
 
   def resizing_with_max_file_size
     size = resizing || []
-    max_file_sizes = [SS::ImageResize.find_by_ext(extname)]
-    if self.class.include?(Cms::Reference::Node) && cur_node.present?
-      max_file_sizes << Cms::ImageResize.site(site).node(cur_node).find_by_ext(extname)
+    max_file_sizes = []
+    if user.blank? || !SS::ImageResize.allowed?(:disable, user) || disable_image_resizes.blank?
+      max_file_sizes << SS::ImageResize.find_by_ext(extname)
+    end
+    if self.class.include?(Cms::Reference::Node) && node.present?
+      if user.blank? || !Cms::ImageResize.allowed?(:disable, user, site: site, node: node) || disable_image_resizes.blank?
+        max_file_sizes << Cms::ImageResize.site(site).node(node).find_by_ext(extname)
+      end
     end
     max_file_sizes.reject(&:blank?).each do |max_file_size|
       if size.present?
@@ -435,9 +440,14 @@ module SS::Model::File
 
   def quality
     quality = []
-    max_file_sizes = [SS::ImageResize.find_by_ext(extname)]
-    if self.class.include?(Cms::Reference::Node) && cur_node.present?
-      max_file_sizes << Cms::ImageResize.site(site).node(cur_node).find_by_ext(extname)
+    max_file_sizes = []
+    if user.blank? || !SS::ImageResize.allowed?(:disable, user) || disable_image_resizes.blank?
+      max_file_sizes << SS::ImageResize.find_by_ext(extname)
+    end
+    if self.class.include?(Cms::Reference::Node) && node.present?
+      if user.blank? || !Cms::ImageResize.allowed?(:disable, user, site: site, node: node) || disable_image_resizes.blank?
+        max_file_sizes << Cms::ImageResize.site(site).node(node).find_by_ext(extname)
+      end
     end
     max_file_sizes.reject(&:blank?).each do |max_file_size|
       next if size <= max_file_size.try(:size)
