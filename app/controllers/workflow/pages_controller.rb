@@ -177,8 +177,27 @@ class Workflow::PagesController < ApplicationController
         end
       end
     end
+    if @item.state_changed? && @item.state == "public" && @item.try(:master_id).present?
+      task_name = "#{@item.collection_name}:#{@item.master_id}"
+      task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site.id, name: task_name)
+      rejected = -> { @item.errors.add :base, :other_task_is_running }
+      guard = ->(&block) do
+        task.run_with(rejected: rejected) do
+          task.log "# #{I18n.t("workflow.branch_page")} #{I18n.t("ss.buttons.publish_save")}"
+          block.call
+        end
+      end
+    else
+      # this means "no guard"
+      guard = ->(&block) { block.call }
+    end
 
-    if !@item.save
+    result = nil
+    guard.call do
+      result = @item.save
+    end
+
+    if !result
       render json: @item.errors.full_messages, status: :unprocessable_entity
       return
     end
@@ -272,13 +291,28 @@ class Workflow::PagesController < ApplicationController
 
     @item.cur_node = @item.parent
     if @item.branches.blank?
-      copy = @item.new_clone
-      copy.master = @item
-      copy.save
+      task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site.id, name: "#{@item.collection_name}:#{@item.id}")
+
+      result = nil
+      rejected = -> do
+        @item.errors.add :base, :other_task_is_running
+        render :branch, layout: false, status: :unprocessable_entity
+        result = false
+      end
+
+      task.run_with(rejected: rejected) do
+        task.log "# #{I18n.t("workflow.branch_page")} #{I18n.t("ss.buttons.new")}"
+
+        copy = @item.new_clone
+        copy.master = @item
+        result = copy.save
+      end
+      return unless result
+
       @item.reload
     end
 
     @items = @item.branches
-    render :branch, layout: "ss/ajax"
+    render :branch, layout: false
   end
 end

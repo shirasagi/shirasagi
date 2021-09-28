@@ -7,9 +7,9 @@ class Ezine::Mailer < ActionMailer::Base
   def verification_mail(entry)
     @entry = entry
     @node = Ezine::Node::Page.find entry.node.id
-    sender = "#{@node.sender_name} <#{@node.sender_email}>"
+    sender = Cms.sender_address(@node, @node.cur_site || @node.site)
 
-    mail from: sender, to: entry.email
+    mail from: sender, to: entry.email, message_id: Cms.generate_message_id(@node.cur_site || @node.site)
   end
 
   # Deliver Ezine::Page as an e-mail.
@@ -23,9 +23,9 @@ class Ezine::Mailer < ActionMailer::Base
     @member = member
     @node = Cms::Node.find page.parent.id
     @node = @node.becomes_with_route
-    sender = "#{@node.sender_name} <#{@node.sender_email}>"
+    sender = Cms.sender_address(@node, @node.cur_site || @node.site)
 
-    mail from: sender, to: member.email do |format|
+    mail from: sender, to: member.email, message_id: Cms.generate_message_id(@node.cur_site || @node.site) do |format|
       case member.email_type
       when "text"
         format.text

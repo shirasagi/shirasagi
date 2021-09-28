@@ -120,7 +120,7 @@ module Cms
     group_ids = groups.pluck(:id)
 
     size = site_criteria.total_bsonsize
-    if opts[:except] != "common" && !groups.none?
+    if opts[:except] != "common" && groups.any?
       size += groups.total_bsonsize rescue 0
     end
 
@@ -160,5 +160,53 @@ module Cms
       end
     end
     size
+  end
+
+  DEFAULT_SENDER_ADDRESS = begin
+    default_from = SS.config.mail.default_from
+    if default_from.present?
+      default_from = default_from.dup
+    else
+      default_from = "noreply@example.jp"
+    end
+    default_from.freeze
+  end
+
+  def self.sender_address(*contents)
+    contents.each do |content|
+      if content.respond_to?(:sender_address)
+        sender_address = content.sender_address
+        return sender_address if sender_address.present?
+      end
+
+      if content.respond_to?(:sender_email) && content.sender_email.present?
+        if content.respond_to?(:sender_name) && content.sender_name.present?
+          return "#{content.sender_name} <#{content.sender_email}>"
+        else
+          return content.sender_email
+        end
+      end
+
+      if content.respond_to?(:from_email) && content.from_email.present?
+        if content.respond_to?(:from_name) && content.from_name.present?
+          return "#{content.from_name} <#{content.from_email}>"
+        else
+          return content.from_email
+        end
+      end
+    end
+
+    DEFAULT_SENDER_ADDRESS
+  end
+
+  def self.generate_message_id(site)
+    # see: mail/fields/message_id_field.rb#generate_message_id
+    if site.present? && site.respond_to?(:domain) && site.domain.present?
+      domain = site.domain
+    end
+    domain ||= "replace-me.example.jp"
+    domain = domain.sub(/:.*$/, '') if domain.include?(":")
+
+    "<#{::Mail.random_tag}@#{domain}.mail>"
   end
 end

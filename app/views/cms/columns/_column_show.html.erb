@@ -1,4 +1,4 @@
-<% buf = render(file: @item.show_file) if @item.show_file %>
+<% buf = render(@item.show_partial_path) if @item.show_partial_path %>
 <% return if buf.blank? %>
 
 <%

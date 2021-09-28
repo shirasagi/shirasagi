@@ -1,0 +1,40 @@
+<div class="addon-views">
+  <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t("mongoid.models.cms/check_links/error/base") } do %>
+    <dl class="see">
+      <dt><%= @item.t :name %></dt>
+      <dd><%= @item.name %></dd>
+
+      <dt><%= @item.t :content %></dt>
+      <dd>
+        <% if @content && @content.allowed?(:read, @cur_user, site: @cur_site, node: @content.try(:parent)) %>
+          <%= link_to "#{@content.name} (#{@content.filename})", @content.private_show_path %>
+        <% elsif @content %>
+          <%= "#{@content.name} (#{@content.filename})" %>
+        <% else %>
+          <%= "#{@item.name} (#{@item.filename})" %>
+        <% end %>
+      </dd>
+
+      <dt><%= @item.t :ref_url %></dt>
+      <dd><%= link_to @item.ref_url, @item.ref_url, target: "_blank", rel: "noopener" %></dd>
+
+      <dt><%= @item.t :urls %></dt>
+      <dd><%=br @item.urls %></dd>
+
+      <dt><%= @item.t(:group_ids) %></dt>
+      <dd><%=br @item.groups.pluck(:name).join("\n") %></dd>
+
+      <dt><%= @item.t :state %></dt>
+      <dd>
+        <% if @content %>
+          <%= @content.public? ? t("ss.state.public") : t("ss.state.closed") %>
+        <% else %>
+          <%= t("ss.options.state.deleted") %>
+        <% end %>
+      </dd>
+
+      <dt><%= @item.t :created %></dt>
+      <dd><%= @item.created.strftime("%Y/%m/%d %H:%M") %></dd>
+    </dl>
+  <% end %>
+</div>

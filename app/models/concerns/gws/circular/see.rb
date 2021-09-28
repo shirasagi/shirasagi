@@ -8,7 +8,7 @@ module Gws::Circular::See
   end
 
   def seen_at(user)
-    self.seen[user.id.to_s]
+    self.seen[user.id.to_s].try { |time| time.in_time_zone }
   end
 
   def seen?(user)
@@ -22,7 +22,7 @@ module Gws::Circular::See
   end
 
   def set_seen(user)
-    self.seen[user.id.to_s] = Time.zone.now
+    self.seen[user.id.to_s] = Time.zone.now.utc
     self
   end
 

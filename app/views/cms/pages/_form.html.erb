@@ -7,7 +7,7 @@
 
   <% if @item.persisted? && SS.config.cms.replace_urls_after_move %>
     <dt><%= @model.t :basename %></dt>
-    <dd><%= @item.basename %></dd>
+    <dd><%= @item.basename %> <%= f.hidden_field :basename, class: "filename" %></dd>
   <% else %>
     <dt><%= @model.t :basename %><%= @model.tt :filename %></dt>
     <dd><%= f.text_field :basename, class: "filename" %></dd>

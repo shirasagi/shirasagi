@@ -19,7 +19,7 @@ module Cms::Model::Page
 
     #text_index :name, :html
 
-    self.default_released_type = "same_as_updated"
+    self.default_released_type = SS.config.cms.default_released_type.presence || "same_as_updated"
 
     attr_accessor :window_name
 
@@ -183,10 +183,21 @@ module Cms::Model::Page
     end
   end
 
+  def owned_files
+    SS::File.where(owner_item_type: self.class.name, owner_item_id: id).to_a
+  end
+
+  def html_bytesize
+    return 0 if !respond_to?(:html)
+    html.to_s.bytesize
+  end
+
+  def owned_files_bytesize
+    owned_files.map(&:size).sum
+  end
+
   def new_size_input
-    html = self.try(:render_html).presence || self.try(:html)
-    file_bytesize = SS::File.where(owner_item_type: self.class.name, owner_item_id: self.id).sum(:size)
-    self.set(size: html.try(:bytesize).to_i + file_bytesize)
+    self.set(size: (html_bytesize + owned_files_bytesize))
   end
 
   private

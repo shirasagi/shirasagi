@@ -20,6 +20,10 @@
     <%= link_to t("cms.file"), cms_apis_files_path(cid: @cur_node || '-'), class: "ajax-box btn btn-file-upload" %>
   </span>
 
+  <div class="column-value-upload-drop-area">
+    <span class="column-value-upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
+  </div>
+
   <div class="column-value-files<% if !file %> hide<% end %>">
     <% if file %>
       <%= render 'cms/apis/forms/select_temp_file/upload', item: file %>

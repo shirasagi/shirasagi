@@ -13,6 +13,7 @@ describe Ezine::Mailer, type: :mailer, dbscope: :example do
       expect(mail.to.first).to eq "entry@example.jp"
       expect(mail.subject.to_s).not_to eq ""
       expect(mail.body.to_s).not_to eq ""
+      expect(mail.message_id).to end_with("@#{site.domain}.mail")
     end
   end
 
@@ -29,6 +30,7 @@ describe Ezine::Mailer, type: :mailer, dbscope: :example do
         expect(mail.subject.to_s).not_to eq ""
         expect(mail.body.multipart?).to be_falsey
         expect(mail.body.raw_source.to_s).not_to eq ""
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
 
@@ -42,6 +44,7 @@ describe Ezine::Mailer, type: :mailer, dbscope: :example do
         expect(mail.body.multipart?).to be_truthy
         expect(mail.body.parts[0].body.to_s).not_to eq ""
         expect(mail.body.parts[1].body.to_s).not_to eq ""
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
   end

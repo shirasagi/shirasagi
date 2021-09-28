@@ -5,9 +5,7 @@ class History::Log
   # include SS::Reference::Site
 
   store_in_repl_master
-  index({ created: -1 })
-
-  attr_accessor :save_term
+  index(created: 1)
 
   field :session_id, type: String
   field :request_id, type: String
@@ -29,23 +27,6 @@ class History::Log
 
   scope :site, ->(site) { where(site_id: site.id) }
 
-  def save_term_options
-    [
-      [I18n.t(:"history.save_term.day"), "day"],
-      [I18n.t(:"history.save_term.month"), "month"],
-      [I18n.t(:"history.save_term.year"), "year"],
-      [I18n.t(:"history.save_term.all_save"), "all_save"],
-    ]
-  end
-
-  def delete_term_options
-    [
-      [I18n.t(:"history.save_term.year"), "year"],
-      [I18n.t(:"history.save_term.month"), "month"],
-      [I18n.t(:"history.save_term.all_delete"), "all_delete"],
-    ]
-  end
-
   def user_label
     user ? "#{user.name}(#{user_id})" : user_id
   end
@@ -53,11 +34,11 @@ class History::Log
   def target_label
     if target_class.present?
       model  = target_class.to_s.underscore
-      label  = I18n.t :"mongoid.models.#{model}", default: model
+      label  = I18n.t("mongoid.models.#{model}", default: model)
       label += "(#{target_id})" if target_id.present?
     else
       model = controller.singularize
-      label = I18n.t :"mongoid.models.#{model}", default: model
+      label = I18n.t("mongoid.models.#{model}", default: model)
     end
     label
   end
@@ -70,6 +51,8 @@ class History::Log
     end
 
     def create_log!(request, response, options)
+      item             = options[:item]
+
       log              = new
       log.session_id   = request.session.id
       log.request_id   = request.uuid
@@ -79,8 +62,8 @@ class History::Log
       log.cur_user     = options[:cur_user]
       log.user_id      = options[:cur_user].id if options[:cur_user]
       log.site_id      = options[:cur_site].id if options[:cur_site]
-      log.ref_coll     = options[:item].collection_name if options[:item]
-      log.filename     = options[:item].data[:filename] if options[:item].try(:ref_coll) == "ss_files"
+      log.ref_coll     = item.collection_name if item
+      log.filename     = item.data[:filename] if item.try(:ref_coll) == "ss_files"
 
       if options[:action] == "undo_delete"
         log.behavior = "restore"
@@ -88,34 +71,51 @@ class History::Log
         log.behavior = "delete"
       end
 
-      options[:item].tap do |item|
-        if item && item.try(:new_record?)
-          log.target_id    = item.id
-          log.target_class = item.class
-        end
-      end
+      log.target_class = item.class    if item
+      log.target_id    = item.try(:id) if item.respond_to?(:new_record?) && !item.try(:new_record?)
 
       log.save!
     end
 
-    def term_to_date(name)
-      case name.to_s
-      when "year"
-        Time.zone.now - 1.year
-      when "month"
-        # n = Time.zone.now
-        # Time.local n.year, n.month, 1, 0, 0, 0
-        Time.zone.now - 1.month
-      when "day"
-        # Time.zone.today.to_time
-        Time.zone.now - 1.day
-      when "all_delete"
-        Time.zone.now
-      when "all_save"
-        nil
-      else
-        false
+    def enum_csv(options)
+      exporter = SS::Csv.draw(:export, context: self) do |drawer|
+        drawer.column :created
+        drawer.column :user_name do
+          drawer.body { |item| item.user_label }
+        end
+        drawer.column :model_name do
+          drawer.body { |item| item.target_label }
+        end
+        drawer.column :action
+        drawer.column :path do
+          drawer.body { |item| item.url }
+        end
+        drawer.column :session_id
+        drawer.column :request_id
       end
+
+      exporter.enum(all, options)
+    end
+
+    def build_file_log(file, options)
+      log = History::Log.new
+
+      log.site_id = options[:site_id] || SS.current_site.try(:id)
+      log.user_id = options[:user_id] || SS.current_user.try(:id)
+
+      if file
+        log.url = file.url
+        log.ref_coll = file.collection_name
+        log.target_class = file.class.name
+        log.target_id = file.id.to_s
+      end
+
+      log.session_id = options[:session_id] || Rails.application.current_session_id
+      log.request_id = options[:request_id] || Rails.application.current_request_id
+      log.controller = options[:controller] || Rails.application.current_controller
+      log.page_url = options[:page_url] || Rails.application.current_path_info
+
+      log
     end
   end
 end

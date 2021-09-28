@@ -31,6 +31,6 @@
   </div>
 
   <footer class="send">
-    <%= submit_tag t("ss.import"), name: 'import', class: :save, data: { confirm: t("ss.confirm.import") } %>
+    <%= submit_tag t("ss.buttons.import"), name: 'import', class: :save, data: { confirm: t("ss.confirm.import"), disable_with: t("ss.buttons.importing") } %>
   </footer>
 <% end %>

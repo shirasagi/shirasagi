@@ -13,7 +13,7 @@ FactoryBot.define do
     send_date { Time.zone.now }
 
     trait :with_draft do
-      state 'closed'
+      state { 'closed' }
     end
   end
 end

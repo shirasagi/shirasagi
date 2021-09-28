@@ -66,8 +66,8 @@
     display: none;
   }
   @include mb {
-    margin-left: 10px;
     margin-right: 10px;
+    margin-left: 10px;
   }
 }
 .gws-category-label {
@@ -132,29 +132,29 @@ a.gws-category-label:hover {
 // Popup (tooltip)
 .gws-popup {
   position: absolute;
+  z-index: 200;
   width: 400px;
   padding: 10px;
   border-radius: 4px;
-  @include box-shadow(0 1px 6px #666);
   background-color: #fff;
-  z-index: 200;
+  @include box-shadow(0 1px 6px #666);
   &:after {
-    width: 0;
-    height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-top: 10px solid #bbb;
     content: "";
     position: absolute;
-    left: 50%;
     bottom: -10px;
+    left: 50%;
+    width: 0;
+    height: 0;
     margin-left: -10px;
+    border-top: 10px solid #bbb;
+    border-right: 10px solid transparent;
+    border-left: 10px solid transparent;
   }
   &.top:after {
-    border-top-color: transparent;
-    border-bottom: 10px solid #bbb;
     top: -20px;
     bottom: auto;
+    border-bottom: 10px solid #bbb;
+    border-top-color: transparent;
   }
   &.left:after {
     left: 10px;
@@ -171,12 +171,12 @@ a.gws-category-label:hover {
 .gws-dropdown-menu {
   left: -4px;
   max-height: 300px;
-  overflow-y: scroll;
   margin: 0;
   padding: 4px;
+  overflow-y: scroll;
   border: $border-gray4;
-  @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
   background: $white;
+  @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
   white-space: nowrap;
 }
 

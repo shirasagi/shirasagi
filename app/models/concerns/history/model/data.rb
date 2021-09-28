@@ -16,6 +16,7 @@ module History::Model::Data
     field :ref_class, type: String
     field :data, type: Hash
     field :state, type: String
+    field :action, type: String, default: 'save'
 
     validates :ref_coll, presence: true
     validates :data, presence: true
@@ -42,7 +43,7 @@ module History::Model::Data
     model.relations.each do |k, relation|
       case relation.class.to_s
       when Mongoid::Association::Referenced::HasMany.to_s
-        if relation.dependent.present? && opts[:create_by_trash].present?
+        if relation.dependent.present? && opts[:create_by_trash].present? && data['_id'].present?
           History::Trash.where(ref_class: relation.class_name, "data.#{relation.foreign_key}" => data['_id']).restore!(opts)
         end
       when Mongoid::Association::Embedded::EmbedsMany.to_s

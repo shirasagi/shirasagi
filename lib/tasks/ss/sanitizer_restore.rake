@@ -13,12 +13,12 @@ namespace :ss do
 
       if file.nil?
         Fs.rm_rf(path)
-        puts "#{filename}: removed"
+        puts "removed: #{filename}"
         next
       end
 
       if file.sanitizer_restore_file(path)
-        puts "#{filename}: restored"
+        puts "restored: #{filename}"
       else
         Rails.logger.error("sanitier_restore_file: #{file.class}##{id}: #{file.errors.full_messages.join(' ')}")
       end

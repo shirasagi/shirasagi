@@ -117,7 +117,7 @@ class Opendata::Resource
     # downloaded count never decreases previous count
     return downloaded_count_cache["value"] if downloaded_count_cache.present? && count < downloaded_count_cache["value"]
 
-    self.set(downloaded_count_cache: { "value" => count, "created" => now }) if persisted?
+    self.set(downloaded_count_cache: { "value" => count, "created" => now.utc }) if persisted?
     count
   end
 

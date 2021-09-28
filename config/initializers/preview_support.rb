@@ -1,6 +1,6 @@
 module SS
   module PreviewSupport
-    include SS::FilterSupport
+    extend SS::FilterSupport
 
     def preview?(request)
       filters = request.env["ss.filters"] rescue nil
@@ -30,8 +30,9 @@ module SS
       return url if preview_path?(request, uri)
       return url if fs_path?(request, uri)
 
+      path = uri.path.sub(/^\//, "")
       routes = Rails.application.routes.url_helpers
-      routes.cms_preview_path(site: cur_site(request), path: url.sub(/^\//, ""))
+      routes.cms_preview_path(site: cur_site(request), path: path)
     end
 
     module_function :preview?

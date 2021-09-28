@@ -23,7 +23,7 @@ class Event::Agents::Parts::CalendarController < ApplicationController
     if y.present? && m.present? && Date.valid_date?(y.to_i, m.to_i, 1)
       @year = y.to_i
       @month = m.to_i
-      @day = Time.zone.today.day.to_i
+      @day = 1
     elsif cur_page.blank?
       @cur_main_path.sub(/\..+?$/, "").scan(/(\d{4})(\d{2})(\d{2})?$/).each do |y, m, d|
         d = 1 unless d
@@ -55,11 +55,11 @@ class Event::Agents::Parts::CalendarController < ApplicationController
       date: @cur_date).
       in(event_dates: dates).
       distinct(:event_dates).
-      flatten.compact.uniq.sort
+      flatten.compact.uniq.map(&:to_date).sort
   end
 
-  def events(date)
-    @items.where(:event_dates.in => date).
+  def events(dates)
+    @items.where(:event_dates.in => dates).
         entries.
         sort_by { |page| page.event_dates.size }
   end
@@ -75,8 +75,7 @@ class Event::Agents::Parts::CalendarController < ApplicationController
     dates = dates.map { |m| m.mongoize }
     node_category_ids = @parent_node.st_categories.pluck(:id)
     events(dates).each do |page|
-      page.event_dates.split(/\R/).each do |date|
-        d = Date.parse(date)
+      page.event_dates.each do |d|
         next unless @events[d]
         @events[d] << [
             page,

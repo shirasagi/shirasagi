@@ -5,6 +5,8 @@ ja:
     management: 管理
     download: ダウンロード
     file: ファイル
+    page: ページ
+    node: フォルダー
     group_users: 所属ユーザー
     image: 画像
     import: インポート
@@ -38,6 +40,7 @@ ja:
     replace: 差し替え
     before_replace: 差し替え前
     after_replace: 差し替え後
+    broken_link: リンク切れ
     disable_image_resizes: 自動画像リサイズを無効にする
 
     views:
@@ -48,6 +51,7 @@ ja:
       index:
         updated: "更新日時：%{updated}"
         released: "公開日時：%{released}"
+        approved: "承認日時：%{approved}"
     navi:
       readable: 閲覧一覧
       editable: 管理一覧
@@ -108,10 +112,10 @@ ja:
       send_email: メールを作成する
       send_message: メッセージを作成する
       copy_email_address: メールアドレスをコピー
-      reset_posted: 未投稿に戻す
       closed_save: 非公開にする
     buttons:
       save: 保存
+      saving: 保存中
       new: 新規作成
       draft_save: 下書き保存
       closed_save: 非公開保存
@@ -121,20 +125,25 @@ ja:
       cancel: キャンセル
       edit: 編集
       delete: 削除
+      deleting: 削除中
       search: 検索
       replace: 置換
       replace_all: 全置換
       reset: リセット
       clear: クリア
       send: 送信
+      sending: 送信中
       run: 実行
+      running: 実行中
       stop: 停止
       toggle: 折りたたみ表示
       move: 移動
+      moving: 移動中
       import: インポート
+      importing: インポート中
       convert: 変換
       unlock_and_edit_forcibly: 強制的にロックを解除し編集する
-      random_password: ランダム生成
+      random_gen: ランダム生成
       copy: コピー
       paste: 貼り付け
       attach: 添付
@@ -144,6 +153,7 @@ ja:
       split: 分割
       integrate: 統合
       upload: アップロード
+      uploading: アップロード中
       download: ダウンロード
       add: 追加
       print: 印刷
@@ -184,7 +194,6 @@ ja:
       send: 送信してよろしいですか？
       publish: 公開してよろしいですか？
       depublish: 非公開にしてよろしいですか？
-      reset_posted: 未投稿状態に戻してもよろしいですか？
       restore_file: ファイルを復元してもよろしいですか？
       delete_file_histories: ファイル履歴を削除してもよろしいですか？
       contains_url_expect: このページにリンクを貼っているページがあるため、処理を中断します。貼っているリンクを全て解除してから操作を続行してください。
@@ -220,7 +229,6 @@ ja:
       unset_seen_all: 未読にしました。
       set_star_all: スターをつけました。
       unset_star_all: スターをはずしました。
-      reset_posted: 未投稿に戻しました。
       replace_saved: 差し替え保存しました。
 
     info:
@@ -238,8 +246,6 @@ ja:
       import:
         blank_file: ファイルを入力してください。
         invalid_file_type: 不正なファイル形式です。
-      sanitizer:
-        wait: ファイルを無害化しています。しばらく時間をおいてから再度お試しください。
     apis:
       groups:
         index: グループを選択する
@@ -407,6 +413,15 @@ ja:
       sanitizer_state:
         wait: 無害化中
         complete: 無害化済
+      duration:
+        "1_day": １日
+        "1_week": １週間
+        "2_weeks": ２週間
+        "1_month": １ヶ月
+        "2_months": ２ヶ月
+        "3_months": ３ヶ月
+        "6_months": ６ヶ月
+        "1_year": １年
 
     tasks:
       started: 開始しました。
@@ -673,6 +688,9 @@ ja:
       ss/addon/line_setting:
         line_channel_secret: チャネルシークレット
         line_channel_access_token: チャネルアクセストークン
+      ss/addon/site_auto_post_setting:
+        site_twitter_auto_post: Twitter自動投稿
+        site_edit_auto_post: 編集時に自動投稿
       ss/addon/file_setting:
         file_resizing: 添付ファイルリサイズ
         file_resizing_width: 幅
@@ -1108,7 +1126,7 @@ ja:
     ss/addon/approve_setting:
       forced_update:
         - メールアドレスが設定されていない場合の承認について設定します。
-        - 設定すると実行時の注意を無視します。
+        - 無効に設定すると実行時の注意を無視します。
       close_confirmation:
         - 下書き保存時の警告表示を設定します。
     ss/model/max_file_size:
@@ -1196,3 +1214,4 @@ ja:
   job:
     models:
       ss/public_file_remover_job: 公開済みファイル削除ジョブ
+      ss/task_sweep_job: タスク削除ジョブ

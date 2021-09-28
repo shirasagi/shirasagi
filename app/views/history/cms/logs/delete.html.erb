@@ -5,13 +5,13 @@
   <header><h2><%= t("ss.confirm.delete") %></h2></header>
 
   <dl class="see">
-    <dt><%= @item.t :save_term %><%= @model.tt :save_term %></dt>
-    <dd><%= f.select :save_term, @item.delete_term_options %></dd>
+    <dt><%= @item.class.human_attribute_name :delete_term %></dt>
+    <dd><%= f.select :delete_term, @item.delete_term_options, include_blank: t("history.options.duration.all_delete") %></dd>
   </dl>
 </section>
 
 <footer class="send">
-  <%= f.submit t("ss.buttons.delete"), class: "delete" %>
+  <%= f.submit t("ss.buttons.delete"), class: "delete", data: { disable_with: t("ss.buttons.deleting") } %>
   <%= f.button t("ss.buttons.cancel"), class: "btn-default", type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
 </footer>
 <% end %>

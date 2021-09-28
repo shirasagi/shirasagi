@@ -16,6 +16,7 @@ class Gws::Elasticsearch::Indexer::ShareFileJob < Gws::ApplicationJob
   def enum_es_docs
     Enumerator.new do |y|
       doc = {}
+      doc[:collection_name] = index_type
       doc[:url] = item_path
       doc[:name] = item.name
       doc[:categories] = item.categories.pluck(:name)

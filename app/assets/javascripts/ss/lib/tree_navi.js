@@ -118,7 +118,9 @@ SS_TreeNavi.prototype.openItem = function(item, mark) {
     this.renderChildren(item);
     return;
   }
-  this.el.find('.tree-item').each(function(){
+  this.el.find('.tree-item').each(function () {
+    if (!$(this).data('filename')) { return; }
+
     var filename = $(this).data('filename').toString();
     var path = item.data('filename').toString() + '/';
     if (filename.startsWith(path)) {
@@ -132,7 +134,9 @@ SS_TreeNavi.prototype.closeItem = function(item, mark) {
   item.removeClass('is-open');
   mark.html(this.closeMark);
 
-  this.el.find('.tree-item').each(function() {
+  this.el.find('.tree-item').each(function () {
+    if (!$(this).data('filename')) { return; }
+
     var filename = $(this).data('filename').toString();
     var path = item.data('filename').toString() + '/';
     if (filename.startsWith(path)) {

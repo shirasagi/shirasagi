@@ -48,7 +48,7 @@ describe Gws::Elasticsearch::Indexer::ReportFileJob, dbscope: :example do
         expect(requests.length).to eq 1
         requests.first.tap do |request|
           expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/report-#{report.id}")
+          expect(request['uri']['path']).to end_with("/gws_report_files-report-#{report.id}")
           body = JSON.parse(request['body'])
           expect(body['url']).to eq "/.g#{site.id}/report/files/redirect/#{report.id}"
         end
@@ -78,7 +78,7 @@ describe Gws::Elasticsearch::Indexer::ReportFileJob, dbscope: :example do
         expect(requests.length).to eq 1
         requests.first.tap do |request|
           expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/report-#{report.id}")
+          expect(request['uri']['path']).to end_with("/gws_report_files-report-#{report.id}")
           body = JSON.parse(request['body'])
           expect(body['url']).to eq "/.g#{site.id}/report/files/redirect/#{report.id}"
         end
@@ -107,7 +107,7 @@ describe Gws::Elasticsearch::Indexer::ReportFileJob, dbscope: :example do
         expect(requests.length).to eq 1
         requests.first.tap do |request|
           expect(request['method']).to eq 'delete'
-          expect(request['uri']['path']).to end_with("/report-#{report.id}")
+          expect(request['uri']['path']).to end_with("/gws_report_files-report-#{report.id}")
         end
       end
     end
@@ -135,7 +135,7 @@ describe Gws::Elasticsearch::Indexer::ReportFileJob, dbscope: :example do
         expect(requests.length).to eq 1
         requests.first.tap do |request|
           expect(request['method']).to eq 'delete'
-          expect(request['uri']['path']).to end_with("/report-#{report.id}")
+          expect(request['uri']['path']).to end_with("/gws_report_files-report-#{report.id}")
         end
       end
     end

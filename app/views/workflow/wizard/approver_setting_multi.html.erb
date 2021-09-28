@@ -89,7 +89,7 @@
 <dl class="see request-setting">
   <dd>
     <div class="buttons">
-      <%= button_tag t("workflow.buttons.request"), { updatetype: :request, class: "update-item btn-primary" } %>
+      <%= button_tag t("workflow.buttons.request"), { updatetype: :request, class: "update-item btn-primary", data: { disable: '' } } %>
       <% if local_assigns.fetch(:cancel_button, true) %>
         <%# プレビューからの承認時、選択可能なルートが 2 個以上（複数）ある場合にのみ取り消すことができる。 %>
         <%# それ以外では常に取り消すことができる。 %>
@@ -99,7 +99,7 @@
     <div class="checkbox">
       <label>
         <% force = @cur_site.forced_update rescue nil %>
-        <% if force == "enabled" %>
+        <% if force == "disabled" %>
         <%= check_box_tag 'forced-request', true, true, class: 'forced' %><%= t("errors.messages.forced_update") %>
         <% else %>
         <%= check_box_tag 'forced-request', true, false, class: 'forced' %><%= t("errors.messages.forced_update") %>

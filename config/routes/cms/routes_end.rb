@@ -63,6 +63,14 @@ Rails.application.routes.draw do
     delete :lock, action: :unlock, on: :member
   end
 
+  concern :file_api do
+    get :select, on: :member
+    get :selected_files, on: :collection
+    get :view, on: :member
+    get :thumb, on: :member
+    get :download, on: :member
+  end
+
   concern :michecker do
     get :michecker, on: :member
     post :michecker_start, on: :member
@@ -181,8 +189,17 @@ Rails.application.routes.draw do
     delete "search_contents/:id" => "search_contents/pages#destroy_all_pages"
     resource :generate_lock
 
-    resources :check_links_pages, only: [:show, :index]
-    resources :check_links_nodes, only: [:show, :index]
+    namespace "check_links" do
+      resources :reports, concerns: [:deletion], only: [:show, :index] do
+        resources :pages, only: [:show, :index] do
+          get :download, on: :collection
+        end
+        resources :nodes, only: [:show, :index] do
+          get :download, on: :collection
+        end
+      end
+      resources :ignore_urls, concerns: :deletion
+    end
 
     namespace "apis" do
       get "groups" => "groups#index"
@@ -205,33 +222,17 @@ Rails.application.routes.draw do
       match "forms/:id/link_check" => "forms#link_check", as: :form_link_check, via: %i[post put]
       post "validation" => "validation#validate"
 
-      resources :files, path: ":cid/files", concerns: :deletion do
-        get :select, on: :member
-        get :view, on: :member
-        get :thumb, on: :member
-        get :download, on: :member
+      resources :files, path: ":cid/files", concerns: [:deletion, :file_api] do
         get :contrast_ratio, on: :collection
       end
-      resources :user_files, path: ":cid/user_files", concerns: :deletion do
-        get :select, on: :member
-        get :view, on: :member
-        get :thumb, on: :member
-        get :download, on: :member
+      resources :user_files, path: ":cid/user_files", concerns: [:deletion, :file_api] do
         get :contrast_ratio, on: :collection
       end
-      resources :temp_files, concerns: :deletion do
-        get :select, on: :member
-        get :view, on: :member
-        get :thumb, on: :member
-        get :download, on: :member
+      resources :temp_files, concerns: [:deletion, :file_api] do
         get :contrast_ratio, on: :collection
       end
       namespace :node, path: "node:cid/cms", cid: /\w+/ do
-        resources :temp_files, concerns: :deletion do
-          get :select, on: :member
-          get :view, on: :member
-          get :thumb, on: :member
-          get :download, on: :member
+        resources :temp_files, concerns: [:deletion, :file_api] do
           get :contrast_ratio, on: :collection
         end
       end
@@ -283,8 +284,6 @@ Rails.application.routes.draw do
       namespace "translate" do
         get "langs" => "langs#index"
       end
-
-      post "sns_poster/:id/line_reset" => "sns_poster#line_reset", as: :line_reset
     end
   end
 

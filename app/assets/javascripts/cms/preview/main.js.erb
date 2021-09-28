@@ -24,6 +24,7 @@ SS_Preview = (function () {
     this.layouts = [];
     this.parts = [];
     this.editLock = new EditLock(this);
+    this.updateDisabled = false;
   }
 
   SS_Preview.libs = {
@@ -1031,6 +1032,11 @@ SS_Preview = (function () {
       url += "/" + action;
       var path = SS_Preview.request_path || location.pathname;
 
+      if (self.updateDisabled) {
+        return;
+      }
+      self.updateDisabled = true;
+
       $.ajax({
         type: "POST",
         url: url,
@@ -1041,6 +1047,7 @@ SS_Preview = (function () {
         },
         success: function (data) {
           if (data.workflow_alert) {
+            self.updateDisabled = false;
             self.notice.show(data.workflow_alert);
             return;
           }
@@ -1065,6 +1072,7 @@ SS_Preview = (function () {
           } catch (ex) {
             self.notice.show("Error: " + error);
           }
+          self.updateDisabled = false;
         },
         complete: function() {
           $frame.dialog("close");
@@ -1089,6 +1097,11 @@ SS_Preview = (function () {
     var url = SS_Preview.publishPath;
     var token = $('meta[name="csrf-token"]').attr('content');
 
+    if (self.updateDisabled) {
+      return;
+    }
+    self.updateDisabled = true;
+
     $.ajax({
       url: url,
       type: "POST",
@@ -1104,6 +1117,7 @@ SS_Preview = (function () {
           var $button = self.$el.find("#ss-preview-btn-publish")
           var $buttonContainer = $button.closest(".ss-preview-btn-group");
           $buttonContainer.remove();
+          self.updateDisabled = false;
         }
       },
       error: function(xhr, status, error) {
@@ -1114,6 +1128,7 @@ SS_Preview = (function () {
         } catch (ex) {
           self.notice.show("Error: " + error);
         }
+        self.updateDisabled = false;
       }
     });
   };

@@ -3,9 +3,9 @@
 .gws-schedule-tool-calendars {
   display: none;
   position: absolute;
+  z-index: 101;
   top: 0;
   left: 0;
-  z-index: 101;
   width: 211px;
   padding: 5px 0 20px;
   border-right: 1px solid #ccc;
@@ -47,8 +47,8 @@
   padding: 0 10px;
   a {
     display: block;
-    float: left;
     margin: 1px 6px -1px 0;
+    float: left;
     border: 1px solid $gray4;
     border-left: 3px solid #bbb;
     border-radius: 0 4px 0 0;
@@ -96,19 +96,19 @@
       }
     }
     .search {
-      float: right;
       margin: -5px 0 -5px 20px;
+      float: right;
       @include mb {
-        float: none;
         margin: 0;
+        float: none;
         input[type="text"] {
           width: auto !important;
         }
       }
     }
     .operations {
-      float: right;
       margin: -5px 0 -5px 20px;
+      float: right;
       @include mb {
         margin: 0;
         .btn-print { display: none; }
@@ -159,28 +159,28 @@
   }
   .label {
     min-width: 146px;
-    padding: 5px 1px;
     margin: 1px 0;
+    padding: 5px 1px;
   }
   .facility {
     min-width: 160px;
-    padding: 5px 1px;
     margin: 1px 0;
+    padding: 5px 1px;
   }
   .hour-wrap {
     padding: 5px 2px;
   }
   .reservation {
     min-width: 4.5em;
-    padding: 5px 1px;
     margin: 1px 8px;
+    padding: 5px 1px;
   }
   .hour {
     display: inline-block;
     min-width: 2em;
     padding: 1px 4px;
-    border-radius: 3px;
     border: $white 1px solid;
+    border-radius: 3px;
     background-color: #d4d4d4;
     color: #fff;
     text-align: center;
@@ -208,14 +208,14 @@
   }
   .user-tooltip {
     position: absolute;
-    border: 1px solid #d0d0d0;
-    box-shadow: 0 1px 6px #d0d0d0;
-    padding: 8px;
-    white-space: nowrap;
-    overflow: auto;
     z-index: 10000;
-    color: #000;
+    padding: 8px;
+    overflow: auto;
+    border: 1px solid #d0d0d0;
     background: #fff;
+    box-shadow: 0 1px 6px #d0d0d0;
+    color: #000;
+    white-space: nowrap;
   }
 }
 #cboxLoadedContent .gws-schedule-box .user-tooltip {
@@ -268,12 +268,12 @@
   font-size: 120%;
   cursor: pointer;
   &:hover {
-    color: $orange;
     border-color: $orange;
+    color: $orange;
   }
   @include mb {
-    clear: both;
     margin: 10px 0 !important;
+    clear: both;
   }
 }
 .fc-view table {
@@ -303,11 +303,11 @@
   .fc-icon {
     &.fc-icon-gws-schedule-calendar-reload {
       &:after {
+        content: "\E5D5";
+        left: -1px;
         font-family: "Material Icons";
         font-size: 108%;
         font-weight: bold;
-        content: "\E5D5";
-        left: -1px;
       }
     }
   }
@@ -318,8 +318,8 @@
 .print-preview {
   .fc-unthemed {
     th, td {
-      border-color: #000;
       border-style: solid;
+      border-color: #000;
     }
   }
 }
@@ -369,8 +369,8 @@
   }
   .fc-content {
     @include ellipsis;
-    word-break: normal;
     word-wrap: normal;
+    word-break: normal;
   }
 }
 .fc-time-grid-event {
@@ -395,9 +395,9 @@
   display: block;
 }
 .fc-event-point {
-  cursor: pointer;
   background-color: transparent;
   color: #f25a38;
+  cursor: pointer;
   &:hover {
     color: #f25a38;
     text-decoration: underline;
@@ -442,31 +442,31 @@
 }
 .fc-event-private .fc-content:before {
   @include fc_event_prefix;
-  background-color: #f2b;
   content: "秘";
+  background-color: #f2b;
 }
 .fc-event-unknown-attendance .fc-content:before {
   @include fc_event_prefix;
-  background-color: $orange;
   content: "未";
+  background-color: $orange;
 }
 .fc-event-user-attendance-absence {
   display: none;
 }
 .fc-event-approval-request .fc-content:before {
   @include fc_event_prefix;
-  background-color: #84e;
   content: "申";
+  background-color: #84e;
 }
 .fc-event-approval-approve .fc-content:before {
   @include fc_event_prefix;
-  background-color: #84e;
   content: "認";
+  background-color: #84e;
 }
 .fc-event-approval-deny .fc-content:before {
   @include fc_event_prefix;
-  background-color: #84e;
   content: "否";
+  background-color: #84e;
 }
 
 .fc-holiday {
@@ -539,8 +539,8 @@
   }
   .delimiter {
     width: 2px;
-    padding-left: 0;
     padding-right: 0;
+    padding-left: 0;
   }
   .fc-event {
     display: inline;
@@ -564,9 +564,9 @@
     padding-top: 4px;
   }
   .fc-event {
+    z-index: 0;
     margin-left: 1px;
     border-bottom: 1px solid #d8d8d8;
-    z-index: 0;
   }
   .fc-timeline-event {
     background: #2eb0f2;
@@ -596,8 +596,8 @@
     min-height: 23px;
   }
   .fc-event {
-    border-left: 1px solid #555;
     z-index: 0;
+    border-left: 1px solid #555;
   }
 }
 // Print View
@@ -614,8 +614,8 @@
     white-space: normal !important;
   }
   .fc-day-grid-event, .fc-timeline-event {
-    border-bottom: 1px solid #555;
     padding: 1px 0;
+    border-bottom: 1px solid #555;
     background-color: #f4f4f4 !important;
   }
   .fc-event .fc-content:before {
@@ -636,9 +636,9 @@
 }
 .fc-popup {
   position: relative;
-  overflow: auto;
   height: 100%;
   min-height: 30px;
+  overflow: auto;
   background: $white;
   color: $black;
   font-weight: normal;
@@ -646,9 +646,9 @@
   cursor: auto;
   .popup-title {
     @include ellipsis;
-    word-break: normal;
-    word-wrap: normal;
     font-size: 120%;
+    word-wrap: normal;
+    word-break: normal;
   }
   .popup-date {
     padding: 2px 0 0;
@@ -658,8 +658,8 @@
     padding-top: 5px;
     border-top: 1px solid #eee;
     .text {
-      overflow: auto;
       max-height: 70px;
+      overflow: auto;
       color: #222;
       font-size: 90%;
     }
@@ -675,8 +675,8 @@
     }
     .popup-label {
       display: inline-block;
-      float: left;
       min-width: 60px;
+      float: left;
     }
     .popup-value {
       margin-left: 60px;
@@ -709,10 +709,10 @@
 .fc-loading {
   display: inline-block;
   position: absolute;
+  z-index: 2;
   padding: 0 5px;
   background-color: #6ad;
   color: #fff;
-  z-index: 2;
 }
 
 // multiple calendar
@@ -802,11 +802,10 @@ dl.gws-schedule-repeat {
   margin-left: 5px;
   color: #e00;
   &:before {
+    content: "\E002";
+    display: inline;
     font-family: "Material Icons";
     font-size: 108%;
-    content: "\E002";
-
-    display: inline;
     vertical-align: -3px;
   }
 }
@@ -840,10 +839,10 @@ dl.gws-schedule-repeat {
     border-bottom: 1px solid #f2f2f2;
     font-weight: bold;
     &:before {
+      content: " ";
       margin-right: 6px;
       padding-left: 3px;
       background: #f25a38;
-      content: " ";
     }
   }
 }

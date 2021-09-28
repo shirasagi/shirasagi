@@ -7,7 +7,7 @@
     <div class="search-info" style="float: right;"><%= I18n.t("cms.search_contents_condition", condition: truncate(@item.brief_search_condition, length: 60)) %></div>
     <div class="search-count"><%= I18n.t("cms.search_contents_count", count: @result_count) %></div>
     <label class="check"><input type="checkbox"/></label>
-    <button class="destroy-all btn"><%= t :"ss.links.delete" %></button>
+    <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn", method: "delete", confirm: t('ss.confirm.delete') %>
     <% if @list_head_search %>
       <div class="list-head-search" style="margin-top: 10px;"><%= render partial: "list_head_search" %></div>
     <% end %>
@@ -32,7 +32,15 @@
 
           <div class="meta">
             <span class="id">#<%= item.id %></span>
-            <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+            <% if item.try(:updated) %>
+              <span class="datetime"><%= t("ss.views.index.updated", updated: item.updated.strftime("%Y/%m/%d %H:%M")) %></span>
+            <% end %>
+            <% if item.try(:released) %>
+              <span class="datetime"><%= t("ss.views.index.released", released: item.released.strftime("%Y/%m/%d %H:%M")) %></span>
+            <% end %>
+            <% if item.try(:approved) %>
+              <span class="datetime"><%= t("ss.views.index.approved", approved: item.approved.strftime("%Y/%m/%d %H:%M")) %></span>
+            <% end %>
             <span class="filename"><%= item.filename %></span>
             <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
             <% if item.user %>

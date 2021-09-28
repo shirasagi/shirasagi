@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :cms_editor_template, class: Cms::EditorTemplate do
     transient do
-      site nil
+      site { nil }
     end
 
     cur_site { site || cms_site }

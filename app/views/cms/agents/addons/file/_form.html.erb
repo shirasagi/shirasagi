@@ -42,11 +42,11 @@
 
   var options = {};
   options.selectUrl = function(id) {
-    var selectUrlTemplate = "<%= @cur_node ? select_cms_apis_node_temp_file_path(id: ":id", owner_item_id: @item.id, owner_item_type: @model.to_s) : select_cms_apis_temp_file_path(id: ":id") %>";
+    var selectUrlTemplate = "<%= @cur_node ? select_cms_apis_node_temp_file_path(cid: @cur_node, id: ":id", owner_item_id: @item.id, owner_item_type: @model.to_s) : select_cms_apis_temp_file_path(id: ":id") %>";
     return selectUrlTemplate.replace(":id", id);
   };
   options.uploadUrl = function() {
-    var uploadUrlTemplate = "<%= @cur_node ? cms_apis_node_temp_files_path(format: "json", owner_item_id: @item.id, owner_item_type: @model.to_s) : cms_apis_temp_files_path(format: "json") %>";
+    var uploadUrlTemplate = "<%= @cur_node ? cms_apis_node_temp_files_path(cid: @cur_node, format: "json", owner_item_id: @item.id, owner_item_type: @model.to_s) : cms_apis_temp_files_path(format: "json") %>";
     return uploadUrlTemplate;
   };
   var tempFile = new SS_Addon_TempFile($el.find(".upload-drop-area"), <%= @cur_user.id %>, options);

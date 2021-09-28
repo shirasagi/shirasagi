@@ -28,7 +28,7 @@
 <% @cur_form.columns.order_by(order: 1, name: 1).each do |column| %>
   <% next if !select_like_columns.any? { |t| column.is_a?(t) } %>
 
-  <% gen = SS::HslGenerator.new(column.id).to_enum %>
+  <% gen = SS::RandomColor.new(column.id) %>
   <% labels = [] %>
   <% values = [] %>
   <% bg_colors = [] %>
@@ -54,7 +54,7 @@
 
           <% labels << option %>
           <% values << value %>
-          <% bg_colors << gen.next %>
+          <% bg_colors << gen.next.to_s %>
         <% end %>
       </tbody>
     </table>

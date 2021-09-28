@@ -38,7 +38,7 @@ new Cms_Site_Search_History("<%= ".cms-site-search .search-form" %>", "<%= @cur_
   <%= form_for :s, url: @cur_node.url, html: { method: :get, class: 'search-form' }, "aria-label" => t("cms.search_form") do |f| %>
 
     <div class="site-search-keyword">
-      <%= f.text_field :keyword, autocomplete: "off" %>
+      <%= f.text_field :keyword, autocomplete: "off", title: (t "cms.search_contents"), placeholder: (t "cms.search_contents"), size: 40 %>
       <ul class="site-search-history" style="display: none;"></ul>
     </div>
 

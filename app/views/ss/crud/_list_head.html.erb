@@ -4,7 +4,7 @@
   <div class="list-head-action">
     <%= render file: "_list_head_tags" %>
     <div class="list-head-action-destroy">
-      <button class="destroy-all btn"><%= t :"ss.links.delete" %></button>
+      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.delete') %>
     </div>
   </div>
 

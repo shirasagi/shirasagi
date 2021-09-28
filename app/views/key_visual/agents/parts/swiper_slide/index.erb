@@ -1,0 +1,59 @@
+<% wrap_id = "key_visual-swiper_slide-#{@cur_part.id}" %>
+
+<div class="ss-swiper-slide" id="<%= wrap_id %>">
+  <%= sanitize(@cur_part.upper_html) if @cur_part.upper_html.present? %>
+
+  <div class="swiper-container ss-swiper-slide-container ss-swiper-slide-main">
+    <div class="swiper-wrapper ss-swiper-slide-wrapper">
+      <% @items.each do |item| %>
+        <% file = item.file %>
+        <% next unless file %>
+
+        <div class="swiper-slide ss-swiper-slide-item" data-ss-page-id="<%= item.id %>">
+          <% if item.link_url.present? %>
+            <%= link_to item.link_url, class: "ss-swiper-slide-item-link", target: @cur_part.link_target, rel: @cur_part.link_target.present? ? "noopener" : nil do %>
+              <%= image_tag file.url, alt: item.name, class: "ss-swiper-slide-item-image" %>
+            <% end %>
+          <% else %>
+            <%= image_tag file.url, alt: item.name, class: "ss-swiper-slide-item-image" %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+    <% if @cur_part.kv_navigation == "show" %>
+      <div class="swiper-button-next ss-swiper-slide-button-next"></div>
+      <div class="swiper-button-prev ss-swiper-slide-button-prev"></div>
+    <% end %>
+    <% if @cur_part.kv_pagination_style == "disc" || @cur_part.kv_pagination_style == "number" %>
+      <div class="swiper-pagination ss-swiper-slide-pagination"></div>
+    <% end %>
+
+    <% if @cur_part.kv_autoplay == "enabled" || @cur_part.kv_autoplay == "started" %>
+      <div class="ss-swiper-slide-controller">
+        <button type="button" class="ss-swiper-slide-play" aria-pressed="<%= @cur_part.kv_autoplay == "started" ? "true" : "false" %>"><%= t('key_visual.controls.start') %></button>
+        <button type="button" class="ss-swiper-slide-stop" aria-pressed="<%= @cur_part.kv_autoplay == "started" ? "false" : "true" %>"><%= t('key_visual.controls.stop') %></button>
+      </div>
+    <% end %>
+  </div>
+  <% if @cur_part.kv_thumbnail == "show" %>
+    <div thumbsSlider="" class="swiper-container ss-swiper-slide-container ss-swiper-slide-thumbnail">
+      <div class="swiper-wrapper ss-swiper-slide-wrapper">
+        <% @items.each do |item| %>
+          <% file = item.file %>
+          <% next unless file %>
+
+          <div class="swiper-slide ss-swiper-slide-item">
+            <%= image_tag file.url, alt: item.name, class: "ss-swiper-slide-item-image" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= sanitize(@cur_part.lower_html) if @cur_part.lower_html.present? %>
+</div>
+
+<%= jquery do %>
+  var slide = new KeyVisual_SwiperSlide("#<%= wrap_id %>", <%== @cur_part.js_option.to_json %>);
+  KeyVisual_SwiperSlide.instances["#<%= wrap_id %>"] = slide;
+<% end %>

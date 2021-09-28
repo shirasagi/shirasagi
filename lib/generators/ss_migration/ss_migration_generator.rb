@@ -1,3 +1,5 @@
+require 'rails/generators'
+
 class SsMigrationGenerator < Rails::Generators::NamedBase
   class_option :module, type: :string, desc: "put migration file into specified module directory"
 

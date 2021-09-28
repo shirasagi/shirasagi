@@ -11,7 +11,7 @@ class Guide::Agents::Nodes::GuideController < ApplicationController
     @answers = @answers.split("-").map { |transitions| transitions.split(",") }
 
     if params[:question].present?
-      question = ::Guide::Question.find(params[:question])
+      question = ::Guide::Question.where(id: params[:question]).first
       question_type = question.question_type
 
       if params[:answers].present?
@@ -45,6 +45,9 @@ class Guide::Agents::Nodes::GuideController < ApplicationController
     @before_condition = condition.join("-")
 
     @no = @answers.size
+  rescue => e
+    Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    raise "404"
   end
 
   public

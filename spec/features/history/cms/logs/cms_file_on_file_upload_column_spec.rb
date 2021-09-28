@@ -58,7 +58,8 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
       item.reload
       expect(item.column_values.count).to eq 1
       expect(item.column_values.first.file).to be_present
-      file_url = item.column_values.first.file.url
+      file = item.column_values.first.file
+      file_url = file.url
 
       History::Log.all.reorder(created: 1, id: 1).to_a.tap do |histories|
         histories[0].tap do |history|
@@ -68,8 +69,8 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
           expect(history.url).to eq sns_login_path
           expect(history.controller).to eq "sns/login"
           expect(history.action).to eq "login"
-          expect(history.target_id).to be_blank
-          expect(history.target_class).to be_blank
+          expect(history.target_id).to eq cms_user.id.to_s
+          expect(history.target_class).to eq "SS::User"
           expect(history.page_url).to be_blank
           expect(history.behavior).to be_blank
           expect(history.ref_coll).to eq "ss_users"
@@ -83,8 +84,8 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
           expect(history.url).to eq edit_path
           expect(history.controller).to eq "article/pages"
           expect(history.action).to eq "login"
-          expect(history.target_id).to be_blank
-          expect(history.target_class).to be_blank
+          expect(history.target_id).to eq site.id.to_s
+          expect(history.target_class).to eq "Cms::Site"
           expect(history.page_url).to be_blank
           expect(history.behavior).to be_blank
           expect(history.ref_coll).to eq "ss_sites"
@@ -98,8 +99,8 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
           expect(history.url).to eq file_url
           expect(history.controller).to eq "article/pages"
           expect(history.action).to eq "update"
-          expect(history.target_id).to be_blank
-          expect(history.target_class).to be_blank
+          expect(history.target_id).to eq file.id.to_s
+          expect(history.target_class).to eq file.class.name
           expect(history.page_url).to eq article_page_path(site: site, cid: node, id: item)
           expect(history.behavior).to eq "attachment"
           expect(history.ref_coll).to eq "ss_files"
@@ -112,8 +113,8 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
           expect(history.url).to eq article_page_path(site: site, cid: node, id: item)
           expect(history.controller).to eq "article/pages"
           expect(history.action).to eq "update"
-          expect(history.target_id).to be_blank
-          expect(history.target_class).to be_blank
+          expect(history.target_id).to eq item.id.to_s
+          expect(history.target_class).to eq item.class.name
           expect(history.page_url).to be_blank
           expect(history.behavior).to be_blank
           expect(history.ref_coll).to eq "cms_pages"

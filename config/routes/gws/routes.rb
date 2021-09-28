@@ -26,6 +26,14 @@ Rails.application.routes.draw do
     post :unlock_all, on: :collection
   end
 
+  concern :file_api do
+    get :select, on: :member
+    get :selected_files, on: :collection
+    get :view, on: :member
+    get :thumb, on: :member
+    get :download, on: :member
+  end
+
   namespace "gws", path: ".g:site" do
     get "/", to: "portal/main#show", as: :portal
     match "logout" => "login#logout", as: :logout, via: [:get, :delete]
@@ -77,12 +85,7 @@ Rails.application.routes.draw do
       put "reload_site_usages" => "site_usages#reload"
       post "validation" => "validation#validate"
 
-      resources :files, concerns: :deletion do
-        get :select, on: :member
-        get :view, on: :member
-        get :thumb, on: :member
-        get :download, on: :member
-      end
+      resources :files, concerns: [:deletion, :file_api]
     end
   end
 

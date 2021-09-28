@@ -40,7 +40,7 @@ class Gws::UsersController < ApplicationController
       @group = @cur_site.descendants.active.find(params[:s][:group]) rescue nil
     end
     @group ||= @cur_site
-    @group_ids ||= @cur_site.descendants.active.in_group(@group).pluck(:id)
+    @group_ids ||= @cur_site.descendants_and_self.active.in_group(@group).pluck(:id)
   end
 
   def build_form_data

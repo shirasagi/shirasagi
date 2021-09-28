@@ -1,5 +1,5 @@
 version: "2"
-engines:
+plugins:
   rubocop:
     enabled: true
     channel: rubocop-0-71
@@ -24,13 +24,7 @@ engines:
     enabled: true
     config:
       file: .scss-lint.yml
-ratings:
-  paths:
-  - Gemfile.lock
-  - "**.rb"
-  - "**.coffee"
-  - "**.css"
-exclude_paths:
+exclude_patterns:
 - bin/**/*
 - private/**/*
 - public/**/*

@@ -1,0 +1,10 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), cms_check_links_report_pages_path(report_id: item.id), id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+<% end %>
+
+<% @index_title = proc do |item| %>
+  <%= link_to item.name_with_site, cms_check_links_report_pages_path(report_id: item.id), class: "title" %>
+<% end %>
+
+<%= render file: "cms/crud/index" %>

@@ -72,7 +72,7 @@ $(".ms-container").each(function () {
 <dl class="see request-setting">
   <dd>
     <div class="buttons">
-      <%= button_tag t("workflow.state.request"), { updatetype: :request, class: "update-item" } %>
+      <%= button_tag t("workflow.state.request"), { updatetype: :request, class: "update-item", data: { disable: '' } } %>
       <%= button_tag t("workflow.state.cancel"), { class: "workflow-route-cancel" } %>
     </div>
   </dd>

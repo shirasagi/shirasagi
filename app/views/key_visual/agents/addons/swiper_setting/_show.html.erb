@@ -1,0 +1,40 @@
+<dl class="see mod-key_visual-pagelist">
+  <dt><%= @model.t :link_target %></dt>
+  <dd><%= @item.label :link_target %></dd>
+
+  <dt><%= @model.t :kv_speed %></dt>
+  <dd>
+    <% if @item.kv_speed.present? %>
+      <%= number_with_delimiter(@item.kv_speed) %><%= I18n.t("datetime.prompts.milli_second") %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :kv_space %></dt>
+  <dd>
+    <% if @item.kv_space.present? %>
+      <%= t("key_visual.human_pixel", count: @item.kv_space) %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :kv_autoplay %></dt>
+  <dd><%= @item.label :kv_autoplay %></dd>
+
+  <dt><%= @model.t :kv_pause %></dt>
+  <dd>
+    <% if @item.kv_pause.present? %>
+      <%= number_with_delimiter(@item.kv_pause) %><%= I18n.t("datetime.prompts.milli_second") %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :kv_navigation %></dt>
+  <dd><%= @item.label :kv_navigation %></dd>
+
+  <dt><%= @model.t :kv_pagination_style %></dt>
+  <dd><%= @item.label :kv_pagination_style %></dd>
+
+  <dt><%= @model.t :kv_thumbnail %></dt>
+  <dd><%= @item.label :kv_thumbnail %></dd>
+
+  <dt><%= @model.t :kv_thumbnail_count %></dt>
+  <dd><%= @item.kv_thumbnail_count %></dd>
+</dl>

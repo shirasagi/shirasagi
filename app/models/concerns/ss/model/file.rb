@@ -287,6 +287,7 @@ module SS::Model::File
       ::FileUtils.copy(self.path, new_file.path)
       # to create thumbnail call "#save!"
       new_file.save!
+      new_file.sanitizer_copy_file
     end
   end
 
@@ -377,13 +378,13 @@ module SS::Model::File
     dir = ::File.dirname(path)
     Fs.mkdir_p(dir) unless Fs.exists?(dir)
 
-    return if sanitizer_save_file
-
     SS::ImageConverter.attach(in_file, ext: ::File.extname(in_file.original_filename)) do |converter|
       converter.apply_defaults!(resizing: resizing_with_max_file_size, quality: quality)
       Fs.upload(path, converter.to_io)
       self.geo_location = converter.geo_location
     end
+
+    sanitizer_save_file
 
     self.size = Fs.size(path)
   end

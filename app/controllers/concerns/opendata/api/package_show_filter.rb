@@ -34,7 +34,7 @@ module Opendata::Api::PackageShowFilter
     end
 
     dataset = Opendata::Dataset.site(@cur_site).and_public.
-      or({ "uuid" => id }, { "filename" => id }).first
+      where("$or" => [{ "uuid" => id }, { "filename" => id }]).first
 
     if dataset
       res = { success: true, result: convert_package(dataset), help: help }

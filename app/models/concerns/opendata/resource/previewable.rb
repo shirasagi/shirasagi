@@ -123,8 +123,13 @@ module Opendata::Resource::Previewable
   end
 
   def format_coordinate(coordinate)
+    delimiters = I18n.t("map.coordinate.delimiters")
+    dd = delimiters[:degree]
+    dm = delimiters[:minutes]
+    ds = delimiters[:seconds]
+
     # dms
-    if coordinate =~ /^([^\d]+)?([\d\.]+)[\°度]([\d\.]+)[\'分]([\d\.]+)[\"秒]([^\d]+)?$/
+    if coordinate =~ /^([^\d]+)?([\d\.]+)[#{dd}]([\d\.]+)[#{dm}]([\d\.]+)[#{ds}]([^\d]+)?$/u
       d = $2.to_f
       m = $3.to_f / 60
       s = $4.to_f / 3600
@@ -132,7 +137,7 @@ module Opendata::Resource::Previewable
     end
 
     # dm
-    if coordinate =~ /^([^\d]+)?([\d\.]+)[\°度]([\d\.]+)[\'分]([^\d]+)?$/
+    if coordinate =~ /^([^\d]+)?([\d\.]+)[#{dd}]([\d\.]+)[#{dm}]([^\d]+)?$/u
       d = $2.to_f
       m = $3.to_f / 60
       return d + m

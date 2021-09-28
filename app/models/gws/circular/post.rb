@@ -178,10 +178,10 @@ class Gws::Circular::Post
 
   def browsable_comments
     return comments if user == @cur_user
-    comments.or(
+    comments.where("$or" => [
       { browsing_authority: nil },
       { browsing_authority: "all" },
-      { browsing_authority: "author_or_commenter", user: @cur_user })
+      { browsing_authority: "author_or_commenter", user: @cur_user }])
   end
 
   private

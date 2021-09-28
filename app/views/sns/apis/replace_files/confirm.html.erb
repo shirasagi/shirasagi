@@ -21,7 +21,8 @@
         <div class="" style="display: flex;">
           <article class="file-view before">
             <div><%= t('ss.before_replace') %></div>
-            <a class="thumb select" href="<%= @dst_file.url %>" target="_blank">
+            <%= sanitizer_status(@item) %>
+            <a class="thumb select" href="<%= @item.url %>" target="_blank">
               <% if @item.image? %>
                 <img src="<%= @item.thumb_url %>" alt="<%= @item.basename %>" />
               <% else %>
@@ -38,6 +39,7 @@
 
           <article class="file-view after">
             <div><%= t('ss.after_replace') %></div>
+            <%= sanitizer_status(@dst_file) %>
             <a class="thumb select" href="<%= @dst_file.url %>" target="_blank">
               <% if @dst_file.image? %>
                 <img src="<%= @dst_file.thumb_url %>" alt="<%= @dst_file.basename %>" />

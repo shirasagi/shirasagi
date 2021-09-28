@@ -11,6 +11,14 @@ Rails.application.routes.draw do
     get :download, on: :collection
   end
 
+  concern :file_api do
+    get :select, on: :member
+    get :selected_files, on: :collection
+    get :view, on: :member
+    get :thumb, on: :member
+    get :download, on: :member
+  end
+
   concern :command do
     get :command, on: :member
     post :command, on: :member
@@ -151,20 +159,13 @@ Rails.application.routes.draw do
 
   namespace "member", path: ".m:member", member: /\d+/ do
     namespace "apis" do
-      resources :temp_files, concerns: :deletion do
-        get :select, on: :member
-        get :view, on: :member
-        get :thumb, on: :member
-        get :download, on: :member
-      end
+      resources :temp_files, concerns: [:deletion, :file_api]
     end
   end
 
   namespace "member", path: ".s:site/member", module: "member" do
     namespace "apis" do
-      resources :photos, concerns: :deletion do
-        get :select, on: :member
-      end
+      resources :photos, concerns: [:deletion, :file_api]
     end
 
     resources :groups, concerns: :deletion do

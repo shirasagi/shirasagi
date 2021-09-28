@@ -8,7 +8,9 @@ class Job::BindedJob < ::ActiveJob::ConfiguredJob
   attr_reader :bindings
 
   def perform_now(*args)
-    ApplicationJob.check_size_limit_per_user!(@bindings[:user_id])
+    user_id_or_user = @bindings[:user_id].presence || @bindings["user_id"]
+    user_id_or_user = user_id_or_user.id if user_id_or_user.respond_to?(:id)
+    ApplicationJob.check_size_limit_per_user!(user_id_or_user)
     @job_class.new(*args).bind(@bindings).perform_now
   end
 

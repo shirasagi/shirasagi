@@ -27,7 +27,7 @@
     <div class="search-ui-form">
       <%= f.file_field :in_files, multiple: :multiple, required: :required %>
       <%= f.select :resizing, @model.resizing_options, { include_blank: t("ss.resize_image") }, { class: "image-size" } %>
-      <%= f.submit t("ss.buttons.save"), class: "btn save", style: "margin-left: 10px;" %>
+      <%= f.submit t("ss.buttons.save"), class: "btn save", style: "margin-left: 10px;", data: { disable_with: t("ss.buttons.saving") } %>
     </div>
 
   <% end %>

@@ -170,7 +170,7 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
       item.html = [
         "<!-- write-kana --><div>上部</div><!-- end-write-kana -->",
         item.html,
-        "<div>下部</div>"
+        "<!-- write-kana --><div>下部</div><!-- end-write-kana -->"
       ].join
       item.save!
 
@@ -183,7 +183,7 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
       expect(page).to have_no_css('ruby', text: '必要(ひつよう)')
       expect(page).to have_no_css('ruby', text: '場合(ばあい)')
       expect(page).to have_css('ruby', text: '上部(じょうぶ)')
-      expect(page).to have_no_css('ruby', text: '下部(かぶ)')
+      expect(page).to have_css('ruby', text: '下部(かぶ)')
     end
   end
 
@@ -198,7 +198,7 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
       item.html = [
           "<!-- skip-kana --><div>上部</div><!-- end-skip-kana -->",
           item.html,
-          "<div>下部</div>"
+          "<!-- skip-kana --><div>下部</div><!-- end-skip-kana -->"
       ].join
       item.save!
 
@@ -211,7 +211,7 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
       expect(page).to have_css('ruby', text: '必要(ひつよう)')
       expect(page).to have_css('ruby', text: '場合(ばあい)')
       expect(page).to have_no_css('ruby', text: '上部(じょうぶ)')
-      expect(page).to have_css('ruby', text: '下部(かぶ)')
+      expect(page).to have_no_css('ruby', text: '下部(かぶ)')
     end
   end
 
@@ -242,6 +242,39 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
       expect(page).to have_css('ruby', text: '場合(ばあい)')
       expect(page).to have_no_css('ruby', text: '上部(じょうぶ)')
       expect(page).to have_no_css('ruby', text: '下部(かぶ)')
+    end
+  end
+
+  context "with link" do
+    let(:user_dic_body) do
+      body = []
+      body << 'SHIRASAGI, シラサギ'
+      body << 'Shirasagi, シラサギ'
+      body << 'shirasagi, シラサギ'
+      body.join("\r\n")
+    end
+    let(:dic) { create :kana_dictionary, body: user_dic_body }
+    let(:kana_url) { item.full_url.sub(node.url, SS.config.kana.location + node.url) }
+
+    before do
+      site.auto_description = 'enabled'
+      site.auto_keywords = 'enabled'
+      site.save!
+
+      Kana::Dictionary.build_dic(site.id, [ dic.id ])
+
+      item.name = "SHIRASAGI 開発マニュアル"
+      item.html = "<a href='https://shirasagi.github.io/'>SHIRASAGI 開発マニュアル</a>#{item.html}"
+      item.save!
+
+      FileUtils.rm_rf(item.path)
+    end
+
+    it do
+      visit kana_url
+      expect(page).to have_css('ruby', text: 'SHIRASAGI(しらさぎ)')
+      expect(page).to have_css('ruby', text: '開発(かいはつ)')
+      expect(page).to have_link(href: 'https://shirasagi.github.io/')
     end
   end
 end

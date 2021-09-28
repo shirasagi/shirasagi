@@ -1,6 +1,8 @@
 module ApplicationHelper
   include Category::CategoryHelper
   include SS::AutoLink
+  include SS::ButtonToHelper
+  include SS::ColorPickerHelper
 
   def tryb(&block)
     begin
@@ -283,7 +285,7 @@ module ApplicationHelper
   end
 
   def sanitizer_status(item)
-    return if item.sanitizer_state != 'wait'
+    return unless %w(wait complete).include?(item.sanitizer_state)
     h = %(<div class="sanitizer-status sanitizer-#{item.sanitizer_state}">#{item.label :sanitizer_state}</div>)
     h.html_safe
   end

@@ -15,4 +15,6 @@ class Rss::WeatherXmlPage
   default_scope ->{ where(route: "rss/weather_xml_page") }
 
   skip_callback(:destroy, :before, :create_history_trash)
+
+  self.default_released_type = "fixed"
 end

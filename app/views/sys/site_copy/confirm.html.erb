@@ -14,7 +14,7 @@
 </div>
 
 <footer class="send">
-  <%= f.submit t("ss.buttons.run"), class: 'btn-primary save' %>
+  <%= f.submit t("ss.buttons.run"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.running") } %>
   <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
 </footer>
 <% end %>

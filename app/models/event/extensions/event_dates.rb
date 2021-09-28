@@ -1,46 +1,60 @@
 class Event::Extensions::EventDates < Array
-  def mongoize
-    self.to_a
-  end
-
   class << self
+    # Get the object as it was stored in the database, and instantiate
+    # this custom class from it.
     def demongoize(object)
-      if object.present?
-        String.new(object.map { |d| d.strftime("%Y/%m/%d") }.join("\r\n"))
-      else
-        String.new("")
-      end
+      return if object.nil?
+      new(object.select { |item| item.respond_to?(:in_time_zone) }.map(&:in_time_zone).compact.map(&:to_date))
     end
 
+    # Takes any possible object and converts it to how it would be
+    # stored in the database.
     def mongoize(object)
       case object
-      when self.class then object.mongoize
-      when String then
-        set = object.split(/\r\n|\n/).map do |d|
-          begin
-            Date.parse(d).mongoize
-          rescue => e
-            nil
-          end
-        end
-
-        if set.present?
-          set = set.compact.uniq.sort
-          self.new(set).mongoize
-        else
-          self.new([]).mongoize
-        end
+      when String
+        mongoize_string(object)
+      when Array
+        mongoize_array(object)
       else
-        object
+        nil
       end
     end
 
-    def evolve(object)
-      case object
-      when self.class then object.mongoize
-      else
-        object
-      end
+    # # Converts the object that was supplied to a criteria and converts it
+    # # into a database friendly form.
+    # def evolve(object)
+    #   mongoize(object)
+    # end
+
+    private
+
+    def mongoize_string(object)
+      mongoize_array(object.split(/\R+/))
     end
+
+    def mongoize_array(array)
+      array = array.select { |item| item.respond_to?(:in_time_zone) }.map(&:in_time_zone).compact.map(&:to_date)
+      array.compact!
+      array.uniq!
+      array.sort!
+
+      new(array)
+    end
+  end
+
+  def clustered
+    ret = []
+    return ret if empty?
+
+    range = []
+    each do |date|
+      if range.present? && range.last.tomorrow != date
+        ret << range
+        range = []
+      end
+      range << date
+    end
+    ret << range if range.present?
+    ret
   end
 end

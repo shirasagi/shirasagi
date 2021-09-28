@@ -240,13 +240,13 @@ module Gws::Model::File
     Fs.mkdir_p(dir) unless Fs.exists?(dir)
 
     run_callbacks(:_save_file) do
-      return if sanitizer_save_file
-
       SS::ImageConverter.attach(in_file, ext: ::File.extname(in_file.original_filename)) do |converter|
         converter.apply_defaults!(resizing: resizing_with_max_file_size, quality: quality)
         Fs.upload(path, converter.to_io)
         self.geo_location = converter.geo_location
       end
+
+      sanitizer_save_file
 
       self.size = Fs.size(path)
     end

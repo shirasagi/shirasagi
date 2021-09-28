@@ -89,6 +89,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
         expect(mail.decoded.to_s).to include(mail.subject)
         notice_url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
         expect(mail.decoded.to_s).to include(notice_url)
+        expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
       end
 
       # user1 is able to read in inbox
@@ -154,6 +155,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
         expect(mail.decoded.to_s).to include(mail.subject)
         notice_url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
         expect(mail.decoded.to_s).to include(notice_url)
+        expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
       end
     end
   end

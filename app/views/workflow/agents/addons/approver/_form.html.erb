@@ -1,7 +1,7 @@
 <%
   js_options = {}
-  if @item.try(:public?) && @cur_site.close_confirmation_enabled?
-    js_options[:close_confirmation] = @item.state
+  if @cur_site.try(:close_confirmation_enabled?) && @item.persisted? && (@item.state == "public")
+    js_options[:close_confirmation] = true
     contains_urls_path = url_for(action: 'contains_urls') rescue nil
     if contains_urls_path && @contains_urls.present?
       js_options[:contain_links_path] = contains_urls_path
@@ -11,6 +11,7 @@
     js_options[:release] = "allowed"
     js_options[:draft_save] = t("ss.buttons.draft_save")
     js_options[:publish_save] = t("ss.buttons.publish_save")
+    js_options[:disable_with] = t("ss.buttons.saving")
   end
   if @item.state == "closed" && @item.workflow_state == "request"
     js_options[:workflow_state] = "request"
@@ -21,11 +22,12 @@
 
   <% if @ss_mode == :cms %>
   var linePostConfirm = function() {
-    var linePostEnabled, lineTokenEnabled, linePosted, lineAutoPost;
+    var linePostEnabled, lineTokenEnabled, linePosted, lineAutoPost, lineEditAutoPost;
 
     linePostEnabled = <%== @item.class.include?(Cms::Addon::LinePoster) %>;
     lineTokenEnabled = <%== @cur_site.line_token_enabled? %>
     lineAutoPost = $('[name="item[line_auto_post]"]').length && ($('[name="item[line_auto_post]"]').val() == "active");
+    lineEditAutoPost = $('[name="item[line_edit_auto_post]"]').length && ($('[name="item[line_edit_auto_post]"]').val() == "enabled");
 
     <% item = (@item.respond_to?(:master) && @item.master) ? @item.master : @item %>
     linePosted = <%== item.respond_to?(:line_posted) && item.line_posted.present? %>;
@@ -33,22 +35,33 @@
     if (!linePostEnabled) { return false; }
     if (!lineTokenEnabled) { return false; }
     if (!lineAutoPost) { return false; }
-    if (linePosted) { return false; }
+
+    if (lineEditAutoPost) {
+      // 再編集が有効の為、すでに投稿済みかをチェックしない。
+    } else {
+      if (linePosted) { return false; }
+    }
     return true;
   };
 
   var twitterPostConfirm = function() {
-    var twitterPostEnabled, twitterAutoPost, twitterPosted, editAutoPost;
+    var twitterPostEnabled, twitterAutoPost, twitterEditAutoPost, twitterPosted;
 
     twitterPostEnabled = <%== @item.class.include?(Cms::Addon::TwitterPoster) %>;
     twitterAutoPost = $('[name="item[twitter_auto_post]"]').length && ($('[name="item[twitter_auto_post]"]').val() == "active");
+    twitterEditAutoPost = $('[name="item[twitter_edit_auto_post]"]').length && ($('[name="item[twitter_edit_auto_post]"]').val() == "enabled");
 
     <% item = (@item.respond_to?(:master) && @item.master) ? @item.master : @item %>
     twitterPosted = <%== item.respond_to?(:twitter_posted) && item.twitter_posted.present? %>;
 
     if (!twitterPostEnabled) { return false; }
     if (!twitterAutoPost) { return false; }
-    if (twitterPosted) { return false; }
+
+    if (twitterEditAutoPost) {
+      // 再編集が有効の為、すでに投稿済みかをチェックしない。
+    } else {
+      if (twitterPosted) { return false; }
+    }
     return true;
   };
 
@@ -66,7 +79,7 @@
   });
   <% end %>
 
-  <% if params[:action] =~ /edit|delete/ && @cur_user.respond_to?(:cms_role_permit_any?) && !@cur_user.cms_role_permit_any?(@cur_site, %w(delete_cms_ignore_alert)) && @contains_urls.present? %>
+  <% if params[:action] =~ /edit|delete/ && @cur_user.respond_to?(:cms_role_permit_any?) && !@cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_alert)) && @contains_urls.present? && @contains_urls.and_public.present? %>
   $(".save").attr("data-alert-msg", "<%= I18n.t('ss.confirm.contains_url_expect') %>");
   <% else %>
   $(".save").attr("data-alert-msg", "");

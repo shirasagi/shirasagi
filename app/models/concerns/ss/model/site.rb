@@ -122,6 +122,15 @@ module SS::Model::Site
       SS::UploadPolicy.upload_policy_options
     end
 
+    def same_domain_sites
+      @_same_domain_sites ||= SS::Site.all.select { |site| self.full_root_url == site.full_root_url }
+    end
+
+    def same_domain_site_from_path(path)
+      sites = same_domain_sites.sort_by { |site| site.url.count("/") }.reverse
+      sites.find { |site| path.start_with?(site.url) }
+    end
+
     private
 
     def validate_domains

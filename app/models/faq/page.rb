@@ -22,18 +22,10 @@ class Faq::Page
   include Cms::Addon::ReleasePlan
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
-  include Faq::Addon::Csv::Page
 
   set_permission_name "faq_pages"
 
   after_save :new_size_input, if: ->{ @db_changes }
-
-  def new_size_input
-    html = self.try(:html)
-    question = self.try(:question)
-    file_bytesize = SS::File.where(owner_item_type: self.class.name, owner_item_id: self.id).sum(:size)
-    self.set(size: html.try(:bytesize).to_i + question.try(:bytesize).to_i + file_bytesize)
-  end
 
   default_scope ->{ where(route: "faq/page") }
 end

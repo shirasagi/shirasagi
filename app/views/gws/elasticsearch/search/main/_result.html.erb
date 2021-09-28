@@ -1,7 +1,15 @@
-<% return if @result.blank? %>
+<%
+  return if @result.blank?
+  case @result['hits']['total']
+  when Integer
+    count = @result['hits']['total']
+  when Hash
+    count = @result['hits']['total']['value']
+  end
+%>
 
 <div class="list-head">
-  <%= I18n.t('gws/elasticsearch.format.search_results_count', count: @result['hits']['total'], from: @item.from + 1, to: @item.from + @item.size, took: @result['took'] / 1000.0) %>
+  <%= I18n.t('gws/elasticsearch.format.search_results_count', count: count, from: @item.from + 1, to: @item.from + @item.size, took: @result['took'] / 1000.0) %>
 </div>
 <ul class="list-items">
   <% @result['hits']['hits'].each do |hit| %>
@@ -15,7 +23,7 @@
         <%= link_to title, source['url'], class: 'title' %>
         <div class="meta">
           <% if @show_type %>
-            <span class="type"><%= @setting.translate_type(hit['_type']) %></span>
+            <span class="type"><%= @setting.translate_type(source['collection_name']) %></span>
           <% end %>
           <span class="id"><%= hit['_id'] %></span>
           <span class="datetime"><%= I18n.l(Time.zone.parse(source['updated'])) %></span>

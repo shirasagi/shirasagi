@@ -1,6 +1,10 @@
 <%= jquery do %>
   SS_AjaxFile.errors.entityTooLarge = "<%= I18n.t('errors.messages.request_entity_too_large') %>";
-  new SS_AjaxFile(null, { indexPath: "<%= url_for(action: :index, file_size: params[:file_size]) %>" });
+  new SS_AjaxFile(null, {
+    indexPath: "<%= url_for(action: :index) %>",
+    selectedFilesPath: "<%= url_for(action: :selected_files) %>",
+    pathOptions: <%== { file_size: params[:file_size] }.to_json %>
+  });
   SS_SearchUI.modal();
 <% end %>
 
@@ -11,7 +15,7 @@
     <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
       <%= f.file_field :in_files, multiple: :multiple, required: :required %>
       <%= f.select :resizing, @model.resizing_options, { include_blank: t("ss.resize_image") }, { class: "image-size" } %>
-      <%= f.submit t("ss.buttons.save"), class: "save btn", style: "margin-left: 10px;" %>
+      <%= f.submit t("ss.buttons.save"), class: "save btn", style: "margin-left: 10px;", data: { disable_with: t("ss.buttons.saving") } %>
     </div>
 
   <% end %>

@@ -17,7 +17,7 @@ class Job::Sns::LogsController < ApplicationController
 
   def log_criteria
     criteria = @model.where(user_id: @cur_user.id)
-    criteria = criteria.search_ymd(ymd: @ymd) if @ymd.present?
+    criteria = criteria.search_ymd(ymd: @ymd, term: '1.day') if @ymd.present?
     criteria
   end
 end

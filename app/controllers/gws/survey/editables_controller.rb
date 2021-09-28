@@ -58,7 +58,7 @@ class Gws::Survey::EditablesController < ApplicationController
 
   def set_category
     return if params[:category_id].blank? || params[:category_id] == '-'
-    @category ||= @categories.find(id: params[:category_id])
+    @category ||= @categories.find(params[:category_id])
     raise '403' unless @category.readable?(@cur_user) || @category.allowed?(:read, @cur_user, site: @cur_site)
   end
 

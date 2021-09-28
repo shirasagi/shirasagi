@@ -5,7 +5,7 @@ class Gws::CompressJob < Gws::ApplicationJob
     Rails.logger.error("Error : Failed to compress share_files.") unless zip.save
 
     #Gws::Share::Mailer.compressed_mail(user, zip).deliver_now
-    item = Gws::Share::Mailer.compressed_mail(zip.user, zip).message
+    item = Gws::Share::Mailer.compressed_mail(site, zip.user, zip).message
 
     subject = item.subject
     subject = NKF.nkf("-w", subject) if subject =~ /ISO-2022-JP/i

@@ -66,6 +66,7 @@ class Rss::ImportBase < Cms::ApplicationJob
     page.layout_id = node.page_layout_id if node.page_layout_id.present?
     page.rss_link = rss_item.link
     page.html = rss_item.html
+    page.released_type = 'fixed'
     page.released = rss_item.released
     page.permission_level = node.permission_level if page.permission_level.blank?
     page.group_ids = Array.new(node.group_ids) if page.group_ids.blank?

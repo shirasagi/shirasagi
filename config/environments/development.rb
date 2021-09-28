@@ -17,7 +17,7 @@ Rails.application.configure do
   config.action_controller.forgery_protection_origin_check = false
 
   # action view
-  config.action_view.automatically_disable_submit_tag = false
+  config.action_view.automatically_disable_submit_tag = true
   config.action_view.form_with_generates_remote_forms = false
 
   # Show full error reports.

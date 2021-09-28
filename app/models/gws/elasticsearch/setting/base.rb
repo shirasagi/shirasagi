@@ -141,7 +141,7 @@ module Gws::Elasticsearch::Setting::Base
     type_query = {}
     type_query[:bool] = {}
     type_query[:bool][:minimum_should_match] = 1
-    type_query[:bool][:should] = search_types.map { |type| { type: { value: type } } }
+    type_query[:bool][:should] = search_types.map { |type| { term: { collection_name: type } } }
 
     query = {}
     query[:bool] = {}

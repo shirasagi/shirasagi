@@ -7,7 +7,7 @@ new Cms_Site_Search_History("#<%= "site-search-history-part-#{@cur_part.id}" %>"
 <%== @cur_part.upper_html if @cur_part.upper_html.present?  %>
 <form id="<%= "site-search-history-part-#{@cur_part.id}" %>" action="<%= @node.url %>" accept-charset="UTF-8" method="get">
   <div class="site-search-keyword">
-    <input type="text" title="サイト内検索" placeholder="<%= @cur_part.placeholder %>" class="text" id="search-box" size="40" name="s[keyword]" autocomplete="off">
+    <input type="text" title=<%= t "cms.search_contents" %> placeholder=<%= t "cms.search_contents" %> class="text" id="s_keyword" size="40" name="s[keyword]" autocomplete="off">
     <ul class="site-search-history" style="display: none;"></ul>
   </div>
   <button type="submit" id="search-button"><%= t "cms.search_button" %></button>

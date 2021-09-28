@@ -21,7 +21,7 @@
       <%= f.submit t("gws/monitor.links.comment"), class: 'btn-primary answer', data: { confirm: I18n.t("gws/monitor.confirm.comment_answer") }  %>
       <%= f.submit t("gws/monitor.links.question_not_applicable"), class: 'btn-primary question_not_applicable', data: { confirm: I18n.t("gws/monitor.confirm.comment_answer") }  %>
     <% else %>
-      <%= f.submit t("ss.buttons.save"), class: 'btn-primary save' %>
+      <%= f.submit t("ss.buttons.save"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.saving") } %>
     <% end %>
     <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
   <% end %>
