@@ -16,7 +16,7 @@ class Uploader::File
     return false unless valid?
     @binary = self.class.remove_exif(binary) if binary && exif_image?
     if binary && image?
-      max_file_size = SS::ImageResize.find_by_ext(ext.sub('.', ''))
+      max_file_size = SS::ImageResize.find_item(ext.sub('.', ''))
       if max_file_size.present?
         if binary.size >= SS::ImageResize.find_size(ext.sub('.', ''))
           quality = max_file_size.try(:quality)

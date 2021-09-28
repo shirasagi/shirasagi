@@ -422,11 +422,11 @@ module SS::Model::File
     size = resizing || []
     max_file_sizes = []
     if user.blank? || !SS::ImageResize.allowed?(:disable, user) || disable_image_resizes.blank?
-      max_file_sizes << SS::ImageResize.find_by_ext(extname)
+      max_file_sizes << SS::ImageResize.find_item(extname)
     end
     if self.class.include?(Cms::Reference::Node) && node.present?
       if user.blank? || !Cms::ImageResize.allowed?(:disable, user, site: site, node: node) || disable_image_resizes.blank?
-        max_file_sizes << Cms::ImageResize.site(site).node(node).find_by_ext(extname)
+        max_file_sizes << Cms::ImageResize.site(site).node(node).find_item(extname)
       end
     end
     max_file_sizes.reject(&:blank?).each do |max_file_size|
@@ -443,11 +443,11 @@ module SS::Model::File
     quality = []
     max_file_sizes = []
     if user.blank? || !SS::ImageResize.allowed?(:disable, user) || disable_image_resizes.blank?
-      max_file_sizes << SS::ImageResize.find_by_ext(extname)
+      max_file_sizes << SS::ImageResize.find_item(extname)
     end
     if self.class.include?(Cms::Reference::Node) && node.present?
       if user.blank? || !Cms::ImageResize.allowed?(:disable, user, site: site, node: node) || disable_image_resizes.blank?
-        max_file_sizes << Cms::ImageResize.site(site).node(node).find_by_ext(extname)
+        max_file_sizes << Cms::ImageResize.site(site).node(node).find_item(extname)
       end
     end
     max_file_sizes.reject(&:blank?).each do |max_file_size|

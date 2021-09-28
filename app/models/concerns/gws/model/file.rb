@@ -269,7 +269,7 @@ module Gws::Model::File
     size = resizing || []
     max_file_sizes = []
     if user.blank? || !SS::ImageResize.allowed?(:disable, user) || disable_image_resizes.blank?
-      max_file_sizes << SS::ImageResize.find_by_ext(extname)
+      max_file_sizes << SS::ImageResize.find_item(extname)
     end
     max_file_sizes.reject(&:blank?).each do |max_file_size|
       if size.present?
@@ -285,7 +285,7 @@ module Gws::Model::File
     quality = []
     max_file_sizes = []
     if user.blank? || !SS::ImageResize.allowed?(:disable, user) || disable_image_resizes.blank?
-      max_file_sizes << SS::ImageResize.find_by_ext(extname)
+      max_file_sizes << SS::ImageResize.find_item(extname)
     end
     max_file_sizes.reject(&:blank?).each do |max_file_size|
       next if size <= max_file_size.try(:size)
