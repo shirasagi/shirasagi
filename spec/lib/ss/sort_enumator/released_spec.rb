@@ -18,19 +18,70 @@ describe SS::SortEmulator, dbscope: :example do
 
   context "with released" do
     let!(:node) { create :cms_node_page, cur_site: site }
-    let!(:page1) { create :cms_page, cur_site: site, cur_node: node, released_type: released_type }
-    let!(:page2) { create :cms_page, cur_site: site, cur_node: node, released_type: released_type }
-    let!(:page3) { create :cms_page, cur_site: site, cur_node: node, released_type: released_type }
+    let!(:page1) do
+      created = now - rand(3.months..6.months)
+      first_released = created + rand(7.days..14.days)
+      updated = first_released + rand(7.days..14.days)
+
+      page = nil
+      Timecop.freeze(created) do
+        page = create(:cms_page, cur_site: site, cur_node: node, released_type: released_type, state: "closed")
+      end
+      Timecop.freeze(first_released) do
+        page.state = "public"
+        page.released = first_released
+        page.save!
+      end
+      Timecop.freeze(updated) do
+        page.description = Array.new(2) { unique_id }.join("\n")
+        page.save!
+      end
+      page
+    end
+    let!(:page2) do
+      created = now - rand(3.months..6.months)
+      first_released = created + rand(7.days..14.days)
+      updated = first_released + rand(7.days..14.days)
+
+      page = nil
+      Timecop.freeze(created) do
+        page = create(:cms_page, cur_site: site, cur_node: node, released_type: released_type, state: "closed")
+      end
+      Timecop.freeze(first_released) do
+        page.state = "public"
+        page.released = first_released
+        page.save!
+      end
+      Timecop.freeze(updated) do
+        page.description = Array.new(2) { unique_id }.join("\n")
+        page.save!
+      end
+      page
+    end
+    let!(:page3) do
+      created = page2.created
+      first_released = page2.first_released
+      updated = page2.updated
+
+      page = nil
+      Timecop.freeze(created) do
+        page = create(:cms_page, cur_site: site, cur_node: node, released_type: released_type, state: "closed")
+      end
+      Timecop.freeze(first_released) do
+        page.state = "public"
+        page.released = first_released
+        page.save!
+      end
+      Timecop.freeze(updated) do
+        page.description = Array.new(2) { unique_id }.join("\n")
+        page.save!
+      end
+      page
+    end
     let!(:page4) { create :cms_page, cur_site: site, cur_node: node, released_type: released_type }
     let(:criteria) { Cms::Page.all }
 
     before do
-      rtime = ->{ now - rand(1_000..9_999) * 1_000 }
-      page1.set(released: rtime.call, first_released: rtime.call, created: rtime.call, updated: rtime.call)
-
-      page2.set(released: rtime.call, first_released: rtime.call, created: rtime.call, updated: rtime.call)
-      page3.set(released: page2.released, first_released: page2.first_released, created: page2.created, updated: page2.updated)
-
       page4.unset(:released, :first_released, :created, :updated)
     end
 
