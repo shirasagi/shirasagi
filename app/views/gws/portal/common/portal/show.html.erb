@@ -12,9 +12,9 @@
     <% @portlet = item %>
     <div class="portlet-html <%= item.portlet_id_class %> <%= item.portlet_model_class %>" data-id="<%= item.id %>">
       <% if @portal.my_portal? || item.readable?(@cur_user, site: @cur_site) %>
-        <%= render file: item.view_file if item.view_file %>
+        <%= render template: item.view_template if item.view_template %>
       <% else %>
-        <%= render file: 'gws/portal/portlets/private/index' %>
+        <%= render template: 'gws/portal/portlets/private/index' %>
       <% end %>
     </div>
   <% end %>
