@@ -79,7 +79,12 @@ module Cms::Model::Node
   end
 
   def becomes_with_route(name = nil)
-    super (name || route).sub("/", "/node/")
+    return self if name.blank?
+
+    name = name.sub("/", "/node/")
+    return self if route == name
+
+    super name
   end
 
   def dirname

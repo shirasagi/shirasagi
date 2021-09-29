@@ -76,8 +76,8 @@ describe Cms::Page, type: :model, dbscope: :example do
   end
 
   describe "#becomes_with_route" do
-    subject { create(:cms_page, route: "article/page") }
-    it { expect(subject.becomes_with_route).to be_kind_of(Article::Page) }
+    subject { create(:cms_page) }
+    it { expect(subject.becomes_with_route("article/page")).to be_kind_of(Article::Page) }
   end
 
   describe "#name_for_index" do
