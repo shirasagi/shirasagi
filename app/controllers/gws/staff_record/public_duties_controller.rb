@@ -65,6 +65,6 @@ class Gws::StaffRecord::PublicDutiesController < ApplicationController
       where(charge_name: @item.charge_name).
       update_all(get_charge_params)
 
-    render_update true, render: { file: :edit_charge }
+    render_update true, render: { template: "edit_charge" }
   end
 end

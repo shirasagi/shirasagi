@@ -98,7 +98,7 @@ module Gws::Schedule::PlanFilter
 
   def print
     @portrait = 'horizontal'
-    render file: 'print', layout: 'ss/print'
+    render template: 'print', layout: 'ss/print'
   end
 
   def create
@@ -134,7 +134,7 @@ module Gws::Schedule::PlanFilter
   def copy
     set_item
     @item = @item.new_clone
-    render file: :new
+    render template: "new"
   end
 
   def soft_delete
@@ -166,7 +166,7 @@ module Gws::Schedule::PlanFilter
 
     render_opts = {}
     render_opts[:location] = { action: :index }
-    render_opts[:render] = { file: :undo_delete }
+    render_opts[:render] = { template: "undo_delete" }
     render_opts[:notice] = t('ss.notice.restored')
 
     saved = @item.save

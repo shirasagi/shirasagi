@@ -46,7 +46,7 @@ class Opendata::Idea::IdeasController < ApplicationController
       where(cond)
 
     @items = Opendata::Idea.in(id: @ideas.map(&:id) + @comments.map(&:idea_id)).order_by(:created.desc)
-    render file: :index
+    render template: "index"
   end
 
   def index_request
@@ -62,6 +62,6 @@ class Opendata::Idea::IdeasController < ApplicationController
       where(cond)
 
     @items = Opendata::Idea.in(id: @ideas.map(&:id) + @comments.map(&:idea_id)).order_by(:created.desc)
-    render file: :index
+    render template: "index"
   end
 end

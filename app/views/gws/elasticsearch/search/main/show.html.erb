@@ -36,11 +36,11 @@
 
 <div class="index">
   <div class="list-head">
-    <%= render file: '_search' %>
+    <%= render template: '_search' %>
   </div>
 
   <% if @result.present? %>
-    <%= render file: '_result' %>
+    <%= render template: '_result' %>
   <% end %>
 </div>
 

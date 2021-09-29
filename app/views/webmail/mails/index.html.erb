@@ -28,7 +28,7 @@
 <%= paginate @items if @items.try(:current_page) %>
 
 <div class="index">
-  <%= render file: "_list_head" %>
+  <%= render template: "_list_head" %>
 
   <ul class="list-items ss-messages webmail-mails">
     <li class="list-item-head">

@@ -101,9 +101,9 @@ class Gws::Discussion::CommentsController < ApplicationController
 
     if result
       @comment.save_notify_message(@cur_site, @cur_user)
-      render_create true, location: { action: :index }, render: { file: :index }
+      render_create true, location: { action: :index }, render: { template: "index" }
     else
-      render_create false, location: { action: :index }, render: { file: :index }
+      render_create false, location: { action: :index }, render: { template: "index" }
     end
   end
 end

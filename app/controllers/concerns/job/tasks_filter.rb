@@ -57,7 +57,7 @@ module Job::TasksFilter
       respond_to do |format|
         format.html { redirect_to({ action: :index }, { notice: I18n.t('job.notice.reseted_state') }) }
         format.json do
-          render file: "ss/tasks/index", status: :created, content_type: json_content_type, locals: { item: @item }
+          render template: "ss/tasks/index", status: :created, content_type: json_content_type, locals: { item: @item }
         end
       end
     else

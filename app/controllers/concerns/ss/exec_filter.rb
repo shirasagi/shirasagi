@@ -7,8 +7,8 @@ module SS::ExecFilter
 
   def index
     respond_to do |format|
-      format.html { render file: "ss/tasks/index" }
-      format.json { render file: "ss/tasks/index", content_type: json_content_type, locals: { item: @item } }
+      format.html { render template: "ss/tasks/index" }
+      format.json { render template: "ss/tasks/index", content_type: json_content_type, locals: { item: @item } }
     end
   end
 

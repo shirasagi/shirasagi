@@ -11,9 +11,9 @@ module Gws::Schedule::CalendarFilter
     set_item
 
     if @item.readable?(@cur_user, site: @cur_site)
-      render file: "popup", layout: false
+      render template: "popup", layout: false
     else
-      render file: "popup_hidden", layout: false
+      render template: "popup_hidden", layout: false
     end
   end
 

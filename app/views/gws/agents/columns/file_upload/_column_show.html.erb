@@ -1,6 +1,6 @@
 <% value ||= nil %>
 <% files = value.try(:files) %>
-<%= render file: 'gws/agents/columns/main/_common_label', locals: { column: column, show: true } %>
+<%= render 'gws/agents/columns/main/common_label', column: column, show: true %>
 <dd>
   <% if files.present? %>
     <% files.each do |file| %>

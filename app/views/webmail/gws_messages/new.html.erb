@@ -13,4 +13,4 @@
         onclick: "location.href='#{webmail_mail_path(webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index, mailbox: params[:mailbox])}'; return false;" %>
 <% end %>
 
-<%= render file: 'ss/crud/new' %>
+<%= render template: 'ss/crud/new' %>

@@ -75,7 +75,7 @@ module Cms::PublicFilter::Crud
 
   def render_create(result, opts = {})
     location = opts[:location].presence || @cur_node.url
-    render_opts = opts[:render].presence || { file: :new }
+    render_opts = opts[:render].presence || { template: "new" }
     notice = opts[:notice].presence || t("ss.notice.saved")
 
     if result
@@ -93,7 +93,7 @@ module Cms::PublicFilter::Crud
 
   def render_update(result, opts = {})
     location = opts[:location].presence || @cur_node.url
-    render_opts = opts[:render].presence || { file: :edit }
+    render_opts = opts[:render].presence || { template: "edit" }
     notice = opts[:notice].presence || t("ss.notice.saved")
 
     if result
@@ -111,7 +111,7 @@ module Cms::PublicFilter::Crud
 
   def render_destroy(result, opts = {})
     location = opts[:location].presence || @cur_node.url
-    render_opts = opts[:render].presence || { file: :delete }
+    render_opts = opts[:render].presence || { template: "delete" }
     notice = opts[:notice].presence || t("ss.notice.deleted")
 
     if result
