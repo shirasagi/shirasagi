@@ -8,7 +8,7 @@ describe Opendata::Dataset::ImportJob, dbscope: :example do
 
   describe ".perform_later" do
     before do
-      @save_url_type = SS.config.cms.url_type
+      @save_url_type = SS.config.sns.url_type
       SS.config.replace_value_at(:sns, :url_type, 'any')
       Sys::TrustedUrlValidator.send(:clear_trusted_urls)
 
