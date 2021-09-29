@@ -63,7 +63,7 @@ class Gws::Schedule::Todo
     [name, id: id, site: site_id, category: '-']
   end
 
-  def calendar_format(user, site, opts)
+  def calendar_format(user, site)
     result = super
     return result if result.empty?
 

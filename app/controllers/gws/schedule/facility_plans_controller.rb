@@ -34,10 +34,7 @@ class Gws::Schedule::FacilityPlansController < ApplicationController
   public
 
   def events
-    opts = {}
-    opts[:attendance_classes] = false
-    opts[:cur_user] = @cur_user
-    @events = @items.map { |m| m.calendar_format(@cur_user, @cur_site, opts) }
+    @events = @items.map { |m| m.calendar_format(@cur_user, @cur_site) }
   end
 
   def download
