@@ -56,7 +56,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     if result
       flash["cms.preview.notice"] = t("ss.notice.saved")
     end
-    render_create result, location: location, render: { file: :new, status: :unprocessable_entity }
+    render_create result, location: location, render: { template: "new", status: :unprocessable_entity }
   end
 
   def create_as_branch
@@ -102,14 +102,14 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
       flash["cms.preview.notice"] = I18n.t("workflow.notice.created_branch_page")
       render json: { location: location }, status: :ok, content_type: json_content_type
     else
-      render file: :new, status: :unprocessable_entity
+      render template: "new", status: :unprocessable_entity
     end
   end
 
   def save_with_overwrite
     render_opts = {
       location: { action: :edit },
-      render: { file: :edit, status: :unprocessable_entity }
+      render: { template: "edit", status: :unprocessable_entity }
     }
 
     result = @item.save
@@ -147,7 +147,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
       flash["cms.preview.notice"] = I18n.t("workflow.notice.created_branch_page")
       render json: { location: location }, status: :ok, content_type: json_content_type
     else
-      render file: :edit, status: :unprocessable_entity
+      render template: "edit", status: :unprocessable_entity
     end
   end
 

@@ -138,9 +138,9 @@ class Opendata::Dataset::ResourcesController < ApplicationController
     file = @item.assoc_file
     text = page.opendata_resources_text(file)
     @item.update_resource_with_file!(page, file, @item.license_id, text)
-    render_update true, render: { file: :sync }
+    render_update true, render: { template: "sync" }
   rescue => e
     @item.errors.add :base, e.message
-    render_update false, render: { file: :sync }
+    render_update false, render: { template: "sync" }
   end
 end

@@ -106,8 +106,8 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
             fill_in "item[in_basename]", with: name
             expect do
               click_button I18n.t('ss.buttons.save')
-            end.to change { Gws::Memo::Folder.find(id: item.id).name }.from(item.name).to(name)
-               .and change { Gws::Memo::Folder.find(id: child_item.id).name }.from(child_item.name).to(modify_child_name)
+            end.to change { Gws::Memo::Folder.find(item.id).name }.from(item.name).to(name)
+               .and change { Gws::Memo::Folder.find(child_item.id).name }.from(child_item.name).to(modify_child_name)
           end
           visit index_path
           expect(page).to have_link(name)
@@ -122,7 +122,7 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
           modify_child_name = "test/child"
           within "form#item-form" do
             fill_in "item[in_basename]", with: modify_child_name
-            expect{ click_button I18n.t('ss.buttons.save') }.not_to(change { Gws::Memo::Folder.find(id: child_item.id).name })
+            expect{ click_button I18n.t('ss.buttons.save') }.not_to(change { Gws::Memo::Folder.find(child_item.id).name })
           end
         end
       end

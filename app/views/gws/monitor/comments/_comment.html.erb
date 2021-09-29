@@ -23,7 +23,7 @@
       </div>
       <% end %>
 
-      <%= render file: '_comment_menu', locals: { comment: comment, recursion: recursion } %>
+      <%= render template: '_comment_menu', locals: { comment: comment, recursion: recursion } %>
     </div>
   </aside>
 <% end %>

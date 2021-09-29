@@ -150,7 +150,7 @@ class Opendata::Workflow::IdeaCommentsController < ApplicationController
   def approver_setting
     if @route.present?
       if @item.apply_workflow?(@route)
-        render file: "approver_setting_multi", layout: false
+        render template: "approver_setting_multi", layout: false
       else
         render json: @item.errors.full_messages, status: :bad_request
       end

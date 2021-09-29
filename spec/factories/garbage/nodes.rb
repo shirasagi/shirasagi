@@ -1,41 +1,41 @@
 FactoryBot.define do
   factory :garbage_node_base, class: Garbage::Node::Base, traits: [:cms_node] do
-    route "garbage/base"
+    route { "garbage/base" }
   end
 
   factory :garbage_node_node, class: Garbage::Node::Node, traits: [:cms_node] do
-    route "garbage/node"
+    route { "garbage/node" }
   end
 
   factory :garbage_node_page, class: Garbage::Node::Page, traits: [:cms_node] do
-    route "garbage/page"
+    route { "garbage/page" }
   end
 
   factory :garbage_node_search, class: Garbage::Node::Search, traits: [:cms_node] do
-    route "garbage/search"
+    route { "garbage/search" }
   end
 
   factory :garbage_node_category, class: Garbage::Node::Category, traits: [:cms_node] do
-    route "garbage/category"
+    route { "garbage/category" }
   end
 
   factory :garbage_node_category_list, class: Garbage::Node::CategoryList, traits: [:cms_node] do
-    route "garbage/category_list"
+    route { "garbage/category_list" }
   end
 
   factory :garbage_node_area, class: Garbage::Node::Area, traits: [:cms_node] do
-    route "garbage/area"
+    route { "garbage/area" }
   end
 
   factory :garbage_node_area_list, class: Garbage::Node::AreaList, traits: [:cms_node] do
-    route "garbage/area_list"
+    route { "garbage/area_list" }
   end
 
   factory :garbage_node_center, class: Garbage::Node::Center, traits: [:cms_node] do
-    route "garbage/center"
+    route { "garbage/center" }
   end
 
   factory :garbage_node_center_list, class: Garbage::Node::CenterList, traits: [:cms_node] do
-    route "garbage/center_list"
+    route { "garbage/center_list" }
   end
 end

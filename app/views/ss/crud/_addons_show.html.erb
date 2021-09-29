@@ -6,7 +6,7 @@
 <% addons.each do |addon| %>
   <% addon_options = { id: "addon-#{addon.id}", head: addon.name, class: css_classes.dup, toggle: true, display_body: display_body } %>
 
-  <% buf = render file: addon.show_file, locals: { addon: addon_options } if addon.show_file %>
+  <% buf = render addon.show_partial_path, addon: addon_options if addon.show_partial_path %>
   <% next if buf.blank? %>
 
   <%= render "ss/crud/addon", addon: addon_options do %>

@@ -53,5 +53,5 @@
     </div>
   </div>
 
-  <%= render file: "_addons_show", locals: { addons: @item.addons.select { |addon| [Gws::Addon::Notice::CommentPost].include?(addon.klass) } } %>
+  <%= render template: "_addons_show", locals: { addons: @item.addons.select { |addon| [Gws::Addon::Notice::CommentPost].include?(addon.klass) } } %>
 </div>

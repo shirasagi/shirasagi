@@ -1,36 +1,12 @@
 GIT
-  remote: https://github.com/mongodb/mongoid.git
-  revision: 1dde68026127460cbc263274e7eeab7afce412b5
+  remote: https://github.com/shirasagi/mongoid
+  revision: ca2d42c4a88625a4b145e55a80db5df5eb880ba8
+  branch: 7.3-stable-MONGOID-5183
   specs:
-    mongoid (7.1.0)
-      activemodel (>= 5.1, < 6.0.0)
-      mongo (>= 2.5.1, < 3.0.0)
-
-GIT
-  remote: https://github.com/mongoid/mongo_session_store.git
-  revision: 3d979f7781be0edac0782291cff5cce9f6402214
-  specs:
-    mongo_session_store (3.1.0)
-      actionpack (>= 4.0)
-      mongo (~> 2.0)
-
-GIT
-  remote: https://github.com/mongoid/mongoid-grid_fs.git
-  revision: e828e84753575560d669ad7667d40f7dace40503
-  specs:
-    mongoid-grid_fs (2.4.0)
-      mime-types (>= 1.0, < 4.0)
-      mongoid (>= 3.0, < 8.0)
-
-GIT
-  remote: https://github.com/mongoid/mongoid-rspec.git
-  revision: 68c95b133be1a1482fe882e39afd33262147d1f4
-  specs:
-    mongoid-rspec (4.0.1)
-      activesupport (>= 3.0.0)
-      mongoid (>= 3.1)
-      mongoid-compatibility (>= 0.5.1)
-      rspec (~> 3.3)
+    mongoid (7.3.3.ss.pre.1)
+      activemodel (>= 5.1, < 6.2)
+      mongo (>= 2.10.5, < 3.0.0)
+      ruby2_keywords (~> 0.0.5)
 
 GEM
   remote: https://rubygems.org/
@@ -90,7 +66,7 @@ GEM
       msgpack (~> 1.0)
     brakeman (4.3.1)
     browser (2.5.3)
-    bson (4.5.0)
+    bson (4.12.1)
     buftok (0.2.0)
     builder (3.2.4)
     bxslider-rails (4.2.5.1)
@@ -150,11 +126,11 @@ GEM
     erubi (1.10.0)
     excon (0.71.0)
     execjs (2.7.0)
-    factory_bot (4.10.0)
-      activesupport (>= 3.0.0)
-    factory_bot_rails (4.10.0)
-      factory_bot (~> 4.10.0)
-      railties (>= 3.0.0)
+    factory_bot (6.2.0)
+      activesupport (>= 5.0.0)
+    factory_bot_rails (6.2.0)
+      factory_bot (~> 6.2.0)
+      railties (>= 5.0.0)
     faraday (0.17.4)
       multipart-post (>= 1.2, < 3)
     fast_blank (1.0.0)
@@ -326,11 +302,24 @@ GEM
     minitest (5.14.4)
     momentjs-rails (2.20.1)
       railties (>= 3.1)
-    mongo (2.5.3)
-      bson (>= 4.3.0, < 5.0.0)
+    mongo (2.15.1)
+      bson (>= 4.8.2, < 5.0.0)
+    mongo_session_store (3.2.1)
+      actionpack (>= 4.0)
+      mongo (~> 2.0)
     mongoid-compatibility (0.5.1)
       activesupport
       mongoid (>= 2.0)
+    mongoid-grid_fs (2.4.0)
+      mime-types (>= 1.0, < 4.0)
+      mongoid (>= 3.0, < 8.0)
+    mongoid-rspec (4.1.0)
+      activesupport (>= 3.0.0)
+      mongoid (>= 3.1)
+      mongoid-compatibility (>= 0.5.1)
+      rspec-core (~> 3.3)
+      rspec-expectations (~> 3.3)
+      rspec-mocks (~> 3.3)
     msgpack (1.3.3)
     multi_json (1.15.0)
     multi_xml (0.6.0)
@@ -520,12 +509,15 @@ GEM
       unicode-display_width (>= 1.4.0, < 1.7)
     rubocop-performance (1.4.0)
       rubocop (>= 0.71.0)
+    rubocop-rspec (1.41.0)
+      rubocop (>= 0.68.1)
     ruby-debug-ide (0.7.2)
       rake (>= 0.8.1)
     ruby-progressbar (1.10.1)
     ruby-saml (1.12.2)
       nokogiri (>= 1.10.5)
       rexml
+    ruby2_keywords (0.0.5)
     ruby_dep (1.5.0)
     rubyzip (1.3.0)
     safe_yaml (1.0.5)
@@ -698,10 +690,10 @@ DEPENDENCIES
   mini_magick
   mini_racer
   momentjs-rails
-  mongo_session_store!
+  mongo_session_store
   mongoid!
-  mongoid-grid_fs!
-  mongoid-rspec!
+  mongoid-grid_fs
+  mongoid-rspec
   net-ldap
   non-stupid-digest-assets
   oauth2
@@ -733,6 +725,7 @@ DEPENDENCIES
   rspec-retry
   rubocop
   rubocop-performance
+  rubocop-rspec
   ruby-debug-ide
   ruby-saml
   rubyzip

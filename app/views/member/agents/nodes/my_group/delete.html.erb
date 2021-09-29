@@ -7,10 +7,10 @@
     <div class="head"><h2><%= t("ss.confirm.delete") %></h2></div>
 
     <div class="columns">
-      <%= render file: "_delete" %>
+      <%= render template: "_delete" %>
       <% @model.addons.each do |addon| %>
         <% file = "#{Rails.root}/app/views/#{addon.path}/view/_delete.html.erb" %>
-        <%= render file: file, locals: { f: f } if File.exists?(file) %>
+        <%= render "#{addon.path}/view/delete", f: f if File.exists?(file) %>
       <% end %>
     </div>
 

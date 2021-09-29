@@ -1,6 +1,7 @@
 <% f ||= nil %>
 <tr id="file-<%= file_id %>" class="file-view" data-file-id="<%= file_id %>" data-humanized-name="<%= file_humanized_name %>" data-url="<%= file_url %>" data-thumb-url="<%= file_thumb_url %>" data-extname="<%= file_extname %>">
   <td class="column-thumb">
+    <%= local_assigns[:file_sanitizer_status] %>
     <%= link_to file_url, class: :thumb, target: "_blank", rel: "noopener", title: file_humanized_name do %>
       <% if file_is_image %>
         <img alt="<%= file_humanized_name %>" src="<%= file_thumb_url %>">
@@ -16,7 +17,6 @@
     <% end %>
   </td>
   <td class="column-url">
-    <%= local_assigns[:file_sanitizer_status] %>
     <% if f %>
       <input type="text" name="item[link_urls][<%= file_id %>]" value="<%= file_link_url %>" class="link-url">
     <% else %>

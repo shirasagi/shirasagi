@@ -30,6 +30,6 @@ class Gws::Presence::UsersController < ApplicationController
 
   def table
     items
-    render file: :table, layout: false
+    render template: "table", layout: false
   end
 end

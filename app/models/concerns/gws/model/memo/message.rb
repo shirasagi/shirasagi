@@ -86,7 +86,7 @@ module Gws::Model
         path = in_path.try(:[], member_id.to_s).presence || user_setting_was.try(:[], 'path').presence || 'INBOX'
         seen_at = user_settings.find{ |setting| setting['user_id'] == member_id }.try(:[], 'seen_at')
         user_setting = { 'user_id' => member_id, 'path' => path }
-        user_setting['seen_at'] = seen_at if seen_at.present?
+        user_setting['seen_at'] = seen_at.in_time_zone.utc if seen_at.present?
         user_setting
       end
     end
@@ -273,7 +273,7 @@ module Gws::Model
       found = user_settings.find { |setting| setting['user_id'] == user.id && setting['seen_at'].present? }
       return if found.blank?
 
-      found['seen_at']
+      found['seen_at'].try { |time| time.in_time_zone }
     end
 
     def path(user)

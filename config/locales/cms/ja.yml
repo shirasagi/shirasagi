@@ -125,7 +125,7 @@ ja:
         - PDFファイルをご覧いただくためには、Adobe Readerのプラグイン（無償）が必要となります。
         - お持ちでない場合は、お使いの機種とスペックに合わせたプラグインをインストールしてください。
         - </div>
-        - <a href="http://get.adobe.com/jp/reader/">Adobe Readerをダウンロードする</a>
+        - <a href="https://get.adobe.com/jp/reader/">Adobe Readerをダウンロードする</a>
     all_content:
       download_tab: 一覧出力
       download_head: 全コンテンツ一覧出力
@@ -158,6 +158,7 @@ ja:
       line_post_enabled: LINE連携が有効になっています。連携しない場合は、設定を解除してください。
       twitter_post_enabled: Twitter投稿が有効になっています。連携しない場合は、設定を解除してください。
       source_clean: "ソースクリーニングを実行してよろしいですか。\nソースクリーニングにより表示が崩れる可能性があります。"
+      change_form: 定型フォームを変更してよろしいですか？
     notices:
       import_with_entry_form_is_not_supported: 次のフォームでは本文ブロックは出力されません。
       restoring_public_content_from_trash: 非公開で復元されます。復元後、内容を確認うえ、公開してください。
@@ -170,6 +171,7 @@ ja:
         - "リンク切れを修正した場合、再度リンクチェックを実行し、新しいレポートを作成してください。"
       check_links_report_annotation: ※リンクチェックの実行タイミングや通信先サーバーの負荷状況によっては誤検出の場合があります。
       check_links_report_created: "%{time} 時点"
+      confirm_column_deletion_whose_form_is_in_use: "定型フォームは利用中のため入力項目を削除するとページが正しく表示されなくなる場合があります。それでも削除する場合はチェックしてください。"
     apis:
       categories:
         index: カテゴリーを選択する
@@ -215,9 +217,9 @@ ja:
           search: データセットを検索
           select: データセットを設定する
       forms:
-        index: 定形フォームを選択する
-        search: 定形フォームを検索
-        select: 定形フォームを設定する
+        index: 定型フォームを選択する
+        search: 定型フォームを検索
+        select: 定型フォームを設定する
     auto_correct:
       link: 自動修正
       notice: アクセシビリティチェック（保存時に自動で修正されます）
@@ -612,7 +614,6 @@ ja:
       cms/redirect_link: リンクページ
       cms/site_search/history: 履歴
       cms/site_search/keyword: 注目ワード
-      cms/site_search/history: 履歴
       cms/line_poster: LINE連携
       cms/content_quota: 容量制限
       cms/check_links: リンクチェック実行結果
@@ -772,13 +773,6 @@ ja:
         name: タイトル
         description: 説明
         order: 並び順
-      cms/addon/site_search/history:
-        upper_html:
-          - 上部HTMLを入力します。
-        lower_html:
-          - 下部HTMLを入力します。
-        placeholder:
-          - プレースホルダーを入力します。
       cms/command:
         name: タイトル
         description: 説明
@@ -1243,6 +1237,9 @@ ja:
       unsupported_encoding: 対応していない文字コードです。
       thumb_is_blank: サムネイル画像が登録されていません。
       not_found_file_url_in_body: 本文内の画像が見つかりませんでした。
+      unable_to_delete_in_use_column_without_confirmation: 同意がないため削除できません。
+      unable_to_delete_all_columns_if_form_is_in_use: 定型フォームが使用中のため一括削除することはできません。
+      unable_to_close_form_if_form_is_in_use: 定型フォームが使用中のため非公開にすることはできません。
 
     template:
       no_errors: エラーは見つかりませんでした。
@@ -2306,6 +2303,14 @@ ja:
     cms/check_links/ignore_url:
       name:
         - 除外URLを入力します。
+
+    cms/addon/site_search/history:
+      upper_html:
+        - 上部HTMLを入力します。
+      lower_html:
+        - 下部HTMLを入力します。
+      placeholder:
+        - プレースホルダーを入力します。
 
   all_content:
     page_id: ページID

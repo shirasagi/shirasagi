@@ -128,8 +128,9 @@ RSpec.configure do |config|
     Capybara.app_host = nil
   end
 
-  config.before(:example, type: :feature) do
+  config.before(:example, type: :feature) do |example|
     page.reset!
+    # puts '# ' + example.metadata[:full_description]
   end
 
   config.after(:example, type: :feature) do

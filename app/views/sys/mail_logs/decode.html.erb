@@ -9,10 +9,10 @@
     <div class="addon-view" id="addon-basic">
       <% if addons.size > 0 %><div class="addon-head"><h2><%= t :basic_info %></h2></div><% end %>
       <div class="addon-body">
-        <%= render file: '_decode', locals: { f: f } %>
+        <%= render template: '_decode', locals: { f: f } %>
       </div>
     </div>
-    <%= render file: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
+    <%= render template: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
   </div>
 
   <footer class="send">

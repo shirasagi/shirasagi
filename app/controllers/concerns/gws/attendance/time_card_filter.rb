@@ -84,7 +84,7 @@ module Gws::Attendance::TimeCardFilter
     @model = Gws::Attendance::TimeEdit
     if request.get?
       @cell = @model.new
-      render file: 'time', layout: false
+      render template: 'time', layout: false
       return
     end
 
@@ -105,13 +105,13 @@ module Gws::Attendance::TimeCardFilter
       flash[:notice] = notice
       render json: { location: location }, status: :ok, content_type: json_content_type
     else
-      render file: 'time', layout: false, status: :unprocessable_entity
+      render template: 'time', layout: false, status: :unprocessable_entity
     end
   end
 
   def memo
     if request.get?
-      render file: 'memo', layout: false
+      render template: 'memo', layout: false
       return
     end
 

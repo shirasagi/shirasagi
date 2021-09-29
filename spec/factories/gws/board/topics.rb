@@ -5,6 +5,6 @@ FactoryBot.define do
 
     name { "name-#{unique_id}" }
     text { "text-#{unique_id}" }
-    category_ids [0]
+    category_ids { [0] }
   end
 end

@@ -52,7 +52,7 @@ class Rdf::PropsController < ApplicationController
     copy_class_ids.delete(@rdf_class.id)
     @item.class_ids = copy_class_ids
 
-    render_destroy @item.update, render: { file: :unlink }
+    render_destroy @item.update, render: { template: "unlink" }
   end
 
   def import

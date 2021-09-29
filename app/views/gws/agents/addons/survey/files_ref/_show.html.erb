@@ -14,7 +14,7 @@
   <p><%= t("gws/survey.notices.count_limit", count: limit) %></p>
 
   <div class="gws-survey">
-    <%= render file: "gws/survey/files/_table", locals: { cur_form: @item, items: files } %>
+    <%= render "gws/survey/files/table", cur_form: @item, items: files %>
   </div>
 
   <div class="list-more"><%= link_to I18n.t("ss.links.more"), gws_survey_editable_files_path(editable_id: @item), class: 'btn' %></div>

@@ -72,7 +72,7 @@ return $(".licenses a.more").colorbox({
 
 <article class="categories nodes">
   <header><h1><%= I18n.t("opendata.labels.category") %></h1></header>
-  <%= render file: "opendata/agents/nodes/dataset/dataset/categories" %>
+  <%= render template: "opendata/agents/nodes/dataset/dataset/categories" %>
   <% if @categories_popped %>
     <nav><%= link_to t('ss.links.more'), "#{@dataset_path}categories/", class: "more" %></nav>
   <% end %>
@@ -80,7 +80,7 @@ return $(".licenses a.more").colorbox({
 
 <article class="estat-categories nodes">
   <header><h1><%= I18n.t("opendata.labels.estat-category") %></h1></header>
-  <%= render file: "opendata/agents/nodes/dataset/dataset/estat_categories" %>
+  <%= render template: "opendata/agents/nodes/dataset/dataset/estat_categories" %>
   <% if @estat_categories_popped %>
     <nav><%= link_to t('ss.links.more'), "#{@dataset_path}estat_categories/", class: "more" %></nav>
   <% end %>
@@ -88,7 +88,7 @@ return $(".licenses a.more").colorbox({
 
 <article class="tags nodes">
   <header><h1><%= I18n.t("opendata.labels.tag") %></h1></header>
-  <%= render file: "opendata/agents/nodes/dataset/dataset/tags" %>
+  <%= render template: "opendata/agents/nodes/dataset/dataset/tags" %>
   <% if @tags.popped? %>
     <nav><%= link_to t('ss.links.more'), "#{@dataset_path}tags/", class: "more" %></nav>
   <% end %>
@@ -96,7 +96,7 @@ return $(".licenses a.more").colorbox({
 
 <article class="formats nodes">
   <header><h1><%= I18n.t("opendata.labels.format") %></h1></header>
-  <%= render file: "opendata/agents/nodes/dataset/dataset/formats" %>
+  <%= render template: "opendata/agents/nodes/dataset/dataset/formats" %>
   <% if @formats.popped? %>
     <nav><%= link_to t('ss.links.more'), "#{@dataset_path}formats/", class: "more" %></nav>
   <% end %>
@@ -104,7 +104,7 @@ return $(".licenses a.more").colorbox({
 
 <article class="licenses nodes">
   <header><h1><%= I18n.t("opendata.labels.license") %></h1></header>
-  <%= render file: "opendata/agents/nodes/dataset/dataset/licenses" %>
+  <%= render template: "opendata/agents/nodes/dataset/dataset/licenses" %>
   <% if @licenses.popped? %>
     <nav><%= link_to t('ss.links.more'), "#{@dataset_path}licenses/", class: "more" %></nav>
   <% end %>

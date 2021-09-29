@@ -5,6 +5,8 @@ class Cms::EditorTemplatesController < ApplicationController
 
   model Cms::EditorTemplate
   navi_view "cms/main/conf_navi"
+  # InvalidCrossOriginRequest エラーの発生を抑制する
+  skip_after_action :verify_same_origin_request, only: :template
 
   private
 

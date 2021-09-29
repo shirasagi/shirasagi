@@ -4,7 +4,7 @@
 <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
 
 <div class="main-box">
-  <%= render file: '_form', locals: { f: f } %>
+  <%= render template: '_form', locals: { f: f } %>
 </div>
 
 <footer class="send">

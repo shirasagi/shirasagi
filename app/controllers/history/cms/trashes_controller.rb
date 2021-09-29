@@ -77,7 +77,7 @@ class History::Cms::TrashesController < ApplicationController
 
     render_opts = {}
     render_opts[:location] = { action: :index }
-    render_opts[:render] = { file: :undo_delete }
+    render_opts[:render] = { template: "undo_delete" }
     render_opts[:notice] = t('ss.notice.restored')
 
     render_update result, render_opts

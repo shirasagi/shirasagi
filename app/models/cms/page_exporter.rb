@@ -139,7 +139,13 @@ class Cms::PageExporter
 
   def draw_event_date(drawer)
     drawer.column :event_name
-    drawer.column :event_dates
+    drawer.column :event_dates do
+      drawer.body do |item|
+        if item.event_dates.present?
+          item.event_dates.map { |d| I18n.l(d, format: :picker) }.join("\n")
+        end
+      end
+    end
     drawer.column :event_deadline
   end
 

@@ -61,7 +61,7 @@ class Ldap::ServerController < ApplicationController
     @entity = Ldap::Group.find(connection, dn)
 
     raise "404" if @entity.blank?
-    render file: "ldap/server/entity"
+    render template: "ldap/server/entity"
   end
 
   def user
@@ -72,6 +72,6 @@ class Ldap::ServerController < ApplicationController
     @entity = Ldap::User.find(connection, dn)
 
     raise "404" if @entity.blank?
-    render file: "ldap/server/entity"
+    render template: "ldap/server/entity"
   end
 end

@@ -40,9 +40,9 @@ describe "gws_notices", type: :feature, dbscope: :example do
 
       before { login_user user3 }
 
-      it 'status code is 403' do
+      it 'status code is 404' do
         visit copy_path
-        expect(status_code).to eq 403
+        expect(status_code).to eq 404
       end
     end
   end

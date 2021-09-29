@@ -79,7 +79,7 @@ class Webmail::GroupsController < ApplicationController
     @item.cur_user = @cur_user
     result = @item.import_csv
     flash.now[:notice] = t("ss.notice.saved") if result
-    render_create result, location: { action: :import }, render: { file: :import }
+    render_create result, location: { action: :import }, render: { template: "import" }
   end
 
   def download

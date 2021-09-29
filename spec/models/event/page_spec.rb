@@ -3,7 +3,8 @@ require 'spec_helper'
 describe Event::Page, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create :event_node_page, cur_site: site }
-  subject { create :event_page, cur_site: site, cur_node: node }
+  let(:event_date) { Time.zone.now.beginning_of_day + rand(1..10).days }
+  subject { create :event_page, cur_site: site, cur_node: node, event_dates: [ event_date ] }
   let(:show_path) { Rails.application.routes.url_helpers.event_page_path(site: subject.site, cid: subject.parent, id: subject) }
 
   describe "#attributes" do
@@ -15,6 +16,14 @@ describe Event::Page, dbscope: :example do
     it { expect(subject.full_url).not_to eq nil }
     it { expect(subject.parent).to eq node }
     it { expect(subject.private_show_path).to eq show_path }
+    it do
+      subject.reload
+
+      event_dates = subject.read_attribute_before_type_cast(:event_dates)
+      expect(event_dates).to have(1).items
+      expect(event_dates.first.in_time_zone).not_to eq event_date
+      expect(event_dates.first.in_time_zone).to eq event_date + event_date.utc_offset.seconds
+    end
   end
 
   describe "validation" do

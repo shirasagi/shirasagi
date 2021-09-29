@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :job_log, class: Job::Log do
     transient do
-      job nil
+      job { nil }
     end
 
     site_id { job.site_id }
@@ -15,22 +15,22 @@ FactoryBot.define do
   end
 
   trait :job_log_running do
-    state Job::Log::STATE_RUNNING
+    state { Job::Log::STATE_RUNNING }
     started { Time.zone.now }
-    logs [ "Job Started" ]
+    logs { [ "Job Started" ] }
   end
 
   trait :job_log_completed do
-    state Job::Log::STATE_COMPLETED
+    state { Job::Log::STATE_COMPLETED }
     started { 10.minutes.ago }
     closed { Time.zone.now }
-    logs [ "Job Started", "Job Completed" ]
+    logs { [ "Job Started", "Job Completed" ] }
   end
 
   trait :job_log_failed do
-    state Job::Log::STATE_FAILED
+    state { Job::Log::STATE_FAILED }
     started { 10.minutes.ago }
     closed { Time.zone.now }
-    logs [ "Job Started", "Job Failed" ]
+    logs { [ "Job Started", "Job Failed" ] }
   end
 end

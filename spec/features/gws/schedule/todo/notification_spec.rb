@@ -23,8 +23,6 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       visit gws_schedule_todo_readables_path gws_site, "-"
 
       click_on I18n.t("ss.links.new")
-      within "form#item-form" do
-      end
       within 'form#item-form' do
         fill_in 'item[name]', with: name
         fill_in 'item[text]', with: text
@@ -32,12 +30,16 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
         select I18n.t("ss.options.state.enabled"), from: "item[notify_state]"
 
         within '.gws-addon-member' do
-          click_on I18n.t('ss.apis.users.index')
+          wait_cbox_open do
+            click_on I18n.t('ss.apis.users.index')
+          end
         end
       end
       wait_for_cbox do
         expect(page).to have_content(user2.long_name)
-        click_on user2.long_name
+        wait_cbox_close do
+          click_on user2.long_name
+        end
       end
       within 'form#item-form' do
         expect(page).to have_content(user2.name)
@@ -161,7 +163,9 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       within "#addon-gws-agents-addons-schedule-todo-comment_post" do
         within "#comment-#{todo.comments.order_by(created: -1).first.id}" do
           expect(page).to have_content(comment_text)
-          click_on I18n.t("ss.buttons.edit")
+          wait_cbox_open do
+            click_on I18n.t("ss.buttons.edit")
+          end
         end
       end
       wait_for_cbox do
@@ -192,7 +196,9 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       within "#addon-gws-agents-addons-schedule-todo-comment_post" do
         within "#comment-#{todo.comments.order_by(created: -1).first.id}" do
           expect(page).to have_content(comment_text2)
-          click_on I18n.t("ss.buttons.delete")
+          wait_cbox_open do
+            click_on I18n.t("ss.buttons.delete")
+          end
         end
       end
       wait_for_cbox do
@@ -267,12 +273,16 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
         select I18n.t("ss.options.state.enabled"), from: "item[notify_state]"
 
         within '.gws-addon-member' do
-          click_on I18n.t('ss.apis.users.index')
+          wait_cbox_open do
+            click_on I18n.t('ss.apis.users.index')
+          end
         end
       end
       wait_for_cbox do
         expect(page).to have_content(user2.long_name)
-        click_on user2.long_name
+        wait_cbox_close do
+          click_on user2.long_name
+        end
       end
       within 'form#item-form' do
         expect(page).to have_content(user2.name)
