@@ -5,6 +5,6 @@ FactoryBot.define do
 
     name { "name-#{unique_id}" }
     color { "#aabbcc" }
-    readable_setting_range "public"
+    readable_setting_range { "public" }
   end
 end

@@ -91,7 +91,7 @@ class Sns::Login::OpenIdConnectController < ApplicationController
     end
 
     if request.get? && core_resp.blank?
-      render file: 'sns/login/open_id_connect/implicit_flow_post_back', layout: false
+      render template: 'sns/login/open_id_connect/implicit_flow_post_back', layout: false
       return
     end
 

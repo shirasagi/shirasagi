@@ -4,15 +4,19 @@ FactoryBot.define do
     cur_user { gws_user }
 
     name { "name-#{unique_id}" }
-    limit 1
+    limit { 1 }
   end
 
   trait :gws_portal_schedule_portlet do
-    portlet_model "schedule"
+    portlet_model { "schedule" }
+  end
+
+  trait :gws_portal_notice_portlet do
+    portlet_model { "notice" }
   end
 
   trait :gws_portal_ad_portlet do
-    portlet_model "ad"
+    portlet_model { "ad" }
     ad_width { rand(300..400) }
     ad_speed { rand(10..30) }
     ad_pause { rand(60..90) }
@@ -29,10 +33,10 @@ FactoryBot.define do
   end
 
   factory :gws_portal_user_portlet, class: Gws::Portal::UserPortlet, traits: [:gws_portal_portlet_base] do
-    portlet_model ''
+    portlet_model { '' }
   end
 
   factory :gws_portal_group_portlet, class: Gws::Portal::GroupPortlet, traits: [:gws_portal_portlet_base] do
-    portlet_model ''
+    portlet_model { '' }
   end
 end

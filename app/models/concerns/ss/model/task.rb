@@ -12,6 +12,8 @@ module SS::Model::Task
   STATE_FAILED = "failed".freeze
   STATE_INTERRUPTED = "interrupted".freeze
 
+  RUN_EXPIRATION = 2.hours
+
   included do
     store_in collection: "ss_tasks"
     store_in_repl_master
@@ -44,26 +46,7 @@ module SS::Model::Task
   module ClassMethods
     def ready(cond, &block)
       task = self.find_or_create_by(cond)
-      return false unless task.start
-
-      state = STATE_STOP
-      begin
-        require 'benchmark'
-        time = Benchmark.realtime { yield task }
-        task.log sprintf("# %d sec\n\n", time)
-        state = STATE_COMPLETED
-      rescue Interrupt => e
-        task.log "-- #{e}"
-        # task.log e.backtrace.join("\n")
-        state = STATE_INTERRUPTED
-      rescue StandardError => e
-        task.log "-- Error"
-        task.log e.to_s
-        task.log e.backtrace.join("\n")
-        state = STATE_FAILED
-      ensure
-        task.close(state)
-      end
+      task.run_with(rejected: ->{ false }, &block)
     end
 
     def search(params)
@@ -104,7 +87,13 @@ module SS::Model::Task
     self.log_buffer = 50
   end
 
-  def running?(limit = 1.day)
+  def ready?(limit = nil)
+    limit ||= RUN_EXPIRATION
+    state == STATE_READY && (started.presence || updated) + limit > Time.zone.now
+  end
+
+  def running?(limit = nil)
+    limit ||= RUN_EXPIRATION
     state == STATE_RUNNING && (started.presence || updated) + limit > Time.zone.now
   end
 
@@ -114,7 +103,8 @@ module SS::Model::Task
       return false
     end
 
-    change_state(STATE_RUNNING, { started: Time.zone.now })
+    if_states = [ STATE_STOP, STATE_READY, STATE_COMPLETED, STATE_FAILED, STATE_INTERRUPTED ]
+    change_state(STATE_RUNNING, started: Time.zone.now, if_states: if_states)
   end
 
   def ready
@@ -122,7 +112,7 @@ module SS::Model::Task
       Rails.logger.info "already running."
       return false
     end
-    if state == STATE_READY
+    if ready?
       Rails.logger.info "already ready."
       return false
     end
@@ -131,7 +121,7 @@ module SS::Model::Task
       return false
     end
 
-    change_state(STATE_READY)
+    change_state(STATE_READY, if_states: [ STATE_STOP, STATE_COMPLETED, STATE_FAILED, STATE_INTERRUPTED ])
   end
 
   def close(state = STATE_STOP)
@@ -152,6 +142,34 @@ module SS::Model::Task
     end
 
     result
+  end
+
+  def run_with(resolved: nil, rejected: nil, &block)
+    ret = nil
+    if !start
+      ret = rejected.call if rejected
+      return ret
+    end
+
+    resolved ||= block
+
+    begin
+      ret = resolved.call
+    rescue Interrupt => e
+      log "-- #{e}"
+      close(STATE_INTERRUPTED)
+      raise
+    rescue Exception => e
+      log "-- Error"
+      log e.to_s
+      log e.backtrace.join("\n")
+      close(STATE_FAILED)
+      raise
+    else
+      close(STATE_COMPLETED)
+    end
+
+    ret
   end
 
   def clear_log(msg = nil)
@@ -227,16 +245,27 @@ module SS::Model::Task
   private
 
   def change_state(state, attrs = {})
-    self.started       = attrs[:started]
-    self.closed        = nil
-    self.state         = state
-    self.interrupt     = nil
-    self.total_count   = 0
-    self.current_count = 0
-    result = save
+    raise "first of all, you must save." if new_record?
 
-    clear_log if result
+    expired_at = attrs[:started].try { |time| time.in_time_zone } || Time.zone.now
+    expired_at -= RUN_EXPIRATION
 
-    result
+    cond = [
+      { state: { "$in" => attrs[:if_states] } },
+      { updated: { "$lte" => expired_at.utc } }
+    ]
+    updates = {
+      state: state, started: attrs[:started].try { |time| time.in_time_zone.utc }, closed: nil, interrupt: nil,
+      total_count: 0, current_count: 0
+    }
+
+    criteria = self.class.where(id: id, "$and" => [{ "$or" => cond }])
+    task = criteria.find_one_and_update({ '$set' => updates }, return_document: :after)
+    return false if task.blank?
+
+    self.reload
+    clear_log
+
+    true
   end
 end

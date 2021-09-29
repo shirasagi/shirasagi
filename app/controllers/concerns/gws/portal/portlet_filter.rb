@@ -28,7 +28,7 @@ module Gws::Portal::PortletFilter
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
     @item.name = @item.label(:portlet_model)
-    render file: 'gws/portal/common/portlets/select_model' unless @item.portlet_model_enabled?
+    render template: 'gws/portal/common/portlets/select_model' unless @item.portlet_model_enabled?
 
     if params[:group].present?
       @default_readable_setting = proc do
@@ -56,7 +56,7 @@ module Gws::Portal::PortletFilter
 
   def reset
     raise '403' unless @portal.allowed?(:edit, @cur_user, site: @cur_site)
-    return render(file: 'gws/portal/common/portlets/reset') unless request.post?
+    return render(template: 'gws/portal/common/portlets/reset') unless request.post?
 
     @portal.portlets.destroy_all
     @portal.save_default_portlets

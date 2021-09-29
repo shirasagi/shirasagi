@@ -101,6 +101,7 @@ module Workflow::Addon
       attributes["master_id"] = source_file.id
       file = SS::File.create_empty!(attributes, validate: false) do |new_file|
         ::FileUtils.copy(source_file.path, new_file.path)
+        new_file.sanitizer_copy_file
       end
 
       if respond_to?(:html) && html.present?

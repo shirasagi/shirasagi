@@ -1,5 +1,5 @@
 <% value ||= nil %>
-<%= render file: 'gws/agents/columns/main/_common_label', locals: { column: column } %>
+<%= render 'gws/agents/columns/main/common_label', column: column %>
 <dd>
   <span class="prefix"><%= column.prefix_label %></span>
   <% format = (column.input_type == "datetime") ? '%Y/%m/%d %H:%M' : '%Y/%m/%d' %>

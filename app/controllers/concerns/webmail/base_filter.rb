@@ -56,7 +56,7 @@ module Webmail::BaseFilter
   end
 
   def imap_initialize
-    @webmail_redirect_path ||= [ :render, "app/views/webmail/main/login_failed", 403 ]
+    @webmail_redirect_path ||= [ :render, "webmail/main/login_failed", 403 ]
 
     @imap_setting ||= begin
       if @webmail_mode == :group
@@ -83,7 +83,7 @@ module Webmail::BaseFilter
     method, path, status = @webmail_redirect_path
     case method
     when :render
-      render file: path, status: status
+      render template: path, status: status
     else
       redirect_to path
     end

@@ -7,13 +7,15 @@
   <dt><%= @model.t :state %></dt>
   <dd><%= f.select :state, @item.state_options %></dd>
 
-  <dt><%= @model.t :released %><%= @model.tt :released %></dt>
-  <dd>
-    <% if @item.respond_to?(:released_type) %>
-      <%= f.select :released_type, @item.released_type_options %>
-    <% end %>
-    <%= f.text_field :released, class: "datetime js-datetime", value: tryb { @item.released.strftime("%Y/%m/%d %H:%M") } %>
-  </dd>
+  <% if @item.respond_to?(:released) %>
+    <dt><%= @model.t :released %><%= @model.tt :released %></dt>
+    <dd>
+      <% if @item.respond_to?(:released_type) %>
+        <%= f.select :released_type, @item.released_type_options %>
+      <% end %>
+      <%= f.text_field :released, class: "datetime js-datetime", value: @item.released.try { |time| I18n.l(time, format: :picker) } %>
+    </dd>
+  <% end %>
 </dl>
 
 <%= jquery do %>

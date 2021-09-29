@@ -30,6 +30,8 @@ this.SS = (function () {
     delete: "<%= I18n.t 'ss.confirm.delete' %>"
   };
 
+  SS.defaultTimeoutMillis = 2000;
+
   // $.isEmptyObject には IE11 で非互換がある。
   //
   //                            | Chrome 84 | IE 11  |
@@ -52,7 +54,7 @@ this.SS = (function () {
   // IE 11 向けにポリフィルを組み込むと、上記のような非互換が発生する。
   //
   // IE 11 でも isEmptyObject が動作するように本メソッドを提供する。
-  SS.isEmptyObject = function(objectOrArray) {
+  SS.isEmptyObject = function (objectOrArray) {
     if ($.isEmptyObject(objectOrArray)) {
       return true;
     }
@@ -230,7 +232,7 @@ this.SS = (function () {
       success: function () {
       },
       error: function (data, status) {
-        alert(["== Error =="].concat(data.responseJSON).join("\n"));
+        alert([ "== Error ==" ].concat(data.responseJSON).join("\n"));
       }
     };
     elem.on("submit", selector, function (e) {
@@ -305,7 +307,7 @@ this.SS = (function () {
           }
         },
         error: function (data, status) {
-          alert(["== Error =="].concat(data.responseJSON).join("\n"));
+          alert([ "== Error ==" ].concat(data.responseJSON).join("\n"));
         }
       };
       $.ajax($.extend(true, defaults, params));
@@ -418,9 +420,9 @@ this.SS = (function () {
           var errors;
           try {
             errors = $.parseJSON(xhr.responseText);
-            return alert(["== Error =="].concat(errors).join("\n"));
+            return alert([ "== Error ==" ].concat(errors).join("\n"));
           } catch (_error) {
-            return alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
+            return alert([ "== Error ==" ].concat(xhr["statusText"]).join("\n"));
           }
         }
       });
@@ -522,7 +524,7 @@ this.SS = (function () {
   //
   // SS.formatTime(new Date())
   // SS.formatTime(moment())
-  SS.formatTime = function(time, format) {
+  SS.formatTime = function (time, format) {
     if (!format) {
       format = "default"
     }
@@ -535,21 +537,21 @@ this.SS = (function () {
 
   SS.renderFileUploadInitialized = false;
 
-  SS.renderFileUpload = function() {
-    $(".ss-file-field .btn-file-upload").each(function() {
+  SS.renderFileUpload = function () {
+    $(".ss-file-field .btn-file-upload").each(function () {
       var $uploadBtn = $(this);
       if ($uploadBtn.data("on-select")) {
         return;
       }
 
       var $container = $uploadBtn.closest(".ss-file-field")
-      var onSelect = function($item) {
+      var onSelect = function ($item) {
         $.colorbox.close();
 
         var $data = $item.closest("[data-id]");
         var fileId = $data.data('id');
         var fileName = $data.data("humanizedName") || $data.data("name") || $data.find(".select-item").text() || $item.text() || $data.text();
-        if (! fileId || ! fileName) {
+        if (!fileId || !fileName) {
           return;
         }
 
@@ -561,7 +563,7 @@ this.SS = (function () {
 
       $uploadBtn.data("on-select", onSelect);
 
-      $container.find(".dropdown-item").on("click", function(ev) {
+      $container.find(".dropdown-item").on("click", function (ev) {
         ev.preventDefault();
 
         var $el = $(this);
@@ -578,23 +580,23 @@ this.SS = (function () {
 
       var dropEventTriggered = false;
       var dropNoticeHtml = $container.find(".upload-drop-notice").html();
-      $container.on("dragenter", function(ev) {
-        if (! dropEventTriggered) {
+      $container.on("dragenter", function (ev) {
+        if (!dropEventTriggered) {
           $container.addClass('file-dragenter');
         }
         return false;
       });
-      $container.on("dragleave", function(ev) {
+      $container.on("dragleave", function (ev) {
         $container.removeClass('file-dragenter');
         return false;
       });
-      $container.on("dragover", function(ev) {
-        if (! dropEventTriggered) {
+      $container.on("dragover", function (ev) {
+        if (!dropEventTriggered) {
           $container.addClass('file-dragenter');
         }
         return false;
       });
-      $container.on("drop", function(ev) {
+      $container.on("drop", function (ev) {
         $container.removeClass('file-dragenter');
 
         var files = ev.originalEvent.dataTransfer.files;
@@ -628,10 +630,10 @@ this.SS = (function () {
           data: formData,
           processData: false,
           contentType: false
-        }).then(function(data) {
+        }).then(function (data) {
           // success
           var fileData = data[0];
-          if (! fileData) {
+          if (!fileData) {
             return;
           }
 
@@ -639,16 +641,16 @@ this.SS = (function () {
           $container.find(".file-id").val(fileData["id"] || fileData["_id"]);
           $container.find(".btn-file-delete").removeClass("hide");
           $container.find(".upload-drop-notice").addClass("hide");
-        }, function(xhr, textStatus, errorThrown) {
+        }, function (xhr, textStatus, errorThrown) {
           // error
           if (xhr.status === 413) {
-            alert(["== Error =="].concat("<%= I18n.t('errors.messages.request_entity_too_large') %>").join("\n"));
+            alert([ "== Error ==" ].concat("<%= I18n.t('errors.messages.request_entity_too_large') %>").join("\n"));
           } else if (xhr.responseJSON && Array.isArray(xhr.responseJSON)) {
-            alert(["== Error =="].concat(xhr.responseJSON).join("\n"));
+            alert([ "== Error ==" ].concat(xhr.responseJSON).join("\n"));
           } else {
-            alert(["== Error =="].concat(xhr.statusText).join("\n"));
+            alert([ "== Error ==" ].concat(xhr.statusText).join("\n"));
           }
-        }).then(function() {
+        }).then(function () {
           // complete
           dropEventTriggered = false;
           $container.find(".upload-drop-notice").html(dropNoticeHtml);
@@ -659,10 +661,10 @@ this.SS = (function () {
       });
     });
 
-    if (! SS.renderFileUploadInitialized) {
+    if (!SS.renderFileUploadInitialized) {
       SS.renderFileUploadInitialized = true;
 
-      $(document).on("click", ".ss-file-field .btn-file-delete", function() {
+      $(document).on("click", ".ss-file-field .btn-file-delete", function () {
         var $this = $(this);
         var $container = $this.closest(".ss-file-field")
         $container.find(".humanized-name").text("");
@@ -675,7 +677,48 @@ this.SS = (function () {
     }
   };
 
-  SS.debugLog = function() {
+  SS.timeoutAfterSubmit = function() {
+    $(document).on("submit", "form", function (ev) {
+      var $form = $(ev.target);
+      var timeout = $form.data("ss-timeout") || SS.defaultTimeoutMillis;
+
+      setTimeout(function () {
+        $form.trigger("ss:submitTimeout");
+      }, timeout);
+    });
+  };
+
+  SS.enableFormElementsOnTimeoutSubmit = function() {
+    $(document).on("ss:submitTimeout", function (ev) {
+      var $form = $(ev.target);
+      $.rails.enableFormElements($form);
+    });
+  };
+
+  SS.onDoubleClickGuardClick = function(ev) {
+    var $element = $(ev.target);
+    var timeout = $element.data("ss-timeout") || SS.defaultTimeoutMillis;
+
+    $.rails.disableFormElement($element);
+    setTimeout(function () {
+      $element.trigger("ss:clickTimeout");
+    }, timeout);
+  };
+
+  SS.onClickTimeout = function(ev) {
+    var $element = $(ev.target);
+    $.rails.enableFormElement($element);
+  };
+
+  SS.enableDoubleClickGuard = function () {
+    SS.timeoutAfterSubmit();
+    SS.enableFormElementsOnTimeoutSubmit();
+
+    $(document).on("click", ".ss-dc-guard", SS.onDoubleClickGuardClick);
+    $(document).on("ss:clickTimeout", SS.onClickTimeout);
+  };
+
+  SS.debugLog = function () {
     if (SS.debug) {
       console.log.apply(console, arguments);
     }

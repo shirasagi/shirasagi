@@ -21,6 +21,6 @@ class Gws::Portal::Apis::AdFilesController < ApplicationController
 
   def select
     set_item
-    render file: :select, layout: !request.xhr?
+    render template: "select", layout: !request.xhr?
   end
 end

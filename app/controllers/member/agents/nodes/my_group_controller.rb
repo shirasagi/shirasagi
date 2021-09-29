@@ -52,7 +52,7 @@ class Member::Agents::Nodes::MyGroupController < ApplicationController
     render_update(
       @item.save,
       location: @cur_node.url,
-      render: { file: :invite },
+      render: { template: "invite" },
       notice: t("member.notice.invited"))
   end
 
@@ -63,7 +63,7 @@ class Member::Agents::Nodes::MyGroupController < ApplicationController
     render_update(
       @item.accept(@cur_member),
       location: @cur_node.url,
-      render: { file: :accept },
+      render: { template: "accept" },
       notice: t("member.notice.accepted"))
   end
 
@@ -74,7 +74,7 @@ class Member::Agents::Nodes::MyGroupController < ApplicationController
     render_update(
       @item.reject(@cur_member),
       location: @cur_node.url,
-      render: { file: :reject },
+      render: { template: "reject" },
       notice: t("member.notice.rejected"))
   end
 end

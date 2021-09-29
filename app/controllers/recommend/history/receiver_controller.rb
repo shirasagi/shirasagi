@@ -6,6 +6,6 @@ class Recommend::History::ReceiverController < ApplicationController
   private
 
   def set_site
-    @cur_site = Cms::Site.find id: params[:site]
+    @cur_site = Cms::Site.find params[:site]
   end
 end

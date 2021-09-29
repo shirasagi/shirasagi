@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
+
 gem 'rails', '~> 5.2.0'
 gem 'sprockets', '< 4.0'
 gem 'sass'
@@ -15,10 +17,9 @@ gem 'unicorn'
 gem 'unicorn-worker-killer'
 
 # Database
-gem 'mongoid', git: 'https://github.com/mongodb/mongoid.git' #'~> 7.1.0'
-gem 'mongo_session_store', git: 'https://github.com/mongoid/mongo_session_store.git'
-gem 'mongoid-rspec', git: 'https://github.com/mongoid/mongoid-rspec.git'
-gem 'mongoid-grid_fs', git: 'https://github.com/mongoid/mongoid-grid_fs.git'
+gem 'mongoid', github: 'shirasagi/mongoid', branch: '7.3-stable-MONGOID-5183'
+gem 'mongo_session_store'
+gem 'mongoid-grid_fs'
 
 # Assets
 gem 'autosize-rails'
@@ -113,6 +114,7 @@ group :development, :test do
   gem 'guard-rspec', '~> 4.3.1', require: false
   gem 'guard-rubocop', require: false
   gem 'guard-scss_lint', require: false
+  gem 'mongoid-rspec'
   gem 'pry-byebug', require: false
   gem 'pry-doc', require: false
   gem 'pry-rails', require: false
@@ -124,6 +126,7 @@ group :development, :test do
   gem 'rspec-rails', require: false
   gem 'rubocop', require: false
   gem 'rubocop-performance', require: false
+  gem 'rubocop-rspec', require: false
   gem 'ruby-debug-ide', require: false
   gem 'scss_lint', require: false
   gem 'selenium-webdriver', require: false

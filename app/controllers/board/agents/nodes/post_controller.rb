@@ -125,7 +125,7 @@ class Board::Agents::Nodes::PostController < ApplicationController
       [ { name: /#{::Regexp.escape(w)}/ }, { text: /#{::Regexp.escape(w)}/ } ]
     end.flatten
 
-    @items = @model.site(@cur_site).node(@cur_node).or(@query).
+    @items = @model.site(@cur_site).node(@cur_node).where("$or" => @query).
       page(params[:page]).
       per(@cur_node.limit)
   end

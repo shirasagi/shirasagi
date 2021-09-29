@@ -21,7 +21,7 @@ module SS::CrudFilter
   end
 
   def render(*args)
-    args.empty? ? super(file: params[:action]) : super
+    args.empty? ? super(template: params[:action]) : super
   end
 
   def set_item
@@ -115,7 +115,7 @@ module SS::CrudFilter
 
   def render_create(result, opts = {})
     location = opts[:location].presence || crud_redirect_url || { action: :show, id: @item }
-    render_opts = opts[:render].presence || { file: :new }
+    render_opts = opts[:render].presence || { template: "new" }
     notice = opts[:notice].presence || t("ss.notice.saved")
 
     if result
@@ -133,7 +133,7 @@ module SS::CrudFilter
 
   def render_update(result, opts = {})
     location = opts[:location].presence || crud_redirect_url || { action: :show }
-    render_opts = opts[:render].presence || { file: :edit }
+    render_opts = opts[:render].presence || { template: "edit" }
     notice = opts[:notice].presence || t("ss.notice.saved")
 
     if result
@@ -151,7 +151,7 @@ module SS::CrudFilter
 
   def render_destroy(result, opts = {})
     location = opts[:location].presence || crud_redirect_url || { action: :index }
-    render_opts = opts[:render].presence || { file: :delete }
+    render_opts = opts[:render].presence || { template: "delete" }
     notice = opts[:notice].presence || t("ss.notice.deleted")
 
     if result

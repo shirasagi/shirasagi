@@ -81,7 +81,7 @@ module Cms::NodeFilter
       raise "403" unless @item.allowed?(:move, @cur_user, site: @cur_site, node: @cur_node)
 
       location = { action: :move, source: @source, link_check: true }
-      render_update @item.move(destination), location: location, render: { file: :move }, notice: t('ss.notice.moved')
+      render_update @item.move(destination), location: location, render: { template: "move" }, notice: t('ss.notice.moved')
     end
   end
 

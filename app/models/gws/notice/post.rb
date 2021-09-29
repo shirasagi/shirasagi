@@ -48,6 +48,7 @@ class Gws::Notice::Post
         search_severity(params).
         search_folders(params).
         search_category(params).
+        search_categories(params).
         search_browsed_state(params)
     end
 
@@ -72,6 +73,12 @@ class Gws::Notice::Post
       return all if params.blank? || params[:category_id].blank?
 
       all.where(category_ids: params[:category_id].to_i)
+    end
+
+    def search_categories(params)
+      return all if params.blank? || params[:category_ids].blank?
+
+      all.in(category_ids: params[:category_ids])
     end
 
     def search_browsed_state(params)

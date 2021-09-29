@@ -43,7 +43,7 @@ table.rdf-props {
   <%= paginate @items if @items.try(:current_page) %>
 
   <footer class="send">
-    <%= f.submit t("rdf.buttons.import"), class: "save" %>
+    <%= f.submit t("rdf.buttons.import"), class: "save", data: { disable_with: t("ss.buttons.importing") } %>
     <%= f.button t("ss.buttons.cancel"), class: "btn-default", type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
   </footer>
 <% end %>

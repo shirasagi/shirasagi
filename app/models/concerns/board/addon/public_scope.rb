@@ -20,7 +20,7 @@ module Board::Addon
         member_ids = members.map(&:id)
         group_criteria_part = { public_scope: 'group', :member_id.in => member_ids }
 
-        self.or(public_criteria_part, private_criteria_part, group_criteria_part)
+        self.where("$or" => [public_criteria_part, private_criteria_part, group_criteria_part])
       end
 
       def and_public

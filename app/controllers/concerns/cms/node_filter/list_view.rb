@@ -33,7 +33,7 @@ module Cms::NodeFilter::ListView
     save_items = @items
     @items = items
 
-    body = render_to_string(file: "index")
+    body = render_to_string(template: "index")
     mime = rendered_format
 
     if @cur_node.view_layout == "cms/redirect" && !mobile_path?

@@ -6,7 +6,7 @@ class Cms::ColumnsController < ApplicationController
 
   navi_view 'cms/main/conf_navi'
 
-  helper_method :column_type_options
+  helper_method :column_type_options, :form_is_in_use?
 
   private
 
@@ -64,6 +64,13 @@ class Cms::ColumnsController < ApplicationController
     end
 
     items
+  end
+
+  def form_is_in_use?
+    return @form_is_in_use if !@form_is_in_use.nil?
+
+    set_form
+    @form_is_in_use = Cms::Page.site(@cur_site).where(form_id: @cur_form.id).present?
   end
 
   def set_column_model
@@ -129,10 +136,20 @@ class Cms::ColumnsController < ApplicationController
 
   def destroy
     raise '403' unless @cur_form.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+    if form_is_in_use? && params[:in_delete_confirmation].to_s != "yes"
+      @item.errors.add :base, :unable_to_delete_in_use_column_without_confirmation
+      render_destroy false
+      return
+    end
+
     render_destroy @item.destroy
   end
 
   def destroy_all
+    if form_is_in_use?
+      redirect_to url_for(action: :index), notice: t("errors.messages.unable_to_delete_all_columns_if_form_is_in_use")
+      return
+    end
     raise '403' unless @cur_form.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
 
     entries = @items.entries

@@ -1,5 +1,5 @@
 <% value ||= nil %>
-<%= render file: 'gws/agents/columns/main/_common_label', locals: { column: column } %>
+<%= render 'gws/agents/columns/main/common_label', column: column %>
 <dd>
   <span class="prefix"><%= column.prefix_label %></span>
   <%= select_tag("#{object_name}[#{column.id}]", options_for_select(column.select_options, selected: value.try(:value)), column.form_options.merge(include_blank: column.place_holder.presence || true)) %>

@@ -26,6 +26,6 @@
     <dt><%= t("workflow.branch_page") %></dt>
   <% end %>
   <dd class="result">
-    <%= render file: "workflow/pages/branch" if @items.present? %>
+    <%= render template: "workflow/pages/branch" if @items.present? %>
   </dd>
 </dl>

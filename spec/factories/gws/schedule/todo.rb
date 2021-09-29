@@ -8,6 +8,6 @@ FactoryBot.define do
     text { "text-#{unique_id}" }
     member_ids { [gws_user.id] }
 
-    todo_state 'unfinished'
+    todo_state { 'unfinished' }
   end
 end

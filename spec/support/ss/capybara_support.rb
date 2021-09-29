@@ -1,4 +1,21 @@
 module SS::CapybaraSupport
+  module Hooks
+    def self.extended(obj)
+      default_raise_server_errors_setting = Capybara.raise_server_errors
+      raise_server_errors_setting = obj.metadata[:raise_server_errors]
+
+      if !raise_server_errors_setting.nil?
+        obj.before(:example) do
+          Capybara.raise_server_errors = raise_server_errors_setting
+          puts "[Capybara] raise_server_errors : #{Capybara.raise_server_errors}"
+        end
+        obj.after(:example) do
+          Capybara.raise_server_errors = default_raise_server_errors_setting
+        end
+      end
+    end
+  end
+
   module_function
 
   def activate_driver(name, config)
@@ -40,3 +57,5 @@ module SS::CapybaraSupport
     false
   end
 end
+
+RSpec.configuration.extend(SS::CapybaraSupport::Hooks)

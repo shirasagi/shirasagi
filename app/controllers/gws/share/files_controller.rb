@@ -257,7 +257,7 @@ class Gws::Share::FilesController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { render file: :show }
+        format.html { render template: "show" }
         format.json { render json: [t("errors.messages.locked", user: @item.lock_owner.long_name)], status: :locked }
       end
     end

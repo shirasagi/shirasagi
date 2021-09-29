@@ -7,13 +7,13 @@
     <div class="addon-view" id="addon-basic">
       <div class="addon-head"><h2><%= t("gws/notice.confirm.create_my_folder") %></h2></div>
       <div class="addon-body">
-        <%= render file: "_create_my_folder", locals: {f: f} %>
+        <%= render template: "_create_my_folder", locals: {f: f} %>
       </div>
     </div>
   </div>
 
   <footer class="send">
-    <%= f.submit t("ss.buttons.save"), class: 'btn-primary save' %>
+    <%= f.submit t("ss.buttons.save"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.saving") } %>
     <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
   </footer>
 <% end %>

@@ -4,5 +4,5 @@
   <time datetime="<%= renderer.control_datetime.iso8601 %>"><%= renderer.control_datetime_format %></time>
   <span class="publishing-office"><%= renderer.publishing_offices.join("・") %><%= renderer.publishing_offices.length > 1 ? "　共同発表" : "発表" %></span>
   <% end %>
-  <%= render file: "_create" %>
+  <%= render template: "_create" %>
 </div>

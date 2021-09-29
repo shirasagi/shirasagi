@@ -17,7 +17,7 @@
     <% end %>
 
     <% @portlet = item %>
-    <%= render file: item.view_file if item.view_file %>
+    <%= render template: item.view_template if item.view_template %>
   </div>
   <% end %>
 </div>

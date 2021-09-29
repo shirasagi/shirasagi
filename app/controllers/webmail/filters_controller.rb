@@ -83,12 +83,12 @@ class Webmail::FiltersController < ApplicationController
     set_item
 
     mailbox = params[:mailbox].presence
-    return render(file: :show) if mailbox.blank?
+    return render(template: "show") if mailbox.blank?
 
     @imap.examine(mailbox)
     uids = @item.uids_search([])
     count = @item.uids_apply(uids)
-    return render(file: :show) if count == false
+    return render(template: "show") if count == false
 
     @imap.mailboxes.update_status
 

@@ -1,15 +1,15 @@
 FactoryBot.define do
   factory :add_changeset, class: Chorg::Changeset do
-    type Chorg::Changeset::TYPE_ADD
+    type { Chorg::Changeset::TYPE_ADD }
     destinations { [ { name: "組織変更/新設グループ_#{unique_id}" }.stringify_keys ] }
   end
 
   factory :move_changeset, class: Chorg::Changeset do
     transient do
-      source nil
+      source { nil }
     end
 
-    type Chorg::Changeset::TYPE_MOVE
+    type { Chorg::Changeset::TYPE_MOVE }
     sources { [ { id: source.id, name: source.name }.stringify_keys ] }
     destinations do
       [ { name: "組織変更/新設グループ_#{unique_id}",
@@ -25,10 +25,10 @@ FactoryBot.define do
 
   factory :move_changeset_only_name, class: Chorg::Changeset do
     transient do
-      source nil
+      source { nil }
     end
 
-    type Chorg::Changeset::TYPE_MOVE
+    type { Chorg::Changeset::TYPE_MOVE }
     sources { [ { id: source.id, name: source.name }.stringify_keys ] }
     destinations do
       [ { name: "組織変更/新設グループ_#{unique_id}",
@@ -44,11 +44,11 @@ FactoryBot.define do
 
   factory :unify_changeset, class: Chorg::Changeset do
     transient do
-      sources nil
-      destination nil
+      sources { nil }
+      destination { nil }
     end
 
-    type Chorg::Changeset::TYPE_UNIFY
+    type { Chorg::Changeset::TYPE_UNIFY }
     destinations do
       [ { name: "組織変更/新設グループ_#{unique_id}",
           order: "",
@@ -77,11 +77,11 @@ FactoryBot.define do
 
   factory :division_changeset, class: Chorg::Changeset do
     transient do
-      source nil
-      destinations nil
+      source { nil }
+      destinations { nil }
     end
 
-    type Chorg::Changeset::TYPE_DIVISION
+    type { Chorg::Changeset::TYPE_DIVISION }
     sources { [ { id: source.id, name: source.name }.stringify_keys ] }
 
     after(:build) do |entity, evaluator|
@@ -100,10 +100,10 @@ FactoryBot.define do
 
   factory :delete_changeset, class: Chorg::Changeset do
     transient do
-      source nil
+      source { nil }
     end
 
-    type Chorg::Changeset::TYPE_DELETE
+    type { Chorg::Changeset::TYPE_DELETE }
     sources { [ { id: source.id, name: source.name }.stringify_keys ] }
   end
 end

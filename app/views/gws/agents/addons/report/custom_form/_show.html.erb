@@ -3,8 +3,8 @@
 <dl class="see mod-gws-report-custom_form">
 <% @item.column_values.order_by(order: 1, name: 1).each do |value| %>
   <% column = value.column %>
-  <% if column.present? && column.column_show_path.present? %>
-    <%= render file: column.column_show_path, locals: { column: column, value: value } %>
+  <% if column.present? && column.column_show_partial_path.present? %>
+    <%= render column.column_show_partial_path, column: column, value: value %>
   <% else %>
     <dt><%= value.name %></dt>
     <dd>

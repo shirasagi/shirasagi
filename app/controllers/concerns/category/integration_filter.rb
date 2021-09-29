@@ -1,8 +1,6 @@
 module Category::IntegrationFilter
   extend ActiveSupport::Concern
 
-  public
-
   def split
     set_item
     @item = @item.becomes_with_route
@@ -11,7 +9,7 @@ module Category::IntegrationFilter
 
     return if request.get?
     @item.attributes = get_params
-    render_create @item.category_split, location: redirect_url, render: { file: :split }
+    render_create @item.category_split, location: redirect_url, render: { template: "split" }
   end
 
   def integrate
@@ -22,6 +20,6 @@ module Category::IntegrationFilter
 
     return if request.get?
     @item.attributes = get_params
-    render_create @item.category_integrate, location: redirect_url, render: { file: :integrate }
+    render_create @item.category_integrate, location: redirect_url, render: { template: "integrate" }
   end
 end

@@ -1,5 +1,5 @@
 <% if default_map_api(site: @cur_site) == "openlayers" %>
-  <%= render file: "app/views/opendata/agents/nodes/dataset/resource/openlayers/kml_content" %>
+  <%= render template: "opendata/agents/nodes/dataset/resource/openlayers/kml_content" %>
 <% else %>
-  <%= render file: "app/views/opendata/agents/nodes/dataset/resource/googlemaps/kml_content" %>
+  <%= render template: "opendata/agents/nodes/dataset/resource/googlemaps/kml_content" %>
 <% end %>

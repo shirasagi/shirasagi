@@ -110,7 +110,6 @@ describe Category::Addon::Integration, dbscope: :example do
 
     it "#integrate" do
       Cms::Node::GenerateJob.bind(site_id: site).perform_now
-      sleep 1
 
       Job::Log.first.tap do |log|
         expect(log.logs).to include(/INFO -- : .* Started Job/)
@@ -256,7 +255,6 @@ describe Category::Addon::Integration, dbscope: :example do
 
     it "#integrate" do
       Cms::Node::GenerateJob.bind(site_id: site).perform_now
-      sleep 1
 
       Job::Log.first.tap do |log|
         expect(log.logs).to include(/INFO -- : .* Started Job/)
@@ -406,7 +404,6 @@ describe Category::Addon::Integration, dbscope: :example do
 
     it "#integrate" do
       Cms::Node::GenerateJob.bind(site_id: site).perform_now
-      sleep 1
 
       Job::Log.first.tap do |log|
         expect(log.logs).to include(/INFO -- : .* Started Job/)
@@ -552,7 +549,6 @@ describe Category::Addon::Integration, dbscope: :example do
 
     it "#integrate" do
       Cms::Node::GenerateJob.bind(site_id: site).perform_now
-      sleep 1
 
       Job::Log.first.tap do |log|
         expect(log.logs).to include(/INFO -- : .* Started Job/)
@@ -695,7 +691,6 @@ describe Category::Addon::Integration, dbscope: :example do
 
     it "#integrate" do
       Cms::Node::GenerateJob.bind(site_id: site).perform_now
-      sleep 1
 
       Job::Log.first.tap do |log|
         expect(log.logs).to include(/INFO -- : .* Started Job/)

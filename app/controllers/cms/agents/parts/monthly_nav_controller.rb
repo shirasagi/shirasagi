@@ -13,12 +13,14 @@ class Cms::Agents::Parts::MonthlyNavController < ApplicationController
   private
 
   def set_condition_hash
-    if @cur_part.parent.present?
-      if @cur_part.parent.route == "cms/archive"
-        @condition_hash = @cur_part.parent.try(:parent).try(:becomes_with_route).try(:condition_hash)
-      else
-        @condition_hash = @cur_part.parent.becomes_with_route.try(:condition_hash)
-      end
+    parent = @cur_part.parent
+    return unless parent
+
+    if parent.route == "cms/archive"
+      @condition_hash = parent.try(:parent).try(:becomes_with_route).try(:condition_hash)
+    else
+      parent = parent.becomes_with_route rescue parent
+      @condition_hash = parent.try(:condition_hash)
     end
   end
 
@@ -31,9 +33,10 @@ class Cms::Agents::Parts::MonthlyNavController < ApplicationController
   end
 
   def contents_size(i)
-    Cms::Page.site(@cur_site).and_public(@cur_date).
-      where(@condition_hash).
-      where(:released.gte => previous_month_beginning(i), :released.lte => previous_month_end(i))
-      .count
+    criteria = Cms::Page.site(@cur_site)
+    criteria = criteria.and_public(@cur_date)
+    criteria = criteria.where(@condition_hash) if @condition_hash.present?
+    criteria = criteria.where(:released.gte => previous_month_beginning(i), :released.lte => previous_month_end(i))
+    criteria.count
   end
 end
