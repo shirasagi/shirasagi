@@ -221,17 +221,25 @@ module Cms::Model::Node
   end
 
   def update_page_index_queues
-    if remove_files_recursively?
-      pages.each do |page|
-        Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site).
-          perform_now(action: 'delete', id: page.id.to_s)
-      end
-      Cms::PageIndexQueue.site(site).in(id: pages.pluck(:id)).where(action: 'release').destroy_all
-    else
-      pages.and_public.each do |page|
-        next unless page.public_node?
+    criteria = Cms::Page.site(@cur_site || site).
+      where(filename: /^#{::Regexp.escape(filename)}\//)
+    all_ids = criteria.pluck(:id)
 
-        Cms::PageRelease.release(page)
+    if remove_files_recursively?
+      all_ids.each_slice(20) do |ids|
+        criteria.in(id: ids).to_a.each do |item|
+          Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: @cur_site || site).
+            perform_now(action: 'delete', id: item.id.to_s)
+        end
+      end
+      Cms::PageIndexQueue.site(@cur_site || site).in(id: all_ids).where(action: 'release').destroy_all
+    else
+      all_ids.each_slice(20) do |ids|
+        criteria.in(id: ids).to_a.each do |item|
+          next unless item.public_node?
+
+          Cms::PageRelease.release(item)
+        end
       end
     end
   end
