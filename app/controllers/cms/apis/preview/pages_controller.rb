@@ -21,8 +21,6 @@ class Cms::Apis::Preview::PagesController < ApplicationController
 
   def set_item
     super
-    return @item if @item.blank? || @item.class != Cms::Page
-    @item = @item.becomes_with_route rescue @item
   end
 
   def check_lockable_item

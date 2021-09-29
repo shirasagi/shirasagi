@@ -15,7 +15,7 @@ class Member::Agents::Nodes::BlogPageController < ApplicationController
   def render_blog_layout
     return if response.content_type != "text/html"
 
-    node = @cur_node.becomes_with_route
+    node = @cur_node
     layout = @cur_node.layout
     layout.html = layout.html.gsub(/\#\{(.+?)\}/) do |m|
       name = $1
@@ -30,7 +30,7 @@ class Member::Agents::Nodes::BlogPageController < ApplicationController
     @items = pages.
       search(params).
       order_by(released: -1).
-      page(params[:page]).per(@cur_node.parent.becomes_with_route.page_limit || 3)
+      page(params[:page]).per(@cur_node.parent.page_limit || 3)
   end
 
   def rss

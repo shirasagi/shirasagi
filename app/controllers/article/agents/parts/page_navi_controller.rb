@@ -13,8 +13,6 @@ class Article::Agents::Parts::PageNaviController < ApplicationController
     return unless @cur_page
     return unless @cur_node
 
-    @cur_page = @cur_page.becomes_with_route
-    @cur_node = @cur_node.becomes_with_route
     ids = pages.order_by(@cur_node.sort_hash).pluck(:id)
     idx = ids.index(@cur_page.id)
 

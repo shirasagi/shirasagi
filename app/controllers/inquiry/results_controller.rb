@@ -18,7 +18,6 @@ class Inquiry::ResultsController < ApplicationController
   end
 
   def set_aggregation
-    @cur_node = @cur_node.becomes_with_route
     raise "403" if @cur_node.route != "inquiry/form"
     @columns = @cur_node.columns.order_by(order: 1)
     @answer_count = @cur_node.answers.site(@cur_site).allow(:read, @cur_user).count

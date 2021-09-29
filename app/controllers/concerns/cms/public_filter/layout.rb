@@ -33,7 +33,7 @@ module Cms::PublicFilter::Layout
   def find_part(path)
     part = Cms::Part.site(@cur_site).filename(path).first
     return unless part
-    @preview || part.public? ? part.becomes_with_route : nil
+    @preview || part.public? ? part : nil
   end
 
   def render_part(part, opts = {})
@@ -223,7 +223,7 @@ module Cms::PublicFilter::Layout
     if part.ajax_view == "enabled" && !filters.include?(:mobile) && !@preview
       html << part.ajax_html
     else
-      html << render_part(part.becomes_with_route)
+      html << render_part(part)
     end
     if previewable
       html << "</div>"

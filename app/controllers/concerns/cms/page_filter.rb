@@ -35,7 +35,7 @@ module Cms::PageFilter
     params = {}
 
     if @cur_node
-      n = @cur_node.class == Cms::Node ? @cur_node.becomes_with_route : @cur_node
+      n = @cur_node
 
       layout_id = n.page_layout_id || n.layout_id
       params[:layout_id] = layout_id if layout_id.present?

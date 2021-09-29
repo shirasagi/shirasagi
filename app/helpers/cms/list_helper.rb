@@ -56,7 +56,7 @@ module Cms::ListHelper
       render_list_with_shirasagi(cur_item, default_node_loop_html, &block)
     else
       source = cur_item.loop_liquid.presence || default_node_loop_liquid
-      assigns = { "nodes" => @items.to_a.map(&:becomes_with_route) }
+      assigns = { "nodes" => @items.to_a }
       render_list_with_liquid(source, assigns)
     end
   end
@@ -72,7 +72,7 @@ module Cms::ListHelper
       render_list_with_shirasagi(cur_item, default_page_loop_html, &block)
     else
       source = cur_item.loop_liquid.presence || default_page_loop_liquid
-      assigns = { "pages" => @items.to_a.map(&:becomes_with_route) }
+      assigns = { "pages" => @items.to_a }
       render_list_with_liquid(source, assigns)
     end
   end

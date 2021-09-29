@@ -55,7 +55,6 @@ class Inquiry::ColumnsController < ApplicationController
     @items = []
 
     entries.each do |item|
-      item = item.becomes_with_route rescue item
       if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
         next if item.destroy
       else

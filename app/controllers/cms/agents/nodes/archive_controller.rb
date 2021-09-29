@@ -42,8 +42,7 @@ class Cms::Agents::Nodes::ArchiveController < ApplicationController
   end
 
   def becomes_with_route_node
-    @cur_node = @cur_node.becomes_with_route
-    @cur_parent = @cur_node.parent.try(:becomes_with_route)
+    @cur_parent = @cur_node.parent
   end
 
   def pages

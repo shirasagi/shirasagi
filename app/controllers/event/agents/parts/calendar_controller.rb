@@ -45,7 +45,7 @@ class Event::Agents::Parts::CalendarController < ApplicationController
   end
 
   def set_parent_node
-    @parent_node = @cur_part.parent.try(:becomes_with_route)
+    @parent_node = @cur_part.parent
   end
 
   def set_event_dates(dates)

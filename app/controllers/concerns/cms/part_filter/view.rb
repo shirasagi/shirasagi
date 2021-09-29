@@ -16,14 +16,12 @@ module Cms::PartFilter::View
   def cur_page
     return @cur_page if @cur_page
     path = @cur_path.sub(/^#{@cur_site.url}/, "")
-    page = Cms::Page.site(@cur_site).filename(path).first
-    page ? page.becomes_with_route : nil
+    Cms::Page.site(@cur_site).filename(path).first
   end
 
   def cur_node
     return @cur_node if @cur_node
     path = @cur_path.sub(/^#{@cur_site.url}/, "")
-    node = Cms::Node.site(@cur_site).in_path(path).sort(depth: -1).first
-    node ? node.becomes_with_route : nil
+    Cms::Node.site(@cur_site).in_path(path).sort(depth: -1).first
   end
 end
