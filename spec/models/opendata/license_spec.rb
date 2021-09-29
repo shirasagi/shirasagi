@@ -15,11 +15,11 @@ describe Opendata::License, dbscope: :example do
     it { expect(described_class.search(nil).selector.to_h).to be_empty }
     it do
       expect(described_class.search(keyword: "キーワード").selector.to_h).to \
-        include("$and" => include("$or" => include("name" => /キーワード/i)))
+        include("$or" => include("name" => /キーワード/i))
     end
     it do
       expect(described_class.search(keyword: "()[]{}.?+*|\\").selector.to_h).to \
-        include("$and" => include("$or" => include("name" => /\(\)\[\]\{\}\.\?\+\*\|\\/i)))
+        include("$or" => include("name" => /\(\)\[\]\{\}\.\?\+\*\|\\/i))
     end
   end
 end

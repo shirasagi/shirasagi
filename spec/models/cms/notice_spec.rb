@@ -26,7 +26,7 @@ describe Cms::Notice, dbscope: :example do
 
     context "when keyword is given" do
       subject { described_class.search(keyword: "キーワード1 キーワード2") }
-      it { expect(subject.selector.to_h).to include("$and" => include("$or" => include("name" => /キーワード1/i))) }
+      it { expect(subject.selector.to_h).to include("$or" => include("name" => /キーワード1/i)) }
       it { expect(subject.selector.to_h).to include("$and" => include("$or" => include("name" => /キーワード2/i))) }
     end
   end
