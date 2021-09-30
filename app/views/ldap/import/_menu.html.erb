@@ -1,7 +1,7 @@
 <nav class="nav-menu">
   <% if params[:action] == "index" %>
     <%= link_to t('ss.links.import'), action: :import_confirmation %>
-  <% elsif params[:action] =~ /import_confirmation|import/ %>
+  <% elsif params[:action] =~ /import_confirmation|import|destroy_all/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /delete|sync_confirmation|sync|results/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
