@@ -221,10 +221,14 @@ module Cms::Model::Node
   end
 
   def update_page_index_queues
+    site = @cur_site || self.site
+    return if site.blank?
+    return unless site.elasticsearch_enabled?
+
     if remove_files_recursively?
-      Cms::Elasticsearch::Indexer::NodeCloseJob.bind(site_id: @cur_site || site, node_id: id).perform_later
+      Cms::Elasticsearch::Indexer::NodeCloseJob.bind(site_id: site, node_id: id).perform_later
     else
-      criteria = Cms::Page.site(@cur_site || site).
+      criteria = Cms::Page.site(site).
         where(filename: /^#{::Regexp.escape(filename)}\//)
       all_ids = criteria.pluck(:id)
       all_ids.each_slice(20) do |ids|
