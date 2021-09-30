@@ -228,16 +228,7 @@ module Cms::Model::Node
     if remove_files_recursively?
       Cms::Elasticsearch::Indexer::NodeCloseJob.bind(site_id: site, node_id: id).perform_later
     else
-      criteria = Cms::Page.site(site).
-        where(filename: /^#{::Regexp.escape(filename)}\//)
-      all_ids = criteria.pluck(:id)
-      all_ids.each_slice(20) do |ids|
-        criteria.in(id: ids).to_a.each do |item|
-          next unless item.public_node?
-
-          Cms::PageRelease.release(item)
-        end
-      end
+      Cms::Elasticsearch::Indexer::NodeReleaseJob.bind(site_id: site, node_id: id).perform_later
     end
   end
 
