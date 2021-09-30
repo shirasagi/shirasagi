@@ -49,7 +49,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           expect(mail.parts[0].body.raw_source).to include(item_texts.join("\r\n"))
           expect(mail.parts[1].content_type).to include("application/octet-stream")
           expect(mail.parts[1].content_type).to include("filename=mail-1.eml")
-          expect(mail.parts[1].body.raw_source).to eq Base64.encode64(File.binread(content))
+          expect(mail.parts[1].body.raw_source).to eq Base64.encode64(File.binread(content)).gsub("\n", "\r\n")
         end
       end
     end

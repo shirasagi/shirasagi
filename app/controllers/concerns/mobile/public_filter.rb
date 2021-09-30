@@ -26,7 +26,7 @@ module Mobile::PublicFilter
   end
 
   def render_mobile
-    return if response.content_type != "text/html"
+    return if response.media_type != "text/html"
 
     body = response.body
 

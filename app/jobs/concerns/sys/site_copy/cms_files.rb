@@ -1,7 +1,7 @@
 module Sys::SiteCopy::CmsFiles
   extend ActiveSupport::Concern
   include SS::Copy::Cache
-  include Sys::SiteCopy::SsFiles
+  include Sys::SiteCopy::SSFiles
 
   def copy_cms_files
     file_ids = Cms::File.site(@src_site).where(model: "cms/file").pluck(:id)

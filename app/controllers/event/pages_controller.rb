@@ -65,7 +65,7 @@ class Event::PagesController < ApplicationController
       file_type = SS::MimeType.find(file.original_filename, nil)
     end
 
-    if file_type == "text/comma-separated-values"
+    if file_type == "text/csv"
       # check CSV
       if !Event::Page::CsvImporter.valid_csv?(file)
         @item.errors.add :base, :malformed_csv

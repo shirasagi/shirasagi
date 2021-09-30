@@ -81,7 +81,7 @@ describe Jmaxml::Filter, dbscope: :example do
       expect(mail.body.raw_source).to include('岩手県内陸南部：震度６弱')
       expect(mail.body.raw_source).to include('岩手県沿岸北部：震度５強')
       expect(mail.body.raw_source).to include('岩手県内陸北部：震度５強')
-      expect(mail.body.raw_source).to end_with("\n#{action2.signature_text}\n")
+      expect(mail.body.raw_source).to end_with("\r\n#{action2.signature_text.gsub("\n", "\r\n")}\r\n")
     end
   end
 end

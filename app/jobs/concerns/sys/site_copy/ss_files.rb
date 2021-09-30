@@ -1,4 +1,4 @@
-module Sys::SiteCopy::SsFiles
+module Sys::SiteCopy::SSFiles
   extend ActiveSupport::Concern
-  include SS::Copy::SsFiles
+  include SS::Copy::SSFiles
 end
