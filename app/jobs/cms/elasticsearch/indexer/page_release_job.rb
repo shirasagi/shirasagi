@@ -28,7 +28,14 @@ class Cms::Elasticsearch::Indexer::PageReleaseJob < Cms::ApplicationJob
   def enum_es_docs
     Enumerator.new do |y|
       y << convert_to_doc
-      item.files.each { |file| y << convert_file_to_doc(file) }
+      item.attached_files.each { |file| y << convert_file_to_doc(file) }
+      if item[:resources].present?
+        item.becomes_with_route.resources.each do |resource|
+          next if resource.file.blank?
+
+          y << convert_resource_to_doc(resource)
+        end
+      end
     end
   end
 
@@ -69,6 +76,13 @@ class Cms::Elasticsearch::Indexer::PageReleaseJob < Cms::ApplicationJob
     doc[:created] = file.created.try(:iso8601)
 
     [ "file-#{file.id}", doc ]
+  end
+
+  def convert_resource_to_doc(resource)
+    id, doc = convert_file_to_doc(resource.file)
+    doc[:name] = resource.name
+
+    [ id, doc ]
   end
 
   def item_text
