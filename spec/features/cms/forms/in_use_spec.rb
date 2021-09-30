@@ -44,6 +44,9 @@ describe Cms::FormsController, type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.links.delete")
         end
       end
+
+      click_button I18n.t('ss.buttons.delete')
+
       wait_for_notice I18n.t("ss.notice.deleted")
 
       expect { form.reload }.not_to raise_error
