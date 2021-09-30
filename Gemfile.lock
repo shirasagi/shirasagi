@@ -349,7 +349,7 @@ GEM
       connection_pool (~> 2.2)
     net-ldap (0.17.0)
     nio4r (2.5.8)
-    nokogiri (1.12.4)
+    nokogiri (1.12.5)
       mini_portile2 (~> 2.6.1)
       racc (~> 1.4)
     non-stupid-digest-assets (1.0.9)
