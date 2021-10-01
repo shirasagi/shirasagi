@@ -228,7 +228,7 @@ module SS::Model::File
   end
 
   def resizing=(size)
-    @resizing = (size.class == String) ? size.split(",") : size
+    @resizing = size.instance_of?(String) ? size.split(",") : size
   end
 
   def read

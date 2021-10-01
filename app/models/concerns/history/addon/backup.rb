@@ -36,7 +36,7 @@ module History::Addon
       backup.ref_coll  = collection_name
       backup.ref_class = self.class.to_s
       backup.action = history_backup_action if history_backup_action.present?
-      if self.class.relations.find { |k, relation| relation.class == Mongoid::Association::Embedded::EmbedsMany }
+      if self.class.relations.find { |k, relation| relation.instance_of?(Mongoid::Association::Embedded::EmbedsMany) }
         backup.data = self.class.find(id).attributes
       else
         backup.data = attributes
