@@ -1,14 +1,20 @@
 <%= jquery do %>
   var toggleActionType = function() {
-    val = $(".action-type").val();
-    if (val == "remove") {
-      $(".replaced-value").hide();
-    } else if (val == "replace") {
+    var target = $("#item_target_type").val();
+    var action = $(".action-type").val();
+    $(".replace-source").hide();
+    $(".replaced-value").hide();
+
+    if (action == "replace") {
+      if (target == "attribute") {
+        $(".replace-source").show();
+      }
       $(".replaced-value").show();
     }
   }
 
   $(".action-type").on("change", toggleActionType);
+  $("#item_target_type").on("change", toggleActionType);
   toggleActionType();
 <% end %>
 
@@ -22,6 +28,8 @@
   <dt><%= @model.t :action %><%= @model.tt :action %></dt>
   <dd>
     <%= f.select :action_type, @item.action_type_options, {}, class: "action-type", style: "width: 70px" %>
-    <%= f.text_field :replaced_value, class: "replaced-value" %>
+    <%= f.text_field :replace_source, class: "replace-source", style: "width: 300px" %>
+    <span class="replace-source">→</span>
+    <%= f.text_field :replaced_value, class: "replaced-value", style: "width: 300px" %>
   </dd>
 </dl>

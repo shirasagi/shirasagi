@@ -8,6 +8,8 @@
   <dt><%= @model.t :action %></dt>
   <dd>
     <span>[<%= @item.label :action_type %>]</span>
-    <span style="margin-left: 4px;"><%= @item.replaced_value %></span>
+    <% if @item.replaced_value.present? %>
+      <span style="margin-left: 4px;"><%= @item.replace_source.presence || @item.target_value %> → <%= @item.replaced_value %></span>
+    <% end %>
   </dd>
 </dl>

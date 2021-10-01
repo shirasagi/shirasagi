@@ -46,7 +46,7 @@ this.Cms_Source_Cleaner = (function (superClass) {
   };
 
   Cms_Source_Cleaner.cleanUp = function (html) {
-    var action, action_type, actions, e, i, ref, replaced_value, target_type, target_value, v;
+    var action, action_type, actions, e, i, ref, replace_source, replaced_value, target_type, target_value, v;
     actions = {
       "remove": {
         "tag": this.removeTag,
@@ -67,11 +67,13 @@ this.Cms_Source_Cleaner = (function (superClass) {
       action_type = v["action_type"];
       target_type = v["target_type"];
       target_value = v["target_value"];
+      replace_source = v["replace_source"];
       replaced_value = v["replaced_value"];
       try {
         action = actions[action_type][target_type];
         html = action(html, {
           "value": target_value,
+          "replace_source": replace_source,
           "replaced": replaced_value
         });
       } catch (_error) {
@@ -159,10 +161,15 @@ this.Cms_Source_Cleaner = (function (superClass) {
   };
 
   Cms_Source_Cleaner.replaceAttribute = function (html, opts) {
-    var replaced, ret, value;
+    var regxp, replace_source, replaced, ret, value;
     value = opts["value"];
+    replace_source = opts["replace_source"];
     replaced = opts["replaced"];
     ret = $('<div>' + html + '</div>');
+    if (replace_source) {
+      regxp = new RegExp(Cms_Source_Cleaner.regexpEscape(replace_source), "g");
+      replaced = $(ret).find("*").attr(value).replace(regxp, replaced);
+    }
     $(ret).find("*").attr(value, replaced);
     return ret.html();
   };

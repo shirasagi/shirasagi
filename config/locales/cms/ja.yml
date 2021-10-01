@@ -922,6 +922,7 @@ ja:
       cms/addon/source_cleaner:
         target: 対象
         action: 操作
+        replace_source: 置換元
         replaced_value: 置換後の値
       cms/addon/opendata_ref/site:
         opendata_site_ids: サイト
@@ -1840,6 +1841,7 @@ ja:
         - 対象のクリーニング方法を設定します。
         - 置換または削除が選択できます。
         - 置換後のタグや属性の値、文字列を右欄に入力します。
+        - 対象が属性の場合、置換元の文字列と置換後の文字列を右欄に入力します。
 
     cms/addon/opendata_ref/site:
       opendata_site_ids:
