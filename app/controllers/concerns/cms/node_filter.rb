@@ -20,6 +20,7 @@ module Cms::NodeFilter
 
   def change_item_class
     @item.route = params[:route] if params[:route]
+    @item = @item.becomes_with_route(@item.route) rescue @item
     @model = @item.class
   end
 
