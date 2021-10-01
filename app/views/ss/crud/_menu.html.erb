@@ -1,6 +1,5 @@
 <nav class="nav-menu">
-  <% if params[:controller] =~ /sys\/history_archives/ %>
-  <% elsif params[:action] =~ /index/ %>
+  <% if params[:action] =~ /index/ %>
     <%= link_to(t('ss.links.new'), { action: :new }, class: :new) if @model.allowed?(:edit, @cur_user) %>
     <%= link_to t('ss.links.download'), action: :download_all rescue nil %>
     <%= link_to t('ss.links.import'), action: :import rescue nil %>

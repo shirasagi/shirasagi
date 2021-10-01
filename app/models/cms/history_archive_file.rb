@@ -1,9 +1,10 @@
-class Sys::HistoryArchiveFile
-  include Sys::Permission
+class Cms::HistoryArchiveFile
   include SS::Model::File
+  include SS::Reference::Site
+  include Cms::SitePermission
   extend ActiveSupport::Concern
 
-  set_permission_name "sys_users", :edit
+  set_permission_name "cms_tools", :use
 
   attr_accessor :cur_site, :cur_node, :request
 
@@ -12,7 +13,7 @@ class Sys::HistoryArchiveFile
   def previewable?(opts = {})
     cur_user = opts[:user]
     if cur_user
-      Sys::HistoryArchiveFile.allowed?(:read, cur_user)
+      Cms::HistoryArchiveFile.allowed?(:read, cur_user)
     end
   end
 end

@@ -2,7 +2,7 @@ class History::Cms::HistoryArchivesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  model Sys::HistoryArchiveFile
+  model Cms::HistoryArchiveFile
 
   navi_view "history/cms/logs/navi"
 

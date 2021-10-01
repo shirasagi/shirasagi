@@ -17,7 +17,7 @@ class Sys::HistoryArchivesController < ApplicationController
   def index
     raise "403" unless SS::User.allowed?(:read, @cur_user)
 
-    @items = @model.all.
+    @items = @model.where(site_id: nil).
       search(params[:s]).
       page(params[:page]).per(50)
   end

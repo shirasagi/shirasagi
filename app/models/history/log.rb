@@ -75,14 +75,6 @@ class History::Log
       log.target_id    = item.try(:id) if item.respond_to?(:new_record?) && !item.try(:new_record?)
 
       log.save!
-      try_invoke_archive(options[:cur_user], options[:cur_site])
-    end
-
-    def try_invoke_archive(cur_user, cur_site)
-      # return if rand <= 0.8
-      # return if !Sys::HistoryArchiveJob.histories_to_archive?(cur_site)
-
-      Sys::HistoryArchiveJob.bind(site_id: cur_site, user_id: cur_user).perform_now
     end
 
     def enum_csv(options)
