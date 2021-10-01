@@ -79,7 +79,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(history_file.filename).to eq ::File.basename(before_csv)
         expect(history_file.name).to eq ::File.basename(before_csv)
         expect(history_file.state).to eq "closed"
-        expect(::FileUtils.cmp(history_file.path, before_csv)).to be true
+        expect(Fs.cmp(history_file.path, before_csv)).to be true
 
         # show history files and restore
         within "#addon-cms-agents-addons-file" do
@@ -115,7 +115,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(replaced_file.filename).to eq "before_csv.csv"
         expect(replaced_file.name).to eq "before_csv.csv"
         expect(replaced_file.state).to eq "public"
-        expect(::FileUtils.cmp(replaced_file.path, before_csv)).to be true
+        expect(Fs.cmp(replaced_file.path, before_csv)).to be true
       end
 
       it "destroy" do

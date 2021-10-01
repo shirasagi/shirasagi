@@ -6,5 +6,5 @@
     <%= ss_button_to t("gws/share.links.file_download"), url_for(action: :download_all), class: "download-all btn btn-list-head-action", method: "post", confirm: t('gws/share.links.confirm.download_all') %>
   </div>
 
-  <%= render file: "_search" %>
+  <%= render template: "_search" %>
 </div>

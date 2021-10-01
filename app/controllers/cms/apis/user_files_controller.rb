@@ -47,6 +47,6 @@ class Cms::Apis::UserFilesController < ApplicationController
     @items = @items.
       in(id: @select_ids).
       order_by(filename: 1)
-    render file: :index
+    render template: "index"
   end
 end

@@ -25,7 +25,7 @@ class Sys::SiteCopyController < ApplicationController
 
     respond_to do |format|
       format.html { render }
-      format.json { render file: "ss/tasks/index", content_type: json_content_type, locals: { item: @item } }
+      format.json { render template: "ss/tasks/index", content_type: json_content_type, locals: { item: @item } }
     end
   end
 
@@ -49,6 +49,11 @@ class Sys::SiteCopyController < ApplicationController
   def run
     set_item
     @item.attributes = get_params
+    unless @item.save
+      render
+      return
+    end
+
     if @item.ready
       Sys::SiteCopyJob.perform_later
 

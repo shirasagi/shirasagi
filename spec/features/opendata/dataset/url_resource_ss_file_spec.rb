@@ -95,7 +95,7 @@ describe "opendata_url_resource", dbscope: :example, js: true do
       SS::File.where(filename: filename).first.tap do |file|
         expect(file.name).to eq filename
         expect(file.filename).to eq filename
-        expect(file.content_type).to eq "text/comma-separated-values"
+        expect(file.content_type).to eq "text/csv"
         expect(file.size).to eq ::File.size(csv_path)
         expect(file.read).to eq ::File.binread(csv_path)
         expect(file.owner_item_id).to eq dataset.id
@@ -124,7 +124,7 @@ describe "opendata_url_resource", dbscope: :example, js: true do
       SS::File.where(filename: filename).first.tap do |file|
         expect(file.name).to eq filename
         expect(file.filename).to eq filename
-        expect(file.content_type).to eq "text/comma-separated-values"
+        expect(file.content_type).to eq "text/csv"
         expect(file.size).to eq ::File.size(csv_path)
         expect(file.read).to eq ::File.binread(csv_path)
         expect(file.owner_item_id).to eq dataset.id
@@ -179,7 +179,7 @@ describe "opendata_url_resource", dbscope: :example, js: true do
         SS::File.where(filename: filename).first.tap do |file|
           expect(file.name).to eq filename
           expect(file.filename).to eq filename
-          expect(file.content_type).to eq "text/comma-separated-values"
+          expect(file.content_type).to eq "text/csv"
           expect(file.size).to eq ::File.size(csv_path)
           expect(file.read).to eq ::File.binread(csv_path)
           expect(file.owner_item_id).to eq dataset.id
@@ -197,7 +197,7 @@ describe "opendata_url_resource", dbscope: :example, js: true do
         SS::File.where(filename: filename).first.tap do |file|
           expect(file.name).to eq filename
           expect(file.filename).to eq filename
-          expect(file.content_type).to eq "text/comma-separated-values"
+          expect(file.content_type).to eq "text/csv"
           expect(file.size).to eq ::File.size(csv_path)
           expect(file.read).to eq ::File.binread(csv_path)
           expect(file.owner_item_id).to eq dataset.id
@@ -218,7 +218,7 @@ describe "opendata_url_resource", dbscope: :example, js: true do
         SS::File.where(filename: filename).first.tap do |file|
           expect(file.name).to eq filename
           expect(file.filename).to eq filename
-          expect(file.content_type).to eq "text/comma-separated-values"
+          expect(file.content_type).to eq "text/csv"
           expect(file.size).to eq ::File.size(csv_path2)
           expect(file.read).to eq ::File.binread(csv_path2)
           expect(file.owner_item_id).to eq dataset.id

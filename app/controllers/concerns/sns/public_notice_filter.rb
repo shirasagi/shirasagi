@@ -12,6 +12,6 @@ module Sns::PublicNoticeFilter
 
   def frame_content
     raise "403" unless @item = @model.and_public.find(params[:id])
-    render file: "frame_content", layout: false
+    render template: "frame_content", layout: false
   end
 end

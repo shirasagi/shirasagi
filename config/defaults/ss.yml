@@ -19,6 +19,10 @@ production: &production
   # history backups max age
   keep_history_backup_after_destroyed: 14.days
 
+  # task の保存期間を設定
+  # 0 を設定すると無制限に保存
+  keep_tasks: 14.days
+
   session:
     key: '_ss_session'
     same_site: 'Lax'
@@ -53,8 +57,8 @@ test:
   disable: false
   file_url_with: filename
   publish_file_with: cp
-  sanitizer_input: sanitizer_input_test
-  sanitizer_output: sanitizer_output_test
+  sanitizer_input: tmp/sanitizer_input
+  sanitizer_output: tmp/sanitizer_output
 
 development:
   <<: *production

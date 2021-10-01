@@ -30,7 +30,7 @@ class Gws::Workflow::FormsController < ApplicationController
     return if request.get?
 
     @item.state = 'public'
-    render_opts = { render: { file: :publish }, notice: t('ss.notice.published') }
+    render_opts = { render: { template: "publish" }, notice: t('ss.notice.published') }
     render_update @item.save, render_opts
   end
 
@@ -45,7 +45,7 @@ class Gws::Workflow::FormsController < ApplicationController
     return if request.get?
 
     @item.state = 'closed'
-    render_opts = { render: { file: :depublish }, notice: t('ss.notice.depublished') }
+    render_opts = { render: { template: "depublish" }, notice: t('ss.notice.depublished') }
     render_update @item.save, render_opts
   end
 end

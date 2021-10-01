@@ -267,7 +267,7 @@ class Gws::Memo::Notifier
 
     # item は操作対象の copy の場合がある。copy の場合 `set(...)` を呼び出しても DB が更新されないので、
     # 回りくどいようだが `where(id: item.id).set(...)` とする。
-    item.class.where(id: item.id).set(notification_noticed_at: now) if item.respond_to?(:notification_noticed_at)
+    item.class.where(id: item.id).set(notification_noticed_at: now.utc) if item.respond_to?(:notification_noticed_at)
   end
 
   private

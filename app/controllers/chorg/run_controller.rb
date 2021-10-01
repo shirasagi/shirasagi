@@ -83,7 +83,7 @@ class Chorg::RunController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { render file: :confirmation, status: :unprocessable_entity }
+        format.html { render template: "confirmation", status: :unprocessable_entity }
         format.json { render json: @item.errors.full_messages, status: :unprocessable_entity }
       end
     end

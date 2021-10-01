@@ -1,4 +1,4 @@
-<% buf = render(file: @item.form_file, locals: { f: f }) if @item.form_file %>
+<% buf = render(@item.form_partial_path, f: f) if @item.form_partial_path %>
 <% return if buf.blank? %>
 <div class="addon-view" id="column-<%= @model.name.underscore.gsub('/', '-') %>">
   <div class="addon-head toggle-head"><h2><%= @model.model_name.human %></h2></div>

@@ -179,10 +179,10 @@ module Gws::Discussion::Postable
   end
 
   def update_topic_descendants_updated
-    topic.set descendants_updated: updated if topic
+    topic.set(descendants_updated: updated.utc) if topic
   end
 
   def update_forum_descendants_updated
-    forum.set descendants_updated: updated if forum
+    forum.set(descendants_updated: updated.utc) if forum
   end
 end

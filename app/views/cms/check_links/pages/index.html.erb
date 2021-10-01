@@ -1,0 +1,75 @@
+<div class="index">
+  <div class="list-head">
+    <div style="line-height: 20px;">
+      <%=br t("cms.notices.check_links_report", time: @cur_report.created.strftime("%Y/%m/%d %H:%M")).join("\n") %>
+    </div>
+    <div style="padding-top: 2px; color: red;"><%= t("cms.notices.check_links_report_annotation") %></div>
+  </div>
+  <div class="list-head">
+    <% @s = OpenStruct.new params[:s] %>
+    <div class="list-head-search-full">
+      <%= form_for :s, url: "", html: { method: :get } do |f| %>
+        <span style="margin-right: 10px;">
+          <%= f.text_field :keyword %>
+        </span>
+        <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+        <input type="button" value="<%= t('ss.buttons.reset') %>" onclick="location.href='?'" class="btn" />
+      <% end %>
+    </div>
+  </div>
+
+  <div class="list-items">
+    <div style="padding: 2px"><%= "#{@model.content_name}#{@items.size}#{t("ss.units.count")}" %></div>
+    <table class="index check-links-erros">
+      <thead>
+        <tr>
+          <th class="name"><%= @model.t("name") %></th>
+          <th class="url"><%= @model.t("ref_url") %></th>
+          <th class="groups"><%= @model.t("group_ids") %></th>
+          <th class="state"><%= @model.t("state") %></th>
+          <th class="preview"><%= t("ss.links.preview") %></th>
+        </tr>
+      </thead>
+      <tbody>
+      <% @items.each do |item| %>
+        <% content = item.content %>
+        <tr>
+          <td class="name">
+            <% if content && content.allowed?(:read, @cur_user, site: @cur_site, node: content.try(:parent)) %>
+              <%= link_to content.name, content.private_show_path %>
+            <% elsif content %>
+              <%= content.name %>
+            <% else %>
+              <%= item.name %>
+            <% end %>
+          </td>
+          <td class="url">
+            <%= link_to item.ref, item.ref_url, target: "_blank", rel: "noopener" %>
+          </td>
+          <td class="groups"><%= item.group_label %></td>
+          <td class="state">
+            <% if content %>
+              <%= content.public? ? t("ss.state.public") : t("ss.state.closed") %>
+            <% else %>
+              <%= t("ss.options.state.deleted") %>
+            <% end %>
+          </td>
+          <td class="preview">
+            <%= "#{item.t(:urls)}#{item.urls.size}#{t("ss.units.count")}" %>
+            <%= "（" %>
+            <% if content %>
+              <%= link_to t("cms.links.check_preview"), "#{cms_preview_path(path: "")}/#{item.preview_path}", target: "_blank", rel: "noopener" %>
+            <% else %>
+              <%= t("cms.links.check_preview") %>
+            <% end %>
+            <%= "）" %>
+            <!-- <%= link_to t("ss.links.show"), { action: :show, id: item }, class: "title" %> -->
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+
+    <%= paginate @items if @items.try(:current_page) %>
+  </div>
+</div>

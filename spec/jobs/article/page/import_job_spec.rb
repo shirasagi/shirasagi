@@ -66,7 +66,8 @@ describe Article::Page::ImportJob, dbscope: :example do
         filename = "#{unique_id}.csv"
         csv_file = SS::TempFile.create_empty!(name: filename, filename: filename, content_type: 'text/csv') do |file|
           ::File.open(file.path, "wb") do |f|
-            Article::Page.site(site).node(source_node).enum_csv(encoding: "UTF-8").each do |csv_row|
+            exporter = Cms::PageExporter.new(site: site, criteria: Article::Page.site(site).node(source_node))
+            exporter.enum_csv(encoding: "UTF-8").each do |csv_row|
               f.write(csv_row)
             end
           end
@@ -262,7 +263,9 @@ describe Article::Page::ImportJob, dbscope: :example do
         it do
           Article::Page.site(site).node(dest_node).first.tap do |page|
             expect(page.group_ids).to eq source_page.group_ids
-            expect(page.permission_level).to eq source_page.permission_level
+            unless SS.config.ss.disable_permission_level
+              expect(page.permission_level).to eq source_page.permission_level
+            end
           end
         end
       end

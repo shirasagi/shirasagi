@@ -82,14 +82,15 @@ class Cms::ImportJobFile
   def set_errors(item, import_filename)
     item.errors.each do |n, e|
       if n == :filename
-        @import_logs << "error: #{import_filename}#{e}"
-        self.errors.add :base, "#{item.filename}#{e}"
+        @import_logs << "error: #{import_filename} #{e}"
+        self.errors.add :base, "#{item.filename} #{e}"
       elsif n == :name
-        @import_logs << "error: #{import_filename}#{e}"
-        self.errors.add :base, "#{import_filename}#{e}"
+        @import_logs << "error: #{import_filename} #{e}"
+        self.errors.add :base, "#{import_filename} #{e}"
       else
-        @import_logs << "error: #{import_filename} #{item.class.t(n)}#{e}"
-        self.errors.add :base, "#{import_filename} #{item.class.t(n)}#{e}"
+        name = n == :base ? '' : item.class.t(n)
+        @import_logs << "error: #{import_filename} #{name}#{e}"
+        self.errors.add :base, "#{import_filename} #{name}#{e}"
       end
     end
   end

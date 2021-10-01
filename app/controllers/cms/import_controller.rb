@@ -31,14 +31,14 @@ class Cms::ImportController < ApplicationController
     if request.get?
       respond_to do |format|
         format.html { render }
-        format.json { render file: "ss/tasks/index", content_type: json_content_type, locals: { item: @task } }
+        format.json { render template: "ss/tasks/index", content_type: json_content_type, locals: { item: @task } }
       end
       return
     end
 
     @item = @model.new get_params
     render_create @item.save_with_import, location: { action: :import },
-      render: { file: :import }, notice: t("ss.notice.started_import")
+      render: { template: "import" }, notice: t("ss.notice.started_import")
   end
 
   def download_logs

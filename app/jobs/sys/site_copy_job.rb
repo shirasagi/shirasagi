@@ -1,6 +1,6 @@
 class Sys::SiteCopyJob < SS::ApplicationJob
   include Job::SS::TaskFilter
-  include Sys::SiteCopy::SsFiles
+  include Sys::SiteCopy::SSFiles
   include Sys::SiteCopy::CmsRoles
   include Sys::SiteCopy::CmsForms
   include Sys::SiteCopy::CmsColumns

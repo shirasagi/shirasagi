@@ -19,11 +19,11 @@
 <% if forms.present? %>
   <dt><%= @model.t :form_id %><%= @model.tt :form_id %></dt>
   <dd>
+    <%= f.hidden_field :form_id, value: cur_form.try(:id) %>
     <% if cur_form && !cur_form.allowed?(:read, @cur_user, site: @cur_site) %>
-      <%= f.hidden_field :form_id, value: cur_form.try(:id) %>
-      <%= f.select(:form_id, options_from_collection_for_select(forms, :id, :name, selected: cur_form.try(:id)), { include_blank: t("cms.default_form") }, { disabled: true }) %>
+      <%= select_tag("in_form_id", options_from_collection_for_select(forms, :id, :name, selected: cur_form.try(:id)), include_blank: t("cms.default_form"), id: nil, class: "form-change", disabled: true) %>
     <% else %>
-      <%= f.select(:form_id, options_from_collection_for_select(forms, :id, :name, selected: cur_form.try(:id)), include_blank: t("cms.default_form")) %>
+      <%= select_tag("in_form_id", options_from_collection_for_select(forms, :id, :name, selected: cur_form.try(:id)), include_blank: t("cms.default_form"), id: nil, class: "form-change") %>
       <%= button_tag(t('ss.buttons.change'), type: :button, class: %w(btn btn-form-change)) %>
     <% end %>
 
@@ -38,6 +38,7 @@
 
       Cms_TemplateForm.userId = <%= @cur_user.id %>;
       Cms_TemplateForm.confirms.delete = <%== t("ss.confirm.delete").to_json %>;
+      Cms_TemplateForm.confirms.changeForm = <%== t("cms.confirm.change_form").to_json %>;
       Cms_TemplateForm.paths.formColumn = <%== cms_apis_form_column_new_path(id: ":formId", column_id: ":columnId", node: @cur_node.try(:id)).to_json %>;
       Cms_TemplateForm.paths.formUrlTemplate = <%== cms_apis_form_path(id: ':id', node: @cur_node.try(:id), item_id: (@item.new_record? ? nil : @item.id), item_route: @item.route).to_json %>;
       Cms_TemplateForm.render();

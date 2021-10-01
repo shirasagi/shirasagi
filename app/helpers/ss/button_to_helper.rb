@@ -21,6 +21,8 @@ module SS::ButtonToHelper
     params = html_options.delete("params")
 
     html_options["type"] ||= "button"
+    html_options["class"] = Array(html_options["class"])
+    html_options["class"] << "ss-dc-guard" unless html_options["class"].include?("ss-dc-guard")
     html_options["data"] ||= {}
     html_options["data"]["remote"] = true if remote
     html_options["data"]["ss-button-to-action"] = url

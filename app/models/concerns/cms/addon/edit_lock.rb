@@ -27,7 +27,7 @@ module Cms::Addon::EditLock
         # lock by myself
         { lock_owner_id: user.id },
         # lock is expired
-        { :lock_until.lt => Time.zone.now },
+        { :lock_until.lt => Time.zone.now.utc },
       ])
     end
     x = criteria.find_one_and_update({ '$set' => { lock_owner_id: user.id, lock_until: lock_until }}, return_document: :after)
@@ -47,7 +47,7 @@ module Cms::Addon::EditLock
         # lock by myself
         { lock_owner_id: user.id },
         # lock is expired
-        { :lock_until.lt => Time.zone.now }
+        { :lock_until.lt => Time.zone.now.utc }
       ])
     end
 

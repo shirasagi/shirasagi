@@ -45,7 +45,25 @@ class Cms::Apis::Preview::PagesController < ApplicationController
     else
       @item.state = "public"
     end
-    result = @item.save
+    if @item.state_changed? && @item.state == "public" && @item.try(:master_id).present?
+      task_name = "#{@item.collection_name}:#{@item.master_id}"
+      task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site.id, name: task_name)
+      rejected = -> { @item.errors.add :base, :other_task_is_running }
+      guard = ->(&block) do
+        task.run_with(rejected: rejected) do
+          task.log "# #{I18n.t("workflow.branch_page")} #{I18n.t("ss.buttons.publish_save")}"
+          block.call
+        end
+      end
+    else
+      # this means "no guard"
+      guard = ->(&block) { block.call }
+    end
+
+    result = nil
+    guard.call do
+      result = @item.save
+    end
 
     if !result
       render json: @item.errors.full_messages, status: :unprocessable_entity

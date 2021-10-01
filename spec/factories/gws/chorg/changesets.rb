@@ -1,15 +1,15 @@
 FactoryBot.define do
   factory :gws_add_changeset, class: Gws::Chorg::Changeset do
-    type Chorg::Model::Changeset::TYPE_ADD
+    type { Chorg::Model::Changeset::TYPE_ADD }
     destinations { [ { name: "組織変更/新設グループ_#{unique_id}" }.stringify_keys ] }
   end
 
   factory :gws_move_changeset, class: Gws::Chorg::Changeset do
     transient do
-      source nil
+      source { nil }
     end
 
-    type Chorg::Model::Changeset::TYPE_MOVE
+    type { Chorg::Model::Changeset::TYPE_MOVE }
     sources { [ { id: source.id, name: source.name }.stringify_keys ] }
     destinations do
       [ { name: "組織変更/新設グループ_#{unique_id}",
@@ -25,10 +25,10 @@ FactoryBot.define do
 
   factory :gws_move_changeset_only_name, class: Gws::Chorg::Changeset do
     transient do
-      source nil
+      source { nil }
     end
 
-    type Chorg::Model::Changeset::TYPE_MOVE
+    type { Chorg::Model::Changeset::TYPE_MOVE }
     sources { [ { id: source.id, name: source.name }.stringify_keys ] }
     destinations do
       [ { name: "組織変更/新設グループ_#{unique_id}",
@@ -44,11 +44,11 @@ FactoryBot.define do
 
   factory :gws_unify_changeset, class: Gws::Chorg::Changeset do
     transient do
-      sources nil
-      destination nil
+      sources { nil }
+      destination { nil }
     end
 
-    type Chorg::Model::Changeset::TYPE_UNIFY
+    type { Chorg::Model::Changeset::TYPE_UNIFY }
     destinations do
       [ { name: "組織変更/新設グループ_#{unique_id}",
           order: "",
@@ -72,11 +72,11 @@ FactoryBot.define do
 
   factory :gws_division_changeset, class: Gws::Chorg::Changeset do
     transient do
-      source nil
-      destinations nil
+      source { nil }
+      destinations { nil }
     end
 
-    type Chorg::Model::Changeset::TYPE_DIVISION
+    type { Chorg::Model::Changeset::TYPE_DIVISION }
     sources { [ { id: source.id, name: source.name }.stringify_keys ] }
 
     after(:build) do |entity, evaluator|
@@ -90,10 +90,10 @@ FactoryBot.define do
 
   factory :gws_delete_changeset, class: Gws::Chorg::Changeset do
     transient do
-      source nil
+      source { nil }
     end
 
-    type Chorg::Model::Changeset::TYPE_DELETE
+    type { Chorg::Model::Changeset::TYPE_DELETE }
     sources { [ { id: source.id, name: source.name }.stringify_keys ] }
   end
 end

@@ -1,0 +1,59 @@
+<%
+  filename = @cur_path.sub(@cur_site.url, "/").sub(/^\//, "")
+  @item = Cms::Page.site(@cur_site).where(filename: filename).first
+
+  filename = filename.sub(/\/index\.html$/, "")
+  @item ||= Cms::Node.site(@cur_site).where(filename: filename).first
+
+  if @item
+    @item = @item.becomes_with_route
+    @check_links_error = @item.try(:check_links_error)
+    @error_urls = @check_links_error.urls if @check_links_error
+  end
+
+  return if @error_urls.blank?
+
+  cur_dir = ::File.dirname(@cur_path)
+  cur_dir = cur_dir + "/" if !cur_dir.end_with?("/")
+
+  error_urls = @error_urls.map { |url| CGI.unescape_html(url) }
+%>
+<%= jquery do %>
+  var linkErrors = <%== error_urls.to_json %>;
+  var previewPath = "<%= cms_preview_path(path: "") %>";
+  var fullUrl = "<%= @cur_site.full_root_url.sub(/\/$/, "") %>";
+  var curDir = "<%= cur_dir %>"
+
+  if (linkErrors) {
+    $.each(linkErrors, function() {
+      var path = this;
+      var ele = $("body").find('[href="' + this + '"]');
+
+      $("html").not("#ss-preview").find('[href="' + path + '"]').each(function () {
+        $(this).addClass("ss-check-links-error");
+      });
+
+      if(path[0] = "/") {
+        // preview path
+        $("html").not("#ss-preview").find('[href="' + previewPath + path + '"]').each(function () {
+          $(this).addClass("ss-check-links-error");
+        });
+
+        // relative path
+        var relativePath = path.replace(new RegExp("^" + curDir), "");
+        $("html").not("#ss-preview").find('[href="' + relativePath + '"]').each(function () {
+          $(this).addClass("ss-check-links-error");
+        });
+
+        // full url
+        $("html").not("#ss-preview").find('[href="' + fullUrl + path + '"]').each(function () {
+          $(this).addClass("ss-check-links-error");
+        });
+      }
+    });
+    $("a.ss-check-links-error").each(function() {
+      var text = $(this).text() ? ("[<%= t("ss.broken_link") %>]" + $(this).text()) : "[<%= t("ss.broken_link") %>]";
+      $(this).text(text);
+    });
+  }
+<% end %>

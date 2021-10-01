@@ -1,17 +1,23 @@
-<table class="index branches">
-  <thead>
-    <tr>
-      <th><%= @model.t :name %></th>
-      <th class="datetime"><%= @model.t :updated %></th>
-    </tr>
-  </thead>
+<% if @item.errors.present? %>
+  <%= error_messages_for :item %>
+<% end %>
 
-  <tbody>
-    <% @items.each do |item| %>
-    <tr>
-      <td class="name"><%= link_to item.name, item.private_show_path %></td>
-      <td class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
+<% if @items.present? %>
+  <table class="index branches">
+    <thead>
+      <tr>
+        <th><%= @model.t :name %></th>
+        <th class="datetime"><%= @model.t :updated %></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @items.each do |item| %>
+      <tr>
+        <td class="name"><%= link_to item.name, item.private_show_path %></td>
+        <td class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

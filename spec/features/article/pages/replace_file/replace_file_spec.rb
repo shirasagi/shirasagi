@@ -114,7 +114,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(replaced_file.filename).to eq ::File.basename(before_csv)
         expect(replaced_file.name).to eq "replaced"
         expect(replaced_file.state).to eq "public"
-        expect(::FileUtils.cmp(replaced_file.path, after_csv)).to be true
+        expect(Fs.cmp(replaced_file.path, after_csv)).to be true
 
         # history files
         expect(replaced_file.history_files.size).to eq 1
@@ -123,7 +123,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(history_file.filename).to eq ::File.basename(before_csv)
         expect(history_file.name).to eq ::File.basename(before_csv)
         expect(history_file.state).to eq "closed"
-        expect(::FileUtils.cmp(history_file.path, before_csv)).to be true
+        expect(Fs.cmp(history_file.path, before_csv)).to be true
       end
     end
 
@@ -134,9 +134,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within 'form#item-form' do
-          select form.name, from: 'item[form_id]'
           wait_event_to_fire("ss:formActivated") do
-            find('.btn-form-change').click
+            page.accept_confirm(I18n.t("cms.confirm.change_form")) do
+              select form.name, from: 'in_form_id'
+            end
           end
         end
 
@@ -236,7 +237,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(history_file.filename).to eq "before_csv.csv"
         expect(history_file.name).to eq "before_csv.csv"
         expect(history_file.state).to eq "closed"
-        expect(::FileUtils.cmp(history_file.path, before_csv)).to be true
+        expect(Fs.cmp(history_file.path, before_csv)).to be true
       end
     end
 
@@ -247,9 +248,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within 'form#item-form' do
-          select form.name, from: 'item[form_id]'
           wait_event_to_fire("ss:formActivated") do
-            find('.btn-form-change').click
+            page.accept_confirm(I18n.t("cms.confirm.change_form")) do
+              select form.name, from: 'in_form_id'
+            end
           end
         end
 
@@ -342,7 +344,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(replaced_file.filename).to eq ::File.basename(before_csv)
         expect(replaced_file.name).to eq "replaced"
         expect(replaced_file.state).to eq "public"
-        expect(::FileUtils.cmp(replaced_file.path, after_csv)).to be true
+        expect(Fs.cmp(replaced_file.path, after_csv)).to be true
 
         # history files
         expect(replaced_file.history_files.size).to eq 1
@@ -351,7 +353,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(history_file.filename).to eq ::File.basename(before_csv)
         expect(history_file.name).to eq ::File.basename(before_csv)
         expect(history_file.state).to eq "closed"
-        expect(::FileUtils.cmp(history_file.path, before_csv)).to be true
+        expect(Fs.cmp(history_file.path, before_csv)).to be true
       end
     end
 
@@ -362,9 +364,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within 'form#item-form' do
-          select form.name, from: 'item[form_id]'
           wait_event_to_fire("ss:formActivated") do
-            find('.btn-form-change').click
+            page.accept_confirm(I18n.t("cms.confirm.change_form")) do
+              select form.name, from: 'in_form_id'
+            end
           end
         end
 
@@ -456,7 +459,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(replaced_file.filename).to eq ::File.basename(after_image)
         expect(replaced_file.name).to eq "replaced"
         expect(replaced_file.state).to eq "public"
-        #expect(::FileUtils.cmp(replaced_file.path, after_image)).to be true
+        #expect(Fs.cmp(replaced_file.path, after_image)).to be true
 
         # history files
         expect(replaced_file.history_files.size).to eq 1
@@ -465,7 +468,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(history_file.filename).to eq ::File.basename(before_image)
         expect(history_file.name).to eq ::File.basename(before_image)
         expect(history_file.state).to eq "closed"
-        #expect(::FileUtils.cmp(history_file.path, before_csv)).to be true
+        #expect(Fs.cmp(history_file.path, before_csv)).to be true
       end
     end
   end

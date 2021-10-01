@@ -161,10 +161,10 @@ class Gws::Discussion::TopicsController < ApplicationController
     if result
       @item = @comment
       @comment.save_notify_message(@cur_site, @cur_user)
-      render_create true, location: { action: :index }, render: { file: :index }
+      render_create true, location: { action: :index }, render: { template: "index" }
     else
       @item = @topic
-      render_create false, location: { action: :index }, render: { file: :index }
+      render_create false, location: { action: :index }, render: { template: "index" }
     end
   end
 
@@ -181,9 +181,9 @@ class Gws::Discussion::TopicsController < ApplicationController
     if @item.valid?
       item = @item.save_clone(@topic)
       item.attributes = get_params
-      render_create true, location: { action: :index }, render: { file: :copy }
+      render_create true, location: { action: :index }, render: { template: "copy" }
     else
-      render_create false, location: { action: :index }, render: { file: :copy }
+      render_create false, location: { action: :index }, render: { template: "copy" }
     end
   end
 end

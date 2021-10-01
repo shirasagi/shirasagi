@@ -62,7 +62,7 @@ module Board::Model::Post
   def update_topic_descendants_updated
     return unless topic
     return unless _id_changed?
-    topic.set descendants_updated: updated
+    topic.set(descendants_updated: updated.utc)
   end
 
   def validate_children

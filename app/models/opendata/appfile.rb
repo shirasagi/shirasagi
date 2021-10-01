@@ -89,6 +89,7 @@ class Opendata::Appfile
       end
       clone_file.owner_item = _parent
       clone_file.save(validate: false)
+      clone_file.sanitizer_copy_file
       self.file = clone_file
     end
 

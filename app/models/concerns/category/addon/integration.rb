@@ -103,7 +103,9 @@ module Category::Addon
 
       # rename filenames
       %w(nodes pages parts layouts).each do |name|
-        send(name).where(filename: /^#{::Regexp.escape(src_filename)}\//).each do |item|
+        partial.send(name).each do |item|
+          next unless item.filename.start_with?(src_filename)
+
           dst = item.filename.sub(/^#{::Regexp.escape(src_filename)}\//, "#{dst_filename}/")
           item.set(
             filename: dst,

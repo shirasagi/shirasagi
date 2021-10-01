@@ -20,14 +20,13 @@ class SS::Nginx::Config
   end
 
   def reload_server
-    if @written
-      `nginx -s reload`
-    end
+    reload_server! if @written
     self
   end
 
   def reload_server!
-    `nginx -s reload`
+    response = system('sudo nginx -s reload') || system('nginx -s reload')
+    Rails.logger.error 'Failed to reload nginx' unless response
     self
   end
 

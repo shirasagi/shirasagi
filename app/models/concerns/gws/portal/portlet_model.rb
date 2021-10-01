@@ -79,10 +79,10 @@ module Gws::Portal::PortletModel
     PORTLETS[portlet_model.to_sym].slice(:size_x, :size_y)
   end
 
-  def view_file
+  def view_template
     return nil unless PORTLETS.key?(portlet_model.to_sym)
 
-    "gws/portal/portlets/#{portlet_model}/index.html.erb"
+    "gws/portal/portlets/#{portlet_model}/index"
   end
 
   def portlet_id_class

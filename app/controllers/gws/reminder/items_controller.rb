@@ -34,7 +34,7 @@ class Gws::Reminder::ItemsController < ApplicationController
   def redirect
     set_item
     raise "404" if @item.user_id != @cur_user.id
-    @item.set(read_at: Time.zone.now)
+    @item.set(read_at: Time.zone.now.utc)
 
     redirect_url = @item.url
     if redirect_url

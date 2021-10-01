@@ -58,13 +58,14 @@ class Board::PostsController < ApplicationController
   def reply
     @item = @model.new get_params
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
-    render_create @item.save, location: { action: :index }, render: { file: :new_reply }
+    render_create @item.save, location: { action: :index }, render: { template: "new_reply" }
   end
 
   def download
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
-    csv = @model.site(@cur_site).node(@cur_node).allow(:read, @cur_user, site: @cur_site, node: @cur_node).order(updated: -1).to_csv
+    criteria = @model.site(@cur_site).node(@cur_node).allow(:read, @cur_user, site: @cur_site, node: @cur_node)
+    csv = criteria.order(updated: -1).to_csv
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "board_posts_#{Time.zone.now.to_i}.csv"
   end
 end

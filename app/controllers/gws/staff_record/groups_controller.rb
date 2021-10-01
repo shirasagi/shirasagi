@@ -39,6 +39,6 @@ class Gws::StaffRecord::GroupsController < ApplicationController
     @item = @model.new(get_params)
     result = @item.import_csv
     flash.now[:notice] = t("ss.notice.saved") if result
-    render_create result, location: { action: :index }, render: { file: :import }
+    render_create result, location: { action: :index }, render: { template: "import" }
   end
 end

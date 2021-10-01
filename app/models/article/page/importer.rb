@@ -34,13 +34,11 @@ class Article::Page::Importer
   def import_csv(file)
     i = 0
     self.class.each_csv(file) do |row|
-      begin
-        i += 1
-        item = update_row(row)
-        put_log("update #{i + 1}: #{item.name}") if item.present?
-      rescue => e
-        put_log("error  #{i + 1}: #{e}")
-      end
+      i += 1
+      item = update_row(row)
+      put_log("update #{i + 1}: #{item.name}") if item.present?
+    rescue => e
+      put_log("error  #{i + 1}: #{e}")
     end
   end
 
@@ -191,6 +189,10 @@ class Article::Page::Importer
   end
 
   def define_importer_released(importer)
+    importer.simple_column :released_type do |row, item, head, value|
+      released_type = from_label(value, item.released_type_options)
+      item.released_type = released_type.presence
+    end
     importer.simple_column :released
     importer.simple_column :release_date
     importer.simple_column :close_date
