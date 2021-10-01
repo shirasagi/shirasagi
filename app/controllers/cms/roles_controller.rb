@@ -30,7 +30,7 @@ class Cms::RolesController < ApplicationController
 
   def download
     csv = @model.to_csv(@cur_site).encode("SJIS", invalid: :replace, undef: :replace)
-    filename = @model.to_s.tableize.gsub(/\//, "_")
+    filename = @model.to_s.tableize.tr("/", "_")
     send_data csv, filename: "#{filename}_#{Time.zone.now.to_i}.csv"
   end
 
