@@ -19,8 +19,8 @@ class Sys::HistoryArchiveJob < SS::ApplicationJob
   end
 
   def select_histories_to_archive(now = Time.zone.now)
-    save_term = SS.config.ss.history_log_saving_days
-    History::Log.lt(created:threshold_day(now, save_term))
+    save_term = SS.config.ss.history_log_saving_days.days
+    History::Log.lt(created: threshold_day(now, save_term))
   end
 
   def threshold_day(now, save_term)
