@@ -37,13 +37,17 @@ describe 'article_pages_with_upload_policy', type: :feature, dbscope: :example, 
           fill_in "item[column_values][][in_wrap][value]", with: column1_value
           within first(".column-value-cms-column-fileupload") do
             fill_in "item[column_values][][in_wrap][file_label]", with: unique_id
-            click_on I18n.t("ss.links.upload")
+            wait_cbox_open do
+              click_on I18n.t("ss.links.upload")
+            end
           end
         end
 
         wait_for_cbox do
           attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/logo.png"
-          click_on I18n.t('ss.buttons.attach')
+          wait_cbox_close do
+            click_on I18n.t('ss.buttons.attach')
+          end
         end
 
         within 'form#item-form' do
@@ -74,6 +78,7 @@ describe 'article_pages_with_upload_policy', type: :feature, dbscope: :example, 
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
         click_on copy_name
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         expect(page).to have_css('#selected-files .sanitizer-wait')
       end
