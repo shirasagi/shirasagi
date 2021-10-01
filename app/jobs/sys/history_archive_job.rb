@@ -55,7 +55,7 @@ class Sys::HistoryArchiveJob < SS::ApplicationJob
   def register_archives
     @sys_archiver.register_archives if @sys_archiver
     if @cms_archiver
-      @cms_archiver.each { |_k, archiver| archiver.register_archives(_k) }
+      @cms_archiver.each { |k, archiver| archiver.register_archives(k) }
     end
   end
 
@@ -63,14 +63,14 @@ class Sys::HistoryArchiveJob < SS::ApplicationJob
     @sys_archiver.create_archives if @sys_archiver
 
     if @cms_archiver
-      @cms_archiver.each { |_k, archiver| archiver.create_archives }
+      @cms_archiver.each { |k, archiver| archiver.create_archives }
     end
   end
 
   def finalize_workdir
     @sys_archiver.finalize_workdir if @sys_archiver
     if @cms_archiver
-      @cms_archiver.each { |_k, archiver| archiver.finalize_workdir }
+      @cms_archiver.each { |k, archiver| archiver.finalize_workdir }
     end
   end
 
@@ -121,23 +121,27 @@ class Sys::HistoryArchiveJob < SS::ApplicationJob
       )
     end
 
+    def write_to_diff_file(file)
+      @last_open_file_handle.close if @last_open_file_handle
+
+      dirname = ::File.dirname(file)
+      ::FileUtils.mkdir_p(dirname) if !::Dir.exist?(dirname)
+
+      @last_open_file = file
+      @last_open_file_handle = ::File.open(file, 'a')
+      @last_open_file_handle.binmode
+      @last_open_file_handle.sync = true
+
+      if ::File.size(file) == 0
+        @last_open_file_handle.write(@csv_generator.csv_headers.to_csv.encode('SJIS', invalid: :replace, undef: :replace))
+      end
+    end
+
     def append_file(file, history)
       @csv_generator ||= Sys::HistoryCsv.new
 
       if @last_open_file != file
-        @last_open_file_handle.close if @last_open_file_handle
-
-        dirname = ::File.dirname(file)
-        ::FileUtils.mkdir_p(dirname) if !::Dir.exist?(dirname)
-
-        @last_open_file = file
-        @last_open_file_handle = ::File.open(file, 'a')
-        @last_open_file_handle.binmode
-        @last_open_file_handle.sync = true
-
-        if ::File.size(file) == 0
-          @last_open_file_handle.write(@csv_generator.csv_headers.to_csv.encode('SJIS', invalid: :replace, undef: :replace))
-        end
+        write_to_diff_file(file)
       end
 
       @last_open_file_handle.write(@csv_generator.to_csv(history).encode('SJIS', invalid: :replace, undef: :replace))
@@ -176,9 +180,13 @@ class Sys::HistoryArchiveJob < SS::ApplicationJob
 
     def create_empty_archive_file(name, filename, site_id, &block)
       if site_id
-        Cms::HistoryArchiveFile.create_empty!(site_id: site_id, name: name, filename: filename, content_type: 'application/zip', &block)
+        Cms::HistoryArchiveFile.create_empty!(
+          site_id: site_id, name: name, filename: filename, content_type: 'application/zip', &block
+        )
       else
-        Sys::HistoryArchiveFile.create_empty!(site_id: nil, name: name, filename: filename, content_type: 'application/zip', &block)
+        Sys::HistoryArchiveFile.create_empty!(
+          site_id: nil, name: name, filename: filename, content_type: 'application/zip', &block
+        )
       end
     end
 
