@@ -17,7 +17,7 @@ class Event::PagesController < ApplicationController
   end
 
   def change_node_type
-    @cur_node = @cur_node.becomes_with_route if @cur_node.class == Cms::Node
+    @cur_node = @cur_node.becomes_with_route if @cur_node.instance_of?(Cms::Node)
   end
 
   def set_task

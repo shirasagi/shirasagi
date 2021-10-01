@@ -35,7 +35,7 @@ class Article::PagesController < ApplicationController
 
     form = nil
     if csv_params[:form_id].present?
-      @cur_node = @cur_node.becomes_with_route if @cur_node.class == Cms::Node
+      @cur_node = @cur_node.becomes_with_route if @cur_node.instance_of?(Cms::Node)
       if @cur_node.respond_to?(:st_forms)
         form = @cur_node.st_forms.where(id: csv_params.delete(:form_id)).first
         csv_params[:form] = form
