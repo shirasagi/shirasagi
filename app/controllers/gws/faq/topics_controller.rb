@@ -56,7 +56,7 @@ class Gws::Faq::TopicsController < ApplicationController
 
   def show
     raise '403' unless readable?
-    render file: "show_#{@item.mode}"
+    render template: "show_#{@item.mode}"
   end
 
   def read
@@ -77,7 +77,7 @@ class Gws::Faq::TopicsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { render({ file: :edit }) }
+        format.html { render(template: "edit") }
         format.json { render(json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type) }
       end
     end

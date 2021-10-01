@@ -4,7 +4,7 @@
 <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
 
 <div class="addon-views">
-  <%= render file: "_column_form", locals: { f: f } %>
+  <%= render template: "_column_form", locals: { f: f } %>
 </div>
 
 <footer class="send">

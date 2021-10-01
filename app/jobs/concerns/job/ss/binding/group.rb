@@ -10,7 +10,7 @@ module Job::SS::Binding::Group
 
   def group
     return nil if group_id.blank?
-    @group ||= self.class.group_class.or({ id: group_id }, { name: group_id }).first
+    @group ||= self.class.group_class.where("$or" => [{ id: group_id }, { name: group_id }]).first
   end
 
   def bind(bindings)

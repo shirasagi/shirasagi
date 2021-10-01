@@ -69,7 +69,8 @@ class Gws::Attendance::TimeCard
         item.save!
       end
       true
-    rescue
+    rescue => e
+      Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       false
     end
 
@@ -80,7 +81,8 @@ class Gws::Attendance::TimeCard
         item.save!
       end
       true
-    rescue
+    rescue => e
+      Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       false
     end
 

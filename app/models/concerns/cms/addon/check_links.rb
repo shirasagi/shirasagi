@@ -3,11 +3,22 @@ module Cms::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
-    included do
-      field :check_links_errors, type: Array
-      field :check_links_errors_updated, type: DateTime
+    def latest_check_links_report
+      @_latest_check_links_report ||= Cms::CheckLinks::Report.site(site).first
+    end
 
-      scope :has_check_links_errors, ->{ where(:check_links_errors.exists => true) }
+    def check_links_error
+      return if latest_check_links_report.nil?
+      return if @_check_links_error == false
+
+      if self.class.include?(Cms::Model::Page)
+        @_check_links_error = Cms::CheckLinks::Error::Page.where(report_id: latest_check_links_report.id, page_id: id).first
+      elsif self.class.include?(Cms::Model::Node)
+        @_check_links_error = Cms::CheckLinks::Error::Node.where(report_id: latest_check_links_report.id, node_id: id).first
+      else
+        @_check_links_error = false
+        nil
+      end
     end
   end
 end

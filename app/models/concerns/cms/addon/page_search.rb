@@ -411,13 +411,8 @@ module Cms::Addon
     end
 
     def enum_csv
-      Enumerator.new do |y|
-        y << encode_sjis(headers.to_csv)
-        search.each do |content|
-          content.site ||= @cur_site
-          y << encode_sjis(row(content).to_csv)
-        end
-      end
+      exporter = Cms::PageExporter.new(site: @cur_site, criteria: search)
+      exporter.enum_csv(encoding: "Shift_JIS")
     end
 
     private
@@ -425,87 +420,6 @@ module Cms::Addon
     def normalize_search_routes
       return if search_routes.blank?
       self.search_routes = search_routes.dup.select(&:present?)
-    end
-
-    def encode_sjis(str)
-      str.encode("SJIS", invalid: :replace, undef: :replace)
-    end
-
-    def category_name_tree(item)
-      item.categories.map do |ct|
-        Cms::Node.site(ct.site).in_path(ct.filename).reorder(depth: 1).pluck(:name).join("/")
-      end
-    end
-
-    def headers
-      %w(
-        filename name index_name layout body_layout_id order
-        keywords description summary_html
-        html body_part
-        categories
-        event_name event_dates
-        related_pages
-        parent_crumb
-        contact_state contact_group contact_charge contact_tel contact_fax contact_email contact_link_url contact_link_name
-        released release_date close_date
-        groups permission_level
-        state
-      ).map { |e| Cms::Page.t e }
-    end
-
-    def row(item)
-      [
-        # basic
-        item.basename,
-        item.name,
-        item.index_name,
-        Cms::Layout.where(id: item.layout_id).pluck(:name).first,
-        Cms::BodyLayout.where(id: item.body_layout_id).pluck(:name).first,
-        item.order,
-
-        # meta
-        item.keywords,
-        item.description,
-        item.summary_html,
-
-        item.html,
-        item.body_parts.map{ |body| body.gsub("\t", '    ') }.join("\t"),
-
-        # category
-        category_name_tree(item).join("\n"),
-
-        # event
-        item.event_name,
-        item.event_dates,
-
-        # related pages
-        item.related_pages.pluck(:filename).join("\n"),
-
-        # crumb
-        item.parent_crumb_urls,
-
-        # contact
-        item.label(:contact_state),
-        item.contact_group.try(:name),
-        item.contact_charge,
-        item.contact_tel,
-        item.contact_fax,
-        item.contact_email,
-        item.contact_link_url,
-        item.contact_link_name,
-
-        # released
-        item.released.try(:strftime, "%Y/%m/%d %H:%M"),
-        item.release_date.try(:strftime, "%Y/%m/%d %H:%M"),
-        item.close_date.try(:strftime, "%Y/%m/%d %H:%M"),
-
-        # groups
-        item.groups.pluck(:name).join("\n"),
-        item.permission_level,
-
-        # state
-        item.label(:state)
-      ]
     end
   end
 end

@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :cms_theme_template, class: Cms::ThemeTemplate do
     transient do
-      site nil
+      site { nil }
     end
 
     cur_site { site || cms_site }

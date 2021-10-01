@@ -11,9 +11,9 @@
       <td><%= gws_public_user_long_name(member.long_name) %></td>
       <td>
         <% if member == @cur_user || @item.allowed_for_managers?(:edit, @cur_user, site: @cur_site) %>
-          <%= render file: 'gws/agents/addons/schedule/attendance/_edit_attendance', locals: { member: member } %>
+          <%= render 'gws/agents/addons/schedule/attendance/edit_attendance', member: member %>
         <% else %>
-          <%= render file: 'gws/agents/addons/schedule/attendance/_show_attendance', locals: { member: member } %>
+          <%= render 'gws/agents/addons/schedule/attendance/show_attendance', member: member %>
         <% end %>
       </td>
     </tr>

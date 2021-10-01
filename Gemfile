@@ -1,11 +1,13 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 5.2.0'
+git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
+
+gem 'rails', '~> 6.0.0'
 gem 'sprockets', '< 4.0'
 gem 'sass'
 gem 'sassc-rails'
 gem 'uglifier'
-gem 'coffee-rails'
+# gem 'coffee-rails'
 gem 'mini_racer'
 gem 'jbuilder'
 gem 'sdoc', group: :doc
@@ -15,10 +17,9 @@ gem 'unicorn'
 gem 'unicorn-worker-killer'
 
 # Database
-gem 'mongoid', git: 'https://github.com/mongodb/mongoid.git' #'~> 7.1.0'
-gem 'mongo_session_store', git: 'https://github.com/mongoid/mongo_session_store.git'
-gem 'mongoid-rspec', git: 'https://github.com/mongoid/mongoid-rspec.git'
-gem 'mongoid-grid_fs', git: 'https://github.com/mongoid/mongoid-grid_fs.git'
+gem 'mongoid', github: 'shirasagi/mongoid', branch: '7.3-stable-MONGOID-5183'
+gem 'mongo_session_store'
+gem 'mongoid-grid_fs'
 
 # Assets
 gem 'autosize-rails'
@@ -63,7 +64,7 @@ gem 'retriable'
 gem 'romaji'
 gem 'roo'
 #gem 'roo-xls', git: "https://github.com/roo-rb/roo-xls.git"
-gem 'rubyzip'
+gem 'rubyzip', '~> 2.3.0'
 gem 'thinreports'
 gem 'ungarbled'
 
@@ -104,6 +105,7 @@ gem 'elasticsearch'
 gem 'line-bot-api'
 
 group :development, :test do
+  gem 'brakeman', require: false
   gem 'dotenv-rails'
   gem 'capybara', require: false
   gem 'debase', require: false
@@ -113,6 +115,7 @@ group :development, :test do
   gem 'guard-rspec', '~> 4.3.1', require: false
   gem 'guard-rubocop', require: false
   gem 'guard-scss_lint', require: false
+  gem 'mongoid-rspec', require: false
   gem 'pry-byebug', require: false
   gem 'pry-doc', require: false
   gem 'pry-rails', require: false
@@ -122,8 +125,9 @@ group :development, :test do
   gem 'rspec-collection_matchers', require: false
   gem 'rspec-its', require: false
   gem 'rspec-rails', require: false
-  gem 'rubocop', require: false
+  gem 'rubocop', '0.71.0', require: false
   gem 'rubocop-performance', require: false
+  gem 'rubocop-rspec', require: false
   gem 'ruby-debug-ide', require: false
   gem 'scss_lint', require: false
   gem 'selenium-webdriver', require: false
@@ -138,7 +142,6 @@ group :development, :test do
 end
 
 group :development do
-  gem 'brakeman', require: false
   gem 'guard-brakeman', require: false
   gem 'terminal-notifier-guard', require: false
   gem 'yard', require: false

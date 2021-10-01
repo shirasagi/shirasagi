@@ -99,8 +99,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
     dates = dates.map { |m| m.mongoize }
     node_category_ids = @cur_node.st_categories.pluck(:id)
     events(dates).each do |page|
-      page.event_dates.split(/\R/).each do |date|
-        d = Date.parse(date)
+      page.event_dates.each do |d|
         next unless @events[d]
         @events[d] << [
           page,

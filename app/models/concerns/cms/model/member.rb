@@ -63,7 +63,7 @@ module Cms::Model::Member
     after_save :send_notify_mail, if: ->{ oauth_type.blank? }
     after_save :send_verification_mail, if: ->{ oauth_type.blank? }
 
-    scope :and_enabled, -> { self.or({ state: 'enabled' }, { state: nil }) }
+    scope :and_enabled, -> { self.where("$or" => [{ state: 'enabled' }, { state: nil }]) }
     scope :and_temporary, -> { where(state: 'temporary') }
     scope :and_verification_token, ->(token) do
       email = SS::Crypt.decrypt(token) rescue nil

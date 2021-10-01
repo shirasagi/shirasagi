@@ -92,7 +92,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           expect(mail.body.raw_source).to include(url)
 
           if target != 'dl.see.bcc'
-            expect(mail.body.raw_source).to include(recipient.name + "\n")
+            expect(mail.body.raw_source).to include(recipient.name + "\r\n")
           end
           expect(mail.message_id).to end_with("@#{SS.config.gws.canonical_domain}.mail")
         end

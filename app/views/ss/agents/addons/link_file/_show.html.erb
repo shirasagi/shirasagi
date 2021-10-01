@@ -7,7 +7,11 @@
       <table class="index">
         <tbody>
           <% @item.files.each do |file| %>
-            <%= render "ss/agents/addons/link_file/file_view", file_id: file.id, file_humanized_name: file.humanized_name, file_url: file.url, file_thumb_url: file.thumb_url, file_is_image: file.image?, file_extname: file.extname, file_link_url: file.link_url, file_sanitizer_status: sanitizer_status(file) %>
+            <%= render "ss/agents/addons/link_file/file_view",
+              file_id: file.id, file_humanized_name: file.humanized_name,
+              file_url: file.url, file_thumb_url: file.thumb_url, file_link_url: file.link_url,
+              file_is_image: file.image?, file_extname: file.extname,
+              file_sanitizer_status: sanitizer_status(file) %>
           <% end %>
         </tbody>
       </table>

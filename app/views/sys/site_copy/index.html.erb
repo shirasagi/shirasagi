@@ -5,9 +5,9 @@
 
 <div class="addon-views">
   <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t('ss.basic_info'), toggle: true, display_body: @item.running? || @item.state == 'ready' ? "hide" : "show" } do %>
-    <%= render file: '_form', locals: { f: f } %>
+    <%= render template: '_form', locals: { f: f } %>
   <% end %>
-  <%= render file: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
+  <%= render template: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
 
   <%= render "ss/crud/addon", addon: { id: "task-form", head: t('sys.site_copy/task_status'), toggle: true, display_body: @item.running? || @item.state == 'ready' ? "show" : "hide" } do %>
     <%= render partial: 'task' %>

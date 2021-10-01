@@ -35,7 +35,7 @@ module Gws::Portal::PortalFilter
 
   def show_portal
     if @portal.blank?
-      render file: "gws/portal/common/portal/no_portals"
+      render template: "gws/portal/common/portal/no_portals"
       return
     end
 
@@ -84,7 +84,7 @@ module Gws::Portal::PortalFilter
         readable(@cur_user, site: @cur_site).to_a
     end
 
-    render file: "gws/portal/common/portal/show"
+    render template: "gws/portal/common/portal/show"
   end
 
   def show_setting
@@ -93,7 +93,7 @@ module Gws::Portal::PortalFilter
 
   def show_layout
     @items = @portal.portlets
-    render file: 'gws/portal/common/layouts/show'
+    render template: 'gws/portal/common/layouts/show'
   end
 
   def update_layout

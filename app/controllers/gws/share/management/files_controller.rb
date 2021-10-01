@@ -194,7 +194,7 @@ class Gws::Share::Management::FilesController < ApplicationController
 
   def render_destroy(result, opts = {})
     location = opts[:location].presence || crud_redirect_url || { action: :index }
-    render_opts = opts[:render].presence || { file: :delete }
+    render_opts = opts[:render].presence || { template: "delete" }
     if params[:action] == "active"
       notice = opts[:notice].presence || t("ss.notice.restored")
     elsif params[:action] == "destroy"

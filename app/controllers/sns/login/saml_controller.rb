@@ -82,6 +82,7 @@ class Sns::Login::SamlController < ApplicationController
     response.settings = settings
 
     if !response.is_valid?
+      Rails.logger.warn("Failed to validate SAMLResponse:\n  #{response.errors.join("\n  ")}") rescue nil
       render_login nil, nil, alert: response.status_message.presence
       return
     end

@@ -63,7 +63,7 @@ module Member::AjaxFileFilter
 
   def select
     set_item
-    render file: :select, layout: !request.xhr?
+    render template: "select", layout: !request.xhr?
   end
 
   def selected_files
@@ -71,7 +71,7 @@ module Member::AjaxFileFilter
     @items = @items.
       in(id: @select_ids).
       order_by(filename: 1)
-    render file: :index
+    render template: "index"
   end
 
   def show

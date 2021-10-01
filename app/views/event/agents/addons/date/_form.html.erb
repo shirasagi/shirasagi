@@ -23,7 +23,7 @@
     <%= button_tag t("event.add_date"), { type: :button, class: "add-date btn" } %>
     <%= link_to t("event.add_repeat_dates"), event_apis_repeat_dates_path, class: "ajax-box btn" %>
   </dd>
-  <dd style="display: none;"><%= f.text_area :event_dates, class: "event-dates btn" %></dd>
+  <dd style="display: none;"><%= f.text_area :event_dates, value: @item.event_dates.try { |dates| dates.map { |d| d.strftime("%Y/%m/%d") }.join("\n") }, class: "event-dates btn" %></dd>
 
   <dt><%= @model.t :event_deadline %><%= @model.tt :event_deadline %></dt>
   <dd><%= f.text_field :event_deadline, class: "datetime js-datetime", value: tryb { @item.event_deadline.strftime("%Y/%m/%d %H:%M") } %></dd>

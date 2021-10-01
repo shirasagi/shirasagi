@@ -2,12 +2,15 @@
   <dt><%= @model.t :state %></dt>
   <dd><%= @item.label :state %></dd>
 
-  <dt><%= @model.t :released %></dt>
-    <dd>
-    <% if !@item.respond_to?(:released_type) || @item.released_type == "fixed" %>
-      <%= tryb { I18n.l(@item.released, format: :long) } %>
-    <% else %>
-      <%= @item.date.try { |time| "(" + I18n.l(time, format: :long) + ")" } %>
-    <% end %>
-  </dd>
+  <% if @item.respond_to?(:released) %>
+    <dt><%= @model.t :released %></dt>
+      <dd>
+      <% if !@item.respond_to?(:released_type) || @item.released_type == "fixed" %>
+        <%= @item.released.try { |time| content_tag(:time, I18n.l(time, format: :long), datetime: time.iso8601) } %>
+      <% else %>
+        <%= @item.label :released_type %>
+        <%= @item.released.try { |time| content_tag(:time, "(" + I18n.l(time, format: :long) + ")", datetime: time.iso8601) } %>
+      <% end %>
+    </dd>
+  <% end %>
 </dl>

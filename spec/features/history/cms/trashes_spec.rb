@@ -80,7 +80,10 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
           click_button I18n.t('ss.links.delete')
         end
       end
-      wait_for_notice I18n.t('ss.notice.deleted')
+
+      expect(page).to have_content I18n.t('ss.confirm.target_to_delete')
+      click_button I18n.t('ss.buttons.delete')
+
       expect(current_path).to eq index_path
       expect(page).to have_no_css('a.title', text: page_item.name)
       expect(page).to have_no_css('a.title', text: file.name)
@@ -121,6 +124,20 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       wait_for_notice I18n.t('ss.notice.restored')
       expect(current_path).to eq index_path
       expect(page).to have_no_css('a.title', text: page_item.name)
+
+      expect(Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        expect(log.class_name).to eq "History::Trash::RestoreJob"
+        expect(log.args.first).to eq trashes[0].id.to_s
+      end
+
+      expect(SS::Task.count).to eq 1
+      SS::Task.first.tap do |task|
+        expect(task.name).to eq "cms_pages:#{page_item.id}"
+        expect(task.state).to eq "completed"
+      end
 
       expect { page_item.reload }.not_to raise_error
       expect(page_item.files.count).to eq 1
@@ -165,6 +182,20 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       wait_for_notice I18n.t('ss.notice.restored')
       expect(current_path).to eq index_path
       expect(page).to have_no_css('a.title', text: file.name)
+
+      expect(Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        expect(log.class_name).to eq "History::Trash::RestoreJob"
+        expect(log.args.first).to eq trashes[1].id.to_s
+      end
+
+      expect(SS::Task.count).to eq 1
+      SS::Task.first.tap do |task|
+        expect(task.name).to eq "ss_files:#{file.id}"
+        expect(task.state).to eq "completed"
+      end
 
       expect { file.reload }.to raise_error Mongoid::Errors::DocumentNotFound
 
@@ -328,6 +359,67 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css(".create-branch", text: I18n.t("workflow.create_branch"))
           expect(page).to have_no_content(page_item.name)
         end
+      end
+    end
+  end
+
+  context "duplicated restore protection" do
+    before { login_cms_user }
+
+    context "task is already running" do
+      let(:task) { SS::Task.create(site_id: site.id, name: "cms_pages:#{page_item.id}") }
+
+      before do
+        expect(task.start).to be_truthy
+      end
+
+      it do
+        # move page to trash
+        visit page_path
+        click_link I18n.t('ss.links.delete')
+        click_button I18n.t('ss.buttons.delete')
+        wait_for_notice I18n.t('ss.notice.deleted')
+
+        expect(History::Trash.all.count).to eq 2
+
+        # restore it
+        visit index_path
+        click_link page_item.name
+        click_link I18n.t('ss.buttons.restore')
+        click_button I18n.t('ss.buttons.restore')
+
+        expect(page).to have_css(".errorExplanation", text: I18n.t('errors.messages.other_task_is_running'))
+      end
+    end
+
+    context "other job that user executed is on the schedule" do
+      before do
+        args = []
+        Job::Task.create!(
+          user_id: cms_user.id, name: SecureRandom.uuid, class_name: "History::Trash::RestoreJob", app_type: "cms",
+          pool: "default", args: args, active_job: {
+            "job_class" => "History::Trash::RestoreJob", "job_id" => SecureRandom.uuid, "provider_job_id" => nil,
+            "queue_name" => "default", "priority" => nil, "arguments" => args
+          }
+        )
+      end
+
+      it do
+        # move page to trash
+        visit page_path
+        click_link I18n.t('ss.links.delete')
+        click_button I18n.t('ss.buttons.delete')
+        wait_for_notice I18n.t('ss.notice.deleted')
+
+        expect(History::Trash.all.count).to eq 2
+
+        # restore it
+        visit index_path
+        click_link page_item.name
+        click_link I18n.t('ss.buttons.restore')
+        click_button I18n.t('ss.buttons.restore')
+
+        expect(page).to have_css(".errorExplanation", text: I18n.t('errors.messages.other_task_is_running'))
       end
     end
   end

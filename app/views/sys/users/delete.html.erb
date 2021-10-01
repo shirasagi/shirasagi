@@ -5,14 +5,14 @@
   <div class="addon-view" id="addon-basic">
     <div class="addon-head"><h2><%= t("ss.confirm.delete") %></h2></div>
     <div class="addon-body">
-      <%= render file: "_delete" %>
+      <%= render template: "_delete" %>
     </div>
   </div>
 </div>
 
 <% if !@item.deletion_locked? %>
 <footer class="send">
-  <%= f.submit t("ss.buttons.delete"), class: 'btn-danger delete' %>
+  <%= f.submit t("ss.buttons.delete"), class: 'btn-danger delete', data: { disable_with: t("ss.buttons.deleting") } %>
   <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
 </footer>
 <% end %>

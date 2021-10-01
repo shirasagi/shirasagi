@@ -2,9 +2,9 @@
 
 <div class="addon-views">
   <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t("ss.basic_info"), toggle: true, display_body: "hide" } do %>
-    <%= render file: "_show" %>
+    <%= render template: "_show" %>
   <% end %>
-  <%= render file: "_addons_show", locals: { addons: addons, display_body: "hide" } if addons.size > 0 %>
+  <%= render template: "_addons_show", locals: { addons: addons, display_body: "hide" } if addons.size > 0 %>
 </div>
 
-<%= render file: "cms/page_search_contents/show" %>
+<%= render template: "cms/page_search_contents/show" %>

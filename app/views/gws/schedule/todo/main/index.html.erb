@@ -37,15 +37,15 @@
     <%= render "gws/schedule/todo/main/tabs" %>
     <% case @s.grouping %>
     <% when "category" %>
-      <%= render file: "gws/schedule/todo/main/index_category" %>
+      <%= render template: "gws/schedule/todo/main/index_category" %>
     <% when "user" %>
-      <%= render file: "gws/schedule/todo/main/index_user" %>
+      <%= render template: "gws/schedule/todo/main/index_user" %>
     <% when "end_at" %>
-      <%= render file: "gws/schedule/todo/main/index_end_at" %>
+      <%= render template: "gws/schedule/todo/main/index_end_at" %>
     <% when "discussion_forum" %>
-      <%= render file: "gws/schedule/todo/main/index_discussion_forum" %>
+      <%= render template: "gws/schedule/todo/main/index_discussion_forum" %>
     <% else %>
-      <%= render file: "gws/schedule/todo/main/index_default" %>
+      <%= render template: "gws/schedule/todo/main/index_default" %>
     <% end %>
   </div>
 </div>

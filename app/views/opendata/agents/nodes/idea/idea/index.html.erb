@@ -41,7 +41,7 @@
 
 <article class="areas nodes">
   <header><h1><%= I18n.t("opendata.labels.area") %></h1></header>
-  <%= render file: "opendata/agents/nodes/idea/idea/areas" %>
+  <%= render template: "opendata/agents/nodes/idea/idea/areas" %>
   <% if @areas_popped %>
   <nav><%= link_to t('ss.links.more'), "#{@node_url}areas/", class: "more" %></nav>
   <% end %>
@@ -49,7 +49,7 @@
 
 <article class="tags nodes">
   <header><h1><%= I18n.t("opendata.labels.tag") %></h1></header>
-  <%= render file: "opendata/agents/nodes/idea/idea/tags" %>
+  <%= render template: "opendata/agents/nodes/idea/idea/tags" %>
   <% if @tags.popped? %>
   <nav><%= link_to t('ss.links.more'), "#{@node_url}tags/", class: "more" %></nav>
   <% end %>

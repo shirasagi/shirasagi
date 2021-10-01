@@ -20,7 +20,7 @@
         <% end %>
       <% end %>
     <% end %>
-  <% elsif params[:action] =~ /new|create|lock/ %>
+  <% elsif params[:action] =~ /new|create|lock|destroy_all/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /edit|update|delete|move|publish|depublish|copy/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>

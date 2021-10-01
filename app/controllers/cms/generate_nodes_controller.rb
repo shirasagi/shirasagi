@@ -30,7 +30,7 @@ class Cms::GenerateNodesController < ApplicationController
     respond_to do |format|
       format.html { render }
       format.json do
-        render file: "ss/tasks/index", content_type: json_content_type, locals: { item: @item }
+        render template: "ss/tasks/index", content_type: json_content_type, locals: { item: @item }
       end
     end
   end

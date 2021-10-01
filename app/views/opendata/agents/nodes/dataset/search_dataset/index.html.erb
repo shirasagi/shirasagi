@@ -22,7 +22,7 @@ $(".download-all").on("click", function () {
 <% if !controller.preview_path? && Fs.exists?(file) %>
   <%== Fs.read(file) %>
 <% else %>
-  <%= render file: 'opendata/agents/nodes/dataset/search_dataset/search' %>
+  <%= render template: 'opendata/agents/nodes/dataset/search_dataset/search' %>
 <% end %>
 
 <% if @items.count > 0 %>

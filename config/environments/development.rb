@@ -17,7 +17,7 @@ Rails.application.configure do
   config.action_controller.forgery_protection_origin_check = false
 
   # action view
-  config.action_view.automatically_disable_submit_tag = false
+  config.action_view.automatically_disable_submit_tag = true
   config.action_view.form_with_generates_remote_forms = false
 
   # Show full error reports.
@@ -27,6 +27,7 @@ Rails.application.configure do
   # Run rails dev:cache to toggle caching.
   if Rails.root.join('tmp', 'caching-dev.txt').exist?
     config.action_controller.perform_caching = true
+    config.action_controller.enable_fragment_cache_logging = true
 
     config.cache_store = :memory_store
     config.public_file_server.headers = {
@@ -62,7 +63,7 @@ Rails.application.configure do
   config.sass.debug_info = false
   config.sass.inline_source_maps = true
 
-  # Raises error for missing translations
+  # Raises error for missing translations.
   # config.action_view.raise_on_missing_translations = true
 
   # Use an evented file watcher to asynchronously detect changes in source code,

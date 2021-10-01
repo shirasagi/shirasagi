@@ -126,6 +126,17 @@ describe Cms::Page, type: :model, dbscope: :example do
     end
 
     context "when relative untrusted host url is given" do
+      before do
+        @save_url_type = SS.config.sns.url_type
+        SS.config.replace_value_at(:sns, :url_type, "restricted")
+        Sys::TrustedUrlValidator.send(:clear_trusted_urls)
+      end
+
+      after do
+        SS.config.replace_value_at(:sns, :url_type, @save_url_type)
+        Sys::TrustedUrlValidator.send(:clear_trusted_urls)
+      end
+
       it do
         subject.redirect_link = "//#{unique_domain}/a/b/c"
         expect(subject).to be_invalid
@@ -135,6 +146,17 @@ describe Cms::Page, type: :model, dbscope: :example do
     end
 
     context "when absolute untrusted host url is given" do
+      before do
+        @save_url_type = SS.config.sns.url_type
+        SS.config.replace_value_at(:sns, :url_type, "restricted")
+        Sys::TrustedUrlValidator.send(:clear_trusted_urls)
+      end
+
+      after do
+        SS.config.replace_value_at(:sns, :url_type, @save_url_type)
+        Sys::TrustedUrlValidator.send(:clear_trusted_urls)
+      end
+
       it do
         subject.redirect_link = "#{unique_url}/a/b/c"
         expect(subject).to be_invalid

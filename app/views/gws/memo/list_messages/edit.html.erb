@@ -15,4 +15,4 @@
   <%= f.button t('ss.buttons.cancel'), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
 <% end %>
 
-<%= render file: 'ss/crud/edit' %>
+<%= render template: 'ss/crud/edit' %>

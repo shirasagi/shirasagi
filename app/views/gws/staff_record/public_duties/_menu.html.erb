@@ -1,5 +1,5 @@
 <% if params[:action] =~ /index/ %>
-<% elsif params[:action] =~ /new|create|lock/ %>
+<% elsif params[:action] =~ /new|create|lock|destroy_all/ %>
 <% elsif params[:action] =~ /edit|update|delete|move/ %>
   <nav class="nav-menu">
     <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>

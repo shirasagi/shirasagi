@@ -1,4 +1,4 @@
-<% buf = render(file: @item.form_file, locals: { f: f }) if @item.form_file %>
+<% buf = render(@item.form_partial_path, f: f) if @item.form_partial_path %>
 <% return if buf.blank? %>
 
 <%

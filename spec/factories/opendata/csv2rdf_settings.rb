@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :opendata_csv2rdf_setting, class: Opendata::Csv2rdfSetting do
     transient do
-      resource nil
+      resource { nil }
     end
 
     cur_site { cms_site }
@@ -11,12 +11,12 @@ FactoryBot.define do
 
   factory :opendata_csv2rdf_setting_geo, class: Opendata::Csv2rdfSetting do
     transient do
-      rdf_class nil
+      rdf_class { nil }
     end
 
     class_id { rdf_class.id }
-    header_rows 1
-    header_labels [%w(場所), %w(緯度), %w(経度), %w(実行結果)]
+    header_rows { 1 }
+    header_labels { [%w(場所), %w(緯度), %w(経度), %w(実行結果)] }
     column_types do
       prefix = rdf_class.vocab.prefix
       array = []
