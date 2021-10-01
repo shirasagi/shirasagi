@@ -68,7 +68,7 @@ class Cms::SearchContents::PagesController < ApplicationController
     end
 
     if params[:download]
-      filename = @model.to_s.tableize.gsub(/\//, "_")
+      filename = @model.to_s.tableize.tr("/", "_")
       filename = "#{filename}_#{Time.zone.now.to_i}.csv"
       send_enum @item.enum_csv, type: 'text/csv; charset=Shift_JIS', filename: filename
     end
