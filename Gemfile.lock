@@ -112,8 +112,8 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    debase (0.2.4.1)
-      debase-ruby_core_source (>= 0.10.2)
+    debase (0.2.5.beta2)
+      debase-ruby_core_source (>= 0.10.12)
     debase-ruby_core_source (0.10.12)
     debug_inspector (1.1.0)
     diff-lcs (1.4.4)
@@ -689,7 +689,7 @@ DEPENDENCIES
   capybara
   clam_scan
   coffee-rails
-  debase
+  debase (= 0.2.5.beta2)
   diff-lcs
   diffy
   docker-api
