@@ -48,14 +48,18 @@
     @include display-flex(flex);
     @include align-items(center);
     width: 100%;
-    margin-top: 5px;
+    margin: 5px 0;
   }
-
   .auto-reload {
     @include flex-grow(2);
     @include display-flex(inline-flex);
     @include justify-content(flex-end);
     @include align-items(center);
+    [type=number] {
+      margin: 0 .25rem;
+      width: 6rem !important;
+      text-align: center;
+    }
   }
 }
 

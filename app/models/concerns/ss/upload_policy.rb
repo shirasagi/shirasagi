@@ -11,7 +11,7 @@ module SS::UploadPolicy
   end
 
   def sanitizer_state_options
-    %w(wait complete).map { |v| [ I18n.t("ss.options.sanitizer_state.#{v}"), v ] }
+    self.class.sanitizer_state_options
   end
 
   def sanitizer_skip
@@ -24,8 +24,9 @@ module SS::UploadPolicy
     return false if try(:original_id)
     return false if errors.present?
 
-    ::FileUtils.rm_f(sanitizer_input_path) if FileTest.exist?(sanitizer_input_path)
-    ::FileUtils.copy(path, sanitizer_input_path) if FileTest.exist?(path)
+    input_path = sanitizer_input_path
+    ::FileUtils.rm_f(input_path) if FileTest.exist?(input_path)
+    ::FileUtils.cp(path, input_path)
 
     set(sanitizer_state: 'wait') unless sanitizer_state == 'wait'
   end
@@ -55,8 +56,9 @@ module SS::UploadPolicy
     return false if @sanitizer_skip
     return false if try(:original_id)
 
-    ::FileUtils.rm_f(sanitizer_input_path) if FileTest.exist?(sanitizer_input_path)
-    ::FileUtils.copy(path, sanitizer_input_path) if FileTest.exist?(path)
+    input_path = sanitizer_input_path
+    ::FileUtils.rm_f(input_path) if FileTest.exist?(input_path)
+    ::FileUtils.cp(path, input_path)
 
     self.sanitizer_state = 'wait'
   end
@@ -66,6 +68,14 @@ module SS::UploadPolicy
   end
 
   module_function
+
+  def sanitizer_state_options
+    %w(wait complete).map { |v| [ I18n.t("ss.options.sanitizer_state.#{v}"), v ] }
+  end
+
+  def sanitizer_state_label(value)
+    I18n.t("ss.options.sanitizer_state.#{value}", default: '')
+  end
 
   def upload_policy
     default = SS.config.ss.upload_policy
@@ -81,5 +91,20 @@ module SS::UploadPolicy
     values = [[I18n.t("ss.options.upload_policy.default_#{default}"), nil]]
     values += ['sanitizer', 'restricted'].map { |v| [ I18n.t("ss.options.upload_policy.#{v}"), v ] }
     values
+  end
+
+  def sanitizer_restore(output_path)
+    filename = ::File.basename(output_path)
+    return unless filename =~ /\A\d+_\d+.*_\d+_marked/
+
+    id = filename.sub(/\A(\d+).*/, '\\1').to_i
+    file = SS::File.find(id).becomes_with_model rescue nil
+    return unless file
+
+    if !file.sanitizer_restore_file(output_path)
+      Rails.logger.error("sanitier_restore: #{file.class}##{id}: #{file.errors.full_messages.join(' ')}")
+    end
+
+    file
   end
 end

@@ -4,15 +4,21 @@ class Uploader::FilesController < ApplicationController
 
   model Uploader::File
 
-  before_action :set_format
+  prepend_before_action :set_format
   before_action :create_folder
   before_action :redirect_from_index
   before_action :set_item
+  before_action :set_item_was, if: ->{ @item }
   before_action :set_crumbs
+  after_action :save_job, only: [:create, :update, :destroy, :destroy_all]
 
   navi_view "uploader/main/navi"
 
   private
+
+  def set_format
+    request.formats = [params[:format] || :html]
+  end
 
   def set_crumbs
     filename = @item.filename.sub(@cur_node.filename, "")
@@ -23,10 +29,6 @@ class Uploader::FilesController < ApplicationController
       @crumbs << [name, url]
     end
     @crumbs.pop if params[:do].present?
-  end
-
-  def set_format
-    request.formats = [params[:format] || :html]
   end
 
   def create_folder
@@ -54,6 +56,39 @@ class Uploader::FilesController < ApplicationController
 
     @item.site = @cur_site
     @item.read if @item.text?
+    @item.set_sanitizer_state
+  end
+
+  def set_item_was
+    @path_was = @item.path
+    @text_was = @item.text if @item.text?
+  end
+
+  def save_job
+    return unless SS::UploadPolicy.upload_policy == 'sanitizer'
+    return unless response.headers['Location']
+
+    bindings = { user_id: @cur_user.id, site_id: @cur_site.id }
+    job = Uploader::FilesJob.bind(bindings)
+    action = params[:action]
+
+    if action == 'create' && @directory
+      job.perform_later([{ mkdir: ["#{@item.path}/#{@directory}"] }])
+    elsif action == 'create'
+      @items.each do |item|
+        Uploader::JobFile.upload(item.path, bindings)
+      end
+    elsif action == 'update'
+      job_params = []
+      job_params << { mv: [@path_was, @item.path] } if @path_was != @item.path
+      job_params << { text: [@item.path, @item.text] } if @text && @text_was != @item.text
+      job.perform_later(job_params) if job_params.present?
+      Uploader::JobFile.upload(@item.path, bindings) if @file
+    elsif action == 'destroy'
+      paths = [@path_was]
+      paths = @paths.map { |name| "#{@path_was}/#{name}" } if @paths.present?
+      job.perform_later([{ rm: paths }])
+    end
   end
 
   def set_items(path)
@@ -65,12 +100,15 @@ class Uploader::FilesController < ApplicationController
   end
 
   def create_files
+    @items = []
     @files.each do |file|
       next unless file.present?
       path = ::File.join(@cur_site.path, @item.filename, file.original_filename)
       item = @model.new(path: path, binary: file.read, site: @cur_site)
 
-      if !item.save
+      if item.save
+        @items << item
+      else
         item.errors.each do |n, e|
           if n == :base
             attr = nil
@@ -115,8 +153,8 @@ class Uploader::FilesController < ApplicationController
   end
 
   def index
-    raise "404" unless @item.directory?
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+    return redirect_to("#{request.path}?do=show") unless @item.directory?
     set_items(@item.path)
     render :index
   end

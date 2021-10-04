@@ -41,6 +41,7 @@ ja:
     before_replace: 差し替え前
     after_replace: 差し替え後
     broken_link: リンク切れ
+    auto_reload: 自動更新
 
     views:
       login/login:

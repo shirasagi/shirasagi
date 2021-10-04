@@ -1,6 +1,7 @@
 class Cms::ImportJobFile
   extend SS::Translation
   include SS::Document
+  include SS::SanitizerJobFile
   include SS::Reference::User
   include Cms::Reference::Site
 
@@ -22,8 +23,8 @@ class Cms::ImportJobFile
   before_save :set_import_date
   before_save :save_root_node, if: -> { @root_node }
   before_save :save_in_file, if: -> { @import_file }
-
   after_save :perform_job, if: -> { @import_job }
+  after_destroy :destroy_files
 
   def save_with_import
     @import_job = true
@@ -150,7 +151,9 @@ class Cms::ImportJobFile
   def perform_job
     job = Cms::ImportFilesJob.bind(site_id: site.id)
     job = job.set(wait_until: import_date) if import_date.present?
-    job.perform_later
+    job_class = sanitizer_job(job).perform_later
+
+    set(job_name: job_class.job_id, job_wait: job.job_wait)
   end
 
   private
@@ -193,5 +196,9 @@ class Cms::ImportJobFile
   def save_root_node
     @root_node.save!
     self.node = @root_node
+  end
+
+  def destroy_files
+    files.destroy_all
   end
 end
