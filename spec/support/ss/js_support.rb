@@ -153,7 +153,7 @@ module SS
       Timeout.timeout(ajax_timeout) do
         sleep 1 until finished_all_ajax_requests?
       end
-      if block_given?
+      if block
         sleep 1
         yield
       end
@@ -168,7 +168,7 @@ module SS
 
     def wait_for_cbox(&block)
       have_css("#cboxClose", text: "close")
-      within("#cboxContent", &block) if block_given?
+      within("#cboxContent", &block) if block
     end
 
     def colorbox_opened?

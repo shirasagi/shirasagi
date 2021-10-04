@@ -24,7 +24,7 @@ module Jmaxml::Addon::Trigger::Tsunami
     context[:type] = Jmaxml::Type::TSUNAMI
     context[:area_codes] = area_codes
 
-    return true unless block_given?
+    return true unless block
 
     yield
   end

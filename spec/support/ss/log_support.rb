@@ -29,7 +29,7 @@ module SS
           severity, message, progname = *args
           severity ||= ::Logger::Severity::UNKNOWN
           if message.nil?
-            if block_given?
+            if block
               message = yield
             else
               message = progname
