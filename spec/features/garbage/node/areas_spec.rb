@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "garbage_node_areas", type: :feature, dbscope: :example, js: true do
-  let(:site)   { cms_site }
+  let(:site) { cms_site }
 
   let!(:search_node) do
     create(

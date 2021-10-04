@@ -43,7 +43,7 @@ module History::Addon
         backup.data = attributes
       end
 
-      backup.state     = 'current'
+      backup.state = 'current'
       current.state = 'before' if current
       before.state = nil if before
 

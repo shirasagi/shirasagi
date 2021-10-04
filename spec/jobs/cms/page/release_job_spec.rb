@@ -14,7 +14,7 @@ describe Cms::Page::ReleaseJob, dbscope: :example do
   end
   let!(:user1) { create(:cms_test_user, group: cms_group, role: role) }
   let!(:user2) { create(:cms_test_user, group: cms_group, role: role) }
-  let!(:node)   { create :article_node_page, cur_site: site, layout_id: layout.id }
+  let!(:node) { create :article_node_page, cur_site: site, layout_id: layout.id }
 
   let(:file) do
     tmp_ss_file site: site, cur_user: user1, contents: "#{Rails.root}/spec/fixtures/ss/logo.png", model: "article/page"

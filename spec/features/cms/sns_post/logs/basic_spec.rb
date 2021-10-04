@@ -7,7 +7,7 @@ describe "cms_pages sns post", type: :feature, dbscope: :example, js: true do
   let(:item) { create :cms_page, cur_node: node, state: "closed" }
 
   let(:edit_path) { edit_cms_page_path site.id, node, item }
-  let(:index_path) { cms_sns_post_logs_path  site.id }
+  let(:index_path) { cms_sns_post_logs_path site.id }
 
   let(:line_text_message) { unique_id }
 

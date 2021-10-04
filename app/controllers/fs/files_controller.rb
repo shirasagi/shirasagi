@@ -106,7 +106,7 @@ class Fs::FilesController < ApplicationController
       set_last_modified
       send_thumb @item, type: @item.content_type, filename: @item.filename,
         disposition: :inline, width: width, height: height
-    elsif thumb  = @item.try(:thumb, size)
+    elsif thumb = @item.try(:thumb, size)
       @item = thumb
       index
     else
