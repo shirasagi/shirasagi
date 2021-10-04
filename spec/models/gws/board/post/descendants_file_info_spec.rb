@@ -34,7 +34,7 @@ RSpec.describe Gws::Board::Post, type: :model, dbscope: :example do
         let(:file9) { tmp_ss_file(contents: '0' * (1 + rand(10)), user: user) }
         let(:files) { [ file0, file1, file2, file3, file4, file5, file6, file7, file8, file9 ] }
         let(:file_ids) { files.map(&:id) }
-        let(:total_file_size) { files.map(&:size).inject(:+) }
+        let(:total_file_size) { files.sum(&:size) }
         subject { create :gws_board_topic, cur_user: user, file_ids: file_ids }
 
         its(:file_ids) { is_expected.to include 1..10 }
@@ -82,7 +82,7 @@ RSpec.describe Gws::Board::Post, type: :model, dbscope: :example do
         let(:file9) { tmp_ss_file(contents: '0' * (1 + rand(10)), user: user) }
         let(:files) { [ file0, file1, file2, file3, file4, file5, file6, file7, file8, file9 ] }
         let(:file_ids) { files.map(&:id) }
-        let(:total_file_size) { files.map(&:size).inject(:+) }
+        let(:total_file_size) { files.sum(&:size) }
         subject { create(:gws_board_topic, cur_user: user) }
 
         before do
@@ -128,7 +128,7 @@ RSpec.describe Gws::Board::Post, type: :model, dbscope: :example do
         end
 
         its(:descendants_files_count) { is_expected.to eq @files.length }
-        its(:descendants_total_file_size) { is_expected.to eq @files.map(&:size).inject(:+) }
+        its(:descendants_total_file_size) { is_expected.to eq @files.sum(&:size) }
       end
     end
 

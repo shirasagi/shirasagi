@@ -170,7 +170,7 @@ module Gws::Addon::Import::Schedule
     end
 
     def set_errors(item, index)
-      errors = item.errors.full_messages.inject(:+)
+      errors = item.errors.full_messages.join
       self.errors.add :base, "#{index}: #{errors}"
     end
 
