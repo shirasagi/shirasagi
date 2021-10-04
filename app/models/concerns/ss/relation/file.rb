@@ -10,6 +10,7 @@ module SS::Relation::File
       belongs_to name.to_sym, class_name: class_name, dependent: :destroy
 
       attr_accessor "in_#{name}", "rm_#{name}", "in_#{name}_resizing"
+
       permit_params "in_#{name}", "rm_#{name}"
       permit_params "in_#{name}_resizing" => []
 
@@ -44,6 +45,7 @@ module SS::Relation::File
       belongs_to name.to_sym, class_name: class_name, dependent: :destroy
 
       attr_accessor "rm_#{name}", "in_#{name}_resizing"
+
       permit_params "#{name}_id", "rm_#{name}", "in_#{name}_resizing" => []
 
       before_save if: ->{ send("#{name}_id").present? } do

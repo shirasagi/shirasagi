@@ -4,6 +4,7 @@ module Gws::Circular::PostFilter
   included do
     append_view_path 'app/views/gws/circular/main'
     attr_accessor(:cur_tab)
+
     model Gws::Circular::Post
 
     before_action :set_cur_tab

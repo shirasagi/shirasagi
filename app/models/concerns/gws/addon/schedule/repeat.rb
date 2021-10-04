@@ -5,6 +5,7 @@ module Gws::Addon::Schedule::Repeat
   included do
     attr_accessor :repeat_type, :interval, :repeat_start, :repeat_end, :repeat_base, :wdays, :edit_range
     attr_accessor :todo_action
+
     belongs_to :repeat_plan, class_name: "Gws::Schedule::RepeatPlan"
     permit_params :repeat_type, :interval, :repeat_start, :repeat_end, :repeat_base, :edit_range, wdays: []
 
