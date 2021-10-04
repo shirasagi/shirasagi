@@ -60,7 +60,7 @@ module SS::AutoLink
         attributes = link_attributes.merge('href' => href)
         link = options[:link_to].call(link_text, attributes, escapes) if options[:link_to]
         link ||= content_tag(:a, link_text, attributes, escapes)
-        link + punctuation.reverse.join('')
+        link + punctuation.reverse.join
       end
     end
   end

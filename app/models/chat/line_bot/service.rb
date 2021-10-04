@@ -164,16 +164,15 @@ class Chat::LineBot::Service
 
     templates = []
     action_templates.each do |action|
-      template =
-        {
-          type: "template",
-          altText: suggest_text(event, templates),
-          template: {
-            type: "buttons",
-            actions: action,
-            text: suggest_text(event, templates)
-          }
+      template = {
+        type: "template",
+        altText: suggest_text(event, templates),
+        template: {
+          type: "buttons",
+          actions: action,
+          text: suggest_text(event, templates)
         }
+      }
       templates << template
     end
     templates << site_search(event) if phrase(event).site_search == "enabled" && site_search?
@@ -184,7 +183,7 @@ class Chat::LineBot::Service
   def link_text(event, templates)
     if templates.empty?
       if phrase(event).response.scan(/<p(?: .+?)?>.*?<\/p>/).present?
-        phrase(event).response.scan(/<p(?: .+?)?>.*?<\/p>/).join("").gsub(%r{</?[^>]+?>}, "")
+        phrase(event).response.scan(/<p(?: .+?)?>.*?<\/p>/).join.gsub(%r{</?[^>]+?>}, "")
       else
         @cur_node.response_template.gsub(%r{</?[^>]+?>}, "")
       end
@@ -232,9 +231,9 @@ class Chat::LineBot::Service
   def res(event)
     templates = []
     template = {
-        type: "text",
-        text: phrase(event).response.gsub(%r{</?[^>]+?>}, "")
-      }
+      type: "text",
+      text: phrase(event).response.gsub(%r{</?[^>]+?>}, "")
+    }
     templates << template
     templates << site_search(event) if phrase(event).site_search == "enabled" && site_search?
     templates << question(event) if phrase(event).question == "enabled" && question?
