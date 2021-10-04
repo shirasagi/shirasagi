@@ -19,7 +19,7 @@ module Cms::Model::Layout
   end
 
   def head
-    return nil if html !~ /<head>/
+    return nil if !/<head>/.match?(html)
     tags = []
     tags << %(<meta name="keywords" content="#{ERB::Util.html_escape(keywords)}" />) if keywords.present?
     tags << %(<meta name="description" content="#{ERB::Util.html_escape(description)}" />) if description.present?
@@ -28,7 +28,7 @@ module Cms::Model::Layout
   end
 
   def body
-    return html =~ /<body/ ? html.sub(/.*?(<body.*<\/body>).*/im, '\\1') : nil
+    return /<body/.match?(html) ? html.sub(/.*?(<body.*<\/body>).*/im, '\\1') : nil
   end
 
   # returns admin side show path

@@ -4,7 +4,7 @@
 module Net
   module SmtpRcptToExtension
     def rcptto(to_addr)
-      if to_addr.to_s =~ /^<[^>]+>/
+      if /^<[^>]+>/.match?(to_addr.to_s)
         getok("RCPT TO:#{to_addr}")
       else
         super

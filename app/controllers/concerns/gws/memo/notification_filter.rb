@@ -78,7 +78,7 @@ module Gws::Memo::NotificationFilter
 
   def send_destroy_notification
     return if request.get?
-    return if response.code !~ /^3/
+    return if !/^3/.match?(response.code)
 
     @destroyed_items ||= []
     @destroyed_items << @destroyed_item if @destroyed_item

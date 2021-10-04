@@ -47,7 +47,7 @@ module Cms::NodeHelper
 
   def colored_state_label(item)
     return "" unless item.respond_to?(:status)
-    if item.status =~ /public|ready|request/
+    if /public|ready|request/.match?(item.status)
       %(<span class="state state-#{item.status}">#{t("ss.state.#{item.status}")}</span>)
     elsif item.respond_to?(:workflow_state) && item.workflow_state == "remand"
       %(<span class="state state-remand">#{t("ss.state.#{item.status}")}</span>)

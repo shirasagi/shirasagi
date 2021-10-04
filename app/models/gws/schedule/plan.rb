@@ -71,7 +71,7 @@ class Gws::Schedule::Plan
 
   def allowed?(action, user, opts = {})
     return true if allowed_for_managers?(action, user, opts)
-    member?(user) || custom_group_member?(user) if action =~ /edit|delete/
+    member?(user) || custom_group_member?(user) if /edit|delete/.match?(action)
     false
   end
 
@@ -96,7 +96,7 @@ class Gws::Schedule::Plan
   private
 
   def validate_color
-    self.color = nil if color =~ /^#ffffff$/i
+    self.color = nil if /^#ffffff$/i.match?(color)
   end
 
   def validate_file_size

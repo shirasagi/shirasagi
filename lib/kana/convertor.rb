@@ -60,7 +60,7 @@ module Kana::Convertor
         mecab.parse(text).split(/\n/).each do |line|
           next if line == "EOS"
           data = line.split(",")
-          next if data[2] !~ /[一-龠a-zA-Z]/
+          next if !/[一-龠a-zA-Z]/.match?(data[2])
           next if data[10].blank?
 
           ps = data[0].to_i

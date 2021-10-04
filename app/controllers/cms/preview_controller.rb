@@ -134,7 +134,7 @@ class Cms::PreviewController < ApplicationController
       url = m.match(/.*?="(.*?)"/)[1]
       site = @cur_site.same_domain_site_from_path(url)
 
-      if url =~ /^\/(assets|assets-dev)\//
+      if /^\/(assets|assets-dev)\//.match?(url)
         m
       elsif site && (site.id == @cur_site.id) && url =~ /^\/(?!\/)/
         m.sub(/="/, "=\"#{preview_url}")

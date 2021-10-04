@@ -45,9 +45,9 @@ module Opendata::Api::GroupListFilter
       group_list << {id: group.id, state: group.state, name: group.name, order: group.order, packages: datasets.count}
     end
 
-    if sort =~ /^name$/i
+    if /^name$/i.match?(sort)
       group_list.sort!{ |a, b| a[:name] <=> b[:name] }
-    elsif sort =~ /^packages$/i
+    elsif /^packages$/i.match?(sort)
       group_list.sort!{ |a, b| (b[:packages] == a[:packages]) ? a[:name] <=> b[:name] : b[:packages] <=> a[:packages] }
     end
 

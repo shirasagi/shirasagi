@@ -9,16 +9,16 @@ class Translate::Convertor
   end
 
   def translatable?(text)
-    return false if text =~ EmailValidator::REGEXP
-    return false if text =~ /\A#{URI::regexp(%w(http https))}\z/
-    return false if text =~ /\A[#{I18n.t("translate.ignore_character")}]+\z/
+    return false if EmailValidator::REGEXP.match?(text)
+    return false if /\A#{URI::regexp(%w(http https))}\z/.match?(text)
+    return false if /\A[#{I18n.t("translate.ignore_character")}]+\z/.match?(text)
     true
   end
 
   def convert(html)
     return html if html.blank?
 
-    if html =~ /<html.*>/m
+    if /<html.*>/m.match?(html)
       partial = false
     else
       html = "<html><body>" + html + "</body></html>"

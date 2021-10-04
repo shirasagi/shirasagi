@@ -34,7 +34,7 @@ module Cms::Model::Node
     scope :root, ->{ where depth: 1 }
     scope :in_path, ->(path) {
       paths = Cms::Node.split_path(path.sub(/^\//, ""))
-      paths.pop if paths.last =~ /\./
+      paths.pop if /\./.match?(paths.last)
       where :filename.in => paths
     }
 
@@ -149,7 +149,7 @@ module Cms::Model::Node
     dst_dir = ::File.dirname(dst).sub(/^\.$/, "")
     (@cur_site || site).then do |s|
       return errors.add :filename, :empty if dst.blank?
-      return errors.add :filename, :invalid if dst !~ /^([\w\-]+\/)*[\w\-]+(#{::Regexp.escape(fix_extname || "")})?$/
+      return errors.add :filename, :invalid if !/^([\w\-]+\/)*[\w\-]+(#{::Regexp.escape(fix_extname || "")})?$/.match?(dst)
 
       return errors.add :base, :same_filename if filename == dst
       return errors.add :filename, :taken if Cms::Node.site(s).where(filename: dst).first

@@ -6,7 +6,7 @@ namespace :ss do
 
     ::Fs.glob("#{Rails.root}/#{SS.config.ss.sanitizer_output}/*").sort.each do |path|
       filename = ::File.basename(path)
-      next unless filename =~ /\A\d+_\d+.*_\d+_marked/
+      next unless /\A\d+_\d+.*_\d+_marked/.match?(filename)
 
       id = filename.sub(/^(\d+).*/, '\\1').to_i
       file = SS::File.find(id).becomes_with_model rescue nil

@@ -130,9 +130,9 @@ module Cms::PublicFilter::Layout
 
   def render_body_class(html)
     html.sub(/<body.*?>/) do |m|
-      m = m.sub(/ class="/, %( class="#{body_class(@cur_main_path)} )     ) if m =~ / class="/
-      m = m.sub(/<body/,    %(<body class="#{body_class(@cur_main_path)}")) unless m =~ / class="/
-      m = m.sub(/<body/,    %(<body id="#{body_id(@cur_main_path)}")      ) unless m =~ / id="/
+      m = m.sub(/ class="/, %( class="#{body_class(@cur_main_path)} )     ) if / class="/.match?(m)
+      m = m.sub(/<body/,    %(<body class="#{body_class(@cur_main_path)}")) unless / class="/.match?(m)
+      m = m.sub(/<body/,    %(<body id="#{body_id(@cur_main_path)}")      ) unless / id="/.match?(m)
       m
     end
   end

@@ -85,16 +85,16 @@ class Mobile::Converter < String
       name = src_attr["alt"].presence || src_attr["title"].presence || href.sub(/.*\//, "")
       cls = "tag-img" + ( src_attr["class"] ? " #{src_attr['class']}" : "" )
 
-      if href =~ /^\/fs\/.+?\/\_\/.+?#{ext}/
+      if /^\/fs\/.+?\/\_\/.+?#{ext}/.match?(href)
         # ss_file thumb
-        if href =~ /\/thumb\//
+        if /\/thumb\//.match?(href)
           match
         else
           src_attr["src"] = href.sub(/\/\_\//, "/_/thumb/")
           html = %(<img #{attr_to_s(src_attr)}>)
           html
         end
-      elsif ext =~ /^\.(jpeg|jpg|bmp)$/i
+      elsif /^\.(jpeg|jpg|bmp)$/i.match?(ext)
         html = name
         html += %( <a href="#{href}" class="#{cls}" title="#{name}">[#{I18n.t("ss.image")}]</a>) if href
         html

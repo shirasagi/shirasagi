@@ -7,7 +7,7 @@ module Cms::ApiFilter
   private
 
   def rescue_action(e)
-    if e.to_s =~ /^\d+$/
+    if /^\d+$/.match?(e.to_s)
       respond_to do |format|
         format.json { render json: :error, status: e.to_s.to_i }
       end

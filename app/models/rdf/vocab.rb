@@ -89,7 +89,7 @@ class Rdf::Vocab
 
     def normalize_uri(uri)
       return uri if uri.blank?
-      uri = "#{uri}#" if /[\/#]$/ !~ uri
+      uri = "#{uri}#" if !/[\/#]$/.match?(uri)
       uri
     end
   end
@@ -106,7 +106,7 @@ class Rdf::Vocab
   end
 
   def validate_uri
-    errors.add :uri, :invalid if /[\/#]$/ !~ self.uri
+    errors.add :uri, :invalid if !/[\/#]$/.match?(self.uri)
   end
 
   def validate_owner

@@ -14,7 +14,7 @@ class Voice::Scraper
     html = extract_body(html)
 
     # delete unnecessary chunk
-    if html =~ /<!--[^>]*?\s#{@skip_marks[0]}\s[^>]*?-->/i
+    if /<!--[^>]*?\s#{@skip_marks[0]}\s[^>]*?-->/i.match?(html)
       html.gsub!(/<!--[^>]*?\s#{@skip_marks[0]}\s[^>]*?-->(.*?)<!--[^>]*?\s#{@skip_marks[1]}\s[^>]*?-->/im, '')
     end
     html.gsub!(/<!--[\s\S]*?-->/m, '')

@@ -109,7 +109,7 @@ module Chorg::MongoidSupport
 
     @exclude_fields.each do |filter|
       if filter.is_a?(::Regexp)
-        return false if filter =~ key
+        return false if filter&.match?(key)
       elsif key == filter
         return false
       end

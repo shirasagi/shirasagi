@@ -14,11 +14,11 @@ module Jmaxml::Helper::Forecast
         kind_code = kind.elements['Code'].text.to_s.strip
         kind_status = kind.elements['Status'].text.to_s.strip
 
-        if kind_name =~ /特別警報/
+        if /特別警報/.match?(kind_name)
           kind_type = 'special-alert'
-        elsif kind_name =~ /警報/
+        elsif /警報/.match?(kind_name)
           kind_type = 'alert'
-        elsif kind_name =~ /注意報/
+        elsif /注意報/.match?(kind_name)
           kind_type = 'warning'
         end
 

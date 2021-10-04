@@ -9,7 +9,7 @@ module Translate::PublicFilter
 
   def set_request_path_with_translate
     return if !@cur_site.translate_enabled?
-    return if @cur_main_path !~ /^#{@cur_site.translate_location}\/.+?\//
+    return if !/^#{@cur_site.translate_location}\/.+?\//.match?(@cur_main_path)
 
     if browser.bot?
       Rails.logger.warn("translate denied : #{request.user_agent}")

@@ -4,7 +4,7 @@ module SS::Helpers
     include SS::Helpers::ColorPickerBuilder
 
     def hidden_field(method, options = {})
-      return super if method !~ /\[/
+      return super if !/\[/.match?(method)
 
       object_method = "#{@object_name}[" + method.sub("[", "][")
       value = options[:value] || array_value(method)
@@ -22,7 +22,7 @@ module SS::Helpers
     end
 
     def check_box(method, options = {}, checked_value = "1", unchecked_value = "0")
-      return super if method !~ /\[/
+      return super if !/\[/.match?(method)
 
       object_method = "#{@object_name}[" + method.sub("[", "][")
       if method.end_with?("[]")

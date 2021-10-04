@@ -161,7 +161,7 @@ module Cms::Content
           current = cur_path.sub(/\?.*/, "")
           next false if current.delete("/").blank?
           next true if self.url.sub(/\/index\.html$/, "/") == current.sub(/\/index\.html$/, "/")
-          next true if current =~ /^#{::Regexp.escape(url)}(\/|\?|$)/
+          next true if /^#{::Regexp.escape(url)}(\/|\?|$)/.match?(current)
 
           false
         end
@@ -348,11 +348,11 @@ module Cms::Content
   def validate_filename
     if @basename
       return errors.add :basename, :empty if @basename.blank?
-      errors.add :basename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+(#{::Regexp.escape(fix_extname || "")})?$/
-      errors.add :basename, :invalid if basename !~ /^[\w\-]+(#{::Regexp.escape(fix_extname || "")})?$/
+      errors.add :basename, :invalid if !/^([\w\-]+\/)*[\w\-]+(#{::Regexp.escape(fix_extname || "")})?$/.match?(filename)
+      errors.add :basename, :invalid if !/^[\w\-]+(#{::Regexp.escape(fix_extname || "")})?$/.match?(basename)
     else
       return errors.add :filename, :empty if filename.blank?
-      errors.add :filename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+(#{::Regexp.escape(fix_extname || "")})?$/
+      errors.add :filename, :invalid if !/^([\w\-]+\/)*[\w\-]+(#{::Regexp.escape(fix_extname || "")})?$/.match?(filename)
     end
 
     self.filename = filename.sub(/\..*$/, "") + fix_extname if fix_extname && basename.present?
