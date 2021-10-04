@@ -703,6 +703,9 @@ Style/HashEachMethods:
 Style/HashSyntax:
   Enabled: false
 
+Style/HashAsLastArrayItem:
+  Enabled: false
+
 # Offense count: 16
 Style/IdenticalConditionalBranches:
   Exclude:
