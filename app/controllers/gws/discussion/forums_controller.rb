@@ -62,11 +62,9 @@ class Gws::Discussion::ForumsController < ApplicationController
 
   def edit
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    if @item.is_a?(Cms::Addon::EditLock)
-      unless @item.acquire_lock
-        redirect_to action: :lock
-        return
-      end
+    if @item.is_a?(Cms::Addon::EditLock) && !@item.acquire_lock
+      redirect_to action: :lock
+      return
     end
     render
   end

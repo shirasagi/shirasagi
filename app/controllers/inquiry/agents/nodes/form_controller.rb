@@ -94,11 +94,11 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   def new
     set_group
     set_page
-    if @group || @page
-      raise "404" if @cur_site.inquiry_form != @cur_node
+    if (@group || @page) && (@cur_site.inquiry_form != @cur_node)
+      raise "404"
     end
-    if @group && @page
-      raise "404" if @page.contact_group_id != @group.id
+    if @group && @page && (@page.contact_group_id != @group.id)
+      raise "404"
     end
   end
 
@@ -118,11 +118,9 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       return
     end
 
-    if @cur_node.captcha_enabled? && get_captcha[:captcha_error].nil?
-      unless captcha_valid?(@answer)
-        render action: :confirm
-        return
-      end
+    if @cur_node.captcha_enabled? && get_captcha[:captcha_error].nil? && !captcha_valid?(@answer)
+      render action: :confirm
+      return
     end
 
     @answer.group_ids = @group ? [ @group.id ] : @cur_node.group_ids

@@ -118,8 +118,8 @@ module Gws::Faq::Postable
     return false if user.blank?
     return false if !file_ids.include?(file.id)
 
-    if topic.present? && topic.id != id
-      return true if topic.allowed?(:read, user, site: site)
+    if topic.present? && topic.id != id && topic.allowed?(:read, user, site: site)
+      return true
     end
 
     false

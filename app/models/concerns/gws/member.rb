@@ -37,8 +37,8 @@ module Gws::Member
   def member?(user)
     return true if member_ids.include?(user.id)
     return true if user.group_ids.any? { |group_id| member_group_ids.include?(group_id) }
-    if self.class.member_include_custom_groups?
-      return true if (member_custom_group_ids & Gws::CustomGroup.member(user).pluck(:id)).present?
+    if self.class.member_include_custom_groups? && (member_custom_group_ids & Gws::CustomGroup.member(user).pluck(:id)).present?
+      return true
     end
     false
   end

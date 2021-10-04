@@ -65,10 +65,8 @@ module Google::PfifBuilder
     unless note_params[:note_record_id].start_with?("#{domain_name}/")
       note_params[:note_record_id] = "#{domain_name}/#{note_params[:note_record_id]}"
     end
-    if note_params[:linked_person_record_id].present?
-      unless note_params[:linked_person_record_id].start_with?("#{domain_name}/")
-        note_params[:linked_person_record_id] = "#{domain_name}/#{note_params[:linked_person_record_id]}"
-      end
+    if note_params[:linked_person_record_id].present? && !note_params[:linked_person_record_id].start_with?("#{domain_name}/")
+      note_params[:linked_person_record_id] = "#{domain_name}/#{note_params[:linked_person_record_id]}"
     end
 
     builder.note do

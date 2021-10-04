@@ -30,11 +30,11 @@ module Gws::Presence::UserFilter
     if Gws::UserPresence.allowed?(:manage_all, @cur_user, site: @cur_site)
       @manageable = true
     end
-    if Gws::UserPresence.allowed?(:manage_private, @cur_user, site: @cur_site)
-      @manageable = true if @group && (@group.id == @cur_user.gws_default_group.id)
+    if Gws::UserPresence.allowed?(:manage_private, @cur_user, site: @cur_site) && (@group && (@group.id == @cur_user.gws_default_group.id))
+      @manageable = true
     end
-    if Gws::UserPresence.allowed?(:manage_custom_group, @cur_user, site: @cur_site)
-      @manageable = true if @custom_group
+    if Gws::UserPresence.allowed?(:manage_custom_group, @cur_user, site: @cur_site) && @custom_group
+      @manageable = true
     end
   end
 end

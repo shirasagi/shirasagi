@@ -27,10 +27,8 @@ module Gws::Monitor::TopicFilter
 
   def set_category
     @categories = Gws::Monitor::Category.site(@cur_site).readable(@cur_user, site: @cur_site).tree_sort
-    if category_id = params[:category].presence
-      if category_id != '-'
-        @category ||= Gws::Monitor::Category.site(@cur_site).readable(@cur_user, site: @cur_site).where(id: category_id).first
-      end
+    if category_id = params[:category].presence && (category_id != '-')
+      @category ||= Gws::Monitor::Category.site(@cur_site).readable(@cur_user, site: @cur_site).where(id: category_id).first
     end
   end
 

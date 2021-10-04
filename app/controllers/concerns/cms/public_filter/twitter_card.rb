@@ -36,8 +36,8 @@ module Cms::PublicFilter::TwitterCard
 
   def twitter_image_urls
     urls = extract_image_urls
-    if urls.blank?
-      urls = [ @cur_site.twitter_default_image_url ] if @cur_site.twitter_default_image_url.present?
+    if urls.blank? && @cur_site.twitter_default_image_url.present?
+      urls = [ @cur_site.twitter_default_image_url ]
     end
     urls
   end

@@ -95,12 +95,10 @@ class Voice::File
     self.class.ensure_release_lock(self) do
       begin
         download
-        unless force
-          if self.latest?
-            # voice file is up-to-date
-            Rails.logger.info("voice file up-to-date: #{self.url}")
-            break
-          end
+        if !force && self.latest?
+          # voice file is up-to-date
+          Rails.logger.info("voice file up-to-date: #{self.url}")
+          break
         end
 
         Fs.mkdir_p(::File.dirname(self.file))

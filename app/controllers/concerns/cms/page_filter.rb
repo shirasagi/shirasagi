@@ -162,11 +162,9 @@ module Cms::PageFilter
     end
 
     # If page is failed to update, page is going to show in edit mode with update errors
-    if !result && @item.is_a?(Cms::Addon::EditLock)
-      # So, edit lock must be held
-      unless @item.acquire_lock
-        location = { action: :lock }
-      end
+    # So, edit lock must be held
+    if !result && @item.is_a?(Cms::Addon::EditLock) && !@item.acquire_lock
+      location = { action: :lock }
     end
 
     render_update result, location: location

@@ -82,11 +82,9 @@ class Article::PagesController < ApplicationController
       if file.nil? || ::File.extname(file.original_filename) != ".csv"
         raise I18n.t("errors.messages.invalid_csv")
       end
-      if !Article::Page::Importer.valid_encoding?(file.to_io, Encoding::UTF_8)
-        if !Article::Page::Importer.valid_encoding?(file.to_io, Encoding::SJIS)
-          raise I18n.t("errors.messages.unsupported_encoding")
+      if !Article::Page::Importer.valid_encoding?(file.to_io, Encoding::UTF_8) && !Article::Page::Importer.valid_encoding?(file.to_io, Encoding::SJIS)
+        raise I18n.t("errors.messages.unsupported_encoding")
         end
-      end
       if !Article::Page::Importer.valid_csv?(file)
         raise I18n.t("errors.messages.malformed_csv")
       end

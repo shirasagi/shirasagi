@@ -532,8 +532,8 @@ class Event::Page::IcalImporter
 
     if user
       raise "403" unless page.allowed?(:edit, user)
-      if page.state == "public"
-        raise "403" unless page.allowed?(:release, user)
+      if page.state == "public" && !page.allowed?(:release, user)
+        raise "403"
       end
     end
 
@@ -573,11 +573,9 @@ class Event::Page::IcalImporter
     log.site_id      = site.id if site
     log.action       = action
 
-    if page && page.respond_to?(:new_record?)
-      if !page.new_record?
-        log.target_id    = page.id
-        log.target_class = page.class
-      end
+    if page && page.respond_to?(:new_record?) && !page.new_record?
+      log.target_id    = page.id
+      log.target_class = page.class
     end
 
     log.save

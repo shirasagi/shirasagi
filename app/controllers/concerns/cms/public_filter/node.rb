@@ -98,8 +98,8 @@ module Cms::PublicFilter::Node
 
   def generate_node_with_pagination(node, opts = {})
     node_perf_log(node, page: 1) do
-      if generate_node(node, cache: node.filename)
-        @task.log "#{node.url}index.html" if @task
+      if generate_node(node, cache: node.filename) && @task
+        @task.log "#{node.url}index.html"
       end
     end
 
@@ -109,8 +109,8 @@ module Cms::PublicFilter::Node
     2.upto(max) do |i|
       file = "#{node.path}/index.p#{i}.html"
       node_perf_log(node, page: i) do
-        if generate_node(node, file: file, params: { page: i }, cache: node.filename)
-          @task.log "#{node.url}index.p#{i}.html" if @task
+        if generate_node(node, file: file, params: { page: i }, cache: node.filename) && @task
+          @task.log "#{node.url}index.p#{i}.html"
         end
       end
 

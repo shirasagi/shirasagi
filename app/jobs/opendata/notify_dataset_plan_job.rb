@@ -71,10 +71,8 @@ class Opendata::NotifyDatasetPlanJob < Cms::ApplicationJob
       return true
     else
       # 2/29
-      if update_plan_date.month == 2 && update_plan_date.day == 29
-        if !today.leap? && today.month == 2 && today.day == 28
-          return true
-        end
+      if update_plan_date.month == 2 && update_plan_date.day == 29 && (!today.leap? && today.month == 2 && today.day == 28)
+        return true
       end
     end
 

@@ -42,8 +42,8 @@ class Workflow::PagesController < ApplicationController
       params[:workflow_approvers].each do |workflow_approver|
         element = workflow_approver.split(",")
         target_user = SS::User.find(element[1]) rescue nil
-        if target_user
-          email_blank_users.push(target_user.name) if target_user.email.blank?
+        if target_user && target_user.email.blank?
+          email_blank_users.push(target_user.name)
         end
       end
     else
@@ -51,15 +51,15 @@ class Workflow::PagesController < ApplicationController
       current_workflow_approvers = @item.workflow_approvers_at(current_level)
       current_workflow_approvers.each do |workflow_approver|
         target_user = SS::User.find(workflow_approver[:user_id]) rescue nil
-        if target_user
-          email_blank_users.push(target_user.name) if target_user.email.blank?
+        if target_user && target_user.email.blank?
+          email_blank_users.push(target_user.name)
         end
       end
       target_user = nil
       target_user_id = @item.workflow_user_id || @cur_user._id
       target_user = SS::User.find(target_user_id) rescue nil
-      if target_user
-        email_blank_users.push(target_user.name) if target_user.email.blank?
+      if target_user && target_user.email.blank?
+        email_blank_users.push(target_user.name)
       end
     end
     email_blank_users.uniq!
@@ -88,11 +88,9 @@ class Workflow::PagesController < ApplicationController
   def request_update
     raise "403" unless @item.allowed?(:edit, @cur_user)
 
-    if params[:forced_update_option] == "false"
-      if message = workflow_alert
-        render json: { workflow_alert: message }
-        return
-      end
+    if params[:forced_update_option] == "false" && message = workflow_alert
+      render json: { workflow_alert: message }
+      return
     end
 
     @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
@@ -148,11 +146,9 @@ class Workflow::PagesController < ApplicationController
   def approve_update
     raise "403" unless @item.allowed?(:approve, @cur_user)
 
-    if params[:forced_update_option] == "false"
-      if message = workflow_alert
-        render json: { workflow_alert: message }
-        return
-      end
+    if params[:forced_update_option] == "false" && message = workflow_alert
+      render json: { workflow_alert: message }
+      return
     end
 
     save_level = @item.workflow_current_level
@@ -236,11 +232,9 @@ class Workflow::PagesController < ApplicationController
   def remand_update
     raise "403" unless @item.allowed?(:approve, @cur_user)
 
-    if params[:forced_update_option] == "false"
-      if message = workflow_alert
-        render json: { workflow_alert: message }
-        return
-      end
+    if params[:forced_update_option] == "false" && message = workflow_alert
+      render json: { workflow_alert: message }
+      return
     end
 
     @item.remand_workflow_approver_state(@cur_user, params[:remand_comment])

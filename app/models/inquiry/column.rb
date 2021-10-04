@@ -50,16 +50,12 @@ class Inquiry::Column
   end
 
   def validate_data(answer, data, in_reply)
-    if required?(in_reply)
-      if data.blank? || data.value.blank?
-        answer.errors.add :base, "#{name}#{I18n.t('errors.messages.blank')}"
-      end
+    if required?(in_reply) && (data.blank? || data.value.blank?)
+      answer.errors.add :base, "#{name}#{I18n.t('errors.messages.blank')}"
     end
 
-    if input_confirm == "enabled"
-      if data.present? && data.value.present? && data.value != data.confirm
-        answer.errors.add :base, "#{name}#{I18n.t('errors.messages.input_confirm_not_match')}"
-      end
+    if input_confirm == "enabled" && (data.present? && data.value.present? && data.value != data.confirm)
+      answer.errors.add :base, "#{name}#{I18n.t('errors.messages.input_confirm_not_match')}"
     end
 
     handler = INPUT_TYPE_VALIDATION_HANDLERS.find { |type, handler| type == input_type.to_sym }
@@ -68,27 +64,21 @@ class Inquiry::Column
   end
 
   def validate_email_field(answer, data)
-    if data.present? && data.value.present?
-      unless Cms::Member::EMAIL_REGEX.match?(data.value)
-        answer.errors.add :base, "#{name}#{I18n.t('errors.messages.email')}"
-      end
+    if data.present? && data.value.present? && !Cms::Member::EMAIL_REGEX.match?(data.value)
+      answer.errors.add :base, "#{name}#{I18n.t('errors.messages.email')}"
     end
   end
 
   def validate_radio_button(answer, data)
-    if data.present? && data.value.present?
-      unless select_options.include?(data.value)
-        answer.errors.add :base, "#{name}#{I18n.t('errors.messages.invalid')}"
-      end
+    if data.present? && data.value.present? && !select_options.include?(data.value)
+      answer.errors.add :base, "#{name}#{I18n.t('errors.messages.invalid')}"
     end
   end
   alias validate_select validate_radio_button
 
   def validate_check_box(answer, data)
-    if data.present? && data.values.present?
-      if (data.values.select(&:present?) - select_options).present?
-        answer.errors.add :base, "#{name}#{I18n.t('errors.messages.invalid')}"
-      end
+    if data.present? && data.values.present? && (data.values.select(&:present?) - select_options).present?
+      answer.errors.add :base, "#{name}#{I18n.t('errors.messages.invalid')}"
     end
   end
 
@@ -99,14 +89,12 @@ class Inquiry::Column
       file_size  = data.values[2].to_i
       limit_size = (self.max_upload_file_size * 1024 * 1024).to_i
 
-      if data.present? && data.value.present?
-        if file_size > limit_size
-          answer.errors.add :base, "#{name}#{I18n.t(
-            "errors.messages.too_large_file",
-            filename: data.values[1],
-            size: ApplicationController.helpers.number_to_human_size(file_size),
-            limit: ApplicationController.helpers.number_to_human_size(limit_size))}"
-        end
+      if data.present? && data.value.present? && (file_size > limit_size)
+        answer.errors.add :base, "#{name}#{I18n.t(
+          "errors.messages.too_large_file",
+          filename: data.values[1],
+          size: ApplicationController.helpers.number_to_human_size(file_size),
+          limit: ApplicationController.helpers.number_to_human_size(limit_size))}"
       end
     end
   end

@@ -7,8 +7,8 @@ class MailPage::Agents::Tasks::Node::PagesController < ApplicationController
 
     # initialize context before generating rss
     init_context
-    if generate_node_rss @node
-      @task.log "#{@node.url}rss.xml" if @task
+    if generate_node_rss(@node) && @task
+      @task.log "#{@node.url}rss.xml"
     end
 
     written

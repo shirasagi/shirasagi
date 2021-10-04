@@ -6,11 +6,11 @@ class Sys::TrustedUrlValidator < ActiveModel::EachValidator
       url = ensure_addressable_url(url)
       request_url = ::Addressable::URI.parse(Rails.application.current_request.url)
 
-      if url.host.present?
-        return false if url.host != request_url.host
+      if url.host.present? && (url.host != request_url.host)
+        return false
       end
-      if url.port.present?
-        return false if url.port != request_url.port
+      if url.port.present? && (url.port != request_url.port)
+        return false
       end
 
       true
@@ -20,8 +20,8 @@ class Sys::TrustedUrlValidator < ActiveModel::EachValidator
       url = ensure_addressable_url(url)
       return true if url.scheme.blank? && url.host.blank? && url.port.blank?
 
-      if known_trusted_urls.present?
-        return true if parse_urls(known_trusted_urls).any? { |trusted_url| trusted_url_one?(trusted_url, url) }
+      if known_trusted_urls.present? && parse_urls(known_trusted_urls).any? { |trusted_url| trusted_url_one?(trusted_url, url) }
+        return true
       end
 
       if trusted_urls.any? { |trusted_url| trusted_url_one?(trusted_url, url) }
@@ -55,17 +55,17 @@ class Sys::TrustedUrlValidator < ActiveModel::EachValidator
     end
 
     def trusted_url_one?(trusted_template_url, uncertain_url)
-      if trusted_template_url.scheme.present?
-        return false if uncertain_url.scheme != trusted_template_url.scheme
+      if trusted_template_url.scheme.present? && (uncertain_url.scheme != trusted_template_url.scheme)
+        return false
       end
-      if trusted_template_url.host.present?
-        return false if uncertain_url.host != trusted_template_url.host
+      if trusted_template_url.host.present? && (uncertain_url.host != trusted_template_url.host)
+        return false
       end
-      if trusted_template_url.port.present?
-        return false if uncertain_url.port != trusted_template_url.port
+      if trusted_template_url.port.present? && (uncertain_url.port != trusted_template_url.port)
+        return false
       end
-      if trusted_template_url.path.present?
-        return false unless uncertain_url.path.start_with?(trusted_template_url.path)
+      if trusted_template_url.path.present? && !uncertain_url.path.start_with?(trusted_template_url.path)
+        return false
       end
 
       true

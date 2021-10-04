@@ -126,10 +126,10 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
     expect(page).to have_no_css(".result table a", text: "[TEST]page7")
 
     page.accept_confirm do
-    within "form.index-search" do
-      fill_in "keyword", with: "複数行入力"
-      fill_in "replacement", with: "置換"
-      click_button I18n.t("ss.buttons.replace_all")
+      within "form.index-search" do
+        fill_in "keyword", with: "複数行入力"
+        fill_in "replacement", with: "置換"
+        click_button I18n.t("ss.buttons.replace_all")
       end
     end
     expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))

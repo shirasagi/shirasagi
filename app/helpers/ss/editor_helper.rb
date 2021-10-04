@@ -212,8 +212,8 @@ module SS::EditorHelper
       editor_options[:plugins] ||= []
       editor_options[:plugins].push('textcolor')
       editor_options[:plugins].uniq!
-      if editor_options[:toolbar]
-        editor_options[:toolbar] += ' | forecolor backcolor' unless editor_options[:toolbar].include?('forecolor backcolor')
+      if editor_options[:toolbar] && !editor_options[:toolbar].include?('forecolor backcolor')
+        editor_options[:toolbar] += ' | forecolor backcolor'
       end
     end
     if color_button == 'disabled'

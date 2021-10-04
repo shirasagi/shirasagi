@@ -12,10 +12,8 @@ class Gws::Column::Value::UrlField < Gws::Column::Value::Base
 
     return if value.blank?
 
-    if column.max_length.present? && column.max_length > 0
-      if value.length > column.max_length
-        record.errors.add(:base, name + I18n.t('errors.messages.too_long', count: column.max_length))
-      end
+    if column.max_length.present? && column.max_length > 0 && (value.length > column.max_length)
+      record.errors.add(:base, name + I18n.t('errors.messages.too_long', count: column.max_length))
     end
   end
 

@@ -57,11 +57,9 @@ class Board::Agents::Nodes::PostController < ApplicationController
 
   def create
     @item = @model.new get_params
-    if @cur_node.captcha_enabled? && get_captcha[:captcha_error].nil?
-      unless captcha_valid?(@item)
-        render action: :new
-        return
-      end
+    if @cur_node.captcha_enabled? && get_captcha[:captcha_error].nil? && !captcha_valid?(@item)
+      render action: :new
+      return
     end
 
     render_create @item.save, location: "#{@cur_node.url}sent", render: :new
@@ -74,11 +72,9 @@ class Board::Agents::Nodes::PostController < ApplicationController
 
   def reply
     @item = @model.new get_params
-    if @cur_node.captcha_enabled? && get_captcha[:captcha_error].nil?
-      unless captcha_valid?(@item)
-        render action: :new_reply
-        return
-      end
+    if @cur_node.captcha_enabled? && get_captcha[:captcha_error].nil? && !captcha_valid?(@item)
+      render action: :new_reply
+      return
     end
 
     render_create @item.save, location: "#{@cur_node.url}sent", render: :new_reply

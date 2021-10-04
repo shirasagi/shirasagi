@@ -75,12 +75,10 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
       return
     end
 
-    if @cur_node.confirm_personal_data_state == 'enabled'
-      if @item.in_confirm_personal_info != 'yes'
-        @item.errors.add :base, :please_confirm_personal_data_protection
-        render action: :confirm
-        return
-      end
+    if @cur_node.confirm_personal_data_state == 'enabled' && (@item.in_confirm_personal_info != 'yes')
+      @item.errors.add :base, :please_confirm_personal_data_protection
+      render action: :confirm
+      return
     end
 
     render action: :new unless @item.save

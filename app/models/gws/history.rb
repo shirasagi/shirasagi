@@ -103,10 +103,8 @@ class Gws::History
       )
       item.attributes = attributes
 
-      if allowed_severity = cur_site.allowed_log_severity_for(item.module_key)
-        if severity_to_num(severity) >= severity_to_num(allowed_severity)
-          item.save!(context: context.to_sym)
-        end
+      if allowed_severity = cur_site.allowed_log_severity_for(item.module_key) && (severity_to_num(severity) >= severity_to_num(allowed_severity))
+        item.save!(context: context.to_sym)
       end
 
       try_invoke_archive(cur_user, cur_site)

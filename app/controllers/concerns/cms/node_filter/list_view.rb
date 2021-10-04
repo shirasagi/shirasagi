@@ -59,14 +59,14 @@ module Cms::NodeFilter::ListView
   def generate_empty_files
     html = _render_with_pagination([])
     basename = "index.html"
-    if Fs.write_data_if_modified("#{@cur_node.path}/#{basename}", html)
-      @task.log "#{@cur_node.url}#{basename}" if @task
+    if Fs.write_data_if_modified("#{@cur_node.path}/#{basename}", html) && @task
+      @task.log "#{@cur_node.url}#{basename}"
     end
 
     basename = "rss.xml"
     rss = _render_rss(@cur_node, [])
-    if Fs.write_data_if_modified("#{@cur_node.path}/#{basename}", rss.to_xml)
-      @task.log "#{@cur_node.url}#{basename}" if @task
+    if Fs.write_data_if_modified("#{@cur_node.path}/#{basename}", rss.to_xml) && @task
+      @task.log "#{@cur_node.url}#{basename}"
     end
   end
 
@@ -116,15 +116,15 @@ module Cms::NodeFilter::ListView
         basename = "index.p#{page_index + 1}.html"
       end
 
-      if Fs.write_data_if_modified("#{@cur_node.path}/#{basename}", html)
-        @task.log "#{@cur_node.url}#{basename}" if @task
+      if Fs.write_data_if_modified("#{@cur_node.path}/#{basename}", html) && @task
+        @task.log "#{@cur_node.url}#{basename}"
       end
 
       if page_index == 0
         basename = "rss.xml"
         rss = _render_rss(@cur_node, pages)
-        if Fs.write_data_if_modified("#{@cur_node.path}/#{basename}", rss.to_xml)
-          @task.log "#{@cur_node.url}#{basename}" if @task
+        if Fs.write_data_if_modified("#{@cur_node.path}/#{basename}", rss.to_xml) && @task
+          @task.log "#{@cur_node.url}#{basename}"
         end
       end
 

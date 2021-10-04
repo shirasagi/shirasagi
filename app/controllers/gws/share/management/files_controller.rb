@@ -78,8 +78,8 @@ class Gws::Share::Management::FilesController < ApplicationController
   public
 
   def index
-    if params[:folder].present?
-      raise "403" unless @folder.allowed?(:read, @cur_user, site: @cur_site)
+    if params[:folder].present? && !@folder.allowed?(:read, @cur_user, site: @cur_site)
+      raise "403"
     end
     if @category.present? || @folder.present?
       params[:s] ||= {}

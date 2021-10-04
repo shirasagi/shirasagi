@@ -33,8 +33,8 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
   end
 
   def check_readable
-    if @item
-      raise '403' unless @item.allowed?(:read, @cur_user, site: @cur_site)
+    if @item && !@item.allowed?(:read, @cur_user, site: @cur_site)
+      raise '403'
     end
   end
 end
