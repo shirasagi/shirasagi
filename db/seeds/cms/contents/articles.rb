@@ -295,7 +295,7 @@ save_page route: "article/page", filename: "docs/page30.html", name: "ふれあ�
             @form_columns2[2].value_type.new(column: @form_columns2[2], file_id: file_10_9.id, file_label: "画像3",
                                               image_html_type: "image"),
             @form_columns2[3].value_type.new(column: @form_columns2[3], value: ["1月30日、シラサギ博物館でふれあいフェスティバルを開催しました。",
-                                                                                  "内容を入力します。" * 15, "内容を入力します。" * 15].join("\n")),
+                                                                                "内容を入力します。" * 15, "内容を入力します。" * 15].join("\n")),
           ],
           group_ids: [@g_seisaku.id]
 
@@ -345,9 +345,9 @@ save_page route: "article/page", filename: "docs/page32.html", name: "インタ�
                                               file_label: "画像", image_html_type: "image"),
             # 回答
             @form_columns5[3].value_type.new(column: @form_columns5[3], order: 4, value: ["回答を入力します。" * 10,
-                                                                                            "回答を入力します。" * 10,
-                                                                                            "回答を入力します。" * 10,
-                                                                                            "回答を入力します。" * 10].join("\n")),
+                                                                                          "回答を入力します。" * 10,
+                                                                                          "回答を入力します。" * 10,
+                                                                                          "回答を入力します。" * 10].join("\n")),
             # 質問
             @form_columns5[2].value_type.new(column: @form_columns5[2], order: 5, head: "h1", text: "質問を入力します。" * 2),
             # 画像右
@@ -355,16 +355,16 @@ save_page route: "article/page", filename: "docs/page32.html", name: "インタ�
                                               file_label: "画像", image_html_type: "image"),
             # 回答
             @form_columns5[3].value_type.new(column: @form_columns5[3], order: 7, value: ["回答を入力します。" * 10,
-                                                                                            "回答を入力します。" * 10,
-                                                                                            "回答を入力します。" * 10,
-                                                                                            "回答を入力します。" * 10].join("\n")),
+                                                                                          "回答を入力します。" * 10,
+                                                                                          "回答を入力します。" * 10,
+                                                                                          "回答を入力します。" * 10].join("\n")),
             # 質問
             @form_columns5[2].value_type.new(column: @form_columns5[2], order: 8, head: "h1", text: "質問を入力します。" * 2),
             # 回答
             @form_columns5[3].value_type.new(column: @form_columns5[3], order: 9, value: ["回答を入力します。" * 10,
-                                                                                            "回答を入力します。" * 10,
-                                                                                            "回答を入力します。" * 10,
-                                                                                            "回答を入力します。" * 10].join("\n")),
+                                                                                          "回答を入力します。" * 10,
+                                                                                          "回答を入力します。" * 10,
+                                                                                          "回答を入力します。" * 10].join("\n")),
           ],
           group_ids: [@g_seisaku.id]
 
