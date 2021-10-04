@@ -482,7 +482,10 @@ Rails/InverseOf:
 Rails/LexicallyScopedActionFilter:
   Enabled: false
 
-# Offense count: 73
+Rails/NegateInclude:
+  Enabled: false
+
+  # Offense count: 73
 Rails/OutputSafety:
   Enabled: false
 
