@@ -151,7 +151,7 @@ describe Gws::Addon::System::MenuSetting, type: :model, dbscope: :example do
 
     it do
       I18n.enforce_available_locales = false
-      I18n.locale = 'zh-TW'.to_sym
+      I18n.locale = :'zh-TW'
 
       site.menu_portal_label_translations = labels
       site.save!

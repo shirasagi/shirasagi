@@ -174,7 +174,7 @@ class Webmail::Mail
   end
 
   def requested_mdn?
-    return false if flags.include?(:"$MDNSent")
+    return false if flags.include?(:$MDNSent)
     return false if disposition_notification_to.blank?
 
     to.each do |mdn_to|
