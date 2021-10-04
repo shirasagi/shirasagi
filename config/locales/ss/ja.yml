@@ -141,7 +141,9 @@ ja:
       move: 移動
       moving: 移動中
       import: インポート
+      restore_message: 復元
       importing: インポート中
+      restoring_message: 復元中
       convert: 変換
       unlock_and_edit_forcibly: 強制的にロックを解除し編集する
       random_gen: ランダム生成

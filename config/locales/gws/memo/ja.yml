@@ -41,6 +41,7 @@ ja:
     backup_messages: バックアップ
     import_messages: インポート
     restore_messages: 復元
+    restore_messages: 復元
     unsend: 送信先のメッセージも削除する（送信取り消し）
     export_filter: 対象
     backup_filter: 対象
@@ -79,7 +80,7 @@ ja:
       start_export: エクスポートを開始しました。
       start_import: インポートしました。
       start_backup: バックアップを開始しました。
-      start_import: 復元しました。
+      start_restore: 復元しました。
       no_recents: 新着はありません
     export:
       subject: '[メッセージ] エクスポートが完了しました。'
@@ -95,6 +96,8 @@ ja:
       empty_messages: バックアップ対象のメッセージが見つかりませんでした。
     import:
       caution: "※差出人や送信者等のユーザー情報は、エクスポートしたデータとID及び氏名が一致している場合のみ復元されます。"
+    restore:
+      caution: "※差出人や送信者等のユーザー情報は、バックアップしたデータとID及び氏名が一致している場合のみ復元されます。"
     mdn:
       subject: '[開封確認] %{subject}'
       confirmed: "メッセージが開封されました。\n%{name} %{date}"
@@ -314,8 +317,11 @@ ja:
   activemodel:
     models:
       gws/memo/message_importer: インポート
+      gws/memo/message_restorer: 復元
     attributes:
       gws/memo/message_importer:
+        in_file: ファイル
+      gws/memo/message_restorer:
         in_file: ファイル
   tooltip:
     gws/memo/message:
