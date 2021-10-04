@@ -62,7 +62,7 @@ class Gws::Schedule::ApprovalsController < ApplicationController
   end
 
   def send_approval_approve_mail
-    exclusion_user_ids = @cur_schedule.members.reject{|user| user.use_notice?(@cur_schedule)}.map(&:id)
+    exclusion_user_ids = @cur_schedule.members.reject{ |user| user.use_notice?(@cur_schedule) }.map(&:id)
     exclusion_user_ids << @cur_user.id
     exclusion_user_ids.uniq!
 
@@ -75,7 +75,7 @@ class Gws::Schedule::ApprovalsController < ApplicationController
   end
 
   def send_approval_deny_mail
-    exclusion_user_ids = @cur_schedule.members.reject{|user| user.use_notice?(@cur_schedule)}.map(&:id)
+    exclusion_user_ids = @cur_schedule.members.reject{ |user| user.use_notice?(@cur_schedule) }.map(&:id)
     exclusion_user_ids << @cur_user.id
     exclusion_user_ids.uniq!
 

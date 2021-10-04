@@ -18,8 +18,8 @@ describe "garbage_node_areas", type: :feature, dbscope: :example, js: true do
     )
   end
 
-  let!(:category1) { create :garbage_node_category, name: "category1"}
-  let!(:category2) { create :garbage_node_category, name: "category2"}
+  let!(:category1) { create :garbage_node_category, name: "category1" }
+  let!(:category2) { create :garbage_node_category, name: "category2" }
 
   let!(:item) do
     create(
