@@ -39,25 +39,25 @@ describe Cms::PublicHelper, type: :helper, dbscope: :example do
           html = Nokogiri::HTML.fragment(html)
           expect(html.css(".first a")[0]).to be_present
           expect(html.css(".first a")[0].attr("href")).to eq "/gyosei/docs"
-          expect(html.css(".first a")[0].text()).to eq "«"
+          expect(html.css(".first a")[0].text).to eq "«"
 
           expect(html.css(".prev a")[0]).to be_present
           expect(html.css(".prev a")[0].attr("href")).to eq "/gyosei/docs/index.p9.html"
-          expect(html.css(".prev a")[0].text()).to eq I18n.t("views.pagination.previous")
+          expect(html.css(".prev a")[0].text).to eq I18n.t("views.pagination.previous")
 
           expect(html.css(".page")).to have(11).items
-          expect(html.css(".page.current")[0].text()).to include "10"
+          expect(html.css(".page.current")[0].text).to include "10"
 
           expect(html.css(".gap")).to have(2).items
 
           expect(html.css(".next a")[0]).to be_present
           expect(html.css(".next a")[0].attr("href")).to eq "/gyosei/docs/index.p11.html"
-          expect(html.css(".next a")[0].text()).to eq I18n.t("views.pagination.next")
+          expect(html.css(".next a")[0].text).to eq I18n.t("views.pagination.next")
 
           expect(html.css(".last a")[0]).to be_present
           expect(html.css(".last a")[0].attr("href")).to eq "/gyosei/docs/index.p31.html"
           # expect(html.css(".last a")[0].text()).to eq CGI.unescapeHTML(I18n.t("views.pagination.last"))
-          expect(html.css(".last a")[0].text()).to eq "»"
+          expect(html.css(".last a")[0].text).to eq "»"
         end
       end
 
@@ -71,7 +71,7 @@ describe Cms::PublicHelper, type: :helper, dbscope: :example do
           html = Nokogiri::HTML.fragment(html)
           expect(html.css(".first a")[0]).to be_present
           expect(html.css(".first a")[0].attr("href")).to eq "/gyosei/docs?keyword=test"
-          expect(html.css(".first a")[0].text()).to eq "«"
+          expect(html.css(".first a")[0].text).to eq "«"
         end
       end
     end
@@ -85,25 +85,25 @@ describe Cms::PublicHelper, type: :helper, dbscope: :example do
         html = Nokogiri::HTML.fragment(html)
         expect(html.css(".first a")[0]).to be_present
         expect(html.css(".first a")[0].attr("href")).to eq "/"
-        expect(html.css(".first a")[0].text()).to eq "«"
+        expect(html.css(".first a")[0].text).to eq "«"
 
         expect(html.css(".prev a")[0]).to be_present
         expect(html.css(".prev a")[0].attr("href")).to eq "/?page=9"
-        expect(html.css(".prev a")[0].text()).to eq I18n.t("views.pagination.previous")
+        expect(html.css(".prev a")[0].text).to eq I18n.t("views.pagination.previous")
 
         expect(html.css(".page")).to have(11).items
-        expect(html.css(".page.current")[0].text()).to include "10"
+        expect(html.css(".page.current")[0].text).to include "10"
 
         expect(html.css(".gap")).to have(2).items
 
         expect(html.css(".next a")[0]).to be_present
         expect(html.css(".next a")[0].attr("href")).to eq "/?page=11"
-        expect(html.css(".next a")[0].text()).to eq I18n.t("views.pagination.next")
+        expect(html.css(".next a")[0].text).to eq I18n.t("views.pagination.next")
 
         expect(html.css(".last a")[0]).to be_present
         expect(html.css(".last a")[0].attr("href")).to eq "/?page=31"
         # expect(html.css(".last a")[0].text()).to eq CGI.unescapeHTML(I18n.t("views.pagination.last"))
-        expect(html.css(".last a")[0].text()).to eq "»"
+        expect(html.css(".last a")[0].text).to eq "»"
       end
     end
   end
