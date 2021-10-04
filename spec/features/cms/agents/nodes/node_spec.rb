@@ -37,12 +37,12 @@ describe "cms_agents_nodes_node", type: :feature, dbscope: :example do
   end
 
   context "public with child_item conditions" do
-    let (:upper_html) { '<div>' }
-    let (:loop_html) { '<h2><a href="#{url}">#{index_name}</a></h2>#{child_items}' }
-    let (:lower_html) { '</div>' }
-    let (:child_upper_html) { '<ul>' }
-    let (:child_loop_html) { '<li>#{index_name}</li>' }
-    let (:child_lower_html) { '</ul>' }
+    let(:upper_html) { '<div>' }
+    let(:loop_html) { '<h2><a href="#{url}">#{index_name}</a></h2>#{child_items}' }
+    let(:lower_html) { '</div>' }
+    let(:child_upper_html) { '<ul>' }
+    let(:child_loop_html) { '<li>#{index_name}</li>' }
+    let(:child_lower_html) { '</ul>' }
     let(:cms_node) do
       create :cms_node_node, layout_id: layout.id, filename: "cms-node",
              upper_html: upper_html, loop_html: loop_html, lower_html: lower_html,
