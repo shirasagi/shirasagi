@@ -18,7 +18,7 @@ module History::Searchable
           # controller
           inner_cond << { controller: word.pluralize }
 
-          models = I18n.t(:"mongoid.models").invert
+          models = I18n.t("mongoid.models").invert
           inner_cond << { controller: models[word].to_s.pluralize } if models[word].present?
 
           # session_id
