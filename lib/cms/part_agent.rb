@@ -50,7 +50,7 @@ class Cms::PartAgent < SS::Agent
       "SERVER_NAME" => server_name,
       "SERVER_PORT" => server_port && server_port.numeric? ? server_port : "80",
       "rack.version" => [1, 3],
-      "rack.input" => StringIO.new,
+      "rack.input" => StringIO.new
     }
   end
 end

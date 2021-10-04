@@ -26,7 +26,7 @@ class Member::Agents::Nodes::PhotoSearchController < ApplicationController
       location_ids: location_ids,
       category_ids: category_ids,
       locations: locations,
-      categories: categories,
+      categories: categories
     }
   end
 

@@ -51,7 +51,7 @@ module Opendata::Api
       name: site.name,
       url: site.full_url,
       created: site.created,
-      updated: site.updated,
+      updated: site.updated
     }
   end
 
@@ -66,7 +66,7 @@ module Opendata::Api
       uid: user.uid,
       email: user.email,
       created: user.created,
-      updated: user.updated,
+      updated: user.updated
     }
   end
 
@@ -76,7 +76,7 @@ module Opendata::Api
       name: member.name,
       email: member.email,
       created: member.created,
-      updated: member.updated,
+      updated: member.updated
     }
   end
 
@@ -86,7 +86,7 @@ module Opendata::Api
       name: group.name,
       trailing_name: group.trailing_name,
       created: group.created,
-      updated: group.updated,
+      updated: group.updated
     }
   end
 
@@ -96,7 +96,7 @@ module Opendata::Api
       name: dataset_group.name,
       categories: convert_categories(dataset_group),
       created: dataset_group.created,
-      updated: dataset_group.updated,
+      updated: dataset_group.updated
     }
   end
 
@@ -115,7 +115,7 @@ module Opendata::Api
       filename: category.filename,
       state: category.state,
       created: category.created,
-      updated: category.updated,
+      updated: category.updated
     }
   end
 
@@ -130,7 +130,7 @@ module Opendata::Api
       filename: estat_category.filename,
       state: estat_category.state,
       created: estat_category.created,
-      updated: estat_category.updated,
+      updated: estat_category.updated
     }
   end
 
@@ -145,7 +145,7 @@ module Opendata::Api
       filename: area.filename,
       state: area.state,
       created: area.created,
-      updated: area.updated,
+      updated: area.updated
     }
   end
 
@@ -207,7 +207,7 @@ module Opendata::Api
       uid: license.uid,
       state: license.state,
       created: license.created,
-      updated: license.updated,
+      updated: license.updated
     }
   end
 end

@@ -56,12 +56,12 @@ class Cms::SearchContents::HtmlController < ApplicationController
     location = {
       action: :index,
       keyword: keyword,
-      replacement: replacement,
+      replacement: replacement
     }
     flash[:updated_items] = {
       "update_pages" => @pages.map(&:id).join(","),
       "update_layouts" => @layouts.map(&:id).join(","),
-      "update_parts" => @parts.map(&:id).join(","),
+      "update_parts" => @parts.map(&:id).join(",")
     }
     redirect_to location, notice: t("ss.notice.saved")
   end

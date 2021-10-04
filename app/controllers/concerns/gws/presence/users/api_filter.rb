@@ -28,7 +28,7 @@ module Gws::Presence::Users::ApiFilter
       presence_state_style: @item.state_style,
       presence_plan: @item.plan,
       presence_memo: @item.memo,
-      editable: (@manage_all || @manageable_user_ids.include?(@item.user_id)),
+      editable: (@manage_all || @manageable_user_ids.include?(@item.user_id))
     }
   end
 

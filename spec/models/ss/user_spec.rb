@@ -163,7 +163,7 @@ describe SS::User, dbscope: :example do
           {
             uid: unique_id,
             in_password: 'pass',
-            name: unique_id,
+            name: unique_id
           }
         end
         before { model.create!(entity) }
@@ -265,7 +265,7 @@ describe SS::User, dbscope: :example do
             uid: unique_id,
             in_password: 'pass',
             name: unique_id,
-            account_start_date: now + 3.days,
+            account_start_date: now + 3.days
           }
         end
         before { model.create!(entity) }
@@ -282,7 +282,7 @@ describe SS::User, dbscope: :example do
             in_password: 'pass',
             name: unique_id,
             account_start_date: now + 3.days,
-            account_expiration_date: now + 7.days,
+            account_expiration_date: now + 7.days
           }
         end
         before { model.create!(entity) }

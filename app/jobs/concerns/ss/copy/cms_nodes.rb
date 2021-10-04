@@ -19,7 +19,7 @@ module SS::Copy::CmsNodes
   def copy_cms_node_options
     {
       before: method(:before_copy_cms_node),
-      after: method(:after_copy_cms_node),
+      after: method(:after_copy_cms_node)
     }
   end
 

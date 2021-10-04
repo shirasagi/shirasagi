@@ -36,7 +36,7 @@ class Google::PersonFinder
 
   def upload_uri
     query = {
-      key: api_key,
+      key: api_key
     }
     URI.parse("https://www.google.org/personfinder/#{repository}/api/write?#{query.to_param}")
   end
