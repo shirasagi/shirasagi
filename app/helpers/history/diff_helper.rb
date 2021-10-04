@@ -13,7 +13,7 @@ module History::DiffHelper
         value
       end
     end
-    sdiffs.join('').html_safe
+    sdiffs.join.html_safe
   end
 
   def diff_current_value(str1, str2)
@@ -30,7 +30,7 @@ module History::DiffHelper
         value
       end
     end
-    sdiffs.join('').html_safe
+    sdiffs.join.html_safe
   end
 
   def column_value_diff_html(name, before_value, current_value)
@@ -42,7 +42,7 @@ module History::DiffHelper
     html << "  <td>#{diff_before_value(before_value, current_value)}</td>"
     html << "  <td>#{diff_current_value(current_value, before_value)}</td>"
     html << "</tr>"
-    html.join('').html_safe
+    html.join.html_safe
   end
 
   # array1 old values
@@ -99,6 +99,6 @@ module History::DiffHelper
       html << column_value_diff_html((new_value || old_value).name, old_summary, new_summary)
     end
 
-    html.join('').html_safe
+    html.join.html_safe
   end
 end
