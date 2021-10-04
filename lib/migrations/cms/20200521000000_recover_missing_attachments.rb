@@ -22,7 +22,7 @@ class SS::Migration20200521000000
       html.scan(/"\/fs\/(\d\/)+_\//) do
         matched = $&
         matched = matched[5..-4]
-        matched = matched.gsub("/", "")
+        matched = matched.delete("/")
         yield matched.to_i
       end
     end

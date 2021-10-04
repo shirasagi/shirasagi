@@ -11,7 +11,7 @@ module SS::Fields::Normalizer
   def normalize_fields
     self.class.fields.each do |name, field_def|
       next if name[0] == '_'
-      m = "normalize_#{field_def.type.to_s.underscore.gsub(/\//, '_')}_field"
+      m = "normalize_#{field_def.type.to_s.underscore.tr('/', '_')}_field"
       send(m, name, field_def) rescue nil
     end
   end
