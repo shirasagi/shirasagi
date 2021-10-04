@@ -8,7 +8,7 @@ describe "facility_node_pages", type: :feature, dbscope: :example, js: true do
   let(:new_path)    { new_facility_page_path site.id, node }
   let(:show_path)   { facility_page_path site.id, node, item }
   let(:edit_path)   { edit_facility_page_path site.id, node, item }
-  let(:delete_path) { delete_facility_page_path site.id, node, item  }
+  let(:delete_path) { delete_facility_page_path site.id, node, item }
   let(:import_path) { import_facility_pages_path site.id, node }
 
   context "with auth" do

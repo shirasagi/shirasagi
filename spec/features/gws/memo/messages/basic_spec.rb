@@ -38,7 +38,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example do
       end
     end
 
-    it '#show'  do
+    it '#show' do
       visit gws_memo_messages_path(site)
       within '.list-items' do
         expect(page).to have_no_css(".list-item.seen")

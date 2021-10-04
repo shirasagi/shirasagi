@@ -41,7 +41,7 @@ module Webmail::MailHelper
     group_options = group_options(path_helper)
     selected = send(path_helper, webmail_mode: @webmail_mode || :account, account: params[:account])
 
-    all_options  = account_options + group_options
+    all_options = account_options + group_options
     all_options.unshift([nil, send(path_helper, @cur_user.webmail_user.imap_default_index)]) if account_options.blank?
     option_tags = options_for_select(all_options, selected)
 
