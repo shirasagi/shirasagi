@@ -1,12 +1,5 @@
 class Guide::QuestionDiagram
-  attr_reader :node
-
-  attr_reader :roots
-  attr_reader :longest_length
-  attr_reader :shortest_length
-
-  attr_reader :questions
-  attr_reader :unevaluated_longest_length
+  attr_reader :node, :roots, :longest_length, :shortest_length, :questions, :unevaluated_longest_length
 
   def initialize(node)
     @node = node

@@ -1,8 +1,7 @@
 class SS::ImageResizer
   include ActiveModel::Model
 
-  attr_accessor :cur_site, :cur_user
-  attr_accessor :resizing
+  attr_accessor :cur_site, :cur_user, :resizing
 
   def resizing
     (@resizing && @resizing.size == 2) ? @resizing.map(&:to_i) : nil

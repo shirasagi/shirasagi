@@ -15,8 +15,7 @@ class SS::Csv
       @context = self
     end
 
-    attr_reader :cur_site, :cur_user
-    attr_reader :encoding, :columns
+    attr_reader :cur_site, :cur_user, :encoding, :columns
 
     def each
       yield draw_header

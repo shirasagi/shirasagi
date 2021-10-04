@@ -4,13 +4,7 @@ class Sys::Auth::OpenIdConnect::TokenRequest
   TIMEOUT = 30.seconds
   OPEN_TIMEOUT = 30.seconds
 
-  attr_accessor :state
-  attr_accessor :grant_type
-  attr_accessor :code
-
-  attr_accessor :cur_item
-  attr_accessor :redirect_uri
-  attr_accessor :sso_token
+  attr_accessor :state, :grant_type, :code, :cur_item, :redirect_uri, :sso_token
 
   validates :state, presence: true
   validates :grant_type, presence: true

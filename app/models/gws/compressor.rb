@@ -1,6 +1,5 @@
 class Gws::Compressor
-  attr_accessor :user, :model, :items, :filename, :name
-  attr_accessor :root, :path, :url
+  attr_accessor :user, :model, :items, :filename, :name, :root, :path, :url
 
   def initialize(user, attr = {})
     self.user     = user

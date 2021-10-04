@@ -1,7 +1,6 @@
 class Garbage::K5374::AreaDaysExporter < Garbage::K5374::BaseExporter
 
-  attr_reader :area_days
-  attr_reader :remarks, :remark_count
+  attr_reader :area_days, :remarks, :remark_count
 
   def initialize(cur_node, task = nil)
     super(cur_node, task)
