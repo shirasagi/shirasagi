@@ -193,7 +193,7 @@ module Cms::Model::Page
   end
 
   def owned_files_bytesize
-    owned_files.map(&:size).sum
+    owned_files.sum(&:size)
   end
 
   def new_size_input

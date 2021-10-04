@@ -16,7 +16,7 @@ module Gws::Addon::Discussion::Quota
     return if site.discussion_filesize_limit <= 0
 
     limit = site.discussion_filesize_limit * 1024 * 1024
-    size = files.compact.map(&:size).sum
+    size = files.compact.sum(&:size)
 
     if size > limit
       errors.add(:base, :file_size_limit, size: number_to_human_size(size), limit: number_to_human_size(limit))

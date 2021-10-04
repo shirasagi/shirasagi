@@ -123,7 +123,7 @@ class Chat::LineReportsController < ApplicationController
       end
       row = []
       row << I18n.t('chat.line_report.total')
-      row << items.map(&:to_i).sum
+      row << items.sum(&:to_i)
       data << row
     end
 
@@ -146,7 +146,7 @@ class Chat::LineReportsController < ApplicationController
       end
       row = []
       row << I18n.t('chat.line_report.total')
-      row << items.map(&:to_i).sum
+      row << items.sum(&:to_i)
       data << row
     end
 
