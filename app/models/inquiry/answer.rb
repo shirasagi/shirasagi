@@ -100,7 +100,7 @@ class Inquiry::Answer
   end
 
   def find_data(column)
-    data.select { |d| d.column_id == column.id }.first
+    data.find { |d| d.column_id == column.id }
   end
 
   def set_data(hash = {})

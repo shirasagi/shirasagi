@@ -218,7 +218,7 @@ class Opendata::Dataset::Importer
     # file
     if file_name.present?
       path = "#{@datasets_dir}/#{@dataset_id}/#{@resource_id}/*"
-      file_path = Dir.glob(path).select { |f| ::File.file?(f) }.first
+      file_path = Dir.glob(path).find { |f| ::File.file?(f) }
 
       if file_path.present?
         item.in_file = Fs::UploadedFile.create_from_file(file_path)
@@ -230,7 +230,7 @@ class Opendata::Dataset::Importer
     # tsv file
     if tsv_name.present?
       path = "#{@datasets_dir}/#{@dataset_id}/#{@resource_id}/tsv/*"
-      file_path = Dir.glob(path).select { |f| ::File.file?(f) }.first
+      file_path = Dir.glob(path).find { |f| ::File.file?(f) }
 
       if file_path.present?
         item.in_tsv = Fs::UploadedFile.create_from_file(file_path)

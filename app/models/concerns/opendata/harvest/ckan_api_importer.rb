@@ -134,7 +134,7 @@ module Opendata::Harvest::CkanApiImporter
   end
 
   def create_resource_from_ckan_api(attributes, idx, dataset, license)
-    resource = dataset.resources.select { |r| r.uuid == attributes["id"] }.first
+    resource = dataset.resources.find { |r| r.uuid == attributes["id"] }
 
     if resource.nil?
       resource = Opendata::Resource.new

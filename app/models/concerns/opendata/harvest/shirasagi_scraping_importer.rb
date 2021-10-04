@@ -130,7 +130,7 @@ module Opendata::Harvest::ShirasagiScrapingImporter
   end
 
   def create_resource_from_shirasagi_scraper(attributes, idx, dataset, license)
-    resource = dataset.resources.select { |r| r.harvest_imported_url == attributes["url"] }.first
+    resource = dataset.resources.find { |r| r.harvest_imported_url == attributes["url"] }
 
     if resource
       put_log("-- same url resource exists #{attributes["url"]}")

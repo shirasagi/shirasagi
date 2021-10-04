@@ -29,7 +29,7 @@ class Webmail::Apis::MailsController < ApplicationController
     @imap.select(mailbox)
 
     if s_params[:mailbox].present?
-      @cur_mailbox = @mailboxes.all.select { |mailbox| mailbox.original_name == s_params[:mailbox] }.first
+      @cur_mailbox = @mailboxes.all.find { |mailbox| mailbox.original_name == s_params[:mailbox] }
     end
     @cur_mailbox ||= @mailboxes.all.first
 

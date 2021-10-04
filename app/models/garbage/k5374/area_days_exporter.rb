@@ -51,7 +51,7 @@ class Garbage::K5374::AreaDaysExporter < Garbage::K5374::BaseExporter
       row << node.name
       row << node.center
       garbage_type_fields.each do |field|
-        type = node.garbage_type.select { |v| v["field"] == field }.first
+        type = node.garbage_type.find { |v| v["field"] == field }
         if type.nil?
           row << ""
           next

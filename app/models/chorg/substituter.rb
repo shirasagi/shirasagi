@@ -38,7 +38,7 @@ module Chorg::Substituter
 
     def integer_array?(array_value)
       return false if !array_value.is_a?(Array)
-      return false if array_value.to_a.select { |value| value && !value.is_a?(Integer) }.first
+      return false if array_value.to_a.find { |value| value && !value.is_a?(Integer) }
       true
     end
 
@@ -85,7 +85,7 @@ module Chorg::Substituter
 
     def string_array?(array_value)
       return false if !array_value.is_a?(Array)
-      return false if array_value.to_a.select { |value| value && !value.is_a?(String) }.first
+      return false if array_value.to_a.find { |value| value && !value.is_a?(String) }
       true
     end
 

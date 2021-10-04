@@ -122,7 +122,7 @@ module SS::Addon
     end
 
     def find_translate_target(code)
-      translate_targets.select { |item| item.code == code }.first
+      translate_targets.find { |item| item.code == code }
     end
   end
 end
