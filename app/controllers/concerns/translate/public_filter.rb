@@ -38,7 +38,7 @@ module Translate::PublicFilter
     convertor = Translate::Convertor.new(@cur_site, @translate_source, @translate_target)
     body = convertor.convert(body)
 
-    if @cur_site.request_word_limit_exceeded && body =~ /<body data-translate=\".+?\"/
+    if @cur_site.request_word_limit_exceeded && body =~ /<body data-translate=".+?"/
       h = []
       h << '<script src="/assets/js/jquery.colorbox.js"></script>'
       h << '<link rel="stylesheet" media="screen" href="/assets/css/colorbox/colorbox.css">'

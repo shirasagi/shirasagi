@@ -60,7 +60,7 @@ class Opendata::Graph::Base
 
   def format_data(data)
     return "-" if data.blank?
-    return data if !/^(\-)?((\d)+\,)?((\d)+\.)?+(\d)+$/.match?(data)
+    return data if !/^(-)?((\d)+,)?((\d)+\.)?+(\d)+$/.match?(data)
 
     data = data.delete(",")
     data = data.to_f.to_s

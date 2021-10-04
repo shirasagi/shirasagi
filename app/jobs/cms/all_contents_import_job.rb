@@ -108,7 +108,7 @@ class Cms::AllContentsImportJob < Cms::ApplicationJob
     categories = categories.split(/[, 　、\r\n]+/) if categories
     categories ||= []
 
-    category_filenames = categories.map { |category| category.sub(/[ \t\(].*$/, '') }
+    category_filenames = categories.map { |category| category.sub(/[ \t(].*$/, '') }
     item.category_ids = Cms::Node.site(site).in(filename: category_filenames).pluck(:id)
   end
 

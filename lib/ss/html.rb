@@ -1,7 +1,7 @@
 class SS::Html
   class << self
     def extract_img_src(html, base_url = nil)
-      return nil unless html =~ /\<\s*?img\s+[^>]*\/?>/i
+      return nil unless html =~ /<\s*?img\s+[^>]*\/?>/i
 
       img_tag = $&
       return nil unless img_tag =~ /src\s*=\s*(['"]?[^'"]+['"]?)/

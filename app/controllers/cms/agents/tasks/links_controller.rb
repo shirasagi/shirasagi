@@ -176,7 +176,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
         internal = (next_url[0] != "/" && next_url !~ /^https?:/)
         next_url = File.expand_path next_url, url.sub(/[^\/]*?$/, "") if internal
-        next_url = URI.encode(next_url) if next_url.match?(/[^-_.!~*'()\w;\/\?:@&=+$,%#]/)
+        next_url = URI.encode(next_url) if next_url.match?(/[^-_.!~*'()\w;\/?:@&=+$,%#]/)
 
         next_url = @ref_string.new(next_url, offset: offset, inner_yield: inner_yield)
 

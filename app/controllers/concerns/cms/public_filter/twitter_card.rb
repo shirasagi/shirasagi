@@ -69,7 +69,7 @@ module Cms::PublicFilter::TwitterCard
   end
 
   def extract_image_urls_from_html(html)
-    regex = /\<\s*?img\s+[^>]*\/?>/i
+    regex = /<\s*?img\s+[^>]*\/?>/i
     urls = html.scan(regex).map do |m|
       next nil unless m =~ /src\s*=\s*(['"]?[^'"]+['"]?)/
 

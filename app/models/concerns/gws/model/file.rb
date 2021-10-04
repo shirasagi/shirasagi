@@ -129,7 +129,7 @@ module Gws::Model::File
   end
 
   def humanized_name
-    "#{name.sub(/\.[^\.]+$/, '')} (#{extname.upcase} #{number_to_human_size(size)})"
+    "#{name.sub(/\.[^.]+$/, '')} (#{extname.upcase} #{number_to_human_size(size)})"
   end
 
   def download_filename
@@ -216,7 +216,7 @@ module Gws::Model::File
   end
 
   def validate_filename
-    if multibyte_filename_disabled? && filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
+    if multibyte_filename_disabled? && filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-.]+$/
       errors.add :in_file, :invalid_filename
     end
   end
