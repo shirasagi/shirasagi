@@ -17,7 +17,7 @@ class Jmaxml::Trigger::TornadoAlert < Jmaxml::Trigger::Base
     context[:type] = Jmaxml::Type::TORNADO
     context[:area_codes] = area_codes
 
-    return true unless block_given?
+    return true unless block
 
     yield
   end

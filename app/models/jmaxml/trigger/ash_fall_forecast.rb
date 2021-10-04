@@ -20,7 +20,7 @@ class Jmaxml::Trigger::AshFallForecast < Jmaxml::Trigger::Base
     context[:type] = Jmaxml::Type::ASH_FALL
     context[:area_codes] = area_codes
 
-    return true unless block_given?
+    return true unless block
 
     yield
   end

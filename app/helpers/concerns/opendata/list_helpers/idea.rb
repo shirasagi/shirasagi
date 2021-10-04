@@ -47,7 +47,7 @@ module Opendata::ListHelpers::Idea
     h = []
     h << cur_item.upper_html.presence || default_idea_upper_html
 
-    if block_given?
+    if block
       h << capture(&block)
     else
       @items.each do |item|
