@@ -43,7 +43,7 @@ describe Ldap::Group, ldap: true do
 
   describe "#parent" do
     subject(:dn) { "ou=001001政策課, ou=001企画政策部, dc=example, dc=jp" }
-    subject(:parent_dn) { dn[dn.index(",") + 1..-1] }
+    subject(:parent_dn) { dn[dn.index(",") + 1..] }
     subject(:connection) do
       Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
                                username: username, password: password)

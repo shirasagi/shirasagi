@@ -10,8 +10,8 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
     let(:node_category_child1) { create :category_node_page, cur_site: site, cur_node: node_category_root }
     let(:html) { '<h2>見出し2</h2><p>内容が入ります。</p><h3>見出し3</h3><p>内容が入ります。内容が入ります。</p>' }
     let(:item) { create(:article_page, cur_site: site, cur_node: node, html: html, category_ids: [ node_category_child1.id ]) }
-    let(:pc_preview_path) { cms_preview_path(site: site, path: item.url[1..-1]) }
-    let(:mobile_preview_path) { cms_preview_path(site: site, path: "#{site.mobile_location}#{item.url}"[1..-1]) }
+    let(:pc_preview_path) { cms_preview_path(site: site, path: item.url[1..]) }
+    let(:mobile_preview_path) { cms_preview_path(site: site, path: "#{site.mobile_location}#{item.url}"[1..]) }
 
     before { login_cms_user }
 
@@ -40,8 +40,8 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
     let!(:node_child2) { create :category_node_node, cur_site: site, cur_node: node_root }
     let!(:node_faq_search) { create :faq_node_search, cur_site: site, cur_node: node_root }
     let(:faq_part_search) { create(:faq_part_search, cur_site: site, cur_node: node_faq_search) }
-    let(:pc_preview_path) { cms_preview_path(site: site, path: node_root.url[1..-1]) }
-    let(:mobile_preview_path) { cms_preview_path(site: site, path: "#{site.mobile_location}#{node_root.url}"[1..-1]) }
+    let(:pc_preview_path) { cms_preview_path(site: site, path: node_root.url[1..]) }
+    let(:mobile_preview_path) { cms_preview_path(site: site, path: "#{site.mobile_location}#{node_root.url}"[1..]) }
 
     before do
       category_part_node = create(
@@ -113,8 +113,8 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
     let(:item) { create(:cms_page, filename: "404.html", cur_site: site, html: html) }
     let(:html) { '<h2>見出し2</h2><p>内容が入ります。</p><h3>見出し3</h3><p>内容が入ります。内容が入ります。</p>' }
 
-    let(:pc_preview_path) { cms_preview_path(site: site, path: item.url[1..-1]) }
-    let(:mobile_preview_path) { cms_preview_path(site: site, path: "#{site.mobile_location}#{item.url}"[1..-1]) }
+    let(:pc_preview_path) { cms_preview_path(site: site, path: item.url[1..]) }
+    let(:mobile_preview_path) { cms_preview_path(site: site, path: "#{site.mobile_location}#{item.url}"[1..]) }
 
     before { login_cms_user }
 

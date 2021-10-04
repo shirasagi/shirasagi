@@ -85,7 +85,7 @@ module ApplicationHelper
   # @deprecated
   def scss(&block)
     opts = Rails.application.config.sass
-    load_paths = opts.load_paths[1..-1] || []
+    load_paths = opts.load_paths[1..] || []
     load_paths << "#{Rails.root}/vendor/assets/stylesheets"
 
     sass = Sass::Engine.new(

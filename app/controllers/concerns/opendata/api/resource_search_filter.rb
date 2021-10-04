@@ -114,7 +114,7 @@ module Opendata::Api::ResourceSearchFilter
       if @result_list.size < @offset.to_i
         @result_list = []
       else
-        @result_list = @result_list[@offset.to_i..-1]
+        @result_list = @result_list[@offset.to_i..]
       end
     end
 

@@ -78,11 +78,11 @@ module SS::Model::Group
 
   def section_name
     return name unless name.include?('/')
-    name.split("/")[1..-1].join(' ')
+    name.split("/")[1..].join(' ')
   end
 
   def trailing_name
-    @trailing_name ||= name.split("/")[depth..-1].join("/")
+    @trailing_name ||= name.split("/")[depth..].join("/")
   end
 
   def root

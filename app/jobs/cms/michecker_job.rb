@@ -64,7 +64,7 @@ class Cms::MicheckerJob < Cms::ApplicationJob
 
     params = {
       protocol: scheme, host: domain,
-      site: site.id, path: @target.url[1..-1], "no-controller" => true, access_token: new_access_token!
+      site: site.id, path: @target.url[1..], "no-controller" => true, access_token: new_access_token!
     }
 
     Rails.application.routes.url_helpers.cms_preview_url(params)

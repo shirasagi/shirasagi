@@ -61,7 +61,7 @@ module Gws::Model::Folder
   end
 
   def trailing_name
-    @trailing_name ||= name.split("/")[depth-1..-1].join("/") if name.present?
+    @trailing_name ||= name.split("/")[depth-1..].join("/") if name.present?
   end
 
   def parent

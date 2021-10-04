@@ -19,7 +19,7 @@ class Webmail::PartFile
     ret = ::File.extname(part.filename)
     return "" if ret.blank?
 
-    ret = ret[1..-1] if ret.start_with?(".")
+    ret = ret[1..] if ret.start_with?(".")
     ret
   end
 

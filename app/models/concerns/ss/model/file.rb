@@ -207,7 +207,7 @@ module SS::Model::File
     ret = ::File.extname(filename)
     return "" if ret.blank?
 
-    ret = ret[1..-1] if ret.start_with?(".")
+    ret = ret[1..] if ret.start_with?(".")
     ret
   end
 

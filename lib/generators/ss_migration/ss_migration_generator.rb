@@ -14,7 +14,7 @@ class SsMigrationGenerator < Rails::Generators::NamedBase
     @migration_fullpath = SS::Migration::DIR
     @migration_fullpath = @migration_fullpath.join(options['module']) if options['module']
     @migration_fullpath = @migration_fullpath.join("#{@version}_#{file_name}.rb")
-    @migration_relative_path = @migration_fullpath.to_s[(Rails.root.to_s.length + 1)..-1]
+    @migration_relative_path = @migration_fullpath.to_s[(Rails.root.to_s.length + 1)..]
     template "migration.rb.tt", @migration_fullpath
   end
 
@@ -22,7 +22,7 @@ class SsMigrationGenerator < Rails::Generators::NamedBase
     @spec_fullpath = SPEC_DIR
     @spec_fullpath = @spec_fullpath.join(options['module']) if options['module']
     @spec_fullpath = @spec_fullpath.join("#{@version}_#{file_name}_spec.rb")
-    @spec_relative_path = @spec_fullpath.to_s[(Rails.root.to_s.length + 1)..-1]
+    @spec_relative_path = @spec_fullpath.to_s[(Rails.root.to_s.length + 1)..]
     template "migration_spec.rb.tt", @spec_fullpath
   end
 end

@@ -93,7 +93,7 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
 
     if site.domains.any? { |domain| searches.include?(domain) }
       # internal link
-      filename = u.path[1..-1].to_s
+      filename = u.path[1..].to_s
       content = Cms::Page.site(site).where(filename: filename).first
       content ||= Cms::Node.site(site).where(filename: filename.sub(/\/$/, "")).first
       if content.present?

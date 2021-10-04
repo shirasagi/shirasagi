@@ -112,7 +112,7 @@ class Cms::PreviewController < ApplicationController
         @contents_env[key] = request.env[key]
       end
     end
-    @contents_env["REQUEST_URI"] = "#{@cur_site.full_url}#{@cur_path[1..-1]}"
+    @contents_env["REQUEST_URI"] = "#{@cur_site.full_url}#{@cur_path[1..]}"
     @contents_env[::Rack::PATH_INFO] = @cur_path
     @contents_env[::Rack::REQUEST_METHOD] = ::Rack::GET
     @contents_env[::Rack::REQUEST_PATH] = @cur_path

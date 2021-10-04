@@ -74,13 +74,13 @@ module Cms::PublicFilter::TwitterCard
       next nil unless m =~ /src\s*=\s*(['"]?[^'"]+['"]?)/
 
       url = $1
-      url = url[1..-1] if url.start_with?("'", '"')
+      url = url[1..] if url.start_with?("'", '"')
       url = url[0..-2] if url.end_with?("'", '"')
       url = url.strip
 
       next nil unless url.start_with?("/")
 
-      "#{@cur_site.full_root_url}#{url[1..-1]}"
+      "#{@cur_site.full_root_url}#{url[1..]}"
     end
 
     urls.compact

@@ -39,7 +39,7 @@ module Gws::Model::Category
   end
 
   def trailing_name
-    @trailing_name ||= name.split("/")[depth..-1].join("/")
+    @trailing_name ||= name.split("/")[depth..].join("/")
   end
 
   def depth

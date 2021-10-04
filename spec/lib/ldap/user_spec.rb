@@ -33,7 +33,7 @@ describe Ldap::User, ldap: true do
 
   describe "#parent" do
     let(:dn) { "uid=admin, ou=001001政策課, ou=001企画政策部, dc=example, dc=jp" }
-    let(:parent_dn) { dn[dn.index(",") + 1..-1] }
+    let(:parent_dn) { dn[dn.index(",") + 1..] }
     let(:username) { "cn=admin,dc=example,dc=jp" }
     let(:password) { SS::Crypt.encrypt("admin") }
     let(:connection) do

@@ -24,7 +24,7 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
       return if uri.blank? || uri.host.blank?
 
       if uri.host == "youtu.be"
-        return uri.path[1..-1]
+        return uri.path[1..]
       end
 
       if uri.host.end_with?(".youtube.com")
@@ -34,7 +34,7 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
         end
 
         if uri.path.start_with?("/embed/")
-          return uri.path[7..-1].sub(/\/.*$/, "")
+          return uri.path[7..].sub(/\/.*$/, "")
         end
       end
 

@@ -204,7 +204,7 @@ module Cms::Addon::List
 
       all_nodes = begin
         nodes_conditions = pending_filenames.map do |site, filename, _bind, _category_key|
-          { site_id: site.id, filename: filename.start_with?("/") ? filename[1..-1] : filename }
+          { site_id: site.id, filename: filename.start_with?("/") ? filename[1..] : filename }
         end
         Cms::Node.unscoped.where("$or" => nodes_conditions).to_a
       end

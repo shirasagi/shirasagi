@@ -47,8 +47,8 @@ module Gws::Addon::System::LogSetting
 
   def allowed_log_severity_for(mod)
     mod = mod.to_s
-    if mod.start_with?('gws/') && respond_to?("log_#{mod[4..-1]}_severity")
-      severity = send("log_#{mod[4..-1]}_severity")
+    if mod.start_with?('gws/') && respond_to?("log_#{mod[4..]}_severity")
+      severity = send("log_#{mod[4..]}_severity")
     end
 
     severity ||= log_main_severity

@@ -16,7 +16,7 @@ module Gws::Schedule::PlanHelper
 
     dates[1].split(/ /).each_with_index do |s, i|
       next if s == dates[0].split(/ /)[i]
-      return [dates[0], dates[1].split(/ /)[i..-1].join(' ')].join(' - ')
+      return [dates[0], dates[1].split(/ /)[i..].join(' ')].join(' - ')
     end
   end
 

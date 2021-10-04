@@ -79,7 +79,7 @@ module Kana::Convertor
         end
       end
 
-      kana << byte[pl..-1].pack("C*").force_encoding("utf-8")
+      kana << byte[pl..].pack("C*").force_encoding("utf-8")
       kana.scrub('').strip
     end
 

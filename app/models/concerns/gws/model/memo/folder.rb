@@ -16,7 +16,7 @@ module Gws::Model::Memo::Folder
 
   def trailing_name
     # @trailing_name ||= name.split("/")[depth..-1].join("/")
-    @trailing_name ||= name.split("/")[depth..-1].join("/") if name.present?
+    @trailing_name ||= name.split("/")[depth..].join("/") if name.present?
   end
 
   def depth

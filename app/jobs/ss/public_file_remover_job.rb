@@ -52,7 +52,7 @@ class SS::PublicFileRemoverJob < SS::ApplicationJob
   def parse_file_id(path)
     path = path.sub(@public_root, "")
     path = path.sub("/_", "")
-    path = path[1..-1] if path.start_with?("/")
+    path = path[1..] if path.start_with?("/")
     path = path.gsub("/", "")
 
     Integer(path) rescue nil

@@ -123,12 +123,12 @@ module Tasks
           puts "# member/login"
           each_items(::Member::Node::Login.site(site)) do |item|
             if item.redirect_url.start_with?("/")
-              item.set(redirect_url: "#{site.url}#{item.redirect_url[1..-1]}")
+              item.set(redirect_url: "#{site.url}#{item.redirect_url[1..]}")
             end
           end
 
-          site.mobile_location = "#{site.url}#{site.mobile_location[1..-1]}" if site.mobile_location.present?
-          site.editor_css_path = "#{site.url}#{site.editor_css_path[1..-1]}" if site.editor_css_path.present?
+          site.mobile_location = "#{site.url}#{site.mobile_location[1..]}" if site.mobile_location.present?
+          site.editor_css_path = "#{site.url}#{site.editor_css_path[1..]}" if site.editor_css_path.present?
         end
       end
 

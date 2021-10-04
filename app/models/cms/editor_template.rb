@@ -55,7 +55,7 @@ class Cms::EditorTemplate
     url = thumb.present? ? thumb.url : SS.config.cms.editor_template_thumb
 
     # trim leading slash because it is required relative path from root.
-    url = url[1..-1] if url.start_with?("/")
+    url = url[1..] if url.start_with?("/")
     url
   end
 

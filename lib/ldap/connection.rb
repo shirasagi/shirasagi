@@ -39,7 +39,7 @@ class Ldap::Connection
       return nil if index.nil?
 
       first = ldap_dn[0..index - 1].strip
-      remains = ldap_dn[index + 1..-1].strip
+      remains = ldap_dn[index + 1..].strip
 
       key, value = first.split("=", 2)
       filter = Net::LDAP::Filter.eq(key.strip, value.strip)

@@ -10,7 +10,7 @@ class SS::DataUrl
       raise MalformedDataUrlError unless data_index
 
       media_type = data_url[5..data_index - 1]
-      data = data_url[data_index + 1..-1]
+      data = data_url[data_index + 1..]
 
       media_type_options = media_type.split(';')
       media_type = media_type_options.shift

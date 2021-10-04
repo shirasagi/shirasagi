@@ -101,7 +101,7 @@ class Event::Agents::Parts::CalendarController < ApplicationController
     end
 
     if preview_path?
-      @render_url = cms_preview_path(site: @cur_site, preview_date: params[:preview_date], path: @cur_part.url[1..-1])
+      @render_url = cms_preview_path(site: @cur_site, preview_date: params[:preview_date], path: @cur_part.url[1..])
     else
       @render_url = @cur_part.url
     end
@@ -128,7 +128,7 @@ class Event::Agents::Parts::CalendarController < ApplicationController
     end
 
     if preview_path?
-      @render_url = cms_preview_path(site: @cur_site, preview_date: params[:preview_date], path: @cur_part.url[1..-1])
+      @render_url = cms_preview_path(site: @cur_site, preview_date: params[:preview_date], path: @cur_part.url[1..])
     else
       @render_url = @cur_part.url
     end

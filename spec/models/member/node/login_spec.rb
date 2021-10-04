@@ -58,7 +58,7 @@ describe Member::Node::Login, type: :model, dbscope: :example do
     context "when full path is given" do
       let(:path) { "/#{unique_id}" }
       it do
-        expect(node.make_trusted_full_url(path)).to eq URI.join(node.site.full_url, path[1..-1]).to_s
+        expect(node.make_trusted_full_url(path)).to eq URI.join(node.site.full_url, path[1..]).to_s
       end
     end
 

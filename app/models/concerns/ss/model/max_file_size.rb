@@ -73,6 +73,6 @@ module SS::Model::MaxFileSize
     # normalize extensions
     # 1. convert to downcase
     # 2. remove leading period
-    self.extensions = extensions.map(&:downcase).map { |ext| ext.start_with?('.') ? ext[1..-1] : ext }
+    self.extensions = extensions.map(&:downcase).map { |ext| ext.start_with?('.') ? ext[1..] : ext }
   end
 end

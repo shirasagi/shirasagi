@@ -138,7 +138,7 @@ class SS::Migration
     def new_version
       latest = latest_migration_file_version
       latest_ymd_part = latest[0..7]
-      latest_seq_part = latest[8..-1]
+      latest_seq_part = latest[8..]
 
       current_ymd_part = Time.zone.now.strftime("%Y%m%d")
 

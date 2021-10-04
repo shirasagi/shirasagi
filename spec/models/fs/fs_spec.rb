@@ -244,8 +244,8 @@ describe Fs do
       expect(filesystem.glob("#{tmpdir}/spec/fs/*")).to eq [ "#{tmpdir}/spec/fs/logo.png" ]
       expect(filesystem.glob("#{tmpdir}/spec/**/*")).to eq [ "#{tmpdir}/spec/fs", "#{tmpdir}/spec/fs/logo.png" ]
 
-      expect(grid_fs.glob("#{tmpdir}/spec/fs/*")).to eq [ "#{tmpdir}/spec/fs/logo.png"[1..-1] ]
-      expect(grid_fs.glob("#{tmpdir}/spec/**/*")).to eq [ "#{tmpdir}/spec/fs/logo.png"[1..-1] ]
+      expect(grid_fs.glob("#{tmpdir}/spec/fs/*")).to eq [ "#{tmpdir}/spec/fs/logo.png"[1..] ]
+      expect(grid_fs.glob("#{tmpdir}/spec/**/*")).to eq [ "#{tmpdir}/spec/fs/logo.png"[1..] ]
     end
   end
 

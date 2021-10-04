@@ -119,10 +119,10 @@ module Gws::Model
 
       Array(in_members).flatten.compact.uniq.select(&:present?).each do |member_id|
         if member_id.to_s.start_with?('webmail_group:')
-          group_id = member_id[14..-1]
+          group_id = member_id[14..]
           webmail_address_groups << Webmail::AddressGroup.user(@cur_user).find(group_id) rescue nil
         elsif member_id.to_s.start_with?('shared_group:')
-          group_id = member_id[13..-1]
+          group_id = member_id[13..]
           shared_address_groups << Gws::SharedAddress::Group.site(@cur_site).find(group_id) rescue nil
         else
           users << Gws::User.find(member_id) rescue nil

@@ -7,7 +7,7 @@ class SS::Html
       return nil unless img_tag =~ /src\s*=\s*(['"]?[^'"]+['"]?)/
 
       img_source = $1
-      img_source = img_source[1..-1] if img_source.start_with?("'", '"')
+      img_source = img_source[1..] if img_source.start_with?("'", '"')
       img_source = img_source[0..-2] if img_source.end_with?("'", '"')
       img_source = img_source.strip
       if img_source.start_with?('.') && base_url

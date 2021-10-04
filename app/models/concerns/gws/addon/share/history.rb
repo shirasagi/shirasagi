@@ -25,7 +25,7 @@ module Gws::Addon::Share
 
     def current_history_file_id
       base = path + "_history"
-      Fs.glob("#{base}[0-9]*").map { |path| path[base.length..-1].to_i }.max
+      Fs.glob("#{base}[0-9]*").map { |path| path[base.length..].to_i }.max
     end
 
     def next_history_file_id
