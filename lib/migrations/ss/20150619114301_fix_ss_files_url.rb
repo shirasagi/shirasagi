@@ -52,7 +52,7 @@ class SS::Migration20150619114301
       if url
         "=\"#{url}\""
       else
-        "#{head}#{id.split("").join("/")}/_#{tail}"
+        "#{head}#{id.chars.join("/")}/_#{tail}"
       end
     end
   end

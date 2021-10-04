@@ -42,7 +42,7 @@ class Kana::Dictionary
     end
 
     def master_dic(site_id)
-      self.master_root + "/" + site_id.to_s.split(//).join("/") + "/_/user.dic"
+      self.master_root + "/" + site_id.to_s.chars.join("/") + "/_/user.dic"
     end
 
     def build_dic(site_id, item_ids)

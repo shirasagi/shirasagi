@@ -144,7 +144,7 @@ module SS
 
     def native_fill_in(locator = nil, with:)
       el = find(:fillable_field, locator).set('').click
-      with.to_s.split('').each { |c| el.native.send_keys(c) }
+      with.to_s.chars.each { |c| el.native.send_keys(c) }
       el
     rescue Selenium::WebDriver::Error::StaleElementReferenceError
       el
