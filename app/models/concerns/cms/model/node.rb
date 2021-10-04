@@ -28,7 +28,7 @@ module Cms::Model::Node
 
     after_save :rename_children, if: ->{ @db_changes }
     after_save :remove_files_recursively, if: ->{ remove_files_recursively? }
-    after_update :update_page_index_queues, if: ->{ @db_changes }
+    after_update :update_page_index_queues, if: ->{ @db_changes["state"] }
     after_destroy :remove_all
     after_destroy :destroy_children
 
@@ -225,10 +225,10 @@ module Cms::Model::Node
     return if site.blank?
     return unless site.elasticsearch_enabled?
 
-    if remove_files_recursively?
-      Cms::Elasticsearch::Indexer::NodeCloseJob.bind(site_id: site, node_id: id).perform_later
-    else
+    if public? && public_node?
       Cms::Elasticsearch::Indexer::NodeReleaseJob.bind(site_id: site, node_id: id).perform_later
+    else
+      Cms::Elasticsearch::Indexer::NodeCloseJob.bind(site_id: site, node_id: id).perform_later
     end
   end
 
