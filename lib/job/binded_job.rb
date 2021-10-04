@@ -4,8 +4,7 @@ class Job::BindedJob < ::ActiveJob::ConfiguredJob
     @bindings = bindings.dup.stringify_keys
   end
 
-  attr_reader :options
-  attr_reader :bindings
+  attr_reader :options, :bindings
 
   def perform_now(*args)
     user_id_or_user = @bindings[:user_id].presence || @bindings["user_id"]

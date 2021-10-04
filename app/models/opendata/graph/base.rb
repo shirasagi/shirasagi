@@ -1,12 +1,5 @@
 class Opendata::Graph::Base
-  attr_reader :csv_lines
-  attr_reader :csv_columns
-
-  attr_reader :type
-  attr_reader :resource
-  attr_reader :labels
-  attr_reader :headers
-  attr_reader :datasets
+  attr_reader :csv_lines, :csv_columns, :type, :resource, :labels, :headers, :datasets
 
   def initialize(type, resource)
     @type = type
