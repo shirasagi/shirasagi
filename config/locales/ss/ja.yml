@@ -1,5 +1,6 @@
 ja:
   ss:
+    backup: バックアップ
     basic_info: 基本情報
     config: 設定
     management: 管理
@@ -22,6 +23,7 @@ ja:
     role_setting: ロール一括設定
     required: 必須入力
     required_field: ※必須入力
+    restore: 復元
     search_result: 検索結果
     url: URL
     login_url: ログインURL

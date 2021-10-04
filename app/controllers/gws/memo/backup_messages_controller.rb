@@ -1,4 +1,4 @@
-class Gws::Memo::ExportMessagesController < ApplicationController
+class Gws::Memo::BackupMessagesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
@@ -18,7 +18,7 @@ class Gws::Memo::ExportMessagesController < ApplicationController
 
   def set_crumbs
     @crumbs << [@cur_site.menu_memo_label || t('mongoid.models.gws/memo/message'), gws_memo_messages_path ]
-    @crumbs << [t('gws/memo/message.export_messages'), gws_memo_export_messages_path ]
+    @crumbs << [t('gws/memo/message.backup_messages'), gws_memo_backup_messages_path ]
   end
 
   def fix_params
@@ -26,7 +26,7 @@ class Gws::Memo::ExportMessagesController < ApplicationController
   end
 
   def check_permission
-    raise "403" unless @cur_user.gws_role_permit_any?(@cur_site, :export_gws_memo_messages)
+    raise "403" unless @cur_user.gws_role_permit_any?(@cur_site, :backup_gws_memo_messages)
   end
 
   public
@@ -35,33 +35,33 @@ class Gws::Memo::ExportMessagesController < ApplicationController
     @item = @model.new
   end
 
-  def export
+  def backup
     message_ids = params.dig(:item, :message_ids)
     message_ids = message_ids.select(&:present?) if message_ids
     root_url = params.dig(:item, :root_url)
-    export_filter = params.dig(:item, :export_filter)
+    backup_filter = params.dig(:item, :backup_filter)
     format = params.dig(:item, :format)
 
-    if export_filter != 'all' && message_ids.blank?
+    if backup_filter != 'all' && message_ids.blank?
       @item = @model.new
       @item.errors.add(:base, I18n.t("gws/memo/message.errors.blank_message"))
       render file: :index
       return
     end
 
-    unless Gws::Memo::MessageExportJob.check_size_limit_per_user?(@cur_user.id)
+    unless Gws::Memo::MessageBackupJob.check_size_limit_per_user?(@cur_user.id)
       @item = @model.new
       @item.errors.add(:base, t('job.notice.size_limit_exceeded'))
       render file: :index
       return
     end
 
-    job_class = Gws::Memo::MessageExportJob.bind(site_id: @cur_site.id, user_id: @cur_user)
-    job_class.perform_later(*message_ids, root_url: root_url, export_filter: export_filter, format: format)
-    render_create true, location: { action: :start_export }, notice: I18n.t("gws/memo/message.notice.start_export")
+    job_class = Gws::Memo::MessageBackupJob.bind(site_id: @cur_site.id, user_id: @cur_user)
+    job_class.perform_later(*message_ids, root_url: root_url, backup_filter: backup_filter, format: format)
+    render_create true, location: { action: :start_backup }, notice: I18n.t("gws/memo/message.notice.start_backup")
   end
 
-  def start_export
+  def start_backup
     #
   end
 end
