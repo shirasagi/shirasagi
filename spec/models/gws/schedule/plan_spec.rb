@@ -40,7 +40,7 @@ RSpec.describe Gws::Schedule::Plan, type: :model, dbscope: :example do
 
         opts = {}
         opts[:cur_user] = gws_user
-        cal = subject.calendar_format(gws_user, gws_site, opts)
+        cal = subject.calendar_format(gws_user, gws_site)
         expect(cal[:className]).to include 'fc-event-range'
         expect(cal[:className]).to include 'fc-event-allday'
       end
