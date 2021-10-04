@@ -3,6 +3,7 @@ module Translate::Lang::Export
 
   included do
     attr_accessor :in_file
+
     permit_params :in_file
   end
 

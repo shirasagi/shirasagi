@@ -4,6 +4,7 @@ module Cms::Addon::OpendataRef::Dataset
 
   included do
     attr_accessor :skip_assoc_opendata
+
     field :opendata_dataset_state, type: String, default: 'none', metadata: { branch: false }
     embeds_ids :opendata_datasets, class_name: "Opendata::Dataset", metadata: { on_copy: :clear, branch: false }
 

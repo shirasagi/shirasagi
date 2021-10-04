@@ -15,6 +15,7 @@ module Opendata::Node
     include History::Addon::Backup
 
     attr_accessor :count
+
     default_scope ->{ where(route: "opendata/category") }
   end
 
@@ -27,6 +28,7 @@ module Opendata::Node
     include History::Addon::Backup
 
     attr_accessor :count
+
     default_scope ->{ where(route: "opendata/estat_category") }
   end
 
@@ -40,6 +42,7 @@ module Opendata::Node
     include History::Addon::Backup
 
     attr_accessor :count, :code
+
     default_scope ->{ where(route: "opendata/area") }
   end
 

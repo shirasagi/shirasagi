@@ -8,6 +8,7 @@ module Gws::Addon::Import::Facility
 
     included do
       attr_accessor :in_file, :imported
+
       permit_params :in_file
     end
 

@@ -4,6 +4,7 @@ module Gws::Addon::Memo::Quota
 
   included do
     attr_accessor :in_skip_validates_sender_quota
+
     @in_skip_validates_sender_quota = false
     validate :validate_attached_file_size
     validate :validate_quota, if: -> { send_date_was.blank? }

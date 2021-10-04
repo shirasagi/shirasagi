@@ -7,6 +7,7 @@ module Cms::Addon::Import
 
     included do
       attr_accessor :in_file, :imported
+
       permit_params :in_file
     end
 

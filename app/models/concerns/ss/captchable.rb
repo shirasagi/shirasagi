@@ -3,6 +3,7 @@ module SS::Captchable
 
   included do
     attr_accessor :captcha_answer, :captcha_text, :captcha_error
+
     permit_params :captcha_answer, :captcha_text, :captcha_error
   end
 

@@ -6,6 +6,7 @@ module Gws::Export
 
   included do
     attr_accessor :in_file, :in_csv_encoding
+
     permit_params :in_file, :in_csv_encoding
   end
 

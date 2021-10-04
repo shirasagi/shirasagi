@@ -20,6 +20,7 @@ module Cms::Addon::Form::Page
     validate :validate_column_values
 
     attr_accessor :link_check_user
+
     validate :validate_column_links, on: :link
 
     before_validation :set_form_contains_urls

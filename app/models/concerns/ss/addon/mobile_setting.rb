@@ -5,6 +5,7 @@ module SS::Addon
 
     included do
       attr_accessor :in_mobile_size
+
       field :mobile_state, type: String
       field :mobile_size, type: Integer, default: 500 * 1_024 # 500kb
       field :mobile_location, type: String
