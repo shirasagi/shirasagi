@@ -10,8 +10,10 @@ class SS::Extensions::ObjectIds < Array
 
     def mongoize(object)
       case object
-      when self.class then object.mongoize
-      when String then []
+      when self.class
+        object.mongoize
+      when String
+        []
       when Array
         ids = object.reject { |m| m.blank? }.uniq.map { |m| m.to_s.numeric? ? m.to_s.to_i : m.to_s }
         # ids = object.reject {|m| m.blank? }.uniq.map {|m| BSON::ObjectId.from_string(m) }
@@ -23,7 +25,8 @@ class SS::Extensions::ObjectIds < Array
 
     def evolve(object)
       case object
-      when self.class then object.mongoize
+      when self.class
+        object.mongoize
       else
         object
       end
