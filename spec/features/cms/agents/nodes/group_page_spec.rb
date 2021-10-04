@@ -64,12 +64,12 @@ describe "cms_agents_nodes_group_page", type: :feature, dbscope: :example do
   end
 
   context "public with child_item conditions" do
-    let! (:upper_html) { '<div class="middle dw">' }
-    let! (:loop_html) { '<section class="item dw-panel"><div class="dw-panel__content"><h2><a href="#{url}">#{index_name}</a></h2>#{child_items}</div></section>' }
-    let! (:lower_html) { '</div>' }
-    let! (:child_upper_html) { '<ul>' }
-    let! (:child_loop_html) { '<li><a href="#{url}">#{index_name}</a></li>' }
-    let! (:child_lower_html) { '</ul>' }
+    let!(:upper_html) { '<div class="middle dw">' }
+    let!(:loop_html) { '<section class="item dw-panel"><div class="dw-panel__content"><h2><a href="#{url}">#{index_name}</a></h2>#{child_items}</div></section>' }
+    let!(:lower_html) { '</div>' }
+    let!(:child_upper_html) { '<ul>' }
+    let!(:child_loop_html) { '<li><a href="#{url}">#{index_name}</a></li>' }
+    let!(:child_lower_html) { '</ul>' }
     let!(:cms_node) do
       create :cms_node_node, layout_id: layout.id, filename: "cms-node",
         upper_html: upper_html, loop_html: loop_html, lower_html: lower_html,
