@@ -14,6 +14,5 @@ class Cms::PublicController < ApplicationController
   end
 
   def put_access_log
-    #
   end
 end
