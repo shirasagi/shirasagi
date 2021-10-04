@@ -52,10 +52,9 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
       expect(Fs.exists?(file.sanitizer_input_path)).to be_truthy
 
       # restore
-      output_path = sanitizer_mock_restore(file)
+      file = mock_sanitizer_restore(file)
       expect(file.sanitizer_state).to eq 'complete'
       expect(Fs.exists?(file.path)).to be_truthy
-      expect(Fs.exists?(output_path)).to be_falsey
 
       visit sys_ad_path
       expect(page).to have_css('#selected-files .sanitizer-complete')

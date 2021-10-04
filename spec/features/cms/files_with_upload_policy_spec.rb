@@ -42,10 +42,9 @@ describe "cms_files_with_upload_policy", type: :feature, dbscope: :example, js: 
       expect(page).to have_css('.sanitizer-wait', text: I18n.t('ss.options.sanitizer_state.wait'))
 
       # restore
-      output_path = sanitizer_mock_restore(file)
+      file = mock_sanitizer_restore(file)
       expect(file.sanitizer_state).to eq 'complete'
       expect(Fs.exists?(file.path)).to be_truthy
-      expect(Fs.exists?(output_path)).to be_falsey
 
       visit index_path
       expect(page).to have_css('.list-items .sanitizer-complete')

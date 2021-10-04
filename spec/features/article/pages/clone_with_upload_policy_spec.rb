@@ -56,7 +56,7 @@ describe 'article_pages_with_upload_policy', type: :feature, dbscope: :example, 
 
         # restore
         file = SS::File.first
-        sanitizer_mock_restore(file)
+        file = mock_sanitizer_restore(file)
 
         # clone
         visit article_pages_path(site: site, cid: node)

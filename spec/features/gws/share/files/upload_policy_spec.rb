@@ -70,10 +70,9 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       expect(page).to have_css('.sanitizer-wait', text: I18n.t('ss.options.sanitizer_state.wait'))
 
       # restore
-      output_path = sanitizer_mock_restore(file)
+      file = mock_sanitizer_restore(file)
       expect(file.sanitizer_state).to eq 'complete'
       expect(Fs.exists?(file.path)).to be_truthy
-      expect(Fs.exists?(output_path)).to be_falsey
 
       click_on I18n.t('ss.links.back_to_index')
       expect(page).to have_css('.list-items .sanitizer-complete')
@@ -93,7 +92,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       file.reload
       file_path = file.path
       sanitizer_input_path = file.sanitizer_input_path
-      expect(Fs.cmp(file.path, file.sanitizer_input_path)).to be_truthy
+      expect(Fs.cmp(file.path, sanitizer_input_path)).to be_truthy
 
       # soft delete
       click_on I18n.t("ss.links.delete")

@@ -49,10 +49,9 @@ describe "member_apis_temp_files", type: :feature, dbscope: :example, js: true d
       expect(Fs.cmp(file.path, file.sanitizer_input_path)).to be_truthy
 
       # restore
-      output_path = sanitizer_mock_restore(file)
+      file = mock_sanitizer_restore(file)
       expect(file.sanitizer_state).to eq 'complete'
       expect(Fs.exists?(file.path)).to be_truthy
-      expect(Fs.exists?(output_path)).to be_falsey
     end
   end
 
