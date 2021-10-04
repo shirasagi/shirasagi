@@ -32,7 +32,7 @@ class Translate::Api::MicrosoftTranslator
     @count = 0
     @metered_usage = 0
 
-    count = texts.map(&:size).sum
+    count = texts.sum(&:size)
     uri = URI(@url + "&from=#{from}&to=#{to}")
     content = texts.map { |text| { "Text" => text } }.to_json
 

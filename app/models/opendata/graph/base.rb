@@ -53,7 +53,7 @@ class Opendata::Graph::Base
      # check column1 is total column
       columns_total = []
       @csv_columns.each do |column|
-        columns_total << column[1..column.size].map(&:to_f).sum
+        columns_total << column[1..column.size].sum(&:to_f)
       end
       column1, other = columns_total.partition.with_index { |_, i| i == 1 }.map(&:sum)
       (column1 == other)

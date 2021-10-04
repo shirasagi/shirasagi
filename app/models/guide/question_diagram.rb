@@ -18,8 +18,8 @@ class Guide::QuestionDiagram
     @procedures = {}
     @questions = []
 
-    @longest_length = @roots.map { |point| calc_longest_length(point) }.sum
-    @shortest_length = @roots.map { |point| calc_shortest_length(point) }.sum
+    @longest_length = @roots.sum { |point| calc_longest_length(point) }
+    @shortest_length = @roots.sum { |point| calc_shortest_length(point) }
     @unevaluated_longest_length = @longest_length
   end
 
@@ -51,7 +51,7 @@ class Guide::QuestionDiagram
       end
     end
 
-    @unevaluated_longest_length = points.map { |point| calc_longest_length(point) }.sum
+    @unevaluated_longest_length = points.sum { |point| calc_longest_length(point) }
 
     points
   end
