@@ -439,6 +439,9 @@ Rails/HasManyOrHasOneDependent:
     - 'app/models/opendata/app.rb'
     - 'app/models/opendata/dataset.rb'
 
+Rails/HelperInstanceVariable:
+  Enabled: false
+
 # Offense count: 45
 # Cop supports --auto-correct.
 # Configuration parameters: Include.
