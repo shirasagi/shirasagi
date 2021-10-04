@@ -840,18 +840,8 @@ Style/RandomWithOffset:
     - 'spec/jobs/gws/chorg/main_runner/staff_record_spec.rb'
     - 'spec/models/gws/board/post/descendants_file_info_spec.rb'
 
-# Offense count: 8
-# Cop supports --auto-correct.
 Style/RedundantBegin:
-  Exclude:
-    - 'app/helpers/application_helper.rb'
-    - 'app/jobs/rdf/vocab_import_job.rb'
-    - 'app/models/ezine/entry.rb'
-    - 'app/models/job/service/runner.rb'
-    - 'app/models/voice/file.rb'
-    - 'app/models/webmail/imap/quota.rb'
-    - 'app/models/workflow/extensions/route.rb'
-    - 'lib/tasks/unicorn.rake'
+  Enabled: false
 
 # Offense count: 1
 # Cop supports --auto-correct.
