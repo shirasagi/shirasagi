@@ -51,7 +51,6 @@ class Cms::SearchContents::HtmlController < ApplicationController
         replace_html_with_string(keyword, replacement)
       end
     rescue => e
-      #
     end
 
     location = {
