@@ -3,8 +3,8 @@ module Opendata::UrlHelper
     opts[:alt] ||= ""
     if opts[:size] && (opts.delete(:size) == :small)
       opts[:width] = 38
-        opts[:height] = 38
-      end
+      opts[:height] = 38
+    end
 
     url = member.icon ? member.icon.url : "opendata/icon-user.png"
     image_tag url, opts

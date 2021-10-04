@@ -17,7 +17,7 @@ module Cms::FormHelper
     end
     if cur_layout && !items.find { |_name, id| id == cur_layout.id }
       items.prepend([cur_layout.name, cur_layout.id])
-      end
+    end
     items
   end
 

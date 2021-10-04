@@ -84,7 +84,7 @@ class Article::PagesController < ApplicationController
       end
       if !Article::Page::Importer.valid_encoding?(file.to_io, Encoding::UTF_8) && !Article::Page::Importer.valid_encoding?(file.to_io, Encoding::SJIS)
         raise I18n.t("errors.messages.unsupported_encoding")
-        end
+      end
       if !Article::Page::Importer.valid_csv?(file)
         raise I18n.t("errors.messages.malformed_csv")
       end

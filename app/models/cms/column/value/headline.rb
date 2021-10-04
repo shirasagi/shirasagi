@@ -39,7 +39,7 @@ class Cms::Column::Value::Headline < Cms::Column::Value::Base
 
     if column.max_length.present? && column.max_length > 0 && (text.length > column.max_length)
       self.errors.add(:text, :too_long, count: column.max_length)
-      end
+    end
   end
 
   def to_default_html
