@@ -67,7 +67,7 @@ class Sys::PasswordValidator < ActiveModel::Validator
     return if record.new_record?
     return if record.decrypted_password.blank?
 
-    diff_chars = record.in_password.split("").uniq - record.decrypted_password.split("").uniq
+    diff_chars = record.in_password.chars.uniq - record.decrypted_password.chars.uniq
     return if diff_chars.length >= @setting.password_min_change_char_count
 
     record.errors.add :password, :password_min_change_chars, count: @setting.password_min_change_char_count

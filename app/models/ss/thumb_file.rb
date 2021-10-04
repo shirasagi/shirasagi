@@ -15,11 +15,11 @@ class SS::ThumbFile
 
   def public_dir
     return if site.blank? || !site.respond_to?(:root_path)
-    "#{site.root_path}/fs/" + original_id.to_s.split(//).join("/") + "/_/thumb"
+    "#{site.root_path}/fs/" + original_id.to_s.chars.join("/") + "/_/thumb"
   end
 
   def url_with_filename
-    "/fs/" + original_id.to_s.split(//).join("/") + "/_/thumb/#{filename}"
+    "/fs/" + original_id.to_s.chars.join("/") + "/_/thumb/#{filename}"
   end
 
   def url_with_name
@@ -28,7 +28,7 @@ class SS::ThumbFile
 
   def full_url_with_filename
     return if site.blank? || !site.respond_to?(:full_root_url)
-    "#{site.full_root_url}fs/" + original_id.to_s.split(//).join("/") + "/_/thumb/#{filename}"
+    "#{site.full_root_url}fs/" + original_id.to_s.chars.join("/") + "/_/thumb/#{filename}"
   end
 
   def full_url_with_name
