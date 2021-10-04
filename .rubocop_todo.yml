@@ -891,6 +891,9 @@ Style/RescueStandardError:
 Style/SafeNavigation:
   Enabled: false
 
+Style/StringConcatenation:
+  Enabled: false
+
 # Offense count: 30692
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
