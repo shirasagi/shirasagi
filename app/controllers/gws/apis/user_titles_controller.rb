@@ -3,7 +3,6 @@ class Gws::Apis::UserTitlesController < ApplicationController
 
   model Gws::UserTitle
 
-  public
 
   def index
     @multi = params[:single].blank?
