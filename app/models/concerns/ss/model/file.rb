@@ -152,24 +152,24 @@ module SS::Model::File
     item = effective_owner_item
     if cur_user && item
       permit = meta[:permit] || %i(role readable member)
-      if permit.include?(:readable) && item.respond_to?(:readable?) && item.readable?(cur_user, site: item.try(:site))
-        return true
+      if permit.include?(:readable) && item.respond_to?(:readable?)
+        return true if item.readable?(cur_user, site: item.try(:site))
       end
-      if permit.include?(:member) && item.respond_to?(:member?) && item.member?(cur_user)
-        return true
+      if permit.include?(:member) && item.respond_to?(:member?)
+        return true if item.member?(cur_user)
       end
-      if permit.include?(:role) && item.respond_to?(:allowed?) && item.allowed?(:read, cur_user, site: item.try(:site))
-        return true
+      if permit.include?(:role) && item.respond_to?(:allowed?)
+        return true if item.allowed?(:read, cur_user, site: item.try(:site))
       end
     end
 
-    if item && item.is_a?(Fs::FilePreviewable) && item.file_previewable?(self, user: cur_user, member: cur_member)
+    if item && item.is_a?(Fs::FilePreviewable)
       # special delegation if item implements previewable?
-      return true
+      return true if item.file_previewable?(self, user: cur_user, member: cur_member)
     end
 
-    if cur_user && respond_to?(:user_id) && (user_id == cur_user.id)
-      return true
+    if cur_user && respond_to?(:user_id)
+      return true if user_id == cur_user.id
     end
 
     false

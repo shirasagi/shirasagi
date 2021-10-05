@@ -13,14 +13,14 @@ class SS::Migration20150521192401
     end
 
     Ads::Banner.all.each do |page|
-      if page.site && page.file && !page.file.site_id
-        page.file.set(site_id: page.site.id)
+      if page.site && page.file
+        page.file.set(site_id: page.site.id) unless page.file.site_id
       end
     end
 
     Facility::Image.all.each do |page|
-      if page.site && page.image && !page.image.site_id
-        page.image.set(site_id: page.site.id)
+      if page.site && page.image
+        page.image.set(site_id: page.site.id) unless page.image.site_id
       end
     end
   end

@@ -37,8 +37,10 @@ class Cms::Column::Value::Headline < Cms::Column::Value::Base
 
     return if text.blank?
 
-    if column.max_length.present? && column.max_length > 0 && (text.length > column.max_length)
-      self.errors.add(:text, :too_long, count: column.max_length)
+    if column.max_length.present? && column.max_length > 0
+      if text.length > column.max_length
+        self.errors.add(:text, :too_long, count: column.max_length)
+      end
     end
   end
 

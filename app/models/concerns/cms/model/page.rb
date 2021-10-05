@@ -118,8 +118,8 @@ module Cms::Model::Page
 
   def move(dst)
     validate_destination_filename(dst)
-    if is_a?(Cms::Addon::EditLock) && locked?
-      errors.add :base, :locked, user: lock_owner.long_name
+    if is_a?(Cms::Addon::EditLock)
+      errors.add :base, :locked, user: lock_owner.long_name if locked?
     end
     return false unless errors.empty?
 

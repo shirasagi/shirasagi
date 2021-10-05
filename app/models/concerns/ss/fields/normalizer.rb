@@ -57,8 +57,8 @@ module SS::Fields::Normalizer
     return true if val.nil?
     return false if boolean_field?(field_def)
 
-    if val.is_a?(String) && (val.length == 1)
-      return false
+    if val.is_a?(String)
+      return false if val.length == 1
     end
     val.blank?
   end

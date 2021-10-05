@@ -84,10 +84,12 @@ class Gws::Share::FilesController < ApplicationController
   end
 
   def render_update(result, opts = {})
-    # if result is false, browser goes to edit form which requires to be locked.
-    if !result && !@item.acquire_lock
-      redirect_to action: :lock
-      return
+    unless result
+      # if result is false, browser goes to edit form which requires to be locked.
+      unless @item.acquire_lock
+        redirect_to action: :lock
+        return
+      end
     end
 
     super
@@ -122,8 +124,8 @@ class Gws::Share::FilesController < ApplicationController
   end
 
   def show
-    if params[:folder].present? && !(@item.folder_id.to_s == params[:folder])
-      raise "404"
+    if params[:folder].present?
+      raise "404" unless @item.folder_id.to_s == params[:folder]
     end
     render
   end

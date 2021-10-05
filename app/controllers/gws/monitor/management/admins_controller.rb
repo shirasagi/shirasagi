@@ -34,8 +34,8 @@ class Gws::Monitor::Management::AdminsController < ApplicationController
   end
 
   def check_readable
-    if @item && !@item.allowed?(:read, @cur_user, site: @cur_site)
-      raise '403'
+    if @item
+      raise '403' unless @item.allowed?(:read, @cur_user, site: @cur_site)
     end
   end
 end

@@ -40,8 +40,8 @@ class Inquiry::Agents::Tasks::Node::FormsController < ApplicationController
       File.delete(file) if File.exists?(file)
     end
 
-    if generate_inquiry_node(@node) && @task
-      @task.log "#{@node.url}index.html"
+    if generate_inquiry_node @node
+      @task.log "#{@node.url}index.html" if @task
     end
   end
 end

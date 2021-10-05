@@ -15,8 +15,10 @@ module Cms::FormHelper
     Cms::Layout.site(@cur_site).where(depth: 1).sort(name: 1).each do |item|
       items << [item.name, item.id]
     end
-    if cur_layout && !items.find { |_name, id| id == cur_layout.id }
-      items.prepend([cur_layout.name, cur_layout.id])
+    if cur_layout
+      unless items.find { |_name, id| id == cur_layout.id }
+        items.prepend([cur_layout.name, cur_layout.id])
+      end
     end
     items
   end

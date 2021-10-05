@@ -18,8 +18,10 @@ class Cms::Column::Value::Table < Cms::Column::Value::Base
 
     return if value.blank?
 
-    if column.max_length.present? && column.max_length > 0 && (url.length > column.max_length)
-      self.errors.add(:value, :too_long, count: column.max_length)
+    if column.max_length.present? && column.max_length > 0
+      if url.length > column.max_length
+        self.errors.add(:value, :too_long, count: column.max_length)
+      end
     end
   end
 

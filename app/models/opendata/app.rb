@@ -106,9 +106,11 @@ class Opendata::App
   end
 
   def validate_appurl
-    if self.appurl.present? && self.appfiles.present?
-      errors.add :appurl, I18n.t("opendata.errors.messages.validate_appurl")
-      return
+    if self.appurl.present?
+      if self.appfiles.present?
+        errors.add :appurl, I18n.t("opendata.errors.messages.validate_appurl")
+        return
+      end
     end
   end
 

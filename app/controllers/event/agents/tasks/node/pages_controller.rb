@@ -4,14 +4,14 @@ class Event::Agents::Tasks::Node::PagesController < ApplicationController
 
   def generate
     written = generate_node @node
-    if written && @task
-      @task.log "#{@node.url}index.html"
+    if written
+      @task.log "#{@node.url}index.html" if @task
     end
 
     # initialize context before generating rss
     init_context
-    if generate_node_ical(@node) && @task
-      @task.log "#{@node.url}index.ics"
+    if generate_node_ical @node
+      @task.log "#{@node.url}index.ics" if @task
     end
 
     @start_date = Time.zone.today.advance(years: -1)
@@ -62,8 +62,8 @@ class Event::Agents::Tasks::Node::PagesController < ApplicationController
         file = "#{@node.path}/#{date}/#{display}.html"
 
         init_context
-        if generate_node(@node, url: url, file: file) && @task
-          @task.log url
+        if generate_node(@node, url: url, file: file)
+          @task.log url if @task
         end
       end
     end

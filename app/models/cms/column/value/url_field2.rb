@@ -133,12 +133,16 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
       self.errors.add(:link_url, :blank)
     end
 
-    if link_label.present? && column.label_max_length.present? && column.label_max_length > 0 && (link_label.length > column.label_max_length)
-      self.errors.add(:link_label, :too_long, count: column.label_max_length)
+    if link_label.present? && column.label_max_length.present? && column.label_max_length > 0
+      if link_label.length > column.label_max_length
+        self.errors.add(:link_label, :too_long, count: column.label_max_length)
+      end
     end
 
-    if link_url.present? && column.link_max_length.present? && column.link_max_length > 0 && (link_url.length > column.link_max_length)
-      self.errors.add(:link_url, :too_long, count: column.link_max_length)
+    if link_url.present? && column.link_max_length.present? && column.link_max_length > 0
+      if link_url.length > column.link_max_length
+        self.errors.add(:link_url, :too_long, count: column.link_max_length)
+      end
     end
   end
 

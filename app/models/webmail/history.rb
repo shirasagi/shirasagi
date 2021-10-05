@@ -105,8 +105,10 @@ class Webmail::History
       )
       item.attributes = attributes
 
-      if allowed_severity = SS.config.webmail.history['severity'] && (severity_to_num(severity) >= severity_to_num(allowed_severity))
-        item.save!(context: context.to_sym)
+      if allowed_severity = SS.config.webmail.history['severity']
+        if severity_to_num(severity) >= severity_to_num(allowed_severity)
+          item.save!(context: context.to_sym)
+        end
       end
 
       try_invoke_archive(cur_user)

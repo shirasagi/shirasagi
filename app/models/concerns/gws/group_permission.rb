@@ -46,8 +46,8 @@ module Gws::GroupPermission
     if opts[:only] != :private
       permits << "#{action}_other_#{self.class.permission_name}"
     end
-    if opts[:only] != :other && (owned?(user) || (!opts[:strict] && new_record?))
-      permits << "#{action}_private_#{self.class.permission_name}"
+    if opts[:only] != :other
+      permits << "#{action}_private_#{self.class.permission_name}" if owned?(user) || (!opts[:strict] && new_record?)
     end
 
     return true if user.gws_role_permit_any?(site, *permits)

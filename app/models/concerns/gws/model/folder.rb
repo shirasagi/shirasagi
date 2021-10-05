@@ -159,12 +159,14 @@ module Gws::Model::Folder
   end
 
   def validate_folder_name
-    if self.id == 0 && dependant_scope.where(name: self.name).first
-      errors.add :base, :not_create_same_folder
+    if self.id == 0
+      errors.add :base, :not_create_same_folder if dependant_scope.where(name: self.name).first
     end
 
-    if self.id != 0 && (dependant_scope.where(name: self.name).present? && dependant_scope.where(id: self.id).first.name != self.name)
-      errors.add :base, :not_move_to_same_name_folder
+    if self.id != 0
+      if dependant_scope.where(name: self.name).present? && dependant_scope.where(id: self.id).first.name != self.name
+        errors.add :base, :not_move_to_same_name_folder
+      end
     end
     true
   end

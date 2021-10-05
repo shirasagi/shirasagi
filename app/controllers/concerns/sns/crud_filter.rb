@@ -43,9 +43,11 @@ module Sns::CrudFilter
 
   def edit
     raise "403" unless @item.allowed?(:edit, @cur_user)
-    if @item.is_a?(Cms::Addon::EditLock) && !@item.acquire_lock
-      redirect_to action: :lock
-      return
+    if @item.is_a?(Cms::Addon::EditLock)
+      unless @item.acquire_lock
+        redirect_to action: :lock
+        return
+      end
     end
     render
   end

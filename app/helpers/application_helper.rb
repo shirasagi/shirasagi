@@ -184,8 +184,8 @@ module ApplicationHelper
 
   def content_tag_if(name, content_or_options_with_block = nil, options = nil, escape = true, &block)
     # content_tag(*args, &block)
-    if block && content_or_options_with_block.is_a?(Hash)
-      options = content_or_options_with_block
+    if block
+      options = content_or_options_with_block if content_or_options_with_block.is_a?(Hash)
     end
 
     if_condition = options ? options.delete(:if) : nil

@@ -21,8 +21,8 @@ class Map::Extensions::Points < Array
           point["loc"] = Map::Extensions::Loc.mongoize(point["loc"])
           lat = point["loc"][0]
           lng = point["loc"][1]
-          if lat.present? && lng.present? && (lat < lng)
-            point["loc"] = [lng, lat]
+          if lat.present? && lng.present?
+            point["loc"] = [lng, lat] if lat < lng
           end
           point
         end

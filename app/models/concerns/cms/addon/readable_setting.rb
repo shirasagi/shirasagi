@@ -21,8 +21,8 @@ module Cms::Addon::ReadableSetting
 
     # Allow readable settings and readable permissions.
     scope :readable, ->(user, opts = {}) {
-      if requires_read_permission_to_read? && !self.allowed?(:read, user, opts)
-        return none
+      if requires_read_permission_to_read?
+        return none unless self.allowed?(:read, user, opts)
       end
       or_conds = readable_conditions(user, opts)
       where("$and" => [{ "$or" => or_conds }])
@@ -38,8 +38,8 @@ module Cms::Addon::ReadableSetting
   def readable?(user, opts = {})
     opts[:site] ||= self.site
 
-    if self.class.requires_read_permission_to_read? && !self.class.allowed?(:read, user, opts)
-      return false
+    if self.class.requires_read_permission_to_read?
+      return false unless self.class.allowed?(:read, user, opts)
     end
 
     return true if readable_setting_range == 'public'

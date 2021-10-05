@@ -13,8 +13,8 @@ module Cms::NodeFilter
 
   def set_item
     super
-    if @cur_node && (@item.id == @cur_node.id && @item.collection_name.to_s == "cms_nodes")
-      raise "500"
+    if @cur_node
+      raise "500" if @item.id == @cur_node.id && @item.collection_name.to_s == "cms_nodes"
     end
   end
 

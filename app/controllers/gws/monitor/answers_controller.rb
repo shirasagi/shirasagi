@@ -29,8 +29,8 @@ class Gws::Monitor::AnswersController < ApplicationController
   end
 
   def check_attended
-    if @item && !@item.attended?(@cur_group)
-      raise '403'
+    if @item
+      raise '403' unless @item.attended?(@cur_group)
     end
   end
 end

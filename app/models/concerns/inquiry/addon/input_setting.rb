@@ -80,8 +80,8 @@ module Inquiry::Addon
     private
 
     def validate_select_options
-      if /(select|radio_button|check_box|form_select)/.match?(input_type) && select_options.blank?
-        errors.add :select_options, :blank
+      if /(select|radio_button|check_box|form_select)/.match?(input_type)
+        errors.add :select_options, :blank if select_options.blank?
       end
     end
 

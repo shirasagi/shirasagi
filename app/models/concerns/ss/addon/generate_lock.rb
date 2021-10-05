@@ -27,8 +27,10 @@ module SS::Addon
       return if !generate_lock_until_changed? || generate_lock_until.blank?
 
       begin
-        if SS.config.cms.generate_lock['generate_lock_until'].present? && (generate_lock_until > Time.zone.now + SS::Duration.parse(SS.config.cms.generate_lock['generate_lock_until']))
-          errors.add :generate_lock_until, :disallow_datetime_by_system
+        if SS.config.cms.generate_lock['generate_lock_until'].present?
+          if generate_lock_until > Time.zone.now + SS::Duration.parse(SS.config.cms.generate_lock['generate_lock_until'])
+            errors.add :generate_lock_until, :disallow_datetime_by_system
+          end
         end
       rescue
         errors.add :generate_lock_until, :invalid

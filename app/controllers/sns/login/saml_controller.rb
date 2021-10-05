@@ -48,8 +48,8 @@ class Sns::Login::SamlController < ApplicationController
       ref = URI.join(@request_url, ref) rescue nil
     end
     ref = normalize_url(ref) if ref.present?
-    if ref.present? && !trusted_url?(ref)
-      ref = nil
+    if ref.present?
+      ref = nil unless trusted_url?(ref)
     end
     ref = ref.to_s if ref.present?
 
@@ -59,8 +59,8 @@ class Sns::Login::SamlController < ApplicationController
       login_path = URI.join(@request_url, login_path) rescue nil
     end
     login_path = normalize_url(login_path) if login_path.present?
-    if login_path.present? && !trusted_url?(login_path)
-      login_path = nil
+    if login_path.present?
+      login_path = nil unless trusted_url?(login_path)
     end
     login_path = login_path.to_s if login_path.present?
 

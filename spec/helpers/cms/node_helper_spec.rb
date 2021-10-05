@@ -11,8 +11,8 @@ describe Cms::NodeHelper, type: :helper, dbscope: :example do
       proc do |site, node|
         syntax_check = true
         syntax_check = site.syntax_check_enabled? if syntax_check
-        if node && node.respond_to?(:syntax_check_enabled?) && syntax_check
-          syntax_check = node.syntax_check_enabled?
+        if node && node.respond_to?(:syntax_check_enabled?)
+          syntax_check = node.syntax_check_enabled? if syntax_check
         end
         syntax_check
       end
@@ -99,11 +99,11 @@ describe Cms::NodeHelper, type: :helper, dbscope: :example do
           inplace_syntax_check = column.syntax_check_enabled?
           inplace_syntax_check = site.syntax_check_enabled? if inplace_syntax_check
           inplace_syntax_check = node.syntax_check_enabled? if inplace_syntax_check && node
-          if node && node.respond_to?(:syntax_check_enabled?) && inplace_syntax_check
-            inplace_syntax_check = node.syntax_check_enabled?
+          if node && node.respond_to?(:syntax_check_enabled?)
+            inplace_syntax_check = node.syntax_check_enabled? if inplace_syntax_check
           end
-          if item.parent && item.parent.respond_to?(:syntax_check_enabled?) && inplace_syntax_check
-            inplace_syntax_check = item.parent.syntax_check_enabled?
+          if item.parent && item.parent.respond_to?(:syntax_check_enabled?)
+            inplace_syntax_check = item.parent.syntax_check_enabled? if inplace_syntax_check
           end
           inplace_syntax_check
         end

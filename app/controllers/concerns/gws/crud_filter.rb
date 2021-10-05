@@ -44,9 +44,11 @@ module Gws::CrudFilter
 
   def edit
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    if @item.is_a?(Cms::Addon::EditLock) && !@item.acquire_lock
-      redirect_to action: :lock
-      return
+    if @item.is_a?(Cms::Addon::EditLock)
+      unless @item.acquire_lock
+        redirect_to action: :lock
+        return
+      end
     end
     render
   end
@@ -126,9 +128,11 @@ module Gws::CrudFilter
     entries.each do |item|
       if item.allowed?(:delete, @cur_user, site: @cur_site)
         item.attributes = fix_params
-        if item.is_a?(Gws::User) && (item.deletion_unlocked? && item.disabled?)
-          item.destroy
-          next
+        if item.is_a?(Gws::User)
+          if item.deletion_unlocked? && item.disabled?
+            item.destroy
+            next
+          end
         end
         next if item.disable
       else

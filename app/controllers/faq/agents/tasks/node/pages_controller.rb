@@ -7,8 +7,8 @@ class Faq::Agents::Tasks::Node::PagesController < ApplicationController
 
     # initialize context before generating rss
     init_context
-    if generate_node_rss(@node) && @task
-      @task.log "#{@node.url}rss.xml"
+    if generate_node_rss @node
+      @task.log "#{@node.url}rss.xml" if @task
     end
 
     written

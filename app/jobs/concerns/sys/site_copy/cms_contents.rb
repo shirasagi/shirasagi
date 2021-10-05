@@ -34,8 +34,12 @@ module Sys::SiteCopy::CmsContents
     metadata = field.options[:metadata]
     return metadata[:on_copy] if metadata.present?
 
-    if field.association.instance_of?(Mongoid::Association::Referenced::BelongsTo) && [Member::Photo, KeyVisual::Image].include?(field.options[:klass]) && field.association.class_name.constantize.include?(SS::Model::File)
-      return :dummy
+    if field.association.instance_of?(Mongoid::Association::Referenced::BelongsTo)
+      if [Member::Photo, KeyVisual::Image].include?(field.options[:klass])
+        if field.association.class_name.constantize.include?(SS::Model::File)
+          return :dummy
+        end
+      end
     end
 
     nil
