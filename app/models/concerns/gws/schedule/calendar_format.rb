@@ -59,7 +59,7 @@ module Gws::Schedule::CalendarFormat
     data
   end
 
-  def add_attendace_classes(data, cur_user, attendance_user_id)
+  def set_attendance_classes(data, cur_user, attendance_user_id)
     return data if !attendance_check_plan?
 
     if contains_unknown_attendance?
