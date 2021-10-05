@@ -30,7 +30,7 @@ module Inquiry::AnswersFilter
 
         values = {}
         columns.each do |column|
-          answer_data = item.data.find { |answer_data| answer_data.column_id == column.id }
+          answer_data = item.data.select { |answer_data| answer_data.column_id == column.id }.first
           values[column.id] = answer_data.value if answer_data
         end
 

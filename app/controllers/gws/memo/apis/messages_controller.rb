@@ -27,7 +27,7 @@ class Gws::Memo::Apis::MessagesController < ApplicationController
     s_params = params[:s] || {}
 
     if s_params[:folder].present?
-      @cur_folder = @folders.find { |folder| folder.folder_path == s_params[:folder] }
+      @cur_folder = @folders.select { |folder| folder.folder_path == s_params[:folder] }.first
     end
     @cur_folder ||= @folders.first
 

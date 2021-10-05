@@ -70,7 +70,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetGraphController < ApplicationCont
     @dataset = @model.site(@cur_site).and_public.where(id: params[:dataset_id]).first
     raise "404" unless @dataset
 
-    @item = @dataset.resources.find { |r| r.id == params[:id].to_i }
+    @item = @dataset.resources.select { |r| r.id == params[:id].to_i }.first
     raise "404" unless @item
 
     type = params[:type].presence || @item.preview_graph_types.first

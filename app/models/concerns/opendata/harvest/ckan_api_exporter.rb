@@ -94,7 +94,7 @@ module Opendata::Harvest::CkanApiExporter
   end
 
   def export_resource(resource, dataset_relation, exported_resources, d_idx, r_idx)
-    resource_relation = dataset_relation.rel_resources.find { |r| r.uuid == resource.uuid }
+    resource_relation = dataset_relation.rel_resources.select { |r| r.uuid == resource.uuid }.first
 
     if resource_relation
 

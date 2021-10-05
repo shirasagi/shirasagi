@@ -114,7 +114,7 @@ module Chorg::Runner::Base
   end
 
   def put_array_field_log(old_value, new_value)
-    if new_value.find { |value| value && value.is_a?(String) }
+    if new_value.select { |value| value && value.is_a?(String) }.first
       with_inc_depth do
         new_value.each_with_index do |value, i|
           put_log("[#{i}]")

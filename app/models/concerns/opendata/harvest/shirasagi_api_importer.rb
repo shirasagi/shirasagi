@@ -128,7 +128,7 @@ module Opendata::Harvest::ShirasagiApiImporter
   end
 
   def create_resource_from_shirasagi_api(attributes, idx, dataset)
-    resource = dataset.resources.find { |r| r.uuid == attributes["uuid"] }
+    resource = dataset.resources.select { |r| r.uuid == attributes["uuid"] }.first
 
     if resource.nil?
       resource = Opendata::Resource.new

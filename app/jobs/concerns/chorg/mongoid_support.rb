@@ -167,7 +167,7 @@ module Chorg::MongoidSupport
         end
         updates
       end
-      next if !array.find(&:present?)
+      next if !array.select(&:present?).first
 
       hash[field_name] = Chorg::EmbeddedArray.new(field_name, array)
     end

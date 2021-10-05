@@ -125,7 +125,7 @@ module Chorg::Addon::EntityLog
       next if !entity.respond_to?(field_name)
 
       embedded_array = entity.send(field_name).map(&:changes)
-      next if !embedded_array.find(&:present?)
+      next if !embedded_array.select(&:present?).first
 
       embedded_array.each_with_index do |embedded, idx|
         embedded.each do |key, changes|
