@@ -7,8 +7,6 @@
       <nav class="tap-menu">
         <% if @tap_menu %>
           <% @tap_menu.call item %>
-        <% elsif item.class == Sys::HistoryArchiveFile %>
-          <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user) %>
         <% else %>
           <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user) %>
           <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user) %>
