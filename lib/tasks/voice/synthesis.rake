@@ -7,7 +7,7 @@ namespace :voice do
   task synthesis: [:environment, :setup_logger] do
     id_or_url = ENV["id"] || ENV["url"]
     force = ENV["force"] ||  "false"
-    force = /^(false|0)$/i.match?(force) ? false : true
+    force = force =~ /^(false|0)$/i ? false : true
 
     if id_or_url.blank?
       Rails.logger.error("url parameter is not given")

@@ -18,7 +18,7 @@ module Cms::Addon::Import
       @imported = 0
       return false if in_file.blank?
 
-      if /^\.zip$/i.match?(::File.extname(in_file.original_filename))
+      if ::File.extname(in_file.original_filename) =~ /^\.zip$/i
         import_from_zip(root_files: root_files.present?)
       else
         import_from_file
@@ -98,7 +98,7 @@ module Cms::Addon::Import
 
           if entry.directory?
             @imported += 1 if save_import_node(entry.get_input_stream, import_filename)
-          elsif /^\.(html|htm)$/i.match?(::File.extname(import_filename))
+          elsif ::File.extname(import_filename) =~ /^\.(html|htm)$/i
             @imported += 1 if save_import_page(entry.get_input_stream, import_filename)
           elsif upload_import_file(entry.get_input_stream, import_filename)
             @imported += 1
@@ -112,7 +112,7 @@ module Cms::Addon::Import
     def import_from_file
       import_filename = "#{self.filename}/#{in_file.original_filename}"
 
-      if /^\.(html|htm)$/i.match?(::File.extname(import_filename))
+      if ::File.extname(import_filename) =~ /^\.(html|htm)$/i
         @imported += 1 if save_import_page(in_file, import_filename)
       elsif upload_import_file(in_file, import_filename)
         @imported += 1

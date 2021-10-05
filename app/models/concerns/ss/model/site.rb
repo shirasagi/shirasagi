@@ -182,7 +182,7 @@ module SS::Model::Site
         else
           site = nil
           host_with_path = ::File.join(host, path.to_s)
-          host_with_path += "/" if !/\/$/.match?(host_with_path)
+          host_with_path += "/" if host_with_path !~ /\/$/
           depth = 0
 
           sites.each do |s|

@@ -101,9 +101,9 @@ module SS::Model::User
 
   module ClassMethods
     def flex_find(keyword)
-      if /^\d+$/.match?(keyword)
+      if keyword =~ /^\d+$/
         cond = { id: keyword }
-      elsif /@/.match?(keyword)
+      elsif keyword =~ /@/
         cond = { email: keyword }
       else
         cond = { uid: keyword }
@@ -372,7 +372,7 @@ module SS::Model::User
 
   def validate_uid
     return if uid.blank?
-    errors.add :uid, :invalid if !/^[\w\-]+$/.match?(uid)
+    errors.add :uid, :invalid if uid !~ /^[\w\-]+$/
   end
 
   def validate_cur_user

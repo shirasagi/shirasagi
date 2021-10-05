@@ -103,7 +103,7 @@ class Webmail::Mail
 
     begin
       emails = emails.map { |to| Webmail::Converter.extract_address(to) }
-      emails.each { |email| raise "invalid address" unless EmailValidator::REGEXP.match?(email) }
+      emails.each { |email| raise "invalid address" unless email =~ EmailValidator::REGEXP }
     rescue => e
       errors.add field, :invalid_email_included
     end

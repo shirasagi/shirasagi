@@ -12,7 +12,7 @@ class Opendata::Graph::Base
 
   def extract_csv_lines
     encoding = ::NKF.guess(Fs.read(@resource.file.path))
-    if /shift_jis|windows/.match?(encoding.name.downcase)
+    if encoding.name.downcase =~ /shift_jis|windows/
       encoding = "cp932"
     end
 
@@ -60,10 +60,10 @@ class Opendata::Graph::Base
 
   def format_data(data)
     return "-" if data.blank?
-    return data if !/^(-)?((\d)+,)?((\d)+\.)?+(\d)+$/.match?(data)
+    return data if data !~ /^(-)?((\d)+,)?((\d)+\.)?+(\d)+$/
 
     data = data.delete(",")
     data = data.to_f.to_s
-    /\.0$/.match?(data) ? data.to_i : data.to_f
+    data =~ /\.0$/ ? data.to_i : data.to_f
   end
 end

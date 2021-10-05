@@ -13,7 +13,7 @@ module Tasks
           ::Rails.application.eager_load!
 
           Mongoid.models.sort_by(&:to_s).each do |model|
-            next if /^Mongoid::/.match?(model.to_s)
+            next if model.to_s =~ /^Mongoid::/
             puts "- #{model}"
 
             coll = model.collection_name

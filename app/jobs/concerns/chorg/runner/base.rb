@@ -108,7 +108,7 @@ module Chorg::Runner::Base
 
   def put_string_field_log(old_value, new_value)
     Diffy::Diff.new(old_value, new_value, diff: "-U 3").to_s.each_line do |line|
-      next if /No newline at end of file/i.match?(line)
+      next if /No newline at end of file/i =~ line
       put_log(line.chomp.to_s)
     end
   end

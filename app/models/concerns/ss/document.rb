@@ -179,7 +179,7 @@ module SS::Document
     fields.map do |name|
       text = send(name)
       next if text.blank?
-      text.gsub!(/<("[^"]*"|'[^']*'|[^'">])*>/, " ") if /html$/.match?(name)
+      text.gsub!(/<("[^"]*"|'[^']*'|[^'">])*>/, " ") if name =~ /html$/
       text.gsub!(/\s+/, " ")
       texts << text
     end

@@ -3,9 +3,9 @@ namespace :ss do
     assets_path = "#{Rails.public_path}#{Rails.application.config.assets.prefix}"
 
     Dir.glob("#{assets_path}/**/*.*") do |file|
-      if /^_/.match?(File.basename(file))
+      if File.basename(file) =~ /^_/
         File.unlink file
-      elsif /-[0-9a-f]{32,}\./.match?(file)
+      elsif file =~ /-[0-9a-f]{32,}\./
         File.unlink file
       end
     end

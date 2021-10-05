@@ -64,7 +64,7 @@ class Recommend::History::Log
 
       item = opts[:item]
       path = opts[:path]
-      path += "index.html" if /\/$/.match?(path)
+      path += "index.html" if path =~ /\/$/
 
       receiver_node = Recommend::Node::Receiver.site(site).and_public.first
       if receiver_node

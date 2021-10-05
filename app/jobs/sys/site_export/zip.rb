@@ -51,7 +51,7 @@ class Sys::SiteExport::Zip
   def add_public_files(zip)
     require "find"
     Find.find(@site_dir) do |path|
-      next if /^#{site_fs_path}/.match?(path)
+      next if path =~ /^#{site_fs_path}/
       next if @exclude_public_files.include?(path)
 
       entry = path.sub(/^#{@site_dir}/, 'public')

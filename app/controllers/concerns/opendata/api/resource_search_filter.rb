@@ -31,13 +31,13 @@ module Opendata::Api::ResourceSearchFilter
   end
 
   def convert_property_name(field)
-    if /^name$/i.match?(field)
+    if field =~ /^name$/i
       property = "name"
-    elsif /^description$/i.match?(field)
+    elsif field =~ /^description$/i
       property = "text"
-    elsif /^filename$/i.match?(field)
+    elsif field =~ /^filename$/i
       property = "filename"
-    elsif /^format$/i.match?(field)
+    elsif field =~ /^format$/i
       property = "format"
     end
 
@@ -50,7 +50,7 @@ module Opendata::Api::ResourceSearchFilter
     queries.each do |query|
       field, term = URI.decode(query).split(":")
       property = convert_property_name(field)
-      if !/#{term}/i.match?(resource[property.to_sym])
+      if resource[property.to_sym] !~ /#{term}/i
         result = false
       end
     end

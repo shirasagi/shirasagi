@@ -46,7 +46,7 @@ class History::Log
   class << self
     def create_controller_log!(request, response, options)
       return if request.get?
-      return if !/^3/.match?(response.code)
+      return if response.code !~ /^3/
       create_log!(request, response, options)
     end
 

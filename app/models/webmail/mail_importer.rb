@@ -56,7 +56,7 @@ class Webmail::MailImporter
     Zip::File.open(in_file.path) do |entries|
       entries.each do |entry|
         next if !entry.file?
-        next if /^\./.match?(::File.basename(entry.name))
+        next if ::File.basename(entry.name) =~ /^\./
 
         entry_type = SS::MimeType.find(entry.name, nil)
         next if entry_type != "message/rfc822"

@@ -156,7 +156,7 @@ class Uploader::File
 
   def validate_filename
     if directory?
-      errors.add :path, :invalid_filename if !/^\/?([\w\-]+\/)*[\w\-]+$/.match?(filename)
+      errors.add :path, :invalid_filename if filename !~ /^\/?([\w\-]+\/)*[\w\-]+$/
       return
     end
 

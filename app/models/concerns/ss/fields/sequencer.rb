@@ -29,7 +29,7 @@ module SS::Fields::Sequencer
 
   def set_sequence
     self.class.instance_variable_get(:@_sequenced_fields).each do |name|
-      next if /^[1-9]\d*$/.match?(self[name].to_s)
+      next if self[name].to_s =~ /^[1-9]\d*$/
       self[name] = next_sequence(name)
     end
   end

@@ -8,7 +8,7 @@ class Gws::CompressJob < Gws::ApplicationJob
     item = Gws::Share::Mailer.compressed_mail(site, zip.user, zip).message
 
     subject = item.subject
-    subject = NKF.nkf("-w", subject) if /ISO-2022-JP/i.match?(subject)
+    subject = NKF.nkf("-w", subject) if subject =~ /ISO-2022-JP/i
 
     message = SS::Notification.new
     message.cur_group     = site

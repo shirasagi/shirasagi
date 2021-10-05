@@ -7,7 +7,7 @@ module Gws::ApiFilter
   private
 
   def rescue_action(e)
-    if /^\d+$/.match?(e.to_s)
+    if e.to_s =~ /^\d+$/
       respond_to do |format|
         format.json { render json: :error, status: e.to_s.to_i }
       end
