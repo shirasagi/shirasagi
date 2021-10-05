@@ -149,7 +149,7 @@ class Cms::SearchContents::HtmlController < ApplicationController
           attributes[field] = new_value if new_value != old_value
         elsif old_value.is_a?(Array)
           old_value = old_value.map(&:to_s)
-          new_value = old_value.map { |v| yield v }
+          new_value = old_value.map(&block)
           attributes[field] = new_value if new_value != old_value
         end
       end

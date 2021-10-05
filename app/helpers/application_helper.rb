@@ -199,7 +199,7 @@ module ApplicationHelper
     end
 
     if block
-      return capture { yield }
+      return capture(&block)
     end
 
     content_or_options_with_block

@@ -40,20 +40,16 @@ module Tasks
 
         private
 
-        def each_sites
+        def each_sites(&block)
           name = ENV['site']
           if name
-            ::Gws::Group.where(name: name).each do |site|
-              yield site
-            end
+            ::Gws::Group.where(name: name).each(&block)
             return
           end
 
           all_ids = ::Gws::Group.all.where(name: { "$not" => /\// }).pluck(:id)
           all_ids.each_slice(20).each do |ids|
-            ::Gws::Group.where(:id.in => ids).each do |site|
-              yield site
-            end
+            ::Gws::Group.where(:id.in => ids).each(&block)
           end
         end
       end
