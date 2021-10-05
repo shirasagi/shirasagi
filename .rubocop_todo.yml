@@ -484,7 +484,7 @@ Rails/LexicallyScopedActionFilter:
 Rails/NegateInclude:
   Enabled: false
 
-  # Offense count: 73
+# Offense count: 73
 Rails/OutputSafety:
   Enabled: false
 
