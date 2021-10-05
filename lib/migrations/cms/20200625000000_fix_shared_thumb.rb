@@ -58,7 +58,7 @@ class SS::Migration20200625000000
     end
     return if user.blank?
 
-    attr = Hash[file.attributes.except(*SS::File::COPY_SKIP_ATTRS)]
+    attr = file.attributes.except(*SS::File::COPY_SKIP_ATTRS).to_h
     attr.symbolize_keys!
     attr[:model] = file.model
     attr[:site] = page.site

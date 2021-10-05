@@ -61,7 +61,7 @@ module SS::Addon
       run_callbacks(:clone_files) do
         ids = {}
         files.each do |f|
-          attributes = Hash[f.attributes]
+          attributes = f.attributes.to_h
           attributes.slice!(*f.fields.keys)
 
           file = SS::File.new(attributes)

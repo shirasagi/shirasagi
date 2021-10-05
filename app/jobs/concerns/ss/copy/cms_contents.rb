@@ -87,7 +87,7 @@ module SS::Copy::CmsContents
       [field_name, resolve_reference(ref_type, field_value)]
     end
 
-    Hash[attributes.compact]
+    attributes.compact.to_h
   end
 
   def resolve_unsafe_references(content, klass = nil, *field_names)
@@ -109,7 +109,7 @@ module SS::Copy::CmsContents
       [field_name, resolve_reference(ref_type, field_value)]
     end
 
-    Hash[attributes.compact]
+    attributes.compact.to_h
   end
 
   def resolve_reference(ref_type, id_or_ids)

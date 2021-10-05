@@ -105,7 +105,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     return if file.blank?
 
     if @new_clone
-      attributes = Hash[file.attributes]
+      attributes = file.attributes.to_h
       attributes.select!{ |k| file.fields.key?(k) }
 
       attributes["user_id"] = @cur_user.id if @cur_user
