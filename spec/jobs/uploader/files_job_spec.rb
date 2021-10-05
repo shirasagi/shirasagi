@@ -7,6 +7,10 @@ describe Uploader::FilesJob, dbscope: :example do
   let!(:bindings) { { user_id: user.id, site_id: site.id } }
   let!(:job) { described_class.bind(bindings) }
 
+  before { upload_policy_before_settings }
+
+  after { upload_policy_after_settings }
+
   describe "perform directory" do
     let!(:dir1_path) { "#{site.path}/#{unique_id}" }
     let!(:dir2_path) { "#{site.path}/#{unique_id}" }
@@ -42,9 +46,6 @@ describe Uploader::FilesJob, dbscope: :example do
     let!(:css_path) { "#{site.path}/style.css" }
     let!(:text_data) { "html { body { color: red; } }" }
 
-    before { upload_policy_before_settings }
-    after { upload_policy_after_settings }
-
     it do
       # upload
       FileUtils.mkdir_p ::File.dirname(file_path)
@@ -53,8 +54,8 @@ describe Uploader::FilesJob, dbscope: :example do
       FileUtils.rm(file_path)
 
       file = Uploader::JobFile.first
-      mock_sanitizer_restore(file)
-      expect(file.path).to eq file_path
+      restored_file = mock_sanitizer_restore(file)
+      expect(restored_file.path).to eq file_path
       expect(Fs.exists?(file_path)).to be_truthy
       expect(Fs.exists?(css_path)).to be_truthy
       expect(Uploader::JobFile.all.size).to eq 0
@@ -81,9 +82,6 @@ describe Uploader::FilesJob, dbscope: :example do
     let!(:js_path) { "#{site.path}/example.js" }
     let!(:text_data) { "value = 2" }
 
-    before { upload_policy_before_settings }
-    after { upload_policy_after_settings }
-
     it do
       # upload
       FileUtils.mkdir_p ::File.dirname(file_path)
@@ -92,8 +90,8 @@ describe Uploader::FilesJob, dbscope: :example do
       FileUtils.rm(file_path)
 
       file = Uploader::JobFile.first
-      mock_sanitizer_restore(file)
-      expect(file.path).to eq file_path
+      restored_file = mock_sanitizer_restore(file)
+      expect(restored_file.path).to eq file_path
       expect(Fs.exists?(file_path)).to be_truthy
       expect(Fs.exists?(js_path)).to be_truthy
       expect(Uploader::JobFile.all.size).to eq 0
@@ -118,9 +116,6 @@ describe Uploader::FilesJob, dbscope: :example do
     let!(:source) { "#{::Rails.root}/spec/fixtures/ss/logo.png" }
     let!(:file_path) { "#{site.path}/example.png" }
 
-    before { upload_policy_before_settings }
-    after { upload_policy_after_settings }
-
     it do
       # upload
       FileUtils.mkdir_p ::File.dirname(file_path)
@@ -129,8 +124,8 @@ describe Uploader::FilesJob, dbscope: :example do
       FileUtils.rm(file_path)
 
       file = Uploader::JobFile.first
-      mock_sanitizer_restore(file)
-      expect(file.path).to eq file_path
+      restored_file = mock_sanitizer_restore(file)
+      expect(restored_file.path).to eq file_path
       expect(Fs.exists?(file_path)).to be_truthy
       expect(Uploader::JobFile.all.size).to eq 0
 

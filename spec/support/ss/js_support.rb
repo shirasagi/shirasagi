@@ -134,6 +134,14 @@ module SS
       (el.value.to_s.strip == with.to_s.strip) ? el : native_fill_in(locator, with: with)
     end
 
+    def fill_in_code_mirror(locator, options = {})
+      with = options.delete(:with)
+      options[:visible] = :all
+
+      element = find(:fillable_field, locator, options)
+      page.execute_script("$(arguments[0]).data('editor').setValue(arguments[1])", element, with)
+    end
+
     def native_fill_in(locator = nil, with:)
       el = find(:fillable_field, locator).set('').click
       with.to_s.split('').each { |c| el.native.send_keys(c) }

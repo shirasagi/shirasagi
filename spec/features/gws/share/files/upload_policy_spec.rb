@@ -8,13 +8,9 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
   context "sanitizer setting" do
     before { login_gws_user }
 
-    before do
-      upload_policy_before_settings('sanitizer')
-    end
+    before { upload_policy_before_settings("sanitizer") }
 
-    after do
-      upload_policy_after_settings
-    end
+    after { upload_policy_after_settings }
 
     it do
       visit gws_share_files_path(site)
@@ -70,13 +66,13 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       expect(page).to have_css('.sanitizer-wait', text: I18n.t('ss.options.sanitizer_state.wait'))
 
       # restore
-      file = mock_sanitizer_restore(file)
-      expect(file.sanitizer_state).to eq 'complete'
-      expect(Fs.exists?(file.path)).to be_truthy
+      restored_file = mock_sanitizer_restore(file)
+      expect(restored_file.sanitizer_state).to eq 'complete'
+      expect(Fs.exists?(restored_file.path)).to be_truthy
 
       click_on I18n.t('ss.links.back_to_index')
       expect(page).to have_css('.list-items .sanitizer-complete')
-      click_on file.name
+      click_on restored_file.name
       expect(page).to have_css('.sanitizer-complete')
 
       # update
@@ -124,9 +120,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       site.set(upload_policy: 'restricted')
     end
 
-    after do
-      upload_policy_after_settings
-    end
+    after { upload_policy_after_settings }
 
     it do
       visit gws_share_files_path(site)

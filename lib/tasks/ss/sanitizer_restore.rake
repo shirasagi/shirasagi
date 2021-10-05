@@ -7,17 +7,13 @@ namespace :ss do
     ::Fs.glob("#{Rails.root}/#{SS.config.ss.sanitizer_output}/*").sort.each do |path|
       filename = ::File.basename(path)
 
-      if Uploader::JobFile.sanitizer_restore(path)
-        puts "restored: #{filename}"
+      if job_model = Uploader::JobFile.sanitizer_restore(path)
+        puts "restored: #{filename} -> #{job_model.path}"
         next
       end
 
       if file = SS::UploadPolicy.sanitizer_restore(path)
-        puts "restored: #{filename}"
-
-        if task = SS::SanitizerJobFile.restore_wait_job(file)
-          puts "task: #{task.id} #{task[:class_name]}"
-        end
+        puts "restored: #{filename} -> #{file.path}"
         next
       end
 

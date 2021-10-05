@@ -15,6 +15,13 @@ def mock_sanitizer_restore(file)
   output_path = file.sanitizer_input_path.sub(/\A(.*)\./, '\\1_100_marked.')
   Fs.mv file.sanitizer_input_path, output_path
 
-  return if Uploader::JobFile.sanitizer_restore(output_path)
-  return if SS::UploadPolicy.sanitizer_restore(output_path)
+  if job_model = Uploader::JobFile.sanitizer_restore(output_path)
+    return job_model
+  end
+
+  if file = SS::UploadPolicy.sanitizer_restore(output_path)
+    return file
+  end
+
+  return nil
 end

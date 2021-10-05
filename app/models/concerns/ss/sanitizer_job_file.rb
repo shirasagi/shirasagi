@@ -16,29 +16,29 @@ module SS::SanitizerJobFile
     job.delay_wait
   end
 
-  module_function
+  class << self
+    def job_models
+      {
+        'cms/import_file' => Cms::ImportJobFile
+      }
+    end
 
-  def job_models
-    {
-      'cms/import_file' => Cms::ImportJobFile
-    }
-  end
+    def restore_wait_job(file)
+      job_model = job_models[file.model]
+      return false unless job_model
 
-  def restore_wait_job(file)
-    job_model = job_models[file.model]
-    return unless job_model
+      item = job_model.site(file.site).where(file_ids: file.id).first
+      return false unless item
 
-    item = job_model.site(file.site).where(file_ids: file.id).first
-    return unless item
+      task = item.task
+      return false unless task
 
-    task = item.task
-    return unless task
+      wait = item.job_wait || Time.zone.now.to_i
+      item.set(job_wait: nil)
+      task.set(at: wait)
 
-    wait = item.job_wait || Time.zone.now.to_i
-    item.set(job_wait: nil)
-    task.set(at: wait)
-
-    ActiveJob::QueueAdapters::ShirasagiAdapter.run_rake_if_needed
-    return task
+      ActiveJob::QueueAdapters::ShirasagiAdapter.run_rake_if_needed
+      return true
+    end
   end
 end

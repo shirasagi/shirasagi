@@ -4,16 +4,12 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
   let(:user) { sys_user }
   let(:group) { create(:gws_group) }
 
+  before { login_sys_user }
+
   context "sanitizer setting" do
-    before { login_sys_user }
+    before { upload_policy_before_settings("sanitizer") }
 
-    before do
-      upload_policy_before_settings('sanitizer')
-    end
-
-    after do
-      upload_policy_after_settings
-    end
+    after { upload_policy_after_settings }
 
     it do
       visit sys_ad_path
@@ -52,9 +48,9 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
       expect(Fs.exists?(file.sanitizer_input_path)).to be_truthy
 
       # restore
-      file = mock_sanitizer_restore(file)
-      expect(file.sanitizer_state).to eq 'complete'
-      expect(Fs.exists?(file.path)).to be_truthy
+      restored_file = mock_sanitizer_restore(file)
+      expect(restored_file.sanitizer_state).to eq 'complete'
+      expect(Fs.exists?(restored_file.path)).to be_truthy
 
       visit sys_ad_path
       expect(page).to have_css('#selected-files .sanitizer-complete')
@@ -64,17 +60,13 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
   end
 
   context "restricted setting" do
-    before { login_sys_user }
-
     before do
       upload_policy_before_settings('sanitizer')
       user.set(organization_id: group.id)
       group.set(upload_policy: 'restricted')
     end
 
-    after do
-      upload_policy_after_settings
-    end
+    after { upload_policy_after_settings }
 
     it do
       visit sys_ad_path

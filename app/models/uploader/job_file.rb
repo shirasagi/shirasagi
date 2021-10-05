@@ -47,7 +47,7 @@ class Uploader::JobFile
 
     def sanitizer_restore(output_path)
       filename = ::File.basename(output_path)
-      return unless filename =~ /\Auploader_\d+_\d+.*_\d+_marked/
+      return unless /\Auploader_\d+_\d+.*_\d+_marked/.match?(filename)
 
       id = filename.sub(/\Auploader_(\d+).*/, '\\1').to_i
       job_model = self.find(id) rescue nil
@@ -55,9 +55,10 @@ class Uploader::JobFile
 
       job_model.sanitizer_restore_file(output_path)
       job_model.destroy
+      return job_model
     rescue => e
       Rails.logger.error("sanitizer_restore: #{e} (#{output_path})")
-      false
+      return nil
     end
   end
 end

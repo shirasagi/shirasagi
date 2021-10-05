@@ -2414,7 +2414,7 @@ div.index {
       width: 0;
     }
     .list-item-title.dir:after {
-      content: '/';
+      content: "/";
     }
     &[data-depth="0"] {
       .list-item-indent {

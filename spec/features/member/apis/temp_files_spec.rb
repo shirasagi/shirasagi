@@ -26,13 +26,9 @@ describe "member_apis_temp_files", type: :feature, dbscope: :example, js: true d
   end
 
   context "sanitizer setting" do
-    before do
-      upload_policy_before_settings('sanitizer')
-    end
+    before { upload_policy_before_settings("sanitizer") }
 
-    after do
-      upload_policy_after_settings
-    end
+    after { upload_policy_after_settings }
 
     it do
       # create
@@ -49,9 +45,9 @@ describe "member_apis_temp_files", type: :feature, dbscope: :example, js: true d
       expect(Fs.cmp(file.path, file.sanitizer_input_path)).to be_truthy
 
       # restore
-      file = mock_sanitizer_restore(file)
-      expect(file.sanitizer_state).to eq 'complete'
-      expect(Fs.exists?(file.path)).to be_truthy
+      restored_file = mock_sanitizer_restore(file)
+      expect(restored_file.sanitizer_state).to eq 'complete'
+      expect(Fs.exists?(restored_file.path)).to be_truthy
     end
   end
 
@@ -61,9 +57,7 @@ describe "member_apis_temp_files", type: :feature, dbscope: :example, js: true d
       site.set(upload_policy: 'restricted')
     end
 
-    after do
-      upload_policy_after_settings
-    end
+    after { upload_policy_after_settings }
 
     it do
       # create

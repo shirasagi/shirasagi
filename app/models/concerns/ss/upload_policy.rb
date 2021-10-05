@@ -10,10 +10,6 @@ module SS::UploadPolicy
     "#{Rails.root}/#{SS.config.ss.sanitizer_input}/#{id}_#{created.to_i}#{::File.extname(basename)}"
   end
 
-  def sanitizer_state_options
-    self.class.sanitizer_state_options
-  end
-
   def sanitizer_skip
     @sanitizer_skip = true
   end
@@ -39,7 +35,6 @@ module SS::UploadPolicy
 
     try(:generate_public_file) if try(:public?)
     Fs.rm_rf(output_path)
-
     true
   end
 
@@ -67,44 +62,44 @@ module SS::UploadPolicy
     ::FileUtils.rm_f(sanitizer_input_path) if SS::UploadPolicy.upload_policy == 'sanitizer'
   end
 
-  module_function
-
-  def sanitizer_state_options
-    %w(wait complete).map { |v| [ I18n.t("ss.options.sanitizer_state.#{v}"), v ] }
-  end
-
-  def sanitizer_state_label(value)
-    I18n.t("ss.options.sanitizer_state.#{value}", default: '')
-  end
-
-  def upload_policy
-    default = SS.config.ss.upload_policy
-    return nil unless default
-    return SS.current_site.upload_policy || default if SS.current_site
-    return SS.current_organization.upload_policy || default if SS.current_organization
-    return SS.current_user.organization.try(:upload_policy) || default if SS.current_user
-    return default
-  end
-
-  def upload_policy_options
-    default = SS.config.ss.upload_policy
-    values = [[I18n.t("ss.options.upload_policy.default_#{default}"), nil]]
-    values += ['sanitizer', 'restricted'].map { |v| [ I18n.t("ss.options.upload_policy.#{v}"), v ] }
-    values
-  end
-
-  def sanitizer_restore(output_path)
-    filename = ::File.basename(output_path)
-    return unless filename =~ /\A\d+_\d+.*_\d+_marked/
-
-    id = filename.sub(/\A(\d+).*/, '\\1').to_i
-    file = SS::File.find(id).becomes_with_model rescue nil
-    return unless file
-
-    if !file.sanitizer_restore_file(output_path)
-      Rails.logger.error("sanitier_restore: #{file.class}##{id}: #{file.errors.full_messages.join(' ')}")
+  class << self
+    def sanitizer_state_label(value)
+      I18n.t("ss.options.sanitizer_state.#{value}", default: '')
     end
 
-    file
+    def upload_policy
+      default = SS.config.ss.upload_policy
+      return nil unless default
+      return SS.current_site.upload_policy || default if SS.current_site
+      return SS.current_organization.upload_policy || default if SS.current_organization
+      return SS.current_user.organization.try(:upload_policy) || default if SS.current_user
+      return default
+    end
+
+    def upload_policy_options
+      default = SS.config.ss.upload_policy
+      values = [[I18n.t("ss.options.upload_policy.default_#{default}"), nil]]
+      values += ['sanitizer', 'restricted'].map { |v| [I18n.t("ss.options.upload_policy.#{v}"), v] }
+      values
+    end
+
+    def sanitizer_restore(output_path)
+      filename = ::File.basename(output_path)
+      return unless /\A\d+_\d+.*_\d+_marked/.match?(filename)
+
+      id = filename.sub(/\A(\d+).*/, '\\1').to_i
+      file = SS::File.find(id).becomes_with_model rescue nil
+      return unless file
+
+      if !file.sanitizer_restore_file(output_path)
+        Rails.logger.error("sanitier_restore: #{file.class}##{id}: #{file.errors.full_messages.join(' ')}")
+      end
+
+      if SS::SanitizerJobFile.restore_wait_job(file)
+        return file
+      end
+
+      file
+    end
   end
 end

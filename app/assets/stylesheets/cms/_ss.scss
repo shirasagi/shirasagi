@@ -56,8 +56,8 @@
     @include justify-content(flex-end);
     @include align-items(center);
     [type=number] {
-      margin: 0 .25rem;
       width: 6rem !important;
+      margin: 0 .25rem;
       text-align: center;
     }
   }
