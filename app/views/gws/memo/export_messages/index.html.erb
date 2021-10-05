@@ -38,11 +38,6 @@ $('a.ajax-box').data('on-select', function($item) {
       <div class="addon-head"><h2><%= t("ss.export") %></h2></div>
       <div class="addon-body">
         <dl class="see" style="margin-top: 20px;">
-          <dt><%= t "gws/memo/message.format" %></dt>
-          <dd>
-            <%= f.select :format, ["json", "eml"] %>
-          </dd>
-
           <dt><%= t("gws/memo/message.export_filter") %></dt>
           <dd>
             <label><%= radio_button_tag "#{f.object_name}[export_filter]", 'all', true %> <%= t("gws/memo.options.export_filter.all") %></label>

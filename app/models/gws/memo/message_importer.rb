@@ -1,3 +1,4 @@
+
 class Gws::Memo::MessageImporter
   include ActiveModel::Model
   include Sys::SiteImport::File
@@ -15,9 +16,10 @@ class Gws::Memo::MessageImporter
     @ss_files_map = {}
     @gws_users_map = {}
 
+    Zip.unicode_names = true
     Zip::File.open(in_file.path) do |entries|
       entries.each do |entry|
-        next if entry.directory?
+        next if !entry.name.end_with?(".eml")
 
         import_gws_memo_message(entry)
       end
@@ -27,56 +29,57 @@ class Gws::Memo::MessageImporter
   private
 
   def import_gws_memo_message(entry)
-    data = read_json(entry)
-    data.delete('_id')
+    msg = read_eml(entry)
 
     item = Gws::Memo::Message.new
-    data.each do |k, v|
-      next if %w(user members to_members cc_members bcc_members files list_id).include?(k)
-
-      item[k] = v
+    item.site_id = cur_site.id
+    item.subject = msg[:content].subject
+    item.send_date = msg[:content].date
+    if msg[:content].attachments.present?
+      item.text = msg[:content].text_part.decoded
+    else
+      item.text = msg[:content].decoded
     end
 
-    # site_id
-    item.site_id = cur_site.id
-
+    sender = Gws::User.find_by(email: msg[:content].from.first) rescue nil
+    item.user_uid = sender.uid
+    item.user_name = sender.name
     # user_id (from)
-    if data['user']
-      user = find_user(data['user'])
-      if user
-        item.cur_user = user
-        @sent_by_cur_user = (@cur_user.id == user.id)
-      else
-        item.cur_user = @cur_user
-      end
+    if sender
+      item.cur_user = sender
+      @sent_by_cur_user = (@cur_user.id == sender.id)
+    else
+      item.cur_user = @cur_user
     end
 
     # to_member_ids
-    if data['to_members'].present?
+    if msg[:content].to.present?
       item.to_member_ids = []
-      data['to_members'].each do |data_user|
-        user = find_user(data_user)
-        item.to_member_ids += [user.id] if user
+      msg[:content].to.each do |email|
+        receiver = find_user(email)
+        item.to_member_ids += [receiver.id] if receiver
       end
     end
 
     # cc_member_ids
-    if data['cc_members'].present?
+    if msg[:content].cc.present?
       item.cc_member_ids = []
-      data['cc_members'].each do |data_user|
-        user = find_user(data_user)
-        item.cc_member_ids += [user.id] if user
+      msg[:content].cc.each do |email|
+        receiver = find_user(email)
+        item.cc_member_ids += [receiver.id] if receiver
       end
     end
 
     # bcc_member_ids
-    if data['bcc_members'].present?
+    if msg[:content].bcc.present?
       item.bcc_member_ids = []
-      data['bcc_members'].each do |data_user|
-        user = find_user(data_user)
-        item.bcc_member_ids += [user.id] if user
+      msg[:content].bcc.each do |email|
+        receiver = find_user(email)
+        item.bcc_member_ids += [receiver.id] if receiver
       end
     end
+
+    item.member_ids = member_ids(item).sort
 
     # check member_ids
     unless item.draft?
@@ -86,6 +89,14 @@ class Gws::Memo::MessageImporter
       if !member_ids(item).include?(@cur_user.id)
         item.to_member_ids += [@cur_user.id]
       end
+    end
+
+    #trash
+    item.user_settings = []
+    if msg[:tmp_path].include?("受信トレイ")
+      item.user_settings << { "user_id" => @cur_user.id, "path" => "INBOX" }
+    elsif msg[:tmp_path].include?("ゴミ箱")
+      item.user_settings << { "user_id" => @cur_user.id, "path" => "INBOX.Trash" }
     end
 
     # deleted
@@ -104,13 +115,10 @@ class Gws::Memo::MessageImporter
     item.filtered = {}
     item.filtered[@cur_user.id.to_s] = @datetime
 
-    # user_settings
-    item.user_settings = []
-
     # files
     item.file_ids = []
-    if data['files'].present?
-      data['files'].each do |data_file|
+    if msg[:content].attachments.present?
+      msg[:content].attachments.each do |data_file|
         item.file_ids += [save_ss_file(data_file).id]
       end
     end
@@ -119,16 +127,8 @@ class Gws::Memo::MessageImporter
     item.save
   end
 
-  def find_user(data)
-    id = data['_id']
-    name = data['name']
-
-    return nil if id.nil? || name.nil?
-
-    user = Gws::User.unscoped.find(id) rescue nil
-
-    return nil if user.try(:name) != name
-
+  def find_user(email)
+    user = Gws::User.find_by(email: email) rescue nil
     user
   end
 
@@ -139,12 +139,12 @@ class Gws::Memo::MessageImporter
   def save_ss_file(data)
     file = Fs::UploadedFile.new('gws_message')
     file.binmode
-    file.write(Base64.strict_decode64(data['base64']))
+    file.write(data.body)
     file.rewind
-    file.original_filename = data['filename']
+    file.original_filename = data.filename
 
-    item = SS::File.new(model: data['model'])
-    item.name = data['name']
+    item = SS::File.new(model: "gws/memo/message")
+    item.name = data.filename
     item.user_id = @cur_user.id
     item.in_file = file
     item.save!
@@ -153,9 +153,16 @@ class Gws::Memo::MessageImporter
     item
   end
 
-  def read_json(entry)
-    entry.get_input_stream do |f|
-      JSON.load(f)
+  def read_eml(entry)
+    ext = File.extname(entry.name)
+    msg = {}
+    Tempfile.open(URI.decode(entry.to_s).force_encoding('UTF-8')) do |file|
+      msg[:tmp_path] = "tmp/" + File.basename(file)
+      entry.extract(msg[:tmp_path])
+      msg[:content] = Mail.read("tmp/" + File.basename(file.path))
+      File.delete(msg[:tmp_path])
     end
+
+    msg
   end
 end

@@ -7,7 +7,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
     @message_ids = args
     @root_url = opts[:root_url].to_s
     @output_zip = SS::ZipCreator.new("gws-memo-messages.zip", user, site: site)
-    @output_format = opts[:format].to_s.presence || "json"
+    # @output_format = opts[:format].to_s.presence || "json"
     @export_filter = opts[:export_filter].to_s.presence || "selected"
     @exported_items = 0
 
@@ -62,11 +62,8 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
         folder_name = folder_name.split("/").map { |path| sanitize_filename(path) }.join("/")
         basename = "#{folder_name}/#{basename}"
       end
-      if @output_format == "eml"
-        write_eml(basename, data)
-      else
-        write_json(basename, data.to_json)
-      end
+      write_eml(basename, data)
+      # write_json(basename, data.to_json)
 
       @exported_items += 1
     end

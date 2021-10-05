@@ -8,7 +8,6 @@ class Gws::Memo::ImportMessagesController < ApplicationController
   menu_view nil
 
   before_action :deny_with_auth
-  before_action :check_permission
 
   private
 
@@ -23,10 +22,6 @@ class Gws::Memo::ImportMessagesController < ApplicationController
 
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
-  end
-
-  def check_permission
-    raise "403" unless @cur_user.gws_role_permit_any?(@cur_site, :restore_gws_memo_messages)
   end
 
   public

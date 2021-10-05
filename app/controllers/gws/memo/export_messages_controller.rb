@@ -8,7 +8,6 @@ class Gws::Memo::ExportMessagesController < ApplicationController
   menu_view nil
 
   before_action :deny_with_auth
-  before_action :check_permission
 
   private
 
@@ -25,10 +24,6 @@ class Gws::Memo::ExportMessagesController < ApplicationController
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
-  def check_permission
-    raise "403" unless @cur_user.gws_role_permit_any?(@cur_site, :export_gws_memo_messages)
-  end
-
   public
 
   def index
@@ -40,7 +35,6 @@ class Gws::Memo::ExportMessagesController < ApplicationController
     message_ids = message_ids.select(&:present?) if message_ids
     root_url = params.dig(:item, :root_url)
     export_filter = params.dig(:item, :export_filter)
-    format = params.dig(:item, :format)
 
     if export_filter != 'all' && message_ids.blank?
       @item = @model.new
@@ -57,7 +51,7 @@ class Gws::Memo::ExportMessagesController < ApplicationController
     end
 
     job_class = Gws::Memo::MessageExportJob.bind(site_id: @cur_site.id, user_id: @cur_user)
-    job_class.perform_later(*message_ids, root_url: root_url, export_filter: export_filter, format: format)
+    job_class.perform_later(*message_ids, root_url: root_url, export_filter: export_filter)
     render_create true, location: { action: :start_export }, notice: I18n.t("gws/memo/message.notice.start_export")
   end
 
