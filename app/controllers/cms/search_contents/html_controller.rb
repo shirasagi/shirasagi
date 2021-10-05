@@ -137,7 +137,7 @@ class Cms::SearchContents::HtmlController < ApplicationController
     true
   end
 
-  def update_column_values_fields(item)
+  def update_column_values_fields(item, &block)
     item = item.becomes_with_route if item.respond_to?(:becomes_with_route)
 
     item.column_values.each do |column_value|
@@ -153,7 +153,7 @@ class Cms::SearchContents::HtmlController < ApplicationController
           attributes[field] = new_value if new_value != old_value
         elsif old_value.is_a?(Array)
           old_value = old_value.map(&:to_s)
-          new_value = old_value.map { |v| yield v }
+          new_value = old_value.map(&block)
           attributes[field] = new_value if new_value != old_value
         end
       end

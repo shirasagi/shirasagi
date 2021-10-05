@@ -19,7 +19,7 @@ module SS
       def bm(n = 1, &block)
         require 'benchmark'
 
-        time = Benchmark.realtime { n.times { yield } }
+        time = Benchmark.realtime { n.times(&block) }
         dump "#{sprintf("%.6f ms", time/n)} (#{sprintf("%.3f ms", time)}/#{n})"
       end
 

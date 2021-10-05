@@ -6,7 +6,7 @@ module Webmail
       @imap = imap
     end
 
-    def each
+    def each(&block)
       @imap.mailboxes.all.each do |mailbox|
         begin
           @cur_mailbox = mailbox
@@ -16,9 +16,7 @@ module Webmail
           next
         end
 
-        @imap.mails.all.each do |m|
-          yield m
-        end
+        @imap.mails.all.each(&block)
       end
     end
 

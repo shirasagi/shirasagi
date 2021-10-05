@@ -115,11 +115,9 @@ class Kana::Dictionary
       count
     end
 
-    def each_all_csv(criteria)
+    def each_all_csv(criteria, &block)
       criteria.each do |item|
-        item.enumerate_csv.each do |word, yomi|
-          yield word, yomi
-        end
+        item.enumerate_csv.each(&block)
         logger.warn("dictionary #{item.name} has #{item.errors.size} error(s).") if item.errors.present?
       end
     end

@@ -24,7 +24,7 @@ module SS
       mode = options[:binary] ? "wb" : "w"
       mode = "#{mode}:#{options[:encoding]}" if options[:encoding]
 
-      ::File.open(tmpfile, mode) { |file| yield file }
+      ::File.open(tmpfile, mode, &block)
       tmpfile
     end
 
