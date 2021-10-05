@@ -73,7 +73,7 @@ module Sys::SiteCopy::CmsContents
       [field_name, resolve_reference(ref_type, field_value)]
     end
 
-    Hash[attributes.compact]
+    attributes.compact.to_h
   end
 
   def resolve_unsafe_references(content, klass = nil, *field_names)
@@ -97,7 +97,7 @@ module Sys::SiteCopy::CmsContents
       [field_name, resolve_reference(ref_type, field_value)]
     end
 
-    Hash[attributes.compact]
+    attributes.compact.to_h
   end
 
   def update_html_links(src_content, dest_content, options = {})

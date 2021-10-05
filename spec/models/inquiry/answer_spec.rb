@@ -30,7 +30,7 @@ describe Inquiry::Answer, dbscope: :example do
     let(:email_confirmation) { email }
     let(:radio) { radio_column.select_options.sample }
     let(:select) { select_column.select_options.sample }
-    let(:check) { Hash[check_column.select_options.map.with_index { |val, i| [i.to_s, val] }.sample(2)] }
+    let(:check) { check_column.select_options.map.with_index { |val, i| [i.to_s, val] }.sample(2).to_h }
 
     let(:data) do
       data = {}
@@ -249,7 +249,7 @@ describe Inquiry::Answer, dbscope: :example do
     let(:email_confirmation) { email }
     let(:radio) { radio_column.select_options.sample }
     let(:select) { select_column.select_options.sample }
-    let(:check) { Hash[check_column.select_options.map.with_index { |val, i| [i.to_s, val] }.sample(2)] }
+    let(:check) { check_column.select_options.map.with_index { |val, i| [i.to_s, val] }.sample(2).to_h }
     let(:page) { create :cms_page, cur_site: site }
 
     let(:data) do
@@ -279,7 +279,7 @@ describe Inquiry::Answer, dbscope: :example do
     let(:email_confirmation) { email }
     let(:radio) { radio_column.select_options.sample }
     let(:select) { select_column.select_options.sample }
-    let(:check) { Hash[check_column.select_options.map.with_index { |val, i| [i.to_s, val] }.sample(2)] }
+    let(:check) { check_column.select_options.map.with_index { |val, i| [i.to_s, val] }.sample(2).to_h }
     let(:node1) { create :category_node_page, cur_site: site }
 
     let(:data) do

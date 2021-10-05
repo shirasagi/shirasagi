@@ -24,7 +24,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
   let(:email_confirmation) { email }
   let(:radio_value) { radio_column.select_options.sample }
   let(:select_value) { select_column.select_options.sample }
-  let(:check_value) { Hash[check_column.select_options.map.with_index { |val, i| [i.to_s, val] }.sample(2)] }
+  let(:check_value) { check_column.select_options.map.with_index { |val, i| [i.to_s, val] }.sample(2).to_h }
   let(:name_column) { node.columns[0] }
   let(:company_column) { node.columns[1] }
   let(:email_column) { node.columns[2] }

@@ -49,7 +49,7 @@ module Opendata::DatasetCopy
 
   def clone_file_resources
     @original.resources.each do |r|
-      attributes = Hash[r.attributes]
+      attributes = r.attributes.to_h
       attributes.select!{ |k| r.fields.key?(k) }
       attributes.merge!(id: nil,
                         uuid: nil,
@@ -68,7 +68,7 @@ module Opendata::DatasetCopy
 
   def clone_url_resources
     @original.url_resources.each do |r|
-      attributes = Hash[r.attributes]
+      attributes = r.attributes.to_h
       attributes.select!{ |k| r.fields.key?(k) }
       attributes.merge!(id: nil,
                         uuid: nil,
