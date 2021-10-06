@@ -79,7 +79,7 @@ module SS::UploadPolicy
     def upload_policy_options
       default = SS.config.ss.upload_policy
       values = [[I18n.t("ss.options.upload_policy.default_#{default}"), nil]]
-      values += ['sanitizer', 'restricted'].map { |v| [I18n.t("ss.options.upload_policy.#{v}"), v] }
+      values += %w(sanitizer restricted).map { |v| [I18n.t("ss.options.upload_policy.#{v}"), v] }
       values
     end
 
