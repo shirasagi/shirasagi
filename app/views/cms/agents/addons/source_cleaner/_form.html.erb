@@ -1,6 +1,6 @@
 <%= jquery do %>
   var toggleActionType = function() {
-    var target = $("#item_target_type").val();
+    var target = $(".target-type").val();
     var action = $(".action-type").val();
     $(".replace-source").hide();
     $(".replaced-value").hide();
@@ -14,22 +14,23 @@
   }
 
   $(".action-type").on("change", toggleActionType);
-  $("#item_target_type").on("change", toggleActionType);
+  $(".target-type").on("change", toggleActionType);
   toggleActionType();
 <% end %>
 
 <dl class="see mod-cms-sourcecleaner">
   <dt><%= @model.t :target %><%= @model.tt :target %></dt>
   <dd>
-    <%= f.select :target_type, @item.target_type_options, {}, style: "width: 70px" %>
+    <%= f.select :target_type, @item.target_type_options, {}, class: "target-type", style: "width: 70px" %>
     <%= f.text_field :target_value, placeholder: "div" %>
   </dd>
 
   <dt><%= @model.t :action %><%= @model.tt :action %></dt>
-  <dd>
-    <%= f.select :action_type, @item.action_type_options, {}, class: "action-type", style: "width: 70px" %>
-    <%= f.text_field :replace_source, class: "replace-source", style: "width: 300px" %>
-    <span class="replace-source">→</span>
-    <%= f.text_field :replaced_value, class: "replaced-value", style: "width: 300px" %>
-  </dd>
+  <dd><%= f.select :action_type, @item.action_type_options, {}, class: "action-type", style: "width: 70px" %></dd>
+
+  <dt class="replace-source"><%= @model.t :replace_source %><%= @model.tt :replace_source %></dt>
+  <dd class="replace-source"><%= f.text_field :replace_source %></dd>
+
+  <dt class="replaced-value"><%= @model.t :replaced_value %><%= @model.tt :replaced_value %></dt>
+  <dd class="replaced-value"><%= f.text_field :replaced_value %></dd>
 </dl>
