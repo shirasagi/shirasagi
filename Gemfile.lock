@@ -694,7 +694,6 @@ DEPENDENCIES
   levenshtein
   line-bot-api
   liquid
-  mail
   mail-iso-2022-jp
   marcel
   marked-rails

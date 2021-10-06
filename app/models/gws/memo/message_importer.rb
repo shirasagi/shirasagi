@@ -15,11 +15,13 @@ class Gws::Memo::MessageImporter
     @datetime = Time.zone.now
     @ss_files_map = {}
     @gws_users_map = {}
+    @restored_folders = {}
 
     Zip.unicode_names = true
     Zip::File.open(in_file.path) do |entries|
       entries.each do |entry|
         next if !entry.name.end_with?(".eml")
+        next if !entry.to_s.include?("/")
 
         import_gws_memo_message(entry)
       end
@@ -32,6 +34,7 @@ class Gws::Memo::MessageImporter
     msg = read_eml(entry)
 
     item = Gws::Memo::Message.new
+
     item.site_id = cur_site.id
     item.subject = msg[:content].subject
     item.send_date = msg[:content].date
@@ -39,6 +42,13 @@ class Gws::Memo::MessageImporter
       item.text = msg[:content].text_part.decoded
     else
       item.text = msg[:content].decoded
+    end
+
+    if msg[:content].mime_type == "text/html"
+      item.format = "html"
+      item.html = msg[:content].decoded
+    else
+      item.format = "text"
     end
 
     sender = Gws::User.find_by(email: msg[:content].from.first) rescue nil
@@ -91,14 +101,6 @@ class Gws::Memo::MessageImporter
       end
     end
 
-    #trash
-    item.user_settings = []
-    if msg[:tmp_path].include?("受信トレイ")
-      item.user_settings << { "user_id" => @cur_user.id, "path" => "INBOX" }
-    elsif msg[:tmp_path].include?("ゴミ箱")
-      item.user_settings << { "user_id" => @cur_user.id, "path" => "INBOX.Trash" }
-    end
-
     # deleted
     item.deleted = {}
     unless item.draft?
@@ -125,6 +127,32 @@ class Gws::Memo::MessageImporter
 
     item.allow_other_user_files
     item.save
+
+        # folder
+    item.user_settings = []
+    if msg[:tmp_path].include?("受信トレイ")
+      path = "INBOX"
+    elsif msg[:tmp_path].include?("ゴミ箱")
+      path = "INBOX.Trash"
+    else
+      restore_folder(msg[:folder_name])
+      path = @restored_folders[msg[:folder_name]]
+    end
+
+    item.move(@cur_user, path).update
+
+    item
+  end
+
+  def restore_folder(folder_name)
+    return if @restored_folders.has_key?(folder_name)
+
+    folder = Gws::Memo::Folder.find_or_initialize_by(
+      user_uid: @cur_user.uid, user_name: @cur_user.name,
+      user_id: @cur_user.id, site_id: @cur_site.id, name: folder_name
+    )
+    folder.save
+    @restored_folders[folder_name] = folder.id.to_s
   end
 
   def find_user(email)
@@ -155,13 +183,23 @@ class Gws::Memo::MessageImporter
 
   def read_eml(entry)
     ext = File.extname(entry.name)
+    file_path = URI.decode(entry.to_s).force_encoding('UTF-8')
     msg = {}
-    Tempfile.open(URI.decode(entry.to_s).force_encoding('UTF-8')) do |file|
-      msg[:tmp_path] = "tmp/" + File.basename(file)
+    Tempfile.open(file_path) do |file|
+      msg[:tmp_path] = "tmp/#{File.basename(file)}"
+      msg[:folder_name] = file_path.slice(/^.*\//).tr("/", "")
       entry.extract(msg[:tmp_path])
-      msg[:content] = Mail.read("tmp/" + File.basename(file.path))
+      msg[:content] = Mail.read(msg[:tmp_path])
       File.delete(msg[:tmp_path])
     end
+
+    # Tempfile.open(entry.to_s) do |file|
+    #   msg[:tmp_path] = "tmp/" + File.basename(file)
+    #   msg[:folder_name] = entry.to_s.slice(/^.*\//).tr("/", "")
+    #   entry.extract(msg[:tmp_path])
+    #   msg[:content] = Mail.read("tmp/" + File.basename(file.path))
+    #   File.delete(msg[:tmp_path])
+    # end
 
     msg
   end
