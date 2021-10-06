@@ -3,6 +3,7 @@ module ApplicationHelper
   include SS::AutoLink
   include SS::ButtonToHelper
   include SS::ColorPickerHelper
+  include SS::ErrorMessagesFor
 
   def tryb(&block)
     begin
