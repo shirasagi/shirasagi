@@ -4,6 +4,7 @@ module SS::ErrorMessagesFor
   def error_messages_for(object, header_message: nil)
     object = instance_variable_get("@#{object}") unless object.respond_to?(:to_model)
     object = convert_to_model(object)
+    return if object.nil?
 
     object_name = object.class.model_name.human.downcase if object.class.respond_to?(:model_name)
     object_name ||= object
