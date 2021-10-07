@@ -13,22 +13,16 @@ module SS::ErrorMessagesFor
 
     html = { id: 'errorExplanation', class: 'errorExplanation' }
     I18n.with_options(scope: %i[activerecord errors template]) do |locale|
-      header_message = if header_message.nil?
-        locale.t(:header, count: count, model: object_name.to_s.gsub('_', ' '))
-      else
-        # like `header_message: false`
-        header_message
-      end
-
-      message = locale.t(:body)
+      header_message ||= locale.t(:header, count: count, model: object_name.to_s.tr('_', ' '))
+      message_body = locale.t(:body)
 
       error_messages = object.errors.full_messages.map do |msg|
         content_tag(:li, msg)
       end.join.html_safe
 
       contents = ''
-      contents << content_tag(:h2, header_message) unless header_message.blank?
-      contents << content_tag(:p, message) unless message.blank?
+      contents << content_tag(:h2, header_message) if header_message.present?
+      contents << content_tag(:p, message_body) if message_body.present?
       contents << content_tag(:ul, error_messages)
 
       content_tag(:div, contents.html_safe, html)
