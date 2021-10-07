@@ -34,7 +34,6 @@ module Cms::Addon
 
     def default_release_plan_enabled?
       parent = self.try(:parent)
-      parent = parent.becomes_with_route if parent.present?
       return true if parent.try(:default_release_plan_enabled?)
 
       site = self.try(:site)
@@ -50,7 +49,6 @@ module Cms::Addon
 
     def default_release_date(now = Time.zone.now)
       parent = self.try(:parent)
-      parent = parent.becomes_with_route if parent.present?
       return calc_beginning_of_day(now, parent.default_release_days_after) if parent.try(:default_release_plan_enabled?)
       return calc_beginning_of_day(now, parent.default_release_days_after) if parent.try(:default_release_plan_enabled?)
 
@@ -65,7 +63,6 @@ module Cms::Addon
 
     def default_close_date(now = Time.zone.now)
       parent = self.try(:parent)
-      parent = parent.becomes_with_route if parent.present?
       return calc_beginning_of_day(now, parent.default_close_days_after) if parent.try(:default_release_plan_enabled?)
 
       site = self.try(:site)

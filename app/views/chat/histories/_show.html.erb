@@ -7,7 +7,7 @@
 
   <% if @item.question.present? %>
     <dt><%= @model.t :question %></dt>
-    <dd><%= @cur_node.becomes_with_route.question %> → <%= @item.label :question %></dd>
+    <dd><%= @cur_node.question %> → <%= @item.label :question %></dd>
   <% else %>
     <dt><%= @model.t :text %></dt>
     <dd><%= @item.text %></dd>

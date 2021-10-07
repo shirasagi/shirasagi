@@ -54,7 +54,7 @@ module Cms::Model::Node
           criteria = criteria.where({ filename: /^#{::Regexp.escape(self.filename)}\//, depth: self.depth + 1 })
         end
         criteria = criteria.reorder(self.sort_hash) if self.respond_to?(:sort_hash)
-        criteria.to_a.map(&:becomes_with_route)
+        criteria.to_a
       end
       export :pages do |context|
         site = context.registers[:cur_site]
@@ -67,7 +67,7 @@ module Cms::Model::Node
           criteria = criteria.where({ filename: /^#{::Regexp.escape(self.filename)}\//, depth: self.depth + 1 })
         end
         criteria = criteria.reorder(self.sort_hash) if self.respond_to?(:sort_hash)
-        criteria.to_a.map(&:becomes_with_route)
+        criteria.to_a
       end
     end
   end
@@ -283,7 +283,6 @@ module Cms::Model::Node
       all_ids = criteria.pluck(:id)
       all_ids.each_slice(20) do |ids|
         criteria.in(id: ids).to_a.each do |item|
-          item = item.becomes_with_route if item.respond_to?(:becomes_with_route)
           dst_filename = item.filename.sub(/^#{::Regexp.escape(src)}\//, "#{dst}/")
           item.set(filename: dst_filename, depth: dst_filename.scan("/").size + 1)
         end
@@ -325,7 +324,6 @@ module Cms::Model::Node
 
   def remove_children_recursively
     children.each do |child_node|
-      child_node = child_node.becomes_with_route
       child_node.remove_files_recursively
     end
   end

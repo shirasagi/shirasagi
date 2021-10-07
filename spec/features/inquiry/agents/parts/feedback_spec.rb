@@ -131,7 +131,7 @@ describe "inquiry_agents_parts_feedback", type: :feature, dbscope: :example do
       item.cur_node = node
       expect(item.source_name).to eq page1.name
       expect(item.source_full_url).to eq page1.full_url
-      expect(item.source_content.becomes_with_route).to eq page1
+      expect(item.source_content).to eq page1
     end
   end
 
@@ -164,7 +164,7 @@ describe "inquiry_agents_parts_feedback", type: :feature, dbscope: :example do
       item.cur_node = node
       expect(item.source_name).to eq page1.name
       expect(item.source_full_url).to eq page1.full_url
-      expect(item.source_content.becomes_with_route).to eq page1
+      expect(item.source_content).to eq page1
     end
   end
 

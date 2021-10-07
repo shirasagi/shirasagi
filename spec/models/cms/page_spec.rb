@@ -16,7 +16,6 @@ describe Cms::Page, type: :model, dbscope: :example do
     subject(:item) { create :cms_page }
     let(:show_path) { Rails.application.routes.url_helpers.cms_page_path(site: subject.site, id: subject) }
 
-    it { expect(item.becomes_with_route).not_to eq nil }
     it { expect(item.dirname).to eq nil }
     it { expect(item.basename).not_to eq nil }
     it { expect(item.path).not_to eq nil }
@@ -32,7 +31,6 @@ describe Cms::Page, type: :model, dbscope: :example do
     let(:item) { create :cms_page, cur_node: node }
     let(:show_path) { Rails.application.routes.url_helpers.node_page_path(site: item.site, cid: node.id, id: item.id) }
 
-    it { expect(item.becomes_with_route).not_to eq nil }
     it { expect(item.dirname).to eq node.filename }
     it { expect(item.basename).not_to eq nil }
     it { expect(item.path).not_to eq nil }

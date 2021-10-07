@@ -9,7 +9,6 @@ module Opendata::IdeaChildNode
     @parent_idea_node = begin
       node = self
       while node
-        node = node.becomes_with_route
         if node.is_a?(Opendata::Node::Idea)
           break
         end
@@ -26,11 +25,11 @@ module Opendata::IdeaChildNode
     category_path = "#{category_path}/#{@cur_subcategory}" if @cur_subcategory
 
     node = Cms::Node.site(@cur_site || self.site).and_public.where(filename: category_path).first
-    return node.becomes_with_route if node
+    return node if node
 
     (parent_idea_node.st_categories || parent_idea_node.default_st_categories || []).each do |cate|
       node = Cms::Node.site(@cur_site || self.site).and_public.where(filename: "#{cate.filename}/#{category_path}").first
-      return node.becomes_with_route if node
+      return node if node
     end
 
     nil

@@ -12,7 +12,7 @@ module Member::Addon::LoginLink
     ret = self.login_link_url.presence
     return ret if ret
 
-    ret = self.parent.becomes_with_route.redirect_url.presence rescue nil
+    ret = self.parent.redirect_url.presence rescue nil
     return ret if ret
 
     ret = Member::Node::Mypage.site(@cur_site || self.site).first.url rescue nil

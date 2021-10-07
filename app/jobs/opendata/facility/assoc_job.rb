@@ -7,7 +7,7 @@ class Opendata::Facility::AssocJob < Cms::ApplicationJob
     return if @dataset_node.blank?
 
     @facility_site = Cms::Site.find(facility_site_id)
-    @facility_node = Cms::Node.site(@facility_site).find(facility_node_id).becomes_with_route
+    @facility_node = Cms::Node.site(@facility_site).find(facility_node_id)
     @forcibly_updates = forcibly_updates
 
     import_csv_as_resource

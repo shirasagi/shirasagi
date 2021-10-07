@@ -3,7 +3,6 @@
 addon ||= local_assigns.fetch(:addon, {})
 addon[:display_body] = "hide"
 
-@cur_node = @cur_node.becomes_with_route if @cur_node
 if @cur_node && (st_categories = @cur_node.st_categories).present?
   conds = [{ :id.in => @cur_node.st_category_ids }]
   st_categories.pluck(:filename).each do |filename|

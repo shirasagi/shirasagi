@@ -82,7 +82,7 @@ module Cms::ChildList
 
   def template_variable_handler_child_items(name, issuer)
     items = self.send(name)
-    parent_node = parent.becomes_with_route
+    parent_node = parent
     html = ''
     html << parent_node.child_upper_html.to_s
     if parent_node.child_loop_html.present?
@@ -95,7 +95,6 @@ module Cms::ChildList
   end
 
   def render_child_loop_html(item, opts = {})
-    item = item.becomes_with_route rescue item
     item.render_template(opts[:html] || child_loop_html, self)
   end
 end
