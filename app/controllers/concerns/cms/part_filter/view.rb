@@ -3,7 +3,7 @@ module Cms::PartFilter::View
   include SS::AgentFilter
 
   included do
-    helper ApplicationHelper
+    helper ApplicatioHelper
     before_action :prepend_current_view_path
   end
 
@@ -22,6 +22,6 @@ module Cms::PartFilter::View
   def cur_node
     return @cur_node if @cur_node
     path = @cur_path.sub(/^#{@cur_site.url}/, "")
-    Cms::Node.site(@cur_site).in_path(path).sort(depth: -1).first
+    Cms::Node.site(@cur_site).in_path(path).reorder(depth: -1).first
   end
 end

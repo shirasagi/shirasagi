@@ -7,7 +7,7 @@ module Cms::Model::NodeDiscriminatorRetrieval
     self.discriminator_key = "route"
 
     class << self
-      alias get_discriminator_mapping_without_shirasagi get_discriminator_mapping
+      alias_method :get_discriminator_mapping_without_shirasagi, :get_discriminator_mapping
 
       def get_discriminator_mapping(type)
         camelized = type.sub("/", "/node/").camelize
