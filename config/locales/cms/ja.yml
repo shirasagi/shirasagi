@@ -49,6 +49,7 @@ ja:
     pagination: ページネーション
     page_search: ページ検索
     part: パーツ
+    plz_check_targets_to_delete: 削除対象が選択されておりません。チェックボックスにチェックを入れた上で削除をお願いします。
     preview: プレビュー
     preview_mobile_page: 携帯プレビュー
     preview_page: プレビュー

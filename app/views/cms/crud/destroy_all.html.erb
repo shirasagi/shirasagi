@@ -29,3 +29,13 @@
     </footer>
   </div>
 <% end %>
+
+<%= jquery do %>
+  $('.btn-danger').click(function(){
+    var checked_count = $('.list-item :checked').length;
+    if (checked_count == 0 ){
+      alert("<%= I18n.t("cms.plz_check_targets_to_delete") %>");
+      return false;
+    }
+  });
+<% end %>
