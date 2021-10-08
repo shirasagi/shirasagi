@@ -14,7 +14,8 @@ module SS::ErrorMessagesFor
 
     html = { id: 'errorExplanation', class: 'errorExplanation' }
     I18n.with_options(scope: %i[activerecord errors template]) do |locale|
-      header_message ||= locale.t(:header, count: count, model: object_name.to_s.tr('_', ' '))
+      # be careful, header_message can be nil, false and arbitrary string, and nil means no header
+      header_message = locale.t(:header, count: count, model: object_name.to_s.tr('_', ' ')) if header_message.nil?
       message_body = locale.t(:body)
 
       error_messages = object.errors.full_messages.map do |msg|
