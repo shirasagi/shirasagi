@@ -78,6 +78,7 @@ describe 'article_pages_with_upload_policy', type: :feature, dbscope: :example, 
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
         click_on copy_name
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         expect(page).to have_css('#selected-files .sanitizer-wait')
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))

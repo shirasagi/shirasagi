@@ -15,5 +15,7 @@ if Module.const_defined?(:Unicorn)
   use Unicorn::WorkerKiller::Oom, (mem_min*(1024**2)), (mem_max*(1024**2))
 end
 
-require ::File.expand_path('../config/environment', __FILE__)
+require_relative "config/environment"
+
 run Rails.application
+Rails.application.load_server

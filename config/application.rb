@@ -1,4 +1,4 @@
-require_relative 'boot'
+require_relative "boot"
 
 require "rails"
 # Pick the frameworks you want:
@@ -23,10 +23,18 @@ module SS
   mattr_reader(:version) { "1.14.2" }
 
   class Application < Rails::Application
-    config.middleware.delete ActionDispatch::HostAuthorization
-
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
+
+    config.middleware.delete ActionDispatch::HostAuthorization
+
+    # Configuration for the application, engines, and railties goes here.
+    #
+    # These settings can be overridden in specific environments using the files
+    # in config/environments, which are processed later.
+    #
+    # config.time_zone = "Central Time (US & Canada)"
+    # config.eager_load_paths << Rails.root.join("extras")
 
     config.autoload_paths << "#{config.root}/lib"
     config.autoload_paths << "#{config.root}/app/validators"

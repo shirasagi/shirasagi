@@ -75,7 +75,7 @@ module SS
   end
 end
 
-if ci? || true
+if ENV["ECHO_LOGS_ON_FAILURE"] == "enable"
   RSpec.configuration.extend(SS::LogSupport)
   RSpec.configuration.before(:suite) do
     SS::LogSupport.install_stdout_logger
