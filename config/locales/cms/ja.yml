@@ -6,6 +6,8 @@ ja:
     body_layout: 本文レイアウト
     calendar_view: カレンダー表示
     check_links: リンクチェック実行結果
+    check_links_reports: レポート
+    check_links_ignore_urls: 除外設定
     check_links_nodes: フォルダー
     check_links_pages: ページ
     count_pages: ページ目
@@ -124,7 +126,7 @@ ja:
         - PDFファイルをご覧いただくためには、Adobe Readerのプラグイン（無償）が必要となります。
         - お持ちでない場合は、お使いの機種とスペックに合わせたプラグインをインストールしてください。
         - </div>
-        - <a href="http://get.adobe.com/jp/reader/">Adobe Readerをダウンロードする</a>
+        - <a href="https://get.adobe.com/jp/reader/">Adobe Readerをダウンロードする</a>
     all_content:
       download_tab: 一覧出力
       download_head: 全コンテンツ一覧出力
@@ -157,6 +159,7 @@ ja:
       line_post_enabled: LINE連携が有効になっています。連携しない場合は、設定を解除してください。
       twitter_post_enabled: Twitter投稿が有効になっています。連携しない場合は、設定を解除してください。
       source_clean: "ソースクリーニングを実行してよろしいですか。\nソースクリーニングにより表示が崩れる可能性があります。"
+      change_form: 定型フォームを変更してよろしいですか？
     notices:
       import_with_entry_form_is_not_supported: 次のフォームでは本文ブロックは出力されません。
       restoring_public_content_from_trash: 非公開で復元されます。復元後、内容を確認うえ、公開してください。
@@ -164,6 +167,12 @@ ja:
       generate_locked: 書き出しを停止しました。
       generate_unlocked: 書き出しの停止を解除しました。
       over_content_quota: 使用容量を超過しているフォルダがあります。
+      check_links_report:
+        - "%{time} 時点でのレポートです。"
+        - "リンク切れを修正した場合、再度リンクチェックを実行し、新しいレポートを作成してください。"
+      check_links_report_annotation: ※リンクチェックの実行タイミングや通信先サーバーの負荷状況によっては誤検出の場合があります。
+      check_links_report_created: "%{time} 時点"
+      confirm_column_deletion_whose_form_is_in_use: "定型フォームは利用中のため入力項目を削除するとページが正しく表示されなくなる場合があります。それでも削除する場合はチェックしてください。"
     apis:
       categories:
         index: カテゴリーを選択する
@@ -209,9 +218,9 @@ ja:
           search: データセットを検索
           select: データセットを設定する
       forms:
-        index: 定形フォームを選択する
-        search: 定形フォームを検索
-        select: 定形フォームを設定する
+        index: 定型フォームを選択する
+        search: 定型フォームを検索
+        select: 定型フォームを設定する
     auto_correct:
       link: 自動修正
       notice: アクセシビリティチェック（保存時に自動で修正されます）
@@ -222,6 +231,7 @@ ja:
       back_to_contents: コンテンツへ戻る
       michecker: miChecker で確認する
       download: フォルダ容量をCSVダウンロードする
+      check_preview: プレビューで確認する
     move_page:
       confirm: 確認
       message: '"%{source}"へのリンクが含まれるページ'
@@ -346,6 +356,10 @@ ja:
         same_as_updated: 更新日
         same_as_created: 作成日
         same_as_first_released: 初公開日
+      twitter_post_format:
+        thumb_and_page: サムネイル画像とページ
+        files_and_page: 本文内の画像とページ
+        page_only: ページ
       line_post_format:
         thumb_carousel: サムネイル画像とLINEメッセージ
         body_carousel: 本文内の最初の画像とLINEメッセージ
@@ -534,6 +548,11 @@ ja:
     delete_cms_ignore_alert: 警告を無視して削除する
     edit_cms_ignore_alert: 警告を無視して非公開保存する
     use_cms_sitemap: フォルダ容量のCSVダウンロード
+    read_cms_check_links_reports: リンクチェックレポートの閲覧
+    delete_cms_check_links_reports: リンクチェックレポートの削除
+    read_other_cms_check_links_errors: リンクチェックエラーの閲覧（全て）
+    read_private_cms_check_links_errors: リンクチェックエラーの閲覧（所有）
+    edit_cms_check_links_ignore_urls: リンクチェックエラー例外の管理
 
   modules:
     cms: 標準機能
@@ -596,9 +615,9 @@ ja:
       cms/redirect_link: リンクページ
       cms/site_search/history: 履歴
       cms/site_search/keyword: 注目ワード
-      cms/site_search/history: 履歴
       cms/line_poster: LINE連携
       cms/content_quota: 容量制限
+      cms/check_links: リンクチェック実行結果
 
   mongoid:
     models:
@@ -649,6 +668,8 @@ ja:
       cms/column/free: 自由入力
       cms/column/table: 表
       cms/michecker/result: miChecker結果
+      cms/michecker_task: miCheckerタスク
+      cms/check_links/error/base: エラー情報
     errors:
       models:
         cms/content:
@@ -661,6 +682,7 @@ ja:
               youtube_id_can_not_get: からYouTubeIDが取得できませんでした。
     attributes:
       cms/content:
+        released_type: 公開日時種別
         released: 公開日時
         name: タイトル
         keyword: キーワード
@@ -752,13 +774,6 @@ ja:
         name: タイトル
         description: 説明
         order: 並び順
-      cms/addon/site_search/history:
-        upper_html:
-          - 上部HTMLを入力します。
-        lower_html:
-          - 下部HTMLを入力します。
-        placeholder:
-          - プレースホルダーを入力します。
       cms/command:
         name: タイトル
         description: 説明
@@ -776,6 +791,7 @@ ja:
         editor_css_path: スタイルシートパス
         syntax_check: アクセシビリティチェック
       cms/addon/release:
+        released_type: 公開日時種別
         released: 公開日時
       cms/addon/release_plan:
         release_date: 公開開始日時(予約)
@@ -834,17 +850,28 @@ ja:
         sns_share_orders: 並び順
       cms/addon/twitter_poster:
         twitter_auto_post: Twitter投稿
-        twitter_url: TweetURL
+        twitter_edit_auto_post: 編集時に自動投稿
+        twitter_post_format: 投稿形式
+        twitter_posted: Twitter投稿履歴
+        twitter_posted_url: TweetURL
         twitter_posted_at: 投稿日時
-        sns_auto_delete: 非公開時に投稿を削除
         twitter_post_error: 投稿エラー
+      cms/addon/line_poster:
+        line_auto_post: LINE投稿
+        line_post_format: 投稿形式
+        line_text_message: LINEメッセージ
+        line_text_message_placeholder: "○月○日、○○○イベントが行われます。詳しくは、市ホームページをご覧ください。\n※全角45文字以内\n※改行はしないでください"
+        line_posted: LINE投稿履歴
+        line_edit_auto_post: 編集時に自動投稿
+        line_post_error: 投稿エラー
       cms/addon/node_twitter_post_setting:
-        node_auto_post_setting: SNS自動投稿設定
         node_twitter_auto_post: Twitter投稿
-        node_sns_auto_delete: 非公開時に投稿を削除
+        node_twitter_post_format: 投稿形式
+        node_twitter_edit_auto_post: 編集時に自動投稿
       cms/addon/node_line_post_setting:
         node_line_auto_post: LINE投稿
         node_line_post_format: 投稿形式
+        node_line_edit_auto_post: 編集時に自動投稿
       cms/addon/import/page:
         in_file: ファイル
       cms/addon/import/group:
@@ -1071,13 +1098,6 @@ ja:
         low_vision_report_filepath: 視覚化検証結果
         low_vision_source_filepath: 視覚化検証元画像
         low_vision_result_filepath: 視覚化検証画像
-      cms/addon/line_poster:
-        line_auto_post: LINE投稿
-        line_post_format: 投稿形式
-        line_text_message: LINEメッセージ
-        line_text_message_placeholder: "○月○日、○○○イベントが行われます。詳しくは、市ホームページをご覧ください。\n※全角45文字以内\n※改行はしないでください"
-        line_posted: 投稿日時
-        line_post_error: 投稿エラー
       cms/sns_post_log/base:
         name: タイトル
         type: 投稿SNS
@@ -1085,6 +1105,16 @@ ja:
         page_id: 連携ページ
       cms/addon/content_quota:
         content_quota: 容量制限
+      cms/check_links/error/base:
+        ref: パス
+        ref_url: URL
+        name: タイトル
+        filename: ファイル名
+        urls: リンク切れ
+        content: 検出対象
+        group_ids: 管理グループ
+      cms/check_links/ignore_url:
+        name: 除外URL
 
   activemodel:
     attributes:
@@ -1208,6 +1238,9 @@ ja:
       unsupported_encoding: 対応していない文字コードです。
       thumb_is_blank: サムネイル画像が登録されていません。
       not_found_file_url_in_body: 本文内の画像が見つかりませんでした。
+      unable_to_delete_in_use_column_without_confirmation: 同意がないため削除できません。
+      unable_to_delete_all_columns_if_form_is_in_use: 定型フォームが使用中のため一括削除することはできません。
+      unable_to_close_form_if_form_is_in_use: 定型フォームが使用中のため非公開にすることはできません。
 
     template:
       no_errors: エラーは見つかりませんでした。
@@ -2175,18 +2208,32 @@ ja:
       list_type:
         - 種類を選択します。
 
-    cms/addon/redirect_link:
-      redirect_link:
-        - ページを別URLにリダイレクトする際に入力します。
-
-    cms/csv_import_base:
-      file:
-        - インポートするファイルを設定します。
-        - ファイルはUTF-8またはShift_JISでエンコードされている必要があります。
+    cms/addon/node_twitter_post_setting:
+      node_twitter_auto_post:
+        - 有効に設定すると公開時にTwitter投稿をおこないます。
+      node_twitter_edit_auto_post:
+        - 有効に設定すると再度公開した際にTwitter投稿をおこないます。
+        - この設定は再投稿が完了した際に、自動的に無効に戻ります。
+      node_twitter_post_format:
+        - 投稿形式を選択します。
+        -
+        - ・サムネイル画像とページ
+        - サムネイル画像とページタイトルおよびリンクを投稿します。
+        -
+        - ・本文内の画像とページ
+        - 本文内の画像とページタイトルおよびリンクを投稿します。
+        - 画像は最大４件表示されます。
+        -
+        - ・ページ
+        - ページタイトルおよびリンクを投稿します。
+        - ページをOGPで表示する場合は、こちらを選択してください。
 
     cms/addon/node_line_post_setting:
       node_line_auto_post:
         - 有効に設定すると公開時にLINE投稿をおこないます。
+      node_line_edit_auto_post:
+        - 有効に設定すると再度公開した際にLINE投稿をおこないます。
+        - この設定は再投稿が完了した際に、自動的に無効に戻ります。
       node_line_post_format:
         - 投稿形式を選択します。
         -
@@ -2199,9 +2246,32 @@ ja:
         - ・LINEメッセージのみ
         - LINEメッセージと記事へのリンクをカルーセル形式で投稿します。
 
+    cms/addon/twitter_poster:
+      twitter_auto_post:
+        - 有効に設定すると公開時にTwitter投稿をおこないます。
+      twitter_edit_auto_post:
+        - 有効に設定すると再度公開した際にTwitter投稿をおこないます。
+        - この設定は再投稿が完了した際に、自動的に無効に戻ります。
+      twitter_post_format:
+        - 投稿形式を選択します。
+        -
+        - ・サムネイル画像とページ
+        - サムネイル画像とページタイトルおよびリンクを投稿します。
+        -
+        - ・本文内の画像とページ
+        - 本文内の画像とページタイトルおよびリンクを投稿します。
+        - 画像は最大４件表示されます。
+        -
+        - ・ページ
+        - ページタイトルおよびリンクを投稿します。
+        - ページをOGPで表示する場合は、こちらを選択してください。
+
     cms/addon/line_poster:
       line_auto_post:
         - 有効に設定すると公開時にLINE投稿をおこないます。
+      line_edit_auto_post:
+        - 有効に設定すると再度公開した際にLINE投稿をおこないます。
+        - この設定は再投稿が完了した際に、自動的に無効に戻ります。
       line_post_format:
         - 投稿形式を選択します。
         -
@@ -2216,12 +2286,32 @@ ja:
       line_text_message:
         - LINEに投稿するメッセージを入力します。
 
+    cms/addon/redirect_link:
+      redirect_link:
+        - ページを別URLにリダイレクトする際に入力します。
+    cms/csv_import_base:
+      file:
+        - インポートするファイルを設定します。
+        - ファイルはUTF-8またはShift_JISでエンコードされている必要があります。
+
     cms/addon/content_quota:
       content_quota:
         - フォルダーの合計容量の上限を入力します。
         - 合計容量が超えた場合、警告が表示されます。
         - 未設定である場合、警告は表示されません。
         - 初期値は 未設定 です。
+
+    cms/check_links/ignore_url:
+      name:
+        - 除外URLを入力します。
+
+    cms/addon/site_search/history:
+      upper_html:
+        - 上部HTMLを入力します。
+      lower_html:
+        - 下部HTMLを入力します。
+      placeholder:
+        - プレースホルダーを入力します。
 
   all_content:
     page_id: ページID

@@ -27,15 +27,11 @@ describe "member_apis_temp_files", type: :feature, dbscope: :example, js: true d
 
   context "sanitizer setting" do
     before do
-      @save_config = SS.config.replace_value_at(:ss, :upload_policy, 'sanitizer')
-      Fs.mkdir_p(SS.config.ss.sanitizer_input)
-      Fs.mkdir_p(SS.config.ss.sanitizer_output)
+      upload_policy_before_settings('sanitizer')
     end
 
     after do
-      Fs.rm_rf(SS.config.ss.sanitizer_input)
-      Fs.rm_rf(SS.config.ss.sanitizer_output)
-      SS.config.replace_value_at(:ss, :upload_policy, @save_config)
+      upload_policy_after_settings
     end
 
     it do
@@ -50,25 +46,24 @@ describe "member_apis_temp_files", type: :feature, dbscope: :example, js: true d
       expect(file.sanitizer_state).to eq 'wait'
       expect(Fs.exists?(file.path)).to be_truthy
       expect(Fs.exists?(file.sanitizer_input_path)).to be_truthy
-      expect(FileTest.size(file.path)).to eq 2048
+      expect(Fs.cmp(file.path, file.sanitizer_input_path)).to be_truthy
 
       # restore
-      output_path = "#{SS.config.ss.sanitizer_output}/#{file.id}_filename_100_marked.#{file.extname}"
-      Fs.mv file.sanitizer_input_path, output_path
-      file.sanitizer_restore_file(output_path)
+      output_path = sanitizer_mock_restore(file)
       expect(file.sanitizer_state).to eq 'complete'
-      expect(FileTest.size(file.path)).to be > 2048
+      expect(Fs.exists?(file.path)).to be_truthy
+      expect(Fs.exists?(output_path)).to be_falsey
     end
   end
 
   context "restricted setting" do
     before do
-      @save_config = SS.config.replace_value_at(:ss, :upload_policy, 'sanitizer')
-      site.update_attributes(upload_policy: 'restricted')
+      upload_policy_before_settings('sanitizer')
+      site.set(upload_policy: 'restricted')
     end
 
     after do
-      SS.config.replace_value_at(:ss, :upload_policy, @save_config)
+      upload_policy_after_settings
     end
 
     it do

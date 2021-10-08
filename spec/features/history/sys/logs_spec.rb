@@ -37,7 +37,7 @@ describe "history_sys_logs", type: :feature, dbscope: :example do
       csv[0].tap do |row|
         expect(row[History::Log.t(:created)]).to be_present
         expect(row[History::Log.t(:user_name)]).to eq "#{user.name}(#{user.id})"
-        expect(row[History::Log.t(:model_name)]).to eq "sns/login"
+        expect(row[History::Log.t(:model_name)]).to eq "#{user.class.model_name.human}(#{user.id})"
         expect(row[History::Log.t(:action)]).to eq "login"
         expect(row[History::Log.t(:path)]).to eq "/.mypage/login"
       end

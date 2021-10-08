@@ -64,8 +64,6 @@ class Jmaxml::Renderer::Base < AbstractController::Base
       templates_name = headers.delete(:template_name) || action_name
 
       each_template(Array(templates_path), templates_name) do |template|
-        self.formats = template.formats
-
         responses << {
           html: render(template: template),
           content_type: template.type.to_s

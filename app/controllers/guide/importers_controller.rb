@@ -33,7 +33,7 @@ class Guide::ImportersController < ApplicationController
     end
 
     @item.attributes = get_params
-    render_update @item.import_procedures, location: { action: :index }, render: { file: :import }
+    render_update @item.import_procedures, location: { action: :index }, render: { template: "import" }
   end
 
   def download_questions
@@ -51,7 +51,7 @@ class Guide::ImportersController < ApplicationController
     end
 
     @item.attributes = get_params
-    render_update @item.import_questions, location: { action: :index }, render: { file: :import }
+    render_update @item.import_questions, location: { action: :index }, render: { template: "import" }
   end
 
   def download_transitions
@@ -69,7 +69,7 @@ class Guide::ImportersController < ApplicationController
     end
 
     @item.attributes = get_params
-    render_update @item.import_transitions, location: { action: :index }, render: { file: :import }
+    render_update @item.import_transitions, location: { action: :index }, render: { template: "import" }
   end
 
   def download_template

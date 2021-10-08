@@ -1,9 +1,10 @@
 require 'spec_helper'
 
-describe "voice_main", type: :feature, dbscope: :example do
+describe "voice_main", type: :feature, dbscope: :example, open_jtalk: true do
   let(:voice_site) do
     SS::Site.find_or_create_by(name: "VoiceSite", host: "voicehost", domains: unique_domain)
   end
+  let(:ua) { 'shirasagi rspec' }
 
   before do
     WebMock.reset!
@@ -14,10 +15,13 @@ describe "voice_main", type: :feature, dbscope: :example do
       Fs.binwrite(output, IO.binread("#{Rails.root}/spec/fixtures/voice/voice-disabled.wav"))
       true
     end
+
+    # explicitly set user-agent to pass bot detection
+    page.driver.header('User-Agent', ua)
   end
   after { WebMock.reset! }
 
-  describe "#index", open_jtalk: true do
+  describe "#index" do
     context "when valid site is given" do
       let(:path) { "#{unique_id}.html" }
       let(:url) { "http://#{voice_site.domain}/#{path}" }
@@ -176,6 +180,17 @@ describe "voice_main", type: :feature, dbscope: :example do
         expect(status_code).to eq 200
         expect(response_headers).to include("Content-Type" => "audio/mpeg")
         expect(response_headers.keys).to_not include("Retry-After")
+      end
+    end
+
+    context "when user-agent is spider" do
+      let(:ua) { "Mozilla/5.0 (compatible; Linespider/1.1; +https://lin.ee/4dwXkTH)" }
+      let(:path) { "#{unique_id}.html" }
+      let(:url) { "http://#{voice_site.domain}/#{path}" }
+
+      it "returns 404" do
+        visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
+        expect(status_code).to eq 404
       end
     end
   end

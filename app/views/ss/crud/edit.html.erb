@@ -11,19 +11,19 @@
     addon_options[:id] = "addon-basic"
     addon_options[:head] = @addon_basic_name || t("ss.basic_info") if addons.size > 0
   %>
-  <% buf = render file: "_form", locals: { f: f, addon: addon_options } %>
+  <% buf = render template: "_form", locals: { f: f, addon: addon_options } %>
   <%= render "ss/crud/addon", addon: addon_options do %>
     <%= buf %>
   <% end %>
 
-  <%= render file: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
+  <%= render template: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
 </div>
 
 <footer class="send">
   <% if @crud_buttons %>
     <% @crud_buttons.call f %>
   <% else %>
-    <%= f.submit t("ss.buttons.save"), class: 'btn-primary save' %>
+    <%= f.submit t("ss.buttons.save"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.saving") } %>
     <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
   <% end %>
 </footer>

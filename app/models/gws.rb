@@ -131,4 +131,15 @@ module Gws
 
     criteria.total_bsonsize + criteria.aggregate_files_used
   end
+
+  def generate_message_id(site)
+    # see: mail/fields/message_id_field.rb#generate_message_id
+    if site.present? && site.respond_to?(:canonical_domain) && site.canonical_domain.present?
+      domain = site.canonical_domain
+    end
+    domain ||= SS.config.gws.canonical_domain
+    domain = domain.sub(/:.*$/, '') if domain.include?(":")
+
+    "<#{::Mail.random_tag}@#{domain}.mail>"
+  end
 end

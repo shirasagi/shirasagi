@@ -82,7 +82,7 @@ class Uploader::FilesController < ApplicationController
       end
     end
     location = "#{uploader_files_path}/#{@item.filename}"
-    render_create @item.errors.empty?, location: location, render: { file: :new_files }
+    render_create @item.errors.empty?, location: location, render: { template: "new_files" }
   end
 
   def create_directory
@@ -95,7 +95,7 @@ class Uploader::FilesController < ApplicationController
       end
     end
     location = "#{uploader_files_path}/#{@item.filename}"
-    render_create @item.errors.empty?, location: location, render: { file: :new_directory }
+    render_create @item.errors.empty?, location: location, render: { template: "new_directory" }
   end
 
   def set_params(*keys)
@@ -155,9 +155,9 @@ class Uploader::FilesController < ApplicationController
     else
       @item.errors.add :base, :set_filename
       if @directory
-        render_create false, location: location, render: { file: :new_directory }
+        render_create false, location: location, render: { template: "new_directory" }
       else
-        render_create false, location: location, render: { file: :new_files }
+        render_create false, location: location, render: { template: "new_files" }
       end
     end
   end

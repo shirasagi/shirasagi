@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :cms_loop_setting, class: Cms::LoopSetting do
     transient do
-      site nil
+      site { nil }
     end
 
     cur_site { site || cms_site }

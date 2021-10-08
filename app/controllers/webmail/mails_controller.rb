@@ -346,6 +346,6 @@ class Webmail::MailsController < ApplicationController
   end
 
   def print
-    render file: 'print', layout: 'ss/print'
+    render template: 'print', layout: 'ss/print'
   end
 end

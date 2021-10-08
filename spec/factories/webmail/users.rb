@@ -1,12 +1,12 @@
 FactoryBot.define do
   factory :webmail_user, class: Webmail::User do
-    name 'user_name'
+    name { 'user_name' }
     email do
       conf = SS::WebmailSupport.test_conf
       conf['email'] || 'webmail@example.jp'
     end
     uid { email.split("@")[0] }
-    in_password 'pass'
+    in_password { 'pass' }
     group_ids { [ ss_group.id ] }
     imap_settings do
       conf = SS::WebmailSupport.test_conf
@@ -27,7 +27,7 @@ FactoryBot.define do
   factory :webmail_user_without_imap, class: Webmail::User do
     name { "webmail-user-#{unique_id}" }
     email { "#{name}@example.jp" }
-    in_password 'pass'
+    in_password { 'pass' }
     group_ids { [ ss_group.id ] }
   end
 end

@@ -94,7 +94,7 @@ class Gws::Workflow::FilesController < ApplicationController
 
     @item = @model.new pre_params.merge(fix_params)
     raise '403' unless @item.editable?(@cur_user, site: @cur_site)
-    render_opts = { file: :new }
+    render_opts = { template: "new" }
     render_opts[:layout] = false if request.xhr?
     render render_opts
   end
@@ -102,7 +102,7 @@ class Gws::Workflow::FilesController < ApplicationController
   def form_select
     set_forms
     @forms = @forms.search(params[:s]).page(params[:page]).per(50)
-    render file: 'form_select'
+    render template: 'form_select'
   end
 
   def create
@@ -177,7 +177,7 @@ class Gws::Workflow::FilesController < ApplicationController
     @item.workflow_approvers = nil
     @item.workflow_required_counts = nil
 
-    render_opts = { render: { file: :request_cancel }, notice: t('workflow.notice.request_cancelled') }
+    render_opts = { render: { template: "request_cancel" }, notice: t('workflow.notice.request_cancelled') }
     render_update @item.save, render_opts
   end
 
@@ -229,7 +229,7 @@ class Gws::Workflow::FilesController < ApplicationController
     end
 
     render_opts = {}
-    render_opts[:render] = { file: :copy }
+    render_opts[:render] = { template: "copy" }
     if result
       render_opts[:location] = gws_workflow_file_path(state: 'all', id: @new_item)
     end

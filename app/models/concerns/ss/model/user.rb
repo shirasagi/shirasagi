@@ -88,7 +88,7 @@ module SS::Model::User
     default_scope -> {
       order_by uid: 1, email: 1
     }
-    scope :uid_or_email, ->(id) { self.or({email: id}, {uid: id}) }
+    scope :uid_or_email, ->(id) { self.where("$or" => [{ email: id }, { uid: id }]) }
     scope :and_enabled, ->(now = Time.zone.now) do
       self.and(
         { "$or" => [ { "account_start_date" => nil }, { "account_start_date" => { "$lte" => now } } ] },

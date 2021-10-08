@@ -74,7 +74,7 @@ describe "opendata_url_resource", dbscope: :example, js: true do
       expect(item.file.owner_item_type).to eq dataset.class.name
       expect(item.file.state).to eq "closed"
       expect(item.file.model).to eq "opendata/url_resource"
-      expect(item.file.content_type).to eq "text/comma-separated-values"
+      expect(item.file.content_type).to eq "text/csv"
 
       #
       # Content

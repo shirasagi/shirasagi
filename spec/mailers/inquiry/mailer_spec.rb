@@ -13,6 +13,7 @@ describe Inquiry::Mailer, type: :mailer, dbscope: :example do
       expect(mail.to.first).to eq "notice@example.jp"
       expect(mail.subject.to_s).not_to eq ""
       expect(mail.body.to_s).not_to eq ""
+      expect(mail.message_id).to end_with("@#{site.domain}.mail")
     end
   end
 

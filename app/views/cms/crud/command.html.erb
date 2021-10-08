@@ -18,7 +18,7 @@
   </section>
 
   <footer class="send">
-    <%= f.submit t("ss.buttons.run"), class: :save %>
+    <%= f.submit t("ss.buttons.run"), class: :save, data: { disable_with: t("ss.buttons.running") } %>
     <%= f.button t("ss.buttons.cancel"), type: :reset, class: "btn-default", onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
   </footer>
 <% end %>

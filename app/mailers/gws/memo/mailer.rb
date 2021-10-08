@@ -17,7 +17,7 @@ class Gws::Memo::Mailer < ActionMailer::Base
       add_attachment_file(file)
     end
 
-    mail(from: from, bcc: forward_emails, subject: subject)
+    mail(from: from, bcc: forward_emails, subject: subject, message_id: Gws.generate_message_id(@cur_site))
   end
 
   def notice_mail(notice, users, item)
@@ -37,7 +37,7 @@ class Gws::Memo::Mailer < ActionMailer::Base
 
     return false unless bcc.present?
 
-    mail(from: @from, bcc: bcc, subject: subject, body: @body)
+    mail(from: @from, bcc: bcc, subject: subject, body: @body, message_id: Gws.generate_message_id(@cur_site))
   end
 
   def set_group_settings

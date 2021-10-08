@@ -111,7 +111,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   end
 
   def print
-    render file: 'print', layout: 'ss/print'
+    render template: 'print', layout: 'ss/print'
   end
 
   def enter
@@ -123,7 +123,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
       return
     end
 
-    render_opts = { location: location, render: { file: :index }, notice: t('gws/attendance.notice.punched') }
+    render_opts = { location: location, render: { template: "index" }, notice: t('gws/attendance.notice.punched') }
     render_update @item.punch("#{params[:action]}#{params[:index]}"), render_opts
   end
 

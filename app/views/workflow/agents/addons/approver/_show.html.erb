@@ -33,10 +33,10 @@
             <% end %>
             <div class="buttons">
               <% if workflow_approver[:state] == 'request' %>
-                <%= button_tag t("workflow.buttons.approve"), updatetype: :approve, class: "update-item btn-primary", disabled: true %>
-                <%= button_tag t("workflow.buttons.remand"), updatetype: :remand, class: "update-item btn-default", disabled: true %>
+                <%= button_tag t("workflow.buttons.approve"), updatetype: :approve, class: "update-item btn-primary", disabled: true, data: { disable: '' } %>
+                <%= button_tag t("workflow.buttons.remand"), updatetype: :remand, class: "update-item btn-default", disabled: true, data: { disable: '' } %>
               <% elsif workflow_approver[:state] == 'pending' %>
-                <%= button_tag t("workflow.buttons.pull_up"), updatetype: :pull_up, class: "update-item btn-primary", disabled: true %>
+                <%= button_tag t("workflow.buttons.pull_up"), updatetype: :pull_up, class: "update-item btn-primary", disabled: true, data: { disable: '' } %>
               <% end %>
             </div>
             <% if @ss_mode == :cms %>
@@ -86,7 +86,7 @@
             <% end %>
 
             <div class="buttons">
-              <%= button_tag t("workflow.links.set_seen"), updatetype: :seen, class: "update-item btn-primary", disabled: true %>
+              <%= button_tag t("workflow.links.set_seen"), updatetype: :seen, class: "update-item btn-primary", disabled: true, data: { disable: '' } %>
             </div>
           <% end %>
         </section>

@@ -14,7 +14,6 @@ module SS::AjaxFileFilter
 
   def select_with_clone
     set_item
-    return render(json: [I18n.t('ss.errors.sanitizer.wait')], status: 500) if @item.sanitizer_state == 'wait'
 
     @item = @item.copy(
       cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node
@@ -22,7 +21,7 @@ module SS::AjaxFileFilter
     @page = Cms::Page.find_or_initialize_by(id: params[:owner_item_id])
     @page = @page.becomes_with_route(params[:owner_item_type].underscore) if params[:owner_item_type].present?
 
-    render file: :select, layout: !request.xhr?
+    render template: "select", layout: !request.xhr?
   end
 
   public
@@ -39,7 +38,7 @@ module SS::AjaxFileFilter
     set_item
     @page = Cms::Page.find_or_initialize_by(id: params[:owner_item_id])
     @page = @page.becomes_with_route(params[:owner_item_type].underscore) if params[:owner_item_type].present?
-    render file: :select, layout: !request.xhr?
+    render template: "select", layout: !request.xhr?
   end
 
   def selected_files
@@ -49,6 +48,6 @@ module SS::AjaxFileFilter
     @items = @items.allow(:read, @cur_user).
       in(id: @select_ids).
       order_by(filename: 1)
-    render file: :index
+    render template: "index"
   end
 end

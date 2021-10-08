@@ -2,13 +2,13 @@
   <label class="check"><input type="checkbox"/></label>
 
   <div class="list-head-action">
-    <%= render file: "_list_head_tags" %>
+    <%= render template: "_list_head_tags" %>
     <div class="list-head-action-destroy">
-      <button class="soft-delete-all btn" data-ss-list-head-method="post" data-ss-list-head-action="<%= url_for(action: :soft_delete_all) %>" data-ss-confirmation="<%= t('ss.confirm.soft_delete') %>"><%= t :"ss.links.delete" %></button>
-      <button class="btn btn-download" data-ss-list-head-method="post" data-ss-list-head-action="<%= url_for(action: :download_all_comments) %>" data-ss-confirmation="<%= t("ss.confirm.download") %>"><%= t("ss.buttons.csv") %></button>
-      <button class="btn btn-download" data-ss-list-head-method="post" data-ss-list-head-action="<%= url_for(action: :download_all_attachments) %>" data-ss-confirmation="<%= t("ss.confirm.download") %>"><%= t("gws/survey.buttons.zip_all_files") %></button>
+      <%= ss_button_to t("ss.links.delete"), url_for(action: :soft_delete_all), class: "soft-delete-all btn btn-list-head-action", method: "post", confirm: t('ss.confirm.soft_delete') %>
+      <%= ss_button_to t("ss.buttons.csv"), url_for(action: :download_all_comments), class: "btn btn-download btn-list-head-action", method: "post", confirm: t("ss.confirm.download") %>
+      <%= ss_button_to t("gws/survey.buttons.zip_all_files"), url_for(action: :download_all_attachments), class: "btn btn-download btn-list-head-action", method: "post", confirm: t("ss.confirm.download") %>
     </div>
   </div>
 
-  <%= render file: "_search" %>
+  <%= render template: "_search" %>
 </div>

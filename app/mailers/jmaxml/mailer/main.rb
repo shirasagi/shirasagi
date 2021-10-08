@@ -17,9 +17,9 @@ class Jmaxml::Mailer::Main < ActionMailer::Base
     @action = action
     @xmldoc = @context.xmldoc
     if head_info_type == '取消'
-      mail template_path: template_paths, template_name: 'cancel'
+      mail template_path: template_paths, template_name: 'cancel', message_id: Cms.generate_message_id(@page.cur_site || @page.site)
     else
-      mail template_path: template_paths
+      mail template_path: template_paths, message_id: Cms.generate_message_id(@page.cur_site || @page.site)
     end
   end
 end

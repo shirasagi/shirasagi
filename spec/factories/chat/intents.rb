@@ -4,6 +4,6 @@ FactoryBot.define do
     cur_user { cms_user }
     name { unique_id.to_s }
     phrase { unique_id.to_s }
-    response { "<p>#{unique_id.to_s}</p>" }
+    response { "<p>#{unique_id}</p>" }
   end
 end

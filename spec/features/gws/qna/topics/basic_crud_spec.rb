@@ -83,6 +83,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         expect(mail.subject).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
         expect(mail.decoded.to_s).to include(mail.subject, url)
+        expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
       end
     end
 
@@ -127,6 +128,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
       expect(mail.subject).to eq notice.subject
       url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
       expect(mail.decoded.to_s).to include(mail.subject, url)
+      expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
     end
 
     it "#delete" do
@@ -161,6 +163,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
       expect(mail.subject).to eq notice.subject
       url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
       expect(mail.decoded.to_s).to include(mail.subject, url)
+      expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
     end
   end
 end

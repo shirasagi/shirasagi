@@ -9,6 +9,7 @@ class Gws::SitesController < ApplicationController
   menu_view 'gws/crud/resource_menu'
 
   before_action :set_addons, only: %w(show new create edit update)
+  after_action :reload_nginx, only: [:create, :update, :destroy, :destroy_all]
 
   private
 
@@ -23,6 +24,10 @@ class Gws::SitesController < ApplicationController
 
   def set_addons
     @addons = @item.addons(:organization)
+  end
+
+  def reload_nginx
+    SS::Nginx::Config.new.write.reload_server
   end
 
   public

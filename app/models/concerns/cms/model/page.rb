@@ -19,7 +19,7 @@ module Cms::Model::Page
 
     #text_index :name, :html
 
-    self.default_released_type = "same_as_updated"
+    self.default_released_type = SS.config.cms.default_released_type.presence || "same_as_updated"
 
     attr_accessor :window_name
 

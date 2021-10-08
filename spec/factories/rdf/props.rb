@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :rdf_prop, class: Rdf::Prop do
     transient do
-      vocab nil
-      rdf_class nil
+      vocab { nil }
+      rdf_class { nil }
     end
 
     # vocab_id { vocab.present? ? vocab.id : nil }

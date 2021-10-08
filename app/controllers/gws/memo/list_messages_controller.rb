@@ -116,7 +116,7 @@ class Gws::Memo::ListMessagesController < ApplicationController
     @item.attributes = send_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
 
-    render_update @item.save, notice: t('ss.notice.sent'), render: { file: :publish }
+    render_update @item.save, notice: t('ss.notice.sent'), render: { template: "publish" }
   end
 
   def seen

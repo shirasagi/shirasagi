@@ -5,7 +5,7 @@ module Tasks
 
       class << self
         def reset
-          @reset = SS.config.gws.dig("presence", "reset") || {}
+          @reset = ::SS.config.gws.dig("presence", "reset") || {}
 
           each_sites do |site|
             Rails.logger.info "#{site.name}の在籍ステータスをリセット開始"

@@ -2,7 +2,7 @@
 <% if !controller.preview_path? && Fs.exists?(file) %>
   <%== Fs.read(file) %>
 <% else %>
-  <%= render file: 'opendata/agents/nodes/idea/search_idea/search' %>
+  <%= render template: 'opendata/agents/nodes/idea/search_idea/search' %>
 <% end %>
 
 <% if @items.count > 0 %>

@@ -159,7 +159,7 @@ class Opendata::DatasetAccessReportJob < Cms::ApplicationJob
       next if found.present?
 
       Rails.logger.info "report #{item.dataset_name}(#{item.dataset_id}): already deleted"
-      Opendata::DatasetAccessReport.site(site).where(dataset_id: item.dataset_id).set(deleted: @now)
+      Opendata::DatasetAccessReport.site(site).where(dataset_id: item.dataset_id).set(deleted: @now.utc)
     end
   end
 

@@ -44,6 +44,6 @@ class Opendata::Dataset::Harvest::Importer::CategorySettingsController < Applica
     @item = @model.new(get_params)
     result = @item.import
     flash.now[:notice] = t("ss.notice.saved") if result
-    render_create result, location: { action: :import }, render: { file: :import }
+    render_create result, location: { action: :import }, render: { template: "import" }
   end
 end

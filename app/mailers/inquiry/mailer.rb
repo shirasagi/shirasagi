@@ -1,5 +1,5 @@
 class Inquiry::Mailer < ActionMailer::Base
-  add_template_helper(Inquiry::MailerHelper)
+  helper Inquiry::MailerHelper
 
   def notify_mail(site, node, answer, notice_email)
     @node = node
@@ -25,8 +25,8 @@ class Inquiry::Mailer < ActionMailer::Base
     end
     @answer_data = @answer_data.join("\n")
 
-    from = "#{node.from_name} <#{node.from_email}>"
-    mail(from: from, to: notice_email)
+    from = Cms.sender_address(node, site)
+    mail(from: from, to: notice_email, message_id: Cms.generate_message_id(@node.cur_site || @node.site))
   end
 
   def reply_mail(site, node, answer)
@@ -34,7 +34,7 @@ class Inquiry::Mailer < ActionMailer::Base
     @subject = node.reply_subject
     @node = node
     reply_email_address = nil
-    from = "#{node.from_name} <#{node.from_email}>"
+    from = Cms.sender_address(node, site)
 
     answer.data.each do |data|
       if data.column.input_type == "email_field"
@@ -43,6 +43,6 @@ class Inquiry::Mailer < ActionMailer::Base
       end
     end
     return nil if reply_email_address.blank?
-    mail(from: from, to: reply_email_address)
+    mail(from: from, to: reply_email_address, message_id: Cms.generate_message_id(@node.cur_site || @node.site))
   end
 end

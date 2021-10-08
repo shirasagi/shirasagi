@@ -59,6 +59,7 @@
 //= require ss/lib/validation
 //= require ss/lib/ajax_file
 //= require ss/lib/replace_file
+//= require ss/lib/button_to
 //= require chat/lib/chart
 //= require cms/lib/editor
 //= require cms/lib/form
@@ -198,5 +199,7 @@ $(function () {
   SS_Color.render();
   SS_TextZoom.render();
   SS_PopupNotice.render();
-  return SS_CascadeMenu.render();
+  SS_CascadeMenu.render();
+  SS_ButtonTo.render();
+  SS.enableDoubleClickGuard();
 });

@@ -38,7 +38,8 @@ linters:
     enabled: false
 
   PropertySortOrder:
-    enabled: false
+    enabled: true
+    order: smacss
 
   QualifyingElement:
     allow_element_with_attribute: true

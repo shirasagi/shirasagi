@@ -3,5 +3,5 @@
   <dd><%= f.text_field :style %></dd>
 
   <dt><%= @model.t :bgcolor %><%= @model.tt :bgcolor %></dt>
-  <dd><%= f.text_field :bgcolor, class: 'js-color', 'data-clear' => 1, 'data-swatches' => 1 %></dd>
+  <dd><%= f.ss_color_picker :bgcolor %></dd>
 </dl>

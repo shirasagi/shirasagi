@@ -1,10 +1,14 @@
+<% if params[:update_type] == "approve" %>
+  <%== render_sns_post_confirm rescue nil %>
+<% end %>
+
 <dl class="see">
   <dt class="wide"><%= t("workflow.buttons.#{params[:update_type]}") %><%= t("workflow.comment") %></dt>
   <dd class="wide"><textarea name="comment"></textarea></dd>
 </dl>
 
 <footer class="send">
-  <%= submit_tag(t("workflow.buttons.#{params[:update_type]}"), class: 'btn-primary save') %>
+  <%= submit_tag(t("workflow.buttons.#{params[:update_type]}"), class: 'btn-primary save ss-dc-guard') %>
   <%= button_tag(t("ss.buttons.cancel"), type: :reset, class: 'btn-default') %>
 </footer>
 

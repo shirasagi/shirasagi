@@ -37,8 +37,8 @@
       display: inline-block;
     }
     .version {
-      float: right;
       padding: 2px;
+      float: right;
       color: #888;
       font-size: 90%;
     }
@@ -63,16 +63,16 @@
     padding: 0;
   }
   .sso {
-    list-style: none;
     width: 100%;
     margin: 0;
     padding: 0;
+    list-style: none;
     li {
       margin: 1em 20px;
       a {
         display: block;
-        text-align: center;
         font-size: 100%;
+        text-align: center;
       }
     }
     .name {
@@ -105,8 +105,8 @@
   margin: 20px 10px;
 
   h2 {
-    font-weight: bold;
     margin-bottom: 20px;
+    font-weight: bold;
   }
   .main-box {
     h2 {
@@ -123,12 +123,12 @@
 }
 
 .login-ad {
-  float: left;
   margin: 20px 10px;
+  float: left;
 
   h2 {
-    font-weight: bold;
     margin-bottom: 20px;
+    font-weight: bold;
   }
   .main-box {
     h2 {

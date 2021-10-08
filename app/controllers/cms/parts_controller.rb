@@ -46,6 +46,6 @@ class Cms::PartsController < ApplicationController
       @items[mod][:items] << [ name.sub(/.*\//, ""), path ]
     end
 
-    render file: "cms/nodes/routes", layout: "ss/ajax"
+    render template: "cms/nodes/routes", layout: "ss/ajax"
   end
 end

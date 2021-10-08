@@ -81,24 +81,20 @@ module SS::Model::Column
     self.class.name.underscore.sub('/column/', '/agents/columns/')
   end
 
-  def show_file
-    file = "#{Rails.root}/app/views/#{path}/_show.html.erb"
-    File.exists?(file) ? file : nil
+  def show_partial_path
+    "#{path}/show" if File.exists?("#{Rails.root}/app/views/#{path}/_show.html.erb")
   end
 
-  def form_file
-    file = "#{Rails.root}/app/views/#{path}/_form.html.erb"
-    File.exists?(file) ? file : nil
+  def form_partial_path
+    "#{path}/form" if File.exists?("#{Rails.root}/app/views/#{path}/_form.html.erb")
   end
 
-  def column_form_path
-    file = "#{Rails.root}/app/views/#{path}/_column_form.html.erb"
-    File.exists?(file) ? file : nil
+  def column_form_partial_path
+    "#{path}/column_form" if File.exists?("#{Rails.root}/app/views/#{path}/_column_form.html.erb")
   end
 
-  def column_show_path
-    file = "#{Rails.root}/app/views/#{path}/_column_show.html.erb"
-    File.exists?(file) ? file : nil
+  def column_show_partial_path
+    "#{path}/column_show" if File.exists?("#{Rails.root}/app/views/#{path}/_column_show.html.erb")
   end
 
   delegate :value_type, to: :class

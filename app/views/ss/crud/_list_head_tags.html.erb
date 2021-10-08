@@ -4,6 +4,16 @@
 
 <div class="list-head-action-tag">
   <%= select_tag(:tag, options_for_select(st_tags), include_blank: true, class: :tag) %>
-  <button class="set-tag-all btn"><%= t :"ss.links.set_tag" %></button>
-  <button class="reset-tag-all btn"><%= t :"ss.links.reset_tags" %></button>
+  <%= ss_button_to t("ss.links.set_tag"), url_for(action: :set_tag_all), class: "set-tag-all btn btn-list-head-action", method: "post", confirm: t('ss.confirm.set_tag') %>
+  <%= ss_button_to t("ss.links.reset_tags"), url_for(action: :reset_tag_all), class: "reset-tag-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.reset_tag') %>
 </div>
+
+<%= jquery do %>
+  var $el = $(".list-head-action-tag select[name='tag']");
+  $el.on("change", function() {
+    var val = $(this).val();
+    $(".btn-list-head-action").each(function() {
+      this.dataset.ssButtonToParams = JSON.stringify({ tag: val });
+    });
+  });
+<% end %>

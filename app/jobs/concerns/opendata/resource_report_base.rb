@@ -180,7 +180,7 @@ module Opendata::ResourceReportBase
 
         msg = "report #{item.dataset_name}(#{item.dataset_id})/#{item.resource_name}(#{item.resource_id}): already deleted"
         Rails.logger.info msg
-        self.class.report_model.site(site).where(dataset_id: item.dataset_id, resource_id: item.resource_id).set(deleted: @now)
+        self.class.report_model.site(site).where(dataset_id: item.dataset_id, resource_id: item.resource_id).set(deleted: @now.utc)
       end
     end
   end

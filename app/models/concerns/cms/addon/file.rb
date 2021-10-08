@@ -38,7 +38,7 @@ module Cms::Addon
           next
         else
           file.update(site: site, model: model_name.i18n_key, owner_item: self, state: state)
-          item = create_history_log(file)
+          item = History::Log.build_file_log(file, site_id: @cur_site.try(:id), user_id: @cur_user.try(:id))
           item.action = "update"
           item.behavior = "attachment"
           item.save
@@ -54,7 +54,7 @@ module Cms::Addon
           file.skip_history_trash = skip_history_trash if [ file, self ].all? { |obj| obj.respond_to?(:skip_history_trash) }
           file.cur_user = @cur_user if file.respond_to?(:cur_user=) && @cur_user
           file.destroy
-          item = create_history_log(file)
+          item = History::Log.build_file_log(file, site_id: @cur_site.try(:id), user_id: @cur_user.try(:id))
           item.action = "destroy"
           item.behavior = "attachment"
           item.save
@@ -82,7 +82,7 @@ module Cms::Addon
           if add_ids.present?
             files = SS::File.where(:id.in => add_ids)
             files.each do |file|
-              item = create_history_log(file)
+              item = History::Log.build_file_log(file, site_id: @cur_site.try(:id), user_id: @cur_user.try(:id))
               item.action = "update"
               item.behavior = "attachment"
               item.save
@@ -94,7 +94,7 @@ module Cms::Addon
           if del_ids.present?
             files = SS::File.where(:id.in => del_ids)
             files.each do |file|
-              item = create_history_log(file)
+              item = History::Log.build_file_log(file, site_id: @cur_site.try(:id), user_id: @cur_user.try(:id))
               item.action = "destroy"
               item.behavior = "attachment"
               item.save
@@ -137,28 +137,11 @@ module Cms::Addon
       end
     end
 
-    def create_history_log(file)
-      site_id = nil
-      user_id = nil
-      site_id = @cur_site.id if @cur_site.present?
-      user_id = @cur_user.id if @cur_user.present?
-      History::Log.new(
-        site_id: site_id,
-        user_id: user_id,
-        session_id: Rails.application.current_session_id,
-        request_id: Rails.application.current_request_id,
-        controller: Rails.application.current_controller,
-        url: file.try(:url),
-        page_url: Rails.application.current_path_info,
-        ref_coll: file.try(:collection_name).to_s
-      )
-    end
-
     def put_contains_urls_logs
       add_contains_urls = self.contains_urls - self.contains_urls_was.to_a
-      add_contains_urls.each do |file|
-        item = create_history_log(file)
-        item.url = file
+      add_contains_urls.each do |file_url|
+        item = History::Log.build_file_log(nil, site_id: @cur_site.try(:id), user_id: @cur_user.try(:id))
+        item.url = file_url
         item.action = "update"
         item.behavior = "paste"
         item.ref_coll = "ss_files"
@@ -166,9 +149,9 @@ module Cms::Addon
       end
 
       del_contains_urls = self.contains_urls_was.to_a - self.contains_urls
-      del_contains_urls.each do |file|
-        item = create_history_log(file)
-        item.url = file
+      del_contains_urls.each do |file_url|
+        item = History::Log.build_file_log(nil, site_id: @cur_site.try(:id), user_id: @cur_user.try(:id))
+        item.url = file_url
         item.action = "destroy"
         item.behavior = "paste"
         item.ref_coll = "ss_files"

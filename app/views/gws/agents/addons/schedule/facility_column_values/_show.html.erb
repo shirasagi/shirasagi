@@ -3,8 +3,8 @@
 <dl class="see mod-gws-schedule-facility_custom_values">
   <% @item.facility_column_values.order_by(order: 1, name: 1).each do |column_value| %>
     <% column = @item.main_facility.columns.find(column_value.column_id) rescue nil %>
-    <% if column && column.column_show_path %>
-    <%= render(file: column.column_show_path, locals: { column: column, value: column_value }) %>
+    <% if column && column.column_show_partial_path %>
+    <%= render(column.column_show_partial_path, column: column, value: column_value) %>
     <% else %>
     <dt><%= column_value.name %></dt>
     <dd><%= br column_value.value %></dd>

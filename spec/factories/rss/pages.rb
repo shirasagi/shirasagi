@@ -1,13 +1,13 @@
 FactoryBot.define do
   factory :rss_page, class: Rss::Page, traits: [:cms_page] do
     transient do
-      site nil
-      node nil
+      site { nil }
+      node { nil }
     end
 
     cur_site { site || cms_site }
     filename { node ? "#{node.filename}/#{name}.html" : "dir/#{name}.html" }
-    route "rss/page"
+    route { "rss/page" }
     rss_link { "http://example.com/#{filename}" }
 
     factory :rss_page_rss_link_blank do
@@ -17,10 +17,10 @@ FactoryBot.define do
 
   factory :rss_weather_xml_page, class: Rss::WeatherXmlPage, traits: [:cms_page] do
     transient do
-      in_xml nil
+      in_xml { nil }
     end
 
-    route "rss/weather_xml_page"
+    route { "rss/weather_xml_page" }
     rss_link { "http://weather.example.com/developer/xml/data/#{SecureRandom.uuid}.xml" }
 
     after(:create) do |page, evaluator|

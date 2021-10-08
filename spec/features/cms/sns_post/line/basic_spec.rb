@@ -12,14 +12,14 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
   let(:name) { "sample" }
   let(:line_text_message) { unique_id }
 
-  context "publish directly" do
-    before do
-      site.line_channel_secret = unique_id
-      site.line_channel_access_token = unique_id
-      site.save!
+  before do
+    site.line_channel_secret = unique_id
+    site.line_channel_access_token = unique_id
+    site.save!
+  end
 
-      login_cms_user
-    end
+  context "publish directly" do
+    before { login_cms_user }
 
     context "post none" do
       it "#new" do
@@ -30,7 +30,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           end
           ensure_addon_opened("#addon-cms-agents-addons-line_poster")
           within "#addon-cms-agents-addons-line_poster" do
-            expect(page).to have_css("select option[selected]", text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[line_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[line_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+
             select I18n.t("ss.options.state.expired"), from: "item[line_auto_post]"
             select I18n.t("cms.options.line_post_format.message_only_carousel"), from: "item[line_post_format]"
             fill_in "item[line_text_message]", with: line_text_message
@@ -50,7 +52,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           visit edit_path
           ensure_addon_opened("#addon-cms-agents-addons-line_poster")
           within "#addon-cms-agents-addons-line_poster" do
-            expect(page).to have_css("select option[selected]", text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[line_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[line_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+
             select I18n.t("ss.options.state.expired"), from: "item[line_auto_post]"
             select I18n.t("cms.options.line_post_format.message_only_carousel"), from: "item[line_post_format]"
             fill_in "item[line_text_message]", with: line_text_message
@@ -61,7 +65,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-line_poster" do
-            have_css("dd", text: line_text_message)
+            expect(page).to have_css("dd", text: I18n.t("ss.options.state.expired"))
           end
           expect(capture.broadcast.count).to eq 0
           expect(capture.broadcast.messages).to eq nil
@@ -79,7 +83,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           end
           ensure_addon_opened("#addon-cms-agents-addons-line_poster")
           within "#addon-cms-agents-addons-line_poster" do
-            expect(page).to have_css("select option[selected]", text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[line_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[line_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+
             select I18n.t("ss.options.state.active"), from: "item[line_auto_post]"
             select I18n.t("cms.options.line_post_format.message_only_carousel"), from: "item[line_post_format]"
             fill_in "item[line_text_message]", with: line_text_message
@@ -90,13 +96,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             end
           end
           wait_for_cbox do
-            have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
+            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
             click_on I18n.t("ss.buttons.ignore_alert")
           end
           expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-line_poster" do
-            have_css("dd", text: line_text_message)
+            expect(page).to have_css("dd", text: line_text_message)
           end
 
           expect(capture.broadcast.count).to eq 1
@@ -113,7 +119,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           visit edit_path
           ensure_addon_opened("#addon-cms-agents-addons-line_poster")
           within "#addon-cms-agents-addons-line_poster" do
-            expect(page).to have_css("select option[selected]", text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[line_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[line_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+
             select I18n.t("ss.options.state.active"), from: "item[line_auto_post]"
             select I18n.t("cms.options.line_post_format.message_only_carousel"), from: "item[line_post_format]"
             fill_in "item[line_text_message]", with: line_text_message
@@ -124,13 +132,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             end
           end
           wait_for_cbox do
-            have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
+            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
             click_on I18n.t("ss.buttons.ignore_alert")
           end
           expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-line_poster" do
-            have_css("dd", text: line_text_message)
+            expect(page).to have_css("dd", text: line_text_message)
           end
 
           expect(capture.broadcast.count).to eq 1
@@ -172,7 +180,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           ensure_addon_opened("#addon-cms-agents-addons-line_poster")
           within "#addon-cms-agents-addons-line_poster" do
-            expect(page).to have_css("select option[selected]", text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[line_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[line_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+
             select I18n.t("ss.options.state.active"), from: "item[line_auto_post]"
             select I18n.t("cms.options.line_post_format.thumb_carousel"), from: "item[line_post_format]"
             fill_in "item[line_text_message]", with: line_text_message
@@ -184,13 +194,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             end
           end
           wait_for_cbox do
-            have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
+            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
             click_on I18n.t("ss.buttons.ignore_alert")
           end
           expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-line_poster" do
-            have_css("dd", text: line_text_message)
+            expect(page).to have_css("dd", text: line_text_message)
           end
 
           expect(capture.broadcast.count).to eq 1
@@ -220,7 +230,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           ensure_addon_opened("#addon-cms-agents-addons-line_poster")
           within "#addon-cms-agents-addons-line_poster" do
-            expect(page).to have_css("select option[selected]", text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[line_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[line_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+
             select I18n.t("ss.options.state.active"), from: "item[line_auto_post]"
             select I18n.t("cms.options.line_post_format.thumb_carousel"), from: "item[line_post_format]"
             fill_in "item[line_text_message]", with: line_text_message
@@ -231,13 +243,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             end
           end
           wait_for_cbox do
-            have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
+            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
             click_on I18n.t("ss.buttons.ignore_alert")
           end
           expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-line_poster" do
-            have_css("dd", text: line_text_message)
+            expect(page).to have_css("dd", text: line_text_message)
           end
 
           expect(capture.broadcast.count).to eq 1
@@ -279,7 +291,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           end
           ensure_addon_opened("#addon-cms-agents-addons-line_poster")
           within "#addon-cms-agents-addons-line_poster" do
-            expect(page).to have_css("select option[selected]", text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[line_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[line_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+
             select I18n.t("ss.options.state.active"), from: "item[line_auto_post]"
             select I18n.t("cms.options.line_post_format.body_carousel"), from: "item[line_post_format]"
             fill_in "item[line_text_message]", with: line_text_message
@@ -290,13 +304,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             end
           end
           wait_for_cbox do
-            have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
+            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
             click_on I18n.t("ss.buttons.ignore_alert")
           end
           expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-line_poster" do
-            have_css("dd", text: line_text_message)
+            expect(page).to have_css("dd", text: line_text_message)
           end
 
           expect(capture.broadcast.count).to eq 1
@@ -330,7 +344,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           ensure_addon_opened("#addon-cms-agents-addons-line_poster")
           within "#addon-cms-agents-addons-line_poster" do
-            expect(page).to have_css("select option[selected]", text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[line_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[line_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+
             select I18n.t("ss.options.state.active"), from: "item[line_auto_post]"
             select I18n.t("cms.options.line_post_format.body_carousel"), from: "item[line_post_format]"
             fill_in "item[line_text_message]", with: line_text_message
@@ -341,13 +357,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             end
           end
           wait_for_cbox do
-            have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
+            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
             click_on I18n.t("ss.buttons.ignore_alert")
           end
           expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-line_poster" do
-            have_css("dd", text: line_text_message)
+            expect(page).to have_css("dd", text: line_text_message)
           end
 
           expect(capture.broadcast.count).to eq 1
@@ -358,6 +374,103 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           expect(capture.broadcast.messages.dig(0, :template, :columns, 0, :actions, 0, :uri)).to eq item.full_url
           expect(capture.broadcast.messages.dig(0, :template, :columns, 0, "thumbnailImageUrl")).to include(::File.basename(attach_file_path))
           expect(Cms::SnsPostLog::Line.count).to eq 1
+        end
+      end
+    end
+  end
+
+  context "enable edit auto post" do
+    before { login_cms_user }
+
+    context "post message_only_carousel" do
+      it "#new" do
+        capture_line_bot_client do |capture|
+          visit new_path
+          within "form#item-form" do
+            fill_in "item[name]", with: name
+          end
+          ensure_addon_opened("#addon-cms-agents-addons-line_poster")
+          within "#addon-cms-agents-addons-line_poster" do
+            expect(page).to have_css('select[name="item[line_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[line_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+
+            select I18n.t("ss.options.state.active"), from: "item[line_auto_post]"
+            select I18n.t("cms.options.line_post_format.message_only_carousel"), from: "item[line_post_format]"
+            select I18n.t("ss.options.state.enabled"), from: "item[line_edit_auto_post]"
+            fill_in "item[line_text_message]", with: line_text_message
+          end
+          within "form#item-form" do
+            click_on I18n.t("ss.buttons.publish_save")
+          end
+          wait_for_cbox do
+            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
+            click_on I18n.t("ss.buttons.ignore_alert")
+          end
+          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+          within "#addon-cms-agents-addons-line_poster" do
+            expect(page).to have_css("dd", text: line_text_message)
+          end
+
+          expect(capture.broadcast.count).to eq 1
+          expect(capture.broadcast.messages.dig(0, :template, :type)).to eq "carousel"
+          expect(capture.broadcast.messages.dig(0, :altText)).to eq name
+          expect(capture.broadcast.messages.dig(0, :template, :columns, 0, :title)).to eq name
+          expect(capture.broadcast.messages.dig(0, :template, :columns, 0, :text)).to eq line_text_message
+          expect(Cms::SnsPostLog::Line.count).to eq 1
+
+          # edit (enable line_edit_auto_post)
+          click_on I18n.t("ss.links.edit")
+
+          ensure_addon_opened("#addon-cms-agents-addons-line_poster")
+          within "#addon-cms-agents-addons-line_poster" do
+            expect(page).to have_css('select[name="item[line_auto_post]"] option[selected]', text: I18n.t("ss.options.state.active"))
+            expect(page).to have_css('select[name="item[line_post_format]"] option[selected]', text: I18n.t("cms.options.line_post_format.message_only_carousel"))
+            expect(page).to have_css('select[name="item[line_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+            expect(find('[name="item[line_text_message]"]').value).to eq line_text_message
+
+            select I18n.t("ss.options.state.enabled"), from: "item[line_edit_auto_post]"
+          end
+          within "form#item-form" do
+            click_on I18n.t("ss.buttons.publish_save")
+          end
+          wait_for_cbox do
+            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
+            click_on I18n.t("ss.buttons.ignore_alert")
+          end
+          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+          within "#addon-cms-agents-addons-line_poster" do
+            expect(page).to have_css("dd", text: line_text_message)
+          end
+
+          expect(capture.broadcast.count).to eq 2
+          expect(Cms::SnsPostLog::Line.count).to eq 2
+
+          # edit (disable line_edit_auto_post)
+          click_on I18n.t("ss.links.edit")
+
+          ensure_addon_opened("#addon-cms-agents-addons-line_poster")
+          within "#addon-cms-agents-addons-line_poster" do
+            expect(page).to have_css('select[name="item[line_auto_post]"] option[selected]', text: I18n.t("ss.options.state.active"))
+            expect(page).to have_css('select[name="item[line_post_format]"] option[selected]', text: I18n.t("cms.options.line_post_format.message_only_carousel"))
+            expect(page).to have_css('select[name="item[line_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+            expect(find('[name="item[line_text_message]"]').value).to eq line_text_message
+
+            select I18n.t("ss.options.state.disabled"), from: "item[line_edit_auto_post]"
+          end
+
+          within "form#item-form" do
+            click_on I18n.t("ss.buttons.publish_save")
+          end
+          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+          within "#addon-cms-agents-addons-line_poster" do
+            expect(page).to have_css("dd", text: line_text_message)
+          end
+
+          expect(capture.broadcast.count).to eq 2
+          expect(Cms::SnsPostLog::Line.count).to eq 2
         end
       end
     end

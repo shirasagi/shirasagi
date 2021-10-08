@@ -6,8 +6,14 @@ module Cms::SnsHelper
     item = (@item.respond_to?(:master) && @item.master) ? @item.master : @item
 
     return false if !site.line_token_enabled?
-    return false if @item.line_auto_post != "active"
-    return false if item.line_posted.present?
+    return false if !@item.use_line_post?
+
+    if @item.line_edit_auto_post_enabled?
+      # 再編集が有効の為、すでに投稿済みかをチェックしない。
+    else
+      return false if item.line_posted.present?
+    end
+
     true
   end
 
@@ -17,7 +23,13 @@ module Cms::SnsHelper
     item = (@item.respond_to?(:master) && @item.master) ? @item.master : @item
 
     return false if !@item.use_twitter_post?
-    return false if item.twitter_posted.present?
+
+    if @item.twitter_edit_auto_post_enabled?
+      # 再編集が有効の為、すでに投稿済みかをチェックしない。
+    else
+      return false if item.twitter_posted.present?
+    end
+
     true
   end
 

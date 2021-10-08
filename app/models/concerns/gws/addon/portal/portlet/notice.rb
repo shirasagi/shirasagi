@@ -29,8 +29,13 @@ module Gws::Addon::Portal::Portlet
       if notice_severity.present?
         search[:severity] = notice_severity
       end
-      if cate = notice_categories.readable(user, site: portal.site).first
-        search[:category] = cate.name
+      category_ids = notice_categories.readable(user, site: portal.site).pluck(:id)
+      if category_ids.present?
+        search[:category_ids] = category_ids
+      end
+      folder_ids = notice_folders.readable(user, site: portal.site).pluck(:id)
+      if folder_ids.present?
+        search[:folder_ids] = folder_ids
       end
       if notice_browsed_state.present?
         search[:user] = user

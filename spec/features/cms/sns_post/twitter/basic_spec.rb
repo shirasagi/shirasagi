@@ -12,17 +12,17 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
   let(:name) { "sample" }
 
-  context "publish directly" do
-    before do
-      site.twitter_username = unique_id
-      site.twitter_consumer_key = unique_id
-      site.twitter_consumer_secret = unique_id
-      site.twitter_access_token = unique_id
-      site.twitter_access_token_secret = unique_id
-      site.save!
+  before do
+    site.twitter_username = unique_id
+    site.twitter_consumer_key = unique_id
+    site.twitter_consumer_secret = unique_id
+    site.twitter_access_token = unique_id
+    site.twitter_access_token_secret = unique_id
+    site.save!
+  end
 
-      login_cms_user
-    end
+  context "publish directly" do
+    before { login_cms_user }
 
     context "post none" do
       it "#new" do
@@ -33,7 +33,9 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           end
           ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("select option[selected]", text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+
             select I18n.t("ss.options.state.expired"), from: "item[twitter_auto_post]"
           end
           within "form#item-form" do
@@ -43,7 +45,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           visit current_path
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_no_css("dd", text: "https://twitter.com/user_screen_id/status/twitter_id")
+            expect(page).to have_no_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
           end
           expect(capture.update.count).to eq 0
           expect(capture.update.tweet).to eq nil
@@ -58,7 +60,8 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           visit edit_path
           ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("select option[selected]", text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
             select I18n.t("ss.options.state.expired"), from: "item[twitter_auto_post]"
           end
           within "form#item-form" do
@@ -68,7 +71,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_no_css("dd", text: "https://twitter.com/user_screen_id/status/twitter_id")
+            expect(page).to have_no_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
           end
           expect(capture.update.count).to eq 0
           expect(capture.update.tweet).to eq nil
@@ -79,7 +82,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
       end
     end
 
-    context "post message" do
+    context "post page" do
       it "#new" do
         capture_twitter_rest_client do |capture|
           visit new_path
@@ -88,21 +91,24 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           end
           ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("select option[selected]", text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
+            select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
           end
           within "form#item-form" do
             click_on I18n.t("ss.buttons.publish_save")
           end
           wait_for_cbox do
-            have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
+            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
             click_on I18n.t("ss.buttons.ignore_alert")
           end
           expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           visit current_path
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("dd", text: "https://twitter.com/user_screen_id/status/twitter_id")
+            expect(page).to have_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
           end
           expect(capture.update.count).to eq 1
           expect(capture.update.tweet).to include(name)
@@ -117,21 +123,24 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           visit edit_path
           ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("select option[selected]", text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
+            select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
           end
           within "form#item-form" do
             click_on I18n.t("ss.buttons.publish_save")
           end
           wait_for_cbox do
-            have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
+            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
             click_on I18n.t("ss.buttons.ignore_alert")
           end
           expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("dd", text: "https://twitter.com/user_screen_id/status/twitter_id")
+            expect(page).to have_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
           end
           expect(capture.update.count).to eq 1
           expect(capture.update.tweet).to include(item.name)
@@ -171,21 +180,24 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("select option[selected]", text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
+            select I18n.t("cms.options.twitter_post_format.files_and_page"), from: "item[twitter_post_format]"
           end
           within "form#item-form" do
             click_on I18n.t("ss.buttons.publish_save")
           end
           wait_for_cbox do
-            have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
+            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
             click_on I18n.t("ss.buttons.ignore_alert")
           end
           expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           visit current_path
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("dd", text: "https://twitter.com/user_screen_id/status/twitter_id")
+            expect(page).to have_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
           end
           expect(capture.update.count).to eq 0
           expect(capture.update.tweet).to eq nil
@@ -217,21 +229,24 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("select option[selected]", text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
+            select I18n.t("cms.options.twitter_post_format.files_and_page"), from: "item[twitter_post_format]"
           end
           within "form#item-form" do
             click_on I18n.t("ss.buttons.publish_save")
           end
           wait_for_cbox do
-            have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
+            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
             click_on I18n.t("ss.buttons.ignore_alert")
           end
           expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("dd", text: "https://twitter.com/user_screen_id/status/twitter_id")
+            expect(page).to have_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
           end
           expect(capture.update.count).to eq 0
           expect(capture.update.tweet).to eq nil
@@ -239,6 +254,95 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           expect(capture.update_with_media.tweet).to include(item.name)
           expect(capture.update_with_media.tweet).to include(item.full_url)
           expect(Cms::SnsPostLog::Twitter.count).to eq 1
+        end
+      end
+    end
+  end
+
+  context "enable edit auto post" do
+    before { login_cms_user }
+
+    context "post page" do
+      it "#new" do
+        capture_twitter_rest_client do |capture|
+          visit new_path
+          within "form#item-form" do
+            fill_in "item[name]", with: name
+          end
+          ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
+          within "#addon-cms-agents-addons-twitter_poster" do
+            expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+
+            select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
+            select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
+            select I18n.t("ss.options.state.enabled"), from: "item[twitter_edit_auto_post]"
+          end
+          within "form#item-form" do
+            click_on I18n.t("ss.buttons.publish_save")
+          end
+          wait_for_cbox do
+            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
+            click_on I18n.t("ss.buttons.ignore_alert")
+          end
+          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+          visit current_path
+          within "#addon-cms-agents-addons-twitter_poster" do
+            expect(page).to have_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
+          end
+          expect(capture.update.count).to eq 1
+          expect(Cms::SnsPostLog::Twitter.count).to eq 1
+
+          # edit (enable twitter_edit_auto_post)
+          click_on I18n.t("ss.links.edit")
+
+          ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
+          within "#addon-cms-agents-addons-twitter_poster" do
+            expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.active"))
+            expect(page).to have_css('select[name="item[twitter_post_format]"] option[selected]', text: I18n.t("cms.options.twitter_post_format.page_only"))
+            expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+
+            select I18n.t("ss.options.state.enabled"), from: "item[twitter_edit_auto_post]"
+          end
+          within "form#item-form" do
+            click_on I18n.t("ss.buttons.publish_save")
+          end
+          wait_for_cbox do
+            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
+            click_on I18n.t("ss.buttons.ignore_alert")
+          end
+          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+          visit current_path
+          within "#addon-cms-agents-addons-twitter_poster" do
+            expect(page).to have_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
+          end
+          expect(capture.update.count).to eq 2
+          expect(Cms::SnsPostLog::Twitter.count).to eq 2
+
+          # edit (disable twitter_edit_auto_post)
+          click_on I18n.t("ss.links.edit")
+
+          ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
+          within "#addon-cms-agents-addons-twitter_poster" do
+            expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.active"))
+            expect(page).to have_css('select[name="item[twitter_post_format]"] option[selected]', text: I18n.t("cms.options.twitter_post_format.page_only"))
+            expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+
+            select I18n.t("ss.options.state.disabled"), from: "item[twitter_edit_auto_post]"
+          end
+          within "form#item-form" do
+            click_on I18n.t("ss.buttons.publish_save")
+          end
+          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+          visit current_path
+          within "#addon-cms-agents-addons-twitter_poster" do
+            expect(page).to have_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
+          end
+          expect(capture.update.count).to eq 2
+          expect(Cms::SnsPostLog::Twitter.count).to eq 2
         end
       end
     end

@@ -31,7 +31,6 @@ class Webmail::ImportMailsController < ApplicationController
       return
     end
 
-
     @item = @model.new
   end
 
@@ -46,14 +45,14 @@ class Webmail::ImportMailsController < ApplicationController
     file = params.dig(:item, :in_file)
     if file.nil?
       @item.errors.add :in_file, :blank
-      render file: :index
+      render template: "index"
       return
     end
 
     file_type = SS::MimeType.find(file.original_filename, nil)
     if !@model::SUPPORTED_MIME_TYPES.include?(file_type)
       @item.errors.add :in_file, :invalid_file_type
-      render file: :index
+      render template: "index"
       return
     end
 
@@ -62,7 +61,8 @@ class Webmail::ImportMailsController < ApplicationController
     @item.in_file = file
     @item.import_mails
 
-    render_create @item.errors.blank?, location: { action: :index }, render: { file: :index }, notice: I18n.t("webmail.import.start_import")
+    render_opts = { location: { action: :index }, render: { template: "index" }, notice: I18n.t("webmail.import.start_import") }
+    render_create @item.errors.blank?, render_opts
   end
 
   def start_import
