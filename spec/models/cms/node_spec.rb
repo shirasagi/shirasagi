@@ -222,4 +222,44 @@ describe Cms::Node::Page, dbscope: :example do
       end
     end
   end
+
+  describe "#parent" do
+    let(:site) { cms_site }
+    let(:node_depth0) do
+      create(
+        %i[article_node_page cms_node_node cms_node_page category_node_node category_node_page].sample, cur_site: site
+      )
+    end
+    let(:node_depth1) do
+      create(
+        %i[article_node_page cms_node_node cms_node_page category_node_node category_node_page].sample,
+        cur_site: site, cur_node: node_depth0
+      )
+    end
+    let(:node_depth2) do
+      create(
+        %i[article_node_page cms_node_node cms_node_page category_node_node category_node_page].sample,
+        cur_site: site, cur_node: node_depth1
+      )
+    end
+    let(:node_depth3) do
+      create(
+        %i[article_node_page cms_node_node cms_node_page category_node_node category_node_page].sample,
+        cur_site: site, cur_node: node_depth2
+      )
+    end
+
+    it do
+      expect(node_depth3.parent).to be_a(node_depth2.class)
+      expect(node_depth3.parent.id).to eq node_depth2.id
+
+      expect(node_depth2.parent).to be_a(node_depth1.class)
+      expect(node_depth2.parent.id).to eq node_depth1.id
+
+      expect(node_depth1.parent).to be_a(node_depth0.class)
+      expect(node_depth1.parent.id).to eq node_depth0.id
+
+      expect(node_depth0.parent).to be false
+    end
+  end
 end
