@@ -495,7 +495,7 @@ this.SS = (function () {
       if (data.maxDate !== null) {
         opts.maxDate = data.maxDate;
       }
-      return $(this).datetimepicker(opts);
+      return $(this).attr('autocomplete', 'off').datetimepicker(opts);
     });
     $.each($(".js-datetime"), function () {
       var data, opts;
@@ -513,7 +513,7 @@ this.SS = (function () {
       if (data.step !== null) {
         opts.step = data.step;
       }
-      return $(this).datetimepicker(opts);
+      return $(this).attr('autocomplete', 'off').datetimepicker(opts);
     });
   };
 
