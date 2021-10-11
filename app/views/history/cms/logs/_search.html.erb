@@ -1,8 +1,75 @@
 <% @s = OpenStruct.new params[:s] %>
 <div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
-    <%= f.select :ref_coll, @ref_coll_options %>
-    <%= f.text_field :keyword, style: "width: 300px;" %>
-    <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+    <div class="log-search-wrapper search-wrapper">
+      <span><%= t('ss.search') %></span>
+      <%= f.select :search_opts, @search_opts, {}, {class: 'search-opts'} %>
+      <%= f.text_field :keyword, style: "width: 300px;", class: "log-search-field text-field" %>
+      <%= f.select :keyword, @action_opts, {include_blank: true}, {class: "log-search-field action-field hide", style: "width: 300px;"} %>
+      <%= f.select :keyword, @controller_opts, {include_blank: true}, {class: "log-search-field controller-field hide", style: "width: 300px;"} %>
+      <%= f.select :keyword, @user_opts, {include_blank: true}, {class: "log-search-field user-field hide", style: "width: 300px;"} %>
+      <%= f.select :keyword, @group_opts, {include_blank: true}, {class: "log-search-field group-field hide", style: "width: 300px;"} %>
+    </div>
+    <div class="log-search-wrapper refined-wrapper" style="margin-top: 10px;">
+      <span><%= t('ss.refined_search') %></span>
+      <%= f.select :refined_opts, @refined_opts, {}, {class: 'refined-opts'} %>
+      <%= f.select :refined_keyword, @user_opts, {include_blank: true}, {class: "log-search-field user-field", style: "width: 300px;"} %>
+      <%= f.select :refined_keyword, @group_opts, {include_blank: true}, {class: "log-search-field group-field hide", style: "width: 300px;"} %>
+      <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+    </div>
   <% end %>
 </div>
+
+<%= jquery do %>
+  disableAllForms('log-search-wrapper')
+  var initVal1 = $('.search-opts').val()
+  var initVal2 = $('.refined-opts').val()
+  setForm(initVal1, 'search-wrapper')
+  setForm(initVal2, 'refined-wrapper')
+
+  function disableAllForms(wrapperClass) {
+    $(`.${wrapperClass} .log-search-field`).each( function() {
+      $(this).addClass('hide');
+      $(this).prop('disabled', true);
+    });
+  }
+
+  $('.search-opts').change(function() {
+    disableAllForms('search-wrapper');
+    var SelectedOpt = $(this).val();
+    setForm(SelectedOpt, 'search-wrapper');
+  });
+
+  $('.refined-opts').change(function() {
+    disableAllForms('refined-wrapper');
+    var SelectedOpt = $(this).val();
+    setForm(SelectedOpt, 'refined-wrapper');
+  });
+
+  function setForm(SelectedOpt, warpperClass) {
+    targetField = `.${warpperClass} .${SelectedOpt}-field`
+
+    switch (SelectedOpt) {
+    case 'user':
+      enableForm(targetField)
+      break;
+    case 'action':
+      enableForm(targetField);
+      break;
+    case 'controller':
+      enableForm(targetField)
+      break;
+    case 'group':
+      enableForm(targetField)
+      break;
+    default:
+      enableForm(`.${warpperClass} .text-field`)
+      $('.text-field').val("");
+    }
+  }
+
+  function enableForm(targetField) {
+    $(targetField).removeClass('hide');
+    $(targetField).prop('disabled', false);
+  }
+<% end %>

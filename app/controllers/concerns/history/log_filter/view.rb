@@ -2,16 +2,47 @@ module History::LogFilter::View
   extend ActiveSupport::Concern
 
   def index
-    @ref_coll_options = [Cms::Node, Cms::Page, Cms::Part, Cms::Layout, SS::File].collect do |model|
-      [model.model_name.human, model.collection_name]
-    end
-    @ref_coll_options.unshift([I18n.t('ss.all'), 'all'])
+    set_options
     @s = OpenStruct.new params[:s]
     @s[:ref_coll] ||= 'all'
     @items = @model.where(cond).search(@s)
                .order_by(created: -1)
                .page(params[:page])
                .per(50)
+  end
+
+  def set_options
+    ref_coll_options = [Cms::Node, Cms::Page, Cms::Part, Cms::Layout, SS::File].collect do |model|
+      [model.model_name.human, model.collection_name]
+    end
+    search_opts = [
+      [t('ss.operation'), 'action'], [t('ss.function'), 'controller'],
+      [t("mongoid.models.ss/user"), 'user'], [t("mongoid.models.ss/group"), 'group']
+    ]
+    search_opts += ref_coll_options
+    @search_opts = search_opts.unshift([I18n.t('ss.all'), 'all'])
+    @refined_opts = [[t("mongoid.models.ss/user"), 'user'], [t("mongoid.models.ss/group"), 'group']]
+
+    criterias = @model.where(cond).order_by(created: -1).page(params[:page]).per(50)
+    @action_opts = criterias.pluck(:action).uniq.map { |action| "#{action} #{action}".split }
+    @controller_opts = criterias.pluck(:controller).uniq.map do |controller|
+      "#{controller} #{controller}".split
+    end
+
+    @user_opts = criterias.pluck(:user_id).uniq.map do |user_id|
+      user = Cms::User.find(user_id) rescue nil
+      "#{user.name},#{user.name}".split(",")
+    end
+
+    groups = []
+    criterias.pluck(:group_ids).compact.uniq.each do |group_ids|
+      group_ids.each do |group_id|
+        group = Cms::Group.find(group_id) rescue nil
+        groups << "#{group.name} #{group.name}".split
+      end
+      groups
+    end
+    @group_opts = groups.flatten(1).uniq
   end
 
   def delete

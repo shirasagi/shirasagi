@@ -6,6 +6,11 @@ module History::Searchable
       criteria = self.where({})
       return criteria if params.blank?
 
+      if params[:search_opts] =~ /action|user|controller|group/
+        criteria = search_except_ref_coll(params, criteria)
+        return criteria
+      end
+
       if params[:keyword].present?
         words = params[:keyword].split(/[\s　]+/).uniq.compact if params[:keyword].is_a?(String)
         words = words[0..4]
@@ -47,12 +52,50 @@ module History::Searchable
           { "$or" => inner_cond }
         end
         criteria = criteria.where("$and" => cond)
+
+        if params[:refined_keyword].present?
+          criteria = refined_search(criteria, params)
+        end
       end
-      if params[:ref_coll] == 'all'
+
+      if params[:search_opts] == 'all'
         criteria
-      elsif params[:ref_coll].present?
-        criteria = criteria.where(ref_coll: params[:ref_coll])
+      elsif params[:search_opts].present?
+        criteria = criteria.where(ref_coll: params[:search_opts])
       end
+      criteria
+    end
+
+    def search_except_ref_coll(params, criteria)
+      if params[:search_opts] == "user"
+        user_id = SS::User.find_by(name: params[:keyword]).id
+        criteria = criteria.where(user_id: user_id)
+      elsif params[:search_opts] == "controller"
+        criteria = criteria.where(controller: params[:keyword].pluralize)
+      elsif params[:search_opts] == "group"
+        group_id = Cms::Group.find_by(name: params[:keyword]).id
+        criteria = criteria.in(group_ids: group_id)
+      elsif params[:search_opts] == "action"
+        criteria = criteria.where(action: params[:keyword])
+      end
+
+      criteria = refined_search(criteria, params) if params[:refined_keyword].present?
+      criteria
+    end
+
+    def refined_search(criteria, params)
+      word = params[:refined_keyword]
+
+      if params[:refined_opts] == "user"
+        user_id = SS::User.find_by(name: word).id
+        criteria = criteria.where(user_id: user_id)
+      end
+
+      if params[:refined_opts] == "group"
+        group_id = Cms::Group.find_by(name: word).id
+        criteria = criteria.in(group_ids: group_id)
+      end
+
       criteria
     end
   end
