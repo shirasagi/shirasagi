@@ -52,11 +52,11 @@ class Gws::Memo::MessageImporter
     end
 
     sender = Gws::User.find_by(email: msg[:content].from.first) rescue nil
-    item.user_uid = sender.uid
-    item.user_name = sender.name
     # user_id (from)
     if sender
       item.cur_user = sender
+      item.user_uid = sender.uid
+      item.user_name = sender.name
       @sent_by_cur_user = (@cur_user.id == sender.id)
     else
       item.cur_user = @cur_user
@@ -128,10 +128,14 @@ class Gws::Memo::MessageImporter
     item.allow_other_user_files
     item.save
 
-        # folder
+    # folder
     item.user_settings = []
     if msg[:tmp_path].include?("受信トレイ")
       path = "INBOX"
+    elsif msg[:tmp_path].include?("送信済みトレイ")
+      path = "INBOX.Sent"
+    elsif msg[:tmp_path].include?("下書き")
+      path = "INBOX.Draft"
     elsif msg[:tmp_path].include?("ゴミ箱")
       path = "INBOX.Trash"
     else
@@ -139,7 +143,12 @@ class Gws::Memo::MessageImporter
       path = @restored_folders[msg[:folder_name]]
     end
 
-    item.move(@cur_user, path).update
+    if path != "INBOX.Draft"
+      item.move(@cur_user, path).update
+    else
+      item.state = "closed"
+      item.update
+    end
 
     item
   end
@@ -192,14 +201,6 @@ class Gws::Memo::MessageImporter
       msg[:content] = Mail.read(msg[:tmp_path])
       File.delete(msg[:tmp_path])
     end
-
-    # Tempfile.open(entry.to_s) do |file|
-    #   msg[:tmp_path] = "tmp/" + File.basename(file)
-    #   msg[:folder_name] = entry.to_s.slice(/^.*\//).tr("/", "")
-    #   entry.extract(msg[:tmp_path])
-    #   msg[:content] = Mail.read("tmp/" + File.basename(file.path))
-    #   File.delete(msg[:tmp_path])
-    # end
 
     msg
   end

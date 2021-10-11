@@ -4,10 +4,9 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
   def perform(*args)
     opts = args.extract_options!
     @datetime = Time.zone.now
-    @message_ids = args
+    @message_ids = args[0]
     @root_url = opts[:root_url].to_s
     @output_zip = SS::ZipCreator.new("gws-memo-messages.zip", user, site: site)
-    # @output_format = opts[:format].to_s.presence || "json"
     @export_filter = opts[:export_filter].to_s.presence || "selected"
     @exported_items = 0
 
@@ -72,13 +71,13 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
   def each_message_with_rescue
     criteria = Gws::Memo::Message.unscoped.site(site).where("user_settings.user_id" => user.id)
     if @export_filter == "all"
-      all_ids = criteria.pluck(:id).map(&:to_s)
+      all_ids = criteria.pluck(:id).map(&:to_s) + extract_sent_and_draft_ids
     else
       all_ids = @message_ids
     end
 
     all_ids.each_slice(100) do |ids|
-      criteria.in(id: ids).to_a.each do |item|
+      Gws::Memo::Message.in(id: ids).to_a.each do |item|
         begin
           yield item
         rescue => e
@@ -89,8 +88,26 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
     end
   end
 
+  def extract_sent_and_draft_ids
+    folders = Gws::Memo::Folder.static_items(user, site) + Gws::Memo::Folder.user(user).site(site)
+    sent_folder = folders.select { |folder| folder.folder_path == "INBOX.Sent" }.first
+    draft_folder = folders.select { |folder| folder.folder_path == "INBOX.Draft" }.first
+
+    @sent_ids = Gws::Memo::Message.folder(sent_folder, user).pluck(:id).map(&:to_s)
+    @draft_ids = Gws::Memo::Message.folder(draft_folder, user).pluck(:id).map(&:to_s)
+    sent_and_draft_ids = @sent_ids + @draft_ids
+
+    sent_and_draft_ids
+  end
+
   def item_folder_name(item)
-    path = item.path(user)
+    unless path = item.path(user)
+      if @sent_ids.include?(item.id.to_s)
+        path = "INBOX.Sent"
+      elsif @draft_ids.include?(item.id.to_s)
+        path = "INBOX.Draft"
+      end
+    end
     return if path.blank?
 
     if !path.numeric?

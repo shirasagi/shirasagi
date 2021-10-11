@@ -51,11 +51,10 @@ class Gws::Memo::ExportMessagesController < ApplicationController
     end
 
     job_class = Gws::Memo::MessageExportJob.bind(site_id: @cur_site.id, user_id: @cur_user)
-    job_class.perform_later(*message_ids, root_url: root_url, export_filter: export_filter)
+    job_class.perform_later(message_ids, root_url: root_url, export_filter: export_filter)
     render_create true, location: { action: :start_export }, notice: I18n.t("gws/memo/message.notice.start_export")
   end
 
   def start_export
-    #
   end
 end
