@@ -3,7 +3,7 @@ module Cms::PartFilter::View
   include SS::AgentFilter
 
   included do
-    helper ApplicatioHelper
+    helper ApplicationHelper
     before_action :prepend_current_view_path
   end
 
