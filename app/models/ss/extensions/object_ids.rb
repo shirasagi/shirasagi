@@ -39,10 +39,11 @@ class SS::Extensions::ObjectIds < Array
       ids = array.flatten.reject(&:blank?)
       ids.uniq!
       ids.map! do |id|
-        if id.numeric?
-          BSON::ObjectId.legal?(id.to_s) ? id.to_s : id.to_i
+        id = id.to_s
+        if id.numeric? && !BSON::ObjectId.legal?(id)
+          id.to_i
         else
-          id.to_s
+          id
         end
       end
 
