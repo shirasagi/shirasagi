@@ -62,7 +62,6 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
         basename = "#{folder_name}/#{basename}"
       end
       write_eml(basename, data)
-      # write_json(basename, data.to_json)
 
       @exported_items += 1
     end
@@ -90,8 +89,9 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
 
   def extract_sent_and_draft_ids
     folders = Gws::Memo::Folder.static_items(user, site) + Gws::Memo::Folder.user(user).site(site)
-    sent_folder = folders.select { |folder| folder.folder_path == "INBOX.Sent" }.first
-    draft_folder = folders.select { |folder| folder.folder_path == "INBOX.Draft" }.first
+
+    sent_folder = folders.find { |folder| folder.folder_path == "INBOX.Sent" }
+    draft_folder = folders.find { |folder| folder.folder_path == "INBOX.Draft" }
 
     @sent_ids = Gws::Memo::Message.folder(sent_folder, user).pluck(:id).map(&:to_s)
     @draft_ids = Gws::Memo::Message.folder(draft_folder, user).pluck(:id).map(&:to_s)
@@ -101,7 +101,8 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
   end
 
   def item_folder_name(item)
-    unless path = item.path(user)
+    path = item.path(user)
+    if path.blank? || item.state == "closed"
       if @sent_ids.include?(item.id.to_s)
         path = "INBOX.Sent"
       elsif @draft_ids.include?(item.id.to_s)

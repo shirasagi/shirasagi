@@ -62,6 +62,5 @@ class Gws::Memo::BackupMessagesController < ApplicationController
   end
 
   def start_backup
-    #
   end
 end
