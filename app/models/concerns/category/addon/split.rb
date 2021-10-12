@@ -38,9 +38,7 @@ module Category::Addon
     def validate_category_split(partial)
       # validate partial save
       if !partial.valid?
-        partial.errors.each do |n, e|
-          self.errors.add n, e
-        end
+        self.errors.merge!(partial)
       end
     end
   end
