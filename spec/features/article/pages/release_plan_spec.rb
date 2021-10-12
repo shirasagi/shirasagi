@@ -7,7 +7,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   let(:edit_path) { edit_article_page_path site, node, item }
 
   let(:today) { Time.zone.today }
-  let(:hours_and_minutes) { (0..23).map { |h| [[h, 0],[h, 30]] }.flatten(1) }
+  let(:hours_and_minutes) { (0..23).flat_map { |h| [[h, 0], [h, 30]] } }
   let(:times) { hours_and_minutes.map { |h, m| format("%02d:%02d", h, m) } }
 
   before { login_cms_user }
