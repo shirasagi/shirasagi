@@ -148,8 +148,8 @@ module Gws::Addon::Import::Facility
         I18n.l(time)
       end
 
-      def header_value_to_text(header, options = {})
-        I18n.t("gws/facility/item.csv.#{header}", options)
+      def header_value_to_text(header, **options)
+        I18n.t("gws/facility/item.csv.#{header}", **options)
       end
 
       def type_datas_value_to_text(type_datas)
@@ -287,8 +287,8 @@ module Gws::Addon::Import::Facility
       self.errors.add :base, "#{index}: #{error}"
     end
 
-    def header_t(header, options = {})
-      I18n.t("gws/facility/item.csv.#{header}", options)
+    def header_t(header, **options)
+      I18n.t("gws/facility/item.csv.#{header}", **options)
     end
 
     def user_names_to_ids(names)
@@ -441,8 +441,8 @@ module Gws::Addon::Import::Facility
       I18n.t("gws/facility/item.csv.#{header}")
     end
 
-    def column_header_value_to_text(header, options = {})
-      I18n.t("gws/facility/item.csv.columns.#{header}", options)
+    def column_header_value_to_text(header, **options)
+      I18n.t("gws/facility/item.csv.columns.#{header}", **options)
     end
 
     def approval_check_state_datas_text_to_value(approval_check_state_datas)
