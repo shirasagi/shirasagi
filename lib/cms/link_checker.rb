@@ -35,7 +35,7 @@ class Cms::LinkChecker
       }
 
       Timeout.timeout(@head_request_timeout) do
-        open(url, **opts) { |_f| }
+        URI.open(url, **opts) { |_f| }
       end
 
       return {

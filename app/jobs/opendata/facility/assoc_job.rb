@@ -29,7 +29,7 @@ class Opendata::Facility::AssocJob < Cms::ApplicationJob
   end
 
   def download_csv
-    open("#{@facility_node.full_url}index.csv") do |f|
+    URI.open("#{@facility_node.full_url}index.csv") do |f|
       f.binmode
 
       @csv_file = Fs::UploadedFile.new("opendata")
