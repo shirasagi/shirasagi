@@ -6,7 +6,7 @@ module Opendata::Api::TagListFilter
     help = t("opendata.api.tag_list_help")
 
     query = params[:query]
-    query = URI.decode(query) if query
+    query = Addressable::URI.unencode(query) if query
     #vocabulary_id = params[:vocabulary_id]
     #all_fields = params[:all_fields] || false
 

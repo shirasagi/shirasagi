@@ -94,8 +94,8 @@ class Voice::MainController < ApplicationController
 
   def get_and_normalize_path
     path = params[:path]
-    path = ::URI.unescape(path) if path.include?("%3A%2F%2F")
-    url = ::URI.parse(path)
+    path = Addressable::URI.unencode(path) if path.include?("%3A%2F%2F")
+    url = Addressable::URI.parse(path)
     url.normalize!
     url
   end
