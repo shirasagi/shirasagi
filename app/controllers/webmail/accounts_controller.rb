@@ -92,7 +92,7 @@ class Webmail::AccountsController < ApplicationController
 
     result = @cur_user.save
     if !result
-      @item.errors.messages[:base] += @cur_user.errors.full_messages
+      SS::Model.copy_errors(@cur_user, @item)
     end
     render_update result
   end
