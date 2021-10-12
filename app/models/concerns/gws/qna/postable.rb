@@ -153,6 +153,6 @@ module Gws::Qna::Postable
   def update_topic_descendants_updated
     return unless topic
 
-    topic.set descendants_updated: updated
+    topic.set(descendants_updated: updated.utc)
   end
 end

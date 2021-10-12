@@ -160,7 +160,7 @@ module Gws::Board::Postable
 
   # topic(root_post)を設定
   def set_topic_id
-    self.topic_id = root_post.id
+    self.topic = root_post.becomes_with(Gws::Board::Topic)
   end
 
   # コメントを許可しているか検証
@@ -181,6 +181,6 @@ module Gws::Board::Postable
   def update_topic_descendants_updated
     return unless topic
 
-    topic.set descendants_updated: updated
+    topic.set(descendants_updated: updated.utc)
   end
 end

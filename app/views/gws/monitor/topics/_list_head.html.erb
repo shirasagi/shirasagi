@@ -2,10 +2,10 @@
   <label class="check"><input type="checkbox" /></label>
 
   <div class="list-head-action">
-    <button class="public-all btn" data-ss-list-head-method="post" data-ss-list-head-action="<%= url_for(action: :public_all) %>" data-ss-confirmation="<%= t('gws/monitor.confirm.public_all') %>"><%= t('gws/monitor.links.public') %></button>
-    <button class="preparation-all btn" data-ss-list-head-method="post" data-ss-list-head-action="<%= url_for(action: :preparation_all) %>" data-ss-confirmation="<%= t('gws/monitor.confirm.preparation_all') %>"><%= t('gws/monitor.links.preparation') %></button>
-    <button class="question-not-applicable-all btn" data-ss-list-head-method="post" data-ss-list-head-action="<%= url_for(action: :question_not_applicable_all) %>" data-ss-confirmation="<%= t('gws/monitor.confirm.question_not_applicable') %>"><%= t('gws/monitor.links.question_not_applicable') %></button>
+    <%= ss_button_to t('gws/monitor.links.public'), url_for(action: :public_all), class: "public-all btn btn-list-head-action", method: "post", confirm: t('gws/monitor.confirm.public_all') %>
+    <%= ss_button_to t('gws/monitor.links.preparation'), url_for(action: :preparation_all), class: "preparation-all btn btn-list-head-action", method: "post", confirm: t('gws/monitor.confirm.preparation_all') %>
+    <%= ss_button_to t('gws/monitor.links.question_not_applicable'), url_for(action: :question_not_applicable_all), class: "question-not-applicable-all btn btn-list-head-action", method: "post", confirm: t('gws/monitor.confirm.question_not_applicable') %>
   </div>
 
-  <%= render file: '_search' %>
+  <%= render template: '_search' %>
 </div>

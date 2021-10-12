@@ -71,7 +71,7 @@ module History::LogFilter::View
       end
     else
       respond_to do |format|
-        format.html { render file: :delete }
+        format.html { render template: "delete" }
         format.json { render json: :error, status: :unprocessable_entity }
       end
     end

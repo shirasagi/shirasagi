@@ -11,36 +11,30 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   def set_params
   end
 
-  def unset_errors_in_contents
-    Cms::Page.site(@site).has_check_links_errors.each do |content|
-      content.with_repl_master.unset(:check_links_errors_updated, :check_links_errors)
+  def create_report
+    @report_max_age = (SS.config.cms.check_links["report_max_age"].presence || 5).to_i
+    return if @report_max_age <= 0
+
+    # create new report
+    @report = Cms::CheckLinks::Report.new
+    @report.site = @site
+    if !@report.save
+      @task.log "Error : Failed to save Cms::CheckLinks::Report #{@report.errors.full_messages}"
+      return
+    end
+    @task.log "# #{@report.name} created"
+
+    @errors.map do |ref, urls|
+      next if @report.save_error(ref, urls.select(&:inner_yield))
+      @task.log "Error : Failed to save Cms::CheckLinks::Error ref:#{ref} (#{urls.join(",")})"
     end
 
-    Cms::Node.site(@site).has_check_links_errors.each do |content|
-      content.with_repl_master.unset(:check_links_errors_updated, :check_links_errors)
+    # destroy old reports
+    report_ids = Cms::CheckLinks::Report.site(@site).limit(@report_max_age).pluck(:id)
+    Cms::CheckLinks::Report.site(@site).nin(id: report_ids).each do |report|
+      @task.log "# #{report.name} destroyed"
+      report.destroy
     end
-  end
-
-  def set_errors_in_contents(ref, urls)
-    content = find_content_from_ref(ref)
-    if content
-      content.with_repl_master.set(check_links_errors_updated: @task.started, check_links_errors: urls)
-    end
-  end
-
-  def find_content_from_ref(ref)
-    filename = ref.sub(/^#{::Regexp.escape(@site.url)}/, "")
-    filename.sub!(/\?.*$/, "")
-    filename += "index.html" if ref.match?(/\/$/)
-
-    page = Cms::Page.site(@site).where(filename: filename).first
-    return page if page
-
-    filename.sub!(/\/(index\.html)?$/, "")
-    node = Cms::Node.site(@site).where(filename: filename).first
-    return node if node
-
-    return nil
   end
 
   public
@@ -48,15 +42,17 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   # Checks the URLs by task.
   def check
     @task.log "# #{@site.name}"
+    @ref_string = Cms::CheckLinks::RefString
 
     @base_url = @site.full_url.sub(/^(https?:\/\/.*?\/).*/, '\\1')
 
-    @urls    = { @site.url => %w(Site) }
+    @urls    = { @ref_string.new(@site.url) => %w(Site) }
     @results = {}
     @errors  = {}
 
     @html_request_timeout = SS.config.cms.check_links["html_request_timeout"] rescue 10
     @head_request_timeout = SS.config.cms.check_links["head_request_timeout"] rescue 5
+    @check_mobile = SS.config.cms.check_links["check_mobile_path"] != false
 
     (10*1000*1000).times do |i|
       break if @urls.blank?
@@ -71,8 +67,9 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       ref = File.join(@base_url, ref) if ref[0] == "/"
       msg << ref
       msg << urls.map do |url|
+        meta = @meta.present? ? url.meta : ""
         url = File.join(@base_url, url) if url[0] == "/"
-        "  - #{url}"
+        "  - #{url} #{meta}"
       end
     end
     msg = msg.join("\n")
@@ -88,11 +85,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       ).deliver_now
     end
 
-    unset_errors_in_contents
-    @errors.map do |ref, urls|
-      urls = urls.map { |url| (url[0] == "/") ? File.join(@base_url, url) : url }
-      set_errors_in_contents(ref, urls)
-    end
+    create_report
     head :ok
   end
 
@@ -124,6 +117,17 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     end
   end
 
+  def same_domain_site_path?(path)
+    site = @site.same_domain_site_from_path(path)
+    site && site.id == @site.id
+  end
+
+  def mobile_url?(path)
+    return false if @site.mobile_disabled?
+    return false if !path.match?(/^#{@site.mobile_url}/)
+    true
+  end
+
   # Checks the html url.
   def check_html(url, refs)
     file = get_internal_file(url)
@@ -137,10 +141,33 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     add_valid_url(url, refs)
     return if url[0] != "/"
 
+    # self site path
+    if !same_domain_site_path?(url)
+      return
+    end
+
+    # self site and mobile path
+    if !@check_mobile && mobile_url?(url)
+      return
+    end
+
     begin
       html = NKF.nkf "-w", html
-      html = html.gsub(/<!--.*?-->/m, "")
+
+      # scan layout_yield offset
+      html.scan(/<!-- layout_yield -->(.*?)<!-- \/layout_yield -->/m)
+      yield_start, yield_end = Regexp.last_match.offset(0) if Regexp.last_match
+      yield_start ||= html.size
+      yield_end ||= 0
+
+      # remove href in comment
+      html.gsub!(/<!--.*?-->/m) { |m| " " * m.size }
+
       html.scan(/\shref="([^"]+)"/i) do |m|
+        offset = Regexp.last_match.offset(0)
+        href_start, href_end = offset
+        inner_yield = (href_start > yield_start && href_end < yield_end)
+
         next_url = m[0]
         next_url = next_url.sub(/^#{::Regexp.escape(@base_url)}/, "/")
         next_url = next_url.sub(/#.*/, "")
@@ -150,10 +177,17 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
         internal = (next_url[0] != "/" && next_url !~ /^https?:/)
         next_url = File.expand_path next_url, url.sub(/[^\/]*?$/, "") if internal
         next_url = URI.encode(next_url) if next_url.match?(/[^-_.!~*'()\w;\/\?:@&=+$,%#]/)
-        next if @results[next_url]
 
-        @urls[next_url] ||= []
-        @urls[next_url] << url
+        next_url = @ref_string.new(next_url, offset: offset, inner_yield: inner_yield)
+
+        if @results[next_url] == 1
+          next
+        elsif @results[next_url] == 0
+          add_invalid_url(next_url, [url])
+        else
+          @urls[next_url] ||= []
+          @urls[next_url] << url
+        end
       end
     rescue
       add_invalid_url(url, refs)

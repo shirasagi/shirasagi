@@ -105,9 +105,10 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         within 'form#item-form' do
           fill_in 'item[name]', with: name
-          select form.name, from: 'item[form_id]'
           wait_event_to_fire("ss:formActivated") do
-            find('.btn-form-change').click
+            page.accept_confirm(I18n.t("cms.confirm.change_form")) do
+              select form.name, from: 'in_form_id'
+            end
           end
 
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
@@ -428,9 +429,10 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         within 'form#item-form' do
           fill_in 'item[name]', with: name
-          select form.name, from: 'item[form_id]'
           wait_event_to_fire("ss:formActivated") do
-            find('.btn-form-change').click
+            page.accept_confirm(I18n.t("cms.confirm.change_form")) do
+              select form.name, from: 'in_form_id'
+            end
           end
 
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
@@ -732,7 +734,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         visit new_article_page_path(site: site, cid: node)
 
         within '#addon-basic' do
-          expect(page).to have_no_css('select[name="item[form_id]"]')
+          expect(page).to have_no_css('select[name="in_form_id"]')
         end
       end
 
@@ -745,7 +747,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         visit new_article_page_path(site: site, cid: node)
 
         within '#addon-basic' do
-          expect(page).to have_css('select[name="item[form_id]"]')
+          expect(page).to have_css('select[name="in_form_id"]')
           expect(page).to have_no_css('select option', text: form.name)
           expect(page).to have_css('select option', text: form2.name)
         end
@@ -756,9 +758,10 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         within 'form#item-form' do
           fill_in 'item[name]', with: name
-          select form.name, from: 'item[form_id]'
           wait_event_to_fire("ss:formActivated") do
-            find('.btn-form-change').click
+            page.accept_confirm(I18n.t("cms.confirm.change_form")) do
+              select form.name, from: 'in_form_id'
+            end
           end
 
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
@@ -773,7 +776,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         visit edit_article_page_path(site: site, cid: node, id: item)
 
         within '#addon-basic' do
-          expect(page).to have_css('select[name="item[form_id]"][disabled]')
+          expect(page).to have_css('select[name="in_form_id"][disabled]')
         end
 
         within 'form#item-form' do

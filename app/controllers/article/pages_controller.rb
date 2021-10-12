@@ -52,7 +52,8 @@ class Article::PagesController < ApplicationController
       criteria = criteria.exists(form_id: false)
     end
 
-    enumerable = criteria.enum_csv(csv_params)
+    exporter = Cms::PageExporter.new(site: @cur_site, criteria: criteria)
+    enumerable = exporter.enum_csv(csv_params)
 
     filename = @model.to_s.tableize.gsub(/\//, "_")
     filename = "#{filename}_#{Time.zone.now.to_i}.csv"
@@ -71,7 +72,7 @@ class Article::PagesController < ApplicationController
     if request.get?
       respond_to do |format|
         format.html { render }
-        format.json { render file: "ss/tasks/index", content_type: json_content_type, locals: { item: @task } }
+        format.json { render template: "ss/tasks/index", content_type: json_content_type, locals: { item: @task } }
       end
       return
     end

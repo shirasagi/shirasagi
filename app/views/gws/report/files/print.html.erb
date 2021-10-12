@@ -11,10 +11,10 @@ end
   <div class="addon-view print" id="addon-basic">
     <% if addons.size > 0 %><div class="addon-head print"><h2><%= t('ss.basic_info') %></h2></div><% end %>
     <div class="addon-body print">
-      <%= render file: '_show' %>
+      <%= render template: '_show' %>
     </div>
   </div>
-  <%= render file: '_addons_show', locals: { addons: addons, css_classes: %w(print) } if addons.size > 0 %>
+  <%= render template: '_addons_show', locals: { addons: addons, css_classes: %w(print) } if addons.size > 0 %>
 </div>
 
 <%= jquery do %>

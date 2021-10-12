@@ -15,7 +15,7 @@ end
 count = `find spec -name '*.rb' | fgrep -v spec/factories/ | fgrep -v spec/support/ | fgrep -v _spec.rb | wc -l`
 count = count.strip.to_i
 if count > 1
-  puts "there are spec files which aren't ended with \"_spec.rb\""
+  STDERR.puts "there are spec files which aren't ended with \"_spec.rb\""
   exit!
 end
 

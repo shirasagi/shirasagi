@@ -1,8 +1,10 @@
+@import "compass-mixins/lib/compass";
+
 .sheet {
   border: 0;
   border-radius: unset;
-  page-break-after: always;
   background: #fff;
+  page-break-after: always;
 }
 
 .vertical {
@@ -28,8 +30,8 @@
   }
 
   .sheet {
-    box-shadow: 0 .5mm 2mm rgba(0, 0, 0, .3);
     margin: 5mm;
+    @include box-shadow(0 .5mm 2mm rgba(0, 0, 0, .3));
   }
 }
 @media print {

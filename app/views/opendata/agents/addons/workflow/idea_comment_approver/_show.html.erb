@@ -102,7 +102,7 @@ $(".workflow-partial-section").each(function () {
           <%= render "ss/crud/addon", addon: { head: "#{t("workflow.state.approve")}/#{t("workflow.state.remand")}#{@model.tt :approve_remand}" } do %>
             <%= text_area :remand, :comment, value: "", style: "display: none;" %>
             <div class="buttons">
-              <%= button_tag t("workflow.state.approve"), { updatetype: :approve, class: "update-item btn-primary" } %>
+              <%= button_tag t("workflow.state.approve"), { updatetype: :approve, class: "update-item btn-primary", data: { disable: '' } } %>
               <%= button_tag t("workflow.state.remand"), { updatetype: :remand, class: "update-item btn-default" } %>
             </div>
           <% end %>

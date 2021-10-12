@@ -47,7 +47,7 @@ class Gws::Schedule::HolidaysController < ApplicationController
   def copy
     set_item
     @item = @item.new_clone
-    render file: :new
+    render template: "new"
   end
 
   def events
@@ -70,6 +70,6 @@ class Gws::Schedule::HolidaysController < ApplicationController
     @item.cur_user = @cur_user
     result = @item.import
     flash.now[:notice] = t("ss.notice.saved") if !result && @item.imported > 0
-    render_create result, location: { action: :index }, render: { file: :import }
+    render_create result, location: { action: :index }, render: { template: "import" }
   end
 end

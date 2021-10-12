@@ -34,12 +34,10 @@ class Faq::Page::Importer
   def import_csv(file)
     table = CSV.read(file.path, headers: true, encoding: 'SJIS:UTF-8')
     table.each_with_index do |row, i|
-      begin
-        item = update_row(row)
-        put_log("update #{i + 1}: #{item.name}")
-      rescue => e
-        put_log("error  #{i + 1}: #{e}")
-      end
+      item = update_row(row)
+      put_log("update #{i + 1}: #{item.name}")
+    rescue => e
+      put_log("error  #{i + 1}: #{e}")
     end
   end
 
@@ -144,6 +142,8 @@ class Faq::Page::Importer
     item.contact_link_name = value(row, :contact_link_name)
 
     # released
+    released_type = label_value(item, row, :released_type)
+    item.released_type = released_type
     item.released = value(row, :released)
     item.release_date = value(row, :release_date)
     item.close_date = value(row, :close_date)
@@ -151,7 +151,9 @@ class Faq::Page::Importer
     # groups
     group_names = ary_value(row, :groups)
     item.group_ids = SS::Group.in(name: group_names).pluck(:id)
-    item.permission_level = value(row, :permission_level)
+    unless SS.config.ss.disable_permission_level
+      item.permission_level = value(row, :permission_level)
+    end
 
     # state
     state = label_value(item, row, :state)

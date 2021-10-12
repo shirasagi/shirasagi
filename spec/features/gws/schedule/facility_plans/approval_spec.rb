@@ -20,8 +20,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       expect(item.approvals).to be_blank
 
       visit gws_schedule_facilities_path(site: site)
-      within ".fc-event" do
-        # click_on item.name
+      within ".fc-event:not(.fc-holiday)" do
         first(".fc-title").click
       end
       within ".gws-popup" do

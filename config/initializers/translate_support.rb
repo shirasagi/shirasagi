@@ -1,6 +1,6 @@
 module SS
   module TranslateSupport
-    include SS::FilterSupport
+    extend SS::FilterSupport
 
     def translate?(request)
       filters = request.env["ss.filters"] rescue nil
@@ -22,6 +22,7 @@ module SS
 
       return url unless uri
       return url unless same_host?(request, uri)
+      return url unless same_site?(request, uri)
       return url if relative_path?(request, uri)
       return url if translate_path?(request, uri)
       return url if fs_path?(request, uri)

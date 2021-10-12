@@ -1,15 +1,15 @@
 .routes-view {
   article {
-    clear: both;
-    float: left;
     width: 100%;
     padding: 5px 0;
+    float: left;
+    clear: both;
     border-bottom: 1px solid #ddd;
     h1 {
-      clear: both;
-      float: left;
       width: 160px;
       padding: 5px;
+      float: left;
+      clear: both;
     }
     div {
       float: left;
@@ -45,10 +45,10 @@
     }
   }
   .controller {
-    margin-top: 5px;
-    width: 100%;
     @include display-flex(flex);
     @include align-items(center);
+    width: 100%;
+    margin-top: 5px;
   }
 
   .auto-reload {
@@ -135,8 +135,8 @@
   margin-top: -1px;
   a {
     display: block;
-    float: left;
     margin: 1px 0 -1px 6px;
+    float: left;
     border: 1px solid $gray4;
     border-left: 3px solid #bbb;
     border-radius: 0 4px 0 0;
@@ -164,24 +164,24 @@
 .cms-dropdown-menu {
   left: -4px;
   max-height: 300px;
-  overflow-y: scroll;
   margin: 0;
   padding: 4px;
+  overflow-y: scroll;
   border: $border-gray4;
-  @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
   background: $white;
+  @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
   white-space: nowrap;
 }
 
 .cms-modal-tabs {
-  zoom: 1;
+  height: 30px;
   margin-top: -1px;
   padding: 0 10px;
-  height: 30px;
+  zoom: 1;
   a {
     display: block;
-    float: left;
     margin: 1px 6px -1px 0;
+    float: left;
     border: 1px solid #d0d0d0;
     border-left: 3px solid #bbb;
     border-radius: 0 4px 0 0;

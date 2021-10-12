@@ -13,7 +13,7 @@ class Member::Agents::Nodes::BlogPageController < ApplicationController
   end
 
   def render_blog_layout
-    return if response.content_type != "text/html"
+    return if response.media_type != "text/html"
 
     node = @cur_node.becomes_with_route
     layout = @cur_node.layout

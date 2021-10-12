@@ -5,7 +5,7 @@ class Gws::Report::NotificationJob < Gws::ApplicationJob
 
     if added_member_ids.present?
       Gws::User.in(id: added_member_ids).each do |recipient|
-        mail = Gws::Report::Mailer.publish_mail(@item)
+        mail = Gws::Report::Mailer.publish_mail(site, @item)
         next if mail.blank?
         create_memo_notice(mail, recipient)
       end
@@ -13,7 +13,7 @@ class Gws::Report::NotificationJob < Gws::ApplicationJob
 
     if removed_member_ids.present?
       Gws::User.in(id: removed_member_ids).each do |recipient|
-        mail = Gws::Report::Mailer.depublish_mail(@item)
+        mail = Gws::Report::Mailer.depublish_mail(site, @item)
         next if mail.blank?
         create_memo_notice(mail, recipient)
       end

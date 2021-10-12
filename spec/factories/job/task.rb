@@ -5,8 +5,8 @@ FactoryBot.define do
     end
 
     site_id { cur_site.try(:id) }
-    pool "default"
-    class_name "Class"
-    args [ "hello" ]
+    pool { "default" }
+    class_name { "Class" }
+    args { %w(hello) }
   end
 end

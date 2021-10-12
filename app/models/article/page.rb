@@ -31,7 +31,6 @@ class Article::Page
   include Cms::Addon::ReleasePlan
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
-  include Article::Export
   include Cms::Addon::ForMemberPage
 
   after_save :new_size_input, if: ->{ @db_changes }

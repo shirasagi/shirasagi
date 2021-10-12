@@ -52,7 +52,7 @@ class Webmail::RolesController < ApplicationController
     end
 
     mime = SS::MimeType.find(file.original_filename, file.content_type)
-    if mime != "text/comma-separated-values" || !Webmail::RoleImportJob.valid_csv?(file)
+    if mime != "text/csv" || !Webmail::RoleImportJob.valid_csv?(file)
       @item.errors.add :base, :invalid_csv
       return
     end

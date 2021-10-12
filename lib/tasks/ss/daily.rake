@@ -17,6 +17,9 @@ namespace :ss do
     # history_backupの削除
     ::Tasks::SS.invoke_task("history:backup:sweep")
 
+    # history_backupの削除
+    ::Tasks::SS.invoke_task("ss:task:sweep")
+
     if ::SS.config.cms.disable.blank?
       # ゴミ箱の掃除
       ::Tasks::SS.invoke_task("history:trash:purge")

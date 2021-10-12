@@ -15,6 +15,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
   before do
     post1.set_seen(user1)
     post1.save!
+    post1.reload
   end
 
   describe "article state" do
@@ -30,7 +31,9 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
         msg = I18n.t('gws/circular.seen_user_info.format', count: count, total: total)
         expect(page).to have_css("dd", text: msg)
 
-        click_on I18n.t('gws/circular.seen_user_info.more')
+        wait_cbox_open do
+          click_on I18n.t('gws/circular.seen_user_info.more')
+        end
       end
 
       wait_for_cbox do

@@ -34,11 +34,11 @@ class History::Log
   def target_label
     if target_class.present?
       model  = target_class.to_s.underscore
-      label  = I18n.t :"mongoid.models.#{model}", default: model
+      label  = I18n.t("mongoid.models.#{model}", default: model)
       label += "(#{target_id})" if target_id.present?
     else
       model = controller.singularize
-      label = I18n.t :"mongoid.models.#{model}", default: model
+      label = I18n.t("mongoid.models.#{model}", default: model)
     end
     label
   end
@@ -51,6 +51,8 @@ class History::Log
     end
 
     def create_log!(request, response, options)
+      item             = options[:item]
+
       log              = new
       log.session_id   = request.session.id
       log.request_id   = request.uuid
@@ -60,8 +62,8 @@ class History::Log
       log.cur_user     = options[:cur_user]
       log.user_id      = options[:cur_user].id if options[:cur_user]
       log.site_id      = options[:cur_site].id if options[:cur_site]
-      log.ref_coll     = options[:item].try(:collection_name) if options[:item]
-      log.filename     = options[:item].data[:filename] if options[:item].try(:ref_coll) == "ss_files"
+      log.ref_coll     = item.collection_name if item
+      log.filename     = item.data[:filename] if item.try(:ref_coll) == "ss_files"
 
       if options[:action] == "undo_delete"
         log.behavior = "restore"
@@ -69,12 +71,8 @@ class History::Log
         log.behavior = "delete"
       end
 
-      options[:item].tap do |item|
-        if item && item.try(:new_record?)
-          log.target_id    = item.id
-          log.target_class = item.class
-        end
-      end
+      log.target_class = item.class    if item
+      log.target_id    = item.try(:id) if item.respond_to?(:new_record?) && !item.try(:new_record?)
 
       log.save!
     end
@@ -97,6 +95,27 @@ class History::Log
       end
 
       exporter.enum(all, options)
+    end
+
+    def build_file_log(file, options)
+      log = History::Log.new
+
+      log.site_id = options[:site_id] || SS.current_site.try(:id)
+      log.user_id = options[:user_id] || SS.current_user.try(:id)
+
+      if file
+        log.url = file.url
+        log.ref_coll = file.collection_name
+        log.target_class = file.class.name
+        log.target_id = file.id.to_s
+      end
+
+      log.session_id = options[:session_id] || Rails.application.current_session_id
+      log.request_id = options[:request_id] || Rails.application.current_request_id
+      log.controller = options[:controller] || Rails.application.current_controller
+      log.page_url = options[:page_url] || Rails.application.current_path_info
+
+      log
     end
   end
 end

@@ -1,7 +1,7 @@
 module Webmail
   extend Sys::ModulePermission
 
-  class CP50221Encoder < Mail::Ruby19::BestEffortCharsetEncoder
+  class CP50221Encoder < ::Mail::Ruby19::BestEffortCharsetEncoder
     def encode(string, charset)
       if charset.present? && charset.to_s.casecmp("iso-2022-jp") == 0
         # treated string as CP50221 (Microsoft Extended Encoding of ISO-2022-JP)

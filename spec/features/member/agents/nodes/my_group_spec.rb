@@ -141,7 +141,7 @@ describe 'members/agents/nodes/my_group', type: :feature, dbscope: :example, js:
         expect(mail.body.multipart?).to be_falsey
         expect(mail.body.raw_source).to include(cms_member.name)
         expect(mail.body.raw_source).to include(invitation_message)
-        expect(mail.body.raw_source).to include(member_invitation_signature)
+        expect(mail.body.raw_source).to include(member_invitation_signature.gsub("\n", "\r\n"))
 
         mail.body.raw_source =~ /(#{::Regexp.escape(node_registration.full_url)}[^ \t\r\n]+)/
         url = $1
@@ -231,7 +231,7 @@ describe 'members/agents/nodes/my_group', type: :feature, dbscope: :example, js:
         expect(mail.body.multipart?).to be_falsey
         expect(mail.body.raw_source).to include(cms_member.name)
         expect(mail.body.raw_source).to include(invitation_message)
-        expect(mail.body.raw_source).to include(group_invitation_signature)
+        expect(mail.body.raw_source).to include(group_invitation_signature.gsub("\n", "\r\n"))
 
         mail.body.raw_source =~ /(#{::Regexp.escape(node_my_group.full_url)}[^ \t\r\n]+\/accept)/
         url = $1
@@ -332,7 +332,7 @@ describe 'members/agents/nodes/my_group', type: :feature, dbscope: :example, js:
         expect(mail.body.multipart?).to be_falsey
         expect(mail.body.raw_source).to include(cms_member.name)
         expect(mail.body.raw_source).to include(invitation_message)
-        expect(mail.body.raw_source).to include(group_invitation_signature)
+        expect(mail.body.raw_source).to include(group_invitation_signature.gsub("\n", "\r\n"))
 
         mail.body.raw_source =~ /(#{::Regexp.escape(node_my_group.full_url)}[^ \t\r\n]+\/accept)/
         url = $1

@@ -24,6 +24,13 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
     end
     expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
+    expect(SS::Task.count).to eq 1
+    SS::Task.first.tap do |task|
+      expect(task.name).to eq "cms_pages:#{item.id}"
+      expect(task.state).to eq "completed"
+      task.destroy
+    end
+
     # draft save
     click_on I18n.t('ss.links.edit')
     within "#item-form" do
@@ -59,6 +66,12 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
       click_on I18n.t('ss.buttons.publish_save')
     end
     wait_for_notice I18n.t('ss.notice.saved')
+
+    expect(SS::Task.count).to eq 1
+    SS::Task.first.tap do |task|
+      expect(task.name).to eq "cms_pages:#{item.id}"
+      expect(task.state).to eq "completed"
+    end
 
     if item.route == "cms/page"
       within "#content-navi" do
@@ -115,5 +128,75 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
     let(:node) { create :sitemap_node_page, filename: "sitemap", name: "sitemap" }
     let(:show_path) { sitemap_page_path site, node, item }
     it { create_branch }
+  end
+
+  context "duplicated creating branch protection" do
+    let(:item) { create :article_page, filename: "docs/page.html", name: old_name, index_name: old_index_name }
+    let(:node) { create :article_node_page, filename: "docs", name: "article" }
+    let(:show_path) { article_page_path site, node, item }
+
+    before { login_cms_user }
+
+    context "task is already running" do
+      let(:task) { SS::Task.create(site_id: site.id, name: "cms_pages:#{item.id}") }
+
+      before do
+        expect(task.start).to be_truthy
+      end
+
+      it do
+        visit show_path
+
+        within "#addon-workflow-agents-addons-branch" do
+          click_button I18n.t('workflow.create_branch')
+        end
+        within "#addon-workflow-agents-addons-branch" do
+          expect(page).to have_css(".errorExplanation", text: I18n.t('errors.messages.other_task_is_running'))
+        end
+      end
+    end
+  end
+
+  context "duplicated publishing branch protection" do
+    let(:item) { create :article_page, filename: "docs/page.html", name: old_name, index_name: old_index_name }
+    let(:node) { create :article_node_page, filename: "docs", name: "article" }
+    let(:show_path) { article_page_path site, node, item }
+
+    before { login_cms_user }
+
+    context "task is already running" do
+      let!(:task) { SS::Task.create(site_id: site.id, name: "cms_pages:#{item.id}") }
+
+      it do
+        visit show_path
+
+        within "#addon-workflow-agents-addons-branch" do
+          click_button I18n.t('workflow.create_branch')
+
+          # wait branch created
+          expect(page).to have_css('.see.branch', text: old_name)
+          click_link old_name
+        end
+        within "#addon-workflow-agents-addons-branch" do
+          expect(page).to have_css('.see.master', text: I18n.t('workflow.branch_message'))
+        end
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+        task.reload
+        expect(task.state).to eq "completed"
+
+        expect(task.start).to be_truthy
+
+        click_on I18n.t('ss.links.edit')
+        within "#item-form" do
+          if item.class.fields.key?("html")
+            fill_in_ckeditor "item[html]", with: "<p>hello</p>"
+          end
+          click_on I18n.t('ss.buttons.publish_save')
+        end
+
+        expect(page).to have_css(".errorExplanation", text: I18n.t('errors.messages.other_task_is_running'))
+      end
+    end
   end
 end

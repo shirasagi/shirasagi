@@ -3,7 +3,7 @@ FactoryBot.define do
     cur_site { cms_site }
     name { unique_id }
     email { "#{name}@example.jp" }
-    state "enabled"
-    in_password "pass123"
+    state { "enabled" }
+    in_password { "pass123" }
   end
 end

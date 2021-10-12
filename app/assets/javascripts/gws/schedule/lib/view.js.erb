@@ -91,7 +91,7 @@ this.Gws_Schedule_View = (function ($) {
         },
         onSelectDate: function (ct, i) {
           date = sprintf("%d-%02d-%02d", ct.getFullYear(), ct.getMonth() + 1, ct.getDate());
-          return $('.calendar').fullCalendar('gotoDate', date);
+          return $jQuery1('.calendar').fullCalendar('gotoDate', date);
         }
       });
     }

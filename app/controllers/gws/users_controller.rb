@@ -40,7 +40,7 @@ class Gws::UsersController < ApplicationController
       @group = @cur_site.descendants.active.find(params[:s][:group]) rescue nil
     end
     @group ||= @cur_site
-    @group_ids ||= @cur_site.descendants.active.in_group(@group).pluck(:id)
+    @group_ids ||= @cur_site.descendants_and_self.active.in_group(@group).pluck(:id)
   end
 
   def build_form_data
@@ -177,7 +177,7 @@ class Gws::UsersController < ApplicationController
       result = @item.import
     end
     flash.now[:notice] = t("ss.notice.saved") if !result && @item.imported > 0
-    render_create result, location: { action: :index }, render: { file: :import }
+    render_create result, location: { action: :index }, render: { template: "import" }
   end
 
   def webmail_import
@@ -187,7 +187,7 @@ class Gws::UsersController < ApplicationController
       result = @item.import
     end
     flash.now[:notice] = t("ss.notice.saved") if !result && @item.imported > 0
-    render_create result, location: { action: :index }, render: { file: :webmail_import }
+    render_create result, location: { action: :index }, render: { template: "webmail_import" }
   end
 
   def lock_all

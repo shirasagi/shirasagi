@@ -4,7 +4,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:user) { gws_user }
   let!(:notice_folder) { create(:gws_notice_folder) }
-  let!(:notice_post) { create(:gws_notice_post, severity: 'high', folder_id: notice_folder) }
+  let!(:notice_post) { create(:gws_notice_post, severity: 'high', folder: notice_folder) }
 
   before do
     login_gws_user

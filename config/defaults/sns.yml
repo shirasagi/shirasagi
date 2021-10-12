@@ -15,7 +15,8 @@ production: &production
   #
   # restricted: restrict to only allow trusted urls
   # any: any urls are allowed. this means there are no securities.
-  url_type: restricted
+  # url_type: restricted
+  url_type: any
 
   # trusted_urls are list of external url which can transfer without confirmation
   trusted_urls: []

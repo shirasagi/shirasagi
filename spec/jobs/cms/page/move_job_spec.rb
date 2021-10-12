@@ -18,26 +18,26 @@ describe Cms::Page::MoveJob, dbscope: :example do
 
   describe "#perform" do
     before do
-      # move
-      node.move(dst)
-      node.reload
-      item1.reload
-      item2.reload
+      # move & perform
+      result = nil
+      perform_enqueued_jobs do
+        expect do
+          result = node.move(dst)
+        end.to output(include(item1.full_url.sub(src, dst))).to_stdout
+      end
+      expect(result).to be_truthy
 
-      # perform
-      expect do
-        described_class.bind(site_id: site, user_id: user).perform_now(src: site.url + src, dst: site.url + dst)
-      end.to output(include(item1.full_url)).to_stdout
-    end
-
-    it do
       log = Job::Log.first
       expect(log.logs).to include(/INFO -- : .* Started Job/)
       expect(log.logs).to include(/INFO -- : .* Completed Job/)
+      expect(log.state).to eq "completed"
 
+      node.reload
       item1.reload
       item2.reload
+    end
 
+    it do
       expect(item1.url).not_to include(src)
       expect(item1.url).to include(dst)
       expect(item1.html).not_to include(src)

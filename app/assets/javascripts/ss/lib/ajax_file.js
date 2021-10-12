@@ -6,7 +6,7 @@ this.SS_AjaxFile = (function () {
     this.render();
   }
 
-  SS_AjaxFile.additionalFileResigings = [];
+  SS_AjaxFile.additionalFileResizings = [];
   SS_AjaxFile.firesEvents = false;
 
   SS_AjaxFile.errors = {
@@ -17,16 +17,26 @@ this.SS_AjaxFile = (function () {
     for (var i = 0; i < arguments.length; i++) {
       var argument = arguments[i];
       if (argument.default) {
-        for (var j = 0; j < SS_AjaxFile.additionalFileResigings.length; j++) {
-          if (SS_AjaxFile.additionalFileResigings[j].default) {
-            SS_AjaxFile.additionalFileResigings[j].default = false;
+        for (var j = 0; j < SS_AjaxFile.additionalFileResizings.length; j++) {
+          if (SS_AjaxFile.additionalFileResizings[j].default) {
+            SS_AjaxFile.additionalFileResizings[j].default = false;
           }
         }
       }
 
-      SS_AjaxFile.additionalFileResigings.push(argument);
+      SS_AjaxFile.additionalFileResizings.push(argument);
     }
   }
+
+  SS_AjaxFile.defaultFileResizing = function () {
+    for (var i = 0; i < SS_AjaxFile.additionalFileResizings.length; i++) {
+      if (SS_AjaxFile.additionalFileResizings[i].default) {
+        return SS_AjaxFile.additionalFileResizings[i].value;
+      }
+    }
+
+    return null;
+  };
 
   SS_AjaxFile.defaultFileSelectHandler = function() {
     var promisses = [];
@@ -89,6 +99,9 @@ this.SS_AjaxFile = (function () {
         },
         error: function (xhr, status, error) {
           self.submitError(xhr);
+        },
+        complete: function (xhr, status) {
+          $.rails.enableFormElements($form);
         }
       };
 
@@ -110,8 +123,8 @@ this.SS_AjaxFile = (function () {
       return false;
     });
 
-    for (var i = 0; i < SS_AjaxFile.additionalFileResigings.length; i++) {
-      var fileResizing = SS_AjaxFile.additionalFileResigings[i];
+    for (var i = 0; i < SS_AjaxFile.additionalFileResizings.length; i++) {
+      var fileResizing = SS_AjaxFile.additionalFileResizings[i];
       var option = $('<option />').val(fileResizing.value).text(fileResizing.label);
       if (fileResizing.default) {
         option.prop('selected', true)
@@ -146,8 +159,8 @@ this.SS_AjaxFile = (function () {
       self.$el.find("form.user-file [type='file']").val(null).trigger("change");
 
       var defaultImageSize = null;
-      for (var i = 0; i < SS_AjaxFile.additionalFileResigings.length; i++) {
-        var fileResizing = SS_AjaxFile.additionalFileResigings[i];
+      for (var i = 0; i < SS_AjaxFile.additionalFileResizings.length; i++) {
+        var fileResizing = SS_AjaxFile.additionalFileResizings[i];
         if (fileResizing.default) {
           defaultImageSize = fileResizing.value;
           break;

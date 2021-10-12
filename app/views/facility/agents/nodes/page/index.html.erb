@@ -34,7 +34,7 @@ $(window).on("load", function() {
 <% end %>
 
 <% Facility::Node::Page.addons.each do |addon| %>
-  <%= render file: addon.view_file if addon.view_file %>
+  <%= render template: addon.view_template_path if addon.view_template_path %>
 <% end %>
 
 <% if @images.present? %>
@@ -67,5 +67,5 @@ $(window).on("load", function() {
 
 <% if @merged_map.present? %>
   <% @cur_page = @merged_map %>
-  <%= render file: "map/agents/addons/page/view/index" %>
+  <%= render template: "map/agents/addons/page/view/index" %>
 <% end %>

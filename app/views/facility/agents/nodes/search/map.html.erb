@@ -3,8 +3,8 @@
 
 <%= render_facility_search_map "#map-canvas", markers: @markers, site: @cur_site, preview: @preview %>
 
-<%= render file: "facility/agents/addons/search_result/view/upper" %>
-<%= render file: "facility/agents/addons/search_result/view/map" %>
+<%= render template: "facility/agents/addons/search_result/view/upper" %>
+<%= render template: "facility/agents/addons/search_result/view/map" %>
 
 <%= jquery do %>
   $(".ajax-box").on("click", function () {

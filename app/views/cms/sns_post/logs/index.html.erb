@@ -4,9 +4,9 @@
 <% end %>
 
 <% @index_meta = proc do |item| %>
-  <span class="id">#<%= item.id %></span>
+  <span class="action"><%= item.action %></span>
   <span class="state"><%= item.label(:state) %></span>
   <span class="datetime"><%= item.created.strftime("%Y/%m/%d %H:%M") %></span>
 <% end %>
 
-<%= render file: "cms/crud/index" %>
+<%= render template: "cms/crud/index" %>

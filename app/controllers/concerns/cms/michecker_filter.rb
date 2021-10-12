@@ -15,7 +15,7 @@ module Cms::MicheckerFilter
       @lowvision_result = Cms::Michecker::LowVision.load(@result.low_vision_report_filepath)
     end
 
-    render file: "michecker", layout: "cms/michecker"
+    render template: "michecker", layout: "cms/michecker"
   end
 
   def michecker_start
@@ -59,7 +59,7 @@ module Cms::MicheckerFilter
     end
 
     respond_to do |format|
-      format.html { render(file: "michecker_accessibility_report", layout: false) }
+      format.html { render(template: "michecker_accessibility_report", layout: false) }
       format.csv do
         if @accessibility_result.blank?
           response.status = 404
@@ -81,7 +81,7 @@ module Cms::MicheckerFilter
     end
 
     respond_to do |format|
-      format.html { render file: "michecker_lowvision_report", layout: false }
+      format.html { render template: "michecker_lowvision_report", layout: false }
       format.csv do
         if @lowvision_result.blank?
           response.status = 404

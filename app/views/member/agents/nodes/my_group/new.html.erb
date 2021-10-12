@@ -8,12 +8,12 @@
       <%= render partial: "form", locals: { f: f }  %>
       <% @model.addons.each do |addon| %>
         <% file = "#{Rails.root}/app/views/#{addon.path}/view/_form.html.erb" %>
-        <%= render file: file, locals: { f: f } if File.exists?(file) %>
+        <%= render "#{addon.path}/view/form", f: f if File.exists?(file) %>
       <% end %>
     </div>
 
     <footer class="send">
-      <%= f.submit t("ss.buttons.save") %>
+      <%= f.submit t("ss.buttons.save"), data: { disable_with: t("ss.buttons.saving") } %>
       <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{@cur_node.url}'; return false;" %>
     </footer>
   </div>

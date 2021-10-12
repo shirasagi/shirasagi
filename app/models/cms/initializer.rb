@@ -120,6 +120,12 @@ module Cms
       Cms::Role.permission :use_cms_sitemap
     end
 
+    Cms::Role.permission :read_cms_check_links_reports
+    Cms::Role.permission :delete_cms_check_links_reports
+    Cms::Role.permission :read_other_cms_check_links_errors
+    Cms::Role.permission :read_private_cms_check_links_errors
+    Cms::Role.permission :edit_cms_check_links_ignore_urls
+
     SS::File.model "cms/editor_template", SS::File
     SS::File.model "cms/file", Cms::File
     SS::File.model "cms/page", SS::File

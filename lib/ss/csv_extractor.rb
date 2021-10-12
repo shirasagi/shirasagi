@@ -16,8 +16,8 @@ class SS::CsvExtractor
     elsif extname.upcase == "CSV"
       extract_headers_from_csv
     end
-  rescue CSV::MalformedCSVError => e
-    logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+  rescue => e
+    Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
   end
 
   private
@@ -29,7 +29,7 @@ class SS::CsvExtractor
     Timeout.timeout(60) do
       sp = Roo::Spreadsheet.open(file.path, extension: ext)
       csv = sp.sheet(0).to_csv
-      @csv_headers = CSV::parse(csv).first.select { |v| v.present? }
+      @csv_headers = CSV::parse(csv).first.to_a.select { |v| v.present? }
     end
   end
 

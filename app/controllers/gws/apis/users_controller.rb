@@ -30,7 +30,7 @@ class Gws::Apis::UsersController < ApplicationController
   end
 
   def group_ids
-    @group_ids ||= @cur_site.descendants.active.in_group(@group).pluck(:id)
+    @group_ids ||= @cur_site.descendants_and_self.active.in_group(@group).pluck(:id)
   end
 
   public

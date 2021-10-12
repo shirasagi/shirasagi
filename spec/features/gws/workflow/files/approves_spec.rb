@@ -115,6 +115,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         expect(mail.subject).to eq I18n.t("gws_notification.gws/workflow/file.request", name: item.name)
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice1.id}"
         expect(mail.decoded.to_s).to include(mail.subject, url)
+        expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
       end
 
       #
@@ -190,6 +191,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         expect(mail.subject).to eq I18n.t("gws_notification.gws/workflow/file.approve", name: item.name)
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice3.id}"
         expect(mail.decoded.to_s).to include(mail.subject, url)
+        expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
       end
     end
   end

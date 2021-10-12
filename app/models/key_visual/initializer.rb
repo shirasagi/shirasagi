@@ -2,6 +2,7 @@ module KeyVisual
   class Initializer
     Cms::Node.plugin "key_visual/image"
     Cms::Part.plugin "key_visual/slide"
+    Cms::Part.plugin "key_visual/swiper_slide"
 
     Cms::Role.permission :read_other_key_visual_images, module_name: "key_visual"
     Cms::Role.permission :read_private_key_visual_images, module_name: "key_visual"

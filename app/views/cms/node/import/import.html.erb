@@ -24,7 +24,7 @@ $('#task-form').submit(function(){
   <%= render "ss/tasks/box", task: @task, url: url_for(action: :import, format: :json) %>
 
   <footer class="send">
-    <%= f.submit t("ss.buttons.import"), class: :save %>
+    <%= f.submit t("ss.buttons.import"), class: :save, data: { disable_with: t("ss.buttons.importing") } %>
     <%= f.button t("ss.buttons.cancel"), type: :reset, class: "btn-default", onclick: "location.href='#{contents_path(@cur_node)}'; return false;" %>
   </footer>
 <% end %>

@@ -13,10 +13,10 @@ module SS::Addon::Notification::Reply
     I18n.t "modules.addons.ss/notification/reply.#{reply_module}", default: name.titleize
   end
 
-  def reply_addon_show_file
+  def reply_addon_show_partial_path
     return nil if reply_module.blank?
     file = "#{Rails.root}/app/views/ss/agents/addons/notification/reply/#{reply_module}/_show.html.erb"
-    File.exists?(file) ? file : nil
+    File.exists?(file) ? "ss/agents/addons/notification/reply/#{reply_module}/show" : nil
   end
 
   def reply_item

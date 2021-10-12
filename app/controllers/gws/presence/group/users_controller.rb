@@ -36,12 +36,12 @@ class Gws::Presence::Group::UsersController < ApplicationController
 
   def table
     items
-    render file: :table, layout: false
+    render template: "table", layout: false
   end
 
   def portlet
     @items = @group.users.active.search(params[:s]).order_by_title(@cur_site)
     @manageable_users, @group_users = @items.partition { |item| @editable_user_ids.include?(item.id) }
-    render file: :portlet, layout: false
+    render template: "portlet", layout: false
   end
 end

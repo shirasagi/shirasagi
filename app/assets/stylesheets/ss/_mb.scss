@@ -6,8 +6,8 @@
   body {
     background-color: $gray2;
     color: #000;
-    font-size: 75%;
     font-family: $font-base;
+    font-size: 75%;
     line-height: 1.40;
     word-wrap: break-word;
   }
@@ -43,12 +43,12 @@
       display: none;
     }
     nav {
-      float: right;
       margin: 0;
+      float: right;
       a {
         display: block;
-        float: left;
         padding: 0 10px;
+        float: left;
         border-left: $border-black;
         @include border-radius(0);
       }
@@ -65,8 +65,8 @@
     display: none;
   }
   #navi {
-    float: none;
     width: 100%;
+    float: none;
   }
   #navi + #main .wrap {
     margin: 0;
@@ -75,10 +75,10 @@
     display: none;
   }
   #menu {
-    float: none;
-    width: 100%;
     @include box-sizing(border-box);
+    width: 100%;
     padding: 0;
+    float: none;
     border-top: $border-gray3;
     background: $white;
   }
@@ -117,12 +117,12 @@
       @include clear;
       padding: 0 10px 10px;
       a {
-        float: left;
         display: inline-block;
         width: auto;
         max-width: 200px;
         margin: 0 2px 4px;
         padding: 8px 4px 5px;
+        float: left;
         border: $border-gray5;
         @include border-radius(3px);
         background: $gray3;
@@ -172,8 +172,8 @@
     }
   }
   table.index {
-    table-layout: fixed;
     width: 100%;
+    table-layout: fixed;
     border: $border-gray3;
     tr, th, td {
       display: block;
@@ -186,18 +186,18 @@
         border: 0;
       }
       th {
-        float: left;
         padding: 7px 0;
+        float: left;
         &:before {
-          margin: 0 2px;
           content: "/";
+          margin: 0 2px;
         }
       }
       th.checkbox {
         padding: 5px 2px;
         &:before {
-          margin: 0;
           content: "";
+          margin: 0;
         }
       }
     }
@@ -210,11 +210,11 @@
       }
       td {
         display: block;
-        overflow: hidden;
-        clear: both;
-        float: left;
         max-width: 100%;
         padding: 2px 8px;
+        float: left;
+        clear: both;
+        overflow: hidden;
         @include ellipsis;
       }
       td.checkbox {
@@ -228,8 +228,8 @@
         color: #080;
       }
       td.datetime {
-        clear: none;
         float: right;
+        clear: none;
         color: #888;
       }
       nav.tap-menu {
@@ -251,14 +251,14 @@
   }
   dl.see {
     > dt {
-      float: none;
       width: auto;
       margin-bottom: 10px;
+      float: none;
     }
     > dd {
-      float: none;
       margin-left: 0;
       padding: 0 0 10px;
+      float: none;
       border-top: 0;
     }
     > dt ~ dt {
@@ -272,14 +272,14 @@
   // features
 
   #http-tester .buttons {
-    @include clear;
-    float: none !important;
     width: 100% !important;
+    float: none !important;
+    @include clear;
     button {
       display: inline-block !important;
       width: auto !important;
-      float: left !important;
       margin-right: 10px !important;
+      float: left !important;
     }
   }
   #http-tester .view {

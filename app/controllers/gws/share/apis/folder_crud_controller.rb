@@ -46,7 +46,7 @@ class Gws::Share::Apis::FolderCrudController < ApplicationController
     raise "403" unless allowed
 
     @addons = []
-    render file: "new"
+    render template: "new"
   end
 
   def create
@@ -82,7 +82,7 @@ class Gws::Share::Apis::FolderCrudController < ApplicationController
     @item.in_basename = ::File.basename(@item.name)
     @parent = @item.parent
     @addons = []
-    render file: "edit"
+    render template: "edit"
   end
 
   def update
@@ -104,7 +104,7 @@ class Gws::Share::Apis::FolderCrudController < ApplicationController
     set_item
     raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
 
-    render file: "delete"
+    render template: "delete"
   end
 
   def destroy

@@ -51,6 +51,9 @@ class Ldap::ServerController < ApplicationController
   rescue Net::LDAP::Error => e
     @errors = [ e.to_s ]
     render
+  rescue Errno::ECONNREFUSED => e
+    @errors = [ t("ldap.errors.connection_refused") ]
+    render
   end
 
   def group
@@ -61,7 +64,7 @@ class Ldap::ServerController < ApplicationController
     @entity = Ldap::Group.find(connection, dn)
 
     raise "404" if @entity.blank?
-    render file: "ldap/server/entity"
+    render template: "ldap/server/entity"
   end
 
   def user
@@ -72,6 +75,6 @@ class Ldap::ServerController < ApplicationController
     @entity = Ldap::User.find(connection, dn)
 
     raise "404" if @entity.blank?
-    render file: "ldap/server/entity"
+    render template: "ldap/server/entity"
   end
 end
