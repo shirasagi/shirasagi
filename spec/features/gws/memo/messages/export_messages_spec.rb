@@ -15,7 +15,6 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
     def export_memo(memo, opts = {})
       visit gws_memo_export_messages_path(site)
       within "form#item-form" do
-        select((opts[:format].presence || 'eml'), from: 'item_format')
         choose "item_export_filter_selected"
         click_on I18n.t("ss.links.select")
       end
@@ -271,7 +270,6 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
     it do
       visit gws_memo_export_messages_path(site)
       within "form#item-form" do
-        select 'json', from: 'item_format'
         choose "item_export_filter_all"
         perform_enqueued_jobs do
           click_on I18n.t("ss.export")
@@ -334,7 +332,6 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
     it do
       visit gws_memo_export_messages_path(site)
       within "form#item-form" do
-        select 'eml', from: 'item_format'
         choose "item_export_filter_all"
         perform_enqueued_jobs do
           click_on I18n.t("ss.export")
@@ -380,7 +377,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      expect(exported.keys).to have(3).items
+      expect(exported.keys).to have(4).items
       expect(exported.keys).to include(include("#{folder2.name}/"))
       memo1.subject.tap do |subject|
         filename = subject.encode('cp932', invalid: :replace, undef: :replace, replace: "_")
@@ -409,7 +406,6 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
     it do
       visit gws_memo_export_messages_path(site)
       within "form#item-form" do
-        select 'json', from: 'item_format'
         choose "item_export_filter_all"
         perform_enqueued_jobs do
           click_on I18n.t("ss.export")
@@ -483,7 +479,6 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
     it do
       visit gws_memo_export_messages_path(site)
       within "form#item-form" do
-        select 'eml', from: 'item_format'
         click_on I18n.t("ss.links.select")
       end
       wait_for_cbox do
@@ -498,7 +493,6 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
       # export again
       within "form#item-form" do
-        select 'eml', from: 'item_format'
         click_on I18n.t("ss.links.select")
       end
       wait_for_cbox do
