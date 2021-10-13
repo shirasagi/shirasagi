@@ -13,6 +13,7 @@ class Gws::Memo::MessageImporter
 
   def import_messages
     @datetime = Time.zone.now
+    @zip_filename = in_file.original_filename.sub(/.zip$/, "")
     @ss_files_map = {}
     @gws_users_map = {}
     @restored_folders = {}
@@ -21,7 +22,7 @@ class Gws::Memo::MessageImporter
     Zip::File.open(in_file.path) do |entries|
       entries.each do |entry|
         next if !entry.name.end_with?(".eml")
-        next if !entry.to_s.include?("/")
+        next if !entry.name.include?("/")
 
         import_gws_memo_message(entry)
       end
@@ -32,6 +33,7 @@ class Gws::Memo::MessageImporter
 
   def import_gws_memo_message(entry)
     msg = read_eml(entry)
+    return if msg.nil?
 
     item = Gws::Memo::Message.new
 
@@ -41,7 +43,7 @@ class Gws::Memo::MessageImporter
     if msg[:content].attachments.present?
       item.text = msg[:content].text_part.decoded
     else
-      item.text = msg[:content].decoded
+      item.text = msg[:content].body.to_s.force_encoding("UTF-8")
     end
 
     if msg[:content].mime_type == "text/html"
@@ -57,9 +59,9 @@ class Gws::Memo::MessageImporter
       item.cur_user = sender
       item.user_uid = sender.uid
       item.user_name = sender.name
-      @sent_by_cur_user = (@cur_user.id == sender.id)
+      @sent_by_cur_user = (cur_user.id == sender.id)
     else
-      item.cur_user = @cur_user
+      item.cur_user = cur_user
     end
 
     # to_member_ids
@@ -94,10 +96,10 @@ class Gws::Memo::MessageImporter
     # check member_ids
     unless item.draft?
       if item.to_member_ids.blank?
-        item.to_member_ids = [@cur_user.id]
+        item.to_member_ids = [cur_user.id]
       end
-      if !member_ids(item).include?(@cur_user.id)
-        item.to_member_ids += [@cur_user.id]
+      if !member_ids(item).include?(cur_user.id)
+        item.to_member_ids += [cur_user.id]
       end
     end
 
@@ -105,7 +107,7 @@ class Gws::Memo::MessageImporter
     item.deleted = {}
     unless item.draft?
       member_ids(item).each do |id|
-        item.deleted[id.to_s] = @datetime if id != @cur_user.id
+        item.deleted[id.to_s] = @datetime if id != cur_user.id
       end
       item.deleted["sent"] = @datetime unless @sent_by_cur_user
     end
@@ -115,7 +117,7 @@ class Gws::Memo::MessageImporter
 
     # filterd
     item.filtered = {}
-    item.filtered[@cur_user.id.to_s] = @datetime
+    item.filtered[cur_user.id.to_s] = @datetime
 
     # files
     item.file_ids = []
@@ -130,13 +132,13 @@ class Gws::Memo::MessageImporter
 
     # folder
     item.user_settings = []
-    if msg[:tmp_path].include?("受信トレイ")
+    if msg[:folder_name].include?("受信トレイ")
       path = "INBOX"
-    elsif msg[:tmp_path].include?("送信済みトレイ")
+    elsif msg[:folder_name].include?("送信済みトレイ")
       path = "INBOX.Sent"
-    elsif msg[:tmp_path].include?("下書き")
+    elsif msg[:folder_name].include?("下書き")
       path = "INBOX.Draft"
-    elsif msg[:tmp_path].include?("ゴミ箱")
+    elsif msg[:folder_name].include?("ゴミ箱")
       path = "INBOX.Trash"
     else
       restore_folder(msg[:folder_name])
@@ -144,7 +146,7 @@ class Gws::Memo::MessageImporter
     end
 
     if path != "INBOX.Draft"
-      item.move(@cur_user, path).update
+      item.move(cur_user, path).update
     else
       item.state = "closed"
       item.update
@@ -157,8 +159,8 @@ class Gws::Memo::MessageImporter
     return if @restored_folders.has_key?(folder_name)
 
     folder = Gws::Memo::Folder.find_or_initialize_by(
-      user_uid: @cur_user.uid, user_name: @cur_user.name,
-      user_id: @cur_user.id, site_id: @cur_site.id, name: folder_name
+      user_uid: cur_user.uid, user_name: cur_user.name,
+      user_id: cur_user.id, site_id: @cur_site.id, name: folder_name
     )
     folder.save
     @restored_folders[folder_name] = folder.id.to_s
@@ -182,7 +184,7 @@ class Gws::Memo::MessageImporter
 
     item = SS::File.new(model: "gws/memo/message")
     item.name = data.filename
-    item.user_id = @cur_user.id
+    item.user_id = cur_user.id
     item.in_file = file
     item.save!
 
@@ -195,8 +197,16 @@ class Gws::Memo::MessageImporter
     file_path = URI.decode(entry.to_s).force_encoding('UTF-8')
     msg = {}
     Tempfile.open(file_path) do |file|
-      msg[:tmp_path] = "tmp/#{File.basename(file)}"
-      msg[:folder_name] = file_path.slice(/^.*\//).tr("/", "")
+      structure = entry.name.force_encoding("UTF-8")
+      msg[:tmp_path] = "tmp/#{File.basename(structure)}"
+      if structure == "#{@zip_filename}/#{File.basename(structure)}"
+        msg[:folder_name] = "no_name"
+      elsif structure.start_with?(/.+#{@zip_filename}\//)
+        # macで操作を行ったフォルダ構造の先頭に「__MACOS」が含まれるものと、含まれない２つのファイルが作成されて重複する
+        return nil
+      else
+        msg[:folder_name] = structure.sub("#{@zip_filename}/", "").slice(/.*\//).tr("/", "")
+      end
       entry.extract(msg[:tmp_path])
       msg[:content] = Mail.read(msg[:tmp_path])
       File.delete(msg[:tmp_path])
