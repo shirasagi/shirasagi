@@ -28,13 +28,16 @@ class Voice::MainController < ApplicationController
   end
 
   def set_url
-    @url = get_and_normalize_path
+    @url = get_and_normalize_path!
     if @url.host.blank? || @url.path.blank?
       # path must not be either nil, empty.
       logger.debug("malformed url: #{@url}")
       # raise "400"
       head :bad_request
     end
+  rescue Addressable::URI::InvalidURIError => e
+    logger.info("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    head :bad_request
   end
 
   def lock_voice_file
@@ -92,7 +95,7 @@ class Voice::MainController < ApplicationController
 
   private
 
-  def get_and_normalize_path
+  def get_and_normalize_path!
     path = params[:path]
     path = Addressable::URI.unencode(path) if path.include?("%3A%2F%2F")
     url = Addressable::URI.parse(path)
