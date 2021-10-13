@@ -149,9 +149,10 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
 
   def write_eml(name, data)
     @output_zip.create_entry("#{name}.eml") do |f|
+      sanitized_subject = sanitize_content(data["subject"].slice(0..79))
+      f.puts Mail::Field.new("Subject", sanitized_subject, "utf-8").encoded
       f.puts Mail::Field.new("Date", data["created"].in_time_zone.rfc822, "utf-8").encoded
       f.puts Mail::Field.new("Message-ID", gen_message_id(data), "utf-8").encoded
-      f.puts Mail::Field.new("Subject", data["subject"], "utf-8").encoded
       f.puts Mail::Field.new("From", data['from_name_email'], "utf-8").encoded
       f.puts Mail::Field.new("To", data['to_members_name_email'], "utf-8").encoded
       f.puts Mail::Field.new("Cc", data['cc_members_name_email'], "utf-8").encoded if data['cc_members_name_email'].present?
@@ -226,15 +227,25 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
   def write_body_to_eml(file, data)
     if data["format"] == "html"
       content_type = "text/html"
-      base64 = Mail::Encodings::Base64.encode(data["html"].to_s)
+      sanitized_html = sanitize_content(data["html"])
+      base64 = Mail::Encodings::Base64.encode(sanitized_html)
     else
       content_type = "text/plain"
-      base64 = Mail::Encodings::Base64.encode(data["text"].to_s)
+      sanitized_text = sanitize_content(data["text"])
+      base64 = Mail::Encodings::Base64.encode(sanitized_text)
     end
 
     file.puts "Content-Type: #{content_type}; charset=UTF-8"
     file.puts "Content-Transfer-Encoding: base64"
     file.puts ""
     file.puts base64
+  end
+
+  def sanitize_content(text)
+    sanitized_content = text.gsub(/<script.*?<\/script>/, "").
+      gsub(/<style.*?<\/style>/, "").
+      gsub(/style="(.*?)"/, "")
+
+    sanitized_content
   end
 end
