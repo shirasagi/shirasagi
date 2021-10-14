@@ -7,9 +7,9 @@ describe "cms_sites", type: :feature, dbscope: :example do
 
   around do |example|
     save_config = SS.config.cms.generate_lock
-    SS::Config.replace_value_at(:cms, 'generate_lock', { 'disable' => false, 'generate_lock_until' => '1.hour' })
+    SS.config.replace_value_at(:cms, 'generate_lock', { 'disable' => false, 'generate_lock_until' => '1.hour' })
     travel_to(now) { example.run }
-    SS::Config.replace_value_at(:cms, 'generate_lock', save_config)
+    SS.config.replace_value_at(:cms, 'generate_lock', save_config)
   end
 
   describe "generate lock" do
