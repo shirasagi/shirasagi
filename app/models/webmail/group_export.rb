@@ -111,9 +111,7 @@ class Webmail::GroupExport
     if setting[:name].present?
       setting.set_imap_password
       if setting.invalid?(:group)
-        setting.errors.full_messages.each do |msg|
-          errors.add :base, "#{index + 1}: #{msg}"
-        end
+        SS::Model.copy_errors(setting, self, prefix: "#{index + 1}: ")
         return
       end
 
@@ -123,9 +121,7 @@ class Webmail::GroupExport
     end
 
     if !item.save
-      item.errors.full_messages.each do |msg|
-        errors.add :base, "#{index + 1}: #{msg}"
-      end
+      SS::Model.copy_errors(item, self, prefix: "#{index + 1}: ")
       return
     end
 

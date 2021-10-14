@@ -174,7 +174,7 @@ class Cms::ImportJobFile
     return if @root_node.valid?
 
     self.errors.add :base, I18n.t("errors.messages.root_node_save_error")
-    @root_node.errors.full_messages.each { |e| self.errors.add :base, e }
+    SS::Model.copy_errors(@root_node, self)
   end
 
   def validate_in_file
@@ -188,7 +188,7 @@ class Cms::ImportJobFile
     v = @import_file.valid?
     return if v
 
-    @import_file.errors.full_messages.each { |e| self.errors.add :base, e }
+    SS::Model.copy_errors(@import_file, self)
   end
 
   def save_in_file
