@@ -21,6 +21,7 @@ class Gws::Memo::MessageImporter
     Zip.unicode_names = true
     Zip::File.open(in_file.path) do |entries|
       entries.each do |entry|
+        next if entry.name.start_with?(".") || entry.name.start_with?("_")
         next if !entry.name.end_with?(".eml")
         next if !entry.name.include?("/")
 
@@ -32,28 +33,26 @@ class Gws::Memo::MessageImporter
   private
 
   def import_gws_memo_message(entry)
-    msg = read_eml(entry)
-    return if msg.nil?
-
+    msg = Mail.new(entry.get_input_stream.read)
     item = Gws::Memo::Message.new
 
     item.site_id = cur_site.id
-    item.subject = msg[:content].subject
-    item.send_date = msg[:content].date
-    if msg[:content].attachments.present?
-      item.text = msg[:content].text_part.decoded
+    item.subject = msg.subject
+    item.send_date = msg.date
+    if msg.attachments.present?
+      item.text = NKF.nkf("-Ww", msg.text_part.decoded)
     else
-      item.text = msg[:content].body.to_s.force_encoding("UTF-8")
+      item.text = NKF.nkf("-Ww", msg.body.to_s)
     end
 
-    if msg[:content].mime_type == "text/html"
+    if msg.mime_type == "text/html"
       item.format = "html"
-      item.html = msg[:content].decoded
+      item.html = msg.decoded
     else
       item.format = "text"
     end
 
-    sender = Gws::User.find_by(email: msg[:content].from.first) rescue nil
+    sender = Gws::User.find_by(email: msg.from.first) rescue nil
     # user_id (from)
     if sender
       item.cur_user = sender
@@ -65,29 +64,29 @@ class Gws::Memo::MessageImporter
     end
 
     # to_member_ids
-    if msg[:content].to.present?
+    if msg.to.present?
       item.to_member_ids = []
-      msg[:content].to.each do |email|
-        receiver = find_user(email)
+      msg.to.each do |address|
+        receiver = find_user(address)
         item.to_member_ids += [receiver.id] if receiver
         item.to_member_ids += [cur_user.id] unless receiver
       end
     end
 
     # cc_member_ids
-    if msg[:content].cc.present?
+    if msg.cc.present?
       item.cc_member_ids = []
-      msg[:content].cc.each do |email|
-        receiver = find_user(email)
+      msg.cc.each do |address|
+        receiver = find_user(address)
         item.cc_member_ids += [receiver.id] if receiver
       end
     end
 
     # bcc_member_ids
-    if msg[:content].bcc.present?
+    if msg.bcc.present?
       item.bcc_member_ids = []
-      msg[:content].bcc.each do |email|
-        receiver = find_user(email)
+      msg.bcc.each do |address|
+        receiver = find_user(address)
         item.bcc_member_ids += [receiver.id] if receiver
       end
     end
@@ -122,8 +121,8 @@ class Gws::Memo::MessageImporter
 
     # files
     item.file_ids = []
-    if msg[:content].attachments.present?
-      msg[:content].attachments.each do |data_file|
+    if msg.attachments.present?
+      msg.attachments.each do |data_file|
         item.file_ids += [save_ss_file(data_file).id]
       end
     end
@@ -133,17 +132,18 @@ class Gws::Memo::MessageImporter
 
     # folder
     item.user_settings = []
-    if msg[:folder_name].include?("受信トレイ")
+    folder_name = get_folder_name(entry.name)
+    if folder_name == "受信トレイ"
       path = "INBOX"
-    elsif msg[:folder_name].include?("送信済みトレイ")
+    elsif folder_name == "送信済みトレイ"
       path = "INBOX.Sent"
-    elsif msg[:folder_name].include?("下書き")
+    elsif folder_name == "下書き"
       path = "INBOX.Draft"
-    elsif msg[:folder_name].include?("ゴミ箱")
+    elsif folder_name == "ゴミ箱"
       path = "INBOX.Trash"
     else
-      restore_folder(msg[:folder_name])
-      path = @restored_folders[msg[:folder_name]]
+      restore_folder(folder_name)
+      path = @restored_folders[folder_name]
     end
 
     if path != "INBOX.Draft"
@@ -154,6 +154,18 @@ class Gws::Memo::MessageImporter
     end
 
     item
+  end
+
+  def get_folder_name(entry_name)
+    structure = NKF.nkf("-Ww", entry_name)
+    if structure.count("/") == 1
+      folder_name = ::File.dirname(structure).sub("#{@zip_filename}", "")
+    else
+      folder_name = ::File.dirname(structure).sub("#{@zip_filename}/", "")
+    end
+    folder_name = "no_name" if folder_name.blank?
+
+    folder_name
   end
 
   def restore_folder(folder_name)
@@ -167,8 +179,13 @@ class Gws::Memo::MessageImporter
     @restored_folders[folder_name] = folder.id.to_s
   end
 
-  def find_user(email)
-    user = Gws::User.find_by(email: email) rescue nil
+  def find_user(address)
+    if address.include?("@")
+      user = Gws::User.find_by(email: address) rescue nil
+    else
+      user = Gws::User.find_by(name: address) rescue nil
+    end
+
     user
   end
 
@@ -191,28 +208,5 @@ class Gws::Memo::MessageImporter
 
     item.in_file = nil
     item
-  end
-
-  def read_eml(entry)
-    ext = File.extname(entry.name)
-    file_path = URI.decode(entry.to_s).force_encoding('UTF-8')
-    msg = {}
-    Tempfile.open(file_path) do |file|
-      structure = entry.name.force_encoding("UTF-8")
-      msg[:tmp_path] = "tmp/#{File.basename(structure)}"
-      if structure == "#{@zip_filename}/#{File.basename(structure)}"
-        msg[:folder_name] = "no_name"
-      elsif structure.start_with?(/.+#{@zip_filename}\//)
-        # macで操作を行ったフォルダ構造の先頭に「__MACOS」が含まれるものと、含まれない２つのファイルが作成されて重複する
-        return nil
-      else
-        msg[:folder_name] = structure.sub("#{@zip_filename}/", "").slice(/.*\//).tr("/", "")
-      end
-      entry.extract(msg[:tmp_path])
-      msg[:content] = Mail.read(msg[:tmp_path])
-      File.delete(msg[:tmp_path])
-    end
-
-    msg
   end
 end
