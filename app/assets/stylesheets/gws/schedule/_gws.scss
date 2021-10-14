@@ -446,12 +446,16 @@
   background-color: #f2b;
 }
 .fc-event-unknown-attendance .fc-content:before {
+}
+.fc-event-user-attendance-unknown .fc-content:before {
   @include fc_event_prefix;
   content: "未";
   background-color: $orange;
 }
-.fc-event-user-attendance-absence {
-  display: none;
+.fc-event-user-attendance-absence .fc-content:before {
+  @include fc_event_prefix;
+  content: "不";
+  background-color: $orange;
 }
 .fc-event-approval-request .fc-content:before {
   @include fc_event_prefix;

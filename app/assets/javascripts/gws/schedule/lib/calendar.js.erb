@@ -82,6 +82,9 @@ this.Gws_Schedule_Calendar = (function ($) {
         withAbsence: {
           text: "<%= I18n.t('gws/schedule.calendar.buttonText.withAbsence') %>",
           click: function (e) {
+            $(".fc-event-user-attendance-absence").each(function() {
+              $(this).toggleClass("hide");
+            });
             $('.fc-event-user-attendance-absence').toggle(!$(this).hasClass('fc-state-active'));
             $(this).toggleClass("fc-state-active");
             return Gws_Schedule_Calendar.updateNoPlanVisibility($(this).closest(".fc"));
@@ -151,9 +154,7 @@ this.Gws_Schedule_Calendar = (function ($) {
         attendance = $('.fc .fc-withAbsence-button');
         if (attendance.length) {
           if (attendance.hasClass('fc-state-active')) {
-            $('.fc .fc-event-user-attendance-absence').show();
-          } else {
-            $('.fc .fc-event-user-attendance-absence').hide();
+            $('.fc .fc-event-user-attendance-absence').removeClass("hide")
           }
         }
         Gws_Schedule_Calendar.updateNoPlanVisibility(view.el.closest(".fc"));

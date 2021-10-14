@@ -52,19 +52,28 @@ module Gws::Schedule::CalendarFormat
       data[:className] += ' fc-event-private'
     end
 
-    if attendance_check_plan?
-      if contains_unknown_attendance?
-        data[:className] += ' fc-event-unknown-attendance'
-      end
-
-      attendance = attendances.where(user_id: user.id).order_by(created: 1).first
-      attendance_state = attendance.try(:attendance_state) || 'unknown'
-
-      data[:className] += " fc-event-user-attendance-#{attendance_state}"
-    end
-
     if approval_check_plan?
       data[:className] += " fc-event-approval-#{approval_state}"
+    end
+
+    data
+  end
+
+  def set_attendance_classes(data, cur_user, attendance_user_id)
+    return data if !attendance_check_plan?
+
+    if contains_unknown_attendance?
+      data[:className] += ' fc-event-unknown-attendance'
+    end
+
+    attendance = attendances.where(user_id: attendance_user_id).order_by(created: 1).first
+    attendance_state = attendance.try(:attendance_state) || 'unknown'
+    data[:className] += " fc-event-user-attendance-#{attendance_state}"
+
+    if attendance_state == "absence"
+      return nil if cur_user.id != attendance_user_id
+
+      data[:className] += ' hide'
     end
 
     data
