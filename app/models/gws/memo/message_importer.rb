@@ -70,6 +70,7 @@ class Gws::Memo::MessageImporter
       msg[:content].to.each do |email|
         receiver = find_user(email)
         item.to_member_ids += [receiver.id] if receiver
+        item.to_member_ids += [cur_user.id] unless receiver
       end
     end
 
