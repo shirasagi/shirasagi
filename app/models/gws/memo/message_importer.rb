@@ -21,7 +21,7 @@ class Gws::Memo::MessageImporter
     Zip.unicode_names = true
     Zip::File.open(in_file.path) do |entries|
       entries.each do |entry|
-        next if entry.name.start_with?(".") || entry.name.start_with?("_")
+        next if entry.name.start_with?(".", "_")
         next if !entry.name.end_with?(".eml")
         next if !entry.name.include?("/")
 
@@ -159,7 +159,7 @@ class Gws::Memo::MessageImporter
   def get_folder_name(entry_name)
     structure = NKF.nkf("-Ww", entry_name)
     if structure.count("/") == 1
-      folder_name = ::File.dirname(structure).sub("#{@zip_filename}", "")
+      folder_name = ::File.dirname(structure).sub(@zip_filename, "")
     else
       folder_name = ::File.dirname(structure).sub("#{@zip_filename}/", "")
     end
