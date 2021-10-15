@@ -29,3 +29,12 @@
     </footer>
   </div>
 <% end %>
+<%= jquery do %>
+  $('.send .delete').on('click', function() {
+    var checkedCount = $('.list-item :checked').length;
+    if (checkedCount === 0){
+      alert("<%= I18n.t("errors.messages.plz_check_targets_to_delete") %>");
+      return false;
+    }
+  });
+<% end %>
