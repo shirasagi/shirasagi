@@ -6,8 +6,8 @@ module Cms::PageFilter
   included do
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :move, :copy, :contains_urls]
     before_action :set_contains_urls_items, only: [:contains_urls, :edit, :update, :delete, :destroy]
-    before_action :deny_update_with_contains_urls, only: [:update], if: ->{ @contains_urls.present? }
-    before_action :deny_destroy_with_contains_urls, only: [:destroy], if: ->{ @contains_urls.present? }
+    before_action :deny_update_with_contains_urls, only: [:update]
+    before_action :deny_destroy_with_contains_urls, only: [:destroy]
   end
 
   private
@@ -80,7 +80,7 @@ module Cms::PageFilter
 
   def deny_update_with_contains_urls
     return if @cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_alert))
-    return if @contains_urls.and_public.blank?
+    return if @contains_urls.try(:and_public).blank?
     return unless @item.public?
     return if params.dig(:item, :state) == 'public'
 
@@ -89,7 +89,7 @@ module Cms::PageFilter
 
   def deny_destroy_with_contains_urls
     return if @cur_user.cms_role_permit_any?(@cur_site, %w(delete_cms_ignore_alert))
-    return if @contains_urls.and_public.blank?
+    return if @contains_urls.try(:and_public).blank?
 
     raise "403"
   end

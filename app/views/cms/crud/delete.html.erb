@@ -1,4 +1,4 @@
-<% delete_alert_enabled = !@cur_user.cms_role_permit_any?(@cur_site, %w(delete_cms_ignore_alert)) && @contains_urls.present? && @contains_urls.and_public.present? %>
+<% delete_alert_enabled = !@cur_user.cms_role_permit_any?(@cur_site, %w(delete_cms_ignore_alert)) && @contains_urls.try(:and_public).present? %>
 <%= form_for :item, url: { action: :show }, html: { method: :delete, multipart: true } do |f| %>
 <%= error_messages_for :item %>
 
