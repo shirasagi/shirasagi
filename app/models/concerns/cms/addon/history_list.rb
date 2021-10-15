@@ -15,7 +15,7 @@ module Cms::Addon
 
     def limit
       value = self[:limit].to_i
-      (value < 1 || 50 < value) ? 5 : value
+      (value < 1 || value > 50) ? 5 : value
     end
 
     def list_identity

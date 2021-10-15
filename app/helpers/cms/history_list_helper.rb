@@ -4,7 +4,7 @@ module Cms::HistoryListHelper
   def default_upper_html
     ih = []
     ih << '<section id="history">'
-    ih << '<header><h2>閲覧履歴</h2></header>'
+    ih << "<header><h2>#{I18n.t("cms.parts.cms/history_list")}</h2></header>"
     ih << '<ul>'
     ih.join("\n").freeze
   end
@@ -25,7 +25,7 @@ module Cms::HistoryListHelper
   def default_loop_liquid
     ih = []
     ih << '<section id="history">'
-    ih << '<header><h2>閲覧履歴</h2></header>'
+    ih << "<header><h2>#{I18n.t("cms.parts.cms/history_list")}</h2></header>"
     ih << '<ul>'
     ih << '{% for item in items %}'
     ih << '<li class="current"><a href="{{ item.url }}">{{ item.index_name | default: item.name }}</a></li>'

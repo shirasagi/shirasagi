@@ -39,7 +39,8 @@ describe "cms_agents_parts_page", type: :feature, dbscope: :example, js: true do
 
   context "with cache" do
     let!(:part) do
-      create :cms_part_page, upper_html: '<div class="parts">', lower_html: '</div>', ajax_view: "enabled", ajax_view_expire_seconds: 10
+      create(:cms_part_page, upper_html: '<div class="parts">', lower_html: '</div>',
+        ajax_view: "enabled", ajax_view_expire_seconds: 10)
     end
 
     it "#index" do
