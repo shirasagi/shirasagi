@@ -242,8 +242,8 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
   end
 
   def sanitize_content(text)
-    sanitized_content = text.gsub(/<script.*?<\/script>/, "").
-      gsub(/<style.*?<\/style>/, "").
+    sanitized_content = text.gsub(/<script[^>]*>[^<]+<\/script>/, "").
+      gsub(/<style[^>]*>[^<]+<\/style>/, "").
       gsub(/style="(.*?)"/, "")
 
     sanitized_content
