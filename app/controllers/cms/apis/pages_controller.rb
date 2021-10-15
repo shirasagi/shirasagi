@@ -33,7 +33,6 @@ class Cms::Apis::PagesController < ApplicationController
     node_id = @s.node
     if node_id.present? && node_id != "all"
       @selected_node = Cms::Node.site(@cur_site).where(id: node_id.to_s).first
-      @selected_node = @selected_node.becomes_with_route if @selected_node
     end
   end
 

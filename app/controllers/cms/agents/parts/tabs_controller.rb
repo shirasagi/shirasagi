@@ -19,8 +19,6 @@ class Cms::Agents::Parts::TabsController < ApplicationController
       node = Cms::Node.site(site).and_public.filename(content_or_path).first
       next unless node
 
-      node = node.becomes_with_route
-
       @tabs << tab = { name: node.name, url: node.url, rss: nil, pages: [] }
 
       rest = content_or_path.sub(/^#{::Regexp.escape(node.filename)}/, "")
@@ -52,7 +50,7 @@ class Cms::Agents::Parts::TabsController < ApplicationController
       end
 
       pages = pages ? pages.order_by(released: -1).limit(@cur_part.limit) : []
-      tab[:pages] = pages.map { |item| item.becomes_with_route rescue item }
+      tab[:pages] = pages.to_a
       tab[:rss]   = "#{node.url}rss.xml" if @agent.controller.class.method_defined?(:rss)
     end
 

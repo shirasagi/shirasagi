@@ -61,7 +61,7 @@ class Garbage::NodesController < ApplicationController
   public
 
   def download
-    send_csv @cur_node.children.map(&:becomes_with_route)
+    send_csv @cur_node.children
   end
 
   def import

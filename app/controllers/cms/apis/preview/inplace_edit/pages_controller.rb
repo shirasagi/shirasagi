@@ -19,7 +19,6 @@ class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
     super
     return @item if @item.blank? || @item.class != Cms::Page
 
-    @item = @item.becomes_with_route rescue @item
     @model = @item.class
   end
 

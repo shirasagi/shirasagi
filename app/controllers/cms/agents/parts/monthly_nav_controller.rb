@@ -5,7 +5,7 @@ class Cms::Agents::Parts::MonthlyNavController < ApplicationController
 
   def index
     @months = []
-    @cur_part.becomes_with_route.periods.times do |i|
+    @cur_part.periods.times do |i|
       @months.push [ previous_month_beginning(i), contents_size(i)]
     end
   end
@@ -17,9 +17,8 @@ class Cms::Agents::Parts::MonthlyNavController < ApplicationController
     return unless parent
 
     if parent.route == "cms/archive"
-      @condition_hash = parent.try(:parent).try(:becomes_with_route).try(:condition_hash)
+      @condition_hash = parent.try(:parent).try(:condition_hash)
     else
-      parent = parent.becomes_with_route rescue parent
       @condition_hash = parent.try(:condition_hash)
     end
   end

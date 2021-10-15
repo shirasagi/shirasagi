@@ -22,7 +22,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
   end
 
   def set_item
-    @item = @cur_page = Cms::Page.site(@cur_site).find(params[:page_id]).becomes_with_route
+    @item = @cur_page = Cms::Page.site(@cur_site).find(params[:page_id])
     @item.attributes = fix_params
     raise "404" if !@item.respond_to?(:form) || !@item.respond_to?(:column_values)
 

@@ -4,6 +4,8 @@ module Cms::Model::Part
   include Cms::Content
 
   included do
+    include Cms::Model::PartDiscriminatorRetrieval
+
     store_in collection: "cms_parts"
     set_permission_name "cms_parts"
 
@@ -42,7 +44,12 @@ module Cms::Model::Part
   end
 
   def becomes_with_route(name = nil)
-    super (name || route).sub("/", "/part/")
+    return self if name.blank?
+
+    name = name.sub("/", "/part/")
+    return self if route == name
+
+    super name
   end
 
   def mobile_view_options

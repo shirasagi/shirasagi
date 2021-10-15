@@ -35,9 +35,9 @@ class Cms::Agents::Parts::CalendarNavController < ApplicationController
 
     if @cur_part.parent.present?
       if @cur_part.parent.route == "cms/archive"
-        @condition_hash = @cur_part.parent.try(:parent).try(:becomes_with_route).try(:condition_hash)
+        @condition_hash = @cur_part.parent.try(:parent).try(:condition_hash)
       else
-        @condition_hash = @cur_part.parent.becomes_with_route.try(:condition_hash)
+        @condition_hash = @cur_part.parent.try(:condition_hash)
       end
     end
     start_date = @current_month_date.advance(days: -1 * @current_month_date.wday)

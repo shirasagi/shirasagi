@@ -88,7 +88,6 @@ class Sys::SiteExportJob < SS::ApplicationJob
     scope ||= model.site(@src_site)
     scope.pluck(:id).each do |id|
       item = model.unscoped.find(id)
-      item = item.becomes_with_route || item rescue item
       yield(item) if block_given?
       json.write(item.to_json(methods: "_type"))
       store_file_ids(item)

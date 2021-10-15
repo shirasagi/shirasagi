@@ -29,7 +29,6 @@ module Opendata::Addon::ExportPublicEntityFormat
         names.reverse.join('/')
       end
 
-      node = node.becomes_with_route
       st_categories = node.st_categories.presence || node.default_st_categories
       st_categories = st_categories.map { |cate| cate.children.and_public.sort(order: 1).to_a }.flatten
 

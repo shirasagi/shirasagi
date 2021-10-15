@@ -28,7 +28,7 @@ class Ezine::MemberPage::MainController < ApplicationController
   end
 
   def load_members(method = :members_to_deliver)
-    @members = @cur_node.becomes_with_route.send(method).order_by(updated: -1)
+    @members = @cur_node.send(method).order_by(updated: -1)
     @members_email = @members.reduce("") do |a, e|
       a += e.email + "\n" unless e.email.blank?
       a

@@ -15,7 +15,7 @@ module Opendata::Addon
     def validate_categories_limit
       return unless try(:cur_node)
 
-      node = cur_node.becomes_with_route
+      node = cur_node
       limit = node.try(:categories_limit).to_i
 
       return if limit <= 0
@@ -50,7 +50,7 @@ module Opendata::Addon
     def validate_estat_categories_limit
       return unless try(:cur_node)
 
-      node = cur_node.becomes_with_route
+      node = cur_node
       limit = node.try(:estat_categories_limit).to_i
 
       return if limit <= 0

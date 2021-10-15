@@ -9,7 +9,6 @@ describe KeyVisual::Image, dbscope: :example do
   end
 
   describe "#attributes" do
-    it { expect(subject.becomes_with_route).not_to eq nil }
     it { expect(subject.dirname).to eq node.filename }
     it { expect(subject.basename).not_to eq nil }
     it { expect(subject.path).not_to eq nil }

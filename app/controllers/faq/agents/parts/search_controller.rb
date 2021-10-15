@@ -11,7 +11,6 @@ class Faq::Agents::Parts::SearchController < ApplicationController
       return
     end
 
-    @search_node = @search_node.becomes_with_route rescue @search_node
     @url = mobile_path? ? ::File.join(@cur_site.mobile_url, @search_node.filename) : @search_node.url
     render
   end

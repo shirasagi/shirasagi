@@ -6,7 +6,6 @@ module Sys::SiteCopy::CmsPages
   def copy_cms_page(src_page)
     return nil if (src_page.route != "cms/page") && !@copy_contents.include?('pages')
 
-    src_page = src_page.becomes_with_route
     copy_cms_content(:pages, src_page, copy_cms_page_options)
   rescue => e
     @task.log("#{src_page.filename}(#{src_page.id}): ページのコピーに失敗しました。")

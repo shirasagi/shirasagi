@@ -62,9 +62,7 @@ class SS::LiquidPartDrop < Liquid::Drop
   private
 
   def find_part(filename)
-    part = Cms::Part.site(@site).and_public.where(filename: normalize_filename(filename)).first
-    part = part.becomes_with_route if part
-    part
+    Cms::Part.site(@site).and_public.where(filename: normalize_filename(filename)).first
   end
 
   def normalize_filename(filename)

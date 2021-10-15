@@ -270,7 +270,7 @@ describe Inquiry::Answer, dbscope: :example do
 
     its(:source_name) { is_expected.to eq page.name }
     its(:source_full_url) { is_expected.to eq page.full_url }
-    its(:source_content) { expect(subject.source_content.becomes_with_route).to eq page }
+    its(:source_content) { expect(subject.source_content).to eq page }
   end
 
   describe "with node's source_url" do
@@ -300,6 +300,6 @@ describe Inquiry::Answer, dbscope: :example do
 
     its(:source_name) { is_expected.to eq node1.name }
     its(:source_full_url) { is_expected.to eq node1.full_url }
-    its(:source_content) { expect(subject.source_content.becomes_with_route).to eq node1 }
+    its(:source_content) { expect(subject.source_content).to eq node1 }
   end
 end

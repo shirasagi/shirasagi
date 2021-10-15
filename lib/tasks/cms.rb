@@ -183,7 +183,6 @@ module Tasks
           return
         end
 
-        node = node.becomes_with_route rescue node
         yield node
       end
 
@@ -229,7 +228,6 @@ module Tasks
         all_ids = criteria.pluck(:id)
         all_ids.each_slice(100) do |ids|
           criteria.klass.where(:id.in => ids).each do |item|
-            item = item.becomes_with_route
             attrs = %w(html upper_html lower_html roop_html)
             attrs.each do |attr|
               next unless item.respond_to?(attr) && item.respond_to?("#{attr}=")
