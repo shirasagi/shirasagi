@@ -52,7 +52,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
         it "#edit" do
           visit edit_public_item_path
-          expected_alert(I18n.t('ss.buttons.draft_save'))
+          expected_alert(I18n.t('ss.buttons.close_save'))
 
           visit edit_closed_item_path
           unexpected_alert(I18n.t('ss.buttons.draft_save'))
@@ -87,15 +87,15 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
           within "form#item-form" do
             fill_in "item[name]", with: "sample"
           end
-          unexpected_alert(I18n.t('ss.buttons.save'))
+          unexpected_alert(I18n.t('ss.buttons.draft_save'))
         end
 
         it "#edit" do
           visit edit_public_item_path
-          expected_alert(I18n.t('ss.buttons.save'))
+          expected_alert(I18n.t('ss.buttons.close_save'))
 
           visit edit_closed_item_path
-          unexpected_alert(I18n.t('ss.buttons.save'))
+          unexpected_alert(I18n.t('ss.buttons.draft_save'))
         end
       end
     end
@@ -125,7 +125,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
         it "#edit" do
           visit edit_public_item_path
-          expected_alert(I18n.t('ss.buttons.draft_save'))
+          expected_alert(I18n.t('ss.buttons.close_save'))
 
           visit edit_closed_item_path
           unexpected_alert(I18n.t('ss.buttons.draft_save'))
@@ -167,10 +167,10 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
         it "#edit" do
           visit edit_public_item_path
-          expected_alert(I18n.t('ss.buttons.save'))
+          expected_alert(I18n.t('ss.buttons.close_save'))
 
           visit edit_closed_item_path
-          unexpected_alert(I18n.t('ss.buttons.save'))
+          unexpected_alert(I18n.t('ss.buttons.draft_save'))
         end
       end
     end
@@ -199,7 +199,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
         it "#edit" do
           visit edit_public_item_path
-          expected_alert(I18n.t('ss.buttons.draft_save'))
+          expected_alert(I18n.t('ss.buttons.close_save'))
 
           visit edit_closed_item_path
           unexpected_alert(I18n.t('ss.buttons.draft_save'))
@@ -239,10 +239,10 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
         it "#edit" do
           visit edit_public_item_path
-          expected_alert(I18n.t('ss.buttons.save'))
+          expected_alert(I18n.t('ss.buttons.close_save'))
 
           visit edit_closed_item_path
-          unexpected_alert(I18n.t('ss.buttons.save'))
+          unexpected_alert(I18n.t('ss.buttons.draft_save'))
         end
       end
     end

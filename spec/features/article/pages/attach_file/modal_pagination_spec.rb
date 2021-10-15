@@ -62,7 +62,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within "form#item-form" do
-          click_on I18n.t("ss.buttons.draft_save")
+          click_on I18n.t("ss.buttons.close_save")
         end
         click_on I18n.t('ss.buttons.ignore_alert')
 
@@ -119,7 +119,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within "form#item-form" do
-          click_on I18n.t("ss.buttons.draft_save")
+          click_on I18n.t("ss.buttons.close_save")
         end
         click_on I18n.t('ss.buttons.ignore_alert')
 
@@ -180,7 +180,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within "form#item-form" do
-          click_on I18n.t("ss.buttons.draft_save")
+          click_on I18n.t("ss.buttons.close_save")
         end
         click_on I18n.t('ss.buttons.ignore_alert')
 
@@ -237,7 +237,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within "form#item-form" do
-          click_on I18n.t("ss.buttons.draft_save")
+          click_on I18n.t("ss.buttons.close_save")
         end
         click_on I18n.t('ss.buttons.ignore_alert')
 
@@ -312,7 +312,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within "form#item-form" do
-          click_on I18n.t("ss.buttons.draft_save")
+          click_on I18n.t("ss.buttons.close_save")
         end
         click_on I18n.t('ss.buttons.ignore_alert')
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -384,7 +384,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within "form#item-form" do
-          click_on I18n.t("ss.buttons.draft_save")
+          click_on I18n.t("ss.buttons.close_save")
         end
         click_on I18n.t('ss.buttons.ignore_alert')
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
