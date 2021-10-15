@@ -10,7 +10,8 @@ module Cms::Model::Part
     field :route, type: String
     field :mobile_view, type: String, default: "show"
     field :ajax_view, type: String, default: "disabled"
-    permit_params :mobile_view, :ajax_view
+    field :ajax_view_expire_seconds, type: Integer
+    permit_params :mobile_view, :ajax_view, :ajax_view_expire_seconds
 
     liquidize do
       export as: :html do |context|
@@ -61,6 +62,14 @@ module Cms::Model::Part
   def ajax_html
     json = url.sub(/\.html$/, ".json")
     %(<a class="ss-part" data-href="#{json}">#{name}</a>)
+  end
+
+  def ajax_view_cache_enabled?
+    ajax_view == "enabled" && ajax_view_expire_seconds.to_i > 0
+  end
+
+  def ajax_view_cache_key
+    "ss-part/#{cache_key}"
   end
 
   # returns admin side show path

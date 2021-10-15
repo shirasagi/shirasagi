@@ -18,6 +18,9 @@
 
   <dt><%= @model.t :ajax_view %></dt>
   <dd><%= @item.label :ajax_view %></dd>
+
+  <dt><%= @model.t :ajax_view_expire_seconds %></dt>
+  <dd><%= @item.ajax_view_expire_seconds %><%= t("datetime.prompts.second") if @item.ajax_view_expire_seconds.present? %></dd>
 </dl>
 
 <%= render template: template_path if File.exists?(file_path) %>

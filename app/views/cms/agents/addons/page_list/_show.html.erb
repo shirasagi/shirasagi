@@ -2,23 +2,28 @@
 <%= code_editor "##{addon[:id]} .html", mode: :html, readonly: true %>
 
 <dl class="see">
-  <dt><%= @model.t :conditions %></dt>
-  <dd><%=br @item.conditions %></dd>
+  <% if @model.use_conditions %>
+    <dt><%= @model.t :conditions %></dt>
+    <dd><%=br @item.conditions %></dd>
+  <% end %>
 
   <% if @model.use_no_archive_html %>
-    <dt><%= @model.t :sort %></dt>
-    <dd>
-      <%=
-        @item.value_setting_for(:sort).try do |setting|
-          description = setting[2].try { |hash| hash["data-description"] }
-          if description.present?
-            content_tag(:span, setting[0], class: "ss-popup", title: description, "data-ss-popup-inline" => true, "data-ss-popup-html" => description, role: "button")
-          else
-            setting[0]
+
+    <% if @model.use_sort %>
+      <dt><%= @model.t :sort %></dt>
+      <dd>
+        <%=
+          @item.value_setting_for(:sort).try do |setting|
+            description = setting[2].try { |hash| hash["data-description"] }
+            if description.present?
+              content_tag(:span, setting[0], class: "ss-popup", title: description, "data-ss-popup-inline" => true, "data-ss-popup-html" => description, role: "button")
+           else
+              setting[0]
+            end
           end
-        end
-      %>
-    </dd>
+        %>
+      </dd>
+    <% end %>
 
     <dt><%= @model.t :limit %></dt>
     <dd><%= @item.limit %></dd>

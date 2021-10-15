@@ -1,0 +1,9 @@
+<% return unless @item %>
+
+<%= jquery do %>
+new Cms_History("#<%= "cms-history-part-#{@cur_part.id}" %>", "<%= @cur_part.list_identity %>", <%= @cur_part.limit %>);
+<% end %>
+
+<div id="<%= "cms-history-part-#{@cur_part.id}" %>">
+  <%= render_item_list %>
+</div>
