@@ -68,7 +68,7 @@ class Uploader::FilesController < ApplicationController
     return unless SS::UploadPolicy.upload_policy == 'sanitizer'
     return unless response.headers['Location']
 
-    job_file = Uploader::JobFile.new_job(user_id: @cur_user.id, site_id: @cur_site.id)
+    job_file = Uploader::JobFile.new_job(site_id: @cur_site.id)
     action = params[:action]
 
     if action == 'create' && @directory
