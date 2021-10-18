@@ -43,6 +43,7 @@ describe Uploader::FilesJob, dbscope: :example do
   describe "perform scss file" do
     let!(:source) { "#{::Rails.root}/spec/fixtures/uploader/style.scss" }
     let!(:file_path) { "#{site.path}/style.scss" }
+    let!(:rel_path) { file_path.delete_prefix("#{Rails.root}/") }
     let!(:css_path) { "#{site.path}/style.css" }
     let!(:text_data) { "html { body { color: red; } }" }
 
@@ -50,12 +51,12 @@ describe Uploader::FilesJob, dbscope: :example do
       # upload
       FileUtils.mkdir_p ::File.dirname(file_path)
       FileUtils.cp(source, file_path)
-      Uploader::JobFile.upload(file_path, bindings)
+      Uploader::JobFile.new_job(bindings).upload(file_path)
       FileUtils.rm(file_path)
 
       file = Uploader::JobFile.first
       restored_file = mock_sanitizer_restore(file)
-      expect(restored_file.path).to eq file_path
+      expect(restored_file.path).to eq rel_path
       expect(Fs.exists?(file_path)).to be_truthy
       expect(Fs.exists?(css_path)).to be_truthy
       expect(Uploader::JobFile.all.size).to eq 0
@@ -63,14 +64,14 @@ describe Uploader::FilesJob, dbscope: :example do
       # update
       FileUtils.rm(css_path)
       perform_enqueued_jobs do
-        job.perform_now([{ text: [file_path, text_data] }])
+        job.perform_now([{ text: [rel_path, text_data] }])
       end
       expect(Fs.read(file_path)).to eq text_data
       expect(Fs.exists?(css_path)).to be_truthy
 
       # delete
       perform_enqueued_jobs do
-        job.perform_now([{ rm: [file_path] }])
+        job.perform_now([{ rm: [rel_path] }])
       end
       expect(Fs.exists?(file_path)).to be_falsey
     end
@@ -79,6 +80,7 @@ describe Uploader::FilesJob, dbscope: :example do
   describe "perform coffee file" do
     let!(:source) { "#{::Rails.root}/spec/fixtures/uploader/example.coffee" }
     let!(:file_path) { "#{site.path}/example.coffee" }
+    let!(:rel_path) { file_path.delete_prefix("#{Rails.root}/") }
     let!(:js_path) { "#{site.path}/example.js" }
     let!(:text_data) { "value = 2" }
 
@@ -86,12 +88,12 @@ describe Uploader::FilesJob, dbscope: :example do
       # upload
       FileUtils.mkdir_p ::File.dirname(file_path)
       FileUtils.cp(source, file_path)
-      Uploader::JobFile.upload(file_path, bindings)
+      Uploader::JobFile.new_job(bindings).upload(file_path)
       FileUtils.rm(file_path)
 
       file = Uploader::JobFile.first
       restored_file = mock_sanitizer_restore(file)
-      expect(restored_file.path).to eq file_path
+      expect(restored_file.path).to eq rel_path
       expect(Fs.exists?(file_path)).to be_truthy
       expect(Fs.exists?(js_path)).to be_truthy
       expect(Uploader::JobFile.all.size).to eq 0
@@ -99,14 +101,14 @@ describe Uploader::FilesJob, dbscope: :example do
       # update
       FileUtils.rm(js_path)
       perform_enqueued_jobs do
-        job.perform_now([{ text: [file_path, text_data] }])
+        job.perform_now([{ text: [rel_path, text_data] }])
       end
       expect(Fs.read(file_path)).to eq text_data
       expect(Fs.exists?(js_path)).to be_truthy
 
       # delete
       perform_enqueued_jobs do
-        job.perform_now([{ rm: [file_path] }])
+        job.perform_now([{ rm: [rel_path] }])
       end
       expect(Fs.exists?(file_path)).to be_falsey
     end
@@ -115,23 +117,24 @@ describe Uploader::FilesJob, dbscope: :example do
   describe "perform image file" do
     let!(:source) { "#{::Rails.root}/spec/fixtures/ss/logo.png" }
     let!(:file_path) { "#{site.path}/example.png" }
+    let!(:rel_path) { file_path.delete_prefix("#{Rails.root}/") }
 
     it do
       # upload
       FileUtils.mkdir_p ::File.dirname(file_path)
       FileUtils.cp(source, file_path)
-      Uploader::JobFile.upload(file_path, bindings)
+      Uploader::JobFile.new_job(bindings).upload(file_path)
       FileUtils.rm(file_path)
 
       file = Uploader::JobFile.first
       restored_file = mock_sanitizer_restore(file)
-      expect(restored_file.path).to eq file_path
+      expect(restored_file.path).to eq rel_path
       expect(Fs.exists?(file_path)).to be_truthy
       expect(Uploader::JobFile.all.size).to eq 0
 
       # delete
       perform_enqueued_jobs do
-        job.perform_now([{ rm: [file_path] }])
+        job.perform_now([{ rm: [rel_path] }])
       end
       expect(Fs.exists?(file_path)).to be_falsey
     end

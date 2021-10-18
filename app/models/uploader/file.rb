@@ -126,7 +126,7 @@ class Uploader::File
 
   def set_sanitizer_state
     return unless SS::UploadPolicy.upload_policy == 'sanitizer'
-    job_model = Uploader::JobFile.find_by(path: path) rescue nil
+    job_model = Uploader::JobFile.find_by(path: path.delete_prefix("#{Rails.root}/")) rescue nil
     @sanitizer_state = job_model ? 'wait' : nil
   end
 

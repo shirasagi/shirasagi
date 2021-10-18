@@ -17,6 +17,8 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
       let!(:name2) { unique_id }
       let!(:path1) { "#{node.path}/#{name1}" }
       let!(:path2) { "#{node.path}/#{name2}" }
+      let!(:rel_path1) { path1.delete_prefix("#{Rails.root}/") }
+      let!(:rel_path2) { path2.delete_prefix("#{Rails.root}/") }
 
       it do
         visit index_path
@@ -30,7 +32,7 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
             click_button I18n.t("ss.buttons.save")
           end
         end
-        expectation.to have_enqueued_job.with [{ mkdir: [path1] }]
+        expectation.to have_enqueued_job.with [{ mkdir: [rel_path1] }]
         expect(page).to have_css(".list-item-title.dir")
 
         # update
@@ -43,7 +45,7 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
             click_button I18n.t("ss.buttons.save")
           end
         end
-        expectation.to have_enqueued_job.with [{ mv: [path1, path2] }]
+        expectation.to have_enqueued_job.with [{ mv: [rel_path1, rel_path2] }]
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
         # delete
@@ -55,7 +57,7 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
             click_button I18n.t("ss.buttons.delete")
           end
         end
-        expectation.to have_enqueued_job.with [{ rm: [path2] }]
+        expectation.to have_enqueued_job.with [{ rm: [rel_path2] }]
         expect(page).to have_no_css(".list-item")
       end
     end
@@ -66,6 +68,8 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
       let!(:name2) { "logo2.png" }
       let!(:path1) { "#{node.path}/#{name1}" }
       let!(:path2) { "#{node.path}/#{name2}" }
+      let!(:rel_path1) { path1.delete_prefix("#{Rails.root}/") }
+      let!(:rel_path2) { path2.delete_prefix("#{Rails.root}/") }
 
       it do
         visit index_path
@@ -80,7 +84,7 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
         expect(page).to have_css("div.info a.file")
 
         job_file = Uploader::JobFile.first
-        expect(job_file.path).to eq path1
+        expect(job_file.path).to eq rel_path1
         expect(Fs.exists?(job_file.path)).to be_truthy
         expect(Fs.exists?(job_file.sanitizer_input_path)).to be_truthy
 
@@ -100,7 +104,7 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
         # sanitize
         restored_file = mock_sanitizer_restore(job_file)
         expect(Fs.exists?(restored_file.path)).to be_truthy
-        expect(restored_file.path).to eq path1
+        expect(restored_file.path).to eq rel_path1
 
         # update
         visit "#{index_path}/#{name1}?do=show"
@@ -113,14 +117,14 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
             click_button I18n.t("ss.buttons.save")
           end
         end
-        expectation.to have_enqueued_job.with [{ mv: [path1, path2] }]
+        expectation.to have_enqueued_job.with [{ mv: [rel_path1, rel_path2] }]
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
         # sanitize
         job_file = Uploader::JobFile.first
         restored_file = mock_sanitizer_restore(job_file)
         expect(Fs.exists?(restored_file.path)).to be_truthy
-        expect(restored_file.path).to eq path2
+        expect(restored_file.path).to eq rel_path2
 
         # delete
         click_link I18n.t('ss.links.back_to_show')
@@ -131,7 +135,7 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
             click_button I18n.t("ss.buttons.delete")
           end
         end
-        expectation.to have_enqueued_job.with [{ rm: [path2] }]
+        expectation.to have_enqueued_job.with [{ rm: [rel_path2] }]
         expect(page).to have_no_css(".list-item")
       end
     end
@@ -142,6 +146,8 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
       let!(:name2) { "style2.scss" }
       let!(:path1) { "#{node.path}/#{name1}" }
       let!(:path2) { "#{node.path}/#{name2}" }
+      let!(:rel_path1) { path1.delete_prefix("#{Rails.root}/") }
+      let!(:rel_path2) { path2.delete_prefix("#{Rails.root}/") }
       let!(:css_path1) { "#{node.path}/style.css" }
       let!(:css_path2) { "#{node.path}/style2.css" }
       let!(:text) { "html { color: blue }" }
@@ -159,7 +165,7 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
         expect(page).to have_css("div.info a.file")
 
         job_file = Uploader::JobFile.first
-        expect(job_file.path).to eq path1
+        expect(job_file.path).to eq rel_path1
         expect(Fs.exists?(job_file.path)).to be_truthy
         expect(Fs.exists?(job_file.sanitizer_input_path)).to be_truthy
         expect(Fs.exists?(css_path1)).to be_truthy
@@ -168,7 +174,7 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
         # sanitize
         restored_file = mock_sanitizer_restore(job_file)
         expect(Fs.exists?(restored_file.path)).to be_truthy
-        expect(restored_file.path).to eq path1
+        expect(restored_file.path).to eq rel_path1
 
         # update
         visit "#{index_path}/#{name1}?do=show"
@@ -181,7 +187,10 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
             click_button I18n.t("ss.buttons.save")
           end
         end
-        expectation.to have_enqueued_job.with [{ mv: [path1, path2] }, { text: [path2, text] }]
+        expectation.to have_enqueued_job.with [
+          { mv: [rel_path1, rel_path2] },
+          { text: [rel_path2, text] }
+        ]
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
         # not sanitize
@@ -198,7 +207,7 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
             click_button I18n.t("ss.buttons.delete")
           end
         end
-        expectation.to have_enqueued_job.with [{ rm: [path2] }]
+        expectation.to have_enqueued_job.with [{ rm: [rel_path2] }]
       end
     end
   end

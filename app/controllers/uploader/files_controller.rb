@@ -68,26 +68,24 @@ class Uploader::FilesController < ApplicationController
     return unless SS::UploadPolicy.upload_policy == 'sanitizer'
     return unless response.headers['Location']
 
-    bindings = { user_id: @cur_user.id, site_id: @cur_site.id }
-    job = Uploader::FilesJob.bind(bindings)
+    job_file = Uploader::JobFile.new_job(user_id: @cur_user.id, site_id: @cur_site.id)
     action = params[:action]
 
     if action == 'create' && @directory
-      job.perform_later([{ mkdir: ["#{@item.path}/#{@directory}"] }])
+      job_file.bind_mkdir(["#{@item.path}/#{@directory}"]).save_job
     elsif action == 'create'
       @items.each do |item|
-        Uploader::JobFile.upload(item.path, bindings)
+        job_file.upload(item.path)
       end
     elsif action == 'update'
-      job_params = []
-      job_params << { mv: [@path_was, @item.path] } if @path_was != @item.path
-      job_params << { text: [@item.path, @item.text] } if @text && @text_was != @item.text
-      job.perform_later(job_params) if job_params.present?
-      Uploader::JobFile.upload(@item.path, bindings) if @file
+      job_file.bind_mv(@path_was, @item.path) if @path_was != @item.path
+      job_file.bind_text(@item.path, @item.text) if @text && @text_was != @item.text
+      job_file.save_job
+      job_file.upload(@item.path) if @file
     elsif action == 'destroy'
       paths = [@path_was]
       paths = @paths.map { |name| "#{@path_was}/#{name}" } if @paths.present?
-      job.perform_later([{ rm: paths }])
+      job_file.bind_rm(paths).save_job
     end
   end
 
@@ -213,7 +211,7 @@ class Uploader::FilesController < ApplicationController
     @item.filename = @filename if @filename && @filename.start_with?(@cur_node.filename)
     @item.site = @cur_site
     if ext != @item.ext
-      @item.errors.add :base, "#{filename}#{I18n.t("errors.messages.invalid_file_type")}"
+      @item.errors.add :base, "#{@item.filename} #{I18n.t("errors.messages.invalid_file_type")}"
       @item.filename = filename
       render_update false
       return

@@ -37,12 +37,43 @@ class Uploader::JobFile
   end
 
   class << self
-    def upload(path, bindings)
-      uploader = self.new(bindings)
-      uploader.path = path
+    def new_job(bindings)
+      @job_bindings = bindings
+      @job_args = []
+      self
+    end
+
+    def upload(path)
+      uploader = self.new(@job_bindings)
+      uploader.path = path.delete_prefix("#{Rails.root}/")
       uploader.save!
       uploader.sanitizer_save
       uploader
+    end
+
+    def bind_mkdir(paths)
+      @job_args << { mkdir: paths.map { |p| p.delete_prefix("#{Rails.root}/") } }
+      self
+    end
+
+    def bind_mv(src, dst)
+      @job_args << { mv: [src.delete_prefix("#{Rails.root}/"), dst.delete_prefix("#{Rails.root}/")] }
+      self
+    end
+
+    def bind_rm(paths)
+      @job_args << { rm: paths.map { |p| p.delete_prefix("#{Rails.root}/") } }
+      self
+    end
+
+    def bind_text(path, data)
+      @job_args << { text: [path.delete_prefix("#{Rails.root}/"), data] }
+      self
+    end
+
+    def save_job
+      return if @job_args.empty?
+      Uploader::FilesJob.bind(@job_bindings).perform_later(@job_args)
     end
 
     def sanitizer_restore(output_path)
