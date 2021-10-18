@@ -1814,6 +1814,15 @@ footer.send {
   input.publish_save, input.save, button.save, input.delete {
     @include btn-red;
   }
+  .footer-notice {
+    width: 80%;
+    margin: -5px auto 25px;
+    padding: 10px 15px;
+    border: 1px solid #800;
+    border-radius: 4px;
+    background: #fff;
+    color: #800;
+  }
 }
 .field_with_errors {
   display: inline;
@@ -2403,6 +2412,9 @@ div.index {
     .list-item-indent {
       display: inline-block;
       width: 0;
+    }
+    .list-item-title.dir:after {
+      content: "/";
     }
     &[data-depth="0"] {
       .list-item-indent {

@@ -6,22 +6,19 @@ namespace :ss do
 
     ::Fs.glob("#{Rails.root}/#{SS.config.ss.sanitizer_output}/*").sort.each do |path|
       filename = ::File.basename(path)
-      next unless filename =~ /\A\d+_\d+.*_\d+_marked/
 
-      id = filename.sub(/^(\d+).*/, '\\1').to_i
-      file = SS::File.find(id).becomes_with_model rescue nil
-
-      if file.nil?
-        Fs.rm_rf(path)
-        puts "removed: #{filename}"
+      if job_model = Uploader::JobFile.sanitizer_restore(path)
+        puts "restored: #{filename} -> #{job_model.path}"
         next
       end
 
-      if file.sanitizer_restore_file(path)
-        puts "restored: #{filename}"
-      else
-        Rails.logger.error("sanitier_restore_file: #{file.class}##{id}: #{file.errors.full_messages.join(' ')}")
+      if file = SS::UploadPolicy.sanitizer_restore(path)
+        puts "restored: #{filename} -> #{file.path}"
+        next
       end
+
+      Fs.rm_rf(path)
+      puts "removed: #{filename}"
     end
   end
 end

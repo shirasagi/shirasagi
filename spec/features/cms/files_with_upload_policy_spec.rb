@@ -8,13 +8,9 @@ describe "cms_files_with_upload_policy", type: :feature, dbscope: :example, js: 
   context "sanitizer setting" do
     before { login_cms_user }
 
-    before do
-      upload_policy_before_settings('sanitizer')
-    end
+    before { upload_policy_before_settings("sanitizer") }
 
-    after do
-      upload_policy_after_settings
-    end
+    after { upload_policy_after_settings }
 
     it do
       visit index_path
@@ -42,14 +38,13 @@ describe "cms_files_with_upload_policy", type: :feature, dbscope: :example, js: 
       expect(page).to have_css('.sanitizer-wait', text: I18n.t('ss.options.sanitizer_state.wait'))
 
       # restore
-      output_path = sanitizer_mock_restore(file)
-      expect(file.sanitizer_state).to eq 'complete'
-      expect(Fs.exists?(file.path)).to be_truthy
-      expect(Fs.exists?(output_path)).to be_falsey
+      restored_file = mock_sanitizer_restore(file)
+      expect(restored_file.sanitizer_state).to eq 'complete'
+      expect(Fs.exists?(restored_file.path)).to be_truthy
 
       visit index_path
       expect(page).to have_css('.list-items .sanitizer-complete')
-      click_on file.name
+      click_on restored_file.name
       expect(page).to have_css('.sanitizer-complete')
 
       # update
@@ -78,9 +73,7 @@ describe "cms_files_with_upload_policy", type: :feature, dbscope: :example, js: 
       site.set(upload_policy: 'restricted')
     end
 
-    after do
-      upload_policy_after_settings
-    end
+    after { upload_policy_after_settings }
 
     it do
       # create

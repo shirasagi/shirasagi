@@ -15,13 +15,9 @@ describe 'article_pages_with_upload_policy', type: :feature, dbscope: :example, 
     node.save!
   end
 
-  before do
-    upload_policy_before_settings("sanitizer")
-  end
+  before { upload_policy_before_settings("sanitizer") }
 
-  after do
-    upload_policy_after_settings
-  end
+  after { upload_policy_after_settings }
 
   context 'clone formed page' do
     before { login_cms_user }
@@ -60,7 +56,7 @@ describe 'article_pages_with_upload_policy', type: :feature, dbscope: :example, 
 
         # restore
         file = SS::File.first
-        sanitizer_mock_restore(file)
+        restored_file = mock_sanitizer_restore(file)
 
         # clone
         visit article_pages_path(site: site, cid: node)
