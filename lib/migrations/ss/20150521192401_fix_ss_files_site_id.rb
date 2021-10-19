@@ -4,23 +4,25 @@ class SS::Migration20150521192401
   depends_on "20150518040533"
 
   def change
-    Cms::Page.all.each do |page|
-      if page.site
-        page.files.each do |file|
-          file.set(site_id: page.site.id) unless file.site_id
+    criteria = Cms::Page.exists(site_id: true)
+    all_ids = criteria.pluck(:id)
+    all_ids.each_slice(20) do |ids|
+      criteria.in(id: ids).to_a.each do |page|
+        next unless page.site
+
+        if page.respond_to?(:files)
+          page.files.exists(site_id: false).each do |file|
+            file.set(site_id: page.site.id)
+          end
         end
-      end
-    end
 
-    Ads::Banner.all.each do |page|
-      if page.site && page.file
-        page.file.set(site_id: page.site.id) unless page.file.site_id
-      end
-    end
+        if page.route == 'ads/banner' && page.file.present? && page.file.site_id.blank?
+          page.file.set(site_id: page.site.id)
+        end
 
-    Facility::Image.all.each do |page|
-      if page.site && page.image
-        page.image.set(site_id: page.site.id) unless page.image.site_id
+        if page.route == 'facility/image' && page.image.present? && page.image.site_id.blank?
+          page.image.set(site_id: page.site.id)
+        end
       end
     end
   end
