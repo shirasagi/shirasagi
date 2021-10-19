@@ -1,0 +1,3 @@
+<%= render 'cms/agents/columns/main/base', show: true, column: column, value: value do %>
+  <%= value.page.try(:name) %>
+<% end %>

@@ -1,0 +1,7 @@
+<dl class="see column-cms-select_pages">
+  <dt><%= @model.t :place_holder %></dt>
+  <dd><%= @item.place_holder %></dd>
+
+  <dt><%= @model.t :page_ids %><%= @model.tt :page_ids %></dt>
+  <dd><%=br @item.ordered_pages.pluck(:name).join("\n") %></dd>
+</dl>
