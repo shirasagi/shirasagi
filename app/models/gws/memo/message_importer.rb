@@ -1,4 +1,3 @@
-
 class Gws::Memo::MessageImporter
   include ActiveModel::Model
   include Sys::SiteImport::File
@@ -66,11 +65,22 @@ class Gws::Memo::MessageImporter
     # to_member_ids
     if msg.to.present?
       item.to_member_ids = []
+      to_webmail_address_group_ids = []
+      to_shared_address_group_ids = []
       msg.to.each do |address|
         receiver = find_user(address)
         item.to_member_ids += [receiver.id] if receiver
         item.to_member_ids += [cur_user.id] unless receiver
+
+        webmail_address_group = find_webmail_address_group(address)
+        to_webmail_address_group_ids << webmail_address_group.id if webmail_address_group
+
+        shared_address_group = find_shared_address_group(address)
+        to_shared_address_group_ids << shared_address_group.id if shared_address_group
       end
+
+      item.to_webmail_address_group_ids = to_webmail_address_group_ids
+      item.to_shared_address_group_ids = to_shared_address_group_ids
     end
 
     # cc_member_ids
@@ -133,13 +143,14 @@ class Gws::Memo::MessageImporter
     # folder
     item.user_settings = []
     folder_name = get_folder_name(entry.name)
-    if folder_name == "受信トレイ"
+    case folder_name
+    when I18n.t('gws/memo/folder.inbox')
       path = "INBOX"
-    elsif folder_name == "送信済みトレイ"
+    when I18n.t('gws/memo/folder.inbox_sent')
       path = "INBOX.Sent"
-    elsif folder_name == "下書き"
+    when I18n.t('gws/memo/folder.inbox_draft')
       path = "INBOX.Draft"
-    elsif folder_name == "ゴミ箱"
+    when I18n.t('gws/memo/folder.inbox_trash')
       path = "INBOX.Trash"
     else
       restore_folder(folder_name)
@@ -193,13 +204,26 @@ class Gws::Memo::MessageImporter
   end
 
   def find_user(address)
-    if address.include?("@")
-      user = Gws::User.find_by(email: address) rescue nil
+    if valid_address?(address)
+      user = Gws::User.site(@cur_site).find_by(email: address) rescue nil
     else
-      user = Gws::User.find_by(name: address) rescue nil
+      user = Gws::User.site(@cur_site).find_by(name: address) rescue nil
     end
 
     user
+  end
+
+  def find_webmail_address_group(name)
+    Webmail::AddressGroup.find_by(name: name) rescue nil
+  end
+
+  def find_shared_address_group(name)
+    Gws::SharedAddress::Group.find_by(name: name) rescue nil
+  end
+
+  def valid_address?(email_address)
+    valid_address = /\A[a-zA-Z0-9_\#!$%&`'*+\-{|}~^\/=?\.]+@[a-zA-Z0-9][a-zA-Z0-9\.-]+\z/
+    valid_address =~ email_address
   end
 
   def member_ids(item)
