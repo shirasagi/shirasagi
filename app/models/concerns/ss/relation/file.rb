@@ -179,7 +179,10 @@ module SS::Relation::File
     cur_id = send("#{name}_id")
     prev_id = send("#{name}_id_was")
 
-    file = SS::File.find(cur_id)
+    file = SS::File.where(id: cur_id).first
+
+    return if file.blank?
+
     expected_model = opts[:file_model] || (opts[:class_name].presence || "SS::File").to_s.underscore
     if file.model != expected_model
       file.update(model: expected_model)
