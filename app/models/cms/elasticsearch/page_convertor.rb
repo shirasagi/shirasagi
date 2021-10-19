@@ -1,5 +1,6 @@
 class Cms::Elasticsearch::PageConvertor
   attr_reader :item
+  attr_writer :index_item_id
 
   def initialize(item, opts = {})
     @item = item
@@ -84,7 +85,9 @@ class Cms::Elasticsearch::PageConvertor
   class << self
     def with_route(item, opts = {})
       klass = "#{self.name}::#{item.route.classify.gsub("::", "")}".constantize rescue self
-      klass.new(item, opts)
+      convertor = klass.new(item)
+      convertor.index_item_id = opts[:index_item_id] if opts[:index_item_id].present?
+      convertor
     end
   end
 end
