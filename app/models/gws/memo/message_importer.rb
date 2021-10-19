@@ -175,6 +175,19 @@ class Gws::Memo::MessageImporter
       user_uid: cur_user.uid, user_name: cur_user.name,
       user_id: cur_user.id, site_id: @cur_site.id, name: folder_name
     )
+    if !folder.save
+      structure = []
+      folder_name.split("/").each do |parent_name|
+        next if parent_name == File.basename(folder_name)
+
+        structure << parent_name
+        parent_folder = Gws::Memo::Folder.find_or_initialize_by(
+          user_uid: cur_user.uid, user_name: cur_user.name,
+          user_id: cur_user.id, site_id: @cur_site.id, name: structure.join("/")
+        )
+        parent_folder.save
+      end
+    end
     folder.save
     @restored_folders[folder_name] = folder.id.to_s
   end
