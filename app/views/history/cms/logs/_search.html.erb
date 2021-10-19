@@ -1,31 +1,36 @@
-<% @s = OpenStruct.new params[:s] %>
+<style>
+  .log-search-wrapper {
+    display: inline;
+    margin-left: 10px;
+  }
+</style>
+
+<% s = OpenStruct.new params[:s] %>
 <div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
-    <div class="log-search-wrapper search-wrapper">
-      <span><%= t('ss.search') %></span>
-      <%= f.select :search_opts, @search_opts, {}, {class: 'search-opts'} %>
-      <%= f.text_field :keyword, style: "width: 300px;", class: "log-search-field text-field" %>
+    <div class="log-search-wrapper operation-wrapper">
+      <span><%= t('ss.search_operation') %></span>
+      <%= f.select :operation_target_opts, @operation_target_opts, {}, {class: 'operation-opts'} %>
+      <%= f.text_field :keyword ,style: "width: 300px;", class: "log-search-field text-field" %>
       <%= f.select :keyword, @action_opts, {include_blank: true}, {class: "log-search-field action-field hide", style: "width: 300px;"} %>
       <%= f.select :keyword, @controller_opts, {include_blank: true}, {class: "log-search-field controller-field hide", style: "width: 300px;"} %>
-      <%= f.select :keyword, @user_opts, {include_blank: true}, {class: "log-search-field user-field hide", style: "width: 300px;"} %>
-      <%= f.select :keyword, @group_opts, {include_blank: true}, {class: "log-search-field group-field hide", style: "width: 300px;"} %>
     </div>
-    <div class="log-search-wrapper refined-wrapper" style="margin-top: 10px;">
-      <span><%= t('ss.refined_search') %></span>
-      <%= f.select :refined_opts, @refined_opts, {}, {class: 'refined-opts'} %>
-      <%= f.select :refined_keyword, @user_opts, {include_blank: true}, {class: "log-search-field user-field", style: "width: 300px;"} %>
-      <%= f.select :refined_keyword, @group_opts, {include_blank: true}, {class: "log-search-field group-field hide", style: "width: 300px;"} %>
+    <div class="log-search-wrapper operator-wrapper">
+      <span><%= t('ss.search_operator') %></span>
+      <%= f.select :operator_target_opts, @operator_target_opts, {}, {class: 'operator-opts'} %>
+      <%= f.select :operator_keyword, @user_opts, {include_blank: true}, {class: "log-search-field user-field", style: "width: 300px;"} %>
+      <%= f.select :operator_keyword, @group_opts, {include_blank: true}, {class: "log-search-field group-field hide", style: "width: 300px;"} %>
       <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
     </div>
   <% end %>
 </div>
 
 <%= jquery do %>
-  disableAllForms('log-search-wrapper')
-  var initVal1 = $('.search-opts').val()
-  var initVal2 = $('.refined-opts').val()
-  setForm(initVal1, 'search-wrapper')
-  setForm(initVal2, 'refined-wrapper')
+  disableAllForms('log-search-wrapper');
+  var operationVal = $('.operation-opts').val();
+  var operatorVal = $('.operator-opts').val();
+  setForm(operationVal, 'operation-wrapper');
+  setForm(operatorVal, 'operator-wrapper');
 
   function disableAllForms(wrapperClass) {
     $(`.${wrapperClass} .log-search-field`).each( function() {
@@ -34,16 +39,16 @@
     });
   }
 
-  $('.search-opts').change(function() {
-    disableAllForms('search-wrapper');
+  $('.operation-opts').change(function() {
+    disableAllForms('operation-wrapper');
     var SelectedOpt = $(this).val();
-    setForm(SelectedOpt, 'search-wrapper');
+    setForm(SelectedOpt, 'operation-wrapper');
   });
 
-  $('.refined-opts').change(function() {
-    disableAllForms('refined-wrapper');
+  $('.operator-opts').change(function() {
+    disableAllForms('operator-wrapper');
     var SelectedOpt = $(this).val();
-    setForm(SelectedOpt, 'refined-wrapper');
+    setForm(SelectedOpt, 'operator-wrapper');
   });
 
   function setForm(SelectedOpt, warpperClass) {
@@ -64,7 +69,7 @@
       break;
     default:
       enableForm(`.${warpperClass} .text-field`)
-      $('.text-field').val("");
+      $('.text-field').val('');
     }
   }
 

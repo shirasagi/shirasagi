@@ -15,13 +15,11 @@ module History::LogFilter::View
     ref_coll_options = [Cms::Node, Cms::Page, Cms::Part, Cms::Layout, SS::File].collect do |model|
       [model.model_name.human, model.collection_name]
     end
-    search_opts = [
-      [t('ss.operation'), 'action'], [t('ss.function'), 'controller'],
-      [t("mongoid.models.ss/user"), 'user'], [t("mongoid.models.ss/group"), 'group']
-    ]
-    search_opts += ref_coll_options
-    @search_opts = search_opts.unshift([I18n.t('ss.all'), 'all'])
-    @refined_opts = [[t("mongoid.models.ss/user"), 'user'], [t("mongoid.models.ss/group"), 'group']]
+    search_opts = [[t('ss.operation'), 'action'], [t('ss.function'), 'controller']]
+    search_opts += ref_coll_options if params[:controller] == "history/cms/logs"
+
+    @operation_target_opts = search_opts.unshift([I18n.t('ss.all'), 'all'])
+    @operator_target_opts = [[t("mongoid.models.ss/user"), 'user'], [t("mongoid.models.ss/group"), 'group']]
 
     criterias = @model.where(cond).order_by(created: -1).page(params[:page]).per(50)
     @action_opts = criterias.pluck(:action).uniq.map { |action| "#{action} #{action}".split }

@@ -22,10 +22,10 @@ ja:
     resize_image: 画像リサイズ
     role: ロール
     role_setting: ロール一括設定
-    refined_search: 絞り込み
     required: 必須入力
     required_field: ※必須入力
-    search: 検索
+    search_operation: 操作対象
+    search_operator: 操作実行者
     search_result: 検索結果
     url: URL
     login_url: ログインURL

@@ -6,7 +6,7 @@ module History::Searchable
       criteria = self.where({})
       return criteria if params.blank?
 
-      if params[:search_opts] =~ /action|user|controller|group/
+      if params[:operation_target_opts].try(:match, /action|controller/)
         criteria = search_except_ref_coll(params, criteria)
         return criteria
       end
@@ -53,45 +53,43 @@ module History::Searchable
         end
         criteria = criteria.where("$and" => cond)
 
-        if params[:refined_keyword].present?
-          criteria = refined_search(criteria, params)
+        if params[:operator_keyword].present?
+          criteria = operator_search(criteria, params)
         end
+      elsif params[:operator_keyword].present?
+        criteria = operator_search(criteria, params)
       end
 
-      if params[:search_opts] == 'all'
+      if params[:operation_target_opts] == 'all'
         criteria
-      elsif params[:search_opts].present?
-        criteria = criteria.where(ref_coll: params[:search_opts])
+      elsif params[:operation_target_opts].present?
+        criteria = criteria.where(ref_coll: params[:operation_target_opts])
       end
       criteria
     end
 
     def search_except_ref_coll(params, criteria)
-      if params[:search_opts] == "user"
-        user_id = SS::User.find_by(name: params[:keyword]).id
-        criteria = criteria.where(user_id: user_id)
-      elsif params[:search_opts] == "controller"
-        criteria = criteria.where(controller: params[:keyword].pluralize)
-      elsif params[:search_opts] == "group"
-        group_id = Cms::Group.find_by(name: params[:keyword]).id
-        criteria = criteria.in(group_ids: group_id)
-      elsif params[:search_opts] == "action"
-        criteria = criteria.where(action: params[:keyword])
+      if params[:keyword].present?
+        case params[:operation_target_opts]
+        when "controller"
+          criteria = criteria.where(controller: params[:keyword].pluralize)
+        else #action
+          criteria = criteria.where(action: params[:keyword])
+        end
       end
 
-      criteria = refined_search(criteria, params) if params[:refined_keyword].present?
+      criteria = operator_search(criteria, params) if params[:operator_keyword].present?
       criteria
     end
 
-    def refined_search(criteria, params)
-      word = params[:refined_keyword]
+    def operator_search(criteria, params)
+      word = params[:operator_keyword]
 
-      if params[:refined_opts] == "user"
+      case params[:operator_target_opts]
+      when "user"
         user_id = SS::User.find_by(name: word).id
         criteria = criteria.where(user_id: user_id)
-      end
-
-      if params[:refined_opts] == "group"
+      else #group
         group_id = Cms::Group.find_by(name: word).id
         criteria = criteria.in(group_ids: group_id)
       end
