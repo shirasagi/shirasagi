@@ -52,7 +52,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
         it "#edit" do
           visit edit_public_item_path
-          expected_alert(I18n.t('ss.buttons.close_save'))
+          expected_alert(I18n.t('ss.buttons.withdraw'))
 
           visit edit_closed_item_path
           unexpected_alert(I18n.t('ss.buttons.draft_save'))
@@ -92,7 +92,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
         it "#edit" do
           visit edit_public_item_path
-          expected_alert(I18n.t('ss.buttons.close_save'))
+          expected_alert(I18n.t('ss.buttons.withdraw'))
 
           visit edit_closed_item_path
           unexpected_alert(I18n.t('ss.buttons.draft_save'))
@@ -125,7 +125,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
         it "#edit" do
           visit edit_public_item_path
-          expected_alert(I18n.t('ss.buttons.close_save'))
+          expected_alert(I18n.t('ss.buttons.withdraw'))
 
           visit edit_closed_item_path
           unexpected_alert(I18n.t('ss.buttons.draft_save'))
@@ -167,7 +167,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
         it "#edit" do
           visit edit_public_item_path
-          expected_alert(I18n.t('ss.buttons.close_save'))
+          expected_alert(I18n.t('ss.buttons.withdraw'))
 
           visit edit_closed_item_path
           unexpected_alert(I18n.t('ss.buttons.draft_save'))
@@ -199,7 +199,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
         it "#edit" do
           visit edit_public_item_path
-          expected_alert(I18n.t('ss.buttons.close_save'))
+          expected_alert(I18n.t('ss.buttons.withdraw'))
 
           visit edit_closed_item_path
           unexpected_alert(I18n.t('ss.buttons.draft_save'))
@@ -239,7 +239,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
         it "#edit" do
           visit edit_public_item_path
-          expected_alert(I18n.t('ss.buttons.close_save'))
+          expected_alert(I18n.t('ss.buttons.withdraw'))
 
           visit edit_closed_item_path
           unexpected_alert(I18n.t('ss.buttons.draft_save'))

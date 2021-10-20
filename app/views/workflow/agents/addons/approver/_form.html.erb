@@ -9,7 +9,7 @@
   end
   if @item.state == "public" && @item.persisted?
     # 警告する意味でボタンのラベルを別のものにする
-    js_options[:draft_save] = t("ss.buttons.close_save")
+    js_options[:draft_save] = t("ss.buttons.withdraw")
   else
     js_options[:draft_save] = t("ss.buttons.draft_save")
   end

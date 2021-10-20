@@ -104,7 +104,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       click_on article_page.name
       click_on I18n.t('ss.links.edit')
 
-      click_on I18n.t('ss.buttons.close_save')
+      click_on I18n.t('ss.buttons.withdraw')
       expect(page).to have_css('#alertExplanation h2', text: I18n.t('cms.alert'), wait: 60)
       click_on I18n.t('ss.buttons.ignore_alert')
       wait_for_notice I18n.t('ss.notice.saved')
@@ -196,7 +196,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       click_on article_page.name
       click_on I18n.t('ss.links.edit')
 
-      click_on I18n.t('ss.buttons.close_save')
+      click_on I18n.t('ss.buttons.withdraw')
       expect(page).to have_css('#alertExplanation h2', text: I18n.t('cms.alert'), wait: 60)
       click_on I18n.t('ss.buttons.ignore_alert')
       wait_for_notice I18n.t('ss.notice.saved')
@@ -340,7 +340,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       click_on article_page.name
       click_on I18n.t('ss.links.edit')
 
-      click_on I18n.t('ss.buttons.close_save')
+      click_on I18n.t('ss.buttons.withdraw')
       expect(page).to have_css('#alertExplanation h2', text: I18n.t('cms.alert'), wait: 60)
       click_on I18n.t('ss.buttons.ignore_alert')
       wait_for_notice I18n.t('ss.notice.saved')

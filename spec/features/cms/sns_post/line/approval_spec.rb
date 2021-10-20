@@ -343,7 +343,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             select I18n.t("ss.options.state.enabled"), from: "item[line_edit_auto_post]"
           end
           within "form#item-form" do
-            click_on I18n.t("ss.buttons.close_save")
+            click_on I18n.t("ss.buttons.withdraw")
           end
           wait_for_cbox do
             expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.close"))
@@ -407,7 +407,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             select I18n.t("ss.options.state.disabled"), from: "item[line_edit_auto_post]"
           end
           within "form#item-form" do
-            click_on I18n.t("ss.buttons.close_save")
+            click_on I18n.t("ss.buttons.withdraw")
           end
           wait_for_cbox do
             expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.close"))

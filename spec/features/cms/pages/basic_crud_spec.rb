@@ -157,7 +157,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
       it "permited and contains_urls" do
         visit edit_path2
         within "form" do
-          click_on I18n.t("ss.buttons.close_save")
+          click_on I18n.t("ss.buttons.withdraw")
         end
         expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
       end
@@ -165,7 +165,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
       it "permited and not contains_urls" do
         visit edit_path3
         within "form" do
-          click_on I18n.t("ss.buttons.close_save")
+          click_on I18n.t("ss.buttons.withdraw")
         end
         expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
       end
@@ -176,7 +176,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
                                     release_private_cms_pages release_other_cms_pages))
         visit edit_path2
         within "form" do
-          click_on I18n.t("ss.buttons.close_save")
+          click_on I18n.t("ss.buttons.withdraw")
         end
         expect(page).not_to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
         expect(page).to have_css(".errorExplanation", text: I18n.t('ss.confirm.contains_url_expect'))
@@ -188,7 +188,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
                                     release_private_cms_pages release_other_cms_pages))
         visit edit_path3
         within "form" do
-          click_on I18n.t("ss.buttons.close_save")
+          click_on I18n.t("ss.buttons.withdraw")
         end
         expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
       end
