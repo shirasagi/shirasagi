@@ -17,7 +17,10 @@ describe "gws_memo_message_import_messages", type: :feature, dbscope: :example, 
       expect(page).to have_css("#notice", text: I18n.t("gws/memo/message.notice.start_import"))
 
       visit gws_memo_messages_path(site)
-      expect(page).to have_css(".list-item.unseen", count: 7)
+
+      expect(page).to have_text("parent")
+      expect(page).to have_text("child")
+      expect(page).to have_css(".list-item.unseen", count: 5)
     end
 
     it 'import files which are right under root folder' do

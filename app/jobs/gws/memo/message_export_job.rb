@@ -39,32 +39,41 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
       if item.to_members.present?
         data['to_members'] = item.to_members.map { |u| user_attributes(u) }
         data['to_members_name_email'] = item.to_members.map { |u| user_name_email(u) }
+        data['to_member_ids'] = item.to_members.map { |u| u.id }
       end
 
+      data['to_members_name_email'] =[] if data['to_members_name_email'].nil?
       if item.to_shared_address_group_ids.present?
         item.to_shared_address_group_ids.each do |u|
-          if data['to_members_name_email'].blank?
-            data['to_members_name_email'] = shared_address_group_name(u)
-          else
-            data['to_members_name_email'] << shared_address_group_name(u)
-          end
+          data['to_members_name_email'] << shared_address_group_name(u)
         end
       end
-
 
       if item.to_webmail_address_group_ids
-        item.to_webmail_address_group_ids.map do |u|
-          if data['to_members_name_email'].blank?
-            data['to_members_name_email'] = webmail_address_group_name(u)
-          else
-            data['to_members_name_email'] << webmail_address_group_name(u)
-          end
+        item.to_webmail_address_group_ids.each do |u|
+          data['to_members_name_email'] << webmail_address_group_name(u)
         end
       end
+
       if item.cc_members.present?
         data['cc_members'] = item.cc_members.map { |u| user_attributes(u) }
         data['cc_members_name_email'] = item.cc_members.map { |u| user_name_email(u) }
+        data['cc_member_ids'] = item.cc_members.map { |u| u.id }
       end
+
+      data['cc_members_name_email'] = [] if data['cc_members_name_email'].nil?
+      if item.cc_shared_address_group_ids
+        item.cc_shared_address_group_ids.map do |u|
+          data['cc_members_name_email'] << shared_address_group_name(u)
+        end
+      end
+
+      if item.cc_webmail_address_group_ids
+        item.cc_webmail_address_group_ids.map do |u|
+          data['cc_members_name_email'] << webmail_address_group_name(u)
+        end
+      end
+
       if item.bcc_members.present?
         data['bcc_members'] = item.bcc_members.select{ |u| u.id == user.id }.map { |u| user_attributes(u) }
       end
@@ -176,6 +185,8 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
       f.puts Mail::Field.new("Message-ID", gen_message_id(data), "utf-8").encoded
       f.puts Mail::Field.new("From", data['from_name_email'], "utf-8").encoded
       f.puts Mail::Field.new("To", data['to_members_name_email'], "utf-8").encoded
+      f.puts Mail::Field.new("Member-IDs", data['to_member_ids'], "utf-8").encoded
+      f.puts Mail::Field.new("Cc-IDs", data['cc_member_ids'], "utf-8").encoded
       f.puts Mail::Field.new("Cc", data['cc_members_name_email'], "utf-8").encoded if data['cc_members_name_email'].present?
       user_settings = data["user_settings"]
       s_status = []
@@ -241,13 +252,11 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
   end
 
   def shared_address_group_name(id)
-    shared_address_name = Gws::SharedAddress::Group.find(id).try(:name)
-    shared_address_name
+    Gws::SharedAddress::Group.find(id).try(:name)
   end
 
   def webmail_address_group_name(id)
-    webmail_address_name = Webmail::AddressGroup.find(id).try(:name)
-    webmail_address_name
+    Webmail::AddressGroup.find(id).try(:name)
   end
 
   def gen_message_id(data)
