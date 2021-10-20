@@ -36,7 +36,7 @@ module Voice::Downloadable
     end
     @cached_page
   rescue
-    Rails.logger.info("error was raised while downloading from #{url}")
+    Rails.logger.error("error was raised while downloading from #{url}")
     raise
   end
 
