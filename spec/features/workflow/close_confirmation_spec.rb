@@ -162,7 +162,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
             fill_in "item[name]", with: "sample"
             fill_in "item[basename]", with: "sample"
           end
-          unexpected_alert(I18n.t('ss.buttons.save'))
+          unexpected_alert(I18n.t('ss.buttons.draft_save'))
         end
 
         it "#edit" do
@@ -234,7 +234,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
           within "form#item-form" do
             fill_in "item[name]", with: "sample"
           end
-          unexpected_alert(I18n.t('ss.buttons.save'))
+          unexpected_alert(I18n.t('ss.buttons.draft_save'))
         end
 
         it "#edit" do
