@@ -32,10 +32,10 @@ module History::LogFilter::View
       next if user.nil?
 
       "#{user.name},#{user.name}".split(",")
-    end
+    end.compact!
 
     groups = []
-    criterias.pluck(:group_ids).compact.uniq.each do |group_ids|
+    @model.where(cond).pluck(:group_ids).compact.uniq.each do |group_ids|
       group_ids.each do |group_id|
         group = Cms::Group.find(group_id) rescue nil
         next if group.nil?
@@ -44,7 +44,7 @@ module History::LogFilter::View
       end
       groups
     end
-    @group_opts = groups.flatten(1).uniq
+    @group_opts = groups.flatten(1).uniq.compact
   end
 
   def delete
