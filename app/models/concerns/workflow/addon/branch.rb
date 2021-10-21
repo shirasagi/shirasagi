@@ -40,9 +40,10 @@ module Workflow::Addon
       self.fields.select { |n, v| (v.options.dig(:metadata, :branch) == false) }.each do |n, v|
         attributes.delete(n)
       end
+      # new を呼び出す前に _id を削除しておかないと `#branches` などの参照が変になる
+      attributes.delete("_id")
 
       item = self.class.new(attributes)
-      item.id = nil
       item.state = "closed"
       item.cur_user = @cur_user
       item.cur_site = @cur_site
