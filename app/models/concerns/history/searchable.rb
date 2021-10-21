@@ -72,7 +72,7 @@ module History::Searchable
       if params[:keyword].present?
         case params[:operation_target_opts]
         when "controller"
-          criteria = criteria.where(controller: params[:keyword].pluralize)
+          criteria = criteria.where(controller: params[:keyword])
         else #action
           criteria = criteria.where(action: params[:keyword])
         end
