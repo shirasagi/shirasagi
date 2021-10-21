@@ -7,7 +7,7 @@ module SS::Relation::File
       class_name = opts[:class_name].presence || "SS::File"
       required = opts[:required] || false
 
-      belongs_to name.to_sym, class_name: class_name.to_s, dependent: :destroy
+      belongs_to name.to_sym, class_name: class_name.to_s
 
       attr_accessor "in_#{name}", "rm_#{name}", "in_#{name}_resizing"
 
@@ -35,6 +35,9 @@ module SS::Relation::File
       after_save if: ->{ send(name).present? } do
         _update_relation_owner_item(name, opts)
       end
+      after_destroy if: ->{ send(name).present? } do
+        _remove_relation(name, opts)
+      end
 
       expose_public_methods(name, opts)
     end
@@ -42,7 +45,7 @@ module SS::Relation::File
     def belongs_to_file2(name, opts = {})
       class_name = opts[:class_name].presence || "SS::File"
 
-      belongs_to name.to_sym, class_name: class_name.to_s, dependent: :destroy
+      belongs_to name.to_sym, class_name: class_name.to_s
 
       attr_accessor "rm_#{name}", "in_#{name}_resizing"
 
@@ -61,6 +64,9 @@ module SS::Relation::File
         _replace_relation(name, opts)
       end
       before_save if: ->{ send("rm_#{name}").to_s == "1" } do
+        _remove_relation(name, opts)
+      end
+      after_destroy if: ->{ send(name).present? } do
         _remove_relation(name, opts)
       end
 
@@ -82,6 +88,18 @@ module SS::Relation::File
     end
   end
 
+  module Utils
+    module_function
+
+    def owner_item(item)
+      item.embedded? ? item._parent : item
+    end
+
+    def file_owned?(file, item)
+      file.owner_item_type == item.class.name && file.owner_item_id == item.id
+    end
+  end
+
   def relation_file(name, opts = {})
     class_name = opts[:class_name] || "SS::File"
 
@@ -95,7 +113,7 @@ module SS::Relation::File
     file.state    = send("#{name}_file_state")
     file.content_type = ::Fs.content_type(file.filename)
     file.resizing = send("in_#{name}_resizing").presence || opts[:resizing]
-    file.owner_item = self.embedded? ? self._parent : self if file.respond_to?(:owner_item=)
+    file.owner_item = Utils.owner_item(self) if file.respond_to?(:owner_item=)
     file
   end
 
@@ -131,9 +149,18 @@ module SS::Relation::File
 
   def _remove_relation(name, _opts)
     file = send(name)
-    file.destroy if file
     unset("#{name}_id") rescue nil
     send("#{name}=", nil)
+
+    return if file.blank?
+
+    owner_item = Utils.owner_item(self)
+    if owner_item.respond_to?(:branch?) && owner_item.branch?
+      # 差し替えページの場合、差し替え元と共有している可能性がある。共有している場合は削除しないようにする。
+      return if !Utils.file_owned?(file, owner_item) && Utils.file_owned?(file, owner_item.master)
+    end
+
+    file.destroy
   end
 
   def _file_state(_name, opts)
@@ -150,10 +177,13 @@ module SS::Relation::File
 
   def _update_relation_owner_item(name, _opts)
     file = send(name)
-    owner_item = self.embedded? ? self._parent : self
-    if file.owner_item.blank? || file.owner_item_type != owner_item.class.name || file.owner_item_id != owner_item.id
-      file.update(owner_item: owner_item)
-    end
+    owner_item = Utils.owner_item(self)
+    return if Utils.file_owned?(file, owner_item)
+
+    # 差し替えページの場合、所有者を差し替え元のままとする
+    return if self.respond_to?(:branch?) && self.branch? && Utils.file_owned?(file, owner_item.master)
+
+    file.update(owner_item: owner_item)
   end
 
   def _generate_relation_public(name, _opts)
