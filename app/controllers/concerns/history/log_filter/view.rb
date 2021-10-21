@@ -22,13 +22,15 @@ module History::LogFilter::View
     @operator_target_opts = [[t("mongoid.models.ss/user"), 'user'], [t("mongoid.models.ss/group"), 'group']]
 
     criterias = @model.where(cond).order_by(created: -1).page(params[:page]).per(50)
-    @action_opts = criterias.pluck(:action).uniq.map { |action| "#{action} #{action}".split }
-    @controller_opts = criterias.pluck(:controller).uniq.map do |controller|
+    @action_opts = @model.where(cond).pluck(:action).uniq.map { |action| "#{action} #{action}".split }
+    @controller_opts = @model.where(cond).pluck(:controller).uniq.map do |controller|
       "#{controller} #{controller}".split
     end
 
-    @user_opts = criterias.pluck(:user_id).uniq.map do |user_id|
+    @user_opts = @model.where(cond).pluck(:user_id).uniq.map do |user_id|
       user = Cms::User.find(user_id) rescue nil
+      next if user.nil?
+
       "#{user.name},#{user.name}".split(",")
     end
 
@@ -36,6 +38,8 @@ module History::LogFilter::View
     criterias.pluck(:group_ids).compact.uniq.each do |group_ids|
       group_ids.each do |group_id|
         group = Cms::Group.find(group_id) rescue nil
+        next if group.nil?
+
         groups << "#{group.name} #{group.name}".split
       end
       groups
