@@ -50,6 +50,61 @@ describe Article::Page, dbscope: :example do
         expect(item.date).to eq item.first_released
       end
     end
+
+    context "illegally set to blank" do
+      before do
+        item.set(released_type: "")
+      end
+
+      context "default_released_type config set to same_as_updated" do
+        before do
+          @save_default_released_type = SS.config.cms.default_released_type
+          SS.config.replace_value_at(:cms, :default_released_type, "same_as_updated")
+        end
+
+        after do
+          SS.config.replace_value_at(:cms, :default_released_type, @save_default_released_type)
+        end
+
+        it do
+          expect(item.date).to eq item.updated
+        end
+      end
+
+      context "default_released_type config set to same_as_created" do
+        before do
+          @save_default_released_type = SS.config.cms.default_released_type
+          SS.config.replace_value_at(:cms, :default_released_type, "same_as_created")
+          item.class.default_released_type = "same_as_created"
+        end
+
+        after do
+          SS.config.replace_value_at(:cms, :default_released_type, @save_default_released_type)
+          item.class.default_released_type = @save_default_released_type
+        end
+
+        it do
+          expect(item.date).to eq item.created
+        end
+      end
+
+      context "default_released_type config set to fixed" do
+        before do
+          @save_default_released_type = SS.config.cms.default_released_type
+          SS.config.replace_value_at(:cms, :default_released_type, "fixed")
+          item.class.default_released_type = "fixed"
+        end
+
+        after do
+          SS.config.replace_value_at(:cms, :default_released_type, @save_default_released_type)
+          item.class.default_released_type = @save_default_released_type
+        end
+
+        it do
+          expect(item.date).to eq item.released
+        end
+      end
+    end
   end
 
   describe "published page" do
