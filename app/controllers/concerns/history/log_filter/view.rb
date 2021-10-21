@@ -32,7 +32,8 @@ module History::LogFilter::View
       next if user.nil?
 
       "#{user.name},#{user.name}".split(",")
-    end.compact!
+    end
+    @user_opts.compact!
 
     groups = []
     @model.where(cond).pluck(:group_ids).compact.uniq.each do |group_ids|
