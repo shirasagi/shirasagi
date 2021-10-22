@@ -5,8 +5,8 @@ module Gws::Addon::EditLock
   LOCK_INTERVAL = 10.minutes.freeze
 
   included do
-    field :lock_until, type: DateTime
-    belongs_to :lock_owner, class_name: "Gws::User"
+    field :lock_until, type: DateTime, metadata: { on_copy: :clear }
+    ss_belongs_to :lock_owner, class_name: "Gws::User", metadata: { on_copy: :clear }
 
     validates :lock_until, datetime: true
     validate :validate_lock

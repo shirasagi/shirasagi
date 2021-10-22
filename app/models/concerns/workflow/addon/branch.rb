@@ -52,17 +52,6 @@ module Workflow::Addon
         item.basename = ""
       end
 
-      item.workflow_user_id = nil
-      item.workflow_state = nil
-      item.workflow_comment = nil
-      item.workflow_approvers = nil
-      item.workflow_required_counts = nil
-
-      if item.is_a?(Cms::Addon::EditLock)
-        item.lock_owner_id = nil
-        item.lock_until = nil
-      end
-
       if item.is_a?(Cms::Addon::TwitterPoster)
         item.twitter_auto_post = "expired"
         item.twitter_edit_auto_post = "disabled"

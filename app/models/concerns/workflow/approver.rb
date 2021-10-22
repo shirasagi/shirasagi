@@ -19,20 +19,20 @@ module Workflow::Approver
   included do
     cattr_reader(:approver_user_class) { Cms::User }
 
-    field :workflow_user_id, type: Integer
-    field :workflow_agent_id, type: Integer
-    field :workflow_state, type: String
-    field :workflow_comment, type: String
-    field :workflow_pull_up, type: String
-    field :workflow_on_remand, type: String
-    field :workflow_approvers, type: Workflow::Extensions::WorkflowApprovers
-    field :workflow_required_counts, type: Workflow::Extensions::Route::RequiredCounts
-    field :workflow_approver_attachment_uses, type: Array
+    field :workflow_user_id, type: Integer, metadata: { on_copy: :clear }
+    field :workflow_agent_id, type: Integer, metadata: { on_copy: :clear }
+    field :workflow_state, type: String, metadata: { on_copy: :clear }
+    field :workflow_comment, type: String, metadata: { on_copy: :clear }
+    field :workflow_pull_up, type: String, metadata: { on_copy: :clear }
+    field :workflow_on_remand, type: String, metadata: { on_copy: :clear }
+    field :workflow_approvers, type: Workflow::Extensions::WorkflowApprovers, metadata: { on_copy: :clear }
+    field :workflow_required_counts, type: Workflow::Extensions::Route::RequiredCounts, metadata: { on_copy: :clear }
+    field :workflow_approver_attachment_uses, type: Array, metadata: { on_copy: :clear }
     # 現在の回覧ステップ: 0 はまだ回覧が始まっていないことを意味する。
-    field :workflow_current_circulation_level, type: Integer, default: 0
-    field :workflow_circulations, type: Workflow::Extensions::WorkflowCirculations
-    field :workflow_circulation_attachment_uses, type: Array
-    field :approved, type: DateTime
+    field :workflow_current_circulation_level, type: Integer, default: 0, metadata: { on_copy: :clear }
+    field :workflow_circulations, type: Workflow::Extensions::WorkflowCirculations, metadata: { on_copy: :clear }
+    field :workflow_circulation_attachment_uses, type: Array, metadata: { on_copy: :clear }
+    field :approved, type: DateTime, metadata: { on_copy: :clear }
 
     permit_params :workflow_user_id, :workflow_state, :workflow_comment, :workflow_pull_up, :workflow_on_remand
     permit_params workflow_approvers: []
