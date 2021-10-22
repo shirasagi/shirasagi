@@ -76,10 +76,10 @@ describe Cms::Page::ReleaseJob, dbscope: :example do
       copy.save!
       expect(copy.state).to eq "closed"
       expect(copy.files.count).to eq 1
-      expect(copy.files.first.id).not_to eq file.id
+      expect(copy.files.first.id).to eq file.id
       expect(copy.html).to include(file.humanized_name)
-      expect(copy.html).not_to include(file.url)
-      expect(copy.html).to include(copy.files.first.url)
+      expect(copy.html).to include(file.url)
+      expect(copy.html).to eq item.html
 
       # ready
       now = Time.zone.now.advance(days: -1)
@@ -109,10 +109,9 @@ describe Cms::Page::ReleaseJob, dbscope: :example do
       page = Article::Page.first
       expect(page.state).to eq "public"
       expect(page.file_ids.length).to eq 1
-      expect(page.file_ids[0]).not_to eq file.id
+      expect(page.file_ids[0]).to eq file.id
       expect(page.html).to include(file.humanized_name)
-      expect(page.html).not_to include(file.url)
-      expect(page.html).to include(page.files.first.url)
+      expect(page.html).to include(file.url)
 
       # there are no pages in trash
       expect(History::Trash.all.count).to eq 0

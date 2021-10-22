@@ -41,11 +41,12 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
 
       if item.class.fields.key?("file_ids")
         expect(branch.files.count).to eq item.files.count
-        expect(branch.files.pluck(:id) & item.files.pluck(:id)).to be_blank
+        expect(branch.files.pluck(:id) & item.files.pluck(:id)).to eq item.files.pluck(:id)
 
         expect(item.html).to include(item.files.first.url)
         expect(branch.html).to include(branch.files.first.url)
-        expect(branch.html).not_to include(item.files.first.url)
+        expect(branch.html).to include(item.files.first.url)
+        expect(branch.html).to eq item.html
       end
 
       # draft save

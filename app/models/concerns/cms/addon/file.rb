@@ -19,6 +19,83 @@ module Cms::Addon
       after_remove_file :remove_public_files if respond_to?(:after_remove_file)
     end
 
+    module Utils
+      extend SingleForwardable
+
+      module_function
+
+      delegate [:owner_item, :file_owned?] => SS::Relation::File::Utils
+
+      def each_file(file_ids, &block)
+        file_ids.each_slice(20) do |ids|
+          SS::File.in(id: ids).to_a.each(&block)
+        end
+      end
+
+      def attach_files(item, add_ids)
+        owner_item = Utils.owner_item(item)
+        is_branch = owner_item.respond_to?(:branch?) && owner_item.branch?
+
+        ids = []
+        Utils.each_file(item.file_ids) do |file|
+          if !item.allowed_other_user_files? && item.cur_user && item.cur_user.id != file.user_id
+            # 他人のファイルを謝って添付することを防止する
+            next
+          end
+
+          if !add_ids.include?(file.id)
+            # もともとから添付されていたファイルについては、必要であれば state を変更する
+            file.update(state: item.state) if item.state_changed?
+            ids << file.id
+            next
+          end
+
+          # ここから新規に追加されたファイルの処理
+
+          if Utils.file_owned?(file, owner_item)
+            # すでに自分自身が所有している場合は、必要であれば state を変更する
+            file.update(state: item.state) if item.state_changed?
+            ids << file.id
+            next
+          end
+
+          # 差し替えページの場合、ファイルの所有者が差し替え元なら、そのままとする
+          if is_branch && Utils.file_owned?(file, owner_item.master)
+            ids << file.id
+            next
+          end
+
+          result = file.update(site: item.site, model: item.model_name.i18n_key, owner_item: item, state: item.state)
+          if result
+            History::Log.build_file_log(file, site_id: item.cur_site.try(:id), user_id: item.cur_user.try(:id)).tap do |history|
+              history.action = "update"
+              history.behavior = "attachment"
+              history.save
+            end
+
+            ids << file.id
+          end
+        end
+
+        ids
+      end
+
+      def delete_files(item, del_ids)
+        Utils.each_file(del_ids) do |file|
+          file.skip_history_trash = item.skip_history_trash if [ file, item ].all? { |obj| obj.respond_to?(:skip_history_trash) }
+          file.cur_user = item.cur_user if file.respond_to?(:cur_user=) && item.cur_user
+          result = file.destroy
+          if result
+            History::Log.build_file_log(file, site_id: @cur_site.try(:id), user_id: @cur_user.try(:id)).tap do |history|
+              history.action = "destroy"
+              history.behavior = "attachment"
+              history.save
+            end
+          end
+        end
+      end
+    end
+
     def allow_other_user_files
       @allowed_other_user_files = true
     end
@@ -29,83 +106,74 @@ module Cms::Addon
 
     def save_files
       add_ids = file_ids - file_ids_was.to_a
-
-      ids = []
-      files.each do |file|
-        if !add_ids.include?(file.id)
-          file.update(owner_item: self, state: state) if state_changed?
-        elsif !allowed_other_user_files? && @cur_user && @cur_user.id != file.user_id
-          next
-        else
-          file.update(site: site, model: model_name.i18n_key, owner_item: self, state: state)
-          item = History::Log.build_file_log(file, site_id: @cur_site.try(:id), user_id: @cur_user.try(:id))
-          item.action = "update"
-          item.behavior = "attachment"
-          item.save
-        end
-        ids << file.id
-      end
+      ids = Utils.attach_files(self, add_ids)
       self.file_ids = ids
 
       del_ids = file_ids_was.to_a - ids
-      del_ids.each do |id|
-        file = SS::File.where(id: id).first
-        if file
-          file.skip_history_trash = skip_history_trash if [ file, self ].all? { |obj| obj.respond_to?(:skip_history_trash) }
-          file.cur_user = @cur_user if file.respond_to?(:cur_user=) && @cur_user
-          file.destroy
-          item = History::Log.build_file_log(file, site_id: @cur_site.try(:id), user_id: @cur_user.try(:id))
-          item.action = "destroy"
-          item.behavior = "attachment"
-          item.save
+      Utils.delete_files(self, del_ids)
+
+      return if self.try(:column_values).blank?
+
+      file_ids = []
+      self.column_values.each do |column_value|
+        file_ids += column_value.all_file_ids
+      end
+      file_ids.compact!
+      file_ids.uniq!
+
+      file_ids_was = []
+      column_values_was.each do |column_value|
+        file_ids_was += column_value.all_file_ids
+      end
+      file_ids_was.compact!
+      file_ids_was.uniq!
+
+      add_ids = file_ids - file_ids_was
+
+      if add_ids.present?
+        files = SS::File.in(id: add_ids)
+        files.each do |file|
+          History::Log.build_file_log(file, site_id: @cur_site.try(:id), user_id: @cur_user.try(:id)).tap do |history|
+            history.action = "update"
+            history.behavior = "attachment"
+            history.save
+          end
         end
       end
 
-      if add_ids.empty? && del_ids.empty?
-        unless self.try(:column_values).nil?
-          file_ids = []
-          self.column_values.each do |column_value|
-            file_ids += column_value.all_file_ids
-          end
-          file_ids.compact!
-          file_ids.uniq!
+      del_ids = file_ids_was - file_ids
 
-          file_ids_was = []
-          column_values_was.each do |column_value|
-            file_ids_was += column_value.all_file_ids
-          end
-          file_ids_was.compact!
-          file_ids_was.uniq!
-
-          add_ids = file_ids - file_ids_was
-
-          if add_ids.present?
-            files = SS::File.where(:id.in => add_ids)
-            files.each do |file|
-              item = History::Log.build_file_log(file, site_id: @cur_site.try(:id), user_id: @cur_user.try(:id))
-              item.action = "update"
-              item.behavior = "attachment"
-              item.save
-            end
-          end
-
-          del_ids = file_ids_was - file_ids
-
-          if del_ids.present?
-            files = SS::File.where(:id.in => del_ids)
-            files.each do |file|
-              item = History::Log.build_file_log(file, site_id: @cur_site.try(:id), user_id: @cur_user.try(:id))
-              item.action = "destroy"
-              item.behavior = "attachment"
-              item.save
-            end
+      if del_ids.present?
+        files = SS::File.where(:id.in => del_ids)
+        files.each do |file|
+          History::Log.build_file_log(file, site_id: @cur_site.try(:id), user_id: @cur_user.try(:id)).tap do |history|
+            history.action = "destroy"
+            history.behavior = "attachment"
+            history.save
           end
         end
       end
     end
 
     def destroy_files
-      files.destroy_all
+      owner_item = Utils.owner_item(self)
+      is_branch = owner_item.respond_to?(:branch?) && owner_item.branch?
+
+      Utils.each_file(file_ids) do |file|
+        if is_branch
+          # 差し替えページの場合、差し替え元と共有している可能性がある。共有している場合は削除しないようにする。
+          next if !Utils.file_owned?(file, owner_item) && Utils.file_owned?(file, owner_item.master)
+        end
+
+        result = file.destroy
+        if result
+          History::Log.build_file_log(file, site_id: @cur_site.try(:id), user_id: @cur_user.try(:id)).tap do |history|
+            history.action = "destroy"
+            history.behavior = "attachment"
+            history.save
+          end
+        end
+      end
     end
 
     def generate_public_files
@@ -132,7 +200,15 @@ module Cms::Addon
     end
 
     def update_owner_item_of_files
-      files.each do |file|
+      owner_item = Utils.owner_item(self)
+      is_branch = owner_item.respond_to?(:branch?) && owner_item.branch?
+
+      Utils.each_file(file_ids) do |file|
+        next if Utils.file_owned?(file, owner_item)
+
+        # 差し替えページの場合、所有者を差し替え元のままとする
+        next if is_branch && Utils.file_owned?(file, owner_item.master)
+
         file.update(owner_item: self)
       end
     end

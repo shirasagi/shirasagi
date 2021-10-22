@@ -81,6 +81,9 @@ module Workflow::Addon
     end
 
     def clone_files
+      return if file_ids.blank?
+      return if respond_to?(:branch?) && branch?
+
       run_callbacks(:clone_files) do
         ids = {}
         files.each do |f|
