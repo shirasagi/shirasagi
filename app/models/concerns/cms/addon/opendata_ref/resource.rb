@@ -3,7 +3,7 @@ module Cms::Addon::OpendataRef::Resource
   extend ActiveSupport::Concern
 
   included do
-    field :opendata_resources, type: Hash, metadata: { on_copy: :clear, branch: false }
+    field :opendata_resources, type: Hash, metadata: { on_copy: :clear }
 
     permit_params opendata_resources: {}
 

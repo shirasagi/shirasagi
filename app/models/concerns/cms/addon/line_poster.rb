@@ -9,8 +9,8 @@ module Cms::Addon
       field :line_auto_post, type: String
       field :line_edit_auto_post, type: String
 
-      field :line_posted, type: Array, default: [], metadata: { branch: false }
-      field :line_post_error, type: String, metadata: { branch: false }
+      field :line_posted, type: Array, default: [], metadata: { on_copy: :clear }
+      field :line_post_error, type: String, metadata: { on_copy: :clear }
 
       field :line_text_message, type: String
       field :line_post_format, type: String

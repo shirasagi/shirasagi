@@ -15,8 +15,8 @@ module Cms::Addon
       field :twitter_post_format, type: String
       field :twitter_edit_auto_post, type: String
 
-      field :twitter_posted, type: Array, default: [], metadata: { branch: false }
-      field :twitter_post_error, type: String, metadata: { branch: false }
+      field :twitter_posted, type: Array, default: [], metadata: { on_copy: :clear }
+      field :twitter_post_error, type: String, metadata: { on_copy: :clear }
 
       permit_params :twitter_auto_post, :twitter_edit_auto_post, :twitter_post_format, :twitter_post_id, :twitter_user_id
 
