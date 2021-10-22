@@ -95,6 +95,17 @@ module SS::Document
         [field[0], t(field[0])]
       end.to_h
     end
+
+    def ss_belongs_to(name, options = {}, &block)
+      metadata = options.delete(:metadata)
+      association = belongs_to(name, options, &block)
+
+      if metadata
+        fields[association.foreign_key].try do |field|
+          field.options[:metadata] = metadata
+        end
+      end
+    end
   end
 
   def assign_attributes_safe(attr)
