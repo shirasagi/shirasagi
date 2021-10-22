@@ -24,9 +24,9 @@ module Cms::Content
     field :filename, type: String
     field :depth, type: Integer
     field :order, type: Integer, default: 0
-    field :released, type: DateTime
+    field :released, type: DateTime, metadata: { on_copy: :clear }
     field :released_type, type: String, default: ->{ self.class.default_released_type }
-    field :first_released, type: DateTime
+    field :first_released, type: DateTime, metadata: { on_copy: :clear }
     field :md5, type: String
 
     permit_params :state, :name, :index_name, :filename, :basename, :order, :released, :released_type, :route
@@ -35,12 +35,13 @@ module Cms::Content
     validates :name, presence: true
     validates :filename, uniqueness: { scope: :site_id }, length: { maximum: 200 }
     validates :released, datetime: true
-    after_validation :update_released, if: -> { public? }
+    validate :validate_name, if: ->{ name.present? }
+
     before_validation :set_filename
     before_validation :validate_filename
-    after_validation :set_depth, if: ->{ filename.present? }
 
-    validate :validate_name, if: ->{ name.present? }
+    after_validation :update_released, if: -> { public? }
+    after_validation :set_depth, if: ->{ filename.present? }
 
     after_destroy :remove_private_dir
 

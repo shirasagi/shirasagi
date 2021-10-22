@@ -17,6 +17,13 @@ module Workflow::Addon
 
       before_merge_branch :merge_file_histories rescue nil
 
+      before_create do
+        if master.present?
+          self.released = master.released
+          self.first_released = master.first_released
+        end
+      end
+
       before_save :seq_clone_filename, if: ->{ new_clone? && basename.blank? }
       after_save :merge_to_master
 
