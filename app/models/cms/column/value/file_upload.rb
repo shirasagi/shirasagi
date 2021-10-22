@@ -126,10 +126,8 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
       # history_files
       if @merge_values
-        clone_file.master_id = nil
         clone_file.history_file_ids = file.history_file_ids
       else
-        clone_file.master_id = file.id
         clone_file.history_file_ids = []
       end
 

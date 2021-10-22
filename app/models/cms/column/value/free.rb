@@ -73,10 +73,8 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
 
           # history_files
           if @merge_values
-            clone_file.master_id = nil
             clone_file.history_file_ids = source_file.history_file_ids
           else
-            clone_file.master_id = source_file.id
             clone_file.history_file_ids = []
           end
 
