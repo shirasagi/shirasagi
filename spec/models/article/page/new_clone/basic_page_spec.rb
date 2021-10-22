@@ -27,8 +27,7 @@ describe Article::Page, dbscope: :example do
           expect(subject.site_id).to eq item.site_id
           expect(subject.name).to eq item.name
           expect(subject.index_name).to eq item.index_name
-          expect(subject.filename).not_to eq item.filename
-          expect(subject.filename).to start_with "#{node.filename}/"
+          expect(subject.filename).to eq "#{node.filename}/"
           expect(subject.depth).to eq item.depth
           expect(subject.order).to eq item.order
           expect(subject.state).not_to eq item.state
@@ -77,6 +76,7 @@ describe Article::Page, dbscope: :example do
           expect(subject.index_name).to eq item.index_name
           expect(subject.filename).not_to eq item.filename
           expect(subject.filename).to start_with "#{node.filename}/"
+          expect(subject.filename).to end_with ".html"
           expect(subject.depth).to eq item.depth
           expect(subject.order).to eq item.order
           expect(subject.state).not_to eq item.state
@@ -141,6 +141,7 @@ describe Article::Page, dbscope: :example do
             expect(subject.index_name).to eq item.index_name
             expect(subject.filename).not_to eq item.filename
             expect(subject.filename).to start_with "#{node.filename}/"
+            expect(subject.filename).to end_with ".html"
             expect(subject.depth).to eq item.depth
             expect(subject.order).to eq item.order
             expect(subject.state).not_to eq item.state
