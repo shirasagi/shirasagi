@@ -4,7 +4,7 @@ class Gws::Memo::MessageBackupJob < Gws::ApplicationJob
   def perform(*args)
     opts = args.extract_options!
     @datetime = Time.zone.now
-    @message_ids = args
+    @message_ids = args[0]
     @root_url = opts[:root_url].to_s
     @output_zip = SS::ZipCreator.new("gws-memo-messages.zip", user, site: site)
     @output_format = opts[:format].to_s.presence || "json"

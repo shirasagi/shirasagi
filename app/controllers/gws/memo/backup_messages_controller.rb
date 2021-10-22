@@ -57,7 +57,7 @@ class Gws::Memo::BackupMessagesController < ApplicationController
     end
 
     job_class = Gws::Memo::MessageBackupJob.bind(site_id: @cur_site.id, user_id: @cur_user)
-    job_class.perform_later(*message_ids, root_url: root_url, backup_filter: backup_filter, format: format)
+    job_class.perform_later(message_ids, root_url: root_url, backup_filter: backup_filter, format: format)
     render_create true, location: { action: :start_backup }, notice: I18n.t("gws/memo/message.notice.start_backup")
   end
 

@@ -63,73 +63,13 @@ class Gws::Memo::MessageImporter
     end
 
     # to_member_ids
-    if msg.to.present?
-      to_member_ids = []
-      item.to_member_ids = []
-      to_webmail_address_group_ids = []
-      to_shared_address_group_ids = []
-      msg.header["Member-IDs"].value.split(",").each do |id|
-        receiver = find_user(id.to_i)
-        to_member_ids << receiver.id if receiver
-      end
-      item.to_member_ids = to_member_ids if to_member_ids.present?
-
-      to_webmail_address_group_ids = []
-      to_shared_address_group_ids = []
-      msg.to.each do |address|
-        webmail_address_group = find_webmail_address_group(address)
-        to_webmail_address_group_ids << webmail_address_group.id if webmail_address_group
-
-        shared_address_group = find_shared_address_group(address)
-        to_shared_address_group_ids << shared_address_group.id if shared_address_group
-      end
-      item.to_webmail_address_group_ids = to_webmail_address_group_ids
-      item.to_shared_address_group_ids = to_shared_address_group_ids
-
-      item.to_member_ids += [cur_user.id] if item.to_member_ids.blank?
-    end
+    item = import_to_members(msg, item) if msg.to.present?
 
     # cc_member_ids
-    if msg.cc.present?
-      item.cc_member_ids = []
-      msg.header["Cc-IDs"].value.split(",").each do |id|
-        receiver = find_user(id.to_i)
-        item.cc_member_ids += [receiver.id] if receiver
-      end
-
-      cc_webmail_address_group_ids = []
-      cc_shared_address_group_ids = []
-      msg.cc.each do |address|
-        webmail_address_group = find_webmail_address_group(address)
-        cc_webmail_address_group_ids << webmail_address_group.id if webmail_address_group
-
-        shared_address_group = find_shared_address_group(address)
-        cc_shared_address_group_ids << shared_address_group.id if shared_address_group
-      end
-      item.cc_webmail_address_group_ids = cc_webmail_address_group_ids
-      item.cc_shared_address_group_ids = cc_shared_address_group_ids
-    end
+    item = import_cc_members(msg, item) if msg.cc.present?
 
     # bcc_member_ids
-    if msg.bcc.present?
-      item.bcc_member_ids = []
-      msg.header["Bcc-IDs"].value.split(",").each do |id|
-        receiver = find_user(id.to_i)
-        item.bcc_member_ids += [receiver.id] if receiver
-      end
-
-      bcc_webmail_address_group_ids = []
-      bcc_shared_address_group_ids = []
-      msg.bbc.each do |address|
-        webmail_address_group = find_webmail_address_group(address)
-        bcc_webmail_address_group_ids << webmail_address_group.id if webmail_address_group
-
-        shared_address_group = find_shared_address_group(address)
-        bcc_shared_address_group_ids << shared_address_group.id if shared_address_group
-      end
-      item.bcc_webmail_address_group_ids = bcc_webmail_address_group_ids
-      item.bcc_shared_address_group_ids = bcc_shared_address_group_ids
-    end
+    item = import_bcc_members(msg, item) if msg.bcc.present?
 
     item.member_ids = member_ids(item).sort
 
@@ -197,6 +137,78 @@ class Gws::Memo::MessageImporter
     item
   end
 
+  def import_to_members(msg, item)
+    to_member_ids = []
+    item.to_member_ids = []
+    to_webmail_address_group_ids = []
+    to_shared_address_group_ids = []
+    msg.header["Member-IDs"].value.split(",").each do |id|
+      receiver = find_user(id.to_i)
+      to_member_ids << receiver.id if receiver
+    end
+    item.to_member_ids = to_member_ids if to_member_ids.present?
+
+    to_webmail_address_group_ids = []
+    to_shared_address_group_ids = []
+    msg.to.each do |address|
+      webmail_address_group = find_webmail_address_group(address)
+      to_webmail_address_group_ids << webmail_address_group.id if webmail_address_group
+
+      shared_address_group = find_shared_address_group(address)
+      to_shared_address_group_ids << shared_address_group.id if shared_address_group
+    end
+    item.to_webmail_address_group_ids = to_webmail_address_group_ids
+    item.to_shared_address_group_ids = to_shared_address_group_ids
+
+    item.to_member_ids += [cur_user.id] if item.to_member_ids.blank?
+
+    item
+  end
+
+  def import_cc_members(msg, item)
+    item.cc_member_ids = []
+    msg.header["Cc-IDs"].value.split(",").each do |id|
+      receiver = find_user(id.to_i)
+      item.cc_member_ids += [receiver.id] if receiver
+    end
+
+    cc_webmail_address_group_ids = []
+    cc_shared_address_group_ids = []
+    msg.cc.each do |address|
+      webmail_address_group = find_webmail_address_group(address)
+      cc_webmail_address_group_ids << webmail_address_group.id if webmail_address_group
+
+      shared_address_group = find_shared_address_group(address)
+      cc_shared_address_group_ids << shared_address_group.id if shared_address_group
+    end
+    item.cc_webmail_address_group_ids = cc_webmail_address_group_ids
+    item.cc_shared_address_group_ids = cc_shared_address_group_ids
+
+    item
+  end
+
+  def import_bcc_members(msg, item)
+    item.bcc_member_ids = []
+    msg.header["Bcc-IDs"].value.split(",").each do |id|
+      receiver = find_user(id.to_i)
+      item.bcc_member_ids += [receiver.id] if receiver
+    end
+
+    bcc_webmail_address_group_ids = []
+    bcc_shared_address_group_ids = []
+    msg.bbc.each do |address|
+      webmail_address_group = find_webmail_address_group(address)
+      bcc_webmail_address_group_ids << webmail_address_group.id if webmail_address_group
+
+      shared_address_group = find_shared_address_group(address)
+      bcc_shared_address_group_ids << shared_address_group.id if shared_address_group
+    end
+    item.bcc_webmail_address_group_ids = bcc_webmail_address_group_ids
+    item.bcc_shared_address_group_ids = bcc_shared_address_group_ids
+
+    item
+  end
+
   def get_folder_name(entry_name)
     structure = NKF.nkf("-Ww", entry_name)
     if structure.count("/") == 1
@@ -243,11 +255,6 @@ class Gws::Memo::MessageImporter
 
   def find_shared_address_group(name)
     Gws::SharedAddress::Group.find_by(name: name) rescue nil
-  end
-
-  def valid_address?(email_address)
-    valid_address = /\A[a-zA-Z0-9_\#!$%&`'*+\-{|}~^\/=?\.]+@[a-zA-Z0-9][a-zA-Z0-9\.-]+\z/
-    valid_address =~ email_address
   end
 
   def member_ids(item)

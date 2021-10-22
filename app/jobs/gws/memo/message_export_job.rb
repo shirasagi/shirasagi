@@ -39,7 +39,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
       if item.to_members.present?
         data['to_members'] = item.to_members.map { |u| user_attributes(u) }
         data['to_members_name_email'] = item.to_members.map { |u| user_name_email(u) }
-        data['to_member_ids'] = item.to_members.map { |u| u.id }
+        data['to_member_ids'] = item.to_members.map(&:id)
       end
 
       data['to_members_name_email'] =[] if data['to_members_name_email'].nil?
@@ -58,7 +58,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
       if item.cc_members.present?
         data['cc_members'] = item.cc_members.map { |u| user_attributes(u) }
         data['cc_members_name_email'] = item.cc_members.map { |u| user_name_email(u) }
-        data['cc_member_ids'] = item.cc_members.map { |u| u.id }
+        data['cc_member_ids'] = item.cc_members.map(&:id)
       end
 
       data['cc_members_name_email'] = [] if data['cc_members_name_email'].nil?
