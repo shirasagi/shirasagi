@@ -125,13 +125,10 @@ module Workflow::Addon
     end
 
     def clone_thumb
-      run_callbacks(:clone_thumb) do
-        return if thumb.blank?
-        return if respond_to?(:branch?) && branch?
+      return if thumb.blank?
+      return if respond_to?(:branch?) && branch?
 
-        self.thumb = clone_file(thumb)
-        thumb
-      end
+      self.thumb = clone_file(thumb)
     end
 
     def merge_branch

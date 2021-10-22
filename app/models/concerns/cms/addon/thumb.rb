@@ -11,8 +11,6 @@ module Cms::Addon
       permit_params :in_thumb
       validate :validate_thumb, if: ->{ in_thumb.present? }
 
-      define_model_callbacks :clone_thumb
-
       before_save :clone_thumb, if: ->{ try(:new_clone?) }
       after_generate_file :generate_thumb_public_file if respond_to?(:after_generate_file)
       after_remove_file :remove_thumb_public_file if respond_to?(:after_remove_file)
