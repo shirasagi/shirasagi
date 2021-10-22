@@ -36,5 +36,22 @@ class SS::File
       metadata = config[2] if config
       metadata
     end
+
+    def clone_file(file, cur_user: nil, owner_item: nil, &block)
+      attributes = file.attributes.to_h
+      attributes.stringify_keys!
+      attributes.select! { |k| file.fields.key?(k) }
+
+      attributes["user_id"] = cur_user.id if cur_user && attributes.key?("user_id")
+      attributes.delete("_id")
+
+      file.class.create_empty!(attributes, validate: false) do |new_file|
+        new_file.owner_item = owner_item if owner_item
+        ::FileUtils.copy(file.path, new_file.path)
+
+        yield new_file if block_given?
+        new_file.sanitizer_copy_file
+      end
+    end
   end
 end

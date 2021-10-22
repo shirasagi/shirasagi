@@ -93,15 +93,7 @@ module Workflow::Addon
     end
 
     def clone_file(source_file)
-      attributes = Hash[source_file.attributes]
-      attributes.select!{ |k| source_file.fields.key?(k) }
-
-      attributes["user_id"] = @cur_user.id if @cur_user
-      attributes["_id"] = nil
-      file = SS::File.create_empty!(attributes, validate: false) do |new_file|
-        ::FileUtils.copy(source_file.path, new_file.path)
-        new_file.sanitizer_copy_file
-      end
+      file = SS::File.clone_file(source_file, cur_user: @cur_user, owner_item: SS::Relation::File::Utils.owner_item(self))
 
       if respond_to?(:html) && html.present?
         html = self.html

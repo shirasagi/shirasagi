@@ -21,13 +21,13 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
   end
 
   def generate_public_files
-    files.each do |file|
+    Cms::Addon::File::Utils.each_file(file_ids) do |file|
       file.generate_public_file
     end
   end
 
   def remove_public_files
-    files.each do |file|
+    Cms::Addon::File::Utils.each_file(file_ids) do |file|
       file.remove_public_file
     end
   end
@@ -57,54 +57,33 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
   def before_save_files
     if @new_clone
       cloned_file_ids = []
-      file_ids.each_slice(20) do |ids|
-        SS::File.in(id: ids).to_a.each do |source_file|
-          attributes = Hash[source_file.attributes]
-          attributes.select!{ |k| source_file.fields.key?(k) }
-
-          attributes["user_id"] = @cur_user.id if @cur_user
-          attributes["_id"] = nil
-          attributes["model"] = _parent.class.name
-          attributes["state"] = _parent.state
-          clone_file = SS::File.create_empty!(attributes, validate: false) do |new_file|
-            ::FileUtils.copy(source_file.path, new_file.path)
-          end
-          clone_file.owner_item = _parent
-
+      Cms::Addon::File::Utils.each_file(file_ids) do |source_file|
+        clone_file = SS::File.clone_file(source_file, cur_user: @cur_user, owner_item: _parent) do |new_file|
           # history_files
           if @merge_values
-            clone_file.history_file_ids = source_file.history_file_ids
-          else
-            clone_file.history_file_ids = []
+            new_file.history_file_ids = source_file.history_file_ids
           end
-
-          clone_file.save(validate: false)
-          clone_file.sanitizer_copy_file
-          result = clone_file
-
-          next unless result
-
-          cloned_file_ids << clone_file.id
-
-          cloned_value = self.value.to_s
-          cloned_value.gsub!("=\"#{source_file.url}\"", "=\"#{clone_file.url}\"")
-          cloned_value.gsub!("=\"#{source_file.thumb_url}\"", "=\"#{clone_file.thumb_url}\"")
-          self.value = cloned_value
         end
+        next unless clone_file
+
+        cloned_file_ids << clone_file.id
+
+        cloned_value = self.value.to_s
+        cloned_value.gsub!("=\"#{source_file.url}\"", "=\"#{clone_file.url}\"")
+        cloned_value.gsub!("=\"#{source_file.thumb_url}\"", "=\"#{clone_file.thumb_url}\"")
+        self.value = cloned_value
       end
 
       self.file_ids = cloned_file_ids
     else
       del_ids = file_ids_was.to_a - file_ids
-      del_ids.each_slice(20) do |ids|
-        SS::File.in(id: ids).destroy_all
+      Cms::Addon::File::Utils.each_file(del_ids) do |file|
+        file.destroy
       end
 
       add_ids = _parent.state_changed? ? file_ids : file_ids - file_ids_was.to_a
-      add_ids.each_slice(20) do |ids|
-        SS::File.in(id: ids).to_a.each do |file|
-          file.update(site_id: _parent.site_id, model: _parent.class.name, owner_item: _parent, state: _parent.state)
-        end
+      Cms::Addon::File::Utils.each_file(add_ids) do |file|
+        file.update(site_id: _parent.site_id, model: _parent.class.name, owner_item: _parent, state: _parent.state)
       end
 
       begin
@@ -118,15 +97,15 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
 
   def destroy_files
     if !_parent.respond_to?(:skip_history_trash)
-      files.destroy_all
+      Cms::Addon::File::Utils.each_file(file_ids) do |file|
+        file.destroy
+      end
       return
     end
 
-    file_ids.each_slice(20) do |ids|
-      SS::File.in(id: ids).to_a.map(&:becomes_with_model).each do |file|
-        file.skip_history_trash = _parent.skip_history_trash if file.respond_to?(:skip_history_trash)
-        file.destroy
-      end
+    Cms::Addon::File::Utils.each_file(file_ids) do |file|
+      file.skip_history_trash = _parent.skip_history_trash if file.respond_to?(:skip_history_trash)
+      file.destroy
     end
   end
 

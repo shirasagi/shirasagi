@@ -114,25 +114,13 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     return if file.blank?
 
     if @new_clone
-      attributes = Hash[file.attributes]
-      attributes.select!{ |k| file.fields.key?(k) }
-
-      attributes["user_id"] = @cur_user.id if @cur_user
-      attributes["_id"] = nil
-      clone_file = SS::File.create_empty!(attributes, validate: false) do |new_file|
-        ::FileUtils.copy(file.path, new_file.path)
-      end
-      clone_file.owner_item = _parent
-
-      # history_files
-      if @merge_values
-        clone_file.history_file_ids = file.history_file_ids
-      else
-        clone_file.history_file_ids = []
+      clone_file = SS::File.clone_file(file, cur_user: @cur_user, owner_item: _parent) do |new_file|
+        # history_files
+        if @merge_values
+          new_file.history_file_ids = file.history_file_ids
+        end
       end
 
-      clone_file.save(validate: false)
-      clone_file.sanitizer_copy_file
       self.file = clone_file
     end
 
