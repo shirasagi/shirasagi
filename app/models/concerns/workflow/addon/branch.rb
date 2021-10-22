@@ -35,22 +35,86 @@ module Workflow::Addon
       name =~ /^\[#{::Regexp.escape(prefix)}\]/
     end
 
-    def new_clone(attributes = {})
-      attributes = self.attributes.merge(attributes).select { |k| self.fields.key?(k) }
-      self.fields.select { |n, v| (v.options.dig(:metadata, :on_copy) == :clear) }.each do |n, v|
-        attributes.delete(n)
+    module Utils
+      module_function
+
+      def clone_attributes(item, attributes_to_override = nil)
+        attributes = Hash[item.attributes]
+        attributes.stringify_keys!
+        # "#attributes" では現在では廃止されている属性が取得される場合がある；それを除去する
+        attributes.select! { |k, _v| item.fields.key?(k) }
+
+        attr_names_to_clear = item.fields.select { |n, v| v.options.dig(:metadata, :on_copy) == :clear }.map { |n, v| n }
+        # new を呼び出す前に _id を削除しておかないと `#branches` などの参照が変になる
+        attr_names_to_clear << "_id"
+        # 特定の日付フィールドはクリアしておく
+        attr_names_to_clear << "updated"
+        attr_names_to_clear << "created"
+
+        attributes = attributes.except(*attr_names_to_clear)
+
+        attributes["filename"] = "#{item.dirname}/" if attributes.key?("filename")
+        attributes["state"] = "closed" if attributes.key?("state")
+
+        if attributes_to_override
+          attributes_to_override = attributes_to_override.stringify_keys
+          attributes_to_override.select! { |k, _v| item.fields.key?(k) }
+
+          attributes.merge!(attributes_to_override)
+        end
+
+        attributes
       end
 
+      ATTR_NAMES_TO_DELETE_ON_MERGE = [
+        # _id を念のため削除しておく
+        "_id",
+        # 特定の日付フィールドは上書きしないように削除しておく
+        "updated", "created",
+        # 他、上書きしないように削除
+        "filename", "master_id"
+      ].freeze
+
+      def merge_attributes(master, branch)
+        attributes = Hash[master.attributes]
+        attributes.stringify_keys!
+        # "#attributes" では現在では廃止されている属性が取得される場合がある；それを除去する
+        attributes.select! { |k, _v| master.fields.key?(k) }
+
+        attributes_to_override = Hash[branch.attributes]
+        attributes_to_override.stringify_keys!
+
+        master.fields.each do |field_name, field_info|
+          if ATTR_NAMES_TO_DELETE_ON_MERGE.include?(field_name)
+            attributes.delete(field_name)
+            next
+          end
+
+          on_merge = field_info.options.dig(:metadata, :on_merge)
+          case on_merge
+          when :clear
+            attributes[field_name] = field_info.default_val
+          when :keep
+            attributes.delete(field_name)
+          else
+            if attributes.key?(field_name)
+              attributes[field_name] = attributes_to_override[field_name] || field_info.default_val
+            elsif attributes_to_override.key?(field_name)
+              attributes[field_name] = attributes_to_override[field_name]
+            end
+          end
+        end
+
+        attributes
+      end
+    end
+
+    def new_clone(attributes_to_override = nil)
+      attributes = Utils.clone_attributes(self, attributes_to_override)
       item = self.class.new(attributes)
-      item.id = nil
-      item.state = "closed"
       item.cur_user = @cur_user
       item.cur_site = @cur_site
       item.cur_node = @cur_node
-      if attributes[:filename].nil?
-        item.filename = "#{dirname}/"
-        item.basename = ""
-      end
 
       if item.is_a?(Cms::Addon::Form::Page)
         item.copy_column_values(self)
@@ -126,15 +190,7 @@ module Workflow::Addon
       run_callbacks(:merge_branch) do
         self.reload
 
-        attributes = {}
-        in_branch_attributes = in_branch.attributes.to_h
-        self.fields.each do |k, v|
-          next if k == "_id"
-          next if k == "filename"
-          next if v.options.dig(:metadata, :branch) == false
-          attributes[k] = in_branch_attributes[k]
-        end
-
+        attributes = Utils.merge_attributes(self, in_branch)
         self.attributes = attributes
         self.master_id = nil
         self.allow_other_user_files if respond_to?(:allow_other_user_files)
