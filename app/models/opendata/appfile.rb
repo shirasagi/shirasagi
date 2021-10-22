@@ -78,20 +78,23 @@ class Opendata::Appfile
 
     return if file.blank?
 
-    if @new_clone
-      attributes = Hash[file.attributes]
-      attributes.select!{ |k| file.fields.key?(k) }
-
-      attributes["user_id"] = @cur_user.id if @cur_user
-      attributes["_id"] = nil
-      clone_file = SS::File.create_empty!(attributes, validate: false) do |new_file|
-        ::FileUtils.copy(file.path, new_file.path)
-      end
-      clone_file.owner_item = _parent
-      clone_file.save(validate: false)
-      clone_file.sanitizer_copy_file
-      self.file = clone_file
-    end
+    # below code must be dead one because opendata/app doesn't include Workflow::Addon::Branch
+    # So, @new_clone must never been set to true.
+    #
+    # if @new_clone
+    #   attributes = Hash[file.attributes]
+    #   attributes.select!{ |k| file.fields.key?(k) }
+    #
+    #   attributes["user_id"] = @cur_user.id if @cur_user
+    #   attributes["_id"] = nil
+    #   clone_file = SS::File.create_empty!(attributes, validate: false) do |new_file|
+    #     ::FileUtils.copy(file.path, new_file.path)
+    #   end
+    #   clone_file.owner_item = _parent
+    #   clone_file.save(validate: false)
+    #   clone_file.sanitizer_copy_file
+    #   self.file = clone_file
+    # end
 
     attrs = {}
 
