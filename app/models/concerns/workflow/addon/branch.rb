@@ -260,7 +260,7 @@ module Workflow::Addon
       return if self.state != "public"
 
       if master.locked? && !master.lock_owned?(@cur_user)
-        errors.add :base, :locked, user: master.lock_owner.long_name
+        errors.add :base, :locked, user: (master.lock_owner.try(:long_name) || "no name")
       end
     end
   end
