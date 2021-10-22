@@ -118,10 +118,20 @@ this.Cms_Source_Cleaner = (function (superClass) {
   };
 
   Cms_Source_Cleaner.removeAttribute = function (html, opts) {
-    var ret, value;
+    var regxp, ret, value, replace_source;
     value = opts["value"];
+    replace_source = opts["replace_source"];
     ret = $('<div>' + html + '</div>');
-    $(ret).find("*").removeAttr(value);
+    if (replace_source) {
+      regxp = new RegExp(Cms_Source_Cleaner.regexpEscape(replace_source), "g");
+      $(ret).find("*").each(function () {
+        if ($(this).attr(value)) {
+          $(this).attr(value, $(this).attr(value).replace(regxp, ''));
+        }
+      });
+    } else {
+      $(ret).find("*").removeAttr(value);
+    }
     return ret.html();
   };
 
@@ -168,9 +178,14 @@ this.Cms_Source_Cleaner = (function (superClass) {
     ret = $('<div>' + html + '</div>');
     if (replace_source) {
       regxp = new RegExp(Cms_Source_Cleaner.regexpEscape(replace_source), "g");
-      replaced = $(ret).find("*").attr(value).replace(regxp, replaced);
+      $(ret).find("*").each(function () {
+        if ($(this).attr(value)) {
+          $(this).attr(value, $(this).attr(value).replace(regxp, replaced));
+        }
+      });
+    } else {
+      $(ret).find("*").attr(value, replaced);
     }
-    $(ret).find("*").attr(value, replaced);
     return ret.html();
   };
 

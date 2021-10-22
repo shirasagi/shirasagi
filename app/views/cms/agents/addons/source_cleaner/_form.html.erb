@@ -5,10 +5,10 @@
     $(".replace-source").hide();
     $(".replaced-value").hide();
 
+    if (target == "attribute") {
+      $(".replace-source").show();
+    }
     if (action == "replace") {
-      if (target == "attribute") {
-        $(".replace-source").show();
-      }
       $(".replaced-value").show();
     }
   }

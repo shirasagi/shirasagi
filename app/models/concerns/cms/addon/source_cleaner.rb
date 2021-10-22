@@ -23,11 +23,14 @@ module Cms::Addon
     def validate_action_type
       return if action_type == "replace"
 
-      self.replace_source = nil
       self.replaced_value = nil
     end
 
     def validate_target_type
+      if target_type != 'attribute'
+        self.replace_source = nil
+      end
+
       if action_type == "replace" && replaced_value.blank?
         errors.add :replaced_value, :blank
       end
