@@ -11,12 +11,12 @@ module Cms::Addon
     included do
       attr_accessor :skip_twitter_post
 
-      field :twitter_auto_post, type: String
+      field :twitter_auto_post, type: String, default: "expired", metadata: { on_copy: :clear }
       field :twitter_post_format, type: String
-      field :twitter_edit_auto_post, type: String
+      field :twitter_edit_auto_post, type: String, default: "disabled", metadata: { on_copy: :clear }
 
-      field :twitter_posted, type: Array, default: [], metadata: { on_copy: :clear }
-      field :twitter_post_error, type: String, metadata: { on_copy: :clear }
+      field :twitter_posted, type: Array, default: [], metadata: { on_copy: :clear, on_merge: :keep }
+      field :twitter_post_error, type: String, metadata: { on_copy: :clear, on_merge: :keep }
 
       permit_params :twitter_auto_post, :twitter_edit_auto_post, :twitter_post_format, :twitter_post_id, :twitter_user_id
 
@@ -118,7 +118,7 @@ module Cms::Addon
             twitter_posted: {
               twitter_post_id: twitter_id.to_s,
               twitter_user_id: user_screen_id,
-              posted_at: posted_at
+              posted_at: posted_at.utc
             }
           )
           self.unset(:twitter_edit_auto_post, :twitter_post_error) #編集時に投稿をリセット

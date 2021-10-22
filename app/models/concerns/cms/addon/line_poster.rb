@@ -6,11 +6,11 @@ module Cms::Addon
     included do
       attr_accessor :skip_line_post
 
-      field :line_auto_post, type: String
-      field :line_edit_auto_post, type: String
+      field :line_auto_post, type: String, default: "expired", metadata: { on_copy: :clear }
+      field :line_edit_auto_post, type: String, default: "disabled", metadata: { on_copy: :clear }
 
-      field :line_posted, type: Array, default: [], metadata: { on_copy: :clear }
-      field :line_post_error, type: String, metadata: { on_copy: :clear }
+      field :line_posted, type: Array, default: [], metadata: { on_copy: :clear, on_merge: :keep }
+      field :line_post_error, type: String, metadata: { on_copy: :clear, on_merge: :keep }
 
       field :line_text_message, type: String
       field :line_post_format, type: String
@@ -114,7 +114,7 @@ module Cms::Addon
     def execute_post_to_line
       Cms::SnsPostLog::Line.create_with(self) do |log|
         begin
-          posted_at = Time.zone.now
+          posted_at = Time.zone.now.utc
           log.created = posted_at
           log.action = "broadcast"
 
