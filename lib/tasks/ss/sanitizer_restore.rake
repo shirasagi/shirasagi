@@ -1,11 +1,23 @@
 namespace :ss do
-  # input: sanitizer_input/{ID}_{TIMESTAMP}.ext
-  # output: sanitizer_output/{ID}_{FILENAME}_{PID}_marked.ext
+  # input: sanitizer_input/{PREFIX}_{TYPE}_{ID}_{TIMESTAMP}.ext
+  # output: sanitizer_output/{PREFIX}_{TYPE}_{ID}_{FILENAME}_{PID}_{SUFFIX}.ext
   task sanitizer_restore: :environment do
     return unless SS.config.ss.sanitizer_output
 
+    allow_suffix = %w(marked marked.MSOfficeWithPassword withPassword withEncrypt sanitized)
+
     ::Fs.glob("#{Rails.root}/#{SS.config.ss.sanitizer_output}/*").sort.each do |path|
       filename = ::File.basename(path)
+      next unless filename.starts_with?("#{SS.config.ss.sanitizer_file_prefix}_")
+
+      basename = ::File.basename(filename, '.*')
+      values = basename.split('_')
+      if !allow_suffix.include?(values.last)
+        Fs.rm_rf(path)
+        next
+      end
+
+      SS::UploadPolicy.sanitizer_rename_zip(path) if ::File.extname(path) == '.zip'
 
       if job_model = Uploader::JobFile.sanitizer_restore(path)
         puts "restored: #{filename} -> #{job_model.path}"

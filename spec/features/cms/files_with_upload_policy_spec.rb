@@ -63,6 +63,32 @@ describe "cms_files_with_upload_policy", type: :feature, dbscope: :example, js: 
       end
       expect(current_path).to eq index_path
     end
+
+    it do
+      # create
+      visit new_path
+      within "form#item-form" do
+        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
+        click_button I18n.t('ss.buttons.save')
+      end
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+      # sanitizer_setting is nil
+      upload_policy_before_settings(nil)
+
+      # update
+      file = Cms::File.all.first
+      visit edit_cms_file_path(site: site.id, id: file.id)
+      within "form#item-form" do
+        attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/ss/logo.png"
+        click_button I18n.t('ss.buttons.save')
+      end
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).not_to have_css('.sanitizer-wait')
+
+      file = Cms::File.all.first
+      expect(file.sanitizer_state).to eq nil
+    end
   end
 
   context "restricted setting" do
