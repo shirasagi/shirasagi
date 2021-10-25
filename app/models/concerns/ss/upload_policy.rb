@@ -111,7 +111,11 @@ module SS::UploadPolicy
       Zip::File.open(zip_path) do |zip_file|
         zip_file.entries.sort_by(&:name).each do |entry|
           next if entry.ftype == :directory
-          next if /_[a-zA-Z]+Report\.txt\z/.match?(entry.name)
+
+          if /_[a-zA-Z]+Report\.txt\z/.match?(entry.name)
+            zip_file.remove(entry)
+            next
+          end
 
           dir = ::File.dirname(entry.name)
           ext = ::File.extname(entry.name)

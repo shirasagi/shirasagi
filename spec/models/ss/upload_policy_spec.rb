@@ -33,21 +33,23 @@ describe SS::UploadPolicy, dbscope: :example do
     after { FileUtils.rm(zip_path) }
 
     it "restore zip" do
-      restored_paths = [
-        'import/dirname/image.png',
-        'import/dirname/test.html',
-        'import/image.png',
-        'import/test.html'
-      ]
-
       SS::UploadPolicy.sanitizer_rename_zip(zip_path)
+      paths = []
 
       Zip::File.open(zip_path) do |zip_file|
         zip_file.entries.sort_by(&:name).each do |entry|
           next if entry.ftype == :directory
-          expect(restored_paths.include?(entry.name)).to be_truthy
+          paths << entry.name
         end
       end
+
+      expect(paths.include?('import/dirname/image.png')).to be_truthy
+      expect(paths.include?('import/dirname/test.html')).to be_truthy
+      expect(paths.include?('import/dirname/with_encrypt.pdf')).to be_truthy
+      expect(paths.include?('import/dirname/with_password.xlsx_8424_holdReport.txt')).to be_falsy
+      expect(paths.include?('import/dirname/with_password.xlsx')).to be_falsy
+      expect(paths.include?('import/dirname/with_password_7933_pdfEncryptReport.txt')).to be_falsy
+      expect(paths.include?('import/dirname/with_password.pdf')).to be_falsy
     end
   end
 

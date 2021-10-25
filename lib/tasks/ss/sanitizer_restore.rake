@@ -5,6 +5,7 @@ namespace :ss do
     return unless SS.config.ss.sanitizer_output
 
     allow_suffix = %w(marked marked.MSOfficeWithPassword withPassword withEncrypt sanitized)
+    # deny_suffix = %w(Report)
 
     ::Fs.glob("#{Rails.root}/#{SS.config.ss.sanitizer_output}/*").sort.each do |path|
       filename = ::File.basename(path)
