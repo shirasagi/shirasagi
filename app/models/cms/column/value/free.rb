@@ -55,58 +55,55 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
   end
 
   def before_save_files
-    if @new_clone
-      cloned_file_ids = []
-      Cms::Addon::File::Utils.each_file(file_ids) do |source_file|
-        clone_file = SS::File.clone_file(source_file, cur_user: @cur_user, owner_item: _parent) do |new_file|
-          # history_files
-          if @merge_values
-            new_file.history_file_ids = source_file.history_file_ids
-          end
+    # Cms::Addon::File では clone_files をしてから save_files を実行しているので、それに習う。
+    #
+    # 注意: カラム処理では以下の点が異なるので注意。
+    #
+    # カラムは数が変更される可能性があるため、master から branch を作成する際も、master へ branch をマージする際も、
+    # delete & insert となるため常に @new_clone がセットされる。
+    # master から branch を作成する際は @merge_values はセットされないのに対し、
+    # master へ branch をマージする際は @merge_values がセットされる。
+    clone_files if @new_clone && !@merge_values
+    save_files
+  end
+
+  def clone_files
+    return if file_ids.blank?
+    return if _parent.respond_to?(:branch?) && _parent.branch?
+
+    cloned_file_ids = []
+
+    Cms::Addon::File::Utils.each_file(file_ids) do |source_file|
+      clone_file = SS::File.clone_file(source_file, cur_user: @cur_user, owner_item: _parent) do |new_file|
+        # history_files
+        if @merge_values
+          new_file.history_file_ids = source_file.history_file_ids
         end
-        next unless clone_file
-
-        cloned_file_ids << clone_file.id
-
-        cloned_value = self.value.to_s
-        cloned_value.gsub!("=\"#{source_file.url}\"", "=\"#{clone_file.url}\"")
-        cloned_value.gsub!("=\"#{source_file.thumb_url}\"", "=\"#{clone_file.thumb_url}\"")
-        self.value = cloned_value
       end
+      next unless clone_file
 
-      self.file_ids = cloned_file_ids
-    else
-      del_ids = file_ids_was.to_a - file_ids
-      Cms::Addon::File::Utils.each_file(del_ids) do |file|
-        file.destroy
-      end
+      cloned_file_ids << clone_file.id
 
-      add_ids = _parent.state_changed? ? file_ids : file_ids - file_ids_was.to_a
-      Cms::Addon::File::Utils.each_file(add_ids) do |file|
-        file.update(site_id: _parent.site_id, model: _parent.class.name, owner_item: _parent, state: _parent.state)
-      end
-
-      begin
-        self.file_ids = file_ids + add_ids - del_ids
-      rescue
-        self.file_ids
-      end
-
+      cloned_value = self.value.to_s
+      cloned_value.gsub!("=\"#{source_file.url}\"", "=\"#{clone_file.url}\"")
+      cloned_value.gsub!("=\"#{source_file.thumb_url}\"", "=\"#{clone_file.thumb_url}\"")
+      self.value = cloned_value
     end
+
+    self.file_ids = cloned_file_ids
+  end
+
+  def save_files
+    add_ids = file_ids - file_ids_was.to_a
+    ids = Cms::Addon::File::Utils.attach_files(self, add_ids)
+    self.file_ids = ids rescue return
+
+    del_ids = file_ids_was.to_a - ids
+    Cms::Addon::File::Utils.delete_files(self, del_ids)
   end
 
   def destroy_files
-    if !_parent.respond_to?(:skip_history_trash)
-      Cms::Addon::File::Utils.each_file(file_ids) do |file|
-        file.destroy
-      end
-      return
-    end
-
-    Cms::Addon::File::Utils.each_file(file_ids) do |file|
-      file.skip_history_trash = _parent.skip_history_trash if file.respond_to?(:skip_history_trash)
-      file.destroy
-    end
+    Cms::Addon::File::Utils.delete_files(self, file_ids)
   end
 
   def build_history_log(file)

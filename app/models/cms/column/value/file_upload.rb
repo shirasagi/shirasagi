@@ -104,25 +104,40 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
   def before_save_file
     if file_id_was.present? && file_id_was != file_id
-      old_file = SS::File.find(file_id_was) rescue nil
-      if old_file
-        old_file.destroy
-        self.file_id = nil
-      end
+      Cms::Addon::File::Utils.delete_files(self, [ file_id_was ]) if file_id_was
     end
 
     return if file.blank?
 
-    if @new_clone
-      clone_file = SS::File.clone_file(file, cur_user: @cur_user, owner_item: _parent) do |new_file|
-        # history_files
-        if @merge_values
-          new_file.history_file_ids = file.history_file_ids
-        end
-      end
+    # 注意: カラム処理では以下の点が異なるので注意。
+    #
+    # カラムは数が変更される可能性があるため、master から branch を作成する際も、master へ branch をマージする際も、
+    # delete & insert となるため常に @new_clone がセットされる。
+    # master から branch を作成する際は @merge_values はセットされないのに対し、
+    # master へ branch をマージする際は @merge_values がセットされる。
+    clone_file if @new_clone && !@merge_values
+    update_file_owner_item
+  end
 
-      self.file = clone_file
+  def clone_file
+    return if file.blank?
+    return if _parent.respond_to?(:branch?) && _parent.branch?
+
+    new_file = SS::File.clone_file(file, cur_user: @cur_user, owner_item: _parent) do |new_file|
+      # history_files
+      if @merge_values
+        new_file.history_file_ids = file.history_file_ids
+      end
     end
+
+    self.file = new_file
+  end
+
+  def update_file_owner_item
+    return if SS::Relation::File::Utils.file_owned?(file, _parent)
+
+    # 差し替えページの場合、所有者を差し替え元のままとする
+    return if _parent.respond_to?(:branch?) && _parent.branch? && SS::Relation::File::Utils.file_owned?(file, _parent.master)
 
     attrs = {}
 
@@ -145,14 +160,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   end
 
   def destroy_file
-    return if file.blank?
-    return nil unless File.exist?(file.path)
-
-    path = "#{History::Trash.root}/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}"
-    FileUtils.mkdir_p(File.dirname(path))
-    FileUtils.cp(file.path, path)
-    file.skip_history_trash = _parent.skip_history_trash if [ _parent, file ].all? { |obj| obj.respond_to?(:skip_history_trash) }
-    file.destroy
+    Cms::Addon::File::Utils.delete_files(self, [ file_id ])
   end
 
   # override Cms::Column::Value::Base#to_default_html
