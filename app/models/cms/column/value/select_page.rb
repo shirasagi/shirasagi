@@ -1,14 +1,11 @@
 class Cms::Column::Value::SelectPage < Cms::Column::Value::Base
+  field :value, type: String
   belongs_to :page, class_name: "Cms::Page"
-  permit_values :page_id, :text
+  permit_values :page_id
 
   liquidize do
     export :page
     export :page_link
-  end
-
-  def value
-    page.try(:name)
   end
 
   def page_link
@@ -46,5 +43,6 @@ class Cms::Column::Value::SelectPage < Cms::Column::Value::Base
     if column.required? && page.nil?
       self.errors.add(:page_id, :blank)
     end
+    self.value = page.try(:name)
   end
 end

@@ -56,7 +56,7 @@ module History::DiffHelper
         current_value = column_value_file_upload_diff_text(current_value)
         html << column_value_diff_html(column_value['name'], before_value, current_value)
       when 'Cms::Column::Value::Free', 'Cms::Column::Value::Table', 'Cms::Column::Value::TextArea',
-        'Cms::Column::Value::TextField', 'Cms::Column::Value::RadioButton', 'Cms::Column::Value::Select'
+        'Cms::Column::Value::TextField', 'Cms::Column::Value::RadioButton', 'Cms::Column::Value::Select', 'Cms::Column::Value::SelectPage'
         before_value = column_value_base_diff_text(column_value)
         current_value = column_value_base_diff_text(current_value)
         html << column_value_diff_html(column_value['name'], before_value, current_value)
@@ -102,7 +102,7 @@ module History::DiffHelper
         current_value = column_value_file_upload_diff_text(column_value)
         html << column_value_diff_html(column_value['name'], '', current_value)
       when 'Cms::Column::Value::Free', 'Cms::Column::Value::Table', 'Cms::Column::Value::TextArea',
-        'Cms::Column::Value::TextField', 'Cms::Column::Value::RadioButton', 'Cms::Column::Value::Select'
+        'Cms::Column::Value::TextField', 'Cms::Column::Value::RadioButton', 'Cms::Column::Value::Select', 'Cms::Column::Value::SelectPage'
         current_value = column_value_base_diff_text(column_value)
         html << column_value_diff_html(column_value['name'], '', current_value)
       when 'Cms::Column::Value::Headline'
