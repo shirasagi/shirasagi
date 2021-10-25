@@ -225,7 +225,7 @@ class Gws::Workflow::FilesController < ApplicationController
 
     result = @new_item.save
     if !result
-      @item.errors.messages[:base] += @new_item.errors.full_messages
+      SS::Model.copy_errors(@new_item, @item)
     end
 
     render_opts = {}

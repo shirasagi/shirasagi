@@ -107,14 +107,7 @@ class Uploader::FilesController < ApplicationController
       if item.save
         @items << item
       else
-        item.errors.each do |n, e|
-          if n == :base
-            attr = nil
-          else
-            attr = @model.t(n)
-          end
-          @item.errors.add :base, "#{item.name} - #{attr}#{e}"
-        end
+        SS::Model.copy_errors(item, @item, prefix: "#{item.name} - ")
       end
     end
     location = "#{uploader_files_path}/#{@item.filename}"
@@ -126,8 +119,8 @@ class Uploader::FilesController < ApplicationController
     item = @model.new(path: path, is_dir: true, site: @cur_site)
 
     if !item.save
-      item.errors.each do |n, e|
-        @item.errors.add :path, e
+      item.errors.each do |error|
+        @item.errors.add :path, error.message
       end
     end
     location = "#{uploader_files_path}/#{@item.filename}"

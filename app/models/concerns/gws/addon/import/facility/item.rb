@@ -276,15 +276,7 @@ module Gws::Addon::Import::Facility
     end
 
     def set_errors(item, index)
-      error = ""
-      item.errors.each do |n, e|
-        if item.class.t(n) == "Base"
-          error += "#{e} "
-        else
-          error += "#{item.class.t(n)}#{e} "
-        end
-      end
-      self.errors.add :base, "#{index}: #{error}"
+      SS::Model.copy_errors(item, self, prefix: "#{index}: ")
     end
 
     def header_t(header, options = {})

@@ -85,7 +85,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     result = branch.save
 
     if !result
-      @cur_column_value.errors.messages[:base] += branch.errors.full_messages
+      SS::Model.copy_errors(branch, @cur_column_value)
       render_create_as_branch false
       return
     end
@@ -131,7 +131,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     branch.master = @item
     result = branch.save
     if !result
-      @cur_column_value.errors.messages[:base] += branch.errors.full_messages
+      SS::Model.copy_errors(branch, @cur_column_value)
       render_save_as_branch false
       return
     end
