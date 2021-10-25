@@ -6,9 +6,10 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
   let!(:form) { create :cms_form, cur_site: site, state: 'public', sub_type: 'entry' }
 
   let(:node2) { create :article_node_page, cur_site: site, group_ids: [cms_group.id] }
-  let!(:selectable_page1) { create :article_page, cur_site: site, cur_node: node2 }
-  let!(:selectable_page2) { create :article_page, cur_site: site, cur_node: node2 }
-  let!(:selectable_page3) { create :article_page, cur_site: site, cur_node: node2 }
+  let!(:selectable_page1) { create :article_page, cur_site: site, cur_node: node2, state: "public" }
+  let!(:selectable_page2) { create :article_page, cur_site: site, cur_node: node2, state: "public" }
+  let!(:selectable_page3) { create :article_page, cur_site: site, cur_node: node2, state: "public" }
+  let!(:selectable_page4) { create :article_page, cur_site: site, cur_node: node2, state: "closed" }
 
   let!(:column1) do
     create(:cms_column_text_field, cur_site: site, cur_form: form, required: "optional", order: 1, input_type: 'text')
@@ -50,8 +51,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
     create(:cms_column_youtube, cur_site: site, cur_form: form, required: "optional", order: 13)
   end
   let!(:column14) do
-    create(:cms_column_select_page, cur_site: site, cur_form: form, required: "optional",
-      order: 14, page_ids: [selectable_page1.id, selectable_page2.id, selectable_page3.id])
+    create(:cms_column_select_page, cur_site: site, cur_form: form, required: "optional", order: 14, node_id: node2.id)
   end
   let(:name) { unique_id }
   let(:column1_value1) { unique_id }
