@@ -12,7 +12,8 @@ class Cms::Column::Value::SelectPage < Cms::Column::Value::Base
   end
 
   def page_link
-    return unless page
+    return if page.nil?
+    return if !page.public?
     ApplicationController.helpers.link_to(page.name, page.url)
   end
 
@@ -44,9 +45,6 @@ class Cms::Column::Value::SelectPage < Cms::Column::Value::Base
 
     if column.required? && page.nil?
       self.errors.add(:page_id, :blank)
-    end
-    if page && !column.page_ids.include?(page_id)
-      self.errors.add(:page_id, :inclusion)
     end
   end
 end

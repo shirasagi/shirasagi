@@ -1040,7 +1040,7 @@ ja:
         list_type: 種類
       cms/column/select_page:
         place_holder: プレースホルダー
-        page_ids: 選択肢
+        node_id: 選択肢
       cms/column/value/base:
         order: 並び順
         alignment: 配置
