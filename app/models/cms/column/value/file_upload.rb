@@ -154,8 +154,15 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
       attrs[:state] = _parent.state
     end
 
-    if attrs.present?
-      file.update(attrs)
+    return if attrs.blank?
+
+    result = file.update(attrs)
+    if result
+      History::Log.build_file_log(file, site_id: _parent.site_id, user_id: _parent.cur_user.try(:id)).tap do |history|
+        history.action = "update"
+        history.behavior = "attachment"
+        history.save
+      end
     end
   end
 

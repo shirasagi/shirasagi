@@ -111,7 +111,7 @@ class History::Log
 
       if file
         log.url = file.url
-        log.ref_coll = file.collection_name
+        log.ref_coll = file.class.collection_name.to_s
         log.target_class = file.class.name
         log.target_id = file.id.to_s
       end

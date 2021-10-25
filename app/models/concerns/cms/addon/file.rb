@@ -70,6 +70,7 @@ module Cms::Addon
 
           result = file.update(site: cur_site, model: owner_item.model_name.i18n_key, owner_item: owner_item, state: owner_item.state)
           if result
+            file = file.becomes_with_model
             History::Log.build_file_log(file, site_id: cur_site.try(:id), user_id: cur_user.try(:id)).tap do |history|
               history.action = "update"
               history.behavior = "attachment"
