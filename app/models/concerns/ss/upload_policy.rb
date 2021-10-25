@@ -7,7 +7,8 @@ module SS::UploadPolicy
   end
 
   def sanitizer_input_path
-    "#{Rails.root}/#{SS.config.ss.sanitizer_input}/#{id}_#{created.to_i}#{::File.extname(basename)}"
+    filename = "#{SS.config.ss.sanitizer_file_prefix}_file_#{id}_#{created.to_i}#{::File.extname(basename)}"
+    "#{Rails.root}/#{SS.config.ss.sanitizer_input}/#{filename}"
   end
 
   def sanitizer_skip
@@ -46,10 +47,14 @@ module SS::UploadPolicy
   end
 
   def sanitizer_save_file
-    return false unless SS::UploadPolicy.upload_policy == 'sanitizer'
     return false unless in_file
     return false if @sanitizer_skip
     return false if try(:original_id)
+
+    if SS::UploadPolicy.upload_policy != 'sanitizer'
+      self.sanitizer_state = nil if sanitizer_state.present?
+      return false
+    end
 
     input_path = sanitizer_input_path
     ::FileUtils.rm_f(input_path) if FileTest.exist?(input_path)
@@ -85,9 +90,9 @@ module SS::UploadPolicy
 
     def sanitizer_restore(output_path)
       filename = ::File.basename(output_path)
-      return unless /\A\d+_\d+.*_\d+_marked/.match?(filename)
+      return unless /\A#{SS.config.ss.sanitizer_file_prefix}_file_\d+_/.match?(filename)
 
-      id = filename.sub(/\A(\d+).*/, '\\1').to_i
+      id = filename.sub(/\A#{SS.config.ss.sanitizer_file_prefix}_file_(\d+).*/, '\\1').to_i
       file = SS::File.find(id).becomes_with_model rescue nil
       return unless file
 
@@ -100,6 +105,29 @@ module SS::UploadPolicy
       end
 
       file
+    end
+
+    def sanitizer_rename_zip(zip_path)
+      Zip::File.open(zip_path) do |zip_file|
+        zip_file.entries.sort_by(&:name).each do |entry|
+          next if entry.ftype == :directory
+
+          if /_[a-zA-Z]+Report\.txt\z/.match?(entry.name)
+            zip_file.remove(entry)
+            next
+          end
+
+          dir = ::File.dirname(entry.name)
+          ext = ::File.extname(entry.name)
+          basename = ::File.basename(entry.name, '.*')
+          basename = basename.sub('_marked.MSOfficeWithPassword', '_marked')
+          basename = basename.sub(/_\d+_\w+\z/, '')
+          basename += ext unless /\.\w+\z/.match?(basename)
+
+          new_name = [dir.presence, basename].compact.join('/')
+          zip_file.rename(entry, new_name)
+        end
+      end rescue false
     end
   end
 end

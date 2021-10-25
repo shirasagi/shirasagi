@@ -18,9 +18,8 @@ class Uploader::JobFile
   end
 
   def sanitizer_input_path
-    time = created.to_i
-    extension = ::File.extname(path)
-    "#{Rails.root}/#{SS.config.ss.sanitizer_input}/uploader_#{id}_#{time}#{extension}"
+    filename = "#{SS.config.ss.sanitizer_file_prefix}_uploader_#{id}_#{created.to_i}#{::File.extname(basename)}"
+    "#{Rails.root}/#{SS.config.ss.sanitizer_input}/#{filename}"
   end
 
   def sanitizer_save
@@ -78,9 +77,9 @@ class Uploader::JobFile
 
     def sanitizer_restore(output_path)
       filename = ::File.basename(output_path)
-      return unless /\Auploader_\d+_\d+.*_\d+_marked/.match?(filename)
+      return unless /\A#{SS.config.ss.sanitizer_file_prefix}_uploader_\d+_/.match?(filename)
 
-      id = filename.sub(/\Auploader_(\d+).*/, '\\1').to_i
+      id = filename.sub(/\A#{SS.config.ss.sanitizer_file_prefix}_uploader_(\d+).*/, '\\1').to_i
       job_model = self.find(id) rescue nil
       return unless job_model
 
