@@ -5,7 +5,7 @@ describe SS::MessageEncryptor do
   let(:basic_auth_pass) { described_class.encrypt('pass') }
 
   before do
-    SS::Config.replace_value_at(:cms, 'basic_auth', [basic_auth_user, basic_auth_pass])
+    SS.config.replace_value_at(:cms, 'basic_auth', [basic_auth_user, basic_auth_pass])
   end
 
   it 'encrypt' do

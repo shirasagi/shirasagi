@@ -80,14 +80,14 @@ describe Cms::Node::GenerateJob, dbscope: :example do
   describe "#perform with generate_lock" do
     before do
       @save_config = SS.config.cms.generate_lock
-      SS::Config.replace_value_at(:cms, 'generate_lock', { 'disable' => false, 'options' => ['1.hour'] })
+      SS.config.replace_value_at(:cms, 'generate_lock', { 'disable' => false, 'options' => ['1.hour'] })
       site.set(generate_lock_until: Time.zone.now + 1.hour)
 
       described_class.bind(site_id: site).perform_now
     end
 
     after do
-      SS::Config.replace_value_at(:cms, 'generate_lock', @save_config)
+      SS.config.replace_value_at(:cms, 'generate_lock', @save_config)
     end
 
     it do

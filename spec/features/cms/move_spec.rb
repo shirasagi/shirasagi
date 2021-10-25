@@ -6,11 +6,11 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
 
   around do |example|
     save_config = SS.config.cms.replace_urls_after_move
-    SS::Config.replace_value_at(:cms, 'replace_urls_after_move', true)
+    SS.config.replace_value_at(:cms, 'replace_urls_after_move', true)
     perform_enqueued_jobs do
       example.run
     end
-    SS::Config.replace_value_at(:cms, 'replace_urls_after_move', save_config)
+    SS.config.replace_value_at(:cms, 'replace_urls_after_move', save_config)
   end
 
   context "with auth", js: true do
