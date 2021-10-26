@@ -8,6 +8,11 @@ class Cms::Column::Value::Base
   class_attribute :_permit_values, instance_accessor: false
   self._permit_values = []
 
+  define_model_callbacks :parent_save
+  define_model_callbacks :parent_create
+  define_model_callbacks :parent_update
+  define_model_callbacks :parent_destroy
+
   attr_reader :in_wrap, :link_errors, :origin_id
 
   embedded_in :page, inverse_of: :column_values
