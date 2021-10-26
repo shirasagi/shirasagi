@@ -5,6 +5,7 @@ class Cms::Column::SelectPage < Cms::Column::Base
 
   def select_options
     return [] if node.nil?
-    Article::Page.public_list(site: node.site, node: node).pluck(:name, :id)
+    return [] if !node.respond_to?(:sort_hash)
+    Article::Page.public_list(site: node.site, node: node).order_by(node.sort_hash).pluck(:name, :id)
   end
 end
