@@ -88,11 +88,8 @@ module History::DiffHelper
     new_values.each do |column_id, new_value|
       old_value = old_values[column_id]
 
-      if old_value && new_value.order == old_value.order
-        #
-      else
-        diff_values << [old_value, new_value]
-      end
+      next if old_value && new_value.order == old_value.order
+      diff_values << [old_value, new_value]
     end
 
     # create diff html

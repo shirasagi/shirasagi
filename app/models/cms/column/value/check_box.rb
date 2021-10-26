@@ -25,7 +25,7 @@ class Cms::Column::Value::CheckBox < Cms::Column::Value::Base
 
   def history_summary
     h = []
-    h << "#{t("values")}: #{values.join("、")}" if values.present?
+    h << "#{t("values")}: #{values.join(",")}" if values.present?
     h << "#{t("alignment")}: #{I18n.t("cms.options.alignment.#{alignment}")}"
     h.join(",")
   end
