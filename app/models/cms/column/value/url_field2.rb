@@ -60,6 +60,14 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
     end
   end
 
+  def history_summary
+    h = []
+    h << "#{t("link_label")}: #{link_label}" if link_label.present?
+    h << "#{t("link_url")}: #{link_url}" if link_url.present?
+    h << "#{t("alignment")}: #{I18n.t("cms.options.alignment.#{alignment}")}"
+    h.join(",")
+  end
+
   private
 
   def validate_link_url

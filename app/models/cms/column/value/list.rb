@@ -21,6 +21,13 @@ class Cms::Column::Value::List < Cms::Column::Value::Base
     end
   end
 
+  def history_summary
+    h = []
+    h << "#{t("lists")}: #{lists.join("、")}" if lists.present?
+    h << "#{t("alignment")}: #{I18n.t("cms.options.alignment.#{alignment}")}"
+    h.join(",")
+  end
+
   private
 
   def text_blank?

@@ -1095,6 +1095,7 @@ ja:
       cms/column/value/table:
         value: 表
       cms/column/value/select_page:
+        value: 選択肢
         page_id: 選択肢
       cms/addon/redirect_link:
         redirect_link: リダイレクトURL
