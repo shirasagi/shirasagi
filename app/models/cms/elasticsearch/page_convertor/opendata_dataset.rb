@@ -1,6 +1,5 @@
 class Cms::Elasticsearch::PageConvertor::OpendataDataset < Cms::Elasticsearch::PageConvertor
-  def initialize(item, opts = {})
-    super
+  def initialize(item)
     @item = item.becomes_with_route
   end
 

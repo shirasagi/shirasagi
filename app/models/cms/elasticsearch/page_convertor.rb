@@ -2,9 +2,8 @@ class Cms::Elasticsearch::PageConvertor
   attr_reader :item
   attr_writer :index_item_id
 
-  def initialize(item, opts = {})
+  def initialize(item)
     @item = item
-    @index_item_id = opts[:index_item_id]
   end
 
   def enum_es_docs
