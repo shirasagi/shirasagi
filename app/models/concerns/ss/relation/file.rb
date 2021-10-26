@@ -181,7 +181,7 @@ module SS::Relation::File
 
     file = SS::File.where(id: cur_id).first
 
-    return if file.blank?
+    return unless file
 
     expected_model = opts[:file_model] || (opts[:class_name].presence || "SS::File").to_s.underscore
     if file.model != expected_model
