@@ -6,6 +6,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
 
   permit_values :value, file_ids: []
 
+  before_save { @add_file_ids = file_ids - file_ids_was.to_a }
   before_validation :set_contains_urls
   after_save :put_contains_urls_logs
   before_parent_save :before_save_files
@@ -94,8 +95,11 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
   end
 
   def save_files
-    add_ids = file_ids - file_ids_was.to_a
-    ids = Cms::Addon::File::Utils.attach_files(self, add_ids)
+    # 追加されたファイルのリストを算出するには before_save でないといけない。
+    # しかし、before_save コールバックが呼ばれた時点では _parent.id が未確定のため files の owner_item をセットできない。
+    # 苦肉の策だが before_save コールバックで追加されたファイルのリストを算出し、@add_file_ids に保存する。
+    # そして、before_parent_save コールバックで files の owner_item をセットする。
+    ids = Cms::Addon::File::Utils.attach_files(self, @add_file_ids)
     self.file_ids = ids rescue return
 
     del_ids = file_ids_was.to_a - ids

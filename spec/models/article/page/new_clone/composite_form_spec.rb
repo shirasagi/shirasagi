@@ -31,6 +31,13 @@ describe Article::Page, dbscope: :example do
           column2.value_type.new(column: column2, value: html, file_ids: [ file2.id ])
         ]
         item.save!
+
+        file1.reload
+        expect(file1.owner_item_type).to eq item.class.name
+        expect(file1.owner_item_id).to eq item.id
+        file2.reload
+        expect(file2.owner_item_type).to eq item.class.name
+        expect(file2.owner_item_id).to eq item.id
       end
 
       context "before save" do

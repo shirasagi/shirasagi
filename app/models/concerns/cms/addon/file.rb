@@ -46,7 +46,7 @@ module Cms::Addon
             next
           end
 
-          if !add_ids.include?(file.id)
+          if add_ids && !add_ids.include?(file.id)
             # もともとから添付されていたファイルについては、必要であれば state を変更する
             file.update(state: owner_item.state) if owner_item.state_changed?
             ids << file.id
