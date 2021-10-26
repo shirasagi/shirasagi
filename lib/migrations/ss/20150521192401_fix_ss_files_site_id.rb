@@ -4,7 +4,7 @@ class SS::Migration20150521192401
   depends_on "20150518040533"
 
   def change
-    criteria = Cms::Page.exists(site_id: true)
+    criteria = Cms::Page.all
     all_ids = criteria.pluck(:id)
     all_ids.each_slice(20) do |ids|
       criteria.in(id: ids).to_a.each do |page|
