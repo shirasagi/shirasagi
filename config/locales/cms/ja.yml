@@ -422,6 +422,7 @@ ja:
       cms/youtube: YouTube埋め込み
       cms/free: 自由入力
       cms/table: 表
+      cms/select_page: ページ選択
     cms/michecker:
       start: miChecker を実行し結果を確認する
       loading: プレビューをロード中です
@@ -669,6 +670,7 @@ ja:
       cms/column/youtube: YouTube埋め込み
       cms/column/free: 自由入力
       cms/column/table: 表
+      cms/column/select_page: ページ選択
       cms/michecker/result: miChecker結果
       cms/michecker_task: miCheckerタスク
       cms/check_links/error/base: エラー情報
@@ -1036,6 +1038,9 @@ ja:
         file_type: ファイルタイプ
       cms/column/list:
         list_type: 種類
+      cms/column/select_page:
+        place_holder: プレースホルダー
+        node_id: 選択肢
       cms/column/value/base:
         order: 並び順
         alignment: 配置
@@ -1089,6 +1094,9 @@ ja:
         value: テキスト
       cms/column/value/table:
         value: 表
+      cms/column/value/select_page:
+        value: 選択肢
+        page_id: 選択肢
       cms/addon/redirect_link:
         redirect_link: リダイレクトURL
       cms/michecker/result:
