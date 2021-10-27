@@ -82,12 +82,10 @@ class Gws::Memo::MessageBackupJob < Gws::ApplicationJob
 
     all_ids.each_slice(100) do |ids|
       criteria.in(id: ids).to_a.each do |item|
-        begin
-          yield item
-        rescue => e
-          Rails.logger.warn("#{item.name}(#{item.id}) をエクスポート中に例外が発生しました。")
-          Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-        end
+        yield item
+      rescue => e
+        Rails.logger.warn("#{item.name}(#{item.id}) をエクスポート中に例外が発生しました。")
+        Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       end
     end
   end
@@ -134,12 +132,8 @@ class Gws::Memo::MessageBackupJob < Gws::ApplicationJob
 
   def write_eml(name, data)
     @output_zip.create_entry("#{name}.eml") do |f|
-      f.puts Mail::Field.new("Date", data["created"].in_time_zone.rfc822, "utf-8").encoded
-      f.puts Mail::Field.new("Message-ID", gen_message_id(data), "utf-8").encoded
-      f.puts Mail::Field.new("Subject", data["subject"], "utf-8").encoded
-      f.puts Mail::Field.new("From", data['from_name_email'], "utf-8").encoded
-      f.puts Mail::Field.new("To", data['to_members_name_email'], "utf-8").encoded
-      f.puts Mail::Field.new("Cc", data['cc_members_name_email'], "utf-8").encoded if data['cc_members_name_email'].present?
+      f = init_mail_field(f, data)
+
       user_settings = data["user_settings"]
       s_status = []
       if user_settings.present?
@@ -183,6 +177,17 @@ class Gws::Memo::MessageBackupJob < Gws::ApplicationJob
         write_body_to_eml(f, data)
       end
     end
+  end
+
+  def init_mail_field(file, data)
+    file.puts Mail::Field.new("Date", data["created"].in_time_zone.rfc822, "utf-8").encoded
+    file.puts Mail::Field.new("Message-ID", gen_message_id(data), "utf-8").encoded
+    file.puts Mail::Field.new("Subject", data["subject"], "utf-8").encoded
+    file.puts Mail::Field.new("From", data['from_name_email'], "utf-8").encoded
+    file.puts Mail::Field.new("To", data['to_members_name_email'], "utf-8").encoded
+    file.puts Mail::Field.new("Cc", data['cc_members_name_email'], "utf-8").encoded if data['cc_members_name_email'].present?
+
+    file
   end
 
   def file_attributes(file)

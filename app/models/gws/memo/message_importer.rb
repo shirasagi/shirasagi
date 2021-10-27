@@ -222,7 +222,7 @@ class Gws::Memo::MessageImporter
   end
 
   def restore_folder(folder_name)
-    return if @restored_folders.has_key?(folder_name)
+    return if @restored_folders.key?(folder_name)
 
     folder = Gws::Memo::Folder.find_or_initialize_by(
       user_uid: cur_user.uid, user_name: cur_user.name,
