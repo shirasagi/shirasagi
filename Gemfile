@@ -121,6 +121,7 @@ group :development, :test do
   gem 'pry-doc', require: false
   gem 'pry-rails', require: false
   gem 'pry-stack_explorer', require: false
+  gem 'puma', require: false
   gem 'rails-controller-testing', require: false
   gem 'rspec', require: false
   gem 'rspec-collection_matchers', require: false

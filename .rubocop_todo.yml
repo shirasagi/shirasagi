@@ -219,6 +219,7 @@ Lint/HandleExceptions:
     - 'app/models/ezine/entry.rb'
     - 'config/initializers/action_mailer.rb'
     - 'config/samples/unicorn.rb'
+    - 'config/samples/puma.rb'
     - 'spec/support/ss/http_server_support.rb'
     - 'spec/support/ss/js_support.rb'
 
