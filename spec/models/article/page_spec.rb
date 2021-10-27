@@ -7,7 +7,6 @@ describe Article::Page, dbscope: :example do
     subject(:item) { create :article_page, cur_node: node }
     let(:show_path) { Rails.application.routes.url_helpers.article_page_path(site: subject.site, cid: node, id: subject) }
 
-    it { expect(item.becomes_with_route).not_to be_nil }
     it { expect(item.dirname).to eq node.filename }
     it { expect(item.basename).not_to be_nil }
     it { expect(item.path).not_to be_nil }
@@ -20,7 +19,7 @@ describe Article::Page, dbscope: :example do
   describe "becomes_with_route" do
     subject(:item) { create :article_page, cur_node: node }
     it do
-      page = Cms::Page.find(item.id).becomes_with_route
+      page = Cms::Page.find(item.id)
       expect(page.changed?).to be_falsey
     end
   end

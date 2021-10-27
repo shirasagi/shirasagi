@@ -28,7 +28,7 @@ class Cms::Apis::Preview::Workflow::WizardController < ApplicationController
 
   def set_item
     @item ||= begin
-      item = @cur_page = Cms::Page.site(@cur_site).find(params[:id]).becomes_with_route
+      item = @cur_page = Cms::Page.site(@cur_site).find(params[:id])
       item.attributes = fix_params
       @model = item.class
       item
@@ -77,14 +77,14 @@ class Cms::Apis::Preview::Workflow::WizardController < ApplicationController
   def approver_setting
     if @route.present?
       if @item.apply_workflow?(@route)
-        render file: "approver_setting_multi", locals: { cancel_button: @route_options.count > 1 }, layout: false
+        render template: "approver_setting_multi", locals: { cancel_button: @route_options.count > 1 }, layout: false
       else
         render json: @item.errors.full_messages, status: :bad_request
       end
     elsif @route_id == "my_group"
-      render file: :approver_setting, locals: { cancel_button: @route_options.count > 1 }, layout: false
+      render template: "approver_setting", locals: { cancel_button: @route_options.count > 1 }, layout: false
     elsif @route_id == "restart"
-      render file: "approver_setting_restart", layout: false
+      render template: "approver_setting_restart", layout: false
     else
       raise "404"
     end

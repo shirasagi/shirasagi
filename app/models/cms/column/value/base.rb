@@ -118,6 +118,13 @@ class Cms::Column::Value::Base
     end
   end
 
+  def history_summary
+    h = []
+    h << "#{t("value")}: #{value}" if try(:value).present?
+    h << "#{t("alignment")}: #{I18n.t("cms.options.alignment.#{alignment}")}"
+    h.join(",")
+  end
+
   private
 
   def render_html_for_liquid(context)

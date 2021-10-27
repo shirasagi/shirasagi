@@ -52,6 +52,6 @@
       <dd><%= tryb { I18n.l(@item.birthday.to_date, format: :long) } %></dd>
     </dl>
 
-    <%= render file: '_mail_category_show' %>
+    <%= render template: '_mail_category_show' %>
   </div>
 </div>

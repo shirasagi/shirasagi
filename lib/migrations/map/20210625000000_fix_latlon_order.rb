@@ -8,8 +8,6 @@ class SS::Migration20210625000000
     ids.each do |id|
       item = Cms::Page.find(id) rescue nil
       next unless item
-
-      item = item.becomes_with_route
       next unless item.respond_to?(:map_points)
       next unless item.map_points.present?
 

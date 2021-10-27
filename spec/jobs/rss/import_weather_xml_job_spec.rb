@@ -244,7 +244,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
         expect(mail.body.raw_source).to include('2016年3月8日 13時32分 ころ地震がありました。')
         expect(mail.body.raw_source).to include('日高地方東部：3')
         expect(mail.body.raw_source).to include(node_my_anpi_post.full_url)
-        expect(mail.body.raw_source).to end_with("\n--------\ntest@example.jp\n")
+        expect(mail.body.raw_source).to end_with("\r\n--------\r\ntest@example.jp\r\n")
       end
     end
   end
@@ -344,7 +344,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
         expect(mail.to.first.to_s).to eq user1.email
         expect(mail.subject).to eq '奈良県気象警報・注意報'
         expect(mail.body.raw_source).to include('【特別警報（大雨）】')
-        expect(mail.body.raw_source).to end_with("\n#{action2.signature_text}\n")
+        expect(mail.body.raw_source).to end_with("\r\n#{action2.signature_text.gsub("\n", "\r\n")}\r\n")
       end
     end
   end
@@ -455,7 +455,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
           expect(mail.body.raw_source).to include('岩手県沿岸北部：5強')
           expect(mail.body.raw_source).to include('岩手県内陸北部：5強')
           expect(mail.body.raw_source).to include(node_my_anpi_post.full_url)
-          expect(mail.body.raw_source).to end_with("\n--------\ntest@example.jp\n")
+          expect(mail.body.raw_source).to end_with("\r\n--------\r\ntest@example.jp\r\n")
         end
       end
     end
@@ -568,7 +568,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
           expect(mail.body.raw_source).to include('岩手県内陸南部：震度６弱')
           expect(mail.body.raw_source).to include('岩手県沿岸北部：震度５強')
           expect(mail.body.raw_source).to include('岩手県内陸北部：震度５強')
-          expect(mail.body.raw_source).to end_with("\n#{action2.signature_text}\n")
+          expect(mail.body.raw_source).to end_with("\r\n#{action2.signature_text.gsub("\n", "\r\n")}\r\n")
         end
       end
     end

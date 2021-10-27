@@ -24,12 +24,7 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
     end
     expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
-    expect(SS::Task.count).to eq 1
-    SS::Task.first.tap do |task|
-      expect(task.name).to eq "cms_pages:#{item.id}"
-      expect(task.state).to eq "completed"
-      task.destroy
-    end
+    check_task
 
     # draft save
     click_on I18n.t('ss.links.edit')
@@ -67,11 +62,7 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
     end
     wait_for_notice I18n.t('ss.notice.saved')
 
-    expect(SS::Task.count).to eq 1
-    SS::Task.first.tap do |task|
-      expect(task.name).to eq "cms_pages:#{item.id}"
-      expect(task.state).to eq "completed"
-    end
+    check_task
 
     if item.route == "cms/page"
       within "#content-navi" do
@@ -88,11 +79,31 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
     expect(item.class.all.size).to eq 1
   end
 
+  def check_task
+    expect(SS::Task.count).to eq 1
+    SS::Task.first.tap do |task|
+      expect(task.name).to eq "cms_pages:#{item.id}"
+      expect(task.state).to eq "completed"
+      task.destroy
+    end
+  end
+
   context "cms page" do
     let(:item) { create :cms_page, filename: "page.html", name: old_name, index_name: old_index_name }
     let(:show_path) { cms_page_path site, item }
 
     it { create_branch }
+
+    context "with thumb" do
+      let(:file) { create :ss_file, site: site, user: cms_user }
+      let(:item) { create :cms_page, filename: "page.html", name: old_name, index_name: old_index_name, thumb_id: file.id }
+
+      before do
+        file.destroy
+      end
+
+      it { create_branch }
+    end
   end
 
   context "article page" do

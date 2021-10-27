@@ -54,7 +54,7 @@ describe "uploader_files", type: :feature, dbscope: :example do
 
       within "form" do
         fill_in "item[filename]", with: "#{node.filename}/replace.png"
-        attach_file "item[files][]", Rails.root.join("spec", "fixtures", "webapi", "replace.png").to_s
+        attach_file "item[file]", Rails.root.join("spec", "fixtures", "webapi", "replace.png").to_s
         click_button I18n.t("ss.buttons.save")
       end
       expect(status_code).to eq 200
@@ -269,7 +269,7 @@ describe "uploader_files", type: :feature, dbscope: :example do
 
       within "form" do
         fill_in "item[filename]", with: "#{node.filename}/replace.scss"
-        attach_file "item[files][]", Rails.root.join("spec", "fixtures", "uploader", "replace.scss").to_s
+        attach_file "item[file]", Rails.root.join("spec", "fixtures", "uploader", "replace.scss").to_s
         click_button I18n.t("ss.buttons.save")
       end
       expect(status_code).to eq 200

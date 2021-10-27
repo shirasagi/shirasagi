@@ -32,6 +32,13 @@ class Cms::Column::Value::DateField < Cms::Column::Value::Base
     end
   end
 
+  def history_summary
+    h = []
+    h << "#{t("file_label")}: #{file_label}" if file_label.present?
+    h << "#{t("image_html_type")}: #{I18n.t("cms.options.column_image_html_type.#{image_html_type}")}"
+    h.join(",")
+  end
+
   private
 
   def validate_value

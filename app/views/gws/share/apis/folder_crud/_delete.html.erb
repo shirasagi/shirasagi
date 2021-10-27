@@ -1,4 +1,4 @@
-<%= render file: "ss/crud/_delete" %>
+<%= render "ss/crud/delete" %>
 
 <% @crud_buttons = proc do |f| %>
   <%= f.submit t("ss.buttons.delete"), class: 'btn-danger delete' %>

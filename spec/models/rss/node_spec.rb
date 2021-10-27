@@ -5,7 +5,6 @@ describe Rss::Node::Page, dbscope: :example do
     let(:site) { cms_site }
     subject { create :rss_node_page, site: site }
 
-    its(:becomes_with_route) { is_expected.not_to be_nil }
     its(:basename) { is_expected.not_to be_nil }
     its(:path) { is_expected.not_to be_nil }
     its(:url) { is_expected.not_to be_nil }

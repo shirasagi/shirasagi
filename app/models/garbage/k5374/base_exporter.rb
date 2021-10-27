@@ -5,7 +5,7 @@ class Garbage::K5374::BaseExporter
 
   def initialize(cur_node, task = nil)
     @site = cur_node.site
-    @node = cur_node.becomes_with_route
+    @node = cur_node
     @task = task
   end
 

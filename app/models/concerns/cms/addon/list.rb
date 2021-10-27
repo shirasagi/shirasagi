@@ -175,7 +175,6 @@ module Cms::Addon::List
     end
 
     def render_loop_html(item, opts = {})
-      item = item.becomes_with_route rescue item
       item.render_template(opts[:html] || loop_html, self)
     end
 

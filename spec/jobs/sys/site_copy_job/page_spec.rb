@@ -42,7 +42,6 @@ describe Sys::SiteCopyJob, dbscope: :example do
         expect(dest_layout.html).to eq layout.html
 
         dest_page = Cms::Page.site(dest_site).find_by(filename: page.filename)
-        dest_page = dest_page.becomes_with_route
         expect(dest_page.name).to eq page.name
         expect(dest_page.layout_id).to eq dest_layout.id
         expect(dest_page.user_id).to eq page.user_id
@@ -119,7 +118,6 @@ describe Sys::SiteCopyJob, dbscope: :example do
         expect(dest_layout.html).to eq layout.html
 
         dest_page = Cms::Page.site(dest_site).find_by(filename: page.filename)
-        dest_page = dest_page.becomes_with_route
         expect(dest_page.name).to eq page.name
         expect(dest_page.layout_id).to eq dest_layout.id
         expect(dest_page.user_id).to eq page.user_id
@@ -155,9 +153,8 @@ describe Sys::SiteCopyJob, dbscope: :example do
 
       it do
         dest_site = Cms::Site.find_by(host: target_host_host)
-
         dest_page = Cms::Page.site(dest_site).find_by(filename: page.filename)
-        dest_page = dest_page.becomes_with_route
+
         expect(dest_page.html).to eq page.html.sub(page.files.first.url, dest_page.files.first.url)
         expect(dest_page.files).to have(1).items
         expect(dest_page.files.first.owner_item_id).to eq dest_page.id
@@ -184,9 +181,8 @@ describe Sys::SiteCopyJob, dbscope: :example do
 
       it do
         dest_site = Cms::Site.find_by(host: target_host_host)
-
         dest_page = Cms::Page.site(dest_site).find_by(filename: page.filename)
-        dest_page = dest_page.becomes_with_route
+
         expect(dest_page.html).to eq page.html.sub(site.full_url, dest_site.full_url)
       end
     end
@@ -215,12 +211,8 @@ describe Sys::SiteCopyJob, dbscope: :example do
 
       it do
         dest_site = Cms::Site.find_by(host: target_host_host)
-
         dest_page1 = Cms::Page.site(dest_site).find_by(filename: page1.filename)
-        dest_page1 = dest_page1.becomes_with_route
-
         dest_page2 = Cms::Page.site(dest_site).find_by(filename: page2.filename)
-        dest_page2 = dest_page2.becomes_with_route
 
         expect(dest_page1.related_page_ids).to eq [dest_page2.id]
         expect(dest_page2.related_page_ids).to eq [dest_page1.id]
@@ -270,9 +262,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
 
       it do
         dest_site = Cms::Site.find_by(host: target_host_host)
-
         dest_page = Cms::Page.site(dest_site).find_by(filename: page.filename)
-        dest_page = dest_page.becomes_with_route
 
         expect(dest_page).to be_truthy
         expect(dest_page.file_id).not_to eq page.file_id
@@ -300,9 +290,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
 
       it do
         dest_site = Cms::Site.find_by(host: target_host_host)
-
         dest_page = Cms::Page.site(dest_site).find_by(filename: page.filename)
-        dest_page = dest_page.becomes_with_route
 
         expect(dest_page).to be_truthy
         expect(dest_page.workflow_state).to eq 'request'

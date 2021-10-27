@@ -29,7 +29,6 @@ describe Sys::SiteCopyJob, dbscope: :example do
       expect(dest_site.group_ids).to eq site.group_ids
 
       dest_part = Cms::Part.site(dest_site).find_by(filename: part.filename)
-      dest_part = dest_part.becomes_with_route
       expect(dest_part.name).to eq part.name
       expect(dest_part.user_id).to eq part.user_id
       expect(dest_part.html).to eq part.html

@@ -45,7 +45,6 @@ shared_examples "cms_node#spec_detail" do
     it { expect(item.state_options).not_to eq nil }
     it { expect(item.state_private_options).not_to eq nil }
     it { expect(item.parent).not_to eq nil }
-    it { expect(item.becomes_with_route).not_to eq nil }
     it { expect(item.serve_static_file?).not_to eq nil }
   end
 

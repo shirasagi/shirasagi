@@ -57,7 +57,7 @@ class Garbage::AreaListsController < ApplicationController
   public
 
   def download
-    send_csv @cur_node.children.sort(id: "ASC").map(&:becomes_with_route)
+    send_csv @cur_node.children.sort(id: "ASC")
   end
 
   def import

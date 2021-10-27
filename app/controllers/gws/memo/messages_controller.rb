@@ -248,7 +248,7 @@ class Gws::Memo::MessagesController < ApplicationController
       @item.request_mdn_ids = @item.request_mdn_ids - [@cur_user.id]
       @item.update
     else
-      @item.errors.messages[:base] += item_mdn.errors.full_messages
+      SS::Model.copy_errors(item_mdn, @item)
     end
 
     render_change result, :send_mdn, redirect: { action: :show }

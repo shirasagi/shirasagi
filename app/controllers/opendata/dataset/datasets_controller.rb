@@ -40,6 +40,6 @@ class Opendata::Dataset::DatasetsController < ApplicationController
     end
 
     @copy = @item.new_clone(get_params)
-    render_update @copy.save, location: { action: :index }, render: { file: :copy }
+    render_update @copy.save, location: { action: :index }, render: { template: "copy" }
   end
 end

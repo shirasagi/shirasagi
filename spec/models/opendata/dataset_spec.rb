@@ -9,7 +9,6 @@ describe Opendata::Dataset, dbscope: :example do
     let(:item) { create :opendata_dataset, cur_node: node }
     let(:show_path) { Rails.application.routes.url_helpers.opendata_dataset_path(site: item.site, cid: node, id: item.id) }
 
-    it { expect(item.becomes_with_route).not_to eq nil }
     it { expect(item.dirname).to eq node.filename }
     it { expect(item.basename).not_to eq nil }
     it { expect(item.path).not_to eq nil }
@@ -21,7 +20,6 @@ describe Opendata::Dataset, dbscope: :example do
 
   context "check attributes with typical url resource" do
     subject { create(:opendata_dataset, cur_node: node) }
-    its(:becomes_with_route) { is_expected.not_to be_nil }
     its(:dirname) { is_expected.to eq node.filename }
     its(:basename) { is_expected.to eq subject.filename.split('/').last }
     its(:path) { is_expected.to end_with "/#{subject.dirname}/#{subject.basename}" }

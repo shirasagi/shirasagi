@@ -47,7 +47,7 @@ production: &production
   # Sanitizer directories
   sanitizer_input: sanitizer_input
   sanitizer_output: sanitizer_output
-  sanitizer_wait_image: public/assets/img/sanitizer-wait-ja.png
+  sanitizer_file_prefix: ss
 
 test:
   <<: *production

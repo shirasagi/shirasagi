@@ -1,6 +1,6 @@
 class Cms::Node::CopyNodesJob < Cms::ApplicationJob
   include Job::SS::TaskFilter
-  include Job::Cms::CopyNodes::SsFiles
+  include Job::Cms::CopyNodes::SSFiles
   include Job::Cms::CopyNodes::CmsForms
   include Job::Cms::CopyNodes::CmsColumns
   include Job::Cms::CopyNodes::CmsLayouts

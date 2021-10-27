@@ -77,7 +77,7 @@ describe Cms::Column::Value::UrlField2, type: :model, dbscope: :example do
       Thread.current["ss.request"] = request
 
       trusted_urls = [ "http://#{domain}/", "https://#{domain}/", "http://シラサギプロジェクト.jp", "https://シラサギプロジェクト.jp" ]
-      @save_trusted_urls = SS.config.cms.trusted_urls
+      @save_trusted_urls = SS.config.sns.trusted_urls
       SS.config.replace_value_at(:sns, :trusted_urls, trusted_urls)
       Sys::TrustedUrlValidator.send(:clear_trusted_urls)
     end

@@ -5,14 +5,14 @@
   <%= error_messages_for :item %>
 
   <div class="addon-views gws-survey">
-    <%= render file: '_basic_info' %>
+    <%= render template: '_basic_info' %>
     <% unless preview %>
-      <%= render file: '_tabs', locals: { cur_tab: 'personal' } %>
+      <%= render template: '_tabs', locals: { cur_tab: 'personal' } %>
     <% end %>
 
     <div class="addon-view">
       <div class="addon-body" style="border-top: none">
-        <%= render file: '_form', locals: { f: f } %>
+        <%= render template: '_form', locals: { f: f } %>
       </div>
     </div>
   </div>

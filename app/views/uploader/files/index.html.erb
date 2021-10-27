@@ -1,5 +1,5 @@
 <div class="index">
-  <%= render file: "_list_head" %>
+  <%= render template: "_list_head" %>
 
   <ul class="list-items">
     <% if @cur_node.filename != @item.filename %>
@@ -18,7 +18,7 @@
         <%= link_to t('ss.links.delete'), action: :file, filename: item.filename, do: :delete if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
       </nav>
 
-      <label class="check"><input type="checkbox" name="ids[]" value="<%= item.name %>" /></label>
+      <label class="check"><input type="checkbox" name="ids[]" value="<%= item.name %>"></label>
       <div class="info">
         <% if item.directory? %>
           <%= link_to item.name, { action: :file, filename: item.filename }, class: "list-item-title dir" %>

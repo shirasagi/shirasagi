@@ -45,6 +45,7 @@ ja:
     errors:
       has_multiple_root_groups: "サイト: %{site} は複数のルートグループが設定されています。"
       connection_setting_not_found: LDAP 接続情報が設定されていません。
+      connection_refused: LDAP サーバーへ接続できません。
 
   modules:
     ldap: LDAP

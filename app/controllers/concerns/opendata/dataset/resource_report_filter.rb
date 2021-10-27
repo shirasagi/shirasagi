@@ -47,7 +47,7 @@ module Opendata::Dataset::ResourceReportFilter
     @items = Kaminari.paginate_array(@items) if @items.is_a?(Array)
     @items = @items.page(params[:page]).per(50)
 
-    render file: "index"
+    render template: "index"
   end
 
   def download

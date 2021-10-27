@@ -12,7 +12,6 @@ describe Sitemap::Page do
     let(:item) { create :sitemap_page, cur_node: node }
     let(:show_path) { Rails.application.routes.url_helpers.sitemap_page_path(site: item.site, cid: node, id: item.id) }
 
-    it { expect(item.becomes_with_route).not_to eq nil }
     it { expect(item.dirname).to eq node.filename }
     it { expect(item.basename).not_to eq nil }
     it { expect(item.path).not_to eq nil }

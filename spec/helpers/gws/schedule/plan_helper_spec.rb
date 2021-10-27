@@ -67,11 +67,15 @@ describe Gws::Schedule::PlanHelper, type: :helper, dbscope: :example do
   end
 
   describe "calendar_format" do
+    let!(:user) { gws_user }
     let!(:item) { create :gws_schedule_plan }
 
     it "events" do
+      opts = {}
+      opts[:user] = user.id
+      opts[:cur_user] = user
       plans  = Gws::Schedule::Plan.all
-      events = helper.calendar_format(plans)
+      events = helper.calendar_format(plans, opts)
       expect(events.present?).to eq true
     end
   end

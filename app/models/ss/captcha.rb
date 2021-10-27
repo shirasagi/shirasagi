@@ -4,6 +4,8 @@ class SS::Captcha
   field :captcha_text, type: String
   field :captcha_error, type: String
 
+  store_in_repl_master
+
   attr_accessor(:image_path)
 
   index({ created: 1 }, { expire_after_seconds: 3600 })

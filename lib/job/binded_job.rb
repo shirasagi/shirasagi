@@ -4,8 +4,7 @@ class Job::BindedJob < ::ActiveJob::ConfiguredJob
     @bindings = bindings.dup.stringify_keys
   end
 
-  attr_reader :options
-  attr_reader :bindings
+  attr_reader :bindings, :options, :job_wait
 
   def perform_now(*args)
     user_id_or_user = @bindings[:user_id].presence || @bindings["user_id"]
@@ -26,5 +25,17 @@ class Job::BindedJob < ::ActiveJob::ConfiguredJob
   def bind(bindings)
     @bindings.merge!(bindings.stringify_keys)
     self
+  end
+
+  def delay_wait
+    if @options[:wait_until]
+      @job_wait = @options.delete(:wait_until).to_i
+    elsif @options[:wait]
+      @job_wait = @options.delete(:wait).since.to_i
+    else
+      @job_wait = Time.zone.now.to_i
+    end
+
+    set(wait: 1.year)
   end
 end

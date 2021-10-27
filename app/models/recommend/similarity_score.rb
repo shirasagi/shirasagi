@@ -4,6 +4,7 @@ class Recommend::SimilarityScore
   include Cms::SitePermission
 
   index({ score: -1 })
+  index({ site_id: 1, score: -1, key: 1 })
 
   seqid :id
   field :key, type: String

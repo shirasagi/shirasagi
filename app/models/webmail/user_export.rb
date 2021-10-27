@@ -151,9 +151,7 @@ class Webmail::UserExport
 
     setting.set_imap_password
     if setting.invalid?
-      setting.errors.full_messages.each do |msg|
-        errors.add :base, "#{index + 1}: #{msg}"
-      end
+      SS::Model.copy_errors(setting, self, prefix: "#{index + 1}: ")
       return
     end
 
@@ -164,9 +162,7 @@ class Webmail::UserExport
 
     item.cur_user = @cur_user
     if !item.save
-      item.errors.full_messages.each do |msg|
-        errors.add :base, "#{index + 1}: #{msg}"
-      end
+      SS::Model.copy_errors(item, self, prefix: "#{index + 1}: ")
       return
     end
 

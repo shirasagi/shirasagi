@@ -38,6 +38,8 @@ RSpec.describe Gws::Schedule::Plan, type: :model, dbscope: :example do
         expect(subject.start_at).to eq Time.zone.local(2010, 1, 1, 0, 0, 0)
         expect(subject.end_at).to eq Time.zone.local(2010, 1, 1, 23, 59, 59)
 
+        opts = {}
+        opts[:cur_user] = gws_user
         cal = subject.calendar_format(gws_user, gws_site)
         expect(cal[:className]).to include 'fc-event-range'
         expect(cal[:className]).to include 'fc-event-allday'

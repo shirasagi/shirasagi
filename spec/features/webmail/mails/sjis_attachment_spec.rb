@@ -52,7 +52,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           expect(mail.parts[0].body.raw_source).to include(item_texts.join("\r\n"))
           expect(mail.parts[1].content_type).to include("text/plain")
           expect(mail.parts[1].content_type).to include("Shift_JIS")
-          expect(mail.parts[1].body.raw_source).to eq Base64.encode64(File.binread(content))
+          expect(mail.parts[1].body.raw_source).to eq Base64.encode64(File.binread(content)).gsub("\n", "\r\n")
         end
       end
     end

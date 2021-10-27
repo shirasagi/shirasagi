@@ -136,7 +136,7 @@ class Gws::Report::FilesController < ApplicationController
 
     @item = @model.new pre_params.merge(fix_params)
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_opts = { file: :new }
+    render_opts = { template: "new" }
     render_opts[:layout] = false if request.xhr?
     render render_opts
   end
@@ -144,7 +144,7 @@ class Gws::Report::FilesController < ApplicationController
   def form_select
     set_forms
     @forms = @forms.search(params[:s]).page(params[:page]).per(50)
-    render file: 'form_select'
+    render template: 'form_select'
   end
 
   def create
@@ -186,7 +186,7 @@ class Gws::Report::FilesController < ApplicationController
     return if request.get?
 
     @item.state = 'public'
-    render_opts = { render: { file: :publish }, notice: t('gws/report.notice.published') }
+    render_opts = { render: { template: "publish" }, notice: t('gws/report.notice.published') }
     render_opts[:location] = gws_report_file_path(state: 'sent', id: @item)
     render_update @item.save, render_opts
   end
@@ -200,7 +200,7 @@ class Gws::Report::FilesController < ApplicationController
     return if request.get?
 
     @item.state = 'closed'
-    render_opts = { render: { file: :depublish }, notice: t('gws/report.notice.depublished') }
+    render_opts = { render: { template: "depublish" }, notice: t('gws/report.notice.depublished') }
     render_opts[:location] = gws_report_file_path(state: 'closed', id: @item)
     render_update @item.save, render_opts
   end
@@ -232,11 +232,11 @@ class Gws::Report::FilesController < ApplicationController
 
     result = @new_item.save
     if !result
-      @item.errors.messages[:base] += @new_item.errors.full_messages
+      SS::Model.copy_errors(@new_item, @item)
     end
 
     render_opts = {}
-    render_opts[:render] = { file: :copy }
+    render_opts[:render] = { template: "copy" }
     if result
       render_opts[:location] = gws_report_file_path(state: 'closed', id: @new_item)
     end

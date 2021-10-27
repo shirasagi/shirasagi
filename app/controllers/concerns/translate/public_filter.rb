@@ -12,7 +12,7 @@ module Translate::PublicFilter
     return if @cur_main_path !~ /^#{@cur_site.translate_location}\/.+?\//
 
     if browser.bot?
-      Rails.logger.warn("translate denied : #{request.user_agent}")
+      Rails.logger.info("translate denied due to a bot access: #{request.user_agent}")
       return
     end
 

@@ -5,8 +5,6 @@ class SS::Migration20200521000000
 
   def change
     each_page do |page|
-      page = page.becomes_with_route rescue page
-
       site = find_site(page.site_id)
       next if site.blank? # page is existed in deleted site
 

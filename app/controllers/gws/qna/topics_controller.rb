@@ -56,7 +56,7 @@ class Gws::Qna::TopicsController < ApplicationController
 
   def show
     raise '403' unless readable?
-    render file: "show_#{@item.mode}"
+    render template: "show_#{@item.mode}"
   end
 
   def read
@@ -77,7 +77,7 @@ class Gws::Qna::TopicsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { render({ file: :edit }) }
+        format.html { render({ template: "edit" }) }
         format.json { render(json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type) }
       end
     end
@@ -87,7 +87,7 @@ class Gws::Qna::TopicsController < ApplicationController
     set_item
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
-    @item.update_attributes(question_state: 'resolved')
+    @item.update(question_state: 'resolved')
     redirect_to action: :show
   end
 
@@ -95,7 +95,7 @@ class Gws::Qna::TopicsController < ApplicationController
     set_item
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
-    @item.update_attributes(question_state: 'open')
+    @item.update(question_state: 'open')
     redirect_to action: :show
   end
 end

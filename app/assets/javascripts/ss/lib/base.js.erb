@@ -360,6 +360,7 @@ this.SS = (function () {
   };
 
   SS.formChanged = false;
+  SS.disableConfirmUnloading = false;
 
   SS.confirmUnloading = function () {
     SS.formChanged = false;
@@ -367,7 +368,7 @@ this.SS = (function () {
       SS.formChanged = true;
     });
     $(window).on("beforeunload", function () {
-      if (SS.formChanged) {
+      if (SS.formChanged && !SS.disableConfirmUnloading) {
         return "<%= I18n.t 'ss.confirm.unload' %>";
       }
     });
@@ -489,13 +490,13 @@ this.SS = (function () {
         scrollInput: false
       };
       data = $(this).data();
-      if (data.minDate !== null) {
+      if (data.minDate) {
         opts.minDate = data.minDate;
       }
-      if (data.maxDate !== null) {
+      if (data.maxDate) {
         opts.maxDate = data.maxDate;
       }
-      return $(this).datetimepicker(opts);
+      return $(this).attr('autocomplete', 'off').datetimepicker(opts);
     });
     $.each($(".js-datetime"), function () {
       var data, opts;
@@ -504,16 +505,16 @@ this.SS = (function () {
         step: 30
       };
       data = $(this).data();
-      if (data.minDate !== null) {
+      if (data.minDate) {
         opts.minDate = data.minDate;
       }
-      if (data.maxDate !== null) {
+      if (data.maxDate) {
         opts.maxDate = data.maxDate;
       }
-      if (data.step !== null) {
+      if (data.step) {
         opts.step = data.step;
       }
-      return $(this).datetimepicker(opts);
+      return $(this).attr('autocomplete', 'off').datetimepicker(opts);
     });
   };
 

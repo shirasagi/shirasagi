@@ -21,7 +21,7 @@ class Sns::LoginController < ApplicationController
     if !request.post?
       # retrieve parameters from get parameter. this is bookmark support.
       @item = SS::User.new email: params[:email]
-      return render(file: :login)
+      return render(template: :login)
     end
 
     safe_params     = get_params
@@ -57,7 +57,8 @@ class Sns::LoginController < ApplicationController
     if @cur_user = SS.current_user = get_user_by_session
       render plain: 'OK'
     else
-      raise '403'
+      # to suppress error level log directly responds "forbidden"
+      head :forbidden
     end
   end
 end

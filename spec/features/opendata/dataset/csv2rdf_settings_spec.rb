@@ -11,11 +11,11 @@ describe "opendata_csv2rdf_settings", type: :feature, dbscope: :example do
   before do
     # overwrite config to disable fuseki
     @save_fuseki = SS.config.opendata.fuseki
-    SS::Config.replace_value_at(:opendata, :fuseki, "disable" => true)
+    SS.config.replace_value_at(:opendata, :fuseki, "disable" => true)
   end
 
   after do
-    SS::Config.replace_value_at(:opendata, :fuseki, @save_fuseki)
+    SS.config.replace_value_at(:opendata, :fuseki, @save_fuseki)
   end
 
   before do

@@ -31,7 +31,7 @@ class Cms::LoginController < ApplicationController
     if !request.post?
       # retrieve parameters from get parameter. this is bookmark support.
       @item = SS::User.new email: params[:email]
-      return render(file: :login)
+      return render(template: "login")
     end
 
     safe_params     = get_params

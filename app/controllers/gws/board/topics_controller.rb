@@ -74,7 +74,7 @@ class Gws::Board::TopicsController < ApplicationController
   def show
     raise '403' unless readable?
 
-    render file: "show_#{@item.mode}"
+    render template: "show_#{@item.mode}"
   end
 
   def read
@@ -95,7 +95,7 @@ class Gws::Board::TopicsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { render({ file: :edit }) }
+        format.html { render({ template: "edit" }) }
         format.json { render(json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type) }
       end
     end
@@ -105,7 +105,7 @@ class Gws::Board::TopicsController < ApplicationController
     set_item
     raise '403' unless readable?
 
-    render file: "print_#{@item.mode}", layout: 'ss/print'
+    render template: "print_#{@item.mode}", layout: 'ss/print'
   end
 
   def soft_delete
@@ -136,7 +136,7 @@ class Gws::Board::TopicsController < ApplicationController
 
     render_opts = {}
     render_opts[:location] = gws_board_topics_path(mode: 'editable')
-    render_opts[:render] = { file: :undo_delete }
+    render_opts[:render] = { template: "undo_delete" }
     render_opts[:notice] = t('ss.notice.restored')
 
     render_update @item.save, render_opts

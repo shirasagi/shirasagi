@@ -1,5 +1,5 @@
 <% return "" if @cur_node.blank? %>
-<% return "" if @cur_node.becomes_with_route.try(:opendata_site_ids).blank? %>
+<% return "" if @cur_node.try(:opendata_site_ids).blank? %>
 <% return "" if @item.opendata_dataset_state == 'none' %>
 <% return "" if @item.attached_files.blank? %>
 

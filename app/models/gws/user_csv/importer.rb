@@ -269,9 +269,7 @@ class Gws::UserCsv::Importer
     sig = "#{Gws::User.t(:uid)}: #{item.uid}の" if item.uid.present?
     sig ||= "#{Gws::User.t(:email)}: #{item.email}の" if item.email.present?
     sig ||= "#{Gws::User.t(:id)}: #{item.id}の" if item.persisted?
-    item.errors.full_messages.each do |error|
-      errors.add(:base, "#{@row_index}行目: #{sig}#{error}")
-    end
+    SS::Model.copy_errors(item, self, prefix: "#{@row_index}行目: #{sig}")
   end
 
   def save_form_data(item)

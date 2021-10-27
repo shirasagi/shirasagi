@@ -69,7 +69,7 @@ class History::Cms::TrashesController < ApplicationController
       @item.id.to_s, restore_params: restore_params, file_params: file_params
     )
     if error_messages.present?
-      @item.errors.messages[:base] += error_messages
+      error_messages.each { |error_message| @item.errors.add :base, error_message }
       result = false
     else
       result = true
@@ -77,7 +77,7 @@ class History::Cms::TrashesController < ApplicationController
 
     render_opts = {}
     render_opts[:location] = { action: :index }
-    render_opts[:render] = { file: :undo_delete }
+    render_opts[:render] = { template: "undo_delete" }
     render_opts[:notice] = t('ss.notice.restored')
 
     render_update result, render_opts

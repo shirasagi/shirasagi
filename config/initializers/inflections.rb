@@ -14,3 +14,12 @@
 # ActiveSupport::Inflector.inflections(:en) do |inflect|
 #   inflect.acronym 'RESTful'
 # end
+
+# register acronym "SS" for loading classes under module "SS" with Zeitwerk class loader.
+#
+# see:
+# - https://guides.rubyonrails.org/autoloading_and_reloading_constants.html#customizing-inflections
+# - https://qiita.com/alfa/items/3a432c31346a705d0690
+ActiveSupport::Inflector.inflections(:en) do |inflect|
+  inflect.acronym 'SS'
+end

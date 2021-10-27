@@ -1,12 +1,12 @@
 <% if @print %>
   <%= render 'ss/crud/print_preview_head', links: [[ I18n.t('ss.links.back'), { action: :summary } ]] %>
 <% else %>
-  <%= render file: "_tabs", locals: {cur_tab: 'summary'} %>
+  <%= render template: "_tabs", locals: {cur_tab: 'summary'} %>
 <% end %>
 
 <div class="index gws-survey <% if @print %>sheet<% end %>">
   <% unless @print %>
-    <%= render file: "_summary_head" %>
+    <%= render template: "_summary_head" %>
   <% end %>
-  <%= render file: "_summary" %>
+  <%= render template: "_summary" %>
 </div>

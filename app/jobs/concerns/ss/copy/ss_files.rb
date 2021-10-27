@@ -1,4 +1,4 @@
-module SS::Copy::SsFiles
+module SS::Copy::SSFiles
   extend ActiveSupport::Concern
   include SS::Copy::Cache
 
