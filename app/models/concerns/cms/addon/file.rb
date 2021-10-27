@@ -32,31 +32,25 @@ module Cms::Addon
         end
       end
 
+      def other_user_owned?(file, cur_user)
+        cur_user && cur_user.id != file.user_id
+      end
+
       def attach_files(item, add_ids)
         owner_item = Utils.owner_item(item)
         cur_site = owner_item.cur_site if owner_item.respond_to?(:cur_site)
         cur_site ||= owner_item.site if owner_item.respond_to?(:site)
         cur_user = owner_item.cur_user if owner_item.respond_to?(:cur_user)
+        is_allowed_other_user_files = owner_item.allowed_other_user_files?
         is_branch = owner_item.respond_to?(:branch?) && owner_item.branch?
 
         ids = []
         Utils.each_file(item.file_ids) do |file|
-          if !owner_item.allowed_other_user_files? && cur_user && cur_user.id != file.user_id
-            # 他人のファイルを謝って添付することを防止する
-            next
-          end
+          # 他人のファイルを謝って添付することを防止する
+          next if !is_allowed_other_user_files && Utils.other_user_owned?(file, cur_user)
 
-          if add_ids && !add_ids.include?(file.id)
-            # もともとから添付されていたファイルについては、必要であれば state を変更する
-            file.update(state: owner_item.state) if owner_item.state_changed?
-            ids << file.id
-            next
-          end
-
-          # ここから新規に追加されたファイルの処理
-
-          if Utils.file_owned?(file, owner_item)
-            # すでに自分自身が所有している場合は、必要であれば state を変更する
+          if add_ids && !add_ids.include?(file.id) || Utils.file_owned?(file, owner_item)
+            # もともとから添付されていたファイル、または、すでに自分自身が所有している場合、必要であれば state を変更する
             file.update(state: owner_item.state) if owner_item.state_changed?
             ids << file.id
             next
@@ -68,17 +62,20 @@ module Cms::Addon
             next
           end
 
-          result = file.update(site: cur_site, model: owner_item.model_name.i18n_key, owner_item: owner_item, state: owner_item.state)
-          if result
-            file = file.becomes_with_model
-            History::Log.build_file_log(file, site_id: cur_site.try(:id), user_id: cur_user.try(:id)).tap do |history|
-              history.action = "update"
-              history.behavior = "attachment"
-              history.save
-            end
+          # ファイルの所有者などを更新する
+          result = file.update(
+            site: cur_site, model: owner_item.model_name.i18n_key, owner_item: owner_item, state: owner_item.state
+          )
+          next unless result
 
-            ids << file.id
+          file = file.becomes_with_model
+          History::Log.build_file_log(file, site_id: cur_site.try(:id), user_id: cur_user.try(:id)).tap do |history|
+            history.action = "update"
+            history.behavior = "attachment"
+            history.save
           end
+
+          ids << file.id
         end
 
         ids
@@ -102,12 +99,12 @@ module Cms::Addon
           end
           file.cur_user = cur_user if file.respond_to?(:cur_user=) && cur_user
           result = file.destroy
-          if result
-            History::Log.build_file_log(file, site_id: cur_site.try(:id), user_id: cur_user.try(:id)).tap do |history|
-              history.action = "destroy"
-              history.behavior = "attachment"
-              history.save
-            end
+          next unless result
+
+          History::Log.build_file_log(file, site_id: cur_site.try(:id), user_id: cur_user.try(:id)).tap do |history|
+            history.action = "destroy"
+            history.behavior = "attachment"
+            history.save
           end
         end
       end
@@ -141,12 +138,12 @@ module Cms::Addon
         end
 
         result = file.destroy
-        if result
-          History::Log.build_file_log(file, site_id: @cur_site.try(:id), user_id: @cur_user.try(:id)).tap do |history|
-            history.action = "destroy"
-            history.behavior = "attachment"
-            history.save
-          end
+        next unless result
+
+        History::Log.build_file_log(file, site_id: @cur_site.try(:id), user_id: @cur_user.try(:id)).tap do |history|
+          history.action = "destroy"
+          history.behavior = "attachment"
+          history.save
         end
       end
     end
