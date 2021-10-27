@@ -1,28 +1,13 @@
 class Gws::Memo::BackupMessagesController < ApplicationController
-  include Gws::BaseFilter
-  include Gws::CrudFilter
+  include Gws::Memo::ExportAndBackupFilter
 
-  model Gws::Memo::Message
-
-  navi_view "gws/memo/messages/navi"
-  menu_view nil
-
-  before_action :deny_with_auth
   before_action :check_permission
 
   private
 
-  def deny_with_auth
-    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
-  end
-
   def set_crumbs
     @crumbs << [@cur_site.menu_memo_label || t('mongoid.models.gws/memo/message'), gws_memo_messages_path ]
     @crumbs << [t('gws/memo/message.backup_messages'), gws_memo_backup_messages_path ]
-  end
-
-  def fix_params
-    { cur_user: @cur_user, cur_site: @cur_site }
   end
 
   def check_permission
@@ -30,10 +15,6 @@ class Gws::Memo::BackupMessagesController < ApplicationController
   end
 
   public
-
-  def index
-    @item = @model.new
-  end
 
   def backup
     message_ids = params.dig(:item, :message_ids)
