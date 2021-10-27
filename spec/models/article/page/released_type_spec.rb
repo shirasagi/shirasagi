@@ -60,10 +60,12 @@ describe Article::Page, dbscope: :example do
         before do
           @save_default_released_type = SS.config.cms.default_released_type
           SS.config.replace_value_at(:cms, :default_released_type, "same_as_updated")
+          item.class.default_released_type = "same_as_updated"
         end
 
         after do
           SS.config.replace_value_at(:cms, :default_released_type, @save_default_released_type)
+          item.class.default_released_type = @save_default_released_type
         end
 
         it do
