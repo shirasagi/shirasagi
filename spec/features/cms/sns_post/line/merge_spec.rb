@@ -26,11 +26,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
         it "#edit" do
           capture_line_bot_client do |capture|
             visit show_path
+            expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
             within "#addon-workflow-agents-addons-branch" do
               click_on I18n.t("workflow.create_branch")
               expect(page).to have_link item.name
               click_on item.name
             end
+            expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
             expect(page).to have_link I18n.t("ss.links.edit")
             click_on I18n.t("ss.links.edit")

@@ -168,6 +168,7 @@ module Cms::PageFilter
         location = { action: :lock }
       end
     end
+    raise "404" if @item.try(:master?) && @item.branches.present?
 
     render_update result, location: location
   end
