@@ -30,55 +30,24 @@ class Gws::Memo::MessageRestorer
     data = read_json(entry)
     data.delete('_id')
 
-    item = Gws::Memo::Message.new
-    data.each do |k, v|
-      next if %w(user members to_members cc_members bcc_members files list_id).include?(k)
+    item = init_memo(data)
 
-      item[k] = v
-    end
-
-    # site_id
-    item.site_id = cur_site.id
-
-    # user_id (from)
     if data['user']
-      user = find_user(data['user'])
-      if user
-        item.cur_user = user
-        @sent_by_cur_user = (@cur_user.id == user.id)
-      else
-        item.cur_user = @cur_user
-      end
+      item.set_cur_user(data['user'])
     end
 
-    # to_member_ids
     if data['to_members'].present?
-      item.to_member_ids = []
-      data['to_members'].each do |data_user|
-        user = find_user(data_user)
-        item.to_member_ids += [user.id] if user
-      end
+      item.set_to_members(data['to_members'])
     end
 
-    # cc_member_ids
     if data['cc_members'].present?
-      item.cc_member_ids = []
-      data['cc_members'].each do |data_user|
-        user = find_user(data_user)
-        item.cc_member_ids += [user.id] if user
-      end
+      item.set_cc_member_ids(data['cc_members'])
     end
 
-    # bcc_member_ids
     if data['bcc_members'].present?
-      item.bcc_member_ids = []
-      data['bcc_members'].each do |data_user|
-        user = find_user(data_user)
-        item.bcc_member_ids += [user.id] if user
-      end
+      item.set_bcc_member_ids(data['bcc_members'])
     end
 
-    # check member_ids
     unless item.draft?
       if item.to_member_ids.blank?
         item.to_member_ids = [@cur_user.id]
@@ -88,8 +57,6 @@ class Gws::Memo::MessageRestorer
       end
     end
 
-    # deleted
-    item.deleted = {}
     unless item.draft?
       member_ids(item).each do |id|
         item.deleted[id.to_s] = @datetime if id != @cur_user.id
@@ -97,18 +64,8 @@ class Gws::Memo::MessageRestorer
       item.deleted["sent"] = @datetime unless @sent_by_cur_user
     end
 
-    # star
-    item.star = {}
-
-    # filterd
-    item.filtered = {}
     item.filtered[@cur_user.id.to_s] = @datetime
 
-    # user_settings
-    item.user_settings = []
-
-    # files
-    item.file_ids = []
     if data['files'].present?
       data['files'].each do |data_file|
         item.file_ids += [save_ss_file(data_file).id]
@@ -119,17 +76,21 @@ class Gws::Memo::MessageRestorer
     item.save
   end
 
-  def find_user(data)
-    id = data['_id']
-    name = data['name']
+  def init_memo(data)
+    Gws::Memo::Message.new
+    item.site_id = cur_site.id
+    item.star = {}
+    item.deleted = {}
+    item.filtered = {}
+    item.file_ids = []
+    item.user_settings = []
+    data.each do |k, v|
+      next if %w(user members to_members cc_members bcc_members files list_id).include?(k)
 
-    return nil if id.nil? || name.nil?
+      item[k] = v
+    end
 
-    user = Gws::User.unscoped.find(id) rescue nil
-
-    return nil if user.try(:name) != name
-
-    user
+    item
   end
 
   def member_ids(item)
@@ -155,6 +116,7 @@ class Gws::Memo::MessageRestorer
 
   def read_json(entry)
     entry.get_input_stream do |f|
+      # 読み込むのがJSON文字列ではなく、オブジェクトだからJSON.loadを使う
       JSON.load(f)
     end
   end
