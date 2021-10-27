@@ -378,7 +378,7 @@ module Cms::Content
 
     return if max_name_length <= 0
     if name.length > max_name_length
-      errors.add :name, :too_long, { count: max_name_length }
+      errors.add :name, :too_long, count: max_name_length
     end
   end
 

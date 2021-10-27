@@ -133,9 +133,9 @@ class Gws::Workflow::PagesController < ApplicationController
     file_ids = params[:workflow_file_ids]
     opts = { comment: comment, file_ids: file_ids }
     if params[:action] == 'pull_up_update'
-      @item.pull_up_workflow_approver_state(@cur_user, opts)
+      @item.pull_up_workflow_approver_state(@cur_user, **opts)
     else
-      @item.approve_workflow_approver_state(@cur_user, opts)
+      @item.approve_workflow_approver_state(@cur_user, **opts)
     end
 
     if @item.finish_workflow?
