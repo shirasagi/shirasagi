@@ -54,7 +54,7 @@ class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
 
     copy = nil
     result = nil
-    task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site.id, name: "#{@item.collection_name}:#{@item.id}")
+    task = SS::Task.find_or_create_for_model(@item, site: @cur_site)
     rejected = -> { @item.errors.add :base, :other_task_is_running }
     task.run_with(rejected: rejected) do
       task.log "# #{I18n.t("workflow.branch_page")} #{I18n.t("ss.buttons.new")}"

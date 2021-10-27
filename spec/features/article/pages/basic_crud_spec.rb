@@ -185,7 +185,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       it "permited and contains_urls" do
         visit edit_path2
         within "form" do
-          click_on I18n.t("ss.buttons.draft_save")
+          click_on I18n.t("ss.buttons.withdraw")
         end
         expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
       end
@@ -193,7 +193,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       it "permited and not contains_urls" do
         visit edit_path
         within "form" do
-          click_on I18n.t("ss.buttons.draft_save")
+          click_on I18n.t("ss.buttons.withdraw")
         end
         expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
       end
@@ -204,7 +204,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
                                     release_private_article_pages release_other_article_pages))
         visit edit_path2
         within "form" do
-          click_on I18n.t("ss.buttons.draft_save")
+          click_on I18n.t("ss.buttons.withdraw")
         end
         expect(page).not_to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
         expect(page).to have_css(".errorExplanation", text: I18n.t('ss.confirm.contains_url_expect'))
@@ -216,7 +216,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
                                     release_private_article_pages release_other_article_pages))
         visit edit_path
         within "form" do
-          click_on I18n.t("ss.buttons.draft_save")
+          click_on I18n.t("ss.buttons.withdraw")
         end
         expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
       end
