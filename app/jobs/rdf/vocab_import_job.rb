@@ -55,7 +55,7 @@ class Rdf::VocabImportJob < Cms::ApplicationJob
 
   def load_and_create_vocab
     ontology_statement = nil
-    RDF::Reader.open(@filename, { base_uri: @filename, format: @format }) do |reader|
+    RDF::Reader.open(@filename, base_uri: @filename, format: @format) do |reader|
       ontology_statement = reader.each_statement.first
     end
     ontology_subject = ontology_statement.try(:subject)

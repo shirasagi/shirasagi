@@ -9,7 +9,6 @@ module Opendata::DatasetChildNode
     @parent_dataset_node = begin
       node = self
       while node
-        node = node.becomes_with_route
         if node.is_a?(Opendata::Node::Dataset)
           break
         end
@@ -26,11 +25,11 @@ module Opendata::DatasetChildNode
     category_path = "#{category_path}/#{@cur_subcategory}" if @cur_subcategory
 
     node = Cms::Node.site(@cur_site || self.site).and_public.where(filename: category_path).first
-    return node.becomes_with_route if node
+    return node if node
 
     (parent_dataset_node.st_categories || parent_dataset_node.default_st_categories || []).each do |cate|
       node = Cms::Node.site(@cur_site || self.site).and_public.where(filename: "#{cate.filename}/#{category_path}").first
-      return node.becomes_with_route if node
+      return node if node
     end
 
     nil
@@ -42,11 +41,11 @@ module Opendata::DatasetChildNode
     category_path = "#{category_path}/#{@cur_subcategory}" if @cur_subcategory
 
     node = Cms::Node.site(@cur_site || self.site).and_public.where(filename: category_path).first
-    return node.becomes_with_route if node
+    return node if node
 
     (parent_dataset_node.st_estat_categories || parent_dataset_node.default_st_estat_categories || []).each do |cate|
       node = Cms::Node.site(@cur_site || self.site).and_public.where(filename: "#{cate.filename}/#{category_path}").first
-      return node.becomes_with_route if node
+      return node if node
     end
 
     nil
@@ -58,7 +57,7 @@ module Opendata::DatasetChildNode
     category_path = "#{category_path}/#{@cur_subcategory}" if @cur_subcategory
 
     node = Cms::Node.site(@cur_site || self.site).and_public.where(filename: category_path).first
-    return node.becomes_with_route if node
+    return node if node
 
     nil
   end

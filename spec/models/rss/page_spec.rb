@@ -8,7 +8,6 @@ describe Rss::Page, dbscope: :example do
     let(:show_path) { Rails.application.routes.url_helpers.rss_page_path(site: subject.site, cid: subject.parent, id: subject) }
     subject { create :rss_page, site: site, node: node }
 
-    its(:becomes_with_route) { is_expected.not_to be_nil }
     its(:parent) { expect(subject.parent.id).to eq node.id }
     its(:dirname) { is_expected.to eq node.filename }
     its(:basename) { is_expected.not_to be_nil }

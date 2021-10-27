@@ -63,6 +63,6 @@ module Webmail::Addon::GroupExtension
     imap_setting.set_imap_password
     self.imap_settings = [imap_setting]
     return if imap_setting.valid?(:group)
-    errors.add :base, imap_setting.errors.full_messages.join(", ")
+    SS::Model.copy_errors(imap_setting, self)
   end
 end

@@ -113,7 +113,7 @@ class Webmail::MailImporter
   def add_too_large_file_error(params)
     params[:size] = params[:size].to_s(:human_size) if params[:size].is_a?(Numeric)
     params[:limit] = params[:limit].to_s(:human_size) if params[:limit].is_a?(Numeric)
-    errmsg = I18n.t("errors.messages.too_large_file", params)
+    errmsg = I18n.t("errors.messages.too_large_file", **params)
     errors.add :base, errmsg
   end
 

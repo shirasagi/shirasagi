@@ -126,8 +126,6 @@ class Cms::SearchContents::HtmlController < ApplicationController
   end
 
   def update_html_fields(item)
-    item = item.becomes_with_route if item.respond_to?(:becomes_with_route)
-
     attributes = {}
     HTML_FIELDS.each do |field|
       next unless item.try(field)
@@ -139,8 +137,6 @@ class Cms::SearchContents::HtmlController < ApplicationController
   end
 
   def update_column_values_fields(item)
-    item = item.becomes_with_route if item.respond_to?(:becomes_with_route)
-
     item.column_values.each do |column_value|
       attributes = {}
       COLUMN_VALUES_FIELDS.each do |field|

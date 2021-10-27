@@ -118,10 +118,6 @@ class SS::Migration20190320000000
   def normalize_item(item)
     return if item.blank?
 
-    if item.respond_to?(:becomes_with_route)
-      item = item.becomes_with_route rescue item
-    end
-
     item
   end
 end

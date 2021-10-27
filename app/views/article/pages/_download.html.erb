@@ -9,7 +9,6 @@
     <% end %>
   </dd>
 
-  <% @cur_node = @cur_node.becomes_with_route %>
   <% if @cur_node.respond_to?(:st_forms) %>
     <% unsupported_forms = [] %>
     <dt><%= t('mongoid.models.cms/form') %></dt>

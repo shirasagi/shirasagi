@@ -1,0 +1,15 @@
+<%= jquery do %>
+$('.sortable-index tbody').sortable();
+<% end %>
+<%
+  def node_options
+    Article::Node::Page.site(@cur_site).map { |item| ["#{item.name} (#{item.filename})", item.id] }
+  end
+%>
+<dl class="see column-cms-select_page">
+  <dt><%= @model.t :place_holder %><%= @model.tt :place_holder %></dt>
+  <dd><%= f.text_field :place_holder %></dd>
+
+  <dt><%= @model.t :node_id %><%= @model.tt :node_id %></dt>
+  <dd><%= f.select :node_id, node_options, include_blank: true %></dd>
+</dl>

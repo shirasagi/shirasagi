@@ -21,7 +21,6 @@ class SS::Csv
     def each
       yield draw_header
       @criteria.each do |item|
-        item = item.becomes_with_route if item.respond_to?(:becomes_with_route)
         item.cur_site = @cur_site if item.respond_to?(:cur_site=)
         item.cur_user = @cur_user if item.respond_to?(:cur_user=)
         item.cur_node = @cur_node if item.respond_to?(:cur_node=)

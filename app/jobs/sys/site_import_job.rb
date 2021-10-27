@@ -190,8 +190,6 @@ class Sys::SiteImportJob < SS::ApplicationJob
       end
 
       data.each { |k, v| item[k] = v }
-      item = item.becomes_with_route || item rescue item
-      data.each { |k, v| item[k] = v }
       yield(item) if block_given?
 
       if save_document(item)

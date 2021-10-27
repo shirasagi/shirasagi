@@ -60,8 +60,8 @@ describe Board::Post, type: :model, dbscope: :example do
       end
 
       it do
-        expect(item.invalid?).to be_truthy
-        expect(item.errors.messages[:delete_key]).to include(I18n.t('board.errors.invalid_delete_key'))
+        expect(item).to be_invalid
+        expect(item.errors[:delete_key]).to include(I18n.t('board.errors.invalid_delete_key'))
       end
     end
   end

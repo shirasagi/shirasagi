@@ -25,7 +25,7 @@ module Opendata::Api::GroupShowFilter
   def group_show
     help = t("opendata.api.group_show_help")
     id = params[:id]
-    id = URI.decode(id) if id
+    id = Addressable::URI.unencode(id) if id
 
     error = group_show_check(id)
     if error

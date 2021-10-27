@@ -31,10 +31,6 @@
     <dd class="closed"><%= task.closed.try { |time| content_tag(:time, I18n.l(time, format: :picker), datetime: time.utc.iso8601) } %></dd>
   </dl>
 
-  <div class="logs">
-    <%= t('job.log_notice', count: limit) %>
-    <textarea class="log" readonly="readonly"><%= task.head_logs(limit).join("\n") %></textarea>
-  </div>
   <div class="controller">
     <% if task.respond_to?(:log_file_path) %>
       <%
@@ -57,11 +53,18 @@
     <% end %>
 
     <span class="auto-reload">
-      自動更新:
-      <label><%= radio_button_tag :auto_refresh, 0, false, { id: nil } %> しない</label>
-      <label><%= radio_button_tag :auto_refresh, 1, true, { id: nil } %> する</label>
-      <%= number_field_tag :interval, SS.config.job.reload_interval || 10, id: nil, min: 1  %>秒
+      <label>
+        <%= check_box_tag :auto_refresh, 1, true, { id: nil } %>
+        <%= t('ss.auto_reload') %> :
+      </label>
+      <%= number_field_tag :interval, SS.config.job.reload_interval || 10, id: nil, min: 1 %>
+      <%= t('datetime.prompts.second') %>
     </span>
+  </div>
+
+  <div class="logs">
+    <textarea class="log" readonly="readonly"><%= task.head_logs(limit).join("\n") %></textarea>
+    <%= t('job.log_notice', count: limit) %>
   </div>
 </section>
 

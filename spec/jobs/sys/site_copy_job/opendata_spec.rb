@@ -75,7 +75,6 @@ describe Sys::SiteCopyJob, dbscope: :example do
         resource = page.resources.first
         license = resource.license
         Cms::Page.site(dest_site).find_by(filename: page.filename).tap do |dest_page|
-          dest_page = dest_page.becomes_with_route
           expect(dest_page.name).to eq page.name
           expect(dest_page.layout_id).to eq dest_layout.id
           expect(dest_page.user_id).to eq page.user_id
@@ -207,7 +206,6 @@ describe Sys::SiteCopyJob, dbscope: :example do
         expect(dest_dataset.name).to eq dataset.name
 
         Cms::Page.site(dest_site).find_by(filename: app1.filename).tap do |dest_app|
-          dest_app = dest_app.becomes_with_route
           expect(dest_app.name).to eq app1.name
           expect(dest_app.layout_id).to eq dest_layout.id
           expect(dest_app.user_id).to eq app1.user_id
@@ -233,7 +231,6 @@ describe Sys::SiteCopyJob, dbscope: :example do
         end
 
         Cms::Page.site(dest_site).find_by(filename: app2.filename).tap do |dest_app|
-          dest_app = dest_app.becomes_with_route
           expect(dest_app.name).to eq app2.name
           expect(dest_app.layout_id).to eq dest_layout.id
           expect(dest_app.user_id).to eq app2.user_id
@@ -345,7 +342,6 @@ describe Sys::SiteCopyJob, dbscope: :example do
         expect(dest_app.name).to eq app1.name
 
         Cms::Page.site(dest_site).find_by(filename: idea1.filename).tap do |dest_idea|
-          dest_idea = dest_idea.becomes_with_route
           expect(dest_idea.name).to eq idea1.name
           # expect(dest_idea.layout_id).to eq dest_layout.id
           expect(dest_idea.user_id).to eq idea1.user_id
@@ -365,7 +361,6 @@ describe Sys::SiteCopyJob, dbscope: :example do
         end
 
         Cms::Page.site(dest_site).find_by(filename: idea2.filename).tap do |dest_idea|
-          dest_idea = dest_idea.becomes_with_route
           expect(dest_idea.name).to eq idea2.name
           # expect(dest_idea.layout_id).to eq dest_layout.id
           expect(dest_idea.user_id).to eq idea2.user_id

@@ -83,6 +83,7 @@ ja:
       set_seen: 既読にしてもよろしいですか？
       unset_seen: 未読にしてもよろしいですか？
       would_you_edit_branch: 差し替えページが作成されています。差し替えページを編集しますか？
+      unable_to_delete_master_page: 差し替えページが作成されているため処理を中断します。
     notice:
       request_cancelled: 申請を取り消しました。
       approver_file_droppable: ファイル追加ボタンをクリックするか、ここにファイルをドロップしてください。

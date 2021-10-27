@@ -3,7 +3,7 @@
   if @cur_site.try(:close_confirmation_enabled?) && @item.persisted? && (@item.state == "public")
     js_options[:close_confirmation] = true
     contains_urls_path = url_for(action: 'contains_urls') rescue nil
-    if contains_urls_path && @contains_urls.present?
+    if contains_urls_path && @contains_urls.try(:and_public).present?
       js_options[:contain_links_path] = contains_urls_path
     end
   end
@@ -88,7 +88,7 @@
   });
   <% end %>
 
-  <% if params[:action] =~ /edit|delete/ && @cur_user.respond_to?(:cms_role_permit_any?) && !@cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_alert)) && @contains_urls.present? && @contains_urls.and_public.present? %>
+  <% if params[:action] =~ /edit|delete/ && @cur_user.respond_to?(:cms_role_permit_any?) && !@cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_alert)) && @contains_urls.try(:and_public).present? %>
   $(".save").attr("data-alert-msg", "<%= I18n.t('ss.confirm.contains_url_expect') %>");
   <% else %>
   $(".save").attr("data-alert-msg", "");

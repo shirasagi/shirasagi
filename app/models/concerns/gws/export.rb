@@ -73,7 +73,7 @@ module Gws::Export
       io.set_encoding('SJIS:UTF-8')
     end
 
-    csv = CSV.new(io, { headers: true })
+    csv = CSV.new(io, headers: true)
     csv.each(&block)
   ensure
     io.set_encoding("ASCII-8BIT")

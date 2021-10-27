@@ -6,7 +6,6 @@ RSpec.describe Ezine::Page, type: :model, dbscope: :example do
     let(:item) { create :ezine_page, cur_node: node }
     let(:show_path) { Rails.application.routes.url_helpers.ezine_page_path(site: item.site, cid: node.id, id: item.id) }
 
-    it { expect(item.becomes_with_route).not_to eq nil }
     it { expect(item.dirname).to eq node.filename }
     it { expect(item.basename).not_to eq nil }
     it { expect(item.path).not_to eq nil }

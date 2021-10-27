@@ -64,7 +64,7 @@ module SS::FileFactory
         next
       end
 
-      item.errors.full_messages.each { |m| errors.add :base, m }
+      SS::Model.copy_errors(item, self)
       return false
     end
     true

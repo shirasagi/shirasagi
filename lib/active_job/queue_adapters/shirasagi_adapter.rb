@@ -10,7 +10,7 @@ module ActiveJob
 
         create_task(job, timestamp)
 
-        run_rake_if_needed
+        self.class.run_rake_if_needed
       end
 
       private
@@ -45,17 +45,19 @@ module ActiveJob
         task.save!
       end
 
-      def run_rake_if_needed
-        # check for on demand run is enabled
-        return if Job::Service.config.mode == 'service'
+      class << self
+        def run_rake_if_needed
+          # check for on demand run is enabled
+          return if Job::Service.config.mode == 'service'
 
-        # check for whether service is started or not
-        name = Job::Service.config.name
-        service = Job::Service.where(name: name).order_by(updated: -1).first
-        return if service && service.current_count > 0
+          # check for whether service is started or not
+          name = Job::Service.config.name
+          service = Job::Service.where(name: name).order_by(updated: -1).first
+          return if service && service.current_count > 0
 
-        # start job execution service
-        ::SS::RakeRunner.run_async "job:run", "RAILS_ENV=#{Rails.env}"
+          # start job execution service
+          ::SS::RakeRunner.run_async "job:run", "RAILS_ENV=#{Rails.env}"
+        end
       end
     end
   end

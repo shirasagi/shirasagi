@@ -10,7 +10,7 @@
           <h3 class="text">
             <%= link_to chat_history_path(id: item.id) do %>
               <% if item.question.present? %>
-                <%= @cur_node.becomes_with_route.question %> → <%= item.label(:question) %>
+                <%= @cur_node.question %> → <%= item.label(:question) %>
               <% else %>
                 <%= item.text %>
               <% end %>

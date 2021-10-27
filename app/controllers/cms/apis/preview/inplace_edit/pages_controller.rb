@@ -19,7 +19,6 @@ class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
     super
     return @item if @item.blank? || @item.class != Cms::Page
 
-    @item = @item.becomes_with_route rescue @item
     @model = @item.class
   end
 
@@ -73,7 +72,7 @@ class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
       path_params[:preview_date] = params[:preview_date].to_s if params[:preview_date].present?
       location = cms_preview_path(path_params)
     elsif copy && copy.errors.present?
-      @item.errors.messages[:base] += copy.errors.full_messages
+      SS::Model.copy_errors(copy, @item)
     end
 
     render_save_as_branch result, location

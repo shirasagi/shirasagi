@@ -27,7 +27,7 @@ class Workflow::WizardController < ApplicationController
 
   def set_item
     @item ||= begin
-      item = @model.site(@cur_site).find(params[:id]).becomes_with_route
+      item = @model.site(@cur_site).find(params[:id])
       item.attributes = fix_params
       item
     end

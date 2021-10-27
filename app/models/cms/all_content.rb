@@ -40,7 +40,6 @@ class Cms::AllContent
       Enumerator.new do |y|
         y << encode_sjis(header.to_csv)
         (Cms::Page.site(site).all + Cms::Node.site(site).all).each do |content|
-          content = content.becomes_with_route rescue content
           content.site ||= site
           y << encode_sjis(row(content).to_csv)
         end

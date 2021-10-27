@@ -220,7 +220,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     return nil if url.match?(/^https?:/)
 
     url  = url.sub(/\?.*/, "")
-    url  = URI.decode(url)
+    url  = Addressable::URI.unencode(url)
     file = "#{@site.path}#{url}"
     file = File.join(file, "index.html") if Fs.directory?(file)
     Fs.file?(file) ? file : nil

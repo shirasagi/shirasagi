@@ -62,7 +62,7 @@ module Inquiry::ListHelper
       render_list_with_shirasagi(cur_item, default_table_html, &block)
     else
       source = cur_item.loop_liquid.presence || default_table_html
-      assigns = { "nodes" => @items.to_a.map(&:becomes_with_route) }
+      assigns = { "nodes" => @items.to_a }
       render_list_with_liquid(source, assigns)
     end
   end

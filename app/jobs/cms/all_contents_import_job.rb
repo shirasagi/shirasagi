@@ -35,7 +35,7 @@ class Cms::AllContentsImportJob < Cms::ApplicationJob
       return
     end
 
-    import_item(item.becomes_with_route, row)
+    import_item(item, row)
   rescue => e
     Rails.logger.info("#{row_number} 行のコンテンツは見つかりませんでした。")
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")

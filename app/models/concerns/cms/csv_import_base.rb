@@ -34,7 +34,7 @@ module Cms::CsvImportBase
         io.set_encoding(Encoding::SJIS, Encoding::UTF_8)
       end
 
-      csv = CSV.new(io, { headers: true })
+      csv = CSV.new(io, headers: true)
       csv.each(&block)
     ensure
       io.set_encoding(Encoding::ASCII_8BIT)

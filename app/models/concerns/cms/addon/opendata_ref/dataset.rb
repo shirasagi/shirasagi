@@ -36,7 +36,6 @@ module Cms::Addon::OpendataRef::Dataset
     parent = self.parent
     return if parent.blank?
 
-    parent = parent.becomes_with_route
     opendata_sites = parent.try(:opendata_sites)
     return if opendata_sites.blank?
 

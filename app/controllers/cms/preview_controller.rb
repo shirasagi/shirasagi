@@ -50,7 +50,7 @@ class Cms::PreviewController < ApplicationController
     @cur_path ||= request_path
     @cur_path.sub!(/^#{cms_preview_path}(\d+)?/, "")
     @cur_path = "index.html" if @cur_path.blank?
-    @cur_path = URI.decode(@cur_path)
+    @cur_path = Addressable::URI.unencode(@cur_path)
     @cur_main_path = @cur_path.sub(@cur_site.url, "/")
   end
 
@@ -63,8 +63,12 @@ class Cms::PreviewController < ApplicationController
     id = preview_item[:id]
     route = preview_item[:route]
 
-    page = Cms::Page.site(@cur_site).find(id) rescue Cms::Page.new(route: route)
-    page = page.becomes_with_route
+    page = Cms::Page.site(@cur_site).find(id) rescue nil
+    page ||= begin
+      new_page = Cms::Page.new
+      new_page.becomes_with_route(route)
+      new_page
+    end
 
     node = Cms::Node.site(@cur_site).where(filename: path).first
 
