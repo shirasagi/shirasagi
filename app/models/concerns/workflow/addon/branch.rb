@@ -115,7 +115,11 @@ module Workflow::Addon
     end
 
     def clone_thumb
-      return if thumb.blank?
+      return if thumb_id.blank?
+      if thumb.blank?
+        self.thumb_id = nil
+        return
+      end
       return if respond_to?(:branch?) && branch?
 
       self.thumb = clone_file(thumb)
