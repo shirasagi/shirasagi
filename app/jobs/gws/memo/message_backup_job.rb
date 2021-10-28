@@ -1,5 +1,5 @@
 class Gws::Memo::MessageBackupJob < Gws::ApplicationJob
-  include SS::ExportHelper
+  include Gws::Memo::Base
 
   def perform(*args)
     opts = args.extract_options!
@@ -188,43 +188,5 @@ class Gws::Memo::MessageBackupJob < Gws::ApplicationJob
     file.puts Mail::Field.new("Cc", data['cc_members_name_email'], "utf-8").encoded if data['cc_members_name_email'].present?
 
     file
-  end
-
-  def file_attributes(file)
-    data = file.attributes
-    data["base64"] = Base64.strict_encode64(::File.binread(file.path))
-    data
-  end
-
-  def user_attributes(user)
-    user.attributes.select { |k, v| %w(_id name).include?(k) }
-  end
-
-  def user_name_email(user)
-    if user.email.present?
-      "#{user.name} <#{user.email}>"
-    else
-      user.name
-    end
-  end
-
-  def gen_message_id(data)
-    @domain_for_message_id ||= site.canonical_domain.presence || SS.config.gws.canonical_domain.presence || "localhost.local"
-    "<#{data["id"].to_s.presence || data["_id"].to_s.presence || SecureRandom.uuid}@#{@domain_for_message_id}>"
-  end
-
-  def write_body_to_eml(file, data)
-    if data["format"] == "html"
-      content_type = "text/html"
-      base64 = Mail::Encodings::Base64.encode(data["html"].to_s)
-    else
-      content_type = "text/plain"
-      base64 = Mail::Encodings::Base64.encode(data["text"].to_s)
-    end
-
-    file.puts "Content-Type: #{content_type}; charset=UTF-8"
-    file.puts "Content-Transfer-Encoding: base64"
-    file.puts ""
-    file.puts base64
   end
 end
