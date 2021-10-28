@@ -185,7 +185,7 @@ class SS::Csv
       @columns << options
     end
 
-    def label_column(key, options = {}, &block)
+    def label_column(key, &block)
       simple_column key do |row, item, head, value|
         options = item.send("#{key}_options")
         private_options = item.send("#{key}_private_options") if item.respond_to?("#{key}_private_options")
