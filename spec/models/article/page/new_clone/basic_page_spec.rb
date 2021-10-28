@@ -9,14 +9,18 @@ describe Article::Page, dbscope: :example do
 
   describe "#new_clone" do
     context "with basic page" do
-      let(:file) { tmp_ss_file(site: site, user: user, contents: file_path) }
+      let(:file1) { tmp_ss_file(site: site, user: user, contents: file_path, basename: "logo1.png") }
+      let(:file2) { tmp_ss_file(site: site, user: user, contents: file_path, basename: "logo2.png") }
       let(:html) do
         [
           "<p>#{unique_id}</p>",
-          "<p><a class=\"icon-png attachment\" href=\"#{file.url}\">#{file.humanized_name}</a></p>"
+          "<p><a class=\"icon-png attachment\" href=\"#{file1.url}\">#{file1.humanized_name}</a></p>",
+          "<p><a class=\"icon-png attachment\" href=\"#{file2.url}\">#{file2.humanized_name}</a></p>",
         ].join("\r\n\r\n")
       end
-      let!(:item) { create :article_page, cur_site: site, cur_user: user, cur_node: node, html: html, file_ids: [ file.id ] }
+      let!(:item) do
+        create :article_page, cur_site: site, cur_user: user, cur_node: node, html: html, file_ids: [ file1.id, file2.id ]
+      end
 
       context "before save" do
         subject { item.new_clone }
@@ -54,9 +58,10 @@ describe Article::Page, dbscope: :example do
           expect(subject.first_released).to eq item.first_released
 
           # 保存前は添付ファイルは元と同じ、HTML も元と同じ
-          expect(subject.files.count).to eq 1
-          expect(subject.files.first.id).to eq file.id
-          expect(subject.html).to include file.url
+          expect(subject.files.count).to eq 2
+          expect(subject.files.pluck(:id)).to include(file1.id, file2.id)
+          expect(subject.html).to include file1.url
+          expect(subject.html).to include file2.url
         end
       end
 
@@ -103,24 +108,26 @@ describe Article::Page, dbscope: :example do
           expect(subject.first_released).to eq item.first_released
 
           # 複製の場合、添付ファイルは元のコピーなのでIDが異なるファイル（中身は同じ）し HTML も異なる
-          expect(subject.files.count).to eq 1
-          subject.files.first.tap do |subject_file|
-            expect(subject_file.id).not_to eq file.id
-            expect(subject_file.name).to eq file.name
-            expect(subject_file.filename).to eq file.filename
-            expect(subject_file.content_type).to eq file.content_type
-            expect(subject_file.size).to eq file.size
-          end
-          expect(subject.html).not_to include file.url
+          expect(subject.files.count).to eq 2
+          expect(subject.files.pluck(:id) & [ file1.id, file2.id ]).to be_blank
+          expect(subject.files.pluck(:name)).to include(file1.name, file2.name)
+          expect(subject.files.pluck(:filename)).to include(file1.filename, file2.filename)
+          expect(subject.files.pluck(:content_type)).to include(file1.content_type, file2.content_type)
+          expect(subject.files.pluck(:size)).to include(file1.size, file2.size)
+          expect(subject.html).not_to include file1.url
+          expect(subject.html).not_to include file2.url
           expect(subject.html).to include subject.files.first.url
 
-          file.reload
-          expect(file.owner_item_type).to eq item.class.name
-          expect(file.owner_item_id).to eq item.id
+          file1.reload
+          expect(file1.owner_item_type).to eq item.class.name
+          expect(file1.owner_item_id).to eq item.id
+          file2.reload
+          expect(file2.owner_item_type).to eq item.class.name
+          expect(file2.owner_item_id).to eq item.id
 
           item.reload
-          expect(item.files.count).to eq 1
-          expect(item.files.first.id).to eq file.id
+          expect(item.files.count).to eq 2
+          expect(item.files.pluck(:id)).to include(file1.id, file2.id)
         end
       end
 
@@ -168,13 +175,17 @@ describe Article::Page, dbscope: :example do
             expect(subject.first_released).to eq item.first_released
 
             # 差し替えページの場合、添付ファイルは元と同じ
-            expect(subject.files.count).to eq 1
-            expect(subject.files.first.id).to eq file.id
-            expect(subject.html).to include file.url
+            expect(subject.files.count).to eq 2
+            expect(subject.files.pluck(:id)).to include(file1.id, file2.id)
+            expect(subject.html).to include file1.url
+            expect(subject.html).to include file2.url
 
-            file.reload
-            expect(file.owner_item_type).to eq item.class.name
-            expect(file.owner_item_id).to eq item.id
+            file1.reload
+            expect(file1.owner_item_type).to eq item.class.name
+            expect(file1.owner_item_id).to eq item.id
+            file2.reload
+            expect(file2.owner_item_type).to eq item.class.name
+            expect(file2.owner_item_id).to eq item.id
 
             item.reload
             expect(item.master?).to be_truthy
@@ -184,15 +195,39 @@ describe Article::Page, dbscope: :example do
             expect(item.branches.first.id).to eq subject.id
 
             subject.destroy
-            expect { file.reload }.not_to raise_error
+            expect { file1.reload }.not_to raise_error
+            expect { file2.reload }.not_to raise_error
             item.reload
-            expect(item.files.count).to eq 1
-            expect(item.files.first.id).to eq file.id
-            expect(item.html).to include file.url
+            expect(item.files.count).to eq 2
+            expect(item.files.pluck(:id)).to include(file1.id, file2.id)
+            expect(item.html).to include file1.url
+            expect(item.html).to include file2.url
+
+            expect(History::Trash.all.count).to eq 1
+            History::Trash.all.first.tap do |trash|
+              expect(trash.site_id).to eq site.id
+              expect(trash.version).to eq SS.version
+              expect(trash.ref_coll).to eq subject.collection_name.to_s
+              expect(trash.ref_class).to eq subject.class.name
+              expect(trash.data).to be_present
+              expect(trash.data["_id"]).to eq subject.id
+              expect(trash.state).to be_blank
+              expect(trash.action).to eq "save"
+            end
           end
         end
 
         context "when branch was finally merged into its master" do
+          let(:branch_name) { "name-#{unique_id}" }
+          let(:branch_file) { tmp_ss_file(site: site, user: user, contents: file_path, basename: "branch_logo.png") }
+          let(:branch_html) do
+            [
+              "<p>#{unique_id}</p>",
+              "<p><a class=\"icon-png attachment\" href=\"#{file1.url}\">#{file1.humanized_name}</a></p>",
+              "<p><a class=\"icon-png attachment\" href=\"#{branch_file.url}\">#{branch_file.humanized_name}</a></p>",
+            ].join("\r\n\r\n")
+          end
+
           it do
             subject.class.find(subject.id).tap do |branch|
               expect(branch.new_clone?).to be_falsey
@@ -200,20 +235,46 @@ describe Article::Page, dbscope: :example do
               expect(branch.state).to eq "closed"
 
               # merge into master
+              branch.name = branch_name
+              branch.html = branch_html
+              branch.file_ids = [ file1.id, branch_file.id ]
               branch.state = "public"
               branch.save
+
+              branch.file_ids = nil
+              branch.skip_history_trash = true
               branch.destroy
             end
 
-            expect { file.reload }.not_to raise_error
             item.reload
             expect(item.master?).to be_truthy
             expect(item.branch?).to be_falsey
             expect(item.master_id).to be_blank
             expect(item.branches.count).to eq 0
-            expect(item.files.count).to eq 1
-            expect(item.files.first.id).to eq file.id
-            expect(item.html).to include file.url
+            expect(item.files.count).to eq 2
+            expect(item.files.pluck(:id)).to include(file1.id, branch_file.id)
+            expect(item.html).to include file1.url
+            expect(item.html).to include branch_file.url
+
+            expect { file1.reload }.not_to raise_error
+            expect(file1.owner_item_type).to eq item.class.name
+            expect(file1.owner_item_id).to eq item.id
+            expect { file2.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+            expect { branch_file.reload }.not_to raise_error
+            expect(branch_file.owner_item_type).to eq item.class.name
+            expect(branch_file.owner_item_id).to eq item.id
+
+            expect(History::Trash.all.count).to eq 1
+            History::Trash.all.first.tap do |trash|
+              expect(trash.site_id).to eq site.id
+              expect(trash.version).to eq SS.version
+              expect(trash.ref_coll).to eq file2.collection_name.to_s
+              expect(trash.ref_class).to eq file2.class.name
+              expect(trash.data).to be_present
+              expect(trash.data["_id"]).to eq file2.id
+              expect(trash.state).to be_blank
+              expect(trash.action).to eq "save"
+            end
           end
         end
       end

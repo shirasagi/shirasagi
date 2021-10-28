@@ -187,6 +187,9 @@ describe Article::Page, dbscope: :example do
               # merge into master
               branch.state = "public"
               branch.save
+
+              branch.file_ids = nil
+              branch.skip_history_trash = true
               branch.destroy
             end
 
