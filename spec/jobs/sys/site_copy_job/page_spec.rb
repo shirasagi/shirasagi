@@ -293,10 +293,10 @@ describe Sys::SiteCopyJob, dbscope: :example do
         dest_page = Cms::Page.site(dest_site).find_by(filename: page.filename)
 
         expect(dest_page).to be_truthy
-        expect(dest_page.workflow_state).to eq 'request'
-        expect(dest_page.workflow_user_id).to eq cms_user.id
-        expect(dest_page.workflow_approvers).to be_truthy
-        expect(dest_page.workflow_required_counts).to eq [ false ]
+        expect(dest_page.workflow_state).to be_blank
+        expect(dest_page.workflow_user_id).to be_blank
+        expect(dest_page.workflow_approvers).to be_blank
+        expect(dest_page.workflow_required_counts).to be_blank
       end
     end
   end
