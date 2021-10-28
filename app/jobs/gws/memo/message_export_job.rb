@@ -179,7 +179,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
       f.puts Mail::Field.new("Message-ID", gen_message_id(data), "utf-8").encoded
       f.puts Mail::Field.new("From", data['from_name_email'], "utf-8").encoded
       f.puts Mail::Field.new("To", data['to_members_name_email'], "utf-8").encoded
-      f.puts Mail::Field.new("Member-IDs", data['to_member_ids'], "utf-8").encoded
+      f.puts Mail::Field.new("X-Shirasagi-Member-IDs", data['to_member_ids'], "utf-8").encoded
       f.puts Mail::Field.new("Cc-IDs", data['cc_member_ids'], "utf-8").encoded
       f.puts Mail::Field.new("Cc", data['cc_members_name_email'], "utf-8").encoded if data['cc_members_name_email'].present?
       user_settings = data["user_settings"]

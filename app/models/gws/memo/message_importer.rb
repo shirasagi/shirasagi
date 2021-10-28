@@ -12,7 +12,7 @@ class Gws::Memo::MessageImporter
 
   def import_messages
     @datetime = Time.zone.now
-    @zip_filename = in_file.original_filename.sub(/.zip$/, "")
+    @zip_filename = File.basename(in_file.original_filename, ".*")
     @ss_files_map = {}
     @gws_users_map = {}
     @restored_folders = {}
@@ -20,9 +20,9 @@ class Gws::Memo::MessageImporter
     Zip.unicode_names = true
     Zip::File.open(in_file.path) do |entries|
       entries.each do |entry|
-        next if entry.name.start_with?(".", "_")
+        next if entry.directory?
         next if !entry.name.end_with?(".eml")
-        next if !entry.name.include?("/")
+        next if File.basename(entry.name).start_with?(".", "_")
 
         import_gws_memo_message(entry)
       end
@@ -142,7 +142,7 @@ class Gws::Memo::MessageImporter
     item.to_member_ids = []
     to_webmail_address_group_ids = []
     to_shared_address_group_ids = []
-    msg.header["Member-IDs"].value.split(",").each do |id|
+    msg.header["X-Shirasagi-Member-IDs"].value.split(",").each do |id|
       receiver = find_user(id.to_i)
       to_member_ids << receiver.id if receiver
     end
