@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Opendata::Harvest::ImportDatasetsJob, dbscope: :example do
+describe Opendata::Harvest::ImportDatasetsJob, type: :feature, dbscope: :example do
   let!(:site) { cms_site }
   let!(:layout) { create(:cms_layout) }
 
