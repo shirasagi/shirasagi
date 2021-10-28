@@ -67,8 +67,8 @@ class Opendata::Dataset::Csv2rdfSettingsController < ApplicationController
 
   def render_with(opts)
     unless request.post?
-      if opts.key?(:file)
-        render(file: opts[:file])
+      if opts.key?(:template)
+        render(template: opts[:template])
       else
         render
       end
@@ -88,7 +88,7 @@ class Opendata::Dataset::Csv2rdfSettingsController < ApplicationController
       respond_to do |format|
         format.html do
           if opts.key?(:file)
-            render(file: opts[:file])
+            render(template: opts[:file])
           else
             render
           end
@@ -118,7 +118,7 @@ class Opendata::Dataset::Csv2rdfSettingsController < ApplicationController
   end
 
   def header_size
-    render_with(file: "wizards", action: :rdf_class)
+    render_with(template: "wizards", action: :rdf_class)
   end
 
   def rdf_class
@@ -126,11 +126,11 @@ class Opendata::Dataset::Csv2rdfSettingsController < ApplicationController
   end
 
   def column_types
-    render_with(file: "wizards", action: :confirmation)
+    render_with(template: "wizards", action: :confirmation)
   end
 
   def confirmation
-    return render(file: "wizards") unless request.post?
+    return render(template: "wizards") unless request.post?
 
     Opendata::Csv2rdfConverter::Job.bind(site_id: @cur_site, user_id: @cur_user, node_id: @cur_node).
       perform_later(@cur_dataset.id, @cur_resource.id)

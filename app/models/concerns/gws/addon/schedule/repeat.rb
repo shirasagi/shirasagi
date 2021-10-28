@@ -188,7 +188,7 @@ module Gws::Addon::Schedule::Repeat
       plan.cur_user = @cur_user
       plan.skip_gws_history
       plan.deleted = self.deleted
-      errors.messages[:base] += plan.errors.full_messages if !plan.save
+      SS::Model.copy_errors(plan, self) if !plan.save
     end
   end
 end

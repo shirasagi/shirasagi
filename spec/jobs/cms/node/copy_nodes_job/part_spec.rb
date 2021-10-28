@@ -23,7 +23,7 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
       end
 
       it "html element which has original node name was overwritten" do
-        copied_part = Cms::Part.site(site).where(filename: /^#{target_node_name}\//).first.becomes_with_route
+        copied_part = Cms::Part.site(site).where(filename: /^#{target_node_name}\//).first
         expect(copied_part.filename).to eq "#{target_node_name}/part.part.html"
         expect(copied_part.lower_html).not_to include node.filename.to_s
         expect(copied_part.lower_html).to include target_node_name.to_s

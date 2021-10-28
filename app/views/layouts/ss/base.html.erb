@@ -441,7 +441,7 @@
           <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_content_navi.html.erb") %>
           <%= render partial: 'content_navi' %>
           <% elsif @tree_navi %>
-          <div id="content-navi"><%= render file: '_tree_navi' %></div>
+          <div id="content-navi"><%= render template: '_tree_navi' %></div>
           <% end %>
         <% end %>
 
@@ -459,5 +459,8 @@
 
 <!-- /#page --></div>
 
+<% if Rails.env.test? %>
+  <%= jquery do %>SS.disableConfirmUnloading = true;<% end %>
+<% end %>
 </body>
 </html>

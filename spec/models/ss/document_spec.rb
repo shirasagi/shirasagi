@@ -29,7 +29,7 @@ RSpec.describe SS::Document, type: :model, dbscope: :example do
       subject { Klass.keyword_in(words, *fields).selector.to_h }
 
       it do
-        expect(subject).to include("$and" => include("$or" => include("name" => /名\|前/i)))
+        expect(subject).to include("$or" => include("name" => /名\|前/i))
         expect(subject).to include("$and" => include("$or" => include("name" => /な\(\*\.\?\)まえ/i)))
       end
     end

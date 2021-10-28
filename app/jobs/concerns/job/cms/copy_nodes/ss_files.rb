@@ -1,6 +1,6 @@
-module Job::Cms::CopyNodes::SsFiles
+module Job::Cms::CopyNodes::SSFiles
   extend ActiveSupport::Concern
-  include SS::Copy::SsFiles
+  include SS::Copy::SSFiles
 
   def copy_ss_file(src_file)
     src_file = src_file.becomes_with_model

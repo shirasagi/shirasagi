@@ -22,7 +22,7 @@ class Garbage::Node::PageImporter < Garbage::Node::BaseImporter
   end
 
   def set_page_categories(row, item)
-    @st_categories ||= node.becomes_with_route.st_categories.map{ |c| [c.name, c.id] }.to_h
+    @st_categories ||= node.st_categories.map{ |c| [c.name, c.id] }.to_h
     categories = row[model.t("category_ids")].to_s.strip
     item.category_ids = categories.split("\n").map { |category| @st_categories[category] }
   end

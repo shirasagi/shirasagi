@@ -38,7 +38,6 @@ module Chorg::MongoidSupport
   def with_entities(models, scope = {})
     models.each do |model|
       model.where(scope).each do |entity|
-        entity = entity.try(:becomes_with_route) || entity
         entity = entity.try(:becomes_with_topic) || entity
         entity.try(:cur_site=, @cur_site)
         entity.try(:allow_other_user_files)

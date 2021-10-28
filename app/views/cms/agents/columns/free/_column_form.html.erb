@@ -3,8 +3,8 @@
 <% controller ||= false %>
 <% source_cleaner_conf = Cms::SourceCleanerTemplate.site(@cur_site).and_public.to_config(site: @cur_site) %>
 <% page = @page.presence || @item %>
-<% opendata_assoced = @cur_node && @cur_node.becomes_with_route.try(:opendata_sites).present? && page.respond_to?(:opendata_resources) %>
-<% licenses = Opendata::License.in(site_id: @cur_node.becomes_with_route.try(:opendata_site_ids)).and_public.pluck(:name, :id) if opendata_assoced %>
+<% opendata_assoced = @cur_node && @cur_node.try(:opendata_sites).present? && page.respond_to?(:opendata_resources) %>
+<% licenses = Opendata::License.in(site_id: @cur_node.try(:opendata_site_ids)).and_public.pluck(:name, :id) if opendata_assoced %>
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
   <% editor_id = "#{id}-html" %>
   <%= text_area_tag("#{f.object_name}[][in_wrap][value]", value.try(:value), column.form_options.merge(id: editor_id, class: "html", style: "height: 400px;")) %>

@@ -10,13 +10,7 @@ module Job::Cms::Binding::Page
 
   def page
     return nil if page_id.blank?
-    @page ||= begin
-      page = self.class.page_class.where("$or" => [{ id: page_id }, { filename: page_id }]).first
-      if page
-        page = page.becomes_with_route rescue page
-      end
-      page
-    end
+    @page ||= self.class.page_class.where("$or" => [{ id: page_id }, { filename: page_id }]).first
   end
 
   def bind(bindings)

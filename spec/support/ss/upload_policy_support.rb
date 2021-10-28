@@ -1,4 +1,4 @@
-def upload_policy_before_settings(value)
+def upload_policy_before_settings(value = nil)
   SS.config.replace_value_at(:ss, :upload_policy, value)
   Fs.mkdir_p(SS.config.ss.sanitizer_input)
   Fs.mkdir_p(SS.config.ss.sanitizer_output)
@@ -10,10 +10,18 @@ def upload_policy_after_settings
   Fs.rm_rf(SS.config.ss.sanitizer_output)
 end
 
-def sanitizer_mock_restore(file)
+def mock_sanitizer_restore(file)
   Fs.rm_rf file.path
-  output_path = "#{SS.config.ss.sanitizer_output}/#{file.id}_filename_100_marked.#{file.extname}"
+  output_path = file.sanitizer_input_path.sub(/\A(.*)\./, '\\1_100_marked.')
   Fs.mv file.sanitizer_input_path, output_path
-  file.sanitizer_restore_file(output_path)
-  return output_path
+
+  if job_model = Uploader::JobFile.sanitizer_restore(output_path)
+    return job_model
+  end
+
+  if file = SS::UploadPolicy.sanitizer_restore(output_path)
+    return file
+  end
+
+  return nil
 end

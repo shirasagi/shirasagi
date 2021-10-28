@@ -18,8 +18,6 @@ class SS::Migration20200625000000
 
       pages.each do |page|
         next if page.site.blank? # unable to fix because site has been deleted
-
-        page = page.becomes_with_route
         next if equal_page?(owner_item, page)
 
         new_file = clone_file(page, file)

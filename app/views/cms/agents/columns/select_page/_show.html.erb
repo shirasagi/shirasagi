@@ -1,0 +1,7 @@
+<dl class="see column-cms-select_pages">
+  <dt><%= @model.t :place_holder %></dt>
+  <dd><%= @item.place_holder %></dd>
+
+  <dt><%= @model.t :node_id %></dt>
+  <dd><%= @item.node.try { |item| "#{item.name} (#{item.filename})" } %></dd>
+</dl>

@@ -19,14 +19,14 @@ class Gws::Memo::ExportMessagesController < ApplicationController
     if export_filter != 'all' && message_ids.blank?
       @item = @model.new
       @item.errors.add(:base, I18n.t("gws/memo/message.errors.blank_message"))
-      render file: :index
+      render template: "index"
       return
     end
 
     unless Gws::Memo::MessageExportJob.check_size_limit_per_user?(@cur_user.id)
       @item = @model.new
       @item.errors.add(:base, t('job.notice.size_limit_exceeded'))
-      render file: :index
+      render template: "index"
       return
     end
 

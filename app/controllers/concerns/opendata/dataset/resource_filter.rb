@@ -64,9 +64,9 @@ module Opendata::Dataset::ResourceFilter
     elsif @item.preview_graph_enabled?
       graph_content
     elsif @map_markers.present?
-      render file: :map_content
+      render template: "map_content"
     else
-      render file: :content, layout: 'cms/ajax'
+      render template: "content", layout: 'cms/ajax'
     end
   end
 
@@ -77,18 +77,18 @@ module Opendata::Dataset::ResourceFilter
     if @data.blank?
       raise "404"
     elsif @map_markers.present?
-      render file: :map_content, layout: 'cms/ajax'
+      render template: "map_content", layout: 'cms/ajax'
     else
-      render file: :content, layout: 'cms/ajax'
+      render template: "content", layout: 'cms/ajax'
     end
   end
 
   def kml_content
-    render file: :kml_content, layout: 'cms/ajax'
+    render template: "kml_content", layout: 'cms/ajax'
   end
 
   def geojson_content
-    render file: :geojson_content, layout: 'cms/ajax'
+    render template: "geojson_content", layout: 'cms/ajax'
   end
 
   def pdf_content
@@ -98,12 +98,12 @@ module Opendata::Dataset::ResourceFilter
     if @images.blank?
       raise "404"
     else
-      render file: :pdf_content, layout: 'cms/ajax'
+      render template: "pdf_content", layout: 'cms/ajax'
     end
   end
 
   def image_content
-    render :image_content, layout: 'cms/ajax'
+    render "image_content", layout: 'cms/ajax'
   end
 
   def graph_content
@@ -170,10 +170,10 @@ module Opendata::Dataset::ResourceFilter
   rescue Timeout::Error => e
     Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     @error_message = I18n.t("opendata.errors.messages.resource_preview_timeout")
-    render file: :error_content, layout: 'cms/ajax'
+    render template: "error_content", layout: 'cms/ajax'
   rescue => e
     Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     @error_message = I18n.t("opendata.errors.messages.resource_preview_failed")
-    render file: :error_content, layout: 'cms/ajax'
+    render template: "error_content", layout: 'cms/ajax'
   end
 end

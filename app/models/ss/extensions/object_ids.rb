@@ -4,29 +4,50 @@ class SS::Extensions::ObjectIds < Array
   end
 
   class << self
+    # Get the object as it was stored in the database, and instantiate
+    # this custom class from it.
     def demongoize(object)
       self.new(object.to_a)
     end
 
+    # Takes any possible object and converts it to how it would be
+    # stored in the database.
     def mongoize(object)
       case object
+      when nil then nil
       when self.class then object.mongoize
-      when String then []
       when Array
-        ids = object.reject { |m| m.blank? }.uniq.map { |m| m.to_s.numeric? ? m.to_s.to_i : m.to_s }
-        # ids = object.reject {|m| m.blank? }.uniq.map {|m| BSON::ObjectId.from_string(m) }
-        self.new(ids).mongoize
+        mongoize_array(object)
       else
-        object
+        mongoize_array(Array.wrap(object))
       end
     end
 
+    # Converts the object that was supplied to a criteria and converts it
+    # into a database friendly form.
     def evolve(object)
       case object
       when self.class then object.mongoize
       else
         object
       end
+    end
+
+    private
+
+    def mongoize_array(array)
+      ids = array.flatten.reject(&:blank?)
+      ids.uniq!
+      ids.map! do |id|
+        id = id.to_s
+        if id.numeric? && !BSON::ObjectId.legal?(id)
+          id.to_i
+        else
+          id
+        end
+      end
+
+      new(ids).mongoize
     end
   end
 end

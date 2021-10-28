@@ -62,7 +62,7 @@ module Gws::Monitor::TopicFilter
   def show
     raise "403" unless @item.attended?(@cur_group) || @item.allowed?(:read, @cur_user, site: @cur_site)
 
-    render file: "show_#{@item.mode}"
+    render template: "show_#{@item.mode}"
   end
 
   def destroy
@@ -84,7 +84,7 @@ module Gws::Monitor::TopicFilter
     @item.user_ids = [@cur_user.id]
     @item.ref_file_ids = @source.file_ids
 
-    render file: :new
+    render template: "new"
   end
 
   # 受け取り済みにする

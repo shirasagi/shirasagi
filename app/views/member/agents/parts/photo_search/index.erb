@@ -8,7 +8,7 @@
   $(window).on("load", function () {
     $(".member-photo-search-part .ajax-box").on("click", function () {
       $.colorbox({
-        html: '<%=j render(file: "app/views/member/agents/nodes/photo_search/_modal", locals: { search_path: search_path }) %>'
+        html: '<%= j render("member/agents/nodes/photo_search/modal", search_path: search_path) %>'
       });
       return false;
     });

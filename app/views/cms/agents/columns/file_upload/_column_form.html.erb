@@ -6,7 +6,7 @@
   form_options['class'] = [ form_options['class'].presence ].flatten.compact
   form_options['class'] << 'file-id'
 %>
-<% opendata_assoced = @cur_node && @cur_node.becomes_with_route.try(:opendata_sites).present? %>
+<% opendata_assoced = @cur_node && @cur_node.try(:opendata_sites).present? %>
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
   <span class="upload-menu-new">
     <% if @cur_node %>

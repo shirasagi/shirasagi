@@ -5,7 +5,7 @@
   form_options['class'] = [ form_options['class'].presence ].flatten.compact
   form_options['class'] << 'file-id'
 %>
-<%= render file: 'gws/agents/columns/main/_common_label', locals: { column: column } %>
+<%= render 'gws/agents/columns/main/common_label', column: column %>
 <% column.upload_file_count.times.each do |index| %>
   <dd>
     <% file = files[index] rescue nil %>

@@ -30,7 +30,6 @@ class Inquiry::FeedbacksController < ApplicationController
       return
     end
 
-    @cur_node = @cur_node.becomes_with_route
     raise "403" if @cur_node.route != "inquiry/form"
 
     options = params[:s] || {}
@@ -47,7 +46,6 @@ class Inquiry::FeedbacksController < ApplicationController
     options[:node] = @cur_node
     options[:feedback] = true
     options[:url] = CGI.unescape(params[:id])
-    @cur_node = @cur_node.becomes_with_route
     @columns = @cur_node.columns.order_by(order: 1)
     @items = @cur_node.aggregate_for_list(options)
     @source_url = options[:url]

@@ -37,13 +37,13 @@ describe "voice_main", type: :feature, dbscope: :example, open_jtalk: true do
       end
 
       it "returns 202, and then returns 200" do
-        visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
+        visit voice_path(Addressable::URI.encode_component(url, '0-9a-zA-Z'))
         expect(status_code).to eq 202
         expect(response_headers.keys).to include("Retry-After")
         expect(Voice::File.where(url: url).count).to be >= 1
 
         # visit again
-        visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
+        visit voice_path(Addressable::URI.encode_component(url, '0-9a-zA-Z'))
         expect(status_code).to eq 200
         expect(response_headers).to include("Content-Type" => "audio/mpeg")
         expect(response_headers.keys).to_not include("Retry-After")
@@ -54,7 +54,7 @@ describe "voice_main", type: :feature, dbscope: :example, open_jtalk: true do
       let(:url) { "http://not-exsit-host-#{unique_id}/" }
 
       it "returns 404" do
-        visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
+        visit voice_path(Addressable::URI.encode_component(url, '0-9a-zA-Z'))
         expect(status_code).to eq 404
         expect(Voice::File.where(url: url).count).to eq 0
       end
@@ -64,7 +64,7 @@ describe "voice_main", type: :feature, dbscope: :example, open_jtalk: true do
       let(:url) { "http:/xyz/" }
 
       it "returns 400" do
-        visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
+        visit voice_path(Addressable::URI.encode_component(url, '0-9a-zA-Z'))
         expect(status_code).to eq 400
         expect(Voice::File.where(url: url).count).to eq 0
       end
@@ -74,7 +74,7 @@ describe "voice_main", type: :feature, dbscope: :example, open_jtalk: true do
       let(:url) { "http://#{voice_site.domain}/not-exist-doc-#{unique_id}.html" }
 
       it "returns 404" do
-        visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
+        visit voice_path(Addressable::URI.encode_component(url, '0-9a-zA-Z'))
         expect(status_code).to eq 404
         expect(Voice::File.where(url: url).count).to eq 0
       end
@@ -90,7 +90,7 @@ describe "voice_main", type: :feature, dbscope: :example, open_jtalk: true do
       end
 
       it "returns 404" do
-        visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
+        visit voice_path(Addressable::URI.encode_component(url, '0-9a-zA-Z'))
         expect(status_code).to eq 404
         expect(Voice::File.where(url: url).count).to eq 0
       end
@@ -106,7 +106,7 @@ describe "voice_main", type: :feature, dbscope: :example, open_jtalk: true do
       end
 
       it "returns 404" do
-        visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
+        visit voice_path(Addressable::URI.encode_component(url, '0-9a-zA-Z'))
         expect(status_code).to eq 404
         expect(Voice::File.where(url: url).count).to eq 0
       end
@@ -122,7 +122,7 @@ describe "voice_main", type: :feature, dbscope: :example, open_jtalk: true do
       end
 
       it "returns 404" do
-        visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
+        visit voice_path(Addressable::URI.encode_component(url, '0-9a-zA-Z'))
         expect(status_code).to eq 404
         expect(Voice::File.where(url: url).count).to eq 0
       end
@@ -144,7 +144,7 @@ describe "voice_main", type: :feature, dbscope: :example, open_jtalk: true do
       end
 
       it "returns 429" do
-        visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
+        visit voice_path(Addressable::URI.encode_component(url, '0-9a-zA-Z'))
         expect(status_code).to eq 429
         expect(Voice::File.where(url: url).count).to eq 0
       end
@@ -167,7 +167,7 @@ describe "voice_main", type: :feature, dbscope: :example, open_jtalk: true do
 
       it "returns 200" do
         # request url with query string
-        visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
+        visit voice_path(Addressable::URI.encode_component(url, '0-9a-zA-Z'))
         expect(status_code).to eq 202
         expect(response_headers.keys).to include("Retry-After")
         # record exists if query string is not given.
@@ -176,7 +176,7 @@ describe "voice_main", type: :feature, dbscope: :example, open_jtalk: true do
         expect(Voice::File.where(url: url).count).to eq 0
 
         # visit again
-        visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
+        visit voice_path(Addressable::URI.encode_component(url, '0-9a-zA-Z'))
         expect(status_code).to eq 200
         expect(response_headers).to include("Content-Type" => "audio/mpeg")
         expect(response_headers.keys).to_not include("Retry-After")
@@ -188,8 +188,8 @@ describe "voice_main", type: :feature, dbscope: :example, open_jtalk: true do
       let(:path) { "#{unique_id}.html" }
       let(:url) { "http://#{voice_site.domain}/#{path}" }
 
-      it "returns 202, and then returns 200" do
-        visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
+      it "returns 404" do
+        visit voice_path(Addressable::URI.encode_component(url, '0-9a-zA-Z'))
         expect(status_code).to eq 404
       end
     end

@@ -269,7 +269,7 @@ class Event::Page::IcalImporter
       options[:count] = recur.count
     end
 
-    day_range(event_dates, dtstart, to, options)
+    day_range(event_dates, dtstart, to, **options)
   end
 
   def evaluate_recur_weekly(event_dates, recur, dtstart:)

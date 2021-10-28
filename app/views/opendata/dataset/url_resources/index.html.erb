@@ -1,4 +1,4 @@
-<%= render file: "_search" %>
+<%= render template: "_search" %>
 
 <table class="index">
   <thead>
@@ -21,7 +21,7 @@
         </nav>
       </td>
       <td><%= link_to item.name, { action: :show, id: item } %></td>
-      <td class="original_url"><%= URI.unescape(item.original_url).truncate(60) %></td>
+      <td class="original_url"><%= Addressable::URI.unencode(item.original_url).truncate(60) %></td>
       <% if item.original_updated.present? %>
         <td class="original_updated"><%= item.original_updated.strftime("%Y/%m/%d %H:%M") %></td>
       <% end %>

@@ -3,7 +3,6 @@ module SS::Copy::CmsParts
   include SS::Copy::Cache
 
   def copy_cms_part(src_part)
-    src_part = src_part.becomes_with_route
     copy_cms_content(:parts, src_part, copy_cms_part_options)
   rescue => e
     @task.log("#{src_part.filename}(#{src_part.id}): パーツのコピーに失敗しました。")

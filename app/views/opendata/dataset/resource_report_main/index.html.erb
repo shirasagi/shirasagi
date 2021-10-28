@@ -21,7 +21,7 @@
 
 <div class="search-form">
   <%= form_for :s, url: { action: :index }, html: { class: "search", method: :get } do |f| %>
-    <%= error_messages_for :item, header_message: t('activemodel.errors.template.header')  %>
+    <%= error_messages_for :item  %>
     <span>
       <%= I18n.t("activemodel.attributes.opendata/dataset_download_report.period") %>
       <%= f.select :start_year, @model.start_year_options %>
@@ -62,9 +62,9 @@
 
 <% case @s.type %>
 <% when "month" %>
-  <%= render file: "_monthly" %>
+  <%= render template: "_monthly" %>
 <% when "year" %>
-  <%= render file: "_yearly" %>
+  <%= render template: "_yearly" %>
 <% else %>
-  <%= render file: "_daily" %>
+  <%= render template: "_daily" %>
 <% end %>

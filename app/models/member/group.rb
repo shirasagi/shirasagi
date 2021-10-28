@@ -129,9 +129,7 @@ class Member::Group
 
       member = find_or_create_member(email)
       if member.invalid?
-        member.errors.full_messages.each do |msg|
-          errors.add :base, msg
-        end
+        SS::Model.copy_errors(member, self)
         next
       end
 

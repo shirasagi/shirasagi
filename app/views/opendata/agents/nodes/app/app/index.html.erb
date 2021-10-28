@@ -24,7 +24,7 @@
         <header>
           <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
           <h2><%= link_to item.name, item.url %>
-            <% if item.parent.becomes_with_route.show_point? %>
+            <% if item.parent.show_point? %>
             <span class="point"><%= item.point.to_i %></span>
             <% end %>
           </h2>
@@ -42,7 +42,7 @@
 
 <article class="areas nodes">
   <header><h1><%= I18n.t("opendata.labels.area") %></h1></header>
-  <%= render file: "opendata/agents/nodes/app/app/areas" %>
+  <%= render template: "opendata/agents/nodes/app/app/areas" %>
   <% if @areas_popped %>
   <nav><%= link_to t('ss.links.more'), "#{@node_url}areas/", class: "more" %></nav>
   <% end %>
@@ -50,7 +50,7 @@
 
 <article class="tags nodes">
   <header><h1><%= I18n.t("opendata.labels.tag") %></h1></header>
-  <%= render file: "opendata/agents/nodes/app/app/tags" %>
+  <%= render template: "opendata/agents/nodes/app/app/tags" %>
   <% if @tags.popped? %>
   <nav><%= link_to t('ss.links.more'), "#{@node_url}tags/", class: "more" %></nav>
   <% end %>
@@ -58,5 +58,5 @@
 
 <article class="licenses nodes">
   <header><h1><%= I18n.t("opendata.labels.license") %></h1></header>
-  <%= render file: "opendata/agents/nodes/app/app/licenses" %>
+  <%= render template: "opendata/agents/nodes/app/app/licenses" %>
 </article>

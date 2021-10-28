@@ -21,7 +21,7 @@
 <% end %>
 
 <div class="index gws-schedule-todo-list">
-  <%= render file: "_list_head" %>
+  <%= render template: "_list_head" %>
 
   <ul class="list-items">
     <% @items.group_by_category(user: @cur_user, site: @cur_site) do |header, items, cate| %>

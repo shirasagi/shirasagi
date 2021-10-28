@@ -1,5 +1,5 @@
 <% return if @cur_node.blank? %>
-<% return if (st_tags = @cur_node.becomes_with_route.try(:st_tags)).blank? %>
+<% return if (st_tags = @cur_node.try(:st_tags)).blank? %>
 <% url_for(action: :set_tag_all) rescue return %>
 
 <div class="list-head-action-tag">

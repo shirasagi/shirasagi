@@ -17,10 +17,8 @@ module Voice::Downloadable
 
     @cached_page = with_retry(max_attempts) do
       # class must provide a method 'url'
-      options = {}
-      options[:read_timeout] = timeout_sec
-      options[:http_basic_authentication] = SS::MessageEncryptor.http_basic_authentication
-      ::URI.open(url, options) do |f|
+      auth = SS::MessageEncryptor.http_basic_authentication
+      ::URI.open(url, read_timeout: timeout_sec, http_basic_authentication: auth) do |f|
         status_code = f.status[0]
 
         html = f.read if status_code == '200'
@@ -36,7 +34,7 @@ module Voice::Downloadable
     end
     @cached_page
   rescue
-    Rails.logger.info("error was raised while downloading from #{url}")
+    Rails.logger.error("error was raised while downloading from #{url}")
     raise
   end
 

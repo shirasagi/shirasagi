@@ -24,9 +24,9 @@ Platform
 --------
 
 - CentOS, Ubuntu
-- Ruby 2.6
-- Ruby on Rails 5.2
-- MongoDB 3
+- Ruby 2.7
+- Ruby on Rails 6.1
+- MongoDB 4.2 or above
 - Unicorn
 
 Installation (Auto)

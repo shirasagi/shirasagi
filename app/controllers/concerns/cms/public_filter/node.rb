@@ -16,7 +16,7 @@ module Cms::PublicFilter::Node
   def find_node(path)
     node = Cms::Node.site(@cur_site).in_path(path).order_by(depth: -1).to_a.first
     return unless node
-    @preview || node.public? ? node.becomes_with_route : nil
+    @preview || node.public? ? node : nil
   end
 
   def render_node(node)
@@ -86,7 +86,7 @@ module Cms::PublicFilter::Node
     if node.view_layout == "cms/redirect"
       @redirect_link = trusted_url!(node.redirect_link)
       html = render_to_string html: "", layout: "cms/redirect"
-    elsif response.content_type == "text/html" && node.layout
+    elsif response.media_type == "text/html" && node.layout
       html = render_layout_with_pagination_cache(node.layout, opts[:cache])
     else
       html = response.body

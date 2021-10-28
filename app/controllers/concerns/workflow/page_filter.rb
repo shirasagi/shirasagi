@@ -15,7 +15,7 @@ module Workflow::PageFilter
         page(params[:page]).per(50)
     end
     @items = [] if !@items
-    render file: :index
+    render template: "index"
   end
 
   public
@@ -48,7 +48,7 @@ module Workflow::PageFilter
   end
 
   def index_wait_close
-    days = @cur_node.becomes_with_route.try(:close_days_before) || @cur_site.close_days_before || SS.config.cms.close_days_before
+    days = @cur_node.try(:close_days_before) || @cur_site.close_days_before || SS.config.cms.close_days_before
     days ||= 0
     cond = {
       state: 'public',

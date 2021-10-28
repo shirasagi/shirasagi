@@ -6,6 +6,8 @@ module Cms::Model::Page
   include Cms::Reference::Layout
 
   included do
+    include Cms::Model::PageDiscriminatorRetrieval
+
     class_variable_set(:@@_show_path, nil)
 
     define_model_callbacks :generate_file
@@ -198,6 +200,30 @@ module Cms::Model::Page
 
   def new_size_input
     self.set(size: (html_bytesize + owned_files_bytesize))
+  end
+
+  def get_linking_cond
+    cond = []
+
+    if self.respond_to?(:url) && self.respond_to?(:full_url)
+      cond << { contains_urls: { '$in' => [ self.url, self.full_url ] } }
+      cond << { form_contains_urls: { '$in' => [ self.url, self.full_url ] } }
+    end
+
+    if self.respond_to?(:files) && self.files.present?
+      cond << { contains_urls: { '$in' => self.files.map(&:url) } }
+    end
+
+    if self.respond_to?(:related_page_ids)
+      cond << { related_page_ids: self.id }
+    end
+
+    cond
+  end
+  module ClassMethods
+    def and_linking_pages(item)
+      where(:id.ne => item.id).where("$and" => [{ "$or" => item.get_linking_cond }])
+    end
   end
 
   private

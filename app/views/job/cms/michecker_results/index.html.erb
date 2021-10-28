@@ -16,4 +16,4 @@
   <span class="datetime last-executed-at"><%= item.michecker_last_executed_at.try { |time| I18n.l(time, format: :picker) } %></span>
 <% end %>
 
-<%= render file: 'cms/crud/index' %>
+<%= render template: 'cms/crud/index' %>

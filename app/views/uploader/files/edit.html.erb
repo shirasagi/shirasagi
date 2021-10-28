@@ -7,9 +7,7 @@ Form_Save_Event.render();
 <%= error_messages_for :item %>
 
 <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_form.html.erb") %>
-  <%= render partial: 'form', locals: { f: f } %>
-<% else %>
-  <%= render file: "#{Rails.root}/app/views/ss/crud/_form", locals: { f: f } %>
+    <%= render partial: 'form', locals: { f: f } %>
 <% end %>
 
 <footer class="send">

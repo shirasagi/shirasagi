@@ -8,16 +8,10 @@ class Event::PagesController < ApplicationController
   append_view_path "app/views/cms/pages"
   navi_view "event/main/navi"
 
-  before_action :change_node_type
-
   private
 
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
-  end
-
-  def change_node_type
-    @cur_node = @cur_node.becomes_with_route if @cur_node.class == Cms::Node
   end
 
   def set_task
@@ -54,7 +48,7 @@ class Event::PagesController < ApplicationController
     if request.get?
       respond_to do |format|
         format.html { render }
-        format.json { render file: "ss/tasks/index", content_type: json_content_type, locals: { item: @task } }
+        format.json { render template: "ss/tasks/index", content_type: json_content_type, locals: { item: @task } }
       end
       return
     end
@@ -65,7 +59,7 @@ class Event::PagesController < ApplicationController
       file_type = SS::MimeType.find(file.original_filename, nil)
     end
 
-    if file_type == "text/comma-separated-values"
+    if file_type == "text/csv"
       # check CSV
       if !Event::Page::CsvImporter.valid_csv?(file)
         @item.errors.add :base, :malformed_csv

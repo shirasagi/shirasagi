@@ -29,6 +29,7 @@ module SS::Model::Task
     field :interrupt, type: String
     field :started, type: DateTime
     field :closed, type: DateTime
+    field :at, type: Integer
     field :total_count, type: Integer, default: 0
     field :current_count, type: Integer, default: 0
 

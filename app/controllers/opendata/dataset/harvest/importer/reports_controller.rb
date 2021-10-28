@@ -27,7 +27,6 @@ class Opendata::Dataset::Harvest::Importer::ReportsController < ApplicationContr
     raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     @items = @item.datasets.order_by(order: 1)
 
-    @cur_node = @cur_node.becomes_with_route
     @cur_categories = st_categories.map { |cate| cate.children.and_public.sort(order: 1).to_a }.flatten
     @cur_estat_categories = st_estat_categories.map { |cate| cate.children.and_public.sort(order: 1).to_a }.flatten
 

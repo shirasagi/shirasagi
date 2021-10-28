@@ -17,8 +17,15 @@ class Ezine::MembersController < ApplicationController
   end
 
   def get_params
-    fix_fields = permit_fields + [ in_data: @columns.map{ |c| [c.id.to_s, { c.id.to_s => {} }] }.flatten ]
-    params.require(:item).permit(fix_fields).merge(fix_params)
+    column_permit_params = @columns.map do |column|
+      if column.input_type.match?(/check_box/)
+        { column.id.to_s => [] }
+      else
+        column.id.to_s
+      end
+    end
+    merged_permit_params = permit_fields + [{ in_data: column_permit_params }]
+    params.require(:item).permit(merged_permit_params).merge(fix_params)
   rescue
     raise "400"
   end

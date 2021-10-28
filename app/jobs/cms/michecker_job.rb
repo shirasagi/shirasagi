@@ -33,9 +33,9 @@ class Cms::MicheckerJob < Cms::ApplicationJob
 
     case @target_type
     when "page"
-      @target = Cms::Page.site(site).find(@target_id).becomes_with_route
+      @target = Cms::Page.site(site).find(@target_id)
     when "node"
-      @target = Cms::Node.site(site).find(@target_id).becomes_with_route
+      @target = Cms::Node.site(site).find(@target_id)
     end
     raise "unknown target type: #{@target_type}" if @target.blank?
   end

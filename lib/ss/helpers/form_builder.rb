@@ -4,6 +4,7 @@ module SS::Helpers
     include SS::Helpers::ColorPickerBuilder
 
     def hidden_field(method, options = {})
+      method = method.to_s
       return super if method !~ /\[/
 
       object_method = "#{@object_name}[" + method.sub("[", "][")

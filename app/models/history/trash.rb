@@ -69,12 +69,12 @@ class History::Trash
     end
     if opts[:create_by_trash]
       if item.errors.present?
-        errors.add :base, item.errors.full_messages
+        SS::Model.copy_errors(item, self)
         return false
       end
 
       unless item.save
-        errors.add :base, item.errors.full_messages
+        SS::Model.copy_errors(item, self)
         return false
       end
 

@@ -8,7 +8,7 @@ class Cms::Apis::OpendataRef::DatasetsController < ApplicationController
   private
 
   def set_node
-    @cur_node ||= Cms::Node.find(params[:cid]).becomes_with_route
+    @cur_node ||= Cms::Node.find(params[:cid])
   end
 
   public

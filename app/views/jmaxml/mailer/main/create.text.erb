@@ -3,5 +3,5 @@
 <%= mailer.control_datetime_format %>　<%= mailer.publishing_offices.join("・") %><%= mailer.publishing_offices.length > 1 ? "　共同発表" : "発表" %>
 
 <% end %>
-<%= render file: "_create" %>
+<%= render template: "_create" %>
 <%= @action.signature_text %>

@@ -66,6 +66,17 @@ describe "sns_login", type: :feature, dbscope: :example do
     end
 
     context "when external url is given at `ref` parameter" do
+      before do
+        @save_url_type = SS.config.sns.url_type
+        SS.config.replace_value_at(:sns, :url_type, "restricted")
+        Sys::TrustedUrlValidator.send(:clear_trusted_urls)
+      end
+
+      after do
+        SS.config.replace_value_at(:sns, :url_type, @save_url_type)
+        Sys::TrustedUrlValidator.send(:clear_trusted_urls)
+      end
+
       it do
         visit sns_login_path(ref: "https://www.google.com/")
         within "form" do
@@ -201,6 +212,17 @@ describe "sns_login", type: :feature, dbscope: :example do
     end
 
     context "with external url" do
+      before do
+        @save_url_type = SS.config.sns.url_type
+        SS.config.replace_value_at(:sns, :url_type, "restricted")
+        Sys::TrustedUrlValidator.send(:clear_trusted_urls)
+      end
+
+      after do
+        SS.config.replace_value_at(:sns, :url_type, @save_url_type)
+        Sys::TrustedUrlValidator.send(:clear_trusted_urls)
+      end
+
       it do
         visit sns_redirect_path(ref: "https://www.google.com/")
         expect(status_code).to eq 200

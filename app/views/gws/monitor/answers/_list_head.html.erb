@@ -7,5 +7,5 @@
     <%= ss_button_to t('gws/monitor.links.question_not_applicable'), url_for(action: :question_not_applicable_all), class: "question-not-applicable-all btn btn-list-head-action", method: "post", confirm: t('gws/monitor.confirm.question_not_applicable') %>
   </div>
 
-  <%= render file: '_search' %>
+  <%= render template: '_search' %>
 </div>

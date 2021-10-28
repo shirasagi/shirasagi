@@ -4,8 +4,6 @@ class Jmaxml::FiltersController < ApplicationController
 
   model Jmaxml::Filter
 
-  before_action :node_becomes_with_route
-
   navi_view "rss/main/navi"
 
   private
@@ -14,13 +12,7 @@ class Jmaxml::FiltersController < ApplicationController
     {}
   end
 
-  def node_becomes_with_route
-    @cur_node = @cur_node.becomes_with_route if !@cur_node.is_a?(Rss::Node::WeatherXml)
-    @cur_node
-  end
-
   def set_items
-    node_becomes_with_route
     @items = @cur_node.filters.order_by(updated: -1)
   end
 

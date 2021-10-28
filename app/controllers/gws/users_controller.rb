@@ -98,7 +98,7 @@ class Gws::UsersController < ApplicationController
     form_data = build_form_data
     result = @item.valid?
     if form_data.present? && form_data.invalid?(:required_check)
-      @item.errors.messages[:base] += form_data.errors.full_messages
+      SS::Model.copy_errors(form_data, @item)
       result = false
     end
 
@@ -124,7 +124,7 @@ class Gws::UsersController < ApplicationController
     result = @item.valid?
     form_data = save_form_data
     if form_data && form_data.invalid?
-      @item.errors.messages[:base] += form_data.errors.full_messages
+      SS::Model.copy_errors(form_data, @item)
       result = false
     end
 
@@ -177,7 +177,7 @@ class Gws::UsersController < ApplicationController
       result = @item.import
     end
     flash.now[:notice] = t("ss.notice.saved") if !result && @item.imported > 0
-    render_create result, location: { action: :index }, render: { file: :import }
+    render_create result, location: { action: :index }, render: { template: "import" }
   end
 
   def webmail_import
@@ -187,7 +187,7 @@ class Gws::UsersController < ApplicationController
       result = @item.import
     end
     flash.now[:notice] = t("ss.notice.saved") if !result && @item.imported > 0
-    render_create result, location: { action: :index }, render: { file: :webmail_import }
+    render_create result, location: { action: :index }, render: { template: "webmail_import" }
   end
 
   def lock_all
