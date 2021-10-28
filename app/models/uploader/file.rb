@@ -204,7 +204,7 @@ class Uploader::File
   def validate_coffee
     return if ext != ".coffee"
     return if ::File.basename(@path)[0] == "_"
-    @js = CoffeeScript.compile @binary
+    @js = ::CoffeeScript.compile @binary
   rescue => e
     errors.add :coffee, e.message
   end
