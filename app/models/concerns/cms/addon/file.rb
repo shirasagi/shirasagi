@@ -46,9 +46,6 @@ module Cms::Addon
 
         ids = []
         Utils.each_file(item.file_ids) do |file|
-          # 他人のファイルを謝って添付することを防止する
-          next if !is_allowed_other_user_files && Utils.other_user_owned?(file, cur_user)
-
           if add_ids && !add_ids.include?(file.id) || Utils.file_owned?(file, owner_item)
             # もともとから添付されていたファイル、または、すでに自分自身が所有している場合、必要であれば state を変更する
             file.update(state: owner_item.state) if owner_item.state_changed?
@@ -61,6 +58,13 @@ module Cms::Addon
             ids << file.id
             next
           end
+
+          # ここから新規ファイルの添付処理
+          #
+          # 既存ファイルの場合はどのユーザーが所有していようと関係ないが、
+          # 新規ファイルの場合、自ユーザーのファイルしか添付することはできない。
+          # 他ユーザーのファイルを誤って添付することを防止する
+          next if !is_allowed_other_user_files && Utils.other_user_owned?(file, cur_user)
 
           # ファイルの所有者などを更新する
           result = file.update(
