@@ -49,6 +49,9 @@ production: &production
   sanitizer_output: sanitizer_output
   sanitizer_file_prefix: ss
 
+  # history log saving days
+  history_log_saving_days: 90
+
 test:
   <<: *production
   disable: false
