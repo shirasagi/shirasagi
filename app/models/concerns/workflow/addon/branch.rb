@@ -60,7 +60,6 @@ module Workflow::Addon
 
         attributes = attributes.except(*attr_names_to_clear)
 
-        attributes["filename"] = "#{item.dirname}/" if attributes.key?("filename")
         attributes["state"] = "closed" if attributes.key?("state")
 
         if attributes_to_override
@@ -122,6 +121,8 @@ module Workflow::Addon
       item.cur_user = @cur_user
       item.cur_site = @cur_site
       item.cur_node = @cur_node
+      item.filename = "#{dirname}/"
+      item.basename = ""
 
       if item.is_a?(Cms::Addon::Form::Page)
         item.copy_column_values(self)
