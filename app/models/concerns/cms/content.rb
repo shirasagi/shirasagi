@@ -172,7 +172,8 @@ module Cms::Content
   end
 
   def date
-    Cms.cms_page_date(released_type.presence || self.class.default_released_type, self[:released], updated, created, first_released)
+    released_type = self.released_type.presence || self.class.default_released_type
+    Cms.cms_page_date(released_type, self[:released], updated, created, first_released)
   end
 
   def public?
