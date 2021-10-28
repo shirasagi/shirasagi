@@ -6,6 +6,7 @@ ja:
     management: 管理
     download: ダウンロード
     file: ファイル
+    function: 機能
     page: ページ
     node: フォルダー
     group_users: 所属ユーザー
@@ -17,6 +18,7 @@ ja:
     login: ログイン
     logout: ログアウト
     module: モジュール
+    operation: 操作
     regexp: 正規表現
     resize_image: 画像リサイズ
     role: ロール
@@ -24,6 +26,8 @@ ja:
     required: 必須入力
     required_field: ※必須入力
     restore: 復元
+    search_operation: 操作対象
+    search_operator: 操作実行者
     search_result: 検索結果
     url: URL
     login_url: ログインURL
