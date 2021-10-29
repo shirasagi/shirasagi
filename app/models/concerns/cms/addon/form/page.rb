@@ -145,8 +145,8 @@ module Cms::Addon::Form::Page
     if docs.present?
       docs = docs.select(&:present?).map do |doc|
         type = doc["_type"] || doc[:_type]
-        effective_kass = type.camelize.constantize rescue Cms::Column::Value::Base
-        Mongoid::Factory.build(Cms::Column::Value::Base, doc.slice(*effective_kass.fields.keys.map(&:to_s)))
+        effective_klass = type.camelize.constantize rescue Cms::Column::Value::Base
+        Mongoid::Factory.build(Cms::Column::Value::Base, doc.slice(*effective_klass.fields.keys.map(&:to_s)))
       end
     end
 
