@@ -235,7 +235,7 @@ Rails.application.routes.draw do
         get :view, on: :member
         get :contrast_ratio, on: :collection
       end
-      resources :replace_files, only: [:index, :edit, :update] do
+      resources :replace_files, path: ":owner_item_id/replace_files", only: [:edit, :update] do
         get :confirm, on: :member
         post :confirm, on: :member
         get :histories, on: :member
@@ -247,7 +247,7 @@ Rails.application.routes.draw do
         resources :temp_files, controller: 'node/temp_files', concerns: [:deletion, :file_api] do
           get :contrast_ratio, on: :collection
         end
-        resources :replace_files, only: [:index, :edit, :update] do
+        resources :replace_files, path: ":owner_item_id/replace_files", only: [:edit, :update] do
           get :confirm, on: :member
           post :confirm, on: :member
           get :histories, on: :member
