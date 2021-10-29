@@ -17,7 +17,7 @@ module Chorg::Addon::EntityLog
   def entity_logs
     @entity_logs ||= begin
       logs = []
-      if ::File.exists?(entity_log_path)
+      if ::File.exist?(entity_log_path)
         ::File.foreach(entity_log_path) do |line|
           logs << JSON.parse(line)
         end
@@ -28,7 +28,7 @@ module Chorg::Addon::EntityLog
 
   def entity_sites
     @entity_sites ||= begin
-      if ::File.exists?(entity_sites_path)
+      if ::File.exist?(entity_sites_path)
         JSON.parse(Fs.read(entity_sites_path))
       else
         create_entity_sites

@@ -13,11 +13,11 @@ RSpec.describe SS::FilePublisher::BySymLink, type: :model, dbscope: :example do
     it do
       expect(::Dir.exists?(dirname)).to be_truthy
 
-      expect(::File.exists?("#{dirname}/#{file.filename}")).to be_truthy
+      expect(::File.exist?("#{dirname}/#{file.filename}")).to be_truthy
       expect(::File.symlink?("#{dirname}/#{file.filename}")).to be_truthy
       expect(::File.readlink("#{dirname}/#{file.filename}")).to eq file.path
 
-      expect(::File.exists?("#{dirname}/#{file.name}")).to be_truthy
+      expect(::File.exist?("#{dirname}/#{file.name}")).to be_truthy
       expect(::File.symlink?("#{dirname}/#{file.name}")).to be_truthy
       expect(::File.readlink("#{dirname}/#{file.name}")).to eq file.path
     end

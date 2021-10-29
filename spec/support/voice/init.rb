@@ -3,7 +3,7 @@ def can_test_open_jtalk_spec?
   # you will waste a lot of time if you turn on allow_open_jtalk.
   return false if ENV["allow_open_jtalk"].to_i == 0
   return false if SS.config.voice.disable
-  unless ::File.exists?(SS.config.voice['openjtalk']['bin'])
+  unless ::File.exist?(SS.config.voice['openjtalk']['bin'])
     puts("[Open JTalk Spec] not found: #{SS.config.voice['openjtalk']['bin']}")
     return false
   end
@@ -11,11 +11,11 @@ def can_test_open_jtalk_spec?
     puts("[Open JTalk Spec] not found: #{SS.config.voice['openjtalk']['dic']}")
     return false
   end
-  unless ::File.exists?(SS.config.voice['openjtalk']['sox'])
+  unless ::File.exist?(SS.config.voice['openjtalk']['sox'])
     puts("[Open JTalk Spec] not found: #{SS.config.voice['openjtalk']['sox']}")
     return false
   end
-  unless ::File.exists?(SS.config.voice['lame']['bin'])
+  unless ::File.exist?(SS.config.voice['lame']['bin'])
     puts("[Open JTalk Spec] not found: #{SS.config.voice['lame']['bin']}")
     return false
   end

@@ -153,7 +153,7 @@ module Cms
 
     site_criteria.each do |site|
       dir = site.root_path
-      next unless ::File.exists?(dir)
+      next unless ::File.exist?(dir)
       # see: https://myokoym.hatenadiary.org/entry/20100606/1275836896
       ::Dir.glob("#{dir}/**/*") do |path|
         size += ::File.stat(path).size rescue 0

@@ -13,11 +13,11 @@ RSpec.describe SS::FilePublisher::ByCopy, type: :model, dbscope: :example do
     it do
       expect(::Dir.exists?(dirname)).to be_truthy
 
-      expect(::File.exists?("#{dirname}/#{file.filename}")).to be_truthy
+      expect(::File.exist?("#{dirname}/#{file.filename}")).to be_truthy
       expect(::File.symlink?("#{dirname}/#{file.filename}")).to be_falsey
       expect(::FileUtils.compare_file("#{dirname}/#{file.filename}", file.path)).to be_truthy
 
-      expect(::File.exists?("#{dirname}/#{file.name}")).to be_truthy
+      expect(::File.exist?("#{dirname}/#{file.name}")).to be_truthy
       expect(::File.symlink?("#{dirname}/#{file.name}")).to be_falsey
       expect(::FileUtils.compare_file("#{dirname}/#{file.name}", file.path)).to be_truthy
     end

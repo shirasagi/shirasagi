@@ -18,7 +18,7 @@ module Rss::Addon::Page
     def weather_xml
       if persisted?
         weather_xml_path.tap do |path|
-          if ::File.exists?(path)
+          if ::File.exist?(path)
             return Zlib::GzipReader.open(path) { |gz| gz.read }
           end
         end

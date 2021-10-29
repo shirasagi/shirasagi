@@ -31,7 +31,7 @@ module SS::FileFactory
 
       # ファイルが存在しない場合、空のファイルを作成する。
       path = item.path
-      if !::File.exists?(path)
+      if !::File.exist?(path)
         dirname = ::File.dirname(path)
         ::FileUtils.mkdir_p(dirname) if !::Dir.exists?(dirname)
         ::FileUtils.touch(path)

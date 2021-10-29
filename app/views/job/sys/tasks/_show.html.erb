@@ -65,7 +65,7 @@
   <dd>
     <%= t('job.log_notice', count: limit) %>
     <%= text_area_tag :logs, safe_join(@item.head_logs(limit), "\n"), readonly: true, style: "height: 400px" %>
-    <% if ::File.exists?(@item.log_file_path) %>
+    <% if ::File.exist?(@item.log_file_path) %>
       <%= link_to(t('job.download_log'), { action: :download }, { class: :btn }) %>
     <% end %>
   </dd>

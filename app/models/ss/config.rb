@@ -17,7 +17,7 @@ module SS::Config
     def load_config(name, section = nil)
       conf = load_yml("#{Rails.root}/config/defaults/#{name}.yml", section)
       path = "#{Rails.root}/config/#{name}.yml"
-      conf = conf.deep_merge(load_yml(path, section)) if File.exists?(path)
+      conf = conf.deep_merge(load_yml(path, section)) if File.exist?(path)
 
       struct = OpenStruct.new(conf).freeze
       define_singleton_method(name) { struct }

@@ -34,7 +34,7 @@ class SS::FilePublisher
   class BySymLink < Base
     def publish(file, dirname)
       src = file.path
-      return unless ::File.exists?(src)
+      return unless ::File.exist?(src)
 
       ::FileUtils.mkdir_p(dirname) unless ::Dir.exists?(dirname)
 

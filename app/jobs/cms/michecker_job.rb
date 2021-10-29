@@ -123,7 +123,7 @@ class Cms::MicheckerJob < Cms::ApplicationJob
   end
 
   def save_result(source_file, dest_file)
-    return unless ::File.exists?(source_file)
+    return unless ::File.exist?(source_file)
 
     basedir = ::File.dirname(dest_file)
     ::FileUtils.mkdir_p(basedir) unless ::Dir.exists?(basedir)

@@ -400,7 +400,7 @@ module SS::Model::File
     backup.site = self.site
     backup.user = @cur_user
     return unless backup.save
-    return unless File.exists?(path)
+    return unless File.exist?(path)
     trash_path = "#{History::Trash.root}/#{path.sub(/.*\/(ss_files\/)/, '\\1')}"
     FileUtils.mkdir_p(File.dirname(trash_path))
     FileUtils.cp(path, trash_path)
