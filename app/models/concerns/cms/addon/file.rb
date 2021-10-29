@@ -66,6 +66,13 @@ module Cms::Addon
           # 他ユーザーのファイルを誤って添付することを防止する
           next if !is_allowed_other_user_files && Utils.other_user_owned?(file, cur_user)
 
+          # ファイルの所有者が存在している場合、誤って所有者を変更することを防止する目的で、ファイルを複製する
+          if file.owner_item.present? && file.owner_item != owner_item
+            clone_file = SS::File.clone_file(file, cur_user: cur_user, owner_item: owner_item)
+            ids << clone_file.id
+            next
+          end
+
           # ファイルの所有者などを更新する
           result = file.update(
             site: cur_site, model: owner_item.model_name.i18n_key, owner_item: owner_item, state: owner_item.state
@@ -123,12 +130,13 @@ module Cms::Addon
     end
 
     def save_files
-      add_ids = file_ids - file_ids_was.to_a
+      file_ids_was = self.file_ids_was.to_a
+      add_ids = file_ids - file_ids_was
       ids = Utils.attach_files(self, add_ids)
       self.file_ids = ids
 
-      del_ids = file_ids_was.to_a - ids
-      Utils.delete_files(self, del_ids)
+      del_ids = file_ids_was - ids
+      Utils.delete_files(self, del_ids) if del_ids.present?
     end
 
     def destroy_files
@@ -185,7 +193,7 @@ module Cms::Addon
         # 差し替えページの場合、所有者を差し替え元のままとする
         next if is_branch && Utils.file_owned?(file, owner_item.master)
 
-        file.update(owner_item: self)
+        file.update(owner_item: owner_item)
       end
     end
 

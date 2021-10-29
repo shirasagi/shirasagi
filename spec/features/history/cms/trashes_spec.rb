@@ -361,6 +361,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       # 差し替えページをゴミ箱から復元すると、差し替え元との関係が失われ、複製したようになる。
       branch_page.reload
       expect(branch_page.master_id).to be_blank
+      # そして、添付ファイルは複製され、差し替え元との関係が失われる
       expect(branch_page.files.count).to eq 1
       branch_page.files.first.tap do |branch_file|
         expect(branch_file.id).not_to eq file.id

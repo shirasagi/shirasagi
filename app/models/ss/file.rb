@@ -43,6 +43,10 @@ class SS::File
       attributes.select! { |k| file.fields.key?(k) }
 
       attributes["user_id"] = cur_user.id if cur_user && attributes.key?("user_id")
+      if owner_item
+        attributes["owner_item_type"] = owner_item.class.name
+        attributes["owner_item_id"] = owner_item.id
+      end
       attributes.delete("_id")
 
       file.class.create_empty!(attributes, validate: false) do |new_file|
