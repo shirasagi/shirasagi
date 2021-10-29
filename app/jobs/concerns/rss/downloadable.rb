@@ -36,7 +36,7 @@ module Rss::Downloadable
 
     @task.log "downloading #{url}"
 
-    ::FileUtils.mkdir_p(self.class.data_cache_dir) unless ::Dir.exists?(self.class.data_cache_dir)
+    ::FileUtils.mkdir_p(self.class.data_cache_dir) unless ::Dir.exist?(self.class.data_cache_dir)
 
     hash = Digest::MD5.hexdigest(url)
 

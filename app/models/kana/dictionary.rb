@@ -50,7 +50,7 @@ class Kana::Dictionary
       mecab_dicdir = SS.config.kana.mecab_dicdir
 
       raise I18n.t("kana.build_fail.no_mecab_indexer") unless ::File.exist?(mecab_indexer)
-      raise I18n.t("kana.build_fail.no_mecab_dicdir") unless ::Dir.exists?(mecab_dicdir)
+      raise I18n.t("kana.build_fail.no_mecab_dicdir") unless ::Dir.exist?(mecab_dicdir)
 
       ::Dir.mktmpdir do |dir|
         tmp_src = File.join(dir, SS::FilenameUtils.make_tmpname("mecab", "txt"))

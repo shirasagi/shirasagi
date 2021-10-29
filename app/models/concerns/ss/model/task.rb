@@ -220,7 +220,7 @@ module SS::Model::Task
   def log(msg)
     @log_file ||= begin
       dirname = ::File.dirname(log_file_path)
-      ::FileUtils.mkdir_p(dirname) unless ::Dir.exists?(dirname)
+      ::FileUtils.mkdir_p(dirname) unless ::Dir.exist?(dirname)
 
       file = ::File.open(log_file_path, 'a')
       file.sync = true

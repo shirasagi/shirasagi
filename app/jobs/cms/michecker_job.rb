@@ -126,7 +126,7 @@ class Cms::MicheckerJob < Cms::ApplicationJob
     return unless ::File.exist?(source_file)
 
     basedir = ::File.dirname(dest_file)
-    ::FileUtils.mkdir_p(basedir) unless ::Dir.exists?(basedir)
+    ::FileUtils.mkdir_p(basedir) unless ::Dir.exist?(basedir)
 
     ::FileUtils.cp(source_file, dest_file)
   end

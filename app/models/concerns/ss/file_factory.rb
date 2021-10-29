@@ -33,7 +33,7 @@ module SS::FileFactory
       path = item.path
       if !::File.exist?(path)
         dirname = ::File.dirname(path)
-        ::FileUtils.mkdir_p(dirname) if !::Dir.exists?(dirname)
+        ::FileUtils.mkdir_p(dirname) if !::Dir.exist?(dirname)
         ::FileUtils.touch(path)
       end
 

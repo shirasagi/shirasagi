@@ -11,7 +11,7 @@ RSpec.describe SS::FilePublisher::ByCopy, type: :model, dbscope: :example do
     end
 
     it do
-      expect(::Dir.exists?(dirname)).to be_truthy
+      expect(::Dir.exist?(dirname)).to be_truthy
 
       expect(::File.exist?("#{dirname}/#{file.filename}")).to be_truthy
       expect(::File.symlink?("#{dirname}/#{file.filename}")).to be_falsey
@@ -29,11 +29,11 @@ RSpec.describe SS::FilePublisher::ByCopy, type: :model, dbscope: :example do
     end
 
     it do
-      expect(::Dir.exists?(dirname)).to be_truthy
+      expect(::Dir.exist?(dirname)).to be_truthy
 
       subject.depublish(file, dirname)
 
-      expect(::Dir.exists?(dirname)).to be_falsey
+      expect(::Dir.exist?(dirname)).to be_falsey
     end
   end
 end

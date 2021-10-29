@@ -36,7 +36,7 @@ class SS::FilePublisher
       src = file.path
       return unless ::File.exist?(src)
 
-      ::FileUtils.mkdir_p(dirname) unless ::Dir.exists?(dirname)
+      ::FileUtils.mkdir_p(dirname) unless ::Dir.exist?(dirname)
 
       # on some conditions, filename doesn't normalize. so it needs to be checked.
       if file.filename.ascii_only?

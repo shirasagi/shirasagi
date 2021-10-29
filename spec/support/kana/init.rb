@@ -17,14 +17,14 @@ RSpec.configuration.before(:suite) do
   prefix = "kana"
   timestamp = Time.zone.now.strftime("%Y%m%d")
   tmp = ::File.join(Dir.tmpdir, "#{prefix}-#{timestamp}")
-  ::Dir.mkdir(tmp) unless ::Dir.exists?(tmp)
+  ::Dir.mkdir(tmp) unless ::Dir.exist?(tmp)
 
   SS.config.kana
   SS.config.replace_value_at(:kana, :root, tmp)
 end
 
 RSpec.configuration.after(:suite) do
-  ::FileUtils.rm_rf(SS.config.kana.root) if SS.config.kana.root.present? && ::Dir.exists?(SS.config.kana.root)
+  ::FileUtils.rm_rf(SS.config.kana.root) if SS.config.kana.root.present? && ::Dir.exist?(SS.config.kana.root)
 end
 
 RSpec.configuration.filter_run_excluding(mecab: true) unless can_test_mecab_spec?
