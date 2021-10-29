@@ -126,6 +126,8 @@ class SS::ReplaceFile
       site = opts[:site]
       node = opts[:node]
 
+      return false if item.try(:branch?)
+
       if item.try(:public?)
         item.allowed?(:release, user, site: site, node: node)
       else
