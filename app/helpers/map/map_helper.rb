@@ -228,8 +228,12 @@ module Map::MapHelper
 
     h << %(<div class="column" data-id="#{item.id}">)
     h << %(<p><a href="#{item.url}">#{item.name}</a></p>)
-    h << %(<p>#{item.address}</p>)
-    h << %(<p><a href="#" class="click-marker">#{I18n.t("facility.sidebar.click_marker")}</a></p>)
+    h << %(<p>#{item.address}</p>) if item.try(:address)
+    if item.map_points.present?
+      h << %(<p><a href="#" class="click-marker">#{I18n.t("facility.sidebar.click_marker")}</a></p>)
+    else
+      h << %(<div class="no-marker">#{I18n.t("facility.sidebar.no_marker")}</div>)
+    end
     h << %(</div>)
 
     h.join("\n")
