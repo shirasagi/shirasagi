@@ -62,6 +62,9 @@ describe Article::Page, dbscope: :example do
           expect(subject.files.pluck(:id)).to include(file1.id, file2.id)
           expect(subject.html).to include file1.url
           expect(subject.html).to include file2.url
+
+          # サムネイルを含めると、全部でファイルは 4 つあるはず
+          expect(SS::File.all.count).to eq 4
         end
       end
 
@@ -128,6 +131,9 @@ describe Article::Page, dbscope: :example do
           item.reload
           expect(item.files.count).to eq 2
           expect(item.files.pluck(:id)).to include(file1.id, file2.id)
+
+          # サムネイルを含めると、全部でファイルは 8 つあるはず
+          expect(SS::File.all.count).to eq 8
         end
       end
 
@@ -203,6 +209,9 @@ describe Article::Page, dbscope: :example do
             expect(item.html).to include file1.url
             expect(item.html).to include file2.url
 
+            # サムネイルを含めると、全部でファイルは 4 つあるはず
+            expect(SS::File.all.count).to eq 4
+
             expect(History::Trash.all.count).to eq 1
             History::Trash.all.first.tap do |trash|
               expect(trash.site_id).to eq site.id
@@ -275,6 +284,9 @@ describe Article::Page, dbscope: :example do
               expect(trash.state).to be_blank
               expect(trash.action).to eq "save"
             end
+
+            # サムネイルを含めると、全部でファイルは 4 つあるはず
+            expect(SS::File.all.count).to eq 4
           end
         end
       end

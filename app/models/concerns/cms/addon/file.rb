@@ -9,6 +9,7 @@ module Cms::Addon
 
       define_model_callbacks :clone_files
 
+      after_merge_branch :transfer_owner_from_branch if respond_to?(:after_merge_branch)
       before_save :clone_files, if: ->{ try(:new_clone?) }
       before_save :save_files
       around_save :update_file_owners
@@ -127,6 +128,18 @@ module Cms::Addon
 
     def allowed_other_user_files?
       @allowed_other_user_files == true
+    end
+
+    def transfer_owner_from_branch
+      return unless in_branch
+
+      owner_item = Utils.owner_item(self)
+      Utils.each_file(file_ids) do |file|
+        if file.owner_item_id == in_branch.id &&  file.owner_item_type == in_branch.class.name
+          # 差し替えページがファイルを所有しているので、所有者を変更
+          file.update(owner_item: owner_item)
+        end
+      end
     end
 
     def save_files
