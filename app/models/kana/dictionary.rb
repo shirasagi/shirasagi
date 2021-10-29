@@ -70,7 +70,7 @@ class Kana::Dictionary
 
     def pull(site_id)
       master_file = master_dic(site_id)
-      unless Fs.exists?(master_file)
+      unless Fs.exist?(master_file)
         return yield nil
       end
 

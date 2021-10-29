@@ -8,7 +8,7 @@ class SS::FilePublisher
   class ByCopy < Base
     def publish(file, dirname)
       src = file.path
-      return unless ::Fs.exists?(src)
+      return unless ::Fs.exist?(src)
 
       ::Fs.mkdir_p(dirname)
 
@@ -23,7 +23,7 @@ class SS::FilePublisher
     end
 
     def publish_one(src, dest)
-      return if ::Fs.exists?(dest) && ::Fs.compare_file_head(src, dest)
+      return if ::Fs.exist?(dest) && ::Fs.compare_file_head(src, dest)
 
       ::Fs.rm_rf(dest)
       ::Fs.cp(src, dest)

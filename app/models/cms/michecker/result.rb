@@ -53,6 +53,6 @@ class Cms::Michecker::Result
 
   def remove_all
     path = root_filepath
-    ::Fs.rm_rf(path) if ::Fs.exists?(path)
+    ::Fs.rm_rf(path) if ::Fs.exist?(path)
   end
 end

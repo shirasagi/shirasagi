@@ -64,7 +64,7 @@ class Voice::File
   end
 
   def exists?
-    Fs.exists?(file)
+    Fs.exist?(file)
   end
 
   def latest?(margin = 60)

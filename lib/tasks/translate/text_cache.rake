@@ -25,7 +25,7 @@ namespace :translate do
       next unless page
 
       targets.each do |target|
-        next if !Fs.exists?(page.path)
+        next if !Fs.exist?(page.path)
 
         puts "#{idx + 1} #{target.code} : #{page.name} #{page.path.sub(@site.path, "")}"
         count += 1

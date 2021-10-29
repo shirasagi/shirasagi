@@ -232,11 +232,11 @@ module SS::Model::File
   end
 
   def read
-    Fs.exists?(path) ? Fs.binread(path) : nil
+    Fs.exist?(path) ? Fs.binread(path) : nil
   end
 
   def to_io(&block)
-    Fs.exists?(path) ? Fs.to_io(path, &block) : nil
+    Fs.exist?(path) ? Fs.to_io(path, &block) : nil
   end
 
   def uploaded_file(&block)
@@ -299,7 +299,7 @@ module SS::Model::File
   end
 
   def image_dimension
-    return unless Fs.exists?(path)
+    return unless Fs.exist?(path)
     return unless image?
 
     ::FastImage.size(path) rescue nil
@@ -376,7 +376,7 @@ module SS::Model::File
     end
 
     dir = ::File.dirname(path)
-    Fs.mkdir_p(dir) unless Fs.exists?(dir)
+    Fs.mkdir_p(dir) unless Fs.exist?(dir)
 
     SS::ImageConverter.attach(in_file, ext: ::File.extname(in_file.original_filename)) do |converter|
       converter.apply_defaults!(resizing: resizing)

@@ -160,7 +160,7 @@ module Cms::Model::Node
 
       return errors.add :base, :same_filename if filename == dst
       return errors.add :filename, :taken if Cms::Node.site(s).where(filename: dst).first
-      return errors.add :base, :exist_physical_file if Fs.exists?("#{s.path}/#{dst}")
+      return errors.add :base, :exist_physical_file if Fs.exist?("#{s.path}/#{dst}")
 
       if dst_dir.present?
         dst_parent = Cms::Node.site(s).where(filename: dst_dir).first
@@ -228,9 +228,9 @@ module Cms::Model::Node
 
   def remove_all
     dst = path.sub("#{Rails.root}/public", History::Trash.root)
-    Fs.rm_rf(dst) if Fs.exists?(dst)
+    Fs.rm_rf(dst) if Fs.exist?(dst)
     Fs.mkdir_p(File.dirname(dst))
-    Fs.mv(path, dst) if Fs.exists?(path)
+    Fs.mv(path, dst) if Fs.exist?(path)
   end
 
   private
@@ -271,8 +271,8 @@ module Cms::Model::Node
     dst = "#{(@cur_site || site).path}/#{@db_changes['filename'][1]}"
     dst_dir = ::File.dirname(dst)
 
-    Fs.mkdir_p dst_dir unless Fs.exists?(dst_dir)
-    Fs.mv src, dst if Fs.exists?(src)
+    Fs.mkdir_p dst_dir unless Fs.exist?(dst_dir)
+    Fs.mv src, dst if Fs.exist?(src)
 
     src, dst = @db_changes["filename"]
     [ Cms::Node, Cms::Page, Cms::Part, Cms::Layout ].each do |model|

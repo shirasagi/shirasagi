@@ -1,5 +1,5 @@
 <% file = "#{@cur_node.path}/search.html" %>
-<% if !controller.preview_path? && Fs.exists?(file) %>
+<% if !controller.preview_path? && Fs.exist?(file) %>
   <%== Fs.read(file) %>
 <% else %>
   <%= render template: 'opendata/agents/nodes/app/search_app/search' %>

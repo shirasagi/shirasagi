@@ -57,8 +57,8 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
 
       file = Gws::Share::File.all.first
       expect(file.sanitizer_state).to eq 'wait'
-      expect(Fs.exists?(file.path)).to be_truthy
-      expect(Fs.exists?(file.sanitizer_input_path)).to be_truthy
+      expect(Fs.exist?(file.path)).to be_truthy
+      expect(Fs.exist?(file.sanitizer_input_path)).to be_truthy
       expect(Fs.cmp(file.path, file.sanitizer_input_path)).to be_truthy
 
       # show
@@ -68,7 +68,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       # restore
       restored_file = mock_sanitizer_restore(file)
       expect(restored_file.sanitizer_state).to eq 'complete'
-      expect(Fs.exists?(restored_file.path)).to be_truthy
+      expect(Fs.exist?(restored_file.path)).to be_truthy
 
       click_on I18n.t('ss.links.back_to_index')
       expect(page).to have_css('.list-items .sanitizer-complete')
@@ -107,8 +107,8 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
         click_on I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
-      expect(Fs.exists?(file_path)).to be_falsey
-      expect(Fs.exists?(sanitizer_input_path)).to be_falsey
+      expect(Fs.exist?(file_path)).to be_falsey
+      expect(Fs.exist?(sanitizer_input_path)).to be_falsey
     end
   end
 
