@@ -1,6 +1,6 @@
-class Sns::Apis::ReplaceFilesController < ApplicationController
-  include Sns::UserFilter
-  include Sns::CrudFilter
+class Cms::Apis::ReplaceFilesController < ApplicationController
+  include Cms::BaseFilter
+  include Cms::CrudFilter
   include SS::FileFilter
   include SS::AjaxFileFilter
 
