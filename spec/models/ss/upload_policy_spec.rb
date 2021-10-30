@@ -13,11 +13,11 @@ describe SS::UploadPolicy, dbscope: :example do
   describe "methods" do
     it "sanitizer_input_path" do
       file = SS::File.new(name: 'example.txt')
-      result = file.sanitizer_input_path.starts_with?("#{Rails.root}/#{SS.config.ss.sanitizer_input}/")
+      result = file.sanitizer_input_path.start_with?("#{Rails.root}/#{SS.config.ss.sanitizer_input}/")
       expect(result).to be_truthy
 
       sanitizer_input_basename = ::File.basename(file.sanitizer_input_path)
-      result = sanitizer_input_basename.starts_with?("#{SS.config.ss.sanitizer_file_prefix}_")
+      result = sanitizer_input_basename.start_with?("#{SS.config.ss.sanitizer_file_prefix}_")
       expect(result).to be_truthy
     end
   end

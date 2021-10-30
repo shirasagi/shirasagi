@@ -88,7 +88,7 @@ describe "cms_files_with_upload_policy", type: :feature, dbscope: :example, js: 
       expect(file.sanitizer_state).to eq nil
     end
 
-    context "error operation" do
+    context "error operations" do
       let!(:error_file) { "#{::Rails.root}/spec/fixtures/ss/file/ss_file_1_1635597955_1000_pdfEncryptReport.txt" }
       let!(:output_path) { "#{SS.config.ss.sanitizer_output}/ss_file_1_1635597955_1000_pdfEncryptReport.txt" }
       let!(:error_filename) { "logo.png_sanitize_error.txt" }

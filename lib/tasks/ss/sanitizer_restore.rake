@@ -9,7 +9,7 @@ namespace :ss do
     ::Fs.glob("#{Rails.root}/#{SS.config.ss.sanitizer_output}/*").sort.each do |path|
       filename = ::File.basename(path)
       basename = ::File.basename(filename, '.*')
-      next unless filename.starts_with?("#{SS.config.ss.sanitizer_file_prefix}_")
+      next unless filename.start_with?("#{SS.config.ss.sanitizer_file_prefix}_")
 
       SS::UploadPolicy.sanitizer_rename_zip(path) if ::File.extname(path) == '.zip'
 
