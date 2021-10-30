@@ -10,10 +10,12 @@ def upload_policy_after_settings
   Fs.rm_rf(SS.config.ss.sanitizer_output)
 end
 
-def mock_sanitizer_restore(file)
-  Fs.rm_rf file.path
-  output_path = file.sanitizer_input_path.sub(/\A(.*)\./, '\\1_100_marked.')
-  Fs.mv file.sanitizer_input_path, output_path
+def mock_sanitizer_restore(file, output_path = nil)
+  unless output_path
+    Fs.rm_rf file.path
+    output_path = file.sanitizer_input_path.sub(/\A(.*)\./, '\\1_100_marked.')
+    Fs.mv file.sanitizer_input_path, output_path
+  end
 
   if job_model = Uploader::JobFile.sanitizer_restore(output_path)
     return job_model

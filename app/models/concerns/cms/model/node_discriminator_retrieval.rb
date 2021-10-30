@@ -16,6 +16,7 @@ module Cms::Model::NodeDiscriminatorRetrieval
         begin
           camelized.constantize
         rescue NameError
+          # return self if Rails.env.development?
           raise Mongoid::Errors::UnknownModel.new(camelized, type)
         end
       end

@@ -286,8 +286,8 @@ module ApplicationHelper
   end
 
   def sanitizer_status(item)
-    value = item.sanitizer_state
-    return unless %w(wait complete).include?(value)
+    value = item.sanitizer_state rescue nil
+    return unless %w(wait complete error).include?(value)
     label = SS::UploadPolicy.sanitizer_state_label(value)
     h = %(<div class="sanitizer-status sanitizer-#{value}">#{label}</div>)
     h.html_safe

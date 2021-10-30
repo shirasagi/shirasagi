@@ -56,7 +56,7 @@ class Uploader::FilesController < ApplicationController
 
     @item.site = @cur_site
     @item.read if @item.text?
-    @item.set_sanitizer_state
+    Uploader::File.set_sanitizer_state([@item], { site_id: @cur_site.id })
   end
 
   def set_item_was
@@ -147,6 +147,7 @@ class Uploader::FilesController < ApplicationController
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
     return redirect_to("#{request.path}?do=show") unless @item.directory?
     set_items(@item.path)
+    Uploader::File.set_sanitizer_state(@items, { site_id: @cur_site.id })
     render :index
   end
 

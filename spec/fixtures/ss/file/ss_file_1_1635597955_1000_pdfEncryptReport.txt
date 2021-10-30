@@ -1,0 +1,29 @@
+パスワードあるいは電子署名付きのPDFファイルのため処理ができません。
+2021年 10月 30日 土曜日 21:45:56 JST
+サニタイザーはPDF無害化処理を試みましたが、パスワードあるいは電子署名が付加されて
+いるため、処理ができませんでした。
+ファイル名: ss_file_1289_1635597955.pdf
+
+PDFにパスワードが掛かっている場合、
+下記の「PASSWORD」欄のINPUT PASSWORD HERE. の箇所にファイル閲覧用の
+パスワードを入力し、このレポートファイルをinputもしくはoutputフォルダに
+再保存することで、パスワードを解除し、その中のファイルを処理することができます。
+（この場合、閲覧用パスワードがこのファイルに一時保存されるため
+パスワードの漏えいリスクがあることをご承知おきください）
+
+安全にファイルの受け渡しを行うのならば、電子証明書を使った
+「トラストパス」の導入をご検討ください。
+
+---PASSWORD---
+INPUT PASSWORD HERE.
+---PASSWORD---
+
+BEGIN
+RY2Iuat1lMyH/ZhBW8a/lu7oTEaERc4pH9lYcoITMyuXXxsIkNlfLq0uJ0IX8PFK1aBNzZuubhKI
+uCToe+MiO7jiFcSHxd1FWgaHBhTjfAxe2nM4lEtq214yX/zFz8vEa+rz+wZxZDk1MoCYTYmNAvUu
+wNwY5DErxMLf7b7PF3S4/TR0flTcUFALeOyOWZAmjk8PH0NQHYKRNJNzmAfuS9uSXLGQsRGKU/f4
+W16DYhijdH6Wnzyvt5oz7lnAPs/FY8MsEg1kd/aoBH+qOYTjGZ/xpmDRfLUojNdGyUfU+XDMTF9K
+g5gxUOKx2Tjq5+OS9jn0oN1HVNSunuztVBGWoQ==
+END
+（管理用コード：この文字列は変更、削除しないでください）
+
