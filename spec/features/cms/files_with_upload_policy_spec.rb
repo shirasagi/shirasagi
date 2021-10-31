@@ -62,7 +62,7 @@ describe "cms_files_with_upload_policy", type: :feature, dbscope: :example, js: 
       expect(current_path).to eq index_path
     end
 
-    it "reset sanitizer_state"do
+    it "reset sanitizer_state" do
       # create
       visit new_path
       within "form#item-form" do

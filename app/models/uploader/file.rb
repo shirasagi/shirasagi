@@ -281,7 +281,7 @@ class Uploader::File
     end
 
     def set_sanitizer_state(items, bindings = {})
-      return if items.size == 0
+      return if items.empty?
 
       dir = ::File.dirname(items.first.path).delete_prefix("#{Rails.root}/")
       paths = Uploader::JobFile.where(bindings).directory(dir).map(&:path)
