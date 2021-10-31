@@ -29,13 +29,24 @@ class Uploader::JobFile
   end
 
   def sanitizer_restore_file(output_path)
-    # dir = ::File.dirname(path)
-    # FileUtils.mkdir_p(dir) unless ::Dir.exist?(dir)
-    FileUtils.mv(output_path, path, force: true)
-    ::Uploader::File.auto_compile(path)
+    if output_path.end_with?('Report.txt')
+      SS::UploadPolicy.sanitizer_overwrite_error_file(output_path)
+      FileUtils.mv(output_path, "#{path}_sanitize_error.txt", force: true)
+    else
+      FileUtils.mv(output_path, path, force: true)
+      ::Uploader::File.auto_compile(path)
+    end
   end
 
   class << self
+    def directory(path, target = nil)
+      if target == 'descendant'
+        all.where(path: /^#{::Regexp.escape(path)}\//)
+      else
+        all.where(path: /^#{::Regexp.escape(path)}\/[^\/]+$/)
+      end
+    end
+
     def new_job(bindings)
       @job_bindings = bindings
       @job_args = []

@@ -42,6 +42,8 @@ module SS::Helpers::FileFormBuilder
       @template.output_buffer << " "
       @template.output_buffer << @template.content_tag(:span, file.try(:humanized_name), class: "humanized-name")
       @template.output_buffer << " "
+      @template.output_buffer << @template.sanitizer_status(file)
+      @template.output_buffer << " "
       @template.output_buffer << @template.hidden_field_tag(
         "#{@object_name}[#{method}_id]", file.try(:id), id: nil, class: "file-id")
       @template.output_buffer << " "

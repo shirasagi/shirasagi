@@ -57,8 +57,8 @@ test:
   disable: false
   file_url_with: filename
   publish_file_with: cp
-  sanitizer_input: tmp/sanitizer_input
-  sanitizer_output: tmp/sanitizer_output
+  sanitizer_input: tmp/test_sanitizer_input
+  sanitizer_output: tmp/test_sanitizer_output
 
 development:
   <<: *production
