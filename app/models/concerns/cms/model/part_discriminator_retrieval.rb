@@ -16,7 +16,8 @@ module Cms::Model::PartDiscriminatorRetrieval
         begin
           camelized.constantize
         rescue NameError
-          raise Mongoid::Errors::UnknownModel.new(camelized, type)
+          Rails.logger.error("Unknown Model '#{camelized}' (#{type})")
+          return self
         end
       end
     end
