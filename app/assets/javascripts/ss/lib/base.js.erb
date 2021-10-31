@@ -557,6 +557,7 @@ this.SS = (function () {
 
         $container.find(".humanized-name").text(fileName);
         $container.find(".file-id").val(fileId);
+        $container.find(".sanitizer-status").replaceWith($data.find('.sanitizer-status'));
         $container.find(".btn-file-delete").removeClass("hide");
         $container.find(".upload-drop-notice").addClass("hide");
       };
@@ -639,6 +640,7 @@ this.SS = (function () {
 
           $container.find(".humanized-name").text(fileData["humanized_name"]);
           $container.find(".file-id").val(fileData["id"] || fileData["_id"]);
+          $container.find(".sanitizer-status").addClass("hide");
           $container.find(".btn-file-delete").removeClass("hide");
           $container.find(".upload-drop-notice").addClass("hide");
         }, function (xhr, textStatus, errorThrown) {
@@ -669,6 +671,7 @@ this.SS = (function () {
         var $container = $this.closest(".ss-file-field")
         $container.find(".humanized-name").text("");
         $container.find(".file-id").val("");
+        $container.find(".sanitizer-status").addClass("hide");
         $container.find(".btn-file-delete").addClass("hide");
         $container.find(".upload-drop-notice").removeClass("hide");
 
