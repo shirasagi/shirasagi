@@ -13,9 +13,9 @@ describe "ads_banners_with_upload_policy", type: :feature, dbscope: :example, js
 
   describe "ss_file_field" do
     it do
-      file1.update_attributes(sanitizer_state: 'wait')
-      file2.update_attributes(sanitizer_state: 'error')
-      file3.update_attributes(sanitizer_state: nil)
+      file1.update(sanitizer_state: 'wait')
+      file2.update(sanitizer_state: 'error')
+      file3.update(sanitizer_state: nil)
 
       # index
       visit index_path
