@@ -5,4 +5,9 @@ module SS::Model
       dest.errors.add :base, message
     end
   end
+
+  def self.container_of(item)
+    return unless item
+    item.embedded? ? item._parent : item
+  end
 end

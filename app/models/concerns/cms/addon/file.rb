@@ -25,14 +25,14 @@ module Cms::Addon
 
       module_function
 
-      delegate [:owner_item, :file_owned?] => SS::Relation::File::Utils
+      delegate [:file_owned?] => SS::Relation::File::Utils
 
       def other_user_owned?(file, cur_user)
         cur_user && cur_user.id != file.user_id
       end
 
       def attach_files(item, add_ids, branch: nil)
-        owner_item = Utils.owner_item(item)
+        owner_item = SS::Model.container_of(item)
         cur_site = owner_item.cur_site if owner_item.respond_to?(:cur_site)
         cur_site ||= owner_item.site if owner_item.respond_to?(:site)
         cur_user = owner_item.cur_user if owner_item.respond_to?(:cur_user)
@@ -91,7 +91,7 @@ module Cms::Addon
       end
 
       def delete_files(item, del_ids)
-        owner_item = Utils.owner_item(item)
+        owner_item = SS::Model.container_of(item)
         cur_site = owner_item.cur_site if owner_item.respond_to?(:cur_site)
         cur_site ||= owner_item.site if owner_item.respond_to?(:site)
         cur_user = owner_item.cur_user if owner_item.respond_to?(:cur_user)
@@ -130,7 +130,7 @@ module Cms::Addon
     def transfer_owner_from_branch
       return unless in_branch
 
-      owner_item = Utils.owner_item(self)
+      owner_item = SS::Model.container_of(self)
       SS::File.each_file(file_ids) do |file|
         if file.owner_item_id == in_branch.id && file.owner_item_type == in_branch.class.name
           # 差し替えページがファイルを所有しているので、所有者を変更
@@ -150,7 +150,7 @@ module Cms::Addon
     end
 
     def destroy_files
-      owner_item = Utils.owner_item(self)
+      owner_item = SS::Model.container_of(self)
       is_branch = owner_item.respond_to?(:branch?) && owner_item.branch?
 
       SS::File.each_file(file_ids) do |file|
@@ -194,7 +194,7 @@ module Cms::Addon
     end
 
     def update_owner_item_of_files
-      owner_item = Utils.owner_item(self)
+      owner_item = SS::Model.container_of(self)
       is_branch = owner_item.respond_to?(:branch?) && owner_item.branch?
 
       SS::File.each_file(file_ids) do |file|

@@ -93,7 +93,7 @@ module Workflow::Addon
     end
 
     def clone_file(source_file)
-      file = SS::File.clone_file(source_file, cur_user: @cur_user, owner_item: SS::Relation::File::Utils.owner_item(self))
+      file = SS::File.clone_file(source_file, cur_user: @cur_user, owner_item: SS::Model.container_of(self))
 
       if respond_to?(:html) && html.present?
         html = self.html

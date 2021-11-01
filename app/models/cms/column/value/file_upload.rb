@@ -122,7 +122,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   def clone_file
     return if file.blank?
 
-    owner_item = SS::Relation::File::Utils.owner_item(self)
+    owner_item = SS::Model.container_of(self)
     return if owner_item.respond_to?(:branch?) && owner_item.branch?
 
     cur_user = owner_item.cur_user if owner_item.respond_to?(:cur_user)
@@ -141,31 +141,32 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   end
 
   def update_file_owner_item
-    return if SS::Relation::File::Utils.file_owned?(file, _parent)
+    owner_item = SS::Model.container_of(self)
+    return if SS::Relation::File::Utils.file_owned?(file, owner_item)
 
     # 差し替えページの場合、所有者を差し替え元のままとする
-    return if _parent.respond_to?(:branch?) && _parent.branch? && SS::Relation::File::Utils.file_owned?(file, _parent.master)
+    return if owner_item.respond_to?(:branch?) && owner_item.branch? && SS::Relation::File::Utils.file_owned?(file, owner_item.master)
 
     attrs = {}
 
-    if file.site_id != _parent.site_id
-      attrs[:site_id] = _parent.site_id
+    if file.site_id != owner_item.site_id
+      attrs[:site_id] = owner_item.site_id
     end
-    if file.model != _parent.class.name
-      attrs[:model] = _parent.class.name
+    if file.model != owner_item.class.name
+      attrs[:model] = owner_item.class.name
     end
-    if file.owner_item != _parent
-      attrs[:owner_item] = _parent
+    if file.owner_item != owner_item
+      attrs[:owner_item] = owner_item
     end
-    if file.state != _parent.state
-      attrs[:state] = _parent.state
+    if file.state != owner_item.state
+      attrs[:state] = owner_item.state
     end
 
     return if attrs.blank?
 
     result = file.update(attrs)
     if result
-      History::Log.build_file_log(file, site_id: _parent.site_id, user_id: _parent.cur_user.try(:id)).tap do |history|
+      History::Log.build_file_log(file, site_id: owner_item.site_id, user_id: owner_item.cur_user.try(:id)).tap do |history|
         history.action = "update"
         history.behavior = "attachment"
         history.save

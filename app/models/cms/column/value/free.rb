@@ -71,7 +71,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
   def clone_files
     return if file_ids.blank?
 
-    owner_item = SS::Relation::File::Utils.owner_item(self)
+    owner_item = SS::Model.container_of(self)
     return if owner_item.respond_to?(:branch?) && owner_item.branch?
 
     cur_user = owner_item.cur_user if owner_item.respond_to?(:cur_user)
@@ -101,7 +101,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
     # しかし、before_save コールバックが呼ばれた時点では _parent.id が未確定のため files の owner_item をセットできない。
     # 苦肉の策だが before_save コールバックで追加されたファイルのリストを算出し、@add_file_ids に保存する。
     # そして、before_parent_save コールバックで files の owner_item をセットする。
-    owner_item = SS::Relation::File::Utils.owner_item(self)
+    owner_item = SS::Model.container_of(self)
     in_branch = owner_item.in_branch if @merge_values && owner_item.respond_to?(:in_branch)
 
     ids = Cms::Addon::File::Utils.attach_files(self, @add_file_ids, branch: in_branch)
@@ -116,7 +116,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
   end
 
   def build_history_log(file)
-    owner_item = SS::Relation::File::Utils.owner_item(self)
+    owner_item = SS::Model.container_of(self)
     site_id = owner_item.cur_site.id if owner_item.respond_to?(:cur_site) && owner_item.cur_site
     user_id = owner_item.cur_user.id if owner_item.respond_to?(:cur_user) && owner_item.cur_user
 
@@ -124,7 +124,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
   end
 
   def put_contains_urls_logs
-    owner_item = SS::Relation::File::Utils.owner_item(self)
+    owner_item = SS::Model.container_of(self)
     add_contains_urls = owner_item.value_contains_urls - owner_item.value_contains_urls_was.to_a
     add_contains_urls.each do |file_url|
       item = build_history_log(nil)

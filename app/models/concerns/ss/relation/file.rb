@@ -91,10 +91,6 @@ module SS::Relation::File
   module Utils
     module_function
 
-    def owner_item(item)
-      item.embedded? ? item._parent : item
-    end
-
     def file_owned?(file, item)
       file.owner_item_type == item.class.name && file.owner_item_id == item.id
     end
@@ -113,7 +109,7 @@ module SS::Relation::File
     file.state    = send("#{name}_file_state")
     file.content_type = ::Fs.content_type(file.filename)
     file.resizing = send("in_#{name}_resizing").presence || opts[:resizing]
-    file.owner_item = Utils.owner_item(self) if file.respond_to?(:owner_item=)
+    file.owner_item = SS::Model.container_of(self) if file.respond_to?(:owner_item=)
     file
   end
 
@@ -154,7 +150,7 @@ module SS::Relation::File
 
     return if file.blank?
 
-    owner_item = Utils.owner_item(self)
+    owner_item = SS::Model.container_of(self)
     if owner_item.respond_to?(:branch?) && owner_item.branch?
       # 差し替えページの場合、差し替え元と共有している可能性がある。共有している場合は削除しないようにする。
       return if !Utils.file_owned?(file, owner_item) && Utils.file_owned?(file, owner_item.master)
@@ -177,7 +173,7 @@ module SS::Relation::File
 
   def _update_relation_owner_item(name, _opts)
     file = send(name)
-    owner_item = Utils.owner_item(self)
+    owner_item = SS::Model.container_of(self)
     return if Utils.file_owned?(file, owner_item)
 
     # 差し替えページの場合、所有者を差し替え元のままとする
