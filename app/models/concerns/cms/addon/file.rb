@@ -25,8 +25,18 @@ module Cms::Addon
 
       module_function
 
+      EMPTY_ARRAY = [].freeze
+
       def other_user_owned?(file, cur_user)
         cur_user && cur_user.id != file.user_id
+      end
+
+      def need_to_clone?(file, owner_item, branch)
+        return false if file.owner_item_id.blank? || file.owner_item.blank?
+        return false if file.owner_item == owner_item
+        return false if branch && file.owner_item == branch
+
+        true
       end
 
       def attach_files(item, add_ids, branch: nil)
@@ -36,10 +46,11 @@ module Cms::Addon
         cur_user = owner_item.cur_user if owner_item.respond_to?(:cur_user)
         is_allowed_other_user_files = owner_item.allowed_other_user_files?
         is_branch = owner_item.respond_to?(:branch?) && owner_item.branch?
+        add_ids ||= Utils::EMPTY_ARRAY
 
         ids = []
         SS::File.each_file(item.file_ids) do |file|
-          if add_ids && !add_ids.include?(file.id) || SS::File.file_owned?(file, owner_item)
+          if !add_ids.include?(file.id) || SS::File.file_owned?(file, owner_item)
             # もともとから添付されていたファイル、または、すでに自分自身が所有している場合、必要であれば state を変更する
             file.update(state: owner_item.state) if owner_item.state_changed?
             ids << file.id
@@ -60,13 +71,11 @@ module Cms::Addon
           next if !is_allowed_other_user_files && Utils.other_user_owned?(file, cur_user)
 
           # ファイルの所有者が存在している場合、誤って所有者を変更することを防止する目的で、ファイルを複製する
-          if file.owner_item.present? && file.owner_item != owner_item
-            # ただし、ブランチが所有している場合を除く
-            if !branch || file.owner_item != branch
-              clone_file = SS::File.clone_file(file, cur_user: cur_user, owner_item: owner_item)
-              ids << clone_file.id
-              next
-            end
+          # ただし、ブランチが所有している場合を除く
+          if Utils.need_to_clone?(file, owner_item, branch)
+            clone_file = SS::File.clone_file(file, cur_user: cur_user, owner_item: owner_item)
+            ids << clone_file.id
+            next
           end
 
           # ファイルの所有者などを更新する
