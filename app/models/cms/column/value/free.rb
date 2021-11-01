@@ -22,13 +22,13 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
   end
 
   def generate_public_files
-    Cms::Addon::File::Utils.each_file(file_ids) do |file|
+    SS::File.each_file(file_ids) do |file|
       file.generate_public_file
     end
   end
 
   def remove_public_files
-    Cms::Addon::File::Utils.each_file(file_ids) do |file|
+    SS::File.each_file(file_ids) do |file|
       file.remove_public_file
     end
   end
@@ -76,7 +76,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
 
     cur_user = owner_item.cur_user if owner_item.respond_to?(:cur_user)
     cloned_file_ids = []
-    Cms::Addon::File::Utils.each_file(file_ids) do |source_file|
+    SS::File.each_file(file_ids) do |source_file|
       clone_file = SS::File.clone_file(source_file, cur_user: cur_user, owner_item: owner_item) do |new_file|
         # history_files
         if @merge_values

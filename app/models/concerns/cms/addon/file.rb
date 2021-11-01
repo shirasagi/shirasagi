@@ -27,12 +27,6 @@ module Cms::Addon
 
       delegate [:owner_item, :file_owned?] => SS::Relation::File::Utils
 
-      def each_file(file_ids, &block)
-        file_ids.each_slice(20) do |ids|
-          SS::File.in(id: ids).to_a.map(&:becomes_with_model).each(&block)
-        end
-      end
-
       def other_user_owned?(file, cur_user)
         cur_user && cur_user.id != file.user_id
       end
@@ -46,7 +40,7 @@ module Cms::Addon
         is_branch = owner_item.respond_to?(:branch?) && owner_item.branch?
 
         ids = []
-        Utils.each_file(item.file_ids) do |file|
+        SS::File.each_file(item.file_ids) do |file|
           if add_ids && !add_ids.include?(file.id) || Utils.file_owned?(file, owner_item)
             # もともとから添付されていたファイル、または、すでに自分自身が所有している場合、必要であれば state を変更する
             file.update(state: owner_item.state) if owner_item.state_changed?
@@ -103,7 +97,7 @@ module Cms::Addon
         cur_user = owner_item.cur_user if owner_item.respond_to?(:cur_user)
         is_branch = owner_item.respond_to?(:branch?) && owner_item.branch?
 
-        Utils.each_file(del_ids) do |file|
+        SS::File.each_file(del_ids) do |file|
           if is_branch
             # 差し替えページの場合、差し替え元と共有している可能性がある。共有している場合は削除しないようにする。
             next if !Utils.file_owned?(file, owner_item) && Utils.file_owned?(file, owner_item.master)
@@ -137,7 +131,7 @@ module Cms::Addon
       return unless in_branch
 
       owner_item = Utils.owner_item(self)
-      Utils.each_file(file_ids) do |file|
+      SS::File.each_file(file_ids) do |file|
         if file.owner_item_id == in_branch.id && file.owner_item_type == in_branch.class.name
           # 差し替えページがファイルを所有しているので、所有者を変更
           file.update(owner_item: owner_item)
@@ -159,7 +153,7 @@ module Cms::Addon
       owner_item = Utils.owner_item(self)
       is_branch = owner_item.respond_to?(:branch?) && owner_item.branch?
 
-      Utils.each_file(file_ids) do |file|
+      SS::File.each_file(file_ids) do |file|
         if is_branch
           # 差し替えページの場合、差し替え元と共有している可能性がある。共有している場合は削除しないようにする。
           next if !Utils.file_owned?(file, owner_item) && Utils.file_owned?(file, owner_item.master)
@@ -203,7 +197,7 @@ module Cms::Addon
       owner_item = Utils.owner_item(self)
       is_branch = owner_item.respond_to?(:branch?) && owner_item.branch?
 
-      Utils.each_file(file_ids) do |file|
+      SS::File.each_file(file_ids) do |file|
         next if Utils.file_owned?(file, owner_item)
 
         # 差し替えページの場合、所有者を差し替え元のままとする

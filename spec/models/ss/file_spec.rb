@@ -637,4 +637,44 @@ describe SS::File, dbscope: :example do
       end
     end
   end
+
+  describe ".each_file" do
+    let(:site) { cms_site }
+    let(:user) { cms_user }
+    let(:file_path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
+    let!(:file1) { tmp_ss_file(SS::TempFile, site: site, user: user, contents: file_path, basename: "logo1.png") }
+    let!(:file2) do
+      tmp_ss_file(SS::File, site: site, user: user, model: "ads/banner", contents: file_path, basename: "logo2.png")
+    end
+    let!(:file3) do
+      tmp_ss_file(Board::File, site: site, user: user, model: "board/post", contents: file_path, basename: "logo3.png")
+    end
+    let!(:file4) do
+      tmp_ss_file(Cms::File, site: site, user: user, model: "cms/file", contents: file_path, basename: "logo4.png")
+    end
+    let!(:file5) do
+      tmp_ss_file(Member::PhotoFile, site: site, user: user, model: "member/photo", contents: file_path, basename: "logo5.png")
+    end
+    let!(:file6) do
+      tmp_ss_file(Member::File, site: site, user: user, model: "member/blog_page", contents: file_path, basename: "logo6.png")
+    end
+
+    it do
+      SS::File.each_file([ file1.id, file2.id, file3.id, file4.id, file5.id, file6.id ]) do |item|
+        if item.id == file1.id
+          expect(item.class).to eq file1.class
+        elsif item.id == file2.id
+          expect(item.class).to eq file2.class
+        elsif item.id == file3.id
+          expect(item.class).to eq file3.class
+        elsif item.id == file4.id
+          expect(item.class).to eq file4.class
+        elsif item.id == file5.id
+          expect(item.class).to eq file5.class
+        elsif item.id == file6.id
+          expect(item.class).to eq file6.class
+        end
+      end
+    end
+  end
 end

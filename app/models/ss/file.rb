@@ -57,5 +57,11 @@ class SS::File
         new_file.sanitizer_copy_file
       end
     end
+
+    def each_file(file_ids, &block)
+      file_ids.each_slice(20) do |ids|
+        SS::File.in(id: ids).to_a.map(&:becomes_with_model).each(&block)
+      end
+    end
   end
 end
