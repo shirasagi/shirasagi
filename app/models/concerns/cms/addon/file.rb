@@ -25,8 +25,6 @@ module Cms::Addon
 
       module_function
 
-      delegate [:file_owned?] => SS::Relation::File::Utils
-
       def other_user_owned?(file, cur_user)
         cur_user && cur_user.id != file.user_id
       end
@@ -41,7 +39,7 @@ module Cms::Addon
 
         ids = []
         SS::File.each_file(item.file_ids) do |file|
-          if add_ids && !add_ids.include?(file.id) || Utils.file_owned?(file, owner_item)
+          if add_ids && !add_ids.include?(file.id) || SS::File.file_owned?(file, owner_item)
             # もともとから添付されていたファイル、または、すでに自分自身が所有している場合、必要であれば state を変更する
             file.update(state: owner_item.state) if owner_item.state_changed?
             ids << file.id
@@ -49,7 +47,7 @@ module Cms::Addon
           end
 
           # 差し替えページの場合、ファイルの所有者が差し替え元なら、そのままとする
-          if is_branch && Utils.file_owned?(file, owner_item.master)
+          if is_branch && SS::File.file_owned?(file, owner_item.master)
             ids << file.id
             next
           end
@@ -100,7 +98,7 @@ module Cms::Addon
         SS::File.each_file(del_ids) do |file|
           if is_branch
             # 差し替えページの場合、差し替え元と共有している可能性がある。共有している場合は削除しないようにする。
-            next if !Utils.file_owned?(file, owner_item) && Utils.file_owned?(file, owner_item.master)
+            next if !SS::File.file_owned?(file, owner_item) && SS::File.file_owned?(file, owner_item.master)
           end
 
           if [ file, owner_item ].all? { |obj| obj.respond_to?(:skip_history_trash) }
@@ -156,7 +154,7 @@ module Cms::Addon
       SS::File.each_file(file_ids) do |file|
         if is_branch
           # 差し替えページの場合、差し替え元と共有している可能性がある。共有している場合は削除しないようにする。
-          next if !Utils.file_owned?(file, owner_item) && Utils.file_owned?(file, owner_item.master)
+          next if !SS::File.file_owned?(file, owner_item) && SS::File.file_owned?(file, owner_item.master)
         end
 
         result = file.destroy
@@ -198,10 +196,10 @@ module Cms::Addon
       is_branch = owner_item.respond_to?(:branch?) && owner_item.branch?
 
       SS::File.each_file(file_ids) do |file|
-        next if Utils.file_owned?(file, owner_item)
+        next if SS::File.file_owned?(file, owner_item)
 
         # 差し替えページの場合、所有者を差し替え元のままとする
-        next if is_branch && Utils.file_owned?(file, owner_item.master)
+        next if is_branch && SS::File.file_owned?(file, owner_item.master)
 
         file.update(owner_item: owner_item)
       end

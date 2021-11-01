@@ -88,14 +88,6 @@ module SS::Relation::File
     end
   end
 
-  module Utils
-    module_function
-
-    def file_owned?(file, item)
-      file.owner_item_type == item.class.name && file.owner_item_id == item.id
-    end
-  end
-
   def relation_file(name, opts = {})
     class_name = opts[:class_name] || "SS::File"
 
@@ -153,7 +145,7 @@ module SS::Relation::File
     owner_item = SS::Model.container_of(self)
     if owner_item.respond_to?(:branch?) && owner_item.branch?
       # 差し替えページの場合、差し替え元と共有している可能性がある。共有している場合は削除しないようにする。
-      return if !Utils.file_owned?(file, owner_item) && Utils.file_owned?(file, owner_item.master)
+      return if !SS::File.file_owned?(file, owner_item) && SS::File.file_owned?(file, owner_item.master)
     end
 
     file.destroy
@@ -174,10 +166,10 @@ module SS::Relation::File
   def _update_relation_owner_item(name, _opts)
     file = send(name)
     owner_item = SS::Model.container_of(self)
-    return if Utils.file_owned?(file, owner_item)
+    return if SS::File.file_owned?(file, owner_item)
 
     # 差し替えページの場合、所有者を差し替え元のままとする
-    return if self.respond_to?(:branch?) && self.branch? && Utils.file_owned?(file, owner_item.master)
+    return if self.respond_to?(:branch?) && self.branch? && SS::File.file_owned?(file, owner_item.master)
 
     file.update(owner_item: owner_item)
   end

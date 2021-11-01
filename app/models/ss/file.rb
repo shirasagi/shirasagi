@@ -63,5 +63,10 @@ class SS::File
         SS::File.in(id: ids).to_a.map(&:becomes_with_model).each(&block)
       end
     end
+
+    # check file owner without any database accesses
+    def file_owned?(file, item)
+      file.owner_item_type == item.class.name && file.owner_item_id == item.id
+    end
   end
 end

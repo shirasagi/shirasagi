@@ -677,4 +677,31 @@ describe SS::File, dbscope: :example do
       end
     end
   end
+
+  describe ".file_owned?" do
+    context "with cms" do
+      let!(:site) { cms_site }
+      let!(:user) { cms_user }
+      let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
+      let!(:column1) do
+        create(:cms_column_file_upload, cur_site: site, cur_form: form, order: 1, file_type: "image")
+      end
+      let!(:item) { create :article_page, cur_site: site, cur_user: user, form: form }
+      let!(:file1) { tmp_ss_file(site: site, user: user, contents: "#{Rails.root}/spec/fixtures/ss/logo.png") }
+
+      before do
+        item.column_values = [
+          column1.value_type.new(column: column1, file_id: file1.id, file_label: file1.humanized_name),
+        ]
+        item.save!
+
+        file1.reload
+      end
+
+      it do
+        expect(SS::File.file_owned?(file1, item)).to be_truthy
+        expect(SS::File.file_owned?(file1, item.column_values.first)).to be_falsey
+      end
+    end
+  end
 end

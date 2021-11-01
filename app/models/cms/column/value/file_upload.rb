@@ -142,10 +142,10 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
   def update_file_owner_item
     owner_item = SS::Model.container_of(self)
-    return if SS::Relation::File::Utils.file_owned?(file, owner_item)
+    return if SS::File.file_owned?(file, owner_item)
 
     # 差し替えページの場合、所有者を差し替え元のままとする
-    return if owner_item.respond_to?(:branch?) && owner_item.branch? && SS::Relation::File::Utils.file_owned?(file, owner_item.master)
+    return if owner_item.respond_to?(:branch?) && owner_item.branch? && SS::File.file_owned?(file, owner_item.master)
 
     attrs = {}
 
