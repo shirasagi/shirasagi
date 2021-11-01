@@ -121,16 +121,23 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
   def clone_file
     return if file.blank?
-    return if _parent.respond_to?(:branch?) && _parent.branch?
 
-    new_file = SS::File.clone_file(file, cur_user: @cur_user, owner_item: _parent) do |new_file|
+    owner_item = SS::Relation::File::Utils.owner_item(self)
+    return if owner_item.respond_to?(:branch?) && owner_item.branch?
+
+    cur_user = owner_item.cur_user if owner_item.respond_to?(:cur_user)
+    new_file = SS::File.clone_file(file, cur_user: cur_user, owner_item: owner_item) do |new_file|
       # history_files
       if @merge_values
         new_file.history_file_ids = file.history_file_ids
       end
     end
 
+    # サムネイルを作成する
+    new_file.send(:save_thumbs)
+
     self.file = new_file
+    self.file_id = new_file.id
   end
 
   def update_file_owner_item
