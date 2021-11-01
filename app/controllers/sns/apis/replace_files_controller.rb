@@ -8,6 +8,7 @@ class Sns::Apis::ReplaceFilesController < ApplicationController
 
   before_action :set_item
   before_action :set_owner_item
+  before_action :deny_sanitizing_file
 
   private
 

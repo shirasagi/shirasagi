@@ -146,7 +146,7 @@ class Uploader::File
   def validate_upload_policy
     case SS::UploadPolicy.upload_policy
     when 'sanitizer'
-      errors.add :base, :sanitizer_waiting if sanitizer_state == 'wait'
+      # errors.add :base, :sanitizer_waiting if sanitizer_state == 'wait'
     when 'restricted'
       errors.add :base, :upload_restricted
     end
