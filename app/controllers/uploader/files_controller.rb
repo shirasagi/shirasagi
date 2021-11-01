@@ -1,6 +1,7 @@
 class Uploader::FilesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
+  include SS::SanitizerFilter
 
   model Uploader::File
 
@@ -10,6 +11,7 @@ class Uploader::FilesController < ApplicationController
   before_action :set_item
   before_action :set_item_was, if: ->{ @item }
   before_action :set_crumbs
+  before_action :deny_sanitizing_file, only: [:update, :destroy]
   after_action :save_job, only: [:create, :update, :destroy, :destroy_all]
 
   navi_view "uploader/main/navi"
