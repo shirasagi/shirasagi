@@ -273,6 +273,9 @@ describe Article::Page, dbscope: :example do
             expect(branch_file.owner_item_type).to eq item.class.name
             expect(branch_file.owner_item_id).to eq item.id
 
+            # サムネイルを含めると、全部でファイルは 4 つあるはず
+            expect(SS::File.all.count).to eq 4
+
             expect(History::Trash.all.count).to eq 1
             History::Trash.all.first.tap do |trash|
               expect(trash.site_id).to eq site.id
@@ -284,9 +287,6 @@ describe Article::Page, dbscope: :example do
               expect(trash.state).to be_blank
               expect(trash.action).to eq "save"
             end
-
-            # サムネイルを含めると、全部でファイルは 4 つあるはず
-            expect(SS::File.all.count).to eq 4
           end
         end
       end

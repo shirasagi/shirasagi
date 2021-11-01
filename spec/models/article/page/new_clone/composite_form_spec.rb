@@ -9,8 +9,9 @@ describe Article::Page, dbscope: :example do
 
   describe "#new_clone" do
     context "with page having composite columns" do
-      let!(:file1) { tmp_ss_file(site: site, user: user, contents: file_path) }
-      let!(:file2) { tmp_ss_file(site: site, user: user, contents: file_path) }
+      let!(:file1) { tmp_ss_file(site: site, user: user, contents: file_path, basename: "logo1.png") }
+      let!(:file2) { tmp_ss_file(site: site, user: user, contents: file_path, basename: "logo2.png") }
+      let!(:file3) { tmp_ss_file(site: site, user: user, contents: file_path, basename: "logo3.png") }
       let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
       let!(:column1) do
         create(:cms_column_file_upload, cur_site: site, cur_form: form, order: 1, file_type: "image")
@@ -23,12 +24,13 @@ describe Article::Page, dbscope: :example do
       before do
         html = [
           "<p>#{unique_id}</p>",
-          "<p><a class=\"icon-png attachment\" href=\"#{file2.url}\">#{file2.humanized_name}</a></p>"
+          "<p><a class=\"icon-png attachment\" href=\"#{file2.url}\">#{file2.humanized_name}</a></p>",
+          "<p><a class=\"icon-png attachment\" href=\"#{file3.url}\">#{file3.humanized_name}</a></p>",
         ].join("\r\n\r\n")
 
         item.column_values = [
           column1.value_type.new(column: column1, file_id: file1.id, file_label: file1.humanized_name),
-          column2.value_type.new(column: column2, value: html, file_ids: [ file2.id ])
+          column2.value_type.new(column: column2, value: html, file_ids: [ file2.id, file3.id ])
         ]
         item.save!
 
@@ -38,6 +40,9 @@ describe Article::Page, dbscope: :example do
         file2.reload
         expect(file2.owner_item_type).to eq item.class.name
         expect(file2.owner_item_id).to eq item.id
+        file3.reload
+        expect(file3.owner_item_type).to eq item.class.name
+        expect(file3.owner_item_id).to eq item.id
       end
 
       context "before save" do
@@ -94,6 +99,9 @@ describe Article::Page, dbscope: :example do
               expect(subject_column_value2.file_ids).to eq item_column_value2.file_ids
             end
           end
+
+          # サムネイルを含めると、全部でファイルは 6 つあるはず
+          expect(SS::File.all.count).to eq 6
         end
       end
 
@@ -167,15 +175,22 @@ describe Article::Page, dbscope: :example do
           file2.reload
           expect(file2.owner_item_type).to eq item.class.name
           expect(file2.owner_item_id).to eq item.id
+          file3.reload
+          expect(file3.owner_item_type).to eq item.class.name
+          expect(file3.owner_item_id).to eq item.id
 
           item.reload
           item.column_values[0].tap do |item_column_value1|
             expect(item_column_value1.file_id).to eq file1.id
           end
           item.column_values[1].tap do |item_column_value2|
-            expect(item_column_value2.file_ids).to eq [ file2.id ]
+            expect(item_column_value2.file_ids).to eq [ file2.id, file3.id ]
             expect(item_column_value2.value).to include file2.url
+            expect(item_column_value2.value).to include file3.url
           end
+
+          # サムネイルを含めると、全部でファイルは 12 個あるはず
+          expect(SS::File.all.count).to eq 12
         end
       end
 
@@ -247,6 +262,9 @@ describe Article::Page, dbscope: :example do
             file2.reload
             expect(file2.owner_item_type).to eq item.class.name
             expect(file2.owner_item_id).to eq item.id
+            file3.reload
+            expect(file3.owner_item_type).to eq item.class.name
+            expect(file3.owner_item_id).to eq item.id
 
             item.reload
             expect(item.master?).to be_truthy
@@ -258,18 +276,45 @@ describe Article::Page, dbscope: :example do
             subject.destroy
             expect { file1.reload }.not_to raise_error
             expect { file2.reload }.not_to raise_error
+            expect { file3.reload }.not_to raise_error
             item.reload
             item.column_values[0].tap do |item_column_value1|
               expect(item_column_value1.file_id).to eq file1.id
             end
             item.column_values[1].tap do |item_column_value2|
-              expect(item_column_value2.file_ids).to eq [ file2.id ]
+              expect(item_column_value2.file_ids).to eq [ file2.id, file3.id ]
               expect(item_column_value2.value).to include file2.url
+              expect(item_column_value2.value).to include file3.url
+            end
+
+            # サムネイルを含めると、全部でファイルは 6 つあるはず
+            expect(SS::File.all.count).to eq 6
+
+            expect(History::Trash.all.count).to eq 1
+            History::Trash.all.first.tap do |trash|
+              expect(trash.site_id).to eq site.id
+              expect(trash.version).to eq SS.version
+              expect(trash.ref_coll).to eq subject.collection_name.to_s
+              expect(trash.ref_class).to eq subject.class.name
+              expect(trash.data).to be_present
+              expect(trash.data["_id"]).to eq subject.id
+              expect(trash.state).to be_blank
+              expect(trash.action).to eq "save"
             end
           end
         end
 
         context "when branch was finally merged into its master" do
+          let(:branch_name) { "name-#{unique_id}" }
+          let(:branch_file) { tmp_ss_file(site: site, user: user, contents: file_path, basename: "branch_logo.png") }
+          let(:branch_html) do
+            [
+              "<p>#{unique_id}</p>",
+              "<p><a class=\"icon-png attachment\" href=\"#{file2.url}\">#{file2.humanized_name}</a></p>",
+              "<p><a class=\"icon-png attachment\" href=\"#{branch_file.url}\">#{branch_file.humanized_name}</a></p>",
+            ].join("\r\n\r\n")
+          end
+
           it do
             subject.class.find(subject.id).tap do |branch|
               expect(branch.new_clone?).to be_falsey
@@ -277,6 +322,13 @@ describe Article::Page, dbscope: :example do
               expect(branch.state).to eq "closed"
 
               # merge into master
+              branch.name = branch_name
+              # branch.html = branch_html
+              # branch.file_ids = [ file2.id, branch_file.id ]
+              branch.column_values = [
+                column1.value_type.new(column: column1, file_id: file1.id, file_label: file1.humanized_name),
+                column2.value_type.new(column: column2, value: branch_html, file_ids: [ file2.id, branch_file.id ])
+              ]
               branch.state = "public"
               branch.save
 
@@ -287,6 +339,8 @@ describe Article::Page, dbscope: :example do
 
             expect { file1.reload }.not_to raise_error
             expect { file2.reload }.not_to raise_error
+            expect { file3.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+            expect { branch_file.reload }.not_to raise_error
             item.reload
             expect(item.master?).to be_truthy
             expect(item.branch?).to be_falsey
@@ -296,8 +350,25 @@ describe Article::Page, dbscope: :example do
               expect(item_column_value1.file_id).to eq file1.id
             end
             item.column_values[1].tap do |item_column_value2|
-              expect(item_column_value2.file_ids).to eq [ file2.id ]
+              expect(item_column_value2.file_ids).to have(2).items
+              expect(item_column_value2.file_ids).to include(file2.id, branch_file.id)
               expect(item_column_value2.value).to include file2.url
+              expect(item_column_value2.value).to include branch_file.url
+            end
+
+            # サムネイルを含めると、全部でファイルは 4 つあるはず
+            expect(SS::File.all.count).to eq 6
+
+            expect(History::Trash.all.count).to eq 1
+            History::Trash.all.first.tap do |trash|
+              expect(trash.site_id).to eq site.id
+              expect(trash.version).to eq SS.version
+              expect(trash.ref_coll).to eq file3.collection_name.to_s
+              expect(trash.ref_class).to eq file3.class.name
+              expect(trash.data).to be_present
+              expect(trash.data["_id"]).to eq file3.id
+              expect(trash.state).to be_blank
+              expect(trash.action).to eq "save"
             end
           end
         end
