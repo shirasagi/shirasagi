@@ -37,7 +37,7 @@ module Cms::Addon
         cur_user && cur_user.id != file.user_id
       end
 
-      def attach_files(item, add_ids)
+      def attach_files(item, add_ids, branch: nil)
         owner_item = Utils.owner_item(item)
         cur_site = owner_item.cur_site if owner_item.respond_to?(:cur_site)
         cur_site ||= owner_item.site if owner_item.respond_to?(:site)
@@ -69,9 +69,12 @@ module Cms::Addon
 
           # ファイルの所有者が存在している場合、誤って所有者を変更することを防止する目的で、ファイルを複製する
           if file.owner_item.present? && file.owner_item != owner_item
-            clone_file = SS::File.clone_file(file, cur_user: cur_user, owner_item: owner_item)
-            ids << clone_file.id
-            next
+            # ただし、ブランチが所有している場合を除く
+            if !branch || file.owner_item != branch
+              clone_file = SS::File.clone_file(file, cur_user: cur_user, owner_item: owner_item)
+              ids << clone_file.id
+              next
+            end
           end
 
           # ファイルの所有者などを更新する
@@ -135,7 +138,7 @@ module Cms::Addon
 
       owner_item = Utils.owner_item(self)
       Utils.each_file(file_ids) do |file|
-        if file.owner_item_id == in_branch.id &&  file.owner_item_type == in_branch.class.name
+        if file.owner_item_id == in_branch.id && file.owner_item_type == in_branch.class.name
           # 差し替えページがファイルを所有しているので、所有者を変更
           file.update(owner_item: owner_item)
         end
