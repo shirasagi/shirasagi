@@ -112,8 +112,7 @@ class Gws::Memo::MessageRestorer
 
   def read_json(entry)
     entry.get_input_stream do |f|
-      # 読み込むのがJSON文字列ではなく、オブジェクトだからJSON.loadを使う
-      JSON.load(f)
+      JSON.parse(f.read)
     end
   end
 end
