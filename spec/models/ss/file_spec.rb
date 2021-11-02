@@ -704,4 +704,96 @@ describe SS::File, dbscope: :example do
       end
     end
   end
+
+  describe ".clone_file" do
+    let(:site) { cms_site }
+    let(:user) { cms_user }
+    let(:file_path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
+
+    context "with some file classes" do
+      subject { SS::File.clone_file(file) }
+
+      context "with SS::File" do
+        let!(:file) do
+          tmp_ss_file(SS::File, site: site, user: user, model: "ads/banner", contents: file_path)
+        end
+
+        it do
+          expect(subject.class).to eq file.class
+          expect(subject.name).to eq file.name
+          expect(subject.filename).to eq file.filename
+          expect(subject.size).to eq file.size
+          expect(subject.content_type).to eq file.content_type
+          expect(Fs.compare_file_head(subject.path, file.path)).to be_truthy
+        end
+      end
+
+      context "with Member::PhotoFile" do
+        let!(:file) do
+          tmp_ss_file(Member::PhotoFile, site: site, user: user, model: "member/photo", contents: file_path)
+        end
+
+        it do
+          expect(subject.class).to eq file.class
+          expect(subject.name).to eq file.name
+          expect(subject.filename).to eq file.filename
+          expect(subject.size).to eq file.size
+          expect(subject.content_type).to eq file.content_type
+          expect(Fs.compare_file_head(subject.path, file.path)).to be_truthy
+        end
+      end
+    end
+
+    context "with some parameters" do
+      let!(:file) { tmp_ss_file(site: site, user: user, contents: file_path) }
+      let!(:owner_item) { create :cms_page, file_ids: [ file.id ] }
+
+      before do
+        file.reload
+        expect(file.user_id).to eq user.id
+        expect(file.owner_item_type).to eq owner_item.class.name
+        expect(file.owner_item_id).to eq owner_item.id
+      end
+
+      context "with cur_user" do
+        let!(:user1) { create :cms_user, name: unique_id, uid: unique_id, group_ids: user.group_ids }
+        subject { SS::File.clone_file(file, cur_user: user1) }
+
+        it do
+          expect(subject.class).to eq file.class
+          expect(subject.user_id).to eq user1.id
+        end
+      end
+
+      context "without cur_user" do
+        subject { SS::File.clone_file(file) }
+
+        it do
+          expect(subject.class).to eq file.class
+          expect(subject.user_id).to be_blank
+        end
+      end
+
+      context "with owner_item" do
+        let!(:owner_item1) { create :article_page }
+        subject { SS::File.clone_file(file, owner_item: owner_item1) }
+
+        it do
+          expect(subject.class).to eq file.class
+          expect(subject.owner_item_type).to eq owner_item1.class.name
+          expect(subject.owner_item_id).to eq owner_item1.id
+        end
+      end
+
+      context "without owner_item" do
+        subject { SS::File.clone_file(file) }
+
+        it do
+          expect(subject.class).to eq file.class
+          expect(subject.owner_item_type).to be_blank
+          expect(subject.owner_item_id).to be_blank
+        end
+      end
+    end
+  end
 end

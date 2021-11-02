@@ -42,15 +42,18 @@ class SS::File
       attributes.stringify_keys!
       attributes.select! { |k| file.fields.key?(k) }
 
-      attributes["user_id"] = cur_user.id if cur_user && attributes.key?("user_id")
+      attributes["user_id"] = cur_user.try(:id) if attributes.key?("user_id")
       if owner_item
         attributes["owner_item_type"] = owner_item.class.name
         attributes["owner_item_id"] = owner_item.id
+      else
+        attributes["owner_item_type"] = nil
+        attributes["owner_item_id"] = nil
       end
       attributes.delete("_id")
 
       file.class.create_empty!(attributes, validate: false) do |new_file|
-        new_file.owner_item = owner_item if owner_item
+        new_file.owner_item = owner_item
         ::FileUtils.copy(file.path, new_file.path)
 
         yield new_file if block_given?
