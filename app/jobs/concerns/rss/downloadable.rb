@@ -90,7 +90,7 @@ module Rss::Downloadable
     file_path = file_paths.find { |path| ::File.exists?(path) }
     return if file_path.blank?
 
-    if file_path.ends_with?(".gz")
+    if file_path.end_with?(".gz")
       ::Zlib::GzipReader.open(file_path) { |gz| gz.read }
     else
       ::File.read(file_path)
