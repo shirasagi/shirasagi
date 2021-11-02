@@ -6,8 +6,8 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
 
   permit_values :value, file_ids: []
 
-  before_save { @add_file_ids = file_ids - file_ids_was.to_a }
   before_validation :set_contains_urls
+  before_save { @add_file_ids = file_ids - file_ids_was.to_a }
   after_save :put_contains_urls_logs
   before_parent_save :before_save_files
   after_parent_destroy :destroy_files
