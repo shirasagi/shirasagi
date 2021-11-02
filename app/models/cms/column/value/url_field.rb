@@ -67,7 +67,7 @@ class Cms::Column::Value::UrlField < Cms::Column::Value::Base
   end
 
   def parse_value
-    return if value.blank?
+    return [ nil, nil ] if value.blank?
 
     label, link = value.split(',')
     if link.blank?
