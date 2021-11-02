@@ -88,6 +88,15 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
     end
   end
 
+  def history_summary
+    h = []
+    h << "#{t("url")}: #{url}" if url.present?
+    h << "#{t("width")}: #{width}" if width.present?
+    h << "#{t("height")}: #{height}" if height.present?
+    h << "#{t("alignment")}: #{I18n.t("cms.options.alignment.#{alignment}")}"
+    h.join(",")
+  end
+
   private
 
   def set_youtube_id

@@ -98,10 +98,10 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      it "draft_save" do
+      it "close_save" do
         visit edit_path
         within "form#item-form" do
-          click_on I18n.t("ss.buttons.draft_save")
+          click_on I18n.t("ss.buttons.withdraw")
         end
         click_on I18n.t("ss.buttons.ignore_alert")
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -183,10 +183,10 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      it "draft_save" do
+      it "close_save" do
         visit edit_path
         within "form#item-form" do
-          click_on I18n.t("ss.buttons.draft_save")
+          click_on I18n.t("ss.buttons.withdraw")
         end
         click_on I18n.t("ss.buttons.ignore_alert")
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))

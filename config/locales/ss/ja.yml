@@ -5,6 +5,7 @@ ja:
     management: 管理
     download: ダウンロード
     file: ファイル
+    function: 機能
     page: ページ
     node: フォルダー
     group_users: 所属ユーザー
@@ -16,12 +17,15 @@ ja:
     login: ログイン
     logout: ログアウト
     module: モジュール
+    operation: 操作
     regexp: 正規表現
     resize_image: 画像リサイズ
     role: ロール
     role_setting: ロール一括設定
     required: 必須入力
     required_field: ※必須入力
+    search_operation: 操作対象
+    search_operator: 操作実行者
     search_result: 検索結果
     url: URL
     login_url: ログインURL
@@ -121,6 +125,7 @@ ja:
       closed_save: 非公開保存
       publish: 公開
       publish_save: 公開保存
+      withdraw: 取り下げ
       ignore_alert: 警告を無視する
       cancel: キャンセル
       edit: 編集
@@ -418,6 +423,7 @@ ja:
       sanitizer_state:
         wait: 無害化中
         complete: 無害化済
+        error: 無害化失敗
       duration:
         "1_day": １日
         "1_week": １週間

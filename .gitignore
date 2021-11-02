@@ -11,6 +11,7 @@
 /config/commands
 /config/environments
 /config/unicorn.rb
+/config/puma.rb
 /config/nginx.conf
 /coverage
 /file

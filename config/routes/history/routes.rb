@@ -29,6 +29,7 @@ Rails.application.routes.draw do
     get "backups/:source/:id/restore" => "backups#restore", as: :restore, source: /[^\/]+/
     get "backups/:source/:id/change" => "backups#change", as: :change, source: /[^\/]+/
 
+    resources :history_archives, concerns: [:deletion], only: [:index, :show, :destroy]
     resources :trashes, only: [:index, :show, :destroy], concerns: :deletion do
       match :undo_delete, on: :member, via: [:get, :delete]
       post :undo_delete_all, on: :collection

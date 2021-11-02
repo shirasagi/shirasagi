@@ -1,8 +1,8 @@
 class Uploader::File
   include ActiveModel::Model
 
-  attr_accessor :path, :binary, :site
-  attr_reader :saved_path, :is_dir, :sanitizer_state
+  attr_accessor :path, :binary, :site, :sanitizer_state
+  attr_reader :saved_path, :is_dir
 
   validate :validate_upload_policy
   validates :path, presence: true
@@ -124,12 +124,6 @@ class Uploader::File
     directory? ? I18n.t('uploader.directory_name') : self.class.t('filename')
   end
 
-  def set_sanitizer_state
-    return unless SS::UploadPolicy.upload_policy == 'sanitizer'
-    job_model = Uploader::JobFile.find_by(path: path.delete_prefix("#{Rails.root}/")) rescue nil
-    @sanitizer_state = job_model ? 'wait' : nil
-  end
-
   def initialize(attributes = {})
     saved_path = attributes.delete :saved_path
     @saved_path = saved_path unless saved_path.nil?
@@ -152,7 +146,7 @@ class Uploader::File
   def validate_upload_policy
     case SS::UploadPolicy.upload_policy
     when 'sanitizer'
-      errors.add :base, :sanitizer_waiting if sanitizer_state == 'wait'
+      # errors.add :base, :sanitizer_waiting if sanitizer_state == 'wait'
     when 'restricted'
       errors.add :base, :upload_restricted
     end
@@ -284,6 +278,22 @@ class Uploader::File
       # ImageMagick doesn't able to handle all image formats. There ara some formats causing unsupported handler exception.
       # Not all image formats have exif. Some formats link svg or ico haven't exif.
       binary
+    end
+
+    def set_sanitizer_state(items, bindings = {})
+      return if items.empty?
+
+      dir = ::File.dirname(items.first.path).delete_prefix("#{Rails.root}/")
+      paths = Uploader::JobFile.where(bindings).directory(dir).map(&:path)
+
+      items.each do |item|
+        if /\.\w+_sanitize_error\.txt$/.match?(item.filename)
+          item.sanitizer_state = 'error'
+          next
+        end
+        next unless paths.include?(item.path.delete_prefix("#{Rails.root}/"))
+        item.sanitizer_state = 'wait'
+      end
     end
   end
 end

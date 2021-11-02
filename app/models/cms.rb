@@ -209,4 +209,17 @@ module Cms
 
     "<#{::Mail.random_tag}@#{domain}.mail>"
   end
+
+  def self.cms_page_date(released_type, released, updated, created, first_released)
+    case released_type
+    when "fixed"
+      released || first_released || updated || created
+    when "same_as_created"
+      created
+    when "same_as_first_released"
+      first_released || updated || created
+    else # same_as_updated
+      updated || created
+    end
+  end
 end

@@ -459,5 +459,8 @@
 
 <!-- /#page --></div>
 
+<% if Rails.env.test? %>
+  <%= jquery do %>SS.disableConfirmUnloading = true;<% end %>
+<% end %>
 </body>
 </html>

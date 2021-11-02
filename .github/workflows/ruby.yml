@@ -5,7 +5,7 @@
 # This workflow will download a prebuilt Ruby version, install dependencies and run tests with Rake
 # For more information see: https://github.com/marketplace/actions/setup-ruby-jruby-and-truffleruby
 
-name: Ruby
+name: Ruby-2.7
 
 on:
   push:
@@ -47,7 +47,7 @@ jobs:
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.6
+        ruby-version: 2.7
         bundler-cache: true
     - name: Install MeCab Ruby
       run: |
@@ -91,6 +91,7 @@ jobs:
         LDAP_TEST: enable
         ANALYZE_COVERAGE: disabled
         TZ: "Asia/Tokyo"
+        RUBYOPT: "-W:deprecated"
     - name: Coveralls Parallel
       uses: coverallsapp/github-action@master
       with:
