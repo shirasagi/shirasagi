@@ -1,4 +1,4 @@
-class Cms::Elasticsearch::PageConvertor::OpendataDataset < Cms::Elasticsearch::PageConvertor
+class Cms::Elasticsearch::PageConverter::OpendataDataset < Cms::Elasticsearch::PageConverter
   def initialize(item)
     @item = item
   end

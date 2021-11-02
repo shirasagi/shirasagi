@@ -1,4 +1,4 @@
-class Cms::Elasticsearch::PageConvertor
+class Cms::Elasticsearch::PageConverter
   attr_reader :item
 
   def initialize(item)
