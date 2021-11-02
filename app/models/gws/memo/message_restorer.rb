@@ -77,13 +77,9 @@ class Gws::Memo::MessageRestorer
   end
 
   def init_memo(data)
-    Gws::Memo::Message.new
+    item = Gws::Memo::Message.new
     item.site_id = cur_site.id
-    item.star = {}
-    item.deleted = {}
-    item.filtered = {}
-    item.file_ids = []
-    item.user_settings = []
+    item.set_blank_val
     data.each do |k, v|
       next if %w(user members to_members cc_members bcc_members files list_id).include?(k)
 

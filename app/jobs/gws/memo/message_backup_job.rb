@@ -1,5 +1,5 @@
 class Gws::Memo::MessageBackupJob < Gws::ApplicationJob
-  include Gws::Memo::Base
+  include Gws::Memo::Helper
 
   def perform(*args)
     opts = args.extract_options!

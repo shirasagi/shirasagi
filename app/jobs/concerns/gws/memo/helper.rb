@@ -1,4 +1,4 @@
-module Gws::Memo::Base
+module Gws::Memo::Helper
   include SS::ExportHelper
 
   private

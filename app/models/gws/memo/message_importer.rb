@@ -12,7 +12,7 @@ class Gws::Memo::MessageImporter
 
   def import_messages
     @datetime = Time.zone.now
-    @zip_filename = File.basename(in_file.original_filename, ".*")
+    @zip_filename = File.basename(in_file.original_filename, ".zip")
     @ss_files_map = {}
     @gws_users_map = {}
     @restored_folders = {}
