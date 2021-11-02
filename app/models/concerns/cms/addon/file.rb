@@ -39,7 +39,7 @@ module Cms::Addon
         true
       end
 
-      def attach_files(item, add_ids, branch: nil)
+      def attach_files(item, add_ids, branch: nil, on_clone_file: nil)
         owner_item = SS::Model.container_of(item)
         cur_site = owner_item.cur_site if owner_item.respond_to?(:cur_site)
         cur_site ||= owner_item.site if owner_item.respond_to?(:site)
@@ -75,6 +75,7 @@ module Cms::Addon
           if Utils.need_to_clone?(file, owner_item, branch)
             clone_file = SS::File.clone_file(file, cur_user: cur_user, owner_item: owner_item)
             ids << clone_file.id
+            on_clone_file.call(file, clone_file) if on_clone_file
             next
           end
 
@@ -149,7 +150,8 @@ module Cms::Addon
     def save_files
       file_ids_was = self.file_ids_was.to_a
       add_ids = file_ids - file_ids_was
-      ids = Utils.attach_files(self, add_ids)
+      on_clone_file = method(:update_html_with_clone_file) if respond_to?(:update_html_with_clone_file)
+      ids = Utils.attach_files(self, add_ids, on_clone_file: on_clone_file)
       self.file_ids = ids
 
       del_ids = file_ids_was - ids

@@ -94,24 +94,26 @@ module Workflow::Addon
 
     def clone_file(source_file)
       file = SS::File.clone_file(source_file, cur_user: @cur_user, owner_item: SS::Model.container_of(self))
+      update_html_with_clone_file(source_file, file)
+      file
+    end
 
+    def update_html_with_clone_file(old_file, new_file)
       if respond_to?(:html) && html.present?
         html = self.html
-        html.gsub!("=\"#{source_file.url}\"", "=\"#{file.url}\"")
-        html.gsub!("=\"#{source_file.thumb_url}\"", "=\"#{file.thumb_url}\"")
+        html.gsub!("=\"#{old_file.url}\"", "=\"#{new_file.url}\"")
+        html.gsub!("=\"#{old_file.thumb_url}\"", "=\"#{new_file.thumb_url}\"")
         self.html = html
       end
 
       if respond_to?(:body_parts) && body_parts.present?
         self.body_parts = body_parts.map do |html|
           html = html.to_s
-          html = html.gsub("=\"#{source_file.url}\"", "=\"#{file.url}\"")
-          html = html.gsub("=\"#{source_file.thumb_url}\"", "=\"#{file.thumb_url}\"")
+          html = html.gsub("=\"#{old_file.url}\"", "=\"#{new_file.url}\"")
+          html = html.gsub("=\"#{old_file.thumb_url}\"", "=\"#{new_file.thumb_url}\"")
           html
         end
       end
-
-      file
     end
 
     def clone_thumb

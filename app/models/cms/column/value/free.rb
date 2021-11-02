@@ -104,11 +104,21 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
     owner_item = SS::Model.container_of(self)
     in_branch = owner_item.in_branch if @merge_values && owner_item.respond_to?(:in_branch)
 
-    ids = Cms::Addon::File::Utils.attach_files(self, @add_file_ids, branch: in_branch)
+    on_clone_file = method(:update_value_with_clone_file)
+    ids = Cms::Addon::File::Utils.attach_files(self, @add_file_ids, branch: in_branch, on_clone_file: on_clone_file)
     self.file_ids = ids rescue return
 
     del_ids = file_ids_was.to_a - ids
     Cms::Addon::File::Utils.delete_files(self, del_ids)
+  end
+
+  def update_value_with_clone_file(old_file, new_file)
+    return if value.blank?
+
+    value = self.value
+    value.gsub!("=\"#{old_file.url}\"", "=\"#{new_file.url}\"")
+    value.gsub!("=\"#{old_file.thumb_url}\"", "=\"#{new_file.thumb_url}\"")
+    self.value = value
   end
 
   def destroy_files
