@@ -62,7 +62,7 @@ class Opendata::Graph::Base
     return "-" if data.blank?
     return data if data !~ /^(\-)?((\d)+\,)?((\d)+\.)?+(\d)+$/
 
-    data = data.gsub(",", "")
+    data = data.delete(",")
     data = data.to_f.to_s
     data =~ /\.0$/ ? data.to_i : data.to_f
   end

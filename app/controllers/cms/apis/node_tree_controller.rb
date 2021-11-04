@@ -51,7 +51,7 @@ class Cms::Apis::NodeTreeController < ApplicationController
         is_parent: (@item.present? && @item.filename.start_with?("#{item.filename}\/"))
       }
     end
-    items.compact.uniq.sort{ |a, b| a[:filename].gsub(/\//, "\0") <=> b[:filename].gsub(/\//, "\0") }
+    items.compact.uniq.sort{ |a, b| a[:filename].tr('/', "\0") <=> b[:filename].tr('/', "\0") }
   end
 
   def item_url(item)

@@ -17,7 +17,7 @@ class Fs::FilesController < ApplicationController
   end
 
   def set_item
-    id = params[:id_path].present? ? params[:id_path].gsub(/\//, "") : params[:id]
+    id = params[:id_path].present? ? params[:id_path].delete('/') : params[:id]
     name_or_filename = params[:filename]
     name_or_filename << ".#{params[:format]}" if params[:format].present?
 
