@@ -8,6 +8,8 @@ module SS::FileFactory
   end
 
   module ClassMethods
+    DEFAULT_MIME_TYPE = "application/octet-stream".freeze
+
     def create_empty!(attributes, options = {})
       item = new(attributes)
       if item.respond_to?(:disable_thumb=)
@@ -44,6 +46,32 @@ module SS::FileFactory
       end
 
       item
+    end
+
+    def create_from_upload!(upload_file, resizing: nil, &block)
+      attributes = {
+        model: self.name.underscore,
+        filename: upload_file.original_filename,
+        content_type: ::Fs.content_type(upload_file.original_filename, DEFAULT_MIME_TYPE)
+      }
+      file = create_empty!(attributes) do |new_file|
+        if resizing.blank?
+          ::FileUtils.copy_stream(upload_file, new_file.path)
+        else
+          SS::ImageConverter.attach(upload_file, ext: ::File.extname(upload_file.original_filename)) do |converter|
+            converter.apply_defaults!(resizing: resizing)
+            Fs.upload(new_file.path, converter.to_io)
+          end
+        end
+
+        if block_given?
+          yield new_file
+          new_file.save!
+        end
+      end
+
+      file.sanitizer_copy_file
+      file
     end
   end
 
