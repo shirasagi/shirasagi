@@ -977,6 +977,9 @@ Style/YodaCondition:
     - 'app/models/member/birth_validator.rb'
     - 'app/models/workflow/extensions/route.rb'
 
+Layout/ArgumentAlignment:
+  EnforcedStyle: with_fixed_indentation
+
 # Offense count: 8178
 # Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
 # URISchemes: http, https
