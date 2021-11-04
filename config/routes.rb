@@ -1,5 +1,5 @@
 class ActionDispatch::Routing::Mapper
-  def sys(ns, opts = {}, &block)
+  def sys(ns, **opts, &block)
     name = opts[:name] || ns.tr("/", "_")
     mod  = opts[:module] || ns
     namespace(name, as: "#{name}_sys", path: ".sys/#{ns}", module: "#{mod}/sys") { yield }
@@ -9,19 +9,19 @@ class ActionDispatch::Routing::Mapper
     namespace(ns, as: "gws_#{ns}", path: ".g:site/#{ns}", module: "gws/#{ns}", site: /\d+/) { yield }
   end
 
-  def cms(ns, opts = {}, &block)
+  def cms(ns, **opts, &block)
     name = opts[:name] || ns.tr("/", "_")
     mod  = opts[:module] || ns
     namespace(name, as: "#{name}_cms", path: ".s:site/#{ns}", module: "#{mod}/cms") { yield }
   end
 
-  def sns(ns, opts = {}, &block)
+  def sns(ns, **opts, &block)
     name = opts[:name] || ns.tr("/", "_")
     mod  = opts[:module] || ns
     namespace(name, as: "#{name}_sns", path: ".u/#{ns}", module: "#{mod}/sns") { yield }
   end
 
-  def content(ns, opts = {}, &block)
+  def content(ns, **opts, &block)
     name = opts[:name] || ns.tr("/", "_")
     mod  = opts[:module] || ns
     namespace(name, path: ".s:site/#{ns}:cid", module: mod, cid: /\w+/) { yield }

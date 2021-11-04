@@ -40,7 +40,7 @@ class Translate::Api::GoogleTranslator
     (@site.translate_mock_api_request_word_count + count) >= request_word_limit
   end
 
-  def translate(contents, source_language, target_language, opts = {})
+  def translate(contents, source_language, target_language, site:)
     @count = 0
 
     count = contents.map(&:size).sum
