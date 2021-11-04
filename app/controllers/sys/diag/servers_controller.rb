@@ -45,7 +45,7 @@ class Sys::Diag::ServersController < ApplicationController
   end
 
   def rails_key?(key)
-    key.start_with?("action_dispatch.") || key.start_with?("action_controller.")
+    key.start_with?("action_dispatch.", "action_controller.")
   end
 
   def other_key?(key)
