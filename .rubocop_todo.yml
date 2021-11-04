@@ -703,9 +703,6 @@ Style/HashEachMethods:
 Style/HashSyntax:
   Enabled: false
 
-Style/HashAsLastArrayItem:
-  Enabled: false
-
 # Offense count: 16
 Style/IdenticalConditionalBranches:
   Exclude:
@@ -938,7 +935,10 @@ Style/TernaryParentheses:
 # SupportedStylesForMultiline: comma, consistent_comma, no_comma
 # Style/TrailingCommaInLiteral:
 Style/TrailingCommaInArrayLiteral:
-  Enabled: false
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: consistent_comma
 
 # Offense count: 6
 # Cop supports --auto-correct.
