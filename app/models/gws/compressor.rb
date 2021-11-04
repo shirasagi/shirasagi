@@ -27,6 +27,8 @@ class Gws::Compressor
 
   def deley_download?
     sizes = items.map(&:size)
+    Rails.logger.debug("sizes.inject(:+)=#{sizes.inject(:+)}, sizes.size=#{sizes.size}")
+    Rails.logger.debug("min_filesize=#{SS.config.env.deley_download['min_filesize']}, min_count=#{SS.config.env.deley_download['min_count']}")
     return true if sizes.inject(:+) >= SS.config.env.deley_download['min_filesize'].to_i
     return true if sizes.size >= SS.config.env.deley_download['min_count'].to_i
 
