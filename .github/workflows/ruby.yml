@@ -92,6 +92,7 @@ jobs:
         ANALYZE_COVERAGE: disabled
         TZ: "Asia/Tokyo"
         RUBYOPT: "-W:deprecated"
+        ECHO_LOGS_ON_FAILURE: enable
     - name: Coveralls Parallel
       uses: coverallsapp/github-action@master
       with:
