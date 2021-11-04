@@ -10,16 +10,16 @@ def save_source_cleaner_template(data)
 end
 
 save_source_cleaner_template name: "<p>&nbsp;</p>", target_type: "string", target_value: "<p>&nbsp;</p>",
-                             action_type: "remove", state: "public", order: 10
+  action_type: "remove", state: "public", order: 10
 save_source_cleaner_template name: "width", target_type: "attribute", target_value: "width",
-                             action_type: "remove", state: "public", order: 20
+  action_type: "remove", state: "public", order: 20
 save_source_cleaner_template name: "height", target_type: "attribute", target_value: "height",
-                             action_type: "remove", state: "public", order: 30
+  action_type: "remove", state: "public", order: 30
 save_source_cleaner_template name: "cellpadding", target_type: "attribute", target_value: "cellpadding",
-                             action_type: "remove", state: "public", order: 40
+  action_type: "remove", state: "public", order: 40
 save_source_cleaner_template name: "cellspacing", target_type: "attribute", target_value: "cellspacing",
-                             action_type: "remove", state: "public", order: 50
+  action_type: "remove", state: "public", order: 50
 save_source_cleaner_template name: "border", target_type: "attribute", target_value: "border",
-                             action_type: "remove", state: "public", order: 60
+  action_type: "remove", state: "public", order: 60
 save_source_cleaner_template name: "style", target_type: "attribute", target_value: "style",
-                             action_type: "remove", state: "public", order: 100
+  action_type: "remove", state: "public", order: 100

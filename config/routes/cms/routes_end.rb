@@ -364,9 +364,9 @@ Rails.application.routes.draw do
   end
 
   match "*public_path" => "cms/public#index", public_path: /[^.].*/,
-        via: [:get, :post, :put, :patch, :delete], format: true
+    via: [:get, :post, :put, :patch, :delete], format: true
   match "*public_path" => "cms/public#index", public_path: /[^.].*/,
-        via: [:get, :post, :put, :patch, :delete], format: false
+    via: [:get, :post, :put, :patch, :delete], format: false
 
   root "cms/public#index", defaults: { format: :html }
 end

@@ -4,17 +4,17 @@ describe "member_my_anpi_posts", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:member) do
     create(:cms_member,
-       cur_site: site,
-       name: unique_id,
-       email: "#{unique_id}@example.jp",
-       in_password: "abc123",
-       in_password_again: "abc123",
-       kana: unique_id,
-       job: unique_id,
-       postal_code: '1050001',
-       addr: "東京都港区虎ノ門#{unique_id}",
-       sex: 'male',
-       birthday: Date.parse("1988/10/10"))
+      cur_site: site,
+      name: unique_id,
+      email: "#{unique_id}@example.jp",
+      in_password: "abc123",
+      in_password_again: "abc123",
+      kana: unique_id,
+      job: unique_id,
+      postal_code: '1050001',
+      addr: "東京都港区虎ノ門#{unique_id}",
+      sex: 'male',
+      birthday: Date.parse("1988/10/10"))
   end
   let(:text0) { unique_id }
   let(:text1) { unique_id }

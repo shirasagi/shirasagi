@@ -281,7 +281,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
       trigger1.save!
 
       node.filters.new(name: unique_id, state: 'enabled', trigger_ids: [ trigger1.id.to_s ],
-                       action_ids: [ action1.id.to_s, action2.id.to_s ])
+        action_ids: [ action1.id.to_s, action2.id.to_s ])
       node.save!
     end
 

@@ -5,7 +5,7 @@ class Service::Account
   include Service::Addon::Quota
 
   attr_accessor :add_role, :in_password,
-                :in_cms_quota_mb, :in_gws_quota_mb, :in_webmail_quota_mb
+    :in_cms_quota_mb, :in_gws_quota_mb, :in_webmail_quota_mb
 
   index({ account: 1 }, { unique: true })
   index({ organization_ids: 1 }, { unique: true, sparse: true })
@@ -32,10 +32,10 @@ class Service::Account
   embeds_ids :organizations, class_name: 'SS::Group'
 
   permit_params :in_password, :account, :password, :name, :roles,
-                :account_start_date, :account_expiration_date, :remark,
-                :cms_use, :gws_use, :webmail_use, :cms_quota, :gws_quota, :webmail_quota,
-                :in_cms_quota_mb, :in_gws_quota_mb, :in_webmail_quota_mb,
-                organization_ids: []
+    :account_start_date, :account_expiration_date, :remark,
+    :cms_use, :gws_use, :webmail_use, :cms_quota, :gws_quota, :webmail_quota,
+    :in_cms_quota_mb, :in_gws_quota_mb, :in_webmail_quota_mb,
+    organization_ids: []
 
   validates :name, presence: true, length: { maximum: 40 }
   validates :account, presence: true, uniqueness: true, length: { maximum: 40 }

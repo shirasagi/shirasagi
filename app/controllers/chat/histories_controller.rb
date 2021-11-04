@@ -40,7 +40,7 @@ class Chat::HistoriesController < ApplicationController
     end
 
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
-              filename: "chat_history_#{Time.zone.now.to_i}.csv"
+      filename: "chat_history_#{Time.zone.now.to_i}.csv"
   end
 
   public

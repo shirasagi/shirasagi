@@ -27,45 +27,45 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
 
   let!(:folder1) do
     create(:gws_notice_folder,
-           cur_site: site, name: "root/group1",
-           member_group_ids: [group1.id], group_ids: [group1.id])
+      cur_site: site, name: "root/group1",
+      member_group_ids: [group1.id], group_ids: [group1.id])
   end
   let!(:folder1_sub1) do
     create(:gws_notice_folder,
-           cur_site: site, name: "root/group1/sub_group1",
-           member_group_ids: [group1_sub1.id], group_ids: [group1_sub1.id])
+      cur_site: site, name: "root/group1/sub_group1",
+      member_group_ids: [group1_sub1.id], group_ids: [group1_sub1.id])
   end
   let!(:folder1_sub2) do
     create(:gws_notice_folder,
-           cur_site: site, name: "root/group1/sub_group2",
-           member_group_ids: [group1_sub2.id], group_ids: [group1_sub2.id])
+      cur_site: site, name: "root/group1/sub_group2",
+      member_group_ids: [group1_sub2.id], group_ids: [group1_sub2.id])
   end
 
   let!(:folder2) do
     create(:gws_notice_folder,
-           cur_site: site, name: "root/group2",
-           member_group_ids: [group2.id], group_ids: [group2.id])
+      cur_site: site, name: "root/group2",
+      member_group_ids: [group2.id], group_ids: [group2.id])
   end
   let!(:folder2_sub1) do
     create(:gws_notice_folder,
-           cur_site: site, name: "root/group2/sub_group1",
-           member_group_ids: [group2_sub1.id], group_ids: [group2_sub1.id])
+      cur_site: site, name: "root/group2/sub_group1",
+      member_group_ids: [group2_sub1.id], group_ids: [group2_sub1.id])
   end
   let!(:folder2_sub2) do
     create(:gws_notice_folder,
-           cur_site: site, name: "root/group2/sub_group2",
-           member_group_ids: [group2_sub2.id], group_ids: [group2_sub2.id])
+      cur_site: site, name: "root/group2/sub_group2",
+      member_group_ids: [group2_sub2.id], group_ids: [group2_sub2.id])
   end
 
   let!(:folder3) do
     create(:gws_notice_folder,
-           cur_site: site, name: "root/group3",
-           member_group_ids: [group3.id], group_ids: [group3.id])
+      cur_site: site, name: "root/group3",
+      member_group_ids: [group3.id], group_ids: [group3.id])
   end
   let!(:folder3_sub1) do
     create(:gws_notice_folder,
-           cur_site: site, name: "root/group3/sub_group1",
-           member_group_ids: [group3_sub1.id], group_ids: [group3_sub1.id])
+      cur_site: site, name: "root/group3/sub_group1",
+      member_group_ids: [group3_sub1.id], group_ids: [group3_sub1.id])
   end
   let!(:folder3_sub2) do
     create(:gws_notice_folder, cur_site: site,
@@ -96,8 +96,8 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
     let!(:revision) { create(:gws_revision, site_id: site.id) }
     let!(:changeset) do
       create(:gws_add_changeset,
-             revision_id: revision.id,
-             destinations: [{ name: "root/group4" }.stringify_keys])
+        revision_id: revision.id,
+        destinations: [{ name: "root/group4" }.stringify_keys])
     end
 
     it do
@@ -124,9 +124,9 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
     let!(:revision) { create(:gws_revision, site_id: site.id) }
     let!(:changeset) do
       create(:gws_move_changeset,
-             revision_id: revision.id,
-             sources: [group_to_hash(group1)],
-             destinations: [group_to_hash(group2)])
+        revision_id: revision.id,
+        sources: [group_to_hash(group1)],
+        destinations: [group_to_hash(group2)])
     end
 
     it do
@@ -189,9 +189,9 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
     let!(:revision) { create(:gws_revision, site_id: site.id) }
     let!(:changeset1) do
       create(:gws_unify_changeset,
-             revision_id: revision.id,
-             sources: [group1],
-             destinations: [{ name: "root/group2" }.stringify_keys])
+        revision_id: revision.id,
+        sources: [group1],
+        destinations: [{ name: "root/group2" }.stringify_keys])
     end
 
     it do
@@ -253,15 +253,15 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
     let!(:revision) { create(:gws_revision, site_id: site.id) }
     let!(:changeset1) do
       create(:gws_unify_changeset,
-             revision_id: revision.id,
-             sources: [group1],
-             destinations: [{ name: "root/group4" }.stringify_keys])
+        revision_id: revision.id,
+        sources: [group1],
+        destinations: [{ name: "root/group4" }.stringify_keys])
     end
     let!(:changeset2) do
       create(:gws_unify_changeset,
-             revision_id: revision.id,
-             sources: [group2],
-             destinations: [{ name: "root/group4" }.stringify_keys])
+        revision_id: revision.id,
+        sources: [group2],
+        destinations: [{ name: "root/group4" }.stringify_keys])
     end
 
     it do
@@ -327,9 +327,9 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
     let!(:revision) { create(:gws_revision, site_id: site.id) }
     let!(:changeset1) do
       create(:gws_division_changeset,
-             revision_id: revision.id,
-             sources: [group_to_hash(group1)],
-             destinations: [group4, group5])
+        revision_id: revision.id,
+        sources: [group_to_hash(group1)],
+        destinations: [group4, group5])
     end
 
     it do
@@ -394,8 +394,8 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
     let!(:revision) { create(:gws_revision, site_id: site.id) }
     let!(:changeset1) do
       create(:gws_delete_changeset,
-             revision_id: revision.id,
-             source: group1)
+        revision_id: revision.id,
+        source: group1)
     end
 
     it do
