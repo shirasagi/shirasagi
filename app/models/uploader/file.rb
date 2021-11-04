@@ -159,7 +159,7 @@ class Uploader::File
       return
     end
 
-    unless /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/.match?(filename)
+    unless /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-.]+$/.match?(filename)
       errors.add :path, :invalid_filename
       return
     end

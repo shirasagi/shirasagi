@@ -43,7 +43,7 @@ class SS::Migration20150619114301
   end
 
   def gsub_urls(html)
-    html.gsub(%r{(="/fs/)(\d+)(/[^\/]+\.[\w\-.]+")}) do
+    html.gsub(%r{(="/fs/)(\d+)(/[^/]+\.[\w\-.]+")}) do
       head = $1
       id   = $2
       tail = $3

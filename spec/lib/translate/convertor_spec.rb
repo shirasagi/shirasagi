@@ -37,7 +37,7 @@ describe Translate::Convertor, dbscope: :example do
     end.compact
 
     texts.each do |text|
-      expect(text).to match(/^\[#{target.code}\:.+?\]/)
+      expect(text).to match(/^\[#{target.code}:.+?\]/)
     end
   end
 end

@@ -102,7 +102,7 @@ module Webmail::MailHelper
     #
     # AUTO_EMAIL_LOCAL_RE = /[\w.!#\$%&'*\/=?^`{|}~+-]/
     # AUTO_EMAIL_RE = /[\w.!#\$%+-]\.?#{AUTO_EMAIL_LOCAL_RE}*@[\w-]+(?:\.[\w-]+)+/
-    email_regex = /[\w.!#\$%+-]\.?#{/[\w.!#\$%&'*\/=?^`{|}~+-]/}*@[\w-]+(?:\.[\w-]+)+/
+    email_regex = /[\w.!#$%+-]\.?#{/[\w.!#$%&'*\/=?^`{|}~+-]/}*@[\w-]+(?:\.[\w-]+)+/
 
     text.gsub(email_regex) do |address|
       link_to address, new_webmail_mail_path(mailbox: @mailbox, item: { to: address })

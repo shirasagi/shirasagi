@@ -355,7 +355,7 @@ module SS::Model::File
   end
 
   def validate_filename
-    if multibyte_filename_disabled? && filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
+    if multibyte_filename_disabled? && filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-.]+$/
       errors.add :base, :invalid_filename
     end
   end
