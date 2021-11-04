@@ -79,7 +79,7 @@ module ApplicationHelper
   # @deprecated
   def coffee(&block)
     javascript_tag do
-      CoffeeScript.compile(capture(&block)).html_safe
+      ::CoffeeScript.compile(capture(&block)).html_safe
     end
   end
 

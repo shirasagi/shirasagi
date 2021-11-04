@@ -57,8 +57,8 @@ describe Uploader::FilesJob, dbscope: :example do
       file = Uploader::JobFile.first
       restored_file = mock_sanitizer_restore(file)
       expect(restored_file.path).to eq rel_path
-      expect(Fs.exists?(file_path)).to be_truthy
-      expect(Fs.exists?(css_path)).to be_truthy
+      expect(Fs.size(file_path)).to be > 0
+      expect(Fs.size(css_path)).to be > 0
       expect(Uploader::JobFile.all.size).to eq 0
 
       # update
@@ -67,7 +67,7 @@ describe Uploader::FilesJob, dbscope: :example do
         job.perform_now([{ text: [rel_path, text_data] }])
       end
       expect(Fs.read(file_path)).to eq text_data
-      expect(Fs.exists?(css_path)).to be_truthy
+      expect(Fs.size(css_path)).to be > 0
 
       # delete
       perform_enqueued_jobs do
@@ -94,8 +94,8 @@ describe Uploader::FilesJob, dbscope: :example do
       file = Uploader::JobFile.first
       restored_file = mock_sanitizer_restore(file)
       expect(restored_file.path).to eq rel_path
-      expect(Fs.exists?(file_path)).to be_truthy
-      expect(Fs.exists?(js_path)).to be_truthy
+      expect(Fs.size(file_path)).to be > 0
+      expect(Fs.size(js_path)).to be > 0
       expect(Uploader::JobFile.all.size).to eq 0
 
       # update
@@ -104,7 +104,7 @@ describe Uploader::FilesJob, dbscope: :example do
         job.perform_now([{ text: [rel_path, text_data] }])
       end
       expect(Fs.read(file_path)).to eq text_data
-      expect(Fs.exists?(js_path)).to be_truthy
+      expect(Fs.size(js_path)).to be > 0
 
       # delete
       perform_enqueued_jobs do
@@ -129,7 +129,7 @@ describe Uploader::FilesJob, dbscope: :example do
       file = Uploader::JobFile.first
       restored_file = mock_sanitizer_restore(file)
       expect(restored_file.path).to eq rel_path
-      expect(Fs.exists?(file_path)).to be_truthy
+      expect(Fs.size(file_path)).to be > 0
       expect(Uploader::JobFile.all.size).to eq 0
 
       # delete
