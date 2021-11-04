@@ -978,7 +978,7 @@ Style/YodaCondition:
     - 'app/models/workflow/extensions/route.rb'
 
 Layout/ArgumentAlignment:
-  Enabled: false
+  EnforcedStyle: with_fixed_indentation
 
 # Offense count: 8178
 # Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
