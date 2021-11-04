@@ -1,0 +1,11 @@
+<% if job_stucked? %>
+  <div id="errorExplanation" class="errorExplanation">
+    <h2><%= t("job.job_stucked.header") %></h2>
+    <p><%= t('job.job_stucked.body') %></p>
+    <ul>
+      <% t('job.job_stucked.notice').each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
