@@ -31,6 +31,7 @@ module SS::Relation::File
         # relation の ID が設定されているにもかかわらず、relation が nil となる。それを防ぐ。
         before_validation { _ensure_to_have_relation(name) }
       end
+      before_validation { _clone_relation_if_necessary(name) }
       validate { _validate_relation(name) }
       if required
         validate { _validate_relation_required(name) }
@@ -89,6 +90,27 @@ module SS::Relation::File
     return if file_id.blank?
 
     send("#{name}=", SS::File.where(id: file_id).first)
+  end
+
+  def _clone_relation_if_necessary(name)
+    file = send(name)
+    return unless file
+
+    owner_item = SS::Model.container_of(self)
+    return if SS::File.file_owned?(file, owner_item)
+
+    # 差し替えページの場合、ファイルの所有者が差し替え元なら、そのままとする
+    is_branch = owner_item.try(:branch?)
+    return if is_branch && SS::File.file_owned?(file, owner_item.master)
+
+    # ファイルの所有者が存在している場合、誤って所有者を変更することを防止する目的で、ファイルを複製する
+    # ただし、ブランチが所有している場合を除く
+    return unless Cms::Addon::File::Utils.need_to_clone?(file, owner_item, owner_item.try(:in_branch))
+
+    cur_user = owner_item.cur_user if owner_item.respond_to?(:cur_user)
+    clone_file = SS::File.clone_file(file, cur_user: cur_user, owner_item: owner_item)
+    send("#{name}=", clone_file)
+    send("#{name}_id=", clone_file.id)
   end
 
   def _validate_relation(name)
