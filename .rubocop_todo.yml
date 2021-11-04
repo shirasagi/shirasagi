@@ -938,10 +938,10 @@ Style/TernaryParentheses:
 # SupportedStylesForMultiline: comma, consistent_comma, no_comma
 # Style/TrailingCommaInLiteral:
 Style/TrailingCommaInArrayLiteral:
-  EnforcedStyleForMultiline: consistent_comma
+  Enabled: false
 
 Style/TrailingCommaInHashLiteral:
-  EnforcedStyleForMultiline: consistent_comma
+  Enabled: false
 
 # Offense count: 6
 # Cop supports --auto-correct.
