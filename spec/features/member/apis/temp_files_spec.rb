@@ -40,14 +40,14 @@ describe "member_apis_temp_files", type: :feature, dbscope: :example, js: true d
 
       file = Member::TempFile.all.first
       expect(file.sanitizer_state).to eq 'wait'
-      expect(Fs.exists?(file.path)).to be_truthy
-      expect(Fs.exists?(file.sanitizer_input_path)).to be_truthy
+      expect(Fs.exist?(file.path)).to be_truthy
+      expect(Fs.exist?(file.sanitizer_input_path)).to be_truthy
       expect(Fs.cmp(file.path, file.sanitizer_input_path)).to be_truthy
 
       # restore
       restored_file = mock_sanitizer_restore(file)
       expect(restored_file.sanitizer_state).to eq 'complete'
-      expect(Fs.exists?(restored_file.path)).to be_truthy
+      expect(Fs.exist?(restored_file.path)).to be_truthy
     end
   end
 

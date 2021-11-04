@@ -24,7 +24,7 @@ module Cms::NodeFilter::ListView
     start_index.upto(9_999) do |page_index|
       basename = "index.p#{page_index + 1}.html"
       file = "#{@cur_node.path}/#{basename}"
-      break unless Fs.exists?(file)
+      break unless Fs.exist?(file)
       Fs.rm_rf file
     end
   end

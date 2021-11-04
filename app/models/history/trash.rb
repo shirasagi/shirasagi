@@ -81,11 +81,11 @@ class History::Trash
       if model.include?(Cms::Content)
         src = item.path.sub("#{Rails.root}/public", self.class.root)
         Fs.mkdir_p(File.dirname(item.path))
-        Fs.mv(src, item.path) if Fs.exists?(src)
+        Fs.mv(src, item.path) if Fs.exist?(src)
       elsif model.include?(SS::Model::File)
         src = "#{self.class.root}/#{item.path.sub(/.*\/(ss_files\/)/, '\\1')}"
         Fs.mkdir_p(File.dirname(item.path))
-        Fs.mv(src, item.path) if Fs.exists?(src)
+        Fs.mv(src, item.path) if Fs.exist?(src)
       end
       self.destroy
     end
@@ -97,7 +97,7 @@ class History::Trash
       src = path
       file = Fs::UploadedFile.create_from_file(path, content_type: self.data[:content_type])
       Fs.mkdir_p(File.dirname(item.path))
-      Fs.mv(src, item.path) if Fs.exists?(src)
+      Fs.mv(src, item.path) if Fs.exist?(src)
       item.in_file = file
       item.save
       self.destroy

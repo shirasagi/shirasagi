@@ -124,7 +124,7 @@ module Cms::PublicFilter::Node
 
     num.upto(max) do |i|
       file = "#{node.path}/index.p#{i}.html"
-      break unless Fs.exists?(file)
+      break unless Fs.exist?(file)
       Fs.rm_rf file
     end
   end

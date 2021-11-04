@@ -89,8 +89,8 @@ module Cms::Model::Page
     dst_dir = ::File.dirname(dst)
 
     run_callbacks :rename_file do
-      Fs.mkdir_p dst_dir unless Fs.exists?(dst_dir)
-      Fs.mv src, dst if Fs.exists?(src)
+      Fs.mkdir_p dst_dir unless Fs.exist?(dst_dir)
+      Fs.mv src, dst if Fs.exist?(src)
       Cms::PageRelease.close(self, @db_changes['filename'][0])
     end
   end
@@ -104,7 +104,7 @@ module Cms::Model::Page
 
     return errors.add :base, :same_filename if filename == dst
     return errors.add :filename, :taken if Cms::Page.site(@cur_site || site).where(filename: dst).first
-    return errors.add :base, :exist_physical_file if Fs.exists?("#{(@cur_site || site).path}/#{dst}")
+    return errors.add :base, :exist_physical_file if Fs.exist?("#{(@cur_site || site).path}/#{dst}")
 
     if dst_dir.present?
       dst_parent = Cms::Node.site(@cur_site || site).where(filename: dst_dir).first

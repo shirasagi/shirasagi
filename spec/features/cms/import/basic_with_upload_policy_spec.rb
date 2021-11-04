@@ -34,7 +34,7 @@ describe "cms_import_with_upload_policy", type: :feature, dbscope: :example, js:
         # sanitize
         job_file = Cms::ImportJobFile.first
         restored_file = mock_sanitizer_restore(job_file.files[0])
-        expect(Fs.exists?(restored_file)).to be_truthy
+        expect(Fs.exist?(restored_file)).to be_truthy
       end
     end
 
@@ -58,7 +58,7 @@ describe "cms_import_with_upload_policy", type: :feature, dbscope: :example, js:
         # sanitize
         job_file = Cms::ImportJobFile.first
         restored_file = mock_sanitizer_restore(job_file.files[0])
-        expect(Fs.exists?(restored_file)).to be_truthy
+        expect(Fs.exist?(restored_file)).to be_truthy
       end
     end
   end

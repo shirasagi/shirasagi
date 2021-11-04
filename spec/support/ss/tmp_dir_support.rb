@@ -55,7 +55,7 @@ module SS
     def extract_basename_from_contents(contents)
       if contents.respond_to?(:path)
         ::File.basename(contents.path)
-      elsif contents.present? && (::File.exists?(contents) rescue false)
+      elsif contents.present? && (::File.exist?(contents) rescue false)
         ::File.basename(contents)
       end
     end
@@ -74,7 +74,7 @@ module SS
     def write_contents_to(ss_file, contents, binary)
       if contents.respond_to?(:path)
         ::FileUtils.copy_file(contents.path, ss_file.path)
-      elsif contents.present? && (::File.exists?(contents) rescue false)
+      elsif contents.present? && (::File.exist?(contents) rescue false)
         ::FileUtils.copy_file(contents, ss_file.path)
       elsif binary
         ::File.binwrite(ss_file.path, contents)

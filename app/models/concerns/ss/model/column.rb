@@ -82,19 +82,19 @@ module SS::Model::Column
   end
 
   def show_partial_path
-    "#{path}/show" if File.exists?("#{Rails.root}/app/views/#{path}/_show.html.erb")
+    "#{path}/show" if File.exist?("#{Rails.root}/app/views/#{path}/_show.html.erb")
   end
 
   def form_partial_path
-    "#{path}/form" if File.exists?("#{Rails.root}/app/views/#{path}/_form.html.erb")
+    "#{path}/form" if File.exist?("#{Rails.root}/app/views/#{path}/_form.html.erb")
   end
 
   def column_form_partial_path
-    "#{path}/column_form" if File.exists?("#{Rails.root}/app/views/#{path}/_column_form.html.erb")
+    "#{path}/column_form" if File.exist?("#{Rails.root}/app/views/#{path}/_column_form.html.erb")
   end
 
   def column_show_partial_path
-    "#{path}/column_show" if File.exists?("#{Rails.root}/app/views/#{path}/_column_show.html.erb")
+    "#{path}/column_show" if File.exist?("#{Rails.root}/app/views/#{path}/_column_show.html.erb")
   end
 
   delegate :value_type, to: :class

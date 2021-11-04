@@ -38,10 +38,10 @@ describe Cms::ImportFilesJob, dbscope: :example do
       end
 
       css_node = nodes.find_by(filename: "#{name}/css")
-      expect(::File.exists?("#{css_node.path}/style.css")).to be_truthy
+      expect(::File.exist?("#{css_node.path}/style.css")).to be_truthy
 
       img_node = nodes.find_by(filename: "#{name}/img")
-      expect(::File.exists?("#{img_node.path}/logo.jpg")).to be_truthy
+      expect(::File.exist?("#{img_node.path}/logo.jpg")).to be_truthy
 
       expect(Cms::ImportJobFile.count).to eq 0
     end

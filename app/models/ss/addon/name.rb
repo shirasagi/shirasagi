@@ -12,18 +12,18 @@ class SS::Addon::Name
 
   def controller_file
     file = "#{Rails.root}/app/controllers/#{self.path}_controller.rb"
-    File.exists?(file) ? path : nil
+    File.exist?(file) ? path : nil
   end
 
   def show_partial_path
-    "#{path}/show" if File.exists?("#{Rails.root}/app/views/#{path}/_show.html.erb")
+    "#{path}/show" if File.exist?("#{Rails.root}/app/views/#{path}/_show.html.erb")
   end
 
   def form_partial_path
-    "#{path}/form" if File.exists?("#{Rails.root}/app/views/#{path}/_form.html.erb")
+    "#{path}/form" if File.exist?("#{Rails.root}/app/views/#{path}/_form.html.erb")
   end
 
   def view_template_path
-    "#{path}/view/index" if File.exists?("#{Rails.root}/app/views/#{path}/view/index.html.erb")
+    "#{path}/view/index" if File.exist?("#{Rails.root}/app/views/#{path}/view/index.html.erb")
   end
 end
