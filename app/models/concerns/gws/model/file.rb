@@ -167,11 +167,11 @@ module Gws::Model::File
   end
 
   def read
-    Fs.exists?(path) ? Fs.binread(path) : nil
+    Fs.exist?(path) ? Fs.binread(path) : nil
   end
 
   def to_io(&block)
-    Fs.exists?(path) ? Fs.to_io(path, &block) : nil
+    Fs.exist?(path) ? Fs.to_io(path, &block) : nil
   end
 
   def uploaded_file(&block)
@@ -237,7 +237,7 @@ module Gws::Model::File
     end
 
     dir = ::File.dirname(path)
-    Fs.mkdir_p(dir) unless Fs.exists?(dir)
+    Fs.mkdir_p(dir) unless Fs.exist?(dir)
 
     run_callbacks(:_save_file) do
       SS::ImageConverter.attach(in_file, ext: ::File.extname(in_file.original_filename)) do |converter|

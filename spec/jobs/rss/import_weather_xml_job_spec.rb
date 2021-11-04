@@ -598,15 +598,15 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
     end
 
     it do
-      expect(::File.exists?(::File.join(tmpdir, base_name1))).to be_truthy
-      expect(::File.exists?(::File.join(tmpdir, base_name2))).to be_truthy
-      expect(::File.exists?(::File.join(tmpdir, base_name3))).to be_truthy
+      expect(::File.exist?(::File.join(tmpdir, base_name1))).to be_truthy
+      expect(::File.exist?(::File.join(tmpdir, base_name2))).to be_truthy
+      expect(::File.exist?(::File.join(tmpdir, base_name3))).to be_truthy
 
       described_class.new.remove_old_cache(threshold)
 
-      expect(::File.exists?(::File.join(tmpdir, base_name1))).to be_falsey
-      expect(::File.exists?(::File.join(tmpdir, base_name2))).to be_truthy
-      expect(::File.exists?(::File.join(tmpdir, base_name3))).to be_falsey
+      expect(::File.exist?(::File.join(tmpdir, base_name1))).to be_falsey
+      expect(::File.exist?(::File.join(tmpdir, base_name2))).to be_truthy
+      expect(::File.exist?(::File.join(tmpdir, base_name3))).to be_falsey
     end
   end
 end

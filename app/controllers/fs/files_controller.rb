@@ -54,11 +54,11 @@ class Fs::FilesController < ApplicationController
   def error_html_file(status)
     if @cur_site && @cur_user.nil?
       file = "#{@cur_site.path}/#{status}.html"
-      return file if Fs.exists?(file)
+      return file if Fs.exist?(file)
     end
 
     file = "#{Rails.public_path}/.error_pages/#{status}.html"
-    Fs.exists?(file) ? file : "#{Rails.public_path}/.error_pages/500.html"
+    Fs.exist?(file) ? file : "#{Rails.public_path}/.error_pages/500.html"
   end
 
   def send_item(disposition = :inline)

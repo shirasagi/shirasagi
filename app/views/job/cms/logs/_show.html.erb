@@ -50,7 +50,7 @@
   <dd><%= @item.args %></dd>
 
   <dt><%= @model.t :logs %></dt>
-  <% if ::File.exists?(@item.file_path) %>
+  <% if ::File.exist?(@item.file_path) %>
   <dd>
     <%= t('job.log_notice', count: limit) %>
     <%= text_area_tag :logs, head_file(@item.file_path, limit), readonly: true, style: "height: 400px" %>

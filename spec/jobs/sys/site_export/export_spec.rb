@@ -33,7 +33,7 @@ describe Sys::SiteExportJob, dbscope: :example do
 
   around do |example|
     tmpdir = ::Dir.mktmpdir(unique_id, "#{Rails.root}/tmp")
-    ::Dir.mkdir_p(tmpdir) if !::Dir.exists?(tmpdir)
+    ::Dir.mkdir_p(tmpdir) if !::Dir.exist?(tmpdir)
 
     Sys::SiteExportJob.export_root = tmpdir
 

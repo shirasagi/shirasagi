@@ -1,5 +1,6 @@
 module SS::FileFilter
   extend ActiveSupport::Concern
+  include SS::SanitizerFilter
 
   private
 

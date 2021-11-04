@@ -427,6 +427,7 @@ ja:
       sanitizer_state:
         wait: 無害化中
         complete: 無害化済
+        error: 無害化失敗
       duration:
         "1_day": １日
         "1_week": １週間

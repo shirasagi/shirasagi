@@ -79,7 +79,7 @@ module ApplicationHelper
   # @deprecated
   def coffee(&block)
     javascript_tag do
-      CoffeeScript.compile(capture(&block)).html_safe
+      ::CoffeeScript.compile(capture(&block)).html_safe
     end
   end
 
@@ -286,8 +286,7 @@ module ApplicationHelper
   end
 
   def sanitizer_status(item)
-    value = item.sanitizer_state
-    return unless %w(wait complete).include?(value)
+    value = item.try(:sanitizer_state) || 'none'
     label = SS::UploadPolicy.sanitizer_state_label(value)
     h = %(<div class="sanitizer-status sanitizer-#{value}">#{label}</div>)
     h.html_safe

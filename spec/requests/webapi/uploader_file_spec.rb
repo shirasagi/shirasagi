@@ -132,7 +132,7 @@ describe "webapi", dbscope: :example, type: :request do
           post upload_file_path, params: correct_upload_file_params
           expect(response.status).to eq 201
 
-          expect(File.exists?("#{uploader_node.path}/style.css")).to be_truthy
+          expect(File.exist?("#{uploader_node.path}/style.css")).to be_truthy
         end
       end
     end

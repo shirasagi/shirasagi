@@ -143,7 +143,7 @@ module Sitemap::Addon
     def generate_sitemap_xml
       file = sitemap_xml_path
       data = sitemap_xml
-      return if Fs.exists?(file) && data == Fs.read(file)
+      return if Fs.exist?(file) && data == Fs.read(file)
       Fs.write file, data
     end
 
@@ -158,7 +158,7 @@ module Sitemap::Addon
 
       src = src.sub(/\.[^\/]+$/, ".xml")
       dst = dst.sub(/\.[^\/]+$/, ".xml")
-      Fs.mv src, dst if Fs.exists?(src)
+      Fs.mv src, dst if Fs.exist?(src)
     end
   end
 end

@@ -134,11 +134,11 @@ module SS
       (el.value.to_s.strip == with.to_s.strip) ? el : native_fill_in(locator, with: with)
     end
 
-    def fill_in_code_mirror(locator, options = {})
+    def fill_in_code_mirror(locator, **options)
       with = options.delete(:with)
       options[:visible] = :all
 
-      element = find(:fillable_field, locator, options)
+      element = find(:fillable_field, locator, **options)
       page.execute_script("$(arguments[0]).data('editor').setValue(arguments[1])", element, with)
     end
 
@@ -204,7 +204,7 @@ module SS
       expect(page).to have_css('#errorExplanation', text: text)
     end
 
-    def save_full_screenshot(opts = {})
+    def save_full_screenshot(**opts)
       filename = opts[:filename].presence || "#{Rails.root}/tmp/screenshots-#{Time.zone.now.to_f}.png"
       page.save_screenshot(filename, full: true)
       puts "screenshot: #{filename}"
@@ -306,10 +306,10 @@ module SS
     # そこで、本メソッドでは setData の完了まで待機する。
     #
     # 参照: https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_editor.html#method-setData
-    def fill_in_ckeditor(locator, options = {})
+    def fill_in_ckeditor(locator, **options)
       with = options.delete(:with)
       options[:visible] = :all
-      element = find(:fillable_field, locator, options)
+      element = find(:fillable_field, locator, **options)
 
       ret = wait_ckeditor_ready(element)
       expect(ret).to be_truthy

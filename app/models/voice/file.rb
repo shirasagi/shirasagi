@@ -50,7 +50,7 @@ class Voice::File
       prefix = "voice"
       timestamp = Time.zone.now.strftime("%Y%m%d")
       tmp = ::File.join(Dir.tmpdir, "#{prefix}-#{timestamp}")
-      ::Dir.mkdir(tmp) unless ::Dir.exists?(tmp)
+      ::Dir.mkdir(tmp) unless ::Dir.exist?(tmp)
       tmp
     end
   end
@@ -64,7 +64,7 @@ class Voice::File
   end
 
   def exists?
-    Fs.exists?(file)
+    Fs.exist?(file)
   end
 
   def latest?(margin = 60)

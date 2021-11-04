@@ -49,8 +49,8 @@ class Kana::Dictionary
       mecab_indexer = SS.config.kana.mecab_indexer
       mecab_dicdir = SS.config.kana.mecab_dicdir
 
-      raise I18n.t("kana.build_fail.no_mecab_indexer") unless ::File.exists?(mecab_indexer)
-      raise I18n.t("kana.build_fail.no_mecab_dicdir") unless ::Dir.exists?(mecab_dicdir)
+      raise I18n.t("kana.build_fail.no_mecab_indexer") unless ::File.exist?(mecab_indexer)
+      raise I18n.t("kana.build_fail.no_mecab_dicdir") unless ::Dir.exist?(mecab_dicdir)
 
       ::Dir.mktmpdir do |dir|
         tmp_src = File.join(dir, SS::FilenameUtils.make_tmpname("mecab", "txt"))
@@ -70,7 +70,7 @@ class Kana::Dictionary
 
     def pull(site_id)
       master_file = master_dic(site_id)
-      unless Fs.exists?(master_file)
+      unless Fs.exist?(master_file)
         return yield nil
       end
 

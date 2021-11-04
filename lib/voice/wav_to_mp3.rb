@@ -13,7 +13,7 @@ module Voice
       input_file = resolve_path(input_file)
       output_file = resolve_path(output_file)
 
-      raise WavToMp3Error, I18n.t("voice.synthesis_fail.no_lame") unless ::File.exists?(bin_path)
+      raise WavToMp3Error, I18n.t("voice.synthesis_fail.no_lame") unless ::File.exist?(bin_path)
       cmd = %("#{bin_path}" #{opts} "#{input_file}" "#{output_file}")
 
       # execute command

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_agents_nodes_api", dbscope: :example do
+describe "opendata_agents_nodes_api", type: :feature, dbscope: :example do
   let!(:node) { create_once :opendata_node_api, name: "opendata_api" }
   let!(:node_area) { create :opendata_node_area }
 

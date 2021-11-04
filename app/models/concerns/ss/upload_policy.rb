@@ -29,8 +29,14 @@ module SS::UploadPolicy
   end
 
   def sanitizer_restore_file(output_path)
+    if output_path.end_with?('Report.txt')
+      SS::UploadPolicy.sanitizer_overwrite_error_file(output_path)
+      self.sanitizer_state = 'error'
+    else
+      self.sanitizer_state = 'complete'
+    end
+
     self.in_file = Fs::UploadedFile.create_from_file(output_path)
-    self.sanitizer_state = 'complete'
     sanitizer_skip
     return false unless save(validate: false)
 
@@ -105,6 +111,12 @@ module SS::UploadPolicy
       end
 
       file
+    end
+
+    def sanitizer_overwrite_error_file(output_path)
+      data = nil
+      ::File.open(output_path) { |f| data = f.readlines[0].strip }
+      Fs.write(output_path, data)
     end
 
     def sanitizer_rename_zip(zip_path)

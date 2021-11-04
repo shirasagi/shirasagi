@@ -61,8 +61,8 @@ Rails.application.configure do
   config.active_support.disallowed_deprecation_warnings = []
 
   # Compress using a preprocessor.
-  config.assets.js_compressor = :uglifier
-  config.assets.css_compressor = :sass
+  # config.assets.js_compressor = :uglifier
+  # config.assets.css_compressor = :sass
 
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true

@@ -18,7 +18,7 @@ class SS::DownloadJobFile
   end
 
   def read
-    ::File.exists?(path) ? ::File.read(path) : nil
+    ::File.exist?(path) ? ::File.read(path) : nil
   end
 
   def content_type

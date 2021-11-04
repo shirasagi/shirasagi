@@ -1,6 +1,7 @@
 class Uploader::FilesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
+  include SS::SanitizerFilter
 
   model Uploader::File
 
@@ -10,6 +11,7 @@ class Uploader::FilesController < ApplicationController
   before_action :set_item
   before_action :set_item_was, if: ->{ @item }
   before_action :set_crumbs
+  before_action :deny_sanitizing_file, only: [:update, :destroy]
   after_action :save_job, only: [:create, :update, :destroy, :destroy_all]
 
   navi_view "uploader/main/navi"
@@ -56,7 +58,7 @@ class Uploader::FilesController < ApplicationController
 
     @item.site = @cur_site
     @item.read if @item.text?
-    @item.set_sanitizer_state
+    Uploader::File.set_sanitizer_state([@item], { site_id: @cur_site.id })
   end
 
   def set_item_was
@@ -147,6 +149,7 @@ class Uploader::FilesController < ApplicationController
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
     return redirect_to("#{request.path}?do=show") unless @item.directory?
     set_items(@item.path)
+    Uploader::File.set_sanitizer_state(@items, { site_id: @cur_site.id })
     render :index
   end
 
@@ -257,7 +260,7 @@ class Uploader::FilesController < ApplicationController
     if extname != @item.ext && @item.ext.present?
       message += "#{I18n.t('uploader.notice.invalid_ext')}\n"
     end
-    if File.exists?(path) && @item.directory?
+    if File.exist?(path) && @item.directory?
       message += "#{I18n.t('uploader.notice.overwrite')}\n"
     end
     render json: { message: message }

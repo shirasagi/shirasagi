@@ -37,7 +37,7 @@ class Inquiry::Agents::Tasks::Node::FormsController < ApplicationController
 
     if !@node.serve_static_file?
       file = ::File.join(@node.path, "index.html")
-      File.delete(file) if File.exists?(file)
+      File.delete(file) if File.exist?(file)
     end
 
     if generate_inquiry_node @node
