@@ -5,7 +5,7 @@ class Gws::Workflow::PagesController < ApplicationController
   prepend_view_path "app/views/workflow/pages"
 
   before_action :set_item,
-                only: %i[request_update restart_update approve_update pull_up_update remand_update branch_create seen_update]
+    only: %i[request_update restart_update approve_update pull_up_update remand_update branch_create seen_update]
 
   private
 

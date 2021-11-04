@@ -11,8 +11,8 @@ end
 
 puts "# theme_templates"
 save_theme_template class_name: "white", name: "白", order: 0, state: "public", site_id: @site.id,
-                    high_contrast_mode: "disabled"
+  high_contrast_mode: "disabled"
 save_theme_template class_name: "blue", name: "青", order: 10, state: "public", site_id: @site.id,
-                    high_contrast_mode: "enabled", font_color: '#FFFFFF', background_color: '#0066CC'
+  high_contrast_mode: "enabled", font_color: '#FFFFFF', background_color: '#0066CC'
 save_theme_template class_name: "black", name: "黒", order: 20, state: "public", site_id: @site.id,
-                    high_contrast_mode: "disabled", css_path: "/css/black.css"
+  high_contrast_mode: "disabled", css_path: "/css/black.css"

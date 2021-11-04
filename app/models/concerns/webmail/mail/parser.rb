@@ -2,8 +2,8 @@ module Webmail::Mail::Parser
   extend ActiveSupport::Concern
 
   attr_accessor :header, :rfc822, :body_structure,
-                :text_part_no, :text_part,
-                :html_part_no, :html_part
+    :text_part_no, :text_part,
+    :html_part_no, :html_part
 
   def parse(data)
     Webmail.activate_cp50221 do

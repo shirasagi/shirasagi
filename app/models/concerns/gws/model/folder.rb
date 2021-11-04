@@ -27,7 +27,7 @@ module Gws::Model::Folder
 
     validate :validate_parent_name
     validate :validate_rename_children,
-             :validate_children_move_to_other_parent, if: ->{ self.attributes["action"] == "update" }
+      :validate_children_move_to_other_parent, if: ->{ self.attributes["action"] == "update" }
 
     validate :validate_folder_name, if: ->{ self.attributes["action"] =~ /create|update/ }
 
