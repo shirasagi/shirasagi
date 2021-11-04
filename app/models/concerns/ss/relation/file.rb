@@ -7,7 +7,7 @@ module SS::Relation::File
       class_name = opts[:class_name].presence || "SS::File"
       required = opts[:required] || false
 
-      belongs_to name.to_sym, class_name: class_name, dependent: :destroy
+      belongs_to name.to_sym, class_name: class_name.to_s, dependent: :destroy
 
       attr_accessor "in_#{name}", "rm_#{name}", "in_#{name}_resizing"
 
@@ -42,7 +42,7 @@ module SS::Relation::File
     def belongs_to_file2(name, opts = {})
       class_name = opts[:class_name].presence || "SS::File"
 
-      belongs_to name.to_sym, class_name: class_name, dependent: :destroy
+      belongs_to name.to_sym, class_name: class_name.to_s, dependent: :destroy
 
       attr_accessor "rm_#{name}", "in_#{name}_resizing"
 
