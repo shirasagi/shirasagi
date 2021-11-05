@@ -135,7 +135,7 @@ class Cms::SearchContents::HtmlController < ApplicationController
     true
   end
 
-  def update_column_values_fields(item)
+  def update_column_values_fields(item, &block)
     item.column_values.each do |column_value|
       attributes = {}
       COLUMN_VALUES_FIELDS.each do |field|
