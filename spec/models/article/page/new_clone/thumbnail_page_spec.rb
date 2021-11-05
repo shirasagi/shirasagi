@@ -52,6 +52,8 @@ describe Article::Page, dbscope: :example do
           # 保存前はサムネイルは元と同じ
           expect(subject.thumb_id).to eq file.id
           expect(subject.thumb_id).to eq item.thumb_id
+          expect(subject.thumb.state).to eq item.state
+          expect(subject.thumb.state).not_to eq subject.state
         end
       end
 
@@ -105,11 +107,14 @@ describe Article::Page, dbscope: :example do
             expect(subject_thumb.filename).to eq file.filename
             expect(subject_thumb.content_type).to eq file.content_type
             expect(subject_thumb.size).to eq file.size
+            expect(subject_thumb.state).not_to eq item.state
+            expect(subject_thumb.state).to eq subject.state
           end
 
           file.reload
           expect(file.owner_item_type).to eq item.class.name
           expect(file.owner_item_id).to eq item.id
+          expect(file.state).to eq item.state
 
           item.reload
           expect(item.thumb_id).to eq file.id
@@ -157,10 +162,12 @@ describe Article::Page, dbscope: :example do
             # 差し替えページの場合、サムネイルは元と同じ
             expect(subject.thumb_id).to eq file.id
             expect(subject.thumb_id).to eq item.thumb_id
+            expect(subject.thumb.state).to eq item.state
 
             file.reload
             expect(file.owner_item_type).to eq item.class.name
             expect(file.owner_item_id).to eq item.id
+            expect(file.state).to eq item.state
 
             item.reload
             expect(item.master?).to be_truthy
@@ -174,6 +181,7 @@ describe Article::Page, dbscope: :example do
             item.reload
             expect(item.thumb_id).to eq file.id
             expect(item.thumb).to be_present
+            expect(item.thumb.state).to eq item.state
           end
         end
 
@@ -201,6 +209,7 @@ describe Article::Page, dbscope: :example do
             expect(item.branches.count).to eq 0
             expect(item.thumb_id).to eq file.id
             expect(item.thumb).to be_present
+            expect(item.thumb.state).to eq item.state
           end
         end
       end

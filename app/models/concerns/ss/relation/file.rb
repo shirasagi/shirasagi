@@ -95,7 +95,7 @@ module SS::Relation::File
         end
       end
 
-      if file.try(:invalid?)
+      if !file.frozen? && file.try(:invalid?)
         SS::Model.copy_errors(file, item)
       end
     end
@@ -161,15 +161,10 @@ module SS::Relation::File
       file.destroy
     end
 
-    def expected_file_mode(item, class_name)
-      class_name == DEFAULT_FILE_CLASS_NAME ? item.class.name.underscore : class_name.underscore
-    end
-
     def upload_and_set_relation(item, name, class_name:, default_resizing:)
       upload_file = item.send("in_#{name}")
       owner_item = SS::Model.container_of(item)
       resizing = item.send("in_#{name}_resizing").presence || default_resizing
-      model = expected_file_mode(item, class_name)
       cur_user = owner_item.try(:cur_user)
 
       # SS::File への登録に成功し、その後、何らかの問題で owner_item の保存に失敗したとしても、
@@ -179,7 +174,7 @@ module SS::Relation::File
         new_file.site_id = owner_item.site_id if owner_item.respond_to?(:site_id)
         new_file.user_id = cur_user.id if cur_user
         new_file.state = item.send("#{name}_file_state")
-        new_file.model = model if new_file.model != model
+        new_file.model = owner_item.class.name.underscore if class_name == DEFAULT_FILE_CLASS_NAME
         new_file.owner_item = owner_item
       end
 
@@ -207,7 +202,14 @@ module SS::Relation::File
     def update_relation(item, name, file, class_name:, default_resizing:)
       attributes = {}
       owner_item = SS::Model.container_of(item)
-      if Changes.need_to_change_owner_item?(file, owner_item)
+
+      return if file.frozen?
+
+      # 差し替えページの場合、ファイルの所有者が差し替え元なら、そのままとする
+      is_branch = owner_item.try(:branch?)
+      return if is_branch && SS::File.file_owned?(file, owner_item.master)
+
+      if !SS::File.file_owned?(file, owner_item)
         attributes[:owner_item] = owner_item
         attributes[:owner_item_id] = owner_item.id
         attributes[:owner_item_type] = owner_item.class.name
@@ -217,8 +219,12 @@ module SS::Relation::File
         attributes[:state] = file_state if file.state != file_state
       end
 
-      model = expected_file_mode(item, class_name)
-      attributes[:model] = model if file.model != model
+      if class_name == DEFAULT_FILE_CLASS_NAME
+        expected_model = owner_item.class.name.underscore
+        if file.model != expected_model
+          attributes[:model] = expected_model
+        end
+      end
 
       file.update(attributes) if attributes.present?
 
@@ -228,15 +234,6 @@ module SS::Relation::File
           file.shrink_image_to(resizing[0].to_i, resizing[1].to_i)
         end
       end
-    end
-
-    def need_to_change_owner_item?(file, owner_item)
-      return false if SS::File.file_owned?(file, owner_item)
-
-      # 差し替えページの場合、所有者を差し替え元のままとする
-      return false if owner_item.try(:branch?) && SS::File.file_owned?(file, owner_item.master)
-
-      true
     end
   end
 end

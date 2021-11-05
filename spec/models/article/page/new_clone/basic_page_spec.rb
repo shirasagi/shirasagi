@@ -117,6 +117,7 @@ describe Article::Page, dbscope: :example do
           expect(subject.files.pluck(:filename)).to include(file1.filename, file2.filename)
           expect(subject.files.pluck(:content_type)).to include(file1.content_type, file2.content_type)
           expect(subject.files.pluck(:size)).to include(file1.size, file2.size)
+          expect(subject.files.pluck(:state)).to include("closed", "closed")
           expect(subject.html).not_to include file1.url
           expect(subject.html).not_to include file2.url
           expect(subject.html).to include subject.files.first.url
@@ -124,9 +125,13 @@ describe Article::Page, dbscope: :example do
           file1.reload
           expect(file1.owner_item_type).to eq item.class.name
           expect(file1.owner_item_id).to eq item.id
+          expect(file1.state).to eq item.state
+          expect(file1.state).not_to eq subject.state
           file2.reload
           expect(file2.owner_item_type).to eq item.class.name
           expect(file2.owner_item_id).to eq item.id
+          expect(file2.state).to eq item.state
+          expect(file2.state).not_to eq subject.state
 
           item.reload
           expect(item.files.count).to eq 2
@@ -189,9 +194,13 @@ describe Article::Page, dbscope: :example do
             file1.reload
             expect(file1.owner_item_type).to eq item.class.name
             expect(file1.owner_item_id).to eq item.id
+            expect(file1.state).to eq item.state
+            expect(file1.state).not_to eq subject.state
             file2.reload
             expect(file2.owner_item_type).to eq item.class.name
             expect(file2.owner_item_id).to eq item.id
+            expect(file2.state).to eq item.state
+            expect(file1.state).not_to eq subject.state
 
             item.reload
             expect(item.master?).to be_truthy
