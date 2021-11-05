@@ -191,8 +191,7 @@ class Gws::Circular::Post
     return if site.circular_filesize_limit <= 0
 
     limit = site.circular_filesize_limit_in_bytes
-    size = files.compact.map(&:size).sum
-
+    size = files.compact.sum(&:size)
     if size > limit
       errors.add(:base, :file_size_limit, size: number_to_human_size(size), limit: number_to_human_size(limit))
     end

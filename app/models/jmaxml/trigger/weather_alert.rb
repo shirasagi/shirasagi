@@ -17,7 +17,7 @@ class Jmaxml::Trigger::WeatherAlert < Jmaxml::Trigger::Base
     context[:type] = Jmaxml::Type::FORECAST
     context[:area_codes] = area_codes
 
-    return true unless block_given?
+    return true unless block
 
     yield
   end

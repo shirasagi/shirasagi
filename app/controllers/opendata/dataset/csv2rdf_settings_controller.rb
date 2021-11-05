@@ -40,7 +40,7 @@ class Opendata::Dataset::Csv2rdfSettingsController < ApplicationController
     actual_rows = @cur_resource.parse_tsv.size
     if actual_rows <= 2
       redirect_to opendata_dataset_resource_path(id: @cur_resource),
-                  flash: { notice: t('opendata.messages.require_at_least_two_rows') }
+        flash: { notice: t('opendata.messages.require_at_least_two_rows') }
       return
     end
 
@@ -137,7 +137,7 @@ class Opendata::Dataset::Csv2rdfSettingsController < ApplicationController
     respond_to do |format|
       format.html do
         redirect_to({ controller: :resources, action: :show, id: @cur_resource },
-                    { notice: t("opendata.notice.started_building_rdf_job") })
+          { notice: t("opendata.notice.started_building_rdf_job") })
       end
       format.json { head :no_content }
     end

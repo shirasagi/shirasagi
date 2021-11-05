@@ -11,6 +11,7 @@ module Sys::Addon
       field :x509_cert, type: String
       field :force_authn_state, type: String
       attr_accessor :in_metadata, :in_x509_cert
+
       permit_params :entity_id, :name_id_format, :sso_url, :slo_url, :x509_cert, :force_authn_state
       permit_params :in_metadata, :in_x509_cert
       before_validation :load_metadata, if: ->{ in_metadata }

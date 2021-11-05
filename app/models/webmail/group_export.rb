@@ -41,6 +41,7 @@ class Webmail::GroupExport
   ].freeze
 
   attr_accessor :cur_user, :in_file
+
   permit_params :in_file
 
   def export_csv(items)

@@ -3,6 +3,7 @@ class SS::ZipCreator
   include SS::ExportHelper
 
   attr_reader :cur_site, :cur_user, :file
+
   delegate :filename, :path, :url, :read, :content_type, to: :file
 
   def initialize(basename, user, opts = {})

@@ -2,8 +2,7 @@ class SS::StreamingFile
   include SS::Model::File
   include SS::Relation::Thumb
 
-  attr_accessor :in_remote_url, :in_size_limit
-  attr_accessor :in_remote_basic_authentication
+  attr_accessor :in_remote_url, :in_size_limit, :in_remote_basic_authentication
 
   before_validation :set_filename, if: ->{ in_remote_url.present? }
 

@@ -4,7 +4,7 @@ class SS::Migration20201110000000
   depends_on "20200630000000"
 
   def change
-    ss_files = SS::File.where(model: "opendata/url_resource").map { |item| [item.id, item] }.to_h
+    ss_files = SS::File.where(model: "opendata/url_resource").index_by { |item| item.id }
     return if ss_files.blank?
 
     Opendata::Dataset.each do |dataset|

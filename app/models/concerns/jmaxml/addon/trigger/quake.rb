@@ -38,7 +38,7 @@ module Jmaxml::Addon::Trigger::Quake
     context[:region_eq_infos] = region_eq_infos
     context[:max_int] = max_int
 
-    return true unless block_given?
+    return true unless block
 
     yield
   end
@@ -68,7 +68,7 @@ module Jmaxml::Addon::Trigger::Quake
     context[:last_page] = last_page
     context[:last_xmldoc] = xmldoc
 
-    return true unless block_given?
+    return true unless block
 
     yield
   end

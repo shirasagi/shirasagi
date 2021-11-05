@@ -77,13 +77,13 @@ module Gws::Model::File
   end
 
   def path
-    "#{self.class.root}/ss_files/" + id.to_s.split(//).join("/") + "/_/#{id}"
+    "#{self.class.root}/ss_files/" + id.to_s.chars.join("/") + "/_/#{id}"
   end
 
   def public_dir
     return if site.blank? || !site.respond_to?(:root_path)
 
-    "#{site.root_path}/fs/" + id.to_s.split(//).join("/") + "/_"
+    "#{site.root_path}/fs/" + id.to_s.chars.join("/") + "/_"
   end
 
   def public_path
@@ -91,17 +91,17 @@ module Gws::Model::File
   end
 
   def url
-    "/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
+    "/fs/" + id.to_s.chars.join("/") + "/_/#{filename}"
   end
 
   def full_url
     return if site.blank? || !site.respond_to?(:full_root_url)
 
-    "#{site.full_root_url}fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
+    "#{site.full_root_url}fs/" + id.to_s.chars.join("/") + "/_/#{filename}"
   end
 
   def thumb_url
-    "/fs/" + id.to_s.split(//).join("/") + "/_/thumb/#{filename}"
+    "/fs/" + id.to_s.chars.join("/") + "/_/thumb/#{filename}"
   end
 
   def public?
@@ -129,7 +129,7 @@ module Gws::Model::File
   end
 
   def humanized_name
-    "#{name.sub(/\.[^\.]+$/, '')} (#{extname.upcase} #{number_to_human_size(size)})"
+    "#{name.sub(/\.[^.]+$/, '')} (#{extname.upcase} #{number_to_human_size(size)})"
   end
 
   def download_filename
@@ -163,7 +163,7 @@ module Gws::Model::File
   end
 
   def resizing=(size)
-    @resizing = (size.class == String) ? size.split(",") : size
+    @resizing = size.instance_of?(String) ? size.split(",") : size
   end
 
   def read
@@ -216,7 +216,7 @@ module Gws::Model::File
   end
 
   def validate_filename
-    if multibyte_filename_disabled? && filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
+    if multibyte_filename_disabled? && filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-.]+$/
       errors.add :in_file, :invalid_filename
     end
   end

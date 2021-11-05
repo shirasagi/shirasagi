@@ -5,8 +5,7 @@ class Cms::ImportJobFile
   include SS::Reference::User
   include Cms::Reference::Site
 
-  attr_accessor :name, :basename
-  attr_accessor :in_file, :import_logs
+  attr_accessor :name, :basename, :in_file, :import_logs
 
   seqid :id
   field :import_date, type: DateTime

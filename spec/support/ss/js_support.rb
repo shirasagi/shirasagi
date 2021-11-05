@@ -144,7 +144,7 @@ module SS
 
     def native_fill_in(locator = nil, with:)
       el = find(:fillable_field, locator).set('').click
-      with.to_s.split('').each { |c| el.native.send_keys(c) }
+      with.to_s.chars.each { |c| el.native.send_keys(c) }
       el
     rescue Selenium::WebDriver::Error::StaleElementReferenceError
       el
@@ -161,7 +161,7 @@ module SS
       Timeout.timeout(ajax_timeout) do
         sleep 1 until finished_all_ajax_requests?
       end
-      if block_given?
+      if block
         sleep 1
         yield
       end
@@ -176,7 +176,7 @@ module SS
 
     def wait_for_cbox(&block)
       have_css("#cboxClose", text: "close")
-      within("#cboxContent", &block) if block_given?
+      within("#cboxContent", &block) if block
     end
 
     def colorbox_opened?

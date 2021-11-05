@@ -59,7 +59,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
       cloned_file_ids = []
       file_ids.each_slice(20) do |ids|
         SS::File.in(id: ids).to_a.each do |source_file|
-          attributes = Hash[source_file.attributes]
+          attributes = source_file.attributes.to_h
           attributes.select!{ |k| source_file.fields.key?(k) }
 
           attributes["user_id"] = @cur_user.id if @cur_user

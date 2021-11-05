@@ -3,16 +3,14 @@ module Tasks
     module Base
       module_function
 
-      def each_item(criteria)
+      def each_item(criteria, &block)
         all_ids = criteria.pluck(:id)
         all_ids.each_slice(20) do |ids|
-          criteria.in(id: ids).to_a.each do |item|
-            yield item
-          end
+          criteria.in(id: ids).to_a.each(&block)
         end
       end
 
-      def each_sites
+      def each_sites(&block)
         name = ENV['site']
         if name
           criteria = ::Gws::Group.all.where(name: name)
@@ -20,9 +18,7 @@ module Tasks
           criteria = ::Gws::Group.all.where(name: { "$not" => /\// })
         end
 
-        ::Tasks::Gws::Base.each_item(criteria) do |site|
-          yield site
-        end
+        ::Tasks::Gws::Base.each_item(criteria, &block)
       end
 
       def with_site(name)

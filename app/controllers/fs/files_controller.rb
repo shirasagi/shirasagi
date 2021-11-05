@@ -17,7 +17,7 @@ class Fs::FilesController < ApplicationController
   end
 
   def set_item
-    id = params[:id_path].present? ? params[:id_path].gsub(/\//, "") : params[:id]
+    id = params[:id_path].present? ? params[:id_path].delete('/') : params[:id]
     name_or_filename = params[:filename]
     name_or_filename << ".#{params[:format]}" if params[:format].present?
 
@@ -106,7 +106,7 @@ class Fs::FilesController < ApplicationController
       set_last_modified
       send_thumb @item, type: @item.content_type, filename: @item.filename,
         disposition: :inline, width: width, height: height
-    elsif thumb  = @item.try(:thumb, size)
+    elsif thumb = @item.try(:thumb, size)
       @item = thumb
       index
     else

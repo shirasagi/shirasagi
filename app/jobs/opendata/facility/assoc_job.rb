@@ -71,7 +71,7 @@ class Opendata::Facility::AssocJob < Cms::ApplicationJob
     resource = @dataset.resources.new
     resource.name = @facility_node.name
     resource.text = I18n.t("opendata.assoc_job.resource_text",
-                           name: @facility_node.name, now: I18n.l(Time.zone.now, format: :long))
+      name: @facility_node.name, now: I18n.l(Time.zone.now, format: :long))
     resource.license_id = find_license.id
     resource.in_file = @csv_file
     resource.save!

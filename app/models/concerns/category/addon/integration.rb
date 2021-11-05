@@ -6,6 +6,7 @@ module Category::Addon
 
     included do
       attr_accessor :in_partial_id
+
       permit_params :in_partial_id
     end
 

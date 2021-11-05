@@ -76,10 +76,10 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
       end
       let(:item) do
         create_once :opendata_dataset,
-                    filename: "#{node.filename}/#{unique_id}.html",
-                    category_ids: [ category.id ],
-                    estat_category_ids: [estat_category.id],
-                    area_ids: [ area.id ]
+          filename: "#{node.filename}/#{unique_id}.html",
+          category_ids: [ category.id ],
+          estat_category_ids: [estat_category.id],
+          area_ids: [ area.id ]
       end
       let(:show_path) { opendata_dataset_path site, node, item }
       let(:edit_path) { edit_opendata_dataset_path site, node, item }
@@ -166,10 +166,10 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
     let(:area) { create_once :opendata_node_area, filename: "opendata_area_1" }
     let(:item) do
       create_once :opendata_dataset,
-                  filename: "#{node.filename}/#{unique_id}.html",
-                  category_ids: [ category.id ],
-                  estat_category_ids: [estat_category.id],
-                  area_ids: [ area.id ]
+        filename: "#{node.filename}/#{unique_id}.html",
+        category_ids: [ category.id ],
+        estat_category_ids: [estat_category.id],
+        area_ids: [ area.id ]
     end
     let(:public_path) { item.url }
 

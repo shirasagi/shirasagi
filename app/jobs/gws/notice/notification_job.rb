@@ -26,13 +26,11 @@ class Gws::Notice::NotificationJob < Gws::ApplicationJob
     end
   end
 
-  def each_item(batch_size = 20)
+  def each_item(batch_size = 20, &block)
     item_ids = @items.pluck(:id)
     item_ids.each_slice(batch_size) do |ids|
       items = @items.in(id: ids).to_a
-      items.each do |item|
-        yield item
-      end
+      items.each(&block)
     end
   end
 

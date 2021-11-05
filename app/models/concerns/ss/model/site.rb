@@ -54,7 +54,7 @@ module SS::Model::Site
       if parent
         parent.root_path
       else
-        "#{self.class.root}/" + (host.split(//).join("/") + "/_")
+        "#{self.class.root}/" + (host.chars.join("/") + "/_")
       end
     end
 

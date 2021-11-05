@@ -24,7 +24,6 @@ class Cms::Apis::Contents::HtmlController < ApplicationController
       @layouts = @layouts.order_by(filename: 1).limit(500)
       @parts   = @parts.order_by(filename: 1).limit(500)
     rescue => e
-      #
     end
   end
 end

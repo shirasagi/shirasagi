@@ -15,9 +15,9 @@ module Gws::Addon::Share::ResourceLimitation
     before_validation :set_share_max_folder_size
 
     validates :share_max_file_size,
-              numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
+      numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
     validates :share_max_folder_size,
-              numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
+      numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
     validate :validate_share_max_file_size, :validate_share_max_folder_size
   end
 

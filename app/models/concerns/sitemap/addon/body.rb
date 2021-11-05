@@ -86,7 +86,7 @@ module Sitemap::Addon
 
         name = url.sub(/^.*?\s*#/, "") if /#/.match?(url)
         url = url.sub(/\s*#.*/, "").strip.sub(/\/$/, "")
-        model = /(^|\/)[^\.]+$/.match?(url) ? Cms::Node : Cms::Page
+        model = /(^|\/)[^.]+$/.match?(url) ? Cms::Node : Cms::Page
         if item = model.where(site_id: site_id).and_public.filename(url).first
           data = { url: item.url, name: name.presence || item.name, depth: depth }
         else
@@ -119,7 +119,7 @@ module Sitemap::Addon
           urls.each do |page_url|
             page_url.sub!(/\s*#.*/, "")
             url = page_url.strip.sub(/\/$/, "")
-            model = /(^|\/)[^\.]+$/.match?(url) ? Cms::Node : Cms::Page
+            model = /(^|\/)[^.]+$/.match?(url) ? Cms::Node : Cms::Page
             if item = model.where(site_id: site_id).and_public.filename(url).first
               page_url = item.url
             end

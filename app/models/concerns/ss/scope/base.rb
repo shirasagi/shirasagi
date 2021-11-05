@@ -107,15 +107,13 @@ module SS::Scope::Base
     # ActiveRecord の find_in_batches では、order_by が無効になるが、本メソッドでは order_by が有効である。
     #
     # @return [Enumerator<self.class>]
-    def find_each(options = {})
+    def find_each(options = {}, &block)
       unless block_given?
         return to_enum(:find_each, options)
       end
 
       find_in_batches(options) do |records|
-        records.each do |record|
-          yield record
-        end
+        records.each(&block)
       end
     end
   end

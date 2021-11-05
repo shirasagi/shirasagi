@@ -59,9 +59,9 @@ describe Opendata::UrlHelper, type: :helper, dbscope: :example do
     context "when composite parameters is given" do
       subject do
         helper.build_path "/dataset/search/",
-                          "sort" => "popular",
-                          "s[area]" => "32",
-                          "s[tag]" => "人口"
+          "sort" => "popular",
+          "s[area]" => "32",
+          "s[tag]" => "人口"
       end
       it { is_expected.to eq "/dataset/search/?s%5Barea%5D=32&s%5Btag%5D=%E4%BA%BA%E5%8F%A3&sort=popular" }
     end

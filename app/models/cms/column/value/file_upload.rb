@@ -114,7 +114,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     return if file.blank?
 
     if @new_clone
-      attributes = Hash[file.attributes]
+      attributes = file.attributes.to_h
       attributes.select!{ |k| file.fields.key?(k) }
 
       attributes["user_id"] = @cur_user.id if @cur_user
@@ -199,7 +199,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
   def to_default_html_attachment
     label = file_label.presence.try { |l| ApplicationController.helpers.sanitize(l) }
-    label ||= file.name.sub(/\.[^\.]+$/, '')
+    label ||= file.name.sub(/\.[^.]+$/, '')
     label = "#{label} (#{file.extname.upcase} #{file.size.to_s(:human_size)})"
     ApplicationController.helpers.link_to(label, file.url)
   end

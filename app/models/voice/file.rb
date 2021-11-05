@@ -56,7 +56,7 @@ class Voice::File
   end
 
   def file
-    site_part = site_id.to_s.split(//).join("/")
+    site_part = site_id.to_s.chars.join("/")
     id_part = Digest::SHA1.hexdigest(id.to_s).scan(/.{1,2}/).shift(2).join("/")
     file_part = "#{id}.mp3"
 

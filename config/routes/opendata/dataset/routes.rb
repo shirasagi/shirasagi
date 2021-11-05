@@ -147,8 +147,8 @@ Rails.application.routes.draw do
 
     get "dataset_area/" => "public#index", cell: "nodes/dataset/dataset_area"
     get "dataset_area/rss.xml" => "public#rss", cell: "nodes/dataset/dataset_area"
-    get "dataset_area/*name/rss.xml" => "public#rss", cell: "nodes/dataset/dataset_area", name: /[^\.]+/
-    get "dataset_area/*name/" => "public#index", cell: "nodes/dataset/dataset_area", name: /[^\.]+/
+    get "dataset_area/*name/rss.xml" => "public#rss", cell: "nodes/dataset/dataset_area", name: /[^.]+/
+    get "dataset_area/*name/" => "public#index", cell: "nodes/dataset/dataset_area", name: /[^.]+/
     get "dataset_map/" => "public#index", cell: "nodes/dataset/dataset_map"
     get "dataset_map/search.html" => "public#search", cell: "nodes/dataset/dataset_map"
     get "dataset_graph/" => "public#index", cell: "nodes/dataset/dataset_graph"

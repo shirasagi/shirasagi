@@ -2,17 +2,17 @@ require 'spec_helper'
 
 describe Gws::StaffRecord::Seating, type: :model, dbscope: :example do
   let!(:site1) { create :gws_group }
-  let!(:group1_1) { create :gws_group, name: "#{site1.name}/#{unique_id}" }
-  let!(:group1_2) { create :gws_group, name: "#{site1.name}/#{unique_id}" }
-  let!(:user1_1) { create :gws_user, group_ids: [ site1.id ] }
-  let!(:user1_2) { create :gws_user, group_ids: [ site1.id ] }
+  let!(:group1) { create :gws_group, name: "#{site1.name}/#{unique_id}" }
+  let!(:group2) { create :gws_group, name: "#{site1.name}/#{unique_id}" }
+  let!(:user1) { create :gws_user, group_ids: [ site1.id ] }
+  let!(:user2) { create :gws_user, group_ids: [ site1.id ] }
   let!(:year1) { create :gws_staff_record_year, cur_site: site1 }
   let(:readable_setting_range) { %w(public select private).sample }
   let!(:staff_record_seating1) do
     create(
       :gws_staff_record_seating, cur_site: site1, year: year1,
-      readable_setting_range: readable_setting_range, readable_group_ids: [ group1_1.id ],
-      readable_member_ids: [ user1_1.id ], group_ids: [ group1_2.id ], user_ids: [ user1_2.id ], permission_level: rand(1..3)
+      readable_setting_range: readable_setting_range, readable_group_ids: [ group1.id ],
+      readable_member_ids: [ user1.id ], group_ids: [ group2.id ], user_ids: [ user2.id ], permission_level: rand(1..3)
     )
   end
 
@@ -42,8 +42,8 @@ describe Gws::StaffRecord::Seating, type: :model, dbscope: :example do
     gws_user.add_to_set(group_ids: site2.id)
     gws_user.add_to_set(gws_role_ids: admin_role.id)
 
-    user1_1.add_to_set(group_ids: site2.id)
-    user1_2.add_to_set(group_ids: site2.id)
+    user1.add_to_set(group_ids: site2.id)
+    user2.add_to_set(group_ids: site2.id)
   end
 
   context "newly import" do
@@ -66,11 +66,11 @@ describe Gws::StaffRecord::Seating, type: :model, dbscope: :example do
         expect(imported_seating.readable_group_ids).to be_blank
         if readable_setting_range == "select"
           expect(imported_seating.readable_member_ids).to have(1).items
-          expect(imported_seating.readable_member_ids).to include(user1_1.id)
+          expect(imported_seating.readable_member_ids).to include(user1.id)
         end
         expect(imported_seating.group_ids).to be_blank
         expect(imported_seating.user_ids).to have(2).items
-        expect(imported_seating.user_ids).to include(gws_user.id, user1_2.id)
+        expect(imported_seating.user_ids).to include(gws_user.id, user2.id)
         unless SS.config.ss.disable_permission_level
           expect(imported_seating.permission_level).to eq staff_record_seating1.permission_level
         end

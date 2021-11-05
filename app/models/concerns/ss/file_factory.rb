@@ -3,6 +3,7 @@ module SS::FileFactory
 
   included do
     attr_accessor :in_files, :saved_files
+
     permit_params :in_files, in_files: []
   end
 
