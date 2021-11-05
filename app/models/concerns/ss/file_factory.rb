@@ -17,6 +17,7 @@ module SS::FileFactory
       end
       item.name = ::File.basename(item.filename) if item.name.blank? && item.filename.present?
       item.size = 0
+      item.model ||= self.name.underscore
       if options.fetch(:validate, true)
         item.save!
       else
@@ -50,7 +51,6 @@ module SS::FileFactory
 
     def create_from_upload!(upload_file, resizing: nil, &block)
       attributes = {
-        model: self.name.underscore,
         filename: upload_file.original_filename,
         content_type: ::Fs.content_type(upload_file.original_filename, DEFAULT_MIME_TYPE)
       }
@@ -63,11 +63,13 @@ module SS::FileFactory
             Fs.upload(new_file.path, converter.to_io)
           end
         end
+      end
 
-        if block_given?
-          yield new_file
-          new_file.save!
-        end
+      if block_given?
+        yield file
+        file.save!
+      else
+        file.send(:save_thumbs)
       end
 
       file.sanitizer_copy_file
