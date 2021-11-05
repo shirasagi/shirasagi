@@ -7,7 +7,7 @@ describe Cms::AllContentsImportJob, dbscope: :example do
   let!(:group1) { Cms::Group.create!(name: "#{cms_group.name}/#{unique_id}") }
   let!(:group2) { Cms::Group.create!(name: "#{cms_group.name}/#{unique_id}") }
 
-  let(:states_dic) { I18n.t("ss.options.state").map { |key, value| [ value, key.to_s ] }.to_h }
+  let(:states_dic) { Hash[I18n.t("ss.options.state").map { |key, value| [ value, key.to_s ] }] }
 
   before do
     Dir.mktmpdir do |dir|

@@ -696,6 +696,9 @@ Style/GuardClause:
 Style/HashAsLastArrayItem:
   Enabled: false
 
+Style/HashConversion:
+  Enabled: false
+
 Style/HashEachMethods:
   Enabled: false
 

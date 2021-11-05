@@ -1,7 +1,7 @@
 class Event::Page::IcalImporter
 
   ICAL_WEEKDAYS = %w(SU MO TU WE TH FR SA).freeze
-  ICAL_WEEKDAY_MAP = ICAL_WEEKDAYS.map.with_index { |wday, index| [wday, index] }.to_h.freeze
+  ICAL_WEEKDAY_MAP = Hash[ICAL_WEEKDAYS.map.with_index { |wday, index| [wday, index] }].freeze
 
   attr_reader :site, :node, :user
 

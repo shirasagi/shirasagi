@@ -93,7 +93,7 @@ module Workflow::Addon
     end
 
     def clone_file(source_file)
-      attributes = source_file.attributes.to_h
+      attributes = Hash[source_file.attributes]
       attributes.select!{ |k| source_file.fields.key?(k) }
 
       attributes["user_id"] = @cur_user.id if @cur_user

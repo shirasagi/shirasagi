@@ -68,7 +68,7 @@ class Cms::Notice
     run_callbacks(:clone_files) do
       ids = {}
       files.each do |f|
-        attributes = f.attributes.to_h
+        attributes = Hash[f.attributes]
         attributes.select!{ |k| f.fields.key?(k) }
 
         file = SS::File.new(attributes)

@@ -27,7 +27,7 @@ module SS::Fields::Normalizer
       hash_value = hash_value_orig = send("#{name}_translations")
       hash_value = hash_value.map { |k, v| [ k, v.present? ? v.strip : v ] }
       hash_value = hash_value.delete_if { |k, v| v.blank? }
-      hash_value = hash_value.to_h
+      hash_value = Hash[hash_value]
       if hash_value != hash_value_orig
         send("#{name}_translations=", hash_value)
       end

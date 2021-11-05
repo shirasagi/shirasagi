@@ -59,7 +59,7 @@ module Gws::Addon
       run_callbacks(:clone_files) do
         ids = {}
         files.each do |f|
-          attributes = f.attributes.to_h
+          attributes = Hash[f.attributes]
           attributes.slice!(*f.fields.keys)
 
           file = SS::File.new(attributes)
