@@ -200,7 +200,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
 
   def render_move(result)
     if result
-      json = @item.column_values.map { |value| [ value.id, value.order ] }.to_h
+      json = Hash[@item.column_values.map { |value| [ value.id, value.order ] }]
       render json: json, status: :ok, content_type: json_content_type
     else
       render json: @item.errors.full_messages, status: :unprocessable_entity

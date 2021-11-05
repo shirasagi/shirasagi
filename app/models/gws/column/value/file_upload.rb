@@ -81,7 +81,7 @@ class Gws::Column::Value::FileUpload < Gws::Column::Value::Base
   def before_save_clone
     ids = {}
     files.each do |f|
-      attributes = f.attributes.to_h
+      attributes = Hash[f.attributes]
       attributes.slice!(*f.fields.keys)
 
       file = SS::File.new(attributes)
