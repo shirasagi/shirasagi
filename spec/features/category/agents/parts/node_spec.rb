@@ -6,83 +6,83 @@ describe "category_agents_parts_node", type: :feature, dbscope: :example do
     create :category_part_node, loop_format: loop_format, upper_html: upper_html, lower_html: lower_html
   end
   let!(:layout) { create_cms_layout part }
-  let!(:cate1) do
+  let!(:cate_d1) do
     create(
       :category_node_node, layout: layout,
       loop_format: 'shirasagi', upper_html: '<div id="category-node-node-1">', lower_html: '</div>'
     )
   end
-  let!(:cate1_1) do
+  let!(:cate_d11) do
     create(
-      :category_node_node, cur_node: cate1, layout: layout,
+      :category_node_node, cur_node: cate_d1, layout: layout,
       loop_format: 'shirasagi', upper_html: '<div id="category-node-node-1-1">', lower_html: '</div>'
     )
   end
-  let!(:cate1_2) do
+  let!(:cate_d12) do
     create(
-      :category_node_node, cur_node: cate1, layout: layout,
+      :category_node_node, cur_node: cate_d1, layout: layout,
       loop_format: 'shirasagi', upper_html: '<div id="category-node-node-1-2">', lower_html: '</div>'
     )
   end
-  let!(:cate1_3) do
+  let!(:cate_d13) do
     create(
-      :category_node_page, cur_node: cate1, layout: layout,
+      :category_node_page, cur_node: cate_d1, layout: layout,
       loop_format: 'shirasagi', upper_html: '<div id="category-node-page-1-3">', lower_html: '</div>'
     )
   end
-  let!(:cate1_1_1) do
+  let!(:cate_d111) do
     create(
-      :category_node_page, cur_node: cate1_1, layout: layout,
+      :category_node_page, cur_node: cate_d11, layout: layout,
       loop_format: 'shirasagi', upper_html: '<div id="category-node-page-1-1-1">', lower_html: '</div>'
     )
   end
-  let!(:cate1_1_2) do
+  let!(:cate_d112) do
     create(
-      :category_node_node, cur_node: cate1_1, layout: layout,
+      :category_node_node, cur_node: cate_d11, layout: layout,
       loop_format: 'shirasagi', upper_html: '<div id="category-node-node-1-1-2">', lower_html: '</div>'
     )
   end
-  let!(:cate1_2_1) do
+  let!(:cate_d121) do
     create(
-      :category_node_page, cur_node: cate1_2, layout: layout,
+      :category_node_page, cur_node: cate_d12, layout: layout,
       loop_format: 'shirasagi', upper_html: '<div id="category-node-page-1-2-1">', lower_html: '</div>'
     )
   end
-  let!(:cate1_2_2) do
+  let!(:cate_d122) do
     create(
-      :category_node_page, cur_node: cate1_2, layout: layout,
+      :category_node_page, cur_node: cate_d12, layout: layout,
       loop_format: 'shirasagi', upper_html: '<div id="category-node-page-1-2-2">', lower_html: '</div>'
     )
   end
 
-  let!(:cate1_1_2_1) do
+  let!(:cate_d1121) do
     create(
-      :category_node_page, cur_node: cate1_1_2, layout: layout,
+      :category_node_page, cur_node: cate_d112, layout: layout,
       loop_format: 'shirasagi', upper_html: '<div id="category-node-page-1-1-2-1">', lower_html: '</div>'
     )
   end
-  let!(:cate1_1_2_2) do
+  let!(:cate_d1122) do
     create(
-      :category_node_page, cur_node: cate1_1_2, layout: layout,
+      :category_node_page, cur_node: cate_d112, layout: layout,
       loop_format: 'shirasagi', upper_html: '<div id="category-node-page-1-1-2-2">', lower_html: '</div>'
     )
   end
 
-  let!(:cate2) do
+  let!(:cate_d2) do
     create(
       :category_node_node, layout: layout,
       loop_format: 'shirasagi', upper_html: '<div id="category-node-node-2">', lower_html: '</div>'
     )
   end
-  let!(:cate2_1) do
+  let!(:cate_d21) do
     create(
-      :category_node_page, cur_node: cate2, layout: layout,
+      :category_node_page, cur_node: cate_d2, layout: layout,
       loop_format: 'shirasagi', upper_html: '<div id="category-node-page-2-1">', lower_html: '</div>'
     )
   end
   let!(:page0) { create(:cms_page, layout: layout, category_ids: Category::Node::Page.all.pluck(:id)) }
-  let!(:page1) { create(:cms_page, cur_node: cate1, layout: layout) }
-  let!(:page1_3) { create(:cms_page, cur_node: cate1_3, layout: layout) }
+  let!(:page1) { create(:cms_page, cur_node: cate_d1, layout: layout) }
+  let!(:page2) { create(:cms_page, cur_node: cate_d13, layout: layout) }
 
   before { Cms::Page.all.each { |page| ::FileUtils.rm_f(page.path) } }
 
@@ -96,53 +96,53 @@ describe "category_agents_parts_node", type: :feature, dbscope: :example do
       let(:lower_html) { '</div> <!-- #category-part-e0 -->' }
 
       it do
-        visit cate1.full_url
+        visit cate_d1.full_url
         within "#category-part-e0" do
           # 第一階層にあるカテゴリーの場合、第一階層にあるカテゴリー（自身の兄弟）を一覧に表示する。
           expect(page).to have_css("article", count: 2)
-          expect(page).to have_css(".item-#{cate1.basename}", text: cate1.name)
-          expect(page).to have_css(".item-#{cate2.basename}", text: cate2.name)
+          expect(page).to have_css(".item-#{cate_d1.basename}", text: cate_d1.name)
+          expect(page).to have_css(".item-#{cate_d2.basename}", text: cate_d2.name)
         end
         within "#category-node-node-1" do
           expect(page).to have_css("article", count: 3)
-          expect(page).to have_css(".item-#{cate1_1.basename}", text: cate1_1.name)
-          expect(page).to have_css(".item-#{cate1_2.basename}", text: cate1_2.name)
-          expect(page).to have_css(".item-#{cate1_3.basename}", text: cate1_3.name)
+          expect(page).to have_css(".item-#{cate_d11.basename}", text: cate_d11.name)
+          expect(page).to have_css(".item-#{cate_d12.basename}", text: cate_d12.name)
+          expect(page).to have_css(".item-#{cate_d13.basename}", text: cate_d13.name)
         end
 
-        visit cate1_2.full_url
+        visit cate_d12.full_url
         within "#category-part-e0" do
           # 第二階層にあるカテゴリーの場合、第二階層にあるカテゴリー（自身の兄弟）を一覧に表示する。
           expect(page).to have_css("article", count: 3)
-          expect(page).to have_css(".item-#{cate1_1.basename}", text: cate1_1.name)
-          expect(page).to have_css(".item-#{cate1_2.basename}", text: cate1_2.name)
-          expect(page).to have_css(".item-#{cate1_3.basename}", text: cate1_3.name)
+          expect(page).to have_css(".item-#{cate_d11.basename}", text: cate_d11.name)
+          expect(page).to have_css(".item-#{cate_d12.basename}", text: cate_d12.name)
+          expect(page).to have_css(".item-#{cate_d13.basename}", text: cate_d13.name)
         end
         within "#category-node-node-1-2" do
           expect(page).to have_css("article", count: 2)
-          expect(page).to have_css(".item-#{cate1_2_1.basename}", text: cate1_2_1.name)
-          expect(page).to have_css(".item-#{cate1_2_2.basename}", text: cate1_2_2.name)
+          expect(page).to have_css(".item-#{cate_d121.basename}", text: cate_d121.name)
+          expect(page).to have_css(".item-#{cate_d122.basename}", text: cate_d122.name)
         end
 
-        visit cate1_1_1.full_url
+        visit cate_d111.full_url
         within "#category-part-e0" do
           # 第三階層にあるカテゴリーの場合、第二階層にあるカテゴリー（親の兄弟）を一覧に表示する。
           expect(page).to have_css("article", count: 3)
-          expect(page).to have_css(".item-#{cate1_1.basename}", text: cate1_1.name)
-          expect(page).to have_css(".item-#{cate1_2.basename}", text: cate1_2.name)
-          expect(page).to have_css(".item-#{cate1_3.basename}", text: cate1_3.name)
+          expect(page).to have_css(".item-#{cate_d11.basename}", text: cate_d11.name)
+          expect(page).to have_css(".item-#{cate_d12.basename}", text: cate_d12.name)
+          expect(page).to have_css(".item-#{cate_d13.basename}", text: cate_d13.name)
         end
         within "#category-node-page-1-1-1" do
           expect(page).to have_css("article", count: 1)
           expect(page).to have_css(".item-#{File.basename(page0.filename, ".*")}", text: page0.name)
         end
 
-        visit cate1_1_2_1.full_url
+        visit cate_d1121.full_url
         within "#category-part-e0" do
           # 第四階層にあるカテゴリーの場合、第三階層にあるカテゴリー（親の兄弟）を一覧に表示する。
           expect(page).to have_css("article", count: 2)
-          expect(page).to have_css(".item-#{cate1_1_1.basename}", text: cate1_1_1.name)
-          expect(page).to have_css(".item-#{cate1_1_2.basename}", text: cate1_1_2.name)
+          expect(page).to have_css(".item-#{cate_d111.basename}", text: cate_d111.name)
+          expect(page).to have_css(".item-#{cate_d112.basename}", text: cate_d112.name)
         end
         within "#category-node-page-1-1-2-1" do
           expect(page).to have_css("article", count: 1)
@@ -154,8 +154,8 @@ describe "category_agents_parts_node", type: :feature, dbscope: :example do
         within "#category-part-e0" do
           # 第一階層にあるページの場合、第一階層にあるカテゴリー（自身の兄弟）を一覧に表示する。
           expect(page).to have_css("article", count: 2)
-          expect(page).to have_css(".item-#{cate1.basename}", text: cate1.name)
-          expect(page).to have_css(".item-#{cate2.basename}", text: cate2.name)
+          expect(page).to have_css(".item-#{cate_d1.basename}", text: cate_d1.name)
+          expect(page).to have_css(".item-#{cate_d2.basename}", text: cate_d2.name)
         end
 
         expect(page1.depth).to eq 2
@@ -163,19 +163,19 @@ describe "category_agents_parts_node", type: :feature, dbscope: :example do
         within "#category-part-e0" do
           # 第二階層にあるページの場合、第二階層にあるカテゴリー（自身の兄弟）を一覧に表示する。
           expect(page).to have_css("article", count: 3)
-          expect(page).to have_css(".item-#{cate1_1.basename}", text: cate1_1.name)
-          expect(page).to have_css(".item-#{cate1_2.basename}", text: cate1_2.name)
-          expect(page).to have_css(".item-#{cate1_3.basename}", text: cate1_3.name)
+          expect(page).to have_css(".item-#{cate_d11.basename}", text: cate_d11.name)
+          expect(page).to have_css(".item-#{cate_d12.basename}", text: cate_d12.name)
+          expect(page).to have_css(".item-#{cate_d13.basename}", text: cate_d13.name)
         end
 
-        expect(page1_3.depth).to eq 3
-        visit page1_3.full_url
+        expect(page2.depth).to eq 3
+        visit page2.full_url
         within "#category-part-e0" do
           # 第三階層にあるページの場合、第二階層にあるカテゴリー（親の兄弟）を一覧に表示する。
           expect(page).to have_css("article", count: 3)
-          expect(page).to have_css(".item-#{cate1_1.basename}", text: cate1_1.name)
-          expect(page).to have_css(".item-#{cate1_2.basename}", text: cate1_2.name)
-          expect(page).to have_css(".item-#{cate1_3.basename}", text: cate1_3.name)
+          expect(page).to have_css(".item-#{cate_d11.basename}", text: cate_d11.name)
+          expect(page).to have_css(".item-#{cate_d12.basename}", text: cate_d12.name)
+          expect(page).to have_css(".item-#{cate_d13.basename}", text: cate_d13.name)
         end
       end
     end
