@@ -8,7 +8,7 @@ describe Garbage::AreaImportJob, dbscope: :example do
     create(
       :garbage_node_area_list,
       site: site,
-      filename: "areas",
+      filename: "areas"
     )
   end
 

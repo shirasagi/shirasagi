@@ -25,7 +25,7 @@ describe "garbage_node_areas", type: :feature, dbscope: :example, js: true do
     create(
       :garbage_node_area,
       name: "item",
-      filename: "search/list/item",
+      filename: "search/list/item"
     )
   end
 
