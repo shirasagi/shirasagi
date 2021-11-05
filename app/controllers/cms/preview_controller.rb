@@ -1,6 +1,8 @@
 class Cms::PreviewController < ApplicationController
   include Cms::BaseFilter
 
+  protect_from_forgery except: [:index]
+
   before_action :set_controller
   before_action :set_preview_date
   before_action :set_preview_notice
