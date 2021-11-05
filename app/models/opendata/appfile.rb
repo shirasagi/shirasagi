@@ -13,11 +13,10 @@ class Opendata::Appfile
   field :format, type: String
 
   embedded_in :app, class_name: "Opendata::App", inverse_of: :appfile
-  belongs_to_file :file
+  belongs_to_file :file, presence: true
 
   permit_params :text
 
-  validates :in_file, presence: true, if: ->{ file_id.blank? }
   validates :filename, uniqueness: true
   validate :validate_appfile
 
