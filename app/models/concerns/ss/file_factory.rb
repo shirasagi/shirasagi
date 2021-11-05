@@ -46,6 +46,8 @@ module SS::FileFactory
         item.sync_stats
       end
 
+      item.update_thumbnails
+
       item
     end
 
@@ -69,7 +71,7 @@ module SS::FileFactory
         yield file
         file.save!
       else
-        file.send(:save_thumbs)
+        file.update_thumbnails
       end
 
       file.sanitizer_copy_file

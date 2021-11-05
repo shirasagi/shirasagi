@@ -310,7 +310,7 @@ describe SS::File, dbscope: :example do
       let(:copy) { src.copy }
 
       it do
-        expect(src.thumb).to be_blank
+        # expect(src.thumb).to be_blank
 
         expect(copy.id).not_to eq src.id
         expect(copy.name).to eq src.name
@@ -343,7 +343,7 @@ describe SS::File, dbscope: :example do
         expect(copy.content_type).to eq src.content_type
         expect(copy.size).to eq src.size
         expect(copy.model).to eq "ss/temp_file"
-        expect(copy.thumb.id).not_to eq src.thumb.id
+        expect(copy.thumb.to_h).not_to eq src.thumb.to_h
       end
     end
 

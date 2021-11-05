@@ -8,6 +8,7 @@ module SS::Model::File
   include SS::CsvHeader
   include SS::FileUsageAggregation
   include SS::UploadPolicy
+  include SS::Thumbnail
   include History::Addon::Trash
   include ActiveSupport::NumberHelper
 
@@ -374,8 +375,6 @@ module SS::Model::File
 
     model.create_empty!(copy_attrs) do |new_file|
       ::FileUtils.copy(self.path, new_file.path)
-      # to create thumbnail call "#save!"
-      new_file.save!
       new_file.sanitizer_copy_file
     end
   end
@@ -455,7 +454,6 @@ module SS::Model::File
   end
 
   def save_file
-    errors.add :in_file, :blank if new_record? && in_file.blank?
     return false if errors.present?
     return if in_file.blank?
 
@@ -473,6 +471,7 @@ module SS::Model::File
       self.geo_location = converter.geo_location
     end
 
+    update_thumbnails
     sanitizer_save_file
 
     self.size = Fs.size(path)
