@@ -66,7 +66,7 @@ module SS::Relation::Thumb
   private
 
   def save_thumbs
-    thumbs_was = thumbs.map { |t| [t.image_size, t] }.to_h
+    thumbs_was = thumbs.index_by { |t| t.image_size }
     thumbs_resizing = self.class.thumbs_resizing
     thumbs_resizing = thumbs_resizing.symbolize_keys.compact
     thumbs_resizing = thumbs_resizing.invert.invert # delete duplicate values

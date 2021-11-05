@@ -307,7 +307,7 @@ save_node filename: "estat-bunya/estat15/estat1505", name: "医療", route: "ope
 save_node filename: "estat-bunya/estat16/estat1601", name: "貿易・国際収支", route: "opendata/estat_category", order: 1601
 save_node filename: "estat-bunya/estat16/estat1602", name: "国際協力", route: "opendata/estat_category", order: 1602
 save_node filename: "estat-bunya/estat99/estat9999", name: "その他", route: "opendata/estat_category", order: 9999
-estat_categories = Opendata::Node::EstatCategory.site(@site).map { |m| [m.filename, m] }.to_h
+estat_categories = Opendata::Node::EstatCategory.site(@site).index_by { |m| m.filename }
 
 save_node filename: "chiiki", name: "地域", route: "cms/node"
 save_node filename: "chiiki/shirasagi", name: "シラサギ市", route: "opendata/area", order: 1

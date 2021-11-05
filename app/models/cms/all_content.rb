@@ -96,7 +96,7 @@ class Cms::AllContent
 
   class HashCollection
     def initialize(array)
-      @hash = array.map { |item| [ item.id, item ] }.to_h
+      @hash = array.index_by { |item| item.id }
     end
 
     def find(id)
