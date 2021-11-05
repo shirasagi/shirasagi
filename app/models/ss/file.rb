@@ -38,7 +38,7 @@ class SS::File
     end
 
     def clone_file(file, cur_user: nil, owner_item: nil, &block)
-      attributes = file.attributes.to_h
+      attributes = Hash[file.attributes]
       attributes.stringify_keys!
       attributes.select! { |k| file.fields.key?(k) }
 

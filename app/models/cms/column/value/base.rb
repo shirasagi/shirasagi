@@ -94,7 +94,7 @@ class Cms::Column::Value::Base
   end
 
   def clone_to(to_item, opts = {})
-    attrs = self.attributes.to_h.except('_id').slice(*self.class.fields.keys.map(&:to_s))
+    attrs = Hash[self.attributes].except('_id').slice(*self.class.fields.keys.map(&:to_s))
     ret = to_item.column_values.build(attrs)
     ret.instance_variable_set(:@new_clone, true)
     ret.instance_variable_set(:@origin_id, self.id)

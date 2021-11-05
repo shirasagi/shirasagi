@@ -134,7 +134,7 @@ module Workflow::Addon
         self.reload
 
         attributes = {}
-        in_branch_attributes = in_branch.attributes.to_h
+        in_branch_attributes = Hash[in_branch.attributes]
         self.fields.each do |k, v|
           next if k == "_id"
           next if k == "filename"
