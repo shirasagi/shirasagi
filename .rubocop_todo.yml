@@ -372,6 +372,9 @@ Performance/CompareWithBlock:
   Exclude:
     - 'app/controllers/cms/apis/node_tree_controller.rb'
 
+Performance/Detect:
+  Enabled: false
+
 # Offense count: 1
 Performance/UnfreezeString:
   Exclude:
