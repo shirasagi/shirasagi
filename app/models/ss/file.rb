@@ -1,6 +1,6 @@
 class SS::File
   include SS::Model::File
-  include SS::Relation::Thumb
+  # include SS::Relation::Thumb
   include SS::Relation::FileHistory
   include SS::Liquidization
 

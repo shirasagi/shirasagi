@@ -1,7 +1,7 @@
 class SS::ReplaceFile
   include SS::Model::File
   include SS::Reference::Site
-  include SS::Relation::Thumb
+  # include SS::Relation::Thumb
   include SS::Relation::FileHistory
   include SS::Liquidization
 

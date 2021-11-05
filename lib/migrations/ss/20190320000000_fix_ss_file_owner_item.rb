@@ -12,7 +12,7 @@ class SS::Migration20190320000000
     all_ids.each_slice(20) do |ids|
       SS::File.unscoped.in(id: ids).to_a.each do |file|
         file = file.becomes_with_model
-        next if file.is_a?(SS::ThumbFile) || file.try(:thumb?)
+        next if file.model == "ss/thumb_file" || file.try(:thumb?)
         next if !file.respond_to?(:owner_item)
         owner_item = file.owner_item rescue nil
         next if owner_item.present?
