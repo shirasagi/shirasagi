@@ -199,6 +199,10 @@ module SS::Relation::File
       clone_file
     end
 
+    def default_model(class_name)
+      class_name.constantize.default_scoping.call.selector["model"]
+    end
+
     def update_relation(item, name, file, class_name:, default_resizing:)
       attributes = {}
       owner_item = SS::Model.container_of(item)
@@ -221,9 +225,11 @@ module SS::Relation::File
 
       if class_name == DEFAULT_FILE_CLASS_NAME
         expected_model = owner_item.class.name.underscore
-        if file.model != expected_model
-          attributes[:model] = expected_model
-        end
+      else
+        expected_model = default_model(class_name)
+      end
+      if file.model != expected_model
+        attributes[:model] = expected_model
       end
 
       file.update(attributes) if attributes.present?
