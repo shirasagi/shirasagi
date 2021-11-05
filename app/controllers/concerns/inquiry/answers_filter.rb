@@ -127,8 +127,6 @@ module Inquiry::AnswersFilter
     file = SS::File.with(client: client_name) do |model|
       model.where(id: params[:fid].to_i).first
     end
-    unless file.blank?
-      send_afile file
-    end
+    send_afile file if file.present?
   end
 end
