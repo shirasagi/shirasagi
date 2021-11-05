@@ -958,6 +958,10 @@ Style/TrivialAccessors:
     - 'lib/opendata/common.rb'
     - 'spec/support/ss/http_server_support.rb'
 
+Style/VariableInterpolation:
+  Exclude:
+    - 'app/models/board/post.rb'
+
 # Offense count: 1
 # Cop supports --auto-correct.
 Style/RedundantCapitalW:
