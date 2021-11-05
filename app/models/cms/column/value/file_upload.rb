@@ -9,7 +9,6 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
   permit_values :file_id, :file_label, :text, :image_html_type, :link_url
 
-  before_validation :clone_file_if_necessary
   before_parent_save :before_save_file
   after_parent_destroy :destroy_file
 
@@ -103,26 +102,6 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     "icon-#{::File.extname(file.filename).sub(/^\./, '')}"
   end
 
-  def clone_file_if_necessary
-    return unless file
-
-    owner_item = SS::Model.container_of(self)
-    return if SS::File.file_owned?(file, owner_item)
-
-    # 差し替えページの場合、ファイルの所有者が差し替え元なら、そのままとする
-    is_branch = owner_item.try(:branch?)
-    return if is_branch && SS::File.file_owned?(file, owner_item.master)
-
-    # ファイルの所有者が存在している場合、誤って所有者を変更することを防止する目的で、ファイルを複製する
-    # ただし、ブランチが所有している場合を除く
-    return unless Cms::Addon::File::Utils.need_to_clone?(file, owner_item, owner_item.try(:in_branch))
-
-    cur_user = owner_item.cur_user if owner_item.respond_to?(:cur_user)
-    clone_file = SS::File.clone_file(file, cur_user: cur_user, owner_item: owner_item)
-    self.file = clone_file
-    self.file_id = clone_file.id
-  end
-
   def before_save_file
     if file_id_was.present? && file_id_was != file_id
       Cms::Addon::File::Utils.delete_files(self, [ file_id_was ]) if file_id_was
@@ -132,19 +111,27 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
     # 注意: カラム処理では以下の点が異なるので注意。
     #
-    # カラムは数が変更される可能性があるため、master から branch を作成する際も、master へ branch をマージする際も、
-    # delete & insert となるため常に @new_clone がセットされる。
-    # master から branch を作成する際は @merge_values はセットされないのに対し、
-    # master へ branch をマージする際は @merge_values がセットされる。
-    clone_file if @new_clone && !@merge_values
+    # - カラムは数が変更される可能性があるため、master から branch を作成する際も、master へ branch をマージする際も、
+    #   delete & insert となるため常に @new_clone がセットされる。
+    # - master から branch を作成する際は @merge_values はセットされないのに対し、
+    #   master へ branch をマージする際は @merge_values がセットされる。
+    # - ゴミ箱から復元する際は、@new_clone も @merge_values もセットされない。
+    #
+    # これらの全てのケースに対応する必要がある。
+    clone_file_if_necessary
     update_file_owner_item
   end
 
-  def clone_file
-    return if file.blank?
+  def clone_file_if_necessary
+    return unless file
 
     owner_item = SS::Model.container_of(self)
-    return if owner_item.respond_to?(:branch?) && owner_item.branch?
+    return if SS::File.file_owned?(file, owner_item)
+
+    # 差し替えページの場合、ファイルの所有者が差し替え元なら、そのままとする
+    return if owner_item.try(:branch?) && SS::File.file_owned?(file, owner_item.master)
+
+    return unless Cms::Addon::File::Utils.need_to_clone?(file, owner_item, owner_item.try(:in_branch))
 
     cur_user = owner_item.cur_user if owner_item.respond_to?(:cur_user)
     new_file = SS::File.clone_file(file, cur_user: cur_user, owner_item: owner_item) do |new_file|
