@@ -23,7 +23,7 @@ module SS::Relation::File
       # この順番を意識して、SS::File への保存を before_validation で、属性の変更を before_save や after_save で実行するように
       # ハンドラーを登録していく。
       before_validation if: ->{ send("in_#{name}").present? } do
-        _upload_and_set_file(name, default_resizing: resizing, state: static_state)
+        _upload_and_set_file(name, default_resizing: resizing, static_state: static_state)
       end
       if class_name != DEFAULT_FILE_CLASS_NAME
         # SS::File 以外のファイルクラスでは、そのクラス関連のモデルしか DB から読み込めないが、
