@@ -4,7 +4,7 @@ class Gws::Schedule::HolidaysController < ApplicationController
   include Gws::Schedule::CalendarFilter
 
   navi_view "gws/schedule/main/navi"
-  menu_view "gws/schedule/holidays/main/menu"
+  menu_view "gws/schedule/holidays/menu"
 
   model Gws::Schedule::Holiday
 
