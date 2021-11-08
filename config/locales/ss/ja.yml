@@ -240,6 +240,11 @@ ja:
       set_star_all: スターをつけました。
       unset_star_all: スターをはずしました。
       replace_saved: 差し替え保存しました。
+      max_file_size_hard_limit_short_notice: "（%{human_size} 以下）"
+      max_file_size_hard_limit_long_notices:
+        - "サーバ設定でファイルのアップロード容量の上限が %{human_size} に設定されています。"
+        - これを超える制限サイズを設定しても有効に機能しません。
+        - サーバ設定の変更を希望される場合はシステム管理者にお問い合わせください。
 
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
