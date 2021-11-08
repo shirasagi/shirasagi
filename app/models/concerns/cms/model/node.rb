@@ -11,6 +11,8 @@ module Cms::Model::Node
   include Facility::Reference::Location
 
   included do
+    include Cms::Model::NodeDiscriminatorRetrieval
+
     store_in collection: "cms_nodes"
     set_permission_name "cms_nodes"
 
@@ -52,7 +54,7 @@ module Cms::Model::Node
           criteria = criteria.where({ filename: /^#{::Regexp.escape(self.filename)}\//, depth: self.depth + 1 })
         end
         criteria = criteria.reorder(self.sort_hash) if self.respond_to?(:sort_hash)
-        criteria.to_a.map(&:becomes_with_route)
+        criteria.to_a
       end
       export :pages do |context|
         site = context.registers[:cur_site]
@@ -65,7 +67,7 @@ module Cms::Model::Node
           criteria = criteria.where({ filename: /^#{::Regexp.escape(self.filename)}\//, depth: self.depth + 1 })
         end
         criteria = criteria.reorder(self.sort_hash) if self.respond_to?(:sort_hash)
-        criteria.to_a.map(&:becomes_with_route)
+        criteria.to_a
       end
     end
   end
@@ -77,7 +79,12 @@ module Cms::Model::Node
   end
 
   def becomes_with_route(name = nil)
-    super (name || route).sub("/", "/node/")
+    return self if name.blank?
+
+    name = name.sub("/", "/node/")
+    return self if route == name
+
+    super name
   end
 
   def dirname
@@ -153,7 +160,7 @@ module Cms::Model::Node
 
       return errors.add :base, :same_filename if filename == dst
       return errors.add :filename, :taken if Cms::Node.site(s).where(filename: dst).first
-      return errors.add :base, :exist_physical_file if Fs.exists?("#{s.path}/#{dst}")
+      return errors.add :base, :exist_physical_file if Fs.exist?("#{s.path}/#{dst}")
 
       if dst_dir.present?
         dst_parent = Cms::Node.site(s).where(filename: dst_dir).first
@@ -221,9 +228,9 @@ module Cms::Model::Node
 
   def remove_all
     dst = path.sub("#{Rails.root}/public", History::Trash.root)
-    Fs.rm_rf(dst) if Fs.exists?(dst)
+    Fs.rm_rf(dst) if Fs.exist?(dst)
     Fs.mkdir_p(File.dirname(dst))
-    Fs.mv(path, dst) if Fs.exists?(path)
+    Fs.mv(path, dst) if Fs.exist?(path)
   end
 
   private
@@ -264,8 +271,8 @@ module Cms::Model::Node
     dst = "#{(@cur_site || site).path}/#{@db_changes['filename'][1]}"
     dst_dir = ::File.dirname(dst)
 
-    Fs.mkdir_p dst_dir unless Fs.exists?(dst_dir)
-    Fs.mv src, dst if Fs.exists?(src)
+    Fs.mkdir_p dst_dir unless Fs.exist?(dst_dir)
+    Fs.mv src, dst if Fs.exist?(src)
 
     src, dst = @db_changes["filename"]
     [ Cms::Node, Cms::Page, Cms::Part, Cms::Layout ].each do |model|
@@ -276,7 +283,6 @@ module Cms::Model::Node
       all_ids = criteria.pluck(:id)
       all_ids.each_slice(20) do |ids|
         criteria.in(id: ids).to_a.each do |item|
-          item = item.becomes_with_route if item.respond_to?(:becomes_with_route)
           dst_filename = item.filename.sub(/^#{::Regexp.escape(src)}\//, "#{dst}/")
           item.set(filename: dst_filename, depth: dst_filename.scan("/").size + 1)
         end
@@ -318,7 +324,6 @@ module Cms::Model::Node
 
   def remove_children_recursively
     children.each do |child_node|
-      child_node = child_node.becomes_with_route
       child_node.remove_files_recursively
     end
   end

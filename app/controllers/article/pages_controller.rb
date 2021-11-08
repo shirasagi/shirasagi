@@ -35,7 +35,6 @@ class Article::PagesController < ApplicationController
 
     form = nil
     if csv_params[:form_id].present?
-      @cur_node = @cur_node.becomes_with_route if @cur_node.class == Cms::Node
       if @cur_node.respond_to?(:st_forms)
         form = @cur_node.st_forms.where(id: csv_params.delete(:form_id)).first
         csv_params[:form] = form
@@ -55,7 +54,7 @@ class Article::PagesController < ApplicationController
     exporter = Cms::PageExporter.new(site: @cur_site, criteria: criteria)
     enumerable = exporter.enum_csv(csv_params)
 
-    filename = @model.to_s.tableize.gsub(/\//, "_")
+    filename = @model.to_s.tableize.tr("/", "_")
     filename = "#{filename}_#{Time.zone.now.to_i}.csv"
 
     response.status = 200
@@ -72,7 +71,7 @@ class Article::PagesController < ApplicationController
     if request.get?
       respond_to do |format|
         format.html { render }
-        format.json { render file: "ss/tasks/index", content_type: json_content_type, locals: { item: @task } }
+        format.json { render template: "ss/tasks/index", content_type: json_content_type, locals: { item: @task } }
       end
       return
     end

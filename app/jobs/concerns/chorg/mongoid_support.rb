@@ -38,7 +38,6 @@ module Chorg::MongoidSupport
   def with_entities(models, scope = {})
     models.each do |model|
       model.where(scope).each do |entity|
-        entity = entity.try(:becomes_with_route) || entity
         entity = entity.try(:becomes_with_topic) || entity
         entity.try(:cur_site=, @cur_site)
         entity.try(:allow_other_user_files)
@@ -78,7 +77,7 @@ module Chorg::MongoidSupport
       return true
     end
 
-    if val.class == Mongoid::Fields::ForeignKey
+    if val.instance_of?(Mongoid::Fields::ForeignKey)
       options = val.association ? val.association.options : {}
     else
       options = val.options[:metadata] || {}
@@ -133,7 +132,7 @@ module Chorg::MongoidSupport
   def skip_target_field?(entity, field_name)
     return false if field_name != "html"
     form = entity.try(:form)
-    form.class == Cms::Form
+    form.instance_of?(Cms::Form)
   end
 
   def with_updates(entity, substituter)

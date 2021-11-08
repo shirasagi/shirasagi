@@ -21,6 +21,7 @@ class Cms::Column::Value::Base
   validate :validate_value
 
   attr_accessor :link_check_user
+
   validate :validate_link_check, on: :link
 
   liquidize do
@@ -116,6 +117,13 @@ class Cms::Column::Value::Base
         self.value = value
       end
     end
+  end
+
+  def history_summary
+    h = []
+    h << "#{t("value")}: #{value}" if try(:value).present?
+    h << "#{t("alignment")}: #{I18n.t("cms.options.alignment.#{alignment}")}"
+    h.join(",")
   end
 
   private

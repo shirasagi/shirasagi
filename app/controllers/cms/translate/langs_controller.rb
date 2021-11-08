@@ -23,7 +23,7 @@ class Cms::Translate::LangsController < ApplicationController
   def download
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
     set_items
-    filename = @model.to_s.tableize.gsub(/\//, "_")
+    filename = @model.to_s.tableize.tr("/", "_")
     send_enum @items.enum_csv, filename: "#{filename}_#{Time.zone.now.to_i}.csv"
   end
 
@@ -36,6 +36,6 @@ class Cms::Translate::LangsController < ApplicationController
     @item.attributes = get_params
     result = @item.import_csv
     flash.now[:notice] = t("ss.notice.saved") if result
-    render_create result, location: { action: :index }, render: { file: :import }
+    render_create result, location: { action: :index }, render: { template: "import" }
   end
 end

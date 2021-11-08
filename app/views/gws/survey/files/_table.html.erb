@@ -53,6 +53,7 @@
                       <% column_value.files.each do |file| %>
                         <span class="prefix"><%= column.prefix_label %></span>
                         <span class="value"><%= link_to(file.humanized_name, file.url) %></span>
+                        <%= sanitizer_status(file) %>
                         <span class="postfix"><%= column.postfix_label %></span>
                         <br/>
                       <% end %>

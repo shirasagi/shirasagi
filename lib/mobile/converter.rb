@@ -85,12 +85,12 @@ class Mobile::Converter < String
       name = src_attr["alt"].presence || src_attr["title"].presence || href.sub(/.*\//, "")
       cls = "tag-img" + ( src_attr["class"] ? " #{src_attr['class']}" : "" )
 
-      if href =~ /^\/fs\/.+?\/\_\/.+?#{ext}/
+      if href =~ /^\/fs\/.+?\/_\/.+?#{ext}/
         # ss_file thumb
         if href =~ /\/thumb\//
           match
         else
-          src_attr["src"] = href.sub(/\/\_\//, "/_/thumb/")
+          src_attr["src"] = href.sub(/\/_\//, "/_/thumb/")
           html = %(<img #{attr_to_s(src_attr)}>)
           html
         end
@@ -120,7 +120,7 @@ class Mobile::Converter < String
   end
 
   def remove_other_namespace_tags!
-    self.gsub!(/<\/?\w*?\:\w+?.*?>/m, "")
+    self.gsub!(/<\/?\w*?:\w+?.*?>/m, "")
   end
 
   def remove_comments!

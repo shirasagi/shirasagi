@@ -16,7 +16,6 @@ describe Cms::Page, type: :model, dbscope: :example do
     subject(:item) { create :cms_page }
     let(:show_path) { Rails.application.routes.url_helpers.cms_page_path(site: subject.site, id: subject) }
 
-    it { expect(item.becomes_with_route).not_to eq nil }
     it { expect(item.dirname).to eq nil }
     it { expect(item.basename).not_to eq nil }
     it { expect(item.path).not_to eq nil }
@@ -32,7 +31,6 @@ describe Cms::Page, type: :model, dbscope: :example do
     let(:item) { create :cms_page, cur_node: node }
     let(:show_path) { Rails.application.routes.url_helpers.node_page_path(site: item.site, cid: node.id, id: item.id) }
 
-    it { expect(item.becomes_with_route).not_to eq nil }
     it { expect(item.dirname).to eq node.filename }
     it { expect(item.basename).not_to eq nil }
     it { expect(item.path).not_to eq nil }
@@ -76,8 +74,8 @@ describe Cms::Page, type: :model, dbscope: :example do
   end
 
   describe "#becomes_with_route" do
-    subject { create(:cms_page, route: "article/page") }
-    it { expect(subject.becomes_with_route).to be_kind_of(Article::Page) }
+    subject { create(:cms_page) }
+    it { expect(subject.becomes_with_route("article/page")).to be_kind_of(Article::Page) }
   end
 
   describe "#name_for_index" do
@@ -126,6 +124,17 @@ describe Cms::Page, type: :model, dbscope: :example do
     end
 
     context "when relative untrusted host url is given" do
+      before do
+        @save_url_type = SS.config.sns.url_type
+        SS.config.replace_value_at(:sns, :url_type, "restricted")
+        Sys::TrustedUrlValidator.send(:clear_trusted_urls)
+      end
+
+      after do
+        SS.config.replace_value_at(:sns, :url_type, @save_url_type)
+        Sys::TrustedUrlValidator.send(:clear_trusted_urls)
+      end
+
       it do
         subject.redirect_link = "//#{unique_domain}/a/b/c"
         expect(subject).to be_invalid
@@ -135,6 +144,17 @@ describe Cms::Page, type: :model, dbscope: :example do
     end
 
     context "when absolute untrusted host url is given" do
+      before do
+        @save_url_type = SS.config.sns.url_type
+        SS.config.replace_value_at(:sns, :url_type, "restricted")
+        Sys::TrustedUrlValidator.send(:clear_trusted_urls)
+      end
+
+      after do
+        SS.config.replace_value_at(:sns, :url_type, @save_url_type)
+        Sys::TrustedUrlValidator.send(:clear_trusted_urls)
+      end
+
       it do
         subject.redirect_link = "#{unique_url}/a/b/c"
         expect(subject).to be_invalid

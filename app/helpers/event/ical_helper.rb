@@ -23,7 +23,6 @@ module Event::IcalHelper
     end
 
     items.each do |item|
-      item = item.becomes_with_route
       next unless item.respond_to?(:event_dates)
       next if item.event_dates.blank?
 

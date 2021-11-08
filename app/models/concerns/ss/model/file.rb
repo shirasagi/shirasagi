@@ -90,12 +90,12 @@ module SS::Model::File
   end
 
   def path
-    "#{self.class.root}/ss_files/" + id.to_s.split(//).join("/") + "/_/#{id}"
+    "#{self.class.root}/ss_files/" + id.to_s.chars.join("/") + "/_/#{id}"
   end
 
   def public_dir
     return if site.blank? || !site.respond_to?(:root_path)
-    "#{site.root_path}/fs/" + id.to_s.split(//).join("/") + "/_"
+    "#{site.root_path}/fs/" + id.to_s.chars.join("/") + "/_"
   end
 
   def public_path
@@ -103,12 +103,12 @@ module SS::Model::File
   end
 
   def url_with_filename
-    "/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
+    "/fs/" + id.to_s.chars.join("/") + "/_/#{filename}"
   end
 
   def url_with_name
     if SS::FilenameUtils.url_safe_japanese?(name)
-      "/fs/" + id.to_s.split(//).join("/") + "/_/#{Addressable::URI.encode_component(name)}"
+      "/fs/" + id.to_s.chars.join("/") + "/_/#{Addressable::URI.encode_component(name)}"
     else
       url_with_filename
     end
@@ -116,20 +116,20 @@ module SS::Model::File
 
   def full_url_with_filename
     return if site.blank? || !site.respond_to?(:full_root_url)
-    "#{site.full_root_url}fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
+    "#{site.full_root_url}fs/" + id.to_s.chars.join("/") + "/_/#{filename}"
   end
 
   def full_url_with_name
     return if site.blank? || !site.respond_to?(:full_root_url)
     if SS::FilenameUtils.url_safe_japanese?(name)
-      "#{site.full_root_url}fs/" + id.to_s.split(//).join("/") + "/_/#{Addressable::URI.encode_component(name)}"
+      "#{site.full_root_url}fs/" + id.to_s.chars.join("/") + "/_/#{Addressable::URI.encode_component(name)}"
     else
       full_url_with_filename
     end
   end
 
   def thumb_url
-    "/fs/" + id.to_s.split(//).join("/") + "/_/thumb/#{filename}"
+    "/fs/" + id.to_s.chars.join("/") + "/_/thumb/#{filename}"
   end
 
   def public?
@@ -228,15 +228,15 @@ module SS::Model::File
   end
 
   def resizing=(size)
-    @resizing = (size.class == String) ? size.split(",") : size
+    @resizing = size.instance_of?(String) ? size.split(",") : size
   end
 
   def read
-    Fs.exists?(path) ? Fs.binread(path) : nil
+    Fs.exist?(path) ? Fs.binread(path) : nil
   end
 
   def to_io(&block)
-    Fs.exists?(path) ? Fs.to_io(path, &block) : nil
+    Fs.exist?(path) ? Fs.to_io(path, &block) : nil
   end
 
   def uploaded_file(&block)
@@ -299,7 +299,7 @@ module SS::Model::File
   end
 
   def image_dimension
-    return unless Fs.exists?(path)
+    return unless Fs.exist?(path)
     return unless image?
 
     ::FastImage.size(path) rescue nil
@@ -355,7 +355,7 @@ module SS::Model::File
   end
 
   def validate_filename
-    if multibyte_filename_disabled? && filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
+    if multibyte_filename_disabled? && filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-.]+$/
       errors.add :base, :invalid_filename
     end
   end
@@ -376,7 +376,7 @@ module SS::Model::File
     end
 
     dir = ::File.dirname(path)
-    Fs.mkdir_p(dir) unless Fs.exists?(dir)
+    Fs.mkdir_p(dir) unless Fs.exist?(dir)
 
     SS::ImageConverter.attach(in_file, ext: ::File.extname(in_file.original_filename)) do |converter|
       converter.apply_defaults!(resizing: resizing_with_max_file_size, quality: quality)
@@ -400,7 +400,7 @@ module SS::Model::File
     backup.site = self.site
     backup.user = @cur_user
     return unless backup.save
-    return unless File.exists?(path)
+    return unless File.exist?(path)
     trash_path = "#{History::Trash.root}/#{path.sub(/.*\/(ss_files\/)/, '\\1')}"
     FileUtils.mkdir_p(File.dirname(trash_path))
     FileUtils.cp(path, trash_path)

@@ -6,8 +6,8 @@ module Fs::File
       :file
     end
 
-    def exists?(path)
-      FileTest.exists? path
+    def exist?(path)
+      FileTest.exist? path
     end
 
     def file?(path)

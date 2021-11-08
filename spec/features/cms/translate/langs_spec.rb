@@ -21,7 +21,7 @@ describe "cms_translate_langs", type: :feature, dbscope: :example do
   let(:google_translation_code) { "ja-google" }
   let(:microsoft_translator_text_code) { "ja-ms" }
   let(:mock_code) { "ja-mock" }
-  let(:accept_languages) { ["ja-1", "ja-2", "ja-3"]}
+  let(:accept_languages) { ["ja-1", "ja-2", "ja-3"] }
   let(:item_csv) do
     [
       item.code,

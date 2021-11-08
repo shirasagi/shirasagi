@@ -350,6 +350,7 @@ Rails.application.routes.draw do
     get "calendar_nav" => "public#index", cell: "parts/calendar_nav"
     get "monthly_nav" => "public#index", cell: "parts/monthly_nav"
     get "site_search_history" => "public#index", cell: "parts/site_search_history"
+    get "history_list" => "public#index", cell: "parts/history_list"
   end
 
   page "cms" do
@@ -363,10 +364,10 @@ Rails.application.routes.draw do
     end
   end
 
-  match "*public_path" => "cms/public#index", public_path: /[^\.].*/,
-        via: [:get, :post, :put, :patch, :delete], format: true
-  match "*public_path" => "cms/public#index", public_path: /[^\.].*/,
-        via: [:get, :post, :put, :patch, :delete], format: false
+  match "*public_path" => "cms/public#index", public_path: /[^.].*/,
+    via: [:get, :post, :put, :patch, :delete], format: true
+  match "*public_path" => "cms/public#index", public_path: /[^.].*/,
+    via: [:get, :post, :put, :patch, :delete], format: false
 
   root "cms/public#index", defaults: { format: :html }
 end

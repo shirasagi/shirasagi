@@ -1,5 +1,5 @@
 class Inquiry::Mailer < ActionMailer::Base
-  add_template_helper(Inquiry::MailerHelper)
+  helper Inquiry::MailerHelper
 
   def notify_mail(site, node, answer, notice_email)
     @node = node

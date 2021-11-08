@@ -7,6 +7,7 @@ module Gws::Addon::Import::Schedule
 
     included do
       attr_accessor :in_file, :imported
+
       permit_params :in_file
     end
 
@@ -170,7 +171,7 @@ module Gws::Addon::Import::Schedule
     end
 
     def set_errors(item, index)
-      errors = item.errors.full_messages.inject(:+)
+      errors = item.errors.full_messages.join
       self.errors.add :base, "#{index}: #{errors}"
     end
 

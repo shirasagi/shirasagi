@@ -67,6 +67,6 @@ class Gws::GroupsController < ApplicationController
     @item.cur_site = @cur_site
     result = @item.import
     flash.now[:notice] = t("ss.notice.saved") if !result && @item.imported > 0
-    render_create result, location: { action: :index }, render: { file: :import }
+    render_create result, location: { action: :index }, render: { template: "import" }
   end
 end

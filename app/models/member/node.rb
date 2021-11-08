@@ -37,7 +37,7 @@ module Member::Node
     def make_trusted_full_url(ref)
       return if ref.blank?
 
-      full_url = make_full_url(URI::decode(ref))
+      full_url = make_full_url(Addressable::URI.unencode(ref))
       return if full_url.blank?
 
       # normalize full url

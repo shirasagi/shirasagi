@@ -78,13 +78,13 @@ class Gws::Chorg::RunController < ApplicationController
             notice = t('chorg.messages.job_started')
           end
           redirect_to({ controller: :revisions, action: :show, id: @revision },
-                      { notice: notice })
+            { notice: notice })
         end
         format.json { head :no_content }
       end
     else
       respond_to do |format|
-        format.html { render file: :confirmation, status: :unprocessable_entity }
+        format.html { render template: "confirmation", status: :unprocessable_entity }
         format.json { render json: @item.errors.full_messages, status: :unprocessable_entity }
       end
     end

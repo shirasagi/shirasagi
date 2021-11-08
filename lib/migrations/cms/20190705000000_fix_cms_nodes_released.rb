@@ -10,7 +10,6 @@ class SS::Migration20190705000000
       next unless node
 
       begin
-        node = node.becomes_with_route
         node.set(released: node.updated) if node.released.nil?
       rescue => e
         puts "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
@@ -23,7 +22,6 @@ class SS::Migration20190705000000
       next unless node
 
       begin
-        node = node.becomes_with_route
         node.set(first_released: node.updated) if node.first_released.nil?
       rescue => e
         puts "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"

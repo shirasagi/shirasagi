@@ -110,7 +110,7 @@ class Gws::Survey::EditablesController < ApplicationController
 
     @item.attributes = get_params
     @item.state = 'public'
-    render_opts = { render: { file: :publish }, notice: t('ss.notice.published') }
+    render_opts = { render: { template: "publish" }, notice: t('ss.notice.published') }
     render_update @item.save, render_opts
   end
 
@@ -122,7 +122,7 @@ class Gws::Survey::EditablesController < ApplicationController
     return if request.get?
 
     @item.state = 'closed'
-    render_opts = { render: { file: :depublish }, notice: t('ss.notice.depublished') }
+    render_opts = { render: { template: "depublish" }, notice: t('ss.notice.depublished') }
     render_update @item.save, render_opts
   end
 
@@ -143,7 +143,7 @@ class Gws::Survey::EditablesController < ApplicationController
       anonymous_state: copy["anonymous_state"],
       file_state: copy["file_state"]
     )
-    render_opts = { location: { action: :index }, render: { file: :copy }, notice: t('ss.notice.copied') }
+    render_opts = { location: { action: :index }, render: { template: "copy" }, notice: t('ss.notice.copied') }
     render_create @copy.save, render_opts
   end
 
@@ -167,7 +167,7 @@ class Gws::Survey::EditablesController < ApplicationController
     @item.cur_form = @cur_form
     @item.name = t("gws/survey.file_name", form: @cur_form.name)
 
-    render_opts = { file: "gws/survey/files/edit", locals: { preview: true } }
+    render_opts = { template: "gws/survey/files/edit", locals: { preview: true } }
     render_opts[:layout] = false if request.xhr?
     render render_opts
   end

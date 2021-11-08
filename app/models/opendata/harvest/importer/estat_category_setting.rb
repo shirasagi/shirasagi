@@ -181,12 +181,12 @@ class Opendata::Harvest::Importer
 
       items.each do |item, idx|
         next if item.valid?
-        errors.add :base, "#{idx + 2} : #{item.errors.full_messages.join(", ")}"
+        SS::Model.copy_errors(item, self, prefix: "#{idx + 2} : ")
       end
 
       id_given_items.values.each do |item, idx|
         next if item.valid?
-        errors.add :base, "#{idx.map { |i| i + 2 }.join(", ")} : #{item.errors.full_messages.join(", ")}"
+        SS::Model.copy_errors(item, self, prefix: "#{idx.map { |i| i + 2 }.join(", ")} : ")
       end
 
       return false if errors.present?

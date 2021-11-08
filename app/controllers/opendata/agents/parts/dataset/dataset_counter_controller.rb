@@ -2,7 +2,6 @@ class Opendata::Agents::Parts::Dataset::DatasetCounterController < ApplicationCo
   include Cms::PartFilter::View
   helper Opendata::UrlHelper
 
-  public
 
   def index
   end

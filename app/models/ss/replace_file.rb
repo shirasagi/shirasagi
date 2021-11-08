@@ -81,7 +81,7 @@ class SS::ReplaceFile
 
     if item.respond_to?(:form) && item.form
       item.column_values.each do |column_value|
-        if column_value.class == Cms::Column::Value::Free
+        if column_value.instance_of?(Cms::Column::Value::Free)
           column_value.value = replace_html(column_value.value.to_s.dup)
           column_value.save!
         end

@@ -1,18 +1,26 @@
 class Uploader::FilesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
+  include SS::SanitizerFilter
 
   model Uploader::File
 
-  before_action :set_format
+  prepend_before_action :set_format
   before_action :create_folder
   before_action :redirect_from_index
   before_action :set_item
+  before_action :set_item_was, if: ->{ @item }
   before_action :set_crumbs
+  before_action :deny_sanitizing_file, only: [:update, :destroy]
+  after_action :save_job, only: [:create, :update, :destroy, :destroy_all]
 
   navi_view "uploader/main/navi"
 
   private
+
+  def set_format
+    request.formats = [params[:format] || :html]
+  end
 
   def set_crumbs
     filename = @item.filename.sub(@cur_node.filename, "")
@@ -23,10 +31,6 @@ class Uploader::FilesController < ApplicationController
       @crumbs << [name, url]
     end
     @crumbs.pop if params[:do].present?
-  end
-
-  def set_format
-    request.formats = [params[:format] || :html]
   end
 
   def create_folder
@@ -54,6 +58,37 @@ class Uploader::FilesController < ApplicationController
 
     @item.site = @cur_site
     @item.read if @item.text?
+    Uploader::File.set_sanitizer_state([@item], { site_id: @cur_site.id })
+  end
+
+  def set_item_was
+    @path_was = @item.path
+    @text_was = @item.text if @item.text?
+  end
+
+  def save_job
+    return unless SS::UploadPolicy.upload_policy == 'sanitizer'
+    return unless response.headers['Location']
+
+    job_file = Uploader::JobFile.new_job(site_id: @cur_site.id)
+    action = params[:action]
+
+    if action == 'create' && @directory
+      job_file.bind_mkdir(["#{@item.path}/#{@directory}"]).save_job
+    elsif action == 'create'
+      @items.each do |item|
+        job_file.upload(item.path)
+      end
+    elsif action == 'update'
+      job_file.bind_mv(@path_was, @item.path) if @path_was != @item.path
+      job_file.bind_text(@item.path, @item.text) if @text && @text_was != @item.text
+      job_file.save_job
+      job_file.upload(@item.path) if @file
+    elsif action == 'destroy'
+      paths = [@path_was]
+      paths = @paths.map { |name| "#{@path_was}/#{name}" } if @paths.present?
+      job_file.bind_rm(paths).save_job
+    end
   end
 
   def set_items(path)
@@ -65,24 +100,20 @@ class Uploader::FilesController < ApplicationController
   end
 
   def create_files
+    @items = []
     @files.each do |file|
       next unless file.present?
       path = ::File.join(@cur_site.path, @item.filename, file.original_filename)
       item = @model.new(path: path, binary: file.read, site: @cur_site)
 
-      if !item.save
-        item.errors.each do |n, e|
-          if n == :base
-            attr = nil
-          else
-            attr = @model.t(n)
-          end
-          @item.errors.add :base, "#{item.name} - #{attr}#{e}"
-        end
+      if item.save
+        @items << item
+      else
+        SS::Model.copy_errors(item, @item, prefix: "#{item.name} - ")
       end
     end
     location = "#{uploader_files_path}/#{@item.filename}"
-    render_create @item.errors.empty?, location: location, render: { file: :new_files }
+    render_create @item.errors.empty?, location: location, render: { template: "new_files" }
   end
 
   def create_directory
@@ -90,12 +121,12 @@ class Uploader::FilesController < ApplicationController
     item = @model.new(path: path, is_dir: true, site: @cur_site)
 
     if !item.save
-      item.errors.each do |n, e|
-        @item.errors.add :path, e
+      item.errors.each do |error|
+        @item.errors.add :path, error.message
       end
     end
     location = "#{uploader_files_path}/#{@item.filename}"
-    render_create @item.errors.empty?, location: location, render: { file: :new_directory }
+    render_create @item.errors.empty?, location: location, render: { template: "new_directory" }
   end
 
   def set_params(*keys)
@@ -115,9 +146,10 @@ class Uploader::FilesController < ApplicationController
   end
 
   def index
-    raise "404" unless @item.directory?
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+    return redirect_to("#{request.path}?do=show") unless @item.directory?
     set_items(@item.path)
+    Uploader::File.set_sanitizer_state(@items, { site_id: @cur_site.id })
     render :index
   end
 
@@ -155,9 +187,9 @@ class Uploader::FilesController < ApplicationController
     else
       @item.errors.add :base, :set_filename
       if @directory
-        render_create false, location: location, render: { file: :new_directory }
+        render_create false, location: location, render: { template: "new_directory" }
       else
-        render_create false, location: location, render: { file: :new_files }
+        render_create false, location: location, render: { template: "new_files" }
       end
     end
   end
@@ -175,7 +207,7 @@ class Uploader::FilesController < ApplicationController
     @item.filename = @filename if @filename && @filename.start_with?(@cur_node.filename)
     @item.site = @cur_site
     if ext != @item.ext
-      @item.errors.add :base, "#{filename}#{I18n.t("errors.messages.invalid_file_type")}"
+      @item.errors.add :base, "#{@item.filename} #{I18n.t("errors.messages.invalid_file_type")}"
       @item.filename = filename
       render_update false
       return
@@ -228,7 +260,7 @@ class Uploader::FilesController < ApplicationController
     if extname != @item.ext && @item.ext.present?
       message += "#{I18n.t('uploader.notice.invalid_ext')}\n"
     end
-    if File.exists?(path) && @item.directory?
+    if File.exist?(path) && @item.directory?
       message += "#{I18n.t('uploader.notice.overwrite')}\n"
     end
     render json: { message: message }

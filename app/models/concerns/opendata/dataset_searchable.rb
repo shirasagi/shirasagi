@@ -24,15 +24,25 @@ module Opendata::DatasetSearchable
     end
 
     def search(params)
-      criteria = self.all
-      return criteria if params.blank?
-      [ :search_keyword, :search_ids, :search_name, :search_tag, :search_area_id, :search_category_id, :search_estat_category_id,
-        :search_dataset_group, :search_dataset_group_id, :search_format, :search_license_id, :search_poster ].each do |m|
-        criteria = criteria.send(m, params)
-      end
+      return all if params.blank?
 
-      criteria
+      criterion = SEARCH_HANDLERS.map { |m| new_scope_without_default { |criteria| criteria.send(m, params) } }
+      criterion = criterion.select { |criteria| criteria.selector.present? }
+      return all if criterion.blank?
+      return all.where(criterion.first.selector) if criterion.length == 1
+
+      case params[:option]
+      when 'any_conditions'
+        all.where(new_scope_without_default { |criteria| criteria.any_of(*criterion.map(&:selector)) }.selector)
+      else # nil, all_keywords, any_keywords
+        all.and(*criterion.map(&:selector))
+      end
     end
+
+    SEARCH_HANDLERS = %i[
+      search_keyword search_ids search_name search_tag search_area_id search_category_id search_estat_category_id
+      search_dataset_group search_dataset_group_id search_format search_license_id search_poster
+    ].freeze
 
     def search_keyword(params)
       return all if params.blank? || params[:keyword].blank?
@@ -71,16 +81,12 @@ module Opendata::DatasetSearchable
 
     def search_tag(params)
       return all if params.blank? || params[:tag].blank?
-
-      operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
-      all.where(operator => [ tags: params[:tag] ])
+      all.where(tags: params[:tag])
     end
 
     def search_area_id(params)
       return all if params.blank? || params[:area_id].blank?
-
-      operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
-      all.where(operator => [ area_ids: params[:area_id].to_i ])
+      all.where(area_ids: params[:area_id].to_i)
     end
 
     def search_category_id(params)
@@ -95,8 +101,7 @@ module Opendata::DatasetSearchable
         category_ids << child.id
       end
 
-      operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
-      all.where(operator => [ category_ids: { "$in" => category_ids } ])
+      all.where(category_ids: { "$in" => category_ids })
     end
 
     def search_estat_category_id(params)
@@ -111,8 +116,7 @@ module Opendata::DatasetSearchable
         estat_category_ids << child.id
       end
 
-      operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
-      all.where(operator => [ estat_category_ids: { "$in" => estat_category_ids } ])
+      all.where(estat_category_ids: { "$in" => estat_category_ids })
     end
 
     def search_dataset_group(params)
@@ -121,31 +125,23 @@ module Opendata::DatasetSearchable
       site = params[:site]
       groups = Opendata::DatasetGroup.site(site).and_public.search_text(params[:dataset_group])
       groups = groups.pluck(:id).presence || [-1]
-      operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
-      all.where(operator => [ dataset_group_ids: { "$in" => groups } ])
+
+      all.where(dataset_group_ids: { "$in" => groups })
     end
 
     def search_dataset_group_id(params)
       return all if params.blank? || params[:dataset_group_id].blank?
-
-      operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
-      all.where(operator => [ dataset_group_ids: params[:dataset_group_id].to_i ])
+      all.where(dataset_group_ids: params[:dataset_group_id].to_i)
     end
 
     def search_format(params)
       return all if params.blank? || params[:format].blank?
-
-      option = params[:option].presence || 'all_keywords'
-      method = option == 'any_conditions' ? 'any' : 'and'
-      all.formast_is(params[:format].upcase, "resources.format", "url_resources.format", method: method)
+      all.formast_is(params[:format].upcase, "resources.format", "url_resources.format")
     end
 
     def search_license_id(params)
       return all if params.blank? || params[:license_id].blank?
-
-      option = params[:option].presence || 'all_keywords'
-      method = option == 'any_conditions' ? 'any' : 'and'
-      all.license_is(params[:license_id].to_i, "resources.license_id", "url_resources.license_id", method: method)
+      all.license_is(params[:license_id].to_i, "resources.license_id", "url_resources.license_id")
     end
 
     def search_poster(params)
@@ -160,8 +156,7 @@ module Opendata::DatasetSearchable
              end
       return all if cond.blank?
 
-      operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
-      all.where(operator => [ cond ])
+      all.where(cond)
     end
   end
 end

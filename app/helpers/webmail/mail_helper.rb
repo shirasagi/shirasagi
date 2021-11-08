@@ -41,7 +41,7 @@ module Webmail::MailHelper
     group_options = group_options(path_helper)
     selected = send(path_helper, webmail_mode: @webmail_mode || :account, account: params[:account])
 
-    all_options  = account_options + group_options
+    all_options = account_options + group_options
     all_options.unshift([nil, send(path_helper, @cur_user.webmail_user.imap_default_index)]) if account_options.blank?
     option_tags = options_for_select(all_options, selected)
 
@@ -102,7 +102,7 @@ module Webmail::MailHelper
     #
     # AUTO_EMAIL_LOCAL_RE = /[\w.!#\$%&'*\/=?^`{|}~+-]/
     # AUTO_EMAIL_RE = /[\w.!#\$%+-]\.?#{AUTO_EMAIL_LOCAL_RE}*@[\w-]+(?:\.[\w-]+)+/
-    email_regex = /[\w.!#\$%+-]\.?#{/[\w.!#\$%&'*\/=?^`{|}~+-]/}*@[\w-]+(?:\.[\w-]+)+/
+    email_regex = /[\w.!#$%+-]\.?#{/[\w.!#$%&'*\/=?^`{|}~+-]/}*@[\w-]+(?:\.[\w-]+)+/
 
     text.gsub(email_regex) do |address|
       link_to address, new_webmail_mail_path(mailbox: @mailbox, item: { to: address })

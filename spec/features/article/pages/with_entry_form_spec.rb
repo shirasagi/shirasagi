@@ -4,6 +4,13 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) { create :article_node_page, cur_site: site, group_ids: [cms_group.id] }
   let!(:form) { create :cms_form, cur_site: site, state: 'public', sub_type: 'entry' }
+
+  let(:node2) { create :article_node_page, cur_site: site, group_ids: [cms_group.id] }
+  let!(:selectable_page1) { create :article_page, cur_site: site, cur_node: node2, state: "public" }
+  let!(:selectable_page2) { create :article_page, cur_site: site, cur_node: node2, state: "public" }
+  let!(:selectable_page3) { create :article_page, cur_site: site, cur_node: node2, state: "public" }
+  let!(:selectable_page4) { create :article_page, cur_site: site, cur_node: node2, state: "closed" }
+
   let!(:column1) do
     create(:cms_column_text_field, cur_site: site, cur_form: form, required: "optional", order: 1, input_type: 'text')
   end
@@ -43,6 +50,9 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
   let!(:column13) do
     create(:cms_column_youtube, cur_site: site, cur_form: form, required: "optional", order: 13)
   end
+  let!(:column14) do
+    create(:cms_column_select_page, cur_site: site, cur_form: form, required: "optional", order: 14, node_id: node2.id)
+  end
   let(:name) { unique_id }
   let(:column1_value1) { unique_id }
   let(:column2_value1) { "#{rand(2000..2050)}/01/01" }
@@ -63,6 +73,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
   let(:column12_caption1) { unique_id }
   let(:column13_youtube_id1) { unique_id }
   let(:column13_url1) { "https://www.youtube.com/watch?v=#{column13_youtube_id1}" }
+  let(:column14_page_id1) { selectable_page1.id }
 
   let(:column1_value2) { unique_id }
   let(:column2_value2) { "#{rand(2000..2050)}/01/01" }
@@ -83,7 +94,12 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
   let(:column12_caption2) { unique_id }
   let(:column13_youtube_id2) { unique_id }
   let(:column13_url2) { "https://www.youtube.com/watch?v=#{column13_youtube_id2}" }
+  let(:column14_page_id2) { selectable_page2.id }
   let!(:body_layout) { create(:cms_body_layout) }
+
+  def article_pages
+    Article::Page.where(filename: /^#{node.filename}\//)
+  end
 
   before do
     cms_role.add_to_set(permissions: %w(read_cms_body_layouts))
@@ -105,9 +121,10 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         within 'form#item-form' do
           fill_in 'item[name]', with: name
-          select form.name, from: 'item[form_id]'
           wait_event_to_fire("ss:formActivated") do
-            find('.btn-form-change').click
+            page.accept_confirm(I18n.t("cms.confirm.change_form")) do
+              select form.name, from: 'in_form_id'
+            end
           end
 
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
@@ -117,8 +134,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
-        expect(Article::Page.all.count).to eq 1
-        Article::Page.all.first.tap do |item|
+        expect(article_pages.count).to eq 1
+        article_pages.first.tap do |item|
           expect(item.name).to eq name
           expect(item.description).to eq form.html
           expect(item.summary).to eq form.html
@@ -240,15 +257,27 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             fill_in "item[column_values][][in_wrap][url]", with: column13_url1
           end
 
+          within ".column-value-palette" do
+            click_on column14.name
+          end
+          within ".column-value-cms-column-selectpage " do
+            within '[name="item[column_values][][in_wrap][page_id]"]' do
+              expect(page).to have_css("option", text: selectable_page1.name)
+              expect(page).to have_css("option", text: selectable_page2.name)
+              expect(page).to have_css("option", text: selectable_page3.name)
+            end
+            select selectable_page1.name, from: 'item[column_values][][in_wrap][page_id]'
+          end
+
           click_on I18n.t('ss.buttons.draft_save')
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
-        expect(Article::Page.all.count).to eq 1
-        Article::Page.all.first.tap do |item|
+        expect(article_pages.count).to eq 1
+        article_pages.first.tap do |item|
           expect(item.name).to eq name
-          expect(item.column_values).to have(13).items
+          expect(item.column_values).to have(14).items
 
           expect(item.column_values.find_by(column_id: column1.id).value).to eq column1_value1
           expect(item.column_values.find_by(column_id: column2.id).date).to eq Time.zone.parse(column2_value1)
@@ -267,6 +296,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(item.column_values.find_by(column_id: column11.id).lists).to include column11_list1
           expect(item.column_values.find_by(column_id: column12.id).value).to be_present
           expect(item.column_values.find_by(column_id: column13.id).youtube_id).to eq column13_youtube_id1
+          expect(item.column_values.find_by(column_id: column14.id).page_id).to eq column14_page_id1
 
           expect(item.backups.count).to eq 2
         end
@@ -337,16 +367,19 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           within ".column-value-cms-column-youtube" do
             fill_in "item[column_values][][in_wrap][url]", with: column13_url2
           end
+          within ".column-value-cms-column-selectpage " do
+            select selectable_page2.name, from: 'item[column_values][][in_wrap][page_id]'
+          end
 
           click_on I18n.t('ss.buttons.draft_save')
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
-        expect(Article::Page.all.count).to eq 1
-        Article::Page.all.first.tap do |item|
+        expect(article_pages.count).to eq 1
+        article_pages.first.tap do |item|
           expect(item.name).to eq name
-          expect(item.column_values).to have(13).items
+          expect(item.column_values).to have(14).items
 
           expect(item.column_values.find_by(column_id: column1.id).value).to eq column1_value2
           expect(item.column_values.find_by(column_id: column2.id).date).to eq Time.zone.parse(column2_value2)
@@ -365,6 +398,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(item.column_values.find_by(column_id: column11.id).lists).to include column11_list2
           expect(item.column_values.find_by(column_id: column12.id).value).to be_present
           expect(item.column_values.find_by(column_id: column13.id).youtube_id).to eq column13_youtube_id2
+          expect(item.column_values.find_by(column_id: column14.id).page_id).to eq column14_page_id2
 
           expect(item.backups.count).to eq 3
         end
@@ -379,7 +413,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         within 'form#item-form' do
           %w(
             textfield datefield urlfield2 textarea select radiobutton checkbox fileupload
-            free headline list table youtube
+            free headline list table youtube selectpage
           ).each do |f|
             within ".column-value-cms-column-#{f} .column-value-header" do
               page.accept_alert do
@@ -395,8 +429,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
-        expect(Article::Page.all.count).to eq 1
-        Article::Page.all.first.tap do |item|
+        expect(article_pages.count).to eq 1
+        article_pages.first.tap do |item|
           expect(item.name).to eq name
           expect(item.column_values).to have(0).items
 
@@ -414,7 +448,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.buttons.delete')
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
-        expect(Article::Page.all.count).to eq 0
+        expect(article_pages.count).to eq 0
         expect(SS::File.all.unscoped.count).to eq 0
       end
     end
@@ -428,9 +462,10 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         within 'form#item-form' do
           fill_in 'item[name]', with: name
-          select form.name, from: 'item[form_id]'
           wait_event_to_fire("ss:formActivated") do
-            find('.btn-form-change').click
+            page.accept_confirm(I18n.t("cms.confirm.change_form")) do
+              select form.name, from: 'in_form_id'
+            end
           end
 
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
@@ -541,17 +576,29 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             fill_in "item[column_values][][in_wrap][url]", with: column13_url1
           end
 
+          within ".column-value-palette" do
+            click_on column14.name
+          end
+          within ".column-value-cms-column-selectpage " do
+            within '[name="item[column_values][][in_wrap][page_id]"]' do
+              expect(page).to have_css("option", text: selectable_page1.name)
+              expect(page).to have_css("option", text: selectable_page2.name)
+              expect(page).to have_css("option", text: selectable_page3.name)
+            end
+            select selectable_page1.name, from: 'item[column_values][][in_wrap][page_id]'
+          end
+
           click_on I18n.t('ss.buttons.draft_save')
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
-        expect(Article::Page.all.count).to eq 1
-        Article::Page.all.first.tap do |item|
+        expect(article_pages.count).to eq 1
+        article_pages.first.tap do |item|
           expect(item.name).to eq name
           expect(item.description).to eq form.html
           expect(item.summary).to eq form.html
-          expect(item.column_values).to have(13).items
+          expect(item.column_values).to have(14).items
 
           expect(item.column_values.find_by(column_id: column1.id).value).to eq column1_value1
           expect(item.column_values.find_by(column_id: column2.id).date).to eq Time.zone.parse(column2_value1)
@@ -570,6 +617,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(item.column_values.find_by(column_id: column11.id).lists).to include column11_list1
           expect(item.column_values.find_by(column_id: column12.id).value).to be_present
           expect(item.column_values.find_by(column_id: column13.id).youtube_id).to eq column13_youtube_id1
+          expect(item.column_values.find_by(column_id: column14.id).page_id).to eq column14_page_id1
 
           expect(item.backups.count).to eq 1
         end
@@ -638,16 +686,19 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           within ".column-value-cms-column-youtube" do
             fill_in "item[column_values][][in_wrap][url]", with: column13_url2
           end
+          within ".column-value-cms-column-selectpage " do
+            select selectable_page2.name, from: 'item[column_values][][in_wrap][page_id]'
+          end
 
           click_on I18n.t('ss.buttons.draft_save')
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
-        expect(Article::Page.all.count).to eq 1
-        Article::Page.all.first.tap do |item|
+        expect(article_pages.count).to eq 1
+        article_pages.first.tap do |item|
           expect(item.name).to eq name
-          expect(item.column_values).to have(13).items
+          expect(item.column_values).to have(14).items
 
           expect(item.column_values.find_by(column_id: column1.id).value).to eq column1_value2
           expect(item.column_values.find_by(column_id: column2.id).date).to eq Time.zone.parse(column2_value2)
@@ -666,6 +717,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(item.column_values.find_by(column_id: column11.id).lists).to include column11_list2
           expect(item.column_values.find_by(column_id: column12.id).value).to be_present
           expect(item.column_values.find_by(column_id: column13.id).youtube_id).to eq column13_youtube_id2
+          expect(item.column_values.find_by(column_id: column14.id).page_id).to eq column14_page_id2
 
           expect(item.backups.count).to eq 2
         end
@@ -680,7 +732,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         within 'form#item-form' do
           %w(
             textfield datefield urlfield2 textarea select radiobutton checkbox fileupload
-            free headline list table youtube
+            free headline list table youtube selectpage
           ).each do |f|
             within ".column-value-cms-column-#{f} .column-value-header" do
               page.accept_alert do
@@ -696,8 +748,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
-        expect(Article::Page.all.count).to eq 1
-        Article::Page.all.first.tap do |item|
+        expect(article_pages.count).to eq 1
+        article_pages.first.tap do |item|
           expect(item.name).to eq name
           expect(item.column_values).to have(0).items
 
@@ -715,7 +767,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.buttons.delete')
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
-        expect(Article::Page.all.count).to eq 0
+        expect(article_pages.count).to eq 0
         expect(SS::File.all.unscoped.count).to eq 0
       end
     end
@@ -732,7 +784,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         visit new_article_page_path(site: site, cid: node)
 
         within '#addon-basic' do
-          expect(page).to have_no_css('select[name="item[form_id]"]')
+          expect(page).to have_no_css('select[name="in_form_id"]')
         end
       end
 
@@ -745,7 +797,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         visit new_article_page_path(site: site, cid: node)
 
         within '#addon-basic' do
-          expect(page).to have_css('select[name="item[form_id]"]')
+          expect(page).to have_css('select[name="in_form_id"]')
           expect(page).to have_no_css('select option', text: form.name)
           expect(page).to have_css('select option', text: form2.name)
         end
@@ -756,9 +808,10 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         within 'form#item-form' do
           fill_in 'item[name]', with: name
-          select form.name, from: 'item[form_id]'
           wait_event_to_fire("ss:formActivated") do
-            find('.btn-form-change').click
+            page.accept_confirm(I18n.t("cms.confirm.change_form")) do
+              select form.name, from: 'in_form_id'
+            end
           end
 
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
@@ -773,7 +826,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         visit edit_article_page_path(site: site, cid: node, id: item)
 
         within '#addon-basic' do
-          expect(page).to have_css('select[name="item[form_id]"][disabled]')
+          expect(page).to have_css('select[name="in_form_id"][disabled]')
         end
 
         within 'form#item-form' do

@@ -4,7 +4,7 @@
 <% end %>
 <%
   begin
-    list_node = @cur_node.becomes_with_route
+    list_node = @cur_node
     category_options = list_node.st_categories.pluck(:name)
   rescue
     return

@@ -1,27 +1,30 @@
 namespace :ss do
-  # input: sanitizer_input/{ID}_{TIMESTAMP}.ext
-  # output: sanitizer_output/{ID}_{FILENAME}_{PID}_marked.ext
+  # input: sanitizer_input/{PREFIX}_{TYPE}_{ID}_{TIMESTAMP}.ext
+  # output: sanitizer_output/{PREFIX}_{TYPE}_{ID}_{FILENAME}_{PID}_{SUFFIX}.ext
   task sanitizer_restore: :environment do
     return unless SS.config.ss.sanitizer_output
 
+    allow_suffix = %w(marked marked.MSOfficeWithPassword withPassword withEncrypt sanitized)
+
     ::Fs.glob("#{Rails.root}/#{SS.config.ss.sanitizer_output}/*").sort.each do |path|
       filename = ::File.basename(path)
-      next unless filename =~ /\A\d+_\d+.*_\d+_marked/
+      basename = ::File.basename(filename, '.*')
+      next unless filename.start_with?("#{SS.config.ss.sanitizer_file_prefix}_")
 
-      id = filename.sub(/^(\d+).*/, '\\1').to_i
-      file = SS::File.find(id).becomes_with_model rescue nil
+      SS::UploadPolicy.sanitizer_rename_zip(path) if ::File.extname(path) == '.zip'
 
-      if file.nil?
-        Fs.rm_rf(path)
-        puts "removed: #{filename}"
+      if job_model = Uploader::JobFile.sanitizer_restore(path)
+        puts "restored: #{filename} -> #{job_model.path}"
         next
       end
 
-      if file.sanitizer_restore_file(path)
-        puts "restored: #{filename}"
-      else
-        Rails.logger.error("sanitier_restore_file: #{file.class}##{id}: #{file.errors.full_messages.join(' ')}")
+      if file = SS::UploadPolicy.sanitizer_restore(path)
+        puts "restored: #{filename} -> #{file.path}"
+        next
       end
+
+      Fs.rm_rf(path)
+      puts "removed: #{filename}"
     end
   end
 end

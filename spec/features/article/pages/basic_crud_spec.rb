@@ -119,6 +119,58 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
       end
+
+      it "destroy_all not permited and contains_urls" do
+        role = user.cms_roles[0]
+        role_permissions = role.permissions.map do |permission|
+          next if permission == "delete_cms_ignore_alert"
+          permission
+        end
+        role.update(permissions: role_permissions.compact)
+
+        visit index_path
+        find('.list-head input[type="checkbox"]').set(true)
+        within ".list-head-action" do
+          page.accept_alert do
+            click_button I18n.t('ss.buttons.delete')
+          end
+        end
+        expect(page).to have_content I18n.t('ss.confirm.contains_links_in_file')
+        expect(page).to have_content I18n.t('ss.confirm.target_to_delete')
+        click_button I18n.t('ss.buttons.delete')
+        wait_for_ajax
+
+        expect(page).to have_content File.basename(item2.filename)
+      end
+
+      it "destroy_all & check contain_urls" do
+        visit index_path
+        find('.list-head input[type="checkbox"]').set(true)
+        within ".list-head-action" do
+          page.accept_alert do
+            click_button I18n.t('ss.buttons.delete')
+          end
+        end
+        wait_for_ajax
+
+        expect(page).to have_css('.contains-urls', text: I18n.t('ss.confirm.contains_links_in_file_ignoring_alert'))
+      end
+
+      it "destroy_all & unable to delete without check" do
+        visit index_path
+        find('.list-head input[type="checkbox"]').set(true)
+
+        within ".list-head-action" do
+          page.accept_alert do
+            click_button I18n.t('ss.buttons.delete')
+          end
+        end
+        wait_for_ajax
+
+        find('.list-item input[type="checkbox"][checked="checked"]').set(false)
+        click_button I18n.t('ss.buttons.delete')
+        expect(page.accept_confirm).to eq I18n.t("errors.messages.plz_check_targets_to_delete")
+      end
     end
 
     it "#contains_urls" do
@@ -133,7 +185,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       it "permited and contains_urls" do
         visit edit_path2
         within "form" do
-          click_on I18n.t("ss.buttons.draft_save")
+          click_on I18n.t("ss.buttons.withdraw")
         end
         expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
       end
@@ -141,7 +193,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       it "permited and not contains_urls" do
         visit edit_path
         within "form" do
-          click_on I18n.t("ss.buttons.draft_save")
+          click_on I18n.t("ss.buttons.withdraw")
         end
         expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
       end
@@ -152,7 +204,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
                                     release_private_article_pages release_other_article_pages))
         visit edit_path2
         within "form" do
-          click_on I18n.t("ss.buttons.draft_save")
+          click_on I18n.t("ss.buttons.withdraw")
         end
         expect(page).not_to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
         expect(page).to have_css(".errorExplanation", text: I18n.t('ss.confirm.contains_url_expect'))
@@ -164,7 +216,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
                                     release_private_article_pages release_other_article_pages))
         visit edit_path
         within "form" do
-          click_on I18n.t("ss.buttons.draft_save")
+          click_on I18n.t("ss.buttons.withdraw")
         end
         expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
       end

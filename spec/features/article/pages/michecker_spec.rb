@@ -75,10 +75,10 @@ describe "michecker", type: :feature, dbscope: :example, js: true, michecker: tr
         expect(result.michecker_last_job_id).to be_present
         expect(result.michecker_last_result).to eq 0
         expect(result.michecker_last_executed_at).to be_present
-        expect(::File.exists?(result.html_checker_report_filepath)).to be_truthy
-        expect(::File.exists?(result.low_vision_report_filepath)).to be_truthy
-        expect(::File.exists?(result.low_vision_source_filepath)).to be_truthy
-        expect(::File.exists?(result.low_vision_result_filepath)).to be_truthy
+        expect(::File.exist?(result.html_checker_report_filepath)).to be_truthy
+        expect(::File.exist?(result.low_vision_report_filepath)).to be_truthy
+        expect(::File.exist?(result.low_vision_source_filepath)).to be_truthy
+        expect(::File.exist?(result.low_vision_result_filepath)).to be_truthy
       end
     end
   end

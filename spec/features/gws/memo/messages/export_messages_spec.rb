@@ -12,10 +12,10 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
   describe 'export selected message' do
     before { login_gws_user }
 
-    def export_memo(memo, opts = {})
+    def export_memo(memo, format: nil)
       visit gws_memo_export_messages_path(site)
       within "form#item-form" do
-        select((opts[:format].presence || 'eml'), from: 'item_format')
+        select(format.presence || 'eml', from: 'item_format')
         choose "item_export_filter_selected"
         click_on I18n.t("ss.links.select")
       end

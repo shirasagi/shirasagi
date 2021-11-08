@@ -25,9 +25,9 @@ class Ldap::Extensions::LdapArray < Array
 
     def mongoize(object)
       case object
-      when self.class then
+      when self.class
         object.mongoize
-      when Array then
+      when Array
         new(normalize(object)).mongoize
       else
         object

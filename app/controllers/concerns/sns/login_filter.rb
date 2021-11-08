@@ -16,7 +16,7 @@ module Sns::LoginFilter
   private
 
   def remote_login?
-    SS::config.sns.remote_login
+    SS.config.sns.remote_login
   end
 
   def default_logged_in_path
@@ -39,7 +39,7 @@ module Sns::LoginFilter
       @item.email = email_or_uid if email_or_uid.present?
       respond_to do |format|
         flash[:alert] = alert
-        format.html { render file: :login }
+        format.html { render template: "login" }
         format.json { render json: alert, status: :unprocessable_entity }
       end
     end
@@ -127,6 +127,6 @@ module Sns::LoginFilter
       return
     end
 
-    render file: "redirect"
+    render template: "redirect"
   end
 end

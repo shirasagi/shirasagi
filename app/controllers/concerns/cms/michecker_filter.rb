@@ -8,14 +8,14 @@ module Cms::MicheckerFilter
     set_item
     @result = Cms::Michecker::Result.site(@cur_site).and_page(@item).reorder(id: -1).first
 
-    if @result && ::File.exists?(@result.html_checker_report_filepath)
+    if @result && ::File.exist?(@result.html_checker_report_filepath)
       @accessibility_result = Cms::Michecker::Accessibility.load(@result.html_checker_report_filepath)
     end
-    if @result && ::File.exists?(@result.low_vision_report_filepath)
+    if @result && ::File.exist?(@result.low_vision_report_filepath)
       @lowvision_result = Cms::Michecker::LowVision.load(@result.low_vision_report_filepath)
     end
 
-    render file: "michecker", layout: "cms/michecker"
+    render template: "michecker", layout: "cms/michecker"
   end
 
   def michecker_start
@@ -54,12 +54,12 @@ module Cms::MicheckerFilter
   private
 
   def michecker_result_accessibility_report
-    if @result && ::File.exists?(@result.html_checker_report_filepath)
+    if @result && ::File.exist?(@result.html_checker_report_filepath)
       @accessibility_result = Cms::Michecker::Accessibility.load(@result.html_checker_report_filepath)
     end
 
     respond_to do |format|
-      format.html { render(file: "michecker_accessibility_report", layout: false) }
+      format.html { render(template: "michecker_accessibility_report", layout: false) }
       format.csv do
         if @accessibility_result.blank?
           response.status = 404
@@ -76,12 +76,12 @@ module Cms::MicheckerFilter
   end
 
   def michecker_result_lowvision_report
-    if @result && ::File.exists?(@result.low_vision_report_filepath)
+    if @result && ::File.exist?(@result.low_vision_report_filepath)
       @lowvision_result = Cms::Michecker::LowVision.load(@result.low_vision_report_filepath)
     end
 
     respond_to do |format|
-      format.html { render file: "michecker_lowvision_report", layout: false }
+      format.html { render template: "michecker_lowvision_report", layout: false }
       format.csv do
         if @lowvision_result.blank?
           response.status = 404

@@ -17,7 +17,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
     end
 
     after do
-      SS.config.replace_value_at(:env, :deley_download, @save_config)
+      SS.config.replace_value_at(:env, :presence, @save_config)
     end
 
     context "user_presence already created" do

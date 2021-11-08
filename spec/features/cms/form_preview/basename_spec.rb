@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
   before do
-    @save_config = SS::Config.replace_value_at(:cms, :replace_urls_after_move, true)
+    @save_config = SS.config.replace_value_at(:cms, :replace_urls_after_move, true)
   end
 
   after do
-    SS::Config.replace_value_at(:cms, :replace_urls_after_move, @save_config)
+    SS.config.replace_value_at(:cms, :replace_urls_after_move, @save_config)
   end
 
   context "with article page" do
@@ -156,9 +156,10 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
 
           select layout.name, from: 'item[layout_id]'
 
-          select form.name, from: 'item[form_id]'
           wait_event_to_fire("ss:formActivated") do
-            find('.btn-form-change').click
+            page.accept_confirm(I18n.t("cms.confirm.change_form")) do
+              select form.name, from: 'in_form_id'
+            end
           end
 
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)

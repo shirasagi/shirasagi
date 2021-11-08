@@ -19,7 +19,7 @@
   <tr class="parent-row">
     <td class="field"><%= @model.t :category_ids %><%= required_label %></td>
     <td class="input">
-      <%= render(file: 'opendata/agents/nodes/mypage/main/_category_form', locals: { f: f, model: Opendata::Node::Idea }) %>
+      <%= render('opendata/agents/nodes/mypage/main/category_form', f: f, model: Opendata::Node::Idea) %>
   </td>
   </tr>
 

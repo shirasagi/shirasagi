@@ -14,25 +14,25 @@ describe "recommend_agents_parts_similarity", type: :feature, dbscope: :example,
   let!(:item4) { create :article_page, layout_id: layout.id, filename: "node/page4.html" }
   let!(:item5) { create :article_page, layout_id: layout.id, filename: "node/page5.html" }
 
-  let!(:score1_1) { create :recommend_similarity_score, site: site, key: item1.url, path: item2.url, score: 0.5 }
-  let!(:score1_2) { create :recommend_similarity_score, site: site, key: item1.url, path: item3.url, score: 0.45 }
-  let!(:score1_3) { create :recommend_similarity_score, site: site, key: item1.url, path: item4.url, score: 0.4 }
-  let!(:score1_4) { create :recommend_similarity_score, site: site, key: item1.url, path: item5.url, score: 0.35 }
+  let!(:score1_path1) { create :recommend_similarity_score, site: site, key: item1.url, path: item2.url, score: 0.5 }
+  let!(:score1_path2) { create :recommend_similarity_score, site: site, key: item1.url, path: item3.url, score: 0.45 }
+  let!(:score1_path3) { create :recommend_similarity_score, site: site, key: item1.url, path: item4.url, score: 0.4 }
+  let!(:score1_path4) { create :recommend_similarity_score, site: site, key: item1.url, path: item5.url, score: 0.35 }
 
-  let!(:score2_1) { create :recommend_similarity_score, site: site, key: item2.url, path: item1.url, score: 0.33 }
-  let!(:score2_2) { create :recommend_similarity_score, site: site, key: item2.url, path: item3.url, score: 0.3 }
-  let!(:score2_3) { create :recommend_similarity_score, site: site, key: item2.url, path: item4.url, score: 0.27 }
-  let!(:score2_4) { create :recommend_similarity_score, site: site, key: item2.url, path: item5.url, score: 0.24 }
+  let!(:score2_path1) { create :recommend_similarity_score, site: site, key: item2.url, path: item1.url, score: 0.33 }
+  let!(:score2_path2) { create :recommend_similarity_score, site: site, key: item2.url, path: item3.url, score: 0.3 }
+  let!(:score2_path3) { create :recommend_similarity_score, site: site, key: item2.url, path: item4.url, score: 0.27 }
+  let!(:score2_path4) { create :recommend_similarity_score, site: site, key: item2.url, path: item5.url, score: 0.24 }
 
-  let!(:site2_score1_1) { create :recommend_similarity_score, site: site2, key: item1.url, path: item2.url, score: 0.35 }
-  let!(:site2_score1_2) { create :recommend_similarity_score, site: site2, key: item1.url, path: item3.url, score: 0.4 }
-  let!(:site2_score1_3) { create :recommend_similarity_score, site: site2, key: item1.url, path: item4.url, score: 0.45 }
-  let!(:site2_score1_4) { create :recommend_similarity_score, site: site2, key: item1.url, path: item5.url, score: 0.5 }
+  let!(:site2_score1_path1) { create :recommend_similarity_score, site: site2, key: item1.url, path: item2.url, score: 0.35 }
+  let!(:site2_score1_path2) { create :recommend_similarity_score, site: site2, key: item1.url, path: item3.url, score: 0.4 }
+  let!(:site2_score1_path3) { create :recommend_similarity_score, site: site2, key: item1.url, path: item4.url, score: 0.45 }
+  let!(:site2_score1_path4) { create :recommend_similarity_score, site: site2, key: item1.url, path: item5.url, score: 0.5 }
 
-  let!(:site2_score2_1) { create :recommend_similarity_score, site: site2, key: item2.url, path: item1.url, score: 0.24 }
-  let!(:site2_score2_2) { create :recommend_similarity_score, site: site2, key: item2.url, path: item3.url, score: 0.27 }
-  let!(:site2_score2_3) { create :recommend_similarity_score, site: site2, key: item2.url, path: item4.url, score: 0.3 }
-  let!(:site2_sscore2_4) { create :recommend_similarity_score, site: site2, key: item2.url, path: item5.url, score: 0.33 }
+  let!(:site2_score2_path1) { create :recommend_similarity_score, site: site2, key: item2.url, path: item1.url, score: 0.24 }
+  let!(:site2_score2_path2) { create :recommend_similarity_score, site: site2, key: item2.url, path: item3.url, score: 0.27 }
+  let!(:site2_score2_path3) { create :recommend_similarity_score, site: site2, key: item2.url, path: item4.url, score: 0.3 }
+  let!(:site2_score2_path4) { create :recommend_similarity_score, site: site2, key: item2.url, path: item5.url, score: 0.33 }
 
   before do
     # delete all statically generated html files to dynamically respond contents.

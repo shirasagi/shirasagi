@@ -18,8 +18,8 @@ class Translate::Api::MockTranslator
     (@site.translate_mock_api_request_word_count + count) >= request_word_limit
   end
 
-  def translate(contents, source, target, opts = {})
-    count = contents.map(&:size).sum
+  def translate(contents, source, target, site:)
+    count = contents.sum(&:size)
 
     if request_word_limit_exceeded?(count)
       @site.request_word_limit_exceeded = true

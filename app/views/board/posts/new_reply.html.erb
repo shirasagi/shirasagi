@@ -5,9 +5,9 @@
 
 <div class="addon-views">
   <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t("ss.basic_info") } do %>
-    <%= render file: '_form', locals: { f: f } %>
+    <%= render template: '_form', locals: { f: f } %>
   <% end %>
-  <%= render file: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
+  <%= render template: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
 </div>
 
 <footer class="send">

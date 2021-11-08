@@ -34,7 +34,7 @@ describe Jmaxml::Trigger::LandslideInfo, dbscope: :example do
     before do
       target_region_ids = []
       area_codes.each do |area_code|
-        region = create("jmaxml_forecast_region_#{area_code}".to_sym)
+        region = create("jmaxml_forecast_region_c#{area_code}".to_sym)
         target_region_ids << region.id
       end
       subject.target_region_ids = target_region_ids

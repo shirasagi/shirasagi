@@ -6,12 +6,6 @@ $(".file").on("change", function() {
   $(".name").val(name);
   $(".filename").val(name);
 });
-$('#task-form').submit(function(){
-  if($('#item_in_file').val() && $('#item_name').val() && $('#item_basename').val()) {
-    alert(`<%= I18n.t('cms.confirm.check_accessibility_manually') %>`);
-  }
-});
-
 <% end %>
 
 <%= form_for :item, url: { action: :import }, html: { id: "task-form", method: :post, multipart: true } do |f| %>
@@ -38,6 +32,7 @@ $('#task-form').submit(function(){
   <%= render "ss/tasks/box", task: @task, url: url_for(action: :import, format: :json) %>
 
   <footer class="send">
+    <div class="footer-notice"><%= I18n.t("cms.confirm.check_accessibility_manually") %></div>
     <%= f.submit t("ss.buttons.import"), class: :save, data: { disable_with: t("ss.buttons.importing") } %>
     <%= f.button t("ss.buttons.cancel"), type: :reset, class: "btn-default", onclick: "location.href='#{cms_contents_path}'; return false;" %>
   </footer>

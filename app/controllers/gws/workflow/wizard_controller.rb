@@ -42,7 +42,7 @@ class Gws::Workflow::WizardController < ApplicationController
   public
 
   def index
-    render file: :index, layout: false
+    render template: "index", layout: false
   end
 
   def approver_setting
@@ -56,14 +56,14 @@ class Gws::Workflow::WizardController < ApplicationController
 
     if @route.present?
       if @item.apply_workflow?(@route)
-        render file: "approver_setting_multi", layout: false
+        render template: "approver_setting_multi", layout: false
       else
         render json: @item.errors.full_messages, status: :bad_request
       end
     elsif "my_group" == @route_id
-      render file: :approver_setting, layout: false
+      render template: "approver_setting", layout: false
     elsif "restart" == @route_id
-      render file: "approver_setting_restart", layout: false
+      render template: "approver_setting_restart", layout: false
     else
       raise "404"
     end
@@ -102,6 +102,6 @@ class Gws::Workflow::WizardController < ApplicationController
     end
     @items = Kaminari.paginate_array(@items).page(params[:page]).per(50)
 
-    render file: 'reroute', layout: false
+    render template: 'reroute', layout: false
   end
 end

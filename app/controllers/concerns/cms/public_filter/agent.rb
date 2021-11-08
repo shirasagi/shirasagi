@@ -25,12 +25,12 @@ module Cms::PublicFilter::Agent
   #   # end
   #
   #   # updated = true
-  #   # if Fs.exists?(file)
+  #   # if Fs.exist?(file)
   #   #   updated = false if data_md5 == Digest::MD5.hexdigest(Fs.read(file))
   #   # end
   #
   #   updated = true
-  #   if Fs.exists?(file)
+  #   if Fs.exist?(file)
   #     updated = false if data == Fs.read(file)
   #   end
   #

@@ -5,14 +5,14 @@ describe "cms_folder_sizes", type: :feature, dbscope: :example do
 
   before do
     @save_config = SS.config.cms.cms_sitemap
-    SS::Config.replace_value_at(:cms, 'cms_sitemap', "disable" => false)
+    SS.config.replace_value_at(:cms, 'cms_sitemap', "disable" => false)
     Cms::Role.permission :use_cms_sitemap
     cms_role.add_to_set(permissions: %w(use_cms_sitemap))
     login_cms_user
   end
 
   after do
-    SS::Config.replace_value_at(:cms, 'cms_sitemap', @save_config)
+    SS.config.replace_value_at(:cms, 'cms_sitemap', @save_config)
   end
 
   describe "index" do

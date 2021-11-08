@@ -32,7 +32,7 @@ namespace :opendata do
 
   namespace :url_resources do
     task destory_fragment_files: :environment do
-      ss_files = SS::File.where(model: "opendata/url_resource").map { |item| [item.id, item] }.to_h
+      ss_files = SS::File.where(model: "opendata/url_resource").index_by { |item| item.id }
       return if ss_files.blank?
 
       Opendata::Dataset.each do |dataset|

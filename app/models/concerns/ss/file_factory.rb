@@ -3,6 +3,7 @@ module SS::FileFactory
 
   included do
     attr_accessor :in_files, :saved_files
+
     permit_params :in_files, in_files: []
   end
 
@@ -31,9 +32,9 @@ module SS::FileFactory
 
       # ファイルが存在しない場合、空のファイルを作成する。
       path = item.path
-      if !::File.exists?(path)
+      if !::File.exist?(path)
         dirname = ::File.dirname(path)
-        ::FileUtils.mkdir_p(dirname) if !::Dir.exists?(dirname)
+        ::FileUtils.mkdir_p(dirname) if !::Dir.exist?(dirname)
         ::FileUtils.touch(path)
       end
 
@@ -65,7 +66,7 @@ module SS::FileFactory
         next
       end
 
-      item.errors.full_messages.each { |m| errors.add :base, m }
+      SS::Model.copy_errors(item, self)
       return false
     end
     true

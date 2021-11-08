@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
   before do
-    @save_config = SS::Config.replace_value_at(:cms, :replace_urls_after_move, false)
+    @save_config = SS.config.replace_value_at(:cms, :replace_urls_after_move, false)
   end
 
   after do
-    SS::Config.replace_value_at(:cms, :replace_urls_after_move, @save_config)
+    SS.config.replace_value_at(:cms, :replace_urls_after_move, @save_config)
   end
 
   context "with article page" do
@@ -160,9 +160,10 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
 
           select layout.name, from: 'item[layout_id]'
 
-          select form.name, from: 'item[form_id]'
           wait_event_to_fire("ss:formActivated") do
-            find('.btn-form-change').click
+            page.accept_confirm(I18n.t("cms.confirm.change_form")) do
+              select form.name, from: 'in_form_id'
+            end
           end
 
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
@@ -190,13 +191,17 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           end
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text
-            click_on I18n.t("ss.links.upload")
+            wait_cbox_open do
+              click_on I18n.t("ss.links.upload")
+            end
           end
         end
 
         wait_for_cbox do
           attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-          click_on I18n.t('ss.buttons.attach')
+          wait_cbox_close do
+            click_on I18n.t('ss.buttons.attach')
+          end
         end
 
         within 'form#item-form' do

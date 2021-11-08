@@ -117,7 +117,7 @@ module Cms::Addon::List
           # #{request_dir} indicates "special default location".
           # usually default location is a current node (or current part's parent if part is given).
           # if #{request_dir} is specified, default location is changed to cur_main_path.
-          cur_dir ||= request_dir.sub(/\/[\w\-\.]*?$/, "").sub(/^\//, "")
+          cur_dir ||= request_dir.sub(/\/[\w\-.]*?$/, "").sub(/^\//, "")
           url = url.sub('#{request_dir}', cur_dir)
           interprets_default_location = true
         end
@@ -175,7 +175,6 @@ module Cms::Addon::List
     end
 
     def render_loop_html(item, opts = {})
-      item = item.becomes_with_route rescue item
       item.render_template(opts[:html] || loop_html, self)
     end
 

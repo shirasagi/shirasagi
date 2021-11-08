@@ -13,10 +13,10 @@ RSpec.describe SS::Migration20200203000000, dbscope: :example do
   it do
     role1.reload
     expect(role1.permissions).to include("use_gws_portal_user_settings", "use_gws_portal_group_settings",
-                                         "use_gws_portal_organization_settings")
+      "use_gws_portal_organization_settings")
 
     role2.reload
     expect(role2.permissions).to include("use_gws_portal_user_settings", "use_gws_portal_group_settings",
-                                         "use_gws_portal_organization_settings")
+      "use_gws_portal_organization_settings")
   end
 end

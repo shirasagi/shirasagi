@@ -19,7 +19,6 @@ class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
     super
     return @item if @item.blank? || @item.class != Cms::Page
 
-    @item = @item.becomes_with_route rescue @item
     @model = @item.class
   end
 
@@ -38,7 +37,7 @@ class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
     result = @item.save
 
     if !result
-      render file: :edit, status: :unprocessable_entity
+      render template: "edit", status: :unprocessable_entity
       return
     end
 
@@ -55,7 +54,7 @@ class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
 
     copy = nil
     result = nil
-    task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site.id, name: "#{@item.collection_name}:#{@item.id}")
+    task = SS::Task.find_or_create_for_model(@item, site: @cur_site)
     rejected = -> { @item.errors.add :base, :other_task_is_running }
     task.run_with(rejected: rejected) do
       task.log "# #{I18n.t("workflow.branch_page")} #{I18n.t("ss.buttons.new")}"
@@ -73,7 +72,7 @@ class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
       path_params[:preview_date] = params[:preview_date].to_s if params[:preview_date].present?
       location = cms_preview_path(path_params)
     elsif copy && copy.errors.present?
-      @item.errors.messages[:base] += copy.errors.full_messages
+      SS::Model.copy_errors(copy, @item)
     end
 
     render_save_as_branch result, location
@@ -84,7 +83,7 @@ class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
       flash["cms.preview.notice"] = I18n.t("workflow.notice.created_branch_page")
       render json: { location: location }, status: :ok, content_type: json_content_type
     else
-      render file: :edit, status: :unprocessable_entity
+      render template: "edit", status: :unprocessable_entity
     end
   end
 

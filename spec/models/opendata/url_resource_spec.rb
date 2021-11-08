@@ -38,7 +38,7 @@ describe Opendata::UrlResource, dbscope: :example do
     end
 
     describe "#path" do
-      its(:path) { expect(Fs.exists?(subject.path)).to be_truthy }
+      its(:path) { expect(Fs.exist?(subject.path)).to be_truthy }
     end
 
     describe "#content_type" do

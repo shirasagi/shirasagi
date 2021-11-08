@@ -3,7 +3,7 @@ module Opendata::DatasetBulkDownload
 
   def exceeded_bulk_download_filesize?(datasets)
     datasets = datasets.select(&:zip_exists?)
-    size = datasets.map(&:zip_size).sum
+    size = datasets.sum(&:zip_size)
     size > SS.config.opendata.bulk_download_max_filesize
   end
 

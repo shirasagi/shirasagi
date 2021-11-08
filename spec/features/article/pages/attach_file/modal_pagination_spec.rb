@@ -62,7 +62,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within "form#item-form" do
-          click_on I18n.t("ss.buttons.draft_save")
+          click_on I18n.t("ss.buttons.withdraw")
         end
         click_on I18n.t('ss.buttons.ignore_alert')
 
@@ -119,7 +119,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within "form#item-form" do
-          click_on I18n.t("ss.buttons.draft_save")
+          click_on I18n.t("ss.buttons.withdraw")
         end
         click_on I18n.t('ss.buttons.ignore_alert')
 
@@ -180,7 +180,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within "form#item-form" do
-          click_on I18n.t("ss.buttons.draft_save")
+          click_on I18n.t("ss.buttons.withdraw")
         end
         click_on I18n.t('ss.buttons.ignore_alert')
 
@@ -237,7 +237,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within "form#item-form" do
-          click_on I18n.t("ss.buttons.draft_save")
+          click_on I18n.t("ss.buttons.withdraw")
         end
         click_on I18n.t('ss.buttons.ignore_alert')
 
@@ -261,9 +261,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within 'form#item-form' do
-          select form.name, from: 'item[form_id]'
           wait_event_to_fire("ss:formActivated") do
-            find('.btn-form-change').click
+            page.accept_confirm(I18n.t("cms.confirm.change_form")) do
+              select form.name, from: 'in_form_id'
+            end
           end
         end
 
@@ -311,7 +312,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within "form#item-form" do
-          click_on I18n.t("ss.buttons.draft_save")
+          click_on I18n.t("ss.buttons.withdraw")
         end
         click_on I18n.t('ss.buttons.ignore_alert')
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -332,9 +333,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within 'form#item-form' do
-          select form.name, from: 'item[form_id]'
           wait_event_to_fire("ss:formActivated") do
-            find('.btn-form-change').click
+            page.accept_confirm(I18n.t("cms.confirm.change_form")) do
+              select form.name, from: 'in_form_id'
+            end
           end
         end
 
@@ -382,7 +384,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within "form#item-form" do
-          click_on I18n.t("ss.buttons.draft_save")
+          click_on I18n.t("ss.buttons.withdraw")
         end
         click_on I18n.t('ss.buttons.ignore_alert')
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))

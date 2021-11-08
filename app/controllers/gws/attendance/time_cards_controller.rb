@@ -69,7 +69,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
 
   def check_memo_editable
     editable = false
-    if @record.date_range.include?(Time.zone.now)
+    if @record.date_range.cover?(Time.zone.now)
       # 備考には打刻という概念がないので、備考の編集 = 打刻とみなす。よって、現在日なら何度でも編集可能。
       editable = true
     end
@@ -111,7 +111,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   end
 
   def print
-    render file: 'print', layout: 'ss/print'
+    render template: 'print', layout: 'ss/print'
   end
 
   def enter
@@ -123,7 +123,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
       return
     end
 
-    render_opts = { location: location, render: { file: :index }, notice: t('gws/attendance.notice.punched') }
+    render_opts = { location: location, render: { template: "index" }, notice: t('gws/attendance.notice.punched') }
     render_update @item.punch("#{params[:action]}#{params[:index]}"), render_opts
   end
 

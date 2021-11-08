@@ -14,13 +14,17 @@
           <span class="datetime"><%= item.created.strftime("%Y/%m/%d %H:%M") %></span>
           <span class="filename"><%= item.url %></span>
           <span class="user"><%= item.user ? link_to(item.user_label, sys_user_path(item.user)) : item.user_id %></span>
+          <% if item.group_ids %>
+            <span class="label"><%= @model.t :group %></span>
+            <span class="group-ids"><%= item.group_label %></span>
+          <% end %>
           <% if item.session_id %>
-          <span class="label"><%= @model.t :session_id %></span>
-          <span class="session-id"><%= item.session_id %></span>
+            <span class="label"><%= @model.t :session_id %></span>
+            <span class="session-id"><%= item.session_id %></span>
           <% end %>
           <% if item.request_id %>
-          <span class="label"><%= @model.t :request_id %></span>
-          <span class="session-id"><%= item.request_id %></span>
+            <span class="label"><%= @model.t :request_id %></span>
+            <span class="session-id"><%= item.request_id %></span>
           <% end %>
         </div>
       </div>

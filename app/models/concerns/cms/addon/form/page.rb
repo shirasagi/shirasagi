@@ -20,6 +20,7 @@ module Cms::Addon::Form::Page
     validate :validate_column_values
 
     attr_accessor :link_check_user
+
     validate :validate_column_links, on: :link
 
     before_validation :set_form_contains_urls
@@ -83,14 +84,19 @@ module Cms::Addon::Form::Page
       next if column_value.validated?
       next if column_value.valid?
 
-      self.errors.messages[:base] += column_value.errors.map do |attribute, error|
+      column_value.errors.each do |error|
+        attribute = error.attribute
+        message = error.message
+
         if %i[value values].include?(attribute.to_sym)
-          column_value.name + error
+          new_message = column_value.name + message
         else
-          I18n.t(
+          new_message = I18n.t(
             "cms.column_value_error_template", name: column_value.name,
-            error: column_value.errors.full_message(attribute, error))
+            error: column_value.errors.full_message(attribute, message))
         end
+
+        self.errors.add :base, new_message
       end
     end
   end

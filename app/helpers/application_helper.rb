@@ -3,6 +3,7 @@ module ApplicationHelper
   include SS::AutoLink
   include SS::ButtonToHelper
   include SS::ColorPickerHelper
+  include SS::ErrorMessagesFor
 
   def tryb(&block)
     begin
@@ -78,7 +79,7 @@ module ApplicationHelper
   # @deprecated
   def coffee(&block)
     javascript_tag do
-      CoffeeScript.compile(capture(&block)).html_safe
+      ::CoffeeScript.compile(capture(&block)).html_safe
     end
   end
 
@@ -136,7 +137,7 @@ module ApplicationHelper
   end
 
   def mail_to_entity(email_address, name = nil, html_options = {}, &block)
-    if block_given?
+    if block
       html_options = name
       name = nil
     end
@@ -158,7 +159,7 @@ module ApplicationHelper
     options ||= {}
     html_options ||= {}
 
-    inner = capture(&block) if block_given?
+    inner = capture(&block) if block
     if inner.blank?
       return link_to(name, url_options, html_options)
     end
@@ -184,7 +185,7 @@ module ApplicationHelper
 
   def content_tag_if(name, content_or_options_with_block = nil, options = nil, escape = true, &block)
     # content_tag(*args, &block)
-    if block_given?
+    if block
       options = content_or_options_with_block if content_or_options_with_block.is_a?(Hash)
     end
 
@@ -197,8 +198,8 @@ module ApplicationHelper
       return content_tag(name, content_or_options_with_block, options, escape, &block)
     end
 
-    if block_given?
-      return capture { yield }
+    if block
+      return capture(&block)
     end
 
     content_or_options_with_block
@@ -285,8 +286,9 @@ module ApplicationHelper
   end
 
   def sanitizer_status(item)
-    return unless %w(wait complete).include?(item.sanitizer_state)
-    h = %(<div class="sanitizer-status sanitizer-#{item.sanitizer_state}">#{item.label :sanitizer_state}</div>)
+    value = item.try(:sanitizer_state) || 'none'
+    label = SS::UploadPolicy.sanitizer_state_label(value)
+    h = %(<div class="sanitizer-status sanitizer-#{value}">#{label}</div>)
     h.html_safe
   end
 end

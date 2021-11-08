@@ -24,7 +24,7 @@ module Cms::NodeFilter::ListView
     start_index.upto(9_999) do |page_index|
       basename = "index.p#{page_index + 1}.html"
       file = "#{@cur_node.path}/#{basename}"
-      break unless Fs.exists?(file)
+      break unless Fs.exist?(file)
       Fs.rm_rf file
     end
   end
@@ -33,7 +33,7 @@ module Cms::NodeFilter::ListView
     save_items = @items
     @items = items
 
-    body = render_to_string(file: "index")
+    body = render_to_string(template: "index")
     mime = rendered_format
 
     if @cur_node.view_layout == "cms/redirect" && !mobile_path?
@@ -73,18 +73,26 @@ module Cms::NodeFilter::ListView
   public
 
   def index
-    @items = pages.
-      order_by(@cur_node.sort_hash).
-      page(params[:page]).
-      per(@cur_node.limit)
+    @items = SS::SortEmulator.new(pages, @cur_node.sort_hash)
+
+    if params[:page].numeric?
+      page = params[:page].to_i
+    else
+      page = 1
+    end
+    limit = @cur_node.limit
+    offset = limit * (page - 1)
+    total_count = @items.length
+
+    @items = @items.drop(offset).take(@cur_node.limit)
+    @items = Kaminari.paginate_array(@items, limit: limit, offset: offset, total_count: total_count)
 
     render_with_pagination @items
   end
 
   def rss
-    @items = pages.
-      order_by(@cur_node.sort_hash).
-      limit(@cur_node.limit)
+    @items = SS::SortEmulator.new(pages, @cur_node.sort_hash)
+    @items = @items.take(@cur_node.limit)
 
     render_rss @cur_node, @items
   end
@@ -95,7 +103,7 @@ module Cms::NodeFilter::ListView
       return true
     end
 
-    all_pages = pages.order_by(@cur_node.sort_hash).to_a
+    all_pages = SS::SortEmulator.new(pages, @cur_node.sort_hash)
     if all_pages.blank?
       generate_empty_files
       cleanup_index_files(1)

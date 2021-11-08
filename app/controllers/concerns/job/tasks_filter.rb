@@ -57,7 +57,7 @@ module Job::TasksFilter
       respond_to do |format|
         format.html { redirect_to({ action: :index }, { notice: I18n.t('job.notice.reseted_state') }) }
         format.json do
-          render file: "ss/tasks/index", status: :created, content_type: json_content_type, locals: { item: @item }
+          render template: "ss/tasks/index", status: :created, content_type: json_content_type, locals: { item: @item }
         end
       end
     else
@@ -70,14 +70,14 @@ module Job::TasksFilter
 
   def download
     set_item
-    raise '404' if !::File.exists?(@item.log_file_path)
+    raise '404' if !::File.exist?(@item.log_file_path)
     send_file @item.log_file_path, type: 'text/plain', filename: "#{@item.id}.log",
               disposition: :attachment, x_sendfile: true
   end
 
   def download_perf
     set_item
-    raise '404' if !::File.exists?(@item.perf_log_file_path)
+    raise '404' if !::File.exist?(@item.perf_log_file_path)
     send_file @item.perf_log_file_path, type: 'application/gzip', filename: "#{@item.id}-performance.log.gz",
               disposition: :attachment, x_sendfile: true
   end

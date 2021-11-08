@@ -52,7 +52,6 @@
     <% end %>
 
     <% pages.each do |page, categories| %>
-    <% page = page.becomes_with_route %>
     <dd class="page" data-id="<%= categories.pluck(:id).join(" ") %>">
       <article class="<%= @cur_node.render_loop_html(page, html: '#{new}') %>">
         <% if categories.present? %>

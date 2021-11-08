@@ -1,5 +1,5 @@
 <div class="index">
-  <%= render file: "_list_head" %>
+  <%= render template: "_list_head" %>
 
   <ul class="list-items">
     <% @items.group_by_end_at do |limit, items| %>

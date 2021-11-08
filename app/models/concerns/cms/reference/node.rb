@@ -18,7 +18,7 @@ module Cms::Reference
       alias_method :cms_node, :node
 
       define_method(:node) do
-        cms_node ? cms_node.becomes_with_route : nil
+        cms_node
       end
     end
 

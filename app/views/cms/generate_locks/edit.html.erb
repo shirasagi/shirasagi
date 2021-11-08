@@ -11,7 +11,7 @@
     addon_options[:id] = "addon-basic"
     addon_options[:head] = t('modules.addons.ss/generate_lock') if addons.size > 0
   %>
-  <% buf = render file: "_form", locals: { f: f, addon: addon_options } %>
+  <% buf = render template: "_form", locals: { f: f, addon: addon_options } %>
   <%= render "ss/crud/addon", addon: addon_options do %>
     <%= buf %>
   <% end %>

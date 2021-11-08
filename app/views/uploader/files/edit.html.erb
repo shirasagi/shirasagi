@@ -6,10 +6,8 @@ Form_Save_Event.render();
 <%= form_for :item, url: { action: :update, filename: @item.filename }, html: { id: "item-form", method: :put, multipart: true } do |f| %>
 <%= error_messages_for :item %>
 
-<% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_form.html.erb") %>
-  <%= render partial: 'form', locals: { f: f } %>
-<% else %>
-  <%= render file: "#{Rails.root}/app/views/ss/crud/_form", locals: { f: f } %>
+<% if ::File.exist?("#{Rails.root}/app/views/#{params[:controller]}/_form.html.erb") %>
+    <%= render partial: 'form', locals: { f: f } %>
 <% end %>
 
 <footer class="send">

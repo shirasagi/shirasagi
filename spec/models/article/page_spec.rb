@@ -7,7 +7,6 @@ describe Article::Page, dbscope: :example do
     subject(:item) { create :article_page, cur_node: node }
     let(:show_path) { Rails.application.routes.url_helpers.article_page_path(site: subject.site, cid: node, id: subject) }
 
-    it { expect(item.becomes_with_route).not_to be_nil }
     it { expect(item.dirname).to eq node.filename }
     it { expect(item.basename).not_to be_nil }
     it { expect(item.path).not_to be_nil }
@@ -20,7 +19,7 @@ describe Article::Page, dbscope: :example do
   describe "becomes_with_route" do
     subject(:item) { create :article_page, cur_node: node }
     it do
-      page = Cms::Page.find(item.id).becomes_with_route
+      page = Cms::Page.find(item.id)
       expect(page.changed?).to be_falsey
     end
   end
@@ -449,14 +448,14 @@ describe Article::Page, dbscope: :example do
         expect(file.user_id).to eq cms_user.id
         expect(subject.file_ids).to include(file.id)
 
-        expect(::File.exists?(file.public_path)).to be_falsey
-        expect(::File.exists?(subject.path)).to be_falsey
+        expect(::File.exist?(file.public_path)).to be_falsey
+        expect(::File.exist?(subject.path)).to be_falsey
 
         subject.state = "public"
         subject.save!
 
-        expect(::File.exists?(file.public_path)).to be_truthy
-        expect(::File.exists?(subject.path)).to be_truthy
+        expect(::File.exist?(file.public_path)).to be_truthy
+        expect(::File.exist?(subject.path)).to be_truthy
       end
     end
 
@@ -468,16 +467,16 @@ describe Article::Page, dbscope: :example do
         expect(file.user_id).to eq cms_user.id
         expect(subject.file_ids).to include(file.id)
 
-        expect(::File.exists?(subject.path)).to be_truthy
-        expect(::File.exists?(file.public_path)).to be_truthy
+        expect(::File.exist?(subject.path)).to be_truthy
+        expect(::File.exist?(file.public_path)).to be_truthy
 
         node.state = "closed"
         node.save!
 
         SS::PublicFileRemoverJob.bind(site_id: cms_site.id).perform_now
 
-        expect(::File.exists?(subject.path)).to be_falsey
-        expect(::File.exists?(file.public_path)).to be_falsey
+        expect(::File.exist?(subject.path)).to be_falsey
+        expect(::File.exist?(file.public_path)).to be_falsey
       end
     end
 
@@ -489,16 +488,16 @@ describe Article::Page, dbscope: :example do
         expect(file.user_id).to eq cms_user.id
         expect(subject.file_ids).to include(file.id)
 
-        expect(::File.exists?(subject.path)).to be_truthy
-        expect(::File.exists?(file.public_path)).to be_truthy
+        expect(::File.exist?(subject.path)).to be_truthy
+        expect(::File.exist?(file.public_path)).to be_truthy
 
         node.for_member_state = "enabled"
         node.save!
 
         SS::PublicFileRemoverJob.bind(site_id: cms_site.id).perform_now
 
-        expect(::File.exists?(subject.path)).to be_falsey
-        expect(::File.exists?(file.public_path)).to be_falsey
+        expect(::File.exist?(subject.path)).to be_falsey
+        expect(::File.exist?(file.public_path)).to be_falsey
       end
     end
   end

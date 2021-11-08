@@ -1,6 +1,5 @@
 class Webmail::StoredMailPart
-  attr_accessor :section
-  attr_accessor :part
+  attr_accessor :section, :part
 
   delegate :attachment?, :filename, :read, :decoded, to: :part
 

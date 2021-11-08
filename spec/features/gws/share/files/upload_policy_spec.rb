@@ -8,13 +8,9 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
   context "sanitizer setting" do
     before { login_gws_user }
 
-    before do
-      upload_policy_before_settings('sanitizer')
-    end
+    before { upload_policy_before_settings("sanitizer") }
 
-    after do
-      upload_policy_after_settings
-    end
+    after { upload_policy_after_settings }
 
     it do
       visit gws_share_files_path(site)
@@ -61,8 +57,8 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
 
       file = Gws::Share::File.all.first
       expect(file.sanitizer_state).to eq 'wait'
-      expect(Fs.exists?(file.path)).to be_truthy
-      expect(Fs.exists?(file.sanitizer_input_path)).to be_truthy
+      expect(Fs.exist?(file.path)).to be_truthy
+      expect(Fs.exist?(file.sanitizer_input_path)).to be_truthy
       expect(Fs.cmp(file.path, file.sanitizer_input_path)).to be_truthy
 
       # show
@@ -70,14 +66,13 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       expect(page).to have_css('.sanitizer-wait', text: I18n.t('ss.options.sanitizer_state.wait'))
 
       # restore
-      output_path = sanitizer_mock_restore(file)
-      expect(file.sanitizer_state).to eq 'complete'
-      expect(Fs.exists?(file.path)).to be_truthy
-      expect(Fs.exists?(output_path)).to be_falsey
+      restored_file = mock_sanitizer_restore(file)
+      expect(restored_file.sanitizer_state).to eq 'complete'
+      expect(Fs.exist?(restored_file.path)).to be_truthy
 
       click_on I18n.t('ss.links.back_to_index')
       expect(page).to have_css('.list-items .sanitizer-complete')
-      click_on file.name
+      click_on restored_file.name
       expect(page).to have_css('.sanitizer-complete')
 
       # update
@@ -93,7 +88,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       file.reload
       file_path = file.path
       sanitizer_input_path = file.sanitizer_input_path
-      expect(Fs.cmp(file.path, file.sanitizer_input_path)).to be_truthy
+      expect(Fs.cmp(file.path, sanitizer_input_path)).to be_truthy
 
       # soft delete
       click_on I18n.t("ss.links.delete")
@@ -112,8 +107,8 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
         click_on I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
-      expect(Fs.exists?(file_path)).to be_falsey
-      expect(Fs.exists?(sanitizer_input_path)).to be_falsey
+      expect(Fs.exist?(file_path)).to be_falsey
+      expect(Fs.exist?(sanitizer_input_path)).to be_falsey
     end
   end
 
@@ -125,9 +120,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       site.set(upload_policy: 'restricted')
     end
 
-    after do
-      upload_policy_after_settings
-    end
+    after { upload_policy_after_settings }
 
     it do
       visit gws_share_files_path(site)

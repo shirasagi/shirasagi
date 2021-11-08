@@ -1,5 +1,6 @@
 module SS::FileFilter
   extend ActiveSupport::Concern
+  include SS::SanitizerFilter
 
   private
 
@@ -61,7 +62,7 @@ module SS::FileFilter
     set_last_modified
 
     if @item.image? && request.xhr?
-      render file: "view", layout: "ss/ajax"
+      render template: "view", layout: "ss/ajax"
       return
     end
 
@@ -122,7 +123,7 @@ module SS::FileFilter
     return if request.get?
 
     resizer = SS::ImageResizer.new get_params
-    render_update resizer.resize(@item), { file: :resize }
+    render_update resizer.resize(@item), { template: "resize" }
   end
 
   def contrast_ratio

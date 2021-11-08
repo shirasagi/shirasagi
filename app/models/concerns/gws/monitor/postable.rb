@@ -33,7 +33,7 @@ module Gws::Monitor::Postable
       order: { created: -1 }
 
     permit_params :name, :mode, :permit_comment, :severity, :due_date,
-                  :spec_config
+      :spec_config
 
     before_validation :set_topic_id, if: :comment?
 

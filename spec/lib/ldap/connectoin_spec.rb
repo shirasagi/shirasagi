@@ -12,7 +12,7 @@ describe Ldap::Connection, ldap: true do
       context "when valid config is given" do
         it do
           expect(Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
-                                          username: username, password: password)).not_to be_nil
+            username: username, password: password)).not_to be_nil
         end
       end
 
@@ -21,7 +21,7 @@ describe Ldap::Connection, ldap: true do
         let(:password) { "pass" }
         it do
           expect(Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
-                                          username: username, password: password)).not_to be_nil
+            username: username, password: password)).not_to be_nil
         end
       end
 
@@ -31,7 +31,7 @@ describe Ldap::Connection, ldap: true do
         it do
           expect do
             Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
-                                     username: username, password: password)
+              username: username, password: password)
           end.to raise_error Ldap::BindError
         end
       end
@@ -42,7 +42,7 @@ describe Ldap::Connection, ldap: true do
         it do
           expect do
             Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
-                                     username: username, password: password)
+              username: username, password: password)
           end.to raise_error Ldap::BindError
         end
       end
@@ -52,7 +52,7 @@ describe Ldap::Connection, ldap: true do
         let(:password) { SS::Crypt.encrypt("pass") }
         it do
           expect(Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
-                                          username: username, password: password)).not_to be_nil
+            username: username, password: password)).not_to be_nil
         end
       end
     end
@@ -60,7 +60,7 @@ describe Ldap::Connection, ldap: true do
     describe "#groups" do
       subject do
         Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
-                                 username: username, password: password)
+          username: username, password: password)
       end
       it { expect(subject.groups.length).to be >= 0 }
     end
@@ -68,7 +68,7 @@ describe Ldap::Connection, ldap: true do
     describe "#users" do
       subject do
         Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
-                                 username: username, password: password)
+          username: username, password: password)
       end
       it { expect(subject.users.length).to be >= 0 }
     end

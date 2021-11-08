@@ -1,10 +1,10 @@
 class Uploader::File
   include ActiveModel::Model
 
-  attr_accessor :path, :binary, :site
+  attr_accessor :path, :binary, :site, :sanitizer_state
   attr_reader :saved_path, :is_dir
 
-  validate :validate_upload_policy, if: ->{ binary.present? }
+  validate :validate_upload_policy
   validates :path, presence: true
   validates :filename, length: { maximum: 2000 }
   validate :validate_filename
@@ -43,6 +43,7 @@ class Uploader::File
   end
 
   def destroy
+    return false unless validate_upload_policy
     Fs.rm_rf path
   end
 
@@ -131,6 +132,10 @@ class Uploader::File
     "#{site.full_url}#{filename}"
   end
 
+  def filename_label
+    directory? ? I18n.t('uploader.directory_name') : self.class.t('filename')
+  end
+
   def initialize(attributes = {})
     saved_path = attributes.delete :saved_path
     @saved_path = saved_path unless saved_path.nil?
@@ -140,30 +145,24 @@ class Uploader::File
     super
   end
 
-  class << self
-    def remove_exif(binary)
-      SS::ImageConverter.read(binary) do |converter|
-        case SS.config.env.image_exif_option
-        when "auto_orient"
-          converter.auto_orient!
-        when "strip"
-          converter.strip!
-        end
-
-        converter.to_io.read
-      end
-    rescue
-      # ImageMagick doesn't able to handle all image formats. There ara some formats causing unsupported handler exception.
-      # Not all image formats have exif. Some formats link svg or ico haven't exif.
-      binary
+  def auto_compile
+    if validate_scss
+      compile_scss
+    elsif validate_coffee
+      compile_coffee
     end
   end
 
   private
 
   def validate_upload_policy
-    return unless %w(restricted sanitizer).include?(SS::UploadPolicy.upload_policy)
-    errors.add :base, :upload_restricted
+    case SS::UploadPolicy.upload_policy
+    when 'sanitizer'
+      # errors.add :base, :sanitizer_waiting if sanitizer_state == 'wait'
+    when 'restricted'
+      errors.add :base, :upload_restricted
+    end
+    errors.blank?
   end
 
   def validate_filename
@@ -172,7 +171,7 @@ class Uploader::File
       return
     end
 
-    unless /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/.match?(filename)
+    unless /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-.]+$/.match?(filename)
       errors.add :path, :invalid_filename
       return
     end
@@ -211,7 +210,7 @@ class Uploader::File
   def validate_coffee
     return if ext != ".coffee"
     return if ::File.basename(@path)[0] == "_"
-    @js = CoffeeScript.compile @binary
+    @js = ::CoffeeScript.compile @binary
   rescue => e
     errors.add :coffee, e.message
   end
@@ -241,13 +240,13 @@ class Uploader::File
     end
 
     def file(path)
-      return nil if !Fs.exists?(path) && (Fs.mode != :grid_fs)
+      return nil if !Fs.exist?(path) && (Fs.mode != :grid_fs)
       Uploader::File.new(path: path, saved_path: path, is_dir: Fs.directory?(path))
     end
 
     def find(path)
       items = []
-      return items if !Fs.exists?(path) && (Fs.mode != :grid_fs)
+      return items if !Fs.exist?(path) && (Fs.mode != :grid_fs)
       return items unless Fs.directory?(path)
 
       Fs.glob("#{path}/*").each do |f|
@@ -264,6 +263,49 @@ class Uploader::File
         items = items.select { |item| item.basename =~ /#{::Regexp.escape(params[:keyword])}/i }
       end
       items
+    end
+
+    def auto_compile(path)
+      ext = ::File.extname(path)
+      return unless %w(.scss .coffee).include?(ext)
+      return if ::File.basename(path)[0] == "_"
+
+      file = self.file(path)
+      file.read if file.text?
+      file.auto_compile
+    end
+
+    def remove_exif(binary)
+      SS::ImageConverter.read(binary) do |converter|
+        case SS.config.env.image_exif_option
+        when "auto_orient"
+          converter.auto_orient!
+        when "strip"
+          converter.strip!
+        end
+
+        converter.to_io.read
+      end
+    rescue
+      # ImageMagick doesn't able to handle all image formats. There ara some formats causing unsupported handler exception.
+      # Not all image formats have exif. Some formats link svg or ico haven't exif.
+      binary
+    end
+
+    def set_sanitizer_state(items, bindings = {})
+      return if items.empty?
+
+      dir = ::File.dirname(items.first.path).delete_prefix("#{Rails.root}/")
+      paths = Uploader::JobFile.where(bindings).directory(dir).map(&:path)
+
+      items.each do |item|
+        if /\.\w+_sanitize_error\.txt$/.match?(item.filename)
+          item.sanitizer_state = 'error'
+          next
+        end
+        next unless paths.include?(item.path.delete_prefix("#{Rails.root}/"))
+        item.sanitizer_state = 'wait'
+      end
     end
   end
 end

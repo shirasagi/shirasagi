@@ -165,7 +165,7 @@ describe 'members/agents/nodes/my_anpi_post', type: :feature, dbscope: :example,
 
       before do
         group = Member::Group.create cur_site: site, name: group_name, invitation_message: unique_id,
-                                     in_admin_member_ids: [ member0.id ]
+          in_admin_member_ids: [ member0.id ]
         group.members.new(member_id: member1.id, state: 'user')
         group.save!
 

@@ -27,7 +27,7 @@ module SS::CapybaraSupport
   def activate_chrome(config)
     require 'selenium-webdriver'
     headless = ENV.fetch('headless', '1')
-    Capybara.server = :webrick
+    set_capybara_server
     Capybara.register_driver :chrome do |app|
       options = Selenium::WebDriver::Chrome::Options.new
       options.add_preference('download.prompt_for_download', false)
@@ -50,6 +50,14 @@ module SS::CapybaraSupport
 
     puts "[Capybara] with Google Chrome(headless: #{headless != '0' ? 'enabled' : 'disabled'})"
     true
+  end
+
+  def set_capybara_server
+    if ENV.fetch('capybara_server', 'puma') == "puma"
+      Capybara.server = :puma, { Silent: false }
+    else
+      Capybara.server = :webrick
+    end
   end
 
   def deactivate_driver(config)

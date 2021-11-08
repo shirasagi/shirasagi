@@ -48,6 +48,7 @@ class Gws::Notice::Post
         search_severity(params).
         search_folders(params).
         search_category(params).
+        search_categories(params).
         search_browsed_state(params)
     end
 
@@ -72,6 +73,12 @@ class Gws::Notice::Post
       return all if params.blank? || params[:category_id].blank?
 
       all.where(category_ids: params[:category_id].to_i)
+    end
+
+    def search_categories(params)
+      return all if params.blank? || params[:category_ids].blank?
+
+      all.in(category_ids: params[:category_ids])
     end
 
     def search_browsed_state(params)
@@ -109,7 +116,7 @@ class Gws::Notice::Post
         size: text.length.to_s(:human_size),
         limit: folder.notice_individual_body_size_limit.to_s(:human_size)
       }
-      errors.add :base, :exceeded_individual_body_size_limit, options
+      errors.add :base, :exceeded_individual_body_size_limit, **options
     end
 
     if text.length + folder.notice_total_body_size > folder.notice_total_body_size_limit
@@ -117,7 +124,7 @@ class Gws::Notice::Post
         size: (text.length + folder.notice_total_body_size).to_s(:human_size),
         limit: folder.notice_total_body_size_limit.to_s(:human_size)
       }
-      errors.add :base, :exceeded_total_body_size_limit, options
+      errors.add :base, :exceeded_total_body_size_limit, **options
     end
   end
 
@@ -135,7 +142,7 @@ class Gws::Notice::Post
         size: file.size.to_s(:human_size),
         limit: folder.notice_individual_file_size_limit.to_s(:human_size)
       }
-      errors.add :base, :exceeded_individual_file_size_limit, options
+      errors.add :base, :exceeded_individual_file_size_limit, **options
     end
 
     if self.total_file_size + folder.notice_total_file_size > folder.notice_total_file_size_limit
@@ -143,7 +150,7 @@ class Gws::Notice::Post
         size: (self.total_file_size + folder.notice_total_file_size).to_s(:human_size),
         limit: folder.notice_total_file_size_limit.to_s(:human_size)
       }
-      errors.add :base, :exceeded_total_file_size_limit, options
+      errors.add :base, :exceeded_total_file_size_limit, **options
     end
   end
 

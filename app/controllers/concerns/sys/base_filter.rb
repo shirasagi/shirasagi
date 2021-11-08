@@ -12,6 +12,5 @@ module Sys::BaseFilter
   private
 
   def set_crumbs
-    #
   end
 end

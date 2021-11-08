@@ -28,11 +28,11 @@ class Translate::Api::MicrosoftTranslator
     (@site.translate_mock_api_request_word_count + count) >= request_word_limit
   end
 
-  def translate(texts, from, to, opts = {})
+  def translate(texts, from, to, site:)
     @count = 0
     @metered_usage = 0
 
-    count = texts.map(&:size).sum
+    count = texts.sum(&:size)
     uri = URI(@url + "&from=#{from}&to=#{to}")
     content = texts.map { |text| { "Text" => text } }.to_json
 

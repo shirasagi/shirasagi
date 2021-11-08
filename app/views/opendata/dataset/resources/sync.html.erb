@@ -3,7 +3,7 @@
 
   <div class="addon-views">
     <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t("ldap.confirm.sync") } do %>
-      <%= render file: "_sync" %>
+      <%= render template: "_sync" %>
     <% end %>
   </div>
 

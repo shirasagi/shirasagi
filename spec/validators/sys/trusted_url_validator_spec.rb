@@ -77,6 +77,17 @@ describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
   end
 
   describe ".valid_url?" do
+    before do
+      @save_url_type = SS.config.sns.url_type
+      SS.config.replace_value_at(:sns, :url_type, "restricted")
+      Sys::TrustedUrlValidator.send(:clear_trusted_urls)
+    end
+
+    after do
+      SS.config.replace_value_at(:sns, :url_type, @save_url_type)
+      Sys::TrustedUrlValidator.send(:clear_trusted_urls)
+    end
+
     it do
       # relative: path only
       expect(described_class.valid_url?(::Addressable::URI.parse("/a/b/c"))).to be_truthy

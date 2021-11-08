@@ -79,9 +79,9 @@ class Chat::LineBot::Service
       add_confirm_yes.confirm_yes += 1
       add_confirm_yes.save
       client.reply_message(event["replyToken"], {
-                             "type": "text",
-                             "text": @cur_node.chat_success.gsub(%r{</?[^>]+?>}, "")
-                           })
+        type: "text",
+        text: @cur_node.chat_success.gsub(%r{</?[^>]+?>}, "")
+      })
     elsif event['postback']['data'].split(',')[0] == 'no'
       add_confirm_no = Chat::LineBot::ExistsPhrase.site(@cur_site).
         where(node_id: @cur_node.id).
@@ -89,9 +89,9 @@ class Chat::LineBot::Service
       add_confirm_no.confirm_no += 1
       add_confirm_no.save
       client.reply_message(event["replyToken"], {
-                             "type": "text",
-                              "text": @cur_node.chat_retry.gsub(%r{</?[^>]+?>}, "")
-                           })
+        type: "text",
+        text: @cur_node.chat_retry.gsub(%r{</?[^>]+?>}, "")
+      })
     elsif event['postback']['data'].split(',')[0] == 'facility'
       client.reply_message(event["replyToken"], show_facilities(event))
     elsif event['postback']['data'].split(',')[0] == 'event'
@@ -153,9 +153,9 @@ class Chat::LineBot::Service
     actions.each do |action|
       action.each do |suggest|
         suggest_templates << {
-          "type": "message",
-          "label": suggest,
-          "text": suggest
+          type: "message",
+          label: suggest,
+          text: suggest
         }
       end
       action_templates << suggest_templates
@@ -164,16 +164,15 @@ class Chat::LineBot::Service
 
     templates = []
     action_templates.each do |action|
-      template =
-        {
-          "type": "template",
-          "altText": suggest_text(event, templates),
-          "template": {
-            "type": "buttons",
-            "actions": action,
-            "text": suggest_text(event, templates)
-          }
+      template = {
+        type: "template",
+        altText: suggest_text(event, templates),
+        template: {
+          type: "buttons",
+          actions: action,
+          text: suggest_text(event, templates)
         }
+      }
       templates << template
     end
     templates << site_search(event) if phrase(event).site_search == "enabled" && site_search?
@@ -184,7 +183,7 @@ class Chat::LineBot::Service
   def link_text(event, templates)
     if templates.empty?
       if phrase(event).response.scan(/<p(?: .+?)?>.*?<\/p>/).present?
-        phrase(event).response.scan(/<p(?: .+?)?>.*?<\/p>/).join("").gsub(%r{</?[^>]+?>}, "")
+        phrase(event).response.scan(/<p(?: .+?)?>.*?<\/p>/).join.gsub(%r{</?[^>]+?>}, "")
       else
         @cur_node.response_template.gsub(%r{</?[^>]+?>}, "")
       end
@@ -202,9 +201,9 @@ class Chat::LineBot::Service
     actions.zip(links).each do |action, link|
       action.zip(link).each do |label, url|
         link_templates << {
-          "type": "uri",
-          "label": label.gsub(%r{</?[^>]+?>}, ""),
-          "uri": url
+          type: "uri",
+          label: label.gsub(%r{</?[^>]+?>}, ""),
+          uri: url
         }
       end
       action_templates << link_templates
@@ -213,16 +212,15 @@ class Chat::LineBot::Service
 
     templates = []
     action_templates.each do |action|
-      template =
-        {
-          "type": "template",
-          "altText": link_text(event, templates),
-          "template": {
-            "type": "buttons",
-            "actions": action,
-            "text": link_text(event, templates)
-          }
+      template = {
+        type: "template",
+        altText: link_text(event, templates),
+        template: {
+          type: "buttons",
+          actions: action,
+          text: link_text(event, templates)
         }
+      }
       templates << template
     end
     templates << site_search(event) if phrase(event).site_search == "enabled" && site_search?
@@ -232,11 +230,10 @@ class Chat::LineBot::Service
 
   def res(event)
     templates = []
-    template =
-      {
-        "type": "text",
-        "text": phrase(event).response.gsub(%r{</?[^>]+?>}, "")
-      }
+    template = {
+      type: "text",
+      text: phrase(event).response.gsub(%r{</?[^>]+?>}, "")
+    }
     templates << template
     templates << site_search(event) if phrase(event).site_search == "enabled" && site_search?
     templates << question(event) if phrase(event).question == "enabled" && question?
@@ -249,21 +246,21 @@ class Chat::LineBot::Service
 
   def question(event)
     {
-      "type": "template",
-      "altText": @cur_node.question.gsub(%r{</?[^>]+?>}, ""),
-      "template": {
-        "type": "confirm",
-        "text": @cur_node.question.gsub(%r{</?[^>]+?>}, ""),
-        "actions": [
+      type: "template",
+      altText: @cur_node.question.gsub(%r{</?[^>]+?>}, ""),
+      template: {
+        type: "confirm",
+        text: @cur_node.question.gsub(%r{</?[^>]+?>}, ""),
+        actions: [
           {
-            "type": "postback",
-            "label": I18n.t("chat.line_bot.service.success"),
-            "data": "yes, #{event.message['text']}"
+            type: "postback",
+            label: I18n.t("chat.line_bot.service.success"),
+            data: "yes, #{event.message['text']}"
           },
           {
-            "type": "postback",
-            "label": I18n.t("chat.line_bot.service.retry"),
-            "data": "no, #{event.message['text']}"
+            type: "postback",
+            label: I18n.t("chat.line_bot.service.retry"),
+            data: "no, #{event.message['text']}"
           }
         ]
       }
@@ -295,18 +292,16 @@ class Chat::LineBot::Service
     uri.query = {s: {keyword: event.message["text"]}}.to_query
     url = uri.try(:to_s)
     template = {
-      "type": "template",
-      "altText": I18n.t("chat.line_bot.service.site_search"),
-      "template": {
-        "type": "buttons",
-        "text": I18n.t("chat.line_bot.service.site_search"),
-        "actions": [
-          {
-            "type": "uri",
-            "label": I18n.t("chat.line_bot.service.search_results"),
-            "uri": "https://" + @cur_site.domains.first + url
-          }
-        ]
+      type: "template",
+      altText: I18n.t("chat.line_bot.service.site_search"),
+      template: {
+        type: "buttons",
+        text: I18n.t("chat.line_bot.service.site_search"),
+        actions: [{
+          type: "uri",
+          label: I18n.t("chat.line_bot.service.search_results"),
+          uri: "https://" + @cur_site.domains.first + url
+        }]
       }
     }
     template
@@ -314,46 +309,44 @@ class Chat::LineBot::Service
 
   def no_match
     {
-      "type": "text",
-      "text": @cur_node.exception_text.gsub(%r{</?[^>]+?>}, "")
+      type: "text",
+      text: @cur_node.exception_text.gsub(%r{</?[^>]+?>}, "")
     }
   end
 
   def send_location(event)
     client.reply_message(event["replyToken"], {
-                           "type": "template",
-                           "altText": I18n.t("chat.line_bot.service.send_location"),
-                           "template": {
-                             "type": "buttons",
-                             "text": I18n.t("chat.line_bot.service.send_location"),
-                             "actions": [
-                               {
-                                 "type": "uri",
-                                 "label": I18n.t("chat.line_bot.service.set_location"),
-                                 "uri": "line://nv/location"
-                               }
-                             ]
-                           }
-                         })
+      type: "template",
+      altText: I18n.t("chat.line_bot.service.send_location"),
+      template: {
+        type: "buttons",
+        text: I18n.t("chat.line_bot.service.send_location"),
+        actions: [{
+          type: "uri",
+          label: I18n.t("chat.line_bot.service.set_location"),
+          uri: "line://nv/location"
+        }]
+      }
+    })
   end
 
   def select_info(event)
     {
-      "type": "template",
-      "altText": I18n.t("chat.line_bot.service.select_info"),
-      "template": {
-        "type": "buttons",
-        "text": I18n.t("chat.line_bot.service.select_info"),
-        "actions": [
+      type: "template",
+      altText: I18n.t("chat.line_bot.service.select_info"),
+      template: {
+        type: "buttons",
+        text: I18n.t("chat.line_bot.service.select_info"),
+        actions: [
           {
-            "type": "postback",
-            "label": I18n.t("chat.line_bot.service.facility"),
-            "data": "facility, #{event.message['latitude']}, #{event.message['longitude']}"
+            type: "postback",
+            label: I18n.t("chat.line_bot.service.facility"),
+            data: "facility, #{event.message['latitude']}, #{event.message['longitude']}"
           },
           {
-            "type": "postback",
-            "label": I18n.t("chat.line_bot.service.event"),
-            "data": "event, #{event.message['latitude']}, #{event.message['longitude']}"
+            type: "postback",
+            label: I18n.t("chat.line_bot.service.event"),
+            data: "event, #{event.message['latitude']}, #{event.message['longitude']}"
           }
         ]
       }
@@ -374,15 +367,11 @@ class Chat::LineBot::Service
 
   def search_facilities(event)
     set_loc(event)
-    @facilities = Facility::Map.site(@cur_site).where(
-      map_points: {
-        "$elemMatch" => {
-          "loc" => {
-            "$geoWithin" => { "$centerSphere" => [ @loc, @radius / EARTH_RADIUS_KM ] }
-          }
-        }
+    @facilities = Facility::Map.site(@cur_site).where(map_points: {
+      "$elemMatch" => {
+        "loc" => { "$geoWithin" => { "$centerSphere" => [ @loc, @radius / EARTH_RADIUS_KM ] } }
       }
-    ).to_a
+    }).to_a
 
     @markers = @facilities.map do |item|
       points = item.map_points.map do |point|
@@ -407,9 +396,9 @@ class Chat::LineBot::Service
     search_facilities(event)
     if @facilities.empty?
       client.reply_message(event['replyToken'], {
-                             "type": "text",
-                             "text": I18n.t("chat.line_bot.service.no_facility")
-                           })
+        type: "text",
+        text: I18n.t("chat.line_bot.service.no_facility")
+      })
     else
       columns = []
       domain = @cur_site.domains.first
@@ -422,39 +411,38 @@ class Chat::LineBot::Service
         else
           distance = I18n.t("chat.line_bot.service.about") + "#{(map[:distance] * 1000).round}m"
         end
-        column =
-          {
-            "title": item.name,
-            "text": "#{item.address}\n #{distance}",
-            "defaultAction": {
-              "type": "uri",
-              "label": "View detail",
-              "uri": "https://" + domain + item.url
+        column = {
+          title: item.name,
+          text: "#{item.address}\n #{distance}",
+          defaultAction: {
+            type: "uri",
+            label: "View detail",
+            uri: "https://" + domain + item.url
+          },
+          actions: [
+            {
+              type: "uri",
+              label: I18n.t("chat.line_bot.service.map"),
+              uri: "https://www.google.com/maps/search/?api=1&query=#{map_lat},#{map_lng}"
             },
-            "actions": [
-              {
-                "type": "uri",
-                "label": I18n.t("chat.line_bot.service.map"),
-                "uri": "https://www.google.com/maps/search/?api=1&query=#{map_lat},#{map_lng}"
-              },
-              {
-                "type": "uri",
-                "label": I18n.t("chat.line_bot.service.details"),
-                "uri": "https://" + domain + item.url
-              }
-            ]
-          }
+            {
+              type: "uri",
+              label: I18n.t("chat.line_bot.service.details"),
+              uri: "https://" + domain + item.url
+            }
+          ]
+        }
         columns << column
       end
 
       template = {
-        "type": "template",
-        "altText": I18n.t("chat.line_bot.service.facility_info"),
-        "template": {
-          "type": "carousel",
-          "columns": columns,
-          "imageAspectRatio": "rectangle",
-          "imageSize": "cover"
+        type: "template",
+        altText: I18n.t("chat.line_bot.service.facility_info"),
+        template: {
+          type: "carousel",
+          columns: columns,
+          imageAspectRatio: "rectangle",
+          imageSize: "cover"
         }
       }
       template
@@ -463,15 +451,11 @@ class Chat::LineBot::Service
 
   def search_events(event)
     set_loc(event)
-    @events = Event::Page.site(@cur_site).where(
-      map_points: {
-        "$elemMatch" => {
-          "loc" => {
-            "$geoWithin" => { "$centerSphere" => [ @loc, @radius / EARTH_RADIUS_KM ] }
-          }
-        }
+    @events = Event::Page.site(@cur_site).where(map_points: {
+      "$elemMatch" => {
+        "loc" => { "$geoWithin" => { "$centerSphere" => [ @loc, @radius / EARTH_RADIUS_KM ] } }
       }
-    ).to_a
+    }).to_a
 
     @markers = @events.map do |item|
       points = item.map_points.map do |point|
@@ -492,15 +476,11 @@ class Chat::LineBot::Service
       item = Facility::Node::Page.site(@cur_site).and_public.find(event.facility_ids).first
       maps = Facility::Map.site(@cur_site).and_public.
         where(filename: /\A#{::Regexp.escape(item.filename)}\//, depth: item.depth + 1).
-        where(
-          map_points: {
-            "$elemMatch" => {
-              "loc" => {
-                "$geoWithin" => { "$centerSphere" => [ @loc, @radius / EARTH_RADIUS_KM ] }
-              }
-            }
+        where(map_points: {
+          "$elemMatch" => {
+            "loc" => { "$geoWithin" => { "$centerSphere" => [ @loc, @radius / EARTH_RADIUS_KM ] } }
           }
-        ).to_a
+        }).to_a
       maps.each do |map|
         points = map.map_points.map do |point|
           point[:event_url] = event.url
@@ -528,9 +508,9 @@ class Chat::LineBot::Service
     search_events(event)
     if @markers.empty?
       client.reply_message(event['replyToken'], {
-                             "type": "text",
-                             "text": I18n.t("chat.line_bot.service.no_event")
-                           })
+        type: "text",
+        text: I18n.t("chat.line_bot.service.no_event")
+      })
     else
       columns = []
       domain = @cur_site.domains.first
@@ -543,39 +523,38 @@ class Chat::LineBot::Service
         else
           distance = I18n.t("chat.line_bot.service.about") + "#{(map[:distance] * 1000).round}m"
         end
-        column =
-          {
-            "title": item.name,
-            "text": "#{item.venue}\n #{distance}",
-            "defaultAction": {
-              "type": "uri",
-              "label": "View detail",
-              "uri": "https://" + domain + item.url
+        column = {
+          title: item.name,
+          text: "#{item.venue}\n #{distance}",
+          defaultAction: {
+            type: "uri",
+            label: "View detail",
+            uri: "https://" + domain + item.url
+          },
+          actions: [
+            {
+              type: "uri",
+              label: I18n.t("chat.line_bot.service.map"),
+              uri: "https://www.google.com/maps/search/?api=1&query=#{map_lat},#{map_lng}"
             },
-            "actions": [
-              {
-                "type": "uri",
-                "label": I18n.t("chat.line_bot.service.map"),
-                "uri": "https://www.google.com/maps/search/?api=1&query=#{map_lat},#{map_lng}"
-              },
-              {
-                "type": "uri",
-                "label": I18n.t("chat.line_bot.service.details"),
-                "uri": "https://" + domain + item.url
-              }
-            ]
-          }
+            {
+              type: "uri",
+              label: I18n.t("chat.line_bot.service.details"),
+              uri: "https://" + domain + item.url
+            }
+          ]
+        }
         columns << column
       end
 
       template = {
-        "type": "template",
-        "altText": I18n.t("chat.line_bot.service.event_info"),
-        "template": {
-          "type": "carousel",
-          "columns": columns,
-          "imageAspectRatio": "rectangle",
-          "imageSize": "cover"
+        type: "template",
+        altText: I18n.t("chat.line_bot.service.event_info"),
+        template: {
+          type: "carousel",
+          columns: columns,
+          imageAspectRatio: "rectangle",
+          imageSize: "cover"
         }
       }
       template

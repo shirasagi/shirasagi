@@ -69,7 +69,6 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
       each_node_with_rescue do |node|
         next unless node
 
-        node = node.becomes_with_route
         next unless node.public?
         next unless node.public_node?
 
@@ -96,7 +95,6 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
       next unless page
 
       @task.performance.collect_page(page) do
-        page = page.becomes_with_route
         result = page.generate_file(task: @task)
 
         @task.log page.url if result
@@ -112,7 +110,6 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
         @task.count
 
         @task.performance.collect_page(page) do
-          page = page.becomes_with_route
           result = page.generate_file(task: @task)
 
           @task.log page.url if result

@@ -34,10 +34,10 @@ describe History::Trash do
 
     it "restore" do
       item.destroy
-      expect(File.exists?("#{described_class.root}/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}")).to be_truthy
+      expect(File.exist?("#{described_class.root}/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}")).to be_truthy
 
       described_class.all.destroy_all
-      expect(File.exists?("#{described_class.root}/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}")).to be_falsey
+      expect(File.exist?("#{described_class.root}/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}")).to be_falsey
     end
   end
 end

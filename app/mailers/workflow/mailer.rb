@@ -8,7 +8,6 @@ class Workflow::Mailer < ActionMailer::Base
     @subject   = "[#{I18n.t('workflow.mail.subject.request')}]#{@page.name} - #{@site.name}"
     @url       = make_full_url(args[:url])
     @comment   = args[:comment]
-    @site      = args[:site]
 
     from_email = format_email(@from_user) || site_sender(@site) || Cms::DEFAULT_SENDER_ADDRESS
     to_email = format_email(@to_user)

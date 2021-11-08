@@ -7,6 +7,7 @@ module Cms::Addon::Import
 
     included do
       attr_accessor :in_file, :imported
+
       permit_params :in_file
     end
 
@@ -121,11 +122,7 @@ module Cms::Addon::Import
     end
 
     def set_errors(item, index)
-      error = ""
-      item.errors.each do |n, e|
-        error += "#{item.class.t(n)}#{e} "
-      end
-      self.errors.add :base, "#{index}: #{error}"
+      SS::Model.copy_errors(item, self, prefix: "#{index}: ")
     end
   end
 end

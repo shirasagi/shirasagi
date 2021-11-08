@@ -53,7 +53,7 @@ module Fs
   end
 
   def same_data?(path, data)
-    return false unless Fs.exists?(path)
+    return false unless Fs.exist?(path)
     return false if Fs.size(path) != data.length
 
     begin

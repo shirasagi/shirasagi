@@ -63,6 +63,15 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     end
   end
 
+  def history_summary
+    h = []
+    h << "#{t("file_label")}: #{file_label}" if file_label.present?
+    h << "#{t("image_html_type")}: #{I18n.t("cms.options.column_image_html_type.#{image_html_type}")}" if image_html_type.present?
+    h << "#{t("text")}: #{text}" if text.present?
+    h << "#{t("alignment")}: #{I18n.t("cms.options.alignment.#{alignment}")}"
+    h.join(",")
+  end
+
   private
 
   def validate_value
@@ -190,7 +199,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
   def to_default_html_attachment
     label = file_label.presence.try { |l| ApplicationController.helpers.sanitize(l) }
-    label ||= file.name.sub(/\.[^\.]+$/, '')
+    label ||= file.name.sub(/\.[^.]+$/, '')
     label = "#{label} (#{file.extname.upcase} #{file.size.to_s(:human_size)})"
     ApplicationController.helpers.link_to(label, file.url)
   end

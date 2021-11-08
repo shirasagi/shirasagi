@@ -1,8 +1,8 @@
 <% file = "#{@cur_node.path}/search.html" %>
-<% if !controller.preview_path? && Fs.exists?(file) %>
+<% if !controller.preview_path? && Fs.exist?(file) %>
   <%== Fs.read(file) %>
 <% else %>
-  <%= render file: 'opendata/agents/nodes/app/search_app/search' %>
+  <%= render template: 'opendata/agents/nodes/app/search_app/search' %>
 <% end %>
 
 <% if @items.count > 0 %>
@@ -29,7 +29,7 @@
     <header>
       <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
       <h2><%= link_to item.name, item.url %>
-        <% if item.parent.becomes_with_route.show_point? %>
+        <% if item.parent.show_point? %>
         <span class="point"><%= item.point.to_i %></span>
         <% end %>
       </h2>

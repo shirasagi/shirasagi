@@ -31,7 +31,7 @@ class Jmaxml::Action::BasesController < ApplicationController
   def new
     @item = @model.new pre_params.merge(fix_params)
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
-    render file: :choice
+    render template: "choice"
   end
 
   def create

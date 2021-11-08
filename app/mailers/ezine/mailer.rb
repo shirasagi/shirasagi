@@ -22,7 +22,6 @@ class Ezine::Mailer < ActionMailer::Base
     @page = page
     @member = member
     @node = Cms::Node.find page.parent.id
-    @node = @node.becomes_with_route
     sender = Cms.sender_address(@node, @node.cur_site || @node.site)
 
     mail from: sender, to: member.email, message_id: Cms.generate_message_id(@node.cur_site || @node.site) do |format|

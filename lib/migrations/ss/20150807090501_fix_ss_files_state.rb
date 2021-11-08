@@ -4,20 +4,19 @@ class SS::Migration20150807090501
   depends_on "20150619114301"
 
   def change
-    Cms::Page.all.each do |item|
-      item.files.each do |f|
-        if item.state == "closed" && f.state == "public"
-          f.update_attributes(state: item.state)
+    criteria = Cms::Page.where(state: 'closed')
+    all_ids = criteria.pluck(:id)
+    all_ids.each_slice(20) do |ids|
+      criteria.in(id: ids).to_a.each do |page|
+        if page.respond_to?(:files)
+          page.files.where(state: 'public').each do |f|
+            f.update(state: page.state)
+          end
         end
-      end
-    end
 
-    Facility::Image.all.each do |item|
-      f = item.image
-      next unless f
-
-      if item.state == "closed" && f.state == "public"
-        f.update_attributes(state: item.state)
+        if page.route == 'facility/image' && page.image.try(:state) == "public"
+          page.image.update(state: page.state)
+        end
       end
     end
   end

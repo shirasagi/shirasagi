@@ -245,7 +245,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         expect(reply_mail.body.raw_source).not_to include("- " + node.columns[7].name)
         expect(reply_mail.body.raw_source).not_to include("logo.png")
         # static
-        expect(reply_mail.body.raw_source).to include(I18n.t("inquiry.default_reply_content_static"))
+        expect(reply_mail.body.raw_source).to include(I18n.t("inquiry.default_reply_content_static").gsub("\n", "\r\n"))
         # lower
         expect(reply_mail.body.raw_source).to include('下部テキスト')
       end
@@ -258,7 +258,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
     it_behaves_like "static reply"
   end
 
-  context "when reply_content_state is static" do
+  context "when reply_content_state is nil" do
     let(:reply_content_state) { nil }
 
     it_behaves_like "static reply"

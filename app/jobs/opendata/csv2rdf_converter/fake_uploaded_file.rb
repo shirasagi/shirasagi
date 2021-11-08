@@ -10,6 +10,7 @@ class Opendata::Csv2rdfConverter::FakeUploadedFile
   # A +Tempfile+ object with the actual uploaded file. Note that some of
   # its interface is available directly.
   attr_accessor :tempfile
+
   alias_attribute :to_io, :tempfile
 
   # A string with the headers of the multipart request.

@@ -1,5 +1,5 @@
 <% value ||= [] %>
-<%= render file: 'gws/agents/columns/main/_common_label', locals: { column: column } %>
+<%= render 'gws/agents/columns/main/common_label', column: column %>
 <dd>
   <%= hidden_field_tag("#{object_name}[#{column.id}][]", nil, id: nil) %>
   <span class="prefix"><%= column.prefix_label %></span>

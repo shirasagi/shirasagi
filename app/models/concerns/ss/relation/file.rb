@@ -7,9 +7,10 @@ module SS::Relation::File
       class_name = opts[:class_name].presence || "SS::File"
       required = opts[:required] || false
 
-      belongs_to name.to_sym, class_name: class_name, dependent: :destroy
+      belongs_to name.to_sym, class_name: class_name.to_s, dependent: :destroy
 
       attr_accessor "in_#{name}", "rm_#{name}", "in_#{name}_resizing"
+
       permit_params "in_#{name}", "rm_#{name}"
       permit_params "in_#{name}_resizing" => []
 
@@ -41,9 +42,10 @@ module SS::Relation::File
     def belongs_to_file2(name, opts = {})
       class_name = opts[:class_name].presence || "SS::File"
 
-      belongs_to name.to_sym, class_name: class_name, dependent: :destroy
+      belongs_to name.to_sym, class_name: class_name.to_s, dependent: :destroy
 
       attr_accessor "rm_#{name}", "in_#{name}_resizing"
+
       permit_params "#{name}_id", "rm_#{name}", "in_#{name}_resizing" => []
 
       before_save if: ->{ send("#{name}_id").present? } do
@@ -179,7 +181,10 @@ module SS::Relation::File
     cur_id = send("#{name}_id")
     prev_id = send("#{name}_id_was")
 
-    file = SS::File.find(cur_id)
+    file = SS::File.where(id: cur_id).first
+
+    return unless file
+
     expected_model = opts[:file_model] || (opts[:class_name].presence || "SS::File").to_s.underscore
     if file.model != expected_model
       file.update(model: expected_model)
