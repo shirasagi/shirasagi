@@ -9,8 +9,8 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
   permit_values :file_id, :file_label, :text, :image_html_type, :link_url
 
-  before_save :before_save_file
-  after_destroy :destroy_file
+  before_parent_save :before_save_file
+  after_parent_destroy :destroy_file
 
   liquidize do
     export :file

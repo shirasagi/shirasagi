@@ -6,10 +6,10 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
 
   permit_values :value, file_ids: []
 
-  before_save :before_save_files
-  after_destroy :destroy_files
-  after_save :put_contains_urls_logs
   before_validation :set_contains_urls
+  after_save :put_contains_urls_logs
+  before_parent_save :before_save_files
+  after_parent_destroy :destroy_files
 
   liquidize do
     export :value
