@@ -10,8 +10,10 @@ json.job do
   json.mode Job::Service.config.mode
   json.polling_queues Job::Service.config.polling.queues
 end
-json.item do
-  json.name @item.name
-  json.current_count @item.current_count
-  json.updated @item.updated
+if @item
+  json.item do
+    json.name @item.name
+    json.current_count @item.current_count
+    json.updated @item.updated
+  end
 end

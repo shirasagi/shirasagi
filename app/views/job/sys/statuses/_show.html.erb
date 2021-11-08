@@ -9,7 +9,7 @@
   <dd><%= Job::Service.config.polling.queues.join(", ") %></dd>
 
   <dt><%= @model.t :name %></dt>
-  <dd><%= @item.name %></dd>
+  <dd><%= @item.try(:name) %></dd>
 
   <dt><%= @model.t :current_count %></dt>
   <dd><%= @item.try(:current_count).try { |num| num.to_s(:delimited) } %></dd>
