@@ -92,6 +92,8 @@ module Cms::Addon::List
 
       conditions.each do |url_with_host|
         host, url = url_with_host.split(":", 2)
+        next unless host
+
         host, url = url, host if url.blank?
 
         if host.present?
