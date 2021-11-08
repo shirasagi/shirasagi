@@ -43,7 +43,7 @@ class Translate::Api::GoogleTranslator
   def translate(contents, source_language, target_language, site:)
     @count = 0
 
-    count = contents.map(&:size).sum
+    count = contents.sum(&:size)
 
     if request_word_limit_exceeded?(count)
       @site.request_word_limit_exceeded = true

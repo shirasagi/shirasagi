@@ -11,7 +11,7 @@ module SS::Fields::Normalizer
   def normalize_fields
     self.class.fields.each do |name, field_def|
       next if name[0] == '_'
-      m = "normalize_#{field_def.type.to_s.underscore.gsub(/\//, '_')}_field"
+      m = "normalize_#{field_def.type.to_s.underscore.tr('/', '_')}_field"
       send(m, name, field_def) rescue nil
     end
   end
@@ -27,7 +27,7 @@ module SS::Fields::Normalizer
       hash_value = hash_value_orig = send("#{name}_translations")
       hash_value = hash_value.map { |k, v| [ k, v.present? ? v.strip : v ] }
       hash_value = hash_value.delete_if { |k, v| v.blank? }
-      hash_value = Hash[hash_value]
+      hash_value = hash_value.to_h
       if hash_value != hash_value_orig
         send("#{name}_translations=", hash_value)
       end

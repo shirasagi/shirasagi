@@ -1,10 +1,7 @@
 class Gws::UserCsv::Exporter
   include ActiveModel::Model
 
-  attr_accessor :site
-  attr_accessor :form
-  attr_accessor :criteria
-  attr_accessor :webmail_support
+  attr_accessor :site, :form, :criteria, :webmail_support
 
   PREFIX = 'A:'.freeze
 

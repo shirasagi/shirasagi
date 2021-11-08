@@ -105,6 +105,6 @@ module Service::BaseFilter
 
   def error_html_file(status)
     file = "#{Rails.public_path}/.error_pages/#{status}.html"
-    Fs.exists?(file) ? file : "#{Rails.public_path}/.error_pages/500.html"
+    Fs.exist?(file) ? file : "#{Rails.public_path}/.error_pages/500.html"
   end
 end

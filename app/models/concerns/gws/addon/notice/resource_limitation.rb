@@ -15,13 +15,13 @@ module Gws::Addon::Notice::ResourceLimitation
     permit_params :notice_individual_file_size_limit_mb, :notice_total_file_size_limit_mb
 
     validates :notice_individual_body_size_limit,
-              numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
+      numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
     validates :notice_total_body_size_limit,
-              numericality: { only_integer: true, greater_than_or_equal_to: 1_024 * 1_024, allow_blank: true }
+      numericality: { only_integer: true, greater_than_or_equal_to: 1_024 * 1_024, allow_blank: true }
     validates :notice_individual_file_size_limit,
-              numericality: { only_integer: true, greater_than_or_equal_to: 1_024 * 1_024, allow_blank: true }
+      numericality: { only_integer: true, greater_than_or_equal_to: 1_024 * 1_024, allow_blank: true }
     validates :notice_total_file_size_limit,
-              numericality: { only_integer: true, greater_than_or_equal_to: 1_024 * 1_024, allow_blank: true }
+      numericality: { only_integer: true, greater_than_or_equal_to: 1_024 * 1_024, allow_blank: true }
   end
 
   def notice_individual_body_size_limit_mb

@@ -9,8 +9,7 @@ class Guide::Importer
 
   set_permission_name "guide_procedures"
 
-  attr_accessor :cur_site, :cur_node, :cur_user
-  attr_accessor :in_file
+  attr_accessor :cur_site, :cur_node, :cur_user, :in_file
 
   permit_params :in_file
 

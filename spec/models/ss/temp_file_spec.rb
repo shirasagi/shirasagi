@@ -26,7 +26,7 @@ describe SS::TempFile do
         expect(file.filename).to eq filename
         expect(file.content_type).to eq content_type
         expect(file.size).to eq 0
-        expect(::File.exists?(file.path)).to be_truthy
+        expect(::File.exist?(file.path)).to be_truthy
         expect(file.errors).to be_empty
       end
     end
@@ -43,7 +43,7 @@ describe SS::TempFile do
         expect(file.filename).to eq filename
         expect(file.content_type).to eq content_type
         expect(file.size).to eq ::File.size("#{Rails.root}/spec/fixtures/ss/logo.png")
-        expect(::File.exists?(file.path)).to be_truthy
+        expect(::File.exist?(file.path)).to be_truthy
         expect(file.errors).to be_empty
       end
     end

@@ -100,7 +100,7 @@ module Webmail
     size = SS::File.where(model: /^webmail\//).aggregate_files_used
 
     dir = "#{Rails.root}/private/files/webmail_files"
-    return size unless ::File.exists?(dir)
+    return size unless ::File.exist?(dir)
 
     # see: https://myokoym.hatenadiary.org/entry/20100606/1275836896
     ::Dir.glob("#{dir}/**/*") do |path|

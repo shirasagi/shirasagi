@@ -3,6 +3,7 @@ class History::DeleteParam
   include ActiveModel::Attributes
 
   attr_accessor :cur_site, :cur_user
+
   attribute :delete_term, :string
 
   validates :delete_term, inclusion: { in: %w(1.year 1.month), allow_blank: true }

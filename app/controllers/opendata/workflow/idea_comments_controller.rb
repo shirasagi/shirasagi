@@ -50,7 +50,7 @@ class Opendata::Workflow::IdeaCommentsController < ApplicationController
 
     group_id = params[:s][:group]
     case group_id
-    when "false" then
+    when "false"
       false
     else
       group_id.to_i

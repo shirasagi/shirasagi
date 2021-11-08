@@ -6,7 +6,7 @@ describe "jmaxml/trigger/quake_intensity_flashes", type: :feature, dbscope: :exa
   let(:index_path) { jmaxml_trigger_bases_path(site, node) }
 
   context "basic crud" do
-    let!(:region) { create(:jmaxml_region_135) }
+    let!(:region) { create(:jmaxml_region_c135) }
     let(:model) { Jmaxml::Trigger::QuakeIntensityFlash }
     let(:name1) { unique_id }
     let(:name2) { unique_id }

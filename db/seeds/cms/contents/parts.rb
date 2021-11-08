@@ -63,7 +63,7 @@ save_part route: "article/page", filename: "oshirase/shisei/recent.part.html", n
 save_part route: "cms/crumb", filename: "breadcrumb.part.html", name: "パンくず", mobile_view: "hide"
 save_part route: "category/node", filename: "category-list.part.html", name: "カテゴリーリスト", limit: 20, sort: "order"
 save_part route: "cms/tabs", filename: "recent-tabs.part.html", name: "新着タブ",
-          conditions: %w(oshirase oshirase/event shisei/jinji), limit: 6
+  conditions: %w(oshirase oshirase/event shisei/jinji), limit: 6
 save_part route: "cms/free", filename: "urgency-layout/announce.part.html", name: "緊急アナウンス"
 save_part route: "cms/free", filename: "urgency-layout/calamity.part.html", name: "災害関係ホームページ"
 save_part route: "cms/free", filename: "urgency-layout/connect.part.html", name: "関連サイト"
@@ -79,18 +79,18 @@ save_part route: "ads/banner", filename: "ad/ad.part.html", name: "広告バナ�
 save_part route: "cms/sns_share", filename: "sns.part.html", name: "sns", mobile_view: "hide"
 save_part route: "key_visual/slide", filename: "key_visual/slide.part.html", name: "スライドショー", mobile_view: "hide"
 save_part route: "inquiry/feedback", filename: "feedback/feedback.part.html", name: "フィードバック", mobile_view: "hide",
-          upper_html: '<section id="feedback"><h2>この情報は役に立ちましたか？</h2>',
-          lower_html: '</section>'
+  upper_html: '<section id="feedback"><h2>この情報は役に立ちましたか？</h2>',
+  lower_html: '</section>'
 save_part route: "member/photo", filename: "kanko-info/photo/recent.part.html", name: "新着写真一覧", mobile_view: "hide", limit: 4
 save_part route: "member/photo_slide", filename: "kanko-info/photo/slide.part.html", name: "スライド", mobile_view: "hide"
 save_part route: "member/photo_search", filename: "kanko-info/photo/search/search.part.html", name: "スライド", mobile_view: "hide"
 save_part route: "member/blog_page", filename: "kanko-info/blog/recent.part.html", name: "新着ブログ", mobile_view: "hide"
 save_part route: "member/login", filename: "login/login.part.html", name: "ログイン", mobile_view: "hide", ajax_view: "enabled"
 save_part route: "member/invited_group", filename: "invited_group.part.html", name: "招待されたグループ",
-          mobile_view: "hide", ajax_view: "enabled"
+  mobile_view: "hide", ajax_view: "enabled"
 save_part route: "cms/calendar_nav", filename: "docs/archive/calendar.part.html", name: "カレンダー"
 save_part route: "cms/monthly_nav", filename: "docs/archive/month.part.html", name: "月次", periods: 12
 save_part route: "recommend/history", filename: "history.part.html", name: "閲覧履歴",
-          mobile_view: "hide", ajax_view: "enabled", limit: 5
+  mobile_view: "hide", ajax_view: "enabled", limit: 5
 save_part route: "translate/tool", filename: "translate.part.html", name: "翻訳ツール", mobile_view: "hide", ajax_view: "enabled"
 save_part route: "cms/site_search_history", filename: "search.part.html", name: "検索フォーム"

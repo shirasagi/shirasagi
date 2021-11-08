@@ -53,11 +53,11 @@ describe "opendata_ideas", type: :feature, dbscope: :example do
       let(:area) { create_once :opendata_node_area, filename: "opendata_area_1" }
       let(:item) do
         create :opendata_idea,
-               cur_site: site,
-               cur_node: node,
-               filename: "#{unique_id}.html",
-               category_ids: [ category.id ],
-               area_ids: [ area.id ]
+          cur_site: site,
+          cur_node: node,
+          filename: "#{unique_id}.html",
+          category_ids: [ category.id ],
+          area_ids: [ area.id ]
       end
       let(:show_path) { opendata_idea_path site, node, item }
       let(:edit_path) { edit_opendata_idea_path site, node, item }
@@ -151,11 +151,11 @@ describe "opendata_ideas", type: :feature, dbscope: :example do
     let(:area) { create_once :opendata_node_area, filename: "opendata_area_1" }
     let(:item) do
       create :opendata_idea,
-             cur_site: site,
-             cur_node: node,
-             filename: "#{unique_id}.html",
-             category_ids: [ category.id ],
-             area_ids: [ area.id ]
+        cur_site: site,
+        cur_node: node,
+        filename: "#{unique_id}.html",
+        category_ids: [ category.id ],
+        area_ids: [ area.id ]
     end
     let(:public_path) { item.url }
 

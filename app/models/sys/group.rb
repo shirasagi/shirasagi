@@ -6,6 +6,7 @@ class Sys::Group
   set_permission_name "sys_groups", :edit
 
   attr_accessor :sys_role_ids
+
   permit_params :sys_role_ids
 
   def users

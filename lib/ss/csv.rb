@@ -15,8 +15,7 @@ class SS::Csv
       @context = self
     end
 
-    attr_reader :cur_site, :cur_user
-    attr_reader :encoding, :columns
+    attr_reader :cur_site, :cur_user, :encoding, :columns
 
     def each
       yield draw_header
@@ -136,7 +135,7 @@ class SS::Csv
         @column = { id: id }.merge(options)
         @columns << @column
       end
-      instance_exec(&block) if block_given?
+      instance_exec(&block) if block
       @column = nil
     end
 
@@ -180,7 +179,7 @@ class SS::Csv
       options = options.dup
       options[:key] = key.to_s
       options[:name] ||= @model.t(key) if key.is_a?(Symbol)
-      options[:callback] = block if block_given?
+      options[:callback] = block if block
 
       @columns << options
     end
@@ -209,7 +208,7 @@ class SS::Csv
     def column(name, options = {}, &block)
       options = options.dup
       options[:name] = name
-      options[:callback] = block if block_given?
+      options[:callback] = block if block
 
       @form[:columns] << options
     end
@@ -317,7 +316,7 @@ class SS::Csv
       else
         ret = DSLImporter.new(options)
       end
-      ret.draw(&block) if block_given?
+      ret.draw(&block) if block
       ret
     end
   end

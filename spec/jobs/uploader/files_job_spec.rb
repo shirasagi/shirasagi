@@ -73,7 +73,7 @@ describe Uploader::FilesJob, dbscope: :example do
       perform_enqueued_jobs do
         job.perform_now([{ rm: [rel_path] }])
       end
-      expect(Fs.exists?(file_path)).to be_falsey
+      expect(Fs.exist?(file_path)).to be_falsey
     end
   end
 
@@ -110,7 +110,7 @@ describe Uploader::FilesJob, dbscope: :example do
       perform_enqueued_jobs do
         job.perform_now([{ rm: [rel_path] }])
       end
-      expect(Fs.exists?(file_path)).to be_falsey
+      expect(Fs.exist?(file_path)).to be_falsey
     end
   end
 
@@ -136,7 +136,7 @@ describe Uploader::FilesJob, dbscope: :example do
       perform_enqueued_jobs do
         job.perform_now([{ rm: [rel_path] }])
       end
-      expect(Fs.exists?(file_path)).to be_falsey
+      expect(Fs.exist?(file_path)).to be_falsey
     end
   end
 end

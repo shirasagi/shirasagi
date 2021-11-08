@@ -380,7 +380,7 @@
             <%= render partial: "sns/main/navi" %>
           <% end %>
         <% else %>
-          <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_navi.html.erb") %>
+          <% if ::File.exist?("#{Rails.root}/app/views/#{params[:controller]}/_navi.html.erb") %>
           <%= render partial: "navi" %>
           <% elsif controller.navi_view_file %>
           <%= render partial: controller.navi_view_file %>
@@ -429,7 +429,7 @@
       </ol>
 
       <% if !@ss_rescue %>
-        <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>
+        <% if ::File.exist?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>
         <div id="menu"><%= render partial: "menu" %></div>
         <% elsif controller.menu_view_file %>
         <div id="menu"><%= render partial: controller.menu_view_file %></div>
@@ -438,7 +438,7 @@
 
       <div class="wrap">
         <% if !@ss_rescue %>
-          <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_content_navi.html.erb") %>
+          <% if ::File.exist?("#{Rails.root}/app/views/#{params[:controller]}/_content_navi.html.erb") %>
           <%= render partial: 'content_navi' %>
           <% elsif @tree_navi %>
           <div id="content-navi"><%= render template: '_tree_navi' %></div>

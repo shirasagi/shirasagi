@@ -260,7 +260,7 @@ class Uploader::FilesController < ApplicationController
     if extname != @item.ext && @item.ext.present?
       message += "#{I18n.t('uploader.notice.invalid_ext')}\n"
     end
-    if File.exists?(path) && @item.directory?
+    if File.exist?(path) && @item.directory?
       message += "#{I18n.t('uploader.notice.overwrite')}\n"
     end
     render json: { message: message }

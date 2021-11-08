@@ -42,14 +42,14 @@ class Event::Agents::Tasks::Node::PagesController < ApplicationController
       date = sprintf("#{m.year}%02d", m.month)
 
       file = "#{@node.path}/#{date}.html"
-      Fs.rm_rf(file) if Fs.exists?(file)
+      Fs.rm_rf(file) if Fs.exist?(file)
 
       event_display_options.each do |display|
         base = "#{@node.path}/#{date}/#{display}"
         file = "#{base}.html"
-        Fs.rm_rf(file) if Fs.exists?(file)
+        Fs.rm_rf(file) if Fs.exist?(file)
         file = "#{base}.ics"
-        Fs.rm_rf(file) if Fs.exists?(file)
+        Fs.rm_rf(file) if Fs.exist?(file)
       end
     end
   end

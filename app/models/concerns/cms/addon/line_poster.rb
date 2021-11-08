@@ -148,13 +148,13 @@ module Cms::Addon
 
     def line_message_carousel(thumb_url = nil)
       column = {
-        "title": name,
-        "text": line_text_message.to_s,
-        "actions": [
+        title: name,
+        text: line_text_message.to_s,
+        actions: [
           {
-            "type": "uri",
-            "label": I18n.t("cms.visit_article"),
-            "uri": full_url
+            type: "uri",
+            label: I18n.t("cms.visit_article"),
+            uri: full_url
           }
         ]
       }
@@ -165,11 +165,11 @@ module Cms::Addon
       end
 
       {
-        "type": "template",
-        "altText": name,
-        "template": {
-          "type": "carousel",
-          "columns": [column]
+        type: "template",
+        altText: name,
+        template: {
+          type: "carousel",
+          columns: [column]
         }
       }
     end

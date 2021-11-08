@@ -14,6 +14,7 @@ class Gws::Memo::ListMessage
   include Gws::Addon::GroupPermission
 
   attr_accessor :cur_user, :cur_list, :in_append_signature
+
   belongs_to :list, class_name: 'Gws::Memo::List'
 
   before_validation :set_list

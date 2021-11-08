@@ -49,10 +49,10 @@ describe Kana::Dictionary do
       it "builds user dictionary" do
         # before build, ensure that dictionary file is not existed.
         user_dic = model.master_dic(item.site_id)
-        Fs.rm_rf(user_dic) if Fs.exists?(user_dic)
+        Fs.rm_rf(user_dic) if Fs.exist?(user_dic)
 
         model.build_dic(item.site_id, [ item.id ])
-        expect(Fs.exists?(user_dic)).to be true
+        expect(Fs.exist?(user_dic)).to be true
       end
 
       it "can pull user dictionary" do

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "garbage_node_areas", type: :feature, dbscope: :example, js: true do
-  let(:site)   { cms_site }
+  let(:site) { cms_site }
 
   let!(:search_node) do
     create(
@@ -18,14 +18,14 @@ describe "garbage_node_areas", type: :feature, dbscope: :example, js: true do
     )
   end
 
-  let!(:category1) { create :garbage_node_category, name: "category1"}
-  let!(:category2) { create :garbage_node_category, name: "category2"}
+  let!(:category1) { create :garbage_node_category, name: "category1" }
+  let!(:category2) { create :garbage_node_category, name: "category2" }
 
   let!(:item) do
     create(
       :garbage_node_area,
       name: "item",
-      filename: "search/list/item",
+      filename: "search/list/item"
     )
   end
 

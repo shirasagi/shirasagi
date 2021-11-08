@@ -1,7 +1,5 @@
 class Translate::RequestBuffer
-  attr_reader :translated, :caches
-  attr_reader :source, :target
-  attr_reader :request_count, :request_word_count
+  attr_reader :translated, :caches, :source, :target, :request_count, :request_word_count
 
   def initialize(site, source, target, opts = {})
     @site = site

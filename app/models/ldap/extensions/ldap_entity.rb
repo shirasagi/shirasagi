@@ -18,9 +18,9 @@ class Ldap::Extensions::LdapEntity < Hash
 
     def mongoize(object)
       case object
-      when self.class then
+      when self.class
         object.mongoize
-      when Hash then
+      when Hash
         object.symbolize_keys
       else
         object

@@ -4,9 +4,9 @@ module Gws::Schedule::UserSetting
 
   included do
     attr_accessor :in_schedule_tabs_group_ids,
-                  :in_schedule_tabs_group_ids_all,
-                  :in_schedule_tabs_custom_group_ids,
-                  :in_schedule_tabs_custom_group_ids_all
+      :in_schedule_tabs_group_ids_all,
+      :in_schedule_tabs_custom_group_ids,
+      :in_schedule_tabs_custom_group_ids_all
 
     # ids
     # - empty:  show
@@ -15,9 +15,9 @@ module Gws::Schedule::UserSetting
     embeds_ids :schedule_tabs_custom_groups, class_name: 'Gws::CustomGroup'
 
     permit_params in_schedule_tabs_group_ids: [],
-                  in_schedule_tabs_group_ids_all: [],
-                  in_schedule_tabs_custom_group_ids: [],
-                  in_schedule_tabs_custom_group_ids_all: []
+      in_schedule_tabs_group_ids_all: [],
+      in_schedule_tabs_custom_group_ids: [],
+      in_schedule_tabs_custom_group_ids_all: []
 
     before_validation :set_schedule_tabs_group_ids, if: -> { in_schedule_tabs_group_ids_all.present? }
     before_validation :set_schedule_tabs_custom_group_ids, if: -> { in_schedule_tabs_custom_group_ids_all.present? }

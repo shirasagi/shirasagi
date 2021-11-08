@@ -1,12 +1,7 @@
 class Sys::Auth::OpenIdConnect::ImplicitFlowResponse
   include ActiveModel::Model
 
-  attr_accessor :state
-  attr_accessor :id_token
-
-  attr_accessor :cur_item
-  attr_accessor :sso_token
-  attr_accessor :session_nonce
+  attr_accessor :state, :id_token, :cur_item, :sso_token, :session_nonce
 
   validates :state, presence: true
   validates :id_token, presence: true

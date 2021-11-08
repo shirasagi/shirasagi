@@ -101,11 +101,11 @@ module SS::Model::JobLog
 
   def file_path
     raise if new_record?
-    @file_path ||= "#{SS::File.root}/job_logs/" + id.to_s.split(//).join("/") + "/_/#{id}.log"
+    @file_path ||= "#{SS::File.root}/job_logs/" + id.to_s.chars.join("/") + "/_/#{id}.log"
   end
 
   def head_logs(limit = 1_000)
-    if file_path && ::File.exists?(file_path)
+    if file_path && ::File.exist?(file_path)
       texts = []
       ::File.open(file_path) do |f|
         limit.times do
@@ -120,7 +120,7 @@ module SS::Model::JobLog
   end
 
   def logs
-    if ::Fs.mode == :file && ::File.exists?(file_path)
+    if ::Fs.mode == :file && ::File.exist?(file_path)
       return ::File.readlines(file_path) rescue []
     end
 
@@ -130,7 +130,7 @@ module SS::Model::JobLog
   private
 
   def destroy_files
-    if ::Fs.mode == :file && ::File.exists?(file_path)
+    if ::Fs.mode == :file && ::File.exist?(file_path)
       dirname = ::File.dirname(file_path)
       ::FileUtils.rm_rf(dirname)
     end

@@ -20,14 +20,14 @@ Bundler/OrderedGems:
 # SupportedHashRocketStyles: key, separator, table
 # SupportedColonStyles: key, separator, table
 # SupportedLastArgumentHashStyles: always_inspect, always_ignore, ignore_implicit, ignore_explicit
-Layout/AlignHash:
+Layout/HashAlignment:
   Enabled: false
 
 # Offense count: 68
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, IndentationWidth.
 # SupportedStyles: with_first_parameter, with_fixed_indentation
-Layout/AlignParameters:
+Layout/ParameterAlignment:
   Enabled: false
 
 # Offense count: 1279
@@ -81,7 +81,7 @@ Layout/EndOfLine:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, IndentationWidth.
 # SupportedStyles: special_inside_parentheses, consistent, align_brackets
-Layout/IndentFirstArrayElement:
+Layout/FirstArrayElementIndentation:
   Enabled: false
 
 # Offense count: 197
@@ -149,7 +149,7 @@ Layout/SpaceInsideParens:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: final_newline, final_blank_line
-Layout/TrailingBlankLines:
+Layout/TrailingEmptyLines:
   Enabled: false
 
 # Offense count: 13
@@ -209,7 +209,7 @@ Lint/EmptyWhen:
     - 'app/models/rdf/builders/sub_class_of_handler.rb'
 
 # Offense count: 11
-Lint/HandleExceptions:
+Lint/SuppressedException:
   Exclude:
     - 'app/controllers/cms/apis/contents/html_controller.rb'
     - 'app/controllers/cms/search_contents/html_controller.rb'
@@ -269,7 +269,7 @@ Lint/UnifiedInteger:
 
 # Offense count: 63
 # Cop supports --auto-correct.
-Lint/UnneededSplatExpansion:
+Lint/RedundantSplatExpansion:
   Enabled: false
 
 # Offense count: 126
@@ -372,6 +372,9 @@ Performance/CompareWithBlock:
   Exclude:
     - 'app/controllers/cms/apis/node_tree_controller.rb'
 
+Performance/Detect:
+  Enabled: false
+
 # Offense count: 1
 Performance/UnfreezeString:
   Exclude:
@@ -440,6 +443,9 @@ Rails/HasManyOrHasOneDependent:
     - 'app/models/opendata/app.rb'
     - 'app/models/opendata/dataset.rb'
 
+Rails/HelperInstanceVariable:
+  Enabled: false
+
 # Offense count: 45
 # Cop supports --auto-correct.
 # Configuration parameters: Include.
@@ -479,7 +485,10 @@ Rails/InverseOf:
 Rails/LexicallyScopedActionFilter:
   Enabled: false
 
-# Offense count: 73
+Rails/NegateInclude:
+  Enabled: false
+
+  # Offense count: 73
 Rails/OutputSafety:
   Enabled: false
 
@@ -560,13 +569,6 @@ Style/AndOr:
 # Offense count: 270
 # Configuration parameters: AllowedChars.
 Style/AsciiComments:
-  Enabled: false
-
-# Offense count: 344
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: braces, no_braces, context_dependent
-Style/BracesAroundHashParameters:
   Enabled: false
 
 # Offense count: 1818
@@ -689,6 +691,12 @@ Style/FrozenStringLiteralComment:
 # Offense count: 220
 # Configuration parameters: MinBodyLength.
 Style/GuardClause:
+  Enabled: false
+
+Style/HashAsLastArrayItem:
+  Enabled: false
+
+Style/HashEachMethods:
   Enabled: false
 
 # Offense count: 186
@@ -841,18 +849,8 @@ Style/RandomWithOffset:
     - 'spec/jobs/gws/chorg/main_runner/staff_record_spec.rb'
     - 'spec/models/gws/board/post/descendants_file_info_spec.rb'
 
-# Offense count: 8
-# Cop supports --auto-correct.
 Style/RedundantBegin:
-  Exclude:
-    - 'app/helpers/application_helper.rb'
-    - 'app/jobs/rdf/vocab_import_job.rb'
-    - 'app/models/ezine/entry.rb'
-    - 'app/models/job/service/runner.rb'
-    - 'app/models/voice/file.rb'
-    - 'app/models/webmail/imap/quota.rb'
-    - 'app/models/workflow/extensions/route.rb'
-    - 'lib/tasks/unicorn.rake'
+  Enabled: false
 
 # Offense count: 1
 # Cop supports --auto-correct.
@@ -896,6 +894,9 @@ Style/RescueStandardError:
 Style/SafeNavigation:
   Enabled: false
 
+Style/StringConcatenation:
+  Enabled: false
+
 # Offense count: 30692
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
@@ -908,6 +909,9 @@ Style/StringLiterals:
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: single_quotes, double_quotes
 Style/StringLiteralsInInterpolation:
+  Enabled: false
+
+Style/SlicingWithRange:
   Enabled: false
 
 # Offense count: 334
@@ -939,6 +943,9 @@ Style/TernaryParentheses:
 Style/TrailingCommaInArrayLiteral:
   Enabled: false
 
+Style/TrailingCommaInHashLiteral:
+  Enabled: false
+
 # Offense count: 6
 # Cop supports --auto-correct.
 # Configuration parameters: ExactNameMatch, AllowPredicates, AllowDSLWriters, IgnoreClassMethods, Whitelist.
@@ -951,9 +958,13 @@ Style/TrivialAccessors:
     - 'lib/opendata/common.rb'
     - 'spec/support/ss/http_server_support.rb'
 
+Style/VariableInterpolation:
+  Exclude:
+    - 'app/models/board/post.rb'
+
 # Offense count: 1
 # Cop supports --auto-correct.
-Style/UnneededCapitalW:
+Style/RedundantCapitalW:
   Exclude:
     - 'db/seeds/demo/load.rb'
 
@@ -976,8 +987,11 @@ Style/YodaCondition:
     - 'app/models/member/birth_validator.rb'
     - 'app/models/workflow/extensions/route.rb'
 
+Layout/ArgumentAlignment:
+  EnforcedStyle: with_fixed_indentation
+
 # Offense count: 8178
 # Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
 # URISchemes: http, https
-Metrics/LineLength:
+Layout/LineLength:
   Max: 130

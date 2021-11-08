@@ -17,9 +17,9 @@ class Webmail::Mail
   index(host: 1, account: 1, mailbox: 1, uid: 1, internal_date: -1)
 
   attr_accessor :flags, :text, :html, :attachments, :format,
-                :reply_uid, :forward_uid, :edit_as_new_uid, :signature,
-                :to_text, :cc_text, :bcc_text,
-                :in_request_mdn, :in_request_dsn, :all_export, :mail_ids
+    :reply_uid, :forward_uid, :edit_as_new_uid, :signature,
+    :to_text, :cc_text, :bcc_text,
+    :in_request_mdn, :in_request_dsn, :all_export, :mail_ids
 
   field :host, type: String
   field :account, type: String
@@ -45,10 +45,10 @@ class Webmail::Mail
   field :disposition_notification_to, type: Array, default: []
 
   permit_params :reply_uid, :forward_uid, :in_reply_to, :references,
-                :subject, :text, :html, :format,
-                :to_text, :cc_text, :bcc_text,
-                :in_request_mdn, :in_request_dsn,
-                to: [], cc: [], bcc: [], reply_to: []
+    :subject, :text, :html, :format,
+    :to_text, :cc_text, :bcc_text,
+    :in_request_mdn, :in_request_dsn,
+    to: [], cc: [], bcc: [], reply_to: []
 
   validates :host, presence: true, uniqueness: { scope: [:account, :mailbox, :uid] }
   validates :account, presence: true
@@ -174,7 +174,7 @@ class Webmail::Mail
   end
 
   def requested_mdn?
-    return false if flags.include?(:"$MDNSent")
+    return false if flags.include?(:$MDNSent)
     return false if disposition_notification_to.blank?
 
     to.each do |mdn_to|
@@ -202,15 +202,15 @@ class Webmail::Mail
     return if rfc822.blank?
 
     dir = ::File.dirname(rfc822_path)
-    Fs.mkdir_p(dir) unless Fs.exists?(dir)
+    Fs.mkdir_p(dir) unless Fs.exist?(dir)
     Fs.binwrite(rfc822_path, rfc822)
   end
 
   def read_rfc822
-    self.rfc822 = Fs.exists?(rfc822_path) ? Fs.binread(rfc822_path) : nil
+    self.rfc822 = Fs.exist?(rfc822_path) ? Fs.binread(rfc822_path) : nil
   end
 
   def destroy_rfc822
-    Fs.rm_rf(rfc822_path) if Fs.exists?(rfc822_path)
+    Fs.rm_rf(rfc822_path) if Fs.exist?(rfc822_path)
   end
 end

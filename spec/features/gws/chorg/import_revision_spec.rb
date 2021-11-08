@@ -230,7 +230,7 @@ describe "gws_chorg_import_revision", type: :feature, dbscope: :example do
       expect(changesets[0].sources.size).to eq 1
       expect(changesets[0].sources[0]["id"]).to eq group4.id
       expect(changesets[0].sources[0]["name"]).to eq "組織変更/グループ_5"
-      expect(changesets[0].destinations).to eq (destination0 + destination1 + destination2)
+      expect(changesets[0].destinations).to eq(destination0 + destination1 + destination2)
 
       expect(changesets[1].type).to eq "division"
       expect(changesets[1].sources.size).to eq 1
