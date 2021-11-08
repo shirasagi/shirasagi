@@ -11,7 +11,7 @@ module SS::Model::File
   include History::Addon::Trash
   include ActiveSupport::NumberHelper
 
-  attr_accessor :in_file, :resizing, :disable_image_resizes
+  attr_accessor :in_file, :resizing, :image_resizes_disabled
 
   included do
     store_in collection: "ss_files"
@@ -30,7 +30,7 @@ module SS::Model::File
 
     attr_accessor :in_data_url
 
-    permit_params :in_file, :state, :name, :filename, :resizing, :disable_image_resizes, :in_data_url
+    permit_params :in_file, :state, :name, :filename, :resizing, :image_resizes_disabled, :in_data_url
 
     before_validation :set_filename, if: ->{ in_file.present? }
     before_validation :normalize_name
@@ -68,11 +68,27 @@ module SS::Model::File
       "#{SS::Application.private_root}/files"
     end
 
-    def resizing_options
-      [
+    def resizing_options(opts = {})
+      options = [
         [320, 240], [240, 320], [640, 480], [480, 640], [800, 600], [600, 800],
         [1024, 768], [768, 1024], [1280, 720], [720, 1280]
       ].map { |x, y| [I18n.t("ss.options.resizing.#{x}x#{y}"), "#{x},#{y}"] }
+
+      min_attributes = [SS::ImageResize.min_attributes]
+      min_attributes << Cms::ImageResize.site(opts[:node].site).node(opts[:node]).min_attributes if opts[:node]
+      min_width = min_attributes.reject(&:blank?).collect { |attribute| attribute['max_width'] }.reject(&:blank?).min
+      min_height = min_attributes.reject(&:blank?).collect { |attribute| attribute['max_height'] }.reject(&:blank?).min
+
+      return options if min_width.blank? || min_height.blank?
+
+      options.select do |k, v|
+        size = v.split(',').collect(&:to_i)
+        size[0] < min_width && size[1] < min_height
+      end
+    end
+
+    def image_resizes_disabled_options
+      %w(enabled disabled).map { |value| [I18n.t("ss.options.image_resizes_disabled.#{value}"), value] }
     end
 
     def search(params)
@@ -421,11 +437,11 @@ module SS::Model::File
   def resizing_with_max_file_size
     size = resizing || []
     max_file_sizes = []
-    if user.blank? || !SS::ImageResize.allowed?(:disable, user) || disable_image_resizes.blank?
+    if user.blank? || !SS::ImageResize.allowed?(:disable, user) || image_resizes_disabled != 'disabled'
       max_file_sizes << SS::ImageResize.find_item(extname)
     end
     if self.class.include?(Cms::Reference::Node) && node.present?
-      if user.blank? || !Cms::ImageResize.allowed?(:disable, user, site: site, node: node) || disable_image_resizes.blank?
+      if user.blank? || !Cms::ImageResize.allowed?(:disable, user, site: site, node: node) || image_resizes_disabled != 'disabled'
         max_file_sizes << Cms::ImageResize.site(site).node(node).find_item(extname)
       end
     end
@@ -442,11 +458,11 @@ module SS::Model::File
   def quality
     quality = []
     max_file_sizes = []
-    if user.blank? || !SS::ImageResize.allowed?(:disable, user) || disable_image_resizes.blank?
+    if user.blank? || !SS::ImageResize.allowed?(:disable, user) || image_resizes_disabled != 'disabled'
       max_file_sizes << SS::ImageResize.find_item(extname)
     end
     if self.class.include?(Cms::Reference::Node) && node.present?
-      if user.blank? || !Cms::ImageResize.allowed?(:disable, user, site: site, node: node) || disable_image_resizes.blank?
+      if user.blank? || !Cms::ImageResize.allowed?(:disable, user, site: site, node: node) || image_resizes_disabled != 'disabled'
         max_file_sizes << Cms::ImageResize.site(site).node(node).find_item(extname)
       end
     end

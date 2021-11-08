@@ -16,4 +16,23 @@ module SS::Model::ImageResize
       only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 100
     }
   end
+
+  module ClassMethods
+    def min_attributes
+      keys = %w(size max_width max_height)
+      values = {}
+      keys.each do |key|
+        values[key] = []
+      end
+      criteria.each do |item|
+        keys.each do |key|
+          values[key] << item.send(key)
+        end
+      end
+      keys.each do |key|
+        values[key] = values[key].reject(&:blank?).min
+      end
+      values
+    end
+  end
 end

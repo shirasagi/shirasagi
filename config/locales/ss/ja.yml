@@ -46,7 +46,6 @@ ja:
     after_replace: 差し替え後
     broken_link: リンク切れ
     auto_reload: 自動更新
-    disable_image_resizes: 自動画像リサイズを無効にする
 
     views:
       login/login:
@@ -434,6 +433,9 @@ ja:
         "3_months": ３ヶ月
         "6_months": ６ヶ月
         "1_year": １年
+      image_resizes_disabled:
+        enabled: 自動リサイズ有効
+        disabled: 自動リサイズ無効
 
     tasks:
       started: 開始しました。
@@ -984,6 +986,15 @@ ja:
         - ファイル名（英数）を入力します。
       geo_location:
         - 緯度・経度を10進で入力します。
+      image_resizes_disabled:
+        - 管理者によって自動リサイズが設定されています。
+        -
+        - 下記の条件の場合に自動的に画像がリサイズされます。
+        - 容量 %{size}以上
+        - 横幅 %{width}ピクセル以上
+        - 高さ %{height}ピクセル以上
+        -
+        - 自動リサイズをしたくない場合は、管理者に権限を付与してもらった後、左の「有効」をクリックし「無効」に設定してください。
     ss/model/user_title:
       code: 役職コードを入力します。
       name: 役職名を入力します。
