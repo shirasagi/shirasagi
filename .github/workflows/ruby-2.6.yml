@@ -78,7 +78,12 @@ jobs:
       - name: Running Docker Containers
         run: docker ps -a
       - name: Run tests
-        run: bundle exec ruby .travis.d/split_specs.rb -p ${{ matrix.parallelism }} -i ${{ matrix.id }} | xargs bundle exec rspec
+        run: |
+          file_list=$(bundle exec ruby .travis.d/split_specs.rb -p ${{ matrix.parallelism }} -i ${{ matrix.id }})
+          if [ $? -ne 0 ]; then
+            exit 1
+          fi
+          echo $file_list | xargs bundle exec rspec
         env:
           allow_open_jtalk: 1
           LDAP_TEST: enable
