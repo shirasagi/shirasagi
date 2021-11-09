@@ -19,7 +19,8 @@ describe "job_sys_statuses", type: :feature, dbscope: :example do
   context "with service task and with non-stucked tasks" do
     let!(:service) { Job::Service.create!(name: Job::Service.config.name, current_count: rand(10..20)) }
     let(:now) { Time.zone.now.change(usec: 0) }
-    let!(:non_stucked_task) { Job::Task.create!(at: now - 5.hours) }
+    let!(:non_stucked_task1) { Job::Task.create!(at: now - 1.minute) }
+    let!(:non_stucked_task2) { Job::Task.create!(at: now - 6.hours + 2.minutes) }
 
     it do
       visit job_sys_status_path
@@ -39,6 +40,8 @@ describe "job_sys_statuses", type: :feature, dbscope: :example do
   context "with service task and with stucked tasks" do
     let!(:service) { Job::Service.create!(name: Job::Service.config.name, current_count: rand(10..20)) }
     let(:now) { Time.zone.now.change(usec: 0) }
+    let!(:non_stucked_task1) { Job::Task.create!(at: now - 1.minute) }
+    let!(:non_stucked_task2) { Job::Task.create!(at: now - 6.hours + 2.minutes) }
     let!(:stucked_task) { Job::Task.create!(at: now - 6.hours) }
 
     it do
