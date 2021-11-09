@@ -18,6 +18,7 @@ describe Job::Sys::StatusesController, type: :request, dbscope: :example do
 
       expect(response.status).to eq 200
       json = JSON.parse(response.body)
+      expect(json["status"]).to eq "ok"
       expect(json["notice"]).to be_blank
       expect(json["active_job"]["queue_adapter"]).to eq Rails.application.config.active_job.queue_adapter.to_s
       expect(json["job"]["mode"]).to eq Job::Service.config.mode
@@ -40,6 +41,7 @@ describe Job::Sys::StatusesController, type: :request, dbscope: :example do
 
       expect(response.status).to eq 200
       json = JSON.parse(response.body)
+      expect(json["status"]).to eq "ok"
       expect(json["notice"]).to be_blank
       expect(json["active_job"]["queue_adapter"]).to eq Rails.application.config.active_job.queue_adapter.to_s
       expect(json["job"]["mode"]).to eq Job::Service.config.mode
@@ -65,6 +67,7 @@ describe Job::Sys::StatusesController, type: :request, dbscope: :example do
 
       expect(response.status).to eq 200
       json = JSON.parse(response.body)
+      expect(json["status"]).to eq "stucked"
       expect(json["notice"]["notices"]).to eq I18n.t('job.job_stucked.notice')
       expect(json["active_job"]["queue_adapter"]).to eq Rails.application.config.active_job.queue_adapter.to_s
       expect(json["job"]["mode"]).to eq Job::Service.config.mode

@@ -1,7 +1,10 @@
 if job_stucked?
+  json.status "stucked"
   json.notice do
     json.notices t('job.job_stucked.notice')
   end
+else
+  json.status "ok"
 end
 json.active_job do
   json.queue_adapter Rails.application.config.active_job.queue_adapter
