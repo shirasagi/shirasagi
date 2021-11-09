@@ -38,6 +38,10 @@ class SS::MaxFileSize
     def load_nginx_client_max_body_size(file)
       file.rewind
       file.each_line do |line|
+        comment_index = line.index("#")
+        if comment_index
+          line = line[0..comment_index]
+        end
         next unless line =~ /client_max_body_size\s+(\d+\w?)/
 
         size = $1
