@@ -13,18 +13,20 @@ describe SS::TaskSweepJob, dbscope: :example do
         SS::Task.create!(name: unique_id)
       end
 
-      expect(SS::Task.all.count).to eq 2
+      Timecop.freeze(now.beginning_of_day) do
+        expect(SS::Task.all.count).to eq 2
 
-      described_class.perform_now
+        described_class.perform_now
 
-      expect(Job::Log.count).to eq 1
-      Job::Log.first.tap do |log|
-        expect(log.logs).to include(/INFO -- : .* Started Job/)
-        expect(log.logs).to include(/INFO -- : .* Completed Job/)
-        expect(log.logs).to include(/INFO -- : .* 1 件のタスクを削除しました。/)
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+          expect(log.logs).to include(/INFO -- : .* 1 件のタスクを削除しました。/)
+        end
+
+        expect(SS::Task.all.count).to eq 1
       end
-
-      expect(SS::Task.all.count).to eq 1
     end
   end
 
