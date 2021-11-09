@@ -2,23 +2,19 @@ require 'spec_helper'
 
 describe Job::Sys::StatusesController, type: :request, dbscope: :example do
   let!(:user) { sys_user }
-
-  before do
-    get sns_auth_token_path(format: :json)
-    auth_token = JSON.parse(response.body)["auth_token"]
-
-    # login
-    params = {
-      'authenticity_token' => auth_token,
-      'item[email]' => user.email,
-      'item[password]' => user.in_password
-    }
-    post sns_login_path(format: :json), params: params
+  let!(:access_token) do
+    token = SS::AccessToken.new(cur_user: user)
+    token.create_token
+    token.save!
+    token
   end
 
   context "without service task and without any tasks" do
     it do
-      get job_sys_status_path(format: "json")
+      get job_sys_status_path(format: "json", access_token: access_token.token)
+      if response.status == 302
+        get job_sys_status_path(format: "json")
+      end
 
       expect(response.status).to eq 200
       json = JSON.parse(response.body)
@@ -33,10 +29,14 @@ describe Job::Sys::StatusesController, type: :request, dbscope: :example do
   context "with service task and with non-stucked tasks" do
     let!(:service) { Job::Service.create!(name: Job::Service.config.name, current_count: rand(10..20)) }
     let(:now) { Time.zone.now.change(usec: 0) }
-    let!(:non_stucked_task) { Job::Task.create!(at: now - 5.hours) }
+    let!(:non_stucked_task1) { Job::Task.create!(at: now - 1.minute) }
+    let!(:non_stucked_task2) { Job::Task.create!(at: now - 6.hours + 2.minutes) }
 
     it do
-      get job_sys_status_path(format: "json")
+      get job_sys_status_path(format: "json", access_token: access_token.token)
+      if response.status == 302
+        get job_sys_status_path(format: "json")
+      end
 
       expect(response.status).to eq 200
       json = JSON.parse(response.body)
@@ -53,10 +53,15 @@ describe Job::Sys::StatusesController, type: :request, dbscope: :example do
   context "with service task and with stucked tasks" do
     let!(:service) { Job::Service.create!(name: Job::Service.config.name, current_count: rand(10..20)) }
     let(:now) { Time.zone.now.change(usec: 0) }
+    let!(:non_stucked_task1) { Job::Task.create!(at: now - 1.minute) }
+    let!(:non_stucked_task2) { Job::Task.create!(at: now - 6.hours + 2.minutes) }
     let!(:stucked_task) { Job::Task.create!(at: now - 6.hours) }
 
     it do
-      get job_sys_status_path(format: "json")
+      get job_sys_status_path(format: "json", access_token: access_token.token)
+      if response.status == 302
+        get job_sys_status_path(format: "json")
+      end
 
       expect(response.status).to eq 200
       json = JSON.parse(response.body)
