@@ -100,6 +100,9 @@ class Webmail::MailsController < ApplicationController
     if data = params[:item].presence
       @item.to << data[:to].to_s if data[:to].present?
     end
+
+    @dedicated = true
+    render layout: "ss/dedicated"
   end
 
   def edit
@@ -252,11 +255,23 @@ class Webmail::MailsController < ApplicationController
       resp = @item.send_mail
     end
 
+    render_opts = { notice: notice }
+    if params.key?(:dedicated)
+      @dedicated = true
+      commit = params[:commit] == I18n.t('ss.buttons.draft_save') ? "draft_save" : "send_mail"
+      render_opts[:location] = url_for(action: :sent, commit: commit)
+      render_opts[:render] = { template: "new", layout: "ss/dedicated" }
+    end
+
     @item.destroy_files if resp
-    render_create resp, notice: notice
+    render_create resp, render_opts
   rescue Net::IMAP::NoResponseError => e
     @item.errors.add :base, e.to_s
-    render_create false
+    if params.key?(:dedicated)
+      @dedicated = true
+      render_opts = { render: { template: "new", layout: "ss/dedicated" } }
+    end
+    render_create false, render_opts
   end
 
   def destroy
@@ -347,5 +362,9 @@ class Webmail::MailsController < ApplicationController
 
   def print
     render template: 'print', layout: 'ss/print'
+  end
+
+  def sent
+    render layout: 'ss/dedicated'
   end
 end

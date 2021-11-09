@@ -27,7 +27,7 @@ Rails.application.routes.draw do
       put :copy
       get :empty, to: ->(_) { [200, {}, ['']] }
       delete :empty
-      # blank
+      get :sent
     end
     member do
       get :download

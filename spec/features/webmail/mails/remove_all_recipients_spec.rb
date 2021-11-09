@@ -23,15 +23,17 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
     context "within to" do
       it do
         visit index_path
-        click_on I18n.t('ss.links.new')
-        within "form#item-form" do
-          fill_in "to", with: user2.email + "\n"
-          fill_in "to", with: user3.email + "\n"
-          fill_in "to", with: user4.email + "\n"
-          fill_in "item[subject]", with: item_subject
-          fill_in "item[text]", with: item_texts.join("\n")
+        new_window = window_opened_by { click_on I18n.t('ss.links.new') }
+        within_window new_window do
+          within "form#item-form" do
+            fill_in "to", with: user2.email + "\n"
+            fill_in "to", with: user3.email + "\n"
+            fill_in "to", with: user4.email + "\n"
+            fill_in "item[subject]", with: item_subject
+            fill_in "item[text]", with: item_texts.join("\n")
 
-          click_on I18n.t('ss.buttons.draft_save')
+            click_on I18n.t('ss.buttons.draft_save')
+          end
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
@@ -77,17 +79,19 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
     context "within cc" do
       it do
         visit index_path
-        click_on I18n.t('ss.links.new')
-        within "form#item-form" do
-          click_on I18n.t("webmail.links.show_cc_bcc")
+        new_window = window_opened_by { click_on I18n.t('ss.links.new') }
+        within_window new_window do
+          within "form#item-form" do
+            click_on I18n.t("webmail.links.show_cc_bcc")
 
-          fill_in "cc", with: user2.email + "\n"
-          fill_in "cc", with: user3.email + "\n"
-          fill_in "cc", with: user4.email + "\n"
-          fill_in "item[subject]", with: item_subject
-          fill_in "item[text]", with: item_texts.join("\n")
+            fill_in "cc", with: user2.email + "\n"
+            fill_in "cc", with: user3.email + "\n"
+            fill_in "cc", with: user4.email + "\n"
+            fill_in "item[subject]", with: item_subject
+            fill_in "item[text]", with: item_texts.join("\n")
 
-          click_on I18n.t('ss.buttons.draft_save')
+            click_on I18n.t('ss.buttons.draft_save')
+          end
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
@@ -133,17 +137,19 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
     context "within bcc" do
       it do
         visit index_path
-        click_on I18n.t('ss.links.new')
-        within "form#item-form" do
-          click_on I18n.t("webmail.links.show_cc_bcc")
+        new_window = window_opened_by { click_on I18n.t('ss.links.new') }
+        within_window new_window do
+          within "form#item-form" do
+            click_on I18n.t("webmail.links.show_cc_bcc")
 
-          fill_in "bcc", with: user2.email + "\n"
-          fill_in "bcc", with: user3.email + "\n"
-          fill_in "bcc", with: user4.email + "\n"
-          fill_in "item[subject]", with: item_subject
-          fill_in "item[text]", with: item_texts.join("\n")
+            fill_in "bcc", with: user2.email + "\n"
+            fill_in "bcc", with: user3.email + "\n"
+            fill_in "bcc", with: user4.email + "\n"
+            fill_in "item[subject]", with: item_subject
+            fill_in "item[text]", with: item_texts.join("\n")
 
-          click_on I18n.t('ss.buttons.draft_save')
+            click_on I18n.t('ss.buttons.draft_save')
+          end
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
