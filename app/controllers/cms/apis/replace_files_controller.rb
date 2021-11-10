@@ -1,6 +1,6 @@
-class Sns::Apis::ReplaceFilesController < ApplicationController
-  include Sns::UserFilter
-  include Sns::CrudFilter
+class Cms::Apis::ReplaceFilesController < ApplicationController
+  include Cms::BaseFilter
+  include Cms::CrudFilter
   include SS::FileFilter
   include SS::AjaxFileFilter
 
@@ -15,7 +15,9 @@ class Sns::Apis::ReplaceFilesController < ApplicationController
   def set_owner_item
     @owner_item = @item.owner_item
     raise "404" unless @owner_item
-    @site = @owner_item.site
+    raise "404" unless @owner_item.id.to_s == params[:owner_item_id].to_s
+
+    raise "403" unless SS::ReplaceFile.replaceable?(@owner_item, user: @cur_user, site: @cur_site, node: @cur_node)
   end
 
   def render_update(result, opts = {})
@@ -41,7 +43,6 @@ class Sns::Apis::ReplaceFilesController < ApplicationController
   def edit
     @dst_file = SS::ReplaceTempFile.user(@cur_user).first
 
-    raise "403" unless @owner_item.allowed?(:edit, @cur_user, site: @site)
     render
   end
 
@@ -49,7 +50,6 @@ class Sns::Apis::ReplaceFilesController < ApplicationController
     @item.attributes = get_params
     @item.in_file = SS::ReplaceTempFile.find(@item.in_file).uploaded_file
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    raise "403" unless @owner_item.allowed?(:edit, @cur_user, site: @site)
 
     result = @item.update
     SS::ReplaceTempFile.user(@cur_user).destroy_all if result
@@ -71,24 +71,20 @@ class Sns::Apis::ReplaceFilesController < ApplicationController
   end
 
   def histories
-    raise "403" unless @owner_item.allowed?(:read, @cur_user, site: @site)
   end
 
   def restore
-    raise "403" unless @owner_item.allowed?(:edit, @cur_user, site: @site)
     @item = SS::HistoryFile.find(params[:source])
 
     render_update @item.restore, notice: I18n.t('history.notice.restored')
   end
 
   def destroy
-    raise "403" unless @owner_item.allowed?(:edit, @cur_user, site: @site)
     SS::HistoryFile.find(params[:source]).destroy
     render_update true
   end
 
   def download
-    raise "403" unless @owner_item.allowed?(:read, @cur_user, site: @site)
     @item = SS::HistoryFile.find(params[:source])
 
     send_file @item.path, type: @item.content_type, filename: @item.download_filename,

@@ -1,9 +1,13 @@
 class SS::ReplaceFile
   include SS::Model::File
+  include SS::Reference::Site
   include SS::Relation::Thumb
   include SS::Relation::FileBranch
   include SS::Relation::FileHistory
   include SS::Liquidization
+
+  # for backward compatibility
+  self.site_required = false
 
   before_validation :set_source_instance
 
@@ -125,6 +129,8 @@ class SS::ReplaceFile
       user = opts[:user]
       site = opts[:site]
       node = opts[:node]
+
+      return false if item.try(:branch?)
 
       if item.try(:public?)
         item.allowed?(:release, user, site: site, node: node)

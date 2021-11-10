@@ -50,9 +50,9 @@
     <% if SS::ReplaceFile.replaceable?(@item, user: @cur_user, site: @cur_site, node: @cur_node) %>
       <div class="replace-file">
         <% if params[:replace_temp_file].present? %>
-          <%= link_to t('ss.buttons.replace_file'), confirm_sns_apis_replace_file_path(user: @cur_user.id, id: file.id), class: "ajax-box" %>
+          <%= link_to t('ss.buttons.replace_file'), params[:cid].blank? ? confirm_cms_apis_replace_file_path(owner_item_id: @item, id: file) : confirm_cms_apis_node_replace_file_path(owner_item_id: @item, id: file), class: "ajax-box" %>
         <% else %>
-          <%= link_to t('ss.buttons.replace_file'), edit_sns_apis_replace_file_path(user: @cur_user.id, id: file.id), class: "ajax-box" %>
+          <%= link_to t('ss.buttons.replace_file'), params[:cid].blank? ? edit_cms_apis_replace_file_path(owner_item_id: @item, id: file) : edit_cms_apis_node_replace_file_path(owner_item_id: @item, id: file), class: "ajax-box" %>
         <% end %>
       </div>
     <% end %>
