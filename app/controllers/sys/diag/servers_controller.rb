@@ -41,11 +41,11 @@ class Sys::Diag::ServersController < ApplicationController
   end
 
   def rack_key?(key)
-    key.starts_with?("rack.")
+    key.start_with?("rack.")
   end
 
   def rails_key?(key)
-    key.starts_with?("action_dispatch.") || key.starts_with?("action_controller.")
+    key.start_with?("action_dispatch.", "action_controller.")
   end
 
   def other_key?(key)
