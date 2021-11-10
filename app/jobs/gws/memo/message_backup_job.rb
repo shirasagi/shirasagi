@@ -1,4 +1,4 @@
-class Gws::Memo::MessageExportJob < Gws::ApplicationJob
+class Gws::Memo::MessageBackupJob < Gws::ApplicationJob
   include Gws::Memo::Helper
 
   def perform(*args)
@@ -7,26 +7,27 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
     @message_ids = args[0]
     @root_url = opts[:root_url].to_s
     @output_zip = SS::ZipCreator.new("gws-memo-messages.zip", user, site: site)
-    @export_filter = opts[:export_filter].to_s.presence || "selected"
-    @exported_items = 0
+    @output_format = opts[:format].to_s.presence || "json"
+    @backup_filter = opts[:backup_filter].to_s.presence || "selected"
+    @backup_items = 0
 
-    export_gws_memo_messages
+    backup_gws_memo_messages
     @output_zip.close
 
-    if @exported_items == 0
-      create_notify_message(failed: true, failed_message: I18n.t("gws/memo/message.export_failed.empty_messages"))
+    if @backup_items == 0
+      create_notify_message(failed: true, failed_message: I18n.t("gws/memo/message.backup_failed.empty_messages"))
       return
     end
 
     create_notify_message
-    Rails.logger.info("#{@exported_items.to_s(:delimied)} 件のメッセージをエクスポートしました。")
+    Rails.logger.info("#{@backup_items.to_s(:delimied)} 件のメッセージのバックアアップを実行しました。")
   ensure
     @output_zip.close if @output_zip
   end
 
   private
 
-  def export_gws_memo_messages
+  def backup_gws_memo_messages
     each_message_with_rescue do |item|
       data = item.attributes
 
@@ -39,41 +40,11 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
       if item.to_members.present?
         data['to_members'] = item.to_members.map { |u| user_attributes(u) }
         data['to_members_name_email'] = item.to_members.map { |u| user_name_email(u) }
-        data['to_member_ids'] = item.to_members.map(&:id)
       end
-
-      data['to_members_name_email'] =[] if data['to_members_name_email'].nil?
-      if item.to_shared_address_group_ids.present?
-        item.to_shared_address_group_ids.each do |u|
-          data['to_members_name_email'] << shared_address_group_name(u)
-        end
-      end
-
-      if item.to_webmail_address_group_ids
-        item.to_webmail_address_group_ids.each do |u|
-          data['to_members_name_email'] << webmail_address_group_name(u)
-        end
-      end
-
       if item.cc_members.present?
         data['cc_members'] = item.cc_members.map { |u| user_attributes(u) }
         data['cc_members_name_email'] = item.cc_members.map { |u| user_name_email(u) }
-        data['cc_member_ids'] = item.cc_members.map(&:id)
       end
-
-      data['cc_members_name_email'] = [] if data['cc_members_name_email'].nil?
-      if item.cc_shared_address_group_ids
-        item.cc_shared_address_group_ids.map do |u|
-          data['cc_members_name_email'] << shared_address_group_name(u)
-        end
-      end
-
-      if item.cc_webmail_address_group_ids
-        item.cc_webmail_address_group_ids.map do |u|
-          data['cc_members_name_email'] << webmail_address_group_name(u)
-        end
-      end
-
       if item.bcc_members.present?
         data['bcc_members'] = item.bcc_members.select{ |u| u.id == user.id }.map { |u| user_attributes(u) }
       end
@@ -91,54 +62,36 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
         folder_name = folder_name.split("/").map { |path| sanitize_filename(path) }.join("/")
         basename = "#{folder_name}/#{basename}"
       end
-      write_eml(basename, data)
+      if @output_format == "eml"
+        write_eml(basename, data)
+      else
+        write_json(basename, data.to_json)
+      end
 
-      @exported_items += 1
+      @backup_items += 1
     end
   end
 
   def each_message_with_rescue
     criteria = Gws::Memo::Message.unscoped.site(site).where("user_settings.user_id" => user.id)
-    if @export_filter == "all"
-      all_ids = criteria.pluck(:id).map(&:to_s) + extract_sent_and_draft_ids
+    if @backup_filter == "all"
+      all_ids = criteria.pluck(:id).map(&:to_s)
     else
       all_ids = @message_ids
     end
 
     all_ids.each_slice(100) do |ids|
-      Gws::Memo::Message.in(id: ids).to_a.each do |item|
-        begin
-          yield item
-        rescue => e
-          Rails.logger.warn("#{item.name}(#{item.id}) をエクスポート中に例外が発生しました。")
-          Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-        end
+      criteria.in(id: ids).to_a.each do |item|
+        yield item
+      rescue => e
+        Rails.logger.warn("#{item.name}(#{item.id}) をエクスポート中に例外が発生しました。")
+        Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       end
     end
-  end
-
-  def extract_sent_and_draft_ids
-    folders = Gws::Memo::Folder.static_items(user, site) + Gws::Memo::Folder.user(user).site(site)
-
-    sent_folder = folders.find { |folder| folder.folder_path == "INBOX.Sent" }
-    draft_folder = folders.find { |folder| folder.folder_path == "INBOX.Draft" }
-
-    @sent_ids = Gws::Memo::Message.folder(sent_folder, user).pluck(:id).map(&:to_s)
-    @draft_ids = Gws::Memo::Message.folder(draft_folder, user).pluck(:id).map(&:to_s)
-    sent_and_draft_ids = @sent_ids + @draft_ids
-
-    sent_and_draft_ids
   end
 
   def item_folder_name(item)
     path = item.path(user)
-    if path.blank? || item.state == "closed"
-      if @sent_ids.include?(item.id.to_s)
-        path = "INBOX.Sent"
-      elsif @draft_ids.include?(item.id.to_s)
-        path = "INBOX.Draft"
-      end
-    end
     return if path.blank?
 
     if !path.numeric?
@@ -160,28 +113,27 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
     item.send_date = @datetime
 
     if opts[:failed]
-      item.subject = I18n.t("gws/memo/message.export_failed.subject")
-      item.text = opts[:failed_message].presence || I18n.t("gws/memo/message.export_failed.notify_message")
+      item.subject = I18n.t("gws/memo/message.backup_filter.subject")
+      item.text = opts[:failed_message].presence || I18n.t("gws/memo/message.backup_filter.notify_message")
     else
-      item.subject = I18n.t("gws/memo/message.export.subject")
+      item.subject = I18n.t("gws/memo/message.backup.subject")
       link = ::File.join(@root_url, @output_zip.url(name: "gws-memo-messages-#{@datetime.strftime('%Y%m%d%H%M%S')}.zip"))
-      item.text = I18n.t("gws/memo/message.export.notify_message", link: link)
+      item.text = I18n.t("gws/memo/message.backup.notify_message", link: link)
     end
 
     item.save!
   end
 
+  def write_json(name, data)
+    @output_zip.create_entry("#{name}.json") do |f|
+      f.write(data)
+    end
+  end
+
   def write_eml(name, data)
     @output_zip.create_entry("#{name}.eml") do |f|
-      sanitized_subject = sanitize_content(data["subject"].slice(0..79))
-      f.puts Mail::Field.new("Subject", sanitized_subject, "utf-8").encoded
-      f.puts Mail::Field.new("Date", data["created"].in_time_zone.rfc822, "utf-8").encoded
-      f.puts Mail::Field.new("Message-ID", gen_message_id(data), "utf-8").encoded
-      f.puts Mail::Field.new("From", data['from_name_email'], "utf-8").encoded
-      f.puts Mail::Field.new("To", data['to_members_name_email'], "utf-8").encoded
-      f.puts Mail::Field.new("X-Shirasagi-Member-IDs", data['to_member_ids'], "utf-8").encoded
-      f.puts Mail::Field.new("Cc-IDs", data['cc_member_ids'], "utf-8").encoded
-      f.puts Mail::Field.new("Cc", data['cc_members_name_email'], "utf-8").encoded if data['cc_members_name_email'].present?
+      f = init_mail_field(f, data)
+
       user_settings = data["user_settings"]
       s_status = []
       if user_settings.present?
@@ -227,11 +179,14 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
     end
   end
 
-  def shared_address_group_name(id)
-    Gws::SharedAddress::Group.find(id).try(:name)
-  end
+  def init_mail_field(file, data)
+    file.puts Mail::Field.new("Date", data["created"].in_time_zone.rfc822, "utf-8").encoded
+    file.puts Mail::Field.new("Message-ID", gen_message_id(data), "utf-8").encoded
+    file.puts Mail::Field.new("Subject", data["subject"], "utf-8").encoded
+    file.puts Mail::Field.new("From", data['from_name_email'], "utf-8").encoded
+    file.puts Mail::Field.new("To", data['to_members_name_email'], "utf-8").encoded
+    file.puts Mail::Field.new("Cc", data['cc_members_name_email'], "utf-8").encoded if data['cc_members_name_email'].present?
 
-  def webmail_address_group_name(id)
-    Webmail::AddressGroup.find(id).try(:name)
+    file
   end
 end
