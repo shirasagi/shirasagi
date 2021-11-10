@@ -25,6 +25,11 @@ module Cms::Addon::Form::Page
 
     before_validation :set_form_contains_urls
 
+    around_save :cms_form_page_around_save_delegate
+    around_create :cms_form_page_around_create_delegate
+    around_update :cms_form_page_around_update_delegate
+    around_destroy :cms_form_page_around_destroy_delegate
+
     before_save :cms_form_page_delete_unlinked_files
 
     around_save :update_file_owner_in_column_values
@@ -217,5 +222,37 @@ module Cms::Addon::Form::Page
     end
 
     self.form_contains_urls = form_contains_urls.flatten.uniq
+  end
+
+  def _delegate_callback_to_column_values(kind, &block)
+    invoke_sequence = nil
+    invoke_sequence = proc do |index, &block|
+      column_value = column_values[index]
+      if column_value
+        column_value.run_callbacks(kind) do
+          invoke_sequence.call(index + 1, &block)
+        end
+      elsif block_given?
+        yield
+      end
+    end
+
+    invoke_sequence.call(0, &block)
+  end
+
+  def cms_form_page_around_save_delegate(&block)
+    _delegate_callback_to_column_values(:parent_save, &block)
+  end
+
+  def cms_form_page_around_create_delegate(&block)
+    _delegate_callback_to_column_values(:parent_create, &block)
+  end
+
+  def cms_form_page_around_update_delegate(&block)
+    _delegate_callback_to_column_values(:parent_update, &block)
+  end
+
+  def cms_form_page_around_destroy_delegate(&block)
+    _delegate_callback_to_column_values(:parent_destroy, &block)
   end
 end
