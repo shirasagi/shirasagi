@@ -28,6 +28,7 @@ Rails.application.routes.draw do
     resources :michecker_results, only: [:index, :show, :destroy], concerns: [:deletion] do
       get :result, on: :member
     end
+    resource :status, only: [:show]
   end
 
   cms "job" do
