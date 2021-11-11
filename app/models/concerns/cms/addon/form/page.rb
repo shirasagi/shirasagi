@@ -32,8 +32,6 @@ module Cms::Addon::Form::Page
 
     before_save :cms_form_page_delete_unlinked_files
 
-    around_save :update_file_owner_in_column_values
-
     if respond_to?(:after_generate_file)
       after_generate_file :cms_form_page_generate_public_files
     end
@@ -147,8 +145,8 @@ module Cms::Addon::Form::Page
     if docs.present?
       docs = docs.select(&:present?).map do |doc|
         type = doc["_type"] || doc[:_type]
-        effective_kass = type.camelize.constantize rescue Cms::Column::Value::Base
-        Mongoid::Factory.build(Cms::Column::Value::Base, doc.slice(*effective_kass.fields.keys.map(&:to_s)))
+        effective_klass = type.camelize.constantize rescue Cms::Column::Value::Base
+        Mongoid::Factory.build(Cms::Column::Value::Base, doc.slice(*effective_klass.fields.keys.map(&:to_s)))
       end
     end
 
@@ -173,37 +171,7 @@ module Cms::Addon::Form::Page
     file_ids_was.uniq!
 
     unlinked_file_ids = file_ids_was - file_ids_is
-    unlinked_file_ids.each_slice(20) do |file_ids|
-      unlinked_files = SS::File.in(id: file_ids).to_a
-      unlinked_files.each do |unlinked_file|
-        next if self.id != unlinked_file.owner_item_id
-
-        if [ self, unlinked_file ].all? { |obj| obj.respond_to?(:skip_history_trash) }
-          unlinked_file.skip_history_trash = skip_history_trash
-        end
-        unlinked_file.cur_user = @cur_user
-        unlinked_file.destroy
-      end
-    end
-  end
-
-  def update_file_owner_in_column_values
-    is_new = new_record?
-    yield
-
-    if is_new && form.present?
-      file_ids_is = []
-      self.column_values.each do |column_value|
-        file_ids_is += column_value.all_file_ids
-      end
-      file_ids_is.compact!
-      file_ids_is.uniq!
-
-      SS::File.in(id: file_ids_is).each do |file|
-        file.owner_item = self
-        file.save
-      end
-    end
+    Cms::Addon::File::Utils.delete_files(self, unlinked_file_ids)
   end
 
   def set_form_contains_urls

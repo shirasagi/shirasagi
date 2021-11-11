@@ -525,12 +525,16 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text1
-            click_on I18n.t("ss.links.upload")
+            wait_cbox_open do
+              click_on I18n.t("ss.links.upload")
+            end
           end
         end
         wait_for_cbox do
           attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-          click_on I18n.t('ss.buttons.attach')
+          wait_cbox_close do
+            click_on I18n.t('ss.buttons.attach')
+          end
         end
         within 'form#item-form' do
           within ".column-value-cms-column-fileupload" do
@@ -542,6 +546,21 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
           within ".column-value-cms-column-free" do
             fill_in_ckeditor "item[column_values][][in_wrap][value]", with: column9_value1
+            wait_cbox_open do
+              click_on I18n.t("ss.links.upload")
+            end
+          end
+        end
+        wait_for_cbox do
+          attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf"
+          wait_cbox_close do
+            click_on I18n.t('ss.buttons.attach')
+          end
+        end
+        within 'form#item-form' do
+          within ".column-value-cms-column-free" do
+            expect(page).to have_content("shirasagi.pdf")
+            click_on I18n.t("sns.file_attach")
           end
 
           within ".column-value-palette" do
@@ -600,28 +619,61 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(item.summary).to eq form.html
           expect(item.column_values).to have(14).items
 
-          expect(item.column_values.find_by(column_id: column1.id).value).to eq column1_value1
-          expect(item.column_values.find_by(column_id: column2.id).date).to eq Time.zone.parse(column2_value1)
-          expect(item.column_values.find_by(column_id: column3.id).link_label).to eq column3_label1
-          expect(item.column_values.find_by(column_id: column3.id).link_url).to eq column3_url1
-          expect(item.column_values.find_by(column_id: column4.id).value).to eq column4_value1.gsub("\n", "\r\n")
-          expect(item.column_values.find_by(column_id: column5.id).value).to eq column5_value1
-          expect(item.column_values.find_by(column_id: column6.id).value).to eq column6_value1
-          expect(item.column_values.find_by(column_id: column7.id).values).to eq [ column7_value1 ]
-          expect(item.column_values.find_by(column_id: column8.id).file_label).to eq column8_image_text1
-          expect(item.column_values.find_by(column_id: column8.id).file.name).to eq 'keyvisual.gif'
-          expect(item.column_values.find_by(column_id: column8.id).file.owner_item_id).to eq item.id
-          expect(item.column_values.find_by(column_id: column9.id).value).to include column9_value1
-          expect(item.column_values.find_by(column_id: column10.id).head).to eq column10_head1
-          expect(item.column_values.find_by(column_id: column10.id).text).to eq column10_text1
-          expect(item.column_values.find_by(column_id: column11.id).lists).to include column11_list1
-          expect(item.column_values.find_by(column_id: column12.id).value).to be_present
-          expect(item.column_values.find_by(column_id: column13.id).youtube_id).to eq column13_youtube_id1
-          expect(item.column_values.find_by(column_id: column14.id).page_id).to eq column14_page_id1
+          item.column_values.find_by(column_id: column1.id).tap do |column_value|
+            expect(column_value.value).to eq column1_value1
+          end
+          item.column_values.find_by(column_id: column2.id).tap do |column_value|
+            expect(column_value.date).to eq Time.zone.parse(column2_value1)
+          end
+          item.column_values.find_by(column_id: column3.id).tap do |column_value|
+            expect(column_value.link_label).to eq column3_label1
+            expect(column_value.link_url).to eq column3_url1
+          end
+          item.column_values.find_by(column_id: column4.id).tap do |column_value|
+            expect(column_value.value).to eq column4_value1.gsub("\n", "\r\n")
+          end
+          item.column_values.find_by(column_id: column5.id).tap do |column_value|
+            expect(column_value.value).to eq column5_value1
+          end
+          item.column_values.find_by(column_id: column6.id).tap do |column_value|
+            expect(column_value.value).to eq column6_value1
+          end
+          item.column_values.find_by(column_id: column7.id).tap do |column_value|
+            expect(column_value.values).to eq [ column7_value1 ]
+          end
+          item.column_values.find_by(column_id: column8.id).tap do |column_value|
+            expect(column_value.file_label).to eq column8_image_text1
+            expect(column_value.file.name).to eq 'keyvisual.gif'
+            expect(column_value.file.owner_item_id).to eq item.id
+          end
+          item.column_values.find_by(column_id: column9.id).tap do |column_value|
+            expect(column_value.value).to include column9_value1
+            expect(column_value.file_ids).to have(1).items
+            column_value.files.first.tap do |file|
+              expect(file.name).to eq 'shirasagi.pdf'
+              expect(file.owner_item_id).to eq item.id
+            end
+          end
+          item.column_values.find_by(column_id: column10.id).tap do |column_value|
+            expect(column_value.head).to eq column10_head1
+            expect(column_value.text).to eq column10_text1
+          end
+          item.column_values.find_by(column_id: column11.id).tap do |column_value|
+            expect(column_value.lists).to include column11_list1
+          end
+          item.column_values.find_by(column_id: column12.id).tap do |column_value|
+            expect(column_value.value).to be_present
+          end
+          item.column_values.find_by(column_id: column13.id).tap do |column_value|
+            expect(column_value.youtube_id).to eq column13_youtube_id1
+          end
+          item.column_values.find_by(column_id: column14.id).tap do |column_value|
+            expect(column_value.page_id).to eq column14_page_id1
+          end
 
           expect(item.backups.count).to eq 1
         end
-        expect(SS::File.all.unscoped.count).to eq 2
+        expect(SS::File.all.unscoped.count).to eq 3
 
         #
         # Update columns
@@ -721,7 +773,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
           expect(item.backups.count).to eq 2
         end
-        expect(SS::File.all.unscoped.count).to eq 2
+        expect(SS::File.all.unscoped.count).to eq 3
 
         #
         # Remove columns

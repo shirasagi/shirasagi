@@ -5,7 +5,7 @@ module Member::Addon::Photo
     include SS::Relation::File
 
     included do
-      belongs_to_file :image, class_name: "Member::PhotoFile", required: true
+      belongs_to_file :image, class_name: "Member::PhotoFile", presence: true
       field :caption, type: String, metadata: { unicode: :nfc }
 
       permit_params :caption, :image_id, :loc
