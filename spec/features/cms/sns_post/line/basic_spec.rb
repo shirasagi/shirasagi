@@ -37,10 +37,14 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             select I18n.t("cms.options.line_post_format.message_only_carousel"), from: "item[line_post_format]"
             fill_in "item[line_text_message]", with: line_text_message
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
           expect(capture.broadcast.count).to eq 0
           expect(capture.broadcast.messages).to eq nil
           expect(Cms::SnsPostLog::Line.count).to eq 0
@@ -59,10 +63,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             select I18n.t("cms.options.line_post_format.message_only_carousel"), from: "item[line_post_format]"
             fill_in "item[line_text_message]", with: line_text_message
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("dd", text: I18n.t("ss.options.state.expired"))
@@ -90,16 +97,19 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             select I18n.t("cms.options.line_post_format.message_only_carousel"), from: "item[line_post_format]"
             fill_in "item[line_text_message]", with: line_text_message
           end
-          within "form#item-form" do
-            wait_cbox_open do
-              click_on I18n.t("ss.buttons.publish_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              wait_cbox_open do
+                click_on I18n.t("ss.buttons.publish_save")
+              end
             end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("dd", text: line_text_message)
@@ -126,16 +136,19 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             select I18n.t("cms.options.line_post_format.message_only_carousel"), from: "item[line_post_format]"
             fill_in "item[line_text_message]", with: line_text_message
           end
-          within "form#item-form" do
-            wait_cbox_open do
-              click_on I18n.t("ss.buttons.publish_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              wait_cbox_open do
+                click_on I18n.t("ss.buttons.publish_save")
+              end
             end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("dd", text: line_text_message)
@@ -188,16 +201,18 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             fill_in "item[line_text_message]", with: line_text_message
           end
 
-          within "form#item-form" do
-            wait_cbox_open do
-              click_on I18n.t("ss.buttons.publish_save")
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              wait_cbox_open do
+                click_on I18n.t("ss.buttons.publish_save")
+              end
             end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("dd", text: line_text_message)
@@ -237,16 +252,19 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             select I18n.t("cms.options.line_post_format.thumb_carousel"), from: "item[line_post_format]"
             fill_in "item[line_text_message]", with: line_text_message
           end
-          within "form#item-form" do
-            wait_cbox_open do
-              click_on I18n.t("ss.buttons.publish_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              wait_cbox_open do
+                click_on I18n.t("ss.buttons.publish_save")
+              end
             end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("dd", text: line_text_message)
@@ -298,16 +316,19 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             select I18n.t("cms.options.line_post_format.body_carousel"), from: "item[line_post_format]"
             fill_in "item[line_text_message]", with: line_text_message
           end
-          within "form#item-form" do
-            wait_cbox_open do
-              click_on I18n.t("ss.buttons.publish_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              wait_cbox_open do
+                click_on I18n.t("ss.buttons.publish_save")
+              end
             end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("dd", text: line_text_message)
@@ -351,16 +372,19 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             select I18n.t("cms.options.line_post_format.body_carousel"), from: "item[line_post_format]"
             fill_in "item[line_text_message]", with: line_text_message
           end
-          within "form#item-form" do
-            wait_cbox_open do
-              click_on I18n.t("ss.buttons.publish_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              wait_cbox_open do
+                click_on I18n.t("ss.buttons.publish_save")
+              end
             end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("dd", text: line_text_message)
@@ -399,14 +423,17 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             select I18n.t("ss.options.state.enabled"), from: "item[line_edit_auto_post]"
             fill_in "item[line_text_message]", with: line_text_message
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("dd", text: line_text_message)
@@ -431,14 +458,17 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
             select I18n.t("ss.options.state.enabled"), from: "item[line_edit_auto_post]"
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("dd", text: line_text_message)
@@ -460,10 +490,12 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             select I18n.t("ss.options.state.disabled"), from: "item[line_edit_auto_post]"
           end
 
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("dd", text: line_text_message)

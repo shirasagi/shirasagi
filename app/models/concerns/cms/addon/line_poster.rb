@@ -22,7 +22,7 @@ module Cms::Addon
 
       permit_params :line_auto_post, :line_edit_auto_post, :line_text_message, :line_post_format
 
-      after_save :post_to_line
+      after_save -> { post_to_line(execute: :job) }
     end
 
     def line_auto_post_options
@@ -84,6 +84,22 @@ module Cms::Addon
       img_url
     end
 
+    def post_to_line(execute: :inline)
+      return unless public?
+      return unless public_node?
+      return if @posted_to_line
+
+      if line_post_enabled?
+        if execute == :job
+          Cms::SnsPost::LineJob.bind(site_id: @cur_site, user_id: @cur_user).perform_later(id)
+        else
+          execute_post_to_line
+        end
+      end
+
+      @posted_to_line = true
+    end
+
     private
 
     def validate_line_title
@@ -99,16 +115,6 @@ module Cms::Addon
       if line_text_message.size > 45
         errors.add :line_text_message, :too_long, count: 45
       end
-    end
-
-    def post_to_line
-      return unless public?
-      return unless public_node?
-      return if @posted_to_line
-
-      execute_post_to_line if line_post_enabled?
-
-      @posted_to_line = true
     end
 
     def execute_post_to_line

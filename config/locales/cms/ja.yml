@@ -2391,3 +2391,5 @@ ja:
       cms/role/import_job: 権限インポート
       cms/all_contents_import_job: 全コンテンツ一括設定
       cms/michecker_job: miChecker
+      cms/sns_post/twitter_job: Twitterページ投稿
+      cms/sns_post/line_job: LINEページ投稿

@@ -22,7 +22,7 @@ module Cms::Addon
 
       validates :thumb_id, presence: true, if: -> { twitter_auto_post == "active" && twitter_post_format == "thumb_and_page" }
 
-      after_save :post_to_twitter
+      after_save -> { post_to_twitter(execute: :job) }
     end
 
     def twitter_auto_post_options
@@ -76,17 +76,23 @@ module Cms::Addon
       end
     end
 
-    private
-
-    def post_to_twitter
+    def post_to_twitter(execute: :inline)
       return unless public?
       return unless public_node?
       return if @posted_to_twitter
 
-      execute_post_to_twitter if twitter_post_enabled?
+      if twitter_post_enabled?
+        if execute == :job
+          Cms::SnsPost::TwitterJob.bind(site_id: @cur_site, user_id: @cur_user).perform_later(id)
+        else
+          execute_post_to_twitter
+        end
+      end
 
       @posted_to_twitter = true
     end
+
+    private
 
     def execute_post_to_twitter
       Cms::SnsPostLog::Twitter.create_with(self) do |log|
