@@ -5,6 +5,11 @@ class Cms::SnsPost::TwitterJob < Cms::ApplicationJob
   def perform(page_id)
     item = Cms::Page.find(page_id)
     Rails.logger.info("post to twitter : #{item.name}")
+
+    if SS.config.cms.enable_lgwan
+      Lgwan::InternetSegmentSupport.pull_private_files(item)
+    end
+
     item.post_to_twitter
   end
 end
