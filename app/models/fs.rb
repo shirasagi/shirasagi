@@ -68,4 +68,24 @@ module Fs
     return if Fs.same_data?(path, data)
     Fs.binwrite(path, data)
   end
+
+  def head_lines(path, limit: nil)
+    return [] if !path || !Fs.exist?(path)
+
+    limit ||= SS.config.job.head_logs
+    limit ||= 1_000
+    texts = []
+    Fs.to_io(path) do |f|
+      limit.times do
+        line = f.gets || break
+        line.force_encoding(Encoding.default_internal)
+        line.chomp!
+        texts << line
+      end
+    end
+    texts
+  rescue => e
+    Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+    []
+  end
 end

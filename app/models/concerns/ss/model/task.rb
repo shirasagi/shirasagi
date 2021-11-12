@@ -202,19 +202,8 @@ module SS::Model::Task
     []
   end
 
-  def head_logs(num_logs = 1_000)
-    if log_file_path && ::File.exist?(log_file_path)
-      texts = []
-      ::File.open(log_file_path) do |f|
-        num_logs.times do
-          line = f.gets || break
-          texts << line.chomp
-        end
-      end
-      texts
-    else
-      []
-    end
+  def head_logs(num_logs = nil)
+    Fs.head_lines(log_file_path, limit: num_logs)
   end
 
   def log(msg)
