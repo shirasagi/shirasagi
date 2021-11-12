@@ -5,6 +5,8 @@ class Recommend::History::Log
 
   store_in_repl_master
   index({ created: -1 })
+  index({ site_id: 1, token: 1, created: -1 })
+  index({ site_id: 1, path: 1, created: -1 })
 
   field :token, type: String
   field :path, type: String

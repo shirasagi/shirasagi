@@ -16,7 +16,7 @@ module SS::Addon::Notification::Reply
   def reply_addon_show_partial_path
     return nil if reply_module.blank?
     file = "#{Rails.root}/app/views/ss/agents/addons/notification/reply/#{reply_module}/_show.html.erb"
-    File.exists?(file) ? "ss/agents/addons/notification/reply/#{reply_module}/show" : nil
+    File.exist?(file) ? "ss/agents/addons/notification/reply/#{reply_module}/show" : nil
   end
 
   def reply_item

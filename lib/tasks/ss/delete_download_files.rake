@@ -14,7 +14,7 @@ namespace :ss do
 
           dir = File.dirname(file)
           2.times do
-            break unless Dir.exists?(dir)
+            break unless Dir.exist?(dir)
             break unless Dir.empty?(dir)
             FileUtils.remove_dir(dir)
             dir = File.dirname(dir)

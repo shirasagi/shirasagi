@@ -18,6 +18,7 @@ module Sys::Addon
       embeds_many :jwks, class_name: "Sys::Auth::OpenIdConnect::JsonWebKey"
       attr_accessor :in_discovery_file
       attr_accessor :in_client_secret, :rm_client_secret
+
       permit_params :issuer, :auth_url, :token_url, :client_id, :client_secret, :response_type
       permit_params :scopes, :max_age, :claims, :response_mode, :jwks_uri
       permit_params :in_discovery_file

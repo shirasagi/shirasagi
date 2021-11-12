@@ -24,8 +24,8 @@ class Cms::SearchContents::SitemapController < ApplicationController
       format.csv do
         response.status = 200
         send_enum Cms::FolderSize.enum_csv(@cur_site),
-                  type: 'text/csv; charset=Shift_JIS',
-                  filename: "folder_sizes_#{Time.zone.now.to_i}.csv"
+          type: 'text/csv; charset=Shift_JIS',
+          filename: "folder_sizes_#{Time.zone.now.to_i}.csv"
       end
     end
   end

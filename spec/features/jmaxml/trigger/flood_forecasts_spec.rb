@@ -6,7 +6,7 @@ describe "jmaxml/trigger/flood_forecasts", type: :feature, dbscope: :example, js
   let(:index_path) { jmaxml_trigger_bases_path(site, node) }
 
   context "basic crud" do
-    let!(:region) { create(:jmaxml_water_level_station_85050900020300042) }
+    let!(:region) { create(:jmaxml_water_level_station_c85050900020300042) }
     let(:model) { Jmaxml::Trigger::FloodForecast }
     let(:name1) { unique_id }
     let(:name2) { unique_id }

@@ -51,13 +51,13 @@ class Garbage::AreaListsController < ApplicationController
 
     csv = "\uFEFF" + csv
     send_data csv.encode("UTF-8", invalid: :replace, undef: :replace),
-              filename: "garbage_areas_#{Time.zone.now.strftime("%Y_%m%d_%H%M")}.csv"
+      filename: "garbage_areas_#{Time.zone.now.strftime("%Y_%m%d_%H%M")}.csv"
   end
 
   public
 
   def download
-    send_csv @cur_node.children.sort(id: "ASC").map(&:becomes_with_route)
+    send_csv @cur_node.children.sort(id: "ASC")
   end
 
   def import

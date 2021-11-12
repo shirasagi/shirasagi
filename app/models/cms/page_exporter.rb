@@ -361,6 +361,13 @@ class Cms::PageExporter
     end
   end
 
+  def draw_column_select_page(drawer, form, column, value_type)
+    drawer.column "#{form.id}/#{column.id}/page_id" do
+      drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:page_id)}" }
+      drawer.body { |item| find_column_value(item, form, column).try { |item| "#{item.page.name}(#{item.page.id})" } }
+    end
+  end
+
   def find_column_value(item, form, column)
     return if item.form_id != form.id
     item.column_values.where(column_id: column.id).first

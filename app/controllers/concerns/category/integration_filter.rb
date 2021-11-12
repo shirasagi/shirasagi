@@ -3,7 +3,6 @@ module Category::IntegrationFilter
 
   def split
     set_item
-    @item = @item.becomes_with_route
     @model = @item.class
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
@@ -14,7 +13,6 @@ module Category::IntegrationFilter
 
   def integrate
     set_item
-    @item = @item.becomes_with_route
     @model = @item.class
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 

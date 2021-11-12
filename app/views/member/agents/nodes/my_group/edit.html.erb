@@ -8,7 +8,7 @@
       <%= render partial: "edit", locals: { f: f }  %>
       <% @model.addons.each do |addon| %>
         <% file = "#{Rails.root}/app/views/#{addon.path}/view/_form.html.erb" %>
-        <%= render "#{addon.path}/view/form", f: f if File.exists?(file) %>
+        <%= render "#{addon.path}/view/form", f: f if File.exist?(file) %>
       <% end %>
     </div>
 

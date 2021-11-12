@@ -78,7 +78,7 @@ class Chat::LineReportsController < ApplicationController
     end
 
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
-              filename: "record_phrase_#{Time.zone.now.to_i}.csv"
+      filename: "record_phrase_#{Time.zone.now.to_i}.csv"
   end
 
   def send_csv_exists_phrases(items)
@@ -105,7 +105,7 @@ class Chat::LineReportsController < ApplicationController
     end
 
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
-              filename: "exists_phrase_#{Time.zone.now.to_i}.csv"
+      filename: "exists_phrase_#{Time.zone.now.to_i}.csv"
   end
 
   def send_csv_sessions(items, dates)
@@ -123,12 +123,12 @@ class Chat::LineReportsController < ApplicationController
       end
       row = []
       row << I18n.t('chat.line_report.total')
-      row << items.map(&:to_i).sum
+      row << items.sum(&:to_i)
       data << row
     end
 
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
-              filename: "session_counts_#{@current_date}_#{Time.zone.now.to_i}.csv"
+      filename: "session_counts_#{@current_date}_#{Time.zone.now.to_i}.csv"
   end
 
   def send_csv_used_times(items, hours)
@@ -146,11 +146,11 @@ class Chat::LineReportsController < ApplicationController
       end
       row = []
       row << I18n.t('chat.line_report.total')
-      row << items.map(&:to_i).sum
+      row << items.sum(&:to_i)
       data << row
     end
 
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
-              filename: "used_times_counts_#{@current_date}_#{Time.zone.now.to_i}.csv"
+      filename: "used_times_counts_#{@current_date}_#{Time.zone.now.to_i}.csv"
   end
 end

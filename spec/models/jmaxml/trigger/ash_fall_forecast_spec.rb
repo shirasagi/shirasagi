@@ -21,11 +21,11 @@ describe Jmaxml::Trigger::AshFallForecast, dbscope: :example do
     subject { create(:jmaxml_trigger_ash_fall_forecast) }
 
     before do
-      region_4620100 = create(:jmaxml_forecast_region_4620100)
-      region_4620300 = create(:jmaxml_forecast_region_4620300)
-      region_4621400 = create(:jmaxml_forecast_region_4621400)
-      region_4621700 = create(:jmaxml_forecast_region_4621700)
-      subject.target_region_ids = [ region_4620100.id, region_4620300.id, region_4621400.id, region_4621700.id ]
+      region_c4620100 = create(:jmaxml_forecast_region_c4620100)
+      region_c4620300 = create(:jmaxml_forecast_region_c4620300)
+      region_c4621400 = create(:jmaxml_forecast_region_c4621400)
+      region_c4621700 = create(:jmaxml_forecast_region_c4621700)
+      subject.target_region_ids = [ region_c4620100.id, region_c4620300.id, region_c4621400.id, region_c4621700.id ]
       subject.save!
     end
 

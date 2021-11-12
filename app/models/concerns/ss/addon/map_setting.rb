@@ -33,7 +33,7 @@ module SS::Addon
     end
 
     def map_layers
-      @_map_layers ||= SS.config.map.layers.map { |layer| [layer["name"], layer] }.to_h
+      @_map_layers ||= SS.config.map.layers.index_by { |layer| layer["name"] }
     end
 
     def map_effective_layers

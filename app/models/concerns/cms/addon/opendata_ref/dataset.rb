@@ -4,6 +4,7 @@ module Cms::Addon::OpendataRef::Dataset
 
   included do
     attr_accessor :skip_assoc_opendata
+
     field :opendata_dataset_state, type: String, default: 'none', metadata: { branch: false }
     embeds_ids :opendata_datasets, class_name: "Opendata::Dataset", metadata: { on_copy: :clear, branch: false }
 
@@ -36,7 +37,6 @@ module Cms::Addon::OpendataRef::Dataset
     parent = self.parent
     return if parent.blank?
 
-    parent = parent.becomes_with_route
     opendata_sites = parent.try(:opendata_sites)
     return if opendata_sites.blank?
 

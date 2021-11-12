@@ -153,7 +153,7 @@ ja:
       check_linked_url_list: リンクを貼っているページを確認する
       contains_urls_exists: このページへのリンク、関連記事、添付ファイルが以下のページに含まれています。
       contains_urls_not_found: このページへのリンク、関連記事、添付ファイルが含まれているページは見つかりませんでした。
-      check_accessibility_manually: "セマンティックなマークアップであるか確認してください。\nコントラスト比に問題がないか確認してください。"
+      check_accessibility_manually: "セマンティックなマークアップであり、コントラスト比に問題がない事を確認してください。"
       when_publish: 公開時の注意
       line_post_enabled: LINE連携が有効になっています。連携しない場合は、設定を解除してください。
       twitter_post_enabled: Twitter投稿が有効になっています。連携しない場合は、設定を解除してください。
@@ -406,6 +406,7 @@ ja:
       cms/calendar_nav: アーカイブナビ(カレンダー)
       cms/monthly_nav: アーカイブナビ（月次）
       cms/site_search_history: サイト内検索(検索履歴)
+      cms/history_list: 閲覧履歴
     columns:
       cms/text_field: 一行入力
       cms/date_field: 日付入力
@@ -421,6 +422,7 @@ ja:
       cms/youtube: YouTube埋め込み
       cms/free: 自由入力
       cms/table: 表
+      cms/select_page: ページ選択
     cms/michecker:
       start: miChecker を実行し結果を確認する
       loading: プレビューをロード中です
@@ -617,6 +619,7 @@ ja:
       cms/line_poster: LINE連携
       cms/content_quota: 容量制限
       cms/check_links: リンクチェック実行結果
+      cms/history_list: 閲覧履歴
 
   mongoid:
     models:
@@ -635,6 +638,7 @@ ja:
       cms/part/page: ページリスト
       cms/part/tabs: 新着タブ
       cms/part/crumb: パンくずリスト
+      cms/part/history_list: 閲覧履歴
       cms/layout: レイアウト
       cms/body_layout: レイアウト
       cms/workflow/route: 承認経路
@@ -666,6 +670,7 @@ ja:
       cms/column/youtube: YouTube埋め込み
       cms/column/free: 自由入力
       cms/column/table: 表
+      cms/column/select_page: ページ選択
       cms/michecker/result: miChecker結果
       cms/michecker_task: miCheckerタスク
       cms/check_links/error/base: エラー情報
@@ -712,6 +717,7 @@ ja:
         route: パーツ属性
         mobile_view: 携帯向け表示
         ajax_view: 動的表示
+        ajax_view_expire_seconds: 動的表示キャッシュ
       cms/layout:
         name: レイアウト名
       cms/addon/layout_html:
@@ -1032,6 +1038,9 @@ ja:
         file_type: ファイルタイプ
       cms/column/list:
         list_type: 種類
+      cms/column/select_page:
+        place_holder: プレースホルダー
+        node_id: 選択肢
       cms/column/value/base:
         order: 並び順
         alignment: 配置
@@ -1085,6 +1094,9 @@ ja:
         value: テキスト
       cms/column/value/table:
         value: 表
+      cms/column/value/select_page:
+        value: 選択肢
+        page_id: 選択肢
       cms/addon/redirect_link:
         redirect_link: リダイレクトURL
       cms/michecker/result:
@@ -1179,6 +1191,7 @@ ja:
       mobile_size_check_server_error: 本文データサイズのチェック中にサーバーエラーが発生しました。
       not_a_child_group: はサイトに所属するグループを設定してください。
       not_found_parent_group: 親グループが存在しません。
+      plz_check_targets_to_delete: 削除対象が選択されておりません。チェックボックスにチェックを入れた上で削除をお願いします。
       invalid_order_of_h: 見出し(H)の順番が不正です。
       invalid_multibyte_character: 英数字は半角文字を入力してください。
       invalid_kana_character: 半角カナ文字が含まれています。
@@ -1533,6 +1546,8 @@ ja:
         - 携帯画面で表示するか否かを選択します。
       ajax_view:
         - パーツを動的に表示するか否かを選択します。
+      ajax_view_expire_seconds:
+        - 秒数を入力すると動的表示をキャッシュします。
 
     cms/addon/list/model:
       conditions:

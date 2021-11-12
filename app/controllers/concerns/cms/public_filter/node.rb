@@ -16,7 +16,7 @@ module Cms::PublicFilter::Node
   def find_node(path)
     node = Cms::Node.site(@cur_site).in_path(path).order_by(depth: -1).to_a.first
     return unless node
-    @preview || node.public? ? node.becomes_with_route : nil
+    @preview || node.public? ? node : nil
   end
 
   def render_node(node)
@@ -124,7 +124,7 @@ module Cms::PublicFilter::Node
 
     num.upto(max) do |i|
       file = "#{node.path}/index.p#{i}.html"
-      break unless Fs.exists?(file)
+      break unless Fs.exist?(file)
       Fs.rm_rf file
     end
   end

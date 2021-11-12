@@ -8,6 +8,7 @@ module Webmail::AddressExport
 
   included do
     attr_accessor :import_format
+
     permit_params :import_format
   end
 

@@ -8,6 +8,7 @@ module Cms::Addon::Import
 
     included do
       attr_accessor :in_file, :root_files, :import_date, :imported
+
       permit_params :in_file, :root_files, :import_date
 
       validates :in_file, presence: true, on: :import
@@ -71,13 +72,16 @@ module Cms::Addon::Import
     end
 
     def set_errors(item, import_filename)
-      item.errors.each do |n, e|
-        if n == :filename
-          self.errors.add :base, "#{item.filename}#{e}"
-        elsif n == :name
-          self.errors.add :base, "#{import_filename}#{e}"
+      item.errors.each do |error|
+        attribute = error.attribute
+        message = error.message
+
+        if attribute == :filename
+          self.errors.add :base, "#{item.filename}#{message}"
+        elsif attribute == :name
+          self.errors.add :base, "#{import_filename}#{message}"
         else
-          self.errors.add :base, "#{import_filename} #{item.class.t(n)}#{e}"
+          self.errors.add :base, "#{import_filename} #{item.class.t(attribute)}#{message}"
         end
       end
     end

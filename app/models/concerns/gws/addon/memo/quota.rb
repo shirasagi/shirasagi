@@ -4,6 +4,7 @@ module Gws::Addon::Memo::Quota
 
   included do
     attr_accessor :in_skip_validates_sender_quota
+
     @in_skip_validates_sender_quota = false
     validate :validate_attached_file_size
     validate :validate_quota, if: -> { send_date_was.blank? }
@@ -14,7 +15,7 @@ module Gws::Addon::Memo::Quota
     return if site.memo_filesize_limit <= 0
 
     limit = site.memo_filesize_limit * 1024 * 1024
-    size = files.compact.map(&:size).sum
+    size = files.compact.sum(&:size)
 
     if size > limit
       errors.add(:base, :file_size_limit, size: number_to_human_size(size), limit: number_to_human_size(limit))

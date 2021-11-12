@@ -231,14 +231,30 @@ Rails.application.routes.draw do
       resources :temp_files, concerns: [:deletion, :file_api] do
         get :contrast_ratio, on: :collection
       end
-      namespace :node, path: "node:cid/cms", cid: /\w+/ do
-        resources :temp_files, concerns: [:deletion, :file_api] do
-          get :contrast_ratio, on: :collection
-        end
-      end
       resources :content_files, only: [] do
         get :view, on: :member
         get :contrast_ratio, on: :collection
+      end
+      resources :replace_files, path: ":owner_item_id/replace_files", only: [:edit, :update] do
+        get :confirm, on: :member
+        post :confirm, on: :member
+        get :histories, on: :member
+        get :download, on: :member
+        post :restore, on: :member
+        post :destroy, on: :member
+      end
+      scope "node:cid/cms", as: "node", cid: /\w+/ do
+        resources :temp_files, controller: 'node/temp_files', concerns: [:deletion, :file_api] do
+          get :contrast_ratio, on: :collection
+        end
+        resources :replace_files, path: ":owner_item_id/replace_files", only: [:edit, :update] do
+          get :confirm, on: :member
+          post :confirm, on: :member
+          get :histories, on: :member
+          get :download, on: :member
+          post :restore, on: :member
+          post :destroy, on: :member
+        end
       end
       namespace "opendata_ref" do
         get "datasets:cid" => "datasets#index", as: 'datasets'
@@ -349,6 +365,7 @@ Rails.application.routes.draw do
     get "calendar_nav" => "public#index", cell: "parts/calendar_nav"
     get "monthly_nav" => "public#index", cell: "parts/monthly_nav"
     get "site_search_history" => "public#index", cell: "parts/site_search_history"
+    get "history_list" => "public#index", cell: "parts/history_list"
   end
 
   page "cms" do
@@ -362,10 +379,10 @@ Rails.application.routes.draw do
     end
   end
 
-  match "*public_path" => "cms/public#index", public_path: /[^\.].*/,
-        via: [:get, :post, :put, :patch, :delete], format: true
-  match "*public_path" => "cms/public#index", public_path: /[^\.].*/,
-        via: [:get, :post, :put, :patch, :delete], format: false
+  match "*public_path" => "cms/public#index", public_path: /[^.].*/,
+    via: [:get, :post, :put, :patch, :delete], format: true
+  match "*public_path" => "cms/public#index", public_path: /[^.].*/,
+    via: [:get, :post, :put, :patch, :delete], format: false
 
   root "cms/public#index", defaults: { format: :html }
 end

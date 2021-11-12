@@ -86,7 +86,7 @@ module Sitemap::Addon
 
         name = url.sub(/^.*?\s*#/, "") if /#/.match?(url)
         url = url.sub(/\s*#.*/, "").strip.sub(/\/$/, "")
-        model = /(^|\/)[^\.]+$/.match?(url) ? Cms::Node : Cms::Page
+        model = /(^|\/)[^.]+$/.match?(url) ? Cms::Node : Cms::Page
         if item = model.where(site_id: site_id).and_public.filename(url).first
           data = { url: item.url, name: name.presence || item.name, depth: depth }
         else
@@ -119,7 +119,7 @@ module Sitemap::Addon
           urls.each do |page_url|
             page_url.sub!(/\s*#.*/, "")
             url = page_url.strip.sub(/\/$/, "")
-            model = /(^|\/)[^\.]+$/.match?(url) ? Cms::Node : Cms::Page
+            model = /(^|\/)[^.]+$/.match?(url) ? Cms::Node : Cms::Page
             if item = model.where(site_id: site_id).and_public.filename(url).first
               page_url = item.url
             end
@@ -143,7 +143,7 @@ module Sitemap::Addon
     def generate_sitemap_xml
       file = sitemap_xml_path
       data = sitemap_xml
-      return if Fs.exists?(file) && data == Fs.read(file)
+      return if Fs.exist?(file) && data == Fs.read(file)
       Fs.write file, data
     end
 
@@ -158,7 +158,7 @@ module Sitemap::Addon
 
       src = src.sub(/\.[^\/]+$/, ".xml")
       dst = dst.sub(/\.[^\/]+$/, ".xml")
-      Fs.mv src, dst if Fs.exists?(src)
+      Fs.mv src, dst if Fs.exist?(src)
     end
   end
 end

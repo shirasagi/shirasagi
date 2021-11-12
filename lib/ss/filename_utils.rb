@@ -33,11 +33,11 @@ class SS::FilenameUtils
   # 連続する記号にマッチする正規表現（一つにまとめる目的で利用する）
   RE1 = /(#{FILESYSTEM_AND_URL_SAFE_SYMBOLS.map { |s| ::Regexp.escape(s) }.join("|")})+/.freeze
   # 先頭の連続する記号にマッチする正規表現（削除する目的で利用する）
-  RE2 = /^(#{FILESYSTEM_AND_URL_SAFE_SYMBOLS.map { |s| ::Regexp.escape(s) }.join("|")})+([^\.])/.freeze
+  RE2 = /^(#{FILESYSTEM_AND_URL_SAFE_SYMBOLS.map { |s| ::Regexp.escape(s) }.join("|")})+([^.])/.freeze
   # 末尾の連続する記号にマッチする正規表現（削除する目的で利用する）
-  RE3 = /([^\.])(#{(FILESYSTEM_AND_URL_SAFE_SYMBOLS - [")"]).map { |s| ::Regexp.escape(s) }.join("|")})+$/.freeze
+  RE3 = /([^.])(#{(FILESYSTEM_AND_URL_SAFE_SYMBOLS - [")"]).map { |s| ::Regexp.escape(s) }.join("|")})+$/.freeze
   # ピリオド直前の連続する記号にマッチする正規表現（削除する目的で利用する）
-  RE4 = /([^\.])(#{(FILESYSTEM_AND_URL_SAFE_SYMBOLS - [")"]).map { |s| ::Regexp.escape(s) }.join("|")})+\./.freeze
+  RE4 = /([^.])(#{(FILESYSTEM_AND_URL_SAFE_SYMBOLS - [")"]).map { |s| ::Regexp.escape(s) }.join("|")})+\./.freeze
 
   attr_accessor :duplicate_filenames
 
@@ -65,7 +65,7 @@ class SS::FilenameUtils
     end
 
     def convert_by_underscore(filename, _opts = nil)
-      filename.gsub(/[^\w\-\.]/, "_")
+      filename.gsub(/[^\w\-.]/, "_")
     end
 
     def convert_by_hex(filename, _opts = nil)

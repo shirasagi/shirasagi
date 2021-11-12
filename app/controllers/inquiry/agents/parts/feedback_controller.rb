@@ -10,7 +10,6 @@ class Inquiry::Agents::Parts::FeedbackController < ApplicationController
 
   def set_parent
     @cur_parent ||= @cur_part.parent
-    @cur_parent = @cur_parent.becomes_with_route
   end
 
   def set_columns

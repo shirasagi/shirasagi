@@ -41,9 +41,9 @@ describe "ldap_server", type: :feature, dbscope: :example do
     let(:index_path) { ldap_server_path site.id }
     let(:group_dn) { "ou=001001政策課,ou=001企画政策部,dc=example,dc=jp" }
     let(:user_dn) { "uid=user1,ou=001001政策課,ou=001企画政策部,dc=example,dc=jp" }
-    let(:index2_path) { "/.s#{site.id}/ldap/server/#{URI.escape(group_dn)}" }
-    let(:group_path) { "/.s#{site.id}/ldap/server/#{URI.escape(group_dn)}/group" }
-    let(:user_path) { "/.s#{site.id}/ldap/server/#{URI.escape(user_dn)}/user" }
+    let(:index2_path) { "/.s#{site.id}/ldap/server/#{Addressable::URI.encode(group_dn)}" }
+    let(:group_path) { "/.s#{site.id}/ldap/server/#{Addressable::URI.encode(group_dn)}/group" }
+    let(:user_path) { "/.s#{site.id}/ldap/server/#{Addressable::URI.encode(user_dn)}/user" }
 
     context "with auth" do
       it "#index" do

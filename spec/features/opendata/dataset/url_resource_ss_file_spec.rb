@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_url_resource", dbscope: :example, js: true do
+describe "opendata_url_resource", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let!(:node_search_dataset) { create(:opendata_node_search_dataset) }
   let(:node) { create(:opendata_node_dataset) }

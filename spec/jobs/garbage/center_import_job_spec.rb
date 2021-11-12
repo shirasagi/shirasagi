@@ -8,7 +8,7 @@ describe Garbage::CenterImportJob, dbscope: :example do
     create(
       :garbage_node_center_list,
       site: site,
-      filename: "centers",
+      filename: "centers"
     )
   end
 

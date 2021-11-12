@@ -51,7 +51,6 @@ class Cms::SearchContents::HtmlController < ApplicationController
         replace_html_with_string(keyword, replacement)
       end
     rescue => e
-      #
     end
 
     location = {
@@ -126,8 +125,6 @@ class Cms::SearchContents::HtmlController < ApplicationController
   end
 
   def update_html_fields(item)
-    item = item.becomes_with_route if item.respond_to?(:becomes_with_route)
-
     attributes = {}
     HTML_FIELDS.each do |field|
       next unless item.try(field)
@@ -138,9 +135,7 @@ class Cms::SearchContents::HtmlController < ApplicationController
     true
   end
 
-  def update_column_values_fields(item)
-    item = item.becomes_with_route if item.respond_to?(:becomes_with_route)
-
+  def update_column_values_fields(item, &block)
     item.column_values.each do |column_value|
       attributes = {}
       COLUMN_VALUES_FIELDS.each do |field|
@@ -154,7 +149,7 @@ class Cms::SearchContents::HtmlController < ApplicationController
           attributes[field] = new_value if new_value != old_value
         elsif old_value.is_a?(Array)
           old_value = old_value.map(&:to_s)
-          new_value = old_value.map { |v| yield v }
+          new_value = old_value.map(&block)
           attributes[field] = new_value if new_value != old_value
         end
       end

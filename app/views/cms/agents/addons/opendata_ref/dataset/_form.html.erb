@@ -1,4 +1,4 @@
-<% return "" if @cur_node.becomes_with_route.try(:opendata_site_ids).blank? %>
+<% return "" if @cur_node.try(:opendata_site_ids).blank? %>
 <% return "" if @item.respond_to?(:master?) && !@item.master? %>
 <style type="text/css">
   .mod-cms-opendata-dataset ul { padding: 0px; }

@@ -3,6 +3,7 @@ class History::DownloadParam
   include ActiveModel::Attributes
 
   attr_accessor :cur_site, :cur_user, :user_ids
+
   attribute :encoding, :string
   attribute :save_term, :string
 

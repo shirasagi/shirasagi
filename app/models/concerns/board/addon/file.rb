@@ -5,6 +5,7 @@ module Board::Addon
 
     included do
       attr_accessor :in_files
+
       embeds_ids :files, class_name: "SS::File"
 
       permit_params in_files: []

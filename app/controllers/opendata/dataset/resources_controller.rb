@@ -134,7 +134,7 @@ class Opendata::Dataset::ResourcesController < ApplicationController
 
     return if request.get?
 
-    page = @item.assoc_page.becomes_with_route
+    page = @item.assoc_page
     file = @item.assoc_file
     text = page.opendata_resources_text(file)
     @item.update_resource_with_file!(page, file, @item.license_id, text)

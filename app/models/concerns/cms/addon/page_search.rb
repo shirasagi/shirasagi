@@ -385,7 +385,7 @@ module Cms::Addon
         end
 
         h = {}
-        @item.search_sort.split(" ").each_slice(2) { |k, v| h[k] = (v == "-1") ? -1 : 1 }
+        @item.search_sort.split.each_slice(2) { |k, v| h[k] = (v == "-1") ? -1 : 1 }
         @criteria = @criteria.reorder(h)
       end
     end

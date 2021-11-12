@@ -5,8 +5,8 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
     return if @dataset_node.blank?
 
     @cms_site = Cms::Site.find(site_id)
-    @cms_node = Cms::Node.site(@cms_site).find(node_id).becomes_with_route
-    @cur_page = Cms::Page.site(@cms_site).node(@cms_node).find(page_id).becomes_with_route
+    @cms_node = Cms::Node.site(@cms_site).find(node_id)
+    @cur_page = Cms::Page.site(@cms_site).node(@cms_node).find(page_id)
 
     @file_goes_to = []
 

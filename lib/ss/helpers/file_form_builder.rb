@@ -3,15 +3,15 @@ module SS::Helpers::FileFormBuilder
   include ActionView::Helpers::FormTagHelper
 
   def ss_file_field(method, options = {})
-    ss_mode = @template.instance_variable_get(:"@ss_mode")
-    # cur_site = @template.instance_variable_get(:"@cur_site")
-    cur_user = @template.instance_variable_get(:"@cur_user")
+    ss_mode = @template.instance_variable_get(:@ss_mode)
+    # cur_site = @template.instance_variable_get(:@cur_site)
+    cur_user = @template.instance_variable_get(:@cur_user)
     item = @template.instance_variable_get(:"@#{@object_name}")
     file = item.send(method)
 
     case ss_mode
     when :cms
-      cur_node = @template.instance_variable_get(:"@cur_node")
+      cur_node = @template.instance_variable_get(:@cur_node)
       if cur_node
         path = @template.cms_apis_node_temp_files_path
       else
@@ -41,6 +41,8 @@ module SS::Helpers::FileFormBuilder
       end
       @template.output_buffer << " "
       @template.output_buffer << @template.content_tag(:span, file.try(:humanized_name), class: "humanized-name")
+      @template.output_buffer << " "
+      @template.output_buffer << @template.sanitizer_status(file)
       @template.output_buffer << " "
       @template.output_buffer << @template.hidden_field_tag(
         "#{@object_name}[#{method}_id]", file.try(:id), id: nil, class: "file-id")

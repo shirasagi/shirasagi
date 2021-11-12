@@ -1,9 +1,12 @@
 class SS::ReplaceFile
   include SS::Model::File
+  include SS::Reference::Site
   include SS::Relation::Thumb
-  include SS::Relation::FileBranch
   include SS::Relation::FileHistory
   include SS::Liquidization
+
+  # for backward compatibility
+  self.site_required = false
 
   before_validation :set_source_instance
 
@@ -81,7 +84,7 @@ class SS::ReplaceFile
 
     if item.respond_to?(:form) && item.form
       item.column_values.each do |column_value|
-        if column_value.class == Cms::Column::Value::Free
+        if column_value.instance_of?(Cms::Column::Value::Free)
           column_value.value = replace_html(column_value.value.to_s.dup)
           column_value.save!
         end
@@ -125,6 +128,8 @@ class SS::ReplaceFile
       user = opts[:user]
       site = opts[:site]
       node = opts[:node]
+
+      return false if item.try(:branch?)
 
       if item.try(:public?)
         item.allowed?(:release, user, site: site, node: node)

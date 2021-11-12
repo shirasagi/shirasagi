@@ -5,6 +5,7 @@ module Gws::Addon
 
     included do
       attr_accessor :in_clone_file, :ref_file_ids
+
       embeds_ids :files, class_name: "SS::File"
       permit_params file_ids: [], ref_file_ids: []
 

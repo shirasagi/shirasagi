@@ -34,7 +34,7 @@ module Sys::SiteCopy::CmsContents
     metadata = field.options[:metadata]
     return metadata[:on_copy] if metadata.present?
 
-    if field.association.class == Mongoid::Association::Referenced::BelongsTo
+    if field.association.instance_of?(Mongoid::Association::Referenced::BelongsTo)
       if [Member::Photo, KeyVisual::Image].include?(field.options[:klass])
         if field.association.class_name.constantize.include?(SS::Model::File)
           return :dummy
@@ -109,7 +109,7 @@ module Sys::SiteCopy::CmsContents
       next unless dest_field_names.include?(field_name)
       next if field_value.blank?
 
-      if field_value.class == Array
+      if field_value.instance_of?(Array)
         file_url_maps.each do |src_url, dest_url|
           field_value = field_value.collect do |value|
             value.gsub(src_url, dest_url)

@@ -4,10 +4,7 @@ class Gws::UserCsv::Importer
   # import `t` and `tt`
   extend SS::Document::ClassMethods
 
-  attr_accessor :in_file
-  attr_accessor :cur_site
-  attr_accessor :cur_user
-  attr_accessor :webmail_support
+  attr_accessor :in_file, :cur_site, :cur_user, :webmail_support
   attr_reader :imported
 
   permit_params :in_file, :webmail_support
@@ -269,9 +266,7 @@ class Gws::UserCsv::Importer
     sig = "#{Gws::User.t(:uid)}: #{item.uid}の" if item.uid.present?
     sig ||= "#{Gws::User.t(:email)}: #{item.email}の" if item.email.present?
     sig ||= "#{Gws::User.t(:id)}: #{item.id}の" if item.persisted?
-    item.errors.full_messages.each do |error|
-      errors.add(:base, "#{@row_index}行目: #{sig}#{error}")
-    end
+    SS::Model.copy_errors(item, self, prefix: "#{@row_index}行目: #{sig}")
   end
 
   def save_form_data(item)

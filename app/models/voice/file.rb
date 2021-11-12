@@ -50,13 +50,13 @@ class Voice::File
       prefix = "voice"
       timestamp = Time.zone.now.strftime("%Y%m%d")
       tmp = ::File.join(Dir.tmpdir, "#{prefix}-#{timestamp}")
-      ::Dir.mkdir(tmp) unless ::Dir.exists?(tmp)
+      ::Dir.mkdir(tmp) unless ::Dir.exist?(tmp)
       tmp
     end
   end
 
   def file
-    site_part = site_id.to_s.split(//).join("/")
+    site_part = site_id.to_s.chars.join("/")
     id_part = Digest::SHA1.hexdigest(id.to_s).scan(/.{1,2}/).shift(2).join("/")
     file_part = "#{id}.mp3"
 
@@ -64,7 +64,7 @@ class Voice::File
   end
 
   def exists?
-    Fs.exists?(file)
+    Fs.exist?(file)
   end
 
   def latest?(margin = 60)

@@ -37,7 +37,7 @@ module Opendata::ColumnTypesSearcher::Searcher
         max_similarity = 0
         column_names.each do |column_name|
           next if column_name.blank?
-          similarity = 1 - Levenshtein.normalized_distance(prop[:names].join(''), column_name)
+          similarity = 1 - Levenshtein.normalized_distance(prop[:names].join, column_name)
           max_similarity = similarity if max_similarity < similarity
         end
 

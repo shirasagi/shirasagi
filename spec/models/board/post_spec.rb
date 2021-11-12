@@ -46,7 +46,7 @@ describe Board::Post, type: :model, dbscope: :example do
 
   describe "validation" do
     let(:node) { create :board_node_post }
-    let(:item) { create :board_post, cur_node: node}
+    let(:item) { create :board_post, cur_node: node }
     let(:child_item) { create(:board_post, node: node, topic_id: item.id, parent_id: item.parent_id) }
 
     it "presence_validation" do
@@ -60,8 +60,8 @@ describe Board::Post, type: :model, dbscope: :example do
       end
 
       it do
-        expect(item.invalid?).to be_truthy
-        expect(item.errors.messages[:delete_key]).to include(I18n.t('board.errors.invalid_delete_key'))
+        expect(item).to be_invalid
+        expect(item.errors[:delete_key]).to include(I18n.t('board.errors.invalid_delete_key'))
       end
     end
   end

@@ -25,10 +25,6 @@ class Cms::Page::MoveJob < Cms::ApplicationJob
       @task.count
       @task.log item.full_url
 
-      if item.respond_to?(:becomes_with_route)
-        item = item.becomes_with_route rescue item
-      end
-
       replace_html_fields(item)
       replace_array_fields(item)
       replace_column_values(item)
@@ -47,7 +43,7 @@ class Cms::Page::MoveJob < Cms::ApplicationJob
 
   def each_item(&block)
     or_conds = []
-    or_conds += Cms::ApiFilter::Contents::HTML_FIELDS.map { |field| { field => /=\"#{::Regexp.escape(@src)}/ } }
+    or_conds += Cms::ApiFilter::Contents::HTML_FIELDS.map { |field| { field => /="#{::Regexp.escape(@src)}/ } }
     or_conds += Cms::ApiFilter::Contents::ARRAY_FIELDS.map { |field| { field => /\A#{::Regexp.escape(@src)}/ } }
     or_conds << {
       column_values: {

@@ -20,11 +20,11 @@ describe Jmaxml::Trigger::TornadoAlert, dbscope: :example do
     subject { create(:jmaxml_trigger_tornado_alert) }
 
     before do
-      region_1310100 = create(:jmaxml_forecast_region_1310100)
-      region_1310200 = create(:jmaxml_forecast_region_1310200)
-      region_1310300 = create(:jmaxml_forecast_region_1310300)
-      region_1310400 = create(:jmaxml_forecast_region_1310400)
-      subject.target_region_ids = [ region_1310100.id, region_1310200.id, region_1310300.id, region_1310400.id ]
+      region_c1310100 = create(:jmaxml_forecast_region_c1310100)
+      region_c1310200 = create(:jmaxml_forecast_region_c1310200)
+      region_c1310300 = create(:jmaxml_forecast_region_c1310300)
+      region_c1310400 = create(:jmaxml_forecast_region_c1310400)
+      subject.target_region_ids = [ region_c1310100.id, region_c1310200.id, region_c1310300.id, region_c1310400.id ]
       subject.save!
     end
 

@@ -17,7 +17,7 @@ module Gws::Share::DescendantsFileInfo
   def total_file_size
     return @total_file_size if @total_file_size
 
-    @total_file_size = files.compact.map(&:size).inject(:+) || 0
+    @total_file_size = files.compact.map(&:size).sum
   end
 
   # def files_count
@@ -98,7 +98,7 @@ module Gws::Share::DescendantsFileInfo
   #   sizes = folder.files.compact.map(&:size) || []
   #   sizes.compact!
   #
-  #   [ sizes.length, sizes.inject(:+) || 0 ]
+  #   [ sizes.length, sizes.sum ]
   # end
 
   # def set_file_info

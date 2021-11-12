@@ -7,6 +7,7 @@ module SS::Addon
 
     included do
       attr_accessor :in_clone_file, :ref_file_ids, :link_urls
+
       embeds_ids :files, class_name: "SS::LinkFile"
       permit_params file_ids: [], ref_file_ids: [], link_urls: {}
 

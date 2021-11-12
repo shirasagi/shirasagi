@@ -37,10 +37,4 @@ describe Cms::Layout do
       end
     end
   end
-
-  describe "#becomes_with_route" do
-    subject { model.last }
-    it { expect{ subject.becomes_with_route }.not_to raise_error }
-    it { expect(subject.becomes_with_route).to be subject }
-  end
 end

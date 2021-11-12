@@ -81,7 +81,7 @@ describe "jmaxml/forecast_regions", type: :feature, dbscope: :example do
   end
 
   context 'search' do
-    let!(:region) { create :jmaxml_forecast_region_0110000 }
+    let!(:region) { create :jmaxml_forecast_region_c0110000 }
 
     before { login_cms_user }
 

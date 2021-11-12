@@ -65,7 +65,7 @@ class Cms::Elasticsearch::PageConvertor
   end
 
   def item_text
-    if Fs.exists?(item.path)
+    if Fs.exist?(item.path)
       html = Fs.read(item.path)
     else
       html = item.html

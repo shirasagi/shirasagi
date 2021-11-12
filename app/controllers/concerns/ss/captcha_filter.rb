@@ -51,7 +51,7 @@ module SS::CaptchaFilter
     captcha
   end
 
-  def is_captcha_valid?(item)
+  def captcha_valid?(item)
     item.attributes = get_captcha
     return item.valid_with_captcha?
   end

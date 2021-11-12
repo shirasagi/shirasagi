@@ -1,0 +1,36 @@
+<div class="index">
+  <%= render file: "_list_head" %>
+
+  <ul class="list-items">
+    <% @items.each do |item| %>
+      <% item = @item_decorator.call(item) if @item_decorator %>
+      <li class="list-item">
+        <nav class="tap-menu">
+          <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user) %>
+        </nav>
+
+        <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>"/></label>
+        <div class="info">
+          <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
+          <%= link_to title, { action: :show, id: item }, class: "title" %>
+
+          <div class="meta">
+            <span class="id">#<%= item.id %></span>
+            <% if item.try(:updated) %>
+              <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+            <% end %>
+            <% if item.try(:filename) %>
+              <% if params.dig(:s, :target) == 'descendant' %>
+                <span class="filename"><%= item.filename %></span>
+              <% else %>
+                <span class="filename"><%= File.basename item.filename %></span>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

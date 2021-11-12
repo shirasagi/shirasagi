@@ -3,8 +3,7 @@ class Gws::Attendance::DownloadParam
   include ActiveModel::Model
   include SS::PermitParams
 
-  attr_accessor :cur_site, :cur_user
-  attr_accessor :from_date, :to_date, :user_ids, :encoding
+  attr_accessor :cur_site, :cur_user, :from_date, :to_date, :user_ids, :encoding
 
   permit_params :from_date, :to_date, :encoding
   permit_params user_ids: []

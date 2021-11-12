@@ -173,8 +173,8 @@ describe "sys_sites", type: :feature, dbscope: :example do
         expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
         page1.reload
         page2.reload
-        expect(Fs.exists?(page1.path)).to be_truthy
-        expect(Fs.exists?(page2.path)).to be_truthy
+        expect(Fs.exist?(page1.path)).to be_truthy
+        expect(Fs.exist?(page2.path)).to be_truthy
       end
     end
 
@@ -194,8 +194,8 @@ describe "sys_sites", type: :feature, dbscope: :example do
         expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
         page1.reload
         page2.reload
-        expect(Fs.exists?(page1.path)).to be_truthy
-        expect(Fs.exists?(page2.path)).to be_truthy
+        expect(Fs.exist?(page1.path)).to be_truthy
+        expect(Fs.exist?(page2.path)).to be_truthy
 
         click_on I18n.t("ss.links.edit")
         within "form#item-form" do
@@ -207,8 +207,8 @@ describe "sys_sites", type: :feature, dbscope: :example do
         expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
         page1.reload
         page2.reload
-        expect(Fs.exists?(page1.path)).to be_truthy
-        expect(Fs.exists?(page2.path)).to be_truthy
+        expect(Fs.exist?(page1.path)).to be_truthy
+        expect(Fs.exist?(page2.path)).to be_truthy
       end
     end
 
@@ -229,8 +229,8 @@ describe "sys_sites", type: :feature, dbscope: :example do
         expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
         page1.reload
         page2.reload
-        expect(Fs.exists?(page1.path)).to be_truthy
-        expect(Fs.exists?(page2.path)).to be_truthy
+        expect(Fs.exist?(page1.path)).to be_truthy
+        expect(Fs.exist?(page2.path)).to be_truthy
 
         click_on I18n.t("ss.links.edit")
         within "form#item-form" do
@@ -243,8 +243,8 @@ describe "sys_sites", type: :feature, dbscope: :example do
         expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
         page1.reload
         page2.reload
-        expect(Fs.exists?(page1.path)).to be_truthy
-        expect(Fs.exists?(page2.path)).to be_truthy
+        expect(Fs.exist?(page1.path)).to be_truthy
+        expect(Fs.exist?(page2.path)).to be_truthy
       end
     end
   end

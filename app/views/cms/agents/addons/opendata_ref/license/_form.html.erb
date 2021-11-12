@@ -1,11 +1,11 @@
-<% return "" if @cur_node.becomes_with_route.try(:opendata_site_ids).blank? %>
+<% return "" if @cur_node.try(:opendata_site_ids).blank? %>
 <% return "" if @item.respond_to?(:master?) && !@item.master? %>
 <%
   addon ||= local_assigns.fetch(:addon, {})
   addon[:display_body] = "hide"
 %>
 
-<% licenses = Opendata::License.in(site_id: @cur_node.becomes_with_route.opendata_site_ids).and_public.pluck(:name, :id) %>
+<% licenses = Opendata::License.in(site_id: @cur_node.opendata_site_ids).and_public.pluck(:name, :id) %>
 <dl class="see mod-cms-opendata-license">
   <dt><%= @model.t :opendata_license_ids %><%= @model.tt :opendata_license_ids %></dt>
   <dd>

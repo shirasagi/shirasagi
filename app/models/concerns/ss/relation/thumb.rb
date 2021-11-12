@@ -8,7 +8,7 @@ module SS::Relation::Thumb
 
     has_many :thumbs, class_name: "SS::ThumbFile", foreign_key: :original_id, dependent: :destroy
     after_save :destroy_thumbs, if: -> { in_file || resizing }
-    after_save :save_thumbs, if: -> { disable_thumb.blank? && image? }
+    after_save :save_thumbs
 
     thumb_size [SS::ImageConverter::DEFAULT_THUMB_WIDTH, SS::ImageConverter::DEFAULT_THUMB_HEIGHT]
   end
@@ -37,7 +37,7 @@ module SS::Relation::Thumb
   end
 
   def thumb_url
-    thumb ? thumb.url : super
+    thumb.try { |file| file.url } || super
   end
 
   def thumb?
@@ -66,7 +66,9 @@ module SS::Relation::Thumb
   private
 
   def save_thumbs
-    thumbs_was = thumbs.map { |t| [t.image_size, t] }.to_h
+    return if disable_thumb.present? || !image?
+
+    thumbs_was = thumbs.index_by { |t| t.image_size }
     thumbs_resizing = self.class.thumbs_resizing
     thumbs_resizing = thumbs_resizing.symbolize_keys.compact
     thumbs_resizing = thumbs_resizing.invert.invert # delete duplicate values

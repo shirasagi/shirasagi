@@ -4,6 +4,7 @@ module Webmail::Addon::GroupExtension
 
   included do
     attr_accessor :default_imap_setting
+
     field :imap_settings, type: Webmail::Extensions::ImapSettings, default: []
     permit_params imap_settings: %i(
       name from address imap_host imap_port imap_ssl_use
@@ -63,6 +64,6 @@ module Webmail::Addon::GroupExtension
     imap_setting.set_imap_password
     self.imap_settings = [imap_setting]
     return if imap_setting.valid?(:group)
-    errors.add :base, imap_setting.errors.full_messages.join(", ")
+    SS::Model.copy_errors(imap_setting, self)
   end
 end

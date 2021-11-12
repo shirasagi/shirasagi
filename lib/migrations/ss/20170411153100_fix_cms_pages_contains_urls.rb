@@ -8,8 +8,6 @@ class SS::Migration20170411153100
     ids.each do |id|
       item = Cms::Page.find(id) rescue nil
       next unless item
-
-      item = item.becomes_with_route
       next unless item.respond_to?(:contains_urls)
 
       if item.respond_to?(:set_contains_urls, true)

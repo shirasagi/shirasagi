@@ -93,7 +93,7 @@ class Webmail::UserAccountsController < ApplicationController
 
     result = @user.save
     if !result
-      @item.errors.messages[:base] += @user.errors.full_messages
+      SS::Model.copy_errors(@user, @item)
     end
 
     @index = @user.imap_settings.length - 1
@@ -120,7 +120,7 @@ class Webmail::UserAccountsController < ApplicationController
 
     result = @user.save
     if !result
-      @item.errors.messages[:base] += @user.errors.full_messages
+      SS::Model.copy_errors(@user, @item)
     end
     render_update result
   end
@@ -150,7 +150,7 @@ class Webmail::UserAccountsController < ApplicationController
 
     result = @user.save
     if !result
-      @item.errors.messages[:base] += @user.errors.full_messages
+      SS::Model.copy_errors(@user, @item)
     end
     render_destroy result
   end

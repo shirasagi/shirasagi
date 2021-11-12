@@ -33,7 +33,7 @@ module Gws::Addon::Schedule::FacilityColumnValues
     new_values.each do |new_value|
       old = column_values.find { |column_value| column_value.column_id == new_value.column_id }
       if old.present?
-        if old.class == new_value.class
+        if old.instance_of?(new_value.class)
           old.update_value(new_value)
         else
           column_values.delete_if { |column_value| column_value.column_id == new_value.column_id }

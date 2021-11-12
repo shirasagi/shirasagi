@@ -63,7 +63,7 @@ module Webmail::UserExtension
     self.imap_settings.each_with_index do |setting, i|
       setting.valid?
       if setting.errors.present?
-        self.errors.add :base, "#{I18n.t("webmail.account_setting")}#{i + 1}: #{setting.errors.full_messages.join(", ")}"
+        SS::Model.copy_errors(setting, self, prefix: "#{I18n.t("webmail.account_setting")}#{i + 1}: ")
       end
     end
   end

@@ -17,7 +17,7 @@ class Jmaxml::Trigger::FloodForecast < Jmaxml::Trigger::Base
     context[:type] = Jmaxml::Type::FLOOD
     context[:area_codes] = area_codes
 
-    return true unless block_given?
+    return true unless block
 
     yield
   end

@@ -25,7 +25,6 @@ class Cms::PageSearch
     CSV.generate do |data|
       data << csv_headers.map { |k| t k }
       search.each do |item|
-        item = item.becomes_with_route
         data << csv_line(item)
       end
     end

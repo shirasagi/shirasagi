@@ -18,8 +18,6 @@ class SS::Migration20200625000000
 
       pages.each do |page|
         next if page.site.blank? # unable to fix because site has been deleted
-
-        page = page.becomes_with_route
         next if equal_page?(owner_item, page)
 
         new_file = clone_file(page, file)
@@ -30,14 +28,12 @@ class SS::Migration20200625000000
 
   private
 
-  def group_by_thumb
+  def group_by_thumb(&block)
     criteria = Cms::Page.unscoped.exists(thumb_id: true)
     all_thumb_ids = criteria.pluck(:thumb_id).sort.uniq
     all_thumb_ids.each_slice(20) do |thumb_ids|
       pages = criteria.in(thumb_id: thumb_ids).to_a
-      pages.group_by { |page| page.thumb_id }.each do |thumb_id, pages|
-        yield thumb_id, pages
-      end
+      pages.group_by { |page| page.thumb_id }.each(&block)
     end
   end
 

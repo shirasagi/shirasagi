@@ -22,7 +22,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
   end
 
   def set_item
-    @item = @cur_page = Cms::Page.site(@cur_site).find(params[:page_id]).becomes_with_route
+    @item = @cur_page = Cms::Page.site(@cur_site).find(params[:page_id])
     @item.attributes = fix_params
     raise "404" if !@item.respond_to?(:form) || !@item.respond_to?(:column_values)
 
@@ -85,7 +85,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     result = branch.save
 
     if !result
-      @cur_column_value.errors.messages[:base] += branch.errors.full_messages
+      SS::Model.copy_errors(branch, @cur_column_value)
       render_create_as_branch false
       return
     end
@@ -131,7 +131,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     branch.master = @item
     result = branch.save
     if !result
-      @cur_column_value.errors.messages[:base] += branch.errors.full_messages
+      SS::Model.copy_errors(branch, @cur_column_value)
       render_save_as_branch false
       return
     end
