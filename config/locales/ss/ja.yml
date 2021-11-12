@@ -46,6 +46,7 @@ ja:
     after_replace: 差し替え後
     broken_link: リンク切れ
     auto_reload: 自動更新
+    quality: 品質
 
     views:
       login/login:

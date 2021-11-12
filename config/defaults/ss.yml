@@ -52,6 +52,18 @@ production: &production
   # history log saving days
   history_log_saving_days: 90
 
+  quality_options:
+    - label: 高品質
+      quality: 85
+    - label: 中高品質
+      quality: 60
+    - label: 中品質
+      quality: 55
+    - label: 低中品質
+      quality: 40
+    - label: 低品質
+      quality: 25
+
 test:
   <<: *production
   disable: false

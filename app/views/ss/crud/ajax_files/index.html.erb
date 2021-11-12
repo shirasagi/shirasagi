@@ -25,6 +25,7 @@
     <div class="search-ui-form">
       <%= f.file_field :in_files, multiple: :multiple, required: :required %>
       <%= f.select :resizing, @model.resizing_options(node: @cur_node), { include_blank: t("ss.resize_image") }, { class: "image-size" } %>
+      <%= f.select :quality, @model.quality_options, { include_blank: t("ss.quality") } %>
       <% if disable_image_resizes %>
         <%= f.select :image_resizes_disabled, @model.image_resizes_disabled_options %>
         <div class="tooltip">?

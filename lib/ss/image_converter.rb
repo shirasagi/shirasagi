@@ -120,7 +120,7 @@ class SS::ImageConverter
   end
 
   def quality!(quality)
-    @commands << [ :quality, quality ]
+    @commands << [:quality, quality ]
     self
   end
 

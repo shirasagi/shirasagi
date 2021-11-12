@@ -9,7 +9,7 @@ module Gws::Model::File
   include SS::CsvHeader
   include ActiveSupport::NumberHelper
 
-  attr_accessor :in_file, :resizing, :image_resizes_disabled
+  attr_accessor :in_file, :resizing, :quality, :image_resizes_disabled
 
   included do
     store_in collection: "ss_files"
@@ -26,7 +26,7 @@ module Gws::Model::File
 
     attr_accessor :in_data_url
 
-    permit_params :in_file, :state, :name, :filename, :resizing, :image_resizes_disabled, :in_data_url
+    permit_params :in_file, :state, :name, :filename, :resizing, :quality, :image_resizes_disabled, :in_data_url
 
     before_validation :set_filename, if: ->{ in_file.present? }
     before_validation :normalize_name
@@ -71,6 +71,10 @@ module Gws::Model::File
         size = v.split(',').collect(&:to_i)
         size[0] < min_width && size[1] < min_height
       end
+    end
+
+    def quality_options
+      SS.config.ss.quality_options.collect { |v| [ v['label'], v['quality'] ] }
     end
 
     def image_resizes_disabled_options
@@ -256,7 +260,7 @@ module Gws::Model::File
 
     run_callbacks(:_save_file) do
       SS::ImageConverter.attach(in_file, ext: ::File.extname(in_file.original_filename)) do |converter|
-        converter.apply_defaults!(resizing: resizing_with_max_file_size, quality: quality)
+        converter.apply_defaults!(resizing: resizing_with_max_file_size, quality: quality_with_max_file_size)
         Fs.upload(path, converter.to_io)
         self.geo_location = converter.geo_location
       end
@@ -296,8 +300,8 @@ module Gws::Model::File
     size
   end
 
-  def quality
-    quality = []
+  def quality_with_max_file_size
+    quality = [self.quality.try(:to_i)]
     max_file_sizes = []
     if user.blank? || !SS::ImageResize.allowed?(:disable, user) || image_resizes_disabled != 'disabled'
       max_file_sizes += SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).to_a
