@@ -5,14 +5,14 @@
       <%= link_to t('ss.links.download'), action: :download %>
       <%= link_to t('ss.links.import'), action: :import %>
     <% end %>
-  <% elsif params[:action] =~ /new|create/ %>
+  <% elsif params[:action] =~ /new|create|destroy_all/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /edit|update|delete/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
-  <% elsif params[:action] =~ /import/ %>
+  <% elsif params[:action] =~ /import|destroy_all/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>

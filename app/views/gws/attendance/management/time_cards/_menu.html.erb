@@ -4,7 +4,7 @@
     <%= link_to t('ss.links.download'), action: :download, s: params[:s].try(:to_unsafe_h) %>
     <%= link_to t('gws/attendance.links.lock'), action: :lock, s: params[:s].try(:to_unsafe_h) %>
     <%= link_to t('gws/attendance.links.unlock'), action: :unlock, s: params[:s].try(:to_unsafe_h) %>
-  <% elsif params[:action] =~ /new|create|lock|unlock|download/ %>
+  <% elsif params[:action] =~ /new|create|lock|unlock|download|destroy_all/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /edit|update|delete|move/ %>
     <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>

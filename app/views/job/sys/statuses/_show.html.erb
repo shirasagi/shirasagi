@@ -1,0 +1,19 @@
+<dl class="see">
+  <dt><%= "active_job.queue_adapter" %></dt>
+  <dd><%= Rails.application.config.active_job.queue_adapter %></dd>
+
+  <dt><%= "job.mode" %></dt>
+  <dd><%= Job::Service.config.mode %></dd>
+
+  <dt><%= "job.polling_queues" %></dt>
+  <dd><%= Job::Service.config.polling.queues.join(", ") %></dd>
+
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.try(:name) %></dd>
+
+  <dt><%= @model.t :current_count %></dt>
+  <dd><%= @item.try(:current_count).try { |num| num.to_s(:delimited) } %></dd>
+
+  <dt><%= @model.t :updated %></dt>
+  <dd><%= @item.try(:updated).try { |time| I18n.l(time, format: :picker) } %></dd>
+</dl>

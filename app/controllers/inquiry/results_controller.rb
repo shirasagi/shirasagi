@@ -18,7 +18,6 @@ class Inquiry::ResultsController < ApplicationController
   end
 
   def set_aggregation
-    @cur_node = @cur_node.becomes_with_route
     raise "403" if @cur_node.route != "inquiry/form"
     @columns = @cur_node.columns.order_by(order: 1)
     @answer_count = @cur_node.answers.site(@cur_site).allow(:read, @cur_user).count
@@ -62,6 +61,6 @@ class Inquiry::ResultsController < ApplicationController
     end
 
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
-              filename: "inquiry_results_#{Time.zone.now.to_i}.csv"
+      filename: "inquiry_results_#{Time.zone.now.to_i}.csv"
   end
 end

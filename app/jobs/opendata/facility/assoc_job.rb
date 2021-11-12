@@ -7,7 +7,7 @@ class Opendata::Facility::AssocJob < Cms::ApplicationJob
     return if @dataset_node.blank?
 
     @facility_site = Cms::Site.find(facility_site_id)
-    @facility_node = Cms::Node.site(@facility_site).find(facility_node_id).becomes_with_route
+    @facility_node = Cms::Node.site(@facility_site).find(facility_node_id)
     @forcibly_updates = forcibly_updates
 
     import_csv_as_resource
@@ -29,7 +29,7 @@ class Opendata::Facility::AssocJob < Cms::ApplicationJob
   end
 
   def download_csv
-    open("#{@facility_node.full_url}index.csv") do |f|
+    URI.open("#{@facility_node.full_url}index.csv") do |f|
       f.binmode
 
       @csv_file = Fs::UploadedFile.new("opendata")
@@ -71,7 +71,7 @@ class Opendata::Facility::AssocJob < Cms::ApplicationJob
     resource = @dataset.resources.new
     resource.name = @facility_node.name
     resource.text = I18n.t("opendata.assoc_job.resource_text",
-                           name: @facility_node.name, now: I18n.l(Time.zone.now, format: :long))
+      name: @facility_node.name, now: I18n.l(Time.zone.now, format: :long))
     resource.license_id = find_license.id
     resource.in_file = @csv_file
     resource.save!

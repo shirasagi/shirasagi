@@ -69,8 +69,8 @@ namespace :cms do
         if ENV['synonym']
           settings["analysis"]["analyzer"]["my_ja_analyzer"]["filter"].push("synonym")
           settings["analysis"]["filter"]["synonym"] = {
-            "type": "synonym",
-            "synonyms_path": "/etc/elasticsearch/synonym.txt"
+            type: "synonym",
+            synonyms_path: "/etc/elasticsearch/synonym.txt"
           }
         end
 

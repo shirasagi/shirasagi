@@ -29,6 +29,7 @@ module SS::Model::Task
     field :interrupt, type: String
     field :started, type: DateTime
     field :closed, type: DateTime
+    field :at, type: Integer
     field :total_count, type: Integer, default: 0
     field :current_count, type: Integer, default: 0
 
@@ -180,12 +181,12 @@ module SS::Model::Task
 
     self.unset(:logs) if self[:logs].present?
 
-    ::FileUtils.rm_f(log_file_path) if log_file_path && ::File.exists?(log_file_path)
+    ::FileUtils.rm_f(log_file_path) if log_file_path && ::File.exist?(log_file_path)
   end
 
   def log_file_path
     return if new_record?
-    @log_file_path ||= "#{SS::File.root}/ss_tasks/" + id.to_s.split(//).join("/") + "/_/#{id}.log"
+    @log_file_path ||= "#{SS::File.root}/ss_tasks/" + id.to_s.chars.join("/") + "/_/#{id}.log"
   end
 
   def perf_log_file_path
@@ -194,7 +195,7 @@ module SS::Model::Task
   end
 
   def logs
-    if log_file_path && ::File.exists?(log_file_path)
+    if log_file_path && ::File.exist?(log_file_path)
       return ::File.readlines(log_file_path, chomp: true) rescue []
     end
 
@@ -202,7 +203,7 @@ module SS::Model::Task
   end
 
   def head_logs(num_logs = 1_000)
-    if log_file_path && ::File.exists?(log_file_path)
+    if log_file_path && ::File.exist?(log_file_path)
       texts = []
       ::File.open(log_file_path) do |f|
         num_logs.times do
@@ -219,7 +220,7 @@ module SS::Model::Task
   def log(msg)
     @log_file ||= begin
       dirname = ::File.dirname(log_file_path)
-      ::FileUtils.mkdir_p(dirname) unless ::Dir.exists?(dirname)
+      ::FileUtils.mkdir_p(dirname) unless ::Dir.exist?(dirname)
 
       file = ::File.open(log_file_path, 'a')
       file.sync = true

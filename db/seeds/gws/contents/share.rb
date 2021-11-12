@@ -44,14 +44,12 @@ end
 ## -------------------------------------
 puts "# share/file"
 
-def sh_upload_file(path, options = {})
+def sh_upload_file(path, options = {}, &block)
   path = File.expand_path(path, "#{Rails.root}/db/seeds/gws/files")
   filename = options[:filename] || ::File.basename(path)
   content_type = options[:content_type] || ::Fs.content_type(path)
 
-  Fs::UploadedFile.create_from_file(path, filename: filename, content_type: content_type) do |f|
-    yield f
-  end
+  Fs::UploadedFile.create_from_file(path, filename: filename, content_type: content_type, &block)
 end
 
 def create_share_file(data)

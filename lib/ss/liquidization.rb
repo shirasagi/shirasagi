@@ -8,10 +8,10 @@ module SS::Liquidization
 
       export_name = options[:as] || args.first
       raise "export name is required" if export_name.blank?
-      raise "block is required" if args.first.nil? && !block_given?
+      raise "block is required" if args.first.nil? && !block
 
       define_method(export_name.to_s) do
-        if block_given?
+        if block
           @delegatee.instance_exec(@context, &block)
         else
           @delegatee.send(args.first)

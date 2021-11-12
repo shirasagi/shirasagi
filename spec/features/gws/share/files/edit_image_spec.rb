@@ -10,15 +10,23 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
   def extract_image_info(filepath)
     image = MiniMagick::Image.open(filepath)
-    image_details = image.details
+    if MiniMagick.graphicsmagick?
+      image_details = image.details
+      image_class_type = image_details["Class"]
+      image_depth = image_details["Depth"]
+    else
+      image_data = image.data
+      image_class_type = image_data["class"]
+      image_depth = "#{image_data["depth"]}-bits"
+    end
 
     {
       filename: ::File.basename(filepath),
       format: image.type,
       width: image.width,
       height: image.height,
-      class_type: image_details["Class"],
-      depth: image_details["Depth"],
+      class_type: image_class_type,
+      depth: image_depth,
       # colors: img.number_colors,
       size: image.size,
       resolution: { x: image.height[0], y: image.height[1] }
@@ -62,24 +70,46 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       end
     end
 
-    context "with png" do
-      let!(:item) do
-        Fs::UploadedFile.create_from_file("#{Rails.root}/spec/fixtures/webapi/replace.png") do |f|
-          create(:gws_share_file, folder_id: folder.id, category_ids: [category.id], in_file: f)
+    shared_examples "with png and jpg" do
+      context "with png" do
+        let!(:item) do
+          Fs::UploadedFile.create_from_file("#{Rails.root}/spec/fixtures/webapi/replace.png") do |f|
+            create(:gws_share_file, folder_id: folder.id, category_ids: [category.id], in_file: f)
+          end
         end
+
+        include_context "rotate image"
       end
 
-      include_context "rotate image"
+      context "with jpg" do
+        let!(:item) do
+          Fs::UploadedFile.create_from_file("#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg") do |f|
+            create(:gws_share_file, folder_id: folder.id, category_ids: [category.id], in_file: f)
+          end
+        end
+
+        include_context "rotate image"
+      end
     end
 
-    context "with jpg" do
-      let!(:item) do
-        Fs::UploadedFile.create_from_file("#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg") do |f|
-          create(:gws_share_file, folder_id: folder.id, category_ids: [category.id], in_file: f)
+    context "with ImageMagick6" do
+      around do |example|
+        MiniMagick.with_cli(:imagemagick) do
+          example.run
         end
       end
 
-      include_context "rotate image"
+      include_context "with png and jpg"
+    end
+
+    context "with GraphicsMagick" do
+      around do |example|
+        MiniMagick.with_cli(:graphicsmagick) do
+          example.run
+        end
+      end
+
+      include_context "with png and jpg"
     end
   end
 end

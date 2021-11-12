@@ -18,7 +18,7 @@
         <%= link_to t('ss.links.delete'), action: :file, filename: item.filename, do: :delete if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
       </nav>
 
-      <label class="check"><input type="checkbox" name="ids[]" value="<%= item.name %>" /></label>
+      <label class="check"><input type="checkbox" name="ids[]" value="<%= item.name %>"></label>
       <div class="info">
         <% if item.directory? %>
           <%= link_to item.name, { action: :file, filename: item.filename }, class: "list-item-title dir" %>
@@ -29,6 +29,7 @@
         <div class="list-item-meta">
           <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
           <span class="filename"><%= item.name %></span>
+          <%= sanitizer_status(item) %>
         </div>
       </div>
     </li>

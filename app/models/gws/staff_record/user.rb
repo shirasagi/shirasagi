@@ -32,9 +32,9 @@ class Gws::StaffRecord::User
   attr_accessor :in_title_id
 
   permit_params :name, :code, :order, :kana, :multi_section, :section_name,
-                :tel_ext, :charge_name, :charge_address, :charge_tel,
-                :divide_duties, :remark, :staff_records_view, :divide_duties_view,
-                :in_title_id
+    :tel_ext, :charge_name, :charge_address, :charge_tel,
+    :divide_duties, :remark, :staff_records_view, :divide_duties_view,
+    :in_title_id
 
   validates :name, presence: true
   validates :code, presence: true

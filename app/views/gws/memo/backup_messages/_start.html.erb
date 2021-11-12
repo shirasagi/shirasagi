@@ -1,0 +1,12 @@
+<%= error_messages_for :item %>
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head"><h2><%= t("ss.#{action}") %></h2></div>
+    <div class="addon-body">
+      <div><%=br t("gws/memo/message.#{action}.start_message") %></div>
+    </div>
+    <footer class="send">
+      <%= link_to t('ss.links.back'), { action: :index } , { class: "btn btn-primary" } %>
+    </footer>
+  </div>
+</div>

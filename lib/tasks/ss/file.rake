@@ -6,7 +6,7 @@ namespace :ss do
 
       begin
         dir = File.dirname(file.path)
-        FileUtils.mkdir_p(dir) unless File.exists?(dir)
+        FileUtils.mkdir_p(dir) unless File.exist?(dir)
 
         fs = Mongoid::GridFs.get file[:file_id]
         File.binwrite file.path, fs.data

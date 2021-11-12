@@ -6,7 +6,7 @@ describe "jmaxml/trigger/tsunami_alerts", type: :feature, dbscope: :example, js:
   let(:index_path) { jmaxml_trigger_bases_path(site, node) }
 
   context "basic crud" do
-    let!(:region) { create(:jmaxml_tsunami_region_100) }
+    let!(:region) { create(:jmaxml_tsunami_region_c100) }
     let(:model) { Jmaxml::Trigger::TsunamiAlert }
     let(:name1) { unique_id }
     let(:name2) { unique_id }

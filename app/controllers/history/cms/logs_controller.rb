@@ -4,7 +4,7 @@ class History::Cms::LogsController < ApplicationController
 
   model History::Log
 
-  navi_view "cms/main/conf_navi"
+  navi_view "history/cms/logs/navi"
 
   before_action :filter_permission
 

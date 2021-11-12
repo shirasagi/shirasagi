@@ -59,7 +59,7 @@ describe 'members/agents/nodes/login', type: :feature, dbscope: :example, js: tr
     let!(:member) { create :cms_member, cur_site: site }
 
     it do
-      visit "#{login_node.full_url}login.html" + "?" + { ref: URI.encode("https://www.ss-proj.org/") }.to_query
+      visit "#{login_node.full_url}login.html" + "?" + { ref: Addressable::URI.encode("https://www.ss-proj.org/") }.to_query
 
       within ".form-login" do
         fill_in "item[email]", with: member.email

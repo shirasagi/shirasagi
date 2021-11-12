@@ -1,10 +1,12 @@
 ja:
   ss:
+    backup: バックアップ
     basic_info: 基本情報
     config: 設定
     management: 管理
     download: ダウンロード
     file: ファイル
+    function: 機能
     page: ページ
     node: フォルダー
     group_users: 所属ユーザー
@@ -16,12 +18,16 @@ ja:
     login: ログイン
     logout: ログアウト
     module: モジュール
+    operation: 操作
     regexp: 正規表現
     resize_image: 画像リサイズ
     role: ロール
     role_setting: ロール一括設定
     required: 必須入力
     required_field: ※必須入力
+    restore: 復元
+    search_operation: 操作対象
+    search_operator: 操作実行者
     search_result: 検索結果
     url: URL
     login_url: ログインURL
@@ -41,6 +47,7 @@ ja:
     before_replace: 差し替え前
     after_replace: 差し替え後
     broken_link: リンク切れ
+    auto_reload: 自動更新
 
     views:
       login/login:
@@ -120,6 +127,7 @@ ja:
       closed_save: 非公開保存
       publish: 公開
       publish_save: 公開保存
+      withdraw: 取り下げ
       ignore_alert: 警告を無視する
       cancel: キャンセル
       edit: 編集
@@ -139,7 +147,9 @@ ja:
       move: 移動
       moving: 移動中
       import: インポート
+      restore_message: 復元
       importing: インポート中
+      restoring_message: 復元中
       convert: 変換
       unlock_and_edit_forcibly: 強制的にロックを解除し編集する
       random_gen: ランダム生成
@@ -196,9 +206,14 @@ ja:
       restore_file: ファイルを復元してもよろしいですか？
       delete_file_histories: ファイル履歴を削除してもよろしいですか？
       contains_url_expect: このページにリンクを貼っているページがあるため、処理を中断します。貼っているリンクを全て解除してから操作を続行してください。
+      contains_links_in_file: このページに対して、リンクを貼っている他のページがあるため削除できません
+      contains_links_in_file_ignoring_alert: 被リンクを確認の上、チェックボックスをクリックして削除してください。
+      not_contains_links_in_file: 被リンクがないので削除できます。
+      target_to_delete: 削除対象の確認
     notice:
       saved: 保存しました。
       deleted: 削除しました。
+      unable_to_delete: '%{items} を削除できませんでした。'
       copied: 複製しました。
       started_import: インポートを開始しました。
       sent: 送信しました。
@@ -229,6 +244,11 @@ ja:
       set_star_all: スターをつけました。
       unset_star_all: スターをはずしました。
       replace_saved: 差し替え保存しました。
+      max_file_size_hard_limit_short_notice: "（%{human_size} 以下）"
+      max_file_size_hard_limit_long_notices:
+        - "サーバ設定でファイルのアップロード容量の上限が %{human_size} に設定されています。"
+        - これを超える制限サイズを設定しても有効に機能しません。
+        - サーバ設定の変更を希望される場合はシステム管理者にお問い合わせください。
 
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
@@ -412,6 +432,7 @@ ja:
       sanitizer_state:
         wait: 無害化中
         complete: 無害化済
+        error: 無害化失敗
       duration:
         "1_day": １日
         "1_week": １週間

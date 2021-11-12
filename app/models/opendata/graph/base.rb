@@ -1,12 +1,5 @@
 class Opendata::Graph::Base
-  attr_reader :csv_lines
-  attr_reader :csv_columns
-
-  attr_reader :type
-  attr_reader :resource
-  attr_reader :labels
-  attr_reader :headers
-  attr_reader :datasets
+  attr_reader :csv_lines, :csv_columns, :type, :resource, :labels, :headers, :datasets
 
   def initialize(type, resource)
     @type = type
@@ -53,7 +46,7 @@ class Opendata::Graph::Base
      # check column1 is total column
       columns_total = []
       @csv_columns.each do |column|
-        columns_total << column[1..column.size].map(&:to_f).sum
+        columns_total << column[1..column.size].sum(&:to_f)
       end
       column1, other = columns_total.partition.with_index { |_, i| i == 1 }.map(&:sum)
       (column1 == other)
@@ -67,9 +60,9 @@ class Opendata::Graph::Base
 
   def format_data(data)
     return "-" if data.blank?
-    return data if data !~ /^(\-)?((\d)+\,)?((\d)+\.)?+(\d)+$/
+    return data if data !~ /^(-)?((\d)+,)?((\d)+\.)?+(\d)+$/
 
-    data = data.gsub(",", "")
+    data = data.delete(",")
     data = data.to_f.to_s
     data =~ /\.0$/ ? data.to_i : data.to_f
   end

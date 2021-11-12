@@ -19,7 +19,7 @@ $(".download-all").on("click", function () {
 <% end %>
 <% end %>
 
-<% if !controller.preview_path? && Fs.exists?(file) %>
+<% if !controller.preview_path? && Fs.exist?(file) %>
   <%== Fs.read(file) %>
 <% else %>
   <%= render template: 'opendata/agents/nodes/dataset/search_dataset/search' %>
@@ -71,7 +71,7 @@ $(".download-all").on("click", function () {
         </div>
         <% end %>
 
-        <% if item.parent.becomes_with_route.show_point? %>
+        <% if item.parent.show_point? %>
         <span class="point"><%= item.point.to_i %></span>
         <% end %>
       </h2>

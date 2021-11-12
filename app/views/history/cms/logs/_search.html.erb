@@ -1,8 +1,73 @@
-<% @s = OpenStruct.new params[:s] %>
+<% s = OpenStruct.new params[:s] %>
 <div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
-    <%= f.select :ref_coll, @ref_coll_options %>
-    <%= f.text_field :keyword, style: "width: 300px;" %>
-    <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+    <div class="log-search-wrapper operation-wrapper d-inline-block">
+      <span><%= t('ss.search_operation') %></span>
+      <%= f.select :operation_target_opts, @operation_target_opts, {}, {class: 'operation-opts'} %>
+      <%= f.text_field :keyword ,style: "width: 300px;", class: "log-search-field text-field" %>
+      <%= f.select :keyword, @action_opts, {include_blank: true}, {class: "log-search-field action-field hide", style: "width: 300px;"} %>
+      <%= f.select :keyword, @controller_opts, {include_blank: true}, {class: "log-search-field controller-field hide", style: "width: 300px;"} %>
+    </div>
+    <div class="log-search-wrapper operator-wrapper d-inline-block ml-4">
+      <span><%= t('ss.search_operator') %></span>
+      <%= f.select :operator_target_opts, @operator_target_opts, {}, {class: 'operator-opts'} %>
+      <%= f.select :operator_keyword, @user_opts, {include_blank: true}, {class: "log-search-field user-field", style: "width: 300px;"} %>
+      <%= f.select :operator_keyword, @group_opts, {include_blank: true}, {class: "log-search-field group-field hide", style: "width: 300px;"} %>
+      <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+    </div>
   <% end %>
 </div>
+
+<%= jquery do %>
+  disableAllForms('log-search-wrapper');
+  var operationVal = $('.operation-opts').val();
+  var operatorVal = $('.operator-opts').val();
+  setForm(operationVal, 'operation-wrapper');
+  setForm(operatorVal, 'operator-wrapper');
+
+  function disableAllForms(wrapperClass) {
+    $(`.${wrapperClass} .log-search-field`).each( function() {
+      $(this).addClass('hide');
+      $(this).prop('disabled', true);
+    });
+  }
+
+  $('.operation-opts').change(function() {
+    disableAllForms('operation-wrapper');
+    var SelectedOpt = $(this).val();
+    setForm(SelectedOpt, 'operation-wrapper');
+  });
+
+  $('.operator-opts').change(function() {
+    disableAllForms('operator-wrapper');
+    var SelectedOpt = $(this).val();
+    setForm(SelectedOpt, 'operator-wrapper');
+  });
+
+  function setForm(SelectedOpt, warpperClass) {
+    targetField = `.${warpperClass} .${SelectedOpt}-field`
+
+    switch (SelectedOpt) {
+    case 'user':
+      enableForm(targetField)
+      break;
+    case 'action':
+      enableForm(targetField);
+      break;
+    case 'controller':
+      enableForm(targetField)
+      break;
+    case 'group':
+      enableForm(targetField)
+      break;
+    default:
+      enableForm(`.${warpperClass} .text-field`)
+      $('.text-field').val('');
+    }
+  }
+
+  function enableForm(targetField) {
+    $(targetField).removeClass('hide');
+    $(targetField).prop('disabled', false);
+  }
+<% end %>

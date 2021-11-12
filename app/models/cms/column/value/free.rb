@@ -6,10 +6,11 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
 
   permit_values :value, file_ids: []
 
-  before_save :before_save_files
-  after_destroy :destroy_files
-  after_save :put_contains_urls_logs
   before_validation :set_contains_urls
+  before_save { @add_file_ids = file_ids - file_ids_was.to_a }
+  after_save :put_contains_urls_logs
+  before_parent_save :before_save_files
+  after_parent_destroy :destroy_files
 
   liquidize do
     export :value
@@ -21,13 +22,13 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
   end
 
   def generate_public_files
-    files.each do |file|
+    SS::File.each_file(file_ids) do |file|
       file.generate_public_file
     end
   end
 
   def remove_public_files
-    files.each do |file|
+    SS::File.each_file(file_ids) do |file|
       file.remove_public_file
     end
   end
@@ -55,92 +56,86 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
   end
 
   def before_save_files
-    if @new_clone
-      cloned_file_ids = []
-      file_ids.each_slice(20) do |ids|
-        SS::File.in(id: ids).to_a.each do |source_file|
-          attributes = Hash[source_file.attributes]
-          attributes.select!{ |k| source_file.fields.key?(k) }
+    # Cms::Addon::File では clone_files をしてから save_files を実行しているので、それに習う。
+    #
+    # 注意: カラム処理では以下の点が異なるので注意。
+    #
+    # カラムは数が変更される可能性があるため、master から branch を作成する際も、master へ branch をマージする際も、
+    # delete & insert となるため常に @new_clone がセットされる。
+    # master から branch を作成する際は @merge_values はセットされないのに対し、
+    # master へ branch をマージする際は @merge_values がセットされる。
+    clone_files if @new_clone && !@merge_values
+    save_files
+  end
 
-          attributes["user_id"] = @cur_user.id if @cur_user
-          attributes["_id"] = nil
-          attributes["model"] = _parent.class.name
-          attributes["state"] = _parent.state
-          clone_file = SS::File.create_empty!(attributes, validate: false) do |new_file|
-            ::FileUtils.copy(source_file.path, new_file.path)
-          end
-          clone_file.owner_item = _parent
+  def clone_files
+    return if file_ids.blank?
 
-          # history_files
-          if @merge_values
-            clone_file.master_id = nil
-            clone_file.history_file_ids = source_file.history_file_ids
-          else
-            clone_file.master_id = source_file.id
-            clone_file.history_file_ids = []
-          end
+    owner_item = SS::Model.container_of(self)
+    return if owner_item.respond_to?(:branch?) && owner_item.branch?
 
-          clone_file.save(validate: false)
-          clone_file.sanitizer_copy_file
-          result = clone_file
-
-          next unless result
-
-          cloned_file_ids << clone_file.id
-
-          cloned_value = self.value.to_s
-          cloned_value.gsub!("=\"#{source_file.url}\"", "=\"#{clone_file.url}\"")
-          cloned_value.gsub!("=\"#{source_file.thumb_url}\"", "=\"#{clone_file.thumb_url}\"")
-          self.value = cloned_value
+    cur_user = owner_item.cur_user if owner_item.respond_to?(:cur_user)
+    cloned_file_ids = []
+    SS::File.each_file(file_ids) do |source_file|
+      clone_file = SS::File.clone_file(source_file, cur_user: cur_user, owner_item: owner_item) do |new_file|
+        # history_files
+        if @merge_values
+          new_file.history_file_ids = source_file.history_file_ids
         end
       end
+      next unless clone_file
 
-      self.file_ids = cloned_file_ids
-    else
-      del_ids = file_ids_was.to_a - file_ids
-      del_ids.each_slice(20) do |ids|
-        SS::File.in(id: ids).destroy_all
-      end
+      cloned_file_ids << clone_file.id
 
-      add_ids = _parent.state_changed? ? file_ids : file_ids - file_ids_was.to_a
-      add_ids.each_slice(20) do |ids|
-        SS::File.in(id: ids).to_a.each do |file|
-          file.update(site_id: _parent.site_id, model: _parent.class.name, owner_item: _parent, state: _parent.state)
-        end
-      end
-
-      begin
-        self.file_ids = file_ids + add_ids - del_ids
-      rescue
-        self.file_ids
-      end
-
+      cloned_value = self.value.to_s
+      cloned_value.gsub!("=\"#{source_file.url}\"", "=\"#{clone_file.url}\"")
+      cloned_value.gsub!("=\"#{source_file.thumb_url}\"", "=\"#{clone_file.thumb_url}\"")
+      self.value = cloned_value
     end
+
+    self.file_ids = cloned_file_ids
+  end
+
+  def save_files
+    # 追加されたファイルのリストを算出するには before_save でないといけない。
+    # しかし、before_save コールバックが呼ばれた時点では _parent.id が未確定のため files の owner_item をセットできない。
+    # 苦肉の策だが before_save コールバックで追加されたファイルのリストを算出し、@add_file_ids に保存する。
+    # そして、before_parent_save コールバックで files の owner_item をセットする。
+    owner_item = SS::Model.container_of(self)
+    in_branch = owner_item.in_branch if @merge_values && owner_item.respond_to?(:in_branch)
+
+    on_clone_file = method(:update_value_with_clone_file)
+    ids = Cms::Addon::File::Utils.attach_files(self, @add_file_ids, branch: in_branch, on_clone_file: on_clone_file)
+    self.file_ids = ids rescue return
+
+    del_ids = file_ids_was.to_a - ids
+    Cms::Addon::File::Utils.delete_files(self, del_ids)
+  end
+
+  def update_value_with_clone_file(old_file, new_file)
+    return if value.blank?
+
+    value = self.value
+    value.gsub!("=\"#{old_file.url}\"", "=\"#{new_file.url}\"")
+    value.gsub!("=\"#{old_file.thumb_url}\"", "=\"#{new_file.thumb_url}\"")
+    self.value = value
   end
 
   def destroy_files
-    if !_parent.respond_to?(:skip_history_trash)
-      files.destroy_all
-      return
-    end
-
-    file_ids.each_slice(20) do |ids|
-      SS::File.in(id: ids).to_a.map(&:becomes_with_model).each do |file|
-        file.skip_history_trash = _parent.skip_history_trash if file.respond_to?(:skip_history_trash)
-        file.destroy
-      end
-    end
+    Cms::Addon::File::Utils.delete_files(self, file_ids)
   end
 
   def build_history_log(file)
-    site_id = self._parent.cur_site.id if self._parent.cur_site.present?
-    user_id = self._parent.cur_user.id if self._parent.cur_user.present?
+    owner_item = SS::Model.container_of(self)
+    site_id = owner_item.cur_site.id if owner_item.respond_to?(:cur_site) && owner_item.cur_site
+    user_id = owner_item.cur_user.id if owner_item.respond_to?(:cur_user) && owner_item.cur_user
 
     History::Log.build_file_log(file, site_id: site_id, user_id: user_id)
   end
 
   def put_contains_urls_logs
-    add_contains_urls = self._parent.value_contains_urls - self._parent.value_contains_urls_was.to_a
+    owner_item = SS::Model.container_of(self)
+    add_contains_urls = owner_item.value_contains_urls - owner_item.value_contains_urls_was.to_a
     add_contains_urls.each do |file_url|
       item = build_history_log(nil)
       item.url = file_url
@@ -150,7 +145,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
       item.save
     end
 
-    del_contains_urls = self._parent.value_contains_urls_was.to_a - self._parent.value_contains_urls
+    del_contains_urls = owner_item.value_contains_urls_was.to_a - owner_item.value_contains_urls
     del_contains_urls.each do |file_url|
       item = build_history_log(nil)
       item.url = file_url

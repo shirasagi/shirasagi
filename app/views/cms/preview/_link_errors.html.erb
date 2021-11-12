@@ -6,7 +6,6 @@
   @item ||= Cms::Node.site(@cur_site).where(filename: filename).first
 
   if @item
-    @item = @item.becomes_with_route
     @check_links_error = @item.try(:check_links_error)
     @error_urls = @check_links_error.urls if @check_links_error
   end

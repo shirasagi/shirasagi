@@ -176,7 +176,7 @@ production: &production
   cms_sitemap:
     disable: true
 
-  default_released_type: "same_as_updated"
+  default_released_type: "fixed"
 
 test:
   <<: *production

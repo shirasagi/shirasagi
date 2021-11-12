@@ -6,11 +6,11 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
 
   around do |example|
     save_config = SS.config.cms.replace_urls_after_move
-    SS::Config.replace_value_at(:cms, 'replace_urls_after_move', true)
+    SS.config.replace_value_at(:cms, 'replace_urls_after_move', true)
     perform_enqueued_jobs do
       example.run
     end
-    SS::Config.replace_value_at(:cms, 'replace_urls_after_move', save_config)
+    SS.config.replace_value_at(:cms, 'replace_urls_after_move', save_config)
   end
 
   context "with auth", js: true do
@@ -38,7 +38,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
     it "#move" do
       item = Cms::Page.where(filename: "page.html").first
       move_page_path = move_cms_page_path(site.id, item)
-      expect(Fs.exists?("#{site.path}/page.html")).to be_truthy
+      expect(Fs.exist?("#{site.path}/page.html")).to be_truthy
 
       visit move_page_path
       within "form" do
@@ -49,8 +49,8 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
       #expect(current_path).to eq move_page_path
       expect(page).to have_css("form#item-form h2", text: "A/page.html")
 
-      expect(Fs.exists?("#{site.path}/page.html")).to be_falsy
-      expect(Fs.exists?("#{site.path}/A/page.html")).to be_truthy
+      expect(Fs.exist?("#{site.path}/page.html")).to be_falsy
+      expect(Fs.exist?("#{site.path}/A/page.html")).to be_truthy
 
       expect(Job::Log.count).to eq 1
       Job::Log.first.tap do |log|
@@ -64,7 +64,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
 
       item = Cms::Node.where(filename: "A/B/C").first
       move_node_path = move_node_conf_path(site.id, item)
-      expect(Fs.exists?("#{site.path}/A/B/C/page2.html")).to be_truthy
+      expect(Fs.exist?("#{site.path}/A/B/C/page2.html")).to be_truthy
 
       visit move_node_path
       within "form" do
@@ -75,8 +75,8 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
       expect(current_path).to eq move_node_path
       expect(page).to have_css("form#item-form h2", text: "D/E")
 
-      expect(Fs.exists?("#{site.path}/A/B/C/page2.html")).to be_falsy
-      expect(Fs.exists?("#{site.path}/D/E/page2.html")).to be_truthy
+      expect(Fs.exist?("#{site.path}/A/B/C/page2.html")).to be_falsy
+      expect(Fs.exist?("#{site.path}/D/E/page2.html")).to be_truthy
 
       expect(Job::Log.count).to eq 2
       Job::Log.first.tap do |log|
@@ -96,8 +96,8 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
       #expect(current_path).to eq move_page_path
       expect(page).to have_css("form#item-form h2", text: "D/E/page.html")
 
-      expect(Fs.exists?("#{site.path}/A/page.html")).to be_falsy
-      expect(Fs.exists?("#{site.path}/D/E/page.html")).to be_truthy
+      expect(Fs.exist?("#{site.path}/A/page.html")).to be_falsy
+      expect(Fs.exist?("#{site.path}/D/E/page.html")).to be_truthy
 
       expect(Job::Log.count).to eq 3
       Job::Log.first.tap do |log|
@@ -117,10 +117,10 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
       expect(current_path).to eq move_node_path
       expect(page).to have_css("form#item-form h2", text: "A/B/C")
 
-      expect(Fs.exists?("#{site.path}/D/E/page.html")).to be_falsy
-      expect(Fs.exists?("#{site.path}/D/E/page2.html")).to be_falsy
-      expect(Fs.exists?("#{site.path}/A/B/C/page.html")).to be_truthy
-      expect(Fs.exists?("#{site.path}/A/B/C/page2.html")).to be_truthy
+      expect(Fs.exist?("#{site.path}/D/E/page.html")).to be_falsy
+      expect(Fs.exist?("#{site.path}/D/E/page2.html")).to be_falsy
+      expect(Fs.exist?("#{site.path}/A/B/C/page.html")).to be_truthy
+      expect(Fs.exist?("#{site.path}/A/B/C/page2.html")).to be_truthy
 
       expect(Job::Log.count).to eq 4
       Job::Log.first.tap do |log|

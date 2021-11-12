@@ -6,11 +6,10 @@ module Cms::Addon
 
     included do
       attr_accessor :in_thumb
-      belongs_to_file2 :thumb
-      permit_params :in_thumb
-      validate :validate_thumb, if: ->{ in_thumb.present? }
 
-      define_model_callbacks :clone_thumb
+      belongs_to_file :thumb
+      permit_params :in_thumb
+      validate :validate_thumb
 
       before_save :clone_thumb, if: ->{ try(:new_clone?) }
       after_generate_file :generate_thumb_public_file if respond_to?(:after_generate_file)
@@ -26,8 +25,8 @@ module Cms::Addon
     private
 
     def validate_thumb
-      file = relation_file(:thumb)
-      errors.add :thumb_id, :thums_is_not_an_image unless file.image?
+      return if thumb.blank? || thumb.image?
+      errors.add :thumb_id, :thums_is_not_an_image
     end
 
     def generate_thumb_public_file

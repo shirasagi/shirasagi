@@ -3,9 +3,8 @@ require 'timecop'
 
 describe Event::EventHelper, type: :helper do
 
-  def date_when(date_opts = {})
-    return Time.zone.today if date_opts.empty?
-    Time.zone.today.change(date_opts)
+  def date_when(year:, month:, day:)
+    Time.zone.today.change(year: year, month: month, day: day)
   end
 
   before { Timecop.freeze(date_when(year: 2014, month: 9, day: 14)) }

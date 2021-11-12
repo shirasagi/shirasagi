@@ -33,7 +33,7 @@ class Cms::Elasticsearch::PageConvertor
 
   def convert_files_to_docs
     docs = []
-    item.files.each do |file|
+    item.attached_files.each do |file|
       # should include public file only?
       docs << convert_file_to_doc(file)
     end
@@ -64,11 +64,19 @@ class Cms::Elasticsearch::PageConvertor
   end
 
   def item_text
-    if Fs.exists?(item.path)
-      ApplicationController.helpers.sanitize(Fs.read(item.path).presence || '', tags: [])
+    if Fs.exist?(item.path)
+      html = Fs.read(item.path)
     else
-      ApplicationController.helpers.sanitize(item.html.presence || '', tags: [])
+      html = item.html
     end
+    config = SS.config.cms.elasticsearch
+    site_search_marks = config['site-search-marks']
+    if html =~ /<!--[^>]*?\s#{site_search_marks[0]}\s[^>]*?-->(.*)<!--[^>]*?\s#{site_search_marks[1]}\s[^>]*?-->/im
+      html = $1
+    elsif html =~ /<\s*body[^>]*>(.*)<\/\s*body\s*>/im
+      html = $1
+    end
+    ApplicationController.helpers.sanitize(html.presence || '', tags: [])
   end
 
   class << self

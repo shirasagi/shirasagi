@@ -186,7 +186,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
     end
 
     before do
-      region_152 = create(:jmaxml_region_152)
+      region_152 = create(:jmaxml_region_c152)
       node.target_region_ids = [ region_152.id ]
       node.earthquake_intensity = '3'
       node.my_anpi_post_id = node_my_anpi_post.id
@@ -244,7 +244,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
         expect(mail.body.raw_source).to include('2016年3月8日 13時32分 ころ地震がありました。')
         expect(mail.body.raw_source).to include('日高地方東部：3')
         expect(mail.body.raw_source).to include(node_my_anpi_post.full_url)
-        expect(mail.body.raw_source).to end_with("\n--------\ntest@example.jp\n")
+        expect(mail.body.raw_source).to end_with("\r\n--------\r\ntest@example.jp\r\n")
       end
     end
   end
@@ -276,12 +276,12 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
     end
 
     before do
-      region_2920100 = create(:jmaxml_forecast_region_2920100)
+      region_2920100 = create(:jmaxml_forecast_region_c2920100)
       trigger1.target_region_ids = [ region_2920100.id ]
       trigger1.save!
 
       node.filters.new(name: unique_id, state: 'enabled', trigger_ids: [ trigger1.id.to_s ],
-                       action_ids: [ action1.id.to_s, action2.id.to_s ])
+        action_ids: [ action1.id.to_s, action2.id.to_s ])
       node.save!
     end
 
@@ -344,7 +344,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
         expect(mail.to.first.to_s).to eq user1.email
         expect(mail.subject).to eq '奈良県気象警報・注意報'
         expect(mail.body.raw_source).to include('【特別警報（大雨）】')
-        expect(mail.body.raw_source).to end_with("\n#{action2.signature_text}\n")
+        expect(mail.body.raw_source).to end_with("\r\n#{action2.signature_text.gsub("\n", "\r\n")}\r\n")
       end
     end
   end
@@ -391,10 +391,10 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
       end
 
       before do
-        region_210 = create(:jmaxml_region_210)
-        region_211 = create(:jmaxml_region_211)
-        region_212 = create(:jmaxml_region_212)
-        region_213 = create(:jmaxml_region_213)
+        region_210 = create(:jmaxml_region_c210)
+        region_211 = create(:jmaxml_region_c211)
+        region_212 = create(:jmaxml_region_c212)
+        region_213 = create(:jmaxml_region_c213)
         node.target_region_ids = [ region_210.id, region_211.id, region_212.id, region_213.id ]
         node.earthquake_intensity = '5+'
         node.my_anpi_post_id = node_my_anpi_post.id
@@ -455,7 +455,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
           expect(mail.body.raw_source).to include('岩手県沿岸北部：5強')
           expect(mail.body.raw_source).to include('岩手県内陸北部：5強')
           expect(mail.body.raw_source).to include(node_my_anpi_post.full_url)
-          expect(mail.body.raw_source).to end_with("\n--------\ntest@example.jp\n")
+          expect(mail.body.raw_source).to end_with("\r\n--------\r\ntest@example.jp\r\n")
         end
       end
     end
@@ -486,10 +486,10 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
       end
 
       before do
-        region_210 = create(:jmaxml_region_210)
-        region_211 = create(:jmaxml_region_211)
-        region_212 = create(:jmaxml_region_212)
-        region_213 = create(:jmaxml_region_213)
+        region_210 = create(:jmaxml_region_c210)
+        region_211 = create(:jmaxml_region_c211)
+        region_212 = create(:jmaxml_region_c212)
+        region_213 = create(:jmaxml_region_c213)
         trigger1.target_region_ids = [ region_210.id, region_211.id, region_212.id, region_213.id ]
         trigger1.save!
         trigger2.target_region_ids = [ region_210.id, region_211.id, region_212.id, region_213.id ]
@@ -568,7 +568,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
           expect(mail.body.raw_source).to include('岩手県内陸南部：震度６弱')
           expect(mail.body.raw_source).to include('岩手県沿岸北部：震度５強')
           expect(mail.body.raw_source).to include('岩手県内陸北部：震度５強')
-          expect(mail.body.raw_source).to end_with("\n#{action2.signature_text}\n")
+          expect(mail.body.raw_source).to end_with("\r\n#{action2.signature_text.gsub("\n", "\r\n")}\r\n")
         end
       end
     end
@@ -598,15 +598,15 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
     end
 
     it do
-      expect(::File.exists?(::File.join(tmpdir, base_name1))).to be_truthy
-      expect(::File.exists?(::File.join(tmpdir, base_name2))).to be_truthy
-      expect(::File.exists?(::File.join(tmpdir, base_name3))).to be_truthy
+      expect(::File.exist?(::File.join(tmpdir, base_name1))).to be_truthy
+      expect(::File.exist?(::File.join(tmpdir, base_name2))).to be_truthy
+      expect(::File.exist?(::File.join(tmpdir, base_name3))).to be_truthy
 
       described_class.new.remove_old_cache(threshold)
 
-      expect(::File.exists?(::File.join(tmpdir, base_name1))).to be_falsey
-      expect(::File.exists?(::File.join(tmpdir, base_name2))).to be_truthy
-      expect(::File.exists?(::File.join(tmpdir, base_name3))).to be_falsey
+      expect(::File.exist?(::File.join(tmpdir, base_name1))).to be_falsey
+      expect(::File.exist?(::File.join(tmpdir, base_name2))).to be_truthy
+      expect(::File.exist?(::File.join(tmpdir, base_name3))).to be_falsey
     end
   end
 end

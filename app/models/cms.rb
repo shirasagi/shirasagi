@@ -153,7 +153,7 @@ module Cms
 
     site_criteria.each do |site|
       dir = site.root_path
-      next unless ::File.exists?(dir)
+      next unless ::File.exist?(dir)
       # see: https://myokoym.hatenadiary.org/entry/20100606/1275836896
       ::Dir.glob("#{dir}/**/*") do |path|
         size += ::File.stat(path).size rescue 0
@@ -208,5 +208,18 @@ module Cms
     domain = domain.sub(/:.*$/, '') if domain.include?(":")
 
     "<#{::Mail.random_tag}@#{domain}.mail>"
+  end
+
+  def self.cms_page_date(released_type, released, updated, created, first_released)
+    case released_type
+    when "fixed"
+      released || first_released || updated || created
+    when "same_as_created"
+      created
+    when "same_as_first_released"
+      first_released || updated || created
+    else # same_as_updated
+      updated || created
+    end
   end
 end

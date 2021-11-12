@@ -8,9 +8,9 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
     let!(:node) { create :cms_node, cur_site: site }
     let!(:part) do
       create :article_part_page,
-      cur_site: site,
-      filename: "#{node.filename}/part",
-      lower_html: "<div class=\"feed\"><a class=\"rss\" href=\"/#{node.filename}/rss.xml\">RSS</a>"
+        cur_site: site,
+        filename: "#{node.filename}/part",
+        lower_html: "<div class=\"feed\"><a class=\"rss\" href=\"/#{node.filename}/rss.xml\">RSS</a>"
     end
 
     describe "copy part which is located under a node" do
@@ -23,7 +23,7 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
       end
 
       it "html element which has original node name was overwritten" do
-        copied_part = Cms::Part.site(site).where(filename: /^#{target_node_name}\//).first.becomes_with_route
+        copied_part = Cms::Part.site(site).where(filename: /^#{target_node_name}\//).first
         expect(copied_part.filename).to eq "#{target_node_name}/part.part.html"
         expect(copied_part.lower_html).not_to include node.filename.to_s
         expect(copied_part.lower_html).to include target_node_name.to_s

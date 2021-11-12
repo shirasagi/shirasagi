@@ -273,7 +273,7 @@ save_node route: "uploader/file", name: "JavaScript", filename: "js"
 save_node route: "category/node", name: "知りたい", filename: "know",
   layout_id: layouts["folder"].id, sort: "order", limit: 100, order: 10
 save_node route: "category/page", name: "相談したい", filename: "consultation",
- layout_id: layouts["folder"].id, sort: "order", limit: 100, order: 20
+  layout_id: layouts["folder"].id, sort: "order", limit: 100, order: 20
 save_node route: "category/page", name: "つながりたい", filename: "lead",
   layout_id: layouts["folder"].id, sort: "order", limit: 100, order: 30
 save_node route: "category/node", name: "目的で探す", filename: "purpose",

@@ -3,6 +3,7 @@ module Translate::Lang::Export
 
   included do
     attr_accessor :in_file
+
     permit_params :in_file
   end
 
@@ -23,7 +24,7 @@ module Translate::Lang::Export
       item.accept_languages = row[t(:accept_languages)]
       item.save
 
-      errors.add :base, "##{no} " + item.errors.full_messages.join("\n") if item.errors.present?
+      SS::Model.copy_errors(item, self, prefix: "##{no} ") if item.errors.present?
     end
 
     errors.empty?

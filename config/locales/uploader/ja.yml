@@ -1,7 +1,7 @@
 ja:
   uploader:
     files: ファイル
-    new_directory: 新規フォルダー名
+    directory_name: フォルダー名
     new_files: アップロード
     links:
       new_directory: 新規フォルダー

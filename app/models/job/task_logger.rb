@@ -103,7 +103,7 @@ class Job::TaskLogger < ::Logger
 
     def open_logfile(filename)
       dirname = ::File.dirname(filename)
-      ::FileUtils.mkdir_p(dirname) unless ::Dir.exists?(dirname)
+      ::FileUtils.mkdir_p(dirname) unless ::Dir.exist?(dirname)
 
       file = ::File.open(filename, 'a')
       file.sync = true

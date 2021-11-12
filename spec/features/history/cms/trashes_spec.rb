@@ -80,7 +80,10 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
           click_button I18n.t('ss.links.delete')
         end
       end
-      wait_for_notice I18n.t('ss.notice.deleted')
+
+      expect(page).to have_content I18n.t('ss.confirm.target_to_delete')
+      click_button I18n.t('ss.buttons.delete')
+
       expect(current_path).to eq index_path
       expect(page).to have_no_css('a.title', text: page_item.name)
       expect(page).to have_no_css('a.title', text: file.name)
@@ -316,6 +319,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       expect(page_item.branches.count).to eq 1
       branch_page = page_item.branches.first
       expect(branch_page.master_id).to eq page_item.id
+      expect(History::Trash.all.count).to eq 0
 
       # delete branch page
       within "#addon-workflow-agents-addons-branch" do
@@ -332,7 +336,9 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       page_item.reload
       expect(page_item.branches.count).to eq 0
       expect { branch_page.reload }.to raise_error Mongoid::Errors::DocumentNotFound
-      expect(History::Trash.all.count).to eq 2
+      # 差し替えページの場合、添付ファイルは差し替え元のファイルと共有しているため、
+      # 差し替えページを削除すると History::Trash は差し替えページの分のみが増える。
+      expect(History::Trash.all.count).to eq 1
 
       visit index_path
       expect(page).to have_css('a.title', text: page_item.name)
@@ -346,8 +352,23 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
 
       page_item.reload
       expect(page_item.branches.count).to eq 0
+      expect(page_item.files.count).to eq 1
+      expect(page_item.files.first.id).to eq file.id
+      file.reload
+      expect(file.owner_item_type).to eq page_item.class.name
+      expect(file.owner_item_id).to eq page_item.id
+
+      # 差し替えページをゴミ箱から復元すると、差し替え元との関係が失われ、複製したようになる。
       branch_page.reload
       expect(branch_page.master_id).to be_blank
+      # そして、添付ファイルは複製され、差し替え元との関係が失われる
+      expect(branch_page.files.count).to eq 1
+      branch_page.files.first.tap do |branch_file|
+        expect(branch_file.id).not_to eq file.id
+        expect(branch_file.owner_item_type).to eq branch_page.class.name
+        expect(branch_file.owner_item_id).to eq branch_page.id
+      end
+
       expect(History::Trash.all.count).to eq 0
 
       visit page_path

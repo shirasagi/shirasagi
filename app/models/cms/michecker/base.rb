@@ -26,7 +26,7 @@ module Cms::Michecker::Base
     private
 
     def each_line(filename, &block)
-      if filename.ends_with?(".gz")
+      if filename.end_with?(".gz")
         ::Zlib::GzipReader.open(filename) do |gz|
           gz.each_line(&block)
         end

@@ -1,22 +1,7 @@
 module Opendata::Api
   def check_num(num, messages)
-    if num
-      if integer?(num)
-        if num.to_i < 0
-          messages << "Must be a natural number"
-        end
-      else
-        messages << "Invalid integer"
-      end
-    end
-
-  end
-
-  def integer?(s)
-    i = Integer(s)
-    check = true
-  rescue
-    check = false
+    num = Integer(num) rescue -1
+    messages << "Must be a natural number" if num < 0
   end
 
   def convert_packages(datasets)

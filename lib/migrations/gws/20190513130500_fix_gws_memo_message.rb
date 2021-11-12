@@ -14,7 +14,7 @@ class SS::Migration20190513130500
           message.filtered[member_id.to_s] = Time.zone.now
         end
         message.in_path[member_id.to_s] ||= message[:path].try(:[], member_id.to_s)
-        seen_at = (message.user_settings_was.presence || []).find{ |setting| setting['user_id'] == member_id }.try(:[], 'user_id')
+        seen_at = (message.user_settings_was.presence || []).find{ |setting| setting['user_id'] == member_id }.try(:[], 'seen_at')
         seen_at ||= message[:seen].try(:[], member_id.to_s)
         { 'user_id' => member_id, 'path' => message.in_path[member_id.to_s], 'seen_at' => seen_at }
       end

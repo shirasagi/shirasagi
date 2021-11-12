@@ -7,6 +7,7 @@ class Cms::Group
   set_permission_name "cms_groups", :edit
 
   attr_accessor :cur_site, :cms_role_ids
+
   permit_params :cms_role_ids
 
   default_scope -> { active }

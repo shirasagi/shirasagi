@@ -7,6 +7,7 @@ module Chorg::Model::Revision
       class_variable_set(:@@changeset_class, Chorg::Changeset)
 
       attr_accessor :in_revision_csv_file
+
       permit_params :in_revision_csv_file
 
       validate :validate_in_revision_csv_file, if: -> { in_revision_csv_file.present? }

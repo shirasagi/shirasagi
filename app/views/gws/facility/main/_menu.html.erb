@@ -5,7 +5,7 @@
       <%= link_to t('ss.links.download'), download_gws_facility_items_path %>
       <%= link_to t('ss.links.import'), import_gws_facility_items_path %>
     <% end %>
-  <% elsif params[:action] =~ /new|create|import/ %>
+  <% elsif params[:action] =~ /new|create|import|destroy_all/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /edit|update|delete/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>

@@ -74,7 +74,6 @@ describe Sys::SiteCopyJob, dbscope: :example do
         expect(dest_layout.html).to eq layout.html
 
         Cms::Node.site(dest_site).find_by(filename: node1.filename).tap do |dest_node|
-          dest_node = dest_node.becomes_with_route
           expect(dest_node.name).to eq node1.name
           expect(dest_node.layout_id).to eq dest_layout.id
           expect(dest_node.user_id).to eq node1.user_id
@@ -84,7 +83,6 @@ describe Sys::SiteCopyJob, dbscope: :example do
         end
 
         Cms::Node.site(dest_site).find_by(filename: node2.filename).tap do |dest_node|
-          dest_node = dest_node.becomes_with_route
           expect(dest_node.name).to eq node2.name
           expect(dest_node.layout_id).to eq dest_layout.id
           expect(dest_node.user_id).to eq node2.user_id
@@ -95,7 +93,6 @@ describe Sys::SiteCopyJob, dbscope: :example do
         end
 
         Cms::Node.site(dest_site).find_by(filename: node3.filename).tap do |dest_node|
-          dest_node = dest_node.becomes_with_route
           expect(dest_node.name).to eq node3.name
           expect(dest_node.layout_id).to eq dest_layout.id
           expect(dest_node.user_id).to eq node2.user_id
@@ -107,7 +104,6 @@ describe Sys::SiteCopyJob, dbscope: :example do
         end
 
         Cms::Node.site(dest_site).find_by(filename: node4.filename).tap do |dest_node|
-          dest_node = dest_node.becomes_with_route
           expect(dest_node.name).to eq node4.name
           expect(dest_node.layout_id).to eq dest_layout.id
           expect(dest_node.user_id).to eq node4.user_id
@@ -147,12 +143,8 @@ describe Sys::SiteCopyJob, dbscope: :example do
         end
 
         dest_site = Cms::Site.find_by(host: target_host_host)
-
         dest_node1 = Cms::Node.site(dest_site).find_by(filename: node1.filename)
-        dest_node1 = dest_node1.becomes_with_route
-
         dest_node2 = Cms::Node.site(dest_site).find_by(filename: node2.filename)
-        dest_node2 = dest_node2.becomes_with_route
 
         expect(dest_node1.st_category_ids).to eq [dest_node2.id]
         expect(dest_node2.st_category_ids).to eq [dest_node1.id]

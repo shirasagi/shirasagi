@@ -14,8 +14,8 @@ module Gws::Addon::Circular::GroupSetting
     field :circular_new_days, type: Integer
 
     permit_params :circular_default_due_date, :circular_max_member,
-                  :circular_filesize_limit, :circular_delete_threshold,
-                  :circular_files_break, :circular_new_days
+      :circular_filesize_limit, :circular_delete_threshold,
+      :circular_files_break, :circular_new_days
 
     validates :circular_default_due_date, numericality: true
     validates :circular_delete_threshold, numericality: true

@@ -29,7 +29,7 @@ module Member::Addon::Blog
     def template_variable_handler_img_src(name, issuer)
       dummy_source = ERB::Util.html_escape("/assets/img/dummy.png")
 
-      return dummy_source unless html =~ /\<\s*?img\s+[^>]*\/?>/i
+      return dummy_source unless html =~ /<\s*?img\s+[^>]*\/?>/i
 
       img_tag = $&
       return dummy_source unless img_tag =~ /src\s*=\s*(['"]?[^'"]+['"]?)/

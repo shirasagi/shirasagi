@@ -1,8 +1,6 @@
 <%= jquery do %>
-$('#item-form').submit(function(){
-  if($('#item_name').val() && $('#item_basename').val()) {
-    alert(`<%= I18n.t('cms.confirm.check_accessibility_manually') %>`);
-  }
-});
+$('#item-form footer.send').prepend(
+  '<div class="footer-notice"><%= I18n.t("cms.confirm.check_accessibility_manually") %></div>'
+);
 <% end %>
 <%= render template: 'ss/crud/edit' %>

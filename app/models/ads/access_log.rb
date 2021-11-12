@@ -2,6 +2,7 @@ class Ads::AccessLog
   include SS::Document
   include SS::Reference::Site
 
+  store_in_repl_master
   #index({ site_id: 1, node_id: 1, date: -1 })
 
   field :node_id, type: Integer

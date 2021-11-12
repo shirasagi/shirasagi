@@ -18,7 +18,7 @@ module Gws::Addon::Share
     end
 
     def save_history_file
-      Fs.cp(path, path + "_history#{next_history_file_id}") if Fs.exists?(path)
+      Fs.cp(path, path + "_history#{next_history_file_id}") if Fs.exist?(path)
     end
 
     private

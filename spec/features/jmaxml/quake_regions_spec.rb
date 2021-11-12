@@ -71,7 +71,7 @@ describe "jmaxml/quake_regions", type: :feature, dbscope: :example do
   end
 
   context 'search' do
-    let!(:region) { create :jmaxml_region_126 }
+    let!(:region) { create :jmaxml_region_c126 }
 
     before { login_cms_user }
 

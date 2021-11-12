@@ -5,7 +5,7 @@ class Gws::Workflow::PagesController < ApplicationController
   prepend_view_path "app/views/workflow/pages"
 
   before_action :set_item,
-                only: %i[request_update restart_update approve_update pull_up_update remand_update branch_create seen_update]
+    only: %i[request_update restart_update approve_update pull_up_update remand_update branch_create seen_update]
 
   private
 
@@ -14,7 +14,7 @@ class Gws::Workflow::PagesController < ApplicationController
   end
 
   def set_item
-    @item = @model.find(params[:id]) #.becomes_with_route
+    @item = @model.find(params[:id])
     @item.attributes = fix_params
     @item.try(:allow_other_user_files)
   end
@@ -133,9 +133,9 @@ class Gws::Workflow::PagesController < ApplicationController
     file_ids = params[:workflow_file_ids]
     opts = { comment: comment, file_ids: file_ids }
     if params[:action] == 'pull_up_update'
-      @item.pull_up_workflow_approver_state(@cur_user, opts)
+      @item.pull_up_workflow_approver_state(@cur_user, **opts)
     else
-      @item.approve_workflow_approver_state(@cur_user, opts)
+      @item.approve_workflow_approver_state(@cur_user, **opts)
     end
 
     if @item.finish_workflow?

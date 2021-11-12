@@ -69,9 +69,9 @@ describe "job_cms_logs", type: :feature, dbscope: :example do
       expect(Job::Log.count).to eq 0
 
       # log files should be removed
-      expect(::File.exists?(log1.file_path)).to be_falsey
-      expect(::File.exists?(log2.file_path)).to be_falsey
-      expect(::File.exists?(log3.file_path)).to be_falsey
+      expect(::File.exist?(log1.file_path)).to be_falsey
+      expect(::File.exist?(log2.file_path)).to be_falsey
+      expect(::File.exist?(log3.file_path)).to be_falsey
     end
 
     context 'when ymd is present' do

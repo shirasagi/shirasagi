@@ -35,7 +35,7 @@ class Cms::AllContentsImportJob < Cms::ApplicationJob
       return
     end
 
-    import_item(item.becomes_with_route, row)
+    import_item(item, row)
   rescue => e
     Rails.logger.info("#{row_number} 行のコンテンツは見つかりませんでした。")
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
@@ -108,7 +108,7 @@ class Cms::AllContentsImportJob < Cms::ApplicationJob
     categories = categories.split(/[, 　、\r\n]+/) if categories
     categories ||= []
 
-    category_filenames = categories.map { |category| category.sub(/[ \t\(].*$/, '') }
+    category_filenames = categories.map { |category| category.sub(/[ \t(].*$/, '') }
     item.category_ids = Cms::Node.site(site).in(filename: category_filenames).pluck(:id)
   end
 

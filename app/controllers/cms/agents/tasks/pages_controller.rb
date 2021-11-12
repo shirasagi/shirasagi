@@ -50,7 +50,6 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
         next unless page
 
         @task.performance.collect_page(page) do
-          page = page.becomes_with_route
           result = page.generate_file(release: false, task: @task)
 
           @task.log page.url if result
@@ -70,7 +69,6 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
       rescue_with(rescue_p: rescue_p) do
         page = Cms::Page.site(@site).where(id: id).first
         next unless page
-        page = page.becomes_with_route
         if !page.update
           @task.log page.url
           @task.log page.errors.full_messages.join("/")
@@ -98,7 +96,7 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
         page = Cms::Page.site(@site).where("$or" => cond).where(id: id).first
         next unless page
         @task.log page.full_url
-        release_page page.becomes_with_route
+        release_page page
       end
     end
   end

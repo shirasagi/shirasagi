@@ -15,13 +15,11 @@ class SS::Csv
       @context = self
     end
 
-    attr_reader :cur_site, :cur_user
-    attr_reader :encoding, :columns
+    attr_reader :cur_site, :cur_user, :encoding, :columns
 
     def each
       yield draw_header
       @criteria.each do |item|
-        item = item.becomes_with_route if item.respond_to?(:becomes_with_route)
         item.cur_site = @cur_site if item.respond_to?(:cur_site=)
         item.cur_user = @cur_user if item.respond_to?(:cur_user=)
         item.cur_node = @cur_node if item.respond_to?(:cur_node=)
@@ -137,7 +135,7 @@ class SS::Csv
         @column = { id: id }.merge(options)
         @columns << @column
       end
-      instance_exec(&block) if block_given?
+      instance_exec(&block) if block
       @column = nil
     end
 
@@ -181,12 +179,12 @@ class SS::Csv
       options = options.dup
       options[:key] = key.to_s
       options[:name] ||= @model.t(key) if key.is_a?(Symbol)
-      options[:callback] = block if block_given?
+      options[:callback] = block if block
 
       @columns << options
     end
 
-    def label_column(key, options = {}, &block)
+    def label_column(key, &block)
       simple_column key do |row, item, head, value|
         options = item.send("#{key}_options")
         private_options = item.send("#{key}_private_options") if item.respond_to?("#{key}_private_options")
@@ -210,7 +208,7 @@ class SS::Csv
     def column(name, options = {}, &block)
       options = options.dup
       options[:name] = name
-      options[:callback] = block if block_given?
+      options[:callback] = block if block
 
       @form[:columns] << options
     end
@@ -318,7 +316,7 @@ class SS::Csv
       else
         ret = DSLImporter.new(options)
       end
-      ret.draw(&block) if block_given?
+      ret.draw(&block) if block
       ret
     end
   end

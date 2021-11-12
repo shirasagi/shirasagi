@@ -34,7 +34,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetMapController < ApplicationContro
             name = resource.tsv_present? ? resource.name : "#{resource.name} [#{map_resource["sheet"]}]"
 
             @map_points[item.id] ||= {}
-            @map_points[item.id][key] =  {
+            @map_points[item.id][key] = {
               format: resource.format,
               points: map_resource["map_points"]
             }

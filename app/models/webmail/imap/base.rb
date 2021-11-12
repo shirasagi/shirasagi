@@ -32,8 +32,7 @@ module Webmail::Imap
   class Base
     include Webmail::Imap::UidsCommand
 
-    attr_accessor :conf, :setting, :error, :address, :email_address
-    attr_accessor :sent_box, :draft_box, :trash_box
+    attr_accessor :conf, :setting, :error, :address, :email_address, :sent_box, :draft_box, :trash_box
 
     private_class_method :new
 
