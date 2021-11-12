@@ -33,7 +33,7 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
   end
 
   def fix_params
-    { setting: @setting }
+    { setting: @setting, aggregate_size: SS.config.cms.elasticsearch['aggregate_size'] }
   end
 
   def permit_fields

@@ -143,6 +143,7 @@ production: &production
   elasticsearch:
     label: 関連サイト全て
     site-search-marks: [ "use-site-search", "end-use-site-search" ]
+    aggregate_size: 100
     indexes:
       - s1
       - s2

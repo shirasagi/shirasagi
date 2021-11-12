@@ -5,7 +5,7 @@ class Cms::Elasticsearch::Searcher
   DEFAULT_FIELD_NAME = 'text_index'.freeze
 
   attr_accessor :setting, :keyword, :category_names
-  attr_writer :index, :type, :field_name, :from, :size
+  attr_writer :index, :type, :field_name, :from, :size, :aggregate_size
 
   permit_params :keyword, category_names: []
 
@@ -23,6 +23,10 @@ class Cms::Elasticsearch::Searcher
 
   def size
     @size ||= 10
+  end
+
+  def aggregate_size
+    @aggregate_size ||= 10
   end
 
   def type
@@ -59,7 +63,7 @@ class Cms::Elasticsearch::Searcher
 
   def aggregate
     aggs = {}
-    aggs[:group_by_categories] = { terms: { field: 'categories' } }
+    aggs[:group_by_categories] = { terms: { field: 'categories', size: aggregate_size } }
 
     search_params = { index: index, size: 0, body: { aggs: aggs } }
 
