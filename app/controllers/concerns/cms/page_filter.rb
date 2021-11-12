@@ -220,7 +220,6 @@ module Cms::PageFilter
       save_as_branch
       return
     end
-    raise "404" if @item.try(:master?) && @item.branches.present?
 
     publish_save
   end

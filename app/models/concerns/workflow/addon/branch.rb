@@ -15,8 +15,6 @@ module Workflow::Addon
 
       validate :validate_master_lock, if: ->{ branch? }
 
-      before_merge_branch :merge_file_histories rescue nil
-
       before_save :seq_clone_filename, if: ->{ new_clone? && basename.blank? }
       after_save :merge_to_master
 
@@ -40,17 +38,16 @@ module Workflow::Addon
       self.fields.select { |n, v| (v.options.dig(:metadata, :branch) == false) }.each do |n, v|
         attributes.delete(n)
       end
+      # new を呼び出す前に _id を削除しておかないと `#branches` などの参照が変になる
+      attributes.delete("_id")
 
       item = self.class.new(attributes)
-      item.id = nil
       item.state = "closed"
       item.cur_user = @cur_user
       item.cur_site = @cur_site
       item.cur_node = @cur_node
-      if attributes[:filename].nil?
-        item.filename = "#{dirname}/"
-        item.basename = ""
-      end
+      item.filename = "#{dirname}/"
+      item.basename = ""
 
       item.workflow_user_id = nil
       item.workflow_state = nil
@@ -82,6 +79,9 @@ module Workflow::Addon
     end
 
     def clone_files
+      return if file_ids.blank?
+      return if respond_to?(:branch?) && branch?
+
       run_callbacks(:clone_files) do
         ids = {}
         files.each do |f|
@@ -93,52 +93,38 @@ module Workflow::Addon
     end
 
     def clone_file(source_file)
-      attributes = Hash[source_file.attributes]
-      attributes.select!{ |k| source_file.fields.key?(k) }
+      file = SS::File.clone_file(source_file, cur_user: @cur_user, owner_item: SS::Model.container_of(self))
+      update_html_with_clone_file(source_file, file)
+      file
+    end
 
-      attributes["user_id"] = @cur_user.id if @cur_user
-      attributes["_id"] = nil
-      attributes["master_id"] = source_file.id
-      file = SS::File.create_empty!(attributes, validate: false) do |new_file|
-        ::FileUtils.copy(source_file.path, new_file.path)
-        new_file.sanitizer_copy_file
-      end
-
+    def update_html_with_clone_file(old_file, new_file)
       if respond_to?(:html) && html.present?
         html = self.html
-        html.gsub!("=\"#{source_file.url}\"", "=\"#{file.url}\"")
-        html.gsub!("=\"#{source_file.thumb_url}\"", "=\"#{file.thumb_url}\"")
+        html.gsub!("=\"#{old_file.url}\"", "=\"#{new_file.url}\"")
+        html.gsub!("=\"#{old_file.thumb_url}\"", "=\"#{new_file.thumb_url}\"")
         self.html = html
       end
 
       if respond_to?(:body_parts) && body_parts.present?
         self.body_parts = body_parts.map do |html|
           html = html.to_s
-          html = html.gsub("=\"#{source_file.url}\"", "=\"#{file.url}\"")
-          html = html.gsub("=\"#{source_file.thumb_url}\"", "=\"#{file.thumb_url}\"")
+          html = html.gsub("=\"#{old_file.url}\"", "=\"#{new_file.url}\"")
+          html = html.gsub("=\"#{old_file.thumb_url}\"", "=\"#{new_file.thumb_url}\"")
           html
         end
       end
-
-      file
     end
 
     def clone_thumb
-      run_callbacks(:clone_thumb) do
-        return if thumb.blank?
-        self.thumb = clone_file(thumb)
-        thumb
+      return if thumb_id.blank?
+      if thumb.blank?
+        self.thumb_id = nil
+        return
       end
-    end
+      return if respond_to?(:branch?) && branch?
 
-    # backwards compatibility
-    def merge(branch)
-      Rails.logger.warn(
-        'DEPRECATION WARNING:' \
-        ' merge is deprecated and will be removed in future version (use merge_branch instead).'
-      )
-      self.in_branch = branch
-      self.merge_branch
+      self.thumb = clone_file(thumb)
     end
 
     def merge_branch
@@ -148,7 +134,7 @@ module Workflow::Addon
         self.reload
 
         attributes = {}
-        in_branch_attributes = in_branch.attributes.to_h
+        in_branch_attributes = Hash[in_branch.attributes]
         self.fields.each do |k, v|
           next if k == "_id"
           next if k == "filename"
@@ -159,34 +145,8 @@ module Workflow::Addon
         self.attributes = attributes
         self.master_id = nil
         self.allow_other_user_files if respond_to?(:allow_other_user_files)
-        clone_thumb
       end
-      self.skip_history_trash = true if self.respond_to?(:skip_history_trash)
       self.save
-    end
-
-    def merge_file_histories
-      return unless in_branch
-
-      in_branch.attached_files.each do |file|
-        master_file = file.master
-
-        # update history files
-        if master_file
-          master_file.save_history_file
-          file.history_file_ids = master_file.history_file_ids
-          master_file.history_file_ids = []
-        end
-
-        # update owner item
-        file.owner_item = self
-
-        # update file's master
-        file.master = nil
-        file.save!
-
-        master_file.save! if master_file
-      end
     end
 
     def merge_to_master

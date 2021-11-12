@@ -25,7 +25,7 @@ class SS::AccessToken
 
       fullpath = fullpath.sub(/(&)?access_token=[\w\-_=]*/, '')
       fullpath = fullpath.sub("?&", "?")
-      fullpath = fullpath[0..-2] if fullpath.ends_with?("?")
+      fullpath = fullpath[0..-2] if fullpath.end_with?("?")
       fullpath
     end
   end

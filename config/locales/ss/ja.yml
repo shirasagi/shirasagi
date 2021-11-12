@@ -1,5 +1,6 @@
 ja:
   ss:
+    backup: バックアップ
     basic_info: 基本情報
     config: 設定
     management: 管理
@@ -24,6 +25,7 @@ ja:
     role_setting: ロール一括設定
     required: 必須入力
     required_field: ※必須入力
+    restore: 復元
     search_operation: 操作対象
     search_operator: 操作実行者
     search_result: 検索結果
@@ -146,7 +148,9 @@ ja:
       move: 移動
       moving: 移動中
       import: インポート
+      restore_message: 復元
       importing: インポート中
+      restoring_message: 復元中
       convert: 変換
       unlock_and_edit_forcibly: 強制的にロックを解除し編集する
       random_gen: ランダム生成
@@ -241,6 +245,11 @@ ja:
       set_star_all: スターをつけました。
       unset_star_all: スターをはずしました。
       replace_saved: 差し替え保存しました。
+      max_file_size_hard_limit_short_notice: "（%{human_size} 以下）"
+      max_file_size_hard_limit_long_notices:
+        - "サーバ設定でファイルのアップロード容量の上限が %{human_size} に設定されています。"
+        - これを超える制限サイズを設定しても有効に機能しません。
+        - サーバ設定の変更を希望される場合はシステム管理者にお問い合わせください。
 
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
