@@ -32,15 +32,14 @@ class Event::Agents::Nodes::PageController < ApplicationController
         index_ics
       end
     end
-
   end
 
   def daily
     @year  = params[:year].to_i
     @month = params[:month].to_i
     @day   = params[:day].to_i
-    @date  = Date.new(@year, @month, @day)
-    raise "404" if !within_one_year?(@date)
+    @date  = Date.new(@year, @month, @day) rescue nil
+    raise "404" if !@date || !within_one_year?(@date)
 
     @items = Cms::Page.public_list(site: @cur_site, node: @cur_node, date: @cur_date).
       where(event_dates: @date)
@@ -74,7 +73,8 @@ class Event::Agents::Nodes::PageController < ApplicationController
       @year_presented = true
       @year = params[:year].to_i
       @month = params[:month].to_i
-      @date = Date.new(@year, @month, 1)
+      @date = Date.new(@year, @month, 1) rescue nil
+      raise '404' if !@date
     else
       @year_presented = false
       @date = Time.zone.today.beginning_of_month
