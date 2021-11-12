@@ -73,7 +73,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
   let(:column12_caption1) { unique_id }
   let(:column13_youtube_id1) { unique_id }
   let(:column13_url1) { "https://www.youtube.com/watch?v=#{column13_youtube_id1}" }
-  let(:column14_page_id1) { selectable_page1.id }
+  let(:column14_page1) { [ selectable_page1, selectable_page2, selectable_page3 ].sample }
 
   let(:column1_value2) { unique_id }
   let(:column2_value2) { "#{rand(2000..2050)}/01/01" }
@@ -94,7 +94,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
   let(:column12_caption2) { unique_id }
   let(:column13_youtube_id2) { unique_id }
   let(:column13_url2) { "https://www.youtube.com/watch?v=#{column13_youtube_id2}" }
-  let(:column14_page_id2) { selectable_page2.id }
+  let(:column14_page2) { ([ selectable_page1, selectable_page2, selectable_page3 ] - [ column14_page1 ]).sample }
   let!(:body_layout) { create(:cms_body_layout) }
 
   def article_pages
@@ -247,7 +247,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             find("input.height").set(column12_height1)
             find("input.width").set(column12_width1)
             find("input.caption").set(column12_caption1)
-            click_on "表を作成する"
+            click_on I18n.t("cms.column_table.create")
           end
 
           within ".column-value-palette" do
@@ -265,8 +265,9 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               expect(page).to have_css("option", text: selectable_page1.name)
               expect(page).to have_css("option", text: selectable_page2.name)
               expect(page).to have_css("option", text: selectable_page3.name)
+              expect(page).to have_no_css("option", text: selectable_page4.name)
             end
-            select selectable_page1.name, from: 'item[column_values][][in_wrap][page_id]'
+            select column14_page1.name, from: 'item[column_values][][in_wrap][page_id]'
           end
 
           click_on I18n.t('ss.buttons.draft_save')
@@ -296,7 +297,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(item.column_values.find_by(column_id: column11.id).lists).to include column11_list1
           expect(item.column_values.find_by(column_id: column12.id).value).to be_present
           expect(item.column_values.find_by(column_id: column13.id).youtube_id).to eq column13_youtube_id1
-          expect(item.column_values.find_by(column_id: column14.id).page_id).to eq column14_page_id1
+          expect(item.column_values.find_by(column_id: column14.id).page_id).to eq column14_page1.id
 
           expect(item.backups.count).to eq 2
         end
@@ -368,7 +369,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             fill_in "item[column_values][][in_wrap][url]", with: column13_url2
           end
           within ".column-value-cms-column-selectpage " do
-            select selectable_page2.name, from: 'item[column_values][][in_wrap][page_id]'
+            select column14_page2.name, from: 'item[column_values][][in_wrap][page_id]'
           end
 
           click_on I18n.t('ss.buttons.draft_save')
@@ -398,7 +399,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(item.column_values.find_by(column_id: column11.id).lists).to include column11_list2
           expect(item.column_values.find_by(column_id: column12.id).value).to be_present
           expect(item.column_values.find_by(column_id: column13.id).youtube_id).to eq column13_youtube_id2
-          expect(item.column_values.find_by(column_id: column14.id).page_id).to eq column14_page_id2
+          expect(item.column_values.find_by(column_id: column14.id).page_id).to eq column14_page2.id
 
           expect(item.backups.count).to eq 3
         end
@@ -603,8 +604,9 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               expect(page).to have_css("option", text: selectable_page1.name)
               expect(page).to have_css("option", text: selectable_page2.name)
               expect(page).to have_css("option", text: selectable_page3.name)
+              expect(page).to have_no_css("option", text: selectable_page4.name)
             end
-            select selectable_page1.name, from: 'item[column_values][][in_wrap][page_id]'
+            select column14_page1.name, from: 'item[column_values][][in_wrap][page_id]'
           end
 
           click_on I18n.t('ss.buttons.draft_save')
@@ -668,7 +670,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             expect(column_value.youtube_id).to eq column13_youtube_id1
           end
           item.column_values.find_by(column_id: column14.id).tap do |column_value|
-            expect(column_value.page_id).to eq column14_page_id1
+            expect(column_value.page_id).to eq column14_page1.id
           end
 
           expect(item.backups.count).to eq 1
@@ -739,7 +741,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             fill_in "item[column_values][][in_wrap][url]", with: column13_url2
           end
           within ".column-value-cms-column-selectpage " do
-            select selectable_page2.name, from: 'item[column_values][][in_wrap][page_id]'
+            select column14_page2.name, from: 'item[column_values][][in_wrap][page_id]'
           end
 
           click_on I18n.t('ss.buttons.draft_save')
@@ -769,7 +771,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(item.column_values.find_by(column_id: column11.id).lists).to include column11_list2
           expect(item.column_values.find_by(column_id: column12.id).value).to be_present
           expect(item.column_values.find_by(column_id: column13.id).youtube_id).to eq column13_youtube_id2
-          expect(item.column_values.find_by(column_id: column14.id).page_id).to eq column14_page_id2
+          expect(item.column_values.find_by(column_id: column14.id).page_id).to eq column14_page2.id
 
           expect(item.backups.count).to eq 2
         end
