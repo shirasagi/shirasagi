@@ -61,14 +61,14 @@ module Gws::Model::File
         [1024, 768], [768, 1024], [1280, 720], [720, 1280]
       ].map { |x, y| [I18n.t("ss.options.resizing.#{x}x#{y}"), "#{x},#{y}"] }
 
-      min_attributes = [SS::ImageResize.min_attributes]
+      min_attributes = [SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).min_attributes]
       min_width = min_attributes.reject(&:blank?).collect { |attribute| attribute['max_width'] }.reject(&:blank?).min
       min_height = min_attributes.reject(&:blank?).collect { |attribute| attribute['max_height'] }.reject(&:blank?).min
 
       return options if min_width.blank? || min_height.blank?
 
       options.select do |k, v|
-        size = v.split('x').collect(&:to_i)
+        size = v.split(',').collect(&:to_i)
         size[0] < min_width && size[1] < min_height
       end
     end
@@ -284,7 +284,7 @@ module Gws::Model::File
     size = resizing || []
     max_file_sizes = []
     if user.blank? || !SS::ImageResize.allowed?(:disable, user) || image_resizes_disabled != 'disabled'
-      max_file_sizes << SS::ImageResize.find_item(extname)
+      max_file_sizes += SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).to_a
     end
     max_file_sizes.reject(&:blank?).each do |max_file_size|
       if size.present?
@@ -300,7 +300,7 @@ module Gws::Model::File
     quality = []
     max_file_sizes = []
     if user.blank? || !SS::ImageResize.allowed?(:disable, user) || image_resizes_disabled != 'disabled'
-      max_file_sizes << SS::ImageResize.find_item(extname)
+      max_file_sizes += SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).to_a
     end
     max_file_sizes.reject(&:blank?).each do |max_file_size|
       next if size <= max_file_size.try(:size)

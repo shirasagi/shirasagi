@@ -1,8 +1,8 @@
 <%
   disable_image_resizes = SS::ImageResize.allowed?(:disable, @cur_user) && SS::ImageResize.present?
   disable_image_resizes ||= @cur_node.present? && Cms::ImageResize.allowed?(:disable, @cur_user, site: @cur_site, node: @cur_node) && Cms::ImageResize.site(@cur_site).node(@cur_node).present?
-  min_attributes = [SS::ImageResize.min_attributes]
-  min_attributes << Cms::ImageResize.site(@cur_site).node(@cur_node).min_attributes if @cur_node.present?
+  min_attributes = [SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).min_attributes]
+  min_attributes << Cms::ImageResize.site(@cur_site).node(@cur_node).where(state: SS::ImageResize::STATE_ENABLED).min_attributes if @cur_node.present?
   min_size = min_attributes.reject(&:blank?).collect { |attribute| attribute['size'] }.reject(&:blank?).min
   min_width = min_attributes.reject(&:blank?).collect { |attribute| attribute['max_width'] }.reject(&:blank?).min
   min_height = min_attributes.reject(&:blank?).collect { |attribute| attribute['max_height'] }.reject(&:blank?).min

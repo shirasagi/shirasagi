@@ -15,18 +15,6 @@ class Uploader::File
   def save
     return false unless valid?
     @binary = self.class.remove_exif(binary) if binary && exif_image?
-    if binary && image?
-      max_file_size = SS::ImageResize.find_item(ext.sub('.', ''))
-      if max_file_size.present?
-        if binary.size >= SS::ImageResize.find_size(ext.sub('.', ''))
-          quality = max_file_size.try(:quality)
-        end
-        @binary = SS::ImageConverter.read(binary) do |converter|
-          converter.apply_defaults!(resizing: [max_file_size.max_width, max_file_size.max_height], quality: quality)
-          converter.to_io.read
-        end
-      end
-    end
     if saved_path && path != saved_path # persisted AND path chenged
       Fs.binwrite(saved_path, binary) unless directory?
       Fs.mv(saved_path, path)

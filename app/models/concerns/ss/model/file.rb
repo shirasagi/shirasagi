@@ -74,8 +74,8 @@ module SS::Model::File
         [1024, 768], [768, 1024], [1280, 720], [720, 1280]
       ].map { |x, y| [I18n.t("ss.options.resizing.#{x}x#{y}"), "#{x},#{y}"] }
 
-      min_attributes = [SS::ImageResize.min_attributes]
-      min_attributes << Cms::ImageResize.site(opts[:node].site).node(opts[:node]).min_attributes if opts[:node]
+      min_attributes = [SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).min_attributes]
+      min_attributes << Cms::ImageResize.site(opts[:node].site).node(opts[:node]).where(state: SS::ImageResize::STATE_ENABLED).min_attributes if opts[:node]
       min_width = min_attributes.reject(&:blank?).collect { |attribute| attribute['max_width'] }.reject(&:blank?).min
       min_height = min_attributes.reject(&:blank?).collect { |attribute| attribute['max_height'] }.reject(&:blank?).min
 
@@ -438,11 +438,11 @@ module SS::Model::File
     size = resizing || []
     max_file_sizes = []
     if user.blank? || !SS::ImageResize.allowed?(:disable, user) || image_resizes_disabled != 'disabled'
-      max_file_sizes << SS::ImageResize.find_item(extname)
+      max_file_sizes += SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).to_a
     end
     if self.class.include?(Cms::Reference::Node) && node.present?
       if user.blank? || !Cms::ImageResize.allowed?(:disable, user, site: site, node: node) || image_resizes_disabled != 'disabled'
-        max_file_sizes << Cms::ImageResize.site(site).node(node).find_item(extname)
+        max_file_sizes += Cms::ImageResize.site(site).node(node).where(state: SS::ImageResize::STATE_ENABLED).to_a
       end
     end
     max_file_sizes.reject(&:blank?).each do |max_file_size|
@@ -459,11 +459,11 @@ module SS::Model::File
     quality = []
     max_file_sizes = []
     if user.blank? || !SS::ImageResize.allowed?(:disable, user) || image_resizes_disabled != 'disabled'
-      max_file_sizes << SS::ImageResize.find_item(extname)
+      max_file_sizes += SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).to_a
     end
     if self.class.include?(Cms::Reference::Node) && node.present?
       if user.blank? || !Cms::ImageResize.allowed?(:disable, user, site: site, node: node) || image_resizes_disabled != 'disabled'
-        max_file_sizes << Cms::ImageResize.site(site).node(node).find_item(extname)
+        max_file_sizes += Cms::ImageResize.site(site).node(node).where(state: SS::ImageResize::STATE_ENABLED).to_a
       end
     end
     max_file_sizes.reject(&:blank?).each do |max_file_size|
