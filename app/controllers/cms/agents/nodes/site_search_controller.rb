@@ -21,7 +21,7 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
     return if keyword.blank?
 
     query = { keyword: keyword }
-    query[:category_names] = get_params[:category_names] if get_params[:category_names].present?
+    query[:category_name] = get_params[:category_name] if get_params[:category_name].present?
 
     history_log = Cms::SiteSearch::History::Log.new(
       site: @cur_site,
@@ -37,7 +37,7 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
   end
 
   def permit_fields
-    [:keyword, :target, category_names: []]
+    [:keyword, :target, :category_name]
   end
 
   def get_params

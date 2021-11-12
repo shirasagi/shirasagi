@@ -46,14 +46,7 @@ new Cms_Site_Search_History("<%= ".cms-site-search .search-form" %>", "<%= @cur_
     <% if tryb { @aggregate_result['aggregations']['group_by_categories']['buckets'] }.present? %>
       <dl class="site-search-categories">
         <dt><%= f.label(:category_name, t("category.node")) %></dt>
-        <dd>
-          <% @aggregate_result['aggregations']['group_by_categories']['buckets'].each do |bucket| %>
-            <%= label_tag do %>
-              <%= f.check_box('category_names[]', {}, bucket['key']) %>
-              <%= "#{bucket['key']}(#{bucket['doc_count']})" %>
-            <% end %>
-          <% end %>
-        </dd>
+        <dd><%= f.select(:category_name, @aggregate_result['aggregations']['group_by_categories']['buckets'].collect { |bucket| ["#{bucket['key']}(#{bucket['doc_count']})", bucket['key']] }, include_blank: "", "aria-label" => t("category.node")) %></dd>
       </dl>
     <% end %>
 
