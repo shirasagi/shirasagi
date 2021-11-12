@@ -51,6 +51,10 @@ module SS::Addon
       ::File.join(url, mobile_location, "/")
     end
 
+    def mobile_full_url
+      ::File.join(full_url, mobile_location, "/")
+    end
+
     def mobile_css
       return default_mobile_css unless value = self.attributes["mobile_css"]
       value
