@@ -419,4 +419,121 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
       end
     end
   end
+
+  context "check linkText" do
+    let(:html1) { "<a href=\"#{ss_file.url}\"></a>" }
+    let(:html2) { "<a href=\"#{ss_file.url}\">#{ss_file.name}</a>" }
+    let(:html3) { "<a href=\"#{ss_file.url}\"><img alt=\"ファイルの内容を示すテキスト\" src=\"#{ss_file.url}\" /></a>" }
+
+    context "with cms addon body" do
+      let!(:item) { create :article_page, cur_node: node, file_ids: [ss_file.id] }
+
+      before { login_cms_user }
+
+      it "#edit" do
+        visit edit_path
+
+        within "#addon-cms-agents-addons-body" do
+          fill_in_ckeditor "item[html]", with: html1
+          click_button I18n.t("cms.syntax_check")
+
+          # confirm syntax check header is shown to wait for ajax completion
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+        end
+      end
+
+      it "#edit" do
+        visit edit_path
+
+        within "#addon-cms-agents-addons-body" do
+          fill_in_ckeditor "item[html]", with: html2
+          click_button I18n.t("cms.syntax_check")
+
+          # confirm syntax check header is shown to wait for ajax completion
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+        end
+      end
+
+      it "#edit" do
+        visit edit_path
+
+        within "#addon-cms-agents-addons-body" do
+          fill_in_ckeditor "item[html]", with: html3
+          click_button I18n.t("cms.syntax_check")
+
+          # confirm syntax check header is shown to wait for ajax completion
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+        end
+      end
+    end
+
+    context "with entry form" do
+      let!(:item) { create :article_page, cur_node: node, file_ids: [ss_file.id], html: html1, form_id: form.id }
+
+      before { login_cms_user }
+
+      it "#edit" do
+        visit edit_path
+
+        within ".column-value-palette" do
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column1.name
+          end
+        end
+        within ".column-value-cms-column-free" do
+          fill_in_ckeditor "item[column_values][][in_wrap][value]", with: html1
+        end
+        within "#addon-cms-agents-addons-form-page" do
+          click_button I18n.t("cms.syntax_check")
+
+          # confirm syntax check header is shown to wait for ajax completion
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+        end
+      end
+
+      it "#edit" do
+        visit edit_path
+
+        within ".column-value-palette" do
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column1.name
+          end
+        end
+        within ".column-value-cms-column-free" do
+          fill_in_ckeditor "item[column_values][][in_wrap][value]", with: html2
+        end
+        within "#addon-cms-agents-addons-form-page" do
+          click_button I18n.t("cms.syntax_check")
+
+          # confirm syntax check header is shown to wait for ajax completion
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+        end
+      end
+
+      it "#edit" do
+        visit edit_path
+
+        within ".column-value-palette" do
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column1.name
+          end
+        end
+        within ".column-value-cms-column-free" do
+          fill_in_ckeditor "item[column_values][][in_wrap][value]", with: html3
+        end
+        within "#addon-cms-agents-addons-form-page" do
+          click_button I18n.t("cms.syntax_check")
+
+          # confirm syntax check header is shown to wait for ajax completion
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+        end
+      end
+    end
+  end
 end
