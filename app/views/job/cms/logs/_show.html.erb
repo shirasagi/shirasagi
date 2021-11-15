@@ -38,7 +38,7 @@
   <dt><%= @model.t :logs %></dt>
   <% if ::File.exist?(@item.file_path) %>
   <dd>
-    <%= t('job.log_notice', count: limit) %>
+    <%= t('job.log_notice', count: Fs::DEFAULT_HEAD_LOGS) %>
     <%= text_area_tag :logs, safe_join(Fs.head_lines(@item.file_path), "\n"), readonly: true, style: "height: 400px" %>
     <%= link_to(t('job.download_log'), { action: :download }, { class: :btn }) %>
   </dd>

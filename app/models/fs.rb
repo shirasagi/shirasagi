@@ -1,6 +1,7 @@
 module Fs
   MAX_COMPARE_FILE_SIZE = SS.config.env.max_compare_file_size || 100 * 1_024
   DEFAULT_BUFFER_SIZE = 4 * 1_024
+  DEFAULT_HEAD_LOGS = SS.config.job.head_logs || 1_000
 
   if SS.config.env.storage == "grid_fs"
     include ::Fs::GridFs
@@ -72,8 +73,7 @@ module Fs
   def head_lines(path, limit: nil)
     return [] if !path || !Fs.exist?(path)
 
-    limit ||= SS.config.job.head_logs
-    limit ||= 1_000
+    limit ||= DEFAULT_HEAD_LOGS
     texts = []
     Fs.to_io(path) do |f|
       limit.times do
