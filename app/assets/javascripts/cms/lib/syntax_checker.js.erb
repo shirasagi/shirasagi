@@ -1108,6 +1108,9 @@ this.Syntax_Checker = (function () {
         var errors, text;
         text = $(this).text();
         if (text.length <= 3) {
+          text = $(this).find("img[alt]").attr('alt');
+        }
+        if (text.length <= 3) {
           Syntax_Checker.errors.push(
             {
               id: id,
