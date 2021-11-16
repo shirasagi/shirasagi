@@ -3,7 +3,42 @@ require 'spec_helper'
 describe SS::File, dbscope: :example do
   context "with empty" do
     subject { described_class.new }
-    its(:valid?) { is_expected.to be_falsey }
+
+    it do
+      expect(subject).to be_invalid
+      expect(subject.errors.count).to eq 4
+      expect(subject.errors[:model]).to include I18n.t("errors.messages.blank")
+      expect(subject.errors[:name]).to include I18n.t("errors.messages.blank")
+      expect(subject.errors[:filename]).to include I18n.t("errors.messages.blank")
+      expect(subject.errors[:content_type]).to include I18n.t("errors.messages.blank")
+    end
+  end
+
+  context "create file with empty contents" do
+    let(:filename) { "#{unique_id}.png" }
+    subject! { described_class.create(model: described_class.name.underscore, filename: filename) }
+
+    it do
+      expect(subject).to be_valid
+      expect(subject.site_id).to be_blank
+      expect(subject.user_id).to be_blank
+      expect(subject.model).to eq described_class.name.underscore
+      expect(subject.state).to eq "closed"
+      expect(subject.name).to eq filename
+      expect(subject.filename).to eq filename
+      expect(subject.size).to eq 0
+      expect(subject.content_type).to eq "image/png"
+      expect(subject.owner_item_type).to be_blank
+      expect(subject.owner_item_id).to be_blank
+      expect(subject.geo_location).to be_blank
+      expect(subject.csv_headers).to be_blank
+      expect(subject.sanitizer_state).to be_blank
+      expect(subject.path).to eq "#{SS::File.root}/ss_files/#{subject.id}/_/#{subject.id}"
+      expect(Fs.exist?(subject.path)).to be_falsey
+      expect(subject.url).to eq "/fs/#{subject.id}/_/#{subject.filename}"
+      expect(subject.thumb).to be_blank
+      expect(subject.thumb_url).to eq "/fs/#{subject.id}/_/thumb/#{subject.filename}"
+    end
   end
 
   context "with 'filename' as SS.config.ss.file_url_with" do

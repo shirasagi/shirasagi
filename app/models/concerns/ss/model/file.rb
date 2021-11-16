@@ -22,7 +22,7 @@ module SS::Model::File
     field :state, type: String, default: "closed"
     field :name, type: String
     field :filename, type: String
-    field :size, type: Integer
+    field :size, type: Integer, default: 0
     field :content_type, type: String
 
     belongs_to :site, class_name: "SS::Site"
@@ -34,13 +34,13 @@ module SS::Model::File
     permit_params :in_file, :state, :name, :filename, :resizing, :quality, :image_resizes_disabled, :in_data_url
 
     before_validation :set_filename, if: ->{ in_file.present? }
-    before_validation :normalize_name
-    before_validation :normalize_filename
+    before_validation :normalize_attributes
 
     validates :model, presence: true
     validates :state, presence: true
-    validates :filename, presence: true, if: ->{ in_file.blank? && in_files.blank? }
-    validates :content_type, presence: true, if: ->{ in_file.blank? && in_files.blank? }
+    validates :name, presence: true
+    validates :filename, presence: true
+    validates :content_type, presence: true
     validate :validate_filename, if: ->{ filename.present? }
     validate :validate_upload_policy, if: ->{ in_file.present? }
     validates_with SS::FileSizeValidator, if: ->{ size.present? }
@@ -269,10 +269,6 @@ module SS::Model::File
     [[I18n.t('ss.options.state.public'), 'public']]
   end
 
-  def name
-    self[:name].presence || basename
-  end
-
   def humanized_name
     "#{::File.basename(name, ".*")} (#{extname.upcase} #{number_to_human_size(size)})"
   end
@@ -423,18 +419,22 @@ module SS::Model::File
   end
 
   def set_filename
-    self.name         = in_file.original_filename if self[:name].blank?
-    self.filename     = in_file.original_filename if filename.blank?
-    self.size         = in_file.size
-    self.content_type = ::SS::MimeType.find(in_file.original_filename, in_file.content_type)
+    return if in_file.blank?
+    return if filename.present?
+
+    self.filename = in_file.original_filename
   end
 
-  def normalize_name
-    self.name = SS::FilenameUtils.convert_to_url_safe_japanese(name) if self.name.present?
-  end
+  def normalize_attributes
+    # name
+    self.name = filename if name.blank? && filename.present?
+    self.name = SS::FilenameUtils.convert_to_url_safe_japanese(name) if name.present?
 
-  def normalize_filename
-    self.filename = SS::FilenameUtils.normalize(self.filename)
+    # filename
+    self.filename = SS::FilenameUtils.normalize(self.filename) if self.filename
+
+    # content_type
+    self.content_type = SS::MimeType.find(self.filename) if self.filename
   end
 
   def multibyte_filename_disabled?

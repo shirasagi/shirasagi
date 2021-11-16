@@ -78,8 +78,6 @@ module SS::FileFactory
   end
 
   def save_files
-    return false unless valid?
-
     self.saved_files = []
 
     in_files.each do |file|
