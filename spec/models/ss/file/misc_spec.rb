@@ -831,38 +831,4 @@ describe SS::File, dbscope: :example do
       end
     end
   end
-
-  describe ".create_from_upload!" do
-    let(:file_path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
-
-    context "without resizing" do
-      subject do
-        Fs::UploadedFile.create_from_file(file_path, basename: "logo.png") do |upload_file|
-          described_class.create_from_upload!(upload_file)
-        end
-      end
-
-      it do
-        expect(subject).to be_persisted
-        expect(subject).to be_valid
-        expect(::Fs.size(subject.path)).to be > 0
-        expect(subject.image_dimension).to eq [ 160, 160 ]
-      end
-    end
-
-    context "with resizing" do
-      subject do
-        Fs::UploadedFile.create_from_file(file_path, basename: "logo.png") do |upload_file|
-          described_class.create_from_upload!(upload_file, resizing: [ 90, 90 ])
-        end
-      end
-
-      it do
-        expect(subject).to be_persisted
-        expect(subject).to be_valid
-        expect(::Fs.size(subject.path)).to be > 0
-        expect(subject.image_dimension).to eq [ 90, 90 ]
-      end
-    end
-  end
 end

@@ -48,33 +48,6 @@ module SS::FileFactory
 
       item
     end
-
-    def create_from_upload!(upload_file, resizing: nil, &block)
-      attributes = {
-        filename: upload_file.original_filename,
-        content_type: ::Fs.content_type(upload_file.original_filename)
-      }
-      file = create_empty!(attributes) do |new_file|
-        if resizing.blank?
-          ::FileUtils.copy_stream(upload_file, new_file.path)
-        else
-          SS::ImageConverter.attach(upload_file, ext: ::File.extname(upload_file.original_filename)) do |converter|
-            converter.apply_defaults!(resizing: resizing)
-            Fs.upload(new_file.path, converter.to_io)
-          end
-        end
-      end
-
-      if block_given?
-        yield file
-        file.save!
-      else
-        file.update_thumbnails
-      end
-
-      file.sanitizer_copy_file
-      file
-    end
   end
 
   def save_files
