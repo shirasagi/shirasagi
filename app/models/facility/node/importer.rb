@@ -49,8 +49,11 @@ class Facility::Node::Importer
   def update_row(row, row_num)
     filename = "#{node.filename}/#{row[model.t(:filename)]}"
     item = model.find_or_initialize_by filename: filename, site_id: site.id
-    item.cur_site = site
     set_page_attributes(row, item)
+    set_category_ids(row, item)
+    set_location_ids(row, item)
+    set_service_ids(row, item)
+    set_group_ids(row, item)
     put_log_of_insert(item, row_num, row)
 
     if item.save
@@ -61,15 +64,48 @@ class Facility::Node::Importer
     end
 
     if row[model.t(:map_points)].present?
-      filename = "#{filename}/map.html"
-      map = ::Facility::Map.find_or_create_by filename: filename
-      set_map_attributes(row, map, row_num)
-      map.site = site
-      map.save
+      map = save_map(filename, row, row_num)
       name += " #{map.map_points.first.try(:[], "loc")}"
     end
 
     return name
+  end
+
+  def set_page_attributes(row, item)
+    item.cur_site        = site
+    item.name            = row[model.t(:name)].try(:squish)
+    item.layout          = Cms::Layout.site(site).where(name: row[model.t(:layout)].try(:squish)).first
+    item.kana            = row[model.t(:kana)].try(:squish)
+    item.address         = row[model.t(:address)].try(:squish)
+    item.postcode        = row[model.t(:postcode)].try(:squish)
+    item.tel             = row[model.t(:tel)].try(:squish)
+    item.fax             = row[model.t(:fax)].try(:squish)
+    item.related_url     = row[model.t(:related_url)].try(:gsub, /[\r\n]/, " ")
+    item.additional_info = row.to_h.select { |k, v| k =~ /^#{model.t(:additional_info)}[:：]/ && v.present? }.
+        map { |k, v| {:field => k.sub(/^#{model.t(:additional_info)}[:：]/, ""), :value => v} }
+  end
+
+  def set_category_ids(row, item)
+    names = row[model.t(:categories)].to_s.split(/\n/).map(&:strip)
+    category_ids = node.st_categories.in(name: names).map(&:id)
+    item.category_ids = SS::Extensions::ObjectIds.new(category_ids)
+  end
+
+  def set_location_ids(row, item)
+    names = row[model.t(:locations)].to_s.split(/\n/).map(&:strip)
+    location_ids = node.st_locations.in(name: names).map(&:id)
+    item.location_ids = SS::Extensions::ObjectIds.new(location_ids)
+  end
+
+  def set_service_ids(row, item)
+    names = row[model.t(:services)].to_s.split(/\n/).map(&:strip)
+    service_ids = node.st_services.in(name: names).map(&:id)
+    item.service_ids = SS::Extensions::ObjectIds.new(service_ids)
+  end
+
+  def set_group_ids(row, item)
+    ids = SS::Group.in(name: row[model.t(:groups)].to_s.split(/\n/)).map(&:id)
+    item.group_ids = SS::Extensions::ObjectIds.new(ids)
   end
 
   def put_log_of_insert(item, row_num, row)
@@ -96,6 +132,7 @@ class Facility::Node::Importer
 
     inputted_category.each do |category|
       next if category_in_db.include?(category)
+
       @count_errors += 1
       put_log(I18n.t("cms.log_of_the_failed_category", category: category, row_num: row_num))
     end
@@ -107,6 +144,7 @@ class Facility::Node::Importer
 
     inputted_location.each do |location|
       next if location_in_db.include?(location)
+
       @count_errors += 1
       put_log(I18n.t("cms.log_of_the_failed_location", location: location, row_num: row_num))
     end
@@ -118,6 +156,7 @@ class Facility::Node::Importer
 
     inputted_service.each do |service|
       next if service_in_db.include?(service)
+
       @count_errors += 1
       put_log(I18n.t("cms.log_of_the_failed_service", service: service, row_num: row_num))
     end
@@ -129,6 +168,7 @@ class Facility::Node::Importer
 
     inputted_group.each do |group|
       next if group_in_db.include?(group)
+
       @count_errors += 1
       put_log(I18n.t("cms.log_of_the_failed_group", group: group, row_num: row_num))
     end
@@ -136,12 +176,12 @@ class Facility::Node::Importer
 
   def put_log_of_update(item, row_num)
     item.changes.each do |change_data|
-      changed_field = change_data[0]
       before_changing_data = change_data[1][0]
       after_changing_data = change_data[1][1]
-      next if changed_field == "additional_info" && before_changing_data.nil? && after_changing_data == []
+      next if before_changing_data.blank? && after_changing_data.blank?
 
-      field_name = "update #{row_num}#{I18n.t("cms.row_num")}:  #{I18n.t("mongoid.attributes.facility/node/page.#{changed_field}")}："
+      changed_field = change_data[0]
+      field_name = "update #{row_num}#{I18n.t("cms.row_num")}: #{I18n.t("mongoid.attributes.facility/node/page.#{changed_field}")}"
 
       if item.fields[changed_field].options[:metadata].nil?
         put_log("#{field_name}#{before_changing_data} → #{after_changing_data}")
@@ -154,37 +194,16 @@ class Facility::Node::Importer
     end
   end
 
-  def set_page_attributes(row, item)
-    item.name            = row[model.t(:name)].try(:squish)
-    item.layout          = Cms::Layout.site(site).where(name: row[model.t(:layout)].try(:squish)).first
-    item.kana            = row[model.t(:kana)].try(:squish)
-    item.address         = row[model.t(:address)].try(:squish)
-    item.postcode        = row[model.t(:postcode)].try(:squish)
-    item.tel             = row[model.t(:tel)].try(:squish)
-    item.fax             = row[model.t(:fax)].try(:squish)
-    item.related_url     = row[model.t(:related_url)].try(:gsub, /[\r\n]/, " ")
-    item.additional_info = row.to_h.select { |k, v| k =~ /^#{model.t(:additional_info)}[:：]/ && v.present? }.
-        map { |k, v| {:field => k.sub(/^#{model.t(:additional_info)}[:：]/, ""), :value => v} }
+  def save_map(filename, row, row_num)
+    filename = "#{filename}/map.html"
+    map = ::Facility::Map.find_or_create_by(filename: filename)
+    set_map_attributes(row, map, row_num)
+    map.site = site
+    map.save
 
-    set_page_categories(row, item)
-    ids = SS::Group.in(name: row[model.t(:groups)].to_s.split(/\n/)).map(&:id)
-    item.group_ids = SS::Extensions::ObjectIds.new(ids)
+    map
   end
 
-  def set_page_categories(row, item)
-    names = row[model.t(:categories)].to_s.split(/\n/).map(&:strip)
-    ids = node.st_categories.in(name: names).map(&:id)
-
-    item.category_ids = SS::Extensions::ObjectIds.new(ids)
-
-    names = row[model.t(:locations)].to_s.split(/\n/).map(&:strip)
-    ids = node.st_locations.in(name: names).map(&:id)
-    item.location_ids = SS::Extensions::ObjectIds.new(ids)
-
-    names = row[model.t(:services)].to_s.split(/\n/).map(&:strip)
-    ids = node.st_services.in(name: names).map(&:id)
-    item.service_ids = SS::Extensions::ObjectIds.new(ids)
-  end
 
   def set_map_attributes(row, item, row_num)
     points = row[model.t(:map_points)].split(/\n/).map do |loc|
@@ -197,9 +216,11 @@ class Facility::Node::Importer
     return if item.new_record?
 
     item.changes.each do |change_data|
-      before_changing_data = change_data[1][0]#[0][:loc]
-      after_changing_data = change_data[1][1]#[0][:loc]
-      put_log("update #{row_num}#{I18n.t("cms.row_num")}:  #{I18n.t("mongoid.attributes.facility/node/page.#{change_data[0]}")}：#{before_changing_data} → #{after_changing_data}")
+      before_changing_data = change_data[1][0]
+      after_changing_data = change_data[1][1]
+      put_log(
+        "update #{row_num}#{I18n.t("cms.row_num")}: #{I18n.t("mongoid.attributes.facility/node/page.#{change_data[0]}")}：#{before_changing_data} → #{after_changing_data}"
+      )
     end
   end
 end
