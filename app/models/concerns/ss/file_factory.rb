@@ -8,8 +8,6 @@ module SS::FileFactory
   end
 
   module ClassMethods
-    DEFAULT_MIME_TYPE = "application/octet-stream".freeze
-
     def create_empty!(attributes, options = {})
       item = new(attributes)
       if item.respond_to?(:disable_thumb=)
@@ -54,7 +52,7 @@ module SS::FileFactory
     def create_from_upload!(upload_file, resizing: nil, &block)
       attributes = {
         filename: upload_file.original_filename,
-        content_type: ::Fs.content_type(upload_file.original_filename, DEFAULT_MIME_TYPE)
+        content_type: ::Fs.content_type(upload_file.original_filename)
       }
       file = create_empty!(attributes) do |new_file|
         if resizing.blank?
