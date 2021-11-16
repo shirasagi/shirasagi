@@ -100,8 +100,7 @@ describe Article::Page, dbscope: :example do
             end
           end
 
-          # サムネイルを含めると、全部でファイルは 6 つあるはず
-          expect(SS::File.all.count).to eq 6
+          expect(SS::File.all.count).to eq 3
         end
       end
 
@@ -189,8 +188,7 @@ describe Article::Page, dbscope: :example do
             expect(item_column_value2.value).to include file3.url
           end
 
-          # サムネイルを含めると、全部でファイルは 12 個あるはず
-          expect(SS::File.all.count).to eq 12
+          expect(SS::File.all.count).to eq 6
         end
       end
 
@@ -287,8 +285,7 @@ describe Article::Page, dbscope: :example do
               expect(item_column_value2.value).to include file3.url
             end
 
-            # サムネイルを含めると、全部でファイルは 6 つあるはず
-            expect(SS::File.all.count).to eq 6
+            expect(SS::File.all.count).to eq 3
 
             expect(History::Trash.all.count).to eq 1
             History::Trash.all.first.tap do |trash|
@@ -356,8 +353,7 @@ describe Article::Page, dbscope: :example do
               expect(item_column_value2.value).to include branch_file.url
             end
 
-            # サムネイルを含めると、全部でファイルは 4 つあるはず
-            expect(SS::File.all.count).to eq 6
+            expect(SS::File.all.count).to eq 3
 
             expect(History::Trash.all.count).to eq 1
             History::Trash.all.first.tap do |trash|

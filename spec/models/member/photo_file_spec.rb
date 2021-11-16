@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Member::PhotoFile, dbscope: :example do
-  describe ".create_from_upload!" do
+  describe "member/photo_file" do
     let(:file_path) { "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg" }
     let(:basename) { File.basename(file_path) }
 
@@ -9,10 +9,13 @@ describe Member::PhotoFile, dbscope: :example do
       context "without resizing" do
         subject do
           Fs::UploadedFile.create_from_file(file_path, basename: basename) do |upload_file|
-            described_class.create_from_upload!(upload_file) do |new_file|
-              new_file.site_id = cms_site.id
-              new_file.user_id = cms_user.id
-            end
+            new_file = described_class.new
+            new_file.site_id = cms_site.id
+            new_file.user_id = cms_user.id
+            new_file.filename = upload_file.original_filename
+            new_file.in_file = upload_file
+            new_file.save!
+            new_file
           end
         end
 
@@ -26,18 +29,24 @@ describe Member::PhotoFile, dbscope: :example do
           expect(subject.image_dimension).to eq [ 712, 210 ]
 
           expect(subject.thumbs.count).to eq 2
-          expect(subject.thumb_url).to be_present
-          expect(subject.thumb).to be_present
-          expect(subject.thumb.image_dimension).to eq [ 160, 47 ]
-          expect(subject.thumb(:detail)).to be_present
-          expect(subject.thumb(:detail).image_dimension).to eq [ 712, 210 ]
+          expect(subject.thumbs[:normal]).to be_present
+          expect(subject.thumbs[:normal].url).to be_present
+          expect(subject.thumbs[:normal].image_dimension).to eq [ 160, 47 ]
+          expect(subject.thumbs[:detail]).to be_present
+          expect(subject.thumbs[:detail].url).to be_present
+          expect(subject.thumbs[:detail].image_dimension).to eq [ 712, 210 ]
         end
       end
 
       context "with resizing" do
         subject do
           Fs::UploadedFile.create_from_file(file_path, basename: basename) do |upload_file|
-            described_class.create_from_upload!(upload_file, resizing: [ 180, 180 ])
+            new_file = described_class.new
+            new_file.filename = upload_file.original_filename
+            new_file.in_file = upload_file
+            new_file.resizing = [ 180, 180 ]
+            new_file.save!
+            new_file
           end
         end
 
@@ -51,11 +60,12 @@ describe Member::PhotoFile, dbscope: :example do
           expect(subject.image_dimension).to eq [ 180, 53 ]
 
           expect(subject.thumbs.count).to eq 2
-          expect(subject.thumb_url).to be_present
-          expect(subject.thumb).to be_present
-          expect(subject.thumb.image_dimension).to eq [ 160, 47 ]
-          expect(subject.thumb(:detail)).to be_present
-          expect(subject.thumb(:detail).image_dimension).to eq [ 180, 53 ]
+          expect(subject.thumbs[:normal]).to be_present
+          expect(subject.thumbs[:normal].url).to be_present
+          expect(subject.thumbs[:normal].image_dimension).to eq [ 160, 47 ]
+          expect(subject.thumbs[:detail]).to be_present
+          expect(subject.thumbs[:detail].url).to be_present
+          expect(subject.thumbs[:detail].image_dimension).to eq [ 180, 53 ]
         end
       end
     end

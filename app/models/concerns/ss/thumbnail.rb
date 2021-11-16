@@ -19,43 +19,108 @@ module SS::Thumbnail
     end
   end
 
-  def thumbnail_path(name = nil)
-    name ||= :normal
-    "#{self.class.root}/ss_files/" + id.to_s.chars.join("/") + "/_/#{id}_#{name}"
+  def thumbs
+    @thumbs ||= ThumbnailCollection.new(self)
   end
 
-  def thumb(name = nil)
-    path = thumbnail_path(name)
-    return unless ::Fs.exist?(path)
+  def thumb
+    thumbs[:normal]
+  end
 
-    OpenStruct.new(
-      name: self.name,
-      filename: self.filename,
-      content_type: self.content_type,
-      path: path,
-      size: ::Fs.size(path),
-    )
+  def thumb_url
+    thumb.url
   end
 
   def update_thumbnails
     return if disable_thumb.present?
 
     # remove_all_thumbnails
-    self.class.thumbs_resizing.each do |name, _dimension|
-      thumbnail_path = thumbnail_path(name)
-      ::Fs.rm_rf(thumbnail_path) if ::Fs.exist?(thumbnail_path)
+    thumbs.each do |thumb|
+      ::Fs.rm_rf(thumb.path) if ::Fs.exist?(thumb.path)
     end
 
     return if !image?
     return if !::Fs.exist?(path)
 
-    ext = ::File.extname(filename)
-    self.class.thumbs_resizing.each do |name, dimension|
-      thumbnail_path = thumbnail_path(name)
-      SS::ImageConverter.attach(path, ext: ext) do |converter|
-        converter.apply_defaults!(resizing: dimension)
+    thumbs.each do |thumb|
+      thumbnail_path = thumb.path
+      width, height = *thumb.dimension
+
+      SS::ImageConverter.open(path) do |converter|
+        converter.resize_to_fit!(width, height)
         Fs.upload(thumbnail_path, converter.to_io)
       end
+    end
+  end
+
+  class ThumbnailCollection
+    include Enumerable
+
+    def initialize(file)
+      @file = file
+    end
+
+    def count(*several_variants)
+      return @file.class.thumbs_resizing.length if several_variants.blank?
+      super
+    end
+
+    def [](name)
+      dimension = @file.class.thumbs_resizing[name]
+      return if dimension.blank?
+
+      ThumbnailInfo.new(file: @file, thumbnail_name: name, dimension: dimension)
+    end
+
+    def each
+      @file.class.thumbs_resizing.each do |name, dimension|
+        yield ThumbnailInfo.new(file: @file, thumbnail_name: name, dimension: dimension)
+      end
+    end
+  end
+
+  class ThumbnailInfo
+    include ActiveModel::Model
+    include SS::Locatable
+
+    attr_accessor :file, :thumbnail_name, :dimension
+
+    class << self
+      delegate :root, to: SS::File
+    end
+
+    delegate :id, :_id, :site, :site_id, :cur_user, :user, :user_id, :content_type, to: :file
+
+    def physical_name
+      "#{id}_#{thumbnail_name}"
+    end
+
+    def name
+      @name ||= begin
+        basename = ::File.basename(file.name, ".*")
+        ext = ::File.extname(file.name)
+        "#{basename}_#{thumbnail_name}#{ext}"
+      end
+    end
+
+    def filename
+      @filename ||= begin
+        basename = ::File.basename(file.filename, ".*")
+        ext = ::File.extname(file.filename)
+        "#{basename}_#{thumbnail_name}#{ext}"
+      end
+    end
+
+    def size
+      return 0 unless ::Fs.exist?(path)
+      @size ||= ::Fs.size(path)
+    end
+
+    def image_dimension
+      return unless Fs.exist?(path)
+      return unless @file.image?
+
+      ::FastImage.size(path) rescue nil
     end
   end
 end

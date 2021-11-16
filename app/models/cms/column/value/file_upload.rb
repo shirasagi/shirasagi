@@ -184,7 +184,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     end
 
     # サムネイルを作成する
-    new_file.send(:save_thumbs)
+    new_file.update_thumbnails
 
     self.file = new_file
     self.file_id = new_file.id
