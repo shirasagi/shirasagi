@@ -22,9 +22,18 @@ class Fs::FilesController < ApplicationController
     name_or_filename << ".#{params[:format]}" if params[:format].present?
 
     item = SS::File.find(id)
-    raise "404" if item.name != name_or_filename && item.filename != name_or_filename
+    if item.name == name_or_filename || item.filename == name_or_filename
+      @item = item.becomes_with_model
+      @variant = nil
+      raise "404" if @item.try(:thumb?)
+      return
+    end
+
+    variant = item.variants.find { |variant| variant.name == name_or_filename || variant.filename == name_or_filename }
+    raise "404" if !variant
 
     @item = item.becomes_with_model
+    @variant = variant
     raise "404" if @item.try(:thumb?)
   end
 
@@ -64,18 +73,21 @@ class Fs::FilesController < ApplicationController
   def send_item(disposition = :inline)
     set_last_modified
 
-    if Fs.mode == :file && Fs.file?(@item.path)
-      send_file @item.path, type: @item.content_type, filename: @item.download_filename,
+    path = @variant ? @variant.path : @item.path
+    download_filename = @variant ? @variant.download_filename : @item.download_filename
+
+    if Fs.mode == :file && Fs.file?(path)
+      send_file path, type: @item.content_type, filename: download_filename,
                 disposition: disposition, x_sendfile: true
     else
-      send_enum @item.to_io, type: @item.content_type, filename: @item.download_filename,
+      send_enum @variant ? @variant.to_io : @item.to_io, type: @item.content_type, filename: download_filename,
                 disposition: disposition
     end
   end
 
-  def send_thumb(file, opts = {})
-    width  = opts.delete(:width).to_i
-    height = opts.delete(:height).to_i
+  def send_thumb(file, width:, height:, **opts)
+    width  = width.to_i
+    height = height.to_i
 
     width  = (width  > 0) ? width  : SS::ImageConverter::DEFAULT_THUMB_WIDTH
     height = (height > 0) ? height : SS::ImageConverter::DEFAULT_THUMB_HEIGHT
@@ -106,13 +118,14 @@ class Fs::FilesController < ApplicationController
       set_last_modified
       send_thumb @item, type: @item.content_type, filename: @item.filename,
         disposition: :inline, width: width, height: height
-    elsif thumb = @item.try(:thumb, size)
-      @item = thumb
-      index
+    elsif size.present? && (variant = @item.variants[size.to_s.to_sym])
+      set_last_modified
+      @variant = variant
+      send_item
     else
       set_last_modified
-      send_thumb @item, type: @item.content_type, filename: @item.filename,
-        disposition: :inline
+      @variant = @item.variants[:thumb]
+      send_item
     end
   rescue => e
     raise "500"

@@ -56,4 +56,14 @@ module SS::Locatable
       full_url_with_filename
     end
   end
+
+  def download_filename
+    return name if name.include?('.') && !name.end_with?(".")
+
+    name_without_ext = ::File.basename(name, ".*")
+    ext = ::File.extname(filename)
+    return name_without_ext if ext.blank? || ext == "."
+
+    name_without_ext + ext
+  end
 end

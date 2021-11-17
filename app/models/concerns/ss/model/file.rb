@@ -4,6 +4,7 @@ module SS::Model::File
   include SS::Document
   include SS::Reference::User
   include SS::Locatable
+  include SS::ReadableFile
   include SS::FileFactory
   include SS::ExifGeoLocation
   include SS::CsvHeader
@@ -220,16 +221,6 @@ module SS::Model::File
     "#{::File.basename(name, ".*")} (#{extname.upcase} #{number_to_human_size(size)})"
   end
 
-  def download_filename
-    return name if name.include?('.') && !name.end_with?(".")
-
-    name_without_ext = ::File.basename(name, ".*")
-    ext = ::File.extname(filename)
-    return name_without_ext if ext.blank? || ext == "."
-
-    name_without_ext + ext
-  end
-
   def basename
     filename.present? ? ::File.basename(filename) : ""
   end
@@ -262,14 +253,6 @@ module SS::Model::File
 
   def resizing=(size)
     @resizing = size.instance_of?(String) ? size.split(",") : size
-  end
-
-  def read
-    Fs.exist?(path) ? Fs.binread(path) : nil
-  end
-
-  def to_io(&block)
-    Fs.exist?(path) ? Fs.to_io(path, &block) : nil
   end
 
   def uploaded_file(&block)

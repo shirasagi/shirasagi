@@ -81,6 +81,7 @@ module SS::VariantProcessor
   class Variant
     include ActiveModel::Model
     include SS::Locatable
+    include SS::ReadableFile
 
     attr_accessor :file, :variant_name
 
