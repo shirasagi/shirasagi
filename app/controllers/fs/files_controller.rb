@@ -25,7 +25,6 @@ class Fs::FilesController < ApplicationController
     if item.name == name_or_filename || item.filename == name_or_filename
       @item = item.becomes_with_model
       @variant = nil
-      raise "404" if @item.try(:thumb?)
       return
     end
 
@@ -34,7 +33,6 @@ class Fs::FilesController < ApplicationController
 
     @item = item.becomes_with_model
     @variant = variant
-    raise "404" if @item.try(:thumb?)
   end
 
   def deny
