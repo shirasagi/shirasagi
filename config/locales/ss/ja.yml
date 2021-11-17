@@ -48,7 +48,8 @@ ja:
     after_replace: 差し替え後
     broken_link: リンク切れ
     auto_reload: 自動更新
-    quality: 品質
+    quality: 画質
+    resize_image_auto: 画像リサイズ(自動)
 
     views:
       login/login:
@@ -742,7 +743,7 @@ ja:
       ss/model/image_resize:
         max_width: 横幅
         max_height: 縦幅
-        quality: 品質
+        quality: 画質
       ss/model/postal_code:
         code: 郵便番号
         prefecture: 都道府県
@@ -1004,6 +1005,8 @@ ja:
         - 横幅 %{width}ピクセル以上
         - 高さ %{height}ピクセル以上
         -
+        - 容量を超過している場合、あらかじめ設定している画質に変更されます。
+        - 横幅、高さを超過している場合、収まるように縮小されます。
         - 自動リサイズをしたくない場合は、管理者に権限を付与してもらった後、左の「有効」をクリックし「無効」に設定してください。
     ss/model/user_title:
       code: 役職コードを入力します。
@@ -1181,9 +1184,9 @@ ja:
       max_height:
         - 画像ファイルの縦幅を設定可能です
       quality:
-        - 画像ファイルの品質を0から100の間で設定可能です
-        - 最大ファイルサイズを超過した場合、品質に基づいて画像を圧縮します
-        - 品質が高い程劣化が少ないです
+        - 画像ファイルの画質を0から100の間で設定可能です
+        - 最大ファイルサイズを超過した場合、画質に基づいて画像を圧縮します
+        - 画質が高い程劣化が少ないです
     ss/model/editor_setting:
       color_button:
         - 文字色変更ボタンの表示を設定します。

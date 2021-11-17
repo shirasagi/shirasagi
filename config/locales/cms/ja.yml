@@ -1910,7 +1910,7 @@ ja:
 
     cms/addon/image_resize_setting:
       image_resize_setting:
-        - フォルダー内のページ編集時に「ファイル>アップロード」から画像ファイルをアップする際の最大横幅、縦幅、品質を設定可能です。
+        - フォルダー内のページ編集時に「ファイル>アップロード」から画像ファイルをアップする際の最大横幅、縦幅、画質を設定可能です。
 
     cms/addon/tag_setting:
       st_tags:

@@ -1,11 +1,9 @@
 <%
-  disable_image_resizes = SS::ImageResize.allowed?(:disable, @cur_user) && SS::ImageResize.present?
-  disable_image_resizes ||= @cur_node.present? && Cms::ImageResize.allowed?(:disable, @cur_user, site: @cur_site, node: @cur_node) && Cms::ImageResize.site(@cur_site).node(@cur_node).present?
-  min_attributes = [SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).min_attributes]
-  min_attributes << Cms::ImageResize.site(@cur_site).node(@cur_node).where(state: SS::ImageResize::STATE_ENABLED).min_attributes if @cur_node.present?
-  min_size = min_attributes.reject(&:blank?).collect { |attribute| attribute['size'] }.reject(&:blank?).min
-  min_width = min_attributes.reject(&:blank?).collect { |attribute| attribute['max_width'] }.reject(&:blank?).min
-  min_height = min_attributes.reject(&:blank?).collect { |attribute| attribute['max_height'] }.reject(&:blank?).min
+  disable_image_resizes = SS::ImageResize.allowed?(:disable, @cur_user) && SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).present?
+  disable_image_resizes ||= @cur_node.present? && Cms::ImageResize.allowed?(:disable, @cur_user, site: @cur_site, node: @cur_node) && Cms::ImageResize.site(@cur_site).node(@cur_node).where(state: SS::ImageResize::STATE_ENABLED).present?
+  min_size = @model.image_resizes_min_attributes(node: @cur_node)['size']
+  min_width = @model.image_resizes_min_attributes(node: @cur_node)['max_width']
+  min_height = @model.image_resizes_min_attributes(node: @cur_node)['max_height']
 %>
 
 <%= jquery do %>
@@ -24,10 +22,16 @@
 
     <div class="search-ui-form">
       <%= f.file_field :in_files, multiple: :multiple, required: :required %>
-      <%= f.select :resizing, @model.resizing_options(node: @cur_node), { include_blank: t("ss.resize_image") }, { class: "image-size" } %>
-      <%= f.select :quality, @model.quality_options, { include_blank: t("ss.quality") } %>
+      <% if @model.resizing_options(user: @cur_user, node: @cur_node).present? %>
+        <%= f.select :resizing, @model.resizing_options(user: @cur_user, node: @cur_node), { include_blank: t("ss.resize_image_auto") }, { class: "image-size" } %>
+      <% end %>
+      <% if @model.quality_options(user: @cur_user, node: @cur_node).present? %>
+        <%= f.select :quality, @model.quality_options(user: @cur_user, node: @cur_node), { include_blank: t("ss.quality") } %>
+      <% end %>
       <% if disable_image_resizes %>
         <%= f.select :image_resizes_disabled, @model.image_resizes_disabled_options %>
+      <% end %>
+      <% if min_size %>
         <div class="tooltip">?
           <ul class="tooltip-content">
             <% t('tooltip.ss/model/file.image_resizes_disabled', size: min_size.to_s(:human_size), width: min_width, height: min_height).each do |tooltip| %>

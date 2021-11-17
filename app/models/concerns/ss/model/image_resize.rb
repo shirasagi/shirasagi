@@ -19,7 +19,7 @@ module SS::Model::ImageResize
 
   module ClassMethods
     def min_attributes
-      keys = %w(size max_width max_height)
+      keys = %w(size max_width max_height quality)
       values = {}
       keys.each do |key|
         values[key] = []

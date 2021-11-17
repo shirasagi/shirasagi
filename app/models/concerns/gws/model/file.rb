@@ -55,26 +55,57 @@ module Gws::Model::File
       "#{SS::Application.private_root}/files"
     end
 
+    def image_resizes_min_attributes(opts = {})
+      if opts[:user]
+        disable_image_resizes = SS::ImageResize.allowed?(:disable, opts[:user]) &&
+                                SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).present?
+        return {} if disable_image_resizes
+      end
+
+      min_attributes = [SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).min_attributes]
+
+      min_attributes.inject do |a, b|
+        a.merge(b) do |k, v1, v2|
+          next v1 if v2.blank?
+          next v2 if v1.blank?
+
+          [v1, v2].min
+        end
+      end
+    end
+
     def resizing_options(opts = {})
       options = [
         [320, 240], [240, 320], [640, 480], [480, 640], [800, 600], [600, 800],
         [1024, 768], [768, 1024], [1280, 720], [720, 1280]
       ].map { |x, y| [I18n.t("ss.options.resizing.#{x}x#{y}"), "#{x},#{y}"] }
 
-      min_attributes = [SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).min_attributes]
-      min_width = min_attributes.reject(&:blank?).collect { |attribute| attribute['max_width'] }.reject(&:blank?).min
-      min_height = min_attributes.reject(&:blank?).collect { |attribute| attribute['max_height'] }.reject(&:blank?).min
+      return options unless opts[:user]
+
+      min_width = image_resizes_min_attributes(opts)['max_width']
+      min_height = image_resizes_min_attributes(opts)['max_height']
 
       return options if min_width.blank? || min_height.blank?
 
       options.select do |k, v|
         size = v.split(',').collect(&:to_i)
-        size[0] < min_width && size[1] < min_height
+        size[0] <= min_width && size[1] <= min_height
       end
     end
 
-    def quality_options
-      SS.config.ss.quality_options.collect { |v| [ v['label'], v['quality'] ] }
+    def quality_options(opts = {})
+      options = SS.config.ss.quality_options.collect { |v| [ v['label'], v['quality'] ] } rescue []
+
+      return options unless opts[:user]
+
+      min_quality = image_resizes_min_attributes(user: opts[:user], node: opts[:node])['quality']
+
+      return options unless min_quality
+
+      options.select do |k, v|
+        quality = v.to_i
+        quality <= min_quality
+      end
     end
 
     def image_resizes_disabled_options
@@ -284,13 +315,17 @@ module Gws::Model::File
     remove_public_file if site
   end
 
-  def resizing_with_max_file_size
-    size = resizing || []
+  def max_file_sizes
     max_file_sizes = []
     if user.blank? || !SS::ImageResize.allowed?(:disable, user) || image_resizes_disabled != 'disabled'
       max_file_sizes += SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).to_a
     end
-    max_file_sizes.reject(&:blank?).each do |max_file_size|
+    max_file_sizes.reject(&:blank?)
+  end
+
+  def resizing_with_max_file_size
+    size = resizing || []
+    max_file_sizes.each do |max_file_size|
       if size.present?
         max_file_size.max_width = size[0] if max_file_size.max_width > size[0]
         max_file_size.max_height = size[1] if max_file_size.max_height > size[1]
@@ -301,12 +336,9 @@ module Gws::Model::File
   end
 
   def quality_with_max_file_size
-    quality = [self.quality.try(:to_i)]
-    max_file_sizes = []
-    if user.blank? || !SS::ImageResize.allowed?(:disable, user) || image_resizes_disabled != 'disabled'
-      max_file_sizes += SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).to_a
-    end
-    max_file_sizes.reject(&:blank?).each do |max_file_size|
+    quality = []
+    quality << self.quality.try(:to_i) if self.quality.present?
+    max_file_sizes.each do |max_file_size|
       next if size <= max_file_size.try(:size)
       quality << max_file_size.try(:quality)
     end
