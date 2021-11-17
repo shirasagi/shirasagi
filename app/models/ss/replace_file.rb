@@ -16,7 +16,7 @@ class SS::ReplaceFile
 
   # thumbs
   after_save :destroy_thumbs, if: -> { in_file || resizing }
-  after_save :save_thumbs, if: -> { disable_thumb.blank? && image? }
+  after_save :save_thumbs, if: -> { in_disable_variant_processing.blank? && image? }
 
   # owner item
   after_save :update_owner_item
@@ -60,7 +60,7 @@ class SS::ReplaceFile
 
     @source.class.create_empty!(source_attributes) do |new_file|
       ::FileUtils.copy(self.path, new_file.path)
-      new_file.disable_thumb = true
+      new_file.in_disable_variant_processing = true
       new_file.save!
       new_file.sanitizer_copy_file
     end

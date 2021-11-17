@@ -28,13 +28,13 @@ describe Member::PhotoFile, dbscope: :example do
           expect(subject.model).to eq "member/photo"
           expect(subject.image_dimension).to eq [ 712, 210 ]
 
-          expect(subject.thumbs.count).to eq 2
-          expect(subject.thumbs[:normal]).to be_present
-          expect(subject.thumbs[:normal].url).to be_present
-          expect(subject.thumbs[:normal].image_dimension).to eq [ 160, 47 ]
-          expect(subject.thumbs[:detail]).to be_present
-          expect(subject.thumbs[:detail].url).to be_present
-          expect(subject.thumbs[:detail].image_dimension).to eq [ 712, 210 ]
+          expect(subject.variants.count).to eq 2
+          expect(subject.variants[:thumb]).to be_present
+          expect(subject.variants[:thumb].url).to be_present
+          expect(subject.variants[:thumb].image_dimension).to eq [ 160, 47 ]
+          expect(subject.variants[:detail]).to be_present
+          expect(subject.variants[:detail].url).to be_present
+          expect(subject.variants[:detail].image_dimension).to eq [ 712, 210 ]
         end
       end
 
@@ -59,13 +59,13 @@ describe Member::PhotoFile, dbscope: :example do
           expect(::Fs.size(subject.path)).to be > 0
           expect(subject.image_dimension).to eq [ 180, 53 ]
 
-          expect(subject.thumbs.count).to eq 2
-          expect(subject.thumbs[:normal]).to be_present
-          expect(subject.thumbs[:normal].url).to be_present
-          expect(subject.thumbs[:normal].image_dimension).to eq [ 160, 47 ]
-          expect(subject.thumbs[:detail]).to be_present
-          expect(subject.thumbs[:detail].url).to be_present
-          expect(subject.thumbs[:detail].image_dimension).to eq [ 180, 53 ]
+          expect(subject.variants.count).to eq 2
+          expect(subject.variants[:thumb]).to be_present
+          expect(subject.variants[:thumb].url).to be_present
+          expect(subject.variants[:thumb].image_dimension).to eq [ 160, 47 ]
+          expect(subject.variants[:detail]).to be_present
+          expect(subject.variants[:detail].url).to be_present
+          expect(subject.variants[:detail].image_dimension).to eq [ 180, 53 ]
         end
       end
     end

@@ -10,8 +10,8 @@ module SS::FileFactory
   module ClassMethods
     def create_empty!(attributes, options = {})
       item = new(attributes)
-      if item.respond_to?(:disable_thumb=)
-        item.disable_thumb = true # サムネイル作成時にエラーになるので、無効にする
+      if item.respond_to?(:in_disable_variant_processing=)
+        item.in_disable_variant_processing = true # サムネイル作成時にエラーになるので、無効にする
       end
       item.name = ::File.basename(item.filename) if item.name.blank? && item.filename.present?
       item.size = 0
@@ -27,8 +27,8 @@ module SS::FileFactory
       item.errors.clear
 
       # フラグを元に戻す
-      if item.respond_to?(:disable_thumb=)
-        item.disable_thumb = nil
+      if item.respond_to?(:in_disable_variant_processing=)
+        item.in_disable_variant_processing = nil
       end
 
       # ファイルが存在しない場合、空のファイルを作成する。
@@ -44,7 +44,7 @@ module SS::FileFactory
         item.sync_stats
       end
 
-      item.update_thumbnails
+      item.update_variants
 
       item
     end

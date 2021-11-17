@@ -38,7 +38,7 @@ describe SS::File, dbscope: :example do
       expect(Fs.exist?(subject.path)).to be_falsey
       expect(subject.url).to eq "/fs/#{subject.id}/_/#{subject.filename}"
       expect(subject.thumb).to be_present
-      expect(subject.thumb_url).to eq "/fs/#{subject.id}/_/#{basename}_normal.png"
+      expect(subject.thumb_url).to eq "/fs/#{subject.id}/_/#{basename}_thumb.png"
     end
   end
 
@@ -59,7 +59,7 @@ describe SS::File, dbscope: :example do
     its(:valid?) { is_expected.to be_truthy }
     its(:path) { is_expected.to eq "#{SS::File.root}/ss_files/#{subject.id}/_/#{subject.id}" }
     its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{subject.filename}" }
-    let(:thumb_basename) { "#{::File.basename(subject.filename, ".*")}_normal.#{subject.extname}" }
+    let(:thumb_basename) { "#{::File.basename(subject.filename, ".*")}_thumb.#{subject.extname}" }
     its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/#{thumb_basename}" }
     its(:public?) { is_expected.to be_falsey }
     its(:public_dir) { is_expected.to be_nil }
@@ -90,7 +90,7 @@ describe SS::File, dbscope: :example do
     its(:valid?) { is_expected.to be_truthy }
     its(:path) { is_expected.to eq "#{SS::File.root}/ss_files/#{subject.id}/_/#{subject.id}" }
     its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{CGI.escape(subject.name)}" }
-    let(:thumb_basename) { "#{::File.basename(subject.name, ".*")}_normal.#{subject.extname}" }
+    let(:thumb_basename) { "#{::File.basename(subject.name, ".*")}_thumb.#{subject.extname}" }
     its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/#{CGI.escape(thumb_basename)}" }
     its(:public?) { is_expected.to be_falsey }
     its(:public_dir) { is_expected.to be_nil }
@@ -122,7 +122,7 @@ describe SS::File, dbscope: :example do
     its(:valid?) { is_expected.to be_truthy }
     its(:path) { is_expected.to eq "#{SS::File.root}/ss_files/#{subject.id}/_/#{subject.id}" }
     its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{CGI.escape(subject.name)}" }
-    let(:thumb_basename) { "#{::File.basename(subject.name, ".*")}_normal.#{subject.extname}" }
+    let(:thumb_basename) { "#{::File.basename(subject.name, ".*")}_thumb.#{subject.extname}" }
     its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/#{CGI.escape(thumb_basename)}" }
     its(:public?) { is_expected.to be_falsey }
     its(:public_dir) { is_expected.to eq "#{site.root_path}/fs/#{subject.id}/_" }
@@ -155,7 +155,7 @@ describe SS::File, dbscope: :example do
     its(:valid?) { is_expected.to be_truthy }
     its(:path) { is_expected.to eq "#{SS::File.root}/ss_files/#{subject.id}/_/#{subject.id}" }
     its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{CGI.escape(subject.name)}" }
-    let(:thumb_basename) { "#{::File.basename(subject.name, ".*")}_normal.#{subject.extname}" }
+    let(:thumb_basename) { "#{::File.basename(subject.name, ".*")}_thumb.#{subject.extname}" }
     its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/#{CGI.escape(thumb_basename)}" }
     its(:public?) { is_expected.to be_falsey }
     its(:public_dir) { is_expected.to eq "#{site0.root_path}/fs/#{subject.id}/_" }

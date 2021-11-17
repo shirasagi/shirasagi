@@ -9,7 +9,7 @@ module SS::Model::File
   include SS::CsvHeader
   include SS::FileUsageAggregation
   include SS::UploadPolicy
-  include SS::Thumbnail
+  include SS::VariantProcessor
   include History::Addon::Trash
   include ActiveSupport::NumberHelper
 
@@ -419,7 +419,7 @@ module SS::Model::File
     end
     self.size = Fs.size(path)
 
-    update_thumbnails
+    update_variants
     sanitizer_save_file
   end
 

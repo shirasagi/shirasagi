@@ -14,7 +14,7 @@ module Sys::SiteImport::File
 
       item = SS::File.unscoped.where(data.reject { |k, v| v.blank? }).first || dummy_ss_file(data)
       item.record_timestamps = false
-      item.disable_thumb = true
+      item.in_disable_variant_processing = true
       data.each { |k, v| item[k] = v }
 
       if item.save
@@ -34,7 +34,7 @@ module Sys::SiteImport::File
       item = SS::File.unscoped.find(id) rescue nil
       next unless item
 
-      item.disable_thumb = true
+      item.in_disable_variant_processing = true
       item[:node_id] = @cms_nodes_map[item[:node_id]] if item[:node_id].present?
       save_document(item)
     end
@@ -47,7 +47,7 @@ module Sys::SiteImport::File
     item = SS::File.new(model: 'ss/dummy')
     item.created = data['created']
     item.updated = data['updated']
-    item.disable_thumb = true
+    item.in_disable_variant_processing = true
     item.in_file = file
     item.save
     item.in_file = nil
