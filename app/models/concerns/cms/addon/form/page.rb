@@ -171,7 +171,7 @@ module Cms::Addon::Form::Page
     file_ids_was.uniq!
 
     unlinked_file_ids = file_ids_was - file_ids_is
-    Cms::Addon::File::Utils.delete_files(self, unlinked_file_ids)
+    Cms::Reference::Files::Utils.delete_files(self, unlinked_file_ids)
   end
 
   def set_form_contains_urls

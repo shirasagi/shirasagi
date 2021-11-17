@@ -191,7 +191,7 @@ module SS::Relation::File
 
       # ファイルの所有者が存在している場合、誤って所有者を変更することを防止する目的で、ファイルを複製する
       # ただし、ブランチが所有している場合を除く
-      return file unless Cms::Addon::File::Utils.need_to_clone?(file, owner_item, owner_item.try(:in_branch))
+      return file unless Cms::Reference::Files::Utils.need_to_clone?(file, owner_item, owner_item.try(:in_branch))
 
       cur_user = owner_item.cur_user if owner_item.respond_to?(:cur_user)
       clone_file = SS::File.clone_file(file, cur_user: cur_user, owner_item: owner_item)

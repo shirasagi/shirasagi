@@ -104,7 +104,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
   def before_save_file
     if file_id_was.present? && file_id_was != file_id
-      Cms::Addon::File::Utils.delete_files(self, [ file_id_was ]) if file_id_was
+      Cms::Reference::Files::Utils.delete_files(self, [ file_id_was ]) if file_id_was
     end
 
     return if file.blank?
@@ -131,7 +131,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     # 差し替えページの場合、ファイルの所有者が差し替え元なら、そのままとする
     return if owner_item.try(:branch?) && SS::File.file_owned?(file, owner_item.master)
 
-    return unless Cms::Addon::File::Utils.need_to_clone?(file, owner_item, owner_item.try(:in_branch))
+    return unless Cms::Reference::Files::Utils.need_to_clone?(file, owner_item, owner_item.try(:in_branch))
 
     cur_user = owner_item.cur_user if owner_item.respond_to?(:cur_user)
     new_file = SS::File.clone_file(file, cur_user: cur_user, owner_item: owner_item) do |new_file|
@@ -183,7 +183,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   end
 
   def destroy_file
-    Cms::Addon::File::Utils.delete_files(self, [ file_id ])
+    Cms::Reference::Files::Utils.delete_files(self, [ file_id ])
   end
 
   # override Cms::Column::Value::Base#to_default_html
