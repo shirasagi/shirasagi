@@ -29,6 +29,7 @@ module Mobile::PublicFilter
     return if response.media_type != "text/html"
 
     body = response.body
+    body.force_encoding(Encoding::UTF_8) if body.encoding != Encoding::UTF_8
 
     # sub sites
     site_urls = SS::Site.all.select { |site| @cur_site.full_root_url == site.full_root_url }.map(&:url)
