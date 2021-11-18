@@ -89,7 +89,7 @@ module SS::VariantProcessor
       delegate :root, to: SS::File
     end
 
-    delegate :id, :_id, :site, :site_id, :cur_user, :user, :user_id, :content_type, to: :file
+    delegate :id, :_id, :site, :site_id, :cur_user, :user, :user_id, :content_type, :updated, :created, to: :file
 
     def physical_name
       "#{id}_#{variant_name}"
