@@ -31,13 +31,13 @@ module Gws::Monitor::DescendantsFileInfo
     end
 
     if (limit = (cur_site.monitor_file_size_per_topic || 0)) > 0
-      size = files.compact.map(&:size).inject(:+) || 0
+      size = files.compact.map(&:size).sum
 
       comments = self.class.topic_comments(topic || self).ne(_id: id)
       comment_files = comments.map(&:files).flatten
-      size += comment_files.compact.map(&:size).inject(:+) || 0
+      size += comment_files.compact.map(&:size).sum
 
-      size += topic.files.compact.map(&:size).inject(:+) || 0 if topic.present?
+      size += topic.files.compact.map(&:size).sum if topic.present?
 
       if size > limit
         errors.add(
@@ -58,7 +58,7 @@ module Gws::Monitor::DescendantsFileInfo
     sizes += comment_files.compact.map(&:size) || []
     sizes.compact!
 
-    [ sizes.length, sizes.inject(:+) || 0 ]
+    [ sizes.length, sizes.sum ]
   end
 
   def set_file_info

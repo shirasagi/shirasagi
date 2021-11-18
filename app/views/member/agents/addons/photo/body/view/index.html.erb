@@ -16,7 +16,7 @@ $(window).on("load", function(){ $(".photo-body .ajax-box").colorbox(); });
   <div class="caption"><%=br @cur_page.caption %></div>
 
   <%
-    license = @cur_page.parent.becomes_with_route.send("license_#{@cur_page.license_name}") rescue nil
+    license = @cur_page.parent.send("license_#{@cur_page.license_name}") rescue nil
   %>
   <% if license.present? %>
     <div class="license"><%== license %></div>

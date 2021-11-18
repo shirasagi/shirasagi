@@ -28,9 +28,9 @@ class Chorg::Runner < Cms::ApplicationJob
 
   def self.job_class(type)
     case type
-    when MAIN then
+    when MAIN
       Chorg::MainRunner
-    when TEST then
+    when TEST
       Chorg::TestRunner
     else
       nil

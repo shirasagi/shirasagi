@@ -9,7 +9,7 @@ module Opendata::ListHelper
 
     h = []
     h << cur_item.upper_html.html_safe if cur_item.upper_html.present?
-    if block_given?
+    if block
       h << capture(&block)
     else
       @items.each do |item|
@@ -26,7 +26,7 @@ module Opendata::ListHelper
           ih << '    <time datetime="#{date.iso}">#{date.long}</time>'
           ih << '    <h2>'
           ih << '      <a href="#{url}">#{name}</a>'
-          if item.parent.becomes_with_route.show_point?
+          if item.parent.show_point?
             ih << "      <span class=\"point\">\#{#{item.route.sub(/^.*\//, '')}_point}</span>"
           end
           ih << '    </h2>'

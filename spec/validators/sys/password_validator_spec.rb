@@ -125,8 +125,7 @@ describe Sys::PasswordValidator, type: :validator, dbscope: :example do
     let(:setting) do
       Sys::Setting.create(
         password_min_use: "enabled", password_min_length: rand(8..12),
-        password_min_symbol_use: "enabled", password_min_symbol_length: rand(2..4)
-      )
+        password_min_symbol_use: "enabled", password_min_symbol_length: rand(2..4))
     end
 
     context "when invalid password is given" do
@@ -153,8 +152,7 @@ describe Sys::PasswordValidator, type: :validator, dbscope: :example do
       let(:setting) do
         Sys::Setting.create(
           password_min_use: "enabled", password_min_length: rand(8..12),
-          password_prohibited_char_use: "enabled", password_prohibited_char: chars.sample(rand(2..4)).join
-        )
+          password_prohibited_char_use: "enabled", password_prohibited_char: chars.sample(rand(2..4)).join)
       end
 
       context "when invalid password is given" do
@@ -167,7 +165,7 @@ describe Sys::PasswordValidator, type: :validator, dbscope: :example do
 
       context "when valid password is given" do
         let(:password) do
-          (chars - setting.password_prohibited_char.split("")).sample(setting.password_min_length)
+          (chars - setting.password_prohibited_char.chars).sample(setting.password_min_length)
         end
 
         it do
@@ -180,11 +178,10 @@ describe Sys::PasswordValidator, type: :validator, dbscope: :example do
       let(:setting) do
         Sys::Setting.create(
           password_min_use: "enabled", password_min_length: rand(8..12),
-          password_prohibited_char_use: "enabled", password_prohibited_char: "(-#"
-        )
+          password_prohibited_char_use: "enabled", password_prohibited_char: "(-#")
       end
       let(:password) do
-        (chars - setting.password_prohibited_char.split("")).sample(setting.password_min_length)
+        (chars - setting.password_prohibited_char.chars).sample(setting.password_min_length)
       end
 
       it do
@@ -197,13 +194,12 @@ describe Sys::PasswordValidator, type: :validator, dbscope: :example do
     let(:setting) do
       Sys::Setting.create(
         password_min_use: "enabled", password_min_length: 4,
-        password_min_change_char_use: "enabled", password_min_change_char_count: 3
-      )
+        password_min_change_char_use: "enabled", password_min_change_char_count: 3)
     end
 
     context "when invalid password is given" do
       let(:password) do
-        prev_chars = user.decrypted_password.split("").uniq
+        prev_chars = user.decrypted_password.chars.uniq
         prev_chars.sample(2).join + (chars - prev_chars).sample(2).join
       end
 
@@ -214,7 +210,7 @@ describe Sys::PasswordValidator, type: :validator, dbscope: :example do
 
     context "when valid password is given" do
       let(:password) do
-        prev_chars = user.decrypted_password.split("").uniq
+        prev_chars = user.decrypted_password.chars.uniq
         prev_chars.sample(1).join + (chars - prev_chars).sample(3).join
       end
 

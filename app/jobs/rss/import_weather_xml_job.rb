@@ -244,7 +244,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     basename = "imported_#{now.to_f.to_s.sub(".", "_")}.log.gz"
     log_file = ::File.join(log_dir, basename)
     tmp_log_file = ::File.join(log_dir, "." + basename)
-    ::FileUtils.mkdir_p(log_dir) unless ::Dir.exists?(log_dir)
+    ::FileUtils.mkdir_p(log_dir) unless ::Dir.exist?(log_dir)
 
     # DISK FULL などにより不完全なファイルが作成されることを防止するために、作業ファイルに保存後、作業ファイルを移動するようにする。
     ::Zlib::GzipWriter.open(tmp_log_file) { |gz| gz.write(urls_with_date.to_json) }

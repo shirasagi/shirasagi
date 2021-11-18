@@ -2,15 +2,15 @@ require 'spec_helper'
 
 describe Gws::StaffRecord::UserTitle, type: :model, dbscope: :example do
   let!(:site1) { create :gws_group }
-  let!(:group1_1) { create :gws_group, name: "#{site1.name}/#{unique_id}" }
-  let!(:group1_2) { create :gws_group, name: "#{site1.name}/#{unique_id}" }
-  let!(:user1_1) { create :gws_user, group_ids: [ site1.id ] }
-  let!(:user1_2) { create :gws_user, group_ids: [ site1.id ] }
+  let!(:group1) { create :gws_group, name: "#{site1.name}/#{unique_id}" }
+  let!(:group2) { create :gws_group, name: "#{site1.name}/#{unique_id}" }
+  let!(:user1) { create :gws_user, group_ids: [ site1.id ] }
+  let!(:user2) { create :gws_user, group_ids: [ site1.id ] }
   let!(:year1) { create :gws_staff_record_year, cur_site: site1 }
   let!(:title1) do
     create(
       :gws_staff_record_user_title, cur_site: site1, year: year1,
-      group_ids: [ group1_1.id, group1_2.id ], user_ids: [ user1_1.id, user1_2.id ], permission_level: rand(1..3)
+      group_ids: [ group1.id, group2.id ], user_ids: [ user1.id, user2.id ], permission_level: rand(1..3)
     )
   end
 
@@ -40,8 +40,8 @@ describe Gws::StaffRecord::UserTitle, type: :model, dbscope: :example do
     gws_user.add_to_set(group_ids: site2.id)
     gws_user.add_to_set(gws_role_ids: admin_role.id)
 
-    user1_1.add_to_set(group_ids: site2.id)
-    user1_2.add_to_set(group_ids: site2.id)
+    user1.add_to_set(group_ids: site2.id)
+    user2.add_to_set(group_ids: site2.id)
   end
 
   context "newly import" do
@@ -62,7 +62,7 @@ describe Gws::StaffRecord::UserTitle, type: :model, dbscope: :example do
         expect(imported_user_title.order).to eq title1.order
         expect(imported_user_title.group_ids).to be_blank
         expect(imported_user_title.user_ids).to have(3).items
-        expect(imported_user_title.user_ids).to include(gws_user.id, user1_1.id, user1_2.id)
+        expect(imported_user_title.user_ids).to include(gws_user.id, user1.id, user2.id)
         unless SS.config.ss.disable_permission_level
           expect(imported_user_title.permission_level).to eq title1.permission_level
         end

@@ -4,8 +4,8 @@ class Gws::Share::FileUploader
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
 
-  attr_accessor :cur_site, :cur_user, :folder_id, :memo
-  attr_accessor :file_ids
+  attr_accessor :cur_site, :cur_user, :folder_id, :memo, :file_ids
+
   permit_params :memo, file_ids: []
 
   validates :file_ids, presence: true
@@ -37,7 +37,7 @@ class Gws::Share::FileUploader
       item.custom_group_ids = custom_group_ids
 
       if item.invalid?(%i[update change_model])
-        errors.messages[:base] += item.errors.full_messages
+        SS::Model.copy_errors(item, self)
         next
       end
 
@@ -47,7 +47,7 @@ class Gws::Share::FileUploader
 
     items.all? do |item|
       result = item.save
-      errors.messages[:base] += item.errors.full_messages unless result
+      SS::Model.copy_errors(item, self) unless result
       result
     end
   end

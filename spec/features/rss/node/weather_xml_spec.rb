@@ -54,7 +54,7 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
   end
 
   context "node conf" do
-    let!(:region) { create :jmaxml_region_126 }
+    let!(:region) { create :jmaxml_region_c126 }
     let!(:member_node_my_anpi_post) { create :member_node_my_anpi_post, cur_site: site }
     let!(:ezine_node_member_page) { create(:ezine_node_member_page, cur_site: site) }
 

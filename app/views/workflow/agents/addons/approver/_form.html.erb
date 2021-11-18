@@ -3,15 +3,24 @@
   if @cur_site.try(:close_confirmation_enabled?) && @item.persisted? && (@item.state == "public")
     js_options[:close_confirmation] = true
     contains_urls_path = url_for(action: 'contains_urls') rescue nil
-    if contains_urls_path && @contains_urls.present?
+    if contains_urls_path && @contains_urls.try(:and_public).present?
       js_options[:contain_links_path] = contains_urls_path
     end
   end
-  if @item.allowed?(:release, @cur_user, site: @cur_site)
-    js_options[:release] = "allowed"
+  if @item.state == "public" && @item.persisted?
+    # 警告する意味でボタンのラベルを別のものにする
+    js_options[:draft_save] = t("ss.buttons.withdraw")
+  else
     js_options[:draft_save] = t("ss.buttons.draft_save")
+  end
+  if @item.allowed?(:release, @cur_user, site: @cur_site)
+    # 公開権限を持つ場合、「公開保存」が表示される
+    js_options[:release] = "allowed"
     js_options[:publish_save] = t("ss.buttons.publish_save")
-    js_options[:disable_with] = t("ss.buttons.saving")
+  elsif @item.state == "public" && @item.is_a?(Workflow::Addon::Branch) && @item.persisted?
+    # 公開権限を持たない場合、「差替保存」が表示される場合がある
+    js_options[:branch_save] = t("cms.buttons.save_as_branch")
+    js_options[:branch_save_url] = branch_create_workflow_page_path(id: @item.id)
   end
   if @item.state == "closed" && @item.workflow_state == "request"
     js_options[:workflow_state] = "request"
@@ -79,7 +88,7 @@
   });
   <% end %>
 
-  <% if params[:action] =~ /edit|delete/ && @cur_user.respond_to?(:cms_role_permit_any?) && !@cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_alert)) && @contains_urls.present? && @contains_urls.and_public.present? %>
+  <% if params[:action] =~ /edit|delete/ && @cur_user.respond_to?(:cms_role_permit_any?) && !@cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_alert)) && @contains_urls.try(:and_public).present? %>
   $(".save").attr("data-alert-msg", "<%= I18n.t('ss.confirm.contains_url_expect') %>");
   <% else %>
   $(".save").attr("data-alert-msg", "");

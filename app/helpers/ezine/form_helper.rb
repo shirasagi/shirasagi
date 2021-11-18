@@ -25,7 +25,7 @@ module Ezine::FormHelper
         opt = { id: "column_tag_#{column.id}_#{i}" }
         opt.merge!(column.additional_attr_to_h)
         checked = value.try(:include?, v) ? true : false
-        h << send(column.input_type + "_tag", "#{name}[#{column.id}][#{i}]", v, checked, opt)
+        h << send(column.input_type + "_tag", "#{name}[#{column.id}][]", v, checked, opt)
         h << label_tag("column_tag_#{column.id}_#{i}", v)
       end
     end

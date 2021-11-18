@@ -30,12 +30,12 @@ module Fs::GridFs
       Mongoid::GridFs.find(filename: path)
     end
 
-    def exists?(path)
+    def exist?(path)
       get(path) != nil
     end
 
     def file?(path)
-      exists?(path)
+      exist?(path)
     end
 
     def directory?(path)

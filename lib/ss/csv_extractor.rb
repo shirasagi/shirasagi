@@ -8,7 +8,6 @@ class SS::CsvExtractor
     @csv_headers = []
   end
 
-  public
 
   def extract_csv_headers
     if extname.upcase == "XLS" || extname.upcase == "XLSX"

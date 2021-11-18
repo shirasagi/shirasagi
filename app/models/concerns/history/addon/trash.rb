@@ -5,6 +5,7 @@ module History::Addon
 
     included do
       attr_accessor :skip_history_trash
+
       before_destroy :create_history_trash, if: ->{ !@skip_history_trash }
     end
 

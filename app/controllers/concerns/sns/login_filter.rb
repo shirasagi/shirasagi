@@ -16,7 +16,7 @@ module Sns::LoginFilter
   private
 
   def remote_login?
-    SS::config.sns.remote_login
+    SS.config.sns.remote_login
   end
 
   def default_logged_in_path

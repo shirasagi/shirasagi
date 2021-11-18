@@ -36,7 +36,7 @@ class Faq::PagesController < ApplicationController
     exporter = Cms::PageExporter.new(mode: "faq", site: @cur_site, criteria: criteria)
     enumerable = exporter.enum_csv(encoding: "Shift_JIS")
 
-    filename = @model.to_s.tableize.gsub(/\//, "_")
+    filename = @model.to_s.tableize.tr("/", "_")
     filename = "#{filename}_#{Time.zone.now.to_i}.csv"
 
     response.status = 200

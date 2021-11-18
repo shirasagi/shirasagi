@@ -13,7 +13,6 @@ class Member::BlogPagesController < ApplicationController
   end
 
   def set_blog_page_nodes
-    @cur_node  = @cur_node.becomes_with_route
     @locations = Member::Node::BlogPageLocation.site(@cur_site).order_by(order: 1)
   end
 

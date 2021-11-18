@@ -20,13 +20,17 @@ module Cms::Addon::Form::Page
     validate :validate_column_values
 
     attr_accessor :link_check_user
+
     validate :validate_column_links, on: :link
 
     before_validation :set_form_contains_urls
 
-    before_save :cms_form_page_delete_unlinked_files
+    around_save :cms_form_page_around_save_delegate
+    around_create :cms_form_page_around_create_delegate
+    around_update :cms_form_page_around_update_delegate
+    around_destroy :cms_form_page_around_destroy_delegate
 
-    around_save :update_file_owner_in_column_values
+    before_save :cms_form_page_delete_unlinked_files
 
     if respond_to?(:after_generate_file)
       after_generate_file :cms_form_page_generate_public_files
@@ -83,14 +87,19 @@ module Cms::Addon::Form::Page
       next if column_value.validated?
       next if column_value.valid?
 
-      self.errors.messages[:base] += column_value.errors.map do |attribute, error|
+      column_value.errors.each do |error|
+        attribute = error.attribute
+        message = error.message
+
         if %i[value values].include?(attribute.to_sym)
-          column_value.name + error
+          new_message = column_value.name + message
         else
-          I18n.t(
+          new_message = I18n.t(
             "cms.column_value_error_template", name: column_value.name,
-            error: column_value.errors.full_message(attribute, error))
+            error: column_value.errors.full_message(attribute, message))
         end
+
+        self.errors.add :base, new_message
       end
     end
   end
@@ -136,8 +145,8 @@ module Cms::Addon::Form::Page
     if docs.present?
       docs = docs.select(&:present?).map do |doc|
         type = doc["_type"] || doc[:_type]
-        effective_kass = type.camelize.constantize rescue Cms::Column::Value::Base
-        Mongoid::Factory.build(Cms::Column::Value::Base, doc.slice(*effective_kass.fields.keys.map(&:to_s)))
+        effective_klass = type.camelize.constantize rescue Cms::Column::Value::Base
+        Mongoid::Factory.build(Cms::Column::Value::Base, doc.slice(*effective_klass.fields.keys.map(&:to_s)))
       end
     end
 
@@ -162,37 +171,7 @@ module Cms::Addon::Form::Page
     file_ids_was.uniq!
 
     unlinked_file_ids = file_ids_was - file_ids_is
-    unlinked_file_ids.each_slice(20) do |file_ids|
-      unlinked_files = SS::File.in(id: file_ids).to_a
-      unlinked_files.each do |unlinked_file|
-        next if self.id != unlinked_file.owner_item_id
-
-        if [ self, unlinked_file ].all? { |obj| obj.respond_to?(:skip_history_trash) }
-          unlinked_file.skip_history_trash = skip_history_trash
-        end
-        unlinked_file.cur_user = @cur_user
-        unlinked_file.destroy
-      end
-    end
-  end
-
-  def update_file_owner_in_column_values
-    is_new = new_record?
-    yield
-
-    if is_new && form.present?
-      file_ids_is = []
-      self.column_values.each do |column_value|
-        file_ids_is += column_value.all_file_ids
-      end
-      file_ids_is.compact!
-      file_ids_is.uniq!
-
-      SS::File.in(id: file_ids_is).each do |file|
-        file.owner_item = self
-        file.save
-      end
-    end
+    Cms::Reference::Files::Utils.delete_files(self, unlinked_file_ids)
   end
 
   def set_form_contains_urls
@@ -211,5 +190,37 @@ module Cms::Addon::Form::Page
     end
 
     self.form_contains_urls = form_contains_urls.flatten.uniq
+  end
+
+  def _delegate_callback_to_column_values(kind, &block)
+    invoke_sequence = nil
+    invoke_sequence = proc do |index, &block|
+      column_value = column_values[index]
+      if column_value
+        column_value.run_callbacks(kind) do
+          invoke_sequence.call(index + 1, &block)
+        end
+      elsif block_given?
+        yield
+      end
+    end
+
+    invoke_sequence.call(0, &block)
+  end
+
+  def cms_form_page_around_save_delegate(&block)
+    _delegate_callback_to_column_values(:parent_save, &block)
+  end
+
+  def cms_form_page_around_create_delegate(&block)
+    _delegate_callback_to_column_values(:parent_create, &block)
+  end
+
+  def cms_form_page_around_update_delegate(&block)
+    _delegate_callback_to_column_values(:parent_update, &block)
+  end
+
+  def cms_form_page_around_destroy_delegate(&block)
+    _delegate_callback_to_column_values(:parent_destroy, &block)
   end
 end

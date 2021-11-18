@@ -1,6 +1,5 @@
 class Cms::CheckLinks::RefString < String
-  attr_accessor :offset
-  attr_accessor :inner_yield
+  attr_accessor :offset, :inner_yield
 
   def meta
     { offset: offset, inner_yield: inner_yield }

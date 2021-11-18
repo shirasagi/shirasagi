@@ -4,6 +4,13 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) { create :article_node_page, cur_site: site }
   let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
+
+  let(:node2) { create :article_node_page, cur_site: site, group_ids: [cms_group.id] }
+  let!(:selectable_page1) { create :article_page, cur_site: site, cur_node: node2, state: "public" }
+  let!(:selectable_page2) { create :article_page, cur_site: site, cur_node: node2, state: "public" }
+  let!(:selectable_page3) { create :article_page, cur_site: site, cur_node: node2, state: "public" }
+  let!(:selectable_page4) { create :article_page, cur_site: site, cur_node: node2, state: "closed" }
+
   let!(:column1) do
     create(:cms_column_text_field, cur_site: site, cur_form: form, order: 1, input_type: 'text')
   end
@@ -28,6 +35,9 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
   let!(:column8) do
     create(:cms_column_file_upload, cur_site: site, cur_form: form, required: "required", order: 8, file_type: "image")
   end
+  let!(:column9) do
+    create(:cms_column_select_page, cur_site: site, cur_form: form, required: "optional", order: 9, node_id: node2.id)
+  end
   let(:name) { unique_id }
   let(:column1_value) { unique_id }
   let(:column2_value) { "#{rand(2000..2050)}/01/01" }
@@ -37,6 +47,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
   let(:column6_value) { column6.select_options.sample }
   let(:column7_value) { column7.select_options.sample }
   let(:column8_image_text) { unique_id }
+  let(:column9_page_id) { selectable_page1.id }
   let(:column1_value2) { unique_id }
   let(:column2_value2) { "#{rand(2000..2050)}/01/01" }
   let(:column3_value2) { "http://#{unique_id}.example.jp/#{unique_id}/" }
@@ -45,7 +56,12 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
   let(:column6_value2) { column6.select_options.sample }
   let(:column7_value2) { column7.select_options.sample }
   let(:column8_image_text2) { unique_id }
+  let(:column9_page_id2) { selectable_page2.id }
   let!(:body_layout) { create(:cms_body_layout) }
+
+  def article_pages
+    Article::Page.where(filename: /^#{node.filename}\//)
+  end
 
   before do
     cms_role.add_to_set(permissions: %w(read_cms_body_layouts))
@@ -99,6 +115,14 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         within ".column-value-cms-column-checkbox" do
           first(:field, name: "item[column_values][][in_wrap][values][]", with: column7_value).click
         end
+        within ".column-value-cms-column-selectpage " do
+          within '[name="item[column_values][][in_wrap][page_id]"]' do
+            expect(page).to have_css("option", text: selectable_page1.name)
+            expect(page).to have_css("option", text: selectable_page2.name)
+            expect(page).to have_css("option", text: selectable_page3.name)
+          end
+          select selectable_page1.name, from: 'item[column_values][][in_wrap][page_id]'
+        end
         click_on I18n.t('ss.buttons.draft_save')
       end
       click_on I18n.t('ss.buttons.ignore_alert')
@@ -136,8 +160,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(page).to have_no_selector('div.column-with-errors')
 
-      expect(Article::Page.all.count).to eq 1
-      Article::Page.all.first.tap do |item|
+      expect(article_pages.count).to eq 1
+      article_pages.first.tap do |item|
         expect(item.name).to eq name
         expect(item.column_values.find_by(column_id: column1.id).value).to eq column1_value
         expect(item.column_values.find_by(column_id: column2.id).date).to eq Time.zone.parse(column2_value)
@@ -148,6 +172,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         expect(item.column_values.find_by(column_id: column7.id).values).to eq [ column7_value ]
         expect(item.column_values.find_by(column_id: column8.id).file.name).to eq 'logo.png'
         expect(item.column_values.find_by(column_id: column8.id).file_label).to eq column8_image_text
+        expect(item.column_values.find_by(column_id: column9.id).page_id).to eq column9_page_id
         expect(item.backups.count).to eq 1
       end
       expect(SS::File.all.unscoped.count).to eq 2
@@ -187,6 +212,9 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text2
           click_on I18n.t("ss.links.upload")
         end
+        within ".column-value-cms-column-selectpage " do
+          select selectable_page2.name, from: 'item[column_values][][in_wrap][page_id]'
+        end
       end
       wait_for_cbox do
         attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
@@ -201,8 +229,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
-      expect(Article::Page.all.count).to eq 1
-      Article::Page.all.first.tap do |item|
+      expect(article_pages.count).to eq 1
+      article_pages.first.tap do |item|
         expect(item.name).to eq name
         expect(item.column_values.find_by(column_id: column1.id).value).to eq column1_value2
         expect(item.column_values.find_by(column_id: column2.id).date).to eq Time.zone.parse(column2_value2)
@@ -213,6 +241,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         expect(item.column_values.find_by(column_id: column7.id).values).to eq [ column7_value2 ]
         expect(item.column_values.find_by(column_id: column8.id).file.name).to eq 'keyvisual.gif'
         expect(item.column_values.find_by(column_id: column8.id).file_label).to eq column8_image_text2
+        expect(item.column_values.find_by(column_id: column9.id).page_id).to eq column9_page_id2
         expect(item.backups.count).to eq 2
       end
       expect(SS::File.all.unscoped.count).to eq 2
@@ -227,7 +256,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t('ss.buttons.delete')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
-      expect(Article::Page.all.count).to eq 0
+      expect(article_pages.count).to eq 0
       expect(SS::File.all.unscoped.count).to eq 0
     end
   end

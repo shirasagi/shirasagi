@@ -22,6 +22,14 @@ class Cms::Column::Value::Headline < Cms::Column::Value::Base
     end
   end
 
+  def history_summary
+    h = []
+    h << "#{t("head")}: #{head}" if head.present?
+    h << "#{t("head")}: #{text}" if text.present?
+    h << "#{t("alignment")}: #{I18n.t("cms.options.alignment.#{alignment}")}"
+    h.join(",")
+  end
+
   private
 
   def validate_value

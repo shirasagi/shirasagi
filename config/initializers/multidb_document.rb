@@ -24,7 +24,7 @@ module Mongoid
           client = Mongoid::Config.clients[client_name]
         end
 
-        if block_given?
+        if block
           self.with(client: client_name, database: client[:database], &block)
         else
           self.with(client: client_name, database: client[:database]) { |criteria| criteria }
@@ -53,7 +53,7 @@ module Mongoid
         client = Mongoid::Config.clients[client_name]
       end
 
-      if block_given?
+      if block
         self.with(client: client_name, database: client[:database], &block)
       else
         self.with(client: client_name, database: client[:database]) { |criteria| criteria }

@@ -7,7 +7,7 @@ describe "facility_item", type: :feature, dbscope: :example do
   let(:import_path) { import_gws_facility_items_path site.id }
   let(:download_path) { download_gws_facility_items_path site.id }
   let!(:category){ create(:gws_facility_category, name: "会議室") }
-  let!(:admin){ create(:gws_user)}
+  let!(:admin){ create(:gws_user) }
 
   before { login_gws_user }
 

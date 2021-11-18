@@ -14,8 +14,9 @@ class Cms::Extensions::AdditionalInfo < Array
 
     def mongoize(object)
       case object
-      when self.class then object.mongoize
-      when Array then
+      when self.class
+        object.mongoize
+      when Array
         object.select { |ary| ary[:field].present? }
       else
         object

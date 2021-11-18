@@ -207,7 +207,7 @@ module Rss::Wrappers
     elsif url_or_file.to_s.start_with?("http:", "https:")
       rss_source = ::URI.parse(url_or_file).open(opts)
     else
-      rss_source = ::File.open(url_or_file, opts)
+      rss_source = ::File.open(url_or_file, **opts)
     end
     parse_from_rss_source(rss_source)
   end

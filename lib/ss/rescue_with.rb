@@ -14,7 +14,7 @@ module SS::RescueWith
     ensure_p.call if ensure_p
   end
 
-  def exception_backtrace(exception)
+  def exception_backtrace(exception, &block)
     backtrace_cleaner = ::Rails.backtrace_cleaner
     wrapper = ::ActionDispatch::ExceptionWrapper.new(backtrace_cleaner, exception)
 
@@ -32,9 +32,7 @@ module SS::RescueWith
     messages << "  "
 
     if block_given?
-      messages.each do |message|
-        yield message
-      end
+      messages.each(&block)
     end
     messages
   end

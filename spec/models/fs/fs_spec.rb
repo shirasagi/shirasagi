@@ -26,23 +26,23 @@ describe Fs do
     end
   end
 
-  describe '.exists?' do
+  describe '.exist?' do
     it do
       # full path
-      expect(filesystem.exists?("#{Rails.root}/spec/fixtures/ss/logo.png")).to be_truthy
-      expect(grid_fs.exists?("#{Rails.root}/spec/fixtures/ss/logo.png")).to be_truthy
-      # not exists
-      expect(filesystem.exists?("#{Rails.root}/spec/fixtures/ss/#{unique_id}.png")).to be_falsey
-      expect(grid_fs.exists?("#{Rails.root}/spec/fixtures/ss/#{unique_id}.png")).to be_falsey
+      expect(filesystem.exist?("#{Rails.root}/spec/fixtures/ss/logo.png")).to be_truthy
+      expect(grid_fs.exist?("#{Rails.root}/spec/fixtures/ss/logo.png")).to be_truthy
+      # not exist
+      expect(filesystem.exist?("#{Rails.root}/spec/fixtures/ss/#{unique_id}.png")).to be_falsey
+      expect(grid_fs.exist?("#{Rails.root}/spec/fixtures/ss/#{unique_id}.png")).to be_falsey
     end
 
     it do
       # relative path
-      expect(filesystem.exists?("spec/fixtures/ss/logo.png")).to be_truthy
-      expect(grid_fs.exists?("spec/fixtures/ss/logo.png")).to be_truthy
-      # not exists
-      expect(filesystem.exists?("spec/fixtures/ss/#{unique_id}.png")).to be_falsey
-      expect(grid_fs.exists?("spec/fixtures/ss/#{unique_id}.png")).to be_falsey
+      expect(filesystem.exist?("spec/fixtures/ss/logo.png")).to be_truthy
+      expect(grid_fs.exist?("spec/fixtures/ss/logo.png")).to be_truthy
+      # not exist
+      expect(filesystem.exist?("spec/fixtures/ss/#{unique_id}.png")).to be_falsey
+      expect(grid_fs.exist?("spec/fixtures/ss/#{unique_id}.png")).to be_falsey
     end
   end
 
@@ -51,7 +51,7 @@ describe Fs do
       # full path
       expect(filesystem.file?("#{Rails.root}/spec/fixtures/ss/logo.png")).to be_truthy
       expect(grid_fs.file?("#{Rails.root}/spec/fixtures/ss/logo.png")).to be_truthy
-      # not exists
+      # not exist
       expect(filesystem.file?("#{Rails.root}/spec/fixtures/ss/#{unique_id}.png")).to be_falsey
       expect(grid_fs.file?("#{Rails.root}/spec/fixtures/ss/#{unique_id}.png")).to be_falsey
     end
@@ -60,7 +60,7 @@ describe Fs do
       # relative path
       expect(filesystem.file?("spec/fixtures/ss/logo.png")).to be_truthy
       expect(grid_fs.file?("spec/fixtures/ss/logo.png")).to be_truthy
-      # not exists
+      # not exist
       expect(filesystem.file?("spec/fixtures/ss/#{unique_id}.png")).to be_falsey
       expect(grid_fs.file?("spec/fixtures/ss/#{unique_id}.png")).to be_falsey
     end
@@ -73,7 +73,7 @@ describe Fs do
       expect(grid_fs.directory?("#{Rails.root}/spec/fixtures/ss")).to be_truthy
       expect(filesystem.directory?("#{Rails.root}/spec/fixtures/ss/logo.png")).to be_falsey
       expect(grid_fs.directory?("#{Rails.root}/spec/fixtures/ss/logo.png")).to be_falsey
-      # not exists
+      # not exist
       expect(filesystem.directory?("#{Rails.root}/spec/fixtures/#{unique_id}")).to be_falsey
       expect(grid_fs.directory?("#{Rails.root}/spec/fixtures/#{unique_id}")).to be_falsey
     end
@@ -84,7 +84,7 @@ describe Fs do
       expect(grid_fs.directory?("spec/fixtures/ss")).to be_truthy
       expect(filesystem.directory?("spec/fixtures/ss/logo.png")).to be_falsey
       expect(grid_fs.directory?("spec/fixtures/ss/logo.png")).to be_falsey
-      # not exists
+      # not exist
       expect(filesystem.directory?("spec/fixtures/#{unique_id}")).to be_falsey
       expect(grid_fs.directory?("spec/fixtures/#{unique_id}")).to be_falsey
     end
@@ -95,7 +95,7 @@ describe Fs do
       # full path
       expect(filesystem.binread("#{Rails.root}/spec/fixtures/ss/logo.png").hash).to eq data.hash
       expect(grid_fs.binread("#{Rails.root}/spec/fixtures/ss/logo.png").hash).to eq data.hash
-      # not exists
+      # not exist
       expect { filesystem.binread("#{Rails.root}/spec/fixtures/#{unique_id}") }.to raise_error Errno::ENOENT
       expect { grid_fs.binread("#{Rails.root}/spec/fixtures/#{unique_id}") }.to raise_error ::Fs::GridFs::FileNotFoundError
     end
@@ -104,7 +104,7 @@ describe Fs do
       # relative path
       expect(filesystem.binread("spec/fixtures/ss/logo.png").hash).to eq data.hash
       expect(grid_fs.binread("spec/fixtures/ss/logo.png").hash).to eq data.hash
-      # not exists
+      # not exist
       expect { filesystem.binread("spec/fixtures/#{unique_id}") }.to raise_error Errno::ENOENT
       expect { grid_fs.binread("spec/fixtures/#{unique_id}") }.to raise_error ::Fs::GridFs::FileNotFoundError
     end
@@ -135,7 +135,7 @@ describe Fs do
       # full path
       expect(filesystem.size("#{Rails.root}/spec/fixtures/ss/logo.png")).to eq data.length
       expect(grid_fs.size("#{Rails.root}/spec/fixtures/ss/logo.png")).to eq data.length
-      # not exists
+      # not exist
       expect { filesystem.size("#{Rails.root}/spec/fixtures/ss/#{unique_id}.png") }.to raise_error Errno::ENOENT
       expect { grid_fs.size("#{Rails.root}/spec/fixtures/ss/#{unique_id}.png") }.to raise_error ::Fs::GridFs::FileNotFoundError
     end
@@ -144,7 +144,7 @@ describe Fs do
       # relative path
       expect(filesystem.size("spec/fixtures/ss/logo.png")).to eq data.length
       expect(grid_fs.size("spec/fixtures/ss/logo.png")).to eq data.length
-      # not exists
+      # not exist
       expect { filesystem.size("spec/fixtures/ss/#{unique_id}.png") }.to raise_error Errno::ENOENT
       expect { grid_fs.size("spec/fixtures/ss/#{unique_id}.png") }.to raise_error ::Fs::GridFs::FileNotFoundError
     end
@@ -155,7 +155,7 @@ describe Fs do
       # full path
       expect(filesystem.content_type("#{Rails.root}/spec/fixtures/ss/logo.png")).to eq 'image/png'
       expect(grid_fs.content_type("#{Rails.root}/spec/fixtures/ss/logo.png")).to eq 'image/png'
-      # not exists
+      # not exist
       expect(filesystem.content_type("#{Rails.root}/spec/fixtures/ss/#{unique_id}.png")).to eq 'image/png'
       expect(grid_fs.content_type("#{Rails.root}/spec/fixtures/ss/#{unique_id}.png")).to eq 'image/png'
     end
@@ -164,7 +164,7 @@ describe Fs do
       # relative path
       expect(filesystem.content_type("spec/fixtures/ss/logo.png")).to eq 'image/png'
       expect(grid_fs.content_type("spec/fixtures/ss/logo.png")).to eq 'image/png'
-      # not exists
+      # not exist
       expect(filesystem.content_type("spec/fixtures/ss/#{unique_id}.png")).to eq 'image/png'
       expect(grid_fs.content_type("spec/fixtures/ss/#{unique_id}.png")).to eq 'image/png'
     end
@@ -191,7 +191,7 @@ describe Fs do
     it do
       expect(filesystem.mv("#{tmpdir}/spec/fs/logo.png", "#{tmpdir}/spec/fs/logo1.png")).to eq 0
       expect(grid_fs.mv("#{tmpdir}/spec/fs/logo.png", "#{tmpdir}/spec/fs/logo1.png")).to eq 0
-      # not exists
+      # not exist
       expect { filesystem.mv("#{tmpdir}/spec/fs/logo2.png", "#{tmpdir}/spec/fs/logo3.png") }.to \
         raise_error Errno::ENOENT
       expect { grid_fs.mv("#{tmpdir}/spec/fs/logo2.png", "#{tmpdir}/spec/fs/logo3.png") }.to \
@@ -218,7 +218,7 @@ describe Fs do
     end
 
     it do
-      # not exists
+      # not exist
       expect(filesystem.rm_rf("#{tmpdir}/spec/fs/logo2.png")).to eq [ "#{tmpdir}/spec/fs/logo2.png" ]
       expect(grid_fs.rm_rf("#{tmpdir}/spec/fs/logo2.png")).to eq [ "#{tmpdir}/spec/fs/logo2.png" ]
     end
@@ -263,13 +263,13 @@ describe Fs do
       it do
         path = "#{tmpdir}/spec/fs/#{unique_id}.png"
 
-        expect(Fs.exists?(path)).to be_falsey
+        expect(Fs.exist?(path)).to be_falsey
         expect(Fs.write_data_if_modified(path, data)).to be_truthy
-        expect(Fs.exists?(path)).to be_truthy
+        expect(Fs.exist?(path)).to be_truthy
 
         # 2nd attempt
         expect(Fs.write_data_if_modified(path, data)).to be_falsey
-        expect(Fs.exists?(path)).to be_truthy
+        expect(Fs.exist?(path)).to be_truthy
       end
     end
 
@@ -278,13 +278,37 @@ describe Fs do
         data = "<html></html>"
         path = "#{tmpdir}/spec/fs/#{unique_id}.html"
 
-        expect(Fs.exists?(path)).to be_falsey
+        expect(Fs.exist?(path)).to be_falsey
         expect(Fs.write_data_if_modified(path, data)).to be_truthy
-        expect(Fs.exists?(path)).to be_truthy
+        expect(Fs.exist?(path)).to be_truthy
 
         # 2nd attempt
         expect(Fs.write_data_if_modified(path, data)).to be_falsey
-        expect(Fs.exists?(path)).to be_truthy
+        expect(Fs.exist?(path)).to be_truthy
+      end
+    end
+  end
+
+  describe '.head_lines' do
+    context "when nil is given as path" do
+      it do
+        expect(Fs.head_lines(nil)).to eq []
+      end
+    end
+
+    context "when nil is given as path" do
+      let(:tmp_file_path) do
+        tmpfile do |f|
+          3.times do
+            f.puts ss_japanese_text
+          end
+        end
+      end
+
+      it do
+        expect(Fs.head_lines(tmp_file_path)).to have(3).items
+        expect(Fs.head_lines(tmp_file_path, limit: 2)).to have(2).items
+        expect { ss_japanese_text + Fs.head_lines(tmp_file_path, limit: 2).join }.not_to raise_error
       end
     end
   end

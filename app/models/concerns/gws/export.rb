@@ -6,6 +6,7 @@ module Gws::Export
 
   included do
     attr_accessor :in_file, :in_csv_encoding
+
     permit_params :in_file, :in_csv_encoding
   end
 
@@ -73,7 +74,7 @@ module Gws::Export
       io.set_encoding('SJIS:UTF-8')
     end
 
-    csv = CSV.new(io, { headers: true })
+    csv = CSV.new(io, headers: true)
     csv.each(&block)
   ensure
     io.set_encoding("ASCII-8BIT")

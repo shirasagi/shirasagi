@@ -12,7 +12,6 @@ class Cms::Apis::FormsController < ApplicationController
       route = params[:route].to_s
 
       page = Cms::Page.new(route: route)
-      page = page.becomes_with_route
 
       page.attributes = params.require(:item).permit(page.class.permitted_fields).except("id")
       page.cur_site = page.site = @cur_site
@@ -43,14 +42,14 @@ class Cms::Apis::FormsController < ApplicationController
 
   def form
     @item = @model.site(@cur_site).find(params[:id])
-    @cur_node = Cms::Node.find(params[:node]).becomes_with_route rescue nil
-    @target = Cms::Page.site(@cur_site).find(params[:item_id]).becomes_with_route if params[:item_id].present?
+    @cur_node = Cms::Node.find(params[:node]) rescue nil
+    @target = Cms::Page.site(@cur_site).find(params[:item_id]) if params[:item_id].present?
     render layout: false
   end
 
   def new_column
     @item = Cms::Form.site(@cur_site).find(params[:id])
-    @cur_node = Cms::Node.find(params[:node]).becomes_with_route rescue nil
+    @cur_node = Cms::Node.find(params[:node]) rescue nil
     @cur_column = @item.columns.find(params[:column_id])
     render layout: false
   end
@@ -58,7 +57,7 @@ class Cms::Apis::FormsController < ApplicationController
   def select_temp_file
     @item = SS::File.find(params[:id])
     @item = @item.copy_if_necessary
-    @cur_node = Cms::Node.find(params[:node]).becomes_with_route rescue nil
+    @cur_node = Cms::Node.find(params[:node]) rescue nil
     @page = Cms::Page.find_or_initialize_by(id: params[:owner_item_id])
     @page = @page.becomes_with_route(params[:owner_item_type].underscore)
     @form = params[:form].presence || "upload"

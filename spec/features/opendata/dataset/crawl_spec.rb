@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_crawl", dbscope: :example do
+describe "opendata_crawl", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let!(:node_search_dataset) { create(:opendata_node_search_dataset) }
   let(:node) { create(:opendata_node_dataset) }

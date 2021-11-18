@@ -76,7 +76,6 @@ module Cms::BaseFilter
   end
 
   def set_crumbs
-    #
   end
 
   def set_tree_navi

@@ -47,7 +47,7 @@ module Gws::Member
     return members.order_by_title(site || cur_site) unless self.class.keep_members_order?
     return @sorted_members if @sorted_members
 
-    hash = members.map { |m| [m.id, m] }.to_h
+    hash = members.index_by { |m| m.id }
     @sorted_members = member_ids.map { |id| hash[id] }.compact
   end
 

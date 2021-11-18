@@ -30,8 +30,7 @@ class Board::PostsController < ApplicationController
   def generate
     return unless @item.errors.empty?
 
-    cur_node = @cur_node.becomes_with_route
-    SS::Agent.invoke_action "board/agents/tasks/node/posts", :generate, cur_node: cur_node, node: cur_node
+    SS::Agent.invoke_action "board/agents/tasks/node/posts", :generate, cur_node: @cur_node, node: @cur_node
   end
 
   public

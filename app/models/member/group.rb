@@ -11,11 +11,7 @@ class Member::Group
   field :invitation_message, type: String
   embeds_many :members, class_name: "Member::GroupMember", cascade_callbacks: true
 
-  attr_accessor :cur_node
-  attr_accessor :cur_member
-  attr_accessor :in_admin_member_ids
-  attr_accessor :in_invitees
-  attr_accessor :in_remove_member_ids
+  attr_accessor :cur_node, :cur_member, :in_admin_member_ids, :in_invitees, :in_remove_member_ids
 
   permit_params :name, :invitation_message, :in_invitees
   permit_params in_admin_member_ids: []
@@ -129,9 +125,7 @@ class Member::Group
 
       member = find_or_create_member(email)
       if member.invalid?
-        member.errors.full_messages.each do |msg|
-          errors.add :base, msg
-        end
+        SS::Model.copy_errors(member, self)
         next
       end
 

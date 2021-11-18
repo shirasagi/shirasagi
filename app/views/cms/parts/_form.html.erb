@@ -19,6 +19,12 @@
 
   <dt><%= @model.t :ajax_view %><%= @model.tt :ajax_view %></dt>
   <dd><%= f.select :ajax_view, @item.ajax_view_options %></dd>
+
+  <dt><%= @model.t :ajax_view_expire_seconds %><%= @model.tt :ajax_view_expire_seconds %></dt>
+  <dd>
+    <%= f.number_field :ajax_view_expire_seconds, min: 0 %>
+    <%= t("datetime.prompts.second") %>
+  </dd>
 </dl>
 
-<%= render template: template_path, locals: { f: f } if File.exists?(file_path) %>
+<%= render template: template_path, locals: { f: f } if File.exist?(file_path) %>

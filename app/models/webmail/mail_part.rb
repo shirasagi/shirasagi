@@ -1,10 +1,5 @@
 class Webmail::MailPart
-  attr_accessor :section
-  attr_accessor :part
-  attr_accessor :param
-  attr_accessor :disposition
-  attr_accessor :disposition_param
-  attr_accessor :data
+  attr_accessor :section, :part, :param, :disposition, :disposition_param, :data
 
   def initialize(part, section = nil, data = nil)
     self.section = section

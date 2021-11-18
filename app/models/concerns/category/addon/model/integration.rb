@@ -6,7 +6,7 @@ module Category::Addon::Model
     def integrate_embeds_ids(content, insert, content_model)
       item_ids = content_model.site(@cur_site).pluck(:id)
       item_ids.each do |item_id|
-        item = content_model.site(@cur_site).find(item_id).becomes_with_route rescue nil
+        item = content_model.site(@cur_site).find(item_id) rescue nil
         next false unless item
 
         embeds_fields = item.fields.select do |n, v|

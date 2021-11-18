@@ -26,27 +26,27 @@ class Rdf::Builders::SubClassOfHandler < Rdf::Builders::BaseHandler
 
       sub_hash.each do |key, value|
         case key
-        when "rdf:type" then
+        when "rdf:type"
           # ignore
-        when "owl:onProperty" then
+        when "owl:onProperty"
           property[:property] = value.first.to_s
-        when "owl:allValuesFrom", "owl:onDataRange", "owl:onClass" then
+        when "owl:allValuesFrom", "owl:onDataRange", "owl:onClass"
           if property.key?(:datatype)
             puts "[warning] duplicate key #{key} for :datatype"
             Rails.logger.warn("duplicate key #{key} for :datatype")
           else
             property[:datatype] = value.first.to_s
           end
-        when "owl:qualifiedCardinality", "owl:cardinality" then
+        when "owl:qualifiedCardinality", "owl:cardinality"
           property[:cardinality] = value.first.value.to_s
-        when "owl:maxQualifiedCardinality", "owl:maxCardinality" then
+        when "owl:maxQualifiedCardinality", "owl:maxCardinality"
           property[:cardinality] = "0..#{value.first.value}"
-        when "owl:minQualifiedCardinality", "owl:minCardinality" then
+        when "owl:minQualifiedCardinality", "owl:minCardinality"
           property[:cardinality] = "#{value.first.value}..n"
         # when "owl:equivalentClass" then
         #   equivalent = convert_to_hash(object)["owl:onDatatype"].first
         #   property[:equivalent] = equivalent.to_s
-        when "rdfs:comment" then
+        when "rdfs:comment"
           property[:comments] = {}
           value.each do |object|
             lang = object.language

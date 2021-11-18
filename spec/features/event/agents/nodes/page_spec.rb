@@ -299,4 +299,26 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       expect(page).to have_css("div#event-table")
     end
   end
+
+  context "with invalid date" do
+    context "with invalid year and date" do
+      it do
+        expect { visit "#{node.url}698079.html" }.to raise_error "404"
+        expect { visit "#{node.url}698079" }.to raise_error "404"
+        expect { visit "#{node.url}698079/" }.to raise_error "404"
+        expect { visit "#{node.url}698079/list" }.to raise_error "404"
+        expect { visit "#{node.url}698079/list.html" }.to raise_error "404"
+      end
+    end
+
+    context "with invalid year, date and day" do
+      it do
+        expect { visit "#{node.url}69807945.html" }.to raise_error "404"
+        expect { visit "#{node.url}69807945" }.to raise_error "404"
+        expect { visit "#{node.url}69807945/" }.to raise_error "404"
+        expect { visit "#{node.url}69807945/index" }.to raise_error "404"
+        expect { visit "#{node.url}69807945/index.html" }.to raise_error "404"
+      end
+    end
+  end
 end

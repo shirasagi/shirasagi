@@ -9,6 +9,7 @@ class Webmail::Role
   set_permission_name "webmail_roles", :edit
 
   attr_accessor :cur_user
+
   field :permission_level, type: Integer, default: 1
 
   permit_params :permission_level

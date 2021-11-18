@@ -25,14 +25,14 @@ class Map::Extensions::Loc < Array
     # convert any possible object to mongoid native type
     def mongoize(object)
       case object
-      when self then
+      when self
         object.mongoize
-      when String then
+      when String
         object = object.gsub(/[, 　、\r\n]+/, ",").split(",").select(&:present?)
         self[Float(object[0]), Float(object[1])].mongoize rescue []
-      when Array then
+      when Array
         self[Float(object[0]), Float(object[1])].mongoize rescue []
-      when Hash then
+      when Hash
         lat = object[:lat].presence || object['lat']
         lng = object[:lng].presence || object['lng']
         self[Float(lat), Float(lng)].mongoize rescue []
@@ -45,7 +45,7 @@ class Map::Extensions::Loc < Array
     # convert the object which was supplied to a criteria, and convert it to mongoid-friendly type
     def evolve(object)
       case object
-      when self then
+      when self
         object.mongoize
       else
         # unknown type

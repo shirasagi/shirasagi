@@ -1,0 +1,57 @@
+<%= jquery do %>
+  new Gws_Memo_ExportAndBackup($('.export-and-backup-msg-component'))
+<% end %>
+
+<%= error_messages_for :item %>
+<%= f.hidden_field "root_url", value: root_url, class: "hidden-ids" %>
+<div class="export-and-backup-msg-component">
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t("ss.export") %></h2></div>
+      <div class="addon-body">
+        <dl class="see" style="margin-top: 20px;">
+
+          <% if action == "backup" %>
+            <dt><%= t "gws/memo/message.format" %></dt>
+            <dd>
+              <%= f.select :format, ["json", "eml"] %>
+            </dd>
+          <% end %>
+
+          <dt><%= t("gws/memo/message.#{action}_filter") %></dt>
+          <dd>
+            <label><%= radio_button_tag "#{f.object_name}[#{action}_filter]", 'all', true %> <%= t("gws/memo.options.#{action}_filter.all") %></label>
+            <label><%= radio_button_tag "#{f.object_name}[#{action}_filter]", 'selected' %> <%= t("gws/memo.options.#{action}_filter.selected") %></label>
+          </dd>
+
+          <dt><%= t "gws/memo/message.message" %><%= @model.tt :from_member_ids %></dt>
+          <dd>
+            <%= f.hidden_field "message_ids[]", value: "", class: "hidden-ids" %>
+            <%= link_to t("ss.links.select"), gws_memo_apis_messages_path(site: @cur_site), class: "ajax-box" %>
+          </dd>
+          <dd>
+            <table class="index ajax-selected" style="display: none;">
+              <thead>
+              <tr>
+                <th class="from">
+                  <i class="material-icons md-15" style="visibility: hidden;">&#xE226;</i>
+                  <%= @model.t :from %>
+                </th>
+                <th class="name"><%= @model.t :subject %></th>
+                <th class="priority"><%= @model.t :priority %></th>
+                <th class="send_date"><%= @model.t :display_send_date %></th>
+                <th class="size"><%= @model.t :size %></th>
+                <th class="deselect"></th>
+              </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </dd>
+        </dl>
+      </div>
+      <footer class="send">
+        <%= f.submit t("ss.#{action}"), { class: "btn btn-primary" } %>
+      </footer>
+    </div>
+  </div>
+</div>

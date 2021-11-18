@@ -104,7 +104,7 @@ module Workflow::Model::Route
   def required_count_label_at(level)
     required_count = required_count_at(level)
     case required_count
-    when false then
+    when false
       I18n.t("workflow.required_count_label.all")
     else
       I18n.t("workflow.required_count_label.minimum", required_count: required_count)

@@ -10,8 +10,9 @@ class Map::Extensions::Points < Array
 
     def mongoize(object)
       case object
-      when self.class then object.mongoize
-      when Array then
+      when self.class
+        object.mongoize
+      when Array
         ary = object.dup
         ary = ary.map do |point|
           point.deep_stringify_keys

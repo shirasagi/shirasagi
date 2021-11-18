@@ -8,6 +8,11 @@ class Cms::Column::Value::Base
   class_attribute :_permit_values, instance_accessor: false
   self._permit_values = []
 
+  define_model_callbacks :parent_save
+  define_model_callbacks :parent_create
+  define_model_callbacks :parent_update
+  define_model_callbacks :parent_destroy
+
   attr_reader :in_wrap, :link_errors, :origin_id
 
   embedded_in :page, inverse_of: :column_values
@@ -21,6 +26,7 @@ class Cms::Column::Value::Base
   validate :validate_value
 
   attr_accessor :link_check_user
+
   validate :validate_link_check, on: :link
 
   liquidize do
@@ -88,7 +94,7 @@ class Cms::Column::Value::Base
   end
 
   def clone_to(to_item, opts = {})
-    attrs = self.attributes.to_h.except('_id').slice(*self.class.fields.keys.map(&:to_s))
+    attrs = Hash[self.attributes].except('_id').slice(*self.class.fields.keys.map(&:to_s))
     ret = to_item.column_values.build(attrs)
     ret.instance_variable_set(:@new_clone, true)
     ret.instance_variable_set(:@origin_id, self.id)
@@ -116,6 +122,13 @@ class Cms::Column::Value::Base
         self.value = value
       end
     end
+  end
+
+  def history_summary
+    h = []
+    h << "#{t("value")}: #{value}" if try(:value).present?
+    h << "#{t("alignment")}: #{I18n.t("cms.options.alignment.#{alignment}")}"
+    h.join(",")
   end
 
   private

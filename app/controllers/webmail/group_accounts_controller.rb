@@ -85,7 +85,7 @@ class Webmail::GroupAccountsController < ApplicationController
 
     result = @group.save
     if !result
-      @item.errors.messages[:base] += @group.errors.full_messages
+      SS::Model.copy_errors(@group, @item)
     end
     render_update result
   end
@@ -102,7 +102,7 @@ class Webmail::GroupAccountsController < ApplicationController
 
     result = @group.save
     if !result
-      @item.errors.messages[:base] += @group.errors.full_messages
+      SS::Model.copy_errors(@group, @item)
     end
     render_destroy result, location: webmail_group_path(id: @group)
   end

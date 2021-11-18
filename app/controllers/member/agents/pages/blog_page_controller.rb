@@ -13,7 +13,7 @@ class Member::Agents::Pages::BlogPageController < ApplicationController
   def render_blog_layout
     return if response.media_type != "text/html"
 
-    node = @cur_page.parent.becomes_with_route
+    node = @cur_page.parent
     @cur_page.layout = node.page_layout
     layout = @cur_page.layout
     layout.html = layout.html.gsub(/\#\{(.+?)\}/) do |m|

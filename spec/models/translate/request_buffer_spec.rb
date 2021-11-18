@@ -32,9 +32,9 @@ describe Translate::RequestBuffer, dbscope: :example do
 
   context "mock develop" do
     before do
-      mock = SS::Config.translate.mock
+      mock = SS.config.translate.mock
       mock["processor"] = "develop"
-      SS::Config.replace_value_at(:translate, 'mock', mock)
+      SS.config.replace_value_at(:translate, 'mock', mock)
     end
 
     it do
@@ -52,9 +52,9 @@ describe Translate::RequestBuffer, dbscope: :example do
 
   context "mock loopback" do
     before do
-      mock = SS::Config.translate.mock
+      mock = SS.config.translate.mock
       mock["processor"] = "loopback"
-      SS::Config.replace_value_at(:translate, 'mock', mock)
+      SS.config.replace_value_at(:translate, 'mock', mock)
     end
 
     it do

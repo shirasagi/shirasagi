@@ -1,4 +1,4 @@
-<% licenses = Opendata::License.in(site_id: @cur_node.becomes_with_route.try(:opendata_site_ids)).and_public.pluck(:name, :id) if @cur_node.present? %>
+<% licenses = Opendata::License.in(site_id: @cur_node.try(:opendata_site_ids)).and_public.pluck(:name, :id) if @cur_node.present? %>
 <% if @item.opendata_dataset_state == 'existance' %>
   <%= jquery do %>
     $("option[value='same']").text("<%= I18n.t("cms.options.opendata_resource.existance") %>");

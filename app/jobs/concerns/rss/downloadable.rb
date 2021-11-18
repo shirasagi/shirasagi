@@ -36,7 +36,7 @@ module Rss::Downloadable
 
     @task.log "downloading #{url}"
 
-    ::FileUtils.mkdir_p(self.class.data_cache_dir) unless ::Dir.exists?(self.class.data_cache_dir)
+    ::FileUtils.mkdir_p(self.class.data_cache_dir) unless ::Dir.exist?(self.class.data_cache_dir)
 
     hash = Digest::MD5.hexdigest(url)
 
@@ -87,10 +87,10 @@ module Rss::Downloadable
 
   def find_in_cache(hash)
     file_paths = %w(xml.gz xml).map { |ext| ::File.join(self.class.data_cache_dir, "#{hash}.#{ext}") }
-    file_path = file_paths.find { |path| ::File.exists?(path) }
+    file_path = file_paths.find { |path| ::File.exist?(path) }
     return if file_path.blank?
 
-    if file_path.ends_with?(".gz")
+    if file_path.end_with?(".gz")
       ::Zlib::GzipReader.open(file_path) { |gz| gz.read }
     else
       ::File.read(file_path)

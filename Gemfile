@@ -2,12 +2,12 @@ source 'https://rubygems.org'
 
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
-gem 'rails', '~> 6.0.0'
+gem 'rails', '~> 6.1.0'
 gem 'sprockets', '< 4.0'
 gem 'sass'
 gem 'sassc-rails'
 gem 'uglifier'
-# gem 'coffee-rails'
+gem 'coffee-rails'
 gem 'mini_racer'
 gem 'jbuilder'
 gem 'sdoc', group: :doc
@@ -39,7 +39,6 @@ gem 'browser'
 gem 'clam_scan'
 gem 'diff-lcs'
 gem 'diffy'
-gem 'dynamic_form'
 gem 'fast_blank'
 gem 'fastimage'
 gem 'fullcalendar.io-rails', '~> 2.6.0'
@@ -61,9 +60,11 @@ gem 'non-stupid-digest-assets'
 gem 'oj'
 gem 'rails_autolink'
 gem 'retriable'
+gem 'rexml'
 gem 'romaji'
 gem 'roo'
 #gem 'roo-xls', git: "https://github.com/roo-rb/roo-xls.git"
+gem 'rss'
 gem 'rubyzip', '~> 2.3.0'
 gem 'thinreports'
 gem 'ungarbled'
@@ -120,14 +121,16 @@ group :development, :test do
   gem 'pry-doc', require: false
   gem 'pry-rails', require: false
   gem 'pry-stack_explorer', require: false
+  gem 'puma', require: false
   gem 'rails-controller-testing', require: false
   gem 'rspec', require: false
   gem 'rspec-collection_matchers', require: false
   gem 'rspec-its', require: false
   gem 'rspec-rails', require: false
-  gem 'rubocop', '0.71.0', require: false
+  gem 'rubocop', '1.18.4', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rspec', require: false
+  gem 'rubocop-rails', '2.11.3', require: false
   gem 'ruby-debug-ide', require: false
   gem 'scss_lint', require: false
   gem 'selenium-webdriver', require: false

@@ -9,7 +9,7 @@ module Gws::ModulePermission
   end
 
   def permission_name
-    class_variable_get(:@@_permission_name) || self.name.underscore.gsub(/\//, "_")
+    class_variable_get(:@@_permission_name) || self.name.underscore.tr("/", "_")
   end
 
   def allowed?(action, user, opts = {})

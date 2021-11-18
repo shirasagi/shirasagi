@@ -1,6 +1,5 @@
 class Chorg::EmbeddedArray
-  attr_reader :field_name
-  attr_reader :update_array
+  attr_reader :field_name, :update_array
 
   def initialize(field_name, update_array)
     @field_name = field_name

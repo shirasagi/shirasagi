@@ -1,5 +1,11 @@
 module SS::FileFilter
   extend ActiveSupport::Concern
+  include SS::SanitizerFilter
+
+  included do
+    # used at Facility::Apis::TempFilesController
+    cattr_accessor :only_image, instance_accessor: false
+  end
 
   private
 
@@ -18,15 +24,22 @@ module SS::FileFilter
     @item = @model.new get_params
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
-    if @item.in_files.present?
-      def @item.to_json
-        saved_files.to_json({ methods: %i[humanized_name image? basename extname url thumb_url] })
-      end
-      render_create @item.save_files, location: { action: :index }
-    else
+    if @item.in_files.blank?
       @item.errors.add :in_files, :blank
       render_create false
+      return
     end
+
+    if self.class.only_image && !@item.image?
+      @item.errors.add :in_file, :image
+      render_create false
+      return
+    end
+
+    def @item.to_json
+      saved_files.to_json({ methods: %i[humanized_name image? basename extname url thumb_url] })
+    end
+    render_create @item.save_files, location: { action: :index }
   end
 
   def update

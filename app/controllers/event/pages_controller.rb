@@ -8,16 +8,10 @@ class Event::PagesController < ApplicationController
   append_view_path "app/views/cms/pages"
   navi_view "event/main/navi"
 
-  before_action :change_node_type
-
   private
 
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
-  end
-
-  def change_node_type
-    @cur_node = @cur_node.becomes_with_route if @cur_node.class == Cms::Node
   end
 
   def set_task
@@ -37,7 +31,7 @@ class Event::PagesController < ApplicationController
     exporter = Cms::PageExporter.new(mode: "event", site: @cur_site, criteria: criteria)
     enumerable = exporter.enum_csv(encoding: "Shift_JIS")
 
-    filename = @model.to_s.tableize.gsub(/\//, "_")
+    filename = @model.to_s.tableize.tr("/", "_")
     filename = "#{filename}_#{Time.zone.now.to_i}.csv"
 
     response.status = 200

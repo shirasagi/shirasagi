@@ -5,9 +5,7 @@ class Gws::Elasticsearch::Searcher
   DEFAULT_FIELD_NAME = 'text_index'.freeze
   WELL_KNOWN_TYPES = %w(all board faq qna report workflow circular monitor share memo).freeze
 
-  attr_accessor :setting
-  attr_accessor :index, :type, :field_name
-  attr_accessor :keyword, :from, :size
+  attr_accessor :setting, :index, :type, :field_name, :keyword, :from, :size
 
   permit_params :keyword
 

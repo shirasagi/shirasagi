@@ -19,7 +19,6 @@ module Cms::FeedFilter
       # rss.channel.pubDate     = date.to_s
 
       items.each do |item|
-        item = item.becomes_with_route rescue item
         date = nil
         %w(released updated created).each { |m| date ||= item.send(m) if item.respond_to?(m) }
 

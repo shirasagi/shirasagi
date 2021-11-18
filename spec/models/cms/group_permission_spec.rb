@@ -3,24 +3,24 @@ require 'spec_helper'
 describe Cms::GroupPermission, type: :model, dbscope: :example do
   context "article_page" do
     let!(:site) { cms_site }
-    let!(:group_1) { create(:cms_group, name: "A", order: 10) }
-    let!(:group_2) { create(:cms_group, name: "B", order: 20) }
+    let!(:group1) { create(:cms_group, name: "A", order: 10) }
+    let!(:group2) { create(:cms_group, name: "B", order: 20) }
 
     let!(:klass) { Article::Page }
-    let!(:docs1) { create(:article_page, site: site, filename: "docs1", name: "docs1", group_ids: [group_1.id]) }
-    let!(:docs1_page1) { create(:article_page, site: site, filename: "docs1/page1.html", group_ids: [group_1.id]) }
-    let!(:docs1_page2) { create(:article_page, site: site, filename: "docs1/page2.html", group_ids: [group_2.id]) }
+    let!(:docs1) { create(:article_page, site: site, filename: "docs1", name: "docs1", group_ids: [group1.id]) }
+    let!(:docs1_page1) { create(:article_page, site: site, filename: "docs1/page1.html", group_ids: [group1.id]) }
+    let!(:docs1_page2) { create(:article_page, site: site, filename: "docs1/page2.html", group_ids: [group2.id]) }
 
-    let!(:docs2) { create(:article_page, site: site, filename: "docs2", name: "docs2", group_ids: [group_2.id]) }
-    let!(:docs2_page1) { create(:article_page, site: site, filename: "docs2/page1.html", group_ids: [group_1.id]) }
-    let!(:docs2_page2) { create(:article_page, site: site, filename: "docs2/page2.html", group_ids: [group_2.id]) }
+    let!(:docs2) { create(:article_page, site: site, filename: "docs2", name: "docs2", group_ids: [group2.id]) }
+    let!(:docs2_page1) { create(:article_page, site: site, filename: "docs2/page1.html", group_ids: [group1.id]) }
+    let!(:docs2_page2) { create(:article_page, site: site, filename: "docs2/page2.html", group_ids: [group2.id]) }
 
     context "other role" do
       let!(:user) do
         create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp",
-          group_ids: [group_1.id], cms_role_ids: [role_1.id])
+          group_ids: [group1.id], cms_role_ids: [role1.id])
       end
-      let!(:role_1) do
+      let!(:role1) do
         create(:cms_role, permissions: Cms::Role.permission_names)
       end
 
@@ -76,9 +76,9 @@ describe Cms::GroupPermission, type: :model, dbscope: :example do
     context "private role" do
       let!(:user) do
         create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp",
-          group_ids: [group_1.id], cms_role_ids: [role_2.id])
+          group_ids: [group1.id], cms_role_ids: [role2.id])
       end
-      let!(:role_2) do
+      let!(:role2) do
         create(:cms_role, permissions: Cms::Role.permission_names.select { |r| r =~ /_private_/ })
       end
 
