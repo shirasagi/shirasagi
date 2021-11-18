@@ -67,8 +67,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           click_on I18n.t("ss.buttons.ignore_alert")
         end
         expect(page).to have_css(".errorExplanation",
-          text: I18n.t("errors.messages.denied_with_upload_policy",
-          policy: I18n.t("ss.options.upload_policy.sanitizer")))
+          text: I18n.t("errors.messages.denied_with_upload_policy", policy: I18n.t("ss.options.upload_policy.sanitizer")))
         expect(enqueued_jobs.size).to eq 0
       end
     end

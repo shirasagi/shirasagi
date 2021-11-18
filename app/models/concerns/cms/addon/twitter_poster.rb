@@ -94,11 +94,11 @@ module Cms::Addon
 
     private
 
-
     def validate_twitter_postable
       policy = SS::UploadPolicy.upload_policy
       if policy
-        errors.add :base, "#{t(:twitter_auto_post)}：#{I18n.t("errors.messages.denied_with_upload_policy", policy: I18n.t("ss.options.upload_policy.#{policy}"))}"
+        msg = I18n.t("errors.messages.denied_with_upload_policy", policy: I18n.t("ss.options.upload_policy.#{policy}"))
+        errors.add :base, "#{t(:twitter_auto_post)}：#{msg}"
         return
       end
 
