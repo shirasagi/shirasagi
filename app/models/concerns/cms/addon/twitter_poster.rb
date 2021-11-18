@@ -20,7 +20,7 @@ module Cms::Addon
 
       permit_params :twitter_auto_post, :twitter_edit_auto_post, :twitter_post_format, :twitter_post_id, :twitter_user_id
 
-      validates :thumb_id, presence: true, if: -> { twitter_auto_post == "active" && twitter_post_format == "thumb_and_page" }
+      validate :validate_twitter_postable, if: -> { twitter_auto_post == "active" }
 
       after_save -> { post_to_twitter(execute: :job) }
     end
@@ -93,6 +93,19 @@ module Cms::Addon
     end
 
     private
+
+
+    def validate_twitter_postable
+      policy = SS::UploadPolicy.upload_policy
+      if policy
+        errors.add :base, "#{t(:twitter_auto_post)}：#{I18n.t("errors.messages.denied_with_upload_policy", policy: I18n.t("ss.options.upload_policy.#{policy}"))}"
+        return
+      end
+
+      if twitter_post_format == "thumb_and_page" && thumb.blank?
+        errors.add :thumb_id, :blank
+      end
+    end
 
     def execute_post_to_twitter
       Cms::SnsPostLog::Twitter.create_with(self) do |log|

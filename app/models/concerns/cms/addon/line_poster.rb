@@ -15,10 +15,7 @@ module Cms::Addon
       field :line_text_message, type: String
       field :line_post_format, type: String
 
-      validates :line_text_message, presence: true, if: -> { line_auto_post == "active" }
-      validates :thumb_id, presence: true, if: -> { line_auto_post == "active" && line_post_format == "thumb_carousel" }
-      validate :validate_line_title, if: -> { line_auto_post == "active" && name.present? }
-      validate :validate_line_text_message, if: -> { line_text_message.present? }
+      validate :validate_line_postable, if: -> { line_auto_post == "active" }
 
       permit_params :line_auto_post, :line_edit_auto_post, :line_text_message, :line_post_format
 
@@ -102,18 +99,28 @@ module Cms::Addon
 
     private
 
-    def validate_line_title
-      if name.size > 40
+    def validate_line_postable
+      policy = SS::UploadPolicy.upload_policy
+      if policy
+        errors.add :base, "#{t(:line_auto_post)}：#{I18n.t("errors.messages.denied_with_upload_policy", policy: I18n.t("ss.options.upload_policy.#{policy}"))}"
+        return
+      end
+
+      if name.present? && name.size > 40
         errors.add :name, :too_long_with_line_title, count: 40
       end
-    end
-
-    def validate_line_text_message
-      if line_text_message.index("\n")
-        errors.add :line_text_message, :invalid_new_line_included
+      if line_post_format == "thumb_carousel" && thumb.blank?
+        errors.add :thumb_id, :blank
       end
-      if line_text_message.size > 45
-        errors.add :line_text_message, :too_long, count: 45
+      if line_text_message.present?
+        if line_text_message.index("\n")
+          errors.add :line_text_message, :invalid_new_line_included
+        end
+        if line_text_message.size > 45
+          errors.add :line_text_message, :too_long, count: 45
+        end
+      else
+        errors.add :line_text_message, :blank
       end
     end
 
