@@ -69,18 +69,14 @@ class Fs::FilesController < ApplicationController
   end
 
   def send_item(disposition = :inline)
+    path = @variant ? @variant.path : @item.path
+    raise "404" unless Fs.file?(path)
+
     set_last_modified
 
-    path = @variant ? @variant.path : @item.path
+    content_type = @variant ? @variant.content_type : @item.content_type
     download_filename = @variant ? @variant.download_filename : @item.download_filename
-
-    if Fs.mode == :file && Fs.file?(path)
-      send_file path, type: @item.content_type, filename: download_filename,
-                disposition: disposition, x_sendfile: true
-    else
-      send_enum @variant ? @variant.to_io : @item.to_io, type: @item.content_type, filename: download_filename,
-                disposition: disposition
-    end
+    ss_send_file @variant || @item, type: content_type, filename: download_filename, disposition: disposition
   end
 
   def send_thumb(file, width:, height:, **opts)
@@ -95,10 +91,6 @@ class Fs::FilesController < ApplicationController
 
     send_enum converter.to_enum, opts
     converter = nil
-  ensure
-    if converter
-      converter.close rescue nil
-    end
   end
 
   public
