@@ -30,7 +30,7 @@ module Board::Addon
     def file_limit_options
       %w(none 1n 2n 3n).collect.with_index do |v, i|
         label = I18n.t("board.options.file_limit.#{v}")
-        label += I18n.t("board.cannot_use") if v != "none" && SS.config.cms.enable_lgwan
+        label += I18n.t("board.cannot_use") if v != "none" && SS::Lgwan.enabled?
         [ label, i ]
       end
     end
