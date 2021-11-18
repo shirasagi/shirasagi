@@ -288,4 +288,28 @@ describe Fs do
       end
     end
   end
+
+  describe '.head_lines' do
+    context "when nil is given as path" do
+      it do
+        expect(Fs.head_lines(nil)).to eq []
+      end
+    end
+
+    context "when nil is given as path" do
+      let(:tmp_file_path) do
+        tmpfile do |f|
+          3.times do
+            f.puts ss_japanese_text
+          end
+        end
+      end
+
+      it do
+        expect(Fs.head_lines(tmp_file_path)).to have(3).items
+        expect(Fs.head_lines(tmp_file_path, limit: 2)).to have(2).items
+        expect { ss_japanese_text + Fs.head_lines(tmp_file_path, limit: 2).join }.not_to raise_error
+      end
+    end
+  end
 end

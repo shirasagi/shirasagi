@@ -17,7 +17,7 @@ class SS::Extensions::Words < Array
       when self.class
         object.mongoize
       when String
-        self.new(object.gsub(/[, 　、\r\n]+/, ",").split(",").compact.uniq).mongoize
+        self.new(object.gsub(/[, 　、\r\n]+/, ",").split(",").select(&:present?).uniq).mongoize
       else
         object
       end

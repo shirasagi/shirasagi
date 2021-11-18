@@ -1,6 +1,6 @@
 this.SS_AjaxFile = (function () {
   function SS_AjaxFile(el, options) {
-    this.$el = $(el || "#ajax-box");
+    this.$el = $(el || "#ajax-file-box");
     this.options = options || {};
 
     this.render();
