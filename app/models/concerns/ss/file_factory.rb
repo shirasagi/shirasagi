@@ -44,7 +44,7 @@ module SS::FileFactory
         item.sync_stats
       end
 
-      item.update_variants
+      item.update_variants if item.respond_to?(:update_variants)
 
       item
     end
@@ -59,6 +59,7 @@ module SS::FileFactory
       item.cur_user = cur_user if respond_to?(:cur_user)
       item.cur_node = cur_node if respond_to?(:cur_node)
       item.cur_group = cur_group if respond_to?(:cur_group)
+      item.cur_member = cur_member if respond_to?(:cur_member)
       item.in_file = file
       item.resizing = resizing
       item.quality = quality

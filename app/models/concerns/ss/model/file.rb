@@ -402,7 +402,7 @@ module SS::Model::File
     end
     self.size = Fs.size(path)
 
-    update_variants
+    update_variants if respond_to?(:update_variants)
     sanitizer_save_file
   end
 
