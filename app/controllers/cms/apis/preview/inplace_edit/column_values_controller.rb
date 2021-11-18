@@ -209,6 +209,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
 
   def render_move_as_branch(result, branch)
     if result
+      flash["cms.preview.notice"] = I18n.t("workflow.notice.created_branch_page")
       path_params = { path: branch.filename, anchor: "inplace" }
       path_params[:preview_date] = params[:preview_date].to_s if params[:preview_date].present?
       location = cms_preview_path(path_params)

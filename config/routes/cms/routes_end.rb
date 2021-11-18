@@ -328,7 +328,7 @@ Rails.application.routes.draw do
     end
     resources :max_file_sizes, concerns: :deletion
     resources :nodes, concerns: :deletion
-    resources :pages, concerns: [:deletion, :copy, :move, :lock, :command, :contains_urls]
+    resources :pages, concerns: [:deletion, :copy, :move, :lock, :command, :contains_urls, :michecker]
     resources :import_pages, concerns: [:deletion, :convert]
     resources :import_nodes, concerns: [:deletion]
     get "/group_pages" => redirect { |p, req| "#{req.path.sub(/\/group_pages$/, "")}/nodes" }

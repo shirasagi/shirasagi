@@ -91,6 +91,8 @@ module Cms::Addon::List
       interprets_default_location = false
 
       conditions.each do |url_with_host|
+        next if url_with_host.blank?
+
         host, url = url_with_host.split(":", 2)
         host, url = url, host if url.blank?
 

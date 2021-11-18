@@ -278,10 +278,12 @@ describe History::Trash, type: :model, dbscope: :example do
       let!(:release_date) { released - rand(3..5).hours }
       let!(:close_date) { release_date + rand(3..5).hours }
       let!(:item) do
-        create(
-          :cms_page, cur_user: user, cur_site: site,
-          released_type: released_type, released: released, release_date: release_date, close_date: close_date
-        )
+        Timecop.freeze(released) do
+          create(
+            :cms_page, cur_user: user, cur_site: site,
+            released_type: released_type, released: released, release_date: release_date, close_date: close_date
+          )
+        end
       end
 
       it do

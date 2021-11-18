@@ -24,16 +24,15 @@
           end
           date = source['released']
           url = Addressable::URI.join((Cms::Site.where(id: source['site_id']).first.presence || @cur_site).full_root_url, source['url']).to_s
-          filename = (Cms::Site.where(id: source['site_id']).first.presence || @cur_site).full_url + hit['_id']
           if source['title'].present?
             title = source['title']
             date = source['timestamp']
-            url = filename = source['url']
+            url = source['url']
           end
         %>
         <h2><%= link_to title, url, class: 'title' %></h2>
         <div class="meta">
-          <span class="url"><%= filename %></span>
+          <span class="url"><%= url %></span>
           <time datetime="<%= date %>"><%= I18n.l(Time.zone.parse(date), format: :long) %></time>
         </div>
       </header>
