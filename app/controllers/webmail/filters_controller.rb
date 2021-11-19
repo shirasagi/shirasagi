@@ -55,8 +55,7 @@ class Webmail::FiltersController < ApplicationController
     end
 
     conf = @imap_setting.imap_settings(@cur_user.imap_default_settings)
-    table = CSV.read(file.path, headers: true, encoding: 'SJIS:UTF-8')
-    table.each do |row|
+    SS::Csv.each_row(file, headers: true) do |row|
       conditions = row[@model.t(:conditions)].to_s.split("\n").collect do |value|
         JSON.parse(value, symbolize_names: true)
       end

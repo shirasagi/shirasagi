@@ -39,7 +39,7 @@ class Cms::FolderSize
       path = path.path if path.respond_to?(:path)
 
       match_count = 0
-      ::CSV.foreach(path, headers: true, encoding: 'SJIS:UTF-8') do |row|
+      SS::Csv.each_row(path, headers: true) do |row|
         FIELDS_DEF.each do |e|
           if row.key?(I18n.t("folder_size.#{e[0]}"))
             match_count += 1

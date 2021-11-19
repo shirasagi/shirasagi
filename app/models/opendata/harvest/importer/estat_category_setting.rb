@@ -131,7 +131,6 @@ class Opendata::Harvest::Importer
         if in_file.blank? || ::File.extname(in_file.original_filename) != ".csv"
           raise I18n.t("errors.messages.invalid_csv")
         end
-        table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
       rescue => e
         errors.add :base, e.to_s
         return
@@ -139,7 +138,7 @@ class Opendata::Harvest::Importer
 
       items = []
       id_given_items = {}
-      table.each_with_index do |row, idx|
+      SS::Csv.each_row(in_file, headers: true).each_with_index do |row, idx|
         id = row[t(:id).to_s].to_s.strip
         order = row[t(:order).to_s].to_s.strip
         category_name = row[t(:category_name).to_s].to_s.strip

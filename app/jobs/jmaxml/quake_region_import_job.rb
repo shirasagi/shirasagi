@@ -8,8 +8,7 @@ class Jmaxml::QuakeRegionImportJob < Cms::ApplicationJob
   end
 
   def import_file
-    table = ::CSV.read(@cur_file.path, headers: true, encoding: 'SJIS:UTF-8')
-    table.each do |row|
+    SS::Csv.each_row(@cur_file, headers: true) do |row|
       import_row(row)
     end
     nil

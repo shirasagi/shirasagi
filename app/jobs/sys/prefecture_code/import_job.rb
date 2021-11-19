@@ -2,10 +2,8 @@ require 'csv'
 
 class Sys::PrefectureCode::ImportJob < Sys::PostalCode::ImportBase
   def import_file
-    open_csv_table(headers: true, encoding: 'SJIS:UTF-8') do |table|
-      table.each_with_index do |row, i|
-        import_row(row, i)
-      end
+    SS::Csv.each_row(@cur_file, headers: true) do |row, i|
+      import_row(row, i)
     end
     nil
   end

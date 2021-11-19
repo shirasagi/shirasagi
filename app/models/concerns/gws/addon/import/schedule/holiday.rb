@@ -100,8 +100,7 @@ module Gws::Addon::Import::Schedule
       @imported = 0
       validate_import
 
-      table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
-      table.each_with_index do |row, i|
+      SS::Csv.each_row(in_file, headers: true) do |row, i|
         update_row(row, i + 2)
       end
       errors.blank?
@@ -114,7 +113,7 @@ module Gws::Addon::Import::Schedule
       fname = in_file.original_filename
       return errors.add :in_file, :invalid_file_type if ::File.extname(fname) !~/^\.csv$/i
       begin
-        CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
+        SS::Csv.each_row(in_file, headers: true) { |_row, index| break if index >= 100 }
         in_file.rewind
       rescue => e
         errors.add :in_file, :invalid_file_type

@@ -33,10 +33,9 @@ class SS::CsvExtractor
   end
 
   def extract_headers_from_csv
-    require "nkf"
-
-    data = NKF.nkf('-wd', file.read)
-    csv = CSV.parse(data, headers: true)
-    @csv_headers = csv.headers.select { |v| v.present? }
+    SS::Csv.each_row(file, headers: true) do |row|
+      @csv_headers = row.headers.select { |v| v.present? }
+      break
+    end
   end
 end

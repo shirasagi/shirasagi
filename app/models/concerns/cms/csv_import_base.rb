@@ -19,30 +19,13 @@ module Cms::CsvImportBase
         break if no >= max_read_lines
       end
 
-      true
+      no != 0
     rescue
       false
-    ensure
-      file.rewind
     end
 
     def each_csv(file, &block)
-      file.to_io do |io|
-        encoding = SS::Csv.detect_encoding(io)
-        return if encoding != Encoding::UTF_8 && encoding != Encoding::SJIS
-
-        io.set_encoding(encoding)
-        if encoding == Encoding::UTF_8
-          # try to skip the BOM
-          bom = io.read(3)
-          io.rewind if bom != SS::Csv::UTF8_BOM
-        end
-
-        csv = CSV.new(io, headers: true)
-        csv.each(&block)
-      ensure
-        csv.close if csv
-      end
+      SS::Csv.each_row(file, headers: true, &block)
     end
   end
 end
