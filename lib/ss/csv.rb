@@ -319,5 +319,53 @@ class SS::Csv
       ret.draw(&block) if block
       ret
     end
+
+    AUTO_DETECT_ENCODINGS = [ Encoding::UTF_8, Encoding::SJIS ].freeze
+
+    def detect_encoding(path_or_io_or_ss_file)
+      if path_or_io_or_ss_file.respond_to?(:rewind)
+        # io
+        begin
+          _detect_encoding(path_or_io_or_ss_file)
+        ensure
+          path_or_io_or_ss_file.rewind
+        end
+      elsif path_or_io_or_ss_file.respond_to?(:to_io)
+        # ss/file
+        path_or_io_or_ss_file.to_io { |io| _detect_encoding(io) }
+      else
+        # path
+        ::File.open(path_or_io_or_ss_file, "rb") { |io| _detect_encoding(io) }
+      end
+    end
+
+    private
+
+    def _detect_encoding(io)
+      bom = io.read(3)
+      return Encoding::UTF_8 if UTF8_BOM.bytes == bom.bytes
+
+      body = bom + io.read(997)
+
+      encoding = AUTO_DETECT_ENCODINGS.find do |encoding|
+        byte_count = count_valid_bytes(body.dup, encoding)
+
+        (byte_count * 100 / body.length) > 90
+      end
+
+      encoding || Encoding::ASCII_8BIT
+    end
+
+    def count_valid_bytes(buff, encoding)
+      buff.force_encoding(encoding)
+
+      byte_count = 0
+      buff.each_codepoint { |cp| byte_count += cp.chr(encoding).bytes.length }
+
+      byte_count
+    rescue ArgumentError
+      # invalid byte sequence in ...
+      byte_count
+    end
   end
 end
