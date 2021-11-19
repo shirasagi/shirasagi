@@ -1,19 +1,23 @@
 <dl class="see mod-cms-sourcecleaner">
-  <dt><%= @model.t :target %></dt>
+  <dt><%= @model.t :target_type %></dt>
   <dd>
     <span>[<%= @item.label :target_type %>]</span>
-    <span style="margin-left: 4px;"><%= @item.target_value %></span>
   </dd>
 
-  <dt><%= @model.t :action %></dt>
+  <dt><%= @model.t :target_value %></dt>
   <dd>
-    <span>[<%= @item.label :action_type %>]</span>
+    <span style="margin-left: 4px;"><%= @item.target_value %></span>
   </dd>
 
   <% if @item.replace_source.present? %>
     <dt><%= @model.t :replace_source %></dt>
     <dd><%= @item.replace_source %></dd>
   <% end %>
+
+  <dt><%= @model.t :action %></dt>
+  <dd>
+    <span>[<%= @item.label :action_type %>]</span>
+  </dd>
 
   <% if @item.replaced_value.present? %>
     <dt><%= @model.t :replaced_value %></dt>

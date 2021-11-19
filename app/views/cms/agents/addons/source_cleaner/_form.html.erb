@@ -19,17 +19,21 @@
 <% end %>
 
 <dl class="see mod-cms-sourcecleaner">
-  <dt><%= @model.t :target %><%= @model.tt :target %></dt>
+  <dt><%= @model.t :target_type %><%= @model.tt :target_type %></dt>
   <dd>
-    <%= f.select :target_type, @item.target_type_options, {}, class: "target-type", style: "width: 70px" %>
+    <%= f.select :target_type, @item.target_type_options, {}, class: "target-type", style: "width: 100px" %>
+  </dd>
+
+  <dt><%= @model.t :target_value %><%= @model.tt :target_value %></dt>
+  <dd>
     <%= f.text_field :target_value, placeholder: "div" %>
   </dd>
 
-  <dt><%= @model.t :action %><%= @model.tt :action %></dt>
-  <dd><%= f.select :action_type, @item.action_type_options, {}, class: "action-type", style: "width: 70px" %></dd>
-
   <dt class="replace-source"><%= @model.t :replace_source %><%= @model.tt :replace_source %></dt>
   <dd class="replace-source"><%= f.text_field :replace_source %></dd>
+
+  <dt><%= @model.t :action %><%= @model.tt :action %></dt>
+  <dd><%= f.select :action_type, @item.action_type_options, {}, class: "action-type", style: "width: 70px" %></dd>
 
   <dt class="replaced-value"><%= @model.t :replaced_value %><%= @model.tt :replaced_value %></dt>
   <dd class="replaced-value"><%= f.text_field :replaced_value %></dd>
