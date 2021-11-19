@@ -104,16 +104,14 @@ class Fs::FilesController < ApplicationController
     width  = params[:width]
     height = params[:height]
 
+    set_last_modified
     if width.present? && height.present?
-      set_last_modified
       send_thumb @item, type: @item.content_type, filename: @item.filename,
         disposition: :inline, width: width, height: height
     elsif size.present? && (variant = @item.variants[size.to_s.to_sym])
-      set_last_modified
       @variant = variant
       send_item
     else
-      set_last_modified
       @variant = @item.variants[:thumb]
       send_item
     end

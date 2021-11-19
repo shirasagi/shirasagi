@@ -27,9 +27,7 @@ module SS::VariantProcessor
     variants[:thumb]
   end
 
-  def thumb_url
-    thumb.url
-  end
+  delegate :url, to: :thumb, prefix: true
 
   def update_variants
     return if in_disable_variant_processing.present?
