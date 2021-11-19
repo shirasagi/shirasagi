@@ -320,30 +320,56 @@ class SS::Csv
       ret
     end
 
-    AUTO_DETECT_ENCODINGS = [ Encoding::UTF_8, Encoding::SJIS ].freeze
+    AUTO_DETECT_ENCODINGS = [ Encoding::SJIS, Encoding::UTF_8 ].freeze
 
     def detect_encoding(path_or_io_or_ss_file)
       if path_or_io_or_ss_file.respond_to?(:rewind)
-        # io
-        begin
-          _detect_encoding(path_or_io_or_ss_file)
-        ensure
-          path_or_io_or_ss_file.rewind
-        end
-      elsif path_or_io_or_ss_file.respond_to?(:to_io)
-        # ss/file
-        path_or_io_or_ss_file.to_io { |io| _detect_encoding(io) }
-      else
-        # path
-        ::File.open(path_or_io_or_ss_file, "rb") { |io| _detect_encoding(io) }
+        # io like File, ActionDispatch::Http::UploadedFile or Fs::UploadedFile
+        return with_keeping_io_position(path_or_io_or_ss_file) { |io| _detect_encoding(io) }
       end
+
+      if path_or_io_or_ss_file.respond_to?(:to_io)
+        # ss/file
+        return path_or_io_or_ss_file.to_io { |io| _detect_encoding(io) }
+      end
+
+      # path
+      ::File.open(path_or_io_or_ss_file, "rb") { |io| _detect_encoding(io) }
+    end
+
+    def each_row(path_or_io_or_ss_file, headers: true, &block)
+      if path_or_io_or_ss_file.respond_to?(:rewind)
+        # io like File, ActionDispatch::Http::UploadedFile or Fs::UploadedFile
+        return with_keeping_io_position(path_or_io_or_ss_file) { |io| _each_row(io, headers: headers, &block) }
+      end
+
+      if path_or_io_or_ss_file.respond_to?(:to_io)
+        # ss/file
+        return path_or_io_or_ss_file.to_io { |io| _each_row(io, headers: headers, &block) }
+      end
+
+      # path
+      ::File.open(path_or_io_or_ss_file, "rb") { |io| _each_row(io, headers: headers, &block) }
     end
 
     private
 
+    def with_keeping_io_position(io)
+      io = io.tempfile if io.is_a?(ActionDispatch::Http::UploadedFile)
+      save_pos = io.pos
+
+      yield io
+    ensure
+      io.pos = save_pos
+    end
+
+    def utf8_bom?(bom)
+      UTF8_BOM.bytes == bom.bytes
+    end
+
     def _detect_encoding(io)
       bom = io.read(3)
-      return Encoding::UTF_8 if UTF8_BOM.bytes == bom.bytes
+      return Encoding::UTF_8 if utf8_bom?(bom)
 
       body = bom + io.read(997)
 
@@ -366,6 +392,29 @@ class SS::Csv
     rescue ArgumentError
       # invalid byte sequence in ...
       byte_count
+    end
+
+    def _each_row(io, headers:, &block)
+      encoding = with_keeping_io_position(io) { _detect_encoding(io) }
+      return if encoding == Encoding::ASCII_8BIT
+
+      io.set_encoding(encoding)
+      if encoding == Encoding::UTF_8
+        # try to skip the BOM
+        pos = io.pos
+        bom = io.read(3)
+        io.pos = pos if !utf8_bom?(bom)
+      end
+
+      csv = CSV.new(io, headers: headers)
+
+      return csv.each unless block_given?
+
+      if block.arity == 2
+        csv.each.with_index(&block)
+      else
+        csv.each(&block)
+      end
     end
   end
 end
