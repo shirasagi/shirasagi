@@ -120,15 +120,16 @@ module Chorg::Model::Revision
       @division_sets = {}
       @delete_sets = []
 
-      begin
-        if ::File.extname(in_revision_csv_file.original_filename) != ".csv"
-          raise I18n.t("errors.messages.invalid_csv")
-        end
-      rescue => e
-        errors.add :base, e.to_s
+      if ::File.extname(in_revision_csv_file.original_filename).try(:downcase) != ".csv"
+        errors.add :base, :invalid_csv
+        return
+      end
+      if !SS::Csv.valid_csv?(in_revision_csv_file, headers: true)
+        errors.add :base, :malformed_csv
         return
       end
 
+      in_revision_csv_file.rewind
       SS::Csv.each_row(in_revision_csv_file, headers: true) do |line, idx|
         attr = csv_line_to_changeset_attributes(line)
         id = attr["id"]

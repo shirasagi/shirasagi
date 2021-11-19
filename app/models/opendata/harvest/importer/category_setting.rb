@@ -133,12 +133,12 @@ class ::Opendata::Harvest::Importer::CategorySetting
   end
 
   def import
-    begin
-      if in_file.blank? || ::File.extname(in_file.original_filename) != ".csv"
-        raise I18n.t("errors.messages.invalid_csv")
-      end
-    rescue => e
-      errors.add :base, e.to_s
+    if in_file.blank? || ::File.extname(in_file.original_filename).try(:downcase) != ".csv"
+      errors.add :base, :invalid_csv
+      return
+    end
+    if !SS::Csv.valid_csv?(in_file, headers: true)
+      errors.add :base, :malformed_csv
       return
     end
 

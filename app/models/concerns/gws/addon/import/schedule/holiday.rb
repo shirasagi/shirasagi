@@ -112,12 +112,9 @@ module Gws::Addon::Import::Schedule
 
       fname = in_file.original_filename
       return errors.add :in_file, :invalid_file_type if ::File.extname(fname) !~/^\.csv$/i
-      begin
-        SS::Csv.each_row(in_file, headers: true) { |_row, index| break if index >= 100 }
-        in_file.rewind
-      rescue => e
-        errors.add :in_file, :invalid_file_type
-      end
+
+      errors.add :in_file, :invalid_file_type if !SS::Csv.valid_csv?(in_file, headers: true)
+      in_file.rewind
     end
 
     def update_row(row, index)

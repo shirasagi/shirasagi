@@ -6,22 +6,8 @@ module Cms::CsvImportBase
   end
 
   module ClassMethods
-    def valid_csv?(file, max_read_lines: 100)
-      no = 0
-      each_csv(file) do |row|
-        no += 1
-
-        if !required_headers.all? { |h| row.headers.include?(h) }
-          return false
-        end
-
-        # check csv record up to 100
-        break if no >= max_read_lines
-      end
-
-      no != 0
-    rescue
-      false
+    def valid_csv?(file, max_read_lines: nil)
+      SS::Csv.valid_csv?(file, headers: true, required_headers: required_headers, max_rows: max_read_lines)
     end
 
     def each_csv(file, &block)

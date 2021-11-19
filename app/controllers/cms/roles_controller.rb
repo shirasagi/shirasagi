@@ -41,7 +41,7 @@ class Cms::RolesController < ApplicationController
     begin
       file = params[:item].try(:[], :file)
       raise I18n.t("errors.messages.invalid_csv") if file.nil? || ::File.extname(file.original_filename) != ".csv"
-      SS::Csv.each_row(file, headers: true) { |_row, index| break if index >= 100 }
+      raise I18n.t("errors.messages.malformed_csv") if !SS::Csv.valid_csv?(file, headers: true)
 
       # save csv to use in job
       ss_file = SS::File.new
