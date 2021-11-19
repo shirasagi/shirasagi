@@ -1,5 +1,6 @@
 class SS::Csv
   UTF8_BOM = "\uFEFF".freeze
+  MAX_READ_ROWS = 100
 
   class BaseExporter
     include Enumerable
@@ -350,6 +351,23 @@ class SS::Csv
 
       # path
       ::File.open(path_or_io_or_ss_file, "rb") { |io| _each_row(io, headers: headers, &block) }
+    end
+
+    def valid_csv?(path_or_io_or_ss_file, headers: true, required_headers: nil, max_rows: nil)
+      max_rows ||= SS::Csv::MAX_READ_ROWS
+
+      count = 0
+      SS::Csv.each_row(path_or_io_or_ss_file, headers: headers) do |row|
+        count += 1
+
+        return false if required_headers && required_headers.any? { |h| !row.headers.include?(h) }
+
+        break if count >= max_rows
+      end
+      count != 0
+    rescue => e
+      Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      false
     end
 
     private
