@@ -44,6 +44,7 @@ class Facility::Node::Importer
       rescue => e
         put_log("#{I18n.t("cms.row_error", row_num: row_num)}: #{e}")
       end
+      put_log("")
     end
   end
 
