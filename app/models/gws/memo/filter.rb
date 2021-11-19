@@ -104,6 +104,9 @@ class Gws::Memo::Filter
   end
 
   def path
-    (action == 'trash') ? 'INBOX.Trash' : folder.id.to_s
+    return 'INBOX.Trash' if action == 'trash'
+    return folder_id.to_s if folder.present?
+
+    nil
   end
 end
