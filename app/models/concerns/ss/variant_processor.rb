@@ -33,8 +33,9 @@ module SS::VariantProcessor
     return if in_disable_variant_processing.present?
 
     # remove all variants
-    variants.each do |variant|
-      ::Fs.rm_rf(variant.path) if ::Fs.exist?(variant.path)
+    ::Dir.glob("#{::File.dirname(path)}/*") do |variant_path|
+      next if variant_path == path
+      ::Fs.rm_rf(variant_path)
     end
 
     return if !image?
