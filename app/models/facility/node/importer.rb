@@ -14,6 +14,7 @@ class Facility::Node::Importer
   def import(file, opts = {})
     @task = opts[:task]
     @count_errors = 0
+    @changed_data = 0
 
     put_log("import start #{file.filename}")
     import_csv(file)
@@ -41,7 +42,7 @@ class Facility::Node::Importer
       begin
         update_row(row, row_num)
       rescue => e
-        put_log("error #{row_num}#{I18n.t("cms.row_num")}: #{e}")
+        put_log("#{I18n.t("cms.row_error", row_num: row_num)}: #{e}")
       end
     end
   end
@@ -54,21 +55,13 @@ class Facility::Node::Importer
     set_location_ids(row, item)
     set_service_ids(row, item)
     set_group_ids(row, item)
-    put_log_of_insert(item, row_num, row)
+    put_attribute_log(item, row_num, row)
 
-    if item.save
-      name = item.name
-    else
-      @count_errors += 1
-      raise item.errors.full_messages.join(", ")
-    end
+    save_facility(item, row_num)
 
-    if row[model.t(:map_points)].present?
-      map = save_map(filename, row, row_num)
-      name += " #{map.map_points.first.try(:[], "loc")}"
-    end
+    return if row[model.t(:map_points)].blank?
 
-    return name
+    save_map(filename, row, row_num)
   end
 
   def set_page_attributes(row, item)
@@ -108,89 +101,97 @@ class Facility::Node::Importer
     item.group_ids = SS::Extensions::ObjectIds.new(ids)
   end
 
-  def put_log_of_insert(item, row_num, row)
-    if item.invalid?
-      @count_errors += 1
-      put_log(I18n.t("cms.log_of_the_failed_import", row_num: row_num))
-    elsif item.new_record?
-      put_log("add #{row_num}#{I18n.t("cms.row_num")}:  #{item.name}")
-    end
-
-    put_log_of_category(item.name, row_num, row)
-    put_log_of_location(item.name, row_num, row)
-    put_log_of_service(item.name, row_num, row)
-    put_log_of_group(item.name, row_num, row)
+  def put_attribute_log(item, row_num, row)
+    put_category_log(item.name, row_num, row)
+    put_location_log(item.name, row_num, row)
+    put_service_log(item.name, row_num, row)
+    put_group_log(item.name, row_num, row)
 
     return if item.invalid? || item.new_record?
 
-    put_log_of_update(item, row_num)
+    put_update_log(item, row_num)
   end
 
-  def put_log_of_category(item_name, row_num, row)
-    inputted_category = row[model.t(:categories)].to_s.split(/\n/).map(&:strip)
+  def put_category_log(item_name, row_num, row)
+    inputted_categories = row[model.t(:categories)].to_s.split(/\n/).map(&:strip)
     category_in_db = Facility::Node::Category.in(id: node.st_category_ids).pluck(:name)
 
-    inputted_category.each do |category|
+    inputted_categories.each do |category|
       next if category_in_db.include?(category)
 
       @count_errors += 1
-      put_log(I18n.t("cms.log_of_the_failed_category", category: category, row_num: row_num))
+      put_log(I18n.t("cms.failed_category_log", category: category, row_num: row_num))
     end
   end
 
-  def put_log_of_location(item_name, row_num, row)
-    inputted_location = row[model.t(:locations)].to_s.split(/\n/).map(&:strip)
+  def put_location_log(item_name, row_num, row)
+    inputted_locations = row[model.t(:locations)].to_s.split(/\n/).map(&:strip)
     location_in_db = Facility::Node::Location.in(id: node.st_location_ids).pluck(:name)
 
-    inputted_location.each do |location|
+    inputted_locations.each do |location|
       next if location_in_db.include?(location)
 
       @count_errors += 1
-      put_log(I18n.t("cms.log_of_the_failed_location", location: location, row_num: row_num))
+      put_log(I18n.t("cms.failed_location_log", location: location, row_num: row_num))
     end
   end
 
-  def put_log_of_service(item_name, row_num, row)
-    inputted_service = row[model.t(:services)].to_s.split(/\n/).map(&:strip)
+  def put_service_log(item_name, row_num, row)
+    inputted_services = row[model.t(:services)].to_s.split(/\n/).map(&:strip)
     service_in_db = Facility::Node::Service.in(id: node.st_service_ids).pluck(:name)
 
-    inputted_service.each do |service|
+    inputted_services.each do |service|
       next if service_in_db.include?(service)
 
       @count_errors += 1
-      put_log(I18n.t("cms.log_of_the_failed_service", service: service, row_num: row_num))
+      put_log(I18n.t("cms.failed_service_log", service: service, row_num: row_num))
     end
   end
 
-  def put_log_of_group(item_name, row_num, row)
-    inputted_group = row[model.t(:groups)].to_s.split(/\n/).map(&:strip)
+  def put_group_log(item_name, row_num, row)
+    inputted_groups = row[model.t(:groups)].to_s.split(/\n/).map(&:strip)
     group_in_db = SS::Group.in(id: node.group_ids).pluck(:name)
 
-    inputted_group.each do |group|
+    inputted_groups.each do |group|
       next if group_in_db.include?(group)
 
       @count_errors += 1
-      put_log(I18n.t("cms.log_of_the_failed_group", group: group, row_num: row_num))
+      put_log(I18n.t("cms.failed_group_log", group: group, row_num: row_num))
     end
   end
 
-  def put_log_of_update(item, row_num)
+  def put_update_log(item, row_num)
     item.changes.each do |change_data|
-      before_changing_data = change_data[1][0]
-      after_changing_data = change_data[1][1]
-      next if before_changing_data.blank? && after_changing_data.blank?
+      data_before_change, data_after_change = change_data[1]
+      next if data_before_change.blank? && data_after_change.blank?
 
+      @changed_data += 1
       changed_field = change_data[0]
-      field_name = "update #{row_num}#{I18n.t("cms.row_num")}: #{I18n.t("mongoid.attributes.facility/node/page.#{changed_field}")}"
+      locale_filed = I18n.t("mongoid.attributes.facility/node/page.#{changed_field}")
+      updated_field = I18n.t("cms.updated_field", row_num: row_num, field: locale_filed)
 
       if item.fields[changed_field].options[:metadata].nil?
-        put_log("#{field_name}#{before_changing_data} → #{after_changing_data}")
+        put_log("#{updated_field} #{data_before_change} to #{data_after_change}")
       else
         klass = item.fields[changed_field].options[:metadata][:elem_class].constantize
-        before_changing_metadata = klass.in(id: before_changing_data).pluck(:name)
-        after_changing_metadata = klass.in(id: after_changing_data).pluck(:name)
-        put_log("#{field_name}#{before_changing_metadata} → #{after_changing_metadata}")
+        metadata_before_change = klass.in(id: data_before_change).pluck(:name)
+        metadata_after_change = klass.in(id: data_after_change).pluck(:name)
+        put_log("#{field_name}: #{metadata_before_change} to #{metadata_after_change}")
       end
+    end
+  end
+
+  def save_facility(item, row_num)
+    name = item.name
+
+    if item.new_record? && item.save
+      put_log(I18n.t("cms.new_record", row_num: row_num, name: item.name))
+    elsif @changed_data > 0 && item.update
+      put_log(I18n.t("cms.update_record", row_num: row_num, name: item.name))
+    else
+      @count_errors += 1
+      err_msgs = item.errors.full_messages.join(",")
+      put_log(I18n.t("cms.failed_to_save", row_num: row_num, err_msgs: err_msgs, name: name))
     end
   end
 
@@ -200,10 +201,7 @@ class Facility::Node::Importer
     set_map_attributes(row, map, row_num)
     map.site = site
     map.save
-
-    map
   end
-
 
   def set_map_attributes(row, item, row_num)
     points = row[model.t(:map_points)].split(/\n/).map do |loc|
@@ -215,12 +213,12 @@ class Facility::Node::Importer
 
     return if item.new_record?
 
-    item.changes.each do |change_data|
-      before_changing_data = change_data[1][0]
-      after_changing_data = change_data[1][1]
-      put_log(
-        "update #{row_num}#{I18n.t("cms.row_num")}: #{I18n.t("mongoid.attributes.facility/node/page.#{change_data[0]}")}：#{before_changing_data} → #{after_changing_data}"
-      )
+    item.changes.each do |changed_data|
+      changed_field = changed_data[0]
+      data_before_change, data_after_change = changed_data[1]
+      locale_filed = I18n.t("mongoid.attributes.facility/node/page.#{changed_field}")
+      updated_field = I18n.t("cms.updated_field", row_num: row_num, field: locale_filed)
+      put_log("#{updated_field} #{data_before_change} to #{data_after_change}")
     end
   end
 end
