@@ -176,7 +176,7 @@ class Facility::Node::Importer
         klass = item.fields[changed_field].options[:metadata][:elem_class].constantize
         metadata_before_change = klass.in(id: data_before_change).pluck(:name)
         metadata_after_change = klass.in(id: data_after_change).pluck(:name)
-        put_log("#{field_name}: #{metadata_before_change} to #{metadata_after_change}")
+        put_log("#{updated_field} #{metadata_before_change} to #{metadata_after_change}")
       end
     end
   end
