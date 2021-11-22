@@ -28,10 +28,11 @@ class Fs::FilesController < ApplicationController
       return
     end
 
-    variant = item.variants.find { |variant| variant.name == name_or_filename || variant.filename == name_or_filename }
+    item = item.becomes_with_model
+    variant = item.variants.from_filename(name_or_filename)
     raise "404" if !variant
 
-    @item = item.becomes_with_model
+    @item = item
     @variant = variant
   end
 
@@ -70,6 +71,7 @@ class Fs::FilesController < ApplicationController
 
   def send_item(disposition = :inline)
     path = @variant ? @variant.path : @item.path
+    @variant.create! if @variant
     raise "404" unless Fs.file?(path)
 
     set_last_modified

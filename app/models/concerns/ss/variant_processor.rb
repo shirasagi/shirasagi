@@ -66,14 +66,63 @@ module SS::VariantProcessor
       super
     end
 
-    def [](name)
-      Variant.new(file: @file, variant_name: name)
+    def [](name_or_options)
+      case name_or_options
+      when String, Symbol
+        name_or_options = name_or_options.to_sym
+        variant_type = @file.class.variant_types.find do |name, _variant_options|
+          name == name_or_options
+        end
+        variant_type ? Variant.new(file: @file, variant_name: variant_type[0], variant_options: variant_type[1]) : nil
+      when Hash
+        # currently width and height are only supported
+        width = name_or_options[:width]
+        height = name_or_options[:height]
+        return if !width.numeric? || !height.numeric?
+
+        variant_type = @file.class.variant_types.find do |_name, variant_options|
+          next if variant_options[:dimension].blank?
+          variant_options[:dimension][0] == width && variant_options[:dimension][1] == height
+        end
+
+        return Variant.new(file: @file, variant_name: variant_type[0], variant_options: variant_type[1]) if variant_type
+
+        Variant.new(file: @file, variant_name: "#{width}x#{height}", variant_options: { dimension: [ width, height ] })
+      else
+        nil
+      end
     end
 
     def each
-      @file.class.variant_types.each do |variant_name, _options|
-        yield self[variant_name]
+      @file.class.variant_types.each do |variant_name, variant_options|
+        yield Variant.new(file: @file, variant_name: variant_name, variant_options: variant_options)
       end
+    end
+
+    def from_filename(name_or_filename)
+      extname = ::File.extname(name_or_filename)
+      name_or_filename = ::File.basename(name_or_filename, ".*")
+      spec_separator = name_or_filename.rindex("_")
+      return unless spec_separator
+
+      spec = name_or_filename[spec_separator + 1..-1]
+      return if spec.blank?
+
+      name_or_filename = name_or_filename[0..spec_separator - 1]
+      name_or_filename = "#{name_or_filename}#{extname}"
+      return if @file.name != name_or_filename && @file.filename != name_or_filename
+
+      variant = self[spec]
+      return variant if variant
+
+      width, height = spec.split("x", 2)
+      return if !width.numeric? || !height.numeric?
+
+      width = width.to_i
+      height = height.to_i
+      return if width <= 0 || width >= 3000 || height <= 0 || height >= 3000
+
+      self[{ width: width, height: height }]
     end
   end
 
@@ -82,7 +131,7 @@ module SS::VariantProcessor
     include SS::Locatable
     include SS::ReadableFile
 
-    attr_accessor :file, :variant_name
+    attr_accessor :file, :variant_name, :variant_options
 
     class << self
       delegate :root, to: SS::File
@@ -120,6 +169,18 @@ module SS::VariantProcessor
       return unless @file.image?
 
       ::FastImage.size(path) rescue nil
+    end
+
+    def create!
+      return true if ::Fs.exist?(path)
+
+      width, height = *variant_options[:dimension]
+      SS::ImageConverter.open(file.path) do |converter|
+        converter.resize_to_fit!(width, height)
+        Fs.upload(path, converter.to_io)
+      end
+
+      true
     end
   end
 end

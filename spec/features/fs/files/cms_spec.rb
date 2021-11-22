@@ -51,6 +51,11 @@ describe "fs_files", type: :feature, dbscope: :example do
           expect(status_code).to eq 200
         end
 
+        it "#index with custom variant" do
+          visit file.variants[{ width: 240, height: 180 }].url
+          expect(status_code).to eq 200
+        end
+
         it "#thumb" do
           visit "/fs/#{file.id}/_/thumb/#{file.filename}"
           expect(status_code).to eq 200
@@ -75,6 +80,11 @@ describe "fs_files", type: :feature, dbscope: :example do
         it "#index with new thumbnail" do
           visit file.thumb_url
           expect(status_code).to eq 404
+        end
+
+        it "#index with custom variant" do
+          visit file.variants[{ width: 240, height: 180 }].url
+          expect(status_code).to eq 200
         end
 
         it "#thumb" do
@@ -111,6 +121,11 @@ describe "fs_files", type: :feature, dbscope: :example do
             expect(status_code).to eq 200
           end
 
+          it "#index with custom variant" do
+            visit file.variants[{ width: 240, height: 180 }].url
+            expect(status_code).to eq 200
+          end
+
           it "#thumb" do
             visit "/fs/#{file.id}/_/thumb/#{file.filename}"
             expect(status_code).to eq 200
@@ -132,6 +147,11 @@ describe "fs_files", type: :feature, dbscope: :example do
 
           it "#index with new thumbnail" do
             visit file.thumb_url
+            expect(status_code).to eq 200
+          end
+
+          it "#index with custom variant" do
+            visit file.variants[{ width: 240, height: 180 }].url
             expect(status_code).to eq 200
           end
 
@@ -188,6 +208,11 @@ describe "fs_files", type: :feature, dbscope: :example do
             expect(status_code).to eq 404
           end
 
+          it "#index with custom variant" do
+            visit file.variants[{ width: 240, height: 180 }].url
+            expect(status_code).to eq 404
+          end
+
           it "#thumb" do
             visit "/fs/#{file.id}/_/thumb/#{file.filename}"
             expect(status_code).to eq 404
@@ -209,6 +234,11 @@ describe "fs_files", type: :feature, dbscope: :example do
 
           it "#index with new thumbnail" do
             visit file.thumb_url
+            expect(status_code).to eq 200
+          end
+
+          it "#index with custom variant" do
+            visit file.variants[{ width: 240, height: 180 }].url
             expect(status_code).to eq 200
           end
 

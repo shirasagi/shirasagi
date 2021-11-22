@@ -28,13 +28,87 @@ describe Member::PhotoFile, dbscope: :example do
           expect(subject.model).to eq "member/photo"
           expect(subject.image_dimension).to eq [ 712, 210 ]
 
+          # variant test
           expect(subject.variants.count).to eq 2
-          expect(subject.variants[:thumb]).to be_present
-          expect(subject.variants[:thumb].url).to be_present
-          expect(subject.variants[:thumb].image_dimension).to eq [ 160, 47 ]
-          expect(subject.variants[:detail]).to be_present
-          expect(subject.variants[:detail].url).to be_present
-          expect(subject.variants[:detail].image_dimension).to eq [ 712, 210 ]
+          subject.variants[:thumb].tap do |variant|
+            expect(variant).to be_present
+            expect(variant.variant_name).to eq :thumb
+
+            expect(variant.id).to eq subject.id
+            expect(variant.site_id).to eq subject.site_id
+            expect(variant.user_id).to eq subject.user_id
+            expect(variant.content_type).to eq subject.content_type
+            expect(variant.updated).to eq subject.updated
+            expect(variant.created).to eq subject.created
+
+            expect(variant.path).to end_with("_thumb")
+            expect(variant.public_dir).to eq subject.public_dir
+            expect(variant.public_path).to be_present
+            expect(variant.url).to be_present
+            expect(variant.full_url).to be_present
+
+            expect(variant.name).to be_present
+            expect(variant.filename).to be_present
+            expect(variant.size).to be_present
+            expect(variant.image_dimension).to eq [ 160, 47 ]
+          end
+          subject.variants[:detail].tap do |variant|
+            expect(variant).to be_present
+            expect(variant.variant_name).to eq :detail
+
+            expect(variant.id).to eq subject.id
+            expect(variant.site_id).to eq subject.site_id
+            expect(variant.user_id).to eq subject.user_id
+            expect(variant.content_type).to eq subject.content_type
+            expect(variant.updated).to eq subject.updated
+            expect(variant.created).to eq subject.created
+
+            expect(variant.path).to end_with("_detail")
+            expect(variant.public_dir).to eq subject.public_dir
+            expect(variant.public_path).to be_present
+            expect(variant.url).to be_present
+            expect(variant.full_url).to be_present
+
+            expect(variant.name).to be_present
+            expect(variant.filename).to be_present
+            expect(variant.size).to be_present
+            expect(variant.image_dimension).to eq [ 712, 210 ]
+          end
+          subject.variants["thumb"].tap do |variant|
+            expect(variant).to be_present
+            expect(variant.variant_name).to eq :thumb
+          end
+          subject.variants["detail"].tap do |variant|
+            expect(variant).to be_present
+            expect(variant.variant_name).to eq :detail
+          end
+          subject.variants[unique_id].tap do |variant|
+            expect(variant).to be_nil
+          end
+          subject.variants[0].tap do |variant|
+            expect(variant).to be_nil
+          end
+          subject.variants[{ width: 160, height: 120 }].tap do |variant|
+            expect(variant).to be_present
+            expect(variant.variant_name).to eq :thumb
+          end
+          subject.variants[{ width: 800, height: 600 }].tap do |variant|
+            expect(variant).to be_present
+            expect(variant.variant_name).to eq :detail
+          end
+          subject.variants[{ width: 1200, height: 900 }].tap do |variant|
+            expect(variant).to be_present
+            expect(variant.variant_name).to eq "1200x900"
+
+            expect(variant.id).to eq subject.id
+            expect(variant.site_id).to eq subject.site_id
+            expect(variant.user_id).to eq subject.user_id
+            expect(variant.content_type).to eq subject.content_type
+            expect(variant.updated).to eq subject.updated
+            expect(variant.created).to eq subject.created
+
+            expect(variant.path).to end_with("_1200x900")
+          end
         end
       end
 
