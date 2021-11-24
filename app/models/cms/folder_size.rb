@@ -50,7 +50,8 @@ class Cms::FolderSize
 
       # if 80% of headers are matched, we considered it is valid
       match_count >= FIELDS_DEF.length * 0.8
-    rescue
+    rescue => e
+      Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       false
     end
 
