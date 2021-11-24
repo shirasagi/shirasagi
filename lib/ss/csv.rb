@@ -339,6 +339,8 @@ class SS::Csv
     end
 
     def each_row(path_or_io_or_ss_file, headers: true, &block)
+      raise ArgumentError, "block is missing" unless block_given?
+
       if path_or_io_or_ss_file.respond_to?(:rewind)
         # io like File, ActionDispatch::Http::UploadedFile or Fs::UploadedFile
         return with_keeping_io_position(path_or_io_or_ss_file) { |io| _each_row(io, headers: headers, &block) }
@@ -425,8 +427,6 @@ class SS::Csv
       end
 
       csv = CSV.new(io, headers: headers)
-
-      return csv.each unless block_given?
 
       if block.arity == 2
         csv.each.with_index(&block)
