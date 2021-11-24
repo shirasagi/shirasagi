@@ -20,13 +20,10 @@ describe SS::Csv do
   end
 
   context "zip as ss/file is given" do
-    let(:path) { "#{Rails.root}/spec/fixtures/cms/import/site.zip" }
-    let(:file) { tmp_ss_file(user: user, contents: path) }
+    let(:file) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/cms/import/site.zip") }
 
     it do
-      ::File.open(path, "rb") do |f|
-        expect(described_class.detect_encoding(f)).to eq Encoding::ASCII_8BIT
-      end
+      expect(described_class.detect_encoding(file)).to eq Encoding::ASCII_8BIT
     end
   end
 
