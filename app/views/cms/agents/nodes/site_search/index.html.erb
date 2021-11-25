@@ -31,24 +31,33 @@
     )
   end
 %>
+<%= javascript_include_tag "/assets/js/jquery.colorbox.js" %>
+<%= stylesheet_link_tag "/assets/css/colorbox/colorbox.css", media: 'all' %>
 <%= jquery do %>
+Cms_Site_Search.render();
 new Cms_Site_Search_History("<%= ".cms-site-search .search-form" %>", "<%= @cur_node.full_url %>");
 <% end %>
 <div class="cms-site-search">
   <%= form_for :s, url: @cur_node.url, html: { method: :get, class: 'search-form' }, "aria-label" => t("cms.search_form") do |f| %>
-
-    <dl class="site-search-keyword">
-      <dt><%= f.label(:keyword, t("cms.search_contents")) %></dt>
-      <dd><%= f.text_field :keyword, autocomplete: "off", title: (t "cms.search_contents"), placeholder: (t "cms.search_contents"), size: 40 %></dd>
-      <ul class="site-search-history" style="display: none;"></ul>
+    <dl class="site-search-categories">
+      <dt><%= f.label(:category_name, t("category.node")) %></dt>
+      <dd>
+        <%= link_to t('facility.submit.change'), "#{@cur_node.url}categories.html", class: "ajax-box categories", style: 'display: block' %>
+        <div class="selected-categories">
+          <% if @s.category_names.present? %>
+            <% @s.category_names.each do |category_name| %>
+              <article class="selected-item" data-name="<%= category_name %>">
+                <header>
+                  <span class="category-name"><%= category_name %></span>
+                  <%= f.hidden_field('category_names[]', value: category_name) %>
+                  <%= button_tag t('ss.buttons.delete'), type: 'button', class: %w(btn deselect) %>
+                </header>
+              </article>
+            <% end %>
+          <% end %>
+        </div>
+      </dd>
     </dl>
-
-    <% if tryb { @aggregate_result['aggregations']['group_by_categories']['buckets'] }.present? %>
-      <dl class="site-search-categories">
-        <dt><%= f.label(:category_name, t("category.node")) %></dt>
-        <dd><%= f.select(:category_name, @aggregate_result['aggregations']['group_by_categories']['buckets'].collect { |bucket| ["#{bucket['key']}(#{bucket['doc_count']})", bucket['key']] }, include_blank: "", "aria-label" => t("category.node")) %></dd>
-      </dl>
-    <% end %>
 
     <% if @cur_site.elasticsearch_outside_enabled? %>
       <dl class="site-search-target">
@@ -56,6 +65,12 @@ new Cms_Site_Search_History("<%= ".cms-site-search .search-form" %>", "<%= @cur_
         <dd><%= select_tag 'target', options_for_select([[t('ss.search_on', name: @cur_site.name), 'inside'], [t('ss.search_on', name: SS.config.cms.elasticsearch['label']), 'outside']], selected: params[:target]), "aria-label" => t("cms.search_target") %></dd>
       </dl>
     <% end %>
+
+    <dl class="site-search-keyword">
+      <dt><%= f.label(:keyword, t("cms.search_contents")) %></dt>
+      <dd><%= f.text_field :keyword, autocomplete: "off", title: (t "cms.search_contents"), placeholder: (t "cms.search_contents"), size: 40 %></dd>
+      <ul class="site-search-history" style="display: none;"></ul>
+    </dl>
 
     <div class="send">
       <input type="submit" value="<%= t('cms.search_button') %>" />

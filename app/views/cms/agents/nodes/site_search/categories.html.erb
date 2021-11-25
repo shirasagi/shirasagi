@@ -1,0 +1,96 @@
+<%= jquery do %>
+Cms_Site_Search.modal();
+var cboxLoad = function() {
+  var url = $(this).attr("href");
+  $.ajax({
+    url: url,
+    type: "GET",
+    success: function (data) {
+      $("#cboxLoadedContent").html(data);
+    },
+    error: function (data, status) {
+      $("#cboxLoadedContent").html("== Error ==");
+    }
+  });
+  return false;
+};
+$("#ajax-box .pagination a").on("click", cboxLoad);
+$("#ajax-box .submitters a").on("click", cboxLoad);
+<% end %>
+<div class="search-ui-form">
+  <%= form_for :s, url: "#{@cur_node.url}categories.html", html: { method: "GET", class: :search } do |f| %>
+    <%= f.text_field :keyword %>
+    <div class="submitters">
+      <%= f.submit t("ss.buttons.search"), class: :btn %>
+      <%= link_to t("ss.buttons.reset"), "#{@cur_node.url}categories.html", class: :btn %>
+    </div>
+  <% end %>
+</div>
+<% if @items.present? %>
+  <table class="index search-ui">
+    <thead class="list-head">
+    <tr>
+      <th class="checkbox"><input type="checkbox" /></th>
+      <th class="name"><%= Cms::Node.t :name %></th>
+    </tr>
+    </thead>
+    <tbody class="items">
+    <% @items.each do |item| %>
+      <% next if params.dig(:s, :keyword).present? && !item.name.include?(params.dig(:s, :keyword)) %>
+      <tr data-name="<%= item.name %>" class="list-item">
+        <td class="checkbox">
+          <label for="<%= "ch-d-#{item.name}" %>">
+            <input type="checkbox" name="ids[]" value="<%= item.name %>" class="set-category" id="<%= "ch-d-#{item.name}" %>" />
+          </label>
+        </td>
+        <td class="name">
+          <%= link_to item.name, "#", class: "select-item" %>
+          <article style="display: none;" class="selected-item" data-name="<%= item.name %>">
+            <header>
+              <span class="category-name"><%= item.name %></span>
+              <%= hidden_field_tag('s[category_names][]', item.name) %>
+              <%= button_tag t('ss.buttons.delete'), type: 'button', class: %w(btn deselect) %>
+            </header>
+          </article>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% elsif tryb { @aggregate_result['aggregations']['group_by_categories']['buckets'] }.present? %>
+  <table class="index search-ui">
+    <thead class="list-head">
+    <tr>
+      <th class="checkbox"><input type="checkbox" /></th>
+      <th class="name"><%= Cms::Node.t :name %></th>
+    </tr>
+    </thead>
+    <tbody class="items">
+    <% @aggregate_result['aggregations']['group_by_categories']['buckets'].each do |bucket| %>
+      <% next if params.dig(:s, :keyword).present? && !bucket['key'].include?(params.dig(:s, :keyword)) %>
+      <tr data-name="<%= bucket['key'] %>" class="list-item">
+        <td class="checkbox">
+          <label for="<%= "ch-d-#{bucket['key']}" %>">
+            <input type="checkbox" name="ids[]" value="<%= bucket['key'] %>" class="set-category" id="<%= "ch-d-#{bucket['key']}" %>" />
+          </label>
+        </td>
+        <td class="name">
+          <%= link_to bucket['key'], "#", class: "select-item" %>
+          <article style="display: none;" class="selected-item" data-name="<%= bucket['key'] %>">
+            <header>
+              <span class="category-name"><%= bucket['key'] %></span>
+              <%= hidden_field_tag('s[category_names][]', bucket['key']) %>
+              <%= button_tag t('ss.buttons.delete'), type: 'button', class: %w(btn deselect) %>
+            </header>
+          </article>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% end %>
+<div class="search-ui-select" style="display: none;">
+  <%= button_tag t('facility.submit.search'), { type: :button, class: "select-items btn" } %>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>
