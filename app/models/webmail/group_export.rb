@@ -137,7 +137,7 @@ class Webmail::GroupExport
     end
 
     unmatched = 0
-    SS::Csv.foreach(in_file, headers: true) do |row|
+    SS::Csv.each_row(in_file, headers: true) do |row|
       EXPORT_DEF.each do |export_def|
         unmatched += 1 if !row.key?(export_def[:label])
       end
