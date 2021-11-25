@@ -21,8 +21,9 @@ SS_OpenInNewWindow.render = function() {
     return;
   }
 
-  $(document).on("click", ".ss-open-in-new-window", function (ev) {
+  $(".ss-open-in-new-window").on("click", function(ev) {
     if (SS_OpenInNewWindow.openInNewWindow(ev.target)) {
+      SS_OpenInNewWindow.closeDropdown(ev.target);
       ev.preventDefault();
       return false;
     }
@@ -47,6 +48,12 @@ SS_OpenInNewWindow.openInNewWindow = function(el) {
 
   window.open(href, target, 'resizable=yes,scrollbars=yes,width=' + width + ',height=' + height);
   return true;
+};
+
+SS_OpenInNewWindow.closeDropdown = function(el) {
+  var $el = $(el);
+  $el.closest(".dropdown-menu.active").removeClass('active');
+  $el.closest(".dropdown.active").removeClass('active');
 };
 
 SS_OpenInNewWindow.processMessages = function(messages, sourceWindow) {

@@ -54,9 +54,11 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           click_on I18n.t("webmail.box.draft")
         end
         click_on item_subject
-        click_on I18n.t("ss.links.edit")
-        within "form#item-form" do
-          click_on I18n.t('ss.buttons.send')
+        new_window = window_opened_by { click_on I18n.t("ss.links.edit") }
+        within_window new_window do
+          within "form#item-form" do
+            click_on I18n.t('ss.buttons.send')
+          end
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.sent'))
 
@@ -96,17 +98,22 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           click_on I18n.t("webmail.box.sent")
         end
         click_on item_subject
-        within "#menu" do
-          # drop down "reply"
-          first(".webmail-dropdown a").click
-          click_on I18n.t("webmail.links.reply_all")
+        new_window = window_opened_by do
+          within "#menu" do
+            # drop down "reply"
+            first(".webmail-dropdown a").click
+            click_on I18n.t("webmail.links.reply_all")
+          end
         end
-        expect(page).to have_css(".webmail-mail-form-address.to", text: user2.email)
-        expect(page).to have_css(".webmail-mail-form-address.cc", text: user3.email)
-        expect(page).to have_no_css(".webmail-mail-form-address.bcc", text: user4.email)
-        within "form#item-form" do
-          click_on I18n.t('ss.buttons.send')
+        within_window new_window do
+          expect(page).to have_css(".webmail-mail-form-address.to", text: user2.email)
+          expect(page).to have_css(".webmail-mail-form-address.cc", text: user3.email)
+          expect(page).to have_no_css(".webmail-mail-form-address.bcc", text: user4.email)
+          within "form#item-form" do
+            click_on I18n.t('ss.buttons.send')
+          end
         end
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.sent'))
 
         expect(ActionMailer::Base.deliveries).to have(2).items
         ActionMailer::Base.deliveries.last.tap do |mail|
