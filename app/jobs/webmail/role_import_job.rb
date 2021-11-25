@@ -7,7 +7,7 @@ class Webmail::RoleImportJob < Webmail::ApplicationJob
   class << self
     def valid_csv?(file)
       count = 0
-      SS::Csv.each_row(file, headers: true) do |row|
+      SS::Csv.foreach_row(file, headers: true) do |row|
         count += 1 if row.key?(Webmail::Role.t("id"))
         count += 1 if row.key?(Webmail::Role.t("name"))
         count += 1 if row.key?(Webmail::Role.t("permissions"))
@@ -24,7 +24,7 @@ class Webmail::RoleImportJob < Webmail::ApplicationJob
 
   def import_file
     i = 2
-    SS::Csv.each_row(@cur_file, headers: true) do |row|
+    SS::Csv.foreach_row(@cur_file, headers: true) do |row|
       import_row(row, i)
       i += 1
     end

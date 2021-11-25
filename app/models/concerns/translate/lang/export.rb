@@ -32,7 +32,7 @@ module Translate::Lang::Export
   private
 
   def each_csv(&block)
-    SS::Csv.each_row(in_file, headers: true, &block)
+    SS::Csv.foreach_row(in_file, headers: true, &block)
   end
 
   def validate_import_file

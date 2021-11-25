@@ -35,7 +35,7 @@ class Facility::Node::Importer
   end
 
   def import_csv(file)
-    SS::Csv.each_row(file, headers: true) do |row, i|
+    SS::Csv.foreach_row(file, headers: true) do |row, i|
       row_num = i + 2
       begin
         update_row(row, row_num)

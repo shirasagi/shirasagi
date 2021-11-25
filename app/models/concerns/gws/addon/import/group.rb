@@ -39,7 +39,7 @@ module Gws::Addon::Import
       validate_import
       return false unless errors.empty?
 
-      SS::Csv.each_row(in_file, headers: true) do |row, i|
+      SS::Csv.foreach_row(in_file, headers: true) do |row, i|
         update_row(row, i + 2)
       end
       return errors.empty?

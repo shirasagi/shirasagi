@@ -130,7 +130,7 @@ module Chorg::Model::Revision
       end
 
       in_revision_csv_file.rewind
-      SS::Csv.each_row(in_revision_csv_file, headers: true) do |line, idx|
+      SS::Csv.foreach_row(in_revision_csv_file, headers: true) do |line, idx|
         attr = csv_line_to_changeset_attributes(line)
         id = attr["id"]
         type = attr["type"]

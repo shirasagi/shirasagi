@@ -54,7 +54,7 @@ class Cms::AllContent
       path = path.path if path.respond_to?(:path)
 
       match_count = 0
-      SS::Csv.each_row(path, headers: true) do |row|
+      SS::Csv.foreach_row(path, headers: true) do |row|
         FIELDS_DEF.each do |e|
           if row.key?(I18n.t("all_content.#{e[0]}"))
             match_count += 1

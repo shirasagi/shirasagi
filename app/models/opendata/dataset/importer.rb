@@ -65,7 +65,7 @@ class Opendata::Dataset::Importer
   end
 
   def import_dataset_csv(file)
-    SS::Csv.each_row(file, headers: true) do |row, i|
+    SS::Csv.foreach_row(file, headers: true) do |row, i|
       i += 1
       begin
         @dataset_index = i
@@ -77,7 +77,7 @@ class Opendata::Dataset::Importer
   end
 
   def import_resource_csv(file, dataset)
-    SS::Csv.each_row(file, headers: true) do |row, i|
+    SS::Csv.foreach_row(file, headers: true) do |row, i|
       i += 1
       begin
         @resource_index = i

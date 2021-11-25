@@ -8,7 +8,7 @@ class Jmaxml::TsunamiRegionImportJob < Cms::ApplicationJob
   end
 
   def import_file
-    SS::Csv.each_row(@cur_file, headers: true) do |row|
+    SS::Csv.foreach_row(@cur_file, headers: true) do |row|
       import_row(row)
     end
     nil

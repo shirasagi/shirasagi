@@ -338,28 +338,42 @@ class SS::Csv
       ::File.open(path_or_io_or_ss_file, "rb") { |io| _detect_encoding(io) }
     end
 
-    def each_row(path_or_io_or_ss_file, headers: true, &block)
+    def open(path_or_io_or_ss_file, headers: true, &block)
       raise ArgumentError, "block is missing" unless block_given?
 
       if path_or_io_or_ss_file.respond_to?(:rewind)
         # io like File, ActionDispatch::Http::UploadedFile or Fs::UploadedFile
-        return with_keeping_io_position(path_or_io_or_ss_file) { |io| _each_row(io, headers: headers, &block) }
+        with_keeping_io_position(path_or_io_or_ss_file) { |io| _open(io, headers: headers, &block) }
+        return
       end
 
       if path_or_io_or_ss_file.respond_to?(:to_io)
         # ss/file
-        return path_or_io_or_ss_file.to_io { |io| _each_row(io, headers: headers, &block) }
+        path_or_io_or_ss_file.to_io { |io| _open(io, headers: headers, &block) }
+        return
       end
 
       # path
-      ::File.open(path_or_io_or_ss_file, "rb") { |io| _each_row(io, headers: headers, &block) }
+      ::File.open(path_or_io_or_ss_file, "rb") { |io| _open(io, headers: headers, &block) }
+    end
+
+    def foreach_row(path_or_io_or_ss_file, headers: true, &block)
+      raise ArgumentError, "block is missing" unless block_given?
+
+      SS::Csv.open(path_or_io_or_ss_file, headers: headers) do |csv|
+        if block.arity == 2
+          csv.each.with_index(&block)
+        else
+          csv.each(&block)
+        end
+      end
     end
 
     def valid_csv?(path_or_io_or_ss_file, headers: true, required_headers: nil, max_rows: nil)
       max_rows ||= SS::Csv::MAX_READ_ROWS
 
       count = 0
-      SS::Csv.each_row(path_or_io_or_ss_file, headers: headers) do |row|
+      SS::Csv.foreach_row(path_or_io_or_ss_file, headers: headers) do |row|
         count += 1
 
         return false if required_headers && required_headers.any? { |h| !row.headers.include?(h) }
@@ -414,7 +428,7 @@ class SS::Csv
       byte_count
     end
 
-    def _each_row(io, headers:, &block)
+    def _open(io, headers:, &block)
       encoding = with_keeping_io_position(io) { _detect_encoding(io) }
       return if encoding == Encoding::ASCII_8BIT
 
@@ -427,12 +441,7 @@ class SS::Csv
       end
 
       csv = CSV.new(io, headers: headers)
-
-      if block.arity == 2
-        csv.each.with_index(&block)
-      else
-        csv.each(&block)
-      end
+      yield csv
     end
   end
 end

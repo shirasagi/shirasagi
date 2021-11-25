@@ -11,7 +11,7 @@ module Cms::CsvImportBase
     end
 
     def each_csv(file, &block)
-      SS::Csv.each_row(file, headers: true, &block)
+      SS::Csv.foreach_row(file, headers: true, &block)
     end
   end
 end

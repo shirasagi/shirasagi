@@ -23,7 +23,7 @@ class Gws::UserCsv::Importer
 
     @imported = 0
 
-    SS::Csv.each_row(in_file, headers: true) do |row, i|
+    SS::Csv.foreach_row(in_file, headers: true) do |row, i|
       @row_index = i + 2
       @row = row
 
@@ -56,7 +56,7 @@ class Gws::UserCsv::Importer
     end
 
     begin
-      SS::Csv.each_row(in_file, headers: true) do |row|
+      SS::Csv.foreach_row(in_file, headers: true) do |row|
         diff = Gws::UserCsv::Exporter.csv_basic_headers(webmail_support: @webmail_support) - row.headers
         if diff.present?
           errors.add :in_file, :invalid_file_type

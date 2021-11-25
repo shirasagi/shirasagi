@@ -73,7 +73,7 @@ class Webmail::GroupExport
     validate_import_file
     return false unless errors.empty?
 
-    SS::Csv.each_row(in_file, headers: true) do |row, index|
+    SS::Csv.foreach_row(in_file, headers: true) do |row, index|
       update_row(row, index)
     end
     errors.empty?
@@ -137,7 +137,7 @@ class Webmail::GroupExport
     end
 
     unmatched = 0
-    SS::Csv.each_row(in_file, headers: true) do |row|
+    SS::Csv.foreach_row(in_file, headers: true) do |row|
       EXPORT_DEF.each do |export_def|
         unmatched += 1 if !row.key?(export_def[:label])
       end

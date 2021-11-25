@@ -8,7 +8,7 @@ class Jmaxml::WaterLevelStationImportJob < Cms::ApplicationJob
   end
 
   def import_file
-    SS::Csv.each_row(@cur_file, headers: true) do |row, i|
+    SS::Csv.foreach_row(@cur_file, headers: true) do |row, i|
       import_row(row, i)
     end
     nil

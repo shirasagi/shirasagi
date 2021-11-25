@@ -3,7 +3,7 @@ require 'nkf'
 
 class Sys::PostalCode::OfficialCsvImportJob < Sys::PostalCode::ImportBase
   def import_file
-    SS::Csv.each_row(@cur_file, headers: false) do |row, i|
+    SS::Csv.foreach_row(@cur_file, headers: false) do |row, i|
       import_row(row, i)
     end
     nil

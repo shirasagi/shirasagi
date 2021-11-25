@@ -32,7 +32,7 @@ class Faq::Page::Importer
   end
 
   def import_csv(file)
-    SS::Csv.each_row(file, headers: true) do |row, i|
+    SS::Csv.foreach_row(file, headers: true) do |row, i|
       item = update_row(row)
       put_log("update #{i + 1}: #{item.name}")
     rescue => e

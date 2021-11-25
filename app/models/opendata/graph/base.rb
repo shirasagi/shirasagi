@@ -11,7 +11,7 @@ class Opendata::Graph::Base
   end
 
   def extract_csv_lines
-    csv_lines = SS::Csv.each_row(resource.file, headers: false).map do |line|
+    csv_lines = SS::Csv.foreach_row(resource.file, headers: false).map do |line|
       if line.select { |v| v.present? }.present?
         line
       else

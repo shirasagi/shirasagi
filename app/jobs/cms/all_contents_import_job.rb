@@ -17,7 +17,7 @@ class Cms::AllContentsImportJob < Cms::ApplicationJob
   end
 
   def import_file
-    SS::Csv.each_row(@cur_file, headers: true) do |row, i|
+    SS::Csv.foreach_row(@cur_file, headers: true) do |row, i|
       @table_headers ||= row.headers
       import_row(row, i + 1)
     end

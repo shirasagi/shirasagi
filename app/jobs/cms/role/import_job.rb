@@ -19,7 +19,7 @@ class Cms::Role::ImportJob < Cms::ApplicationJob
   end
 
   def import_csv(file)
-    SS::Csv.each_row(file, headers: true) do |row, i|
+    SS::Csv.foreach_row(file, headers: true) do |row, i|
       begin
         item = update_row(row, i + 2)
         put_log("update #{i + 1}: #{item.name}") if item.present?

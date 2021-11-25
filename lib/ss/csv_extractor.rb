@@ -33,7 +33,7 @@ class SS::CsvExtractor
   end
 
   def extract_headers_from_csv
-    SS::Csv.each_row(file, headers: true) do |row|
+    SS::Csv.foreach_row(file, headers: true) do |row|
       @csv_headers = row.headers.select { |v| v.present? }
       break
     end
