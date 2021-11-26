@@ -97,8 +97,8 @@ class Webmail::MailsController < ApplicationController
     @item.new_mail
 
     # send from address
-    if data = params[:item].presence
-      @item.to << data[:to].to_s if data[:to].present?
+    if to = params.dig(:item, :to).presence
+      @item.to << to.to_s
     end
 
     @dedicated = true
