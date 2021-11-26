@@ -69,7 +69,7 @@ module Event::EventHelper
     year  = date.year
     month = date.month
 
-    link_to "ics", sprintf("#{@cur_node.try(:url).to_s}%04d%02d/list.ics", year, month), class: opts[:class]
+    link_to t("event.ics_file"), sprintf("#{@cur_node.try(:url)}%04d%02d/list.ics", year, month), class: opts[:class]
   end
 
   def link_to_daily(date, opts = {})
