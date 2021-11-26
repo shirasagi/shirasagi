@@ -73,7 +73,7 @@ this.Cms_Site_Search = (function () {
 
     // select items event
     $(".search-ui-select .select-items").on("click", function (e) {
-      $(".search-ui .items .set-dataset:checked").each(function () {
+      $(".search-ui .items .set-category:checked").each(function () {
         var tr = $(this).closest("tr");
         Cms_Site_Search.selectItem(tr);
       });
@@ -86,7 +86,7 @@ this.Cms_Site_Search = (function () {
       var chk = $(this).prop('checked');
       $('.search-ui .list-item').each(function () {
         $(this).toggleClass('checked', chk);
-        $(this).find('.set-dataset').prop('checked', chk);
+        $(this).find('.set-category').prop('checked', chk);
       });
     });
 
