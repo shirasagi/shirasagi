@@ -2441,6 +2441,7 @@ ja:
       cms/page/remove_job: ページ削除
       cms/page/update_job: ページ更新
       cms/page/move_job: ページ移動
+      cms/page/expiration_notice_job: 公開期限お知らせ
       cms/check_links_job: リンクチェック
       cms/node/copy_nodes_job: フォルダー複製
       cms/import_files_job: ページ/フォルダー取り込み
