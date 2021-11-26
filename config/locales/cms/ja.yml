@@ -185,6 +185,9 @@ ja:
       check_links_report_created: "%{time} 時点"
       delete_forum_column: 入力項目を削除する
       confirm_column_deletion_whose_form_is_in_use: "定型フォームは利用中のため入力項目を削除するとページが正しく表示されなくなる場合があります。"
+      page_expiration_header: ページの公開期限が切れています。
+      page_expiration_body:
+        - "ページの公開期限が切れていますので確認の上、対応を願いいたします。"
     apis:
       categories:
         index: カテゴリーを選択する

@@ -64,5 +64,16 @@ module Cms::Addon
         [ I18n.t("cms.options.page_expiration_before.#{v.sub(".", "_")}"), v ]
       end
     end
+
+    def page_expiration_at(now = nil)
+      now ||= Time.zone.now.beginning_of_day
+
+      if page_expiration_before.present?
+        expired_at = SS::Duration.parse(page_expiration_before)
+      else
+        expired_at = 2.years
+      end
+      now - expired_at
+    end
   end
 end

@@ -42,6 +42,9 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
     let(:group2) do
       create :cms_group, code: unique_id, name: "#{site.groups.first.name}/#{unique_id}", contact_email: unique_email
     end
+    let(:group3) do
+      create :cms_group, code: unique_id, name: "#{site.groups.first.name}/#{unique_id}", contact_email: unique_email
+    end
 
     context "with cms/page on root" do
       let!(:page1) do
@@ -50,6 +53,11 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
       let!(:page2) do
         Timecop.travel(Time.zone.now - SS::Duration.parse(expiration_before) - 1.day) do
           create(:cms_page, cur_site: site, group_ids: [ group2.id ])
+        end
+      end
+      let!(:page3) do
+        Timecop.travel(Time.zone.now - SS::Duration.parse(expiration_before) - 1.day) do
+          create(:cms_page, cur_site: site, group_ids: [ group3.id ], state: "closed")
         end
       end
 
@@ -83,6 +91,11 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
           create(:cms_page, cur_site: site, cur_node: node, group_ids: [ group2.id ])
         end
       end
+      let!(:page3) do
+        Timecop.travel(Time.zone.now - SS::Duration.parse(expiration_before) - 1.day) do
+          create(:cms_page, cur_site: site, cur_node: node, group_ids: [ group3.id ], state: "closed")
+        end
+      end
 
       it do
         described_class.bind(site_id: site).perform_now
@@ -112,6 +125,11 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
       let!(:page2) do
         Timecop.travel(Time.zone.now - SS::Duration.parse(expiration_before) - 1.day) do
           create(:article_page, cur_site: site, cur_node: node, group_ids: [ group2.id ])
+        end
+      end
+      let!(:page3) do
+        Timecop.travel(Time.zone.now - SS::Duration.parse(expiration_before) - 1.day) do
+          create(:article_page, cur_site: site, cur_node: node, group_ids: [ group3.id ], state: "closed")
         end
       end
 

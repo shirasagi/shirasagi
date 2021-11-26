@@ -1,0 +1,14 @@
+<%
+  return unless @cur_site.page_expiration_enabled?
+  return if @item.state != "public"
+  return if @item.date >= @cur_site.page_expiration_at
+%>
+
+<div class="errorExplanation">
+  <h2><%= t("cms.notices.page_expiration_header") %></h2>
+  <ul>
+    <% t("cms.notices.page_expiration_body").each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+  </ul>
+</div>

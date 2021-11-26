@@ -12,22 +12,11 @@ class Cms::Page::ExpirationNoticeJob < Cms::ApplicationJob
 
   private
 
-  def exipired_at
-    @exipired_at ||= begin
-      if site.page_expiration_before.present?
-        exipired_at = SS::Duration.parse(site.page_expiration_before)
-      else
-        exipired_at = 2.years
-      end
-      Time.zone.now.beginning_of_day - exipired_at
-    end
-  end
-
   def all_expired_pages
     @all_expired_pages ||= begin
       pages = []
 
-      criteria = Cms::Page.all.site(site).lt(updated: exipired_at)
+      criteria = Cms::Page.all.site(site).and_public.lt(updated: site.page_expiration_at)
       all_ids = criteria.pluck(:id)
       all_ids.each_slice(20) do |ids|
         pages += criteria.only(*LOAD_FIELDS).in(id: ids).to_a
