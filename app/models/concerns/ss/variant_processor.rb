@@ -43,14 +43,7 @@ module SS::VariantProcessor
 
     self.class.variant_types.each do |variant_name, variant_options|
       variant = variants[variant_name]
-      variant_path = variant.path
-
-      # now only supports dimension
-      width, height = *variant_options[:dimension]
-      SS::ImageConverter.open(path) do |converter|
-        converter.resize_to_fit!(width, height)
-        Fs.upload(variant_path, converter.to_io)
-      end
+      variant.create!
     end
   end
 

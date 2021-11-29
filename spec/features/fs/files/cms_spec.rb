@@ -57,7 +57,7 @@ describe "fs_files", type: :feature, dbscope: :example do
         end
 
         it "#thumb" do
-          visit "/fs/#{file.id}/_/thumb/#{file.filename}"
+          visit "/fs/#{file.id.to_s.chars.join("/")}/_/thumb/#{file.filename}"
           expect(status_code).to eq 200
         end
       end
@@ -84,12 +84,12 @@ describe "fs_files", type: :feature, dbscope: :example do
 
         it "#index with custom variant" do
           visit file.variants[{ width: 240, height: 180 }].url
-          expect(status_code).to eq 200
+          expect(status_code).to eq 404
         end
 
         it "#thumb" do
-          visit "/fs/#{file.id}/_/thumb/#{file.filename}"
-          expect(status_code).to eq 200
+          visit "/fs/#{file.id.to_s.chars.join("/")}/_/thumb/#{file.filename}"
+          expect(status_code).to eq 404
         end
       end
     end
@@ -127,7 +127,7 @@ describe "fs_files", type: :feature, dbscope: :example do
           end
 
           it "#thumb" do
-            visit "/fs/#{file.id}/_/thumb/#{file.filename}"
+            visit "/fs/#{file.id.to_s.chars.join("/")}/_/thumb/#{file.filename}"
             expect(status_code).to eq 200
           end
         end
@@ -156,7 +156,7 @@ describe "fs_files", type: :feature, dbscope: :example do
           end
 
           it "#thumb" do
-            visit "/fs/#{file.id}/_/thumb/#{file.filename}"
+            visit "/fs/#{file.id.to_s.chars.join("/")}/_/thumb/#{file.filename}"
             expect(status_code).to eq 200
           end
         end
@@ -214,7 +214,7 @@ describe "fs_files", type: :feature, dbscope: :example do
           end
 
           it "#thumb" do
-            visit "/fs/#{file.id}/_/thumb/#{file.filename}"
+            visit "/fs/#{file.id.to_s.chars.join("/")}/_/thumb/#{file.filename}"
             expect(status_code).to eq 404
           end
         end
@@ -243,7 +243,7 @@ describe "fs_files", type: :feature, dbscope: :example do
           end
 
           it "#thumb" do
-            visit "/fs/#{file.id}/_/thumb/#{file.filename}"
+            visit "/fs/#{file.id.to_s.chars.join("/")}/_/thumb/#{file.filename}"
             expect(status_code).to eq 200
           end
         end
