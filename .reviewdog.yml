@@ -9,3 +9,7 @@ runner:
     cmd: bundle exec scss-lint
     errorformat:
       - "%f:%l:%c %m"
+  erblint:
+    cmd: bundle exec erblint --format compact app/views
+    errorformat:
+      - "%f:%l:%c: %m"
