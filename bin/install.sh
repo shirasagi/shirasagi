@@ -54,13 +54,11 @@ export PATH="$PATH:$RVM_HOME/bin"
 source $RVM_HOME/scripts/rvm
 rvm install 2.7.5 --disable-binary
 rvm use 2.7.5 --default
-gem install bundler -v 2.1.4
 bundle --version
 
 if [ ! `which ruby` ]; then exit 1; fi
 
-#git clone -b stable --depth 1 https://github.com/shirasagi/shirasagi
-git clone https://github.com/shirasagi/shirasagi
+git clone -b stable --depth 1 https://github.com/shirasagi/shirasagi
 sudo mkdir -p /var/www
 sudo mv shirasagi $SS_DIR
 
