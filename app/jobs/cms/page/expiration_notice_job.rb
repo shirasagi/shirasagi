@@ -1,9 +1,16 @@
 class Cms::Page::ExpirationNoticeJob < Cms::ApplicationJob
+  include Job::SS::TaskFilter
+
   LOAD_FIELDS = %i[id site_id route name filename depth group_ids].freeze
 
-  def perform
+  self.task_class = Cms::Task
+  self.task_name = "cms:page:expiration_notice"
+
+  def perform(*_args)
+    task.log "# #{site.name}"
+
     unless site.page_expiration_enabled?
-      Rails.logger.info("公開期限警告が無効です。")
+      task.log "公開期限警告が無効です。"
       return
     end
 
@@ -53,12 +60,19 @@ class Cms::Page::ExpirationNoticeJob < Cms::ApplicationJob
   end
 
   def send_notice_mails
+    count = 0
+
     all_groups_in_expired_pages.each do |group|
       pages = select_expired_pages_in_group(group)
       next if pages.blank?
 
       mail = Cms::Mailer.expiration_page_notice(site, group, pages)
-      mail.deliver_now if mail
+      if mail
+        mail.deliver_now
+        count += 1
+      end
     end
+
+    task.log "#{count.to_s(:limited)} 通のメールを送信"
   end
 end
