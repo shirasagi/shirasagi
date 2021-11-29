@@ -12,7 +12,7 @@ describe Cms::Column::Value::SelectPage, type: :model, dbscope: :example do
     let!(:selectable_page4) { create :article_page, cur_node: node2, state: 'closed' }
 
     let!(:column1) do
-      create(:cms_column_select_page, cur_form: form, order: 1, node_id: node2.id)
+      create(:cms_column_select_page, cur_form: form, order: 1, node_ids: [node2.id])
     end
     let!(:page) do
       create(

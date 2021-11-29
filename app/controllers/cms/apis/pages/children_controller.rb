@@ -1,8 +1,20 @@
-class Cms::Apis::PagesController < ApplicationController
+class Cms::Apis::Pages::ChildrenController < ApplicationController
   include Cms::ApiFilter
   include Cms::Apis::PageFilter
 
   model Cms::Page
+
+  prepend_view_path "app/views/cms/apis/pages"
+
+  private
+
+  def set_select_items
+    if @selected_node
+      super
+    else
+      @items = @model.none
+    end
+  end
 
   public
 
@@ -14,9 +26,5 @@ class Cms::Apis::PagesController < ApplicationController
     if params[:layout] == "iframe"
       render layout: "ss/ajax_in_iframe"
     end
-  end
-
-  def routes
-    @items = @model.routes
   end
 end

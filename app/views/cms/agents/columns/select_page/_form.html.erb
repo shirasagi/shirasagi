@@ -1,15 +1,33 @@
 <%= jquery do %>
 $('.sortable-index tbody').sortable();
 <% end %>
-<%
-  def node_options
-    Article::Node::Page.site(@cur_site).map { |item| ["#{item.name} (#{item.filename})", item.id] }
-  end
-%>
+
 <dl class="see column-cms-select_page">
   <dt><%= @model.t :place_holder %><%= @model.tt :place_holder %></dt>
   <dd><%= f.text_field :place_holder %></dd>
 
-  <dt><%= @model.t :node_id %><%= @model.tt :node_id %></dt>
-  <dd><%= f.select :node_id, node_options, include_blank: true %></dd>
+  <dt><%= @model.t :node_ids %><%= @model.tt :node_ids %></dt>
+  <dd>
+    <%= f.hidden_field "node_ids[]", value: "", class: "hidden-ids" %>
+    <% page_params = { model: "Article::Node::Page" } %>
+    <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path(page_params), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected sortable-index">
+      <thead>
+        <tr>
+          <th class="name"><%= @model.t :name %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @item.ordered_nodes.each do |item| %>
+        <tr data-id="<%= item.id %>">
+          <td><%= f.hidden_field "node_ids[]", value: item.id %> <%= item.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
 </dl>

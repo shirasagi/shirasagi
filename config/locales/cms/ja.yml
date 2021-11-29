@@ -1055,7 +1055,7 @@ ja:
         list_type: 種類
       cms/column/select_page:
         place_holder: プレースホルダー
-        node_id: 選択肢
+        node_ids: 選択肢の記事フォルダー
       cms/column/value/base:
         order: 並び順
         alignment: 配置

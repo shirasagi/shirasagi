@@ -2,6 +2,6 @@
   <dt><%= @model.t :place_holder %></dt>
   <dd><%= @item.place_holder %></dd>
 
-  <dt><%= @model.t :node_id %></dt>
-  <dd><%= @item.node.try { |item| "#{item.name} (#{item.filename})" } %></dd>
+  <dt><%= @model.t :node_ids %></dt>
+  <dd><%=br @item.ordered_nodes.map(&:name).join("\n") %></dd>
 </dl>
