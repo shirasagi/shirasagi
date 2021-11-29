@@ -74,6 +74,12 @@ module Tasks
         end
       end
 
+      def expiration_notices
+        each_sites do |site|
+          perform_job(::Cms::Page::ExpirationNoticeJob, site: site)
+        end
+      end
+
       def export_site
         with_site(ENV['site']) do |site|
           job = ::Sys::SiteExportJob.new
