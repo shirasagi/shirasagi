@@ -20,14 +20,18 @@ enabled=0
 gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
 EOS
 
-sudo yum install -y --enablerepo=mongodb-org-3.4 mongodb-org
+sudo yum install -y --enablerepo=mongodb-org-4.2 mongodb-org
 sudo systemctl start mongod.service
 sudo systemctl enable mongod.service
 
+sudo yum -y install scl-utils centos-release-scl
 sudo yum -y install \
-  gcc gcc-c++ glibc-headers \
+  devtoolset-10 \
   openssl-devel readline libyaml-devel readline-devel zlib zlib-devel \
   wget git ImageMagick ImageMagick-devel
+
+# use devtoolset-10
+source /opt/rh/devtoolset-10/enable
 
 for i in $(seq 1 3)
 do
