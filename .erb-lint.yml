@@ -1,0 +1,31 @@
+glob: "**/*.{html,text,js}{+*,}.erb"
+exclude:
+  - '**/vendor/**/*'
+  - '**/node_modules/**/*'
+EnableDefaultLinters: false
+linters:
+  ClosingErbTagIndent:
+    enabled: true
+  ExtraNewline:
+    enabled: true
+  FinalNewline:
+    enabled: true
+  ParserErrors:
+    enabled: true
+  RequireInputAutocomplete:
+    enabled: true
+  RightTrim:
+    enabled: true
+  SpaceAroundErbTag:
+    enabled: true
+  SpaceIndentation:
+    enabled: true
+  SpaceInHtmlTag:
+    enabled: true
+  TrailingWhitespace:
+    # 有効にしたいが、有効にすると実行時エラーが多発するので無効にする。
+    enabled: false
+  DeprecatedClasses:
+    enabled: true
+  ErbSafety:
+    enabled: true
