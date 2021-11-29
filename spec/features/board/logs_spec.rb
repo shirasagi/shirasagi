@@ -26,9 +26,9 @@ describe "board_posts", type: :feature, dbscope: :example, js: true do
         fill_in "item[delete_key]", with: "pass"
         click_on I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       visit edit_path
-
       within "form#item-form" do
         wait_cbox_open do
           click_on I18n.t("ss.buttons.upload")
@@ -38,6 +38,7 @@ describe "board_posts", type: :feature, dbscope: :example, js: true do
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_on I18n.t("ss.buttons.save")
+        expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
 
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         wait_cbox_close do
@@ -49,6 +50,7 @@ describe "board_posts", type: :feature, dbscope: :example, js: true do
         expect(page).to have_text('keyvisual.jpg')
         click_on I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       expect(page).to have_text('keyvisual.jpg')
 
