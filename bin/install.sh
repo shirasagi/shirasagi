@@ -32,6 +32,7 @@ sudo yum -y install \
 
 # use devtoolset-10
 source /opt/rh/devtoolset-10/enable
+gcc --version
 
 for i in $(seq 1 3)
 do
@@ -53,7 +54,8 @@ export PATH="$PATH:$RVM_HOME/bin"
 source $RVM_HOME/scripts/rvm
 rvm install 2.7.5 --disable-binary
 rvm use 2.7.5 --default
-gem install bundler
+gem install bundler -v 2.1.4
+bundle --version
 
 if [ ! `which ruby` ]; then exit 1; fi
 
