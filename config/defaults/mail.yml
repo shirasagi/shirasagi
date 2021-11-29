@@ -24,5 +24,6 @@ test:
   default_charset: utf-8
 
 development:
-  <<: *production
   delivery_method: file
+  default_from: noreply@example.jp
+  default_charset: utf-8
