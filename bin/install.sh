@@ -324,6 +324,7 @@ sudo systemctl restart nginx.service
 cd $SS_DIR
 bundle exec rake db:drop
 bundle exec rake db:create_indexes
+bundle exec rake ss:migrate
 bundle exec rake ss:create_site data="{ name: \"自治体サンプル\", host: \"www\", domains: \"${SS_HOSTNAME}\" }"
 bundle exec rake ss:create_site data="{ name: \"企業サンプル\", host: \"company\", domains: \"${SS_HOSTNAME}:${PORT_COMPA}\" }"
 bundle exec rake ss:create_site data="{ name: \"子育て支援サンプル\", host: \"childcare\", domains: \"${SS_HOSTNAME}:${PORT_CHILD}\" }"
