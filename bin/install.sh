@@ -58,7 +58,7 @@ bundle --version
 
 if [ ! `which ruby` ]; then exit 1; fi
 
-git clone -b stable --depth 1 https://github.com/shirasagi/shirasagi
+git clone -b stable https://github.com/shirasagi/shirasagi
 sudo mkdir -p /var/www
 sudo mv shirasagi $SS_DIR
 

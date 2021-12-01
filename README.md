@@ -91,7 +91,7 @@ gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
 SHIRASAGI のダウンロード (stable)
 
 ```
-$ git clone -b stable --depth 1 https://github.com/shirasagi/shirasagi /var/www/shirasagi
+$ git clone -b stable https://github.com/shirasagi/shirasagi /var/www/shirasagi
 ```
 
 設定ファイルの設置と gem のインストール
