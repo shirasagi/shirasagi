@@ -57,7 +57,7 @@ SS_OpenInNewWindow.closeDropdown = function(el) {
 };
 
 SS_OpenInNewWindow.processMessages = function(messages, sourceWindow) {
-  if (! $.isArray(messages)) {
+  if (!$.isArray(messages)) {
     return;
   }
 
