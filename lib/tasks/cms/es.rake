@@ -12,8 +12,11 @@ namespace :cms do
       ::Tasks::Cms::Base.with_site(args[:site] || ENV['site']) do |site|
         break unless es_validator.call(site)
 
-        pages = Cms::Page.site(site).and_public
-        pages.each do |page|
+        ids = Cms::Page.site(site).and_public.pluck(:id)
+        ids.each do |id|
+          page = Cms::Page.find(id) rescue nil
+          next if page.nil?
+
           puts "- #{page.filename}"
           next if site.elasticsearch_deny.include?(page.filename)
           job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site)
