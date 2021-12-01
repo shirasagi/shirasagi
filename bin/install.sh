@@ -11,16 +11,16 @@ PORT_LPSPL=8004
 sudo sed -i "s/\(^SELINUX=\).*/\1disabled/" /etc/selinux/config
 sudo setenforce 0
 
-cat <<EOS | sudo tee -a /etc/yum.repos.d/mongodb-org-4.2.repo
-[mongodb-org-4.2]
+cat <<EOS | sudo tee -a /etc/yum.repos.d/mongodb-org-4.4.repo
+[mongodb-org-4.4]
 name=MongoDB Repository
-baseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/4.2/x86_64/
+baseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/4.4/x86_64/
 gpgcheck=1
 enabled=0
-gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc
+gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
 EOS
 
-sudo yum install -y --enablerepo=mongodb-org-4.2 mongodb-org
+sudo yum install -y --enablerepo=mongodb-org-4.4 mongodb-org
 sudo systemctl start mongod.service
 sudo systemctl enable mongod.service
 

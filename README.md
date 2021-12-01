@@ -26,7 +26,7 @@ Platform
 - CentOS, Ubuntu
 - Ruby 2.7
 - Ruby on Rails 6.1
-- MongoDB 4.2 or above
+- MongoDB 4.4 or above
 - Unicorn
 
 Installation (Auto)
@@ -56,20 +56,20 @@ $ su -
 ### MongoDB のインストール
 
 ```
-# vi /etc/yum.repos.d/mongodb-org-4.2.repo
+# vi /etc/yum.repos.d/mongodb-org-4.4.repo
 ```
 
 ```
-[mongodb-org-4.2]
+[mongodb-org-4.4]
 name=MongoDB Repository
-baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/4.2/x86_64/
+baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/4.4/x86_64/
 gpgcheck=1
-enabled=0
-gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
 ```
 
 ```
-# yum install -y --enablerepo=mongodb-org-4.2 mongodb-org
+# yum install -y --enablerepo=mongodb-org-4.4 mongodb-org
 # systemctl start mongod
 # systemctl enable mongod
 ```
