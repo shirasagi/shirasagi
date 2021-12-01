@@ -36,8 +36,7 @@ class Facility::Node::Importer
   end
 
   def import_csv(file)
-    table = CSV.read(file.path, headers: true, encoding: 'SJIS:UTF-8')
-    table.each_with_index do |row, i|
+    SS::Csv.foreach_row(file, headers: true) do |row, i|
       row_num = i + 2
       begin
         update_row(row, row_num)

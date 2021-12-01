@@ -17,8 +17,8 @@ class Cms::AllContentsImportJob < Cms::ApplicationJob
   end
 
   def import_file
-    @table = ::CSV.read(@cur_file.path, headers: true, encoding: 'SJIS:UTF-8')
-    @table.each_with_index do |row, i|
+    SS::Csv.foreach_row(@cur_file, headers: true) do |row, i|
+      @table_headers ||= row.headers
       import_row(row, i + 1)
     end
     nil
@@ -57,7 +57,7 @@ class Cms::AllContentsImportJob < Cms::ApplicationJob
   def import_item(item, row)
     @field_defs.each do |header, key|
       next if SKIP_FIELDS.include?(key)
-      next if !@table.headers.include?(header)
+      next if !@table_headers.include?(header)
 
       import_method = "set_#{key}"
       if respond_to?(import_method, true)

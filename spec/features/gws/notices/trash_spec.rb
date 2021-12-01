@@ -22,6 +22,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       expect(item.deleted).to be_blank
 
       visit gws_notice_main_path(site: site)
+      expect(page).to have_css("#content-navi .content-navi-refresh", text: "refresh")
       expect(page).to have_css(".list-item", text: item.name)
     end
   end

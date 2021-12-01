@@ -174,8 +174,7 @@ module Gws::Addon::Import::Facility
       validate_import
       return false unless errors.empty?
 
-      table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
-      table.each_with_index do |row, i|
+      SS::Csv.foreach_row(in_file, headers: true) do |row, i|
         update_row(row, i + 2)
       end
       errors.blank?
@@ -191,12 +190,8 @@ module Gws::Addon::Import::Facility
         return
       end
 
-      begin
-        CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
-        in_file.rewind
-      rescue => e
-        errors.add :in_file, :invalid_file_type
-      end
+      errors.add :in_file, :invalid_file_type if !SS::Csv.valid_csv?(in_file, headers: true)
+      in_file.rewind
     end
 
     def update_row(row, index)
