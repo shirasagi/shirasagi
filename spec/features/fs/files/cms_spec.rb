@@ -4,41 +4,189 @@ describe "fs_files", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:user) { cms_user }
   let(:file) do
-    basename = ::File.basename(filename)
-    SS::File.create_empty!(
-      site_id: site.id, cur_user: cms_user, name: basename, filename: basename,
-      content_type: "image/png", model: 'article/page'
-    ) do |file|
-      ::FileUtils.cp(filename, file.path)
-    end
+    SS::Sequence.create(id: 'ss_files_id', value: rand(1_000..1_999))
+    tmp_ss_file(contents: filename, site_id: site.id, cur_user: user)
   end
 
   context "[logo.png]" do
     let(:filename) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
 
-    context "without auth" do
-      it "#index" do
-        visit file.url
-        expect(status_code).to eq 404
+    before do
+      Capybara.app_host = "http://#{site.domain}"
+    end
+
+    context "file without owner_item" do
+      context "without auth" do
+        it "via url" do
+          visit file.url
+          expect(status_code).to eq 404
+        end
+
+        it "via full_url" do
+          visit file.full_url
+          expect(status_code).to eq 404
+        end
+
+        it "via thumb_url" do
+          visit file.thumb_url
+          expect(status_code).to eq 404
+        end
       end
 
-      it "#thumb" do
-        visit file.thumb_url
-        expect(status_code).to eq 404
+      context "with owned user" do
+        before { login_cms_user }
+
+        it "via url" do
+          visit file.url
+          expect(status_code).to eq 200
+        end
+
+        it "via full_url" do
+          visit file.full_url
+          expect(status_code).to eq 200
+        end
+
+        it "via thumb_url" do
+          visit file.thumb_url
+          expect(status_code).to eq 200
+        end
+      end
+
+      context "with other user" do
+        let!(:user2) { create :cms_test_user, group_ids: user.group_ids }
+
+        before { login_user user2 }
+
+        it "via url" do
+          visit file.url
+          expect(status_code).to eq 404
+        end
+
+        it "via full_url" do
+          visit file.full_url
+          expect(status_code).to eq 404
+        end
+
+        it "via thumb_url" do
+          visit file.thumb_url
+          expect(status_code).to eq 404
+        end
       end
     end
 
-    context "with auth" do
-      before { login_cms_user }
+    context "file associated to cms/page as owner_item" do
+      let(:html) do
+        <<~HTML.freeze
+          <p><img alt="#{file.name}" src="#{file.url}" /></p>
+        HTML
+      end
+      let!(:item) { create :cms_page, cur_site: site, cur_user: user, html: html, file_ids: [ file.id ], state: state }
 
-      it "#index" do
-        visit file.url
-        expect(status_code).to eq 200
+      context "with public page" do
+        let(:state) { "public" }
+
+        context "without auth" do
+          it "via url" do
+            visit file.url
+            expect(status_code).to eq 200
+          end
+
+          it "via full_url" do
+            visit file.full_url
+            expect(status_code).to eq 200
+          end
+
+          it "via thumb_url" do
+            visit file.thumb_url
+            expect(status_code).to eq 200
+          end
+        end
+
+        context "with auth" do
+          before { login_cms_user }
+
+          it "via url" do
+            visit file.url
+            expect(status_code).to eq 200
+          end
+
+          it "via full_url" do
+            visit file.full_url
+            expect(status_code).to eq 200
+          end
+
+          it "via thumb_url" do
+            visit file.thumb_url
+            expect(status_code).to eq 200
+          end
+        end
       end
 
-      it "#thumb" do
-        visit file.thumb_url
-        expect(status_code).to eq 200
+      context "with public page via other site" do
+        let(:site2) { create :cms_site_unique }
+        let(:state) { "public" }
+
+        context "without auth" do
+          it "via full_url" do
+            file.site_id = site2.id
+            expect(file.full_url).to start_with(site2.full_url)
+
+            visit file.full_url
+            expect(status_code).to eq 404
+          end
+        end
+
+        context "with auth" do
+          before { login_cms_user }
+
+          it "via full_url" do
+            file.site_id = site2.id
+            expect(file.full_url).to start_with(site2.full_url)
+
+            visit file.full_url
+            expect(status_code).to eq 404
+          end
+        end
+      end
+
+      context "with closed page" do
+        let(:state) { "closed" }
+
+        context "without auth" do
+          it "via url" do
+            visit file.url
+            expect(status_code).to eq 404
+          end
+
+          it "via full_url" do
+            visit file.full_url
+            expect(status_code).to eq 404
+          end
+
+          it "via thumb_url" do
+            visit file.thumb_url
+            expect(status_code).to eq 404
+          end
+        end
+
+        context "with auth" do
+          before { login_cms_user }
+
+          it "via url" do
+            visit file.url
+            expect(status_code).to eq 200
+          end
+
+          it "via full_url" do
+            visit file.full_url
+            expect(status_code).to eq 200
+          end
+
+          it "via thumb_url" do
+            visit file.thumb_url
+            expect(status_code).to eq 200
+          end
+        end
       end
     end
   end
