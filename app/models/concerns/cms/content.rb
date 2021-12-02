@@ -244,6 +244,7 @@ module Cms::Content
     return false unless public?
     return false unless public_node?
     return false if try(:for_member_enabled?) && member.blank?
+    return false if !site || !site.is_a?(SS::Model::Site) || self.site_id != site.id
     true
   end
 
