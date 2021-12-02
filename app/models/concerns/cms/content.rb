@@ -116,9 +116,7 @@ module Cms::Content
       criteria = self.all.site(site) if criteria.blank?
 
       # and_public
-      criteria = criteria.and_public(date)
-
-      criteria
+      criteria.and_public(date)
     end
 
     def private_root

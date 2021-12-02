@@ -27,8 +27,7 @@ class Gws::Survey::File
       criteria = all
       return criteria if params.blank?
 
-      criteria = criteria.search_keyword(params)
-      criteria
+      criteria.search_keyword(params)
     end
 
     def search_keyword(params)

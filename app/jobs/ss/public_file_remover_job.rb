@@ -14,7 +14,7 @@ class SS::PublicFileRemoverJob < SS::ApplicationJob
   def traverse_directory(path)
     count = 0
     ::Dir.foreach(path) do |child_path|
-      next if child_path == "." || child_path == ".."
+      next if %w(. ..).include?(child_path)
 
       count += 1
 
