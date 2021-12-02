@@ -240,7 +240,7 @@ module Cms::Content
     %w(current descendant).map { |m| [ I18n.t("cms.options.node_target.#{m}"), m ] }
   end
 
-  def file_previewable?(file, user:, member:)
+  def file_previewable?(file, site:, user:, member:)
     return false unless public?
     return false unless public_node?
     return false if try(:for_member_enabled?) && member.blank?

@@ -23,10 +23,9 @@ class Cms::File
     super(action, user, opts)
   end
 
-  def previewable?(opts = {})
-    cur_user = opts[:user]
-    return false if !cur_user
+  def previewable?(site: nil, user: nil, member: nil)
+    return false if !user
 
-    self.allowed?(:read, cur_user, site: @cur_site || self.site)
+    self.allowed?(:read, user, site: site || @cur_site || self.site)
   end
 end

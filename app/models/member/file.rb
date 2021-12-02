@@ -6,10 +6,9 @@ class Member::File
 
   default_scope ->{ where(model: /^member\//) }
 
-  def previewable?(opts = {})
+  def previewable?(site: nil, user: nil, member: nil)
     return true if super
 
-    cur_member = opts[:member]
-    cur_member && cur_member.id == member_id
+    member && member.id == self.member_id
   end
 end

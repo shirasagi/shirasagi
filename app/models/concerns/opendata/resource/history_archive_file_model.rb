@@ -11,10 +11,9 @@ module Opendata::Resource::HistoryArchiveFileModel
     default_scope ->{ where(model: model_name.i18n_key.to_s) }
   end
 
-  def previewable?(opts = {})
-    cur_user = opts[:user]
-    return false if cur_user.blank?
+  def previewable?(site: nil, user: nil, member: nil)
+    return false if user.blank?
 
-    cur_user.cms_user.cms_role_permit_any?(site, :read_opendata_histories)
+    user.cms_user.cms_role_permit_any?(site || @cur_site || self.site, :read_opendata_histories)
   end
 end

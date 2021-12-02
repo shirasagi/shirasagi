@@ -4,7 +4,7 @@ class SS::LogoFile
 
   default_scope ->{ where(model: "ss/logo_file") }
 
-  def previewable?(_opts = {})
+  def previewable?(site: nil, user: nil, member: nil)
     true
   end
 end

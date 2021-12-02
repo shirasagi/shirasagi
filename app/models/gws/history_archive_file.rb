@@ -8,10 +8,9 @@ class Gws::HistoryArchiveFile
 
   default_scope ->{ where(model: 'gws/history_archive_file') }
 
-  def previewable?(opts = {})
-    cur_user = opts[:user]
-    if cur_user
-      Gws::History.allowed?(:read, cur_user, site: site)
+  def previewable?(site: nil, user: nil, member: nil)
+    if user
+      Gws::History.allowed?(:read, user, site: site)
     end
   end
 end

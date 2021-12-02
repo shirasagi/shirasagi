@@ -43,7 +43,7 @@ class SS::PublicFileRemoverJob < SS::ApplicationJob
       return
     end
 
-    if !file.previewable?(user: nil, member: nil)
+    if !file.previewable?(site: site, user: nil, member: nil)
       remove_directory(path)
       return
     end

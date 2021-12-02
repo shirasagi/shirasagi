@@ -182,7 +182,7 @@ module Member::Node
       Member::BlogPage.site(site).where(filename: /^#{::Regexp.escape(filename)}\//, depth: depth + 1).and_public
     end
 
-    def file_previewable?(file, user:, member:)
+    def file_previewable?(file, site:, user:, member:)
       return true if super
 
       return true if member.present? && member_id == member.id

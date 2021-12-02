@@ -15,7 +15,7 @@ class Member::BlogPage
 
   default_scope ->{ where(route: "member/blog_page") }
 
-  def file_previewable?(file, user:, member:)
+  def file_previewable?(file, site:, user:, member:)
     return true if super
 
     return true if member.present? && member_id == member.id

@@ -29,7 +29,7 @@ class Fs::FilesController < ApplicationController
   end
 
   def deny
-    raise "404" unless @item.previewable?(user: @cur_user, member: get_member_by_session)
+    raise "404" unless @item.previewable?(site: @cur_site, user: @cur_user, member: get_member_by_session)
     set_last_logged_in
   end
 
