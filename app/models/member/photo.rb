@@ -1,6 +1,6 @@
 class Member::Photo
   include Cms::Model::Page
-  include Cms::Reference::Member
+  include Cms::Addon::MemberReference
   include Workflow::Addon::Approver
   include Member::Addon::Photo::Body
   include Member::Addon::Photo::Category
