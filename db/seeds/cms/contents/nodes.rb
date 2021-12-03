@@ -1,7 +1,7 @@
 puts "# nodes"
 
 def save_node(data)
-  return if SS.config.cms.enable_lgwan && data[:route].start_with?('member/')
+  return if SS::Lgwan.enabled? && data[:route].start_with?('member/')
   puts data[:name]
   cond = {
     site_id: @site._id,

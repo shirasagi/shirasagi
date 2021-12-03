@@ -96,7 +96,7 @@ save_inquiry_answer node_id: @feedback_node.id, site_id: @site._id,
     column_feedback3.id => "どちらともいえない"
   }
 
-if SS.config.cms.enable_lgwan.blank?
+if !SS::Lgwan.enabled?
   ## member
   save_node route: "member/login", filename: "login", name: "ログイン", layout_id: @layouts["login"].id,
     form_auth: "enabled", redirect_url: "/mypage/"

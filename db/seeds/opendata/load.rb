@@ -82,7 +82,7 @@ def save_layout(data)
 
   item = Cms::Layout.find_or_initialize_by(cond)
   item.attributes = data.merge html: html
-  if SS.config.cms.enable_lgwan
+  if SS::Lgwan.enabled?
     html.gsub!('{{ part "mypage-login" }}', '')
     html.gsub!('{{ part "mypage-tabs" }}', '')
   end
@@ -104,7 +104,7 @@ save_layout filename: "dataset-top.layout.html", name: "データ：トップ"
 save_layout filename: "idea-bunya.layout.html", name: "アイデア：分野、アイデア検索"
 save_layout filename: "idea-page.layout.html", name: "アイデア：詳細ページ"
 save_layout filename: "idea-top.layout.html", name: "アイデア：トップ"
-if SS.config.cms.enable_lgwan.blank?
+if !SS::Lgwan.enabled?
   save_layout filename: "mypage-page.layout.html", name: "マイページ：詳細"
 end
 save_layout filename: "mypage-top.layout.html", name: "マイページ：トップ、メンバー、SPARQL"
@@ -119,7 +119,7 @@ layouts = Hash[*array.flatten]
 puts "# nodes"
 
 def save_node(data)
-  return if SS.config.cms.enable_lgwan && data[:route].start_with?('member/')
+  return if SS::Lgwan.enabled? && data[:route].start_with?('member/')
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename], route: data[:route] }
 
@@ -202,7 +202,7 @@ save_node filename: "api", name: "API", route: "opendata/api"
 save_node filename: "member", name: "ユーザー", route: "opendata/member",
   layout_id: layouts["mypage-top"].id
 
-if SS.config.cms.enable_lgwan.blank?
+if !SS::Lgwan.enabled?
   save_node filename: "auth", name: "ログイン", route: "member/login",
     layout_id: layouts["mypage-top"].id, redirect_url: "/mypage/", form_auth: "enabled",
     twitter_oauth: "enabled", facebook_oauth: "enabled", yahoojp_oauth: "enabled",
@@ -355,7 +355,7 @@ save_inquiry_column node_id: inquiry_node.id, name: "お問い合わせ内容", 
 puts "# parts"
 
 def save_part(data)
-  return if SS.config.cms.enable_lgwan && data[:route].start_with?('member/')
+  return if SS::Lgwan.enabled? && data[:route].start_with?('member/')
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
 
@@ -366,7 +366,7 @@ def save_part(data)
 
   item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_initialize_by(cond)
   if html
-    if SS.config.cms.enable_lgwan
+    if SS::Lgwan.enabled?
       html.gsub!('<li><a class="entry" href="/mypage/app/">アプリ登録</a></li>', '')
       html.gsub!('<li><a class="entry" href="/mypage/app/">アプリを登録する</a></li>', '')
       html.gsub!('<li><a class="entry" href="/mypage/dataset/">データセット登録</a></li>', '')
@@ -405,7 +405,7 @@ save_part filename: "idea-attention.part.html", name: "アイデア：注目順"
   route: "opendata/idea", limit: 10, sort: "attention"
 save_part filename: "idea-head.part.html", name: "アイデア：ヘッダー", route: "cms/free"
 save_part filename: "idea-kv.part.html", name: "アイデア：キービジュアル", route: "cms/free"
-if SS.config.cms.enable_lgwan.blank?
+if !SS::Lgwan.enabled?
   save_part filename: "mypage-login.part.html", name: "ログイン", \
     route: "opendata/mypage_login", ajax_view: "enabled"
   save_part filename: "mypage-tabs.part.html", name: "マイページ：タブ", route: "cms/free"

@@ -1,0 +1,14 @@
+# lgwan
+
+production: &production
+  # Disable LGWAN.
+  disable: true
+
+  # copy private files from GATEWAY Segment.
+  pull_private_files_command: "/root/shell/pull_publish.sh"
+
+test:
+  <<: *production
+
+development:
+  <<: *production
