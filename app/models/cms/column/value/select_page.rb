@@ -10,8 +10,11 @@ class Cms::Column::Value::SelectPage < Cms::Column::Value::Base
 
   def page_link
     return if page.nil?
-    return if !page.public?
-    ApplicationController.helpers.link_to(page.name, page.url)
+    if page.public?
+      ApplicationController.helpers.link_to(page.name, page.url)
+    else
+      page.name
+    end
   end
 
   def import_csv(values)
