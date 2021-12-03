@@ -45,6 +45,23 @@ describe "member_agents_pages_blog_page", type: :feature, dbscope: :example, js:
         fill_in 'item[name]', with: blog_page_name
         fill_in_ckeditor 'item[html]', with: blog_page_html
 
+        wait_cbox_open do
+          click_on I18n.t("ss.buttons.upload")
+        end
+      end
+      wait_for_cbox do
+        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+        click_on I18n.t("ss.buttons.save")
+        expect(page).to have_css('.file-view', text: "keyvisual.jpg")
+        first(".user-files .select").click
+      end
+      within 'form div.member-blog-page' do
+        expect(page).to have_css('.file-view', text: "keyvisual.jpg")
+
+        wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
+          click_on I18n.t("sns.image_paste")
+        end
+
         click_on I18n.t('ss.buttons.save')
       end
       expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.saved"))
@@ -62,6 +79,13 @@ describe "member_agents_pages_blog_page", type: :feature, dbscope: :example, js:
         expect(blog_page.body_layout_id).to be_blank
         expect(blog_page.state).to eq "public"
         expect(blog_page.member_id).to eq member.id
+        expect(blog_page.file_ids).to have(1).items
+
+        file = Member::File.find(blog_page.file_ids[0])
+        expect(file.filename).to eq "keyvisual.jpg"
+        expect(file.owner_item_type).to eq blog_page.class.name
+        expect(file.owner_item_id).to eq blog_page.id
+        expect(file.member_id).to eq member.id
       end
 
       visit node_blog.full_url
@@ -150,7 +174,7 @@ describe "member_agents_pages_blog_page", type: :feature, dbscope: :example, js:
       expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.deleted"))
 
       expect(Member::BlogPage.all.count).to eq 0
-      expect(History::Trash.all.count).to eq 1
+      expect(History::Trash.all.count).to eq 2
     end
   end
 end
