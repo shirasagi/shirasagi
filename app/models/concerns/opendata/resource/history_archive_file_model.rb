@@ -13,7 +13,8 @@ module Opendata::Resource::HistoryArchiveFileModel
 
   def previewable?(site: nil, user: nil, member: nil)
     return false if user.blank?
+    return false if !site || !site.is_a?(SS::Model::Site) || self.site_id != site.id
 
-    user.cms_user.cms_role_permit_any?(site || @cur_site || self.site, :read_opendata_histories)
+    user.cms_user.cms_role_permit_any?(site, :read_opendata_histories)
   end
 end

@@ -148,15 +148,19 @@ module SS::Model::File
 
     # be careful: cur_user and item may be nil
     item = effective_owner_item
+    if site && item.try(:site)
+      return false if site.is_a?(SS::Model::Site) && item.site.is_a?(SS::Model::Site) && site.id != item.site_id
+      return false if site.is_a?(SS::Model::Group) && item.site.is_a?(SS::Model::Group) && site.id != item.site_id
+    end
     if user && item
       permit = meta[:permit] || %i(role readable member)
-      if permit.include?(:readable) && item.respond_to?(:readable?) && item.readable?(user, site: site || item.try(:site))
+      if permit.include?(:readable) && item.respond_to?(:readable?) && item.readable?(user, site: item.try(:site))
         return true
       end
       if permit.include?(:member) && item.respond_to?(:member?) && item.member?(user)
         return true
       end
-      if permit.include?(:role) && item.respond_to?(:allowed?) && item.allowed?(:read, user, site: site || item.try(:site))
+      if permit.include?(:role) && item.respond_to?(:allowed?) && item.allowed?(:read, user, site: item.try(:site))
         return true
       end
     end

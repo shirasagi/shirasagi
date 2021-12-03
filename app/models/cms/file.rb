@@ -25,7 +25,8 @@ class Cms::File
 
   def previewable?(site: nil, user: nil, member: nil)
     return false if !user
+    return false if !site || !site.is_a?(SS::Model::Site) || self.site_id != site.id
 
-    self.allowed?(:read, user, site: site || @cur_site || self.site)
+    self.allowed?(:read, user, site: site)
   end
 end
