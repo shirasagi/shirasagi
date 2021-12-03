@@ -19,5 +19,11 @@ FactoryBot.define do
     member_ids { [gws_user.id] }
     start_at { Time.zone.now.change(hour: 10, minute: 0, second: 0) }
     end_at { start_at + 1.hour }
+
+    factory :gws_schedule_facility_plan_few_days do
+      allday { 'allday' }
+      start_at { Time.zone.yesterday.change(hour: 10, minute: 0, second: 0) }
+      end_at { start_at + 2.days + 1.hour }
+    end
   end
 end

@@ -368,9 +368,9 @@
     color: $black;
   }
   .fc-content {
-    @include ellipsis;
     word-wrap: normal;
     word-break: normal;
+    white-space: normal;
   }
 }
 .fc-time-grid-event {

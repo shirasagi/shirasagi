@@ -56,6 +56,12 @@ module Gws::Schedule::CalendarFormat
       data[:className] += " fc-event-approval-#{approval_state}"
     end
 
+    if self.try(:facilities).present?
+      facilities.each do |facility|
+        data[:title] += " [#{facility.name}]"
+      end
+    end
+
     data
   end
 

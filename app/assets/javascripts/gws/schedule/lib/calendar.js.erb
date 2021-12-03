@@ -228,24 +228,31 @@ this.Gws_Schedule_Calendar = (function ($) {
     return {
       editable: true,
       eventClick: function (event, jsEvent, view) {
-        var popup_url, state, target;
-        if (event.noPopup) {
-          return;
-        }
-        target = $(this);
-        Gws_Popup.render(target, "<div class='fc-popup'><span class='fc-loading'><%= I18n.t('gws/schedule.loading') %></span></div>");
-        popup_url = event.restUrl ? event.restUrl : url;
-        state = ("calendar[date]=" + (event.start.format('YYYY-MM-DD')) + "&") + Gws_Schedule_Calendar.viewStateQuery(view);
-        return $.ajax({
-          url: popup_url + "/" + event.id + "/popup",
-          success: function (data) {
-            $('.fc-popup').html(data);
-            $('.fc-popup').find('a').each(function () {
-              return $(this).attr('href', $(this).attr('href') + ("?" + state));
-            });
-            return Gws_Popup.renderPopup(target);
+        var popup_url = event.restUrl ? event.restUrl : url;
+        var state = ("calendar[date]=" + (event.start.format('YYYY-MM-DD')) + "&") + Gws_Schedule_Calendar.viewStateQuery(view);
+        if (event.start.format('YYYY-MM-DD') === event.end.format('YYYY-MM-DD')) {
+          jsEvent.preventDefault();
+
+          event.url = popup_url + "/" + event.id + "?" + state;
+          location.href = event.url;
+        } else {
+          if (event.noPopup) {
+            return;
           }
-        });
+          var target = $(this);
+          Gws_Popup.render(target, "<div class='fc-popup'><span class='fc-loading'><%= I18n.t('gws/schedule.loading') %></span></div>");
+
+          return $.ajax({
+            url: popup_url + "/" + event.id + "/popup",
+            success: function (data) {
+              $('.fc-popup').html(data);
+              $('.fc-popup').find('a').each(function () {
+                return $(this).attr('href', $(this).attr('href') + ("?" + state));
+              });
+              return Gws_Popup.renderPopup(target);
+            }
+          });
+        }
       },
       eventDrop: function (event, delta, revertFunc, jsEvent, ui, view) {
         var drop_url, end;
