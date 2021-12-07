@@ -97,15 +97,21 @@ class Webmail::MailsController < ApplicationController
     @item.new_mail
 
     # send from address
-    if data = params[:item].presence
-      @item.to << data[:to].to_s if data[:to].present?
+    if to = params.dig(:item, :to).presence
+      @item.to << to.to_s
     end
+
+    @dedicated = true
+    render layout: "ss/dedicated"
   end
 
   def edit
     raise "404" unless @item.draft?
 
     @item.set_ref_files(@item.attachments)
+
+    @dedicated = true
+    render layout: "ss/dedicated"
   end
 
   def update
@@ -119,13 +125,21 @@ class Webmail::MailsController < ApplicationController
       resp = @item.send_mail
     end
 
+    render_opts = { notice: notice }
+    if params.key?(:dedicated)
+      @dedicated = true
+      commit = params[:commit] == I18n.t('ss.buttons.draft_save') ? "draft_save" : "send_mail"
+      render_opts[:location] = url_for(action: :sent, commit: commit)
+      render_opts[:render] = { template: "new", layout: "ss/dedicated" }
+    end
+
     if resp
       @item.destroy_files
     else
       @item.set_ref_files(@item.attachments)
     end
 
-    render_create resp, notice: notice
+    render_create resp, render_opts
   end
 
   def header_view
@@ -201,7 +215,8 @@ class Webmail::MailsController < ApplicationController
 
     @item = @model.new pre_params.merge(fix_params)
     @item.new_reply(@ref, params[:without_body].present?)
-    render :new
+    @dedicated = true
+    render :new, layout: "ss/dedicated"
   end
 
   def reply_all
@@ -213,7 +228,8 @@ class Webmail::MailsController < ApplicationController
 
     @item = @model.new pre_params.merge(fix_params)
     @item.new_reply_all(@ref, params[:without_body].present?)
-    render :new
+    @dedicated = true
+    render :new, layout: "ss/dedicated"
   end
 
   def forward
@@ -225,7 +241,8 @@ class Webmail::MailsController < ApplicationController
 
     @item = @model.new pre_params.merge(fix_params)
     @item.new_forward(@ref)
-    render :new
+    @dedicated = true
+    render :new, layout: "ss/dedicated"
   end
 
   def edit_as_new
@@ -237,7 +254,8 @@ class Webmail::MailsController < ApplicationController
 
     @item = @model.new pre_params.merge(fix_params)
     @item.new_edit(@ref)
-    render :new
+    @dedicated = true
+    render :new, layout: "ss/dedicated"
   end
 
   def create
@@ -252,11 +270,23 @@ class Webmail::MailsController < ApplicationController
       resp = @item.send_mail
     end
 
+    render_opts = { notice: notice }
+    if params.key?(:dedicated)
+      @dedicated = true
+      commit = params[:commit] == I18n.t('ss.buttons.draft_save') ? "draft_save" : "send_mail"
+      render_opts[:location] = url_for(action: :sent, commit: commit)
+      render_opts[:render] = { template: "new", layout: "ss/dedicated" }
+    end
+
     @item.destroy_files if resp
-    render_create resp, notice: notice
+    render_create resp, render_opts
   rescue Net::IMAP::NoResponseError => e
     @item.errors.add :base, e.to_s
-    render_create false
+    if params.key?(:dedicated)
+      @dedicated = true
+      render_opts = { render: { template: "new", layout: "ss/dedicated" } }
+    end
+    render_create false, render_opts
   end
 
   def destroy
@@ -347,5 +377,9 @@ class Webmail::MailsController < ApplicationController
 
   def print
     render template: 'print', layout: 'ss/print'
+  end
+
+  def sent
+    render layout: 'ss/dedicated'
   end
 end

@@ -27,6 +27,7 @@ ja:
     menu_settings: メニュー設定
     password_policy: パスワードポリシー
     max_file_size: 最大ファイルサイズ
+    image_resize: 画像リサイズ
     site_copy: サイト複製
     site_copy/description: ※フォルダー、固定ページ、レイアウト、パーツは必須で複製されます
     site_copy/started_job: サイト複製を開始しました。

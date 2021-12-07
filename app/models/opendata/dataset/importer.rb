@@ -65,8 +65,8 @@ class Opendata::Dataset::Importer
   end
 
   def import_dataset_csv(file)
-    table = CSV.read(file, headers: true, encoding: 'cp932:UTF-8')
-    table.each.with_index(1) do |row, i|
+    SS::Csv.foreach_row(file, headers: true) do |row, i|
+      i += 1
       begin
         @dataset_index = i
         create_dataset(row)
@@ -77,8 +77,8 @@ class Opendata::Dataset::Importer
   end
 
   def import_resource_csv(file, dataset)
-    table = CSV.read(file, headers: true, encoding: 'cp932:UTF-8')
-    table.each.with_index(1) do |row, i|
+    SS::Csv.foreach_row(file, headers: true) do |row, i|
+      i += 1
       begin
         @resource_index = i
         create_resource(dataset, row)

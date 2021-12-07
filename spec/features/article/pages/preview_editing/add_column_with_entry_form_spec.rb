@@ -112,21 +112,23 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         visit cms_preview_path(site: site, path: item.preview_path)
 
         # start preview editing
-        within "#ss-preview" do
-          within ".ss-preview-wrap-column-edit-mode" do
-            wait_event_to_fire "ss:inplaceModeChanged" do
+        wait_event_to_fire "ss:inplaceModeChanged" do
+          within "#ss-preview" do
+            within ".ss-preview-wrap-column-edit-mode" do
               click_on I18n.t("cms.inplace_edit")
             end
           end
         end
 
         # #1: cms_column_text_field
-        page.within_frame page.first("#ss-preview-form-palette") do
-          within ".column-value-palette" do
-            click_on column1.name
+        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+          within_frame page.first("#ss-preview-form-palette") do
+            within ".column-value-palette" do
+              click_on column1.name
+            end
           end
         end
-        page.within_frame page.first("#ss-preview-dialog-frame") do
+        within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-textfield" do
               fill_in "item[column_values][][in_wrap][value]", with: column1_value1
@@ -158,12 +160,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(column_value1.order).to eq 0
 
         # #2: cms_column_date_field
-        page.within_frame page.first("#ss-preview-form-palette") do
-          within ".column-value-palette" do
-            click_on column2.name
+        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+          within_frame page.first("#ss-preview-form-palette") do
+            within ".column-value-palette" do
+              click_on column2.name
+            end
           end
         end
-        page.within_frame page.first("#ss-preview-dialog-frame") do
+        within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-datefield" do
               fill_in "item[column_values][][in_wrap][date]", with: column2_value1
@@ -184,12 +188,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(column_value2.order).to eq 1
 
         # #3: cms_column_url_field2
-        page.within_frame page.first("#ss-preview-form-palette") do
-          within ".column-value-palette" do
-            click_on column3.name
+        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+          within_frame page.first("#ss-preview-form-palette") do
+            within ".column-value-palette" do
+              click_on column3.name
+            end
           end
         end
-        page.within_frame page.first("#ss-preview-dialog-frame") do
+        within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-urlfield2" do
               fill_in "item[column_values][][in_wrap][link_label]", with: column3_label1
@@ -212,12 +218,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(column_value3.order).to eq 2
 
         # #4: cms_column_text_area
-        page.within_frame page.first("#ss-preview-form-palette") do
-          within ".column-value-palette" do
-            click_on column4.name
+        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+          within_frame page.first("#ss-preview-form-palette") do
+            within ".column-value-palette" do
+              click_on column4.name
+            end
           end
         end
-        page.within_frame page.first("#ss-preview-dialog-frame") do
+        within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-textarea" do
               fill_in "item[column_values][][in_wrap][value]", with: column4_value1
@@ -238,12 +246,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(column_value4.order).to eq 3
 
         # #5: cms_column_select
-        page.within_frame page.first("#ss-preview-form-palette") do
-          within ".column-value-palette" do
-            click_on column5.name
+        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+          within_frame page.first("#ss-preview-form-palette") do
+            within ".column-value-palette" do
+              click_on column5.name
+            end
           end
         end
-        page.within_frame page.first("#ss-preview-dialog-frame") do
+        within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-select" do
               select column5_value1, from: "item[column_values][][in_wrap][value]"
@@ -264,12 +274,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(column_value5.order).to eq 4
 
         # #6: cms_column_radio_button
-        page.within_frame page.first("#ss-preview-form-palette") do
-          within ".column-value-palette" do
-            click_on column6.name
+        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+          within_frame page.first("#ss-preview-form-palette") do
+            within ".column-value-palette" do
+              click_on column6.name
+            end
           end
         end
-        page.within_frame page.first("#ss-preview-dialog-frame") do
+        within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-radiobutton" do
               first(:field, type: "radio", with: column6_value1).click
@@ -290,12 +302,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(column_value6.order).to eq 5
 
         # #7: cms_column_check_box
-        page.within_frame page.first("#ss-preview-form-palette") do
-          within ".column-value-palette" do
-            click_on column7.name
+        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+          within_frame page.first("#ss-preview-form-palette") do
+            within ".column-value-palette" do
+              click_on column7.name
+            end
           end
         end
-        page.within_frame page.first("#ss-preview-dialog-frame") do
+        within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-checkbox" do
               first(:field, name: "item[column_values][][in_wrap][values][]", with: column7_value1).click
@@ -316,12 +330,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(column_value7.order).to eq 6
 
         # #8: cms_column_file_upload
-        page.within_frame page.first("#ss-preview-form-palette") do
-          within ".column-value-palette" do
-            click_on column8.name
+        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+          within_frame page.first("#ss-preview-form-palette") do
+            within ".column-value-palette" do
+              click_on column8.name
+            end
           end
         end
-        page.within_frame page.first("#ss-preview-dialog-frame") do
+        within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-fileupload" do
               fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text1
@@ -354,12 +370,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(column_value8.order).to eq 7
 
         # #9: cms_column_free
-        page.within_frame page.first("#ss-preview-form-palette") do
-          within ".column-value-palette" do
-            click_on column9.name
+        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+          within_frame page.first("#ss-preview-form-palette") do
+            within ".column-value-palette" do
+              click_on column9.name
+            end
           end
         end
-        page.within_frame page.first("#ss-preview-dialog-frame") do
+        within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-free" do
               fill_in_ckeditor "item[column_values][][in_wrap][value]", with: column9_value1
@@ -397,12 +415,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(column_value9.order).to eq 8
 
         # #10: cms_column_headline
-        page.within_frame page.first("#ss-preview-form-palette") do
-          within ".column-value-palette" do
-            click_on column10.name
+        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+          within_frame page.first("#ss-preview-form-palette") do
+            within ".column-value-palette" do
+              click_on column10.name
+            end
           end
         end
-        page.within_frame page.first("#ss-preview-dialog-frame") do
+        within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-headline" do
               select column10_head1, from: "item[column_values][][in_wrap][head]"
@@ -425,12 +445,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(column_value10.order).to eq 9
 
         # #11: cms_column_list
-        page.within_frame page.first("#ss-preview-form-palette") do
-          within ".column-value-palette" do
-            click_on column11.name
+        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+          within_frame page.first("#ss-preview-form-palette") do
+            within ".column-value-palette" do
+              click_on column11.name
+            end
           end
         end
-        page.within_frame page.first("#ss-preview-dialog-frame") do
+        within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-list" do
               fill_in "item[column_values][][in_wrap][lists][]", with: column11_list1
@@ -451,12 +473,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(column_value11.order).to eq 10
 
         # #12: cms_column_table
-        page.within_frame page.first("#ss-preview-form-palette") do
-          within ".column-value-palette" do
-            click_on column12.name
+        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+          within_frame page.first("#ss-preview-form-palette") do
+            within ".column-value-palette" do
+              click_on column12.name
+            end
           end
         end
-        page.within_frame page.first("#ss-preview-dialog-frame") do
+        within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-table" do
               find("input.height").set(column12_height1)
@@ -479,12 +503,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(column_value12.order).to eq 11
 
         # #13: cms_column_youtube
-        page.within_frame page.first("#ss-preview-form-palette") do
-          within ".column-value-palette" do
-            click_on column13.name
+        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+          within_frame page.first("#ss-preview-form-palette") do
+            within ".column-value-palette" do
+              click_on column13.name
+            end
           end
         end
-        page.within_frame page.first("#ss-preview-dialog-frame") do
+        within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-youtube" do
               fill_in "item[column_values][][in_wrap][url]", with: column13_url1
@@ -505,12 +531,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(column_value13.order).to eq 12
 
         # #14: cms_column_select_page
-        page.within_frame page.first("#ss-preview-form-palette") do
-          within ".column-value-palette" do
-            click_on column14.name
+        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+          within_frame page.first("#ss-preview-form-palette") do
+            within ".column-value-palette" do
+              click_on column14.name
+            end
           end
         end
-        page.within_frame page.first("#ss-preview-dialog-frame") do
+        within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within '[name="item[column_values][][in_wrap][page_id]"]' do
               expect(page).to have_css("option", text: selectable_page1.name)

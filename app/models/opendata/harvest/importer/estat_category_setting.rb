@@ -127,19 +127,18 @@ class Opendata::Harvest::Importer
     end
 
     def import
-      begin
-        if in_file.blank? || ::File.extname(in_file.original_filename) != ".csv"
-          raise I18n.t("errors.messages.invalid_csv")
-        end
-        table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
-      rescue => e
-        errors.add :base, e.to_s
+      if in_file.blank? || ::File.extname(in_file.original_filename).try(:downcase) != ".csv"
+        errors.add :base, :invalid_csv
+        return
+      end
+      if !SS::Csv.valid_csv?(in_file, headers: true)
+        errors.add :base, :malformed_csv
         return
       end
 
       items = []
       id_given_items = {}
-      table.each_with_index do |row, idx|
+      SS::Csv.foreach_row(in_file, headers: true).each_with_index do |row, idx|
         id = row[t(:id).to_s].to_s.strip
         order = row[t(:order).to_s].to_s.strip
         category_name = row[t(:category_name).to_s].to_s.strip

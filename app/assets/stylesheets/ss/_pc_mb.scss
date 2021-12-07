@@ -1443,6 +1443,15 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   .nav-menu {
     margin-left: 230px;
   }
+  .ss-open-in-new-window {
+    &:after {
+      content: "\e89e";
+      display: inline;
+      font-family: "Material Icons";
+      font-size: 108%;
+      vertical-align: -3px;
+    }
+  }
 }
 @include mb {
   #menu {

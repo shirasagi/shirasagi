@@ -41,6 +41,7 @@ module Sys::LinkFilter
         links << [ t("sys.postal_code"), sys_postal_codes_path ]
         links << [ t("sys.prefecture_code"), sys_prefecture_codes_path ]
         links << [ t("sys.max_file_size"), sys_max_file_sizes_path ]
+        links << [ t("sys.image_resize"), sys_image_resizes_path ]
         links << [ t("sys.ad"), sys_ad_path ]
       end
 

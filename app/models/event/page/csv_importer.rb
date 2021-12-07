@@ -32,8 +32,7 @@ class Event::Page::CsvImporter
   end
 
   def import_csv(file)
-    table = CSV.read(file.path, headers: true, encoding: 'SJIS:UTF-8')
-    table.each_with_index do |row, i|
+    SS::Csv.foreach_row(file, headers: true) do |row, i|
       item = update_row(row)
       put_log("update #{i + 1}: #{item.name}")
     rescue => e

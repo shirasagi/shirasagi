@@ -26,15 +26,18 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         click_on item.subject
         expect(page).to have_css("#addon-basic .body--html", text: "test")
 
-        within first(".nav-menu .dropdown") do
-          # click_on I18n.t("ss.links.reply")
-          first("a").click
-          # click_on I18n.t("ss.links.reply")
-          first("li").click
+        new_window = window_opened_by do
+          within first(".nav-menu .dropdown") do
+            # click_on I18n.t("ss.links.reply")
+            first("a").click
+            # click_on I18n.t("ss.links.reply")
+            first("li").click
+          end
         end
-
-        within "form#item-form" do
-          click_on I18n.t("ss.buttons.send")
+        within_window new_window do
+          within "form#item-form" do
+            click_on I18n.t("ss.buttons.send")
+          end
         end
         wait_for_notice I18n.t('ss.notice.sent')
 
@@ -48,11 +51,12 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
 
         visit index_path
         click_on item.subject
-        click_on I18n.t("webmail.links.forward")
-
-        within "form#item-form" do
-          fill_in "to", with: user.email + "\n"
-          click_on I18n.t("ss.buttons.send")
+        new_window = window_opened_by { click_on I18n.t("webmail.links.forward") }
+        within_window new_window do
+          within "form#item-form" do
+            fill_in "to", with: user.email + "\n"
+            click_on I18n.t("ss.buttons.send")
+          end
         end
         expect(page).to have_css("#notice", text: I18n.t("ss.notice.sent"))
 

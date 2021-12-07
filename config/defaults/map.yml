@@ -17,6 +17,9 @@ production: &production
       url: "https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       projection: "EPSG:3857"
 
+  # Hide Map Canvas in mypage
+  disable_mypage: false
+
   # Map Addon Center Location
   map_center:
     - 36.204824

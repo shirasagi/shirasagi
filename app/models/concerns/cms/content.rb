@@ -108,7 +108,13 @@ module Cms::Content
         def criteria.count(options = {}, &block)
           options = options.symbolize_keys
           options[:hint] = { _id: 1 }
-          super(options, &block)
+          begin
+            super(options, &block)
+          rescue Mongo::Error::OperationFailure => e
+            Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join('\n  ')}")
+            options.delete(:hint)
+            super(options, &block)
+          end
         end
       end
 

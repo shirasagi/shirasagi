@@ -149,7 +149,7 @@ class Cms::PreviewController < ApplicationController
       end
     end
     body.gsub!(/<form.*?method="get".*?>/) do |m|
-      m.sub(/action="/, "action=\"#{preview_url}")
+      m.sub(/action="\/(?!\/)/, "action=\"#{preview_url}/")
     end
 
     if rendered = options[:rendered]

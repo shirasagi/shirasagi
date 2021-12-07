@@ -16,6 +16,9 @@
 <%= f.hidden_field :references, id: nil %>
 <%= f.hidden_field :in_reply_to, id: nil %>
 <%= f.hidden_field :ref_file_uid, value: (@item.forward_uid.presence || @item.edit_as_new_uid.presence || @item.uid), id: nil %>
+<% if @dedicated %>
+  <%= hidden_field_tag :dedicated, "1", id: nil %>
+<% end %>
 
 <% render_address_form = proc do |field, addresses, css_class, cc_blank| %>
   <dl class="webmail-mail-form-address <%= css_class %>"<% if cc_blank %> style="display: none;"<% end %>>
