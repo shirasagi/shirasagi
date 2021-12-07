@@ -48,7 +48,7 @@ class Gws::Discussion::ForumsController < ApplicationController
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
 
     @items = items.search(params[:s]).
-      order_by(order: 1).
+      reorder(order: 1, created: 1).
       page(params[:page]).per(50)
   end
 
