@@ -1,0 +1,12 @@
+<dl class="see">
+  <dt><%= @model.t :member_id %></dt>
+  <dd>
+    <% if @item.member.present? %>
+      <% if Cms::Member.allowed?(:read, @cur_user, site: @cur_site) %>
+        <%= link_to @item.member.name, cms_member_path(id: @item.member) %>
+      <% else %>
+        <%= @item.member.name %>
+      <% end %>
+    <% end %>
+  </dd>
+</dl>

@@ -165,7 +165,7 @@ module Member::Node
 
   class BlogPage
     include Cms::Model::Node
-    include Cms::Reference::Member
+    include Cms::Addon::MemberReference
     include Member::Addon::Blog::PageSetting
     include Cms::Addon::PageList
     include Cms::Addon::GroupPermission

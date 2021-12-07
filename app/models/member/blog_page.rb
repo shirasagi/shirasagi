@@ -1,6 +1,6 @@
 class Member::BlogPage
   include Cms::Model::Page
-  include Cms::Reference::Member
+  include Cms::Addon::MemberReference
   include Workflow::Addon::Approver
   include Member::Addon::Blog::Body
   include Member::Addon::File

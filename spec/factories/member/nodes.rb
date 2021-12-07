@@ -33,6 +33,8 @@ FactoryBot.define do
 
   factory :member_node_blog_page, class: Member::Node::BlogPage, traits: [:cms_node] do
     route { "member/blog_page" }
+    description { Array.new(2) { "description-#{unique_id}" }.join("\n") }
+    genres { Array.new(2) { "genre-#{unique_id}" } }
   end
 
   factory :member_node_photo, class: Member::Node::Photo, traits: [:cms_node] do

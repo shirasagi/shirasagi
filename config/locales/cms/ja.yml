@@ -632,6 +632,7 @@ ja:
       cms/content_quota: 容量制限
       cms/check_links: リンクチェック実行結果
       cms/history_list: 閲覧履歴
+      cms/member_reference: メンバー
 
   mongoid:
     models:
@@ -745,6 +746,8 @@ ja:
         body_layout_id: 本文レイアウト
       cms/reference/page_layout:
         page_layout_id: ページレイアウト
+      cms/reference/member:
+        member_id: メンバー
       cms/site:
         auto_keywords: キーワード自動設定
         auto_description: 概要自動設定
