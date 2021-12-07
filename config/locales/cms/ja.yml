@@ -1,6 +1,7 @@
 ja:
   cms:
     add_max_file_size: 最大ファイルサイズを設定する
+    add_image_resize: 画像リサイズを設定する
     alert: 警告
     all_contents: 全コンテンツ
     body_layout: 本文レイアウト
@@ -45,6 +46,8 @@ ja:
     loop_html: ループHTML
     max_file_size: 最大ファイルサイズ
     max_file_size_setting: 最大ファイルサイズ設定
+    image_resize: 画像リサイズ
+    image_resize_setting: 画像リサイズ設定
     member: メンバー
     mobile_size_check: 携帯データサイズチェック
     modules: モジュール
@@ -558,6 +561,10 @@ ja:
     read_other_cms_check_links_errors: リンクチェックエラーの閲覧（全て）
     read_private_cms_check_links_errors: リンクチェックエラーの閲覧（所有）
     edit_cms_check_links_ignore_urls: リンクチェックエラー例外の管理
+    read_cms_image_resizes: 画像リサイズの閲覧
+    edit_cms_image_resizes: 画像リサイズの編集
+    delete_cms_image_resizes: 画像リサイズの削除
+    disable_cms_image_resizes: 画像リサイズの無効化
 
   modules:
     cms: 標準機能
@@ -607,6 +614,7 @@ ja:
       cms/monthly_nav: アーカイブナビ（月次）
       cms/archive_view_switcher: アーカイブ用表示設定
       cms/max_file_size_setting: 最大ファイルサイズ設定
+      cms/image_resize_setting: 画像リサイズ設定
       cms/tag_setting: タグ設定
       cms/tag: タグ
       cms/layout_html: レイアウト
@@ -1903,6 +1911,10 @@ ja:
     cms/addon/max_file_size_setting:
       max_file_size_setting:
         - フォルダー内のページ編集時に「ファイル>アップロード」から添付ファイルをアップする際のサイズ制限を設定可能です。
+
+    cms/addon/image_resize_setting:
+      image_resize_setting:
+        - フォルダー内のページ編集時に「ファイル>アップロード」から画像ファイルをアップする際の最大横幅、縦幅、画質を設定可能です。
 
     cms/addon/tag_setting:
       st_tags:

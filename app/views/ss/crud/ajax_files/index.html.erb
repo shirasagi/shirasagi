@@ -1,3 +1,11 @@
+<%
+  disable_image_resizes = SS::ImageResize.allowed?(:disable, @cur_user) && SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).present?
+  disable_image_resizes ||= @cur_node.present? && Cms::ImageResize.allowed?(:disable, @cur_user, site: @cur_site, node: @cur_node) && Cms::ImageResize.site(@cur_site).node(@cur_node).where(state: SS::ImageResize::STATE_ENABLED).present?
+  min_size = @model.image_resizes_min_attributes(node: @cur_node)['size']
+  min_width = @model.image_resizes_min_attributes(node: @cur_node)['max_width']
+  min_height = @model.image_resizes_min_attributes(node: @cur_node)['max_height']
+%>
+
 <%= jquery do %>
   SS_AjaxFile.errors.entityTooLarge = "<%= I18n.t('errors.messages.request_entity_too_large') %>";
   new SS_AjaxFile(null, {
@@ -15,7 +23,24 @@
 
       <div class="search-ui-form">
         <%= f.file_field :in_files, multiple: :multiple, required: :required %>
-        <%= f.select :resizing, @model.resizing_options, { include_blank: t("ss.resize_image") }, { class: "image-size" } %>
+        <% if @model.resizing_options(user: @cur_user, node: @cur_node).present? %>
+          <%= f.select :resizing, @model.resizing_options(user: @cur_user, node: @cur_node), { include_blank: t("ss.resize_image_auto") }, { class: "image-size" } %>
+        <% end %>
+        <% if @model.quality_options(user: @cur_user, node: @cur_node).present? %>
+          <%= f.select :quality, @model.quality_options(user: @cur_user, node: @cur_node), { include_blank: t("ss.quality") } %>
+        <% end %>
+        <% if disable_image_resizes %>
+          <%= f.select :image_resizes_disabled, @model.image_resizes_disabled_options %>
+        <% end %>
+        <% if min_size %>
+          <div class="tooltip">?
+            <ul class="tooltip-content">
+              <% t('tooltip.ss/model/file.image_resizes_disabled', size: min_size.to_s(:human_size), width: min_width, height: min_height).each do |tooltip| %>
+                <li><%= tooltip %><br></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
         <%= f.submit t("ss.buttons.attach"), class: "save btn", style: "margin-left: 10px;", data: { submitted: "attach" } %>
         <%= f.submit t("ss.buttons.save"), class: "save btn", style: "margin-left: 10px;", data: { submitted: "save", disable_with: t("ss.buttons.saving") } %>
       </div>

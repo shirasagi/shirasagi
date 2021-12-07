@@ -48,6 +48,8 @@ ja:
     after_replace: 差し替え後
     broken_link: リンク切れ
     auto_reload: 自動更新
+    quality: 画質
+    resize_image_auto: 画像リサイズ(自動)
 
     views:
       login/login:
@@ -442,6 +444,9 @@ ja:
         "3_months": ３ヶ月
         "6_months": ６ヶ月
         "1_year": １年
+      image_resizes_disabled:
+        enabled: 自動リサイズ有効
+        disabled: 自動リサイズ無効
 
     tasks:
       started: 開始しました。
@@ -512,6 +517,7 @@ ja:
       ss/group_file: グループファイル
       ss/task: タスク
       ss/max_file_size: 最大ファイルサイズ
+      ss/image_resize: 画像リサイズ
       ss/thumb_file: サムネイルファイル
       ss/migration: DBマイグレーション
       ss/access_token: アクセストークン
@@ -734,6 +740,10 @@ ja:
         size: 制限サイズ
         order: 並び順
         state: 状態
+      ss/model/image_resize:
+        max_width: 横幅
+        max_height: 縦幅
+        quality: 画質
       ss/model/postal_code:
         code: 郵便番号
         prefecture: 都道府県
@@ -989,6 +999,17 @@ ja:
         - ファイル名（英数）を入力します。
       geo_location:
         - 緯度・経度を10進で入力します。
+      image_resizes_disabled:
+        - 管理者によって自動リサイズが設定されています。
+        -
+        - 下記の条件の場合に自動的に画像がリサイズされます。
+        - 容量 %{size}以上
+        - 横幅 %{width}ピクセル以上
+        - 高さ %{height}ピクセル以上
+        -
+        - 容量を超過している場合、あらかじめ設定している画質に変更されます。
+        - 横幅、高さを超過している場合、収まるように縮小されます。
+        - 自動リサイズをしたくない場合は、管理者に権限を付与してもらった後、左の「自動リサイズ有効」をクリックし「自動リサイズ無効」に設定してください。
     ss/model/user_title:
       code: 役職コードを入力します。
       name: 役職名を入力します。
@@ -1159,6 +1180,15 @@ ja:
         - 並び順を設定します
       state:
         - 制限の有効/無効を設定します
+    ss/model/image_resize:
+      max_width:
+        - 画像ファイルの横幅を設定可能です
+      max_height:
+        - 画像ファイルの縦幅を設定可能です
+      quality:
+        - 画像ファイルの画質を0から100の間で設定可能です
+        - 最大ファイルサイズを超過した場合、画質に基づいて画像を圧縮します
+        - 画質が高い程劣化が少ないです
     ss/model/editor_setting:
       color_button:
         - 文字色変更ボタンの表示を設定します。

@@ -2,12 +2,17 @@
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.name %></dd>
 
-  <dt><%= @model.t :extensions %></dt>
-  <dd><%= @item.extensions %></dd>
-
   <dt><%= @model.t :size %></dt>
   <dd><%= number_to_human_size(@item.size) %></dd>
-  <dd><%= br t("ss.notice.max_file_size_hard_limit_long_notices", human_size: SS::MaxFileSize.nginx_client_max_body_size.to_s(:human_size)) %></dd>
+
+  <dt><%= @model.t :max_width %></dt>
+  <dd><%= @item.max_width %></dd>
+
+  <dt><%= @model.t :max_height %></dt>
+  <dd><%= @item.max_height %></dd>
+
+  <dt><%= @model.t :quality %></dt>
+  <dd><%= @item.quality %></dd>
 
   <dt><%= @model.t :order %></dt>
   <dd><%=br @item.order %></dd>
