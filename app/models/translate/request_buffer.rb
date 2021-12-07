@@ -124,7 +124,7 @@ class Translate::RequestBuffer
       sleep @interval
     end
 
-    if !SS.config.cms.enable_lgwan
+    if !SS::Lgwan.enabled?
       @site.update!
     end
 

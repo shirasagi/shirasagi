@@ -48,6 +48,10 @@ namespace :opendata do
     end
   end
 
+  task check_report_and_archives: :environment do
+    ::Tasks::Opendata.check_report_and_archives
+  end
+
   namespace :harvest do
     task exporter_dataset_purge: :environment do
       puts "Please input site: site=[www]" or exit if ENV['site'].blank?
@@ -134,6 +138,14 @@ namespace :opendata do
   end
 
   namespace :history do
+    task update_all_download: :environment do
+      ::Tasks::Opendata.update_all_download_history
+    end
+
+    task update_all_preview: :environment do
+      ::Tasks::Opendata.update_all_preview_history
+    end
+
     task :archive_download, [:site] => :environment do |_task, args|
       ::Tasks::Cms.with_site(args[:site] || ENV['site']) do |site|
         Opendata::ResourceDownloadHistoryArchiveJob.bind(site_id: site.id).perform_now

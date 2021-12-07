@@ -1,17 +1,3 @@
-<%
-  limit = SS.config.job.head_logs || 1_000
-
-  def head_file(path, n)
-    open(path) do |f|
-      text = ''
-      n.times do
-        line = f.gets || break
-        text << line
-      end
-      text
-    end
-  end
-%>
 <dl class="see">
   <dt><%= @model.t :job_id %></dt>
   <dd><%= @item.job_id %></dd>
@@ -52,8 +38,8 @@
   <dt><%= @model.t :logs %></dt>
   <% if ::File.exist?(@item.file_path) %>
   <dd>
-    <%= t('job.log_notice', count: limit) %>
-    <%= text_area_tag :logs, head_file(@item.file_path, limit), readonly: true, style: "height: 400px" %>
+    <%= t('job.log_notice', count: Fs::DEFAULT_HEAD_LOGS) %>
+    <%= text_area_tag :logs, safe_join(Fs.head_lines(@item.file_path), "\n"), readonly: true, style: "height: 400px" %>
     <%= link_to(t('job.download_log'), { action: :download }, { class: :btn }) %>
   </dd>
   <% else %>

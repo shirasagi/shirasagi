@@ -1,0 +1,13 @@
+<% if params[:commit] == "draft_save" %>
+  <%= t("ss.notice.saved") %>
+<% else %>
+  <%= t("ss.notice.sent") %>
+<% end %>
+
+<%= button_tag(t("ss.buttons.close"), type: "button", class: "btn btn-default btn-close") %>
+
+<%= jquery do %>
+  $(".btn-close").on("click", function() {
+    window.close();
+  });
+<% end %>

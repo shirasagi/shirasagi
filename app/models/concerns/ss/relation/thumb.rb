@@ -83,15 +83,17 @@ module SS::Relation::Thumb
           file.set(image_size_name: name) if name != file.image_size_name
         else
           file = SS::ThumbFile.new
-          file.in_file         = uploaded_file
-          file.resizing        = size
-          file.original_id     = id
-          file.state           = state
-          file.filename        = file.in_file.original_filename
-          file.image_size      = size
-          file.image_size_name = name
-          file.user_id         = user_id
-          file.site_id         = site_id if respond_to?(:site_id)
+          file.in_file                = uploaded_file
+          file.resizing               = size
+          file.quality                = quality
+          file.image_resizes_disabled = image_resizes_disabled
+          file.original_id            = id
+          file.state                  = state
+          file.filename               = file.in_file.original_filename
+          file.image_size             = size
+          file.image_size_name        = name
+          file.user_id                = user_id
+          file.site_id                = site_id if respond_to?(:site_id)
           file.save!
         end
 

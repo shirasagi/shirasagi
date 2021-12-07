@@ -179,6 +179,7 @@ ja:
         は1~21の範囲で設定してください。
       trusted_url: は信頼できるURLを入力してください。
       other_task_is_running: 他の処理が実行中のため実行できません。しばらく待ってから実行してください。
+      denied_with_upload_policy: ファイル投稿が制限（%{policy}）されている為、投稿できません。
     template:
       body: 次の項目を確認してください。
       header:

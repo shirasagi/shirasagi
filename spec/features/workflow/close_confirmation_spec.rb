@@ -10,23 +10,39 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
   let!(:role) { create :cms_role, name: "role", permissions: permissions, cur_site: site }
   let!(:user1) { create :cms_user, uid: unique_id, name: unique_id, group_ids: [group.id], cms_role_ids: [role.id] }
 
+  def closed?
+    script = <<~SCRIPT
+      return document.evaluate(
+        "//*[@id='addon-cms-agents-addons-release']//dd[contains(text(), '#{I18n.t("ss.options.state.closed")}')]",
+        document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null
+      ).snapshotLength
+    SCRIPT
+    page.execute_script(script) > 0
+  end
+
   def expected_alert(save_with)
     within "form#item-form" do
+      wait_ckeditor_ready(find(:fillable_field, "item[html]"))
       click_button save_with
     end
     expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.close"))
     click_on I18n.t("ss.buttons.ignore_alert")
     expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-    wait_for_ajax
+    if closed?
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+    end
   end
 
   def unexpected_alert(save_with)
     within "form#item-form" do
+      wait_ckeditor_ready(find(:fillable_field, "item[html]"))
       click_button save_with
     end
     expect(page).to have_no_css("#alertExplanation", text: I18n.t("cms.confirm.close"))
     wait_for_notice I18n.t("ss.notice.saved")
-    wait_for_ajax
+    if closed?
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+    end
   end
 
   context "with article/page" do

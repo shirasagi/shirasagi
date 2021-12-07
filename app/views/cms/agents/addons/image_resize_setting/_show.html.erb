@@ -1,0 +1,37 @@
+<%
+  model = Cms::ImageResize
+  return unless model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+%>
+
+<dl class="see mod-max-file-size-setting">
+  <dd class="wide" style="margin-bottom: 5px;">
+    <%= link_to t("cms.add_image_resize"), node_image_resizes_path(cid: @item.id) %>
+    <%= @model.tt :image_resize_setting %>
+  </dd>
+
+  <% items = model.site(@cur_site).node(@item).allow(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+  <% if items.present? %>
+  <dd class="wide">
+    <table class="index">
+      <thead>
+        <tr>
+          <th><%= model.t :name %></th>
+          <th><%= model.t :extensions %></th>
+          <th><%= model.t :size %></th>
+          <th><%= model.t :state %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% items.each do |item| %>
+          <tr>
+            <td><%= item.name %></td>
+            <td><%= item.extensions %></td>
+            <td><%= number_to_human_size(item.size) %></td>
+            <td><%= item.label :state %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+  <% end %>
+</dl>

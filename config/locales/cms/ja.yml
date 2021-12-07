@@ -1,6 +1,7 @@
 ja:
   cms:
     add_max_file_size: 最大ファイルサイズを設定する
+    add_image_resize: 画像リサイズを設定する
     alert: 警告
     all_contents: 全コンテンツ
     body_layout: 本文レイアウト
@@ -32,15 +33,21 @@ ja:
     link_check: リンクチェック
     form_check: 制約チェック
     list_view: リスト表示
-    row_num: 行目
-    log_of_the_failed_import: 'error %{row_num}行目のデータは登録できませんでした。入力内容をもう１度ご確認ください。'
-    log_of_the_failed_category: 'error %{row_num}行目:  施設の種類『%{category}』を登録できませんでした。'
-    log_of_the_failed_location: 'error %{row_num}行目:  施設の地域『%{location}』を登録できませんでした。'
-    log_of_the_failed_service: 'error %{row_num}行目:  施設の用途『%{service}』を登録できませんでした。'
-    log_of_the_failed_group: 'error %{row_num}行目:  管理グループ『%{group}』を登録できませんでした。'
+    row_error: 'error %{row_num}行目'
+    row_update: 'updating %{row_num}行目'
+    new_record: 'created page %{row_num}行目 施設「%{name}」が作成されました。'
+    update_record: 'updated page %{row_num}行目 施設「%{name}」が更新されました。'
+    updated_field: 'updating %{row_num}行目 %{field}：'
+    failed_to_save: 'failed %{row_num}行目 施設「%{name}」の作成・更新がされませんでした。%{err_msgs}'
+    failed_category_log: 'error %{row_num}行目 施設の種類『%{category}』が存在しないので登録できませんでした。新規に『%{category}』を作成した上で、インポートを実行してください。'
+    failed_location_log: 'error %{row_num}行目 施設の地域『%{location}』が存在しないのでを登録できませんでした。新規に『%{location}』を作成した上で、インポートを実行してください。'
+    failed_service_log: 'error %{row_num}行目 施設の用途『%{service}』が存在しないので登録できませんでした。新規に『%{service}』を作成した上で、インポートを実行してください。'
+    failed_group_log: 'error %{row_num}行目 管理グループ『%{group}』が存在しないので登録できませんでした。新規に『%{group}』を作成した上で、インポートを実行してください。'
     loop_html: ループHTML
     max_file_size: 最大ファイルサイズ
     max_file_size_setting: 最大ファイルサイズ設定
+    image_resize: 画像リサイズ
+    image_resize_setting: 画像リサイズ設定
     member: メンバー
     mobile_size_check: 携帯データサイズチェック
     modules: モジュール
@@ -554,6 +561,10 @@ ja:
     read_other_cms_check_links_errors: リンクチェックエラーの閲覧（全て）
     read_private_cms_check_links_errors: リンクチェックエラーの閲覧（所有）
     edit_cms_check_links_ignore_urls: リンクチェックエラー例外の管理
+    read_cms_image_resizes: 画像リサイズの閲覧
+    edit_cms_image_resizes: 画像リサイズの編集
+    delete_cms_image_resizes: 画像リサイズの削除
+    disable_cms_image_resizes: 画像リサイズの無効化
 
   modules:
     cms: 標準機能
@@ -603,6 +614,7 @@ ja:
       cms/monthly_nav: アーカイブナビ（月次）
       cms/archive_view_switcher: アーカイブ用表示設定
       cms/max_file_size_setting: 最大ファイルサイズ設定
+      cms/image_resize_setting: 画像リサイズ設定
       cms/tag_setting: タグ設定
       cms/tag: タグ
       cms/layout_html: レイアウト
@@ -1900,6 +1912,10 @@ ja:
       max_file_size_setting:
         - フォルダー内のページ編集時に「ファイル>アップロード」から添付ファイルをアップする際のサイズ制限を設定可能です。
 
+    cms/addon/image_resize_setting:
+      image_resize_setting:
+        - フォルダー内のページ編集時に「ファイル>アップロード」から画像ファイルをアップする際の最大横幅、縦幅、画質を設定可能です。
+
     cms/addon/tag_setting:
       st_tags:
         - ページに設定可能なタグを設定します。
@@ -2391,3 +2407,5 @@ ja:
       cms/role/import_job: 権限インポート
       cms/all_contents_import_job: 全コンテンツ一括設定
       cms/michecker_job: miChecker
+      cms/sns_post/twitter_job: Twitterページ投稿
+      cms/sns_post/line_job: LINEページ投稿
