@@ -7,16 +7,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   let(:user2) { create :cms_test_user, group_ids: cms_user.group_ids, cms_role_ids: cms_user.cms_role_ids }
 
   context "with regular page" do
-    let(:file) do
-      filename = "#{Rails.root}/spec/fixtures/ss/logo.png"
-      basename = ::File.basename(filename)
-      SS::File.create_empty!(
-        site_id: site.id, cur_user: cms_user, name: basename, filename: basename,
-        content_type: "image/png", model: 'ss/temp_file'
-      ) do |file|
-        ::FileUtils.cp(filename, file.path)
-      end
-    end
+    let(:filename) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
+    let(:file) { tmp_ss_file(site: site, user: cms_user, contents: filename) }
 
     let!(:master_page) { create(:article_page, cur_site: site, cur_node: node, cur_user: cms_user) }
     let!(:branch_page) do
@@ -24,15 +16,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       copy = master_page.new_clone
       copy.master = master_page
-      copy.save!
-      master_page.reload
-
       copy.html = "#{copy.html}\n<img src=\"#{file.url}\" alt=\"#{file.humanized_name}\">"
       copy.file_ids = Array(copy.file_ids) + [ file.id ]
       copy.save!
+
+      master_page.reload
       file.reload
 
-      copy
+      Article::Page.find(copy.id)
     end
 
     context "when branch page merges into master page" do
@@ -40,6 +31,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       context "without edit lock" do
         it do
+          expect(branch_page.files.count).to eq 1
+          expect(branch_page.html).to include(branch_page.files.first.url)
+
           visit article_page_path(site, node, branch_page)
           expect(page).to have_css("#addon-workflow-agents-addons-branch table.branches", text: master_page.name)
 
@@ -185,21 +179,6 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
           # branch page is destroyed after merge
           expect(Cms::Page.where(id: branch_page.id)).to be_blank
-          expect(branch_page.column_values).to have(3).items
-          branch_page.column_values.order_by(order: 1).to_a.tap do |column_values|
-            column_values[0].tap do |column_value|
-              expect(column_value).to be_a(Cms::Column::Value::TextField)
-            end
-            column_values[1].tap do |column_value|
-              expect(column_value).to be_a(Cms::Column::Value::FileUpload)
-              # expect(column_value.file).to be_blank
-              expect(SS::File.where(id: column_value.file_id)).to be_blank
-            end
-            column_values[2].tap do |column_value|
-              expect(column_value).to be_a(Cms::Column::Value::Free)
-              expect(column_value.files).to have(0).items
-            end
-          end
 
           # there are no pages in trash
           expect(History::Trash.all.count).to eq 0

@@ -5,7 +5,7 @@ module SS::Model::LogoSetting
   included do
     field :logo_application_name, type: String
     # To support high resolution display like Retina, it needs double size for limitation
-    belongs_to_file2 :logo_application_image, class_name: "SS::LogoFile", resizing: [ 210 * 2, 49 * 2 ]
+    belongs_to_file :logo_application_image, class_name: "SS::LogoFile", resizing: [ 210 * 2, 49 * 2 ]
 
     permit_params :logo_application_name
 

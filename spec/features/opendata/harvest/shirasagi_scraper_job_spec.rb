@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Opendata::Harvest::ImportDatasetsJob, dbscope: :example do
+describe Opendata::Harvest::ImportDatasetsJob, type: :feature, dbscope: :example do
   let!(:site) { cms_site }
   let!(:layout) { create(:cms_layout) }
 
@@ -14,7 +14,7 @@ describe Opendata::Harvest::ImportDatasetsJob, dbscope: :example do
   context "with empty datasets" do
     let!(:importer) { create(:opendata_harvest_importer, cur_node: node, source_url: "http://source.example.jp", api_type: "shirasagi_scraper") }
 
-    let(:search_html) { File.read("spec/fixtures/opendata/harvest/shirasagi_scraper/empty_search.html")  }
+    let(:search_html) { File.read("spec/fixtures/opendata/harvest/shirasagi_scraper/empty_search.html") }
     describe "#perform" do
       before do
         stub_request(:get, "http://source.example.jp/dataset/search/index.p1.html").

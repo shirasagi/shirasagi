@@ -74,7 +74,7 @@ module Rdf::Object
   def validate_name
     return if name.blank?
     # symbols is not allowed.
-    errors.add :name, :invalid if name =~ /[\x00-,:-@\[-\^`\{-\x7f]/
+    errors.add :name, :invalid if name =~ /[\x00-,:-@\[-\^`{-\x7f]/
   end
 
   public

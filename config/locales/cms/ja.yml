@@ -32,12 +32,16 @@ ja:
     link_check: リンクチェック
     form_check: 制約チェック
     list_view: リスト表示
-    row_num: 行目
-    log_of_the_failed_import: 'error %{row_num}行目のデータは登録できませんでした。入力内容をもう１度ご確認ください。'
-    log_of_the_failed_category: 'error %{row_num}行目:  施設の種類『%{category}』を登録できませんでした。'
-    log_of_the_failed_location: 'error %{row_num}行目:  施設の地域『%{location}』を登録できませんでした。'
-    log_of_the_failed_service: 'error %{row_num}行目:  施設の用途『%{service}』を登録できませんでした。'
-    log_of_the_failed_group: 'error %{row_num}行目:  管理グループ『%{group}』を登録できませんでした。'
+    row_error: 'error %{row_num}行目'
+    row_update: 'updating %{row_num}行目'
+    new_record: 'created page %{row_num}行目 施設「%{name}」が作成されました。'
+    update_record: 'updated page %{row_num}行目 施設「%{name}」が更新されました。'
+    updated_field: 'updating %{row_num}行目 %{field}：'
+    failed_to_save: 'failed %{row_num}行目 施設「%{name}」の作成・更新がされませんでした。%{err_msgs}'
+    failed_category_log: 'error %{row_num}行目 施設の種類『%{category}』が存在しないので登録できませんでした。新規に『%{category}』を作成した上で、インポートを実行してください。'
+    failed_location_log: 'error %{row_num}行目 施設の地域『%{location}』が存在しないのでを登録できませんでした。新規に『%{location}』を作成した上で、インポートを実行してください。'
+    failed_service_log: 'error %{row_num}行目 施設の用途『%{service}』が存在しないので登録できませんでした。新規に『%{service}』を作成した上で、インポートを実行してください。'
+    failed_group_log: 'error %{row_num}行目 管理グループ『%{group}』が存在しないので登録できませんでした。新規に『%{group}』を作成した上で、インポートを実行してください。'
     loop_html: ループHTML
     max_file_size: 最大ファイルサイズ
     max_file_size_setting: 最大ファイルサイズ設定

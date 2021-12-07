@@ -24,7 +24,7 @@ module SS::Permission
     end
 
     def permission_name
-      class_variable_get(:@@_permission_name) || self.to_s.tableize.gsub(/\//, "_")
+      class_variable_get(:@@_permission_name) || self.to_s.tableize.tr("/", "_")
     end
 
     def permission_action

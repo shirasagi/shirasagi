@@ -30,7 +30,7 @@ module Rdf::Reference
 
       def normalize_vocab_id(vocab_id)
         case vocab_id
-        when "false" then
+        when "false"
           false
         else
           vocab_id.to_i

@@ -116,7 +116,7 @@ save_node route: "category/page", filename: "kurashi/zeikin/tokubetsu", name: "�
 save_node route: "category/page", filename: "kurashi/zeikin/yogo", name: "税務用語"
 save_node route: "category/page", filename: "oshirase", name: "お知らせ", shortcut: "show"
 save_node route: "category/page", filename: "oshirase/event", name: "イベント",
-          conditions: %w(docs calendar), sort: "unfinished_event_dates", limit: 20
+  conditions: %w(docs calendar), sort: "unfinished_event_dates", limit: 20
 save_node route: "category/page", filename: "oshirase/kanko", name: "観光・文化・スポーツ", shortcut: "show"
 save_node route: "category/page", filename: "oshirase/kenko", name: "健康・福祉", shortcut: "show"
 save_node route: "category/page", filename: "oshirase/kosodate", name: "子育て・教育", shortcut: "show"
@@ -187,7 +187,7 @@ save_node route: "cms/node", filename: "use", name: "ご利用案内"
 
 ## article
 save_node route: "article/page", filename: "docs", name: "記事", shortcut: "show",
-          st_form_ids: [@form.id, @form_2.id, @form_3.id, @form_4.id, @form_5.id], st_form_default_id: @form_4.id
+  st_form_ids: [@form.id, @form2.id, @form3.id, @form4.id, @form5.id], st_form_default_id: @form4.id
 
 ## archive
 save_node route: "cms/archive", filename: "docs/archive", name: "アーカイブ", layout_id: @layouts["pages"].id, conditions: %w(docs)
@@ -203,7 +203,7 @@ save_node route: "sitemap/page", filename: "sitemap", name: "サイトマップ"
 
 ## event
 save_node route: "event/page", filename: "calendar", name: "イベントカレンダー", conditions: %w(docs), event_display: "table",
-          st_category_ids: %w(calendar/bunka calendar/kohen calendar/sports).map { |c| @categories[c].id }
+  st_category_ids: %w(calendar/bunka calendar/kohen calendar/sports).map { |c| @categories[c].id }
 
 ## uploader
 save_node route: "uploader/file", filename: "css", name: "CSS", shortcut: "show"
@@ -221,66 +221,66 @@ save_node route: "ads/banner", filename: "ad", name: "広告バナー", shortcut
 @g_koho = SS::Group.where(name: "シラサギ市/企画政策部/広報課").first
 @g_seisaku = SS::Group.where(name: "シラサギ市/企画政策部/政策課").first
 save_node route: "cms/group_page", filename: "shisei/soshiki/kikaku/koho", name: "広報課", order: 10, conditions: %w(docs),
-          layout_id: @layouts["category-middle"].id, condition_group_ids: [@g_koho.id]
+  layout_id: @layouts["category-middle"].id, condition_group_ids: [@g_koho.id]
 save_node route: "cms/group_page", filename: "shisei/soshiki/kikaku/seisaku", name: "政策課", order: 20, conditions: %w(docs),
-          layout_id: @layouts["category-middle"].id, condition_group_ids: [@g_seisaku.id]
+  layout_id: @layouts["category-middle"].id, condition_group_ids: [@g_seisaku.id]
 
 ## urgency
 save_node route: "urgency/layout", filename: "urgency-layout", name: "緊急災害レイアウト",
-          urgency_default_layout_id: @layouts["top"].id, shortcut: "show"
+  urgency_default_layout_id: @layouts["top"].id, shortcut: "show"
 
 ## inquiry
 inquiry_html = File.read("nodes/inquiry.inquiry_html") rescue nil
 inquiry_sent_html = File.read("nodes/inquiry.inquiry_sent_html") rescue nil
 @inquiry_node = save_node route: "inquiry/form", filename: "inquiry", name: "市へのお問い合わせ", shortcut: "show",
-                          from_name: "シラサギサンプルサイト",
-                          inquiry_captcha: "enabled", notice_state: "disabled",
-                          inquiry_html: inquiry_html, inquiry_sent_html: inquiry_sent_html,
-                          reply_state: "disabled",
-                          reply_subject: "シラサギ市へのお問い合わせを受け付けました。",
-                          reply_upper_text: "",
-                          reply_content_state: "static",
-                          reply_lower_text: "",
-                          aggregation_state: "disabled"
+  from_name: "シラサギサンプルサイト",
+  inquiry_captcha: "enabled", notice_state: "disabled",
+  inquiry_html: inquiry_html, inquiry_sent_html: inquiry_sent_html,
+  reply_state: "disabled",
+  reply_subject: "シラサギ市へのお問い合わせを受け付けました。",
+  reply_upper_text: "",
+  reply_content_state: "static",
+  reply_lower_text: "",
+  aggregation_state: "disabled"
 
 ## feedback
 feedback_html = File.read("nodes/feedback.inquiry_html") rescue nil
 feedback_sent_html = File.read("nodes/feedback.inquiry_sent_html") rescue nil
 @feedback_node = save_node route: "inquiry/form", filename: "feedback", name: "この情報はお役に立ちましたか？",
-                           inquiry_captcha: "disabled", notice_state: "disabled",
-                           inquiry_html: feedback_html, inquiry_sent_html: feedback_sent_html,
-                           reply_state: "disabled",
-                           aggregation_state: "disabled"
+  inquiry_captcha: "disabled", notice_state: "disabled",
+  inquiry_html: feedback_html, inquiry_sent_html: feedback_sent_html,
+  reply_state: "disabled",
+  aggregation_state: "disabled"
 
 ## public comment
 save_node route: "inquiry/node", filename: "comment", name: "パブリックコメント",
-          upper_html: "パブリックコメント一覧です。"
+  upper_html: "パブリックコメント一覧です。"
 @inquiry_comment1 = save_node route: "inquiry/form", filename: "comment/comment01", name: "シラサギ市政について",
-                              from_name: "シラサギサンプルサイト",
-                              inquiry_captcha: "enabled", notice_state: "disabled",
-                              inquiry_html: inquiry_html,
-                              inquiry_sent_html: "<p>パブリックコメントを受け付けました。</p>",
-                              reply_state: "disabled",
-                              reply_subject: "シラサギ市へのお問い合わせを受け付けました。",
-                              reply_upper_text: "",
-                              reply_content_state: "static",
-                              reply_lower_text: "",
-                              aggregation_state: "enabled",
-                              reception_start_date: Time.zone.now.beginning_of_month,
-                              reception_close_date: Time.zone.now.end_of_month
+  from_name: "シラサギサンプルサイト",
+  inquiry_captcha: "enabled", notice_state: "disabled",
+  inquiry_html: inquiry_html,
+  inquiry_sent_html: "<p>パブリックコメントを受け付けました。</p>",
+  reply_state: "disabled",
+  reply_subject: "シラサギ市へのお問い合わせを受け付けました。",
+  reply_upper_text: "",
+  reply_content_state: "static",
+  reply_lower_text: "",
+  aggregation_state: "enabled",
+  reception_start_date: Time.zone.now.beginning_of_month,
+  reception_close_date: Time.zone.now.end_of_month
 @inquiry_comment2 = save_node route: "inquiry/form", filename: "comment/comment02", name: "シラサギ市都市計画について",
-                              from_name: "シラサギサンプルサイト",
-                              inquiry_captcha: "enabled", notice_state: "disabled",
-                              inquiry_html: inquiry_html,
-                              inquiry_sent_html: "<p>パブリックコメントを受け付けました。</p>",
-                              reply_state: "disabled",
-                              reply_subject: "シラサギ市へのお問い合わせを受け付けました。",
-                              reply_upper_text: "",
-                              reply_content_state: "static",
-                              reply_lower_text: "",
-                              aggregation_state: "enabled",
-                              reception_start_date: Time.zone.now.prev_month.beginning_of_month,
-                              reception_close_date: Time.zone.now.prev_month.end_of_month
+  from_name: "シラサギサンプルサイト",
+  inquiry_captcha: "enabled", notice_state: "disabled",
+  inquiry_html: inquiry_html,
+  inquiry_sent_html: "<p>パブリックコメントを受け付けました。</p>",
+  reply_state: "disabled",
+  reply_subject: "シラサギ市へのお問い合わせを受け付けました。",
+  reply_upper_text: "",
+  reply_content_state: "static",
+  reply_lower_text: "",
+  aggregation_state: "enabled",
+  reception_start_date: Time.zone.now.prev_month.beginning_of_month,
+  reception_close_date: Time.zone.now.prev_month.end_of_month
 
 ## ezine
 def save_ezine_column(data)
@@ -298,28 +298,28 @@ ezine_signature_html = File.read("nodes/ezine.signature_html") rescue nil
 ezine_signature_text = File.read("nodes/ezine.signature_text") rescue nil
 ezine_reply_signature = File.read("nodes/ezine.reply_signature") rescue nil
 ezine_page_node = save_node route: "ezine/page", filename: "ezine", name: "メールマガジン",
-                            sender_name: "シラサギサンプルサイト",
-                            sender_email: "admin@example.jp",
-                            reply_upper_text: "メールマガジン登録を受け付けました。",
-                            signature_html: ezine_signature_html,
-                            signature_text: ezine_signature_text,
-                            reply_signature: ezine_reply_signature
+  sender_name: "シラサギサンプルサイト",
+  sender_email: "admin@example.jp",
+  reply_upper_text: "メールマガジン登録を受け付けました。",
+  signature_html: ezine_signature_html,
+  signature_text: ezine_signature_text,
+  reply_signature: ezine_reply_signature
 ezine_backnumber_node = save_node route: "ezine/backnumber", filename: "ezine/backnumber",
-                                  name: "メールマガジン　バックナンバー", conditions: %w(ezine)
+  name: "メールマガジン　バックナンバー", conditions: %w(ezine)
 save_ezine_column node_id: ezine_page_node.id, name: "性別", order: 0, input_type: "radio_button",
-                  select_options: %w(男性 女性), required: "required", site_id: @site._id
+  select_options: %w(男性 女性), required: "required", site_id: @site._id
 
 # ezine anpi
 save_node route: "ezine/category_node", filename: "anpi-ezine", name: "安否メールマガジン", layout_id: @layouts["ezine"].id
 @ezine_anpi = save_node route: "ezine/member_page", filename: "anpi-ezine/anpi", name: "安否確認",
-                        layout_id: @layouts["ezine"].id,
-                        sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp",
-                        signature_html: ezine_signature_html, signature_text: ezine_signature_text,
-                        subscription_constraint: "required"
+  layout_id: @layouts["ezine"].id,
+  sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp",
+  signature_html: ezine_signature_html, signature_text: ezine_signature_text,
+  subscription_constraint: "required"
 ezine_event = save_node route: "ezine/member_page", filename: "anpi-ezine/event", name: "イベント情報",
-                        layout_id: @layouts["ezine"].id,
-                        sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp",
-                        signature_html: ezine_signature_html, signature_text: ezine_signature_text
+  layout_id: @layouts["ezine"].id,
+  sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp",
+  signature_html: ezine_signature_html, signature_text: ezine_signature_text
 @member_1.subscription_ids = [@ezine_anpi.id, ezine_event.id]
 @member_1.save
 @member_2.subscription_ids = [@ezine_anpi.id, ezine_event.id]
@@ -329,16 +329,16 @@ ezine_event = save_node route: "ezine/member_page", filename: "anpi-ezine/event"
 save_node route: "cms/node", filename: "institution/chiki", name: "施設のある地域", layout_id: @layouts["one"].id
 center_point = Map::Extensions::Point.mongoize(loc: [34.075593, 134.550614], zoom_level: 10)
 save_node route: "facility/location", filename: "institution/chiki/higashii",
-          name: "東区", order: 10, center_point: center_point
+  name: "東区", order: 10, center_point: center_point
 center_point = Map::Extensions::Point.mongoize(loc: [34.034417, 133.808902], zoom_level: 10)
 save_node route: "facility/location", filename: "institution/chiki/nishi",
-          name: "西区", order: 20, center_point: center_point
+  name: "西区", order: 20, center_point: center_point
 center_point = Map::Extensions::Point.mongoize(loc: [33.609123, 134.352387], zoom_level: 10)
 save_node route: "facility/location", filename: "institution/chiki/minami",
-          name: "南区", order: 30, center_point: center_point
+  name: "南区", order: 30, center_point: center_point
 center_point = Map::Extensions::Point.mongoize(loc: [34.179472, 134.608579], zoom_level: 10)
 save_node route: "facility/location", filename: "institution/chiki/kita",
-          name: "北区", order: 40, center_point: center_point
+  name: "北区", order: 40, center_point: center_point
 save_node route: "cms/node", filename: "institution/shurui", name: "施設の種類", layout_id: @layouts["one"].id
 save_node route: "facility/category", filename: "institution/shurui/bunka", name: "文化施設", order: 10
 save_node route: "facility/category", filename: "institution/shurui/sports", name: "運動施設", order: 20
@@ -358,25 +358,25 @@ array = Facility::Node::Service.where(site_id: @site._id).map { |m| [m.filename,
 facility_services = Hash[*array.flatten]
 
 save_node route: "facility/search", filename: "institution", name: "施設ガイド",
-          st_category_ids: facility_categories.values.map { |cate| cate.id },
-          st_location_ids: facility_locations.values.map { |loc| loc.id },
-          st_service_ids: facility_services.values.map { |serv| serv.id }
+  st_category_ids: facility_categories.values.map { |cate| cate.id },
+  st_location_ids: facility_locations.values.map { |loc| loc.id },
+  st_service_ids: facility_services.values.map { |serv| serv.id }
 
 save_node route: "facility/node", filename: "institution/shisetsu", name: "施設一覧",
-          st_category_ids: facility_categories.values.map { |cate| cate.id },
-          st_location_ids: facility_locations.values.map { |loc| loc.id },
-          st_service_ids: facility_services.values.map { |serv| serv.id }
+  st_category_ids: facility_categories.values.map { |cate| cate.id },
+  st_location_ids: facility_locations.values.map { |loc| loc.id },
+  st_service_ids: facility_services.values.map { |serv| serv.id }
 
 save_node route: "facility/page", filename: "institution/shisetsu/library", name: "シラサギ市立図書館",
-          kana: "しらさぎとしょかん",
-          address: "大鷺県シラサギ市小鷺町1丁目1番地1号",
-          tel: "00-0000-0000",
-          fax: "00-0000-0000",
-          related_url: @link_url,
-          category_ids: facility_categories.values.map(&:id),
-          location_ids: facility_locations.values.map(&:id),
-          service_ids: facility_services.values.map(&:id),
-          st_form_ids: [@form.id, @form_4.id], st_form_default_id: @form_4.id
+  kana: "しらさぎとしょかん",
+  address: "大鷺県シラサギ市小鷺町1丁目1番地1号",
+  tel: "00-0000-0000",
+  fax: "00-0000-0000",
+  related_url: @link_url,
+  category_ids: facility_categories.values.map(&:id),
+  location_ids: facility_locations.values.map(&:id),
+  service_ids: facility_services.values.map(&:id),
+  st_form_ids: [@form.id, @form4.id], st_form_default_id: @form4.id
 
 save_node route: "key_visual/image", filename: "key_visual", name: "キービジュアル"
 

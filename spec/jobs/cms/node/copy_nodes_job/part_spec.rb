@@ -8,9 +8,9 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
     let!(:node) { create :cms_node, cur_site: site }
     let!(:part) do
       create :article_part_page,
-      cur_site: site,
-      filename: "#{node.filename}/part",
-      lower_html: "<div class=\"feed\"><a class=\"rss\" href=\"/#{node.filename}/rss.xml\">RSS</a>"
+        cur_site: site,
+        filename: "#{node.filename}/part",
+        lower_html: "<div class=\"feed\"><a class=\"rss\" href=\"/#{node.filename}/rss.xml\">RSS</a>"
     end
 
     describe "copy part which is located under a node" do

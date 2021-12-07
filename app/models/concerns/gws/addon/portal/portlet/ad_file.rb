@@ -9,6 +9,7 @@ module Gws::Addon::Portal::Portlet
 
     included do
       attr_accessor :link_urls
+
       embeds_ids :ad_files, class_name: "SS::File"
       permit_params ad_file_ids: [], link_urls: {}
 

@@ -1,6 +1,8 @@
 class Cms::PreviewController < ApplicationController
   include Cms::BaseFilter
 
+  protect_from_forgery except: [:index]
+
   before_action :set_controller
   before_action :set_preview_date
   before_action :set_preview_notice
@@ -87,8 +89,8 @@ class Cms::PreviewController < ApplicationController
     # column_values
     column_values = column_values.to_a.select(&:present?)
     column_values.each do |column_value|
-      _type = column_value["_type"]
-      page.column_values << _type.constantize.new(column_value)
+      type = column_value["_type"]
+      page.column_values << type.constantize.new(column_value)
     end
 
     @cur_layout = Cms::Layout.site(@cur_site).where(id: page.layout_id).first

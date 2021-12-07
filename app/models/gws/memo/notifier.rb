@@ -1,8 +1,7 @@
 class Gws::Memo::Notifier
   include ActiveModel::Model
 
-  attr_accessor :cur_site, :cur_group, :cur_user, :to_users, :item, :item_title, :item_text
-  attr_accessor :subject, :text, :action
+  attr_accessor :cur_site, :cur_group, :cur_user, :to_users, :item, :item_title, :item_text, :subject, :text, :action
 
   class << self
     def deliver!(opts)

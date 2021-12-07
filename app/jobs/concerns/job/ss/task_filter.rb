@@ -9,6 +9,7 @@ module Job::SS::TaskFilter
     mattr_accessor(:controller, instance_accessor: false)
     mattr_accessor(:action, instance_accessor: false)
     attr_accessor :task
+
     around_perform :ready
   end
 

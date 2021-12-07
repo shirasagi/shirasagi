@@ -21,10 +21,10 @@ describe Jmaxml::Trigger::WeatherAlert, dbscope: :example do
     subject { create(:jmaxml_trigger_weather_alert) }
 
     before do
-      region_2920100 = create(:jmaxml_forecast_region_2920100)
-      region_2920200 = create(:jmaxml_forecast_region_2920200)
-      region_2920300 = create(:jmaxml_forecast_region_2920300)
-      region_2920400 = create(:jmaxml_forecast_region_2920400)
+      region_2920100 = create(:jmaxml_forecast_region_c2920100)
+      region_2920200 = create(:jmaxml_forecast_region_c2920200)
+      region_2920300 = create(:jmaxml_forecast_region_c2920300)
+      region_2920400 = create(:jmaxml_forecast_region_c2920400)
       subject.target_region_ids = [ region_2920100.id, region_2920200.id, region_2920300.id, region_2920400.id ]
       subject.save!
     end

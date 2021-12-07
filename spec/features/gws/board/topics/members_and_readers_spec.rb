@@ -8,19 +8,19 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
   let!(:user_admin) { create :gws_user, group_ids: [ group1.id ], gws_role_ids: [ role_admin.id ] }
 
   let!(:role_user) { create :gws_role, :gws_role_board_user }
-  let!(:user1_1) { create :gws_user, group_ids: [ group1.id ], gws_role_ids: [ role_user.id ] }
-  let!(:user1_2) { create :gws_user, group_ids: [ group1.id ], gws_role_ids: [ role_user.id ] }
-  let!(:user2) { create :gws_user, group_ids: [ group1.id ], gws_role_ids: [ role_user.id ] }
+  let!(:member1) { create :gws_user, group_ids: [ group1.id ], gws_role_ids: [ role_user.id ] }
+  let!(:member2) { create :gws_user, group_ids: [ group1.id ], gws_role_ids: [ role_user.id ] }
+  let!(:reader) { create :gws_user, group_ids: [ group1.id ], gws_role_ids: [ role_user.id ] }
 
   let!(:cate) { create :gws_board_category, readable_group_ids: [ group1.id ] }
   let!(:item) do
     create(
-      :gws_board_topic, category_ids: [ cate.id ], notify_state: "enabled", member_ids: [ user1_1.id, user1_2.id ],
-      readable_member_ids: [ user2.id ], group_ids: user_admin.group_ids, user_ids: [ user_admin.id ]
+      :gws_board_topic, category_ids: [ cate.id ], notify_state: "enabled", member_ids: [ member1.id, member2.id ],
+      readable_member_ids: [ reader.id ], group_ids: user_admin.group_ids, user_ids: [ user_admin.id ]
     )
   end
   let!(:comment) do
-    create(:gws_board_post, topic: item, parent: item, group_ids: user1_2.group_ids, user_ids: [ user1_2.id ])
+    create(:gws_board_post, topic: item, parent: item, group_ids: member2.group_ids, user_ids: [ member2.id ])
   end
 
   before do
@@ -82,7 +82,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
       notice = SS::Notification.all.reorder(created: -1).first
       expect(notice.group_id).to eq site.id
       expect(notice.member_ids.length).to eq 2
-      expect(notice.member_ids).to include(user1_1.id, user1_2.id)
+      expect(notice.member_ids).to include(member1.id, member2.id)
       expect(notice.user_id).to eq user_admin.id
       expect(notice.subject).to eq I18n.t("gws_notification.gws/board/post.subject", name: item.name)
 
@@ -107,7 +107,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
       expect(SS::Notification.all.count).to eq 2
       notice = SS::Notification.all.reorder(created: -1).first
       expect(notice.group_id).to eq site.id
-      expect(notice.member_ids).to eq [ user1_1.id, user1_2.id ]
+      expect(notice.member_ids).to eq [ member1.id, member2.id ]
       expect(notice.user_id).to eq user_admin.id
       expect(notice.subject).to eq I18n.t("gws_notification.gws/board/post.subject", name: item.name)
 
@@ -144,7 +144,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
       notice = SS::Notification.all.reorder(created: -1).first
       expect(notice.group_id).to eq site.id
       expect(notice.member_ids.length).to eq 2
-      expect(notice.member_ids).to include(user1_1.id, user1_2.id)
+      expect(notice.member_ids).to include(member1.id, member2.id)
       expect(notice.user_id).to eq user_admin.id
       expect(notice.subject).to eq I18n.t("gws_notification.gws/board/post.subject", name: item.name)
 
@@ -168,7 +168,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
       notice = SS::Notification.all.reorder(created: -1).first
       expect(notice.group_id).to eq site.id
       expect(notice.member_ids.length).to eq 2
-      expect(notice.member_ids).to include(user1_1.id, user1_2.id)
+      expect(notice.member_ids).to include(member1.id, member2.id)
       expect(notice.user_id).to eq user_admin.id
       expect(notice.subject).to eq I18n.t("gws_notification.gws/board/post/destroy.subject", name: item.name)
     end
@@ -177,7 +177,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
   context "with member" do
     let(:text1) { unique_id }
     let(:text2) { unique_id }
-    before { login_user user1_1 }
+    before { login_user member1 }
 
     it do
       visit gws_board_main_path(site: site)
@@ -216,13 +216,13 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
       post = item.descendants.first
       expect(post.text).to eq text1
       expect(post.group_ids).to include(*item.group_ids)
-      expect(post.user_ids).to include(*(item.user_ids + [ user1_1.id ]))
+      expect(post.user_ids).to include(*(item.user_ids + [ member1.id ]))
 
       expect(SS::Notification.all.count).to eq 1
       notice = SS::Notification.all.reorder(created: -1).first
       expect(notice.group_id).to eq site.id
-      expect(notice.member_ids).to eq [ user1_2.id ]
-      expect(notice.user_id).to eq user1_1.id
+      expect(notice.member_ids).to eq [ member2.id ]
+      expect(notice.user_id).to eq member1.id
       expect(notice.subject).to eq I18n.t("gws_notification.gws/board/post.subject", name: item.name)
 
       #
@@ -246,8 +246,8 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
       expect(SS::Notification.all.count).to eq 2
       notice = SS::Notification.all.reorder(created: -1).first
       expect(notice.group_id).to eq site.id
-      expect(notice.member_ids).to eq [ user1_2.id ]
-      expect(notice.user_id).to eq user1_1.id
+      expect(notice.member_ids).to eq [ member2.id ]
+      expect(notice.user_id).to eq member1.id
       expect(notice.subject).to eq I18n.t("gws_notification.gws/board/post.subject", name: item.name)
 
       #
@@ -268,8 +268,8 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
       expect(SS::Notification.all.count).to eq 3
       notice = SS::Notification.all.reorder(created: -1).first
       expect(notice.group_id).to eq site.id
-      expect(notice.member_ids).to eq [ user1_2.id ]
-      expect(notice.user_id).to eq user1_1.id
+      expect(notice.member_ids).to eq [ member2.id ]
+      expect(notice.user_id).to eq member1.id
       expect(notice.subject).to eq I18n.t("gws_notification.gws/board/post/destroy.subject", name: item.name)
 
       #
@@ -300,7 +300,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
   end
 
   context "with reader" do
-    before { login_user user2 }
+    before { login_user reader }
 
     it do
       visit gws_board_main_path(site: site)

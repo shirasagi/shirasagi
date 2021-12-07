@@ -41,9 +41,9 @@ class Map::Extensions::Point < Hash
     # convert any possible object to mongoid native type
     def mongoize(object)
       case object
-      when self then
+      when self
         object.mongoize
-      when Hash then
+      when Hash
         h = object.deep_stringify_keys
         return self.new.mongoize if h["loc"].blank?
 

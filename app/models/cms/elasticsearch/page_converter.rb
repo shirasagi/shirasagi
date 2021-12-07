@@ -1,5 +1,6 @@
 class Cms::Elasticsearch::PageConverter
   attr_reader :item
+  attr_accessor :queue
 
   def initialize(item)
     @item = item
@@ -60,11 +61,11 @@ class Cms::Elasticsearch::PageConverter
   end
 
   def index_item_id
-    "page-#{item.id}"
+    queue.try(:filename) || item.filename
   end
 
   def item_text
-    if Fs.exists?(item.path)
+    if Fs.exist?(item.path)
       html = Fs.read(item.path)
     else
       html = item.html
@@ -80,9 +81,11 @@ class Cms::Elasticsearch::PageConverter
   end
 
   class << self
-    def with_route(item)
+    def with_route(item, opts = {})
       klass = "#{self.name}::#{item.route.classify.gsub("::", "")}".constantize rescue self
-      klass.new(item)
+      convertor = klass.new(item)
+      convertor.queue = opts[:queue]
+      convertor
     end
   end
 end

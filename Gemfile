@@ -7,7 +7,7 @@ gem 'sprockets', '< 4.0'
 gem 'sass'
 gem 'sassc-rails'
 gem 'uglifier'
-# gem 'coffee-rails'
+gem 'coffee-rails'
 gem 'mini_racer'
 gem 'jbuilder'
 gem 'sdoc', group: :doc
@@ -127,9 +127,10 @@ group :development, :test do
   gem 'rspec-collection_matchers', require: false
   gem 'rspec-its', require: false
   gem 'rspec-rails', require: false
-  gem 'rubocop', '0.71.0', require: false
+  gem 'rubocop', '1.18.4', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rspec', require: false
+  gem 'rubocop-rails', '2.11.3', require: false
   gem 'ruby-debug-ide', require: false
   gem 'scss_lint', require: false
   gem 'selenium-webdriver', require: false

@@ -23,7 +23,7 @@ module Cms::Extensions::ColumnValuesRelation
   end
 
   def to_liquid
-    LiquidExports.new(self.order_by(order: 1, name: 1).to_a.reject { |value| value.class == Cms::Column::Value::Base })
+    LiquidExports.new(self.order_by(order: 1, name: 1).to_a.reject { |value| value.instance_of?(Cms::Column::Value::Base) })
   end
 
   def move_up(value_id)

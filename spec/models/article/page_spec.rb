@@ -80,34 +80,6 @@ describe Article::Page, dbscope: :example do
     end
   end
 
-  describe "#new_clone" do
-    context "with simple page" do
-      let(:item) { create :article_page, cur_node: node, html: "   <p>あ。&rarr;い</p>\r\n   " }
-      subject { item.new_clone }
-
-      it do
-        expect(subject.new_record?).to be_truthy
-        expect(subject.site_id).to eq item.site_id
-        expect(subject.name).to eq item.name
-        expect(subject.filename).not_to eq item.filename
-        expect(subject.filename).to start_with "#{node.filename}/"
-        expect(subject.depth).to eq item.depth
-        expect(subject.order).to eq item.order
-        expect(subject.state).not_to eq item.state
-        expect(subject.state).to eq 'closed'
-        expect(subject.group_ids).to eq item.group_ids
-        expect(subject.permission_level).to eq item.permission_level
-        expect(subject.workflow_user_id).to be_nil
-        expect(subject.workflow_state).to be_nil
-        expect(subject.workflow_comment).to be_nil
-        expect(subject.workflow_approvers).to eq []
-        expect(subject.workflow_required_counts).to eq []
-        expect(subject.lock_owner_id).to be_nil
-        expect(subject.lock_until).to be_nil
-      end
-    end
-  end
-
   context "with facebook OGP" do
     let(:site0) { cms_site }
     let(:site) { create(:cms_site_subdir, domains: site0.domains, parent_id: site0.id) }
@@ -448,14 +420,14 @@ describe Article::Page, dbscope: :example do
         expect(file.user_id).to eq cms_user.id
         expect(subject.file_ids).to include(file.id)
 
-        expect(::File.exists?(file.public_path)).to be_falsey
-        expect(::File.exists?(subject.path)).to be_falsey
+        expect(::File.exist?(file.public_path)).to be_falsey
+        expect(::File.exist?(subject.path)).to be_falsey
 
         subject.state = "public"
         subject.save!
 
-        expect(::File.exists?(file.public_path)).to be_truthy
-        expect(::File.exists?(subject.path)).to be_truthy
+        expect(::File.exist?(file.public_path)).to be_truthy
+        expect(::File.exist?(subject.path)).to be_truthy
       end
     end
 
@@ -467,16 +439,16 @@ describe Article::Page, dbscope: :example do
         expect(file.user_id).to eq cms_user.id
         expect(subject.file_ids).to include(file.id)
 
-        expect(::File.exists?(subject.path)).to be_truthy
-        expect(::File.exists?(file.public_path)).to be_truthy
+        expect(::File.exist?(subject.path)).to be_truthy
+        expect(::File.exist?(file.public_path)).to be_truthy
 
         node.state = "closed"
         node.save!
 
         SS::PublicFileRemoverJob.bind(site_id: cms_site.id).perform_now
 
-        expect(::File.exists?(subject.path)).to be_falsey
-        expect(::File.exists?(file.public_path)).to be_falsey
+        expect(::File.exist?(subject.path)).to be_falsey
+        expect(::File.exist?(file.public_path)).to be_falsey
       end
     end
 
@@ -488,16 +460,16 @@ describe Article::Page, dbscope: :example do
         expect(file.user_id).to eq cms_user.id
         expect(subject.file_ids).to include(file.id)
 
-        expect(::File.exists?(subject.path)).to be_truthy
-        expect(::File.exists?(file.public_path)).to be_truthy
+        expect(::File.exist?(subject.path)).to be_truthy
+        expect(::File.exist?(file.public_path)).to be_truthy
 
         node.for_member_state = "enabled"
         node.save!
 
         SS::PublicFileRemoverJob.bind(site_id: cms_site.id).perform_now
 
-        expect(::File.exists?(subject.path)).to be_falsey
-        expect(::File.exists?(file.public_path)).to be_falsey
+        expect(::File.exist?(subject.path)).to be_falsey
+        expect(::File.exist?(file.public_path)).to be_falsey
       end
     end
   end

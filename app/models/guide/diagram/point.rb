@@ -5,8 +5,7 @@ class Guide::Diagram::Point
   include SS::Reference::Site
   include Cms::Reference::Node
 
-  attr_accessor :transitions
-  attr_accessor :weight
+  attr_accessor :transitions, :weight
 
   field :name, type: String
   field :id_name, type: String

@@ -54,7 +54,7 @@ class Cms::AllContent
       path = path.path if path.respond_to?(:path)
 
       match_count = 0
-      ::CSV.foreach(path, headers: true, encoding: 'SJIS:UTF-8') do |row|
+      SS::Csv.foreach_row(path, headers: true) do |row|
         FIELDS_DEF.each do |e|
           if row.key?(I18n.t("all_content.#{e[0]}"))
             match_count += 1
@@ -96,7 +96,7 @@ class Cms::AllContent
 
   class HashCollection
     def initialize(array)
-      @hash = Hash[array.map { |item| [ item.id, item ] }]
+      @hash = array.index_by { |item| item.id }
     end
 
     def find(id)

@@ -13,7 +13,7 @@ describe Ldap::Group, ldap: true do
       subject(:dn) { "ou=001企画政策部, dc=example, dc=jp" }
       subject(:connection) do
         Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
-                                 username: username, password: password)
+          username: username, password: password)
       end
       subject { Ldap::Group.find(connection, dn) }
       it { expect(subject.dn).to eq dn.delete(" ") }
@@ -23,7 +23,7 @@ describe Ldap::Group, ldap: true do
       subject(:dn) { "ou=G#{rand(0x100000000).to_s(36)}, dc=example, dc=jp" }
       subject(:connection) do
         Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
-                                 username: username, password: password)
+          username: username, password: password)
       end
       subject { Ldap::Group.find(connection, dn) }
       it { expect(subject).to be_nil }
@@ -34,7 +34,7 @@ describe Ldap::Group, ldap: true do
     subject(:dn) { "ou=001企画政策部, dc=example, dc=jp" }
     subject(:connection) do
       Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
-                               username: username, password: password)
+        username: username, password: password)
     end
     subject { Ldap::Group.find(connection, dn) }
     it { expect(subject.groups).not_to be_nil }
@@ -46,7 +46,7 @@ describe Ldap::Group, ldap: true do
     subject(:parent_dn) { dn[dn.index(",") + 1..-1] }
     subject(:connection) do
       Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
-                               username: username, password: password)
+        username: username, password: password)
     end
     subject { Ldap::Group.find(connection, dn) }
     it { expect(subject.parent.dn).to eq parent_dn.delete(" ") }

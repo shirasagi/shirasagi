@@ -159,7 +159,7 @@ class Uploader::File
       return
     end
 
-    unless /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/.match?(filename)
+    unless /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-.]+$/.match?(filename)
       errors.add :path, :invalid_filename
       return
     end
@@ -198,7 +198,7 @@ class Uploader::File
   def validate_coffee
     return if ext != ".coffee"
     return if ::File.basename(@path)[0] == "_"
-    @js = CoffeeScript.compile @binary
+    @js = ::CoffeeScript.compile @binary
   rescue => e
     errors.add :coffee, e.message
   end
@@ -228,13 +228,13 @@ class Uploader::File
     end
 
     def file(path)
-      return nil if !Fs.exists?(path) && (Fs.mode != :grid_fs)
+      return nil if !Fs.exist?(path) && (Fs.mode != :grid_fs)
       Uploader::File.new(path: path, saved_path: path, is_dir: Fs.directory?(path))
     end
 
     def find(path)
       items = []
-      return items if !Fs.exists?(path) && (Fs.mode != :grid_fs)
+      return items if !Fs.exist?(path) && (Fs.mode != :grid_fs)
       return items unless Fs.directory?(path)
 
       Fs.glob("#{path}/*").each do |f|

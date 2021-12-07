@@ -26,6 +26,6 @@ class Cms::Elasticsearch::Indexer::PageReleaseJob < Cms::ApplicationJob
   end
 
   def enum_es_docs
-    Cms::Elasticsearch::PageConverter.with_route(item).enum_es_docs
+    Cms::Elasticsearch::PageConverter.with_route(item, queue: queue).enum_es_docs
   end
 end

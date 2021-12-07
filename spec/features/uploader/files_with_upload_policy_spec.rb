@@ -85,8 +85,8 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
 
         job_file = Uploader::JobFile.first
         expect(job_file.path).to eq rel_path1
-        expect(Fs.exists?(job_file.path)).to be_truthy
-        expect(Fs.exists?(job_file.sanitizer_input_path)).to be_truthy
+        expect(Fs.exist?(job_file.path)).to be_truthy
+        expect(Fs.exist?(job_file.sanitizer_input_path)).to be_truthy
 
         # update (now sanitaizing..)
         visit "#{index_path}/#{name1}?do=show"
@@ -103,7 +103,7 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
 
         # sanitize
         restored_file = mock_sanitizer_restore(job_file)
-        expect(Fs.exists?(restored_file.path)).to be_truthy
+        expect(Fs.exist?(restored_file.path)).to be_truthy
         expect(restored_file.path).to eq rel_path1
 
         # update
@@ -123,7 +123,7 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
         # sanitize
         job_file = Uploader::JobFile.first
         restored_file = mock_sanitizer_restore(job_file)
-        expect(Fs.exists?(restored_file.path)).to be_truthy
+        expect(Fs.exist?(restored_file.path)).to be_truthy
         expect(restored_file.path).to eq rel_path2
 
         # delete
@@ -166,14 +166,14 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
 
         job_file = Uploader::JobFile.first
         expect(job_file.path).to eq rel_path1
-        expect(Fs.exists?(job_file.path)).to be_truthy
-        expect(Fs.exists?(job_file.sanitizer_input_path)).to be_truthy
-        expect(Fs.exists?(css_path1)).to be_truthy
+        expect(Fs.exist?(job_file.path)).to be_truthy
+        expect(Fs.exist?(job_file.sanitizer_input_path)).to be_truthy
+        expect(Fs.exist?(css_path1)).to be_truthy
         FileUtils.rm(css_path1)
 
         # sanitize
         restored_file = mock_sanitizer_restore(job_file)
-        expect(Fs.exists?(restored_file.path)).to be_truthy
+        expect(Fs.exist?(restored_file.path)).to be_truthy
         expect(restored_file.path).to eq rel_path1
 
         # update
@@ -196,7 +196,7 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
         # not sanitize
         job_file = Uploader::JobFile.first
         expect(job_file.nil?).to be_truthy
-        expect(Fs.exists?(css_path2)).to be_truthy
+        expect(Fs.exist?(css_path2)).to be_truthy
 
         # delete
         click_link I18n.t('ss.links.back_to_show')

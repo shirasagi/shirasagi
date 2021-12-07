@@ -10,21 +10,21 @@ module Gws::Memo::Member
   def sorted_to_members
     return @sorted_to_members if @sorted_to_members
 
-    hash = to_members.map { |m| [m.id, m] }.to_h
+    hash = to_members.index_by { |m| m.id }
     @sorted_to_members = to_member_ids.map { |id| hash[id] }.compact
   end
 
   def sorted_cc_members
     return @sorted_cc_members if @sorted_cc_members
 
-    hash = cc_members.map { |m| [m.id, m] }.to_h
+    hash = cc_members.index_by { |m| m.id }
     @sorted_cc_members = cc_member_ids.map { |id| hash[id] }.compact
   end
 
   def sorted_bcc_members
     return @sorted_bcc_members if @sorted_bcc_members
 
-    hash = bcc_members.map { |m| [m.id, m] }.to_h
+    hash = bcc_members.index_by { |m| m.id }
     @sorted_bcc_members = bcc_member_ids.map { |id| hash[id] }.compact
   end
 

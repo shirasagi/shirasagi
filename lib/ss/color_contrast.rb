@@ -34,7 +34,7 @@ class SS::ColorContrast
     end
 
     def split_rgb(css_color)
-      css_color = css_color[1..-1] if css_color.starts_with?("#")
+      css_color = css_color[1..-1] if css_color.start_with?("#")
 
       raise "invalid css color format" if css_color.length != 3 && css_color.length != 6
 

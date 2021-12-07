@@ -134,17 +134,17 @@ module SS
       (el.value.to_s.strip == with.to_s.strip) ? el : native_fill_in(locator, with: with)
     end
 
-    def fill_in_code_mirror(locator, options = {})
+    def fill_in_code_mirror(locator, **options)
       with = options.delete(:with)
       options[:visible] = :all
 
-      element = find(:fillable_field, locator, options)
+      element = find(:fillable_field, locator, **options)
       page.execute_script("$(arguments[0]).data('editor').setValue(arguments[1])", element, with)
     end
 
     def native_fill_in(locator = nil, with:)
       el = find(:fillable_field, locator).set('').click
-      with.to_s.split('').each { |c| el.native.send_keys(c) }
+      with.to_s.chars.each { |c| el.native.send_keys(c) }
       el
     rescue Selenium::WebDriver::Error::StaleElementReferenceError
       el
@@ -161,7 +161,7 @@ module SS
       Timeout.timeout(ajax_timeout) do
         sleep 1 until finished_all_ajax_requests?
       end
-      if block_given?
+      if block
         sleep 1
         yield
       end
@@ -176,7 +176,7 @@ module SS
 
     def wait_for_cbox(&block)
       have_css("#cboxClose", text: "close")
-      within("#cboxContent", &block) if block_given?
+      within("#cboxContent", &block) if block
     end
 
     def colorbox_opened?
@@ -204,7 +204,7 @@ module SS
       expect(page).to have_css('#errorExplanation', text: text)
     end
 
-    def save_full_screenshot(opts = {})
+    def save_full_screenshot(**opts)
       filename = opts[:filename].presence || "#{Rails.root}/tmp/screenshots-#{Time.zone.now.to_f}.png"
       page.save_screenshot(filename, full: true)
       puts "screenshot: #{filename}"
@@ -306,10 +306,10 @@ module SS
     # そこで、本メソッドでは setData の完了まで待機する。
     #
     # 参照: https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_editor.html#method-setData
-    def fill_in_ckeditor(locator, options = {})
+    def fill_in_ckeditor(locator, **options)
       with = options.delete(:with)
       options[:visible] = :all
-      element = find(:fillable_field, locator, options)
+      element = find(:fillable_field, locator, **options)
 
       ret = wait_ckeditor_ready(element)
       expect(ret).to be_truthy

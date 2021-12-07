@@ -190,6 +190,15 @@ SS_Preview = (function () {
     a.click();
   };
 
+  SS_Preview.closeWindow = function ($frame) {
+    if ($frame.closest("#cboxLoadedContent")[0]) {
+      $.colorbox.close();
+    }
+    if ($frame.closest(".ui-dialog")[0]) {
+      $frame.dialog("close");
+    }
+  }
+
   SS_Preview.prototype.initialize = function(opts) {
     this.$el = $(this.el);
     this.$datePicker = this.$el.find(".ss-preview-date");
@@ -270,6 +279,8 @@ SS_Preview = (function () {
         } else {
           window.history.pushState(null, null, window.location.pathname);
         }
+
+        setTimeout(function() { self.$el.trigger("ss:inplaceModeChanged"); }, 0);
       });
     });
 
@@ -284,6 +295,7 @@ SS_Preview = (function () {
             return;
           }
           window.history.pushState(null, null, window.location.pathname);
+          setTimeout(function() { self.$el.trigger("ss:inplaceModeChanged"); }, 0);
         });
       }
     });
@@ -449,12 +461,7 @@ SS_Preview = (function () {
       var el = ev.target;
 
       if (el.tagName === "BUTTON" && el.classList.contains("btn-cancel")) {
-        if ($(frame).closest("#cboxLoadedContent")[0]) {
-          $.colorbox.close();
-        }
-        if ($(frame).closest(".ui-dialog")[0]) {
-          $(frame).dialog("close");
-        }
+        SS_Preview.closeWindow($(frame));
       }
 
       if (el.tagName === "INPUT" && el.name === "save_if_no_alerts") {
@@ -486,7 +493,7 @@ SS_Preview = (function () {
         contentType: false,
         cache: false,
         success: function(data, textStatus, xhr) {
-          $.colorbox.close();
+          SS_Preview.closeWindow($(frame));
           if (typeof data === "string") {
             // data is html
             location.reload();
@@ -521,6 +528,8 @@ SS_Preview = (function () {
         self.adjustRichEditorHeight(ev.editor);
       });
     }
+
+    self.$el.trigger("ss:inplaceEditFrameInitialized");
   };
 
   // SS_Preview.prototype.openDialogInFrame = function(url) {
@@ -803,7 +812,8 @@ SS_Preview = (function () {
   };
 
   SS_Preview.prototype.finishColumnMoveUp = function(ids, data) {
-    this.overlay.hide();
+    var self = this;
+    self.overlay.hide();
 
     var $target = $(document).find(".ss-preview-column[data-page-id='" + ids.pageId + "'][data-column-id='" + ids.columnId + "']");
     if (!$target[0]) {
@@ -818,6 +828,8 @@ SS_Preview = (function () {
       SS_Preview.setData($prev, "column-order", data[$prev.data("column-id")]);
       SS_Preview.setData($target, "column-order", data[$target.data("column-id")]);
       $target.after($prev);
+
+      $target.trigger("column:moved", "up");
     });
   };
 
@@ -853,7 +865,8 @@ SS_Preview = (function () {
   };
 
   SS_Preview.prototype.finishColumnMoveDown = function(ids, data) {
-    this.overlay.hide();
+    var self = this;
+    self.overlay.hide();
 
     var $target = $(document).find(".ss-preview-column[data-page-id='" + ids.pageId + "'][data-column-id='" + ids.columnId + "']");
     if (!$target[0]) {
@@ -869,6 +882,8 @@ SS_Preview = (function () {
       SS_Preview.setData($next, "column-order", data[$next.data("column-id")]);
       SS_Preview.setData($target, "column-order", data[$target.data("column-id")]);
       $target.before($next);
+
+      $target.trigger("column:moved", "down");
     });
   };
 
@@ -902,7 +917,8 @@ SS_Preview = (function () {
   };
 
   SS_Preview.prototype.finishColumnMovePosition = function(ids, order, data) {
-    this.overlay.hide();
+    var self = this;
+    self.overlay.hide();
 
     var $source = $(document).find(".ss-preview-column[data-page-id='" + ids.pageId + "'][data-column-id='" + ids.columnId + "']");
     if (!$source[0]) {
@@ -925,6 +941,8 @@ SS_Preview = (function () {
       } else {
         $destination.after($source);
       }
+
+      $source.trigger("column:moved", "position");
     });
   };
 
@@ -1075,12 +1093,12 @@ SS_Preview = (function () {
           self.updateDisabled = false;
         },
         complete: function() {
-          $frame.dialog("close");
+          SS_Preview.closeWindow($frame);
         }
       });
     });
     $frame.on("click", "button[type=reset]", function() {
-      $frame.dialog("close");
+      SS_Preview.closeWindow($frame);
     });
   };
 
@@ -1587,7 +1605,22 @@ SS_Preview = (function () {
       return;
     }
 
-    var height = frame.contentWindow.document.body.scrollHeight + FormPalette.margin;
+    var window = frame.contentWindow;
+    if (!window) {
+      return;
+    }
+
+    var document = window.document;
+    if (!document) {
+      return;
+    }
+
+    var body = document.body;
+    if (!body) {
+      return;
+    }
+
+    var height = body.scrollHeight + FormPalette.margin;
     frame.style.height = height + "px";
   };
 

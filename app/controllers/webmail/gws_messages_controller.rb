@@ -60,6 +60,9 @@ class Webmail::GwsMessagesController < ApplicationController
     @item.singleton_class.send(:define_method, :ref_files) do
       ref_files
     end
+
+    @dedicated = true
+    render layout: "ss/dedicated"
   end
 
   def create
@@ -78,6 +81,13 @@ class Webmail::GwsMessagesController < ApplicationController
       ref_files
     end
 
-    render_create @item.save, location: gws_memo_messages_path(folder: 'INBOX.Sent')
+    render_opts = {
+      notice: t('ss.notice.sent'),
+      location: sent_webmail_mails_path(webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index),
+      render: { template: "new", layout: "ss/dedicated" }
+    }
+
+    @dedicated = true
+    render_create @item.save, render_opts
   end
 end

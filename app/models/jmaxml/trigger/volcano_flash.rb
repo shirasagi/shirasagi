@@ -20,7 +20,7 @@ class Jmaxml::Trigger::VolcanoFlash < Jmaxml::Trigger::Base
     context[:type] = Jmaxml::Type::VOLCANO
     context[:area_codes] = area_codes
 
-    return true unless block_given?
+    return true unless block
 
     yield
   end
@@ -45,7 +45,7 @@ class Jmaxml::Trigger::VolcanoFlash < Jmaxml::Trigger::Base
     context[:last_page] = last_page
     context[:last_xmldoc] = xmldoc
 
-    return true unless block_given?
+    return true unless block
 
     yield
   end

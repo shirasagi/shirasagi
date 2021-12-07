@@ -54,7 +54,7 @@ class Article::PagesController < ApplicationController
     exporter = Cms::PageExporter.new(site: @cur_site, criteria: criteria)
     enumerable = exporter.enum_csv(csv_params)
 
-    filename = @model.to_s.tableize.gsub(/\//, "_")
+    filename = @model.to_s.tableize.tr("/", "_")
     filename = "#{filename}_#{Time.zone.now.to_i}.csv"
 
     response.status = 200
@@ -81,10 +81,8 @@ class Article::PagesController < ApplicationController
       if file.nil? || ::File.extname(file.original_filename) != ".csv"
         raise I18n.t("errors.messages.invalid_csv")
       end
-      if !Article::Page::Importer.valid_encoding?(file.to_io, Encoding::UTF_8)
-        if !Article::Page::Importer.valid_encoding?(file.to_io, Encoding::SJIS)
-          raise I18n.t("errors.messages.unsupported_encoding")
-        end
+      if SS::Csv.detect_encoding(file) == Encoding::ASCII_8BIT
+        raise I18n.t("errors.messages.unsupported_encoding")
       end
       if !Article::Page::Importer.valid_csv?(file)
         raise I18n.t("errors.messages.malformed_csv")

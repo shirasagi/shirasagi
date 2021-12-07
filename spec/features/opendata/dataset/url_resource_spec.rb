@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_url_resource", dbscope: :example, js: true do
+describe "opendata_url_resource", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let!(:node_search_dataset) { create(:opendata_node_search_dataset) }
   let(:node) { create(:opendata_node_dataset) }
@@ -72,8 +72,8 @@ describe "opendata_url_resource", dbscope: :example, js: true do
       expect(item.file.site_id).to eq site.id
       expect(item.file.owner_item_id).to eq dataset.id
       expect(item.file.owner_item_type).to eq dataset.class.name
-      expect(item.file.state).to eq "closed"
-      expect(item.file.model).to eq "opendata/url_resource"
+      expect(item.file.state).to eq dataset.state
+      expect(item.file.model).to eq "opendata/dataset"
       expect(item.file.content_type).to eq "text/csv"
 
       #

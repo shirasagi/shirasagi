@@ -14,23 +14,19 @@ class SS::Migration20190314000000
 
   private
 
-  def each_form
+  def each_form(&block)
     all_ids = Gws::Survey::Form.all.where(anonymous_state: "enabled").pluck(:id)
     all_ids.each_slice(20) do |ids|
       forms = Gws::Survey::Form.all.in(id: ids).to_a
-      forms.each do |form|
-        yield form
-      end
+      forms.each(&block)
     end
   end
 
-  def each_file(form)
+  def each_file(form, &block)
     all_ids = Gws::Survey::File.all.where(form_id: form.id).pluck(:id)
     all_ids.each_slice(20) do |ids|
       files = Gws::Survey::File.all.in(id: ids).to_a
-      files.each do |file|
-        yield file
-      end
+      files.each(&block)
     end
   end
 

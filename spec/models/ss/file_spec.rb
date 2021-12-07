@@ -637,4 +637,197 @@ describe SS::File, dbscope: :example do
       end
     end
   end
+
+  describe ".each_file" do
+    let(:site) { cms_site }
+    let(:user) { cms_user }
+    let(:file_path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
+    let!(:file1) { tmp_ss_file(SS::TempFile, site: site, user: user, contents: file_path, basename: "logo1.png") }
+    let!(:file2) do
+      tmp_ss_file(SS::File, site: site, user: user, model: "ads/banner", contents: file_path, basename: "logo2.png")
+    end
+    let!(:file3) do
+      tmp_ss_file(Board::File, site: site, user: user, model: "board/post", contents: file_path, basename: "logo3.png")
+    end
+    let!(:file4) do
+      tmp_ss_file(Cms::File, site: site, user: user, model: "cms/file", contents: file_path, basename: "logo4.png")
+    end
+    let!(:file5) do
+      tmp_ss_file(Member::PhotoFile, site: site, user: user, model: "member/photo", contents: file_path, basename: "logo5.png")
+    end
+    let!(:file6) do
+      tmp_ss_file(Member::File, site: site, user: user, model: "member/blog_page", contents: file_path, basename: "logo6.png")
+    end
+
+    it do
+      SS::File.each_file([ file1.id, file2.id, file3.id, file4.id, file5.id, file6.id ]) do |item|
+        if item.id == file1.id
+          expect(item.class).to eq file1.class
+        elsif item.id == file2.id
+          expect(item.class).to eq file2.class
+        elsif item.id == file3.id
+          expect(item.class).to eq file3.class
+        elsif item.id == file4.id
+          expect(item.class).to eq file4.class
+        elsif item.id == file5.id
+          expect(item.class).to eq file5.class
+        elsif item.id == file6.id
+          expect(item.class).to eq file6.class
+        end
+      end
+    end
+  end
+
+  describe ".file_owned?" do
+    context "with cms" do
+      let!(:site) { cms_site }
+      let!(:user) { cms_user }
+      let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
+      let!(:column1) do
+        create(:cms_column_file_upload, cur_site: site, cur_form: form, order: 1, file_type: "image")
+      end
+      let!(:item) { create :article_page, cur_site: site, cur_user: user, form: form }
+      let!(:file1) { tmp_ss_file(site: site, user: user, contents: "#{Rails.root}/spec/fixtures/ss/logo.png") }
+
+      before do
+        item.column_values = [
+          column1.value_type.new(column: column1, file_id: file1.id, file_label: file1.humanized_name),
+        ]
+        item.save!
+
+        file1.reload
+      end
+
+      it do
+        expect(SS::File.file_owned?(file1, item)).to be_truthy
+        expect(SS::File.file_owned?(file1, item.column_values.first)).to be_falsey
+      end
+    end
+  end
+
+  describe ".clone_file" do
+    let(:site) { cms_site }
+    let(:user) { cms_user }
+    let(:file_path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
+
+    context "with some file classes" do
+      subject { SS::File.clone_file(file) }
+
+      context "with SS::File" do
+        let!(:file) do
+          tmp_ss_file(SS::File, site: site, user: user, model: "ads/banner", contents: file_path)
+        end
+
+        it do
+          expect(subject.class).to eq file.class
+          expect(subject.name).to eq file.name
+          expect(subject.filename).to eq file.filename
+          expect(subject.size).to eq file.size
+          expect(subject.content_type).to eq file.content_type
+          expect(Fs.compare_file_head(subject.path, file.path)).to be_truthy
+        end
+      end
+
+      context "with Member::PhotoFile" do
+        let!(:file) do
+          tmp_ss_file(Member::PhotoFile, site: site, user: user, model: "member/photo", contents: file_path)
+        end
+
+        it do
+          expect(subject.class).to eq file.class
+          expect(subject.name).to eq file.name
+          expect(subject.filename).to eq file.filename
+          expect(subject.size).to eq file.size
+          expect(subject.content_type).to eq file.content_type
+          expect(Fs.compare_file_head(subject.path, file.path)).to be_truthy
+        end
+      end
+    end
+
+    context "with some parameters" do
+      let!(:file) { tmp_ss_file(site: site, user: user, contents: file_path) }
+      let!(:owner_item) { create :cms_page, file_ids: [ file.id ] }
+
+      before do
+        file.reload
+        expect(file.user_id).to eq user.id
+        expect(file.owner_item_type).to eq owner_item.class.name
+        expect(file.owner_item_id).to eq owner_item.id
+      end
+
+      context "with cur_user" do
+        let!(:user1) { create :cms_user, name: unique_id, uid: unique_id, group_ids: user.group_ids }
+        subject { SS::File.clone_file(file, cur_user: user1) }
+
+        it do
+          expect(subject.class).to eq file.class
+          expect(subject.user_id).to eq user1.id
+        end
+      end
+
+      context "without cur_user" do
+        subject { SS::File.clone_file(file) }
+
+        it do
+          expect(subject.class).to eq file.class
+          expect(subject.user_id).to be_blank
+        end
+      end
+
+      context "with owner_item" do
+        let!(:owner_item1) { create :article_page }
+        subject { SS::File.clone_file(file, owner_item: owner_item1) }
+
+        it do
+          expect(subject.class).to eq file.class
+          expect(subject.owner_item_type).to eq owner_item1.class.name
+          expect(subject.owner_item_id).to eq owner_item1.id
+        end
+      end
+
+      context "without owner_item" do
+        subject { SS::File.clone_file(file) }
+
+        it do
+          expect(subject.class).to eq file.class
+          expect(subject.owner_item_type).to be_blank
+          expect(subject.owner_item_id).to be_blank
+        end
+      end
+    end
+  end
+
+  describe ".create_from_upload!" do
+    let(:file_path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
+
+    context "without resizing" do
+      subject do
+        Fs::UploadedFile.create_from_file(file_path, basename: "logo.png") do |upload_file|
+          described_class.create_from_upload!(upload_file)
+        end
+      end
+
+      it do
+        expect(subject).to be_persisted
+        expect(subject).to be_valid
+        expect(::Fs.size(subject.path)).to be > 0
+        expect(subject.image_dimension).to eq [ 160, 160 ]
+      end
+    end
+
+    context "with resizing" do
+      subject do
+        Fs::UploadedFile.create_from_file(file_path, basename: "logo.png") do |upload_file|
+          described_class.create_from_upload!(upload_file, resizing: [ 90, 90 ])
+        end
+      end
+
+      it do
+        expect(subject).to be_persisted
+        expect(subject).to be_valid
+        expect(::Fs.size(subject.path)).to be > 0
+        expect(subject.image_dimension).to eq [ 90, 90 ]
+      end
+    end
+  end
 end

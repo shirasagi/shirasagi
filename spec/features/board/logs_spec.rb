@@ -24,25 +24,33 @@ describe "board_posts", type: :feature, dbscope: :example, js: true do
         fill_in "item[poster]", with: "sample"
         fill_in "item[text]", with: "sample"
         fill_in "item[delete_key]", with: "pass"
-        click_button I18n.t('ss.buttons.save')
+        click_on I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       visit edit_path
-
-      wait_cbox_open do
-        click_on I18n.t("ss.buttons.upload")
+      within "form#item-form" do
+        wait_cbox_open do
+          click_on I18n.t("ss.buttons.upload")
+        end
       end
 
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_button I18n.t("ss.buttons.save")
-        wait_for_ajax
+        click_on I18n.t("ss.buttons.save")
+        expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
 
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_button I18n.t("ss.buttons.attach")
-        wait_for_ajax
+        wait_cbox_close do
+          click_on I18n.t("ss.buttons.attach")
+        end
       end
-      click_button I18n.t('ss.buttons.save')
+
+      within "form#item-form" do
+        expect(page).to have_text('keyvisual.jpg')
+        click_on I18n.t('ss.buttons.save')
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       expect(page).to have_text('keyvisual.jpg')
 

@@ -14,8 +14,10 @@ class SS::Extensions::ObjectIds < Array
     # stored in the database.
     def mongoize(object)
       case object
-      when nil then nil
-      when self.class then object.mongoize
+      when nil
+        nil
+      when self.class
+        object.mongoize
       when Array
         mongoize_array(object)
       else
@@ -27,7 +29,8 @@ class SS::Extensions::ObjectIds < Array
     # into a database friendly form.
     def evolve(object)
       case object
-      when self.class then object.mongoize
+      when self.class
+        object.mongoize
       else
         object
       end

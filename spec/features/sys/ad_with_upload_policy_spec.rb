@@ -44,13 +44,13 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
 
       file = SS::LinkFile.all.first
       expect(file.sanitizer_state).to eq 'wait'
-      expect(Fs.exists?(file.path)).to be_truthy
-      expect(Fs.exists?(file.sanitizer_input_path)).to be_truthy
+      expect(Fs.exist?(file.path)).to be_truthy
+      expect(Fs.exist?(file.sanitizer_input_path)).to be_truthy
 
       # restore
       restored_file = mock_sanitizer_restore(file)
       expect(restored_file.sanitizer_state).to eq 'complete'
-      expect(Fs.exists?(restored_file.path)).to be_truthy
+      expect(Fs.exist?(restored_file.path)).to be_truthy
 
       visit sys_ad_path
       expect(page).to have_css('#selected-files .sanitizer-complete')
