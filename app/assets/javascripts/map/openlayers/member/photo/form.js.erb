@@ -166,7 +166,6 @@ this.Openlayers_Member_Photo_Form = (function () {
       });
       this.map.addLayer(this.markerLayer);
     } else {
-      console.log(this.markerLayer.getSource());
       this.markerLayer.getSource().addFeature(feature);
     }
     return feature;

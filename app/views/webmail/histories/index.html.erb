@@ -91,8 +91,10 @@
 <%= jquery do %>
   $('.list-head input[name=ymd]').datetimepicker({
     onChangeDateTime: function(dp, $input) {
-      console.log($input.val());
       var ymd = $input.val();
+      if (!ymd) {
+        return;
+      }
       ymd = ymd.replace(/\//g, '');
 
       var url = '<%= webmail_daily_histories_path(ymd: ':ymd') %>';
