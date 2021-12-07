@@ -83,9 +83,9 @@ class Cms::Elasticsearch::PageConverter
   class << self
     def with_route(item, opts = {})
       klass = "#{self.name}::#{item.route.classify.gsub("::", "")}".constantize rescue self
-      convertor = klass.new(item)
-      convertor.queue = opts[:queue]
-      convertor
+      converter = klass.new(item)
+      converter.queue = opts[:queue]
+      converter
     end
   end
 end
