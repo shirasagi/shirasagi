@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Translate::Convertor, dbscope: :example do
+describe Translate::Converter, dbscope: :example do
   let(:ss_proj1) { ::File.read("spec/fixtures/translate/ss_proj1.html") }
   let(:site) { cms_site }
 
@@ -26,7 +26,7 @@ describe Translate::Convertor, dbscope: :example do
   end
 
   it do
-    item = Translate::Convertor.new(site, source, target)
+    item = Translate::Converter.new(site, source, target)
     html = item.convert(ss_proj1)
 
     doc = Nokogiri.parse(html)

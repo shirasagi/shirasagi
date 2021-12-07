@@ -1,9 +1,9 @@
-module Kana::Convertor
-  @@mecab = nil
+module Kana::Converter
+  @mecab = nil
 
   if SS.config.kana.disable == false
     require "MeCab"
-    @@mecab = MeCab::Tagger
+    @mecab = MeCab::Tagger
 
     #require "natto"
     #@@mecab = Natto::MeCab
@@ -11,7 +11,7 @@ module Kana::Convertor
 
   class << self
     def kana_html(site, html)
-      return html unless @@mecab
+      return html unless @mecab
 
       config = SS.config.kana["converter"]
       kana_marks = config['kana-marks']
@@ -51,10 +51,10 @@ module Kana::Convertor
 
       Kana::Dictionary.pull(site.id) do |userdic|
         mecab_param = '--node-format=%ps,%pe,%m,%H\n --unk-format='
-        unless userdic.blank?
+        if userdic.present?
           mecab_param = "-u #{userdic} " + mecab_param
         end
-        mecab = @@mecab.new(mecab_param)
+        mecab = @mecab.new(mecab_param)
         # https://taku910.github.io/mecab/format.html
 
         mecab.parse(text).split(/\n/).each do |line|

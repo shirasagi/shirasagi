@@ -20,7 +20,7 @@ module Kana::PublicFilter
   def render_kana
     body = response.body
 
-    body = Kana::Convertor.kana_html(@cur_site, body)
+    body = Kana::Converter.kana_html(@cur_site, body)
     body.sub!(/<body( |>)/m, '<body data-kana="true"\\1')
 
     response.body = body
