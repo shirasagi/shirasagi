@@ -33,6 +33,8 @@
   </ul>
 </nav>
 
+<%= download_ics Date.new(@year, @month, 1), class: "event-ics-file" %>
+
 <div id="event-list">
   <% @events.each do |date, pages| %>
   <dl class="<%= event_dl_class date %>">

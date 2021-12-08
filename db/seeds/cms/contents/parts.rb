@@ -1,7 +1,7 @@
 puts "# parts"
 
 def save_part(data)
-  return if SS.config.cms.enable_lgwan && data[:route].start_with?('member/')
+  return if SS::Lgwan.enabled? && data[:route].start_with?('member/')
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
 
@@ -12,7 +12,7 @@ def save_part(data)
 
   item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_initialize_by(cond)
   if html
-    if SS.config.cms.enable_lgwan
+    if SS::Lgwan.enabled?
       html.gsub!('<li class="sight"><a href="/kanko-info/">観光情報</a></li>', '')
       html.gsub!('<li><a href="/mypage/">安否確認</a></li>', '')
     end
@@ -77,7 +77,8 @@ save_part route: "event/calendar", filename: "calendar/calendar.part.html", name
 save_part route: "event/search", filename: "calendar/search/search.part.html", name: "イベント検索"
 save_part route: "ads/banner", filename: "ad/ad.part.html", name: "広告バナー", mobile_view: "hide", with_category: "enabled"
 save_part route: "cms/sns_share", filename: "sns.part.html", name: "sns", mobile_view: "hide"
-save_part route: "key_visual/slide", filename: "key_visual/slide.part.html", name: "スライドショー", mobile_view: "hide"
+save_part route: "key_visual/swiper_slide", filename: "key_visual/slide.part.html", name: "スライドショー", mobile_view: "hide",
+  kv_autoplay: "started", kv_thumbnail: "show", kv_thumbnail_count: 5
 save_part route: "inquiry/feedback", filename: "feedback/feedback.part.html", name: "フィードバック", mobile_view: "hide",
   upper_html: '<section id="feedback"><h2>この情報は役に立ちましたか？</h2>',
   lower_html: '</section>'

@@ -1,4 +1,4 @@
-class Translate::Convertor
+class Translate::Converter
   attr_reader :site, :source, :target
 
   def initialize(site, source, target)

@@ -8,42 +8,44 @@
   SS_SearchUI.modal();
 <% end %>
 
-<% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-  <%= form_for :item, url: { action: :create }, html: { class: "user-file", multipart: true } do |f| %>
-  <%= error_messages_for :item %>
+<div id="ajax-file-box">
+  <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+    <%= form_for :item, url: { action: :create }, html: { class: "user-file", multipart: true } do |f| %>
+    <%= error_messages_for :item %>
 
-    <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
-      <%= f.file_field :in_files, multiple: :multiple, required: :required %>
-      <%= f.select :resizing, @model.resizing_options, { include_blank: t("ss.resize_image") }, { class: "image-size" } %>
-      <%= f.submit t("ss.buttons.save"), class: "save btn", style: "margin-left: 10px;", data: { disable_with: t("ss.buttons.saving") } %>
-    </div>
+      <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+        <%= f.file_field :in_files, multiple: :multiple, required: :required %>
+        <%= f.select :resizing, @model.resizing_options, { include_blank: t("ss.resize_image") }, { class: "image-size" } %>
+        <%= f.submit t("ss.buttons.save"), class: "save btn", style: "margin-left: 10px;", data: { disable_with: t("ss.buttons.saving") } %>
+      </div>
 
+    <% end %>
   <% end %>
-<% end %>
 
-<div class="index user-files">
-  <% @items.each do |item| %>
-  <article class="file-view" id="user-file<%= item.id %>" data-file-id="<%= item.id %>">
-    <%= sanitizer_status(item) %>
-    <a class="thumb select" href="<%= url_for action: :select, id: item %>">
-      <% if item.image? %>
-      <img src="<%= url_for(action: :thumb, id: item, _: item.updated.to_i) %>" alt="<%= item.basename %>" />
-      <% else %>
-      <span class="ext icon-<%= item.extname %>"><%= item.extname %></span>
-      <% end %>
-    </a>
-    <div class="name">
-      <%= item.name %>
-    </div>
-    <nav class="menu">
-      <% if item.allowed?(:delete, @cur_member, site: @cur_site) %>
-        <%= link_to t("ss.buttons.delete"), { action: :destroy, id: item }, class: "delete", "data-remove" => "#user-file#{item.id}" %>
-      <% end %>
-    </nav>
-  </article>
-  <% end %>
+  <div class="index user-files">
+    <% @items.each do |item| %>
+    <article class="file-view" id="user-file<%= item.id %>" data-file-id="<%= item.id %>">
+      <%= sanitizer_status(item) %>
+      <a class="thumb select" href="<%= url_for action: :select, id: item %>">
+        <% if item.image? %>
+        <img src="<%= url_for(action: :thumb, id: item, _: item.updated.to_i) %>" alt="<%= item.basename %>" />
+        <% else %>
+        <span class="ext icon-<%= item.extname %>"><%= item.extname %></span>
+        <% end %>
+      </a>
+      <div class="name">
+        <%= item.name %>
+      </div>
+      <nav class="menu">
+        <% if item.allowed?(:delete, @cur_member, site: @cur_site) %>
+          <%= link_to t("ss.buttons.delete"), { action: :destroy, id: item }, class: "delete", "data-remove" => "#user-file#{item.id}" %>
+        <% end %>
+      </nav>
+    </article>
+    <% end %>
+  </div>
+
+  <div style="clear: both;"></div>
+
+  <%= paginate @items if @items.try(:current_page) %>
 </div>
-
-<div style="clear: both;"></div>
-
-<%= paginate @items if @items.try(:current_page) %>

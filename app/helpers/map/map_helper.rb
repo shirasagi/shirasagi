@@ -1,8 +1,7 @@
 module Map::MapHelper
   def map_enabled?(opts = {})
-    return true if !SS.config.cms.enable_lgwan
-    return false if opts[:mypage]
-    opts[:preview] ? false : true
+    return true if !SS.config.map.disable_mypage
+    (opts[:mypage] || opts[:preview]) ? false : true
   end
 
   def default_map_api(opts = {})

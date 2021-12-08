@@ -11,10 +11,10 @@ class Cms::HistoryArchiveFile
   default_scope ->{ where(model: 'sys/history_archive_file') }
   default_scope ->{ order_by filename: -1 }
 
-  def previewable?(opts = {})
-    cur_user = opts[:user]
-    if cur_user
-      Cms::HistoryArchiveFile.allowed?(:read, cur_user)
-    end
+  def previewable?(site: nil, user: nil, member: nil)
+    return false if !user
+    return false if !site || !site.is_a?(SS::Model::Site) || self.site_id != site.id
+
+    Cms::HistoryArchiveFile.allowed?(:read, user, site: site)
   end
 end

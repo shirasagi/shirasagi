@@ -1,15 +1,15 @@
-class Cms::Elasticsearch::PageConvertor::OpendataApp < Cms::Elasticsearch::PageConvertor
+class Cms::Elasticsearch::PageConverter::OpendataDataset < Cms::Elasticsearch::PageConverter
   def initialize(item)
     @item = item
   end
 
-  def convert_appfile_to_doc(appfile)
-    file = appfile.file
+  def convert_resource_to_doc(resource)
+    file = resource.file
 
     doc = {}
     doc[:url] = item.url
-    doc[:name] = appfile.filename
-    doc[:text] = appfile.text
+    doc[:name] = resource.name
+    doc[:text] = resource.text
 
     if file
       doc[:data] = Base64.strict_encode64(::File.binread(file.path))
@@ -22,16 +22,16 @@ class Cms::Elasticsearch::PageConvertor::OpendataApp < Cms::Elasticsearch::PageC
     doc[:state] = item.state
 
     doc[:released] = item.released.try(:iso8601)
-    doc[:updated] = appfile.updated.try(:iso8601)
-    doc[:created] = appfile.created.try(:iso8601)
+    doc[:updated] = resource.updated.try(:iso8601)
+    doc[:created] = resource.created.try(:iso8601)
 
     [ "file-#{file.id}", doc ]
   end
 
   def convert_files_to_docs
     docs = []
-    item.appfiles.each do |appfile|
-      docs << convert_appfile_to_doc(appfile)
+    item.resources.each do |resource|
+      docs << convert_resource_to_doc(resource)
     end
     docs
   end

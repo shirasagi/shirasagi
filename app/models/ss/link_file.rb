@@ -6,7 +6,7 @@ class SS::LinkFile
 
   default_scope ->{ where(model: "ss/link_file") }
 
-  def previewable?(opts = {})
+  def previewable?(site: nil, user: nil, member: nil)
     public?
   end
 end

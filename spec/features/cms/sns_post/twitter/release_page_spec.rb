@@ -43,14 +43,17 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             fill_in 'item[release_date]', with: release_date.strftime("%Y/%m/%d %H:%M")
           end
 
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
-          within "#addon-cms-agents-addons-release" do
-            expect(page).to have_css('dd', text: I18n.t('ss.state.ready'))
+            within "#addon-cms-agents-addons-release" do
+              expect(page).to have_css('dd', text: I18n.t('ss.state.ready'))
+            end
           end
+
           expect(capture.update.count).to eq 0
           expect(capture.update.tweet).to eq nil
           expect(capture.update_with_media.count).to eq 0
@@ -59,7 +62,9 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           Timecop.travel(release_date) do
             job = Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id)
-            expect { job.perform_now }.to output.to_stdout
+            perform_enqueued_jobs do
+              expect { job.perform_now }.to output.to_stdout
+            end
 
             login_cms_user
             visit show_path
@@ -95,18 +100,21 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             fill_in 'item[release_date]', with: release_date.strftime("%Y/%m/%d %H:%M")
           end
 
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
-          end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
-          within "#addon-cms-agents-addons-release" do
-            expect(page).to have_css('dd', text: I18n.t('ss.state.ready'))
+            within "#addon-cms-agents-addons-release" do
+              expect(page).to have_css('dd', text: I18n.t('ss.state.ready'))
+            end
           end
+
           expect(capture.update.count).to eq 0
           expect(capture.update.tweet).to eq nil
           expect(capture.update_with_media.count).to eq 0
@@ -115,7 +123,9 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           Timecop.travel(release_date) do
             job = Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id)
-            expect { job.perform_now }.to output.to_stdout
+            perform_enqueued_jobs do
+              expect { job.perform_now }.to output.to_stdout
+            end
 
             login_cms_user
             visit show_path
@@ -162,9 +172,12 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           end
           first("#addon-cms-agents-addons-release_plan").click
 
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.draft_save")
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.draft_save")
+            end
           end
+
           expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
           expect(capture.update.count).to eq 0
@@ -201,17 +214,19 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             click_on item.name
           end
 
-          within ".mod-workflow-approve" do
-            expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
-            fill_in "remand[comment]", with: approve_comment
-            click_on I18n.t("workflow.buttons.approve")
-          end
-          within "#addon-workflow-agents-addons-approver" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
-            expect(page).to have_css(".index", text: approve_comment)
-          end
-          within "#addon-cms-agents-addons-release" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.ready"))
+          perform_enqueued_jobs do
+            within ".mod-workflow-approve" do
+              expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
+              fill_in "remand[comment]", with: approve_comment
+              click_on I18n.t("workflow.buttons.approve")
+            end
+            within "#addon-workflow-agents-addons-approver" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
+              expect(page).to have_css(".index", text: approve_comment)
+            end
+            within "#addon-cms-agents-addons-release" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.ready"))
+            end
           end
 
           visit show_path
@@ -227,7 +242,9 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           Timecop.travel(release_date) do
             job = Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id)
-            expect { job.perform_now }.to output.to_stdout
+            perform_enqueued_jobs do
+              expect { job.perform_now }.to output.to_stdout
+            end
 
             login_cms_user
             visit show_path
@@ -270,14 +287,17 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
             select I18n.t("ss.options.state.active"), from: "item[twitter_edit_auto_post]"
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
@@ -316,7 +336,9 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           Timecop.travel(release_date) do
             job = Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id)
-            expect { job.perform_now }.to output.to_stdout
+            perform_enqueued_jobs do
+              expect { job.perform_now }.to output.to_stdout
+            end
 
             login_cms_user
             visit show_path
@@ -345,14 +367,17 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
             select I18n.t("ss.options.state.active"), from: "item[twitter_edit_auto_post]"
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
@@ -378,14 +403,16 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             fill_in 'item[release_date]', with: release_date.strftime("%Y/%m/%d %H:%M")
           end
 
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-release" do
             expect(page).to have_css('dd', text: I18n.t('ss.state.ready'))
@@ -395,7 +422,9 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           Timecop.travel(release_date) do
             job = Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id)
-            expect { job.perform_now }.to output.to_stdout
+            perform_enqueued_jobs do
+              expect { job.perform_now }.to output.to_stdout
+            end
 
             login_cms_user
             visit show_path
@@ -423,14 +452,17 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
             select I18n.t("ss.options.state.active"), from: "item[twitter_edit_auto_post]"
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
@@ -468,10 +500,13 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           end
           first("#addon-cms-agents-addons-release_plan").click
 
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.draft_save")
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.draft_save")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
           expect(capture.update.count).to eq 1
           expect(Cms::SnsPostLog::Twitter.count).to eq 1
 
@@ -499,15 +534,17 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             click_on item.name
           end
 
-          within ".mod-workflow-approve" do
-            expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
-            click_on I18n.t("workflow.buttons.approve")
-          end
-          within "#addon-workflow-agents-addons-approver" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
-          end
-          within "#addon-cms-agents-addons-release" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.ready"))
+          perform_enqueued_jobs do
+            within ".mod-workflow-approve" do
+              expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
+              click_on I18n.t("workflow.buttons.approve")
+            end
+            within "#addon-workflow-agents-addons-approver" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
+            end
+            within "#addon-cms-agents-addons-release" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.ready"))
+            end
           end
 
           visit show_path
@@ -519,7 +556,9 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           Timecop.travel(release_date) do
             job = Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id)
-            expect { job.perform_now }.to output.to_stdout
+            perform_enqueued_jobs do
+              expect { job.perform_now }.to output.to_stdout
+            end
 
             login_cms_user
             visit show_path

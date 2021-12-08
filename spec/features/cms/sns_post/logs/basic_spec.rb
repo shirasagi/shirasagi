@@ -43,15 +43,18 @@ describe "cms_pages sns post", type: :feature, dbscope: :example, js: true do
               select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
               select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
             end
-            within "form#item-form" do
-              click_on I18n.t("ss.buttons.publish_save")
+
+            perform_enqueued_jobs do
+              within "form#item-form" do
+                click_on I18n.t("ss.buttons.publish_save")
+              end
+              wait_for_cbox do
+                have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
+                have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
+                click_on I18n.t("ss.buttons.ignore_alert")
+              end
+              expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
             end
-            wait_for_cbox do
-              have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
-              have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
-              click_on I18n.t("ss.buttons.ignore_alert")
-            end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
             expect(Cms::SnsPostLog::Twitter.count).to eq 1
             expect(Cms::SnsPostLog::Line.count).to eq 1

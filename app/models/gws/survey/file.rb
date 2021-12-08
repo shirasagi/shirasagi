@@ -27,8 +27,7 @@ class Gws::Survey::File
       criteria = all
       return criteria if params.blank?
 
-      criteria = criteria.search_keyword(params)
-      criteria
+      criteria.search_keyword(params)
     end
 
     def search_keyword(params)
@@ -70,7 +69,7 @@ class Gws::Survey::File
     anonymous_state == 'enabled'
   end
 
-  def file_previewable?(file, user:, member:)
+  def file_previewable?(file, site:, user:, member:)
     return false if user.blank?
     return false if column_values.where(file_ids: file.id).blank?
 
