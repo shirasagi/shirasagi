@@ -360,6 +360,13 @@
 }
 
 // events
+@mixin fc_event_prefix {
+  display: inline-block;
+  margin-right: 2px;
+  padding: 0 2px;
+  border-radius: 2px;
+  color: $white;
+}
 .fc-event {
   border: 0;
   border-radius: 0;
@@ -371,6 +378,14 @@
     word-wrap: normal;
     word-break: normal;
     white-space: normal;
+    .fc-facility:before {
+      @include fc_event_prefix;
+      content: "設";
+      background-color: $orange;
+    }
+    .fc-time,.fc-title,.fc-facility {
+      display: block;
+    }
   }
 }
 .fc-time-grid-event {
@@ -433,19 +448,10 @@
   background-color: #bdf;
   color: #000;
 }
-@mixin fc_event_prefix {
-  display: inline-block;
-  margin-right: 2px;
-  padding: 0 2px;
-  border-radius: 2px;
-  color: $white;
-}
 .fc-event-private .fc-content:before {
   @include fc_event_prefix;
   content: "秘";
   background-color: #f2b;
-}
-.fc-event-unknown-attendance .fc-content:before {
 }
 .fc-event-user-attendance-unknown .fc-content:before {
   @include fc_event_prefix;

@@ -141,6 +141,12 @@ this.Gws_Schedule_Calendar = (function ($) {
           return $(this).find('.fc-loading').remove();
         }
       },
+      eventRender: function(event, element) {
+        if (event.facility) {
+          var span = $('<span class="fc-facility"></span>').append(event.facility);
+          element.find('span.fc-title').after(span);
+        }
+      },
       eventAfterAllRender: function (view) {
         var attendance, todo;
         todo = $('.fc .fc-withTodo-button');
@@ -223,14 +229,14 @@ this.Gws_Schedule_Calendar = (function ($) {
   };
 
   Gws_Schedule_Calendar.editableParams = function (selector, opts) {
-    var url;
-    url = opts['restUrl'];
+    var url = opts['restUrl'];
+    var token = $('meta[name="csrf-token"]').attr('content');
     return {
       editable: true,
       eventClick: function (event, jsEvent, view) {
         var popup_url = event.restUrl ? event.restUrl : url;
         var state = ("calendar[date]=" + (event.start.format('YYYY-MM-DD')) + "&") + Gws_Schedule_Calendar.viewStateQuery(view);
-        if (event.start.format('YYYY-MM-DD') === event.end.format('YYYY-MM-DD')) {
+        if (event.startDateLabel === event.endDateLabel) {
           jsEvent.preventDefault();
 
           event.url = popup_url + "/" + event.id + "?" + state;
@@ -269,7 +275,8 @@ this.Gws_Schedule_Calendar = (function ($) {
               api: 'drop',
               api_start: event.start.format(),
               api_end: end
-            }
+            },
+            authenticity_token: token
           },
           success: function (data, dataType) {
             var viewId;
@@ -291,7 +298,8 @@ this.Gws_Schedule_Calendar = (function ($) {
               api: 'resize',
               api_start: event.start.format(),
               api_end: event.end.format()
-            }
+            },
+            authenticity_token: token
           },
           success: function (data, dataType) {
             var viewId;

@@ -57,9 +57,8 @@ module Gws::Schedule::CalendarFormat
     end
 
     if self.try(:facilities).present?
-      facilities.each do |facility|
-        data[:title] += " [#{facility.name}]"
-      end
+      data[:className] += " fc-event-facility"
+      data[:facility] = facilities.first.try(:name)
     end
 
     data
