@@ -289,7 +289,7 @@ this.Gws_Schedule_Calendar = (function ($) {
           }
         });
       },
-      eventResize: function (event, delta, revertFunc) {
+      eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
         return $.ajax({
           type: 'PUT',
           url: (url + "/") + event.id + ".json",
