@@ -52,6 +52,10 @@ class Member::Photo
     false
   end
 
+  def slideable?
+    slideable_state == "public"
+  end
+
   private
 
   def validate_filename
