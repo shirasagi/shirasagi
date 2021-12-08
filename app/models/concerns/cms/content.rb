@@ -122,9 +122,7 @@ module Cms::Content
       criteria = self.all.site(site) if criteria.blank?
 
       # and_public
-      criteria = criteria.and_public(date)
-
-      criteria
+      criteria.and_public(date)
     end
 
     def private_root
@@ -246,10 +244,11 @@ module Cms::Content
     %w(current descendant).map { |m| [ I18n.t("cms.options.node_target.#{m}"), m ] }
   end
 
-  def file_previewable?(file, user:, member:)
+  def file_previewable?(file, site:, user:, member:)
     return false unless public?
     return false unless public_node?
     return false if try(:for_member_enabled?) && member.blank?
+    return false if !site || !site.is_a?(SS::Model::Site) || self.site_id != site.id
     true
   end
 

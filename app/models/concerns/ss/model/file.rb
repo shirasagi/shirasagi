@@ -149,6 +149,46 @@ module SS::Model::File
     end
   end
 
+  module Utils
+    module_function
+
+    def owned?(file, user)
+      return false if !user
+      return false if !file.respond_to?(:user_id)
+      file.user_id == user.id
+    end
+
+    def previewable_by_owner?(file, owner_item, site:, user:, member:)
+      return false if !owner_item
+      return false if !owner_item.is_a?(Fs::FilePreviewable)
+      owner_item.file_previewable?(file, site: site, user: user, member: member)
+    end
+
+    def same_site?(file, owner_item, site:)
+      return true if site.is_a?(SS::Model::Site) && owner_item.site.is_a?(SS::Model::Site) && site.id == owner_item.site_id
+      return true if site.is_a?(SS::Model::Group) && owner_item.site.is_a?(SS::Model::Group) && site.id == owner_item.site_id
+      false
+    end
+
+    def readable_by_user?(file, owner_item, user:)
+      meta = SS::File.find_model_metadata(file.model) || {}
+      permit = meta[:permit] || %i(role readable member)
+
+      site = owner_item.try(:cur_site) || owner_item.try(:site)
+      if permit.include?(:readable) && owner_item.respond_to?(:readable?) && owner_item.readable?(user, site: site)
+        return true
+      end
+      if permit.include?(:member) && owner_item.respond_to?(:member?) && owner_item.member?(user)
+        return true
+      end
+      if permit.include?(:role) && owner_item.respond_to?(:allowed?) && owner_item.allowed?(:read, user, site: site)
+        return true
+      end
+
+      false
+    end
+  end
+
   def path
     "#{self.class.root}/ss_files/" + id.to_s.chars.join("/") + "/_/#{id}"
   end
@@ -203,34 +243,20 @@ module SS::Model::File
     becomes_with(klass)
   end
 
-  def previewable?(opts = {})
-    meta = SS::File.find_model_metadata(model) || {}
-
+  def previewable?(site: nil, user: nil, member: nil)
     # be careful: cur_user and item may be nil
-    cur_user = opts[:user]
-    cur_member = opts[:member]
     item = effective_owner_item
-    if cur_user && item
-      permit = meta[:permit] || %i(role readable member)
-      if permit.include?(:readable) && item.respond_to?(:readable?)
-        return true if item.readable?(cur_user, site: item.try(:site))
-      end
-      if permit.include?(:member) && item.respond_to?(:member?)
-        return true if item.member?(cur_user)
-      end
-      if permit.include?(:role) && item.respond_to?(:allowed?)
-        return true if item.allowed?(:read, cur_user, site: item.try(:site))
-      end
+    if site && item.try(:site) && !Utils.same_site?(self, item, site: site)
+      return false
+    end
+    if user && item && Utils.readable_by_user?(self, item, user: user)
+      return true
     end
 
-    if item && item.is_a?(Fs::FilePreviewable)
-      # special delegation if item implements previewable?
-      return true if item.file_previewable?(self, user: cur_user, member: cur_member)
-    end
+    return true if Utils.owned?(self, user)
 
-    if cur_user && respond_to?(:user_id)
-      return true if user_id == cur_user.id
-    end
+    # special delegation if item implements previewable?
+    return true if Utils.previewable_by_owner?(self, item, site: site, user: user, member: member)
 
     false
   end

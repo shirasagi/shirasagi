@@ -165,9 +165,8 @@ module Gws::Model::File
     becomes_with(klass)
   end
 
-  def previewable?(opts = {})
-    cur_user = opts[:user]
-    cur_user.present?
+  def previewable?(site: nil, user: nil, member: nil)
+    user.present?
   end
 
   def state_options

@@ -44,7 +44,7 @@ class Member::Photo
     value < 0 ? 0 : value
   end
 
-  def file_previewable?(file, user:, member:)
+  def file_previewable?(file, site:, user:, member:)
     return true if super
 
     return true if member.present? && member_id == member.id
