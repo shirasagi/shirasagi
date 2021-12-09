@@ -895,8 +895,8 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
 }
 
 // -----------------------------------------------------------------------------
-// ad
-#ad {
+// boxes
+#boxes-wrap {
   position: relative;
   @include clear;
   width: $page-width;
@@ -916,7 +916,7 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
       @include r-arrow;
     }
   }
-  .ads-banners {
+  .boxes {
     @include clear;
     span {
       display: block;
