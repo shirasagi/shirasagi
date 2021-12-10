@@ -568,18 +568,15 @@ def save_data(data)
   item
 end
 
-def save_resource(dataset, data, attrs = {})
+def save_resource(dataset, data)
   puts data[:name]
   cond = { name: data[:name] }
 
   path = "datasets/resources/#{data[:filename]}"
-  data.delete :filename
   Fs::UploadedFile.create_from_file(path) do |file|
     item = dataset.resources.where(cond).first || dataset.resources.new
-    item.attributes = attrs if attrs.present?
     item.in_file = file
-    item.update! data
-    puts item.errors.full_messages unless item.save
+    puts item.errors.full_messages unless item.update data
   end
 end
 
@@ -641,12 +638,10 @@ def save_appfile(app, data)
   cond = { filename: data[:filename] }
 
   path = "apps/appfiles/#{data[:filename]}"
-  data.delete :filename
   Fs::UploadedFile.create_from_file(path) do |file|
     item = app.appfiles.where(cond).first || app.appfiles.new
     item.in_file = file
-    item.update! data
-    puts item.errors.full_messages unless item.save
+    puts item.errors.full_messages unless item.update data
   end
 end
 
