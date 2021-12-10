@@ -31,6 +31,9 @@ production: &production
   # Google Maps Addon Zoom Level
   googlemaps_zoom_level: 13
 
+  # Google Maps API End-Point
+  googlemaps_api_end_point: "https://maps.googleapis.com/maps/api/js"
+
   # Openlayers Addon Zoom Level
   openlayers_zoom_level: 10
 

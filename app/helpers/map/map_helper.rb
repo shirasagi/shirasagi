@@ -1,4 +1,6 @@
 module Map::MapHelper
+  DEFAULT_GOOGLEMAPS_API_END_POINT = "https://maps.googleapis.com/maps/api/js".freeze
+
   def map_enabled?(opts = {})
     return true if !SS.config.map.disable_mypage
     (opts[:mypage] || opts[:preview]) ? false : true
@@ -41,7 +43,7 @@ module Map::MapHelper
     params[:key] = key if key.present?
     params[:language] = language if language.present?
     params[:region] = region if region.present?
-    controller.javascript "//maps.googleapis.com/maps/api/js?#{params.to_query}"
+    controller.javascript "#{SS.config.map.googlemaps_api_end_point || DEFAULT_GOOGLEMAPS_API_END_POINT}?#{params.to_query}"
   end
 
   def include_openlayers_api
