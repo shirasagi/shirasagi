@@ -164,9 +164,12 @@ module SS::Model::File
       owner_item.file_previewable?(file, site: site, user: user, member: member)
     end
 
-    def same_site?(file, owner_item, site:)
+    def cms_object?(_file, owner_item)
+      owner_item.try(:site) && owner_item.site.is_a?(SS::Model::Site)
+    end
+
+    def same_cms_site?(file, owner_item, site:)
       return true if site.is_a?(SS::Model::Site) && owner_item.site.is_a?(SS::Model::Site) && site.id == owner_item.site_id
-      return true if site.is_a?(SS::Model::Group) && owner_item.site.is_a?(SS::Model::Group) && site.id == owner_item.site_id
       false
     end
 
@@ -246,7 +249,7 @@ module SS::Model::File
   def previewable?(site: nil, user: nil, member: nil)
     # be careful: cur_user and item may be nil
     item = effective_owner_item
-    if site && item.try(:site) && !Utils.same_site?(self, item, site: site)
+    if site && Utils.cms_object?(self, item) && !Utils.same_cms_site?(self, item, site: site)
       return false
     end
     if user && item && Utils.readable_by_user?(self, item, user: user)
