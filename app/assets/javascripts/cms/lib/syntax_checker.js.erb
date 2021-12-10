@@ -42,6 +42,10 @@ this.Syntax_Checker = (function () {
     return this;
   }
 
+  ResultBox.prototype.showServerError = function() {
+    this.showMessage(<%= raw I18n.t("errors.messages.syntax_check_server_error").to_json %>);
+  }
+
   ResultBox.prototype.showChecking = function() {
     return this.showMessage(SS.loading);
   };
@@ -174,22 +178,57 @@ this.Syntax_Checker = (function () {
 
   Syntax_Checker.config = {};
 
+//  Syntax_Checker.asyncCheck = function () {
+//    var defer = $.Deferred();
+
+//    var resolve = function() {
+
+//      try {
+//        Syntax_Checker.check();
+//        Syntax_Checker.resultBox.showResult(Syntax_Checker.checks, Syntax_Checker.errors);
+//        defer.resolve({ status: Syntax_Checker.errors.length == 0 ? "ok" : "failed" });
+//      } catch (e) {
+//        Syntax_Checker.resultBox.showMessage("<p>" + e + "</p>");
+//        defer.reject(null, null, e);
+//      }
+//    };
+
+//    resolve();
+
+//    return defer.promise();
+//  };
   Syntax_Checker.asyncCheck = function () {
     var defer = $.Deferred();
 
-    var resolve = function() {
+    Syntax_Checker.resultBox.showChecking();
+    Syntax_Checker.reset();
 
-      try {
-        Syntax_Checker.check();
+    var contents = Syntax_Checker.getContents();
+    var token = $('meta[name="csrf-token"]').attr('content');
+
+    $.ajax({
+      type: "POST",
+      url: Syntax_Checker.url,
+      cache: false,
+      data: {
+        authenticity_token: token,
+        contents: contents
+      },
+      success: function(data, textStatus, xhr) {
+        $.each(data.errors, function() {
+          Syntax_Checker.errors.push({ id: this.id, idx: this.idx, code: this.code, ele: null, msg: this.msg, detail: this.detail, correctContent: null });
+        });
         Syntax_Checker.resultBox.showResult(Syntax_Checker.checks, Syntax_Checker.errors);
         defer.resolve({ status: Syntax_Checker.errors.length == 0 ? "ok" : "failed" });
-      } catch (e) {
-        Syntax_Checker.resultBox.showMessage("<p>" + e + "</p>");
-        defer.reject(null, null, e);
+      },
+      error: function (xhr, status, error) {
+        Syntax_Checker.resultBox.showServerError();
+        defer.reject(null, null, error);
+      },
+      complete: function (xhr, status) {
+        defer.resolve({ status: Syntax_Checker.errors.length == 0 ? "ok" : "failed" });
       }
-    };
-
-    resolve();
+    });
 
     return defer.promise();
   };
@@ -389,10 +428,9 @@ this.Syntax_Checker = (function () {
     $.each(array, function(idx, html) {
       chars = [];
       $(html).find(":not(iframe)").addBack().contents().filter(function () {
-        return this.nodeType == 3;
+        return this.nodeType === 3;
       }).each(function () {
-        var c;
-        c = this.textContent.match(/[Ａ-Ｚａ-ｚ０-９]/g);
+        var c = this.textContent.match(/[Ａ-Ｚａ-ｚ０-９]/g);
         if (c) {
           return chars.push(c);
         }
