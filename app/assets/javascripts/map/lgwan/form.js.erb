@@ -30,6 +30,7 @@ this.Map_Lgwan_Form = (function () {
         return false;
       }
     });
+    Map_Lgwan_Form.toggleAddMarker();
   };
 
   Map_Lgwan_Form.clonePointForm = function () {
@@ -63,9 +64,7 @@ this.Map_Lgwan_Form = (function () {
         }
       });
     }
-    if ($(".mod-map dd.marker").length === Map_Lgwan_Form.maxPointForm) {
-      $(".mod-map dd .add-marker").parent().hide();
-    }
+    Map_Lgwan_Form.toggleAddMarker();
   };
 
   Map_Lgwan_Form.clearPointForm = function (ele) {
@@ -84,8 +83,16 @@ this.Map_Lgwan_Form = (function () {
         ele.remove();
       }
     }
-    $(".mod-map dd .add-marker").parent().show();
+    Map_Lgwan_Form.toggleAddMarker();
   };
+
+  Map_Lgwan_Form.toggleAddMarker = function () {
+    if ($(".mod-map dd.marker").length < Map_Lgwan_Form.maxPointForm) {
+      $(".mod-map dd .add-marker").parent().show();
+    } else {
+      $(".mod-map dd .add-marker").parent().hide();
+    }
+  }
 
   Map_Lgwan_Form.createMarker = function (ele) {
     var loc = null;

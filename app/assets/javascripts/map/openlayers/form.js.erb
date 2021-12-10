@@ -96,6 +96,7 @@ this.Openlayers_Map_Form = (function () {
     this.initPopup();
     this.resize();
     this.renderEvents();
+    this.toggleAddMarker();
   };
 
   Openlayers_Map_Form.prototype.createLayers = function (layerOpts) {
@@ -488,9 +489,7 @@ this.Openlayers_Map_Form = (function () {
         };
       })(this));
     }
-    if ($(".mod-map dd.marker").length === this.maxPointForm) {
-      $(".mod-map dd .add-marker").parent().hide();
-    }
+    this.toggleAddMarker();
   };
 
   Openlayers_Map_Form.prototype.clickSetMarker = function (ele) {
@@ -551,7 +550,15 @@ this.Openlayers_Map_Form = (function () {
         ele.remove();
       }
     }
-    $(".mod-map dd .add-marker").parent().show();
+    this.toggleAddMarker();
+  };
+
+  Openlayers_Map_Form.prototype.toggleAddMarker = function () {
+    if ($(".mod-map dd.marker").length < this.maxPointForm) {
+      $(".mod-map dd .add-marker").parent().show();
+    } else {
+      $(".mod-map dd .add-marker").parent().hide();
+    }
   };
 
   Openlayers_Map_Form.prototype.resize = function () {
