@@ -7,7 +7,7 @@
     <%= f.hidden_field :map_zoom_level %>
     <dl class="marker-setting">
       <dt>
-        <%= t("map.markers") %>
+        <%= t("map.markers", limit: SS.config.map.map_max_point_form.to_s(:delimited)) %>
         <%= hidden_field_tag :clicked, nil, class: "loc clicked" %>
       </dt>
       <% if @item.map_points.blank? %>
