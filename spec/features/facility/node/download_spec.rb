@@ -4,13 +4,12 @@ require "csv"
 describe "facility_pages", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) { create :facility_node_node, cur_site: site, name: "施設フォルダ" }
-  let(:item) { create :facility_node_page, filename: "#{node.filename}/name_1", site_id: site.id }
-  let(:item2) { create :facility_node_page, filename: "#{node.filename}/name_2", site_id: site.id }
   let(:index_path) { facility_pages_path site.id, node }
   let(:download_path) { download_facility_pages_path site.id, node }
 
   context "#download" do
-    before do login_cms_user
+    before do
+      login_cms_user
       create :facility_node_page, cur_site: site, cur_node: node, filename: "#{node.filename}/name_1"
       create :facility_node_page, cur_site: site, cur_node: node, filename: "#{node.filename}/name_2"
     end
