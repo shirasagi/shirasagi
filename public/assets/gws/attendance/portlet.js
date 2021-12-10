@@ -1,1 +1,58 @@
-Gws_Attendance_Portlet=function(t,e){this.$el=$(t),this.options=e,this.render()},Gws_Attendance_Portlet.prototype.render=function(){var t=this;this.$el.find("button[name=punch]").on("click",function(){t.punch($(this),$(this).closest("tr").data("field-name"))}),this.$el.find("button[name=edit]").on("click",function(){t.edit($(this),$(this).closest("tr").data("field-name"))})},Gws_Attendance_Portlet.prototype.punch=function(t,e){if(t.attr("disabled","disabled"),confirm(this.options.confirmMessage)){var n=this.options.punchUrl.replace(":TYPE",e),o=this;$.ajax({url:n,method:"POST",data:{ref:this.options.ref},dataType:"json",success:function(){alert(o.options.successMessage),location.reload()},error:function(t){alert(t.responseJSON.join("\n"))},complete:function(){t.removeAttr("disabled")}})}else t.removeAttr("disabled")},Gws_Attendance_Portlet.prototype.edit=function(t,e){t.attr("disabled","disabled");var n=this.options.editUrl.replace(":TYPE",e);$a=$("<a/>",{href:n}),$a.colorbox({open:!0,onClosed:function(){t.removeAttr("disabled")}})};
+Gws_Attendance_Portlet = function (el, options) {
+  // this.el = el;
+  this.$el = $(el);
+  // this.$toolbar = this.$el.find('.cell-toolbar');
+  this.options = options;
+  // this.now = new Date(options.now);
+  this.render();
+};
+
+Gws_Attendance_Portlet.prototype.render = function() {
+  var _this = this;
+
+  this.$el.find('button[name=punch]').on('click', function() {
+    _this.punch($(this), $(this).closest('tr').data('field-name'));
+  });
+
+  this.$el.find('button[name=edit]').on('click', function() {
+    _this.edit($(this), $(this).closest('tr').data('field-name'));
+  });
+};
+
+Gws_Attendance_Portlet.prototype.punch = function($button, fieldName) {
+  $button.attr('disabled', 'disabled');
+  if (! confirm(this.options.confirmMessage)) {
+    $button.removeAttr('disabled');
+    return;
+  }
+
+  var url = this.options.punchUrl.replace(':TYPE', fieldName);
+  var _this = this;
+  $.ajax({
+    url: url,
+    method: 'POST',
+    data: { ref: this.options.ref },
+    dataType: 'json',
+    success: function(data) {
+      alert(_this.options.successMessage);
+      location.reload();
+    },
+    error: function(xhr, status, error) {
+      alert(xhr.responseJSON.join("\n"));
+    },
+    complete: function() {
+      $button.removeAttr('disabled');
+    }
+  });
+};
+
+Gws_Attendance_Portlet.prototype.edit = function($button, fieldName) {
+  $button.attr('disabled', 'disabled');
+
+  var url = this.options.editUrl.replace(':TYPE', fieldName);
+  $a = $('<a/>', { href: url });
+  $a.colorbox({
+    open: true,
+    onClosed: function() { $button.removeAttr('disabled'); }
+  });
+};
