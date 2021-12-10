@@ -130,15 +130,15 @@ module Gws::Monitor::Postable
     if topic.blank? || topic.id == id
       # cur_group is wanted, but currently unable to obtain it.
       # so all groups which user has are checked.
-      ret = user.groups.in_group(site).active.any? do |group|
+      ret = user.groups.in_group(self.site).active.any? do |group|
         attended?(group)
       end
       return ret if ret
 
-      return topic.allowed?(:read, user, site: site)
+      return true if topic.present? && topic.allowed?(:read, user, site: self.site)
     end
 
-    user.groups.in_group(site).active.any? do |group|
+    user.groups.in_group(self.site).active.any? do |group|
       showable_comment?(user, group)
     end
   end
