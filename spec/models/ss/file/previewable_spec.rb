@@ -523,5 +523,96 @@ describe SS::File, dbscope: :example do
         end
       end
     end
+
+    context "gws" do
+      context "with Gws::Schedule::Plan" do
+        let!(:site1) { create :gws_group, name: unique_id }
+        let!(:site1_group1) { create :gws_group, name: "#{site1.name}/#{unique_id}" }
+        let!(:site1_group2) { create :gws_group, name: "#{site1.name}/#{unique_id}" }
+        let!(:site1_role_admin) { create :gws_role_admin, cur_site: site1 }
+        let!(:site1_role_read) { create :gws_role, cur_site: site1, permissions: %w(read_private_gws_schedule_plans) }
+        let!(:user_admin) { create :gws_user, group_ids: [ site1.id ], gws_role_ids: [ site1_role_admin.id ] }
+        let!(:user1) { create :gws_user, group_ids: [ site1_group1.id ], gws_role_ids: [ site1_role_read.id ] }
+        let!(:user2) { create :gws_user, group_ids: [ site1_group2.id ], gws_role_ids: [ site1_role_read.id ] }
+        let!(:file) { tmp_ss_file(contents: file_path, user: user_admin) }
+        let!(:item) do
+          item = create(
+            :gws_schedule_plan, cur_site: site1, cur_user: user_admin, file_ids: [ file.id ],
+            member_ids: member_ids, member_group_ids: nil, member_custom_group_ids: nil,
+            readable_group_ids: nil, readable_member_ids: readable_member_ids, readable_custom_group_ids: nil,
+            group_ids: nil, user_ids: user_ids, custom_group_ids: nil,
+          )
+          file.reload
+          item
+        end
+        let!(:cms_site) { create :cms_site_unique, group_ids: [ site1.id ] }
+
+        context "with member_ids" do
+          let(:member_ids) { [ user1.id ] }
+          let(:readable_member_ids) { [ user_admin.id ] }
+          let(:user_ids) { [ user_admin.id ] }
+
+          it do
+            expect(file.owner_item_type).to eq item.class.name
+            expect(file.owner_item_id).to eq item.id
+
+            # no arguments
+            expect(file.previewable?).to be_falsey
+
+            # only user
+            expect(file.previewable?(user: user1)).to be_truthy
+            expect(file.previewable?(user: user2)).to be_falsey
+
+            # with cms site: CMS サイトとグループウェアのドメインを同じ設定で運用している場合
+            expect(file.previewable?(user: user1, site: cms_site)).to be_truthy
+            expect(file.previewable?(user: user2, site: cms_site)).to be_falsey
+          end
+        end
+
+        context "with readable_member_ids" do
+          let(:member_ids) { [ user_admin.id ] }
+          let(:readable_member_ids) { [ user1.id ] }
+          let(:user_ids) { [ user_admin.id ] }
+
+          it do
+            expect(file.owner_item_type).to eq item.class.name
+            expect(file.owner_item_id).to eq item.id
+
+            # no arguments
+            expect(file.previewable?).to be_falsey
+
+            # only user
+            expect(file.previewable?(user: user1)).to be_truthy
+            expect(file.previewable?(user: user2)).to be_falsey
+
+            # with cms site: CMS サイトとグループウェアのドメインを同じ設定で運用している場合
+            expect(file.previewable?(user: user1, site: cms_site)).to be_truthy
+            expect(file.previewable?(user: user2, site: cms_site)).to be_falsey
+          end
+        end
+
+        context "with user_ids" do
+          let(:member_ids) { [ user_admin.id ] }
+          let(:readable_member_ids) { [ user_admin.id ] }
+          let(:user_ids) { [ user1.id ] }
+
+          it do
+            expect(file.owner_item_type).to eq item.class.name
+            expect(file.owner_item_id).to eq item.id
+
+            # no arguments
+            expect(file.previewable?).to be_falsey
+
+            # only user
+            expect(file.previewable?(user: user1)).to be_truthy
+            expect(file.previewable?(user: user2)).to be_falsey
+
+            # with cms site: CMS サイトとグループウェアのドメインを同じ設定で運用している場合
+            expect(file.previewable?(user: user1, site: cms_site)).to be_truthy
+            expect(file.previewable?(user: user2, site: cms_site)).to be_falsey
+          end
+        end
+      end
+    end
   end
 end
