@@ -540,7 +540,7 @@ describe SS::File, dbscope: :example do
             :gws_schedule_plan, cur_site: site1, cur_user: user_admin, file_ids: [ file.id ],
             member_ids: member_ids, member_group_ids: nil, member_custom_group_ids: nil,
             readable_group_ids: nil, readable_member_ids: readable_member_ids, readable_custom_group_ids: nil,
-            group_ids: nil, user_ids: user_ids, custom_group_ids: nil,
+            group_ids: nil, user_ids: user_ids, custom_group_ids: nil
           )
           file.reload
           item
