@@ -144,15 +144,18 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       expect(page).to have_text(user1.name)
       expect(page).to have_text(user2.name)
 
+      save_full_screenshot
+
       within ".operations" do
         click_on "CSV"
       end
+      save_full_screenshot
       within "form#item-form" do
         click_on I18n.t("ss.buttons.download")
       end
       wait_for_download
 
-      csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+      csv = ::CSV.read(downloads.first, headers: true)
       expect(csv.length).to eq 2
       expect(csv[0][Gws::Survey::File.t(:updated)].present?).to be_truthy
       expect(csv[0][Gws::User.t(:name)]).to eq user1.name
