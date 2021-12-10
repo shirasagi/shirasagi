@@ -10,6 +10,7 @@
   form_class = "inplace-edit #{@cur_column.type_name}"
 %>
 <%= jquery do %>
+  Syntax_Checker.url = <%= raw cms_apis_syntax_check_path(format: "json").to_json %>
   <% if replace_words_conf[:replace_words].present? %>
     Syntax_Checker.config = <%= raw replace_words_conf.to_json %>
   <% end %>
