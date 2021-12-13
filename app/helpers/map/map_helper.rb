@@ -85,7 +85,7 @@ module Map::MapHelper
   def render_map_form(selector, opts = {})
     return "" unless map_enabled?(opts)
 
-    max_point_form = opts[:max_point_form] || SS.config.map.map_max_point_form
+    max_point_form = opts[:max_point_form] || Map.max_number_of_markers(opts[:site])
     map_options = opts[:map] || {}
     markers = opts[:markers]
     s = []
