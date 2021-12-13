@@ -70,6 +70,7 @@ module Map::MapHelper
       map_options[:showGoogleMapsSearch] = show_google_maps_search(opts)
 
       s << "Openlayers_Map.defaultCenter = [#{center.lat}, #{center.lng}];" if center
+      s << "Openlayers_Map.defaultZoom = #{SS.config.map.openlayers_zoom_level};"
       s << 'var canvas = $("' + selector + '")[0];'
       s << "var opts = #{map_options.to_json};"
       s << 'var map = new Openlayers_Map(canvas, opts);'
@@ -78,6 +79,7 @@ module Map::MapHelper
       map_options[:showGoogleMapsSearch] = show_google_maps_search(opts)
 
       s << "Googlemaps_Map.defaultCenter = [#{center.lat}, #{center.lng}];" if center
+      s << "Googlemaps_Map.defaultZoom = #{SS.config.map.googlemaps_zoom_level};"
       s << "Googlemaps_Map.load(\"" + selector + "\", #{map_options.to_json});"
       s << 'Googlemaps_Map.setMarkers(' + markers.to_json + ');' if markers.present?
     end
@@ -108,6 +110,7 @@ module Map::MapHelper
 
       # 初回アドオン表示後に地図を描画しないと、クリックした際にマーカーがずれてしまう
       s << "  Openlayers_Map.defaultCenter = [#{center.lat}, #{center.lng}];" if center
+      s << "Openlayers_Map.defaultZoom = #{SS.config.map.openlayers_zoom_level};"
       s << '  var canvas = $("' + selector + '")[0];'
       s << "  var opts = #{map_options.to_json};"
       s << '  var map = new Openlayers_Map_Form(canvas, opts);'
@@ -118,6 +121,7 @@ module Map::MapHelper
       # 初回アドオン表示後に地図を描画しないと、ズームが 2 に初期設定されてしまう。
       s << "  Map_Form.maxPointForm = #{max_point_form.to_json};" if max_point_form.present?
       s << "  Googlemaps_Map.defaultCenter = [#{center.lat}, #{center.lng}];" if center
+      s << "  Googlemaps_Map.defaultZoom = #{SS.config.map.googlemaps_zoom_level};"
       s << '  Googlemaps_Map.setForm(Map_Form);'
       s << "  Googlemaps_Map.load(#{selector.to_json}, #{map_options.to_json});"
       s << '  Googlemaps_Map.renderMarkers();'
@@ -178,6 +182,7 @@ module Map::MapHelper
       map_options[:layers] = effective_layers(opts)
 
       s << "Openlayers_Map.defaultCenter = [#{center.lat}, #{center.lng}];" if center
+      s << "Openlayers_Map.defaultZoom = #{SS.config.map.openlayers_zoom_level};"
       s << 'var canvas = $("' + selector + '")[0];'
       s << "var opts = #{map_options.to_json};"
       s << 'var map = new Openlayers_Member_Photo_Form(canvas, opts);'
@@ -187,6 +192,7 @@ module Map::MapHelper
       controller.javascript "/assets/js/exif-js.js"
 
       s << "Googlemaps_Map.defaultCenter = [#{center.lat}, #{center.lng}];" if center
+      s << "Googlemaps_Map.defaultZoom = #{SS.config.map.googlemaps_zoom_level};"
       s << 'Googlemaps_Map.setForm(Member_Photo_Form);'
       s << "Googlemaps_Map.load(\"" + selector + "\", #{map_options.to_json});"
       s << 'Googlemaps_Map.renderMarkers();'
