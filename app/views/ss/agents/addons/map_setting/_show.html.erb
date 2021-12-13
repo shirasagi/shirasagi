@@ -10,4 +10,7 @@
 
   <dt><%= @model.t :show_google_maps_search %></dt>
   <dd><%= @item.label :show_google_maps_search %></dd>
+
+  <dt><%= @model.t :map_max_number_of_markers %></dt>
+  <dd><%= Map.max_number_of_markers(@item).to_s(:delimited) %></dd>
 </dl>

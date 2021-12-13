@@ -14,4 +14,7 @@
 
   <dt><%= @model.t :show_google_maps_search %><%= @model.tt :show_google_maps_search %></dt>
   <dd><%= f.select :show_google_maps_search, @item.show_google_maps_search_options %></dd>
+
+  <dt><%= @model.t :map_max_number_of_markers %><%= @model.tt :map_max_number_of_markers %></dt>
+  <dd><%= f.number_field :map_max_number_of_markers %></dd>
 </dl>

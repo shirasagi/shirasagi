@@ -8,8 +8,12 @@ module SS::Addon
       field :map_api_key, type: String
       field :map_api_layer, type: String
       field :show_google_maps_search, type: String, default: "active"
+      field :map_max_number_of_markers, type: Integer
 
-      permit_params :map_api, :map_api_key, :map_api_layer, :show_google_maps_search
+      permit_params :map_api, :map_api_key, :map_api_layer, :show_google_maps_search, :map_max_number_of_markers
+
+      validates :map_max_number_of_markers, numericality: { only_integer: true, greater_than: 0, allow_blank: true }
+      validate :validate_map_max_number_of_markers
     end
 
     def map_api_options
@@ -47,6 +51,15 @@ module SS::Addon
         api_key: map_api_key,
         api_layer: map_api_layer
       }
+    end
+
+    private
+
+    def validate_map_max_number_of_markers
+      return if !map_max_number_of_markers.numeric?
+      return if map_max_number_of_markers <= Map.system_limit_number_of_markers
+
+      errors.add :map_max_number_of_markers, :less_than_or_equal_to, count: Map.system_limit_number_of_markers
     end
   end
 end
