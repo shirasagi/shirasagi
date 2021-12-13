@@ -2,7 +2,6 @@
   value ||= nil
   controller ||= false
   name = "#{f.object_name}[][in_wrap][page_id]"
-  form_options = column.form_options.merge(id: nil, class: "column-value-select-page", include_blank: (column.place_holder.presence || true))
 %>
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
   <%

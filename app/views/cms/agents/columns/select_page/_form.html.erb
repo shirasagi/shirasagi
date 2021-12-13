@@ -3,9 +3,6 @@ $('.sortable-index tbody').sortable();
 <% end %>
 
 <dl class="see column-cms-select_page">
-  <dt><%= @model.t :place_holder %><%= @model.tt :place_holder %></dt>
-  <dd><%= f.text_field :place_holder %></dd>
-
   <dt><%= @model.t :node_ids %><%= @model.tt :node_ids %></dt>
   <dd>
     <%= f.hidden_field "node_ids[]", value: "", class: "hidden-ids" %>
