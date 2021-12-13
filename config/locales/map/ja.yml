@@ -14,6 +14,8 @@ ja:
     designated_location: 指定位置
     designated_level: 指定レベル
     layer: レイヤー
+    longitude: 経度
+    latitude: 緯度
     alert:
       invalid_center: 座標を取得できませんでした。
       invalid_location:

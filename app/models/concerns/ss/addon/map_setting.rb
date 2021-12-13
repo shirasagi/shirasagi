@@ -8,9 +8,11 @@ module SS::Addon
       field :map_api_key, type: String
       field :map_api_layer, type: String
       field :show_google_maps_search, type: String, default: "active"
+      field :map_center, type: Map::Extensions::Loc
       field :map_max_number_of_markers, type: Integer
 
       permit_params :map_api, :map_api_key, :map_api_layer, :show_google_maps_search, :map_max_number_of_markers
+      permit_params map_center: %i[lat lng]
 
       validates :map_max_number_of_markers, numericality: { only_integer: true, greater_than: 0, allow_blank: true }
       validate :validate_map_max_number_of_markers

@@ -37,6 +37,8 @@ production: &production
   # Google Maps API End-Point
   googlemaps_api_end_point: "https://maps.googleapis.com/maps/api/js"
 
+  googlemaps_search_end_point: "https://www.google.co.jp/maps/search/"
+
   # Openlayers Addon Zoom Level
   openlayers_zoom_level: 10
 
