@@ -97,7 +97,7 @@ this.Map_Lgwan_Form = (function () {
   Map_Lgwan_Form.createMarker = function (ele) {
     var loc = null;
     if (ele.find(".marker-loc-input").val()) {
-      if (Map_Lgwan_Form.validateLoc(ele.find(".marker-loc-input"))) {
+      if (Map_Lgwan_Form.validateLoc(ele.find(".marker-loc-input").val())) {
         loc = ele.find(".marker-loc-input").val();
       } else {
         alert("<%= I18n.t('map.alert.invalid_location').join('\n') %>");
@@ -109,23 +109,7 @@ this.Map_Lgwan_Form = (function () {
     }
   };
 
-  Map_Lgwan_Form.validateLoc = function (ele) {
-    var lat, latlon, lon;
-    latlon = ele.val().split(',');
-    lat = parseFloat(latlon[0]);
-    lon = parseFloat(latlon[1]);
-    if (!(lat && !isNaN(lat))) {
-      return false;
-    }
-    if (!(lon && !isNaN(lon))) {
-      return false;
-    }
-    if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
-      return true;
-    } else {
-      return false;
-    }
-  };
+  Map_Lgwan_Form.validateLoc = Openlayers_Map_Form.validateLoc;
 
   return Map_Lgwan_Form;
 })();

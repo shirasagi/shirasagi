@@ -53,7 +53,7 @@ this.Openlayers_Map_Form = (function () {
     ele.val(lat.toFixed(6) + "," + lon.toFixed(6));
   };
 
-  Openlayers_Map_Form.prototype.validateLoc = function (loc) {
+  Openlayers_Map_Form.validateLoc = function (loc) {
     var lat, lonlat, lon;
     if (!loc) {
       return false;
@@ -509,7 +509,7 @@ this.Openlayers_Map_Form = (function () {
   Openlayers_Map_Form.prototype.createMarker = function (ele, loc) {
     var dataId, opts, image;
 
-    if (!this.validateLoc(loc)) {
+    if (!Openlayers_Map_Form.validateLoc(loc)) {
       alert("<%= I18n.t('map.alert.invalid_location').join('\n') %>");
       return;
     }
