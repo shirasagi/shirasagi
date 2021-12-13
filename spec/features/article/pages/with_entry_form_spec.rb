@@ -267,11 +267,11 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(page).to have_css(".list-item", text: selectable_page2.name)
           expect(page).to have_css(".list-item", text: selectable_page3.name)
           expect(page).to have_no_css(".list-item", text: selectable_page4.name)
-          click_on selectable_page1.name
+          click_on column14_page1.name
         end
         within 'form#item-form' do
           within ".column-value-cms-column-selectpage " do
-            expect(page).to have_css(".ajax-selected", text: selectable_page1.name)
+            expect(page).to have_css(".ajax-selected", text: column14_page1.name)
           end
 
           click_on I18n.t('ss.buttons.draft_save')
@@ -382,11 +382,11 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(page).to have_css(".list-item", text: selectable_page2.name)
           expect(page).to have_css(".list-item", text: selectable_page3.name)
           expect(page).to have_no_css(".list-item", text: selectable_page4.name)
-          click_on selectable_page2.name
+          click_on column14_page2.name
         end
         within 'form#item-form' do
           within ".column-value-cms-column-selectpage " do
-            expect(page).to have_css(".ajax-selected", text: selectable_page2.name)
+            expect(page).to have_css(".ajax-selected", text: column14_page2.name)
           end
           click_on I18n.t('ss.buttons.draft_save')
         end
@@ -622,11 +622,11 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(page).to have_css(".list-item", text: selectable_page2.name)
           expect(page).to have_css(".list-item", text: selectable_page3.name)
           expect(page).to have_no_css(".list-item", text: selectable_page4.name)
-          click_on selectable_page1.name
+          click_on column14_page1.name
         end
         within 'form#item-form' do
           within ".column-value-cms-column-selectpage " do
-            expect(page).to have_css(".ajax-selected", text: selectable_page1.name)
+            expect(page).to have_css(".ajax-selected", text: column14_page1.name)
           end
           click_on I18n.t('ss.buttons.draft_save')
         end
@@ -768,10 +768,10 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(page).to have_css(".list-item", text: selectable_page2.name)
           expect(page).to have_css(".list-item", text: selectable_page3.name)
           expect(page).to have_no_css(".list-item", text: selectable_page4.name)
-          click_on selectable_page2.name
+          click_on column14_page2.name
         end
         within 'form#item-form' do
-          expect(page).to have_css(".ajax-selected", text: selectable_page2.name)
+          expect(page).to have_css(".ajax-selected", text: column14_page2.name)
           click_on I18n.t('ss.buttons.draft_save')
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
