@@ -378,6 +378,10 @@
     word-wrap: normal;
     word-break: normal;
     white-space: normal;
+    .fc-category {
+      @include fc_event_prefix;
+      background-color: $orange;
+    }
     .fc-facility:before {
       @include fc_event_prefix;
       content: "設";
@@ -385,6 +389,9 @@
     }
     .fc-time,.fc-title,.fc-facility {
       display: block;
+    }
+    .fc-title,.fc-facility {
+      margin-left: 5px;
     }
   }
 }

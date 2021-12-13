@@ -142,6 +142,10 @@ this.Gws_Schedule_Calendar = (function ($) {
         }
       },
       eventRender: function(event, element) {
+        if (event.category) {
+          var span = $('<span class="fc-category"></span>').append(event.category);
+          element.find('span.fc-title').prepend(span);
+        }
         if (event.facility) {
           var span = $('<span class="fc-facility"></span>').append(event.facility);
           element.find('span.fc-title').after(span);

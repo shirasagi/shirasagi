@@ -56,6 +56,11 @@ module Gws::Schedule::CalendarFormat
       data[:className] += " fc-event-approval-#{approval_state}"
     end
 
+    if self.try(:category)
+      data[:className] += " fc-event-category"
+      data[:category] = category.name
+    end
+
     if self.try(:facilities).present?
       data[:className] += " fc-event-facility"
       data[:facility] = facilities.first.try(:name)
