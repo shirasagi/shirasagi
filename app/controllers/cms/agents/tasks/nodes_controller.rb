@@ -20,7 +20,7 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
   end
 
   def each_node(&block)
-    nodes = base_criteria = Cms::Node.site(@site).and_public
+    nodes = base_criteria = Cms::Node.site(@site)
     nodes = nodes.where(filename: /^#{::Regexp.escape(@node.filename)}(\/|$)/) if @node
     all_ids = nodes.pluck(:id)
     all_ids.each_slice(PER_BATCH) do |ids|
@@ -69,6 +69,7 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
       each_node_with_rescue do |node|
         next unless node
 
+        release_node(node)
         next unless node.public?
         next unless node.public_node?
 
@@ -115,6 +116,27 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
           @task.log page.url if result
         end
       end
+    end
+  end
+
+  def release_node(node)
+    return if !(node.respond_to?(:close_date) && node.respond_to?(:release_date))
+
+    now = Time.zone.now
+    if node.public? && node.close_date && now >= node.close_date
+      node.state = "closed"
+      node.close_date = nil
+    elsif node.state == "ready" && node.release_date && now >= node.release_date
+      node.state = "public"
+      node.release_date = nil
+    else
+      return
+    end
+
+    if node.save
+      @task.log "release update #{node.name} "
+    else
+      @task.log "release save failed: " + node.errors.full_messages.join(', ')
     end
   end
 end
