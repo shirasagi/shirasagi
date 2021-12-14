@@ -136,7 +136,7 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
     if node.save
       @task.log "release update #{node.name} "
     else
-      @task.log "release save failed: " + node.errors.full_messages.join(', ')
+      @task.log "release update failed: " + node.errors.full_messages.join(', ')
     end
   end
 end
