@@ -33,7 +33,8 @@ class Inquiry::Agents::Tasks::Node::FormsController < ApplicationController
   end
 
   def generate
-    @node.save # save for release date
+    #@node.save # save for release date
+
     if generate_inquiry_node @node
       @task.log "#{@node.url}index.html" if @task
     end
