@@ -916,19 +916,19 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
       @include r-arrow;
     }
   }
-  .ss-image-box {
-    @include clear;
-    span {
-      display: block;
-      float: left;
-      margin-right: 12px;
-      @include mb {
-        margin: 0 0 10px 10px;
-      }
-      &:last-child {
-        margin: 0;
-        @include mb { margin: 0 0 10px 10px; }
-      }
+}
+.ss-image-box {
+  @include clear;
+  .ss-image-box-item {
+    display: block;
+    float: left;
+    margin-right: 12px;
+    @include mb {
+      margin: 0 0 10px 10px;
+    }
+    &:last-child {
+      margin: 0;
+      @include mb { margin: 0 0 10px 10px; }
     }
   }
 }
