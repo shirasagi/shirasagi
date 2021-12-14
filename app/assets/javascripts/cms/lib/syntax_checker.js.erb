@@ -136,6 +136,44 @@ this.Syntax_Checker = (function () {
             });
             li.append(correct)
           }
+          if (error["collector"]) {
+            correct = $('<button />', { type: "button", class: "btn btn-auto-correct" }).text("<%= I18n.t('cms.auto_correct.link') %>");
+            correct.on("click", function (ev) {
+              ev.target.disabled = true;
+
+              var setContent = check["setContent"];
+              var getContent = check["getContent"];
+              var resolve = check["resolve"];
+              var type = check["type"];
+
+              var token = $('meta[name="csrf-token"]').attr('content');
+              $.ajax({
+                type: "POST",
+                url: Syntax_Checker.correct_url,
+                cache: false,
+                data: {
+                  authenticity_token: token,
+                  content: { content: getContent(), resolve: resolve, type: type },
+                  collector: error["collector"],
+                  params: error["collector_params"]
+                },
+                success: function(data, textStatus, xhr) {
+                  setContent(data["result"]);
+                  $(self.form.addonSelector).find("button.syntax-check").trigger("click");
+                },
+                error: function (xhr, status, error) {
+                  console.log(error);
+                },
+                complete: function (xhr, status) {
+                  ev.target.disabled = false;
+                }
+              });
+
+              ev.preventDefault();
+              return false;
+            });
+            li.append(correct)
+          }
         });
       }
     });
@@ -216,7 +254,7 @@ this.Syntax_Checker = (function () {
       },
       success: function(data, textStatus, xhr) {
         $.each(data.errors, function() {
-          Syntax_Checker.errors.push({ id: this.id, idx: this.idx, code: this.code, ele: null, msg: this.msg, detail: this.detail, correctContent: null });
+          Syntax_Checker.errors.push(this);
         });
         Syntax_Checker.resultBox.showResult(Syntax_Checker.checks, Syntax_Checker.errors);
         defer.resolve({ status: Syntax_Checker.errors.length == 0 ? "ok" : "failed" });

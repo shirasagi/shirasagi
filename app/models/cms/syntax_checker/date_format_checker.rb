@@ -1,10 +1,12 @@
 class Cms::SyntaxChecker::DateFormatChecker
-  def self.check(context, id, idx, raw_html, doc)
+  include Cms::SyntaxChecker::Base
+
+  def check(context, id, idx, raw_html, doc)
     doc.search('//text()').each do |text_node|
       dates = text_node.text.scan(/\d{4}.\d{1,2}.\d{1,2}/)
       next if dates.blank?
 
-      dates = dates.select { |date| valid_date?(date) }
+      dates = dates.select { |date| self.class.valid_date?(date) }
       next if dates.blank?
 
       context.errors << {
@@ -14,8 +16,34 @@ class Cms::SyntaxChecker::DateFormatChecker
         ele: raw_html,
         msg: I18n.t('errors.messages.invalid_date_format'),
         detail: I18n.t('errors.messages.syntax_check_detail.invalid_date_format'),
-        correctable: true
+        collector: self.class.name
       }
+    end
+  end
+
+  def correct(context)
+    ret = []
+
+    Cms::SyntaxChecker.each_html_with_index(context.content) do |html, index|
+      doc = Nokogiri::HTML.parse(html)
+
+      doc.search('//text()').each do |text_node|
+        text_node.content = text_node.content.gsub(/\d{4}.\d{1,2}.\d{1,2}/) do |matched|
+          if self.class.valid_date?(matched)
+            I18n.l(matched.in_time_zone.to_date, format: :long)
+          else
+            matched
+          end
+        end
+      end
+
+      ret << doc.at('body').at('div').inner_html.strip
+    end
+
+    if context.content["type"] == "array"
+      context.result = ret
+    else
+      context.result = ret[0]
     end
   end
 
