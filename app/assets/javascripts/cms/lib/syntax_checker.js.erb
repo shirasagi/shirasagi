@@ -364,7 +364,7 @@ this.Syntax_Checker = (function () {
     checkLinkText: "<%= I18n.t('errors.messages.check_link_text') %>",
     checkObjectText: "<%= I18n.t('errors.messages.check_object_text') %>",
     checkEmbeddedMedia: "<%= I18n.t('errors.messages.check_embedded_media') %>",
-    replaceWord: "<%= I18n.t('errors.messages.replace_word') %>",
+    replaceWord: "<%= I18n.t('errors.messages.replace_word', from: ':from', to: ':to') %>",
     altIsIncludedInFilename: "<%= I18n.t('errors.messages.alt_is_included_in_filename') %>"
   };
   Syntax_Checker.detail = {
@@ -581,7 +581,7 @@ this.Syntax_Checker = (function () {
               idx: idx,
               code: c[0],
               ele: html,
-              msg: Syntax_Checker.message["replaceWord"] + ("「" + k + "」→「" + v + "」"),
+              msg: Syntax_Checker.message["replaceWord"].replace(':from', k).replace(':to', v),
               correctContent: Syntax_Checker.correctReplaceWords,
               replaceKey: k,
               replaceValue: v,

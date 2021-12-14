@@ -1234,7 +1234,7 @@ ja:
       check_link_text: リンクのテキストを確認してください。
       check_object_text: オブジェクト要素のボディに適切な代替テキストを記述してください。
       check_embedded_media: 動画や音声を含む場合、説明があるか確認してください。
-      replace_word: 使用が好ましくない単語が含まれています。
+      replace_word: 使用が好ましくない単語が含まれています。「%{from}」→「%{to}」
       replace_word_validation: に使用が好ましくない単語が含まれています。
       alt_is_included_in_filename: 代替テキストがファイル名に含まれています。
       cms_form_db_required_node: データの登録には記事フォルダーの設定が必要です。
