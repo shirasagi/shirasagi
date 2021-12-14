@@ -3,13 +3,26 @@ module Cms::SyntaxChecker
 
   mattr_accessor :html_checkers, :text_checkers
   self.html_checkers = [
+    # checkers for both html and text
     Cms::SyntaxChecker::DateFormatChecker,
     Cms::SyntaxChecker::InterwordSpaceChecker,
     Cms::SyntaxChecker::KanaCharacterChecker,
     Cms::SyntaxChecker::MultibyteCharacterChecker,
-    Cms::SyntaxChecker::ReplaceWordsChecker
+    Cms::SyntaxChecker::ReplaceWordsChecker,
+    # checkers only for html
+    Cms::SyntaxChecker::AdjacentAChecker,
+    Cms::SyntaxChecker::AppletAltChecker,
+    Cms::SyntaxChecker::AreaAltChecker,
+    Cms::SyntaxChecker::EmbeddedMediaChecker,
+    Cms::SyntaxChecker::ImgAltChecker,
+    Cms::SyntaxChecker::ImgDataUriSchemeChecker,
+    Cms::SyntaxChecker::LinkTextChecker,
+    Cms::SyntaxChecker::ObjectTextChecker,
+    Cms::SyntaxChecker::OrderOfHChecker,
+    Cms::SyntaxChecker::TableChecker
   ]
   self.text_checkers = [
+    # checkers for both html and text
     Cms::SyntaxChecker::DateFormatChecker,
     Cms::SyntaxChecker::InterwordSpaceChecker,
     Cms::SyntaxChecker::KanaCharacterChecker,
@@ -32,6 +45,8 @@ module Cms::SyntaxChecker
         doc = Nokogiri::HTML.parse(html)
         checkers.each do |checker|
           checker.check(context, id, idx, html, doc)
+        rescue => e
+          Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
         end
       end
     end
