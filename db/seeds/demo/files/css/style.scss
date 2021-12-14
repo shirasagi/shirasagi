@@ -895,8 +895,8 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
 }
 
 // -----------------------------------------------------------------------------
-// boxes
-#boxes-wrap {
+// ss-image-box
+#ss-image-box-container {
   position: relative;
   @include clear;
   width: $page-width;
@@ -916,7 +916,7 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
       @include r-arrow;
     }
   }
-  .boxes {
+  .ss-image-box {
     @include clear;
     span {
       display: block;
