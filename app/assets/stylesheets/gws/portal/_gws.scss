@@ -15,18 +15,18 @@
     .portlet-item {
       position: static;
       width: 100%;
-      margin-bottom: 10px !important;
       height: auto;
+      margin-bottom: 10px !important;
     }
   }
   .portlet-html {
     height: 100%;
   }
   .portlet-html .main-box {
-    overflow-x: hidden;
-    overflow-y: auto;
     height: 100%;
     margin: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
   .portlet-html .portlet--closed {
     background: #eee;
@@ -75,8 +75,8 @@
     }
 
     .ss-swiper-slide-main {
-      height: 80%;
       width: 100%;
+      height: 80%;
     }
 
     .ss-swiper-slide-item {
@@ -95,9 +95,9 @@
 
     .ss-swiper-slide-controller {
       position: absolute;
+      z-index: 10;
       right: 10px;
       bottom: 10px;
-      z-index: 10;
     }
 
     .ss-swiper-slide-pagination {
@@ -118,8 +118,8 @@
     background-image: url(/assets/img/gws/bg-plan.png);
     cursor: move;
     &:hover {
-      box-shadow: 0 1px 5px #bbb;
       background-color: rgba(0, 0, 0, .05);
+      box-shadow: 0 1px 5px #bbb;
     }
   }
   .portlet-item.dragging {
@@ -130,8 +130,8 @@
     background-image: url(/assets/img/gws/bg-plan.png);
   }
   .gs-resize-handle-both {
-    height: 12px;
     bottom: 0;
+    height: 12px;
   }
   .portlet-html .edit-portlet {
     @include btn;
