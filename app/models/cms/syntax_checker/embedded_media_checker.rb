@@ -1,4 +1,6 @@
 class Cms::SyntaxChecker::EmbeddedMediaChecker
-  def self.check(context, id, idx, raw_html, doc)
+  include Cms::SyntaxChecker::Base
+
+  def check(context, id, idx, raw_html, doc)
   end
 end

@@ -1,4 +1,7 @@
 module Cms::SyntaxChecker
+  CheckerContext = Struct.new(:cur_site, :cur_user, :contents, :errors)
+  CorrectorContext = Struct.new(:cur_site, :cur_user, :content, :params, :result)
+
   module_function
 
   mattr_accessor :html_checkers, :text_checkers
@@ -31,8 +34,7 @@ module Cms::SyntaxChecker
   ]
 
   def check(cur_site:, cur_user:, contents:)
-    context = Cms::SyntaxChecker::Context.new
-    context.assign_attributes(cur_site: cur_site, cur_user: cur_user, contents: contents, errors: [])
+    context = Cms::SyntaxChecker::CheckerContext.new(cur_site, cur_user, contents, [])
 
     contents.each do |id, content|
       if content["resolve"] == "html"
@@ -44,12 +46,32 @@ module Cms::SyntaxChecker
       Cms::SyntaxChecker.each_html_with_index(content) do |html, idx|
         doc = Nokogiri::HTML.parse(html)
         checkers.each do |checker|
-          checker.check(context, id, idx, html, doc)
+          innstance = checker.new
+          innstance.check(context, id, idx, html, doc)
         rescue => e
           Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
         end
       end
     end
+
+    context
+  end
+
+  def correct(cur_site:, cur_user:, content:, collector:, params:)
+    default_result = content["content"]
+    context = Cms::SyntaxChecker::CorrectorContext.new(cur_site, cur_user, content, params, default_result)
+
+    if content["resolve"] == "html"
+      checkers = Cms::SyntaxChecker.html_checkers
+    else
+      checkers = Cms::SyntaxChecker.text_checkers
+    end
+
+    checker = checkers.find { |checker| checker.name == collector }
+    return context if !checker
+
+    innstance = checker.new
+    innstance.correct(context)
 
     context
   end

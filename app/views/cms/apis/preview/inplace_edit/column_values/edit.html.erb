@@ -8,7 +8,8 @@
   @inplace_link_check = @cur_column.link_check_enabled?
 %>
 <%= jquery do %>
-  Syntax_Checker.url = <%= raw cms_apis_syntax_check_path(format: "json").to_json %>
+  Syntax_Checker.url = <%= raw cms_apis_check_syntax_check_path(format: "json").to_json %>
+  Syntax_Checker.correct_url = <%= raw cms_apis_correct_syntax_check_path(format: "json").to_json %>
   <% if replace_words_conf[:replace_words].present? %>
     Syntax_Checker.config = <%= raw replace_words_conf.to_json %>
   <% end %>
