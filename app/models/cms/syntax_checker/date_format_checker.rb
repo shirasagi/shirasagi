@@ -14,7 +14,7 @@ class Cms::SyntaxChecker::DateFormatChecker
         ele: raw_html,
         msg: I18n.t('errors.messages.invalid_date_format'),
         detail: I18n.t('errors.messages.syntax_check_detail.invalid_date_format'),
-        corrector: true
+        correctable: true
       }
     end
   end

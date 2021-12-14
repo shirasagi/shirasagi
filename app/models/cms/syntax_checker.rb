@@ -4,17 +4,17 @@ module Cms::SyntaxChecker
   mattr_accessor :html_checkers, :text_checkers
   self.html_checkers = [
     Cms::SyntaxChecker::DateFormatChecker,
-    # Cms::SyntaxChecker::InterwordSpaceChecker,
-    # Cms::SyntaxChecker::KanaCharacterCheckeer,
-    # Cms::SyntaxChecker::MultibyteCharacterCheckeer,
-    # Cms::SyntaxChecker::ReplaceWordsChecker
+    Cms::SyntaxChecker::InterwordSpaceChecker,
+    Cms::SyntaxChecker::KanaCharacterChecker,
+    Cms::SyntaxChecker::MultibyteCharacterChecker,
+    Cms::SyntaxChecker::ReplaceWordsChecker
   ]
   self.text_checkers = [
     Cms::SyntaxChecker::DateFormatChecker,
-    # Cms::SyntaxChecker::InterwordSpaceChecker,
-    # Cms::SyntaxChecker::KanaCharacterCheckeer,
-    # Cms::SyntaxChecker::MultibyteCharacterCheckeer,
-    # Cms::SyntaxChecker::ReplaceWordsChecker
+    Cms::SyntaxChecker::InterwordSpaceChecker,
+    Cms::SyntaxChecker::KanaCharacterChecker,
+    Cms::SyntaxChecker::MultibyteCharacterChecker,
+    Cms::SyntaxChecker::ReplaceWordsChecker
   ]
 
   def check(cur_site:, cur_user:, contents:)
