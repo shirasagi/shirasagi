@@ -68,13 +68,17 @@ this.KeyVisual_SwiperSlide = (function () {
 
     if (self.options.autoplay === "enabled" || self.options.autoplay === "started") {
       var playButton = self.el.querySelector(".ss-swiper-slide-play");
-      playButton.addEventListener("click", function() {
-        self.swiper.autoplay.start();
-      });
-      var stopButton = self.el.querySelector(".ss-swiper-slide-stop")
-      stopButton.addEventListener("click", function() {
-        self.swiper.autoplay.stop();
-      });
+      if (playButton) {
+        playButton.addEventListener("click", function() {
+          self.swiper.autoplay.start();
+        });
+      }
+      var stopButton = self.el.querySelector(".ss-swiper-slide-stop");
+      if (stopButton) {
+        stopButton.addEventListener("click", function () {
+          self.swiper.autoplay.stop();
+        });
+      }
       self.swiper.on("autoplayStart", function() {
         playButton.setAttribute("aria-pressed", true);
         stopButton.setAttribute("aria-pressed", false);

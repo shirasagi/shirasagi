@@ -59,7 +59,7 @@ class Cms::EditorTemplate
     url
   end
 
-  def file_previewable?(file, user:, member:)
+  def file_previewable?(file, site:, user:, member:)
     return false if thumb_id != file.id
     return false if user.blank?
 

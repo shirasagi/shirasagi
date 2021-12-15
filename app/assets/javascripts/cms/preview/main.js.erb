@@ -190,6 +190,15 @@ SS_Preview = (function () {
     a.click();
   };
 
+  SS_Preview.closeWindow = function ($frame) {
+    if ($frame.closest("#cboxLoadedContent")[0]) {
+      $.colorbox.close();
+    }
+    if ($frame.closest(".ui-dialog")[0]) {
+      $frame.dialog("close");
+    }
+  }
+
   SS_Preview.prototype.initialize = function(opts) {
     this.$el = $(this.el);
     this.$datePicker = this.$el.find(".ss-preview-date");
@@ -452,12 +461,7 @@ SS_Preview = (function () {
       var el = ev.target;
 
       if (el.tagName === "BUTTON" && el.classList.contains("btn-cancel")) {
-        if ($(frame).closest("#cboxLoadedContent")[0]) {
-          $.colorbox.close();
-        }
-        if ($(frame).closest(".ui-dialog")[0]) {
-          $(frame).dialog("close");
-        }
+        SS_Preview.closeWindow($(frame));
       }
 
       if (el.tagName === "INPUT" && el.name === "save_if_no_alerts") {
@@ -489,7 +493,7 @@ SS_Preview = (function () {
         contentType: false,
         cache: false,
         success: function(data, textStatus, xhr) {
-          $.colorbox.close();
+          SS_Preview.closeWindow($(frame));
           if (typeof data === "string") {
             // data is html
             location.reload();
@@ -1089,12 +1093,12 @@ SS_Preview = (function () {
           self.updateDisabled = false;
         },
         complete: function() {
-          $frame.dialog("close");
+          SS_Preview.closeWindow($frame);
         }
       });
     });
     $frame.on("click", "button[type=reset]", function() {
-      $frame.dialog("close");
+      SS_Preview.closeWindow($frame);
     });
   };
 
@@ -1601,7 +1605,22 @@ SS_Preview = (function () {
       return;
     }
 
-    var height = frame.contentWindow.document.body.scrollHeight + FormPalette.margin;
+    var window = frame.contentWindow;
+    if (!window) {
+      return;
+    }
+
+    var document = window.document;
+    if (!document) {
+      return;
+    }
+
+    var body = document.body;
+    if (!body) {
+      return;
+    }
+
+    var height = body.scrollHeight + FormPalette.margin;
     frame.style.height = height + "px";
   };
 

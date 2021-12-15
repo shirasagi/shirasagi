@@ -101,6 +101,16 @@ td {
   &.active {
     display: block;
   }
+  .ss-open-in-new-window {
+    &:after {
+      content: "\e89e";
+      display: inline-block;
+      padding-left: 4px;
+      font-family: "Material Icons";
+      font-size: 108%;
+      vertical-align: middle;
+    }
+  }
 }
 .dropdown-menu--top-right {
   right: 0;

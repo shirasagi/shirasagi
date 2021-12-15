@@ -1,1 +1,124 @@
-this.Map_Lgwan_Form=function(){function a(){}return a.maxPointForm=10,a.deleteMessage="\u30de\u30fc\u30ab\u30fc\u3092\u524a\u9664\u3057\u3066\u3088\u308d\u3057\u3044\u3067\u3059\u304b\uff1f",a.renderEvents=function(){$(".mod-map .add-marker").on("click",function(){return a.clonePointForm(),!1}),$(".mod-map .clear-marker").on("click",function(){return a.clearPointForm($(this).closest("dd.marker")),!1}),$(".mod-map .set-marker").on("click",function(){return a.createMarker($(this).closest("dd.marker")),!1}),$(".mod-map .marker-name").on("keypress",function(r){if(13===r.which)return!1}),$(".mod-map .marker-loc-input").on("keypress",function(r){if(13===r.which)return $(this).closest("dd.marker").find(".set-marker").trigger("click"),!1})},a.clonePointForm=function(){var r;$(".mod-map dd.marker").length<a.maxPointForm&&((r=$(".mod-map dd.marker:last").clone(!1).insertAfter($(".mod-map dd.marker:last"))).removeClass("active"),r.find("input,textarea").val(""),r.find(".marker-name").val(""),r.find(".clear-marker").on("click",function(){return a.clearPointForm(r),!1}),r.find(".clear-marker").on("click",function(){return a.clearPointForm(r),!1}),r.find(".set-marker").on("click",function(){return a.createMarker($(this).closest("dd.marker")),!1}),r.find(".marker-name").on("keypress",function(r){if(13===r.which)return!1}),r.find(".marker-loc-input").on("keypress",function(r){if(13===r.which)return $(this).closest("dd.marker").find(".set-marker").trigger("click"),!1})),$(".mod-map dd.marker").length===a.maxPointForm&&$(".mod-map dd .add-marker").parent().hide()},a.clearPointForm=function(r){r.find(".marker-loc-input").val()?confirm(a.deleteMessage)&&(r.removeClass("active"),r.find("input,textarea").val(""),1<$(".mod-map dd.marker").length&&r.remove()):(r.removeClass("active"),r.find("input,textarea").val(""),1<$(".mod-map dd.marker").length&&r.remove()),$(".mod-map dd .add-marker").parent().show()},a.createMarker=function(r){var e=null;r.find(".marker-loc-input").val()&&(a.validateLoc(r.find(".marker-loc-input"))?e=r.find(".marker-loc-input").val():alert("\u6b63\u3057\u3044\u5ea7\u6a19\u3092\u30ab\u30f3\u30de(,)\u533a\u5207\u308a\u3067\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002\n\u4f8b\uff09133.6806607,33.8957612")),e&&(r.find(".marker-loc").val(e),r.addClass("active"))},a.validateLoc=function(r){var e,a,n;return a=r.val().split(","),e=parseFloat(a[0]),n=parseFloat(a[1]),!(!e||isNaN(e))&&(!(!n||isNaN(n))&&(-90<=e&&e<=90&&-180<=n&&n<=180))},a}();
+this.Map_Lgwan_Form = (function () {
+  function Map_Lgwan_Form() {
+  }
+
+  Map_Lgwan_Form.maxPointForm = 10;
+
+  Map_Lgwan_Form.deleteMessage = "マーカーを削除してよろしいですか？";
+
+  Map_Lgwan_Form.renderEvents = function () {
+    $(".mod-map .add-marker").on('click', function (e) {
+      Map_Lgwan_Form.clonePointForm();
+      return false;
+    });
+    $(".mod-map .clear-marker").on('click', function (e) {
+      Map_Lgwan_Form.clearPointForm($(this).closest("dd.marker"));
+      return false;
+    });
+    $(".mod-map .set-marker").on('click', function (e) {
+      Map_Lgwan_Form.createMarker($(this).closest("dd.marker"));
+      return false;
+    });
+    $(".mod-map .marker-name").on('keypress', function (e) {
+      if (e.which === 13) {
+        return false;
+      }
+    });
+    $(".mod-map .marker-loc-input").on('keypress', function (e) {
+      if (e.which === 13) {
+        $(this).closest("dd.marker").find(".set-marker").trigger("click");
+        return false;
+      }
+    });
+  };
+
+  Map_Lgwan_Form.clonePointForm = function () {
+    var cln;
+    if ($(".mod-map dd.marker").length < Map_Lgwan_Form.maxPointForm) {
+      cln = $(".mod-map dd.marker:last").clone(false).insertAfter($(".mod-map dd.marker:last"));
+      cln.removeClass("active");
+      cln.find("input,textarea").val("");
+      cln.find(".marker-name").val("");
+      cln.find(".clear-marker").on('click', function () {
+        Map_Lgwan_Form.clearPointForm(cln);
+        return false;
+      });
+      cln.find(".clear-marker").on('click', function () {
+        Map_Lgwan_Form.clearPointForm(cln);
+        return false;
+      });
+      cln.find(".set-marker").on('click', function () {
+        Map_Lgwan_Form.createMarker($(this).closest("dd.marker"));
+        return false;
+      });
+      cln.find(".marker-name").on('keypress', function (e) {
+        if (e.which === 13) {
+          return false;
+        }
+      });
+      cln.find(".marker-loc-input").on('keypress', function (e) {
+        if (e.which === 13) {
+          $(this).closest("dd.marker").find(".set-marker").trigger("click");
+          return false;
+        }
+      });
+    }
+    if ($(".mod-map dd.marker").length === Map_Lgwan_Form.maxPointForm) {
+      $(".mod-map dd .add-marker").parent().hide();
+    }
+  };
+
+  Map_Lgwan_Form.clearPointForm = function (ele) {
+    if (ele.find(".marker-loc-input").val()) {
+      if (confirm(Map_Lgwan_Form.deleteMessage)) {
+        ele.removeClass("active");
+        ele.find("input,textarea").val("");
+        if ($(".mod-map dd.marker").length > 1) {
+          ele.remove();
+        }
+      }
+    } else {
+      ele.removeClass("active");
+      ele.find("input,textarea").val("");
+      if ($(".mod-map dd.marker").length > 1) {
+        ele.remove();
+      }
+    }
+    $(".mod-map dd .add-marker").parent().show();
+  };
+
+  Map_Lgwan_Form.createMarker = function (ele) {
+    var loc = null;
+    if (ele.find(".marker-loc-input").val()) {
+      if (Map_Lgwan_Form.validateLoc(ele.find(".marker-loc-input"))) {
+        loc = ele.find(".marker-loc-input").val();
+      } else {
+        alert("正しい座標をカンマ(,)区切りで入力してください。\n例）133.6806607,33.8957612");
+      }
+    }
+    if (loc) {
+      ele.find(".marker-loc").val(loc);
+      ele.addClass("active");
+    }
+  };
+
+  Map_Lgwan_Form.validateLoc = function (ele) {
+    var lat, latlon, lon;
+    latlon = ele.val().split(',');
+    lat = parseFloat(latlon[0]);
+    lon = parseFloat(latlon[1]);
+    if (!(lat && !isNaN(lat))) {
+      return false;
+    }
+    if (!(lon && !isNaN(lon))) {
+      return false;
+    }
+    if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  return Map_Lgwan_Form;
+})();

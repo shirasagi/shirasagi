@@ -29,8 +29,12 @@ module SS::Model::MaxFileSize
   end
 
   module ClassMethods
+    def find_item(ext)
+      where(state: STATE_ENABLED, :extensions.in => [ext.downcase, '*']).order_by(order: 1, name: 1, _id: -1).first
+    end
+
     def find_size(ext)
-      item = where(state: STATE_ENABLED, :extensions.in => [ext.downcase, '*']).order_by(order: 1, name: 1, _id: -1).first
+      item = find_item(ext)
       return item.size if item.present?
 
       find_default_limit_size(ext)

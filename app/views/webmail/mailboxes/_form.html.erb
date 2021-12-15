@@ -4,6 +4,9 @@
 <%= jquery do %>
   $('#parent_name').on("change", function() {
     var name = $('#item_name').val();
+    if (!name) {
+      return;
+    }
     name = name.replace(/.*\./, '');
 
     var val = $(this).val();

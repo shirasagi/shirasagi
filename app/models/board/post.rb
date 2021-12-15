@@ -52,7 +52,7 @@ class Board::Post
     end
   end
 
-  def file_previewable?(file, user:, member:)
+  def file_previewable?(file, site:, user:, member:)
     node.present? && node.public?
   end
 

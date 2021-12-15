@@ -1,0 +1,8 @@
+<% return unless item.slideable? %>
+
+<% file = item.image %>
+<% return unless file %>
+
+<div class="swiper-slide ss-swiper-slide-item">
+  <%= image_tag file.url, alt: item.name, class: "ss-swiper-slide-item-image" %>
+</div>

@@ -1,0 +1,12 @@
+<nav class="mod-navi">
+  <h2><%= t("cms.image_resize_setting") %></h2>
+
+  <% if @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+    <h3><%= link_to t("cms.node_config"), node_conf_path %></h3>
+  <% end %>
+  <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+    <h3><%= link_to t("cms.image_resize"), node_image_resizes_path %></h3>
+  <% end %>
+</nav>
+
+<%= render partial: "cms/main/conf_navi" %>

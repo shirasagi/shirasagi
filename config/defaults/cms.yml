@@ -13,9 +13,6 @@ production: &production
   # Disable page redirect link feature
   disable_redirect_link: true
 
-  # enable LGWAN
-  enable_lgwan: false
-
   # StyleSheets on gws pages.
   stylesheets: []
 

@@ -1,4 +1,4 @@
-class Cms::Elasticsearch::PageConvertor
+class Cms::Elasticsearch::PageConverter
   attr_reader :item
   attr_accessor :queue
 
@@ -83,9 +83,9 @@ class Cms::Elasticsearch::PageConvertor
   class << self
     def with_route(item, opts = {})
       klass = "#{self.name}::#{item.route.classify.gsub("::", "")}".constantize rescue self
-      convertor = klass.new(item)
-      convertor.queue = opts[:queue]
-      convertor
+      converter = klass.new(item)
+      converter.queue = opts[:queue]
+      converter
     end
   end
 end

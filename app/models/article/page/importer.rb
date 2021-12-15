@@ -32,8 +32,7 @@ class Article::Page::Importer
   end
 
   def import_csv(file)
-    i = 0
-    self.class.each_csv(file) do |row|
+    self.class.each_csv(file) do |row, i|
       i += 1
       item = update_row(row)
       put_log("update #{i + 1}: #{item.name}") if item.present?

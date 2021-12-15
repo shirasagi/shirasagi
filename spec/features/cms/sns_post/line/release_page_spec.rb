@@ -42,10 +42,12 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             fill_in 'item[release_date]', with: release_date.strftime("%Y/%m/%d %H:%M")
           end
 
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-release" do
             expect(page).to have_css('dd', text: I18n.t('ss.state.ready'))
@@ -56,7 +58,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           Timecop.travel(release_date) do
             job = Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id)
-            expect { job.perform_now }.to output.to_stdout
+            perform_enqueued_jobs do
+              expect { job.perform_now }.to output.to_stdout
+            end
 
             login_cms_user
             visit show_path
@@ -91,14 +95,16 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             fill_in 'item[release_date]', with: release_date.strftime("%Y/%m/%d %H:%M")
           end
 
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            wait_for_cbox do
+              have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-release" do
             expect(page).to have_css('dd', text: I18n.t('ss.state.ready'))
@@ -109,7 +115,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           Timecop.travel(release_date) do
             job = Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id)
-            expect { job.perform_now }.to output.to_stdout
+            perform_enqueued_jobs do
+              expect { job.perform_now }.to output.to_stdout
+            end
 
             login_cms_user
             visit show_path
@@ -153,10 +161,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           end
           first("#addon-cms-agents-addons-release_plan").click
 
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.draft_save")
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.draft_save")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
           expect(capture.broadcast.count).to eq 0
           expect(capture.broadcast.messages).to eq nil
@@ -190,17 +201,19 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             click_on item.name
           end
 
-          within ".mod-workflow-approve" do
-            expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.line_post_enabled"))
-            fill_in "remand[comment]", with: approve_comment
-            click_on I18n.t("workflow.buttons.approve")
-          end
-          within "#addon-workflow-agents-addons-approver" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
-            expect(page).to have_css(".index", text: approve_comment)
-          end
-          within "#addon-cms-agents-addons-release" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.ready"))
+          perform_enqueued_jobs do
+            within ".mod-workflow-approve" do
+              expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.line_post_enabled"))
+              fill_in "remand[comment]", with: approve_comment
+              click_on I18n.t("workflow.buttons.approve")
+            end
+            within "#addon-workflow-agents-addons-approver" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
+              expect(page).to have_css(".index", text: approve_comment)
+            end
+            within "#addon-cms-agents-addons-release" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.ready"))
+            end
           end
 
           visit show_path
@@ -214,7 +227,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           Timecop.travel(release_date) do
             job = Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id)
-            expect { job.perform_now }.to output.to_stdout
+            perform_enqueued_jobs do
+              expect { job.perform_now }.to output.to_stdout
+            end
 
             login_cms_user
             visit show_path
@@ -257,14 +272,17 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             select I18n.t("cms.options.line_post_format.message_only_carousel"), from: "item[line_post_format]"
             fill_in "item[line_text_message]", with: line_text_message
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("dd", text: line_text_message)
@@ -290,10 +308,12 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             fill_in 'item[release_date]', with: release_date.strftime("%Y/%m/%d %H:%M")
           end
 
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-release" do
             expect(page).to have_css('dd', text: I18n.t('ss.state.ready'))
@@ -303,7 +323,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           Timecop.travel(release_date) do
             job = Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id)
-            expect { job.perform_now }.to output.to_stdout
+            perform_enqueued_jobs do
+              expect { job.perform_now }.to output.to_stdout
+            end
 
             login_cms_user
             visit show_path
@@ -332,14 +354,17 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             select I18n.t("cms.options.line_post_format.message_only_carousel"), from: "item[line_post_format]"
             fill_in "item[line_text_message]", with: line_text_message
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("dd", text: line_text_message)
@@ -366,14 +391,16 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             fill_in 'item[release_date]', with: release_date.strftime("%Y/%m/%d %H:%M")
           end
 
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-release" do
             expect(page).to have_css('dd', text: I18n.t('ss.state.ready'))
@@ -383,7 +410,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           Timecop.travel(release_date) do
             job = Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id)
-            expect { job.perform_now }.to output.to_stdout
+            perform_enqueued_jobs do
+              expect { job.perform_now }.to output.to_stdout
+            end
 
             login_cms_user
             visit show_path
@@ -411,14 +440,17 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             select I18n.t("cms.options.line_post_format.message_only_carousel"), from: "item[line_post_format]"
             fill_in "item[line_text_message]", with: line_text_message
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("dd", text: line_text_message)
@@ -456,10 +488,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           end
           first("#addon-cms-agents-addons-release_plan").click
 
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.draft_save")
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.draft_save")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
           expect(capture.broadcast.count).to eq 1
           expect(Cms::SnsPostLog::Line.count).to eq 1
 
@@ -487,15 +522,17 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             click_on item.name
           end
 
-          within ".mod-workflow-approve" do
-            expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.line_post_enabled"))
-            click_on I18n.t("workflow.buttons.approve")
-          end
-          within "#addon-workflow-agents-addons-approver" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
-          end
-          within "#addon-cms-agents-addons-release" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.ready"))
+          perform_enqueued_jobs do
+            within ".mod-workflow-approve" do
+              expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.line_post_enabled"))
+              click_on I18n.t("workflow.buttons.approve")
+            end
+            within "#addon-workflow-agents-addons-approver" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
+            end
+            within "#addon-cms-agents-addons-release" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.ready"))
+            end
           end
 
           visit show_path
@@ -507,7 +544,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           Timecop.travel(release_date) do
             job = Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id)
-            expect { job.perform_now }.to output.to_stdout
+            perform_enqueued_jobs do
+              expect { job.perform_now }.to output.to_stdout
+            end
 
             login_cms_user
             visit show_path

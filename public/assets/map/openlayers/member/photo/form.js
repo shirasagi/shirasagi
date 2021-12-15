@@ -1,1 +1,347 @@
-this.Openlayers_Member_Photo_Form=function(){function e(e,t){null==t&&(t={}),this.canvas=e,(this.opts=t).zoom&&this.validateZoom(t.zoom)&&(this.zoom=t.zoom),this.defaultZoom=Openlayers_Map.defaultZoom,t.center&&this.validateLatLon(t.center[1],t.center[0])&&(this.center=t.center),this.defaultCenter=Openlayers_Map.defaultCenter.reverse(),this.markerFeature=null,this.markerLayer=null,this.popup=null,this.maxPointForm=10,this.deleteMessage="\u30de\u30fc\u30ab\u30fc\u3092\u524a\u9664\u3057\u3066\u3088\u308d\u3057\u3044\u3067\u3059\u304b\uff1f",this.setExifMessage="\u753b\u50cf\u306b\u4f4d\u7f6e\u60c5\u5831\u304c\u542b\u307e\u308c\u3066\u3044\u307e\u3059\u3002\u4f4d\u7f6e\u60c5\u5831\u3092\u5730\u56f3\u306b\u8a2d\u5b9a\u3057\u307e\u3059\u304b\uff1f",this.dataID=0,this.markerIcon=Openlayers_Map.markerIcon,this.clickIcon=Openlayers_Map.clickIcon,this.clickMarkerId=null,this.render()}return e.prototype.getMapLoc=function(e){var t;return t=e.val().split(","),[parseFloat(t[0]),parseFloat(t[1])]},e.prototype.setMapLoc=function(e,t,r){t=Math.ceil(t*Math.pow(10,6))/Math.pow(10,6),r=Math.ceil(r*Math.pow(10,6))/Math.pow(10,6),e.val(t.toFixed(6)+","+r.toFixed(6))},e.prototype.render=function(){return this.initMap(),this.renderMarkers(),this.resize(),this.renderEvents()},e.prototype.createLayers=function(e){var t,r,o,a,n,i,s,c;for(o=[],t=0,a=e.length;t<a;t++)s=(n=e[t]).source,c=n.url,i=n.projection,r=new ol.layer.Tile({source:new ol.source[s]({url:c,projection:i})}),o.push(r);return o},e.prototype.initMap=function(){var e;(e=this.opts.layers)||(e=[{source:"XYZ",url:"https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png",projection:"EPSG:3857"}]),this.map=new ol.Map({target:this.canvas,renderer:["canvas","dom"],layers:this.createLayers(e),controls:ol.control.defaults({attributionOptions:{collapsible:!1}}),view:new ol.View({projection:"EPSG:3857",center:ol.proj.transform(this.getCenter(),"EPSG:4326","EPSG:3857"),minZoom:3,maxZoom:18,zoom:this.getZoom()}),logo:!1})},e.prototype.getCenter=function(){return this.center?this.center:this.defaultCenter},e.prototype.getZoom=function(){return this.zoom?this.zoom:this.defaultZoom},e.prototype.setCenter=function(e){return this.map.getView().setCenter(ol.proj.transform(e,"EPSG:4326","EPSG:3857"))},e.prototype.setZoom=function(e){return this.map.getView().setZoom(e)},e.prototype.renderMarkers=function(){var o;$(".mod-map .marker").each((o=this,function(e,t){var r;$(t).attr("data-id",o.dataID),$(t).find(".marker-loc").val()&&(r=o.getMapLoc($(t).find(".marker-loc")),o.setMarker(r,{id:parseInt(o.dataID)})),o.dataID+=1}))},e.prototype.setMarker=function(e,t){var r,o,a,n,i,s,c;return null==t&&(t={}),s=this.markerIcon,t.image&&(s=t.image),c=new ol.style.Style({image:new ol.style.Icon({anchor:[.5,1],anchorXUnits:"fraction",anchorYUnits:"fraction",src:s})}),o=[e[0],e[1]],(r=new ol.Feature({geometry:new ol.geom.Point(ol.proj.transform(o,"EPSG:4326","EPSG:3857")),markerId:null!=(a=t.id)?a:null,markerHtml:null!=(n=t.html)?n:null,category:null!=(i=t.category)?i:null})).setStyle(c),this.markerLayer?(console.log(this.markerLayer.getSource()),this.markerLayer.getSource().addFeature(r)):(this.markerLayer=new ol.layer.Vector({source:new ol.source.Vector({features:[r]})}),this.map.addLayer(this.markerLayer)),r},e.prototype.getMarker=function(t){var r;return r=null,this.markerLayer&&this.markerLayer.getSource().forEachFeature(function(e){if(e.get("markerId")===t)return r=e}),r},e.prototype.removeMarker=function(e){var t;return!!(t=this.getMarker(e))&&(this.markerLayer.getSource().removeFeature(t),!0)},e.prototype.renderEvents=function(){var r,o,e,t;return this.map.on("click",(r=this,function(e){var t;for(r.map.forEachFeatureAtPixel(e.pixel,function(e){return e}),t=ol.proj.transform(e.coordinate,"EPSG:3857","EPSG:4326");t[0]<180;)t[0]+=360;for(;180<t[0];)t[0]-=360;return r.setMapLoc($(".mod-map .clicked"),t[0],t[1]),r.setMapLoc($(".mod-map .marker-loc"),t[0],t[1]),r.createMarker($(".mod-map .marker-loc"))})),this.map.getView().on("propertychange",function(e){if("resolution"===e.key){var t=this.getZoom();$('input[name="item[map_zoom_level]"]').val(t)}}),$(".mod-map .set-center-position").on("click",(o=this,function(){var e=ol.proj.transform(o.map.getView().getCenter(),"EPSG:3857","EPSG:4326"),t=Math.floor(1e6*e[1])/1e6,r=Math.floor(1e6*e[0])/1e6;return $(".center-input").val(r+","+t),!1})),$(".mod-map .set-zoom-level").on("click",(e=this,function(){return $(".zoom-input").val(e.map.getView().getZoom()),!1})),$(".mod-map .clear-marker").on("click",(t=this,function(){return t.clearMarker($(".mod-map .marker-loc")),!1}))},e.prototype.createMarker=function(e){var t;return t=0,this.removeMarker(t),this.setMarker(this.getMapLoc(e),{id:t})},e.prototype.clearMarker=function(e){var t;t=0,""!==e.val()?confirm(this.deleteMessage)&&(this.removeMarker(t),e.val("")):this.removeMarker(t)},e.prototype.setExifLatLng=function(e){return $(e).on("change",(t=this,function(e){var a;if(e.target.files[0])return a=t,EXIF.getData(e.target.files[0],function(){var e,t,r,o;return e=EXIF.getTag(this,"GPSLatitude"),r=EXIF.getTag(this,"GPSLongitude"),t=EXIF.getTag(this,"GPSLatitudeRef")||"N",o=EXIF.getTag(this,"GPSLongitudeRef")||"W",!(!e||!r)&&!!confirm(a.setExifMessage)&&(t="N"===t?1:-1,o="W"===o?-1:1,e=(e[0]+e[1]/60+e[2]/3600)*t,r=(r[0]+r[1]/60+r[2]/3600)*o,$(".mod-map .clicked").val([e,r].join()),$(".mod-map .marker-loc").val([e,r].join()),a.createMarker($(".mod-map .marker-loc")),a.setCenter([e,r]))})}));var t},e.prototype.resize=function(){if(this.markerLayer)if(0<=this.markerLayer.getSource().getFeatures().length){var e=this.markerLayer.getSource().getExtent();this.map.getView().fit(e,this.map.getSize()),this.map.getView().setZoom(this.getZoom()),this.center&&this.setCenter(this.getCenter()),this.zoom&&this.setZoom(this.getZoom())}else this.setCenter(this.getCenter()),this.setZoom(this.getZoom())},e.prototype.validateZoom=function(e){return 3<=e&&e<=18},e.prototype.validateLatLon=function(e,t){return-90<=e&&e<=90&&-180<=t&&t<=180},e}();
+this.Openlayers_Member_Photo_Form = (function () {
+  function Openlayers_Member_Photo_Form(canvas, opts) {
+    if (opts == null) {
+      opts = {};
+    }
+
+    this.canvas = canvas;
+    this.opts = opts;
+
+    if (opts["zoom"] && this.validateZoom(opts["zoom"])) {
+      this.zoom = opts["zoom"];
+    }
+    this.defaultZoom = Openlayers_Map.defaultZoom;
+
+    if (opts["center"] && this.validateLatLon(opts["center"][1], opts["center"][0])) {
+      this.center = opts["center"];
+    }
+    this.defaultCenter = Openlayers_Map.defaultCenter.reverse();
+
+    this.markerFeature = null;
+    this.markerLayer = null;
+
+    this.popup = null;
+    this.maxPointForm = 10;
+    this.deleteMessage = "マーカーを削除してよろしいですか？";
+    this.setExifMessage = "画像に位置情報が含まれています。位置情報を地図に設定しますか？";
+    this.dataID = 0;
+    this.markerIcon = Openlayers_Map.markerIcon;
+    this.clickIcon = Openlayers_Map.clickIcon;
+    this.clickMarkerId = null;
+    this.render();
+  }
+
+  Openlayers_Member_Photo_Form.prototype.getMapLoc = function (ele) {
+    var latlon;
+    latlon = ele.val().split(',');
+    return [parseFloat(latlon[0]), parseFloat(latlon[1])];
+  };
+
+  Openlayers_Member_Photo_Form.prototype.setMapLoc = function (ele, lat, lon) {
+    lat = Math.ceil(lat * Math.pow(10, 6)) / Math.pow(10, 6);
+    lon = Math.ceil(lon * Math.pow(10, 6)) / Math.pow(10, 6);
+    ele.val(lat.toFixed(6) + "," + lon.toFixed(6));
+  };
+
+  Openlayers_Member_Photo_Form.prototype.render = function () {
+    this.initMap();
+    this.renderMarkers();
+    this.resize();
+    return this.renderEvents();
+  };
+
+  Openlayers_Member_Photo_Form.prototype.createLayers = function (layerOpts) {
+    var j, layer, layers, len, opts, projection, source, url;
+    layers = [];
+    for (j = 0, len = layerOpts.length; j < len; j++) {
+      opts = layerOpts[j];
+      source = opts["source"];
+      url = opts["url"];
+      projection = opts["projection"];
+      layer = new ol.layer.Tile({
+        source: new ol.source[source]({
+          url: url,
+          projection: projection
+        })
+      });
+      layers.push(layer);
+    }
+    return layers;
+  };
+
+  Openlayers_Member_Photo_Form.prototype.initMap = function () {
+    var layerOpts;
+
+    layerOpts = this.opts['layers'];
+    layerOpts || (layerOpts = [
+      {
+        source: "XYZ",
+        url: "https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png",
+        projection: "EPSG:3857"
+      }
+    ]);
+
+    this.map = new ol.Map({
+      target: this.canvas,
+      renderer: ['canvas', 'dom'],
+      layers: this.createLayers(layerOpts),
+      controls: ol.control.defaults({
+        attributionOptions: {
+          collapsible: false
+        }
+      }),
+      view: new ol.View({
+        projection: "EPSG:3857",
+        center: ol.proj.transform(this.getCenter(), "EPSG:4326", "EPSG:3857"),
+        minZoom: 3,
+        maxZoom: 18,
+        zoom: this.getZoom()
+      }),
+      logo: false
+    });
+  };
+
+  Openlayers_Member_Photo_Form.prototype.getCenter = function () {
+    return (this.center ? this.center : this.defaultCenter);
+  };
+
+  Openlayers_Member_Photo_Form.prototype.getZoom = function () {
+    return (this.zoom ? this.zoom : this.defaultZoom);
+  };
+
+  Openlayers_Member_Photo_Form.prototype.setCenter = function (pos) {
+    return this.map.getView().setCenter(ol.proj.transform(pos, 'EPSG:4326', 'EPSG:3857'));
+  };
+
+  Openlayers_Member_Photo_Form.prototype.setZoom = function (level) {
+    return this.map.getView().setZoom(level);
+  };
+
+  Openlayers_Member_Photo_Form.prototype.renderMarkers = function () {
+    $(".mod-map .marker").each((function (_this) {
+      return function (i, e) {
+        var loc;
+        $(e).attr("data-id", _this.dataID);
+        if ($(e).find(".marker-loc").val()) {
+          loc = _this.getMapLoc($(e).find(".marker-loc"));
+          _this.setMarker(loc, {
+            id: parseInt(_this.dataID)
+          });
+        }
+        _this.dataID += 1;
+      };
+    })(this));
+  };
+
+  Openlayers_Member_Photo_Form.prototype.setMarker = function (loc, opts) {
+    var feature, pos, ref, ref1, ref2, src, style;
+    if (opts == null) {
+      opts = {};
+    }
+    src = this.markerIcon;
+    if (opts['image']) {
+      src = opts['image'];
+    }
+    style = new ol.style.Style({
+      image: new ol.style.Icon({
+        anchor: [0.5, 1],
+        anchorXUnits: 'fraction',
+        anchorYUnits: 'fraction',
+        src: src
+      })
+    });
+    pos = [loc[0], loc[1]];
+    feature = new ol.Feature({
+      geometry: new ol.geom.Point(ol.proj.transform(pos, "EPSG:4326", "EPSG:3857")),
+      markerId: (ref = opts['id']) != null ? ref : null,
+      markerHtml: (ref1 = opts['html']) != null ? ref1 : null,
+      category: (ref2 = opts['category']) != null ? ref2 : null
+    });
+    feature.setStyle(style);
+    if (!this.markerLayer) {
+      this.markerLayer = new ol.layer.Vector({
+        source: new ol.source.Vector({
+          features: [feature]
+        })
+      });
+      this.map.addLayer(this.markerLayer);
+    } else {
+      this.markerLayer.getSource().addFeature(feature);
+    }
+    return feature;
+  };
+
+  Openlayers_Member_Photo_Form.prototype.getMarker = function (markerId) {
+    var ret, source;
+    ret = null;
+    if (!this.markerLayer) {
+      return ret;
+    }
+    source = this.markerLayer.getSource();
+    source.forEachFeature(function (feature) {
+      if (feature.get("markerId") === markerId) {
+        return ret = feature;
+      }
+    });
+    return ret;
+  };
+
+  Openlayers_Member_Photo_Form.prototype.removeMarker = function (markerId) {
+    var feature, source;
+    feature = this.getMarker(markerId);
+    if (feature) {
+      source = this.markerLayer.getSource();
+      source.removeFeature(feature);
+      return true;
+    }
+    return false;
+  };
+
+  Openlayers_Member_Photo_Form.prototype.renderEvents = function () {
+    this.map.on('click', (function (_this) {
+      return function (e) {
+        var feature, pos;
+        feature = _this.map.forEachFeatureAtPixel(e.pixel, function (feature, layer) {
+          return feature;
+        });
+        pos = ol.proj.transform(e.coordinate, "EPSG:3857", "EPSG:4326");
+        while (pos[0] < 180) {
+          pos[0] += 360;
+        }
+        while (pos[0] > 180) {
+          pos[0] -= 360;
+        }
+        _this.setMapLoc($(".mod-map .clicked"), pos[0], pos[1]);
+        _this.setMapLoc($(".mod-map .marker-loc"), pos[0], pos[1]);
+        return _this.createMarker($(".mod-map .marker-loc"));
+      };
+    })(this));
+    this.map.getView().on("propertychange", function(e) {
+      if (e.key === 'resolution') {
+        var zoom = this.getZoom();
+        $('input[name="item[map_zoom_level]"]').val(zoom);
+      }
+    });
+    $(".mod-map .set-center-position").on('click', (function (_this) {
+      return function () {
+        var latlng = ol.proj.transform(_this.map.getView().getCenter(), 'EPSG:3857', 'EPSG:4326');
+        var lat = Math.floor((latlng[1] * 1000000)) / 1000000;
+        var lng = Math.floor((latlng[0] * 1000000)) / 1000000;
+        $(".center-input").val(lng + "," + lat);
+        return false;
+      };
+    })(this));
+    $(".mod-map .set-zoom-level").on('click', (function (_this) {
+      return function () {
+        $(".zoom-input").val(_this.map.getView().getZoom());
+        return false;
+      };
+    })(this));
+    return $(".mod-map .clear-marker").on('click', (function (_this) {
+      return function (e) {
+        _this.clearMarker($(".mod-map .marker-loc"));
+        return false;
+      };
+    })(this));
+  };
+
+  Openlayers_Member_Photo_Form.prototype.createMarker = function (ele) {
+    var dataId;
+    dataId = 0;
+    this.removeMarker(dataId);
+    return this.setMarker(this.getMapLoc(ele), {
+      id: dataId
+    });
+  };
+
+  Openlayers_Member_Photo_Form.prototype.clearMarker = function (ele) {
+    var dataId;
+    dataId = 0;
+    if (ele.val() !== "") {
+      if (confirm(this.deleteMessage)) {
+        this.removeMarker(dataId);
+        ele.val("");
+      }
+    } else {
+      this.removeMarker(dataId);
+    }
+  };
+
+  Openlayers_Member_Photo_Form.prototype.setExifLatLng = function (selector) {
+    return $(selector).on("change", (function (_this) {
+      return function (e) {
+        var self;
+        if (!e.target.files[0]) {
+          return;
+        }
+        self = _this;
+        return EXIF.getData(e.target.files[0], function () {
+          var lat, latRef, lon, lonRef;
+          lat = EXIF.getTag(this, 'GPSLatitude');
+          lon = EXIF.getTag(this, 'GPSLongitude');
+          latRef = EXIF.getTag(this, 'GPSLatitudeRef') || "N";
+          lonRef = EXIF.getTag(this, 'GPSLongitudeRef') || "W";
+          if (!(lat && lon)) {
+            return false;
+          }
+          if (!confirm(self.setExifMessage)) {
+            return false;
+          }
+          latRef = latRef === "N" ? 1 : -1;
+          lonRef = lonRef === "W" ? -1 : 1;
+          lat = (lat[0] + (lat[1] / 60) + (lat[2] / 3600)) * latRef;
+          lon = (lon[0] + (lon[1] / 60) + (lon[2] / 3600)) * lonRef;
+          $(".mod-map .clicked").val([lat, lon].join());
+          $(".mod-map .marker-loc").val([lat, lon].join());
+          self.createMarker($(".mod-map .marker-loc"));
+          return self.setCenter([lat, lon]);
+        });
+      };
+    })(this));
+  };
+
+  Openlayers_Member_Photo_Form.prototype.resize = function () {
+    if (!this.markerLayer) {
+      return;
+    }
+
+    var markerLength = this.markerLayer.getSource().getFeatures().length;
+    if (markerLength >= 0) {
+      // marker exists
+      // set manually options and do fit
+      var extent = this.markerLayer.getSource().getExtent();
+      this.map.getView().fit(extent, this.map.getSize());
+      this.map.getView().setZoom(this.getZoom());
+
+      if (this.center) {
+        this.setCenter(this.getCenter());
+      }
+      if (this.zoom) {
+        this.setZoom(this.getZoom());
+      }
+    } else {
+      // marker not exists
+      // set manually or default options
+      this.setCenter(this.getCenter());
+      this.setZoom(this.getZoom());
+    }
+  };
+
+  Openlayers_Member_Photo_Form.prototype.validateZoom = function (zoom) {
+    if (zoom >= 3 && zoom <= 18) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  Openlayers_Member_Photo_Form.prototype.validateLatLon = function (lat, lon) {
+    if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  return Openlayers_Member_Photo_Form;
+})();

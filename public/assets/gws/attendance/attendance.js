@@ -1,1 +1,195 @@
-Gws_Attendance=function(t,o){this.el=t,this.$el=$(t),this.$toolbar=this.$el.find(".cell-toolbar"),this.options=o,this.now=new Date(o.now),this.render()},Gws_Attendance.prototype.render=function(){var i=this;this.$el.find("button[name=punch]").on("click",function(t){t.preventDefault(),t.stopPropagation();var o=$(this).data("action"),e=$(this).data("confirm");i.onPunchClicked(o,e)}),this.$el.find("button[name=edit]").on("click",function(t){t.preventDefault(),t.stopPropagation();var o=$(this).data("action"),e=$(this).data("confirm");i.onEditClicked(o,e)}),this.$el.find(".reason-tooltip").on("click",function(t){t.preventDefault(),t.stopPropagation(),i.hideToolbar(),i.hideTooltip(),$(this).find(".reason").show()}),this.$el.find("select[name=year_month]").on("change",function(){var t=$(this).val();t&&(location.href=i.options.indexUrl.replace(":year_month",t))}),this.$toolbar.find(".punch").on("click",function(){return i.onPunchClicked($(this).attr("href"),$(this).data("confirmation")),!1}),$(document).on("click",this.el+" .time-card .time",function(t){t.preventDefault(),t.stopPropagation(),i.onClickTime($(this))}),$(document).on("click",this.el+" .time-card .memo",function(t){t.preventDefault(),t.stopPropagation(),i.onClickMemo($(this))}),$(document).on("click",function(){i.hideToolbar(),i.hideTooltip()})},Gws_Attendance.prototype.onPunchClicked=function(t,o){if(t&&(!o||confirm(o))){var e=$('meta[name="csrf-token"]').attr("content");$form=$("<form/>",{action:t,method:"post"}),$form.append($("<input/>",{name:"authenticity_token",value:e,type:"hidden"})),$("body").append($form),$form.submit()}},Gws_Attendance.prototype.onEditClicked=function(t,o){t&&(o&&!confirm(o)||($a=$("<a />",{href:t}),$a.colorbox({open:!0,width:"90%"})))},Gws_Attendance.prototype.hideToolbar=function(){this.$toolbar.hide()},Gws_Attendance.prototype.hideTooltip=function(){this.$el.find(".reason-tooltip .reason").hide()},Gws_Attendance.prototype.onClickTime=function(t){this.onClickCell(t,this.options.timeUrl)},Gws_Attendance.prototype.onClickMemo=function(t){this.onClickCell(t,this.options.memoUrl)},Gws_Attendance.prototype.setFocus=function(t){this.$el.find(".time-card .time").removeClass("focus"),this.$el.find(".time-card .memo").removeClass("focus"),t.addClass("focus")},Gws_Attendance.prototype.isCellToday=function(t){return t.closest("tr").hasClass("current")},Gws_Attendance.prototype.onClickCell=function(t,o){if(this.hideTooltip(),t.data("day"))if(this.setFocus(t),this.options.editable||this.isCellToday(t)){var e=t.data("day"),i=t.data("type"),n=t.data("mode"),a=this.isCellToday(t),s=this.options.editable;"memo"===i&&this.isCellToday(t)&&(s=!0);var c,r=!1;if("punch"===n&&a&&this.options.punchUrl)c=(c=this.options.punchUrl).replace(":type",i),this.$toolbar.find(".edit").hide(),this.$toolbar.find(".punch").attr("href",c).show(),r=!0;if("edit"===n&&s)c=(c=(c=o).replace(":day",e)).replace(":type",i),this.$toolbar.find(".punch").hide(),this.$toolbar.find(".edit").attr("href",c).show(),r=!0;if(r){var l=t.offset();t.hasClass("top")?l.top-=this.$toolbar.outerHeight():l.top+=t.outerHeight(),this.$toolbar.show(),this.$toolbar.offset(l)}else this.$toolbar.hide()}else this.$toolbar.hide()};
+Gws_Attendance = function (el, options) {
+  this.el = el;
+  this.$el = $(el);
+  this.$toolbar = this.$el.find('.cell-toolbar');
+  this.options = options;
+  this.now = new Date(options.now);
+  this.render();
+};
+
+Gws_Attendance.prototype.render = function() {
+  var _this = this;
+
+  this.$el.find('button[name=punch]').on('click', function(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    var action = $(this).data('action');
+    var confirm = $(this).data('confirm');
+    _this.onPunchClicked(action, confirm);
+  });
+
+  this.$el.find('button[name=edit]').on('click', function(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    var action = $(this).data('action');
+    var confirm = $(this).data('confirm');
+    _this.onEditClicked(action, confirm);
+  });
+
+  this.$el.find('.reason-tooltip').on('click', function(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    _this.hideToolbar();
+    _this.hideTooltip();
+    $(this).find('.reason').show();
+  });
+
+  this.$el.find('select[name=year_month]').on('change', function() {
+    var val = $(this).val();
+    if (! val) {
+      return;
+    }
+    location.href = _this.options.indexUrl.replace(':year_month', val);
+  });
+
+  this.$toolbar.find(".punch").on("click", function() {
+    _this.onPunchClicked($(this).attr("href"), $(this).data("confirmation"));
+    return false;
+  });
+
+  $(document).on('click', this.el + ' .time-card .time', function(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    _this.onClickTime($(this));
+  });
+
+  $(document).on('click', this.el + ' .time-card .memo', function(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    _this.onClickMemo($(this));
+  });
+
+  $(document).on('click', function() {
+    _this.hideToolbar();
+    _this.hideTooltip();
+  });
+};
+
+Gws_Attendance.prototype.onPunchClicked = function(action, message) {
+  if (! action) {
+    return
+  }
+
+  if (message) {
+    if (! confirm(message)) {
+      return;
+    }
+  }
+
+  var token = $('meta[name="csrf-token"]').attr('content');
+
+  $form = $('<form/>', { action: action, method: 'post' });
+  $form.append($("<input/>", { name: "authenticity_token", value: token, type: "hidden" }));
+  $('body').append($form);
+  $form.submit();
+};
+
+Gws_Attendance.prototype.onEditClicked = function(action, message) {
+  if (!action) {
+    return
+  }
+
+  if (message) {
+    if (!confirm(message)) {
+      return;
+    }
+  }
+
+  $a = $('<a />', { href: action });
+  $a.colorbox({ open: true, width: '90%' });
+};
+
+Gws_Attendance.prototype.hideToolbar = function() {
+  this.$toolbar.hide();
+};
+
+Gws_Attendance.prototype.hideTooltip = function() {
+  this.$el.find('.reason-tooltip .reason').hide();
+};
+
+Gws_Attendance.prototype.onClickTime = function($cell) {
+  this.onClickCell($cell, this.options.timeUrl);
+};
+
+Gws_Attendance.prototype.onClickMemo = function($cell) {
+  this.onClickCell($cell, this.options.memoUrl);
+};
+
+Gws_Attendance.prototype.setFocus = function($cell) {
+  this.$el.find('.time-card .time').removeClass('focus');
+  this.$el.find('.time-card .memo').removeClass('focus');
+  $cell.addClass('focus');
+};
+
+Gws_Attendance.prototype.isCellToday = function($cell) {
+  return $cell.closest('tr').hasClass('current');
+};
+
+Gws_Attendance.prototype.onClickCell = function($cell, urlTemplate) {
+  this.hideTooltip();
+
+  if (! $cell.data('day')) {
+    return;
+  }
+
+  this.setFocus($cell);
+
+  if (!this.options.editable && !this.isCellToday($cell)) {
+    this.$toolbar.hide();
+    return;
+  }
+
+  var day = $cell.data('day');
+  var type = $cell.data('type');
+  var mode = $cell.data('mode');
+
+  var punchable = this.isCellToday($cell);
+  var editable = this.options.editable;
+
+  if (type === "memo") {
+    if (this.isCellToday($cell)) {
+      editable = true;
+    }
+  }
+
+  var showsToolbar = false;
+  if (mode === "punch" && punchable && this.options.punchUrl) {
+    var url = this.options.punchUrl;
+    url = url.replace(':type', type);
+
+    this.$toolbar.find('.edit').hide();
+    this.$toolbar.find('.punch').attr('href', url).show();
+    showsToolbar = true;
+  }
+
+  if (mode === "edit" && editable) {
+    var url = urlTemplate;
+    url = url.replace(':day', day);
+    url = url.replace(':type', type);
+
+    this.$toolbar.find('.punch').hide();
+    this.$toolbar.find('.edit').attr('href', url).show();
+    showsToolbar = true;
+  }
+
+  if (! showsToolbar) {
+    this.$toolbar.hide();
+    return;
+  }
+
+  var offset = $cell.offset();
+  if ($cell.hasClass('top')) {
+    offset.top -= this.$toolbar.outerHeight();
+  } else {
+    offset.top += $cell.outerHeight();
+  }
+
+  // call `show` and then call `offset`. order is important
+  this.$toolbar.show();
+  this.$toolbar.offset(offset);
+};

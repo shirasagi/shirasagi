@@ -1,1 +1,266 @@
-this.Googlemaps_Map=function(){function m(){}return m.map=null,m.form=null,m.center=null,m.zoom=null,m.defaultCenter=[36.204824,138.252924],m.defaultZoom=13,m.markers=null,m.markerIcon="/assets/img/googlemaps/marker1.png",m.clickIcon="/assets/img/googlemaps/marker17.png",m.openedInfo=null,m.resized=null,m.kmlLayer=null,m.showGoogleMapsSearch=!1,m.mapsSearchUrl="https://www.google.co.jp/maps/search/",m.attachMessage=function(e){return google.maps.event.addListener(m.markers[e].marker,"click",function(){m.openedInfo&&m.openedInfo.close(),m.markers[e].window&&m.markers[e].window.open(m.markers[e].marker.getMap(),m.markers[e].marker),m.openedInfo=m.markers[e].window}),google.maps.event.addListener(m.markers[e].window,"closeclick",function(){m.openedInfo=null})},m.setForm=function(e){return this.form=e},m.load=function(e,o){o||(o={}),o.zoom&&m.validateZoom(o.zoom)&&(m.zoom=o.zoom),o.center&&m.validateLatLon(o.center[1],o.center[0])&&(m.center=o.center.reverse()),o.showGoogleMapsSearch&&(m.showGoogleMapsSearch=!0);var n=m.getCenter(),r={center:new google.maps.LatLng(n[0],n[1]),zoom:m.getZoom(),mapTypeId:google.maps.MapTypeId.ROADMAP,panControl:!1,zoomControl:!0,zoomControlOptions:{style:google.maps.ZoomControlStyle.LARGE},mapTypeControl:!0,scaleControl:!0,scrollwheel:!0,streetViewControl:!0,overviewMapControl:!0,overviewMapControlOptions:{opened:!0}};m.map=new google.maps.Map($(e).get(0),r)},m.getCenter=function(){return m.center?m.center:m.defaultCenter},m.getZoom=function(){return m.zoom?m.zoom:m.defaultZoom},m.resize=function(){if(google.maps.event.trigger(this.map,"resize"),!this.resized){var e=m.getCenter();this.map.setCenter(new google.maps.LatLng(e[0],e[1])),this.form&&this.form.renderMarkers()}return this.resized=!0},m.renderMarkers=function(){if(this.form)return this.form.renderMarkers()},m.renderEvents=function(){if(this.form)return this.form.renderEvents()},m.setMarkers=function(e){var s;m.markers=e,s=new google.maps.LatLngBounds,$.each(m.markers,function(e,o){var n,r,t;t={position:new google.maps.LatLng(o.loc[1],o.loc[0]),map:m.map},o.image?t.icon=o.image:t.icon=m.markerIcon,m.markers[e].marker=new google.maps.Marker(t),s.extend(new google.maps.LatLng(o.loc[1],o.loc[0]));var a="";o.html?a=o.html:(o.name||o.text)&&(n=o.name,r=o.text,a='<div class="marker-info">',n&&""!==n&&(a+="<p>"+n+"</p>",r&&""!==r&&$.each(r.split(/[\r\n]+/),function(){return this.match(/^https?:\/\//)?a+='<p><a href="'+this+'">'+this+"</a></p>":a+="<p>"+this+"</p>"})),a+="</div>"),m.showGoogleMapsSearch&&(a+=m.getMapsSearchHtml(o.loc[1],o.loc[0])),a&&(m.markers[e].window=new google.maps.InfoWindow({content:a}),m.attachMessage(e))}),m.adjustMarkerBounds(m.markers.length,s)},m.setKmlLayer=function(e){m.kmlLayer=new google.maps.KmlLayer({url:e,suppressInfoWindows:!0,preserveViewport:!1}),m.kmlLayer.setMap(m.map)},m.setGeoJson=function(e){m.map.data.setStyle({fillColor:"#b2c9e8",strokeColor:"#5A88C6",strokeWeight:1}),m.map.data.loadGeoJson(e,{},function(e){var o=new google.maps.LatLngBounds,n=[];e.forEach(function(e){e.getGeometry().forEachLatLng(function(e){o.extend(e),n.push(e)})}),m.adjustMarkerBounds(n.length,o)})},m.adjustMarkerBounds=function(e,o){if(0<e){var n=!1;if(m.center){var r=m.getCenter();m.map.setCenter(new google.maps.LatLng(r[0],r[1])),n=!0}m.zoom&&(m.map.setZoom(m.getZoom()),n=!0),n||(google.maps.event.addListenerOnce(m.map,"idle",function(){m.map.getZoom()>m.getZoom()&&m.map.setZoom(m.getZoom())}),m.map.fitBounds(o))}else{r=m.getCenter();m.map.setCenter(new google.maps.LatLng(r[0],r[1])),m.map.setZoom(m.getZoom())}},m.validateZoom=function(e){return 1<=e&&e<=21},m.validateLatLon=function(e,o){return-90<=e&&e<=90&&-180<=o&&o<=180},m.getMapsSearchHtml=function(e,o){return'<p><a href="'+(m.mapsSearchUrl+e+","+o)+'">Google\u30de\u30c3\u30d7\u3067\u898b\u308b</a></p>'},m}();
+this.Googlemaps_Map = (function () {
+  function Googlemaps_Map() {
+  }
+
+  Googlemaps_Map.map = null;
+
+  Googlemaps_Map.form = null;
+
+  Googlemaps_Map.center = null; // null means auto
+
+  Googlemaps_Map.zoom = null; // null means auto
+
+  Googlemaps_Map.defaultCenter = [36.204824, 138.252924];
+
+  Googlemaps_Map.defaultZoom = 13;
+
+  Googlemaps_Map.markers = null;
+
+  Googlemaps_Map.markerIcon = "/assets/img/googlemaps/marker1.png";
+
+  Googlemaps_Map.clickIcon = "/assets/img/googlemaps/marker17.png";
+
+  Googlemaps_Map.openedInfo = null;
+
+  Googlemaps_Map.resized = null;
+
+  Googlemaps_Map.kmlLayer = null;
+
+  Googlemaps_Map.showGoogleMapsSearch = false;
+
+  Googlemaps_Map.mapsSearchUrl = "https://www.google.co.jp/maps/search/";
+
+  Googlemaps_Map.attachMessage = function (id) {
+    google.maps.event.addListener(Googlemaps_Map.markers[id]["marker"], 'click', function (event) {
+      if (Googlemaps_Map.openedInfo) {
+        Googlemaps_Map.openedInfo.close();
+      }
+      if (Googlemaps_Map.markers[id]["window"]) {
+        Googlemaps_Map.markers[id]["window"].open(Googlemaps_Map.markers[id]["marker"].getMap(), Googlemaps_Map.markers[id]["marker"]);
+      }
+      Googlemaps_Map.openedInfo = Googlemaps_Map.markers[id]["window"];
+    });
+    return google.maps.event.addListener(Googlemaps_Map.markers[id]["window"], 'closeclick', function (event) {
+      Googlemaps_Map.openedInfo = null;
+    });
+  };
+
+  Googlemaps_Map.setForm = function (form) {
+    return this.form = form;
+  };
+
+  Googlemaps_Map.load = function (selector, options) {
+    if (!options) {
+      options = {}
+    }
+
+    if (options["zoom"]) {
+      if (Googlemaps_Map.validateZoom(options["zoom"])) {
+        Googlemaps_Map.zoom = options["zoom"];
+      }
+    }
+    if (options["center"]) {
+      if (Googlemaps_Map.validateLatLon(options["center"][1], options["center"][0])) {
+        Googlemaps_Map.center = options["center"].reverse();
+      }
+    }
+    if (options["showGoogleMapsSearch"]) {
+      Googlemaps_Map.showGoogleMapsSearch = true;
+    }
+
+    var center = Googlemaps_Map.getCenter();
+    var mapOptions = {
+      center: new google.maps.LatLng(center[0], center[1]),
+      zoom: Googlemaps_Map.getZoom(),
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      panControl: false,
+      zoomControl: true,
+      zoomControlOptions: {
+        style: google.maps.ZoomControlStyle.LARGE
+      },
+      mapTypeControl: true,
+      scaleControl: true,
+      scrollwheel: true,
+      streetViewControl: true,
+      overviewMapControl: true,
+      overviewMapControlOptions: {
+        opened: true
+      }
+    };
+    Googlemaps_Map.map = new google.maps.Map($(selector).get(0), mapOptions);
+  };
+
+  Googlemaps_Map.getCenter = function () {
+    return (Googlemaps_Map.center ? Googlemaps_Map.center : Googlemaps_Map.defaultCenter);
+  }
+
+  Googlemaps_Map.getZoom = function () {
+    return (Googlemaps_Map.zoom ? Googlemaps_Map.zoom : Googlemaps_Map.defaultZoom);
+  }
+
+  Googlemaps_Map.resize = function () {
+    google.maps.event.trigger(this.map, "resize");
+    if (!this.resized) {
+      var center = Googlemaps_Map.getCenter();
+      this.map.setCenter(new google.maps.LatLng(center[0], center[1]));
+      if (this.form) {
+        this.form.renderMarkers();
+      }
+    }
+    return this.resized = true;
+  };
+
+  Googlemaps_Map.renderMarkers = function () {
+    if (this.form) {
+      return this.form.renderMarkers();
+    }
+  };
+
+  Googlemaps_Map.renderEvents = function () {
+    if (this.form) {
+      return this.form.renderEvents();
+    }
+  };
+
+  Googlemaps_Map.setMarkers = function (markers) {
+    var markerBounds, zoomChangeBoundsListener;
+    Googlemaps_Map.markers = markers;
+    markerBounds = new google.maps.LatLngBounds();
+    $.each(Googlemaps_Map.markers, function (id, value) {
+      var name, text, opts;
+
+      opts = {
+        position: new google.maps.LatLng(value["loc"][1], value["loc"][0]),
+        map: Googlemaps_Map.map
+      };
+      if (value["image"]) {
+        opts["icon"] = value["image"];
+      } else {
+        opts["icon"] = Googlemaps_Map.markerIcon;
+      }
+      Googlemaps_Map.markers[id]["marker"] = new google.maps.Marker(opts);
+      markerBounds.extend(new google.maps.LatLng(value["loc"][1], value["loc"][0]));
+
+      var markerHtml = "";
+      if (value["html"]) {
+        markerHtml = value["html"];
+      } else if (value["name"] || value["text"]) {
+        name = value["name"];
+        text = value["text"];
+        markerHtml = '<div class="marker-info">';
+        if (name && name !== "") {
+          markerHtml += '<p>' + name + '</p>';
+          if (text && text !== "") {
+            $.each(text.split(/[\r\n]+/), function () {
+              if (this.match(/^https?:\/\//)) {
+                return markerHtml += '<p><a href="' + this + '">' + this + '</a></p>';
+              } else {
+                return markerHtml += '<p>' + this + '</p>';
+              }
+            });
+          }
+        }
+        markerHtml += '</div>';
+      }
+
+      if (Googlemaps_Map.showGoogleMapsSearch) {
+        markerHtml += Googlemaps_Map.getMapsSearchHtml(value["loc"][1], value["loc"][0]);
+      }
+      if (markerHtml) {
+        Googlemaps_Map.markers[id]["window"] = new google.maps.InfoWindow({
+          content: markerHtml
+        });
+        Googlemaps_Map.attachMessage(id);
+      }
+    });
+
+    Googlemaps_Map.adjustMarkerBounds(Googlemaps_Map.markers.length, markerBounds);
+  };
+
+  Googlemaps_Map.setKmlLayer = function (url) {
+    Googlemaps_Map.kmlLayer = new google.maps.KmlLayer({
+      url: url,
+      suppressInfoWindows: true,
+      preserveViewport: false
+    });
+    Googlemaps_Map.kmlLayer.setMap(Googlemaps_Map.map);
+  };
+
+  Googlemaps_Map.setGeoJson = function (url) {
+    Googlemaps_Map.map.data.setStyle({
+      fillColor: "#b2c9e8",
+      strokeColor: "#5A88C6",
+      strokeWeight: 1
+    });
+    Googlemaps_Map.map.data.loadGeoJson(url, {}, function(data) {
+      var bounds = new google.maps.LatLngBounds();
+      var locs = [];
+
+      data.forEach(function (feature) {
+        feature.getGeometry().forEachLatLng(function (LatLng) {
+          bounds.extend(LatLng);
+          locs.push(LatLng);
+        });
+      });
+
+      Googlemaps_Map.adjustMarkerBounds(locs.length, bounds);
+    });
+  };
+
+  Googlemaps_Map.adjustMarkerBounds = function(pointCount, bounds) {
+    if (pointCount > 0) {
+      // marker exists
+      // set manually options or do fit
+      var manuallyAdjust = false;
+
+      if (Googlemaps_Map.center) {
+        var center = Googlemaps_Map.getCenter();
+        Googlemaps_Map.map.setCenter(new google.maps.LatLng(center[0], center[1]));
+        manuallyAdjust = true;
+      }
+
+      if (Googlemaps_Map.zoom) {
+        Googlemaps_Map.map.setZoom(Googlemaps_Map.getZoom());
+        manuallyAdjust = true;
+      }
+
+      if (!manuallyAdjust) {
+        google.maps.event.addListenerOnce(Googlemaps_Map.map, "idle", function(){
+          if (Googlemaps_Map.map.getZoom() > Googlemaps_Map.getZoom()) {
+            Googlemaps_Map.map.setZoom(Googlemaps_Map.getZoom());
+          }
+        })
+        Googlemaps_Map.map.fitBounds(bounds);
+      }
+    } else {
+      // marker not exists
+      // set manually or default options
+      var center = Googlemaps_Map.getCenter();
+      Googlemaps_Map.map.setCenter(new google.maps.LatLng(center[0], center[1]));
+      Googlemaps_Map.map.setZoom(Googlemaps_Map.getZoom());
+    }
+  };
+
+  Googlemaps_Map.validateZoom = function (zoom) {
+    if (zoom >= 1 && zoom <= 21) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  Googlemaps_Map.validateLatLon = function (lat, lon) {
+    if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  Googlemaps_Map.getMapsSearchHtml = function(lat, lng) {
+    var url = Googlemaps_Map.mapsSearchUrl + lat + "," + lng;
+    return '<p><a href="' + url + '">' + "Googleマップで見る" + '</a></p>';
+  };
+
+  return Googlemaps_Map;
+})();

@@ -17,7 +17,7 @@ module Gws::Addon::Portal::Portlet
     end
 
     def ad_options
-      ret = { auto: true, slideWidth: effective_ad_width, mode: 'horizontal', touchEnabled: false }
+      ret = { autoplay: "started", navigation: "show", pagination_style: "disc" }
       ret[:speed] = ad_speed if ad_speed.present?
       ret[:pause] = ad_pause if ad_pause.present?
       ret

@@ -8,6 +8,7 @@ ja:
     category_of_the_event: イベントカテゴリー
     date_of_the_event: イベント日
     del_date: 削除
+    ics_file: icsファイル
     next_month: 次の月へ
     prev_month: 前の月へ
     next_day: 次の日へ

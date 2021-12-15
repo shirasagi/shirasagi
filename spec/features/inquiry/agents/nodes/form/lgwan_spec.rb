@@ -40,13 +40,13 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
     ActionMailer::Base.deliveries = []
   end
 
-  context "when enable_lgwan: true" do
+  context "when lgwan enabled" do
     before do
-      SS.config.replace_value_at(:cms, :enable_lgwan, true)
+      SS.config.replace_value_at(:lgwan, :disable, false)
     end
 
     after do
-      SS.config.replace_value_at(:cms, :enable_lgwan, false)
+      SS.config.replace_value_at(:lgwan, :disable, true)
     end
 
     let(:index_url) { ::URI.parse "http://#{site.domain}/#{node.filename}/" }
