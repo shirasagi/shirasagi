@@ -58,7 +58,7 @@ this.Cms_Site_Search = (function () {
 
     // select item event
     $(".search-ui a.select-item").on("click", function (e) {
-        $(".selected-categories").html();
+      $(".selected-categories").html('');
       var tr = $(this).closest("tr");
       var article = Cms_Site_Search.selectItem(tr);
 
@@ -70,7 +70,7 @@ this.Cms_Site_Search = (function () {
 
     // select items event
     $(".search-ui-select .select-items").on("click", function (e) {
-        $(".selected-categories").html();
+        $(".selected-categories").html('');
         $(".search-ui .items .set-category:checked").each(function () {
             var tr = $(this).closest("tr");
             Cms_Site_Search.selectItem(tr);
