@@ -1,10 +1,12 @@
 class Cms::SyntaxChecker::InterwordSpaceChecker
   include Cms::SyntaxChecker::Base
 
-  def check(context, id, idx, raw_html, doc)
-    doc.search('//text()').each do |text_node|
-      text = text_node.text.strip
-      next if !text.include?('　')
+  FULL_WIDTH_SPACE = '　'.freeze
+
+  def check(context, id, idx, raw_html, fragment)
+    Cms::SyntaxChecker::Base.each_text_node(fragment) do |text_node|
+      text = text_node.content.strip
+      next if !text.include?(FULL_WIDTH_SPACE)
 
       context.errors << {
         id: id,

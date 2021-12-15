@@ -1,8 +1,8 @@
 class Cms::SyntaxChecker::ImgAltChecker
   include Cms::SyntaxChecker::Base
 
-  def check(context, id, idx, raw_html, doc)
-    doc.css('img').each do |img_node|
+  def check(context, id, idx, raw_html, fragment)
+    fragment.css('img').each do |img_node|
       alt = img_node["alt"]
       alt = alt.strip if alt
       if alt.blank?
