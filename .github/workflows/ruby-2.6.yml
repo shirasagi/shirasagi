@@ -77,6 +77,9 @@ jobs:
           sudo sed -i "s#<policy domain=\"coder\" rights=\"none\" pattern=\"PDF\" />#<policy domain=\"coder\" rights=\"read\" pattern=\"PDF\" />#" policy.xml
           echo "### /etc/ImageMagick-6/policy.xml ###"
           cat policy.xml
+      - name: Mongo version
+        run: |
+          echo 'db.version()' | mongo
       - name: Running Docker Containers
         run: docker ps -a
       - name: Run tests
