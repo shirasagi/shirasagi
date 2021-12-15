@@ -18,4 +18,27 @@ class Cms::SyntaxChecker::KanaCharacterChecker
       }
     end
   end
+
+  def correct(context)
+    ret = []
+
+    Cms::SyntaxChecker.each_html_with_index(context.content) do |html, index|
+      doc = Nokogiri::HTML.parse(html)
+
+      doc.search('//text()').each do |text_node|
+        text_node.content = text_node.content.gsub(/[｡-ﾟ]/) do |matched|
+          # NKF.nkf('-w -X', matched)
+          matched.unicode_normalize(:nfkc)
+        end
+      end
+
+      ret << doc.at('body').at('div').inner_html.strip
+    end
+
+    if context.content["type"] == "array"
+      context.result = ret
+    else
+      context.result = ret[0]
+    end
+  end
 end

@@ -9,7 +9,7 @@ class Cms::SyntaxChecker::ReplaceWordsChecker
     doc.search('//text()').each do |text_node|
       text = text_node.text.strip
       replace_words.each do |replace_from, replace_to|
-        c = text.scan(/#{::Regexp.escape(replace_from)}/)
+        c = text.scan(replace_from)
         next if c.blank?
 
         context.errors << {
@@ -20,11 +20,35 @@ class Cms::SyntaxChecker::ReplaceWordsChecker
           msg: I18n.t('errors.messages.replace_word', from: replace_from, to: replace_to),
           collector: self.class.name,
           collector_params: {
-            replaceKey: replace_from,
-            replaceValue: replace_to,
+            replace_from: replace_from,
+            replace_to: replace_to,
           }
         }
       end
+    end
+  end
+
+  def correct(context)
+    replace_from = context.params["replace_from"]
+    replace_to = context.params["replace_to"]
+    return if replace_from.blank? || replace_to.blank?
+
+    ret = []
+
+    Cms::SyntaxChecker.each_html_with_index(context.content) do |html, index|
+      doc = Nokogiri::HTML.parse(html)
+
+      doc.search('//text()').each do |text_node|
+        text_node.content = text_node.content.gsub(replace_from, replace_to)
+      end
+
+      ret << doc.at('body').at('div').inner_html.strip
+    end
+
+    if context.content["type"] == "array"
+      context.result = ret
+    else
+      context.result = ret[0]
     end
   end
 end
