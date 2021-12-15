@@ -616,7 +616,6 @@ ja:
       cms/redirect_link: リンクページ
       cms/site_search/history: 履歴
       cms/site_search/keyword: 注目ワード
-      cms/site_search/category: カテゴリー
       cms/line_poster: LINE連携
       cms/content_quota: 容量制限
       cms/check_links: リンクチェック実行結果
@@ -976,9 +975,6 @@ ja:
         upper_html: 上部HTML
         lower_html: 下部HTML
         placeholder: プレースホルダー
-      cms/addon/site_search/category:
-        site_search_categories: カテゴリー
-        site_search_category_ids: カテゴリー
       cms/form:
         name: 名前
         order: 並び順
@@ -2331,8 +2327,8 @@ ja:
       placeholder:
         - プレースホルダーを入力します。
 
-    cms/addon/site_search/category:
-      site_search_categories:
+    cms/node/site_search:
+      st_categories:
         - サイト内検索で使用するカテゴリーを設定します。
         - 設定されていない場合は全カテゴリーが対象となります。
 

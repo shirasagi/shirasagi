@@ -79,8 +79,8 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
   def categories
     @s = @item = @model.new(get_params)
 
-    if @cur_node.site_search_categories.present?
-      @items = @cur_node.site_search_categories
+    if @cur_node.st_categories.present?
+      @items = @cur_node.st_categories
     else
       @aggregate_result = @s.search
     end

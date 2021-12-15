@@ -17,21 +17,23 @@ var cboxLoad = function() {
 $("#ajax-box .pagination a").on("click", cboxLoad);
 $("#ajax-box .submitters a").on("click", cboxLoad);
 <% end %>
+<!--
 <div class="search-ui-form">
   <%= form_for :s, url: "#{@cur_node.url}categories.html", html: { method: "GET", class: :search } do |f| %>
     <%= f.text_field :keyword %>
     <div class="submitters">
       <%= f.submit t("ss.buttons.search"), class: :btn %>
-      <%= link_to t("ss.buttons.reset"), "#{@cur_node.url}categories.html", class: :btn %>
+  <%= link_to t("ss.buttons.reset"), "#{@cur_node.url}categories.html", class: :btn %>
     </div>
   <% end %>
 </div>
+-->
 <% if @items.present? %>
   <table class="index search-ui">
     <thead class="list-head">
     <tr>
-      <th class="checkbox"><input type="checkbox" /></th>
-      <th class="name"><%= Cms::Node.t :name %></th>
+      <th class="checkbox"><input type="checkbox"/></th>
+      <th class="name"><%= @cur_node.t :st_category_ids %></th>
     </tr>
     </thead>
     <tbody class="items">
@@ -40,11 +42,11 @@ $("#ajax-box .submitters a").on("click", cboxLoad);
       <tr data-name="<%= item.name %>" class="list-item">
         <td class="checkbox">
           <label for="<%= "ch-d-#{item.name}" %>">
-            <input type="checkbox" name="ids[]" value="<%= item.name %>" class="set-category" id="<%= "ch-d-#{item.name}" %>" />
+            <input type="checkbox" name="ids[]" value="<%= item.name %>" class="set-category" id="<%= "ch-d-#{item.name}" %>"/>
           </label>
         </td>
         <td class="name">
-          <%= link_to item.name, "#", class: "select-item" %>
+          <span class='select-item'><label for="<%= "ch-d-#{item.name}" %>"><%= item.name %></label></span>
           <article style="display: none;" class="selected-item" data-name="<%= item.name %>">
             <header>
               <span class="category-name"><%= item.name %></span>
@@ -61,8 +63,8 @@ $("#ajax-box .submitters a").on("click", cboxLoad);
   <table class="index search-ui">
     <thead class="list-head">
     <tr>
-      <th class="checkbox"><input type="checkbox" /></th>
-      <th class="name"><%= Cms::Node.t :name %></th>
+      <th class="checkbox"><input type="checkbox"/></th>
+      <th class="name"><%= @cur_node.t :st_category_ids %></th>
     </tr>
     </thead>
     <tbody class="items">
@@ -71,11 +73,11 @@ $("#ajax-box .submitters a").on("click", cboxLoad);
       <tr data-name="<%= bucket['key'] %>" class="list-item">
         <td class="checkbox">
           <label for="<%= "ch-d-#{bucket['key']}" %>">
-            <input type="checkbox" name="ids[]" value="<%= bucket['key'] %>" class="set-category" id="<%= "ch-d-#{bucket['key']}" %>" />
+            <input type="checkbox" name="ids[]" value="<%= bucket['key'] %>" class="set-category" id="<%= "ch-d-#{bucket['key']}" %>"/>
           </label>
         </td>
         <td class="name">
-          <%= link_to bucket['key'], "#", class: "select-item" %>
+          <span class='select-item'><label for="<%= "ch-d-#{bucket['key']}" %>"><%= bucket['key'] %></label></span>
           <article style="display: none;" class="selected-item" data-name="<%= bucket['key'] %>">
             <header>
               <span class="category-name"><%= bucket['key'] %></span>
@@ -89,7 +91,7 @@ $("#ajax-box .submitters a").on("click", cboxLoad);
     </tbody>
   </table>
 <% end %>
-<div class="search-ui-select" style="display: none;">
+<div class="search-ui-select">
   <%= button_tag t('facility.submit.search'), { type: :button, class: "select-items btn" } %>
 </div>
 
