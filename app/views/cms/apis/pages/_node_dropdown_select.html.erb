@@ -1,11 +1,6 @@
-<%
-  page_params = {}
-  page_params[:id] = @selected_node.try(:id).to_i
-  page_params[:root_items] = @parent_nodes.map(&:id) if @parent_nodes.present?
-%>
+<% return if @selected_node.blank? %>
 <%= jquery do %>
   SS_Dropdown.render();
-  (new SS_TreeNavi("form.search .tree-navi")).render(<%== cms_apis_node_tree_path(page_params).to_json %>);
 
   var $form = $("form.search");
   $form.on("click", ".item-name", function() {
@@ -21,11 +16,15 @@
 
 <dt><%= t("cms.node") %></dt>
 <dd>
-  <button class="dropdown btn" type="button"><%= @selected_node ? @selected_node.name : @cur_site.name %> <span class="caret">&#x25BC;</span></button>
+  <button class="dropdown btn" type="button"><%= @selected_node.name %> <span class="caret">&#x25BC;</span></button>
   <%= f.hidden_field("node", value: @selected_node.try(:id)) %>
   <div class="dropdown-container" style="background: white; padding: 5px;">
-    <div><%= link_to @cur_site.name, "#", class: "item-name" %></div>
     <div class="tree-navi">
+      <% @parent_nodes.each do |node| %>
+        <div class="tree-item" data-id="<%= node.id %>" data-filename="<%= node.filename %>">
+          <%= link_to node.name, "#", class: "item-name" %>
+        </div>
+      <% end %>
     </div>
   </div>
 </dd>

@@ -11,8 +11,16 @@
   <%= hidden_field_tag("layout", params[:layout]) %>
   <%= hidden_field_tag("single", params[:single]) %>
   <%= hidden_field_tag("unique_id", params[:unique_id]) %>
+  <%= hidden_field_tag("dropdown", params[:dropdown]) %>
+  <% @parent_nodes.each do |node| %>
+    <%= hidden_field_tag("parent_nodes[]", node.id) %>
+  <% end %>
   <dl class="see">
-    <%= render 'node_dropdown_tree', f: f %>
+    <% if @dropdown == "tree"%>
+      <%= render template: '_node_dropdown_tree', locals: { f: f } %>
+    <% else %>
+      <%= render template: '_node_dropdown_select', locals: { f: f } %>
+    <% end %>
 
     <dt><%= t("ss.keyword") %></dt>
     <dd><%= f.text_field :name, value: params[:s].try(:[], :name) %></dd>

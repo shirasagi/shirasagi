@@ -68,6 +68,10 @@ module SS::Document
       field store, type: SS::Extensions::ObjectIds, default: [],
             overwrite: true, metadata: { elem_class: opts[:class_name] }.merge(opts[:metadata] || {})
       define_method(name) { opts[:class_name].constantize.where("$and" => [{ :_id.in => send(store) }]) }
+      define_method("ordered_#{name}") do
+        items = send(name).to_a
+        send(store).map { |id| items.find { |item| item.id == id } }
+      end
     end
 
     def addon(path)

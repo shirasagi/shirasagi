@@ -1054,8 +1054,7 @@ ja:
       cms/column/list:
         list_type: 種類
       cms/column/select_page:
-        place_holder: プレースホルダー
-        node_id: 選択肢
+        node_ids: 記事フォルダー
       cms/column/value/base:
         order: 並び順
         alignment: 配置
@@ -2240,6 +2239,11 @@ ja:
     cms/column/list:
       list_type:
         - 種類を選択します。
+
+    cms/column/base:
+      node_ids:
+        - 記事フォルダーを設定します。
+        - 設定した記事フォルダー配下のページを選択可能です。
 
     cms/addon/node_twitter_post_setting:
       node_twitter_auto_post:

@@ -3208,6 +3208,9 @@ body.ss-ajax-in-iframe {
       float: none;
     }
   }
+  .inplace-edit.select_page {
+    min-height: 600px;
+  }
 }
 
 .column-value-cms-column-table {
