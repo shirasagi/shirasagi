@@ -28,6 +28,7 @@ class Cms::Node
     include Cms::Addon::ContentQuota
     include Cms::Addon::ForMemberNode
     include Cms::Addon::Release
+    include Cms::Addon::ReleasePlan
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
