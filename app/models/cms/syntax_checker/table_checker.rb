@@ -1,38 +1,10 @@
 class Cms::SyntaxChecker::TableChecker
   include Cms::SyntaxChecker::Base
 
-  def check(context, id, idx, raw_html, doc)
-    doc.search('//table').each do |table_node|
-      caption = table_node.at_css('caption')
-      if !caption || caption.text.strip.blank?
-        context.errors << {
-          id: id,
-          idx: idx,
-          code: Cms::SyntaxChecker::Base.outer_html_summary(table_node),
-          msg: I18n.t('errors.messages.set_table_caption'),
-          detail: I18n.t('errors.messages.syntax_check_detail.set_table_caption'),
-          collector: self.class.name,
-          collector_params: {
-            tag: 'caption'
-          }
-        }
-      end
-
-      table_node.search('//th').each do |th_node|
-        next if th_node["scope"].present?
-
-        context.errors << {
-          id: id,
-          idx: idx,
-          code: Cms::SyntaxChecker::Base.outer_html_summary(th_node),
-          msg: I18n.t('errors.messages.set_th_scope'),
-          detail: I18n.t('errors.messages.syntax_check_detail.set_th_scope'),
-          collector: self.class.name,
-          collector_params: {
-            tag: 'th'
-          }
-        }
-      end
+  def check(context, id, idx, raw_html, fragment)
+    fragment.css('table').each do |table_node|
+      check_caption(context, id, idx, table_node)
+      check_unscoped_th(context, id, idx, table_node)
     end
   end
 
@@ -49,24 +21,67 @@ class Cms::SyntaxChecker::TableChecker
 
   private
 
+  def check_caption(context, id, idx, table_node)
+    caption = table_node.at_css('caption')
+    return if caption && caption.text.strip.present?
+
+    context.errors << {
+      id: id,
+      idx: idx,
+      code: Cms::SyntaxChecker::Base.outer_html_summary(table_node),
+      msg: I18n.t('errors.messages.set_table_caption'),
+      detail: I18n.t('errors.messages.syntax_check_detail.set_table_caption'),
+      collector: self.class.name,
+      collector_params: {
+        tag: 'caption'
+      }
+    }
+  end
+
+  def check_unscoped_th(context, id, idx, table_node)
+    tr_nodes = table_node.css('tr').to_a
+    unscoped_nodes = tr_nodes.select { |tr_node| include_unscoped_th?(tr_node) }
+    return if unscoped_nodes.blank?
+
+    code = unscoped_nodes.map { |node| Cms::SyntaxChecker::Base.outer_html_summary(node) }.join(",")
+    context.errors << {
+      id: id,
+      idx: idx,
+      code: code,
+      msg: I18n.t('errors.messages.set_th_scope'),
+      detail: I18n.t('errors.messages.syntax_check_detail.set_th_scope'),
+      collector: self.class.name,
+      collector_params: {
+        tag: 'th'
+      }
+    }
+  end
+
+  def include_unscoped_th?(tr_node)
+    th_nodes = tr_node.css('th')
+    return false if th_nodes.blank?
+
+    th_nodes.any? { |th_node| th_node["scope"].blank? }
+  end
+
   def correct_caption(context)
     ret = []
 
-    Cms::SyntaxChecker.each_html_with_index(context.content) do |html, index|
-      doc = Nokogiri::HTML.parse(html)
-      doc.search('//table').each do |table_node|
+    Cms::SyntaxChecker::Base.each_html_with_index(context.content) do |html, index|
+      fragment = Nokogiri::HTML5.fragment(html)
+      fragment.css('table').each do |table_node|
         caption = table_node.at_css('caption')
         next if caption && caption.content.present?
 
         if !caption
-          caption = Nokogiri::XML::Node::new('caption', doc)
+          caption = Nokogiri::XML::Node::new('caption', table_node.document)
           table_node.prepend_child(caption)
         end
 
         caption.content = I18n.t('cms.auto_correct.caption')
       end
 
-      ret << doc.at('body').at('div').inner_html.strip
+      ret << Cms::SyntaxChecker::Base.inner_html_within_div(fragment)
     end
 
     if context.content["type"] == "array"
@@ -79,9 +94,9 @@ class Cms::SyntaxChecker::TableChecker
   def correct_th_scope(context)
     ret = []
 
-    Cms::SyntaxChecker.each_html_with_index(context.content) do |html, index|
-      doc = Nokogiri::HTML.parse(html)
-      doc.search('//table').each do |table_node|
+    Cms::SyntaxChecker::Base.each_html_with_index(context.content) do |html, index|
+      fragment = Nokogiri::HTML5.fragment(html)
+      fragment.css('table').each do |table_node|
         scope = table_node.css("tr:first th").count == 1 ? "row" : "col"
 
         table_node.css("tr:first th").each do |th_node|
@@ -96,7 +111,7 @@ class Cms::SyntaxChecker::TableChecker
         end
       end
 
-      ret << doc.at('body').at('div').inner_html.strip
+      ret << Cms::SyntaxChecker::Base.inner_html_within_div(fragment)
     end
 
     if context.content["type"] == "array"

@@ -1,10 +1,12 @@
 class Cms::SyntaxChecker::KanaCharacterChecker
   include Cms::SyntaxChecker::Base
 
-  def check(context, id, idx, raw_html, doc)
+  HALF_WIDTH_KANA_REGX = /[｡-ﾟ]+/.freeze
+
+  def check(context, id, idx, raw_html, fragment)
     chars = []
-    doc.search('//text()').each do |text_node|
-      chars += text_node.text.scan(/[｡-ﾟ]+/)
+    Cms::SyntaxChecker::Base.each_text_node(fragment) do |text_node|
+      chars += text_node.content.scan(HALF_WIDTH_KANA_REGX)
     end
     if chars.present?
       context.errors << {
@@ -22,17 +24,17 @@ class Cms::SyntaxChecker::KanaCharacterChecker
   def correct(context)
     ret = []
 
-    Cms::SyntaxChecker.each_html_with_index(context.content) do |html, index|
-      doc = Nokogiri::HTML.parse(html)
+    Cms::SyntaxChecker::Base.each_html_with_index(context.content) do |html, index|
+      fragment = Nokogiri::HTML5.fragment(html)
 
-      doc.search('//text()').each do |text_node|
-        text_node.content = text_node.content.gsub(/[｡-ﾟ]/) do |matched|
+      Cms::SyntaxChecker::Base.each_text_node(fragment) do |text_node|
+        text_node.content = text_node.content.gsub(HALF_WIDTH_KANA_REGX) do |matched|
           # NKF.nkf('-w -X', matched)
           matched.unicode_normalize(:nfkc)
         end
       end
 
-      ret << doc.at('body').at('div').inner_html.strip
+      ret << Cms::SyntaxChecker::Base.inner_html_within_div(fragment)
     end
 
     if context.content["type"] == "array"

@@ -1,10 +1,12 @@
 class Cms::SyntaxChecker::MultibyteCharacterChecker
   include Cms::SyntaxChecker::Base
 
-  def check(context, id, idx, raw_html, doc)
+  FULL_WIDTH_ALNUM_REGEX = /[Ａ-Ｚａ-ｚ０-９]+/.freeze
+
+  def check(context, id, idx, raw_html, fragment)
     chars = []
-    doc.search('//text()').each do |text_node|
-      chars += text_node.text.scan(/[Ａ-Ｚａ-ｚ０-９]+/)
+    Cms::SyntaxChecker::Base.each_text_node(fragment) do |text_node|
+      chars += text_node.content.scan(FULL_WIDTH_ALNUM_REGEX)
     end
     if chars.present?
       context.errors << {
@@ -22,16 +24,16 @@ class Cms::SyntaxChecker::MultibyteCharacterChecker
   def correct(context)
     ret = []
 
-    Cms::SyntaxChecker.each_html_with_index(context.content) do |html, index|
-      doc = Nokogiri::HTML.parse(html)
+    Cms::SyntaxChecker::Base.each_html_with_index(context.content) do |html, index|
+      fragment = Nokogiri::HTML5.fragment(html)
 
-      doc.search('//text()').each do |text_node|
-        text_node.content = text_node.content.gsub(/[Ａ-Ｚａ-ｚ０-９]/) do |matched|
-          (matched.ord - 0xFEE0).chr
+      Cms::SyntaxChecker::Base.each_text_node(fragment) do |text_node|
+        text_node.content = text_node.content.gsub(FULL_WIDTH_ALNUM_REGEX) do |matched|
+          matched.chars.map { |ch| (ch.ord - 0xFEE0).chr }.join
         end
       end
 
-      ret << doc.at('body').at('div').inner_html.strip
+      ret << Cms::SyntaxChecker::Base.inner_html_within_div(fragment)
     end
 
     if context.content["type"] == "array"

@@ -1,13 +1,13 @@
 class Cms::SyntaxChecker::ReplaceWordsChecker
   include Cms::SyntaxChecker::Base
 
-  def check(context, id, idx, raw_html, doc)
+  def check(context, id, idx, raw_html, fragment)
     replace_words_conf = Cms::WordDictionary.site(context.cur_site).to_config
     replace_words = replace_words_conf[:replace_words]
     return if replace_words.blank?
 
-    doc.search('//text()').each do |text_node|
-      text = text_node.text.strip
+    Cms::SyntaxChecker::Base.each_text_node(fragment) do |text_node|
+      text = text_node.content.strip
       replace_words.each do |replace_from, replace_to|
         c = text.scan(replace_from)
         next if c.blank?
@@ -35,14 +35,14 @@ class Cms::SyntaxChecker::ReplaceWordsChecker
 
     ret = []
 
-    Cms::SyntaxChecker.each_html_with_index(context.content) do |html, index|
-      doc = Nokogiri::HTML.parse(html)
+    Cms::SyntaxChecker::Base.each_html_with_index(context.content) do |html, index|
+      fragment = Nokogiri::HTML5.fragment(html)
 
-      doc.search('//text()').each do |text_node|
+      Cms::SyntaxChecker::Base.each_text_node(fragment) do |text_node|
         text_node.content = text_node.content.gsub(replace_from, replace_to)
       end
 
-      ret << doc.at('body').at('div').inner_html.strip
+      ret << Cms::SyntaxChecker::Base.inner_html_within_div(fragment)
     end
 
     if context.content["type"] == "array"

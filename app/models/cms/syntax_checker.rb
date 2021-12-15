@@ -43,11 +43,11 @@ module Cms::SyntaxChecker
         checkers = Cms::SyntaxChecker.text_checkers
       end
 
-      Cms::SyntaxChecker.each_html_with_index(content) do |html, idx|
-        doc = Nokogiri::HTML.parse(html)
+      Cms::SyntaxChecker::Base.each_html_with_index(content) do |html, idx|
+        fragment = Nokogiri::HTML5.fragment(html)
         checkers.each do |checker|
           innstance = checker.new
-          innstance.check(context, id, idx, html, doc)
+          innstance.check(context, id, idx, html, fragment)
         rescue => e
           Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
         end
@@ -74,27 +74,5 @@ module Cms::SyntaxChecker
     innstance.correct(context)
 
     context
-  end
-
-  def each_html_with_index(content, &block)
-    value = content["content"]
-    resolve = content["resolve"]
-
-    if content["type"] == "array"
-      value.each_with_index do |v, index|
-        if resolve == "html"
-          yield v, index
-        else
-          yield "<div>#{v}</div>", index
-        end
-      end
-      return
-    end
-
-    if resolve == "html"
-      yield value, 0
-    else
-      yield "<div>#{value}</div>", 0
-    end
   end
 end
