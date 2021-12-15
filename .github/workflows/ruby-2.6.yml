@@ -10,6 +10,8 @@ name: Ruby-2.6
 on:
   push:
     branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
 
 jobs:
   test:
