@@ -1,12 +1,6 @@
 class Cms::SyntaxChecker::TableChecker
   include Cms::SyntaxChecker::Base
 
-  class << self
-    def outer_html_summary(table_node)
-      table_node.to_s.gsub(/[\r\n]|&nbsp;/, "")
-    end
-  end
-
   def check(context, id, idx, raw_html, doc)
     doc.search('//table').each do |table_node|
       caption = table_node.at_css('caption')
@@ -14,7 +8,7 @@ class Cms::SyntaxChecker::TableChecker
         context.errors << {
           id: id,
           idx: idx,
-          code: self.class.outer_html_summary(table_node),
+          code: Cms::SyntaxChecker::Base.outer_html_summary(table_node),
           msg: I18n.t('errors.messages.set_table_caption'),
           detail: I18n.t('errors.messages.syntax_check_detail.set_table_caption'),
           collector: self.class.name,
@@ -30,7 +24,7 @@ class Cms::SyntaxChecker::TableChecker
         context.errors << {
           id: id,
           idx: idx,
-          code: self.class.outer_html_summary(th_node),
+          code: Cms::SyntaxChecker::Base.outer_html_summary(th_node),
           msg: I18n.t('errors.messages.set_th_scope'),
           detail: I18n.t('errors.messages.syntax_check_detail.set_th_scope'),
           collector: self.class.name,
