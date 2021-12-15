@@ -1,6 +1,15 @@
 class Cms::SyntaxChecker::DateFormatChecker
   include Cms::SyntaxChecker::Base
 
+  class << self
+    def valid_date?(date_like)
+      date = date_like.in_time_zone rescue nil
+      return false if !date
+
+      date.year > 0
+    end
+  end
+
   def check(context, id, idx, raw_html, doc)
     doc.search('//text()').each do |text_node|
       dates = text_node.text.scan(/\d{4}.\d{1,2}.\d{1,2}/)
@@ -45,12 +54,5 @@ class Cms::SyntaxChecker::DateFormatChecker
     else
       context.result = ret[0]
     end
-  end
-
-  def self.valid_date?(date_like)
-    date = date_like.in_time_zone rescue nil
-    return false if !date
-
-    date.year > 0
   end
 end
