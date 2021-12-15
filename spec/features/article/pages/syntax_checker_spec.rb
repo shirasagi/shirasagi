@@ -251,7 +251,7 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
           wait_for_ajax do
             expect(page).to have_css(".errorExplanationBody", text: I18n.t('errors.messages.invalid_multibyte_character'))
           end
-          click_link I18n.t("cms.auto_correct.link")
+          click_on I18n.t("cms.auto_correct.link")
           wait_for_ajax do
             expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.template.no_errors"))
           end
@@ -268,7 +268,7 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         wait_for_ajax do
           expect(page).to have_css(".errorExplanationBody", text: I18n.t('errors.messages.invalid_multibyte_character'))
         end
-        click_link I18n.t("cms.auto_correct.link")
+        click_on I18n.t("cms.auto_correct.link")
         wait_for_ajax do
           expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.template.no_errors"))
         end
@@ -308,7 +308,7 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
           wait_for_ajax
 
           expect(page).to have_css(".errorExplanationBody", text: I18n.t('errors.messages.invalid_multibyte_character'))
-          click_link I18n.t("cms.auto_correct.link")
+          click_on I18n.t("cms.auto_correct.link")
           wait_for_ajax do
             expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.template.no_errors"))
           end
@@ -330,7 +330,7 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
           click_button I18n.t("cms.syntax_check")
           wait_for_ajax
           expect(page).to have_css(".errorExplanationBody", text: I18n.t('errors.messages.invalid_multibyte_character'))
-          click_link I18n.t("cms.auto_correct.link")
+          click_on I18n.t("cms.auto_correct.link")
           wait_for_ajax do
             expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.template.no_errors"))
           end
@@ -371,7 +371,7 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
           wait_for_ajax
 
           expect(page).to have_css(".errorExplanationBody", text: I18n.t('errors.messages.invalid_multibyte_character'))
-          click_link I18n.t("cms.auto_correct.link")
+          click_on I18n.t("cms.auto_correct.link")
           wait_for_ajax do
             expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.template.no_errors"))
           end
@@ -393,7 +393,7 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
           click_button I18n.t("cms.syntax_check")
           wait_for_ajax
           expect(page).to have_css(".errorExplanationBody", text: I18n.t('errors.messages.invalid_multibyte_character'))
-          click_link I18n.t("cms.auto_correct.link")
+          click_on I18n.t("cms.auto_correct.link")
           wait_for_ajax do
             expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.template.no_errors"))
           end
