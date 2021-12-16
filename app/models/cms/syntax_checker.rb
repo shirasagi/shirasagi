@@ -36,7 +36,7 @@ module Cms::SyntaxChecker
   def check(cur_site:, cur_user:, contents:)
     context = Cms::SyntaxChecker::CheckerContext.new(cur_site, cur_user, contents, [])
 
-    contents.each do |id, content|
+    contents.each do |content|
       if content["resolve"] == "html"
         checkers = Cms::SyntaxChecker.html_checkers
       else
@@ -47,7 +47,7 @@ module Cms::SyntaxChecker
         fragment = Nokogiri::HTML5.fragment(html)
         checkers.each do |checker|
           innstance = checker.new
-          innstance.check(context, id, idx, html, fragment)
+          innstance.check(context, content["id"], idx, html, fragment)
         rescue => e
           Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
         end

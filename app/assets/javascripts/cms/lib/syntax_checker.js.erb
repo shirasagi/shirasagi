@@ -235,27 +235,41 @@ this.Syntax_Checker = (function () {
 
 //    return defer.promise();
 //  };
+  Syntax_Checker.validServerParams = [ "content", "resolve", "type" ];
+
   Syntax_Checker.asyncCheck = function () {
     var defer = $.Deferred();
 
     Syntax_Checker.resultBox.showChecking();
     Syntax_Checker.reset();
 
-    var contents = Syntax_Checker.getContents();
     var token = $('meta[name="csrf-token"]').attr('content');
+    var contents = Syntax_Checker.getContents();
+    var params = [];
+    $.each(contents, function(id, content) {
+      var param = {};
+      $.each(Syntax_Checker.validServerParams, function() {
+        if (content[this]) {
+          param[this] = content[this];
+        }
+      });
+
+      if (Object.keys(param).length > 0) {
+        param["id"] = id;
+        params.push(param);
+      }
+    });
 
     $.ajax({
       type: "POST",
       url: Syntax_Checker.url,
-      cache: false,
-      data: {
-        authenticity_token: token,
-        contents: contents
-      },
+      data: JSON.stringify({ authenticity_token: token, item: { contents: params } }),
+      contentType: "application/json",
       success: function(data, textStatus, xhr) {
         $.each(data.errors, function() {
           Syntax_Checker.errors.push(this);
         });
+
         $.each(contents, function(id, content) {
           var afterCheck = content["afterCheck"];
           if (afterCheck) {
