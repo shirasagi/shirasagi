@@ -93,9 +93,10 @@ class Cms::Notice
   def file_previewable?(file, site:, user:, member:)
     return false if !file_ids.include?(file.id)
     return false if user.blank?
+    return false if !site || !site.is_a?(SS::Model::Site) || self.site_id != site.id
 
     return true if state == "public" && notice_target == NOTICE_TARGET_ALL
 
-    allowed?(:read, user, site: @cur_site || site)
+    allowed?(:read, user, site: site)
   end
 end

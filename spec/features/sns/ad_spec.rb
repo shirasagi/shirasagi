@@ -21,7 +21,7 @@ describe "login_ad", type: :feature, dbscope: :example do
       setting.save
       setting.reload
       visit sns_login_path
-      expect(page).to have_css(".login-ad")
+      expect(page).to have_css(".login-image-box")
       expect(page).to have_css("img[src='#{ss_file.url}']")
       expect(page).to have_css("img[src='#{ss_file2.url}']")
     end
@@ -33,7 +33,7 @@ describe "login_ad", type: :feature, dbscope: :example do
       setting.save
       setting.reload
       visit sns_login_path
-      expect(page).to have_no_css(".login-ad")
+      expect(page).to have_no_css(".login-image-box")
     end
   end
 end

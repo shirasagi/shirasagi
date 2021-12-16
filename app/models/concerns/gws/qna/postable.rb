@@ -121,7 +121,7 @@ module Gws::Qna::Postable
     return false if user.blank?
     return false if !file_ids.include?(file.id)
 
-    return true if topic.present? && topic.id != id && topic.allowed?(:read, user, site: site)
+    return true if topic.present? && topic.id != id && topic.allowed?(:read, user, site: self.site)
 
     false
   end

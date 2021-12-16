@@ -83,7 +83,8 @@ save_part route: "inquiry/feedback", filename: "feedback/feedback.part.html", na
   upper_html: '<section id="feedback"><h2>この情報は役に立ちましたか？</h2>',
   lower_html: '</section>'
 save_part route: "member/photo", filename: "kanko-info/photo/recent.part.html", name: "新着写真一覧", mobile_view: "hide", limit: 4
-save_part route: "member/photo_slide", filename: "kanko-info/photo/slide.part.html", name: "スライド", mobile_view: "hide"
+save_part route: "key_visual/swiper_slide", filename: "kanko-info/photo/slide.part.html", name: "スライド", mobile_view: "hide",
+  kv_autoplay: "started", kv_thumbnail: "show", kv_thumbnail_count: 3
 save_part route: "member/photo_search", filename: "kanko-info/photo/search/search.part.html", name: "スライド", mobile_view: "hide"
 save_part route: "member/blog_page", filename: "kanko-info/blog/recent.part.html", name: "新着ブログ", mobile_view: "hide"
 save_part route: "member/login", filename: "login/login.part.html", name: "ログイン", mobile_view: "hide", ajax_view: "enabled"

@@ -1,1 +1,252 @@
-Opendata_Graph=function(t,e){this.$canvas=$(t),this.$container=$(t).parent("div"),this.$controller=$(e),this.chart=null},Opendata_Graph.prototype.render=function(t,e,a,s,i){if(null==i&&(i={}),this.type=t,this.name=e,this.labels=a,this.datasets=s,this.headerIndex=i.headerIndex,this.destroy(),this.headerIndex||0==this.headerIndex){var n=this.datasets[this.headerIndex];n&&(this.datasets=[n])}"bar"==this.type?this.drawBar():"line"==this.type?this.drawLine():"pie"==this.type&&this.drawPie()},Opendata_Graph.prototype.resizeContainer=function(t){var e=this.$container.data("baseWidth");e||(e=this.$container.width(),this.$container.data("baseWidth",e)),e<t?this.$container.css("width",t+"px"):this.$container.css("width",e+"px")},Opendata_Graph.prototype.datasetsMinWidth=function(){return 12*this.datasets.length*this.labels.length},Opendata_Graph.prototype.drawBar=function(){this.resizeContainer(this.datasetsMinWidth()),this.chart=new Chart(this.$canvas,{type:"bar",data:{labels:this.labels,datasets:this.datasets},options:{title:{display:!0,text:this.name,fontSize:18},legend:{display:!0,position:"bottom",onClick:function(){return!1}},plugins:{colorschemes:{scheme:"brewer.Paired12"}},scales:{xAxes:[{ticks:{autoSkip:!1}}],yAxes:[{ticks:{beginAtZero:!0,callback:function(t){return t.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",")}}}]},responsive:!0,maintainAspectRatio:!1}})},Opendata_Graph.prototype.drawLine=function(){this.resizeContainer(this.datasetsMinWidth()),this.chart=new Chart(this.$canvas,{type:"line",data:{labels:this.labels,datasets:this.datasets},options:{title:{display:!0,text:this.name,fontSize:18},legend:{display:!0,position:"bottom",onClick:function(){return!1}},plugins:{colorschemes:{scheme:"brewer.Paired12"}},scales:{xAxes:[{ticks:{autoSkip:!1}}],yAxes:[{ticks:{beginAtZero:!0,callback:function(t){return t.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",")}}}]},responsive:!0,maintainAspectRatio:!1}})},Opendata_Graph.prototype.drawPie=function(){this.resizeContainer(0),this.chart=new Chart(this.$canvas,{type:"pie",data:{labels:this.labels,datasets:this.datasets},options:{title:{display:!0,text:this.name,fontSize:18},legend:{display:!0,position:"bottom",onClick:function(){return!1}},tooltips:{callbacks:{label:function(t,e){var a=e.labels[t.index],s=e.datasets[t.datasetIndex];return e=(e=s.data[t.index]).toString().replace(/\B(?=(\d{3})+(?!\d))/g,","),a=a+"\uff08"+s.label+"\uff09: "+e}}},plugins:{colorschemes:{scheme:"brewer.Paired12"}},scales:{xAxes:[{display:!1}],yAxes:[{display:!1}]},responsive:!0,maintainAspectRatio:!1}})},Opendata_Graph.prototype.renderController=function(t,e,a){var s=this;this.types=t,this.headers=e,this.$controller.html("");var i={bar:"\u68d2\u30b0\u30e9\u30d5",line:"\u7dda\u30b0\u30e9\u30d5",pie:"\u5186\u30b0\u30e9\u30d5"},n=$('<div class="graph-types"></div>');if($.each(this.types,function(){var t=$('<button type="button" data-type="'+this+'">'+i[this]+"</button>");s.type==this&&t.addClass("current"),$(t).on("click",function(){a($(this).data("type"))}),$(n).append(t)}),this.$controller.append(n),"pie"==this.type&&this.headers&&0<this.headers.length){var r=$('<div class="graph-header-controller"></div>'),h=$('<select class="select-header" name="header-index"></select>');$.each(this.headers,function(t){s.headerIndex==t?$(h).append('<option value="'+t+'" selected="selected">'+this+"</option>"):$(h).append('<option value="'+t+'">'+this+"</option>")}),$(h).on("change",function(){a("pie",$(this).val())}),$(r).append(h),this.$controller.append(r)}this.$controller.show()},Opendata_Graph.prototype.destroy=function(){this.chart&&this.chart.destroy(),this.$controller&&this.$controller.html("")};
+Opendata_Graph = function (canvas, controller) {
+  this.$canvas = $(canvas);
+  this.$container = $(canvas).parent("div");
+  this.$controller = $(controller);
+  this.chart = null;
+};
+
+Opendata_Graph.prototype.render = function(type, name, labels, datasets, opts) {
+  if (opts == null) {
+    opts = {};
+  }
+
+  this.type = type;
+  this.name = name;
+  this.labels = labels;
+  this.datasets = datasets;
+  this.headerIndex = opts["headerIndex"];
+
+  this.destroy();
+  if (this.headerIndex || this.headerIndex == 0) {
+    var dataset = this.datasets[this.headerIndex];
+    if (dataset) {
+      this.datasets = [dataset];
+    }
+  }
+  if (this.type == "bar") {
+    this.drawBar();
+  } else if(this.type == "line") {
+    this.drawLine();
+  } else if (this.type == "pie") {
+    this.drawPie();
+  }
+};
+
+Opendata_Graph.prototype.resizeContainer = function(width) {
+  var baseWidth = this.$container.data("baseWidth");
+  if (!baseWidth) {
+    baseWidth = this.$container.width();
+    this.$container.data("baseWidth", baseWidth);
+  }
+  if (width > baseWidth) {
+    this.$container.css("width", width + "px");
+  } else {
+    this.$container.css("width", baseWidth + "px");
+  }
+};
+
+Opendata_Graph.prototype.datasetsMinWidth = function() {
+  return (this.datasets.length * 12) * this.labels.length;
+};
+
+Opendata_Graph.prototype.drawBar = function() {
+  this.resizeContainer(this.datasetsMinWidth());
+  this.chart = new Chart(this.$canvas, {
+    type: 'bar',
+    data: {
+      labels: this.labels,
+      datasets: this.datasets,
+    },
+    options: {
+      title: {
+        display: true,
+        text: this.name,
+        fontSize: 18
+      },
+      legend: {
+        display: true,
+        position: 'bottom',
+        onClick: function () { return false; }
+      },
+      plugins: {
+        colorschemes: {
+          scheme: 'brewer.Paired12'
+        }
+      },
+      scales: {
+        xAxes: [{
+          ticks: {
+            autoSkip: false
+          }
+        }],
+        yAxes: [{
+          ticks: {
+            beginAtZero: true,
+            callback: function (label, index, labels) {
+              return label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            }
+          }
+        }]
+      },
+      responsive: true,
+      maintainAspectRatio: false,
+      //animation: {
+      //  onComplete: function () {}
+      //}
+    }
+  });
+};
+
+Opendata_Graph.prototype.drawLine = function() {
+  this.resizeContainer(this.datasetsMinWidth());
+  this.chart = new Chart(this.$canvas, {
+    type: 'line',
+    data: {
+      labels: this.labels,
+      datasets: this.datasets,
+    },
+    options: {
+      title: {
+        display: true,
+        text: this.name,
+        fontSize: 18
+      },
+      legend: {
+        display: true,
+        position: 'bottom',
+        onClick: function () { return false; }
+      },
+      plugins: {
+        colorschemes: {
+          scheme: 'brewer.Paired12'
+        }
+      },
+      scales: {
+        xAxes: [{
+          ticks: {
+            autoSkip: false
+          }
+        }],
+        yAxes: [{
+          ticks: {
+            beginAtZero: true,
+            callback: function(label, index, labels) {
+              return label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            }
+          }
+        }]
+      },
+      responsive: true,
+      maintainAspectRatio: false,
+      //animation: {
+      //  onComplete: function () {}
+      //}
+    }
+  });
+};
+
+Opendata_Graph.prototype.drawPie = function() {
+  this.resizeContainer(0);
+  this.chart = new Chart(this.$canvas, {
+    type: 'pie',
+    data: {
+      labels: this.labels,
+      datasets: this.datasets,
+    },
+    options: {
+      title: {
+        display: true,
+        text: this.name,
+        fontSize: 18
+      },
+      legend: {
+        display: true,
+        position: 'bottom',
+        onClick: function () { return false; }
+      },
+      tooltips: {
+        callbacks: {
+          label: function(tooltipItem, data) {
+            var label = data["labels"][tooltipItem["index"]];
+            var dataset = data["datasets"][tooltipItem["datasetIndex"]];
+
+            data = dataset["data"][tooltipItem["index"]];
+            data = data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+            label = label + "（" + dataset["label"] + "）: " + data;
+            return label;
+          }
+        }
+      },
+      plugins: {
+        colorschemes: {
+          scheme: 'brewer.Paired12'
+        }
+      },
+      scales: {
+        xAxes: [{ display: false }],
+        yAxes: [{ display: false }]
+      },
+      responsive: true,
+      maintainAspectRatio: false,
+      //animation: {
+      //  onComplete: function () {}
+      //}
+    }
+  });
+};
+
+Opendata_Graph.prototype.renderController = function(types, headers, callback) {
+  var self = this;
+  this.types = types;
+  this.headers = headers;
+  this.$controller.html("");
+
+  // type bottons
+  var graphTypes = {"bar":"棒グラフ","line":"線グラフ","pie":"円グラフ"};
+  var divTypes = $('<div class="graph-types"></div>');
+  $.each(this.types, function() {
+    var button = $('<button type="button" data-type="' + this +'">' + graphTypes[this] + '</button>');
+
+    if (self.type == this) {
+      button.addClass("current");
+    }
+    $(button).on("click", function() {
+      callback($(this).data("type"));
+    })
+    $(divTypes).append(button);
+  });
+  this.$controller.append(divTypes);
+
+  // pie controller
+  if (this.type == "pie" && this.headers && this.headers.length > 0) {
+    var divHeader = $('<div class="graph-header-controller"></div>');
+    var select = $('<select class="select-header" name="header-index"></select>');
+
+    $.each(this.headers, function(i) {
+      if (self.headerIndex == i) {
+        $(select).append('<option value="' + i +'" selected="selected">' + this + '</option>');
+      } else {
+        $(select).append('<option value="' + i +'">' + this + '</option>');
+      }
+    });
+    $(select).on("change", function() {
+      callback("pie", $(this).val());
+    });
+
+    $(divHeader).append(select);
+    this.$controller.append(divHeader);
+  }
+
+  this.$controller.show();
+};
+
+Opendata_Graph.prototype.destroy = function() {
+  if (this.chart) {
+    this.chart.destroy();
+  }
+  if (this.$controller) {
+    this.$controller.html("");
+  }
+};
+

@@ -10,7 +10,7 @@ class Gws::HistoryArchiveFile
 
   def previewable?(site: nil, user: nil, member: nil)
     if user
-      Gws::History.allowed?(:read, user, site: site)
+      Gws::History.allowed?(:read, user, site: self.site)
     end
   end
 end
