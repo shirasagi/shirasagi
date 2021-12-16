@@ -256,6 +256,17 @@ this.Syntax_Checker = (function () {
         $.each(data.errors, function() {
           Syntax_Checker.errors.push(this);
         });
+        $.each(contents, function(id, content) {
+          var afterCheck = content["afterCheck"];
+          if (afterCheck) {
+            afterCheck(id, content);
+          }
+        });
+
+        if (Syntax_Checker.afterCheck) {
+          Syntax_Checker.afterCheck();
+        }
+
         Syntax_Checker.resultBox.showResult(Syntax_Checker.checks, Syntax_Checker.errors);
         defer.resolve({ status: Syntax_Checker.errors.length == 0 ? "ok" : "failed" });
       },
