@@ -2,7 +2,8 @@ class Cms::Apis::SyntaxCheckController < ApplicationController
   include Cms::BaseFilter
 
   def check
-    contents = params[:contents].try(:to_unsafe_h)
+    safe_params = params.require(:item).permit(contents: [ :id, :content, :resolve, :type ])
+    contents = safe_params[:contents]
     if contents.blank?
       render json: { errors: [] }
       return
