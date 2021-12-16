@@ -135,6 +135,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
 
             click_on state == "public" ? I18n.t("cms.buttons.save_as_branch") : I18n.t("ss.buttons.save")
+            expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+            expect(page).to have_css("#errorFormChecker", text: I18n.t("errors.template.no_errors"))
+            expect(page).to have_css("#errorLinkChecker", text: I18n.t("errors.template.check_links"))
           end
         end
         if state == "public"
@@ -203,6 +206,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
 
             click_on I18n.t("ss.buttons.save")
+            expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+            expect(page).to have_css("#errorLinkChecker", text: I18n.t("errors.template.check_links"))
           end
         end
         expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.saved"))
@@ -232,6 +237,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
 
             click_on I18n.t("ss.buttons.save")
+            expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+            expect(page).to have_css("#errorLinkChecker", text: I18n.t("errors.template.check_links"))
           end
         end
         expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.saved"))
@@ -354,6 +361,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
 
             click_on I18n.t("ss.buttons.save")
+            expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+            expect(page).to have_css("#errorLinkChecker", text: I18n.t("errors.template.check_links"))
           end
         end
         expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.saved"))
@@ -430,6 +439,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
 
             click_on I18n.t("ss.buttons.save")
+            expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+            expect(page).to have_css("#errorLinkChecker", text: I18n.t("errors.template.check_links"))
           end
         end
         expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.saved"))
@@ -459,6 +470,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
 
             click_on I18n.t("ss.buttons.save")
+            expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+            expect(page).to have_css("#errorLinkChecker", text: I18n.t("errors.template.check_links"))
           end
         end
         expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.saved"))
@@ -490,6 +503,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
 
             click_on I18n.t("ss.buttons.save")
+            expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+            expect(page).to have_css("#errorLinkChecker", text: I18n.t("errors.template.check_links"))
           end
         end
         expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.saved"))
@@ -517,6 +532,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
 
             click_on I18n.t("ss.buttons.save")
+            expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+            expect(page).to have_css("#errorLinkChecker", text: I18n.t("errors.template.check_links"))
           end
         end
         expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.saved"))
