@@ -2,9 +2,9 @@ class Cms::Apis::SyntaxCheckController < ApplicationController
   include Cms::BaseFilter
 
   def check
-    contents = params[:contents].to_unsafe_h
+    contents = params[:contents].try(:to_unsafe_h)
     if contents.blank?
-      head :bad_request
+      render json: { errors: [] }
       return
     end
 
