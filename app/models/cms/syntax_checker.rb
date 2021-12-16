@@ -14,7 +14,6 @@ module Cms::SyntaxChecker
     Cms::SyntaxChecker::ReplaceWordsChecker,
     # checkers only for html
     Cms::SyntaxChecker::AdjacentAChecker,
-    Cms::SyntaxChecker::AppletAltChecker,
     Cms::SyntaxChecker::AreaAltChecker,
     Cms::SyntaxChecker::EmbeddedMediaChecker,
     Cms::SyntaxChecker::ImgAltChecker,
