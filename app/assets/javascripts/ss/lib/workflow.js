@@ -538,16 +538,6 @@ SS_WorkflowApprover.prototype.render = function () {
     }
   }
 
-  if (self.options.draft_save) {
-    $(".save")
-      .val(self.options.draft_save)
-      .attr("data-disable-with", null)
-      .attr("data-disable", "")
-      .on("click", function (_ev) {
-        self.onClickSave();
-        return true;
-      });
-  }
   if (self.options.publish_save) {
     $("<input />").attr("type", "submit")
       .val(self.options.publish_save)
@@ -570,6 +560,18 @@ SS_WorkflowApprover.prototype.render = function () {
         return true;
       })
       .insertAfter("#item-form input.save");
+  }
+  if (self.options.draft_save) {
+    $(".save")
+      .val(self.options.draft_save)
+      .attr("data-disable-with", null)
+      .attr("data-disable", "")
+      .on("click", function (_ev) {
+        self.onClickSave();
+        return true;
+      });
+  } else {
+    $(".save").remove();
   }
 
   if (self.options.workflow_state === "request") {

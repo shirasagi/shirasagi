@@ -223,6 +223,11 @@ module Cms::PageFilter
       return
     end
 
+    if %w(ready public).include?(@item.state_was)
+      # 公開ページだった場合、非公開とするには公開権限が必要
+      raise "403" unless @item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node)
+    end
+
     draft_save
   end
 
