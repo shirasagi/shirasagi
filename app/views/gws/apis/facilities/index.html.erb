@@ -23,17 +23,47 @@
       <th class="checkbox"><input type="checkbox" /></th>
       <% end %>
       <th class="name"><%= @model.t :name %></th>
+      <th class="facility-reservation-state"><%= t('gws/schedule.facility_reservation.state') %></th>
     </tr>
   </thead>
   <tbody class="items">
     <% @items.each do |item| %>
+      <% overall_exist = 'free' %>
+      <% if @free_times.present? %>
+        <% @free_times.each do |date, hours| %>
+          <% @time_search.hours.each do |hour| %>
+            <% next if @plan.facility_ids_was.to_a.include?(item.id) %>
+            <% next if hours[1][item.id].present? && hours[1][item.id].include?(hour) %>
+            <% next unless @hour_range[date].include?(hour) %>
+            <% overall_exist = @cur_user.gws_role_permit_any?(@cur_site, :regist_private_gws_facility_plans) ? 'registered' : 'exist' %>
+            <% break %>
+          <% end %>
+          <% break unless overall_exist == 'free' %>
+        <% end %>
+      <% end %>
       <tr data-id="<%= item.id %>" class="list-item">
         <% if @multi %>
-        <td class="checkbox">
-          <input type="checkbox" name="ids[]" value="<%= item.id %>" />
-        </td>
+          <td class="checkbox">
+            <% unless overall_exist == 'exist' %>
+              <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+            <% end %>
+          </td>
         <% end %>
-        <td><%= link_to item.name, "#", class: @multi ? "select-item" : "select-single-item" %></td>
+        <td>
+          <% if overall_exist == 'exist' %>
+            <span class="<%= @multi ? "select-item" : "select-single-item" %>" style="color: #888"><%= item.name %></span>
+          <% else %>
+            <%= link_to item.name, "#", class: @multi ? "select-item" : "select-single-item" %>
+          <% end %>
+        </td>
+        <td>
+          <%= t("gws/schedule.facility_reservation.#{overall_exist}") %>
+          <% if overall_exist == 'registered' %>
+            <span class="duplicate-register-message" style="color: #e00;">
+              <%= t('gws/schedule.facility_reservation.duplicate_register_enabled') %>
+            </span>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>

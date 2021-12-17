@@ -72,16 +72,11 @@ module Gws::Addon::Schedule::Facility
   end
 
   def validate_facility_double_booking
-    plans = self.class.ne(id: id).without_deleted.where(site_id: site_id).any_in(facility_ids: facility_ids)
-    if allday?
-      plans = plans.where(:end_at.gt => start_on.in_time_zone.beginning_of_day, :start_at.lt => end_on.in_time_zone.end_of_day)
-    else
-      plans = plans.where(:end_at.gt => start_at, :start_at.lt => end_at)
-    end
-    return if plans.blank?
+    return if @cur_user && @cur_user.gws_role_permit_any?((@cur_site || site), :regist_private_gws_facility_plans)
+    return if facility_double_booking_plans.blank?
 
     errors.add :base, I18n.t('gws/schedule.errors.double_booking_facility')
-    plans.each do |plan|
+    facility_double_booking_plans.each do |plan|
       msg = Gws::Schedule::PlansController.helpers.term(plan)
       msg += " " + plan.facilities.map(&:name).join(',')
       if plan.user.present?
@@ -107,5 +102,17 @@ module Gws::Addon::Schedule::Facility
       max = site.facility_max_hour
       errors.add :base, I18n.t('gws/schedule.errors.over_than_facility_hours', min: min_hour, max: max_hour)
     end
+  end
+
+  public
+
+  def facility_double_booking_plans
+    plans = self.class.ne(id: id).without_deleted.where(site_id: site_id).any_in(facility_ids: facility_ids)
+    if allday?
+      plans = plans.where(:end_at.gt => start_on.in_time_zone.beginning_of_day, :start_at.lt => end_on.in_time_zone.end_of_day)
+    else
+      plans = plans.where(:end_at.gt => start_at, :start_at.lt => end_at)
+    end
+    plans
   end
 end

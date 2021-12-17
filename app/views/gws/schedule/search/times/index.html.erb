@@ -1,6 +1,4 @@
 <%= jquery do %>
-Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller');
-
 $(".gws-schedule-search-times-result .hour-wrap").on({
   mouseenter: function(){
     var plan = $(this).data("plan");
@@ -23,6 +21,11 @@ $(".gws-schedule-search-times-result .hour-wrap").on({
   <%= render "search" %>
 
   <% if @items.present? %>
+  <% if @cur_user.gws_role_permit_any?(@cur_site, :regist_private_gws_facility_plans) %>
+    <div class="duplicate-register-message" style="color: #e00;">
+      <%= t('gws/schedule.facility_reservation.duplicate_register_message') %>
+    </div>
+  <% end %>
   <div class="gws-schedule-search-hr"></div>
   <div class="gws-schedule-search-times-result">
     <% @items.each do |date, hours| %>
@@ -58,6 +61,10 @@ $(".gws-schedule-search-times-result .hour-wrap").on({
             <% link_params = @time_search.link_params(start: date.strftime("%Y-%m-%dT#{hour}:00")) %>
             <% link_params[:facility_ids] = [facility.id] %>
             <%= link_to hour, new_gws_schedule_plan_path(link_params), class: "hour free" %>
+          <% elsif @cur_user.gws_role_permit_any?(@cur_site, :regist_private_gws_facility_plans) %>
+            <% link_params = @time_search.link_params(start: date.strftime("%Y-%m-%dT#{hour}:00")) %>
+            <% link_params[:facility_ids] = [facility.id] %>
+            <%= link_to hour, new_gws_schedule_plan_path(link_params), class: "hour registered" %>
           <% else %>
             <span class="hour exist"><%= hour %></span>
           <% end %>
