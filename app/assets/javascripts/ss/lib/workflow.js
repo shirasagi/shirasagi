@@ -548,17 +548,6 @@ SS_WorkflowApprover.prototype.render = function () {
         return true;
       });
   }
-  if (self.options.branch_save) {
-    $("<input />").attr("type", "submit")
-      .val(self.options.branch_save)
-      .attr("name", "branch_save")
-      .attr("class", "branch_save")
-      .attr("data-disable", "")
-      .on("click", function (_ev) {
-        return true;
-      })
-      .insertAfter("#item-form input.save");
-  }
   if (self.options.publish_save) {
     $("<input />").attr("type", "submit")
       .val(self.options.publish_save)
@@ -567,6 +556,17 @@ SS_WorkflowApprover.prototype.render = function () {
       .attr("data-disable", "")
       .on("click", function (_ev) {
         self.onPublishSaveClicked();
+        return true;
+      })
+      .insertAfter("#item-form input.save");
+  }
+  if (self.options.branch_save) {
+    $("<input />").attr("type", "submit")
+      .val(self.options.branch_save)
+      .attr("name", "branch_save")
+      .attr("class", "branch_save")
+      .attr("data-disable", "")
+      .on("click", function (_ev) {
         return true;
       })
       .insertAfter("#item-form input.save");

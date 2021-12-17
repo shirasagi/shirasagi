@@ -205,23 +205,30 @@ module Cms::PageFilter
   end
 
   def update
+    if !@item.is_a?(Workflow::Addon::Branch)
+      super
+      return
+    end
+
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
 
-    if !%w(ready public).include?(@item.state)
-      draft_save
-      return
-    end
-
-    if !@item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node)
-      raise "403" unless @item.is_a?(Workflow::Addon::Branch)
-
+    if params[:branch_save]
+      # 差し替え保存
       save_as_branch
       return
     end
 
-    publish_save
+    if params[:publish_save]
+      # 公開保存
+      raise "403" unless @item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node)
+
+      publish_save
+      return
+    end
+
+    draft_save
   end
 
   def move

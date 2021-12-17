@@ -10,6 +10,12 @@
   if @item.state == "public" && @item.persisted?
     # 警告する意味でボタンのラベルを別のものにする
     js_options[:draft_save] = t("ss.buttons.withdraw")
+
+    if @item.is_a?(Workflow::Addon::Branch)
+      # そして「差替保存」を表示する
+      js_options[:branch_save] = t("cms.buttons.save_as_branch")
+      js_options[:branch_save_url] = branch_create_workflow_page_path(id: @item.id)
+    end
   else
     js_options[:draft_save] = t("ss.buttons.draft_save")
   end
@@ -17,10 +23,6 @@
     # 公開権限を持つ場合、「公開保存」が表示される
     js_options[:release] = "allowed"
     js_options[:publish_save] = t("ss.buttons.publish_save")
-  elsif @item.state == "public" && @item.is_a?(Workflow::Addon::Branch) && @item.persisted?
-    # 公開権限を持たない場合、「差替保存」が表示される場合がある
-    js_options[:branch_save] = t("cms.buttons.save_as_branch")
-    js_options[:branch_save_url] = branch_create_workflow_page_path(id: @item.id)
   end
   if @item.state == "closed" && @item.workflow_state == "request"
     js_options[:workflow_state] = "request"
