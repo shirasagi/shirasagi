@@ -23,12 +23,16 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
       it do
         visit edit_public_item_path
-        expect(page).to have_no_css(".branch_save")
+        expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.withdraw")}']")
+        expect(page).to have_css(".branch_save[value='#{I18n.t("cms.buttons.save_as_branch")}']")
+        expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
       end
 
       it do
         visit edit_closed_item_path
+        expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.draft_save")}']")
         expect(page).to have_no_css(".branch_save")
+        expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
       end
     end
 
@@ -79,12 +83,16 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
       it do
         visit edit_public_item_path
-        expect(page).to have_no_css(".branch_save")
+        expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.withdraw")}']")
+        expect(page).to have_css(".branch_save[value='#{I18n.t("cms.buttons.save_as_branch")}']")
+        expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
       end
 
       it do
         visit edit_closed_item_path
+        expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.draft_save")}']")
         expect(page).to have_no_css(".branch_save")
+        expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
       end
     end
 
@@ -135,12 +143,16 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
       it do
         visit edit_public_item_path
-        expect(page).to have_no_css(".branch_save")
+        expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.withdraw")}']")
+        expect(page).to have_css(".branch_save[value='#{I18n.t("cms.buttons.save_as_branch")}']")
+        expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
       end
 
       it do
         visit edit_closed_item_path
+        expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.draft_save")}']")
         expect(page).to have_no_css(".branch_save")
+        expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
       end
     end
 

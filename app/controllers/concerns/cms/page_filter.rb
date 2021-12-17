@@ -205,22 +205,17 @@ module Cms::PageFilter
   end
 
   def update
-    if !@item.is_a?(Workflow::Addon::Branch)
-      super
-      return
-    end
-
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
 
-    if params[:branch_save]
+    if params[:branch_save] == I18n.t("cms.buttons.save_as_branch")
       # 差し替え保存
       save_as_branch
       return
     end
 
-    if params[:publish_save]
+    if %w(ready public).include?(@item.state)
       # 公開保存
       raise "403" unless @item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node)
 
