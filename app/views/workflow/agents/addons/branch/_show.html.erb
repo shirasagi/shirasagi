@@ -34,12 +34,7 @@
     js_options = {
       path: branch_create_workflow_page_path(id: @item.id)
     }
-    if @item.branches.present?
-      js_options[:has_branch] = true
-      js_options[:branch_url] = url_for(action: :edit, id: @item.branches.first)
-    end
   %>
 
-  Cms_Branch.branchEditConfirmation = "<%= t("workflow.confirm.would_you_edit_branch") %>";
   new Cms_Branch("#<%= addon[:id] %>", <%== js_options.to_json %>);
 <% end %>
