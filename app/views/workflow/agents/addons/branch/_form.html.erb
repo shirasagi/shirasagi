@@ -1,0 +1,16 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+  css_class = Array(addon[:class])
+  addon[:class] = css_class + %w(hide)
+%>
+
+<% if @item.branches.present? %>
+  <%= jquery do %>
+    setTimeout(function() {
+      if (confirm(<%== t("workflow.confirm.would_you_edit_branch").to_json %>)) {
+        location.href = <%== url_for(action: :edit, id: @item.branches.first).to_json %>
+      }
+    }, 0);
+  <% end %>
+<% end %>
