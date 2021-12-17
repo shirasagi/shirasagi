@@ -9,3 +9,7 @@ runner:
     cmd: bundle exec scss-lint
     errorformat:
       - "%f:%l:%c %m"
+  "stylelint":
+    cmd: .github/workflows/stylelint.sh
+    errorformat:
+      - "%f:%l:%c:%t%*[^:]: %m"
