@@ -46806,8 +46806,6 @@ Cms_Branch = function (el, options) {
   this.render();
 }
 
-Cms_Branch.branchEditConfirmation = "a branch was created. would you edit a branch?";
-
 Cms_Branch.prototype.render = function() {
   var self = this;
 
@@ -46817,16 +46815,6 @@ Cms_Branch.prototype.render = function() {
   });
 
   self.$el.find(".create-branch").prop("disabled", false);
-
-  if (self.options.branch_url) {
-    $(document).find(".nav-menu .edit").on("click", function(ev) {
-      if (confirm(Cms_Branch.branchEditConfirmation)) {
-        location.href = self.options.branch_url;
-        ev.preventDefault();
-        return false;
-      }
-    })
-  }
 };
 
 Cms_Branch.prototype.createBranch = function() {
