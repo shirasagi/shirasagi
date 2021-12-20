@@ -10,7 +10,9 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
   let!(:edit_path) { edit_article_page_path(site: site, cid: node, id: item) }
 
   let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'entry', group_ids: [cms_group.id]) }
-  let!(:column1) { create(:cms_column_file_upload, cur_site: site, cur_form: form, required: "optional", order: 1) }
+  let!(:column1) do
+    create(:cms_column_file_upload, cur_site: site, cur_form: form, required: "optional", order: 1, file_type: "image")
+  end
   let!(:column2) { create(:cms_column_free, cur_site: site, cur_form: form, required: "optional", order: 2) }
 
   let(:logs_path) { history_cms_logs_path site.id }
