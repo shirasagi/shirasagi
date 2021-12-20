@@ -7,6 +7,10 @@
       {
         "ignoreFontFamilies": [ "Material Icons", "FontAwesome" ]
       }
+    ],
+    "selector-disallowed-list": [
+      "/[.#].*(campaign|splash|adsbygoogle|google_ads).*/",
+      "/[.#].*ads[-_].*/", "/[.#].*[-_]ads.*/", "/[.#]ads/"
     ]
   }
 }
