@@ -59,4 +59,11 @@ module Cms::Michecker::Base
     all_count = error_count + warning_count + caution_count + notice_count
     [ all_count, error_count, warning_count, caution_count, notice_count ]
   end
+
+  def self.site_setting_ok?(site, request)
+    return true if site.mypage_domain.present?
+    return true if site.domains.include?(request.host_with_port)
+
+    false
+  end
 end
