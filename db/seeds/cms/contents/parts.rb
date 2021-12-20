@@ -37,6 +37,7 @@ save_part route: "cms/free", filename: "head.part.html", name: "ヘッダー", m
 save_part route: "cms/free", filename: "head-top.part.html", name: "ヘッダー：トップ"
 save_part route: "cms/free", filename: "keyvisual.part.html", name: "キービジュアル", mobile_view: "hide"
 save_part route: "cms/free", filename: "links-life.part.html", name: "関連リンク：くらし・手続き"
+save_part route: "cms/free", filename: "links-garbage.part.html", name: "関連リンク：ゴミ品目"
 save_part route: "cms/free", filename: "navi.part.html", name: "グローバルナビ"
 save_part route: "cms/free", filename: "online.part.html", name: "オンラインサービス"
 save_part route: "cms/free", filename: "connect.part.html", name: "関連サイト", mobile_view: "hide"

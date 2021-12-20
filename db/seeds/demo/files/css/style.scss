@@ -3272,7 +3272,7 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
     h2, dt {
       clear: both;
       float: left;
-      width: 200px;
+      width: 100px;
       padding: 6px $item-margin;
       font-weight: bold;
       background: $hblue;
@@ -3286,7 +3286,7 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
     }
     input, select, dd {
       float: left;
-      min-width: 500px;
+      min-width: 400px;
       margin: 8px $item-margin;
       @include mb {
         @include box-sizing(border-box);
