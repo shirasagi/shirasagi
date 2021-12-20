@@ -17080,7 +17080,9 @@ this.SS_Voice = (function () {
 
   SS_Voice.load = function (ev) {
     if (SS_Voice.cancelLoading) {
-      ev.preventDefault();
+      if (ev) {
+        ev.preventDefault();
+      }
       return false;
     }
 
@@ -17111,7 +17113,9 @@ this.SS_Voice = (function () {
       }
     });
 
-    ev.preventDefault();
+    if (ev) {
+      ev.preventDefault();
+    }
     return false;
   };
 

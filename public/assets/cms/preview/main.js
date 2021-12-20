@@ -1736,14 +1736,16 @@ this.Syntax_Checker = (function () {
     array = Syntax_Checker.formatContent(content);
 
     $.each(array, function(idx, html) {
-      html = $(html);
       $(html).find("a[href]").each(function () {
-        var errors, text;
-        text = $(this).text();
+        var $this = $(this);
+        var text = $this.text();
         if (text.length <= 3) {
-          text = $(this).find("img[alt]").attr('alt');
+          var $imgWithAlt = $this.find("img[alt]");
+          if ($imgWithAlt[0]) {
+            text = $imgWithAlt.attr('alt');
+          }
         }
-        if (text.length <= 3) {
+        if (!text || text.length <= 3) {
           Syntax_Checker.errors.push(
             {
               id: id,
@@ -3514,15 +3516,17 @@ SS_WorkflowApprover.prototype.render = function () {
     }
   }
 
-  if (self.options.draft_save) {
-    $(".save")
-      .val(self.options.draft_save)
-      .attr("data-disable-with", null)
+  if (self.options.publish_save) {
+    $("<input />").attr("type", "submit")
+      .val(self.options.publish_save)
+      .attr("name", "publish_save")
+      .attr("class", "publish_save")
       .attr("data-disable", "")
       .on("click", function (_ev) {
-        self.onClickSave();
+        self.onPublishSaveClicked();
         return true;
-      });
+      })
+      .insertAfter("#item-form input.save");
   }
   if (self.options.branch_save) {
     $("<input />").attr("type", "submit")
@@ -3535,17 +3539,17 @@ SS_WorkflowApprover.prototype.render = function () {
       })
       .insertAfter("#item-form input.save");
   }
-  if (self.options.publish_save) {
-    $("<input />").attr("type", "submit")
-      .val(self.options.publish_save)
-      .attr("name", "publish_save")
-      .attr("class", "publish_save")
+  if (self.options.draft_save) {
+    $(".save")
+      .val(self.options.draft_save)
+      .attr("data-disable-with", null)
       .attr("data-disable", "")
       .on("click", function (_ev) {
-        self.onPublishSaveClicked();
+        self.onClickSave();
         return true;
-      })
-      .insertAfter("#item-form input.save");
+      });
+  } else {
+    $(".save").remove();
   }
 
   if (self.options.workflow_state === "request") {
