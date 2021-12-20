@@ -116,6 +116,27 @@ module SS
       })(arguments[0], arguments[1], arguments[2]);
     SCRIPT
 
+    IMAGE_ELEMENT_INFO = <<~SCRIPT.freeze
+      (function(element, resolve) {
+        if (! element.decode) {
+          resolve({ error: "not a HTMLImageElement" });
+          return;
+        }
+        element.decode().then(() => {
+          resolve({
+            width: element.width,
+            height: element.height,
+            naturalWidth: element.naturalWidth,
+            naturalHeight: element.naturalHeight,
+            currentSrc: element.currentSrc,
+          });
+        }).catch((error) => {
+          resolve({ error: error.toString() });
+          return true;
+        });
+      })(arguments[0], arguments[1]);
+    SCRIPT
+
     def wait_timeout
       Capybara.default_max_wait_time
     end
@@ -340,6 +361,17 @@ module SS
       expect(result).to be_truthy
 
       ret
+    end
+
+    def image_element_info(element)
+      result = page.evaluate_async_script(IMAGE_ELEMENT_INFO, element)
+      expect(result).to be_present
+      expect(result).to be_a(Hash)
+
+      result.symbolize_keys!
+      expect(result[:error]).to be_blank
+
+      result
     end
   end
 end
