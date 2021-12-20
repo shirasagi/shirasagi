@@ -124,6 +124,9 @@ ja:
     column_youtube_auto_width:
       enabled: 画面幅に合わせる
       disabled: 画面幅に合わせない
+    column_url_field:
+      link_label_placeholder: リンクテキスト
+      link_url_placeholder: URL
     visit_article: 記事を見る
 
     adobe_reader:
