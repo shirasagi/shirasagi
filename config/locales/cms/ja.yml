@@ -1201,7 +1201,6 @@ ja:
       branch_page_can_not_move: 差し替え用ページは移動できません。
       check_html: 本文のアクセシビリティチェックを確認してください。
       set_img_alt: 画像の代替テキストを確認してください。
-      set_applet_alt: アプレット要素の代替テキストを確認してください。
       set_area_alt: エリア要素の代替テキストを確認してください。
       invalid_img_scheme: 画像のURIにバイナリー文字列が含まれています。
       set_table_caption: 表にキャプションが設定されていません。
@@ -1232,7 +1231,6 @@ ja:
       invalid_adjacent_a: 隣接する同じリンクを一つのリンクにまとめてください。
       check_interword_space: 単語の文字間のスペースを確認してください。
       check_link_text: リンクのテキストを確認してください。
-      check_object_text: オブジェクト要素のボディに適切な代替テキストを記述してください。
       check_embedded_media: 動画や音声を含む場合、説明があるか確認してください。
       replace_word: 使用が好ましくない単語が含まれています。「%{from}」→「%{to}」
       replace_word_validation: に使用が好ましくない単語が含まれています。
@@ -1242,8 +1240,6 @@ ja:
       syntax_check_detail:
         set_img_alt:
           - 画像の内容を示す代替テキストを設定してください。
-        set_applet_alt:
-          - アプレットの内容を示す代替テキストを設定してください。
         set_area_alt:
           - エリア要素の内容を示す代替テキストを設定してください。
         invalid_img_scheme:
@@ -1273,8 +1269,6 @@ ja:
           - 単語の文字間に不要なスペースが含まれている場合は削除してください。
         check_link_text:
           - リンク内のテキストは遷移先を表すものを設定してください。
-        check_object_text:
-          - オブジェクト要素が正しく読み込まれなかった場合の説明を要素内に記述してください。
         check_embedded_media:
           - 動画や音声を本文に埋め込む場合は説明を記述してください。
         alt_is_included_in_filename:
