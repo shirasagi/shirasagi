@@ -1,8 +1,8 @@
 module Map
   module_function
 
-  SYSTEM_LIMIT_NUMBER_OF_MARKERS = 2_000
-  DEFAULT_MAX_NUMBER_OF_MARKERS = 100
+  SYSTEM_LIMIT_NUMBER_OF_MARKERS = 100
+  DEFAULT_MAX_NUMBER_OF_MARKERS = 10
 
   def system_limit_number_of_markers
     SS.config.map.map_system_limit_number_of_markers || SYSTEM_LIMIT_NUMBER_OF_MARKERS
