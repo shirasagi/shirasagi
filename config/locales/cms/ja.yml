@@ -151,7 +151,7 @@ ja:
       send_verify_mail: 登録確認メールを送信する
       manage_columns: 入力項目を管理する
       manage_init_columns: 初期ブロックを管理する
-      save_as_branch: 差替保存
+      save_as_branch: 差し替え保存
       ignore_alerts_and_save_as_branch: 警告を無視して差替保存
       column_add_list: リストを追加する
     confirm:
