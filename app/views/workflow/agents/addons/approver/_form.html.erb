@@ -18,7 +18,7 @@
       js_options[:draft_save] = t("ss.buttons.withdraw")
     end
 
-    if @item.is_a?(Workflow::Addon::Branch)
+    if @item.is_a?(Workflow::Addon::Branch) && @item.branches.blank?
       # そして「差替保存」を表示する
       js_options[:branch_save] = t("cms.buttons.save_as_branch")
       js_options[:branch_save_url] = branch_create_workflow_page_path(id: @item.id)
