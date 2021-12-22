@@ -1,11 +1,13 @@
 <%= jquery do %>
 $(".gws-schedule-search-times-result .hour-wrap").on({
   mouseenter: function(){
-    var plan = $(this).data("plan");
-    if (plan) {
+    var plans = $(this).data("plans");
+    if (plans) {
       var user_name = "";
-      user_name += '<p>' + plan["user_section_name"] + '<\p>';
-      user_name += '<p>' + plan["user_long_name"] + '<\p>';
+      $.each(plans, function (idx, plan) {
+        user_name += '<p>' + plan["user_section_name"] + '<\p>';
+        user_name += '<p>' + plan["user_long_name"] + '<\p>';
+      });
       $(this).append('<div class="user-tooltip">' + user_name + '</div>');
     }
   },
@@ -21,7 +23,7 @@ $(".gws-schedule-search-times-result .hour-wrap").on({
   <%= render "search" %>
 
   <% if @items.present? %>
-  <% if @cur_user.gws_role_permit_any?(@cur_site, :regist_private_gws_facility_plans) %>
+  <% if @cur_user.gws_role_permit_any?(@cur_site, :regist_private_gws_facility_plans) && @time_search.facilities.present? %>
     <div class="duplicate-register-message" style="color: #e00;">
       <%= t('gws/schedule.facility_reservation.duplicate_register_message') %>
     </div>
@@ -56,7 +58,7 @@ $(".gws-schedule-search-times-result .hour-wrap").on({
         <% @time_search.hours.each do |hour| %>
 
           <% data_plan = hours[2].dig(facility.id, hour) %>
-          <span class="hour-wrap" data-plan="<%= data_plan ? data_plan.to_json : "" %>">
+          <span class="hour-wrap" data-plans="<%= data_plan ? data_plan.to_json : "" %>">
           <% if (hours[1][facility.id] || []).index(hour) %>
             <% link_params = @time_search.link_params(start: date.strftime("%Y-%m-%dT#{hour}:00")) %>
             <% link_params[:facility_ids] = [facility.id] %>

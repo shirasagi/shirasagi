@@ -114,7 +114,7 @@ ja:
     delete_other_gws_facility_categories: カテゴリーの削除（全て）
     delete_private_gws_facility_categories: カテゴリーの削除（所有）
     use_private_gws_facility_plans: 設備予約の利用
-    regist_private_gws_facility_plans: 設備予約の重複登録
+    regist_private_gws_facility_plans: 設備予約の重複予約
 
   modules:
     gws/facility: 設備管理

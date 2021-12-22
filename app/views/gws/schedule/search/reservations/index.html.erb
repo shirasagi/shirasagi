@@ -1,11 +1,13 @@
 <%= jquery do %>
 $(".gws-schedule-search-times-result .hour-wrap").on({
   mouseenter: function(){
-    var plan = $(this).data("plan");
-    if (plan) {
+    var plans = $(this).data("plans");
+    if (plans) {
       var user_name = "";
-      user_name += '<p>' + plan["user_section_name"] + '<\p>';
-      user_name += '<p>' + plan["user_long_name"] + '<\p>';
+      $.each(plans, function (idx, plan) {
+        user_name += '<p>' + plan["user_section_name"] + '<\p>';
+        user_name += '<p>' + plan["user_long_name"] + '<\p>';
+      });
       $(this).append('<div class="user-tooltip">' + user_name + '</div>');
 
       var popup = $(this).find(".user-tooltip");
@@ -68,7 +70,7 @@ $(".gws-schedule-search-times-result .hour-wrap").on({
           <% end %>
 
           <% data_plan = hours[2].dig(facility.id, hour) %>
-          <span class="<%= wrap_classes.join(' ') %>" data-plan="<%= data_plan ? data_plan.to_json : "" %>">
+          <span class="<%= wrap_classes.join(' ') %>" data-plans="<%= data_plan ? data_plan.to_json : "" %>">
             <span class="<%= css_classes.join(' ') %>"><%= hour %></span>
           </span>
           <% next unless css_classes.include?('exist') %>

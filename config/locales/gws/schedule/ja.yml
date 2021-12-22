@@ -102,8 +102,7 @@ ja:
     facility_reservation:
       index: 予約状況の確認
       state: 予約状況
-      duplicate_register_enabled: (重複予約が可能です)
-      duplicate_register_message: 重複登録の権限があるため、設備を重複登録できます。
+      duplicate_register_message: 重複して予約が可能です。
       free: 予約可能
       exist: 予約不可
       registered: 登録済み
