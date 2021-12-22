@@ -209,19 +209,26 @@ module Cms::PageFilter
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
 
-    if !%w(ready public).include?(@item.state)
-      draft_save
-      return
-    end
-
-    if !@item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node)
-      raise "403" unless @item.is_a?(Workflow::Addon::Branch)
-
+    if params[:branch_save] == I18n.t("cms.buttons.save_as_branch")
+      # 差し替え保存
       save_as_branch
       return
     end
 
-    publish_save
+    if %w(ready public).include?(@item.state)
+      # 公開保存
+      raise "403" unless @item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node)
+
+      publish_save
+      return
+    end
+
+    if %w(ready public).include?(@item.state_was)
+      # 公開ページだった場合、非公開とするには公開権限が必要
+      raise "403" unless @item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node)
+    end
+
+    draft_save
   end
 
   def move

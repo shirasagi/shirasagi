@@ -17080,7 +17080,9 @@ this.SS_Voice = (function () {
 
   SS_Voice.load = function (ev) {
     if (SS_Voice.cancelLoading) {
-      ev.preventDefault();
+      if (ev) {
+        ev.preventDefault();
+      }
       return false;
     }
 
@@ -17111,7 +17113,9 @@ this.SS_Voice = (function () {
       }
     });
 
-    ev.preventDefault();
+    if (ev) {
+      ev.preventDefault();
+    }
     return false;
   };
 
@@ -19035,7 +19039,18 @@ this.SS_SearchUI = (function () {
     tr.append($('<td />').append(input).append(name));
     tr.append($('<td />').append(a));
     self.anchorAjaxBox.closest("dl").find(".ajax-selected tbody").prepend(tr);
-    return self.anchorAjaxBox.closest("dl").find(".ajax-selected").trigger("change");
+    self.anchorAjaxBox.closest("dl").find(".ajax-selected").trigger("change");
+  };
+
+  SS_SearchUI.defaultDeselector = function (item) {
+    var table = $(item).closest(".ajax-selected");
+    var tr = $(item).closest("tr");
+
+    tr.remove();
+    if (table.find("tbody tr").size() === 0) {
+      table.hide();
+    }
+    table.trigger("change");
   };
 
   SS_SearchUI.select = function (item) {
@@ -19059,14 +19074,14 @@ this.SS_SearchUI = (function () {
   };
 
   SS_SearchUI.deselect = function (e) {
-    var table;
-    table = $(this).parents(".ajax-selected:first");
-    $(this).parents("tr:first").remove();
-    if (table.find("tbody tr").size() === 0) {
-      table.hide();
+    var $item = $(this);
+    var selector = $item.closest(".ajax-selected").data('on-deselect');
+    if (selector) {
+      selector($item);
+    } else {
+      SS_SearchUI.defaultDeselector($item);
     }
-    table.trigger("change");
-    return e.preventDefault();
+    e.preventDefault();
   };
 
   SS_SearchUI.toggleSelectButton = function ($el) {
@@ -19085,11 +19100,9 @@ this.SS_SearchUI = (function () {
     var self = this;
 
     $(".ajax-selected").each(function () {
-      var $ajaxSelected = $(this);
-
-      $ajaxSelected.on("click", ".deselect", self.deselect);
-      if ($ajaxSelected.find("a.deselect").size() === 0) {
-        $ajaxSelected.hide();
+      $(this).on("click", ".deselect", self.deselect);
+      if ($(this).find("a.deselect").size() === 0) {
+        $(this).hide();
       }
     });
 
@@ -30260,13 +30273,17 @@ this.KeyVisual_SwiperSlide = (function () {
 
     if (self.options.autoplay === "enabled" || self.options.autoplay === "started") {
       var playButton = self.el.querySelector(".ss-swiper-slide-play");
-      playButton.addEventListener("click", function() {
-        self.swiper.autoplay.start();
-      });
-      var stopButton = self.el.querySelector(".ss-swiper-slide-stop")
-      stopButton.addEventListener("click", function() {
-        self.swiper.autoplay.stop();
-      });
+      if (playButton) {
+        playButton.addEventListener("click", function() {
+          self.swiper.autoplay.start();
+        });
+      }
+      var stopButton = self.el.querySelector(".ss-swiper-slide-stop");
+      if (stopButton) {
+        stopButton.addEventListener("click", function () {
+          self.swiper.autoplay.stop();
+        });
+      }
       self.swiper.on("autoplayStart", function() {
         playButton.setAttribute("aria-pressed", true);
         stopButton.setAttribute("aria-pressed", false);

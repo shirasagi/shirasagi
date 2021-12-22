@@ -51,7 +51,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
     create(:cms_column_youtube, cur_site: site, cur_form: form, required: "optional", order: 13)
   end
   let!(:column14) do
-    create(:cms_column_select_page, cur_site: site, cur_form: form, required: "optional", order: 14, node_id: node2.id)
+    create(:cms_column_select_page, cur_site: site, cur_form: form, required: "optional", order: 14, node_ids: [node2.id])
   end
   let(:name) { unique_id }
   let(:column1_value1) { unique_id }
@@ -260,14 +260,18 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           within ".column-value-palette" do
             click_on column14.name
           end
+          click_on I18n.t("cms.apis.pages.index")
+        end
+        wait_for_cbox do
+          expect(page).to have_css(".list-item", text: selectable_page1.name)
+          expect(page).to have_css(".list-item", text: selectable_page2.name)
+          expect(page).to have_css(".list-item", text: selectable_page3.name)
+          expect(page).to have_no_css(".list-item", text: selectable_page4.name)
+          click_on column14_page1.name
+        end
+        within 'form#item-form' do
           within ".column-value-cms-column-selectpage " do
-            within '[name="item[column_values][][in_wrap][page_id]"]' do
-              expect(page).to have_css("option", text: selectable_page1.name)
-              expect(page).to have_css("option", text: selectable_page2.name)
-              expect(page).to have_css("option", text: selectable_page3.name)
-              expect(page).to have_no_css("option", text: selectable_page4.name)
-            end
-            select column14_page1.name, from: 'item[column_values][][in_wrap][page_id]'
+            expect(page).to have_css(".ajax-selected", text: column14_page1.name)
           end
 
           click_on I18n.t('ss.buttons.draft_save')
@@ -368,10 +372,22 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           within ".column-value-cms-column-youtube" do
             fill_in "item[column_values][][in_wrap][url]", with: column13_url2
           end
-          within ".column-value-cms-column-selectpage " do
-            select column14_page2.name, from: 'item[column_values][][in_wrap][page_id]'
-          end
 
+          within ".column-value-cms-column-selectpage " do
+            click_on I18n.t("cms.apis.pages.index")
+          end
+        end
+        wait_for_cbox do
+          expect(page).to have_css(".list-item", text: selectable_page1.name)
+          expect(page).to have_css(".list-item", text: selectable_page2.name)
+          expect(page).to have_css(".list-item", text: selectable_page3.name)
+          expect(page).to have_no_css(".list-item", text: selectable_page4.name)
+          click_on column14_page2.name
+        end
+        within 'form#item-form' do
+          within ".column-value-cms-column-selectpage " do
+            expect(page).to have_css(".ajax-selected", text: column14_page2.name)
+          end
           click_on I18n.t('ss.buttons.draft_save')
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -599,16 +615,19 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           within ".column-value-palette" do
             click_on column14.name
           end
+          click_on I18n.t("cms.apis.pages.index")
+        end
+        wait_for_cbox do
+          expect(page).to have_css(".list-item", text: selectable_page1.name)
+          expect(page).to have_css(".list-item", text: selectable_page2.name)
+          expect(page).to have_css(".list-item", text: selectable_page3.name)
+          expect(page).to have_no_css(".list-item", text: selectable_page4.name)
+          click_on column14_page1.name
+        end
+        within 'form#item-form' do
           within ".column-value-cms-column-selectpage " do
-            within '[name="item[column_values][][in_wrap][page_id]"]' do
-              expect(page).to have_css("option", text: selectable_page1.name)
-              expect(page).to have_css("option", text: selectable_page2.name)
-              expect(page).to have_css("option", text: selectable_page3.name)
-              expect(page).to have_no_css("option", text: selectable_page4.name)
-            end
-            select column14_page1.name, from: 'item[column_values][][in_wrap][page_id]'
+            expect(page).to have_css(".ajax-selected", text: column14_page1.name)
           end
-
           click_on I18n.t('ss.buttons.draft_save')
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -741,9 +760,18 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             fill_in "item[column_values][][in_wrap][url]", with: column13_url2
           end
           within ".column-value-cms-column-selectpage " do
-            select column14_page2.name, from: 'item[column_values][][in_wrap][page_id]'
+            click_on I18n.t("cms.apis.pages.index")
           end
-
+        end
+        wait_for_cbox do
+          expect(page).to have_css(".list-item", text: selectable_page1.name)
+          expect(page).to have_css(".list-item", text: selectable_page2.name)
+          expect(page).to have_css(".list-item", text: selectable_page3.name)
+          expect(page).to have_no_css(".list-item", text: selectable_page4.name)
+          click_on column14_page2.name
+        end
+        within 'form#item-form' do
+          expect(page).to have_css(".ajax-selected", text: column14_page2.name)
           click_on I18n.t('ss.buttons.draft_save')
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))

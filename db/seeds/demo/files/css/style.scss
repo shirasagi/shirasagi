@@ -1942,6 +1942,35 @@ article.body {
   @include mb { width: auto; }
 }
 
+.event-format {
+  margin-bottom: 20px;
+  float: right;
+}
+
+.event-ics-file {
+  float: right;
+  margin-right: 15px;
+  margin-bottom: 20px;
+  padding: 6px 12px 6px 30px;
+  border: 1px solid $orange;
+  @include border-radius(5px);
+  text-decoration: none;
+  color: #000;
+  background-image: url(../img/u-arrow.png);
+  background-repeat: no-repeat;
+  background-position: 10px 52%;
+
+  &:hover {
+    color: #000;
+    background-color: #f48b22;
+    background-image: url(../img/u-arrow-white.png);
+  }
+
+  @include mb {
+    margin-right: 10px;
+  }
+}
+
 // -----------------------------------------------------------------------------
 // content-box
 .content-box {
@@ -3243,7 +3272,7 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
     h2, dt {
       clear: both;
       float: left;
-      width: 200px;
+      width: 100px;
       padding: 6px $item-margin;
       font-weight: bold;
       background: $hblue;
@@ -3257,7 +3286,7 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
     }
     input, select, dd {
       float: left;
-      min-width: 500px;
+      min-width: 400px;
       margin: 8px $item-margin;
       @include mb {
         @include box-sizing(border-box);
@@ -3627,8 +3656,6 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
     padding: 10px 10px 0;
   }
   .event-date ul {
-    position: static;
-    margin-bottom: $smart-margin;
     padding: 0 10px;
   }
   #event-list {

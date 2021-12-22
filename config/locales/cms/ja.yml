@@ -124,6 +124,9 @@ ja:
     column_youtube_auto_width:
       enabled: 画面幅に合わせる
       disabled: 画面幅に合わせない
+    column_url_field:
+      link_label_placeholder: リンクテキスト
+      link_url_placeholder: URL
     visit_article: 記事を見る
 
     adobe_reader:
@@ -148,7 +151,7 @@ ja:
       send_verify_mail: 登録確認メールを送信する
       manage_columns: 入力項目を管理する
       manage_init_columns: 初期ブロックを管理する
-      save_as_branch: 差替保存
+      save_as_branch: 差し替え保存
       ignore_alerts_and_save_as_branch: 警告を無視して差替保存
       column_add_list: リストを追加する
     confirm:
@@ -442,6 +445,9 @@ ja:
       michecker_completed: "miChecker による検証が完了しました。結果を確認してください。"
       accessibility_report_load_error: "アクセシビリティ検証結果の読み込みに失敗しました。"
       low_vision_report_load_error: "視覚化結果の読み込みに失敗しました。"
+      site_setting_ng:
+        - サイト設定のマイページドメインが未設定のため実行することができません。
+        - マイページドメインの設定をサイト管理者に依頼してください。
       data_table:
         length_menu:
           5: 5
@@ -1054,8 +1060,7 @@ ja:
       cms/column/list:
         list_type: 種類
       cms/column/select_page:
-        place_holder: プレースホルダー
-        node_id: 選択肢
+        node_ids: 記事フォルダー
       cms/column/value/base:
         order: 並び順
         alignment: 配置
@@ -1499,7 +1504,9 @@ ja:
       mypage_scheme:
         - マイページスキームを入力します。
       mypage_domain:
-        - マイページドメインを入力します。
+        - 管理画面（マイページ）のドメインを入力します。
+        - 公開画面と管理画面のドメインが異なる場合は、必ず入力してください。
+        - 入力しないと、micheckerなど、一部の機能が正常に動作しなくなります。
       auto_keywords:
         - ページ、フォルダー保存時にメタ情報のキーワードを入力しない場合、自動で入力するかを選択します。
         - 自動入力されるキーワードは親フォルダー名と設定カテゴリー名から生成されます。
@@ -2235,6 +2242,11 @@ ja:
     cms/column/list:
       list_type:
         - 種類を選択します。
+
+    cms/column/select_page:
+      node_ids:
+        - 記事フォルダーを設定します。
+        - 設定した記事フォルダー配下のページを選択可能です。
 
     cms/addon/node_twitter_post_setting:
       node_twitter_auto_post:

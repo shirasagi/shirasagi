@@ -36,7 +36,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
     create(:cms_column_file_upload, cur_site: site, cur_form: form, required: "required", order: 8, file_type: "image")
   end
   let!(:column9) do
-    create(:cms_column_select_page, cur_site: site, cur_form: form, required: "optional", order: 9, node_id: node2.id)
+    create(:cms_column_select_page, cur_site: site, cur_form: form, required: "optional", order: 9, node_ids: [node2.id])
   end
   let(:name) { unique_id }
   let(:column1_value) { unique_id }
@@ -116,13 +116,18 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           first(:field, name: "item[column_values][][in_wrap][values][]", with: column7_value).click
         end
         within ".column-value-cms-column-selectpage " do
-          within '[name="item[column_values][][in_wrap][page_id]"]' do
-            expect(page).to have_css("option", text: selectable_page1.name)
-            expect(page).to have_css("option", text: selectable_page2.name)
-            expect(page).to have_css("option", text: selectable_page3.name)
-          end
-          select selectable_page1.name, from: 'item[column_values][][in_wrap][page_id]'
+          click_on I18n.t("cms.apis.pages.index")
         end
+      end
+      wait_for_cbox do
+        expect(page).to have_css(".list-item", text: selectable_page1.name)
+        expect(page).to have_css(".list-item", text: selectable_page2.name)
+        expect(page).to have_css(".list-item", text: selectable_page3.name)
+        expect(page).to have_no_css(".list-item", text: selectable_page4.name)
+        click_on selectable_page1.name
+      end
+      within 'form#item-form' do
+        expect(page).to have_css(".ajax-selected", text: selectable_page1.name)
         click_on I18n.t('ss.buttons.draft_save')
       end
       click_on I18n.t('ss.buttons.ignore_alert')
@@ -212,9 +217,6 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text2
           click_on I18n.t("ss.links.upload")
         end
-        within ".column-value-cms-column-selectpage " do
-          select selectable_page2.name, from: 'item[column_values][][in_wrap][page_id]'
-        end
       end
       wait_for_cbox do
         attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
@@ -223,6 +225,21 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         within ".column-value-cms-column-fileupload" do
           expect(page).to have_content("keyvisual.gif")
+        end
+        within ".column-value-cms-column-selectpage" do
+          click_on I18n.t("cms.apis.pages.index")
+        end
+      end
+      wait_for_cbox do
+        expect(page).to have_css(".list-item", text: selectable_page1.name)
+        expect(page).to have_css(".list-item", text: selectable_page2.name)
+        expect(page).to have_css(".list-item", text: selectable_page3.name)
+        expect(page).to have_no_css(".list-item", text: selectable_page4.name)
+        click_on selectable_page2.name
+      end
+      within 'form#item-form' do
+        within ".column-value-cms-column-selectpage " do
+          expect(page).to have_css(".ajax-selected", text: selectable_page2.name)
         end
         click_on I18n.t('ss.buttons.draft_save')
       end

@@ -205,6 +205,8 @@ Rails.application.routes.draw do
       get "groups" => "groups#index"
       get "nodes" => "nodes#index"
       get "pages" => "pages#index"
+      get "pages/children" => "pages/children#index"
+      get "pages/categorized" => "pages/categorized#index"
       get "pages/routes" => "pages#routes"
       get "categories" => "categories#index"
       get "contents" => "contents#index"

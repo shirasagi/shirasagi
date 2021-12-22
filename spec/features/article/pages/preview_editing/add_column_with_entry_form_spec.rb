@@ -71,7 +71,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     create(:cms_column_youtube, cur_site: site, cur_form: form, required: "optional", order: 13)
   end
   let!(:column14) do
-    create(:cms_column_select_page, cur_site: site, cur_form: form, required: "optional", order: 14, node_id: node2.id)
+    create(:cms_column_select_page, cur_site: site, cur_form: form, required: "optional", order: 14, node_ids: [node2.id])
   end
 
   before do
@@ -556,15 +556,18 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
         within_frame page.first("#ss-preview-dialog-frame") do
-          within "#item-form" do
-            within '[name="item[column_values][][in_wrap][page_id]"]' do
-              expect(page).to have_css("option", text: selectable_page1.name)
-              expect(page).to have_css("option", text: selectable_page2.name)
-              expect(page).to have_css("option", text: selectable_page3.name)
-              expect(page).to have_no_css("option", text: selectable_page4.name)
+          click_on I18n.t("cms.apis.pages.index")
+          wait_for_cbox do
+            expect(page).to have_css(".list-item", text: selectable_page1.name)
+            expect(page).to have_css(".list-item", text: selectable_page2.name)
+            expect(page).to have_css(".list-item", text: selectable_page3.name)
+            expect(page).to have_no_css(".list-item", text: selectable_page4.name)
+            click_on column14_page1.name
+          end
+          within 'form#item-form' do
+            within ".column-value-cms-column-selectpage " do
+              expect(page).to have_css(".ajax-selected", text: column14_page1.name)
             end
-            select column14_page1.name, from: 'item[column_values][][in_wrap][page_id]'
-
             click_on I18n.t("ss.buttons.save")
           end
         end

@@ -538,15 +538,17 @@ SS_WorkflowApprover.prototype.render = function () {
     }
   }
 
-  if (self.options.draft_save) {
-    $(".save")
-      .val(self.options.draft_save)
-      .attr("data-disable-with", null)
+  if (self.options.publish_save) {
+    $("<input />").attr("type", "submit")
+      .val(self.options.publish_save)
+      .attr("name", "publish_save")
+      .attr("class", "publish_save")
       .attr("data-disable", "")
       .on("click", function (_ev) {
-        self.onClickSave();
+        self.onPublishSaveClicked();
         return true;
-      });
+      })
+      .insertAfter("#item-form input.save");
   }
   if (self.options.branch_save) {
     $("<input />").attr("type", "submit")
@@ -559,17 +561,17 @@ SS_WorkflowApprover.prototype.render = function () {
       })
       .insertAfter("#item-form input.save");
   }
-  if (self.options.publish_save) {
-    $("<input />").attr("type", "submit")
-      .val(self.options.publish_save)
-      .attr("name", "publish_save")
-      .attr("class", "publish_save")
+  if (self.options.draft_save) {
+    $(".save")
+      .val(self.options.draft_save)
+      .attr("data-disable-with", null)
       .attr("data-disable", "")
       .on("click", function (_ev) {
-        self.onPublishSaveClicked();
+        self.onClickSave();
         return true;
-      })
-      .insertAfter("#item-form input.save");
+      });
+  } else {
+    $(".save").remove();
   }
 
   if (self.options.workflow_state === "request") {
