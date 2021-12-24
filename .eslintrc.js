@@ -11,6 +11,7 @@ module.exports = {
     "eslint:recommended"
   ],
   "plugins": [
+    "ignore-erb"
   ],
   "rules": {
     "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
