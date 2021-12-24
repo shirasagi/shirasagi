@@ -27,9 +27,7 @@ jobs:
           echo eslint -v
           eslint -v
       - name: Download eslint formatter
-        run: |
-          mkdir -p tmp
-          curl -sfL https://raw.githubusercontent.com/reviewdog/action-eslint/master/eslint-formatter-rdjson/index.js > tmp/eslint-formatter-rdjson.js
+        run: mkdir -p tmp && curl -sfL https://raw.githubusercontent.com/reviewdog/action-eslint/master/eslint-formatter-rdjson/index.js > tmp/eslint-formatter-rdjson.js
       - name: Eslint test run
         run: |
           echo jq --version

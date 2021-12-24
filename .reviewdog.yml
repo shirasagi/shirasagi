@@ -10,5 +10,5 @@ runner:
     errorformat:
       - "%f:%l:%c:%t%*[^:]: %m"
   eslint:
-    cmd: eslint --resolve-plugins-relative-to=$(npm root -g) -f eslint-formatter-rdjson.js 'app/assets/**/*.{js,js.erb}'
+    cmd: .github/workflows/eslint.sh
     format: rdjson
