@@ -1222,6 +1222,7 @@ ja:
       replace_word: 使用が好ましくない単語が含まれています。「%{from}」→「%{to}」
       replace_word_validation: に使用が好ましくない単語が含まれています。
       alt_is_included_in_filename: 代替テキストがファイル名に含まれています。
+      invalid_url_scheme: 「http://」や 「https://」で始まるURLのみにしてください。
       syntax_check_server_error: アクセシビリティチェック中にサーバーエラーが発生しました。
       syntax_check_detail:
         set_img_alt:
@@ -1261,6 +1262,9 @@ ja:
           - 代替テキストの一部もしくは全部がファイル名に含まれています。
           - 一般的にファイル名をそのまま代替テキストに設定するのは好ましくないと考えられます。
           - 設定している代替テキストが妥当かどうか確認してください。
+        invalid_url_scheme:
+          - 「http://」や 「https://」で始まるURLのみにしてください
+          - "参照: 『安全なウェブサイトの作り方 5-(ii)』"
       thums_is_not_an_image: には画像ファイルを指定してください。
       unsupported_encoding: 対応していない文字コードです。
       thumb_is_blank: サムネイル画像が登録されていません。
