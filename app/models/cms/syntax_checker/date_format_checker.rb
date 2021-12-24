@@ -50,10 +50,6 @@ class Cms::SyntaxChecker::DateFormatChecker
       ret << Cms::SyntaxChecker::Base.inner_html_within_div(fragment)
     end
 
-    if context.content["type"] == "array"
-      context.result = ret
-    else
-      context.result = ret[0]
-    end
+    context.set_result(ret)
   end
 end

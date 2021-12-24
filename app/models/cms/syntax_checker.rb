@@ -1,6 +1,16 @@
 module Cms::SyntaxChecker
+  extend SS::RescueWith
+
   CheckerContext = Struct.new(:cur_site, :cur_user, :contents, :errors)
-  CorrectorContext = Struct.new(:cur_site, :cur_user, :content, :params, :result)
+  CorrectorContext = Struct.new(:cur_site, :cur_user, :content, :params, :result) do
+    def set_result(ret)
+      if content["type"] == "array"
+        self.result = ret
+      else
+        self.result = ret[0]
+      end
+    end
+  end
 
   module_function
 
@@ -44,10 +54,10 @@ module Cms::SyntaxChecker
       Cms::SyntaxChecker::Base.each_html_with_index(content) do |html, idx|
         fragment = Nokogiri::HTML5.fragment(html)
         checkers.each do |checker|
-          innstance = checker.new
-          innstance.check(context, content["id"], idx, html, fragment)
-        rescue => e
-          Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+          rescue_with do
+            innstance = checker.new
+            innstance.check(context, content["id"], idx, html, fragment)
+          end
         end
       end
     end
