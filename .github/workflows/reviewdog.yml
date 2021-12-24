@@ -19,7 +19,7 @@ jobs:
       - name: Install stylelint and dependencies
         run: npm install -g stylelint stylelint-scss stylelint-config-recommended-scss stylelint-config-property-sort-order-smacss
       - name: Install eslint and dependencies
-        run: |-
+        run: |
           npm install -g eslint eslint-plugin-ignore-erb
           curl https://raw.githubusercontent.com/reviewdog/action-eslint/master/eslint-formatter-rdjson/index.js > tmp/eslint-formatter-rdjson.js
       - uses: reviewdog/action-setup@v1
