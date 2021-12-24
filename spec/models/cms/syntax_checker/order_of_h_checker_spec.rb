@@ -171,6 +171,20 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
         expect(context.result).to include head_html1, head_html2, head_html3, head_html4, head_html5, head_html6
       end
     end
+    context "with first level is skipped" do
+      let(:head1) { unique_id }
+      let(:head2) { unique_id }
+      let(:head3) { unique_id }
+      let(:head_html1) { "<h3>#{head1}</h3>" }
+      let(:head_html2) { "<h3>#{head2}</h3>" }
+      let(:head_html3) { "<h3>#{head3}</h3>" }
+      let(:head_htmls) { [ head_html1, head_html2, head_html3 ] }
+
+      it do
+        described_class.new.correct(context)
+        expect(context.result).to include "<h1>#{head1}</h1>", "<h2>#{head2}</h2>", "<h3>#{head3}</h3>"
+      end
+    end
 
     context "with h2 is skipped" do
       let(:head1) { unique_id }
