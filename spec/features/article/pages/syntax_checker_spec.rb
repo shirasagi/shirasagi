@@ -110,6 +110,20 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
 
       before { login_cms_user }
 
+      context "with no columns" do
+        it do
+          visit edit_path
+
+          within "#addon-cms-agents-addons-form-page" do
+            click_button I18n.t("cms.syntax_check")
+
+            # confirm syntax check header is shown to wait for ajax completion
+            expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
+            expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+          end
+        end
+      end
+
       it "#edit" do
         visit edit_path
 
