@@ -9,3 +9,6 @@ runner:
     cmd: .github/workflows/stylelint.sh
     errorformat:
       - "%f:%l:%c:%t%*[^:]: %m"
+  eslint:
+    cmd: eslint --resolve-plugins-relative-to=$(npm root -g) -f tmp/eslint-formatter-rdjson.js 'app/assets/**/*.{js,js.erb}'
+    format: rdjson
