@@ -28,13 +28,12 @@ jobs:
           eslint -v
       - name: Download eslint formatter
         run: |
-          pwd
-          ls
+          mkdir -p tmp
           curl -sfL https://raw.githubusercontent.com/reviewdog/action-eslint/master/eslint-formatter-rdjson/index.js > tmp/eslint-formatter-rdjson.js
       - name: Eslint test run
         run: |
-          pwd
-          ls
+          echo jq --version
+          jq --version
           eslint --resolve-plugins-relative-to=$(npm root -g) -f tmp/eslint-formatter-rdjson.js app/assets/javascripts/ss/script.js.erb | jq .
       - uses: reviewdog/action-setup@v1
       - name: Run reviewdog
