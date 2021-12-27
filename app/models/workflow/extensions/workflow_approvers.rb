@@ -14,9 +14,9 @@ class Workflow::Extensions::WorkflowApprovers < Array
 
     def mongoize(object)
       case object
-      when self.class then
+      when self.class
         object.mongoize
-      when Array then
+      when Array
         Workflow::Extensions::WorkflowApprovers.new(normalize(object)).mongoize
       else
         object
@@ -25,7 +25,8 @@ class Workflow::Extensions::WorkflowApprovers < Array
 
     def evolve(object)
       case object
-      when self.class then object.mongoize
+      when self.class
+        object.mongoize
       else
         object
       end

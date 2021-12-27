@@ -14,7 +14,7 @@ class SS::PublicFileRemoverJob < SS::ApplicationJob
   def traverse_directory(path)
     count = 0
     ::Dir.foreach(path) do |child_path|
-      next if child_path == "." || child_path == ".."
+      next if %w(. ..).include?(child_path)
 
       count += 1
 
@@ -43,7 +43,7 @@ class SS::PublicFileRemoverJob < SS::ApplicationJob
       return
     end
 
-    if !file.previewable?(user: nil, member: nil)
+    if !file.previewable?(site: site, user: nil, member: nil)
       remove_directory(path)
       return
     end
@@ -53,7 +53,7 @@ class SS::PublicFileRemoverJob < SS::ApplicationJob
     path = path.sub(@public_root, "")
     path = path.sub("/_", "")
     path = path[1..-1] if path.start_with?("/")
-    path = path.gsub("/", "")
+    path = path.delete("/")
 
     Integer(path) rescue nil
   end

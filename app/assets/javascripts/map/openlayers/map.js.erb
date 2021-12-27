@@ -340,7 +340,7 @@ this.Openlayers_Map = (function () {
         var proj = projection.getCode();
         var xhr = new XMLHttpRequest();
         var onError = function() {
-          console.log("loadLayer error:" + url);
+          console.warn("loadLayer error:" + url);
         }
         xhr.open('GET', _url);
         xhr.onerror = onError;

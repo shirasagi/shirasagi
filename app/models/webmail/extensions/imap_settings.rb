@@ -24,7 +24,8 @@ class Webmail::Extensions::ImapSettings < Array
 
     def evolve(object)
       case object
-      when self.class then object.mongoize
+      when self.class
+        object.mongoize
       else
         object
       end

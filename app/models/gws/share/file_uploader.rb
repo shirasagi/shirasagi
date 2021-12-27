@@ -4,8 +4,8 @@ class Gws::Share::FileUploader
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
 
-  attr_accessor :cur_site, :cur_user, :folder_id, :memo
-  attr_accessor :file_ids
+  attr_accessor :cur_site, :cur_user, :folder_id, :memo, :file_ids
+
   permit_params :memo, file_ids: []
 
   validates :file_ids, presence: true

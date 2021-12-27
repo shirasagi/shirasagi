@@ -3,10 +3,7 @@ require 'builder'
 class Google::PersonFinder
   include Google::PfifBuilder
 
-  attr_accessor :repository
-  attr_accessor :api_key
-  attr_accessor :domain_name
-  attr_accessor :timeout, :open_timeout
+  attr_accessor :repository, :api_key, :domain_name, :timeout, :open_timeout
 
   def initialize(params = {})
     @repository = params[:repository].presence || 'test'

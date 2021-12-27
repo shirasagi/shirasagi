@@ -153,15 +153,15 @@ module Gws::Discussion::Postable
     super
   end
 
-  def file_previewable?(file, user:, member:)
+  def file_previewable?(file, site:, user:, member:)
     return false if user.blank?
     return false if !file_ids.include?(file.id)
 
     if forum.present? && forum_id != id
-      return true if forum.allowed?(:read, user, site: @cur_site || site)
+      return true if forum.allowed?(:read, user, site: @cur_site || self.site)
       return true if forum.member?(user)
     else
-      return true if self.allowed?(:read, user, site: @cur_site || site)
+      return true if self.allowed?(:read, user, site: @cur_site || self.site)
       return true if self.member?(user)
     end
 

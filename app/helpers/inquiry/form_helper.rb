@@ -37,12 +37,10 @@ module Inquiry::FormHelper
     end
   end
 
-  def inquiry_fields_tag(column, options)
+  def inquiry_fields_tag(column, options, &block)
     tag_name = options[:confirm] ? 'dd' : 'div'
     css_classes = %w(fields)
     css_classes << 'form-select' if column.input_type == 'form_select'
-    output_buffer << content_tag(tag_name, class: css_classes) do
-      yield
-    end
+    output_buffer << content_tag(tag_name, class: css_classes, &block)
   end
 end

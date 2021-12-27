@@ -4,6 +4,7 @@ module Webmail::Addon::GroupExtension
 
   included do
     attr_accessor :default_imap_setting
+
     field :imap_settings, type: Webmail::Extensions::ImapSettings, default: []
     permit_params imap_settings: %i(
       name from address imap_host imap_port imap_ssl_use

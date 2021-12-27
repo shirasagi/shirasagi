@@ -36,6 +36,8 @@ ja:
       set_seen: 確認済にする
       unset_seen: 回覧中に戻す
       approver_file_upload: ファイル追加
+      edit_branch: 差し替えページを編集する
+      continue_to_edit_master: このまま編集する
     buttons:
       select: 選択
       cancel: 取消
@@ -82,12 +84,16 @@ ja:
       request_cancel: 申請を取り消してもよろしいですか？
       set_seen: 既読にしてもよろしいですか？
       unset_seen: 未読にしてもよろしいですか？
-      would_you_edit_branch: 差し替えページが作成されています。差し替えページを編集しますか？
+      would_you_edit_branch: 差し替えページを編集しますか？
       unable_to_delete_master_page: 差し替えページが作成されているため処理を中断します。
     notice:
       request_cancelled: 申請を取り消しました。
       approver_file_droppable: ファイル追加ボタンをクリックするか、ここにファイルをドロップしてください。
       created_branch_page: 差し替えページを作成しました。
+    dialogue:
+      edit_branch_html: |-
+        差し替えページが作成されています。<a href="%{show_path}">「差し替えページ」</a>へ移動し編集してください。
+        編集中の差し替えページを削除する場合は<a href="%{show_path}">「差し替えページ」</a>の上部メニュー より削除してください。
     csv:
       approvers_or_circulations: 承認者・回覧者
     agent_name: "（代理: %{long_name}）"

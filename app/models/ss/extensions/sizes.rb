@@ -14,12 +14,13 @@ class SS::Extensions::Sizes < Array
 
     def mongoize(object)
       case object
-      when self.class then object.mongoize
-      when String then
+      when self.class
+        object.mongoize
+      when String
         object = object.gsub(/[, 　、\r\n]+/, ",").split(",").select(&:present?)
         object = [Integer(object[0]), Integer(object[1])] rescue []
         self.new(object).mongoize
-      when Array then
+      when Array
         [Integer(object[0]), Integer(object[1])] rescue []
       else object
       end
@@ -27,7 +28,8 @@ class SS::Extensions::Sizes < Array
 
     def evolve(object)
       case object
-      when self.class then object.mongoize
+      when self.class
+        object.mongoize
       else
         object
       end

@@ -501,7 +501,7 @@ GEM
     rdf-xsd (3.1.1)
       rdf (~> 3.1)
       rexml (~> 3.2)
-    rdoc (6.1.1)
+    rdoc (6.3.3)
     regexp_parser (2.1.1)
     retriable (3.1.2)
     rexml (3.2.5)

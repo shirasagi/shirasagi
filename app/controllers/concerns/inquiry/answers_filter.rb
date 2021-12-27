@@ -53,7 +53,7 @@ module Inquiry::AnswersFilter
     end
 
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
-              filename: "inquiry_answers_#{Time.zone.now.to_i}.csv"
+      filename: "inquiry_answers_#{Time.zone.now.to_i}.csv"
   end
 
   def send_afile(file)
@@ -127,8 +127,6 @@ module Inquiry::AnswersFilter
     file = SS::File.with(client: client_name) do |model|
       model.where(id: params[:fid].to_i).first
     end
-    unless file.blank?
-      send_afile file
-    end
+    send_afile file if file.present?
   end
 end

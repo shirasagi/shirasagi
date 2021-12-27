@@ -48,8 +48,8 @@ module Chorg::MongoidSupport
 
         entity.try(:skip_twitter_post=, true)
         entity.try(:skip_line_post=, true)
-        def entity.post_to_line; end
-        def entity.post_to_twitter; end
+        def entity.post_to_line(execute: :inline); end
+        def entity.post_to_twitter(execute: :inline); end
 
         entity.try(:skip_assoc_opendata=, true)
         def entity.invoke_opendata_job(action); end
@@ -77,7 +77,7 @@ module Chorg::MongoidSupport
       return true
     end
 
-    if val.class == Mongoid::Fields::ForeignKey
+    if val.instance_of?(Mongoid::Fields::ForeignKey)
       options = val.association ? val.association.options : {}
     else
       options = val.options[:metadata] || {}
@@ -132,7 +132,7 @@ module Chorg::MongoidSupport
   def skip_target_field?(entity, field_name)
     return false if field_name != "html"
     form = entity.try(:form)
-    form.class == Cms::Form
+    form.instance_of?(Cms::Form)
   end
 
   def with_updates(entity, substituter)

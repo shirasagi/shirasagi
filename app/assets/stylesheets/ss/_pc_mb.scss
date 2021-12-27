@@ -101,6 +101,16 @@ td {
   &.active {
     display: block;
   }
+  .ss-open-in-new-window {
+    &:after {
+      content: "\e89e";
+      display: inline-block;
+      padding-left: 4px;
+      font-family: "Material Icons";
+      font-size: 108%;
+      vertical-align: middle;
+    }
+  }
 }
 .dropdown-menu--top-right {
   right: 0;
@@ -1811,7 +1821,7 @@ footer.send {
       margin: 0 4px 4px;
     }
   }
-  input.publish_save, input.branch_save, input.save, button.save, input.delete {
+  input.publish_save, input.branch_save, input.draft_save, input.save, button.save, input.delete {
     @include btn-red;
   }
   .footer-notice {
@@ -3197,6 +3207,9 @@ body.ss-ajax-in-iframe {
     @include mb {
       float: none;
     }
+  }
+  .inplace-edit.select_page {
+    min-height: 600px;
   }
 }
 

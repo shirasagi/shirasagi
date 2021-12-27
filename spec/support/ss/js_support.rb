@@ -116,6 +116,27 @@ module SS
       })(arguments[0], arguments[1], arguments[2]);
     SCRIPT
 
+    IMAGE_ELEMENT_INFO = <<~SCRIPT.freeze
+      (function(element, resolve) {
+        if (! element.decode) {
+          resolve({ error: "not a HTMLImageElement" });
+          return;
+        }
+        element.decode().then(() => {
+          resolve({
+            width: element.width,
+            height: element.height,
+            naturalWidth: element.naturalWidth,
+            naturalHeight: element.naturalHeight,
+            currentSrc: element.currentSrc,
+          });
+        }).catch((error) => {
+          resolve({ error: error.toString() });
+          return true;
+        });
+      })(arguments[0], arguments[1]);
+    SCRIPT
+
     def wait_timeout
       Capybara.default_max_wait_time
     end
@@ -144,7 +165,7 @@ module SS
 
     def native_fill_in(locator = nil, with:)
       el = find(:fillable_field, locator).set('').click
-      with.to_s.split('').each { |c| el.native.send_keys(c) }
+      with.to_s.chars.each { |c| el.native.send_keys(c) }
       el
     rescue Selenium::WebDriver::Error::StaleElementReferenceError
       el
@@ -161,7 +182,7 @@ module SS
       Timeout.timeout(ajax_timeout) do
         sleep 1 until finished_all_ajax_requests?
       end
-      if block_given?
+      if block
         sleep 1
         yield
       end
@@ -176,7 +197,7 @@ module SS
 
     def wait_for_cbox(&block)
       have_css("#cboxClose", text: "close")
-      within("#cboxContent", &block) if block_given?
+      within("#cboxContent", &block) if block
     end
 
     def colorbox_opened?
@@ -340,6 +361,17 @@ module SS
       expect(result).to be_truthy
 
       ret
+    end
+
+    def image_element_info(element)
+      result = page.evaluate_async_script(IMAGE_ELEMENT_INFO, element)
+      expect(result).to be_present
+      expect(result).to be_a(Hash)
+
+      result.symbolize_keys!
+      expect(result[:error]).to be_blank
+
+      result
     end
   end
 end

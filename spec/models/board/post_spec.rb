@@ -46,7 +46,7 @@ describe Board::Post, type: :model, dbscope: :example do
 
   describe "validation" do
     let(:node) { create :board_node_post }
-    let(:item) { create :board_post, cur_node: node}
+    let(:item) { create :board_post, cur_node: node }
     let(:child_item) { create(:board_post, node: node, topic_id: item.id, parent_id: item.parent_id) }
 
     it "presence_validation" do

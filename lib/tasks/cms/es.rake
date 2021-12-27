@@ -12,12 +12,15 @@ namespace :cms do
       ::Tasks::Cms::Base.with_site(args[:site] || ENV['site']) do |site|
         break unless es_validator.call(site)
 
-        pages = Cms::Page.site(site).and_public
-        pages.each do |page|
-          puts "- #{page.filename}"
-          next if site.elasticsearch_deny.include?(page.filename)
-          job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site)
-          job.perform_now(action: 'index', id: page.id.to_s)
+        all_ids = Cms::Page.site(site).and_public.pluck(:id)
+        all_ids.each_slice(100) do |ids|
+          pages = Cms::Page.in(id: ids).to_a
+          pages.each do |page|
+            puts "- #{page.filename}"
+            next if site.elasticsearch_deny.include?(page.filename)
+            job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site)
+            job.perform_now(action: 'index', id: page.id.to_s)
+          end
         end
 
         Cms::PageIndexQueue.site(site).where(action: 'release').destroy_all
@@ -69,8 +72,8 @@ namespace :cms do
         if ENV['synonym']
           settings["analysis"]["analyzer"]["my_ja_analyzer"]["filter"].push("synonym")
           settings["analysis"]["filter"]["synonym"] = {
-            "type": "synonym",
-            "synonyms_path": "/etc/elasticsearch/synonym.txt"
+            type: "synonym",
+            synonyms_path: "/etc/elasticsearch/synonym.txt"
           }
         end
 

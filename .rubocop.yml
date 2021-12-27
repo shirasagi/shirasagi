@@ -81,7 +81,8 @@ Metrics/ModuleLength:
   Max: 500
 
 Naming/MethodParameterName:
-  AllowedNames: [ 'ns', 'to', 'id' ]
+  MinNameLength: 2
+  AllowedNames: [ 'f', 'e', 'n' ]
 
 Rails:
   Enabled: true

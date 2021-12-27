@@ -26,7 +26,7 @@ Rails.application.routes.draw do
       get :contrast_ratio, on: :collection
     end
     get "download_job_files/:filename" => "download_job_files#index",
-      filename: %r{[^\/]+}, format: false
+      filename: %r{[^/]+}, format: false
 
     namespace "addons", module: "agents/addons" do
       post "markdown" => "markdown#preview"
@@ -39,6 +39,18 @@ Rails.application.routes.draw do
   end
 
   namespace "sns", path: ".u:user", user: /\d+/ do
+    #
+    # 注意: 本ブロックにルーティンを追加される方へ。
+    #
+    # 本当にこのブロックへルーティングを追加する必要がありますか？
+    # 追加しようとしているルーティングは、他人のものを操作する必要があるのでしょうか？
+    #
+    # 本来は不要なルーティングが歴史的な理由により残っていますが、
+    # ここのブロックには「他人のプロフィールを閲覧する」や「他人のアカウト情報を閲覧する」など、
+    # 他人のものを操作する必要がある場合だけに限るべきです。
+    #
+    # 自分のものだけを操作できれば十分（通常はこれで十分）な場合は、上のブロックにルーティングを追加してください。
+    #
     get "/" => redirect { |p, req| "#{req.path}/user_profile" }
 
     resource :user_profile, only: [:show]
@@ -46,7 +58,7 @@ Rails.application.routes.draw do
 
     resources :user_files, concerns: [:deletion, :file_api]
     get "download_job_files/:filename(/:name)" => "download_job_files#index",
-      filename: %r{[^\/]+}, name: %r{[^\/]+}, format: false, as: :download_job_files
+      filename: %r{[^/]+}, name: %r{[^/]+}, format: false, as: :download_job_files
 
     namespace "apis" do
       resources :temp_files, concerns: [:deletion, :file_api] do
@@ -54,14 +66,6 @@ Rails.application.routes.draw do
       end
       resources :user_files, concerns: [:deletion, :file_api] do
         get :contrast_ratio, on: :collection
-      end
-      resources :replace_files, only: [:index, :edit, :update] do
-        get :confirm, on: :member
-        post :confirm, on: :member
-        get :histories, on: :member
-        get :download, on: :member
-        post :restore, on: :member
-        post :destroy, on: :member
       end
     end
   end

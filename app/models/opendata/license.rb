@@ -16,7 +16,7 @@ class Opendata::License
   field :order, type: Integer, default: 0
   field :default_state, type: String
 
-  belongs_to_file2 :file
+  belongs_to_file :file
 
   permit_params :state, :name, :related_url, :order, :default_state
   permit_params file_ids: []
@@ -40,7 +40,7 @@ class Opendata::License
     end
   end
 
-  def file_previewable?(file, user:, member:)
+  def file_previewable?(file, site:, user:, member:)
     state == "public"
   end
 

@@ -33,7 +33,7 @@ class Jmaxml::WaterLevelStationsController < ApplicationController
     filename = "water_level_stations_#{Time.zone.now.to_i}.csv"
     response.status = 200
     send_enum SS::CsvConverter.enum_csv(@items, %w(code name region_name order state)),
-              type: 'text/csv; charset=Shift_JIS', filename: filename
+      type: 'text/csv; charset=Shift_JIS', filename: filename
   end
 
   def import

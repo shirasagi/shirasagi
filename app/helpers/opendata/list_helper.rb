@@ -9,7 +9,7 @@ module Opendata::ListHelper
 
     h = []
     h << cur_item.upper_html.html_safe if cur_item.upper_html.present?
-    if block_given?
+    if block
       h << capture(&block)
     else
       @items.each do |item|

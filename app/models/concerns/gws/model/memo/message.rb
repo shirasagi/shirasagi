@@ -61,7 +61,7 @@ module Gws::Model
       scope :and_closed, -> { self.and('$or' => [ { :state.ne => "public" }, { :state.exists => false } ]) }
       scope :folder, ->(folder, user) {
         if folder.sent_box?
-          user(user).where(:"deleted.sent".exists => false).and_public
+          user(user).where(:"deleted.sent".exists => false).and_public # rubocop:disable Style/QuotedSymbols
         elsif folder.draft_box?
           user(user).and_closed
         else

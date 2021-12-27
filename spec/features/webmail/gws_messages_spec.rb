@@ -26,12 +26,14 @@ describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true, 
       it "#show" do
         # new/create
         visit index_path
-        click_link I18n.t('ss.links.new')
-        within "form#item-form" do
-          fill_in "to", with: user.email + "\n"
-          fill_in "item[subject]", with: item_title
-          fill_in "item[text]", with: item_texts.join("\n")
-          click_on I18n.t('ss.buttons.send')
+        new_window = window_opened_by { click_on I18n.t('ss.links.new') }
+        within_window new_window do
+          within "form#item-form" do
+            fill_in "to", with: user.email + "\n"
+            fill_in "item[subject]", with: item_title
+            fill_in "item[text]", with: item_texts.join("\n")
+            click_on I18n.t('ss.buttons.send')
+          end
         end
         wait_for_notice I18n.t('ss.notice.sent')
 
@@ -49,15 +51,19 @@ describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true, 
         click_link item_title
 
         # forward
-        click_link I18n.t('webmail.links.forward_gws_message')
-        first('.gws-addon-memo-member .ajax-box').click
-        wait_for_cbox do
-          click_on user.name
+        new_window = window_opened_by { click_link I18n.t('webmail.links.forward_gws_message') }
+        within_window new_window do
+          first('.gws-addon-memo-member .ajax-box').click
+          wait_for_cbox do
+            click_on user.name
+          end
+          page.accept_alert do
+            click_on I18n.t('ss.buttons.send')
+          end
         end
-        page.accept_alert do
-          click_on I18n.t('ss.buttons.send')
-        end
-        wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_notice I18n.t('ss.notice.sent')
+
+        visit gws_memo_messages_path(site: site, folder: 'INBOX.Sent')
         expect(has_link?(item_title)).to be_truthy
       end
     end

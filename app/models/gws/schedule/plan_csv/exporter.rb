@@ -1,8 +1,7 @@
 class Gws::Schedule::PlanCsv::Exporter
   include ActiveModel::Model
 
-  attr_accessor :site, :user, :model, :template
-  attr_accessor :criteria
+  attr_accessor :site, :user, :model, :template, :criteria
 
   class << self
     def enum_csv(criteria, opts = {})

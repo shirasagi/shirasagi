@@ -1,5 +1,5 @@
 <div class="content-box">
-  <%= form_tag "./result.html", multipart: true, method: "get" do %>
+  <%= form_tag "#{@cur_node.url}result.html", multipart: true, method: "get" do %>
     <div class="name">
       <h2><%= t('garbage.item') %></h2>
       <%= text_field_tag :name, @name %>

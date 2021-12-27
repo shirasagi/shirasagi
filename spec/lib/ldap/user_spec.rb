@@ -14,7 +14,7 @@ describe Ldap::User, ldap: true do
       let(:dn) { "uid=admin, ou=001001政策課, ou=001企画政策部, dc=example, dc=jp" }
       let(:connection) do
         Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
-                                 username: username, password: password)
+          username: username, password: password)
       end
       subject { Ldap::User.find(connection, dn) }
       it { expect(subject.dn).to eq dn.delete(" ") }
@@ -24,7 +24,7 @@ describe Ldap::User, ldap: true do
       let(:dn) { "uid=u#{rand(0x100000000).to_s(36)}, ou=001001政策課, ou=001企画政策部, dc=example, dc=jp" }
       let(:connection) do
         Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
-                                 username: username, password: password)
+          username: username, password: password)
       end
       subject { Ldap::User.find(connection, dn) }
       it { expect(subject).to be_nil }
@@ -38,7 +38,7 @@ describe Ldap::User, ldap: true do
     let(:password) { SS::Crypt.encrypt("admin") }
     let(:connection) do
       Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
-                               username: username, password: password)
+        username: username, password: password)
     end
     subject { Ldap::User.find(connection, dn) }
     it { expect(subject.parent.dn).to eq parent_dn.delete(" ") }
@@ -49,7 +49,7 @@ describe Ldap::User, ldap: true do
     let(:password) { "pass" }
     subject do
       Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
-                               username: username.gsub(/\s+/, ""), password: password) rescue nil
+        username: username.gsub(/\s+/, ""), password: password) rescue nil
     end
     it { expect(subject).not_to be_nil }
   end
@@ -59,7 +59,7 @@ describe Ldap::User, ldap: true do
     let(:password) { "pass-#{rand(0x100000000).to_s(36)}" }
     subject do
       Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
-                               username: username, password: password) rescue nil
+        username: username, password: password) rescue nil
     end
     it { expect(subject).to be_nil }
   end
@@ -69,7 +69,7 @@ describe Ldap::User, ldap: true do
     let(:password) { "pass" }
     subject do
       Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
-                               username: username, password: password) rescue nil
+        username: username, password: password) rescue nil
     end
     it { expect(subject).not_to be_nil }
   end
@@ -79,7 +79,7 @@ describe Ldap::User, ldap: true do
     let(:password) { "pass-#{rand(0x100000000).to_s(36)}" }
     subject do
       Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
-                               username: username, password: password) rescue nil
+        username: username, password: password) rescue nil
     end
     it { expect(subject).to be_nil }
   end

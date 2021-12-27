@@ -32,7 +32,7 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       reset_password_lower_text: "本メールに心当たりのない方は、お手数ですがメールを削除してください。",
       completed_subject: '登録完了',
       completed_upper_text: completed_upper_text,
-      completed_lower_text: completed_lower_text,
+      completed_lower_text: completed_lower_text
     )
   end
   let!(:node_login) do

@@ -1,6 +1,5 @@
 class Gws::Compressor
-  attr_accessor :user, :model, :items, :filename, :name
-  attr_accessor :root, :path, :url
+  attr_accessor :user, :model, :items, :filename, :name, :root, :path, :url
 
   def initialize(user, attr = {})
     self.user     = user
@@ -27,7 +26,7 @@ class Gws::Compressor
 
   def deley_download?
     sizes = items.map(&:size)
-    return true if sizes.inject(:+) >= SS.config.env.deley_download['min_filesize'].to_i
+    return true if sizes.sum >= SS.config.env.deley_download['min_filesize'].to_i
     return true if sizes.size >= SS.config.env.deley_download['min_count'].to_i
 
     false

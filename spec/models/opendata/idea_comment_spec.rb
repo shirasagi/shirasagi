@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Opendata::IdeaComment, dbscope: :example do
-
   before do
     create_once :opendata_node_search_idea, filename: "idea/search"
   end
@@ -15,10 +14,10 @@ describe Opendata::IdeaComment, dbscope: :example do
   end
 
   let!(:member) { opendata_member }
-  let!(:group_01) { create_once :ss_group }
-  let!(:group_02) { create_once :ss_group }
+  let!(:group1) { create_once :ss_group }
+  let!(:group2) { create_once :ss_group }
 
-  let!(:ss_user_01) { create_once :ss_user, group_ids: [group_01.id, group_02.id] }
+  let!(:user1) { create_once :ss_user, group_ids: [group1.id, group2.id] }
 
   context ".get_member_name" do
     subject do
@@ -32,19 +31,19 @@ describe Opendata::IdeaComment, dbscope: :example do
   context ".get_group_name" do
     subject do
       create_once :opendata_idea_comment,
-        site_id: cms_site, idea_id: page_idea.id, user_id: ss_user.id, contact_group_id: group_02.id
+        site_id: cms_site, idea_id: page_idea.id, user_id: ss_user.id, contact_group_id: group2.id
     end
 
-    its(:get_member_name) { is_expected.to eq group_02.name.sub(/.*\//, "") }
+    its(:get_member_name) { is_expected.to eq group2.name.sub(/.*\//, "") }
   end
 
   context ".get_user_groups_first" do
     subject do
       create_once :opendata_idea_comment,
-        site_id: cms_site, idea_id: page_idea.id, user_id: ss_user_01.id
+        site_id: cms_site, idea_id: page_idea.id, user_id: user1.id
     end
 
-    its(:get_member_name) { is_expected.to eq group_01.name }
+    its(:get_member_name) { is_expected.to eq group1.name }
   end
 
   context ".get_guest_user" do
@@ -55,5 +54,4 @@ describe Opendata::IdeaComment, dbscope: :example do
 
     its(:get_member_name) { is_expected.to eq "ゲストユーザー" }
   end
-
 end

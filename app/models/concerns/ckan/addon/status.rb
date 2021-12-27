@@ -12,6 +12,7 @@ module Ckan::Addon
       field :ckan_value_url, type: String
       field :ckan_value_cache, type: Integer
       attr_accessor :in_ckan_basicauth_password
+
       permit_params :ckan_url, :ckan_basicauth_state, :ckan_basicauth_username, :in_ckan_basicauth_password
       permit_params :ckan_status, :ckan_value_url
 

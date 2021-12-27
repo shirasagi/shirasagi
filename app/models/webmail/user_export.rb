@@ -55,6 +55,7 @@ class Webmail::UserExport
   ].freeze
 
   attr_accessor :cur_user, :in_file
+
   permit_params :in_file
 
   def export_csv(items)
@@ -90,10 +91,8 @@ class Webmail::UserExport
     validate_import_file
     return false unless errors.empty?
 
-    index = 0
-    CSV.foreach(in_file.path, headers: true, encoding: 'SJIS:UTF-8') do |row|
+    SS::Csv.foreach_row(in_file, headers: true) do |row, index|
       update_row(row, index)
-      index += 1
     end
     result = errors.empty?
 
@@ -179,7 +178,7 @@ class Webmail::UserExport
     end
 
     unmatched = 0
-    CSV.foreach(in_file.path, headers: true, encoding: 'SJIS:UTF-8') do |row|
+    SS::Csv.foreach_row(in_file, headers: true) do |row|
       EXPORT_DEF.each do |export_def|
         unmatched += 1 if !row.key?(export_def[:label])
       end

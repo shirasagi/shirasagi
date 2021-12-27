@@ -1,13 +1,12 @@
 class Gws::Memo::MessageExportJob < Gws::ApplicationJob
-  include SS::ExportHelper
+  include Gws::Memo::Helper
 
   def perform(*args)
     opts = args.extract_options!
     @datetime = Time.zone.now
-    @message_ids = args
+    @message_ids = args[0]
     @root_url = opts[:root_url].to_s
     @output_zip = SS::ZipCreator.new("gws-memo-messages.zip", user, site: site)
-    @output_format = opts[:format].to_s.presence || "json"
     @export_filter = opts[:export_filter].to_s.presence || "selected"
     @exported_items = 0
 
@@ -40,11 +39,41 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
       if item.to_members.present?
         data['to_members'] = item.to_members.map { |u| user_attributes(u) }
         data['to_members_name_email'] = item.to_members.map { |u| user_name_email(u) }
+        data['to_member_ids'] = item.to_members.map(&:id)
       end
+
+      data['to_members_name_email'] =[] if data['to_members_name_email'].nil?
+      if item.to_shared_address_group_ids.present?
+        item.to_shared_address_group_ids.each do |u|
+          data['to_members_name_email'] << shared_address_group_name(u)
+        end
+      end
+
+      if item.to_webmail_address_group_ids
+        item.to_webmail_address_group_ids.each do |u|
+          data['to_members_name_email'] << webmail_address_group_name(u)
+        end
+      end
+
       if item.cc_members.present?
         data['cc_members'] = item.cc_members.map { |u| user_attributes(u) }
         data['cc_members_name_email'] = item.cc_members.map { |u| user_name_email(u) }
+        data['cc_member_ids'] = item.cc_members.map(&:id)
       end
+
+      data['cc_members_name_email'] = [] if data['cc_members_name_email'].nil?
+      if item.cc_shared_address_group_ids
+        item.cc_shared_address_group_ids.map do |u|
+          data['cc_members_name_email'] << shared_address_group_name(u)
+        end
+      end
+
+      if item.cc_webmail_address_group_ids
+        item.cc_webmail_address_group_ids.map do |u|
+          data['cc_members_name_email'] << webmail_address_group_name(u)
+        end
+      end
+
       if item.bcc_members.present?
         data['bcc_members'] = item.bcc_members.select{ |u| u.id == user.id }.map { |u| user_attributes(u) }
       end
@@ -62,11 +91,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
         folder_name = folder_name.split("/").map { |path| sanitize_filename(path) }.join("/")
         basename = "#{folder_name}/#{basename}"
       end
-      if @output_format == "eml"
-        write_eml(basename, data)
-      else
-        write_json(basename, data.to_json)
-      end
+      write_eml(basename, data)
 
       @exported_items += 1
     end
@@ -75,13 +100,13 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
   def each_message_with_rescue
     criteria = Gws::Memo::Message.unscoped.site(site).where("user_settings.user_id" => user.id)
     if @export_filter == "all"
-      all_ids = criteria.pluck(:id).map(&:to_s)
+      all_ids = criteria.pluck(:id).map(&:to_s) + extract_sent_and_draft_ids
     else
       all_ids = @message_ids
     end
 
     all_ids.each_slice(100) do |ids|
-      criteria.in(id: ids).to_a.each do |item|
+      Gws::Memo::Message.in(id: ids).to_a.each do |item|
         begin
           yield item
         rescue => e
@@ -92,8 +117,28 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
     end
   end
 
+  def extract_sent_and_draft_ids
+    folders = Gws::Memo::Folder.static_items(user, site) + Gws::Memo::Folder.user(user).site(site)
+
+    sent_folder = folders.find { |folder| folder.folder_path == "INBOX.Sent" }
+    draft_folder = folders.find { |folder| folder.folder_path == "INBOX.Draft" }
+
+    @sent_ids = Gws::Memo::Message.folder(sent_folder, user).pluck(:id).map(&:to_s)
+    @draft_ids = Gws::Memo::Message.folder(draft_folder, user).pluck(:id).map(&:to_s)
+    sent_and_draft_ids = @sent_ids + @draft_ids
+
+    sent_and_draft_ids
+  end
+
   def item_folder_name(item)
     path = item.path(user)
+    if path.blank? || item.state == "closed"
+      if @sent_ids.include?(item.id.to_s)
+        path = "INBOX.Sent"
+      elsif @draft_ids.include?(item.id.to_s)
+        path = "INBOX.Draft"
+      end
+    end
     return if path.blank?
 
     if !path.numeric?
@@ -126,19 +171,16 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
     item.save!
   end
 
-  def write_json(name, data)
-    @output_zip.create_entry("#{name}.json") do |f|
-      f.write(data)
-    end
-  end
-
   def write_eml(name, data)
     @output_zip.create_entry("#{name}.eml") do |f|
+      sanitized_subject = sanitize_content(data["subject"].slice(0..79))
+      f.puts Mail::Field.new("Subject", sanitized_subject, "utf-8").encoded
       f.puts Mail::Field.new("Date", data["created"].in_time_zone.rfc822, "utf-8").encoded
       f.puts Mail::Field.new("Message-ID", gen_message_id(data), "utf-8").encoded
-      f.puts Mail::Field.new("Subject", data["subject"], "utf-8").encoded
       f.puts Mail::Field.new("From", data['from_name_email'], "utf-8").encoded
       f.puts Mail::Field.new("To", data['to_members_name_email'], "utf-8").encoded
+      f.puts Mail::Field.new("X-Shirasagi-Member-IDs", data['to_member_ids'], "utf-8").encoded
+      f.puts Mail::Field.new("Cc-IDs", data['cc_member_ids'], "utf-8").encoded
       f.puts Mail::Field.new("Cc", data['cc_members_name_email'], "utf-8").encoded if data['cc_members_name_email'].present?
       user_settings = data["user_settings"]
       s_status = []
@@ -185,41 +227,11 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
     end
   end
 
-  def file_attributes(file)
-    data = file.attributes
-    data["base64"] = Base64.strict_encode64(::File.binread(file.path))
-    data
+  def shared_address_group_name(id)
+    Gws::SharedAddress::Group.find(id).try(:name)
   end
 
-  def user_attributes(user)
-    user.attributes.select { |k, v| %w(_id name).include?(k) }
-  end
-
-  def user_name_email(user)
-    if user.email.present?
-      "#{user.name} <#{user.email}>"
-    else
-      user.name
-    end
-  end
-
-  def gen_message_id(data)
-    @domain_for_message_id ||= site.canonical_domain.presence || SS.config.gws.canonical_domain.presence || "localhost.local"
-    "<#{data["id"].to_s.presence || data["_id"].to_s.presence || SecureRandom.uuid}@#{@domain_for_message_id}>"
-  end
-
-  def write_body_to_eml(file, data)
-    if data["format"] == "html"
-      content_type = "text/html"
-      base64 = Mail::Encodings::Base64.encode(data["html"].to_s)
-    else
-      content_type = "text/plain"
-      base64 = Mail::Encodings::Base64.encode(data["text"].to_s)
-    end
-
-    file.puts "Content-Type: #{content_type}; charset=UTF-8"
-    file.puts "Content-Transfer-Encoding: base64"
-    file.puts ""
-    file.puts base64
+  def webmail_address_group_name(id)
+    Webmail::AddressGroup.find(id).try(:name)
   end
 end

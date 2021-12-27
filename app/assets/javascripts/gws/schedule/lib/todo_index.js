@@ -45,13 +45,9 @@ this.Gws_Schedule_Todo_Index = (function () {
 
     var self = this;
     this.eachListItem($listItemHeader, function() {
-      console.log(this);
       var $this = $(this);
       if (self.examineToShow($this)) {
-        console.log(true);
         showEl($(this));
-      } else {
-        console.log(false);
       }
     });
   };

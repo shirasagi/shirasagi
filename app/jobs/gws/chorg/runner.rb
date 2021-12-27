@@ -29,9 +29,9 @@ class Gws::Chorg::Runner < Gws::ApplicationJob
 
   def self.job_class(type)
     case type
-    when MAIN then
+    when MAIN
       Gws::Chorg::MainRunner
-    when TEST then
+    when TEST
       Gws::Chorg::TestRunner
     else
       nil

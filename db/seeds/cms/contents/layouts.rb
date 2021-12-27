@@ -37,7 +37,7 @@ save_layout filename: "ezine.layout.html", name: "メールマガジン"
 save_layout filename: "urgency-layout/top-level1.layout.html", name: "緊急災害1：トップページ"
 save_layout filename: "urgency-layout/top-level2.layout.html", name: "緊急災害2：トップページ"
 save_layout filename: "urgency-layout/top-level3.layout.html", name: "緊急災害3：トップページ"
-if SS.config.cms.enable_lgwan.blank?
+if !SS::Lgwan.enabled?
   save_layout filename: "kanko-info.layout.html", name: "写真データベース、ブログ"
   save_layout filename: "kanko-info-top.layout.html", name: "観光情報"
   save_layout filename: "kanko-info-photo.layout.html", name: "写真データベース：検索"

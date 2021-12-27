@@ -4,7 +4,8 @@ class Facility::Apis::TempFilesController < ApplicationController
   include SS::FileFilter
   include SS::AjaxFileFilter
 
-  model Facility::TempFile
+  model SS::TempFile
+  self.only_image = true
 
   private
 

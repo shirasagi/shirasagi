@@ -68,11 +68,17 @@ Rails.application.routes.draw do
       end
       resources :categories, concerns: :deletion
 
+      get 'backup_messages' => 'backup_messages#index'
+      put 'backup_messages' => 'backup_messages#backup'
+      get 'start_backup_messages' => 'backup_messages#start_backup'
       get 'export_messages' => 'export_messages#index'
       put 'export_messages' => 'export_messages#export'
       get 'start_export_messages' => 'export_messages#start_export'
+
       get 'import_messages' => 'import_messages#index'
       put 'import_messages' => 'import_messages#import'
+      get 'restore_messages' => 'restore_messages#index'
+      put 'restore_messages' => 'restore_messages#restore'
     end
   end
 end

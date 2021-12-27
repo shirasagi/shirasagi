@@ -101,22 +101,11 @@ module SS::Model::JobLog
 
   def file_path
     raise if new_record?
-    @file_path ||= "#{SS::File.root}/job_logs/" + id.to_s.split(//).join("/") + "/_/#{id}.log"
+    @file_path ||= "#{SS::File.root}/job_logs/" + id.to_s.chars.join("/") + "/_/#{id}.log"
   end
 
-  def head_logs(limit = 1_000)
-    if file_path && ::File.exist?(file_path)
-      texts = []
-      ::File.open(file_path) do |f|
-        limit.times do
-          line = f.gets || break
-          texts << line
-        end
-      end
-      texts
-    else
-      []
-    end
+  def head_logs(limit = nil)
+    Fs.head_lines(file_path, limit: limit)
   end
 
   def logs

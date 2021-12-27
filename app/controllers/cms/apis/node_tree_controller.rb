@@ -23,8 +23,14 @@ class Cms::Apis::NodeTreeController < ApplicationController
   private
 
   def root_items
-    @model.site(@cur_site).where(depth: 1).
-      allow(:read, @cur_user, site: @cur_site).limit(@limit)
+    if params[:root_items]
+      ids = params[:root_items].to_a.map(&:to_i) rescue []
+      @model.site(@cur_site).in(id: ids).
+        allow(:read, @cur_user, site: @cur_site).limit(@limit)
+    else
+      @model.site(@cur_site).where(depth: 1).
+        allow(:read, @cur_user, site: @cur_site).limit(@limit)
+    end
   end
 
   def tree_items
@@ -51,7 +57,7 @@ class Cms::Apis::NodeTreeController < ApplicationController
         is_parent: (@item.present? && @item.filename.start_with?("#{item.filename}\/"))
       }
     end
-    items.compact.uniq.sort{ |a, b| a[:filename].gsub(/\//, "\0") <=> b[:filename].gsub(/\//, "\0") }
+    items.compact.uniq.sort{ |a, b| a[:filename].tr('/', "\0") <=> b[:filename].tr('/', "\0") }
   end
 
   def item_url(item)

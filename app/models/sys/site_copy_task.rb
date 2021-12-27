@@ -18,7 +18,7 @@ class Sys::SiteCopyTask
   field :copy_contents, type: SS::Extensions::Words
 
   permit_params :target_host_name, :target_host_host, :target_host_domains, :target_host_subdir,
-                :target_host_parent_id, :source_site_id, copy_contents: []
+    :target_host_parent_id, :source_site_id, copy_contents: []
 
   validates :target_host_name, presence: true, length: { maximum: 40 }
   validates :target_host_host, presence: true, length: { minimum: 3, maximum: 16 }

@@ -74,21 +74,10 @@ class ApplicationController < ActionController::Base
   end
 
   def send_file_headers!(options)
-    super(options)
-
-    disposition = headers['Content-Disposition']
-    return if disposition.blank?
-    return unless /(.+); filename="(.+)"/ =~ disposition
-
-    name = ::Regexp.last_match[1]
-    filename = ::Regexp.last_match[2]
-
     if browser.ie?("<= 11") && ie11_attachment_mime_types.include?(options[:type])
-      name = "attachment"
+      options[:disposition] = "attachment"
     end
-    encoded = ERB::Util.url_encode(filename)
-
-    headers['Content-Disposition'] = "#{name}; filename*=UTF-8''#{encoded}"
+    super(options)
   end
 
   def ie11_attachment_mime_types

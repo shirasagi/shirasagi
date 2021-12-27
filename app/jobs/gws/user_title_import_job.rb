@@ -7,8 +7,7 @@ class Gws::UserTitleImportJob < Gws::ApplicationJob
   private
 
   def import_file
-    i = 0
-    self.class.each_csv(@cur_file) do |row|
+    self.class.each_csv(@cur_file) do |row, i|
       i += 1
 
       code = value(row, :code)

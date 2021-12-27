@@ -7,6 +7,7 @@ module Chorg::Model::Revision
       class_variable_set(:@@changeset_class, Chorg::Changeset)
 
       attr_accessor :in_revision_csv_file
+
       permit_params :in_revision_csv_file
 
       validate :validate_in_revision_csv_file, if: -> { in_revision_csv_file.present? }
@@ -119,17 +120,17 @@ module Chorg::Model::Revision
       @division_sets = {}
       @delete_sets = []
 
-      begin
-        if ::File.extname(in_revision_csv_file.original_filename) != ".csv"
-          raise I18n.t("errors.messages.invalid_csv")
-        end
-        table = CSV.read(in_revision_csv_file.path, headers: true, encoding: 'SJIS:UTF-8')
-      rescue => e
-        errors.add :base, e.to_s
+      if ::File.extname(in_revision_csv_file.original_filename).try(:downcase) != ".csv"
+        errors.add :base, :invalid_csv
+        return
+      end
+      if !SS::Csv.valid_csv?(in_revision_csv_file, headers: true)
+        errors.add :base, :malformed_csv
         return
       end
 
-      table.each_with_index do |line, idx|
+      in_revision_csv_file.rewind
+      SS::Csv.foreach_row(in_revision_csv_file, headers: true) do |line, idx|
         attr = csv_line_to_changeset_attributes(line)
         id = attr["id"]
         type = attr["type"]

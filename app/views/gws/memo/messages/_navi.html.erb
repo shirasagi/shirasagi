@@ -18,6 +18,12 @@
   <% end %>
   <h3><%= link_to t('ss.export'), gws_memo_export_messages_path, class: "management" %></h3>
   <h3><%= link_to t('ss.import'), gws_memo_import_messages_path, class: "management" %></h3>
+  <% if @cur_user.gws_role_permit_any?(@cur_site, :backup_gws_memo_messages) %>
+    <h3><%= link_to t('ss.backup'), gws_memo_backup_messages_path, class: "management" %></h3>
+  <% end %>
+  <% if @cur_user.gws_role_permit_any?(@cur_site, :restore_gws_memo_messages) %>
+    <h3><%= link_to t('ss.restore'), gws_memo_restore_messages_path, class: "management" %></h3>
+  <% end %>
 </nav>
 
 <%= render partial: 'gws/main/navi' %>

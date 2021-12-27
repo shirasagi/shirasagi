@@ -48,7 +48,7 @@ class Chat::IntentsController < ApplicationController
     begin
       file = params[:item].try(:[], :file)
       raise I18n.t("errors.messages.invalid_csv") if file.nil? || ::File.extname(file.original_filename) != ".csv"
-      CSV.read(file.path, headers: true, encoding: 'SJIS:UTF-8')
+      raise I18n.t("errors.messages.malformed_csv") if !SS::Csv.valid_csv?(file, headers: true)
 
       # save csv to use in job
       ss_file = SS::File.new

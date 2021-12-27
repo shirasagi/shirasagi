@@ -1,6 +1,6 @@
 class Member::Photo
   include Cms::Model::Page
-  include Cms::Reference::Member
+  include Cms::Addon::MemberReference
   include Workflow::Addon::Approver
   include Member::Addon::Photo::Body
   include Member::Addon::Photo::Category
@@ -44,12 +44,16 @@ class Member::Photo
     value < 0 ? 0 : value
   end
 
-  def file_previewable?(file, user:, member:)
+  def file_previewable?(file, site:, user:, member:)
     return true if super
 
     return true if member.present? && member_id == member.id
 
     false
+  end
+
+  def slideable?
+    slideable_state == "public"
   end
 
   private

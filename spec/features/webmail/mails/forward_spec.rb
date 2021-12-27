@@ -29,11 +29,14 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         # forward
         visit index_path
         click_link item_subject
-        click_link I18n.t('webmail.links.forward')
-        within "form#item-form" do
-          fill_in "to", with: user.email + "\n"
+        new_window = window_opened_by { click_link I18n.t('webmail.links.forward') }
+        within_window new_window do
+          within "form#item-form" do
+            fill_in "to", with: user.email + "\n"
+          end
+          click_button I18n.t('ss.buttons.send')
         end
-        click_button I18n.t('ss.buttons.send')
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.sent'))
 
         expect(ActionMailer::Base.deliveries).to have(1).items
         ActionMailer::Base.deliveries.first.tap do |mail|

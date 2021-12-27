@@ -31,8 +31,7 @@ class Garbage::Node::BaseImporter
   end
 
   def import_csv(file)
-    i = 0
-    self.class.each_csv(file) do |row|
+    self.class.each_csv(file) do |row, i|
       begin
         i += 1
         item = update_row(row)

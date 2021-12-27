@@ -38,10 +38,13 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
             select I18n.t("ss.options.state.expired"), from: "item[twitter_auto_post]"
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           visit current_path
           within "#addon-cms-agents-addons-twitter_poster" do
@@ -64,10 +67,13 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
             select I18n.t("ss.options.state.expired"), from: "item[twitter_auto_post]"
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
@@ -97,14 +103,17 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
             select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           visit current_path
           within "#addon-cms-agents-addons-twitter_poster" do
@@ -129,14 +138,17 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
             select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
@@ -186,14 +198,17 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
             select I18n.t("cms.options.twitter_post_format.files_and_page"), from: "item[twitter_post_format]"
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           visit current_path
           within "#addon-cms-agents-addons-twitter_poster" do
@@ -235,14 +250,17 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
             select I18n.t("cms.options.twitter_post_format.files_and_page"), from: "item[twitter_post_format]"
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
@@ -278,14 +296,17 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
             select I18n.t("ss.options.state.enabled"), from: "item[twitter_edit_auto_post]"
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           visit current_path
           within "#addon-cms-agents-addons-twitter_poster" do
@@ -305,14 +326,17 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
             select I18n.t("ss.options.state.enabled"), from: "item[twitter_edit_auto_post]"
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           visit current_path
           within "#addon-cms-agents-addons-twitter_poster" do
@@ -332,10 +356,13 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
             select I18n.t("ss.options.state.disabled"), from: "item[twitter_edit_auto_post]"
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.publish_save")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           visit current_path
           within "#addon-cms-agents-addons-twitter_poster" do

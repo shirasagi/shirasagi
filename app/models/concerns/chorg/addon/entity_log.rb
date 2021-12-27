@@ -7,11 +7,11 @@ module Chorg::Addon::EntityLog
   end
 
   def entity_log_path
-    "#{SS::File.root}/chorg_tasks/" + id.to_s.split(//).join("/") + "/_/entity_logs.log"
+    "#{SS::File.root}/chorg_tasks/" + id.to_s.chars.join("/") + "/_/entity_logs.log"
   end
 
   def entity_sites_path
-    "#{SS::File.root}/chorg_tasks/" + id.to_s.split(//).join("/") + "/_/entity_sites.log"
+    "#{SS::File.root}/chorg_tasks/" + id.to_s.chars.join("/") + "/_/entity_sites.log"
   end
 
   def entity_logs

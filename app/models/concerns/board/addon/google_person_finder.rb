@@ -6,6 +6,7 @@ module Board::Addon
     included do
       attr_accessor :cur_node
       attr_accessor :in_post_gpf_after_save
+
       field :gpf_id, type: String, default: ->{ SecureRandom.uuid }
       field :gpf_repository, type: String
       field :gpf_domain_name, type: String

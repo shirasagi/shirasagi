@@ -4,6 +4,7 @@ module SS::Fields::DependantNaming
   included do
     cattr_accessor(:name_field, instance_accessor: false) { "name" }
     attr_accessor :skip_rename_children
+
     after_save :rename_children, if: ->{ @db_changes && !skip_rename_children }
   end
 

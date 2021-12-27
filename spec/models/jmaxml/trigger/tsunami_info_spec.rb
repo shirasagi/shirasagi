@@ -21,10 +21,10 @@ describe Jmaxml::Trigger::TsunamiInfo, dbscope: :example do
     subject { create(:jmaxml_trigger_tsunami_info) }
 
     before do
-      region_100 = create(:jmaxml_tsunami_region_100)
-      region_101 = create(:jmaxml_tsunami_region_101)
-      region_102 = create(:jmaxml_tsunami_region_102)
-      region_110 = create(:jmaxml_tsunami_region_110)
+      region_100 = create(:jmaxml_tsunami_region_c100)
+      region_101 = create(:jmaxml_tsunami_region_c101)
+      region_102 = create(:jmaxml_tsunami_region_c102)
+      region_110 = create(:jmaxml_tsunami_region_c110)
       subject.target_region_ids = [ region_100.id, region_101.id, region_102.id, region_110.id ]
       subject.save!
     end

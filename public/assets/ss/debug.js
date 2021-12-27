@@ -1,1 +1,97 @@
-this.SS_Debug=function(){function c(){}return c.doing=!1,c.run=function(){return $("#log").val(""),$("#err").val(""),$("#queue").val("0"),this.doing=!0,this.connect_url(location.href)},c.stop=function(){return this.doing=!1},c.connect_url=function(e,r){var t,a,n,l;if(null==r&&(r=null),!1!==this.doing&&void 0!==e&&""!==e&&!e.match(/^#/)&&!e.match(/^[^h]\w+:/)&&!(e.match(/\/logout$/)||e.match(/^\/\..*?\/uploader/)||e.match(/^\/\..*?\/db/)||e.match(/^\/\..*?\/history/))){if((e=e.replace(/#.*/,"")).match(/^https?:/)){if(!e.match(new RegExp("^https?://"+location.host)))return;e=e.replace(/^https?:\/\/.*?\//,"/")}else e.match(/^[^\/]/)&&(e=r.replace(/\/[^\/]*$/,"")+"/"+e);return l=$("#log"),a=(t=(t=(t=e).replace(/\d+/g,"123")).replace(/\?s(\[|\%123).*/g,"")).replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g,"\\$&"),l.val().match(new RegExp("^"+a+"$","m"))?!0:(l.val(l.val()+t+"\n"),l.scrollTop(l[0].scrollHeight-l.height()),(n=$("#queue")).val(parseInt(n.val())+1),$.ajax({type:"GET",url:e,dataType:"html",cache:!1,success:function(t){return n.val(parseInt(n.val())-1),$($.parseHTML(t.replace(/<img[^>]*>/gi,""))).find("a").each(function(){return!$(this).is("[href]")||c.connect_url($(this).attr("href"),e)})},error:function(t){return n.val(parseInt(n.val())-1),(l=$("#err")).val(l.val()+" ["+t.status+"] "+e+" - Referer: "+r+"\n"),l.scrollTop(l[0].scrollHeight-l.height())}}))}},c}();
+this.SS_Debug = (function () {
+  function SS_Debug() {
+  }
+
+  SS_Debug.doing = false;
+
+  SS_Debug.run = function () {
+    $("#log").val("");
+    $("#err").val("");
+    $("#queue").val("0");
+    this.doing = true;
+    return this.connect_url(location.href);
+  };
+
+  SS_Debug.stop = function () {
+    return this.doing = false;
+  };
+
+  SS_Debug.connect_url = function (url, ref) {
+    var path, patt, queue, view;
+    if (ref == null) {
+      ref = null;
+    }
+    if (this.doing === false) {
+      return;
+    }
+    if (url === void 0) {
+      return;
+    }
+    if (url === "") {
+      return;
+    }
+    if (url.match(/^#/)) {
+      return;
+    }
+    if (url.match(/^[^h]\w+:/)) {
+      return;
+    }
+    if (url.match(/\/logout$/)) {
+      return;
+    }
+    if (url.match(/^\/\..*?\/uploader/)) {
+      return;
+    }
+    if (url.match(/^\/\..*?\/db/)) {
+      return;
+    }
+    if (url.match(/^\/\..*?\/history/)) {
+      return;
+    }
+    url = url.replace(/#.*/, "");
+    if (url.match(/^https?:/)) {
+      if (!url.match(new RegExp("^https?://" + location.host))) {
+        return;
+      }
+      url = url.replace(/^https?:\/\/.*?\//, "/");
+    } else if (url.match(/^[^\/]/)) {
+      url = ref.replace(/\/[^\/]*$/, "") + ("/" + url);
+    }
+    view = $("#log");
+    path = url;
+    path = path.replace(/\d+/g, "123");
+    path = path.replace(/\?s(\[|\%123).*/g, "");
+    patt = path.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+    if (view.val().match(new RegExp("^" + patt + "$", "m"))) {
+      return true;
+    }
+    view.val(view.val() + path + "\n");
+    view.scrollTop(view[0].scrollHeight - view.height());
+    queue = $("#queue");
+    queue.val(parseInt(queue.val()) + 1);
+    return $.ajax({
+      type: "GET",
+      url: url,
+      dataType: "html",
+      cache: false,
+      success: function (data, status, xhr) {
+        queue.val(parseInt(queue.val()) - 1);
+        return $($.parseHTML(data.replace(/<img[^>]*>/ig, ""))).find("a").each(function () {
+          if (!$(this).is('[href]')) {
+            return true;
+          }
+          return SS_Debug.connect_url($(this).attr("href"), url);
+        });
+      },
+      error: function (xhr, status, error) {
+        queue.val(parseInt(queue.val()) - 1);
+        view = $("#err");
+        view.val(view.val() + " [" + xhr.status + "] " + url + " - Referer: " + ref + "\n");
+        return view.scrollTop(view[0].scrollHeight - view.height());
+      }
+    });
+  };
+
+  return SS_Debug;
+
+})();

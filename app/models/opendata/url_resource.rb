@@ -139,8 +139,8 @@ class Opendata::UrlResource
 
           @download_temp_file = SS::File.new
           @download_temp_file.in_file = ActionDispatch::Http::UploadedFile.new(tempfile: temp_file,
-                                                                   filename: self.filename,
-                                                                   type: 'application/octet-stream')
+            filename: self.filename,
+            type: 'application/octet-stream')
           @download_temp_file.site_id = dataset.site_id
           @download_temp_file.model = self.class.to_s.underscore
 
@@ -184,7 +184,7 @@ class Opendata::UrlResource
 
         content_disposition = data.meta['content-disposition']
         content_disposition = "Content-Disposition: attachment; filename= " if content_disposition.blank?
-        self.filename = NKF.nkf "-w", content_disposition.match(/filename=(\"?)(.+)\1/)[2].to_s
+        self.filename = NKF.nkf "-w", content_disposition.match(/filename=("?)(.+)\1/)[2].to_s
 
         if data.meta["last-modified"].blank?
           break Time.zone.now

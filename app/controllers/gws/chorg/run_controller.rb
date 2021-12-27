@@ -78,7 +78,7 @@ class Gws::Chorg::RunController < ApplicationController
             notice = t('chorg.messages.job_started')
           end
           redirect_to({ controller: :revisions, action: :show, id: @revision },
-                      { notice: notice })
+            { notice: notice })
         end
         format.json { head :no_content }
       end

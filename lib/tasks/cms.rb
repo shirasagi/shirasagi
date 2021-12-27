@@ -132,7 +132,7 @@ module Tasks
         end
       end
 
-      def each_sites
+      def each_sites(&block)
         name = ENV['site']
         if name
           all_ids = ::Cms::Site.where(host: name).pluck(:id)
@@ -150,9 +150,7 @@ module Tasks
         end
 
         all_ids.each_slice(20) do |ids|
-          ::Cms::Site.where(:id.in => ids).each do |site|
-            yield site
-          end
+          ::Cms::Site.where(:id.in => ids).each(&block)
         end
       end
 
@@ -186,12 +184,10 @@ module Tasks
         yield node
       end
 
-      def each_items(criteria)
+      def each_items(criteria, &block)
         all_ids = criteria.pluck(:id).sort
         all_ids.each_slice(20) do |ids|
-          criteria.in(id: ids).to_a.each do |item|
-            yield item
-          end
+          criteria.in(id: ids).to_a.each(&block)
         end
       end
 

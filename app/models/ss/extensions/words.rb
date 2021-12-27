@@ -14,8 +14,10 @@ class SS::Extensions::Words < Array
 
     def mongoize(object)
       case object
-      when self.class then object.mongoize
-      when String then self.new(object.gsub(/[, 　、\r\n]+/, ",").split(",").compact.uniq).mongoize
+      when self.class
+        object.mongoize
+      when String
+        self.new(object.gsub(/[, 　、\r\n]+/, ",").split(",").select(&:present?).uniq).mongoize
       else
         object
       end
@@ -23,7 +25,8 @@ class SS::Extensions::Words < Array
 
     def evolve(object)
       case object
-      when self.class then object.mongoize
+      when self.class
+        object.mongoize
       else
         object
       end

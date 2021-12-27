@@ -4,6 +4,7 @@ module Gws::Addon::Schedule::Reports
 
   included do
     attr_accessor :in_report_ids, :in_initial_report_ids
+
     permit_params in_report_ids: [], in_initial_report_ids: []
 
     after_save :save_related_reports

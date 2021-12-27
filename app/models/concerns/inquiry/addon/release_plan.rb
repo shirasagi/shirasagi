@@ -14,15 +14,6 @@ module Inquiry::Addon
       validate :validate_release_state
     end
 
-    def label(name)
-      if name == :state
-        state = public? ? "public" : "closed"
-        I18n.t("ss.options.state.#{state}")
-      else
-        super(name)
-      end
-    end
-
     private
 
     def validate_release_date

@@ -37,10 +37,10 @@ describe Jmaxml::Filter, dbscope: :example do
   end
 
   before do
-    region_210 = create(:jmaxml_region_210)
-    region_211 = create(:jmaxml_region_211)
-    region_212 = create(:jmaxml_region_212)
-    region_213 = create(:jmaxml_region_213)
+    region_210 = create(:jmaxml_region_c210)
+    region_211 = create(:jmaxml_region_c211)
+    region_212 = create(:jmaxml_region_c212)
+    region_213 = create(:jmaxml_region_c213)
     trigger.target_region_ids = [ region_210.id, region_211.id, region_212.id, region_213.id ]
     trigger.save!
 

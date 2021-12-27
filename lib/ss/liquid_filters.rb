@@ -1,4 +1,7 @@
 module SS::LiquidFilters
+  AVAILABLE_DATE_FORMATS = I18n.t("date.formats").keys.freeze
+  AVAILABLE_TIME_FORMATS = I18n.t("time.formats").keys.freeze
+
   def ss_date(input, format = nil)
     date = Liquid::Utils.to_date(input)
     return input unless date
@@ -10,12 +13,8 @@ module SS::LiquidFilters
     end
 
     format = format.to_s
-    available_formats = I18n.t("date.formats").keys
-    if available_formats.include?(format.to_sym)
-      I18n.l(date, format: format.to_sym)
-    else
-      date.strftime(format)
-    end
+    format = format.to_sym if AVAILABLE_DATE_FORMATS.include?(format.to_sym)
+    I18n.l(date, format: format)
   end
 
   def ss_time(input, format = nil)
@@ -29,12 +28,8 @@ module SS::LiquidFilters
     end
 
     format = format.to_s
-    available_formats = I18n.t("time.formats").keys
-    if available_formats.include?(format.to_sym)
-      I18n.l(date, format: format.to_sym)
-    else
-      date.strftime(format)
-    end
+    format = format.to_sym if AVAILABLE_TIME_FORMATS.include?(format.to_sym)
+    I18n.l(date, format: format)
   end
 
   def pluralize(input)

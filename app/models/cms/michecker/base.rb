@@ -26,7 +26,7 @@ module Cms::Michecker::Base
     private
 
     def each_line(filename, &block)
-      if filename.ends_with?(".gz")
+      if filename.end_with?(".gz")
         ::Zlib::GzipReader.open(filename) do |gz|
           gz.each_line(&block)
         end
@@ -58,5 +58,12 @@ module Cms::Michecker::Base
 
     all_count = error_count + warning_count + caution_count + notice_count
     [ all_count, error_count, warning_count, caution_count, notice_count ]
+  end
+
+  def self.site_setting_ok?(site, request)
+    return true if site.mypage_domain.present?
+    return true if site.domains.include?(request.host_with_port)
+
+    false
   end
 end

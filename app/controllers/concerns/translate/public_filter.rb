@@ -35,10 +35,10 @@ module Translate::PublicFilter
       body = ActiveSupport::JSON.decode(body)
     end
 
-    convertor = Translate::Convertor.new(@cur_site, @translate_source, @translate_target)
-    body = convertor.convert(body)
+    converter = Translate::Converter.new(@cur_site, @translate_source, @translate_target)
+    body = converter.convert(body)
 
-    if @cur_site.request_word_limit_exceeded && body =~ /<body data-translate=\".+?\"/
+    if @cur_site.request_word_limit_exceeded && body =~ /<body data-translate=".+?"/
       h = []
       h << '<script src="/assets/js/jquery.colorbox.js"></script>'
       h << '<link rel="stylesheet" media="screen" href="/assets/css/colorbox/colorbox.css">'

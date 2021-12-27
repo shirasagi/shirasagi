@@ -47,12 +47,12 @@ class Board::Post
   end
 
   def validate_deny_url
-    if %r{https?://[\w/:%#\$&\?\(\)~\.=\+\-]+}.match?(text)
+    if %r{https?://[\w/:%#$&?()~.=+\-]+}.match?(text)
       errors.add :text, I18n.t('board.errors.not_allow_urls')
     end
   end
 
-  def file_previewable?(file, user:, member:)
+  def file_previewable?(file, site:, user:, member:)
     node.present? && node.public?
   end
 

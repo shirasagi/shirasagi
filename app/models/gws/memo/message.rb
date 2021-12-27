@@ -6,6 +6,7 @@ class Gws::Memo::Message
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::SitePermission
+  include Gws::Memo::Restorer
   include Gws::Addon::Memo::Member
   include Gws::Addon::Memo::Body
   include Gws::Addon::Memo::Priority
@@ -54,9 +55,16 @@ class Gws::Memo::Message
 
     member_ids.each do |member_id|
       next if filtered[member_id.to_s]
-      matched_filter = Gws::Memo::Filter.site(@cur_site).where(user_id: member_id).enabled.detect{ |f| f.match?(self) }
+      filters = Gws::Memo::Filter.site(@cur_site).where(user_id: member_id)
+      filters = filters.enabled
+      matched_filter = filters.detect { |f| f.match?(self) }
       self.user_settings = user_settings.collect do |user_setting|
-        user_setting['path'] = matched_filter.path if matched_filter && user_setting['user_id'] == member_id
+        if matched_filter && user_setting['user_id'] == member_id
+          path = matched_filter.path
+          if path
+            user_setting['path'] = path
+          end
+        end
         user_setting
       end
       self.filtered[member_id.to_s] = Time.zone.now

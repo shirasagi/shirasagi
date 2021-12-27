@@ -7,20 +7,26 @@
       js_options[:contain_links_path] = contains_urls_path
     end
   end
-  if @item.state == "public" && @item.persisted?
-    # 警告する意味でボタンのラベルを別のものにする
-    js_options[:draft_save] = t("ss.buttons.withdraw")
-  else
-    js_options[:draft_save] = t("ss.buttons.draft_save")
-  end
   if @item.allowed?(:release, @cur_user, site: @cur_site)
     # 公開権限を持つ場合、「公開保存」が表示される
     js_options[:release] = "allowed"
     js_options[:publish_save] = t("ss.buttons.publish_save")
-  elsif @item.state == "public" && @item.is_a?(Workflow::Addon::Branch) && @item.persisted?
-    # 公開権限を持たない場合、「差替保存」が表示される場合がある
-    js_options[:branch_save] = t("cms.buttons.save_as_branch")
-    js_options[:branch_save_url] = branch_create_workflow_page_path(id: @item.id)
+  end
+  if %w(ready public).include?(@item.state) && @item.persisted?
+    if @item.allowed?(:release, @cur_user, site: @cur_site)
+      # 警告する意味でボタンのラベルを別のものにする
+      js_options[:draft_save] = t("ss.buttons.withdraw")
+    end
+
+    if @item.is_a?(Workflow::Addon::Branch) && @item.branches.blank?
+      # そして「差替保存」を表示する
+      js_options[:branch_save] = t("cms.buttons.save_as_branch")
+      js_options[:branch_save_url] = branch_create_workflow_page_path(id: @item.id)
+    end
+  else
+    # 非公開ページ or 新規作成
+    # 「公開保存」が表示されている場合、明確に区別する意味でボタンのラベルを「下書き保存」へ変更する。
+    js_options[:draft_save] = js_options[:publish_save] ? t("ss.buttons.draft_save") : t("ss.buttons.save")
   end
   if @item.state == "closed" && @item.workflow_state == "request"
     js_options[:workflow_state] = "request"

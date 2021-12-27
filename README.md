@@ -26,7 +26,7 @@ Platform
 - CentOS, Ubuntu
 - Ruby 2.6 or 3.0 (2.7 might work but not supported)
 - Ruby on Rails 6.1
-- MongoDB 4.2 or above
+- MongoDB 4.4 or above
 - Unicorn
 
 Installation (Auto)
@@ -50,26 +50,26 @@ Installation (CentOS 7)
 
 ```
 $ su -
-# yum -y install wget git ImageMagick ImageMagick-devel
+# yum -y install wget git ImageMagick ImageMagick-devel devtoolset-10
 ```
 
 ### MongoDB のインストール
 
 ```
-# vi /etc/yum.repos.d/mongodb-org-3.4.repo
+# vi /etc/yum.repos.d/mongodb-org-4.4.repo
 ```
 
 ```
-[mongodb-org-3.4]
+[mongodb-org-4.4]
 name=MongoDB Repository
-baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/3.4/x86_64/
+baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/4.4/x86_64/
 gpgcheck=1
 enabled=0
-gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
+gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
 ```
 
 ```
-# yum install -y --enablerepo=mongodb-org-3.4 mongodb-org
+# yum install -y --enablerepo=mongodb-org-4.4 mongodb-org
 # systemctl start mongod
 # systemctl enable mongod
 ```
@@ -81,8 +81,8 @@ gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
 # \curl -sSL https://rvm.io/mpapis.asc | gpg --import -
 # \curl -sSL https://get.rvm.io | sudo bash -s stable
 # source /etc/profile
-# rvm install 2.6.3 --disable-binary
-# rvm use 2.6.3 --default
+# rvm install 2.7.5 --disable-binary
+# rvm use 2.7.5 --default
 # gem install bundler
 ```
 
@@ -91,7 +91,7 @@ gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
 SHIRASAGI のダウンロード (stable)
 
 ```
-$ git clone -b stable --depth 1 https://github.com/shirasagi/shirasagi /var/www/shirasagi
+$ git clone -b stable https://github.com/shirasagi/shirasagi /var/www/shirasagi
 ```
 
 設定ファイルの設置と gem のインストール
@@ -99,6 +99,7 @@ $ git clone -b stable --depth 1 https://github.com/shirasagi/shirasagi /var/www/
 ```
 $ cd /var/www/shirasagi
 $ cp -n config/samples/*.{yml,rb} config/
+$ source /opt/rh/devtoolset-10/enable
 $ bundle install --without development test
 ```
 

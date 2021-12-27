@@ -11,7 +11,7 @@ module SS::Model::File
   include History::Addon::Trash
   include ActiveSupport::NumberHelper
 
-  attr_accessor :in_file, :resizing
+  attr_accessor :in_file, :resizing, :quality, :image_resizes_disabled
 
   included do
     store_in collection: "ss_files"
@@ -30,7 +30,7 @@ module SS::Model::File
 
     attr_accessor :in_data_url
 
-    permit_params :in_file, :state, :name, :filename, :resizing, :in_data_url
+    permit_params :in_file, :state, :name, :filename, :resizing, :quality, :image_resizes_disabled, :in_data_url
 
     before_validation :set_filename, if: ->{ in_file.present? }
     before_validation :normalize_name
@@ -68,11 +68,71 @@ module SS::Model::File
       "#{SS::Application.private_root}/files"
     end
 
-    def resizing_options
-      [
+    def image_resizes_min_attributes(opts = {})
+      if opts[:user]
+        disable_image_resizes = SS::ImageResize.allowed?(:disable, opts[:user]) &&
+                                SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).present?
+        if opts[:node]
+          disable_image_resizes ||=
+            Cms::ImageResize.allowed?(:disable, opts[:user], site: opts[:node].site, node: opts[:node]) &&
+            Cms::ImageResize.site(opts[:node].site).node(opts[:node]).where(state: SS::ImageResize::STATE_ENABLED).present?
+        end
+        return {} if disable_image_resizes
+      end
+
+      min_attributes = [SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).min_attributes]
+      if opts[:node]
+        min_attributes << Cms::ImageResize.site(opts[:node].site).
+          node(opts[:node]).
+          where(state: SS::ImageResize::STATE_ENABLED).min_attributes
+      end
+
+      min_attributes.inject do |a, b|
+        a.merge(b) do |k, v1, v2|
+          next v1 if v2.blank?
+          next v2 if v1.blank?
+
+          [v1, v2].min
+        end
+      end
+    end
+
+    def resizing_options(opts = {})
+      options = [
         [320, 240], [240, 320], [640, 480], [480, 640], [800, 600], [600, 800],
         [1024, 768], [768, 1024], [1280, 720], [720, 1280]
       ].map { |x, y| [I18n.t("ss.options.resizing.#{x}x#{y}"), "#{x},#{y}"] }
+
+      return options unless opts[:user]
+
+      min_width = image_resizes_min_attributes(opts)['max_width']
+      min_height = image_resizes_min_attributes(opts)['max_height']
+
+      return options if min_width.blank? || min_height.blank?
+
+      options.select do |k, v|
+        size = v.split(',').collect(&:to_i)
+        size[0] <= min_width && size[1] <= min_height
+      end
+    end
+
+    def quality_options(opts = {})
+      options = SS.config.ss.quality_options.collect { |v| [ v['label'], v['quality'] ] } rescue []
+
+      return options unless opts[:user]
+
+      min_quality = image_resizes_min_attributes(user: opts[:user], node: opts[:node])['quality']
+
+      return options unless min_quality
+
+      options.select do |k, v|
+        quality = v.to_i
+        quality <= min_quality
+      end
+    end
+
+    def image_resizes_disabled_options
+      %w(enabled disabled).map { |value| [I18n.t("ss.options.image_resizes_disabled.#{value}"), value] }
     end
 
     def search(params)
@@ -89,13 +149,56 @@ module SS::Model::File
     end
   end
 
+  module Utils
+    module_function
+
+    def owned?(file, user)
+      return false if !user
+      return false if !file.respond_to?(:user_id)
+      file.user_id == user.id
+    end
+
+    def previewable_by_owner?(file, owner_item, site:, user:, member:)
+      return false if !owner_item
+      return false if !owner_item.is_a?(Fs::FilePreviewable)
+      owner_item.file_previewable?(file, site: site, user: user, member: member)
+    end
+
+    def cms_object?(_file, owner_item)
+      owner_item.try(:site) && owner_item.site.is_a?(SS::Model::Site)
+    end
+
+    def same_cms_site?(file, owner_item, site:)
+      return true if site.is_a?(SS::Model::Site) && owner_item.site.is_a?(SS::Model::Site) && site.id == owner_item.site_id
+      false
+    end
+
+    def readable_by_user?(file, owner_item, user:)
+      meta = SS::File.find_model_metadata(file.model) || {}
+      permit = meta[:permit] || %i(role readable member)
+
+      site = owner_item.try(:cur_site) || owner_item.try(:site)
+      if permit.include?(:readable) && owner_item.respond_to?(:readable?) && owner_item.readable?(user, site: site)
+        return true
+      end
+      if permit.include?(:member) && owner_item.respond_to?(:member?) && owner_item.member?(user)
+        return true
+      end
+      if permit.include?(:role) && owner_item.respond_to?(:allowed?) && owner_item.allowed?(:read, user, site: site)
+        return true
+      end
+
+      false
+    end
+  end
+
   def path
-    "#{self.class.root}/ss_files/" + id.to_s.split(//).join("/") + "/_/#{id}"
+    "#{self.class.root}/ss_files/" + id.to_s.chars.join("/") + "/_/#{id}"
   end
 
   def public_dir
     return if site.blank? || !site.respond_to?(:root_path)
-    "#{site.root_path}/fs/" + id.to_s.split(//).join("/") + "/_"
+    "#{site.root_path}/fs/" + id.to_s.chars.join("/") + "/_"
   end
 
   def public_path
@@ -103,12 +206,12 @@ module SS::Model::File
   end
 
   def url_with_filename
-    "/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
+    "/fs/" + id.to_s.chars.join("/") + "/_/#{filename}"
   end
 
   def url_with_name
     if SS::FilenameUtils.url_safe_japanese?(name)
-      "/fs/" + id.to_s.split(//).join("/") + "/_/#{Addressable::URI.encode_component(name)}"
+      "/fs/" + id.to_s.chars.join("/") + "/_/#{Addressable::URI.encode_component(name)}"
     else
       url_with_filename
     end
@@ -116,20 +219,20 @@ module SS::Model::File
 
   def full_url_with_filename
     return if site.blank? || !site.respond_to?(:full_root_url)
-    "#{site.full_root_url}fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
+    "#{site.full_root_url}fs/" + id.to_s.chars.join("/") + "/_/#{filename}"
   end
 
   def full_url_with_name
     return if site.blank? || !site.respond_to?(:full_root_url)
     if SS::FilenameUtils.url_safe_japanese?(name)
-      "#{site.full_root_url}fs/" + id.to_s.split(//).join("/") + "/_/#{Addressable::URI.encode_component(name)}"
+      "#{site.full_root_url}fs/" + id.to_s.chars.join("/") + "/_/#{Addressable::URI.encode_component(name)}"
     else
       full_url_with_filename
     end
   end
 
   def thumb_url
-    "/fs/" + id.to_s.split(//).join("/") + "/_/thumb/#{filename}"
+    "/fs/" + id.to_s.chars.join("/") + "/_/thumb/#{filename}"
   end
 
   def public?
@@ -143,34 +246,20 @@ module SS::Model::File
     becomes_with(klass)
   end
 
-  def previewable?(opts = {})
-    meta = SS::File.find_model_metadata(model) || {}
-
+  def previewable?(site: nil, user: nil, member: nil)
     # be careful: cur_user and item may be nil
-    cur_user = opts[:user]
-    cur_member = opts[:member]
     item = effective_owner_item
-    if cur_user && item
-      permit = meta[:permit] || %i(role readable member)
-      if permit.include?(:readable) && item.respond_to?(:readable?)
-        return true if item.readable?(cur_user, site: item.try(:site))
-      end
-      if permit.include?(:member) && item.respond_to?(:member?)
-        return true if item.member?(cur_user)
-      end
-      if permit.include?(:role) && item.respond_to?(:allowed?)
-        return true if item.allowed?(:read, cur_user, site: item.try(:site))
-      end
+    if site && Utils.cms_object?(self, item) && !Utils.same_cms_site?(self, item, site: site)
+      return false
+    end
+    if user && item && Utils.readable_by_user?(self, item, user: user)
+      return true
     end
 
-    if item && item.is_a?(Fs::FilePreviewable)
-      # special delegation if item implements previewable?
-      return true if item.file_previewable?(self, user: cur_user, member: cur_member)
-    end
+    return true if Utils.owned?(self, user)
 
-    if cur_user && respond_to?(:user_id)
-      return true if user_id == cur_user.id
-    end
+    # special delegation if item implements previewable?
+    return true if Utils.previewable_by_owner?(self, item, site: site, user: user, member: member)
 
     false
   end
@@ -228,7 +317,7 @@ module SS::Model::File
   end
 
   def resizing=(size)
-    @resizing = (size.class == String) ? size.split(",") : size
+    @resizing = size.instance_of?(String) ? size.split(",") : size
   end
 
   def read
@@ -355,7 +444,7 @@ module SS::Model::File
   end
 
   def validate_filename
-    if multibyte_filename_disabled? && filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
+    if multibyte_filename_disabled? && filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-.]+$/
       errors.add :base, :invalid_filename
     end
   end
@@ -379,7 +468,7 @@ module SS::Model::File
     Fs.mkdir_p(dir) unless Fs.exist?(dir)
 
     SS::ImageConverter.attach(in_file, ext: ::File.extname(in_file.original_filename)) do |converter|
-      converter.apply_defaults!(resizing: resizing)
+      converter.apply_defaults!(resizing: resizing_with_max_file_size, quality: quality_with_max_file_size)
       Fs.upload(path, converter.to_io)
       self.geo_location = converter.geo_location
     end
@@ -416,5 +505,43 @@ module SS::Model::File
     return unless @db_changes["filename"][0]
 
     remove_public_file if site
+  end
+
+  def max_file_sizes
+    max_file_sizes = []
+    if user.blank? || !SS::ImageResize.allowed?(:disable, user) || image_resizes_disabled != 'disabled'
+      max_file_sizes += SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).to_a
+    end
+    if self.class.include?(Cms::Reference::Node) && node.present?
+      cms_image_resizes_enabled = user.blank? ||
+                                  !Cms::ImageResize.allowed?(:disable, user, site: site, node: node) ||
+                                  image_resizes_disabled != 'disabled'
+      if cms_image_resizes_enabled
+        max_file_sizes += Cms::ImageResize.site(site).node(node).where(state: SS::ImageResize::STATE_ENABLED).to_a
+      end
+    end
+    max_file_sizes.reject(&:blank?)
+  end
+
+  def resizing_with_max_file_size
+    size = resizing || []
+    max_file_sizes.each do |max_file_size|
+      if size.present?
+        max_file_size.max_width = size[0] if max_file_size.max_width > size[0]
+        max_file_size.max_height = size[1] if max_file_size.max_height > size[1]
+      end
+      size = [max_file_size.max_width, max_file_size.max_height]
+    end
+    size
+  end
+
+  def quality_with_max_file_size
+    quality = []
+    quality << self.quality.try(:to_i) if self.quality.present?
+    max_file_sizes.each do |max_file_size|
+      next if size <= max_file_size.try(:size)
+      quality << max_file_size.try(:quality)
+    end
+    quality.reject(&:blank?).min
   end
 end

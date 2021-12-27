@@ -30,7 +30,7 @@ class Cms::RolesController < ApplicationController
 
   def download
     csv = @model.to_csv(@cur_site).encode("SJIS", invalid: :replace, undef: :replace)
-    filename = @model.to_s.tableize.gsub(/\//, "_")
+    filename = @model.to_s.tableize.tr("/", "_")
     send_data csv, filename: "#{filename}_#{Time.zone.now.to_i}.csv"
   end
 
@@ -41,7 +41,7 @@ class Cms::RolesController < ApplicationController
     begin
       file = params[:item].try(:[], :file)
       raise I18n.t("errors.messages.invalid_csv") if file.nil? || ::File.extname(file.original_filename) != ".csv"
-      CSV.read(file.path, headers: true, encoding: 'SJIS:UTF-8')
+      raise I18n.t("errors.messages.malformed_csv") if !SS::Csv.valid_csv?(file, headers: true)
 
       # save csv to use in job
       ss_file = SS::File.new
