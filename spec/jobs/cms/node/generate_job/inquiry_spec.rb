@@ -22,15 +22,8 @@ describe Cms::Node::GenerateJob, dbscope: :example do
   let!(:close_date) { 7.days.from_now }
 
   def generate_all
+    Cms::Node::ReleaseJob.bind(site_id: site).perform_now
     described_class.bind(site_id: site).perform_now
-    inquiry1.reload
-    inquiry2.reload
-    inquiry3.reload
-    inquiry4.reload
-  end
-
-  def generate_node(node)
-    described_class.bind(site_id: site, node_id: node).perform_now
     inquiry1.reload
     inquiry2.reload
     inquiry3.reload
@@ -100,75 +93,6 @@ describe Cms::Node::GenerateJob, dbscope: :example do
           expect(inquiry5.state).to eq "closed"
           expect(::File.exist?(inquiry1_path)).to be true
           expect(::File.exist?(inquiry2_path)).to be true
-          expect(::File.exist?(inquiry3_path)).to be false
-          expect(::File.exist?(inquiry4_path)).to be false
-          expect(::File.exist?(inquiry5_path)).to be false
-        end
-      end
-    end
-
-    context "generate inquiry4" do
-      it do
-        expect(inquiry1.state).to eq "public"
-        expect(inquiry2.state).to eq "ready"
-        expect(inquiry3.state).to eq "public"
-        expect(inquiry4.state).to eq "ready"
-        expect(inquiry5.state).to eq "closed"
-        expect(::File.exist?(inquiry1_path)).to be false
-        expect(::File.exist?(inquiry2_path)).to be false
-        expect(::File.exist?(inquiry3_path)).to be false
-        expect(::File.exist?(inquiry4_path)).to be false
-        expect(::File.exist?(inquiry5_path)).to be false
-
-        generate_node(inquiry4)
-        expect(inquiry1.state).to eq "public"
-        expect(inquiry2.state).to eq "ready"
-        expect(inquiry3.state).to eq "public"
-        expect(inquiry4.state).to eq "ready"
-        expect(inquiry5.state).to eq "closed"
-        expect(::File.exist?(inquiry1_path)).to be false
-        expect(::File.exist?(inquiry2_path)).to be false
-        expect(::File.exist?(inquiry3_path)).to be false
-        expect(::File.exist?(inquiry4_path)).to be false
-        expect(::File.exist?(inquiry5_path)).to be false
-
-        Timecop.travel(release_date.advance(days: 1)) do
-          generate_node(inquiry4)
-          expect(inquiry1.state).to eq "public"
-          expect(inquiry2.state).to eq "ready"
-          expect(inquiry3.state).to eq "public"
-          expect(inquiry4.state).to eq "public"
-          expect(inquiry5.state).to eq "closed"
-          expect(::File.exist?(inquiry1_path)).to be false
-          expect(::File.exist?(inquiry2_path)).to be false
-          expect(::File.exist?(inquiry3_path)).to be false
-          expect(::File.exist?(inquiry4_path)).to be true
-          expect(::File.exist?(inquiry5_path)).to be false
-        end
-
-        Timecop.travel(close_date.advance(days: 1)) do
-          generate_node(inquiry4)
-          expect(inquiry1.state).to eq "public"
-          expect(inquiry2.state).to eq "ready"
-          expect(inquiry3.state).to eq "public"
-          expect(inquiry4.state).to eq "closed"
-          expect(inquiry5.state).to eq "closed"
-          expect(::File.exist?(inquiry1_path)).to be false
-          expect(::File.exist?(inquiry2_path)).to be false
-          expect(::File.exist?(inquiry3_path)).to be false
-          expect(::File.exist?(inquiry4_path)).to be false
-          expect(::File.exist?(inquiry5_path)).to be false
-        end
-
-        Timecop.travel(close_date.advance(days: 3)) do
-          generate_node(inquiry4)
-          expect(inquiry1.state).to eq "public"
-          expect(inquiry2.state).to eq "ready"
-          expect(inquiry3.state).to eq "public"
-          expect(inquiry4.state).to eq "closed"
-          expect(inquiry5.state).to eq "closed"
-          expect(::File.exist?(inquiry1_path)).to be false
-          expect(::File.exist?(inquiry2_path)).to be false
           expect(::File.exist?(inquiry3_path)).to be false
           expect(::File.exist?(inquiry4_path)).to be false
           expect(::File.exist?(inquiry5_path)).to be false

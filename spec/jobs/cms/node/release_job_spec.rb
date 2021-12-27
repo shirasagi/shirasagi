@@ -8,10 +8,6 @@ describe Cms::Node::ReleaseJob, dbscope: :example do
   describe "#perform" do
     before do
       now = Time.zone.now.advance(days: -1)
-      puts "#####"
-      puts "before time trabel"
-      puts now
-      puts ""
       Timecop.travel(10.days.ago) do
         node1.release_date = now
         node2.close_date = now
