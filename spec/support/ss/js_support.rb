@@ -89,6 +89,29 @@ module SS
       })(arguments[0], arguments[1]);
     SCRIPT
 
+    WAIT_ALL_CKEDITORS_READY_SCRIPT = <<~SCRIPT.freeze
+      (function(resolve) {
+        var promises = [];
+        Object.values(CKEDITOR.instances).forEach(function(ckeditor) {
+          if (ckeditor.status === "ready") {
+            console.log("ckeditor is ready");
+            promises.push(Promise.resolve(true));
+            return;
+          }
+
+          var promise = new Promise((resolutionFunc, rejectionFunc) => {
+            ckeditor.once("instanceReady", function() {
+              console.log("ckeditor gets ready");
+              resolutionFunc(true);
+            });
+          });
+          promises.push(promise);
+        });
+
+        Promise.all(promises).then(function() { setTimeout(function() { resolve(true); }, 0); });
+      })(arguments[0]);
+    SCRIPT
+
     FILL_CKEDITOR_SCRIPT = <<~SCRIPT.freeze
       (function(element, text, resolve) {
         var ckeditor = CKEDITOR.instances[element.id];
@@ -312,10 +335,18 @@ module SS
 
     #
     # Usage
-    #   wait_for_ckeditor_event "item[html]"
+    #   wait_for_ckeditor_event find(:fillable_field, "item[html]")
     #
     def wait_ckeditor_ready(element)
       page.evaluate_async_script(WAIT_CKEDITOR_READY_SCRIPT, element)
+    end
+
+    #
+    # Usage
+    #   wait_all_ckeditors_ready
+    #
+    def wait_all_ckeditors_ready
+      page.evaluate_async_script(WAIT_ALL_CKEDITORS_READY_SCRIPT)
     end
 
     # CKEditor に html を設定する
