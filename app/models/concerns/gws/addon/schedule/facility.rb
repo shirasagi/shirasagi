@@ -3,6 +3,7 @@ module Gws::Addon::Schedule::Facility
   extend SS::Addon
 
   included do
+    field :duplicate_registered, type: DateTime
     embeds_ids :facilities, class_name: "Gws::Facility::Item"
 
     permit_params facility_ids: []
@@ -72,8 +73,12 @@ module Gws::Addon::Schedule::Facility
   end
 
   def validate_facility_double_booking
-    return if @cur_user && @cur_user.gws_role_permit_any?((@cur_site || site), :regist_private_gws_facility_plans)
     return if facility_double_booking_plans.blank?
+
+    if @cur_user && @cur_user.gws_role_permit_any?((@cur_site || site), :regist_private_gws_facility_plans)
+      self.duplicate_registered = Time.zone.now
+      return
+    end
 
     errors.add :base, I18n.t('gws/schedule.errors.double_booking_facility')
     facility_double_booking_plans.each do |plan|
@@ -107,7 +112,11 @@ module Gws::Addon::Schedule::Facility
   public
 
   def facility_double_booking_plans
-    plans = self.class.ne(id: id).without_deleted.where(site_id: site_id).any_in(facility_ids: facility_ids)
+    plans = self.class.ne(id: id).
+      without_deleted.
+      exists(duplicate_registered: false).
+      where(site_id: site_id).
+      any_in(facility_ids: facility_ids)
     if allday?
       plans = plans.where(:end_at.gt => start_on.in_time_zone.beginning_of_day, :start_at.lt => end_on.in_time_zone.end_of_day)
     else
