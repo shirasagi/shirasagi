@@ -1,9 +1,6 @@
 <%
   return if @item.files.blank?
-
-  form = @item.try(:form)
-  return if form && form.is_a?(Cms::Form)
-
+  return if @item.respond_to?(:form) && @item.form.present?
   addon ||= local_assigns.fetch(:addon, {})
 %>
 
