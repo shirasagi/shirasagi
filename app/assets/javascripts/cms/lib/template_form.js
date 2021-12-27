@@ -463,5 +463,7 @@ Cms_TemplateForm.prototype.remove = function($evTarget) {
     $columnValue.remove();
     self.resetOrder();
     Cms_Form.activateSyntaxChecks();
+
+    self.$el.trigger("ss:columnDeleted");
   });
 };
