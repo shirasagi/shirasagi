@@ -190,9 +190,7 @@ module SS
       el = find(:fillable_field, locator).set('').click
       with.to_s.chars.each { |c| el.native.send_keys(c) }
       el
-    rescue Selenium::WebDriver::Error::StaleElementReferenceError
-      el
-    rescue Selenium::WebDriver::Error::ElementClickInterceptedError
+    rescue Selenium::WebDriver::Error::WebDriverError
       el
     end
 
@@ -225,12 +223,12 @@ module SS
 
     def colorbox_opened?
       opacity = page.evaluate_script("$('#cboxOverlay').css('opacity')")
-      opacity.nil? ? true : (opacity.to_f == 0.9)
+      opacity.nil? ? true : (opacity.to_f >= 0.9)
     end
 
     def colorbox_closed?
       opacity = page.evaluate_script("$('#cboxOverlay').css('opacity')")
-      opacity.nil? ? true : (opacity.to_f == 0)
+      opacity.nil? ? true : opacity.to_f.zero?
     end
 
     def wait_for_page_load
