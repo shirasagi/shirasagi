@@ -75,7 +75,7 @@ module Gws::Addon::Schedule::Facility
   def validate_facility_double_booking
     return if facility_double_booking_plans.blank?
 
-    if @cur_user && @cur_user.gws_role_permit_any?((@cur_site || site), :regist_private_gws_facility_plans)
+    if @cur_user && @cur_user.gws_role_permit_any?((@cur_site || site), :duplicate_private_gws_facility_plans)
       self.duplicate_registered = Time.zone.now
       return
     end

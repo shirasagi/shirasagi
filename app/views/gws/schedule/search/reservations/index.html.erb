@@ -36,7 +36,7 @@ $(".gws-schedule-search-times-result .hour-wrap").on({
     <% if @reservation_valid %>
       <% reservation_valid = 'free' %>
     <% else %>
-      <% reservation_valid = @cur_user.gws_role_permit_any?(@cur_site, :regist_private_gws_facility_plans) ? 'registered' : 'exist' %>
+      <% reservation_valid = @cur_user.gws_role_permit_any?(@cur_site, :duplicate_private_gws_facility_plans) ? 'registered' : 'exist' %>
     <% end %>
     <span class="reservation-valid <%= reservation_valid %>"><%= t("gws/schedule.facility_reservation.#{reservation_valid}") %></span>
     <% if reservation_valid == 'registered' %>
@@ -75,7 +75,7 @@ $(".gws-schedule-search-times-result .hour-wrap").on({
           </span>
           <% next unless css_classes.include?('exist') %>
           <% next unless wrap_classes.include?('active') %>
-          <% overall_exist = @cur_user.gws_role_permit_any?(@cur_site, :regist_private_gws_facility_plans) ? 'registered' : 'exist' %>
+          <% overall_exist = @cur_user.gws_role_permit_any?(@cur_site, :duplicate_private_gws_facility_plans) ? 'registered' : 'exist' %>
         <% end %>
         <p class="reservation <%= overall_exist %>"><%= t("gws/schedule.facility_reservation.#{overall_exist}") %></p>
       </div>
