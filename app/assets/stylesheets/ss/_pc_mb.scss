@@ -2475,7 +2475,8 @@ table.index {
     word-break: break-all;
   }
   td.state {
-    margin: 6px 0;
+    margin-left: 12px;
+    padding: 6px 18px;
   }
   th.checkbox,
   td.checkbox {
@@ -2486,6 +2487,12 @@ table.index {
     border-bottom: $border-gray5;
     background: $gray1;
     color: $gray2;
+    &.updated {
+      width: 160px;
+    }
+    &.state {
+      width: 120px;
+    }
     &.deselect {
       width: 100px;
     }

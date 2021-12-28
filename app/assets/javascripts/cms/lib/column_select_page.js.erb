@@ -1,0 +1,32 @@
+Cms_Column_Select_Page = function(el) {
+  this.$el = $(el);
+};
+
+Cms_Column_Select_Page.render = function(el) {
+  var instance = new Cms_Column_Select_Page(el);
+  instance.render();
+  return instance;
+};
+
+Cms_Column_Select_Page.prototype.render = function() {
+  var self = this;
+  SS_SearchUI.render();
+  self.$el.find(".ajax-box").data("on-select", function(item) {
+    var data = item.closest("[data-id]");
+    var id = data.data("id");
+    var name = item.text();
+    var tr = $("<tr />").attr("data-id", id);
+    var a = $('<a class="deselect btn" href="#"><%= I18n.t "ss.buttons.delete" %></a>');
+    tr.append($('<td />').append(name));
+    tr.append($('<td />').append(a));
+    self.$el.find(".hidden-ids").val(id);
+    self.$el.find(".ajax-selected tbody tr:not(.selected-self)").remove();
+    self.$el.find(".ajax-selected tbody").prepend(tr);
+    self.$el.find(".ajax-selected").show();
+    self.$el.find(".ajax-selected").trigger("change");
+  });
+  self.$el.find(".ajax-selected").data("on-deselect", function(item) {
+    SS_SearchUI.defaultDeselector(item);
+    self.$el.find(".hidden-ids").val("");
+  });
+};
