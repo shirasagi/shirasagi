@@ -161,7 +161,12 @@ this.SS_SearchUI = (function () {
       self.selectItems($el);
       return $el.find("form.search").submit();
     });
-    self.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").each(function () {
+
+    var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
+    if (!$ajaxSelected.length) {
+      $ajaxSelected = self.anchorAjaxBox.parent().find(".ajax-selected");
+    }
+    $ajaxSelected.find("tr[data-id]").each(function () {
       var id, item, tr;
       id = $(this).data("id");
       tr = $("#colorbox .items [data-id='" + id + "']");
