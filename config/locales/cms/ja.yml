@@ -376,6 +376,9 @@ ja:
       sns_post_log_state:
         success: 成功
         error: エラー
+      file:
+        name: 名前順
+        upload: アップロード順
     sns_share:
       fb_like: Facebook いいね！
       fb_share: Facebook シェア
