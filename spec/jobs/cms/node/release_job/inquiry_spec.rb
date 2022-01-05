@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cms::Node::GenerateJob, dbscope: :example do
+describe Cms::Node::ReleaseJob, dbscope: :example do
   let(:site) { cms_site }
   let(:layout) { create_cms_layout }
 
@@ -22,8 +22,8 @@ describe Cms::Node::GenerateJob, dbscope: :example do
   let!(:close_date) { 7.days.from_now }
 
   def generate_all
-    Cms::Node::ReleaseJob.bind(site_id: site).perform_now
     described_class.bind(site_id: site).perform_now
+    Cms::Node::GenerateJob.bind(site_id: site).perform_now
     inquiry1.reload
     inquiry2.reload
     inquiry3.reload
