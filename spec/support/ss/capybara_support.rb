@@ -49,7 +49,7 @@ module SS::CapybaraSupport
     end
     Capybara.javascript_driver = :chrome
 
-    puts "[Capybara] with Google Chrome(headless: #{headless != '0' ? 'enabled' : 'disabled'})"
+    puts "[Capybara] with Google Chrome(headless: #{headless == '0' ? 'disabled' : 'enabled'})"
     true
   end
 
