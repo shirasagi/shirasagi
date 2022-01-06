@@ -115,7 +115,7 @@ this.Form_Alert = (function () {
     var promise = Syntax_Checker.asyncCheck();
     promise.done(function() {
       $.each(Syntax_Checker.errors, function(id, error) {
-        Form_Alert.add("<%= I18n.t('cms.syntax_check') %>", error["ele"], error["msg"]);
+        Form_Alert.add(<%= I18n.t('cms.syntax_check').to_json %>, error["ele"], error["msg"]);
       });
     });
     return promise;
@@ -128,7 +128,7 @@ this.Form_Alert = (function () {
         $(this).closest("dl").show();
         addonName = $(this).closest(".addon-view").find("header").text();
         fieldName = Form_Alert.justText($(this).closest("dd").prev("dt"));
-        return Form_Alert.add(addonName, this, fieldName + "<%= I18n.t('errors.messages.blank') %>");
+        return Form_Alert.add(addonName, this, fieldName + <%= I18n.t('errors.messages.blank').to_json %>);
       }
     });
   };
@@ -150,17 +150,17 @@ this.Form_Alert = (function () {
     var name = $(form).find("#addon-basic #item_name");
     if ($(submit).hasClass("publish_save") && /^\[<%= I18n.t('workflow.cloned_name_prefix') %>\]/.test($(name).val())) {
       var addonName = $(name).closest(".addon-view").find("header").text();
-      return Form_Alert.add(addonName, name, "<%= I18n.t('errors.messages.cloned_name') %>");
+      return Form_Alert.add(addonName, name, <%= I18n.t('errors.messages.cloned_name').to_json %>);
     }
   };
 
   Form_Alert.closeConfirmation = function (form, submit) {
     var addonName, msg;
     if ($(submit).attr("data-close-confirmation")) {
-      addonName = '<%= I18n.t("cms.confirm.close") %>';
+      addonName = <%= I18n.t("cms.confirm.close").to_json %>;
       msg = null;
       if ($(submit).attr("data-contain-links-path")) {
-        msg = '<a href="' + $(submit).attr("data-contain-links-path") + '" target="_blank" rel="noopener">' + '<%= I18n.t("cms.confirm.check_contains_urls") %>' + '</a>';
+        msg = '<a href="' + $(submit).attr("data-contain-links-path") + '" target="_blank" rel="noopener">' + <%= I18n.t("cms.confirm.check_contains_urls").to_json %> + '</a>';
       }
       return Form_Alert.add(addonName, null, msg);
     }
@@ -175,7 +175,7 @@ this.Form_Alert = (function () {
       messages = f();
     }
 
-    addonName = '<%= I18n.t("cms.sns_post") %>';
+    addonName = <%= I18n.t("cms.sns_post").to_json %>;
     $.each(messages, function() {
       Form_Alert.add(addonName, null, this);
     });
@@ -212,7 +212,7 @@ this.Form_Alert = (function () {
           $(this).closest("dl").show();
           addonName = $(this).closest(".addon-view").find(".addon-head").text();
           fieldName = Form_Alert.justText($(this).closest("dd").prev("dt"));
-          return Form_Alert.add(addonName, this, fieldName + "<%= I18n.t('errors.messages.replace_word_validation') %>" + ("「" + k + "」→「" + v + "」"));
+          return Form_Alert.add(addonName, this, fieldName + <%= I18n.t('errors.messages.replace_word_validation').to_json %> + ("「" + k + "」→「" + v + "」"));
         }
       }));
     }

@@ -4,7 +4,7 @@ this.Map_Form = (function () {
 
   Map_Form.maxPointForm = 10;
 
-  Map_Form.deleteMessage = "<%= I18n.t('map.confirm.delete_marker') %>";
+  Map_Form.deleteMessage = <%= I18n.t('map.confirm.delete_marker').to_json %>;
 
   Map_Form.dataID = 0;
 
@@ -98,7 +98,7 @@ this.Map_Form = (function () {
           Googlemaps_Map.map.fitBounds(result.geometry.viewport);
         }
       } else {
-        alert("<%= I18n.t('map.alert.invalid_center') %>");
+        alert(<%= I18n.t('map.alert.invalid_center').to_json %>);
       }
     });
     return false;
@@ -260,7 +260,7 @@ this.Map_Form = (function () {
     var dataId, opts, image;
 
     if (!Map_Form.validateLoc(loc)) {
-      alert("<%= I18n.t('map.alert.invalid_location').join('\n') %>");
+      alert(<%= Array(I18n.t('map.alert.invalid_location')).join('\n').to_json %>);
       return;
     }
 

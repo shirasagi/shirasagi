@@ -8,7 +8,7 @@ this.SS = (function () {
 
   SS.href = "";
 
-  SS.loading = '<%= ApplicationController.helpers.loading %>';
+  SS.loading = <%= ApplicationController.helpers.loading.to_json %>;
 
   SS.noticeTimeoutId = null;
 
@@ -27,7 +27,7 @@ this.SS = (function () {
   SS.debug = false;
 
   SS.confirm = {
-    delete: "<%= I18n.t 'ss.confirm.delete' %>"
+    delete: <%= I18n.t('ss.confirm.delete').to_json %>
   };
 
   SS.defaultTimeoutMillis = 2000;
@@ -368,7 +368,7 @@ this.SS = (function () {
     });
     $(window).on("beforeunload", function () {
       if (SS.formChanged && !SS.disableConfirmUnloading) {
-        return "<%= I18n.t 'ss.confirm.unload' %>";
+        return <%= I18n.t('ss.confirm.unload').to_json %>;
       }
     });
     $("input[type=submit]").on("click", function () {
@@ -646,7 +646,7 @@ this.SS = (function () {
         }, function (xhr, textStatus, errorThrown) {
           // error
           if (xhr.status === 413) {
-            alert([ "== Error ==" ].concat("<%= I18n.t('errors.messages.request_entity_too_large') %>").join("\n"));
+            alert([ "== Error ==" ].concat(<%= I18n.t('errors.messages.request_entity_too_large').to_json %>).join("\n"));
           } else if (xhr.responseJSON && Array.isArray(xhr.responseJSON)) {
             alert([ "== Error ==" ].concat(xhr.responseJSON).join("\n"));
           } else {

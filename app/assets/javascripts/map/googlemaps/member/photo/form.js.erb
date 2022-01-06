@@ -4,9 +4,9 @@ this.Member_Photo_Form = (function () {
 
   Member_Photo_Form.maxPointForm = 10;
 
-  Member_Photo_Form.deleteMessage = "<%= I18n.t('map.confirm.delete_marker') %>";
+  Member_Photo_Form.deleteMessage = <%= I18n.t('map.confirm.delete_marker').to_json %>;
 
-  Member_Photo_Form.setExifMessage = "<%= I18n.t('map.confirm.find_exif') %>";
+  Member_Photo_Form.setExifMessage = <%= I18n.t('map.confirm.find_exif').to_json %>;
 
   Member_Photo_Form.dataID = 0;
 
