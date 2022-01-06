@@ -228,7 +228,7 @@ class Uploader::FilesController < ApplicationController
       end
     end
 
-    location = "#{uploader_files_path}/#{@item.filename}?do=edit"
+    location = "#{uploader_files_path}/#{@item.filename}"
     render_update result, location: location
   end
 
