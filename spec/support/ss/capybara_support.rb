@@ -34,6 +34,7 @@ module SS::CapybaraSupport
       options.add_preference('download.default_directory', SS::DownloadHelpers.path)
       options.add_argument('window-size=1280,800')
       options.add_argument('log-level=0')
+      options.add_argument('lang=ja-JP')
       if headless != '0'
         options.add_argument('headless')
         options.add_argument('disable-gpu')
