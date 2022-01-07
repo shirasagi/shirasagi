@@ -12,7 +12,9 @@ module Sys::Reference
 
       @sys_role_permissions ||= {}
       sys_roles.each do |role|
-        role.permissions.each do |name|
+        permissions = role.permissions
+        permissions &= SS.current_permission_mask if SS.current_permission_mask
+        permissions.each do |name|
           @sys_role_permissions[name] = 1
         end
       end

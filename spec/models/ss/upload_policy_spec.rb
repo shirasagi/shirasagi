@@ -7,6 +7,7 @@ describe SS::UploadPolicy, dbscope: :example do
   before do
     SS.current_site = nil
     SS.current_user = nil
+    SS.current_permission_mask = nil
     SS.current_organization = nil
   end
 

@@ -1,8 +1,8 @@
 module Member::Addon
-  module YahooJpOauth
+  module YahooJpOAuth
     extend SS::Addon
     extend ActiveSupport::Concern
-    include Member::Addon::BaseOauth
+    include Member::Addon::BaseOAuth
 
     included do
       define_oauth_fields(:yahoojp)

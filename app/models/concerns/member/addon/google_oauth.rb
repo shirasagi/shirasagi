@@ -1,8 +1,8 @@
 module Member::Addon
-  module GoogleOauth
+  module GoogleOAuth
     extend SS::Addon
     extend ActiveSupport::Concern
-    include Member::Addon::BaseOauth
+    include Member::Addon::BaseOAuth
 
     included do
       define_oauth_fields(:google_oauth2)

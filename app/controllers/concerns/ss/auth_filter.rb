@@ -39,12 +39,31 @@ module SS::AuthFilter
 
     login_path = token.login_path
     logout_path = token.logout_path
-    user = token.user
+    user = self.user_class.find(token.user_id) rescue nil
     token.destroy
     return nil if user.blank?
     return nil if user.disabled?
 
     [ user, login_path, logout_path ]
+  end
+
+  def get_user_by_oauth2_token
+    authenticate_with_http_token do |token, _options|
+      token = SS::OAuth2::Token.all.and_token(token).first
+      return nil unless token
+      return nil unless token.enabled?
+
+      user = self.user_class.find(token.user_id) rescue nil
+      return nil if user.blank?
+      return nil if user.disabled?
+
+      [ user, token.scopes ]
+    end
+  end
+
+  def set_locale_and_timezone
+    # I18n.locale = @cur_user.lang.to_sym if @cur_user.try(:lang).present?
+    # Time.zone = Time.find_zone(@cur_user.timezone) if @cur_user.try(:timezone).present?
   end
 
   def set_last_logged_in(timestamp = Time.zone.now.to_i)

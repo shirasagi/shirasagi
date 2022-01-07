@@ -171,6 +171,14 @@ module SS
     Thread.current["ss.user"] = user
   end
 
+  def self.current_permission_mask
+    Thread.current["ss.permission_mask"]
+  end
+
+  def self.current_permission_mask=(mask)
+    Thread.current["ss.permission_mask"] = mask
+  end
+
   def self.current_organization
     Thread.current["ss.organization"]
   end

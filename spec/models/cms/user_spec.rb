@@ -58,4 +58,20 @@ describe Cms::User do
     its(:cms_role_permissions) { is_expected.to be_a(Hash) }
     its(:cms_role_permissions) { is_expected.to include("edit_private_article_pages_#{cms_site.id}" => 1) }
   end
+
+  describe "#cms_role_permissions" do
+    let(:permission) { Cms::Role.permission_names.sample }
+    let!(:role) { create(:cms_role, cur_site: site2, name: unique_id, permissions: [ permission ]) }
+    let!(:user) { create(:cms_user_base, :cms_user_rand_name, :cms_user_email, group: group2, cms_role_ids: [ role.id ]) }
+
+    it do
+      expect(user.cms_role_permissions.length).to eq 1
+      expect(user.cms_role_permissions).to include("#{permission}_#{site2.id}")
+
+      # for oauth2's scope
+      SS.current_permission_mask = [ (Cms::Role.permission_names - [ permission ]).sample ]
+      user1 = Cms::User.find(user.id)
+      expect(user1.cms_role_permissions.length).to eq 0
+    end
+  end
 end

@@ -29,5 +29,6 @@ module Service::AuthFilter
     session[:service_account] = nil
     redirect_to service_login_path if opt[:redirect]
     @cur_user = SS.current_user = nil
+    SS.current_permission_mask = nil
   end
 end
