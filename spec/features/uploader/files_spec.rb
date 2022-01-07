@@ -189,7 +189,6 @@ describe "uploader_files", type: :feature, dbscope: :example do
       fill_in "item[filename]", with: "#{node.filename}/replace.png"
       click_button I18n.t("ss.buttons.save")
 
-      click_link I18n.t('ss.links.back_to_show')
       expect(page).to have_css(".see dd", text: "#{node.filename}/replace.png")
       expect(page).to have_css(".see dd img")
 
@@ -215,12 +214,8 @@ describe "uploader_files", type: :feature, dbscope: :example do
       click_link I18n.t('ss.links.edit')
       fill_in "item[filename]", with: "#{node.filename}/bar"
       click_button I18n.t("ss.buttons.save")
-      click_link I18n.t('ss.links.back_to_show')
-      expect(page).to have_css(".see dd", text: "#{node.filename}/bar")
-
-      click_link I18n.t('ss.links.delete')
-      click_button I18n.t("ss.buttons.delete")
-      expect(page).to have_no_css(".list-item")
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css(".list-item a.up", text: I18n.t("ss.links.parent_directory"))
     end
   end
 
@@ -308,7 +303,7 @@ describe "uploader_files", type: :feature, dbscope: :example do
         click_button I18n.t("ss.buttons.save")
       end
       expect(status_code).to eq 200
-      expect(page).to have_css('#item_text', text: 'html { height: 75%; }')
+      expect(page).to have_content('html { height: 75%; }')
 
       click_link I18n.t('ss.links.back_to_index')
 
