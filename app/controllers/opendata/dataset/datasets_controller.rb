@@ -33,7 +33,7 @@ class Opendata::Dataset::DatasetsController < ApplicationController
     set_item
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
 
-    if request.get?
+    if request.get? || request.head?
       prefix = I18n.t("workflow.cloned_name_prefix")
       @item.name = "[#{prefix}] #{@item.name}" unless @item.cloned_name?
       return

@@ -50,7 +50,7 @@ class Faq::PagesController < ApplicationController
 
     @item = @model.new
 
-    if request.get?
+    if request.get? || request.head?
       respond_to do |format|
         format.html { render }
         format.json { render template: "ss/tasks/index", content_type: json_content_type, locals: { item: @task } }

@@ -28,7 +28,8 @@ class Gws::UserOccupationsController < ApplicationController
 
   def download_all
     @item = SS::DownloadParam.new
-    if request.get?
+
+    if request.get? || request.head?
       render
       return
     end
@@ -47,7 +48,8 @@ class Gws::UserOccupationsController < ApplicationController
 
   def import
     @item = SS::ImportParam.new
-    if request.get?
+
+    if request.get? || request.head?
       render
       return
     end

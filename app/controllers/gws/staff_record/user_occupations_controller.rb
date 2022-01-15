@@ -30,7 +30,7 @@ class Gws::StaffRecord::UserOccupationsController < ApplicationController
   end
 
   def download
-    if request.get?
+    if request.get? || request.head?
       @item = @model.new(fix_params)
       return
     end

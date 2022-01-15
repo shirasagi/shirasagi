@@ -45,7 +45,7 @@ class History::Cms::TrashesController < ApplicationController
     set_item
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
-    if request.get?
+    if request.get? || request.head?
       render
       return
     end

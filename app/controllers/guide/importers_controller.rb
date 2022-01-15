@@ -27,7 +27,8 @@ class Guide::ImportersController < ApplicationController
 
   def import_procedures
     @item = Guide::Importer.new fix_params
-    if request.get?
+
+    if request.get? || request.head?
       render :import
       return
     end
@@ -45,7 +46,7 @@ class Guide::ImportersController < ApplicationController
 
   def import_questions
     @item = Guide::Importer.new fix_params
-    if request.get?
+    if request.get? || request.head?
       render :import
       return
     end
@@ -63,7 +64,8 @@ class Guide::ImportersController < ApplicationController
 
   def import_transitions
     @item = Guide::Importer.new fix_params
-    if request.get?
+
+    if request.get? || request.head?
       render :import
       return
     end

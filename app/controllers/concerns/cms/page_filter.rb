@@ -238,7 +238,7 @@ module Cms::PageFilter
     destination = params[:destination]
     confirm     = params[:confirm]
 
-    if request.get?
+    if request.get? || request.head?
       @filename = @item.filename
     elsif confirm
       @source = "/#{@item.filename}"
@@ -274,7 +274,7 @@ module Cms::PageFilter
   end
 
   def copy
-    if request.get?
+    if request.get? || request.head?
       prefix = I18n.t("workflow.cloned_name_prefix")
       @item.name = "[#{prefix}] #{@item.name}" unless @item.cloned_name?
       return

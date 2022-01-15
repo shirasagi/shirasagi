@@ -208,7 +208,8 @@ class Gws::Report::FilesController < ApplicationController
   def copy
     set_item
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    if request.get?
+
+    if request.get? || request.head?
       @item.name = "[#{I18n.t('workflow.cloned_name_prefix')}] #{@item.name}".truncate(80)
       return
     end

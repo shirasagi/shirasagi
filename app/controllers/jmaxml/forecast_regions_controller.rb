@@ -38,7 +38,8 @@ class Jmaxml::ForecastRegionsController < ApplicationController
 
   def import
     @item = OpenStruct.new
-    if request.get?
+
+    if request.get? || request.head?
       render template: 'rss/main/import'
       return
     end
