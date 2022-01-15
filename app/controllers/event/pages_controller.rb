@@ -102,7 +102,8 @@ class Event::PagesController < ApplicationController
   end
 
   def ical_refresh
-    return if request.get?
+    return if request.get? || request.head?
+
     job = Event::Ical::ImportJob.bind(site_id: @cur_site.id, node_id: @cur_node.id, user_id: @cur_user.id)
     job.perform_later
     redirect_to({ action: :index }, { notice: t("rss.messages.job_started") })

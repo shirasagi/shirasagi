@@ -168,7 +168,7 @@ class Gws::Workflow::FilesController < ApplicationController
     set_item
     raise '403' unless @item.allowed?(:edit, @cur_user)
 
-    return if request.get?
+    return if request.get? || request.head?
 
     @item.state = 'closed'
     @item.workflow_user_id = nil

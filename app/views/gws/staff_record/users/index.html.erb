@@ -12,6 +12,9 @@
   <% if title = item.title(@cur_site) %>
     <span class="user-title"><%= title.name %></span>
   <% end %>
+  <% if occupation = item.occupation(@cur_site) %>
+    <span class="user-occupation"><%= occupation.name %></span>
+  <% end %>
   <span class="order"><%= item.order %></span>
 <% end %>
 

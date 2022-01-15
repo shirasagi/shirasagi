@@ -12,6 +12,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
   let(:name) { unique_id }
   let(:sys_role1) { create(:sys_role_general, name: I18n.t("sys.roles.user")) }
   let(:title1) { create(:gws_user_title, code: "E100") }
+  let(:occupation1) { create(:gws_user_occupation, code: "B133") }
 
   context "with auth" do
     before { login_gws_user }
@@ -69,6 +70,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       #import
       sys_role1
       title1
+      occupation1
 
       visit index_path
       click_link I18n.t('ss.links.import')
@@ -141,7 +143,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       visit index_path
       expect(current_path).to eq index_path
 
-      #new"
+      #new
       visit new_path
       first('.mod-gws-user-groups').click_on I18n.t('ss.apis.groups.index')
       wait_for_cbox

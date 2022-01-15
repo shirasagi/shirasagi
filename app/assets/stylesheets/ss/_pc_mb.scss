@@ -496,12 +496,6 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       clear: both;
     }
   }
-  .env {
-    padding: 15px 10px;
-    float: left;
-    color: $white;
-    @include mb { display: none; }
-  }
   .user-message {
     display: block;
     width: 50px;

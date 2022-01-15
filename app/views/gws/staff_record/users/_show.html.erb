@@ -20,6 +20,9 @@
   <dt><%= @model.t :title_ids %></dt>
   <dd><%= tryb { @item.title.name_with_code } %></dd>
 
+  <dt><%= @model.t :occupation_ids %></dt>
+  <dd><%= tryb { @item.occupation.name_with_code } %></dd>
+
   <dt><%= @model.t :tel_ext %></dt>
   <dd><%= @item.send :tel_ext %></dd>
 

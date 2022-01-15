@@ -8,6 +8,7 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
   context 'with user csv' do
     let!(:sys_role) { create(:sys_role_general, name: '一般ユーザー') }
     let!(:title) { create(:gws_user_title, cur_site: site, code: "E100") }
+    let!(:occupation) { create(:gws_user_occupation, cur_site: site, code: "B133") }
     let(:revision) { create(:gws_revision, site_id: site.id) }
     let!(:changeset1) { create(:gws_add_changeset, revision_id: revision.id, destinations: [{'name' => 'シラサギ市/企画政策部'}]) }
     let!(:changeset2) { create(:gws_add_changeset, revision_id: revision.id, destinations: [{'name' => 'シラサギ市/企画政策部/政策課'}]) }

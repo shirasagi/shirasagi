@@ -99,7 +99,7 @@ module Cms::NodeFilter
     @target = 'folder'
     @target_path = @item.path
 
-    return if request.get?
+    return if request.get? || request.head?
 
     @commands.each do |command|
       command.run(@target, @target_path)

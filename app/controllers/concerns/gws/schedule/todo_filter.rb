@@ -136,7 +136,7 @@ module Gws::Schedule::TodoFilter
     @item.attributes = fix_params
     raise '403' if !@item.allowed?(:edit, @cur_user, site: @cur_site) && !@item.member?(@cur_user)
     @item.errors.clear
-    return if request.get?
+    return if request.get? || request.head?
 
     comment = Gws::Schedule::TodoComment.new(cur_site: @cur_site, cur_user: @cur_user, cur_todo: @item)
     comment.achievement_rate = 100
@@ -152,7 +152,7 @@ module Gws::Schedule::TodoFilter
     @item.attributes = fix_params
     raise '403' if !@item.allowed?(:edit, @cur_user, site: @cur_site) && !@item.member?(@cur_user)
     @item.errors.clear
-    return if request.get?
+    return if request.get? || request.head?
 
     comment = Gws::Schedule::TodoComment.new(cur_site: @cur_site, cur_user: @cur_user, cur_todo: @item)
     comment.achievement_rate = 0
@@ -167,7 +167,7 @@ module Gws::Schedule::TodoFilter
   # def active
   #   @item.attributes = fix_params
   #   raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-  #   return if request.get?
+  #   return if request.get? || request.head?
   #   render_destroy @item.active, {notice: t('gws/schedule/todo.notice.active')}
   # end
 

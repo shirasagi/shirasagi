@@ -183,7 +183,7 @@ class Gws::Report::FilesController < ApplicationController
       redirect_to({ action: :show }, { notice: t('gws/report.notice.published') })
       return
     end
-    return if request.get?
+    return if request.get? || request.head?
 
     @item.state = 'public'
     render_opts = { render: { template: "publish" }, notice: t('gws/report.notice.published') }
@@ -197,7 +197,7 @@ class Gws::Report::FilesController < ApplicationController
       redirect_to({ action: :show }, { notice: t('gws/report.notice.depublished') })
       return
     end
-    return if request.get?
+    return if request.get? || request.head?
 
     @item.state = 'closed'
     render_opts = { render: { template: "depublish" }, notice: t('gws/report.notice.depublished') }

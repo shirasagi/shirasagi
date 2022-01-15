@@ -152,7 +152,7 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
   # パスワード再設定
   def reset_password
     @item = Cms::Member.new
-    return if request.get?
+    return if request.get? || request.head?
 
     @item = @model.new get_params
 
@@ -181,7 +181,7 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
     @item = Cms::Member.site(@cur_site).and_enabled.find_by_secure_id(params[:token]) rescue nil
     raise "404" unless @item.present?
 
-    return if request.get?
+    return if request.get? || request.head?
 
     if params[:item][:new_password].blank?
       @item.errors.add :base, "#{I18n.t("member.view.new_password")}#{I18n.t("errors.messages.not_input")}"

@@ -7,7 +7,7 @@
     <%= hidden_field_tag :single, params[:single] %>
     <dl class="see">
       <dt><%= t("mongoid.models.gws/group") %></dt>
-      <dd>
+      <dd class="dd-group">
         <% if browser.ie?(["<10"]) %>
           <%= render partial: "group_dropdown_normal", locals: { f: f } %>
         <% else %>
@@ -15,19 +15,39 @@
         <% end %>
       </dd>
 
-      <%= render partial: "custom_group_dropdown", locals: { f: f } %>
+      <dt><%= t("mongoid.models.gws/custom_group") %></dt>
+      <dd class="dd-custom-group">
+        <% if browser.ie?(["<10"]) %>
+          <%= render partial: "custom_group_dropdown_normal", locals: { f: f } %>
+        <% else %>
+          <%= render partial: "custom_group_dropdown_tree", locals: { f: f } %>
+        <% end %>
+      </dd>
 
+      <% options = @model.new(cur_site: @cur_site).title_id_options %>
+      <% if options.present? %>
       <dt><%= @model.t :title_ids %></dt>
       <dd>
-        <%= f.select :title_ids, @model.new(cur_site: @cur_site).title_id_options,
+        <%= f.select :title_ids, options,
           { selected: params[:s].try(:[], :title_ids), include_blank: true },
           { class: "submit-on-change" } %>
       </dd>
+      <% end %>
+
+      <% options = @model.new(cur_site: @cur_site).occupation_id_options %>
+      <% if options.present? %>
+      <dt><%= @model.t :occupation_ids %></dt>
+      <dd>
+        <%= f.select :occupation_ids, options,
+          { selected: params[:s].try(:[], :occupation_ids), include_blank: true },
+          { class: "submit-on-change" } %>
+      </dd>
+      <% end %>
 
       <dt><%= t "ss.keyword" %></dt>
       <dd>
-        <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
-        <%= f.submit  t("ss.buttons.search"), class: :btn %>
+        <%= f.text_field :keyword, value: params[:s].try(:[], :keyword), style: 'max-width: 20rem;' %>
+        <%= f.submit  t("ss.buttons.search"), class: 'btn my-0' %>
       </dd>
     </dl>
   <% end %>
@@ -42,6 +62,7 @@
       <th class="name"><%= @model.t :name %></th>
       <th><%= @model.t :group_ids %></th>
       <th><%= @model.t :title_ids %></th>
+      <th><%= @model.t :occupation_ids %></th>
     </tr>
   </thead>
   <tbody class="items">
@@ -56,6 +77,7 @@
         <td><%= link_to gws_public_user_long_name(item.long_name), "#", class: @multi ? "select-item" : "select-single-item" %></td>
         <td><%= tryb { item.gws_main_group(@cur_site).trailing_name } %></td>
         <td><%= tryb { item.title(@cur_site).name } %></td>
+        <td><%= tryb { item.occupation(@cur_site).name } %></td>
       <% end %>
     <% end %>
   </tbody>

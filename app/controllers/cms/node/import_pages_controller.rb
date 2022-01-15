@@ -18,7 +18,7 @@ class Cms::Node::ImportPagesController < ApplicationController
 
   def convert
     set_item
-    return if request.get?
+    return if request.get? || request.head?
 
     @item.attributes = get_params
     render_update @item.update, location: { action: :index }

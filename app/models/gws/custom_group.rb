@@ -1,5 +1,5 @@
 class Gws::CustomGroup
-  include SS::Document
+  include SS::Model::CustomGroup
   include SS::Fields::Normalizer
   include Gws::Referenceable
   include Gws::Reference::User
@@ -8,25 +8,26 @@ class Gws::CustomGroup
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
+  include Gws::Addon::Import::CustomGroup
 
   # Member addon setting
   keep_members_order
 
-  seqid :id
-  field :name, type: String
-  field :order, type: Integer, default: 0
+  set_permission_name "gws_custom_groups"
 
-  permit_params :name, :order
+  validate :validate_parent_name, if: ->{ cur_site.present? }
 
-  validates :name, presence: true, length: { maximum: 40 }
+  private
 
-  default_scope ->{ order_by order: 1 }
+  def validate_presence_member
+    # skip
+  end
 
-  scope :search, ->(params) {
-    criteria = where({})
-    return criteria if params.blank?
+  def validate_parent_name
+    return if cur_site.id == id
 
-    criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
-    criteria
-  }
+    if name.scan('/').present?
+      errors.add :base, :not_found_parent_group unless self.class.where(name: File.dirname(name)).exists?
+    end
+  end
 end

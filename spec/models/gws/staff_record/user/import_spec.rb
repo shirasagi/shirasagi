@@ -12,13 +12,14 @@ describe Gws::StaffRecord::User, type: :model, dbscope: :example do
   let!(:user4) { create :gws_user, group_ids: [ site1.id ] }
   let!(:year1) { create :gws_staff_record_year, cur_site: site1 }
   let!(:title1) { create :gws_staff_record_user_title, cur_site: site1, year: year1 }
+  let!(:occupation1) { create :gws_staff_record_user_occupation, cur_site: site1, year: year1 }
   # let(:readable_setting_range) { %w(public select private).sample }
   let(:readable_setting_range) { "select" }
   let!(:staff_record_user1) do
     create(
-      :gws_staff_record_user, cur_site: site1, year: year1, title_ids: [ title1.id ],
-      readable_setting_range: readable_setting_range, readable_group_ids: [ group1.id, group2.id ],
-      readable_member_ids: [ user1.id, user2.id ], group_ids: [ group3.id, group4.id ], user_ids: [ user3.id, user4.id ],
+      :gws_staff_record_user, cur_site: site1, year: year1, title_ids: [title1.id], occupation_ids: [occupation1.id],
+      readable_setting_range: readable_setting_range, readable_group_ids: [group1.id, group2.id],
+      readable_member_ids: [user1.id, user2.id], group_ids: [group3.id, group4.id], user_ids: [user3.id, user4.id],
       permission_level: rand(1..3)
     )
   end
@@ -44,6 +45,7 @@ describe Gws::StaffRecord::User, type: :model, dbscope: :example do
   let!(:site2) { create :gws_group }
   let!(:year2) { create :gws_staff_record_year, cur_site: site2 }
   let!(:title2) { create :gws_staff_record_user_title, cur_site: site2, year: year2, code: title1.code }
+  let!(:occupation2) { create :gws_staff_record_user_occupation, cur_site: site2, year: year2, code: occupation1.code }
 
   before do
     admin_role = create(:gws_role_admin, cur_site: site2)
@@ -76,6 +78,8 @@ describe Gws::StaffRecord::User, type: :model, dbscope: :example do
         expect(imported_user.section_name).to eq staff_record_user1.section_name
         expect(imported_user.title_ids).to have(1).items
         expect(imported_user.titles.first).to eq title2
+        expect(imported_user.occupation_ids).to have(1).items
+        expect(imported_user.occupations.first).to eq occupation2
         expect(imported_user.tel_ext).to eq staff_record_user1.tel_ext
         expect(imported_user.charge_name).to eq staff_record_user1.charge_name
         expect(imported_user.charge_address).to eq staff_record_user1.charge_address

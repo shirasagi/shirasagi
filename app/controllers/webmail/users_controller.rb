@@ -42,7 +42,7 @@ class Webmail::UsersController < ApplicationController
     raise "403" unless @model.allowed?(:edit, @cur_user)
 
     @item = @model.new
-    return if request.get?
+    return if request.get? || request.head?
 
     @item = Webmail::UserExport.new params.require(:item).permit(Webmail::UserExport.permitted_fields).merge(fix_params)
     result = @item.import_csv

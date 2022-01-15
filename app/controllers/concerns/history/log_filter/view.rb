@@ -71,7 +71,7 @@ module History::LogFilter::View
   def download
     @item = History::DownloadParam.new
     @item.save_term = '1.day'
-    return if request.get?
+    return if request.get? || request.head?
 
     @item.attributes = params.require(:item).permit(:encoding, :save_term, user_ids: [])
     if @item.invalid?
