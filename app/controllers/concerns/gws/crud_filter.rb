@@ -74,7 +74,7 @@ module Gws::CrudFilter
     set_item unless @item
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
 
-    if request.get?
+    if request.get? || request.head?
       render
       return
     end
@@ -87,7 +87,7 @@ module Gws::CrudFilter
     set_item
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
 
-    if request.get?
+    if request.get? || request.head?
       render
       return
     end

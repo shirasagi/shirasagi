@@ -52,7 +52,7 @@ Webmail_Address_Autocomplete.render = function(selector, opts) {
     var label = $input.val();
     var value = (values && values[label]) ? values[label] : label;
     var selected = $input.closest(".webmail-mail-form-address").find(".selected-address");
-    if (!label) {
+    if (!label.trim() || !label.match(/@/)) {
       return false;
     }
 

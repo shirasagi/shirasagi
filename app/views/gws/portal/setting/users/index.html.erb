@@ -18,7 +18,7 @@ SS_Clipboard.renderCopy();
 <% end %>
 
 <% @index_meta = proc do |item| %>
-  <%= gws_public_user_profile(item, :uid_or_id, :datetime, :main_group, :user_title, :email, :tel) %>
+  <%= gws_public_user_profile(item, :uid_or_id, :datetime, :main_group, :user_title, :user_occupation, :email, :tel) %>
 <% end %>
 
 <%= render template: "gws/crud/index" %>

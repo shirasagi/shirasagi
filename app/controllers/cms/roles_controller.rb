@@ -36,7 +36,7 @@ class Cms::RolesController < ApplicationController
 
   def import
     @item = @model.new
-    return if request.get?
+    return if request.get? || request.head?
 
     begin
       file = params[:item].try(:[], :file)

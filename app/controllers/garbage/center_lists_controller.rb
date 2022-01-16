@@ -65,7 +65,7 @@ class Garbage::CenterListsController < ApplicationController
 
     set_task
 
-    if request.get?
+    if request.get? || request.head?
       respond_to do |format|
         format.html { render }
         format.json { render json: @task.to_json(methods: :head_logs) }

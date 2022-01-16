@@ -51,8 +51,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       end
       wait_for_cbox do
         expect(page).to have_content(site.name)
-        find('button.dropdown.btn').click
-        within '.dropdown-container' do
+        find('.dd-group button.dropdown.btn').click
+        within '.dd-group .dropdown-container' do
           click_on site.name
         end
         expect(page).to have_content(editor.name)
@@ -66,8 +66,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       end
       wait_for_cbox do
         expect(page).to have_content(site.name)
-        find('button.dropdown.btn').click
-        within '.dropdown-container' do
+        find('.dd-group button.dropdown.btn').click
+        within '.dd-group .dropdown-container' do
           click_on site.name
         end
         expect(page).to have_content(reader.name)

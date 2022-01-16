@@ -509,6 +509,7 @@ ja:
       ss/site: サイト
       ss/user: ユーザー
       ss/user_title: 役職
+      ss/user_occupation: 職種
       ss/group: グループ
       ss/user_group_history: 異動履歴
       ss/file: ファイル
@@ -573,6 +574,7 @@ ja:
         tel_ext: 内線番号
         tel_ext_short: 内線
         in_title_id: 役職
+        in_occupation_id: 職種
         group_ids: グループ
         groups: グループ
         cms_roles: CMSロール
@@ -607,9 +609,20 @@ ja:
         group_id: グループ
         activation_date: 有効期限（開始）
         expiration_date: 有効期限（終了）
+      ss/model/user_occupation:
+        code: 職種コード
+        name: 職種名
+        remark: 備考
+        order: 並び順
+        group_id: グループ
+        activation_date: 有効期限（開始）
+        expiration_date: 有効期限（終了）
       ss/model/reference/user_titles:
         title_ids: 役職
         title_orders: 役職並び順
+      ss/model/reference/user_occupations:
+        occupation_ids: 職種
+        occupation_orders: 職種並び順
       ss/model/group:
         name: グループ名
         order: 表示順
@@ -884,6 +897,8 @@ ja:
         - LDAPを利用する場合にLDAPユーザーを選択します。
       title_ids:
         - 役職を選択します。
+      occupation_ids:
+        - 職種を選択します。
       account_start_date:
         - 有効期限の開始日を入力します。
       account_expiration_date:
@@ -1013,6 +1028,15 @@ ja:
     ss/model/user_title:
       code: 役職コードを入力します。
       name: 役職名を入力します。
+      activation_date: 有効期限の開始日時を入力します。
+      expiration_date: 有効期限の終了日時を入力します。
+      remark: 備考を入力します。
+      order:
+        - 並び順を入力します。
+        - 数字が大きいほど上位に表示されます。
+    ss/model/user_occupation:
+      code: 職種コードを入力します。
+      name: 職種名を入力します。
       activation_date: 有効期限の開始日時を入力します。
       expiration_date: 有効期限の終了日時を入力します。
       remark: 備考を入力します。

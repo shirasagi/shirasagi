@@ -33,6 +33,11 @@ module SS::UserImportValidator
     attr_accessor :imported_gws_user_title_key, :imported_gws_user_title
 
     validate :validate_imported_gws_user_title, if: ->{ imported_gws_user_title_key.present? }
+
+    # in_occupation_id
+    attr_accessor :imported_gws_user_occupation_key, :imported_gws_user_occupation
+
+    validate :validate_imported_gws_user_occupation, if: ->{ imported_gws_user_occupation_key.present? }
   end
 
   private
@@ -98,5 +103,10 @@ module SS::UserImportValidator
   def validate_imported_gws_user_title
     return if imported_gws_user_title
     errors.add :base, I18n.t("errors.messages.not_found_user_title", code: imported_gws_user_title_key)
+  end
+
+  def validate_imported_gws_user_occupation
+    return if imported_gws_user_occupation
+    errors.add :base, I18n.t("errors.messages.not_found_user_occupation", code: imported_gws_user_occupation_key)
   end
 end

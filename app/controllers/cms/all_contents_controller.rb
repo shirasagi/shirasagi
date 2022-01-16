@@ -37,7 +37,7 @@ class Cms::AllContentsController < ApplicationController
   end
 
   def import
-    if request.get?
+    if request.get? || request.head?
       render
       return
     end

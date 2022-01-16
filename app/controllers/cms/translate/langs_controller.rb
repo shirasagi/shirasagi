@@ -31,7 +31,7 @@ class Cms::Translate::LangsController < ApplicationController
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
 
     @item = @model.new
-    return if request.get?
+    return if request.get? || request.head?
 
     @item.attributes = get_params
     result = @item.import_csv

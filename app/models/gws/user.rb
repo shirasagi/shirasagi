@@ -1,6 +1,7 @@
 class Gws::User
   include SS::Model::User
   include Gws::Reference::UserTitles
+  include Gws::Reference::UserOccupations
   include Gws::Referenceable
   include Gws::SitePermission
   include Gws::Addon::User::PublicDuty
@@ -18,16 +19,17 @@ class Gws::User
 
   cattr_reader(:group_class) { Gws::Group }
 
-  attr_accessor :in_title_id, :in_gws_main_group_id
+  attr_accessor :in_title_id, :in_occupation_id, :in_gws_main_group_id
 
   field :gws_main_group_ids, type: Hash, default: {}
   field :gws_default_group_ids, type: Hash, default: {}
 
   embeds_ids :groups, class_name: "Gws::Group"
 
-  permit_params :in_title_id, :in_gws_main_group_id
+  permit_params :in_title_id, :in_occupation_id, :in_gws_main_group_id
 
   before_validation :set_title_ids, if: ->{ in_title_id }
+  before_validation :set_occupation_ids, if: ->{ in_occupation_id }
   before_validation :set_gws_main_group_id, if: ->{ @cur_site && in_gws_main_group_id }
   validate :validate_groups
   validate :validate_gws_main_group, if: ->{ @cur_site }
@@ -59,6 +61,10 @@ class Gws::User
 
   def title_id_options
     Gws::UserTitle.site(cur_site).active.map { |m| [m.name_with_code, m.id] }
+  end
+
+  def occupation_id_options
+    Gws::UserOccupation.site(cur_site).active.map { |m| [m.name_with_code, m.id] }
   end
 
   def set_gws_default_group_id(group_id)
@@ -107,6 +113,12 @@ class Gws::User
     title_ids = titles.reject { |m| m.group_id == cur_site.id }.map(&:id)
     title_ids << in_title_id.to_i if in_title_id.present?
     self.title_ids = title_ids
+  end
+
+  def set_occupation_ids
+    occupation_ids = occupations.reject { |m| m.group_id == cur_site.id }.map(&:id)
+    occupation_ids << in_occupation_id.to_i if in_occupation_id.present?
+    self.occupation_ids = occupation_ids
   end
 
   def set_gws_main_group_id

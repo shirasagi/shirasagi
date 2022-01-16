@@ -1,7 +1,7 @@
 <%
 
 groups = @cur_user.schedule_tabs_visible_groups(@cur_site)
-custom_groups = @cur_user.schedule_tabs_visible_custom_groups(@cur_site)
+custom_groups = @cur_user.schedule_tabs_visible_custom_groups(@cur_site).reorder(name: 1)
 
 %>
 <dl class="see">

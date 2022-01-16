@@ -82,7 +82,8 @@ module Gws::Attendance::TimeCardFilter
 
     @type = WELL_KNOWN_TYPES[index]
     @model = Gws::Attendance::TimeEdit
-    if request.get?
+
+    if request.get? || request.head?
       @cell = @model.new
       render template: 'time', layout: false
       return
@@ -110,7 +111,7 @@ module Gws::Attendance::TimeCardFilter
   end
 
   def memo
-    if request.get?
+    if request.get? || request.head?
       render template: 'memo', layout: false
       return
     end

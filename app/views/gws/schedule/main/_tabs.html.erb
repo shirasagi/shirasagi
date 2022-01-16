@@ -18,17 +18,18 @@ Gws_Schedule_View.renderTabs('.gws-schedule-tabs');
       <% end %>
     <% end %>
 
-    <% if @cur_site.schedule_custom_group_tab_visible? %>
-      <% @cur_user.schedule_tabs_visible_custom_groups(@cur_site).each do |g| %>
-        <%= link_to gws_schedule_custom_group_plans_path(group: g.id), class: "custom-group" do %>
-          <span class="tab-name"><%= g.name %></span>
-        <% end %>
-      <% end %>
-    <% end %>
-
     <% if @cur_site.schedule_group_all_tab_visible? %>
       <%= link_to gws_schedule_all_groups_path, class: "group-all" do %>
         <span class="tab-name"><%= @cur_site.schedule_group_all_tab_label || @cur_site.schedule_group_all_tab_placeholder %></span>
+      <% end %>
+    <% end %>
+
+    <% if @cur_site.schedule_custom_group_tab_visible? %>
+      <% @cur_user.schedule_tabs_visible_custom_groups(@cur_site).each do |g| %>
+        <% next if g.member_ids.blank? %>
+        <%= link_to gws_schedule_custom_group_plans_path(group: g.id), class: "custom-group" do %>
+          <span class="tab-name"><%= g.trailing_name %></span>
+        <% end %>
       <% end %>
     <% end %>
   <% end %>

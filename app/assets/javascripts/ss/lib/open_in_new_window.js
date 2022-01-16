@@ -3,7 +3,7 @@ function SS_OpenInNewWindow() {
 
 SS_OpenInNewWindow.rendered = false;
 SS_OpenInNewWindow.defaultTarget = '_blank';
-SS_OpenInNewWindow.minWidth = 500;
+SS_OpenInNewWindow.minWidth = 800;
 SS_OpenInNewWindow.defaultWidth = function() {
   var width = window.innerWidth / 2;
   if (width < SS_OpenInNewWindow.minWidth) {

@@ -169,6 +169,7 @@ ja:
       not_found_webmail_role: "ウェブメール権限「%{name}」が見つかりません。"
       not_found_main_group: "グループ（主）「%{name}」が見つかりません。"
       not_found_user_title: "役職コード「%{code}」が見つかりません。"
+      not_found_user_occupation: "職種コード「%{code}」が見つかりません。"
       upload_restricted: ご利用の環境ではファイルをアップロードできません。
       sanitizer_waiting: 無害化処理を行っています。しばらくお待ちください。
       url: は有効なURLを入力してください。

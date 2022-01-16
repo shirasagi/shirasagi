@@ -23,14 +23,14 @@ class Opendata::Dataset::Harvest::ImportersController < ApplicationController
   end
 
   def import
-    return if request.get?
+    return if request.get? || request.head?
 
     Opendata::Harvest::ImportDatasetsJob.bind(site_id: @cur_site, node_id: @cur_node).perform_later(@item.id)
     flash.now[:notice] = I18n.t("opendata.errors.messages.import_started")
   end
 
   def destroy_datasets
-    return if request.get?
+    return if request.get? || request.head?
 
     Opendata::Harvest::DestroyDatasetsJob.bind(site_id: @cur_site, node_id: @cur_node).perform_later(@item.id)
     flash.now[:notice] = I18n.t("opendata.errors.messages.destroy_started")

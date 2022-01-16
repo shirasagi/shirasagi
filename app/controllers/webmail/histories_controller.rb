@@ -39,7 +39,7 @@ class Webmail::HistoriesController < ApplicationController
     raise '403' unless Webmail::History.allowed?(:read, @cur_user)
 
     set_items
-    return if request.get?
+    return if request.get? || request.head?
 
     filename = 'webmail_histories'
     filename = "#{filename}_#{Time.zone.now.to_i}.csv"

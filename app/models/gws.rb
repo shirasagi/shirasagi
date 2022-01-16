@@ -81,6 +81,7 @@ module Gws
     Gws::UserFormData
     Gws::UserPresence
     Gws::UserTitle
+    Gws::UserOccupation
     Gws::Workflow::File
     Gws::Workflow::Form
   ).freeze

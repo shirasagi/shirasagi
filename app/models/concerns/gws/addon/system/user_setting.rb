@@ -4,7 +4,7 @@ module Gws::Addon::System::UserSetting
 
   set_addon_type :organization
 
-  USER_PUBLIC_PROFILES = %w(uid updated main_group user_title email tel).freeze
+  USER_PUBLIC_PROFILES = %w(uid updated main_group user_title user_occupation email tel).freeze
 
   included do
     field :user_public_profiles, type: SS::Extensions::Words

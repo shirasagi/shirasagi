@@ -28,6 +28,7 @@
       <div class="selected-address">
         <input type="hidden" name="item[<%= field %>][]" value="">
         <% addresses.each do |address| %>
+          <% next if address.strip.blank? %>
           <span>
             <%= address %>
             <i class="material-icons md-18 md-inactive deselect">close</i>
