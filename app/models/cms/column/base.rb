@@ -14,4 +14,8 @@ class Cms::Column::Base
     return unless _type
     _type.delete_prefix("Cms::Column::").underscore
   end
+
+  def db_form_type
+    { type: 'input' }
+  end
 end

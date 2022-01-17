@@ -1,0 +1,16 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.send :name %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.send :order %></dd>
+
+  <dt><%= @model.t :form_id %></dt>
+  <dd><%= @item.form.try(:name) %></dd>
+
+  <dt><%= @model.t :node_id %></dt>
+  <dd><%= @item.node.try(:name) %></dd>
+
+  <dt><%= @model.t :import_url %></dt>
+  <dd><%= @item.send :import_url %></dd>
+</dl>

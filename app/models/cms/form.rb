@@ -47,6 +47,14 @@ class Cms::Form
     end
   end
 
+  def column_names
+    @column_names ||= columns.order_by(order: 1).map { |col| col.name }.compact
+  end
+
+  def columns_hash
+    @columns_hash ||= columns.order_by(order: 1).map { |col| [col['name'], col] }.to_h
+  end
+
   def state_options
     %w(public closed).map do |v|
       [ I18n.t("ss.options.state.#{v}"), v ]

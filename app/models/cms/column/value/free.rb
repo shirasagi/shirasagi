@@ -33,6 +33,11 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
     end
   end
 
+  def search_values(values)
+    return false unless values.instance_of?(Array)
+    values.find { |v| value.to_s.index(v) }.present?
+  end
+
   private
 
   def validate_value
@@ -167,5 +172,18 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
       end
     end
     self._parent.value_contains_urls = self.contains_urls
+  end
+
+  class << self
+    def form_example_layout
+      h = []
+      h << %({% if value.value %})
+      h << %(  {% value.value %})
+      h << %(  {% if value.files %})
+      h << %(    {{ value.files }})
+      h << %(  {% endif %})
+      h << %({% endif %})
+      h.join("\n")
+    end
   end
 end

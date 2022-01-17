@@ -10,6 +10,15 @@ this.SS_Form = (function () {
   function SS_Form() {
   }
 
+  SS_Form.render = function () {
+    $('.form-example-head').on('click', function() {
+      var el = $(this);
+      var name = el.attr('class').replace(/.* (example-.*?)( |$)/, '$1');
+      var form = el.closest('.form-example');
+      form.find('.form-example-body.' + name).slideToggle('fast');
+    });
+  };
+
   SS_Form.disableEnterKey = function (selector) {
     if (selector == null) {
       selector = null;

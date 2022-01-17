@@ -1,0 +1,22 @@
+<dl class="see">
+  <dt><%= @model.t :form_id %></dt>
+  <dd><%= @item.form.try(:name) %></dd>
+
+  <dt><%= @model.t :node_id %></dt>
+  <dd><%= @item.node.try(:name) %></dd>
+
+  <dt><%= @model.t :map_search_options %></dt>
+  <dd></dd>
+
+  <% @item.map_search_options.each_with_index do |options, i| %>
+    <dt class="depth-2"><%= @model.t :column_name %> (<%= i + 1 %>)</dt>
+    <dd class="">
+      <%= options['name'] %>
+    </dd>
+
+    <dt class="mt-1 depth-2"><%= @model.t :column_values %></dt>
+    <dd class="mt-1">
+      <%= options['values'].join(" , ") if options['values'] %>
+    </dd>
+  <% end %>
+</dl>

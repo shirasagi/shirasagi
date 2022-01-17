@@ -1,0 +1,17 @@
+<nav class="form-db-menu">
+  <% if params[:action] =~ /index/ %>
+    <%= link_to t('ss.links.new'), { action: :new }, class: :new if @db.node %>
+    <%= t('errors.messages.cms_form_db_required_node') unless @db.node %>
+  <% elsif params[:action] =~ /new|create|download_all|impor|destroy_allt/ %>
+    <%= link_to(t('ss.links.back_to_index'), { action: :index }, class: "back-to-index") %>
+  <% elsif params[:action] =~ /edit|update|delete/ %>
+    <%= link_to(t('ss.links.back_to_show'), { action: :show, id: @item }, class: "back-to-show") %>
+    <%= link_to(t('ss.links.back_to_index'), { action: :index }, class: "back-to-index") %>
+  <% else %>
+    <% if @item && @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to(t('ss.links.edit'), { action: :edit, id: @item }, class: :edit) if @db.node %>
+      <%= link_to(t('ss.links.delete'), { action: :delete, id: @item }, class: :delete) if @db.node %>
+    <% end %>
+    <%= link_to(t('ss.links.back_to_index'), { action: :index }, class: "back-to-index") %>
+  <% end %>
+</nav>

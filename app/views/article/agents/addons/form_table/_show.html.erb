@@ -1,0 +1,11 @@
+<dl class="see">
+  <dt><%= @model.t :form_id %></dt>
+  <dd><%= @item.form.try(:name) %></dd>
+  <dd>
+    <%= link_to t('ss.csv_file'), "#{@item.full_url}index.csv", target: :_blank, rel: "noopener" %>
+    ( <%= link_to t('ss.links.preview'), cms_preview_path(path: "#{@item.preview_path}index.csv"), target: :_blank, rel: "noopener" %> )
+  </dd>
+
+  <dt><%= @model.t :node_id %></dt>
+  <dd><%= @item.node.try(:name) %></dd>
+</dl>

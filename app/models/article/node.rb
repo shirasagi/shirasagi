@@ -28,4 +28,31 @@ module Article::Node
 
     default_scope ->{ where(route: "article/page") }
   end
+
+  class FormTable
+    include Cms::Model::Node
+    include Cms::Addon::NodeSetting
+    include Cms::Addon::Meta
+    include Article::Addon::FormTable
+    include Cms::Addon::PageList
+    include Cms::Addon::LayoutHtml
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "article/form_table") }
+  end
+
+  class MapSearch
+    include Cms::Model::Node
+    include Cms::Addon::NodeSetting
+    include Cms::Addon::Meta
+    include Article::Addon::MapSearch
+    include Article::Addon::MapSearchResult
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "article/map_search") }
+  end
 end

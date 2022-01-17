@@ -26,6 +26,16 @@ class Cms::Column::Value::UrlField < Cms::Column::Value::Base
     parse_value.last
   end
 
+  def import_csv_cell(value)
+    vals = value.to_s.split("\n")
+    self.link = vals[0].presence
+    self.label = vals[1].presence
+  end
+
+  def export_csv_cell
+    [link, label].compact.join("\n")
+  end
+
   private
 
   def validate_value
@@ -79,5 +89,19 @@ class Cms::Column::Value::UrlField < Cms::Column::Value::Base
     link.strip! if link
 
     [ label, link ]
+  end
+
+  class << self
+    def form_example_layout
+      h = []
+      h << %({% if value.link %})
+      h << %(  {% if value.label %})
+      h << %(    <a href="{{ value.link }}">{{ value.label }}</a>)
+      h << %(  {% else %})
+      h << %(    <a href="{{ value.link }}">{{ value.link }}</a>)
+      h << %(  {% endif %})
+      h << %({% endif %})
+      h.join("\n")
+    end
   end
 end

@@ -1,0 +1,12 @@
+<header class="form-db-head">
+  <div>
+    <% title = @db.node ? "#{@db.name}/#{@db.node.name}" : @db.name %>
+    <%= link_to title, url_for(action: :index), class: 'head-title' %>
+  </div>
+  <div>
+    <%= link_to 'CSV Export', { action: :download_all }, class: 'btn head-link' %>
+    <%= link_to 'CSV Import', { action: :import }, class: 'btn head-link' if @db.node %>
+  </div>
+</header>
+
+<%= render partial: 'menu' %>

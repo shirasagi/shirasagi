@@ -1,0 +1,34 @@
+<%= javascript_include_tag "/assets/js/jquery.colorbox.js" %>
+<%= stylesheet_link_tag "/assets/css/colorbox/colorbox.css", media: 'all' %>
+
+<%= jquery do %>
+  $(".ajax-box").on("click", function () {
+    $.colorbox({
+      html: '<%=j render(partial: "modal", locals: { search_path: "./result.html" }) %>'
+    });
+    return false;
+  });
+<% end %>
+
+<%= render "upper" %>
+
+<div class="columns">
+  <% @items.each do |item| %>
+    <article class="column">
+      <header>
+        <h2 class="name"><%= link_to item.name, item.url %></h2>
+      </header>
+      <div class="categories">
+        <ul>
+          <% item.categories.each do |cate| %>
+            <li class="<%= cate.basename %>">
+              <%= link_to cate.name, cate.url %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </article>
+  <% end %>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

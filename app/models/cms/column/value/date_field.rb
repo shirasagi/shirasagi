@@ -39,6 +39,23 @@ class Cms::Column::Value::DateField < Cms::Column::Value::Base
     h.join(",")
   end
 
+  def import_csv_cell(value)
+    if value.blank?
+      self.date = nil
+    else
+      self.date = Time.zone.parse(value) rescue nil
+    end
+  end
+
+  def export_csv_cell
+    date.try(:strftime, '%Y-%m-%d')
+  end
+
+  def search_values(values)
+    return false unless values.instance_of?(Array)
+    (values & [export_csv_cell]).present?
+  end
+
   private
 
   def validate_value
@@ -76,6 +93,16 @@ class Cms::Column::Value::DateField < Cms::Column::Value::Base
       ApplicationController.helpers.content_tag('time', text, options)
     else
       text
+    end
+  end
+
+  class << self
+    def form_example_layout
+      h = []
+      h << %({% if value.date %})
+      h << %(  <span>{{ value.date | ss_date: "long" }}</span>)
+      h << %({% endif %})
+      h.join("\n")
     end
   end
 end

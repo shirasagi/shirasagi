@@ -1,0 +1,5 @@
+<div class="cms-form-table">
+  <%= @cur_node.render_form_table(@items, liquid_registers) %>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

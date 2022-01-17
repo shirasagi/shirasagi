@@ -13,6 +13,7 @@ class Cms::Column::Value::Base
   define_model_callbacks :parent_update
   define_model_callbacks :parent_destroy
 
+  attr_accessor :cur_user, :cur_site
   attr_reader :in_wrap, :link_errors, :origin_id
 
   embedded_in :page, inverse_of: :column_values
@@ -131,6 +132,19 @@ class Cms::Column::Value::Base
     h.join(",")
   end
 
+  def import_csv_cell(value)
+    try(:value=, value)
+  end
+
+  def export_csv_cell
+    try(:value)
+  end
+
+  def search_values(values)
+    return false unless values.instance_of?(Array)
+    (values & [try(:value)]).present?
+  end
+
   private
 
   def render_html_for_liquid(context)
@@ -201,5 +215,15 @@ class Cms::Column::Value::Base
 
   def find_url(val)
     val.scan(%r!<a.*?href="(.+?)">.+?</a>!).flatten | URI.extract(val, %w(http https))
+  end
+
+  class << self
+    def form_example_layout
+      h = []
+      h << %({% if value.value %})
+      h << %(  {{ value.value }})
+      h << %({% endif %})
+      h.join("\n")
+    end
   end
 end

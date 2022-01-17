@@ -8,9 +8,15 @@ ja:
 
   modules:
     article: 記事
+    addons:
+      article/form_table: 定型フォーム設定
+      article/map_search: 検索設定
+      article/map_search_result: 検索結果
 
   cms:
     nodes:
+      article/form_table: 定型フォームの表出力
+      article/map_search: 地図検索
       article/page: 記事リスト
     parts:
       article/page: 記事リスト
@@ -42,7 +48,47 @@ ja:
       article/page: 記事ページ
       article/node/page: 記事リスト
       article/part/node: 記事リスト
+    attributes:
+      article/addon/form_table:
+        form_id: 定型フォーム
+        node_id: 記事フォルダー
+      article/addon/map_search:
+        form_id: 定型フォーム
+        node_id: 記事フォルダー
+        map_search_options: 検索オプション
+        column_name: 項目名
+        column_values: 選択肢
+      article/addon/map_search_result:
+        map_html: 地図HTML
 
   job:
     models:
       article/page/import_job: 記事ページインポート
+
+  tooltip:
+    article/node/form_table:
+      html: |-
+        定型フォームのHTMLを Liquid 形式で設定します。
+        {{ page.name }} ... ページのタイトルを表示します。
+        {{ page.values["項目名"] }} ... 項目の値を表示します。
+        定型フォームを選択して保存すると、詳細な記入例が表示されます。
+    article/addon/form_table:
+      form_id: |-
+        一覧を絞り込むための定型フォームを指定します。
+      node_id: |-
+        一覧を絞り込むための記事フォルダーを指定します。
+    article/addon/map_search:
+      form_id: |-
+        一覧を絞り込むための定型フォームを指定します。
+      node_id: |-
+        一覧を絞り込むための記事フォルダーを指定します。
+      map_search_options:
+        検索フォームで使用する項目名と選択肢を設定します。
+        選択肢は改行区切りで入力します。
+    article/addon/map_search_result:
+      map_html: |-
+        検索結果の地図部分のHTMLを記述することが可能です。
+        以下のテンプレートが使用できます。
+        #{sidebar} 地図と連動するサイドバーを表示します。
+        #{canvas} 地図を表示します。
+        #{filters} 種類を絞り込んで表示します。

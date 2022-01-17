@@ -1,4 +1,6 @@
 class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
+  attr_accessor :resource_url
+
   field :html_tag, type: String
   field :html_additional_attr, type: String, default: ''
   belongs_to :file, class_name: 'SS::File'
@@ -72,7 +74,47 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     h.join(",")
   end
 
+  def import_csv_cell(value)
+    return if value == file.try(:full_url)
+    return self.file_id = nil if value.blank?
+    return self.file_id = nil unless validate_resouce_url(value)
+
+    import_url_resource(value)
+  end
+
+  def import_url_resource(url)
+    require 'open-uri'
+
+    URI.open(url) do |f|
+      attributes = {
+        model: 'ss/temp_file',
+        filename: ::File.basename(value),
+        content_type: f.content_type,
+        user_id: @cur_user.try(:id),
+        site_id: @cur_site.try(:id),
+      }
+      download_file = SS::File.create_empty!(attributes) do |new_file|
+        ::FileUtils.copy(f.path, new_file.path)
+        new_file.sanitizer_copy_file
+      end
+      self.file_id = download_file.id
+    end
+  end
+
+  def export_csv_cell
+    file.try(:full_url)
+  end
+
+  def search_values(values)
+    return false unless values.instance_of?(Array)
+    (values & [file_label, file.try(:name), file.try(:full_url)]).present?
+  end
+
   private
+
+  def validate_resouce_url(value)
+    /\Ahttps?:\/\//.match?(value) && Addressable::URI.parse(value) rescue false
+  end
 
   def validate_value
     return if column.blank?
@@ -280,6 +322,23 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
       when I18n.t("cms.column_file_upload.banner.file_label")
         self.file_label = value
       end
+    end
+  end
+
+  class << self
+    def form_example_layout
+      h = []
+      h << %({% if value.file %})
+      h << %(  {% if value.image? %})
+      h << %(    <a href="{{ value.file.url }}">)
+      h << %(      <img src="{{ value.file.thumb_url }}")
+      h << %(           alt="{{ value.image_text | default: value.file.humanized_name }}")
+      h << %(           title="{{ value.file.basename }}"></a>)
+      h << %(  {% else %})
+      h << %(    <a href="{{ value.file.url }}">{{ value.attachment_text | default: value.file.humanized_name }}</a>)
+      h << %(  {% endif %})
+      h << %({% endif %})
+      h.join("\n")
     end
   end
 end

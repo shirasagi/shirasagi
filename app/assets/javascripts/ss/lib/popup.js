@@ -16,8 +16,10 @@ this.SS_Popup = (function () {
 
     // tippy default settings
     tippy.setDefaultProps({
+      interactive: true,
+      maxWidth: 'min(680px,90vw)',
       theme: 'light-border ss-popup',
-      trigger: 'click'
+      trigger: 'click',
     });
   };
 

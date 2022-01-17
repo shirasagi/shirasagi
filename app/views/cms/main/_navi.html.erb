@@ -34,7 +34,6 @@
     <h2><%= link_to t("mongoid.models.inquiry/answer"), inquiry_site_answers_path, class: "icon-conv" %></h2>
   <% end %>
 
-  <h2><%= link_to t("cms.site_config"), cms_site_path, class: "icon-conf" %></h2>
   <% if Cms::Node.allowed?(:import, @cur_user, site: @cur_site, node: @cur_node, owned: true) %>
     <% if @cur_node %>
       <h2><%= link_to t("cms.import_page"), node_import_path, class: "icon-conf" %></h2>
@@ -42,7 +41,6 @@
       <h2><%= link_to t("cms.import_node"), cms_import_path, class: "icon-conf" %></h2>
     <% end %>
   <% end %>
-  <h2><%= link_to t("cms.all_contents"), cms_all_contents_path, class: "icon-conf" %></h2>
 
   <% if Cms::Node.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
     <h2><%= link_to t("cms.generate_node"), cms_generate_nodes_path, class: "icon-write" %></h2>
@@ -50,11 +48,15 @@
   <% if Cms::Page.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
     <h2><%= link_to t("cms.generate_page"), cms_generate_pages_path, class: "icon-write" %></h2>
   <% end %>
-  <% if History::Trash.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-    <h2><%= link_to History::Trash.model_name.human, history_cms_trashes_path, class: "icon-trash" %></h2>
-  <% end %>
   <% if Cms::Command.allowed?(:use, @cur_user, site: @cur_site, node: @cur_node) %>
     <h2><%= link_to t("cms.command"), cms_command_path, class: "icon-write" %></h2>
+  <% end %>
+
+  <h2><%= link_to t("cms.all_contents"), cms_all_contents_path, class: "icon-write" %></h2>
+  <h2><%= link_to t("cms.site_config"), cms_site_path, class: "icon-conf" %></h2>
+
+  <% if History::Trash.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+    <h2><%= link_to History::Trash.model_name.human, history_cms_trashes_path, class: "icon-trash" %></h2>
   <% end %>
 </nav>
 
