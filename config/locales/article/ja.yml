@@ -9,13 +9,11 @@ ja:
   modules:
     article: 記事
     addons:
-      article/form_table: 定型フォーム設定
       article/map_search: 検索設定
       article/map_search_result: 検索結果
 
   cms:
     nodes:
-      article/form_table: 定型フォームの表出力
       article/map_search: 地図検索
       article/page: 記事リスト
     parts:
@@ -49,9 +47,6 @@ ja:
       article/node/page: 記事リスト
       article/part/node: 記事リスト
     attributes:
-      article/addon/form_table:
-        form_id: 定型フォーム
-        node_id: 記事フォルダー
       article/addon/map_search:
         form_id: 定型フォーム
         node_id: 記事フォルダー
@@ -66,17 +61,6 @@ ja:
       article/page/import_job: 記事ページインポート
 
   tooltip:
-    article/node/form_table:
-      html: |-
-        定型フォームのHTMLを Liquid 形式で設定します。
-        {{ page.name }} ... ページのタイトルを表示します。
-        {{ page.values["項目名"] }} ... 項目の値を表示します。
-        定型フォームを選択して保存すると、詳細な記入例が表示されます。
-    article/addon/form_table:
-      form_id: |-
-        一覧を絞り込むための定型フォームを指定します。
-      node_id: |-
-        一覧を絞り込むための記事フォルダーを指定します。
     article/addon/map_search:
       form_id: |-
         一覧を絞り込むための定型フォームを指定します。
