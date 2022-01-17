@@ -51,6 +51,7 @@ module Jmaxml::Addon::Trigger::Tsunami
       else
         kind_code = ''
       end
+      next if kind_code.blank?
       next unless sub_types.include?(kind_code)
 
       area_codes << area_code
