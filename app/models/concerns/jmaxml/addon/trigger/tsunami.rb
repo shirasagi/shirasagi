@@ -38,6 +38,9 @@ module Jmaxml::Addon::Trigger::Tsunami
       region = target_regions.site(site).where(code: area_code).first
       next if region.blank?
 
+      # Category/Kind/Code の詳細については、
+      # 気象庁防災情報XMLフォーマット 技術情報 (http://xml.kishou.go.jp/tec_material.html) の
+      # 個別コード表 (http://xml.kishou.go.jp/jmaxml_20211224_Code.zip) に含まれる『地震火山関連コード表.xls』のシート "14" を参照
       kind_code = REXML::XPath.first(item, 'Category/Kind/Code/text()').to_s.strip
       case kind_code
       when '52', '53'
