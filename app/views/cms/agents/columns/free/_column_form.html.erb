@@ -56,6 +56,11 @@
         <%= link_to t('ss.links.upload'), cms_apis_temp_files_path(owner_item_id: page.id, owner_item_type: @model.to_s), class: "ajax-box btn btn-file-upload" %>
       <% end %>
     </span>
+    <div class="upload-file-order">
+      <%= button_tag t('ss.buttons.file_name_order'), { type: :button, class: "btn file-order-btn btn-active", value: "name" } %>
+      <%= button_tag t('ss.buttons.file_upload_order'), { type: :button, class: "btn file-order-btn", value: "upload" } %>
+      <%= @model.tt :file_order %>
+    </div>
     <span class="upload-menu-select">
       <%= link_to t("sns.user_file"), cms_apis_user_files_path(cid: @cur_node || '-'), class: "ajax-box btn btn-file-upload" %>
       <%= link_to t("cms.file"), cms_apis_files_path(cid: @cur_node || '-'), class: "ajax-box btn btn-file-upload" %>
@@ -149,5 +154,21 @@
       var unique_id = $('#unique_id').val();
       insertContent(unique_id, text);
     });
+
+    $('.file-order-btn').on('click', function() {
+      var selectedVal = $(this).val();
+      var $filesEl = $('.file-view').sort(function(a, b) {
+        if (selectedVal === 'upload') {
+          a = $(a).attr('id').replace(/[^0-9]/g, '');
+          b = $(b).attr('id').replace(/[^0-9]/g, '');
+        } else {
+          a = $(a).attr('data-name');
+          b = $(b).attr('data-name');
+        }
+        return (a > b ? 1 : -1);
+      });
+
+      $('#selected-files').append($filesEl);
+    })
   <% end %>
 <% end %>

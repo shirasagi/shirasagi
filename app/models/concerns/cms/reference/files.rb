@@ -4,7 +4,6 @@ module Cms::Reference::Files
 
   included do
     embeds_ids :files, class_name: "SS::File"
-    field :file_order, type: String
     permit_params file_ids: []
 
     define_model_callbacks :clone_files
@@ -82,10 +81,6 @@ module Cms::Reference::Files
     files.each do |file|
       file.remove_public_file
     end
-  end
-
-  def file_order_options
-    [ [I18n.t("cms.options.file.name"), "name"], [I18n.t("cms.options.file.upload"), "upload"] ]
   end
 
   private

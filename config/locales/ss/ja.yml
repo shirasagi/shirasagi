@@ -184,6 +184,8 @@ ja:
       file_histories: ファイル履歴
       translate: 翻訳
       replace_save: 差し替え保存
+      file_name_order: 名前順
+      file_upload_order: アップロード順
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: 削除してよろしいですか？
