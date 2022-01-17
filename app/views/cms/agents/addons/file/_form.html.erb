@@ -29,6 +29,12 @@
       <span class="upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
     </div>
 
+    <div class="upload-file-order">
+      <%= button_tag t('ss.buttons.file_name_order'), { type: :button, class: "btn file-order-btn", value: "name" } %>
+      <%= button_tag t('ss.buttons.file_upload_order'), { type: :button, class: "btn file-order-btn", value: "upload" } %>
+      <%= @model.tt :file_order %>
+    </div>
+
     <div id="selected-files">
       <% @item.files.each do |file| %>
         <%= render "ss/crud/ajax_files/file_view", file: file %>
@@ -68,4 +74,20 @@
     %>
     SS_AjaxFile.addFileResizing(<%== opts.to_json %>);
   <% end %>
+
+  $('.file-order-btn').on('click', function() {
+    var selectedVal = $(this).val();
+    var $filesEl = $('.file-view').sort(function(a, b) {
+      if (selectedVal === 'upload') {
+        a = $(a).attr('id').replace(/[^0-9]/g, '');
+        b = $(b).attr('id').replace(/[^0-9]/g, '');
+      } else {
+        a = $(a).attr('data-name');
+        b = $(b).attr('data-name');
+      }
+      return (a > b ? 1 : -1);
+    });
+
+    $('#selected-files').append($filesEl);
+  })
 <% end %>
