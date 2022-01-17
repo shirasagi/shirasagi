@@ -65,6 +65,12 @@
       <span class="column-value-upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
     </div>
 
+    <div class="column-upload-file-order">
+      <%= button_tag t('ss.buttons.file_name_order'), { type: :button, class: "btn column-file-order-btn btn-active", value: "name" } %>
+      <%= button_tag t('ss.buttons.file_upload_order'), { type: :button, class: "btn column-file-order-btn", value: "upload" } %>
+      <%= @model.tt :file_order %>
+    </div>
+
     <div class="column-value-files<% if files.blank? %> hide<% end %>">
       <% if files.present? %>
         <% files.each do |file| %>
@@ -149,5 +155,22 @@
       var unique_id = $('#unique_id').val();
       insertContent(unique_id, text);
     });
+
+    $('.column-file-order-btn').on('click', function() {
+      var selectedVal = $(this).val();
+      var $filesEl = $('.file-view').sort(function(a, b) {
+        if (selectedVal === 'upload') {
+          console.log($(a).attr('data-file-id'))
+          a = $(a).attr('data-file-id')
+          b = $(b).attr('data-file-id')
+        } else {
+          a = $(a).attr('data-name');
+          b = $(b).attr('data-name');
+        }
+        return (a > b ? 1 : -1);
+      });
+
+      $('.column-value-files').append($filesEl);
+    })
   <% end %>
 <% end %>
