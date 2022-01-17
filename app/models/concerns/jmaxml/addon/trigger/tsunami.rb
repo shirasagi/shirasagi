@@ -40,7 +40,7 @@ module Jmaxml::Addon::Trigger::Tsunami
 
       kind_code = REXML::XPath.first(item, 'Category/Kind/Code/text()').to_s.strip
       case kind_code
-      when '52'
+      when '52', '53'
         kind_code = 'special_alert'
       when '51'
         kind_code = 'alert'
@@ -49,6 +49,15 @@ module Jmaxml::Addon::Trigger::Tsunami
       when '71'
         kind_code = 'forecast'
       else
+        # この else 節では以下のコードが想定されている。
+        # 以下のコードは、解除もしくはダウングレードを示すコードなので無視する。
+        #
+        # 00: 津波なし
+        # 50: 警報解除
+        # 60: 津波注意報解除
+        # 72: 津波注意報解除、津波予報（若干の海面変動）への切替
+        # 73: 大津波警報または津波警報の解除、津波予報（若干の海面変動）への切替
+        #
         kind_code = ''
       end
       next if kind_code.blank?
