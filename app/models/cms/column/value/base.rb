@@ -13,7 +13,7 @@ class Cms::Column::Value::Base
   define_model_callbacks :parent_update
   define_model_callbacks :parent_destroy
 
-  attr_accessor :cur_user, :cur_site
+  attr_accessor :cur_user, :cur_site, :link_check_user
   attr_reader :in_wrap, :link_errors, :origin_id
 
   embedded_in :page, inverse_of: :column_values
@@ -25,8 +25,6 @@ class Cms::Column::Value::Base
   after_initialize :copy_column_settings, if: ->{ new_record? }
 
   validate :validate_value
-
-  attr_accessor :link_check_user
 
   validate :validate_link_check, on: :link
 

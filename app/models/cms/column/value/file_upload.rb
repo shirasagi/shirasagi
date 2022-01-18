@@ -85,7 +85,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   def import_url_resource(url)
     require 'open-uri'
 
-    URI.open(url) do |f|
+    URI.parse(url).open do |f|
       attributes = {
         model: 'ss/temp_file',
         filename: ::File.basename(value),
@@ -94,7 +94,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
         site_id: @cur_site.try(:id),
       }
       download_file = SS::File.create_empty!(attributes) do |new_file|
-        ::FileUtils.copy(f.path, new_file.path)
+        IO.copy_stream(f, new_file.path)
         new_file.sanitizer_copy_file
       end
       self.file_id = download_file.id

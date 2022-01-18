@@ -10,8 +10,9 @@ class Article::Extensions::MapSearchOptions < Array
 
     def mongoize(object)
       case object
-      when self.class then object.mongoize
-      when Array then
+      when self.class
+        object.mongoize
+      when Array
         ary = object.dup
         ary = ary.map { |v| v.deep_stringify_keys }
         ary = ary.map do |options|
