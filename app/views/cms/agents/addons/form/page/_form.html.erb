@@ -7,5 +7,5 @@
   <p><%= t('cms.form_not_selected') %></p>
 <% else %>
   <% addon[:head] = @item.form.name %>
-  <%= render 'cms/forms/columns_form', f: f, addon_id: addon[:id], form: @item.form, column_values: @item.column_values %>
+  <%= render 'cms/form/forms/columns_form', f: f, addon_id: addon[:id], form: @item.form, column_values: @item.column_values %>
 <% end %>

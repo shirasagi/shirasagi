@@ -1,3 +1,8 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+  addon[:display_body] = "show" if @item.page_layout_id
+%>
 <dl class="see">
   <dt><%= @model.t :page_layout_id %></dt>
   <dd><%= tryb { @item.page_layout.name }%></dd>

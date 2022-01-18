@@ -1,0 +1,16 @@
+<%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
+  <%= error_messages_for :item %>
+
+  <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
+
+  <%= render template: "_form", locals: { f: f } %>
+
+  <div class="form-db-foot position-fixed">
+    <footer class="send p-0">
+      <%= f.submit t("ss.buttons.save"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.saving") } %>
+      <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+    </footer>
+  </div>
+<% end %>
+
+<%= jquery do %> SS.confirmUnloading(); <% end %>

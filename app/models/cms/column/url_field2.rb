@@ -56,4 +56,8 @@ class Cms::Column::UrlField2 < Cms::Column::Base
   def form_check_enabled?
     super || (label_max_length.present? && label_max_length > 0) || (link_max_length.present? && link_max_length > 0)
   end
+
+  def db_form_type
+    { type: 'textarea', rows: 2 }
+  end
 end

@@ -1,0 +1,21 @@
+<%= f.fields_for :column_values do |g| %>
+  <% if column_values.present? %>
+    <% column_values.order_by(order: 1, name: 1).each do |column_value| %>
+      <% column = column_value.column %>
+      <% next if column.blank? %>
+      <%= render column.column_form_partial_path, f: g, column: column, value: column_value, controller: true %>
+    <% end %>
+  <% else %>
+    <% form.init_columns.order_by(order: 1, id: 1).each do |init_column| %>
+      <% column = init_column.column %>
+      <%= render column.column_form_partial_path, f: g, column: column, value: '', controller: true %>
+    <% end %>
+  <% end %>
+
+  <%= render "cms/form/forms/columns_form_palette", form: form %>
+<% end %>
+
+<%= jquery do %>
+  Cms_TemplateForm.bind(<%== "##{addon_id}".to_json %>, { type: 'entry' });
+  Cms_Form.activateSyntaxChecks();
+<% end %>

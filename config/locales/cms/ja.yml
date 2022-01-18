@@ -151,6 +151,7 @@ ja:
       send_verify_mail: 登録確認メールを送信する
       manage_columns: 入力項目を管理する
       manage_init_columns: 初期ブロックを管理する
+      manage_db: DB管理
       save_as_branch: 差し替え保存
       ignore_alerts_and_save_as_branch: 警告を無視して差替保存
       column_add_list: リストを追加する
@@ -181,7 +182,8 @@ ja:
         - "リンク切れを修正した場合、再度リンクチェックを実行し、新しいレポートを作成してください。"
       check_links_report_annotation: ※リンクチェックの実行タイミングや通信先サーバーの負荷状況によっては誤検出の場合があります。
       check_links_report_created: "%{time} 時点"
-      confirm_column_deletion_whose_form_is_in_use: "定型フォームは利用中のため入力項目を削除するとページが正しく表示されなくなる場合があります。それでも削除する場合はチェックしてください。"
+      delete_forum_column: 入力項目を削除する
+      confirm_column_deletion_whose_form_is_in_use: "定型フォームは利用中のため入力項目を削除するとページが正しく表示されなくなる場合があります。"
     apis:
       categories:
         index: カテゴリーを選択する
@@ -673,6 +675,7 @@ ja:
       cms/loop_setting: ループHTML
       cms/command: コマンド
       cms/form: 定型フォーム
+      cms/form_db: 定型フォーム - DB
       cms/init_column: 初期ブロック
       cms/column/base: 入力項目
       cms/column/text_field: 一行入力
@@ -1002,6 +1005,13 @@ ja:
         column_ids: 入力項目
         init_column_ids: 初期ブロック
         sub_type: 目的
+      cms/form_db:
+        name: 名前
+        order: 並び順
+        form_id: 定型フォーム
+        node_id: 記事フォルダー
+        import_url: インポートURL
+        size: 登録件数
       cms/addon/form/node:
         st_form_ids: 定型フォーム設定
       cms/addon/form/page:
@@ -1015,6 +1025,7 @@ ja:
       cms/column/base:
         route: 属性
         name: 名前
+        value: 値
         order: 並び順
         required: 必須入力
         tooltips: ツールチップ
@@ -1224,6 +1235,7 @@ ja:
       replace_word: 使用が好ましくない単語が含まれています。
       replace_word_validation: に使用が好ましくない単語が含まれています。
       alt_is_included_in_filename: 代替テキストがファイル名に含まれています。
+      cms_form_db_required_node: データの登録には記事フォルダーの設定が必要です。
       syntax_check_detail:
         set_img_alt:
           - 画像の内容を示す代替テキストを設定してください。
@@ -2091,9 +2103,9 @@ ja:
 
         使用例：
           &lt;dl>
-            &lt;dt>項目&lt;/dt>
+            &lt;dt>項目1&lt;/dt>
             &lt;dd>{{ values["項目名1"] }}&lt;/dd>
-            &lt;dt>項目&lt;/dt>
+            &lt;dt>項目2&lt;/dt>
             &lt;dd>{{ values["項目名2"] }}&lt;/dd>
           &lt;/dl>
 
@@ -2132,32 +2144,12 @@ ja:
         - 公開側のHTMLタグを選択します。
       html_additional_attr:
         - 公開側のHTMLタグの追加属性を指定します。
-      layout: |-
-        入力項目のHTMLを設定します。
-        未設定の場合、既定の HTML を表示します。
-
-        使用例：
-          {% if value.date %}
-            &lt;span>{{ value.date | date: "%Y年%1m月%1d日" }}&lt;/span>
-          {% endif %}
 
     cms/column/url_field:
       html_tag:
         - 公開側のHTMLタグを選択します。
       html_additional_attr:
         - 公開側のHTMLタグの追加属性を指定します。
-      layout: |-
-        入力項目のHTMLを設定します。
-        未設定の場合、既定の HTML を表示します。
-
-        使用例：
-          {% if value.link %}
-            {% if value.label %}
-              &lt;a href="{{ value.link }}">{{ value.label }}&lt;/a>
-            {% else %}
-              &lt;a href="{{ value.link }}">{{ value.link }}&lt;/a>
-            {% endif %}
-          {% endif %}
 
     cms/column/url_field2:
       html_tag:
@@ -2172,18 +2164,6 @@ ja:
         - リンクURLの最大長を入力します。
       link_place_holder:
         - リンクURLのプレースホルダーを入力します。
-      layout: |-
-        入力項目のHTMLを設定します。
-        未設定の場合、既定の HTML を表示します。
-
-        使用例：
-          {% if value.link %}
-            {% if value.label %}
-              &lt;a href="{{ value.link }}">{{ value.label }}&lt;/a>
-            {% else %}
-              &lt;a href="{{ value.link }}">{{ value.link }}&lt;/a>
-            {% endif %}
-          {% endif %}
 
     cms/column/select:
       place_holder:
@@ -2198,18 +2178,6 @@ ja:
         - リンクテキストの最大長を入力します。
       label_place_holder:
         - リンクテキストのプレースホルダーを入力します。
-      layout: |-
-        入力項目のHTMLを Liquid 形式で設定します。
-        未設定の場合、既定の HTML を表示します。
-
-        使用例（ファイルアップロードの場合）：
-          {% if value.file %}
-            {% if value.image? %}
-              &lt;a href="{{ value.file.url }}">&lt;img src="{{ value.file.thumb_url }}" alt="{{ value.image_text | default: value.file.humanized_name }}" title="{{ value.file.basename }}">&lt;/a>
-            {% else %}
-              &lt;a href="{{ value.file.url }}">{{ value.attachment_text | default: value.file.humanized_name }}&lt;/a>
-            {% endif %}
-          {% endif %}
 
     cms/addon/column/text_like:
       max_length:
@@ -2231,17 +2199,7 @@ ja:
 
         使用例：
           {% if value.value %}
-            &lt;h2>{{ value.value }}&lt;/h2>
-          {% endif %}
-
-    cms/column/text_area:
-      layout: |-
-        入力項目のHTMLを設定します。
-        未設定の場合、既定の HTML を表示します。
-
-        使用例：
-          {% if value.value %}
-            &lt;p>{{ value.value | newline_to_br }}&lt;/p>
+          &nbsp; {{ value.value }}
           {% endif %}
 
     cms/column/list:

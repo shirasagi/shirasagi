@@ -9,7 +9,7 @@
     </li>
   <% end %>
 
-  <%= content_tag column.list_type, class: "list list-#{column.list_type}" do %>
+  <%= content_tag column.list_type, class: "list list-#{column.list_type} mt-0" do %>
     <% if lists.present? %>
       <% lists.each do |list| %>
         <% render_item.call(list) %>

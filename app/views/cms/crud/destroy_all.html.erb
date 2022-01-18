@@ -8,7 +8,7 @@
 
 <%= form_with url: request.url, method: :delete do |f| %>
   <%= hidden_field_tag "destroy_all", true %>
-  <div class="addon-views"></div>
+  <div class="addon-views">
     <div class="addon-view" id="addon-basic">
       <div class="addon-head">
         <h2><%= t("ss.confirm.target_to_delete") %></h2>

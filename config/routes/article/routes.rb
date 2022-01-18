@@ -61,6 +61,7 @@ Rails.application.routes.draw do
     resources :pages, concerns: [
       :deletion, :copy, :move, :lock, :download_all, :import, :command, :opendata_ref, :contains_urls, :tag, :michecker
     ]
+    resources :map_searches, only: [:index]
   end
 
   content "article" do
@@ -75,6 +76,9 @@ Rails.application.routes.draw do
   node "article" do
     get "page/(index.:format)" => "public#index", cell: "nodes/page"
     get "page/rss.xml" => "public#rss", cell: "nodes/page", format: "xml"
+    get "map_search/(index.:format)" => "public#index", cell: "nodes/map_search"
+    get "map_search/(map.:format)" => "public#map", cell: "nodes/map_search"
+    get "map_search/(result.:format)" => "public#result", cell: "nodes/map_search"
   end
 
   part "article" do
@@ -85,5 +89,4 @@ Rails.application.routes.draw do
   page "article" do
     get "page/:filename.:format" => "public#index", cell: "pages/page"
   end
-
 end

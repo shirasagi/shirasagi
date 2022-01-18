@@ -1,6 +1,6 @@
 <%= jquery do %>
-$('#item-form footer.send').prepend(
-  '<div class="footer-notice"><%= I18n.t("cms.confirm.check_accessibility_manually") %></div>'
-);
+  $('#item-form footer.send').prepend(
+    '<div class="footer-notice"><%= I18n.t("cms.confirm.check_accessibility_manually") %></div>'
+  );
 <% end %>
 <%= render template: 'ss/crud/edit' %>
