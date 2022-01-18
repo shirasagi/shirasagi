@@ -144,7 +144,7 @@ module Map::MapHelper
 
       s << 'var opts = {'
       s << '  markers: ' + (markers.try(:to_json) || '[]') + ','
-      s << '  markerClusterer: true,' if opts[:markerClusterer]
+      s << '  markerCluster: true,' if opts[:markerCluster]
       s << '};'
       s << 'Facility_Search.render("' + selector + '", opts);'
     end

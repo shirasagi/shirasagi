@@ -1,7 +1,7 @@
 <%= javascript_include_tag "/assets/js/jquery.colorbox.js" %>
 <%= stylesheet_link_tag "/assets/css/colorbox/colorbox.css", media: 'all' %>
 
-<%= render_facility_search_map "#map-canvas", markers: @markers, markerClusterer: true, site: @cur_site, preview: @preview %>
+<%= render_facility_search_map "#map-canvas", markers: @markers, markerCluster: true, site: @cur_site, preview: @preview %>
 <%= render "upper" %>
 
 <%
