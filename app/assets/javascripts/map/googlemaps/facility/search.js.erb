@@ -36,7 +36,7 @@ this.Facility_Search = (function () {
         return $("#map-sidebar .column").removeClass("current");
       });
     };
-    Googlemaps_Map.setMarkers(markers);
+    Googlemaps_Map.setMarkers(markers, { markerClusterer: opts['markerClusterer'] });
     //setup sidebar
     $("#map-sidebar .column .click-marker").on("click", function () {
       var dataID;

@@ -144,9 +144,9 @@ module Map::MapHelper
 
       s << 'var opts = {'
       s << '  markers: ' + (markers.try(:to_json) || '[]') + ','
+      s << '  markerClusterer: true,' if opts[:markerClusterer]
       s << '};'
       s << 'Facility_Search.render("' + selector + '", opts);'
-      s << 'Googlemaps_Map.renderMarkerCluster();' if opts[:markerClusterer]
     end
 
     jquery { s.join("\n").html_safe }
