@@ -124,7 +124,7 @@ this.Googlemaps_Map = (function () {
     }
   };
 
-  Googlemaps_Map.setMarkers = function (markers, opts = {}) {
+  Googlemaps_Map.setMarkers = function (markers, opts) {
     var markerBounds, zoomChangeBoundsListener;
     Googlemaps_Map.markers = markers;
     markerBounds = new google.maps.LatLngBounds();
