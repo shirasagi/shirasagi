@@ -16,15 +16,18 @@ class Faq::Agents::Nodes::SearchController < ApplicationController
       return
     end
     @category = params[:category].try { |cate| cate.numeric? ? cate.to_i : nil }
+    @category_ids = params[:category_ids].select(&:numeric?).map(&:to_i) rescue []
     @keyword = params[:keyword].to_s
     @url = mobile_path? ? ::File.join(@cur_site.mobile_url, @cur_node.filename) : @cur_node.url
 
     @query = {}
     @query[:category] = @category.blank? ? {} : { :category_ids.in => [ @category ] }
+    @query[:category_ids] = @category_ids.blank? ? {} : { :category_ids.in => @category_ids }
     @query[:keyword] = @keyword.blank? ? {} : @keyword.split(/[\s　]+/).uniq.compact.map(&method(:make_query))
 
     @items = pages.
       and(@query[:category]).
+      and(@query[:category_ids]).
       and(@query[:keyword]).
       order_by(@cur_node.sort_hash).
       page(params[:page]).
