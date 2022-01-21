@@ -58,3 +58,7 @@ ja:
       integration_partial_node:
         - 統合対象となるフォルダーを選択します。
         - 統合後は削除されます。
+    category/addon/summary_page:
+      summary_page_id:
+        - サマリーとなるページを設定できます。
+        - 設定したページは、Liquid形式のループHTMLより参照できます。
