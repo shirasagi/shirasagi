@@ -9,6 +9,7 @@ ja:
     addons:
       category/category: カテゴリー
       category/setting: カテゴリー
+      category/summary_page: サマリーページ
 
   cms:
     nodes:
@@ -32,6 +33,8 @@ ja:
         partial_node: フォルダー
         integration_master_node: 統合元フォルダー
         integration_partial_node: 対象フォルダー
+      category/addon/summary_page:
+        summary_page_id: サマリーページ
 
   errors:
     messages:

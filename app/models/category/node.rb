@@ -1,6 +1,7 @@
 module Category::Node
   class Base
     include Cms::Model::Node
+    include Category::Addon::SummaryPage
     include Cms::Addon::ReadableSetting
 
     class_variable_set(:@@_requires_read_permission_to_read, false)
@@ -12,6 +13,8 @@ module Category::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
+    include Cms::Addon::Thumb
+    include Category::Addon::SummaryPage
     include Cms::Addon::NodeList
     include Cms::Addon::ChildList
     include Cms::Addon::Release
@@ -30,6 +33,8 @@ module Category::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
+    include Cms::Addon::Thumb
+    include Category::Addon::SummaryPage
     include Event::Addon::PageList
     include Cms::Addon::Release
     include Cms::Addon::DefaultReleasePlan

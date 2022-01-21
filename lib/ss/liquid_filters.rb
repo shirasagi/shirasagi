@@ -133,4 +133,12 @@ module SS::LiquidFilters
   def sanitize(input)
     ApplicationController.helpers.sanitize(input.to_s)
   end
+
+  def public_list(input, limit = 3)
+    node = input.try(:delegatee)
+    return unless node
+    return unless node.class.include?(Cms::Model::Node)
+    criteria = Cms::Page.public_list(site: node.site, node: node)
+    criteria.limit(limit).to_a
+  end
 end
