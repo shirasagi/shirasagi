@@ -76,18 +76,6 @@
   <% end %>
 
   $('.file-order-btn').on('click', function() {
-    var selectedVal = $(this).val();
-    var $filesEl = $('.file-view').sort(function(a, b) {
-      if (selectedVal === 'upload') {
-        a = $(a).attr('id').replace(/[^0-9]/g, '');
-        b = $(b).attr('id').replace(/[^0-9]/g, '');
-      } else {
-        a = $(a).attr('data-name');
-        b = $(b).attr('data-name');
-      }
-      return (a > b ? 1 : -1);
-    });
-
-    $('#selected-files').append($filesEl);
+    new Cms_Upload_File_Order($(this))
   })
 <% end %>

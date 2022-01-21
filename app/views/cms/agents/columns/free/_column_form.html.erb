@@ -157,20 +157,7 @@
     });
 
     $('.column-file-order-btn').on('click', function() {
-      var selectedVal = $(this).val();
-      var $filesEl = $('.file-view').sort(function(a, b) {
-        if (selectedVal === 'upload') {
-          console.log($(a).attr('data-file-id'))
-          a = $(a).attr('data-file-id')
-          b = $(b).attr('data-file-id')
-        } else {
-          a = $(a).attr('data-name');
-          b = $(b).attr('data-name');
-        }
-        return (a > b ? 1 : -1);
-      });
-
-      $('.column-value-files').append($filesEl);
+      new Cms_Upload_File_Order($(this))
     })
   <% end %>
 <% end %>
