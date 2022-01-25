@@ -55,6 +55,14 @@ module Opendata::Addon::Harvest::Dataset
     shirasagi_categories
   end
 
+  def harvest_shirasagi_estat_categories
+    shirasagi_estat_categories = harvest_imported_attributes.dig("estat_categories").to_a
+    if harvest_api_type != "shirasagi_scraper"
+      shirasagi_estat_categories = shirasagi_estat_categories.map { |c| c["name"] }
+    end
+    shirasagi_estat_categories
+  end
+
   def harvest_shirasagi_areas
     shirasagi_areas = harvest_imported_attributes.dig("areas").to_a
     if harvest_api_type != "shirasagi_scraper"

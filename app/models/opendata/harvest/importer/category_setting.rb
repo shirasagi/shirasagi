@@ -76,6 +76,7 @@ class ::Opendata::Harvest::Importer::CategorySetting
     ckan_groups = imported_item.harvest_ckan_groups
     ckan_tags = imported_item.harvest_ckan_tags
     shirasagi_categories = imported_item.harvest_shirasagi_categories
+    shirasagi_estat_categories = imported_item.harvest_shirasagi_estat_categories
     shirasagi_areas = imported_item.harvest_shirasagi_areas
 
     conditions.each do |cond|
@@ -118,6 +119,14 @@ class ::Opendata::Harvest::Importer::CategorySetting
       elsif cond["type"] == "shirasagi_category" && cond["operator"] == "match"
 
         return false if !shirasagi_categories.include?(cond["value"])
+
+      elsif cond["type"] == "shirasagi_estat_category" && cond["operator"] == "unmatch"
+
+        return false if shirasagi_estat_categories.include?(cond["value"])
+
+      elsif cond["type"] == "shirasagi_estat_category" && cond["operator"] == "match"
+
+        return false if !shirasagi_estat_categories.include?(cond["value"])
 
       elsif cond["type"] == "shirasagi_area" && cond["operator"] == "unmatch"
 
