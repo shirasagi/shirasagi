@@ -9,7 +9,7 @@ class Sys::Auth::OpenIdConnect::TokenResponse
   validates :sso_token, presence: true
   validates :session_nonce, presence: true
 
-  validates_with Sys::Auth::OpenIdConnect::JwtValidator
+  validates_with Sys::Auth::OpenIdConnect::JWTValidator
 
   def id
     claim = (cur_item.claims.presence || cur_item.default_claims).find { |claim| jwt[claim].present? }

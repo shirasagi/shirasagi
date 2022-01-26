@@ -68,6 +68,16 @@ ja:
         reserved: "予約日時：%{time}"
         delivered: "配信日時：%{time}"
         term: "期間：%{term}"
+      oauth2/application:
+        header:
+          name: アプリケーション種別
+          text: 説明
+        confidential:
+          name: クライアント
+          text: OAuth 2.0 クライアントを作成します。ユーザーのデータにアクセスするために使用します。
+        service:
+          name: サービス
+          text: OAuth 2.0 サービス・アプリケーションを作成します。サーバー間での認証を有効にします。
     navi:
       readable: 閲覧一覧
       editable: 管理一覧
@@ -548,6 +558,10 @@ ja:
       ss/partner_site: 提携サイト設定
       ss/inquiry_setting: お問い合わせフォーム設定
       ss/maintenance_mode: メンテナンスモード
+      ss/oauth2/sys_permission: システム権限
+      ss/oauth2/cms_permission: CMS権限
+      ss/oauth2/gws_permission: グループウェア権限
+      ss/oauth2/webmail_permission: メール権限
 
   activemodel:
     attributes:
@@ -581,6 +595,9 @@ ja:
       ss/migration: DBマイグレーション
       ss/access_token: アクセストークン
       ss/notification: 通知
+      ss/oauth2/application/base: OAuthアプリ
+      ss/oauth2/application/confidential: クライアント
+      ss/oauth2/application/service: サービス
     errors:
       models:
         ss/model/group:
@@ -948,6 +965,18 @@ ja:
         partner_site_ids: 提携サイト
       ss/addon/inquiry_setting:
         inquiry_form_id: お問い合わせフォーム
+      ss/oauth2/application/base:
+        name: 名前
+        state: ステータス
+        permissions: 権限
+        client_id: クライアントID
+      ss/oauth2/application/confidential:
+        client_secret: クライアントシークレット
+        redirect_uris: リダイレクトURL
+      ss/oauth2/application/service:
+        public_key_type: 公開鍵種別
+        public_key: 公開鍵
+        public_key_encrypted: 公開鍵
 
   tooltip:
     ss/model/site:
@@ -1402,6 +1431,24 @@ ja:
       contrast_ratio:
         - 7以上でAAA、4.5以上でAA
         - （22ポイント以上の文字、または、18ポイント以上の太字の場合は4.5以上でAAA、3以上でAA）
+
+    ss/oauth2/application/base:
+      name:
+        - 名前を入力します。
+      state:
+        - アプリケーションが有効か無効かを選択します。
+    ss/oauth2/application/confidential:
+      redirect_uris:
+        - リダイレクトURLを入力します。複数のリダイレクトURLを入力することが可能で、複数入力する場合は URL を改行で区切ってください。
+    ss/oauth2/application/service:
+      public_key:
+        - 公開鍵をペーストしてください。サポートしているのは RSA 公開鍵のみで、DSA や楕円曲線を用いたものはサポートしていません。
+        - openssl コマンドがインストールされていれば、次のコマンドを実行することで公開鍵を作成することができます。
+        -
+        - $ openssl genrsa 2048 > private_key.pem
+        - $ openssl rsa -in private_key.pem -pubout -out public_key.pem
+        -
+        - public_key.pem が公開鍵ですので、この中身をペーストしてください。
 
   job:
     models:

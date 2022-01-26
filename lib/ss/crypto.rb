@@ -7,6 +7,10 @@ module SS::Crypto
   DEFAULT_CIPHER_TYPE = "AES-256-CBC".freeze
 
   class << self
+    def salt
+      @@salt
+    end
+
     def crypt(str, salt: nil)
       salt ||= @@salt
       Digest::MD5.hexdigest(Digest::MD5.digest(str) + salt)

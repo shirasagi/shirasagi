@@ -1,0 +1,13 @@
+<% @index_meta = proc do |item| %>
+  <span class="datetime"><%= I18n.l(item.updated, format: :picker) %></span>
+  <span class="state"><%= item.label :state %></span>
+  <span class="type">
+    <% if item.is_a?(SS::OAuth2::Application::Confidential) %>
+      <%= t("ss.views.oauth2/application.confidential.name") %>
+    <% else %>
+      <%= t("ss.views.oauth2/application.service.name") %>
+    <% end %>
+  </span>
+<% end %>
+
+<%= render template: "ss/crud/index" %>

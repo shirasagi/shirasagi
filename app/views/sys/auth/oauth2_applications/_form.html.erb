@@ -1,0 +1,7 @@
+<% if @item.is_a?(SS::OAuth2::Application::Confidential) %>
+  <%= hidden_field_tag "type", "confidential" %>
+  <%= render "form_confidential", local_assigns %>
+<% else %>
+  <%= hidden_field_tag "type", "service" %>
+  <%= render "form_service", local_assigns %>
+<% end %>

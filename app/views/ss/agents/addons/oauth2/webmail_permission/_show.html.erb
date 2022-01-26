@@ -1,0 +1,10 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = Webmail::Role.permission_names.any? { |p| @item.permissions.include?(p) } ? "show" : "hide"
+%>
+<dl class="see">
+  <dt class="wide"></dt>
+  <dd class="wide role-permissions">
+    <%= render "ss/roles/show_permissions", model: Webmail::Role %>
+  </dd>
+</dl>

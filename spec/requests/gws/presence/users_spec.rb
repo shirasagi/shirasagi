@@ -114,13 +114,143 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
   end
 
   context "token auth with gws-admin" do
-    before do
-      token = SS::OAuth2::Token.create_token!(gws_user, Gws::Role.permission_names)
-      @headers = {
-        "Authorization" => "Bearer #{token.token}"
-      }
+    context "with jwt bearer grant type" do
+      before do
+        key = OpenSSL::PKey::RSA.generate(2048)
+
+        application = SS::OAuth2::Application::Service.create!(
+          name: unique_id, permissions: Gws::Role.permission_names, state: "enabled",
+          client_id: SecureRandom.urlsafe_base64(18),
+          public_key_type: "rsa",
+          public_key_encrypted: SS::Crypto.encrypt(key.public_key.to_pem)
+        )
+
+        jwt_assertion = JSON::JWT.new(
+          # issuer
+          iss: application.client_id,
+          # subject
+          sub: gws_user.uid,
+          # scope
+          scope: Gws::Role.permission_names.join(" "),
+          # audience
+          aud: sns_login_oauth2_token_url,
+          # expires at
+          exp: 1.hour.from_now.to_i,
+          # issued at
+          iat: Time.zone.now.to_i
+        )
+        jwt_assertion = jwt_assertion.sign(key)
+
+        token_params = {
+          grant_type: SS::OAuth2::TokenRequest::JWTBearer::GRANT_TYPE,
+          assertion: jwt_assertion.to_s
+        }
+
+        post sns_login_oauth2_token_path, params: token_params
+
+        json = JSON.parse(response.body)
+        @headers = {
+          "Authorization" => "Bearer #{json["access_token"]}"
+        }
+      end
+
+      include_context "what gws presence is"
     end
 
-    include_context "what gws presence is"
+    context "with implicit grant" do
+      before do
+        # implicit flow の場合、まずはどうにかしてログインする
+        get auth_token_path
+        auth_token = JSON.parse(response.body)["auth_token"]
+        params = {
+          'authenticity_token' => auth_token,
+          'item[email]' => gws_user.email,
+          'item[password]' => "pass"
+        }
+        post sns_login_path(format: :json), params: params
+
+        # access_token を要求する
+        redirect_uri = "#{unique_url}/cb"
+        application = SS::OAuth2::Application::Confidential.create!(
+          name: unique_id, permissions: Gws::Role.permission_names, state: "enabled",
+          client_id: SecureRandom.urlsafe_base64(18), client_secret: SecureRandom.urlsafe_base64(36),
+          redirect_uris: redirect_uri
+        )
+
+        state = SecureRandom.hex(16)
+        token_params = {
+          response_type: "token",
+          client_id: application.client_id,
+          redirect_uri: redirect_uri,
+          scope: Gws::Role.permission_names.join(" "),
+          state: state
+        }
+        get sns_login_oauth2_authorize_path, params: token_params
+
+        # 同意画面（consent screen）は表示されないので、アクセストークンが応答されるはず
+        expect(response.status).to eq 302
+        fragment = Addressable::URI.parse(response.location).fragment
+        resp = Hash[URI.decode_www_form(fragment)]
+        @headers = {
+          "Authorization" => "Bearer #{resp["access_token"]}"
+        }
+      end
+
+      include_context "what gws presence is"
+    end
+
+    context "with authorization code grant" do
+      before do
+        # authorization code flow の場合、まずはどうにかしてログインする
+        get auth_token_path
+        auth_token = JSON.parse(response.body)["auth_token"]
+        params = {
+          'authenticity_token' => auth_token,
+          'item[email]' => gws_user.email,
+          'item[password]' => "pass"
+        }
+        post sns_login_path(format: :json), params: params
+
+        # access_token を要求する
+        redirect_uri = "#{unique_url}/cb"
+        application = SS::OAuth2::Application::Confidential.create!(
+          name: unique_id, permissions: Gws::Role.permission_names, state: "enabled",
+          client_id: SecureRandom.urlsafe_base64(18), client_secret: SecureRandom.urlsafe_base64(36),
+          redirect_uris: redirect_uri
+        )
+
+        state = SecureRandom.hex(16)
+        code_params = {
+          response_type: "code",
+          client_id: application.client_id,
+          redirect_uri: redirect_uri,
+          scope: Gws::Role.permission_names.join(" "),
+          state: state
+        }
+        get sns_login_oauth2_authorize_path, params: code_params
+
+        expect(response.status).to eq 302 # 現在の実装では同意画面（consent screen）は表示されない
+        location_url = Addressable::URI.parse(response.location)
+        code = location_url.query_values["code"]
+
+        authorization_code_params = {
+          grant_type: "authorization_code",
+          code: code,
+          redirect_uri: redirect_uri
+        }
+        authorization_code_headers = {
+          "Authorization" => "Basic #{Base64.encode64([ application.client_id, application.client_secret ].join(":"))}"
+        }
+        post sns_login_oauth2_token_path, params: authorization_code_params, headers: authorization_code_headers
+
+        expect(response.status).to eq 200
+        json = JSON.parse(response.body)
+        @headers = {
+          "Authorization" => "Bearer #{json["access_token"]}"
+        }
+      end
+
+      include_context "what gws presence is"
+    end
   end
 end

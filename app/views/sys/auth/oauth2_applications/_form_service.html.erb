@@ -1,0 +1,13 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :state %><%= @model.tt :state %></dt>
+  <dd><%= f.select :state, @item.state_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :client_id %><%= @model.tt :client_id %></dt>
+  <dd><%= @item.client_id %> <%= f.hidden_field :client_id %></dd>
+
+  <dt><%= @model.t :public_key %><%= @model.tt :public_key %></dt>
+  <dd><%= f.text_area :in_public_key %></dd>
+</dl>

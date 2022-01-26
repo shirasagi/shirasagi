@@ -1,0 +1,18 @@
+<div class="main-box">
+  <table class="index">
+    <thead>
+    <tr>
+      <th style="width:20%"><%= t("ss.views.oauth2/application.header.name") %></th>
+      <th><%= t("ss.views.oauth2/application.header.text") %></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% %w(confidential service).each do |type| %>
+      <tr>
+        <td><%= link_to t("ss.views.oauth2/application.#{type}.name"), url_for(action: :new, type: type) %></td>
+        <td><%= t("ss.views.oauth2/application.#{type}.text") %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>
