@@ -75,7 +75,5 @@
     SS_AjaxFile.addFileResizing(<%== opts.to_json %>);
   <% end %>
 
-  $('.file-order-btn').on('click', function() {
-    new Cms_Upload_File_Order($(this))
-  })
+  new Cms_UploadFileOrder('file', '.file-order-btn');
 <% end %>

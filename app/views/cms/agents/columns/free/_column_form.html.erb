@@ -156,8 +156,6 @@
       insertContent(unique_id, text);
     });
 
-    $('.column-file-order-btn').on('click', function() {
-      new Cms_Upload_File_Order($(this))
-    })
+    new Cms_UploadFileOrder('columsForm', '.column-file-order-btn');
   <% end %>
 <% end %>

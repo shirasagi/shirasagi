@@ -1,21 +1,21 @@
-Cms_Upload_File_Order = function ($el, options) {
-  this.$el = $el;
+Cms_UploadFileOrder = function (addonName, btnClass) {
+  this.addonName = addonName;
+  this.btnClass = btnClass;
   this.render();
 };
 
-Cms_Upload_File_Order.prototype.render = function () {
-  var selectedVal = this.$el.val();
-  var classes = this.$el.attr('class');
-  var btnClass = classes.split(" ")[1];
-
-  this.changeFileOrder(btnClass, selectedVal);
+Cms_UploadFileOrder.prototype.render = function () {
+  var _this = this;
+  $(this.btnClass).on('click', function () {
+    var selectedVal = $(this).val();
+    _this.changeFileOrder(selectedVal);
+  });
 };
 
-
-Cms_Upload_File_Order.prototype.changeFileOrder = function (btnClass, selectedVal) {
+Cms_UploadFileOrder.prototype.changeFileOrder = function (selectedVal) {
   var $filesEl = $('.file-view').sort(function (a, b) {
     if (selectedVal === 'upload') {
-      if (btnClass === 'file-order-btn') {
+      if (this.addonName === 'file') {
         a = $(a).attr('id').replace(/[^0-9]/g, '');
         b = $(b).attr('id').replace(/[^0-9]/g, '');
       } else {
@@ -29,11 +29,11 @@ Cms_Upload_File_Order.prototype.changeFileOrder = function (btnClass, selectedVa
     return a > b ? 1 : -1;
   });
 
-  this.appendOrderedFiles($filesEl, btnClass);
+  this.appendOrderedFiles($filesEl);
 };
 
-Cms_Upload_File_Order.prototype.appendOrderedFiles = function ($filesEl, btnClass) {
-  if (btnClass === 'file-order-btn') {
+Cms_UploadFileOrder.prototype.appendOrderedFiles = function ($filesEl) {
+  if (this.addonName === 'file') {
     $('#selected-files').append($filesEl);
   } else {
     $('.column-value-files').append($filesEl);
