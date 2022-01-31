@@ -81,6 +81,8 @@ ja:
       copy: 複製する
       command: コマンド
       input: 入力する
+      public: 公開にする
+      close: 非公開にする
       delete: 削除する
       import: インポート
       reply: 返信する
@@ -186,7 +188,10 @@ ja:
       file_histories: ファイル履歴
       translate: 翻訳
       replace_save: 差し替え保存
+      public: 公開にする
+      close: 非公開にする
     confirm:
+      change_state: 公開状態を変更してよろしいですか？
       delete: 削除してよろしいですか？
       soft_delete: 削除してよろしいですか？
       hard_delete: 完全に削除してよろしいですか？
@@ -214,6 +219,8 @@ ja:
       contains_links_in_file_ignoring_alert: 被リンクを確認の上、チェックボックスをクリックして削除してください。
       not_contains_links_in_file: 被リンクがないので削除できます。
       target_to_delete: 削除対象の確認
+      target_to_public: 公開対象の確認
+      target_to_close: 非公開対象の確認
     notice:
       saved: 保存しました。
       deleted: 削除しました。

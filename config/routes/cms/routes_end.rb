@@ -77,6 +77,11 @@ Rails.application.routes.draw do
     get :michecker_result, on: :member
   end
 
+  concern :change_state do
+    get :state, on: :member
+    put :change_all_state, on: :collection, path: ''
+  end
+
   namespace "cms", path: ".s:site" do
     get "/" => "main#index", as: :main
     match "logout" => "login#logout", as: :logout, via: [:get]
@@ -100,7 +105,7 @@ Rails.application.routes.draw do
     end
     resources :contents, path: "contents/(:mod)"
 
-    resources :nodes, concerns: [:deletion, :command] do
+    resources :nodes, concerns: [:deletion, :command, :change_state] do
       get :routes, on: :collection
     end
 

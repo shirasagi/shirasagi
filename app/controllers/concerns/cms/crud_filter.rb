@@ -46,6 +46,24 @@ module Cms::CrudFilter
     entries.size != @items.size
   end
 
+  def change_items_state
+    raise "400" if @selected_items.blank?
+
+    entries = @selected_items.entries
+    @items = []
+
+    entries.each do |item|
+      if item.allowed?(:state, @cur_user, site: @cur_site, node: @cur_node)
+        item.state = @state if item.respond_to?(:state)
+        next if item.save
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    entries.size != @items.size
+  end
+
   public
 
   def index
@@ -100,11 +118,26 @@ module Cms::CrudFilter
     render_destroy @item.destroy
   end
 
+  def change_all_state
+    raise "400" if @selected_items.blank?
+
+    @state = params[:state]
+    if params[:change_all_state]
+      render_ud_all(change_items_state, location: request.path)
+      return
+    end
+
+    respond_to do |format|
+      format.html { render "cms/crud/change_all_state" }
+      format.json { head json: errors }
+    end
+  end
+
   def destroy_all
     raise "400" if @selected_items.blank?
 
     if params[:destroy_all]
-      render_destroy_all(destroy_items, location: request.path)
+      render_ud_all(destroy_items, location: request.path)
       return
     end
 

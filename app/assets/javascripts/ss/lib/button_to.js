@@ -18,6 +18,7 @@ SS_ButtonTo.invokeAction = function(ev) {
   var $button = $(ev.target);
   var action = $button.data('ss-button-to-action');
   var method = $button.data('ss-button-to-method') || 'post';
+  var state = $button.attr('data-state');
   method = method.toString().toLowerCase();
 
   var $form = $("<form/>", { action: action, method: method === "get" ? "get" : "post" });
@@ -36,6 +37,12 @@ SS_ButtonTo.invokeAction = function(ev) {
       var value = params[key];
       $form.append($("<input/>", { name: key, value: value, type: "hidden" }));
     }
+  }
+
+  if (state.length > 0) {
+    $form.append(
+      $("<input/>", { name: 'state', value: state, type: "hidden" })
+    );
   }
 
   var beforeSendEvent = jQuery.Event("ss:beforeSend");

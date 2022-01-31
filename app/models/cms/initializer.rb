@@ -50,6 +50,7 @@ module Cms
     Cms::Role.permission :use_cms_editor_extensions
     Cms::Role.permission :read_cms_generate_lock
     Cms::Role.permission :edit_cms_generate_lock
+    Cms::Role.permission :state_other_cms_nodes
     Cms::Role.permission :read_other_cms_nodes
     Cms::Role.permission :read_other_cms_pages
     Cms::Role.permission :read_other_cms_parts
