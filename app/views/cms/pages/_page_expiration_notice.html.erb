@@ -1,7 +1,8 @@
 <%
   return unless @cur_site.page_expiration_enabled?
   return if @item.state != "public"
-  return if @item.date >= @cur_site.page_expiration_at
+  # be sure to match the condition defined at method "all_expired_pages" in app/jobs/cms/page/expiration_notice_job.rb
+  return if @item.updated >= @cur_site.page_expiration_at
 %>
 
 <div class="errorExplanation">
