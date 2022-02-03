@@ -1,0 +1,34 @@
+<dl class="see mod-cms-line-service-facility_search">
+  <dt><%= @item.t :facility_node_id %></dt>
+  <dd><%= @item.facility_node.try(:name) %></dd>
+
+  <dt><%= @item.t :text_keys %></dt>
+  <dd><%=br @item.text_keys %></dd>
+
+  <dt><%= @item.t :category_ids %></dt>
+  <dd><%= link_to t("cms.buttons.setting"), cms_line_service_group_hook_facility_search_categories_path(hook_id: @item), class: "btn" %></dd>
+  <dd>
+    <% if @item.categories.present? %>
+      <table class="index">
+        <thead>
+        <tr>
+          <th class="order"><%= Cms::Line::FacilitySearch::Category.t(:order) %></th>
+          <th class="name"><%= Cms::Line::FacilitySearch::Category.t(:name) %></th>
+          <th class="category"><%= Cms::Line::FacilitySearch::Category.t(:category_ids) %></th>
+          <th class="datetime"><%= Cms::Line::FacilitySearch::Category.t(:state) %></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @item.categories.each do |category| %>
+          <tr data-id="<%= category.id %>">
+            <td><%= category.order %></td>
+            <td><%= category.name %></td>
+            <td><%= category.categories.pluck(:name).join(", ") %></td>
+            <td><%= category.label :state %></td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </dd>
+</dl>

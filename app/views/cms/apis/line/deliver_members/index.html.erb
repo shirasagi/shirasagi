@@ -1,0 +1,44 @@
+<%= jquery do %>
+SS_SearchUI.modal();
+$('#ajax-box .btn-csv').on('click', function() {
+  location.href = '<%= url_for(action: :download) %>';
+  return false;
+});
+<% end %>
+
+<div class="search-ui-form">
+  <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search, model: params[:model] } do |f| %>
+    <%= f.text_field :name, value: params[:s].try(:[], :name) %>
+    <%= f.submit  t("cms.apis.members.search"), class: :btn %>
+    <%= button_tag "CSV", type: 'button', class: %w(btn btn-csv) %>
+  <% end %>
+</div>
+
+<%= "#{t("cms.member")}#{@items.size}#{t("ss.units.count")}" %>
+
+<table class="index">
+  <thead class="list-head">
+    <tr>
+      <th class="name"><%= Cms::Member.t :name %></th>
+      <th><%= Cms::Member.t :oauth_id %></th>
+      <th style="width: 120px;"></th>
+    </tr>
+  </thead>
+  <tbody class="items">
+    <% @items.each do |item| %>
+      <tr data-id="<%= item.id %>" class="list-item">
+        <td><%= item.name %></td>
+        <td><%= item.oauth_id %></td>
+        <td>
+          <% if item.allowed?(:read, @cur_user, site: @cur_site) %>
+            <%= link_to t("ss.links.show"), item.private_show_path, target: :_blank, rel: "noopener" %>
+          <% else %>
+            <%= t("ss.links.show") %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @items if @items.try(:current_page) %>

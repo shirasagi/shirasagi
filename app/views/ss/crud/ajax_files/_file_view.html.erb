@@ -55,6 +55,9 @@
     <% if local_assigns.fetch(:show_delete, true) %>
       <%= link_to t("ss.buttons.delete"), "#file-#{file.id}", class: "action-delete" %>
     <% end %>
+    <% if local_assigns.fetch(:show_copy_url, false) %>
+      <%= link_to t("ss.buttons.copy_url"), "#file-#{file.id}", class: "action-copy-url" %>
+    <% end %>
   </div>
 
   <% licenses = Opendata::License.in(site_id: @cur_node.try(:opendata_site_ids)).and_public.pluck(:name, :id) if @cur_node.present? %>

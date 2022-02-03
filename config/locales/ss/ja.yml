@@ -62,6 +62,9 @@ ja:
         updated: "更新日時：%{updated}"
         released: "公開日時：%{released}"
         approved: "承認日時：%{approved}"
+        reserved: "予約日時：%{time}"
+        delivered: "配信日時：%{time}"
+        term: "期間：%{term}"
     navi:
       readable: 閲覧一覧
       editable: 管理一覧
@@ -85,6 +88,8 @@ ja:
       import: インポート
       reply: 返信する
       back: 戻る
+      deliver: 配信する
+      test_deliver: テスト配信する
       back_to_show: 詳細へ戻る
       back_to_index: 一覧へ戻る
       back_to_administration: 管理画面へ戻る
@@ -186,6 +191,7 @@ ja:
       file_histories: ファイル履歴
       translate: 翻訳
       replace_save: 差し替え保存
+      copy_url: URLをコピー
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: 削除してよろしいですか？
@@ -220,6 +226,10 @@ ja:
       unable_to_delete: '%{items} を削除できませんでした。'
       copied: 複製しました。
       started_import: インポートを開始しました。
+      started_upload: アップロードを開始しました。
+      started_deliver: 配信を開始しました。
+      started_test_deliver: テスト配信を開始しました。
+      started_apply: 反映処理を開始しました。
       sent: 送信しました。
       posted: 投稿しました。
       initialized: 初期化しました。
@@ -718,6 +728,7 @@ ja:
         opengraph_type: OpenGraph
         opengraph_defaul_image_url: 既定の画像URL
       ss/addon/twitter_setting:
+        twitter_poster_state: ページ連携
         twitter_card: カード形式
         twitter_username: ユーザー名
         twitter_default_image_url: 既定の画像URL
@@ -726,6 +737,7 @@ ja:
         twitter_access_token: アクセストークン
         twitter_access_token_secret: トークンシークレット
       ss/addon/line_setting:
+        line_poster_state: ページ連携
         line_channel_secret: チャネルシークレット
         line_channel_access_token: チャネルアクセストークン
       ss/addon/site_auto_post_setting:
@@ -1146,6 +1158,9 @@ ja:
         - ページに画像が含まれていない場合、ここで設定した URL が og:image として使用されます。
         - ページに画像が含まれている場合、ここで設定した URL は使用されません。
     ss/addon/twitter_setting:
+      twitter_poster_state:
+        - 有効にすると、ページ編集時にTwitter連携が表示されます。
+        - コンシューマーキーとアクセストークン、それぞれのシークレットキーを設定する必要があります。
       twitter_card:
         - Twitter のカード形式を選択します。
         - Twitter でどのような見え方をするかは「Twitter Card Validator（https://cards-dev.twitter.com/validator）」で確認することができます。
@@ -1169,6 +1184,9 @@ ja:
         - アクセストークンシークレット(Access Token Secret)を設定します。
         - Twitterへの自動投稿に必須です。
     ss/addon/line_setting:
+      line_poster_state:
+        - 有効にすると、ページ編集時にLINE連携が表示されます。
+        - チャネルシークレットとチャネルアクセストークンを設定する必要があります。
       line_channel_secret:
         - Lineのチャネルシークレットを設定します。
         - Lineとの連携に必須です。

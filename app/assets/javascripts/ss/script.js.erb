@@ -61,6 +61,7 @@
 //= require ss/lib/replace_file
 //= require ss/lib/button_to
 //= require ss/lib/open_in_new_window
+//= require ss/lib/emoji
 //= require chat/lib/chart
 //= require cms/lib/editor
 //= require cms/lib/form
@@ -74,6 +75,7 @@
 //= require cms/lib/column_select_page
 //= require cms/lib/file_highlighter
 //= require cms/lib/branch
+//= require cms/lib/line
 //= require event/lib/form
 //= require map/googlemaps/map
 //= require map/googlemaps/form
@@ -209,4 +211,5 @@ $(function () {
   SS_ButtonTo.render();
   SS.enableDoubleClickGuard();
   SS_OpenInNewWindow.render();
+  SS_Emoji.render();
 });

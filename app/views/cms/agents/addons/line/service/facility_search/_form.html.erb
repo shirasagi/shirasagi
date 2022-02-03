@@ -1,0 +1,7 @@
+<dl class="see mod-cms-line-service-facility_search">
+  <dt><%= @item.t :facility_node_id %></dt>
+  <dd><%= f.select :facility_node_id, Facility::Node::Node.site(@cur_site).pluck(:name, :id), include_blank: true %></dd>
+
+  <dt><%= @item.t :text_keys %></dt>
+  <dd><%= f.text_area :text_keys %></dd>
+</dl>

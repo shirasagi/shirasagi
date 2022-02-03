@@ -1,0 +1,19 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :image_id %></dt>
+  <dd><%= tryb { image_tag(@item.image.url, alt: @item.name) } %></dd>
+
+  <dt><%= @model.t :summary %></dt>
+  <dd><%= @item.summary %></dd>
+
+  <dt><%= @model.t :category_ids %></dt>
+  <dd><%=br @item.categories.pluck(:name).join("\n") %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.order %></dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= @item.label :state %></dd>
+</dl>

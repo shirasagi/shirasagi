@@ -43,7 +43,7 @@ module Cms::Addon
     end
 
     def line_post_enabled?
-      token_enabled = (site || @cur_site).try(:line_token_enabled?)
+      token_enabled = (site || @cur_site).try(:line_poster_enabled?)
 
       return false if !token_enabled
       return false if skip_line_post.present?
@@ -57,14 +57,6 @@ module Cms::Addon
       end
 
       true
-    end
-
-    def line_client
-      self.site = site || @cur_site
-      Line::Bot::Client.new do |config|
-        config.channel_secret = site.line_channel_secret
-        config.channel_token = site.line_channel_access_token
-      end
     end
 
     def first_img_url
@@ -132,7 +124,6 @@ module Cms::Addon
           log.created = posted_at
           log.action = "broadcast"
 
-          client = line_client
           messages = []
           if line_post_format == "thumb_carousel"
             messages << line_message_carousel(thumb.try(:full_url))
@@ -144,7 +135,7 @@ module Cms::Addon
           raise "messages blank" if messages.blank?
           log.messages = messages
 
-          res = client.broadcast(messages)
+          res = site.line_client.broadcast(messages)
           log.response_code = res.code
           log.response_body = res.body
           raise "#{res.code} #{res.body}" if res.code != "200"

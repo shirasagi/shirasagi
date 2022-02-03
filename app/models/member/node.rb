@@ -321,4 +321,16 @@ module Member::Node
 
     default_scope ->{ where(route: "member/my_group") }
   end
+
+  class MyLineProfile
+    include Cms::Model::Node
+    include Cms::Addon::NodeSetting
+    include Cms::Addon::Meta
+    include Member::Addon::Registration::RequiredFields
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "member/my_line_profile") }
+  end
 end

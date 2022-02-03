@@ -1,0 +1,18 @@
+<dl class="see">
+  <% if @item.new_record? %>
+    <dt><%= @model.t :type %></dt>
+    <dd><%= f.select :type, @item.type_options %></dd>
+  <% else %>
+    <dt><%= @model.t :type %></dt>
+    <dd><%= @item.label :type %></dd>
+  <% end %>
+
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+
+  <dt><%= @model.t :state %><%= @model.tt :state %></dt>
+  <dd><%= f.select :state, @item.state_options %></dd>
+</dl>

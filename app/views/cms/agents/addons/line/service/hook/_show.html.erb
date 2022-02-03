@@ -1,0 +1,29 @@
+<dl class="see line-service-hook">
+  <dd class="wide">
+    <%= link_to t("cms.buttons.setting"), cms_line_service_group_hooks_path(group_id: @item.id), class: "btn", style: "margin-bottom: 10px;" %>
+    <% if @item.hooks.present? %>
+      <table class="index">
+        <thead>
+          <tr>
+            <th><%= Cms::Line::Service::Hook::Base.t :order %></th>
+            <th><%= Cms::Line::Service::Hook::Base.t :service %></th>
+            <th><%= Cms::Line::Service::Hook::Base.t :name %></th>
+            <th><%= Cms::Line::Service::Hook::Base.t :action_type %></th>
+            <th><%= Cms::Line::Service::Hook::Base.t :action_data %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @item.hooks.each do |hook| %>
+            <tr>
+              <td><%= hook.order %></td>
+              <td><%= hook.label :service %></td>
+              <td><%= hook.name %></td>
+              <td><%= hook.label :action_type %></td>
+              <td><%= hook.action_data %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </dd>
+</dl>

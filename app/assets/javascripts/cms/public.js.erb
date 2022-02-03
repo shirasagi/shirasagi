@@ -283,7 +283,9 @@ this.SS_Tabs = (function () {
       html = "<article id='" + view_id + "' class='" + body_css + "' " + disp + ">";
       html += "<h2 style='display: none'>" + name + "</h2>";
       html += "<div class='pages'>" + tab.find(".pages").html() + "</div>";
-      html += "<nav>" + tab.find('nav').html() + "</nav>";
+      if (tab.find('nav').length) {
+        html += "<nav>" + tab.find('nav').html() + "</nav>";
+      }
       html += "</article>";
       box.append(html);
       return tab.remove();

@@ -13,10 +13,10 @@ class Cms::SnsPostLog::Base
   field :state, type: String, default: "error"
   field :error, type: String
 
-  belongs_to :page, class_name: "Cms::Page"
+  field :source_name, type: String
+  belongs_to :source, class_name: "Object", polymorphic: true
 
   before_validation :set_name
-  validates :page_id, presence: true
 
   default_scope -> { order_by(created: -1) }
 
@@ -34,15 +34,24 @@ class Cms::SnsPostLog::Base
     I18n.t("cms.options.sns_post_log_type").map { |k, v| [v, k] }
   end
 
+  def page
+    return if @_page == false
+    return @_page if @_page
+    @_page = soruce.include?(Cms::Model::Page) ? source.page.becomes_with_route : false
+  end
+
+  private
+
   def set_name
-    self.name = "[#{label(:state)}] #{label(:type)} #{created.strftime("%Y/%m/%d %H:%M")}"
+    self.name ||= "[#{label(:state)}] #{label(:type)} #{created.strftime("%Y/%m/%d %H:%M")}"
   end
 
   class << self
-    def create_with(page)
+    def create_with(item)
       log = self.new
-      log.site = page.site
-      log.page = page
+      log.site = item.site
+      log.source_name = item.name
+      log.source = item
       yield(log)
       log.save
     end
@@ -51,11 +60,8 @@ class Cms::SnsPostLog::Base
       criteria = self.where({})
       return criteria if params.blank?
 
-      if params[:name].present?
-        criteria = criteria.search_text params[:name]
-      end
       if params[:keyword].present?
-        criteria = criteria.keyword_in params[:keyword], :name, :body
+        criteria = criteria.keyword_in params[:keyword], :name
       end
       criteria
     end

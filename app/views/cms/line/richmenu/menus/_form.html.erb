@@ -1,0 +1,50 @@
+<%= jquery do %>
+$('[name="item[in_image]"]').on("change", function(){
+  var file = this.files[0];
+  if (file) {
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function (e) {
+      var image = new Image();
+      image.src = e.target.result;
+      image.onload = function () {
+        $('[name="item[width]"]').val(this.width);
+        $('[name="item[height]"]').val(this.height);
+      }
+    }
+  }
+});
+<% end %>
+
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+
+  <dt><%= @model.t :target %><%= @model.tt :target %></dt>
+  <dd><%= f.select :target, @item.target_options, include_blank: true%></dd>
+
+  <dt><%= @model.t :image_id %><%= @model.tt :image_id %></dt>
+  <dd>
+    <% if @item.image %>
+      <div style="padding: 5px 0px 10px 0px;">
+        <%= @item.image.name %>
+      </div>
+    <% end %>
+    <%= f.file_field :in_image %>
+  </dd>
+
+  <dt><%= @model.t :width %><%= @model.tt :width %></dt>
+  <dd><%= f.number_field :width %></dd>
+
+  <dt><%= @model.t :height %><%= @model.tt :height %></dt>
+  <dd><%= f.number_field :height %></dd>
+
+  <dt><%= @model.t :area_size %><%= @model.tt :area_size %></dt>
+  <dd><%= f.number_field :area_size, min: 0, max: 20 %></dd>
+
+  <dt><%= @model.t :chat_bar_text %><%= @model.tt :chat_bar_text %></dt>
+  <dd><%= f.text_field :chat_bar_text %></dd>
+</dl>

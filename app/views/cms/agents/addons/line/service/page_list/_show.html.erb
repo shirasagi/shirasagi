@@ -1,0 +1,10 @@
+<dl class="see mod-cms-line-service-page_list">
+  <dt><%= @model.t :no_image_id %></dt>
+  <dd><%= tryb { image_tag(@item.no_image.url, alt: @item.name, style: "max-width: 200px;") } %></dd>
+
+  <dt><%= @model.t :conditions %></dt>
+  <dd><%=br @item.conditions %></dd>
+
+  <dt><%= @model.t :limit %></dt>
+  <dd><%= @item.limit %></dd>
+</dl>

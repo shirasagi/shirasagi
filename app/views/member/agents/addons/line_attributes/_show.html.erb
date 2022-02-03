@@ -1,0 +1,26 @@
+<%= jquery do %>
+  $("#addon-member-agents-addons-additional_attributes").hide();
+  $("#addon-ezine-agents-addons-subscription").hide();
+<% end %>
+
+<dl class="see mod-pippi-member-additional-attributes">
+  <dt><%= @item.t(:first_registered) %></dt>
+  <dd><%= tryb{ @item.first_registered.strftime("%Y/%m/%d %H:%M") } %></dd>
+
+  <dt><%= @item.t(:subscribe_richmenu_id) %></dt>
+  <dd><%= @item.subscribe_richmenu_id %></dd>
+
+  <dt><%= @item.t(:subscribe_line_message) %></dt>
+  <dd><%= @item.label :subscribe_line_message %></dd>
+
+  <% 1.upto(Cms::Member::CHILD_MAX_SIZE) do |i| %>
+    <% next if @item.send("child#{i}_birthday").blank? %>
+    <dt><%= @model.t "child#{i}_birthday" %></dt>
+    <dd><%= @item.send("child#{i}_age_label") %></dd>
+  <% end %>
+
+  <% @item.each_deliver_categories do |root, children| %>
+    <dt><%= root.name %></dt>
+    <dd><%= children.map(&:name).join(", ") %></dd>
+  <% end %>
+</dl>

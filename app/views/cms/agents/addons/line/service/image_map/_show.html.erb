@@ -1,0 +1,28 @@
+<% if @item.base_url %>
+<dl class="see">
+  <dt><%= @model.t :area_size %></dt>
+  <dd><%= @item.area_size %></dd>
+
+  <dt><%= @model.t :width %></dt>
+  <dd><%= @item.width %></dd>
+
+  <dt><%= @model.t :height %></dt>
+  <dd><%= @item.height %></dd>
+
+  <% %w(1040 700 460 300 240).each do |size| %>
+    <dt><%= @model.t "image#{size}_id" %></dt>
+    <dd>
+      <% if @item.send("image#{size}") %>
+        <%= link_to @item.send("image#{size}").name, @item.send("image#{size}").url %>
+      <% end %>
+      <% url = ::File.join(@item.base_url, size) %><br>
+      <%= link_to url, url %>
+    </dd>
+  <% end %>
+
+  <dt><%= @model.t :alt_text %></dt>
+  <dd><%= @item.alt_text %></dd>
+</dl>
+<% else %>
+  フォルダーがありません。
+<% end %>

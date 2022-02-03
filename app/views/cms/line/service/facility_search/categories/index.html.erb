@@ -1,0 +1,6 @@
+<% @index_meta = proc do |item| %>
+  <span class="datetime"><%= t("ss.views.index.updated", updated: item.updated.strftime("%Y/%m/%d %H:%M")) %></span>
+  <span class="state state-<%= item.state %>"><%= t("ss.state.#{item.state}") %></span>
+<% end %>
+
+<%= render template: "cms/crud/index" %>

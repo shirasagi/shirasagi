@@ -1,0 +1,6 @@
+<% if @item.json_body.present? %>
+<dl class="see">
+  <dt><%= @model.t :json_body %></dt>
+  <dd><pre><%= @item.json_body %></pre></dd>
+</dl>
+<% end %>

@@ -1,0 +1,11 @@
+# pippi
+
+production: &production
+  gd_chat:
+    webhook_url: "https://city-hamamatsu-chatbot-childcare.cms8341.jp/api/bot/webhook/line"
+
+test:
+  <<: *production
+
+development:
+  <<: *production

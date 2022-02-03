@@ -79,7 +79,7 @@ module Service::BaseFilter
 
   def set_user(user, opts = {})
     if opts[:session]
-      reset_session
+      reset_session if SS.config.sns.logged_in_reset_session
       session[:service_account] = {
         "user_id" => user.id,
         "remote_addr" => remote_addr,

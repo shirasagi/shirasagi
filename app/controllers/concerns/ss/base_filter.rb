@@ -119,7 +119,7 @@ module SS::BaseFilter
   def set_user(user, opts = {})
     if opts[:session]
       old_session_id = session.id
-      reset_session
+      reset_session if SS.config.sns.logged_in_reset_session
       form_authenticity_token
       session[:user] = {
         "user_id" => user.id,

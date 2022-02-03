@@ -140,4 +140,15 @@ class Cms::Node
 
     default_scope ->{ where(route: "cms/site_search") }
   end
+
+  class LineHub
+    include Cms::Model::Node
+    include Cms::Addon::NodeSetting
+    include Cms::Addon::Meta
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "cms/line_hub") }
+  end
 end

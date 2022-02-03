@@ -174,6 +174,52 @@ Rails.application.routes.draw do
       resource :site_setting
     end
 
+    namespace "line" do
+      # messages
+      resources :messages, concerns: :deletion do
+        get :deliver, on: :member
+        post :deliver, on: :member
+        get :test_deliver, on: :member
+        post :test_deliver, on: :member
+        get :copy, on: :member
+        put :copy, on: :member
+        resources :templates, path: "template/:type/templates", defaults: { type: '-' }, concerns: :deletion do
+          get :select_type, on: :collection
+        end
+        resources :deliver_plans, concerns: :deletion
+      end
+      resources :test_members, concerns: :deletion
+      resources :deliver_logs, only: [:index, :show, :destroy], concerns: [:deletion]
+      resources :deliver_conditions, concerns: :deletion
+      resources :deliver_categories, concerns: :deletion do
+        resources :categories, concerns: :deletion, controller: "deliver_category/categories"
+      end
+
+      # services
+      namespace "richmenu" do
+        resources :groups, concerns: :deletion do
+          get :apply, on: :collection
+          post :apply, on: :collection
+          resources :menus, concerns: :deletion do
+            get :crop, on: :member
+            put :crop, on: :member
+          end
+        end
+      end
+      namespace "service" do
+        resources :groups, concerns: :deletion do
+          resources :hooks, path: "hook/:type/hooks", defaults: { type: '-' }, concerns: :deletion do
+            get :crop, on: :member
+            put :crop, on: :member
+            namespace "facility_search" do
+              resources :categories, concerns: :deletion
+            end
+          end
+        end
+      end
+      resources :event_sessions, only: [:index, :show, :destroy], concerns: :deletion
+    end
+
     get "check_links" => "check_links#index"
     post "check_links" => "check_links#run"
     get "generate_nodes" => "generate_nodes#index"
@@ -315,6 +361,12 @@ Rails.application.routes.draw do
       namespace "translate" do
         get "langs" => "langs#index"
       end
+
+      namespace "line" do
+        get "deliver_members/:model/:id" => "deliver_members#index", model: /message|deliver_condition|line_deliver/, as: :deliver_members
+        get "deliver_members/:model/:id/download" => "deliver_members#download", model: /message|deliver_condition|line_deliver/
+        get "temp_files/:id" => "temp_files#select", as: :select_temp_file
+      end
     end
   end
 
@@ -355,6 +407,7 @@ Rails.application.routes.draw do
     resources :site_searches, only: [:index]
     get "search_contents/:id" => "page_search_contents#show", as: "page_search_contents"
     get "search_contents/:id/download" => "page_search_contents#download", as: "download_page_search_contents"
+    resources :line_hubs, only: [:index]
   end
 
   node "cms" do
@@ -369,6 +422,9 @@ Rails.application.routes.draw do
     get "archive" => "public#redirect_to_archive_index", cell: "nodes/archive"
     get "photo_album" => "public#index", cell: "nodes/photo_album"
     get "site_search/(index.:format)" => "public#index", cell: "nodes/site_search"
+    get "line_hub/line" => "public#index", cell: "nodes/line_hub"
+    post "line_hub/line" => "public#index", cell: "nodes/line_hub"
+    get "line_hub/image-map/:id/:size" => "public#image_map", cell: "nodes/line_hub"
   end
 
   part "cms" do
