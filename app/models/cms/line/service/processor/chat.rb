@@ -1,16 +1,20 @@
 class Cms::Line::Service::Processor::Chat < Cms::Line::Service::Processor::Base
+  def bot_node
+    @_node ||= Chat::Node::Bot.site(site).first
+  end
+
   def start_messages
     templates = []
 
-    if node.first_text.present?
+    if bot_node.first_text.present?
       templates << {
         type: "text",
         text: "どのような情報をお探しですか。"
       }
     end
 
-    if node.first_suggest.present?
-      suggests = node.first_suggest
+    if bot_node.first_suggest.present?
+      suggests = bot_node.first_suggest
       actions = suggests.each_slice(4).to_a
       action_templates = []
       suggest_templates = []
@@ -46,16 +50,12 @@ class Cms::Line::Service::Processor::Chat < Cms::Line::Service::Processor::Base
     end
   end
 
-  def node
-    Cms::Node.find(1705)
-  end
-
   def intent
     @intent
   end
 
   def find_intent(event)
-    @intent = Chat::Intent.site(site).where(node_id: node.id).where(phrase: event.message['text']).first
+    @intent = Chat::Intent.site(site).where(node_id: bot_node.id).where(phrase: event.message['text']).first
   end
 
   def call
@@ -66,7 +66,7 @@ class Cms::Line::Service::Processor::Chat < Cms::Line::Service::Processor::Base
         case event.type
         when Line::Bot::Event::MessageType::Text
           find_intent(event)
-          if event.message["text"] == node.set_location
+          if event.message["text"] == bot_node.set_location
             #reply_send_location(event)
           elsif intent
             if intent.suggest.present?
@@ -152,7 +152,7 @@ class Cms::Line::Service::Processor::Chat < Cms::Line::Service::Processor::Base
       if intent.suggest.present? && intent.response.present?
         intent.response.gsub(%r{</?[^>]+?>}, "")
       else
-        node.response_template.gsub(%r{</?[^>]+?>}, "")
+        bot_node.response_template.gsub(%r{</?[^>]+?>}, "")
       end
     else
       I18n.t("chat.line_bot.service.choices") + (templates.length + 1).to_s
@@ -169,9 +169,9 @@ class Cms::Line::Service::Processor::Chat < Cms::Line::Service::Processor::Base
     actions.zip(links).each do |action, link|
       action.zip(link).each do |label, url|
         link_templates << {
-          "type": "uri",
-          "label": label.gsub(%r{</?[^>]+?>}, ""),
-          "uri": url
+          type: "uri",
+          label: label.gsub(%r{</?[^>]+?>}, ""),
+          uri: url
         }
       end
       action_templates << link_templates
@@ -182,12 +182,12 @@ class Cms::Line::Service::Processor::Chat < Cms::Line::Service::Processor::Base
     action_templates.each do |action|
       template =
         {
-          "type": "template",
-          "altText": link_text(event, templates),
-          "template": {
-            "type": "buttons",
-            "actions": action,
-            "text": link_text(event, templates)
+          type: "template",
+          altText: link_text(event, templates),
+          template: {
+            type: "buttons",
+            actions: action,
+            text: link_text(event, templates)
           }
         }
       templates << template
@@ -202,7 +202,7 @@ class Cms::Line::Service::Processor::Chat < Cms::Line::Service::Processor::Base
       if intent.response.scan(/<p(?: .+?)?>.*?<\/p>/).present?
         intent.response.scan(/<p(?: .+?)?>.*?<\/p>/).join("").gsub(%r{</?[^>]+?>}, "")
       else
-        node.response_template.gsub(%r{</?[^>]+?>}, "")
+        bot_node.response_template.gsub(%r{</?[^>]+?>}, "")
       end
     else
       I18n.t("chat.line_bot.service.choices") + (templates.length + 1).to_s
@@ -212,11 +212,10 @@ class Cms::Line::Service::Processor::Chat < Cms::Line::Service::Processor::Base
   # reply intent response
   def reply_intent_response(event)
     templates = []
-    template =
-      {
-        "type": "text",
-        "text": intent.response.gsub(%r{</?[^>]+?>}, "")
-      }
+    template = {
+      type: "text",
+      text: intent.response.gsub(%r{</?[^>]+?>}, "")
+    }
     templates << template
     templates << site_search(event) if intent.site_search == "enabled" && site_search?
     templates << question(event) if intent.question == "enabled" && question?
@@ -226,16 +225,16 @@ class Cms::Line::Service::Processor::Chat < Cms::Line::Service::Processor::Base
   # reply send location message
   def reply_send_location(event)
     client.reply_message(event["replyToken"], {
-      "type": "template",
-      "altText": I18n.t("chat.line_bot.service.send_location"),
-      "template": {
-        "type": "buttons",
-        "text": I18n.t("chat.line_bot.service.send_location"),
-        "actions": [
+      type: "template",
+      altText: I18n.t("chat.line_bot.service.send_location"),
+      template: {
+        type: "buttons",
+        text: I18n.t("chat.line_bot.service.send_location"),
+        actions: [
           {
-            "type": "uri",
-            "label": I18n.t("chat.line_bot.service.set_location"),
-            "uri": "line://nv/location"
+            type: "uri",
+            label: I18n.t("chat.line_bot.service.set_location"),
+            uri: "line://nv/location"
           }
         ]
       }
@@ -247,7 +246,7 @@ class Cms::Line::Service::Processor::Chat < Cms::Line::Service::Processor::Base
     template = []
     template << {
       "type": "text",
-      "text": node.exception_text.gsub(%r{</?[^>]+?>}, "")
+      "text": bot_node.exception_text.gsub(%r{</?[^>]+?>}, "")
     }
     template << site_search(event) if site_search?
     client.reply_message(event["replyToken"], template)
@@ -255,21 +254,21 @@ class Cms::Line::Service::Processor::Chat < Cms::Line::Service::Processor::Base
 
   def question(event)
     {
-      "type": "template",
-      "altText": node.question.gsub(%r{</?[^>]+?>}, ""),
-      "template": {
-        "type": "confirm",
-        "text": node.question.gsub(%r{</?[^>]+?>}, ""),
-        "actions": [
+      type: "template",
+      altText: bot_node.question.gsub(%r{</?[^>]+?>}, ""),
+      template: {
+        type: "confirm",
+        text: bot_node.question.gsub(%r{</?[^>]+?>}, ""),
+        actions: [
           {
-            "type": "postback",
-            "label": I18n.t("chat.line_bot.service.success"),
-            "data": "yes, #{event.message['text']}"
+            type: "postback",
+            label: I18n.t("chat.line_bot.service.success"),
+            data: "yes, #{event.message['text']}"
           },
           {
-            "type": "postback",
-            "label": I18n.t("chat.line_bot.service.retry"),
-            "data": "no, #{event.message['text']}"
+            type: "postback",
+            label: I18n.t("chat.line_bot.service.retry"),
+            data: "no, #{event.message['text']}"
           }
         ]
       }
@@ -277,25 +276,25 @@ class Cms::Line::Service::Processor::Chat < Cms::Line::Service::Processor::Base
   end
 
   def question?
-    node.question.present? && node.chat_success.present? && node.chat_retry.present?
+    bot_node.question.present? && bot_node.chat_success.present? && bot_node.chat_retry.present?
   end
 
   def site_search(event)
     site_search_node = Cms::Node::SiteSearch.site(site).first
     uri = URI.parse(site_search_node.url)
-    uri.query = {s: {keyword: event.message["text"]}}.to_query
+    uri.query = { s: { keyword: event.message["text"] } }.to_query
     url = uri.try(:to_s)
     template = {
-      "type": "template",
-      "altText": I18n.t("chat.line_bot.service.site_search"),
-      "template": {
-        "type": "buttons",
-        "text": I18n.t("chat.line_bot.service.site_search"),
-        "actions": [
+      type: "template",
+      altText: I18n.t("chat.line_bot.service.site_search"),
+      template: {
+        type: "buttons",
+        text: I18n.t("chat.line_bot.service.site_search"),
+        actions: [
           {
-            "type": "uri",
-            "label": I18n.t("chat.line_bot.service.search_results"),
-            "uri": "https://" + site.domains.first + url
+            type: "uri",
+            label: I18n.t("chat.line_bot.service.search_results"),
+            uri: site.full_url
           }
         ]
       }
@@ -311,7 +310,7 @@ class Cms::Line::Service::Processor::Chat < Cms::Line::Service::Processor::Base
     # save ExistsPhrase
     if intent
       name = intent.name
-      item = Chat::LineBot::ExistsPhrase.site(site).where(node_id: node.id).where(name: name).first
+      item = Chat::LineBot::ExistsPhrase.site(site).where(node_id: bot_node.id).where(name: name).first
       item ||= Chat::LineBot::ExistsPhrase.new
       item.site = site
       item.node = node
@@ -322,7 +321,7 @@ class Cms::Line::Service::Processor::Chat < Cms::Line::Service::Processor::Base
 
     # save RecordPhrase
     name = event.message["text"]
-    item = Chat::LineBot::RecordPhrase.site(site).where(node_id: node.id).where(name: name).first
+    item = Chat::LineBot::RecordPhrase.site(site).where(node_id: bot_node.id).where(name: name).first
     item ||= Chat::LineBot::RecordPhrase.new
     item.site = site
     item.node = node
