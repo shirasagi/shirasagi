@@ -1,10 +1,17 @@
-class Cms::Line::Service::Processor::GdChat < Cms::Line::Service::Processor::Base
+class Cms::Line::Service::Processor::Api < Cms::Line::Service::Processor::Base
   def logger
-    Pippi::GdChat.logger
+    @logger ||= Logger.new(log_path, 'daily')
+  end
+
+  def url
+    service.api_url
+  end
+
+  def log_path
+    ::File.join(Rails.root, "log", service.api_log_filename)
   end
 
   def call
-    url = SS.config.pippi.dig("gd_chat", "webhook_url")
     path = URI.parse(url).path
     base_url = url.sub(path, "")
 

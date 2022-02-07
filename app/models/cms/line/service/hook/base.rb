@@ -98,10 +98,10 @@ module Cms::Line::Service::Hook
         hooks = [
           Cms::Line::Service::Hook::FacilitySearch,
           Cms::Line::Service::Hook::Chat,
-          Cms::Line::Service::Hook::GdChat,
           Cms::Line::Service::Hook::MyPlan,
           Cms::Line::Service::Hook::ImageMap,
           Cms::Line::Service::Hook::JsonTemplate,
+          Cms::Line::Service::Hook::Api,
         ].map { |klass| klass.new.type }
         hooks.map { |k| [I18n.t("cms.options.line_service_type.#{k}"), k] }
       end
