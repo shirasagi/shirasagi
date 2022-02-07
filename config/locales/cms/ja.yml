@@ -2651,33 +2651,46 @@ ja:
         - プレースホルダーを入力します。
 
     cms/line/facility_search/category:
-       name:
-         - タイトルを入力します。
-       image_id:
-         - サムネイル画像を入力します。
-       summary:
-         - サマリーを入力します。
-       order:
-         - 並び順を入力します。
-       category_ids:
-         - 施設の種類を選択します。
-       state:
-         - ステータスを入力します。
+      name:
+        - タイトルを入力します。
+      image_id:
+        - サムネイル画像を入力します。
+      summary:
+        - サマリーを入力します。
+      order:
+        - 並び順を入力します。
+      category_ids:
+        - 施設の種類を選択します。
+      state:
+        - ステータスを入力します。
+      loop_liquid:
+        - 検索結果ページのテキスト表示部分を Liquid 形式で記述します。
+        - 以下の参照が利用できます。
+        - ページ：page
+        - 距離：distance
+        - ""
+        - |-
+          使用例：
+          距離：{{ distance }}
+          所在地：{{ page.values["所在地"].value }}
+
+    cms/line/service/hook/my_paln:
+      loop_liquid:
+        - 検索結果ページのテキスト表示部分を Liquid 形式で記述します。
+        - 以下の参照が利用できます。
+        - ページ：page
+        - イベント日時：event_dates
+        - ""
+        - |-
+          使用例：
+          日時：{{ event_dates }}
+          内容：{{ page.values["内容"].value }}
 
     cms/addon/line/service/page_list:
       no_image_id:
         - "NO IMAGE画像を設定します。"
       loop_liquid:
         - 検索結果ページのテキスト表示部分を Liquid 形式で記述します。
-        - 以下の参照が利用できます。
-        - ページ：page
-        - 距離（施設検索の場合のみ）：distance
-        - ""
-        - |-
-          使用例：
-          距離：{{ distance }}
-          所在地：{{ page.values["所在地"] }}
-          電話：{{ page.values["電話"] }}
 
     cms/line/test_member:
       name: 名前を入力します。

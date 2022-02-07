@@ -23,7 +23,7 @@ module Cms::Addon
     def interpret_default_location(default_site, &block)
     end
 
-    def page_text(page, assigns = {})
+    def page_summary(page, assigns = {})
       assigns["page"] = page
       assigns.stringify_keys!
       template = ::Cms.parse_liquid(loop_liquid, { cur_site: site })

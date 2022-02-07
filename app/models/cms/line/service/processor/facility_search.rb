@@ -89,7 +89,7 @@ class Cms::Line::Service::Processor::FacilitySearch < Cms::Line::Service::Proces
       item = location.item
       opts[:name] = location.item.name
       opts[:image_url] = category.page_image_url(item)
-      opts[:text] = category.page_text(item, distance: location.label)
+      opts[:text] = category.page_summary(item, distance: location.label)
       opts[:action] = {
         type: "uri",
         label: "ページを見る",
