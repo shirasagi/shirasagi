@@ -22,13 +22,13 @@ class Cms::Line::EventSession
   end
 
   def set_data(key, value)
-    self.data[mode] ||= {}
-    self.data[mode][key] = value
+    self.data[hook_id.to_s] ||= {}
+    self.data[hook_id.to_s][key] = value
     save
   end
 
   def get_data(key)
-    data.dig(mode, key.to_s)
+    data.dig(hook_id.to_s, key.to_s)
   end
 
   class << self

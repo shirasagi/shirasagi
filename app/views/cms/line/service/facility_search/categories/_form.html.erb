@@ -3,39 +3,21 @@
   <dd><%= f.text_field :name %></dd>
 
   <dt><%= @model.t :image_id %><%= @model.tt :image_id %></dt>
-  <dd><%= f.ss_file_field :image %></dd>
+  <dd>
+    <% if @item.image %>
+      <div style="padding: 5px 0px 10px 0px;">
+        <label>
+          <%= @item.image.name %>
+          <%= f.check_box :rm_image %><%= t "ss.buttons.delete" %>
+        </label>
+      </div>
+    <% end %>
+    <%= f.file_field :in_image %>
+  </dd>
 
   <dt><%= @model.t :summary %><%= @model.tt :summary %></dt>
   <dd><%= f.text_area :summary %></dd>
-</dl>
 
-<dl class="see mod-facility-category" style="margin-top: 30px;">
-  <dt><%= t("facility.category.setting") %><%= @model.tt :category_ids %></dt>
-  <dd class="wide" style="line-height: 2.5">
-    <%= f.hidden_field "category_ids[]", value: "", class: "hidden-ids" %>
-    <%= link_to t("facility.category.index"), facility_apis_categories_path, class: "ajax-box" %>
-  </dd>
-  <dd>
-    <table class="index ajax-selected">
-      <thead>
-      <tr>
-        <th class="name"><%= t("facility.category.name") %></th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody>
-      <% @item.categories.each do |cate| %>
-        <tr data-id="<%= cate.id %>">
-          <td><%= f.hidden_field "category_ids[]", value: cate.id %> <%= cate.name %></td>
-          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
-        </tr>
-      <% end %>
-      </tbody>
-    </table>
-  </dd>
-</dl>
-
-<dl class="see" style="margin-top: 30px;">
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
 

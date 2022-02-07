@@ -19,7 +19,8 @@ class Cms::Line::Service::FacilitySearch::CategoriesController < ApplicationCont
   end
 
   def set_crumbs
-    #@crumbs << [t("cms.sns_post"), cms_sns_post_logs_path]
+    @crumbs << [t("cms.line_service"), cms_line_service_groups_path]
+    @crumbs << [t("cms.line_facility_search_category"), { action: :index }]
   end
 
   def set_items

@@ -3,6 +3,7 @@ class Cms::Line::FacilitySearch::Category
   include SS::Reference::Site
   include SS::Reference::User
   include SS::Relation::File
+  include Cms::Addon::Line::Service::PageList
   include Cms::SitePermission
   include Fs::FilePreviewable
 
@@ -14,16 +15,13 @@ class Cms::Line::FacilitySearch::Category
   field :summary, type: String
   field :order, type: Integer, default: 0
   field :state, type: String, default: 'public'
-
   belongs_to_file :image
-  embeds_ids :categories, class_name: "Facility::Node::Category"
 
   validates :hook_id, presence: true
   validates :name, presence: true, length: { maximum: 40 }
   validates :summary, presence: true, length: { maximum: 60 }
 
   permit_params :name, :summary, :order, :state
-  permit_params category_ids: []
 
   default_scope ->{ order_by order: 1 }
 

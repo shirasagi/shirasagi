@@ -1,9 +1,25 @@
+<% addon ||= local_assigns.fetch(:addon, {}) %>
+<%= code_editor "##{addon[:id]} .html", mode: :html %>
+
 <dl class="see mod-cms-line-service-page_list">
   <dt><%= @model.t :no_image_id %><%= @model.tt :no_image_id %></dt>
-  <dd><%= f.ss_file_field :no_image %></dd>
+  <dd>
+    <% if @item.no_image %>
+      <div style="padding: 5px 0px 10px 0px;">
+        <label>
+          <%= @item.no_image.name %>
+          <%= f.check_box :rm_no_image %><%= t "ss.buttons.delete" %>
+        </label>
+      </div>
+    <% end %>
+    <%= f.file_field :in_no_image %>
+  </dd>
 
   <dt><%= @model.t :conditions %><%= @model.tt :conditions %></dt>
   <dd><%= f.text_area :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
+
+  <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
+  <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 200px;" %></dd>
 
   <dt class="limit"><%= @model.t :limit %><%= @model.tt :limit %></dt>
   <dd class="limit"><%= f.number_field :limit %></dd>

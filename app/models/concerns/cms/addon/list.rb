@@ -104,7 +104,7 @@ module Cms::Addon::List
           # myself
           site_ok = (site.id == default_site.id)
           # sub site
-          site_ok ||= (site.parent.id == default_site.id)
+          site_ok ||= (site.parent.try(:id) == default_site.id)
           # partners
           site_ok ||= site.partner_site_ids.include?(default_site.id)
 

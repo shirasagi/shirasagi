@@ -8,9 +8,6 @@
   <dt><%= @model.t :summary %></dt>
   <dd><%= @item.summary %></dd>
 
-  <dt><%= @model.t :category_ids %></dt>
-  <dd><%=br @item.categories.pluck(:name).join("\n") %></dd>
-
   <dt><%= @model.t :order %></dt>
   <dd><%= @item.order %></dd>
 

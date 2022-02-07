@@ -13,6 +13,9 @@ module Map::Addon
       permit_params map_points: [ :name, :loc, :text, :link, :image ]
       permit_params :map_zoom_level, :center_setting, :set_center_position, :zoom_setting, :set_zoom_level
 
+      after_save :save_geolocation, if: ->{ map_points.present? }
+      after_destroy :remove_geolocation
+
       if respond_to? :liquidize
         liquidize do
           export :map_points
@@ -30,6 +33,18 @@ module Map::Addon
         options[:zoom] = set_zoom_level
       end
       options
+    end
+
+    def save_geolocation
+      if public?
+        Map::Geolocation.update_with(self)
+      else
+        Map::Geolocation.remove_with(self)
+      end
+    end
+
+    def remove_geolocation
+      Map::Geolocation.remove_with(self)
     end
   end
 end

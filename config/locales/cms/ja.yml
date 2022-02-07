@@ -1278,16 +1278,15 @@ ja:
         line/action_data: "Trigger Data"
         expired_text: 有効期限切れメッセージ
         expired_minutes: 有効期限（分）
-      cms/addon/line/service/facility_search:
-        facility_node_id: 施設一覧
-        text_keys: 施設詳細の表示項目
-        category_ids: 施設カテゴリー
       cms/addon/line/service/gd_chat:
         api_url: "API URL"
       cms/addon/line/service/page_list:
         no_image_id: NO IMAGE画像
         conditions: 検索条件
+        loop_liquid: 表示テキスト
         limit: 表示件数
+      cms/addon/line/service/facility_search:
+        category_ids: 施設カテゴリー
       cms/line/facility_search/category:
         name: タイトル
         image_id: サムネイル画像
@@ -2664,6 +2663,21 @@ ja:
          - 施設の種類を選択します。
        state:
          - ステータスを入力します。
+
+    cms/addon/line/service/page_list:
+      no_image_id:
+        - "NO IMAGE画像を設定します。"
+      loop_liquid:
+        - 検索結果ページのテキスト表示部分を Liquid 形式で記述します。
+        - 以下の参照が利用できます。
+        - ページ：page
+        - 距離（施設検索の場合のみ）：distance
+        - ""
+        - |-
+          使用例：
+          距離：{{ distance }}
+          所在地：{{ page.values["所在地"] }}
+          電話：{{ page.values["電話"] }}
 
     cms/line/test_member:
       name: 名前を入力します。
