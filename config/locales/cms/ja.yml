@@ -408,7 +408,6 @@ ja:
       line_service_type:
         hub: サービスHUB
         chat: チャットボット
-        my_plan: 今日の予定
         facility_search: 施設検索
         image_map: イメージマップ
         json_template: JSONテンプレート
