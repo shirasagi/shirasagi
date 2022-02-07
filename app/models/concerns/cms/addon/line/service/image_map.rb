@@ -29,6 +29,7 @@ module Cms::Addon
       return @_base_url if @_base_url.present?
       node = Cms::Node::LineHub.site(site).first
       return unless node
+      return unless node.public?
       @_base_url = ::File.join(node.full_url, "image-map", id)
     end
 

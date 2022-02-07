@@ -6,7 +6,7 @@
         <thead>
           <tr>
             <th><%= Cms::Line::Service::Hook::Base.t :order %></th>
-            <th><%= Cms::Line::Service::Hook::Base.t :service %></th>
+            <th><%= Cms::Line::Service::Hook::Base.t :type %></th>
             <th><%= Cms::Line::Service::Hook::Base.t :name %></th>
             <th><%= Cms::Line::Service::Hook::Base.t :action_type %></th>
             <th><%= Cms::Line::Service::Hook::Base.t :action_data %></th>
@@ -16,7 +16,7 @@
           <% @item.hooks.each do |hook| %>
             <tr>
               <td><%= hook.order %></td>
-              <td><%= hook.label :service %></td>
+              <td><%= hook.label :type %></td>
               <td><%= hook.name %></td>
               <td><%= hook.label :action_type %></td>
               <td><%= hook.action_data %></td>
