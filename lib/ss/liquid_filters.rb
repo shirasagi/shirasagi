@@ -141,4 +141,13 @@ module SS::LiquidFilters
     criteria = Cms::Page.public_list(site: node.site, node: node)
     criteria.limit(limit).to_a
   end
+
+  def same_name_pages(input, filename = nil)
+    page = input.try(:delegatee)
+    return unless page
+    return unless page.class.include?(Cms::Model::Page)
+    criteria = Cms::Page.site(page.site)
+    criteria = criteria.where(filename: /^#{filename}\//) if filename.present?
+    criteria.where(name: page.name).nin(id: page.id).to_a
+  end
 end
