@@ -10,6 +10,10 @@ class Fs::FilesController < ApplicationController
 
   private
 
+  def set_site
+    @cur_site = request.env["ss.site"]
+  end
+
   def set_user
     @cur_user, _login_path, _logout_path = get_user_by_access_token
     @cur_user ||= get_user_by_session
