@@ -43,7 +43,7 @@ class Cms::Page::MoveJob < Cms::ApplicationJob
 
   def each_item(&block)
     or_conds = []
-    or_conds += Cms::ApiFilter::Contents::HTML_FIELDS.map { |field| { field => /="#{::Regexp.escape(@src)}/ } }
+    or_conds += Cms::ApiFilter::Contents::HTML_FIELDS.map { |field| { field => /#{::Regexp.escape(@src)}/ } }
     or_conds += Cms::ApiFilter::Contents::ARRAY_FIELDS.map { |field| { field => /\A#{::Regexp.escape(@src)}/ } }
     or_conds << {
       column_values: {
@@ -102,6 +102,8 @@ class Cms::Page::MoveJob < Cms::ApplicationJob
       when 'Cms::Column::Value::UrlField'
         column_value.value = replace_string_urls(column_value.value)
       when 'Cms::Column::Value::UrlField2'
+        column_value.link_url = replace_string_urls(column_value.link_url)
+      when 'Cms::Column::Value::FileUpload'
         column_value.link_url = replace_string_urls(column_value.link_url)
       end
       column_value

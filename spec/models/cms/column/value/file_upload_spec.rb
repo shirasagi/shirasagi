@@ -20,7 +20,7 @@ describe Cms::Column::Value::FileUpload, type: :model, dbscope: :example do
             column: column1, html_tag: column1.html_tag, file: file,
             file_label: "<p>#{unique_id}</p><script>#{unique_id}</script>",
             text: Array.new(2) { "<p>#{unique_id}</p><script>#{unique_id}</script>" }.join("\n"),
-            image_html_type: "thumb", link_url: "http://#{unique_id}.example.jp/"
+            image_html_type: "thumb", link_url: "http://#{unique_id}.example.jp/ "
           )
         ]
       )
@@ -51,6 +51,8 @@ describe Cms::Column::Value::FileUpload, type: :model, dbscope: :example do
         html = "<img alt=\"#{value.file_label.gsub(/<.*?>/, "")}\" src=\"#{file.thumb_url}\" />"
         html = "<a href=\"#{file.url}\">#{html}</a>"
         expect(subject.html).to eq html
+
+        expect(page.form_contains_urls).to include value.link_url
       end
     end
 
@@ -71,6 +73,8 @@ describe Cms::Column::Value::FileUpload, type: :model, dbscope: :example do
         html1 = "<video controls=\"controls\" src=\"#{file.url}\"></video>"
         html2 = "<div>#{value.text.gsub(/<\/?script>/, "").gsub("\n", "<br>")}</div>"
         expect(subject.html).to eq "<div>#{html1}#{html2}</div>"
+
+        expect(page.form_contains_urls).to include value.link_url
       end
     end
 
@@ -91,6 +95,8 @@ describe Cms::Column::Value::FileUpload, type: :model, dbscope: :example do
         html = CGI.escapeHTML(value.file_label.gsub(/<\/?script>/, ""))
         html = "<a href=\"#{file.url}\">#{html} (#{file.extname.upcase} #{file.size.to_s(:human_size)})</a>"
         expect(subject.html).to eq html
+
+        expect(page.form_contains_urls).to include value.link_url
       end
     end
 
@@ -111,6 +117,8 @@ describe Cms::Column::Value::FileUpload, type: :model, dbscope: :example do
         html = "<img alt=\"#{value.file_label.gsub(/<.*?>/, "")}\" src=\"#{file.url}\" />"
         html = "<a href=\"#{value.link_url}\">#{html}</a>"
         expect(subject.html).to eq html
+
+        expect(page.form_contains_urls).to include value.link_url
       end
     end
   end

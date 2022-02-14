@@ -45,7 +45,7 @@ describe Cms::Column::Value::UrlField2, type: :model, dbscope: :example do
 
     let(:valid_url1) { "http://#{domain}/" }
     let(:valid_url2) { "http://#{domain}" }
-    let(:valid_url3) { "http://#{domain}/" }
+    let(:valid_url3) { " http://#{domain}/ " }
     let(:valid_url4) { "http://#{domain}/docs/page1.html" }
     let(:valid_url5) { "http://#{domain}/docs" }
     let(:valid_url6) { "http://#{domain}/docs/" }
@@ -54,7 +54,7 @@ describe Cms::Column::Value::UrlField2, type: :model, dbscope: :example do
 
     let(:valid_url9) { "https://#{domain}/" }
     let(:valid_url10) { "https://#{domain}" }
-    let(:valid_url11) { "https://#{domain}/" }
+    let(:valid_url11) { " https://#{domain}/ " }
     let(:valid_url12) { "https://#{domain}/docs/page1.html" }
     let(:valid_url13) { "https://#{domain}/docs" }
     let(:valid_url14) { "https://#{domain}/docs/" }
