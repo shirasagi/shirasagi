@@ -7,6 +7,11 @@ describe 'gws_memo_import_messages', type: :feature, dbscope: :example do
   let!(:shared_address_group3) { create :gws_shared_address_group, name: "危機管理部 管理課" }
   let!(:shared_address_group4) { create :gws_shared_address_group, name: "危機管理部 防災課" }
 
+  let!(:webmail_address_group1) { create :webmail_address_group, cur_user: gws_user, name: "企画政策部 広報課" }
+  let!(:webmail_address_group2) { create :webmail_address_group, cur_user: gws_user, name: "企画政策部 政策課" }
+  let!(:webmail_address_group3) { create :webmail_address_group, cur_user: gws_user, name: "危機管理部 広報課" }
+  let!(:webmail_address_group4) { create :webmail_address_group, cur_user: gws_user, name: "危機管理部 政策課" }
+
   before { login_gws_user }
 
   it do
@@ -31,11 +36,11 @@ describe 'gws_memo_import_messages', type: :feature, dbscope: :example do
     end
   end
 
-  it do
+  it "import to_shared_address_group" do
     visit gws_memo_import_messages_path(site: site)
 
     within "form#item-form" do
-      attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/memo/group_messages.zip"
+      attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/memo/shared_group_messages.zip"
       click_on I18n.t("ss.import")
     end
 
@@ -49,6 +54,27 @@ describe 'gws_memo_import_messages', type: :feature, dbscope: :example do
       expect(message.to_shared_address_group_ids).to include shared_address_group2.id
       expect(message.to_shared_address_group_ids).to include shared_address_group3.id
       expect(message.to_shared_address_group_ids).to include shared_address_group4.id
+    end
+  end
+
+  it "import to_webmail_address_group" do
+    visit gws_memo_import_messages_path(site: site)
+
+    within "form#item-form" do
+      attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/memo/webmail_group.zip"
+      click_on I18n.t("ss.import")
+    end
+
+    expect(page).to have_css('#notice', text: I18n.t("gws/memo/message.notice.start_import"))
+
+    expect(Gws::Memo::Message.all.count).to eq 1
+    Gws::Memo::Message.all.first.tap do |message|
+      expect(message.site_id).to eq site.id
+      expect(message.subject).to eq "test"
+      expect(message.to_webmail_address_group_ids).to include webmail_address_group1.id
+      expect(message.to_webmail_address_group_ids).to include webmail_address_group2.id
+      expect(message.to_webmail_address_group_ids).to include webmail_address_group3.id
+      expect(message.to_webmail_address_group_ids).to include webmail_address_group4.id
     end
   end
 end
