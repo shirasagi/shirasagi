@@ -1,0 +1,15 @@
+<%= form_for :item, url: "#{@cur_node.url}", html: { method: :put, multipart: true, autocomplete: :off, class: "mypage-edit member-profile" } do |f| %>
+
+<div class="mypage-form member-profile">
+  <%= error_messages_for :item, header_message: false %>
+
+  <div class="columns">
+    <%= render template: "_condition_form", locals: { f: f }  %>
+  </div>
+
+  <footer class="send">
+    <%= f.submit t("ss.links.registration") %>
+  </footer>
+</div>
+
+<% end %>

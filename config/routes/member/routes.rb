@@ -59,6 +59,7 @@ Rails.application.routes.draw do
     # end
 
     resources :my_line_profiles, concerns: :deletion
+    resources :line_first_registrations, concerns: :deletion
   end
 
   node "member" do
@@ -104,6 +105,8 @@ Rails.application.routes.draw do
     get "my_line_profile/leave(.:format)" => "public#leave", cell: "nodes/my_line_profile"
     post "my_line_profile/confirm_leave(.:format)" => "public#confirm_leave", cell: "nodes/my_line_profile"
     post "my_line_profile/complete_leave(.:format)" => "public#complete_leave", cell: "nodes/my_line_profile"
+    get "line_first_registration/(index.:format)" => "public#index", cell: "nodes/line_first_registration"
+    put "line_first_registration/(index.:format)" => "public#index", cell: "nodes/line_first_registration"
 
     scope "my_blog" do
       resource :setting, controller: "public", cell: "nodes/my_blog/setting", except: [:index, :show, :destroy]
