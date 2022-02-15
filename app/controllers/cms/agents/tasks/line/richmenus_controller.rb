@@ -183,10 +183,18 @@ class Cms::Agents::Tasks::Line::RichmenusController < ApplicationController
     end
   end
 
+  def pull_private_files(group)
+    return unless SS::Lgwan.enabled?
+    group.menus.each { |menu| SS::Lgwan.pull_private_files(menu) }
+  end
+
   def apply
     item = Cms::Line::Richmenu::Group.site(@site).active_group
     registrations = {}
-    registrations = apply_richmenu_group(item) if item
+    if item
+      pull_private_files(item)
+      registrations = apply_richmenu_group(item)
+    end
     delete_unused_richmenu(registrations)
     head :ok
   end

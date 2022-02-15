@@ -35,6 +35,10 @@ module Cms::Line::Richmenu
 
     default_scope -> { order_by(order: 1) }
 
+    def owned_files
+      SS::File.where(owner_item_type: self.class.name, owner_item_id: id).to_a
+    end
+
     private
 
     def set_updated
