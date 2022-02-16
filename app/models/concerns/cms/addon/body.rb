@@ -74,7 +74,7 @@ module Cms::Addon
     end
 
     def thumb_path
-      "/fs/#{thumb.id}/#{thumb.filename}" if thumb.present?
+      thumb.url if thumb.present?
     end
   end
 end
