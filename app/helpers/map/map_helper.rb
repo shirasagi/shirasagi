@@ -1,6 +1,7 @@
 module Map::MapHelper
   def map_enabled?(opts = {})
-    return true if !SS.config.map.disable_mypage
+    return true unless opts[:site]
+    return true if (opts[:site].map_api_mypage == "active")
     (opts[:mypage] || opts[:preview]) ? false : true
   end
 

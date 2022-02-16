@@ -8,8 +8,9 @@ module SS::Addon
       field :map_api_key, type: String
       field :map_api_layer, type: String
       field :show_google_maps_search, type: String, default: "active"
+      field :map_api_mypage, type: String, default: "active"
 
-      permit_params :map_api, :map_api_key, :map_api_layer, :show_google_maps_search
+      permit_params :map_api, :map_api_key, :map_api_layer, :show_google_maps_search, :map_api_mypage
     end
 
     def map_api_options
@@ -39,6 +40,12 @@ module SS::Addon
     def map_effective_layers
       layer = map_layers[map_api_layer] || map_layers[map_layers.keys.first]
       [layer]
+    end
+
+    def map_api_mypage_options
+      %w(active expired).collect do |k|
+        [I18n.t("ss.options.state.#{k}"), k]
+      end
     end
 
     def map_setting

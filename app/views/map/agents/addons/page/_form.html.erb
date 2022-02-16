@@ -3,7 +3,7 @@
   addon[:display_body] = "hide"
 %>
 
-<% if map_enabled?(mypage: true) %>
+<% if map_enabled?(mypage: true, site: @cur_site) %>
 
 <%= render_map_form "##{addon[:id]} .map-canvas", site: @cur_site, map: @item.map_options, markers: @item.map_points %>
 
