@@ -11,7 +11,11 @@ module Map::MapHelper
 
   def effective_layers(opts = {})
     return unless opts[:site]
-    opts[:site].map_effective_layers
+    if SS::Lgwan.enabled? && SS::Lgwan.map_layers.present? && !@generate_page
+      SS::Lgwan.map_effective_layers(opts[:site])
+    else
+      opts[:site].map_effective_layers
+    end
   end
 
   def show_google_maps_search(opts = {})
