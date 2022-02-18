@@ -737,6 +737,14 @@ ja:
         file_resizing_height: 高さ
         file_resizing_label: "%{size}（サイト設定）"
         multibyte_filename_state: 日本語ファイル名
+        file_fs_access_restriction_state: /fs のアクセス制限
+        file_fs_access_restriction_allowed_ip_addresses: 許可IPアドレス
+        file_fs_access_restriction_basic_auth: Basic認証
+        file_fs_access_restriction_basic_auth_id: Basic認証（ID）
+        file_fs_access_restriction_basic_auth_password: Basic認証（パスワード）
+        file_fs_access_restriction_env: 環境変数
+        file_fs_access_restriction_env_key: 環境変数（キー）
+        file_fs_access_restriction_env_value: 環境変数（値）
       ss/addon/trash_setting:
         trash_threshold: ゴミ箱保持期間
         trash_threshold_unit: ゴミ箱保持期間単位
@@ -1184,6 +1192,12 @@ ja:
         -
         - "アップロード可: 日本語ファイルはアップロード可ですが、日本語部分がアンダースコアに置き換わります。既定の動作です。"
         - "アップロード不可: 日本語ファイルをアップロードすることができなくなり、英数字・ハイフン・アンダースコアのみで構成されたファイルのみをアップロードすることができるようになります。"
+      file_fs_access_restriction_state:
+        - /fs 以下のアクセスを制限する場合、「有効」を選択してください。
+        - そして、有効にする場合、「許可IPアドレス」「Basic認証」「環境変数」のいずれかのフィールドに適切な設定を入力してください。
+        -
+        - この設定は、サブディレクトリ型サブサイトにおいて、nginx と協働でアクセス制限を実施するもので、
+        - 本設定のみでアクセス制限が有効になるわけではありません。
     ss/addon/trash_setting:
       trash_threshold:
         - ゴミ箱の保持期間を設定できます。
