@@ -169,8 +169,10 @@ module SS::Model::File
     end
 
     def same_cms_site?(file, owner_item, site:)
-      return true if site.is_a?(SS::Model::Site) && owner_item.site.is_a?(SS::Model::Site) && site.id == owner_item.site_id
-      false
+      return false unless site.is_a?(SS::Model::Site)
+      return false unless owner_item.site.is_a?(SS::Model::Site)
+      return false if site.id != owner_item.site_id && site.id != owner_item.site.parent_id
+      true
     end
 
     def readable_by_user?(file, owner_item, user:)
