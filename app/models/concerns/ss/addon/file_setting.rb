@@ -61,6 +61,10 @@ module SS::Addon
       file_fs_access_restriction_state == "enabled"
     end
 
+    def file_fs_access_allowed?(request)
+      false
+    end
+
     private
 
     def encrypt_file_fs_access_restriction_basic_auth_password
