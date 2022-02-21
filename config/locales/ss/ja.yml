@@ -1198,6 +1198,22 @@ ja:
         -
         - この設定は、サブディレクトリ型サブサイトにおいて、nginx と協働でアクセス制限を実施するもので、
         - 本設定のみでアクセス制限が有効になるわけではありません。
+      file_fs_access_restriction_allowed_ip_addresses:
+        - アクセスを許可する IP アドレスを設定します。
+        - 複数の IP アドレスを設定する場合は、改行で区切って設定します。
+        - "\"192.168.10.0/24\" や \"192.168.10.0/255.255.255.0\" のようなネットワークアドレスも設定することができます。"
+      file_fs_access_restriction_env:
+        - 許可する環境変数を設定します。
+        -
+        - これが想定するユースケースですが、nginx はクライアント証明書を認証すると、認証した Subject DN を $ssl_client_s_dn に、Issuer DN を $ssl_client_i_dn にセットします。
+        - これらを nginx の proxy_set_header でシラサギへ伝播し、シラサギで設定内容を確認するというケースを想定しています。
+        -
+        - "nginx の設定例:"
+        - proxy_set_header X-SSL_CLIENT_S_DN \$ssl_client_s_dn
+        -
+        - "シラサギの設定例:"
+        - "  環境変数（キー）: X-SSL_CLIENT_S_DN"
+        - "  環境変数（値）: 証明書 Subject DN"
     ss/addon/trash_setting:
       trash_threshold:
         - ゴミ箱の保持期間を設定できます。

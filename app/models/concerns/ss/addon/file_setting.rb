@@ -62,7 +62,74 @@ module SS::Addon
     end
 
     def file_fs_access_allowed?(request)
+      return false if request.blank?
+
+      if file_fs_access_restriction_allowed_ip_addresses.present?
+        matcher = IPAddressMatcher.new(file_fs_access_restriction_allowed_ip_addresses)
+        # return true if matcher.match?(request.env["HTTP_X_REAL_IP"].presence || request.remote_addr)
+        return true if matcher.match?(request)
+      end
+      if file_fs_access_restriction_basic_auth_id.present? && file_fs_access_restriction_basic_auth_password.present?
+        password = SS::Crypt.decrypt(file_fs_access_restriction_basic_auth_password)
+        matcher = BasicAuthMatcher.new(file_fs_access_restriction_basic_auth_id, password)
+        return true if matcher.match?(request)
+      end
+      if file_fs_access_restriction_env_key.present?
+        matcher = EnvMatcher.new(file_fs_access_restriction_env_key, file_fs_access_restriction_env_value.presence)
+        return true if matcher.match?(request)
+      end
+
       false
+    end
+
+    class IPAddressMatcher
+      def initialize(ip_addresses)
+        @ip_addresses = Array(ip_addresses).map do |addr|
+          next if addr.blank?
+
+          addr = addr.strip
+          next if addr.blank? || addr.start_with?("#")
+
+          IPAddr.new(addr)
+        end.compact
+      end
+
+      def match?(request)
+        remote_addr = request.env["HTTP_X_REAL_IP"].presence || request.remote_addr
+        @ip_addresses.any? { |addr| addr.include?(remote_addr) }
+      end
+    end
+
+    class BasicAuthMatcher
+      def initialize(id, password)
+        @digest = Base64.strict_encode64("#{id}:#{password}")
+      end
+
+      def match?(request)
+        authorization = request.authorization
+        return false if authorization.blank?
+
+        type, digest = authorization.split(" ", 2)
+        return false unless type.casecmp("basic").zero?
+        return false if digest != @digest
+
+        true
+      end
+    end
+
+    class EnvMatcher
+      def initialize(key, value = nil)
+        @key = key
+        @value = value
+      end
+
+      def match?(request)
+        if @value
+          request.env[@key] == @value
+        else
+          request.env.key?(@key)
+        end
+      end
     end
 
     private
