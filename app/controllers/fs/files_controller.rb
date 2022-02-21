@@ -1,40 +1,81 @@
 class Fs::FilesController < ApplicationController
   include SS::AuthFilter
   include Member::AuthFilter
-  include Cms::PublicFilter::Site
 
-  before_action :set_user
-  before_action :set_item
+  before_action :cur_user
+  before_action :cur_item
   before_action :deny
   rescue_from StandardError, with: :rescue_action
 
   private
 
-  def set_user
-    @cur_user, _login_path, _logout_path = get_user_by_access_token
-    @cur_user ||= get_user_by_session
-    SS.current_user = @cur_user
+  def cms_sites
+    # サブディレクトリ型サブサイトの /fs と親サイトの /fs とは区別がつかない。
+    # つまり、リクエスト・ホストからは一意にどのサイトの /fs にアクセスしているのか、容易に判別することはできない。
+    @cms_sites ||= SS::Site.all.in(domains: request_host).order_by(id: 1).to_a
   end
 
-  def set_item
-    id = params[:id_path].present? ? params[:id_path].delete('/') : params[:id]
-    name_or_filename = params[:filename]
-    name_or_filename << ".#{params[:format]}" if params[:format].present?
+  def canonical_site
+    @canonical_site ||= begin
+      if cms_sites.length <= 1
+        cms_sites.first
+      else
+        cms_sites.find { |site| site.parent_id.blank? } || cms_sites.first
+      end
+    end
+  end
 
-    item = SS::File.find(id)
-    raise "404" if item.name != name_or_filename && item.filename != name_or_filename
+  def cur_user
+    @cur_user ||= begin
+      user, _login_path, _logout_path = get_user_by_access_token
+      user ||= get_user_by_session
+      SS.current_user = user
+      user
+    end
+  end
 
-    @item = item.becomes_with_model
-    raise "404" if @item.try(:thumb?)
+  def cur_item
+    @cur_item ||= begin
+      id = params[:id_path].present? ? params[:id_path].delete('/') : params[:id]
+      name_or_filename = params[:filename]
+      name_or_filename << ".#{params[:format]}" if params[:format].present?
+
+      item = SS::File.find(id)
+      raise "404" if item.name != name_or_filename && item.filename != name_or_filename
+
+      item = item.becomes_with_model
+      raise "404" if item.try(:thumb?)
+
+      item
+    end
+  end
+
+  def cur_site
+    @cur_site ||= begin
+      if cms_sites.length <= 1
+        # リクエスト・ホストから一意にサイトが決まるケース
+        cms_sites.first
+      else
+        # リクエスト・ホストから一意にサイトが決まらないケース
+        owner_item = cur_item.send(:effective_owner_item)
+        if owner_item.try(:site) && owner_item.site.is_a?(SS::Model::Site)
+          # owner_item is a cms object.
+          cms_sites.find { |site| site.id == owner_item.site_id }
+        elsif cur_item.try(:site) && cur_item.site.is_a?(SS::Model::Site)
+          # cur_item is a cms object.
+          cms_sites.find { |site| site.id == cur_item.site_id }
+        end
+      end
+    end
   end
 
   def deny
-    raise "404" unless @item.previewable?(site: @cur_site, user: @cur_user, member: get_member_by_session)
+    raise "404" unless cur_item.previewable?(site: cur_site, user: cur_user, member: get_member_by_session)
     set_last_logged_in
   end
 
   def set_last_modified
-    response.headers["Last-Modified"] = CGI::rfc1123_date(@item.updated.in_time_zone)
+    response.headers["Last-Modified"] = CGI::rfc1123_date(cur_item.updated.in_time_zone)
   end
 
   def rescue_action(error = nil)
@@ -52,8 +93,8 @@ class Fs::FilesController < ApplicationController
   end
 
   def error_html_file(status)
-    if @cur_site && @cur_user.nil?
-      file = "#{@cur_site.path}/#{status}.html"
+    if canonical_site && cur_user.nil?
+      file = "#{canonical_site.path}/#{status}.html"
       return file if Fs.exist?(file)
     end
 
@@ -64,11 +105,11 @@ class Fs::FilesController < ApplicationController
   def send_item(disposition = :inline)
     set_last_modified
 
-    if Fs.mode == :file && Fs.file?(@item.path)
-      send_file @item.path, type: @item.content_type, filename: @item.download_filename,
+    if Fs.mode == :file && Fs.file?(cur_item.path)
+      send_file cur_item.path, type: cur_item.content_type, filename: cur_item.download_filename,
                 disposition: disposition, x_sendfile: true
     else
-      send_enum @item.to_io, type: @item.content_type, filename: @item.download_filename,
+      send_enum cur_item.to_io, type: cur_item.content_type, filename: cur_item.download_filename,
                 disposition: disposition
     end
   end
@@ -104,14 +145,14 @@ class Fs::FilesController < ApplicationController
 
     if width.present? && height.present?
       set_last_modified
-      send_thumb @item, type: @item.content_type, filename: @item.filename,
+      send_thumb cur_item, type: cur_item.content_type, filename: cur_item.filename,
         disposition: :inline, width: width, height: height
-    elsif thumb = @item.try(:thumb, size)
-      @item = thumb
+    elsif thumb = cur_item.try(:thumb, size)
+      @cur_item = thumb
       index
     else
       set_last_modified
-      send_thumb @item, type: @item.content_type, filename: @item.filename,
+      send_thumb cur_item, type: cur_item.content_type, filename: cur_item.filename,
         disposition: :inline
     end
   rescue => e
