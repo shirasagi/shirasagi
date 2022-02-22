@@ -16,19 +16,28 @@ this.SS_SearchUI = (function () {
   SS_SearchUI.defaultSelector = function ($item) {
     var self = this;
 
+    var templateId = self.anchorAjaxBox.data("template");
+    var templateEl = templateId ? document.getElementById(templateId) : null;
+    var template, attr;
+    if (templateEl) {
+      template = templateEl.innerHTML;
+      attr = {};
+    } else {
+      template = SS_SearchUI.defaultTemplate;
+
+      var $input = self.anchorAjaxBox.closest("dl").find(".hidden-ids");
+      attr = { name: $input.attr("name"), type: $input.attr("type"), class: $input.attr("class").replace("hidden-ids", "") }
+    }
+
     var $data = $item.closest("[data-id]");
     var data = $data[0].dataset;
-    var $input = self.anchorAjaxBox.closest("dl").find(".hidden-ids");
-    var inputName = $input.attr("name");
-    var inputType = $input.attr("type");
-    var cssClass = $input.attr("class").replace("hidden-ids", "");
-
     data.name ||= $data.find(".select-item").text() || $item.text() || $data.text();
 
-    var tr = ejs.render(SS_SearchUI.defaultTemplate, { data: data, attr: { name: inputName, type: inputType, class: cssClass } });
+    var tr = ejs.render(template, { data: data, attr: attr });
 
-    self.anchorAjaxBox.closest("dl").find(".ajax-selected tbody").prepend(tr);
-    self.anchorAjaxBox.closest("dl").find(".ajax-selected").trigger("change");
+    var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
+    $ajaxSelected.find("tbody").prepend(tr);
+    $ajaxSelected.trigger("change");
   };
 
   SS_SearchUI.defaultDeselector = function (item) {
