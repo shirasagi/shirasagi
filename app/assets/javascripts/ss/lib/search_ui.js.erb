@@ -4,18 +4,29 @@ this.SS_SearchUI = (function () {
 
   SS_SearchUI.anchorAjaxBox;
 
-  SS_SearchUI.defaultSelector = function (item) {
-    var a, data, id, input, name, self, tr;
-    self = this;
-    data = item.closest("[data-id]");
-    id = data.data("id");
-    name = data.data("name") || data.find(".select-item").text() || item.text() || data.text();
-    tr = $("<tr />").attr("data-id", id);//attr
-    input = self.anchorAjaxBox.closest("dl").find(".hidden-ids").clone(false);
-    input = input.val(id).removeClass("hidden-ids");
-    a = $('<a class="deselect btn" href="#"><%= I18n.t "ss.buttons.delete" %></a>');
-    tr.append($('<td />').append(input).append(name));
-    tr.append($('<td />').append(a));
+  SS_SearchUI.defaultTemplate = " \
+    <tr data-id=\"<%%= data.id %>\"> \
+      <td> \
+        <input type=\"<%%= attr.type %>\" name=\"<%%= attr.name %>\" value=\"<%%= data.id %>\" class=\"<%%= attr.class %>\"> \
+        <%%= data.name %> \
+      </td> \
+      <td><a class=\"deselect btn\" href=\"#\"><%= I18n.t "ss.buttons.delete" %></a></td> \
+    </tr>";
+
+  SS_SearchUI.defaultSelector = function ($item) {
+    var self = this;
+
+    var $data = $item.closest("[data-id]");
+    var data = $data[0].dataset;
+    var $input = self.anchorAjaxBox.closest("dl").find(".hidden-ids");
+    var inputName = $input.attr("name");
+    var inputType = $input.attr("type");
+    var cssClass = $input.attr("class").replace("hidden-ids", "");
+
+    data.name ||= $data.find(".select-item").text() || $item.text() || $data.text();
+
+    var tr = ejs.render(SS_SearchUI.defaultTemplate, { data: data, attr: { name: inputName, type: inputType, class: cssClass } });
+
     self.anchorAjaxBox.closest("dl").find(".ajax-selected tbody").prepend(tr);
     self.anchorAjaxBox.closest("dl").find(".ajax-selected").trigger("change");
   };
