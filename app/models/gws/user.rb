@@ -146,7 +146,7 @@ class Gws::User
 
     group_id = gws_main_group_ids[@cur_site.id.to_s]
     return true if group_id.blank?
-    return true if group_ids.include?(group_id) && @cur_site.descendants_and_self.active.where(id: group_id).exists?
+    return true if group_ids.include?(group_id) && @cur_site.descendants_and_self.active.where(id: group_id).present?
 
     errors.add :gws_main_group_ids, :invalid
   end
@@ -156,7 +156,7 @@ class Gws::User
 
     group_id = gws_default_group_ids[@cur_site.id.to_s]
     return true if group_id.blank?
-    return true if group_ids.include?(group_id) && @cur_site.descendants_and_self.active.where(id: group_id).exists?
+    return true if group_ids.include?(group_id) && @cur_site.descendants_and_self.active.where(id: group_id).present?
 
     errors.add :gws_default_group_ids, :invalid
   end
