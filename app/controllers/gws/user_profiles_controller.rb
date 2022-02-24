@@ -7,9 +7,17 @@ class Gws::UserProfilesController < ApplicationController
 
   model Gws::User
 
+  private
+
+  def set_crumbs
+    @crumbs << [ t("sns.profile"), action: :show ]
+  end
+
   def set_item
     @item = @cur_user
   end
+
+  public
 
   def show
     respond_to do |format|
