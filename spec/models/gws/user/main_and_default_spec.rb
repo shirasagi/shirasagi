@@ -14,7 +14,7 @@ describe Gws::User, type: :model, dbscope: :example do
       # メンバー変数が汚染されるとテストで思わぬ結果をうむ場合がある。
       # そこで、データベースからユーザーをロードし、必要処理を実行後、インスタンスを破棄する。
       user.cur_site ||= site
-      user.group_ids = user.group_ids + [ group1.id, group2.id ]
+      user.group_ids = user.group_ids + [ group1.id, group2.id, group4.id ]
       user.save!
     end
     gws_user.reload
@@ -66,6 +66,7 @@ describe Gws::User, type: :model, dbscope: :example do
       end
 
       Gws::User.find(gws_user.id).tap do |user|
+        # 他サイトのグループを主として設定してみる
         user.cur_site = site
         user.in_gws_main_group_id = group4.id
         expect { user.save! }.to raise_error Mongoid::Errors::Validations
@@ -116,6 +117,7 @@ describe Gws::User, type: :model, dbscope: :example do
       end
 
       Gws::User.find(gws_user.id).tap do |user|
+        # 他サイトのグループを既定にしてみる
         user.cur_site = site
         expect(user.set_gws_default_group_id(group4.id.to_s)).to be_falsey
       end
