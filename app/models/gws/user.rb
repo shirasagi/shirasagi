@@ -21,7 +21,9 @@ class Gws::User
 
   attr_accessor :in_title_id, :in_occupation_id, :in_gws_main_group_id
 
+  # 管理者がユーザ管理画面で設定した主グループ。ユーザーの主務を表しており、あまり変更はない。
   field :gws_main_group_ids, type: Hash, default: {}
+  # ユーザーがグループ切り替え機能を用いて設定したアクティブグループ。ユーザーの兼務を表しており、しょっちゅう変わる。
   field :gws_default_group_ids, type: Hash, default: {}
 
   embeds_ids :groups, class_name: "Gws::Group"
@@ -33,6 +35,7 @@ class Gws::User
   before_validation :set_gws_main_group_id, if: ->{ @cur_site && in_gws_main_group_id }
   validate :validate_groups
   validate :validate_gws_main_group, if: ->{ @cur_site }
+  validate :validate_gws_default_group, if: ->{ @cur_site }
 
   # reset default order
   self.default_scoping = nil if default_scopable?
@@ -68,6 +71,12 @@ class Gws::User
   end
 
   def set_gws_default_group_id(group_id)
+    unless group_id.numeric?
+      errors.add :gws_default_group_ids, :invalid
+      return false
+    end
+    group_id = group_id.to_i
+
     ids = gws_default_group_ids.presence || {}
     ids[@cur_site.id.to_s] = group_id
     self.gws_default_group_ids = ids
@@ -88,6 +97,7 @@ class Gws::User
     group_id = gws_default_group_ids[site.id.to_s]
     return if group_id.blank?
 
+    group_id = group_id.to_i if group_id.numeric? # for backwards compatibility
     ids = Array(group_id).compact & self.group_ids
     return if ids.blank?
 
@@ -132,9 +142,20 @@ class Gws::User
   end
 
   def validate_gws_main_group
+    return true if @cur_site.blank?
+
     group_id = gws_main_group_ids[@cur_site.id.to_s]
     return true if group_id.blank?
     return true if group_ids.include?(group_id)
     errors.add :gws_main_group_ids, :invalid
+  end
+
+  def validate_gws_default_group
+    return true if @cur_site.blank?
+
+    group_id = gws_default_group_ids[@cur_site.id.to_s]
+    return true if group_id.blank?
+    return true if group_ids.include?(group_id)
+    errors.add :gws_default_group_ids, :invalid
   end
 end
