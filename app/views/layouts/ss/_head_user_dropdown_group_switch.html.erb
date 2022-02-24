@@ -27,8 +27,8 @@
       </label>
     </li>
     <% alternative_groups.reorder(order: 1, name: 1).each do |group| %>
-      <li>
-        <a href="<%= gws_default_group_path(default_group: group) %>" class="gws-group-switch-item">
+      <li id="gws-group-switch-menu-<%= group.id %>">
+        <a href="#gws-group-switch-menu-<%= group.id %>" class="gws-group-switch-item" data-id="<%= group.id %>">
           <input type="radio" name="gws-group-switch-item" value="<%= group.id %>">
           <span class="gws-group-switch-name"><%= group.section_name %></span>
         </a>
@@ -43,5 +43,33 @@
     if (wrap) {
       wrap.click();
     }
+  });
+
+  var url = <%== gws_apis_default_group_path.to_json %>
+  $("#gws-group-switch-menu").on("click", ".gws-group-switch-item", function(ev) {
+    if (! this.dataset.id) {
+      return;
+    }
+
+    $.ajax({
+      url: url,
+      type: "POST",
+      data: {
+        authenticity_token: $('meta[name="csrf-token"]').attr('content'),
+        default_group: this.dataset.id,
+      },
+      success: function() {
+        location.reload();
+      },
+      error: function(xhr, status, error) {
+        if (xhr.responseJSON) {
+          alert(xhr.responseJSON.errors.join("\n"));
+        } else {
+          alert("error");
+        }
+      }
+    });
+    ev.preventDefault();
+    return false;
   });
 <% end %>
