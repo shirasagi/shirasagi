@@ -20,7 +20,9 @@ class Recommend::SimilarityScore
   set_permission_name "cms_sites", :edit
 
   def content
-    filename = path.sub(/^\//, "")
+    return unless site
+
+    filename = path.sub(/^#{site.url}/, "")
     page = Cms::Page.site(site).where(filename: filename).first
     return page if page
 
