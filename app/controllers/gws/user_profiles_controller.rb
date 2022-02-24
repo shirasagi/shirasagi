@@ -2,6 +2,7 @@ class Gws::UserProfilesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
+  navi_view "gws/user_settings/navi"
   menu_view false
 
   model Gws::User
