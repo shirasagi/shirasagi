@@ -3,7 +3,7 @@ class Gws::UserProfilesController < ApplicationController
   include Gws::CrudFilter
 
   navi_view "gws/user_settings/navi"
-  menu_view "ss/crud/resource_menu"
+  menu_view "sns/user_accounts/menu"
 
   model Gws::User
 
@@ -56,5 +56,19 @@ class Gws::UserProfilesController < ApplicationController
         render json: data.to_json
       end
     end
+  end
+
+  def edit_password
+    @model = SS::PasswordUpdateService
+    @item = SS::PasswordUpdateService.new(cur_user: @cur_user)
+    render
+  end
+
+  def update_password
+    @model = SS::PasswordUpdateService
+    @item = SS::PasswordUpdateService.new(cur_user: @cur_user)
+    @item.attributes = params.require(:item).permit(:old_password, :new_password, :new_password_again)
+    @item.in_updated = params[:_updated].to_s
+    render_update @item.update_password, render: { template: "edit_password" }
   end
 end

@@ -123,6 +123,7 @@ ja:
       send_message: メッセージを作成する
       copy_email_address: メールアドレスをコピー
       closed_save: 非公開にする
+      edit_password: パスワード変更
     buttons:
       save: 保存
       saving: 保存中
@@ -503,6 +504,10 @@ ja:
         encoding: 文字コード
       ss/import_param:
         in_file: ファイル
+      ss/password_update_service:
+        new_password: 新しいパスワード
+        new_password_again: 新しいパスワード（入力確認）
+        old_password: 現在のパスワード
 
   mongoid:
     models:
