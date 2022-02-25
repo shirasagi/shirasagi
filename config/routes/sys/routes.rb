@@ -66,6 +66,7 @@ Rails.application.routes.draw do
       get "postal_codes" => "postal_codes#index"
       get "prefecture_codes" => "prefecture_codes#index"
       post "validation" => "validation#validate"
+      get "cke_config" => "cke_config#index"
     end
 
     namespace "db" do

@@ -89,6 +89,7 @@ Rails.application.routes.draw do
       get "desktop_settings" => "desktop_settings#index"
       put "reload_site_usages" => "site_usages#reload"
       post "validation" => "validation#validate"
+      get "cke_config" => "cke_config#index"
 
       resources :files, concerns: [:deletion, :file_api]
     end

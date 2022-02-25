@@ -1,0 +1,60 @@
+CKEDITOR.editorConfig = function (config) {
+  config.language = <%== I18n.locale.to_s.to_json %>;
+
+  config.customConfig = '';
+
+  config.toolbarGroups = [
+    { name: 'styles', groups: [ 'styles' ] },
+    { name: 'basicstyles', groups: [ 'basicstyles' ] },
+    { name: 'colors', groups: [ 'colors' ] },
+    { name: 'basicstyles', groups: [ 'cleanup' ] },
+    '/',
+    { name: 'paragraph', groups: [ 'align', 'list', 'links', 'blocks', 'paragraph', 'insert' ] },
+  ];
+
+  config.removeButtons = 'Styles,Font,Subscript,Superscript,Anchor,Image,Flash,HorizontalRule,Smiley,SpecialChar,PageBreak,Iframe';
+
+  config.extraPlugins = ['colorbutton', 'font', 'justify'];
+
+  config.bodyClass = "ss-cke";
+
+  config.contentsCss = [ <%== stylesheet_path("ss/cke").to_json %> ];
+
+  config.format_tags = 'p;h1;h2;h3';
+  config.format_h1 = { element: 'h1', attributes: { 'class': 'ss-cke-h1' } };
+  config.format_h2 = { element: 'h2', attributes: { 'class': 'ss-cke-h2' } };
+  config.format_h3 = { element: 'h3', attributes: { 'class': 'ss-cke-h3' } };
+
+  config.fontSize_sizes = "8pt/8pt;10pt/10pt;12pt/12pt;14pt/14pt;18pt/18pt;24pt/24pt;36pt/36pt;";
+  config.fontSize_style = {
+    element: 'span',
+    styles: { 'font-size': '#(size)' },
+    overrides: [ { element: 'span', attributes: { 'font-size': null } } ]
+  };
+
+  config.coreStyles_bold = {
+    element: 'span',
+    attributes: { 'class': 'ss-cke-bold' }
+  };
+  config.coreStyles_italic = {
+    element: 'span',
+    attributes: { 'class': 'ss-cke-italic' }
+  };
+  config.coreStyles_underline = {
+    element: 'span',
+    attributes: { 'class': 'ss-cke-underline' }
+  };
+  config.coreStyles_strike = {
+    element: 'span',
+    attributes: { 'class': 'ss-cke-strike' }
+  };
+
+  config.colorButton_colors =
+    "Black/000000,BurntOrange/993300,DarkOlive/333300,DarkGreen/003300,DarkAzure/003366,NavyBlue/000080,Indigo/333399,VeryDarkGray/333333," +
+    "Maroon/800000,Orange/FF6600,Olive/808000,Green/008000,Teal/008080,Blue/0000FF,GrayishBlue/666699,Gray/808080," +
+    "Red/FF0000,Amber/FF9900,YellowGreen/99CC00,SeaGreen/339966,Turquoise/33CCCC,RoyalBlue/3366FF,Purple/800080,MediumGray/999999," +
+    "Magenta/FF00FF,Gold/FFCC00,Yellow/FFFF00,Lime/00FF00,Aqua/00FFFF,SkyBlue/00CCFF,RedViolet/993366,White/FFFFFF," +
+    "Pink/FF99CC,Peach/FFCC99,LightYellow/FFFF99,PaleGreen/CCFFCC,PaleCyan/CCFFFF,LightSkyBlue/99CCFF,Plum/CC99FF";
+  config.colorButton_colorsPerRow = 8;
+  config.colorButton_enableAutomatic = false;
+};

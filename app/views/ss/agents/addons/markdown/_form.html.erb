@@ -21,6 +21,11 @@
 </div>
 
 <%= jquery do %>
-  SS_Addon_Markdown.prependCkeContentsCss(<%== stylesheet_path("ss/cke").to_json %>);
-  new SS_Addon_Markdown(<%== "##{addon[:id]}".to_json %>);
+  <%
+    options = {}
+    if @ss_mode == :gws
+      options[:customCkeConfig] = gws_apis_cke_config_path(format: "js")
+    end
+  %>
+  new SS_Addon_Markdown(<%== "##{addon[:id]}".to_json %>, <%== options.to_json %>);
 <% end %>
