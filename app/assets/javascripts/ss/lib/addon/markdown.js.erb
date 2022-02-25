@@ -47,13 +47,16 @@ this.SS_Addon_Markdown = (function () {
   SS_Addon_Markdown.prototype.render = function () {
     var self = this;
 
-    self.$el.find("." + SS_Addon_Markdown.type).on("change", function() {
-      self.onTextTypeChanged($(this));
-    }).trigger("change");
+    var $typeSelect = self.$el.find("." + SS_Addon_Markdown.type);
+    $typeSelect.on("change", function() {
+      self.onTextTypeChanged($typeSelect);
+    });
 
     self.$el.find("." + SS_Addon_Markdown.previewButton).on("click", function() {
       self.toggleMarkdownPreview();
     });
+
+    self.onTextTypeChanged($typeSelect);
   };
 
   SS_Addon_Markdown.prototype.onTextTypeChanged = function ($this) {
@@ -79,10 +82,11 @@ this.SS_Addon_Markdown = (function () {
       }
 
       if (val === "cke") {
-        self.enableCKEditor(function() { $typeSelect.prop("disabled", false); });
+        self.enableCKEditor(function() { $typeSelect.prop("disabled", false); self.$el.trigger("ss:editorActivated"); });
       } else {
         self.disableCKEditor();
         $typeSelect.prop("disabled", false);
+        self.$el.trigger("ss:editorDeactivated");
       }
     }
   };
@@ -131,7 +135,7 @@ this.SS_Addon_Markdown = (function () {
   SS_Addon_Markdown.prototype.enableCKEditor = function(onReady) {
     var self = this;
     var $editor = self.$el.find("." + SS_Addon_Markdown.textArea);
-    if ($editor.data("ckeInstance")) {
+    if ($editor.data("ss.ckeInstance")) {
       // already enabled
       return;
     }
@@ -145,17 +149,17 @@ this.SS_Addon_Markdown = (function () {
     var config = {
       customConfig: customConfig,
       on: {
-        instanceReady: function() { $editor.data("ckeInstance", this); onReady(); }
+        instanceReady: function() { $editor.data("ss.ckeInstance", this); onReady(); }
       }
     };
 
-    CKEDITOR.replace($editor[0], config);
+    $editor.ckeditor(config);
   };
 
   SS_Addon_Markdown.prototype.disableCKEditor = function() {
     var $editor = this.$el.find("." + SS_Addon_Markdown.textArea);
-    var ckeInstance = $editor.data("ckeInstance");
-    $editor.data("ckeInstance", null);
+    var ckeInstance = $editor.data("ss.ckeInstance");
+    $editor.data("ss.ckeInstance", null);
 
     if (! ckeInstance) {
       // not enabled
