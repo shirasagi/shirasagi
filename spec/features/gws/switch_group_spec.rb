@@ -50,18 +50,13 @@ describe "gws_switch_group", type: :feature, dbscope: :example, js: true do
       end
     end
 
+    within "nav.user" do
+      expect(page).to have_css("h2", text: "#{group2.trailing_name} #{gws_user.name}")
+    end
     Gws::User.find(gws_user.id).tap do |user|
       user.cur_site = site
       expect(user.gws_main_group_ids).to include(site.id.to_s => default_group.id)
       expect(user.gws_default_group_ids).to include(site.id.to_s => group2.id)
-    end
-
-    visit gws_portal_path(site: site)
-    within "nav.user" do
-      Gws::User.find(gws_user.id).tap do |user|
-        user.cur_site = site
-        expect(page).to have_css("h2", text: "#{group2.trailing_name} #{user.name}")
-      end
     end
   end
 end
