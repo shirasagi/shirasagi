@@ -1,10 +1,14 @@
 this.SS_Addon_Markdown = (function () {
-  function SS_Addon_Markdown() {
+  function SS_Addon_Markdown(el) {
+    this.$el = $(el);
+    this.render();
   }
 
   SS_Addon_Markdown.container = 'ss-addon-markdown';
 
   SS_Addon_Markdown.content = 'ss-addon-markdown-content';
+
+  SS_Addon_Markdown.textArea = 'ss-markdown-area';
 
   SS_Addon_Markdown.toolbar = 'ss-addon-markdown-toolbar';
 
@@ -26,55 +30,199 @@ this.SS_Addon_Markdown = (function () {
 
   SS_Addon_Markdown.helpButton = 'ss-addon-markdown-help-button';
 
-  SS_Addon_Markdown.render = function () {
-    $("." + this.toolbar).append("<span class='" + this.options + "'></span>");
-    $("." + this.container).append("<div class='" + this.preview + " markdown-body'>preview</div>");
-    this.renderForm($("." + this.type).val());
-    return $("." + this.type).on("change", function () {
-      return SS_Addon_Markdown.renderForm($(this).val());
+  SS_Addon_Markdown.cke = { contentsCss: [] };
+
+  SS_Addon_Markdown.render = function (el, options) {
+    var $el = $(el || "." + SS_Addon_Markdown.container);
+    $el.find("." + this.toolbar).append("<span class='" + this.options + "'></span>");
+    $el.append("<div class='" + this.preview + " markdown-body'></div>");
+    $el.find("." + this.options)
+      .append("<input type='button' class='btn " + this.previewButton + "' value='" + this.previewLabel + "' />")
+      .append("<a href='" + this.helpUrl + "' class='" + this.helpButton + "' target='_blank'>" + this.helpLabel + "</a>");
+
+    return new SS_Addon_Markdown("." + SS_Addon_Markdown.container);
+  };
+
+  SS_Addon_Markdown.prependCkeContentsCss = function (path) {
+    if (!SS_Addon_Markdown.cke.contentsCss) {
+      SS_Addon_Markdown.cke.contentsCss = [];
+    }
+
+    SS_Addon_Markdown.cke.contentsCss.unshift(path);
+  };
+
+  SS_Addon_Markdown.prototype.render = function () {
+    var self = this;
+
+    self.$el.find("." + SS_Addon_Markdown.type).on("change", function() {
+      self.onTextTypeChanged($(this));
+    }).trigger("change");
+
+    self.$el.find("." + SS_Addon_Markdown.previewButton).on("click", function() {
+      self.toggleMarkdownPreview();
     });
   };
 
-  SS_Addon_Markdown.resetContent = function () {
-    $("." + this.preview).html('').hide();
-    return $("." + this.content + " textarea").show();
-  };
+  SS_Addon_Markdown.prototype.onTextTypeChanged = function ($this) {
+    var self = this;
+    var val = $this.val();
 
-  SS_Addon_Markdown.renderForm = function (type) {
-    $("." + this.options).html('');
-    this.resetContent();
-    if (type === 'markdown') {
-      return this.renderFormMarkdown();
+    var $typeSelect = this.$el.find("." + SS_Addon_Markdown.type);
+    $typeSelect.prop("disabled", true);
+
+    if (val === "markdown") {
+      this.$el.find("." + SS_Addon_Markdown.options).removeClass("hide");
+      this.$el.find("." + SS_Addon_Markdown.previewButton).removeClass("hide");
+      this.$el.find("." + SS_Addon_Markdown.helpButton).removeClass("hide");
+      self.disableCKEditor();
+      $typeSelect.prop("disabled", false);
+    } else {
+      this.$el.find("." + SS_Addon_Markdown.options).addClass("hide");
+      this.$el.find("." + SS_Addon_Markdown.previewButton).addClass("hide");
+      this.$el.find("." + SS_Addon_Markdown.helpButton).addClass("hide");
+
+      if (this.isPreviewButtonPressed()) {
+        this.hideMarkdownPreview();
+      }
+
+      if (val === "cke") {
+        self.enableCKEditor(function() { $typeSelect.prop("disabled", false); });
+      } else {
+        self.disableCKEditor();
+        $typeSelect.prop("disabled", false);
+      }
     }
   };
 
-  SS_Addon_Markdown.renderFormMarkdown = function () {
-    $("." + this.options).append("<input type='button' class='btn " + this.previewButton + "' value='" + this.previewLabel + "' />");
-    $("." + this.options).append("<a href='" + this.helpUrl + "' class='" + this.helpButton + "' target='_blank' rel='noopener'>" + this.helpLabel + "</a>");
-    return $("." + this.previewButton).on('click', function () {
-      var text;
-      $(this).toggleClass('active');
-      if ($(this).hasClass('active')) {
-        text = $("." + SS_Addon_Markdown.content + " textarea").val();
-        $("." + SS_Addon_Markdown.content + " textarea").hide();
-        //$(".#{SS_Addon_Markdown.preview}").html(marked(text, breaks: true)).show()
-        return $.ajax({
-          url: SS_Addon_Markdown.previewUrl,
-          method: "post",
-          data: {
-            text: text
-          },
-          success: function (data) {
-            return $("." + SS_Addon_Markdown.preview).html(data).show();
-          }
-        });
-      } else {
-        return SS_Addon_Markdown.resetContent();
+  SS_Addon_Markdown.prototype.isPreviewButtonPressed = function() {
+    return this.$el.find("." + SS_Addon_Markdown.previewButton).attr('aria-pressed') === 'true';
+  }
+
+  SS_Addon_Markdown.prototype.toggleMarkdownPreview = function() {
+    if (this.isPreviewButtonPressed()) {
+      this.hideMarkdownPreview();
+    } else {
+      this.previewMarkdown();
+    }
+  };
+
+  SS_Addon_Markdown.prototype.previewMarkdown = function() {
+    var self = this;
+    var text = this.$el.find("." + SS_Addon_Markdown.textArea).val();
+
+    this.$el.find("." + SS_Addon_Markdown.previewButton).attr('aria-pressed', 'true');
+    this.$el.find("." + SS_Addon_Markdown.textArea).addClass("hide");
+    this.$el.find("." + SS_Addon_Markdown.preview).html(SS.loading).removeClass("hide");
+
+    $.ajax({
+      url: SS_Addon_Markdown.previewUrl,
+      method: "post",
+      data: {
+        text: text
+      },
+      success: function(data) {
+        self.$el.find("." + SS_Addon_Markdown.preview).html(data);
+      },
+      error: function(xhr, status, error) {
+        self.$el.find("." + SS_Addon_Markdown.preview).html("<p>Error!!</p><br/><p>" + xhr["statusText"] + "</p>");
       }
     });
   };
 
+  SS_Addon_Markdown.prototype.hideMarkdownPreview = function() {
+    this.$el.find("." + SS_Addon_Markdown.textArea).removeClass("hide").focus();
+    this.$el.find("." + SS_Addon_Markdown.preview).addClass("hide").html('');
+    this.$el.find("." + SS_Addon_Markdown.previewButton).attr('aria-pressed', 'false');
+  };
+
+  SS_Addon_Markdown.prototype.enableCKEditor = function(onReady) {
+    var self = this;
+    var $editor = this.$el.find("." + SS_Addon_Markdown.textArea);
+    if ($editor.data("ckeInstance")) {
+      // already enabled
+      return;
+    }
+
+    var config = { on: { instanceReady: function() { $editor.data("ckeInstance", this); onReady(); } } };
+    self.ckeConfig(config);
+
+    CKEDITOR.replace($editor[0], config);
+  };
+
+  SS_Addon_Markdown.prototype.disableCKEditor = function() {
+    var $editor = this.$el.find("." + SS_Addon_Markdown.textArea);
+    var ckeInstance = $editor.data("ckeInstance");
+    $editor.data("ckeInstance", null);
+
+    if (! ckeInstance) {
+      // not enabled
+      return;
+    }
+
+    ckeInstance.destroy();
+  };
+
+  SS_Addon_Markdown.prototype.ckeConfig = function(config) {
+    config.language = 'ja';
+
+    config.customConfig = '';
+
+    config.toolbarGroups = [
+      { name: 'styles', groups: [ 'styles' ] },
+      { name: 'basicstyles', groups: [ 'basicstyles' ] },
+      { name: 'colors', groups: [ 'colors' ] },
+      { name: 'basicstyles', groups: [ 'cleanup' ] },
+      '/',
+      { name: 'paragraph', groups: [ 'align', 'list', 'links', 'blocks', 'paragraph', 'insert' ] },
+    ];
+
+    config.removeButtons = 'Styles,Font,Subscript,Superscript,Anchor,Image,Flash,HorizontalRule,Smiley,SpecialChar,PageBreak,Iframe';
+
+    config.extraPlugins = ['colorbutton', 'font', 'justify'];
+
+    config.bodyClass = "ss-cke";
+
+    config.contentsCss = SS_Addon_Markdown.cke.contentsCss;
+
+    config.format_tags = 'p;h1;h2;h3';
+    config.format_h1 = { element: 'h1', attributes: { 'class': 'ss-cke-h1' } };
+    config.format_h2 = { element: 'h2', attributes: { 'class': 'ss-cke-h2' } };
+    config.format_h3 = { element: 'h3', attributes: { 'class': 'ss-cke-h3' } };
+
+    config.fontSize_sizes = "8pt/8pt;10pt/10pt;12pt/12pt;14pt/14pt;18pt/18pt;24pt/24pt;36pt/36pt;";
+    config.fontSize_style = {
+      element: 'span',
+      styles: { 'font-size': '#(size)' },
+      overrides: [ { element: 'span', attributes: { 'font-size': null } } ]
+    };
+
+    config.coreStyles_bold = {
+      element: 'span',
+      attributes: { 'class': 'ss-cke-bold' }
+    };
+    config.coreStyles_italic = {
+      element: 'span',
+      attributes: { 'class': 'ss-cke-italic' }
+    };
+    config.coreStyles_underline = {
+      element: 'span',
+      attributes: { 'class': 'ss-cke-underline' }
+    };
+    config.coreStyles_strike = {
+      element: 'span',
+      attributes: { 'class': 'ss-cke-strike' }
+    };
+
+    config.colorButton_colors =
+      "Black/000000,BurntOrange/993300,DarkOlive/333300,DarkGreen/003300,DarkAzure/003366,NavyBlue/000080,Indigo/333399,VeryDarkGray/333333," +
+      "Maroon/800000,Orange/FF6600,Olive/808000,Green/008000,Teal/008080,Blue/0000FF,GrayishBlue/666699,Gray/808080," +
+      "Red/FF0000,Amber/FF9900,YellowGreen/99CC00,SeaGreen/339966,Turquoise/33CCCC,RoyalBlue/3366FF,Purple/800080,MediumGray/999999," +
+      "Magenta/FF00FF,Gold/FFCC00,Yellow/FFFF00,Lime/00FF00,Aqua/00FFFF,SkyBlue/00CCFF,RedViolet/993366,White/FFFFFF," +
+      "Pink/FF99CC,Peach/FFCC99,LightYellow/FFFF99,PaleGreen/CCFFCC,PaleCyan/CCFFFF,LightSkyBlue/99CCFF,Plum/CC99FF";
+    config.colorButton_colorsPerRow = 8;
+    config.colorButton_enableAutomatic = false;
+  }
+
   return SS_Addon_Markdown;
 
 })();
-

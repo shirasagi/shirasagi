@@ -6,13 +6,15 @@
   .btn {
     margin-left: 5px;
   }
-  .active {
-    background: #ddd;
-    color: #888;
-  }
   .ss-addon-markdown-help-button {
     float: right;
     margin: 14px 0 0;
+  }
+}
+.ss-addon-markdown-preview-button {
+  &[aria-pressed="true"] {
+    background: #ddd;
+    color: #888;
   }
 }
 
