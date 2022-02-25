@@ -79,7 +79,7 @@ Rails.application.routes.draw do
 
   concern :change_state do
     get :state, on: :member
-    put :change_all_state, on: :collection, path: ''
+    put :change_state_all, on: :collection, path: ''
   end
 
   namespace "cms", path: ".s:site" do

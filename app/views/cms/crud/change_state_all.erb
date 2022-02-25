@@ -1,5 +1,5 @@
 <%= form_with url: request.url, method: :put do |f| %>
-  <%= hidden_field_tag "change_all_state", true %>
+  <%= hidden_field_tag "change_state_all", true %>
   <%= hidden_field_tag "state", @state %>
   <div class="addon-views"></div>
     <div class="addon-view" id="addon-basic">
@@ -10,14 +10,14 @@
         <div class="index">
           <ul class="list-items">
             <% @selected_items.each do |item| %>
-              <%= render "cms/crud/crud_others", item: item, f: f %>
+              <%= render "cms/crud/confirm_all", item: item, f: f %>
             <% end %>
           </ul>
         </div>
       </div>
     </div>
     <footer class="send">
-      <%= f.submit t("ss.buttons.#{@state}"), class: "btn-danger change-state" %>
+      <%= f.submit t("ss.buttons.make_them_#{@state}"), class: "btn-danger delete" %>
       <%= f.button t("ss.buttons.cancel"), class: "btn-default", type: :reset, onclick: "location.href='#{request.url}'; return false;" %>
     </footer>
   </div>
@@ -27,7 +27,7 @@
   $('.send .change-state').on('click', function() {
     var checkedCount = $('.list-item :checked').length;
     if (checkedCount === 0){
-      alert("<%= I18n.t("errors.messages.plz_check_targets_to_delete") %>");
+      alert("<%= I18n.t("errors.messages.plz_check_targets_to_change_state") %>");
       return false;
     }
   });

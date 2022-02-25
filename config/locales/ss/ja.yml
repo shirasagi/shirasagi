@@ -81,8 +81,8 @@ ja:
       copy: 複製する
       command: コマンド
       input: 入力する
-      public: 公開にする
-      close: 非公開にする
+      make_them_public: 公開にする
+      make_them_close: 非公開にする
       delete: 削除する
       import: インポート
       reply: 返信する
@@ -188,8 +188,8 @@ ja:
       file_histories: ファイル履歴
       translate: 翻訳
       replace_save: 差し替え保存
-      public: 公開にする
-      close: 非公開にする
+      make_them_public: 公開にする
+      make_them_close: 非公開にする
     confirm:
       change_state: 公開状態を変更してよろしいですか？
       delete: 削除してよろしいですか？

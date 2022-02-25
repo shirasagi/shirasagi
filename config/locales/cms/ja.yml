@@ -495,7 +495,6 @@ ja:
     use_cms_commands: コマンドの実行
     use_cms_tools: 運用ツールの利用
     use_cms_editor_extensions: エディターの高度な利用
-    state_other_cms_nodes: フォルダーの公開ステータス変更（全て）
     read_cms_generate_lock: 書き出し停止の閲覧
     edit_cms_generate_lock: 書き出し停止の編集
     read_other_cms_nodes: フォルダーの閲覧（全て）
@@ -1223,7 +1222,6 @@ ja:
       mobile_size_check_server_error: 本文データサイズのチェック中にサーバーエラーが発生しました。
       not_a_child_group: はサイトに所属するグループを設定してください。
       not_found_parent_group: 親グループが存在しません。
-      plz_check_targets_to_delete: 削除対象が選択されておりません。チェックボックスにチェックを入れた上で削除をお願いします。
       plz_check_targets_to_change_state: 公開ステータス変更対象が選択されておりません。チェックボックスにチェックを入れた上で変更をお願いします。
       invalid_order_of_h: 見出し(H)の順番が不正です。
       invalid_multibyte_character: 英数字は半角文字を入力してください。

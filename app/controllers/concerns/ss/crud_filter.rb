@@ -6,7 +6,7 @@ module SS::CrudFilter
     before_action :prepend_current_view_path
     before_action :append_view_paths
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
-    before_action :set_selected_items, only: [:destroy_all, :change_all_state]
+    before_action :set_selected_items, only: [:destroy_all, :change_state_all]
     menu_view "ss/crud/menu"
   end
 
@@ -167,7 +167,7 @@ module SS::CrudFilter
     end
   end
 
-  def render_ud_all(result, opts = {})
+  def render_confirmed_all(result, opts = {})
     location = opts[:location].presence || crud_redirect_url || { action: :index }
     if result
       notice = { notice: opts[:notice].presence || t("ss.notice.deleted") }
