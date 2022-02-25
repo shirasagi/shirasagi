@@ -3,7 +3,7 @@ class Gws::UserProfilesController < ApplicationController
   include Gws::CrudFilter
 
   navi_view "gws/user_settings/navi"
-  menu_view false
+  menu_view "ss/crud/resource_menu"
 
   model Gws::User
 
@@ -11,6 +11,15 @@ class Gws::UserProfilesController < ApplicationController
 
   def set_crumbs
     @crumbs << [ t("sns.profile"), action: :show ]
+  end
+
+  def append_view_paths
+    append_view_path "app/views/sns/user_accounts"
+    super
+  end
+
+  def permit_fields
+    [ :name, :kana, :email, :tel, :tel_ext ]
   end
 
   def set_item
@@ -22,7 +31,7 @@ class Gws::UserProfilesController < ApplicationController
   def show
     respond_to do |format|
       format.html { render }
-      format.json {
+      format.json do
         index = @cur_user.imap_default_index || 0
         user_setting = @cur_user.imap_settings[index]
         base_setting = @cur_user.imap_default_settings
@@ -45,7 +54,7 @@ class Gws::UserProfilesController < ApplicationController
 
         data[:user][:password] = nil
         render json: data.to_json
-      }
+      end
     end
   end
 end
