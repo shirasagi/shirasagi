@@ -201,6 +201,10 @@ describe "fs_files", type: :feature, dbscope: :example do
           end
         end
 
+        after do
+          SS::Application.request_interceptor = nil
+        end
+
         it "via url" do
           visit file.url
           expect(status_code).to eq 200
@@ -252,6 +256,43 @@ describe "fs_files", type: :feature, dbscope: :example do
           visit file.full_url
           expect(status_code).to eq 404
         end
+      end
+    end
+
+    context "with sub-directory sub-site via mypage domain" do
+      let(:mypage_domain) { unique_domain }
+      let!(:sub_site) do
+        create :cms_site_subdir, parent: site, domains: site.domains, group_ids: site.group_ids, mypage_domain: mypage_domain
+      end
+      let(:html) do
+        <<~HTML.freeze
+          <p><img alt="#{file.name}" src="#{file.url}" /></p>
+        HTML
+      end
+      let!(:item) { create :cms_page, cur_site: sub_site, cur_user: user, html: html, file_ids: [ file.id ], state: state }
+      let(:state) { "public" }
+
+      before do
+        site.mypage_domain = mypage_domain
+        site.save!
+
+        SS::Application.request_interceptor = proc do |env|
+          env["HTTP_X_FORWARDED_HOST"] = mypage_domain
+        end
+      end
+
+      after do
+        SS::Application.request_interceptor = nil
+      end
+
+      it "via url" do
+        visit file.url
+        expect(status_code).to eq 200
+      end
+
+      it "via thumb_url" do
+        visit file.thumb_url
+        expect(status_code).to eq 200
       end
     end
   end
