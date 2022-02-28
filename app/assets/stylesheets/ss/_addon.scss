@@ -7,14 +7,8 @@
     margin-left: 5px;
   }
   .ss-addon-markdown-help-button {
-    float: right;
     margin: 14px 0 0;
-  }
-}
-.ss-addon-markdown-preview-button {
-  &[aria-pressed="true"] {
-    background: #ddd;
-    color: #888;
+    float: right;
   }
 }
 
@@ -34,17 +28,17 @@
   }
 
   .thumb {
-    border: none;
     max-width: 150px;
+    border: 0;
     line-height: unset;
 
     .name {
       margin: 0;
       padding: 5px;
-      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      word-wrap: nowrap;
+      overflow-wrap: normal;
+      white-space: nowrap;
     }
   }
 

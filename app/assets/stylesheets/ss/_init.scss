@@ -152,6 +152,9 @@ $border-white: 1px solid $white;
   &:disabled, &.btn-disabled {
     @include btn-disabled;
   }
+  &[aria-pressed="true"], &.btn-pressed {
+    @include btn-pressed;
+  }
 }
 @mixin btn-gray-l {
   display: inline-block;
@@ -250,6 +253,12 @@ $border-white: 1px solid $white;
   background: #d8d8d8;
   color: #888;
   cursor: default;
+}
+@mixin btn-pressed {
+  color: #333;
+  background-color: #ccc;
+  background-image: none;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, .15), 0 1px 2px rgba(0, 0, 0, .05);
 }
 
 @mixin truncate {
