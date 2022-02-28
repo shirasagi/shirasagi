@@ -2,21 +2,24 @@ class Sys::Db::DocsController < ApplicationController
   include Sys::BaseFilter
   include Sys::CrudFilter
 
-  before_action :set_db, prepend: true
-
   menu_view nil
 
   private
 
-  def set_crumbs
-    @crumbs << [t("sys.db_tool"), sys_db_path]
-    @crumbs << [@coll.name, sys_db_docs_path(coll: @coll.name)]
+  def db
+    @db ||= begin
+      raise "404" unless SS::User.allowed?(:edit, @cur_user)
+      Mongoid.default_client
+    end
   end
 
-  def set_db
-    raise '500' unless Rails.env.match?(/development|test/)
-    @db = Mongoid.default_client
-    @coll = @db[params[:coll]]
+  def coll
+    @coll ||= db[params[:coll]]
+  end
+
+  def set_crumbs
+    @crumbs << [ t("sys.db_tool"), sys_db_path ]
+    @crumbs << [ coll.name, sys_db_docs_path(coll: coll.name) ]
   end
 
   def set_item
@@ -28,20 +31,18 @@ class Sys::Db::DocsController < ApplicationController
     end
 
     ## http://api.mongodb.com/ruby/current/Mongo/Collection.html
-    raise "404" unless @item = @coll.find(_id: id).first
+    raise "404" unless @item = coll.find(_id: id).first
   end
 
   public
 
   def index
-    raise "403" unless SS::User.allowed?(:edit, @cur_user)
-
     limit = 50
     page = params[:page].try { |page| page.to_i - 1 } || 0
     offset = page * limit
-    total_count = @coll.count
+    total_count = coll.count
 
-    @items = @coll.find(nil, limit: limit, skip: offset)
+    @items = coll.find(nil, limit: limit, skip: offset)
     @items = Kaminari.paginate_array(@items.to_a, limit: limit, offset: offset, total_count: total_count)
 
     @fields = []
