@@ -62,7 +62,7 @@ module Sys::SiteImport::File
   end
 
   def replace_html_with_url(src, dst)
-    src_path = /=\"#{::Regexp.escape(::File.dirname(src))}\/[^\"]*/
+    src_path = /="#{::Regexp.escape(::File.dirname(src))}\/[^"]*/
     dst_path = "=\"#{dst}"
 
     fields = Cms::ApiFilter::Contents::HTML_FIELDS
