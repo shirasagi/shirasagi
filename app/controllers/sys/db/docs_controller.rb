@@ -36,7 +36,13 @@ class Sys::Db::DocsController < ApplicationController
   def index
     raise "403" unless SS::User.allowed?(:edit, @cur_user)
 
-    @items = @coll.find
+    limit = 50
+    page = params[:page].try { |page| page.to_i - 1 } || 0
+    offset = page * limit
+    total_count = @coll.count
+
+    @items = @coll.find(nil, limit: limit, skip: offset)
+    @items = Kaminari.paginate_array(@items.to_a, limit: limit, offset: offset, total_count: total_count)
 
     @fields = []
     @items.each { |item| @fields |= item.keys }
