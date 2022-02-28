@@ -15,7 +15,7 @@ module SS
         if @tmp_file
           if puts_to_console
             @tmp_file.rewind
-            IO.copy_stream(@tmp_file, STDOUT)
+            IO.copy_stream(@tmp_file, $stdout)
           end
 
           @tmp_file.close rescue nil
