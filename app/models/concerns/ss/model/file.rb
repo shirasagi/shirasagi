@@ -259,9 +259,11 @@ module SS::Model::File
     # be careful: cur_user and item may be nil
     item = effective_owner_item
     if site && Utils.cms_object?(self, item) && !Utils.same_cms_site?(self, item, site: site)
+      Rails.logger.warn { "file is requested in different site" }
       return false
     end
     unless Utils.fs_access_allowed?(self, item, Rails.application.current_request)
+      Rails.logger.warn { "access to /fs is not allowed" }
       return false
     end
     if user && item && Utils.readable_by_user?(self, item, user: user)
@@ -273,6 +275,7 @@ module SS::Model::File
     # special delegation if item implements previewable?
     return true if Utils.previewable_by_owner?(self, item, site: site, user: user, member: member)
 
+    Rails.logger.warn { "file access is not allowed" }
     false
   end
 

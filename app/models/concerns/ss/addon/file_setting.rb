@@ -66,7 +66,6 @@ module SS::Addon
 
       if file_fs_access_restriction_allowed_ip_addresses.present?
         matcher = IPAddressMatcher.new(file_fs_access_restriction_allowed_ip_addresses)
-        # return true if matcher.match?(request.env["HTTP_X_REAL_IP"].presence || request.remote_addr)
         return true if matcher.match?(request)
       end
       if file_fs_access_restriction_basic_auth_id.present? && file_fs_access_restriction_basic_auth_password.present?
@@ -96,7 +95,9 @@ module SS::Addon
 
       def match?(request)
         remote_addr = request.env["HTTP_X_REAL_IP"].presence || request.remote_addr
-        @ip_addresses.any? { |addr| addr.include?(remote_addr) }
+        result = @ip_addresses.any? { |addr| addr.include?(remote_addr) }
+        Rails.logger.warn { "remote address '#{remote_addr}' is not allowed" } unless result
+        result
       end
     end
 
@@ -107,11 +108,20 @@ module SS::Addon
 
       def match?(request)
         authorization = request.authorization
-        return false if authorization.blank?
+        if authorization.blank?
+          Rails.logger.warn { "authorization is not presented" }
+          return false
+        end
 
         type, digest = authorization.split(" ", 2)
-        return false unless type.casecmp("basic").zero?
-        return false if digest != @digest
+        unless type.casecmp("basic").zero?
+          Rails.logger.warn { "authorization type is not 'basic'" }
+          return false
+        end
+        if digest != @digest
+          Rails.logger.warn { "authorization credential is not matched" }
+          return false
+        end
 
         true
       end
@@ -124,11 +134,15 @@ module SS::Addon
       end
 
       def match?(request)
-        if @value
-          request.env[@key] == @value
-        else
-          request.env.key?(@key)
+        result = request.env.key?(@key)
+        message = proc { "environment key '#{@key}' is not presented" }
+        if result && @value
+          result = request.env[@key] == @value
+          message = proc { "environment value '#{request.env[@key]}' is not matched" }
         end
+
+        Rails.logger.warn(&message) unless result
+        result
       end
     end
 

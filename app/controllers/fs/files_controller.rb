@@ -2,12 +2,19 @@ class Fs::FilesController < ApplicationController
   include SS::AuthFilter
   include Member::AuthFilter
 
+  around_action :around_tagged_url
   before_action :cur_user
   before_action :cur_item
   before_action :deny
   rescue_from StandardError, with: :rescue_action
 
   private
+
+  def around_tagged_url
+    Rails.logger.tagged(request.url) do
+      yield
+    end
+  end
 
   def cms_sites
     # サブディレクトリ型サブサイトの /fs と親サイトの /fs とは区別がつかない。
@@ -40,11 +47,22 @@ class Fs::FilesController < ApplicationController
       name_or_filename = params[:filename]
       name_or_filename << ".#{params[:format]}" if params[:format].present?
 
-      item = SS::File.find(id)
-      raise "404" if item.name != name_or_filename && item.filename != name_or_filename
+      begin
+        item = SS::File.find(id)
+      rescue Mongoid::Errors::DocumentNotFound
+        Rails.logger.warn { "#{id} is not found" }
+        raise
+      end
+      if item.name != name_or_filename && item.filename != name_or_filename
+        Rails.logger.warn { "name or filename is not matched" }
+        raise "404"
+      end
 
       item = item.becomes_with_model
-      raise "404" if item.try(:thumb?)
+      if item.try(:thumb?)
+        Rails.logger.warn { "requested file is a thumbnail file" }
+        raise "404"
+      end
 
       item
     end
@@ -70,8 +88,18 @@ class Fs::FilesController < ApplicationController
   end
 
   def deny
-    raise "404" unless cur_item.previewable?(site: cur_site, user: cur_user, member: get_member_by_session)
-    set_last_logged_in
+    member = get_member_by_session
+
+    tags = []
+    tags << "file:#{cur_item.id}(#{cur_item.filename})" if cur_item
+    tags << "site:#{cur_site.host}(#{cur_site.name})" if cur_site
+    tags << "user:#{cur_user.long_name}" if cur_user
+    tags << "member:#{member.id}(#{member.name})" if member
+
+    Rails.logger.tagged(*tags) do
+      raise "404" unless cur_item.previewable?(site: cur_site, user: cur_user, member: member)
+      set_last_logged_in
+    end
   end
 
   def set_last_modified

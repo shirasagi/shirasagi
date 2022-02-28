@@ -5,6 +5,14 @@ describe SS::Addon::FileSetting::BasicAuthMatcher, dbscope: :example do
   let(:pass) { unique_id }
   let(:digest) { Base64.encode64("#{id}:#{pass}").chomp }
 
+  before do
+    SS::LogSupport.stdout_logger.enable
+  end
+
+  after do
+    SS::LogSupport.stdout_logger.disable(false)
+  end
+
   it do
     matcher = described_class.new(id, pass)
 
@@ -16,5 +24,8 @@ describe SS::Addon::FileSetting::BasicAuthMatcher, dbscope: :example do
     expect(matcher.match?(ActionDispatch::Request.new("HTTP_AUTHORIZATION" => "Digest #{digest}"))).to be_falsey
     expect(matcher.match?(ActionDispatch::Request.new("HTTP_AUTHORIZATION" => "Basic #{unique_id}"))).to be_falsey
     expect(matcher.match?(ActionDispatch::Request.new({}))).to be_falsey
+
+    expect { SS::LogSupport.stdout_logger.disable(true) }.to \
+        output(include("authorization is not presented", "authorization type is not 'basic'", "authorization credential is not matched")).to_stdout
   end
 end
