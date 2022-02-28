@@ -210,6 +210,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example do
       wait_for_ajax
       expect(page).to have_no_selector('li.list-item')
 
+      save_full_screenshot
       click_link I18n.t('gws/memo/folder.inbox_trash')
       expect(page).to have_selector('li.list-item')
 
