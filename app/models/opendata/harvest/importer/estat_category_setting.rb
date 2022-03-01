@@ -74,31 +74,32 @@ class Opendata::Harvest::Importer
       shirasagi_areas = imported_item.harvest_shirasagi_areas
 
       conditions.each do |cond|
-        formula = case cond["type"]
-                  when 'string'
-                    text_index.include?(cond["value"])
-                  when 'regexp'
-                    text_index.match(::Regexp.new(cond["value"]))
-                  when 'ckan_group'
-                    ckan_groups.include?(cond["value"])
-                  when 'ckan_tag'
-                    ckan_tags.include?(cond["value"])
-                  when 'shirasagi_category'
-                    shirasagi_categories.include?(cond["value"])
-                  when 'shirasagi_estat_category'
-                    shirasagi_estat_categories.include?(cond["value"])
-                  when 'shirasagi_area'
-                    shirasagi_areas.include?(cond["value"])
-                  else
-                    next
-                  end
+        result = case cond["type"]
+                 when 'string'
+                   text_index.include?(cond["value"])
+                 when 'regexp'
+                   text_index.match?(::Regexp.new(cond["value"]))
+                 when 'ckan_group'
+                   ckan_groups.include?(cond["value"])
+                 when 'ckan_tag'
+                   ckan_tags.include?(cond["value"])
+                 when 'shirasagi_category'
+                   shirasagi_categories.include?(cond["value"])
+                 when 'shirasagi_estat_category'
+                   shirasagi_estat_categories.include?(cond["value"])
+                 when 'shirasagi_area'
+                   shirasagi_areas.include?(cond["value"])
+                 else
+                   nil
+                 end
+
+        next if result.nil?
+
         case cond["operator"]
         when 'match'
-          return false if !formula
+          return false if !result
         when 'unmatch'
-          return false if formula
-        else
-          next
+          return false if result
         end
       end
       true
