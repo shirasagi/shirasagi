@@ -112,6 +112,7 @@ module Cms
     Cms::Role.permission :move_other_cms_pages
     Cms::Role.permission :import_private_cms_nodes
     Cms::Role.permission :import_other_cms_nodes
+    Cms::Role.permission :import_other_cms_forms
     Cms::Role.permission :unlock_other_cms_pages
     if SS.config.michecker && SS.config.michecker['disable'].blank?
       Cms::Role.permission :use_cms_michecker

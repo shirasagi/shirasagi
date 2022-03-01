@@ -123,7 +123,7 @@ Rails.application.routes.draw do
     scope module: "form" do
       resources :forms, concerns: [:deletion] do
         resources :init_columns, concerns: [:deletion]
-        resources :columns, concerns: [:deletion]
+        resources :columns, concerns: [:deletion, :import]
       end
     end
 

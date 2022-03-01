@@ -560,6 +560,7 @@ ja:
     edit_other_cms_forms: 定型フォームの管理（全て）
     delete_private_cms_forms: 定型フォームの削除（所有）
     delete_other_cms_forms: 定型フォームの削除（全て）
+    import_other_cms_forms: 定型フォームのインポート
     use_cms_michecker: micheckerの利用
     delete_cms_ignore_alert: 警告を無視して削除する
     edit_cms_ignore_alert: 警告を無視して非公開保存する

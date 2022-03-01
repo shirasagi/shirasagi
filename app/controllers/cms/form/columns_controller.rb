@@ -161,4 +161,52 @@ class Cms::Form::ColumnsController < ApplicationController
     end
     render_destroy_all(entries.size != @items.size)
   end
+
+  def import
+    raise "403" unless @cur_form.allowed?(:import, @cur_user, site: @cur_site, node: @cur_node)
+
+    set_task
+
+    @item = @cur_form
+
+    if request.get? || request.head?
+      respond_to do |format|
+        format.html { render }
+        format.json { render template: "ss/tasks/index", content_type: json_content_type, locals: { item: @task } }
+      end
+      return
+    end
+
+    begin
+      file = params[:item].try(:[], :file)
+      if file.nil? || ::File.extname(file.original_filename) != ".csv"
+        raise I18n.t("facility.import.invalid_file")
+      end
+
+      # save csv to use in job
+      ss_file = SS::File.new
+      ss_file.in_file = file
+      ss_file.model = "facility/file"
+      ss_file.save
+
+      # call job
+      Cms::Form::ImportColumnsJob.bind(site_id: @cur_site, node_id: @cur_form, user_id: @cur_user).perform_later(ss_file.id)
+    rescue => e
+      @cur_form.errors.add :base, e.to_s
+    end
+
+    if @cur_form.errors.present?
+      render
+    else
+      redirect_to({ action: :import }, { notice: I18n.t("ss.notice.started_import") })
+    end
+  end
+
+  def set_task
+    @task = Cms::Task.find_or_create_by(name: task_name, site_id: @cur_site.id)
+  end
+
+  def task_name
+    "form:create_column_values"
+  end
 end

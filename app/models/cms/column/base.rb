@@ -18,4 +18,8 @@ class Cms::Column::Base
   def db_form_type
     { type: 'input' }
   end
+
+  def set_basic_attrs(basic_attrs)
+    basic_attrs.each { |k, v| self[k] = v }
+  end
 end
