@@ -312,4 +312,27 @@ describe Fs do
       end
     end
   end
+
+  describe '.tail_lines' do
+    context "when nil is given as path" do
+      it do
+        expect(Fs.tail_lines(nil)).to be_blank
+      end
+    end
+
+    context "random UTF-8 is given" do
+      let(:path) do
+        # 末端が不利な位置にあっても正しく末尾行を取得できることを確認するためのデータ
+        # さまざまな乱数シードを用いて 10 連続で成功することを確認済み
+        tmpfile do |file|
+          file.write "a" * rand(1..3)
+          file.write Array.new(rand(1..3)) { ss_japanese_text }.join + "\n" while file.size < 1024
+        end
+      end
+
+      it do
+        expect(Fs.tail_lines(path, limit_in_bytes: 1024)).to be_present
+      end
+    end
+  end
 end
