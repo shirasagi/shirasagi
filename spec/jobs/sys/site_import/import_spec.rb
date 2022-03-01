@@ -18,14 +18,7 @@ describe Sys::SiteImportJob, dbscope: :example do
   end
 
   before do
-    # @save_multibyte_filename = SS.config.replace_value_at(:env, :multibyte_filename, "hex")
-    # @save_file_url_with = SS.config.replace_value_at(:ss, :file_url_with, "name")
     execute(destination_site, file_path)
-  end
-
-  after do
-    # SS.config.replace_value_at(:env, :multibyte_filename, @save_multibyte_filename)
-    # SS.config.replace_value_at(:ss, :file_url_with, @save_file_url_with)
   end
 
   context 'with pages' do
