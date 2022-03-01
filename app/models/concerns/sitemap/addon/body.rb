@@ -72,7 +72,7 @@ module Sitemap::Addon
       tree.flatten("/", entries)
 
       entries.map do |m|
-        if m.class.include?(Cms::Model::Node)
+        if m.is_a?(Cms::Model::Node)
           url = "/#{m.filename}/"
         else
           url = "/#{m.filename}"
