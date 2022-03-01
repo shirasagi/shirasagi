@@ -58,6 +58,16 @@ class Gws::UserProfilesController < ApplicationController
     end
   end
 
+  def edit
+    render
+  end
+
+  def update
+    @item.attributes = get_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    render_update @item.save
+  end
+
   def edit_password
     @model = SS::PasswordUpdateService
     @item = SS::PasswordUpdateService.new(cur_user: @cur_user)
