@@ -48,6 +48,7 @@ class Cms::SourceCleanerTemplate
         h[:source_cleaner][idx]["target_type"] = item.target_type
         h[:source_cleaner][idx]["target_value"] = item.target_value
         h[:source_cleaner][idx]["action_type"] = item.action_type
+        h[:source_cleaner][idx]["replace_source"] = item.replace_source
         h[:source_cleaner][idx]["replaced_value"] = item.replaced_value
       end
 

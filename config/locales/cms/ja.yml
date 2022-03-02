@@ -950,7 +950,9 @@ ja:
       cms/copy_nodes_task:
         target_node_name: 複製先フォルダー名
       cms/addon/source_cleaner:
-        target: 対象
+        target_type: 対象の種別
+        target_value: 対象の名称
+        replace_source: 対象の属性値
         action: 操作
         replaced_value: 置換後の値
       cms/addon/opendata_ref/site:
@@ -1882,13 +1884,26 @@ ja:
         - アクセシビリティチェックの有効無効を設定します。
 
     cms/addon/source_cleaner:
-      target:
-        - クリーニングの対象を設定します。
-        - タグ、属性、文字列の中から種別を選択し、右欄に対象を入力します。
+      target_type:
+        - |-
+          クリーニング対象の種別を設定します。
+          クリーニング対象は置換または削除されます。
+          タグ ... HTMLタグを設定します。
+          属性 ... HTMLタグの属性(attribute)を設定します。
+          文字列 ... 文字列を設定します。
+          正規表現 ... 正規表現にマッチする文字列を設定します。
+      target_value:
+        - 置換または削除対象のタグや属性の名称、文字列を設定します。
+      replace_source:
+        - 置換または削除対象の属性の値を設定します。
       action:
-        - 対象のクリーニング方法を設定します。
-        - 置換または削除が選択できます。
-        - 置換後のタグや属性の値、文字列を右欄に入力します。
+        - |-
+          対象のクリーニング方法を設定します。
+          クリーニング対象のタグや属性の値、文字列を置換または削除します。
+          削除 ... クリーニング対象を削除します。
+          置換 ... クリーニング対象を特定の値に置換します。
+      replaced_value:
+        - 置換後のタグや属性の値、文字列を設定します。
 
     cms/addon/opendata_ref/site:
       opendata_site_ids:
