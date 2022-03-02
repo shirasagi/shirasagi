@@ -18,7 +18,7 @@ CKEDITOR.editorConfig = function (config) {
 
   config.bodyClass = "ss-cke";
 
-  config.contentsCss = [ <%== stylesheet_path("ss/cke").to_json %> ];
+  config.contentsCss = [ <%== stylesheet_path("ss/cke_reset").to_json %>, <%== stylesheet_path("ss/cke").to_json %> ];
 
   config.format_tags = 'p;h1;h2;h3';
   config.format_h1 = { element: 'h1', attributes: { 'class': 'ss-cke-h1' } };
