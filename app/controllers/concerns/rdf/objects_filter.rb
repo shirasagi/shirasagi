@@ -41,7 +41,7 @@ module Rdf::ObjectsFilter
     end
     node = node.parent while node.parent.present?
 
-    @categories = [node.becomes_with_route]
+    @categories = [node]
   end
 
   # override Cms::CrudFilter#destroy_items

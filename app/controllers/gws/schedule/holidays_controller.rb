@@ -4,7 +4,7 @@ class Gws::Schedule::HolidaysController < ApplicationController
   include Gws::Schedule::CalendarFilter
 
   navi_view "gws/schedule/main/navi"
-  menu_view "gws/schedule/main/menu"
+  menu_view "gws/schedule/holidays/menu"
 
   model Gws::Schedule::Holiday
 
@@ -64,7 +64,8 @@ class Gws::Schedule::HolidaysController < ApplicationController
   end
 
   def import
-    return if request.get?
+    return if request.get? || request.head?
+
     @item = @model.new get_params
     @item.cur_site = @cur_site
     @item.cur_user = @cur_user

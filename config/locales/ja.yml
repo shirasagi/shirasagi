@@ -169,7 +169,9 @@ ja:
       not_found_webmail_role: "ウェブメール権限「%{name}」が見つかりません。"
       not_found_main_group: "グループ（主）「%{name}」が見つかりません。"
       not_found_user_title: "役職コード「%{code}」が見つかりません。"
+      not_found_user_occupation: "職種コード「%{code}」が見つかりません。"
       upload_restricted: ご利用の環境ではファイルをアップロードできません。
+      sanitizer_waiting: 無害化処理を行っています。しばらくお待ちください。
       url: は有効なURLを入力してください。
       invalid_latlon: |-
         の正しい座標をカンマ(,)区切りで入力してください。
@@ -178,6 +180,14 @@ ja:
         は1~21の範囲で設定してください。
       trusted_url: は信頼できるURLを入力してください。
       other_task_is_running: 他の処理が実行中のため実行できません。しばらく待ってから実行してください。
+      denied_with_upload_policy: ファイル投稿が制限（%{policy}）されている為、投稿できません。
+      unify_before_blank: 統合元が入力されていません。
+      unify_after_blank: 統合先が入力されていません。
+      move_before_blank: 移動元が入力されていません。
+      move_after_blank: 移動先が入力されていません。
+      division_before_blank: 分割元が入力されていません。
+      division_after_blank: １番目の分割先が入力されていません。
+      add_after_blank: 新設先が入力されていません。
     template:
       body: 次の項目を確認してください。
       header:
@@ -260,6 +270,13 @@ ja:
   activerecord:
     errors:
       <<: *errors
+
+  # https://github.com/mongodb/mongoid/blob/master/lib/config/locales/en.yml
+  mongoid:
+    errors:
+      messages:
+        taken: はすでに存在します。
+
   views:
     pagination:
       first: "&laquo;"

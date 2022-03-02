@@ -119,10 +119,23 @@ Rails.application.routes.draw do
     resources :theme_templates, concerns: [:deletion, :template]
     resources :source_cleaner_templates, concerns: [:deletion, :template]
     resources :word_dictionaries, concerns: [:deletion, :template]
-    resources :forms, concerns: [:deletion] do
-      resources :init_columns, concerns: [:deletion]
-      resources :columns, concerns: [:deletion]
+
+    scope module: "form" do
+      resources :forms, concerns: [:deletion] do
+        resources :init_columns, concerns: [:deletion]
+        resources :columns, concerns: [:deletion]
+      end
     end
+
+    namespace "form" do
+      resources :dbs, concerns: [:deletion] do
+        resources :docs, concerns: [:deletion] do
+          match :import, via: [:get, :post], on: :collection
+          match :download_all, via: [:get, :post], on: :collection
+        end
+      end
+    end
+
     resources :notices, concerns: [:deletion, :copy]
     resources :public_notices, concerns: [:deletion, :copy] do
       get :frame_content, on: :member
@@ -205,6 +218,8 @@ Rails.application.routes.draw do
       get "groups" => "groups#index"
       get "nodes" => "nodes#index"
       get "pages" => "pages#index"
+      get "pages/children" => "pages/children#index"
+      get "pages/categorized" => "pages/categorized#index"
       get "pages/routes" => "pages#routes"
       get "categories" => "categories#index"
       get "contents" => "contents#index"
@@ -231,14 +246,30 @@ Rails.application.routes.draw do
       resources :temp_files, concerns: [:deletion, :file_api] do
         get :contrast_ratio, on: :collection
       end
-      namespace :node, path: "node:cid/cms", cid: /\w+/ do
-        resources :temp_files, concerns: [:deletion, :file_api] do
-          get :contrast_ratio, on: :collection
-        end
-      end
       resources :content_files, only: [] do
         get :view, on: :member
         get :contrast_ratio, on: :collection
+      end
+      resources :replace_files, path: ":owner_item_id/replace_files", only: [:edit, :update] do
+        get :confirm, on: :member
+        post :confirm, on: :member
+        get :histories, on: :member
+        get :download, on: :member
+        post :restore, on: :member
+        post :destroy, on: :member
+      end
+      scope "node:cid/cms", as: "node", cid: /\w+/ do
+        resources :temp_files, controller: 'node/temp_files', concerns: [:deletion, :file_api] do
+          get :contrast_ratio, on: :collection
+        end
+        resources :replace_files, path: ":owner_item_id/replace_files", only: [:edit, :update] do
+          get :confirm, on: :member
+          post :confirm, on: :member
+          get :histories, on: :member
+          get :download, on: :member
+          post :restore, on: :member
+          post :destroy, on: :member
+        end
       end
       namespace "opendata_ref" do
         get "datasets:cid" => "datasets#index", as: 'datasets'
@@ -284,12 +315,13 @@ Rails.application.routes.draw do
       namespace "translate" do
         get "langs" => "langs#index"
       end
+
+      match "mobile_size_check/check" => "mobile_size_check#check", via: [:post, :options], as: "mobile_size_check"
     end
   end
 
   namespace "cms", path: ".cms" do
     match "link_check/check" => "link_check#check", via: [:post, :options], as: "link_check"
-    match "mobile_size_check/check" => "mobile_size_check#check", via: [:post, :options], as: "mobile_size_check"
   end
 
   content "cms", name: "node", module: "cms/node" do
@@ -311,8 +343,9 @@ Rails.application.routes.draw do
       get :delete, on: :member
     end
     resources :max_file_sizes, concerns: :deletion
+    resources :image_resizes, concerns: :deletion
     resources :nodes, concerns: :deletion
-    resources :pages, concerns: [:deletion, :copy, :move, :lock, :command, :contains_urls]
+    resources :pages, concerns: [:deletion, :copy, :move, :lock, :command, :contains_urls, :michecker]
     resources :import_pages, concerns: [:deletion, :convert]
     resources :import_nodes, concerns: [:deletion]
     get "/group_pages" => redirect { |p, req| "#{req.path.sub(/\/group_pages$/, "")}/nodes" }
@@ -337,6 +370,7 @@ Rails.application.routes.draw do
     get "archive" => "public#redirect_to_archive_index", cell: "nodes/archive"
     get "photo_album" => "public#index", cell: "nodes/photo_album"
     get "site_search/(index.:format)" => "public#index", cell: "nodes/site_search"
+    get "site_search/categories(.:format)" => "public#categories", cell: "nodes/site_search"
   end
 
   part "cms" do
@@ -349,6 +383,7 @@ Rails.application.routes.draw do
     get "calendar_nav" => "public#index", cell: "parts/calendar_nav"
     get "monthly_nav" => "public#index", cell: "parts/monthly_nav"
     get "site_search_history" => "public#index", cell: "parts/site_search_history"
+    get "history_list" => "public#index", cell: "parts/history_list"
   end
 
   page "cms" do
@@ -362,10 +397,10 @@ Rails.application.routes.draw do
     end
   end
 
-  match "*public_path" => "cms/public#index", public_path: /[^\.].*/,
-        via: [:get, :post, :put, :patch, :delete], format: true
-  match "*public_path" => "cms/public#index", public_path: /[^\.].*/,
-        via: [:get, :post, :put, :patch, :delete], format: false
+  match "*public_path" => "cms/public#index", public_path: /[^.].*/,
+    via: [:get, :post, :put, :patch, :delete], format: true
+  match "*public_path" => "cms/public#index", public_path: /[^.].*/,
+    via: [:get, :post, :put, :patch, :delete], format: false
 
   root "cms/public#index", defaults: { format: :html }
 end

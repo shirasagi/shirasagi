@@ -22,14 +22,13 @@ Cms_Branch.prototype.createBranch = function() {
   var self = this;
   var token = $('meta[name="csrf-token"]').attr('content');
 
+  self.$result.addClass("wide").show().html(SS.loading);
+  self.$el.find(".create-branch").prop("disabled", true);
+
   $.ajax({
     url: self.options.path,
     type: "POST",
     data: { authenticity_token: token },
-    beforeSend: function () {
-      self.$result.addClass("wide").show().html(SS.loading);
-      self.$el.find(".create-branch").prop("disabled", true);
-    },
     success: function (data) {
       self.$result.removeClass("wide").html(data).find("a").removeClass();
       self.$el.find(".create-branch").prop("disabled", false);

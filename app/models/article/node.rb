@@ -22,9 +22,23 @@ module Article::Node
     include Cms::Addon::Release
     include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::MaxFileSizeSetting
+    include Cms::Addon::ImageResizeSetting
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
     default_scope ->{ where(route: "article/page") }
+  end
+
+  class MapSearch
+    include Cms::Model::Node
+    include Cms::Addon::NodeSetting
+    include Cms::Addon::Meta
+    include Article::Addon::MapSearch
+    include Article::Addon::MapSearchResult
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "article/map_search") }
   end
 end

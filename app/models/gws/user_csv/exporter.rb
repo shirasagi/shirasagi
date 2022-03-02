@@ -1,17 +1,14 @@
 class Gws::UserCsv::Exporter
   include ActiveModel::Model
 
-  attr_accessor :site
-  attr_accessor :form
-  attr_accessor :criteria
-  attr_accessor :webmail_support
+  attr_accessor :site, :form, :criteria, :webmail_support
 
   PREFIX = 'A:'.freeze
 
   class << self
     def csv_basic_headers(opts = {})
       headers = %w(
-        id name kana uid organization_uid email password tel tel_ext title_ids type
+        id name kana uid organization_uid email password tel tel_ext title_ids occupation_ids type
         account_start_date account_expiration_date initial_password_warning session_lifetime
         organization_id groups gws_main_group_ids switch_user_id remark
         ldap_dn gws_roles sys_roles
@@ -83,6 +80,7 @@ class Gws::UserCsv::Exporter
     terms << item.tel
     terms << item.tel_ext
     terms << item.title(site).try(:code)
+    terms << item.occupation(site).try(:code)
     terms << item.label(:type)
     terms << (item.account_start_date.present? ? I18n.l(item.account_start_date) : nil)
     terms << (item.account_expiration_date.present? ? I18n.l(item.account_expiration_date) : nil)

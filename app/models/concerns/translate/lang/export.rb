@@ -3,6 +3,7 @@ module Translate::Lang::Export
 
   included do
     attr_accessor :in_file
+
     permit_params :in_file
   end
 
@@ -10,8 +11,7 @@ module Translate::Lang::Export
     validate_import_file
     return false unless errors.empty?
 
-    no = 0
-    each_csv do |row|
+    each_csv do |row, no|
       no += 1
 
       code = row[t(:code)]
@@ -23,7 +23,7 @@ module Translate::Lang::Export
       item.accept_languages = row[t(:accept_languages)]
       item.save
 
-      errors.add :base, "##{no} " + item.errors.full_messages.join("\n") if item.errors.present?
+      SS::Model.copy_errors(item, self, prefix: "##{no} ") if item.errors.present?
     end
 
     errors.empty?
@@ -32,8 +32,7 @@ module Translate::Lang::Export
   private
 
   def each_csv(&block)
-    csv = ::CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
-    csv.each(&block)
+    SS::Csv.foreach_row(in_file, headers: true, &block)
   end
 
   def validate_import_file
@@ -46,8 +45,7 @@ module Translate::Lang::Export
     end
 
     begin
-      no = 0
-      each_csv do |row|
+      each_csv do |row, no|
         no += 1
         # check csv record up to 100
         break if no >= 100

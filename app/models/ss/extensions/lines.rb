@@ -14,8 +14,10 @@ class SS::Extensions::Lines < Array
 
     def mongoize(object)
       case object
-      when self.class then object.mongoize
-      when String then self.new(object.split(/\r\n|\r|\n/).compact).mongoize
+      when self.class
+        object.mongoize
+      when String
+        self.new(object.split(/\r\n|\r|\n/).compact).mongoize
       else
         object
       end
@@ -23,7 +25,8 @@ class SS::Extensions::Lines < Array
 
     def evolve(object)
       case object
-      when self.class then object.mongoize
+      when self.class
+        object.mongoize
       else
         object
       end

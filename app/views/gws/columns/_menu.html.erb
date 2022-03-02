@@ -19,7 +19,7 @@
     <% if @cur_form.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to(t('ss.links.import'), { action: :import }) rescue nil %>
     <% end %>
-  <% elsif params[:action] =~ /new|create|lock|download|import/ %>
+  <% elsif params[:action] =~ /new|create|lock|download|import|destroy_all/ %>
     <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
   <% elsif params[:action] =~ /edit|update|delete|move|contains_urls/ %>
     <% if @cur_form.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>

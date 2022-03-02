@@ -6,19 +6,19 @@ describe Facility::ImportJob, dbscope: :example do
   let!(:layout) { create(:cms_layout, site: site, name: "施設レイアウト") }
 
   let!(:node_categories) { create(:cms_node_node, site: site, filename: "facilities/categories") }
-  let!(:node_category_1) { create(:facility_node_category, site: site, filename: "facilities/categories/c1", name: "食べる") }
-  let!(:node_category_2) { create(:facility_node_category, site: site, filename: "facilities/categories/c2", name: "買う") }
-  let!(:node_category_3) { create(:facility_node_category, site: site, filename: "facilities/categories/c3", name: "見る・遊ぶ") }
+  let!(:node_category1) { create(:facility_node_category, site: site, filename: "facilities/categories/c1", name: "食べる") }
+  let!(:node_category2) { create(:facility_node_category, site: site, filename: "facilities/categories/c2", name: "買う") }
+  let!(:node_category3) { create(:facility_node_category, site: site, filename: "facilities/categories/c3", name: "見る・遊ぶ") }
 
   let!(:node_locations) { create(:cms_node_node, site: site, filename: "facilities/locations") }
-  let!(:node_location_1) { create(:facility_node_location, site: site, filename: "facilities/locations/l1", name: "シラサギ市") }
-  let!(:node_location_2) { create(:facility_node_location, site: site, filename: "facilities/locations/l2", name: "すだち市") }
-  let!(:node_location_3) { create(:facility_node_location, site: site, filename: "facilities/locations/l3", name: "子育て町") }
+  let!(:node_location1) { create(:facility_node_location, site: site, filename: "facilities/locations/l1", name: "シラサギ市") }
+  let!(:node_location2) { create(:facility_node_location, site: site, filename: "facilities/locations/l2", name: "すだち市") }
+  let!(:node_location3) { create(:facility_node_location, site: site, filename: "facilities/locations/l3", name: "子育て町") }
 
   let!(:node_services) { create(:cms_node_node, site: site, filename: "facilities/services") }
-  let!(:node_service_1) { create(:facility_node_service, site: site, filename: "facilities/services/s1", name: "駐車場有") }
-  let!(:node_service_2) { create(:facility_node_service, site: site, filename: "facilities/services/s2", name: "緊急避難所") }
-  let!(:node_service_3) { create(:facility_node_service, site: site, filename: "facilities/services/s3", name: "WIFIスポット") }
+  let!(:node_service1) { create(:facility_node_service, site: site, filename: "facilities/services/s1", name: "駐車場有") }
+  let!(:node_service2) { create(:facility_node_service, site: site, filename: "facilities/services/s2", name: "緊急避難所") }
+  let!(:node_service3) { create(:facility_node_service, site: site, filename: "facilities/services/s3", name: "WIFIスポット") }
 
   let!(:group1) { create(:cms_group, name: "地図管理係") }
   let!(:group2) { create(:cms_group, name: "観光整備係") }
@@ -29,9 +29,9 @@ describe Facility::ImportJob, dbscope: :example do
       :facility_node_page,
       site: site,
       filename: "facilities",
-      st_category_ids: [node_category_1.id, node_category_2.id, node_category_3.id],
-      st_location_ids: [node_location_1.id, node_location_2.id, node_location_3.id],
-      st_service_ids: [node_service_1.id, node_service_2.id, node_service_3.id],
+      st_category_ids: [node_category1.id, node_category2.id, node_category3.id],
+      st_location_ids: [node_location1.id, node_location2.id, node_location3.id],
+      st_service_ids: [node_service1.id, node_service2.id, node_service3.id],
       group_ids: [group1.id, group2.id, group3.id])
   end
 
@@ -109,13 +109,13 @@ describe Facility::ImportJob, dbscope: :example do
       it do
         expect(model.all.count).to eq 3
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(/update 2行目:  施設名：シラサギランド → シラサギ施設1/)
-          expect(log.logs).to include(/update 2行目:  施設の種類：\["食べる", "買う", "見る・遊ぶ"\] → \["買う"\]/)
-          expect(log.logs).to include(/update 2行目:  施設の地域：\["シラサギ市", "すだち市", "子育て町"\] → \["シラサギ市"\]/)
-          expect(log.logs).to include(/update 2行目:  施設の用途：\["駐車場有", "緊急避難所", "WIFIスポット"\] → \["駐車場有", "緊急避難所"\]/)
-          expect(log.logs).to include(/update 3行目:  郵便番号：〒123-4321 → 〒222-4321/)
-          expect(log.logs).to include(/update 3行目:  施設の種類：\["食べる", "買う", "見る・遊ぶ"\] → \["食べる", "買う"\]/)
-          expect(log.logs).to include(/update 3行目:  管理グループ：\["観光整備係"\] → \["地図管理係"\]/)
+          expect(log.logs).to include(/updating 2行目 施設名： シラサギランド to シラサギ施設1/)
+          expect(log.logs).to include(/updating 2行目 施設の種類： \["食べる", "買う", "見る・遊ぶ"\] to \["買う"\]/)
+          expect(log.logs).to include(/updating 2行目 施設の地域： \["シラサギ市", "すだち市", "子育て町"\] to \["シラサギ市"\]/)
+          expect(log.logs).to include(/updating 2行目 施設の用途： \["駐車場有", "緊急避難所", "WIFIスポット"\] to \["駐車場有", "緊急避難所"\]/)
+          expect(log.logs).to include(/updating 3行目 郵便番号： 〒123-4321 to 〒222-4321/)
+          expect(log.logs).to include(/updating 3行目 施設の種類： \["食べる", "買う", "見る・遊ぶ"\] to \["食べる", "買う"\]/)
+          expect(log.logs).to include(/updating 3行目 管理グループ： \["観光整備係"\] to \["地図管理係"\]/)
         end
       end
     end
@@ -130,13 +130,20 @@ describe Facility::ImportJob, dbscope: :example do
       it do
         expect(model.all.count).to eq 11
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(/error 2行目:  施設の種類『走る』を登録できませんでした。/)
-          expect(log.logs).to include(/error 3行目:  管理グループ『掃除係』を登録できませんでした。/)
-          expect(log.logs).to include(/error 5行目のデータは登録できませんでした。入力内容をもう１度ご確認ください。/)
-          expect(log.logs).to include(/error 5行目: 施設名を入力してください。/)
-          expect(log.logs).to include(/error 7行目: フォルダー名は不正な値です。/)
-          expect(log.logs).to include(/error 11行目:  施設の地域『子規町』を登録できませんでした。/)
-          expect(log.logs).to include(/error 11行目:  施設の用途『充電スポット』を登録できませんでした。/)
+          expect(log.logs).to include(/error 2行目 施設の種類『走る』が存在しないので登録できませんでした。新規に『走る』を作成した上で、インポートを実行してください。/)
+          expect(log.logs).to include(/created page 2行目 施設「シラサギ施設1」が作成されました/)
+          expect(log.logs).to include(/error 3行目 管理グループ『掃除係』が存在しないので登録できませんでした。新規に『掃除係』を作成した上で、インポートを実行してください。/)
+          expect(log.logs).to include(/created page 3行目 施設「シラサギ施設2」が作成されました。/)
+          expect(log.logs).to include(/created page 4行目 施設「シラサギ施設3」が作成されました。/)
+          expect(log.logs).to include(/failed 5行目 施設「」の作成・更新がされませんでした。施設名を入力してください/)
+          expect(log.logs).to include(/created page 6行目 施設「シラサギ施設5」が作成されました。/)
+          expect(log.logs).to include(/failed 7行目 施設「シラサギ施設6」の作成・更新がされませんでした。フォルダー名は不正な値です。/)
+          expect(log.logs).to include(/created page 8行目 施設「シラサギ施設7」が作成されました。/)
+          expect(log.logs).to include(/created page 9行目 施設「シラサギ施設8」が作成されました。/)
+          expect(log.logs).to include(/created page 10行目 施設「シラサギ施設9」が作成されました。/)
+          expect(log.logs).to include(/error 11行目 施設の地域『子規町』が存在しないのでを登録できませんでした。新規に『子規町』を作成した上で、インポートを実行してください。/)
+          expect(log.logs).to include(/error 11行目 施設の用途『充電スポット』が存在しないので登録できませんでした。新規に『充電スポット』を作成した上で、インポートを実行してください。/)
+          expect(log.logs).to include(/created page 11行目 施設「シラサギ施設10」が作成されました。/)
         end
       end
     end

@@ -77,7 +77,7 @@ class Chorg::RunController < ApplicationController
         end
         format.html do
           redirect_to({ controller: :revisions, action: :show, id: @cur_revision },
-                      { notice: notice })
+            { notice: notice })
         end
         format.json { head :no_content }
       end

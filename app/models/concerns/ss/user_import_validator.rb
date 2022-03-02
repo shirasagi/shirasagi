@@ -4,29 +4,40 @@ module SS::UserImportValidator
   included do
     # sys_role_ids
     attr_accessor :imported_sys_role_keys, :imported_sys_roles
+
     validate :validate_imported_sys_roles, if: ->{ imported_sys_role_keys.present? }
 
     # gws_role_ids
     attr_accessor :imported_gws_role_keys, :imported_gws_roles
+
     validate :validate_imported_gws_roles, if: ->{ imported_gws_role_keys.present? }
 
     # webmail_role_ids
     attr_accessor :imported_webmail_role_keys, :imported_webmail_roles
+
     validate :validate_imported_webmail_roles, if: ->{ imported_webmail_role_keys.present? }
 
     # group_ids
     attr_accessor :imported_gws_group
     attr_accessor :imported_cms_groups
     attr_accessor :imported_group_keys, :imported_groups
+
     validate :validate_imported_groups, if: ->{ imported_group_keys.present? }
 
     # gws_main_group_id
     attr_accessor :imported_gws_main_group_key, :imported_gws_main_group
+
     validate :validate_imported_main_group, if: ->{ imported_gws_main_group_key.present? }
 
     # in_title_id
     attr_accessor :imported_gws_user_title_key, :imported_gws_user_title
+
     validate :validate_imported_gws_user_title, if: ->{ imported_gws_user_title_key.present? }
+
+    # in_occupation_id
+    attr_accessor :imported_gws_user_occupation_key, :imported_gws_user_occupation
+
+    validate :validate_imported_gws_user_occupation, if: ->{ imported_gws_user_occupation_key.present? }
   end
 
   private
@@ -92,5 +103,10 @@ module SS::UserImportValidator
   def validate_imported_gws_user_title
     return if imported_gws_user_title
     errors.add :base, I18n.t("errors.messages.not_found_user_title", code: imported_gws_user_title_key)
+  end
+
+  def validate_imported_gws_user_occupation
+    return if imported_gws_user_occupation
+    errors.add :base, I18n.t("errors.messages.not_found_user_occupation", code: imported_gws_user_occupation_key)
   end
 end

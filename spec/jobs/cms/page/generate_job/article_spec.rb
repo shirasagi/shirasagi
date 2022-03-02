@@ -86,7 +86,7 @@ describe Cms::Page::GenerateJob, dbscope: :example do
         expect(task.logs).to include(include(page1.filename))
         expect(task.node_id).to be_nil
         # logs are saved in a file
-        expect(::File.exists?(task.log_file_path)).to be_truthy
+        expect(::File.exist?(task.log_file_path)).to be_truthy
         # and there are no `logs` field
         expect(task[:logs]).to be_nil
       end
@@ -151,7 +151,7 @@ describe Cms::Page::GenerateJob, dbscope: :example do
   describe "#perform with generate_lock" do
     before do
       @save_config = SS.config.cms.generate_lock
-      SS::Config.replace_value_at(:cms, 'generate_lock', { 'disable' => false, 'options' => ['1.hour'] })
+      SS.config.replace_value_at(:cms, 'generate_lock', { 'disable' => false, 'options' => ['1.hour'] })
       site.set(generate_lock_until: Time.zone.now + 1.hour)
 
       Fs.rm_rf node.path
@@ -168,7 +168,7 @@ describe Cms::Page::GenerateJob, dbscope: :example do
     end
 
     after do
-      SS::Config.replace_value_at(:cms, 'generate_lock', @save_config)
+      SS.config.replace_value_at(:cms, 'generate_lock', @save_config)
     end
 
     it do
@@ -190,7 +190,7 @@ describe Cms::Page::GenerateJob, dbscope: :example do
         expect(task.logs).not_to include(include(page1.filename))
         expect(task.node_id).to be_nil
         # logs are saved in a file
-        expect(::File.exists?(task.log_file_path)).to be_truthy
+        expect(::File.exist?(task.log_file_path)).to be_truthy
         # and there are no `logs` field
         expect(task[:logs]).to be_nil
       end

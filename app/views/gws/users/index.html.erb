@@ -4,7 +4,7 @@ SS_Clipboard.renderCopy();
 
 <% @index_meta = proc do |item| %>
   <% item.cur_site = @cur_site %>
-  <%= gws_public_user_profile(item, :uid_or_id, :updated, :main_group_section_name, :user_title, :email, :tel) %>
+  <%= gws_public_user_profile(item, :uid_or_id, :updated, :main_group_section_name, :user_title, :user_occupation, :email, :tel) %>
   <% if item.deletion_locked? %>
     <span class="deletion-lock state state-deletion-locked"><%= item.label :deletion_lock_state %></span>
   <% end %>

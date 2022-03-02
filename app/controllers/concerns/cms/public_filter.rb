@@ -70,7 +70,7 @@ module Cms::PublicFilter
   end
 
   def redirect_slash
-    return unless request.get?
+    return unless request.get? || request.head?
     redirect_to "#{request.path}/"
   end
 
@@ -98,9 +98,9 @@ module Cms::PublicFilter
   def compile_scss
     return unless @cur_path.match?(/\.css$/)
     return if @cur_path.match?(/\/_[^\/]*$/)
-    return unless Fs.exists? @scss = @file.sub(/\.css$/, ".scss")
+    return unless Fs.exist? @scss = @file.sub(/\.css$/, ".scss")
 
-    css_mtime = Fs.exists?(@file) ? Fs.stat(@file).mtime : 0
+    css_mtime = Fs.exist?(@file) ? Fs.stat(@file).mtime : 0
     return if Fs.stat(@scss).mtime.to_i <= css_mtime.to_i
 
     data = Fs.read(@scss)
@@ -213,7 +213,7 @@ module Cms::PublicFilter
     if page.view_layout == "cms/redirect" && !mobile_path?
       @redirect_link = trusted_url!(page.redirect_link)
       render html: "", layout: "cms/redirect"
-    elsif response.content_type == "text/html" && page.layout
+    elsif response.media_type == "text/html" && page.layout
       render html: render_layout(page.layout).html_safe, layout: (request.xhr? ? false : "cms/page")
     else
       @_response_body = response.body
@@ -252,10 +252,10 @@ module Cms::PublicFilter
   def error_html_file(status)
     if @cur_site
       file = "#{@cur_site.path}/#{status}.html"
-      return file if Fs.exists?(file)
+      return file if Fs.exist?(file)
     end
 
     file = "#{Rails.public_path}/.error_pages/#{status}.html"
-    Fs.exists?(file) ? file : "#{Rails.public_path}/.error_pages/500.html"
+    Fs.exist?(file) ? file : "#{Rails.public_path}/.error_pages/500.html"
   end
 end

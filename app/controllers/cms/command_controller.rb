@@ -13,7 +13,7 @@ class Cms::CommandController < ApplicationController
     @target = 'site'
     @target_path = @cur_site.path
 
-    return if request.get?
+    return if request.get? || request.head?
 
     @commands.each do |command|
       command.run(@target, @target_path)

@@ -53,7 +53,7 @@ this.SS_Validation = (function () {
         });
       },
       error: function(xhr, status, error) {
-        console.log(["== Error =="].concat(error).join("\n"));
+        console.warn(["== Error =="].concat(error).join("\n"));
       }
     });
   };

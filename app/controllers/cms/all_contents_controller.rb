@@ -30,14 +30,14 @@ class Cms::AllContentsController < ApplicationController
       format.csv do
         response.status = 200
         send_enum Cms::AllContent.enum_csv(@cur_site),
-                  type: 'text/csv; charset=Shift_JIS',
-                  filename: "all_contents_#{Time.zone.now.to_i}.csv"
+          type: 'text/csv; charset=Shift_JIS',
+          filename: "all_contents_#{Time.zone.now.to_i}.csv"
       end
     end
   end
 
   def import
-    if request.get?
+    if request.get? || request.head?
       render
       return
     end

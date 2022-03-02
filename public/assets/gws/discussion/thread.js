@@ -1,1 +1,84 @@
-this.Gws_Discussion_Thread=function(){function t(){}return t.render=function(c){var s=function(t,e,i){var n=$("<span></span>"),a=$('<img src="/assets/img/gws/ic-file.png" alt="" />'),o=$('<a target="_blank" rel="noopener"></a>'),s=$('<input type="hidden" name="item[file_ids][]" class="file-id" />'),r=$('<i class="material-icons md-18 md-inactive deselect">close</i>');n.attr("data-file-id",e),n.attr("id","file-"+e),o.text(i),o.attr("href","/.u"+c+"/apis/temp_files/"+e+"/view"),s.attr("value",e),r.on("click",function(){return $(this).parent("span").remove(),$(t).find("[data-file-id]").length<=0&&$(t).hide(),!1}),n.append(a),n.append(o),n.append(r),n.append(s),$(t).show(),$(t).append(n)};$("a.ajax-box").data("on-select",function(t){var e=$.colorbox.element().closest(".comment-files").find(".selected-files"),i=t.closest("[data-id]"),n=i.data("id"),a=i.data("humanized-name");return s(e,n,a),$.colorbox.close()});var t={select:function(t,o){return $(t).each(function(t,e){var i,n,a;return a=$(o).closest(".comment-files").find(".selected-files"),i=e._id,n=e.name,s(a,i,n)}),!1}};$(".comment-files .upload-drop-area").each(function(){new SS_Addon_TempFile(this,c,t)}),$(".open-reply").on("click",function(){return $(this).closest(".addon-body").next(".reply").show(),$(this).remove(),!1}),$(".reply[data-topic]").each(function(){var t=$(this).attr("data-topic"),e=function(){return $(".discussion-contributor"+t+" input#item_contributor_model").val($(this).data("model")),$(".discussion-contributor"+t+" input#item_contributor_id").val($(this).data("id")),$(".discussion-contributor"+t+" input#item_contributor_name").val($(this).data("name"))};return $(this).find(".discussion-contributor"+t+' input[name="tmp[contributor]"]').on("change",e),$(this).find(".discussion-contributor"+t+' input[name="tmp[contributor]"]:checked').each(e)})},t}();
+this.Gws_Discussion_Thread = (function () {
+  function Gws_Discussion_Thread() {
+  }
+
+  Gws_Discussion_Thread.render = function (user) {
+    //temp file
+    var appendSelectedFile = function (selected, fileId, humanizedName) {
+      var span = $('<span></span>');
+      var img = $('<img src="/assets/img/gws/ic-file.png" alt="" />');
+      var a = $('<a target="_blank" rel="noopener"></a>');
+      var input = $('<input type="hidden" name="item[file_ids][]" class="file-id" />');
+      var icon = $("<i class=\"material-icons md-18 md-inactive deselect\">close</i>");
+
+      span.attr("data-file-id", fileId);
+      span.attr("id", "file-" + fileId);
+      a.text(humanizedName);
+      a.attr("href", "/.u" + user + "/apis/temp_files/" + fileId + "/view");
+      input.attr("value", fileId);
+      icon.on("click", function (e) {
+        $(this).parent("span").remove();
+        if ($(selected).find("[data-file-id]").length <= 0) {
+          $(selected).hide();
+        }
+        return false;
+      });
+
+      span.append(img);
+      span.append(a);
+      span.append(icon);
+      span.append(input);
+
+      $(selected).show();
+      $(selected).append(span);
+    };
+
+    $('a.ajax-box').data('on-select', function ($item) {
+      var selected = $.colorbox.element().closest(".comment-files").find(".selected-files");
+      var $data = $item.closest('[data-id]');
+      var fileId = $data.data('id');
+      var humanizedName = $data.data('humanized-name');
+      appendSelectedFile(selected, fileId, humanizedName);
+      return $.colorbox.close();
+    });
+
+    var options = {
+      select: function (files, dropArea) {
+        $(files).each(function (i, file) {
+          var fileId, humanizedName, selected;
+          selected = $(dropArea).closest(".comment-files").find(".selected-files");
+          fileId = file["_id"];
+          humanizedName = file["name"];
+          return appendSelectedFile(selected, fileId, humanizedName);
+        });
+        return false;
+      }
+    };
+
+    $(".comment-files .upload-drop-area").each(function() {
+      new SS_Addon_TempFile(this, user, options);
+    });
+
+    // reply
+    $(".open-reply").on('click', function () {
+      $(this).closest(".addon-body").next(".reply").show();
+      $(this).remove();
+      return false;
+    });
+
+    //rely contriutor
+    $(".reply[data-topic]").each(function () {
+      var topic = $(this).attr("data-topic");
+      var setContributor = function () {
+        $('.discussion-contributor' + topic + ' input#item_contributor_model').val($(this).data('model'));
+        $('.discussion-contributor' + topic + ' input#item_contributor_id').val($(this).data('id'));
+        return $('.discussion-contributor' + topic + ' input#item_contributor_name').val($(this).data('name'));
+      };
+      $(this).find('.discussion-contributor' + topic + ' input[name="tmp[contributor]"]').on('change', setContributor);
+      return $(this).find('.discussion-contributor' + topic + ' input[name="tmp[contributor]"]:checked').each(setContributor);
+    });
+  };
+
+  return Gws_Discussion_Thread;
+
+})();

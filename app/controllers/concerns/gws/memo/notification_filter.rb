@@ -27,7 +27,7 @@ module Gws::Memo::NotificationFilter
   end
 
   def send_update_notification(subject = nil, text = nil)
-    return if request.get?
+    return if request.get? || request.head?
     #return if response.code !~ /^3/
     return if @item.errors.present?
     return unless @cur_site.notify_model?(@item.class)
@@ -53,7 +53,7 @@ module Gws::Memo::NotificationFilter
   end
 
   def send_undo_delete_notification
-    return if request.get?
+    return if request.get? || request.head?
     return if @item.errors.present?
     return unless @cur_site.notify_model?(@item.class)
     return unless item_notify_enabled?(@item)
@@ -77,7 +77,7 @@ module Gws::Memo::NotificationFilter
   end
 
   def send_destroy_notification
-    return if request.get?
+    return if request.get? || request.head?
     return if response.code !~ /^3/
 
     @destroyed_items ||= []
@@ -100,7 +100,7 @@ module Gws::Memo::NotificationFilter
   end
 
   def set_destroyed_item
-    return if request.get?
+    return if request.get? || request.head?
     return if @item.blank?
 
     if @item.class.name.include?("Gws::Monitor")
@@ -116,7 +116,7 @@ module Gws::Memo::NotificationFilter
   end
 
   def set_destroyed_items
-    return if request.get?
+    return if request.get? || request.head?
 
     if @items.present?
       @destroyed_items ||= []
@@ -136,12 +136,12 @@ module Gws::Memo::NotificationFilter
   end
 
   def item_notify_enabled?(item)
-    case item.model_name.i18n_key
-    when :"gws/board/post"
+    case item.model_name.i18n_key.to_s
+    when "gws/board/post"
       return item.topic.notify_enabled? && item.topic.public?
-    when :"gws/schedule/comment"
+    when "gws/schedule/comment"
       return item.schedule.notify_enabled?
-    when :"gws/schedule/attendance"
+    when "gws/schedule/attendance"
       return item._parent.notify_enabled?
     else
       notifiable = item.respond_to?(:notify_enabled?) ? item.notify_enabled? : true

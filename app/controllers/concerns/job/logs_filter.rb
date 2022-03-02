@@ -77,7 +77,7 @@ module Job::LogsFilter
 
   def download
     set_item
-    raise '404' if !::File.exists?(@item.file_path)
+    raise '404' if !::File.exist?(@item.file_path)
     send_file @item.file_path, type: 'text/plain', filename: "#{@item.id}.log",
               disposition: :attachment, x_sendfile: true
   end
@@ -85,7 +85,7 @@ module Job::LogsFilter
   def download_all
     @item = @model.new(save_term: "1.day")
     # show condition input form if request is get.
-    return if request.get?
+    return if request.get? || request.head?
 
     save_term = params.require(:item).permit(:save_term)[:save_term]
 
@@ -105,7 +105,7 @@ module Job::LogsFilter
     @item = @model.new
     @item.save_term = "6.months"
     # show condition input form if request is get.
-    return if request.get?
+    return if request.get? || request.head?
 
     save_term = params.require(:item).permit(:save_term)[:save_term]
 

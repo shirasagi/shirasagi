@@ -1,1 +1,177 @@
-this.Opendata_Dataset_Graph=function(){function o(){}return o.graph=null,o.$canvas=null,o.$controller=null,o.render=function(e,t){$(".dataset-search a#ajax-search").colorbox({fixed:!0,width:"90%",height:"90%"}),o.$canvas=$(e),o.$controller=$(t),o.graph=new Opendata_Graph(o.$canvas,o.$controller)},o.renderGraph=function(e,n){var t=$('.selected-dataset [name="resource_id"]:checked:first');if(0<t.length){var c=$(t).data("url"),i=$(t).closest("li").find(".resource-name").text();e&&(c+="?type="+e),$.ajax({url:c,type:"GET",dataType:"json",success:function(e){var t=e.type,c=e.types,s=e.datasets,r=e.labels,a=e.headers;"pie"==t&&(n||(n=0),i+="\uff08"+a[n]+"\uff09"),o.graph.render(t,i,r,s,{headerIndex:n}),o.graph.renderController(c,a,function(e,t){o.renderGraph(e,t)})}})}else o.graph.destroy()},o.selectItem=function(e){$(e).attr("data-id");var t=$(e).find(".selected-item").clone(!1);$(t).find("a").removeClass("cboxElement"),$(t).find('[name="resource_id"]').each(function(){$(this).val();$(this).on("click",function(){$(this).closest(".selected-dataset").find('[name="resource_id"]').not(this).prop("checked",!1),o.renderGraph(),o.toggleFirstNotice()})}),$(t).find(".deselect").on("click",function(){return $(this).closest(".selected-item").remove(),o.graph.destroy(),o.toggleFirstNotice(),!1}),t.show(),$(".dataset-search .selected-dataset").append(t);for(var c=$(".dataset-search .selected-dataset .selected-item").length-10,s=0;s<c;s++)$(".dataset-search .selected-dataset .selected-item:first").remove();return o.toggleFirstNotice(),t},o.toggleSelectButton=function(){0<$(".search-ui .items input:checked").size()?$(".select-items").parent("div").show():$(".select-items").parent("div").hide()},o.toggleFirstNotice=function(){0<$('.selected-dataset [name="resource_id"]:checked').length?$(".resource-graph .first-notice").hide():$(".resource-graph .first-notice").show()},o.modal=function(){$(".search-ui-form form.search").on("submit",function(){return $(this).ajaxSubmit({url:$(this).attr("action"),success:function(e){return $("#cboxLoadedContent").html(e)},error:function(){return alert("== Error ==")}}),!1}),$(".search-ui a.select-item").on("click",function(){var e=$(this).closest("tr"),t=o.selectItem(e);return $.colorbox.close(),$(t).find(".set-graph:first").trigger("click"),!1}),$(".search-ui-select .select-items").on("click",function(){return $(".search-ui .items .set-dataset:checked").each(function(){var e=$(this).closest("tr");o.selectItem(e)}),$.colorbox.close(),!1}),$(".search-ui .list-head input:checkbox").on("change",function(){var e=$(this).prop("checked");$(".search-ui .list-item").each(function(){$(this).toggleClass("checked",e),$(this).find(".set-dataset").prop("checked",e)})}),$(".search-ui").on("change",function(){o.toggleSelectButton()}),$(".dataset-search .selected-dataset .selected-item").each(function(){var e=$(this).attr("data-id"),t=$(".items [data-id='"+e+"']");t.find("input[type=checkbox]").remove();var c=t.find(".select-item").html();t.find(".select-item").replaceWith("<span class='select-item' style='color: #888'>"+c+"</span>")})},o}();
+this.Opendata_Dataset_Graph = (function () {
+  function Opendata_Dataset_Graph() {
+  }
+
+  Opendata_Dataset_Graph.graph = null;
+  Opendata_Dataset_Graph.$canvas = null;
+  Opendata_Dataset_Graph.$controller = null;
+
+  Opendata_Dataset_Graph.render = function (canvas, controller) {
+    $(".dataset-search a#ajax-search").colorbox({
+      fixed: true,
+      width: "90%",
+      height: "90%"
+    });
+    Opendata_Dataset_Graph.$canvas = $(canvas);
+    Opendata_Dataset_Graph.$controller = $(controller);
+    Opendata_Dataset_Graph.graph = new Opendata_Graph(
+      Opendata_Dataset_Graph.$canvas,
+      Opendata_Dataset_Graph.$controller
+    );
+  }
+
+  Opendata_Dataset_Graph.renderGraph = function (type, header) {
+    var ele = $('.selected-dataset [name="resource_id"]:checked:first');
+
+    if (ele.length > 0) {
+      var url = $(ele).data("url");
+      var name = $(ele).closest("li").find(".resource-name").text();
+
+      if (type) {
+        url += "?type=" + type;
+      }
+      $.ajax({
+        url: url,
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+          var type = data["type"];
+          var types = data["types"];
+          var datasets = data["datasets"];
+          var labels = data["labels"];
+          var headers = data["headers"];
+
+          if (type == "pie") {
+            if (!header) {
+              header = 0;
+            }
+            name += "（" + headers[header] + "）";
+          }
+          Opendata_Dataset_Graph.graph.render(type, name, labels, datasets, {headerIndex: header});
+          Opendata_Dataset_Graph.graph.renderController(types, headers, function (type, header) {
+            Opendata_Dataset_Graph.renderGraph(type, header);
+          });
+        }
+      });
+    } else {
+      Opendata_Dataset_Graph.graph.destroy();
+    }
+  };
+
+  Opendata_Dataset_Graph.selectItem = function (ele) {
+    var dataset_id = $(ele).attr("data-id");
+    var item = $(ele).find(".selected-item").clone(false);
+
+    // remove renderInBox class
+    $(item).find("a").removeClass("cboxElement");
+
+    $(item).find('[name="resource_id"]').each(function (idx) {
+      var resource_id = $(this).val();
+
+      // checkbox
+      $(this).on("click", function () {
+        $(this).closest('.selected-dataset').find('[name="resource_id"]').not(this).prop("checked", false);
+        Opendata_Dataset_Graph.renderGraph();
+        Opendata_Dataset_Graph.toggleFirstNotice();
+      });
+    });
+
+    // deselect button
+    $(item).find(".deselect").on("click", function (e) {
+      $(this).closest(".selected-item").remove();
+      Opendata_Dataset_Graph.graph.destroy();
+      Opendata_Dataset_Graph.toggleFirstNotice();
+      return false;
+    });
+
+    // append and remove
+    item.show();
+    $(".dataset-search .selected-dataset").append(item);
+    var length = $(".dataset-search .selected-dataset .selected-item").length - 10;
+    for (var i = 0; i < length; i++) {
+      $(".dataset-search .selected-dataset .selected-item:first").remove();
+    }
+    Opendata_Dataset_Graph.toggleFirstNotice();
+
+    return item;
+  }
+
+  Opendata_Dataset_Graph.toggleSelectButton = function () {
+    if ($(".search-ui .items input:checked").size() > 0) {
+      $(".select-items").parent("div").show();
+    } else {
+      $(".select-items").parent("div").hide();
+    }
+  };
+
+  Opendata_Dataset_Graph.toggleFirstNotice = function () {
+    if ($('.selected-dataset [name="resource_id"]:checked').length > 0) {
+      $(".resource-graph .first-notice").hide();
+    } else {
+      $(".resource-graph .first-notice").show();
+    }
+  };
+
+  Opendata_Dataset_Graph.modal = function () {
+    // form search event
+    $(".search-ui-form form.search").on("submit", function (e) {
+      $(this).ajaxSubmit({
+        url: $(this).attr("action"),
+        success: function (data) {
+          return $("#cboxLoadedContent").html(data);
+        },
+        error: function (data, status) {
+          return alert("== Error ==");
+        }
+      });
+      return false;
+    });
+
+    // select item event
+    $(".search-ui a.select-item").on("click", function (e) {
+      var tr = $(this).closest("tr");
+      var article = Opendata_Dataset_Graph.selectItem(tr);
+
+      $.colorbox.close();
+      $(article).find(".set-graph:first").trigger("click");
+
+      return false;
+    });
+
+    // select items event
+    $(".search-ui-select .select-items").on("click", function (e) {
+      $(".search-ui .items .set-dataset:checked").each(function () {
+        var tr = $(this).closest("tr");
+        Opendata_Dataset_Graph.selectItem(tr);
+      });
+      $.colorbox.close();
+      return false;
+    });
+
+    // list-head checkbox event
+    $(".search-ui .list-head input:checkbox").on("change", function (e) {
+      var chk = $(this).prop('checked');
+      $('.search-ui .list-item').each(function () {
+        $(this).toggleClass('checked', chk);
+        $(this).find('.set-dataset').prop('checked', chk);
+      });
+    });
+
+    // toggle select items button event
+    $(".search-ui").on("change", function (e) {
+      Opendata_Dataset_Graph.toggleSelectButton();
+    });
+
+    // disable selected items in modal
+    $(".dataset-search .selected-dataset .selected-item").each(function () {
+      var id = $(this).attr("data-id");
+      var tr = $(".items [data-id='" + id + "']");
+      tr.find("input[type=checkbox]").remove();
+
+      var item = tr.find(".select-item").html();
+      tr.find(".select-item").replaceWith("<span class='select-item' style='color: #888'>" + item + "</span>");
+    });
+  }
+
+  return Opendata_Dataset_Graph;
+})();

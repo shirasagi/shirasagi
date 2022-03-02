@@ -1,1 +1,117 @@
-this.Facility_Search=function(){function a(){}return a.render=function(a,e){var r,s,o;return null==e&&(e={}),r=e.markers,o=function(a){var e,r,s;return e=a.offset().top,r=a.closest("#map-sidebar").offset().top,s=a.closest("#map-sidebar").scrollTop(),a.closest("#map-sidebar").animate({scrollTop:e-r+s},"fast")},Googlemaps_Map.load(a,e),s=Googlemaps_Map.attachMessage,Googlemaps_Map.attachMessage=function(r){return s(r),google.maps.event.addListener(Googlemaps_Map.markers[r].marker,"click",function(){var a,e;return $("#map-sidebar .column").removeClass("current"),e=Googlemaps_Map.markers[r].id,(a=$('#map-sidebar .column[data-id="'+e+'"]')).addClass("current"),o(a)}),google.maps.event.addListener(Googlemaps_Map.markers[r].window,"closeclick",function(){return $("#map-sidebar .column").removeClass("current")})},Googlemaps_Map.setMarkers(r),$("#map-sidebar .column .click-marker").on("click",function(){var s;return s=parseInt($(this).closest(".column").attr("data-id")),$("#map-sidebar .column").removeClass("current"),$.each(Googlemaps_Map.markers,function(a,e){var r;if(s===e.id)return Googlemaps_Map.openedInfo&&Googlemaps_Map.openedInfo.close(),e.window.open(e.marker.getMap(),e.marker),Googlemaps_Map.openedInfo=e.window,(r=$('#map-sidebar .column[data-id="'+s+'"]')).addClass("current"),o(r),!1}),!1}),$(".filters a").on("click",function(){var o;return $(this).hasClass("clicked")?$(this).removeClass("clicked"):$(this).addClass("clicked"),o=[],$(".filters a.clicked").each(function(){return o.push(parseInt($(this).attr("data-id")))}),$.each(Googlemaps_Map.markers,function(a){var e,r,s;return s=!1,$.each(o,function(){if(0<=$.inArray(parseInt(this),Googlemaps_Map.markers[a].category))return!(s=!0)}),r=Googlemaps_Map.markers[a].id,e=$('#map-sidebar .column[data-id="'+r+'"]'),s?(Googlemaps_Map.markers[a].marker.setVisible(!0),e.show()):(Googlemaps_Map.markers[a].marker.setVisible(!1),Googlemaps_Map.markers[a].window.close(),e.hide())}),!1}),$(".filters .focus").on("change",function(){var s;return(s=$(this)).find("option:selected").each(function(){var a,e,r;return""!==$(this).val()&&(e=$(this).val().split(","),r=$(this).attr("data-zoom-level"),a=new google.maps.LatLng(e[0],e[1]),Googlemaps_Map.map.setCenter(a),r&&Googlemaps_Map.map.setZoom(parseInt(r)),s.val(""))})})},a}();
+this.Facility_Search = (function () {
+  function Facility_Search() {
+  }
+
+  Facility_Search.render = function (selector, opts) {
+    var markers, overrided, slideSidebar;
+    if (opts == null) {
+      //define functions
+      opts = {};
+    }
+    markers = opts["markers"];
+    slideSidebar = function (column) {
+      var columnTop, indexTop, scrolled;
+      columnTop = column.offset().top;
+      indexTop = column.closest("#map-sidebar").offset().top;
+      scrolled = column.closest("#map-sidebar").scrollTop();
+      return column.closest("#map-sidebar").animate({
+        scrollTop: columnTop - indexTop + scrolled
+      }, 'fast');
+    };
+    //setup map
+    Googlemaps_Map.load(selector, opts);
+    //setup markers
+    overrided = Googlemaps_Map.attachMessage;
+    Googlemaps_Map.attachMessage = function (id) {
+      overrided(id);
+      google.maps.event.addListener(Googlemaps_Map.markers[id]["marker"], 'click', function (event) {
+        var column, dataID;
+        $("#map-sidebar .column").removeClass("current");
+        dataID = Googlemaps_Map.markers[id]["id"];
+        column = $('#map-sidebar .column[data-id="' + dataID + '"]');
+        column.addClass("current");
+        return slideSidebar(column);
+      });
+      return google.maps.event.addListener(Googlemaps_Map.markers[id]["window"], 'closeclick', function (event) {
+        return $("#map-sidebar .column").removeClass("current");
+      });
+    };
+    Googlemaps_Map.setMarkers(markers);
+    //setup sidebar
+    $("#map-sidebar .column .click-marker").on("click", function () {
+      var dataID;
+      dataID = parseInt($(this).closest(".column").attr("data-id"));
+      $("#map-sidebar .column").removeClass("current");
+      $.each(Googlemaps_Map.markers, function (i, m) {
+        var column;
+        if (dataID === m["id"]) {
+          if (Googlemaps_Map.openedInfo) {
+            Googlemaps_Map.openedInfo.close();
+          }
+          m["window"].open(m["marker"].getMap(), m["marker"]);
+          Googlemaps_Map.openedInfo = m["window"];
+          column = $('#map-sidebar .column[data-id="' + dataID + '"]');
+          column.addClass("current");
+          slideSidebar(column);
+          return false;
+        }
+      });
+      return false;
+    });
+    //setup category filter
+    $(".filters a").on("click", function () {
+      var dataIDs;
+      if ($(this).hasClass("clicked")) {
+        $(this).removeClass("clicked");
+      } else {
+        $(this).addClass("clicked");
+      }
+      dataIDs = [];
+      $(".filters a.clicked").each(function () {
+        return dataIDs.push(parseInt($(this).attr("data-id")));
+      });
+      $.each(Googlemaps_Map.markers, function (id, value) {
+        var column, dataID, visible;
+        visible = false;
+        $.each(dataIDs, function () {
+          if ($.inArray(parseInt(this), Googlemaps_Map.markers[id]["category"]) >= 0) {
+            visible = true;
+            return false;
+          }
+        });
+        dataID = Googlemaps_Map.markers[id]["id"];
+        column = $('#map-sidebar .column[data-id="' + dataID + '"]');
+        if (visible) {
+          Googlemaps_Map.markers[id]["marker"].setVisible(true);
+          return column.show();
+        } else {
+          Googlemaps_Map.markers[id]["marker"].setVisible(false);
+          Googlemaps_Map.markers[id]["window"].close();
+          return column.hide();
+        }
+      });
+      return false;
+    });
+    //setup location filter
+    return $(".filters .focus").on("change", function () {
+      var select;
+      select = $(this);
+      return select.find("option:selected").each(function () {
+        var latlng, loc, zoomLevel;
+        if ($(this).val() === "") {
+          return false;
+        }
+        loc = $(this).val().split(",");
+        zoomLevel = $(this).attr("data-zoom-level");
+        latlng = new google.maps.LatLng(loc[0], loc[1]);
+        Googlemaps_Map.map.setCenter(latlng);
+        if (zoomLevel) {
+          Googlemaps_Map.map.setZoom(parseInt(zoomLevel));
+        }
+        return select.val("");
+      });
+    });
+  };
+
+  return Facility_Search;
+})();

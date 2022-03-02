@@ -1,21 +1,24 @@
 <%= form_for :item, url: { action: :import }, html: { id: "item-form", method: :post, multipart: true } do |f| %>
   <%= error_messages_for :item %>
 
-  <section class="main-box">
-    <header><h2><%= t("ss.import") %></h2></header>
-
-    <dl class="see">
-      <dt><%= t "ss.file" %><%= @model.tt :in_file %></dt>
-      <dd>
-        <%= f.hidden_field "item[in_file]", value: "" %>
-        <%= f.file_field :in_file %>
-      </dd>
-      <% download_template_path = url_for(action: :download_template) rescue nil %>
-      <% if download_template_path.present? %>
-        <dd><%= link_to t('ss.links.download_template'), download_template_path %></dd>
-      <% end %>
-    </dl>
-  </section>
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t("ss.import") %></h2></div>
+      <div class="addon-body">
+        <dl class="see">
+          <dt><%= t "ss.file" %><%= @model.tt :in_file %></dt>
+          <dd>
+            <%= f.hidden_field "item[in_file]", value: "" %>
+            <%= f.file_field :in_file %>
+          </dd>
+          <% download_template_path = url_for(action: :download_template) rescue nil %>
+          <% if download_template_path.present? %>
+            <dd><%= link_to t('ss.links.download_template'), download_template_path %></dd>
+          <% end %>
+        </dl>
+      </div>
+    </div>
+  </div>
 
   <footer class="send">
     <%= f.submit t("ss.buttons.import"), class: :save, data: { confirm: t("ss.confirm.import"), disable_with: t("ss.buttons.importing") } %>

@@ -41,7 +41,7 @@ class Gws::HistoriesController < ApplicationController
     raise '403' unless Gws::History.allowed?(:read, @cur_user, site: @cur_site)
 
     set_items
-    return if request.get?
+    return if request.get? || request.head?
 
     filename = 'gws_histories'
     filename = "#{filename}_#{Time.zone.now.to_i}.csv"

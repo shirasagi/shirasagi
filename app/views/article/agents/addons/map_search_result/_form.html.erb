@@ -1,0 +1,16 @@
+<% addon ||= local_assigns.fetch(:addon, {}) %>
+<%= code_editor "##{addon[:id]} .map-html", mode: :html %>
+
+<dl class="see mod-cms-map-search-result">
+  <dt><%= @model.t :map_html%><%= @model.tt :map_html %></dt>
+  <dd>
+    <%= f.text_area :map_html, style: "height: 200px", class: "map-html" %>
+
+    <% if example = @item.form_example_map_html %>
+      <div class="form-example">
+        <div class="form-example-head example-layout-html"><%= t 'ss.input_example' %></div>
+        <div class="form-example-body example-layout-html"><%= example %></div>
+      </div>
+    <% end %>
+  </dd>
+ </dl>

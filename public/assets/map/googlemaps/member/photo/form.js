@@ -1,1 +1,181 @@
-this.Member_Photo_Form=function(){function r(){}return r.maxPointForm=10,r.deleteMessage="\u30de\u30fc\u30ab\u30fc\u3092\u524a\u9664\u3057\u3066\u3088\u308d\u3057\u3044\u3067\u3059\u304b\uff1f",r.setExifMessage="\u753b\u50cf\u306b\u4f4d\u7f6e\u60c5\u5831\u304c\u542b\u307e\u308c\u3066\u3044\u307e\u3059\u3002\u4f4d\u7f6e\u60c5\u5831\u3092\u5730\u56f3\u306b\u8a2d\u5b9a\u3057\u307e\u3059\u304b\uff1f",r.dataID=0,r.clickMarker=null,r.setMapLoc=function(a,e,o){e=Math.ceil(e*Math.pow(10,6))/Math.pow(10,6),o=Math.ceil(o*Math.pow(10,6))/Math.pow(10,6),a.val(e.toFixed(6)+","+o.toFixed(6))},r.getMapLoc=function(a){var e;return e=a.val().split(","),new google.maps.LatLng(parseFloat(e[1]),parseFloat(e[0]))},r.attachMessage=function(t){google.maps.event.addListener(Googlemaps_Map.markers[t],"click",function(){Googlemaps_Map.openedInfo&&Googlemaps_Map.openedInfo.close(),$('dd[data-id = "'+t+'"]').each(function(){var a,e,o;return e=$(this).find(".marker-name").val(),o=$(this).find(".marker-text").val(),""===e&&""===o||(a='<div class="marker-info">',""!==e&&(a+="<p>"+e+"</p>"),""!==o&&$.each(o.split(/[\r\n]+/),function(){return this.match(/^https?:\/\//)?a+='<p><a href="'+this+'">'+this+"</a></p>":a+="<p>"+this+"</p>"}),Googlemaps_Map.openedInfo=new google.maps.InfoWindow({content:a,maxWidth:260}),Googlemaps_Map.openedInfo.open(Googlemaps_Map.markers[t].getMap(),Googlemaps_Map.markers[t])),!1})})},r.clearMarker=function(a){var e;e=0,""!==a.val()?confirm(r.deleteMessage)&&Googlemaps_Map.markers[e]&&(Googlemaps_Map.markers[e].setMap(null),a.val("")):Googlemaps_Map.markers[e]&&Googlemaps_Map.markers[e].setMap(null)},r.createMarker=function(a){var e;""!==$(".mod-map .clicked").val()&&(a.val($(".mod-map .clicked").val()),e=0,Googlemaps_Map.markers[e]&&Googlemaps_Map.markers[e].setMap(null),Googlemaps_Map.markers[e]=new google.maps.Marker({position:r.getMapLoc($(".mod-map .marker-loc")),map:Googlemaps_Map.map,icon:Googlemaps_Map.markerIcon}),r.attachMessage(e))},r.renderMarkers=function(){var a,e,o,t;if(o=new google.maps.LatLngBounds,Googlemaps_Map.markers)for(a=0,e=(t=Googlemaps_Map.markers).length;a<e;a++)t[a].setMap(null);Googlemaps_Map.markers=[],r.dataID=0,$(".mod-map .marker").each(function(){var a;return $(this).attr("data-id",r.dataID),""!==$(this).find(".marker-loc").val()&&(a=r.getMapLoc($(this).find(".marker-loc")),Googlemaps_Map.markers[r.dataID]=new google.maps.Marker({position:a,map:Googlemaps_Map.map,icon:Googlemaps_Map.markerIcon}),r.attachMessage(r.dataID),o.extend(a)),r.dataID+=1}),Googlemaps_Map.adjustMarkerBounds(Googlemaps_Map.markers.length,o)},r.setExifLatLng=function(a){return $(a).on("change",function(a){if(a.target.files[0])return EXIF.getData(a.target.files[0],function(){var a,e,o,t;return a=EXIF.getTag(this,"GPSLatitude"),o=EXIF.getTag(this,"GPSLongitude"),e=EXIF.getTag(this,"GPSLatitudeRef")||"N",t=EXIF.getTag(this,"GPSLongitudeRef")||"W",!(!a||!o)&&(!!confirm(r.setExifMessage)&&(e="N"===e?1:-1,t="W"===t?-1:1,a=(a[0]+a[1]/60+a[2]/3600)*e,o=(o[0]+o[1]/60+o[2]/3600)*t,$(".mod-map .clicked").val([a,o].join()),r.createMarker($(".mod-map .marker-loc")),Googlemaps_Map.map.setCenter(new google.maps.LatLng(o,a))))})})},r.renderEvents=function(){google.maps.event.addListener(Googlemaps_Map.map,"click",function(a){return r.setMapLoc($(".mod-map .clicked"),a.latLng.lng(),a.latLng.lat()),r.createMarker($(".mod-map .marker-loc"))}),$(".mod-map .clear-marker").on("click",function(){return r.clearMarker($(".mod-map .marker-loc")),!1}),$(".mod-map .set-center-position").on("click",function(){var a=Googlemaps_Map.map.getCenter(),e=Math.floor(1e6*a.lat())/1e6,o=Math.floor(1e6*a.lng())/1e6;return $(".center-input").val(o+","+e),!1}),$(".mod-map .set-zoom-level").on("click",function(){return $(".zoom-input").val(Googlemaps_Map.map.getZoom()),!1}),google.maps.event.addListener(Googlemaps_Map.map,"bounds_changed",function(){var a=Googlemaps_Map.map.getZoom();$('input[name="item[map_zoom_level]"]').val(a)})},r}();
+this.Member_Photo_Form = (function () {
+  function Member_Photo_Form() {
+  }
+
+  Member_Photo_Form.maxPointForm = 10;
+
+  Member_Photo_Form.deleteMessage = "マーカーを削除してよろしいですか？";
+
+  Member_Photo_Form.setExifMessage = "画像に位置情報が含まれています。位置情報を地図に設定しますか？";
+
+  Member_Photo_Form.dataID = 0;
+
+  Member_Photo_Form.clickMarker = null;
+
+  Member_Photo_Form.setMapLoc = function (ele, lat, lon) {
+    lat = Math.ceil(lat * Math.pow(10, 6)) / Math.pow(10, 6);
+    lon = Math.ceil(lon * Math.pow(10, 6)) / Math.pow(10, 6);
+    ele.val(lat.toFixed(6) + "," + lon.toFixed(6));
+  };
+
+  Member_Photo_Form.getMapLoc = function (ele) {
+    var latlon;
+    latlon = ele.val().split(',');
+    return new google.maps.LatLng(parseFloat(latlon[1]), parseFloat(latlon[0]));
+  };
+
+  Member_Photo_Form.attachMessage = function (id) {
+    google.maps.event.addListener(Googlemaps_Map.markers[id], 'click', function (event) {
+      if (Googlemaps_Map.openedInfo) {
+        Googlemaps_Map.openedInfo.close();
+      }
+      $('dd[data-id = "' + id + '"]').each(function () {
+        var markerHtml, name, text;
+        name = $(this).find(".marker-name").val();
+        text = $(this).find(".marker-text").val();
+        if (name !== "" || text !== "") {
+          markerHtml = '<div class="marker-info">';
+          if (name !== "") {
+            markerHtml += '<p>' + name + '</p>';
+          }
+          if (text !== "") {
+            $.each(text.split(/[\r\n]+/), function () {
+              if (this.match(/^https?:\/\//)) {
+                return markerHtml += '<p><a href="' + this + '">' + this + '</a></p>';
+              } else {
+                return markerHtml += '<p>' + this + '</p>';
+              }
+            });
+          }
+          Googlemaps_Map.openedInfo = new google.maps.InfoWindow({
+            content: markerHtml,
+            maxWidth: 260
+          });
+          Googlemaps_Map.openedInfo.open(Googlemaps_Map.markers[id].getMap(), Googlemaps_Map.markers[id]);
+        }
+        return false;
+      });
+    });
+  };
+
+  Member_Photo_Form.clearMarker = function (ele) {
+    var dataId;
+    dataId = 0;
+    if (ele.val() !== "") {
+      if (confirm(Member_Photo_Form.deleteMessage)) {
+        if (Googlemaps_Map.markers[dataId]) {
+          Googlemaps_Map.markers[dataId].setMap(null);
+          ele.val("");
+        }
+      }
+    } else {
+      if (Googlemaps_Map.markers[dataId]) {
+        Googlemaps_Map.markers[dataId].setMap(null);
+      }
+    }
+  };
+
+  Member_Photo_Form.createMarker = function (ele) {
+    var dataId;
+    if ($(".mod-map .clicked").val() !== "") {
+      ele.val($(".mod-map .clicked").val());
+      dataId = 0;
+      if (Googlemaps_Map.markers[dataId]) {
+        Googlemaps_Map.markers[dataId].setMap(null);
+      }
+      Googlemaps_Map.markers[dataId] = new google.maps.Marker({
+        position: Member_Photo_Form.getMapLoc($(".mod-map .marker-loc")),
+        map: Googlemaps_Map.map,
+        icon: Googlemaps_Map.markerIcon
+      });
+      Member_Photo_Form.attachMessage(dataId);
+    }
+  };
+
+  Member_Photo_Form.renderMarkers = function () {
+    var i, len, m, markerBounds, ref, zoomChangeBoundsListener;
+    markerBounds = new google.maps.LatLngBounds();
+    if (Googlemaps_Map.markers) {
+      ref = Googlemaps_Map.markers;
+      for (i = 0, len = ref.length; i < len; i++) {
+        m = ref[i];
+        m.setMap(null);
+      }
+    }
+
+    Googlemaps_Map.markers = [];
+    Member_Photo_Form.dataID = 0;
+    $(".mod-map .marker").each(function () {
+      var loc;
+      $(this).attr("data-id", Member_Photo_Form.dataID);
+      if ($(this).find(".marker-loc").val() !== "") {
+        loc = Member_Photo_Form.getMapLoc($(this).find(".marker-loc"));
+        Googlemaps_Map.markers[Member_Photo_Form.dataID] = new google.maps.Marker({
+          position: loc,
+          map: Googlemaps_Map.map,
+          icon: Googlemaps_Map.markerIcon
+        });
+        Member_Photo_Form.attachMessage(Member_Photo_Form.dataID);
+        markerBounds.extend(loc);
+      }
+      return Member_Photo_Form.dataID += 1;
+    });
+    Googlemaps_Map.adjustMarkerBounds(Googlemaps_Map.markers.length, markerBounds);
+  };
+
+  Member_Photo_Form.setExifLatLng = function (selector) {
+    return $(selector).on("change", function (e) {
+      if (!e.target.files[0]) {
+        return;
+      }
+      return EXIF.getData(e.target.files[0], function () {
+        var lat, latRef, lon, lonRef;
+        lat = EXIF.getTag(this, 'GPSLatitude');
+        lon = EXIF.getTag(this, 'GPSLongitude');
+        latRef = EXIF.getTag(this, 'GPSLatitudeRef') || "N";
+        lonRef = EXIF.getTag(this, 'GPSLongitudeRef') || "W";
+        if (!(lat && lon)) {
+          return false;
+        }
+        if (!confirm(Member_Photo_Form.setExifMessage)) {
+          return false;
+        }
+        latRef = latRef === "N" ? 1 : -1;
+        lonRef = lonRef === "W" ? -1 : 1;
+        lat = (lat[0] + (lat[1] / 60) + (lat[2] / 3600)) * latRef;
+        lon = (lon[0] + (lon[1] / 60) + (lon[2] / 3600)) * lonRef;
+        $(".mod-map .clicked").val([lat, lon].join());
+        Member_Photo_Form.createMarker($(".mod-map .marker-loc"));
+        return Googlemaps_Map.map.setCenter(new google.maps.LatLng(lon, lat));
+      });
+    });
+  };
+
+  Member_Photo_Form.renderEvents = function () {
+    google.maps.event.addListener(Googlemaps_Map.map, 'click', function (event) {
+      Member_Photo_Form.setMapLoc($(".mod-map .clicked"), event.latLng.lng(), event.latLng.lat());
+      return Member_Photo_Form.createMarker($(".mod-map .marker-loc"));
+    });
+    $(".mod-map .clear-marker").on('click', function (e) {
+      Member_Photo_Form.clearMarker($(".mod-map .marker-loc"));
+      return false;
+    });
+    $(".mod-map .set-center-position").on('click', function () {
+      var latlng = Googlemaps_Map.map.getCenter();
+      var lat = Math.floor((latlng.lat() * 1000000)) / 1000000;
+      var lng = Math.floor((latlng.lng() * 1000000)) / 1000000;
+      $(".center-input").val(lng + "," + lat);
+      return false;
+    });
+    $(".mod-map .set-zoom-level").on('click', function () {
+      $(".zoom-input").val(Googlemaps_Map.map.getZoom());
+      return false;
+    });
+    google.maps.event.addListener(Googlemaps_Map.map, 'bounds_changed', function (event) {
+      var zoom = Googlemaps_Map.map.getZoom();
+      $('input[name="item[map_zoom_level]"]').val(zoom);
+    });
+  };
+
+  return Member_Photo_Form;
+})();

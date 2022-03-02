@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
-gem 'rails', '~> 5.2.0'
+gem 'rails', '~> 6.1.0'
 gem 'sprockets', '< 4.0'
 gem 'sass'
 gem 'sassc-rails'
@@ -39,7 +39,6 @@ gem 'browser'
 gem 'clam_scan'
 gem 'diff-lcs'
 gem 'diffy'
-gem 'dynamic_form'
 gem 'fast_blank'
 gem 'fastimage'
 gem 'fullcalendar.io-rails', '~> 2.6.0'
@@ -61,10 +60,12 @@ gem 'non-stupid-digest-assets'
 gem 'oj'
 gem 'rails_autolink'
 gem 'retriable'
+gem 'rexml'
 gem 'romaji'
 gem 'roo'
 #gem 'roo-xls', git: "https://github.com/roo-rb/roo-xls.git"
-gem 'rubyzip'
+gem 'rss'
+gem 'rubyzip', '~> 2.3.0'
 gem 'thinreports'
 gem 'ungarbled'
 
@@ -105,28 +106,31 @@ gem 'elasticsearch'
 gem 'line-bot-api'
 
 group :development, :test do
+  gem 'brakeman', require: false
   gem 'dotenv-rails'
   gem 'capybara', require: false
-  gem 'debase', require: false
+  gem 'debase', '0.2.5.beta2', require: false
   gem 'factory_bot_rails', require: false
   gem 'fuubar', require: false
   gem 'guard', require: false
   gem 'guard-rspec', '~> 4.3.1', require: false
   gem 'guard-rubocop', require: false
   gem 'guard-scss_lint', require: false
-  gem 'mongoid-rspec'
+  gem 'mongoid-rspec', require: false
   gem 'pry-byebug', require: false
   gem 'pry-doc', require: false
   gem 'pry-rails', require: false
   gem 'pry-stack_explorer', require: false
+  gem 'puma', require: false
   gem 'rails-controller-testing', require: false
   gem 'rspec', require: false
   gem 'rspec-collection_matchers', require: false
   gem 'rspec-its', require: false
   gem 'rspec-rails', require: false
-  gem 'rubocop', require: false
+  gem 'rubocop', '1.18.4', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rspec', require: false
+  gem 'rubocop-rails', '2.11.3', require: false
   gem 'ruby-debug-ide', require: false
   gem 'scss_lint', require: false
   gem 'selenium-webdriver', require: false
@@ -141,7 +145,6 @@ group :development, :test do
 end
 
 group :development do
-  gem 'brakeman', require: false
   gem 'guard-brakeman', require: false
   gem 'terminal-notifier-guard', require: false
   gem 'yard', require: false

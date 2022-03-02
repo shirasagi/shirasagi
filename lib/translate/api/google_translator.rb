@@ -37,13 +37,13 @@ class Translate::Api::GoogleTranslator
 
   def request_word_limit_exceeded?(count)
     return false if request_word_limit.nil?
-    (@site.translate_mock_api_request_word_count + count) >= request_word_limit
+    (@site.translate_google_api_request_word_count + count) >= request_word_limit
   end
 
-  def translate(contents, source_language, target_language, opts = {})
+  def translate(contents, source_language, target_language, site:)
     @count = 0
 
-    count = contents.map(&:size).sum
+    count = contents.sum(&:size)
 
     if request_word_limit_exceeded?(count)
       @site.request_word_limit_exceeded = true

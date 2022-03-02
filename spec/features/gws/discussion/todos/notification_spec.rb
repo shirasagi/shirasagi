@@ -109,9 +109,6 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
       end
       # click_on item.name
       first('.fc-view a.fc-event-todo').click
-      within '.gws-popup' do
-        click_on I18n.t("ss.links.show")
-      end
       click_on I18n.t('gws/schedule/todo.links.revert')
       within "form" do
         click_on I18n.t('gws/schedule/todo.buttons.revert')

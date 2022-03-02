@@ -36,7 +36,7 @@ class Faq::PagesController < ApplicationController
     exporter = Cms::PageExporter.new(mode: "faq", site: @cur_site, criteria: criteria)
     enumerable = exporter.enum_csv(encoding: "Shift_JIS")
 
-    filename = @model.to_s.tableize.gsub(/\//, "_")
+    filename = @model.to_s.tableize.tr("/", "_")
     filename = "#{filename}_#{Time.zone.now.to_i}.csv"
 
     response.status = 200
@@ -50,7 +50,7 @@ class Faq::PagesController < ApplicationController
 
     @item = @model.new
 
-    if request.get?
+    if request.get? || request.head?
       respond_to do |format|
         format.html { render }
         format.json { render template: "ss/tasks/index", content_type: json_content_type, locals: { item: @task } }

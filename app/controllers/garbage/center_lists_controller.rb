@@ -51,13 +51,13 @@ class Garbage::CenterListsController < ApplicationController
 
     csv = "\uFEFF" + csv
     send_data csv.encode("UTF-8", invalid: :replace, undef: :replace),
-              filename: "garbage_centers_#{Time.zone.now.strftime("%Y_%m%d_%H%M")}.csv"
+      filename: "garbage_centers_#{Time.zone.now.strftime("%Y_%m%d_%H%M")}.csv"
   end
 
   public
 
   def download
-    send_csv @cur_node.children.map(&:becomes_with_route)
+    send_csv @cur_node.children
   end
 
   def import
@@ -65,7 +65,7 @@ class Garbage::CenterListsController < ApplicationController
 
     set_task
 
-    if request.get?
+    if request.get? || request.head?
       respond_to do |format|
         format.html { render }
         format.json { render json: @task.to_json(methods: :head_logs) }

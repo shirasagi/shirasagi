@@ -144,7 +144,7 @@ module Opendata::Resource::Previewable
     end
 
     # d
-    if coordinate =~ /^([^\d]+)?([\d\.]+)([^\d]+)?$/
+    if coordinate =~ /^([^\d]+)?([\d.]+)([^\d]+)?$/
       d = $2.to_f
       return d
     end

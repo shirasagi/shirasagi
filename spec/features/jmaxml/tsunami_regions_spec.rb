@@ -71,7 +71,7 @@ describe "jmaxml/tsunami_regions", type: :feature, dbscope: :example do
   end
 
   context 'search' do
-    let!(:region) { create :jmaxml_tsunami_region_100 }
+    let!(:region) { create :jmaxml_tsunami_region_c100 }
 
     before { login_cms_user }
 

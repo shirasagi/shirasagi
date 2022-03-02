@@ -13,9 +13,6 @@ production: &production
   # Disable page redirect link feature
   disable_redirect_link: true
 
-  # enable LGWAN
-  enable_lgwan: false
-
   # StyleSheets on gws pages.
   stylesheets: []
 
@@ -143,6 +140,7 @@ production: &production
   elasticsearch:
     label: 関連サイト全て
     site-search-marks: [ "use-site-search", "end-use-site-search" ]
+    aggregate_size: 100
     indexes:
       - s1
       - s2
@@ -175,7 +173,7 @@ production: &production
   cms_sitemap:
     disable: true
 
-  default_released_type: "same_as_updated"
+  default_released_type: "fixed"
 
 test:
   <<: *production

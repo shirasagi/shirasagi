@@ -6,11 +6,8 @@ class Gws::Schedule::PlanCsv::Importer
   extend SS::Translation
   include Cms::CsvImportBase
 
-  attr_accessor :in_file
-  attr_accessor :cur_site
-  attr_accessor :cur_user
-  attr_reader :imported
-  attr_reader :items
+  attr_accessor :in_file, :cur_site, :cur_user
+  attr_reader :imported, :items
 
   permit_params :in_file
 

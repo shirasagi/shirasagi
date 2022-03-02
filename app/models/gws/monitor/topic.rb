@@ -94,7 +94,7 @@ class Gws::Monitor::Topic
   end
 
   def zip_path
-    self.download_root_path + id.to_s.split(//).join("/") + "/_/#{id}"
+    self.download_root_path + id.to_s.chars.join("/") + "/_/#{id}"
   end
 
   def active?

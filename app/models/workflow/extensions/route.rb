@@ -15,9 +15,9 @@ module Workflow::Extensions::Route
 
       def mongoize(object)
         case object
-        when self.class then
+        when self.class
           object.mongoize
-        when Array then
+        when Array
           Workflow::Extensions::Route::Approvers.new(normalize(object)).mongoize
         else
           object
@@ -76,9 +76,9 @@ module Workflow::Extensions::Route
 
       def mongoize(object)
         case object
-        when self.class then
+        when self.class
           object.mongoize
-        when Array then
+        when Array
           Workflow::Extensions::Route::RequiredCounts.new(normalize(object)).mongoize
         else
           object
@@ -127,9 +127,9 @@ module Workflow::Extensions::Route
 
       def mongoize(object)
         case object
-        when self.class then
+        when self.class
           object.mongoize
-        when Array then
+        when Array
           Workflow::Extensions::Route::Circulations.new(normalize(object)).mongoize
         else
           object

@@ -21,7 +21,7 @@ class Inquiry::Agents::Tasks::Node::FormsController < ApplicationController
       raise e
     end
 
-    if response.content_type == "text/html" && node.layout
+    if response.media_type == "text/html" && node.layout
       html = render_to_string html: render_layout(node.layout).html_safe, layout: "cms/page"
     else
       html = response.body
@@ -33,12 +33,12 @@ class Inquiry::Agents::Tasks::Node::FormsController < ApplicationController
   end
 
   def generate
-    @node.save # save for release date
+    #@node.save # save for release date
 
-    if !@node.serve_static_file?
-      file = ::File.join(@node.path, "index.html")
-      File.delete(file) if File.exists?(file)
-    end
+    #if !@node.serve_static_file?
+    #  file = ::File.join(@node.path, "index.html")
+    #  File.delete(file) if File.exist?(file)
+    #end
 
     if generate_inquiry_node @node
       @task.log "#{@node.url}index.html" if @task

@@ -8,10 +8,10 @@ module Cms::MicheckerFilter
     set_item
     @result = Cms::Michecker::Result.site(@cur_site).and_page(@item).reorder(id: -1).first
 
-    if @result && ::File.exists?(@result.html_checker_report_filepath)
+    if @result && ::File.exist?(@result.html_checker_report_filepath)
       @accessibility_result = Cms::Michecker::Accessibility.load(@result.html_checker_report_filepath)
     end
-    if @result && ::File.exists?(@result.low_vision_report_filepath)
+    if @result && ::File.exist?(@result.low_vision_report_filepath)
       @lowvision_result = Cms::Michecker::LowVision.load(@result.low_vision_report_filepath)
     end
 
@@ -54,7 +54,7 @@ module Cms::MicheckerFilter
   private
 
   def michecker_result_accessibility_report
-    if @result && ::File.exists?(@result.html_checker_report_filepath)
+    if @result && ::File.exist?(@result.html_checker_report_filepath)
       @accessibility_result = Cms::Michecker::Accessibility.load(@result.html_checker_report_filepath)
     end
 
@@ -76,7 +76,7 @@ module Cms::MicheckerFilter
   end
 
   def michecker_result_lowvision_report
-    if @result && ::File.exists?(@result.low_vision_report_filepath)
+    if @result && ::File.exist?(@result.low_vision_report_filepath)
       @lowvision_result = Cms::Michecker::LowVision.load(@result.low_vision_report_filepath)
     end
 

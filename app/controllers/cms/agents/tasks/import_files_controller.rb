@@ -1,6 +1,6 @@
 class Cms::Agents::Tasks::ImportFilesController < ApplicationController
   def import
-    Cms::ImportJobFile.site(@site).where(:import_date.lte => Time.zone.now).each do |item|
+    Cms::ImportJobFile.site(@site).where(:import_date.lte => Time.zone.now, job_wait: nil).each do |item|
       begin
         if item.node
           @task.log("import in #{item.node.name}(#{item.node.filename})")

@@ -129,7 +129,7 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
   def download
     @model = Gws::Attendance::DownloadParam
 
-    if request.get?
+    if request.get? || request.head?
       user_ids = @items.pluck(:user_id)
       @target_users = Gws::User.in(id: user_ids).active
       if @target_users.blank?
@@ -155,7 +155,7 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
   end
 
   def lock
-    if request.get?
+    if request.get? || request.head?
       user_ids = @items.and_unlocked.pluck(:user_id)
       @target_users = Gws::User.in(id: user_ids).active
       if @target_users.blank?
@@ -175,7 +175,7 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
   end
 
   def unlock
-    if request.get?
+    if request.get? || request.head?
       user_ids = @items.and_locked.pluck(:user_id)
       @target_users = Gws::User.in(id: user_ids).active
       if @target_users.blank?

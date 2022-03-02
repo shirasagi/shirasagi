@@ -11,7 +11,7 @@ module SS::Copy::Cache
     return cache if keys.blank?
     return cache[keys] if cache.key?(keys)
 
-    cache[keys] = ret = yield if block_given?
+    cache[keys] = ret = yield if block
     ret
   end
 

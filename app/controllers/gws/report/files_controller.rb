@@ -183,7 +183,7 @@ class Gws::Report::FilesController < ApplicationController
       redirect_to({ action: :show }, { notice: t('gws/report.notice.published') })
       return
     end
-    return if request.get?
+    return if request.get? || request.head?
 
     @item.state = 'public'
     render_opts = { render: { template: "publish" }, notice: t('gws/report.notice.published') }
@@ -197,7 +197,7 @@ class Gws::Report::FilesController < ApplicationController
       redirect_to({ action: :show }, { notice: t('gws/report.notice.depublished') })
       return
     end
-    return if request.get?
+    return if request.get? || request.head?
 
     @item.state = 'closed'
     render_opts = { render: { template: "depublish" }, notice: t('gws/report.notice.depublished') }
@@ -208,7 +208,8 @@ class Gws::Report::FilesController < ApplicationController
   def copy
     set_item
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    if request.get?
+
+    if request.get? || request.head?
       @item.name = "[#{I18n.t('workflow.cloned_name_prefix')}] #{@item.name}".truncate(80)
       return
     end
@@ -232,7 +233,7 @@ class Gws::Report::FilesController < ApplicationController
 
     result = @new_item.save
     if !result
-      @item.errors.messages[:base] += @new_item.errors.full_messages
+      SS::Model.copy_errors(@new_item, @item)
     end
 
     render_opts = {}

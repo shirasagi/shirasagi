@@ -48,7 +48,7 @@ module Opendata::Api::ResourceSearchFilter
     result = true
 
     queries.each do |query|
-      field, term = URI.decode(query).split(":")
+      field, term = Addressable::URI.unencode(query).split(":")
       property = convert_property_name(field)
       if resource[property.to_sym] !~ /#{term}/i
         result = false
@@ -72,7 +72,7 @@ module Opendata::Api::ResourceSearchFilter
       return
     end
 
-    field, term = URI.decode(@queries[0]).split(":")
+    field, term = Addressable::URI.unencode(@queries[0]).split(":")
 
     field_list = %w(name description filename format)
     unless field_list.include?(field)

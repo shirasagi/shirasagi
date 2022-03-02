@@ -360,6 +360,13 @@
 }
 
 // events
+@mixin fc_event_prefix {
+  display: inline-block;
+  margin-right: 2px;
+  padding: 0 2px;
+  border-radius: 2px;
+  color: $white;
+}
 .fc-event {
   border: 0;
   border-radius: 0;
@@ -368,9 +375,22 @@
     color: $black;
   }
   .fc-content {
-    @include ellipsis;
     word-wrap: normal;
     word-break: normal;
+    white-space: normal;
+    .fc-category {
+      @include fc_event_prefix;
+      background-color: $orange;
+    }
+    .fc-facility:before {
+      @include fc_event_prefix;
+      content: "設";
+      background-color: $orange;
+    }
+    .fc-title,.fc-facility {
+      display: block;
+      margin-left: 5px;
+    }
   }
 }
 .fc-time-grid-event {
@@ -420,6 +440,12 @@
   background-image: url(/assets/img/gws/bg-plan.png);
   color: #000;
   &:hover { color: #000; text-decoration: underline; }
+  .fc-content {
+    @include ellipsis;
+    .fc-title,.fc-facility {
+      display: inline;
+    }
+  }
 }
 .fc-agenda-view .fc-day-grid .fc-event-point {
   background-color: #bdf;
@@ -433,25 +459,20 @@
   background-color: #bdf;
   color: #000;
 }
-@mixin fc_event_prefix {
-  display: inline-block;
-  margin-right: 2px;
-  padding: 0 2px;
-  border-radius: 2px;
-  color: $white;
-}
 .fc-event-private .fc-content:before {
   @include fc_event_prefix;
   content: "秘";
   background-color: #f2b;
 }
-.fc-event-unknown-attendance .fc-content:before {
+.fc-event-user-attendance-unknown .fc-content:before {
   @include fc_event_prefix;
   content: "未";
   background-color: $orange;
 }
-.fc-event-user-attendance-absence {
-  display: none;
+.fc-event-user-attendance-absence .fc-content:before {
+  @include fc_event_prefix;
+  content: "不";
+  background-color: $orange;
 }
 .fc-event-approval-request .fc-content:before {
   @include fc_event_prefix;
@@ -476,17 +497,6 @@
   &:hover { color: #000; }
 }
 
-// View: basicWeek
-.fc-basicWeek-view {
-  .fc-title {
-    display: block;
-  }
-}
-.calendar.multiple .fc-basicWeek-view {
-  .fc-title {
-    display: inline;
-  }
-}
 // View: agendaDay
 .fc-agendaDay-view {
   .fc-time-grid-event {

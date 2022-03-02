@@ -1,4 +1,6 @@
 class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
+  attr_accessor :resource_url
+
   field :html_tag, type: String
   field :html_additional_attr, type: String, default: ''
   belongs_to :file, class_name: 'SS::File'
@@ -9,8 +11,8 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
   permit_values :file_id, :file_label, :text, :image_html_type, :link_url
 
-  before_save :before_save_file
-  after_destroy :destroy_file
+  before_parent_save :before_save_file
+  after_parent_destroy :destroy_file
 
   liquidize do
     export :file
@@ -63,7 +65,56 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     end
   end
 
+  def history_summary
+    h = []
+    h << "#{t("file_label")}: #{file_label}" if file_label.present?
+    h << "#{t("image_html_type")}: #{I18n.t("cms.options.column_image_html_type.#{image_html_type}")}" if image_html_type.present?
+    h << "#{t("text")}: #{text}" if text.present?
+    h << "#{t("alignment")}: #{I18n.t("cms.options.alignment.#{alignment}")}"
+    h.join(",")
+  end
+
+  def import_csv_cell(value)
+    return if value == file.try(:full_url)
+    return self.file_id = nil if value.blank?
+    return self.file_id = nil unless validate_resouce_url(value)
+
+    import_url_resource(value)
+  end
+
+  def import_url_resource(url)
+    require 'open-uri'
+
+    URI.parse(url).open do |f|
+      attributes = {
+        model: 'ss/temp_file',
+        filename: ::File.basename(value),
+        content_type: f.content_type,
+        user_id: @cur_user.try(:id),
+        site_id: @cur_site.try(:id),
+      }
+      download_file = SS::File.create_empty!(attributes) do |new_file|
+        IO.copy_stream(f, new_file.path)
+        new_file.sanitizer_copy_file
+      end
+      self.file_id = download_file.id
+    end
+  end
+
+  def export_csv_cell
+    file.try(:full_url)
+  end
+
+  def search_values(values)
+    return false unless values.instance_of?(Array)
+    (values & [file_label, file.try(:name), file.try(:full_url)]).present?
+  end
+
   private
+
+  def validate_resouce_url(value)
+    /\Ahttps?:\/\//.match?(value) && Addressable::URI.parse(value) rescue false
+  end
 
   def validate_value
     return if column.blank?
@@ -95,69 +146,86 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
   def before_save_file
     if file_id_was.present? && file_id_was != file_id
-      old_file = SS::File.find(file_id_was) rescue nil
-      if old_file
-        old_file.destroy
-        self.file_id = nil
-      end
+      Cms::Reference::Files::Utils.delete_files(self, [ file_id_was ]) if file_id_was
     end
 
     return if file.blank?
 
-    if @new_clone
-      attributes = Hash[file.attributes]
-      attributes.select!{ |k| file.fields.key?(k) }
+    # 注意: カラム処理では以下の点が異なるので注意。
+    #
+    # - カラムは数が変更される可能性があるため、master から branch を作成する際も、master へ branch をマージする際も、
+    #   delete & insert となるため常に @new_clone がセットされる。
+    # - master から branch を作成する際は @merge_values はセットされないのに対し、
+    #   master へ branch をマージする際は @merge_values がセットされる。
+    # - ゴミ箱から復元する際は、@new_clone も @merge_values もセットされない。
+    #
+    # これらの全てのケースに対応する必要がある。
+    clone_file_if_necessary
+    update_file_owner_item
+  end
 
-      attributes["user_id"] = @cur_user.id if @cur_user
-      attributes["_id"] = nil
-      clone_file = SS::File.create_empty!(attributes, validate: false) do |new_file|
-        ::FileUtils.copy(file.path, new_file.path)
-      end
-      clone_file.owner_item = _parent
+  def clone_file_if_necessary
+    return unless file
 
+    owner_item = SS::Model.container_of(self)
+    return if SS::File.file_owned?(file, owner_item)
+
+    # 差し替えページの場合、ファイルの所有者が差し替え元なら、そのままとする
+    return if owner_item.try(:branch?) && SS::File.file_owned?(file, owner_item.master)
+
+    return unless Cms::Reference::Files::Utils.need_to_clone?(file, owner_item, owner_item.try(:in_branch))
+
+    cur_user = owner_item.cur_user if owner_item.respond_to?(:cur_user)
+    new_file = SS::File.clone_file(file, cur_user: cur_user, owner_item: owner_item) do |new_file|
       # history_files
       if @merge_values
-        clone_file.master_id = nil
-        clone_file.history_file_ids = file.history_file_ids
-      else
-        clone_file.master_id = file.id
-        clone_file.history_file_ids = []
+        new_file.history_file_ids = file.history_file_ids
       end
-
-      clone_file.save(validate: false)
-      clone_file.sanitizer_copy_file
-      self.file = clone_file
     end
+
+    # サムネイルを作成する
+    new_file.send(:save_thumbs)
+
+    self.file = new_file
+    self.file_id = new_file.id
+  end
+
+  def update_file_owner_item
+    owner_item = SS::Model.container_of(self)
+    return if SS::File.file_owned?(file, owner_item)
+
+    # 差し替えページの場合、所有者を差し替え元のままとする
+    return if owner_item.respond_to?(:branch?) && owner_item.branch? && SS::File.file_owned?(file, owner_item.master)
 
     attrs = {}
 
-    if file.site_id != _parent.site_id
-      attrs[:site_id] = _parent.site_id
+    if file.site_id != owner_item.site_id
+      attrs[:site_id] = owner_item.site_id
     end
-    if file.model != _parent.class.name
-      attrs[:model] = _parent.class.name
+    if file.model != owner_item.class.name
+      attrs[:model] = owner_item.class.name
     end
-    if file.owner_item != _parent
-      attrs[:owner_item] = _parent
+    if file.owner_item != owner_item
+      attrs[:owner_item] = owner_item
     end
-    if file.state != _parent.state
-      attrs[:state] = _parent.state
+    if file.state != owner_item.state
+      attrs[:state] = owner_item.state
     end
 
-    if attrs.present?
-      file.update(attrs)
+    return if attrs.blank?
+
+    result = file.update(attrs)
+    if result
+      History::Log.build_file_log(file, site_id: owner_item.site_id, user_id: owner_item.cur_user.try(:id)).tap do |history|
+        history.action = "update"
+        history.behavior = "attachment"
+        history.save
+      end
     end
   end
 
   def destroy_file
-    return if file.blank?
-    return nil unless File.exist?(file.path)
-
-    path = "#{History::Trash.root}/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}"
-    FileUtils.mkdir_p(File.dirname(path))
-    FileUtils.cp(file.path, path)
-    file.skip_history_trash = _parent.skip_history_trash if [ _parent, file ].all? { |obj| obj.respond_to?(:skip_history_trash) }
-    file.destroy
+    Cms::Reference::Files::Utils.delete_files(self, [ file_id ])
   end
 
   # override Cms::Column::Value::Base#to_default_html
@@ -190,7 +258,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
   def to_default_html_attachment
     label = file_label.presence.try { |l| ApplicationController.helpers.sanitize(l) }
-    label ||= file.name.sub(/\.[^\.]+$/, '')
+    label ||= file.name.sub(/\.[^.]+$/, '')
     label = "#{label} (#{file.extname.upcase} #{file.size.to_s(:human_size)})"
     ApplicationController.helpers.link_to(label, file.url)
   end
@@ -254,6 +322,23 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
       when I18n.t("cms.column_file_upload.banner.file_label")
         self.file_label = value
       end
+    end
+  end
+
+  class << self
+    def form_example_layout
+      h = []
+      h << %({% if value.file %})
+      h << %(  {% if value.image? %})
+      h << %(    <a href="{{ value.file.url }}">)
+      h << %(      <img src="{{ value.file.thumb_url }}")
+      h << %(           alt="{{ value.image_text | default: value.file.humanized_name }}")
+      h << %(           title="{{ value.file.basename }}"></a>)
+      h << %(  {% else %})
+      h << %(    <a href="{{ value.file.url }}">{{ value.attachment_text | default: value.file.humanized_name }}</a>)
+      h << %(  {% endif %})
+      h << %({% endif %})
+      h.join("\n")
     end
   end
 end

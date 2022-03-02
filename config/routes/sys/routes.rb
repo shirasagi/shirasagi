@@ -40,8 +40,10 @@ Rails.application.routes.draw do
     resources :sites, concerns: :deletion
     resources :roles, concerns: :deletion
     resources :max_file_sizes, concerns: :deletion
+    resources :image_resizes, concerns: :deletion
     resources :postal_codes, concerns: [:deletion, :export]
     resources :prefecture_codes, concerns: [:deletion, :export]
+    resources :history_archives, concerns: [:deletion], only: [:index, :show, :destroy]
     resources :mail_logs, concerns: :deletion, only: [ :index, :show, :delete, :destroy ] do
       get :decode, on: :member
       put :decode, on: :member, action: :commit_decode

@@ -124,7 +124,7 @@ describe "event_pages", type: :feature, js: true do
     it "permited and contains_urls" do
       visit edit_path2
       within "form" do
-        click_on I18n.t("ss.buttons.draft_save")
+        click_on I18n.t("ss.buttons.withdraw")
       end
       expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
     end
@@ -132,7 +132,7 @@ describe "event_pages", type: :feature, js: true do
     it "permited and not contains_urls" do
       visit edit_path
       within "form" do
-        click_on I18n.t("ss.buttons.draft_save")
+        click_on I18n.t("ss.buttons.withdraw")
       end
       expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
     end
@@ -143,7 +143,7 @@ describe "event_pages", type: :feature, js: true do
                                   release_private_event_pages release_other_event_pages))
       visit edit_path2
       within "form" do
-        click_on I18n.t("ss.buttons.draft_save")
+        click_on I18n.t("ss.buttons.withdraw")
       end
       expect(page).not_to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
       expect(page).to have_css(".errorExplanation", text: I18n.t('ss.confirm.contains_url_expect'))
@@ -155,7 +155,7 @@ describe "event_pages", type: :feature, js: true do
                                   release_private_event_pages release_other_event_pages))
       visit edit_path
       within "form" do
-        click_on I18n.t("ss.buttons.draft_save")
+        click_on I18n.t("ss.buttons.withdraw")
       end
       expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
     end

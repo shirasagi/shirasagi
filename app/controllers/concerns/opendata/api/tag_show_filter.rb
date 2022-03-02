@@ -5,7 +5,7 @@ module Opendata::Api::TagShowFilter
   def tag_show
     help = t("opendata.api.tag_show_help")
     id = params[:id]
-    id = URI.decode(id) if id
+    id = Addressable::URI.unencode(id) if id
 
     if !id
       error = {__type: "Validation Error", id: "Missing value"}

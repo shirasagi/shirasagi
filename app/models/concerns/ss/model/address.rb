@@ -31,9 +31,9 @@ module SS::Model::Address
     belongs_to :member, class_name: "Gws::User"
 
     permit_params :member_id, :name, :kana, :company, :title, :tel, :email,
-                  :home_postal_code, :home_prefecture, :home_city, :home_street_address, :home_tel, :home_fax,
-                  :office_postal_code, :office_prefecture, :office_city, :office_street_address, :office_tel, :office_fax,
-                  :personal_webpage, :memo
+      :home_postal_code, :home_prefecture, :home_city, :home_street_address, :home_tel, :home_fax,
+      :office_postal_code, :office_prefecture, :office_city, :office_street_address, :office_tel, :office_fax,
+      :personal_webpage, :memo
 
     validates :name, presence: true
     validates :email, email: true

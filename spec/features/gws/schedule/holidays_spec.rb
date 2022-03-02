@@ -121,7 +121,10 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example do
         click_link I18n.t('ss.links.download')
         expect(status_code).to eq 200
         expect(page.response_headers['Content-Type']).to eq("text/csv")
-        expect(page.response_headers['Content-Disposition']).to eq("attachment; filename*=UTF-8''gws_holidays_#{time.to_i}.csv")
+
+        filename = "gws_holidays_#{time.to_i}.csv"
+        disposition = ActionDispatch::Http::ContentDisposition.format(disposition: "attachment", filename: filename)
+        expect(page.response_headers['Content-Disposition']).to eq disposition
       end
 
       csv = CSV.parse(page.html.encode("UTF-8", "SJIS"), headers: true)

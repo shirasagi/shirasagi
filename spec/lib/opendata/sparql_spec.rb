@@ -3,11 +3,11 @@ require 'spec_helper'
 describe Opendata::Sparql do
   before do
     @save_config = SS.config.opendata.fuseki
-    SS::Config.replace_value_at(:opendata, 'fuseki', "disable" => false)
+    SS.config.replace_value_at(:opendata, 'fuseki', "disable" => false)
   end
 
   after do
-    SS::Config.replace_value_at(:opendata, 'fuseki', @save_config)
+    SS.config.replace_value_at(:opendata, 'fuseki', @save_config)
   end
 
   describe ".save" do

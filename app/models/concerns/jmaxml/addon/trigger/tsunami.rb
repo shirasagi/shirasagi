@@ -24,7 +24,7 @@ module Jmaxml::Addon::Trigger::Tsunami
     context[:type] = Jmaxml::Type::TSUNAMI
     context[:area_codes] = area_codes
 
-    return true unless block_given?
+    return true unless block
 
     yield
   end
@@ -38,9 +38,12 @@ module Jmaxml::Addon::Trigger::Tsunami
       region = target_regions.site(site).where(code: area_code).first
       next if region.blank?
 
+      # Category/Kind/Code の詳細については、
+      # 気象庁防災情報XMLフォーマット 技術情報 (http://xml.kishou.go.jp/tec_material.html) の
+      # 個別コード表 (http://xml.kishou.go.jp/jmaxml_20211224_Code.zip) に含まれる『地震火山関連コード表.xls』のシート "14" を参照
       kind_code = REXML::XPath.first(item, 'Category/Kind/Code/text()').to_s.strip
       case kind_code
-      when '52'
+      when '52', '53'
         kind_code = 'special_alert'
       when '51'
         kind_code = 'alert'
@@ -49,8 +52,18 @@ module Jmaxml::Addon::Trigger::Tsunami
       when '71'
         kind_code = 'forecast'
       else
+        # この else 節では以下のコードが想定されている。
+        # 以下のコードは、解除もしくはダウングレードを示すコードなので無視する。
+        #
+        # 00: 津波なし（LastKind にだけ出現するようだ）
+        # 50: 警報解除
+        # 60: 津波注意報解除
+        # 72: 津波注意報解除、津波予報（若干の海面変動）への切替
+        # 73: 大津波警報または津波警報の解除、津波予報（若干の海面変動）への切替
+        #
         kind_code = ''
       end
+      next if kind_code.blank?
       next unless sub_types.include?(kind_code)
 
       area_codes << area_code

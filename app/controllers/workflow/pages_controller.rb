@@ -11,7 +11,7 @@ class Workflow::PagesController < ApplicationController
   end
 
   def set_item
-    @item = @model.find(params[:id]).becomes_with_route
+    @item = @model.find(params[:id])
     @item.attributes = fix_params
     @item.try(:allow_other_user_files)
   end
@@ -178,8 +178,7 @@ class Workflow::PagesController < ApplicationController
       end
     end
     if @item.state_changed? && @item.state == "public" && @item.try(:master_id).present?
-      task_name = "#{@item.collection_name}:#{@item.master_id}"
-      task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site.id, name: task_name)
+      task = SS::Task.find_or_create_for_model(@item.master, site: @cur_site)
       rejected = -> { @item.errors.add :base, :other_task_is_running }
       guard = ->(&block) do
         task.run_with(rejected: rejected) do
@@ -272,7 +271,7 @@ class Workflow::PagesController < ApplicationController
     set_item
     raise "403" unless @item.allowed?(:edit, @cur_user)
 
-    return if request.get?
+    return if request.get? || request.head?
 
     @item.approved = nil
     # @item.workflow_user_id = nil
@@ -291,7 +290,7 @@ class Workflow::PagesController < ApplicationController
 
     @item.cur_node = @item.parent
     if @item.branches.blank?
-      task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site.id, name: "#{@item.collection_name}:#{@item.id}")
+      task = SS::Task.find_or_create_for_model(@item, site: @cur_site)
 
       result = nil
       rejected = -> do

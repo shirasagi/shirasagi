@@ -32,7 +32,7 @@ module Sys::Addon
     end
 
     def extract_img_src(html)
-      return nil unless html =~ /\<\s*?img\s+[^>]*\/?>/i
+      return nil unless html =~ /<\s*?img\s+[^>]*\/?>/i
 
       img_tag = $&
       return nil unless img_tag =~ /src\s*=\s*(['"]?[^'"]+['"]?)/

@@ -28,7 +28,7 @@ class Cms::Apis::Preview::Workflow::WizardController < ApplicationController
 
   def set_item
     @item ||= begin
-      item = @cur_page = Cms::Page.site(@cur_site).find(params[:id]).becomes_with_route
+      item = @cur_page = Cms::Page.site(@cur_site).find(params[:id])
       item.attributes = fix_params
       @model = item.class
       item

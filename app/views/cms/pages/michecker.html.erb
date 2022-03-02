@@ -10,7 +10,11 @@
       </button>
 
       <div class="michecker-notice">
-        <%= t('cms.cms/michecker.loading') %> <%= loading %>
+        <% if Cms::Michecker::Base.site_setting_ok?(@cur_site, request) %>
+          <%= t('cms.cms/michecker.loading') %> <%= loading %>
+        <% else %>
+          <%= br t("cms.cms/michecker.site_setting_ng") %>
+        <% end %>
       </div>
     </div>
 
@@ -42,7 +46,9 @@
   Cms_Michecker.messages.accessibilityReportLoadError = <%== t("cms.cms/michecker.accessibility_report_load_error").to_json %>;
   Cms_Michecker.messages.lowVisionReportLoadError = <%== t("cms.cms/michecker.low_vision_report_load_error").to_json %>;
 
+  <% if Cms::Michecker::Base.site_setting_ok?(@cur_site, request) %>
   var michecker = new Cms_Michecker("#ss-michecker");
+  <% end %>
   $("#resize").resizable({
     handles: 's'
   });

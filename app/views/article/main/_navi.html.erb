@@ -1,3 +1,5 @@
+<% return node_navi unless params[:controller].starts_with?('article/') %>
+
 <%= node_navi :article do %>
 
 <h3><%= link_to t("article.page"), article_pages_path %></h3>

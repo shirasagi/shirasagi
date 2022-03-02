@@ -17,6 +17,9 @@ ja:
       export_filter:
         all: 全てのメッセージ
         selected: 選択したメッセージ
+      backup_filter:
+        all: 全てのメッセージ
+        selected: 選択したメッセージ
     links:
       show_messages: メッセージを見る
       publish: 送信する
@@ -35,9 +38,13 @@ ja:
     select_check: 件のメッセージを選択
     commit_params_check: 送信
     export_messages: エクスポート
+    backup_messages: バックアップ
     import_messages: インポート
+    restore_messages: 復元
+    restore_messages: 復元
     unsend: 送信先のメッセージも削除する（送信取り消し）
     export_filter: 対象
+    backup_filter: 対象
     links:
       move: 移動する
       etc: その他
@@ -72,17 +79,25 @@ ja:
       ignore_mdn: 開封確認を無視しました。
       start_export: エクスポートを開始しました。
       start_import: インポートしました。
+      start_backup: バックアップを開始しました。
+      start_restore: 復元しました。
       no_recents: 新着はありません
     export:
       subject: '[メッセージ] エクスポートが完了しました。'
       notify_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n%{link}"
       start_message: "エクスポート処理を開始しました。\nエクスポート処理が完了次第、ダウンロードリンクが通知されます。"
-    export_failed:
-      subject: '[メッセージ] エクスポートが失敗しました。'
-      notify_message: "エクスポートが失敗しました。失敗の原因はタスク・マネージャーから確認することができます。"
-      empty_messages: エクスポート対象のメッセージが見つかりませんでした。
+    backup:
+      subject: '[メッセージ] バックアップが完了しました。'
+      notify_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n%{link}"
+      start_message: "バックアップ処理を開始しました。\nバックアップ処理が完了次第、ダウンロードリンクが通知されます。"
+    backup_failed:
+      subject: '[メッセージ] バックアップが失敗しました。'
+      notify_message: "バックアップが失敗しました。失敗の原因はタスク・マネージャーから確認することができます。"
+      empty_messages: バックアップ対象のメッセージが見つかりませんでした。
     import:
       caution: "※差出人や送信者等のユーザー情報は、エクスポートしたデータとID及び氏名が一致している場合のみ復元されます。"
+    restore:
+      caution: "※差出人や送信者等のユーザー情報は、バックアップしたデータとID及び氏名が一致している場合のみ復元されます。"
     mdn:
       subject: '[開封確認] %{subject}'
       confirmed: "メッセージが開封されました。\n%{name} %{date}"
@@ -159,6 +174,8 @@ ja:
     edit_private_gws_memo_templates: 電話メモの編集（所有）
     delete_other_gws_memo_templates: 電話メモの削除（全て）
     delete_private_gws_memo_templates: 電話メモの削除（所有）
+    restore_gws_memo_messages: メッセージの復元
+    backup_gws_memo_messages: メッセージのバックアップ
   mongoid:
     models:
       gws/memo/message: メッセージ
@@ -300,8 +317,11 @@ ja:
   activemodel:
     models:
       gws/memo/message_importer: インポート
+      gws/memo/message_restorer: 復元
     attributes:
       gws/memo/message_importer:
+        in_file: ファイル
+      gws/memo/message_restorer:
         in_file: ファイル
   tooltip:
     gws/memo/message:

@@ -1,9 +1,12 @@
 inherit_from: .rubocop_todo.yml
 require:
   - rubocop-performance
+  - rubocop-rails
 
 AllCops:
+  # be sure to set minimal support version
   TargetRubyVersion: 2.6
+  NewCops: enable
   Exclude:
     - Guardfile
     - Vagrantfile
@@ -78,8 +81,9 @@ Metrics/ModuleLength:
   Enabled: true
   Max: 500
 
-Naming/UncommunicativeMethodParamName:
-  AllowedNames: [ 'ns', 'to', 'id' ]
+Naming/MethodParameterName:
+  MinNameLength: 2
+  AllowedNames: [ 'f', 'e', 'n' ]
 
 Rails:
   Enabled: true
@@ -127,7 +131,7 @@ Style/SignalException:
     - semantic
 
 # Cop supports --auto-correct.
-Style/UnneededPercentQ:
+Style/RedundantPercentQ:
   Enabled: true
 
 # Cop supports --auto-correct.

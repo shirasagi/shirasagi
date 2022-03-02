@@ -47,8 +47,8 @@ class Gws::Discussion::ForumsController < ApplicationController
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
 
-    @items = items.search(params[:s])
-    @items.reorder(order: 1, created: 1).
+    @items = items.search(params[:s]).
+      reorder(order: 1, created: 1).
       page(params[:page]).per(50)
   end
 
@@ -107,7 +107,7 @@ class Gws::Discussion::ForumsController < ApplicationController
     set_item
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
-    if request.get?
+    if request.get? || request.head?
       prefix = I18n.t("workflow.cloned_name_prefix")
       @item.name = "[#{prefix}] #{@item.name}"
       return

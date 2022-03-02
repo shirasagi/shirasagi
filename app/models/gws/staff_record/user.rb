@@ -9,6 +9,7 @@ class Gws::StaffRecord::User
   include Gws::Addon::History
   include Gws::Export
   include SS::Model::Reference::UserTitles
+  include SS::Model::Reference::UserOccupations
 
   seqid :id
   field :name, type: String
@@ -28,13 +29,14 @@ class Gws::StaffRecord::User
   field :divide_duties_view, type: String, default: 'show'
 
   embeds_ids :titles, class_name: "Gws::StaffRecord::UserTitle"
+  embeds_ids :occupations, class_name: "Gws::StaffRecord::UserOccupation"
 
-  attr_accessor :in_title_id
+  attr_accessor :in_title_id, :in_occupation_id
 
   permit_params :name, :code, :order, :kana, :multi_section, :section_name,
-                :tel_ext, :charge_name, :charge_address, :charge_tel,
-                :divide_duties, :remark, :staff_records_view, :divide_duties_view,
-                :in_title_id
+    :tel_ext, :charge_name, :charge_address, :charge_tel,
+    :divide_duties, :remark, :staff_records_view, :divide_duties_view,
+    :in_title_id, :in_occupation_id
 
   validates :name, presence: true
   validates :code, presence: true
@@ -46,6 +48,7 @@ class Gws::StaffRecord::User
 
   before_validation :set_section_order, if: -> { section_name.present? }
   before_validation :set_title_ids, if: -> { in_title_id }
+  before_validation :set_occupation_ids, if: -> { in_occupation_id }
 
   default_scope -> { order_by section_order: 1, section_name: 1, order: 1 }
 
@@ -92,6 +95,10 @@ class Gws::StaffRecord::User
     Gws::StaffRecord::UserTitle.site(cur_site).where(year_id: year_id).active.map { |m| [m.name_with_code, m.id] }
   end
 
+  def occupation_id_options
+    Gws::StaffRecord::UserOccupation.site(cur_site).where(year_id: year_id).active.map { |m| [m.name_with_code, m.id] }
+  end
+
   def staff_records_view_options
     %w(show hide).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
   end
@@ -132,9 +139,15 @@ class Gws::StaffRecord::User
     self.title_ids = title_ids
   end
 
+  def set_occupation_ids
+    occupation_ids = occupations.reject { |m| m.group_id == cur_site.id }.map(&:id)
+    occupation_ids << in_occupation_id.to_i if in_occupation_id.present?
+    self.occupation_ids = occupation_ids
+  end
+
   def export_fields
     fields = %w(
-      id name code order kana multi_section section_name title_ids tel_ext
+      id name code order kana multi_section section_name title_ids occupation_ids tel_ext
       charge_name charge_address charge_tel divide_duties remark staff_records_view divide_duties_view
       readable_setting_range readable_group_ids readable_member_ids
       group_ids user_ids
@@ -151,22 +164,24 @@ class Gws::StaffRecord::User
     data[5] = item.label(:multi_section)
     # title_ids
     data[7] = item.titles.pluck(:code).join("\n")
+    # occupation_ids
+    data[8] = item.occupations.pluck(:code).join("\n")
     # staff_records_view
-    data[14] = item.label(:staff_records_view)
+    data[15] = item.label(:staff_records_view)
     # divide_duties_views
-    data[15] = item.label(:divide_duties_view)
+    data[16] = item.label(:divide_duties_view)
 
     # readable_setting_range
-    data[16] = item.label(:readable_setting_range)
+    data[17] = item.label(:readable_setting_range)
     # readable_group_ids
-    data[17] = Gws::Group.site(@cur_site).in(id: data[17]).active.pluck(:name).join("\n")
+    data[18] = Gws::Group.site(@cur_site).in(id: data[18]).active.pluck(:name).join("\n")
     # readable_member_ids
-    data[18] = Gws::User.site(@cur_site).in(id: data[18]).active.pluck(:uid).join("\n")
+    data[19] = Gws::User.site(@cur_site).in(id: data[19]).active.pluck(:uid).join("\n")
 
     # group_ids
-    data[19] = Gws::Group.site(@cur_site).in(id: data[19]).active.pluck(:name).join("\n")
+    data[20] = Gws::Group.site(@cur_site).in(id: data[20]).active.pluck(:name).join("\n")
     # user_ids
-    data[20] = Gws::User.site(@cur_site).in(id: data[20]).active.pluck(:uid).join("\n")
+    data[21] = Gws::User.site(@cur_site).in(id: data[21]).active.pluck(:uid).join("\n")
 
     data
   end
@@ -184,6 +199,16 @@ class Gws::StaffRecord::User
       data[:title_ids] = user_titles.pluck(:id)
     else
       data[:title_ids] = []
+    end
+
+    # occupation_ids
+    if data[:occupation_ids].present?
+      user_occupations = Gws::StaffRecord::UserOccupation.site(@cur_site)
+      user_occupations = user_occupations.where(year_id: self.year_id)
+      user_occupations = user_occupations.in(code: data[:occupation_ids].split(/\R/))
+      data[:occupation_ids] = user_occupations.pluck(:id)
+    else
+      data[:occupation_ids] = []
     end
 
     # staff_records_view

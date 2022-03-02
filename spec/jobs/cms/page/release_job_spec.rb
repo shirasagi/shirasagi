@@ -12,15 +12,15 @@ describe Cms::Page::ReleaseJob, dbscope: :example do
       site_id: site.id
     )
   end
-  let!(:user_1) { create(:cms_test_user, group: cms_group, role: role) }
-  let!(:user_2) { create(:cms_test_user, group: cms_group, role: role) }
-  let!(:node)   { create :article_node_page, cur_site: site, layout_id: layout.id }
+  let!(:user1) { create(:cms_test_user, group: cms_group, role: role) }
+  let!(:user2) { create(:cms_test_user, group: cms_group, role: role) }
+  let!(:node) { create :article_node_page, cur_site: site, layout_id: layout.id }
 
   let(:file) do
-    tmp_ss_file site: site, cur_user: user_1, contents: "#{Rails.root}/spec/fixtures/ss/logo.png", model: "article/page"
+    tmp_ss_file site: site, cur_user: user1, contents: "#{Rails.root}/spec/fixtures/ss/logo.png", model: "article/page"
   end
   let!(:item) do
-    create :article_page, cur_user: user_1, cur_site: site, cur_node: node, layout_id: layout.id, file_ids: [ file.id ],
+    create :article_page, cur_user: user1, cur_site: site, cur_node: node, layout_id: layout.id, file_ids: [ file.id ],
            html: "<a href=\"#{file.url}\">#{file.humanized_name}</a>"
   end
 
@@ -56,10 +56,10 @@ describe Cms::Page::ReleaseJob, dbscope: :example do
       expect(History::Trash.all.count).to eq 0
 
       # Workflow::PagesController request_update
-      item.workflow_user_id = user_1.id
+      item.workflow_user_id = user1.id
       item.workflow_state = "request"
       item.workflow_approvers = [
-        { level: 1, user_id: user_2.id, state: "pending", comment: "" }
+        { level: 1, user_id: user2.id, state: "pending", comment: "" }
       ]
       item.workflow_required_counts = [ false ]
       item.save!
@@ -76,10 +76,10 @@ describe Cms::Page::ReleaseJob, dbscope: :example do
       copy.save!
       expect(copy.state).to eq "closed"
       expect(copy.files.count).to eq 1
-      expect(copy.files.first.id).not_to eq file.id
+      expect(copy.files.first.id).to eq file.id
       expect(copy.html).to include(file.humanized_name)
-      expect(copy.html).not_to include(file.url)
-      expect(copy.html).to include(copy.files.first.url)
+      expect(copy.html).to include(file.url)
+      expect(copy.html).to eq item.html
 
       # ready
       now = Time.zone.now.advance(days: -1)
@@ -109,10 +109,9 @@ describe Cms::Page::ReleaseJob, dbscope: :example do
       page = Article::Page.first
       expect(page.state).to eq "public"
       expect(page.file_ids.length).to eq 1
-      expect(page.file_ids[0]).not_to eq file.id
+      expect(page.file_ids[0]).to eq file.id
       expect(page.html).to include(file.humanized_name)
-      expect(page.html).not_to include(file.url)
-      expect(page.html).to include(page.files.first.url)
+      expect(page.html).to include(file.url)
 
       # there are no pages in trash
       expect(History::Trash.all.count).to eq 0

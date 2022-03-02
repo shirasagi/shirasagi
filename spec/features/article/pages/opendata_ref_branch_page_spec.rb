@@ -121,7 +121,63 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       click_on I18n.t('ss.buttons.publish_save')
       wait_for_notice I18n.t('ss.notice.saved')
 
-      # completely change file ids
+      # file ids remain in same
+      save_file_ids = article_page.file_ids.dup
+      article_page.reload
+      expect(article_page.file_ids - save_file_ids).to be_blank
+
+      # dataset also remains in same
+      expect(Opendata::Dataset.site(od_site).count).to eq 1
+      Opendata::Dataset.site(od_site).first.tap do |dataset|
+        expect(dataset.name).to eq article_page.name
+        expect(dataset.state).to eq 'public'
+        expect(dataset.parent.id).to eq dataset_node.id
+        expect(dataset.assoc_site_id).to eq article_page.site.id
+        expect(dataset.assoc_node_id).to eq article_page.parent.id
+        expect(dataset.assoc_page_id).to eq article_page.id
+        expect(dataset.assoc_method).to eq 'auto'
+        expect(dataset.resources.count).to eq 1
+      end
+
+      #
+      # create a branch page and merge it, second attempts
+      #
+      visit article_pages_path(site, article_node)
+      click_on article_page.name
+      within '#addon-workflow-agents-addons-branch' do
+        click_on I18n.t('workflow.create_branch')
+        expect(page).to have_css('table.branches')
+        click_on article_page.name
+      end
+
+      click_on I18n.t('ss.links.edit')
+      within "#item-form" do
+        within "#file-#{article_page.file_ids.first}" do
+          page.accept_confirm(I18n.t("ss.confirm.delete")) do
+            click_on I18n.t("ss.buttons.delete")
+          end
+        end
+        within "#addon-cms-agents-addons-file" do
+          wait_cbox_open do
+            click_on I18n.t("ss.buttons.upload")
+          end
+        end
+      end
+      wait_for_cbox do
+        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/opendata/resource.pdf"
+        wait_cbox_close do
+          click_on I18n.t("ss.buttons.attach")
+        end
+      end
+      within "#item-form" do
+        within "#addon-cms-agents-addons-file" do
+          expect(page).to have_css(".file-view", text: "resource.pdf")
+        end
+        click_on I18n.t('ss.buttons.publish_save')
+      end
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      # file ids are completely changed
       save_file_ids = article_page.file_ids.dup
       article_page.reload
       expect(article_page.file_ids - save_file_ids).to eq article_page.file_ids
@@ -149,7 +205,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       wait_for_ajax
 
-      expect(Job::Log.count).to eq 6
+      expect(Job::Log.count).to eq 9
       expect(Opendata::Dataset.site(od_site).count).to eq 1
       Opendata::Dataset.site(od_site).first.tap do |dataset|
         expect(dataset.name).to eq article_page.name
@@ -162,7 +218,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(dataset.resources.count).to eq 1
         dataset.resources.first.tap do |resource|
           file = article_page.files.first
-          expect(resource.name).to eq file.name
+          expect(resource.name).to eq ::File.basename(file.name, ".*")
           expect(resource.content_type).to eq file.content_type
           expect(resource.file_id).not_to eq file.id
           expect(resource.license_id).not_to be_nil

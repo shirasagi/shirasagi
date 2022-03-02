@@ -3,7 +3,6 @@ module SS::Copy::CmsNodes
   include SS::Copy::Cache
 
   def copy_cms_node(src_node)
-    src_node = src_node.becomes_with_route
     copy_cms_content(:nodes, src_node, copy_cms_node_options)
   rescue => e
     @task.log("#{src_node.filename}(#{src_node.id}): フォルダーのコピーに失敗しました。")

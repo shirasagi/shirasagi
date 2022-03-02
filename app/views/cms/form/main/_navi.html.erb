@@ -1,0 +1,12 @@
+<nav class="mod-navi">
+  <h2><%= Cms::Form.model_name.human %></h2>
+
+  <% if Cms::Form.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to Cms::Form.model_name.human, cms_forms_path %></h3>
+  <% end %>
+  <% if Cms::Form.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to Cms::FormDb.model_name.human, cms_form_dbs_path %></h3>
+  <% end %>
+</nav>
+
+<%= render partial: "cms/main/conf_navi" %>

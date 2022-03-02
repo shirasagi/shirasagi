@@ -37,11 +37,14 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
             select I18n.t("ss.options.state.expired"), from: "item[twitter_auto_post]"
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.draft_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.draft_save")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
           visit show_path
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
@@ -77,17 +80,20 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           # approve
           login_user user1
           visit show_path
-          within ".mod-workflow-approve" do
-            expect(page).to have_no_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
-            fill_in "remand[comment]", with: approve_comment
-            click_on I18n.t("workflow.buttons.approve")
-          end
-          within "#addon-workflow-agents-addons-approver" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
-            expect(page).to have_css(".index", text: approve_comment)
-          end
-          within "#addon-cms-agents-addons-release" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
+
+          perform_enqueued_jobs do
+            within ".mod-workflow-approve" do
+              expect(page).to have_no_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
+              fill_in "remand[comment]", with: approve_comment
+              click_on I18n.t("workflow.buttons.approve")
+            end
+            within "#addon-workflow-agents-addons-approver" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
+              expect(page).to have_css(".index", text: approve_comment)
+            end
+            within "#addon-cms-agents-addons-release" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
+            end
           end
 
           login_cms_user
@@ -119,11 +125,14 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
             select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.draft_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.draft_save")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_no_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
@@ -157,17 +166,20 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           # approve
           login_user user1
           visit show_path
-          within ".mod-workflow-approve" do
-            expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
-            fill_in "remand[comment]", with: approve_comment
-            click_on I18n.t("workflow.buttons.approve")
-          end
-          within "#addon-workflow-agents-addons-approver" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
-            expect(page).to have_css(".index", text: approve_comment)
-          end
-          within "#addon-cms-agents-addons-release" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
+
+          perform_enqueued_jobs do
+            within ".mod-workflow-approve" do
+              expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
+              fill_in "remand[comment]", with: approve_comment
+              click_on I18n.t("workflow.buttons.approve")
+            end
+            within "#addon-workflow-agents-addons-approver" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
+              expect(page).to have_css(".index", text: approve_comment)
+            end
+            within "#addon-cms-agents-addons-release" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
+            end
           end
 
           login_cms_user
@@ -208,11 +220,14 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
             select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.draft_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.draft_save")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_no_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
@@ -251,17 +266,19 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             click_on item.name
           end
 
-          within ".mod-workflow-approve" do
-            expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
-            fill_in "remand[comment]", with: approve_comment
-            click_on I18n.t("workflow.buttons.approve")
-          end
-          within "#addon-workflow-agents-addons-approver" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
-            expect(page).to have_css(".index", text: approve_comment)
-          end
-          within "#addon-cms-agents-addons-release" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
+          perform_enqueued_jobs do
+            within ".mod-workflow-approve" do
+              expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
+              fill_in "remand[comment]", with: approve_comment
+              click_on I18n.t("workflow.buttons.approve")
+            end
+            within "#addon-workflow-agents-addons-approver" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
+              expect(page).to have_css(".index", text: approve_comment)
+            end
+            within "#addon-cms-agents-addons-release" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
+            end
           end
 
           login_cms_user
@@ -297,10 +314,13 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
             select I18n.t("ss.options.state.enabled"), from: "item[twitter_edit_auto_post]"
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.draft_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.draft_save")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_no_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
@@ -327,17 +347,20 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           # 1. approve
           login_user user1
           visit show_path
-          within ".mod-workflow-approve" do
-            expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
-            fill_in "remand[comment]", with: approve_comment
-            click_on I18n.t("workflow.buttons.approve")
-          end
-          within "#addon-workflow-agents-addons-approver" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
-            expect(page).to have_css(".index", text: approve_comment)
-          end
-          within "#addon-cms-agents-addons-release" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
+
+          perform_enqueued_jobs do
+            within ".mod-workflow-approve" do
+              expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
+              fill_in "remand[comment]", with: approve_comment
+              click_on I18n.t("workflow.buttons.approve")
+            end
+            within "#addon-workflow-agents-addons-approver" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
+              expect(page).to have_css(".index", text: approve_comment)
+            end
+            within "#addon-cms-agents-addons-release" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
+            end
           end
 
           login_cms_user
@@ -362,14 +385,17 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
             select I18n.t("ss.options.state.enabled"), from: "item[twitter_edit_auto_post]"
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.draft_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.withdraw")
+            end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.close"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.close"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
@@ -396,17 +422,20 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           # 2. approve
           login_user user1
           visit show_path
-          within ".mod-workflow-approve" do
-            expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
-            fill_in "remand[comment]", with: approve_comment
-            click_on I18n.t("workflow.buttons.approve")
-          end
-          within "#addon-workflow-agents-addons-approver" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
-            expect(page).to have_css(".index", text: approve_comment)
-          end
-          within "#addon-cms-agents-addons-release" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
+
+          perform_enqueued_jobs do
+            within ".mod-workflow-approve" do
+              expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
+              fill_in "remand[comment]", with: approve_comment
+              click_on I18n.t("workflow.buttons.approve")
+            end
+            within "#addon-workflow-agents-addons-approver" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
+              expect(page).to have_css(".index", text: approve_comment)
+            end
+            within "#addon-cms-agents-addons-release" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
+            end
           end
 
           login_cms_user
@@ -431,14 +460,17 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
             select I18n.t("ss.options.state.disabled"), from: "item[twitter_edit_auto_post]"
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.draft_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.withdraw")
+            end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.close"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          wait_for_cbox do
-            expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.close"))
-            click_on I18n.t("ss.buttons.ignore_alert")
-          end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
@@ -465,17 +497,20 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           # 3. approve
           login_user user1
           visit show_path
-          within ".mod-workflow-approve" do
-            expect(page).to have_no_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
-            fill_in "remand[comment]", with: approve_comment
-            click_on I18n.t("workflow.buttons.approve")
-          end
-          within "#addon-workflow-agents-addons-approver" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
-            expect(page).to have_css(".index", text: approve_comment)
-          end
-          within "#addon-cms-agents-addons-release" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
+
+          perform_enqueued_jobs do
+            within ".mod-workflow-approve" do
+              expect(page).to have_no_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
+              fill_in "remand[comment]", with: approve_comment
+              click_on I18n.t("workflow.buttons.approve")
+            end
+            within "#addon-workflow-agents-addons-approver" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
+              expect(page).to have_css(".index", text: approve_comment)
+            end
+            within "#addon-cms-agents-addons-release" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
+            end
           end
 
           login_cms_user
@@ -512,10 +547,13 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
             select I18n.t("ss.options.state.active"), from: "item[twitter_edit_auto_post]"
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.draft_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.draft_save")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_no_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
@@ -547,17 +585,19 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             click_on item.name
           end
 
-          within ".mod-workflow-approve" do
-            expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
-            fill_in "remand[comment]", with: approve_comment
-            click_on I18n.t("workflow.buttons.approve")
-          end
-          within "#addon-workflow-agents-addons-approver" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
-            expect(page).to have_css(".index", text: approve_comment)
-          end
-          within "#addon-cms-agents-addons-release" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
+          perform_enqueued_jobs do
+            within ".mod-workflow-approve" do
+              expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
+              fill_in "remand[comment]", with: approve_comment
+              click_on I18n.t("workflow.buttons.approve")
+            end
+            within "#addon-workflow-agents-addons-approver" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
+              expect(page).to have_css(".index", text: approve_comment)
+            end
+            within "#addon-cms-agents-addons-release" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
+            end
           end
 
           login_cms_user
@@ -589,10 +629,13 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
             select I18n.t("ss.options.state.enabled"), from: "item[twitter_edit_auto_post]"
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.draft_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.draft_save")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_no_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
@@ -624,17 +667,19 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             click_on item.name
           end
 
-          within ".mod-workflow-approve" do
-            expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
-            fill_in "remand[comment]", with: approve_comment
-            click_on I18n.t("workflow.buttons.approve")
-          end
-          within "#addon-workflow-agents-addons-approver" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
-            expect(page).to have_css(".index", text: approve_comment)
-          end
-          within "#addon-cms-agents-addons-release" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
+          perform_enqueued_jobs do
+            within ".mod-workflow-approve" do
+              expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
+              fill_in "remand[comment]", with: approve_comment
+              click_on I18n.t("workflow.buttons.approve")
+            end
+            within "#addon-workflow-agents-addons-approver" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
+              expect(page).to have_css(".index", text: approve_comment)
+            end
+            within "#addon-cms-agents-addons-release" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
+            end
           end
 
           login_cms_user
@@ -666,10 +711,13 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
             select I18n.t("ss.options.state.disabled"), from: "item[twitter_edit_auto_post]"
           end
-          within "form#item-form" do
-            click_on I18n.t("ss.buttons.draft_save")
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              click_on I18n.t("ss.buttons.draft_save")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_no_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
@@ -701,17 +749,19 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             click_on item.name
           end
 
-          within ".mod-workflow-approve" do
-            expect(page).to have_no_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
-            fill_in "remand[comment]", with: approve_comment
-            click_on I18n.t("workflow.buttons.approve")
-          end
-          within "#addon-workflow-agents-addons-approver" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
-            expect(page).to have_css(".index", text: approve_comment)
-          end
-          within "#addon-cms-agents-addons-release" do
-            expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
+          perform_enqueued_jobs do
+            within ".mod-workflow-approve" do
+              expect(page).to have_no_css(".sns-post-confirm", text: I18n.t("cms.confirm.twitter_post_enabled"))
+              fill_in "remand[comment]", with: approve_comment
+              click_on I18n.t("workflow.buttons.approve")
+            end
+            within "#addon-workflow-agents-addons-approver" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.approve"))
+              expect(page).to have_css(".index", text: approve_comment)
+            end
+            within "#addon-cms-agents-addons-release" do
+              expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
+            end
           end
 
           login_cms_user

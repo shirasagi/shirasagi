@@ -1,0 +1,7 @@
+<% addon ||= local_assigns.fetch(:addon, {}) %>
+<%= code_editor "##{addon[:id]} .map-html", mode: :html, readonly: true %>
+
+<dl class="see">
+  <dt><%= @model.t :map_html%><%= @model.tt :map_html %></dt>
+  <dd><%= text_area_tag "item[map_html]", @item.map_html, style: "height: 200px", class: "map-html" %></dd>
+</dl>

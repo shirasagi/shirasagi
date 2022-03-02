@@ -33,7 +33,7 @@ module Gws::Monitor::Postable
       order: { created: -1 }
 
     permit_params :name, :mode, :permit_comment, :severity, :due_date,
-                  :spec_config
+      :spec_config
 
     before_validation :set_topic_id, if: :comment?
 
@@ -123,22 +123,22 @@ module Gws::Monitor::Postable
     becomes_with(Gws::Monitor::Topic)
   end
 
-  def file_previewable?(file, user:, member:)
+  def file_previewable?(file, site:, user:, member:)
     return false if user.blank?
     return false if !file_ids.include?(file.id)
 
     if topic.blank? || topic.id == id
       # cur_group is wanted, but currently unable to obtain it.
       # so all groups which user has are checked.
-      ret = user.groups.in_group(site).active.any? do |group|
+      ret = user.groups.in_group(self.site).active.any? do |group|
         attended?(group)
       end
       return ret if ret
 
-      return topic.allowed?(:read, user, site: site)
+      return true if topic.present? && topic.allowed?(:read, user, site: self.site)
     end
 
-    user.groups.in_group(site).active.any? do |group|
+    user.groups.in_group(self.site).active.any? do |group|
       showable_comment?(user, group)
     end
   end

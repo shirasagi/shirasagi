@@ -232,8 +232,9 @@ save_part route: "cms/node", filename: "purpose/birth/folder.part.html", name: "
   sort: "order", limit: 100
 save_part route: "ads/banner", filename: "relation/banner.part.html", name: "バナー",
   link_action: "direct", sort: "order", mobile_view: "hide"
-save_part route: "key_visual/slide", filename: "slide/slide.part.html", name: "スライドショー",
-  mobile_view: "hide"
+save_part route: "key_visual/swiper_slide", filename: "slide/slide.part.html", name: "スライドショー",
+  mobile_view: "hide", upper_html: "<div id=\"slide\" class=\"content-box\">", lower_html: "</div>",
+  kv_autoplay: "started", kv_thumbnail: "show", kv_thumbnail_count: 3
 save_part route: "ads/banner", filename: "sub-menu/banner.part.html", name: "バナー",
   link_action: "direct", sort: "order", mobile_view: "hide"
 save_part route: "cms/page", filename: "topics/recent.part.html", name: "ページリスト", limit: 1
@@ -273,7 +274,7 @@ save_node route: "uploader/file", name: "JavaScript", filename: "js"
 save_node route: "category/node", name: "知りたい", filename: "know",
   layout_id: layouts["folder"].id, sort: "order", limit: 100, order: 10
 save_node route: "category/page", name: "相談したい", filename: "consultation",
- layout_id: layouts["folder"].id, sort: "order", limit: 100, order: 20
+  layout_id: layouts["folder"].id, sort: "order", limit: 100, order: 20
 save_node route: "category/page", name: "つながりたい", filename: "lead",
   layout_id: layouts["folder"].id, sort: "order", limit: 100, order: 30
 save_node route: "category/node", name: "目的で探す", filename: "purpose",

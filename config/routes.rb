@@ -1,48 +1,48 @@
 class ActionDispatch::Routing::Mapper
-  def sys(ns, opts = {}, &block)
+  def sys(ns, **opts, &block)
     name = opts[:name] || ns.tr("/", "_")
     mod  = opts[:module] || ns
-    namespace(name, as: "#{name}_sys", path: ".sys/#{ns}", module: "#{mod}/sys") { yield }
+    namespace(name, as: "#{name}_sys", path: ".sys/#{ns}", module: "#{mod}/sys", &block)
   end
 
   def gws(ns, &block)
-    namespace(ns, as: "gws_#{ns}", path: ".g:site/#{ns}", module: "gws/#{ns}", site: /\d+/) { yield }
+    namespace(ns, as: "gws_#{ns}", path: ".g:site/#{ns}", module: "gws/#{ns}", site: /\d+/, &block)
   end
 
-  def cms(ns, opts = {}, &block)
+  def cms(ns, **opts, &block)
     name = opts[:name] || ns.tr("/", "_")
     mod  = opts[:module] || ns
-    namespace(name, as: "#{name}_cms", path: ".s:site/#{ns}", module: "#{mod}/cms") { yield }
+    namespace(name, as: "#{name}_cms", path: ".s:site/#{ns}", module: "#{mod}/cms", &block)
   end
 
-  def sns(ns, opts = {}, &block)
+  def sns(ns, **opts, &block)
     name = opts[:name] || ns.tr("/", "_")
     mod  = opts[:module] || ns
-    namespace(name, as: "#{name}_sns", path: ".u/#{ns}", module: "#{mod}/sns") { yield }
+    namespace(name, as: "#{name}_sns", path: ".u/#{ns}", module: "#{mod}/sns", &block)
   end
 
-  def content(ns, opts = {}, &block)
+  def content(ns, **opts, &block)
     name = opts[:name] || ns.tr("/", "_")
     mod  = opts[:module] || ns
-    namespace(name, path: ".s:site/#{ns}:cid", module: mod, cid: /\w+/) { yield }
+    namespace(name, path: ".s:site/#{ns}:cid", module: mod, cid: /\w+/, &block)
   end
 
   def node(ns, &block)
     name = ns.tr("/", "_")
     path = ".s:site/nodes/#{ns}"
-    namespace(name, as: "#{name}_node", path: path, module: "cms") { yield }
+    namespace(name, as: "#{name}_node", path: path, module: "cms", &block)
   end
 
   def page(ns, &block)
     name = ns.tr("/", "_")
     path = ".s:site/pages/#{ns}"
-    namespace(name, as: "#{name}_page", path: path, module: "cms") { yield }
+    namespace(name, as: "#{name}_page", path: path, module: "cms", &block)
   end
 
   def part(ns, &block)
     name = ns.tr("/", "_")
     path = ".s:site/parts/#{ns}"
-    namespace(name, as: "#{name}_part", path: path, module: "cms") { yield }
+    namespace(name, as: "#{name}_part", path: path, module: "cms", &block)
   end
 end
 

@@ -4,7 +4,7 @@ class Ezine::Entry
   include Ezine::Entryable
   include Ezine::Addon::Data
 
-  validates :email, presence: true, email: true
+  validates :email, presence: true, email: { rfc2822: true }
   validates :email_type, inclusion: { in: %w(text html) }
   validates :entry_type, inclusion: { in: %w(add update delete) }
 

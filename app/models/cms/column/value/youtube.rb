@@ -88,6 +88,28 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
     end
   end
 
+  def history_summary
+    h = []
+    h << "#{t("url")}: #{url}" if url.present?
+    h << "#{t("width")}: #{width}" if width.present?
+    h << "#{t("height")}: #{height}" if height.present?
+    h << "#{t("alignment")}: #{I18n.t("cms.options.alignment.#{alignment}")}"
+    h.join(",")
+  end
+
+  def import_csv_cell(value)
+    self.url = value.presence
+  end
+
+  def export_csv_cell
+    url
+  end
+
+  def search_values(values)
+    return false unless values.instance_of?(Array)
+    (values & [url, youtube_id]).present?
+  end
+
   private
 
   def set_youtube_id
@@ -115,6 +137,21 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
       end
     else
       youtube_iframe
+    end
+  end
+
+  class << self
+    def form_example_layout
+      h = []
+      h << %({% if value.youtube_id %})
+      h << %(  <iframe src="https://www.youtube.com/embed/{{ value.youtube_id }}")
+      h << %(    width="{{ value.width }}" )
+      h << %(    height="{{ value.height }}")
+      h << %(    frameborder="0")
+      h << %(    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture")
+      h << %(    allowfullscreen="allowfullscreen"></iframe>)
+      h << %({% endif %})
+      h.join("\n")
     end
   end
 end

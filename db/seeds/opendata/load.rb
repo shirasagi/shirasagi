@@ -82,7 +82,7 @@ def save_layout(data)
 
   item = Cms::Layout.find_or_initialize_by(cond)
   item.attributes = data.merge html: html
-  if SS.config.cms.enable_lgwan
+  if SS::Lgwan.enabled?
     html.gsub!('{{ part "mypage-login" }}', '')
     html.gsub!('{{ part "mypage-tabs" }}', '')
   end
@@ -104,7 +104,7 @@ save_layout filename: "dataset-top.layout.html", name: "データ：トップ"
 save_layout filename: "idea-bunya.layout.html", name: "アイデア：分野、アイデア検索"
 save_layout filename: "idea-page.layout.html", name: "アイデア：詳細ページ"
 save_layout filename: "idea-top.layout.html", name: "アイデア：トップ"
-if SS.config.cms.enable_lgwan.blank?
+if !SS::Lgwan.enabled?
   save_layout filename: "mypage-page.layout.html", name: "マイページ：詳細"
 end
 save_layout filename: "mypage-top.layout.html", name: "マイページ：トップ、メンバー、SPARQL"
@@ -119,7 +119,7 @@ layouts = Hash[*array.flatten]
 puts "# nodes"
 
 def save_node(data)
-  return if SS.config.cms.enable_lgwan && data[:route].start_with?('member/')
+  return if SS::Lgwan.enabled? && data[:route].start_with?('member/')
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename], route: data[:route] }
 
@@ -200,26 +200,26 @@ save_node filename: "sparql", name: "SPARQL", route: "opendata/sparql",
 save_node filename: "api", name: "API", route: "opendata/api"
 
 save_node filename: "member", name: "ユーザー", route: "opendata/member",
-          layout_id: layouts["mypage-top"].id
+  layout_id: layouts["mypage-top"].id
 
-if SS.config.cms.enable_lgwan.blank?
+if !SS::Lgwan.enabled?
   save_node filename: "auth", name: "ログイン", route: "member/login",
-            layout_id: layouts["mypage-top"].id, redirect_url: "/mypage/", form_auth: "enabled",
-            twitter_oauth: "enabled", facebook_oauth: "enabled", yahoojp_oauth: "enabled",
-            google_oauth2_oauth: "enabled", github_oauth: "enabled"
+    layout_id: layouts["mypage-top"].id, redirect_url: "/mypage/", form_auth: "enabled",
+    twitter_oauth: "enabled", facebook_oauth: "enabled", yahoojp_oauth: "enabled",
+    google_oauth2_oauth: "enabled", github_oauth: "enabled"
 
   save_node filename: "mypage", name: "マイページ", route: "opendata/mypage",
-            layout_id: layouts["mypage-top"].id
+    layout_id: layouts["mypage-top"].id
   save_node filename: "mypage/favorite", name: "マイリスト", route: "opendata/my_favorite_dataset",
-            layout_id: layouts["mypage-page"].id, order: 10
+    layout_id: layouts["mypage-page"].id, order: 10
   save_node filename: "mypage/dataset", name: "データカタログ", route: "opendata/my_dataset",
-            layout_id: layouts["mypage-page"].id, order: 20
+    layout_id: layouts["mypage-page"].id, order: 20
   save_node filename: "mypage/app", name: "アプリマーケット", route: "opendata/my_app",
-            layout_id: layouts["mypage-page"].id, order: 30
+    layout_id: layouts["mypage-page"].id, order: 30
   save_node filename: "mypage/idea", name: "アイデアボックス", route: "opendata/my_idea",
-            layout_id: layouts["mypage-page"].id, order: 40
+    layout_id: layouts["mypage-page"].id, order: 40
   save_node filename: "mypage/profile", name: "プロフィール", route: "opendata/my_profile",
-            layout_id: layouts["mypage-page"].id, order: 50
+    layout_id: layouts["mypage-page"].id, order: 50
 end
 
 save_node filename: "bunya", name: "分野", route: "cms/node"
@@ -307,7 +307,7 @@ save_node filename: "estat-bunya/estat15/estat1505", name: "医療", route: "ope
 save_node filename: "estat-bunya/estat16/estat1601", name: "貿易・国際収支", route: "opendata/estat_category", order: 1601
 save_node filename: "estat-bunya/estat16/estat1602", name: "国際協力", route: "opendata/estat_category", order: 1602
 save_node filename: "estat-bunya/estat99/estat9999", name: "その他", route: "opendata/estat_category", order: 9999
-estat_categories = Opendata::Node::EstatCategory.site(@site).map { |m| [m.filename, m] }.to_h
+estat_categories = Opendata::Node::EstatCategory.site(@site).index_by { |m| m.filename }
 
 save_node filename: "chiiki", name: "地域", route: "cms/node"
 save_node filename: "chiiki/shirasagi", name: "シラサギ市", route: "opendata/area", order: 1
@@ -336,26 +336,26 @@ end
 puts "# inquiry"
 
 inquiry_node = save_node route: "inquiry/form", filename: "inquiry", name: "お問い合わせ",
-                         layout_id: layouts["portal-general"].id,
-                         inquiry_html: "<p>下記事項を入力の上、確認画面へのボタンを押してください。</p>\n",
-                         inquiry_sent_html: "<p>お問い合わせを受け付けました。</p>\n",
-                         inquiry_captcha: "enabled",
-                         notice_state: "disabled",
-                         reply_state: "disabled"
+  layout_id: layouts["portal-general"].id,
+  inquiry_html: "<p>下記事項を入力の上、確認画面へのボタンを押してください。</p>\n",
+  inquiry_sent_html: "<p>お問い合わせを受け付けました。</p>\n",
+  inquiry_captcha: "enabled",
+  notice_state: "disabled",
+  reply_state: "disabled"
 save_inquiry_column node_id: inquiry_node.id, name: "お名前", order: 10, input_type: "text_field",
-                    html: "", select_options: [], required: "required", site_id: @site._id
+  html: "", select_options: [], required: "required", site_id: @site._id
 save_inquiry_column node_id: inquiry_node.id, name: "企業・団体名", order: 20, input_type: "text_field",
-                    html: "", select_options: [], required: "optional", site_id: @site._id
+  html: "", select_options: [], required: "optional", site_id: @site._id
 save_inquiry_column node_id: inquiry_node.id, name: "メールアドレス", order: 30, input_type: "email_field",
-                    html: "", select_options: [], required: "required", site_id: @site._id
+  html: "", select_options: [], required: "required", site_id: @site._id
 save_inquiry_column node_id: inquiry_node.id, name: "お問い合わせ内容", order: 40, input_type: "text_area",
-                    html: "", select_options: [], required: "required", site_id: @site._id
+  html: "", select_options: [], required: "required", site_id: @site._id
 
 ## -------------------------------------
 puts "# parts"
 
 def save_part(data)
-  return if SS.config.cms.enable_lgwan && data[:route].start_with?('member/')
+  return if SS::Lgwan.enabled? && data[:route].start_with?('member/')
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
 
@@ -366,7 +366,7 @@ def save_part(data)
 
   item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_initialize_by(cond)
   if html
-    if SS.config.cms.enable_lgwan
+    if SS::Lgwan.enabled?
       html.gsub!('<li><a class="entry" href="/mypage/app/">アプリ登録</a></li>', '')
       html.gsub!('<li><a class="entry" href="/mypage/app/">アプリを登録する</a></li>', '')
       html.gsub!('<li><a class="entry" href="/mypage/dataset/">データセット登録</a></li>', '')
@@ -405,7 +405,7 @@ save_part filename: "idea-attention.part.html", name: "アイデア：注目順"
   route: "opendata/idea", limit: 10, sort: "attention"
 save_part filename: "idea-head.part.html", name: "アイデア：ヘッダー", route: "cms/free"
 save_part filename: "idea-kv.part.html", name: "アイデア：キービジュアル", route: "cms/free"
-if SS.config.cms.enable_lgwan.blank?
+if !SS::Lgwan.enabled?
   save_part filename: "mypage-login.part.html", name: "ログイン", \
     route: "opendata/mypage_login", ajax_view: "enabled"
   save_part filename: "mypage-tabs.part.html", name: "マイページ：タブ", route: "cms/free"
@@ -533,7 +533,7 @@ license_file6 = save_ss_files "fixtures/cc-by-nc-nd.png", filename: "cc-by-nc-nd
 license_file7 = save_ss_files "fixtures/cc-zero.png", filename: "cc-zero.png", model: "opendata/license"
 
 license_cc_by = save_license name: "表示（CC BY）", file_id: license_file1.id, order: 1,
-                             default_state: 'default', uid: "cc-by"
+  default_state: 'default', uid: "cc-by"
 save_license name: "表示-継承（CC BY-SA）", file_id: license_file2.id, order: 2, uid: "cc-by-sa"
 save_license name: "表示-改変禁止（CC BY-ND）", file_id: license_file3.id, order: 3, uid: "cc-by-nd"
 save_license name: "表示-非営利（CC BY-NC）", file_id: license_file4.id, order: 4, uid: "cc-by-nc"
@@ -553,7 +553,7 @@ end
 
 1.step(3) do |i|
   save_dataset_group name: "データセットグループ#{i}",
-                     category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1)
+    category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1)
 end
 
 ## -------------------------------------
@@ -568,54 +568,51 @@ def save_data(data)
   item
 end
 
-def save_resource(dataset, data, attrs = {})
+def save_resource(dataset, data)
   puts data[:name]
   cond = { name: data[:name] }
 
   path = "datasets/resources/#{data[:filename]}"
-  data.delete :filename
   Fs::UploadedFile.create_from_file(path) do |file|
     item = dataset.resources.where(cond).first || dataset.resources.new
-    item.attributes = attrs if attrs.present?
     item.in_file = file
-    item.update! data
-    puts item.errors.full_messages unless item.save
+    puts item.errors.full_messages unless item.update data
   end
 end
 
 dataset1 = save_data filename: "dataset/1.html", name: "サンプルデータ【1】", route: "opendata/dataset",
-                     layout_id: layouts["dataset-page"].id, text: "サンプルデータ【1】", member_id: @member_1.id, tags: %w(タグ),
-                     category_ids: Opendata::Node::Category.site(@site).pluck(:id).sample(1),
-                     dataset_group_ids: Opendata::DatasetGroup.site(@site).pluck(:id).sample(1),
-                     area_ids: Opendata::Node::Area.site(@site).pluck(:id).sample(1)
+  layout_id: layouts["dataset-page"].id, text: "サンプルデータ【1】", member_id: @member_1.id, tags: %w(タグ),
+  category_ids: Opendata::Node::Category.site(@site).pluck(:id).sample(1),
+  dataset_group_ids: Opendata::DatasetGroup.site(@site).pluck(:id).sample(1),
+  area_ids: Opendata::Node::Area.site(@site).pluck(:id).sample(1)
 
 dataset2 = save_data filename: "dataset/2.html", name: "サンプルデータ【2】", route: "opendata/dataset",
-                     layout_id: layouts["dataset-page"].id, text: "サンプルデータ【2】", member_id: @member_1.id, tags: %w(タグ),
-                     category_ids: Opendata::Node::Category.site(@site).pluck(:id).sample(1),
-                     dataset_group_ids: Opendata::DatasetGroup.site(@site).pluck(:id).sample(1),
-                     area_ids: Opendata::Node::Area.site(@site).pluck(:id).sample(1)
+  layout_id: layouts["dataset-page"].id, text: "サンプルデータ【2】", member_id: @member_1.id, tags: %w(タグ),
+  category_ids: Opendata::Node::Category.site(@site).pluck(:id).sample(1),
+  dataset_group_ids: Opendata::DatasetGroup.site(@site).pluck(:id).sample(1),
+  area_ids: Opendata::Node::Area.site(@site).pluck(:id).sample(1)
 
 dataset3 = save_data filename: "dataset/3.html", name: "サンプルデータ【3】", route: "opendata/dataset",
-                     layout_id: layouts["dataset-page"].id, text: "サンプルデータ【3】", member_id: @member_1.id, tags: %w(タグ),
-                     category_ids: Opendata::Node::Category.site(@site).pluck(:id).sample(1),
-                     dataset_group_ids: Opendata::DatasetGroup.site(@site).pluck(:id).sample(1),
-                     area_ids: Opendata::Node::Area.site(@site).pluck(:id).sample(1)
+  layout_id: layouts["dataset-page"].id, text: "サンプルデータ【3】", member_id: @member_1.id, tags: %w(タグ),
+  category_ids: Opendata::Node::Category.site(@site).pluck(:id).sample(1),
+  dataset_group_ids: Opendata::DatasetGroup.site(@site).pluck(:id).sample(1),
+  area_ids: Opendata::Node::Area.site(@site).pluck(:id).sample(1)
 
 dataset4 = save_data filename: "dataset/4.html", name: "サンプルデータ【4】", route: "opendata/dataset",
-                     layout_id: layouts["dataset-page"].id, text: "サンプルデータ【4】", member_id: @member_1.id, tags: %w(タグ),
-                     category_ids: Opendata::Node::Category.site(@site).pluck(:id).sample(1),
-                     dataset_group_ids: Opendata::DatasetGroup.site(@site).pluck(:id).sample(1),
-                     area_ids: Opendata::Node::Area.site(@site).pluck(:id).sample(1)
+  layout_id: layouts["dataset-page"].id, text: "サンプルデータ【4】", member_id: @member_1.id, tags: %w(タグ),
+  category_ids: Opendata::Node::Category.site(@site).pluck(:id).sample(1),
+  dataset_group_ids: Opendata::DatasetGroup.site(@site).pluck(:id).sample(1),
+  area_ids: Opendata::Node::Area.site(@site).pluck(:id).sample(1)
 
 dataset5 = save_data filename: "dataset/5.html", name: "サンプルデータ【5】", route: "opendata/dataset",
-                     layout_id: layouts["dataset-page"].id, text: "サンプルデータ【5】", member_id: @member_1.id, tags: %w(タグ),
-                     category_ids: Opendata::Node::Category.site(@site).pluck(:id).sample(1),
-                     estat_category_ids: [
-                       estat_categories["estat-bunya/estat1/estat101"].id,
-                       estat_categories["estat-bunya/estat5/estat501"].id
-                     ],
-                     dataset_group_ids: Opendata::DatasetGroup.site(@site).pluck(:id).sample(1),
-                     area_ids: Opendata::Node::Area.site(@site).pluck(:id).sample(1)
+  layout_id: layouts["dataset-page"].id, text: "サンプルデータ【5】", member_id: @member_1.id, tags: %w(タグ),
+  category_ids: Opendata::Node::Category.site(@site).pluck(:id).sample(1),
+  estat_category_ids: [
+    estat_categories["estat-bunya/estat1/estat101"].id,
+    estat_categories["estat-bunya/estat5/estat501"].id
+  ],
+  dataset_group_ids: Opendata::DatasetGroup.site(@site).pluck(:id).sample(1),
+  area_ids: Opendata::Node::Area.site(@site).pluck(:id).sample(1)
 
 save_resource(dataset1, name: "サンプルリソース", filename: "sample.txt", license_id: license_cc_by.id)
 save_resource(dataset2, name: "年齢別人口", filename: "population.csv", license_id: license_cc_by.id,
@@ -641,12 +638,10 @@ def save_appfile(app, data)
   cond = { filename: data[:filename] }
 
   path = "apps/appfiles/#{data[:filename]}"
-  data.delete :filename
   Fs::UploadedFile.create_from_file(path) do |file|
     item = app.appfiles.where(cond).first || app.appfiles.new
     item.in_file = file
-    item.update! data
-    puts item.errors.full_messages unless item.save
+    puts item.errors.full_messages unless item.update data
   end
 end
 

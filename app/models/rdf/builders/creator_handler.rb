@@ -9,13 +9,13 @@ class Rdf::Builders::CreatorHandler < Rdf::Builders::BaseHandler
       if object.node?
         @context.traverse(object).each do |sub_statement|
           case sub_statement.predicate.pname
-          when "foaf:name" then
+          when "foaf:name"
             sub_attributes[:names] = {} unless sub_attributes.key?(:names)
             lang = sub_statement.object.language
             lang ||= :invariant
             value = sub_statement.object.object
             sub_attributes[:names][lang] = value
-          when "foaf:homepage" then
+          when "foaf:homepage"
             sub_attributes[:homepage] = sub_statement.object.to_s
           end
         end

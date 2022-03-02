@@ -23,6 +23,26 @@ class Cms::Column::Value::CheckBox < Cms::Column::Value::Base
     end
   end
 
+  def history_summary
+    h = []
+    h << "#{t("values")}: #{values.join(",")}" if values.present?
+    h << "#{t("alignment")}: #{I18n.t("cms.options.alignment.#{alignment}")}"
+    h.join(",")
+  end
+
+  def import_csv_cell(value)
+    self.values = value.to_s.split("\n").map { |v| v.strip }.compact
+  end
+
+  def export_csv_cell
+    values.join("\n")
+  end
+
+  def search_values(values)
+    return false unless values.instance_of?(Array)
+    (values & self.values).present?
+  end
+
   private
 
   def validate_value

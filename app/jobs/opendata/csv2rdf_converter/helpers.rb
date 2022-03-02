@@ -1,7 +1,6 @@
 module Opendata::Csv2rdfConverter::Helpers
   module Context
-    attr_reader :cur_site, :cur_user, :cur_node, :cur_dataset, :cur_resource
-    attr_reader :item, :csv, :uri, :tmp_dir, :tmp_file
+    attr_reader :cur_site, :cur_user, :cur_node, :cur_dataset, :cur_resource, :item, :csv, :uri, :tmp_dir, :tmp_file
 
     def init_context(dataset, resource)
       @cur_site = self.site

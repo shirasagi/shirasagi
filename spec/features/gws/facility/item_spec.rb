@@ -7,7 +7,7 @@ describe "facility_item", type: :feature, dbscope: :example do
   let(:import_path) { import_gws_facility_items_path site.id }
   let(:download_path) { download_gws_facility_items_path site.id }
   let!(:category){ create(:gws_facility_category, name: "会議室") }
-  let!(:admin){ create(:gws_user)}
+  let!(:admin){ create(:gws_user) }
 
   before { login_gws_user }
 
@@ -101,7 +101,10 @@ describe "facility_item", type: :feature, dbscope: :example do
         end
         expect(status_code).to eq 200
         expect(page.response_headers['Content-Type']).to eq("text/csv")
-        expect(page.response_headers['Content-Disposition']).to eq("attachment; filename*=UTF-8''gws_items_#{time.to_i}.csv")
+
+        filename = "gws_items_#{time.to_i}.csv"
+        disposition = ActionDispatch::Http::ContentDisposition.format(disposition: "attachment", filename: filename)
+        expect(page.response_headers['Content-Disposition']).to eq disposition
       end
 
       csv = CSV.parse(page.html.encode("UTF-8", "SJIS"), headers: true)

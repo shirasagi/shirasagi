@@ -8,7 +8,7 @@ module SS::Relation::Thumb
 
     has_many :thumbs, class_name: "SS::ThumbFile", foreign_key: :original_id, dependent: :destroy
     after_save :destroy_thumbs, if: -> { in_file || resizing }
-    after_save :save_thumbs, if: -> { disable_thumb.blank? && image? }
+    after_save :save_thumbs
 
     thumb_size [SS::ImageConverter::DEFAULT_THUMB_WIDTH, SS::ImageConverter::DEFAULT_THUMB_HEIGHT]
   end
@@ -37,7 +37,7 @@ module SS::Relation::Thumb
   end
 
   def thumb_url
-    thumb ? thumb.url : super
+    thumb.try { |file| file.url } || super
   end
 
   def thumb?
@@ -66,7 +66,9 @@ module SS::Relation::Thumb
   private
 
   def save_thumbs
-    thumbs_was = thumbs.map { |t| [t.image_size, t] }.to_h
+    return if disable_thumb.present? || !image?
+
+    thumbs_was = thumbs.index_by { |t| t.image_size }
     thumbs_resizing = self.class.thumbs_resizing
     thumbs_resizing = thumbs_resizing.symbolize_keys.compact
     thumbs_resizing = thumbs_resizing.invert.invert # delete duplicate values
@@ -81,15 +83,17 @@ module SS::Relation::Thumb
           file.set(image_size_name: name) if name != file.image_size_name
         else
           file = SS::ThumbFile.new
-          file.in_file         = uploaded_file
-          file.resizing        = size
-          file.original_id     = id
-          file.state           = state
-          file.filename        = file.in_file.original_filename
-          file.image_size      = size
-          file.image_size_name = name
-          file.user_id         = user_id
-          file.site_id         = site_id if respond_to?(:site_id)
+          file.in_file                = uploaded_file
+          file.resizing               = size
+          file.quality                = quality
+          file.image_resizes_disabled = image_resizes_disabled
+          file.original_id            = id
+          file.state                  = state
+          file.filename               = file.in_file.original_filename
+          file.image_size             = size
+          file.image_size_name        = name
+          file.user_id                = user_id
+          file.site_id                = site_id if respond_to?(:site_id)
           file.save!
         end
 

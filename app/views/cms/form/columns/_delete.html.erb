@@ -1,0 +1,16 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <% if form_is_in_use? %>
+    <dd class="mt-4">
+        <%= t("cms.notices.confirm_column_deletion_whose_form_is_in_use") %>
+    </dd>
+    <dd>
+      <label>
+        <%= check_box_tag("in_delete_confirmation", "yes", false) %>
+        <b><%= t("cms.notices.delete_forum_column") %></b>
+      </label>
+    </dd>
+  <% end %>
+</dl>

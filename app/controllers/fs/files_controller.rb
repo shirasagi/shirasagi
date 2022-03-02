@@ -17,7 +17,7 @@ class Fs::FilesController < ApplicationController
   end
 
   def set_item
-    id = params[:id_path].present? ? params[:id_path].gsub(/\//, "") : params[:id]
+    id = params[:id_path].present? ? params[:id_path].delete('/') : params[:id]
     name_or_filename = params[:filename]
     name_or_filename << ".#{params[:format]}" if params[:format].present?
 
@@ -29,7 +29,7 @@ class Fs::FilesController < ApplicationController
   end
 
   def deny
-    raise "404" unless @item.previewable?(user: @cur_user, member: get_member_by_session)
+    raise "404" unless @item.previewable?(site: @cur_site, user: @cur_user, member: get_member_by_session)
     set_last_logged_in
   end
 
@@ -54,11 +54,11 @@ class Fs::FilesController < ApplicationController
   def error_html_file(status)
     if @cur_site && @cur_user.nil?
       file = "#{@cur_site.path}/#{status}.html"
-      return file if Fs.exists?(file)
+      return file if Fs.exist?(file)
     end
 
     file = "#{Rails.public_path}/.error_pages/#{status}.html"
-    Fs.exists?(file) ? file : "#{Rails.public_path}/.error_pages/500.html"
+    Fs.exist?(file) ? file : "#{Rails.public_path}/.error_pages/500.html"
   end
 
   def send_item(disposition = :inline)
@@ -106,7 +106,7 @@ class Fs::FilesController < ApplicationController
       set_last_modified
       send_thumb @item, type: @item.content_type, filename: @item.filename,
         disposition: :inline, width: width, height: height
-    elsif thumb  = @item.try(:thumb, size)
+    elsif thumb = @item.try(:thumb, size)
       @item = thumb
       index
     else

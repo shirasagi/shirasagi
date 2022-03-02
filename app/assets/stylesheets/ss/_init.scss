@@ -78,7 +78,7 @@ $border-white: 1px solid $white;
   }
 }
 @mixin arrow {
-  padding-left: 25px;
+  padding-left: 22px;
   background: url(/assets/img/ic-arrow16-off.png) no-repeat left center;
   &:hover {
     background: url(/assets/img/ic-arrow16-on.png) no-repeat left center;

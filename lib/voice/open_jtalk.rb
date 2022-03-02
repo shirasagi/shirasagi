@@ -14,9 +14,9 @@ class Voice::OpenJtalk
     @sox_path = resolve_path(@config['sox'])
 
     [ @openjtalk_bin, @openjtalk_voice, @openjtalk_dic ].each do |path|
-      raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.no_open_jtalk", path: path) unless ::File.exists?(path)
+      raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.no_open_jtalk", path: path) unless ::File.exist?(path)
     end
-    raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.no_sox", path: @sox_path) unless ::File.exists?(@sox_path)
+    raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.no_sox", path: @sox_path) unless ::File.exist?(@sox_path)
   end
 
   def build(site_id, texts, output)
@@ -66,7 +66,7 @@ class Voice::OpenJtalk
     status = Voice::Command.run_with_logging(cmd, "openjtalk")
 
     raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.open_jtalk") unless status.exitstatus.to_i == 0
-    raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.open_jtalk") unless ::File.exists?(output)
+    raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.open_jtalk") unless ::File.exist?(output)
     raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.open_jtalk") if ::File.size(output) == 0
   end
 

@@ -9,10 +9,10 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
     let!(:node) { create :article_node_page, cur_site: site }
     let!(:article_page) do
       create :article_page,
-      cur_site: site,
-      cur_node: node,
-      filename: "#{node.filename}/page",
-      file_ids: [file.id]
+        cur_site: site,
+        cur_node: node,
+        filename: "#{node.filename}/page",
+        file_ids: [file.id]
     end
 
     describe "copy page which is located under a node" do

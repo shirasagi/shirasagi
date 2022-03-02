@@ -7,7 +7,7 @@ module Cms::PublicFilter::Page
   def find_page(path)
     page = Cms::Page.site(@cur_site).filename(path).first
     return unless page
-    @preview || (page.public? && page.public_node?) ? page.becomes_with_route : nil
+    @preview || (page.public? && page.public_node?) ? page : nil
   end
 
   def render_page(page, env = {})
@@ -52,7 +52,7 @@ module Cms::PublicFilter::Page
     if page.view_layout == "cms/redirect"
       @redirect_link = trusted_url!(page.redirect_link)
       html = render_to_string html: "", layout: "cms/redirect"
-    elsif response.content_type == "text/html" && page.layout
+    elsif response.media_type == "text/html" && page.layout
       html = render_to_string html: render_layout(page.layout).html_safe, layout: "cms/page"
     else
       html = response.body

@@ -2,10 +2,9 @@ module Gws::Export
   extend ActiveSupport::Concern
   extend SS::Translation
 
-  UTF8_BOM = "\uFEFF".freeze
-
   included do
     attr_accessor :in_file, :in_csv_encoding
+
     permit_params :in_file, :in_csv_encoding
   end
 
@@ -21,7 +20,7 @@ module Gws::Export
     end
 
     if in_csv_encoding.present? && in_csv_encoding.casecmp("UTF-8") == 0
-      csv = UTF8_BOM + csv
+      csv = SS::Csv::UTF8_BOM + csv
     else
       csv = csv.encode("SJIS", invalid: :replace, undef: :replace)
     end
@@ -36,8 +35,7 @@ module Gws::Export
     field_keys = export_fields
     field_vals = export_field_names
 
-    no = 0
-    each_csv do |row|
+    each_csv do |row, no|
       no += 1
       data = {}
       row.each do |k, v|
@@ -55,28 +53,8 @@ module Gws::Export
 
   private
 
-  def utf8_file?
-    in_file.rewind
-    bom = in_file.read(3)
-    in_file.rewind
-
-    bom.force_encoding("UTF-8")
-    UTF8_BOM == bom
-  end
-
   def each_csv(&block)
-    io = in_file.to_io
-    if utf8_file?
-      io.seek(3)
-      io.set_encoding('UTF-8')
-    else
-      io.set_encoding('SJIS:UTF-8')
-    end
-
-    csv = CSV.new(io, { headers: true })
-    csv.each(&block)
-  ensure
-    io.set_encoding("ASCII-8BIT")
+    SS::Csv.foreach_row(in_file, headers: true, &block)
   end
 
   def export_fields
@@ -104,8 +82,7 @@ module Gws::Export
     end
 
     begin
-      no = 0
-      each_csv do |row|
+      each_csv do |row, no|
         no += 1
         # check csv record up to 100
         break if no >= 100

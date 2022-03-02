@@ -8,6 +8,7 @@ module Gws::Addon::Import::Facility
 
     included do
       attr_accessor :in_file, :imported
+
       permit_params :in_file
     end
 
@@ -148,8 +149,8 @@ module Gws::Addon::Import::Facility
         I18n.l(time)
       end
 
-      def header_value_to_text(header, options = {})
-        I18n.t("gws/facility/item.csv.#{header}", options)
+      def header_value_to_text(header, **options)
+        I18n.t("gws/facility/item.csv.#{header}", **options)
       end
 
       def type_datas_value_to_text(type_datas)
@@ -173,8 +174,7 @@ module Gws::Addon::Import::Facility
       validate_import
       return false unless errors.empty?
 
-      table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
-      table.each_with_index do |row, i|
+      SS::Csv.foreach_row(in_file, headers: true) do |row, i|
         update_row(row, i + 2)
       end
       errors.blank?
@@ -190,12 +190,8 @@ module Gws::Addon::Import::Facility
         return
       end
 
-      begin
-        CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
-        in_file.rewind
-      rescue => e
-        errors.add :in_file, :invalid_file_type
-      end
+      errors.add :in_file, :invalid_file_type if !SS::Csv.valid_csv?(in_file, headers: true)
+      in_file.rewind
     end
 
     def update_row(row, index)
@@ -276,19 +272,11 @@ module Gws::Addon::Import::Facility
     end
 
     def set_errors(item, index)
-      error = ""
-      item.errors.each do |n, e|
-        if item.class.t(n) == "Base"
-          error += "#{e} "
-        else
-          error += "#{item.class.t(n)}#{e} "
-        end
-      end
-      self.errors.add :base, "#{index}: #{error}"
+      SS::Model.copy_errors(item, self, prefix: "#{index}: ")
     end
 
-    def header_t(header, options = {})
-      I18n.t("gws/facility/item.csv.#{header}", options)
+    def header_t(header, **options)
+      I18n.t("gws/facility/item.csv.#{header}", **options)
     end
 
     def user_names_to_ids(names)
@@ -441,8 +429,8 @@ module Gws::Addon::Import::Facility
       I18n.t("gws/facility/item.csv.#{header}")
     end
 
-    def column_header_value_to_text(header, options = {})
-      I18n.t("gws/facility/item.csv.columns.#{header}", options)
+    def column_header_value_to_text(header, **options)
+      I18n.t("gws/facility/item.csv.columns.#{header}", **options)
     end
 
     def approval_check_state_datas_text_to_value(approval_check_state_datas)

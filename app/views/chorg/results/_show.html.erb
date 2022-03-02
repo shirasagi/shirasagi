@@ -21,13 +21,14 @@
     <dd class="closed"><%= tryb { @item.closed.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
   </dl>
 
-  <div class="logs">
-    <textarea class="log" readonly="readonly"><%= @item.logs.join("\n") %></textarea>
-  </div>
   <div class="controller">
     <% if @item.respond_to?(:log_file_path) && SS::User.allowed?(:edit, @cur_user) %>
       <%= link_to(t('job.download_log'), download_job_sys_task_path(id: @item), { class: "btn", target: "_blank", rel: "noopener" }) %>
     <% end %>
+  </div>
+
+  <div class="logs">
+    <textarea class="log" readonly="readonly"><%= @item.logs.join("\n") %></textarea>
   </div>
 </section>
 

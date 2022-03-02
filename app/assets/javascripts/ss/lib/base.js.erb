@@ -266,7 +266,6 @@ this.SS = (function () {
           return self.html(SS.loading);
         },
         success: function () {
-          return console.log("success");
         },
         error: function (data, status) {
           return alert("== Error ==");
@@ -360,6 +359,7 @@ this.SS = (function () {
   };
 
   SS.formChanged = false;
+  SS.disableConfirmUnloading = false;
 
   SS.confirmUnloading = function () {
     SS.formChanged = false;
@@ -367,7 +367,7 @@ this.SS = (function () {
       SS.formChanged = true;
     });
     $(window).on("beforeunload", function () {
-      if (SS.formChanged) {
+      if (SS.formChanged && !SS.disableConfirmUnloading) {
         return "<%= I18n.t 'ss.confirm.unload' %>";
       }
     });
@@ -489,13 +489,13 @@ this.SS = (function () {
         scrollInput: false
       };
       data = $(this).data();
-      if (data.minDate !== null) {
+      if (data.minDate) {
         opts.minDate = data.minDate;
       }
-      if (data.maxDate !== null) {
+      if (data.maxDate) {
         opts.maxDate = data.maxDate;
       }
-      return $(this).datetimepicker(opts);
+      return $(this).attr('autocomplete', 'off').datetimepicker(opts);
     });
     $.each($(".js-datetime"), function () {
       var data, opts;
@@ -504,16 +504,16 @@ this.SS = (function () {
         step: 30
       };
       data = $(this).data();
-      if (data.minDate !== null) {
+      if (data.minDate) {
         opts.minDate = data.minDate;
       }
-      if (data.maxDate !== null) {
+      if (data.maxDate) {
         opts.maxDate = data.maxDate;
       }
-      if (data.step !== null) {
+      if (data.step) {
         opts.step = data.step;
       }
-      return $(this).datetimepicker(opts);
+      return $(this).attr('autocomplete', 'off').datetimepicker(opts);
     });
   };
 
@@ -557,6 +557,7 @@ this.SS = (function () {
 
         $container.find(".humanized-name").text(fileName);
         $container.find(".file-id").val(fileId);
+        $container.find(".sanitizer-status").replaceWith($data.find('.sanitizer-status'));
         $container.find(".btn-file-delete").removeClass("hide");
         $container.find(".upload-drop-notice").addClass("hide");
       };
@@ -639,6 +640,7 @@ this.SS = (function () {
 
           $container.find(".humanized-name").text(fileData["humanized_name"]);
           $container.find(".file-id").val(fileData["id"] || fileData["_id"]);
+          $container.find(".sanitizer-status").addClass("hide");
           $container.find(".btn-file-delete").removeClass("hide");
           $container.find(".upload-drop-notice").addClass("hide");
         }, function (xhr, textStatus, errorThrown) {
@@ -669,6 +671,7 @@ this.SS = (function () {
         var $container = $this.closest(".ss-file-field")
         $container.find(".humanized-name").text("");
         $container.find(".file-id").val("");
+        $container.find(".sanitizer-status").addClass("hide");
         $container.find(".btn-file-delete").addClass("hide");
         $container.find(".upload-drop-notice").removeClass("hide");
 

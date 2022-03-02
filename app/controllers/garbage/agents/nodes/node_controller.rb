@@ -8,5 +8,7 @@ class Garbage::Agents::Nodes::NodeController < ApplicationController
       order_by(@cur_node.sort_hash).
       page(params[:page]).
       per(@cur_node.limit)
+
+    render_with_pagination @items
   end
 end

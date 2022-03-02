@@ -7,6 +7,7 @@ module SS::Addon
 
     included do
       attr_accessor :in_clone_file, :ref_file_ids, :link_urls
+
       embeds_ids :files, class_name: "SS::LinkFile"
       permit_params file_ids: [], ref_file_ids: [], link_urls: {}
 
@@ -39,7 +40,7 @@ module SS::Addon
           elsif !allowed_other_user_files? && @cur_user && @cur_user.id != file.user_id
             next
           else
-            file.update(model: "ss/link_file", owner_item: self, state: "public")
+            file.update(model: "ss/link_file", owner_item: self, state: "public", site_id: nil)
           end
           ids << file.id
         end

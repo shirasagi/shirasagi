@@ -11,7 +11,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
     let(:end_at) { start_at + 3.hours }
     let(:name2) { unique_id }
     let(:column_value1) { unique_id }
-    let(:column_value1_2) { unique_id }
+    let(:column_value2) { unique_id }
 
     before { login_gws_user }
 
@@ -45,7 +45,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       click_on I18n.t("ss.links.edit")
       within "form#item-form" do
         fill_in "item[name]", with: name2
-        fill_in "item[facility_column_values][#{column1.id}]", with: column_value1_2
+        fill_in "item[facility_column_values][#{column1.id}]", with: column_value2
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -55,7 +55,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       plan.reload
       expect(plan.name).to eq name2
       expect(plan.facility_column_values.count).to eq 1
-      expect(plan.facility_column_values.first.value).to eq column_value1_2
+      expect(plan.facility_column_values.first.value).to eq column_value2
 
       #
       # Soft Delete

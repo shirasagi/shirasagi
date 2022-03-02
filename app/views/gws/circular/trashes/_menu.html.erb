@@ -1,6 +1,6 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
-  <% elsif params[:action] =~ /new|create|lock/ %>
+  <% elsif params[:action] =~ /new|create|lock|destroy_all/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /delete|active|move/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>

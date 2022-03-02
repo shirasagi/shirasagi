@@ -14,7 +14,7 @@ class Cms::Node::CommandController < ApplicationController
     @target = 'folder'
     @target_path = @cur_node.path
 
-    return if request.get?
+    return if request.get? || request.head?
 
     @commands.each do |command|
       command.run(@target, @target_path)

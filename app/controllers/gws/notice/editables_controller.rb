@@ -123,7 +123,7 @@ class Gws::Notice::EditablesController < ApplicationController
   def move
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
-    if request.get?
+    if request.get? || request.head?
       render
       return
     end
@@ -135,7 +135,7 @@ class Gws::Notice::EditablesController < ApplicationController
   def create_my_folder
     raise '403' if !Gws::Notice::Folder.allowed?(:my_folder, @cur_user, site: @cur_site)
 
-    if request.get?
+    if request.get? || request.head?
       render
       return
     end

@@ -1,5 +1,6 @@
 class SS::Csv
   UTF8_BOM = "\uFEFF".freeze
+  MAX_READ_ROWS = 100
 
   class BaseExporter
     include Enumerable
@@ -15,13 +16,11 @@ class SS::Csv
       @context = self
     end
 
-    attr_reader :cur_site, :cur_user
-    attr_reader :encoding, :columns
+    attr_reader :cur_site, :cur_user, :encoding, :columns
 
     def each
       yield draw_header
       @criteria.each do |item|
-        item = item.becomes_with_route if item.respond_to?(:becomes_with_route)
         item.cur_site = @cur_site if item.respond_to?(:cur_site=)
         item.cur_user = @cur_user if item.respond_to?(:cur_user=)
         item.cur_node = @cur_node if item.respond_to?(:cur_node=)
@@ -137,7 +136,7 @@ class SS::Csv
         @column = { id: id }.merge(options)
         @columns << @column
       end
-      instance_exec(&block) if block_given?
+      instance_exec(&block) if block
       @column = nil
     end
 
@@ -181,12 +180,12 @@ class SS::Csv
       options = options.dup
       options[:key] = key.to_s
       options[:name] ||= @model.t(key) if key.is_a?(Symbol)
-      options[:callback] = block if block_given?
+      options[:callback] = block if block
 
       @columns << options
     end
 
-    def label_column(key, options = {}, &block)
+    def label_column(key, &block)
       simple_column key do |row, item, head, value|
         options = item.send("#{key}_options")
         private_options = item.send("#{key}_private_options") if item.respond_to?("#{key}_private_options")
@@ -210,7 +209,7 @@ class SS::Csv
     def column(name, options = {}, &block)
       options = options.dup
       options[:name] = name
-      options[:callback] = block if block_given?
+      options[:callback] = block if block
 
       @form[:columns] << options
     end
@@ -318,8 +317,131 @@ class SS::Csv
       else
         ret = DSLImporter.new(options)
       end
-      ret.draw(&block) if block_given?
+      ret.draw(&block) if block
       ret
+    end
+
+    AUTO_DETECT_ENCODINGS = [ Encoding::SJIS, Encoding::UTF_8 ].freeze
+
+    def detect_encoding(path_or_io_or_ss_file)
+      if path_or_io_or_ss_file.respond_to?(:rewind)
+        # io like File, ActionDispatch::Http::UploadedFile or Fs::UploadedFile
+        return with_keeping_io_position(path_or_io_or_ss_file) { |io| _detect_encoding(io) }
+      end
+
+      if path_or_io_or_ss_file.respond_to?(:to_io)
+        # ss/file
+        return path_or_io_or_ss_file.to_io { |io| _detect_encoding(io) }
+      end
+
+      # path
+      ::File.open(path_or_io_or_ss_file, "rb") { |io| _detect_encoding(io) }
+    end
+
+    def open(path_or_io_or_ss_file, headers: true, &block)
+      raise ArgumentError, "block is missing" unless block_given?
+
+      if path_or_io_or_ss_file.respond_to?(:rewind)
+        # io like File, ActionDispatch::Http::UploadedFile or Fs::UploadedFile
+        with_keeping_io_position(path_or_io_or_ss_file) { |io| _open(io, headers: headers, &block) }
+        return
+      end
+
+      if path_or_io_or_ss_file.respond_to?(:to_io)
+        # ss/file
+        path_or_io_or_ss_file.to_io { |io| _open(io, headers: headers, &block) }
+        return
+      end
+
+      # path
+      ::File.open(path_or_io_or_ss_file, "rb") { |io| _open(io, headers: headers, &block) }
+    end
+
+    def foreach_row(path_or_io_or_ss_file, headers: true, &block)
+      raise ArgumentError, "block is missing" unless block_given?
+
+      SS::Csv.open(path_or_io_or_ss_file, headers: headers) do |csv|
+        if block.arity == 2
+          csv.each.with_index(&block)
+        else
+          csv.each(&block)
+        end
+      end
+    end
+
+    def valid_csv?(path_or_io_or_ss_file, headers: true, required_headers: nil, max_rows: nil)
+      max_rows ||= SS::Csv::MAX_READ_ROWS
+
+      count = 0
+      SS::Csv.foreach_row(path_or_io_or_ss_file, headers: headers) do |row|
+        count += 1
+
+        return false if required_headers && required_headers.any? { |h| !row.headers.include?(h) }
+
+        break if count >= max_rows
+      end
+      count != 0
+    rescue => e
+      Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      false
+    end
+
+    private
+
+    def with_keeping_io_position(io)
+      io = io.tempfile if io.is_a?(ActionDispatch::Http::UploadedFile)
+      save_pos = io.pos
+
+      yield io
+    ensure
+      io.pos = save_pos
+    end
+
+    def utf8_bom?(bom)
+      UTF8_BOM.bytes == bom.bytes
+    end
+
+    def _detect_encoding(io)
+      bom = io.read(3)
+      return Encoding::UTF_8 if utf8_bom?(bom)
+
+      body = bom + io.read(997)
+
+      encoding = AUTO_DETECT_ENCODINGS.find do |encoding|
+        byte_count = count_valid_bytes(body.dup, encoding)
+
+        (byte_count * 100 / body.length) > 90
+      end
+
+      encoding || Encoding::ASCII_8BIT
+    end
+
+    def count_valid_bytes(buff, encoding)
+      buff.force_encoding(encoding)
+
+      byte_count = 0
+      buff.each_codepoint { |cp| byte_count += cp.chr(encoding).bytes.length }
+
+      byte_count
+    rescue ArgumentError
+      # invalid byte sequence in ...
+      byte_count
+    end
+
+    def _open(io, headers:, &block)
+      encoding = with_keeping_io_position(io) { _detect_encoding(io) }
+      return if encoding == Encoding::ASCII_8BIT
+
+      io.set_encoding(encoding)
+      if encoding == Encoding::UTF_8
+        # try to skip the BOM
+        pos = io.pos
+        bom = io.read(3)
+        io.pos = pos if !utf8_bom?(bom)
+      end
+
+      csv = CSV.new(io, headers: headers)
+      yield csv
     end
   end
 end

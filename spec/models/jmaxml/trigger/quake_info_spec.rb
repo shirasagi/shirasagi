@@ -22,10 +22,10 @@ describe Jmaxml::Trigger::QuakeInfo, dbscope: :example do
       subject { create(:jmaxml_trigger_quake_info) }
 
       before do
-        region_210 = create(:jmaxml_region_210)
-        region_211 = create(:jmaxml_region_211)
-        region_212 = create(:jmaxml_region_212)
-        region_213 = create(:jmaxml_region_213)
+        region_210 = create(:jmaxml_region_c210)
+        region_211 = create(:jmaxml_region_c211)
+        region_212 = create(:jmaxml_region_c212)
+        region_213 = create(:jmaxml_region_c213)
         subject.earthquake_intensity = '4'
         subject.target_region_ids = [ region_210.id, region_211.id, region_212.id, region_213.id ]
         subject.save!
@@ -70,10 +70,10 @@ describe Jmaxml::Trigger::QuakeInfo, dbscope: :example do
     subject { create(:jmaxml_trigger_quake_info) }
 
     before do
-      region_210 = create(:jmaxml_region_210)
-      region_211 = create(:jmaxml_region_211)
-      region_212 = create(:jmaxml_region_212)
-      region_213 = create(:jmaxml_region_213)
+      region_210 = create(:jmaxml_region_c210)
+      region_211 = create(:jmaxml_region_c211)
+      region_212 = create(:jmaxml_region_c212)
+      region_213 = create(:jmaxml_region_c213)
       subject.earthquake_intensity = '4'
       subject.target_region_ids = [ region_210.id, region_211.id, region_212.id, region_213.id ]
       subject.save!

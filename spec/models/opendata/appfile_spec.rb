@@ -20,7 +20,7 @@ describe Opendata::Appfile, dbscope: :example do
     its(:url) { is_expected.to eq "#{app.url.sub(/\.html$/, "")}/appfile/#{subject.id}/#{subject.filename}" }
     its(:full_url) { is_expected.to eq "#{app.full_url.sub(/\.html$/, "")}/appfile/#{subject.id}/#{subject.filename}" }
     its(:content_url) { is_expected.to eq "#{app.full_url.sub(/\.html$/, "")}/appfile/#{subject.id}/content.html" }
-    its(:path) { expect(::Fs.exists?(subject.path)).to be_truthy }
+    its(:path) { expect(::Fs.exist?(subject.path)).to be_truthy }
     its(:content_type) { is_expected.to eq SS::MimeType.find(file_path.to_s, nil) }
     its(:size) { is_expected.to be >10 }
     its(:allowed?) { expect(subject.allowed?(nil, nil)).to be_truthy }
@@ -113,7 +113,7 @@ describe Opendata::Appfile, dbscope: :example do
       ::FileUtils.rm_rf tmpdir
     end
 
-    its(:url) { is_expected.to end_with("/#{URI.escape("index - コピー.json")}") }
-    its(:full_url) { is_expected.to end_with("/#{URI.escape("index - コピー.json")}") }
+    its(:url) { is_expected.to end_with("/#{Addressable::URI.encode("index - コピー.json")}") }
+    its(:full_url) { is_expected.to end_with("/#{Addressable::URI.encode("index - コピー.json")}") }
   end
 end

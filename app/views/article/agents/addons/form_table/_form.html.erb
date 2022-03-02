@@ -1,0 +1,7 @@
+<dl class="see mod-cms-form-table">
+  <dt><%= @model.t :form_id %><%= @model.tt :form_id %></dt>
+  <dd><%= f.select :form_id, @item.form_options, include_blank: '' %></dd>
+
+  <dt><%= @model.t :node_id %><%= @model.tt :node_id %></dt>
+  <dd><%= f.select :node_id, @item.node_options, include_blank: '' %></dd>
+</dl>

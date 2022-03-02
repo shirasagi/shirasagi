@@ -98,7 +98,7 @@ class Gws::UsersController < ApplicationController
     form_data = build_form_data
     result = @item.valid?
     if form_data.present? && form_data.invalid?(:required_check)
-      @item.errors.messages[:base] += form_data.errors.full_messages
+      SS::Model.copy_errors(form_data, @item)
       result = false
     end
 
@@ -124,7 +124,7 @@ class Gws::UsersController < ApplicationController
     result = @item.valid?
     form_data = save_form_data
     if form_data && form_data.invalid?
-      @item.errors.messages[:base] += form_data.errors.full_messages
+      SS::Model.copy_errors(form_data, @item)
       result = false
     end
 
@@ -171,7 +171,8 @@ class Gws::UsersController < ApplicationController
   end
 
   def import
-    return if request.get?
+    return if request.get? || request.head?
+
     @item = Gws::UserCsv::Importer.new get_params
     if @item.valid?
       result = @item.import
@@ -181,7 +182,8 @@ class Gws::UsersController < ApplicationController
   end
 
   def webmail_import
-    return if request.get?
+    return if request.get? || request.head?
+
     @item = Gws::UserCsv::Importer.new get_params
     if @item.valid?
       result = @item.import

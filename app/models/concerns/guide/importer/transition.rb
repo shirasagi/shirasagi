@@ -72,7 +72,6 @@ module Guide::Importer::Transition
 
           case type
           when I18n.t("guide.transition")
-            #
           when I18n.t("guide.procedure")
             point = Guide::Procedure.site(cur_site).node(cur_node).where(id_name: id_name).first
             point_ids << point.id if point

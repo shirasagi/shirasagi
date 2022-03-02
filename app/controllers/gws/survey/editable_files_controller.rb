@@ -71,7 +71,8 @@ class Gws::Survey::EditableFilesController < ApplicationController
 
   def notification
     @items = @cur_form.files
-    if request.get?
+
+    if request.get? || request.head?
       render
       return
     end
@@ -88,7 +89,7 @@ class Gws::Survey::EditableFilesController < ApplicationController
     end
     @items = criteria
 
-    if request.get?
+    if request.get? || request.head?
       render
       return
     end

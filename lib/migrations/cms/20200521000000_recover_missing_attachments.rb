@@ -5,8 +5,6 @@ class SS::Migration20200521000000
 
   def change
     each_page do |page|
-      page = page.becomes_with_route rescue page
-
       site = find_site(page.site_id)
       next if site.blank? # page is existed in deleted site
 
@@ -22,7 +20,7 @@ class SS::Migration20200521000000
       html.scan(/"\/fs\/(\d\/)+_\//) do
         matched = $&
         matched = matched[5..-4]
-        matched = matched.gsub("/", "")
+        matched = matched.delete("/")
         yield matched.to_i
       end
     end

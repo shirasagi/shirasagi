@@ -1,6 +1,7 @@
 module Fs
   MAX_COMPARE_FILE_SIZE = SS.config.env.max_compare_file_size || 100 * 1_024
   DEFAULT_BUFFER_SIZE = 4 * 1_024
+  DEFAULT_HEAD_LOGS = SS.config.job.head_logs || 1_000
 
   if SS.config.env.storage == "grid_fs"
     include ::Fs::GridFs
@@ -53,7 +54,7 @@ module Fs
   end
 
   def same_data?(path, data)
-    return false unless Fs.exists?(path)
+    return false unless Fs.exist?(path)
     return false if Fs.size(path) != data.length
 
     begin
@@ -67,5 +68,24 @@ module Fs
   def write_data_if_modified(path, data)
     return if Fs.same_data?(path, data)
     Fs.binwrite(path, data)
+  end
+
+  def head_lines(path, limit: nil)
+    return [] if !path || !Fs.exist?(path)
+
+    limit ||= DEFAULT_HEAD_LOGS
+    texts = []
+    Fs.to_io(path) do |f|
+      limit.times do
+        line = f.gets || break
+        line.force_encoding(Encoding.default_internal)
+        line.chomp!
+        texts << line
+      end
+    end
+    texts
+  rescue => e
+    Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+    []
   end
 end

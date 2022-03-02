@@ -22,7 +22,7 @@ this.SS_Clipboard = (function () {
         return true;
       } catch (_error) {
         e = _error;
-        console.log(e);
+        console.warn(e);
         alert("<%= I18n.t("ss.notice.clipboard_copy_failed") %>");
         return false;
       }

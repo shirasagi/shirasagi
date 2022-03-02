@@ -25,14 +25,14 @@ class Translate::Api::MicrosoftTranslator
 
   def request_word_limit_exceeded?(count)
     return false if request_word_limit.nil?
-    (@site.translate_mock_api_request_word_count + count) >= request_word_limit
+    (@site.translate_microsoft_api_request_word_count + count) >= request_word_limit
   end
 
-  def translate(texts, from, to, opts = {})
+  def translate(texts, from, to, site:)
     @count = 0
     @metered_usage = 0
 
-    count = texts.map(&:size).sum
+    count = texts.sum(&:size)
     uri = URI(@url + "&from=#{from}&to=#{to}")
     content = texts.map { |text| { "Text" => text } }.to_json
 

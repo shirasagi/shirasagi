@@ -6,6 +6,7 @@ module Category::Addon
 
     included do
       attr_accessor :in_partial_id
+
       permit_params :in_partial_id
     end
 
@@ -33,13 +34,13 @@ module Category::Addon
 
       # validate allowed partial node
       if !partial.allowed?(:edit, @cur_user, site: @cur_site)
-        self.errors.add :base, I18n.t("errors.messages.partial_auth_error", error_opts)
+        self.errors.add :base, I18n.t("errors.messages.partial_auth_error", **error_opts)
         return
       end
 
       # partial is master's ancestor node
       if filename == partial.filename || filename =~ /^#{::Regexp.escape(partial.filename)}\//
-        self.errors.add :base, I18n.t("errors.messages.partial_ancestor_error", error_opts)
+        self.errors.add :base, I18n.t("errors.messages.partial_ancestor_error", **error_opts)
         return
       end
 
@@ -54,7 +55,7 @@ module Category::Addon
         partial.send(name).where(depth: partial.depth + 1).each do |item|
           if basenames.include?(item.basename)
             error_opts = { name: item.name, filename: item.filename }
-            self.errors.add :base, I18n.t("errors.messages.partial_children_basename_duplication", error_opts)
+            self.errors.add :base, I18n.t("errors.messages.partial_children_basename_duplication", **error_opts)
           end
           validate_partial_editor_lock(item)
         end
@@ -70,7 +71,7 @@ module Category::Addon
 
         if files.include?(file)
           error_opts = { file: file }
-          self.errors.add :base, I18n.t("errors.messages.partial_children_static_file_duplication", error_opts)
+          self.errors.add :base, I18n.t("errors.messages.partial_children_static_file_duplication", **error_opts)
         end
       end
     end
@@ -80,7 +81,7 @@ module Category::Addon
 
       # validate editor lock
       if partial.respond_to?(:locked?) && partial.locked?
-        self.errors.add :base, I18n.t("errors.messages.partial_children_static_file_duplication", error_opts)
+        self.errors.add :base, I18n.t("errors.messages.partial_children_static_file_duplication", **error_opts)
       end
     end
 
@@ -92,13 +93,13 @@ module Category::Addon
       dst_path = ::File.join(@cur_site.path, dst_filename)
 
       # move static files
-      Fs.mkdir_p dst_path unless Fs.exists?(dst_path)
+      Fs.mkdir_p dst_path unless Fs.exist?(dst_path)
       Fs.glob("#{src_path}/**/{*,.*}").each do |src|
         file = src.sub(/^#{::Regexp.escape(src_path)}\//, "")
         next if %w(index.html rss.xml).include?(file)
 
         dst = src.sub(/^#{::Regexp.escape(src_path)}\//, "#{dst_path}/")
-        Fs.mv src, dst if Fs.exists?(src)
+        Fs.mv src, dst if Fs.exist?(src)
       end
 
       # rename filenames

@@ -7,6 +7,7 @@ class History::Log
   store_in_repl_master
   index(created: 1)
 
+  field :group_ids, type: Array
   field :session_id, type: String
   field :request_id, type: String
   field :url, type: String
@@ -31,6 +32,10 @@ class History::Log
     user ? "#{user.name}(#{user_id})" : user_id
   end
 
+  def group_label
+    Cms::Group.in(id: group_ids).map { |group| group.name }.join(",")
+  end
+
   def target_label
     if target_class.present?
       model  = target_class.to_s.underscore
@@ -45,7 +50,7 @@ class History::Log
 
   class << self
     def create_controller_log!(request, response, options)
-      return if request.get?
+      return if request.get? || request.head?
       return if response.code !~ /^3/
       create_log!(request, response, options)
     end
@@ -60,6 +65,7 @@ class History::Log
       log.controller   = options[:controller]
       log.action       = options[:action]
       log.cur_user     = options[:cur_user]
+      log.group_ids    = options[:cur_user].group_ids
       log.user_id      = options[:cur_user].id if options[:cur_user]
       log.site_id      = options[:cur_site].id if options[:cur_site]
       log.ref_coll     = item.collection_name if item
@@ -105,7 +111,7 @@ class History::Log
 
       if file
         log.url = file.url
-        log.ref_coll = file.collection_name
+        log.ref_coll = file.class.collection_name.to_s
         log.target_class = file.class.name
         log.target_id = file.id.to_s
       end

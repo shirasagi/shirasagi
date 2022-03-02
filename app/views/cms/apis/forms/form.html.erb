@@ -2,7 +2,7 @@
 <% form_for(:item) do |f| %>
   <% html = capture do %>
     <%= render "ss/crud/addon", addon: { id: "addon-cms-agents-addons-form-page", head: @item.name } do %>
-      <%= render "cms/forms/columns_form", f: f, addon_id: "addon-cms-agents-addons-form-page", form: @item, column_values: Cms::Column::Value::Base.none %>
+      <%= render "cms/form/forms/columns_form", f: f, addon_id: "addon-cms-agents-addons-form-page", form: @item, column_values: Cms::Column::Value::Base.none %>
     <% end %>
   <% end %>
 <% end %>

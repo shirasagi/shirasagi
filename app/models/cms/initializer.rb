@@ -8,6 +8,7 @@ module Cms
     Cms::Node.plugin "cms/group_page"
     Cms::Node.plugin "cms/site_search"
     Cms::Part.plugin "cms/site_search_history"
+    Cms::Part.plugin "cms/history_list"
     Cms::Part.plugin "cms/free"
     Cms::Part.plugin "cms/node"
     Cms::Part.plugin "cms/page"
@@ -29,6 +30,7 @@ module Cms
     Cms::Column.plugin 'cms/youtube'
     Cms::Column.plugin 'cms/free'
     Cms::Column.plugin 'cms/table'
+    Cms::Column.plugin 'cms/select_page'
 
     Cms::Role.permission :edit_cms_sites
     Cms::Role.permission :edit_cms_groups
@@ -119,6 +121,10 @@ module Cms
     if SS.config.cms.cms_sitemap && SS.config.cms.cms_sitemap['disable'].blank?
       Cms::Role.permission :use_cms_sitemap
     end
+    Cms::Role.permission :read_cms_image_resizes
+    Cms::Role.permission :edit_cms_image_resizes
+    Cms::Role.permission :delete_cms_image_resizes
+    Cms::Role.permission :disable_cms_image_resizes
 
     Cms::Role.permission :read_cms_check_links_reports
     Cms::Role.permission :delete_cms_check_links_reports

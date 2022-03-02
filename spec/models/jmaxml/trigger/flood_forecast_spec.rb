@@ -20,9 +20,9 @@ describe Jmaxml::Trigger::FloodForecast, dbscope: :example do
     subject { create(:jmaxml_trigger_flood_forecast) }
 
     before do
-      region1 = create(:jmaxml_water_level_station_85050900020300042)
-      region2 = create(:jmaxml_water_level_station_85050900020300045)
-      region3 = create(:jmaxml_water_level_station_85050900020300053)
+      region1 = create(:jmaxml_water_level_station_c85050900020300042)
+      region2 = create(:jmaxml_water_level_station_c85050900020300045)
+      region3 = create(:jmaxml_water_level_station_c85050900020300053)
       subject.target_region_ids = [ region1.id, region2.id, region3.id ]
       subject.save!
     end

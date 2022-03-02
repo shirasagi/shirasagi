@@ -3,8 +3,7 @@
   <div class="procedure-wrap">
     <dl class="procedure item-#{id}">
       <dt>リンク URL</dt>
-      <dt><a href="#{link_url}">#{link_url}</a></dt>
-      <dd>#{procedure_location}</dd>
+      <dd><a href="#{link_url}">#{link_url}</a></dd>
       <dt>実施場所</dt>
       <dd>#{procedure_location}</dd>
       <dt>必要なもの</dt>

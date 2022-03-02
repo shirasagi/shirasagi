@@ -37,6 +37,18 @@ describe SS::LiquidFilters do
       let(:source) { "{{ value || ss_date: '%Y/%m' }}" }
       it { is_expected.to eq value.to_date.strftime('%Y/%m') }
     end
+
+    context "with custom date format (wday)" do
+      context "%a" do
+        let(:source) { "{{ value || ss_date: '%a' }}" }
+        it { is_expected.to eq I18n.t("date.abbr_day_names")[value.wday] }
+      end
+
+      context "%A" do
+        let(:source) { "{{ value || ss_date: '%A' }}" }
+        it { is_expected.to eq I18n.t("date.day_names")[value.wday] }
+      end
+    end
   end
 
   describe "ss_time" do
@@ -70,6 +82,18 @@ describe SS::LiquidFilters do
     context "with custom date format" do
       let(:source) { "{{ value || ss_time: '%F %j' }}" }
       it { is_expected.to eq value.strftime('%F %j') }
+    end
+
+    context "with custom date format (wday)" do
+      context "%a" do
+        let(:source) { "{{ value || ss_time: '%a' }}" }
+        it { is_expected.to eq I18n.t("date.abbr_day_names")[value.wday] }
+      end
+
+      context "%A" do
+        let(:source) { "{{ value || ss_time: '%A' }}" }
+        it { is_expected.to eq I18n.t("date.day_names")[value.wday] }
+      end
     end
   end
 

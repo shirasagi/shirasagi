@@ -45,7 +45,7 @@ class History::Cms::TrashesController < ApplicationController
     set_item
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
-    if request.get?
+    if request.get? || request.head?
       render
       return
     end
@@ -69,7 +69,7 @@ class History::Cms::TrashesController < ApplicationController
       @item.id.to_s, restore_params: restore_params, file_params: file_params
     )
     if error_messages.present?
-      @item.errors.messages[:base] += error_messages
+      error_messages.each { |error_message| @item.errors.add :base, error_message }
       result = false
     else
       result = true

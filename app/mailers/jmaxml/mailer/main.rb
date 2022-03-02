@@ -3,6 +3,7 @@ class Jmaxml::Mailer::Main < ActionMailer::Base
 
   def self.inherited(child)
     attr_reader :xmldoc
+
     child.append_view_path "#{Rails.root}/app/views/#{child.mailer_name}"
     child.append_view_path "#{Rails.root}/app/views/#{self.mailer_name}"
   end

@@ -42,15 +42,15 @@ class Kana::Dictionary
     end
 
     def master_dic(site_id)
-      self.master_root + "/" + site_id.to_s.split(//).join("/") + "/_/user.dic"
+      self.master_root + "/" + site_id.to_s.chars.join("/") + "/_/user.dic"
     end
 
     def build_dic(site_id, item_ids)
       mecab_indexer = SS.config.kana.mecab_indexer
       mecab_dicdir = SS.config.kana.mecab_dicdir
 
-      raise I18n.t("kana.build_fail.no_mecab_indexer") unless ::File.exists?(mecab_indexer)
-      raise I18n.t("kana.build_fail.no_mecab_dicdir") unless ::Dir.exists?(mecab_dicdir)
+      raise I18n.t("kana.build_fail.no_mecab_indexer") unless ::File.exist?(mecab_indexer)
+      raise I18n.t("kana.build_fail.no_mecab_dicdir") unless ::Dir.exist?(mecab_dicdir)
 
       ::Dir.mktmpdir do |dir|
         tmp_src = File.join(dir, SS::FilenameUtils.make_tmpname("mecab", "txt"))
@@ -70,7 +70,7 @@ class Kana::Dictionary
 
     def pull(site_id)
       master_file = master_dic(site_id)
-      unless Fs.exists?(master_file)
+      unless Fs.exist?(master_file)
         return yield nil
       end
 
@@ -115,11 +115,9 @@ class Kana::Dictionary
       count
     end
 
-    def each_all_csv(criteria)
+    def each_all_csv(criteria, &block)
       criteria.each do |item|
-        item.enumerate_csv.each do |word, yomi|
-          yield word, yomi
-        end
+        item.enumerate_csv.each(&block)
         logger.warn("dictionary #{item.name} has #{item.errors.size} error(s).") if item.errors.present?
       end
     end

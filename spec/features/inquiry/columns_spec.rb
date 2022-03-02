@@ -66,13 +66,13 @@ describe "inquiry_columns", type: :feature do
       expect(current_path).to eq index_path
     end
 
-    context "enable_lgwan: true" do
+    context "lgwan enabled" do
       before do
-        SS.config.replace_value_at(:cms, :enable_lgwan, true)
+        SS.config.replace_value_at(:lgwan, :disable, false)
       end
 
       after do
-        SS.config.replace_value_at(:cms, :enable_lgwan, false)
+        SS.config.replace_value_at(:lgwan, :disable, true)
       end
 
       it "#new" do
@@ -99,9 +99,9 @@ describe "inquiry_columns", type: :feature do
       end
     end
 
-    context "enable_lgwan: false" do
+    context "lgwan disabled" do
       before do
-        SS.config.replace_value_at(:cms, :enable_lgwan, false)
+        SS.config.replace_value_at(:lgwan, :disable, true)
       end
 
       it "#new" do

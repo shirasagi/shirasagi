@@ -6,8 +6,8 @@ module Cms::PageFilter
   included do
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :move, :copy, :contains_urls]
     before_action :set_contains_urls_items, only: [:contains_urls, :edit, :update, :delete, :destroy]
-    before_action :deny_update_with_contains_urls, only: [:update], if: ->{ @contains_urls.present? }
-    before_action :deny_destroy_with_contains_urls, only: [:destroy], if: ->{ @contains_urls.present? }
+    before_action :deny_update_with_contains_urls, only: [:update]
+    before_action :deny_destroy_with_contains_urls, only: [:destroy]
   end
 
   private
@@ -35,7 +35,7 @@ module Cms::PageFilter
     params = {}
 
     if @cur_node
-      n = @cur_node.class == Cms::Node ? @cur_node.becomes_with_route : @cur_node
+      n = @cur_node
 
       layout_id = n.page_layout_id || n.layout_id
       params[:layout_id] = layout_id if layout_id.present?
@@ -80,7 +80,7 @@ module Cms::PageFilter
 
   def deny_update_with_contains_urls
     return if @cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_alert))
-    return if @contains_urls.and_public.blank?
+    return if @contains_urls.try(:and_public).blank?
     return unless @item.public?
     return if params.dig(:item, :state) == 'public'
 
@@ -89,9 +89,93 @@ module Cms::PageFilter
 
   def deny_destroy_with_contains_urls
     return if @cur_user.cms_role_permit_any?(@cur_site, %w(delete_cms_ignore_alert))
-    return if @contains_urls.and_public.blank?
+    return if @contains_urls.try(:and_public).blank?
 
     raise "403"
+  end
+
+  def draft_save
+    raise ArgumentError if %w(ready public).include?(@item.state)
+
+    result = @item.save
+
+    if !result && @item.is_a?(Cms::Addon::EditLock)
+      # So, edit lock must be held
+      unless @item.acquire_lock
+        location = { action: :lock }
+      end
+    end
+
+    render_update result, location: location
+  end
+
+  def publish_save
+    raise ArgumentError if !%w(ready public).include?(@item.state)
+
+    @item.state = "ready" if @item.try(:release_date).present?
+
+    result = nil
+    if @item.try(:master_id).present?
+      task = SS::Task.find_or_create_for_model(@item.master, site: @cur_site)
+      rejected = -> { @item.errors.add :base, :other_task_is_running }
+      task.run_with(rejected: rejected) do
+        task.log "# #{I18n.t("workflow.branch_page")} #{I18n.t("ss.buttons.publish_save")}"
+        result = @item.save
+      end
+    else
+      result = @item.save
+    end
+
+    location = nil
+    if result && @item.try(:branch?) && @item.state == "public"
+      location = { action: :index }
+      @item.file_ids = nil if @item.respond_to?(:file_ids)
+      @item.skip_history_trash = true if @item.respond_to?(:skip_history_trash)
+      @item.destroy
+    end
+
+    # If page is failed to update, page is going to show in edit mode with update errors
+    if !result && @item.is_a?(Cms::Addon::EditLock)
+      # So, edit lock must be held
+      unless @item.acquire_lock
+        location = { action: :lock }
+      end
+    end
+
+    render_update result, location: location
+  end
+
+  def save_as_branch
+    if @item.branches.present?
+      @item.errors.add :base, :branch_is_already_existed
+      render_update false
+      return
+    end
+
+    copy = nil
+    result = nil
+    SS::Task.find_or_create_for_model(@item, site: @cur_site).tap do |task|
+      rejected = -> { @item.errors.add :base, :other_task_is_running }
+      task.run_with(rejected: rejected) do
+        task.log "# #{I18n.t("workflow.branch_page")} #{I18n.t("ss.buttons.new")}"
+        @item.cur_site = @cur_site
+        @item.cur_node = @item.parent if @item.parent
+        @item.cur_user = @cur_user
+        copy = @item.new_clone
+        copy.master = @item
+        result = copy.save
+      end
+    end
+
+    render_opts = {}
+    if result
+      render_opts[:location] = url_for(action: :show, id: copy)
+      render_opts[:notice] = I18n.t("workflow.notice.created_branch_page")
+    elsif copy && copy.errors.present?
+      @item.errors.messages[:base] += copy.errors.full_messages
+    end
+
+    render_update result, render_opts
   end
 
   public
@@ -124,52 +208,27 @@ module Cms::PageFilter
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
-    # if params.dig(:item, :column_values).present? && @item.form.present?
-    #   new_column_values = @item.build_column_values(params.dig(:item, :column_values))
-    #   @item.update_column_values(new_column_values)
-    # end
-    if @item.state == "public"
+
+    if params[:branch_save] == I18n.t("cms.buttons.save_as_branch")
+      # 差し替え保存
+      save_as_branch
+      return
+    end
+
+    if %w(ready public).include?(@item.state)
+      # 公開保存
       raise "403" unless @item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node)
-      @item.state = "ready" if @item.try(:release_date).present?
+
+      publish_save
+      return
     end
 
-    if @item.state_changed? && @item.state == "public" && @item.try(:master_id).present?
-      task_name = "#{@item.collection_name}:#{@item.master_id}"
-      task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site.id, name: task_name)
-      rejected = -> { @item.errors.add :base, :other_task_is_running }
-      guard = ->(&block) do
-        task.run_with(rejected: rejected) do
-          task.log "# #{I18n.t("workflow.branch_page")} #{I18n.t("ss.buttons.publish_save")}"
-          block.call
-        end
-      end
-    else
-      # this means "no guard"
-      guard = ->(&block) { block.call }
+    if %w(ready public).include?(@item.state_was)
+      # 公開ページだった場合、非公開とするには公開権限が必要
+      raise "403" unless @item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node)
     end
 
-    result = nil
-    guard.call do
-      result = @item.save
-    end
-
-    location = nil
-    if result && @item.try(:branch?) && @item.state == "public"
-      location = { action: :index }
-      @item.file_ids = nil if @item.respond_to?(:file_ids)
-      @item.skip_history_trash = true if @item.respond_to?(:skip_history_trash)
-      @item.destroy
-    end
-
-    # If page is failed to update, page is going to show in edit mode with update errors
-    if !result && @item.is_a?(Cms::Addon::EditLock)
-      # So, edit lock must be held
-      unless @item.acquire_lock
-        location = { action: :lock }
-      end
-    end
-
-    render_update result, location: location
+    draft_save
   end
 
   def move
@@ -179,7 +238,7 @@ module Cms::PageFilter
     destination = params[:destination]
     confirm     = params[:confirm]
 
-    if request.get?
+    if request.get? || request.head?
       @filename = @item.filename
     elsif confirm
       @source = "/#{@item.filename}"
@@ -200,7 +259,7 @@ module Cms::PageFilter
         location = { cid: node.id, action: :move, source: @source, link_check: true }
       end
 
-      task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site.id, name: "#{@item.collection_name}:#{@item.id}")
+      task = SS::Task.find_or_create_for_model(@item, site: @cur_site)
 
       rejected = -> do
         @item.errors.add :base, :other_task_is_running
@@ -208,20 +267,20 @@ module Cms::PageFilter
       end
 
       task.run_with(rejected: rejected) do
-        task.log "# 移動"
+        task.log "# #{I18n.t("ss.buttons.move")}"
         render_update @item.move(destination), location: location, render: { template: "move" }, notice: t('ss.notice.moved')
       end
     end
   end
 
   def copy
-    if request.get?
+    if request.get? || request.head?
       prefix = I18n.t("workflow.cloned_name_prefix")
       @item.name = "[#{prefix}] #{@item.name}" unless @item.cloned_name?
       return
     end
 
-    task = SS::Task.order_by(id: 1).find_or_create_by(site_id: @cur_site.id, name: "#{@item.collection_name}:#{@item.id}")
+    task = SS::Task.find_or_create_for_model(@item, site: @cur_site)
 
     rejected = -> do
       @item.errors.add :base, :other_task_is_running
@@ -229,7 +288,7 @@ module Cms::PageFilter
     end
 
     task.run_with(rejected: rejected) do
-      task.log "# ページの複製"
+      task.log "# #{I18n.t("ss.links.copy")}"
 
       @item.attributes = get_params
       @copy = @item.new_clone
@@ -251,7 +310,7 @@ module Cms::PageFilter
     @target = 'page'
     @target_path = @item.path
 
-    return if request.get?
+    return if request.get? || request.head?
 
     @commands.each do |command|
       command.run(@target, @target_path)

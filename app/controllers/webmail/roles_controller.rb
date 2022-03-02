@@ -43,7 +43,7 @@ class Webmail::RolesController < ApplicationController
 
   def import
     @item = @model.new
-    return if request.get?
+    return if request.get? || request.head?
 
     file = params.require(:item).permit(:in_file)[:in_file]
     if file.blank?
@@ -52,7 +52,7 @@ class Webmail::RolesController < ApplicationController
     end
 
     mime = SS::MimeType.find(file.original_filename, file.content_type)
-    if mime != "text/comma-separated-values" || !Webmail::RoleImportJob.valid_csv?(file)
+    if mime != "text/csv" || !Webmail::RoleImportJob.valid_csv?(file)
       @item.errors.add :base, :invalid_csv
       return
     end

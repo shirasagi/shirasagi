@@ -30,7 +30,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
 
   def set_columns
     disable_upload_file = {}
-    disable_upload_file = { :input_type.ne => 'upload_file' } if SS.config.cms.enable_lgwan
+    disable_upload_file = { :input_type.ne => 'upload_file' } if SS::Lgwan.enabled?
 
     @columns = Inquiry::Column.site(@cur_site).
       where(node_id: @cur_node.id, state: "public").
@@ -119,7 +119,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     end
 
     if @cur_node.captcha_enabled? && get_captcha[:captcha_error].nil?
-      unless is_captcha_valid?(@answer)
+      unless captcha_valid?(@answer)
         render action: :confirm
         return
       end

@@ -8,7 +8,7 @@ describe Garbage::CategoryImportJob, dbscope: :example do
     create(
       :garbage_node_category_list,
       site: site,
-      filename: "categories",
+      filename: "categories"
     )
   end
 

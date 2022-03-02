@@ -10,6 +10,7 @@ module Cms::Content
   include Cms::Addon::CheckLinks
   include Fs::FilePreviewable
   include History::Addon::Trash
+  include Cms::ContentLiquid
 
   attr_accessor :cur_node, :basename
 
@@ -43,8 +44,6 @@ module Cms::Content
     validate :validate_name, if: ->{ name.present? }
 
     after_destroy :remove_private_dir
-
-    export_liquid_methods
   end
 
   module ClassMethods
@@ -109,7 +108,13 @@ module Cms::Content
         def criteria.count(options = {}, &block)
           options = options.symbolize_keys
           options[:hint] = { _id: 1 }
-          super(options, &block)
+          begin
+            super(options, &block)
+          rescue Mongo::Error::OperationFailure => e
+            Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join('\n  ')}")
+            options.delete(:hint)
+            super(options, &block)
+          end
         end
       end
 
@@ -117,55 +122,11 @@ module Cms::Content
       criteria = self.all.site(site) if criteria.blank?
 
       # and_public
-      criteria = criteria.and_public(date)
-
-      criteria
+      criteria.and_public(date)
     end
 
     def private_root
       "#{SS::Application.private_root}/#{self.collection_name}"
-    end
-
-    def export_liquid_methods
-      liquidize do
-        export :id
-        export :name
-        export :index_name
-        export :url
-        export :full_url
-        export :basename
-        export :filename
-        export :order
-        export :date
-        export :released
-        export :released_type
-        export :updated
-        export :created
-        export :parent do
-          p = self.parent
-          p == false ? nil : p
-        end
-        export :css_class do |context|
-          issuer = context.registers[:cur_part] || context.registers[:cur_node]
-          template_variable_handler_class("class", issuer)
-        end
-        export :new? do |context|
-          issuer = context.registers[:cur_part] || context.registers[:cur_node]
-          issuer.respond_to?(:in_new_days?) && issuer.in_new_days?(self.date)
-        end
-        export :current? do |context|
-          # ApplicationHelper#current_url?
-          cur_path = context.registers[:cur_path]
-          next false if cur_path.blank?
-
-          current = cur_path.sub(/\?.*/, "")
-          next false if current.delete("/").blank?
-          next true if self.url.sub(/\/index\.html$/, "/") == current.sub(/\/index\.html$/, "/")
-          next true if current =~ /^#{::Regexp.escape(url)}(\/|\?|$)/
-
-          false
-        end
-      end
     end
   end
 
@@ -206,7 +167,7 @@ module Cms::Content
 
   def private_dir
     return if new_record?
-    self.class.private_root + "/" + id.to_s.split(//).join("/") + "/_"
+    self.class.private_root + "/" + id.to_s.chars.join("/") + "/_"
   end
 
   def private_file(basename)
@@ -215,16 +176,8 @@ module Cms::Content
   end
 
   def date
-    case released_type
-    when "fixed"
-      self[:released] || first_released || updated || created
-    when "same_as_created"
-      created
-    when "same_as_first_released"
-      first_released || updated || created
-    else # same_as_updated
-      updated || created
-    end
+    released_type = self.released_type.presence || self.class.default_released_type
+    Cms.cms_page_date(released_type, self[:released], updated, created, first_released)
   end
 
   def public?
@@ -272,9 +225,11 @@ module Cms::Content
   end
 
   def becomes_with_route(name = nil)
+    return self if name.blank?
+
     # be careful, Cms::Layout does not respond to route
-    name ||= route if respond_to?(:route)
-    return self unless name
+    return self if respond_to?(:route) && name == route
+
     klass = name.camelize.constantize rescue nil
     return self unless klass
 
@@ -289,10 +244,11 @@ module Cms::Content
     %w(current descendant).map { |m| [ I18n.t("cms.options.node_target.#{m}"), m ] }
   end
 
-  def file_previewable?(file, user:, member:)
+  def file_previewable?(file, site:, user:, member:)
     return false unless public?
     return false unless public_node?
     return false if try(:for_member_enabled?) && member.blank?
+    return false if !site || !site.is_a?(SS::Model::Site) || self.site_id != site.id
     true
   end
 
@@ -362,7 +318,7 @@ module Cms::Content
   def create_history_trash
     backup = History::Trash.new
     backup.ref_coll = collection_name
-    backup.ref_class = self.becomes_with_route.class.to_s
+    backup.ref_class = self.class.to_s
     backup.data = attributes
     backup.data.delete(:lock_until)
     backup.data.delete(:lock_owner_id)
@@ -376,7 +332,7 @@ module Cms::Content
 
     return if max_name_length <= 0
     if name.length > max_name_length
-      errors.add :name, :too_long, { count: max_name_length }
+      errors.add :name, :too_long, count: max_name_length
     end
   end
 

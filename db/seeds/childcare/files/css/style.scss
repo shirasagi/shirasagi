@@ -470,66 +470,6 @@ textarea {
 }
 
 // -----------------------------------------------------------------------------
-// slide
-#slide {
-  @include clear;
-  padding: 0;
-  .images {
-    li {
-      max-width: 100%;
-    }
-    img {
-      max-width: 100%;
-      height: auto;
-    }
-  }
-  .bx-controls {
-    display: inline-block;
-    padding: 5px 15px;
-    @include mb { display: none; }
-    .bx-controls-auto-item a {
-      position: relative;
-      padding-left: 16px;
-      &.active {
-        text-decoration: none;
-      }
-      &:before {
-        content: "";
-        position: absolute;
-        top: 4px;
-        left: 0;
-      }
-    }
-    .bx-start:before {
-      top: 3px;
-      border-top: 7px solid transparent;
-      border-bottom: 7px solid transparent;
-      border-left: 10px solid $primary2;
-    }
-    .bx-stop:before {
-      width: 10px;
-      height: 10px;
-      background: $primary2;
-    }
-  }
-  .bx-thumbs {
-    float: right;
-    margin: -3.6em 15px 0 0;
-    padding-left: 10em;
-    @include mb { display: none; }
-    a {
-      display: inline-block;
-      margin: 0 0 10px 5px;
-      img {
-        opacity: .6;
-      }
-      &.active img {
-        opacity: 1;
-      }
-    }
-  }
-}
-// -----------------------------------------------------------------------------
 // pages
 .article-pages li, .category-pages li, .cms-pages li, .faq-pages li, .ezine-pages li {
   @include mb {
@@ -1728,6 +1668,130 @@ article.post {
       }
       .meta .url {
         display: block;
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// swiper-slide
+body#body--index {
+  #wrap {
+    .ss-swiper-slide {
+      box-sizing: border-box;
+      margin: 0 auto 30px;
+      width: calc(100% - 30px);
+      max-width: 1050px;
+      background: #fff;
+      -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 14%), 0 3px 1px -2px rgba(0, 0, 0, 20%), 0 1px 5px 0 rgba(0, 0, 0, 12%);
+      -moz-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 14%), 0 3px 1px -2px rgba(0, 0, 0, 20%), 0 1px 5px 0 rgba(0, 0, 0, 12%);
+
+      @include mb {}
+
+      * {
+        box-sizing: border-box;
+      }
+
+      >.content-box {
+        display: none;
+      }
+
+      .swiper-container {
+        &.ss-swiper-slide-main {
+          padding-bottom: 60px;
+
+          @include mb {
+            padding: 0;
+          }
+        }
+
+        &.ss-swiper-slide-thumbnail {
+          position: absolute;
+          bottom: 10px;
+          right: 15px;
+          max-width: calc(100% - 80px);
+          padding: 0;
+          height: 40px;
+          display: flex;
+          justify-content: flex-end;
+
+
+          @include mb {
+            display: none;
+          }
+
+          .swiper-wrapper {
+            margin: 0;
+            width: 387px;
+            transform: translate3d(0px, 0px, 0px) !important;
+            overflow: hidden;
+
+            .swiper-slide {
+              display: inline-block;
+              margin-left: 9px;
+              margin-bottom: 5px;
+              width: 120px !important;
+              height: 40px;
+
+              &:not(:first-child) {}
+            }
+          }
+        }
+
+        .swiper-wrapper {}
+
+        .ss-swiper-slide-controller {
+          right: auto;
+          bottom: 5px;
+          left: 15px;
+          display: flex;
+          flex-direction: column;
+
+          @include mb {
+            display: none;
+          }
+
+          button {
+            position: relative;
+            padding-left: 16px;
+            border: none;
+            text-decoration: underline;
+            color: #06c;
+            background-color: transparent;
+
+            &:before {
+              content: "";
+              position: absolute;
+              top: 5px;
+              left: 0;
+            }
+
+            &.ss-swiper-slide-play {
+              &:before {
+                border-top: 7px solid transparent;
+                border-bottom: 7px solid transparent;
+                border-left: 10px solid #009dd5;
+              }
+            }
+
+            &.ss-swiper-slide-stop {
+              &:before {
+                width: 10px;
+                height: 10px;
+                background: #009dd5;
+              }
+            }
+
+            &[aria-pressed="true"] {
+              text-decoration: none;
+            }
+
+            &:hover {
+              cursor: pointer;
+            }
+          }
+        }
       }
     }
   }

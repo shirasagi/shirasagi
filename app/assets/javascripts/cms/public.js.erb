@@ -13,7 +13,9 @@
 //= require ss/lib/mobile
 //= require ss/lib/clipboard
 //= require ss/lib/file_view
+//= require cms/lib/site_search
 //= require cms/lib/site_search_history
+//= require cms/lib/history
 //= require ss/lib/search_ui
 //= require ss/lib/ajax_file
 //= require chat/lib/bot
@@ -26,6 +28,7 @@
 //= require key_visual/lib/slide
 //= require key_visual/lib/swiper_slide
 //= require map/googlemaps/map
+//= require map/googlemaps/markerclusterer.js
 //= require map/googlemaps/facility/search
 //= require map/googlemaps/member/photo/form
 //= require map/openlayers/map
@@ -369,7 +372,9 @@ this.SS_Voice = (function () {
 
   SS_Voice.load = function (ev) {
     if (SS_Voice.cancelLoading) {
-      ev.preventDefault();
+      if (ev) {
+        ev.preventDefault();
+      }
       return false;
     }
 
@@ -400,7 +405,9 @@ this.SS_Voice = (function () {
       }
     });
 
-    ev.preventDefault();
+    if (ev) {
+      ev.preventDefault();
+    }
     return false;
   };
 

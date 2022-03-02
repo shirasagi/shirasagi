@@ -4,6 +4,15 @@
 <%= code_editor "##{addon[:id]} .html", mode: :html %>
 
 <dl class="see">
-  <dt class="wide"><%= @model.tt :layout %></dt>
-  <dd class="wide"><%= f.text_area :layout, style: "height: 400px", class: "html" %></dd>
+  <dt class="wide">HTML<%= @model.tt :layout %></dt>
+  <dd class="wide">
+    <%= f.text_area :layout, style: "height: 400px", class: "html" %>
+
+    <% if example = @model.value_type.form_example_layout %>
+      <div class="form-example">
+        <div class="form-example-head example-layout-html"><%= t 'ss.input_example' %></div>
+        <div class="form-example-body example-layout-html"><%= example %></div>
+      </div>
+    <% end %>
+  </dd>
 </dl>

@@ -4,15 +4,10 @@ class Member::Agents::Parts::InvitedGroupController < ApplicationController
   helper Cms::ListHelper
 
   skip_before_action :logged_in?
-  before_action :becomes_with_route
   before_action :set_member
   before_action :set_my_group_node
 
   private
-
-  def becomes_with_route
-    @cur_part = @cur_part.becomes_with_route
-  end
 
   def set_member
     logged_in? redirect: false

@@ -17,7 +17,18 @@ this.SS_SearchUI = (function () {
     tr.append($('<td />').append(input).append(name));
     tr.append($('<td />').append(a));
     self.anchorAjaxBox.closest("dl").find(".ajax-selected tbody").prepend(tr);
-    return self.anchorAjaxBox.closest("dl").find(".ajax-selected").trigger("change");
+    self.anchorAjaxBox.closest("dl").find(".ajax-selected").trigger("change");
+  };
+
+  SS_SearchUI.defaultDeselector = function (item) {
+    var table = $(item).closest(".ajax-selected");
+    var tr = $(item).closest("tr");
+
+    tr.remove();
+    if (table.find("tbody tr").size() === 0) {
+      table.hide();
+    }
+    table.trigger("change");
   };
 
   SS_SearchUI.select = function (item) {
@@ -41,14 +52,14 @@ this.SS_SearchUI = (function () {
   };
 
   SS_SearchUI.deselect = function (e) {
-    var table;
-    table = $(this).parents(".ajax-selected:first");
-    $(this).parents("tr:first").remove();
-    if (table.find("tbody tr").size() === 0) {
-      table.hide();
+    var $item = $(this);
+    var selector = $item.closest(".ajax-selected").data('on-deselect');
+    if (selector) {
+      selector($item);
+    } else {
+      SS_SearchUI.defaultDeselector($item);
     }
-    table.trigger("change");
-    return e.preventDefault();
+    e.preventDefault();
   };
 
   SS_SearchUI.toggleSelectButton = function ($el) {
@@ -67,11 +78,9 @@ this.SS_SearchUI = (function () {
     var self = this;
 
     $(".ajax-selected").each(function () {
-      var $ajaxSelected = $(this);
-
-      $ajaxSelected.on("click", ".deselect", self.deselect);
-      if ($ajaxSelected.find("a.deselect").size() === 0) {
-        $ajaxSelected.hide();
+      $(this).on("click", ".deselect", self.deselect);
+      if ($(this).find("a.deselect").size() === 0) {
+        $(this).hide();
       }
     });
 
@@ -111,7 +120,8 @@ this.SS_SearchUI = (function () {
         $(this).ajaxSubmit({
           url: $(this).attr("action"),
           success: function (data) {
-            $el.closest("#cboxLoadedContent").html(data);
+            var $data = $("<div />").html(data);
+            $.colorbox.prep($data.contents());
           },
           error: function (data, status) {
             $div.html("== Error ==");
@@ -152,7 +162,12 @@ this.SS_SearchUI = (function () {
       self.selectItems($el);
       return $el.find("form.search").submit();
     });
-    self.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").each(function () {
+
+    var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
+    if (!$ajaxSelected.length) {
+      $ajaxSelected = self.anchorAjaxBox.parent().find(".ajax-selected");
+    }
+    $ajaxSelected.find("tr[data-id]").each(function () {
       var id, item, tr;
       id = $(this).data("id");
       tr = $("#colorbox .items [data-id='" + id + "']");

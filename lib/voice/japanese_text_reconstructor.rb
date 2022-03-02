@@ -10,7 +10,7 @@ class Voice::JapaneseTextReconstructor
     @max_length = max_length
   end
 
-  def each
+  def each(&block)
     # setup enumerable
     e = @texts.lazy
 
@@ -39,9 +39,7 @@ class Voice::JapaneseTextReconstructor
     end
 
     # finally, yields text which has appropriate length
-    e.each do |text|
-      yield text
-    end
+    e.each(&block)
   end
 
   private

@@ -70,7 +70,7 @@ class Opendata::Harvest::ShirasagiScraper
         resource["url"] = data_url
       else
         href = node.css(".icons a.download").first.attributes["href"].value
-        href = ::Addressable::URI.unescape(href)
+        href = ::Addressable::URI.unencode(href)
         resource["url"] = ::File.join(url, href)
       end
 
@@ -78,7 +78,7 @@ class Opendata::Harvest::ShirasagiScraper
       resource["format"] = ::File.extname(resource["url"]).downcase.delete(".")
 
       digits = %w(バイト KB MB GB TB PB)
-      bytes, digit = resource["name"].scan(/ ([\d\.]+?)(#{digits.join("|")})\)$/).flatten
+      bytes, digit = resource["name"].scan(/ ([\d.]+?)(#{digits.join("|")})\)$/).flatten
       if digits.index(digit)
         resource["display_size"] = (bytes.to_f * (1024 ** digits.index(digit))).to_i
       end

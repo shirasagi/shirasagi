@@ -21,7 +21,11 @@ module Gws::Schedule::PlanHelper
   end
 
   def calendar_format(plans, opts = {})
-    events = plans.map { |m| m.calendar_format(@cur_user, @cur_site) }
+    events = plans.map do |m|
+      event = m.calendar_format(@cur_user, @cur_site)
+      event = m.set_attendance_classes(event, @cur_user, opts[:user].to_i)
+    end
+    events.compact!
     return events unless opts[:holiday]
 
     events += calendar_holidays opts[:holiday][0], opts[:holiday][1]

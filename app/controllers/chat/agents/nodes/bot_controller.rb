@@ -7,7 +7,7 @@ class Chat::Agents::Nodes::BotController < ApplicationController
   private
 
   def create_chat_history
-    return if @result == @cur_node.becomes_with_route.first_text
+    return if @result == @cur_node.first_text
     history = Chat::History.new(params.permit(Chat::History.permitted_fields))
     history.session_id = request.session.id
     history.request_id = request.uuid
@@ -26,7 +26,6 @@ class Chat::Agents::Nodes::BotController < ApplicationController
   public
 
   def index
-    @cur_node = @cur_node.becomes_with_route
     @intents = Chat::Intent.site(@cur_site).
       where(node_id: @cur_node.id).
       order_by(order: 1, name: 1, updated: -1).

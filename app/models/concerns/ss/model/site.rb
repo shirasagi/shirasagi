@@ -54,7 +54,7 @@ module SS::Model::Site
       if parent
         parent.root_path
       else
-        "#{self.class.root}/" + (host.split(//).join("/") + "/_")
+        "#{self.class.root}/" + (host.chars.join("/") + "/_")
       end
     end
 
@@ -153,8 +153,8 @@ module SS::Model::Site
 
       return if src_site.host.blank?
       return if path == src_site.path
-      return if Fs.exists?(path)
-      return if !Fs.exists?(src_site.path)
+      return if Fs.exist?(path)
+      return if !Fs.exist?(src_site.path)
 
       if path.include?(src_site.path)
         temp_path = src_site.path.sub(self.class.root, "#{self.class.root}/temp")
@@ -162,8 +162,8 @@ module SS::Model::Site
         Fs.mv(src_site.path, src_site.path.sub(self.class.root, "#{self.class.root}/temp"))
         FileUtils.rmdir(File.dirname(src_site.path), parents: true) if Dir.empty?(File.dirname(src_site.path))
         Fs.mkdir_p(File.dirname(path))
-        FileUtils.rmdir(path, parents: true) if Fs.exists?(path) && Dir.empty?(path)
-        Fs.mv(temp_path, path) if Fs.exists?(temp_path)
+        FileUtils.rmdir(path, parents: true) if Fs.exist?(path) && Dir.empty?(path)
+        Fs.mv(temp_path, path) if Fs.exist?(temp_path)
       else
         Fs.mkdir_p(File.dirname(path))
         Fs.mv(src_site.path, path)

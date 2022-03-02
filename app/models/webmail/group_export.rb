@@ -41,6 +41,7 @@ class Webmail::GroupExport
   ].freeze
 
   attr_accessor :cur_user, :in_file
+
   permit_params :in_file
 
   def export_csv(items)
@@ -72,10 +73,8 @@ class Webmail::GroupExport
     validate_import_file
     return false unless errors.empty?
 
-    index = 0
-    CSV.foreach(in_file.path, headers: true, encoding: 'SJIS:UTF-8') do |row|
+    SS::Csv.foreach_row(in_file, headers: true) do |row, index|
       update_row(row, index)
-      index += 1
     end
     errors.empty?
   end
@@ -111,9 +110,7 @@ class Webmail::GroupExport
     if setting[:name].present?
       setting.set_imap_password
       if setting.invalid?(:group)
-        setting.errors.full_messages.each do |msg|
-          errors.add :base, "#{index + 1}: #{msg}"
-        end
+        SS::Model.copy_errors(setting, self, prefix: "#{index + 1}: ")
         return
       end
 
@@ -123,9 +120,7 @@ class Webmail::GroupExport
     end
 
     if !item.save
-      item.errors.full_messages.each do |msg|
-        errors.add :base, "#{index + 1}: #{msg}"
-      end
+      SS::Model.copy_errors(item, self, prefix: "#{index + 1}: ")
       return
     end
 
@@ -142,7 +137,7 @@ class Webmail::GroupExport
     end
 
     unmatched = 0
-    CSV.foreach(in_file.path, headers: true, encoding: 'SJIS:UTF-8') do |row|
+    SS::Csv.foreach_row(in_file, headers: true) do |row|
       EXPORT_DEF.each do |export_def|
         unmatched += 1 if !row.key?(export_def[:label])
       end

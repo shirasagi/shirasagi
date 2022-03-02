@@ -6,7 +6,7 @@ module Gws
   mattr_accessor(:module_usable_handlers) { {} }
 
   def module_usable(name, proc = nil, &block)
-    proc = block if block_given?
+    proc = block if block
     module_usable_handlers[name.to_sym] = proc
   end
 
@@ -81,6 +81,7 @@ module Gws
     Gws::UserFormData
     Gws::UserPresence
     Gws::UserTitle
+    Gws::UserOccupation
     Gws::Workflow::File
     Gws::Workflow::Form
   ).freeze

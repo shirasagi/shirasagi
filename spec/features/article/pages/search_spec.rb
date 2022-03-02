@@ -71,8 +71,6 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
       expect(current_path).to eq index_path
 
-      save_full_screenshot
-
       within ".list-items" do
         expect(page).to have_css(".list-item:nth-child(2)", text: item5.name)
         expect(page).to have_css(".list-item:nth-child(3)", text: item4.name)

@@ -3,7 +3,7 @@
   mod = route.to_s.sub(/\/.+?$/, "")
 %>
 
-<% if ::File.exists?("#{Rails.root}/app/views/#{route}/_navi.html.erb") %>
+<% if ::File.exist?("#{Rails.root}/app/views/#{route}/_navi.html.erb") %>
   <%= render "#{route}/navi" %>
 <% elsif ::File.exist?("#{Rails.root}/app/views/#{mod}/main/_navi.html.erb") %>
   <%= render "#{mod}/main/navi" %>

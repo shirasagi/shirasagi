@@ -69,23 +69,23 @@ class History::Trash
     end
     if opts[:create_by_trash]
       if item.errors.present?
-        errors.add :base, item.errors.full_messages
+        SS::Model.copy_errors(item, self)
         return false
       end
 
       unless item.save
-        errors.add :base, item.errors.full_messages
+        SS::Model.copy_errors(item, self)
         return false
       end
 
       if model.include?(Cms::Content)
         src = item.path.sub("#{Rails.root}/public", self.class.root)
         Fs.mkdir_p(File.dirname(item.path))
-        Fs.mv(src, item.path) if Fs.exists?(src)
+        Fs.mv(src, item.path) if Fs.exist?(src)
       elsif model.include?(SS::Model::File)
         src = "#{self.class.root}/#{item.path.sub(/.*\/(ss_files\/)/, '\\1')}"
         Fs.mkdir_p(File.dirname(item.path))
-        Fs.mv(src, item.path) if Fs.exists?(src)
+        Fs.mv(src, item.path) if Fs.exist?(src)
       end
       self.destroy
     end
@@ -93,11 +93,11 @@ class History::Trash
       item.group_ids = opts[:cur_group].to_a.pluck(:id)
       item.save
       id = self.data[:_id]
-      path = "#{self.class.root}/ss_files/" + id.to_s.split(//).join("/") + "/_/#{id}"
+      path = "#{self.class.root}/ss_files/" + id.to_s.chars.join("/") + "/_/#{id}"
       src = path
       file = Fs::UploadedFile.create_from_file(path, content_type: self.data[:content_type])
       Fs.mkdir_p(File.dirname(item.path))
-      Fs.mv(src, item.path) if Fs.exists?(src)
+      Fs.mv(src, item.path) if Fs.exist?(src)
       item.in_file = file
       item.save
       self.destroy

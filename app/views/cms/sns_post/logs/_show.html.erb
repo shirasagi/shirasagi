@@ -18,7 +18,7 @@
   <dd><%= @item.label(:state) %></dd>
 
   <% if @item.page %>
-    <% page = @item.page.becomes_with_route %>
+    <% page = @item.page %>
     <dt><%= @model.t :page_id %></dt>
 
     <% if page.allowed?(:read, @cur_user, site: @cur_site) %>

@@ -2,8 +2,7 @@ class SS::StreamingFile
   include SS::Model::File
   include SS::Relation::Thumb
 
-  attr_accessor :in_remote_url, :in_size_limit
-  attr_accessor :in_remote_basic_authentication
+  attr_accessor :in_remote_url, :in_size_limit, :in_remote_basic_authentication
 
   before_validation :set_filename, if: ->{ in_remote_url.present? }
 
@@ -12,7 +11,7 @@ class SS::StreamingFile
   def set_filename
     self.in_remote_url = ::Addressable::URI.escape(in_remote_url)
 
-    basename = ::File.basename(::Addressable::URI.unescape(in_remote_url))
+    basename = ::File.basename(::Addressable::URI.unencode(in_remote_url))
     self.name = basename if name.blank?
     self.filename = basename if filename.blank?
     self.content_type = ::SS::MimeType.find(filename, "application/octet-stream")

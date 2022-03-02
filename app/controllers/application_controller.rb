@@ -7,6 +7,8 @@ class ApplicationController < ActionController::Base
   # before_action -> { FileUtils.touch "#{Rails.root}/Gemfile" } if Rails.env.to_s == "development"
   before_action :set_cache_buster
 
+  before_action :clear_secure_option_of_session_on_ie11
+
   class CloseableChunkedBody < Rack::Chunked::Body
     def initialize(*args)
       super
@@ -72,21 +74,10 @@ class ApplicationController < ActionController::Base
   end
 
   def send_file_headers!(options)
-    super(options)
-
-    disposition = headers['Content-Disposition']
-    return if disposition.blank?
-    return unless /(.+); filename="(.+)"/ =~ disposition
-
-    name = ::Regexp.last_match[1]
-    filename = ::Regexp.last_match[2]
-
     if browser.ie?("<= 11") && ie11_attachment_mime_types.include?(options[:type])
-      name = "attachment"
+      options[:disposition] = "attachment"
     end
-    encoded = ERB::Util.url_encode(filename)
-
-    headers['Content-Disposition'] = "#{name}; filename*=UTF-8''#{encoded}"
+    super(options)
   end
 
   def ie11_attachment_mime_types
@@ -182,4 +173,14 @@ class ApplicationController < ActionController::Base
     url
   end
   helper_method :trusted_url!
+
+  def clear_secure_option_of_session_on_ie11
+    return unless browser.ie?("<= 11")
+
+    # IE11 利用時、CMS のページのプレビュー表示での印刷時に画像が表示されないという障害がある。
+    # その障害は Set-Cookie レスポンスの SameSite=Lax が原因。
+    # Set-Cookie レスポンスに SameSite=Lax がついていない場合、Firefox などの一部のブラウザの開発者ツールで警告が表示されるし、
+    # SameSite=Lax は付いておいた方がよいので、IE11 の場合だけ無効にする。
+    request.session_options[:same_site] = nil if request.session_options[:same_site].present?
+  end
 end

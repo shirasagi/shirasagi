@@ -56,8 +56,7 @@ module Gws::Board::Postable
       criteria = criteria.search_keyword(params)
       criteria = criteria.search_severity(params)
       criteria = criteria.search_category(params)
-      criteria = criteria.search_browsed_state(params)
-      criteria
+      criteria.search_browsed_state(params)
     end
 
     def search_keyword(params)
@@ -145,13 +144,11 @@ module Gws::Board::Postable
     super
   end
 
-  def file_previewable?(file, user:, member:)
+  def file_previewable?(file, site:, user:, member:)
     return false if user.blank?
     return false if !file_ids.include?(file.id)
 
-    if topic.present? && topic.id != id
-      return true if topic.allowed?(:read, user, site: site)
-    end
+    return true if topic.present? && topic.id != id && topic.allowed?(:read, user, site: site)
 
     false
   end

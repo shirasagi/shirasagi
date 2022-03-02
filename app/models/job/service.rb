@@ -57,6 +57,11 @@ class Job::Service
       service
     end
 
+    def stucked?
+      reserved_tasks = Job::Task.lte(at: Time.zone.now - 6.hours)
+      reserved_tasks.present?
+    end
+
     private
 
     def load_config(config)

@@ -44,9 +44,9 @@ class Rdf::VocabImportJob < Cms::ApplicationJob
 
   def format_of(file)
     case File.extname(file).downcase
-    when ".ttl" then
+    when ".ttl"
       :ttl
-    when ".xml", ".rdf" then
+    when ".xml", ".rdf"
       :rdfxml
     else
       :ttl
@@ -55,7 +55,7 @@ class Rdf::VocabImportJob < Cms::ApplicationJob
 
   def load_and_create_vocab
     ontology_statement = nil
-    RDF::Reader.open(@filename, { base_uri: @filename, format: @format }) do |reader|
+    RDF::Reader.open(@filename, base_uri: @filename, format: @format) do |reader|
       ontology_statement = reader.each_statement.first
     end
     ontology_subject = ontology_statement.try(:subject)
@@ -127,15 +127,15 @@ class Rdf::VocabImportJob < Cms::ApplicationJob
   def create_builder(hash)
     hash["rdf:type"].each do |rdf_type|
       case rdf_type.pname
-      when "owl:ObjectProperty", "owl:DatatypeProperty", "rdf:Property" then
+      when "owl:ObjectProperty", "owl:DatatypeProperty", "rdf:Property"
         # property
         @property_count += 1
         return [ Rdf::Prop, Rdf::Builders::PropertyBuilder.new ]
-      when "owl:Class", "rdfs:Class", "rdfs:Datatype" then
+      when "owl:Class", "rdfs:Class", "rdfs:Datatype"
         # class
         @class_count += 1
         return [ Rdf::Class, Rdf::Builders::ClassBuilder.new ]
-      when "http://purl.org/dc/dcam/VocabularyEncodingScheme" then
+      when "http://purl.org/dc/dcam/VocabularyEncodingScheme"
         return []
       end
     end

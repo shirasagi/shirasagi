@@ -21,6 +21,26 @@ class Cms::Column::Value::List < Cms::Column::Value::Base
     end
   end
 
+  def history_summary
+    h = []
+    h << "#{t("lists")}: #{lists.join(",")}" if lists.present?
+    h << "#{t("alignment")}: #{I18n.t("cms.options.alignment.#{alignment}")}"
+    h.join(",")
+  end
+
+  def import_csv_cell(value)
+    self.lists = value.to_s.split("\n").map { |v| v.strip }.compact
+  end
+
+  def export_csv_cell
+    lists.join("\n")
+  end
+
+  def search_values(values)
+    return false unless values.instance_of?(Array)
+    (values & lists).present?
+  end
+
   private
 
   def text_blank?
@@ -50,5 +70,19 @@ class Cms::Column::Value::List < Cms::Column::Value::Base
       map { |list| ApplicationController.helpers.content_tag(:li, list) }.
       join("\n")
     ApplicationController.helpers.content_tag(column.list_type.to_sym, li.html_safe)
+  end
+
+  class << self
+    def form_example_layout
+      h = []
+      h << %({% if value.lists %})
+      h << %(  <{{ value.list_type }}>)
+      h << %(    {% for item in value.lists %})
+      h << %(      <li>{{ item | sanitize }}</li>)
+      h << %(    {% endfor %})
+      h << %(  </{{ value.list_type }}>)
+      h << %({% endif %})
+      h.join("\n")
+    end
   end
 end

@@ -56,10 +56,10 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
         let(:trigger) { create(:jmaxml_trigger_quake_intensity_flash) }
 
         before do
-          region_210 = create(:jmaxml_region_210)
-          region_211 = create(:jmaxml_region_211)
-          region_212 = create(:jmaxml_region_212)
-          region_213 = create(:jmaxml_region_213)
+          region_210 = create(:jmaxml_region_c210)
+          region_211 = create(:jmaxml_region_c211)
+          region_212 = create(:jmaxml_region_c212)
+          region_213 = create(:jmaxml_region_c213)
           trigger.target_region_ids = [ region_210.id, region_211.id, region_212.id, region_213.id ]
           trigger.save!
         end
@@ -87,7 +87,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to include('岩手県内陸南部：震度６弱')
             expect(mail.body.raw_source).to include('岩手県沿岸北部：震度５強')
             expect(mail.body.raw_source).to include('岩手県内陸北部：震度５強')
-            expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
+            expect(mail.body.raw_source).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
           end
           expect(emails).to eq []
         end
@@ -98,10 +98,10 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
         let(:trigger) { create(:jmaxml_trigger_quake_info) }
 
         before do
-          region_210 = create(:jmaxml_region_210)
-          region_211 = create(:jmaxml_region_211)
-          region_212 = create(:jmaxml_region_212)
-          region_213 = create(:jmaxml_region_213)
+          region_210 = create(:jmaxml_region_c210)
+          region_211 = create(:jmaxml_region_c211)
+          region_212 = create(:jmaxml_region_c212)
+          region_213 = create(:jmaxml_region_c213)
           trigger.earthquake_intensity = '4'
           trigger.target_region_ids = [ region_210.id, region_211.id, region_212.id, region_213.id ]
           trigger.save!
@@ -130,7 +130,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to include('岩手県沿岸北部：震度４')
             expect(mail.body.raw_source).to include('岩手県沿岸南部：震度４')
             expect(mail.body.raw_source).to include('岩手県内陸北部：震度４')
-            expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
+            expect(mail.body.raw_source).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
           end
           expect(emails).to eq []
         end
@@ -141,11 +141,11 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
         let(:trigger) { create(:jmaxml_trigger_tsunami_alert) }
 
         before do
-          region_100 = create(:jmaxml_tsunami_region_100)
-          region_101 = create(:jmaxml_tsunami_region_101)
-          region_102 = create(:jmaxml_tsunami_region_102)
-          region_110 = create(:jmaxml_tsunami_region_110)
-          region_210 = create(:jmaxml_tsunami_region_210)
+          region_100 = create(:jmaxml_tsunami_region_c100)
+          region_101 = create(:jmaxml_tsunami_region_c101)
+          region_102 = create(:jmaxml_tsunami_region_c102)
+          region_110 = create(:jmaxml_tsunami_region_c110)
+          region_210 = create(:jmaxml_tsunami_region_c210)
           trigger.target_region_ids = [ region_100.id, region_101.id, region_102.id, region_110.id, region_210.id ]
           trigger.save!
         end
@@ -174,7 +174,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to include('北海道太平洋沿岸西部　　　第１波：2011年3月11日 15時40分')
             expect(mail.body.raw_source).to include('地震発生時刻：　　2011年3月11日 14時46分ごろ')
             expect(mail.body.raw_source).to include('震源地：　　　　　三陸沖 牡鹿半島の東南東１３０ｋｍ付近')
-            expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
+            expect(mail.body.raw_source).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
           end
           expect(emails).to eq []
         end
@@ -185,11 +185,11 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
         let(:trigger) { create(:jmaxml_trigger_tsunami_info) }
 
         before do
-          region_100 = create(:jmaxml_tsunami_region_100)
-          region_101 = create(:jmaxml_tsunami_region_101)
-          region_102 = create(:jmaxml_tsunami_region_102)
-          region_110 = create(:jmaxml_tsunami_region_110)
-          region_201 = create(:jmaxml_tsunami_region_201)
+          region_100 = create(:jmaxml_tsunami_region_c100)
+          region_101 = create(:jmaxml_tsunami_region_c101)
+          region_102 = create(:jmaxml_tsunami_region_c102)
+          region_110 = create(:jmaxml_tsunami_region_c110)
+          region_201 = create(:jmaxml_tsunami_region_c201)
           trigger.target_region_ids = [ region_100.id, region_101.id, region_102.id, region_110.id, region_201.id ]
           trigger.save!
         end
@@ -218,7 +218,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to include('北海道太平洋沿岸西部　　　第１波：2010年2月28日 14時00分　高さ：１ｍ')
             expect(mail.body.raw_source).to include('地震発生時刻：　　2010年2月27日 15時34分ごろ')
             expect(mail.body.raw_source).to include('震源地：　　　　　南米西部')
-            expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
+            expect(mail.body.raw_source).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
           end
           expect(emails).to eq []
         end
@@ -229,11 +229,11 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
         let(:trigger) { create(:jmaxml_trigger_weather_alert) }
 
         before do
-          region_2920100 = create(:jmaxml_forecast_region_2920100)
-          region_2920200 = create(:jmaxml_forecast_region_2920200)
-          region_2920300 = create(:jmaxml_forecast_region_2920300)
-          region_2920400 = create(:jmaxml_forecast_region_2920400)
-          trigger.target_region_ids = [ region_2920100.id, region_2920200.id, region_2920300.id, region_2920400.id ]
+          region_c2920100 = create(:jmaxml_forecast_region_c2920100)
+          region_c2920200 = create(:jmaxml_forecast_region_c2920200)
+          region_c2920300 = create(:jmaxml_forecast_region_c2920300)
+          region_c2920400 = create(:jmaxml_forecast_region_c2920400)
+          trigger.target_region_ids = [ region_c2920100.id, region_c2920200.id, region_c2920300.id, region_c2920400.id ]
           trigger.save!
         end
 
@@ -261,7 +261,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to include('＜大和高田市＞')
             expect(mail.body.raw_source).to include('＜大和郡山市＞')
             expect(mail.body.raw_source).to include('＜天理市＞')
-            expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
+            expect(mail.body.raw_source).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
           end
           expect(emails).to eq []
         end
@@ -277,9 +277,9 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
         end
 
         before do
-          region1 = create(:jmaxml_water_level_station_85050900020300042)
-          region2 = create(:jmaxml_water_level_station_85050900020300045)
-          region3 = create(:jmaxml_water_level_station_85050900020300053)
+          region1 = create(:jmaxml_water_level_station_c85050900020300042)
+          region2 = create(:jmaxml_water_level_station_c85050900020300045)
+          region3 = create(:jmaxml_water_level_station_c85050900020300053)
           trigger.target_region_ids = [ region1.id, region2.id, region3.id ]
           trigger.save!
         end
@@ -306,7 +306,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to include('＜岐阜県△△市＞')
             expect(mail.body.raw_source).to include('△△地区 △△地区 △△地区')
             expect(mail.body.raw_source).to include('所により１時間に５０ミリの雨が降っています。')
-            expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
+            expect(mail.body.raw_source).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
           end
           expect(emails).to eq []
         end
@@ -334,7 +334,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
         before do
           target_region_ids = []
           area_codes.each do |area_code|
-            region = create("jmaxml_forecast_region_#{area_code}".to_sym)
+            region = create("jmaxml_forecast_region_c#{area_code}".to_sym)
             target_region_ids << region.id
           end
           trigger.target_region_ids = target_region_ids
@@ -359,11 +359,11 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
             expect(mail.body.raw_source).to include('2013年8月31日 11時05分　福岡県・福岡管区気象台　共同発表')
-            expect(mail.body.raw_source).to include(headline_text)
-            expect(mail.body.raw_source).to include("＜警戒（発表）＞\n北九州市、福岡市")
-            expect(mail.body.raw_source).to include("＜警戒（継続）＞\n直方市、飯塚市、田川市、行橋市、筑紫野市")
-            expect(mail.body.raw_source).to include("＜解除＞\n大牟田市、久留米市、八女市、中間市、小郡市")
-            expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
+            expect(mail.body.raw_source).to include(headline_text.gsub("\n", "\r\n"))
+            expect(mail.body.raw_source).to include("＜警戒（発表）＞\r\n北九州市、福岡市")
+            expect(mail.body.raw_source).to include("＜警戒（継続）＞\r\n直方市、飯塚市、田川市、行橋市、筑紫野市")
+            expect(mail.body.raw_source).to include("＜解除＞\r\n大牟田市、久留米市、八女市、中間市、小郡市")
+            expect(mail.body.raw_source).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
           end
           expect(emails).to eq []
         end
@@ -374,8 +374,8 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
         let(:trigger) { create(:jmaxml_trigger_volcano_flash) }
 
         before do
-          region1 = create(:jmaxml_forecast_region_2042900)
-          region2 = create(:jmaxml_forecast_region_2043200)
+          region1 = create(:jmaxml_forecast_region_c2042900)
+          region2 = create(:jmaxml_forecast_region_c2043200)
           trigger.target_region_ids = [ region1.id, region2.id ]
           trigger.save!
         end
@@ -400,7 +400,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to include('2014年9月27日 12時00分　気象庁地震火山部発表')
             expect(mail.body.raw_source).to include('御嶽山で、平成２６年９月２７日１１時５３分頃、噴火が発生しました。')
             expect(mail.body.raw_source).to include("長野県王滝村、長野県木曽町")
-            expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
+            expect(mail.body.raw_source).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
           end
           expect(emails).to eq []
         end
@@ -411,11 +411,11 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
         let(:trigger) { create(:jmaxml_trigger_ash_fall_forecast) }
 
         before do
-          region_4620100 = create(:jmaxml_forecast_region_4620100)
-          region_4620300 = create(:jmaxml_forecast_region_4620300)
-          region_4621400 = create(:jmaxml_forecast_region_4621400)
-          region_4621700 = create(:jmaxml_forecast_region_4621700)
-          trigger.target_region_ids = [ region_4620100.id, region_4620300.id, region_4621400.id, region_4621700.id ]
+          region_c4620100 = create(:jmaxml_forecast_region_c4620100)
+          region_c4620300 = create(:jmaxml_forecast_region_c4620300)
+          region_c4621400 = create(:jmaxml_forecast_region_c4621400)
+          region_c4621700 = create(:jmaxml_forecast_region_c4621700)
+          trigger.target_region_ids = [ region_c4620100.id, region_c4620300.id, region_c4621400.id, region_c4621700.id ]
           trigger.save!
         end
 
@@ -437,12 +437,12 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
             expect(mail.body.raw_source).to include('2014年6月6日 05時00分　気象庁地震火山部発表')
-            expect(mail.body.raw_source).to include("＜降灰＞\n鹿児島県鹿児島市、鹿児島県鹿屋市、")
-            expect(mail.body.raw_source).to include("＜小さな噴石の落下＞\n鹿児島県鹿児島市")
+            expect(mail.body.raw_source).to include("＜降灰＞\r\n鹿児島県鹿児島市、鹿児島県鹿屋市、")
+            expect(mail.body.raw_source).to include("＜小さな噴石の落下＞\r\n鹿児島県鹿児島市")
             expect(mail.body.raw_source).to include('６日０６時から６日２４時までに噴火が発生した場合には、')
             expect(mail.body.raw_source).to include('６日０６時から０９時まで　南東（垂水・鹿屋方向）')
             expect(mail.body.raw_source).to include('噴煙が高さ３０００ｍまで上がった場合の')
-            expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
+            expect(mail.body.raw_source).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
           end
           expect(emails).to eq []
         end
@@ -453,11 +453,11 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
         let(:trigger) { create(:jmaxml_trigger_tornado_alert) }
 
         before do
-          region_1310100 = create(:jmaxml_forecast_region_1310100)
-          region_1310200 = create(:jmaxml_forecast_region_1310200)
-          region_1310300 = create(:jmaxml_forecast_region_1310300)
-          region_1310400 = create(:jmaxml_forecast_region_1310400)
-          trigger.target_region_ids = [ region_1310100.id, region_1310200.id, region_1310300.id, region_1310400.id ]
+          region_c1310100 = create(:jmaxml_forecast_region_c1310100)
+          region_c1310200 = create(:jmaxml_forecast_region_c1310200)
+          region_c1310300 = create(:jmaxml_forecast_region_c1310300)
+          region_c1310400 = create(:jmaxml_forecast_region_c1310400)
+          trigger.target_region_ids = [ region_c1310100.id, region_c1310200.id, region_c1310300.id, region_c1310400.id ]
           trigger.save!
         end
 
@@ -481,7 +481,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to include('2009年8月10日 07時38分　気象庁予報部発表')
             expect(mail.body.raw_source).to include("東京地方では、竜巻発生のおそれがあります。")
             expect(mail.body.raw_source).to include("千代田区、中央区、港区、新宿区")
-            expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
+            expect(mail.body.raw_source).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
           end
           expect(emails).to eq []
         end
@@ -504,10 +504,10 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
         let(:trigger) { create(:jmaxml_trigger_quake_intensity_flash) }
 
         before do
-          region_210 = create(:jmaxml_region_210)
-          region_211 = create(:jmaxml_region_211)
-          region_212 = create(:jmaxml_region_212)
-          region_213 = create(:jmaxml_region_213)
+          region_210 = create(:jmaxml_region_c210)
+          region_211 = create(:jmaxml_region_c211)
+          region_212 = create(:jmaxml_region_c212)
+          region_213 = create(:jmaxml_region_c213)
           trigger.target_region_ids = [ region_210.id, region_211.id, region_212.id, region_213.id ]
           trigger.save!
         end
@@ -531,7 +531,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             mail_body ||= mail.body.raw_source
             expect(mail.body.raw_source).to include('2011年3月11日 14時46分　気象庁発表')
             expect(mail.body.raw_source).to include('緊急地震速報（警報）を取り消します。')
-            expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
+            expect(mail.body.raw_source).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
           end
           expect(emails).to eq []
         end
@@ -543,10 +543,10 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
         let(:trigger) { create(:jmaxml_trigger_quake_info) }
 
         before do
-          region_210 = create(:jmaxml_region_210)
-          region_211 = create(:jmaxml_region_211)
-          region_212 = create(:jmaxml_region_212)
-          region_213 = create(:jmaxml_region_213)
+          region_210 = create(:jmaxml_region_c210)
+          region_211 = create(:jmaxml_region_c211)
+          region_212 = create(:jmaxml_region_c212)
+          region_213 = create(:jmaxml_region_c213)
           trigger.target_region_ids = [ region_210.id, region_211.id, region_212.id, region_213.id ]
           trigger.save!
         end
@@ -570,7 +570,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             mail_body ||= mail.body.raw_source
             expect(mail.body.raw_source).to include('2008年6月14日 09時06分　気象庁発表')
             expect(mail.body.raw_source).to include('震源・震度情報を取り消します。')
-            expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
+            expect(mail.body.raw_source).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
           end
           expect(emails).to eq []
         end
@@ -582,8 +582,8 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
         let(:trigger) { create(:jmaxml_trigger_volcano_flash) }
 
         before do
-          region1 = create(:jmaxml_forecast_region_2042900)
-          region2 = create(:jmaxml_forecast_region_2043200)
+          region1 = create(:jmaxml_forecast_region_c2042900)
+          region2 = create(:jmaxml_forecast_region_c2043200)
           trigger.target_region_ids = [ region1.id, region2.id ]
           trigger.save!
         end
@@ -607,7 +607,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             mail_body ||= mail.body.raw_source
             expect(mail.body.raw_source).to include('2014年9月27日 11時53分　気象庁地震火山部発表')
             expect(mail.body.raw_source).to include('噴火速報を取り消します。')
-            expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
+            expect(mail.body.raw_source).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
           end
           expect(emails).to eq []
         end

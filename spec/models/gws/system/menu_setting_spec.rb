@@ -52,58 +52,49 @@ describe Gws::Addon::System::MenuSetting, type: :model, dbscope: :example do
     end
     let(:new_label) { unique_id }
 
-    before do
-      @save_locale = I18n.locale
-    end
+    it do
+      I18n.with_locale(:ja) do
+        site.menu_portal_label_translations = labels
+        site.save!
 
-    after do
-      I18n.locale = @save_locale if @save_locale
-      @save_locale = nil
+        site.reload
+        # fallback to en
+        expect(site.menu_portal_label).to eq labels['en']
+        expect(site.menu_portal_label_translations).to include('en' => labels['en'])
+        expect(site.menu_portal_label_translations).not_to have_key('ja')
+
+        # overwrite at locale 'ja'
+        site.menu_portal_label = new_label
+        site.save!
+
+        site.reload
+        expect(site.menu_portal_label).to eq new_label
+        expect(site.menu_portal_label).not_to eq labels['en']
+        expect(site.menu_portal_label_translations).to include('en' => labels['en'])
+        expect(site.menu_portal_label_translations).to have_key('ja')
+      end
     end
 
     it do
-      I18n.locale = :ja
+      I18n.with_locale(:en) do
+        site.menu_portal_label_translations = labels
+        site.save!
 
-      site.menu_portal_label_translations = labels
-      site.save!
+        site.reload
+        expect(site.menu_portal_label).to eq labels['en']
+        expect(site.menu_portal_label_translations).to include('en' => labels['en'])
+        expect(site.menu_portal_label_translations).not_to have_key('ja')
 
-      site.reload
-      # fallback to en
-      expect(site.menu_portal_label).to eq labels['en']
-      expect(site.menu_portal_label_translations).to include('en' => labels['en'])
-      expect(site.menu_portal_label_translations).not_to have_key('ja')
+        # overwrite at locale 'en'
+        site.menu_portal_label = new_label
+        site.save!
 
-      # overwrite at locale 'ja'
-      site.menu_portal_label = new_label
-      site.save!
-
-      site.reload
-      expect(site.menu_portal_label).to eq new_label
-      expect(site.menu_portal_label).not_to eq labels['en']
-      expect(site.menu_portal_label_translations).to include('en' => labels['en'])
-      expect(site.menu_portal_label_translations).to have_key('ja')
-    end
-
-    it do
-      I18n.locale = :en
-
-      site.menu_portal_label_translations = labels
-      site.save!
-
-      site.reload
-      expect(site.menu_portal_label).to eq labels['en']
-      expect(site.menu_portal_label_translations).to include('en' => labels['en'])
-      expect(site.menu_portal_label_translations).not_to have_key('ja')
-
-      # overwrite at locale 'en'
-      site.menu_portal_label = new_label
-      site.save!
-
-      site.reload
-      expect(site.menu_portal_label).to eq new_label
-      expect(site.menu_portal_label).not_to eq labels['en']
-      expect(site.menu_portal_label_translations).to include('en' => new_label)
-      expect(site.menu_portal_label_translations).not_to have_key('ja')
+        site.reload
+        expect(site.menu_portal_label).to eq new_label
+        expect(site.menu_portal_label).not_to eq labels['en']
+        expect(site.menu_portal_label_translations).to include('en' => new_label)
+        expect(site.menu_portal_label_translations).not_to have_key('ja')
+      end
     end
   end
 
@@ -115,61 +106,57 @@ describe Gws::Addon::System::MenuSetting, type: :model, dbscope: :example do
 
     before do
       @save_enforce_available_locales = I18n.enforce_available_locales
-      @save_locale = I18n.locale
     end
 
     after do
-      I18n.locale = @save_locale if @save_locale
       I18n.enforce_available_locales = @save_enforce_available_locales if !@save_enforce_available_locales.nil?
-
       @save_enforce_available_locales = nil
-      @save_locale = nil
     end
 
     it do
       I18n.enforce_available_locales = false
-      I18n.locale = :ja
+      I18n.with_locale(:ja) do
+        site.menu_portal_label_translations = labels
+        site.save!
 
-      site.menu_portal_label_translations = labels
-      site.save!
+        site.reload
+        # fallback to en
+        expect(site.menu_portal_label).to be_nil
+        expect(site.menu_portal_label_translations).to include('zh-TW' => labels['zh-TW'])
+        expect(site.menu_portal_label_translations).not_to have_key('ja')
 
-      site.reload
-      # fallback to en
-      expect(site.menu_portal_label).to be_nil
-      expect(site.menu_portal_label_translations).to include('zh-TW' => labels['zh-TW'])
-      expect(site.menu_portal_label_translations).not_to have_key('ja')
+        # overwrite at locale 'ja'
+        site.menu_portal_label = new_label
+        site.save!
 
-      # overwrite at locale 'ja'
-      site.menu_portal_label = new_label
-      site.save!
-
-      site.reload
-      expect(site.menu_portal_label).to eq new_label
-      expect(site.menu_portal_label_translations).to include('zh-TW' => labels['zh-TW'])
-      expect(site.menu_portal_label_translations).to have_key('ja')
+        site.reload
+        expect(site.menu_portal_label).to eq new_label
+        expect(site.menu_portal_label_translations).to include('zh-TW' => labels['zh-TW'])
+        expect(site.menu_portal_label_translations).to have_key('ja')
+      end
     end
 
     it do
       I18n.enforce_available_locales = false
-      I18n.locale = 'zh-TW'.to_sym
+      I18n.with_locale(:'zh-TW') do
+        site.menu_portal_label_translations = labels
+        site.save!
 
-      site.menu_portal_label_translations = labels
-      site.save!
+        site.reload
+        expect(site.menu_portal_label).to eq labels['zh-TW']
+        expect(site.menu_portal_label_translations).to include('zh-TW' => labels['zh-TW'])
+        expect(site.menu_portal_label_translations).not_to have_key('ja')
 
-      site.reload
-      expect(site.menu_portal_label).to eq labels['zh-TW']
-      expect(site.menu_portal_label_translations).to include('zh-TW' => labels['zh-TW'])
-      expect(site.menu_portal_label_translations).not_to have_key('ja')
+        # overwrite at locale 'en'
+        site.menu_portal_label = new_label
+        site.save!
 
-      # overwrite at locale 'en'
-      site.menu_portal_label = new_label
-      site.save!
-
-      site.reload
-      expect(site.menu_portal_label).to eq new_label
-      expect(site.menu_portal_label).not_to eq labels['zh-TW']
-      expect(site.menu_portal_label_translations).to include('zh-TW' => new_label)
-      expect(site.menu_portal_label_translations).not_to have_key('ja')
+        site.reload
+        expect(site.menu_portal_label).to eq new_label
+        expect(site.menu_portal_label).not_to eq labels['zh-TW']
+        expect(site.menu_portal_label_translations).to include('zh-TW' => new_label)
+        expect(site.menu_portal_label_translations).not_to have_key('ja')
+      end
     end
   end
 end
