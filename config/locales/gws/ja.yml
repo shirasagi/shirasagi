@@ -51,6 +51,8 @@ ja:
         index: カスタムグループを選択する
       user_titles:
         index: 役職を選択する
+      user_occupations:
+        index: 職種を選択する
     options:
       severity:
         high: 重要なお知らせ
@@ -81,6 +83,7 @@ ja:
         updated: 更新日
         main_group: グループ
         user_title: 役職
+        user_occupation: 職種
         email: メールアドレス
         tel: 電話番号
 
@@ -114,6 +117,7 @@ ja:
     edit_gws_groups: グループの管理
     edit_gws_users: ユーザの管理
     edit_gws_user_titles: 役職の管理
+    edit_gws_user_occupations: 職種の管理
     edit_gws_roles: 権限/ロールの管理
     edit_gws_user_forms: ユーザ拡張情報の管理
     read_gws_histories: 操作履歴の閲覧
@@ -172,6 +176,7 @@ ja:
       gws/custom_group_member: カスタムグループメンバー
       gws/user: ユーザー
       gws/user_title: 役職
+      gws/user_occupation: 職種
       gws/role: 権限/ロール
       gws/link: リンク集
       gws/share: 共有ファイル
@@ -198,6 +203,10 @@ ja:
           not_found: "%{line_no}: ID %{id} の設備は存在しません。"
         gws/column/base:
           not_found: " %{id}は存在しません。"
+        gws/custom_group:
+          not_found: "%{line_no} 行目: Id %{id} のカスタムグループは存在しません。"
+          not_found_group: "%{line_no} 行目: 参加グループ「%{name} 」が見つかりません。"
+          not_found_user: "%{line_no} 行目: 参加ユーザー「%{uid} 」が見つかりません。"
     attributes:
       gws/model/category:
         model: モデル
@@ -236,6 +245,8 @@ ja:
       gws/custom_group:
         name: グループ名
         order: 表示順
+        member_group_ids: 参加グループ
+        member_ids: 参加ユーザー
       gws/link:
         name: タイトル
       gws/history:
@@ -463,6 +474,8 @@ ja:
         color: 背景色
       gws/addon/import/group:
         in_file: ファイル
+      gws/addon/import/custom_group:
+        in_file: ファイル
       gws/addon/import/facility/item:
         in_file: ファイル
       gws/addon/import/role:
@@ -612,3 +625,4 @@ ja:
       gws/history_archive_job: 操作履歴アーカイブ作成
       gws/compress_job: ファイル/圧縮ダウンロード
       gws/user_title_import_job: 役職インポート
+      gws/user_occupation_import_job: 職種インポート

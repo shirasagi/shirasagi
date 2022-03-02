@@ -1,7 +1,7 @@
 puts "# parts"
 
 def save_part(data)
-  return if SS.config.cms.enable_lgwan && data[:route].start_with?('member/')
+  return if SS::Lgwan.enabled? && data[:route].start_with?('member/')
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
 
@@ -12,7 +12,7 @@ def save_part(data)
 
   item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_initialize_by(cond)
   if html
-    if SS.config.cms.enable_lgwan
+    if SS::Lgwan.enabled?
       html.gsub!('<li class="sight"><a href="/kanko-info/">観光情報</a></li>', '')
       html.gsub!('<li><a href="/mypage/">安否確認</a></li>', '')
     end
@@ -37,6 +37,7 @@ save_part route: "cms/free", filename: "head.part.html", name: "ヘッダー", m
 save_part route: "cms/free", filename: "head-top.part.html", name: "ヘッダー：トップ"
 save_part route: "cms/free", filename: "keyvisual.part.html", name: "キービジュアル", mobile_view: "hide"
 save_part route: "cms/free", filename: "links-life.part.html", name: "関連リンク：くらし・手続き"
+save_part route: "cms/free", filename: "links-garbage.part.html", name: "関連リンク：ゴミ品目"
 save_part route: "cms/free", filename: "navi.part.html", name: "グローバルナビ"
 save_part route: "cms/free", filename: "online.part.html", name: "オンラインサービス"
 save_part route: "cms/free", filename: "connect.part.html", name: "関連サイト", mobile_view: "hide"
@@ -77,12 +78,14 @@ save_part route: "event/calendar", filename: "calendar/calendar.part.html", name
 save_part route: "event/search", filename: "calendar/search/search.part.html", name: "イベント検索"
 save_part route: "ads/banner", filename: "ad/ad.part.html", name: "広告バナー", mobile_view: "hide", with_category: "enabled"
 save_part route: "cms/sns_share", filename: "sns.part.html", name: "sns", mobile_view: "hide"
-save_part route: "key_visual/slide", filename: "key_visual/slide.part.html", name: "スライドショー", mobile_view: "hide"
+save_part route: "key_visual/swiper_slide", filename: "key_visual/slide.part.html", name: "スライドショー", mobile_view: "hide",
+  kv_autoplay: "started", kv_thumbnail: "show", kv_thumbnail_count: 5
 save_part route: "inquiry/feedback", filename: "feedback/feedback.part.html", name: "フィードバック", mobile_view: "hide",
   upper_html: '<section id="feedback"><h2>この情報は役に立ちましたか？</h2>',
   lower_html: '</section>'
 save_part route: "member/photo", filename: "kanko-info/photo/recent.part.html", name: "新着写真一覧", mobile_view: "hide", limit: 4
-save_part route: "member/photo_slide", filename: "kanko-info/photo/slide.part.html", name: "スライド", mobile_view: "hide"
+save_part route: "key_visual/swiper_slide", filename: "kanko-info/photo/slide.part.html", name: "スライド", mobile_view: "hide",
+  kv_autoplay: "started", kv_thumbnail: "show", kv_thumbnail_count: 3
 save_part route: "member/photo_search", filename: "kanko-info/photo/search/search.part.html", name: "スライド", mobile_view: "hide"
 save_part route: "member/blog_page", filename: "kanko-info/blog/recent.part.html", name: "新着ブログ", mobile_view: "hide"
 save_part route: "member/login", filename: "login/login.part.html", name: "ログイン", mobile_view: "hide", ajax_view: "enabled"

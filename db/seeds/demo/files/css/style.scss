@@ -531,50 +531,7 @@ img {
     text-decoration: none;
   }
 }
-// -----------------------------------------------------------------------------
-// slide
-.key_visual-slide, .member-photo-slide {
-  margin: $box-margin 0;
-  padding: 5px 0;
-  background: #333;
-  @include mb {
-    margin: $smart-margin 0;
-  }
-  .bx-controls {
-    padding: 0 10px;
-    background: #333;
-    text-align: right;
-    @include mb { display: none; }
-    div {
-      display: inline-block;
-    }
-    .bx-stop {
-      padding-left: 15px;
-      background: url(../img/stop.png) no-repeat left center;
-    }
-    .bx-start {
-      margin-right: 12px;
-      padding-left: 15px;
-      background: url(../img/play.png) no-repeat left center;
-    }
-    .bx-controls-auto-item a {
-      color: $t-white;
-      text-decoration: none;
-    }
-  }
-  .bx-thumbs {
-    padding: 0 10px;
-    @include mb { display: none; }
-    a {
-      display: inline-block;
-      margin-bottom: 5px;
-    }
-    img {
-      width: 120px;
-      height: auto;
-    }
-  }
-}
+
 // -----------------------------------------------------------------------------
 // guide about safety oline propose useful population relations ranking topics
 #guide, #about, #safety, #online, #propose, #useful, #population, #relations, #ranking, #topics,
@@ -895,8 +852,8 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
 }
 
 // -----------------------------------------------------------------------------
-// ad
-#ad {
+// ss-image-box
+#ss-image-box-container {
   position: relative;
   @include clear;
   width: $page-width;
@@ -916,19 +873,19 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
       @include r-arrow;
     }
   }
-  .ads-banners {
-    @include clear;
-    span {
-      display: block;
-      float: left;
-      margin-right: 12px;
-      @include mb {
-        margin: 0 0 10px 10px;
-      }
-      &:last-child {
-        margin: 0;
-        @include mb { margin: 0 0 10px 10px; }
-      }
+}
+.ss-image-box {
+  @include clear;
+  .ss-image-box-item {
+    display: block;
+    float: left;
+    margin-right: 12px;
+    @include mb {
+      margin: 0 0 10px 10px;
+    }
+    &:last-child {
+      margin: 0;
+      @include mb { margin: 0 0 10px 10px; }
     }
   }
 }
@@ -1985,6 +1942,35 @@ article.body {
   @include mb { width: auto; }
 }
 
+.event-format {
+  margin-bottom: 20px;
+  float: right;
+}
+
+.event-ics-file {
+  float: right;
+  margin-right: 15px;
+  margin-bottom: 20px;
+  padding: 6px 12px 6px 30px;
+  border: 1px solid $orange;
+  @include border-radius(5px);
+  text-decoration: none;
+  color: #000;
+  background-image: url(../img/u-arrow.png);
+  background-repeat: no-repeat;
+  background-position: 10px 52%;
+
+  &:hover {
+    color: #000;
+    background-color: #f48b22;
+    background-image: url(../img/u-arrow-white.png);
+  }
+
+  @include mb {
+    margin-right: 10px;
+  }
+}
+
 // -----------------------------------------------------------------------------
 // content-box
 .content-box {
@@ -2336,7 +2322,7 @@ article.body {
     height: 500px !important;
     overflow: hidden;
     margin-bottom: $item-margin;
-    .maker-info {
+    .marker-info {
       width: 300px;
     }
   }
@@ -3286,7 +3272,7 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
     h2, dt {
       clear: both;
       float: left;
-      width: 200px;
+      width: 100px;
       padding: 6px $item-margin;
       font-weight: bold;
       background: $hblue;
@@ -3300,7 +3286,7 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
     }
     input, select, dd {
       float: left;
-      min-width: 500px;
+      min-width: 400px;
       margin: 8px $item-margin;
       @include mb {
         @include box-sizing(border-box);
@@ -3670,8 +3656,6 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
     padding: 10px 10px 0;
   }
   .event-date ul {
-    position: static;
-    margin-bottom: $smart-margin;
     padding: 0 10px;
   }
   #event-list {
@@ -4367,6 +4351,100 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
   @include mb {
     padding: 0 15px 15px;
     box-sizing: border-box;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// swiper slide
+.ss-swiper-slide {
+  margin: 24px 0;
+  padding: 5px 0;
+  background: #333;
+
+  @include mb {
+    margin: 10px 0;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .swiper-container {
+    &.ss-swiper-slide-thumbnail {
+      padding: 0 10px;
+
+      @include mb {
+        display: none;
+      }
+
+      .swiper-wrapper {
+        margin-left: 0;
+        width: 620px;
+        transform: translate3d(0px, 0px, 0px) !important;
+        overflow: hidden;
+
+        .swiper-slide {
+          display: inline-block;
+          margin-bottom: 5px;
+          width: 120px !important;
+          height: 35px;
+
+          &:not(:first-child) {
+            margin-left: 5px;
+          }
+        }
+      }
+    }
+
+    .swiper-wrapper {}
+
+    .ss-swiper-slide-controller {
+      display: flex;
+      justify-content: flex-end;
+      position: static;
+
+      @include mb {
+        display: none;
+      }
+
+      button {
+        border: none;
+        color: #fff;
+        padding-left: 15px;
+
+        &.ss-swiper-slide-play {
+          margin-right: 12px;
+          padding-right: 0;
+          background: url(../img/play.png) no-repeat left center;
+        }
+
+        &.ss-swiper-slide-stop {
+          background: url(../img/stop.png) no-repeat left center;
+        }
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+body#body--index {
+  #wrap {
+    #main {
+      .swiper-wrapper {
+        width: 620px;
+      }
+    }
+  }
+}
+body#body--kanko-info-index {
+  #wrap {
+    #main {
+      .swiper-wrapper {
+        width: 370px;
+      }
+    }
   }
 }
 

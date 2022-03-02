@@ -122,7 +122,7 @@ module Gws::Monitor::TopicFilter
     @item.attributes = fix_params
     @item.state = 'public'
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    return if request.get?
+    return if request.get? || request.head?
 
     @item.attributes = get_params
     render_update @item.save, {notice: t('gws/monitor.notice.published')}

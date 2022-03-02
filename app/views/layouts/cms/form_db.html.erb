@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0" />
+<%
+  if @ss_rescue
+    window_name = "#{@ss_rescue[:status]} #{::Rack::Utils::HTTP_STATUS_CODES[@ss_rescue[:status]]}"
+  else
+    window_name = @form.name
+  end
+  if window_name.present?
+    title = "#{window_name} | #{SS.config.ss.application_name}"
+  else
+    title = SS.config.ss.application_name
+  end
+%>
+<title><%= title %></title>
+<%= safe_join controller.stylesheets.map { |path| stylesheet_link_tag(path, media: "all") }, "\n" %>
+<%= stylesheet_link_tag('cms/form_db', media: "all") %>
+<%= safe_join controller.javascripts.map { |path| javascript_include_tag(path) }, "\n" %>
+<%= javascript_include_tag('cms/form_db', defer: true) %>
+<!--[if lt IE 9]>
+<script src="/assets/js/html5.js"></script>
+<script src="/assets/js/selectivizr-min.js"></script>
+<![endif]-->
+<%= csrf_meta_tags %>
+</head>
+<body>
+
+<div class="form-db-page">
+  <% if notice %>
+    <%= jquery do %>SS.notice('<%= br notice %>', <%== flash[:notice_options].to_json %>);<% end %>
+  <% end %>
+
+  <%= render template: '_head' %>
+
+  <aside id="notice">
+    <div class="wrap"><%= notice %></div>
+  </aside>
+
+  <div class="form-db-main">
+    <%= yield %>
+  </div>
+</div>
+
+</body>
+</html>

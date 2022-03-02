@@ -15,6 +15,9 @@
   <% if Gws::UserTitle.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.ss/user_title'), gws_user_titles_path %></h3>
   <% end %>
+  <% if Gws::UserOccupation.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('mongoid.models.ss/user_occupation'), gws_user_occupations_path %></h3>
+  <% end %>
   <% if Gws::Role.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.gws/role'), gws_roles_path %></h3>
   <% end %>

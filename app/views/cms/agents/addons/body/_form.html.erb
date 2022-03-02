@@ -31,13 +31,7 @@
     Link_Checker.url               = "<%= SS.config.cms.link_check_url %>";
     Link_Checker.rootUrl           = "<%= @cur_site.full_root_url %>";
     Mobile_Size_Checker.enabled    = <%= @cur_site.mobile_enabled? %>;
-    Mobile_Size_Checker.mobile_size = <%= @cur_site.mobile_size %>;
-    Mobile_Size_Checker.check_size = "<%= number_to_human_size(@cur_site.mobile_size) %>";
-    Mobile_Size_Checker.hostFullUrl = "<%= @cur_site.full_url %>";
-    Mobile_Size_Checker.message["SizeCheckError"] = "<%= I18n.t(
-      'errors.messages.mobile_size_check_failed_to_size',
-      mobile_size: number_to_human_size(@cur_site.mobile_size)
-      ) %>"
+    Mobile_Size_Checker.url        = <%== cms_apis_mobile_size_check_path(format: "json").to_json %>;
 
     Form_Preview.page_route        = "<%= @item.try(:route) %>";
     Form_Preview.form_preview_path = "<%= cms_form_preview_path(path: "#{tryb{@cur_node.filename + "/"}}.html") %>";

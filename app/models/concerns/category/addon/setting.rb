@@ -6,6 +6,18 @@ module Category::Addon
     included do
       embeds_ids :st_categories, class_name: "Category::Node::Base"
       permit_params st_category_ids: []
+      define_method(:st_categories) do
+        if st_categories_sortable?
+          items = ::Category::Node::Base.in(id: st_category_ids).to_a
+          return st_category_ids.map { |id| items.find { |item| item.id == id } }
+        end
+
+        ::Category::Node::Base.in(id: st_category_ids)
+      end
+    end
+
+    def st_categories_sortable?
+      false
     end
 
     def st_parent_categories

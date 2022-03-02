@@ -23,8 +23,7 @@ class Gws::UserCsv::Importer
 
     @imported = 0
 
-    @table ||= load_csv_table
-    @table.each_with_index do |row, i|
+    SS::Csv.foreach_row(in_file, headers: true) do |row, i|
       @row_index = i + 2
       @row = row
 
@@ -57,21 +56,19 @@ class Gws::UserCsv::Importer
     end
 
     begin
-      @table = load_csv_table
+      SS::Csv.foreach_row(in_file, headers: true) do |row|
+        diff = Gws::UserCsv::Exporter.csv_basic_headers(webmail_support: @webmail_support) - row.headers
+        if diff.present?
+          errors.add :in_file, :invalid_file_type
+        end
+        break
+      end
     rescue => e
       errors.add(:in_file, :invalid_file_type)
       return
     end
 
-    diff = Gws::UserCsv::Exporter.csv_basic_headers(webmail_support: @webmail_support) - @table.headers
-    if diff.present?
-      errors.add :in_file, :invalid_file_type
-    end
     in_file.rewind
-  end
-
-  def load_csv_table
-    CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
   end
 
   def row_value(key)
@@ -95,7 +92,7 @@ class Gws::UserCsv::Importer
     end
 
     keys = %i[
-      set_password set_title set_type set_initial_password_warning set_organization_id set_group_ids
+      set_password set_title set_occupation set_type set_initial_password_warning set_organization_id set_group_ids
       set_main_group_ids set_switch_user_id set_gws_roles set_sys_roles
     ]
     keys += %i[set_webmail_roles] if webmail_support
@@ -148,6 +145,19 @@ class Gws::UserCsv::Importer
     end
 
     item.in_title_id = title ? title.id : ''
+  end
+
+  def set_occupation(item)
+    value = row_value('occupation_ids')
+
+    if value.present?
+      occupation = Gws::UserOccupation.site(cur_site).where(code: value).first
+
+      item.imported_gws_user_occupation_key = value
+      item.imported_gws_user_occupation = occupation
+    end
+
+    item.in_occupation_id = occupation ? occupation.id : ''
   end
 
   def set_type(item)

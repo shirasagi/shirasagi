@@ -1,6 +1,11 @@
+<%
+  page_params = {}
+  page_params[:id] = @selected_node.try(:id).to_i
+  page_params[:root_items] = @parent_nodes.map(&:id) if @parent_nodes.present?
+%>
 <%= jquery do %>
   SS_Dropdown.render();
-  (new SS_TreeNavi("form.search .tree-navi")).render(<%== cms_apis_node_tree_path(id: @selected_node.try(:id).to_i).to_json %>);
+  (new SS_TreeNavi("form.search .tree-navi")).render(<%== cms_apis_node_tree_path(page_params).to_json %>);
 
   var $form = $("form.search");
   $form.on("click", ".item-name", function() {

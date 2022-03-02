@@ -1,0 +1,27 @@
+<fieldset class="keyword">
+  <legend><%= t("facility.keyword") %></legend>
+
+  <div class="keyword">
+    <%= text_field_tag :keyword, @keyword, class: "keyword", placeholder: t("facility.keyword"), title: t("facility.keyword") %>
+  </div>
+</fieldset>
+
+<% @cur_node.map_search_options.each_with_index do |options, idx| %>
+  <fieldset class="category">
+    <%= hidden_field_tag "columns[#{idx}][]", '' %>
+    <legend><%= options['name'] %></legend>
+
+    <div class="category">
+      <% options['values'].each_with_index do |value, v_idx| %>
+        <div>
+          <% id = "column#{idx}_#{v_idx}" %>
+          <% checked = @columns ? @columns[idx].try(:index, value) : false %>
+          <label for=<%= id %>>
+            <%= check_box_tag "columns[#{idx}][]", value, checked, { id: id, class: "prop"} %>
+            <%= value %>
+          </label>
+        </div>
+      <% end %>
+    </div>
+  </fieldset>
+<% end %>

@@ -64,7 +64,7 @@ class Opendata::Idea::CommentsController < ApplicationController
   end
 
   def soft_delete
-    if request.get?
+    if request.get? || request.head?
       set_item
       render
       return
@@ -78,7 +78,7 @@ class Opendata::Idea::CommentsController < ApplicationController
   end
 
   def undo_delete
-    if request.get?
+    if request.get? || request.head?
       set_item
       render
       return

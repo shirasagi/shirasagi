@@ -1,6 +1,7314 @@
-function sprintf(){var t=sprintf.arguments,e=t.length;if(0==e)return"";for(var i,s,n,r,o="",a=t[0],d=a.length,l=1,h=i=0,c=0;c<d;c++){var u=a.charAt(c);switch(h){case 0:"%"==u?(u,h=1,r=""):o+=u;break;case 1:if("%"==u){o+=u,h=0;break}switch(e<=l&&(t[e++]=""),s=0,n=-1,u){case"-":i|=1,h=1;break;case"+":i|=2,h=1;break;case"0":i|=4,h=2;break;case" ":i|=8,h=1;break;case"#":i|=16,h=1;break;case"1":case"2":case"3":case"4":case"5":case"6":case"7":case"8":case"9":s=parseInt(u),h=2;break;case"-":i=1,h=2;break;case".":s="",n=0,h=3;break;case"d":o+=toInteger(t[l],i,s,n),l++,h=0;break;case"f":o+=toFloatingPoint(t[l],i,s,6),l++,h=0;break;case"e":o+=toExponential(t[l],i,s,6,"e"),l++,h=0;break;case"E":o+=toExponential(t[l],i,s,6,"E"),l++,h=0;break;case"s":o+=t[l],l++,h=0;break;default:o+=r+u,h=0}break;case 2:switch(u){case".":n=0,h=3;break;case"0":case"1":case"2":case"3":case"4":case"5":case"6":case"7":case"8":case"9":s=10*s+parseInt(u),h=2;break;case"d":o+=toInteger(t[l],i,s,n),l++,h=0;break;case"f":o+=toFloatingPoint(t[l],i,s,6),l++,h=0;break;case"e":o+=toExponential(t[l],i,s,6,"e"),l++,h=0;break;case"E":o+=toExponential(t[l],i,s,6,"E"),l++,h=0;break;case"s":o+=toFormatString(t[l],s,n),l++,h=0;break;default:o+=r+u,h=0}break;case 3:switch(u){case"0":case"1":case"2":case"3":case"4":case"5":case"6":case"7":case"8":case"9":n=10*n+parseInt(u);break;case"d":o+=toInteger(t[l],i,s,n),l++,h=0;break;case"f":o+=toFloatingPoint(t[l],i,s,n),l++,h=0;break;case"e":o+=toExponential(t[l],i,s,n,"e"),l++,h=0;break;case"E":o+=toExponential(t[l],i,s,n,"E"),l++,h=0;break;case"s":o+=toFormatString(t[l],s,n),l++,h=0;break;default:o+=r+u,h=0}break;default:return"error"}h&&(r+=u)}return o}function toInteger(t,e,i,s){"number"!=typeof t&&("string"==typeof t?(t=parseFloat(t),isNaN(t)&&(t=0)):t=0);var n=t.toString();if(-1<t&&t<1)n="0";else{t<0&&(n=n.substring(1));var r=n.indexOf("e");if(-1!=r){var o=parseInt(n.substring(r+2));for(-1==(a=n.indexOf("."))?(n=n.substring(0,r)+"000000000000000000000",o-=21):o-=(n=n.substring(0,a)+n.substring(a+1,r)+"00000").length-a;o;o--)n+="0"}else{var a;-1!=(a=n.indexOf("."))&&(n=n.substring(0,a))}}var d=n.length;if(d<s){for(var l="0",h=s-d;h;h--)n=l+n;d=s}return ProcFlag(n,e,i-d,0<=t)}function toFloatingPoint(t,e,i,s){"number"!=typeof t&&("string"==typeof t?(t=parseFloat(t),isNaN(t)&&(t=0)):t=0);var n=0<=t;return n||(t=-t),str=toFloatingPoint2(t,e,s),ProcFlag(str,e,i-str.length,n)}function toFloatingPoint2(t,e,i){var s=t.toString(),n=s.indexOf("e");if(-1!=n){var r=parseInt(s.substring(n+1));if(0<r){for(-1==(d=s.indexOf("."))?(s=s.substring(0,n)+"000000000000000000000",r-=21):r-=(s=s.charAt(0)+s.substring(2,n)+"00000").length-1;r;r--)s+="0"}else{var o=r+i;if(o<-1)s="0";else if(0<=o){for(-1!=(d=(s=s.substring(0,n)).indexOf("."))&&(s=s.charAt(0)+s.substring(2,n)),s="000000"+s,r+=7;r;r++)s="0"+s;s="0."+s}else{if(5<(h=parseFloat(s.substring(0,n)))){s="0.00000";for(var a=r+7;a;a++)s+="0";s+="1"}else s="0"}}}var d,l=s.length;if(-1!=(d=s.indexOf("."))){var h,c=l-d-1;if(i<c)if(5<(h=parseFloat(s.charAt(d+i+1)+"."+s.substring(d+i+2))))if(t<1){for(a=2;"0"==s.charAt(a);)a++;s=(h=(parseInt(s.substring(a,i+2))+1).toString()).length>i+2-a?2==a?"1."+h.substring(1):s.substring(0,a-1)+h:s.substring(0,a)+h}else s=(h=(parseInt(s.substring(0,d)+s.substring(d+1,d+i+1))+1).toString()).length>d+i?h.substring(0,d+1)+"."+h.substring(d+1):h.substring(0,d)+"."+h.substring(d);else s=s.substring(0,i?d+i+1:d);else if(c<i)for(a=i-c;a;a--)s+="0"}else if(i){s+=".0";for(a=i-1;a;a--)s+="0"}return s}function toExponential(t,e,i,s,n){"number"!=typeof t&&("string"==typeof t?(t=parseFloat(t),isNaN(t)&&(t=0)):t=0);var r=0<=t;r||(t=-t);var o,a=t.toString(),d=a.indexOf("."),l=a.indexOf("e"),h=((-1!=l)<<1)+(-1!=d);if(0==h)(o=a.length-1)&&(a=a.charAt(0)+"."+a.substring(d=1));else if(1==h)if(10<t)o=d-1,a=a.substring(0,1)+"."+a.substring(1,d)+a.substring(d+1),d=1;else if(1<t)o=0;else{for(var c=2;;c++)if("0"!=a.charAt(c)){o=1-c,a=a.charAt(c)+"."+a.substring(c+1);break}d=1}else o=parseInt(a.substring(l+1)),a=a.substring(0,l);return a=toFloatingPoint2(parseFloat(a),e,s),a=ProcFlag(a+=0<=o?n+(o<10?"+0":"+")+o:n+(-10<o?"-0"+-o:o),e,i-a.length,r)}function toFormatString(t,e,i){"string"!=typeof t&&(t=t.toString());var s=t.length;if(0<=i&&i<s&&(t=t.substring(0,i),s=i),s<e)for(var n=" ",r=e-s;r;r--)t=n+t;return t}function ProcFlag(t,e,i,s){var n=1&e,r=2&e,o=8&e;if(o&&i--,i-=0<!s+r,0<(4&e)&&!n){if(0<i)for(var a="0",d=i;d;d--)t=a+t;s?r&&(t="+"+t):t="-"+t}else{s?r&&(t="+"+t):t="-"+t;a=" ";if(0<i){a=" ";if(n)for(d=i;d;d--)t+=a;else for(d=i;d;d--)t=a+t}}return o&&(t=" "+t),t}function Gws_Category_Navi(t){this.el=$(t)}function Gws_Tab(){}function Gws_Bookmark(){this.bookmarkId=null,this.defaultName=null,this.url=null,this.model=null,this.el=$(".gws-bookmark"),this.bookmarkIcon="&#xE838;",this.unbookmarkIcon="&#xE83A;",this.loading=!1}function Gws_ReadableSetting(t){this.el=$(t)}function Gws_Contrast(t){this.opts=t,this.$el=$("#user-contrast-menu"),this.template="body * { color: :color !important; border-color: :color !important; background: :background !important; }",this.render()}function Gws_Schedule_Integration(){}function Gws_Schedule_Csv(t){this.$el=$(t),this.$importMode=this.$el.find("#import_mode"),this.$importLog=this.$el.find(".import-log")}function Gws_Memo_Folder(){}function Gws_Memo_Filter(){}function Gws_Portal(t,e){var i={autogenerate_stylesheet:!0,resize:{enabled:!0,max_size:[4,10]},widget_base_dimensions:["auto",120],widget_margins:[10,10],min_cols:1,max_cols:4};e&&e.readonly&&(this.readonly=!0,i.resize={enabled:!1},i.draggable={enabled:!1,handle:"disable"}),e&&e.max_rows&&(i.max_rows=e.max_rows),this.el=$(t),this.gs=this.el.find("ul.portlets").gridster(i).data("gridster")}function Gws_Share_FolderToolbar(t,e){this.$el=$(t),this.options=e,this.render()}!function(t,e){"object"==typeof exports&&"undefined"!=typeof module?module.exports=e():"function"==typeof define&&define.amd?define(e):t.moment=e()}(this,function(){"use strict";function l(){return zs.apply(null,arguments)}function t(t){zs=t}function o(t){return t instanceof Array||"[object Array]"===Object.prototype.toString.call(t)}function a(t){return null!=t&&"[object Object]"===Object.prototype.toString.call(t)}function d(t){if(Object.getOwnPropertyNames)return 0===Object.getOwnPropertyNames(t).length;var e;for(e in t)if(t.hasOwnProperty(e))return!1;return!0}function r(t){return void 0===t}function h(t){return"number"==typeof t||"[object Number]"===Object.prototype.toString.call(t)}function n(t){return t instanceof Date||"[object Date]"===Object.prototype.toString.call(t)}function i(t,e){var i,s=[];for(i=0;i<t.length;++i)s.push(e(t[i],i));return s}function c(t,e){return Object.prototype.hasOwnProperty.call(t,e)}function u(t,e){for(var i in e)c(e,i)&&(t[i]=e[i]);return c(e,"toString")&&(t.toString=e.toString),c(e,"valueOf")&&(t.valueOf=e.valueOf),t}function _(t,e,i,s){return ke(t,e,i,s,!0).utc()}function e(){return{empty:!1,unusedTokens:[],unusedInput:[],overflow:-2,charsLeftOver:0,nullInput:!1,invalidMonth:null,invalidFormat:!1,userInvalidated:!1,iso:!1,parsedDateParts:[],meridiem:null,rfc2822:!1,weekdayMismatch:!1}}function p(t){return null==t._pf&&(t._pf=e()),t._pf}function f(t){if(null==t._isValid){var e=p(t),i=Ms.call(e.parsedDateParts,function(t){return null!=t}),s=!isNaN(t._d.getTime())&&e.overflow<0&&!e.empty&&!e.invalidMonth&&!e.invalidWeekday&&!e.weekdayMismatch&&!e.nullInput&&!e.invalidFormat&&!e.userInvalidated&&(!e.meridiem||e.meridiem&&i);if(t._strict&&(s=s&&0===e.charsLeftOver&&0===e.unusedTokens.length&&e.bigHour===undefined),null!=Object.isFrozen&&Object.isFrozen(t))return s;t._isValid=s}return t._isValid}function s(t){var e=_(NaN);return null!=t?u(p(e),t):p(e).userInvalidated=!0,e}function g(t,e){var i,s,n;if(r(e._isAMomentObject)||(t._isAMomentObject=e._isAMomentObject),r(e._i)||(t._i=e._i),r(e._f)||(t._f=e._f),r(e._l)||(t._l=e._l),r(e._strict)||(t._strict=e._strict),r(e._tzm)||(t._tzm=e._tzm),r(e._isUTC)||(t._isUTC=e._isUTC),r(e._offset)||(t._offset=e._offset),r(e._pf)||(t._pf=p(e)),r(e._locale)||(t._locale=e._locale),0<Ds.length)for(i=0;i<Ds.length;i++)r(n=e[s=Ds[i]])||(t[s]=n);return t}function m(t){g(this,t),this._d=new Date(null!=t._d?t._d.getTime():NaN),this.isValid()||(this._d=new Date(NaN)),!1===Ts&&(Ts=!0,l.updateOffset(this),Ts=!1)}function w(t){return t instanceof m||null!=t&&null!=t._isAMomentObject}function v(t){return t<0?Math.ceil(t)||0:Math.floor(t)}function y(t){var e=+t,i=0;return 0!==e&&isFinite(e)&&(i=v(e)),i}function x(t,e,i){var s,n=Math.min(t.length,e.length),r=Math.abs(t.length-e.length),o=0;for(s=0;s<n;s++)(i&&t[s]!==e[s]||!i&&y(t[s])!==y(e[s]))&&o++;return o+r}function b(t){!1===l.suppressDeprecationWarnings&&"undefined"!=typeof console&&console.warn&&console.warn("Deprecation warning: "+t)}function $(r,o){var a=!0;return u(function(t){if(null!=l.deprecationHandler&&l.deprecationHandler(null,r),a){for(var e,i=[],s=0;s<arguments.length;s++){if(e="","object"==typeof arguments[s]){for(var n in e+="\n["+s+"] ",t)e+=n+": "+arguments[0][n]+", ";e=e.slice(0,-2)}else e=arguments[s];i.push(e)}b(r+"\nArguments: "+Array.prototype.slice.call(i).join("")+"\n"+(new Error).stack),a=!1}return o.apply(this,arguments)},o)}function k(t,e){null!=l.deprecationHandler&&l.deprecationHandler(t,e),Ys[t]||(b(e),Ys[t]=!0)}function S(t){return t instanceof Function||"[object Function]"===Object.prototype.toString.call(t)}function z(t){var e,i;for(i in t)S(e=t[i])?this[i]=e:this["_"+i]=e;this._config=t,this._dayOfMonthOrdinalParseLenient=new RegExp((this._dayOfMonthOrdinalParse.source||this._ordinalParse.source)+"|"+/\d{1,2}/.source)}function M(t,e){var i,s=u({},t);for(i in e)c(e,i)&&(a(t[i])&&a(e[i])?(s[i]={},u(s[i],t[i]),u(s[i],e[i])):null!=e[i]?s[i]=e[i]:delete s[i]);for(i in t)c(t,i)&&!c(e,i)&&a(t[i])&&(s[i]=u({},s[i]));return s}function C(t){null!=t&&this.set(t)}function D(t,e,i){var s=this._calendar[t]||this._calendar.sameElse;return S(s)?s.call(e,i):s}function T(t){var e=this._longDateFormat[t],i=this._longDateFormat[t.toUpperCase()];return e||!i?e:(this._longDateFormat[t]=i.replace(/MMMM|MM|DD|dddd/g,function(t){return t.slice(1)}),this._longDateFormat[t])}function Y(){return this._invalidDate}function I(t){return this._ordinal.replace("%d",t)}function O(t,e,i,s){var n=this._relativeTime[i];return S(n)?n(t,e,i,s):n.replace(/%d/i,t)}function P(t,e){var i=this._relativeTime[0<t?"future":"past"];return S(i)?i(e):i.replace(/%s/i,e)}function E(t,e){var i=t.toLowerCase();js[i]=js[i+"s"]=js[e]=t}function F(t){return"string"==typeof t?js[t]||js[t.toLowerCase()]:undefined}function G(t){var e,i,s={};for(i in t)c(t,i)&&(e=F(i))&&(s[e]=t[i]);return s}function j(t,e){As[t]=e}function A(t){var e=[];for(var i in t)e.push({unit:i,priority:As[i]});return e.sort(function(t,e){return t.priority-e.priority}),e}function W(t,e,i){var s=""+Math.abs(t),n=e-s.length;return(0<=t?i?"+":"":"-")+Math.pow(10,Math.max(0,n)).toString().substr(1)+s}function N(t,e,i,s){var n=s;"string"==typeof s&&(n=function(){return this[s]()}),t&&(Hs[t]=n),e&&(Hs[e[0]]=function(){return W(n.apply(this,arguments),e[1],e[2])}),i&&(Hs[i]=function(){return this.localeData().ordinal(n.apply(this,arguments),t)})}function L(t){return t.match(/\[[\s\S]/)?t.replace(/^\[|\]$/g,""):t.replace(/\\/g,"")}function H(s){var t,n,r=s.match(Ws);for(t=0,n=r.length;t<n;t++)Hs[r[t]]?r[t]=Hs[r[t]]:r[t]=L(r[t]);return function(t){var e,i="";for(e=0;e<n;e++)i+=S(r[e])?r[e].call(t,s):r[e];return i}}function q(t,e){return t.isValid()?(e=R(e,t.localeData()),Ls[e]=Ls[e]||H(e),Ls[e](t)):t.localeData().invalidDate()}function R(t,e){function i(t){return e.longDateFormat(t)||t}var s=5;for(Ns.lastIndex=0;0<=s&&Ns.test(t);)t=t.replace(Ns,i),Ns.lastIndex=0,s-=1;return t}function U(t,e,i){dn[t]=S(e)?e:function(t){return t&&i?i:e}}function V(t,e){return c(dn,t)?dn[t](e._strict,e._locale):new RegExp(Z(t))}function Z(t){return B(t.replace("\\","").replace(/\\(\[)|\\(\])|\[([^\]\[]*)\]|\\(.)/g,function(t,e,i,s,n){return e||i||s||n}))}function B(t){return t.replace(/[-\/\\^$*+?.()|[\]{}]/g,"\\$&")}function Q(t,i){var e,s=i;for("string"==typeof t&&(t=[t]),h(i)&&(s=function(t,e){e[i]=y(t)}),e=0;e<t.length;e++)ln[t[e]]=s}function X(t,n){Q(t,function(t,e,i,s){i._w=i._w||{},n(t,i._w,i,s)})}function J(t,e,i){null!=e&&c(ln,t)&&ln[t](e,i._a,i,t)}function K(t){return tt(t)?366:365}function tt(t){return t%4==0&&t%100!=0||t%400==0}function et(){return tt(this.year())}function it(e,i){return function(t){return null!=t?(nt(this,e,t),l.updateOffset(this,i),this):st(this,e)}}function st(t,e){return t.isValid()?t._d["get"+(t._isUTC?"UTC":"")+e]():NaN}function nt(t,e,i){t.isValid()&&!isNaN(i)&&("FullYear"===e&&tt(t.year())&&1===t.month()&&29===t.date()?t._d["set"+(t._isUTC?"UTC":"")+e](i,t.month(),dt(i,t.month())):t._d["set"+(t._isUTC?"UTC":"")+e](i))}function rt(t){return S(this[t=F(t)])?this[t]():this}function ot(t,e){if("object"==typeof t)for(var i=A(t=G(t)),s=0;s<i.length;s++)this[i[s].unit](t[i[s].unit]);else if(S(this[t=F(t)]))return this[t](e);return this}function at(t,e){return(t%e+e)%e}function dt(t,e){if(isNaN(t)||isNaN(e))return NaN;var i=at(e,12);return t+=(e-i)/12,1===i?tt(t)?29:28:31-i%7%2}function lt(t,e){return t?o(this._months)?this._months[t.month()]:this._months[(this._months.isFormat||xn).test(e)?"format":"standalone"][t.month()]:o(this._months)?this._months:this._months.standalone}function ht(t,e){return t?o(this._monthsShort)?this._monthsShort[t.month()]:this._monthsShort[xn.test(e)?"format":"standalone"][t.month()]:o(this._monthsShort)?this._monthsShort:this._monthsShort.standalone}function ct(t,e,i){var s,n,r,o=t.toLocaleLowerCase();if(!this._monthsParse)for(this._monthsParse=[],this._longMonthsParse=[],this._shortMonthsParse=[],s=0;s<12;++s)r=_([2e3,s]),this._shortMonthsParse[s]=this.monthsShort(r,"").toLocaleLowerCase(),this._longMonthsParse[s]=this.months(r,"").toLocaleLowerCase();return i?"MMM"===e?-1!==(n=vn.call(this._shortMonthsParse,o))?n:null:-1!==(n=vn.call(this._longMonthsParse,o))?n:null:"MMM"===e?-1!==(n=vn.call(this._shortMonthsParse,o))?n:-1!==(n=vn.call(this._longMonthsParse,o))?n:null:-1!==(n=vn.call(this._longMonthsParse,o))?n:-1!==(n=vn.call(this._shortMonthsParse,o))?n:null}function ut(t,e,i){var s,n,r;if(this._monthsParseExact)return ct.call(this,t,e,i);for(this._monthsParse||(this._monthsParse=[],this._longMonthsParse=[],this._shortMonthsParse=[]),s=0;s<12;s++){if(n=_([2e3,s]),i&&!this._longMonthsParse[s]&&(this._longMonthsParse[s]=new RegExp("^"+this.months(n,"").replace(".","")+"$","i"),this._shortMonthsParse[s]=new RegExp("^"+this.monthsShort(n,"").replace(".","")+"$","i")),i||this._monthsParse[s]||(r="^"+this.months(n,"")+"|^"+this.monthsShort(n,""),this._monthsParse[s]=new RegExp(r.replace(".",""),"i")),i&&"MMMM"===e&&this._longMonthsParse[s].test(t))return s;if(i&&"MMM"===e&&this._shortMonthsParse[s].test(t))return s;if(!i&&this._monthsParse[s].test(t))return s}}function _t(t,e){var i;if(!t.isValid())return t;if("string"==typeof e)if(/^\d+$/.test(e))e=y(e);else if(!h(e=t.localeData().monthsParse(e)))return t;return i=Math.min(t.date(),dt(t.year(),e)),t._d["set"+(t._isUTC?"UTC":"")+"Month"](e,i),t}function pt(t){return null!=t?(_t(this,t),l.updateOffset(this,!0),this):st(this,"Month")}function ft(){return dt(this.year(),this.month())}function gt(t){return this._monthsParseExact?(c(this,"_monthsRegex")||wt.call(this),t?this._monthsShortStrictRegex:this._monthsShortRegex):(c(this,"_monthsShortRegex")||(this._monthsShortRegex=kn),this._monthsShortStrictRegex&&t?this._monthsShortStrictRegex:this._monthsShortRegex)}function mt(t){return this._monthsParseExact?(c(this,"_monthsRegex")||wt.call(this),t?this._monthsStrictRegex:this._monthsRegex):(c(this,"_monthsRegex")||(this._monthsRegex=Sn),this._monthsStrictRegex&&t?this._monthsStrictRegex:this._monthsRegex)}function wt(){function t(t,e){return e.length-t.length}var e,i,s=[],n=[],r=[];for(e=0;e<12;e++)i=_([2e3,e]),s.push(this.monthsShort(i,"")),n.push(this.months(i,"")),r.push(this.months(i,"")),r.push(this.monthsShort(i,""));for(s.sort(t),n.sort(t),r.sort(t),e=0;e<12;e++)s[e]=B(s[e]),n[e]=B(n[e]);for(e=0;e<24;e++)r[e]=B(r[e]);this._monthsRegex=new RegExp("^("+r.join("|")+")","i"),this._monthsShortRegex=this._monthsRegex,this._monthsStrictRegex=new RegExp("^("+n.join("|")+")","i"),this._monthsShortStrictRegex=new RegExp("^("+s.join("|")+")","i")}function vt(t,e,i,s,n,r,o){var a=new Date(t,e,i,s,n,r,o);return t<100&&0<=t&&isFinite(a.getFullYear())&&a.setFullYear(t),a}function yt(t){var e=new Date(Date.UTC.apply(null,arguments));return t<100&&0<=t&&isFinite(e.getUTCFullYear())&&e.setUTCFullYear(t),e}function xt(t,e,i){var s=7+e-i;return-((7+yt(t,0,s).getUTCDay()-e)%7)+s-1}function bt(t,e,i,s,n){var r,o,a=1+7*(e-1)+(7+i-s)%7+xt(t,s,n);return a<=0?o=K(r=t-1)+a:a>K(t)?(r=t+1,o=a-K(t)):(r=t,o=a),{year:r,dayOfYear:o}}function $t(t,e,i){var s,n,r=xt(t.year(),e,i),o=Math.floor((t.dayOfYear()-r-1)/7)+1;return o<1?s=o+kt(n=t.year()-1,e,i):o>kt(t.year(),e,i)?(s=o-kt(t.year(),e,i),n=t.year()+1):(n=t.year(),s=o),{week:s,year:n}}function kt(t,e,i){var s=xt(t,e,i),n=xt(t+1,e,i);return(K(t)-s+n)/7}function St(t){return $t(t,this._week.dow,this._week.doy).week}function zt(){return this._week.dow}function Mt(){return this._week.doy}function Ct(t){var e=this.localeData().week(this);return null==t?e:this.add(7*(t-e),"d")}function Dt(t){var e=$t(this,1,4).week;return null==t?e:this.add(7*(t-e),"d")}function Tt(t,e){return"string"!=typeof t?t:isNaN(t)?"number"==typeof(t=e.weekdaysParse(t))?t:null:parseInt(t,10)}function Yt(t,e){return"string"==typeof t?e.weekdaysParse(t)%7||7:isNaN(t)?null:t}function It(t,e){return t?o(this._weekdays)?this._weekdays[t.day()]:this._weekdays[this._weekdays.isFormat.test(e)?"format":"standalone"][t.day()]:o(this._weekdays)?this._weekdays:this._weekdays.standalone}function Ot(t){return t?this._weekdaysShort[t.day()]:this._weekdaysShort}function Pt(t){return t?this._weekdaysMin[t.day()]:this._weekdaysMin}function Et(t,e,i){var s,n,r,o=t.toLocaleLowerCase();if(!this._weekdaysParse)for(this._weekdaysParse=[],this._shortWeekdaysParse=[],this._minWeekdaysParse=[],s=0;s<7;++s)r=_([2e3,1]).day(s),this._minWeekdaysParse[s]=this.weekdaysMin(r,"").toLocaleLowerCase(),this._shortWeekdaysParse[s]=this.weekdaysShort(r,"").toLocaleLowerCase(),this._weekdaysParse[s]=this.weekdays(r,"").toLocaleLowerCase();return i?"dddd"===e?-1!==(n=vn.call(this._weekdaysParse,o))?n:null:"ddd"===e?-1!==(n=vn.call(this._shortWeekdaysParse,o))?n:null:-1!==(n=vn.call(this._minWeekdaysParse,o))?n:null:"dddd"===e?-1!==(n=vn.call(this._weekdaysParse,o))?n:-1!==(n=vn.call(this._shortWeekdaysParse,o))?n:-1!==(n=vn.call(this._minWeekdaysParse,o))?n:null:"ddd"===e?-1!==(n=vn.call(this._shortWeekdaysParse,o))?n:-1!==(n=vn.call(this._weekdaysParse,o))?n:-1!==(n=vn.call(this._minWeekdaysParse,o))?n:null:-1!==(n=vn.call(this._minWeekdaysParse,o))?n:-1!==(n=vn.call(this._weekdaysParse,o))?n:-1!==(n=vn.call(this._shortWeekdaysParse,o))?n:null}function Ft(t,e,i){var s,n,r;if(this._weekdaysParseExact)return Et.call(this,t,e,i);for(this._weekdaysParse||(this._weekdaysParse=[],this._minWeekdaysParse=[],this._shortWeekdaysParse=[],this._fullWeekdaysParse=[]),s=0;s<7;s++){if(n=_([2e3,1]).day(s),i&&!this._fullWeekdaysParse[s]&&(this._fullWeekdaysParse[s]=new RegExp("^"+this.weekdays(n,"").replace(".",".?")+"$","i"),this._shortWeekdaysParse[s]=new RegExp("^"+this.weekdaysShort(n,"").replace(".",".?")+"$","i"),this._minWeekdaysParse[s]=new RegExp("^"+this.weekdaysMin(n,"").replace(".",".?")+"$","i")),this._weekdaysParse[s]||(r="^"+this.weekdays(n,"")+"|^"+this.weekdaysShort(n,"")+"|^"+this.weekdaysMin(n,""),this._weekdaysParse[s]=new RegExp(r.replace(".",""),"i")),i&&"dddd"===e&&this._fullWeekdaysParse[s].test(t))return s;if(i&&"ddd"===e&&this._shortWeekdaysParse[s].test(t))return s;if(i&&"dd"===e&&this._minWeekdaysParse[s].test(t))return s;if(!i&&this._weekdaysParse[s].test(t))return s}}function Gt(t){if(!this.isValid())return null!=t?this:NaN;var e=this._isUTC?this._d.getUTCDay():this._d.getDay();return null!=t?(t=Tt(t,this.localeData()),this.add(t-e,"d")):e}function jt(t){if(!this.isValid())return null!=t?this:NaN;var e=(this.day()+7-this.localeData()._week.dow)%7;return null==t?e:this.add(t-e,"d")}function At(t){if(!this.isValid())return null!=t?this:NaN;if(null==t)return this.day()||7;var e=Yt(t,this.localeData());return this.day(this.day()%7?e:e-7)}function Wt(t){return this._weekdaysParseExact?(c(this,"_weekdaysRegex")||Ht.call(this),t?this._weekdaysStrictRegex:this._weekdaysRegex):(c(this,"_weekdaysRegex")||(this._weekdaysRegex=Tn),this._weekdaysStrictRegex&&t?this._weekdaysStrictRegex:this._weekdaysRegex)}function Nt(t){return this._weekdaysParseExact?(c(this,"_weekdaysRegex")||Ht.call(this),t?this._weekdaysShortStrictRegex:this._weekdaysShortRegex):(c(this,"_weekdaysShortRegex")||(this._weekdaysShortRegex=Yn),this._weekdaysShortStrictRegex&&t?this._weekdaysShortStrictRegex:this._weekdaysShortRegex)}function Lt(t){return this._weekdaysParseExact?(c(this,"_weekdaysRegex")||Ht.call(this),t?this._weekdaysMinStrictRegex:this._weekdaysMinRegex):(c(this,"_weekdaysMinRegex")||(this._weekdaysMinRegex=In),this._weekdaysMinStrictRegex&&t?this._weekdaysMinStrictRegex:this._weekdaysMinRegex)}function Ht(){function t(t,e){return e.length-t.length}var e,i,s,n,r,o=[],a=[],d=[],l=[];for(e=0;e<7;e++)i=_([2e3,1]).day(e),s=this.weekdaysMin(i,""),n=this.weekdaysShort(i,""),r=this.weekdays(i,""),o.push(s),a.push(n),d.push(r),l.push(s),l.push(n),l.push(r);for(o.sort(t),a.sort(t),d.sort(t),l.sort(t),e=0;e<7;e++)a[e]=B(a[e]),d[e]=B(d[e]),l[e]=B(l[e]);this._weekdaysRegex=new RegExp("^("+l.join("|")+")","i"),this._weekdaysShortRegex=this._weekdaysRegex,this._weekdaysMinRegex=this._weekdaysRegex,this._weekdaysStrictRegex=new RegExp("^("+d.join("|")+")","i"),this._weekdaysShortStrictRegex=new RegExp("^("+a.join("|")+")","i"),this._weekdaysMinStrictRegex=new RegExp("^("+o.join("|")+")","i")}function qt(){return this.hours()%12||12}function Rt(){return this.hours()||24}function Ut(t,e){N(t,0,0,function(){return this.localeData().meridiem(this.hours(),this.minutes(),e)})}function Vt(t,e){return e._meridiemParse}function Zt(t){return"p"===(t+"").toLowerCase().charAt(0)}function Bt(t,e,i){return 11<t?i?"pm":"PM":i?"am":"AM"}function Qt(t){return t?t.toLowerCase().replace("_","-"):t}function Xt(t){for(var e,i,s,n,r=0;r<t.length;){for(e=(n=Qt(t[r]).split("-")).length,i=(i=Qt(t[r+1]))?i.split("-"):null;0<e;){if(s=Jt(n.slice(0,e).join("-")))return s;if(i&&i.length>=e&&x(n,i,!0)>=e-1)break;e--}r++}return null}function Jt(t){var e=null;if(!Gn[t]&&"undefined"!=typeof module&&module&&module.exports)try{e=On._abbr,require("./locale/"+t),Kt(e)}catch(i){}return Gn[t]}function Kt(t,e){var i;return t&&(i=r(e)?ie(t):te(t,e))&&(On=i),On._abbr}function te(t,e){if(null===e)return delete Gn[t],null;var i=Fn;if(e.abbr=t,null!=Gn[t])k("defineLocaleOverride","use moment.updateLocale(localeName, config) to change an existing locale. moment.defineLocale(localeName, config) should only be used for creating a new locale See http://momentjs.com/guides/#/warnings/define-locale/ for more info."),i=Gn[t]._config;else if(null!=e.parentLocale){if(null==Gn[e.parentLocale])return jn[e.parentLocale]||(jn[e.parentLocale]=[]),jn[e.parentLocale].push({name:t,config:e}),null;i=Gn[e.parentLocale]._config}return Gn[t]=new C(M(i,e)),jn[t]&&jn[t].forEach(function(t){te(t.name,t.config)}),Kt(t),Gn[t]}function ee(t,e){if(null!=e){var i,s,n=Fn;null!=(s=Jt(t))&&(n=s._config),(i=new C(e=M(n,e))).parentLocale=Gn[t],Gn[t]=i,Kt(t)}else null!=Gn[t]&&(null!=Gn[t].parentLocale?Gn[t]=Gn[t].parentLocale:null!=Gn[t]&&delete Gn[t]);return Gn[t]}function ie(t){var e;if(t&&t._locale&&t._locale._abbr&&(t=t._locale._abbr),!t)return On;if(!o(t)){if(e=Jt(t))return e;t=[t]}return Xt(t)}function se(){return Cs(Gn)}function ne(t){var e,i=t._a;return i&&-2===p(t).overflow&&(e=i[cn]<0||11<i[cn]?cn:i[un]<1||i[un]>dt(i[hn],i[cn])?un:i[_n]<0||24<i[_n]||24===i[_n]&&(0!==i[pn]||0!==i[fn]||0!==i[gn])?_n:i[pn]<0||59<i[pn]?pn:i[fn]<0||59<i[fn]?fn:i[gn]<0||999<i[gn]?gn:-1,p(t)._overflowDayOfYear&&(e<hn||un<e)&&(e=un),p(t)._overflowWeeks&&-1===e&&(e=mn),p(t)._overflowWeekday&&-1===e&&(e=wn),p(t).overflow=e),t}function re(t,e,i){return null!=t?t:null!=e?e:i}function oe(t){var e=new Date(l.now());return t._useUTC?[e.getUTCFullYear(),e.getUTCMonth(),e.getUTCDate()]:[e.getFullYear(),e.getMonth(),e.getDate()]}function ae(t){var e,i,s,n,r,o=[];if(!t._d){for(s=oe(t),t._w&&null==t._a[un]&&null==t._a[cn]&&de(t),null!=t._dayOfYear&&(r=re(t._a[hn],s[hn]),(t._dayOfYear>K(r)||0===t._dayOfYear)&&(p(t)._overflowDayOfYear=!0),i=yt(r,0,t._dayOfYear),t._a[cn]=i.getUTCMonth(),t._a[un]=i.getUTCDate()),e=0;e<3&&null==t._a[e];++e)t._a[e]=o[e]=s[e];for(;e<7;e++)t._a[e]=o[e]=null==t._a[e]?2===e?1:0:t._a[e];24===t._a[_n]&&0===t._a[pn]&&0===t._a[fn]&&0===t._a[gn]&&(t._nextDay=!0,t._a[_n]=0),t._d=(t._useUTC?yt:vt).apply(null,o),n=t._useUTC?t._d.getUTCDay():t._d.getDay(),null!=t._tzm&&t._d.setUTCMinutes(t._d.getUTCMinutes()-t._tzm),t._nextDay&&(t._a[_n]=24),t._w&&"undefined"!=typeof t._w.d&&t._w.d!==n&&(p(t).weekdayMismatch=!0)}}function de(t){var e,i,s,n,r,o,a,d;if(null!=(e=t._w).GG||null!=e.W||null!=e.E)r=1,o=4,i=re(e.GG,t._a[hn],$t(Se(),1,4).year),s=re(e.W,1),((n=re(e.E,1))<1||7<n)&&(d=!0);else{r=t._locale._week.dow,o=t._locale._week.doy;var l=$t(Se(),r,o);i=re(e.gg,t._a[hn],l.year),s=re(e.w,l.week),null!=e.d?((n=e.d)<0||6<n)&&(d=!0):null!=e.e?(n=e.e+r,(e.e<0||6<e.e)&&(d=!0)):n=r}s<1||s>kt(i,r,o)?p(t)._overflowWeeks=!0:null!=d?p(t)._overflowWeekday=!0:(a=bt(i,s,n,r,o),t._a[hn]=a.year,t._dayOfYear=a.dayOfYear)}function le(t){var e,i,s,n,r,o,a=t._i,d=An.exec(a)||Wn.exec(a);if(d){for(p(t).iso=!0,e=0,i=Ln.length;e<i;e++)if(Ln[e][1].exec(d[1])){n=Ln[e][0],s=!1!==Ln[e][2];break}if(null==n)return void(t._isValid=!1);if(d[3]){for(e=0,i=Hn.length;e<i;e++)if(Hn[e][1].exec(d[3])){r=(d[2]||" ")+Hn[e][0];break}if(null==r)return void(t._isValid=!1)}if(!s&&null!=r)return void(t._isValid=!1);if(d[4]){if(!Nn.exec(d[4]))return void(t._isValid=!1);o="Z"}t._f=n+(r||"")+(o||""),me(t)}else t._isValid=!1}function he(t,e,i,s,n,r){var o=[ce(t),$n.indexOf(e),parseInt(i,10),parseInt(s,10),parseInt(n,10)];return r&&o.push(parseInt(r,10)),o}function ce(t){var e=parseInt(t,10);return e<=49?2e3+e:e<=999?1900+e:e}function ue(t){return t.replace(/\([^)]*\)|[\n\t]/g," ").replace(/(\s\s+)/g," ").trim()}function _e(t,e,i){if(t&&Cn.indexOf(t)!==new Date(e[0],e[1],e[2]).getDay())return p(i).weekdayMismatch=!0,i._isValid=!1;return!0}function pe(t,e,i){if(t)return Un[t];if(e)return 0;var s=parseInt(i,10),n=s%100;return 60*((s-n)/100)+n}function fe(t){var e=Rn.exec(ue(t._i));if(e){var i=he(e[4],e[3],e[2],e[5],e[6],e[7]);if(!_e(e[1],i,t))return;t._a=i,t._tzm=pe(e[8],e[9],e[10]),t._d=yt.apply(null,t._a),t._d.setUTCMinutes(t._d.getUTCMinutes()-t._tzm),p(t).rfc2822=!0}else t._isValid=!1}function ge(t){var e=qn.exec(t._i);null===e?(le(t),!1===t._isValid&&(delete t._isValid,fe(t),!1===t._isValid&&(delete t._isValid,l.createFromInputFallback(t)))):t._d=new Date(+e[1])}function me(t){if(t._f!==l.ISO_8601)if(t._f!==l.RFC_2822){t._a=[],p(t).empty=!0;var e,i,s,n,r,o=""+t._i,a=o.length,d=0;for(s=R(t._f,t._locale).match(Ws)||[],e=0;e<s.length;e++)n=s[e],(i=(o.match(V(n,t))||[])[0])&&(0<(r=o.substr(0,o.indexOf(i))).length&&p(t).unusedInput.push(r),o=o.slice(o.indexOf(i)+i.length),d+=i.length),Hs[n]?(i?p(t).empty=!1:p(t).unusedTokens.push(n),J(n,i,t)):t._strict&&!i&&p(t).unusedTokens.push(n);p(t).charsLeftOver=a-d,0<o.length&&p(t).unusedInput.push(o),t._a[_n]<=12&&!0===p(t).bigHour&&0<t._a[_n]&&(p(t).bigHour=undefined),p(t).parsedDateParts=t._a.slice(0),p(t).meridiem=t._meridiem,t._a[_n]=we(t._locale,t._a[_n],t._meridiem),ae(t),ne(t)}else fe(t);else le(t)}function we(t,e,i){var s;return null==i?e:null!=t.meridiemHour?t.meridiemHour(e,i):(null!=t.isPM&&((s=t.isPM(i))&&e<12&&(e+=12),s||12!==e||(e=0)),e)}function ve(t){var e,i,s,n,r;if(0===t._f.length)return p(t).invalidFormat=!0,void(t._d=new Date(NaN));for(n=0;n<t._f.length;n++)r=0,e=g({},t),null!=t._useUTC&&(e._useUTC=t._useUTC),e._f=t._f[n],me(e),f(e)&&(r+=p(e).charsLeftOver,r+=10*p(e).unusedTokens.length,p(e).score=r,(null==s||r<s)&&(s=r,i=e));u(t,i||e)}function ye(t){if(!t._d){var e=G(t._i);t._a=i([e.year,e.month,e.day||e.date,e.hour,e.minute,e.second,e.millisecond],function(t){return t&&parseInt(t,10)}),ae(t)}}function xe(t){var e=new m(ne(be(t)));return e._nextDay&&(e.add(1,"d"),e._nextDay=undefined),e}function be(t){var e=t._i,i=t._f;return t._locale=t._locale||ie(t._l),null===e||i===undefined&&""===e?s({nullInput:!0}):("string"==typeof e&&(t._i=e=t._locale.preparse(e)),w(e)?new m(ne(e)):(n(e)?t._d=e:o(i)?ve(t):i?me(t):$e(t),f(t)||(t._d=null),t))}function $e(t){var e=t._i;r(e)?t._d=new Date(l.now()):n(e)?t._d=new Date(e.valueOf()):"string"==typeof e?ge(t):o(e)?(t._a=i(e.slice(0),function(t){return parseInt(t,10)}),ae(t)):a(e)?ye(t):h(e)?t._d=new Date(e):l.createFromInputFallback(t)}function ke(t,e,i,s,n){var r={};return!0!==i&&!1!==i||(s=i,i=undefined),(a(t)&&d(t)||o(t)&&0===t.length)&&(t=undefined),r._isAMomentObject=!0,r._useUTC=r._isUTC=n,r._l=i,r._i=t,r._f=e,r._strict=s,xe(r)}function Se(t,e,i,s){return ke(t,e,i,s,!1)}function ze(t,e){var i,s;if(1===e.length&&o(e[0])&&(e=e[0]),!e.length)return Se();for(i=e[0],s=1;s<e.length;++s)e[s].isValid()&&!e[s][t](i)||(i=e[s]);return i}function Me(){return ze("isBefore",[].slice.call(arguments,0))}function Ce(){return ze("isAfter",[].slice.call(arguments,0))}function De(t){for(var e in t)if(-1===vn.call(Qn,e)||null!=t[e]&&isNaN(t[e]))return!1;for(var i=!1,s=0;s<Qn.length;++s)if(t[Qn[s]]){if(i)return!1;parseFloat(t[Qn[s]])!==y(t[Qn[s]])&&(i=!0)}return!0}function Te(){return this._isValid}function Ye(){return Qe(NaN)}function Ie(t){var e=G(t),i=e.year||0,s=e.quarter||0,n=e.month||0,r=e.week||0,o=e.day||0,a=e.hour||0,d=e.minute||0,l=e.second||0,h=e.millisecond||0;this._isValid=De(e),this._milliseconds=+h+1e3*l+6e4*d+1e3*a*60*60,this._days=+o+7*r,this._months=+n+3*s+12*i,this._data={},this._locale=ie(),this._bubble()}function Oe(t){return t instanceof Ie}function Pe(t){return t<0?-1*Math.round(-1*t):Math.round(t)}function Ee(t,i){N(t,0,0,function(){var t=this.utcOffset(),e="+";return t<0&&(t=-t,e="-"),e+W(~~(t/60),2)+i+W(~~t%60,2)})}function Fe(t,e){var i=(e||"").match(t);if(null===i)return null;var s=((i[i.length-1]||[])+"").match(Xn)||["-",0,0],n=60*s[1]+y(s[2]);return 0===n?0:"+"===s[0]?n:-n}function Ge(t,e){var i,s;return e._isUTC?(i=e.clone(),s=(w(t)||n(t)?t.valueOf():Se(t).valueOf())-i.valueOf(),i._d.setTime(i._d.valueOf()+s),l.updateOffset(i,!1),i):Se(t).local()}function je(t){return 15*-Math.round(t._d.getTimezoneOffset()/15)}function Ae(t,e,i){var s,n=this._offset||0;if(!this.isValid())return null!=t?this:NaN;if(null==t)return this._isUTC?n:je(this);if("string"==typeof t){if(null===(t=Fe(rn,t)))return this}else Math.abs(t)<16&&!i&&(t*=60);return!this._isUTC&&e&&(s=je(this)),this._offset=t,this._isUTC=!0,null!=s&&this.add(s,"m"),n!==t&&(!e||this._changeInProgress?ei(this,Qe(t-n,"m"),1,!1):this._changeInProgress||(this._changeInProgress=!0,l.updateOffset(this,!0),this._changeInProgress=null)),this}function We(t,e){return null!=t?("string"!=typeof t&&(t=-t),this.utcOffset(t,e),this):-this.utcOffset()}function Ne(t){return this.utcOffset(0,t)}function Le(t){return this._isUTC&&(this.utcOffset(0,t),this._isUTC=!1,t&&this.subtract(je(this),"m")),this}function He(){if(null!=this._tzm)this.utcOffset(this._tzm,!1,!0);else if("string"==typeof this._i){var t=Fe(nn,this._i);null!=t?this.utcOffset(t):this.utcOffset(0,!0)}return this}function qe(t){return!!this.isValid()&&(t=t?Se(t).utcOffset():0,(this.utcOffset()-t)%60==0)}function Re(){return this.utcOffset()>this.clone().month(0).utcOffset()||this.utcOffset()>this.clone().month(5).utcOffset()}function Ue(){if(!r(this._isDSTShifted))return this._isDSTShifted;var t={};if(g(t,this),(t=be(t))._a){var e=t._isUTC?_(t._a):Se(t._a);this._isDSTShifted=this.isValid()&&0<x(t._a,e.toArray())}else this._isDSTShifted=!1;return this._isDSTShifted}function Ve(){return!!this.isValid()&&!this._isUTC}function Ze(){return!!this.isValid()&&this._isUTC}function Be(){return!!this.isValid()&&(this._isUTC&&0===this._offset)}function Qe(t,e){var i,s,n,r=t,o=null;return Oe(t)?r={ms:t._milliseconds,d:t._days,M:t._months}:h(t)?(r={},e?r[e]=t:r.milliseconds=t):(o=Jn.exec(t))?(i="-"===o[1]?-1:1,r={y:0,d:y(o[un])*i,h:y(o[_n])*i,m:y(o[pn])*i,s:y(o[fn])*i,ms:y(Pe(1e3*o[gn]))*i}):(o=Kn.exec(t))?(i="-"===o[1]?-1:(o[1],1),r={y:Xe(o[2],i),M:Xe(o[3],i),w:Xe(o[4],i),d:Xe(o[5],i),h:Xe(o[6],i),m:Xe(o[7],i),s:Xe(o[8],i)}):null==r?r={}:"object"==typeof r&&("from"in r||"to"in r)&&(n=Ke(Se(r.from),Se(r.to)),(r={}).ms=n.milliseconds,r.M=n.months),s=new Ie(r)
-,Oe(t)&&c(t,"_locale")&&(s._locale=t._locale),s}function Xe(t,e){var i=t&&parseFloat(t.replace(",","."));return(isNaN(i)?0:i)*e}function Je(t,e){var i={milliseconds:0,months:0};return i.months=e.month()-t.month()+12*(e.year()-t.year()),t.clone().add(i.months,"M").isAfter(e)&&--i.months,i.milliseconds=+e-+t.clone().add(i.months,"M"),i}function Ke(t,e){var i;return t.isValid()&&e.isValid()?(e=Ge(e,t),t.isBefore(e)?i=Je(t,e):((i=Je(e,t)).milliseconds=-i.milliseconds,i.months=-i.months),i):{milliseconds:0,months:0}}function ti(s,n){return function(t,e){var i;return null===e||isNaN(+e)||(k(n,"moment()."+n+"(period, number) is deprecated. Please use moment()."+n+"(number, period). See http://momentjs.com/guides/#/warnings/add-inverted-param/ for more info."),i=t,t=e,e=i),ei(this,Qe(t="string"==typeof t?+t:t,e),s),this}}function ei(t,e,i,s){var n=e._milliseconds,r=Pe(e._days),o=Pe(e._months);t.isValid()&&(s=null==s||s,o&&_t(t,st(t,"Month")+o*i),r&&nt(t,"Date",st(t,"Date")+r*i),n&&t._d.setTime(t._d.valueOf()+n*i),s&&l.updateOffset(t,r||o))}function ii(t,e){var i=t.diff(e,"days",!0);return i<-6?"sameElse":i<-1?"lastWeek":i<0?"lastDay":i<1?"sameDay":i<2?"nextDay":i<7?"nextWeek":"sameElse"}function si(t,e){var i=t||Se(),s=Ge(i,this).startOf("day"),n=l.calendarFormat(this,s)||"sameElse",r=e&&(S(e[n])?e[n].call(this,i):e[n]);return this.format(r||this.localeData().calendar(n,this,Se(i)))}function ni(){return new m(this)}function ri(t,e){var i=w(t)?t:Se(t);return!(!this.isValid()||!i.isValid())&&("millisecond"===(e=F(r(e)?"millisecond":e))?this.valueOf()>i.valueOf():i.valueOf()<this.clone().startOf(e).valueOf())}function oi(t,e){var i=w(t)?t:Se(t);return!(!this.isValid()||!i.isValid())&&("millisecond"===(e=F(r(e)?"millisecond":e))?this.valueOf()<i.valueOf():this.clone().endOf(e).valueOf()<i.valueOf())}function ai(t,e,i,s){return("("===(s=s||"()")[0]?this.isAfter(t,i):!this.isBefore(t,i))&&(")"===s[1]?this.isBefore(e,i):!this.isAfter(e,i))}function di(t,e){var i,s=w(t)?t:Se(t);return!(!this.isValid()||!s.isValid())&&("millisecond"===(e=F(e||"millisecond"))?this.valueOf()===s.valueOf():(i=s.valueOf(),this.clone().startOf(e).valueOf()<=i&&i<=this.clone().endOf(e).valueOf()))}function li(t,e){return this.isSame(t,e)||this.isAfter(t,e)}function hi(t,e){return this.isSame(t,e)||this.isBefore(t,e)}function ci(t,e,i){var s,n,r;if(!this.isValid())return NaN;if(!(s=Ge(t,this)).isValid())return NaN;switch(n=6e4*(s.utcOffset()-this.utcOffset()),e=F(e)){case"year":r=ui(this,s)/12;break;case"month":r=ui(this,s);break;case"quarter":r=ui(this,s)/3;break;case"second":r=(this-s)/1e3;break;case"minute":r=(this-s)/6e4;break;case"hour":r=(this-s)/36e5;break;case"day":r=(this-s-n)/864e5;break;case"week":r=(this-s-n)/6048e5;break;default:r=this-s}return i?r:v(r)}function ui(t,e){var i=12*(e.year()-t.year())+(e.month()-t.month()),s=t.clone().add(i,"months");return-(i+(e-s<0?(e-s)/(s-t.clone().add(i-1,"months")):(e-s)/(t.clone().add(i+1,"months")-s)))||0}function _i(){return this.clone().locale("en").format("ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")}function pi(t){if(!this.isValid())return null;var e=!0!==t,i=e?this.clone().utc():this;return i.year()<0||9999<i.year()?q(i,e?"YYYYYY-MM-DD[T]HH:mm:ss.SSS[Z]":"YYYYYY-MM-DD[T]HH:mm:ss.SSSZ"):S(Date.prototype.toISOString)?e?this.toDate().toISOString():new Date(this._d.valueOf()).toISOString().replace("Z",q(i,"Z")):q(i,e?"YYYY-MM-DD[T]HH:mm:ss.SSS[Z]":"YYYY-MM-DD[T]HH:mm:ss.SSSZ")}function fi(){if(!this.isValid())return"moment.invalid(/* "+this._i+" */)";var t="moment",e="";this.isLocal()||(t=0===this.utcOffset()?"moment.utc":"moment.parseZone",e="Z");var i="["+t+'("]',s=0<=this.year()&&this.year()<=9999?"YYYY":"YYYYYY",n="-MM-DD[T]HH:mm:ss.SSS",r=e+'[")]';return this.format(i+s+n+r)}function gi(t){t||(t=this.isUtc()?l.defaultFormatUtc:l.defaultFormat);var e=q(this,t);return this.localeData().postformat(e)}function mi(t,e){return this.isValid()&&(w(t)&&t.isValid()||Se(t).isValid())?Qe({to:this,from:t}).locale(this.locale()).humanize(!e):this.localeData().invalidDate()}function wi(t){return this.from(Se(),t)}function vi(t,e){return this.isValid()&&(w(t)&&t.isValid()||Se(t).isValid())?Qe({from:this,to:t}).locale(this.locale()).humanize(!e):this.localeData().invalidDate()}function yi(t){return this.to(Se(),t)}function xi(t){var e;return t===undefined?this._locale._abbr:(null!=(e=ie(t))&&(this._locale=e),this)}function bi(){return this._locale}function $i(t){switch(t=F(t)){case"year":this.month(0);case"quarter":case"month":this.date(1);case"week":case"isoWeek":case"day":case"date":this.hours(0);case"hour":this.minutes(0);case"minute":this.seconds(0);case"second":this.milliseconds(0)}return"week"===t&&this.weekday(0),"isoWeek"===t&&this.isoWeekday(1),"quarter"===t&&this.month(3*Math.floor(this.month()/3)),this}function ki(t){return(t=F(t))===undefined||"millisecond"===t?this:("date"===t&&(t="day"),this.startOf(t).add(1,"isoWeek"===t?"week":t).subtract(1,"ms"))}function Si(){return this._d.valueOf()-6e4*(this._offset||0)}function zi(){return Math.floor(this.valueOf()/1e3)}function Mi(){return new Date(this.valueOf())}function Ci(){var t=this;return[t.year(),t.month(),t.date(),t.hour(),t.minute(),t.second(),t.millisecond()]}function Di(){var t=this;return{years:t.year(),months:t.month(),date:t.date(),hours:t.hours(),minutes:t.minutes(),seconds:t.seconds(),milliseconds:t.milliseconds()}}function Ti(){return this.isValid()?this.toISOString():null}function Yi(){return f(this)}function Ii(){return u({},p(this))}function Oi(){return p(this).overflow}function Pi(){return{input:this._i,format:this._f,locale:this._locale,isUTC:this._isUTC,strict:this._strict}}function Ei(t,e){N(0,[t,t.length],0,e)}function Fi(t){return Wi.call(this,t,this.week(),this.weekday(),this.localeData()._week.dow,this.localeData()._week.doy)}function Gi(t){return Wi.call(this,t,this.isoWeek(),this.isoWeekday(),1,4)}function ji(){return kt(this.year(),1,4)}function Ai(){var t=this.localeData()._week;return kt(this.year(),t.dow,t.doy)}function Wi(t,e,i,s,n){var r;return null==t?$t(this,s,n).year:((r=kt(t,s,n))<e&&(e=r),Ni.call(this,t,e,i,s,n))}function Ni(t,e,i,s,n){var r=bt(t,e,i,s,n),o=yt(r.year,0,r.dayOfYear);return this.year(o.getUTCFullYear()),this.month(o.getUTCMonth()),this.date(o.getUTCDate()),this}function Li(t){return null==t?Math.ceil((this.month()+1)/3):this.month(3*(t-1)+this.month()%3)}function Hi(t){var e=Math.round((this.clone().startOf("day")-this.clone().startOf("year"))/864e5)+1;return null==t?e:this.add(t-e,"d")}function qi(t,e){e[gn]=y(1e3*("0."+t))}function Ri(){return this._isUTC?"UTC":""}function Ui(){return this._isUTC?"Coordinated Universal Time":""}function Vi(t){return Se(1e3*t)}function Zi(){return Se.apply(null,arguments).parseZone()}function Bi(t){return t}function Qi(t,e,i,s){var n=ie(),r=_().set(s,e);return n[i](r,t)}function Xi(t,e,i){if(h(t)&&(e=t,t=undefined),t=t||"",null!=e)return Qi(t,e,i,"month");var s,n=[];for(s=0;s<12;s++)n[s]=Qi(t,s,i,"month");return n}function Ji(t,e,i,s){"boolean"==typeof t?h(e)&&(i=e,e=undefined):(e=t,t=!1,h(i=e)&&(i=e,e=undefined)),e=e||"";var n,r=ie(),o=t?r._week.dow:0;if(null!=i)return Qi(e,(i+o)%7,s,"day");var a=[];for(n=0;n<7;n++)a[n]=Qi(e,(n+o)%7,s,"day");return a}function Ki(t,e){return Xi(t,e,"months")}function ts(t,e){return Xi(t,e,"monthsShort")}function es(t,e,i){return Ji(t,e,i,"weekdays")}function is(t,e,i){return Ji(t,e,i,"weekdaysShort")}function ss(t,e,i){return Ji(t,e,i,"weekdaysMin")}function ns(){var t=this._data;return this._milliseconds=hr(this._milliseconds),this._days=hr(this._days),this._months=hr(this._months),t.milliseconds=hr(t.milliseconds),t.seconds=hr(t.seconds),t.minutes=hr(t.minutes),t.hours=hr(t.hours),t.months=hr(t.months),t.years=hr(t.years),this}function rs(t,e,i,s){var n=Qe(e,i);return t._milliseconds+=s*n._milliseconds,t._days+=s*n._days,t._months+=s*n._months,t._bubble()}function os(t,e){return rs(this,t,e,1)}function as(t,e){return rs(this,t,e,-1)}function ds(t){return t<0?Math.floor(t):Math.ceil(t)}function ls(){var t,e,i,s,n,r=this._milliseconds,o=this._days,a=this._months,d=this._data;return 0<=r&&0<=o&&0<=a||r<=0&&o<=0&&a<=0||(r+=864e5*ds(cs(a)+o),a=o=0),d.milliseconds=r%1e3,t=v(r/1e3),d.seconds=t%60,e=v(t/60),d.minutes=e%60,i=v(e/60),d.hours=i%24,a+=n=v(hs(o+=v(i/24))),o-=ds(cs(n)),s=v(a/12),a%=12,d.days=o,d.months=a,d.years=s,this}function hs(t){return 4800*t/146097}function cs(t){return 146097*t/4800}function us(t){if(!this.isValid())return NaN;var e,i,s=this._milliseconds;if("month"===(t=F(t))||"year"===t)return e=this._days+s/864e5,i=this._months+hs(e),"month"===t?i:i/12;switch(e=this._days+Math.round(cs(this._months)),t){case"week":return e/7+s/6048e5;case"day":return e+s/864e5;case"hour":return 24*e+s/36e5;case"minute":return 1440*e+s/6e4;case"second":return 86400*e+s/1e3;case"millisecond":return Math.floor(864e5*e)+s;default:throw new Error("Unknown unit "+t)}}function _s(){return this.isValid()?this._milliseconds+864e5*this._days+this._months%12*2592e6+31536e6*y(this._months/12):NaN}function ps(t){return function(){return this.as(t)}}function fs(){return Qe(this)}function gs(t){return t=F(t),this.isValid()?this[t+"s"]():NaN}function ms(t){return function(){return this.isValid()?this._data[t]:NaN}}function ws(){return v(this.days()/7)}function vs(t,e,i,s,n){return n.relativeTime(e||1,!!i,t,s)}function ys(t,e,i){var s=Qe(t).abs(),n=zr(s.as("s")),r=zr(s.as("m")),o=zr(s.as("h")),a=zr(s.as("d")),d=zr(s.as("M")),l=zr(s.as("y")),h=n<=Mr.ss&&["s",n]||n<Mr.s&&["ss",n]||r<=1&&["m"]||r<Mr.m&&["mm",r]||o<=1&&["h"]||o<Mr.h&&["hh",o]||a<=1&&["d"]||a<Mr.d&&["dd",a]||d<=1&&["M"]||d<Mr.M&&["MM",d]||l<=1&&["y"]||["yy",l];return h[2]=e,h[3]=0<+t,h[4]=i,vs.apply(null,h)}function xs(t){return t===undefined?zr:"function"==typeof t&&(zr=t,!0)}function bs(t,e){return Mr[t]!==undefined&&(e===undefined?Mr[t]:(Mr[t]=e,"s"===t&&(Mr.ss=e-1),!0))}function $s(t){if(!this.isValid())return this.localeData().invalidDate();var e=this.localeData(),i=ys(this,!t,e);return t&&(i=e.pastFuture(+this,i)),e.postformat(i)}function ks(t){return(0<t)-(t<0)||+t}function Ss(){if(!this.isValid())return this.localeData().invalidDate();var t,e,i=Cr(this._milliseconds)/1e3,s=Cr(this._days),n=Cr(this._months);e=v((t=v(i/60))/60),i%=60,t%=60;var r=v(n/12),o=n%=12,a=s,d=e,l=t,h=i?i.toFixed(3).replace(/\.?0+$/,""):"",c=this.asSeconds();if(!c)return"P0D";var u=c<0?"-":"",_=ks(this._months)!==ks(c)?"-":"",p=ks(this._days)!==ks(c)?"-":"",f=ks(this._milliseconds)!==ks(c)?"-":"";return u+"P"+(r?_+r+"Y":"")+(o?_+o+"M":"")+(a?p+a+"D":"")+(d||l||h?"T":"")+(d?f+d+"H":"")+(l?f+l+"M":"")+(h?f+h+"S":"")}var zs,Ms;Ms=Array.prototype.some?Array.prototype.some:function(t){for(var e=Object(this),i=e.length>>>0,s=0;s<i;s++)if(s in e&&t.call(this,e[s],s,e))return!0;return!1};var Cs,Ds=l.momentProperties=[],Ts=!1,Ys={};l.suppressDeprecationWarnings=!1,l.deprecationHandler=null,Cs=Object.keys?Object.keys:function(t){var e,i=[];for(e in t)c(t,e)&&i.push(e);return i};var Is={sameDay:"[Today at] LT",nextDay:"[Tomorrow at] LT",nextWeek:"dddd [at] LT",lastDay:"[Yesterday at] LT",lastWeek:"[Last] dddd [at] LT",sameElse:"L"},Os={LTS:"h:mm:ss A",LT:"h:mm A",L:"MM/DD/YYYY",LL:"MMMM D, YYYY",LLL:"MMMM D, YYYY h:mm A",LLLL:"dddd, MMMM D, YYYY h:mm A"},Ps="Invalid date",Es="%d",Fs=/\d{1,2}/,Gs={future:"in %s",past:"%s ago",s:"a few seconds",ss:"%d seconds",m:"a minute",mm:"%d minutes",h:"an hour",hh:"%d hours",d:"a day",dd:"%d days",M:"a month",MM:"%d months",y:"a year",yy:"%d years"},js={},As={},Ws=/(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g,Ns=/(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g,Ls={},Hs={},qs=/\d/,Rs=/\d\d/,Us=/\d{3}/,Vs=/\d{4}/,Zs=/[+-]?\d{6}/,Bs=/\d\d?/,Qs=/\d\d\d\d?/,Xs=/\d\d\d\d\d\d?/,Js=/\d{1,3}/,Ks=/\d{1,4}/,tn=/[+-]?\d{1,6}/,en=/\d+/,sn=/[+-]?\d+/,nn=/Z|[+-]\d\d:?\d\d/gi,rn=/Z|[+-]\d\d(?::?\d\d)?/gi,on=/[+-]?\d+(\.\d{1,3})?/,an=/[0-9]{0,256}['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFF07\uFF10-\uFFEF]{1,256}|[\u0600-\u06FF\/]{1,256}(\s*?[\u0600-\u06FF]{1,256}){1,2}/i,dn={},ln={},hn=0,cn=1,un=2,_n=3,pn=4,fn=5,gn=6,mn=7,wn=8;N("Y",0,0,function(){var t=this.year();return t<=9999?""+t:"+"+t}),N(0,["YY",2],0,function(){return this.year()%100}),N(0,["YYYY",4],0,"year"),N(0,["YYYYY",5],0,"year"),N(0,["YYYYYY",6,!0],0,"year"),E("year","y"),j("year",1),U("Y",sn),U("YY",Bs,Rs),U("YYYY",Ks,Vs),U("YYYYY",tn,Zs),U("YYYYYY",tn,Zs),Q(["YYYYY","YYYYYY"],hn),Q("YYYY",function(t,e){e[hn]=2===t.length?l.parseTwoDigitYear(t):y(t)}),Q("YY",function(t,e){e[hn]=l.parseTwoDigitYear(t)}),Q("Y",function(t,e){e[hn]=parseInt(t,10)}),l.parseTwoDigitYear=function(t){return y(t)+(68<y(t)?1900:2e3)};var vn,yn=it("FullYear",!0);vn=Array.prototype.indexOf?Array.prototype.indexOf:function(t){var e;for(e=0;e<this.length;++e)if(this[e]===t)return e;return-1},N("M",["MM",2],"Mo",function(){return this.month()+1}),N("MMM",0,0,function(t){return this.localeData().monthsShort(this,t)}),N("MMMM",0,0,function(t){return this.localeData().months(this,t)}),E("month","M"),j("month",8),U("M",Bs),U("MM",Bs,Rs),U("MMM",function(t,e){return e.monthsShortRegex(t)}),U("MMMM",function(t,e){return e.monthsRegex(t)}),Q(["M","MM"],function(t,e){e[cn]=y(t)-1}),Q(["MMM","MMMM"],function(t,e,i,s){var n=i._locale.monthsParse(t,s,i._strict);null!=n?e[cn]=n:p(i).invalidMonth=t});var xn=/D[oD]?(\[[^\[\]]*\]|\s)+MMMM?/,bn="January_February_March_April_May_June_July_August_September_October_November_December".split("_"),$n="Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec".split("_"),kn=an,Sn=an;N("w",["ww",2],"wo","week"),N("W",["WW",2],"Wo","isoWeek"),E("week","w"),E("isoWeek","W"),j("week",5),j("isoWeek",5),U("w",Bs),U("ww",Bs,Rs),U("W",Bs),U("WW",Bs,Rs),X(["w","ww","W","WW"],function(t,e,i,s){e[s.substr(0,1)]=y(t)});var zn={dow:0,doy:6};N("d",0,"do","day"),N("dd",0,0,function(t){return this.localeData().weekdaysMin(this,t)}),N("ddd",0,0,function(t){return this.localeData().weekdaysShort(this,t)}),N("dddd",0,0,function(t){return this.localeData().weekdays(this,t)}),N("e",0,0,"weekday"),N("E",0,0,"isoWeekday"),E("day","d"),E("weekday","e"),E("isoWeekday","E"),j("day",11),j("weekday",11),j("isoWeekday",11),U("d",Bs),U("e",Bs),U("E",Bs),U("dd",function(t,e){return e.weekdaysMinRegex(t)}),U("ddd",function(t,e){return e.weekdaysShortRegex(t)}),U("dddd",function(t,e){return e.weekdaysRegex(t)}),X(["dd","ddd","dddd"],function(t,e,i,s){var n=i._locale.weekdaysParse(t,s,i._strict);null!=n?e.d=n:p(i).invalidWeekday=t}),X(["d","e","E"],function(t,e,i,s){e[s]=y(t)});var Mn="Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"),Cn="Sun_Mon_Tue_Wed_Thu_Fri_Sat".split("_"),Dn="Su_Mo_Tu_We_Th_Fr_Sa".split("_"),Tn=an,Yn=an,In=an;N("H",["HH",2],0,"hour"),N("h",["hh",2],0,qt),N("k",["kk",2],0,Rt),N("hmm",0,0,function(){return""+qt.apply(this)+W(this.minutes(),2)}),N("hmmss",0,0,function(){return""+qt.apply(this)+W(this.minutes(),2)+W(this.seconds(),2)}),N("Hmm",0,0,function(){return""+this.hours()+W(this.minutes(),2)}),N("Hmmss",0,0,function(){return""+this.hours()+W(this.minutes(),2)+W(this.seconds(),2)}),Ut("a",!0),Ut("A",!1),E("hour","h"),j("hour",13),U("a",Vt),U("A",Vt),U("H",Bs),U("h",Bs),U("k",Bs),U("HH",Bs,Rs),U("hh",Bs,Rs),U("kk",Bs,Rs),U("hmm",Qs),U("hmmss",Xs),U("Hmm",Qs),U("Hmmss",Xs),Q(["H","HH"],_n),Q(["k","kk"],function(t,e){var i=y(t);e[_n]=24===i?0:i}),Q(["a","A"],function(t,e,i){i._isPm=i._locale.isPM(t),i._meridiem=t}),Q(["h","hh"],function(t,e,i){e[_n]=y(t),p(i).bigHour=!0}),Q("hmm",function(t,e,i){var s=t.length-2;e[_n]=y(t.substr(0,s)),e[pn]=y(t.substr(s)),p(i).bigHour=!0}),Q("hmmss",function(t,e,i){var s=t.length-4,n=t.length-2;e[_n]=y(t.substr(0,s)),e[pn]=y(t.substr(s,2)),e[fn]=y(t.substr(n)),p(i).bigHour=!0}),Q("Hmm",function(t,e){var i=t.length-2;e[_n]=y(t.substr(0,i)),e[pn]=y(t.substr(i))}),Q("Hmmss",function(t,e){var i=t.length-4,s=t.length-2;e[_n]=y(t.substr(0,i)),e[pn]=y(t.substr(i,2)),e[fn]=y(t.substr(s))});var On,Pn=/[ap]\.?m?\.?/i,En=it("Hours",!0),Fn={calendar:Is,longDateFormat:Os,invalidDate:Ps,ordinal:Es,dayOfMonthOrdinalParse:Fs,relativeTime:Gs,months:bn,monthsShort:$n,week:zn,weekdays:Mn,weekdaysMin:Dn,weekdaysShort:Cn,meridiemParse:Pn},Gn={},jn={},An=/^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?::\d\d(?::\d\d(?:[.,]\d+)?)?)?)([\+\-]\d\d(?::?\d\d)?|\s*Z)?)?$/,Wn=/^\s*((?:[+-]\d{6}|\d{4})(?:\d\d\d\d|W\d\d\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?:\d\d(?:\d\d(?:[.,]\d+)?)?)?)([\+\-]\d\d(?::?\d\d)?|\s*Z)?)?$/,Nn=/Z|[+-]\d\d(?::?\d\d)?/,Ln=[["YYYYYY-MM-DD",/[+-]\d{6}-\d\d-\d\d/],["YYYY-MM-DD",/\d{4}-\d\d-\d\d/],["GGGG-[W]WW-E",/\d{4}-W\d\d-\d/],["GGGG-[W]WW",/\d{4}-W\d\d/,!1],["YYYY-DDD",/\d{4}-\d{3}/],["YYYY-MM",/\d{4}-\d\d/,!1],["YYYYYYMMDD",/[+-]\d{10}/],["YYYYMMDD",/\d{8}/],["GGGG[W]WWE",/\d{4}W\d{3}/],["GGGG[W]WW",/\d{4}W\d{2}/,!1],["YYYYDDD",/\d{7}/]],Hn=[["HH:mm:ss.SSSS",/\d\d:\d\d:\d\d\.\d+/],["HH:mm:ss,SSSS",/\d\d:\d\d:\d\d,\d+/],["HH:mm:ss",/\d\d:\d\d:\d\d/],["HH:mm",/\d\d:\d\d/],["HHmmss.SSSS",/\d\d\d\d\d\d\.\d+/],["HHmmss,SSSS",/\d\d\d\d\d\d,\d+/],["HHmmss",/\d\d\d\d\d\d/],["HHmm",/\d\d\d\d/],["HH",/\d\d/]],qn=/^\/?Date\((\-?\d+)/i,Rn=/^(?:(Mon|Tue|Wed|Thu|Fri|Sat|Sun),?\s)?(\d{1,2})\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(\d{2,4})\s(\d\d):(\d\d)(?::(\d\d))?\s(?:(UT|GMT|[ECMP][SD]T)|([Zz])|([+-]\d{4}))$/,Un={UT:0,GMT:0,EDT:-240,EST:-300,CDT:-300,CST:-360,MDT:-360,MST:-420,PDT:-420,PST:-480};l.createFromInputFallback=$("value provided is not in a recognized RFC2822 or ISO format. moment construction falls back to js Date(), which is not reliable across all browsers and versions. Non RFC2822/ISO date formats are discouraged and will be removed in an upcoming major release. Please refer to http://momentjs.com/guides/#/warnings/js-date/ for more info.",function(t){t._d=new Date(t._i+(t._useUTC?" UTC":""))}),l.ISO_8601=function(){},l.RFC_2822=function(){};var Vn=$("moment().min is deprecated, use moment.max instead. http://momentjs.com/guides/#/warnings/min-max/",function(){var t=Se.apply(null,arguments);return this.isValid()&&t.isValid()?t<this?this:t:s()}),Zn=$("moment().max is deprecated, use moment.min instead. http://momentjs.com/guides/#/warnings/min-max/",function(){var t=Se.apply(null,arguments);return this.isValid()&&t.isValid()?this<t?this:t:s()}),Bn=function(){return Date.now?Date.now():+new Date},Qn=["year","quarter","month","week","day","hour","minute","second","millisecond"];Ee("Z",":"),Ee("ZZ",""),U("Z",rn),U("ZZ",rn),Q(["Z","ZZ"],function(t,e,i){i._useUTC=!0,i._tzm=Fe(rn,t)});var Xn=/([\+\-]|\d\d)/gi;l.updateOffset=function(){};var Jn=/^(\-|\+)?(?:(\d*)[. ])?(\d+)\:(\d+)(?:\:(\d+)(\.\d*)?)?$/,Kn=/^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/;Qe.fn=Ie.prototype,Qe.invalid=Ye;var tr=ti(1,"add"),er=ti(-1,"subtract");l.defaultFormat="YYYY-MM-DDTHH:mm:ssZ",l.defaultFormatUtc="YYYY-MM-DDTHH:mm:ss[Z]";var ir=$("moment().lang() is deprecated. Instead, use moment().localeData() to get the language configuration. Use moment().locale() to change languages.",function(t){return t===undefined?this.localeData():this.locale(t)});N(0,["gg",2],0,function(){return this.weekYear()%100}),N(0,["GG",2],0,function(){return this.isoWeekYear()%100}),Ei("gggg","weekYear"),Ei("ggggg","weekYear"),Ei("GGGG","isoWeekYear"),Ei("GGGGG","isoWeekYear"),E("weekYear","gg"),E("isoWeekYear","GG"),j("weekYear",1),j("isoWeekYear",1),U("G",sn),U("g",sn),U("GG",Bs,Rs),U("gg",Bs,Rs),U("GGGG",Ks,Vs),U("gggg",Ks,Vs),U("GGGGG",tn,Zs),U("ggggg",tn,Zs),X(["gggg","ggggg","GGGG","GGGGG"],function(t,e,i,s){e[s.substr(0,2)]=y(t)}),X(["gg","GG"],function(t,e,i,s){e[s]=l.parseTwoDigitYear(t)}),N("Q",0,"Qo","quarter"),E("quarter","Q"),j("quarter",7),U("Q",qs),Q("Q",function(t,e){e[cn]=3*(y(t)-1)}),N("D",["DD",2],"Do","date"),E("date","D"),j("date",9),U("D",Bs),U("DD",Bs,Rs),U("Do",function(t,e){return t?e._dayOfMonthOrdinalParse||e._ordinalParse:e._dayOfMonthOrdinalParseLenient}),Q(["D","DD"],un),Q("Do",function(t,e){e[un]=y(t.match(Bs)[0])});var sr=it("Date",!0);N("DDD",["DDDD",3],"DDDo","dayOfYear"),E("dayOfYear","DDD"),j("dayOfYear",4),U("DDD",Js),U("DDDD",Us),Q(["DDD","DDDD"],function(t,e,i){i._dayOfYear=y(t)}),N("m",["mm",2],0,"minute"),E("minute","m"),j("minute",14),U("m",Bs),U("mm",Bs,Rs),Q(["m","mm"],pn);var nr=it("Minutes",!1);N("s",["ss",2],0,"second"),E("second","s"),j("second",15),U("s",Bs),U("ss",Bs,Rs),Q(["s","ss"],fn);var rr,or=it("Seconds",!1);for(N("S",0,0,function(){return~~(this.millisecond()/100)}),N(0,["SS",2],0,function(){return~~(this.millisecond()/10)}),N(0,["SSS",3],0,"millisecond"),N(0,["SSSS",4],0,function(){return 10*this.millisecond()}),N(0,["SSSSS",5],0,function(){return 100*this.millisecond()}),N(0,["SSSSSS",6],0,function(){return 1e3*this.millisecond()}),N(0,["SSSSSSS",7],0,function(){return 1e4*this.millisecond()}),N(0,["SSSSSSSS",8],0,function(){return 1e5*this.millisecond()}),N(0,["SSSSSSSSS",9],0,function(){return 1e6*this.millisecond()}),E("millisecond","ms"),j("millisecond",16),U("S",Js,qs),U("SS",Js,Rs),U("SSS",Js,Us),rr="SSSS";rr.length<=9;rr+="S")U(rr,en);for(rr="S";rr.length<=9;rr+="S")Q(rr,qi);var ar=it("Milliseconds",!1);N("z",0,0,"zoneAbbr"),N("zz",0,0,"zoneName");var dr=m.prototype;dr.add=tr,dr.calendar=si,dr.clone=ni,dr.diff=ci,dr.endOf=ki,dr.format=gi,dr.from=mi,dr.fromNow=wi,dr.to=vi,dr.toNow=yi,dr.get=rt,dr.invalidAt=Oi,dr.isAfter=ri,dr.isBefore=oi,dr.isBetween=ai,dr.isSame=di,dr.isSameOrAfter=li,dr.isSameOrBefore=hi,dr.isValid=Yi,dr.lang=ir,dr.locale=xi,dr.localeData=bi,dr.max=Zn,dr.min=Vn,dr.parsingFlags=Ii,dr.set=ot,dr.startOf=$i,dr.subtract=er,dr.toArray=Ci,dr.toObject=Di,dr.toDate=Mi,dr.toISOString=pi,dr.inspect=fi,dr.toJSON=Ti,dr.toString=_i,dr.unix=zi,dr.valueOf=Si,dr.creationData=Pi,dr.year=yn,dr.isLeapYear=et,dr.weekYear=Fi,dr.isoWeekYear=Gi,dr.quarter=dr.quarters=Li,dr.month=pt,dr.daysInMonth=ft,dr.week=dr.weeks=Ct,dr.isoWeek=dr.isoWeeks=Dt,dr.weeksInYear=Ai,dr.isoWeeksInYear=ji,dr.date=sr,dr.day=dr.days=Gt,dr.weekday=jt,dr.isoWeekday=At,dr.dayOfYear=Hi,dr.hour=dr.hours=En,dr.minute=dr.minutes=nr,dr.second=dr.seconds=or,dr.millisecond=dr.milliseconds=ar,dr.utcOffset=Ae,dr.utc=Ne,dr.local=Le,dr.parseZone=He,dr.hasAlignedHourOffset=qe,dr.isDST=Re,dr.isLocal=Ve,dr.isUtcOffset=Ze,dr.isUtc=Be,dr.isUTC=Be,dr.zoneAbbr=Ri,dr.zoneName=Ui,dr.dates=$("dates accessor is deprecated. Use date instead.",sr),dr.months=$("months accessor is deprecated. Use month instead",pt),dr.years=$("years accessor is deprecated. Use year instead",yn),dr.zone=$("moment().zone is deprecated, use moment().utcOffset instead. http://momentjs.com/guides/#/warnings/zone/",We),dr.isDSTShifted=$("isDSTShifted is deprecated. See http://momentjs.com/guides/#/warnings/dst-shifted/ for more information",Ue);var lr=C.prototype;lr.calendar=D,lr.longDateFormat=T,lr.invalidDate=Y,lr.ordinal=I,lr.preparse=Bi,lr.postformat=Bi,lr.relativeTime=O,lr.pastFuture=P,lr.set=z,lr.months=lt,lr.monthsShort=ht,lr.monthsParse=ut,lr.monthsRegex=mt,lr.monthsShortRegex=gt,lr.week=St,lr.firstDayOfYear=Mt,lr.firstDayOfWeek=zt,lr.weekdays=It,lr.weekdaysMin=Pt,lr.weekdaysShort=Ot,lr.weekdaysParse=Ft,lr.weekdaysRegex=Wt,lr.weekdaysShortRegex=Nt,lr.weekdaysMinRegex=Lt,lr.isPM=Zt,lr.meridiem=Bt,Kt("en",{dayOfMonthOrdinalParse:/\d{1,2}(th|st|nd|rd)/,ordinal:function(t){var e=t%10;return t+(1===y(t%100/10)?"th":1===e?"st":2===e?"nd":3===e?"rd":"th")}}),l.lang=$("moment.lang is deprecated. Use moment.locale instead.",Kt),l.langData=$("moment.langData is deprecated. Use moment.localeData instead.",ie);var hr=Math.abs,cr=ps("ms"),ur=ps("s"),_r=ps("m"),pr=ps("h"),fr=ps("d"),gr=ps("w"),mr=ps("M"),wr=ps("y"),vr=ms("milliseconds"),yr=ms("seconds"),xr=ms("minutes"),br=ms("hours"),$r=ms("days"),kr=ms("months"),Sr=ms("years"),zr=Math.round,Mr={ss:44,s:45,m:45,h:22,d:26,M:11},Cr=Math.abs,Dr=Ie.prototype;return Dr.isValid=Te,Dr.abs=ns,Dr.add=os,Dr.subtract=as,Dr.as=us,Dr.asMilliseconds=cr,Dr.asSeconds=ur,Dr.asMinutes=_r,Dr.asHours=pr,Dr.asDays=fr,Dr.asWeeks=gr,Dr.asMonths=mr,Dr.asYears=wr,Dr.valueOf=_s,Dr._bubble=ls,Dr.clone=fs,Dr.get=gs,Dr.milliseconds=vr,Dr.seconds=yr,Dr.minutes=xr,Dr.hours=br,Dr.days=$r,Dr.weeks=ws,Dr.months=kr,Dr.years=Sr,Dr.humanize=$s,Dr.toISOString=Ss,Dr.toString=Ss,Dr.toJSON=Ss,Dr.locale=xi,Dr.localeData=bi,Dr.toIsoString=$("toIsoString() is deprecated. Please use toISOString() instead (notice the capitals)",Ss),Dr.lang=ir,N("X",0,0,"unix"),N("x",0,0,"valueOf"),U("x",sn),U("X",on),Q("X",function(t,e,i){i._d=new Date(1e3*parseFloat(t,10))}),Q("x",function(t,e,i){i._d=new Date(y(t))}),l.version="2.20.1",t(Se),l.fn=dr,l.min=Me,l.max=Ce,l.now=Bn,l.utc=_,l.unix=Vi,l.months=Ki,l.isDate=n,l.locale=Kt,l.invalid=s,l.duration=Qe,l.isMoment=w,l.weekdays=es,l.parseZone=Zi,l.localeData=ie,l.isDuration=Oe,l.monthsShort=ts,l.weekdaysMin=ss,l.defineLocale=te,l.updateLocale=ee,l.locales=se,l.weekdaysShort=is,l.normalizeUnits=F,l.relativeTimeRounding=xs,l.relativeTimeThreshold=bs,l.calendarFormat=ii,l.prototype=dr,l.HTML5_FMT={DATETIME_LOCAL:"YYYY-MM-DDTHH:mm",DATETIME_LOCAL_SECONDS:"YYYY-MM-DDTHH:mm:ss",DATETIME_LOCAL_MS:"YYYY-MM-DDTHH:mm:ss.SSS",DATE:"YYYY-MM-DD",TIME:"HH:mm",TIME_SECONDS:"HH:mm:ss",TIME_MS:"HH:mm:ss.SSS",WEEK:"YYYY-[W]WW",MONTH:"YYYY-MM"},l}),function(t,e){"use strict";"object"==typeof exports?module.exports=e(require("jquery")):"function"==typeof define&&define.amd?define("gridster-coords",["jquery"],e):t.GridsterCoords=e(t.$||t.jQuery)}(this,function(i){"use strict";function e(t){return t[0]&&i.isPlainObject(t[0])?this.data=t[0]:this.el=t,this.isCoords=!0,this.coords={},this.init(),this}var t=e.prototype;return t.init=function(){this.set(),this.original_coords=this.get()},t.set=function(t,e){var i=this.el;if(i&&!t&&(this.data=i.offset(),this.data.width=i[0].scrollWidth,this.data.height=i[0].scrollHeight),i&&t&&!e){var s=i.offset();this.data.top=s.top,this.data.left=s.left}var n=this.data;return void 0===n.left&&(n.left=n.x1),void 0===n.top&&(n.top=n.y1),this.coords.x1=n.left,this.coords.y1=n.top,this.coords.x2=n.left+n.width,this.coords.y2=n.top+n.height,this.coords.cx=n.left+n.width/2,this.coords.cy=n.top+n.height/2,this.coords.width=n.width,this.coords.height=n.height,this.coords.el=i||!1,this},t.update=function(t){if(!t&&!this.el)return this;if(t){var e=i.extend({},this.data,t);return this.data=e,this.set(!0,!0)}return this.set(!0),this},t.get=function(){return this.coords},t.destroy=function(){this.el.removeData("coords"),delete this.el},i.fn.coords=function(){if(this.data("coords"))return this.data("coords");var t=new e(this);return this.data("coords",t),t},e}),function(t,e){"use strict";"object"==typeof exports?module.exports=e(require("jquery")):"function"==typeof define&&define.amd?define("gridster-collision",["jquery","gridster-coords"],e):t.GridsterCollision=e(t.$||t.jQuery,t.GridsterCoords)}(this,function(f){"use strict";function i(t,e,i){this.options=f.extend(s,i),this.$element=t,this.last_colliders=[],this.last_colliders_coords=[],this.set_colliders(e),this.init()}var s={colliders_context:document.body,overlapping_region:"C"};i.defaults=s;var t=i.prototype;return t.init=function(){this.find_collisions()},t.overlaps=function(t,e){var i=!1,s=!1;return(e.x1>=t.x1&&e.x1<=t.x2||e.x2>=t.x1&&e.x2<=t.x2||t.x1>=e.x1&&t.x2<=e.x2)&&(i=!0),(e.y1>=t.y1&&e.y1<=t.y2||e.y2>=t.y1&&e.y2<=t.y2||t.y1>=e.y1&&t.y2<=e.y2)&&(s=!0),i&&s},t.detect_overlapping_region=function(t,e){var i="",s="";return t.y1>e.cy&&t.y1<e.y2&&(i="N"),t.y2>e.y1&&t.y2<e.cy&&(i="S"),t.x1>e.cx&&t.x1<e.x2&&(s="W"),t.x2>e.x1&&t.x2<e.cx&&(s="E"),i+s||"C"},t.calculate_overlapped_area_coords=function(t,e){var i=Math.max(t.x1,e.x1),s=Math.max(t.y1,e.y1);return f({left:i,top:s,width:Math.min(t.x2,e.x2)-i,height:Math.min(t.y2,e.y2)-s}).coords().get()},t.calculate_overlapped_area=function(t){return t.width*t.height},t.manage_colliders_start_stop=function(t,e,i){for(var s=this.last_colliders_coords,n=0,r=s.length;n<r;n++)-1===f.inArray(s[n],t)&&e.call(this,s[n]);for(var o=0,a=t.length;o<a;o++)-1===f.inArray(t[o],s)&&i.call(this,t[o])},t.find_collisions=function(t){for(var e=this,i=this.options.overlapping_region,s=[],n=[],r=this.colliders||this.$colliders,o=r.length,a=e.$element.coords().update(t||!1).get();o--;){var d=e.$colliders?f(r[o]):r[o],l=d.isCoords?d:d.coords(),h=l.get();if(e.overlaps(a,h)){var c=e.detect_overlapping_region(a,h);if(c===i||"all"===i){var u=e.calculate_overlapped_area_coords(a,h),_=e.calculate_overlapped_area(u);if(0!==_){var p={area:_,area_coords:u,region:c,coords:h,player_coords:a,el:d};e.options.on_overlap&&e.options.on_overlap.call(this,p),s.push(l),n.push(p)}}}}return(e.options.on_overlap_stop||e.options.on_overlap_start)&&this.manage_colliders_start_stop(s,e.options.on_overlap_start,e.options.on_overlap_stop),this.last_colliders_coords=s,n},t.get_closest_colliders=function(t){var e=this.find_collisions(t);return e.sort(function(t,e){return"C"===t.region&&"C"===e.region?t.coords.y1<e.coords.y1||t.coords.x1<e.coords.x1?-1:1:(t.area,e.area,1)}),e},t.set_colliders=function(t){"string"==typeof t||t instanceof f?this.$colliders=f(t,this.options.colliders_context).not(this.$element):this.colliders=f(t)},f.fn.collision=function(t,e){return new i(this,t,e)},i}),function(t){"use strict";t.delay=function(t,e){var i=Array.prototype.slice.call(arguments,2);return setTimeout(function(){return t.apply(null,i)},e)},t.debounce=function(s,n,r){var o;return function(){var t=this,e=arguments,i=function(){o=null,r||s.apply(t,e)};r&&!o&&s.apply(t,e),clearTimeout(o),o=setTimeout(i,n)}},t.throttle=function(e,i){var s,n,r,o,a,d,l=debounce(function(){a=o=!1},i);return function(){s=this,n=arguments;var t=function(){r=null,a&&e.apply(s,n),l()};return r||(r=setTimeout(t,i)),o?a=!0:d=e.apply(s,n),l(),o=!0,d}}}(window),function(t,e){"use strict";"object"==typeof exports?module.exports=e(require("jquery")):"function"==typeof define&&define.amd?define("gridster-draggable",["jquery"],e):t.GridsterDraggable=e(t.$||t.jQuery)}(this,function(i){"use strict";function e(t,e){this.options=i.extend({},s,e),this.$document=i(document),this.$container=i(t),this.$scroll_container=this.options.scroll_container===window?i(window):this.$container.closest(this.options.scroll_container),this.is_dragging=!1,this.player_min_left=0+this.options.offset_left,this.player_min_top=0+this.options.offset_top,this.id=r(),this.ns=".gridster-draggable-"+this.id,this.init()}var s={items:"li",distance:1,limit:{width:!0,height:!1},offset_left:0,autoscroll:!0,ignore_dragging:["INPUT","TEXTAREA","SELECT","BUTTON"],handle:null,container_width:0,move_element:!0,helper:!1,remove_helper:!0},n=i(window),f={x:"left",y:"top"},o=!!("ontouchstart"in window),g=function(t){return t.charAt(0).toUpperCase()+t.slice(1)},t=0,r=function(){return++t+""};e.defaults=s;var a=e.prototype;return a.init=function(){var t=this.$container.css("position");this.calculate_dimensions(),this.$container.css("position","static"===t?"relative":t),this.disabled=!1,this.events(),n.bind(this.nsEvent("resize"),throttle(i.proxy(this.calculate_dimensions,this),200))},a.nsEvent=function(t){return(t||"")+this.ns},a.events=function(){this.pointer_events={start:this.nsEvent("touchstart")+" "+this.nsEvent("mousedown"),move:this.nsEvent("touchmove")+" "+this.nsEvent("mousemove"),end:this.nsEvent("touchend")+" "+this.nsEvent("mouseup")},this.$container.on(this.nsEvent("selectstart"),i.proxy(this.on_select_start,this)),this.$container.on(this.pointer_events.start,this.options.items,i.proxy(this.drag_handler,this)),this.$document.on(this.pointer_events.end,i.proxy(function(t){this.is_dragging=!1,this.disabled||(this.$document.off(this.pointer_events.move),this.drag_start&&this.on_dragstop(t))},this))},a.get_actual_pos=function(t){return t.position()},a.get_mouse_pos=function(t){if(t.originalEvent&&t.originalEvent.touches){var e=t.originalEvent;t=e.touches.length?e.touches[0]:e.changedTouches[0]}return{left:t.clientX,top:t.clientY}},a.get_offset=function(t){t.preventDefault();var e=this.get_mouse_pos(t),i=Math.round(e.left-this.mouse_init_pos.left),s=Math.round(e.top-this.mouse_init_pos.top),n=Math.round(this.el_init_offset.left+i-this.baseX+this.$scroll_container.scrollLeft()-this.scroll_container_offset_x),r=Math.round(this.el_init_offset.top+s-this.baseY+this.$scroll_container.scrollTop()-this.scroll_container_offset_y);return this.options.limit.width&&(n>this.player_max_left?n=this.player_max_left:n<this.player_min_left&&(n=this.player_min_left)),this.options.limit.height&&(r>this.player_max_top?r=this.player_max_top:r<this.player_min_top&&(r=this.player_min_top)),{position:{left:n,top:r},pointer:{left:e.left,
-top:e.top,diff_left:i+(this.$scroll_container.scrollLeft()-this.scroll_container_offset_x),diff_top:s+(this.$scroll_container.scrollTop()-this.scroll_container_offset_y)}}},a.get_drag_data=function(t){var e=this.get_offset(t);return e.$player=this.$player,e.$helper=this.helper?this.$helper:this.$player,e},a.set_limits=function(t){return t||(t=this.$container.width()),this.player_max_left=t-this.player_width-this.options.offset_left,this.player_max_top=this.options.container_height-this.player_height-this.options.offset_top,this.options.container_width=t,this},a.scroll_in=function(t,e){var i,s=f[t],n=50,r=30,o="scroll"+g(s),a="x"===t,d=a?this.scroller_width:this.scroller_height;i=this.$scroll_container===window?a?this.$scroll_container.width():this.$scroll_container.height():a?this.$scroll_container[0].scrollWidth:this.$scroll_container[0].scrollHeight;var l,h=a?this.$player.width():this.$player.height(),c=this.$scroll_container[o](),u=c+d-n,_=c+n,p=c+e.pointer[s];return u<=p&&(l=c+r)<i-d+h&&(this.$scroll_container[o](l),this["scroll_offset_"+t]+=r),p<=_&&0<(l=c-r)&&(this.$scroll_container[o](l),this["scroll_offset_"+t]-=r),this},a.manage_scroll=function(t){this.scroll_in("x",t),this.scroll_in("y",t)},a.calculate_dimensions=function(){this.scroller_height=this.$scroll_container.height(),this.scroller_width=this.$scroll_container.width()},a.drag_handler=function(t){if(!this.disabled&&(1===t.which||o)&&!this.ignore_drag(t)){var n=this,r=!0;return this.$player=i(t.currentTarget),this.el_init_pos=this.get_actual_pos(this.$player),this.mouse_init_pos=this.get_mouse_pos(t),this.offsetY=this.mouse_init_pos.top-this.el_init_pos.top,this.$document.on(this.pointer_events.move,function(t){var e=n.get_mouse_pos(t),i=Math.abs(e.left-n.mouse_init_pos.left),s=Math.abs(e.top-n.mouse_init_pos.top);return(i>n.options.distance||s>n.options.distance)&&(r?(r=!1,n.on_dragstart.call(n,t)):!0===n.is_dragging&&n.on_dragmove.call(n,t),!1)}),!!o&&void 0}},a.on_dragstart=function(t){if(t.preventDefault(),this.is_dragging)return this;this.drag_start=this.is_dragging=!0;var e=this.$container.offset();return this.baseX=Math.round(e.left),this.baseY=Math.round(e.top),"clone"===this.options.helper?(this.$helper=this.$player.clone().appendTo(this.$container).addClass("helper"),this.helper=!0):this.helper=!1,this.scroll_container_offset_y=this.$scroll_container.scrollTop(),this.scroll_container_offset_x=this.$scroll_container.scrollLeft(),this.el_init_offset=this.$player.offset(),this.player_width=this.$player.width(),this.player_height=this.$player.height(),this.set_limits(this.options.container_width),this.options.start&&this.options.start.call(this.$player,t,this.get_drag_data(t)),!1},a.on_dragmove=function(t){var e=this.get_drag_data(t);this.options.autoscroll&&this.manage_scroll(e),this.options.move_element&&(this.helper?this.$helper:this.$player).css({position:"absolute",left:e.position.left,top:e.position.top});var i=this.last_position||e.position;return e.prev_position=i,this.options.drag&&this.options.drag.call(this.$player,t,e),this.last_position=e.position,!1},a.on_dragstop=function(t){var e=this.get_drag_data(t);return this.drag_start=!1,this.options.stop&&this.options.stop.call(this.$player,t,e),this.helper&&this.options.remove_helper&&this.$helper.remove(),!1},a.on_select_start=function(t){if(!this.disabled&&!this.ignore_drag(t))return!1},a.enable=function(){this.disabled=!1},a.disable=function(){this.disabled=!0},a.destroy=function(){this.disable(),this.$container.off(this.ns),this.$document.off(this.ns),n.off(this.ns),i.removeData(this.$container,"drag")},a.ignore_drag=function(t){return this.options.handle?!i(t.target).is(this.options.handle):i.isFunction(this.options.ignore_dragging)?this.options.ignore_dragging(t):this.options.resize?!i(t.target).is(this.options.items):i(t.target).is(this.options.ignore_dragging.join(", "))},i.fn.gridDraggable=function(t){return new e(this,t)},i.fn.dragg=function(t){return this.each(function(){i.data(this,"drag")||i.data(this,"drag",new e(this,t))})},e}),function(t,e){"use strict";"object"==typeof exports?module.exports=e(require("jquery"),require("./jquery.draggable.js"),require("./jquery.collision.js"),require("./jquery.coords.js"),require("./utils.js")):"function"==typeof define&&define.amd?define(["jquery","gridster-draggable","gridster-collision"],e):t.Gridster=e(t.$||t.jQuery,t.GridsterDraggable,t.GridsterCollision)}(this,function(w,t){"use strict";function d(t,e){this.options=w.extend(!0,{},s,e),this.options.draggable=this.options.draggable||{},this.options.draggable=w.extend(!0,{},this.options.draggable,{scroll_container:this.options.scroll_container}),this.$el=w(t),this.$scroll_container=this.options.scroll_container===window?w(window):this.$el.closest(this.options.scroll_container),this.$wrapper=this.$el.parent(),this.$widgets=this.$el.children(this.options.widget_selector).addClass("gs-w"),this.$changed=w([]),this.w_queue={},this.is_responsive()?this.min_widget_width=this.get_responsive_col_width():this.min_widget_width=this.options.widget_base_dimensions[0],this.min_widget_height=this.options.widget_base_dimensions[1],this.is_resizing=!1,this.min_col_count=this.options.min_cols,this.prev_col_count=this.min_col_count,this.generated_stylesheets=[],this.$style_tags=w([]),typeof this.options.limit==typeof!0&&(console.log("limit: bool is deprecated, consider using limit: { width: boolean, height: boolean} instead"),this.options.limit={width:this.options.limit,height:this.options.limit}),this.options.auto_init&&this.init()}function i(t){for(var e=["col","row","size_x","size_y"],i={},s=0,n=e.length;s<n;s++){var r=e[s];if(!(r in t))throw new Error("Not exists property `"+r+"`");var o=t[r];if(!o||isNaN(o))throw new Error("Invalid value of `"+r+"` property");i[r]=+o}return i}var e=w(window),s={namespace:"",widget_selector:"li",static_class:"static",widget_margins:[10,10],widget_base_dimensions:[400,225],extra_rows:0,extra_cols:0,min_cols:1,max_cols:1/0,limit:{width:!0,height:!1},min_rows:1,max_rows:15,autogenerate_stylesheet:!0,avoid_overlapped_widgets:!0,auto_init:!0,center_widgets:!1,responsive_breakpoint:!1,scroll_container:window,shift_larger_widgets_down:!0,move_widgets_down_only:!1,shift_widgets_up:!0,show_element:function(t,e){e?t.fadeIn(e):t.fadeIn()},hide_element:function(t,e){e?t.fadeOut(e):t.fadeOut()},serialize_params:function(t,e){return{col:e.col,row:e.row,size_x:e.size_x,size_y:e.size_y}},collision:{wait_for_mouseup:!1},draggable:{items:".gs-w:not(.static)",distance:4,ignore_dragging:t.defaults.ignore_dragging.slice(0)},resize:{enabled:!1,axes:["both"],handle_append_to:"",handle_class:"gs-resize-handle",max_size:[1/0,1/0],min_size:[1,1]},ignore_self_occupied:!1};d.defaults=s,d.generated_stylesheets=[],d.sort_by_row_asc=function(t){return t.sort(function(t,e){return t.row||(t=w(t).coords().grid,e=w(e).coords().grid),t=i(t),e=i(e),t.row>e.row?1:-1})},d.sort_by_row_and_col_asc=function(t){return t.sort(function(t,e){return t=i(t),e=i(e),t.row>e.row||t.row===e.row&&t.col>e.col?1:-1})},d.sort_by_col_asc=function(t){return t.sort(function(t,e){return t=i(t),e=i(e),t.col>e.col?1:-1})},d.sort_by_row_desc=function(t){return t.sort(function(t,e){return t=i(t),e=i(e),t.row+t.size_y<e.row+e.size_y?1:-1})};var n=d.prototype;return n.init=function(){this.options.resize.enabled&&this.setup_resize(),this.generate_grid_and_stylesheet(),this.get_widgets_from_DOM(),this.set_dom_grid_height(),this.set_dom_grid_width(),this.$wrapper.addClass("ready"),this.draggable(),this.options.resize.enabled&&this.resizable(),this.options.center_widgets&&setTimeout(w.proxy(function(){this.center_widgets()},this),0),e.bind("resize.gridster",throttle(w.proxy(this.recalculate_faux_grid,this),200))},n.disable=function(){return this.$wrapper.find(".player-revert").removeClass("player-revert"),this.drag_api.disable(),this},n.enable=function(){return this.drag_api.enable(),this},n.disable_resize=function(){return this.$el.addClass("gs-resize-disabled"),this.resize_api.disable(),this},n.enable_resize=function(){return this.$el.removeClass("gs-resize-disabled"),this.resize_api.enable(),this},n.add_widget=function(t,e,i,s,n,r,o,a){var d;if(e||(e=1),i||(i=1),s||n)d={col:s,row:n,size_x:e,size_y:i},this.options.avoid_overlapped_widgets&&this.empty_cells(s,n,e,i);else if(!1===(d=this.next_position(e,i)))return!1;var l=w(t).attr({"data-col":d.col,"data-row":d.row,"data-sizex":e,"data-sizey":i}).addClass("gs-w").appendTo(this.$el).hide();this.$widgets=this.$widgets.add(l),this.$changed=this.$changed.add(l),this.register_widget(l);var h=parseInt(d.row)+(parseInt(d.size_y)-1);return this.rows<h&&this.add_faux_rows(h-this.rows),r&&this.set_widget_max_size(l,r),o&&this.set_widget_min_size(l,o),this.set_dom_grid_width(),this.set_dom_grid_height(),this.drag_api.set_limits(this.cols*this.min_widget_width+(this.cols+1)*this.options.widget_margins[0]),this.options.center_widgets&&setTimeout(w.proxy(function(){this.center_widgets()},this),0),this.options.show_element.call(this,l,a),l},n.set_widget_min_size=function(t,e){if(!(t="number"==typeof t?this.$widgets.eq(t):t).length)return this;var i=t.data("coords").grid;return i.min_size_x=e[0],i.min_size_y=e[1],this},n.set_widget_max_size=function(t,e){if(!(t="number"==typeof t?this.$widgets.eq(t):t).length)return this;var i=t.data("coords").grid;return i.max_size_x=e[0],i.max_size_y=e[1],this},n.add_resize_handle=function(t){var e=this.options.resize.handle_append_to?w(this.options.resize.handle_append_to,t):t;return 0===e.children("span[class~='"+this.resize_handle_class+"']").length&&w(this.resize_handle_tpl).appendTo(e),this},n.resize_widget=function(t,e,i,s){var n=t.coords().grid;this.is_resizing=!0,e||(e=n.size_x),i||(i=n.size_y),this.is_valid_row(n.row,i)||this.add_faux_rows(Math.max(this.calculate_highest_row(n.row,i)-this.rows,0)),this.is_valid_col(n.col,i)||this.add_faux_cols(Math.max(this.calculate_highest_row(n.col,e)-this.cols,0));var r={col:n.col,row:n.row,size_x:e,size_y:i};return this.mutate_widget_in_gridmap(t,n,r),this.set_dom_grid_height(),this.set_dom_grid_width(),s&&s.call(this,r.size_x,r.size_y),this.is_resizing=!1,t},n.expand_widget=function(t,e,i,s,n){var r=t.coords().grid,o=Math.floor((w(window).width()-2*this.options.widget_margins[0])/this.min_widget_width);e=e||Math.min(o,this.cols),i||(i=r.size_y);var a=r.size_y;t.attr("pre_expand_col",r.col),t.attr("pre_expand_sizex",r.size_x),t.attr("pre_expand_sizey",r.size_y);var d=s||1;a<i&&this.add_faux_rows(Math.max(i-a,0));var l={col:d,row:r.row,size_x:e,size_y:i};return this.mutate_widget_in_gridmap(t,r,l),this.set_dom_grid_height(),this.set_dom_grid_width(),n&&n.call(this,l.size_x,l.size_y),t},n.collapse_widget=function(t,e){var i=t.coords().grid,s=parseInt(t.attr("pre_expand_sizex")),n=parseInt(t.attr("pre_expand_sizey")),r={col:parseInt(t.attr("pre_expand_col")),row:i.row,size_x:s,size_y:n};return this.mutate_widget_in_gridmap(t,i,r),this.set_dom_grid_height(),this.set_dom_grid_width(),e&&e.call(this,r.size_x,r.size_y),t},n.fit_to_content=function(t,e,i,s){var n=t.coords().grid,r=this.$wrapper.width(),o=this.$wrapper.height(),a=this.options.widget_base_dimensions[0]+2*this.options.widget_margins[0],d=this.options.widget_base_dimensions[1]+2*this.options.widget_margins[1],l=Math.ceil((r+2*this.options.widget_margins[0])/a),h=Math.ceil((o+2*this.options.widget_margins[1])/d),c={col:n.col,row:n.row,size_x:Math.min(e,l),size_y:Math.min(i,h)};return this.mutate_widget_in_gridmap(t,n,c),this.set_dom_grid_height(),this.set_dom_grid_width(),s&&s.call(this,c.size_x,c.size_y),t},n.center_widgets=debounce(function(){var t,e=this.$wrapper.width();t=this.is_responsive()?this.get_responsive_col_width():this.options.widget_base_dimensions[0]+2*this.options.widget_margins[0];var i=2*Math.floor(Math.max(Math.floor(e/t),this.min_col_count)/2);this.options.min_cols=i,this.options.max_cols=i,this.options.extra_cols=0,this.set_dom_grid_width(i);var s=((this.cols=i)-this.prev_col_count)/2;return s<0?(this.get_min_col()>-1*s?this.shift_cols(s):this.resize_widget_dimensions(this.options),setTimeout(w.proxy(function(){this.resize_widget_dimensions(this.options)},this),0)):0<s?(this.resize_widget_dimensions(this.options),setTimeout(w.proxy(function(){this.shift_cols(s)},this),0)):(this.resize_widget_dimensions(this.options),setTimeout(w.proxy(function(){this.resize_widget_dimensions(this.options)},this),0)),this.prev_col_count=i,this},200),n.get_min_col=function(){return Math.min.apply(Math,this.$widgets.map(w.proxy(function(t,e){return this.get_cells_occupied(w(e).coords().grid).cols},this)).get())},n.shift_cols=function(o){var t=this.$widgets.map(w.proxy(function(t,e){var i=w(e);return this.dom_to_coords(i)},this));(t=d.sort_by_row_and_col_asc(t)).each(w.proxy(function(t,e){var i=w(e.el),s=i.coords().grid,n=parseInt(i.attr("data-col")),r={col:Math.max(Math.round(n+o),1),row:s.row,size_x:s.size_x,size_y:s.size_y};setTimeout(w.proxy(function(){this.mutate_widget_in_gridmap(i,s,r)},this),0)},this))},n.mutate_widget_in_gridmap=function(t,e,i){var s=e.size_y,n=this.get_cells_occupied(e),r=this.get_cells_occupied(i),o=[];w.each(n.cols,function(t,e){-1===w.inArray(e,r.cols)&&o.push(e)});var a=[];w.each(r.cols,function(t,e){-1===w.inArray(e,n.cols)&&a.push(e)});var d=[];w.each(n.rows,function(t,e){-1===w.inArray(e,r.rows)&&d.push(e)});var l=[];if(w.each(r.rows,function(t,e){-1===w.inArray(e,n.rows)&&l.push(e)}),this.remove_from_gridmap(e),a.length){var h=[i.col,i.row,i.size_x,Math.min(s,i.size_y),t];this.empty_cells.apply(this,h)}if(l.length){var c=[i.col,i.row,i.size_x,i.size_y,t];this.empty_cells.apply(this,c)}if(e.col=i.col,e.row=i.row,e.size_x=i.size_x,e.size_y=i.size_y,this.add_to_gridmap(i,t),t.removeClass("player-revert"),this.update_widget_dimensions(t,i),this.options.shift_widgets_up){if(o.length){var u=[o[0],i.row,o[o.length-1]-o[0]+1,Math.min(s,i.size_y),t];this.remove_empty_cells.apply(this,u)}if(d.length){var _=[i.col,i.row,i.size_x,i.size_y,t];this.remove_empty_cells.apply(this,_)}}return this.move_widget_up(t),this},n.empty_cells=function(t,r,e,o,i){return this.widgets_below({col:t,row:r-o,size_x:e,size_y:o}).not(i).each(w.proxy(function(t,e){var i=w(e),s=i.coords().grid;if(s.row<=r+o-1){var n=r+o-s.row;this.move_widget_down(i,n)}},this)),this.is_resizing||this.set_dom_grid_height(),this},n.remove_empty_cells=function(t,e,i,s,n){return this.widgets_below({col:t,row:e,size_x:i,size_y:s}).not(n).each(w.proxy(function(t,e){this.move_widget_up(w(e),s)},this)),this.set_dom_grid_height(),this},n.next_position=function(t,e){t||(t=1),e||(e=1);for(var i,s=this.gridmap,n=s.length,r=[],o=1;o<n;o++){i=s[o].length;for(var a=1;a<=i;a++)this.can_move_to({size_x:t,size_y:e},o,a)&&r.push({col:o,row:a,size_y:e,size_x:t})}return!!r.length&&d.sort_by_row_and_col_asc(r)[0]},n.remove_by_grid=function(t,e){var i=this.is_widget(t,e);i&&this.remove_widget(i)},n.remove_widget=function(t,e,i){var s=t instanceof w?t:w(t);if(0===s.length)return this;var n=s.coords().grid;if(void 0===n)return this;w.isFunction(e)&&(i=e,e=!1),this.cells_occupied_by_placeholder={},this.$widgets=this.$widgets.not(s);var r=this.widgets_below(s);return this.remove_from_gridmap(n),this.options.hide_element.call(this,s,w.proxy(function(){s.remove(),e||r.each(w.proxy(function(t,e){this.move_widget_up(w(e),n.size_y)},this)),this.set_dom_grid_height(),i&&i.call(this,t)},this)),this},n.remove_all_widgets=function(i){return this.$widgets.each(w.proxy(function(t,e){this.remove_widget(e,!0,i)},this)),this},n.serialize=function(t){t||(t=this.$widgets);var s=[];return t.each(w.proxy(function(t,e){var i=w(e);void 0!==i.coords().grid&&s.push(this.options.serialize_params(i,i.coords().grid))},this)),s},n.serialize_changed=function(){return this.serialize(this.$changed)},n.dom_to_coords=function(t){return{col:parseInt(t.attr("data-col"),10),row:parseInt(t.attr("data-row"),10),size_x:parseInt(t.attr("data-sizex"),10)||1,size_y:parseInt(t.attr("data-sizey"),10)||1,max_size_x:parseInt(t.attr("data-max-sizex"),10)||!1,max_size_y:parseInt(t.attr("data-max-sizey"),10)||!1,min_size_x:parseInt(t.attr("data-min-sizex"),10)||!1,min_size_y:parseInt(t.attr("data-min-sizey"),10)||!1,el:t}},n.register_widget=function(t){var e=t instanceof w,i=e?this.dom_to_coords(t):t,s=!1;e||(t=i.el);var n=this.can_go_widget_up(i);return this.options.shift_widgets_up&&n&&(i.row=n,t.attr("data-row",n),this.$el.trigger("gridster:positionchanged",[i]),s=!0),this.options.avoid_overlapped_widgets&&!this.can_move_to({size_x:i.size_x,size_y:i.size_y},i.col,i.row)&&(w.extend(i,this.next_position(i.size_x,i.size_y)),t.attr({"data-col":i.col,"data-row":i.row,"data-sizex":i.size_x,"data-sizey":i.size_y}),s=!0),t.data("coords",t.coords()),t.data("coords").grid=i,this.add_to_gridmap(i,t),this.update_widget_dimensions(t,i),this.options.resize.enabled&&this.add_resize_handle(t),s},n.update_widget_position=function(t,i){return this.for_each_cell_occupied(t,function(t,e){if(!this.gridmap[t])return this;this.gridmap[t][e]=i}),this},n.update_widget_dimensions=function(t,e){var i=e.size_x*(this.is_responsive()?this.get_responsive_col_width():this.options.widget_base_dimensions[0])+(e.size_x-1)*this.options.widget_margins[0],s=e.size_y*this.options.widget_base_dimensions[1]+(e.size_y-1)*this.options.widget_margins[1];return t.data("coords").update({width:i,height:s}),t.attr({"data-col":e.col,"data-row":e.row,"data-sizex":e.size_x,"data-sizey":e.size_y}),this},n.update_widgets_dimensions=function(){return w.each(this.$widgets,w.proxy(function(t,e){var i=w(e).coords().grid;"object"==typeof i&&this.update_widget_dimensions(w(e),i)},this)),this},n.remove_from_gridmap=function(t){return this.update_widget_position(t,!1)},n.add_to_gridmap=function(t,e){this.update_widget_position(t,e||t.el)},n.draggable=function(){var i=this,t=w.extend(!0,{},this.options.draggable,{offset_left:this.options.widget_margins[0],offset_top:this.options.widget_margins[1],container_width:this.cols*this.min_widget_width+(this.cols+1)*this.options.widget_margins[0],container_height:this.rows*this.min_widget_height+(this.rows+1)*this.options.widget_margins[0],limit:{width:this.options.limit.width,height:this.options.limit.height},start:function(t,e){i.$widgets.filter(".player-revert").removeClass("player-revert"),i.$player=w(this),i.$helper=w(e.$helper),i.helper=!i.$helper.is(i.$player),i.on_start_drag.call(i,t,e),i.$el.trigger("gridster:dragstart")},stop:function(t,e){i.on_stop_drag.call(i,t,e),i.$el.trigger("gridster:dragstop")},drag:throttle(function(t,e){i.on_drag.call(i,t,e),i.$el.trigger("gridster:drag")},60)});this.drag_api=this.$el.dragg(t).data("drag")},n.resizable=function(){return this.resize_api=this.$el.gridDraggable({items:"."+this.options.resize.handle_class,offset_left:this.options.widget_margins[0],container_width:this.container_width,move_element:!1,resize:!0,limit:{width:this.options.max_cols!==1/0||this.limit.width,height:this.options.max_rows!==1/0||this.limit.height},scroll_container:this.options.scroll_container,start:w.proxy(this.on_start_resize,this),stop:w.proxy(function(t,e){delay(w.proxy(function(){this.on_stop_resize(t,e)},this),120)},this),drag:throttle(w.proxy(this.on_resize,this),60)}),this},n.setup_resize=function(){this.resize_handle_class=this.options.resize.handle_class;var t=this.options.resize.axes,e='<span class="'+this.resize_handle_class+" "+this.resize_handle_class+'-{type}" />';return this.resize_handle_tpl=w.map(t,function(t){return e.replace("{type}",t)}).join(""),w.isArray(this.options.draggable.ignore_dragging)&&this.options.draggable.ignore_dragging.push("."+this.resize_handle_class),this},n.on_start_drag=function(t,e){this.$helper.add(this.$player).add(this.$wrapper).addClass("dragging"),this.highest_col=this.get_highest_occupied_cell().col,this.$player.addClass("player"),this.player_grid_data=this.$player.coords().grid,this.placeholder_grid_data=w.extend({},this.player_grid_data),this.get_highest_occupied_cell().row+this.player_grid_data.size_y<=this.options.max_rows&&this.set_dom_grid_height(this.$el.height()+this.player_grid_data.size_y*this.min_widget_height),this.set_dom_grid_width(this.cols);var i=this.player_grid_data.size_x,s=this.cols-this.highest_col;this.options.max_cols===1/0&&s<=i&&this.add_faux_cols(Math.min(i-s,1));var n=this.faux_grid,r=this.$player.data("coords").coords;this.cells_occupied_by_player=this.get_cells_occupied(this.player_grid_data),this.cells_occupied_by_placeholder=this.get_cells_occupied(this.placeholder_grid_data),this.last_cols=[],this.last_rows=[],this.collision_api=this.$helper.collision(n,this.options.collision),this.$preview_holder=w("<"+this.$player.get(0).tagName+" />",{"class":"preview-holder","data-row":this.$player.attr("data-row"),"data-col":this.$player.attr("data-col"),css:{width:r.width,height:r.height}}).appendTo(this.$el),this.options.draggable.start&&this.options.draggable.start.call(this,t,e)},n.on_drag=function(t,e){if(null===this.$player)return!1;var i=this.options.widget_margins,s=this.$preview_holder.attr("data-col"),n=this.$preview_holder.attr("data-row"),r={left:e.position.left+this.baseX-i[0]*s,top:e.position.top+this.baseY-i[1]*n};this.options.max_cols===1/0&&(this.placeholder_grid_data.col+this.placeholder_grid_data.size_x-1>=this.cols-1&&this.options.max_cols>=this.cols+1&&(this.add_faux_cols(1),this.set_dom_grid_width(this.cols+1),this.drag_api.set_limits(this.cols*this.min_widget_width+(this.cols+1)*this.options.widget_margins[0])),this.collision_api.set_colliders(this.faux_grid)),this.colliders_data=this.collision_api.get_closest_colliders(r),this.on_overlapped_column_change(this.on_start_overlapping_column,this.on_stop_overlapping_column),this.on_overlapped_row_change(this.on_start_overlapping_row,this.on_stop_overlapping_row),this.helper&&this.$player&&this.$player.css({left:e.position.left,top:e.position.top}),this.options.draggable.drag&&this.options.draggable.drag.call(this,t,e)},n.on_stop_drag=function(t,e){this.$helper.add(this.$player).add(this.$wrapper).removeClass("dragging");var i=this.options.widget_margins,s=this.$preview_holder.attr("data-col"),n=this.$preview_holder.attr("data-row");e.position.left=e.position.left+this.baseX-i[0]*s,e.position.top=e.position.top+this.baseY-i[1]*n,this.colliders_data=this.collision_api.get_closest_colliders(e.position),this.on_overlapped_column_change(this.on_start_overlapping_column,this.on_stop_overlapping_column),this.on_overlapped_row_change(this.on_start_overlapping_row,this.on_stop_overlapping_row),this.$changed=this.$changed.add(this.$player);var r=this.placeholder_grid_data.el.coords().grid;r.col===this.placeholder_grid_data.col&&r.row===this.placeholder_grid_data.row||(this.update_widget_position(r,!1),this.options.collision.wait_for_mouseup&&this.for_each_cell_occupied(this.placeholder_grid_data,function(t,e){if(this.is_widget(t,e)){var i=this.placeholder_grid_data.row+this.placeholder_grid_data.size_y-parseInt(this.gridmap[t][e][0].getAttribute("data-row"));!this.move_widget_down(this.is_widget(t,e),i)&&this.set_placeholder(this.placeholder_grid_data.el.coords().grid.col,this.placeholder_grid_data.el.coords().grid.row)}})),this.cells_occupied_by_player=this.get_cells_occupied(this.placeholder_grid_data);var o=this.placeholder_grid_data.col,a=this.placeholder_grid_data.row;this.set_cells_player_occupies(o,a),this.$player.coords().grid.row=a,this.$player.coords().grid.col=o,this.$player.addClass("player-revert").removeClass("player").attr({"data-col":o,"data-row":a}).css({left:"",top:""}),this.options.draggable.stop&&this.options.draggable.stop.call(this,t,e),this.$preview_holder.remove(),this.$player=null,this.$helper=null,this.placeholder_grid_data={},this.player_grid_data={},this.cells_occupied_by_placeholder={},this.cells_occupied_by_player={},this.w_queue={},this.set_dom_grid_height(),this.set_dom_grid_width(),this.options.max_cols===1/0&&this.drag_api.set_limits(this.cols*this.min_widget_width+(this.cols+1)*this.options.widget_margins[0])},n.on_start_resize=function(t,e){this.$resized_widget=e.$player.closest(".gs-w"),this.resize_coords=this.$resized_widget.coords(),this.resize_wgd=this.resize_coords.grid,this.resize_initial_width=this.resize_coords.coords.width,this.resize_initial_height=this.resize_coords.coords.height,this.resize_initial_sizex=this.resize_coords.grid.size_x,this.resize_initial_sizey=this.resize_coords.grid.size_y,this.resize_initial_col=this.resize_coords.grid.col,this.resize_last_sizex=this.resize_initial_sizex,this.resize_last_sizey=this.resize_initial_sizey,this.resize_max_size_x=Math.min(this.resize_wgd.max_size_x||this.options.resize.max_size[0],this.options.max_cols-this.resize_initial_col+1),this.resize_max_size_y=this.resize_wgd.max_size_y||this.options.resize.max_size[1],this.resize_min_size_x=this.resize_wgd.min_size_x||this.options.resize.min_size[0]||1,this.resize_min_size_y=this.resize_wgd.min_size_y||this.options.resize.min_size[1]||1,this.resize_initial_last_col=this.get_highest_occupied_cell().col,this.set_dom_grid_width(this.cols),this.resize_dir={right:e.$player.is("."+this.resize_handle_class+"-x"),bottom:e.$player.is("."+this.resize_handle_class+"-y")},this.is_responsive()||this.$resized_widget.css({"min-width":this.options.widget_base_dimensions[0],"min-height":this.options.widget_base_dimensions[1]});var i=this.$resized_widget.get(0).tagName;this.$resize_preview_holder=w("<"+i+" />",{"class":"preview-holder resize-preview-holder","data-row":this.$resized_widget.attr("data-row"),"data-col":this.$resized_widget.attr("data-col"),css:{width:this.resize_initial_width,height:this.resize_initial_height}}).appendTo(this.$el),this.$resized_widget.addClass("resizing"),this.options.resize.start&&this.options.resize.start.call(this,t,e,this.$resized_widget),this.$el.trigger("gridster:resizestart")},n.on_stop_resize=function(t,e){this.$resized_widget.removeClass("resizing").css({width:"",height:"","min-width":"","min-height":""}),delay(w.proxy(function(){this.$resize_preview_holder.remove().css({"min-width":"","min-height":""}),this.options.resize.stop&&this.options.resize.stop.call(this,t,e,this.$resized_widget),this.$el.trigger("gridster:resizestop")},this),300),this.set_dom_grid_width(),this.set_dom_grid_height(),this.options.max_cols===1/0&&this.drag_api.set_limits(this.cols*this.min_widget_width)},n.on_resize=function(t,e){var i,s=e.pointer.diff_left,n=e.pointer.diff_top,r=this.is_responsive()?this.get_responsive_col_width():this.options.widget_base_dimensions[0],o=this.options.widget_base_dimensions[1],a=this.options.widget_margins[0],d=this.options.widget_margins[1],l=this.resize_max_size_x,h=this.resize_min_size_x,c=this.resize_max_size_y,u=this.resize_min_size_y,_=this.options.max_cols===1/0,p=Math.ceil(s/(r+2*a)-.2),f=Math.ceil(n/(o+2*d)-.2),g=Math.max(1,this.resize_initial_sizex+p),m=Math.max(1,this.resize_initial_sizey+f),w=Math.floor(this.container_width/this.min_widget_width-this.resize_initial_col+1),v=w*this.min_widget_width+(w-1)*a;g=Math.max(Math.min(g,l),h),i=l*r+((g=Math.min(w,g))-1)*a;var y=Math.min(i,v),x=h*r+(g-1)*a,b=c*o+((m=Math.max(Math.min(m,c),u))-1)*d,$=u*o+(m-1)*d;if(this.resize_dir.right?m=this.resize_initial_sizey:this.resize_dir.bottom&&(g=this.resize_initial_sizex),_){var k=this.resize_initial_col+g-1;_&&this.resize_initial_last_col<=k&&(this.set_dom_grid_width(Math.max(k+1,this.cols)),this.cols<k&&this.add_faux_cols(k-this.cols))}var S={};!this.resize_dir.bottom&&(S.width=Math.max(Math.min(this.resize_initial_width+s,y),x)),!this.resize_dir.right&&(S.height=Math.max(Math.min(this.resize_initial_height+n,b),$)),this.$resized_widget.css(S),g===this.resize_last_sizex&&m===this.resize_last_sizey||(this.resize_widget(this.$resized_widget,g,m,!1),this.set_dom_grid_width(this.cols),this.$resize_preview_holder.css({width:"",height:""}).attr({"data-row":this.$resized_widget.attr("data-row"),"data-sizex":g,"data-sizey":m})),this.options.resize.resize&&this.options.resize.resize.call(this,t,e,this.$resized_widget),this.$el.trigger("gridster:resize"),this.resize_last_sizex=g,this.resize_last_sizey=m},n.on_overlapped_column_change=function(t,e){if(!this.colliders_data.length)return this;var i,s=this.get_targeted_columns(this.colliders_data[0].el.data.col),n=this.last_cols.length,r=s.length;for(i=0;i<r;i++)-1===w.inArray(s[i],this.last_cols)&&(t||w.noop).call(this,s[i]);for(i=0;i<n;i++)-1===w.inArray(this.last_cols[i],s)&&(e||w.noop).call(this,this.last_cols[i]);return this.last_cols=s,this},n.on_overlapped_row_change=function(t,e){if(!this.colliders_data.length)return this;var i,s=this.get_targeted_rows(this.colliders_data[0].el.data.row),n=this.last_rows.length,r=s.length;for(i=0;i<r;i++)-1===w.inArray(s[i],this.last_rows)&&(t||w.noop).call(this,s[i]);for(i=0;i<n;i++)-1===w.inArray(this.last_rows[i],s)&&(e||w.noop).call(this,this.last_rows[i]);this.last_rows=s},n.set_player=function(t,e,i){var h=!1,s=i?{col:t}:this.colliders_data[0].el.data,c=s.col,u=s.row||e;this.player_grid_data={col:c,row:u,size_y:this.player_grid_data.size_y,size_x:this.player_grid_data.size_x},this.cells_occupied_by_player=this.get_cells_occupied(this.player_grid_data),this.cells_occupied_by_placeholder=this.get_cells_occupied(this.placeholder_grid_data);var _=this.get_widgets_overlapped(this.player_grid_data),p=this.player_grid_data.size_y,f=this.player_grid_data.size_x,g=this.cells_occupied_by_placeholder,m=this;if(_.each(w.proxy(function(t,e){var i=w(e),s=i.coords().grid,n=g.cols[0]+f-1,r=g.rows[0]+p-1;if(i.hasClass(m.options.static_class))return!0;if(m.options.collision.wait_for_mouseup&&m.drag_api.is_dragging)m.placeholder_grid_data.col=c,m.placeholder_grid_data.row=u,m.cells_occupied_by_placeholder=m.get_cells_occupied(m.placeholder_grid_data),m.$preview_holder.attr({"data-row":u,"data-col":c});else if(s.size_x<=f&&s.size_y<=p)if(m.is_swap_occupied(g.cols[0],s.row,s.size_x,s.size_y)||m.is_player_in(g.cols[0],s.row)||m.is_in_queue(g.cols[0],s.row,i))if(m.is_swap_occupied(n,s.row,s.size_x,s.size_y)||m.is_player_in(n,s.row)||m.is_in_queue(n,s.row,i))if(m.is_swap_occupied(s.col,g.rows[0],s.size_x,s.size_y)||m.is_player_in(s.col,g.rows[0])||m.is_in_queue(s.col,g.rows[0],i))if(m.is_swap_occupied(s.col,r,s.size_x,s.size_y)||m.is_player_in(s.col,r)||m.is_in_queue(s.col,r,i))if(m.is_swap_occupied(g.cols[0],g.rows[0],s.size_x,s.size_y)||m.is_player_in(g.cols[0],g.rows[0])||m.is_in_queue(g.cols[0],g.rows[0],i))for(var o=0;o<f;o++)for(var a=0;a<p;a++){var d=g.cols[0]+o,l=g.rows[0]+a;if(!m.is_swap_occupied(d,l,s.size_x,s.size_y)&&!m.is_player_in(d,l)&&!m.is_in_queue(d,l,i)){h=m.queue_widget(d,l,i),o=f;break}}else m.options.move_widgets_down_only?_.each(w.proxy(function(t,e){var i=w(e);m.can_go_down(i)&&i.coords().grid.row===m.player_grid_data.row&&!m.is_in_queue(n,s.row,i)&&(m.move_widget_down(i,m.player_grid_data.size_y),m.set_placeholder(c,u))})):h=m.queue_widget(g.cols[0],g.rows[0],i);else h=m.queue_widget(s.col,r,i);else h=m.queue_widget(s.col,g.rows[0],i);else h=m.queue_widget(n,s.row,i);else m.options.move_widgets_down_only?_.each(w.proxy(function(t,e){var i=w(e);m.can_go_down(i)&&i.coords().grid.row===m.player_grid_data.row&&!m.is_in_queue(i.coords().grid.col,s.row,i)&&(m.move_widget_down(i,m.player_grid_data.size_y),m.set_placeholder(c,u))})):h=m.queue_widget(g.cols[0],s.row,i);else m.options.shift_larger_widgets_down&&!h&&_.each(w.proxy(function(t,e){var i=w(e);m.can_go_down(i)&&i.coords().grid.row===m.player_grid_data.row&&(m.move_widget_down(i,m.player_grid_data.size_y),m.set_placeholder(c,u))}));m.clean_up_changed()})),h&&this.can_placeholder_be_set(c,u,f,p)){for(var n in this.w_queue){var r=parseInt(n.split("_")[0]),o=parseInt(n.split("_")[1]);"full"!==this.w_queue[n]&&this.new_move_widget_to(this.w_queue[n],r,o)}this.set_placeholder(c,u)}if(!_.length){if(this.options.shift_widgets_up){var a=this.can_go_player_up(this.player_grid_data);!1!==a&&(u=a)}this.can_placeholder_be_set(c,u,f,p)&&this.set_placeholder(c,u)}return this.w_queue={},{col:c,row:u}},n.is_swap_occupied=function(t,e,i,s){for(var n=!1,r=0;r<i;r++)for(var o=0;o<s;o++){var a=t+r,d=e+o,l=a+"_"+d;if(this.is_occupied(a,d))n=!0;else if(l in this.w_queue){if("full"===this.w_queue[l]){n=!0;continue}var h=this.w_queue[l].coords().grid;this.is_widget_under_player(h.col,h.row)||delete this.w_queue[l]}d>parseInt(this.options.max_rows)&&(n=!0),a>parseInt(this.options.max_cols)&&(n=!0),this.is_player_in(a,d)&&(n=!0)}return n},n.can_placeholder_be_set=function(t,e,i,s){for(var n=!0,r=0;r<i;r++)for(var o=0;o<s;o++){var a=t+r,d=e+o,l=this.is_widget(a,d);d>parseInt(this.options.max_rows)&&(n=!1),a>parseInt(this.options.max_cols)&&(n=!1),this.is_occupied(a,d)&&!this.is_widget_queued_and_can_move(l)&&(n=!1)}return n},n.queue_widget=function(t,e,i){var s=i,
-n=s.coords().grid,r=t+"_"+e;if(r in this.w_queue)return!1;this.w_queue[r]=s;for(var o=0;o<n.size_x;o++)for(var a=0;a<n.size_y;a++){var d=t+o+"_"+(e+a);d!==r&&(this.w_queue[d]="full")}return!0},n.is_widget_queued_and_can_move=function(t){var e=!1;if(!1===t)return!1;for(var i in this.w_queue)if("full"!==this.w_queue[i]&&this.w_queue[i].attr("data-col")===t.attr("data-col")&&this.w_queue[i].attr("data-row")===t.attr("data-row")){e=!0;for(var s=this.w_queue[i],n=parseInt(i.split("_")[0]),r=parseInt(i.split("_")[1]),o=s.coords().grid,a=0;a<o.size_x;a++)for(var d=0;d<o.size_y;d++){var l=n+a,h=r+d;this.is_player_in(l,h)&&(e=!1)}}return e},n.is_in_queue=function(t,e,i){var s=!1,n=t+"_"+e;if(n in this.w_queue)if("full"===this.w_queue[n])s=!0;else{var r=this.w_queue[n].coords().grid;this.is_widget_under_player(r.col,r.row)?this.w_queue[n].attr("data-col")===i.attr("data-col")&&this.w_queue[n].attr("data-row")===i.attr("data-row")?(delete this.w_queue[n],s=!1):s=!0:(delete this.w_queue[n],s=!1)}return s},n.widgets_constraints=function(t){var n=w([]),r=[],o=[];return t.each(w.proxy(function(t,e){var i=w(e),s=i.coords().grid;this.can_go_widget_up(s)?(n=n.add(i),r.push(s)):o.push(s)},this)),t.not(n),{can_go_up:d.sort_by_row_asc(r),can_not_go_up:d.sort_by_row_desc(o)}},n.manage_movements=function(t,o,a){return w.each(t,w.proxy(function(t,e){var i=e,s=i.el,n=this.can_go_widget_up(i);if(n)this.move_widget_to(s,n),this.set_placeholder(o,n+i.size_y);else if(!this.can_go_player_up(this.player_grid_data)){var r=a+this.player_grid_data.size_y-i.row;this.can_go_down(s)&&(console.log("In Move Down!"),this.move_widget_down(s,r),this.set_placeholder(o,a))}},this)),this},n.is_player=function(t,e){if(e&&!this.gridmap[t])return!1;var i=e?this.gridmap[t][e]:t;return i&&(i.is(this.$player)||i.is(this.$helper))},n.is_player_in=function(t,e){var i=this.cells_occupied_by_player||{};return 0<=w.inArray(t,i.cols)&&0<=w.inArray(e,i.rows)},n.is_placeholder_in=function(t,e){var i=this.cells_occupied_by_placeholder||{};return this.is_placeholder_in_col(t)&&0<=w.inArray(e,i.rows)},n.is_placeholder_in_col=function(t){var e=this.cells_occupied_by_placeholder||[];return 0<=w.inArray(t,e.cols)},n.is_empty=function(t,e){return void 0===this.gridmap[t]||void 0!==this.gridmap[t][e]&&!1===this.gridmap[t][e]},n.is_valid_col=function(t,e){return this.options.max_cols===1/0||this.cols>=this.calculate_highest_col(t,e)},n.is_valid_row=function(t,e){return this.rows>=this.calculate_highest_row(t,e)},n.calculate_highest_col=function(t,e){return t+(e||1)-1},n.calculate_highest_row=function(t,e){return t+(e||1)-1},n.is_occupied=function(t,e){return!(!this.gridmap[t]||this.is_player(t,e)||!this.gridmap[t][e]||this.options.ignore_self_occupied&&this.$player.data()===w(this.gridmap[t][e]).data())},n.is_widget=function(t,e){var i=this.gridmap[t];return!!i&&!!(i=i[e])&&i},n.is_static=function(t,e){var i=this.gridmap[t];return!!i&&!(!(i=i[e])||!i.hasClass(this.options.static_class))},n.is_widget_under_player=function(t,e){return!!this.is_widget(t,e)&&this.is_player_in(t,e)},n.get_widgets_under_player=function(e){e||(e=this.cells_occupied_by_player||{cols:[],rows:[]});var s=w([]);return w.each(e.cols,w.proxy(function(t,i){w.each(e.rows,w.proxy(function(t,e){this.is_widget(i,e)&&(s=s.add(this.gridmap[i][e]))},this))},this)),s},n.set_placeholder=function(t,s){var n=w.extend({},this.placeholder_grid_data),e=t+n.size_x-1;e>this.cols&&(t-=e-t);var i=this.placeholder_grid_data.row<s,r=this.placeholder_grid_data.col!==t;if(this.placeholder_grid_data.col=t,this.placeholder_grid_data.row=s,this.cells_occupied_by_placeholder=this.get_cells_occupied(this.placeholder_grid_data),this.$preview_holder.attr({"data-row":s,"data-col":t}),this.options.shift_player_up){(i||r)&&this.widgets_below({col:n.col,row:n.row,size_y:n.size_y,size_x:n.size_x}).each(w.proxy(function(t,e){var i=w(e),s=i.coords().grid,n=this.can_go_widget_up(s);n&&this.move_widget_to(i,n)},this));var o=this.get_widgets_under_player(this.cells_occupied_by_placeholder);o.length&&o.each(w.proxy(function(t,e){var i=w(e);this.move_widget_down(i,s+n.size_y-i.data("coords").grid.row)},this))}},n.can_go_player_up=function(t){var s=t.row+t.size_y-1,n=!0,r=[],o=1e4,a=this.get_widgets_under_player();return this.for_each_column_occupied(t,function(t){var e=this.gridmap[t],i=s+1;for(r[t]=[];0<--i&&(this.is_empty(t,i)||this.is_player(t,i)||this.is_widget(t,i)&&e[i].is(a));)r[t].push(i),o=i<o?i:o;if(0===r[t].length)return!(n=!1);r[t].sort(function(t,e){return t-e})}),!!n&&this.get_valid_rows(t,r,o)},n.can_go_widget_up=function(s){var n=s.row+s.size_y-1,r=!0,o=[],a=1e4;return this.for_each_column_occupied(s,function(t){var e=this.gridmap[t];o[t]=[];for(var i=n+1;0<--i&&(!this.is_widget(t,i)||this.is_player_in(t,i)||e[i].is(s.el));)this.is_player(t,i)||this.is_placeholder_in(t,i)||this.is_player_in(t,i)||o[t].push(i),i<a&&(a=i);if(0===o[t].length)return!(r=!1);o[t].sort(function(t,e){return t-e})}),!!r&&this.get_valid_rows(s,o,a)},n.get_valid_rows=function(t,e,i){for(var s=t.row,n=t.row+t.size_y-1,r=t.size_y,o=i-1,a=[];++o<=n;){var d=!0;if(w.each(e,function(t,e){w.isArray(e)&&-1===w.inArray(o,e)&&(d=!1)}),!0===d&&(a.push(o),a.length===r))break}var l=!1;return 1===r?a[0]!==s&&(l=a[0]||!1):a[0]!==s&&(l=this.get_consecutive_numbers_index(a,r)),l},n.get_consecutive_numbers_index=function(t,e){for(var i=t.length,s=[],n=!0,r=-1,o=0;o<i;o++){if(n||t[o]===r+1){if(s.push(o),s.length===e)break;n=!1}else s=[],n=!0;r=t[o]}return s.length>=e&&t[s[0]]},n.get_widgets_overlapped=function(){var n=w([]),r=[],e=this.cells_occupied_by_player.rows.slice(0);return e.reverse(),w.each(this.cells_occupied_by_player.cols,w.proxy(function(t,s){w.each(e,w.proxy(function(t,e){if(!this.gridmap[s])return!0;var i=this.gridmap[s][e];this.is_occupied(s,e)&&!this.is_player(i)&&-1===w.inArray(i,r)&&(n=n.add(i),r.push(i))},this))},this)),n},n.on_start_overlapping_column=function(t){this.set_player(t,void 0,!1)},n.on_start_overlapping_row=function(t){this.set_player(void 0,t,!1)},n.on_stop_overlapping_column=function(t){var e=this;this.options.shift_larger_widgets_down&&this.for_each_widget_below(t,this.cells_occupied_by_player.rows[0],function(){e.move_widget_up(this,e.player_grid_data.size_y)})},n.on_stop_overlapping_row=function(t){var e=this,i=this.cells_occupied_by_player.cols;if(this.options.shift_larger_widgets_down)for(var s=0,n=i.length;s<n;s++)this.for_each_widget_below(i[s],t,function(){e.move_widget_up(this,e.player_grid_data.size_y)})},n.new_move_widget_to=function(t,e,i){var s=t.coords().grid;return this.remove_from_gridmap(s),s.row=i,s.col=e,this.add_to_gridmap(s),t.attr("data-row",i),t.attr("data-col",e),this.update_widget_position(s,t),this.$changed=this.$changed.add(t),this},n.move_widget=function(t,e,i,s){var n=t.coords().grid,r={col:e,row:i,size_x:n.size_x,size_y:n.size_y};return this.mutate_widget_in_gridmap(t,n,r),this.set_dom_grid_height(),this.set_dom_grid_width(),s&&s.call(this,r.col,r.row),t},n.move_widget_to=function(t,e){var r=this,i=t.coords().grid,s=this.widgets_below(t);return!1!==this.can_move_to(i,i.col,e)&&(this.remove_from_gridmap(i),i.row=e,this.add_to_gridmap(i),t.attr("data-row",e),this.$changed=this.$changed.add(t),s.each(function(t,e){var i=w(e),s=i.coords().grid,n=r.can_go_widget_up(s);n&&n!==s.row&&r.move_widget_to(i,n)}),this)},n.move_widget_up=function(s,n){if(void 0===n)return!1;var t=s.coords().grid,r=t.row,o=[];if(n||(n=1),!this.can_go_up(s))return!1;this.for_each_column_occupied(t,function(t){if(-1===w.inArray(s,o)){var e=s.coords().grid,i=r-n;if(!(i=this.can_go_up_to_row(e,t,i)))return!0;this.remove_from_gridmap(e),e.row=i,this.add_to_gridmap(e),s.attr("data-row",e.row),this.$changed=this.$changed.add(s),o.push(s)}})},n.move_widget_down=function(t,e){var i,s,r;if(e<=0)return!1;if((i=t.coords().grid.row)+(t.coords().grid.size_y-1)+e>this.options.max_rows)return!1;if(s=[],r=e,!t)return!1;if(this.failed=!1,-1===w.inArray(t,s)){var o=t.coords().grid,n=i+e;if(this.widgets_below(t).each(w.proxy(function(t,e){if(!0!==this.failed){var i=w(e),s=i.coords().grid,n=this.displacement_diff(s,o,r);0<n&&(this.failed=!1===this.move_widget_down(i,n))}},this)),this.failed)return!1;this.remove_from_gridmap(o),o.row=n,this.update_widget_position(o,t),t.attr("data-row",o.row),this.$changed=this.$changed.add(t),s.push(t)}return!0},n.can_go_up_to_row=function(t,e,i){var s,n=!0,r=[],o=t.row;if(this.for_each_column_occupied(t,function(t){for(r[t]=[],s=o;s--&&this.is_empty(t,s)&&!this.is_placeholder_in(t,s);)r[t].push(s);if(!r[t].length)return!(n=!1)}),!n)return!1;for(s=i,s=1;s<o;s++){for(var a=!0,d=0,l=r.length;d<l;d++)r[d]&&-1===w.inArray(s,r[d])&&(a=!1);if(!0===a){n=s;break}}return n},n.displacement_diff=function(t,e,i){var s=t.row,n=[],r=e.row+e.size_y;return this.for_each_column_occupied(t,function(t){for(var e=0,i=r;i<s;i++)this.is_empty(t,i)&&(e+=1);n.push(e)}),0<(i-=Math.max.apply(Math,n))?i:0},n.widgets_below=function(t){var e=w([]),i=w.isPlainObject(t)?t:t.coords().grid;if(void 0===i)return e;var s=this,n=i.row+i.size_y-1;return this.for_each_column_occupied(i,function(t){s.for_each_widget_below(t,n,function(){if(!s.is_player(this)&&-1===w.inArray(this,e))return e=e.add(this),!0})}),d.sort_by_row_asc(e)},n.set_cells_player_occupies=function(t,e){return this.remove_from_gridmap(this.placeholder_grid_data),this.placeholder_grid_data.col=t,this.placeholder_grid_data.row=e,this.add_to_gridmap(this.placeholder_grid_data,this.$player),this},n.empty_cells_player_occupies=function(){return this.remove_from_gridmap(this.placeholder_grid_data),this},n.can_go_down=function(t){var e=!0,i=this;return t.hasClass(this.options.static_class)&&(e=!1),this.widgets_below(t).each(function(){w(this).hasClass(i.options.static_class)&&(e=!1)}),e},n.can_go_up=function(t){var e=t.coords().grid,i=e.row,s=i-1,n=!0;return 1!==i&&(this.for_each_column_occupied(e,function(t){if(this.is_occupied(t,s)||this.is_player(t,s)||this.is_placeholder_in(t,s)||this.is_player_in(t,s))return!(n=!1)}),n)},n.can_move_to=function(s,t,e){var n=s.el,i={size_y:s.size_y,size_x:s.size_x,col:t,row:e},r=!0;return!(this.options.max_cols!==1/0&&t+s.size_x-1>this.cols)&&(!(this.options.max_rows<e+s.size_y-1)&&(this.for_each_cell_occupied(i,function(t,e){var i=this.is_widget(t,e);!i||s.el&&!i.is(n)||(r=!1)}),r))},n.get_targeted_columns=function(t){for(var e=(t||this.player_grid_data.col)+(this.player_grid_data.size_x-1),i=[],s=t;s<=e;s++)i.push(s);return i},n.get_targeted_rows=function(t){for(var e=(t||this.player_grid_data.row)+(this.player_grid_data.size_y-1),i=[],s=t;s<=e;s++)i.push(s);return i},n.get_cells_occupied=function(t,e){var i,s={cols:[],rows:[]};for(e instanceof w&&(t=arguments[1].coords().grid),i=0;i<t.size_x;i++){var n=t.col+i;s.cols.push(n)}for(i=0;i<t.size_y;i++){var r=t.row+i;s.rows.push(r)}return s},n.for_each_cell_occupied=function(t,i){return this.for_each_column_occupied(t,function(e){this.for_each_row_occupied(t,function(t){i.call(this,e,t)})}),this},n.for_each_column_occupied=function(t,e){for(var i=0;i<t.size_x;i++){var s=t.col+i;e.call(this,s,t)}},n.for_each_row_occupied=function(t,e){for(var i=0;i<t.size_y;i++){var s=t.row+i;e.call(this,s,t)}},n.clean_up_changed=function(){var t=this;t.$changed.each(function(){t.options.shift_larger_widgets_down&&t.move_widget_up(w(this))})},n._traversing_widgets=function(t,e,i,s,n){var r=this.gridmap;if(r[i]){var o,a,d=t+"/"+e;if(arguments[2]instanceof w){var l=arguments[2].coords().grid;i=l.col,s=l.row,n=arguments[3]}var h=[],c=s,u={"for_each/above":function(){for(;c--&&!(0<c&&this.is_widget(i,c)&&-1===w.inArray(r[i][c],h)&&(o=n.call(r[i][c],i,c),h.push(r[i][c]),o)););},"for_each/below":function(){for(c=s+1,a=r[i].length;c<a;c++)this.is_widget(i,c)&&-1===w.inArray(r[i][c],h)&&(o=n.call(r[i][c],i,c),h.push(r[i][c]))}};u[d]&&u[d].call(this)}},n.for_each_widget_above=function(t,e,i){return this._traversing_widgets("for_each","above",t,e,i),this},n.for_each_widget_below=function(t,e,i){return this._traversing_widgets("for_each","below",t,e,i),this},n.get_highest_occupied_cell=function(){for(var t,e=this.gridmap,i=e[1].length,s=[],n=[],r=e.length-1;1<=r;r--)for(t=i-1;1<=t;t--)if(this.is_widget(r,t)){s.push(t),n.push(r);break}return{col:Math.max.apply(Math,n),row:Math.max.apply(Math,s)}},n.get_widgets_in_range=function(t,e,i,s){var n,r,o,a,d=w([]);for(n=i;t<=n;n--)for(r=s;e<=r;r--)!1!==(o=this.is_widget(n,r))&&((a=o.data("coords").grid).col>=t&&a.col<=i&&a.row>=e&&a.row<=s&&(d=d.add(o)));return d},n.get_widgets_at_cell=function(t,e){return this.get_widgets_in_range(t,e,t,e)},n.get_widgets_from=function(e,i){var t=w();return e&&(t=t.add(this.$widgets.filter(function(){var t=parseInt(w(this).attr("data-col"));return t===e||e<t}))),i&&(t=t.add(this.$widgets.filter(function(){var t=parseInt(w(this).attr("data-row"));return t===i||i<t}))),t},n.set_dom_grid_height=function(t){if(void 0===t){var e=this.get_highest_occupied_cell().row;t=(e+1)*this.options.widget_margins[1]+e*this.min_widget_height}return this.container_height=t,this.$el.css("height",this.container_height),this},n.set_dom_grid_width=function(t){void 0===t&&(t=this.get_highest_occupied_cell().col);var e=this.options.max_cols===1/0?this.options.max_cols:this.cols;return t=Math.min(e,Math.max(t,this.options.min_cols)),this.container_width=(t+1)*this.options.widget_margins[0]+t*this.min_widget_width,this.is_responsive()?this.$el.css({"min-width":"100%","max-width":"100%"}):this.$el.css("width",this.container_width),this},n.is_responsive=function(){return this.options.autogenerate_stylesheet&&"auto"===this.options.widget_base_dimensions[0]&&this.options.max_cols!==1/0},n.get_responsive_col_width=function(){var t=this.cols||this.options.max_cols;return(this.$el[0].clientWidth-3-(t+1)*this.options.widget_margins[0])/t},n.resize_responsive_layout=function(){return this.min_widget_width=this.get_responsive_col_width(),this.generate_stylesheet(),this.update_widgets_dimensions(),this.drag_api.set_limits(this.cols*this.min_widget_width+(this.cols+1)*this.options.widget_margins[0]),this},n.toggle_collapsed_grid=function(t,e){return t?(this.$widgets.css({"margin-top":e.widget_margins[0],"margin-bottom":e.widget_margins[0],"min-height":e.widget_base_dimensions[1]}),this.$el.addClass("collapsed"),this.resize_api&&this.disable_resize(),this.drag_api&&this.disable()):(this.$widgets.css({"margin-top":"auto","margin-bottom":"auto","min-height":"auto"}),this.$el.removeClass("collapsed"),this.resize_api&&this.enable_resize(),this.drag_api&&this.enable()),this},n.generate_stylesheet=function(t){var e,i="",s=this.is_responsive()&&this.options.responsive_breakpoint&&w(window).width()<this.options.responsive_breakpoint;t||(t={}),t.cols||(t.cols=this.cols),t.rows||(t.rows=this.rows),t.namespace||(t.namespace=this.options.namespace),t.widget_base_dimensions||(t.widget_base_dimensions=this.options.widget_base_dimensions),t.widget_margins||(t.widget_margins=this.options.widget_margins),this.is_responsive()&&(t.widget_base_dimensions=[this.get_responsive_col_width(),t.widget_base_dimensions[1]],this.toggle_collapsed_grid(s,t));var n=w.param(t);if(0<=w.inArray(n,d.generated_stylesheets))return!1;for(this.generated_stylesheets.push(n),d.generated_stylesheets.push(n),e=1;e<=t.cols+1;e++)i+=t.namespace+' [data-col="'+e+'"] { left:'+(s?this.options.widget_margins[0]:e*t.widget_margins[0]+(e-1)*t.widget_base_dimensions[0])+"px; }\n";for(e=1;e<=t.rows+1;e++)i+=t.namespace+' [data-row="'+e+'"] { top:'+(e*t.widget_margins[1]+(e-1)*t.widget_base_dimensions[1])+"px; }\n";for(var r=1;r<=t.rows;r++)i+=t.namespace+' [data-sizey="'+r+'"] { height:'+(s?"auto":r*t.widget_base_dimensions[1]+(r-1)*t.widget_margins[1])+(s?"":"px")+"; }\n";for(var o=1;o<=t.cols;o++){var a=o*t.widget_base_dimensions[0]+(o-1)*t.widget_margins[0];i+=t.namespace+' [data-sizex="'+o+'"] { width:'+(s?this.$wrapper.width()-2*this.options.widget_margins[0]:a>this.$wrapper.width()?this.$wrapper.width():a)+"px; }\n"}return this.remove_style_tags(),this.add_style_tag(i)},n.add_style_tag=function(t){var e=document,i="gridster-stylesheet";if(""!==this.options.namespace&&(i=i+"-"+this.options.namespace),!document.getElementById(i)){var s=e.createElement("style");s.id=i,e.getElementsByTagName("head")[0].appendChild(s),s.setAttribute("type","text/css"),s.styleSheet?s.styleSheet.cssText=t:s.appendChild(document.createTextNode(t)),this.remove_style_tags(),this.$style_tags=this.$style_tags.add(s)}return this},n.remove_style_tags=function(){var t=d.generated_stylesheets,e=this.generated_stylesheets;this.$style_tags.remove(),d.generated_stylesheets=w.map(t,function(t){if(-1===w.inArray(t,e))return t})},n.generate_faux_grid=function(t,e){var i,s;for(this.faux_grid=[],this.gridmap=[],i=e;0<i;i--)for(this.gridmap[i]=[],s=t;0<s;s--)this.add_faux_cell(s,i);return this},n.add_faux_cell=function(t,e){var i=w({left:this.baseX+(e-1)*this.min_widget_width,top:this.baseY+(t-1)*this.min_widget_height,width:this.min_widget_width,height:this.min_widget_height,col:e,row:t,original_col:e,original_row:t}).coords();return w.isArray(this.gridmap[e])||(this.gridmap[e]=[]),void 0===this.gridmap[e][t]&&(this.gridmap[e][t]=!1),this.faux_grid.push(i),this},n.add_faux_rows=function(t){t=window.parseInt(t,10);for(var e=this.rows,i=e+parseInt(t||1),s=i;e<s;s--)for(var n=this.cols;1<=n;n--)this.add_faux_cell(s,n);return this.rows=i,this.options.autogenerate_stylesheet&&this.generate_stylesheet(),this},n.add_faux_cols=function(t){t=window.parseInt(t,10);var e=this.cols,i=e+parseInt(t||1);i=Math.min(i,this.options.max_cols);for(var s=e+1;s<=i;s++)for(var n=this.rows;1<=n;n--)this.add_faux_cell(n,s);return this.cols=i,this.options.autogenerate_stylesheet&&this.generate_stylesheet(),this},n.recalculate_faux_grid=function(){var t=this.$wrapper.width();return this.baseX=(e.width()-t)/2,this.baseY=this.$wrapper.offset().top,"relative"===this.$wrapper.css("position")&&(this.baseX=this.baseY=0),w.each(this.faux_grid,w.proxy(function(t,e){this.faux_grid[t]=e.update({left:this.baseX+(e.data.col-1)*this.min_widget_width,top:this.baseY+(e.data.row-1)*this.min_widget_height})},this)),this.is_responsive()&&this.resize_responsive_layout(),this.options.center_widgets&&this.center_widgets(),this},n.resize_widget_dimensions=function(t){return t.widget_margins&&(this.options.widget_margins=t.widget_margins),t.widget_base_dimensions&&(this.options.widget_base_dimensions=t.widget_base_dimensions),this.min_widget_width=2*this.options.widget_margins[0]+this.options.widget_base_dimensions[0],this.min_widget_height=2*this.options.widget_margins[1]+this.options.widget_base_dimensions[1],this.$widgets.each(w.proxy(function(t,e){var i=w(e);this.resize_widget(i)},this)),this.generate_grid_and_stylesheet(),this.get_widgets_from_DOM(),this.set_dom_grid_height(),this.set_dom_grid_width(),this},n.get_widgets_from_DOM=function(){var t=this.$widgets.map(w.proxy(function(t,e){var i=w(e);return this.dom_to_coords(i)},this));return t=d.sort_by_row_and_col_asc(t),w(t).map(w.proxy(function(t,e){return this.register_widget(e)||null},this)).length&&this.$el.trigger("gridster:positionschanged"),this},n.get_num_widgets=function(){return this.$widgets.size()},n.set_num_columns=function(t){var e=this.options.max_cols,i=Math.floor(t/(this.min_widget_width+this.options.widget_margins[0]))+this.options.extra_cols,s=this.$widgets.map(function(){return w(this).attr("data-col")}).get();s.length||(s=[0]);var n=Math.max.apply(Math,s);this.cols=Math.max(n,i,this.options.min_cols),e!==1/0&&n<=e&&e<this.cols&&(this.cols=e),this.drag_api&&this.drag_api.set_limits(this.cols*this.min_widget_width+(this.cols+1)*this.options.widget_margins[0])},n.set_new_num_rows=function(t){var e=this.options.max_rows,i=this.$widgets.map(function(){return w(this).attr("data-row")}).get();i.length||(i=[0]);var s=Math.max.apply(Math,i);this.rows=Math.max(s,t,this.options.min_rows),e!==1/0&&(e<s||e<this.rows)&&(e=this.rows),this.min_rows=s,this.max_rows=e,this.options.max_rows=e;var n=this.rows*this.min_widget_height+(this.rows+1)*this.options.widget_margins[1];this.drag_api&&(this.drag_api.options.container_height=n),this.container_height=n,this.generate_faux_grid(this.rows,this.cols)},n.generate_grid_and_stylesheet=function(){var t=this.$wrapper.width();this.set_num_columns(t);this.options.extra_rows;return this.$widgets.each(function(t,e){+w(e).attr("data-sizey")}),this.rows=this.options.max_rows,this.baseX=(e.width()-t)/2,this.baseY=this.$wrapper.offset().top,this.options.autogenerate_stylesheet&&this.generate_stylesheet(),this.generate_faux_grid(this.rows,this.cols)},n.destroy=function(t){return this.$el.removeData("gridster"),w.each(this.$widgets,function(){w(this).removeData("coords")}),e.unbind(".gridster"),this.drag_api&&this.drag_api.destroy(),this.resize_api&&this.resize_api.destroy(),this.$widgets.each(function(t,e){w(e).coords().destroy()}),this.resize_api&&this.resize_api.destroy(),this.remove_style_tags(),t&&this.$el.remove(),this},w.fn.gridster=function(e){return this.each(function(){var t=w(this);t.data("gridster")||t.data("gridster",new d(this,e))})},d}),function(R){var U={mode:"horizontal",slideSelector:"",infiniteLoop:!0,hideControlOnEnd:!1,speed:500,easing:null,slideMargin:0,startSlide:0,randomStart:!1,captions:!1,ticker:!1,tickerHover:!1,adaptiveHeight:!1,adaptiveHeightSpeed:500,video:!1,useCSS:!0,preloadImages:"visible",responsive:!0,slideZIndex:50,wrapperClass:"bx-wrapper",touchEnabled:!0,swipeThreshold:50,oneToOneTouch:!0,preventDefaultSwipeX:!0,preventDefaultSwipeY:!1,ariaLive:!0,ariaHidden:!0,keyboardEnabled:!1,pager:!0,pagerType:"full",pagerShortSeparator:" / ",pagerSelector:null,buildPager:null,pagerCustom:null,controls:!0,nextText:"Next",prevText:"Prev",nextSelector:null,prevSelector:null,autoControls:!1,startText:"Start",stopText:"Stop",autoControlsCombine:!1,autoControlsSelector:null,auto:!1,pause:4e3,autoStart:!0,autoDirection:"next",stopAutoOnClick:!1,autoHover:!1,autoDelay:0,autoSlideForOnePage:!1,minSlides:1,maxSlides:1,moveSlides:0,slideWidth:0,shrinkItems:!1,onSliderLoad:function(){return!0},onSlideBefore:function(){return!0},onSlideAfter:function(){return!0},onSlideNext:function(){return!0},onSlidePrev:function(){return!0},onSliderResize:function(){return!0}};R.fn.bxSlider=function(e){if(0===this.length)return this;if(1<this.length)return this.each(function(){R(this).bxSlider(e)}),this;var h={},c=this,s=R(window).width(),n=R(window).height();if(!R(c).data("bxSlider")){var r=function(){R(c).data("bxSlider")||(h.settings=R.extend({},U,e),h.settings.slideWidth=parseInt(h.settings.slideWidth),h.children=c.children(h.settings.slideSelector),h.children.length<h.settings.minSlides&&(h.settings.minSlides=h.children.length),h.children.length<h.settings.maxSlides&&(h.settings.maxSlides=h.children.length),h.settings.randomStart&&(h.settings.startSlide=Math.floor(Math.random()*h.children.length)),h.active={index:h.settings.startSlide},h.carousel=1<h.settings.minSlides||1<h.settings.maxSlides,h.carousel&&(h.settings.preloadImages="all"),h.minThreshold=h.settings.minSlides*h.settings.slideWidth+(h.settings.minSlides-1)*h.settings.slideMargin,h.maxThreshold=h.settings.maxSlides*h.settings.slideWidth+(h.settings.maxSlides-1)*h.settings.slideMargin,h.working=!1,h.controls={},h.interval=null,h.animProp="vertical"===h.settings.mode?"top":"left",h.usingCSS=h.settings.useCSS&&"fade"!==h.settings.mode&&function(){for(var t=document.createElement("div"),e=["WebkitPerspective","MozPerspective","OPerspective","msPerspective"],i=0;i<e.length;i++)if(t.style[e[i]]!==undefined)return h.cssPrefix=e[i].replace("Perspective","").toLowerCase(),h.animProp="-"+h.cssPrefix+"-transform",!0;return!1}(),"vertical"===h.settings.mode&&(h.settings.maxSlides=h.settings.minSlides),c.data("origStyle",c.attr("style")),c.children(h.settings.slideSelector).each(function(){R(this).data("origStyle",R(this).attr("style"))}),t())},t=function(){var t=h.children.eq(h.settings.startSlide);c.wrap('<div class="'+h.settings.wrapperClass+'"><div class="bx-viewport"></div></div>'),h.viewport=c.parent(),h.settings.ariaLive&&!h.settings.ticker&&h.viewport.attr("aria-live","polite"),h.loader=R('<div class="bx-loading" />'),h.viewport.prepend(h.loader),c.css({width:"horizontal"===h.settings.mode?1e3*h.children.length+215+"%":"auto",position:"relative"}),h.usingCSS&&h.settings.easing?c.css("-"+h.cssPrefix+"-transition-timing-function",h.settings.easing):h.settings.easing||(h.settings.easing="swing"),h.viewport.css({width:"100%",overflow:"hidden",position:"relative"}),h.viewport.parent().css({maxWidth:d()}),h.settings.pager||h.settings.controls||h.viewport.parent().css({margin:"0 auto 0px"}),h.children.css({"float":"horizontal"===h.settings.mode?"left":"none",listStyle:"none",position:"relative"}),h.children.css("width",l()),"horizontal"===h.settings.mode&&0<h.settings.slideMargin&&h.children.css("marginRight",h.settings.slideMargin),"vertical"===h.settings.mode&&0<h.settings.slideMargin&&h.children.css("marginBottom",h.settings.slideMargin),"fade"===h.settings.mode&&(h.children.css({position:"absolute",zIndex:0,display:"none"}),h.children.eq(h.settings.startSlide).css({zIndex:h.settings.slideZIndex,display:"block"})),h.controls.el=R('<div class="bx-controls" />'),h.settings.captions&&b(),h.active.last=h.settings.startSlide===p()-1,h.settings.video&&c.fitVids(),("all"===h.settings.preloadImages||h.settings.ticker)&&(t=h.children),h.settings.ticker?h.settings.pager=!1:(h.settings.controls&&y(),h.settings.auto&&h.settings.autoControls&&x(),h.settings.pager&&v(),(h.settings.controls||h.settings.autoControls||h.settings.pager)&&h.viewport.after(h.controls.el)),o(t,a)},o=function(t,e){var i=t.find('img:not([src=""]), iframe').length,s=0;0!==i?t.find('img:not([src=""]), iframe').each(function(){R(this).one("load error",function(){++s===i&&e()}).each(function(){this.complete&&R(this).load()})}):e()},a=function(){if(h.settings.infiniteLoop&&"fade"!==h.settings.mode&&!h.settings.ticker){var t="vertical"===h.settings.mode?h.settings.minSlides:h.settings.maxSlides,e=h.children.slice(0,t).clone(!0).addClass("bx-clone"),i=h.children.slice(-t).clone(!0).addClass("bx-clone");h.settings.ariaHidden&&(e.attr("aria-hidden",!0),i.attr("aria-hidden",!0)),c.append(e).prepend(i)}h.loader.remove(),g(),"vertical"===h.settings.mode&&(h.settings.adaptiveHeight=!0),h.viewport.height(u()),c.redrawSlider(),h.settings.onSliderLoad.call(c,h.active.index),h.initialized=!0,h.settings.responsive&&R(window).bind("resize",L),h.settings.auto&&h.settings.autoStart&&(1<p()||h.settings.autoSlideForOnePage)&&I(),h.settings.ticker&&O(),h.settings.pager&&C(h.settings.startSlide),h.settings.controls&&Y(),h.settings.touchEnabled&&!h.settings.ticker&&G(),h.settings.keyboardEnabled&&!h.settings.ticker&&R(document).keydown(F)},u=function(){var t=0,e=R();if("vertical"===h.settings.mode||h.settings.adaptiveHeight)if(h.carousel){var s=1===h.settings.moveSlides?h.active.index:h.active.index*f();for(e=h.children.eq(s),i=1;i<=h.settings.maxSlides-1;i++)e=s+i>=h.children.length?e.add(h.children.eq(i-1)):e.add(h.children.eq(s+i))}else e=h.children.eq(h.active.index);else e=h.children;return"vertical"===h.settings.mode?(e.each(function(){t+=R(this).outerHeight()}),0<h.settings.slideMargin&&(t+=h.settings.slideMargin*(h.settings.minSlides-1))):t=Math.max.apply(Math,e.map(function(){return R(this).outerHeight(!1)}).get()),"border-box"===h.viewport.css("box-sizing")?t+=parseFloat(h.viewport.css("padding-top"))+parseFloat(h.viewport.css("padding-bottom"))+parseFloat(h.viewport.css("border-top-width"))+parseFloat(h.viewport.css("border-bottom-width")):"padding-box"===h.viewport.css("box-sizing")&&(t+=parseFloat(h.viewport.css("padding-top"))+parseFloat(h.viewport.css("padding-bottom"))),t},d=function(){var t="100%";return 0<h.settings.slideWidth&&(t="horizontal"===h.settings.mode?h.settings.maxSlides*h.settings.slideWidth+(h.settings.maxSlides-1)*h.settings.slideMargin:h.settings.slideWidth),t},l=function(){var t=h.settings.slideWidth,e=h.viewport.width();if(0===h.settings.slideWidth||h.settings.slideWidth>e&&!h.carousel||"vertical"===h.settings.mode)t=e;else if(1<h.settings.maxSlides&&"horizontal"===h.settings.mode){if(e>h.maxThreshold)return t;e<h.minThreshold?t=(e-h.settings.slideMargin*(h.settings.minSlides-1))/h.settings.minSlides:h.settings.shrinkItems&&(t=Math.floor((e+h.settings.slideMargin)/Math.ceil((e+h.settings.slideMargin)/(t+h.settings.slideMargin))-h.settings.slideMargin))}return t},_=function(){var t=1,e=null;return"horizontal"===h.settings.mode&&0<h.settings.slideWidth?h.viewport.width()<h.minThreshold?t=h.settings.minSlides:h.viewport.width()>h.maxThreshold?t=h.settings.maxSlides:(e=h.children.first().width()+h.settings.slideMargin,t=Math.floor((h.viewport.width()+h.settings.slideMargin)/e)):"vertical"===h.settings.mode&&(t=h.settings.minSlides),t},p=function(){var t=0,e=0,i=0;if(0<h.settings.moveSlides)if(h.settings.infiniteLoop)t=Math.ceil(h.children.length/f());else for(;e<h.children.length;)++t,e=i+_(),i+=h.settings.moveSlides<=_()?h.settings.moveSlides:_();else t=Math.ceil(h.children.length/_());return t},f=function(){return 0<h.settings.moveSlides&&h.settings.moveSlides<=_()?h.settings.moveSlides:_()},g=function(){var t,e,i;h.children.length>h.settings.maxSlides&&h.active.last&&!h.settings.infiniteLoop?"horizontal"===h.settings.mode?(t=(e=h.children.last()).position(),m(-(t.left-(h.viewport.width()-e.outerWidth())),"reset",0)):"vertical"===h.settings.mode&&(i=h.children.length-h.settings.minSlides,t=h.children.eq(i).position(),m(-t.top,"reset",0)):(t=h.children.eq(h.active.index*f()).position(),h.active.index===p()-1&&(h.active.last=!0),t!==undefined&&("horizontal"===h.settings.mode?m(-t.left,"reset",0):"vertical"===h.settings.mode&&m(-t.top,"reset",0)))},m=function(t,e,i,s){var n,r;h.usingCSS?(r="vertical"===h.settings.mode?"translate3d(0, "+t+"px, 0)":"translate3d("+t+"px, 0, 0)",c.css("-"+h.cssPrefix+"-transition-duration",i/1e3+"s"),"slide"===e?(c.css(h.animProp,r),0!==i?c.bind("transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd",function(t){R(t.target).is(c)&&(c.unbind("transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd"),D())}):D()):"reset"===e?c.css(h.animProp,r):"ticker"===e&&(c.css("-"+h.cssPrefix+"-transition-timing-function","linear"),c.css(h.animProp,r),0!==i?c.bind("transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd",function(t){R(t.target).is(c)&&(c.unbind("transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd"),m(s.resetValue,"reset",0),P())}):(m(s.resetValue,"reset",0),P()))):((n={})[h.animProp]=t,"slide"===e?c.animate(n,i,h.settings.easing,function(){D()}):"reset"===e?c.css(h.animProp,t):"ticker"===e&&c.animate(n,i,"linear",function(){m(s.resetValue,"reset",0),P()}))},w=function(){for(var t="",e="",i=p(),s=0;s<i;s++)e="",h.settings.buildPager&&R.isFunction(h.settings.buildPager)||h.settings.pagerCustom?(e=h.settings.buildPager(s),h.pagerEl.addClass("bx-custom-pager")):(e=s+1,h.pagerEl.addClass("bx-default-pager")),t+='<div class="bx-pager-item"><a href="" data-slide-index="'+s+'" class="bx-pager-link">'+e+"</a></div>";h.pagerEl.html(t)},v=function(){h.settings.pagerCustom?h.pagerEl=R(h.settings.pagerCustom):(h.pagerEl=R('<div class="bx-pager" />'),h.settings.pagerSelector?R(h.settings.pagerSelector).html(h.pagerEl):h.controls.el.addClass("bx-has-pager").append(h.pagerEl),w()),h.pagerEl.on("click touchend","a",M)},y=function(){h.controls.next=R('<a class="bx-next" href="">'+h.settings.nextText+"</a>"),h.controls.prev=R('<a class="bx-prev" href="">'+h.settings.prevText+"</a>"),h.controls.next.bind("click touchend",$),h.controls.prev.bind("click touchend",k),h.settings.nextSelector&&R(h.settings.nextSelector).append(h.controls.next),h.settings.prevSelector&&R(h.settings.prevSelector).append(h.controls.prev),h.settings.nextSelector||h.settings.prevSelector||(h.controls.directionEl=R('<div class="bx-controls-direction" />'),h.controls.directionEl.append(h.controls.prev).append(h.controls.next),h.controls.el.addClass("bx-has-controls-direction").append(h.controls.directionEl))},x=function(){h.controls.start=R('<div class="bx-controls-auto-item"><a class="bx-start" href="">'+h.settings.startText+"</a></div>"),h.controls.stop=R('<div class="bx-controls-auto-item"><a class="bx-stop" href="">'+h.settings.stopText+"</a></div>"),h.controls.autoEl=R('<div class="bx-controls-auto" />'),h.controls.autoEl.on("click",".bx-start",S),h.controls.autoEl.on("click",".bx-stop",z),h.settings.autoControlsCombine?h.controls.autoEl.append(h.controls.start):h.controls.autoEl.append(h.controls.start).append(h.controls.stop),h.settings.autoControlsSelector?R(h.settings.autoControlsSelector).html(h.controls.autoEl
-):h.controls.el.addClass("bx-has-controls-auto").append(h.controls.autoEl),T(h.settings.autoStart?"stop":"start")},b=function(){h.children.each(function(){var t=R(this).find("img:first").attr("title");t!==undefined&&(""+t).length&&R(this).append('<div class="bx-caption"><span>'+t+"</span></div>")})},$=function(t){t.preventDefault(),h.controls.el.hasClass("disabled")||(h.settings.auto&&h.settings.stopAutoOnClick&&c.stopAuto(),c.goToNextSlide())},k=function(t){t.preventDefault(),h.controls.el.hasClass("disabled")||(h.settings.auto&&h.settings.stopAutoOnClick&&c.stopAuto(),c.goToPrevSlide())},S=function(t){c.startAuto(),t.preventDefault()},z=function(t){c.stopAuto(),t.preventDefault()},M=function(t){var e,i;t.preventDefault(),h.controls.el.hasClass("disabled")||(h.settings.auto&&h.settings.stopAutoOnClick&&c.stopAuto(),(e=R(t.currentTarget)).attr("data-slide-index")!==undefined&&(i=parseInt(e.attr("data-slide-index")))!==h.active.index&&c.goToSlide(i))},C=function(i){var t=h.children.length;if("short"===h.settings.pagerType)return 1<h.settings.maxSlides&&(t=Math.ceil(h.children.length/h.settings.maxSlides)),void h.pagerEl.html(i+1+h.settings.pagerShortSeparator+t);h.pagerEl.find("a").removeClass("active"),h.pagerEl.each(function(t,e){R(e).find("a").eq(i).addClass("active")})},D=function(){if(h.settings.infiniteLoop){var t="";0===h.active.index?t=h.children.eq(0).position():h.active.index===p()-1&&h.carousel?t=h.children.eq((p()-1)*f()).position():h.active.index===h.children.length-1&&(t=h.children.eq(h.children.length-1).position()),t&&("horizontal"===h.settings.mode?m(-t.left,"reset",0):"vertical"===h.settings.mode&&m(-t.top,"reset",0))}h.working=!1,h.settings.onSlideAfter.call(c,h.children.eq(h.active.index),h.oldIndex,h.active.index)},T=function(t){h.settings.autoControlsCombine?h.controls.autoEl.html(h.controls[t]):(h.controls.autoEl.find("a").removeClass("active"),h.controls.autoEl.find("a:not(.bx-"+t+")").addClass("active"))},Y=function(){1===p()?(h.controls.prev.addClass("disabled"),h.controls.next.addClass("disabled")):!h.settings.infiniteLoop&&h.settings.hideControlOnEnd&&(0===h.active.index?(h.controls.prev.addClass("disabled"),h.controls.next.removeClass("disabled")):h.active.index===p()-1?(h.controls.next.addClass("disabled"),h.controls.prev.removeClass("disabled")):(h.controls.prev.removeClass("disabled"),h.controls.next.removeClass("disabled")))},I=function(){if(0<h.settings.autoDelay)setTimeout(c.startAuto,h.settings.autoDelay);else c.startAuto(),R(window).focus(function(){c.startAuto()}).blur(function(){c.stopAuto()});h.settings.autoHover&&c.hover(function(){h.interval&&(c.stopAuto(!0),h.autoPaused=!0)},function(){h.autoPaused&&(c.startAuto(!0),h.autoPaused=null)})},O=function(){var t,e,i,s,n,r,o,a,d=0;"next"===h.settings.autoDirection?c.append(h.children.clone().addClass("bx-clone")):(c.prepend(h.children.clone().addClass("bx-clone")),t=h.children.first().position(),d="horizontal"===h.settings.mode?-t.left:-t.top),m(d,"reset",0),h.settings.pager=!1,h.settings.controls=!1,h.settings.autoControls=!1,h.settings.tickerHover&&(h.usingCSS?(s="horizontal"===h.settings.mode?4:5,h.viewport.hover(function(){e=c.css("-"+h.cssPrefix+"-transform"),i=parseFloat(e.split(",")[s]),m(i,"reset",0)},function(){a=0,h.children.each(function(){a+="horizontal"===h.settings.mode?R(this).outerWidth(!0):R(this).outerHeight(!0)}),n=h.settings.speed/a,r="horizontal"===h.settings.mode?"left":"top",o=n*(a-Math.abs(parseInt(i))),P(o)})):h.viewport.hover(function(){c.stop()},function(){a=0,h.children.each(function(){a+="horizontal"===h.settings.mode?R(this).outerWidth(!0):R(this).outerHeight(!0)}),n=h.settings.speed/a,r="horizontal"===h.settings.mode?"left":"top",o=n*(a-Math.abs(parseInt(c.css(r)))),P(o)})),P()},P=function(t){var e,i,s=t||h.settings.speed,n={left:0,top:0},r={left:0,top:0};"next"===h.settings.autoDirection?n=c.find(".bx-clone").first().position():r=h.children.first().position(),e="horizontal"===h.settings.mode?-n.left:-n.top,i="horizontal"===h.settings.mode?-r.left:-r.top,m(e,"ticker",s,{resetValue:i})},E=function(t){var e=R(window),i={top:e.scrollTop(),left:e.scrollLeft()},s=t.offset();return i.right=i.left+e.width(),i.bottom=i.top+e.height(),s.right=s.left+t.outerWidth(),s.bottom=s.top+t.outerHeight(),!(i.right<s.left||i.left>s.right||i.bottom<s.top||i.top>s.bottom)},F=function(t){var e=document.activeElement.tagName.toLowerCase(),i="input|textarea";if(null==new RegExp(e,["i"]).exec(i)&&E(c)){if(39===t.keyCode)return $(t),!1;if(37===t.keyCode)return k(t),!1}},G=function(){h.touch={start:{x:0,y:0},end:{x:0,y:0}},h.viewport.bind("touchstart MSPointerDown pointerdown",j),h.viewport.on("click",".bxslider a",function(t){h.viewport.hasClass("click-disabled")&&(t.preventDefault(),h.viewport.removeClass("click-disabled"))})},j=function(t){if(h.controls.el.addClass("disabled"),h.working)t.preventDefault(),h.controls.el.removeClass("disabled");else{h.touch.originalPos=c.position();var e=t.originalEvent,i="undefined"!=typeof e.changedTouches?e.changedTouches:[e];h.touch.start.x=i[0].pageX,h.touch.start.y=i[0].pageY,h.viewport.get(0).setPointerCapture&&(h.pointerId=e.pointerId,h.viewport.get(0).setPointerCapture(h.pointerId)),h.viewport.bind("touchmove MSPointerMove pointermove",W),h.viewport.bind("touchend MSPointerUp pointerup",N),h.viewport.bind("MSPointerCancel pointercancel",A)}},A=function(){m(h.touch.originalPos.left,"reset",0),h.controls.el.removeClass("disabled"),h.viewport.unbind("MSPointerCancel pointercancel",A),h.viewport.unbind("touchmove MSPointerMove pointermove",W),h.viewport.unbind("touchend MSPointerUp pointerup",N),h.viewport.get(0).releasePointerCapture&&h.viewport.get(0).releasePointerCapture(h.pointerId)},W=function(t){var e=t.originalEvent,i="undefined"!=typeof e.changedTouches?e.changedTouches:[e],s=Math.abs(i[0].pageX-h.touch.start.x),n=Math.abs(i[0].pageY-h.touch.start.y),r=0,o=0;n<3*s&&h.settings.preventDefaultSwipeX?t.preventDefault():s<3*n&&h.settings.preventDefaultSwipeY&&t.preventDefault(),"fade"!==h.settings.mode&&h.settings.oneToOneTouch&&("horizontal"===h.settings.mode?(o=i[0].pageX-h.touch.start.x,r=h.touch.originalPos.left+o):(o=i[0].pageY-h.touch.start.y,r=h.touch.originalPos.top+o),m(r,"reset",0))},N=function(t){h.viewport.unbind("touchmove MSPointerMove pointermove",W),h.controls.el.removeClass("disabled");var e=t.originalEvent,i="undefined"!=typeof e.changedTouches?e.changedTouches:[e],s=0,n=0;h.touch.end.x=i[0].pageX,h.touch.end.y=i[0].pageY,"fade"===h.settings.mode?(n=Math.abs(h.touch.start.x-h.touch.end.x))>=h.settings.swipeThreshold&&(h.touch.start.x>h.touch.end.x?c.goToNextSlide():c.goToPrevSlide(),c.stopAuto()):("horizontal"===h.settings.mode?(n=h.touch.end.x-h.touch.start.x,s=h.touch.originalPos.left):(n=h.touch.end.y-h.touch.start.y,s=h.touch.originalPos.top),!h.settings.infiniteLoop&&(0===h.active.index&&0<n||h.active.last&&n<0)?m(s,"reset",200):Math.abs(n)>=h.settings.swipeThreshold?(n<0?c.goToNextSlide():c.goToPrevSlide(),c.stopAuto()):m(s,"reset",200)),h.viewport.unbind("touchend MSPointerUp pointerup",N),h.viewport.get(0).releasePointerCapture&&h.viewport.get(0).releasePointerCapture(h.pointerId)},L=function(){if(h.initialized)if(h.working)window.setTimeout(L,10);else{var t=R(window).width(),e=R(window).height();s===t&&n===e||(s=t,n=e,c.redrawSlider(),h.settings.onSliderResize.call(c,h.active.index))}},H=function(t){var e=_();h.settings.ariaHidden&&!h.settings.ticker&&(h.children.attr("aria-hidden","true"),h.children.slice(t,t+e).attr("aria-hidden","false"))},q=function(t){return t<0?h.settings.infiniteLoop?p()-1:h.active.index:t>=p()?h.settings.infiniteLoop?0:h.active.index:t};return c.goToSlide=function(t,e){var i,s,n,r,o=!0,a=0,d={left:0,top:0},l=null;if(h.oldIndex=h.active.index,h.active.index=q(t),!h.working&&h.active.index!==h.oldIndex){if(h.working=!0,void 0!==(o=h.settings.onSlideBefore.call(c,h.children.eq(h.active.index),h.oldIndex,h.active.index))&&!o)return h.active.index=h.oldIndex,void(h.working=!1);"next"===e?h.settings.onSlideNext.call(c,h.children.eq(h.active.index),h.oldIndex,h.active.index)||(o=!1):"prev"===e&&(h.settings.onSlidePrev.call(c,h.children.eq(h.active.index),h.oldIndex,h.active.index)||(o=!1)),h.active.last=h.active.index>=p()-1,(h.settings.pager||h.settings.pagerCustom)&&C(h.active.index),h.settings.controls&&Y(),"fade"===h.settings.mode?(h.settings.adaptiveHeight&&h.viewport.height()!==u()&&h.viewport.animate({height:u()},h.settings.adaptiveHeightSpeed),h.children.filter(":visible").fadeOut(h.settings.speed).css({zIndex:0}),h.children.eq(h.active.index).css("zIndex",h.settings.slideZIndex+1).fadeIn(h.settings.speed,function(){R(this).css("zIndex",h.settings.slideZIndex),D()})):(h.settings.adaptiveHeight&&h.viewport.height()!==u()&&h.viewport.animate({height:u()},h.settings.adaptiveHeightSpeed),!h.settings.infiniteLoop&&h.carousel&&h.active.last?"horizontal"===h.settings.mode?(d=(l=h.children.eq(h.children.length-1)).position(),a=h.viewport.width()-l.outerWidth()):(i=h.children.length-h.settings.minSlides,d=h.children.eq(i).position()):h.carousel&&h.active.last&&"prev"===e?(s=1===h.settings.moveSlides?h.settings.maxSlides-f():(p()-1)*f()-(h.children.length-h.settings.maxSlides),d=(l=c.children(".bx-clone").eq(s)).position()):"next"===e&&0===h.active.index?(d=c.find("> .bx-clone").eq(h.settings.maxSlides).position(),h.active.last=!1):0<=t&&(r=t*parseInt(f()),d=h.children.eq(r).position()),void 0!==d?(n="horizontal"===h.settings.mode?-(d.left-a):-d.top,m(n,"slide",h.settings.speed)):h.working=!1),h.settings.ariaHidden&&H(h.active.index*f())}},c.goToNextSlide=function(){if(h.settings.infiniteLoop||!h.active.last){var t=parseInt(h.active.index)+1;c.goToSlide(t,"next")}},c.goToPrevSlide=function(){if(h.settings.infiniteLoop||0!==h.active.index){var t=parseInt(h.active.index)-1;c.goToSlide(t,"prev")}},c.startAuto=function(t){h.interval||(h.interval=setInterval(function(){"next"===h.settings.autoDirection?c.goToNextSlide():c.goToPrevSlide()},h.settings.pause),h.settings.autoControls&&!0!==t&&T("stop"))},c.stopAuto=function(t){h.interval&&(clearInterval(h.interval),h.interval=null,h.settings.autoControls&&!0!==t&&T("start"))},c.getCurrentSlide=function(){return h.active.index},c.getCurrentSlideElement=function(){return h.children.eq(h.active.index)},c.getSlideElement=function(t){return h.children.eq(t)},c.getSlideCount=function(){return h.children.length},c.isWorking=function(){return h.working},c.redrawSlider=function(){h.children.add(c.find(".bx-clone")).outerWidth(l()),h.viewport.css("height",u()),h.settings.ticker||g(),h.active.last&&(h.active.index=p()-1),h.active.index>=p()&&(h.active.last=!0),h.settings.pager&&!h.settings.pagerCustom&&(w(),C(h.active.index)),h.settings.ariaHidden&&H(h.active.index*f())},c.destroySlider=function(){h.initialized&&(h.initialized=!1,R(".bx-clone",this).remove(),h.children.each(function(){R(this).data("origStyle")!==undefined?R(this).attr("style",R(this).data("origStyle")):R(this).removeAttr("style")}),R(this).data("origStyle")!==undefined?this.attr("style",R(this).data("origStyle")):R(this).removeAttr("style"),R(this).unwrap().unwrap(),h.controls.el&&h.controls.el.remove(),h.controls.next&&h.controls.next.remove(),h.controls.prev&&h.controls.prev.remove(),h.pagerEl&&h.settings.controls&&!h.settings.pagerCustom&&h.pagerEl.remove(),R(".bx-caption",this).remove(),h.controls.autoEl&&h.controls.autoEl.remove(),clearInterval(h.interval),h.settings.responsive&&R(window).unbind("resize",L),h.settings.keyboardEnabled&&R(document).unbind("keydown",F),R(this).removeData("bxSlider"))},c.reloadSlider=function(t){t!==undefined&&(e=t),c.destroySlider(),r(),R(c).data("bxSlider",this)},r(),R(c).data("bxSlider",this),this}}}(jQuery),jQuery.easing.jswing=jQuery.easing.swing,jQuery.extend(jQuery.easing,{def:"easeOutQuad",swing:function(t,e,i,s,n){return jQuery.easing[jQuery.easing.def](t,e,i,s,n)},easeInQuad:function(t,e,i,s,n){return s*(e/=n)*e+i},easeOutQuad:function(t,e,i,s,n){return-s*(e/=n)*(e-2)+i},easeInOutQuad:function(t,e,i,s,n){return(e/=n/2)<1?s/2*e*e+i:-s/2*(--e*(e-2)-1)+i},easeInCubic:function(t,e,i,s,n){return s*(e/=n)*e*e+i},easeOutCubic:function(t,e,i,s,n){return s*((e=e/n-1)*e*e+1)+i},easeInOutCubic:function(t,e,i,s,n){return(e/=n/2)<1?s/2*e*e*e+i:s/2*((e-=2)*e*e+2)+i},easeInQuart:function(t,e,i,s,n){return s*(e/=n)*e*e*e+i},easeOutQuart:function(t,e,i,s,n){return-s*((e=e/n-1)*e*e*e-1)+i},easeInOutQuart:function(t,e,i,s,n){return(e/=n/2)<1?s/2*e*e*e*e+i:-s/2*((e-=2)*e*e*e-2)+i},easeInQuint:function(t,e,i,s,n){return s*(e/=n)*e*e*e*e+i},easeOutQuint:function(t,e,i,s,n){return s*((e=e/n-1)*e*e*e*e+1)+i},easeInOutQuint:function(t,e,i,s,n){return(e/=n/2)<1?s/2*e*e*e*e*e+i:s/2*((e-=2)*e*e*e*e+2)+i},easeInSine:function(t,e,i,s,n){return-s*Math.cos(e/n*(Math.PI/2))+s+i},easeOutSine:function(t,e,i,s,n){return s*Math.sin(e/n*(Math.PI/2))+i},easeInOutSine:function(t,e,i,s,n){return-s/2*(Math.cos(Math.PI*e/n)-1)+i},easeInExpo:function(t,e,i,s,n){return 0==e?i:s*Math.pow(2,10*(e/n-1))+i},easeOutExpo:function(t,e,i,s,n){return e==n?i+s:s*(1-Math.pow(2,-10*e/n))+i},easeInOutExpo:function(t,e,i,s,n){return 0==e?i:e==n?i+s:(e/=n/2)<1?s/2*Math.pow(2,10*(e-1))+i:s/2*(2-Math.pow(2,-10*--e))+i},easeInCirc:function(t,e,i,s,n){return-s*(Math.sqrt(1-(e/=n)*e)-1)+i},easeOutCirc:function(t,e,i,s,n){return s*Math.sqrt(1-(e=e/n-1)*e)+i},easeInOutCirc:function(t,e,i,s,n){return(e/=n/2)<1?-s/2*(Math.sqrt(1-e*e)-1)+i:s/2*(Math.sqrt(1-(e-=2)*e)+1)+i},easeInElastic:function(t,e,i,s,n){var r=1.70158,o=0,a=s;if(0==e)return i;if(1==(e/=n))return i+s;if(o||(o=.3*n),a<Math.abs(s)){a=s;r=o/4}else r=o/(2*Math.PI)*Math.asin(s/a);return-a*Math.pow(2,10*(e-=1))*Math.sin((e*n-r)*(2*Math.PI)/o)+i},easeOutElastic:function(t,e,i,s,n){var r=1.70158,o=0,a=s;if(0==e)return i;if(1==(e/=n))return i+s;if(o||(o=.3*n),a<Math.abs(s)){a=s;r=o/4}else r=o/(2*Math.PI)*Math.asin(s/a);return a*Math.pow(2,-10*e)*Math.sin((e*n-r)*(2*Math.PI)/o)+s+i},easeInOutElastic:function(t,e,i,s,n){var r=1.70158,o=0,a=s;if(0==e)return i;if(2==(e/=n/2))return i+s;if(o||(o=n*(.3*1.5)),a<Math.abs(s)){a=s;r=o/4}else r=o/(2*Math.PI)*Math.asin(s/a);return e<1?a*Math.pow(2,10*(e-=1))*Math.sin((e*n-r)*(2*Math.PI)/o)*-.5+i:a*Math.pow(2,-10*(e-=1))*Math.sin((e*n-r)*(2*Math.PI)/o)*.5+s+i},easeInBack:function(t,e,i,s,n,r){return r==undefined&&(r=1.70158),s*(e/=n)*e*((r+1)*e-r)+i},easeOutBack:function(t,e,i,s,n,r){return r==undefined&&(r=1.70158),s*((e=e/n-1)*e*((r+1)*e+r)+1)+i},easeInOutBack:function(t,e,i,s,n,r){return r==undefined&&(r=1.70158),(e/=n/2)<1?s/2*(e*e*((1+(r*=1.525))*e-r))+i:s/2*((e-=2)*e*((1+(r*=1.525))*e+r)+2)+i},easeInBounce:function(t,e,i,s,n){return s-jQuery.easing.easeOutBounce(t,n-e,0,s,n)+i},easeOutBounce:function(t,e,i,s,n){return(e/=n)<1/2.75?s*(7.5625*e*e)+i:e<2/2.75?s*(7.5625*(e-=1.5/2.75)*e+.75)+i:e<2.5/2.75?s*(7.5625*(e-=2.25/2.75)*e+.9375)+i:s*(7.5625*(e-=2.625/2.75)*e+.984375)+i},easeInOutBounce:function(t,e,i,s,n){return e<n/2?.5*jQuery.easing.easeInBounce(t,2*e,0,s,n)+i:.5*jQuery.easing.easeOutBounce(t,2*e-n,0,s,n)+.5*s+i}}),function(n){"use strict";n.fn.fitVids=function(t){var e={customSelector:null},i=document.createElement("div"),s=document.getElementsByTagName("base")[0]||document.getElementsByTagName("script")[0];return i.className="fit-vids-style",i.innerHTML="&shy;<style>               .fluid-width-video-wrapper {                 width: 100%;                              position: relative;                       padding: 0;                            }                                                                                   .fluid-width-video-wrapper iframe,        .fluid-width-video-wrapper object,        .fluid-width-video-wrapper embed {           position: absolute;                       top: 0;                                   left: 0;                                  width: 100%;                              height: 100%;                          }                                       </style>",s.parentNode.insertBefore(i,s),t&&n.extend(e,t),this.each(function(){var t=["iframe[src*='player.vimeo.com']","iframe[src*='www.youtube.com']","iframe[src*='www.kickstarter.com']","object","embed"];e.customSelector&&t.push(e.customSelector),n(this).find(t.join(",")).each(function(){var t=n(this);if(!("embed"===this.tagName.toLowerCase()&&t.parent("object").length||t.parent(".fluid-width-video-wrapper").length)){var e=("object"===this.tagName.toLowerCase()||t.attr("height")&&!isNaN(parseInt(t.attr("height"),10))?parseInt(t.attr("height"),10):t.height())/(isNaN(parseInt(t.attr("width"),10))?t.width():parseInt(t.attr("width"),10));if(!t.attr("id")){var i="fitvid"+Math.floor(999999*Math.random());t.attr("id",i)}t.wrap('<div class="fluid-width-video-wrapper"></div>').parent(".fluid-width-video-wrapper").css("padding-top",100*e+"%"),t.removeAttr("height").removeAttr("width")}})})}}(jQuery),Gws_Category_Navi.prototype.setBaseUrl=function(t){this.baseUrl=t},Gws_Category_Navi.prototype.render=function(t){if(0!=t.length){var n=this,r=[],o=r[0],a=-1,d=location.href.replace(/https?:\/\/.*?\//,"/"),l=null;$.each(t,function(t,e){var i=(e.name.match(/\//g)||[]).length,s=n.baseUrl.replace("ID",e._id);0!=i&&i==a||(r.push({depth:i,items:[]}),o=r[r.length-1]),d.startsWith(s)&&(l=e._id),o.items.push('<a class="link-item" href="'+s+'">'+e.trailing_name+"</a>"),a=i});var i=[];$.each(r,function(t,e){i.push('<div class="depth depth-'+e.depth+'">'),i.push(e.items.join('<span class="separator"></span>')),i.push("</div>")}),this.el.find(".dropdown-menu").append(i.join(""));var e=this.el.find(".dropdown-toggle");if(l){var s='<i class="material-icons md-18 md-dark">&#xE14C;</i>';e.after('<a class="ml-1" href="'+e.attr("href")+'">'+s+"</a>")}e.on("click",function(){return!1})}else this.el.hide()},Gws_Tab.renderTabs=function(t){var e=location.pathname+"/";$(t).find("a").each(function(){var t=$(this);e.match(new RegExp("^"+t.attr("href")+"(/|$)"))&&t.addClass("current")})},this.Gws_Popup=function(){function t(){}return t.init=null,t.render=function(t,e){var i;return this.init||(this.init=!0,$(window).resize(function(){return $(".gws-popup").remove()}),$(document).on("click",function(t){if(!$(t.target).closest(".gws-popup, .gws-popup-event").length)return $(".gws-popup").remove()})),$(".gws-popup").remove(),i=$("<div class='gws-popup'></div>").html($(e)),$("body").append(i),t.addClass("gws-popup-event"),this.renderPopup(t)},t.renderPopup=function(t){var e,i,s;return e=$(".gws-popup"),$(window).width()<1.5*e.outerWidth()&&e.css("max-width",$(window).width()/2),i=t.offset().left+t.outerWidth()/2-e.outerWidth()/2,s=t.offset().top-e.outerHeight()-20,i<0?(i=t.offset().left+t.outerWidth()/2-20,e.addClass("left")):e.removeClass("left"),i+e.outerWidth()>$(window).width()?(i=t.offset().left-e.outerWidth()+t.outerWidth()/2+20,e.addClass("right")):e.removeClass("right"),s<0?(s=t.offset().top+t.outerHeight(),e.addClass("top")):e.removeClass("top"),e.css({left:i,top:s}).animate({top:"+=10",opacity:1},50)},t}(),this.Gws_Member=function(){function t(){}return t.groups=null,t.users=null,t.render=function(){return $(".js-copy-groups").length<2&&($(".js-copy-groups").remove(),$(".js-paste-groups").remove()),$(".js-copy-groups").on("click",function(){return t.copyGroups($(this))}),$(".js-paste-groups").on("click",function(){return t.pasteGroups($(this))}),$(".js-copy-users").length<2&&($(".js-copy-users").remove(),$(".js-paste-users").remove()),$(".js-copy-users").on("click",function(){return t.copyUsers($(this))}),$(".js-paste-users").on("click",function(){return t.pasteUsers($(this))})},t.confirmReadableSetting=function(){return $(".save").on("click",function(){if(0===$(".gws-addon-readable-setting tbody tr").length)return confirm("\u95b2\u89a7\u8005\u304c\u5165\u529b\u3055\u308c\u3066\u3044\u307e\u305b\u3093\u3002\n\u5168\u54e1\u306b\u8868\u793a\u3055\u308c\u307e\u3059\u304c\u3088\u308d\u3057\u3044\u3067\u3059\u304b\uff1f")})},t.copyGroups=function(t){return this.groups=t.closest("dl").find("tbody tr").clone(!0),this.showLog(t,this.groups.length+"\u4ef6\u306e\u30b0\u30eb\u30fc\u30d7\u3092\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f\u3002"),!1},t.pasteGroups=function(t){var e;return e=this.pasteItems(t,this.groups),this.showLog(t,e+"\u4ef6\u306e\u30b0\u30eb\u30fc\u30d7\u3092\u8ffd\u52a0\u3057\u307e\u3057\u305f\u3002"),!1},t.copyUsers=function(t){return this.users=t.closest("dl").find("tbody tr").clone(!0),this.showLog(t,this.users.length+"\u4ef6\u306e\u30e6\u30fc\u30b6\u30fc\u3092\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f\u3002"),!1},t.pasteUsers=function(t){var e;return e=this.pasteItems(t,this.users),this.showLog(t,e+"\u4ef6\u306e\u30e6\u30fc\u30b6\u30fc\u3092\u8ffd\u52a0\u3057\u307e\u3057\u305f\u3002"),!1},t.pasteItems=function(t,e){var i,s,n,r;return e&&0!==e.length?((i=t.closest("dl")).find("table").show(),r=i.find("tbody"),s=i.find(".hidden-ids").attr("name"),n=0,e.each(function(){var t;if(0===r.find('tr[data-id="'+$(this).data("id")+'"]').length)return(t=$(this).clone(!0)).find("input").attr("name",s),r.append(t),n+=1}),n):0},t.showLog=function(t,e){return $(".gws-member-log").remove(),$("<span class='gws-member-log'>"+e+"</span>").appendTo(t.parent()).hide().fadeIn(200)},t}(),this.Gws_Reminder=function(){function t(){}return t.renderList=function(e){var t;return null==e&&(e={}),(t=$(e.el||document)).find(".list-item").each(function(){return $(this).find(".links").prepend('<a class="restore" href="#" style="display: none;">\u5143\u306b\u623b\u3059</a>')}),t.find(".list-item.deleted").each(function(){return $(this).find(".check, .meta, .delete, .updated, .more-btn").hide(),$(this).find(".dropdown-menu").removeClass("active"),$(this).find(".restore").show(),$(this).find(".notification").hide()}),t.find(".list-item .delete").on("click",function(){var t;return t=$(this).closest(".list-item"),$.ajax({url:e.url,method:"post",data:{_method:"delete",id:t.data("id"),item_id:t.data("item_id"),item_model:t.data("model"),item_name:t.data("name"),date:t.data("date")},success:function(){return t.toggleClass("gws-list-item--deleted").find(".check, .meta, .delete, .updated, .more-btn").hide(),t.find(".dropdown-menu").removeClass("active"),t.find(".restore").show(),t.find(".notification").hide(),!1},error:function(){return alert("Error")}}),!1}),t.find(".list-item .restore").on("click",function(){var t;return t=$(this).closest(".list-item"),$.ajax({url:e.restore_url,method:"post",data:{id:t.data("id"),item_id:t.data("item_id"),item_model:t.data("model"),item_name:t.data("name"),date:t.data("date")},success:function(){return t.toggleClass("gws-list-item--deleted").find(".check, .meta, .delete, .more-btn").show(),t.find(".restore").hide(),t.find(".notification")[0]&&(t.find(".notification")[0].selectedIndex=0),t.find(".notification").show(),!1},error:function(){return alert("Error")}}),!1})},t}(),Gws_Bookmark.prototype.render=function(t){null===t&&(t={});var e,i=this;this.bookmarkId=t.id,this.defaultName=t.default_name,this.url=t.url,this.model=t.model,e=this.bookmarkId?this.bookmarkIcon:this.unbookmarkIcon;var s=t.name||this.defaultName,n=$('<span class="bookmark-icon"></span>').append($('<i class="material-icons"></i>').html(e)),r=$('<ul class="dropdown-menu"></ul>'),o=$("<li></li>");o.append($('<input name="bookmark[name]" id="bookmark_name" class="bookmark-name" type="text">').val(s)),o.append($('<input name="button" type="button" class="btn update" />').val(t.save)),o.append($('<input name="button" type="button" class="btn delete" />').val(t["delete"])),r.append($('<li><div class="bookmark-notice"></div></li>')).append(o),this.el.html(n).append(r),this.el.on("click",function(t){if(i.loading)return!1;$(t.target).hasClass("update")?i.update():$(t.target).hasClass("delete")?i["delete"]():i.bookmarkId?(i.el.addClass("active"),i.el.find(".dropdown-menu").addClass("active")):i.create()})},Gws_Bookmark.prototype.create=function(){this.loading=!0;var e=this,i=this.el.find(".dropdown-menu").html();this.el.find(".dropdown-menu").html(SS.loading),$.ajax({url:this.url,method:"POST",data:{item:{name:this.defaultName,url:location.pathname+location.search,model:this.model}},success:function(t){e.el.find(".dropdown-menu").html(i),e.el.addClass("active"),e.el.find(".dropdown-menu").addClass("active"),e.el.find(".material-icons").html(e.bookmarkIcon),e.el.find(".bookmark-notice").text(t.notice),e.el.find(".bookmark-name").val(e.defaultName),e.bookmarkId=t.bookmark_id,e.loading=!1},error:function(){alert("Error")}})},Gws_Bookmark.prototype.update=function(){this.loading=!0;var e=this,i=this.el.find(".bookmark-name").val()||this.defaultName,t=this.url+"/"+this.bookmarkId,s=this.el.find(".dropdown-menu").html();this.el.find(".dropdown-menu").html(SS.loading),this.el.addClass("active"),this.el.find(".dropdown-menu").addClass("active"),$.ajax({url:t,method:"POST",data:{_method:"patch",item:{name:i,url:location.pathname+location.search,model:this.model}},success:function(t){e.el.find(".dropdown-menu").html(s),e.el.removeClass("active"),e.el.find(".dropdown-menu").removeClass("active"),e.el.find(".material-icons").html(e.bookmarkIcon),e.el.find(".bookmark-notice").text(t.notice),e.el.find(".bookmark-name").val(i),e.bookmarkId=t.bookmark_id,e.loading=!1},error:function(){alert("Error")}})},Gws_Bookmark.prototype["delete"]=function(){var t=this;if(!this.bookmarkId)return!1;this.loading=!0;var e=this.url+"/"+this.bookmarkId,i=this.el.find(".dropdown-menu").html();this.el.find(".dropdown-menu").html(SS.loading),this.el.addClass("active"),this.el.find(".dropdown-menu").addClass("active"),$.ajax({url:e,method:"POST",data:{_method:"delete",item:{url:location.pathname+location.search}},success:function(){t.el.find(".dropdown-menu").html(i),t.el.removeClass("active"),t.el.find(".dropdown-menu").removeClass("active"),t.el.find(".material-icons").html(t.unbookmarkIcon),t.bookmarkId=null,t.loading=!1},error:function(){alert("Error")}})},Gws_ReadableSetting.prototype.render=function(){var t=this;this.el.find(".buttons input").on("change",function(){"select"==$(this).val()?t.showSelectForm():t.hideSelectForm()}),"select"==this.el.find(".buttons input:checked").val()?this.el.find(".gws-addon-readable-setting-select").show():this.el.find(".gws-addon-readable-setting-select").hide()},Gws_ReadableSetting.prototype.showSelectForm=function(){this.el.find(".gws-addon-readable-setting-select").slideDown("fast")},Gws_ReadableSetting.prototype.hideSelectForm=function(){this.el.find(".gws-addon-readable-setting-select").slideUp("fast")},Gws_Contrast.getContrastId=function(t){return Cookies.get("gws-contrast-"+t)},Gws_Contrast.setContrastId=function(t,e){Cookies.set("gws-contrast-"+t,e,{expires:7,path:"/"})},Gws_Contrast.removeContrastId=function(t){Cookies.remove("gws-contrast-"+t)},Gws_Contrast.prototype.render=function(){var s=this;this.$el.data("load",function(){s.loadContrasts()}),this.$el.on("click",".gws-contrast-item",function(t){var e=$(this),i=e.data("id");"default"===i?(s.removeContrast(e.data("text-color"),e.data("color")),Gws_Contrast.removeContrastId(s.opts.siteId)):(s.changeContrast(e.data("text-color"),e.data("color")),Gws_Contrast.setContrastId(s.opts.siteId,i)),SS.notice(s.opts.notice.replace(":name",e.text())),t.stopPropagation()})},Gws_Contrast.prototype.loadContrasts=function(){if(this.$el.data("loadedAt"))this.checkActiveContrast();else{var e=this;$.ajax({url:this.opts.url,type:"GET",dataType:"json",success:function(t){e.renderContrasts(t)},error:function(){e.showMessage(this.opts.loadError)},complete:function(t){e.completeLoading(t)}})}},Gws_Contrast.prototype.completeLoading=function(){this.$el.data("loadedAt",Date.now()),this.$el.find(".gws-contrast-loading").closest("li").hide()},Gws_Contrast.prototype.showMessage=function(t){this.$el.append($("<li/>").html('<div class="gws-contrast-error">'+t+"</div>"))},Gws_Contrast.prototype.renderContrasts=function(t){if(0!==t.length){this.renderContrast("default",this.opts.defaultContrast);var e=this;$.each(t,function(){e.renderContrast(this._id.$oid,this.name,this.color,this.text_color)}),this.checkActiveContrast()}else this.showMessage(this.opts.noContrasts)},Gws_Contrast.prototype.renderContrast=function(t,e,i,s){var n={id:t};i&&(n.color=i),s&&(n.textColor=s);var r=$("<input/>",{type:"radio",name:"gws-contrast-item",value:t}),o=$("<label/>",{"class":"gws-contrast-item",data:n});o.append(r),o.append('<span class="gws-contrast-name">'+e+"</span>"),this.$el.append($("<li/>").append(o))},Gws_Contrast.prototype.checkActiveContrast=function(){var t=Gws_Contrast.getContrastId(this.opts.siteId);t?$('input[name="gws-contrast-item"]').val([t]):$('input[name="gws-contrast-item"]').val(["default"])},Gws_Contrast.prototype.changeContrast=function(t,e){this.$style||(this.$style=$("<style/>",{type:"text/css"}),$("head").append(this.$style)),this.$style.html(this.template.replace(/:color/g,t).replace(/:background/g,e))},Gws_Contrast.prototype.removeContrast=function(){this.$style&&this.$style.html("")},this.Gws_Schedule_Plan=function(){function r(){}return r.diffOn=36e5,r.renderForm=function(t){return null==t&&(t={}),$("input.date").datetimepicker({lang:"ja",timepicker:!1,format:"Y/m/d",closeOnDateSelect:!0,scrollInput:!1,maxDate:t.maxDate}),$("input.datetime").datetimepicker({lang:"ja",roundTime:"ceil",step:30,maxDate:t.maxDate}),this.relateDateForm(),this.relateDateTimeForm()},r.renderAlldayForm=function(){return this.changeDateForm(),$("#item_allday").on("change",function(){return r.changeDateValue(),r.changeDateForm()})},r.changeDateValue=function(){var t,e;return $("#item_allday").prop("checked")?($("#item_start_on").val($("#item_start_at").val().replace(/ .*/,"")),$("#item_end_on").val($("#item_end_at").val().replace(/ .*/,""))):(e=$("#item_start_at").val().replace(/.* /,""),t=$("#item_end_at").val().replace(/.* /,""),""===e&&""!==$("#item_start_on").val()&&(e="00:00"),""===t&&""!==$("#item_end_on").val()&&(t="00:00"),$("#item_start_at").val($("#item_start_on").val()+" "+e),$("#item_end_at").val($("#item_end_on").val()+" "+t))},r.changeDateForm=function(){return $("#item_allday").prop("checked")?($(".dates-field").show(),$(".datetimes-field").hide()):($(".dates-field").hide(),$(".datetimes-field").show())},r.relateDateForm=function(s,n){if(null==s&&(s=".date.start"),null==n&&(n=".date.end"),$(s+", "+n).on("click",function(){return r.diffOn=r.diffDates($(s).val(),$(n).val())}),$(s).on("change",function(){var t,e,i;if((i=$(s).val())&&(i=new Date(i).getTime(),!isNaN(i)))return(t=new Date).setTime(i+r.diffOn),e="%d/%02d/%02d",$(s).hasClass("datetime")&&(e="%d/%02d/%02d %02d:%02d"),$(n).val(sprintf(e,t.getFullYear(),t.getMonth()+1,t.getDate(),t.getHours(),t.getMinutes()))}),""===$(n).val())return $(s).trigger("change")},r.relateDateTimeForm=function(){return this.relateDateForm(".datetime.start",".datetime.end")},r.diffDates=function(t,e){var i;return t&&e?(i=new Date(e).getTime()-new Date(t).getTime())<0?0:i:36e5},r.transferEnd2Start=function(){return $("#item_allday").prop("checked")?$("#item_start_on").val($("#item_end_on").val()):$("#item_start_at").val($("#item_end_at").val())},r}(),this.Gws_Schedule_Repeat_Plan=function(){function t(){}return t.renderForm=function(){return this.changeRepeatForm(),this.relateDateForm(),$("#item_repeat_type").on("change",function(){return t.changeRepeatForm()})},t.changeRepeatForm=function(){var t;return""===(t=$("#item_repeat_type").val())?$(".gws-schedule-repeat").addClass("hide"):($(".gws-schedule-repeat").removeClass("hide"),$(".repeat-daily, .repeat-weekly, .repeat-monthly").hide(),$(".repeat-"+t).show())},t.relateDateForm=function(){return Gws_Schedule_Plan.relateDateForm(".date.repeat_start",".date.repeat_end")},t.renderSubmitButtons=function(){var t,e,i,s,n,r;return n=$("#main form"),r='<span class="gws-schedule-btn-space"></span>',t=$('<input type="button" class="btn" value="\u4eca\u56de\u306e\u307f" />'),e=$('<input type="button" class="btn" value="\u4ee5\u964d\u3059\u3079\u3066" />'),i=$('<input type="button" class="btn" value="\u4e00\u9023\u306e\u30b9\u30b1\u30b8\u30e5\u30fc\u30eb\u3059\u3079\u3066" />'),t.bind("click",function(){return n.append('<input type="hidden" name="item[edit_range]" value="one" />').submit()}),e.bind("click",function(){return n.append('<input type="hidden" name="item[edit_range]" value="later" />').submit()}),i.bind("click",function(){return n.append('<input type="hidden" name="item[edit_range]" value="all" />').submit()}),(s=$('<div class="gws-schedule-repeat-submit"></div>')).append(t).append(r).append(e).append(r).append(i),$(".send .save, .send .delete").on("click",function(){if(""!==$("#item_repeat_type").val())return $.colorbox({inline:!0,href:s}),!1})},t}(),Gws_Schedule_Integration.paths={},Gws_Schedule_Integration.render=function(){var t=$(
-".gws-schedule-box");t[0]&&(t.find(".send-message").each(function(){$(this).on("click",function(){var t=$(this).closest("[data-user-id]").data("user-id");location.href=Gws_Schedule_Integration.paths.newMemoMessage+"?to%5B%5D="+t})}),t.find(".send-email").each(function(){$(this).on("click",function(){var t=$(this).closest("[data-email]").data("email");location.href=Gws_Schedule_Integration.paths.newWebmail+"?item%5Bto%5D="+encodeURIComponent(t)})}),t.find(".copy-email-address").each(function(){$(this).on("click",function(t){return $(this).closest("[data-email]").find(".clipboard-copy-button").trigger("click"),$(".dropdown, .dropdown-menu").removeClass("active"),t.preventDefault(),!1})}))},this.Gws_Schedule_Todo_Search=function(){function t(t){this.$el=$(t),this.templateHtml=this.$el.find("#schedule-todo-selected-member-template").html(),this.render()}return t.prototype.render=function(){var i=this;this.$el.find("select.schedule-todo-auto-submit").on("change",function(){i.scheduleToSubmit()});var t=this.$el.find(".schedule-todo-member-select-btn");if(t[0]){var e=t.data("href");t.colorbox({href:e,width:"90%",height:"90%"}),t.data("on-select",function(t){var e=t.closest("[data-id]");0!==e.length&&i.selectUser(e.data())}),this.$el.on("click",".schedule-todo-selected-member .dismiss",function(){$(this).closest(".schedule-todo-selected-member").remove(),i.scheduleToSubmit()})}},t.prototype.selectUser=function(t){var e=t.id,i=t.longName;if(!(0<this.$el.find(".schedule-todo-selected-member[data-id="+e+"]").length)){var s=this.templateHtml.replace(/#id/g,e).replace(/#name/g,i);this.$el.find(".schedule-todo-selected-members").append(s).removeClass("hide"),this.scheduleToSubmit()}},t.prototype.scheduleToSubmit=function(){if(!this.timerId){var t=this;this.timerId=setTimeout(function(){t.$el.submit()},0)}},t}(),this.Gws_Schedule_Todo_Index=function(){function t(t){this.$el=$(t),this.render()}var i=function(t){t.removeClass("hide")},e=function(t){t.addClass("hide")},n=function(t){return"expand_less"===t.find(".list-item-switch").html()};return t.prototype.render=function(){var t=this;this.$el.find(".gws-schedule-todo-list-item-header").on("click",function(){t.toggleListItems($(this))})},t.prototype.toggleListItems=function(t){n(t)?this.collapseListItems(t):this.expandListItems(t)},t.prototype.collapseListItems=function(t){t.find(".list-item-switch").html("expand_more"),this.eachListItem(t,function(){e($(this))})},t.prototype.expandListItems=function(t){t.find(".list-item-switch").html("expand_less");var e=this;this.eachListItem(t,function(){console.log(this);var t=$(this);e.examineToShow(t)?(console.log(!0),i($(this))):console.log(!1)})},t.prototype.examineToShow=function(t){if(t.hasClass("gws-schedule-todo-list-item-header"))return!(e=t.data("parent"))||this.examineToShow(this.$el.find("#"+e));var e,i=t.data("group"),s=this.$el.find("#"+i);return!!n(s)&&(!(e=s.data("parent"))||this.examineToShow(this.$el.find("#"+e)))},t.prototype.eachListItem=function(t,s){var n=t.data("group"),r=t.data("depth");$.each(t.nextAll(".list-item"),function(){var t=$(this),e=t.data("group"),i=t.data("depth");if(e!==n&&i<=r)return!1;s.apply(this)})},t}(),Gws_Schedule_Csv.render=function(t){var e=new Gws_Schedule_Csv(t);return e.render(),e},Gws_Schedule_Csv.prototype.render=function(){var e=this;this.$el.find(".import-confirm").on("click",function(){e.$importMode.val("confirm")}),this.$el.find(".import-save").on("click",function(){e.$importMode.val("save")}),this.$el.find("#import_form").ajaxForm({beforeSubmit:function(){e.$importLog.html('<span class="import-loading">\u30a2\u30c3\u30d7\u30ed\u30fc\u30c9\u3057\u3066\u3044\u307e\u3059\u3002</span>'),SS_AddonTabs.show("#import-result")},success:function(t){e.renderResult(t)},error:function(){e.renderError(data)}}),this.$el.find(".show-csv-description").on("click",function(){e.showCsvDescription()})},Gws_Schedule_Csv.prototype.renderResult=function(t){var e=this.$importLog;if(e.html(""),t.messages&&e.append('<div class="mb-1">'+t.messages.join("<br />")+"</div>"),t.items){var i={exist:0,entry:0,saved:0,error:0},s='<table class="index mt-1"><thead><tr><th style="width: 150px">\u958b\u59cb\u65e5\u6642</th><th style="width: 150px">\u7d42\u4e86\u65e5\u6642</th><th style="width: 30%">\u30bf\u30a4\u30c8\u30eb</th><th>\u7d50\u679c</th></tr></thead><tbody>';$.each(t.items,function(t,e){"exist"==e.result&&(i.exist+=1),"entry"==e.result&&(i.entry+=1),"saved"==e.result&&(i.saved+=1),"error"==e.result&&(i.error+=1),s+='<tr class="import-'+e.result+'"><td>'+SS.formatTime(e.start_at)+"</td><td>"+SS.formatTime(e.end_at)+"</td><td>"+e.name+"</td><td>"+e.messages.join("<br />")+"</td></tr>"}),s+="</tbody></table>";var n='<div class="mb-1">';i.exist&&(n+='<span class="ml-2 import-exist">\u767b\u9332\u6e08\u307f('+i.exist+")</span>"),i.entry&&(n+='<span class="ml-2 import-entry">\u767b\u9332\u53ef\u80fd('+i.entry+")</span>"),i.saved&&(n+='<span class="ml-2 import-saved">\u767b\u9332\u5b8c\u4e86('+i.saved+")</span>"),i.error&&(n+='<span class="ml-2 import-error">\u30a8\u30e9\u30fc('+i.error+")</span>"),n+="</div>",e.append(n+s)}},Gws_Schedule_Csv.prototype.renderError=function(t,e,i){try{var s=t.responseJSON.join("\n");this.$importLog.html(s)}catch(n){this.$importLog.html("Error: "+i)}},Gws_Schedule_Csv.prototype.showCsvDescription=function(){var t=this.$el.find(".show-csv-description").attr("href");$.colorbox({inline:!0,href:t,width:"90%",height:"90%",fixed:!0,open:!0})},this.Gws_Memo_Message=function(){function t(){}return t.render=function(){$(".list-head .search").on("click",function(){$(".gws-memo-search").animate({height:"toggle"},"fast")}),$(".gws-memo-search .reset").on("click",function(){$(".gws-memo-search input[type=text]").val(""),$(".gws-memo-search input[type=checkbox]").val(""),$(".gws-memo-search .search").trigger("click")}),$(".cc-bcc-label").on("click",function(){return $(".gws-addon-memo-member .cc-bcc").animate({height:"toggle"},"fast"),!1}),$(".add-template").on("change",function(){""!==$(this).val()&&("html"===$("#item_format").val()?CKEDITOR.instances.item_html.insertText($(this).val()):Webmail_Mail_Form.insertText($("#item_text"),$(this).val()),$(this).val(""))}),$(".send-mdn,.ignore-mdn").on("click",function(){if($(this).hasClass("disabled"))return!1;$.ajax({url:$(this).attr("href"),method:"POST",dataType:"json",data:{_method:"put",authenticity_token:$('meta[name="csrf-token"]').attr("content")},beforeSend:function(){return $(".send-mdn,.ignore-mdn").addClass("disabled")},success:function(t){return SS.notice(t.notice),$(".request-mdn-notice").remove()}})}),$(".icon-star a").on("click",function(){var t,e=$(this).parent();return t=e.hasClass("on")?$(this).attr("href")+"/unset_star":$(this).attr("href")+"/set_star",$.ajax({url:t,method:"POST",dataType:"json",data:{_method:"put"},success:function(t){"set_star"===t.action?e.removeClass("off").addClass("on"):e.removeClass("on").addClass("off"),t.notice&&SS.notice(t.notice)}}),!1})},t.buildForm=function(t,e){var i=$(".list-item input:checkbox:checked").map(function(){return $(this).val()});if(0===i.length)return!1;var s,n,r=$('meta[name="csrf-token"]').attr("content"),o=$("<form/>",{action:t,method:"post",data:{confirm:e}});for(o.append($("<input/>",{name:"authenticity_token",value:r,type:"hidden"})),s=0,n=i.length;s<n;s++){var a=i[s];o.append($("<input/>",{name:"ids[]",value:a,type:"hidden"}))}return o},t}(),Gws_Memo_Folder.render=function(){return $("#addon-gws-agents-addons-group_permission").hide()},Gws_Memo_Filter.render=function(){return $("#addon-gws-agents-addons-group_permission").hide()},this.Gws_Monitor_Topic=function(){function t(){}return t.render=function(){return $(".public").on("click",function(){var t,e,i,s,n;return n=$('meta[name="csrf-token"]').attr("content"),e=(t=$(this)).data("ss-action"),i=t.data("ss-confirm"),(s=$("<form/>",{action:e,method:"post",data:{confirm:i}})).append($("<input/>",{name:"authenticity_token",value:n,type:"hidden"})),s.appendTo(document.body).submit()}),$(".preparation").on("click",function(){var t,e,i,s,n;return n=$('meta[name="csrf-token"]').attr("content"),e=(t=$(this)).data("ss-action"),i=t.data("ss-confirm"),(s=$("<form/>",{action:e,method:"post",data:{confirm:i}})).append($("<input/>",{name:"authenticity_token",value:n,type:"hidden"})),s.appendTo(document.body).submit()}),$(".question_not_applicable").on("click",function(){var t,e,i;return i=$('meta[name="csrf-token"]').attr("content"),e=$("#item_id").val(),(t=$("<form/>",{action:e+"/question_not_applicable",method:"post",data:{confirm:"\u8a72\u5f53\u306a\u3057\u306b\u3057\u307e\u3059\u304b\uff1f"}})).append($("<input/>",{name:"authenticity_token",value:i,type:"hidden"})),t.appendTo(document.body).submit()}),$(".answered").on("click",function(){var t,e,i;return i=$('meta[name="csrf-token"]').attr("content"),e=$("#item_id").val(),(t=$("<form/>",{action:e+"/answered",method:"post",data:{confirm:"\u56de\u7b54\u6e08\u307f\u306b\u3057\u307e\u3059\u304b\uff1f"}})).append($("<input/>",{name:"authenticity_token",value:i,type:"hidden"})),t.appendTo(document.body).submit()})},t.buildForm=function(t,e){var i,s,n,r,o,a;if(0===(i=$(".list-item input:checkbox:checked").map(function(){return $(this).val()})).length)return!1;for(a=$('meta[name="csrf-token"]').attr("content"),(s=$("<form/>",{action:t,method:"post",data:{confirm:e}})).append($("<input/>",{name:"authenticity_token",value:a,type:"hidden"})),n=0,o=i.length;n<o;n++)r=i[n],s.append($("<input/>",{name:"ids[]",value:r,type:"hidden"}));return s},t.renderForm=function(t){return null==t&&(t={}),$("input.date").datetimepicker({lang:"ja",timepicker:!1,format:"Y/m/d",closeOnDateSelect:!0,scrollInput:!1,maxDate:t.maxDate}),$("input.datetime").datetimepicker({lang:"ja",roundTime:"ceil",step:30,maxDate:t.maxDate})},t}(),Gws_Portal.prototype.addItems=function(t){var i=this;$.each(t,function(t,e){i.addItem(e)})},Gws_Portal.prototype.addItem=function(t){var e=t._id.$oid,i=this.gs.add_widget('<li class="portlet-item" data-id="'+e+'"></li>',t.grid_data.size_x,t.grid_data.size_y,t.grid_data.col,t.grid_data.row);if(i){i.data("id",e);var s=this.el.find(".portlet-html[data-id='"+e+"']");if(s.length){s.height();s.prependTo(i)}}},Gws_Portal.prototype.autoResizeItem=function(t,e){var i=this.gs.options.widget_base_dimensions[1],s=i/2<e%i?1:0,n=t.data("sizex"),r=Math.floor(e/i)+s;t.data("sizey")<r&&this.gs.resize_widget(t,n,r)},Gws_Portal.prototype.setSerializeEvent=function(t){var e=this;e.updateUrl=$(t).data("href"),$(t).on("click",function(){e.serialize()})},Gws_Portal.prototype.setResetEvent=function(t){var i=this;$(t).on("click",function(){var t=[];i.el.find(".portlet-item").each(function(){t.push($(this).clone())}),i.gs.remove_all_widgets(),$.each(t,function(t,e){i.gs.add_widget(e,e.data("sizex"),e.data("sizey"))})})},Gws_Portal.prototype.serialize=function(){var i=this,s={};i.el.find("li.portlet-item").each(function(){var t=$(this),e=t.data("id");s[e]=i.gs.serialize(t)[0]}),$.ajax({url:i.updateUrl,method:"POST",dataType:"json",data:{_method:"put",authenticity_token:$('meta[name="csrf-token"]').attr("content"),json:JSON.stringify(s)},success:function(t){SS.notice(t.message)}})},Gws_Elasticsearch_Highlighter=function(){},Gws_Elasticsearch_Highlighter.prototype={render:function(){location.hash&&$(location.hash).css("border","1px solid red")}},this.Gws_Discussion_Thread=function(){function t(){}return t.render=function(d){var o=function(t,e,i){var s=$("<span></span>"),n=$('<img src="/assets/img/gws/ic-file.png" alt="" />'),r=$('<a target="_blank" rel="noopener"></a>'),o=$('<input type="hidden" name="item[file_ids][]" class="file-id" />'),a=$('<i class="material-icons md-18 md-inactive deselect">close</i>');s.attr("data-file-id",e),s.attr("id","file-"+e),r.text(i),r.attr("href","/.u"+d+"/apis/temp_files/"+e+"/view"),o.attr("value",e),a.on("click",function(){return $(this).parent("span").remove(),$(t).find("[data-file-id]").length<=0&&$(t).hide(),!1}),s.append(n),s.append(r),s.append(a),s.append(o),$(t).show(),$(t).append(s)};$("a.ajax-box").data("on-select",function(t){var e=$.colorbox.element().closest(".comment-files").find(".selected-files"),i=t.closest("[data-id]"),s=i.data("id"),n=i.data("humanized-name");return o(e,s,n),$.colorbox.close()});var t={select:function(t,r){return $(t).each(function(t,e){var i,s,n;return n=$(r).closest(".comment-files").find(".selected-files"),i=e._id,s=e.name,o(n,i,s)}),!1}};$(".comment-files .upload-drop-area").each(function(){new SS_Addon_TempFile(this,d,t)}),$(".open-reply").on("click",function(){return $(this).closest(".addon-body").next(".reply").show(),$(this).remove(),!1}),$(".reply[data-topic]").each(function(){var t=$(this).attr("data-topic"),e=function(){return $(".discussion-contributor"+t+" input#item_contributor_model").val($(this).data("model")),$(".discussion-contributor"+t+" input#item_contributor_id").val($(this).data("id")),$(".discussion-contributor"+t+" input#item_contributor_name").val($(this).data("name"))};return $(this).find(".discussion-contributor"+t+' input[name="tmp[contributor]"]').on("change",e),$(this).find(".discussion-contributor"+t+' input[name="tmp[contributor]"]:checked').each(e)})},t}(),this.Gws_Discussion_Unseen=function(){function e(){}return e.url=null,e.intervalID=null,e.intervalTime=null,e.timestamp=null,e.renderUnseen=function(t,e,i){if(this.url=t,this.intervalTime=e,this.timestamp=i,this.url&&this.intervalTime&&this.timestamp)return this.intervalID=setInterval(this.checkMessage,this.intervalTime)},e.checkMessage=function(){return $.ajax({url:e.url,success:function(t){if(parseInt(t)>e.timestamp)return $(".gws-discussion-unseen").show(),clearInterval(e.intervalID)}})},e}(),Gws_Attendance=function(t,e){this.el=t,this.$el=$(t),this.$toolbar=this.$el.find(".cell-toolbar"),this.options=e,this.now=new Date(e.now),this.render()},Gws_Attendance.prototype.render=function(){var s=this;this.$el.find("button[name=punch]").on("click",function(t){t.preventDefault(),t.stopPropagation();var e=$(this).data("action"),i=$(this).data("confirm");s.onPunchClicked(e,i)}),this.$el.find("button[name=edit]").on("click",function(t){t.preventDefault(),t.stopPropagation();var e=$(this).data("action"),i=$(this).data("confirm");s.onEditClicked(e,i)}),this.$el.find(".reason-tooltip").on("click",function(t){t.preventDefault(),t.stopPropagation(),s.hideToolbar(),s.hideTooltip(),$(this).find(".reason").show()}),this.$el.find("select[name=year_month]").on("change",function(){var t=$(this).val();t&&(location.href=s.options.indexUrl.replace(":year_month",t))}),this.$toolbar.find(".punch").on("click",function(){return s.onPunchClicked($(this).attr("href"),$(this).data("confirmation")),!1}),$(document).on("click",this.el+" .time-card .time",function(t){t.preventDefault(),t.stopPropagation(),s.onClickTime($(this))}),$(document).on("click",this.el+" .time-card .memo",function(t){t.preventDefault(),t.stopPropagation(),s.onClickMemo($(this))}),$(document).on("click",function(){s.hideToolbar(),s.hideTooltip()})},Gws_Attendance.prototype.onPunchClicked=function(t,e){if(t&&(!e||confirm(e))){var i=$('meta[name="csrf-token"]').attr("content");$form=$("<form/>",{action:t,method:"post"}),$form.append($("<input/>",{name:"authenticity_token",value:i,type:"hidden"})),$("body").append($form),$form.submit()}},Gws_Attendance.prototype.onEditClicked=function(t,e){t&&(e&&!confirm(e)||($a=$("<a />",{href:t}),$a.colorbox({open:!0,width:"90%"})))},Gws_Attendance.prototype.hideToolbar=function(){this.$toolbar.hide()},Gws_Attendance.prototype.hideTooltip=function(){this.$el.find(".reason-tooltip .reason").hide()},Gws_Attendance.prototype.onClickTime=function(t){this.onClickCell(t,this.options.timeUrl)},Gws_Attendance.prototype.onClickMemo=function(t){this.onClickCell(t,this.options.memoUrl)},Gws_Attendance.prototype.setFocus=function(t){this.$el.find(".time-card .time").removeClass("focus"),this.$el.find(".time-card .memo").removeClass("focus"),t.addClass("focus")},Gws_Attendance.prototype.isCellToday=function(t){return t.closest("tr").hasClass("current")},Gws_Attendance.prototype.onClickCell=function(t,e){if(this.hideTooltip(),t.data("day"))if(this.setFocus(t),this.options.editable||this.isCellToday(t)){var i=t.data("day"),s=t.data("type"),n=t.data("mode"),r=this.isCellToday(t),o=this.options.editable;"memo"===s&&this.isCellToday(t)&&(o=!0);var a,d=!1;if("punch"===n&&r&&this.options.punchUrl)a=(a=this.options.punchUrl).replace(":type",s),this.$toolbar.find(".edit").hide(),this.$toolbar.find(".punch").attr("href",a).show(),d=!0;if("edit"===n&&o)a=(a=(a=e).replace(":day",i)).replace(":type",s),this.$toolbar.find(".punch").hide(),this.$toolbar.find(".edit").attr("href",a).show(),d=!0;if(d){var l=t.offset();t.hasClass("top")?l.top-=this.$toolbar.outerHeight():l.top+=t.outerHeight(),this.$toolbar.show(),this.$toolbar.offset(l)}else this.$toolbar.hide()}else this.$toolbar.hide()},Gws_Attendance_Portlet=function(t,e){this.$el=$(t),this.options=e,this.render()},Gws_Attendance_Portlet.prototype.render=function(){var t=this;this.$el.find("button[name=punch]").on("click",function(){t.punch($(this),$(this).closest("tr").data("field-name"))}),this.$el.find("button[name=edit]").on("click",function(){t.edit($(this),$(this).closest("tr").data("field-name"))})},Gws_Attendance_Portlet.prototype.punch=function(t,e){if(t.attr("disabled","disabled"),confirm(this.options.confirmMessage)){var i=this.options.punchUrl.replace(":TYPE",e),s=this;$.ajax({url:i,method:"POST",data:{ref:this.options.ref},dataType:"json",success:function(){alert(s.options.successMessage),location.reload()},error:function(t){alert(t.responseJSON.join("\n"))},complete:function(){t.removeAttr("disabled")}})}else t.removeAttr("disabled")},Gws_Attendance_Portlet.prototype.edit=function(t,e){t.attr("disabled","disabled");var i=this.options.editUrl.replace(":TYPE",e);$a=$("<a/>",{href:i}),$a.colorbox({open:!0,onClosed:function(){t.removeAttr("disabled")}})},this.Gws_Presence_User=function(){function l(){}return l.render=function(){$(document).on("click",function(){return $(".presence-state-selector").hide(),!0}),$(".presence-state-selector").on("click",function(){return!1}),$(".presence-state-selector [data-value]").on("click",function(){var e=$(this).closest(".presence-state-selector").attr("data-id"),t=$(this).closest(".presence-state-selector").attr("data-url"),i=$(this).attr("data-value");return $.ajax({url:t,type:"POST",data:{_method:"put",authenticity_token:$('meta[name="csrf-token"]').attr("content"),presence_state:i},success:function(t){l.changedState(e,t),$(".presence-state-selector").hide()},error:function(t){alert(t.responseJSON.join("\n"))}}),!1}),$(".editable .select-presence-state,.editable .presence-state").on("click",function(){return $(".presence-state-selector").closest("li.portlet-item").css("z-index",0),$(".presence-state-selector").hide(),$(this).closest("li.portlet-item").css("z-index",1e3),$(this).closest("td").find(".presence-state-selector").show(),!1}),$(".ajax-text-field").on("click",function(){return l.toggleForm(this),!1}),$(".ajax-text-field").next(".editicon").on("click",function(){return $(this).prev(".ajax-text-field").trigger("click"),!1})},l.changedState=function(t,e){var i=e.presence_state||"",s=e.presence_state_label,n=e.presence_state_style,r=$("tr[data-id="+t+"] .presence-state"),o=$("tr[data-id="+t+"] .presence-state-selector");r.removeClass(),r.addClass("presence-state"),r.addClass(n),r.text(s),o.find('[data-value="'+i+'"] .selected-icon').css("visibility","visible"),o.find('[data-value!="'+i+'"] .selected-icon').css("visibility","hidden")},l.toggleForm=function(t){var e=$(t).attr("data-tag-state"),i=$(t).attr("data-original-tag"),s=$(t).attr("data-form-tag"),n=$(t).text()||$(t).val(),r=$(s).attr("name"),o=($(s).attr("data-id"),$(s).attr("data-url")),a=!1;if("original"==e){(s=$(s)).attr("data-original-tag",$(t).attr("data-original-tag")),s.attr("data-form-tag",$(t).attr("data-form-tag")),s.val(n),s.focusout(function(){if(a)return!0;var t={_method:"put",authenticity_token:$('meta[name="csrf-token"]').attr("content")};return t[r]=$(s).val(),$.ajax({url:o,type:"POST",data:t,success:function(t){$(s).val(t[r]),l.toggleForm(s)},error:function(t){alert(t.responseJSON.join("\n")),a=!0}}),!1}),s.keypress(function(t){if(13==t.which){var e={_method:"put",authenticity_token:$('meta[name="csrf-token"]').attr("content")};return e[r]=$(s).val(),$.ajax({url:o,type:"POST",data:e,success:function(t){$(s).val(t[r]),l.toggleForm(s)},error:function(t){alert(t.responseJSON.join("\n")),a=!0}}),!1}});var d=s.uniqueId();$(t).replaceWith(s),$(d).focus()}else(i=$(i).text(n)).attr("data-original-tag",$(t).attr("data-original-tag")),i.attr("data-form-tag",$(t).attr("data-form-tag")),i.on("click",function(){return l.toggleForm(this),!1}),i.uniqueId(),$(t).replaceWith(i),$(".ajax-text-field[data-id='"+i.attr("data-id")+"'][data-name='"+i.attr("data-name")+"']").text(n)},l}(),this.Gws_Presence_User_Reload=function(){function t(){}return t.render=function(t){null==t&&(t={});var e=t.url,i=t.paginate_params,s=t.page;$(".group-users .reload").on("click",function(){param=$.param({s:{keyword:$(".group-users [name='s[keyword]']").val()},paginate_params:i,page:s}),$.ajax({url:e+"?"+param,beforeSend:function(){$(".group-users .data-table-wrap").html(SS.loading)},success:function(t){$(".group-users .data-table-wrap").html(t);var e=$(".group-users .data-table-wrap").find("time");$(".group-users .list-head time").replaceWith(e).show(),e.show()}})}),$(".group-users .list-head .search").on("submit",function(){return param=$.param({s:{keyword:$(".group-users [name='s[keyword]']").val()},paginate_params:i}),$.ajax({url:e+"?"+param,beforeSend:function(){$(".group-users .data-table-wrap").html(SS.loading)},success:function(t){$(".group-users .data-table-wrap").html(t);var e=$(".group-users .data-table-wrap").find("time");$(".group-users .list-head time").replaceWith(e),e.show()},error:function(){$(".group-users .data-table-wrap").html("")}}),!1})},t}(),Gws_Share_FolderToolbar.prototype.render=function(){var t=this;this.$el.find(".btn-create-folder").on("click",function(){t.createFolder($(this))}),this.$el.find(".btn-create-root-folder").on("click",function(){t.createFolder($(this))}),this.$el.find(".btn-rename-folder").on("click",function(){t.renameFolder($(this),{success:{callback:t.refresh}})}),this.$el.find(".btn-delete-folder").on("click",function(){t.deleteFolder($(this))}),this.$el.find(".btn-edit-folder").on("click",function(){t.editFolder($(this))}),this.$el.find(".btn-refresh-folder").on("click",function(){t.refreshFolder()})},Gws_Share_FolderToolbar.prototype.createFolder=function(t,e){var i=t.data("href");if(i)location.href=i;else{var s=t.data("api");if(s){var n=t.data("success");!n&&e&&(n=e.success);var r=t.data("error");!r&&e&&(r=e.error);var o=this;$.colorbox({href:s,open:!0,fixed:!0,"with":"90%",height:"90%",onComplete:function(){SS.ajaxForm("#cboxLoadedContent form",{success:function(t){var e;if($.colorbox.close(),n&&n.redirect_to)return t&&((e=t.id)||(e=t._id)),void(location.href=n.redirect_to.replace(/:id/,e));n&&n.reload?location.reload():n&&n.callback&&n.callback.call(o,t)},error:function(t){$.colorbox.close(),t.responseJSON&&0<t.responseJSON.length?alert(t.responseJSON.join("\n")):r&&r.message&&alert(r.message)}})}})}}},Gws_Share_FolderToolbar.prototype.refresh=function(t){t&&(this.$el.find(".folder-name").text(t.name),this.refreshFolder())},Gws_Share_FolderToolbar.prototype.renameFolder=Gws_Share_FolderToolbar.prototype.createFolder,Gws_Share_FolderToolbar.prototype.deleteFolder=Gws_Share_FolderToolbar.prototype.createFolder,Gws_Share_FolderToolbar.prototype.editFolder=Gws_Share_FolderToolbar.prototype.createFolder,Gws_Share_FolderToolbar.prototype.refreshFolder=function(){this.options.treeNavi&&this.options.treeNavi.refresh()},$(function(){$("a[href^=http]").not('[href*="'+location.hostname+'"]').attr({target:"_blank",rel:"noopener"});var e=location.pathname+"/";$(".gws-schedule-tabs a").each(function(){var t=$(this);e.match(new RegExp("^"+t.attr("href")+"(/|$)"))&&t.addClass("current")}),Gws_Member.render()});
+//! moment.js
+//! version : 2.20.1
+//! authors : Tim Wood, Iskren Chernev, Moment.js contributors
+//! license : MIT
+//! momentjs.com
+
+;(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    global.moment = factory()
+}(this, (function () { 'use strict';
+
+var hookCallback;
+
+function hooks () {
+    return hookCallback.apply(null, arguments);
+}
+
+// This is done to register the method called with moment()
+// without creating circular dependencies.
+function setHookCallback (callback) {
+    hookCallback = callback;
+}
+
+function isArray(input) {
+    return input instanceof Array || Object.prototype.toString.call(input) === '[object Array]';
+}
+
+function isObject(input) {
+    // IE8 will treat undefined and null as object if it wasn't for
+    // input != null
+    return input != null && Object.prototype.toString.call(input) === '[object Object]';
+}
+
+function isObjectEmpty(obj) {
+    if (Object.getOwnPropertyNames) {
+        return (Object.getOwnPropertyNames(obj).length === 0);
+    } else {
+        var k;
+        for (k in obj) {
+            if (obj.hasOwnProperty(k)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+function isUndefined(input) {
+    return input === void 0;
+}
+
+function isNumber(input) {
+    return typeof input === 'number' || Object.prototype.toString.call(input) === '[object Number]';
+}
+
+function isDate(input) {
+    return input instanceof Date || Object.prototype.toString.call(input) === '[object Date]';
+}
+
+function map(arr, fn) {
+    var res = [], i;
+    for (i = 0; i < arr.length; ++i) {
+        res.push(fn(arr[i], i));
+    }
+    return res;
+}
+
+function hasOwnProp(a, b) {
+    return Object.prototype.hasOwnProperty.call(a, b);
+}
+
+function extend(a, b) {
+    for (var i in b) {
+        if (hasOwnProp(b, i)) {
+            a[i] = b[i];
+        }
+    }
+
+    if (hasOwnProp(b, 'toString')) {
+        a.toString = b.toString;
+    }
+
+    if (hasOwnProp(b, 'valueOf')) {
+        a.valueOf = b.valueOf;
+    }
+
+    return a;
+}
+
+function createUTC (input, format, locale, strict) {
+    return createLocalOrUTC(input, format, locale, strict, true).utc();
+}
+
+function defaultParsingFlags() {
+    // We need to deep clone this object.
+    return {
+        empty           : false,
+        unusedTokens    : [],
+        unusedInput     : [],
+        overflow        : -2,
+        charsLeftOver   : 0,
+        nullInput       : false,
+        invalidMonth    : null,
+        invalidFormat   : false,
+        userInvalidated : false,
+        iso             : false,
+        parsedDateParts : [],
+        meridiem        : null,
+        rfc2822         : false,
+        weekdayMismatch : false
+    };
+}
+
+function getParsingFlags(m) {
+    if (m._pf == null) {
+        m._pf = defaultParsingFlags();
+    }
+    return m._pf;
+}
+
+var some;
+if (Array.prototype.some) {
+    some = Array.prototype.some;
+} else {
+    some = function (fun) {
+        var t = Object(this);
+        var len = t.length >>> 0;
+
+        for (var i = 0; i < len; i++) {
+            if (i in t && fun.call(this, t[i], i, t)) {
+                return true;
+            }
+        }
+
+        return false;
+    };
+}
+
+function isValid(m) {
+    if (m._isValid == null) {
+        var flags = getParsingFlags(m);
+        var parsedParts = some.call(flags.parsedDateParts, function (i) {
+            return i != null;
+        });
+        var isNowValid = !isNaN(m._d.getTime()) &&
+            flags.overflow < 0 &&
+            !flags.empty &&
+            !flags.invalidMonth &&
+            !flags.invalidWeekday &&
+            !flags.weekdayMismatch &&
+            !flags.nullInput &&
+            !flags.invalidFormat &&
+            !flags.userInvalidated &&
+            (!flags.meridiem || (flags.meridiem && parsedParts));
+
+        if (m._strict) {
+            isNowValid = isNowValid &&
+                flags.charsLeftOver === 0 &&
+                flags.unusedTokens.length === 0 &&
+                flags.bigHour === undefined;
+        }
+
+        if (Object.isFrozen == null || !Object.isFrozen(m)) {
+            m._isValid = isNowValid;
+        }
+        else {
+            return isNowValid;
+        }
+    }
+    return m._isValid;
+}
+
+function createInvalid (flags) {
+    var m = createUTC(NaN);
+    if (flags != null) {
+        extend(getParsingFlags(m), flags);
+    }
+    else {
+        getParsingFlags(m).userInvalidated = true;
+    }
+
+    return m;
+}
+
+// Plugins that add properties should also add the key here (null value),
+// so we can properly clone ourselves.
+var momentProperties = hooks.momentProperties = [];
+
+function copyConfig(to, from) {
+    var i, prop, val;
+
+    if (!isUndefined(from._isAMomentObject)) {
+        to._isAMomentObject = from._isAMomentObject;
+    }
+    if (!isUndefined(from._i)) {
+        to._i = from._i;
+    }
+    if (!isUndefined(from._f)) {
+        to._f = from._f;
+    }
+    if (!isUndefined(from._l)) {
+        to._l = from._l;
+    }
+    if (!isUndefined(from._strict)) {
+        to._strict = from._strict;
+    }
+    if (!isUndefined(from._tzm)) {
+        to._tzm = from._tzm;
+    }
+    if (!isUndefined(from._isUTC)) {
+        to._isUTC = from._isUTC;
+    }
+    if (!isUndefined(from._offset)) {
+        to._offset = from._offset;
+    }
+    if (!isUndefined(from._pf)) {
+        to._pf = getParsingFlags(from);
+    }
+    if (!isUndefined(from._locale)) {
+        to._locale = from._locale;
+    }
+
+    if (momentProperties.length > 0) {
+        for (i = 0; i < momentProperties.length; i++) {
+            prop = momentProperties[i];
+            val = from[prop];
+            if (!isUndefined(val)) {
+                to[prop] = val;
+            }
+        }
+    }
+
+    return to;
+}
+
+var updateInProgress = false;
+
+// Moment prototype object
+function Moment(config) {
+    copyConfig(this, config);
+    this._d = new Date(config._d != null ? config._d.getTime() : NaN);
+    if (!this.isValid()) {
+        this._d = new Date(NaN);
+    }
+    // Prevent infinite loop in case updateOffset creates new moment
+    // objects.
+    if (updateInProgress === false) {
+        updateInProgress = true;
+        hooks.updateOffset(this);
+        updateInProgress = false;
+    }
+}
+
+function isMoment (obj) {
+    return obj instanceof Moment || (obj != null && obj._isAMomentObject != null);
+}
+
+function absFloor (number) {
+    if (number < 0) {
+        // -0 -> 0
+        return Math.ceil(number) || 0;
+    } else {
+        return Math.floor(number);
+    }
+}
+
+function toInt(argumentForCoercion) {
+    var coercedNumber = +argumentForCoercion,
+        value = 0;
+
+    if (coercedNumber !== 0 && isFinite(coercedNumber)) {
+        value = absFloor(coercedNumber);
+    }
+
+    return value;
+}
+
+// compare two arrays, return the number of differences
+function compareArrays(array1, array2, dontConvert) {
+    var len = Math.min(array1.length, array2.length),
+        lengthDiff = Math.abs(array1.length - array2.length),
+        diffs = 0,
+        i;
+    for (i = 0; i < len; i++) {
+        if ((dontConvert && array1[i] !== array2[i]) ||
+            (!dontConvert && toInt(array1[i]) !== toInt(array2[i]))) {
+            diffs++;
+        }
+    }
+    return diffs + lengthDiff;
+}
+
+function warn(msg) {
+    if (hooks.suppressDeprecationWarnings === false &&
+            (typeof console !==  'undefined') && console.warn) {
+        console.warn('Deprecation warning: ' + msg);
+    }
+}
+
+function deprecate(msg, fn) {
+    var firstTime = true;
+
+    return extend(function () {
+        if (hooks.deprecationHandler != null) {
+            hooks.deprecationHandler(null, msg);
+        }
+        if (firstTime) {
+            var args = [];
+            var arg;
+            for (var i = 0; i < arguments.length; i++) {
+                arg = '';
+                if (typeof arguments[i] === 'object') {
+                    arg += '\n[' + i + '] ';
+                    for (var key in arguments[0]) {
+                        arg += key + ': ' + arguments[0][key] + ', ';
+                    }
+                    arg = arg.slice(0, -2); // Remove trailing comma and space
+                } else {
+                    arg = arguments[i];
+                }
+                args.push(arg);
+            }
+            warn(msg + '\nArguments: ' + Array.prototype.slice.call(args).join('') + '\n' + (new Error()).stack);
+            firstTime = false;
+        }
+        return fn.apply(this, arguments);
+    }, fn);
+}
+
+var deprecations = {};
+
+function deprecateSimple(name, msg) {
+    if (hooks.deprecationHandler != null) {
+        hooks.deprecationHandler(name, msg);
+    }
+    if (!deprecations[name]) {
+        warn(msg);
+        deprecations[name] = true;
+    }
+}
+
+hooks.suppressDeprecationWarnings = false;
+hooks.deprecationHandler = null;
+
+function isFunction(input) {
+    return input instanceof Function || Object.prototype.toString.call(input) === '[object Function]';
+}
+
+function set (config) {
+    var prop, i;
+    for (i in config) {
+        prop = config[i];
+        if (isFunction(prop)) {
+            this[i] = prop;
+        } else {
+            this['_' + i] = prop;
+        }
+    }
+    this._config = config;
+    // Lenient ordinal parsing accepts just a number in addition to
+    // number + (possibly) stuff coming from _dayOfMonthOrdinalParse.
+    // TODO: Remove "ordinalParse" fallback in next major release.
+    this._dayOfMonthOrdinalParseLenient = new RegExp(
+        (this._dayOfMonthOrdinalParse.source || this._ordinalParse.source) +
+            '|' + (/\d{1,2}/).source);
+}
+
+function mergeConfigs(parentConfig, childConfig) {
+    var res = extend({}, parentConfig), prop;
+    for (prop in childConfig) {
+        if (hasOwnProp(childConfig, prop)) {
+            if (isObject(parentConfig[prop]) && isObject(childConfig[prop])) {
+                res[prop] = {};
+                extend(res[prop], parentConfig[prop]);
+                extend(res[prop], childConfig[prop]);
+            } else if (childConfig[prop] != null) {
+                res[prop] = childConfig[prop];
+            } else {
+                delete res[prop];
+            }
+        }
+    }
+    for (prop in parentConfig) {
+        if (hasOwnProp(parentConfig, prop) &&
+                !hasOwnProp(childConfig, prop) &&
+                isObject(parentConfig[prop])) {
+            // make sure changes to properties don't modify parent config
+            res[prop] = extend({}, res[prop]);
+        }
+    }
+    return res;
+}
+
+function Locale(config) {
+    if (config != null) {
+        this.set(config);
+    }
+}
+
+var keys;
+
+if (Object.keys) {
+    keys = Object.keys;
+} else {
+    keys = function (obj) {
+        var i, res = [];
+        for (i in obj) {
+            if (hasOwnProp(obj, i)) {
+                res.push(i);
+            }
+        }
+        return res;
+    };
+}
+
+var defaultCalendar = {
+    sameDay : '[Today at] LT',
+    nextDay : '[Tomorrow at] LT',
+    nextWeek : 'dddd [at] LT',
+    lastDay : '[Yesterday at] LT',
+    lastWeek : '[Last] dddd [at] LT',
+    sameElse : 'L'
+};
+
+function calendar (key, mom, now) {
+    var output = this._calendar[key] || this._calendar['sameElse'];
+    return isFunction(output) ? output.call(mom, now) : output;
+}
+
+var defaultLongDateFormat = {
+    LTS  : 'h:mm:ss A',
+    LT   : 'h:mm A',
+    L    : 'MM/DD/YYYY',
+    LL   : 'MMMM D, YYYY',
+    LLL  : 'MMMM D, YYYY h:mm A',
+    LLLL : 'dddd, MMMM D, YYYY h:mm A'
+};
+
+function longDateFormat (key) {
+    var format = this._longDateFormat[key],
+        formatUpper = this._longDateFormat[key.toUpperCase()];
+
+    if (format || !formatUpper) {
+        return format;
+    }
+
+    this._longDateFormat[key] = formatUpper.replace(/MMMM|MM|DD|dddd/g, function (val) {
+        return val.slice(1);
+    });
+
+    return this._longDateFormat[key];
+}
+
+var defaultInvalidDate = 'Invalid date';
+
+function invalidDate () {
+    return this._invalidDate;
+}
+
+var defaultOrdinal = '%d';
+var defaultDayOfMonthOrdinalParse = /\d{1,2}/;
+
+function ordinal (number) {
+    return this._ordinal.replace('%d', number);
+}
+
+var defaultRelativeTime = {
+    future : 'in %s',
+    past   : '%s ago',
+    s  : 'a few seconds',
+    ss : '%d seconds',
+    m  : 'a minute',
+    mm : '%d minutes',
+    h  : 'an hour',
+    hh : '%d hours',
+    d  : 'a day',
+    dd : '%d days',
+    M  : 'a month',
+    MM : '%d months',
+    y  : 'a year',
+    yy : '%d years'
+};
+
+function relativeTime (number, withoutSuffix, string, isFuture) {
+    var output = this._relativeTime[string];
+    return (isFunction(output)) ?
+        output(number, withoutSuffix, string, isFuture) :
+        output.replace(/%d/i, number);
+}
+
+function pastFuture (diff, output) {
+    var format = this._relativeTime[diff > 0 ? 'future' : 'past'];
+    return isFunction(format) ? format(output) : format.replace(/%s/i, output);
+}
+
+var aliases = {};
+
+function addUnitAlias (unit, shorthand) {
+    var lowerCase = unit.toLowerCase();
+    aliases[lowerCase] = aliases[lowerCase + 's'] = aliases[shorthand] = unit;
+}
+
+function normalizeUnits(units) {
+    return typeof units === 'string' ? aliases[units] || aliases[units.toLowerCase()] : undefined;
+}
+
+function normalizeObjectUnits(inputObject) {
+    var normalizedInput = {},
+        normalizedProp,
+        prop;
+
+    for (prop in inputObject) {
+        if (hasOwnProp(inputObject, prop)) {
+            normalizedProp = normalizeUnits(prop);
+            if (normalizedProp) {
+                normalizedInput[normalizedProp] = inputObject[prop];
+            }
+        }
+    }
+
+    return normalizedInput;
+}
+
+var priorities = {};
+
+function addUnitPriority(unit, priority) {
+    priorities[unit] = priority;
+}
+
+function getPrioritizedUnits(unitsObj) {
+    var units = [];
+    for (var u in unitsObj) {
+        units.push({unit: u, priority: priorities[u]});
+    }
+    units.sort(function (a, b) {
+        return a.priority - b.priority;
+    });
+    return units;
+}
+
+function zeroFill(number, targetLength, forceSign) {
+    var absNumber = '' + Math.abs(number),
+        zerosToFill = targetLength - absNumber.length,
+        sign = number >= 0;
+    return (sign ? (forceSign ? '+' : '') : '-') +
+        Math.pow(10, Math.max(0, zerosToFill)).toString().substr(1) + absNumber;
+}
+
+var formattingTokens = /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g;
+
+var localFormattingTokens = /(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g;
+
+var formatFunctions = {};
+
+var formatTokenFunctions = {};
+
+// token:    'M'
+// padded:   ['MM', 2]
+// ordinal:  'Mo'
+// callback: function () { this.month() + 1 }
+function addFormatToken (token, padded, ordinal, callback) {
+    var func = callback;
+    if (typeof callback === 'string') {
+        func = function () {
+            return this[callback]();
+        };
+    }
+    if (token) {
+        formatTokenFunctions[token] = func;
+    }
+    if (padded) {
+        formatTokenFunctions[padded[0]] = function () {
+            return zeroFill(func.apply(this, arguments), padded[1], padded[2]);
+        };
+    }
+    if (ordinal) {
+        formatTokenFunctions[ordinal] = function () {
+            return this.localeData().ordinal(func.apply(this, arguments), token);
+        };
+    }
+}
+
+function removeFormattingTokens(input) {
+    if (input.match(/\[[\s\S]/)) {
+        return input.replace(/^\[|\]$/g, '');
+    }
+    return input.replace(/\\/g, '');
+}
+
+function makeFormatFunction(format) {
+    var array = format.match(formattingTokens), i, length;
+
+    for (i = 0, length = array.length; i < length; i++) {
+        if (formatTokenFunctions[array[i]]) {
+            array[i] = formatTokenFunctions[array[i]];
+        } else {
+            array[i] = removeFormattingTokens(array[i]);
+        }
+    }
+
+    return function (mom) {
+        var output = '', i;
+        for (i = 0; i < length; i++) {
+            output += isFunction(array[i]) ? array[i].call(mom, format) : array[i];
+        }
+        return output;
+    };
+}
+
+// format date using native date object
+function formatMoment(m, format) {
+    if (!m.isValid()) {
+        return m.localeData().invalidDate();
+    }
+
+    format = expandFormat(format, m.localeData());
+    formatFunctions[format] = formatFunctions[format] || makeFormatFunction(format);
+
+    return formatFunctions[format](m);
+}
+
+function expandFormat(format, locale) {
+    var i = 5;
+
+    function replaceLongDateFormatTokens(input) {
+        return locale.longDateFormat(input) || input;
+    }
+
+    localFormattingTokens.lastIndex = 0;
+    while (i >= 0 && localFormattingTokens.test(format)) {
+        format = format.replace(localFormattingTokens, replaceLongDateFormatTokens);
+        localFormattingTokens.lastIndex = 0;
+        i -= 1;
+    }
+
+    return format;
+}
+
+var match1         = /\d/;            //       0 - 9
+var match2         = /\d\d/;          //      00 - 99
+var match3         = /\d{3}/;         //     000 - 999
+var match4         = /\d{4}/;         //    0000 - 9999
+var match6         = /[+-]?\d{6}/;    // -999999 - 999999
+var match1to2      = /\d\d?/;         //       0 - 99
+var match3to4      = /\d\d\d\d?/;     //     999 - 9999
+var match5to6      = /\d\d\d\d\d\d?/; //   99999 - 999999
+var match1to3      = /\d{1,3}/;       //       0 - 999
+var match1to4      = /\d{1,4}/;       //       0 - 9999
+var match1to6      = /[+-]?\d{1,6}/;  // -999999 - 999999
+
+var matchUnsigned  = /\d+/;           //       0 - inf
+var matchSigned    = /[+-]?\d+/;      //    -inf - inf
+
+var matchOffset    = /Z|[+-]\d\d:?\d\d/gi; // +00:00 -00:00 +0000 -0000 or Z
+var matchShortOffset = /Z|[+-]\d\d(?::?\d\d)?/gi; // +00 -00 +00:00 -00:00 +0000 -0000 or Z
+
+var matchTimestamp = /[+-]?\d+(\.\d{1,3})?/; // 123456789 123456789.123
+
+// any word (or two) characters or numbers including two/three word month in arabic.
+// includes scottish gaelic two word and hyphenated months
+var matchWord = /[0-9]{0,256}['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFF07\uFF10-\uFFEF]{1,256}|[\u0600-\u06FF\/]{1,256}(\s*?[\u0600-\u06FF]{1,256}){1,2}/i;
+
+
+var regexes = {};
+
+function addRegexToken (token, regex, strictRegex) {
+    regexes[token] = isFunction(regex) ? regex : function (isStrict, localeData) {
+        return (isStrict && strictRegex) ? strictRegex : regex;
+    };
+}
+
+function getParseRegexForToken (token, config) {
+    if (!hasOwnProp(regexes, token)) {
+        return new RegExp(unescapeFormat(token));
+    }
+
+    return regexes[token](config._strict, config._locale);
+}
+
+// Code from http://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript
+function unescapeFormat(s) {
+    return regexEscape(s.replace('\\', '').replace(/\\(\[)|\\(\])|\[([^\]\[]*)\]|\\(.)/g, function (matched, p1, p2, p3, p4) {
+        return p1 || p2 || p3 || p4;
+    }));
+}
+
+function regexEscape(s) {
+    return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+}
+
+var tokens = {};
+
+function addParseToken (token, callback) {
+    var i, func = callback;
+    if (typeof token === 'string') {
+        token = [token];
+    }
+    if (isNumber(callback)) {
+        func = function (input, array) {
+            array[callback] = toInt(input);
+        };
+    }
+    for (i = 0; i < token.length; i++) {
+        tokens[token[i]] = func;
+    }
+}
+
+function addWeekParseToken (token, callback) {
+    addParseToken(token, function (input, array, config, token) {
+        config._w = config._w || {};
+        callback(input, config._w, config, token);
+    });
+}
+
+function addTimeToArrayFromToken(token, input, config) {
+    if (input != null && hasOwnProp(tokens, token)) {
+        tokens[token](input, config._a, config, token);
+    }
+}
+
+var YEAR = 0;
+var MONTH = 1;
+var DATE = 2;
+var HOUR = 3;
+var MINUTE = 4;
+var SECOND = 5;
+var MILLISECOND = 6;
+var WEEK = 7;
+var WEEKDAY = 8;
+
+// FORMATTING
+
+addFormatToken('Y', 0, 0, function () {
+    var y = this.year();
+    return y <= 9999 ? '' + y : '+' + y;
+});
+
+addFormatToken(0, ['YY', 2], 0, function () {
+    return this.year() % 100;
+});
+
+addFormatToken(0, ['YYYY',   4],       0, 'year');
+addFormatToken(0, ['YYYYY',  5],       0, 'year');
+addFormatToken(0, ['YYYYYY', 6, true], 0, 'year');
+
+// ALIASES
+
+addUnitAlias('year', 'y');
+
+// PRIORITIES
+
+addUnitPriority('year', 1);
+
+// PARSING
+
+addRegexToken('Y',      matchSigned);
+addRegexToken('YY',     match1to2, match2);
+addRegexToken('YYYY',   match1to4, match4);
+addRegexToken('YYYYY',  match1to6, match6);
+addRegexToken('YYYYYY', match1to6, match6);
+
+addParseToken(['YYYYY', 'YYYYYY'], YEAR);
+addParseToken('YYYY', function (input, array) {
+    array[YEAR] = input.length === 2 ? hooks.parseTwoDigitYear(input) : toInt(input);
+});
+addParseToken('YY', function (input, array) {
+    array[YEAR] = hooks.parseTwoDigitYear(input);
+});
+addParseToken('Y', function (input, array) {
+    array[YEAR] = parseInt(input, 10);
+});
+
+// HELPERS
+
+function daysInYear(year) {
+    return isLeapYear(year) ? 366 : 365;
+}
+
+function isLeapYear(year) {
+    return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+}
+
+// HOOKS
+
+hooks.parseTwoDigitYear = function (input) {
+    return toInt(input) + (toInt(input) > 68 ? 1900 : 2000);
+};
+
+// MOMENTS
+
+var getSetYear = makeGetSet('FullYear', true);
+
+function getIsLeapYear () {
+    return isLeapYear(this.year());
+}
+
+function makeGetSet (unit, keepTime) {
+    return function (value) {
+        if (value != null) {
+            set$1(this, unit, value);
+            hooks.updateOffset(this, keepTime);
+            return this;
+        } else {
+            return get(this, unit);
+        }
+    };
+}
+
+function get (mom, unit) {
+    return mom.isValid() ?
+        mom._d['get' + (mom._isUTC ? 'UTC' : '') + unit]() : NaN;
+}
+
+function set$1 (mom, unit, value) {
+    if (mom.isValid() && !isNaN(value)) {
+        if (unit === 'FullYear' && isLeapYear(mom.year()) && mom.month() === 1 && mom.date() === 29) {
+            mom._d['set' + (mom._isUTC ? 'UTC' : '') + unit](value, mom.month(), daysInMonth(value, mom.month()));
+        }
+        else {
+            mom._d['set' + (mom._isUTC ? 'UTC' : '') + unit](value);
+        }
+    }
+}
+
+// MOMENTS
+
+function stringGet (units) {
+    units = normalizeUnits(units);
+    if (isFunction(this[units])) {
+        return this[units]();
+    }
+    return this;
+}
+
+
+function stringSet (units, value) {
+    if (typeof units === 'object') {
+        units = normalizeObjectUnits(units);
+        var prioritized = getPrioritizedUnits(units);
+        for (var i = 0; i < prioritized.length; i++) {
+            this[prioritized[i].unit](units[prioritized[i].unit]);
+        }
+    } else {
+        units = normalizeUnits(units);
+        if (isFunction(this[units])) {
+            return this[units](value);
+        }
+    }
+    return this;
+}
+
+function mod(n, x) {
+    return ((n % x) + x) % x;
+}
+
+var indexOf;
+
+if (Array.prototype.indexOf) {
+    indexOf = Array.prototype.indexOf;
+} else {
+    indexOf = function (o) {
+        // I know
+        var i;
+        for (i = 0; i < this.length; ++i) {
+            if (this[i] === o) {
+                return i;
+            }
+        }
+        return -1;
+    };
+}
+
+function daysInMonth(year, month) {
+    if (isNaN(year) || isNaN(month)) {
+        return NaN;
+    }
+    var modMonth = mod(month, 12);
+    year += (month - modMonth) / 12;
+    return modMonth === 1 ? (isLeapYear(year) ? 29 : 28) : (31 - modMonth % 7 % 2);
+}
+
+// FORMATTING
+
+addFormatToken('M', ['MM', 2], 'Mo', function () {
+    return this.month() + 1;
+});
+
+addFormatToken('MMM', 0, 0, function (format) {
+    return this.localeData().monthsShort(this, format);
+});
+
+addFormatToken('MMMM', 0, 0, function (format) {
+    return this.localeData().months(this, format);
+});
+
+// ALIASES
+
+addUnitAlias('month', 'M');
+
+// PRIORITY
+
+addUnitPriority('month', 8);
+
+// PARSING
+
+addRegexToken('M',    match1to2);
+addRegexToken('MM',   match1to2, match2);
+addRegexToken('MMM',  function (isStrict, locale) {
+    return locale.monthsShortRegex(isStrict);
+});
+addRegexToken('MMMM', function (isStrict, locale) {
+    return locale.monthsRegex(isStrict);
+});
+
+addParseToken(['M', 'MM'], function (input, array) {
+    array[MONTH] = toInt(input) - 1;
+});
+
+addParseToken(['MMM', 'MMMM'], function (input, array, config, token) {
+    var month = config._locale.monthsParse(input, token, config._strict);
+    // if we didn't find a month name, mark the date as invalid.
+    if (month != null) {
+        array[MONTH] = month;
+    } else {
+        getParsingFlags(config).invalidMonth = input;
+    }
+});
+
+// LOCALES
+
+var MONTHS_IN_FORMAT = /D[oD]?(\[[^\[\]]*\]|\s)+MMMM?/;
+var defaultLocaleMonths = 'January_February_March_April_May_June_July_August_September_October_November_December'.split('_');
+function localeMonths (m, format) {
+    if (!m) {
+        return isArray(this._months) ? this._months :
+            this._months['standalone'];
+    }
+    return isArray(this._months) ? this._months[m.month()] :
+        this._months[(this._months.isFormat || MONTHS_IN_FORMAT).test(format) ? 'format' : 'standalone'][m.month()];
+}
+
+var defaultLocaleMonthsShort = 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_');
+function localeMonthsShort (m, format) {
+    if (!m) {
+        return isArray(this._monthsShort) ? this._monthsShort :
+            this._monthsShort['standalone'];
+    }
+    return isArray(this._monthsShort) ? this._monthsShort[m.month()] :
+        this._monthsShort[MONTHS_IN_FORMAT.test(format) ? 'format' : 'standalone'][m.month()];
+}
+
+function handleStrictParse(monthName, format, strict) {
+    var i, ii, mom, llc = monthName.toLocaleLowerCase();
+    if (!this._monthsParse) {
+        // this is not used
+        this._monthsParse = [];
+        this._longMonthsParse = [];
+        this._shortMonthsParse = [];
+        for (i = 0; i < 12; ++i) {
+            mom = createUTC([2000, i]);
+            this._shortMonthsParse[i] = this.monthsShort(mom, '').toLocaleLowerCase();
+            this._longMonthsParse[i] = this.months(mom, '').toLocaleLowerCase();
+        }
+    }
+
+    if (strict) {
+        if (format === 'MMM') {
+            ii = indexOf.call(this._shortMonthsParse, llc);
+            return ii !== -1 ? ii : null;
+        } else {
+            ii = indexOf.call(this._longMonthsParse, llc);
+            return ii !== -1 ? ii : null;
+        }
+    } else {
+        if (format === 'MMM') {
+            ii = indexOf.call(this._shortMonthsParse, llc);
+            if (ii !== -1) {
+                return ii;
+            }
+            ii = indexOf.call(this._longMonthsParse, llc);
+            return ii !== -1 ? ii : null;
+        } else {
+            ii = indexOf.call(this._longMonthsParse, llc);
+            if (ii !== -1) {
+                return ii;
+            }
+            ii = indexOf.call(this._shortMonthsParse, llc);
+            return ii !== -1 ? ii : null;
+        }
+    }
+}
+
+function localeMonthsParse (monthName, format, strict) {
+    var i, mom, regex;
+
+    if (this._monthsParseExact) {
+        return handleStrictParse.call(this, monthName, format, strict);
+    }
+
+    if (!this._monthsParse) {
+        this._monthsParse = [];
+        this._longMonthsParse = [];
+        this._shortMonthsParse = [];
+    }
+
+    // TODO: add sorting
+    // Sorting makes sure if one month (or abbr) is a prefix of another
+    // see sorting in computeMonthsParse
+    for (i = 0; i < 12; i++) {
+        // make the regex if we don't have it already
+        mom = createUTC([2000, i]);
+        if (strict && !this._longMonthsParse[i]) {
+            this._longMonthsParse[i] = new RegExp('^' + this.months(mom, '').replace('.', '') + '$', 'i');
+            this._shortMonthsParse[i] = new RegExp('^' + this.monthsShort(mom, '').replace('.', '') + '$', 'i');
+        }
+        if (!strict && !this._monthsParse[i]) {
+            regex = '^' + this.months(mom, '') + '|^' + this.monthsShort(mom, '');
+            this._monthsParse[i] = new RegExp(regex.replace('.', ''), 'i');
+        }
+        // test the regex
+        if (strict && format === 'MMMM' && this._longMonthsParse[i].test(monthName)) {
+            return i;
+        } else if (strict && format === 'MMM' && this._shortMonthsParse[i].test(monthName)) {
+            return i;
+        } else if (!strict && this._monthsParse[i].test(monthName)) {
+            return i;
+        }
+    }
+}
+
+// MOMENTS
+
+function setMonth (mom, value) {
+    var dayOfMonth;
+
+    if (!mom.isValid()) {
+        // No op
+        return mom;
+    }
+
+    if (typeof value === 'string') {
+        if (/^\d+$/.test(value)) {
+            value = toInt(value);
+        } else {
+            value = mom.localeData().monthsParse(value);
+            // TODO: Another silent failure?
+            if (!isNumber(value)) {
+                return mom;
+            }
+        }
+    }
+
+    dayOfMonth = Math.min(mom.date(), daysInMonth(mom.year(), value));
+    mom._d['set' + (mom._isUTC ? 'UTC' : '') + 'Month'](value, dayOfMonth);
+    return mom;
+}
+
+function getSetMonth (value) {
+    if (value != null) {
+        setMonth(this, value);
+        hooks.updateOffset(this, true);
+        return this;
+    } else {
+        return get(this, 'Month');
+    }
+}
+
+function getDaysInMonth () {
+    return daysInMonth(this.year(), this.month());
+}
+
+var defaultMonthsShortRegex = matchWord;
+function monthsShortRegex (isStrict) {
+    if (this._monthsParseExact) {
+        if (!hasOwnProp(this, '_monthsRegex')) {
+            computeMonthsParse.call(this);
+        }
+        if (isStrict) {
+            return this._monthsShortStrictRegex;
+        } else {
+            return this._monthsShortRegex;
+        }
+    } else {
+        if (!hasOwnProp(this, '_monthsShortRegex')) {
+            this._monthsShortRegex = defaultMonthsShortRegex;
+        }
+        return this._monthsShortStrictRegex && isStrict ?
+            this._monthsShortStrictRegex : this._monthsShortRegex;
+    }
+}
+
+var defaultMonthsRegex = matchWord;
+function monthsRegex (isStrict) {
+    if (this._monthsParseExact) {
+        if (!hasOwnProp(this, '_monthsRegex')) {
+            computeMonthsParse.call(this);
+        }
+        if (isStrict) {
+            return this._monthsStrictRegex;
+        } else {
+            return this._monthsRegex;
+        }
+    } else {
+        if (!hasOwnProp(this, '_monthsRegex')) {
+            this._monthsRegex = defaultMonthsRegex;
+        }
+        return this._monthsStrictRegex && isStrict ?
+            this._monthsStrictRegex : this._monthsRegex;
+    }
+}
+
+function computeMonthsParse () {
+    function cmpLenRev(a, b) {
+        return b.length - a.length;
+    }
+
+    var shortPieces = [], longPieces = [], mixedPieces = [],
+        i, mom;
+    for (i = 0; i < 12; i++) {
+        // make the regex if we don't have it already
+        mom = createUTC([2000, i]);
+        shortPieces.push(this.monthsShort(mom, ''));
+        longPieces.push(this.months(mom, ''));
+        mixedPieces.push(this.months(mom, ''));
+        mixedPieces.push(this.monthsShort(mom, ''));
+    }
+    // Sorting makes sure if one month (or abbr) is a prefix of another it
+    // will match the longer piece.
+    shortPieces.sort(cmpLenRev);
+    longPieces.sort(cmpLenRev);
+    mixedPieces.sort(cmpLenRev);
+    for (i = 0; i < 12; i++) {
+        shortPieces[i] = regexEscape(shortPieces[i]);
+        longPieces[i] = regexEscape(longPieces[i]);
+    }
+    for (i = 0; i < 24; i++) {
+        mixedPieces[i] = regexEscape(mixedPieces[i]);
+    }
+
+    this._monthsRegex = new RegExp('^(' + mixedPieces.join('|') + ')', 'i');
+    this._monthsShortRegex = this._monthsRegex;
+    this._monthsStrictRegex = new RegExp('^(' + longPieces.join('|') + ')', 'i');
+    this._monthsShortStrictRegex = new RegExp('^(' + shortPieces.join('|') + ')', 'i');
+}
+
+function createDate (y, m, d, h, M, s, ms) {
+    // can't just apply() to create a date:
+    // https://stackoverflow.com/q/181348
+    var date = new Date(y, m, d, h, M, s, ms);
+
+    // the date constructor remaps years 0-99 to 1900-1999
+    if (y < 100 && y >= 0 && isFinite(date.getFullYear())) {
+        date.setFullYear(y);
+    }
+    return date;
+}
+
+function createUTCDate (y) {
+    var date = new Date(Date.UTC.apply(null, arguments));
+
+    // the Date.UTC function remaps years 0-99 to 1900-1999
+    if (y < 100 && y >= 0 && isFinite(date.getUTCFullYear())) {
+        date.setUTCFullYear(y);
+    }
+    return date;
+}
+
+// start-of-first-week - start-of-year
+function firstWeekOffset(year, dow, doy) {
+    var // first-week day -- which january is always in the first week (4 for iso, 1 for other)
+        fwd = 7 + dow - doy,
+        // first-week day local weekday -- which local weekday is fwd
+        fwdlw = (7 + createUTCDate(year, 0, fwd).getUTCDay() - dow) % 7;
+
+    return -fwdlw + fwd - 1;
+}
+
+// https://en.wikipedia.org/wiki/ISO_week_date#Calculating_a_date_given_the_year.2C_week_number_and_weekday
+function dayOfYearFromWeeks(year, week, weekday, dow, doy) {
+    var localWeekday = (7 + weekday - dow) % 7,
+        weekOffset = firstWeekOffset(year, dow, doy),
+        dayOfYear = 1 + 7 * (week - 1) + localWeekday + weekOffset,
+        resYear, resDayOfYear;
+
+    if (dayOfYear <= 0) {
+        resYear = year - 1;
+        resDayOfYear = daysInYear(resYear) + dayOfYear;
+    } else if (dayOfYear > daysInYear(year)) {
+        resYear = year + 1;
+        resDayOfYear = dayOfYear - daysInYear(year);
+    } else {
+        resYear = year;
+        resDayOfYear = dayOfYear;
+    }
+
+    return {
+        year: resYear,
+        dayOfYear: resDayOfYear
+    };
+}
+
+function weekOfYear(mom, dow, doy) {
+    var weekOffset = firstWeekOffset(mom.year(), dow, doy),
+        week = Math.floor((mom.dayOfYear() - weekOffset - 1) / 7) + 1,
+        resWeek, resYear;
+
+    if (week < 1) {
+        resYear = mom.year() - 1;
+        resWeek = week + weeksInYear(resYear, dow, doy);
+    } else if (week > weeksInYear(mom.year(), dow, doy)) {
+        resWeek = week - weeksInYear(mom.year(), dow, doy);
+        resYear = mom.year() + 1;
+    } else {
+        resYear = mom.year();
+        resWeek = week;
+    }
+
+    return {
+        week: resWeek,
+        year: resYear
+    };
+}
+
+function weeksInYear(year, dow, doy) {
+    var weekOffset = firstWeekOffset(year, dow, doy),
+        weekOffsetNext = firstWeekOffset(year + 1, dow, doy);
+    return (daysInYear(year) - weekOffset + weekOffsetNext) / 7;
+}
+
+// FORMATTING
+
+addFormatToken('w', ['ww', 2], 'wo', 'week');
+addFormatToken('W', ['WW', 2], 'Wo', 'isoWeek');
+
+// ALIASES
+
+addUnitAlias('week', 'w');
+addUnitAlias('isoWeek', 'W');
+
+// PRIORITIES
+
+addUnitPriority('week', 5);
+addUnitPriority('isoWeek', 5);
+
+// PARSING
+
+addRegexToken('w',  match1to2);
+addRegexToken('ww', match1to2, match2);
+addRegexToken('W',  match1to2);
+addRegexToken('WW', match1to2, match2);
+
+addWeekParseToken(['w', 'ww', 'W', 'WW'], function (input, week, config, token) {
+    week[token.substr(0, 1)] = toInt(input);
+});
+
+// HELPERS
+
+// LOCALES
+
+function localeWeek (mom) {
+    return weekOfYear(mom, this._week.dow, this._week.doy).week;
+}
+
+var defaultLocaleWeek = {
+    dow : 0, // Sunday is the first day of the week.
+    doy : 6  // The week that contains Jan 1st is the first week of the year.
+};
+
+function localeFirstDayOfWeek () {
+    return this._week.dow;
+}
+
+function localeFirstDayOfYear () {
+    return this._week.doy;
+}
+
+// MOMENTS
+
+function getSetWeek (input) {
+    var week = this.localeData().week(this);
+    return input == null ? week : this.add((input - week) * 7, 'd');
+}
+
+function getSetISOWeek (input) {
+    var week = weekOfYear(this, 1, 4).week;
+    return input == null ? week : this.add((input - week) * 7, 'd');
+}
+
+// FORMATTING
+
+addFormatToken('d', 0, 'do', 'day');
+
+addFormatToken('dd', 0, 0, function (format) {
+    return this.localeData().weekdaysMin(this, format);
+});
+
+addFormatToken('ddd', 0, 0, function (format) {
+    return this.localeData().weekdaysShort(this, format);
+});
+
+addFormatToken('dddd', 0, 0, function (format) {
+    return this.localeData().weekdays(this, format);
+});
+
+addFormatToken('e', 0, 0, 'weekday');
+addFormatToken('E', 0, 0, 'isoWeekday');
+
+// ALIASES
+
+addUnitAlias('day', 'd');
+addUnitAlias('weekday', 'e');
+addUnitAlias('isoWeekday', 'E');
+
+// PRIORITY
+addUnitPriority('day', 11);
+addUnitPriority('weekday', 11);
+addUnitPriority('isoWeekday', 11);
+
+// PARSING
+
+addRegexToken('d',    match1to2);
+addRegexToken('e',    match1to2);
+addRegexToken('E',    match1to2);
+addRegexToken('dd',   function (isStrict, locale) {
+    return locale.weekdaysMinRegex(isStrict);
+});
+addRegexToken('ddd',   function (isStrict, locale) {
+    return locale.weekdaysShortRegex(isStrict);
+});
+addRegexToken('dddd',   function (isStrict, locale) {
+    return locale.weekdaysRegex(isStrict);
+});
+
+addWeekParseToken(['dd', 'ddd', 'dddd'], function (input, week, config, token) {
+    var weekday = config._locale.weekdaysParse(input, token, config._strict);
+    // if we didn't get a weekday name, mark the date as invalid
+    if (weekday != null) {
+        week.d = weekday;
+    } else {
+        getParsingFlags(config).invalidWeekday = input;
+    }
+});
+
+addWeekParseToken(['d', 'e', 'E'], function (input, week, config, token) {
+    week[token] = toInt(input);
+});
+
+// HELPERS
+
+function parseWeekday(input, locale) {
+    if (typeof input !== 'string') {
+        return input;
+    }
+
+    if (!isNaN(input)) {
+        return parseInt(input, 10);
+    }
+
+    input = locale.weekdaysParse(input);
+    if (typeof input === 'number') {
+        return input;
+    }
+
+    return null;
+}
+
+function parseIsoWeekday(input, locale) {
+    if (typeof input === 'string') {
+        return locale.weekdaysParse(input) % 7 || 7;
+    }
+    return isNaN(input) ? null : input;
+}
+
+// LOCALES
+
+var defaultLocaleWeekdays = 'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split('_');
+function localeWeekdays (m, format) {
+    if (!m) {
+        return isArray(this._weekdays) ? this._weekdays :
+            this._weekdays['standalone'];
+    }
+    return isArray(this._weekdays) ? this._weekdays[m.day()] :
+        this._weekdays[this._weekdays.isFormat.test(format) ? 'format' : 'standalone'][m.day()];
+}
+
+var defaultLocaleWeekdaysShort = 'Sun_Mon_Tue_Wed_Thu_Fri_Sat'.split('_');
+function localeWeekdaysShort (m) {
+    return (m) ? this._weekdaysShort[m.day()] : this._weekdaysShort;
+}
+
+var defaultLocaleWeekdaysMin = 'Su_Mo_Tu_We_Th_Fr_Sa'.split('_');
+function localeWeekdaysMin (m) {
+    return (m) ? this._weekdaysMin[m.day()] : this._weekdaysMin;
+}
+
+function handleStrictParse$1(weekdayName, format, strict) {
+    var i, ii, mom, llc = weekdayName.toLocaleLowerCase();
+    if (!this._weekdaysParse) {
+        this._weekdaysParse = [];
+        this._shortWeekdaysParse = [];
+        this._minWeekdaysParse = [];
+
+        for (i = 0; i < 7; ++i) {
+            mom = createUTC([2000, 1]).day(i);
+            this._minWeekdaysParse[i] = this.weekdaysMin(mom, '').toLocaleLowerCase();
+            this._shortWeekdaysParse[i] = this.weekdaysShort(mom, '').toLocaleLowerCase();
+            this._weekdaysParse[i] = this.weekdays(mom, '').toLocaleLowerCase();
+        }
+    }
+
+    if (strict) {
+        if (format === 'dddd') {
+            ii = indexOf.call(this._weekdaysParse, llc);
+            return ii !== -1 ? ii : null;
+        } else if (format === 'ddd') {
+            ii = indexOf.call(this._shortWeekdaysParse, llc);
+            return ii !== -1 ? ii : null;
+        } else {
+            ii = indexOf.call(this._minWeekdaysParse, llc);
+            return ii !== -1 ? ii : null;
+        }
+    } else {
+        if (format === 'dddd') {
+            ii = indexOf.call(this._weekdaysParse, llc);
+            if (ii !== -1) {
+                return ii;
+            }
+            ii = indexOf.call(this._shortWeekdaysParse, llc);
+            if (ii !== -1) {
+                return ii;
+            }
+            ii = indexOf.call(this._minWeekdaysParse, llc);
+            return ii !== -1 ? ii : null;
+        } else if (format === 'ddd') {
+            ii = indexOf.call(this._shortWeekdaysParse, llc);
+            if (ii !== -1) {
+                return ii;
+            }
+            ii = indexOf.call(this._weekdaysParse, llc);
+            if (ii !== -1) {
+                return ii;
+            }
+            ii = indexOf.call(this._minWeekdaysParse, llc);
+            return ii !== -1 ? ii : null;
+        } else {
+            ii = indexOf.call(this._minWeekdaysParse, llc);
+            if (ii !== -1) {
+                return ii;
+            }
+            ii = indexOf.call(this._weekdaysParse, llc);
+            if (ii !== -1) {
+                return ii;
+            }
+            ii = indexOf.call(this._shortWeekdaysParse, llc);
+            return ii !== -1 ? ii : null;
+        }
+    }
+}
+
+function localeWeekdaysParse (weekdayName, format, strict) {
+    var i, mom, regex;
+
+    if (this._weekdaysParseExact) {
+        return handleStrictParse$1.call(this, weekdayName, format, strict);
+    }
+
+    if (!this._weekdaysParse) {
+        this._weekdaysParse = [];
+        this._minWeekdaysParse = [];
+        this._shortWeekdaysParse = [];
+        this._fullWeekdaysParse = [];
+    }
+
+    for (i = 0; i < 7; i++) {
+        // make the regex if we don't have it already
+
+        mom = createUTC([2000, 1]).day(i);
+        if (strict && !this._fullWeekdaysParse[i]) {
+            this._fullWeekdaysParse[i] = new RegExp('^' + this.weekdays(mom, '').replace('.', '\.?') + '$', 'i');
+            this._shortWeekdaysParse[i] = new RegExp('^' + this.weekdaysShort(mom, '').replace('.', '\.?') + '$', 'i');
+            this._minWeekdaysParse[i] = new RegExp('^' + this.weekdaysMin(mom, '').replace('.', '\.?') + '$', 'i');
+        }
+        if (!this._weekdaysParse[i]) {
+            regex = '^' + this.weekdays(mom, '') + '|^' + this.weekdaysShort(mom, '') + '|^' + this.weekdaysMin(mom, '');
+            this._weekdaysParse[i] = new RegExp(regex.replace('.', ''), 'i');
+        }
+        // test the regex
+        if (strict && format === 'dddd' && this._fullWeekdaysParse[i].test(weekdayName)) {
+            return i;
+        } else if (strict && format === 'ddd' && this._shortWeekdaysParse[i].test(weekdayName)) {
+            return i;
+        } else if (strict && format === 'dd' && this._minWeekdaysParse[i].test(weekdayName)) {
+            return i;
+        } else if (!strict && this._weekdaysParse[i].test(weekdayName)) {
+            return i;
+        }
+    }
+}
+
+// MOMENTS
+
+function getSetDayOfWeek (input) {
+    if (!this.isValid()) {
+        return input != null ? this : NaN;
+    }
+    var day = this._isUTC ? this._d.getUTCDay() : this._d.getDay();
+    if (input != null) {
+        input = parseWeekday(input, this.localeData());
+        return this.add(input - day, 'd');
+    } else {
+        return day;
+    }
+}
+
+function getSetLocaleDayOfWeek (input) {
+    if (!this.isValid()) {
+        return input != null ? this : NaN;
+    }
+    var weekday = (this.day() + 7 - this.localeData()._week.dow) % 7;
+    return input == null ? weekday : this.add(input - weekday, 'd');
+}
+
+function getSetISODayOfWeek (input) {
+    if (!this.isValid()) {
+        return input != null ? this : NaN;
+    }
+
+    // behaves the same as moment#day except
+    // as a getter, returns 7 instead of 0 (1-7 range instead of 0-6)
+    // as a setter, sunday should belong to the previous week.
+
+    if (input != null) {
+        var weekday = parseIsoWeekday(input, this.localeData());
+        return this.day(this.day() % 7 ? weekday : weekday - 7);
+    } else {
+        return this.day() || 7;
+    }
+}
+
+var defaultWeekdaysRegex = matchWord;
+function weekdaysRegex (isStrict) {
+    if (this._weekdaysParseExact) {
+        if (!hasOwnProp(this, '_weekdaysRegex')) {
+            computeWeekdaysParse.call(this);
+        }
+        if (isStrict) {
+            return this._weekdaysStrictRegex;
+        } else {
+            return this._weekdaysRegex;
+        }
+    } else {
+        if (!hasOwnProp(this, '_weekdaysRegex')) {
+            this._weekdaysRegex = defaultWeekdaysRegex;
+        }
+        return this._weekdaysStrictRegex && isStrict ?
+            this._weekdaysStrictRegex : this._weekdaysRegex;
+    }
+}
+
+var defaultWeekdaysShortRegex = matchWord;
+function weekdaysShortRegex (isStrict) {
+    if (this._weekdaysParseExact) {
+        if (!hasOwnProp(this, '_weekdaysRegex')) {
+            computeWeekdaysParse.call(this);
+        }
+        if (isStrict) {
+            return this._weekdaysShortStrictRegex;
+        } else {
+            return this._weekdaysShortRegex;
+        }
+    } else {
+        if (!hasOwnProp(this, '_weekdaysShortRegex')) {
+            this._weekdaysShortRegex = defaultWeekdaysShortRegex;
+        }
+        return this._weekdaysShortStrictRegex && isStrict ?
+            this._weekdaysShortStrictRegex : this._weekdaysShortRegex;
+    }
+}
+
+var defaultWeekdaysMinRegex = matchWord;
+function weekdaysMinRegex (isStrict) {
+    if (this._weekdaysParseExact) {
+        if (!hasOwnProp(this, '_weekdaysRegex')) {
+            computeWeekdaysParse.call(this);
+        }
+        if (isStrict) {
+            return this._weekdaysMinStrictRegex;
+        } else {
+            return this._weekdaysMinRegex;
+        }
+    } else {
+        if (!hasOwnProp(this, '_weekdaysMinRegex')) {
+            this._weekdaysMinRegex = defaultWeekdaysMinRegex;
+        }
+        return this._weekdaysMinStrictRegex && isStrict ?
+            this._weekdaysMinStrictRegex : this._weekdaysMinRegex;
+    }
+}
+
+
+function computeWeekdaysParse () {
+    function cmpLenRev(a, b) {
+        return b.length - a.length;
+    }
+
+    var minPieces = [], shortPieces = [], longPieces = [], mixedPieces = [],
+        i, mom, minp, shortp, longp;
+    for (i = 0; i < 7; i++) {
+        // make the regex if we don't have it already
+        mom = createUTC([2000, 1]).day(i);
+        minp = this.weekdaysMin(mom, '');
+        shortp = this.weekdaysShort(mom, '');
+        longp = this.weekdays(mom, '');
+        minPieces.push(minp);
+        shortPieces.push(shortp);
+        longPieces.push(longp);
+        mixedPieces.push(minp);
+        mixedPieces.push(shortp);
+        mixedPieces.push(longp);
+    }
+    // Sorting makes sure if one weekday (or abbr) is a prefix of another it
+    // will match the longer piece.
+    minPieces.sort(cmpLenRev);
+    shortPieces.sort(cmpLenRev);
+    longPieces.sort(cmpLenRev);
+    mixedPieces.sort(cmpLenRev);
+    for (i = 0; i < 7; i++) {
+        shortPieces[i] = regexEscape(shortPieces[i]);
+        longPieces[i] = regexEscape(longPieces[i]);
+        mixedPieces[i] = regexEscape(mixedPieces[i]);
+    }
+
+    this._weekdaysRegex = new RegExp('^(' + mixedPieces.join('|') + ')', 'i');
+    this._weekdaysShortRegex = this._weekdaysRegex;
+    this._weekdaysMinRegex = this._weekdaysRegex;
+
+    this._weekdaysStrictRegex = new RegExp('^(' + longPieces.join('|') + ')', 'i');
+    this._weekdaysShortStrictRegex = new RegExp('^(' + shortPieces.join('|') + ')', 'i');
+    this._weekdaysMinStrictRegex = new RegExp('^(' + minPieces.join('|') + ')', 'i');
+}
+
+// FORMATTING
+
+function hFormat() {
+    return this.hours() % 12 || 12;
+}
+
+function kFormat() {
+    return this.hours() || 24;
+}
+
+addFormatToken('H', ['HH', 2], 0, 'hour');
+addFormatToken('h', ['hh', 2], 0, hFormat);
+addFormatToken('k', ['kk', 2], 0, kFormat);
+
+addFormatToken('hmm', 0, 0, function () {
+    return '' + hFormat.apply(this) + zeroFill(this.minutes(), 2);
+});
+
+addFormatToken('hmmss', 0, 0, function () {
+    return '' + hFormat.apply(this) + zeroFill(this.minutes(), 2) +
+        zeroFill(this.seconds(), 2);
+});
+
+addFormatToken('Hmm', 0, 0, function () {
+    return '' + this.hours() + zeroFill(this.minutes(), 2);
+});
+
+addFormatToken('Hmmss', 0, 0, function () {
+    return '' + this.hours() + zeroFill(this.minutes(), 2) +
+        zeroFill(this.seconds(), 2);
+});
+
+function meridiem (token, lowercase) {
+    addFormatToken(token, 0, 0, function () {
+        return this.localeData().meridiem(this.hours(), this.minutes(), lowercase);
+    });
+}
+
+meridiem('a', true);
+meridiem('A', false);
+
+// ALIASES
+
+addUnitAlias('hour', 'h');
+
+// PRIORITY
+addUnitPriority('hour', 13);
+
+// PARSING
+
+function matchMeridiem (isStrict, locale) {
+    return locale._meridiemParse;
+}
+
+addRegexToken('a',  matchMeridiem);
+addRegexToken('A',  matchMeridiem);
+addRegexToken('H',  match1to2);
+addRegexToken('h',  match1to2);
+addRegexToken('k',  match1to2);
+addRegexToken('HH', match1to2, match2);
+addRegexToken('hh', match1to2, match2);
+addRegexToken('kk', match1to2, match2);
+
+addRegexToken('hmm', match3to4);
+addRegexToken('hmmss', match5to6);
+addRegexToken('Hmm', match3to4);
+addRegexToken('Hmmss', match5to6);
+
+addParseToken(['H', 'HH'], HOUR);
+addParseToken(['k', 'kk'], function (input, array, config) {
+    var kInput = toInt(input);
+    array[HOUR] = kInput === 24 ? 0 : kInput;
+});
+addParseToken(['a', 'A'], function (input, array, config) {
+    config._isPm = config._locale.isPM(input);
+    config._meridiem = input;
+});
+addParseToken(['h', 'hh'], function (input, array, config) {
+    array[HOUR] = toInt(input);
+    getParsingFlags(config).bigHour = true;
+});
+addParseToken('hmm', function (input, array, config) {
+    var pos = input.length - 2;
+    array[HOUR] = toInt(input.substr(0, pos));
+    array[MINUTE] = toInt(input.substr(pos));
+    getParsingFlags(config).bigHour = true;
+});
+addParseToken('hmmss', function (input, array, config) {
+    var pos1 = input.length - 4;
+    var pos2 = input.length - 2;
+    array[HOUR] = toInt(input.substr(0, pos1));
+    array[MINUTE] = toInt(input.substr(pos1, 2));
+    array[SECOND] = toInt(input.substr(pos2));
+    getParsingFlags(config).bigHour = true;
+});
+addParseToken('Hmm', function (input, array, config) {
+    var pos = input.length - 2;
+    array[HOUR] = toInt(input.substr(0, pos));
+    array[MINUTE] = toInt(input.substr(pos));
+});
+addParseToken('Hmmss', function (input, array, config) {
+    var pos1 = input.length - 4;
+    var pos2 = input.length - 2;
+    array[HOUR] = toInt(input.substr(0, pos1));
+    array[MINUTE] = toInt(input.substr(pos1, 2));
+    array[SECOND] = toInt(input.substr(pos2));
+});
+
+// LOCALES
+
+function localeIsPM (input) {
+    // IE8 Quirks Mode & IE7 Standards Mode do not allow accessing strings like arrays
+    // Using charAt should be more compatible.
+    return ((input + '').toLowerCase().charAt(0) === 'p');
+}
+
+var defaultLocaleMeridiemParse = /[ap]\.?m?\.?/i;
+function localeMeridiem (hours, minutes, isLower) {
+    if (hours > 11) {
+        return isLower ? 'pm' : 'PM';
+    } else {
+        return isLower ? 'am' : 'AM';
+    }
+}
+
+
+// MOMENTS
+
+// Setting the hour should keep the time, because the user explicitly
+// specified which hour he wants. So trying to maintain the same hour (in
+// a new timezone) makes sense. Adding/subtracting hours does not follow
+// this rule.
+var getSetHour = makeGetSet('Hours', true);
+
+// months
+// week
+// weekdays
+// meridiem
+var baseConfig = {
+    calendar: defaultCalendar,
+    longDateFormat: defaultLongDateFormat,
+    invalidDate: defaultInvalidDate,
+    ordinal: defaultOrdinal,
+    dayOfMonthOrdinalParse: defaultDayOfMonthOrdinalParse,
+    relativeTime: defaultRelativeTime,
+
+    months: defaultLocaleMonths,
+    monthsShort: defaultLocaleMonthsShort,
+
+    week: defaultLocaleWeek,
+
+    weekdays: defaultLocaleWeekdays,
+    weekdaysMin: defaultLocaleWeekdaysMin,
+    weekdaysShort: defaultLocaleWeekdaysShort,
+
+    meridiemParse: defaultLocaleMeridiemParse
+};
+
+// internal storage for locale config files
+var locales = {};
+var localeFamilies = {};
+var globalLocale;
+
+function normalizeLocale(key) {
+    return key ? key.toLowerCase().replace('_', '-') : key;
+}
+
+// pick the locale from the array
+// try ['en-au', 'en-gb'] as 'en-au', 'en-gb', 'en', as in move through the list trying each
+// substring from most specific to least, but move to the next array item if it's a more specific variant than the current root
+function chooseLocale(names) {
+    var i = 0, j, next, locale, split;
+
+    while (i < names.length) {
+        split = normalizeLocale(names[i]).split('-');
+        j = split.length;
+        next = normalizeLocale(names[i + 1]);
+        next = next ? next.split('-') : null;
+        while (j > 0) {
+            locale = loadLocale(split.slice(0, j).join('-'));
+            if (locale) {
+                return locale;
+            }
+            if (next && next.length >= j && compareArrays(split, next, true) >= j - 1) {
+                //the next array item is better than a shallower substring of this one
+                break;
+            }
+            j--;
+        }
+        i++;
+    }
+    return null;
+}
+
+function loadLocale(name) {
+    var oldLocale = null;
+    // TODO: Find a better way to register and load all the locales in Node
+    if (!locales[name] && (typeof module !== 'undefined') &&
+            module && module.exports) {
+        try {
+            oldLocale = globalLocale._abbr;
+            var aliasedRequire = require;
+            aliasedRequire('./locale/' + name);
+            getSetGlobalLocale(oldLocale);
+        } catch (e) {}
+    }
+    return locales[name];
+}
+
+// This function will load locale and then set the global locale.  If
+// no arguments are passed in, it will simply return the current global
+// locale key.
+function getSetGlobalLocale (key, values) {
+    var data;
+    if (key) {
+        if (isUndefined(values)) {
+            data = getLocale(key);
+        }
+        else {
+            data = defineLocale(key, values);
+        }
+
+        if (data) {
+            // moment.duration._locale = moment._locale = data;
+            globalLocale = data;
+        }
+    }
+
+    return globalLocale._abbr;
+}
+
+function defineLocale (name, config) {
+    if (config !== null) {
+        var parentConfig = baseConfig;
+        config.abbr = name;
+        if (locales[name] != null) {
+            deprecateSimple('defineLocaleOverride',
+                    'use moment.updateLocale(localeName, config) to change ' +
+                    'an existing locale. moment.defineLocale(localeName, ' +
+                    'config) should only be used for creating a new locale ' +
+                    'See http://momentjs.com/guides/#/warnings/define-locale/ for more info.');
+            parentConfig = locales[name]._config;
+        } else if (config.parentLocale != null) {
+            if (locales[config.parentLocale] != null) {
+                parentConfig = locales[config.parentLocale]._config;
+            } else {
+                if (!localeFamilies[config.parentLocale]) {
+                    localeFamilies[config.parentLocale] = [];
+                }
+                localeFamilies[config.parentLocale].push({
+                    name: name,
+                    config: config
+                });
+                return null;
+            }
+        }
+        locales[name] = new Locale(mergeConfigs(parentConfig, config));
+
+        if (localeFamilies[name]) {
+            localeFamilies[name].forEach(function (x) {
+                defineLocale(x.name, x.config);
+            });
+        }
+
+        // backwards compat for now: also set the locale
+        // make sure we set the locale AFTER all child locales have been
+        // created, so we won't end up with the child locale set.
+        getSetGlobalLocale(name);
+
+
+        return locales[name];
+    } else {
+        // useful for testing
+        delete locales[name];
+        return null;
+    }
+}
+
+function updateLocale(name, config) {
+    if (config != null) {
+        var locale, tmpLocale, parentConfig = baseConfig;
+        // MERGE
+        tmpLocale = loadLocale(name);
+        if (tmpLocale != null) {
+            parentConfig = tmpLocale._config;
+        }
+        config = mergeConfigs(parentConfig, config);
+        locale = new Locale(config);
+        locale.parentLocale = locales[name];
+        locales[name] = locale;
+
+        // backwards compat for now: also set the locale
+        getSetGlobalLocale(name);
+    } else {
+        // pass null for config to unupdate, useful for tests
+        if (locales[name] != null) {
+            if (locales[name].parentLocale != null) {
+                locales[name] = locales[name].parentLocale;
+            } else if (locales[name] != null) {
+                delete locales[name];
+            }
+        }
+    }
+    return locales[name];
+}
+
+// returns locale data
+function getLocale (key) {
+    var locale;
+
+    if (key && key._locale && key._locale._abbr) {
+        key = key._locale._abbr;
+    }
+
+    if (!key) {
+        return globalLocale;
+    }
+
+    if (!isArray(key)) {
+        //short-circuit everything else
+        locale = loadLocale(key);
+        if (locale) {
+            return locale;
+        }
+        key = [key];
+    }
+
+    return chooseLocale(key);
+}
+
+function listLocales() {
+    return keys(locales);
+}
+
+function checkOverflow (m) {
+    var overflow;
+    var a = m._a;
+
+    if (a && getParsingFlags(m).overflow === -2) {
+        overflow =
+            a[MONTH]       < 0 || a[MONTH]       > 11  ? MONTH :
+            a[DATE]        < 1 || a[DATE]        > daysInMonth(a[YEAR], a[MONTH]) ? DATE :
+            a[HOUR]        < 0 || a[HOUR]        > 24 || (a[HOUR] === 24 && (a[MINUTE] !== 0 || a[SECOND] !== 0 || a[MILLISECOND] !== 0)) ? HOUR :
+            a[MINUTE]      < 0 || a[MINUTE]      > 59  ? MINUTE :
+            a[SECOND]      < 0 || a[SECOND]      > 59  ? SECOND :
+            a[MILLISECOND] < 0 || a[MILLISECOND] > 999 ? MILLISECOND :
+            -1;
+
+        if (getParsingFlags(m)._overflowDayOfYear && (overflow < YEAR || overflow > DATE)) {
+            overflow = DATE;
+        }
+        if (getParsingFlags(m)._overflowWeeks && overflow === -1) {
+            overflow = WEEK;
+        }
+        if (getParsingFlags(m)._overflowWeekday && overflow === -1) {
+            overflow = WEEKDAY;
+        }
+
+        getParsingFlags(m).overflow = overflow;
+    }
+
+    return m;
+}
+
+// Pick the first defined of two or three arguments.
+function defaults(a, b, c) {
+    if (a != null) {
+        return a;
+    }
+    if (b != null) {
+        return b;
+    }
+    return c;
+}
+
+function currentDateArray(config) {
+    // hooks is actually the exported moment object
+    var nowValue = new Date(hooks.now());
+    if (config._useUTC) {
+        return [nowValue.getUTCFullYear(), nowValue.getUTCMonth(), nowValue.getUTCDate()];
+    }
+    return [nowValue.getFullYear(), nowValue.getMonth(), nowValue.getDate()];
+}
+
+// convert an array to a date.
+// the array should mirror the parameters below
+// note: all values past the year are optional and will default to the lowest possible value.
+// [year, month, day , hour, minute, second, millisecond]
+function configFromArray (config) {
+    var i, date, input = [], currentDate, expectedWeekday, yearToUse;
+
+    if (config._d) {
+        return;
+    }
+
+    currentDate = currentDateArray(config);
+
+    //compute day of the year from weeks and weekdays
+    if (config._w && config._a[DATE] == null && config._a[MONTH] == null) {
+        dayOfYearFromWeekInfo(config);
+    }
+
+    //if the day of the year is set, figure out what it is
+    if (config._dayOfYear != null) {
+        yearToUse = defaults(config._a[YEAR], currentDate[YEAR]);
+
+        if (config._dayOfYear > daysInYear(yearToUse) || config._dayOfYear === 0) {
+            getParsingFlags(config)._overflowDayOfYear = true;
+        }
+
+        date = createUTCDate(yearToUse, 0, config._dayOfYear);
+        config._a[MONTH] = date.getUTCMonth();
+        config._a[DATE] = date.getUTCDate();
+    }
+
+    // Default to current date.
+    // * if no year, month, day of month are given, default to today
+    // * if day of month is given, default month and year
+    // * if month is given, default only year
+    // * if year is given, don't default anything
+    for (i = 0; i < 3 && config._a[i] == null; ++i) {
+        config._a[i] = input[i] = currentDate[i];
+    }
+
+    // Zero out whatever was not defaulted, including time
+    for (; i < 7; i++) {
+        config._a[i] = input[i] = (config._a[i] == null) ? (i === 2 ? 1 : 0) : config._a[i];
+    }
+
+    // Check for 24:00:00.000
+    if (config._a[HOUR] === 24 &&
+            config._a[MINUTE] === 0 &&
+            config._a[SECOND] === 0 &&
+            config._a[MILLISECOND] === 0) {
+        config._nextDay = true;
+        config._a[HOUR] = 0;
+    }
+
+    config._d = (config._useUTC ? createUTCDate : createDate).apply(null, input);
+    expectedWeekday = config._useUTC ? config._d.getUTCDay() : config._d.getDay();
+
+    // Apply timezone offset from input. The actual utcOffset can be changed
+    // with parseZone.
+    if (config._tzm != null) {
+        config._d.setUTCMinutes(config._d.getUTCMinutes() - config._tzm);
+    }
+
+    if (config._nextDay) {
+        config._a[HOUR] = 24;
+    }
+
+    // check for mismatching day of week
+    if (config._w && typeof config._w.d !== 'undefined' && config._w.d !== expectedWeekday) {
+        getParsingFlags(config).weekdayMismatch = true;
+    }
+}
+
+function dayOfYearFromWeekInfo(config) {
+    var w, weekYear, week, weekday, dow, doy, temp, weekdayOverflow;
+
+    w = config._w;
+    if (w.GG != null || w.W != null || w.E != null) {
+        dow = 1;
+        doy = 4;
+
+        // TODO: We need to take the current isoWeekYear, but that depends on
+        // how we interpret now (local, utc, fixed offset). So create
+        // a now version of current config (take local/utc/offset flags, and
+        // create now).
+        weekYear = defaults(w.GG, config._a[YEAR], weekOfYear(createLocal(), 1, 4).year);
+        week = defaults(w.W, 1);
+        weekday = defaults(w.E, 1);
+        if (weekday < 1 || weekday > 7) {
+            weekdayOverflow = true;
+        }
+    } else {
+        dow = config._locale._week.dow;
+        doy = config._locale._week.doy;
+
+        var curWeek = weekOfYear(createLocal(), dow, doy);
+
+        weekYear = defaults(w.gg, config._a[YEAR], curWeek.year);
+
+        // Default to current week.
+        week = defaults(w.w, curWeek.week);
+
+        if (w.d != null) {
+            // weekday -- low day numbers are considered next week
+            weekday = w.d;
+            if (weekday < 0 || weekday > 6) {
+                weekdayOverflow = true;
+            }
+        } else if (w.e != null) {
+            // local weekday -- counting starts from begining of week
+            weekday = w.e + dow;
+            if (w.e < 0 || w.e > 6) {
+                weekdayOverflow = true;
+            }
+        } else {
+            // default to begining of week
+            weekday = dow;
+        }
+    }
+    if (week < 1 || week > weeksInYear(weekYear, dow, doy)) {
+        getParsingFlags(config)._overflowWeeks = true;
+    } else if (weekdayOverflow != null) {
+        getParsingFlags(config)._overflowWeekday = true;
+    } else {
+        temp = dayOfYearFromWeeks(weekYear, week, weekday, dow, doy);
+        config._a[YEAR] = temp.year;
+        config._dayOfYear = temp.dayOfYear;
+    }
+}
+
+// iso 8601 regex
+// 0000-00-00 0000-W00 or 0000-W00-0 + T + 00 or 00:00 or 00:00:00 or 00:00:00.000 + +00:00 or +0000 or +00)
+var extendedIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?::\d\d(?::\d\d(?:[.,]\d+)?)?)?)([\+\-]\d\d(?::?\d\d)?|\s*Z)?)?$/;
+var basicIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})(?:\d\d\d\d|W\d\d\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?:\d\d(?:\d\d(?:[.,]\d+)?)?)?)([\+\-]\d\d(?::?\d\d)?|\s*Z)?)?$/;
+
+var tzRegex = /Z|[+-]\d\d(?::?\d\d)?/;
+
+var isoDates = [
+    ['YYYYYY-MM-DD', /[+-]\d{6}-\d\d-\d\d/],
+    ['YYYY-MM-DD', /\d{4}-\d\d-\d\d/],
+    ['GGGG-[W]WW-E', /\d{4}-W\d\d-\d/],
+    ['GGGG-[W]WW', /\d{4}-W\d\d/, false],
+    ['YYYY-DDD', /\d{4}-\d{3}/],
+    ['YYYY-MM', /\d{4}-\d\d/, false],
+    ['YYYYYYMMDD', /[+-]\d{10}/],
+    ['YYYYMMDD', /\d{8}/],
+    // YYYYMM is NOT allowed by the standard
+    ['GGGG[W]WWE', /\d{4}W\d{3}/],
+    ['GGGG[W]WW', /\d{4}W\d{2}/, false],
+    ['YYYYDDD', /\d{7}/]
+];
+
+// iso time formats and regexes
+var isoTimes = [
+    ['HH:mm:ss.SSSS', /\d\d:\d\d:\d\d\.\d+/],
+    ['HH:mm:ss,SSSS', /\d\d:\d\d:\d\d,\d+/],
+    ['HH:mm:ss', /\d\d:\d\d:\d\d/],
+    ['HH:mm', /\d\d:\d\d/],
+    ['HHmmss.SSSS', /\d\d\d\d\d\d\.\d+/],
+    ['HHmmss,SSSS', /\d\d\d\d\d\d,\d+/],
+    ['HHmmss', /\d\d\d\d\d\d/],
+    ['HHmm', /\d\d\d\d/],
+    ['HH', /\d\d/]
+];
+
+var aspNetJsonRegex = /^\/?Date\((\-?\d+)/i;
+
+// date from iso format
+function configFromISO(config) {
+    var i, l,
+        string = config._i,
+        match = extendedIsoRegex.exec(string) || basicIsoRegex.exec(string),
+        allowTime, dateFormat, timeFormat, tzFormat;
+
+    if (match) {
+        getParsingFlags(config).iso = true;
+
+        for (i = 0, l = isoDates.length; i < l; i++) {
+            if (isoDates[i][1].exec(match[1])) {
+                dateFormat = isoDates[i][0];
+                allowTime = isoDates[i][2] !== false;
+                break;
+            }
+        }
+        if (dateFormat == null) {
+            config._isValid = false;
+            return;
+        }
+        if (match[3]) {
+            for (i = 0, l = isoTimes.length; i < l; i++) {
+                if (isoTimes[i][1].exec(match[3])) {
+                    // match[2] should be 'T' or space
+                    timeFormat = (match[2] || ' ') + isoTimes[i][0];
+                    break;
+                }
+            }
+            if (timeFormat == null) {
+                config._isValid = false;
+                return;
+            }
+        }
+        if (!allowTime && timeFormat != null) {
+            config._isValid = false;
+            return;
+        }
+        if (match[4]) {
+            if (tzRegex.exec(match[4])) {
+                tzFormat = 'Z';
+            } else {
+                config._isValid = false;
+                return;
+            }
+        }
+        config._f = dateFormat + (timeFormat || '') + (tzFormat || '');
+        configFromStringAndFormat(config);
+    } else {
+        config._isValid = false;
+    }
+}
+
+// RFC 2822 regex: For details see https://tools.ietf.org/html/rfc2822#section-3.3
+var rfc2822 = /^(?:(Mon|Tue|Wed|Thu|Fri|Sat|Sun),?\s)?(\d{1,2})\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(\d{2,4})\s(\d\d):(\d\d)(?::(\d\d))?\s(?:(UT|GMT|[ECMP][SD]T)|([Zz])|([+-]\d{4}))$/;
+
+function extractFromRFC2822Strings(yearStr, monthStr, dayStr, hourStr, minuteStr, secondStr) {
+    var result = [
+        untruncateYear(yearStr),
+        defaultLocaleMonthsShort.indexOf(monthStr),
+        parseInt(dayStr, 10),
+        parseInt(hourStr, 10),
+        parseInt(minuteStr, 10)
+    ];
+
+    if (secondStr) {
+        result.push(parseInt(secondStr, 10));
+    }
+
+    return result;
+}
+
+function untruncateYear(yearStr) {
+    var year = parseInt(yearStr, 10);
+    if (year <= 49) {
+        return 2000 + year;
+    } else if (year <= 999) {
+        return 1900 + year;
+    }
+    return year;
+}
+
+function preprocessRFC2822(s) {
+    // Remove comments and folding whitespace and replace multiple-spaces with a single space
+    return s.replace(/\([^)]*\)|[\n\t]/g, ' ').replace(/(\s\s+)/g, ' ').trim();
+}
+
+function checkWeekday(weekdayStr, parsedInput, config) {
+    if (weekdayStr) {
+        // TODO: Replace the vanilla JS Date object with an indepentent day-of-week check.
+        var weekdayProvided = defaultLocaleWeekdaysShort.indexOf(weekdayStr),
+            weekdayActual = new Date(parsedInput[0], parsedInput[1], parsedInput[2]).getDay();
+        if (weekdayProvided !== weekdayActual) {
+            getParsingFlags(config).weekdayMismatch = true;
+            config._isValid = false;
+            return false;
+        }
+    }
+    return true;
+}
+
+var obsOffsets = {
+    UT: 0,
+    GMT: 0,
+    EDT: -4 * 60,
+    EST: -5 * 60,
+    CDT: -5 * 60,
+    CST: -6 * 60,
+    MDT: -6 * 60,
+    MST: -7 * 60,
+    PDT: -7 * 60,
+    PST: -8 * 60
+};
+
+function calculateOffset(obsOffset, militaryOffset, numOffset) {
+    if (obsOffset) {
+        return obsOffsets[obsOffset];
+    } else if (militaryOffset) {
+        // the only allowed military tz is Z
+        return 0;
+    } else {
+        var hm = parseInt(numOffset, 10);
+        var m = hm % 100, h = (hm - m) / 100;
+        return h * 60 + m;
+    }
+}
+
+// date and time from ref 2822 format
+function configFromRFC2822(config) {
+    var match = rfc2822.exec(preprocessRFC2822(config._i));
+    if (match) {
+        var parsedArray = extractFromRFC2822Strings(match[4], match[3], match[2], match[5], match[6], match[7]);
+        if (!checkWeekday(match[1], parsedArray, config)) {
+            return;
+        }
+
+        config._a = parsedArray;
+        config._tzm = calculateOffset(match[8], match[9], match[10]);
+
+        config._d = createUTCDate.apply(null, config._a);
+        config._d.setUTCMinutes(config._d.getUTCMinutes() - config._tzm);
+
+        getParsingFlags(config).rfc2822 = true;
+    } else {
+        config._isValid = false;
+    }
+}
+
+// date from iso format or fallback
+function configFromString(config) {
+    var matched = aspNetJsonRegex.exec(config._i);
+
+    if (matched !== null) {
+        config._d = new Date(+matched[1]);
+        return;
+    }
+
+    configFromISO(config);
+    if (config._isValid === false) {
+        delete config._isValid;
+    } else {
+        return;
+    }
+
+    configFromRFC2822(config);
+    if (config._isValid === false) {
+        delete config._isValid;
+    } else {
+        return;
+    }
+
+    // Final attempt, use Input Fallback
+    hooks.createFromInputFallback(config);
+}
+
+hooks.createFromInputFallback = deprecate(
+    'value provided is not in a recognized RFC2822 or ISO format. moment construction falls back to js Date(), ' +
+    'which is not reliable across all browsers and versions. Non RFC2822/ISO date formats are ' +
+    'discouraged and will be removed in an upcoming major release. Please refer to ' +
+    'http://momentjs.com/guides/#/warnings/js-date/ for more info.',
+    function (config) {
+        config._d = new Date(config._i + (config._useUTC ? ' UTC' : ''));
+    }
+);
+
+// constant that refers to the ISO standard
+hooks.ISO_8601 = function () {};
+
+// constant that refers to the RFC 2822 form
+hooks.RFC_2822 = function () {};
+
+// date from string and format string
+function configFromStringAndFormat(config) {
+    // TODO: Move this to another part of the creation flow to prevent circular deps
+    if (config._f === hooks.ISO_8601) {
+        configFromISO(config);
+        return;
+    }
+    if (config._f === hooks.RFC_2822) {
+        configFromRFC2822(config);
+        return;
+    }
+    config._a = [];
+    getParsingFlags(config).empty = true;
+
+    // This array is used to make a Date, either with `new Date` or `Date.UTC`
+    var string = '' + config._i,
+        i, parsedInput, tokens, token, skipped,
+        stringLength = string.length,
+        totalParsedInputLength = 0;
+
+    tokens = expandFormat(config._f, config._locale).match(formattingTokens) || [];
+
+    for (i = 0; i < tokens.length; i++) {
+        token = tokens[i];
+        parsedInput = (string.match(getParseRegexForToken(token, config)) || [])[0];
+        // console.log('token', token, 'parsedInput', parsedInput,
+        //         'regex', getParseRegexForToken(token, config));
+        if (parsedInput) {
+            skipped = string.substr(0, string.indexOf(parsedInput));
+            if (skipped.length > 0) {
+                getParsingFlags(config).unusedInput.push(skipped);
+            }
+            string = string.slice(string.indexOf(parsedInput) + parsedInput.length);
+            totalParsedInputLength += parsedInput.length;
+        }
+        // don't parse if it's not a known token
+        if (formatTokenFunctions[token]) {
+            if (parsedInput) {
+                getParsingFlags(config).empty = false;
+            }
+            else {
+                getParsingFlags(config).unusedTokens.push(token);
+            }
+            addTimeToArrayFromToken(token, parsedInput, config);
+        }
+        else if (config._strict && !parsedInput) {
+            getParsingFlags(config).unusedTokens.push(token);
+        }
+    }
+
+    // add remaining unparsed input length to the string
+    getParsingFlags(config).charsLeftOver = stringLength - totalParsedInputLength;
+    if (string.length > 0) {
+        getParsingFlags(config).unusedInput.push(string);
+    }
+
+    // clear _12h flag if hour is <= 12
+    if (config._a[HOUR] <= 12 &&
+        getParsingFlags(config).bigHour === true &&
+        config._a[HOUR] > 0) {
+        getParsingFlags(config).bigHour = undefined;
+    }
+
+    getParsingFlags(config).parsedDateParts = config._a.slice(0);
+    getParsingFlags(config).meridiem = config._meridiem;
+    // handle meridiem
+    config._a[HOUR] = meridiemFixWrap(config._locale, config._a[HOUR], config._meridiem);
+
+    configFromArray(config);
+    checkOverflow(config);
+}
+
+
+function meridiemFixWrap (locale, hour, meridiem) {
+    var isPm;
+
+    if (meridiem == null) {
+        // nothing to do
+        return hour;
+    }
+    if (locale.meridiemHour != null) {
+        return locale.meridiemHour(hour, meridiem);
+    } else if (locale.isPM != null) {
+        // Fallback
+        isPm = locale.isPM(meridiem);
+        if (isPm && hour < 12) {
+            hour += 12;
+        }
+        if (!isPm && hour === 12) {
+            hour = 0;
+        }
+        return hour;
+    } else {
+        // this is not supposed to happen
+        return hour;
+    }
+}
+
+// date from string and array of format strings
+function configFromStringAndArray(config) {
+    var tempConfig,
+        bestMoment,
+
+        scoreToBeat,
+        i,
+        currentScore;
+
+    if (config._f.length === 0) {
+        getParsingFlags(config).invalidFormat = true;
+        config._d = new Date(NaN);
+        return;
+    }
+
+    for (i = 0; i < config._f.length; i++) {
+        currentScore = 0;
+        tempConfig = copyConfig({}, config);
+        if (config._useUTC != null) {
+            tempConfig._useUTC = config._useUTC;
+        }
+        tempConfig._f = config._f[i];
+        configFromStringAndFormat(tempConfig);
+
+        if (!isValid(tempConfig)) {
+            continue;
+        }
+
+        // if there is any input that was not parsed add a penalty for that format
+        currentScore += getParsingFlags(tempConfig).charsLeftOver;
+
+        //or tokens
+        currentScore += getParsingFlags(tempConfig).unusedTokens.length * 10;
+
+        getParsingFlags(tempConfig).score = currentScore;
+
+        if (scoreToBeat == null || currentScore < scoreToBeat) {
+            scoreToBeat = currentScore;
+            bestMoment = tempConfig;
+        }
+    }
+
+    extend(config, bestMoment || tempConfig);
+}
+
+function configFromObject(config) {
+    if (config._d) {
+        return;
+    }
+
+    var i = normalizeObjectUnits(config._i);
+    config._a = map([i.year, i.month, i.day || i.date, i.hour, i.minute, i.second, i.millisecond], function (obj) {
+        return obj && parseInt(obj, 10);
+    });
+
+    configFromArray(config);
+}
+
+function createFromConfig (config) {
+    var res = new Moment(checkOverflow(prepareConfig(config)));
+    if (res._nextDay) {
+        // Adding is smart enough around DST
+        res.add(1, 'd');
+        res._nextDay = undefined;
+    }
+
+    return res;
+}
+
+function prepareConfig (config) {
+    var input = config._i,
+        format = config._f;
+
+    config._locale = config._locale || getLocale(config._l);
+
+    if (input === null || (format === undefined && input === '')) {
+        return createInvalid({nullInput: true});
+    }
+
+    if (typeof input === 'string') {
+        config._i = input = config._locale.preparse(input);
+    }
+
+    if (isMoment(input)) {
+        return new Moment(checkOverflow(input));
+    } else if (isDate(input)) {
+        config._d = input;
+    } else if (isArray(format)) {
+        configFromStringAndArray(config);
+    } else if (format) {
+        configFromStringAndFormat(config);
+    }  else {
+        configFromInput(config);
+    }
+
+    if (!isValid(config)) {
+        config._d = null;
+    }
+
+    return config;
+}
+
+function configFromInput(config) {
+    var input = config._i;
+    if (isUndefined(input)) {
+        config._d = new Date(hooks.now());
+    } else if (isDate(input)) {
+        config._d = new Date(input.valueOf());
+    } else if (typeof input === 'string') {
+        configFromString(config);
+    } else if (isArray(input)) {
+        config._a = map(input.slice(0), function (obj) {
+            return parseInt(obj, 10);
+        });
+        configFromArray(config);
+    } else if (isObject(input)) {
+        configFromObject(config);
+    } else if (isNumber(input)) {
+        // from milliseconds
+        config._d = new Date(input);
+    } else {
+        hooks.createFromInputFallback(config);
+    }
+}
+
+function createLocalOrUTC (input, format, locale, strict, isUTC) {
+    var c = {};
+
+    if (locale === true || locale === false) {
+        strict = locale;
+        locale = undefined;
+    }
+
+    if ((isObject(input) && isObjectEmpty(input)) ||
+            (isArray(input) && input.length === 0)) {
+        input = undefined;
+    }
+    // object construction must be done this way.
+    // https://github.com/moment/moment/issues/1423
+    c._isAMomentObject = true;
+    c._useUTC = c._isUTC = isUTC;
+    c._l = locale;
+    c._i = input;
+    c._f = format;
+    c._strict = strict;
+
+    return createFromConfig(c);
+}
+
+function createLocal (input, format, locale, strict) {
+    return createLocalOrUTC(input, format, locale, strict, false);
+}
+
+var prototypeMin = deprecate(
+    'moment().min is deprecated, use moment.max instead. http://momentjs.com/guides/#/warnings/min-max/',
+    function () {
+        var other = createLocal.apply(null, arguments);
+        if (this.isValid() && other.isValid()) {
+            return other < this ? this : other;
+        } else {
+            return createInvalid();
+        }
+    }
+);
+
+var prototypeMax = deprecate(
+    'moment().max is deprecated, use moment.min instead. http://momentjs.com/guides/#/warnings/min-max/',
+    function () {
+        var other = createLocal.apply(null, arguments);
+        if (this.isValid() && other.isValid()) {
+            return other > this ? this : other;
+        } else {
+            return createInvalid();
+        }
+    }
+);
+
+// Pick a moment m from moments so that m[fn](other) is true for all
+// other. This relies on the function fn to be transitive.
+//
+// moments should either be an array of moment objects or an array, whose
+// first element is an array of moment objects.
+function pickBy(fn, moments) {
+    var res, i;
+    if (moments.length === 1 && isArray(moments[0])) {
+        moments = moments[0];
+    }
+    if (!moments.length) {
+        return createLocal();
+    }
+    res = moments[0];
+    for (i = 1; i < moments.length; ++i) {
+        if (!moments[i].isValid() || moments[i][fn](res)) {
+            res = moments[i];
+        }
+    }
+    return res;
+}
+
+// TODO: Use [].sort instead?
+function min () {
+    var args = [].slice.call(arguments, 0);
+
+    return pickBy('isBefore', args);
+}
+
+function max () {
+    var args = [].slice.call(arguments, 0);
+
+    return pickBy('isAfter', args);
+}
+
+var now = function () {
+    return Date.now ? Date.now() : +(new Date());
+};
+
+var ordering = ['year', 'quarter', 'month', 'week', 'day', 'hour', 'minute', 'second', 'millisecond'];
+
+function isDurationValid(m) {
+    for (var key in m) {
+        if (!(indexOf.call(ordering, key) !== -1 && (m[key] == null || !isNaN(m[key])))) {
+            return false;
+        }
+    }
+
+    var unitHasDecimal = false;
+    for (var i = 0; i < ordering.length; ++i) {
+        if (m[ordering[i]]) {
+            if (unitHasDecimal) {
+                return false; // only allow non-integers for smallest unit
+            }
+            if (parseFloat(m[ordering[i]]) !== toInt(m[ordering[i]])) {
+                unitHasDecimal = true;
+            }
+        }
+    }
+
+    return true;
+}
+
+function isValid$1() {
+    return this._isValid;
+}
+
+function createInvalid$1() {
+    return createDuration(NaN);
+}
+
+function Duration (duration) {
+    var normalizedInput = normalizeObjectUnits(duration),
+        years = normalizedInput.year || 0,
+        quarters = normalizedInput.quarter || 0,
+        months = normalizedInput.month || 0,
+        weeks = normalizedInput.week || 0,
+        days = normalizedInput.day || 0,
+        hours = normalizedInput.hour || 0,
+        minutes = normalizedInput.minute || 0,
+        seconds = normalizedInput.second || 0,
+        milliseconds = normalizedInput.millisecond || 0;
+
+    this._isValid = isDurationValid(normalizedInput);
+
+    // representation for dateAddRemove
+    this._milliseconds = +milliseconds +
+        seconds * 1e3 + // 1000
+        minutes * 6e4 + // 1000 * 60
+        hours * 1000 * 60 * 60; //using 1000 * 60 * 60 instead of 36e5 to avoid floating point rounding errors https://github.com/moment/moment/issues/2978
+    // Because of dateAddRemove treats 24 hours as different from a
+    // day when working around DST, we need to store them separately
+    this._days = +days +
+        weeks * 7;
+    // It is impossible to translate months into days without knowing
+    // which months you are are talking about, so we have to store
+    // it separately.
+    this._months = +months +
+        quarters * 3 +
+        years * 12;
+
+    this._data = {};
+
+    this._locale = getLocale();
+
+    this._bubble();
+}
+
+function isDuration (obj) {
+    return obj instanceof Duration;
+}
+
+function absRound (number) {
+    if (number < 0) {
+        return Math.round(-1 * number) * -1;
+    } else {
+        return Math.round(number);
+    }
+}
+
+// FORMATTING
+
+function offset (token, separator) {
+    addFormatToken(token, 0, 0, function () {
+        var offset = this.utcOffset();
+        var sign = '+';
+        if (offset < 0) {
+            offset = -offset;
+            sign = '-';
+        }
+        return sign + zeroFill(~~(offset / 60), 2) + separator + zeroFill(~~(offset) % 60, 2);
+    });
+}
+
+offset('Z', ':');
+offset('ZZ', '');
+
+// PARSING
+
+addRegexToken('Z',  matchShortOffset);
+addRegexToken('ZZ', matchShortOffset);
+addParseToken(['Z', 'ZZ'], function (input, array, config) {
+    config._useUTC = true;
+    config._tzm = offsetFromString(matchShortOffset, input);
+});
+
+// HELPERS
+
+// timezone chunker
+// '+10:00' > ['10',  '00']
+// '-1530'  > ['-15', '30']
+var chunkOffset = /([\+\-]|\d\d)/gi;
+
+function offsetFromString(matcher, string) {
+    var matches = (string || '').match(matcher);
+
+    if (matches === null) {
+        return null;
+    }
+
+    var chunk   = matches[matches.length - 1] || [];
+    var parts   = (chunk + '').match(chunkOffset) || ['-', 0, 0];
+    var minutes = +(parts[1] * 60) + toInt(parts[2]);
+
+    return minutes === 0 ?
+      0 :
+      parts[0] === '+' ? minutes : -minutes;
+}
+
+// Return a moment from input, that is local/utc/zone equivalent to model.
+function cloneWithOffset(input, model) {
+    var res, diff;
+    if (model._isUTC) {
+        res = model.clone();
+        diff = (isMoment(input) || isDate(input) ? input.valueOf() : createLocal(input).valueOf()) - res.valueOf();
+        // Use low-level api, because this fn is low-level api.
+        res._d.setTime(res._d.valueOf() + diff);
+        hooks.updateOffset(res, false);
+        return res;
+    } else {
+        return createLocal(input).local();
+    }
+}
+
+function getDateOffset (m) {
+    // On Firefox.24 Date#getTimezoneOffset returns a floating point.
+    // https://github.com/moment/moment/pull/1871
+    return -Math.round(m._d.getTimezoneOffset() / 15) * 15;
+}
+
+// HOOKS
+
+// This function will be called whenever a moment is mutated.
+// It is intended to keep the offset in sync with the timezone.
+hooks.updateOffset = function () {};
+
+// MOMENTS
+
+// keepLocalTime = true means only change the timezone, without
+// affecting the local hour. So 5:31:26 +0300 --[utcOffset(2, true)]-->
+// 5:31:26 +0200 It is possible that 5:31:26 doesn't exist with offset
+// +0200, so we adjust the time as needed, to be valid.
+//
+// Keeping the time actually adds/subtracts (one hour)
+// from the actual represented time. That is why we call updateOffset
+// a second time. In case it wants us to change the offset again
+// _changeInProgress == true case, then we have to adjust, because
+// there is no such time in the given timezone.
+function getSetOffset (input, keepLocalTime, keepMinutes) {
+    var offset = this._offset || 0,
+        localAdjust;
+    if (!this.isValid()) {
+        return input != null ? this : NaN;
+    }
+    if (input != null) {
+        if (typeof input === 'string') {
+            input = offsetFromString(matchShortOffset, input);
+            if (input === null) {
+                return this;
+            }
+        } else if (Math.abs(input) < 16 && !keepMinutes) {
+            input = input * 60;
+        }
+        if (!this._isUTC && keepLocalTime) {
+            localAdjust = getDateOffset(this);
+        }
+        this._offset = input;
+        this._isUTC = true;
+        if (localAdjust != null) {
+            this.add(localAdjust, 'm');
+        }
+        if (offset !== input) {
+            if (!keepLocalTime || this._changeInProgress) {
+                addSubtract(this, createDuration(input - offset, 'm'), 1, false);
+            } else if (!this._changeInProgress) {
+                this._changeInProgress = true;
+                hooks.updateOffset(this, true);
+                this._changeInProgress = null;
+            }
+        }
+        return this;
+    } else {
+        return this._isUTC ? offset : getDateOffset(this);
+    }
+}
+
+function getSetZone (input, keepLocalTime) {
+    if (input != null) {
+        if (typeof input !== 'string') {
+            input = -input;
+        }
+
+        this.utcOffset(input, keepLocalTime);
+
+        return this;
+    } else {
+        return -this.utcOffset();
+    }
+}
+
+function setOffsetToUTC (keepLocalTime) {
+    return this.utcOffset(0, keepLocalTime);
+}
+
+function setOffsetToLocal (keepLocalTime) {
+    if (this._isUTC) {
+        this.utcOffset(0, keepLocalTime);
+        this._isUTC = false;
+
+        if (keepLocalTime) {
+            this.subtract(getDateOffset(this), 'm');
+        }
+    }
+    return this;
+}
+
+function setOffsetToParsedOffset () {
+    if (this._tzm != null) {
+        this.utcOffset(this._tzm, false, true);
+    } else if (typeof this._i === 'string') {
+        var tZone = offsetFromString(matchOffset, this._i);
+        if (tZone != null) {
+            this.utcOffset(tZone);
+        }
+        else {
+            this.utcOffset(0, true);
+        }
+    }
+    return this;
+}
+
+function hasAlignedHourOffset (input) {
+    if (!this.isValid()) {
+        return false;
+    }
+    input = input ? createLocal(input).utcOffset() : 0;
+
+    return (this.utcOffset() - input) % 60 === 0;
+}
+
+function isDaylightSavingTime () {
+    return (
+        this.utcOffset() > this.clone().month(0).utcOffset() ||
+        this.utcOffset() > this.clone().month(5).utcOffset()
+    );
+}
+
+function isDaylightSavingTimeShifted () {
+    if (!isUndefined(this._isDSTShifted)) {
+        return this._isDSTShifted;
+    }
+
+    var c = {};
+
+    copyConfig(c, this);
+    c = prepareConfig(c);
+
+    if (c._a) {
+        var other = c._isUTC ? createUTC(c._a) : createLocal(c._a);
+        this._isDSTShifted = this.isValid() &&
+            compareArrays(c._a, other.toArray()) > 0;
+    } else {
+        this._isDSTShifted = false;
+    }
+
+    return this._isDSTShifted;
+}
+
+function isLocal () {
+    return this.isValid() ? !this._isUTC : false;
+}
+
+function isUtcOffset () {
+    return this.isValid() ? this._isUTC : false;
+}
+
+function isUtc () {
+    return this.isValid() ? this._isUTC && this._offset === 0 : false;
+}
+
+// ASP.NET json date format regex
+var aspNetRegex = /^(\-|\+)?(?:(\d*)[. ])?(\d+)\:(\d+)(?:\:(\d+)(\.\d*)?)?$/;
+
+// from http://docs.closure-library.googlecode.com/git/closure_goog_date_date.js.source.html
+// somewhat more in line with 4.4.3.2 2004 spec, but allows decimal anywhere
+// and further modified to allow for strings containing both week and day
+var isoRegex = /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/;
+
+function createDuration (input, key) {
+    var duration = input,
+        // matching against regexp is expensive, do it on demand
+        match = null,
+        sign,
+        ret,
+        diffRes;
+
+    if (isDuration(input)) {
+        duration = {
+            ms : input._milliseconds,
+            d  : input._days,
+            M  : input._months
+        };
+    } else if (isNumber(input)) {
+        duration = {};
+        if (key) {
+            duration[key] = input;
+        } else {
+            duration.milliseconds = input;
+        }
+    } else if (!!(match = aspNetRegex.exec(input))) {
+        sign = (match[1] === '-') ? -1 : 1;
+        duration = {
+            y  : 0,
+            d  : toInt(match[DATE])                         * sign,
+            h  : toInt(match[HOUR])                         * sign,
+            m  : toInt(match[MINUTE])                       * sign,
+            s  : toInt(match[SECOND])                       * sign,
+            ms : toInt(absRound(match[MILLISECOND] * 1000)) * sign // the millisecond decimal point is included in the match
+        };
+    } else if (!!(match = isoRegex.exec(input))) {
+        sign = (match[1] === '-') ? -1 : (match[1] === '+') ? 1 : 1;
+        duration = {
+            y : parseIso(match[2], sign),
+            M : parseIso(match[3], sign),
+            w : parseIso(match[4], sign),
+            d : parseIso(match[5], sign),
+            h : parseIso(match[6], sign),
+            m : parseIso(match[7], sign),
+            s : parseIso(match[8], sign)
+        };
+    } else if (duration == null) {// checks for null or undefined
+        duration = {};
+    } else if (typeof duration === 'object' && ('from' in duration || 'to' in duration)) {
+        diffRes = momentsDifference(createLocal(duration.from), createLocal(duration.to));
+
+        duration = {};
+        duration.ms = diffRes.milliseconds;
+        duration.M = diffRes.months;
+    }
+
+    ret = new Duration(duration);
+
+    if (isDuration(input) && hasOwnProp(input, '_locale')) {
+        ret._locale = input._locale;
+    }
+
+    return ret;
+}
+
+createDuration.fn = Duration.prototype;
+createDuration.invalid = createInvalid$1;
+
+function parseIso (inp, sign) {
+    // We'd normally use ~~inp for this, but unfortunately it also
+    // converts floats to ints.
+    // inp may be undefined, so careful calling replace on it.
+    var res = inp && parseFloat(inp.replace(',', '.'));
+    // apply sign while we're at it
+    return (isNaN(res) ? 0 : res) * sign;
+}
+
+function positiveMomentsDifference(base, other) {
+    var res = {milliseconds: 0, months: 0};
+
+    res.months = other.month() - base.month() +
+        (other.year() - base.year()) * 12;
+    if (base.clone().add(res.months, 'M').isAfter(other)) {
+        --res.months;
+    }
+
+    res.milliseconds = +other - +(base.clone().add(res.months, 'M'));
+
+    return res;
+}
+
+function momentsDifference(base, other) {
+    var res;
+    if (!(base.isValid() && other.isValid())) {
+        return {milliseconds: 0, months: 0};
+    }
+
+    other = cloneWithOffset(other, base);
+    if (base.isBefore(other)) {
+        res = positiveMomentsDifference(base, other);
+    } else {
+        res = positiveMomentsDifference(other, base);
+        res.milliseconds = -res.milliseconds;
+        res.months = -res.months;
+    }
+
+    return res;
+}
+
+// TODO: remove 'name' arg after deprecation is removed
+function createAdder(direction, name) {
+    return function (val, period) {
+        var dur, tmp;
+        //invert the arguments, but complain about it
+        if (period !== null && !isNaN(+period)) {
+            deprecateSimple(name, 'moment().' + name  + '(period, number) is deprecated. Please use moment().' + name + '(number, period). ' +
+            'See http://momentjs.com/guides/#/warnings/add-inverted-param/ for more info.');
+            tmp = val; val = period; period = tmp;
+        }
+
+        val = typeof val === 'string' ? +val : val;
+        dur = createDuration(val, period);
+        addSubtract(this, dur, direction);
+        return this;
+    };
+}
+
+function addSubtract (mom, duration, isAdding, updateOffset) {
+    var milliseconds = duration._milliseconds,
+        days = absRound(duration._days),
+        months = absRound(duration._months);
+
+    if (!mom.isValid()) {
+        // No op
+        return;
+    }
+
+    updateOffset = updateOffset == null ? true : updateOffset;
+
+    if (months) {
+        setMonth(mom, get(mom, 'Month') + months * isAdding);
+    }
+    if (days) {
+        set$1(mom, 'Date', get(mom, 'Date') + days * isAdding);
+    }
+    if (milliseconds) {
+        mom._d.setTime(mom._d.valueOf() + milliseconds * isAdding);
+    }
+    if (updateOffset) {
+        hooks.updateOffset(mom, days || months);
+    }
+}
+
+var add      = createAdder(1, 'add');
+var subtract = createAdder(-1, 'subtract');
+
+function getCalendarFormat(myMoment, now) {
+    var diff = myMoment.diff(now, 'days', true);
+    return diff < -6 ? 'sameElse' :
+            diff < -1 ? 'lastWeek' :
+            diff < 0 ? 'lastDay' :
+            diff < 1 ? 'sameDay' :
+            diff < 2 ? 'nextDay' :
+            diff < 7 ? 'nextWeek' : 'sameElse';
+}
+
+function calendar$1 (time, formats) {
+    // We want to compare the start of today, vs this.
+    // Getting start-of-today depends on whether we're local/utc/offset or not.
+    var now = time || createLocal(),
+        sod = cloneWithOffset(now, this).startOf('day'),
+        format = hooks.calendarFormat(this, sod) || 'sameElse';
+
+    var output = formats && (isFunction(formats[format]) ? formats[format].call(this, now) : formats[format]);
+
+    return this.format(output || this.localeData().calendar(format, this, createLocal(now)));
+}
+
+function clone () {
+    return new Moment(this);
+}
+
+function isAfter (input, units) {
+    var localInput = isMoment(input) ? input : createLocal(input);
+    if (!(this.isValid() && localInput.isValid())) {
+        return false;
+    }
+    units = normalizeUnits(!isUndefined(units) ? units : 'millisecond');
+    if (units === 'millisecond') {
+        return this.valueOf() > localInput.valueOf();
+    } else {
+        return localInput.valueOf() < this.clone().startOf(units).valueOf();
+    }
+}
+
+function isBefore (input, units) {
+    var localInput = isMoment(input) ? input : createLocal(input);
+    if (!(this.isValid() && localInput.isValid())) {
+        return false;
+    }
+    units = normalizeUnits(!isUndefined(units) ? units : 'millisecond');
+    if (units === 'millisecond') {
+        return this.valueOf() < localInput.valueOf();
+    } else {
+        return this.clone().endOf(units).valueOf() < localInput.valueOf();
+    }
+}
+
+function isBetween (from, to, units, inclusivity) {
+    inclusivity = inclusivity || '()';
+    return (inclusivity[0] === '(' ? this.isAfter(from, units) : !this.isBefore(from, units)) &&
+        (inclusivity[1] === ')' ? this.isBefore(to, units) : !this.isAfter(to, units));
+}
+
+function isSame (input, units) {
+    var localInput = isMoment(input) ? input : createLocal(input),
+        inputMs;
+    if (!(this.isValid() && localInput.isValid())) {
+        return false;
+    }
+    units = normalizeUnits(units || 'millisecond');
+    if (units === 'millisecond') {
+        return this.valueOf() === localInput.valueOf();
+    } else {
+        inputMs = localInput.valueOf();
+        return this.clone().startOf(units).valueOf() <= inputMs && inputMs <= this.clone().endOf(units).valueOf();
+    }
+}
+
+function isSameOrAfter (input, units) {
+    return this.isSame(input, units) || this.isAfter(input,units);
+}
+
+function isSameOrBefore (input, units) {
+    return this.isSame(input, units) || this.isBefore(input,units);
+}
+
+function diff (input, units, asFloat) {
+    var that,
+        zoneDelta,
+        delta, output;
+
+    if (!this.isValid()) {
+        return NaN;
+    }
+
+    that = cloneWithOffset(input, this);
+
+    if (!that.isValid()) {
+        return NaN;
+    }
+
+    zoneDelta = (that.utcOffset() - this.utcOffset()) * 6e4;
+
+    units = normalizeUnits(units);
+
+    switch (units) {
+        case 'year': output = monthDiff(this, that) / 12; break;
+        case 'month': output = monthDiff(this, that); break;
+        case 'quarter': output = monthDiff(this, that) / 3; break;
+        case 'second': output = (this - that) / 1e3; break; // 1000
+        case 'minute': output = (this - that) / 6e4; break; // 1000 * 60
+        case 'hour': output = (this - that) / 36e5; break; // 1000 * 60 * 60
+        case 'day': output = (this - that - zoneDelta) / 864e5; break; // 1000 * 60 * 60 * 24, negate dst
+        case 'week': output = (this - that - zoneDelta) / 6048e5; break; // 1000 * 60 * 60 * 24 * 7, negate dst
+        default: output = this - that;
+    }
+
+    return asFloat ? output : absFloor(output);
+}
+
+function monthDiff (a, b) {
+    // difference in months
+    var wholeMonthDiff = ((b.year() - a.year()) * 12) + (b.month() - a.month()),
+        // b is in (anchor - 1 month, anchor + 1 month)
+        anchor = a.clone().add(wholeMonthDiff, 'months'),
+        anchor2, adjust;
+
+    if (b - anchor < 0) {
+        anchor2 = a.clone().add(wholeMonthDiff - 1, 'months');
+        // linear across the month
+        adjust = (b - anchor) / (anchor - anchor2);
+    } else {
+        anchor2 = a.clone().add(wholeMonthDiff + 1, 'months');
+        // linear across the month
+        adjust = (b - anchor) / (anchor2 - anchor);
+    }
+
+    //check for negative zero, return zero if negative zero
+    return -(wholeMonthDiff + adjust) || 0;
+}
+
+hooks.defaultFormat = 'YYYY-MM-DDTHH:mm:ssZ';
+hooks.defaultFormatUtc = 'YYYY-MM-DDTHH:mm:ss[Z]';
+
+function toString () {
+    return this.clone().locale('en').format('ddd MMM DD YYYY HH:mm:ss [GMT]ZZ');
+}
+
+function toISOString(keepOffset) {
+    if (!this.isValid()) {
+        return null;
+    }
+    var utc = keepOffset !== true;
+    var m = utc ? this.clone().utc() : this;
+    if (m.year() < 0 || m.year() > 9999) {
+        return formatMoment(m, utc ? 'YYYYYY-MM-DD[T]HH:mm:ss.SSS[Z]' : 'YYYYYY-MM-DD[T]HH:mm:ss.SSSZ');
+    }
+    if (isFunction(Date.prototype.toISOString)) {
+        // native implementation is ~50x faster, use it when we can
+        if (utc) {
+            return this.toDate().toISOString();
+        } else {
+            return new Date(this._d.valueOf()).toISOString().replace('Z', formatMoment(m, 'Z'));
+        }
+    }
+    return formatMoment(m, utc ? 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]' : 'YYYY-MM-DD[T]HH:mm:ss.SSSZ');
+}
+
+/**
+ * Return a human readable representation of a moment that can
+ * also be evaluated to get a new moment which is the same
+ *
+ * @link https://nodejs.org/dist/latest/docs/api/util.html#util_custom_inspect_function_on_objects
+ */
+function inspect () {
+    if (!this.isValid()) {
+        return 'moment.invalid(/* ' + this._i + ' */)';
+    }
+    var func = 'moment';
+    var zone = '';
+    if (!this.isLocal()) {
+        func = this.utcOffset() === 0 ? 'moment.utc' : 'moment.parseZone';
+        zone = 'Z';
+    }
+    var prefix = '[' + func + '("]';
+    var year = (0 <= this.year() && this.year() <= 9999) ? 'YYYY' : 'YYYYYY';
+    var datetime = '-MM-DD[T]HH:mm:ss.SSS';
+    var suffix = zone + '[")]';
+
+    return this.format(prefix + year + datetime + suffix);
+}
+
+function format (inputString) {
+    if (!inputString) {
+        inputString = this.isUtc() ? hooks.defaultFormatUtc : hooks.defaultFormat;
+    }
+    var output = formatMoment(this, inputString);
+    return this.localeData().postformat(output);
+}
+
+function from (time, withoutSuffix) {
+    if (this.isValid() &&
+            ((isMoment(time) && time.isValid()) ||
+             createLocal(time).isValid())) {
+        return createDuration({to: this, from: time}).locale(this.locale()).humanize(!withoutSuffix);
+    } else {
+        return this.localeData().invalidDate();
+    }
+}
+
+function fromNow (withoutSuffix) {
+    return this.from(createLocal(), withoutSuffix);
+}
+
+function to (time, withoutSuffix) {
+    if (this.isValid() &&
+            ((isMoment(time) && time.isValid()) ||
+             createLocal(time).isValid())) {
+        return createDuration({from: this, to: time}).locale(this.locale()).humanize(!withoutSuffix);
+    } else {
+        return this.localeData().invalidDate();
+    }
+}
+
+function toNow (withoutSuffix) {
+    return this.to(createLocal(), withoutSuffix);
+}
+
+// If passed a locale key, it will set the locale for this
+// instance.  Otherwise, it will return the locale configuration
+// variables for this instance.
+function locale (key) {
+    var newLocaleData;
+
+    if (key === undefined) {
+        return this._locale._abbr;
+    } else {
+        newLocaleData = getLocale(key);
+        if (newLocaleData != null) {
+            this._locale = newLocaleData;
+        }
+        return this;
+    }
+}
+
+var lang = deprecate(
+    'moment().lang() is deprecated. Instead, use moment().localeData() to get the language configuration. Use moment().locale() to change languages.',
+    function (key) {
+        if (key === undefined) {
+            return this.localeData();
+        } else {
+            return this.locale(key);
+        }
+    }
+);
+
+function localeData () {
+    return this._locale;
+}
+
+function startOf (units) {
+    units = normalizeUnits(units);
+    // the following switch intentionally omits break keywords
+    // to utilize falling through the cases.
+    switch (units) {
+        case 'year':
+            this.month(0);
+            /* falls through */
+        case 'quarter':
+        case 'month':
+            this.date(1);
+            /* falls through */
+        case 'week':
+        case 'isoWeek':
+        case 'day':
+        case 'date':
+            this.hours(0);
+            /* falls through */
+        case 'hour':
+            this.minutes(0);
+            /* falls through */
+        case 'minute':
+            this.seconds(0);
+            /* falls through */
+        case 'second':
+            this.milliseconds(0);
+    }
+
+    // weeks are a special case
+    if (units === 'week') {
+        this.weekday(0);
+    }
+    if (units === 'isoWeek') {
+        this.isoWeekday(1);
+    }
+
+    // quarters are also special
+    if (units === 'quarter') {
+        this.month(Math.floor(this.month() / 3) * 3);
+    }
+
+    return this;
+}
+
+function endOf (units) {
+    units = normalizeUnits(units);
+    if (units === undefined || units === 'millisecond') {
+        return this;
+    }
+
+    // 'date' is an alias for 'day', so it should be considered as such.
+    if (units === 'date') {
+        units = 'day';
+    }
+
+    return this.startOf(units).add(1, (units === 'isoWeek' ? 'week' : units)).subtract(1, 'ms');
+}
+
+function valueOf () {
+    return this._d.valueOf() - ((this._offset || 0) * 60000);
+}
+
+function unix () {
+    return Math.floor(this.valueOf() / 1000);
+}
+
+function toDate () {
+    return new Date(this.valueOf());
+}
+
+function toArray () {
+    var m = this;
+    return [m.year(), m.month(), m.date(), m.hour(), m.minute(), m.second(), m.millisecond()];
+}
+
+function toObject () {
+    var m = this;
+    return {
+        years: m.year(),
+        months: m.month(),
+        date: m.date(),
+        hours: m.hours(),
+        minutes: m.minutes(),
+        seconds: m.seconds(),
+        milliseconds: m.milliseconds()
+    };
+}
+
+function toJSON () {
+    // new Date(NaN).toJSON() === null
+    return this.isValid() ? this.toISOString() : null;
+}
+
+function isValid$2 () {
+    return isValid(this);
+}
+
+function parsingFlags () {
+    return extend({}, getParsingFlags(this));
+}
+
+function invalidAt () {
+    return getParsingFlags(this).overflow;
+}
+
+function creationData() {
+    return {
+        input: this._i,
+        format: this._f,
+        locale: this._locale,
+        isUTC: this._isUTC,
+        strict: this._strict
+    };
+}
+
+// FORMATTING
+
+addFormatToken(0, ['gg', 2], 0, function () {
+    return this.weekYear() % 100;
+});
+
+addFormatToken(0, ['GG', 2], 0, function () {
+    return this.isoWeekYear() % 100;
+});
+
+function addWeekYearFormatToken (token, getter) {
+    addFormatToken(0, [token, token.length], 0, getter);
+}
+
+addWeekYearFormatToken('gggg',     'weekYear');
+addWeekYearFormatToken('ggggg',    'weekYear');
+addWeekYearFormatToken('GGGG',  'isoWeekYear');
+addWeekYearFormatToken('GGGGG', 'isoWeekYear');
+
+// ALIASES
+
+addUnitAlias('weekYear', 'gg');
+addUnitAlias('isoWeekYear', 'GG');
+
+// PRIORITY
+
+addUnitPriority('weekYear', 1);
+addUnitPriority('isoWeekYear', 1);
+
+
+// PARSING
+
+addRegexToken('G',      matchSigned);
+addRegexToken('g',      matchSigned);
+addRegexToken('GG',     match1to2, match2);
+addRegexToken('gg',     match1to2, match2);
+addRegexToken('GGGG',   match1to4, match4);
+addRegexToken('gggg',   match1to4, match4);
+addRegexToken('GGGGG',  match1to6, match6);
+addRegexToken('ggggg',  match1to6, match6);
+
+addWeekParseToken(['gggg', 'ggggg', 'GGGG', 'GGGGG'], function (input, week, config, token) {
+    week[token.substr(0, 2)] = toInt(input);
+});
+
+addWeekParseToken(['gg', 'GG'], function (input, week, config, token) {
+    week[token] = hooks.parseTwoDigitYear(input);
+});
+
+// MOMENTS
+
+function getSetWeekYear (input) {
+    return getSetWeekYearHelper.call(this,
+            input,
+            this.week(),
+            this.weekday(),
+            this.localeData()._week.dow,
+            this.localeData()._week.doy);
+}
+
+function getSetISOWeekYear (input) {
+    return getSetWeekYearHelper.call(this,
+            input, this.isoWeek(), this.isoWeekday(), 1, 4);
+}
+
+function getISOWeeksInYear () {
+    return weeksInYear(this.year(), 1, 4);
+}
+
+function getWeeksInYear () {
+    var weekInfo = this.localeData()._week;
+    return weeksInYear(this.year(), weekInfo.dow, weekInfo.doy);
+}
+
+function getSetWeekYearHelper(input, week, weekday, dow, doy) {
+    var weeksTarget;
+    if (input == null) {
+        return weekOfYear(this, dow, doy).year;
+    } else {
+        weeksTarget = weeksInYear(input, dow, doy);
+        if (week > weeksTarget) {
+            week = weeksTarget;
+        }
+        return setWeekAll.call(this, input, week, weekday, dow, doy);
+    }
+}
+
+function setWeekAll(weekYear, week, weekday, dow, doy) {
+    var dayOfYearData = dayOfYearFromWeeks(weekYear, week, weekday, dow, doy),
+        date = createUTCDate(dayOfYearData.year, 0, dayOfYearData.dayOfYear);
+
+    this.year(date.getUTCFullYear());
+    this.month(date.getUTCMonth());
+    this.date(date.getUTCDate());
+    return this;
+}
+
+// FORMATTING
+
+addFormatToken('Q', 0, 'Qo', 'quarter');
+
+// ALIASES
+
+addUnitAlias('quarter', 'Q');
+
+// PRIORITY
+
+addUnitPriority('quarter', 7);
+
+// PARSING
+
+addRegexToken('Q', match1);
+addParseToken('Q', function (input, array) {
+    array[MONTH] = (toInt(input) - 1) * 3;
+});
+
+// MOMENTS
+
+function getSetQuarter (input) {
+    return input == null ? Math.ceil((this.month() + 1) / 3) : this.month((input - 1) * 3 + this.month() % 3);
+}
+
+// FORMATTING
+
+addFormatToken('D', ['DD', 2], 'Do', 'date');
+
+// ALIASES
+
+addUnitAlias('date', 'D');
+
+// PRIOROITY
+addUnitPriority('date', 9);
+
+// PARSING
+
+addRegexToken('D',  match1to2);
+addRegexToken('DD', match1to2, match2);
+addRegexToken('Do', function (isStrict, locale) {
+    // TODO: Remove "ordinalParse" fallback in next major release.
+    return isStrict ?
+      (locale._dayOfMonthOrdinalParse || locale._ordinalParse) :
+      locale._dayOfMonthOrdinalParseLenient;
+});
+
+addParseToken(['D', 'DD'], DATE);
+addParseToken('Do', function (input, array) {
+    array[DATE] = toInt(input.match(match1to2)[0]);
+});
+
+// MOMENTS
+
+var getSetDayOfMonth = makeGetSet('Date', true);
+
+// FORMATTING
+
+addFormatToken('DDD', ['DDDD', 3], 'DDDo', 'dayOfYear');
+
+// ALIASES
+
+addUnitAlias('dayOfYear', 'DDD');
+
+// PRIORITY
+addUnitPriority('dayOfYear', 4);
+
+// PARSING
+
+addRegexToken('DDD',  match1to3);
+addRegexToken('DDDD', match3);
+addParseToken(['DDD', 'DDDD'], function (input, array, config) {
+    config._dayOfYear = toInt(input);
+});
+
+// HELPERS
+
+// MOMENTS
+
+function getSetDayOfYear (input) {
+    var dayOfYear = Math.round((this.clone().startOf('day') - this.clone().startOf('year')) / 864e5) + 1;
+    return input == null ? dayOfYear : this.add((input - dayOfYear), 'd');
+}
+
+// FORMATTING
+
+addFormatToken('m', ['mm', 2], 0, 'minute');
+
+// ALIASES
+
+addUnitAlias('minute', 'm');
+
+// PRIORITY
+
+addUnitPriority('minute', 14);
+
+// PARSING
+
+addRegexToken('m',  match1to2);
+addRegexToken('mm', match1to2, match2);
+addParseToken(['m', 'mm'], MINUTE);
+
+// MOMENTS
+
+var getSetMinute = makeGetSet('Minutes', false);
+
+// FORMATTING
+
+addFormatToken('s', ['ss', 2], 0, 'second');
+
+// ALIASES
+
+addUnitAlias('second', 's');
+
+// PRIORITY
+
+addUnitPriority('second', 15);
+
+// PARSING
+
+addRegexToken('s',  match1to2);
+addRegexToken('ss', match1to2, match2);
+addParseToken(['s', 'ss'], SECOND);
+
+// MOMENTS
+
+var getSetSecond = makeGetSet('Seconds', false);
+
+// FORMATTING
+
+addFormatToken('S', 0, 0, function () {
+    return ~~(this.millisecond() / 100);
+});
+
+addFormatToken(0, ['SS', 2], 0, function () {
+    return ~~(this.millisecond() / 10);
+});
+
+addFormatToken(0, ['SSS', 3], 0, 'millisecond');
+addFormatToken(0, ['SSSS', 4], 0, function () {
+    return this.millisecond() * 10;
+});
+addFormatToken(0, ['SSSSS', 5], 0, function () {
+    return this.millisecond() * 100;
+});
+addFormatToken(0, ['SSSSSS', 6], 0, function () {
+    return this.millisecond() * 1000;
+});
+addFormatToken(0, ['SSSSSSS', 7], 0, function () {
+    return this.millisecond() * 10000;
+});
+addFormatToken(0, ['SSSSSSSS', 8], 0, function () {
+    return this.millisecond() * 100000;
+});
+addFormatToken(0, ['SSSSSSSSS', 9], 0, function () {
+    return this.millisecond() * 1000000;
+});
+
+
+// ALIASES
+
+addUnitAlias('millisecond', 'ms');
+
+// PRIORITY
+
+addUnitPriority('millisecond', 16);
+
+// PARSING
+
+addRegexToken('S',    match1to3, match1);
+addRegexToken('SS',   match1to3, match2);
+addRegexToken('SSS',  match1to3, match3);
+
+var token;
+for (token = 'SSSS'; token.length <= 9; token += 'S') {
+    addRegexToken(token, matchUnsigned);
+}
+
+function parseMs(input, array) {
+    array[MILLISECOND] = toInt(('0.' + input) * 1000);
+}
+
+for (token = 'S'; token.length <= 9; token += 'S') {
+    addParseToken(token, parseMs);
+}
+// MOMENTS
+
+var getSetMillisecond = makeGetSet('Milliseconds', false);
+
+// FORMATTING
+
+addFormatToken('z',  0, 0, 'zoneAbbr');
+addFormatToken('zz', 0, 0, 'zoneName');
+
+// MOMENTS
+
+function getZoneAbbr () {
+    return this._isUTC ? 'UTC' : '';
+}
+
+function getZoneName () {
+    return this._isUTC ? 'Coordinated Universal Time' : '';
+}
+
+var proto = Moment.prototype;
+
+proto.add               = add;
+proto.calendar          = calendar$1;
+proto.clone             = clone;
+proto.diff              = diff;
+proto.endOf             = endOf;
+proto.format            = format;
+proto.from              = from;
+proto.fromNow           = fromNow;
+proto.to                = to;
+proto.toNow             = toNow;
+proto.get               = stringGet;
+proto.invalidAt         = invalidAt;
+proto.isAfter           = isAfter;
+proto.isBefore          = isBefore;
+proto.isBetween         = isBetween;
+proto.isSame            = isSame;
+proto.isSameOrAfter     = isSameOrAfter;
+proto.isSameOrBefore    = isSameOrBefore;
+proto.isValid           = isValid$2;
+proto.lang              = lang;
+proto.locale            = locale;
+proto.localeData        = localeData;
+proto.max               = prototypeMax;
+proto.min               = prototypeMin;
+proto.parsingFlags      = parsingFlags;
+proto.set               = stringSet;
+proto.startOf           = startOf;
+proto.subtract          = subtract;
+proto.toArray           = toArray;
+proto.toObject          = toObject;
+proto.toDate            = toDate;
+proto.toISOString       = toISOString;
+proto.inspect           = inspect;
+proto.toJSON            = toJSON;
+proto.toString          = toString;
+proto.unix              = unix;
+proto.valueOf           = valueOf;
+proto.creationData      = creationData;
+
+// Year
+proto.year       = getSetYear;
+proto.isLeapYear = getIsLeapYear;
+
+// Week Year
+proto.weekYear    = getSetWeekYear;
+proto.isoWeekYear = getSetISOWeekYear;
+
+// Quarter
+proto.quarter = proto.quarters = getSetQuarter;
+
+// Month
+proto.month       = getSetMonth;
+proto.daysInMonth = getDaysInMonth;
+
+// Week
+proto.week           = proto.weeks        = getSetWeek;
+proto.isoWeek        = proto.isoWeeks     = getSetISOWeek;
+proto.weeksInYear    = getWeeksInYear;
+proto.isoWeeksInYear = getISOWeeksInYear;
+
+// Day
+proto.date       = getSetDayOfMonth;
+proto.day        = proto.days             = getSetDayOfWeek;
+proto.weekday    = getSetLocaleDayOfWeek;
+proto.isoWeekday = getSetISODayOfWeek;
+proto.dayOfYear  = getSetDayOfYear;
+
+// Hour
+proto.hour = proto.hours = getSetHour;
+
+// Minute
+proto.minute = proto.minutes = getSetMinute;
+
+// Second
+proto.second = proto.seconds = getSetSecond;
+
+// Millisecond
+proto.millisecond = proto.milliseconds = getSetMillisecond;
+
+// Offset
+proto.utcOffset            = getSetOffset;
+proto.utc                  = setOffsetToUTC;
+proto.local                = setOffsetToLocal;
+proto.parseZone            = setOffsetToParsedOffset;
+proto.hasAlignedHourOffset = hasAlignedHourOffset;
+proto.isDST                = isDaylightSavingTime;
+proto.isLocal              = isLocal;
+proto.isUtcOffset          = isUtcOffset;
+proto.isUtc                = isUtc;
+proto.isUTC                = isUtc;
+
+// Timezone
+proto.zoneAbbr = getZoneAbbr;
+proto.zoneName = getZoneName;
+
+// Deprecations
+proto.dates  = deprecate('dates accessor is deprecated. Use date instead.', getSetDayOfMonth);
+proto.months = deprecate('months accessor is deprecated. Use month instead', getSetMonth);
+proto.years  = deprecate('years accessor is deprecated. Use year instead', getSetYear);
+proto.zone   = deprecate('moment().zone is deprecated, use moment().utcOffset instead. http://momentjs.com/guides/#/warnings/zone/', getSetZone);
+proto.isDSTShifted = deprecate('isDSTShifted is deprecated. See http://momentjs.com/guides/#/warnings/dst-shifted/ for more information', isDaylightSavingTimeShifted);
+
+function createUnix (input) {
+    return createLocal(input * 1000);
+}
+
+function createInZone () {
+    return createLocal.apply(null, arguments).parseZone();
+}
+
+function preParsePostFormat (string) {
+    return string;
+}
+
+var proto$1 = Locale.prototype;
+
+proto$1.calendar        = calendar;
+proto$1.longDateFormat  = longDateFormat;
+proto$1.invalidDate     = invalidDate;
+proto$1.ordinal         = ordinal;
+proto$1.preparse        = preParsePostFormat;
+proto$1.postformat      = preParsePostFormat;
+proto$1.relativeTime    = relativeTime;
+proto$1.pastFuture      = pastFuture;
+proto$1.set             = set;
+
+// Month
+proto$1.months            =        localeMonths;
+proto$1.monthsShort       =        localeMonthsShort;
+proto$1.monthsParse       =        localeMonthsParse;
+proto$1.monthsRegex       = monthsRegex;
+proto$1.monthsShortRegex  = monthsShortRegex;
+
+// Week
+proto$1.week = localeWeek;
+proto$1.firstDayOfYear = localeFirstDayOfYear;
+proto$1.firstDayOfWeek = localeFirstDayOfWeek;
+
+// Day of Week
+proto$1.weekdays       =        localeWeekdays;
+proto$1.weekdaysMin    =        localeWeekdaysMin;
+proto$1.weekdaysShort  =        localeWeekdaysShort;
+proto$1.weekdaysParse  =        localeWeekdaysParse;
+
+proto$1.weekdaysRegex       =        weekdaysRegex;
+proto$1.weekdaysShortRegex  =        weekdaysShortRegex;
+proto$1.weekdaysMinRegex    =        weekdaysMinRegex;
+
+// Hours
+proto$1.isPM = localeIsPM;
+proto$1.meridiem = localeMeridiem;
+
+function get$1 (format, index, field, setter) {
+    var locale = getLocale();
+    var utc = createUTC().set(setter, index);
+    return locale[field](utc, format);
+}
+
+function listMonthsImpl (format, index, field) {
+    if (isNumber(format)) {
+        index = format;
+        format = undefined;
+    }
+
+    format = format || '';
+
+    if (index != null) {
+        return get$1(format, index, field, 'month');
+    }
+
+    var i;
+    var out = [];
+    for (i = 0; i < 12; i++) {
+        out[i] = get$1(format, i, field, 'month');
+    }
+    return out;
+}
+
+// ()
+// (5)
+// (fmt, 5)
+// (fmt)
+// (true)
+// (true, 5)
+// (true, fmt, 5)
+// (true, fmt)
+function listWeekdaysImpl (localeSorted, format, index, field) {
+    if (typeof localeSorted === 'boolean') {
+        if (isNumber(format)) {
+            index = format;
+            format = undefined;
+        }
+
+        format = format || '';
+    } else {
+        format = localeSorted;
+        index = format;
+        localeSorted = false;
+
+        if (isNumber(format)) {
+            index = format;
+            format = undefined;
+        }
+
+        format = format || '';
+    }
+
+    var locale = getLocale(),
+        shift = localeSorted ? locale._week.dow : 0;
+
+    if (index != null) {
+        return get$1(format, (index + shift) % 7, field, 'day');
+    }
+
+    var i;
+    var out = [];
+    for (i = 0; i < 7; i++) {
+        out[i] = get$1(format, (i + shift) % 7, field, 'day');
+    }
+    return out;
+}
+
+function listMonths (format, index) {
+    return listMonthsImpl(format, index, 'months');
+}
+
+function listMonthsShort (format, index) {
+    return listMonthsImpl(format, index, 'monthsShort');
+}
+
+function listWeekdays (localeSorted, format, index) {
+    return listWeekdaysImpl(localeSorted, format, index, 'weekdays');
+}
+
+function listWeekdaysShort (localeSorted, format, index) {
+    return listWeekdaysImpl(localeSorted, format, index, 'weekdaysShort');
+}
+
+function listWeekdaysMin (localeSorted, format, index) {
+    return listWeekdaysImpl(localeSorted, format, index, 'weekdaysMin');
+}
+
+getSetGlobalLocale('en', {
+    dayOfMonthOrdinalParse: /\d{1,2}(th|st|nd|rd)/,
+    ordinal : function (number) {
+        var b = number % 10,
+            output = (toInt(number % 100 / 10) === 1) ? 'th' :
+            (b === 1) ? 'st' :
+            (b === 2) ? 'nd' :
+            (b === 3) ? 'rd' : 'th';
+        return number + output;
+    }
+});
+
+// Side effect imports
+hooks.lang = deprecate('moment.lang is deprecated. Use moment.locale instead.', getSetGlobalLocale);
+hooks.langData = deprecate('moment.langData is deprecated. Use moment.localeData instead.', getLocale);
+
+var mathAbs = Math.abs;
+
+function abs () {
+    var data           = this._data;
+
+    this._milliseconds = mathAbs(this._milliseconds);
+    this._days         = mathAbs(this._days);
+    this._months       = mathAbs(this._months);
+
+    data.milliseconds  = mathAbs(data.milliseconds);
+    data.seconds       = mathAbs(data.seconds);
+    data.minutes       = mathAbs(data.minutes);
+    data.hours         = mathAbs(data.hours);
+    data.months        = mathAbs(data.months);
+    data.years         = mathAbs(data.years);
+
+    return this;
+}
+
+function addSubtract$1 (duration, input, value, direction) {
+    var other = createDuration(input, value);
+
+    duration._milliseconds += direction * other._milliseconds;
+    duration._days         += direction * other._days;
+    duration._months       += direction * other._months;
+
+    return duration._bubble();
+}
+
+// supports only 2.0-style add(1, 's') or add(duration)
+function add$1 (input, value) {
+    return addSubtract$1(this, input, value, 1);
+}
+
+// supports only 2.0-style subtract(1, 's') or subtract(duration)
+function subtract$1 (input, value) {
+    return addSubtract$1(this, input, value, -1);
+}
+
+function absCeil (number) {
+    if (number < 0) {
+        return Math.floor(number);
+    } else {
+        return Math.ceil(number);
+    }
+}
+
+function bubble () {
+    var milliseconds = this._milliseconds;
+    var days         = this._days;
+    var months       = this._months;
+    var data         = this._data;
+    var seconds, minutes, hours, years, monthsFromDays;
+
+    // if we have a mix of positive and negative values, bubble down first
+    // check: https://github.com/moment/moment/issues/2166
+    if (!((milliseconds >= 0 && days >= 0 && months >= 0) ||
+            (milliseconds <= 0 && days <= 0 && months <= 0))) {
+        milliseconds += absCeil(monthsToDays(months) + days) * 864e5;
+        days = 0;
+        months = 0;
+    }
+
+    // The following code bubbles up values, see the tests for
+    // examples of what that means.
+    data.milliseconds = milliseconds % 1000;
+
+    seconds           = absFloor(milliseconds / 1000);
+    data.seconds      = seconds % 60;
+
+    minutes           = absFloor(seconds / 60);
+    data.minutes      = minutes % 60;
+
+    hours             = absFloor(minutes / 60);
+    data.hours        = hours % 24;
+
+    days += absFloor(hours / 24);
+
+    // convert days to months
+    monthsFromDays = absFloor(daysToMonths(days));
+    months += monthsFromDays;
+    days -= absCeil(monthsToDays(monthsFromDays));
+
+    // 12 months -> 1 year
+    years = absFloor(months / 12);
+    months %= 12;
+
+    data.days   = days;
+    data.months = months;
+    data.years  = years;
+
+    return this;
+}
+
+function daysToMonths (days) {
+    // 400 years have 146097 days (taking into account leap year rules)
+    // 400 years have 12 months === 4800
+    return days * 4800 / 146097;
+}
+
+function monthsToDays (months) {
+    // the reverse of daysToMonths
+    return months * 146097 / 4800;
+}
+
+function as (units) {
+    if (!this.isValid()) {
+        return NaN;
+    }
+    var days;
+    var months;
+    var milliseconds = this._milliseconds;
+
+    units = normalizeUnits(units);
+
+    if (units === 'month' || units === 'year') {
+        days   = this._days   + milliseconds / 864e5;
+        months = this._months + daysToMonths(days);
+        return units === 'month' ? months : months / 12;
+    } else {
+        // handle milliseconds separately because of floating point math errors (issue #1867)
+        days = this._days + Math.round(monthsToDays(this._months));
+        switch (units) {
+            case 'week'   : return days / 7     + milliseconds / 6048e5;
+            case 'day'    : return days         + milliseconds / 864e5;
+            case 'hour'   : return days * 24    + milliseconds / 36e5;
+            case 'minute' : return days * 1440  + milliseconds / 6e4;
+            case 'second' : return days * 86400 + milliseconds / 1000;
+            // Math.floor prevents floating point math errors here
+            case 'millisecond': return Math.floor(days * 864e5) + milliseconds;
+            default: throw new Error('Unknown unit ' + units);
+        }
+    }
+}
+
+// TODO: Use this.as('ms')?
+function valueOf$1 () {
+    if (!this.isValid()) {
+        return NaN;
+    }
+    return (
+        this._milliseconds +
+        this._days * 864e5 +
+        (this._months % 12) * 2592e6 +
+        toInt(this._months / 12) * 31536e6
+    );
+}
+
+function makeAs (alias) {
+    return function () {
+        return this.as(alias);
+    };
+}
+
+var asMilliseconds = makeAs('ms');
+var asSeconds      = makeAs('s');
+var asMinutes      = makeAs('m');
+var asHours        = makeAs('h');
+var asDays         = makeAs('d');
+var asWeeks        = makeAs('w');
+var asMonths       = makeAs('M');
+var asYears        = makeAs('y');
+
+function clone$1 () {
+    return createDuration(this);
+}
+
+function get$2 (units) {
+    units = normalizeUnits(units);
+    return this.isValid() ? this[units + 's']() : NaN;
+}
+
+function makeGetter(name) {
+    return function () {
+        return this.isValid() ? this._data[name] : NaN;
+    };
+}
+
+var milliseconds = makeGetter('milliseconds');
+var seconds      = makeGetter('seconds');
+var minutes      = makeGetter('minutes');
+var hours        = makeGetter('hours');
+var days         = makeGetter('days');
+var months       = makeGetter('months');
+var years        = makeGetter('years');
+
+function weeks () {
+    return absFloor(this.days() / 7);
+}
+
+var round = Math.round;
+var thresholds = {
+    ss: 44,         // a few seconds to seconds
+    s : 45,         // seconds to minute
+    m : 45,         // minutes to hour
+    h : 22,         // hours to day
+    d : 26,         // days to month
+    M : 11          // months to year
+};
+
+// helper function for moment.fn.from, moment.fn.fromNow, and moment.duration.fn.humanize
+function substituteTimeAgo(string, number, withoutSuffix, isFuture, locale) {
+    return locale.relativeTime(number || 1, !!withoutSuffix, string, isFuture);
+}
+
+function relativeTime$1 (posNegDuration, withoutSuffix, locale) {
+    var duration = createDuration(posNegDuration).abs();
+    var seconds  = round(duration.as('s'));
+    var minutes  = round(duration.as('m'));
+    var hours    = round(duration.as('h'));
+    var days     = round(duration.as('d'));
+    var months   = round(duration.as('M'));
+    var years    = round(duration.as('y'));
+
+    var a = seconds <= thresholds.ss && ['s', seconds]  ||
+            seconds < thresholds.s   && ['ss', seconds] ||
+            minutes <= 1             && ['m']           ||
+            minutes < thresholds.m   && ['mm', minutes] ||
+            hours   <= 1             && ['h']           ||
+            hours   < thresholds.h   && ['hh', hours]   ||
+            days    <= 1             && ['d']           ||
+            days    < thresholds.d   && ['dd', days]    ||
+            months  <= 1             && ['M']           ||
+            months  < thresholds.M   && ['MM', months]  ||
+            years   <= 1             && ['y']           || ['yy', years];
+
+    a[2] = withoutSuffix;
+    a[3] = +posNegDuration > 0;
+    a[4] = locale;
+    return substituteTimeAgo.apply(null, a);
+}
+
+// This function allows you to set the rounding function for relative time strings
+function getSetRelativeTimeRounding (roundingFunction) {
+    if (roundingFunction === undefined) {
+        return round;
+    }
+    if (typeof(roundingFunction) === 'function') {
+        round = roundingFunction;
+        return true;
+    }
+    return false;
+}
+
+// This function allows you to set a threshold for relative time strings
+function getSetRelativeTimeThreshold (threshold, limit) {
+    if (thresholds[threshold] === undefined) {
+        return false;
+    }
+    if (limit === undefined) {
+        return thresholds[threshold];
+    }
+    thresholds[threshold] = limit;
+    if (threshold === 's') {
+        thresholds.ss = limit - 1;
+    }
+    return true;
+}
+
+function humanize (withSuffix) {
+    if (!this.isValid()) {
+        return this.localeData().invalidDate();
+    }
+
+    var locale = this.localeData();
+    var output = relativeTime$1(this, !withSuffix, locale);
+
+    if (withSuffix) {
+        output = locale.pastFuture(+this, output);
+    }
+
+    return locale.postformat(output);
+}
+
+var abs$1 = Math.abs;
+
+function sign(x) {
+    return ((x > 0) - (x < 0)) || +x;
+}
+
+function toISOString$1() {
+    // for ISO strings we do not use the normal bubbling rules:
+    //  * milliseconds bubble up until they become hours
+    //  * days do not bubble at all
+    //  * months bubble up until they become years
+    // This is because there is no context-free conversion between hours and days
+    // (think of clock changes)
+    // and also not between days and months (28-31 days per month)
+    if (!this.isValid()) {
+        return this.localeData().invalidDate();
+    }
+
+    var seconds = abs$1(this._milliseconds) / 1000;
+    var days         = abs$1(this._days);
+    var months       = abs$1(this._months);
+    var minutes, hours, years;
+
+    // 3600 seconds -> 60 minutes -> 1 hour
+    minutes           = absFloor(seconds / 60);
+    hours             = absFloor(minutes / 60);
+    seconds %= 60;
+    minutes %= 60;
+
+    // 12 months -> 1 year
+    years  = absFloor(months / 12);
+    months %= 12;
+
+
+    // inspired by https://github.com/dordille/moment-isoduration/blob/master/moment.isoduration.js
+    var Y = years;
+    var M = months;
+    var D = days;
+    var h = hours;
+    var m = minutes;
+    var s = seconds ? seconds.toFixed(3).replace(/\.?0+$/, '') : '';
+    var total = this.asSeconds();
+
+    if (!total) {
+        // this is the same as C#'s (Noda) and python (isodate)...
+        // but not other JS (goog.date)
+        return 'P0D';
+    }
+
+    var totalSign = total < 0 ? '-' : '';
+    var ymSign = sign(this._months) !== sign(total) ? '-' : '';
+    var daysSign = sign(this._days) !== sign(total) ? '-' : '';
+    var hmsSign = sign(this._milliseconds) !== sign(total) ? '-' : '';
+
+    return totalSign + 'P' +
+        (Y ? ymSign + Y + 'Y' : '') +
+        (M ? ymSign + M + 'M' : '') +
+        (D ? daysSign + D + 'D' : '') +
+        ((h || m || s) ? 'T' : '') +
+        (h ? hmsSign + h + 'H' : '') +
+        (m ? hmsSign + m + 'M' : '') +
+        (s ? hmsSign + s + 'S' : '');
+}
+
+var proto$2 = Duration.prototype;
+
+proto$2.isValid        = isValid$1;
+proto$2.abs            = abs;
+proto$2.add            = add$1;
+proto$2.subtract       = subtract$1;
+proto$2.as             = as;
+proto$2.asMilliseconds = asMilliseconds;
+proto$2.asSeconds      = asSeconds;
+proto$2.asMinutes      = asMinutes;
+proto$2.asHours        = asHours;
+proto$2.asDays         = asDays;
+proto$2.asWeeks        = asWeeks;
+proto$2.asMonths       = asMonths;
+proto$2.asYears        = asYears;
+proto$2.valueOf        = valueOf$1;
+proto$2._bubble        = bubble;
+proto$2.clone          = clone$1;
+proto$2.get            = get$2;
+proto$2.milliseconds   = milliseconds;
+proto$2.seconds        = seconds;
+proto$2.minutes        = minutes;
+proto$2.hours          = hours;
+proto$2.days           = days;
+proto$2.weeks          = weeks;
+proto$2.months         = months;
+proto$2.years          = years;
+proto$2.humanize       = humanize;
+proto$2.toISOString    = toISOString$1;
+proto$2.toString       = toISOString$1;
+proto$2.toJSON         = toISOString$1;
+proto$2.locale         = locale;
+proto$2.localeData     = localeData;
+
+// Deprecations
+proto$2.toIsoString = deprecate('toIsoString() is deprecated. Please use toISOString() instead (notice the capitals)', toISOString$1);
+proto$2.lang = lang;
+
+// Side effect imports
+
+// FORMATTING
+
+addFormatToken('X', 0, 0, 'unix');
+addFormatToken('x', 0, 0, 'valueOf');
+
+// PARSING
+
+addRegexToken('x', matchSigned);
+addRegexToken('X', matchTimestamp);
+addParseToken('X', function (input, array, config) {
+    config._d = new Date(parseFloat(input, 10) * 1000);
+});
+addParseToken('x', function (input, array, config) {
+    config._d = new Date(toInt(input));
+});
+
+// Side effect imports
+
+
+hooks.version = '2.20.1';
+
+setHookCallback(createLocal);
+
+hooks.fn                    = proto;
+hooks.min                   = min;
+hooks.max                   = max;
+hooks.now                   = now;
+hooks.utc                   = createUTC;
+hooks.unix                  = createUnix;
+hooks.months                = listMonths;
+hooks.isDate                = isDate;
+hooks.locale                = getSetGlobalLocale;
+hooks.invalid               = createInvalid;
+hooks.duration              = createDuration;
+hooks.isMoment              = isMoment;
+hooks.weekdays              = listWeekdays;
+hooks.parseZone             = createInZone;
+hooks.localeData            = getLocale;
+hooks.isDuration            = isDuration;
+hooks.monthsShort           = listMonthsShort;
+hooks.weekdaysMin           = listWeekdaysMin;
+hooks.defineLocale          = defineLocale;
+hooks.updateLocale          = updateLocale;
+hooks.locales               = listLocales;
+hooks.weekdaysShort         = listWeekdaysShort;
+hooks.normalizeUnits        = normalizeUnits;
+hooks.relativeTimeRounding  = getSetRelativeTimeRounding;
+hooks.relativeTimeThreshold = getSetRelativeTimeThreshold;
+hooks.calendarFormat        = getCalendarFormat;
+hooks.prototype             = proto;
+
+// currently HTML5 input type only supports 24-hour formats
+hooks.HTML5_FMT = {
+    DATETIME_LOCAL: 'YYYY-MM-DDTHH:mm',             // <input type="datetime-local" />
+    DATETIME_LOCAL_SECONDS: 'YYYY-MM-DDTHH:mm:ss',  // <input type="datetime-local" step="1" />
+    DATETIME_LOCAL_MS: 'YYYY-MM-DDTHH:mm:ss.SSS',   // <input type="datetime-local" step="0.001" />
+    DATE: 'YYYY-MM-DD',                             // <input type="date" />
+    TIME: 'HH:mm',                                  // <input type="time" />
+    TIME_SECONDS: 'HH:mm:ss',                       // <input type="time" step="1" />
+    TIME_MS: 'HH:mm:ss.SSS',                        // <input type="time" step="0.001" />
+    WEEK: 'YYYY-[W]WW',                             // <input type="week" />
+    MONTH: 'YYYY-MM'                                // <input type="month" />
+};
+
+return hooks;
+
+})));
+//  Copyright (c) 2002 M.Inamori,All rights reserved.
+//  Coded 2/26/02
+//
+//	sprintf()
+
+function sprintf() {
+	var argv = sprintf.arguments;
+	var argc = argv.length;
+	if(argc == 0)
+		return "";
+	var result = "";
+	var format = argv[0];
+	var format_length = format.length;
+	
+	var flag, width, precision;
+	flag = 0;
+	
+	var index = 1;
+	var mode = 0;
+	var tmpresult;
+	var buff;
+	for(var i = 0; i < format_length; i++) {
+		var c = format.charAt(i);
+		switch(mode) {
+		case 0:		//normal
+			if(c == '%') {
+				tmpresult = c;
+				mode = 1;
+				buff = "";
+			}
+			else
+				result += c;
+			break;
+		case 1:		//after '%'
+			if(c == '%') {
+				result += c;
+				mode = 0;
+				break;
+			}
+			if(index >= argc)
+				argv[argc++] = "";
+			width = 0;
+			precision = -1;
+			switch(c) {
+			case '-':
+				flag |= 1;
+				mode = 1;
+				break;
+			case '+':
+				flag |= 2;
+				mode = 1;
+				break;
+			case '0':
+				flag |= 4;
+				mode = 2;
+				break;
+			case ' ':
+				flag |= 8;
+				mode = 1;
+				break;
+			case '#':
+				flag |= 16;
+				mode = 1;
+				break;
+			case '1': case '2': case '3': case '4': case '5':
+			case '6': case '7': case '8': case '9':
+				width = parseInt(c);
+				mode = 2;
+				break;
+			case '-':
+				flag = 1;
+				mode = 2;
+				break;
+			case '.':
+				width = "";
+				precision = 0;
+				mode = 3;
+				break;
+			case 'd':
+				result += toInteger(argv[index], flag, width, precision);
+				index++;
+				mode = 0;
+				break;
+			case 'f':
+				result += toFloatingPoint(argv[index], flag, width, 6);
+				index++;
+				mode = 0;
+				break;
+			case 'e':
+				result += toExponential(argv[index], flag, width, 6, 'e');
+				index++;
+				mode = 0;
+				break;
+			case 'E':
+				result += toExponential(argv[index], flag, width, 6, 'E');
+				index++;
+				mode = 0;
+				break;
+			case 's':
+				result += argv[index];
+				index++;
+				mode = 0;
+				break;
+			default:
+				result += buff + c;
+				mode = 0;
+				break;
+			}
+			break;
+		case 2:		//while defining width
+			switch(c) {
+			case '.':
+				precision = 0;
+				mode = 3;
+				break;
+			case '0': case '1': case '2': case '3': case '4':
+			case '5': case '6': case '7': case '8': case '9':
+				width = width * 10 + parseInt(c);
+				mode = 2;
+				break;
+			case 'd':
+				result += toInteger(argv[index], flag, width, precision);
+				index++;
+				mode = 0;
+				break;
+			case 'f':
+				result += toFloatingPoint(argv[index], flag, width, 6);
+				index++;
+				mode = 0;
+				break;
+			case 'e':
+				result += toExponential(argv[index], flag, width, 6, 'e');
+				index++;
+				mode = 0;
+				break;
+			case 'E':
+				result += toExponential(argv[index], flag, width, 6, 'E');
+				index++;
+				mode = 0;
+				break;
+			case 's':
+				result += toFormatString(argv[index], width, precision);
+				index++;
+				mode = 0;
+				break;
+			default:
+				result += buff + c;
+				mode = 0;
+				break;
+			}
+			break;
+		case 3:		//while defining precision
+			switch(c) {
+			case '0': case '1': case '2': case '3': case '4':
+			case '5': case '6': case '7': case '8': case '9':
+				precision = precision * 10 + parseInt(c);
+				break;
+			case 'd':
+				result += toInteger(argv[index], flag, width, precision);
+				index++;
+				mode = 0;
+				break;
+			case 'f':
+				result += toFloatingPoint(argv[index], flag, width, precision);
+				index++;
+				mode = 0;
+				break;
+			case 'e':
+				result += toExponential(argv[index], flag, width, precision, 'e');
+				index++;
+				mode = 0;
+				break;
+			case 'E':
+				result += toExponential(argv[index], flag, width, precision, 'E');
+				index++;
+				mode = 0;
+				break;
+			case 's':
+				result += toFormatString(argv[index], width, precision);
+				index++;
+				mode = 0;
+				break;
+			default:
+				result += buff + c;
+				mode = 0;
+				break;
+			}
+			break;
+		default:
+			return "error";
+		}
+		
+		if(mode)
+			buff += c;
+	}
+	
+	return result;
+}
+
+function toInteger(n, f, w, p) {
+	if(typeof n != "number") {
+		if(typeof n == "string") {
+			n = parseFloat(n);
+			if(isNaN(n))
+				n = 0;
+		}
+		else
+			n = 0;
+	}
+	
+	var str = n.toString();
+	
+	//to integer if decimal
+	if(-1 < n && n < 1)
+		str = "0";
+	else {
+		if(n < 0)
+			str = str.substring(1);
+		var pos_e = str.indexOf('e');
+		if(pos_e != -1) {		//指数
+			var exp = parseInt(str.substring(pos_e + 2));
+			var pos_dot = str.indexOf('.');
+			if(pos_dot == -1) {
+				str = str.substring(0, pos_e) + "000000000000000000000";
+				exp -= 21;
+			}
+			else {
+				str = str.substring(0, pos_dot)
+							+ str.substring(pos_dot + 1, pos_e) + "00000";
+				exp -= str.length - pos_dot;
+			}
+			for( ; exp; exp--)
+				str += "0";
+		}
+		else {
+			var pos_dot = str.indexOf('.');
+			if(pos_dot != -1)
+				str = str.substring(0, pos_dot);
+		}
+	}
+	
+	//精度
+	var len = str.length;
+	if(len < p) {
+		var c = "0";
+		for(var i = p - len; i; i--)
+			str = c + str;
+		len = p;
+	}
+	
+	//フラグの処理
+	return ProcFlag(str, f, w - len, n >= 0);
+}
+
+function toFloatingPoint(n, f, w, p) {
+	if(typeof n != "number") {
+		if(typeof n == "string") {
+			n = parseFloat(n);
+			if(isNaN(n))
+				n = 0;
+		}
+		else
+			n = 0;
+	}
+	
+	var bpositive = (n >= 0);
+	if(!bpositive)
+		n = -n;
+	
+	str = toFloatingPoint2(n, f, p);
+	
+	//フラグの処理
+	return ProcFlag(str, f, w - str.length, bpositive);
+}
+
+function toFloatingPoint2(n, f, p) {
+	var str = n.toString();
+	
+	//to decimal if exponential
+	var pos_e = str.indexOf('e');
+	if(pos_e != -1) {
+		var exp = parseInt(str.substring(pos_e + 1));
+		if(exp > 0) {			//指数を整数に
+			var pos_dot = str.indexOf('.');
+			if(pos_dot == -1) {
+				str = str.substring(0, pos_e) + "000000000000000000000";
+				exp -= 21;
+			}
+			else {
+				str = str.charAt(0) + str.substring(2, pos_e) + "00000";
+				exp -= str.length - 1;
+			}
+			for( ; exp; exp--)
+				str += "0";
+		}
+		else {					//指数を小数に
+			var equive_p = exp + p;
+			if(equive_p < -1)	//精度無し
+				str = "0";
+			else if(equive_p >= 0) {	//精度有り
+				str = str.substring(0, pos_e);
+				var pos_dot = str.indexOf(".");
+				if(pos_dot != -1)
+					str = str.charAt(0) + str.substring(2, pos_e);
+				str = "000000" + str;
+				for(exp += 7; exp; exp++)
+					str = "0" + str;
+				str = "0." + str;
+			}
+			else {				//微妙
+				var tmp = parseFloat(str.substring(0, pos_e));
+				if(tmp > 5) {	//切り上げ
+					str = "0.00000";
+					for(var i = exp + 7; i; i++)
+						str += "0";
+					str += "1";
+				}
+				else			//切捨て
+					str = "0";
+			}
+		}
+	}
+	
+	//精度で整形
+	var len = str.length;
+	var pos_dot = str.indexOf(".");
+	if(pos_dot != -1) {
+		var dec = len - pos_dot - 1;
+		if(dec > p) {		//切る
+			var tmp = parseFloat(str.charAt(pos_dot + p + 1)
+									+ "." + str.substring(pos_dot + p + 2));
+			if(tmp > 5) {	//切り上げ
+				var i;
+				if(n < 1) {
+					i = 2;
+					while(str.charAt(i) == "0")
+						i++;
+					tmp = (parseInt(str.substring(i, p + 2)) + 1).toString();
+					if(tmp.length > p + 2 - i) {		//桁増
+						if(i == 2)
+							str = "1." + tmp.substring(1);
+						else
+							str = str.substring(0, i - 1) + tmp;
+					}
+					else
+						str = str.substring(0, i) + tmp;
+				}
+				else {
+					tmp = (parseInt(str.substring(0, pos_dot) + str.substring(
+								pos_dot + 1, pos_dot + p + 1)) + 1).toString();
+					if(tmp.length > pos_dot + p)				//桁増
+						str = tmp.substring(0, pos_dot + 1)
+									+ "." +  tmp.substring(pos_dot + 1);
+					else
+						str = tmp.substring(0, pos_dot)
+									+ "." + tmp.substring(pos_dot);
+				}
+			}
+			else {		//切捨て
+				str = str.substring(0, p ? pos_dot + p + 1 : pos_dot);
+			}
+		}
+		else if(dec < p) {	//"0"を充填
+			for(var i = p - dec; i; i--)
+				str += "0";
+		}
+	}
+	else {
+		if(p) {
+			str += ".0";
+			for(var i = p - 1; i; i--)
+				str += "0";
+		}
+	}
+	
+	return str;
+}
+
+function toExponential(n, f, w, p, e) {
+	if(typeof n != "number") {
+		if(typeof n == "string") {
+			n = parseFloat(n);
+			if(isNaN(n))
+				n = 0;
+		}
+		else
+			n = 0;
+	}
+	
+	var bpositive = n >= 0;
+	if(!bpositive)
+		n = -n;
+	
+	var str = n.toString();
+	var pos_dot = str.indexOf(".");
+	var pos_e = str.indexOf("e");
+	var type = ((pos_e != -1) << 1) + (pos_dot != -1);
+	var exp;
+	
+	//仮数部と指数部に分ける
+	if(type == 0) {			//整数
+		if(exp = str.length - 1)
+			str = str.charAt(0) + "." + str.substring(pos_dot = 1);
+	}
+	else if(type == 1) {	//小数
+		if(n > 10) {
+			exp = pos_dot - 1;
+			str = str.substring(0, 1) + "."
+					+ str.substring(1, pos_dot) + str.substring(pos_dot + 1);
+			pos_dot = 1;
+		}
+		else if(n > 1)
+			exp = 0;
+		else {
+			for(var i = 2; ; i++) {
+				if(str.charAt(i) != "0") {
+					exp = 1 - i;
+					str = str.charAt(i) + "." + str.substring(i + 1);
+					break;
+				}
+			}
+			pos_dot = 1;
+		}
+	}
+	else {	//指数
+		exp = parseInt(str.substring(pos_e + 1));
+		str = str.substring(0, pos_e);
+	}
+	
+	//仮数部の整形
+	str = toFloatingPoint2(parseFloat(str), f, p);
+	
+	//指数部の整形
+	if(exp >= 0)
+		str += e + (exp < 10 ? "+0" : "+") + exp;
+	else
+		str += e + (exp > -10 ? "-0" + (-exp) : exp);
+	
+	//フラグの処理
+	str = ProcFlag(str, f, w - str.length, bpositive);
+	
+	return str;
+}
+
+function toFormatString(s, w, p) {
+	if(typeof s != "string")
+		s = s.toString();
+	
+	var len = s.length;
+	if(p >= 0) {
+		if(p < len) {
+			s = s.substring(0, p);
+			len = p;
+		}
+	}
+	if(len < w) {
+		var c = " ";
+		for(var i = w - len; i; i--)
+			s = c + s;
+	}
+	
+	return s;
+}
+
+function ProcFlag(str, f, extra, b) {
+	var minus = f & 1;
+	var plus = f & 2;
+	var space = f & 8;
+	if(space)			//with ' '
+		extra--;
+	extra -= !b + plus > 0;
+	if((f & 4) > 0 && !minus) {	//with 0 and not -
+		if(extra > 0) {
+			var c = "0";
+			for(var i = extra; i; i--)
+				str = c + str;
+		}
+		if(!b)
+			str = "-" + str;
+		else if(plus)
+			str = "+" + str;
+	}
+	else {					//without 0 or with -
+		if(!b)
+			str = "-" + str;
+		else if(plus)
+			str = "+" + str;
+		var c = " ";
+		if(extra > 0) {
+			var c = " ";
+			if(minus)
+				for(var i = extra; i; i--)
+					str += c;
+			else
+				for(var i = extra; i; i--)
+					str = c + str;
+		}
+	}
+	if(space)
+		str = " " + str;
+	
+	return str;
+}
+;
+/*! gridster.js - v0.7.0 - 2017-03-27 - * https://dsmorse.github.io/gridster.js/ - Copyright (c) 2017 ducksboard; Licensed MIT */
+ !function(a,b){"use strict";"object"==typeof exports?module.exports=b(require("jquery")):"function"==typeof define&&define.amd?define("gridster-coords",["jquery"],b):a.GridsterCoords=b(a.$||a.jQuery)}(this,function(a){"use strict";function b(b){return b[0]&&a.isPlainObject(b[0])?this.data=b[0]:this.el=b,this.isCoords=!0,this.coords={},this.init(),this}var c=b.prototype;return c.init=function(){this.set(),this.original_coords=this.get()},c.set=function(a,b){var c=this.el;if(c&&!a&&(this.data=c.offset(),this.data.width=c[0].scrollWidth,this.data.height=c[0].scrollHeight),c&&a&&!b){var d=c.offset();this.data.top=d.top,this.data.left=d.left}var e=this.data;return void 0===e.left&&(e.left=e.x1),void 0===e.top&&(e.top=e.y1),this.coords.x1=e.left,this.coords.y1=e.top,this.coords.x2=e.left+e.width,this.coords.y2=e.top+e.height,this.coords.cx=e.left+e.width/2,this.coords.cy=e.top+e.height/2,this.coords.width=e.width,this.coords.height=e.height,this.coords.el=c||!1,this},c.update=function(b){if(!b&&!this.el)return this;if(b){var c=a.extend({},this.data,b);return this.data=c,this.set(!0,!0)}return this.set(!0),this},c.get=function(){return this.coords},c.destroy=function(){this.el.removeData("coords"),delete this.el},a.fn.coords=function(){if(this.data("coords"))return this.data("coords");var a=new b(this);return this.data("coords",a),a},b}),function(a,b){"use strict";"object"==typeof exports?module.exports=b(require("jquery")):"function"==typeof define&&define.amd?define("gridster-collision",["jquery","gridster-coords"],b):a.GridsterCollision=b(a.$||a.jQuery,a.GridsterCoords)}(this,function(a,b){"use strict";function c(b,c,e){this.options=a.extend(d,e),this.$element=b,this.last_colliders=[],this.last_colliders_coords=[],this.set_colliders(c),this.init()}var d={colliders_context:document.body,overlapping_region:"C"};c.defaults=d;var e=c.prototype;return e.init=function(){this.find_collisions()},e.overlaps=function(a,b){var c=!1,d=!1;return(b.x1>=a.x1&&b.x1<=a.x2||b.x2>=a.x1&&b.x2<=a.x2||a.x1>=b.x1&&a.x2<=b.x2)&&(c=!0),(b.y1>=a.y1&&b.y1<=a.y2||b.y2>=a.y1&&b.y2<=a.y2||a.y1>=b.y1&&a.y2<=b.y2)&&(d=!0),c&&d},e.detect_overlapping_region=function(a,b){var c="",d="";return a.y1>b.cy&&a.y1<b.y2&&(c="N"),a.y2>b.y1&&a.y2<b.cy&&(c="S"),a.x1>b.cx&&a.x1<b.x2&&(d="W"),a.x2>b.x1&&a.x2<b.cx&&(d="E"),c+d||"C"},e.calculate_overlapped_area_coords=function(b,c){var d=Math.max(b.x1,c.x1),e=Math.max(b.y1,c.y1);return a({left:d,top:e,width:Math.min(b.x2,c.x2)-d,height:Math.min(b.y2,c.y2)-e}).coords().get()},e.calculate_overlapped_area=function(a){return a.width*a.height},e.manage_colliders_start_stop=function(b,c,d){for(var e=this.last_colliders_coords,f=0,g=e.length;f<g;f++)a.inArray(e[f],b)===-1&&c.call(this,e[f]);for(var h=0,i=b.length;h<i;h++)a.inArray(b[h],e)===-1&&d.call(this,b[h])},e.find_collisions=function(b){for(var c=this,d=this.options.overlapping_region,e=[],f=[],g=this.colliders||this.$colliders,h=g.length,i=c.$element.coords().update(b||!1).get();h--;){var j=c.$colliders?a(g[h]):g[h],k=j.isCoords?j:j.coords(),l=k.get();if(c.overlaps(i,l)){var m=c.detect_overlapping_region(i,l);if(m===d||"all"===d){var n=c.calculate_overlapped_area_coords(i,l),o=c.calculate_overlapped_area(n);if(0!==o){var p={area:o,area_coords:n,region:m,coords:l,player_coords:i,el:j};c.options.on_overlap&&c.options.on_overlap.call(this,p),e.push(k),f.push(p)}}}}return(c.options.on_overlap_stop||c.options.on_overlap_start)&&this.manage_colliders_start_stop(e,c.options.on_overlap_start,c.options.on_overlap_stop),this.last_colliders_coords=e,f},e.get_closest_colliders=function(a){var b=this.find_collisions(a);return b.sort(function(a,b){return"C"===a.region&&"C"===b.region?a.coords.y1<b.coords.y1||a.coords.x1<b.coords.x1?-1:1:(a.area,b.area,1)}),b},e.set_colliders=function(b){"string"==typeof b||b instanceof a?this.$colliders=a(b,this.options.colliders_context).not(this.$element):this.colliders=a(b)},a.fn.collision=function(a,b){return new c(this,a,b)},c}),function(a,b){"use strict";a.delay=function(a,b){var c=Array.prototype.slice.call(arguments,2);return setTimeout(function(){return a.apply(null,c)},b)},a.debounce=function(a,b,c){var d;return function(){var e=this,f=arguments,g=function(){d=null,c||a.apply(e,f)};c&&!d&&a.apply(e,f),clearTimeout(d),d=setTimeout(g,b)}},a.throttle=function(a,b){var c,d,e,f,g,h,i=debounce(function(){g=f=!1},b);return function(){c=this,d=arguments;var j=function(){e=null,g&&a.apply(c,d),i()};return e||(e=setTimeout(j,b)),f?g=!0:h=a.apply(c,d),i(),f=!0,h}}}(window),function(a,b){"use strict";"object"==typeof exports?module.exports=b(require("jquery")):"function"==typeof define&&define.amd?define("gridster-draggable",["jquery"],b):a.GridsterDraggable=b(a.$||a.jQuery)}(this,function(a){"use strict";function b(b,d){this.options=a.extend({},c,d),this.$document=a(document),this.$container=a(b),this.$scroll_container=this.options.scroll_container===window?a(window):this.$container.closest(this.options.scroll_container),this.is_dragging=!1,this.player_min_left=0+this.options.offset_left,this.player_min_top=0+this.options.offset_top,this.id=i(),this.ns=".gridster-draggable-"+this.id,this.init()}var c={items:"li",distance:1,limit:{width:!0,height:!1},offset_left:0,autoscroll:!0,ignore_dragging:["INPUT","TEXTAREA","SELECT","BUTTON"],handle:null,container_width:0,move_element:!0,helper:!1,remove_helper:!0},d=a(window),e={x:"left",y:"top"},f=!!("ontouchstart"in window),g=function(a){return a.charAt(0).toUpperCase()+a.slice(1)},h=0,i=function(){return++h+""};b.defaults=c;var j=b.prototype;return j.init=function(){var b=this.$container.css("position");this.calculate_dimensions(),this.$container.css("position","static"===b?"relative":b),this.disabled=!1,this.events(),d.bind(this.nsEvent("resize"),throttle(a.proxy(this.calculate_dimensions,this),200))},j.nsEvent=function(a){return(a||"")+this.ns},j.events=function(){this.pointer_events={start:this.nsEvent("touchstart")+" "+this.nsEvent("mousedown"),move:this.nsEvent("touchmove")+" "+this.nsEvent("mousemove"),end:this.nsEvent("touchend")+" "+this.nsEvent("mouseup")},this.$container.on(this.nsEvent("selectstart"),a.proxy(this.on_select_start,this)),this.$container.on(this.pointer_events.start,this.options.items,a.proxy(this.drag_handler,this)),this.$document.on(this.pointer_events.end,a.proxy(function(a){this.is_dragging=!1,this.disabled||(this.$document.off(this.pointer_events.move),this.drag_start&&this.on_dragstop(a))},this))},j.get_actual_pos=function(a){return a.position()},j.get_mouse_pos=function(a){if(a.originalEvent&&a.originalEvent.touches){var b=a.originalEvent;a=b.touches.length?b.touches[0]:b.changedTouches[0]}return{left:a.clientX,top:a.clientY}},j.get_offset=function(a){a.preventDefault();var b=this.get_mouse_pos(a),c=Math.round(b.left-this.mouse_init_pos.left),d=Math.round(b.top-this.mouse_init_pos.top),e=Math.round(this.el_init_offset.left+c-this.baseX+this.$scroll_container.scrollLeft()-this.scroll_container_offset_x),f=Math.round(this.el_init_offset.top+d-this.baseY+this.$scroll_container.scrollTop()-this.scroll_container_offset_y);return this.options.limit.width&&(e>this.player_max_left?e=this.player_max_left:e<this.player_min_left&&(e=this.player_min_left)),this.options.limit.height&&(f>this.player_max_top?f=this.player_max_top:f<this.player_min_top&&(f=this.player_min_top)),{position:{left:e,top:f},pointer:{left:b.left,top:b.top,diff_left:c+(this.$scroll_container.scrollLeft()-this.scroll_container_offset_x),diff_top:d+(this.$scroll_container.scrollTop()-this.scroll_container_offset_y)}}},j.get_drag_data=function(a){var b=this.get_offset(a);return b.$player=this.$player,b.$helper=this.helper?this.$helper:this.$player,b},j.set_limits=function(a){return a||(a=this.$container.width()),this.player_max_left=a-this.player_width-this.options.offset_left,this.player_max_top=this.options.container_height-this.player_height-this.options.offset_top,this.options.container_width=a,this},j.scroll_in=function(a,b){var c,d=e[a],f=50,h=30,i="scroll"+g(d),j="x"===a,k=j?this.scroller_width:this.scroller_height;c=this.$scroll_container===window?j?this.$scroll_container.width():this.$scroll_container.height():j?this.$scroll_container[0].scrollWidth:this.$scroll_container[0].scrollHeight;var l,m=j?this.$player.width():this.$player.height(),n=this.$scroll_container[i](),o=n,p=o+k,q=p-f,r=o+f,s=o+b.pointer[d],t=c-k+m;return s>=q&&(l=n+h)<t&&(this.$scroll_container[i](l),this["scroll_offset_"+a]+=h),s<=r&&(l=n-h)>0&&(this.$scroll_container[i](l),this["scroll_offset_"+a]-=h),this},j.manage_scroll=function(a){this.scroll_in("x",a),this.scroll_in("y",a)},j.calculate_dimensions=function(){this.scroller_height=this.$scroll_container.height(),this.scroller_width=this.$scroll_container.width()},j.drag_handler=function(b){if(!this.disabled&&(1===b.which||f)&&!this.ignore_drag(b)){var c=this,d=!0;return this.$player=a(b.currentTarget),this.el_init_pos=this.get_actual_pos(this.$player),this.mouse_init_pos=this.get_mouse_pos(b),this.offsetY=this.mouse_init_pos.top-this.el_init_pos.top,this.$document.on(this.pointer_events.move,function(a){var b=c.get_mouse_pos(a),e=Math.abs(b.left-c.mouse_init_pos.left),f=Math.abs(b.top-c.mouse_init_pos.top);return(e>c.options.distance||f>c.options.distance)&&(d?(d=!1,c.on_dragstart.call(c,a),!1):(c.is_dragging===!0&&c.on_dragmove.call(c,a),!1))}),!!f&&void 0}},j.on_dragstart=function(a){if(a.preventDefault(),this.is_dragging)return this;this.drag_start=this.is_dragging=!0;var b=this.$container.offset();return this.baseX=Math.round(b.left),this.baseY=Math.round(b.top),"clone"===this.options.helper?(this.$helper=this.$player.clone().appendTo(this.$container).addClass("helper"),this.helper=!0):this.helper=!1,this.scroll_container_offset_y=this.$scroll_container.scrollTop(),this.scroll_container_offset_x=this.$scroll_container.scrollLeft(),this.el_init_offset=this.$player.offset(),this.player_width=this.$player.width(),this.player_height=this.$player.height(),this.set_limits(this.options.container_width),this.options.start&&this.options.start.call(this.$player,a,this.get_drag_data(a)),!1},j.on_dragmove=function(a){var b=this.get_drag_data(a);this.options.autoscroll&&this.manage_scroll(b),this.options.move_element&&(this.helper?this.$helper:this.$player).css({position:"absolute",left:b.position.left,top:b.position.top});var c=this.last_position||b.position;return b.prev_position=c,this.options.drag&&this.options.drag.call(this.$player,a,b),this.last_position=b.position,!1},j.on_dragstop=function(a){var b=this.get_drag_data(a);return this.drag_start=!1,this.options.stop&&this.options.stop.call(this.$player,a,b),this.helper&&this.options.remove_helper&&this.$helper.remove(),!1},j.on_select_start=function(a){if(!this.disabled&&!this.ignore_drag(a))return!1},j.enable=function(){this.disabled=!1},j.disable=function(){this.disabled=!0},j.destroy=function(){this.disable(),this.$container.off(this.ns),this.$document.off(this.ns),d.off(this.ns),a.removeData(this.$container,"drag")},j.ignore_drag=function(b){return this.options.handle?!a(b.target).is(this.options.handle):a.isFunction(this.options.ignore_dragging)?this.options.ignore_dragging(b):this.options.resize?!a(b.target).is(this.options.items):a(b.target).is(this.options.ignore_dragging.join(", "))},a.fn.gridDraggable=function(a){return new b(this,a)},a.fn.dragg=function(c){return this.each(function(){a.data(this,"drag")||a.data(this,"drag",new b(this,c))})},b}),function(a,b){"use strict";"object"==typeof exports?module.exports=b(require("jquery"),require("./jquery.draggable.js"),require("./jquery.collision.js"),require("./jquery.coords.js"),require("./utils.js")):"function"==typeof define&&define.amd?define(["jquery","gridster-draggable","gridster-collision"],b):a.Gridster=b(a.$||a.jQuery,a.GridsterDraggable,a.GridsterCollision)}(this,function(a,b,c){"use strict";function d(b,c){this.options=a.extend(!0,{},g,c),this.options.draggable=this.options.draggable||{},this.options.draggable=a.extend(!0,{},this.options.draggable,{scroll_container:this.options.scroll_container}),this.$el=a(b),this.$scroll_container=this.options.scroll_container===window?a(window):this.$el.closest(this.options.scroll_container),this.$wrapper=this.$el.parent(),this.$widgets=this.$el.children(this.options.widget_selector).addClass("gs-w"),this.$changed=a([]),this.w_queue={},this.is_responsive()?this.min_widget_width=this.get_responsive_col_width():this.min_widget_width=this.options.widget_base_dimensions[0],this.min_widget_height=this.options.widget_base_dimensions[1],this.is_resizing=!1,this.min_col_count=this.options.min_cols,this.prev_col_count=this.min_col_count,this.generated_stylesheets=[],this.$style_tags=a([]),typeof this.options.limit==typeof!0&&(console.log("limit: bool is deprecated, consider using limit: { width: boolean, height: boolean} instead"),this.options.limit={width:this.options.limit,height:this.options.limit}),this.options.auto_init&&this.init()}function e(a){for(var b=["col","row","size_x","size_y"],c={},d=0,e=b.length;d<e;d++){var f=b[d];if(!(f in a))throw new Error("Not exists property `"+f+"`");var g=a[f];if(!g||isNaN(g))throw new Error("Invalid value of `"+f+"` property");c[f]=+g}return c}var f=a(window),g={namespace:"",widget_selector:"li",static_class:"static",widget_margins:[10,10],widget_base_dimensions:[400,225],extra_rows:0,extra_cols:0,min_cols:1,max_cols:1/0,limit:{width:!0,height:!1},min_rows:1,max_rows:15,autogenerate_stylesheet:!0,avoid_overlapped_widgets:!0,auto_init:!0,center_widgets:!1,responsive_breakpoint:!1,scroll_container:window,shift_larger_widgets_down:!0,move_widgets_down_only:!1,shift_widgets_up:!0,show_element:function(a,b){b?a.fadeIn(b):a.fadeIn()},hide_element:function(a,b){b?a.fadeOut(b):a.fadeOut()},serialize_params:function(a,b){return{col:b.col,row:b.row,size_x:b.size_x,size_y:b.size_y}},collision:{wait_for_mouseup:!1},draggable:{items:".gs-w:not(.static)",distance:4,ignore_dragging:b.defaults.ignore_dragging.slice(0)},resize:{enabled:!1,axes:["both"],handle_append_to:"",handle_class:"gs-resize-handle",max_size:[1/0,1/0],min_size:[1,1]},ignore_self_occupied:!1};d.defaults=g,d.generated_stylesheets=[],d.sort_by_row_asc=function(b){return b=b.sort(function(b,c){return b.row||(b=a(b).coords().grid,c=a(c).coords().grid),b=e(b),c=e(c),b.row>c.row?1:-1})},d.sort_by_row_and_col_asc=function(a){return a=a.sort(function(a,b){return a=e(a),b=e(b),a.row>b.row||a.row===b.row&&a.col>b.col?1:-1})},d.sort_by_col_asc=function(a){return a=a.sort(function(a,b){return a=e(a),b=e(b),a.col>b.col?1:-1})},d.sort_by_row_desc=function(a){return a=a.sort(function(a,b){return a=e(a),b=e(b),a.row+a.size_y<b.row+b.size_y?1:-1})};var h=d.prototype;return h.init=function(){this.options.resize.enabled&&this.setup_resize(),this.generate_grid_and_stylesheet(),this.get_widgets_from_DOM(),this.set_dom_grid_height(),this.set_dom_grid_width(),this.$wrapper.addClass("ready"),this.draggable(),this.options.resize.enabled&&this.resizable(),this.options.center_widgets&&setTimeout(a.proxy(function(){this.center_widgets()},this),0),f.bind("resize.gridster",throttle(a.proxy(this.recalculate_faux_grid,this),200))},h.disable=function(){return this.$wrapper.find(".player-revert").removeClass("player-revert"),this.drag_api.disable(),this},h.enable=function(){return this.drag_api.enable(),this},h.disable_resize=function(){return this.$el.addClass("gs-resize-disabled"),this.resize_api.disable(),this},h.enable_resize=function(){return this.$el.removeClass("gs-resize-disabled"),this.resize_api.enable(),this},h.add_widget=function(b,c,d,e,f,g,h,i){var j;if(c||(c=1),d||(d=1),e||f)j={col:e,row:f,size_x:c,size_y:d},this.options.avoid_overlapped_widgets&&this.empty_cells(e,f,c,d);else if((j=this.next_position(c,d))===!1)return!1;var k=a(b).attr({"data-col":j.col,"data-row":j.row,"data-sizex":c,"data-sizey":d}).addClass("gs-w").appendTo(this.$el).hide();this.$widgets=this.$widgets.add(k),this.$changed=this.$changed.add(k),this.register_widget(k);var l=parseInt(j.row)+(parseInt(j.size_y)-1);return this.rows<l&&this.add_faux_rows(l-this.rows),g&&this.set_widget_max_size(k,g),h&&this.set_widget_min_size(k,h),this.set_dom_grid_width(),this.set_dom_grid_height(),this.drag_api.set_limits(this.cols*this.min_widget_width+(this.cols+1)*this.options.widget_margins[0]),this.options.center_widgets&&setTimeout(a.proxy(function(){this.center_widgets()},this),0),this.options.show_element.call(this,k,i),k},h.set_widget_min_size=function(a,b){if(a="number"==typeof a?this.$widgets.eq(a):a,!a.length)return this;var c=a.data("coords").grid;return c.min_size_x=b[0],c.min_size_y=b[1],this},h.set_widget_max_size=function(a,b){if(a="number"==typeof a?this.$widgets.eq(a):a,!a.length)return this;var c=a.data("coords").grid;return c.max_size_x=b[0],c.max_size_y=b[1],this},h.add_resize_handle=function(b){var c=this.options.resize.handle_append_to?a(this.options.resize.handle_append_to,b):b;return 0===c.children("span[class~='"+this.resize_handle_class+"']").length&&a(this.resize_handle_tpl).appendTo(c),this},h.resize_widget=function(a,b,c,d){var e=a.coords().grid;this.is_resizing=!0,b||(b=e.size_x),c||(c=e.size_y),this.is_valid_row(e.row,c)||this.add_faux_rows(Math.max(this.calculate_highest_row(e.row,c)-this.rows,0)),this.is_valid_col(e.col,c)||this.add_faux_cols(Math.max(this.calculate_highest_row(e.col,b)-this.cols,0));var f={col:e.col,row:e.row,size_x:b,size_y:c};return this.mutate_widget_in_gridmap(a,e,f),this.set_dom_grid_height(),this.set_dom_grid_width(),d&&d.call(this,f.size_x,f.size_y),this.is_resizing=!1,a},h.expand_widget=function(b,c,d,e,f){var g=b.coords().grid,h=Math.floor((a(window).width()-2*this.options.widget_margins[0])/this.min_widget_width);c=c||Math.min(h,this.cols),d||(d=g.size_y);var i=g.size_y;b.attr("pre_expand_col",g.col),b.attr("pre_expand_sizex",g.size_x),b.attr("pre_expand_sizey",g.size_y);var j=e||1;d>i&&this.add_faux_rows(Math.max(d-i,0));var k={col:j,row:g.row,size_x:c,size_y:d};return this.mutate_widget_in_gridmap(b,g,k),this.set_dom_grid_height(),this.set_dom_grid_width(),f&&f.call(this,k.size_x,k.size_y),b},h.collapse_widget=function(a,b){var c=a.coords().grid,d=parseInt(a.attr("pre_expand_sizex")),e=parseInt(a.attr("pre_expand_sizey")),f=parseInt(a.attr("pre_expand_col")),g={col:f,row:c.row,size_x:d,size_y:e};return this.mutate_widget_in_gridmap(a,c,g),this.set_dom_grid_height(),this.set_dom_grid_width(),b&&b.call(this,g.size_x,g.size_y),a},h.fit_to_content=function(a,b,c,d){var e=a.coords().grid,f=this.$wrapper.width(),g=this.$wrapper.height(),h=this.options.widget_base_dimensions[0]+2*this.options.widget_margins[0],i=this.options.widget_base_dimensions[1]+2*this.options.widget_margins[1],j=Math.ceil((f+2*this.options.widget_margins[0])/h),k=Math.ceil((g+2*this.options.widget_margins[1])/i),l={col:e.col,row:e.row,size_x:Math.min(b,j),size_y:Math.min(c,k)};return this.mutate_widget_in_gridmap(a,e,l),this.set_dom_grid_height(),this.set_dom_grid_width(),d&&d.call(this,l.size_x,l.size_y),a},h.center_widgets=debounce(function(){var b,c=this.$wrapper.width();b=this.is_responsive()?this.get_responsive_col_width():this.options.widget_base_dimensions[0]+2*this.options.widget_margins[0];var d=2*Math.floor(Math.max(Math.floor(c/b),this.min_col_count)/2);this.options.min_cols=d,this.options.max_cols=d,this.options.extra_cols=0,this.set_dom_grid_width(d),this.cols=d;var e=(d-this.prev_col_count)/2;return e<0?(this.get_min_col()>e*-1?this.shift_cols(e):this.resize_widget_dimensions(this.options),setTimeout(a.proxy(function(){this.resize_widget_dimensions(this.options)},this),0)):e>0?(this.resize_widget_dimensions(this.options),setTimeout(a.proxy(function(){this.shift_cols(e)},this),0)):(this.resize_widget_dimensions(this.options),setTimeout(a.proxy(function(){this.resize_widget_dimensions(this.options)},this),0)),this.prev_col_count=d,this},200),h.get_min_col=function(){return Math.min.apply(Math,this.$widgets.map(a.proxy(function(b,c){return this.get_cells_occupied(a(c).coords().grid).cols},this)).get())},h.shift_cols=function(b){var c=this.$widgets.map(a.proxy(function(b,c){var d=a(c);return this.dom_to_coords(d)},this));c=d.sort_by_row_and_col_asc(c),c.each(a.proxy(function(c,d){var e=a(d.el),f=e.coords().grid,g=parseInt(e.attr("data-col")),h={col:Math.max(Math.round(g+b),1),row:f.row,size_x:f.size_x,size_y:f.size_y};setTimeout(a.proxy(function(){this.mutate_widget_in_gridmap(e,f,h)},this),0)},this))},h.mutate_widget_in_gridmap=function(b,c,d){var e=c.size_y,f=this.get_cells_occupied(c),g=this.get_cells_occupied(d),h=[];a.each(f.cols,function(b,c){a.inArray(c,g.cols)===-1&&h.push(c)});var i=[];a.each(g.cols,function(b,c){a.inArray(c,f.cols)===-1&&i.push(c)});var j=[];a.each(f.rows,function(b,c){a.inArray(c,g.rows)===-1&&j.push(c)});var k=[];if(a.each(g.rows,function(b,c){a.inArray(c,f.rows)===-1&&k.push(c)}),this.remove_from_gridmap(c),i.length){var l=[d.col,d.row,d.size_x,Math.min(e,d.size_y),b];this.empty_cells.apply(this,l)}if(k.length){var m=[d.col,d.row,d.size_x,d.size_y,b];this.empty_cells.apply(this,m)}if(c.col=d.col,c.row=d.row,c.size_x=d.size_x,c.size_y=d.size_y,this.add_to_gridmap(d,b),b.removeClass("player-revert"),this.update_widget_dimensions(b,d),this.options.shift_widgets_up){if(h.length){var n=[h[0],d.row,h[h.length-1]-h[0]+1,Math.min(e,d.size_y),b];this.remove_empty_cells.apply(this,n)}if(j.length){var o=[d.col,d.row,d.size_x,d.size_y,b];this.remove_empty_cells.apply(this,o)}}return this.move_widget_up(b),this},h.empty_cells=function(b,c,d,e,f){return this.widgets_below({col:b,row:c-e,size_x:d,size_y:e}).not(f).each(a.proxy(function(b,d){var f=a(d),g=f.coords().grid;if(g.row<=c+e-1){var h=c+e-g.row;this.move_widget_down(f,h)}},this)),this.is_resizing||this.set_dom_grid_height(),this},h.remove_empty_cells=function(b,c,d,e,f){return this.widgets_below({col:b,row:c,size_x:d,size_y:e}).not(f).each(a.proxy(function(b,c){this.move_widget_up(a(c),e)},this)),this.set_dom_grid_height(),this},h.next_position=function(a,b){a||(a=1),b||(b=1);for(var c,e=this.gridmap,f=e.length,g=[],h=1;h<f;h++){c=e[h].length;for(var i=1;i<=c;i++){this.can_move_to({size_x:a,size_y:b},h,i)&&g.push({col:h,row:i,size_y:b,size_x:a})}}return!!g.length&&d.sort_by_row_and_col_asc(g)[0]},h.remove_by_grid=function(a,b){var c=this.is_widget(a,b);c&&this.remove_widget(c)},h.remove_widget=function(b,c,d){var e=b instanceof a?b:a(b);if(0===e.length)return this;var f=e.coords().grid;if(void 0===f)return this;a.isFunction(c)&&(d=c,c=!1),this.cells_occupied_by_placeholder={},this.$widgets=this.$widgets.not(e);var g=this.widgets_below(e);return this.remove_from_gridmap(f),this.options.hide_element.call(this,e,a.proxy(function(){e.remove(),c||g.each(a.proxy(function(b,c){this.move_widget_up(a(c),f.size_y)},this)),this.set_dom_grid_height(),d&&d.call(this,b)},this)),this},h.remove_all_widgets=function(b){return this.$widgets.each(a.proxy(function(a,c){this.remove_widget(c,!0,b)},this)),this},h.serialize=function(b){b||(b=this.$widgets);var c=[];return b.each(a.proxy(function(b,d){var e=a(d);void 0!==e.coords().grid&&c.push(this.options.serialize_params(e,e.coords().grid))},this)),c},h.serialize_changed=function(){return this.serialize(this.$changed)},h.dom_to_coords=function(a){return{col:parseInt(a.attr("data-col"),10),row:parseInt(a.attr("data-row"),10),size_x:parseInt(a.attr("data-sizex"),10)||1,size_y:parseInt(a.attr("data-sizey"),10)||1,max_size_x:parseInt(a.attr("data-max-sizex"),10)||!1,max_size_y:parseInt(a.attr("data-max-sizey"),10)||!1,min_size_x:parseInt(a.attr("data-min-sizex"),10)||!1,min_size_y:parseInt(a.attr("data-min-sizey"),10)||!1,el:a}},h.register_widget=function(b){var c=b instanceof a,d=c?this.dom_to_coords(b):b,e=!1;c||(b=d.el);var f=this.can_go_widget_up(d);return this.options.shift_widgets_up&&f&&(d.row=f,b.attr("data-row",f),this.$el.trigger("gridster:positionchanged",[d]),e=!0),this.options.avoid_overlapped_widgets&&!this.can_move_to({size_x:d.size_x,size_y:d.size_y},d.col,d.row)&&(a.extend(d,this.next_position(d.size_x,d.size_y)),b.attr({"data-col":d.col,"data-row":d.row,"data-sizex":d.size_x,"data-sizey":d.size_y}),e=!0),b.data("coords",b.coords()),b.data("coords").grid=d,this.add_to_gridmap(d,b),this.update_widget_dimensions(b,d),this.options.resize.enabled&&this.add_resize_handle(b),e},h.update_widget_position=function(a,b){return this.for_each_cell_occupied(a,function(a,c){if(!this.gridmap[a])return this;this.gridmap[a][c]=b}),this},h.update_widget_dimensions=function(a,b){var c=b.size_x*(this.is_responsive()?this.get_responsive_col_width():this.options.widget_base_dimensions[0])+(b.size_x-1)*this.options.widget_margins[0],d=b.size_y*this.options.widget_base_dimensions[1]+(b.size_y-1)*this.options.widget_margins[1];return a.data("coords").update({width:c,height:d}),a.attr({"data-col":b.col,"data-row":b.row,"data-sizex":b.size_x,"data-sizey":b.size_y}),this},h.update_widgets_dimensions=function(){return a.each(this.$widgets,a.proxy(function(b,c){var d=a(c).coords().grid;"object"==typeof d&&this.update_widget_dimensions(a(c),d)},this)),this},h.remove_from_gridmap=function(a){return this.update_widget_position(a,!1)},h.add_to_gridmap=function(a,b){this.update_widget_position(a,b||a.el)},h.draggable=function(){var b=this,c=a.extend(!0,{},this.options.draggable,{offset_left:this.options.widget_margins[0],offset_top:this.options.widget_margins[1],container_width:this.cols*this.min_widget_width+(this.cols+1)*this.options.widget_margins[0],container_height:this.rows*this.min_widget_height+(this.rows+1)*this.options.widget_margins[0],limit:{width:this.options.limit.width,height:this.options.limit.height},start:function(c,d){b.$widgets.filter(".player-revert").removeClass("player-revert"),b.$player=a(this),b.$helper=a(d.$helper),b.helper=!b.$helper.is(b.$player),b.on_start_drag.call(b,c,d),b.$el.trigger("gridster:dragstart")},stop:function(a,c){b.on_stop_drag.call(b,a,c),b.$el.trigger("gridster:dragstop")},drag:throttle(function(a,c){b.on_drag.call(b,a,c),b.$el.trigger("gridster:drag")},60)});this.drag_api=this.$el.dragg(c).data("drag")},h.resizable=function(){return this.resize_api=this.$el.gridDraggable({items:"."+this.options.resize.handle_class,offset_left:this.options.widget_margins[0],container_width:this.container_width,move_element:!1,resize:!0,limit:{width:this.options.max_cols!==1/0||this.limit.width,height:this.options.max_rows!==1/0||this.limit.height},scroll_container:this.options.scroll_container,start:a.proxy(this.on_start_resize,this),stop:a.proxy(function(b,c){delay(a.proxy(function(){this.on_stop_resize(b,c)},this),120)},this),drag:throttle(a.proxy(this.on_resize,this),60)}),this},h.setup_resize=function(){this.resize_handle_class=this.options.resize.handle_class;var b=this.options.resize.axes,c='<span class="'+this.resize_handle_class+" "+this.resize_handle_class+'-{type}" />';return this.resize_handle_tpl=a.map(b,function(a){return c.replace("{type}",a)}).join(""),a.isArray(this.options.draggable.ignore_dragging)&&this.options.draggable.ignore_dragging.push("."+this.resize_handle_class),this},h.on_start_drag=function(b,c){this.$helper.add(this.$player).add(this.$wrapper).addClass("dragging"),this.highest_col=this.get_highest_occupied_cell().col,this.$player.addClass("player"),this.player_grid_data=this.$player.coords().grid,this.placeholder_grid_data=a.extend({},this.player_grid_data),this.get_highest_occupied_cell().row+this.player_grid_data.size_y<=this.options.max_rows&&this.set_dom_grid_height(this.$el.height()+this.player_grid_data.size_y*this.min_widget_height),this.set_dom_grid_width(this.cols);var d=this.player_grid_data.size_x,e=this.cols-this.highest_col;this.options.max_cols===1/0&&e<=d&&this.add_faux_cols(Math.min(d-e,1));var f=this.faux_grid,g=this.$player.data("coords").coords;this.cells_occupied_by_player=this.get_cells_occupied(this.player_grid_data),this.cells_occupied_by_placeholder=this.get_cells_occupied(this.placeholder_grid_data),this.last_cols=[],this.last_rows=[],this.collision_api=this.$helper.collision(f,this.options.collision),this.$preview_holder=a("<"+this.$player.get(0).tagName+" />",{class:"preview-holder","data-row":this.$player.attr("data-row"),"data-col":this.$player.attr("data-col"),css:{width:g.width,height:g.height}}).appendTo(this.$el),this.options.draggable.start&&this.options.draggable.start.call(this,b,c)},h.on_drag=function(a,b){if(null===this.$player)return!1;var c=this.options.widget_margins,d=this.$preview_holder.attr("data-col"),e=this.$preview_holder.attr("data-row"),f={left:b.position.left+this.baseX-c[0]*d,top:b.position.top+this.baseY-c[1]*e};if(this.options.max_cols===1/0){this.placeholder_grid_data.col+this.placeholder_grid_data.size_x-1>=this.cols-1&&this.options.max_cols>=this.cols+1&&(this.add_faux_cols(1),this.set_dom_grid_width(this.cols+1),this.drag_api.set_limits(this.cols*this.min_widget_width+(this.cols+1)*this.options.widget_margins[0])),this.collision_api.set_colliders(this.faux_grid)}this.colliders_data=this.collision_api.get_closest_colliders(f),this.on_overlapped_column_change(this.on_start_overlapping_column,this.on_stop_overlapping_column),this.on_overlapped_row_change(this.on_start_overlapping_row,this.on_stop_overlapping_row),this.helper&&this.$player&&this.$player.css({left:b.position.left,top:b.position.top}),this.options.draggable.drag&&this.options.draggable.drag.call(this,a,b)},h.on_stop_drag=function(a,b){this.$helper.add(this.$player).add(this.$wrapper).removeClass("dragging");var c=this.options.widget_margins,d=this.$preview_holder.attr("data-col"),e=this.$preview_holder.attr("data-row");b.position.left=b.position.left+this.baseX-c[0]*d,b.position.top=b.position.top+this.baseY-c[1]*e,this.colliders_data=this.collision_api.get_closest_colliders(b.position),this.on_overlapped_column_change(this.on_start_overlapping_column,this.on_stop_overlapping_column),this.on_overlapped_row_change(this.on_start_overlapping_row,this.on_stop_overlapping_row),this.$changed=this.$changed.add(this.$player);var f=this.placeholder_grid_data.el.coords().grid;f.col===this.placeholder_grid_data.col&&f.row===this.placeholder_grid_data.row||(this.update_widget_position(f,!1),this.options.collision.wait_for_mouseup&&this.for_each_cell_occupied(this.placeholder_grid_data,function(a,b){if(this.is_widget(a,b)){var c=this.placeholder_grid_data.row+this.placeholder_grid_data.size_y,d=parseInt(this.gridmap[a][b][0].getAttribute("data-row")),e=c-d;!this.move_widget_down(this.is_widget(a,b),e)&&this.set_placeholder(this.placeholder_grid_data.el.coords().grid.col,this.placeholder_grid_data.el.coords().grid.row)}})),this.cells_occupied_by_player=this.get_cells_occupied(this.placeholder_grid_data);var g=this.placeholder_grid_data.col,h=this.placeholder_grid_data.row;this.set_cells_player_occupies(g,h),this.$player.coords().grid.row=h,this.$player.coords().grid.col=g,this.$player.addClass("player-revert").removeClass("player").attr({"data-col":g,"data-row":h}).css({left:"",top:""}),this.options.draggable.stop&&this.options.draggable.stop.call(this,a,b),this.$preview_holder.remove(),this.$player=null,this.$helper=null,this.placeholder_grid_data={},this.player_grid_data={},this.cells_occupied_by_placeholder={},this.cells_occupied_by_player={},this.w_queue={},this.set_dom_grid_height(),this.set_dom_grid_width(),this.options.max_cols===1/0&&this.drag_api.set_limits(this.cols*this.min_widget_width+(this.cols+1)*this.options.widget_margins[0])},h.on_start_resize=function(b,c){this.$resized_widget=c.$player.closest(".gs-w"),this.resize_coords=this.$resized_widget.coords(),this.resize_wgd=this.resize_coords.grid,this.resize_initial_width=this.resize_coords.coords.width,this.resize_initial_height=this.resize_coords.coords.height,this.resize_initial_sizex=this.resize_coords.grid.size_x,this.resize_initial_sizey=this.resize_coords.grid.size_y,this.resize_initial_col=this.resize_coords.grid.col,this.resize_last_sizex=this.resize_initial_sizex,this.resize_last_sizey=this.resize_initial_sizey,
+this.resize_max_size_x=Math.min(this.resize_wgd.max_size_x||this.options.resize.max_size[0],this.options.max_cols-this.resize_initial_col+1),this.resize_max_size_y=this.resize_wgd.max_size_y||this.options.resize.max_size[1],this.resize_min_size_x=this.resize_wgd.min_size_x||this.options.resize.min_size[0]||1,this.resize_min_size_y=this.resize_wgd.min_size_y||this.options.resize.min_size[1]||1,this.resize_initial_last_col=this.get_highest_occupied_cell().col,this.set_dom_grid_width(this.cols),this.resize_dir={right:c.$player.is("."+this.resize_handle_class+"-x"),bottom:c.$player.is("."+this.resize_handle_class+"-y")},this.is_responsive()||this.$resized_widget.css({"min-width":this.options.widget_base_dimensions[0],"min-height":this.options.widget_base_dimensions[1]});var d=this.$resized_widget.get(0).tagName;this.$resize_preview_holder=a("<"+d+" />",{class:"preview-holder resize-preview-holder","data-row":this.$resized_widget.attr("data-row"),"data-col":this.$resized_widget.attr("data-col"),css:{width:this.resize_initial_width,height:this.resize_initial_height}}).appendTo(this.$el),this.$resized_widget.addClass("resizing"),this.options.resize.start&&this.options.resize.start.call(this,b,c,this.$resized_widget),this.$el.trigger("gridster:resizestart")},h.on_stop_resize=function(b,c){this.$resized_widget.removeClass("resizing").css({width:"",height:"","min-width":"","min-height":""}),delay(a.proxy(function(){this.$resize_preview_holder.remove().css({"min-width":"","min-height":""}),this.options.resize.stop&&this.options.resize.stop.call(this,b,c,this.$resized_widget),this.$el.trigger("gridster:resizestop")},this),300),this.set_dom_grid_width(),this.set_dom_grid_height(),this.options.max_cols===1/0&&this.drag_api.set_limits(this.cols*this.min_widget_width)},h.on_resize=function(a,b){var c,d=b.pointer.diff_left,e=b.pointer.diff_top,f=this.is_responsive()?this.get_responsive_col_width():this.options.widget_base_dimensions[0],g=this.options.widget_base_dimensions[1],h=this.options.widget_margins[0],i=this.options.widget_margins[1],j=this.resize_max_size_x,k=this.resize_min_size_x,l=this.resize_max_size_y,m=this.resize_min_size_y,n=this.options.max_cols===1/0,o=Math.ceil(d/(f+2*h)-.2),p=Math.ceil(e/(g+2*i)-.2),q=Math.max(1,this.resize_initial_sizex+o),r=Math.max(1,this.resize_initial_sizey+p),s=Math.floor(this.container_width/this.min_widget_width-this.resize_initial_col+1),t=s*this.min_widget_width+(s-1)*h;q=Math.max(Math.min(q,j),k),q=Math.min(s,q),c=j*f+(q-1)*h;var u=Math.min(c,t),v=k*f+(q-1)*h;r=Math.max(Math.min(r,l),m);var w=l*g+(r-1)*i,x=m*g+(r-1)*i;if(this.resize_dir.right?r=this.resize_initial_sizey:this.resize_dir.bottom&&(q=this.resize_initial_sizex),n){var y=this.resize_initial_col+q-1;n&&this.resize_initial_last_col<=y&&(this.set_dom_grid_width(Math.max(y+1,this.cols)),this.cols<y&&this.add_faux_cols(y-this.cols))}var z={};!this.resize_dir.bottom&&(z.width=Math.max(Math.min(this.resize_initial_width+d,u),v)),!this.resize_dir.right&&(z.height=Math.max(Math.min(this.resize_initial_height+e,w),x)),this.$resized_widget.css(z),q===this.resize_last_sizex&&r===this.resize_last_sizey||(this.resize_widget(this.$resized_widget,q,r,!1),this.set_dom_grid_width(this.cols),this.$resize_preview_holder.css({width:"",height:""}).attr({"data-row":this.$resized_widget.attr("data-row"),"data-sizex":q,"data-sizey":r})),this.options.resize.resize&&this.options.resize.resize.call(this,a,b,this.$resized_widget),this.$el.trigger("gridster:resize"),this.resize_last_sizex=q,this.resize_last_sizey=r},h.on_overlapped_column_change=function(b,c){if(!this.colliders_data.length)return this;var d,e=this.get_targeted_columns(this.colliders_data[0].el.data.col),f=this.last_cols.length,g=e.length;for(d=0;d<g;d++)a.inArray(e[d],this.last_cols)===-1&&(b||a.noop).call(this,e[d]);for(d=0;d<f;d++)a.inArray(this.last_cols[d],e)===-1&&(c||a.noop).call(this,this.last_cols[d]);return this.last_cols=e,this},h.on_overlapped_row_change=function(b,c){if(!this.colliders_data.length)return this;var d,e=this.get_targeted_rows(this.colliders_data[0].el.data.row),f=this.last_rows.length,g=e.length;for(d=0;d<g;d++)a.inArray(e[d],this.last_rows)===-1&&(b||a.noop).call(this,e[d]);for(d=0;d<f;d++)a.inArray(this.last_rows[d],e)===-1&&(c||a.noop).call(this,this.last_rows[d]);this.last_rows=e},h.set_player=function(b,c,d){var e=this,f=!1,g=d?{col:b}:e.colliders_data[0].el.data,h=g.col,i=g.row||c;this.player_grid_data={col:h,row:i,size_y:this.player_grid_data.size_y,size_x:this.player_grid_data.size_x},this.cells_occupied_by_player=this.get_cells_occupied(this.player_grid_data),this.cells_occupied_by_placeholder=this.get_cells_occupied(this.placeholder_grid_data);var j=this.get_widgets_overlapped(this.player_grid_data),k=this.player_grid_data.size_y,l=this.player_grid_data.size_x,m=this.cells_occupied_by_placeholder,n=this;if(j.each(a.proxy(function(b,c){var d=a(c),e=d.coords().grid,g=m.cols[0]+l-1,o=m.rows[0]+k-1;if(d.hasClass(n.options.static_class))return!0;if(n.options.collision.wait_for_mouseup&&n.drag_api.is_dragging)n.placeholder_grid_data.col=h,n.placeholder_grid_data.row=i,n.cells_occupied_by_placeholder=n.get_cells_occupied(n.placeholder_grid_data),n.$preview_holder.attr({"data-row":i,"data-col":h});else if(e.size_x<=l&&e.size_y<=k)if(n.is_swap_occupied(m.cols[0],e.row,e.size_x,e.size_y)||n.is_player_in(m.cols[0],e.row)||n.is_in_queue(m.cols[0],e.row,d))if(n.is_swap_occupied(g,e.row,e.size_x,e.size_y)||n.is_player_in(g,e.row)||n.is_in_queue(g,e.row,d))if(n.is_swap_occupied(e.col,m.rows[0],e.size_x,e.size_y)||n.is_player_in(e.col,m.rows[0])||n.is_in_queue(e.col,m.rows[0],d))if(n.is_swap_occupied(e.col,o,e.size_x,e.size_y)||n.is_player_in(e.col,o)||n.is_in_queue(e.col,o,d))if(n.is_swap_occupied(m.cols[0],m.rows[0],e.size_x,e.size_y)||n.is_player_in(m.cols[0],m.rows[0])||n.is_in_queue(m.cols[0],m.rows[0],d))for(var p=0;p<l;p++)for(var q=0;q<k;q++){var r=m.cols[0]+p,s=m.rows[0]+q;if(!n.is_swap_occupied(r,s,e.size_x,e.size_y)&&!n.is_player_in(r,s)&&!n.is_in_queue(r,s,d)){f=n.queue_widget(r,s,d),p=l;break}}else n.options.move_widgets_down_only?j.each(a.proxy(function(b,c){var d=a(c);n.can_go_down(d)&&d.coords().grid.row===n.player_grid_data.row&&!n.is_in_queue(g,e.row,d)&&(n.move_widget_down(d,n.player_grid_data.size_y),n.set_placeholder(h,i))})):f=n.queue_widget(m.cols[0],m.rows[0],d);else f=n.queue_widget(e.col,o,d);else f=n.queue_widget(e.col,m.rows[0],d);else f=n.queue_widget(g,e.row,d);else n.options.move_widgets_down_only?j.each(a.proxy(function(b,c){var d=a(c);n.can_go_down(d)&&d.coords().grid.row===n.player_grid_data.row&&!n.is_in_queue(d.coords().grid.col,e.row,d)&&(n.move_widget_down(d,n.player_grid_data.size_y),n.set_placeholder(h,i))})):f=n.queue_widget(m.cols[0],e.row,d);else n.options.shift_larger_widgets_down&&!f&&j.each(a.proxy(function(b,c){var d=a(c);n.can_go_down(d)&&d.coords().grid.row===n.player_grid_data.row&&(n.move_widget_down(d,n.player_grid_data.size_y),n.set_placeholder(h,i))}));n.clean_up_changed()})),f&&this.can_placeholder_be_set(h,i,l,k)){for(var o in this.w_queue){var p=parseInt(o.split("_")[0]),q=parseInt(o.split("_")[1]);"full"!==this.w_queue[o]&&this.new_move_widget_to(this.w_queue[o],p,q)}this.set_placeholder(h,i)}if(!j.length){if(this.options.shift_widgets_up){var r=this.can_go_player_up(this.player_grid_data);r!==!1&&(i=r)}this.can_placeholder_be_set(h,i,l,k)&&this.set_placeholder(h,i)}return this.w_queue={},{col:h,row:i}},h.is_swap_occupied=function(a,b,c,d){for(var e=!1,f=0;f<c;f++)for(var g=0;g<d;g++){var h=a+f,i=b+g,j=h+"_"+i;if(this.is_occupied(h,i))e=!0;else if(j in this.w_queue){if("full"===this.w_queue[j]){e=!0;continue}var k=this.w_queue[j],l=k.coords().grid;this.is_widget_under_player(l.col,l.row)||delete this.w_queue[j]}i>parseInt(this.options.max_rows)&&(e=!0),h>parseInt(this.options.max_cols)&&(e=!0),this.is_player_in(h,i)&&(e=!0)}return e},h.can_placeholder_be_set=function(a,b,c,d){for(var e=!0,f=0;f<c;f++)for(var g=0;g<d;g++){var h=a+f,i=b+g,j=this.is_widget(h,i);i>parseInt(this.options.max_rows)&&(e=!1),h>parseInt(this.options.max_cols)&&(e=!1),this.is_occupied(h,i)&&!this.is_widget_queued_and_can_move(j)&&(e=!1)}return e},h.queue_widget=function(a,b,c){var d=c,e=d.coords().grid,f=a+"_"+b;if(f in this.w_queue)return!1;this.w_queue[f]=d;for(var g=0;g<e.size_x;g++)for(var h=0;h<e.size_y;h++){var i=a+g,j=b+h,k=i+"_"+j;k!==f&&(this.w_queue[k]="full")}return!0},h.is_widget_queued_and_can_move=function(a){var b=!1;if(a===!1)return!1;for(var c in this.w_queue)if("full"!==this.w_queue[c]&&this.w_queue[c].attr("data-col")===a.attr("data-col")&&this.w_queue[c].attr("data-row")===a.attr("data-row")){b=!0;for(var d=this.w_queue[c],e=parseInt(c.split("_")[0]),f=parseInt(c.split("_")[1]),g=d.coords().grid,h=0;h<g.size_x;h++)for(var i=0;i<g.size_y;i++){var j=e+h,k=f+i;this.is_player_in(j,k)&&(b=!1)}}return b},h.is_in_queue=function(a,b,c){var d=!1,e=a+"_"+b;if(e in this.w_queue)if("full"===this.w_queue[e])d=!0;else{var f=this.w_queue[e],g=f.coords().grid;this.is_widget_under_player(g.col,g.row)?this.w_queue[e].attr("data-col")===c.attr("data-col")&&this.w_queue[e].attr("data-row")===c.attr("data-row")?(delete this.w_queue[e],d=!1):d=!0:(delete this.w_queue[e],d=!1)}return d},h.widgets_constraints=function(b){var c=a([]),e=[],f=[];return b.each(a.proxy(function(b,d){var g=a(d),h=g.coords().grid;this.can_go_widget_up(h)?(c=c.add(g),e.push(h)):f.push(h)},this)),b.not(c),{can_go_up:d.sort_by_row_asc(e),can_not_go_up:d.sort_by_row_desc(f)}},h.manage_movements=function(b,c,d){return a.each(b,a.proxy(function(a,b){var e=b,f=e.el,g=this.can_go_widget_up(e);if(g)this.move_widget_to(f,g),this.set_placeholder(c,g+e.size_y);else{if(!this.can_go_player_up(this.player_grid_data)){var h=d+this.player_grid_data.size_y-e.row;this.can_go_down(f)&&(console.log("In Move Down!"),this.move_widget_down(f,h),this.set_placeholder(c,d))}}},this)),this},h.is_player=function(a,b){if(b&&!this.gridmap[a])return!1;var c=b?this.gridmap[a][b]:a;return c&&(c.is(this.$player)||c.is(this.$helper))},h.is_player_in=function(b,c){var d=this.cells_occupied_by_player||{};return a.inArray(b,d.cols)>=0&&a.inArray(c,d.rows)>=0},h.is_placeholder_in=function(b,c){var d=this.cells_occupied_by_placeholder||{};return this.is_placeholder_in_col(b)&&a.inArray(c,d.rows)>=0},h.is_placeholder_in_col=function(b){var c=this.cells_occupied_by_placeholder||[];return a.inArray(b,c.cols)>=0},h.is_empty=function(a,b){return void 0===this.gridmap[a]||void 0!==this.gridmap[a][b]&&this.gridmap[a][b]===!1},h.is_valid_col=function(a,b){return this.options.max_cols===1/0||this.cols>=this.calculate_highest_col(a,b)},h.is_valid_row=function(a,b){return this.rows>=this.calculate_highest_row(a,b)},h.calculate_highest_col=function(a,b){return a+(b||1)-1},h.calculate_highest_row=function(a,b){return a+(b||1)-1},h.is_occupied=function(b,c){return!!this.gridmap[b]&&(!this.is_player(b,c)&&(!!this.gridmap[b][c]&&(!this.options.ignore_self_occupied||this.$player.data()!==a(this.gridmap[b][c]).data())))},h.is_widget=function(a,b){var c=this.gridmap[a];return!!c&&(!!(c=c[b])&&c)},h.is_static=function(a,b){var c=this.gridmap[a];return!!c&&!(!(c=c[b])||!c.hasClass(this.options.static_class))},h.is_widget_under_player=function(a,b){return!!this.is_widget(a,b)&&this.is_player_in(a,b)},h.get_widgets_under_player=function(b){b||(b=this.cells_occupied_by_player||{cols:[],rows:[]});var c=a([]);return a.each(b.cols,a.proxy(function(d,e){a.each(b.rows,a.proxy(function(a,b){this.is_widget(e,b)&&(c=c.add(this.gridmap[e][b]))},this))},this)),c},h.set_placeholder=function(b,c){var d=a.extend({},this.placeholder_grid_data),e=b+d.size_x-1;e>this.cols&&(b-=e-b);var f=this.placeholder_grid_data.row<c,g=this.placeholder_grid_data.col!==b;if(this.placeholder_grid_data.col=b,this.placeholder_grid_data.row=c,this.cells_occupied_by_placeholder=this.get_cells_occupied(this.placeholder_grid_data),this.$preview_holder.attr({"data-row":c,"data-col":b}),this.options.shift_player_up){if(f||g){this.widgets_below({col:d.col,row:d.row,size_y:d.size_y,size_x:d.size_x}).each(a.proxy(function(b,c){var d=a(c),e=d.coords().grid,f=this.can_go_widget_up(e);f&&this.move_widget_to(d,f)},this))}var h=this.get_widgets_under_player(this.cells_occupied_by_placeholder);h.length&&h.each(a.proxy(function(b,e){var f=a(e);this.move_widget_down(f,c+d.size_y-f.data("coords").grid.row)},this))}},h.can_go_player_up=function(a){var b=a.row+a.size_y-1,c=!0,d=[],e=1e4,f=this.get_widgets_under_player();return this.for_each_column_occupied(a,function(a){var g=this.gridmap[a],h=b+1;for(d[a]=[];--h>0&&(this.is_empty(a,h)||this.is_player(a,h)||this.is_widget(a,h)&&g[h].is(f));)d[a].push(h),e=h<e?h:e;if(0===d[a].length)return c=!1,!0;d[a].sort(function(a,b){return a-b})}),!!c&&this.get_valid_rows(a,d,e)},h.can_go_widget_up=function(a){var b=a.row+a.size_y-1,c=!0,d=[],e=1e4;return this.for_each_column_occupied(a,function(f){var g=this.gridmap[f];d[f]=[];for(var h=b+1;--h>0&&(!this.is_widget(f,h)||this.is_player_in(f,h)||g[h].is(a.el));)this.is_player(f,h)||this.is_placeholder_in(f,h)||this.is_player_in(f,h)||d[f].push(h),h<e&&(e=h);if(0===d[f].length)return c=!1,!0;d[f].sort(function(a,b){return a-b})}),!!c&&this.get_valid_rows(a,d,e)},h.get_valid_rows=function(b,c,d){for(var e=b.row,f=b.row+b.size_y-1,g=b.size_y,h=d-1,i=[];++h<=f;){var j=!0;if(a.each(c,function(b,c){a.isArray(c)&&a.inArray(h,c)===-1&&(j=!1)}),j===!0&&(i.push(h),i.length===g))break}var k=!1;return 1===g?i[0]!==e&&(k=i[0]||!1):i[0]!==e&&(k=this.get_consecutive_numbers_index(i,g)),k},h.get_consecutive_numbers_index=function(a,b){for(var c=a.length,d=[],e=!0,f=-1,g=0;g<c;g++){if(e||a[g]===f+1){if(d.push(g),d.length===b)break;e=!1}else d=[],e=!0;f=a[g]}return d.length>=b&&a[d[0]]},h.get_widgets_overlapped=function(){var b=a([]),c=[],d=this.cells_occupied_by_player.rows.slice(0);return d.reverse(),a.each(this.cells_occupied_by_player.cols,a.proxy(function(e,f){a.each(d,a.proxy(function(d,e){if(!this.gridmap[f])return!0;var g=this.gridmap[f][e];this.is_occupied(f,e)&&!this.is_player(g)&&a.inArray(g,c)===-1&&(b=b.add(g),c.push(g))},this))},this)),b},h.on_start_overlapping_column=function(a){this.set_player(a,void 0,!1)},h.on_start_overlapping_row=function(a){this.set_player(void 0,a,!1)},h.on_stop_overlapping_column=function(a){var b=this;this.options.shift_larger_widgets_down&&this.for_each_widget_below(a,this.cells_occupied_by_player.rows[0],function(a,c){b.move_widget_up(this,b.player_grid_data.size_y)})},h.on_stop_overlapping_row=function(a){var b=this,c=this.cells_occupied_by_player.cols;if(this.options.shift_larger_widgets_down)for(var d=0,e=c.length;d<e;d++)this.for_each_widget_below(c[d],a,function(a,c){b.move_widget_up(this,b.player_grid_data.size_y)})},h.new_move_widget_to=function(a,b,c){var d=a.coords().grid;return this.remove_from_gridmap(d),d.row=c,d.col=b,this.add_to_gridmap(d),a.attr("data-row",c),a.attr("data-col",b),this.update_widget_position(d,a),this.$changed=this.$changed.add(a),this},h.move_widget=function(a,b,c,d){var e=a.coords().grid,f={col:b,row:c,size_x:e.size_x,size_y:e.size_y};return this.mutate_widget_in_gridmap(a,e,f),this.set_dom_grid_height(),this.set_dom_grid_width(),d&&d.call(this,f.col,f.row),a},h.move_widget_to=function(b,c){var d=this,e=b.coords().grid,f=this.widgets_below(b);return this.can_move_to(e,e.col,c)!==!1&&(this.remove_from_gridmap(e),e.row=c,this.add_to_gridmap(e),b.attr("data-row",c),this.$changed=this.$changed.add(b),f.each(function(b,c){var e=a(c),f=e.coords().grid,g=d.can_go_widget_up(f);g&&g!==f.row&&d.move_widget_to(e,g)}),this)},h.move_widget_up=function(b,c){if(void 0===c)return!1;var d=b.coords().grid,e=d.row,f=[];if(c||(c=1),!this.can_go_up(b))return!1;this.for_each_column_occupied(d,function(d){if(a.inArray(b,f)===-1){var g=b.coords().grid,h=e-c;if(!(h=this.can_go_up_to_row(g,d,h)))return!0;this.remove_from_gridmap(g),g.row=h,this.add_to_gridmap(g),b.attr("data-row",g.row),this.$changed=this.$changed.add(b),f.push(b)}})},h.move_widget_down=function(b,c){var d,e,f,g;if(c<=0)return!1;if(d=b.coords().grid,(e=d.row)+(b.coords().grid.size_y-1)+c>this.options.max_rows)return!1;if(f=[],g=c,!b)return!1;if(this.failed=!1,a.inArray(b,f)===-1){var h=b.coords().grid,i=e+c;if(this.widgets_below(b).each(a.proxy(function(b,c){if(this.failed!==!0){var d=a(c),e=d.coords().grid,f=this.displacement_diff(e,h,g);f>0&&(this.failed=this.move_widget_down(d,f)===!1)}},this)),this.failed)return!1;this.remove_from_gridmap(h),h.row=i,this.update_widget_position(h,b),b.attr("data-row",h.row),this.$changed=this.$changed.add(b),f.push(b)}return!0},h.can_go_up_to_row=function(b,c,d){var e,f=!0,g=[],h=b.row;if(this.for_each_column_occupied(b,function(a){for(g[a]=[],e=h;e--&&this.is_empty(a,e)&&!this.is_placeholder_in(a,e);)g[a].push(e);if(!g[a].length)return f=!1,!0}),!f)return!1;for(e=d,e=1;e<h;e++){for(var i=!0,j=0,k=g.length;j<k;j++)g[j]&&a.inArray(e,g[j])===-1&&(i=!1);if(i===!0){f=e;break}}return f},h.displacement_diff=function(a,b,c){var d=a.row,e=[],f=b.row+b.size_y;return this.for_each_column_occupied(a,function(a){for(var b=0,c=f;c<d;c++)this.is_empty(a,c)&&(b+=1);e.push(b)}),c-=Math.max.apply(Math,e),c>0?c:0},h.widgets_below=function(b){var c=a([]),e=a.isPlainObject(b)?b:b.coords().grid;if(void 0===e)return c;var f=this,g=e.row+e.size_y-1;return this.for_each_column_occupied(e,function(b){f.for_each_widget_below(b,g,function(b,d){if(!f.is_player(this)&&a.inArray(this,c)===-1)return c=c.add(this),!0})}),d.sort_by_row_asc(c)},h.set_cells_player_occupies=function(a,b){return this.remove_from_gridmap(this.placeholder_grid_data),this.placeholder_grid_data.col=a,this.placeholder_grid_data.row=b,this.add_to_gridmap(this.placeholder_grid_data,this.$player),this},h.empty_cells_player_occupies=function(){return this.remove_from_gridmap(this.placeholder_grid_data),this},h.can_go_down=function(b){var c=!0,d=this;return b.hasClass(this.options.static_class)&&(c=!1),this.widgets_below(b).each(function(){a(this).hasClass(d.options.static_class)&&(c=!1)}),c},h.can_go_up=function(a){var b=a.coords().grid,c=b.row,d=c-1,e=!0;return 1!==c&&(this.for_each_column_occupied(b,function(a){if(this.is_occupied(a,d)||this.is_player(a,d)||this.is_placeholder_in(a,d)||this.is_player_in(a,d))return e=!1,!0}),e)},h.can_move_to=function(a,b,c){var d=a.el,e={size_y:a.size_y,size_x:a.size_x,col:b,row:c},f=!0;if(this.options.max_cols!==1/0){if(b+a.size_x-1>this.cols)return!1}return!(this.options.max_rows<c+a.size_y-1)&&(this.for_each_cell_occupied(e,function(b,c){var e=this.is_widget(b,c);!e||a.el&&!e.is(d)||(f=!1)}),f)},h.get_targeted_columns=function(a){for(var b=(a||this.player_grid_data.col)+(this.player_grid_data.size_x-1),c=[],d=a;d<=b;d++)c.push(d);return c},h.get_targeted_rows=function(a){for(var b=(a||this.player_grid_data.row)+(this.player_grid_data.size_y-1),c=[],d=a;d<=b;d++)c.push(d);return c},h.get_cells_occupied=function(b){var c,d={cols:[],rows:[]};for(arguments[1]instanceof a&&(b=arguments[1].coords().grid),c=0;c<b.size_x;c++){var e=b.col+c;d.cols.push(e)}for(c=0;c<b.size_y;c++){var f=b.row+c;d.rows.push(f)}return d},h.for_each_cell_occupied=function(a,b){return this.for_each_column_occupied(a,function(c){this.for_each_row_occupied(a,function(a){b.call(this,c,a)})}),this},h.for_each_column_occupied=function(a,b){for(var c=0;c<a.size_x;c++){var d=a.col+c;b.call(this,d,a)}},h.for_each_row_occupied=function(a,b){for(var c=0;c<a.size_y;c++){var d=a.row+c;b.call(this,d,a)}},h.clean_up_changed=function(){var b=this;b.$changed.each(function(){b.options.shift_larger_widgets_down&&b.move_widget_up(a(this))})},h._traversing_widgets=function(b,c,d,e,f){var g=this.gridmap;if(g[d]){var h,i,j=b+"/"+c;if(arguments[2]instanceof a){var k=arguments[2].coords().grid;d=k.col,e=k.row,f=arguments[3]}var l=[],m=e,n={"for_each/above":function(){for(;m--&&!(m>0&&this.is_widget(d,m)&&a.inArray(g[d][m],l)===-1&&(h=f.call(g[d][m],d,m),l.push(g[d][m]),h)););},"for_each/below":function(){for(m=e+1,i=g[d].length;m<i;m++)this.is_widget(d,m)&&a.inArray(g[d][m],l)===-1&&(h=f.call(g[d][m],d,m),l.push(g[d][m]))}};n[j]&&n[j].call(this)}},h.for_each_widget_above=function(a,b,c){return this._traversing_widgets("for_each","above",a,b,c),this},h.for_each_widget_below=function(a,b,c){return this._traversing_widgets("for_each","below",a,b,c),this},h.get_highest_occupied_cell=function(){for(var a,b=this.gridmap,c=b[1].length,d=[],e=[],f=b.length-1;f>=1;f--)for(a=c-1;a>=1;a--)if(this.is_widget(f,a)){d.push(a),e.push(f);break}return{col:Math.max.apply(Math,e),row:Math.max.apply(Math,d)}},h.get_widgets_in_range=function(b,c,d,e){var f,g,h,i,j=a([]);for(f=d;f>=b;f--)for(g=e;g>=c;g--)(h=this.is_widget(f,g))!==!1&&(i=h.data("coords").grid,i.col>=b&&i.col<=d&&i.row>=c&&i.row<=e&&(j=j.add(h)));return j},h.get_widgets_at_cell=function(a,b){return this.get_widgets_in_range(a,b,a,b)},h.get_widgets_from=function(b,c){var d=a();return b&&(d=d.add(this.$widgets.filter(function(){var c=parseInt(a(this).attr("data-col"));return c===b||c>b}))),c&&(d=d.add(this.$widgets.filter(function(){var b=parseInt(a(this).attr("data-row"));return b===c||b>c}))),d},h.set_dom_grid_height=function(a){if(void 0===a){var b=this.get_highest_occupied_cell().row;a=(b+1)*this.options.widget_margins[1]+b*this.min_widget_height}return this.container_height=a,this.$el.css("height",this.container_height),this},h.set_dom_grid_width=function(a){void 0===a&&(a=this.get_highest_occupied_cell().col);var b=this.options.max_cols===1/0?this.options.max_cols:this.cols;return a=Math.min(b,Math.max(a,this.options.min_cols)),this.container_width=(a+1)*this.options.widget_margins[0]+a*this.min_widget_width,this.is_responsive()?(this.$el.css({"min-width":"100%","max-width":"100%"}),this):(this.$el.css("width",this.container_width),this)},h.is_responsive=function(){return this.options.autogenerate_stylesheet&&"auto"===this.options.widget_base_dimensions[0]&&this.options.max_cols!==1/0},h.get_responsive_col_width=function(){var a=this.cols||this.options.max_cols;return(this.$el[0].clientWidth-3-(a+1)*this.options.widget_margins[0])/a},h.resize_responsive_layout=function(){return this.min_widget_width=this.get_responsive_col_width(),this.generate_stylesheet(),this.update_widgets_dimensions(),this.drag_api.set_limits(this.cols*this.min_widget_width+(this.cols+1)*this.options.widget_margins[0]),this},h.toggle_collapsed_grid=function(a,b){return a?(this.$widgets.css({"margin-top":b.widget_margins[0],"margin-bottom":b.widget_margins[0],"min-height":b.widget_base_dimensions[1]}),this.$el.addClass("collapsed"),this.resize_api&&this.disable_resize(),this.drag_api&&this.disable()):(this.$widgets.css({"margin-top":"auto","margin-bottom":"auto","min-height":"auto"}),this.$el.removeClass("collapsed"),this.resize_api&&this.enable_resize(),this.drag_api&&this.enable()),this},h.generate_stylesheet=function(b){var c,e="",f=this.is_responsive()&&this.options.responsive_breakpoint&&a(window).width()<this.options.responsive_breakpoint;b||(b={}),b.cols||(b.cols=this.cols),b.rows||(b.rows=this.rows),b.namespace||(b.namespace=this.options.namespace),b.widget_base_dimensions||(b.widget_base_dimensions=this.options.widget_base_dimensions),b.widget_margins||(b.widget_margins=this.options.widget_margins),this.is_responsive()&&(b.widget_base_dimensions=[this.get_responsive_col_width(),b.widget_base_dimensions[1]],this.toggle_collapsed_grid(f,b));var g=a.param(b);if(a.inArray(g,d.generated_stylesheets)>=0)return!1;for(this.generated_stylesheets.push(g),d.generated_stylesheets.push(g),c=1;c<=b.cols+1;c++)e+=b.namespace+' [data-col="'+c+'"] { left:'+(f?this.options.widget_margins[0]:c*b.widget_margins[0]+(c-1)*b.widget_base_dimensions[0])+"px; }\n";for(c=1;c<=b.rows+1;c++)e+=b.namespace+' [data-row="'+c+'"] { top:'+(c*b.widget_margins[1]+(c-1)*b.widget_base_dimensions[1])+"px; }\n";for(var h=1;h<=b.rows;h++)e+=b.namespace+' [data-sizey="'+h+'"] { height:'+(f?"auto":h*b.widget_base_dimensions[1]+(h-1)*b.widget_margins[1])+(f?"":"px")+"; }\n";for(var i=1;i<=b.cols;i++){var j=i*b.widget_base_dimensions[0]+(i-1)*b.widget_margins[0];e+=b.namespace+' [data-sizex="'+i+'"] { width:'+(f?this.$wrapper.width()-2*this.options.widget_margins[0]:j>this.$wrapper.width()?this.$wrapper.width():j)+"px; }\n"}return this.remove_style_tags(),this.add_style_tag(e)},h.add_style_tag=function(a){var b=document,c="gridster-stylesheet";if(""!==this.options.namespace&&(c=c+"-"+this.options.namespace),!document.getElementById(c)){var d=b.createElement("style");d.id=c,b.getElementsByTagName("head")[0].appendChild(d),d.setAttribute("type","text/css"),d.styleSheet?d.styleSheet.cssText=a:d.appendChild(document.createTextNode(a)),this.remove_style_tags(),this.$style_tags=this.$style_tags.add(d)}return this},h.remove_style_tags=function(){var b=d.generated_stylesheets,c=this.generated_stylesheets;this.$style_tags.remove(),d.generated_stylesheets=a.map(b,function(b){if(a.inArray(b,c)===-1)return b})},h.generate_faux_grid=function(a,b){this.faux_grid=[],this.gridmap=[];var c,d;for(c=b;c>0;c--)for(this.gridmap[c]=[],d=a;d>0;d--)this.add_faux_cell(d,c);return this},h.add_faux_cell=function(b,c){var d=a({left:this.baseX+(c-1)*this.min_widget_width,top:this.baseY+(b-1)*this.min_widget_height,width:this.min_widget_width,height:this.min_widget_height,col:c,row:b,original_col:c,original_row:b}).coords();return a.isArray(this.gridmap[c])||(this.gridmap[c]=[]),void 0===this.gridmap[c][b]&&(this.gridmap[c][b]=!1),this.faux_grid.push(d),this},h.add_faux_rows=function(a){a=window.parseInt(a,10);for(var b=this.rows,c=b+parseInt(a||1),d=c;d>b;d--)for(var e=this.cols;e>=1;e--)this.add_faux_cell(d,e);return this.rows=c,this.options.autogenerate_stylesheet&&this.generate_stylesheet(),this},h.add_faux_cols=function(a){a=window.parseInt(a,10);var b=this.cols,c=b+parseInt(a||1);c=Math.min(c,this.options.max_cols);for(var d=b+1;d<=c;d++)for(var e=this.rows;e>=1;e--)this.add_faux_cell(e,d);return this.cols=c,this.options.autogenerate_stylesheet&&this.generate_stylesheet(),this},h.recalculate_faux_grid=function(){var b=this.$wrapper.width();return this.baseX=(f.width()-b)/2,this.baseY=this.$wrapper.offset().top,"relative"===this.$wrapper.css("position")&&(this.baseX=this.baseY=0),a.each(this.faux_grid,a.proxy(function(a,b){this.faux_grid[a]=b.update({left:this.baseX+(b.data.col-1)*this.min_widget_width,top:this.baseY+(b.data.row-1)*this.min_widget_height})},this)),this.is_responsive()&&this.resize_responsive_layout(),this.options.center_widgets&&this.center_widgets(),this},h.resize_widget_dimensions=function(b){return b.widget_margins&&(this.options.widget_margins=b.widget_margins),b.widget_base_dimensions&&(this.options.widget_base_dimensions=b.widget_base_dimensions),this.min_widget_width=2*this.options.widget_margins[0]+this.options.widget_base_dimensions[0],this.min_widget_height=2*this.options.widget_margins[1]+this.options.widget_base_dimensions[1],this.$widgets.each(a.proxy(function(b,c){var d=a(c);this.resize_widget(d)},this)),this.generate_grid_and_stylesheet(),this.get_widgets_from_DOM(),this.set_dom_grid_height(),this.set_dom_grid_width(),this},h.get_widgets_from_DOM=function(){var b=this.$widgets.map(a.proxy(function(b,c){var d=a(c);return this.dom_to_coords(d)},this));return b=d.sort_by_row_and_col_asc(b),a(b).map(a.proxy(function(a,b){return this.register_widget(b)||null},this)).length&&this.$el.trigger("gridster:positionschanged"),this},h.get_num_widgets=function(){return this.$widgets.size()},h.set_num_columns=function(b){var c=this.options.max_cols,d=Math.floor(b/(this.min_widget_width+this.options.widget_margins[0]))+this.options.extra_cols,e=this.$widgets.map(function(){return a(this).attr("data-col")}).get();e.length||(e=[0]);var f=Math.max.apply(Math,e);this.cols=Math.max(f,d,this.options.min_cols),c!==1/0&&c>=f&&c<this.cols&&(this.cols=c),this.drag_api&&this.drag_api.set_limits(this.cols*this.min_widget_width+(this.cols+1)*this.options.widget_margins[0])},h.set_new_num_rows=function(b){var c=this.options.max_rows,d=this.$widgets.map(function(){return a(this).attr("data-row")}).get();d.length||(d=[0]);var e=Math.max.apply(Math,d);this.rows=Math.max(e,b,this.options.min_rows),c!==1/0&&(c<e||c<this.rows)&&(c=this.rows),this.min_rows=e,this.max_rows=c,this.options.max_rows=c;var f=this.rows*this.min_widget_height+(this.rows+1)*this.options.widget_margins[1];this.drag_api&&(this.drag_api.options.container_height=f),this.container_height=f,this.generate_faux_grid(this.rows,this.cols)},h.generate_grid_and_stylesheet=function(){var b=this.$wrapper.width();this.set_num_columns(b);var c=this.options.extra_rows;return this.$widgets.each(function(b,d){c+=+a(d).attr("data-sizey")}),this.rows=this.options.max_rows,this.baseX=(f.width()-b)/2,this.baseY=this.$wrapper.offset().top,this.options.autogenerate_stylesheet&&this.generate_stylesheet(),this.generate_faux_grid(this.rows,this.cols)},h.destroy=function(b){return this.$el.removeData("gridster"),a.each(this.$widgets,function(){a(this).removeData("coords")}),f.unbind(".gridster"),this.drag_api&&this.drag_api.destroy(),this.resize_api&&this.resize_api.destroy(),this.$widgets.each(function(b,c){a(c).coords().destroy()}),this.resize_api&&this.resize_api.destroy(),this.remove_style_tags(),b&&this.$el.remove(),this},a.fn.gridster=function(b){return this.each(function(){var c=a(this);c.data("gridster")||c.data("gridster",new d(this,b))})},d});
+/**
+ * Category Navi
+ */
+
+function Gws_Category_Navi(selector) {
+  this.el = $(selector);
+}
+
+Gws_Category_Navi.prototype.setBaseUrl = function(url) {
+  this.baseUrl = url;
+};
+
+Gws_Category_Navi.prototype.render = function(items) {
+  if (items.length == 0) {
+    this.el.hide();
+    return;
+  }
+  var _this = this;
+  var list = [];
+  var line = list[0];
+  var last_depth = -1;
+  var path = location.href.replace(/https?:\/\/.*?\//, '/');
+  var isCate = null;
+
+  $.each(items, function(idx, item) {
+    var depth = (item.name.match(/\//g) || []).length;
+    var url = _this.baseUrl.replace('ID', item._id);
+
+    if (depth == 0 || depth != last_depth) {
+      list.push({ depth: depth, items: []});
+      line = list[list.length - 1];
+    }
+    if (path.startsWith(url)) {
+      isCate = item._id;
+    }
+    line.items.push('<a class="link-item" href="' + url + '">' + item.trailing_name + '</a>');
+    last_depth = depth;
+  });
+
+  var html = [];
+  $.each(list, function(idx, data) {
+    html.push('<div class="depth depth-' + data.depth + '">');
+    html.push(data.items.join('<span class="separator"></span>'));
+    html.push('</div>');
+  });
+  this.el.find('.dropdown-menu').append(html.join(''));
+
+  var toggle = this.el.find('.dropdown-toggle');
+  if (isCate) {
+    var icon = '<i class="material-icons md-18 md-dark">&#xE14C;</i>';
+    toggle.after('<a class="ml-1" href="' + toggle.attr('href') + '">' + icon + '</a>');
+  }
+  toggle.on("click", function() {
+    return false;
+  });
+};
+// Tab
+function Gws_Tab() {
+}
+
+Gws_Tab.renderTabs = function(selector) {
+  var path = location.pathname + "/";
+  $(selector).find('a').each(function() {
+    var $menu = $(this);
+    if (path.match(new RegExp('^' + $menu.attr('href') + '(\/|$)'))) {
+      $menu.addClass("current")
+    }
+  });
+};
+this.Gws_Popup = (function () {
+  function Gws_Popup() {
+  }
+
+  Gws_Popup.init = null;
+
+  Gws_Popup.render = function (target, content) {
+    var popup;
+    if (!this.init) {
+      this.init = true;
+      $(window).resize(function () {
+        return $('.gws-popup').remove();
+      });
+      $(document).on("click", function (ev) {
+        if (!$(ev.target).closest('.gws-popup, .gws-popup-event').length) {
+          return $('.gws-popup').remove();
+        }
+      });
+    }
+    $('.gws-popup').remove();
+    popup = $("<div class='gws-popup'></div>").html($(content));
+    $("body").append(popup);
+    target.addClass('gws-popup-event');
+    return this.renderPopup(target);
+
+  };
+  //$(window).resize(@render Popup)
+
+  Gws_Popup.renderPopup = function (target) {
+    var popup, pos_left, pos_top;
+    popup = $('.gws-popup');
+    if ($(window).width() < popup.outerWidth() * 1.5) {
+      popup.css('max-width', $(window).width() / 2);
+    } else {
+
+    }
+    //pop up.css(max'width',340 );
+    pos_left = target.offset().left + (target.outerWidth() / 2) - (popup.outerWidth() / 2);
+    pos_top = target.offset().top - popup.outerHeight() - 20;
+    if (pos_left < 0) {
+      pos_left = target.offset().left + target.outerWidth() / 2 - 20;
+      popup.addClass('left');
+    } else {
+      popup.removeClass('left');
+    }
+    if (pos_left + popup.outerWidth() > $(window).width()) {
+      pos_left = target.offset().left - popup.outerWidth() + target.outerWidth() / 2 + 20;
+      popup.addClass('right');
+    } else {
+      popup.removeClass('right');
+    }
+    if (pos_top < 0) {
+      pos_top = target.offset().top + target.outerHeight();
+      popup.addClass('top');
+    } else {
+      popup.removeClass('top');
+    }
+    return popup.css({
+      left: pos_left,
+      top: pos_top
+    }).animate({
+      top: '+=10',
+      opacity: 1
+    }, 50);
+  };
+
+  return Gws_Popup;
+
+})();
+this.Gws_Member = (function () {
+  function Gws_Member() {
+  }
+
+  Gws_Member.groups = null;
+
+  Gws_Member.users = null;
+
+  Gws_Member.render = function () {
+    if ($('.js-copy-groups').length < 2) {
+      $('.js-copy-groups').remove();
+      $('.js-paste-groups').remove();
+    }
+    $('.js-copy-groups').on("click", function () {
+      return Gws_Member.copyGroups($(this));
+    });
+    $('.js-paste-groups').on("click", function () {
+      return Gws_Member.pasteGroups($(this));
+    });
+    if ($('.js-copy-users').length < 2) {
+      $('.js-copy-users').remove();
+      $('.js-paste-users').remove();
+    }
+    $('.js-copy-users').on("click", function () {
+      return Gws_Member.copyUsers($(this));
+    });
+    return $('.js-paste-users').on("click", function () {
+      return Gws_Member.pasteUsers($(this));
+    });
+  };
+
+  Gws_Member.confirmReadableSetting = function () {
+    return $('.save').on('click', function () {
+//$(submit).trigger("click")
+      if ($('.gws-addon-readable-setting tbody tr').length === 0) {
+        return confirm('閲覧者が入力されていません。\n全員に表示されますがよろしいですか？');
+      }
+    });
+  };
+
+  Gws_Member.copyGroups = function (el) {
+    this.groups = el.closest('dl').find('tbody tr').clone(true);
+    this.showLog(el, this.groups.length + "件のグループをコピーしました。");
+    return false;
+  };
+
+  Gws_Member.pasteGroups = function (el) {
+    var num;
+    num = this.pasteItems(el, this.groups);
+    this.showLog(el, num + "件のグループを追加しました。");
+    return false;
+  };
+
+  Gws_Member.copyUsers = function (el) {
+    this.users = el.closest('dl').find('tbody tr').clone(true);
+    this.showLog(el, this.users.length + "件のユーザーをコピーしました。");
+    return false;
+  };
+
+  Gws_Member.pasteUsers = function (el) {
+    var num;
+    num = this.pasteItems(el, this.users);
+    this.showLog(el, num + "件のユーザーを追加しました。");
+    return false;
+  };
+
+  Gws_Member.pasteItems = function (el, list) {
+    var dl, name, num, tbody;
+    if (!list || list.length === 0) {
+      return 0;
+    }
+    dl = el.closest('dl');
+    dl.find('table').show();
+    tbody = dl.find('tbody');
+    name = dl.find('.hidden-ids').attr('name');
+    num = 0;
+    list.each(function () {
+      var tr;
+      if (tbody.find('tr[data-id="' + $(this).data('id') + '"]').length === 0) {
+        tr = $(this).clone(true);
+        tr.find('input').attr('name', name);
+        tbody.append(tr);
+        return num += 1;
+      }
+    });
+    return num;
+  };
+
+  Gws_Member.showLog = function (el, msg) {
+    $(".gws-member-log").remove();
+    return $("<span class='gws-member-log'>" + msg + "</span>").appendTo(el.parent()).hide().fadeIn(200);
+  };
+
+  return Gws_Member;
+
+})();
+this.Gws_Reminder = (function () {
+  function Gws_Reminder() {
+  }
+
+  Gws_Reminder.renderList = function (opts) {
+    var el;
+    if (opts == null) {
+      opts = {};
+    }
+    el = $(opts['el'] || document);
+    el.find('.list-item').each(function () {
+      return $(this).find('.links').prepend('<a class="restore" href="#" style="display: none;">元に戻す</a>');
+    });
+    el.find('.list-item.deleted').each(function () {
+      $(this).find('.check, .meta, .delete, .updated, .more-btn').hide();
+      $(this).find('.dropdown-menu').removeClass('active');
+      $(this).find('.restore').show();
+      return $(this).find('.notification').hide();
+    });
+    el.find('.list-item .delete').on("click", function () {
+      var item;
+      item = $(this).closest('.list-item');
+      $.ajax({
+        url: opts['url'],
+        method: 'post',
+        data: {
+          _method: 'delete',
+          id: item.data('id'),
+          item_id: item.data('item_id'),
+          item_model: item.data('model'),
+          item_name: item.data('name'),
+          date: item.data('date')
+        },
+        success: function (data) {
+          item.toggleClass('gws-list-item--deleted').find('.check, .meta, .delete, .updated, .more-btn').hide();
+          item.find('.dropdown-menu').removeClass('active');
+          item.find('.restore').show();
+          item.find('.notification').hide();
+          return false;
+        },
+        error: function (data) {
+          return alert('Error');
+        }
+      });
+      return false;
+    });
+    return el.find('.list-item .restore').on("click", function () {
+      var item;
+      item = $(this).closest('.list-item');
+      $.ajax({
+        url: opts['restore_url'],
+        method: 'post',
+        data: {
+          id: item.data('id'),
+          item_id: item.data('item_id'),
+          item_model: item.data('model'),
+          item_name: item.data('name'),
+          date: item.data('date')
+        },
+        success: function (data) {
+          item.toggleClass('gws-list-item--deleted').find('.check, .meta, .delete, .more-btn').show();
+          item.find('.restore').hide();
+          if (item.find('.notification')[0]) {
+            item.find('.notification')[0].selectedIndex = 0;
+          }
+          item.find('.notification').show();
+          return false;
+        },
+        error: function (data) {
+          return alert('Error');
+        }
+      });
+      return false;
+    });
+  };
+
+  return Gws_Reminder;
+
+})();
+function Gws_Bookmark() {
+  this.bookmarkId = null;
+  this.defaultName = null;
+  this.url = null;
+  this.model = null;
+  this.el = $('.gws-bookmark');
+  this.bookmarkIcon = "&#xE838;";
+  this.unbookmarkIcon = "&#xE83A;";
+  this.loading = false;
+}
+
+Gws_Bookmark.prototype.render = function(opts) {
+  if (opts === null) {
+    opts = {};
+  }
+  var _this = this;
+  this.bookmarkId = opts['id'];
+  this.defaultName = opts['default_name'];
+  this.url = opts['url'];
+  this.model = opts['model'];
+
+  var icon;
+  if (this.bookmarkId) {
+    icon = this.bookmarkIcon;
+  } else {
+    icon = this.unbookmarkIcon;
+  }
+  var bookmarkName = opts['name'] || this.defaultName;
+
+  var span = $('<span class="bookmark-icon"></span>').append($('<i class="material-icons"></i>').html(icon));
+  var ul = $('<ul class="dropdown-menu"></ul>');
+  var li = $('<li></li>');
+  li.append($('<input name="bookmark[name]" id="bookmark_name" class="bookmark-name" type="text">').val(bookmarkName));
+  li.append($('<input name="button" type="button" class="btn update" />').val(opts['save']));
+  li.append($('<input name="button" type="button" class="btn delete" />').val(opts['delete']));
+  ul.append($('<li><div class="bookmark-notice"></div></li>')).append(li);
+  this.el.html(span).append(ul);
+
+  this.el.on("click", function(e) {
+    if (_this.loading) {
+      return false;
+    } else if ($(e.target).hasClass('update')) {
+      _this.update();
+    } else if ($(e.target).hasClass('delete')) {
+      _this.delete();
+    } else if (_this.bookmarkId) {
+      _this.el.addClass('active');
+      _this.el.find('.dropdown-menu').addClass('active');
+    } else {
+      _this.create();
+    }
+  });
+};
+
+Gws_Bookmark.prototype.create = function() {
+  this.loading = true;
+  var _this = this;
+  var html = this.el.find('.dropdown-menu').html();
+  this.el.find('.dropdown-menu').html(SS.loading);
+  $.ajax({
+    url: this.url,
+    method: 'POST',
+    data: {
+      item: {
+        name: this.defaultName,
+        url: location.pathname + location.search,
+        model: this.model
+      }
+    },
+    success: function(data) {
+      _this.el.find('.dropdown-menu').html(html);
+      _this.el.addClass('active');
+      _this.el.find('.dropdown-menu').addClass('active');
+      _this.el.find('.material-icons').html(_this.bookmarkIcon);
+      _this.el.find('.bookmark-notice').text(data['notice']);
+      _this.el.find('.bookmark-name').val(_this.defaultName);
+      _this.bookmarkId = data['bookmark_id'];
+      _this.loading = false;
+    },
+    error: function() {
+      alert('Error');
+    }
+  });
+};
+
+Gws_Bookmark.prototype.update = function() {
+  this.loading = true;
+  var _this = this;
+  var newName = this.el.find('.bookmark-name').val() || this.defaultName;
+  var uri = this.url + '/' + this.bookmarkId;
+  var html = this.el.find('.dropdown-menu').html();
+  this.el.find('.dropdown-menu').html(SS.loading);
+  this.el.addClass('active');
+  this.el.find('.dropdown-menu').addClass('active');
+  $.ajax({
+    url: uri,
+    method: 'POST',
+    data: {
+      _method: 'patch',
+      item: {
+        name: newName,
+        url: location.pathname + location.search,
+        model: this.model
+      }
+    },
+    success: function(data) {
+      _this.el.find('.dropdown-menu').html(html);
+      _this.el.removeClass('active');
+      _this.el.find('.dropdown-menu').removeClass('active');
+      _this.el.find('.material-icons').html(_this.bookmarkIcon);
+      _this.el.find('.bookmark-notice').text(data['notice']);
+      _this.el.find('.bookmark-name').val(newName);
+      _this.bookmarkId = data['bookmark_id'];
+      _this.loading = false;
+    },
+    error: function() {
+      alert('Error');
+    }
+  });
+};
+
+Gws_Bookmark.prototype.delete = function() {
+  var _this = this;
+  if (!this.bookmarkId) {
+    return false;
+  }
+  this.loading = true;
+  var uri = this.url + '/' + this.bookmarkId;
+  var html = this.el.find('.dropdown-menu').html();
+  this.el.find('.dropdown-menu').html(SS.loading);
+  this.el.addClass('active');
+  this.el.find('.dropdown-menu').addClass('active');
+  $.ajax({
+    url: uri,
+    method: 'POST',
+    data: {
+      _method: 'delete',
+      item: {
+        url: location.pathname + location.search
+      }
+    },
+    success: function() {
+      _this.el.find('.dropdown-menu').html(html);
+      _this.el.removeClass('active');
+      _this.el.find('.dropdown-menu').removeClass('active');
+      _this.el.find('.material-icons').html(_this.unbookmarkIcon);
+      _this.bookmarkId = null;
+      _this.loading = false;
+    },
+    error: function() {
+      alert('Error');
+    }
+  });
+};
+// Readable Setting UI
+function Gws_ReadableSetting(selector) {
+  this.el = $(selector);
+}
+
+Gws_ReadableSetting.prototype.render = function() {
+  var _this = this;
+  this.el.find('.buttons input').on("change", function() {
+    var val = $(this).val();
+    if (val == 'select') {
+      _this.showSelectForm();
+    } else {
+      _this.hideSelectForm();
+    }
+  });
+
+  var val = this.el.find('.buttons input:checked').val();
+  if (val == 'select') {
+    this.el.find('.gws-addon-readable-setting-select').show();
+  } else {
+    this.el.find('.gws-addon-readable-setting-select').hide();
+  }
+};
+
+Gws_ReadableSetting.prototype.showSelectForm = function() {
+  this.el.find('.gws-addon-readable-setting-select').slideDown("fast");
+}
+
+Gws_ReadableSetting.prototype.hideSelectForm = function() {
+  this.el.find('.gws-addon-readable-setting-select').slideUp("fast");
+}
+;
+function Gws_Contrast(opts) {
+  this.opts = opts;
+  this.$el = $('#user-contrast-menu');
+  this.template = 'body * { color: :color !important; border-color: :color !important; background: :background !important; }';
+
+  this.render();
+}
+
+Gws_Contrast.getContrastId = function(siteId) {
+  return Cookies.get("gws-contrast-" + siteId);
+};
+
+Gws_Contrast.setContrastId = function(siteId, contrastId) {
+  Cookies.set("gws-contrast-" + siteId, contrastId, { expires: 7, path: '/' });
+};
+
+Gws_Contrast.removeContrastId = function(siteId) {
+  Cookies.remove("gws-contrast-" + siteId);
+};
+
+Gws_Contrast.prototype.render = function() {
+  var _this = this;
+
+  this.$el.data('load', function() {
+    _this.loadContrasts();
+  });
+
+  this.$el.on('click', '.gws-contrast-item', function(ev) {
+    var $this = $(this);
+    var id = $this.data('id');
+    if (id === 'default') {
+      _this.removeContrast($this.data('text-color'), $this.data('color'));
+      Gws_Contrast.removeContrastId(_this.opts.siteId);
+    } else {
+      _this.changeContrast($this.data('text-color'), $this.data('color'));
+      Gws_Contrast.setContrastId(_this.opts.siteId, id);
+    }
+    SS.notice(_this.opts.notice.replace(':name', $this.text()));
+
+    ev.stopPropagation();
+  });
+};
+
+Gws_Contrast.prototype.loadContrasts = function() {
+  if (this.$el.data('loadedAt')) {
+    this.checkActiveContrast();
+    return;
+  }
+
+  var _this = this;
+  $.ajax({
+    url: this.opts.url,
+    type: 'GET',
+    dataType: 'json',
+    success: function(data) { _this.renderContrasts(data); },
+    error: function(xhr, status, error) { _this.showMessage(this.opts.loadError); },
+    complete: function(xhr, status) { _this.completeLoading(xhr); }
+  });
+};
+
+Gws_Contrast.prototype.completeLoading = function(xhr) {
+  this.$el.data('loadedAt', Date.now());
+  this.$el.find('.gws-contrast-loading').closest('li').hide();
+};
+
+Gws_Contrast.prototype.showMessage = function(message) {
+  this.$el.append($('<li/>').html('<div class="gws-contrast-error">' + message + '</div>'));
+};
+
+Gws_Contrast.prototype.renderContrasts = function(data) {
+  if (data.length === 0) {
+    this.showMessage(this.opts.noContrasts);
+    return;
+  }
+
+  this.renderContrast('default', this.opts.defaultContrast);
+
+  var _this = this;
+  $.each(data, function() {
+    _this.renderContrast(this._id['$oid'], this.name, this.color, this.text_color);
+  });
+
+  this.checkActiveContrast();
+};
+
+Gws_Contrast.prototype.renderContrast = function(id, name, color, textColor) {
+  var dataAttrs = { id: id };
+  if (color) {
+    dataAttrs.color = color;
+  }
+  if (textColor) {
+    dataAttrs.textColor = textColor;
+  }
+
+  var $input = $('<input/>', { type: 'radio', name: 'gws-contrast-item', value: id });
+  var $label = $('<label/>', { class: 'gws-contrast-item', data: dataAttrs });
+  $label.append($input);
+  $label.append('<span class="gws-contrast-name">' + name + '</span>');
+
+  this.$el.append($('<li/>').append($label));
+};
+
+Gws_Contrast.prototype.checkActiveContrast = function() {
+  var contrastId = Gws_Contrast.getContrastId(this.opts.siteId);
+  if (! contrastId) {
+    $('input[name="gws-contrast-item"]').val(['default']);
+    return;
+  }
+
+  $('input[name="gws-contrast-item"]').val([contrastId]);
+};
+
+Gws_Contrast.prototype.changeContrast = function(textColor, color) {
+  if (! this.$style) {
+    this.$style = $('<style/>', { type: 'text/css' });
+    $('head').append(this.$style);
+  }
+
+  this.$style.html(this.template.replace(/:color/g, textColor).replace(/:background/g, color));
+};
+
+Gws_Contrast.prototype.removeContrast = function() {
+  if (! this.$style) {
+    return;
+  }
+
+  this.$style.html('');
+};
+this.Gws_Schedule_Plan = (function () {
+  function Gws_Schedule_Plan() {
+  }
+
+  Gws_Schedule_Plan.diffOn = 3600000;
+
+  Gws_Schedule_Plan.renderForm = function (opts) {
+    if (opts == null) {
+      opts = {};
+    }
+    $("input.date").datetimepicker({
+      lang: "ja",
+      timepicker: false,
+      format: 'Y/m/d',
+      closeOnDateSelect: true,
+      scrollInput: false,
+      maxDate: opts["maxDate"]
+    });
+    $("input.datetime").datetimepicker({
+      lang: "ja",
+      roundTime: 'ceil',
+      step: 30,
+      maxDate: opts["maxDate"]
+    });
+    this.relateDateForm();
+    return this.relateDateTimeForm();
+  };
+
+  Gws_Schedule_Plan.renderAlldayForm = function () {
+    this.changeDateForm();
+    return $('#item_allday').on("change", function () {
+      Gws_Schedule_Plan.changeDateValue();
+      return Gws_Schedule_Plan.changeDateForm();
+    });
+  };
+  // @example
+  //   2015/09/29 00:00 => 2015/09/29
+  //   2015/09/29 => 2015/09/29 00:00
+
+  Gws_Schedule_Plan.changeDateValue = function () {
+    var etime, stime;
+    if ($('#item_allday').prop('checked')) {
+      $('#item_start_on').val($('#item_start_at').val().replace(/ .*/, ''));
+      return $('#item_end_on').val($('#item_end_at').val().replace(/ .*/, ''));
+    } else {
+      stime = $('#item_start_at').val().replace(/.* /, '');
+      etime = $('#item_end_at').val().replace(/.* /, '');
+      if (stime === '' && $('#item_start_on').val() !== '') {
+        stime = '00:00';
+      }
+      if (etime === '' && $('#item_end_on').val() !== '') {
+        etime = '00:00';
+      }
+      $('#item_start_at').val($('#item_start_on').val() + (" " + stime));
+      return $('#item_end_at').val($('#item_end_on').val() + (" " + etime));
+    }
+  };
+
+  Gws_Schedule_Plan.changeDateForm = function () {
+    if ($('#item_allday').prop('checked')) {
+      $('.dates-field').show();
+      return $('.datetimes-field').hide();
+    } else {
+      $('.dates-field').hide();
+      return $('.datetimes-field').show();
+    }
+  };
+
+  Gws_Schedule_Plan.relateDateForm = function (start_sel, end_sel) {
+    if (start_sel == null) {
+      start_sel = '.date.start';
+    }
+    if (end_sel == null) {
+      end_sel = '.date.end';
+    }
+    $(start_sel + ", " + end_sel).on("click", function () {
+      return Gws_Schedule_Plan.diffOn = Gws_Schedule_Plan.diffDates($(start_sel).val(), $(end_sel).val());
+    });
+    $(start_sel).on("change", function () {
+      var date, format, start;
+      start = $(start_sel).val();
+      if (!start) {
+        return;
+      }
+      start = (new Date(start)).getTime();
+      if (isNaN(start)) {
+        return;
+      }
+      date = new Date();
+      date.setTime(start + Gws_Schedule_Plan.diffOn);
+      format = '%d/%02d/%02d';
+      if ($(start_sel).hasClass('datetime')) {
+        format = '%d/%02d/%02d %02d:%02d';
+      }
+      return $(end_sel).val(sprintf(format, date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes()));
+    });
+    if ($(end_sel).val() === "") {
+      return $(start_sel).trigger("change");
+    }
+  };
+
+  Gws_Schedule_Plan.relateDateTimeForm = function () {
+    return this.relateDateForm('.datetime.start', '.datetime.end');
+  };
+
+  Gws_Schedule_Plan.diffDates = function (src, dst) {
+    var diff;
+    if (!src || !dst) {
+      return 1000 * 60 * 60;
+    }
+    diff = (new Date(dst)).getTime() - (new Date(src)).getTime();
+    if (diff < 0) {
+      return 0;
+    }
+    return diff;
+  };
+
+  Gws_Schedule_Plan.transferEnd2Start = function () {
+    if ($('#item_allday').prop('checked')) {
+      return $('#item_start_on').val($('#item_end_on').val());
+    } else {
+      return $('#item_start_at').val($('#item_end_at').val());
+    }
+  };
+
+  return Gws_Schedule_Plan;
+
+})();
+this.Gws_Schedule_Repeat_Plan = (function () {
+  function Gws_Schedule_Repeat_Plan() {
+  }
+
+  Gws_Schedule_Repeat_Plan.renderForm = function () {
+    this.changeRepeatForm();
+    this.relateDateForm();
+    return $('#item_repeat_type').on("change", function () {
+      return Gws_Schedule_Repeat_Plan.changeRepeatForm();
+    });
+  };
+
+  Gws_Schedule_Repeat_Plan.changeRepeatForm = function () {
+    var repeat_type;
+    repeat_type = $('#item_repeat_type').val();
+    if (repeat_type === '') {
+      return $('.gws-schedule-repeat').addClass("hide");
+    } else {
+      $('.gws-schedule-repeat').removeClass("hide");
+      $(".repeat-daily, .repeat-weekly, .repeat-monthly").hide();
+      return $(".repeat-" + repeat_type).show();
+    }
+  };
+
+  Gws_Schedule_Repeat_Plan.relateDateForm = function () {
+    return Gws_Schedule_Plan.relateDateForm('.date.repeat_start', '.date.repeat_end');
+  };
+
+  Gws_Schedule_Repeat_Plan.renderSubmitButtons = function () {
+    var b1, b2, b3, buttons, form, sp;
+    form = $("#main form");
+    sp = '<span class="gws-schedule-btn-space"></span>';
+    b1 = $('<input type="button" class="btn" value="今回のみ" />');
+    b2 = $('<input type="button" class="btn" value="以降すべて" />');
+    b3 = $('<input type="button" class="btn" value="一連のスケジュールすべて" />');
+    b1.bind('click', function () {
+      return form.append('<input type="hidden" name="item[edit_range]" value="one" />').submit();
+    });
+    b2.bind('click', function () {
+      return form.append('<input type="hidden" name="item[edit_range]" value="later" />').submit();
+    });
+    b3.bind('click', function () {
+      return form.append('<input type="hidden" name="item[edit_range]" value="all" />').submit();
+    });
+    buttons = $('<div class="gws-schedule-repeat-submit"></div>');
+    buttons.append(b1).append(sp).append(b2).append(sp).append(b3);
+    return $('.send .save, .send .delete').on("click", function () {
+      if ($("#item_repeat_type").val() !== "") {
+        $.colorbox({
+          inline: true,
+          href: buttons
+        });
+        return false;
+      }
+    });
+  };
+
+  return Gws_Schedule_Repeat_Plan;
+
+})();
+
+function Gws_Schedule_Integration() {
+}
+
+Gws_Schedule_Integration.paths = {};
+
+Gws_Schedule_Integration.render = function() {
+  var $el = $(".gws-schedule-box");
+  if (! $el[0]) {
+    return;
+  }
+
+  $el.find(".send-message").each(function() {
+    $(this).on("click", function(ev) {
+      var userId = $(this).closest("[data-user-id]").data("user-id");
+      location.href = Gws_Schedule_Integration.paths.newMemoMessage + "?to%5B%5D=" + userId;
+    });
+  });
+
+  $el.find(".send-email").each(function() {
+    $(this).on("click", function(ev) {
+      var email = $(this).closest("[data-email]").data("email");
+      location.href = Gws_Schedule_Integration.paths.newWebmail + "?item%5Bto%5D=" + encodeURIComponent(email);
+    });
+  });
+
+  $el.find(".copy-email-address").each(function() {
+    $(this).on("click", function(ev) {
+      $(this).closest("[data-email]").find(".clipboard-copy-button").trigger("click");
+
+      $(".dropdown, .dropdown-menu").removeClass('active');
+
+      ev.preventDefault();
+      return false;
+    });
+  });
+};
+this.Gws_Schedule_Todo_Search = (function () {
+  function Gws_Schedule_Todo_Search(el) {
+    this.$el = $(el);
+    this.templateHtml = this.$el.find("#schedule-todo-selected-member-template").html();
+
+    this.render();
+  }
+
+  Gws_Schedule_Todo_Search.prototype.render = function() {
+    var self = this;
+
+    this.$el.find("select.schedule-todo-auto-submit").on("change", function() {
+      self.scheduleToSubmit();
+    });
+
+    var $btn = this.$el.find(".schedule-todo-member-select-btn");
+    if ($btn[0]) {
+      var href = $btn.data("href");
+      $btn.colorbox({ href: href, width: "90%", height: "90%" });
+
+      $btn.data("on-select", function ($item) {
+        var $x = $item.closest("[data-id]");
+        if ($x.length === 0) {
+          return;
+        }
+
+        self.selectUser($x.data());
+      });
+
+      this.$el.on("click", ".schedule-todo-selected-member .dismiss", function () {
+        $(this).closest(".schedule-todo-selected-member").remove();
+        self.scheduleToSubmit();
+      });
+    }
+  };
+
+  Gws_Schedule_Todo_Search.prototype.selectUser = function(userData) {
+    var id = userData.id;
+    var name = userData.longName;
+
+    if (this.$el.find(".schedule-todo-selected-member[data-id=" + id + "]").length > 0) {
+      return;
+    }
+
+    var html = this.templateHtml.replace(/#id/g, id).replace(/#name/g, name);
+    this.$el.find(".schedule-todo-selected-members").append(html).removeClass("hide");
+    this.scheduleToSubmit();
+  };
+
+  Gws_Schedule_Todo_Search.prototype.scheduleToSubmit = function() {
+    if (this.timerId) {
+      return;
+    }
+
+    var self = this;
+    this.timerId = setTimeout(function() { self.$el.submit(); }, 0);
+  };
+
+  return Gws_Schedule_Todo_Search;
+
+})();
+this.Gws_Schedule_Todo_Index = (function () {
+  function Gws_Schedule_Todo_Index(el) {
+    this.$el = $(el);
+    this.render();
+  }
+
+  var showEl = function($el) {
+    $el.removeClass("hide");
+  };
+
+  var hideEl = function($el) {
+    $el.addClass("hide");
+  };
+
+  var isExpanded = function($listItemHeader) {
+    var status = $listItemHeader.find(".list-item-switch").html();
+    return status === "expand_less";
+  };
+
+  Gws_Schedule_Todo_Index.prototype.render = function() {
+    var self = this;
+
+    this.$el.find(".gws-schedule-todo-list-item-header").on("click", function() {
+      self.toggleListItems($(this));
+    });
+  };
+
+  Gws_Schedule_Todo_Index.prototype.toggleListItems = function($listItemHeader) {
+    if (isExpanded($listItemHeader)) {
+      this.collapseListItems($listItemHeader);
+    } else {
+      this.expandListItems($listItemHeader);
+    }
+  };
+
+  Gws_Schedule_Todo_Index.prototype.collapseListItems = function($listItemHeader) {
+    $listItemHeader.find(".list-item-switch").html("expand_more");
+    this.eachListItem($listItemHeader, function() {
+      hideEl($(this));
+    });
+  };
+
+  Gws_Schedule_Todo_Index.prototype.expandListItems = function($listItemHeader) {
+    $listItemHeader.find(".list-item-switch").html("expand_less");
+
+    var self = this;
+    this.eachListItem($listItemHeader, function() {
+      var $this = $(this);
+      if (self.examineToShow($this)) {
+        showEl($(this));
+      }
+    });
+  };
+
+  Gws_Schedule_Todo_Index.prototype.examineToShow = function($listItem) {
+    if ($listItem.hasClass("gws-schedule-todo-list-item-header")) {
+      var parentGroup = $listItem.data("parent");
+      if (parentGroup) {
+        return this.examineToShow(this.$el.find("#" + parentGroup));
+      }
+
+      return true;
+    }
+
+    var listItemGroup = $listItem.data("group");
+    var $listItemHeader = this.$el.find("#" + listItemGroup);
+    if (!isExpanded($listItemHeader)) {
+      return false;
+    }
+
+    var parentGroup = $listItemHeader.data("parent");
+    if (parentGroup) {
+      return this.examineToShow(this.$el.find("#" + parentGroup));
+    }
+
+    return true;
+  };
+
+  Gws_Schedule_Todo_Index.prototype.eachListItem = function($listItemHeader, callback) {
+    var targetGroup = $listItemHeader.data("group");
+    var targetDepth = $listItemHeader.data("depth");
+
+    $.each($listItemHeader.nextAll(".list-item"), function() {
+      var $this = $(this);
+      var group = $this.data("group");
+      var depth = $this.data("depth");
+      if (group !== targetGroup && depth <= targetDepth) {
+        return false;
+      }
+
+      callback.apply(this);
+    });
+  };
+
+  return Gws_Schedule_Todo_Index;
+
+})();
+function Gws_Schedule_Csv(el) {
+  this.$el = $(el);
+  this.$importMode = this.$el.find('#import_mode');
+  this.$importLog = this.$el.find('.import-log');
+}
+
+Gws_Schedule_Csv.render = function (el) {
+  var instance = new Gws_Schedule_Csv(el);
+  instance.render();
+  return instance;
+};
+
+Gws_Schedule_Csv.prototype.render = function () {
+  var self = this;
+  this.$el.find('.import-confirm').on("click", function(){
+    self.$importMode.val('confirm');
+  });
+  this.$el.find('.import-save').on("click", function(){
+    self.$importMode.val('save');
+  });
+  this.$el.find('#import_form').ajaxForm({
+    beforeSubmit: function() {
+      self.$importLog.html('<span class="import-loading">アップロードしています。</span>');
+      SS_AddonTabs.show('#import-result');
+    },
+    success: function(data, status) {
+      self.renderResult(data);
+    },
+    error: function(xhr, status, error) {
+      self.renderError(data);
+    }
+  });
+//  this.$el.find('.download-csv-template').on("click", function() {
+//    setTimeout(function() { self.showCsvDescription(); }, 0);
+//    return true;
+//  });
+  this.$el.find('.show-csv-description').on("click", function() {
+    self.showCsvDescription();
+  });
+}
+
+Gws_Schedule_Csv.prototype.renderResult = function(data) {
+  var log = this.$importLog;
+  log.html('')
+
+  if (data.messages) {
+    log.append('<div class="mb-1">' + data.messages.join('<br />') + '</div>');
+  }
+  if (data.items) {
+    var count = { exist: 0, entry: 0, saved: 0, error: 0 };
+    var html = '<table class="index mt-1"><thead><tr>' +
+      '<th style="width: 150px">開始日時</th>' +
+      '<th style="width: 150px">終了日時</th>' +
+      '<th style="width: 30%">タイトル</th>' +
+      '<th>結果</th>' +
+      '</tr></thead><tbody>';
+
+    $.each(data.items, function(i, item){
+      if (item.result == 'exist') count.exist += 1;
+      if (item.result == 'entry') count.entry += 1;
+      if (item.result == 'saved') count.saved += 1;
+      if (item.result == 'error') count.error += 1;
+
+      html += '<tr class="import-' + item.result + '">' +
+        '<td>' + SS.formatTime(item.start_at) + '</td>' +
+        '<td>' + SS.formatTime(item.end_at) + '</td>' +
+        '<td>' + item.name + '</td>' +
+        '<td>' + item.messages.join('<br />') + '</td>' +
+        '</tr>'
+    });
+    html += '</tbody></table>';
+
+    var tabs = '<div class="mb-1">';
+    if (count.exist) tabs += '<span class="ml-2 import-exist">登録済み(' + count.exist + ')</span>';
+    if (count.entry) tabs += '<span class="ml-2 import-entry">登録可能(' + count.entry + ')</span>';
+    if (count.saved) tabs += '<span class="ml-2 import-saved">登録完了(' + count.saved + ')</span>';
+    if (count.error) tabs += '<span class="ml-2 import-error">エラー(' + count.error + ')</span>';
+    tabs += '</div>'
+
+    log.append(tabs + html);
+  }
+}
+
+Gws_Schedule_Csv.prototype.renderError = function(xhr, status, error) {
+  try {
+    var errors = xhr.responseJSON;
+    var msg = errors.join("\n");
+    this.$importLog.html(msg);
+  } catch (ex) {
+    this.$importLog.html("Error: " + error);
+  }
+};
+
+Gws_Schedule_Csv.prototype.showCsvDescription = function() {
+  var href = this.$el.find('.show-csv-description').attr("href");
+  $.colorbox({
+    inline: true, href: href, width: "90%", height: "90%", fixed: true, open: true
+  });
+};
+this.Gws_Memo_Message = (function () {
+  function Gws_Memo_Message() {
+  }
+
+  Gws_Memo_Message.render = function () {
+    $(".list-head .search").on("click", function () {
+      $(".gws-memo-search").animate({ height: "toggle" }, "fast");
+    });
+
+    $(".gws-memo-search .reset").on("click", function () {
+      $(".gws-memo-search input[type=text]").val("");
+      $(".gws-memo-search input[type=checkbox]").val("");
+      $(".gws-memo-search .search").trigger("click");
+    });
+
+    $('.cc-bcc-label').on("click", function () {
+      $('.gws-addon-memo-member .cc-bcc').animate({ height: 'toggle' }, 'fast');
+      return false;
+    });
+
+    $('.add-template').on("change", function () {
+      if ($(this).val() === "") {
+        return;
+      }
+      if ($('#item_format').val() === "html") {
+        CKEDITOR.instances['item_html'].insertText($(this).val());
+      } else {
+        Webmail_Mail_Form.insertText($("#item_text"), $(this).val());
+      }
+      $(this).val("");
+    });
+
+    $(".send-mdn,.ignore-mdn").on("click", function () {
+      if ($(this).hasClass('disabled')) {
+        return false;
+      }
+
+      $.ajax({
+        url: $(this).attr("href"),
+        method: 'POST',
+        dataType: 'json',
+        data: {
+          _method: 'put',
+          authenticity_token: $('meta[name="csrf-token"]').attr('content')
+        },
+        beforeSend: function () {
+          return $(".send-mdn,.ignore-mdn").addClass('disabled');
+        },
+        success: function (data) {
+          SS.notice(data.notice);
+          return $(".request-mdn-notice").remove();
+        }
+      });
+    });
+
+    $(".icon-star a").on("click", function () {
+      var $wrap = $(this).parent();
+      var url;
+      if ($wrap.hasClass('on')) {
+        url = $(this).attr('href') + '/unset_star';
+      } else {
+        url = $(this).attr('href') + '/set_star';
+      }
+      $.ajax({
+        url: url,
+        method: 'POST',
+        dataType: 'json',
+        data: {
+          _method: 'put'
+        },
+        success: function (data) {
+          if (data.action === 'set_star') {
+            $wrap.removeClass('off').addClass('on');
+          } else {
+            $wrap.removeClass('on').addClass('off');
+          }
+          if (data.notice) {
+            SS.notice(data.notice);
+          }
+        }
+      });
+      return false;
+    });
+  };
+
+  Gws_Memo_Message.buildForm = function (action, confirm) {
+    var checked = $(".list-item input:checkbox:checked").map(function () {
+      return $(this).val();
+    });
+    if (checked.length === 0) {
+      return false;
+    }
+    var token = $('meta[name="csrf-token"]').attr("content");
+    var form = $("<form/>", { action: action, method: "post", data: { confirm: confirm } });
+    form.append($("<input/>", { name: "authenticity_token", value: token, type: "hidden" }));
+    var i, len;
+    for (i = 0, len = checked.length; i < len; i++) {
+      var id = checked[i];
+      form.append($("<input/>", { name: "ids[]", value: id, type: "hidden" }));
+    }
+    return form;
+  };
+
+  return Gws_Memo_Message;
+
+})();
+function Gws_Memo_Folder() {
+}
+
+Gws_Memo_Folder.render = function () {
+  return $("#addon-gws-agents-addons-group_permission").hide();
+};
+function Gws_Memo_Filter() {
+}
+
+Gws_Memo_Filter.render = function () {
+  return $("#addon-gws-agents-addons-group_permission").hide();
+};
+function Gws_Memo_ExportAndBackup($el) {
+  this.$el = $el;
+
+  this.render();
+}
+
+Gws_Memo_ExportAndBackup.prototype.render = function() {
+  this.$el.find('a.ajax-box').data('on-select', function($item) {
+    var $data       = $item.closest('[data-id]');
+    var id          = $data.attr('data-id');
+    var attachments = $data.data('attachments');
+    var from        = $data.data('from');
+    var name        = $data.data('name');
+    var priority    = $data.data('priority');
+    var send_date   = $data.data('send_date');
+    var size        = $data.data('display_size');
+
+    var $newTr    = $('<tr />').attr('data-id', id);
+    var $newInput = SS_SearchUI.anchorAjaxBox.closest('dl').find('.hidden-ids').clone(false);
+    $newInput     = $newInput.val(id).removeClass('hidden-ids');
+    var $newA     = $('<a>').attr('class','deselect btn').attr('href','#').text('削除').on('click', SS_SearchUI.deselect);
+
+    var icon = $('<i class="material-icons md-15">&#xE226;</i>');
+    if (!attachments) {
+      icon.css('visibility','hidden');
+    }
+    $newTr.append($('<td />').text(from).prepend(icon));
+    $newTr.append($('<td />').append($newInput).append(name));
+    $newTr.append($('<td />').text(priority));
+    $newTr.append($('<td />').text(send_date));
+    $newTr.append($('<td />').text(size));
+    $newTr.append($('<td />').append($newA));
+    SS_SearchUI.anchorAjaxBox.closest('dl').find('.ajax-selected tbody').prepend($newTr);
+    SS_SearchUI.anchorAjaxBox.closest('dl').find('.ajax-selected').trigger('change');
+  });
+};
+this.Gws_Monitor_Topic = (function () {
+  function Gws_Monitor_Topic() {
+  }
+
+  Gws_Monitor_Topic.render = function () {
+    $(".public").on("click", function () {
+      var $this, action, confirm, form, token;
+      token = $('meta[name="csrf-token"]').attr('content');
+      $this = $(this);
+      action = $this.data('ss-action');
+      confirm = $this.data('ss-confirm');
+      form = $("<form/>", {
+        action: action,
+        method: "post",
+        data: {
+          confirm: confirm
+        }
+      });
+      form.append($("<input/>", {
+        name: "authenticity_token",
+        value: token,
+        type: "hidden"
+      }));
+      return form.appendTo(document.body).submit();
+    });
+    $(".preparation").on("click", function () {
+      var $this, action, confirm, form, token;
+      token = $('meta[name="csrf-token"]').attr('content');
+      $this = $(this);
+      action = $this.data('ss-action');
+      confirm = $this.data('ss-confirm');
+      form = $("<form/>", {
+        action: action,
+        method: "post",
+        data: {
+          confirm: confirm
+        }
+      });
+      form.append($("<input/>", {
+        name: "authenticity_token",
+        value: token,
+        type: "hidden"
+      }));
+      return form.appendTo(document.body).submit();
+    });
+    $(".question_not_applicable").on("click", function () {
+      var form, id, token;
+      token = $('meta[name="csrf-token"]').attr('content');
+      id = $("#item_id").val();
+      form = $("<form/>", {
+        action: id + "/question_not_applicable",
+        method: "post",
+        data: {
+          confirm: "該当なしにしますか？"
+        }
+      });
+      form.append($("<input/>", {
+        name: "authenticity_token",
+        value: token,
+        type: "hidden"
+      }));
+      return form.appendTo(document.body).submit();
+    });
+    return $(".answered").on("click", function () {
+      var form, id, token;
+      token = $('meta[name="csrf-token"]').attr('content');
+      id = $("#item_id").val();
+      form = $("<form/>", {
+        action: id + "/answered",
+        method: "post",
+        data: {
+          confirm: "回答済みにしますか？"
+        }
+      });
+      form.append($("<input/>", {
+        name: "authenticity_token",
+        value: token,
+        type: "hidden"
+      }));
+      return form.appendTo(document.body).submit();
+    });
+  };
+
+  Gws_Monitor_Topic.buildForm = function (action, confirm) {
+    var checked, form, i, id, len, token;
+    checked = $(".list-item input:checkbox:checked").map(function () {
+      return $(this).val();
+    });
+    if (checked.length === 0) {
+      return false;
+    }
+    token = $('meta[name="csrf-token"]').attr('content');
+    form = $("<form/>", {
+      action: action,
+      method: "post",
+      data: {
+        confirm: confirm
+      }
+    });
+    form.append($("<input/>", {
+      name: "authenticity_token",
+      value: token,
+      type: "hidden"
+    }));
+    for (i = 0, len = checked.length; i < len; i++) {
+      id = checked[i];
+      form.append($("<input/>", {
+        name: "ids[]",
+        value: id,
+        type: "hidden"
+      }));
+    }
+    return form;
+  };
+
+  Gws_Monitor_Topic.renderForm = function (opts) {
+    if (opts == null) {
+      opts = {};
+    }
+    $("input.date").datetimepicker({
+      lang: "ja",
+      timepicker: false,
+      format: 'Y/m/d',
+      closeOnDateSelect: true,
+      scrollInput: false,
+      maxDate: opts["maxDate"]
+    });
+    return $("input.datetime").datetimepicker({
+      lang: "ja",
+      roundTime: 'ceil',
+      step: 30,
+      maxDate: opts["maxDate"]
+    });
+  };
+
+  return Gws_Monitor_Topic;
+
+})();
+function Gws_Portal(selector, settings) {
+  var options = {
+    autogenerate_stylesheet: true,
+    resize: {
+      enabled: true,
+      max_size: [4, 10]
+    },
+    widget_base_dimensions: ['auto', 120],
+    widget_margins: [10, 10],
+    min_cols: 1,
+    max_cols: 4
+  };
+  if (settings && settings['readonly']) {
+    this.readonly = true;
+    options['resize'] = { enabled: false };
+    options['draggable'] = { enabled: false, handle: 'disable' };
+  }
+  if (settings && settings['max_rows']) {
+    options['max_rows'] = settings['max_rows'];
+  }
+
+  this.el = $(selector);
+  this.gs = this.el.find("ul.portlets").gridster(options).data('gridster');
+}
+
+Gws_Portal.prototype.addItems = function(items) {
+  var _this = this;
+  $.each(items, function(idx, item) {
+    _this.addItem(item);
+  });
+};
+
+Gws_Portal.prototype.addItem = function(item) {
+  var id = item._id.$oid;
+
+  var li = this.gs.add_widget(
+    '<li class="portlet-item" data-id="' + id + '"></li>',
+    item.grid_data.size_x,
+    item.grid_data.size_y,
+    item.grid_data.col,
+    item.grid_data.row
+  );
+  if (! li) {
+    return;
+  }
+  li.data('id', id);
+
+  var html = this.el.find(".portlet-html[data-id='" + id + "']");
+  if (html.length) {
+    var height = html.height();
+    html.prependTo(li);
+    //this.autoResizeItem(li, height);
+  }
+};
+
+Gws_Portal.prototype.autoResizeItem = function(widget, height) {
+  var base_y = this.gs.options.widget_base_dimensions[1];
+  var extra  = ((height % base_y) > (base_y / 2)) ? 1 : 0;
+  var size_x = widget.data('sizex');
+  var size_y = Math.floor(height / base_y) + extra;
+
+  if (widget.data('sizey') < size_y) {
+    this.gs.resize_widget(widget, size_x, size_y);
+  }
+};
+
+Gws_Portal.prototype.setSerializeEvent = function(selector) {
+  var _this = this;
+  _this.updateUrl = $(selector).data('href');
+  $(selector).on("click", function() {
+    _this.serialize();
+  });
+};
+
+Gws_Portal.prototype.setResetEvent = function(selector) {
+  var _this = this;
+  $(selector).on("click", function() {
+    var list = [];
+    _this.el.find(".portlet-item").each(function(index) {
+      list.push($(this).clone());
+    });
+    _this.gs.remove_all_widgets();
+
+    $.each(list, function(index, li) {
+      _this.gs.add_widget(li, li.data('sizex'), li.data('sizey'));
+    });
+  });
+};
+
+Gws_Portal.prototype.serialize = function() {
+  var _this = this;
+  var list = {};
+  _this.el.find("li.portlet-item").each(function() {
+    var li = $(this);
+    var id = li.data('id');
+    list[id] = _this.gs.serialize(li)[0];
+  });
+
+  $.ajax({
+    url: _this.updateUrl,
+    method: 'POST',
+    dataType: 'json',
+    data: {
+      _method: 'put',
+      authenticity_token: $('meta[name="csrf-token"]').attr('content'),
+      json: JSON.stringify(list)
+    },
+    success: function(data) {
+      SS.notice(data.message);
+    }
+  });
+};
+Gws_Elasticsearch_Highlighter = function () {
+}
+
+Gws_Elasticsearch_Highlighter.prototype = {
+  render: function () {
+    if (location.hash) {
+      $(location.hash).css('border', '1px solid red');
+    }
+  }
+}
+;
+this.Gws_Discussion_Thread = (function () {
+  function Gws_Discussion_Thread() {
+  }
+
+  Gws_Discussion_Thread.render = function (user) {
+    //temp file
+    var appendSelectedFile = function (selected, fileId, humanizedName) {
+      var span = $('<span></span>');
+      var img = $('<img src="/assets/img/gws/ic-file.png" alt="" />');
+      var a = $('<a target="_blank" rel="noopener"></a>');
+      var input = $('<input type="hidden" name="item[file_ids][]" class="file-id" />');
+      var icon = $("<i class=\"material-icons md-18 md-inactive deselect\">close</i>");
+
+      span.attr("data-file-id", fileId);
+      span.attr("id", "file-" + fileId);
+      a.text(humanizedName);
+      a.attr("href", "/.u" + user + "/apis/temp_files/" + fileId + "/view");
+      input.attr("value", fileId);
+      icon.on("click", function (e) {
+        $(this).parent("span").remove();
+        if ($(selected).find("[data-file-id]").length <= 0) {
+          $(selected).hide();
+        }
+        return false;
+      });
+
+      span.append(img);
+      span.append(a);
+      span.append(icon);
+      span.append(input);
+
+      $(selected).show();
+      $(selected).append(span);
+    };
+
+    $('a.ajax-box').data('on-select', function ($item) {
+      var selected = $.colorbox.element().closest(".comment-files").find(".selected-files");
+      var $data = $item.closest('[data-id]');
+      var fileId = $data.data('id');
+      var humanizedName = $data.data('humanized-name');
+      appendSelectedFile(selected, fileId, humanizedName);
+      return $.colorbox.close();
+    });
+
+    var options = {
+      select: function (files, dropArea) {
+        $(files).each(function (i, file) {
+          var fileId, humanizedName, selected;
+          selected = $(dropArea).closest(".comment-files").find(".selected-files");
+          fileId = file["_id"];
+          humanizedName = file["name"];
+          return appendSelectedFile(selected, fileId, humanizedName);
+        });
+        return false;
+      }
+    };
+
+    $(".comment-files .upload-drop-area").each(function() {
+      new SS_Addon_TempFile(this, user, options);
+    });
+
+    // reply
+    $(".open-reply").on('click', function () {
+      $(this).closest(".addon-body").next(".reply").show();
+      $(this).remove();
+      return false;
+    });
+
+    //rely contriutor
+    $(".reply[data-topic]").each(function () {
+      var topic = $(this).attr("data-topic");
+      var setContributor = function () {
+        $('.discussion-contributor' + topic + ' input#item_contributor_model').val($(this).data('model'));
+        $('.discussion-contributor' + topic + ' input#item_contributor_id').val($(this).data('id'));
+        return $('.discussion-contributor' + topic + ' input#item_contributor_name').val($(this).data('name'));
+      };
+      $(this).find('.discussion-contributor' + topic + ' input[name="tmp[contributor]"]').on('change', setContributor);
+      return $(this).find('.discussion-contributor' + topic + ' input[name="tmp[contributor]"]:checked').each(setContributor);
+    });
+  };
+
+  return Gws_Discussion_Thread;
+
+})();
+this.Gws_Discussion_Unseen = (function () {
+  function Gws_Discussion_Unseen() {
+  }
+
+  Gws_Discussion_Unseen.url = null;
+
+  Gws_Discussion_Unseen.intervalID = null;
+
+  Gws_Discussion_Unseen.intervalTime = null;
+
+  Gws_Discussion_Unseen.timestamp = null;
+
+  Gws_Discussion_Unseen.renderUnseen = function (url, intervalTime, timestamp) {
+    this.url = url;
+    this.intervalTime = intervalTime;
+    this.timestamp = timestamp;
+    if (this.url && this.intervalTime && this.timestamp) {
+      return this.intervalID = setInterval(this.checkMessage, this.intervalTime);
+    }
+  };
+
+  Gws_Discussion_Unseen.checkMessage = function () {
+    return $.ajax({
+      url: Gws_Discussion_Unseen.url,
+      success: function (data, status) {
+        var timestamp;
+        timestamp = parseInt(data);
+        if (timestamp > Gws_Discussion_Unseen.timestamp) {
+          $(".gws-discussion-unseen").show();
+          return clearInterval(Gws_Discussion_Unseen.intervalID);
+        }
+      }
+    });
+  };
+
+  return Gws_Discussion_Unseen;
+
+})();
+Gws_Attendance = function (el, options) {
+  this.el = el;
+  this.$el = $(el);
+  this.$toolbar = this.$el.find('.cell-toolbar');
+  this.options = options;
+  this.now = new Date(options.now);
+  this.render();
+};
+
+Gws_Attendance.prototype.render = function() {
+  var _this = this;
+
+  this.$el.find('button[name=punch]').on('click', function(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    var action = $(this).data('action');
+    var confirm = $(this).data('confirm');
+    _this.onPunchClicked(action, confirm);
+  });
+
+  this.$el.find('button[name=edit]').on('click', function(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    var action = $(this).data('action');
+    var confirm = $(this).data('confirm');
+    _this.onEditClicked(action, confirm);
+  });
+
+  this.$el.find('.reason-tooltip').on('click', function(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    _this.hideToolbar();
+    _this.hideTooltip();
+    $(this).find('.reason').show();
+  });
+
+  this.$el.find('select[name=year_month]').on('change', function() {
+    var val = $(this).val();
+    if (! val) {
+      return;
+    }
+    location.href = _this.options.indexUrl.replace(':year_month', val);
+  });
+
+  this.$toolbar.find(".punch").on("click", function() {
+    _this.onPunchClicked($(this).attr("href"), $(this).data("confirmation"));
+    return false;
+  });
+
+  $(document).on('click', this.el + ' .time-card .time', function(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    _this.onClickTime($(this));
+  });
+
+  $(document).on('click', this.el + ' .time-card .memo', function(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    _this.onClickMemo($(this));
+  });
+
+  $(document).on('click', function() {
+    _this.hideToolbar();
+    _this.hideTooltip();
+  });
+};
+
+Gws_Attendance.prototype.onPunchClicked = function(action, message) {
+  if (! action) {
+    return
+  }
+
+  if (message) {
+    if (! confirm(message)) {
+      return;
+    }
+  }
+
+  var token = $('meta[name="csrf-token"]').attr('content');
+
+  $form = $('<form/>', { action: action, method: 'post' });
+  $form.append($("<input/>", { name: "authenticity_token", value: token, type: "hidden" }));
+  $('body').append($form);
+  $form.submit();
+};
+
+Gws_Attendance.prototype.onEditClicked = function(action, message) {
+  if (!action) {
+    return
+  }
+
+  if (message) {
+    if (!confirm(message)) {
+      return;
+    }
+  }
+
+  $a = $('<a />', { href: action });
+  $a.colorbox({ open: true, width: '90%' });
+};
+
+Gws_Attendance.prototype.hideToolbar = function() {
+  this.$toolbar.hide();
+};
+
+Gws_Attendance.prototype.hideTooltip = function() {
+  this.$el.find('.reason-tooltip .reason').hide();
+};
+
+Gws_Attendance.prototype.onClickTime = function($cell) {
+  this.onClickCell($cell, this.options.timeUrl);
+};
+
+Gws_Attendance.prototype.onClickMemo = function($cell) {
+  this.onClickCell($cell, this.options.memoUrl);
+};
+
+Gws_Attendance.prototype.setFocus = function($cell) {
+  this.$el.find('.time-card .time').removeClass('focus');
+  this.$el.find('.time-card .memo').removeClass('focus');
+  $cell.addClass('focus');
+};
+
+Gws_Attendance.prototype.isCellToday = function($cell) {
+  return $cell.closest('tr').hasClass('current');
+};
+
+Gws_Attendance.prototype.onClickCell = function($cell, urlTemplate) {
+  this.hideTooltip();
+
+  if (! $cell.data('day')) {
+    return;
+  }
+
+  this.setFocus($cell);
+
+  if (!this.options.editable && !this.isCellToday($cell)) {
+    this.$toolbar.hide();
+    return;
+  }
+
+  var day = $cell.data('day');
+  var type = $cell.data('type');
+  var mode = $cell.data('mode');
+
+  var punchable = this.isCellToday($cell);
+  var editable = this.options.editable;
+
+  if (type === "memo") {
+    if (this.isCellToday($cell)) {
+      editable = true;
+    }
+  }
+
+  var showsToolbar = false;
+  if (mode === "punch" && punchable && this.options.punchUrl) {
+    var url = this.options.punchUrl;
+    url = url.replace(':type', type);
+
+    this.$toolbar.find('.edit').hide();
+    this.$toolbar.find('.punch').attr('href', url).show();
+    showsToolbar = true;
+  }
+
+  if (mode === "edit" && editable) {
+    var url = urlTemplate;
+    url = url.replace(':day', day);
+    url = url.replace(':type', type);
+
+    this.$toolbar.find('.punch').hide();
+    this.$toolbar.find('.edit').attr('href', url).show();
+    showsToolbar = true;
+  }
+
+  if (! showsToolbar) {
+    this.$toolbar.hide();
+    return;
+  }
+
+  var offset = $cell.offset();
+  if ($cell.hasClass('top')) {
+    offset.top -= this.$toolbar.outerHeight();
+  } else {
+    offset.top += $cell.outerHeight();
+  }
+
+  // call `show` and then call `offset`. order is important
+  this.$toolbar.show();
+  this.$toolbar.offset(offset);
+};
+Gws_Attendance_Portlet = function (el, options) {
+  // this.el = el;
+  this.$el = $(el);
+  // this.$toolbar = this.$el.find('.cell-toolbar');
+  this.options = options;
+  // this.now = new Date(options.now);
+  this.render();
+};
+
+Gws_Attendance_Portlet.prototype.render = function() {
+  var _this = this;
+
+  this.$el.find('button[name=punch]').on('click', function() {
+    _this.punch($(this), $(this).closest('tr').data('field-name'));
+  });
+
+  this.$el.find('button[name=edit]').on('click', function() {
+    _this.edit($(this), $(this).closest('tr').data('field-name'));
+  });
+};
+
+Gws_Attendance_Portlet.prototype.punch = function($button, fieldName) {
+  $button.attr('disabled', 'disabled');
+  if (! confirm(this.options.confirmMessage)) {
+    $button.removeAttr('disabled');
+    return;
+  }
+
+  var url = this.options.punchUrl.replace(':TYPE', fieldName);
+  var _this = this;
+  $.ajax({
+    url: url,
+    method: 'POST',
+    data: { ref: this.options.ref },
+    dataType: 'json',
+    success: function(data) {
+      alert(_this.options.successMessage);
+      location.reload();
+    },
+    error: function(xhr, status, error) {
+      alert(xhr.responseJSON.join("\n"));
+    },
+    complete: function() {
+      $button.removeAttr('disabled');
+    }
+  });
+};
+
+Gws_Attendance_Portlet.prototype.edit = function($button, fieldName) {
+  $button.attr('disabled', 'disabled');
+
+  var url = this.options.editUrl.replace(':TYPE', fieldName);
+  $a = $('<a/>', { href: url });
+  $a.colorbox({
+    open: true,
+    onClosed: function() { $button.removeAttr('disabled'); }
+  });
+};
+this.Gws_Presence_User = (function () {
+  function Gws_Presence_User() {}
+
+  Gws_Presence_User.render = function () {
+    // selector
+    $(document).on("click", function() {
+      $(".presence-state-selector").hide();
+        return true;
+    });
+    $(".presence-state-selector").on("click", function() {
+      return false;
+    });
+    $(".presence-state-selector [data-value]").on("click", function() {
+      var id = $(this).closest(".presence-state-selector").attr("data-id");
+      var url = $(this).closest(".presence-state-selector").attr("data-url");
+      var value = $(this).attr("data-value");
+      $.ajax({
+        url: url,
+        type: "POST",
+        data: {
+          _method: 'put',
+          authenticity_token: $('meta[name="csrf-token"]').attr('content'),
+          presence_state: value,
+        },
+        success: function(data) {
+          Gws_Presence_User.changedState(id, data);
+          $(".presence-state-selector").hide();
+        },
+        error: function (xhr, status, error) {
+          alert(xhr.responseJSON.join("\n"));
+        },
+      });
+      return false;
+    });
+    $(".editable .select-presence-state,.editable .presence-state").on("click", function(){
+      $(".presence-state-selector").closest("li.portlet-item").css("z-index", 0);
+      $(".presence-state-selector").hide();
+      $(this).closest("li.portlet-item").css("z-index", 1000);
+      $(this).closest("td").find(".presence-state-selector").show();
+      return false;
+    });
+    // ajax-text-field
+    $(".ajax-text-field").on("click", function(){
+      Gws_Presence_User.toggleForm(this);
+      return false;
+    });
+    $(".ajax-text-field").next(".editicon").on("click", function(){
+      $(this).prev(".ajax-text-field").trigger('click');
+      return false;
+    })
+  };
+
+  Gws_Presence_User.changedState = function (id, data) {
+    var presence_state = data["presence_state"] || "";
+    var presence_state_label = data["presence_state_label"];
+    var presence_state_style = data["presence_state_style"];
+    var state = $("tr[data-id=" + id + "] .presence-state");
+    var selector = $("tr[data-id=" + id + "] .presence-state-selector");
+
+    state.removeClass();
+    state.addClass('presence-state');
+    state.addClass(presence_state_style);
+    state.text(presence_state_label);
+
+    selector.find('[data-value="' + presence_state + '"] .selected-icon').css('visibility', 'visible');
+    selector.find('[data-value!="' + presence_state + '"] .selected-icon').css('visibility', 'hidden');
+  }
+
+  Gws_Presence_User.toggleForm = function (ele) {
+    var state = $(ele).attr("data-tag-state");
+    var original = $(ele).attr("data-original-tag");
+    var form = $(ele).attr("data-form-tag");
+    var value = $(ele).text() || $(ele).val();
+    var name = $(form).attr("name");
+    var id = $(form).attr("data-id");
+    var url = $(form).attr("data-url");
+    var errorOccurred = false;
+
+    if (state == "original") {
+      form = $(form);
+      form.attr("data-original-tag", $(ele).attr("data-original-tag"));
+      form.attr("data-form-tag", $(ele).attr("data-form-tag"));
+      form.val(value);
+      form.focusout(function (e) {
+        if (errorOccurred) {
+          return true;
+        }
+        var data = {
+          _method: 'put',
+          authenticity_token: $('meta[name="csrf-token"]').attr('content'),
+        };
+        data[name] = $(form).val();
+        $.ajax({
+          url: url,
+          type: "POST",
+          data: data,
+          success: function(data) {
+            $(form).val(data[name]);
+            Gws_Presence_User.toggleForm(form);
+          },
+          error: function (xhr, status, error) {
+            alert(xhr.responseJSON.join("\n"));
+            errorOccurred = true;
+          },
+        });
+        return false;
+      });
+      form.keypress(function (e) {
+        if (e.which == 13) {
+          var data = {
+            _method: 'put',
+            authenticity_token: $('meta[name="csrf-token"]').attr('content'),
+          };
+          data[name] = $(form).val();
+          $.ajax({
+            url: url,
+            type: "POST",
+            data: data,
+            success: function(data) {
+              $(form).val(data[name]);
+              Gws_Presence_User.toggleForm(form);
+            },
+            error: function (xhr, status, error) {
+              alert(xhr.responseJSON.join("\n"));
+              errorOccurred = true;
+            },
+          });
+          return false;
+        }
+      });
+      var replaced = form.uniqueId();
+      $(ele).replaceWith(form);
+      $(replaced).focus();
+    }
+    else {
+      original = $(original).text(value);
+      original.attr("data-original-tag", $(ele).attr("data-original-tag"));
+      original.attr("data-form-tag", $(ele).attr("data-form-tag"));
+      original.on("click", function(){
+        Gws_Presence_User.toggleForm(this);
+        return false;
+      });
+      original.uniqueId();
+      $(ele).replaceWith(original);
+
+      // support same name's ajax-text-field
+      $(".ajax-text-field[data-id='" + original.attr("data-id") + "'][data-name='" + original.attr("data-name") + "']").text(value);
+    }
+  };
+
+  return Gws_Presence_User;
+})();
+
+this.Gws_Presence_User_Reload = (function () {
+  function Gws_Presence_User_Reload() {}
+
+  Gws_Presence_User_Reload.render = function (opts) {
+    if (opts == null) {
+      opts = {};
+    }
+
+    var table_url = opts["url"];
+    var paginate_params = opts["paginate_params"];
+    var page = opts["page"];
+
+    $(".group-users .reload").on("click", function () {
+      param = $.param({
+        "s": {"keyword": $(".group-users [name='s[keyword]']").val()},
+        "paginate_params": paginate_params,
+        "page": page
+      });
+      $.ajax({
+        url: table_url + '?' + param,
+        beforeSend: function () {
+          $(".group-users .data-table-wrap").html(SS.loading);
+        },
+        success: function (data) {
+          $(".group-users .data-table-wrap").html(data);
+          var time = $(".group-users .data-table-wrap").find("time");
+          $(".group-users .list-head time").replaceWith(time).show();
+          time.show();
+        }
+      });
+    });
+    $(".group-users .list-head .search").on("submit", function () {
+      param = $.param({
+        "s": {"keyword": $(".group-users [name='s[keyword]']").val()},
+        "paginate_params": paginate_params,
+      });
+      $.ajax({
+        url: table_url + '?' + param,
+        beforeSend: function () {
+          $(".group-users .data-table-wrap").html(SS.loading);
+        },
+        success: function (data) {
+          $(".group-users .data-table-wrap").html(data);
+          var time = $(".group-users .data-table-wrap").find("time");
+          $(".group-users .list-head time").replaceWith(time);
+          time.show();
+        },
+        error: function (xhr, status, error) {
+          $(".group-users .data-table-wrap").html("");
+        }
+      });
+      return false;
+    });
+  }
+
+  return Gws_Presence_User_Reload;
+})();
+function Gws_Share_FolderToolbar(el, options) {
+  this.$el = $(el);
+  this.options = options;
+  this.render();
+}
+
+Gws_Share_FolderToolbar.prototype.render = function () {
+  var self = this;
+
+  this.$el.find(".btn-create-folder").on("click", function() {
+    self.createFolder($(this));
+  });
+
+  this.$el.find(".btn-create-root-folder").on("click", function() {
+    self.createFolder($(this));
+  });
+
+  this.$el.find(".btn-rename-folder").on("click", function() {
+    self.renameFolder($(this), { success: { callback: self.refresh } });
+  });
+
+  this.$el.find(".btn-delete-folder").on("click", function() {
+    self.deleteFolder($(this));
+  });
+
+  this.$el.find(".btn-edit-folder").on("click", function() {
+    self.editFolder($(this));
+  });
+
+  this.$el.find(".btn-refresh-folder").on("click", function() {
+    self.refreshFolder();
+  });
+};
+
+Gws_Share_FolderToolbar.prototype.createFolder = function ($button, options) {
+  var href = $button.data("href");
+  if (href) {
+    location.href = href;
+    return;
+  }
+
+  var api = $button.data("api");
+  if (! api) {
+    return;
+  }
+
+  var success = $button.data("success");
+  if (! success && options) {
+    success = options.success;
+  }
+  var error = $button.data("error");
+  if (! error && options) {
+    error = options.error;
+  }
+
+  var self = this;
+
+  $.colorbox({
+    href: api, open: true, fixed: true, with: "90%", height: "90%",
+    onComplete: function() {
+      SS.ajaxForm("#cboxLoadedContent form", {
+        success: function(data) {
+          $.colorbox.close();
+          if (success && success.redirect_to) {
+            var id;
+            if (data) {
+              id = data.id;
+              if (! id) {
+                id = data._id;
+              }
+            }
+
+            location.href = success.redirect_to.replace(/:id/, id);
+            return;
+          }
+          if (success && success.reload) {
+            location.reload();
+            return;
+          }
+          if (success && success.callback) {
+            success.callback.call(self, data);
+          }
+        },
+        error: function(xhr) {
+          $.colorbox.close();
+
+          if (xhr.responseJSON && xhr.responseJSON.length > 0) {
+            alert(xhr.responseJSON.join("\n"));
+          } else if (error && error.message) {
+            alert(error.message);
+          }
+        }
+      });
+    }
+  });
+};
+
+Gws_Share_FolderToolbar.prototype.refresh = function (data) {
+  if (! data) {
+    return;
+  }
+
+  this.$el.find(".folder-name").text(data.name);
+  this.refreshFolder();
+};
+
+Gws_Share_FolderToolbar.prototype.renameFolder = Gws_Share_FolderToolbar.prototype.createFolder;
+Gws_Share_FolderToolbar.prototype.deleteFolder = Gws_Share_FolderToolbar.prototype.createFolder;
+Gws_Share_FolderToolbar.prototype.editFolder = Gws_Share_FolderToolbar.prototype.createFolder;
+
+Gws_Share_FolderToolbar.prototype.refreshFolder = function () {
+  if (!this.options.treeNavi) {
+    return;
+  }
+
+  this.options.treeNavi.refresh();
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+$(function () {
+  // external link
+  $('a[href^=http]').not('[href*="' + location.hostname + '"]').attr({ target: '_blank', rel: "noopener" });
+
+  // tabs
+  var path = location.pathname + "/";
+  $(".gws-schedule-tabs a").each(function () {
+    var menu = $(this);
+    if (path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))) {
+      menu.addClass("current");
+    }
+  });
+
+  Gws_Member.render();
+});

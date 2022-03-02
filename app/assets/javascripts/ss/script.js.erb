@@ -60,6 +60,7 @@
 //= require ss/lib/ajax_file
 //= require ss/lib/replace_file
 //= require ss/lib/button_to
+//= require ss/lib/open_in_new_window
 //= require chat/lib/chart
 //= require cms/lib/editor
 //= require cms/lib/form
@@ -70,6 +71,7 @@
 //= require cms/lib/column_list
 //= require cms/lib/column_table
 //= require cms/lib/column_radio_button
+//= require cms/lib/column_select_page
 //= require cms/lib/file_highlighter
 //= require cms/lib/branch
 //= require event/lib/form
@@ -90,7 +92,7 @@
 //= require cms/lib/readable_setting
 //= require cms/lib/michecker
 //= require ss/lib/usage
-//= require bxslider
+//= require key_visual/lib/swiper_slide
 //= require cms/preview/jquery-ui
 //= require datatables.net/js/jquery.dataTables.js
 
@@ -130,6 +132,9 @@ $(function () {
     $(selector).each(function() {
       var $this = $(this);
       var href = $this.attr('href');
+      if (!href) {
+        return true;
+      }
       if (path.match(new RegExp('^' + href.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1') + '(\/|$)')) || crumbs.indexOf(href) !== -1) {
         if (hrefLength < href.length) {
           matchedElement = this;
@@ -194,6 +199,7 @@ $(function () {
   SS_ListUI.render();
   SS_Mobile.render();
   SS_AddonTabs.render();
+  SS_Form.render();
   SS_Popup.render(".tooltip", { "ss-popup-inline": true, "ss-popup-href": ".tooltip-content", "tippy-theme": "light-border ss-tooltip" });
   SS_SearchUI.render();
   SS_Color.render();
@@ -202,4 +208,5 @@ $(function () {
   SS_CascadeMenu.render();
   SS_ButtonTo.render();
   SS.enableDoubleClickGuard();
+  SS_OpenInNewWindow.render();
 });

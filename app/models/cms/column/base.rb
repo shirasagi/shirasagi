@@ -9,4 +9,13 @@ class Cms::Column::Base
   def alignment_options
     %w(flow center).map { |v| [ I18n.t("cms.options.alignment.#{v}"), v ] }
   end
+
+  def type_name
+    return unless _type
+    _type.delete_prefix("Cms::Column::").underscore
+  end
+
+  def db_form_type
+    { type: 'input' }
+  end
 end

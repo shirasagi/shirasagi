@@ -5,7 +5,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
   let(:use_plan_role) { create :gws_role, permissions: %w(use_private_gws_schedule_plans) }
   let!(:user0) { gws_user }
   let!(:user1) { create :gws_user, group_ids: user0.group_ids, gws_role_ids: [ use_plan_role.id ] }
-  let!(:item) { create :gws_schedule_plan, cur_site: site, cur_user: user0, member_ids: [ user1.id ] }
+  let!(:item) { create :gws_schedule_facility_plan_few_days, cur_site: site, cur_user: user0, member_ids: [ user1.id ] }
 
   before { login_user user1 }
 

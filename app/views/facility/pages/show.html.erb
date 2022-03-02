@@ -53,7 +53,7 @@
 <% end %>
 
 <% if @images.present? %>
-  <%= render "ss/crud/addon", addon: { head: t("facility.image") } do %>
+  <%= render "ss/crud/addon", addon: { id: "facility-images", head: t("facility.image") } do %>
     <div class="images">
       <% @images.each do |page, path, thumb_size| %>
         <div class="image">
@@ -72,7 +72,7 @@
 <% end %>
 
 <% if @items.present? %>
-  <%= render "ss/crud/addon", addon: { head: t("facility.notice") } do %>
+  <%= render "ss/crud/addon", addon: { id: "facility-notices", head: t("facility.notice") } do %>
     <table class="index" style="margin-bottom: 5px;">
       <% @items.each do |item| %>
         <tr>
@@ -92,7 +92,7 @@
 <% end %>
 
 <% if @merged_map.present? && default_map_api(site: @cur_site).present? %>
-  <%= render "ss/crud/addon", addon: { head: t("map.map") } do %>
+  <%= render "ss/crud/addon", addon: { id: "facility-map", head: t("map.map") } do %>
     <% @cur_page = @merged_map %>
     <%= render template: "map/agents/addons/page/view/index", locals: { no_header: true } %>
     <% @cur_page.map_points.each do |map_point| %>

@@ -23,9 +23,6 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       within ".fc-event:not(.fc-holiday)" do
         first(".fc-title").click
       end
-      within ".gws-popup" do
-        click_on I18n.t("ss.links.show")
-      end
       within "#addon-gws-agents-addons-schedule-approval" do
         within "span[data-facility-id='#{facility1.id}']" do
           first("input[value='approve']").click
@@ -71,9 +68,9 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         # click_on item.name
         first(".fc-title").click
       end
-      within ".gws-popup" do
-        click_on I18n.t("ss.links.show")
-      end
+      # within ".gws-popup" do
+      #   click_on I18n.t("ss.links.show")
+      # end
       within "#addon-gws-agents-addons-schedule-approval" do
         within "span[data-facility-id='#{facility1.id}']" do
           first("input[value='approve']").click

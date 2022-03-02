@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Gws::UserCsv::Importer, type: :model, dbscope: :example do
   let(:site) { gws_site }
   let!(:title) { create(:gws_user_title, code: 'E100', name: '社長') }
+  let!(:occupation) { create(:gws_user_occupation, code: 'B133', name: '看護師') }
   let!(:sys_role1) { create(:sys_role_general, name: "一般ユーザー") }
 
   context 'with no forms' do
@@ -25,6 +26,7 @@ describe Gws::UserCsv::Importer, type: :model, dbscope: :example do
         expect(user.tel).to eq '000-0000-0001'
         expect(user.tel_ext).to eq '1000'
         expect(user.title_ids).to eq [title.id]
+        expect(user.occupation_ids).to eq [occupation.id]
         expect(user.type).to eq 'sns'
         expect(user.account_start_date).to eq Time.zone.parse('2017/11/1  12:02:00')
         expect(user.account_expiration_date).to eq Time.zone.parse('2017/11/2  13:52:00')

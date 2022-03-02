@@ -85,7 +85,7 @@ module Job::LogsFilter
   def download_all
     @item = @model.new(save_term: "1.day")
     # show condition input form if request is get.
-    return if request.get?
+    return if request.get? || request.head?
 
     save_term = params.require(:item).permit(:save_term)[:save_term]
 
@@ -105,7 +105,7 @@ module Job::LogsFilter
     @item = @model.new
     @item.save_term = "6.months"
     # show condition input form if request is get.
-    return if request.get?
+    return if request.get? || request.head?
 
     save_term = params.require(:item).permit(:save_term)[:save_term]
 

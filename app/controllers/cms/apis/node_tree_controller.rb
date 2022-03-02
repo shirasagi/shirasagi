@@ -23,8 +23,14 @@ class Cms::Apis::NodeTreeController < ApplicationController
   private
 
   def root_items
-    @model.site(@cur_site).where(depth: 1).
-      allow(:read, @cur_user, site: @cur_site).limit(@limit)
+    if params[:root_items]
+      ids = params[:root_items].to_a.map(&:to_i) rescue []
+      @model.site(@cur_site).in(id: ids).
+        allow(:read, @cur_user, site: @cur_site).limit(@limit)
+    else
+      @model.site(@cur_site).where(depth: 1).
+        allow(:read, @cur_user, site: @cur_site).limit(@limit)
+    end
   end
 
   def tree_items

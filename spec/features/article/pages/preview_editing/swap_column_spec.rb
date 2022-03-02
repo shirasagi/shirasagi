@@ -153,9 +153,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         it do
           visit cms_preview_path(site: site, path: item.preview_path)
 
-          within "#ss-preview" do
-            within ".ss-preview-wrap-column-edit-mode" do
-              wait_event_to_fire "ss:inplaceModeChanged" do
+          wait_event_to_fire "ss:inplaceModeChanged" do
+            within "#ss-preview" do
+              within ".ss-preview-wrap-column-edit-mode" do
                 click_on I18n.t("cms.inplace_edit")
               end
             end

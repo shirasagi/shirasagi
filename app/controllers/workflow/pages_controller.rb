@@ -271,7 +271,7 @@ class Workflow::PagesController < ApplicationController
     set_item
     raise "403" unless @item.allowed?(:edit, @cur_user)
 
-    return if request.get?
+    return if request.get? || request.head?
 
     @item.approved = nil
     # @item.workflow_user_id = nil

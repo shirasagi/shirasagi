@@ -26,7 +26,7 @@ class Article::PagesController < ApplicationController
   public
 
   def download_all
-    if request.get?
+    if request.get? || request.head?
       return
     end
 
@@ -68,7 +68,7 @@ class Article::PagesController < ApplicationController
 
     @item = @model.new
 
-    if request.get?
+    if request.get? || request.head?
       respond_to do |format|
         format.html { render }
         format.json { render template: "ss/tasks/index", content_type: json_content_type, locals: { item: @task } }
@@ -81,10 +81,8 @@ class Article::PagesController < ApplicationController
       if file.nil? || ::File.extname(file.original_filename) != ".csv"
         raise I18n.t("errors.messages.invalid_csv")
       end
-      if !Article::Page::Importer.valid_encoding?(file.to_io, Encoding::UTF_8)
-        if !Article::Page::Importer.valid_encoding?(file.to_io, Encoding::SJIS)
-          raise I18n.t("errors.messages.unsupported_encoding")
-        end
+      if SS::Csv.detect_encoding(file) == Encoding::ASCII_8BIT
+        raise I18n.t("errors.messages.unsupported_encoding")
       end
       if !Article::Page::Importer.valid_csv?(file)
         raise I18n.t("errors.messages.malformed_csv")

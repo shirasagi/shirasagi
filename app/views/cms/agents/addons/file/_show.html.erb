@@ -1,5 +1,6 @@
 <%
-  return "" if @item.files.blank?
+  return if @item.files.blank?
+  return if @item.respond_to?(:form) && @item.form.present?
   addon ||= local_assigns.fetch(:addon, {})
 %>
 

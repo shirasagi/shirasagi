@@ -6,6 +6,8 @@
   @inplace_syntax_check = cms_syntax_check_enabled?(column: true, parent: true)
 
   @inplace_link_check = @cur_column.link_check_enabled?
+
+  form_class = "inplace-edit #{@cur_column.type_name}"
 %>
 <%= jquery do %>
   <% if replace_words_conf[:replace_words].present? %>
@@ -28,7 +30,7 @@
   Cms_Column_Free.fileSelectPath = <%== cms_apis_form_temp_file_select_path(id: ":fileId", form: "free", node: @item.parent.try(:id), owner_item_id: @item.id, owner_item_type: @model.to_s).to_json %>;
 <% end %>
 
-<%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
+<%= form_for :item, url: { action: :update }, html: { id: "item-form", class: form_class, method: :put, multipart: true, autocomplete: :off } do |f| %>
   <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
 
   <%= f.fields_for :column_values do |g| %>

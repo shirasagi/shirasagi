@@ -124,6 +124,7 @@ production: &production
       - "Gws::StaffRecord::Year"
       - "Gws::UserFormData"
       - "Gws::UserTitle"
+      - "Gws::UserOccupation"
       - "Gws::Workflow::File"
       - "Gws::Workflow::Form"
       - "Gws::Workflow::Route"

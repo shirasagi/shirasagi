@@ -33,7 +33,7 @@ class Sys::PostalCodesController < ApplicationController
   def import
     @item = SS::TempFile.new
 
-    return if request.get?
+    return if request.get? || request.head?
 
     safe_params = params.require(:item).permit(:in_file, :in_official_csv)
     @item.in_file = safe_params[:in_file]

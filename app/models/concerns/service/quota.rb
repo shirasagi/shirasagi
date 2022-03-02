@@ -34,6 +34,7 @@ module Service::Quota
       SS::PostalCode,
       SS::UserGroupHistory.any_in(gws_site_id: org_ids),
       SS::UserTitle.any_in(group_id: org_ids),
+      SS::UserOccupation.any_in(group_id: org_ids),
       SS::User.unscoped.any_in(organization_id: org_ids),
     ].sum { |c| c.total_bsonsize }
 

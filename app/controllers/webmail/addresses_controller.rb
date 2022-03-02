@@ -77,7 +77,7 @@ class Webmail::AddressesController < ApplicationController
 
   def import
     @item = @model.new
-    return if request.get?
+    return if request.get? || request.head?
 
     @item.attributes = get_params
     result = @item.import_csv

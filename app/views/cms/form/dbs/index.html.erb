@@ -1,0 +1,19 @@
+<% @tap_menu2 = proc do |item| %>
+  <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+<% end %>
+
+<% @index_title = proc do |item| %>
+  <%= link_to item.name, { action: :show, id: item.id }, class: "title" %>
+  <div class="float-start mt-1 mr-4 ml-1">
+    <%= link_to t('cms.buttons.manage_db'), cms_form_db_docs_path(db_id: item.id), target: '_blank', class: 'btn' %>
+  </div>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span><%= @model.t :size %> : <%= item.pages.size %></span>
+  <span class="order"><%= item.order %></span>
+<% end %>
+
+<%= render template: 'cms/crud/index' %>

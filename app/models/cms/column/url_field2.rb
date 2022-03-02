@@ -33,12 +33,12 @@ class Cms::Column::UrlField2 < Cms::Column::Base
     if type == :link_label
       options = {}
       options['maxlength'] = label_max_length if label_max_length.present?
-      options['placeholder'] = label_place_holder if label_place_holder.present?
+      options['placeholder'] = label_place_holder.presence || I18n.t("cms.column_url_field.link_label_placeholder")
       options
     elsif type == :link_url
       options = {}
       options['maxlength'] = link_max_length if link_max_length.present?
-      options['placeholder'] = link_place_holder if link_place_holder.present?
+      options['placeholder'] = link_place_holder.presence || I18n.t("cms.column_url_field.link_url_placeholder")
       options
     else
       super()
@@ -55,5 +55,9 @@ class Cms::Column::UrlField2 < Cms::Column::Base
 
   def form_check_enabled?
     super || (label_max_length.present? && label_max_length > 0) || (link_max_length.present? && link_max_length > 0)
+  end
+
+  def db_form_type
+    { type: 'textarea', rows: 2 }
   end
 end

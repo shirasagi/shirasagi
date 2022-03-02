@@ -1,0 +1,23 @@
+<dl class="condition">
+  <dt class="keyword"><%= t("facility.keyword") %></dt>
+  <dd><%= @keyword %></dd>
+
+  <% @cur_node.map_search_options.each_with_index do |options, idx| %>
+    <%
+      values = (@columns[idx] || []) & options['values']
+    %>
+    <dt class="category"><%= options['name'] %></dt>
+    <dd><%= values.join(', ') %></dd>
+  <% end %>
+</dl>
+
+<%= render template: "_settings" %>
+
+<section class="result">
+  <h2>
+    <%= t("facility.result") %>
+    <span class="number"><%= @items.count %></span><%= t("facility.count") %>
+  </h2>
+</section>
+
+<%= render "tabs" %>

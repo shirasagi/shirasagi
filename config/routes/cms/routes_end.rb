@@ -119,10 +119,23 @@ Rails.application.routes.draw do
     resources :theme_templates, concerns: [:deletion, :template]
     resources :source_cleaner_templates, concerns: [:deletion, :template]
     resources :word_dictionaries, concerns: [:deletion, :template]
-    resources :forms, concerns: [:deletion] do
-      resources :init_columns, concerns: [:deletion]
-      resources :columns, concerns: [:deletion]
+
+    scope module: "form" do
+      resources :forms, concerns: [:deletion] do
+        resources :init_columns, concerns: [:deletion]
+        resources :columns, concerns: [:deletion]
+      end
     end
+
+    namespace "form" do
+      resources :dbs, concerns: [:deletion] do
+        resources :docs, concerns: [:deletion] do
+          match :import, via: [:get, :post], on: :collection
+          match :download_all, via: [:get, :post], on: :collection
+        end
+      end
+    end
+
     resources :notices, concerns: [:deletion, :copy]
     resources :public_notices, concerns: [:deletion, :copy] do
       get :frame_content, on: :member
@@ -205,6 +218,8 @@ Rails.application.routes.draw do
       get "groups" => "groups#index"
       get "nodes" => "nodes#index"
       get "pages" => "pages#index"
+      get "pages/children" => "pages/children#index"
+      get "pages/categorized" => "pages/categorized#index"
       get "pages/routes" => "pages#routes"
       get "categories" => "categories#index"
       get "contents" => "contents#index"
@@ -300,12 +315,13 @@ Rails.application.routes.draw do
       namespace "translate" do
         get "langs" => "langs#index"
       end
+
+      match "mobile_size_check/check" => "mobile_size_check#check", via: [:post, :options], as: "mobile_size_check"
     end
   end
 
   namespace "cms", path: ".cms" do
     match "link_check/check" => "link_check#check", via: [:post, :options], as: "link_check"
-    match "mobile_size_check/check" => "mobile_size_check#check", via: [:post, :options], as: "mobile_size_check"
   end
 
   content "cms", name: "node", module: "cms/node" do
@@ -327,6 +343,7 @@ Rails.application.routes.draw do
       get :delete, on: :member
     end
     resources :max_file_sizes, concerns: :deletion
+    resources :image_resizes, concerns: :deletion
     resources :nodes, concerns: :deletion
     resources :pages, concerns: [:deletion, :copy, :move, :lock, :command, :contains_urls, :michecker]
     resources :import_pages, concerns: [:deletion, :convert]
@@ -353,6 +370,7 @@ Rails.application.routes.draw do
     get "archive" => "public#redirect_to_archive_index", cell: "nodes/archive"
     get "photo_album" => "public#index", cell: "nodes/photo_album"
     get "site_search/(index.:format)" => "public#index", cell: "nodes/site_search"
+    get "site_search/categories(.:format)" => "public#categories", cell: "nodes/site_search"
   end
 
   part "cms" do

@@ -1,6 +1,7 @@
 ja:
   cms:
     add_max_file_size: 最大ファイルサイズを設定する
+    add_image_resize: 画像リサイズを設定する
     alert: 警告
     all_contents: 全コンテンツ
     body_layout: 本文レイアウト
@@ -32,15 +33,21 @@ ja:
     link_check: リンクチェック
     form_check: 制約チェック
     list_view: リスト表示
-    row_num: 行目
-    log_of_the_failed_import: 'error %{row_num}行目のデータは登録できませんでした。入力内容をもう１度ご確認ください。'
-    log_of_the_failed_category: 'error %{row_num}行目:  施設の種類『%{category}』を登録できませんでした。'
-    log_of_the_failed_location: 'error %{row_num}行目:  施設の地域『%{location}』を登録できませんでした。'
-    log_of_the_failed_service: 'error %{row_num}行目:  施設の用途『%{service}』を登録できませんでした。'
-    log_of_the_failed_group: 'error %{row_num}行目:  管理グループ『%{group}』を登録できませんでした。'
+    row_error: 'error %{row_num}行目'
+    row_update: 'updating %{row_num}行目'
+    new_record: 'created page %{row_num}行目 施設「%{name}」が作成されました。'
+    update_record: 'updated page %{row_num}行目 施設「%{name}」が更新されました。'
+    updated_field: 'updating %{row_num}行目 %{field}：'
+    failed_to_save: 'failed %{row_num}行目 施設「%{name}」の作成・更新がされませんでした。%{err_msgs}'
+    failed_category_log: 'error %{row_num}行目 施設の種類『%{category}』が存在しないので登録できませんでした。新規に『%{category}』を作成した上で、インポートを実行してください。'
+    failed_location_log: 'error %{row_num}行目 施設の地域『%{location}』が存在しないのでを登録できませんでした。新規に『%{location}』を作成した上で、インポートを実行してください。'
+    failed_service_log: 'error %{row_num}行目 施設の用途『%{service}』が存在しないので登録できませんでした。新規に『%{service}』を作成した上で、インポートを実行してください。'
+    failed_group_log: 'error %{row_num}行目 管理グループ『%{group}』が存在しないので登録できませんでした。新規に『%{group}』を作成した上で、インポートを実行してください。'
     loop_html: ループHTML
     max_file_size: 最大ファイルサイズ
     max_file_size_setting: 最大ファイルサイズ設定
+    image_resize: 画像リサイズ
+    image_resize_setting: 画像リサイズ設定
     member: メンバー
     mobile_size_check: 携帯データサイズチェック
     modules: モジュール
@@ -117,6 +124,9 @@ ja:
     column_youtube_auto_width:
       enabled: 画面幅に合わせる
       disabled: 画面幅に合わせない
+    column_url_field:
+      link_label_placeholder: リンクテキスト
+      link_url_placeholder: URL
     visit_article: 記事を見る
 
     adobe_reader:
@@ -141,7 +151,8 @@ ja:
       send_verify_mail: 登録確認メールを送信する
       manage_columns: 入力項目を管理する
       manage_init_columns: 初期ブロックを管理する
-      save_as_branch: 差替保存
+      manage_db: DB管理
+      save_as_branch: 差し替え保存
       ignore_alerts_and_save_as_branch: 警告を無視して差替保存
       column_add_list: リストを追加する
     confirm:
@@ -171,7 +182,8 @@ ja:
         - "リンク切れを修正した場合、再度リンクチェックを実行し、新しいレポートを作成してください。"
       check_links_report_annotation: ※リンクチェックの実行タイミングや通信先サーバーの負荷状況によっては誤検出の場合があります。
       check_links_report_created: "%{time} 時点"
-      confirm_column_deletion_whose_form_is_in_use: "定型フォームは利用中のため入力項目を削除するとページが正しく表示されなくなる場合があります。それでも削除する場合はチェックしてください。"
+      delete_forum_column: 入力項目を削除する
+      confirm_column_deletion_whose_form_is_in_use: "定型フォームは利用中のため入力項目を削除するとページが正しく表示されなくなる場合があります。"
     apis:
       categories:
         index: カテゴリーを選択する
@@ -435,6 +447,9 @@ ja:
       michecker_completed: "miChecker による検証が完了しました。結果を確認してください。"
       accessibility_report_load_error: "アクセシビリティ検証結果の読み込みに失敗しました。"
       low_vision_report_load_error: "視覚化結果の読み込みに失敗しました。"
+      site_setting_ng:
+        - サイト設定のマイページドメインが未設定のため実行することができません。
+        - マイページドメインの設定をサイト管理者に依頼してください。
       data_table:
         length_menu:
           5: 5
@@ -554,6 +569,10 @@ ja:
     read_other_cms_check_links_errors: リンクチェックエラーの閲覧（全て）
     read_private_cms_check_links_errors: リンクチェックエラーの閲覧（所有）
     edit_cms_check_links_ignore_urls: リンクチェックエラー例外の管理
+    read_cms_image_resizes: 画像リサイズの閲覧
+    edit_cms_image_resizes: 画像リサイズの編集
+    delete_cms_image_resizes: 画像リサイズの削除
+    disable_cms_image_resizes: 画像リサイズの無効化
 
   modules:
     cms: 標準機能
@@ -603,6 +622,7 @@ ja:
       cms/monthly_nav: アーカイブナビ（月次）
       cms/archive_view_switcher: アーカイブ用表示設定
       cms/max_file_size_setting: 最大ファイルサイズ設定
+      cms/image_resize_setting: 画像リサイズ設定
       cms/tag_setting: タグ設定
       cms/tag: タグ
       cms/layout_html: レイアウト
@@ -620,6 +640,7 @@ ja:
       cms/content_quota: 容量制限
       cms/check_links: リンクチェック実行結果
       cms/history_list: 閲覧履歴
+      cms/member_reference: メンバー
 
   mongoid:
     models:
@@ -654,6 +675,7 @@ ja:
       cms/loop_setting: ループHTML
       cms/command: コマンド
       cms/form: 定型フォーム
+      cms/form_db: 定型フォーム - DB
       cms/init_column: 初期ブロック
       cms/column/base: 入力項目
       cms/column/text_field: 一行入力
@@ -733,6 +755,8 @@ ja:
         body_layout_id: 本文レイアウト
       cms/reference/page_layout:
         page_layout_id: ページレイアウト
+      cms/reference/member:
+        member_id: メンバー
       cms/site:
         auto_keywords: キーワード自動設定
         auto_description: 概要自動設定
@@ -926,7 +950,9 @@ ja:
       cms/copy_nodes_task:
         target_node_name: 複製先フォルダー名
       cms/addon/source_cleaner:
-        target: 対象
+        target_type: 対象の種別
+        target_value: 対象の名称
+        replace_source: 対象の属性値
         action: 操作
         replaced_value: 置換後の値
       cms/addon/opendata_ref/site:
@@ -981,6 +1007,13 @@ ja:
         column_ids: 入力項目
         init_column_ids: 初期ブロック
         sub_type: 目的
+      cms/form_db:
+        name: 名前
+        order: 並び順
+        form_id: 定型フォーム
+        node_id: 記事フォルダー
+        import_url: インポートURL
+        size: 登録件数
       cms/addon/form/node:
         st_form_ids: 定型フォーム設定
       cms/addon/form/page:
@@ -994,6 +1027,7 @@ ja:
       cms/column/base:
         route: 属性
         name: 名前
+        value: 値
         order: 並び順
         required: 必須入力
         tooltips: ツールチップ
@@ -1039,8 +1073,7 @@ ja:
       cms/column/list:
         list_type: 種類
       cms/column/select_page:
-        place_holder: プレースホルダー
-        node_id: 選択肢
+        node_ids: 記事フォルダー
       cms/column/value/base:
         order: 並び順
         alignment: 配置
@@ -1187,7 +1220,7 @@ ja:
       mobile_size_check_failure: 失敗
       mobile_size_check_disable: モバイルサイズが設定されていません。
       mobile_size_check_size: 本文のデータサイズはOKです。
-      mobile_size_check_failed_to_size: 携帯で表示する場合、本文のデータサイズが%{mobile_size}以下になるようにしてください。
+      mobile_size_check_failed_to_size: "携帯で表示する場合、本文のデータサイズが%{mobile_size}以下になるようにしてください。(本文サイズ：%{size})"
       mobile_size_check_server_error: 本文データサイズのチェック中にサーバーエラーが発生しました。
       not_a_child_group: はサイトに所属するグループを設定してください。
       not_found_parent_group: 親グループが存在しません。
@@ -1204,6 +1237,7 @@ ja:
       replace_word: 使用が好ましくない単語が含まれています。
       replace_word_validation: に使用が好ましくない単語が含まれています。
       alt_is_included_in_filename: 代替テキストがファイル名に含まれています。
+      cms_form_db_required_node: データの登録には記事フォルダーの設定が必要です。
       syntax_check_detail:
         set_img_alt:
           - 画像の内容を示す代替テキストを設定してください。
@@ -1489,7 +1523,9 @@ ja:
       mypage_scheme:
         - マイページスキームを入力します。
       mypage_domain:
-        - マイページドメインを入力します。
+        - 管理画面（マイページ）のドメインを入力します。
+        - 公開画面と管理画面のドメインが異なる場合は、必ず入力してください。
+        - 入力しないと、micheckerなど、一部の機能が正常に動作しなくなります。
       auto_keywords:
         - ページ、フォルダー保存時にメタ情報のキーワードを入力しない場合、自動で入力するかを選択します。
         - 自動入力されるキーワードは親フォルダー名と設定カテゴリー名から生成されます。
@@ -1848,13 +1884,26 @@ ja:
         - アクセシビリティチェックの有効無効を設定します。
 
     cms/addon/source_cleaner:
-      target:
-        - クリーニングの対象を設定します。
-        - タグ、属性、文字列の中から種別を選択し、右欄に対象を入力します。
+      target_type:
+        - |-
+          クリーニング対象の種別を設定します。
+          クリーニング対象は置換または削除されます。
+          タグ ... HTMLタグを設定します。
+          属性 ... HTMLタグの属性(attribute)を設定します。
+          文字列 ... 文字列を設定します。
+          正規表現 ... 正規表現にマッチする文字列を設定します。
+      target_value:
+        - 置換または削除対象のタグや属性の名称、文字列を設定します。
+      replace_source:
+        - 置換または削除対象の属性の値を設定します。
       action:
-        - 対象のクリーニング方法を設定します。
-        - 置換または削除が選択できます。
-        - 置換後のタグや属性の値、文字列を右欄に入力します。
+        - |-
+          対象のクリーニング方法を設定します。
+          クリーニング対象のタグや属性の値、文字列を置換または削除します。
+          削除 ... クリーニング対象を削除します。
+          置換 ... クリーニング対象を特定の値に置換します。
+      replaced_value:
+        - 置換後のタグや属性の値、文字列を設定します。
 
     cms/addon/opendata_ref/site:
       opendata_site_ids:
@@ -1899,6 +1948,10 @@ ja:
     cms/addon/max_file_size_setting:
       max_file_size_setting:
         - フォルダー内のページ編集時に「ファイル>アップロード」から添付ファイルをアップする際のサイズ制限を設定可能です。
+
+    cms/addon/image_resize_setting:
+      image_resize_setting:
+        - フォルダー内のページ編集時に「ファイル>アップロード」から画像ファイルをアップする際の最大横幅、縦幅、画質を設定可能です。
 
     cms/addon/tag_setting:
       st_tags:
@@ -2065,9 +2118,9 @@ ja:
 
         使用例：
           &lt;dl>
-            &lt;dt>項目&lt;/dt>
+            &lt;dt>項目1&lt;/dt>
             &lt;dd>{{ values["項目名1"] }}&lt;/dd>
-            &lt;dt>項目&lt;/dt>
+            &lt;dt>項目2&lt;/dt>
             &lt;dd>{{ values["項目名2"] }}&lt;/dd>
           &lt;/dl>
 
@@ -2106,32 +2159,12 @@ ja:
         - 公開側のHTMLタグを選択します。
       html_additional_attr:
         - 公開側のHTMLタグの追加属性を指定します。
-      layout: |-
-        入力項目のHTMLを設定します。
-        未設定の場合、既定の HTML を表示します。
-
-        使用例：
-          {% if value.date %}
-            &lt;span>{{ value.date | date: "%Y年%1m月%1d日" }}&lt;/span>
-          {% endif %}
 
     cms/column/url_field:
       html_tag:
         - 公開側のHTMLタグを選択します。
       html_additional_attr:
         - 公開側のHTMLタグの追加属性を指定します。
-      layout: |-
-        入力項目のHTMLを設定します。
-        未設定の場合、既定の HTML を表示します。
-
-        使用例：
-          {% if value.link %}
-            {% if value.label %}
-              &lt;a href="{{ value.link }}">{{ value.label }}&lt;/a>
-            {% else %}
-              &lt;a href="{{ value.link }}">{{ value.link }}&lt;/a>
-            {% endif %}
-          {% endif %}
 
     cms/column/url_field2:
       html_tag:
@@ -2146,18 +2179,6 @@ ja:
         - リンクURLの最大長を入力します。
       link_place_holder:
         - リンクURLのプレースホルダーを入力します。
-      layout: |-
-        入力項目のHTMLを設定します。
-        未設定の場合、既定の HTML を表示します。
-
-        使用例：
-          {% if value.link %}
-            {% if value.label %}
-              &lt;a href="{{ value.link }}">{{ value.label }}&lt;/a>
-            {% else %}
-              &lt;a href="{{ value.link }}">{{ value.link }}&lt;/a>
-            {% endif %}
-          {% endif %}
 
     cms/column/select:
       place_holder:
@@ -2172,18 +2193,6 @@ ja:
         - リンクテキストの最大長を入力します。
       label_place_holder:
         - リンクテキストのプレースホルダーを入力します。
-      layout: |-
-        入力項目のHTMLを Liquid 形式で設定します。
-        未設定の場合、既定の HTML を表示します。
-
-        使用例（ファイルアップロードの場合）：
-          {% if value.file %}
-            {% if value.image? %}
-              &lt;a href="{{ value.file.url }}">&lt;img src="{{ value.file.thumb_url }}" alt="{{ value.image_text | default: value.file.humanized_name }}" title="{{ value.file.basename }}">&lt;/a>
-            {% else %}
-              &lt;a href="{{ value.file.url }}">{{ value.attachment_text | default: value.file.humanized_name }}&lt;/a>
-            {% endif %}
-          {% endif %}
 
     cms/addon/column/text_like:
       max_length:
@@ -2205,22 +2214,17 @@ ja:
 
         使用例：
           {% if value.value %}
-            &lt;h2>{{ value.value }}&lt;/h2>
-          {% endif %}
-
-    cms/column/text_area:
-      layout: |-
-        入力項目のHTMLを設定します。
-        未設定の場合、既定の HTML を表示します。
-
-        使用例：
-          {% if value.value %}
-            &lt;p>{{ value.value | newline_to_br }}&lt;/p>
+          &nbsp; {{ value.value }}
           {% endif %}
 
     cms/column/list:
       list_type:
         - 種類を選択します。
+
+    cms/column/select_page:
+      node_ids:
+        - 記事フォルダーを設定します。
+        - 設定した記事フォルダー配下のページを選択可能です。
 
     cms/addon/node_twitter_post_setting:
       node_twitter_auto_post:
@@ -2327,6 +2331,11 @@ ja:
       placeholder:
         - プレースホルダーを入力します。
 
+    cms/node/site_search:
+      st_categories:
+        - サイト内検索で使用するカテゴリーを設定します。
+        - 設定されていない場合は全カテゴリーが対象となります。
+
   all_content:
     page_id: ページID
     node_id: フォルダーID
@@ -2391,3 +2400,5 @@ ja:
       cms/role/import_job: 権限インポート
       cms/all_contents_import_job: 全コンテンツ一括設定
       cms/michecker_job: miChecker
+      cms/sns_post/twitter_job: Twitterページ投稿
+      cms/sns_post/line_job: LINEページ投稿

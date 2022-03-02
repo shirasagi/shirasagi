@@ -11,23 +11,28 @@ PORT_LPSPL=8004
 sudo sed -i "s/\(^SELINUX=\).*/\1disabled/" /etc/selinux/config
 sudo setenforce 0
 
-cat <<EOS | sudo tee -a /etc/yum.repos.d/mongodb-org-3.4.repo
-[mongodb-org-3.4]
+cat <<EOS | sudo tee -a /etc/yum.repos.d/mongodb-org-4.4.repo
+[mongodb-org-4.4]
 name=MongoDB Repository
-baseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/3.4/x86_64/
+baseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/4.4/x86_64/
 gpgcheck=1
 enabled=0
-gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
+gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
 EOS
 
-sudo yum install -y --enablerepo=mongodb-org-3.4 mongodb-org
+sudo yum install -y --enablerepo=mongodb-org-4.4 mongodb-org
 sudo systemctl start mongod.service
 sudo systemctl enable mongod.service
 
+sudo yum -y install scl-utils centos-release-scl
 sudo yum -y install \
-  gcc gcc-c++ glibc-headers \
+  devtoolset-10 \
   openssl-devel readline libyaml-devel readline-devel zlib zlib-devel \
   wget git ImageMagick ImageMagick-devel
+
+# use devtoolset-10
+source /opt/rh/devtoolset-10/enable
+gcc --version
 
 for i in $(seq 1 3)
 do
@@ -47,13 +52,13 @@ else
 fi
 export PATH="$PATH:$RVM_HOME/bin"
 source $RVM_HOME/scripts/rvm
-rvm install 2.7.4 --disable-binary
-rvm use 2.7.4 --default
-gem install bundler
+rvm install 3.0.2 --disable-binary
+rvm use 3.0.2 --default
+bundle --version
 
 if [ ! `which ruby` ]; then exit 1; fi
 
-git clone -b stable --depth 1 https://github.com/shirasagi/shirasagi
+git clone -b stable https://github.com/shirasagi/shirasagi
 sudo mkdir -p /var/www
 sudo mv shirasagi $SS_DIR
 
@@ -319,6 +324,7 @@ sudo systemctl restart nginx.service
 cd $SS_DIR
 bundle exec rake db:drop
 bundle exec rake db:create_indexes
+bundle exec rake ss:migrate
 bundle exec rake ss:create_site data="{ name: \"自治体サンプル\", host: \"www\", domains: \"${SS_HOSTNAME}\" }"
 bundle exec rake ss:create_site data="{ name: \"企業サンプル\", host: \"company\", domains: \"${SS_HOSTNAME}:${PORT_COMPA}\" }"
 bundle exec rake ss:create_site data="{ name: \"子育て支援サンプル\", host: \"childcare\", domains: \"${SS_HOSTNAME}:${PORT_CHILD}\" }"

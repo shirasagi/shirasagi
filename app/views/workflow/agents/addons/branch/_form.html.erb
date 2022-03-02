@@ -1,0 +1,24 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+  css_class = Array(addon[:class])
+  addon[:class] = css_class + %w(hide)
+%>
+
+<% if @item.branches.present? %>
+  <% html = capture do %>
+    <% branch = @item.branches.first %>
+    <section class="main-box">
+      <header><h2><%= t("workflow.confirm.would_you_edit_branch") %></h2></header>
+      <%= br t("workflow.dialogue.edit_branch_html", show_path: url_for(action: :show, id: branch)) %>
+      <footer class="send">
+        <%= link_to t("workflow.links.edit_branch"), url_for(action: :edit, id: branch), class: "btn btn-primary" %>
+        <%= button_tag t("workflow.links.continue_to_edit_master"), type: "button", class: "btn btn-default", onclick: "$.colorbox.close();" %>
+      </footer>
+    </section>
+  <% end %>
+
+  <%= jquery do %>
+    $.colorbox({ html: <%= raw html.to_json %>, open: true, maxWidth: "80%", fixed: true });
+  <% end %>
+<% end %>

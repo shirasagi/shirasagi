@@ -6,10 +6,9 @@ class Webmail::History::ArchiveFile
 
   default_scope ->{ where(model: 'webmail/history/archive_file') }
 
-  def previewable?(opts = {})
-    cur_user = opts[:user]
-    if cur_user
-      Webmail::History::ArchiveFile.allowed?(:read, cur_user)
+  def previewable?(site: nil, user: nil, member: nil)
+    if user
+      Webmail::History::ArchiveFile.allowed?(:read, user)
     end
   end
 end

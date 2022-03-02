@@ -48,6 +48,10 @@ ja:
     after_replace: 差し替え後
     broken_link: リンク切れ
     auto_reload: 自動更新
+    quality: 画質
+    resize_image_auto: 画像リサイズ(自動)
+    input_example: 記入例
+    csv_file: CSVファイル
 
     views:
       login/login:
@@ -127,7 +131,7 @@ ja:
       closed_save: 非公開保存
       publish: 公開
       publish_save: 公開保存
-      withdraw: 取り下げ
+      withdraw: 取り下げ保存
       ignore_alert: 警告を無視する
       cancel: キャンセル
       edit: 編集
@@ -442,6 +446,9 @@ ja:
         "3_months": ３ヶ月
         "6_months": ６ヶ月
         "1_year": １年
+      image_resizes_disabled:
+        enabled: 自動リサイズ有効
+        disabled: 自動リサイズ無効
 
     tasks:
       started: 開始しました。
@@ -504,6 +511,7 @@ ja:
       ss/site: サイト
       ss/user: ユーザー
       ss/user_title: 役職
+      ss/user_occupation: 職種
       ss/group: グループ
       ss/user_group_history: 異動履歴
       ss/file: ファイル
@@ -512,6 +520,7 @@ ja:
       ss/group_file: グループファイル
       ss/task: タスク
       ss/max_file_size: 最大ファイルサイズ
+      ss/image_resize: 画像リサイズ
       ss/thumb_file: サムネイルファイル
       ss/migration: DBマイグレーション
       ss/access_token: アクセストークン
@@ -567,6 +576,7 @@ ja:
         tel_ext: 内線番号
         tel_ext_short: 内線
         in_title_id: 役職
+        in_occupation_id: 職種
         group_ids: グループ
         groups: グループ
         cms_roles: CMSロール
@@ -601,9 +611,20 @@ ja:
         group_id: グループ
         activation_date: 有効期限（開始）
         expiration_date: 有効期限（終了）
+      ss/model/user_occupation:
+        code: 職種コード
+        name: 職種名
+        remark: 備考
+        order: 並び順
+        group_id: グループ
+        activation_date: 有効期限（開始）
+        expiration_date: 有効期限（終了）
       ss/model/reference/user_titles:
         title_ids: 役職
         title_orders: 役職並び順
+      ss/model/reference/user_occupations:
+        occupation_ids: 職種
+        occupation_orders: 職種並び順
       ss/model/group:
         name: グループ名
         order: 表示順
@@ -689,6 +710,8 @@ ja:
         map_api_key: APIキー
         map_api_layer: 地図レイヤー
         show_google_maps_search: Googleマップへのリンク
+        map_center: 地図の中心座標
+        map_max_number_of_markers: 最大地点数
       ss/addon/kana_setting:
         kana_format: ふりがなの形式
       ss/addon/facebook_setting:
@@ -734,6 +757,10 @@ ja:
         size: 制限サイズ
         order: 並び順
         state: 状態
+      ss/model/image_resize:
+        max_width: 横幅
+        max_height: 縦幅
+        quality: 画質
       ss/model/postal_code:
         code: 郵便番号
         prefecture: 都道府県
@@ -874,6 +901,8 @@ ja:
         - LDAPを利用する場合にLDAPユーザーを選択します。
       title_ids:
         - 役職を選択します。
+      occupation_ids:
+        - 職種を選択します。
       account_start_date:
         - 有効期限の開始日を入力します。
       account_expiration_date:
@@ -937,8 +966,8 @@ ja:
         - ページの本文レイアウトを選択します。
         - 通常レイアウトのみの利用であれば設定は不要です。
       order:
-        - フォルダーの並び順の設定で「指定順」を指定している場合に利用します。
-        - 数字が小さいほど一覧ページの上位にリンクが表示されます。
+        - 並び順を指定します。
+        - 数字が小さいほど一覧ページの上位に表示されます。
       keywords:
         - 検索エンジン用のキーワードの設定に利用します。
         - 「,」で区切ることにより複数のキーワードの設定が可能です。
@@ -978,6 +1007,8 @@ ja:
         - 編集を許可するグループを選択します。
       user_ids:
         - 編集を許可するユーザーを選択します。
+      import:
+        - CSVファイルに記載された施設の種類、地域、用途、または管理グループが事前に作成されていない場合、該当する施設は登録されません
     ss/model/file:
       in_file:
         - ファイルを選択します。
@@ -987,9 +1018,29 @@ ja:
         - ファイル名（英数）を入力します。
       geo_location:
         - 緯度・経度を10進で入力します。
+      image_resizes_disabled:
+        - 管理者によって自動リサイズが設定されています。
+        -
+        - 下記の条件の場合に自動的に画像がリサイズされます。
+        - 容量 %{size}以上
+        - 横幅 %{width}ピクセル以上
+        - 高さ %{height}ピクセル以上
+        -
+        - 容量を超過している場合、あらかじめ設定している画質に変更されます。
+        - 横幅、高さを超過している場合、収まるように縮小されます。
+        - 自動リサイズをしたくない場合は、管理者に権限を付与してもらった後、左の「自動リサイズ有効」をクリックし「自動リサイズ無効」に設定してください。
     ss/model/user_title:
       code: 役職コードを入力します。
       name: 役職名を入力します。
+      activation_date: 有効期限の開始日時を入力します。
+      expiration_date: 有効期限の終了日時を入力します。
+      remark: 備考を入力します。
+      order:
+        - 並び順を入力します。
+        - 数字が大きいほど上位に表示されます。
+    ss/model/user_occupation:
+      code: 職種コードを入力します。
+      name: 職種名を入力します。
       activation_date: 有効期限の開始日時を入力します。
       expiration_date: 有効期限の終了日時を入力します。
       remark: 備考を入力します。
@@ -1079,6 +1130,11 @@ ja:
         - サイトで使用するOpenLayersのレイヤーを選択します。
       show_google_maps_search:
         - 有効にすると、地図マーカーに「Googleマップで見る」リンクが表示されます。
+      map_center:
+        - 地図の中心座標を経度、緯度の順に入力します。
+        - Googleマップは緯度、経度の順で表示しますが、これとは順番が逆になっているので注意してください。
+      map_max_number_of_markers:
+        - 1ページあたりのマーカー数の最大個数を入力します。
     ss/addon/kana_setting:
       kana_format:
         - かな機能にて公開画面にふりがなを付与した際の表記形式を設定します。
@@ -1157,6 +1213,15 @@ ja:
         - 並び順を設定します
       state:
         - 制限の有効/無効を設定します
+    ss/model/image_resize:
+      max_width:
+        - 画像ファイルの横幅を設定可能です
+      max_height:
+        - 画像ファイルの縦幅を設定可能です
+      quality:
+        - 画像ファイルの画質を0から100の間で設定可能です
+        - 最大ファイルサイズを超過した場合、画質に基づいて画像を圧縮します
+        - 画質が高い程劣化が少ないです
     ss/model/editor_setting:
       color_button:
         - 文字色変更ボタンの表示を設定します。

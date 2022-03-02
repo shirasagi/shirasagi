@@ -1,6 +1,15 @@
 <%= code_editor ".mod-cms-html-form textarea", mode: :html %>
 
 <dl class="see mod-cms-html-form">
-  <dt><%= @model.t :html %><%= @model.tt :html %></dt>
-  <dd class="wide"><%= f.text_area :html, style: "height: 400px" %></dd>
+  <dt class="wide"><%= @model.t :html %><%= @model.tt :html %></dt>
+  <dd class="wide">
+    <%= f.text_area :html, style: "height: 400px" %>
+
+    <% if example = @item.try(:form_example_layout_html) %>
+      <div class="form-example">
+        <div class="form-example-head example-layout-html"><%= t 'ss.input_example' %></div>
+        <div class="form-example-body example-layout-html"><%= example %></div>
+      </div>
+    <% end %>
+  </dd>
 </dl>

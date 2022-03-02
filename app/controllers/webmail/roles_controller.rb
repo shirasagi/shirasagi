@@ -43,7 +43,7 @@ class Webmail::RolesController < ApplicationController
 
   def import
     @item = @model.new
-    return if request.get?
+    return if request.get? || request.head?
 
     file = params.require(:item).permit(:in_file)[:in_file]
     if file.blank?

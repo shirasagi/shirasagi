@@ -33,7 +33,7 @@ class Cms::NoticesController < ApplicationController
   def copy
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, owned: true)
 
-    if request.get?
+    if request.get? || request.head?
       prefix = I18n.t("workflow.cloned_name_prefix")
       @item.name = "[#{prefix}] #{@item.name}"
       return

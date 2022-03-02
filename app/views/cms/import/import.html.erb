@@ -1,11 +1,11 @@
 <%= jquery do %>
-$(".file").on("change", function() {
-  var basename = $(this).val().split('\\').pop();
-  var ext = basename.split('.').pop();
-  var name = ext.match(/zip/i) ? basename.replace(/\.[^.]+?$/, "") : "";
-  $(".name").val(name);
-  $(".filename").val(name);
-});
+  $(".file").on("change", function() {
+    var basename = $(this).val().split('\\').pop();
+    var ext = basename.split('.').pop();
+    var name = ext.match(/zip/i) ? basename.replace(/\.[^.]+?$/, "") : "";
+    $(".name").val(name);
+    $(".filename").val(name);
+  });
 <% end %>
 
 <%= form_for :item, url: { action: :import }, html: { id: "task-form", method: :post, multipart: true } do |f| %>

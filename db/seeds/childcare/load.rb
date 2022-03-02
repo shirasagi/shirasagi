@@ -232,8 +232,9 @@ save_part route: "cms/node", filename: "purpose/birth/folder.part.html", name: "
   sort: "order", limit: 100
 save_part route: "ads/banner", filename: "relation/banner.part.html", name: "バナー",
   link_action: "direct", sort: "order", mobile_view: "hide"
-save_part route: "key_visual/slide", filename: "slide/slide.part.html", name: "スライドショー",
-  mobile_view: "hide"
+save_part route: "key_visual/swiper_slide", filename: "slide/slide.part.html", name: "スライドショー",
+  mobile_view: "hide", upper_html: "<div id=\"slide\" class=\"content-box\">", lower_html: "</div>",
+  kv_autoplay: "started", kv_thumbnail: "show", kv_thumbnail_count: 3
 save_part route: "ads/banner", filename: "sub-menu/banner.part.html", name: "バナー",
   link_action: "direct", sort: "order", mobile_view: "hide"
 save_part route: "cms/page", filename: "topics/recent.part.html", name: "ページリスト", limit: 1

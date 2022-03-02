@@ -30,10 +30,13 @@ module SS::FileFilter
       return
     end
 
-    if self.class.only_image && !@item.image?
-      @item.errors.add :in_file, :image
-      render_create false
-      return
+    if self.class.only_image
+      if !@item.in_files.all? { |file| SS::ImageConverter.image?(file) }
+        @item.errors.add :in_files, :image
+        render_create false
+        return
+      end
+      @item.in_files.each { |file| file.rewind }
     end
 
     def @item.to_json
@@ -132,7 +135,7 @@ module SS::FileFilter
     set_item
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
-    return if request.get?
+    return if request.get? || request.head?
 
     resizer = SS::ImageResizer.new get_params
     render_update resizer.resize(@item), { template: "resize" }

@@ -180,8 +180,8 @@ ja:
         - "#{number} 検索結果件数を表示します。"
       map_html:
         - "検索結果の地図部分のHTMLを記述することが可能です。以下のテンプレートが使用できます。"
-        - "#{canvas} 地図を表示します。"
         - "#{sidebar} 地図と連動するサイドバーを表示します。"
+        - "#{canvas} 地図を表示します。"
         - "#{filters} 種類を絞り込んで表示します。"
     facility/addon/pointer_image:
       image:

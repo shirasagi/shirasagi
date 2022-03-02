@@ -7,8 +7,8 @@
 
   body = select_tag("lang", options_for_select(options, selected), class: "translate", id: id)
   if @preferred_lang.present? && @cur_site.translate_source.code != @preferred_lang.code
-    convertor = Translate::Convertor.new(@cur_site, @cur_site.translate_source, @preferred_lang)
-    body = convertor.convert(body)
+    converter = Translate::Converter.new(@cur_site, @cur_site.translate_source, @preferred_lang)
+    body = converter.convert(body)
   end
   body.sub!('class="translate"', 'class="notranslate"')
 %>

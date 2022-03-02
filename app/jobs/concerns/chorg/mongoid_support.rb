@@ -48,8 +48,8 @@ module Chorg::MongoidSupport
 
         entity.try(:skip_twitter_post=, true)
         entity.try(:skip_line_post=, true)
-        def entity.post_to_line; end
-        def entity.post_to_twitter; end
+        def entity.post_to_line(execute: :inline); end
+        def entity.post_to_twitter(execute: :inline); end
 
         entity.try(:skip_assoc_opendata=, true)
         def entity.invoke_opendata_job(action); end

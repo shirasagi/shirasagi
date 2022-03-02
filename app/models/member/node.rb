@@ -165,7 +165,7 @@ module Member::Node
 
   class BlogPage
     include Cms::Model::Node
-    include Cms::Reference::Member
+    include Cms::Addon::MemberReference
     include Member::Addon::Blog::PageSetting
     include Cms::Addon::PageList
     include Cms::Addon::GroupPermission
@@ -182,7 +182,7 @@ module Member::Node
       Member::BlogPage.site(site).where(filename: /^#{::Regexp.escape(filename)}\//, depth: depth + 1).and_public
     end
 
-    def file_previewable?(file, user:, member:)
+    def file_previewable?(file, site:, user:, member:)
       return true if super
 
       return true if member.present? && member_id == member.id

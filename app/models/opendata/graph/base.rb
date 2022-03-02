@@ -11,13 +11,7 @@ class Opendata::Graph::Base
   end
 
   def extract_csv_lines
-    encoding = ::NKF.guess(Fs.read(@resource.file.path))
-    if encoding.name.downcase =~ /shift_jis|windows/
-      encoding = "cp932"
-    end
-
-    csv_lines = ::CSV.open(resource.file.path, encoding: "#{encoding}:UTF-8").to_a
-    csv_lines = csv_lines.map do |line|
+    csv_lines = SS::Csv.foreach_row(resource.file, headers: false).map do |line|
       if line.select { |v| v.present? }.present?
         line
       else

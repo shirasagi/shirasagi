@@ -106,7 +106,7 @@ class Gws::Survey::EditablesController < ApplicationController
       redirect_to({ action: :show }, { notice: t('ss.notice.published') })
       return
     end
-    return if request.get?
+    return if request.get? || request.head?
 
     @item.attributes = get_params
     @item.state = 'public'
@@ -119,7 +119,7 @@ class Gws::Survey::EditablesController < ApplicationController
       redirect_to({ action: :show }, { notice: t('ss.notice.depublished') })
       return
     end
-    return if request.get?
+    return if request.get? || request.head?
 
     @item.state = 'closed'
     render_opts = { render: { template: "depublish" }, notice: t('ss.notice.depublished') }
@@ -133,7 +133,7 @@ class Gws::Survey::EditablesController < ApplicationController
       prefix = I18n.t("workflow.cloned_name_prefix")
       @copy.name = "[#{prefix}] #{@item.name}"
     end
-    return if request.get?
+    return if request.get? || request.head?
 
     copy = params.require(:copy).permit(:name, :anonymous_state, :file_state)
     @copy = @item.new_clone(

@@ -2,8 +2,36 @@
   value ||= nil
   controller ||= false
   name = "#{f.object_name}[][in_wrap][page_id]"
-  form_options = column.form_options.merge(id: nil, class: "column-value-select-page", include_blank: (column.place_holder.presence || true))
 %>
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
-  <%= select_tag(name, options_for_select(column.select_options, selected: value.try(:page_id)), form_options) %>
+  <%
+    page_params = { single: 1, parent_nodes: column.ordered_nodes.map(&:id), dropdown: "select" }
+    page_params[:s] = { statuses: %w(public) }
+
+    page_id = value.try(:page_id)
+    page = value.try(:page)
+  %>
+  <%= jquery do %>
+    Cms_Column_Select_Page.render("#<%= id %>");
+  <% end %>
+  <%= link_to t("cms.apis.pages.index"), cms_apis_pages_children_path(page_params), class: "ajax-box btn", style: "margin-bottom: 10px;" %>
+  <%= hidden_field_tag name, page_id, class: "hidden-ids" %>
+  <table class="index ajax-selected">
+    <thead>
+      <tr>
+        <th class="name"><%= Cms::Page.t(:name) %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if page %>
+        <tr data-id="<%= page.id %>">
+          <td>
+            <%= page.name %>
+          </td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 <% end %>

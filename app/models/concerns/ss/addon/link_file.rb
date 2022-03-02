@@ -40,7 +40,7 @@ module SS::Addon
           elsif !allowed_other_user_files? && @cur_user && @cur_user.id != file.user_id
             next
           else
-            file.update(model: "ss/link_file", owner_item: self, state: "public")
+            file.update(model: "ss/link_file", owner_item: self, state: "public", site_id: nil)
           end
           ids << file.id
         end

@@ -30,7 +30,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
 
   def set_columns
     disable_upload_file = {}
-    disable_upload_file = { :input_type.ne => 'upload_file' } if SS.config.cms.enable_lgwan
+    disable_upload_file = { :input_type.ne => 'upload_file' } if SS::Lgwan.enabled?
 
     @columns = Inquiry::Column.site(@cur_site).
       where(node_id: @cur_node.id, state: "public").

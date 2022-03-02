@@ -1,0 +1,29 @@
+<dl class="see mod-cms-map-search">
+  <dt><%= @model.t :form_id %><%= @model.tt :form_id %></dt>
+  <dd><%= f.select :form_id, @item.form_options, include_blank: '' %></dd>
+
+  <dt><%= @model.t :node_id %><%= @model.tt :node_id %></dt>
+  <dd><%= f.select :node_id, @item.node_options, include_blank: '' %></dd>
+
+  <dt><%= @model.t :map_search_options %><%= @model.tt :map_search_options %></dt>
+  <dd></dd>
+
+  <% 4.times.each do |i| %>
+    <%
+      name = tryb { @item.map_search_options[i]['name'] }
+      values = tryb { @item.map_search_options[i]['values'].join("\n") }
+    %>
+    <dt class="depth-2"><%= @model.t :column_name %> (<%= i + 1 %>)</dt>
+    <dd class="map-search-options-name<%= i %>">
+      <% value = tryb { @item.map_search_options[i]['name'] } %>
+      <%= text_field_tag "item[map_search_options][][name]", "",
+        value: name, id: nil, style: "max-width: 30rem;" %>
+    </dd>
+
+    <dt class="mt-1 depth-2"><%= @model.t :column_values %></dt>
+    <dd class="mt-1 map-search-options-value<%= i %>">
+      <%= text_area_tag "item[map_search_options][][values]", values,
+        id: nil, style: "max-width: 30rem;" %>
+    </dd>
+  <% end %>
+</dl>

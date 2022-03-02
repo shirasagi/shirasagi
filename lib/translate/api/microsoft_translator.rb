@@ -25,7 +25,7 @@ class Translate::Api::MicrosoftTranslator
 
   def request_word_limit_exceeded?(count)
     return false if request_word_limit.nil?
-    (@site.translate_mock_api_request_word_count + count) >= request_word_limit
+    (@site.translate_microsoft_api_request_word_count + count) >= request_word_limit
   end
 
   def translate(texts, from, to, site:)

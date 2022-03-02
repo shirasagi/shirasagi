@@ -171,7 +171,8 @@ class Gws::UsersController < ApplicationController
   end
 
   def import
-    return if request.get?
+    return if request.get? || request.head?
+
     @item = Gws::UserCsv::Importer.new get_params
     if @item.valid?
       result = @item.import
@@ -181,7 +182,8 @@ class Gws::UsersController < ApplicationController
   end
 
   def webmail_import
-    return if request.get?
+    return if request.get? || request.head?
+
     @item = Gws::UserCsv::Importer.new get_params
     if @item.valid?
       result = @item.import

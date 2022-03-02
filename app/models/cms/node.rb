@@ -47,6 +47,7 @@ class Cms::Node
     include Cms::Addon::Release
     include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::MaxFileSizeSetting
+    include Cms::Addon::ImageResizeSetting
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
     include Cms::ChildList
@@ -133,10 +134,15 @@ class Cms::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
+    include Category::Addon::Setting
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
-    default_scope ->{ where(route: "cms/site_search") }
+    default_scope -> { where(route: "cms/site_search") }
+
+    def st_categories_sortable?
+      true
+    end
   end
 end

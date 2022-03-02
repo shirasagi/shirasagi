@@ -45,7 +45,7 @@ class Member::Agents::Nodes::MyGroupController < ApplicationController
 
   def invite
     set_item
-    return if request.get?
+    return if request.get? || request.head?
 
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
@@ -58,7 +58,7 @@ class Member::Agents::Nodes::MyGroupController < ApplicationController
 
   def accept
     set_item
-    return if request.get?
+    return if request.get? || request.head?
 
     render_update(
       @item.accept(@cur_member),
@@ -69,7 +69,7 @@ class Member::Agents::Nodes::MyGroupController < ApplicationController
 
   def reject
     set_item
-    return if request.get?
+    return if request.get? || request.head?
 
     render_update(
       @item.reject(@cur_member),
