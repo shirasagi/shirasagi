@@ -2316,6 +2316,11 @@ ja:
       placeholder:
         - プレースホルダーを入力します。
 
+    cms/node/site_search:
+      st_categories:
+        - サイト内検索で使用するカテゴリーを設定します。
+        - 設定されていない場合は全カテゴリーが対象となります。
+
   all_content:
     page_id: ページID
     node_id: フォルダーID
