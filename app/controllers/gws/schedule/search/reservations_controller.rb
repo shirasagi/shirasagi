@@ -42,8 +42,7 @@ class Gws::Schedule::Search::ReservationsController < ApplicationController
 
   def index
     set_plan
-    @plan.send(:validate_facility_double_booking)
-    @reservation_valid = @plan.errors.empty?
+    @reservation_valid = @plan.facility_double_booking_plans.blank?
 
     @submit = params[:submit].present?
 

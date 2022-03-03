@@ -10,4 +10,8 @@ FactoryBot.define do
       basename { "no/de" }
     end
   end
+
+  factory :article_node_search, class: Article::Node::Search, traits: [:cms_node] do
+    route { "article/search" }
+  end
 end

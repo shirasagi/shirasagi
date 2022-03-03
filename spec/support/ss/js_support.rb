@@ -89,6 +89,29 @@ module SS
       })(arguments[0], arguments[1]);
     SCRIPT
 
+    WAIT_ALL_CKEDITORS_READY_SCRIPT = <<~SCRIPT.freeze
+      (function(resolve) {
+        var promises = [];
+        Object.values(CKEDITOR.instances).forEach(function(ckeditor) {
+          if (ckeditor.status === "ready") {
+            console.log("ckeditor is ready");
+            promises.push(Promise.resolve(true));
+            return;
+          }
+
+          var promise = new Promise((resolutionFunc, rejectionFunc) => {
+            ckeditor.once("instanceReady", function() {
+              console.log("ckeditor gets ready");
+              resolutionFunc(true);
+            });
+          });
+          promises.push(promise);
+        });
+
+        Promise.all(promises).then(function() { setTimeout(function() { resolve(true); }, 0); });
+      })(arguments[0]);
+    SCRIPT
+
     FILL_CKEDITOR_SCRIPT = <<~SCRIPT.freeze
       (function(element, text, resolve) {
         var ckeditor = CKEDITOR.instances[element.id];
@@ -167,9 +190,7 @@ module SS
       el = find(:fillable_field, locator).set('').click
       with.to_s.chars.each { |c| el.native.send_keys(c) }
       el
-    rescue Selenium::WebDriver::Error::StaleElementReferenceError
-      el
-    rescue Selenium::WebDriver::Error::ElementClickInterceptedError
+    rescue Selenium::WebDriver::Error::WebDriverError
       el
     end
 
@@ -202,12 +223,12 @@ module SS
 
     def colorbox_opened?
       opacity = page.evaluate_script("$('#cboxOverlay').css('opacity')")
-      opacity.nil? ? true : (opacity.to_f == 0.9)
+      opacity.nil? ? true : (opacity.to_f >= 0.9)
     end
 
     def colorbox_closed?
       opacity = page.evaluate_script("$('#cboxOverlay').css('opacity')")
-      opacity.nil? ? true : (opacity.to_f == 0)
+      opacity.nil? ? true : opacity.to_f.zero?
     end
 
     def wait_for_page_load
@@ -312,10 +333,18 @@ module SS
 
     #
     # Usage
-    #   wait_for_ckeditor_event "item[html]"
+    #   wait_for_ckeditor_event find(:fillable_field, "item[html]")
     #
     def wait_ckeditor_ready(element)
       page.evaluate_async_script(WAIT_CKEDITOR_READY_SCRIPT, element)
+    end
+
+    #
+    # Usage
+    #   wait_all_ckeditors_ready
+    #
+    def wait_all_ckeditors_ready
+      page.evaluate_async_script(WAIT_ALL_CKEDITORS_READY_SCRIPT)
     end
 
     # CKEditor に html を設定する
