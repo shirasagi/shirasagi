@@ -1,0 +1,39 @@
+<div class="cms-tabs">
+  <% path = url_for(action: :index) %>
+  <%= link_to(path, class: [ params[:action] == "index" ? 'current' : nil ]) do %>
+    <span class="tab-name">Collections</span>
+  <% end %>
+  <% path = url_for(action: :info) %>
+  <%= link_to(path, class: [ params[:action] != "index" ? 'current' : nil ]) do %>
+    <span class="tab-name">Server</span>
+  <% end %>
+</div>
+
+<div class="addon-views">
+  <%= render "ss/crud/addon", addon: { id: "addon-basic", head: "Server" } do %>
+    <dl class="see">
+      <dt>name</dt>
+      <dd><%= db.database.name %></dd>
+
+      <% db.command(hello: 1).documents.first.try do |result| %>
+        <%= render "sys/db/colls/bson_document", result: result, depth: 1 %>
+      <% end rescue nil %>
+    </dl>
+  <% end %>
+
+  <%= render "ss/crud/addon", addon: { id: "addon-stats", head: "Stats" } do %>
+    <% db.command(dbStats: 1).documents.first.try do |result| %>
+      <dl class="see">
+        <%= render "sys/db/colls/bson_document", result: result, depth: 1 %>
+      </dl>
+    <% end %>
+  <% end rescue nil %>
+
+  <%= render "ss/crud/addon", addon: { id: "addon-build-info", head: "Build Info" } do %>
+    <% db.command(buildInfo: 1).documents.first.try do |result| %>
+      <dl class="see">
+        <%= render "sys/db/colls/bson_document", result: result, depth: 1 %>
+      </dl>
+    <% end %>
+  <% end rescue nil %>
+</div>

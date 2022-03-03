@@ -1,0 +1,14 @@
+<% if depth > 3 %>
+  <%= result %>
+<% else %>
+  <% result.keys.sort.each do |key| %>
+    <dt class="depth-<%= depth %>"><%= key %></dt>
+    <dd class="depth-<%= depth %>">
+      <% if result[key].is_a?(BSON::Document) %>
+        <%= render "sys/db/colls/bson_document", result: result[key], depth: depth + 1 %>
+      <% else %>
+        <%= result[key] %>
+      <% end %>
+    </dd>
+  <% end %>
+<% end %>

@@ -3,6 +3,7 @@ class Sys::Db::CollsController < ApplicationController
   include Sys::CrudFilter
 
   menu_view nil
+  helper_method :db
 
   private
 
@@ -38,5 +39,9 @@ class Sys::Db::CollsController < ApplicationController
 
   def destroy
     raise
+  end
+
+  def info
+    render
   end
 end
