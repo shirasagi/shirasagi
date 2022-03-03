@@ -191,9 +191,14 @@
     color: #fff;
   }
   .hour.exist {
-    cursor: pointer;
     &:hover {
       background-color: #e70;
+    }
+  }
+  .hour.registered {
+    cursor: pointer;
+    &:hover {
+      background-color: $orange;
     }
   }
   .active {

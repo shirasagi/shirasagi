@@ -27,15 +27,17 @@ describe "gws_user_occupations", type: :feature, dbscope: :example do
       end
 
       csv = ::SS::ChunkReader.new(page.html).to_a.join
-      csv = csv.encode("UTF-8", "SJIS")
-      csv = ::CSV.parse(csv, headers: true)
-
-      expect(csv.length).to eq 1
-      expect(csv.headers).to include(Gws::UserOccupation.t(:code), Gws::UserOccupation.t(:name))
-      expect(csv[0][Gws::UserOccupation.t(:code)]).to eq item.code
-      expect(csv[0][Gws::UserOccupation.t(:name)]).to eq item.name
-      expect(csv[0][Gws::UserOccupation.t(:remark)]).to eq item.remark
-      expect(csv[0][Gws::UserOccupation.t(:order)]).to eq item.order.to_s
+      csv.force_encoding("UTF-8")
+      csv = csv[1..-1]
+      SS::Csv.open(StringIO.new(csv)) do |csv|
+        table = csv.read
+        expect(table.length).to eq 1
+        expect(table.headers).to include(Gws::UserOccupation.t(:code), Gws::UserOccupation.t(:name))
+        expect(table[0][Gws::UserOccupation.t(:code)]).to eq item.code
+        expect(table[0][Gws::UserOccupation.t(:name)]).to eq item.name
+        expect(table[0][Gws::UserOccupation.t(:remark)]).to eq item.remark
+        expect(table[0][Gws::UserOccupation.t(:order)]).to eq item.order.to_s
+      end
     end
   end
 

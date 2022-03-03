@@ -3,6 +3,7 @@ module Gws::Addon::Schedule::Facility
   extend SS::Addon
 
   included do
+    field :duplicate_registered, type: DateTime
     embeds_ids :facilities, class_name: "Gws::Facility::Item"
 
     permit_params facility_ids: []
@@ -72,16 +73,15 @@ module Gws::Addon::Schedule::Facility
   end
 
   def validate_facility_double_booking
-    plans = self.class.ne(id: id).without_deleted.where(site_id: site_id).any_in(facility_ids: facility_ids)
-    if allday?
-      plans = plans.where(:end_at.gt => start_on.in_time_zone.beginning_of_day, :start_at.lt => end_on.in_time_zone.end_of_day)
-    else
-      plans = plans.where(:end_at.gt => start_at, :start_at.lt => end_at)
+    return if facility_double_booking_plans.blank?
+
+    if @cur_user && @cur_user.gws_role_permit_any?((@cur_site || site), :duplicate_private_gws_facility_plans)
+      self.duplicate_registered = Time.zone.now
+      return
     end
-    return if plans.blank?
 
     errors.add :base, I18n.t('gws/schedule.errors.double_booking_facility')
-    plans.each do |plan|
+    facility_double_booking_plans.each do |plan|
       msg = Gws::Schedule::PlansController.helpers.term(plan)
       msg += " " + plan.facilities.map(&:name).join(',')
       if plan.user.present?
@@ -107,5 +107,21 @@ module Gws::Addon::Schedule::Facility
       max = site.facility_max_hour
       errors.add :base, I18n.t('gws/schedule.errors.over_than_facility_hours', min: min_hour, max: max_hour)
     end
+  end
+
+  public
+
+  def facility_double_booking_plans
+    plans = self.class.ne(id: id).
+      without_deleted.
+      exists(duplicate_registered: false).
+      where(site_id: site_id).
+      any_in(facility_ids: facility_ids)
+    if allday?
+      plans = plans.where(:end_at.gt => start_on.in_time_zone.beginning_of_day, :start_at.lt => end_on.in_time_zone.end_of_day)
+    else
+      plans = plans.where(:end_at.gt => start_at, :start_at.lt => end_at)
+    end
+    plans
   end
 end

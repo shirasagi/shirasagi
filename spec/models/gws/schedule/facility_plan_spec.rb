@@ -94,13 +94,14 @@ RSpec.describe Gws::Schedule::Plan, type: :model, dbscope: :example do
   end
 
   describe "#validate_facility_double_booking" do
-    let(:user) { gws_user }
+    let(:role) { create :gws_role_schedule_plan_editor }
+    let(:user) { create :gws_user, gws_role_ids: [ role.id ] }
     let(:now) { Time.zone.now.change(hour: 16) }
     let(:tomorrow) { now + 1.day }
     let!(:facility) { create :gws_facility_item }
     let!(:item) do
       create(
-        :gws_schedule_plan,
+        :gws_schedule_plan, site_id: site.id, cur_user: user,
         allday: nil, start_at: now.change(hour: 8), end_at: now.change(hour: 22),
         facility_ids: [facility.id]
       )
@@ -109,7 +110,7 @@ RSpec.describe Gws::Schedule::Plan, type: :model, dbscope: :example do
     context "with duplicated start_at/end_at plan" do
       subject do
         build(
-          :gws_schedule_plan, site_id: site.id,
+          :gws_schedule_plan, site_id: site.id, cur_user: user,
           allday: nil, start_at: now, end_at: now + 1.hour, start_on: now.beginning_of_day, end_on: now.end_of_day,
           facility_ids: [facility.id]
         )
@@ -125,7 +126,7 @@ RSpec.describe Gws::Schedule::Plan, type: :model, dbscope: :example do
     context "with duplicated all-day plan" do
       subject do
         build(
-          :gws_schedule_plan, site_id: site.id,
+          :gws_schedule_plan, site_id: site.id, cur_user: user,
           allday: "allday", start_at: now, end_at: now + 1.hour, start_on: now.beginning_of_day, end_on: now.end_of_day,
           facility_ids: [facility.id]
         )
@@ -141,7 +142,7 @@ RSpec.describe Gws::Schedule::Plan, type: :model, dbscope: :example do
     context "with non-duplicated all-day plan but start_at/end_at is duplicated" do
       subject do
         build(
-          :gws_schedule_plan, site_id: site.id,
+          :gws_schedule_plan, site_id: site.id, cur_user: user,
           allday: "allday", start_at: now, end_at: now + 1.hour, start_on: tomorrow.beginning_of_day, end_on: tomorrow.end_of_day,
           facility_ids: [facility.id]
         )

@@ -1,0 +1,13 @@
+<%
+
+def search_node_options
+  Article::Node::Search.site(@cur_site).map do |node|
+    [node.name, node.id]
+  end
+end
+
+%>
+<dl class="see mod-article-search">
+  <dt><%= @model.t :search_node_id %><%= @model.tt :search_node_id %></dt>
+  <dd><%= f.select :search_node_id, search_node_options, include_blank: true %></dd>
+</dl>
