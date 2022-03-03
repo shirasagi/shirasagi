@@ -16,7 +16,7 @@
       return;
     }
 
-    var $html = $("<div />", { id: "file-" + fileId, class: "file-view", "data-file-id": fileId });
+    var $html = $(ejs.render("<div id=\"file-<%%= fileId %>\" class=\"file-view\" data-file-id=\"<%%= fileId %>\"></div>", { fileId: fileId }));
     $html.html(SS.loading);
     $el.find("#selected-files").append($html);
 
