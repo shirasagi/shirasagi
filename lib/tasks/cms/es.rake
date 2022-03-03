@@ -16,6 +16,8 @@ namespace :cms do
         all_ids.each_slice(100) do |ids|
           pages = Cms::Page.in(id: ids).to_a
           pages.each do |page|
+            next unless page.public_node?
+
             puts "- #{page.filename}"
             next if site.elasticsearch_deny.include?(page.filename)
             job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site)
