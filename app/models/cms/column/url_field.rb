@@ -12,4 +12,8 @@ class Cms::Column::UrlField < Cms::Column::Base
       [ I18n.t("cms.options.html_tag.#{v}", default: v), v ]
     end
   end
+
+  def db_form_type
+    { type: 'textarea', rows: 2 }
+  end
 end

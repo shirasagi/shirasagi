@@ -45,7 +45,7 @@ class Event::PagesController < ApplicationController
 
     @item = @model.new
 
-    if request.get?
+    if request.get? || request.head?
       respond_to do |format|
         format.html { render }
         format.json { render template: "ss/tasks/index", content_type: json_content_type, locals: { item: @task } }
@@ -102,7 +102,8 @@ class Event::PagesController < ApplicationController
   end
 
   def ical_refresh
-    return if request.get?
+    return if request.get? || request.head?
+
     job = Event::Ical::ImportJob.bind(site_id: @cur_site.id, node_id: @cur_node.id, user_id: @cur_user.id)
     job.perform_later
     redirect_to({ action: :index }, { notice: t("rss.messages.job_started") })

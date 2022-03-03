@@ -90,6 +90,20 @@ module SS::Addon
 
     public
 
+    def reset_translate_api_count!
+      # mock
+      self.translate_mock_api_request_count = 0
+      self.translate_mock_api_request_word_count = 0
+      # microsoft translator text api
+      self.translate_microsoft_api_request_count = 0
+      self.translate_microsoft_api_request_word_count = 0
+      self.translate_microsoft_api_request_metered_usage = 0
+      # google translation api
+      self.translate_google_api_request_count = 0
+      self.translate_google_api_request_word_count = 0
+      self.save!
+    end
+
     def translate_state_options
       [
         [I18n.t("ss.options.state.enabled"), "enabled"],

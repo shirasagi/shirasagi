@@ -151,6 +151,7 @@ ja:
       send_verify_mail: 登録確認メールを送信する
       manage_columns: 入力項目を管理する
       manage_init_columns: 初期ブロックを管理する
+      manage_db: DB管理
       save_as_branch: 差し替え保存
       ignore_alerts_and_save_as_branch: 警告を無視して差替保存
       column_add_list: リストを追加する
@@ -181,7 +182,8 @@ ja:
         - "リンク切れを修正した場合、再度リンクチェックを実行し、新しいレポートを作成してください。"
       check_links_report_annotation: ※リンクチェックの実行タイミングや通信先サーバーの負荷状況によっては誤検出の場合があります。
       check_links_report_created: "%{time} 時点"
-      confirm_column_deletion_whose_form_is_in_use: "定型フォームは利用中のため入力項目を削除するとページが正しく表示されなくなる場合があります。それでも削除する場合はチェックしてください。"
+      delete_forum_column: 入力項目を削除する
+      confirm_column_deletion_whose_form_is_in_use: "定型フォームは利用中のため入力項目を削除するとページが正しく表示されなくなる場合があります。"
     apis:
       categories:
         index: カテゴリーを選択する
@@ -673,6 +675,7 @@ ja:
       cms/loop_setting: ループHTML
       cms/command: コマンド
       cms/form: 定型フォーム
+      cms/form_db: 定型フォーム - DB
       cms/init_column: 初期ブロック
       cms/column/base: 入力項目
       cms/column/text_field: 一行入力
@@ -947,7 +950,9 @@ ja:
       cms/copy_nodes_task:
         target_node_name: 複製先フォルダー名
       cms/addon/source_cleaner:
-        target: 対象
+        target_type: 対象の種別
+        target_value: 対象の名称
+        replace_source: 対象の属性値
         action: 操作
         replaced_value: 置換後の値
       cms/addon/opendata_ref/site:
@@ -1002,6 +1007,13 @@ ja:
         column_ids: 入力項目
         init_column_ids: 初期ブロック
         sub_type: 目的
+      cms/form_db:
+        name: 名前
+        order: 並び順
+        form_id: 定型フォーム
+        node_id: 記事フォルダー
+        import_url: インポートURL
+        size: 登録件数
       cms/addon/form/node:
         st_form_ids: 定型フォーム設定
       cms/addon/form/page:
@@ -1015,6 +1027,7 @@ ja:
       cms/column/base:
         route: 属性
         name: 名前
+        value: 値
         order: 並び順
         required: 必須入力
         tooltips: ツールチップ
@@ -1222,6 +1235,7 @@ ja:
       replace_word: 使用が好ましくない単語が含まれています。「%{from}」→「%{to}」
       replace_word_validation: に使用が好ましくない単語が含まれています。
       alt_is_included_in_filename: 代替テキストがファイル名に含まれています。
+      cms_form_db_required_node: データの登録には記事フォルダーの設定が必要です。
       invalid_url_scheme: 「http://」や 「https://」で始まるURLのみにしてください。
       syntax_check_server_error: アクセシビリティチェック中にサーバーエラーが発生しました。
       syntax_check_detail:
@@ -1869,13 +1883,26 @@ ja:
         - アクセシビリティチェックの有効無効を設定します。
 
     cms/addon/source_cleaner:
-      target:
-        - クリーニングの対象を設定します。
-        - タグ、属性、文字列の中から種別を選択し、右欄に対象を入力します。
+      target_type:
+        - |-
+          クリーニング対象の種別を設定します。
+          クリーニング対象は置換または削除されます。
+          タグ ... HTMLタグを設定します。
+          属性 ... HTMLタグの属性(attribute)を設定します。
+          文字列 ... 文字列を設定します。
+          正規表現 ... 正規表現にマッチする文字列を設定します。
+      target_value:
+        - 置換または削除対象のタグや属性の名称、文字列を設定します。
+      replace_source:
+        - 置換または削除対象の属性の値を設定します。
       action:
-        - 対象のクリーニング方法を設定します。
-        - 置換または削除が選択できます。
-        - 置換後のタグや属性の値、文字列を右欄に入力します。
+        - |-
+          対象のクリーニング方法を設定します。
+          クリーニング対象のタグや属性の値、文字列を置換または削除します。
+          削除 ... クリーニング対象を削除します。
+          置換 ... クリーニング対象を特定の値に置換します。
+      replaced_value:
+        - 置換後のタグや属性の値、文字列を設定します。
 
     cms/addon/opendata_ref/site:
       opendata_site_ids:
@@ -2090,9 +2117,9 @@ ja:
 
         使用例：
           &lt;dl>
-            &lt;dt>項目&lt;/dt>
+            &lt;dt>項目1&lt;/dt>
             &lt;dd>{{ values["項目名1"] }}&lt;/dd>
-            &lt;dt>項目&lt;/dt>
+            &lt;dt>項目2&lt;/dt>
             &lt;dd>{{ values["項目名2"] }}&lt;/dd>
           &lt;/dl>
 
@@ -2131,32 +2158,12 @@ ja:
         - 公開側のHTMLタグを選択します。
       html_additional_attr:
         - 公開側のHTMLタグの追加属性を指定します。
-      layout: |-
-        入力項目のHTMLを設定します。
-        未設定の場合、既定の HTML を表示します。
-
-        使用例：
-          {% if value.date %}
-            &lt;span>{{ value.date | date: "%Y年%1m月%1d日" }}&lt;/span>
-          {% endif %}
 
     cms/column/url_field:
       html_tag:
         - 公開側のHTMLタグを選択します。
       html_additional_attr:
         - 公開側のHTMLタグの追加属性を指定します。
-      layout: |-
-        入力項目のHTMLを設定します。
-        未設定の場合、既定の HTML を表示します。
-
-        使用例：
-          {% if value.link %}
-            {% if value.label %}
-              &lt;a href="{{ value.link }}">{{ value.label }}&lt;/a>
-            {% else %}
-              &lt;a href="{{ value.link }}">{{ value.link }}&lt;/a>
-            {% endif %}
-          {% endif %}
 
     cms/column/url_field2:
       html_tag:
@@ -2171,18 +2178,6 @@ ja:
         - リンクURLの最大長を入力します。
       link_place_holder:
         - リンクURLのプレースホルダーを入力します。
-      layout: |-
-        入力項目のHTMLを設定します。
-        未設定の場合、既定の HTML を表示します。
-
-        使用例：
-          {% if value.link %}
-            {% if value.label %}
-              &lt;a href="{{ value.link }}">{{ value.label }}&lt;/a>
-            {% else %}
-              &lt;a href="{{ value.link }}">{{ value.link }}&lt;/a>
-            {% endif %}
-          {% endif %}
 
     cms/column/select:
       place_holder:
@@ -2197,18 +2192,6 @@ ja:
         - リンクテキストの最大長を入力します。
       label_place_holder:
         - リンクテキストのプレースホルダーを入力します。
-      layout: |-
-        入力項目のHTMLを Liquid 形式で設定します。
-        未設定の場合、既定の HTML を表示します。
-
-        使用例（ファイルアップロードの場合）：
-          {% if value.file %}
-            {% if value.image? %}
-              &lt;a href="{{ value.file.url }}">&lt;img src="{{ value.file.thumb_url }}" alt="{{ value.image_text | default: value.file.humanized_name }}" title="{{ value.file.basename }}">&lt;/a>
-            {% else %}
-              &lt;a href="{{ value.file.url }}">{{ value.attachment_text | default: value.file.humanized_name }}&lt;/a>
-            {% endif %}
-          {% endif %}
 
     cms/addon/column/text_like:
       max_length:
@@ -2230,17 +2213,7 @@ ja:
 
         使用例：
           {% if value.value %}
-            &lt;h2>{{ value.value }}&lt;/h2>
-          {% endif %}
-
-    cms/column/text_area:
-      layout: |-
-        入力項目のHTMLを設定します。
-        未設定の場合、既定の HTML を表示します。
-
-        使用例：
-          {% if value.value %}
-            &lt;p>{{ value.value | newline_to_br }}&lt;/p>
+          &nbsp; {{ value.value }}
           {% endif %}
 
     cms/column/list:
@@ -2356,6 +2329,11 @@ ja:
         - 下部HTMLを入力します。
       placeholder:
         - プレースホルダーを入力します。
+
+    cms/node/site_search:
+      st_categories:
+        - サイト内検索で使用するカテゴリーを設定します。
+        - 設定されていない場合は全カテゴリーが対象となります。
 
   all_content:
     page_id: ページID

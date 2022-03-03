@@ -2,6 +2,7 @@
 class Webmail::User
   include SS::Model::User
   include SS::Reference::UserTitles
+  include SS::Reference::UserOccupations
   include Webmail::Addon::UserExtension
   include Webmail::Addon::Role
   include Webmail::Permission

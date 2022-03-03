@@ -2,7 +2,9 @@
   <% @items.each do |item| %>
     <div class="column" data-id="<%= item.id %>">
       <p><%= link_to item.name, item.url %></p>
-      <p><%= item.address %></p>
+      <% if item.try(:address) %>
+        <p><%= item.address %></p>
+      <% end %>
       <% if @markers.find { |marker| marker[:id] == item.id }.present? %>
         <%= link_to t("facility.sidebar.click_marker"), "#", class: "click-marker" %>
       <% else %>

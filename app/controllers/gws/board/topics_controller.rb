@@ -112,7 +112,7 @@ class Gws::Board::TopicsController < ApplicationController
     set_item unless @item
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
 
-    if request.get?
+    if request.get? || request.head?
       render
       return
     end
@@ -126,7 +126,7 @@ class Gws::Board::TopicsController < ApplicationController
     set_item
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
 
-    if request.get?
+    if request.get? || request.head?
       render
       return
     end

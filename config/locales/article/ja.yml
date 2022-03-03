@@ -1,20 +1,34 @@
 ja:
   article:
     page: 記事ページ
+    search: 検索
+    reset: リセット
+    result: 検索結果
+    count: 件
     page_navi:
       next: 次のページ
       prev: 前のページ
       back_to_index: 一覧へ戻る
+    query:
+      category: カテゴリー
+      keyword: キーワード
 
   modules:
     article: 記事
+    addons:
+      article/map_search: 検索設定
+      article/map_search_result: 検索結果
+      article/search: 記事検索
 
   cms:
     nodes:
+      article/map_search: 地図検索
       article/page: 記事リスト
+      article/search: 記事検索
     parts:
       article/page: 記事リスト
       article/page_navi: 記事ナビゲーション
+      article/search: 記事検索
 
   cms_role:
     read_other_article_pages: ページの閲覧（全て）
@@ -42,7 +56,39 @@ ja:
       article/page: 記事ページ
       article/node/page: 記事リスト
       article/part/node: 記事リスト
+    attributes:
+      article/addon/map_search:
+        form_id: 定型フォーム
+        node_id: 記事フォルダー
+        map_search_options: 検索オプション
+        column_name: 項目名
+        column_values: 選択肢
+      article/addon/map_search_result:
+        map_html: 地図HTML
+      article/addon/search:
+        search_node_id: 検索フォルダー
 
   job:
     models:
       article/page/import_job: 記事ページインポート
+
+  tooltip:
+    article/addon/map_search:
+      form_id: |-
+        一覧を絞り込むための定型フォームを指定します。
+      node_id: |-
+        一覧を絞り込むための記事フォルダーを指定します。
+      map_search_options:
+        検索フォームで使用する項目名と選択肢を設定します。
+        選択肢は改行区切りで入力します。
+    article/addon/map_search_result:
+      map_html: |-
+        検索結果の地図部分のHTMLを記述することが可能です。
+        以下のテンプレートが使用できます。
+        #{sidebar} 地図と連動するサイドバーを表示します。
+        #{canvas} 地図を表示します。
+        #{filters} 種類を絞り込んで表示します。
+    article/addon/search:
+      search_node_id:
+        - 検索先のフォルダーを設定します。
+        - 未入力の場合は自フォルダーを対象にします。

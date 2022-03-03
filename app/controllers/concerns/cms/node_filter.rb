@@ -69,7 +69,7 @@ module Cms::NodeFilter
     destination = params[:destination]
     confirm     = params[:confirm]
 
-    if request.get?
+    if request.get? || request.head?
       @filename = @item.filename
     elsif confirm
       @source = "/#{@item.filename}/"
@@ -99,7 +99,7 @@ module Cms::NodeFilter
     @target = 'folder'
     @target_path = @item.path
 
-    return if request.get?
+    return if request.get? || request.head?
 
     @commands.each do |command|
       command.run(@target, @target_path)

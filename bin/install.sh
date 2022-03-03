@@ -52,8 +52,8 @@ else
 fi
 export PATH="$PATH:$RVM_HOME/bin"
 source $RVM_HOME/scripts/rvm
-rvm install 2.7.5 --disable-binary
-rvm use 2.7.5 --default
+rvm install 3.0.2 --disable-binary
+rvm use 3.0.2 --default
 bundle --version
 
 if [ ! `which ruby` ]; then exit 1; fi

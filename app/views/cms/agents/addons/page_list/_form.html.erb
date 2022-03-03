@@ -2,7 +2,9 @@
 
 <%= code_editor "##{addon[:id]} .html", mode: :html %>
 <%= jquery do %>
-  Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html');
+  if ($('#item_loop_html').length) {
+    Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html');
+  }
 
   var $addon = $("<%= "##{addon[:id]}" %>");
   $addon.find("select[name='item[sort]']").on("change", function() {
@@ -66,50 +68,50 @@
   <dt class="limit"><%= @model.t :limit %><%= @model.tt :limit %></dt>
   <dd class="limit"><%= f.number_field :limit %></dd>
 
-  <% if @model.use_liquid %>
+  <% if @model.use_new_days %>
+    <dt class="new-days"><%= @model.t :new_days %><%= @model.tt :new_days %></dt>
+    <dd class="new-days short"><%= f.number_field :new_days %> <span class="postfix"><%= t "datetime.prompts.day" %></span></dd>
+  <% end %>
+
+  <% if @model.use_loop_settings && @model.use_liquid %>
     <dt class="loop_format"><%= @model.t :loop_format %><%= @model.tt :loop_format %></dt>
     <dd class="loop_format"><%= f.select :loop_format, @item.loop_format_options %></dd>
   <% end %>
 </dl>
 
-<dl class="see loop-format-shirasagi">
-  <% if @model.use_upper_html %>
-    <dt><%= @model.t :upper_html %><%= @model.tt :upper_html %></dt>
-    <dd><%= f.text_area :upper_html, class: :html %></dd>
-  <% end %>
+<% if @model.use_loop_settings %>
+  <dl class="see loop-format-shirasagi">
+    <% if @model.use_upper_html %>
+      <dt><%= @model.t :upper_html %><%= @model.tt :upper_html %></dt>
+      <dd><%= f.text_area :upper_html, class: :html %></dd>
+    <% end %>
 
-  <% if @model.use_loop_html %>
-    <dt><%= @model.t :loop_html %><%= @model.tt :loop_html %></dt>
-    <dd><%= f.select :loop_setting_id, ancestral_loop_settings, include_blank: t('cms.input_directly') %></dd>
-    <dd><%= f.text_area :loop_html, class: :html, style: "height: 100px;" %></dd>
-  <% end %>
+    <% if @model.use_loop_html %>
+      <dt><%= @model.t :loop_html %><%= @model.tt :loop_html %></dt>
+      <dd><%= f.select :loop_setting_id, ancestral_loop_settings, include_blank: t('cms.input_directly') %></dd>
+      <dd><%= f.text_area :loop_html, class: :html, style: "height: 100px;" %></dd>
+    <% end %>
 
-  <% if @model.use_lower_html %>
-    <dt><%= @model.t :lower_html %><%= @model.tt :lower_html %></dt>
-    <dd><%= f.text_area :lower_html, class: :html %></dd>
-  <% end %>
+    <% if @model.use_lower_html %>
+      <dt><%= @model.t :lower_html %><%= @model.tt :lower_html %></dt>
+      <dd><%= f.text_area :lower_html, class: :html %></dd>
+    <% end %>
 
-  <% if @model.use_no_items_display %>
-    <dt><%= @model.t :no_items_display_state %><%= @model.tt :no_items_display_state %></dt>
-    <dd><%= f.select :no_items_display_state, @item.no_items_display_state_options, include_blank: true %></dd>
-  <% end %>
+    <% if @model.use_no_items_display %>
+      <dt><%= @model.t :no_items_display_state %><%= @model.tt :no_items_display_state %></dt>
+      <dd><%= f.select :no_items_display_state, @item.no_items_display_state_options, include_blank: true %></dd>
+    <% end %>
 
-  <% if @model.use_substitute_html %>
-    <dt><%= @model.t :substitute_html %><%= @model.tt :substitute_html %></dt>
-    <dd><%= f.text_area :substitute_html, class: :html %></dd>
-  <% end %>
-</dl>
-
-<% if @model.use_liquid %>
-  <dl class="see loop-format-liquid">
-    <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
-    <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 300px;" %></dd>
+    <% if @model.use_substitute_html %>
+      <dt><%= @model.t :substitute_html %><%= @model.tt :substitute_html %></dt>
+      <dd><%= f.text_area :substitute_html, class: :html %></dd>
+    <% end %>
   </dl>
 <% end %>
 
-<% if @model.use_new_days %>
-  <dl class="see new-days">
-    <dt><%= @model.t :new_days %><%= @model.tt :new_days %></dt>
-    <dd class="short"><%= f.number_field :new_days %> <span class="postfix"><%= t "datetime.prompts.day" %></span></dd>
+<% if @model.use_loop_settings && @model.use_liquid %>
+  <dl class="see loop-format-liquid">
+    <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
+    <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 300px;" %></dd>
   </dl>
 <% end %>

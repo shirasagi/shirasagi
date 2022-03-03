@@ -1,0 +1,37 @@
+<table class="form-db-table table-db">
+  <thead>
+    <tr>
+      <th class="td-icon"></th>
+      <th style="width: 18rem;"><%= Cms::Column::Base.t :name %></th>
+      <th style="width: 18rem;"><%= Cms::Column::Base.t :route %></th>
+      <th style="width: 50rem;"><%= Cms::Column::Base.t :value %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th class="td-icon"></th>
+      <td class="text-break"><%= Article::Page.t :name %></td>
+      <td class="text-break"><%= Article::Page.t :name %></td>
+      <td class="text-break">
+        <%= @item.name %>
+        <% if node = @item.parent %>
+        <br>
+          <%= link_to "( #{Article::Page.model_name.human} )", article_page_path(cid: @item.parent.id, id: @item.id), target: '_blank' %>
+        <% end %>
+      </td>
+    </tr>
+
+    <% @column_names.each do |col_name| %>
+      <% values = @db.collect_values(@item, col_name) %>
+
+      <tr>
+        <th class="td-icon"></th>
+        <td class="text-break"><%= col_name %></td>
+        <td class="text-break"><%= values[:type] %></td>
+        <td class="text-break">
+          <pre class="pre-value"><%= values[:full] %></pre>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

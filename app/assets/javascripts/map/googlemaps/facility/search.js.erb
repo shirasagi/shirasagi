@@ -36,7 +36,7 @@ this.Facility_Search = (function () {
         return $("#map-sidebar .column").removeClass("current");
       });
     };
-    Googlemaps_Map.setMarkers(markers);
+    Googlemaps_Map.setMarkers(markers, { markerCluster: opts['markerCluster'] });
     //setup sidebar
     $("#map-sidebar .column .click-marker").on("click", function () {
       var dataID;
@@ -45,10 +45,22 @@ this.Facility_Search = (function () {
       $.each(Googlemaps_Map.markers, function (i, m) {
         var column;
         if (dataID === m["id"]) {
+          var cluster = Googlemaps_Map.markerClusterer.clusters_.find(function(cluster) {
+            if (cluster.getMarkers().length === 1) return false;
+            return cluster.getMarkers().find(function(marker) {
+              return marker.position === m.marker.position;
+            });
+          });
+          if (cluster) {
+            m["window"].setPosition(cluster.getMarkers()[0].position);
+            m["window"].pixelOffset = new google.maps.Size(0, -15);
+            console.log(cluster)
+          }
+
           if (Googlemaps_Map.openedInfo) {
             Googlemaps_Map.openedInfo.close();
           }
-          m["window"].open(m["marker"].getMap(), m["marker"]);
+          m["window"].open(m["marker"].getMap() || Googlemaps_Map.map, m["marker"]);
           Googlemaps_Map.openedInfo = m["window"];
           column = $('#map-sidebar .column[data-id="' + dataID + '"]');
           column.addClass("current");
@@ -56,6 +68,7 @@ this.Facility_Search = (function () {
           return false;
         }
       });
+
       return false;
     });
     //setup category filter

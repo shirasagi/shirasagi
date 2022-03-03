@@ -1,0 +1,24 @@
+<dl class="see">
+  <dt><%= @model.t :year_id %></dt>
+  <dd><%= @item.year.name %></dd>
+
+  <dt><%= @model.t :code %><%= @model.tt :code %></dt>
+  <dd><%= f.text_field :code, autofocus: pc_browser? %></dd>
+
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+
+  <% if false %>
+    <dt><%= @model.t :activation_date %><%= @model.tt :activation_date %></dt>
+    <dd><%= f.text_field :activation_date, class: 'datetime js-datetime', value: tryb { @item.activation_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+
+    <dt><%= @model.t :expiration_date %><%= @model.tt :expiration_date %></dt>
+    <dd><%= f.text_field :expiration_date, class: 'datetime js-datetime', value: tryb { @item.expiration_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <% end %>
+
+  <dt><%= @model.t :remark %><%= @model.tt :remark %></dt>
+  <dd><%= f.text_area :remark %></dd>
+</dl>

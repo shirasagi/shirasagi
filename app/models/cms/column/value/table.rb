@@ -7,6 +7,11 @@ class Cms::Column::Value::Table < Cms::Column::Value::Base
     export :value
   end
 
+  def search_values(values)
+    return false unless values.instance_of?(Array)
+    values.find { |v| value.to_s.index(v) }.present?
+  end
+
   private
 
   def validate_value

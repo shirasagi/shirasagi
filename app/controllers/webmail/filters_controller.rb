@@ -45,7 +45,7 @@ class Webmail::FiltersController < ApplicationController
   end
 
   def import
-    return if request.get?
+    return if request.get? || request.head?
 
     file = params[:item].try(:[], :in_file)
     if file.nil? || ::File.extname(file.original_filename) != ".csv"

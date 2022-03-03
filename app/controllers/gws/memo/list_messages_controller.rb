@@ -108,7 +108,7 @@ class Gws::Memo::ListMessagesController < ApplicationController
     raise '404' if @item.public?
     raise '403' unless @item.allowed?(:send, @cur_user, site: @cur_site)
 
-    if request.get?
+    if request.get? || request.head?
       send_params
       return
     end

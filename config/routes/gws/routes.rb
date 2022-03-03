@@ -46,9 +46,13 @@ Rails.application.routes.draw do
     get "question_management" => "question_management#index"
     resource  :site
     resources :groups, concerns: [:deletion, :download, :import]
-    resources :custom_groups, concerns: [:deletion]
+    resources :custom_groups, concerns: [:deletion, :download, :import]
     resources :users, concerns: [:deletion, :download, :import, :webmail_import, :lock_and_unlock]
     resources :user_titles, concerns: [:deletion] do
+      match :download_all, on: :collection, via: %i[get post]
+      match :import, on: :collection, via: %i[get post]
+    end
+    resources :user_occupations, concerns: [:deletion] do
       match :download_all, on: :collection, via: %i[get post]
       match :import, on: :collection, via: %i[get post]
     end
@@ -74,6 +78,7 @@ Rails.application.routes.draw do
       get "groups" => "groups#index"
       get "users" => "users#index"
       get "user_titles" => "user_titles#index"
+      get "user_occupations" => "user_occupations#index"
       get "facilities" => "facilities#index"
       post "reminders" => "reminders#create"
       delete "reminders" => "reminders#destroy"

@@ -50,6 +50,8 @@ ja:
     auto_reload: 自動更新
     quality: 画質
     resize_image_auto: 画像リサイズ(自動)
+    input_example: 記入例
+    csv_file: CSVファイル
 
     views:
       login/login:
@@ -509,6 +511,7 @@ ja:
       ss/site: サイト
       ss/user: ユーザー
       ss/user_title: 役職
+      ss/user_occupation: 職種
       ss/group: グループ
       ss/user_group_history: 異動履歴
       ss/file: ファイル
@@ -573,6 +576,7 @@ ja:
         tel_ext: 内線番号
         tel_ext_short: 内線
         in_title_id: 役職
+        in_occupation_id: 職種
         group_ids: グループ
         groups: グループ
         cms_roles: CMSロール
@@ -607,9 +611,20 @@ ja:
         group_id: グループ
         activation_date: 有効期限（開始）
         expiration_date: 有効期限（終了）
+      ss/model/user_occupation:
+        code: 職種コード
+        name: 職種名
+        remark: 備考
+        order: 並び順
+        group_id: グループ
+        activation_date: 有効期限（開始）
+        expiration_date: 有効期限（終了）
       ss/model/reference/user_titles:
         title_ids: 役職
         title_orders: 役職並び順
+      ss/model/reference/user_occupations:
+        occupation_ids: 職種
+        occupation_orders: 職種並び順
       ss/model/group:
         name: グループ名
         order: 表示順
@@ -695,6 +710,8 @@ ja:
         map_api_key: APIキー
         map_api_layer: 地図レイヤー
         show_google_maps_search: Googleマップへのリンク
+        map_center: 地図の中心座標
+        map_max_number_of_markers: 最大地点数
       ss/addon/kana_setting:
         kana_format: ふりがなの形式
       ss/addon/facebook_setting:
@@ -884,6 +901,8 @@ ja:
         - LDAPを利用する場合にLDAPユーザーを選択します。
       title_ids:
         - 役職を選択します。
+      occupation_ids:
+        - 職種を選択します。
       account_start_date:
         - 有効期限の開始日を入力します。
       account_expiration_date:
@@ -947,8 +966,8 @@ ja:
         - ページの本文レイアウトを選択します。
         - 通常レイアウトのみの利用であれば設定は不要です。
       order:
-        - フォルダーの並び順の設定で「指定順」を指定している場合に利用します。
-        - 数字が小さいほど一覧ページの上位にリンクが表示されます。
+        - 並び順を指定します。
+        - 数字が小さいほど一覧ページの上位に表示されます。
       keywords:
         - 検索エンジン用のキーワードの設定に利用します。
         - 「,」で区切ることにより複数のキーワードの設定が可能です。
@@ -1013,6 +1032,15 @@ ja:
     ss/model/user_title:
       code: 役職コードを入力します。
       name: 役職名を入力します。
+      activation_date: 有効期限の開始日時を入力します。
+      expiration_date: 有効期限の終了日時を入力します。
+      remark: 備考を入力します。
+      order:
+        - 並び順を入力します。
+        - 数字が大きいほど上位に表示されます。
+    ss/model/user_occupation:
+      code: 職種コードを入力します。
+      name: 職種名を入力します。
       activation_date: 有効期限の開始日時を入力します。
       expiration_date: 有効期限の終了日時を入力します。
       remark: 備考を入力します。
@@ -1102,6 +1130,11 @@ ja:
         - サイトで使用するOpenLayersのレイヤーを選択します。
       show_google_maps_search:
         - 有効にすると、地図マーカーに「Googleマップで見る」リンクが表示されます。
+      map_center:
+        - 地図の中心座標を経度、緯度の順に入力します。
+        - Googleマップは緯度、経度の順で表示しますが、これとは順番が逆になっているので注意してください。
+      map_max_number_of_markers:
+        - 1ページあたりのマーカー数の最大個数を入力します。
     ss/addon/kana_setting:
       kana_format:
         - かな機能にて公開画面にふりがなを付与した際の表記形式を設定します。

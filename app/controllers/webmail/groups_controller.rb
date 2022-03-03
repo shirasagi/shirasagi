@@ -73,7 +73,7 @@ class Webmail::GroupsController < ApplicationController
     raise "403" unless @model.allowed?(:edit, @cur_user)
 
     @item = @model.new
-    return if request.get?
+    return if request.get? || request.head?
 
     @item = Webmail::GroupExport.new params.require(:item).permit(Webmail::GroupExport.permitted_fields)
     @item.cur_user = @cur_user

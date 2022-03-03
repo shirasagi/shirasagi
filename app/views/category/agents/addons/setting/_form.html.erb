@@ -1,3 +1,9 @@
+<% if @item.st_categories_sortable? %>
+  <%= jquery do %>
+    $('.sortable-index tbody').sortable();
+  <% end %>
+<% end %>
+
 <dl class="see mod-category">
   <dt><%= t("category.setting") %><%= @model.tt :st_categories %></dt>
   <dd class="wide" style="line-height: 2.5">
@@ -5,20 +11,20 @@
     <%= link_to t("cms.apis.categories.index"), cms_apis_categories_path, class: "ajax-box" %>
   </dd>
   <dd>
-    <table class="index ajax-selected">
+    <table class="index ajax-selected <%= 'sortable-index' if @item.st_categories_sortable? %>">
       <thead>
-        <tr>
-          <th class="name"><%= t("category.name") %></th>
-          <th></th>
-        </tr>
+      <tr>
+        <th class="name"><%= t("category.name") %></th>
+        <th></th>
+      </tr>
       </thead>
       <tbody>
-        <% @item.st_categories.each do |cate| %>
+      <% @item.st_categories.each do |cate| %>
         <tr data-id="<%= cate.id %>">
           <td><%= f.hidden_field "st_category_ids[]", value: cate.id %> <%= cate.name %></td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
-        <% end %>
+      <% end %>
       </tbody>
     </table>
   </dd>

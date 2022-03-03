@@ -30,6 +30,20 @@ class Cms::Column::Value::Headline < Cms::Column::Value::Base
     h.join(",")
   end
 
+  def import_csv_cell(value)
+    self.text = value.presence
+    self.head ||= 'h1'
+  end
+
+  def export_csv_cell
+    text
+  end
+
+  def search_values(values)
+    return false unless values.instance_of?(Array)
+    (values & [text]).present?
+  end
+
   private
 
   def validate_value
@@ -58,5 +72,15 @@ class Cms::Column::Value::Headline < Cms::Column::Value::Base
 
     escaped = ApplicationController.helpers.sanitize(text)
     ApplicationController.helpers.content_tag(head.to_sym, escaped)
+  end
+
+  class << self
+    def form_example_layout
+      h = []
+      h << %({% if value.text %})
+      h << %(  <{{ value.head }}>{{ value.text | sanitize }}</{{ value.head }}>)
+      h << %({% endif %})
+      h.join("\n")
+    end
   end
 end

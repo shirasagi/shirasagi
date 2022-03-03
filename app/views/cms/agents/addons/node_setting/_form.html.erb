@@ -1,9 +1,10 @@
 <%
-addon ||= local_assigns.fetch(:addon, {})
-addon[:display_body] = "hide"
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+  addon[:display_body] = "show" if @item.page_layout_id
 
-view_route = params[:route] ? params[:route] : @item.route
-view_route = @item.view_route if @item.view_route.present?
+  view_route = params[:route] ? params[:route] : @item.route
+  view_route = @item.view_route if @item.view_route.present?
 %>
 
 <dl class="see mod-cms-node_setting">

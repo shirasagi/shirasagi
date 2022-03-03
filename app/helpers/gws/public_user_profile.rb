@@ -32,6 +32,13 @@ module Gws::PublicUserProfile
             html << "<span class=\"user-title\">#{title.name}</span>"
           end
         end
+      when :user_occupation
+        if cur_site.user_profile_public?("user_occupation")
+          occupation = user.occupation(cur_site)
+          if occupation
+            html << "<span class=\"user-occupation\">#{occupation.name}</span>"
+          end
+        end
       when :email
         if cur_site.user_profile_public?("email") && user.email.present?
           html << "<span class=\"email js-clipboard-copy\">#{user.email}</span>"

@@ -164,6 +164,7 @@ module SS::Model::User
 
       criteria = criteria.search_name(params)
       criteria = criteria.search_title_ids(params)
+      criteria = criteria.search_occupation_ids(params)
       criteria = criteria.search_keyword(params)
       criteria
     end
@@ -197,6 +198,11 @@ module SS::Model::User
     def search_title_ids(params)
       return all if params.blank? || params[:title_ids].blank?
       all.where(title_ids: params[:title_ids].to_i)
+    end
+
+    def search_occupation_ids(params)
+      return all if params.blank? || params[:occupation_ids].blank?
+      all.where(occupation_ids: params[:occupation_ids].to_i)
     end
 
     def type_options

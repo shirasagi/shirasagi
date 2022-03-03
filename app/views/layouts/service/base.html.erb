@@ -21,10 +21,6 @@
   <div class="wrap">
     <h1 class="application-name"><%= link_to service_main_path do %><%= render_application_logo %><% end %></h1>
 
-    <% if Rails.env.development? %>
-    <div class="env dev">&lt;Development&gt;</div>
-    <% end %>
-
     <% if @cur_user %>
     <nav class="user">
       <div class="dropdown dropdown-toggle">

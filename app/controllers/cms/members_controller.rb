@@ -43,7 +43,7 @@ class Cms::MembersController < ApplicationController
 
   def verify
     raise '404' unless @node = Member::Node::Registration.site(@cur_site).and_public.first
-    return if request.get?
+    return if request.get? || request.head?
 
     Member::Mailer.verification_mail(@item).deliver_now
     @item.verify_mail_sent = Time.zone.now.to_i

@@ -12,26 +12,7 @@
     page = value.try(:page)
   %>
   <%= jquery do %>
-  var $column = $("#" + "<%= id %>");
-  $column.find(".ajax-box").data("on-select", function(item) {
-    var data = item.closest("[data-id]");
-    var id = data.data("id");
-    var name = item.text();
-
-    var tr = $("<tr />").attr("data-id", id);
-    var a = $('<a class="deselect btn" href="#"><%= I18n.t "ss.buttons.delete" %></a>');
-    tr.append($('<td />').append(name));
-    tr.append($('<td />').append(a));
-    $column.find(".hidden-ids").val(id);
-    $column.find(".ajax-selected tbody tr").remove();
-    $column.find(".ajax-selected tbody").prepend(tr);
-    $column.find(".ajax-selected").show();
-    $column.find(".ajax-selected").trigger("change");
-  });
-  $column.find(".ajax-selected").data("on-deselect", function(item) {
-    SS_SearchUI.defaultDeselector(item);
-    $column.find(".hidden-ids").val("");
-  });
+    Cms_Column_Select_Page.render("#<%= id %>");
   <% end %>
   <%= link_to t("cms.apis.pages.index"), cms_apis_pages_children_path(page_params), class: "ajax-box btn", style: "margin-bottom: 10px;" %>
   <%= hidden_field_tag name, page_id, class: "hidden-ids" %>

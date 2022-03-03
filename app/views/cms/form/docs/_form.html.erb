@@ -1,0 +1,40 @@
+<table class="form-db-table table-db">
+  <thead>
+    <tr>
+      <th class="td-icon"></th>
+      <th style="width: 18rem;"><%= Cms::Column::Base.t :name %></th>
+      <th style="width: 18rem;"><%= Cms::Column::Base.t :route %></th>
+      <th style="width: 50rem;"><%= Cms::Column::Base.t :value %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th class="td-icon"></th>
+      <td class="text-break"><%= Article::Page.t :name %></td>
+      <td class="text-break"><%= Article::Page.t :name %></td>
+      <td class="text-break"><%= f.text_field :name, value: @item.name %></td>
+    </tr>
+
+    <% @column_names.each_with_index do |col_name, idx| %>
+      <% values = @db.collect_values(@item, col_name) %>
+
+      <tr>
+        <th class="td-icon"></th>
+        <td class="text-break"><%= col_name %></td>
+        <td class="text-break"><%= values[:type] %></td>
+        <td class="text-break">
+          <%= hidden_field_tag "item[column_values][#{idx}][name]", col_name %>
+
+          <% case values[:form][:type] %>
+          <% when 'input' %>
+            <%= text_field_tag "item[column_values][#{idx}][value]", values[:full] %>
+          <% when 'textarea' %>
+            <%= text_area_tag "item[column_values][#{idx}][value]", values[:full], rows: values[:form][:rows], style: "height: auto;" %>
+          <% else %>
+            <%= values[:full] %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

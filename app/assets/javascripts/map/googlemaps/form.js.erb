@@ -153,9 +153,7 @@ this.Map_Form = (function () {
       //  Map_Form.setMarkerThumb(this);
       //});
     }
-    if ($(".mod-map dd.marker").length === Map_Form.maxPointForm) {
-      $(".mod-map dd .add-marker").parent().hide();
-    }
+    Map_Form.toggleAddMarker();
   };
 
   Map_Form.clearPointForm = function (ele) {
@@ -180,7 +178,15 @@ this.Map_Form = (function () {
         ele.remove();
       }
     }
-    $(".mod-map dd .add-marker").parent().show();
+    Map_Form.toggleAddMarker();
+  };
+
+  Map_Form.toggleAddMarker = function () {
+    if ($(".mod-map dd.marker").length < Map_Form.maxPointForm) {
+      $(".mod-map dd .add-marker").parent().show();
+    } else {
+      $(".mod-map dd .add-marker").parent().hide();
+    }
   };
 
   Map_Form.openMarkerImages = function (marker) {
@@ -317,6 +323,7 @@ this.Map_Form = (function () {
       Map_Form.dataID += 1;
     });
 
+    Map_Form.toggleAddMarker();
     Googlemaps_Map.adjustMarkerBounds(Googlemaps_Map.markers.length, markerBounds);
   };
 

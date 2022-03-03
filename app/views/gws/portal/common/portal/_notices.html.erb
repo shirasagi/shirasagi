@@ -31,21 +31,23 @@
       </li>
     <% end %>
 
-    <% @notices.each do |item| %>
-    <li class="list-item <%= item.browsed?(@cur_user) ? 'read' : 'unread' %>">
-      <div class="info">
-        <%= link_to item.name, gws_notice_readable_path(folder_id: '-', category_id: '-', id: item), class: "title notice-severity-#{item.severity}" %>
-        <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
-      </div>
-      <div class="meta">
-        <% if item.categories.readable(@cur_user, site: @cur_site).present? %>
-          <% item.categories.readable(@cur_user, site: @cur_site).each do |category| %>
-            <%= link_to category.trailing_name, gws_notice_readables_path(folder_id: '-', category_id: category.id), class: "gws-category-label", style: category_label_css(category) %>
+    <% if @notices.present? %>
+      <% @notices.each do |item| %>
+      <li class="list-item <%= item.browsed?(@cur_user) ? 'read' : 'unread' %>">
+        <div class="info">
+          <%= link_to item.name, gws_notice_readable_path(folder_id: '-', category_id: '-', id: item), class: "title notice-severity-#{item.severity}" %>
+          <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
+        </div>
+        <div class="meta">
+          <% if item.categories.readable(@cur_user, site: @cur_site).present? %>
+            <% item.categories.readable(@cur_user, site: @cur_site).each do |category| %>
+              <%= link_to category.trailing_name, gws_notice_readables_path(folder_id: '-', category_id: category.id), class: "gws-category-label", style: category_label_css(category) %>
+            <% end %>
           <% end %>
-        <% end %>
-        <span class="datetime"><%= tryb { item.released.strftime("%Y/%m/%d %H:%M") } %></span>
-      </div>
-    </li>
+          <span class="datetime"><%= tryb { item.released.strftime("%Y/%m/%d %H:%M") } %></span>
+        </div>
+      </li>
+      <% end %>
     <% end %>
   </ul>
   <div class="more"><%= link_to I18n.t("ss.links.more"), gws_notice_readables_path(folder_id: '-', category_id: '-') %></div>

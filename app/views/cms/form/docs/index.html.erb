@@ -1,0 +1,57 @@
+<%= form_tag({ action: :destroy_all }, { method: :delete }) do |f| %>
+
+<%= button_tag type: 'submit', class: "btn menu-btn js-list-destroy m-1" do %>
+  <i class="material-icons md-16">delete</i>
+<% end %>
+
+<table class="form-db-table table-db">
+  <thead>
+    <tr>
+      <th class="row-link-disabled td-check" scope="row">
+        <label class="link-expand">
+          <input type="checkbox" class="js-list-select" value="1">
+        </label>
+      </th>
+      <th scope="row">
+        <div class="text-truncate" style="width: 100px;"><%= Article::Page.t :name %></div>
+      </th>
+
+      <% @column_names.each do |col_name| %>
+      <th scope="row">
+        <div class="text-truncate" style="width: 100px;"><%= col_name %></div>
+      </th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% @items.each do |item| %>
+      <tr class="row-link" data-href="<%= url_for action: 'show', id: item.id %>">
+        <th class="row-link-disabled td-check" scope="row">
+          <label class="link-expand">
+            <input type="checkbox" name="ids[]" value="<%= item.id %>">
+          </label>
+        </th>
+        <td class="text-nowrap" title="<%= item.name %>">
+          <div class="text-truncate" style="width: 100px;"><%= item.name %></div>
+        </td>
+
+        <% @column_names.each do |col_name| %>
+          <% values = @db.collect_values(item, col_name) %>
+
+          <td class="text-nowrap" title="<%= values[:tips] %>">
+            <div class="text-truncate" style="width: 100px;"><%= values[:cell] %></div>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% end %>
+
+<% pager = paginate(@items) %>
+<% if pager.present? %>
+  <div class="form-db-foot position-fixed">
+    <%= pager %>
+  </div>
+<% end %>

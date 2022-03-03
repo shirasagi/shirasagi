@@ -135,7 +135,7 @@ module SS::FileFilter
     set_item
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
-    return if request.get?
+    return if request.get? || request.head?
 
     resizer = SS::ImageResizer.new get_params
     render_update resizer.resize(@item), { template: "resize" }

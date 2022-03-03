@@ -1,0 +1,16 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+
+  <dt><%= @model.t :form_id %><%= @model.tt :form_id %></dt>
+  <dd><%= f.select :form_id, @item.form_options, include_blank: '' %></dd>
+
+  <dt><%= @model.t :node_id %><%= @model.tt :node_id %></dt>
+  <dd><%= f.select :node_id, @item.node_options, include_blank: '' %></dd>
+
+  <dt><%= @model.t :import_url %><%= @model.tt :import_url %></dt>
+  <dd><%= f.text_field :import_url %></dd>
+</dl>

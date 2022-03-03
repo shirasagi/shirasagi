@@ -58,7 +58,7 @@ class Cms::Apis::ReplaceFilesController < ApplicationController
   end
 
   def confirm
-    if request.get?
+    if request.get? || request.head?
       @dst_file = SS::ReplaceTempFile.user(@cur_user).first
       redirect_to({ action: :edit }) unless @dst_file
       return

@@ -427,6 +427,7 @@ Rails/FindEach:
     - 'app/models/concerns/fs/grid_fs.rb'
     - 'app/models/concerns/ss/fields/dependant_naming.rb'
     - 'app/models/concerns/ss/reference/user_titles.rb'
+    - 'app/models/concerns/ss/reference/user_occupations.rb'
     - 'app/models/ezine/column.rb'
     - 'app/models/gws/schedule/repeat_plan.rb'
 

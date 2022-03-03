@@ -34,7 +34,7 @@ class Gws::StaffRecord::GroupsController < ApplicationController
   end
 
   def import
-    return if request.get?
+    return if request.get? || request.head?
 
     @item = @model.new(get_params)
     result = @item.import_csv

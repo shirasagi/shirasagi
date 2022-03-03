@@ -1,0 +1,42 @@
+<%
+  syntax_check = cms_syntax_check_enabled?
+
+  # be careful: @item is different instance in some cases
+  if @item && @item.respond_to?(:route)
+    @item_route = @item.route
+  else
+    @item_route = params[:item_route]
+  end
+%>
+
+<%= hidden_field_tag "#{f.object_name}[column_values][]", ""  %>
+
+<% if form.sub_type_static? %>
+  <%= render 'cms/form/forms/columns_form_static', local_assigns %>
+<% else %>
+  <%= render 'cms/form/forms/columns_form_entry', local_assigns %>
+<% end %>
+
+<div class="my-2">
+  <%= button_tag(t("cms.syntax_check"), name: nil, type: "button", class: "btn syntax-check") if syntax_check %>
+  <%= button_tag(t("cms.mobile_size_check"), name: nil, type: "button", class: "btn mobile-size-check") if @cur_site.mobile_enabled? %>
+  <%= button_tag(t("cms.link_check"), name: nil, type: "button", class: "btn link-check") %>
+  <% if !@preview %>
+    <%= button_tag(t("cms.preview"), name: nil, type: "button", class: "btn preview") %>
+  <% end %>
+</div>
+
+<%= jquery do %>
+  Cms_Form.addonSelector = "#addon-cms-agents-addons-form-page .addon-body";
+  Cms_Form.form_html_path = <%== cms_apis_form_html_path(id: form).to_json %>;
+  Cms_Form.form_link_check_path = <%== cms_apis_form_link_check_path(id: form).to_json %>;
+  Cms_Form.activateSyntaxChecks();
+
+  <% if !@preview %>
+  Form_Preview.page_route        = "<%= @item_route %>";
+  Form_Preview.form_preview_path = "<%= cms_form_preview_path(path: "#{tryb{@cur_node.filename + "/"}}.html") %>";
+  Form_Preview.render();
+  <% end %>
+
+  $("body").on("click", ".column-value .file-view a.thumb", function(ev) { SS_FileView.open(ev, { viewPath: "<%= view_cms_apis_content_file_path(id: ":id") %>" }); });
+<% end %>

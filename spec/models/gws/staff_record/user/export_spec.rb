@@ -12,13 +12,14 @@ describe Gws::StaffRecord::User, type: :model, dbscope: :example do
   let!(:user4) { create :gws_user, group_ids: [ site1.id ] }
   let!(:year1) { create :gws_staff_record_year, cur_site: site1 }
   let!(:title1) { create :gws_staff_record_user_title, cur_site: site1, year: year1 }
+  let!(:occupation1) { create :gws_staff_record_user_occupation, cur_site: site1, year: year1 }
   # let(:readable_setting_range) { %w(public select private).sample }
   let(:readable_setting_range) { "select" }
   let!(:staff_record_user1) do
     create(
-      :gws_staff_record_user, cur_site: site1, year: year1, title_ids: [ title1.id ],
-      readable_setting_range: readable_setting_range, readable_group_ids: [ group1.id, group2.id ],
-      readable_member_ids: [ user1.id, user2.id ], group_ids: [ group3.id, group4.id ], user_ids: [ user3.id, user4.id ],
+      :gws_staff_record_user, cur_site: site1, year: year1, title_ids: [title1.id], occupation_ids: [occupation1.id],
+      readable_setting_range: readable_setting_range, readable_group_ids: [group1.id, group2.id],
+      readable_member_ids: [user1.id, user2.id], group_ids: [group3.id, group4.id], user_ids: [user3.id, user4.id],
       permission_level: rand(1..3)
     )
   end
@@ -46,11 +47,11 @@ describe Gws::StaffRecord::User, type: :model, dbscope: :example do
       csv = ::CSV.parse(csv, headers: true)
 
       expect(csv.length).to eq 1
-      expect(csv.headers.length).to eq 21
+      expect(csv.headers.length).to eq 22
       expect(csv.headers).to include(*%i[id name code order kana].map { |f| described_class.t(f) })
       expect(csv.headers).not_to include(*%i[section_order permission_level].map { |f| described_class.t(f) })
       csv.first.tap do |row|
-        expect(row.length).to eq 21
+        expect(row.length).to eq 22
         expect(row[described_class.t(:id)]).to eq staff_record_user1.id.to_s
         expect(row[described_class.t(:name)]).to eq staff_record_user1.name
         expect(row[described_class.t(:code)]).to eq staff_record_user1.code
@@ -59,6 +60,7 @@ describe Gws::StaffRecord::User, type: :model, dbscope: :example do
         expect(row[described_class.t(:multi_section)]).to eq staff_record_user1.label(:multi_section)
         expect(row[described_class.t(:section_name)]).to eq staff_record_user1.section_name
         expect(row[described_class.t(:title_ids)]).to eq title1.code
+        expect(row[described_class.t(:occupation_ids)]).to eq occupation1.code
         expect(row[described_class.t(:tel_ext)]).to eq staff_record_user1.tel_ext
         expect(row[described_class.t(:charge_name)]).to eq staff_record_user1.charge_name
         expect(row[described_class.t(:charge_address)]).to eq staff_record_user1.charge_address
@@ -91,11 +93,11 @@ describe Gws::StaffRecord::User, type: :model, dbscope: :example do
       csv = ::CSV.parse(csv, headers: true)
 
       expect(csv.length).to eq 1
-      expect(csv.headers.length).to eq 21
+      expect(csv.headers.length).to eq 22
       expect(csv.headers).to include(*%i[id name code order kana].map { |f| described_class.t(f) })
       expect(csv.headers).not_to include(*%i[section_order permission_level].map { |f| described_class.t(f) })
       csv.first.tap do |row|
-        expect(row.length).to eq 21
+        expect(row.length).to eq 22
         expect(row[described_class.t(:id)]).to eq staff_record_user1.id.to_s
         expect(row[described_class.t(:name)]).to eq staff_record_user1.name
         expect(row[described_class.t(:code)]).to eq staff_record_user1.code
@@ -104,6 +106,7 @@ describe Gws::StaffRecord::User, type: :model, dbscope: :example do
         expect(row[described_class.t(:multi_section)]).to eq staff_record_user1.label(:multi_section)
         expect(row[described_class.t(:section_name)]).to eq staff_record_user1.section_name
         expect(row[described_class.t(:title_ids)]).to eq title1.code
+        expect(row[described_class.t(:occupation_ids)]).to eq occupation1.code
         expect(row[described_class.t(:tel_ext)]).to eq staff_record_user1.tel_ext
         expect(row[described_class.t(:charge_name)]).to eq staff_record_user1.charge_name
         expect(row[described_class.t(:charge_address)]).to eq staff_record_user1.charge_address

@@ -92,7 +92,7 @@ class Gws::UserCsv::Importer
     end
 
     keys = %i[
-      set_password set_title set_type set_initial_password_warning set_organization_id set_group_ids
+      set_password set_title set_occupation set_type set_initial_password_warning set_organization_id set_group_ids
       set_main_group_ids set_switch_user_id set_gws_roles set_sys_roles
     ]
     keys += %i[set_webmail_roles] if webmail_support
@@ -145,6 +145,19 @@ class Gws::UserCsv::Importer
     end
 
     item.in_title_id = title ? title.id : ''
+  end
+
+  def set_occupation(item)
+    value = row_value('occupation_ids')
+
+    if value.present?
+      occupation = Gws::UserOccupation.site(cur_site).where(code: value).first
+
+      item.imported_gws_user_occupation_key = value
+      item.imported_gws_user_occupation = occupation
+    end
+
+    item.in_occupation_id = occupation ? occupation.id : ''
   end
 
   def set_type(item)

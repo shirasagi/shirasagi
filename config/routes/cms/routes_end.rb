@@ -119,10 +119,23 @@ Rails.application.routes.draw do
     resources :theme_templates, concerns: [:deletion, :template]
     resources :source_cleaner_templates, concerns: [:deletion, :template]
     resources :word_dictionaries, concerns: [:deletion, :template]
-    resources :forms, concerns: [:deletion] do
-      resources :init_columns, concerns: [:deletion]
-      resources :columns, concerns: [:deletion]
+
+    scope module: "form" do
+      resources :forms, concerns: [:deletion] do
+        resources :init_columns, concerns: [:deletion]
+        resources :columns, concerns: [:deletion]
+      end
     end
+
+    namespace "form" do
+      resources :dbs, concerns: [:deletion] do
+        resources :docs, concerns: [:deletion] do
+          match :import, via: [:get, :post], on: :collection
+          match :download_all, via: [:get, :post], on: :collection
+        end
+      end
+    end
+
     resources :notices, concerns: [:deletion, :copy]
     resources :public_notices, concerns: [:deletion, :copy] do
       get :frame_content, on: :member
@@ -359,6 +372,7 @@ Rails.application.routes.draw do
     get "archive" => "public#redirect_to_archive_index", cell: "nodes/archive"
     get "photo_album" => "public#index", cell: "nodes/photo_album"
     get "site_search/(index.:format)" => "public#index", cell: "nodes/site_search"
+    get "site_search/categories(.:format)" => "public#categories", cell: "nodes/site_search"
   end
 
   part "cms" do

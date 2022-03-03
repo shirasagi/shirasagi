@@ -132,7 +132,7 @@ class Opendata::Dataset::ResourcesController < ApplicationController
     set_item
     raise "403" unless @dataset.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
 
-    return if request.get?
+    return if request.get? || request.head?
 
     page = @item.assoc_page
     file = @item.assoc_file
