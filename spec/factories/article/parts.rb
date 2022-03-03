@@ -6,4 +6,8 @@ FactoryBot.define do
       basename { "pa/rt" }
     end
   end
+
+  factory :article_part_search, class: Article::Part::Search, traits: [:cms_part] do
+    route { "article/search" }
+  end
 end
