@@ -145,7 +145,7 @@
       var data = $item.closest("[data-id]");
       var href = hostUrl + data.find(".filename").text();
       var label = data.find(".select-item").text();
-      var text = "<a href='" + href + "'>" + label + '</a>';
+      var text = ejs.render("<a href=\"<%%= href %>\"><%%= label %></a>", { href: href, label: label });
       var unique_id = $('#unique_id').val();
       insertContent(unique_id, text);
     });
