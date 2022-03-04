@@ -17,7 +17,7 @@ class Gws::Circular::Apis::ArticleStatesController < ApplicationController
     if params[:s].present? && params[:s][:group].present?
       @group = @cur_site.descendants.active.find(params[:s][:group]) rescue nil
     else
-      @group = @cur_site
+      @group = @cur_group
     end
 
     @group ||= @cur_site
