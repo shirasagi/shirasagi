@@ -186,6 +186,8 @@ ja:
       file_histories: ファイル履歴
       translate: 翻訳
       replace_save: 差し替え保存
+      file_name_order: 名前順
+      file_upload_order: アップロード順
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: 削除してよろしいですか？
@@ -1009,6 +1011,9 @@ ja:
         - 編集を許可するユーザーを選択します。
       import:
         - CSVファイルに記載された施設の種類、地域、用途、または管理グループが事前に作成されていない場合、該当する施設は登録されません
+      file_order:
+        - 管理画面上でのファイルの並び順をリアルタイムで変更し、ファイルを見つけやすくします。
+        - ただし、並び順は保存されません。
     ss/model/file:
       in_file:
         - ファイルを選択します。

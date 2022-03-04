@@ -1236,8 +1236,8 @@ ja:
       replace_word_validation: に使用が好ましくない単語が含まれています。
       alt_is_included_in_filename: 代替テキストがファイル名に含まれています。
       cms_form_db_required_node: データの登録には記事フォルダーの設定が必要です。
-      invalid_url_scheme: 「http://」や 「https://」で始まるURLのみにしてください。
       syntax_check_server_error: アクセシビリティチェック中にサーバーエラーが発生しました。
+      invalid_url_scheme: 「http://」や 「https://」で始まるURLのみにしてください。
       syntax_check_detail:
         set_img_alt:
           - 画像の内容を示す代替テキストを設定してください。
@@ -2131,6 +2131,9 @@ ja:
     cms/addon/form/page:
       form_id:
         - 定型フォームを設定します。
+      file_order:
+        - 管理画面上で表示されているファイルの並び順を変更し、ファイルを見つけやすくします。
+        - ただし、並び順は保存されません。
     cms/init_column:
       order:
         - 表示順を入力します。

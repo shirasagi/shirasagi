@@ -5,16 +5,16 @@
   .toolbar {
     display: block;
     position: absolute;
+    z-index: 100;
     top: -45px;
     left: 0;
-    background: $black3;
-    height: 40px;
     min-width: 40px;
-    border-radius: 2px;
-    white-space: nowrap;
+    height: 40px;
     padding: 0 5px;
-    z-index: 100;
+    border-radius: 2px;
+    background: $black3;
     color: $white;
+    white-space: nowrap;
 
     &:before {
       content: "";
@@ -23,17 +23,17 @@
       left: 20px;
       width: 0;
       height: 0;
-      border-left: 7px solid transparent;
-      border-right: 7px solid transparent;
       border-top: 7px solid $black3;
+      border-right: 7px solid transparent;
+      border-left: 7px solid transparent;
     }
   }
 
   .btn-group {
     display: inline-block;
+    height: 40px;
     margin: 0;
     padding: 0;
-    height: 40px;
     vertical-align: top;
   }
 
@@ -53,12 +53,12 @@
 
   .btn {
     box-sizing: border-box;
-    background: transparent;
-    border: 0;
-    outline: none;
-    padding: 2px 0 0;
     width: 40px;
     height: 40px;
+    padding: 2px 0 0;
+    border: 0;
+    outline: none;
+    background: transparent;
     color: $white;
   }
 

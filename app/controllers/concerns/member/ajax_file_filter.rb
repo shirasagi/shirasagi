@@ -109,23 +109,21 @@ module Member::AjaxFileFilter
 
   def view
     set_item
-    set_last_modified
+    raise "404" unless Fs.file?(@item.path)
 
-    if Fs.mode == :file && Fs.file?(@item.path)
-      send_file @item.path, type: @item.content_type, filename: @item.filename,
-        disposition: :inline, x_sendfile: true
-    else
-      send_enum @item.to_io, type: @item.content_type, filename: @item.filename,
-        disposition: :inline
-    end
+    set_last_modified
+    ss_send_file @item, type: @item.content_type, filename: @item.filename, disposition: :inline
   end
 
   def thumb
     set_item
+    raise "404" unless Fs.file?(@item.path)
+
     set_last_modified
 
-    if @item.try(:thumb)
-      return send_file @item.thumb.path, type: @item.content_type, filename: @item.filename, disposition: :inline
+    if (thumb = @item.try(:thumb)) && Fs.file?(thumb.path)
+      ss_send_file thumb, type: thumb.content_type, filename: thumb.filename, disposition: :inline
+      return
     end
 
     converter = SS::ImageConverter.open(@item.path)
@@ -143,15 +141,10 @@ module Member::AjaxFileFilter
 
   def download
     set_item
-    set_last_modified
+    raise "404" unless Fs.file?(@item.path)
 
-    if Fs.mode == :file && Fs.file?(@item.path)
-      send_file @item.path, type: @item.content_type, filename: @item.filename,
-        disposition: :attachment, x_sendfile: true
-    else
-      send_enum @item.to_io, type: @item.content_type, filename: @item.filename,
-        disposition: :attachment
-    end
+    set_last_modified
+    ss_send_file @item, type: @item.content_type, filename: @item.filename, disposition: :attachment
   end
 
   module ClassMethods

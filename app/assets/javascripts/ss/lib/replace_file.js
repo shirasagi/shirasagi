@@ -34,7 +34,7 @@ this.SS_ReplaceFile = (function () {
       promises.push(promise);
     });
 
-    $.when.apply($, promises).then(function() {
+    $.when.apply($, promises).always(function() {
       setTimeout(function() { location.reload(); }, 0);
     });
   };
