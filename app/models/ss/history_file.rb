@@ -1,6 +1,6 @@
 class SS::HistoryFile
   include SS::Model::File
-  include SS::Relation::Thumb
+  # include SS::Relation::Thumb
 
   field :site_id, type: Integer
   field :node_id, type: Integer

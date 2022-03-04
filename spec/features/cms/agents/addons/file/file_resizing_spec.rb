@@ -75,14 +75,19 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
     it_behaves_like "file resizing is"
 
     after do
-      expect(SS::File.all.count).to eq 2
+      expect(SS::File.all.count).to eq 1
       expect(SS::File.all.where(model: "ss/temp_file").count).to eq 1
-      expect(SS::File.all.where(model: "ss/thumb_file").count).to eq 1
       SS::File.all.where(model: "ss/temp_file").first.tap do |file|
         dimension = file.image_dimension
         expect(dimension).to be_present
         expect(dimension[0]).to be <= file_resizing[0]
         expect(dimension[1]).to be <= file_resizing[1]
+
+        thumb = file.thumb
+        thumb_dimension = thumb.image_dimension
+        expect(thumb_dimension).to be_present
+        expect(thumb_dimension[0]).to be <= dimension[0]
+        expect(thumb_dimension[1]).to be <= dimension[1]
       end
     end
   end
@@ -97,21 +102,32 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
     it_behaves_like "file resizing is"
 
     after do
-      expect(SS::File.all.count).to eq 4
+      expect(SS::File.all.count).to eq 2
       expect(SS::File.all.where(model: "ss/user_file").count).to eq 1
       expect(SS::File.all.where(model: "ss/temp_file").count).to eq 1
-      expect(SS::File.all.where(model: "ss/thumb_file").count).to eq 2
       SS::File.all.where(model: "ss/user_file").first.tap do |file|
         dimension = file.image_dimension
         expect(dimension).to be_present
         expect(dimension[0]).to be <= file_resizing[0]
         expect(dimension[1]).to be <= file_resizing[1]
+
+        thumb = file.thumb
+        thumb_dimension = thumb.image_dimension
+        expect(thumb_dimension).to be_present
+        expect(thumb_dimension[0]).to be <= dimension[0]
+        expect(thumb_dimension[1]).to be <= dimension[1]
       end
       SS::File.all.where(model: "ss/temp_file").first.tap do |file|
         dimension = file.image_dimension
         expect(dimension).to be_present
         expect(dimension[0]).to be <= file_resizing[0]
         expect(dimension[1]).to be <= file_resizing[1]
+
+        thumb = file.thumb
+        thumb_dimension = thumb.image_dimension
+        expect(thumb_dimension).to be_present
+        expect(thumb_dimension[0]).to be <= dimension[0]
+        expect(thumb_dimension[1]).to be <= dimension[1]
       end
     end
   end
@@ -126,21 +142,32 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
     it_behaves_like "file resizing is"
 
     after do
-      expect(SS::File.all.count).to eq 3
+      expect(SS::File.all.count).to eq 2
       expect(SS::File.all.where(model: "cms/file").count).to eq 1
       expect(SS::File.all.where(model: "ss/temp_file").count).to eq 1
-      expect(SS::File.all.where(model: "ss/thumb_file").count).to eq 1
       SS::File.all.where(model: "cms/file").first.tap do |file|
         dimension = file.image_dimension
         expect(dimension).to be_present
         expect(dimension[0]).to be <= file_resizing[0]
         expect(dimension[1]).to be <= file_resizing[1]
+
+        thumb = file.thumb
+        thumb_dimension = thumb.image_dimension
+        expect(thumb_dimension).to be_present
+        expect(thumb_dimension[0]).to be <= dimension[0]
+        expect(thumb_dimension[1]).to be <= dimension[1]
       end
       SS::File.all.where(model: "ss/temp_file").first.tap do |file|
         dimension = file.image_dimension
         expect(dimension).to be_present
         expect(dimension[0]).to be <= file_resizing[0]
         expect(dimension[1]).to be <= file_resizing[1]
+
+        thumb = file.thumb
+        thumb_dimension = thumb.image_dimension
+        expect(thumb_dimension).to be_present
+        expect(thumb_dimension[0]).to be <= dimension[0]
+        expect(thumb_dimension[1]).to be <= dimension[1]
       end
     end
   end

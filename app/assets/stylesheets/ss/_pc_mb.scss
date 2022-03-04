@@ -1902,6 +1902,9 @@ footer.send {
     margin: 0 20px;
     color: #b30;
   }
+  .upload-file-order {
+    margin: 20px 0;
+  }
   .file-dragenter {
     background: #fbeee8;
   }
@@ -3500,6 +3503,7 @@ body.ss-ajax-in-iframe {
     cursor: move;
   }
 }
+
 .column-value-cms-column-table {
   .table-menu {
     display: none;
