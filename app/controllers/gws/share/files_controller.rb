@@ -213,11 +213,7 @@ class Gws::Share::FilesController < ApplicationController
 
     raise "404" unless Fs.file?(path)
 
-    if Fs.mode == :file
-      send_file path, type: type, filename: filename, disposition: :attachment, x_sendfile: true
-    else
-      send_data ::Fs.binread(path), type: type, filename: filename, disposition: :attachment
-    end
+    ss_send_file path, type: type, filename: filename, disposition: :attachment
   end
 
   def lock

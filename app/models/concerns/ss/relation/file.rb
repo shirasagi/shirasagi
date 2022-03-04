@@ -167,16 +167,22 @@ module SS::Relation::File
       resizing = item.send("in_#{name}_resizing").presence || default_resizing
       cur_user = owner_item.try(:cur_user)
 
-      # SS::File への登録に成功し、その後、何らかの問題で owner_item の保存に失敗したとしても、
-      # ファイルダイアログに表示されることを意図して SS::TempFile として登録する。
-      # ファイルダイアログに表示できさえすれば、なんとかゾンビファイルにならなくてすむ。
-      new_file = class_name.constantize.create_from_upload!(upload_file, resizing: resizing) do |new_file|
-        new_file.site_id = owner_item.site_id if owner_item.respond_to?(:site_id)
-        new_file.user_id = cur_user.id if cur_user
-        new_file.state = item.send("#{name}_file_state")
-        new_file.model = owner_item.class.name.underscore if class_name == DEFAULT_FILE_CLASS_NAME
-        new_file.owner_item = owner_item
+      new_file = class_name.constantize.new
+      new_file.site_id = owner_item.site_id if owner_item.respond_to?(:site_id)
+      new_file.user_id = cur_user.id if cur_user
+      new_file.model ||= begin
+        if class_name == DEFAULT_FILE_CLASS_NAME
+          owner_item.class.name.underscore
+        else
+          default_model(class_name)
+        end
       end
+      new_file.state = item.send("#{name}_file_state")
+      new_file.filename = upload_file.original_filename
+      new_file.owner_item = owner_item
+      new_file.in_file = upload_file
+      new_file.resizing = resizing
+      new_file.save!
 
       Changes.set_relation(item, name, new_file)
     end
