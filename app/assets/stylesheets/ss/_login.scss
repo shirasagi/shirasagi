@@ -9,8 +9,7 @@
   left: 0;
   background: $gray1 url(/assets/img/back.png) no-repeat left 60%;
   background-size: contain;
-}
-#page-login {
+
   #main {
     .wrap {
       margin: 0 10px;
@@ -123,11 +122,10 @@
 }
 
 .login-image-box {
+  @import "swiper/dist/css/swiper";
+
   margin: 20px 10px;
   float: left;
-}
-.login-image-box {
-  @import "swiper/dist/css/swiper";
 
   .ss-swiper-slide {
     position: relative;

@@ -121,18 +121,6 @@ this.Form_Alert = (function () {
     return promise;
   };
 
-  Form_Alert.presence = function (form, submit) {
-    return $(form).find("input.presence,textarea.presence").each(function () {
-      var addonName, fieldName;
-      if ($(this).val() === "") {
-        $(this).closest("dl").show();
-        addonName = $(this).closest(".addon-view").find("header").text();
-        fieldName = Form_Alert.justText($(this).closest("dd").prev("dt"));
-        return Form_Alert.add(addonName, this, fieldName + <%= I18n.t('errors.messages.blank').to_json %>);
-      }
-    });
-  };
-
   Form_Alert.wrapDeferred = function (validate) {
     return function (form, submit) {
       var d = $.Deferred();
@@ -188,35 +176,6 @@ this.Form_Alert = (function () {
       "ele": ele,
       "msg": msg
     });
-  };
-
-  Form_Alert.justText = function (ele) {
-    return $(ele).clone().children().remove().end().text();
-  };
-
-  Form_Alert.validateReplaceWord = function (form, submit) {
-    var addonIds, excludes, k, results, v, words;
-    words = Syntax_Checker.config["replace_words"];
-    if (!words) {
-      return;
-    }
-    addonIds = ["#addon-basic", "#addon-cms-agents-addons-meta", "#addon-event-agents-addons-date", "#addon-map-agents-addons-page"];
-    excludes = ['[name="item[basename]"]', "location-search.keyword"];
-    results = [];
-    for (k in words) {
-      v = words[k];
-      results.push($(form).find(addonIds.join(",")).find("input,textarea").not(excludes.join(",")).each(function () {
-        var addonName, fieldName, val;
-        val = $(this).val();
-        if (val && !SS.isEmptyObject(val.match(RegExp("" + k.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1'), "g")))) {
-          $(this).closest("dl").show();
-          addonName = $(this).closest(".addon-view").find(".addon-head").text();
-          fieldName = Form_Alert.justText($(this).closest("dd").prev("dt"));
-          return Form_Alert.add(addonName, this, fieldName + <%= I18n.t('errors.messages.replace_word_validation').to_json %> + ("「" + k + "」→「" + v + "」"));
-        }
-      }));
-    }
-    return results;
   };
 
   return Form_Alert;

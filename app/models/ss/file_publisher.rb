@@ -20,6 +20,17 @@ class SS::FilePublisher
       if SS::FilenameUtils.url_safe_japanese?(file.name)
         publish_one(src, "#{dirname}/#{file.name}")
       end
+      file.variants.each do |variant|
+        variant_src = variant.path
+        next unless ::Fs.exist?(variant_src)
+
+        if variant.filename.ascii_only?
+          publish_one(variant_src, "#{dirname}/#{variant.filename}")
+        end
+        if SS::FilenameUtils.url_safe_japanese?(variant.name)
+          publish_one(variant_src, "#{dirname}/#{variant.name}")
+        end
+      end
     end
 
     def publish_one(src, dest)
@@ -45,6 +56,17 @@ class SS::FilePublisher
       # on some conditions, name aren't url-safe. so it needs to be checked.
       if SS::FilenameUtils.url_safe_japanese?(file.name)
         publish_one(src, "#{dirname}/#{file.name}")
+      end
+      file.variants.each do |variant|
+        variant_src = variant.path
+        next unless ::Fs.exist?(variant_src)
+
+        if variant.filename.ascii_only?
+          publish_one(variant_src, "#{dirname}/#{variant.filename}")
+        end
+        if SS::FilenameUtils.url_safe_japanese?(variant.name)
+          publish_one(variant_src, "#{dirname}/#{variant.name}")
+        end
       end
     end
 

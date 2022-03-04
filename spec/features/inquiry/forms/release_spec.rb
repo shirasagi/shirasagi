@@ -51,7 +51,7 @@ describe "inquiry_forms", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
       end
-      ensure_addon_opened("#addon-inquiry-agents-addons-release_plan")
+      ensure_addon_opened("#addon-cms-agents-addons-release_plan")
       within "form#item-form" do
         fill_in "item[release_date]", with: release_date1
       end
@@ -71,7 +71,7 @@ describe "inquiry_forms", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
       end
-      ensure_addon_opened("#addon-inquiry-agents-addons-release_plan")
+      ensure_addon_opened("#addon-cms-agents-addons-release_plan")
       within "form#item-form" do
         fill_in "item[release_date]", with: release_date2
       end
@@ -91,7 +91,7 @@ describe "inquiry_forms", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
       end
-      ensure_addon_opened("#addon-inquiry-agents-addons-release_plan")
+      ensure_addon_opened("#addon-cms-agents-addons-release_plan")
       within "form#item-form" do
         fill_in "item[close_date]", with: close_date1
       end
@@ -111,7 +111,7 @@ describe "inquiry_forms", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
       end
-      ensure_addon_opened("#addon-inquiry-agents-addons-release_plan")
+      ensure_addon_opened("#addon-cms-agents-addons-release_plan")
       within "form#item-form" do
         fill_in "item[close_date]", with: close_date2
       end
