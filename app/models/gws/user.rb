@@ -74,12 +74,7 @@ class Gws::User
   end
 
   def set_gws_default_group_id(group_id)
-    unless group_id.numeric?
-      errors.add :gws_default_group_ids, :invalid
-      return false
-    end
-    group_id = group_id.to_i
-
+    group_id = group_id.numeric? ? group_id.to_i : nil
     ids = gws_default_group_ids.presence || {}
     ids[@cur_site.id.to_s] = group_id
     self.gws_default_group_ids = ids
