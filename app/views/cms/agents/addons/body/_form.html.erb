@@ -1,6 +1,5 @@
 <%
   source_cleaner_conf = Cms::SourceCleanerTemplate.site(@cur_site).and_public.to_config(site: @cur_site)
-  replace_words_conf = Cms::WordDictionary.site(@cur_site).to_config
 
   syntax_check = cms_syntax_check_enabled?
 
@@ -42,9 +41,8 @@
       Cms_Source_Cleaner.render(".source-cleaner");
     <% end %>
 
-    <% if replace_words_conf[:replace_words].present? %>
-      Syntax_Checker.config = <%= raw replace_words_conf.to_json %>
-    <% end %>
+    Syntax_Checker.url = <%= raw cms_apis_check_syntax_check_path(format: "json").to_json %>
+    Syntax_Checker.correct_url = <%= raw cms_apis_correct_syntax_check_path(format: "json").to_json %>
 
     Cms_Form.options.check.syntax = <%= syntax_check %>;
     Cms_Form.render();
