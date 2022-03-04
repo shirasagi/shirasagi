@@ -5,7 +5,7 @@ runner:
   brakeman:
     cmd: bundle exec brakeman --quiet --format tabs
     format: brakeman
-  "scss-lint":
-    cmd: bundle exec scss-lint
+  stylelint:
+    cmd: .github/workflows/stylelint.sh
     errorformat:
-      - "%f:%l:%c %m"
+      - "%f:%l:%c:%t%*[^:]: %m"

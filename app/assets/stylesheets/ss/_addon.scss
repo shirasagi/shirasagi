@@ -11,8 +11,8 @@
     color: #888;
   }
   .ss-addon-markdown-help-button {
-    float: right;
     margin: 14px 0 0;
+    float: right;
   }
 }
 
@@ -32,17 +32,17 @@
   }
 
   .thumb {
-    border: none;
     max-width: 150px;
+    border: 0;
     line-height: unset;
 
     .name {
       margin: 0;
       padding: 5px;
-      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       word-wrap: nowrap;
+      white-space: nowrap;
     }
   }
 
