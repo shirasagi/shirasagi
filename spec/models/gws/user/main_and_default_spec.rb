@@ -87,7 +87,8 @@ describe Gws::User, type: :model, dbscope: :example do
 
       Gws::User.find(gws_user.id).tap do |user|
         user.cur_site = site
-        expect(user.set_gws_default_group_id(group1.id.to_s)).to be_truthy
+        user.set_gws_default_group_id(group1.id.to_s)
+        expect(user.save).to be_truthy
       end
 
       Gws::User.find(gws_user.id).tap do |user|
@@ -100,7 +101,8 @@ describe Gws::User, type: :model, dbscope: :example do
 
       Gws::User.find(gws_user.id).tap do |user|
         user.cur_site = site
-        expect(user.set_gws_default_group_id(group2.id.to_s)).to be_truthy
+        user.set_gws_default_group_id(group2.id.to_s)
+        expect(user.save).to be_truthy
       end
 
       Gws::User.find(gws_user.id).tap do |user|
@@ -113,13 +115,15 @@ describe Gws::User, type: :model, dbscope: :example do
 
       Gws::User.find(gws_user.id).tap do |user|
         user.cur_site = site
-        expect(user.set_gws_default_group_id(group3.id.to_s)).to be_falsey
+        user.set_gws_default_group_id(group3.id.to_s)
+        expect(user.save).to be_falsey
       end
 
       Gws::User.find(gws_user.id).tap do |user|
         # 他サイトのグループを既定にしてみる
         user.cur_site = site
-        expect(user.set_gws_default_group_id(group4.id.to_s)).to be_falsey
+        user.set_gws_default_group_id(group4.id.to_s)
+        expect(user.save).to be_falsey
       end
     end
   end

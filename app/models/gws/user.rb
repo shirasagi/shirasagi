@@ -19,7 +19,7 @@ class Gws::User
 
   cattr_reader(:group_class) { Gws::Group }
 
-  attr_accessor :in_title_id, :in_occupation_id, :in_gws_main_group_id
+  attr_accessor :in_title_id, :in_occupation_id, :in_gws_main_group_id, :in_gws_default_group_id
 
   # 管理者がユーザ管理画面で設定した主グループ。ユーザーの主務を表しており、あまり変更はない。
   field :gws_main_group_ids, type: Hash, default: {}
@@ -28,11 +28,14 @@ class Gws::User
 
   embeds_ids :groups, class_name: "Gws::Group"
 
-  permit_params :in_title_id, :in_occupation_id, :in_gws_main_group_id
+  permit_params :in_title_id, :in_occupation_id, :in_gws_main_group_id, :in_gws_default_group_id
 
   before_validation :set_title_ids, if: ->{ in_title_id }
   before_validation :set_occupation_ids, if: ->{ in_occupation_id }
   before_validation :set_gws_main_group_id, if: ->{ @cur_site && in_gws_main_group_id }
+  before_validation if: ->{ @cur_site && in_gws_default_group_id } do
+    set_gws_default_group_id(in_gws_default_group_id)
+  end
   validate :validate_groups
   validate :validate_gws_main_group, if: ->{ @cur_site }
   validate :validate_gws_default_group, if: ->{ @cur_site }
@@ -80,14 +83,16 @@ class Gws::User
     ids = gws_default_group_ids.presence || {}
     ids[@cur_site.id.to_s] = group_id
     self.gws_default_group_ids = ids
-    save
   end
 
-  def gws_default_group
+  def gws_default_group(site = nil)
     return @gws_default_group if @gws_default_group
-    return nil unless @cur_site
-    @gws_default_group = find_gws_default_group(@cur_site)
-    @gws_default_group ||= find_gws_main_group(@cur_site)
+
+    site ||= @cur_site
+    return nil unless site
+
+    @gws_default_group = find_gws_default_group(site)
+    @gws_default_group ||= find_gws_main_group(site)
   end
 
   def find_gws_default_group(site = nil)
