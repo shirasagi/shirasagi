@@ -45,6 +45,22 @@ table.index td.fixnum   { color: #999; }
 table.index td.array    { color: #a00; }
 
 </style>
+
+<div class="cms-tabs">
+  <% path = url_for(action: :index) %>
+  <%= link_to(path, class: [ params[:action] == "index" ? 'current' : nil ]) do %>
+    <span class="tab-name">Documents</span>
+  <% end %>
+  <% path = url_for(action: :indexes) %>
+  <%= link_to(path, class: [ params[:action] == "indexes" ? 'current' : nil ]) do %>
+    <span class="tab-name">Indexes</span>
+  <% end %>
+  <% path = url_for(action: :stats) %>
+  <%= link_to(path, class: [ params[:action] == "stats" ? 'current' : nil ]) do %>
+    <span class="tab-name">Stats</span>
+  <% end %>
+</div>
+
 <div class="table-wrap">
   <table class="index">
     <thead>

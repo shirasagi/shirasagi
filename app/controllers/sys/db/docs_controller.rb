@@ -3,6 +3,7 @@ class Sys::Db::DocsController < ApplicationController
   include Sys::CrudFilter
 
   menu_view nil
+  helper_method :db, :coll
 
   private
 
@@ -67,5 +68,13 @@ class Sys::Db::DocsController < ApplicationController
 
   def destroy
     raise
+  end
+
+  def indexes
+    render
+  end
+
+  def stats
+    render
   end
 end

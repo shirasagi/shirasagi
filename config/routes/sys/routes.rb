@@ -73,7 +73,10 @@ Rails.application.routes.draw do
       resources :colls, only: [:index, :show] do
         get :info, on: :collection
       end
-      resources :docs, concerns: :deletion, path: "colls/:coll/docs"
+      resources :docs, only: [:index, :show], path: "colls/:coll/docs" do
+        get :indexes, on: :collection
+        get :stats, on: :collection
+      end
     end
 
     namespace "auth" do

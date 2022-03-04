@@ -14,26 +14,71 @@
     <dl class="see">
       <dt>name</dt>
       <dd><%= db.database.name %></dd>
-
-      <% db.command(hello: 1).documents.first.try do |result| %>
-        <%= render "sys/db/colls/bson_document", result: result, depth: 1 %>
-      <% end rescue nil %>
     </dl>
   <% end %>
 
+  <%= render "ss/crud/addon", addon: { id: "addon-stats", head: "Hello" } do %>
+    <%= link_to "https://docs.mongodb.com/manual/reference/command/hello/#mongodb-dbcommand-dbcmd.hello", target: "_blank", rel: "noopener" %>
+    <%=
+      begin
+        db.command(hello: 1).documents.first.try do |result|
+          content_tag(:dl, class: "see") { render "sys/db/colls/bson_document", result: result, depth: 1 }
+        end
+      rescue => e
+        e.to_s
+      end
+    %>
+  <% end %>
+
   <%= render "ss/crud/addon", addon: { id: "addon-stats", head: "Stats" } do %>
-    <% db.command(dbStats: 1).documents.first.try do |result| %>
-      <dl class="see">
-        <%= render "sys/db/colls/bson_document", result: result, depth: 1 %>
-      </dl>
-    <% end %>
-  <% end rescue nil %>
+    <%= link_to "https://docs.mongodb.com/manual/reference/command/dbStats/#mongodb-dbcommand-dbcmd.dbStats", target: "_blank", rel: "noopener" %>
+    <%=
+      begin
+        db.command(dbStats: 1).documents.first.try do |result|
+          content_tag(:dl, class: "see") { render "sys/db/colls/bson_document", result: result, depth: 1 }
+        end
+      rescue => e
+        e.to_s
+      end
+    %>
+  <% end %>
 
   <%= render "ss/crud/addon", addon: { id: "addon-build-info", head: "Build Info" } do %>
-    <% db.command(buildInfo: 1).documents.first.try do |result| %>
-      <dl class="see">
-        <%= render "sys/db/colls/bson_document", result: result, depth: 1 %>
-      </dl>
-    <% end %>
-  <% end rescue nil %>
+    <%= link_to "https://docs.mongodb.com/manual/reference/command/buildInfo/#mongodb-dbcommand-dbcmd.buildInfo", target: "_blank", rel: "noopener" %>
+    <%=
+      begin
+        db.command(buildInfo: 1).documents.first.try do |result|
+          content_tag(:dl, class: "see") { render "sys/db/colls/bson_document", result: result, depth: 1 }
+        end
+      rescue => e
+        e.to_s
+      end
+    %>
+  <% end %>
+
+  <%= render "ss/crud/addon", addon: { id: "addon-build-info", head: "Host" } do %>
+    <%= link_to "https://docs.mongodb.com/manual/reference/command/hostInfo/#mongodb-dbcommand-dbcmd.hostInfo", target: "_blank", rel: "noopener" %>
+    <%=
+      begin
+        db.command(hostInfo: 1).documents.first.try do |result|
+          content_tag(:dl, class: "see") { render "sys/db/colls/bson_document", result: result, depth: 1 }
+        end
+      rescue => e
+        e.to_s
+      end
+    %>
+  <% end %>
+
+  <%= render "ss/crud/addon", addon: { id: "addon-build-info", head: "Server Status" } do %>
+    <%= link_to "https://docs.mongodb.com/manual/reference/command/serverStatus/#mongodb-dbcommand-dbcmd.serverStatus", target: "_blank", rel: "noopener" %>
+    <%=
+      begin
+        db.command(serverStatus: 1).documents.first.try do |result|
+          content_tag(:dl, class: "see") { render "sys/db/colls/bson_document", result: result, depth: 1 }
+        end
+      rescue => e
+        e.to_s
+      end
+    %>
+  <% end %>
 </div>
