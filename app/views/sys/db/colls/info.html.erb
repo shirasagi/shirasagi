@@ -15,13 +15,21 @@
       <dt>name</dt>
       <dd><%= db.database.name %></dd>
     </dl>
+
+    <div>
+      These articles should be read to utilize blow stats.
+      <ul>
+        <li><%= link_to "https://docs.mongodb.com/manual/administration/monitoring/", target: "_blank", rel: "noopener" %></li>
+        <li><%= link_to "https://docs.mongodb.com/manual/administration/analyzing-mongodb-performance/", target: "_blank", rel: "noopener" %></li>
+      </ul>
+    </div>
   <% end %>
 
-  <%= render "ss/crud/addon", addon: { id: "addon-stats", head: "Hello" } do %>
-    <%= link_to "https://docs.mongodb.com/manual/reference/command/hello/#mongodb-dbcommand-dbcmd.hello", target: "_blank", rel: "noopener" %>
+  <%= render "ss/crud/addon", addon: { id: "addon-build-info", head: "Server Status", toggle: true, display_body: "hide" } do %>
+    <%= link_to "https://docs.mongodb.com/manual/reference/command/serverStatus/#mongodb-dbcommand-dbcmd.serverStatus", target: "_blank", rel: "noopener" %>
     <%=
       begin
-        db.command(hello: 1).documents.first.try do |result|
+        db.command(serverStatus: 1).documents.first.try do |result|
           content_tag(:dl, class: "see") { render "sys/db/colls/bson_document", result: result, depth: 1 }
         end
       rescue => e
@@ -30,7 +38,7 @@
     %>
   <% end %>
 
-  <%= render "ss/crud/addon", addon: { id: "addon-stats", head: "Stats" } do %>
+  <%= render "ss/crud/addon", addon: { id: "addon-stats", head: "DbStats", toggle: true } do %>
     <%= link_to "https://docs.mongodb.com/manual/reference/command/dbStats/#mongodb-dbcommand-dbcmd.dbStats", target: "_blank", rel: "noopener" %>
     <%=
       begin
@@ -43,7 +51,46 @@
     %>
   <% end %>
 
-  <%= render "ss/crud/addon", addon: { id: "addon-build-info", head: "Build Info" } do %>
+  <%= render "ss/crud/addon", addon: { id: "addon-build-info", head: "Repl Set Get Status", toggle: true, display_body: "hide" } do %>
+    <%= link_to "https://docs.mongodb.com/manual/reference/command/replSetGetStatus/#mongodb-dbcommand-dbcmd.replSetGetStatus", target: "_blank", rel: "noopener" %>
+    <%=
+      begin
+        db.command(replSetGetStatus: 1).documents.first.try do |result|
+          content_tag(:dl, class: "see") { render "sys/db/colls/bson_document", result: result, depth: 1 }
+        end
+      rescue => e
+        e.to_s
+      end
+    %>
+  <% end %>
+
+  <%= render "ss/crud/addon", addon: { id: "addon-build-info", head: "Connection Pool Stats", toggle: true } do %>
+    <%= link_to "https://docs.mongodb.com/manual/reference/command/connPoolStats/#mongodb-dbcommand-dbcmd.connPoolStats", target: "_blank", rel: "noopener" %>
+    <%=
+      begin
+        db.command(connPoolStats: 1).documents.first.try do |result|
+          content_tag(:dl, class: "see") { render "sys/db/colls/bson_document", result: result, depth: 1 }
+        end
+      rescue => e
+        e.to_s
+      end
+    %>
+  <% end %>
+
+  <%= render "ss/crud/addon", addon: { id: "addon-build-info", head: "Command Line Options", toggle: true, display_body: "hide" } do %>
+    <%= link_to "https://docs.mongodb.com/manual/reference/command/getCmdLineOpts/#mongodb-dbcommand-dbcmd.getCmdLineOpts", target: "_blank", rel: "noopener" %>
+    <%=
+      begin
+        db.command(getCmdLineOpts: 1).documents.first.try do |result|
+          content_tag(:dl, class: "see") { render "sys/db/colls/bson_document", result: result, depth: 1 }
+        end
+      rescue => e
+        e.to_s
+      end
+    %>
+  <% end %>
+
+  <%= render "ss/crud/addon", addon: { id: "addon-build-info", head: "Build Info", toggle: true } do %>
     <%= link_to "https://docs.mongodb.com/manual/reference/command/buildInfo/#mongodb-dbcommand-dbcmd.buildInfo", target: "_blank", rel: "noopener" %>
     <%=
       begin
@@ -56,7 +103,7 @@
     %>
   <% end %>
 
-  <%= render "ss/crud/addon", addon: { id: "addon-build-info", head: "Host" } do %>
+  <%= render "ss/crud/addon", addon: { id: "addon-build-info", head: "Host Info", toggle: true } do %>
     <%= link_to "https://docs.mongodb.com/manual/reference/command/hostInfo/#mongodb-dbcommand-dbcmd.hostInfo", target: "_blank", rel: "noopener" %>
     <%=
       begin
@@ -69,11 +116,11 @@
     %>
   <% end %>
 
-  <%= render "ss/crud/addon", addon: { id: "addon-build-info", head: "Server Status" } do %>
-    <%= link_to "https://docs.mongodb.com/manual/reference/command/serverStatus/#mongodb-dbcommand-dbcmd.serverStatus", target: "_blank", rel: "noopener" %>
+  <%= render "ss/crud/addon", addon: { id: "addon-stats", head: "Hello", toggle: true } do %>
+    <%= link_to "https://docs.mongodb.com/manual/reference/command/hello/#mongodb-dbcommand-dbcmd.hello", target: "_blank", rel: "noopener" %>
     <%=
       begin
-        db.command(serverStatus: 1).documents.first.try do |result|
+        db.command(hello: 1).documents.first.try do |result|
           content_tag(:dl, class: "see") { render "sys/db/colls/bson_document", result: result, depth: 1 }
         end
       rescue => e
