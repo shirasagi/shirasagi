@@ -5,6 +5,8 @@ class Sys::Db::DocsController < ApplicationController
   menu_view nil
   helper_method :db, :coll
 
+  before_action :set_search, only: :index
+
   private
 
   def db
@@ -21,6 +23,10 @@ class Sys::Db::DocsController < ApplicationController
   def set_crumbs
     @crumbs << [ t("sys.db_tool"), sys_db_path ]
     @crumbs << [ coll.name, sys_db_docs_path(coll: coll.name) ]
+  end
+
+  def set_search
+    @s ||= OpenStruct.new params[:s]
   end
 
   def set_item
@@ -41,9 +47,19 @@ class Sys::Db::DocsController < ApplicationController
     limit = 50
     page = params[:page].try { |page| page.to_i - 1 } || 0
     offset = page * limit
-    total_count = coll.count
 
-    @items = coll.find(nil, limit: limit, skip: offset)
+    if @s.filter.present?
+      begin
+        filter = ExecJS.eval(@s.filter)
+      rescue => e
+        @filter_error = e.to_s
+        render
+        return
+      end
+    end
+
+    @items = coll.find(filter, limit: limit, skip: offset)
+    total_count = @items.count
     @items = Kaminari.paginate_array(@items.to_a, limit: limit, offset: offset, total_count: total_count)
 
     @fields = []
