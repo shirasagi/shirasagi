@@ -74,9 +74,13 @@ class Gws::User
   end
 
   def set_gws_default_group_id(group_id)
-    group_id = group_id.numeric? ? group_id.to_i : nil
     ids = gws_default_group_ids.presence || {}
-    ids[@cur_site.id.to_s] = group_id
+    if group_id.numeric?
+      ids[@cur_site.id.to_s] = group_id.to_i
+    else
+      ids.delete(@cur_site.id.to_s)
+    end
+
     self.gws_default_group_ids = ids
   end
 
@@ -133,8 +137,13 @@ class Gws::User
 
   def set_gws_main_group_id
     group_ids = gws_main_group_ids
-    group_ids[@cur_site.id.to_s] = in_gws_main_group_id.present? ? in_gws_main_group_id.to_i : nil
-    self.gws_main_group_ids = group_ids.select { |k, v| v.present? }
+    if in_gws_main_group_id.numeric?
+      group_ids[@cur_site.id.to_s] = in_gws_main_group_id.to_i
+    else
+      group_ids.delete(@cur_site.id.to_s)
+    end
+
+    self.gws_main_group_ids = group_ids
   end
 
   def validate_groups
