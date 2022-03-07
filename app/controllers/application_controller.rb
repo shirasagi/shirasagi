@@ -69,6 +69,13 @@ class ApplicationController < ActionController::Base
     headers['Transfer-Encoding'] = 'chunked'
     headers.delete('Content-Length')
 
+    # Unfortunately Rack::ETag (https://github.com/rack/rack/blob/master/lib/rack/etag.rb#L54) above 2.2
+    # forcibly calculate etag even though the response is streaming. So, streaming response doesn't work properly.
+    # To fix this issue, you must set "Last-Modified" header explicitly
+    #
+    # see: https://qiita.com/snaka/items/133edf3e1a4cabd9ce45
+    headers['Last-Modified'] = Time.zone.now.rfc2822
+
     # output csv by streaming
     self.response_body = CloseableChunkedBody.new(enum)
   end
