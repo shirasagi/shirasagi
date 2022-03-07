@@ -30,7 +30,8 @@ module Cms::SyntaxChecker
     Cms::SyntaxChecker::ImgDataUriSchemeChecker,
     Cms::SyntaxChecker::LinkTextChecker,
     Cms::SyntaxChecker::OrderOfHChecker,
-    Cms::SyntaxChecker::TableChecker
+    Cms::SyntaxChecker::TableChecker,
+    Cms::SyntaxChecker::UrlSchemeChecker
   ]
   self.text_checkers = [
     # checkers for both html and text
