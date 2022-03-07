@@ -29,7 +29,7 @@ describe "history_sys_logs", type: :feature, dbscope: :example do
       click_on 'ダウンロード'
 
       csv = ::SS::ChunkReader.new(page.html).to_a.join
-      csv = csv.encode("UTF-8", "SJIS")
+      csv = NKF.nkf("-Ww", csv)
       csv = ::CSV.parse(csv, headers: true)
 
       expect(csv.length).to eq 6

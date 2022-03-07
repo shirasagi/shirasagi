@@ -3,11 +3,14 @@ module SS::Model::File
   extend SS::Translation
   include SS::Document
   include SS::Reference::User
+  include SS::Locatable
+  include SS::ReadableFile
   include SS::FileFactory
   include SS::ExifGeoLocation
   include SS::CsvHeader
   include SS::FileUsageAggregation
   include SS::UploadPolicy
+  include SS::VariantProcessor
   include History::Addon::Trash
   include ActiveSupport::NumberHelper
 
@@ -21,7 +24,7 @@ module SS::Model::File
     field :state, type: String, default: "closed"
     field :name, type: String
     field :filename, type: String
-    field :size, type: Integer
+    field :size, type: Integer, default: 0
     field :content_type, type: String
 
     belongs_to :site, class_name: "SS::Site"
@@ -33,13 +36,13 @@ module SS::Model::File
     permit_params :in_file, :state, :name, :filename, :resizing, :quality, :image_resizes_disabled, :in_data_url
 
     before_validation :set_filename, if: ->{ in_file.present? }
-    before_validation :normalize_name
-    before_validation :normalize_filename
+    before_validation :normalize_attributes
 
     validates :model, presence: true
     validates :state, presence: true
-    validates :filename, presence: true, if: ->{ in_file.blank? && in_files.blank? }
-    validates :content_type, presence: true, if: ->{ in_file.blank? && in_files.blank? }
+    validates :name, presence: true
+    validates :filename, presence: true
+    validates :content_type, presence: true
     validate :validate_filename, if: ->{ filename.present? }
     validate :validate_upload_policy, if: ->{ in_file.present? }
     validates_with SS::FileSizeValidator, if: ->{ size.present? }
@@ -50,17 +53,6 @@ module SS::Model::File
     before_destroy :remove_file
 
     default_scope ->{ order_by name: 1 }
-
-    if Rails.env.test?
-      define_method(:url) { SS.config.ss.file_url_with == "name" ? url_with_name : url_with_filename }
-      define_method(:full_url) { SS.config.ss.file_url_with == "name" ? full_url_with_name : full_url_with_filename }
-    elsif SS.config.ss.file_url_with == "name"
-      define_method(:url) { url_with_name }
-      define_method(:full_url) { full_url_with_name }
-    else
-      define_method(:url) { url_with_filename }
-      define_method(:full_url) { full_url_with_filename }
-    end
   end
 
   module ClassMethods
@@ -192,49 +184,6 @@ module SS::Model::File
     end
   end
 
-  def path
-    "#{self.class.root}/ss_files/" + id.to_s.chars.join("/") + "/_/#{id}"
-  end
-
-  def public_dir
-    return if site.blank? || !site.respond_to?(:root_path)
-    "#{site.root_path}/fs/" + id.to_s.chars.join("/") + "/_"
-  end
-
-  def public_path
-    public_dir.try { |dir| "#{dir}/#{filename}" }
-  end
-
-  def url_with_filename
-    "/fs/" + id.to_s.chars.join("/") + "/_/#{filename}"
-  end
-
-  def url_with_name
-    if SS::FilenameUtils.url_safe_japanese?(name)
-      "/fs/" + id.to_s.chars.join("/") + "/_/#{Addressable::URI.encode_component(name)}"
-    else
-      url_with_filename
-    end
-  end
-
-  def full_url_with_filename
-    return if site.blank? || !site.respond_to?(:full_root_url)
-    "#{site.full_root_url}fs/" + id.to_s.chars.join("/") + "/_/#{filename}"
-  end
-
-  def full_url_with_name
-    return if site.blank? || !site.respond_to?(:full_root_url)
-    if SS::FilenameUtils.url_safe_japanese?(name)
-      "#{site.full_root_url}fs/" + id.to_s.chars.join("/") + "/_/#{Addressable::URI.encode_component(name)}"
-    else
-      full_url_with_filename
-    end
-  end
-
-  def thumb_url
-    "/fs/" + id.to_s.chars.join("/") + "/_/thumb/#{filename}"
-  end
-
   def public?
     state == "public"
   end
@@ -268,22 +217,8 @@ module SS::Model::File
     [[I18n.t('ss.options.state.public'), 'public']]
   end
 
-  def name
-    self[:name].presence || basename
-  end
-
   def humanized_name
     "#{::File.basename(name, ".*")} (#{extname.upcase} #{number_to_human_size(size)})"
-  end
-
-  def download_filename
-    return name if name.include?('.') && !name.end_with?(".")
-
-    name_without_ext = ::File.basename(name, ".*")
-    ext = ::File.extname(filename)
-    return name_without_ext if ext.blank? || ext == "."
-
-    name_without_ext + ext
   end
 
   def basename
@@ -318,14 +253,6 @@ module SS::Model::File
 
   def resizing=(size)
     @resizing = size.instance_of?(String) ? size.split(",") : size
-  end
-
-  def read
-    Fs.exist?(path) ? Fs.binread(path) : nil
-  end
-
-  def to_io(&block)
-    Fs.exist?(path) ? Fs.to_io(path, &block) : nil
   end
 
   def uploaded_file(&block)
@@ -374,8 +301,6 @@ module SS::Model::File
 
     model.create_empty!(copy_attrs) do |new_file|
       ::FileUtils.copy(self.path, new_file.path)
-      # to create thumbnail call "#save!"
-      new_file.save!
       new_file.sanitizer_copy_file
     end
   end
@@ -424,18 +349,22 @@ module SS::Model::File
   end
 
   def set_filename
-    self.name         = in_file.original_filename if self[:name].blank?
-    self.filename     = in_file.original_filename if filename.blank?
-    self.size         = in_file.size
-    self.content_type = ::SS::MimeType.find(in_file.original_filename, in_file.content_type)
+    return if in_file.blank?
+    return if filename.present?
+
+    self.filename = in_file.original_filename
   end
 
-  def normalize_name
-    self.name = SS::FilenameUtils.convert_to_url_safe_japanese(name) if self.name.present?
-  end
+  def normalize_attributes
+    # name
+    self.name = filename if name.blank? && filename.present?
+    self.name = SS::FilenameUtils.convert_to_url_safe_japanese(name) if name.present?
 
-  def normalize_filename
-    self.filename = SS::FilenameUtils.normalize(self.filename)
+    # filename
+    self.filename = SS::FilenameUtils.normalize(self.filename) if self.filename
+
+    # content_type
+    self.content_type = SS::MimeType.find(self.filename) if self.filename
   end
 
   def multibyte_filename_disabled?
@@ -455,7 +384,6 @@ module SS::Model::File
   end
 
   def save_file
-    errors.add :in_file, :blank if new_record? && in_file.blank?
     return false if errors.present?
     return if in_file.blank?
 
@@ -467,15 +395,15 @@ module SS::Model::File
     dir = ::File.dirname(path)
     Fs.mkdir_p(dir) unless Fs.exist?(dir)
 
-    SS::ImageConverter.attach(in_file, ext: ::File.extname(in_file.original_filename)) do |converter|
+    SS::ImageConverter.attach(in_file, ext: ::File.extname(filename)) do |converter|
       converter.apply_defaults!(resizing: resizing_with_max_file_size, quality: quality_with_max_file_size)
       Fs.upload(path, converter.to_io)
       self.geo_location = converter.geo_location
     end
-
-    sanitizer_save_file
-
     self.size = Fs.size(path)
+
+    update_variants if respond_to?(:update_variants)
+    sanitizer_save_file
   end
 
   def create_history_trash

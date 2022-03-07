@@ -1,6 +1,6 @@
 class SS::File
   include SS::Model::File
-  include SS::Relation::Thumb
+  # include SS::Relation::Thumb
   include SS::Relation::FileHistory
   include SS::Liquidization
 
@@ -15,7 +15,7 @@ class SS::File
     export :basename
     export :url
     export as: :thumb_url do
-      thumb ? thumb.url : nil
+      thumb ? thumb_url : nil
     end
     export :image?
   end

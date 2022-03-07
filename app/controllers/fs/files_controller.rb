@@ -22,10 +22,18 @@ class Fs::FilesController < ApplicationController
     name_or_filename << ".#{params[:format]}" if params[:format].present?
 
     item = SS::File.find(id)
-    raise "404" if item.name != name_or_filename && item.filename != name_or_filename
+    if item.name == name_or_filename || item.filename == name_or_filename
+      @item = item.becomes_with_model
+      @variant = nil
+      return
+    end
 
-    @item = item.becomes_with_model
-    raise "404" if @item.try(:thumb?)
+    item = item.becomes_with_model
+    variant = item.variants.from_filename(name_or_filename)
+    raise "404" if !variant
+
+    @item = item
+    @variant = variant
   end
 
   def deny
@@ -62,33 +70,15 @@ class Fs::FilesController < ApplicationController
   end
 
   def send_item(disposition = :inline)
+    path = @variant ? @variant.path : @item.path
+    @variant.create! if @variant
+    raise "404" unless Fs.file?(path)
+
     set_last_modified
 
-    if Fs.mode == :file && Fs.file?(@item.path)
-      send_file @item.path, type: @item.content_type, filename: @item.download_filename,
-                disposition: disposition, x_sendfile: true
-    else
-      send_enum @item.to_io, type: @item.content_type, filename: @item.download_filename,
-                disposition: disposition
-    end
-  end
-
-  def send_thumb(file, opts = {})
-    width  = opts.delete(:width).to_i
-    height = opts.delete(:height).to_i
-
-    width  = (width  > 0) ? width  : SS::ImageConverter::DEFAULT_THUMB_WIDTH
-    height = (height > 0) ? height : SS::ImageConverter::DEFAULT_THUMB_HEIGHT
-
-    converter = SS::ImageConverter.open(file.path)
-    converter.resize_to_fit!(width, height)
-
-    send_enum converter.to_enum, opts
-    converter = nil
-  ensure
-    if converter
-      converter.close rescue nil
-    end
+    content_type = @variant ? @variant.content_type : @item.content_type
+    download_filename = @variant ? @variant.download_filename : @item.download_filename
+    ss_send_file @variant || @item, type: content_type, filename: download_filename, disposition: disposition
   end
 
   public
@@ -100,20 +90,20 @@ class Fs::FilesController < ApplicationController
   def thumb
     size   = params[:size]
     width  = params[:width]
+    width  = width.numeric? ? width.to_i : nil
     height = params[:height]
+    height = height.numeric? ? height.to_i : nil
 
-    if width.present? && height.present?
-      set_last_modified
-      send_thumb @item, type: @item.content_type, filename: @item.filename,
-        disposition: :inline, width: width, height: height
-    elsif thumb = @item.try(:thumb, size)
-      @item = thumb
-      index
+    if width.present? && height.present? && width > 0 && height > 0
+      @variant = @item.variants[{ width: width, height: height }]
+    elsif size.present? && (variant = @item.variants[size.to_s.to_sym])
+      @variant = variant
     else
-      set_last_modified
-      send_thumb @item, type: @item.content_type, filename: @item.filename,
-        disposition: :inline
+      @variant = @item.variants[:thumb]
     end
+
+    set_last_modified
+    send_item
   rescue => e
     raise "500"
   end

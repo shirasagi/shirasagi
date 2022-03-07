@@ -4,7 +4,7 @@ GIT
   branch: 7.3-stable-MONGOID-5183
   specs:
     mongoid (7.3.3.ss.pre.1)
-      activemodel (>= 5.1, < 6.2)
+      activemodel (>= 6.0, < 6.2)
       mongo (>= 2.10.5, < 3.0.0)
       ruby2_keywords (~> 0.0.5)
 
@@ -80,7 +80,7 @@ GEM
     bindata (2.4.10)
     binding_of_caller (1.0.0)
       debug_inspector (>= 0.0.1)
-    bootsnap (1.8.1)
+    bootsnap (1.9.3)
       msgpack (~> 1.0)
     brakeman (5.1.1)
     browser (5.3.1)
@@ -112,9 +112,9 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    debase (0.2.4.1)
-      debase-ruby_core_source (>= 0.10.2)
-    debase-ruby_core_source (0.10.12)
+    debase (0.2.5.beta2)
+      debase-ruby_core_source (>= 0.10.12)
+    debase-ruby_core_source (0.10.14)
     debug_inspector (1.1.0)
     diff-lcs (1.4.4)
     diffy (3.4.0)
@@ -188,7 +188,7 @@ GEM
       googleauth (~> 0.9)
       grpc (~> 1.24)
       rly (~> 0.2.3)
-    google-protobuf (3.17.3)
+    google-protobuf (3.19.2)
     googleapis-common-protos (1.3.11)
       google-protobuf (~> 3.14)
       googleapis-common-protos-types (>= 1.0.6, < 2.0)
@@ -696,7 +696,7 @@ DEPENDENCIES
   capybara
   clam_scan
   coffee-rails
-  debase
+  debase (= 0.2.5.beta2)
   diff-lcs
   diffy
   docker-api
@@ -810,4 +810,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.1.4
+   2.2.32

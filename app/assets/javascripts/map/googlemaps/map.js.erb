@@ -30,7 +30,7 @@ this.Googlemaps_Map = (function () {
 
   Googlemaps_Map.showGoogleMapsSearch = false;
 
-  Googlemaps_Map.mapsSearchUrl = "https://www.google.co.jp/maps/search/";
+  Googlemaps_Map.mapsSearchUrl = "<%= SS.config.map.googlemaps_search_end_point %>";
 
   Googlemaps_Map.attachMessage = function (id) {
     google.maps.event.addListener(Googlemaps_Map.markers[id]["marker"], 'click', function (event) {

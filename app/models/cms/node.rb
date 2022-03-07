@@ -28,6 +28,7 @@ class Cms::Node
     include Cms::Addon::ContentQuota
     include Cms::Addon::ForMemberNode
     include Cms::Addon::Release
+    include Cms::Addon::ReleasePlan
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
@@ -134,10 +135,15 @@ class Cms::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
+    include Category::Addon::Setting
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
-    default_scope ->{ where(route: "cms/site_search") }
+    default_scope -> { where(route: "cms/site_search") }
+
+    def st_categories_sortable?
+      true
+    end
   end
 end

@@ -305,7 +305,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
           expect(item.backups.count).to eq 2
         end
-        expect(SS::File.all.unscoped.count).to eq 2
+        expect(SS::File.all.unscoped.count).to eq 1
 
         #
         # Update columns
@@ -419,7 +419,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
           expect(item.backups.count).to eq 3
         end
-        expect(SS::File.all.unscoped.count).to eq 2
+        expect(SS::File.all.unscoped.count).to eq 1
 
         #
         # Remove columns
@@ -694,7 +694,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
           expect(item.backups.count).to eq 1
         end
-        expect(SS::File.all.unscoped.count).to eq 3
+        expect(SS::File.all.unscoped.count).to eq 2
 
         #
         # Update columns
@@ -803,7 +803,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
           expect(item.backups.count).to eq 2
         end
-        expect(SS::File.all.unscoped.count).to eq 3
+        expect(SS::File.all.unscoped.count).to eq 2
 
         #
         # Remove columns
