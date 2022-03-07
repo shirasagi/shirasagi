@@ -5,7 +5,7 @@ class SS::ThumbFile
 
   index({ original_id: 1 })
 
-  field :original_id, type: Integer
+  belongs_to :original, foreign_key: "original_id", class_name: 'SS::File'
   field :image_size, type: SS::Extensions::Sizes
   field :image_size_name, type: String
 
@@ -19,7 +19,7 @@ class SS::ThumbFile
   end
 
   def url_with_filename
-    "/fs/" + original_id.to_s.split(//).join("/") + "/_/thumb/#{filename}"
+    "/fs/" + original_id.to_s.split(//).join("/") + "/_/thumb/#{original.filename}"
   end
 
   def url_with_name
@@ -28,7 +28,7 @@ class SS::ThumbFile
 
   def full_url_with_filename
     return if site.blank? || !site.respond_to?(:full_root_url)
-    "#{site.full_root_url}fs/" + original_id.to_s.split(//).join("/") + "/_/thumb/#{filename}"
+    "#{site.full_root_url}fs/" + original_id.to_s.split(//).join("/") + "/_/thumb/#{original.filename}"
   end
 
   def full_url_with_name
