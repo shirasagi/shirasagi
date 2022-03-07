@@ -13,12 +13,12 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
     it do
       visit gws_schedule_plans_path(site: site)
       within ".fc-view" do
-        expect(page).to have_css(".fc-content", text: item.name)
+        expect(page).to have_css(".fc-event-allday .fc-content", text: item.name)
       end
 
       within ".fc-view" do
         # click_on item.name
-        find(".fc-content", text: item.name).click
+        find(".fc-event-allday .fc-content", text: item.name).click
       end
 
       within ".gws-popup" do
