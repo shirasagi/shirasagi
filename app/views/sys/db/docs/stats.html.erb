@@ -15,7 +15,7 @@
 
 <div class="addon-views">
   <%= render "ss/crud/addon", addon: { id: "addon-stats", head: "Stats" } do %>
-    <%= link_to "https://docs.mongodb.com/manual/reference/command/collStats/#mongodb-dbcommand-dbcmd.collStats", target: "_blank", rel: "noopener" %>
+    <%= link_to "https://docs.mongodb.com/manual/reference/command/collStats/#mongodb-dbcommand-dbcmd.collStats", "https://docs.mongodb.com/manual/reference/command/collStats/#mongodb-dbcommand-dbcmd.collStats", target: "_blank", rel: "noopener" %>
     <%=
       begin
         db.command(collStats: params[:coll]).documents.first.try do |result|
