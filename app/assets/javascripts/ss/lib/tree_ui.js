@@ -111,6 +111,10 @@ this.SS_TreeUI = (function () {
       e.stopPropagation();
       return false;
     });
+    var self = this;
+    this.tree.on("click", "[type='checkbox']", function (ev) {
+      self.checkAllChildren(this, this.checked);
+    });
     if (expand_all) {
       SS_TreeUI.openImage(this.tree.find("tbody tr img"));
     } else if (collapse_all) {
@@ -129,6 +133,30 @@ this.SS_TreeUI = (function () {
   SS_TreeUI.prototype.collapseAll = function () {
     return $(this.tree.find("tr img.toggle.opened").get().reverse()).each(function () {
       return $(this).trigger("click");
+    });
+  };
+
+  SS_TreeUI.prototype.checkAllChildren = function (checkboxEl, checked) {
+    var $checkboxEl = $(checkboxEl);
+    var $tr = $checkboxEl.closest("[data-depth]");
+    var depth = $tr.data("depth");
+    if (!Number.isInteger(depth)) {
+      return;
+    }
+
+    var breakLoop = false;
+    $tr.nextAll("[data-depth]").each(function() {
+      if (breakLoop) {
+        return;
+      }
+
+      var $nextEl = $(this);
+      if ($nextEl.data("depth") <= depth) {
+        breakLoop = true;
+        return;
+      }
+
+      $nextEl.find("[type='checkbox']").prop("checked", checked);
     });
   };
 
