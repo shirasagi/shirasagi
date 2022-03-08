@@ -36,9 +36,9 @@ module Gws::Addon
           elsif !allowed_other_user_files? && @cur_user && @cur_user.id != file.user_id
             next
           elsif file.model == "share/file"
-            file.update(site: site, owner_item: self, state: state)
+            file.update(owner_item: self, state: state)
           else
-            file.update(site: site, model: model_name.i18n_key, owner_item: self, state: state)
+            file.update(model: model_name.i18n_key, owner_item: self, state: state)
           end
           ids << file.id
         end
