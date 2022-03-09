@@ -19,8 +19,8 @@ module Workflow::Approver
   included do
     cattr_reader(:approver_user_class) { Cms::User }
 
-    field :workflow_user_id, type: Integer
-    field :workflow_agent_id, type: Integer
+    belongs_to :workflow_user, class_name: "Cms::User"
+    belongs_to :workflow_agent, class_name: "Cms::User"
     field :workflow_state, type: String
     field :workflow_comment, type: String
     field :workflow_pull_up, type: String
@@ -51,6 +51,22 @@ module Workflow::Approver
     before_save :transfer_workflow_approver_file_ownerships
 
     after_destroy :destroy_workflow_approver_files
+
+    re_define_method(:workflow_user) do |_reload = false|
+      if workflow_user_id.present?
+        self.class.approver_user_class.where(id: workflow_user_id).first
+      else
+        nil
+      end
+    end
+
+    re_define_method(:workflow_agent) do |_reload = false|
+      if workflow_agent_id.present?
+        self.class.approver_user_class.where(id: workflow_agent_id).first
+      else
+        nil
+      end
+    end
   end
 
   def status
@@ -58,22 +74,6 @@ module Workflow::Approver
     return state if workflow_state == "cancelled"
     return workflow_state if workflow_state.present?
     state
-  end
-
-  def workflow_user
-    if workflow_user_id.present?
-      self.class.approver_user_class.where(id: workflow_user_id).first
-    else
-      nil
-    end
-  end
-
-  def workflow_agent
-    if workflow_agent_id.present?
-      self.class.approver_user_class.where(id: workflow_agent_id).first
-    else
-      nil
-    end
   end
 
   def workflow_levels
