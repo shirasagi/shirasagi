@@ -51,12 +51,18 @@
   <% end %>
 <% end %>
 
-<dl class="see">
-  <% if @model.use_conditions %>
+<% if @model.use_conditions %>
+  <dl class="see">
     <dt><%= @model.t :conditions %><%= @model.tt :conditions %></dt>
     <dd><%= f.text_area :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
-  <% end %>
+  </dl>
+<% end %>
 
+<% if @model.use_condition_forms %>
+  <%= render "cms/agents/addons/page_list/form_condition_forms", local_assigns %>
+<% end %>
+
+<dl class="see">
   <% if @model.use_sort %>
     <dt class="sort"><%= @model.t :sort %><%= @model.tt :sort %></dt>
     <dd class="sort">

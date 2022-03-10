@@ -1,5 +1,9 @@
 FactoryBot.define do
   factory :cms_column_select, class: Cms::Column::Select do
+    transient do
+      select_option_count { nil }
+    end
+
     cur_site { cms_site }
 
     name { "name-#{unique_id}" }
@@ -9,8 +13,8 @@ FactoryBot.define do
     prefix_label { "prefix_label-#{unique_id}" }
     postfix_label { "postfix_label-#{unique_id}" }
     select_options do
-      times = rand(1..5).times
-      times.map { unique_id }
+      count = select_option_count || rand(1..5)
+      Array.new(count) { unique_id * 2 }
     end
   end
 end

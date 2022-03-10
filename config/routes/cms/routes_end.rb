@@ -129,6 +129,8 @@ Rails.application.routes.draw do
       resources :forms, concerns: [:deletion, :change_state] do
         resources :init_columns, concerns: [:deletion]
         resources :columns, concerns: [:deletion]
+
+        get :column_names, on: :collection
       end
     end
 

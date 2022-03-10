@@ -18,9 +18,11 @@ module Cms::Addon::List
       cattr_accessor(:use_liquid, instance_accessor: false) { true }
       cattr_accessor(:use_sort, instance_accessor: false) { true }
       cattr_accessor(:use_conditions, instance_accessor: false) { true }
+      cattr_accessor(:use_condition_forms, instance_accessor: false) { false }
       attr_accessor :cur_date
 
       field :conditions, type: SS::Extensions::Words
+      field :condition_forms, type: Cms::Extensions::ConditionForms
       field :sort, type: String
       field :limit, type: Integer, default: -> { self.class.default_limit }
       field :loop_html, type: String
@@ -36,6 +38,7 @@ module Cms::Addon::List
 
       permit_params :conditions, :sort, :limit, :loop_html, :loop_setting_id, :upper_html, :lower_html, :new_days
       permit_params :no_items_display_state, :substitute_html, :loop_format, :loop_liquid
+      permit_params condition_forms: [ form_ids: [], filters: [ :column_name, :condition_values ] ]
 
       before_validation :validate_conditions
 

@@ -95,12 +95,25 @@ module Cms::Content
       date = opts[:date]
 
       # condition_hash
-      if parent_item && parent_item.respond_to?(:condition_hash)
-        # list addon included
-        condition_hash = parent_item.condition_hash(opts.slice(*Cms::Addon::List::Model::WELL_KONWN_CONDITION_HASH_OPTIONS))
-        ids = self.unscoped.where(condition_hash).distinct(:id)
+      if parent_item
+        ids = []
+        if parent_item.respond_to?(:condition_hash)
+          # list addon included
+          condition_hash = parent_item.condition_hash(opts.slice(*Cms::Addon::List::Model::WELL_KONWN_CONDITION_HASH_OPTIONS))
+          criteria = self.unscoped.where(condition_hash)
+          if parent_item.respond_to?(:condition_forms) && parent_item.condition_forms.present?
+            extra_conditions = parent_item.condition_forms.to_mongo_query
+            if extra_conditions.length == 1
+              criteria = criteria.where(extra_conditions.first)
+            elsif extra_conditions.length > 1
+              criteria = criteria.where("$and" => [{ "$or" => extra_conditions }])
+            end
+          end
+          ids += criteria.distinct(:id)
+        end
         return self.none if ids.blank?
 
+        ids.uniq!
         criteria = all.in(id: ids)
         criteria = criteria.hint({ _id: 1 })
 

@@ -473,6 +473,13 @@ ja:
       hatena: はてなブックマーク
       hatena_add: このエントリーをはてなブックマークに追加
       line: LINEで送る
+    condition_form:
+      form_name: 定型フォーム名
+      filters: 条件
+      column_name: 項目名
+      column_value: 値
+      select_all: すべて選択
+      choose_forms_at_first: 条件を設定するには、先に定型フォームを選択してください。
 
     opendata_ref/license:
       ref_opendata: オープンデータ側の設定にしたがう
@@ -963,6 +970,8 @@ ja:
         readable_members_hash: 閲覧ユーザー(ハッシュ)
       cms/addon/list/model:
         conditions: 検索条件(URL)
+        condition_forms: 検索条件(定型フォーム)
+        condition_form_ids: 検索条件(定型フォーム)
         loop_html: ループHTML
         upper_html: 上部HTML
         lower_html: 下部HTML
@@ -1977,6 +1986,8 @@ ja:
           oshirase
           oshirase/event
           shisei/jinji
+      condition_form_ids:
+        - 指定の定型フォームをもつページのみを一覧に表示することができます。
       sort:
         - リストの並び替え方法を指定します。
       limit:
