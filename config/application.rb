@@ -66,7 +66,7 @@ module SS
 
     cattr_accessor(:private_root, instance_accessor: false) { "#{Rails.root}/private" }
 
-    THREAD_LOCAL_VARIABLES = %w(ss.env ss.request ss.site ss.user ss.organization)
+    THREAD_LOCAL_VARIABLES = %w(ss.env ss.request ss.site ss.user ss.organization).freeze
 
     def call(*args, &block)
       save_context = {}
