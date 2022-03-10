@@ -35,7 +35,7 @@ module SS::Relation::FileHistory
   private
 
   def history_file_instance
-    safe_attributes = attributes.to_h.select{ |k| SS::HistoryFile.fields.key?(k) }
+    safe_attributes = Hash[attributes].select{ |k| SS::HistoryFile.fields.key?(k) }
     # COPY_SKIP_ATTRS
     %w(_id id model file_id thumb_id in_file).each { |k| safe_attributes.delete(k) }
 

@@ -14,6 +14,13 @@ module SS::UploadPolicy
     %w(wait complete).map { |v| [ I18n.t("ss.options.sanitizer_state.#{v}"), v ] }
   end
 
+  # sanitize 機能がマージされていないのに、先に添付ファイルの copy on write 機能をマージしたところ、
+  # undefined method エラーが処理が途中で失敗するようになってしまった。
+  # そこで、空のメソッドを定義する。
+  # 将来、この部分で競合が発生するかもしれないが、それは意図したもので、適時、修正していただきたい。
+  def sanitizer_copy_file
+  end
+
   def sanitizer_restore_file(output_path)
     self.sanitizer_state = 'complete'
     self.in_file = Fs::UploadedFile.create_from_file(output_path)

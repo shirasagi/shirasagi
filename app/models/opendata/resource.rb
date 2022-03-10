@@ -147,7 +147,10 @@ class Opendata::Resource
     return if format.blank?
 
     self.format = format.upcase
-    self.rm_tsv = "1" if %(CSV TSV).index(format)
+    if %(CSV TSV).index(format)
+      self.rm_tsv = "1"
+      self.in_tsv = nil
+    end
   end
 
   def save_dataset
