@@ -106,7 +106,7 @@ module SS::BaseFilter
   def login_by_access_token
     @cur_user, login_path, logout_path = get_user_by_access_token
     SS.current_user = @cur_user
-    SS.current_permission_mask = nil
+    SS.current_token = nil
     return false if !@cur_user
 
     set_locale_and_timezone
@@ -119,9 +119,9 @@ module SS::BaseFilter
   end
 
   def login_by_oauth2_token
-    @cur_user, permission_mask = get_user_by_oauth2_token
+    @cur_user, token = get_user_by_oauth2_token
     SS.current_user = @cur_user
-    SS.current_permission_mask = permission_mask
+    SS.current_token = token
     return false if !@cur_user
 
     set_locale_and_timezone
@@ -132,7 +132,7 @@ module SS::BaseFilter
 
   def login_by_session
     @cur_user = SS.current_user = get_user_by_session
-    SS.current_permission_mask = nil
+    SS.current_token = nil
     return false if !@cur_user
 
     set_locale_and_timezone
@@ -164,7 +164,7 @@ module SS::BaseFilter
     session[:user] = nil
     redirect_to login_path_by_cookie if opt[:redirect]
     @cur_user = SS.current_user = nil
-    SS.current_permission_mask = nil
+    SS.current_token = nil
   end
 
   def check_api_user

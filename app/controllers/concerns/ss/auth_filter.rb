@@ -57,7 +57,7 @@ module SS::AuthFilter
       return nil if user.blank?
       return nil if user.disabled?
 
-      [ user, token.scopes ]
+      [ user, token ]
     end
   end
 

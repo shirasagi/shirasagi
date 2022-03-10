@@ -17,7 +17,6 @@ class SS::OAuth2::Application::Base
   before_validation :normalize_permissions
 
   validates :name, presence: true, uniqueness: true
-  validates :permissions, presence: true
   validates :state, presence: true, inclusion: { in: %w(enabled disabled), allow_blank: true }
   validates :client_id, presence: true, uniqueness: true
 

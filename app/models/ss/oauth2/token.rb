@@ -8,7 +8,6 @@ class SS::OAuth2::Token
 
   validates :user_id, presence: true
   validates :token, presence: true, uniqueness: true
-  validates :scopes, presence: true
   validates :expiration_date, presence: true
 
   class << self

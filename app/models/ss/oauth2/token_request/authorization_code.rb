@@ -1,5 +1,6 @@
 class SS::OAuth2::TokenRequest::AuthorizationCode
   GRANT_TYPE = "authorization_code".freeze
+  VALIDATION_HANDLERS = %i[validate_grant_type check_required_params authenticate_client parse_code parse_scope load_user].freeze
 
   def initialize(controller, unsafe_params)
     @controller = controller
@@ -12,9 +13,7 @@ class SS::OAuth2::TokenRequest::AuthorizationCode
   end
 
   def process
-    %i[validate_grant_type check_required_params authenticate_client parse_code parse_scope load_user].each do |handler|
-      break unless send(handler)
-    end
+    return unless VALIDATION_HANDLERS.all? { |handler| send(handler) }
 
     token = SS::OAuth2::Token.create_token!(@user, @scopes)
     expires_in = token.expiration_date.in_time_zone - @now

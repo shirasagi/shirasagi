@@ -114,7 +114,7 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
   end
 
   context "token auth with gws-admin" do
-    context "with jwt bearer grant type" do
+    context "with jwt bearer grant type with service application" do
       before do
         key = OpenSSL::PKey::RSA.generate(2048)
 
@@ -157,7 +157,48 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       include_context "what gws presence is"
     end
 
-    context "with implicit grant" do
+    context "with jwt bearer grant type with confidential application" do
+      before do
+        redirect_uri = "#{unique_url}/cb"
+        application = SS::OAuth2::Application::Confidential.create!(
+          name: unique_id, permissions: Gws::Role.permission_names, state: "enabled",
+          client_id: SecureRandom.urlsafe_base64(18), client_secret: SecureRandom.urlsafe_base64(36),
+          redirect_uris: redirect_uri
+        )
+
+        jwt_assertion = JSON::JWT.new(
+          # issuer
+          iss: application.client_id,
+          # subject
+          sub: gws_user.uid,
+          # scope
+          scope: Gws::Role.permission_names.join(" "),
+          # audience
+          aud: sns_login_oauth2_token_url,
+          # expires at
+          exp: 1.hour.from_now.to_i,
+          # issued at
+          iat: Time.zone.now.to_i
+        )
+        jwt_assertion = jwt_assertion.sign(application.client_secret)
+
+        token_params = {
+          grant_type: SS::OAuth2::TokenRequest::JWTBearer::GRANT_TYPE,
+          assertion: jwt_assertion.to_s
+        }
+
+        post sns_login_oauth2_token_path, params: token_params
+
+        json = JSON.parse(response.body)
+        @headers = {
+          "Authorization" => "Bearer #{json["access_token"]}"
+        }
+      end
+
+      include_context "what gws presence is"
+    end
+
+    context "with implicit grant with confidential application" do
       before do
         # implicit flow の場合、まずはどうにかしてログインする
         get auth_token_path
@@ -199,7 +240,7 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       include_context "what gws presence is"
     end
 
-    context "with authorization code grant" do
+    context "with authorization code grant with confidential application" do
       before do
         # authorization code flow の場合、まずはどうにかしてログインする
         get auth_token_path

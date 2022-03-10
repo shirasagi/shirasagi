@@ -1,6 +1,7 @@
 class SS::OAuth2::TokenRequest::JWTBearer
   GRANT_TYPE = "urn:ietf:params:oauth:grant-type:jwt-bearer".freeze
   MAX_ASSERTION_SIZE = 1_024 * 32
+  VALIDATION_HANDLERS = %i[validate_grant_type parse_assertion parse_iss parse_scope validate_aud validate_exp parse_sub].freeze
 
   def initialize(controller, unsafe_params)
     safe_params = unsafe_params.permit(:grant_type, :assertion)
@@ -11,9 +12,7 @@ class SS::OAuth2::TokenRequest::JWTBearer
   end
 
   def process
-    %i[validate_grant_type parse_assertion parse_iss parse_scope validate_aud validate_exp parse_sub].each do |handler|
-      break unless send(handler)
-    end
+    return unless VALIDATION_HANDLERS.all? { |handler| send(handler) }
 
     token = SS::OAuth2::Token.create_token!(@user, @scopes)
     expires_in = token.expiration_date.in_time_zone - @now
@@ -73,7 +72,11 @@ class SS::OAuth2::TokenRequest::JWTBearer
     end
 
     begin
-      @jwt.verify! application.public_key
+      if application.is_a?(SS::OAuth2::Application::Service)
+        @jwt.verify! application.public_key
+      else
+        @jwt.verify! application.client_secret
+      end
     rescue
       respond_error :bad_request, "invalid_assertion", "JWT signature is invalid"
       return
@@ -85,11 +88,6 @@ class SS::OAuth2::TokenRequest::JWTBearer
 
   def parse_scope
     scopes = @jwt[:scope]
-    if scopes.blank?
-      respond_error :bad_request, "invalid_scope", "assertion must contain 'scope'"
-      return
-    end
-
     scopes = scopes.to_s.split
     unauthorized_scopes = scopes - @application.permissions
     if unauthorized_scopes.present?
