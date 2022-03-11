@@ -7,7 +7,7 @@ class Gws::LoginController < ApplicationController
   private
 
   def set_organization
-    organizations = SS::Group.organizations.where(domains: request_host)
+    organizations = Gws::Group.organizations.where(domains: request_host)
     raise '404' if organizations.size > 1
 
     @cur_site = SS.current_site = organizations.first || @cur_site
