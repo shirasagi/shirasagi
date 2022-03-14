@@ -130,7 +130,7 @@ module Gws::Circular::PostFilter
         item.set_seen(@cur_user).save
       end
     end
-    render_destroy_all(true, notice: t("ss.notice.set_seen"))
+    render_confirmed_all(true, notice: t("ss.notice.set_seen"))
   end
 
   def unset_seen_all
@@ -140,6 +140,6 @@ module Gws::Circular::PostFilter
         item.unset_seen(@cur_user).save
       end
     end
-    render_destroy_all(true, notice: t("ss.notice.unset_seen"))
+    render_confirmed_all(true, notice: t("ss.notice.unset_seen"))
   end
 end

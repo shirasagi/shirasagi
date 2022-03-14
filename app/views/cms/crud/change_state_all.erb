@@ -1,39 +1,33 @@
-<%
-  if @selected_items.klass.ancestors.include?(Cms::Model::Page)
-    template_path = "cms/crud/destroy_pages"
-  else
-    template_path = "cms/crud/confirm_all"
-  end
-%>
-
-<%= form_with url: request.url, method: :delete do |f| %>
-  <%= hidden_field_tag "destroy_all", true %>
-  <div class="addon-views">
+<%= form_with url: request.url, method: :put do |f| %>
+  <%= hidden_field_tag "change_state_all", true %>
+  <%= hidden_field_tag "state", @state %>
+  <div class="addon-views"></div>
     <div class="addon-view" id="addon-basic">
       <div class="addon-head">
-        <h2><%= t("ss.confirm.target_to_delete") %></h2>
+        <h2><%= t("ss.confirm.target_to_#{@state}") %></h2>
       </div>
       <div class="addon-body">
         <div class="index">
           <ul class="list-items">
             <% @selected_items.each do |item| %>
-              <%= render template_path, item: item, f: f %>
+              <%= render "cms/crud/confirm_all", item: item, f: f %>
             <% end %>
           </ul>
         </div>
       </div>
     </div>
     <footer class="send">
-      <%= f.submit t("ss.buttons.delete"), class: "btn-danger delete" %>
+      <%= f.submit t("ss.buttons.make_them_#{@state}"), class: "btn-danger delete" %>
       <%= f.button t("ss.buttons.cancel"), class: "btn-default", type: :reset, onclick: "location.href='#{request.url}'; return false;" %>
     </footer>
   </div>
 <% end %>
+
 <%= jquery do %>
-  $('.send .delete').on('click', function() {
+  $('.send .change-state').on('click', function() {
     var checkedCount = $('.list-item :checked').length;
     if (checkedCount === 0){
-      alert("<%= I18n.t("errors.messages.plz_check_targets_to_delete") %>");
+      alert("<%= I18n.t("errors.messages.plz_check_targets_to_change_state") %>");
       return false;
     }
   });
