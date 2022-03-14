@@ -51,7 +51,7 @@ class SS::OAuth2::AuthorizeRequest::Token
       scopes = application.permissions
     end
 
-    token = SS::OAuth2::Token.create_token!(@user, scopes)
+    token = SS::OAuth2::Token.create_token!(application, @user, scopes)
     expires_in = token.expiration_date.in_time_zone - @now
     response_json = {
       access_token: token.token, token_type: "Bearer", expires_in: expires_in.to_i

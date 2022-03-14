@@ -52,10 +52,22 @@ module SS::AuthFilter
       token = SS::OAuth2::Token.all.and_token(token).first
       return nil unless token
       return nil unless token.enabled?
+      if token.user_id.blank?
+        History::Log.create_log!(
+          request, response, controller: params[:controller], action: 'token',
+          cur_site: nil, cur_user: nil, item: token.application
+        ) rescue nil
+        return [ nil, token ]
+      end
 
       user = self.user_class.find(token.user_id) rescue nil
       return nil if user.blank?
       return nil if user.disabled?
+
+      History::Log.create_log!(
+        request, response, controller: params[:controller], action: 'token',
+        cur_site: nil, cur_user: user, item: token.application
+      ) rescue nil
 
       [ user, token ]
     end

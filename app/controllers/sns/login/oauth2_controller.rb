@@ -26,6 +26,8 @@ class Sns::Login::OAuth2Controller < ApplicationController
       request = SS::OAuth2::TokenRequest::AuthorizationCode.new(self, params)
     when SS::OAuth2::TokenRequest::JWTBearer::GRANT_TYPE
       request = SS::OAuth2::TokenRequest::JWTBearer.new(self, params)
+    when SS::OAuth2::TokenRequest::ClientCredentials::GRANT_TYPE
+      request = SS::OAuth2::TokenRequest::ClientCredentials.new(self, params)
     else
       render json: { error: "unsupported_grant_type" }, status: :bad_request
       return

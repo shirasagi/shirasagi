@@ -15,7 +15,7 @@ class SS::OAuth2::TokenRequest::AuthorizationCode
   def process
     return unless VALIDATION_HANDLERS.all? { |handler| send(handler) }
 
-    token = SS::OAuth2::Token.create_token!(@user, @scopes)
+    token = SS::OAuth2::Token.create_token!(@application, @user, @scopes)
     expires_in = token.expiration_date.in_time_zone - @now
     response_json = {
       access_token: token.token, token_type: "Bearer", expires_in: expires_in.to_i
@@ -66,6 +66,10 @@ class SS::OAuth2::TokenRequest::AuthorizationCode
       return
     end
 
+    if application.redirect_uris.blank?
+      respond_error :bad_request, "access_denied", "redirect uri is mismatched"
+      return
+    end
     if !application.redirect_uris.include?(@redirect_uri)
       respond_error :bad_request, "access_denied", "redirect uri is mismatched"
       return

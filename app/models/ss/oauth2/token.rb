@@ -2,21 +2,24 @@ class SS::OAuth2::Token
   include SS::Document
   include SS::Reference::User
 
+  belongs_to :application, class_name: "SS::OAuth2::Application::Base", polymorphic: true
   field :token, type: String
   field :scopes, type: SS::Extensions::Words
   field :expiration_date, type: DateTime
 
-  validates :user_id, presence: true
   validates :token, presence: true, uniqueness: true
   validates :expiration_date, presence: true
 
   class << self
-    def new_token(user, scopes)
-      new(cur_user: user, user: user, token: SecureRandom.urlsafe_base64(12), scopes: scopes, expiration_date: 1.hour.from_now)
+    def new_token(application, user, scopes)
+      new(
+        cur_user: user, application: application, user: user,
+        token: SecureRandom.urlsafe_base64(12), scopes: scopes, expiration_date: 1.hour.from_now
+      )
     end
 
-    def create_token!(user, scopes)
-      ret = new_token(user, scopes)
+    def create_token!(application, user, scopes)
+      ret = new_token(application, user, scopes)
       ret.save!
       ret
     end

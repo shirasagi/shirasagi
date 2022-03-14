@@ -65,8 +65,10 @@ class History::Log
       log.controller   = options[:controller]
       log.action       = options[:action]
       log.cur_user     = options[:cur_user]
-      log.group_ids    = options[:cur_user].group_ids
-      log.user_id      = options[:cur_user].id if options[:cur_user]
+      if options[:cur_user]
+        log.group_ids  = options[:cur_user].group_ids
+        log.user_id    = options[:cur_user].id
+      end
       log.site_id      = options[:cur_site].id if options[:cur_site]
       log.ref_coll     = item.collection_name if item
       log.filename     = item.data[:filename] if item.try(:ref_coll) == "ss_files"
