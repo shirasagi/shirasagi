@@ -32,14 +32,15 @@ class Cms::Line::Service::Processor::Chat < Cms::Line::Service::Processor::Base
         suggest_templates = []
       end
 
-      templates += action_templates.map do |action|
+      templates += action_templates.map.with_index do |action, idx|
+        text = (idx == 0) ? "以下よりご選択ください。" : "#{I18n.t("chat.line_bot.service.choices")}#{idx + 1}"
         {
           type: "template",
-          altText: "以下よりご選択ください。",
+          altText: text,
           template: {
             type: "buttons",
             actions: action,
-            text: "以下よりご選択ください。",
+            text: text,
           }
         }
       end
@@ -101,7 +102,7 @@ class Cms::Line::Service::Processor::Chat < Cms::Line::Service::Processor::Base
     # save Session
     item = Chat::LineBot::Session.new
     item.site = site
-    item.node = node
+    item.node = bot_node
     item.line_user_id = event['source']['userId']
     item.date_created = Time.zone.today
     item.save
@@ -109,7 +110,7 @@ class Cms::Line::Service::Processor::Chat < Cms::Line::Service::Processor::Base
     # save UsedTime
     item = Chat::LineBot::UsedTime.new
     item.site = site
-    item.node = node
+    item.node = bot_node
     item.hour = Time.zone.now.hour
     item.save
   end
@@ -247,6 +248,7 @@ class Cms::Line::Service::Processor::Chat < Cms::Line::Service::Processor::Base
 
   # reply no match message
   def reply_no_match(event)
+    return if bot_node.exception_text.blank?
     template = []
     template << {
       "type": "text",
@@ -317,7 +319,7 @@ class Cms::Line::Service::Processor::Chat < Cms::Line::Service::Processor::Base
       item = Chat::LineBot::ExistsPhrase.site(site).where(node_id: bot_node.id).where(name: name).first
       item ||= Chat::LineBot::ExistsPhrase.new
       item.site = site
-      item.node = node
+      item.node = bot_node
       item.name = name
       item.frequency += 1
       item.save
@@ -328,7 +330,7 @@ class Cms::Line::Service::Processor::Chat < Cms::Line::Service::Processor::Base
     item = Chat::LineBot::RecordPhrase.site(site).where(node_id: bot_node.id).where(name: name).first
     item ||= Chat::LineBot::RecordPhrase.new
     item.site = site
-    item.node = node
+    item.node = bot_node
     item.name = name
     item.frequency += 1
     item.save
