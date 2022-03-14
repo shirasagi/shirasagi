@@ -3,7 +3,7 @@ this.Gws_Schedule_Calendar = (function ($) {
   }
 
   Gws_Schedule_Calendar.messages = {
-    noPlan: '<%= I18n.t("gws/schedule.no_plan") %>'
+    noPlan: <%= I18n.t("gws/schedule.no_plan").to_json %>
   };
 
   Gws_Schedule_Calendar.render = function (selector, opts, init) {
@@ -63,7 +63,7 @@ this.Gws_Schedule_Calendar = (function ($) {
   Gws_Schedule_Calendar.defaultParams = function (selector, opts) {
     return {
       buttonText: {
-        listMonth: "<%= I18n.t('gws/schedule.calendar.buttonText.listMonth') %>"
+        listMonth: <%= I18n.t('gws/schedule.calendar.buttonText.listMonth').to_json %>
       },
       columnFormat: {
         month: "ddd",
@@ -72,7 +72,7 @@ this.Gws_Schedule_Calendar = (function ($) {
       },
       customButtons: {
         withTodo: {
-          text: "<%= I18n.t('gws/schedule.calendar.buttonText.withTodo') %>",
+          text: <%= I18n.t('gws/schedule.calendar.buttonText.withTodo').to_json %>,
           click: function (e) {
             $('.fc-event-todo').toggle(!$(this).hasClass('fc-state-active'));
             $(this).toggleClass("fc-state-active");
@@ -80,7 +80,7 @@ this.Gws_Schedule_Calendar = (function ($) {
           }
         },
         withAbsence: {
-          text: "<%= I18n.t('gws/schedule.calendar.buttonText.withAbsence') %>",
+          text: <%= I18n.t('gws/schedule.calendar.buttonText.withAbsence').to_json %>,
           click: function (e) {
             $(".fc-event-user-attendance-absence").each(function() {
               $(this).toggleClass("hide");
@@ -91,7 +91,7 @@ this.Gws_Schedule_Calendar = (function ($) {
           }
         },
         withListView: {
-          text: "<%= I18n.t('gws/schedule.calendar.buttonText.listMonth') %>",
+          text: <%= I18n.t('gws/schedule.calendar.buttonText.listMonth').to_json %>,
           click: function (e) {
             $.fullCalendar.toggleListFormat(selector);
             $(selector).fullCalendar('refetchEvents');
@@ -101,7 +101,7 @@ this.Gws_Schedule_Calendar = (function ($) {
           }
         },
         reload: {
-          text: "<%= I18n.t('ss.buttons.reload') %>",
+          text: <%= I18n.t('ss.buttons.reload').to_json %>,
           icon: "gws-schedule-calendar-reload",
           click: function (e) {
             $(selector).fullCalendar('refetchEvents');
@@ -126,9 +126,9 @@ this.Gws_Schedule_Calendar = (function ($) {
       startParam: 's[start]',
       timeFormat: 'HH:mm',
       titleFormat: {
-        month: "<%= I18n.t('gws/schedule.calendar.titleFormat.month') %>",
-        week: "<%= I18n.t('gws/schedule.calendar.titleFormat.week') %>",
-        day: "<%= I18n.t('gws/schedule.calendar.titleFormat.day') %>"
+        month: <%= I18n.t('gws/schedule.calendar.titleFormat.month').to_json %>,
+        week: <%= I18n.t('gws/schedule.calendar.titleFormat.week').to_json %>,
+        day: <%= I18n.t('gws/schedule.calendar.titleFormat.day').to_json %>
       },
       loading: function (isLoading, view) {
         if (isLoading) {
