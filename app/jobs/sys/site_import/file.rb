@@ -20,6 +20,7 @@ module Sys::SiteImport::File
       if item.save
         src = SS::File.new(id: id, filename: item.filename)
         @ss_files_map[id] = item.id
+        @ss_files_url[src.thumb_url] = item.thumb_url
         @ss_files_url[src.url] = item.url
         FileUtils.mkdir_p(File.dirname(item.path))
         FileUtils.cp(path, item.path) # FileUtils.mv
@@ -61,12 +62,11 @@ module Sys::SiteImport::File
   end
 
   def replace_html_with_url(src, dst)
-    src_path = "=\"#{src}"
+    src_path = /="#{::Regexp.escape(::File.dirname(src))}\/[^"]*/
     dst_path = "=\"#{dst}"
 
     fields = Cms::ApiFilter::Contents::HTML_FIELDS
-    path = "=\"#{::Regexp.escape(src)}"
-    cond = { "$or" => fields.map { |field| { field => /#{path}/ } } }
+    cond = { "$or" => fields.map { |field| { field => src_path } } }
 
     criterias = [
       Cms::Page.in(id: @cms_pages_map.values),
