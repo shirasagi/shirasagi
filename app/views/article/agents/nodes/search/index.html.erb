@@ -1,0 +1,35 @@
+<%
+  categories = []
+  @cur_node.st_parent_categories.each do |parent|
+    categories << parent
+    categories += Category::Node::Base.site(@cur_site).
+      where(filename: /^#{parent.filename}\//).entries
+  end
+  category_options = categories.map { |c| [c.name, c.id] }
+%>
+
+<div class="article-search">
+  <%= form_tag @url, multipart: true, method: "get" do |f| %>
+    <% if categories.present? %>
+    <div class="category">
+      <label for="category"><%= t('article.query.category') %></label>
+      <%= select_tag :category,  options_for_select(category_options, @category), include_blank: true %>
+    </div>
+    <% end %>
+    <div class="keyword">
+      <label for="keyword"><%= t('article.query.keyword') %></label>
+      <%= text_field_tag :keyword, @keyword %>
+    </div>
+    <div class="submitters">
+      <%= submit_tag t('article.search'), name: :search %>
+      <%= submit_tag t('article.reset'), name: :reset %>
+    </div>
+  <% end %>
+</div>
+
+<h2 class="result"><%= t("article.result") %><span><%= @items.count %></span><%= t("article.count") %></h2>
+<div class="article-search pages">
+  <%= render_page_list %>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

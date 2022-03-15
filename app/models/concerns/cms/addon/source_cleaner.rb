@@ -7,6 +7,7 @@ module Cms::Addon
       field :target_type, type: String
       field :target_value, type: String
       field :action_type, type: String
+      field :replace_source, type: String
       field :replaced_value, type: String
 
       validates :target_type, presence: true
@@ -16,14 +17,20 @@ module Cms::Addon
       validate :validate_action_type
       validate :validate_target_type
 
-      permit_params :target_type, :target_value, :action_type, :replaced_value
+      permit_params :target_type, :target_value, :action_type, :replace_source, :replaced_value
     end
 
     def validate_action_type
-      self.replaced_value = nil if action_type != "replace"
+      return if action_type == "replace"
+
+      self.replaced_value = nil
     end
 
     def validate_target_type
+      if target_type != 'attribute'
+        self.replace_source = nil
+      end
+
       if action_type == "replace" && replaced_value.blank?
         errors.add :replaced_value, :blank
       end

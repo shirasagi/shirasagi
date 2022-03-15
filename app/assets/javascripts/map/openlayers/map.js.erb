@@ -33,9 +33,9 @@ this.Openlayers_Map = (function () {
 
   Openlayers_Map.defaultZoom = <%= SS.config.map.openlayers_zoom_level %>;
 
-  Openlayers_Map.markerIcon = "<%= SS.config.map.dig("map_marker_images", "openlayers", "default", "marker") %>";
+  Openlayers_Map.markerIcon = <%= SS.config.map.dig("map_marker_images", "openlayers", "default", "marker").to_json %>;
 
-  Openlayers_Map.clickIcon = "<%= SS.config.map.dig("map_marker_images", "openlayers", "default", "click") %>";
+  Openlayers_Map.clickIcon = <%= SS.config.map.dig("map_marker_images", "openlayers", "default", "click").to_json %>;
 
   Openlayers_Map.prototype.getCenter = function () {
     return (this.center ? this.center : this.defaultCenter);

@@ -7,13 +7,15 @@ ja:
     zoom_level: ズームレベル
     search: 地名を検索
     setting: マップ設定
-    markers: マーカー設定
+    markers: マーカー設定（最大%{limit}個）
     clicked: クリック座標
     center_position: 中心位置
     auto: 自動
     designated_location: 指定位置
     designated_level: 指定レベル
     layer: レイヤー
+    longitude: 経度
+    latitude: 緯度
     alert:
       invalid_center: 座標を取得できませんでした。
       invalid_location:
