@@ -113,7 +113,7 @@ this.SS_TreeUI = (function () {
       return false;
     });
     if (opts.descendants_check) {
-      self.tree.on("click", "[type='checkbox']", function (ev) {
+      self.tree.on("click", "[type='checkbox']", function (_ev) {
         self.checkAllChildren(this, this.checked);
       });
     }
