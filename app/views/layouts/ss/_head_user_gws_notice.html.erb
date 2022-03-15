@@ -1,0 +1,51 @@
+<%
+  search_condition = SS.config.gws.dig("popup_notice", "search_condition")
+  if search_condition == "unseen"
+    default_label  = t("gws/memo/message.links.seens")
+    switched_label = t("gws/memo/message.links.unseens")
+    default_url    = recent_gws_memo_notices_path(s: { unseen: @cur_user.id })
+    switched_url   = recent_gws_memo_notices_path
+  else
+    default_label  = t("gws/memo/message.links.unseens")
+    switched_label = t("gws/memo/message.links.seens")
+    default_url    = recent_gws_memo_notices_path
+    switched_url   = recent_gws_memo_notices_path(s: { unseen: @cur_user.id })
+  end
+%>
+<%= jquery do %>
+  $(".gws-memo-notice .unseens").on("click", function() {
+    $(".gws-memo-notice.popup-notice-container [data-url]").each(function() {
+      var url = $(this).attr("data-url");
+      var switched = $(this).attr("data-url-switched");
+      $(this).attr("data-url", switched);
+      $(this).attr("data-url-switched", url);
+    });
+    var label = $(this).text();
+    var switched = $(this).attr("data-label-switched");
+    $(this).text(switched);
+    $(this).attr("data-label-switched", label);
+  });
+  (new SS_PopupNotice(".gws-memo-notice.popup-notice-container")).render();
+<% end %>
+<div class="gws-memo-notice popup-notice-container">
+  <%= link_to gws_memo_notices_path, "class" => "ajax-popup-notice toggle-popup-notice", "data-url" => default_url, "data-url-switched" => switched_url do %>
+    <i class="material-icons">&#xE7F4;</i>
+    <% count = SS::Notification.unseens(@cur_user).size %>
+    <% if count > 0 %><span class="unseen popup-notice-unseen"><%= count %></span><% end %>
+  <% end %>
+  <div class="popup-notice" style="display: none;">
+    <header class="popup-notice-header">
+      <h2>
+        <%= t('modules.sns/notification') %>
+        <%= link_to default_label, "#",
+                    "class" => "ajax-popup-notice unseens",
+                    "data-url" => default_url,
+                    "data-url-switched" =>  switched_url,
+                    "data-label-switched" => switched_label
+        %>
+      </h2>
+    </header>
+    <div class="popup-notice-items"></div>
+    <%= link_to t("ss.links.more_all"), gws_memo_notices_path, class: "more-all" %>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+<header id="head">
+  <div class="wrap">
+    <h1 class="application-name"><%= link_to sns_mypage_path do %><%= render_application_logo %><% end %></h1>
+
+    <div class="sp-menu-button">
+      <a href="#" class="">
+        <span></span>
+        <span></span>
+        <span></span>
+      </a>
+    </div>
+
+    <div class="application-menu">
+      <% if SS.config.cms.disable.blank? && SS.config.cms.disable_navi.blank? && Cms.allowed?(:use, @cur_user) %>
+        <div class="cms">
+          <% if @ss_mode == :cms %>
+            <h2><%= link_to t('ss.links.cms'), cms_contents_path(@cur_site), class: "current" %></h2>
+          <% else %>
+            <h2><%= link_to t('ss.links.cms'), sns_cms_path %></h2>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if SS.config.gws.disable.blank? && SS.config.gws.disable_navi.blank? && Gws.allowed?(:use, @cur_user) %>
+        <div class="gws">
+          <% if @ss_mode == :gws %>
+            <h2><%= link_to t('ss.links.gws'), gws_portal_path(@cur_site), class: "current" %></h2>
+          <% else %>
+            <h2><%= link_to t('ss.links.gws'), sns_gws_path %></h2>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if SS.config.webmail.disable.blank? && SS.config.webmail.disable_navi.blank? && Webmail.allowed?(:use, @cur_user) %>
+        <div class="webmail">
+          <%
+            webmail_mode =  params[:webmail_mode] || :account
+            account = params[:account] || @cur_user.imap_default_index
+            opts = (@ss_mode == :webmail) ? { class: "current" } : {}
+          %>
+          <h2><%= link_to t('webmail.mail'), webmail_mails_path(webmail_mode: webmail_mode, account: account), opts %></h2>
+        </div>
+      <% end %>
+    </div>
+
+    <% if @cur_user %>
+      <%= render "layouts/ss/head_user", local_assigns %>
+    <% end %>
+  </div>
+</header> <!-- /#head -->
