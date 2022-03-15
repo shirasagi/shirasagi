@@ -2,7 +2,7 @@ class Cms::TempFile
   include SS::Model::File
   include SS::Reference::Site
   include Cms::Reference::Node
-  include SS::Relation::Thumb
+  # include SS::Relation::Thumb
   include SS::UserPermission
 
   validates_with Cms::FileSizeValidator, if: ->{ size.present? && @cur_node.present? }

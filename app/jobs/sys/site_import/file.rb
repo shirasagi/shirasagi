@@ -14,12 +14,13 @@ module Sys::SiteImport::File
 
       item = SS::File.unscoped.where(data.reject { |k, v| v.blank? }).first || dummy_ss_file(data)
       item.record_timestamps = false
-      item.disable_thumb = true
+      item.in_disable_variant_processing = true
       data.each { |k, v| item[k] = v }
 
       if item.save
         src = SS::File.new(id: id, filename: item.filename)
         @ss_files_map[id] = item.id
+        @ss_files_url[src.thumb_url] = item.thumb_url
         @ss_files_url[src.url] = item.url
         FileUtils.mkdir_p(File.dirname(item.path))
         FileUtils.cp(path, item.path) # FileUtils.mv
@@ -34,7 +35,7 @@ module Sys::SiteImport::File
       item = SS::File.unscoped.find(id) rescue nil
       next unless item
 
-      item.disable_thumb = true
+      item.in_disable_variant_processing = true
       item[:node_id] = @cms_nodes_map[item[:node_id]] if item[:node_id].present?
       save_document(item)
     end
@@ -47,7 +48,7 @@ module Sys::SiteImport::File
     item = SS::File.new(model: 'ss/dummy')
     item.created = data['created']
     item.updated = data['updated']
-    item.disable_thumb = true
+    item.in_disable_variant_processing = true
     item.in_file = file
     item.save
     item.in_file = nil
@@ -61,12 +62,11 @@ module Sys::SiteImport::File
   end
 
   def replace_html_with_url(src, dst)
-    src_path = "=\"#{src}"
+    src_path = /="#{::Regexp.escape(::File.dirname(src))}\/[^"]*/
     dst_path = "=\"#{dst}"
 
     fields = Cms::ApiFilter::Contents::HTML_FIELDS
-    path = "=\"#{::Regexp.escape(src)}"
-    cond = { "$or" => fields.map { |field| { field => /#{path}/ } } }
+    cond = { "$or" => fields.map { |field| { field => src_path } } }
 
     criterias = [
       Cms::Page.in(id: @cms_pages_map.values),

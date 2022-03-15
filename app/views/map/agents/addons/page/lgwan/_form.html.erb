@@ -1,4 +1,5 @@
 <%= jquery do %>
+  Map_Lgwan_Form.maxPointForm = <%= Map.max_number_of_markers(@cur_site) %>;
   Map_Lgwan_Form.renderEvents();
 <% end %>
 
@@ -7,7 +8,7 @@
     <%= f.hidden_field :map_zoom_level %>
     <dl class="marker-setting">
       <dt>
-        <%= t("map.markers") %><%= @item.tt :map_points_lgwan %>
+        <%= t("map.markers", limit: Map.max_number_of_markers(@cur_site).to_s(:delimited)) %><%= @item.tt :map_points_lgwan %>
         <%= hidden_field_tag :clicked, nil, class: "loc clicked" %>
       </dt>
       <% if @item.map_points.blank? %>

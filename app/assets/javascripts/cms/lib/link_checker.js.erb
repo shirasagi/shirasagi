@@ -69,12 +69,12 @@ this.Link_Checker = (function () {
   }
 
   Link_Checker.message = {
-    header: "<%= I18n.t('cms.link_check') %>",
-    noLinks: "<%= I18n.t('errors.template.no_links') %>",
-    checkLinks: "<%= I18n.t('errors.template.check_links') %>",
-    success: "<%= I18n.t('errors.messages.link_check_success') %>",
-    failure: "<%= I18n.t('errors.messages.link_check_failure') %>",
-    linkCheckerError: "<%= I18n.t('errors.messages.link_check_failed_to_connect') %>"
+    header: <%= I18n.t('cms.link_check').to_json %>,
+    noLinks: <%= I18n.t('errors.template.no_links').to_json %>,
+    checkLinks: <%= I18n.t('errors.template.check_links').to_json %>,
+    success: <%= I18n.t('errors.messages.link_check_success').to_json %>,
+    failure: <%= I18n.t('errors.messages.link_check_failure').to_json %>,
+    linkCheckerError: <%= I18n.t('errors.messages.link_check_failed_to_connect').to_json %>
   };
 
   Link_Checker.url = "/.cms/link_check/check.json";

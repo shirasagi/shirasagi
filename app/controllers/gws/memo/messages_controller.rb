@@ -184,7 +184,7 @@ class Gws::Memo::MessagesController < ApplicationController
       end
       @items << item
     end
-    render_destroy_all(entries.size != @items.size)
+    render_confirmed_all(entries.size != @items.size)
   end
 
   def reply
@@ -273,7 +273,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
       item.move(@cur_user, 'INBOX.Trash').update
     end
-    render_destroy_all(true)
+    render_confirmed_all(true)
   end
 
   def move_all

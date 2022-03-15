@@ -56,7 +56,7 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
       expect(item.column_values.first.files.count).to eq 1
       file = item.column_values.first.files.first
       file_url = file.url
-      thumb_file_url = file_url.sub("/_/", "/_/thumb/")
+      thumb_file_url = file_url.sub(".jpg", "_thumb.jpg")
 
       History::Log.all.reorder(created: 1, id: 1).to_a.tap do |histories|
         histories[0].tap do |history|
@@ -132,10 +132,6 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
         end
       end
       click_on I18n.t("ss.buttons.publish_save")
-
-      wait_for_cbox do
-        click_on I18n.t("ss.buttons.ignore_alert")
-      end
       wait_for_notice I18n.t("ss.notice.saved")
 
       History::Log.all.reorder(created: 1, id: 1).to_a.tap do |histories|

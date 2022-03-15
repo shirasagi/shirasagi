@@ -23,9 +23,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.download")
       wait_for_download
 
-      csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+      csv = ::CSV.read(downloads.first, headers: true)
       expect(csv.length).to eq 2
-      expect(csv[0][Article::Page.t(:filename)]).not_to be_nil
+      expect(csv[0][0]).not_to be_nil
     end
 
     scenario "click on download button to check in checkbox" do
@@ -39,9 +39,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.download")
       wait_for_download
 
-      csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+      csv = ::CSV.read(downloads.first, headers: true)
       expect(csv.length).to eq 2
-      expect(csv[0][Article::Page.t(:filename)]).not_to be_nil
+      expect(csv[0][0]).not_to be_nil
     end
   end
 end

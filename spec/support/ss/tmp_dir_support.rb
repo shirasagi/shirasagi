@@ -46,7 +46,7 @@ module SS
         attr[:user_id] = user.id
       end
       attr[:node_id] = node.id if node
-      attr[:content_type] = options.delete(:content_type) || ::Fs.content_type(basename, "application/octet-stream")
+      attr[:content_type] = options.delete(:content_type) || ::Fs.content_type(basename)
       file_model.create_empty!(attr.update(options)) do |ss_file|
         write_contents_to(ss_file, contents, binary)
       end

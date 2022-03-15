@@ -41,7 +41,7 @@
       <% @summary_image.each do |page, path, thumb_size| %>
         <p>
           <%= link_to path do %>
-            <%= image_tag page.image.thumb_url + "?" + thumb_size.to_query, alt: page.image_alt %>
+            <%= image_tag page.image.variants[thumb_size].url, alt: page.image_alt %>
           <% end %>
         </p>
         <% if page.image_comment.present? %>
@@ -59,7 +59,7 @@
         <div class="image">
           <p>
             <%= link_to path do %>
-              <%= image_tag page.image.thumb_url + "?" + thumb_size.to_query, alt: page.image_alt %>
+              <%= image_tag page.image.variants[thumb_size].url, alt: page.image_alt %>
             <% end %>
           </p>
           <% if page.image_comment.present? %>

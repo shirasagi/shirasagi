@@ -15,14 +15,14 @@ this.Form_Preview = (function () {
       basename = $("#" + Form_Preview.form_id + " input[name='item[basename]']").val();
       errors = [];
       if (!name) {
-        errors.push("<%= I18n.t('errors.messages.set_name') %>");
+        errors.push(<%= I18n.t('errors.messages.set_name').to_json %>);
       }
       if (basename) {
         if (!/^[\w\-]+(\.html)?$/.test(basename)) {
-          errors.push("<%= I18n.t('errors.messages.invalid_filename') %>");
+          errors.push(<%= I18n.t('errors.messages.invalid_filename').to_json %>);
         }
       } else {
-        errors.push("<%= I18n.t('errors.messages.set_filename') %>");
+        errors.push(<%= I18n.t('errors.messages.set_filename').to_json %>);
       }
       if (!SS.isEmptyObject(errors)) {
         alert(errors.join("\n"));

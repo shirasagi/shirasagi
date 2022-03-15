@@ -3,7 +3,7 @@ this.Gws_Schedule_Calendar = (function ($) {
   }
 
   Gws_Schedule_Calendar.messages = {
-    noPlan: '<%= I18n.t("gws/schedule.no_plan") %>'
+    noPlan: <%= I18n.t("gws/schedule.no_plan").to_json %>
   };
 
   Gws_Schedule_Calendar.render = function (selector, opts, init) {
@@ -63,7 +63,7 @@ this.Gws_Schedule_Calendar = (function ($) {
   Gws_Schedule_Calendar.defaultParams = function (selector, opts) {
     return {
       buttonText: {
-        listMonth: "<%= I18n.t('gws/schedule.calendar.buttonText.listMonth') %>"
+        listMonth: <%= I18n.t('gws/schedule.calendar.buttonText.listMonth').to_json %>
       },
       columnFormat: {
         month: "ddd",
@@ -72,7 +72,7 @@ this.Gws_Schedule_Calendar = (function ($) {
       },
       customButtons: {
         withTodo: {
-          text: "<%= I18n.t('gws/schedule.calendar.buttonText.withTodo') %>",
+          text: <%= I18n.t('gws/schedule.calendar.buttonText.withTodo').to_json %>,
           click: function (e) {
             $('.fc-event-todo').toggle(!$(this).hasClass('fc-state-active'));
             $(this).toggleClass("fc-state-active");
@@ -80,7 +80,7 @@ this.Gws_Schedule_Calendar = (function ($) {
           }
         },
         withAbsence: {
-          text: "<%= I18n.t('gws/schedule.calendar.buttonText.withAbsence') %>",
+          text: <%= I18n.t('gws/schedule.calendar.buttonText.withAbsence').to_json %>,
           click: function (e) {
             $(".fc-event-user-attendance-absence").each(function() {
               $(this).toggleClass("hide");
@@ -91,7 +91,7 @@ this.Gws_Schedule_Calendar = (function ($) {
           }
         },
         withListView: {
-          text: "<%= I18n.t('gws/schedule.calendar.buttonText.listMonth') %>",
+          text: <%= I18n.t('gws/schedule.calendar.buttonText.listMonth').to_json %>,
           click: function (e) {
             $.fullCalendar.toggleListFormat(selector);
             $(selector).fullCalendar('refetchEvents');
@@ -101,7 +101,7 @@ this.Gws_Schedule_Calendar = (function ($) {
           }
         },
         reload: {
-          text: "<%= I18n.t('ss.buttons.reload') %>",
+          text: <%= I18n.t('ss.buttons.reload').to_json %>,
           icon: "gws-schedule-calendar-reload",
           click: function (e) {
             $(selector).fullCalendar('refetchEvents');
@@ -126,9 +126,9 @@ this.Gws_Schedule_Calendar = (function ($) {
       startParam: 's[start]',
       timeFormat: 'HH:mm',
       titleFormat: {
-        month: "<%= I18n.t('gws/schedule.calendar.titleFormat.month') %>",
-        week: "<%= I18n.t('gws/schedule.calendar.titleFormat.week') %>",
-        day: "<%= I18n.t('gws/schedule.calendar.titleFormat.day') %>"
+        month: <%= I18n.t('gws/schedule.calendar.titleFormat.month').to_json %>,
+        week: <%= I18n.t('gws/schedule.calendar.titleFormat.week').to_json %>,
+        day: <%= I18n.t('gws/schedule.calendar.titleFormat.day').to_json %>
       },
       loading: function (isLoading, view) {
         if (isLoading) {
@@ -139,6 +139,28 @@ this.Gws_Schedule_Calendar = (function ($) {
           }
         } else {
           return $(this).find('.fc-loading').remove();
+        }
+      },
+      eventRender: function(event, element) {
+        if (event.className.includes('fc-event-range')) {
+          var end = event.end.toDate();
+          end.setDate(end.getDate() - 1);
+          var formatted = (end.getMonth()+1).toString().padStart(2, '0') + '/' + end.getDate().toString().padStart(2, '0');
+          formatted = formatted.replace(/\n|\r/g, '');
+          if (event.start.format('MM/DD') === formatted) {
+            var span = $('<span class="fc-date"></span>').append(formatted);
+          } else {
+            var span = $('<span class="fc-date"></span>').append(event.start.format('MM/DD') + ' - ' + formatted);
+          }
+          element.find('span.fc-title').before(span);
+        }
+        if (event.category) {
+          var span = $('<span class="fc-category"></span>').append(event.category);
+          element.find('span.fc-title').prepend(span);
+        }
+        if (event.facility) {
+          var span = $('<span class="fc-facility"></span>').append(event.facility);
+          element.find('span.fc-title').after(span);
         }
       },
       eventAfterAllRender: function (view) {
@@ -223,19 +245,25 @@ this.Gws_Schedule_Calendar = (function ($) {
   };
 
   Gws_Schedule_Calendar.editableParams = function (selector, opts) {
-    var url;
-    url = opts['restUrl'];
+    var url = opts['restUrl'];
+    var token = $('meta[name="csrf-token"]').attr('content');
     return {
       editable: true,
       eventClick: function (event, jsEvent, view) {
-        var popup_url, state, target;
         if (event.noPopup) {
           return;
         }
-        target = $(this);
+        var popup_url = event.restUrl ? event.restUrl : url;
+        var state = ("calendar[date]=" + (event.start.format('YYYY-MM-DD')) + "&") + Gws_Schedule_Calendar.viewStateQuery(view);
+        if (event.className.includes('fc-event-point')) {
+          jsEvent.preventDefault();
+          event.url = popup_url + "/" + event.id + "?" + state;
+          location.href = event.url;
+          return;
+        }
+        var target = $(this);
         Gws_Popup.render(target, "<div class='fc-popup'><span class='fc-loading'><%= I18n.t('gws/schedule.loading') %></span></div>");
-        popup_url = event.restUrl ? event.restUrl : url;
-        state = ("calendar[date]=" + (event.start.format('YYYY-MM-DD')) + "&") + Gws_Schedule_Calendar.viewStateQuery(view);
+
         return $.ajax({
           url: popup_url + "/" + event.id + "/popup",
           success: function (data) {
@@ -262,7 +290,8 @@ this.Gws_Schedule_Calendar = (function ($) {
               api: 'drop',
               api_start: event.start.format(),
               api_end: end
-            }
+            },
+            authenticity_token: token
           },
           success: function (data, dataType) {
             var viewId;
@@ -275,7 +304,7 @@ this.Gws_Schedule_Calendar = (function ($) {
           }
         });
       },
-      eventResize: function (event, delta, revertFunc) {
+      eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
         return $.ajax({
           type: 'PUT',
           url: (url + "/") + event.id + ".json",
@@ -284,7 +313,8 @@ this.Gws_Schedule_Calendar = (function ($) {
               api: 'resize',
               api_start: event.start.format(),
               api_end: event.end.format()
-            }
+            },
+            authenticity_token: token
           },
           success: function (data, dataType) {
             var viewId;

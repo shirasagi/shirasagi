@@ -1,0 +1,75 @@
+<%
+  current_active_group = @cur_group || @cur_user.gws_default_group
+  alternative_groups = @cur_user.groups.in_group(@cur_site)
+  if current_active_group
+    alternative_groups = alternative_groups.ne(id: current_active_group.id)
+  end
+  return if alternative_groups.blank?
+%>
+<li>
+  <a class="gws-group-switch cascade-menu" href="#gws-group-switch-menu" data-ref="#gws-group-switch-menu">
+    <%= t("gws.links.switch_group") %>
+    <span class="caret"><i class="material-icons">&#xE315;</i></span>
+  </a>
+</li>
+
+<% @group_switch_cascade_html = capture do %>
+  <ul id="gws-group-switch-menu" class="dropdown-menu cascade-sub-menu">
+    <li class="gws-group-switch-menu-header">
+      <a href="#user-main-dropdown" class="cascade-back">
+        <i class="material-icons caret">&#xE314;</i> <%= t("gws.links.switch_group") %>
+      </a>
+    </li>
+    <li>
+      <label class="gws-group-switch-item">
+        <input type="radio" name="gws-group-switch-item" value="<%= @cur_user.gws_default_group.id %>" checked>
+        <span class="gws-group-switch-name"><%= @cur_user.gws_default_group.section_name %></span>
+      </label>
+    </li>
+    <% alternative_groups.reorder(order: 1, name: 1).each do |group| %>
+      <li id="gws-group-switch-menu-<%= group.id %>">
+        <a href="#gws-group-switch-menu-<%= group.id %>" class="gws-group-switch-item" data-id="<%= group.id %>">
+          <input type="radio" name="gws-group-switch-item" value="<%= group.id %>">
+          <span class="gws-group-switch-name"><%= group.section_name %></span>
+        </a>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
+<%= jquery do %>
+  $("#gws-group-switch-menu").on("change", "[name='gws-group-switch-item']", function() {
+    var wrap = $(this).closest("a")[0];
+    if (wrap) {
+      wrap.click();
+    }
+  });
+
+  var url = <%== gws_apis_default_group_path.to_json %>
+  $("#gws-group-switch-menu").on("click", ".gws-group-switch-item", function(ev) {
+    if (! this.dataset.id) {
+      return;
+    }
+
+    $.ajax({
+      url: url,
+      type: "POST",
+      data: {
+        authenticity_token: $('meta[name="csrf-token"]').attr('content'),
+        default_group: this.dataset.id,
+      },
+      success: function() {
+        location.reload();
+      },
+      error: function(xhr, status, error) {
+        if (xhr.responseJSON) {
+          alert(xhr.responseJSON.errors.join("\n"));
+        } else {
+          alert("error");
+        }
+      }
+    });
+    ev.preventDefault();
+    return false;
+  });
+<% end %>

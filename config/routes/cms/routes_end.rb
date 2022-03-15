@@ -77,6 +77,11 @@ Rails.application.routes.draw do
     get :michecker_result, on: :member
   end
 
+  concern :change_state do
+    get :state, on: :member
+    put :change_state_all, on: :collection, path: ''
+  end
+
   namespace "cms", path: ".s:site" do
     get "/" => "main#index", as: :main
     match "logout" => "login#logout", as: :logout, via: [:get]
@@ -100,7 +105,7 @@ Rails.application.routes.draw do
     end
     resources :contents, path: "contents/(:mod)"
 
-    resources :nodes, concerns: [:deletion, :command] do
+    resources :nodes, concerns: [:deletion, :command, :change_state] do
       get :routes, on: :collection
     end
 
@@ -315,12 +320,15 @@ Rails.application.routes.draw do
       namespace "translate" do
         get "langs" => "langs#index"
       end
+
+      match "mobile_size_check/check" => "mobile_size_check#check", via: [:post, :options], as: "mobile_size_check"
+      post "syntax_check/check" => "syntax_check#check", as: "check_syntax_check"
+      post "syntax_check/correct" => "syntax_check#correct", as: "correct_syntax_check"
     end
   end
 
   namespace "cms", path: ".cms" do
     match "link_check/check" => "link_check#check", via: [:post, :options], as: "link_check"
-    match "mobile_size_check/check" => "mobile_size_check#check", via: [:post, :options], as: "mobile_size_check"
   end
 
   content "cms", name: "node", module: "cms/node" do
@@ -369,6 +377,7 @@ Rails.application.routes.draw do
     get "archive" => "public#redirect_to_archive_index", cell: "nodes/archive"
     get "photo_album" => "public#index", cell: "nodes/photo_album"
     get "site_search/(index.:format)" => "public#index", cell: "nodes/site_search"
+    get "site_search/categories(.:format)" => "public#categories", cell: "nodes/site_search"
   end
 
   part "cms" do

@@ -4,7 +4,7 @@ this.Event_Form = (function () {
 
   Event_Form.maxTermForm = 10;
 
-  Event_Form.deleteMessage = "<%= I18n.t('event.confirm.delete_date') %>";
+  Event_Form.deleteMessage = <%= I18n.t('event.confirm.delete_date').to_json %>;
 
   Event_Form.render = function () {
     if ($("form .mod-event").length) {

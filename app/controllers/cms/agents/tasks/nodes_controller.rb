@@ -53,6 +53,24 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
     end
   end
 
+  def release_node(node)
+    node.cur_site = @site
+
+    if node.public?
+      node.state = "closed"
+      node.close_date = nil
+    elsif node.state == "ready"
+      node.state = "public"
+      node.release_date = nil
+    end
+
+    if node.save
+      @task.log "release update #{node.name} - #{node.state} "
+    else
+      @task.log "release update failed: " + node.errors.full_messages.join(', ')
+    end
+  end
+
   public
 
   def generate
@@ -68,8 +86,6 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
 
       each_node_with_rescue do |node|
         next unless node
-
-        release_node(node)
         next unless node.public?
         next unless node.public_node?
 
@@ -119,24 +135,28 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
     end
   end
 
-  def release_node(node)
-    return if !(node.respond_to?(:close_date) && node.respond_to?(:release_date))
+  def release
+    @task.log "# #{@site.name}"
 
-    now = Time.zone.now
-    if node.public? && node.close_date && now >= node.close_date
-      node.state = "closed"
-      node.close_date = nil
-    elsif node.state == "ready" && node.release_date && now >= node.release_date
-      node.state = "public"
-      node.release_date = nil
-    else
-      return
-    end
+    time = Time.zone.now
 
-    if node.save
-      @task.log "release update #{node.name} "
-    else
-      @task.log "release update failed: " + node.errors.full_messages.join(', ')
+    cond = [
+      { state: "ready", release_date: { "$lte" => time } },
+      { state: "public", close_date: { "$lte" => time } }
+    ]
+    nodes = Cms::Node.site(@site).where("$or" => cond)
+
+    ids   = nodes.pluck(:id)
+    @task.total_count = ids.size
+
+    ids.each do |id|
+      rescue_with(rescue_p: rescue_p) do
+        @task.count
+        node = Cms::Node.site(@site).or(cond).where(id: id).first
+        next unless node
+
+        release_node node.becomes_with_route
+      end
     end
   end
 end

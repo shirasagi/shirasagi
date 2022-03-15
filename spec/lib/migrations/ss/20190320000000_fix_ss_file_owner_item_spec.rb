@@ -22,7 +22,10 @@ RSpec.describe SS::Migration20190320000000, dbscope: :example do
   let!(:gws_schedule_plan1) { create :gws_schedule_plan, cur_site: gws_site, cur_user: gws_user }
   let!(:gws_mem_message1) { create :gws_memo_message, cur_site: gws_site, cur_user: gws_user }
   let!(:file4) { tmp_ss_file(user: gws_user, contents: "#{Rails.root}/spec/fixtures/ss/logo.png") }
-  let!(:file5) { tmp_ss_file(user: gws_user, contents: "#{Rails.root}/spec/fixtures/ss/logo.png") }
+  let!(:file5) do
+    # corrupted image file
+    tmp_ss_file(user: gws_user, contents: unique_id, basename: "logo.png")
+  end
 
   before do
     article_page1.set(file_ids: [ file1.id ])
@@ -40,8 +43,6 @@ RSpec.describe SS::Migration20190320000000, dbscope: :example do
 
     # corrupted image file
     gws_mem_message1.set(file_ids: [ file5.id ])
-    # replace image data with text
-    ::File.open(file5.path, "wt") { |file| file.write unique_id }
 
     [ file1, file2, file3, file4, file5 ].each do |file|
       file.reload
@@ -64,28 +65,28 @@ RSpec.describe SS::Migration20190320000000, dbscope: :example do
       expect(file1.owner_item_type).to eq article_page1.class.name
       expect(file1.owner_item).to be_present
       expect(file1.site_id).to be_blank
-      expect(file1.thumb).to be_present
+      expect(::Fs.exist?(file1.thumb.path)).to be_truthy
 
       file2.reload
       expect(file2.owner_item_id).to eq article_page2.id
       expect(file2.owner_item_type).to eq article_page2.class.name
       expect(file2.owner_item).to be_present
       expect(file2.site_id).to be_blank
-      expect(file2.thumb).to be_present
+      expect(::Fs.exist?(file2.thumb.path)).to be_truthy
 
       file3.reload
       expect(file3.owner_item_id).to eq article_page2.id
       expect(file3.owner_item_type).to eq article_page2.class.name
       expect(file3.owner_item).to be_present
       expect(file3.site_id).to be_blank
-      expect(file3.thumb).to be_present
+      expect(::Fs.exist?(file3.thumb.path)).to be_truthy
 
       file4.reload
       expect(file4.owner_item_id).to eq gws_schedule_plan1.id
       expect(file4.owner_item_type).to eq gws_schedule_plan1.class.name
       expect(file4.owner_item).to be_present
       expect(file4.site_id).to be_blank
-      expect(file4.thumb).to be_present
+      expect(::Fs.exist?(file4.thumb.path)).to be_truthy
 
       file5.reload
       expect(file5.owner_item_id).to eq gws_mem_message1.id
@@ -93,7 +94,7 @@ RSpec.describe SS::Migration20190320000000, dbscope: :example do
       expect(file5.owner_item).to be_present
       expect(file5.site_id).to eq gws_mem_message1.site.id
       # file5 has no thumbnail files because file5 is corrupted
-      expect(file5.thumb).to be_blank
+      expect(::Fs.exist?(file5.thumb.path)).to be_falsey
     end
   end
 end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'gws_memo_messages', type: :feature, dbscope: :example do
+describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:user1) { gws_user }
   let!(:user2) { create(:gws_user, cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids) }
@@ -12,7 +12,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example do
   let(:subject) { unique_id }
   let(:text) { Array.new(rand(2..3)) { unique_id }.join("\n") }
 
-  context 'with auth', js: true do
+  context 'with auth' do
     before { login_gws_user }
 
     it '#index' do
@@ -133,13 +133,17 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example do
         click_on I18n.t("webmail.links.show_cc_bcc")
 
         within 'dl.see.to' do
-          click_on I18n.t('gws.organization_addresses')
+          wait_cbox_open do
+            click_on I18n.t('gws.organization_addresses')
+          end
         end
       end
 
       wait_for_cbox do
         expect(page).to have_content(user2.name)
-        click_on user2.name
+        wait_cbox_close do
+          click_on user2.name
+        end
       end
 
       within 'form#item-form' do
@@ -156,13 +160,17 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example do
         click_on I18n.t("webmail.links.show_cc_bcc")
 
         within 'dl.see.to' do
-          click_on I18n.t('gws.organization_addresses')
+          wait_cbox_open do
+            click_on I18n.t('gws.organization_addresses')
+          end
         end
       end
 
       wait_for_cbox do
         expect(page).to have_content(user2.name)
-        click_on user2.name
+        wait_cbox_close do
+          click_on user2.name
+        end
       end
 
       within 'form#item-form' do
