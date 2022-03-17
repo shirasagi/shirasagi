@@ -19,7 +19,7 @@ describe 'chorg_results', type: :feature, dbscope: :example, js: true do
       end
       wait_for_cbox do
         expect(page).to have_css(".list-item", text: site1.name)
-        expect(page).not_to have_content(site2.name)
+        expect(page).to have_no_content(site2.name)
       end
     end
   end
