@@ -148,8 +148,19 @@ module SS::LiquidFilters
     return [] if key.blank?
     return [] if value.blank?
     pages.select do |page|
-      page.column_values.select { |v| v.column.try(:name) == key && v.value == value }.present?
+      page.column_values.to_a.select { |v| v.column.try(:name) == key && v.value == value }.present?
     end
+  end
+
+  def sort_by_column_value(pages, key)
+    return [] if pages.blank?
+    return [] if key.blank?
+    sorted = []
+    pages.each do |page|
+      value = page.column_values.to_a.find { |value| value.column.try(:name) == key }
+      sorted << [value.try(:value), page]
+    end
+    sorted.sort_by { |item| item[0] }.map { |item| item[1] }
   end
 
   def same_name_pages(input, filename = nil)
