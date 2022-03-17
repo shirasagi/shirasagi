@@ -142,6 +142,16 @@ module SS::LiquidFilters
     criteria.limit(limit).to_a
   end
 
+  def filter_by_column_value(pages, key_value)
+    key, value = key_value.split(".")
+    return [] if pages.blank?
+    return [] if key.blank?
+    return [] if value.blank?
+    pages.select do |page|
+      page.column_values.select { |v| v.column.try(:name) == key && v.value == value }.present?
+    end
+  end
+
   def same_name_pages(input, filename = nil)
     page = input.try(:delegatee)
     return unless page
