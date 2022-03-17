@@ -228,7 +228,9 @@
                   <% end %>
                   </td>
                   <td>
-                    <%= t("workflow.circulation_state.#{state}") %>
+                    <% if state.present? %>
+                      <%= t("workflow.circulation_state.#{state}", default: state) %>
+                    <% end %>
                   </td>
                   <td>
                     <div class="approver-comment"><%= workflow_circulation[:comment] %></div>
