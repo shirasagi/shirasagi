@@ -229,10 +229,10 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
   end
 
   def shared_address_group_name(id)
-    Gws::SharedAddress::Group.find(id).try(:name)
+    Gws::SharedAddress::Group.find(id).try(:name) rescue nil
   end
 
   def webmail_address_group_name(id)
-    Webmail::AddressGroup.find(id).try(:name)
+    Webmail::AddressGroup.find(id).try(:name) rescue nil
   end
 end
