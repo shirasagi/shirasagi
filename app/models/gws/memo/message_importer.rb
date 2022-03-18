@@ -38,17 +38,17 @@ class Gws::Memo::MessageImporter
     item.site_id = cur_site.id
     item.subject = msg.subject
     item.send_date = msg.date
-    if msg.attachments.present?
-      item.text = NKF.nkf("-Ww", msg.text_part.decoded)
-    else
-      item.text = NKF.nkf("-Ww", msg.body.to_s)
-    end
+    item.format = "html"
 
-    if msg.mime_type == "text/html"
-      item.format = "html"
+    case msg.mime_type
+    when "text/html"
       item.html = msg.decoded
-    else
+    when "multipart/mixed"
+      item.html = msg.html_part.try(:decoded)
+      item.text = NKF.nkf("-Ww", msg.text_part.try(:decoded)) rescue nil
+    else # text/plain
       item.format = "text"
+      item.text = NKF.nkf("-Ww", msg.body.to_s) rescue nil
     end
 
     sender = Gws::User.find_by(email: msg.from.first) rescue nil
