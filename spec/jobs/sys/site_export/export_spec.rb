@@ -237,11 +237,24 @@ describe Sys::SiteExportJob, dbscope: :example do
       zip_path = execute
       # ::FileUtils.cp(zip_path, "#{Rails.root}/spec/fixtures/sys/site-exports-1.zip")
       Zip::File.open(zip_path) do |zip|
+        JSON.parse(zip.read(zip.get_entry("cms_nodes.json"))).tap do |cms_nodes|
+          expect(cms_nodes).to be_a(Array)
+          expect(cms_nodes.length).to eq 1
+
+          cms_nodes[0].tap do |cms_node|
+            expect(cms_node["route"]).to eq node.route
+            expect(cms_node["_id"]).to eq node.id
+            expect(cms_node["name"]).to eq node.name
+            expect(cms_node["filename"]).to eq node.filename
+          end
+        end
         JSON.parse(zip.read(zip.get_entry("cms_pages.json"))).tap do |cms_pages|
           expect(cms_pages).to be_a(Array)
           expect(cms_pages.length).to eq 3
 
           cms_pages[0].tap do |cms_page|
+            expect(cms_page["_id"]).to eq page1.id
+            expect(cms_page["route"]).to eq page1.route
             expect(cms_page["name"]).to eq page1.name
             expect(cms_page["filename"]).to eq page1.filename
             expect(cms_page["html"]).to eq page1.html
@@ -249,6 +262,8 @@ describe Sys::SiteExportJob, dbscope: :example do
           end
 
           cms_pages[1].tap do |cms_page|
+            expect(cms_page["_id"]).to eq page2.id
+            expect(cms_page["route"]).to eq page2.route
             expect(cms_page["name"]).to eq page2.name
             expect(cms_page["filename"]).to eq page2.filename
             expect(cms_page["column_values"]).to be_a(Array)
@@ -271,6 +286,8 @@ describe Sys::SiteExportJob, dbscope: :example do
           end
 
           cms_pages[2].tap do |cms_page|
+            expect(cms_page["_id"]).to eq page3.id
+            expect(cms_page["route"]).to eq page3.route
             expect(cms_page["name"]).to eq page3.name
             expect(cms_page["filename"]).to eq page3.filename
             expect(cms_page["column_values"]).to be_a(Array)
