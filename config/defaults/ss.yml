@@ -64,6 +64,8 @@ production: &production
     - label: 最低画質
       quality: 25
 
+  updates_and_reloads_nginx_conf: false
+
 test:
   <<: *production
   disable: false

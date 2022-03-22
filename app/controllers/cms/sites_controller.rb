@@ -22,7 +22,9 @@ class Cms::SitesController < ApplicationController
   end
 
   def reload_nginx
-    SS::Nginx::Config.new.write.reload_server
+    if SS.config.ss.updates_and_reloads_nginx_conf
+      SS::Nginx::Config.new.write.reload_server
+    end
   end
 
   public
