@@ -77,4 +77,26 @@ describe 'gws_memo_import_messages', type: :feature, dbscope: :example do
       expect(message.to_webmail_address_group_ids).to include webmail_address_group4.id
     end
   end
+
+  it "import multipart mail" do
+    visit gws_memo_import_messages_path(site: site)
+
+    within "form#item-form" do
+      attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/memo/multipart.zip"
+      click_on I18n.t("ss.import")
+    end
+
+    expect(page).to have_css('#notice', text: I18n.t("gws/memo/message.notice.start_import"))
+
+    expect(Gws::Memo::Message.all.count).to eq 1
+    Gws::Memo::Message.all.first.tap do |message|
+      expect(message.site_id).to eq site.id
+      expect(message.subject).to eq "シラサギ市 マルチパートメッセージ"
+      expect(message.html).to include "<p>マルチパートプロジェクトです</p>"
+      expect(message.format).to eq "html"
+      expect(message.file_ids.length).to eq 1
+      expect(message.filtered).to include(gws_user.id.to_s)
+      expect(message.state).to eq "public"
+    end
+  end
 end
