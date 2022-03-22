@@ -45,8 +45,7 @@ describe Sys::SiteExportJob, dbscope: :example do
   def execute
     job = Sys::SiteExportJob.new
     task = OpenStruct.new(source_site_id: site.id)
-    def task.log(msg)
-      puts(msg)
+    def task.log(_msg)
     end
     job.task = task
     job.perform
@@ -311,7 +310,7 @@ describe Sys::SiteExportJob, dbscope: :example do
         end
         JSON.parse(zip.read(zip.get_entry("ss_files.json"))).tap do |ss_files|
           expect(ss_files).to be_a(Array)
-          expect(ss_files.length).to eq 14
+          expect(ss_files.length).to eq 7
 
           expect(ss_files[0]["_id"]).to eq page1_file1.id
           expect(ss_files[0]["model"]).to eq page1_file1.model
@@ -320,47 +319,49 @@ describe Sys::SiteExportJob, dbscope: :example do
           expect(ss_files[0]["state"]).to eq page1_file1.state
           expect(zip.get_entry(ss_files[0]["export_path"])).to be_present
 
-          expect(ss_files[2]["_id"]).to eq page2_file1.id
-          expect(ss_files[2]["model"]).to eq page2_file1.model
-          expect(ss_files[2]["name"]).to eq page2_file1.name
-          expect(ss_files[2]["filename"]).to eq page2_file1.filename
-          expect(ss_files[2]["state"]).to eq page2_file1.state
+          expect(ss_files[1]["_id"]).to eq page2_file1.id
+          expect(ss_files[1]["model"]).to eq page2_file1.model
+          expect(ss_files[1]["name"]).to eq page2_file1.name
+          expect(ss_files[1]["filename"]).to eq page2_file1.filename
+          expect(ss_files[1]["state"]).to eq page2_file1.state
+          expect(zip.get_entry(ss_files[1]["export_path"])).to be_present
+
+          expect(ss_files[2]["_id"]).to eq page2_file2.id
+          expect(ss_files[2]["model"]).to eq page2_file2.model
+          expect(ss_files[2]["name"]).to eq page2_file2.name
+          expect(ss_files[2]["filename"]).to eq page2_file2.filename
+          expect(ss_files[2]["state"]).to eq page2_file2.state
           expect(zip.get_entry(ss_files[2]["export_path"])).to be_present
 
-          expect(ss_files[4]["_id"]).to eq page2_file2.id
-          expect(ss_files[4]["model"]).to eq page2_file2.model
-          expect(ss_files[4]["name"]).to eq page2_file2.name
-          expect(ss_files[4]["filename"]).to eq page2_file2.filename
-          expect(ss_files[4]["state"]).to eq page2_file2.state
+          expect(ss_files[3]["_id"]).to eq page3_file1.id
+          expect(ss_files[3]["model"]).to eq page3_file1.model
+          expect(ss_files[3]["name"]).to eq page3_file1.name
+          expect(ss_files[3]["filename"]).to eq page3_file1.filename
+          expect(ss_files[3]["state"]).to eq page3_file1.state
+          expect(zip.get_entry(ss_files[3]["export_path"])).to be_present
+
+          expect(ss_files[4]["_id"]).to eq page3_file2.id
+          expect(ss_files[4]["model"]).to eq page3_file2.model
+          expect(ss_files[4]["name"]).to eq page3_file2.name
+          expect(ss_files[4]["filename"]).to eq page3_file2.filename
+          expect(ss_files[4]["state"]).to eq page3_file2.state
           expect(zip.get_entry(ss_files[4]["export_path"])).to be_present
 
-          expect(ss_files[6]["_id"]).to eq page3_file1.id
-          expect(ss_files[6]["model"]).to eq page3_file1.model
-          expect(ss_files[6]["name"]).to eq page3_file1.name
-          expect(ss_files[6]["filename"]).to eq page3_file1.filename
-          expect(ss_files[6]["state"]).to eq page3_file1.state
+          expect(ss_files[5]["_id"]).to eq page3_file3.id
+          expect(ss_files[5]["model"]).to eq page3_file3.model
+          expect(ss_files[5]["name"]).to eq page3_file3.name
+          expect(ss_files[5]["filename"]).to eq page3_file3.filename
+          expect(ss_files[5]["state"]).to eq page3_file3.state
+          expect(zip.get_entry(ss_files[5]["export_path"])).to be_present
+
+          expect(ss_files[6]["_id"]).to eq page3_file4.id
+          expect(ss_files[6]["model"]).to eq page3_file4.model
+          expect(ss_files[6]["name"]).to eq page3_file4.name
+          expect(ss_files[6]["filename"]).to eq page3_file4.filename
+          expect(ss_files[6]["state"]).to eq page3_file4.state
           expect(zip.get_entry(ss_files[6]["export_path"])).to be_present
 
-          expect(ss_files[8]["_id"]).to eq page3_file2.id
-          expect(ss_files[8]["model"]).to eq page3_file2.model
-          expect(ss_files[8]["name"]).to eq page3_file2.name
-          expect(ss_files[8]["filename"]).to eq page3_file2.filename
-          expect(ss_files[8]["state"]).to eq page3_file2.state
-          expect(zip.get_entry(ss_files[8]["export_path"])).to be_present
-
-          expect(ss_files[10]["_id"]).to eq page3_file3.id
-          expect(ss_files[10]["model"]).to eq page3_file3.model
-          expect(ss_files[10]["name"]).to eq page3_file3.name
-          expect(ss_files[10]["filename"]).to eq page3_file3.filename
-          expect(ss_files[10]["state"]).to eq page3_file3.state
-          expect(zip.get_entry(ss_files[10]["export_path"])).to be_present
-
-          expect(ss_files[12]["_id"]).to eq page3_file4.id
-          expect(ss_files[12]["model"]).to eq page3_file4.model
-          expect(ss_files[12]["name"]).to eq page3_file4.name
-          expect(ss_files[12]["filename"]).to eq page3_file4.filename
-          expect(ss_files[12]["state"]).to eq page3_file4.state
-          expect(zip.get_entry(ss_files[12]["export_path"])).to be_present
+          expect(ss_files.all? { |ss_file| ss_file["_id"].present? }).to be_truthy
         end
       end
     end

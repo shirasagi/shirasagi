@@ -241,11 +241,6 @@ class Sys::SiteExportJob < SS::ApplicationJob
 
       item[:export_path] = copy_file(item)
       json.write(item.to_json)
-
-      item.variants.each do |variant|
-        export_path = copy_file(variant)
-        json.write({ name: variant.variant_name, export_path: export_path }.to_json)
-      end
     end
     json.close
   end
