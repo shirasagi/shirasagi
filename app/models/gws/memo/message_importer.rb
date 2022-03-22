@@ -43,7 +43,7 @@ class Gws::Memo::MessageImporter
     case msg.mime_type
     when "text/html"
       item.html = msg.decoded
-    when "multipart/mixed"
+    when "multipart/mixed", "multipart/alternative"
       item.html = msg.html_part.try(:decoded)
       item.text = NKF.nkf("-Ww", msg.text_part.try(:decoded)) rescue nil
     else # text/plain
