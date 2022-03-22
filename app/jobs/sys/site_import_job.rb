@@ -178,6 +178,8 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
       if data.key?("_type")
         effective_model = data["_type"].constantize rescue model
+      elsif data.key?("route") && model.instance_methods.include?(:becomes_with_route)
+        effective_model = model.new.becomes_with_route(data["route"]).class rescue model
       else
         effective_model = model
       end
