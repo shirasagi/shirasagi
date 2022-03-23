@@ -75,6 +75,23 @@ describe "cms_search_contents_files", type: :feature, dbscope: :example, js: tru
           expect(info[:height]).to eq 90
         end
 
+        # by page's name
+        within "form.search" do
+          fill_in "s[keyword]", with: item1.name
+          click_on I18n.t("ss.buttons.search")
+        end
+        expect(page).to have_css(".file-view", text: name1)
+        expect(page).to have_css(".file-view", text: name2)
+        expect(page).to have_css(".file-view", text: item1.name)
+        image_element_info(first(".file-view img[alt='#{file1.name}']")).tap do |info|
+          expect(info[:width]).to eq 90
+          expect(info[:height]).to eq 90
+        end
+        image_element_info(first(".file-view img[alt='#{file2.name}']")).tap do |info|
+          expect(info[:width]).to eq 90
+          expect(info[:height]).to eq 90
+        end
+
         within "form.search" do
           fill_in "s[keyword]", with: unique_id
           click_on I18n.t("ss.buttons.search")
