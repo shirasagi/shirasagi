@@ -15,7 +15,7 @@ module Gws::Elasticsearch::Indexer::Base
       before_file_ids = collect_file_ids_was_for_save(item)
 
       ret = yield
-      return ret unless site.menu_elasticsearch_visible?
+      return ret unless site.try(:menu_elasticsearch_visible?)
 
       after_file_ids = collect_file_ids_for_save(item)
       remove_file_ids = before_file_ids - after_file_ids
