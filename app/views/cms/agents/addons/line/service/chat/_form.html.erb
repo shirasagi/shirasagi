@@ -1,0 +1,5 @@
+<% node_options = Chat::Node::Bot.site(@cur_site).map { |item| [item.name, item.id] } %>
+<dl class="see">
+  <dt><%= @item.t :node_id %><%= @item.tt :node_id %></dt>
+  <dd><%= f.select :node_id, node_options, include_blank: true %></dd>
+</dl>

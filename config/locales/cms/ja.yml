@@ -756,6 +756,7 @@ ja:
       cms/line/service/page_list: ページリスト
       cms/line/service/area: タップ領域
       cms/line/service/json_body: JSONテンプレート
+      cms/line/service/chat: チャットボット
       cms/line/deliver_condition/body: 配信条件
       cms/line/message/body: 本文
       cms/line/message/deliver_condition: 配信条件
