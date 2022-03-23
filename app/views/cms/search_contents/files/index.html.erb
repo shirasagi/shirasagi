@@ -15,11 +15,14 @@
     <dd class="wide">
       <div id="selected-files">
         <% @items.each do |file| %>
+          <%
+            page = Cms::Page.in(file_ids: file.id).first
+            next if page.nil?
+          %>
+
           <div class="file-view">
-            <% page = Cms::Page.in(file_ids: file.id).first %>
-            <% next if page.nil? %>
             <%= sanitizer_status(file) %>
-            <%= link_to cms_page_path(id: page.id), class: :thumb, target: "_blank", rel: "noopener" do %>
+            <%= link_to page.private_show_path, class: :thumb, target: "_blank", rel: "noopener" do %>
               <% if file.image? %>
                 <%= image_tag file.thumb_url, alt: file.name %>
               <% else %>
@@ -44,7 +47,7 @@
                 <span title="<%= file.name %>"><%= file.name %></span><br />
                 <span title="<%= file.filename %>"><%= file.filename %></span><br />
               </div>
-              <%= link_to cms_page_path(id: page.id), target: "_blank", rel: "noopener" do %>
+              <%= link_to page.private_show_path, target: "_blank", rel: "noopener" do %>
                 <div class="name">
                   <span title="<%= page.name %>"><%= page.name %></span><br />
                   <span title="<%= page.filename %>"><%= page.filename %></span><br />
