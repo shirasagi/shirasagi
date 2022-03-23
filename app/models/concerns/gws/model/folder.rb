@@ -119,7 +119,8 @@ module Gws::Model::Folder
   end
 
   def dependant_scope
-    self.class.site(@cur_site || site)
+    s = @cur_site || site
+    s ? self.class.site(s) : self.class.none
   end
 
   def validate_parent_name
