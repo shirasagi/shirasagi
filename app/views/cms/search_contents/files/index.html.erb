@@ -16,8 +16,8 @@
       <div id="selected-files">
         <% @items.each do |file| %>
           <%
-            page = Cms::Page.in(file_ids: file.id).first
-            next if page.nil?
+            page = file.owner_item
+            next if page.blank?
           %>
 
           <div class="file-view">
