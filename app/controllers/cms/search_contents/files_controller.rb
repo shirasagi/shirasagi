@@ -24,8 +24,9 @@ class Cms::SearchContents::FilesController < ApplicationController
   public
 
   def index
-    page = params[:page].try { |page| page.to_s.numeric? ? page.to_s.to_i - 1 : nil } || 0
-    service = Cms::FileSearchService.new(cur_site: @cur_site, cur_user: @cur_user, s: params[:s], page: page, limit: 50)
+    service = Cms::FileSearchService.new(cur_site: @cur_site, cur_user: @cur_user)
+    service.s = params.require(:s).permit(:keyword) if params[:s]
+    service.page = params[:page].try { |page| page.to_s.numeric? ? page.to_s.to_i - 1 : nil } || 0
     @items = service.call
   end
 end

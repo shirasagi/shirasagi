@@ -4,13 +4,19 @@ class Cms::FileSearchService
   attr_accessor :cur_site, :cur_user, :s, :page, :limit
 
   STAGE_BUILDERS = %i[
-    stage_files_attached_to_page stage_lookup_page stage_file_search stage_apply_permissions stage_projection stage_pagination
+    stage_files_attached_to_page stage_lookup_pages stage_search stage_permissions stage_projection stage_pagination
   ].freeze
 
   class << self
     def page_models
       @page_models ||= ::Mongoid.models.select { |model| model.ancestors.include?(Cms::Model::Page) }.map(&:name)
     end
+  end
+
+  def initialize(*args)
+    super
+    @page ||= 0
+    @limit ||= 50
   end
 
   def call
@@ -43,18 +49,18 @@ class Cms::FileSearchService
     @stages << { "$match" => { owner_item_type: { "$in" => self.class.page_models } } }
   end
 
-  def stage_lookup_page
+  def stage_lookup_pages
     @stages << { "$lookup" => { from: "cms_pages", "localField" => "owner_item_id", "foreignField" => "_id", as: "page" } }
   end
 
-  def stage_file_search
+  def stage_search
     return if s.blank? || s[:keyword].blank?
 
     words = s[:keyword].to_s.split(/[\s　]+/).uniq.select(&:present?)
     return if words.blank?
 
     words = words.take(4).map { |w| /#{::Regexp.escape(w)}/i }
-    conds  = words.map do |word|
+    conds = words.map do |word|
       { "$or" => %w(name filename page.name page.filename).map { |field| { field => word } } }
     end
 
@@ -65,7 +71,7 @@ class Cms::FileSearchService
     end
   end
 
-  def stage_apply_permissions
+  def stage_permissions
     if cur_user.cms_role_permissions["read_other_cms_pages_#{cur_site.id}"]
       @stages << { "$match" => { "page.site_id" => cur_site.id } }
     else
