@@ -3,8 +3,8 @@ require 'spec_helper'
 describe "cms/pages", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let!(:item) { create :cms_page, cur_site: site, basename: unique_id }
-  let(:map_center_lng) { rand(130..140) }
-  let(:map_center_lat) { rand(35..38) }
+  let(:map_center_lng) { rand(12_700..14_500) / 100.0 }
+  let(:map_center_lat) { rand(2_700..4_500) / 100.0 }
 
   before do
     site.map_api = map_api
@@ -140,7 +140,10 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         end
         expect(item.map_zoom_level).to eq map_zoom_level
         expect(item.center_setting).to eq "designated_location"
-        expect(item.set_center_position).to eq "#{map_center_lng},#{map_center_lat}"
+        item.set_center_position.split(",").tap do |lng, lat|
+          expect(lng.to_f).to be_within(0.001).of(map_center_lng)
+          expect(lat.to_f).to be_within(0.001).of(map_center_lat)
+        end
         expect(item.zoom_setting).to eq "designated_level"
         expect(item.set_zoom_level).to eq set_zoom_level
 
