@@ -100,14 +100,14 @@ RSpec.describe SS::Migration20200521000000, dbscope: :example do
       expect(page1.file_ids.length).to eq 2
 
       page1_file2.reload
-      expect(page1_file2.owner_item.id).to eq page1.id
+      expect(page1_file2.owner_item).to eq page1
       expect(page1_file2.model).to eq page1.class.model_name.i18n_key.to_s
 
       page2.reload
       expect(page2.file_ids.length).to eq 2
 
       page2_file2.reload
-      expect(page2_file2.owner_item.id).to eq page2.id
+      expect(page2_file2.owner_item).to eq page2
       expect(page2_file2.model).to eq page2.class.model_name.i18n_key.to_s
 
       page3.reload
@@ -115,8 +115,8 @@ RSpec.describe SS::Migration20200521000000, dbscope: :example do
       expect(page3.column_values.exists(value: true).first.file_ids.length).to eq 2
 
       page3_file2.reload
-      expect(page3_file2.owner_item.id).to eq page3.id
-      expect(page3_file2.model).to eq page3.class.name
+      expect(page3_file2.owner_item).to eq page3
+      expect(page3_file2.model).to eq page3.class.model_name.i18n_key.to_s
     end
   end
 end

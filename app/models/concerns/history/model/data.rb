@@ -65,9 +65,10 @@ module History::Model::Data
                 relation[key][i] = restore_file(file_id, opts)
               end
             else
-              klass = field.association.class_name.constantize rescue nil
+              next if !field.association || !field.association.class_name
 
-              next if klass.blank? || !klass.include?(SS::Model::File)
+              klass = field.association.class_name.constantize rescue nil
+              next if !klass || !klass.include?(SS::Model::File)
 
               relation[key] = restore_file(relation[key], opts)
             end
@@ -90,9 +91,10 @@ module History::Model::Data
           restore_file(file_id, opts)
         end
       else
-        klass = field.association.class_name.constantize rescue nil
+        next if !field.association || !field.association.class_name
 
-        next if klass.blank? || !klass.include?(SS::Model::File)
+        klass = field.association.class_name.constantize rescue nil
+        next if !klass || !klass.include?(SS::Model::File)
 
         data[k] = restore_file(data[k], opts)
       end

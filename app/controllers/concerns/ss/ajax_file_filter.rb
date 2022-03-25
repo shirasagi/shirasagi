@@ -30,6 +30,7 @@ module SS::AjaxFileFilter
   def index
     @items = @model
     @items = @items.site(@cur_site) if @cur_site
+    @items = @items.where(content_type: /^image\//) if self.class.only_image
     @items = @items.allow(:read, @cur_user).
       order_by(filename: 1).
       page(params[:page]).per(20)

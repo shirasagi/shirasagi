@@ -10,7 +10,9 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
   let!(:edit_path) { edit_article_page_path(site: site, cid: node, id: item) }
 
   let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'entry', group_ids: [cms_group.id]) }
-  let!(:column1) { create(:cms_column_file_upload, cur_site: site, cur_form: form, required: "optional", order: 1) }
+  let!(:column1) do
+    create(:cms_column_file_upload, cur_site: site, cur_form: form, required: "optional", order: 1, file_type: "image")
+  end
   let!(:column2) { create(:cms_column_free, cur_site: site, cur_form: form, required: "optional", order: 2) }
 
   let(:logs_path) { history_cms_logs_path site.id }
@@ -49,7 +51,10 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".file-view", text: "keyvisual.jpg")
       end
 
-      click_on I18n.t("ss.buttons.publish_save")
+      wait_cbox_open do
+        click_on I18n.t("ss.buttons.publish_save")
+        expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("cms.column_file_upload.image.file_label_place_holder"))
+      end
       wait_for_cbox do
         click_on I18n.t("ss.buttons.ignore_alert")
       end
@@ -58,7 +63,8 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
       item.reload
       expect(item.column_values.count).to eq 1
       expect(item.column_values.first.file).to be_present
-      file_url = item.column_values.first.file.url
+      file = item.column_values.first.file
+      file_url = file.url
 
       History::Log.all.reorder(created: 1, id: 1).to_a.tap do |histories|
         histories[0].tap do |history|
@@ -98,8 +104,8 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
           expect(history.url).to eq file_url
           expect(history.controller).to eq "article/pages"
           expect(history.action).to eq "update"
-          expect(history.target_id).to be_blank
-          expect(history.target_class).to be_blank
+          expect(history.target_id).to eq file.id.to_s
+          expect(history.target_class).to eq file.class.name
           expect(history.page_url).to eq article_page_path(site: site, cid: node, id: item)
           expect(history.behavior).to eq "attachment"
           expect(history.ref_coll).to eq "ss_files"
