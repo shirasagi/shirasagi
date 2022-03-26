@@ -37,11 +37,16 @@ module Article::Node
     include Cms::Addon::Meta
     include Article::Addon::MapSearch
     include Article::Addon::MapSearchResult
+    include Category::Addon::Setting
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
     default_scope ->{ where(route: "article/map_search") }
+
+    def st_categories_sortable?
+      true
+    end
   end
 
   class Search

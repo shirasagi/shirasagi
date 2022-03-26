@@ -64,6 +64,11 @@ class Article::Agents::Nodes::MapSearchController < ApplicationController
     end
   end
 
+  def set_filter_items
+    category_ids = @items.map(&:category_ids).flatten.uniq
+    @filter_categories_array = @cur_node.st_categories.select { |c| category_ids.include?(c.id) }
+  end
+
   public
 
   def index
@@ -73,7 +78,7 @@ class Article::Agents::Nodes::MapSearchController < ApplicationController
   def map
     set_items
     set_markers
-
+    set_filter_items
     @current = "map"
     render 'map'
   end

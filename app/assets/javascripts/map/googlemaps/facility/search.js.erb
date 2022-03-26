@@ -74,11 +74,7 @@ this.Facility_Search = (function () {
     //setup category filter
     $(".filters a").on("click", function () {
       var dataIDs;
-      if ($(this).hasClass("clicked")) {
-        $(this).removeClass("clicked");
-      } else {
-        $(this).addClass("clicked");
-      }
+      $(this).toggleClass("clicked").blur();
       dataIDs = [];
       $(".filters a.clicked").each(function () {
         return dataIDs.push(parseInt($(this).attr("data-id")));
@@ -103,6 +99,9 @@ this.Facility_Search = (function () {
           return column.hide();
         }
       });
+      if (Googlemaps_Map.markerClusterer) {
+        Googlemaps_Map.markerClusterer.repaint();
+      }
       return false;
     });
     //setup location filter
