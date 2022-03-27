@@ -34,8 +34,6 @@ describe "article_node_map_search", type: :feature, dbscope: :example, js: true 
         fill_in "item[name]", with: name
         fill_in "item[basename]", with: basename
         select layout.name, from: "item[layout_id]"
-        select form.name, from: "item[form_id]"
-        select article_node.name, from: "item[node_id]"
         within ".map-search-options-name0" do
           fill_in "item[map_search_options][][name]", with: col1.name
         end

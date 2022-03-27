@@ -58,8 +58,6 @@ ja:
       article/part/node: 記事リスト
     attributes:
       article/addon/map_search:
-        form_id: 定型フォーム
-        node_id: 記事フォルダー
         map_search_options: 検索オプション
         column_name: 項目名
         column_values: 選択肢

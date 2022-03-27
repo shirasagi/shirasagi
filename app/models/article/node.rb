@@ -35,6 +35,7 @@ module Article::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
+    include Event::Addon::PageList
     include Article::Addon::MapSearch
     include Article::Addon::MapSearchResult
     include Category::Addon::Setting
@@ -43,6 +44,9 @@ module Article::Node
     include History::Addon::Backup
 
     default_scope ->{ where(route: "article/map_search") }
+
+    self.use_condition_forms = true
+    self.use_loop_settings = false
 
     def st_categories_sortable?
       true

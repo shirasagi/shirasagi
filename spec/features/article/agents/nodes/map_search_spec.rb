@@ -3,8 +3,7 @@ require 'spec_helper'
 describe "article_agents_nodes_map_search", type: :feature, dbscope: :example, js: true do
   let(:site)   { cms_site }
   let(:layout) { create_cms_layout }
-  let(:node)   { create :article_node_map_search, layout_id: layout.id, filename: "node", form_id: form }
-  let(:form) { create(:cms_form, cur_site: site, sub_type: 'entry') }
+  let(:node)   { create :article_node_map_search, layout_id: layout.id, filename: "node" }
 
   context "public" do
     before do
