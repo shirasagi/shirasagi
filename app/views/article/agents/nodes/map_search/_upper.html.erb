@@ -1,7 +1,7 @@
 <%= jquery do %>
   $(".map-search-change").on("click", function () {
     $.colorbox({
-      html: "<%=j render(partial: 'modal', locals: { search_path: './map.html' }) %>"
+      html: "<%=j render(partial: 'modal') %>"
     });
     return false;
   });

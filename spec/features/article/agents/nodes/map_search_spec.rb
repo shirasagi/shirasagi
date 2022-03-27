@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "article_agents_nodes_map_search", type: :feature, dbscope: :example do
+describe "article_agents_nodes_map_search", type: :feature, dbscope: :example, js: true do
   let(:site)   { cms_site }
   let(:layout) { create_cms_layout }
   let(:node)   { create :article_node_map_search, layout_id: layout.id, filename: "node", form_id: form }
@@ -12,16 +12,34 @@ describe "article_agents_nodes_map_search", type: :feature, dbscope: :example do
     end
 
     it "#index" do
+      # form
       visit node.url
-      expect(status_code).to eq 200
       expect(page).to have_css(".map-search-settings")
-
       click_button I18n.t('facility.submit.reset')
+
+      # map
       click_button I18n.t('facility.submit.search')
       expect(page).to have_css(".map-search-result")
+      expect(page).to have_css("#map-canvas")
 
-      find('.map-search-tabs').click
+      find('.map-search-change').click
+      wait_for_cbox do
+        click_button I18n.t('facility.submit.search')
+      end
       expect(page).to have_css(".map-search-result")
+      expect(page).to have_css("#map-canvas")
+
+      # list
+      find('.map-search-tabs').click_link I18n.t("facility.tab.result")
+      expect(page).to have_css(".map-search-result")
+      expect(page).not_to have_css("#map-canvas")
+
+      find('.map-search-change').click
+      wait_for_cbox do
+        click_button I18n.t('facility.submit.search')
+      end
+      expect(page).to have_css(".map-search-result")
+      expect(page).not_to have_css("#map-canvas")
     end
   end
 end
