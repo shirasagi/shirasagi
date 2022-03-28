@@ -24,7 +24,6 @@ module Inquiry::Addon
       validates :question, presence: true, inclusion: {
         in: %w(enabled disabled)
       }
-      validate :validate_input_type_upload_file
       validate :validate_select_options
       validate :validate_input_confirm_options
       # validate :validate_max_upload_file_size_options
@@ -35,9 +34,7 @@ module Inquiry::Addon
 
     def input_type_options
       %w(text_field text_area email_field radio_button select check_box upload_file form_select).map do |v|
-        label = I18n.t("inquiry.options.input_type.#{v}")
-        label += I18n.t("inquiry.cannot_use") if v == "upload_file" && SS::Lgwan.enabled?
-        [ label, v ]
+        [ I18n.t("inquiry.options.input_type.#{v}"), v ]
       end
     end
 
@@ -96,12 +93,6 @@ module Inquiry::Addon
     #     errors.add :select_options, :blank if select_options.blank?
     #   end
     # end
-
-    def validate_input_type_upload_file
-      if input_type == "upload_file" && SS::Lgwan.enabled?
-        errors.add :input_type, :cannot_use_upload_file
-      end
-    end
 
     def validate_transfers
       return if transfers.blank?

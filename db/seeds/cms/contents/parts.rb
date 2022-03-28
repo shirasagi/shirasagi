@@ -1,7 +1,6 @@
 puts "# parts"
 
 def save_part(data)
-  return if SS::Lgwan.enabled? && data[:route].start_with?('member/')
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
 
@@ -11,13 +10,7 @@ def save_part(data)
   lower_html ||= File.read("parts/" + data[:filename].sub(/\.html$/, ".lower_html")) rescue nil
 
   item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_initialize_by(cond)
-  if html
-    if SS::Lgwan.enabled?
-      html.gsub!('<li class="sight"><a href="/kanko-info/">観光情報</a></li>', '')
-      html.gsub!('<li><a href="/mypage/">安否確認</a></li>', '')
-    end
-    item.html = html
-  end
+  item.html = html if html
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html

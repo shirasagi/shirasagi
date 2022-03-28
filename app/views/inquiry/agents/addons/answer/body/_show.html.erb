@@ -1,8 +1,14 @@
 <dl class="see mod-inquiry-answer-body">
   <% @item.data.each do |data| %>
     <dt><%= tryb { data.column.name } || "Unknown Name" %></dt>
-    <% if data.column && data.column.input_type =~ /upload_file/ %>
-      <dd><%= link_to data.value, { action: :download_afile, fid: data.values[0] } %></dd>
+    <% if data.column && data.file %>
+      <dd>
+        <% if data.file.sanitizer_state.present? && data.file.sanitizer_state != "complete" %>
+          <%= "#{data.value} #{data.file.label(:sanitizer_state)}" %>
+        <% else %>
+          <%= link_to data.value, { action: :download_afile, fid: data.values[0] } %>
+        <% end %>
+      </dd>
     <% else %>
       <dd><%= br data.value %></dd>
     <% end %>

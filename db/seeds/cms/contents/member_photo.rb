@@ -1,4 +1,3 @@
-return if SS::Lgwan.enabled?
 puts "# member_photo"
 
 photo_page1 = save_page route: "member/photo", filename: "kanko-info/photo/page1.html", name: "観光地1",
