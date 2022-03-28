@@ -62,7 +62,7 @@ describe "article_node_map_search", type: :feature, dbscope: :example, js: true 
       # public node
       node = Article::Node::MapSearch.first
       visit node.full_url
-      expect(first('fieldset.category legend')).to have_text(col1.name)
+      expect(first('fieldset.columns legend')).to have_text(col1.name)
       click_on I18n.t("facility.submit.search")
 
       # map
@@ -71,8 +71,8 @@ describe "article_node_map_search", type: :feature, dbscope: :example, js: true 
       expect(page).to have_css(".filters")
 
       # result
-      find('.tab.list a').click
-      expect(page).to have_css(".columns")
+      # find('.tab.list a').click
+      # expect(page).to have_css(".columns")
     end
   end
 end

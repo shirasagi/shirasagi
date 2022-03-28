@@ -11,7 +11,7 @@
     <ul>
       <% @filter_categories_array.each do |cate| %>
         <li class="<%= cate.basename %>">
-          <%= link_to cate.name, "#", class: "clicked", "data-id" => cate.id %>
+          <%= link_to cate.name, "#", class: 'clicked', "data-id" => cate.id %>
         </li>
       <% end %>
     </ul>

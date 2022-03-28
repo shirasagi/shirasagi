@@ -11,6 +11,13 @@
   <dt class="keyword"><%= t("facility.keyword") %></dt>
   <dd><%= @keyword %></dd>
 
+  <% if @categories %>
+    <dt class="category">種類</dt>
+    <dd class="category-settings" data-category-settings="<%= @categories.join(',') %>">
+      <%= @categories.join(', ') %>
+    </dd>
+  <% end %>
+
   <% @cur_node.map_search_options.each_with_index do |options, idx| %>
     <%
       values = (@columns[idx] || []) & options['values']
@@ -31,9 +38,10 @@
   </h2>
 </section>
 
+<!--
 <nav class="tabs map-search-tabs">
   <ul>
-    <% query = params.to_unsafe_h.select{ |k, v| %(keyword columns).index(k) }.to_query %>
+    <% query = params.to_unsafe_h.select{ |k, v| %(keyword columns categories).index(k) }.to_query %>
     <li class="tab map<%= @current == "map" ? " current" : "" %>">
       <%= link_to t("facility.tab.map"), "./map.html?#{query}" %>
     </li>
@@ -42,3 +50,4 @@
     </li>
   </ul>
 </nav>
+-->

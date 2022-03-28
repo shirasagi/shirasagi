@@ -12,6 +12,7 @@ class Article::Agents::Nodes::MapSearchController < ApplicationController
     @keyword = params[:keyword].try { |keyword| keyword.to_s }
     @columns = params[:columns].permit! rescue []
     @columns = @columns.to_h.map { |k, v| v }
+    @categories = (params[:categories] || []).reject(&:blank?)
   end
 
   def pages

@@ -217,7 +217,13 @@ module Map::MapHelper
     if point && point[:name].present?
       h << %(<p class="point-name">#{point[:name]}</p>)
     end
-    h << %(<p class="show">#{link_to t('ss.links.show'), item.url}</p>)
+    h << %(<p>#{item.form.name}</p>) if item.try(:form)
+    if item.respond_to?(:column_values)
+      col_address = item.column_values.to_a.find { |c| c.name == "所在地1" }
+      h << %(<p>#{col_address.value}</p>) if col_address.try(:value)
+    end
+
+    h << %(<p class="show"><a href="#{item.url}">#{I18n.t('ss.links.show')}</a></p>)
     h << %(</div>)
 
     h.join("\n")
@@ -225,10 +231,15 @@ module Map::MapHelper
 
   def render_map_sidebar(item)
     h = []
-
-    h << %(<div class="column" data-id="#{item.id}">)
+    h << %(<div class="column" data-id="#{item.id}" data-form-id="#{item.try(:form_id)}">)
     h << %(<p><a href="#{item.url}">#{item.name}</a></p>)
     h << %(<p>#{item.address}</p>) if item.try(:address)
+    h << %(<p>#{item.form.name}</p>) if item.try(:form)
+    if item.respond_to?(:column_values)
+      col_address = item.column_values.to_a.find { |c| c.name == "所在地1" }
+      h << %(<p>#{col_address.value}</p>) if col_address.try(:value)
+    end
+
     if item.map_points.present?
       h << %(<p><a href="#" class="click-marker">#{I18n.t("facility.sidebar.click_marker")}</a></p>)
     else

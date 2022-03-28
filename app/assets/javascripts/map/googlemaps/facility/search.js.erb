@@ -99,6 +99,10 @@ this.Facility_Search = (function () {
           return column.hide();
         }
       });
+
+      var resultSize = $('#map-sidebar .column:visible').length;
+      $('.map-search-result .number').text(resultSize);
+
       if (Googlemaps_Map.markerClusterer) {
         Googlemaps_Map.markerClusterer.repaint();
       }
