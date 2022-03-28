@@ -211,16 +211,19 @@ module Map::MapHelper
 
   def render_marker_info(item, point = nil)
     h = []
-    h << %(<div class="marker-info" data-id="#{item.id}">)
+    h << %(<div class="marker-info" data-id="#{item.id}" data-form-id="#{item.try(:form_id)}">)
     h << %(<p class="name">#{item.name}</p>)
     h << %(<p class="address">#{item.address}</p>) if item.try(:address)
+
     if point && point[:name].present?
-      h << %(<p class="point-name">#{point[:name]}</p>)
+      h << %(<p class="point-name">#{point[:name]}</p>) if point[:name].present?
     end
-    h << %(<p>#{item.form.name}</p>) if item.try(:form)
+    if item.try(:form)
+      h << %(<p class="form-name">#{item.form.name}</p>)
+    end
     if item.respond_to?(:column_values)
       col_address = item.column_values.to_a.find { |c| c.name == "所在地1" }
-      h << %(<p>#{col_address.value}</p>) if col_address.try(:value)
+      h << %(<p class="address">#{col_address.value}</p>) if col_address.try(:value)
     end
 
     h << %(<p class="show"><a href="#{item.url}">#{I18n.t('ss.links.show')}</a></p>)
@@ -232,12 +235,15 @@ module Map::MapHelper
   def render_map_sidebar(item)
     h = []
     h << %(<div class="column" data-id="#{item.id}" data-form-id="#{item.try(:form_id)}">)
-    h << %(<p><a href="#{item.url}">#{item.name}</a></p>)
-    h << %(<p>#{item.address}</p>) if item.try(:address)
-    h << %(<p>#{item.form.name}</p>) if item.try(:form)
+    h << %(<p class="name"><a href="#{item.url}">#{item.name}</a></p>)
+    h << %(<p class="address">#{item.address}</p>) if item.try(:address)
+
+    if item.try(:form)
+      h << %(<p class="form-name">#{item.form.name}</p>)
+    end
     if item.respond_to?(:column_values)
       col_address = item.column_values.to_a.find { |c| c.name == "所在地1" }
-      h << %(<p>#{col_address.value}</p>) if col_address.try(:value)
+      h << %(<p class="address">#{col_address.value}</p>) if col_address.try(:value)
     end
 
     if item.map_points.present?
