@@ -191,7 +191,7 @@ this.Googlemaps_Map = (function () {
       return data.marker;
     });
     Googlemaps_Map.markerClusterer = new MarkerClusterer(Googlemaps_Map.map, clusterMarkers, {
-      averageCenter: true,
+      // averageCenter: true,
       ignoreHiddenMarkers: true,
       imagePath: '/assets/img/marker-clusterer/m',
       // zoomOnClick: false,
@@ -221,6 +221,7 @@ this.Googlemaps_Map = (function () {
       });
 
       Googlemaps_Map.openMarkerClusterInfo(infoWindow);
+      event.stopPropagation();
     };
   };
 

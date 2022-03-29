@@ -103,8 +103,13 @@ this.Facility_Search = (function () {
       var resultSize = $('#map-sidebar .column:visible').length;
       $('.map-search-result .number').text(resultSize);
 
+      if (Googlemaps_Map.openedInfo) {
+        Googlemaps_Map.openedInfo.close();
+        Googlemaps_Map.openedInfo = null;
+      }
       if (Googlemaps_Map.markerClusterer) {
         Googlemaps_Map.markerClusterer.repaint();
+        Googlemaps_Map.closeMarkerClusterInfo();
       }
       return false;
     });
