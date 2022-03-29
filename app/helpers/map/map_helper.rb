@@ -209,11 +209,20 @@ module Map::MapHelper
     jquery { s.join("\n").html_safe }
   end
 
+  def map_marker_address(item)
+    if item.respond_to?(:column_values)
+      item.column_values.each do |col|
+        next unless %w(所在地_住所1 所在地1 所在地).include?(col.name)
+        return col.value if col.value.present?
+      end
+    end
+    return item.try(:address) ? item.address.presence : nil
+  end
+
   def render_marker_info(item, point = nil)
     h = []
     h << %(<div class="marker-info" data-id="#{item.id}" data-form-id="#{item.try(:form_id)}">)
     h << %(<p class="name">#{item.name}</p>)
-    h << %(<p class="address">#{item.address}</p>) if item.try(:address)
 
     if point && point[:name].present?
       h << %(<p class="point-name">#{point[:name]}</p>) if point[:name].present?
@@ -221,9 +230,8 @@ module Map::MapHelper
     if item.try(:form)
       h << %(<p class="form-name">#{item.form.name}</p>)
     end
-    if item.respond_to?(:column_values)
-      col_address = item.column_values.to_a.find { |c| c.name == "所在地1" }
-      h << %(<p class="address">#{col_address.value}</p>) if col_address.try(:value)
+    if address = map_marker_address(item)
+      h << %(<p class="address">#{address}</p>)
     end
 
     h << %(<p class="show"><a href="#{item.url}">#{I18n.t('ss.links.show')}</a></p>)
@@ -236,14 +244,12 @@ module Map::MapHelper
     h = []
     h << %(<div class="column" data-id="#{item.id}" data-form-id="#{item.try(:form_id)}">)
     h << %(<p class="name"><a href="#{item.url}">#{item.name}</a></p>)
-    h << %(<p class="address">#{item.address}</p>) if item.try(:address)
 
     if item.try(:form)
       h << %(<p class="form-name">#{item.form.name}</p>)
     end
-    if item.respond_to?(:column_values)
-      col_address = item.column_values.to_a.find { |c| c.name == "所在地1" }
-      h << %(<p class="address">#{col_address.value}</p>) if col_address.try(:value)
+    if address = map_marker_address(item)
+      h << %(<p class="address">#{address}</p>)
     end
 
     if item.map_points.present?
