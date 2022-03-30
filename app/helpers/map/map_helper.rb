@@ -220,16 +220,20 @@ module Map::MapHelper
   end
 
   def render_marker_info(item, point = nil)
+    categories = item.categories.order(depth: 1).entries
+    cate1 = categories.first
+    cate2 = categories.last
+
     h = []
-    h << %(<div class="marker-info" data-id="#{item.id}" data-form-id="#{item.try(:form_id)}">)
+    h << %(<div class="marker-info" data-id="#{item.id}" data-cate-id="#{cate1.try(:id)}">)
     h << %(<p class="name">#{item.name}</p>)
 
     if point && point[:name].present?
       h << %(<p class="point-name">#{point[:name]}</p>) if point[:name].present?
     end
-    if item.try(:form)
-      h << %(<p class="form-name">#{item.form.name}</p>)
-    end
+
+    h << %(<p class="form-name">#{cate2.name}</p>) if cate2
+
     if address = map_marker_address(item)
       h << %(<p class="address">#{address}</p>)
     end
@@ -241,13 +245,15 @@ module Map::MapHelper
   end
 
   def render_map_sidebar(item)
-    h = []
-    h << %(<div class="column" data-id="#{item.id}" data-form-id="#{item.try(:form_id)}">)
-    h << %(<p class="name"><a href="#{item.url}">#{item.name}</a></p>)
+    categories = item.categories.order(depth: 1).entries
+    cate1 = categories.first
+    cate2 = categories.last
 
-    if item.try(:form)
-      h << %(<p class="form-name">#{item.form.name}</p>)
-    end
+    h = []
+    h << %(<div class="column" data-id="#{item.id}" data-cate-id="#{cate1.try(:id)}">)
+    h << %(<p class="name"><a href="#{item.url}">#{item.name}</a></p>)
+    h << %(<p class="form-name">#{cate2.name}</p>) if cate2
+
     if address = map_marker_address(item)
       h << %(<p class="address">#{address}</p>)
     end
