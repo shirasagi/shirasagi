@@ -5,6 +5,13 @@
 
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
+  <span class="site"><%= tryb { item.site.name } %></span>
+  <% if item.node.present? %>
+    <span class="node"><%= item.node.filename %></span>
+  <% end %>
+  <% if item.segment.present? %>
+    <span class="segment"><%= "[#{item.segment}]" %></span>
+  <% end %>
   <span class="state"><%= item.state %></span>
   <span class="started">
     <%= item.started.try do |time| %>

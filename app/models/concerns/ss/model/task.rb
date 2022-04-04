@@ -32,6 +32,7 @@ module SS::Model::Task
     field :at, type: Integer
     field :total_count, type: Integer, default: 0
     field :current_count, type: Integer, default: 0
+    field :segment, type: String
 
     validates :name, presence: true
     validates :state, presence: true

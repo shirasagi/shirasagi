@@ -13,6 +13,21 @@ production: &production
   # Disable page redirect link feature
   disable_redirect_link: true
 
+  ## Generate segments
+  ## set segment as array when splitting node and page generation
+  ## (node or page) - site host - segment
+  #generate_segments:
+  #  node:
+  #    www:
+  #      - "web01"
+  #      - "web02"
+  #      - "web03"
+  #  page:
+  #    www:
+  #      - "web01"
+  #      - "web02"
+  #      - "web03"
+
   # StyleSheets on gws pages.
   stylesheets: []
 

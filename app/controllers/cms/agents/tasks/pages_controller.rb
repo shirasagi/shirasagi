@@ -15,12 +15,24 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
     end
   end
 
+  def filter_by_segment(ids)
+    return ids if @segment.blank?
+
+    keys = @site.generate_page_segments
+    return ids if keys.blank?
+    return ids if keys.index(@segment).nil?
+
+    @task.log "# filter by #{@segment}"
+    ids.select { |id| (id % keys.size) == keys.index(@segment) }
+  end
+
   def each_page(&block)
     criteria = Cms::Page.site(@site).and_public
     criteria = criteria.node(@node) if @node
     all_ids = criteria.pluck(:id)
     @task.total_count = all_ids.size
 
+    all_ids = filter_by_segment(all_ids)
     all_ids.each_slice(PER_BATCH) do |ids|
       criteria.in(id: ids).to_a.each(&block)
       @task.count(ids.length)
