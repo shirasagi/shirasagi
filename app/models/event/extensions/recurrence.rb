@@ -155,6 +155,12 @@ class Event::Extensions::Recurrence
         parts << I18n.t("ss.wave_dash")
         parts << I18n.l(end_datetime, format: :zoo_h_mm)
       end
+      if frequency == "weekly" && by_days.present?
+        week_days = I18n.t("date.abbr_day_names")
+        parts << " ("
+        parts << (by_days.map { |wday| week_days[wday] }.join(","))
+        parts << ")"
+      end
 
       parts.join
     end
@@ -193,8 +199,9 @@ class Event::Extensions::Recurrence
   end
 
   def event_within_time?(start_at, end_at)
-    range = start_datetime..end_datetime
-    return false unless range.cover?(start_at) && range.cover?(end_at)
+    range1 = Range.new(start_datetime.strftime("%1H%M").to_i, end_datetime.strftime("%1H%M").to_i, true)
+    range2 = Range.new(start_at.strftime("%1H%M").to_i, end_at.strftime("%1H%M").to_i, true)
+    return false if !range1.cover?(range2) && !range2.cover?(range1)
     return false if excluded_date?(start_at.to_date)
     return true if frequency != "weekly"
     by_days.include?(start_at.wday)

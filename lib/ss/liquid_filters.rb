@@ -138,6 +138,6 @@ module SS::LiquidFilters
     recurrences = Array(input)
     date = Time.zone.today
 
-    recurrences.select { |recurrence| recurrence.collect_event_dates.include?(date) }
+    recurrences.select { |recurrence| recurrence.collect_event_dates.any? { |event_date| date <= event_date } }
   end
 end

@@ -1,6 +1,6 @@
 <%
   addon ||= local_assigns.fetch(:addon, {})
-  addon[:display_body] = "hide"
+  addon[:display_body] = @item.event_dates.blank? ? "hide" : "show"
 
   week_days = I18n.t("date.abbr_day_names")
 %>
@@ -56,7 +56,7 @@
     <div class="event-recurrence-row">
       <div class="event-recurrence-wdays">
         <% week_days.each_with_index do |wday, index| %>
-          <label><%= check_box_tag "#{f.object_name}[event_recurrences][][in_by_days][]", index %><%= wday %></label>
+          <label><%= check_box_tag "#{f.object_name}[event_recurrences][][in_by_days][]", index, recurr.by_days && recurr.by_days.include?(index) %><%= wday %></label>
         <% end %>
       </div>
     </div>
