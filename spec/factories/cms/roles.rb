@@ -13,7 +13,7 @@ FactoryBot.define do
 
   factory :cms_role_admin, class: Cms::Role do
     name { "cms_role_admin" }
-    permissions { Cms::Role.permission_names }
+    permissions { Cms::Role.permission_names - %w(edit_cms_ignore_alert delete_cms_ignore_alert) }
     site_id { 1 }
   end
 end
