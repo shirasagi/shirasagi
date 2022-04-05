@@ -4,14 +4,13 @@ class Guide::QuestionDiagram
   def initialize(node)
     @node = node
     @all_procedures = {}
-    @roots = Guide::Question.node(node).
-      select { |point| point.referenced_questions.blank? }.
-      map { |point| build_diagram(point) }
+    @referenced_questions = Guide::Question.node(node).
+      entries.
+      select { |point| point.referenced_questions.blank? }
+    @roots = @referenced_questions.map { |point| build_diagram(point) }
 
     @procedures = {}
     @questions = []
-    @referenced_questions = Guide::Question.node(node).
-      select { |point| point.referenced_questions.blank? }
 
     @queue = []
     @longest_length = @roots.sum { |point| calc_longest_length(point) }
@@ -32,8 +31,14 @@ class Guide::QuestionDiagram
       @questions << point
 
       transitions = answer.is_a?(Array) ? answer : [answer]
-      transitions.each do |transition|
-        next_points = point.transitions[transition].to_a
+      point.transitions.each do |key, _|
+        if transitions.include?(key)
+          next_points = point.positive_transitions[key].to_a
+        else
+          next_points = point.negative_transitions[key].to_a
+        end
+
+        next if next_points.blank?
 
         next_points = next_points.map do |point|
           if point.question?
@@ -72,19 +77,29 @@ class Guide::QuestionDiagram
   end
 
   def progress
-    (evaluated_length.to_f / @longest_length.to_f).floor(2)
+    (evaluated_length.to_f / @longest_length).floor(2)
   end
 
   private
 
   def build_diagram(point)
     point.transitions = {}
+    point.positive_transitions = {}
+    point.negative_transitions = {}
 
     if point.question?
       point.edges.each do |edge|
         point.transitions[edge.transition] = []
+        point.positive_transitions[edge.transition] = []
+        point.negative_transitions[edge.transition] = []
         edge.points.each do |next_point|
           point.transitions[edge.transition] << build_diagram(next_point)
+        end
+        edge.positive_points.each do |next_point|
+          point.positive_transitions[edge.transition] << build_diagram(next_point)
+        end
+        edge.negative_points.each do |next_point|
+          point.negative_transitions[edge.transition] << build_diagram(next_point)
         end
       end
     else

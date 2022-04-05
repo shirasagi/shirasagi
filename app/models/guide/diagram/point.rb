@@ -5,7 +5,7 @@ class Guide::Diagram::Point
   include SS::Reference::Site
   include Cms::Reference::Node
 
-  attr_accessor :transitions, :weight
+  attr_accessor :transitions, :positive_transitions, :negative_transitions, :weight
 
   field :name, type: String
   field :id_name, type: String
@@ -22,8 +22,17 @@ class Guide::Diagram::Point
 
   store_in collection: "guide_diagram_point"
 
-  def export_label
-    procedure? ? "[#{I18n.t("guide.procedure")}] #{id_name}" : "[#{I18n.t("guide.question")}] #{id_name}"
+  def export_label(edge = nil)
+    label = procedure? ? I18n.t("guide.procedure") : I18n.t("guide.question")
+    if edge
+      if edge.negative_point_ids.include?(id)
+        applicable = I18n.t('guide.labels.not_applicable')
+      else
+        applicable = I18n.t('guide.labels.applicable')
+      end
+      label = "#{label}:#{applicable}"
+    end
+    "[#{label}] #{id_name}"
   end
 
   def procedure?

@@ -12,8 +12,11 @@ class Guide::Diagram::Edge
   validates :question_type, presence: true
 
   embeds_ids :points, class_name: "Guide::Diagram::Point"
+  embeds_ids :negative_points, class_name: "Guide::Diagram::Point"
 
-  # validate :validate_points, if: ->{ parent }
+  def positive_points
+    points.nin(id: negative_point_ids)
+  end
 
   def export_label
     "[#{I18n.t("guide.transition")}] #{value}"
