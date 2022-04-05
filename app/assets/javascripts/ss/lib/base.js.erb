@@ -495,9 +495,9 @@ this.SS = (function () {
   //
   // そこで、Enter キーが押されたら、イベント "blur" を発生させ、入力が確定 → onChangeDateTime イベント発生という順で処理が進むようにする。
   // また、念の為 Enter キーでフォーカスを移動させないようにするため enterLikeTab を false にする。
-  SS.renderDateTimePicker = function () {
+  SS.renderDateTimePicker = function (rooElement) {
     $.datetimepicker.setLocale('ja');
-    $.each($(".js-date"), function () {
+    $.each($(rooElement || document).find(".js-date"), function () {
       var $this = $(this);
       var opts = {
         timepicker: false,
@@ -523,7 +523,7 @@ this.SS = (function () {
           return true;
         });
     });
-    $.each($(".js-datetime"), function () {
+    $.each($(rooElement || document).find(".js-datetime"), function () {
       var $this = $(this);
       var opts = {
         roundTime: 'ceil',

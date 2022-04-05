@@ -197,10 +197,14 @@ describe SS::SortEmulator, dbscope: :example do
 
   context "with event_dates" do
     let!(:node) { create :cms_node_page, cur_site: site, sort: sort }
-    let!(:page1) { create :cms_page, cur_site: site, cur_node: node, event_dates: (now - rand(1..10).days).strftime("%Y/%m/%d") }
-    let!(:page2) { create :cms_page, cur_site: site, cur_node: node, event_dates: (now - rand(1..10).days).strftime("%Y/%m/%d") }
-    let!(:page3) { create :cms_page, cur_site: site, cur_node: node, event_dates: page2.event_dates }
-    let!(:page4) { create :cms_page, cur_site: site, cur_node: node, event_dates: nil }
+    let(:event_date1) { now - rand(1..10).days }
+    let(:event_recurr1) { { kind: "date", start_at: event_date1, frequency: "daily", until_on: event_date1 } }
+    let!(:page1) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: [ event_recurr1 ] }
+    let(:event_date2) { now - rand(1..10).days }
+    let(:event_recurr2) { { kind: "date", start_at: event_date2, frequency: "daily", until_on: event_date2 } }
+    let!(:page2) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: [ event_recurr2 ] }
+    let!(:page3) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: page2.event_recurrences }
+    let!(:page4) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: nil }
     let(:criteria) { Cms::Page.all }
     let(:sort) { "event_dates" }
 
@@ -209,10 +213,14 @@ describe SS::SortEmulator, dbscope: :example do
 
   context "with unfinished_event_dates" do
     let!(:node) { create :cms_node_page, cur_site: site, sort: sort }
-    let!(:page1) { create :cms_page, cur_site: site, cur_node: node, event_dates: (now - rand(1..10).days).strftime("%Y/%m/%d") }
-    let!(:page2) { create :cms_page, cur_site: site, cur_node: node, event_dates: (now - rand(1..10).days).strftime("%Y/%m/%d") }
-    let!(:page3) { create :cms_page, cur_site: site, cur_node: node, event_dates: page2.event_dates }
-    let!(:page4) { create :cms_page, cur_site: site, cur_node: node, event_dates: nil }
+    let(:event_date1) { now - rand(1..10).days }
+    let(:event_recurr1) { { kind: "date", start_at: event_date1, frequency: "daily", until_on: event_date1 } }
+    let!(:page1) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: [ event_recurr1 ] }
+    let(:event_date2) { now - rand(1..10).days }
+    let(:event_recurr2) { { kind: "date", start_at: event_date2, frequency: "daily", until_on: event_date2 } }
+    let!(:page2) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: [ event_recurr2 ] }
+    let!(:page3) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: page2.event_recurrences }
+    let!(:page4) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: nil }
     let(:criteria) { Cms::Page.all }
     let(:sort) { "unfinished_event_dates" }
 
@@ -221,10 +229,14 @@ describe SS::SortEmulator, dbscope: :example do
 
   context "with finished_event_dates" do
     let!(:node) { create :cms_node_page, cur_site: site, sort: sort }
-    let!(:page1) { create :cms_page, cur_site: site, cur_node: node, event_dates: (now - rand(1..10).days).strftime("%Y/%m/%d") }
-    let!(:page2) { create :cms_page, cur_site: site, cur_node: node, event_dates: (now - rand(1..10).days).strftime("%Y/%m/%d") }
-    let!(:page3) { create :cms_page, cur_site: site, cur_node: node, event_dates: page2.event_dates }
-    let!(:page4) { create :cms_page, cur_site: site, cur_node: node, event_dates: nil }
+    let(:event_date1) { now - rand(1..10).days }
+    let(:event_recurr1) { { kind: "date", start_at: event_date1, frequency: "daily", until_on: event_date1 } }
+    let!(:page1) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: [ event_recurr1 ] }
+    let(:event_date2) { now - rand(1..10).days }
+    let(:event_recurr2) { { kind: "date", start_at: event_date2, frequency: "daily", until_on: event_date2 } }
+    let!(:page2) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: [ event_recurr2 ] }
+    let!(:page3) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: page2.event_recurrences }
+    let!(:page4) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: nil }
     let(:criteria) { Cms::Page.all }
     let(:sort) { "finished_event_dates" }
 
@@ -233,10 +245,14 @@ describe SS::SortEmulator, dbscope: :example do
 
   context "with event_dates_today" do
     let!(:node) { create :cms_node_page, cur_site: site, sort: sort }
-    let!(:page1) { create :cms_page, cur_site: site, cur_node: node, event_dates: (now - rand(1..10).days).strftime("%Y/%m/%d") }
-    let!(:page2) { create :cms_page, cur_site: site, cur_node: node, event_dates: (now - rand(1..10).days).strftime("%Y/%m/%d") }
-    let!(:page3) { create :cms_page, cur_site: site, cur_node: node, event_dates: page2.event_dates }
-    let!(:page4) { create :cms_page, cur_site: site, cur_node: node, event_dates: nil }
+    let(:event_date1) { now - rand(1..10).days }
+    let(:event_recurr1) { { kind: "date", start_at: event_date1, frequency: "daily", until_on: event_date1 } }
+    let!(:page1) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: [ event_recurr1 ] }
+    let(:event_date2) { now - rand(1..10).days }
+    let(:event_recurr2) { { kind: "date", start_at: event_date2, frequency: "daily", until_on: event_date2 } }
+    let!(:page2) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: [ event_recurr2 ] }
+    let!(:page3) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: page2.event_recurrences }
+    let!(:page4) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: nil }
     let(:criteria) { Cms::Page.all }
     let(:sort) { "event_dates_today" }
 
@@ -245,10 +261,14 @@ describe SS::SortEmulator, dbscope: :example do
 
   context "with event_dates_tomorrow" do
     let!(:node) { create :cms_node_page, cur_site: site, sort: sort }
-    let!(:page1) { create :cms_page, cur_site: site, cur_node: node, event_dates: (now - rand(1..10).days).strftime("%Y/%m/%d") }
-    let!(:page2) { create :cms_page, cur_site: site, cur_node: node, event_dates: (now - rand(1..10).days).strftime("%Y/%m/%d") }
-    let!(:page3) { create :cms_page, cur_site: site, cur_node: node, event_dates: page2.event_dates }
-    let!(:page4) { create :cms_page, cur_site: site, cur_node: node, event_dates: nil }
+    let(:event_date1) { now - rand(1..10).days }
+    let(:event_recurr1) { { kind: "date", start_at: event_date1, frequency: "daily", until_on: event_date1 } }
+    let!(:page1) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: [ event_recurr1 ] }
+    let(:event_date2) { now - rand(1..10).days }
+    let(:event_recurr2) { { kind: "date", start_at: event_date2, frequency: "daily", until_on: event_date2 } }
+    let!(:page2) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: [ event_recurr2 ] }
+    let!(:page3) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: page2.event_recurrences }
+    let!(:page4) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: nil }
     let(:criteria) { Cms::Page.all }
     let(:sort) { "event_dates_tomorrow" }
 
@@ -257,10 +277,14 @@ describe SS::SortEmulator, dbscope: :example do
 
   context "with event_dates_week" do
     let!(:node) { create :cms_node_page, cur_site: site, sort: sort }
-    let!(:page1) { create :cms_page, cur_site: site, cur_node: node, event_dates: (now - rand(1..10).days).strftime("%Y/%m/%d") }
-    let!(:page2) { create :cms_page, cur_site: site, cur_node: node, event_dates: (now - rand(1..10).days).strftime("%Y/%m/%d") }
-    let!(:page3) { create :cms_page, cur_site: site, cur_node: node, event_dates: page2.event_dates }
-    let!(:page4) { create :cms_page, cur_site: site, cur_node: node, event_dates: nil }
+    let(:event_date1) { now - rand(1..10).days }
+    let(:event_recurr1) { { kind: "date", start_at: event_date1, frequency: "daily", until_on: event_date1 } }
+    let!(:page1) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: [ event_recurr1 ] }
+    let(:event_date2) { now - rand(1..10).days }
+    let(:event_recurr2) { { kind: "date", start_at: event_date2, frequency: "daily", until_on: event_date2 } }
+    let!(:page2) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: [ event_recurr2 ] }
+    let!(:page3) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: page2.event_recurrences }
+    let!(:page4) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: nil }
     let(:criteria) { Cms::Page.all }
     let(:sort) { "event_dates_week" }
 
@@ -269,10 +293,14 @@ describe SS::SortEmulator, dbscope: :example do
 
   context "with event_deadline" do
     let!(:node) { create :cms_node_page, cur_site: site, sort: sort }
-    let!(:page1) { create :cms_page, cur_site: site, cur_node: node, event_dates: (now - rand(1..10).days).strftime("%Y/%m/%d") }
-    let!(:page2) { create :cms_page, cur_site: site, cur_node: node, event_dates: (now - rand(1..10).days).strftime("%Y/%m/%d") }
-    let!(:page3) { create :cms_page, cur_site: site, cur_node: node, event_dates: page2.event_dates }
-    let!(:page4) { create :cms_page, cur_site: site, cur_node: node, event_dates: nil }
+    let(:event_date1) { now - rand(1..10).days }
+    let(:event_recurr1) { { kind: "date", start_at: event_date1, frequency: "daily", until_on: event_date1 } }
+    let!(:page1) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: [ event_recurr1 ] }
+    let(:event_date2) { now - rand(1..10).days }
+    let(:event_recurr2) { { kind: "date", start_at: event_date2, frequency: "daily", until_on: event_date2 } }
+    let!(:page2) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: [ event_recurr2 ] }
+    let!(:page3) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: page2.event_recurrences }
+    let!(:page4) { create :cms_page, cur_site: site, cur_node: node, event_recurrences: nil }
     let(:criteria) { Cms::Page.all }
     let(:sort) { "event_deadline" }
 

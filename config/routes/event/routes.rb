@@ -82,8 +82,7 @@ Rails.application.routes.draw do
 
   namespace "event", path: ".s:site/event" do
     namespace "apis" do
-      get "repeat_dates" => "repeat_dates#index"
-      put "repeat_dates" => "repeat_dates#create"
+      post "edit_exclude_dates" => "edit_exclude_dates#index"
     end
   end
 end

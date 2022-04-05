@@ -1,0 +1,40 @@
+<%
+  next_month = month + 1.month
+  date = month - month.wday.days
+%>
+
+<table class="event-recurrence-exclude-dates-calendar">
+  <caption><%= I18n.l(month, format: :month) %></caption>
+  <thead>
+  <tr>
+    <% 7.times do |i| %>
+      <th><%= t("date.abbr_day_names")[i] %></th>
+    <% end %>
+  </tr>
+  </thead>
+  <tbody>
+  <% loop do %>
+    <tr>
+      <% 7.times do |i| %>
+        <%=
+          if month <= date && date < next_month
+            tag.td class: "this-month" do
+              if @event_dates.include?(date)
+                button_tag date.day, class: "toggle-btn", aria: { pressed: @item.included_date?(date) }, data: { date: I18n.l(date, format: :picker) }
+              else
+                tag.span(date.day, class: "day")
+              end
+            end
+          elsif date < month
+            tag.td(tag.span(date.day, class: "day"), class: "prev-month")
+          else
+            tag.td(tag.span(date.day, class: "day"), class: "next-month")
+          end
+        %>
+        <% date += 1.day %>
+      <% end %>
+    </tr>
+    <% break if next_month <= date %>
+  <% end %>
+  </tbody>
+</table>

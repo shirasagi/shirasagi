@@ -133,4 +133,11 @@ module SS::LiquidFilters
   def sanitize(input)
     ApplicationController.helpers.sanitize(input.to_s)
   end
+
+  def event_active_recurrences(input)
+    recurrences = Array(input)
+    date = Time.zone.today
+
+    recurrences.select { |recurrence| recurrence.collect_event_dates.include?(date) }
+  end
 end

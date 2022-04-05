@@ -4,7 +4,10 @@ FactoryBot.define do
     route { "event/page" }
 
     event_name { unique_id }
-    event_dates { [Time.zone.now.beginning_of_day + rand(1..10).days] }
+    event_recurrences do
+      event_date = Time.zone.today + rand(1..10).days
+      [ { kind: "date", start_at: event_date, frequency: "daily", until_on: event_date } ]
+    end
 
     schedule { "schedule-#{unique_id}" }
     venue { "venue-#{unique_id}" }

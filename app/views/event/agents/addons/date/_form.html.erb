@@ -2,29 +2,116 @@
   addon ||= local_assigns.fetch(:addon, {})
   addon[:display_body] = "hide"
 
-  max_term_form = SS.config.event.max_term_form.to_i
+  week_days = I18n.t("date.abbr_day_names")
 %>
-<%= jquery do%>
-  Event_Form.maxTermForm = <%= (max_term_form > 0) ? max_term_form : 1 %>;
-  Event_Form.render();
+
+<% render_recurrence_common_row = proc do |recurr, frequency| %>
+  <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_update_from_view]", "1" %>
+  <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_frequency]", frequency %>
+  <%# hidden_field_tag "#{f.object_name}[event_recurrences][][in_kind]", recurr.kind || "datetime" %>
+  <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_kind]", "datetime" %>
+
+  <div class="event-recurrence-row">
+    <%= button_tag t("ss.buttons.delete"), type: "button", class: "btn event-recurrence-delete-btn" %>
+    <div class="event-recurrence-date">
+      <%= text_field_tag "#{f.object_name}[event_recurrences][][in_start_on]", recurr.start_date.try { |time| I18n.l(time.to_date, format: :picker) }, class: "date js-date", id: nil %>
+      <%= t("ss.wave_dash") %>
+      <%= text_field_tag "#{f.object_name}[event_recurrences][][in_until_on]", recurr.until_on.try { |time| I18n.l(time.to_date, format: :picker) }, class: "date js-date", id: nil %>
+    </div>
+
+    <% if false %>
+      <% shows_time = recurr.kind == "datetime" %>
+      <label class="event-recurrence-time-ctrl">
+        <%= check_box_tag "in_specify_time", "1", shows_time, id: nil %>
+        <%= t("event.specify_time") %>
+      </label>
+    <% end %>
+    <% shows_time = true %>
+
+    <div class="event-recurrence-time <% unless shows_time %>hide<% end %>">
+      <%= time_field_tag "#{f.object_name}[event_recurrences][][in_start_time]", shows_time ? recurr.start_datetime.try { |time| I18n.l(time, format: :zoo_hh_mm) } : nil %>
+      <%= t("ss.wave_dash") %>
+      <%= time_field_tag "#{f.object_name}[event_recurrences][][in_end_time]", shows_time ? recurr.end_datetime.try { |time| I18n.l(time, format: :zoo_hh_mm) } : nil %>
+    </div>
+
+    <div class="event-recurrence-excludes">
+      <% disp = recurr.exclude_dates.try { |dates| dates.map { |date| I18n.l(date.to_date, format: :picker) }.join(",") } %>
+      <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_exclude_dates]", disp %>
+      <%= button_tag "除外日", type: "button", class: "btn event-recurrence-exclude-dates-btn", data: { url: event_apis_edit_exclude_dates_path } %>
+      <div class="event-recurrence-excludes-summary" title="<%= disp %>"><%= disp %></div>
+    </div>
+  </div>
+<% end %>
+
+<% render_daily_recurrence = proc do |recurr| %>
+  <div class="event-recurrence event-recurrence-daily">
+    <% render_recurrence_common_row.call(recurr, "daily") %>
+  </div>
+<% end %>
+
+<% render_weekly_recurrence = proc do |recurr| %>
+  <div class="event-recurrence event-recurrence-weekly">
+    <% render_recurrence_common_row.call(recurr, "weekly") %>
+
+    <div class="event-recurrence-row">
+      <div class="event-recurrence-wdays">
+        <% week_days.each_with_index do |wday, index| %>
+          <label><%= check_box_tag "#{f.object_name}[event_recurrences][][in_by_days][]", index %><%= wday %></label>
+        <% end %>
+      </div>
+    </div>
+  </div>
 <% end %>
 
 <dl class="see mod-event">
   <dt><%= @model.t :event_name %><%= @model.tt :event_name %></dt>
   <dd><%= f.text_field :event_name %></dd>
 
-  <dt><%= @model.t :event_dates %><%= @model.tt :event_dates %></dt>
-  <dd class="dates">
-    <%= text_field_tag "event[][start_date]", nil, { id: nil, class: "date js-date start" } %>
-    - <%= text_field_tag "event[][close_date]", nil, { id: nil, class: "date js-date close" } %>
-    <%= button_tag t("event.del_date"), { type: :button, class: "clear btn" } %>
+  <dt><%= @model.t :event_recurrences %><%= @model.tt :event_recurrences %></dt>
+  <dd></dd>
+  <dt class="depth-2"><%= t("event.daily_event") %></dt>
+  <dd class="depth-2">
+    <% @item.event_recurrences.each do |recurr| %>
+      <% next if recurr.frequency != "daily" %>
+      <% render_daily_recurrence.call recurr %>
+    <% end %>
+
+    <%# for new record %>
+    <% render_daily_recurrence.call OpenStruct.new %>
+
+    <div class="event-recurrence">
+      <div class="event-recurrence-row">
+        <%= button_tag t("event.add_date"), type: "button", class: "btn event-recurrence-add-btn", data: { template: "event-recurrence-daily-template" } %>
+      </div>
+    </div>
+    <script type="text/html" id="event-recurrence-daily-template">
+      <% render_daily_recurrence.call OpenStruct.new %>
+    </script>
   </dd>
-  <dd class="setting-dates">
-    <%= button_tag t("event.add_date"), { type: :button, class: "add-date btn" } %>
-    <%= link_to t("event.add_repeat_dates"), event_apis_repeat_dates_path, class: "ajax-box btn" %>
+  <dt class="depth-2"><%= t("event.weekly_event") %></dt>
+  <dd>
+    <% @item.event_recurrences.each do |recurr| %>
+      <% next if recurr.frequency != "weekly" %>
+      <% render_weekly_recurrence.call recurr %>
+    <% end %>
+
+    <%# for new record %>
+    <% render_weekly_recurrence.call OpenStruct.new %>
+
+    <div class="event-recurrence">
+      <div class="event-recurrence-row">
+        <%= button_tag t("event.add_date"), type: "button", class: "btn event-recurrence-add-btn", data: { template: "event-recurrence-weekly-template" } %>
+      </div>
+    </div>
+    <script type="text/html" id="event-recurrence-weekly-template">
+      <% render_weekly_recurrence.call OpenStruct.new %>
+    </script>
   </dd>
-  <dd style="display: none;"><%= f.text_area :event_dates, value: @item.event_dates.try { |dates| dates.map { |d| d.strftime("%Y/%m/%d") }.join("\n") }, class: "event-dates btn" %></dd>
 
   <dt><%= @model.t :event_deadline %><%= @model.tt :event_deadline %></dt>
   <dd><%= f.text_field :event_deadline, class: "datetime js-datetime", value: tryb { @item.event_deadline.strftime("%Y/%m/%d %H:%M") } %></dd>
 </dl>
+
+<%= jquery do%>
+  new Event_Form(<%== "##{addon[:id]}".to_json %>);
+<% end %>
