@@ -5,14 +5,31 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
   let(:node)   { create :guide_node_guide, filename: "guide" }
   let(:item) { create(:guide_question, cur_site: site, cur_node: node) }
 
-  let!(:procedure1) { create :guide_procedure, cur_site: site, cur_node: node, name: "procedure1", id_name: "0.procedure1", order: 10 }
-  let!(:procedure2) { create :guide_procedure, cur_site: site, cur_node: node, name: "procedure2", id_name: "1.procedure1", order: 20 }
+  let!(:procedure1) do
+    create :guide_procedure, cur_site: site, cur_node: node, name: "procedure1", id_name: "0.procedure1", order: 10
+  end
+  let!(:procedure2) do
+    create :guide_procedure, cur_site: site, cur_node: node, name: "procedure2", id_name: "1.procedure1", order: 20
+  end
 
-  let!(:question1) { create :guide_question, cur_site: site, cur_node: node, name: "question1", id_name: "0.question1", order: 10, in_edges: [] }
-  let!(:question2) { create :guide_question, cur_site: site, cur_node: node, name: "question2", id_name: "1.question2", order: 20, in_edges: [] }
+  let!(:question1) do
+    create :guide_question, cur_site: site, cur_node: node, name: "question1", id_name: "0.question1", order: 10,
+           in_edges: in_edges(question2)
+  end
+  let!(:question2) do
+    create :guide_question, cur_site: site, cur_node: node, name: "question2", id_name: "1.question2", order: 20,
+           in_edges: in_edges(procedure2)
+  end
 
   let(:index_path) { guide_questions_path site.id, node }
   let(:new_path) { new_guide_question_path site.id, node }
+
+  def in_edges(point)
+    [
+      { value: I18n.t("guide.links.applicable"), question_type: "yes_no", point_ids: [point.id] },
+      { value: I18n.t("guide.links.not_applicable"), question_type: "yes_no", point_ids: [] }
+    ]
+  end
 
   context "basic crud" do
     before { login_cms_user }
@@ -79,7 +96,8 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
-      item = ::Guide::Question.first
+      item = ::Guide::Question.find_by(id_name: '0.sample')
+      expect(question1.referenced_question_ids.size).to eq 0
       expect(item.edges.size).to eq 2
       expect(item.edges[0].value).to eq I18n.t("guide.links.applicable")
       expect(item.edges[0].question_type).to eq "yes_no"
@@ -87,6 +105,12 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
       expect(item.edges[1].value).to eq I18n.t("guide.links.not_applicable")
       expect(item.edges[1].question_type).to eq "yes_no"
       expect(item.edges[1].point_ids).to match_array [procedure1.id, procedure2.id, question1.id, question2.id]
+
+      question1.reload
+      expect(question1.referenced_question_ids.size).to eq 1
+
+      question2.reload
+      expect(question2.referenced_question_ids.size).to eq 2
     end
   end
 end

@@ -59,11 +59,14 @@ module Guide::Addon
     end
 
     def set_referenced_questions
+      question_ids = []
       self.edges.each do |edge|
         edge.questions.each do |question|
+          question_ids << question.id
           question.add_to_set(referenced_question_ids: id)
         end
       end
+      self.class.nin(id: question_ids).pull(referenced_question_ids: id)
     end
 
     def set_check_type

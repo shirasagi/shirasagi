@@ -10,8 +10,12 @@ class Guide::QuestionDiagram
 
     @procedures = {}
     @questions = []
+    @referenced_questions = Guide::Question.node(node).
+      select { |point| point.referenced_questions.blank? }
 
+    @queue = []
     @longest_length = @roots.sum { |point| calc_longest_length(point) }
+    @queue = []
     @shortest_length = @roots.sum { |point| calc_shortest_length(point) }
     @unevaluated_longest_length = @longest_length
   end
@@ -33,7 +37,12 @@ class Guide::QuestionDiagram
 
         next_points = next_points.map do |point|
           if point.question?
-            point
+            if @referenced_questions.include?(point)
+              nil
+            else
+              @referenced_questions << point
+              point
+            end
           else
             @procedures[point.id] = point
             nil
@@ -44,6 +53,7 @@ class Guide::QuestionDiagram
       end
     end
 
+    @queue = []
     @unevaluated_longest_length = points.sum { |point| calc_longest_length(point) }
 
     points
@@ -85,11 +95,13 @@ class Guide::QuestionDiagram
 
   def calc_longest_length(point)
     if point.question?
+      @queue << point.id
       lengths = []
 
       point.transitions.each do |transition, next_points|
         length = 0
         next_points.each do |next_point|
+          next if @queue.include?(next_point.id)
           length += calc_longest_length(next_point)
         end
         lengths << length
@@ -109,11 +121,13 @@ class Guide::QuestionDiagram
 
   def calc_shortest_length(point)
     if point.question?
+      @queue << point.id
       lengths = []
 
       point.transitions.each do |transition, next_points|
         length = 0
         next_points.each do |next_point|
+          next if @queue.include?(next_point.id)
           length += calc_shortest_length(next_point)
         end
         lengths << length

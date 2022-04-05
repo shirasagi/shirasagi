@@ -11,7 +11,7 @@ class Guide::Apis::QuestionsController < ApplicationController
     @items = @model.site(@cur_site).
       node(@node).
       ne(id: @id).
-      where(referenced_question_ids: []).
+      # where(referenced_question_ids: []).
       allow(:read, @cur_user, site: @cur_site).
       search(params[:s]).
       page(params[:page]).per(50)

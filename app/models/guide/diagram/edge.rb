@@ -13,7 +13,7 @@ class Guide::Diagram::Edge
 
   embeds_ids :points, class_name: "Guide::Diagram::Point"
 
-  validate :validate_points, if: ->{ parent }
+  # validate :validate_points, if: ->{ parent }
 
   def export_label
     "[#{I18n.t("guide.transition")}] #{value}"
