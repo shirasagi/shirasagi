@@ -79,9 +79,7 @@
   });
   <% end %>
 
-  <% if params[:action] =~ /edit|delete/ && @cur_user.respond_to?(:cms_role_permit_any?) && !@cur_user.cms_role_permit_any?(@cur_site, %w(delete_cms_ignore_alert)) && @contains_urls.present? %>
-  $(".save").attr("data-alert-msg", "<%= I18n.t('ss.confirm.contains_url_expect') %>");
-  <% else %>
-  $(".save").attr("data-alert-msg", "");
+  <% if params[:action] =~ /edit|delete/ && @cur_user.respond_to?(:cms_role_permit_any?) && !@cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_alert)) && @contains_urls.try(:and_public).present? %>
+    Form_Alert.addStaticAlerts("<%= t("cms.backlink_check") %>", [ "<%= t('ss.confirm.contains_url_expect') %>" ]);
   <% end %>
 <% end %>
