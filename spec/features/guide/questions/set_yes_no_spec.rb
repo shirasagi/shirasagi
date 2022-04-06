@@ -102,9 +102,11 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
       expect(item.edges[0].value).to eq I18n.t("guide.links.applicable")
       expect(item.edges[0].question_type).to eq "yes_no"
       expect(item.edges[0].point_ids).to match_array [procedure1.id, question1.id]
+      expect(item.edges[0].not_applicable_point_ids).to match_array []
       expect(item.edges[1].value).to eq I18n.t("guide.links.not_applicable")
       expect(item.edges[1].question_type).to eq "yes_no"
       expect(item.edges[1].point_ids).to match_array [procedure1.id, procedure2.id, question1.id, question2.id]
+      expect(item.edges[1].not_applicable_point_ids).to match_array []
 
       question1.reload
       expect(question1.referenced_question_ids.size).to eq 1

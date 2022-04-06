@@ -33,9 +33,9 @@ class Guide::QuestionDiagram
       transitions = answer.is_a?(Array) ? answer : [answer]
       point.transitions.each do |key, _|
         if transitions.include?(key)
-          next_points = point.positive_transitions[key].to_a
+          next_points = point.applicable_transitions[key].to_a
         else
-          next_points = point.negative_transitions[key].to_a
+          next_points = point.not_applicable_transitions[key].to_a
         end
 
         next if next_points.blank?
@@ -84,22 +84,22 @@ class Guide::QuestionDiagram
 
   def build_diagram(point)
     point.transitions = {}
-    point.positive_transitions = {}
-    point.negative_transitions = {}
+    point.applicable_transitions = {}
+    point.not_applicable_transitions = {}
 
     if point.question?
       point.edges.each do |edge|
         point.transitions[edge.transition] = []
-        point.positive_transitions[edge.transition] = []
-        point.negative_transitions[edge.transition] = []
+        point.applicable_transitions[edge.transition] = []
+        point.not_applicable_transitions[edge.transition] = []
         edge.points.each do |next_point|
           point.transitions[edge.transition] << build_diagram(next_point)
         end
-        edge.positive_points.each do |next_point|
-          point.positive_transitions[edge.transition] << build_diagram(next_point)
+        edge.applicable_points.each do |next_point|
+          point.applicable_transitions[edge.transition] << build_diagram(next_point)
         end
-        edge.negative_points.each do |next_point|
-          point.negative_transitions[edge.transition] << build_diagram(next_point)
+        edge.not_applicable_points.each do |next_point|
+          point.not_applicable_transitions[edge.transition] << build_diagram(next_point)
         end
       end
     else

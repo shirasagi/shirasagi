@@ -2,7 +2,7 @@
   <tr data-id="<%= form_id %>">
     <td><%= hidden_field_tag "item[in_edges][][point_ids][]", form_id %> <%= form_name %></td>
     <td>
-      <label><%= check_box_tag('item[in_edges][][negative_point_ids][]', form_id, form_checked) %> <%= t('guide.labels.not_applicable') %></label>
+      <label><%= check_box_tag('item[in_edges][][not_applicable_point_ids][]', form_id, form_checked) %> <%= t('guide.labels.not_applicable') %></label>
     </td>
     <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
   </tr>
@@ -131,7 +131,7 @@ $("#addon-guide-agents-addons-question a.ajax-box").data("on-select", function($
         question_type: edge.question_type,
         value: edge.value,
         point_ids: edge.point_ids,
-        negative_point_ids: edge.negative_point_ids
+        not_applicable_point_ids: edge.not_applicable_point_ids
       )
     end
   end
