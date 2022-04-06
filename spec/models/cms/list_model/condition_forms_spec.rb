@@ -601,7 +601,7 @@ describe Cms::Addon::List::Model do
         node.save!
       end
 
-      context "on same column" do
+      context "on same column; no result" do
         let(:column_id1) { column1.id }
         let(:condition_kind1) { %w(any_of start_with end_with).sample }
         let(:condition_values1) { [ column1_value1 ] }
@@ -611,12 +611,27 @@ describe Cms::Addon::List::Model do
         let(:condition_values2) { [ column1_value2 ] }
 
         it do
-          expect(subject).to have(2).items
-          expect(subject).to include(page1.id, page5.id)
+          expect(subject).to have(0).items
+          # expect(subject).to include(page1.id, page5.id)
         end
       end
 
       context "on different columns; this is expected case" do
+        let(:column_id1) { column4.id }
+        let(:condition_kind1) { %w(any_of start_with end_with).sample }
+        let(:condition_values1) { [ column4_value2 ] }
+
+        let(:column_id2) { column5.id }
+        let(:condition_kind2) { (%w(any_of start_with end_with) - [ condition_kind1 ]).sample }
+        let(:condition_values2) { [ column5_value1 ] }
+
+        it do
+          expect(subject).to have(1).items
+          expect(subject).to include(page4.id)
+        end
+      end
+
+      context "on different columns; no result" do
         let(:column_id1) { column1.id }
         let(:condition_kind1) { %w(any_of start_with end_with).sample }
         let(:condition_values1) { [ column1_value1 ] }
@@ -626,8 +641,7 @@ describe Cms::Addon::List::Model do
         let(:condition_values2) { [ column4_value2 ] }
 
         it do
-          expect(subject).to have(2).items
-          expect(subject).to include(page1.id, page4.id)
+          expect(subject).to have(0).items
         end
       end
     end

@@ -156,7 +156,7 @@ module Cms::Extensions
       elsif conditions.count == 1
         conditions.first.merge(form_id: form_id)
       else
-        { form_id: form_id, "$or" => conditions }
+        { form_id: form_id, "$and" => conditions }
       end
     end
 

@@ -2,7 +2,7 @@
   condition_form = @item.condition_forms.to_edit_form
   column_names = Cms::Column::Base.site(@cur_site).in(form_id: condition_form.forms.map(&:id)).pluck(:name)
   column_names.uniq!
-  column_names.sort!
+  # column_names.sort!
 
   addon ||= local_assigns.fetch(:addon, {})
 %>
