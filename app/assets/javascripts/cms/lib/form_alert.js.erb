@@ -17,7 +17,7 @@ this.Form_Alert = (function () {
       var resolved = function(html) {
         var promise = Form_Alert.asyncValidate(form, submit, { html: html });
         promise.done(function() {
-          if (! SS.isEmptyObject(Form_Alert.alerts)) {
+          if (!SS.isEmptyObject(Form_Alert.alerts) || !SS.isEmptyObject(Form_Alert.staticAlerts)) {
             Form_Alert.showAlert(form, submit);
             return;
           }
@@ -64,35 +64,48 @@ this.Form_Alert = (function () {
     });
   };
 
+  Form_Alert.staticAlerts = {};
+
+  Form_Alert.addStaticAlerts = function(key, messages) {
+    if (! Form_Alert.staticAlerts[key]) {
+      Form_Alert.staticAlerts[key] = []
+    }
+
+    for (var i = 0; i < messages.length; i++) {
+      Form_Alert.staticAlerts[key].push({ msg: messages[i] });
+    }
+  };
+
   Form_Alert.showAlert = function (form, submit) {
-    var div = $('<div id="alertExplanation" class="errorExplanation">');
-    div.append("<h2><%= I18n.t('cms.alert') %></h2>");
-    var ref = Form_Alert.alerts;
-    var alert_msg = $(submit).attr("data-alert-msg");
-    for (var addon in ref) {
-      var fields = ref[addon];
-      div.append('<p>' + addon + '</p>');
-      if　(alert_msg)　{
-        div.append("<p>" + alert_msg + "</p>");
-      }
-      var ul = $("<ul>").appendTo(div);
-      var i, j, len;
-      for (i = j = 0, len = fields.length; j < len; i = ++j) {
-        var field = fields[i];
-        if (field["msg"]) {
-          ul.append('<li>' + field["msg"] + '</li>');
+    var $div = $('<div/>', { id: "alertExplanation", class: "errorExplanation" });
+    $div.append("<h2><%= I18n.t('cms.alert') %></h2>");
+
+    var appendAlerts = function (alerts) {
+      for (var addon in alerts) {
+        var fields = alerts[addon];
+        $div.append('<p>' + addon + '</p>');
+        var $ul = $("<ul>").appendTo($div);
+        var i, j, len;
+        for (i = j = 0, len = fields.length; j < len; i = ++j) {
+          var field = fields[i];
+          if (field["msg"]) {
+            $ul.append('<li>' + field["msg"] + '</li>');
+          }
         }
       }
     }
+    appendAlerts(Form_Alert.alerts);
+    appendAlerts(Form_Alert.staticAlerts);
+
     // caution: below IE8, you must use document.createElement() method to create <footer>
-    var footer = $(document.createElement("footer")).addClass('send');
+    var $footer = $(document.createElement("footer")).addClass('send');
     
-    if (!alert_msg) {
-      footer.append('<button name="button" type="button" class="btn-primary save"><%= I18n.t("ss.buttons.ignore_alert") %></button>');
+    if (SS.isEmptyObject(Form_Alert.staticAlerts)) {
+      $footer.append('<button name="button" type="button" class="btn-primary save"><%= I18n.t("ss.buttons.ignore_alert") %></button>');
     }
-    footer.append('<button name="button" type="button" class="btn-default cancel"><%= I18n.t("ss.buttons.cancel") %></button>');
+    $footer.append('<button name="button" type="button" class="btn-default cancel"><%= I18n.t("ss.buttons.cancel") %></button>');
     $.colorbox({
-      html: div.get(0).outerHTML + footer.get(0).outerHTML,
+      html: $div.get(0).outerHTML + $footer.get(0).outerHTML,
       maxHeight: "80%",
       fixed: true
     });

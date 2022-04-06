@@ -6,7 +6,13 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
   let(:old_index_name) { "[TEST] br_page" }
   let(:new_name) { "[TEST] br_replace" }
 
-  before { login_cms_user }
+  before do
+    role = cms_role
+    role.permissions = role.permissions - %w(edit_cms_ignore_alert delete_cms_ignore_alert)
+    role.save!
+
+    login_cms_user
+  end
 
   shared_examples "create_branch" do
     it do

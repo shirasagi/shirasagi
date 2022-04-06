@@ -56,7 +56,7 @@ module Cms::PageFilter
 
   def set_contains_urls_items
     @contains_urls = []
-    return unless @item.class.include?(Cms::Model::Page)
+    return if !@item.class.include?(Cms::Model::Page) || @item.try(:branch?)
 
     cond = []
     if @item.respond_to?(:url) && @item.respond_to?(:full_url)
