@@ -46,4 +46,8 @@ FactoryBot.define do
   factory :cms_node_site_search, class: Cms::Node::SiteSearch, traits: [:cms_node] do
     route { "cms/site_search" }
   end
+
+  factory :cms_node_form_search, class: Cms::Node::FormSearch, traits: [:cms_node] do
+    route { "cms/form_search" }
+  end
 end

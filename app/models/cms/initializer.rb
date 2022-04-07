@@ -8,6 +8,7 @@ module Cms
     Cms::Node.plugin "cms/group_page"
     Cms::Node.plugin "cms/site_search"
     Cms::Node.plugin "cms/line_hub"
+    Cms::Node.plugin "cms/form_search"
     Cms::Part.plugin "cms/site_search_history"
     Cms::Part.plugin "cms/history_list"
     Cms::Part.plugin "cms/free"

@@ -23,4 +23,8 @@ class Cms::Column::List < Cms::Column::Base
   def db_form_type
     { type: 'textarea', rows: 4 }
   end
+
+  def exact_match_to_value(value)
+    { lists: value }
+  end
 end

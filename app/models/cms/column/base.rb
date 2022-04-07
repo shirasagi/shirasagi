@@ -18,4 +18,8 @@ class Cms::Column::Base
   def db_form_type
     { type: 'input' }
   end
+
+  def exact_match_to_value(value)
+    { value: value }
+  end
 end
