@@ -31,6 +31,8 @@
                   <%= link_to point.name_with_type, guide_procedure_path(id: point.id) %>
                 <% end %>
               </td>
+              <td><%= edge.not_applicable_point_ids.include?(point.id) ? t('guide.labels.not_applicable') : t('guide.labels.applicable') %></td>
+              <td><%= edge.optional_necessary_point_ids.include?(point.id) ? t('guide.labels.optional_necessary') : t('guide.labels.necessary') %></td>
             </tr>
           <% end %>
           </tbody>

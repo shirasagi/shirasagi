@@ -56,5 +56,29 @@ module Guide::Addon
     def template_variable_handler_link(name, issuer)
       link_url.present? ? "<a href=\"#{link_url}\">#{self.name}</a>".html_safe : self.name
     end
+
+    def referenced_questions
+      Guide::Question.site(@cur_site || site).node(@cur_node || node).where(
+        edges: {
+          "$elemMatch" => { point_ids: { "$in" => [id] } }
+        }
+      )
+    end
+
+    def necessary_count
+      edges = Guide::Diagram::Edge.none
+      referenced_questions.each do |question|
+        edges += question.edges.in(point_ids: [id]).nin(optional_necessary_point_ids: [id])
+      end
+      edges.count
+    end
+
+    def optional_necessary_count
+      edges = Guide::Diagram::Edge.none
+      referenced_questions.each do |question|
+        edges += question.edges.in(optional_necessary_point_ids: [id])
+      end
+      edges.count
+    end
   end
 end

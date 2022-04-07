@@ -13,14 +13,23 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
   end
 
   let!(:question1) do
-    create :guide_question, cur_site: site, cur_node: node, name: "question1", id_name: "0.question1", order: 10, in_edges: []
+    create :guide_question, cur_site: site, cur_node: node, name: "question1", id_name: "0.question1", order: 10,
+           in_edges: in_edges(question2)
   end
   let!(:question2) do
-    create :guide_question, cur_site: site, cur_node: node, name: "question2", id_name: "1.question2", order: 20, in_edges: []
+    create :guide_question, cur_site: site, cur_node: node, name: "question2", id_name: "1.question2", order: 20,
+           in_edges: in_edges(procedure2)
   end
 
   let(:index_path) { guide_questions_path site.id, node }
   let(:new_path) { new_guide_question_path site.id, node }
+
+  def in_edges(point)
+    [
+      { value: I18n.t("guide.links.applicable"), question_type: "yes_no", point_ids: [point.id] },
+      { value: I18n.t("guide.links.not_applicable"), question_type: "yes_no", point_ids: [] }
+    ]
+  end
 
   context "basic crud" do
     before { login_cms_user }
@@ -87,19 +96,27 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
       end
 
       within "form#item-form" do
-        expect(page).to have_css("#addon-guide-agents-addons-question [data-id='#{question2.id}']", text: question2.id_name)
         click_on I18n.t("ss.buttons.save")
       end
       wait_for_notice I18n.t('ss.notice.saved')
 
-      item = ::Guide::Question.first
+      item = ::Guide::Question.find_by(id_name: '0.sample')
+      expect(question1.referenced_question_ids.size).to eq 0
       expect(item.edges.size).to eq 2
       expect(item.edges[0].value).to eq I18n.t("guide.links.applicable")
       expect(item.edges[0].question_type).to eq "yes_no"
       expect(item.edges[0].point_ids).to match_array [procedure1.id, question1.id]
+      expect(item.edges[0].not_applicable_point_ids).to match_array []
       expect(item.edges[1].value).to eq I18n.t("guide.links.not_applicable")
       expect(item.edges[1].question_type).to eq "yes_no"
       expect(item.edges[1].point_ids).to match_array [procedure1.id, procedure2.id, question1.id, question2.id]
+      expect(item.edges[1].not_applicable_point_ids).to match_array []
+
+      question1.reload
+      expect(question1.referenced_question_ids.size).to eq 1
+
+      question2.reload
+      expect(question2.referenced_question_ids.size).to eq 2
     end
   end
 end
