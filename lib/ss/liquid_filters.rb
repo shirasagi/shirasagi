@@ -140,4 +140,8 @@ module SS::LiquidFilters
 
     recurrences.select { |recurrence| recurrence.collect_event_dates.any? { |event_date| date <= event_date } }
   end
+
+  def event_recurrence_summary(input)
+    Event.recurrence_summary(input)
+  end
 end

@@ -11,10 +11,6 @@ this.Event_Form = (function () {
   Event_Form.prototype.render = function() {
     var self = this;
 
-    self.$el.on("change", '[name="in_specify_time"]', function() {
-      self.changeBetweenDateAndDateTime(this);
-    })
-
     self.$el.on("click", ".event-recurrence-add-btn", function() {
       self.addRecurrence(this);
     });
@@ -37,20 +33,6 @@ this.Event_Form = (function () {
       index += 1;
     });
   }
-
-  Event_Form.prototype.changeBetweenDateAndDateTime = function(checkEl) {
-    var $recurrence = $(checkEl).closest(".event-recurrence");
-    var $recurrenceTime = $recurrence.find(".event-recurrence-time");
-    if (checkEl.checked) {
-      // to datetime
-      $recurrenceTime.removeClass("hide");
-      $recurrence.find('[name="item[event_recurrences][][in_kind]"]').val("datetime");
-    } else {
-      // to date
-      $recurrenceTime.addClass("hide");
-      $recurrence.find('[name="item[event_recurrences][][in_kind]"]').val("date");
-    }
-  };
 
   Event_Form.prototype.addRecurrence = function(buttonEl) {
     var self = this;

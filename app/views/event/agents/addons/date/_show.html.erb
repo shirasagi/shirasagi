@@ -16,7 +16,7 @@
         <div class="event-recurrence-time">
           <%= recurr.start_datetime.try { |time| I18n.l(time, format: :zoo_hh_mm) } %>
           <%= t("ss.wave_dash") %>
-          <%= recurr.end_at.try { |time| I18n.l(time, format: :zoo_hh_mm) } %>
+          <%= recurr.end_datetime.try { |time| I18n.l(time, format: :zoo_hh_mm) } %>
         </div>
       <% end %>
       <% if recurr.exclude_dates.present? %>
@@ -26,7 +26,13 @@
       <% end %>
       <% if recurr.frequency == "weekly" && recurr.by_days.present? %>
         <div class="event-recurrence-wdays">
-          <%= recurr.by_days.map { |by_day| week_days[by_day] }.join(",") %>
+          <%
+            wdays = recurr.by_days.map { |by_day| week_days[by_day] }
+            if recurr.includes_holiday
+              wdays << "祝日"
+            end
+          %>
+          <%= wdays.join(",") %>
         </div>
       <% end %>
     </div>
@@ -38,23 +44,20 @@
   <dd class="event-name"><%= @item.send :event_name %></dd>
 
   <dt><%= @model.t :event_recurrences %></dt>
-  <dd class="event-daily-recurrences">  <dd></dd>
-  <dt class="depth-2"><%= t("event.daily_event") %></dt>
-  <dd class="depth-2">
+  <dd>
     <% @item.event_recurrences.each do |recurr| %>
-      <% next if recurr.frequency != "daily" %>
       <% render_recurr.call(recurr) %>
     <% end %>
   </dd>
-
-  <dt class="depth-2"><%= t("event.weekly_event") %></dt>
-  <dd class="depth-2">
-    <% @item.event_recurrences.each do |recurr| %>
-      <% next if recurr.frequency != "weekly" %>
-      <% render_recurr.call(recurr) %>
-    <% end %>
+  <dd>
+    <% summary = Event.recurrence_summary(@item.event_recurrences) %>
+    <%= button_tag t("mongoid.attributes.cms/addon/meta.description"), type: "button", class: "btn ss-popup", title: summary, "data-ss-popup-inline" => true, "data-ss-popup-html" => summary %>
   </dd>
 
   <dt><%= @model.t :event_deadline %></dt>
   <dd><%= tryb { I18n.l(@item.event_deadline) } %></dd>
 </dl>
+
+<%= jquery do %>
+  SS_Popup.render();
+<% end %>

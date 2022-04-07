@@ -5,59 +5,38 @@
   week_days = I18n.t("date.abbr_day_names")
 %>
 
-<% render_recurrence_common_row = proc do |recurr, frequency| %>
-  <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_update_from_view]", "1" %>
-  <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_frequency]", frequency %>
-  <%# hidden_field_tag "#{f.object_name}[event_recurrences][][in_kind]", recurr.kind || "datetime" %>
-  <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_kind]", "datetime" %>
+<% render_recurrence = proc do |recurr| %>
+  <div class="event-recurrence">
+    <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_update_from_view]", "1" %>
 
-  <div class="event-recurrence-row">
-    <%= button_tag t("ss.buttons.delete"), type: "button", class: "btn event-recurrence-delete-btn" %>
-    <div class="event-recurrence-date">
-      <%= text_field_tag "#{f.object_name}[event_recurrences][][in_start_on]", recurr.start_date.try { |time| I18n.l(time.to_date, format: :picker) }, class: "date js-date", id: nil %>
-      <%= t("ss.wave_dash") %>
-      <%= text_field_tag "#{f.object_name}[event_recurrences][][in_until_on]", recurr.until_on.try { |time| I18n.l(time.to_date, format: :picker) }, class: "date js-date", id: nil %>
+    <div class="event-recurrence-row">
+      <%= button_tag t("ss.buttons.delete"), type: "button", class: "btn event-recurrence-delete-btn" %>
+      <div class="event-recurrence-date">
+        <%= text_field_tag "#{f.object_name}[event_recurrences][][in_start_on]", recurr.start_date.try { |time| I18n.l(time.to_date, format: :picker) }, class: "date js-date", id: nil %>
+        <%= t("ss.wave_dash") %>
+        <%= text_field_tag "#{f.object_name}[event_recurrences][][in_until_on]", recurr.until_on.try { |time| I18n.l(time.to_date, format: :picker) }, class: "date js-date", id: nil %>
+      </div>
+
+      <div class="event-recurrence-time">
+        <%= time_field_tag "#{f.object_name}[event_recurrences][][in_start_time]", recurr.start_datetime.try { |time| I18n.l(time, format: :zoo_hh_mm) } || "10:00" %>
+        <%= t("ss.wave_dash") %>
+        <%= time_field_tag "#{f.object_name}[event_recurrences][][in_end_time]", recurr.end_datetime.try { |time| I18n.l(time, format: :zoo_hh_mm) } || "17:00" %>
+      </div>
+
+      <div class="event-recurrence-excludes">
+        <% disp = recurr.exclude_dates.try { |dates| dates.map { |date| I18n.l(date.to_date, format: :picker) }.join(",") } %>
+        <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_exclude_dates]", disp %>
+        <%= button_tag "除外日", type: "button", class: "btn event-recurrence-exclude-dates-btn", data: { url: event_apis_edit_exclude_dates_path } %>
+        <div class="event-recurrence-excludes-summary" title="<%= disp %>"><%= disp %></div>
+      </div>
     </div>
-
-    <% if false %>
-      <% shows_time = recurr.kind == "datetime" %>
-      <label class="event-recurrence-time-ctrl">
-        <%= check_box_tag "in_specify_time", "1", shows_time, id: nil %>
-        <%= t("event.specify_time") %>
-      </label>
-    <% end %>
-    <% shows_time = true %>
-
-    <div class="event-recurrence-time <% unless shows_time %>hide<% end %>">
-      <%= time_field_tag "#{f.object_name}[event_recurrences][][in_start_time]", shows_time ? recurr.start_datetime.try { |time| I18n.l(time, format: :zoo_hh_mm) } : nil %>
-      <%= t("ss.wave_dash") %>
-      <%= time_field_tag "#{f.object_name}[event_recurrences][][in_end_time]", shows_time ? recurr.end_datetime.try { |time| I18n.l(time, format: :zoo_hh_mm) } : nil %>
-    </div>
-
-    <div class="event-recurrence-excludes">
-      <% disp = recurr.exclude_dates.try { |dates| dates.map { |date| I18n.l(date.to_date, format: :picker) }.join(",") } %>
-      <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_exclude_dates]", disp %>
-      <%= button_tag "除外日", type: "button", class: "btn event-recurrence-exclude-dates-btn", data: { url: event_apis_edit_exclude_dates_path } %>
-      <div class="event-recurrence-excludes-summary" title="<%= disp %>"><%= disp %></div>
-    </div>
-  </div>
-<% end %>
-
-<% render_daily_recurrence = proc do |recurr| %>
-  <div class="event-recurrence event-recurrence-daily">
-    <% render_recurrence_common_row.call(recurr, "daily") %>
-  </div>
-<% end %>
-
-<% render_weekly_recurrence = proc do |recurr| %>
-  <div class="event-recurrence event-recurrence-weekly">
-    <% render_recurrence_common_row.call(recurr, "weekly") %>
 
     <div class="event-recurrence-row">
       <div class="event-recurrence-wdays">
         <% week_days.each_with_index do |wday, index| %>
           <label><%= check_box_tag "#{f.object_name}[event_recurrences][][in_by_days][]", index, recurr.by_days && recurr.by_days.include?(index) %><%= wday %></label>
         <% end %>
+        <label><%= check_box_tag "#{f.object_name}[event_recurrences][][in_by_days][]", "holiday", recurr.includes_holiday %><%= "祝日" %></label>
       </div>
     </div>
   </div>
@@ -68,43 +47,26 @@
   <dd><%= f.text_field :event_name %></dd>
 
   <dt><%= @model.t :event_recurrences %><%= @model.tt :event_recurrences %></dt>
-  <dd></dd>
-  <dt class="depth-2"><%= t("event.daily_event") %></dt>
-  <dd class="depth-2">
-    <% @item.event_recurrences.each do |recurr| %>
-      <% next if recurr.frequency != "daily" %>
-      <% render_daily_recurrence.call recurr %>
-    <% end %>
-
-    <%# for new record %>
-    <% render_daily_recurrence.call OpenStruct.new %>
-
-    <div class="event-recurrence">
-      <div class="event-recurrence-row">
-        <%= button_tag t("event.add_date"), type: "button", class: "btn event-recurrence-add-btn", data: { template: "event-recurrence-daily-template" } %>
-      </div>
-    </div>
-    <script type="text/html" id="event-recurrence-daily-template">
-      <% render_daily_recurrence.call OpenStruct.new %>
-    </script>
-  </dd>
-  <dt class="depth-2"><%= t("event.weekly_event") %></dt>
   <dd>
+    <div class="event-recurrence">
+      <div class="event-recurrence-row">
+        終日イベントの場合は、開始時刻に 10:00 を、終了時刻に 17:00 をセットしてください。
+      </div>
+    </div>
     <% @item.event_recurrences.each do |recurr| %>
-      <% next if recurr.frequency != "weekly" %>
-      <% render_weekly_recurrence.call recurr %>
+      <% render_recurrence.call recurr %>
     <% end %>
 
     <%# for new record %>
-    <% render_weekly_recurrence.call OpenStruct.new %>
+    <% render_recurrence.call OpenStruct.new %>
 
     <div class="event-recurrence">
       <div class="event-recurrence-row">
-        <%= button_tag t("event.add_date"), type: "button", class: "btn event-recurrence-add-btn", data: { template: "event-recurrence-weekly-template" } %>
+        <%= button_tag t("event.add_date"), type: "button", class: "btn event-recurrence-add-btn", data: { template: "event-recurrence-template" } %>
       </div>
     </div>
-    <script type="text/html" id="event-recurrence-weekly-template">
-      <% render_weekly_recurrence.call OpenStruct.new %>
+    <script type="text/html" id="event-recurrence-template">
+      <% render_recurrence.call OpenStruct.new %>
     </script>
   </dd>
 

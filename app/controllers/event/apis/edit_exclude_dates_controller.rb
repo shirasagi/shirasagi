@@ -4,7 +4,7 @@ class Event::Apis::EditExcludeDatesController < ApplicationController
   def index
     @edit_params = Event::EditExcludeDatesParams.new(cur_site: @cur_site, cur_user: @cur_user, index: params[:index])
     @edit_params.attributes = params.require(:item).permit(event_recurrences: [
-      :in_update_from_view, :in_frequency, :in_kind, :in_start_on, :in_until_on, :in_start_time, :in_end_time, :in_exclude_dates,
+      :in_update_from_view, :in_start_on, :in_until_on, :in_start_time, :in_end_time, :in_exclude_dates,
       in_by_days: []
     ])
 

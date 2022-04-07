@@ -5,8 +5,7 @@
     <ul>
       <li class="prev">
         <% if within_one_year?(@prev_month_date) %>
-          <%= link_to t("event.prev_month"), "#", class: :paginate,
-            "data-year" => @prev_month_date.year, "data-month" => @prev_month_date.month %>
+          <%= link_to t("event.prev_month"), "#", class: "paginate", data: { year: @prev_month_date.year, month: @prev_month_date.month } %>
         <% else %>
           <%= t("event.prev_month") %>
         <% end %>
@@ -17,8 +16,7 @@
       </li>
       <li class="next">
         <% if within_one_year?(@next_month_date) %>
-          <%= link_to t("event.next_month"), "#", class: :paginate,
-            "data-year" => @next_month_date.year, "data-month" => @next_month_date.month  %>
+          <%= link_to t("event.next_month"), "#", class: "paginate", data: { year: @next_month_date.year, month: @next_month_date.month } %>
         <% else %>
           <%= t("event.next_month") %>
         <% end %>

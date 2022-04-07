@@ -15,9 +15,6 @@ ja:
     filter_all: 全て
     date_range_delimiter: ～
     keyword: キーワード
-    specify_time: 時間を指定する
-    daily_event: 開催日の指定
-    weekly_event: 定期開催
     dates:
       setting: 開催期間
       start_date: 開始
@@ -158,7 +155,7 @@ ja:
       event/addon/date:
         event_name: イベントタイトル
         event_dates: イベント日
-        event_recurrences: 繰り返しイベント
+        event_recurrences: 定期開催
         event_deadline: 申込締切
       event/addon/calendar_list:
         event_display: 表示形式
@@ -205,7 +202,7 @@ ja:
         - イベントページにリンクを表示する場合はイベントの期間を入力します。
         - 「日付フォームを追加する」を選択することで複数の期間を設定することが可能です。
       event_recurrences:
-        - 繰り返しイベントを入力します。
+        - 定期開催イベントを入力します。
       event_deadline:
         - イベントの申し込み締切日を入力します。
     event/addon/body:

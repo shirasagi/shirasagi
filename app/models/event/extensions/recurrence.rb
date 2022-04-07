@@ -19,6 +19,7 @@ class Event::Extensions::Recurrence
   # attribute :count, :integer
   # frequency が weekly の場合の曜日
   attribute :by_days
+  attribute :includes_holiday, :boolean
   # 除外日
   attribute :exclude_dates
 
@@ -100,9 +101,11 @@ class Event::Extensions::Recurrence
       end
     end
 
+    # rubocop:disable Style/YodaCondition
     def normalize_by_days(by_days)
-      Array(by_days).select(&:numeric?).map(&:to_i)
+      Array(by_days).select(&:numeric?).map(&:to_i).select { |wday| 0 <= wday && wday <= 6 }.uniq
     end
+    # rubocop:enable Style/YodaCondition
 
     def normalize_exclude_dates(exclude_dates)
       exclude_dates.split(",").select(&:present?).map(&:in_time_zone).map(&:to_date)
@@ -110,60 +113,39 @@ class Event::Extensions::Recurrence
 
     private
 
-    # rubocop:disable Style/IfInsideElse
     def convert_from_view_params(object)
       return if object["in_start_on"].blank?
 
       ret = {}
 
-      ret["kind"] = object["in_kind"]
-      if ret["kind"] == "date"
+      if object["in_start_time"].blank?
         ret["start_at"] = object["in_start_on"]
       else
-        ret["start_at"] = "#{object["in_start_on"]} #{object["in_start_time"]}" if object["in_start_time"].present?
+        ret["start_at"] = "#{object["in_start_on"]} #{object["in_start_time"]}"
       end
-      if ret["kind"] == "date"
+      if object["in_end_time"].blank?
         # end_on は start_on から自動で計算されるので未セットとする
         # ret["end_on"] = object["in_start_on"]
       else
-        ret["end_at"] = "#{object["in_start_on"]} #{object["in_end_time"]}" if object["in_end_time"].present?
+        ret["end_at"] = "#{object["in_start_on"]} #{object["in_end_time"]}"
       end
-      ret["frequency"] = object["in_frequency"] if object["in_frequency"].present?
       ret["until_on"] = object["in_until_on"] if object["in_until_on"].present?
       if object["in_by_days"].present?
         ret["by_days"] = normalize_by_days(object["in_by_days"])
+        ret["includes_holiday"] = object["in_by_days"].include?("holiday")
       end
       if object["in_exclude_dates"].present?
         ret["exclude_dates"] = normalize_exclude_dates(object["in_exclude_dates"])
       end
+      ret["kind"] = object["in_start_time"].present? || object["in_end_time"].present? ? "datetime" : "date"
+      ret["frequency"] = ret["by_days"].present? || ret["includes_holiday"] ? "weekly" : "daily"
 
       ret
     end
   end
-  # rubocop:enable Style/IfInsideElse
 
   liquidize do
-    export :to_long_html do
-      parts = [
-        I18n.l(start_date, format: :zoo_m_d_a),
-        I18n.t("ss.wave_dash"),
-        I18n.l(until_on, format: :zoo_m_d_a),
-      ]
-      if kind == "datetime"
-        parts << " "
-        parts << I18n.l(start_datetime, format: :zoo_h_mm)
-        parts << I18n.t("ss.wave_dash")
-        parts << I18n.l(end_datetime, format: :zoo_h_mm)
-      end
-      if frequency == "weekly" && by_days.present?
-        week_days = I18n.t("date.abbr_day_names")
-        parts << " ("
-        parts << (by_days.map { |wday| week_days[wday] }.join(","))
-        parts << ")"
-      end
-
-      parts.join
-    end
+    export :to_long_html
   end
 
   def collect_event_dates(excludes: true)
@@ -198,13 +180,24 @@ class Event::Extensions::Recurrence
     end_at.in_time_zone
   end
 
-  def event_within_time?(start_at, end_at)
-    range1 = Range.new(start_datetime.strftime("%1H%M").to_i, end_datetime.strftime("%1H%M").to_i, true)
-    range2 = Range.new(start_at.strftime("%1H%M").to_i, end_at.strftime("%1H%M").to_i, true)
-    return false if !range1.cover?(range2) && !range2.cover?(range1)
-    return false if excluded_date?(start_at.to_date)
-    return true if frequency != "weekly"
-    by_days.include?(start_at.wday)
+  def all_day?
+    return true if kind == "date"
+
+    start_time = I18n.l(start_datetime, format: :zoo_h_mm)
+    return false if start_time != "10:00"
+
+    end_time = I18n.l(end_datetime, format: :zoo_h_mm)
+    return false if end_time != "17:00"
+
+    true
+  end
+
+  def start_time_between?(from_time, to_time)
+    from_time = I18n.l(from_time, format: :zoo_hh_mm)
+    to_time = I18n.l(to_time, format: :zoo_hh_mm)
+    start_time = I18n.l(start_datetime, format: :zoo_h_mm)
+
+    from_time <= start_time && start_time < to_time
   end
 
   def included_date?(date)
@@ -215,6 +208,28 @@ class Event::Extensions::Recurrence
 
   def excluded_date?(date)
     !included_date?(date)
+  end
+
+  def to_long_html
+    parts = [
+      I18n.l(start_date, format: :zoo_m_d_a),
+      I18n.t("ss.wave_dash"),
+      I18n.l(until_on, format: :zoo_m_d_a),
+    ]
+    if kind == "datetime"
+      parts << " "
+      parts << I18n.l(start_datetime, format: :zoo_h_mm)
+      parts << I18n.t("ss.wave_dash")
+      parts << I18n.l(end_datetime, format: :zoo_h_mm)
+    end
+    if frequency == "weekly" && by_days.present?
+      week_days = I18n.t("date.abbr_day_names")
+      parts << " ("
+      parts << (by_days.map { |wday| week_days[wday] }.join(","))
+      parts << ")"
+    end
+
+    parts.join
   end
 
   private
@@ -237,7 +252,10 @@ class Event::Extensions::Recurrence
     to = until_on.try(:to_date) || date + TERM_LIMIT
     ret = []
     loop do
-      ret << date if !excludes || included_date?(date)
+      next if excludes && excluded_date?(date)
+
+      ret << date
+    ensure
       date += 1.day
       break if date > to
     end
@@ -250,11 +268,18 @@ class Event::Extensions::Recurrence
 
     ret = []
     date = from
-    while date <= to
-      if by_days.present? && by_days.include?(date.wday) && (!excludes || included_date?(date))
+    loop do
+      next if excludes && excluded_date?(date)
+
+      if by_days.present? && by_days.include?(date.wday)
         ret << date
       end
+      if includes_holiday && date.national_holiday?
+        ret << date
+      end
+    ensure
       date += 1.day
+      break if  date > to
     end
     ret
   end

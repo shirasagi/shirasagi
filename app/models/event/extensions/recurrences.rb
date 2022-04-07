@@ -19,12 +19,12 @@ class Event::Extensions::Recurrences
     values.map { |recurrence| recurrence.collect_event_dates }.flatten.uniq.sort
   end
 
-  def event_within_time?(start_at, end_at)
-    values.any? { |value| value.event_within_time?(start_at, end_at) }
+  def start_time_between(from_time, to_time)
+    values.select { |recurrence| recurrence.start_time_between?(from_time, to_time) }
   end
 
-  def within_time(start_at, end_at)
-    values.select { |value| value.event_within_time?(start_at, end_at) }
+  def start_time_between?(from_time, to_time)
+    values.any? { |recurrence| recurrence.start_time_between?(from_time, to_time) }
   end
 
   class << self

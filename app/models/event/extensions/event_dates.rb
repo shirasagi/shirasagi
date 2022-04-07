@@ -43,18 +43,6 @@ class Event::Extensions::EventDates < Array
   end
 
   def clustered
-    ret = []
-    return ret if empty?
-
-    range = []
-    each do |date|
-      if range.present? && range.last.tomorrow != date
-        ret << range
-        range = []
-      end
-      range << date
-    end
-    ret << range if range.present?
-    ret
+    Event.cluster_dates(self)
   end
 end
