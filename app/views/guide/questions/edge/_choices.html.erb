@@ -15,7 +15,7 @@
     <table class="index ajax-selected">
       <tbody>
         <% edge.points.each do |point| %>
-          <% @render_form.call(point.id, point.name_with_type, edge.not_applicable_point_ids.include?(point.id)) %>
+          <% @render_form.call(point.id, point.name_with_type, edge.not_applicable_point_ids.include?(point.id), edge.necessary_point_ids.include?(point.id)) %>
         <% end %>
       </tbody>
     </table>

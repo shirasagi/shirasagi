@@ -52,7 +52,8 @@ module Guide::Importer::Transition
         question_type: edge.question_type,
         value: edge.value,
         point_ids: edge.point_ids,
-        not_applicable_point_ids: edge.not_applicable_point_ids
+        not_applicable_point_ids: edge.not_applicable_point_ids,
+        necessary_point_ids: edge.necessary_point_ids
       )
     end
 
@@ -67,31 +68,41 @@ module Guide::Importer::Transition
 
       point_ids = []
       not_applicable_point_ids = []
+      necessary_point_ids = []
       v.split(/\n/).each do |line|
         line.scan(/^\[(.+?)\](.+?)$/).each do |type, id_name|
           id_name = id_name.squish
           type = type.squish
 
           case type
-          when I18n.t("guide.procedure"), "#{I18n.t("guide.procedure")}:#{I18n.t("guide.labels.applicable")}"
+          when /#{::Regexp.escape(I18n.t("guide.procedure"))}/
             point = Guide::Procedure.site(cur_site).node(cur_node).where(id_name: id_name).first
-            point_ids << point.id if point
-          when "#{I18n.t("guide.procedure")}:#{I18n.t("guide.labels.not_applicable")}"
-            point = Guide::Procedure.site(cur_site).node(cur_node).where(id_name: id_name).first
-            point_ids << point.id if point
-            not_applicable_point_ids << point.id if point
-          when I18n.t("guide.question"), "#{I18n.t("guide.question")}:#{I18n.t("guide.labels.applicable")}"
+            if point
+              point_ids << point.id
+              if type.match?(I18n.t("guide.labels.not_applicable"))
+                not_applicable_point_ids << point.id
+              end
+              if type.match?(I18n.t("guide.labels.necessary"))
+                necessary_point_ids << point.id
+              end
+            end
+          when /#{::Regexp.escape(I18n.t("guide.question"))}/
             point = Guide::Question.site(cur_site).node(cur_node).where(id_name: id_name).first
-            point_ids << point.id if point
-          when "#{I18n.t("guide.question")}:#{I18n.t("guide.labels.not_applicable")}"
-            point = Guide::Question.site(cur_site).node(cur_node).where(id_name: id_name).first
-            point_ids << point.id if point
-            not_applicable_point_ids << point.id if point
+            if point
+              point_ids << point.id
+              if type.match?(I18n.t("guide.labels.not_applicable"))
+                not_applicable_point_ids << point.id
+              end
+              if type.match?(I18n.t("guide.labels.necessary"))
+                necessary_point_ids << point.id
+              end
+            end
           end
         end
       end
       in_edges[idx][:point_ids] = point_ids
       in_edges[idx][:not_applicable_point_ids] = not_applicable_point_ids
+      in_edges[idx][:necessary_point_ids] = necessary_point_ids
     end
 
     item.in_edges = in_edges

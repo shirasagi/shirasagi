@@ -1,8 +1,11 @@
-<% @render_form = proc do |form_id, form_name, form_checked| %>
+<% @render_form = proc do |form_id, form_name, form_not_applicable, form_necessary| %>
   <tr data-id="<%= form_id %>">
     <td><%= hidden_field_tag "item[in_edges][][point_ids][]", form_id %> <%= form_name %></td>
     <td>
-      <label><%= check_box_tag('item[in_edges][][not_applicable_point_ids][]', form_id, form_checked) %> <%= t('guide.labels.not_applicable') %></label>
+      <label><%= check_box_tag('item[in_edges][][not_applicable_point_ids][]', form_id, form_not_applicable) %> <%= t('guide.labels.not_applicable') %></label>
+    </td>
+    <td>
+      <label><%= check_box_tag('item[in_edges][][necessary_point_ids][]', form_id, form_necessary) %> <%= t('guide.labels.necessary') %></label>
     </td>
     <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
   </tr>
@@ -131,7 +134,8 @@ $("#addon-guide-agents-addons-question a.ajax-box").data("on-select", function($
         question_type: edge.question_type,
         value: edge.value,
         point_ids: edge.point_ids,
-        not_applicable_point_ids: edge.not_applicable_point_ids
+        not_applicable_point_ids: edge.not_applicable_point_ids,
+        necessary_point_ids: edge.necessary_point_ids
       )
     end
   end
@@ -184,5 +188,5 @@ $("#addon-guide-agents-addons-question a.ajax-box").data("on-select", function($
 </div>
 
 <script type="text/html" class="form-template">
-  <% @render_form.call(":id", ":name", false) %>
+  <% @render_form.call(":id", ":name", false, false) %>
 </script>

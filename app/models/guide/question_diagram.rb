@@ -10,6 +10,7 @@ class Guide::QuestionDiagram
     @roots = @referenced_questions.map { |point| build_diagram(point) }
 
     @procedures = {}
+    @procedure_necessary_count = {}
     @questions = []
 
     @queue = []
@@ -40,16 +41,22 @@ class Guide::QuestionDiagram
 
         next if next_points.blank?
 
-        next_points = next_points.map do |point|
-          if point.question?
-            if @referenced_questions.include?(point)
+        next_points = next_points.map do |next_point|
+          if next_point.question?
+            if @referenced_questions.include?(next_point)
               nil
             else
-              @referenced_questions << point
-              point
+              @referenced_questions << next_point
+              next_point
             end
           else
-            @procedures[point.id] = point
+            if point.necessary_transitions[key].present? && point.necessary_transitions[key].to_a.include?(next_point)
+              @procedure_necessary_count[next_point.id] ||= 0
+              @procedure_necessary_count[next_point.id] += 1
+            end
+            if next_point.necessary_count.zero? || next_point.necessary_count <= @procedure_necessary_count[next_point.id]
+              @procedures[next_point.id] = next_point
+            end
             nil
           end
         end.compact
@@ -86,12 +93,14 @@ class Guide::QuestionDiagram
     point.transitions = {}
     point.applicable_transitions = {}
     point.not_applicable_transitions = {}
+    point.necessary_transitions = {}
 
     if point.question?
       point.edges.each do |edge|
         point.transitions[edge.transition] = []
         point.applicable_transitions[edge.transition] = []
         point.not_applicable_transitions[edge.transition] = []
+        point.necessary_transitions[edge.transition] = []
         edge.points.each do |next_point|
           point.transitions[edge.transition] << build_diagram(next_point)
         end
@@ -100,6 +109,9 @@ class Guide::QuestionDiagram
         end
         edge.not_applicable_points.each do |next_point|
           point.not_applicable_transitions[edge.transition] << build_diagram(next_point)
+        end
+        edge.necessary_points.each do |next_point|
+          point.necessary_transitions[edge.transition] << build_diagram(next_point)
         end
       end
     else

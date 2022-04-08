@@ -13,6 +13,7 @@ class Guide::Diagram::Edge
 
   embeds_ids :points, class_name: "Guide::Diagram::Point"
   embeds_ids :not_applicable_points, class_name: "Guide::Diagram::Point"
+  embeds_ids :necessary_points, class_name: "Guide::Diagram::Point"
 
   def applicable_points
     points.nin(id: not_applicable_point_ids)
