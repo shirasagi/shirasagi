@@ -6,7 +6,7 @@ addon[:display_body] = "hide"
 if @cur_node && (st_categories = @cur_node.st_categories).present?
   conds = [{ :id.in => @cur_node.st_category_ids }]
   st_categories.pluck(:filename).each do |filename|
-    conds << { filename: /#{::Regexp.escape(filename)}\// }
+    conds << { filename: /^#{::Regexp.escape(filename)}\// }
   end
   categories = Category::Node::Base.site(@cur_site).where("$and" => [{ "$or" => conds }])
   readable_categories = categories.readable(@cur_user, site: @cur_site).to_a
