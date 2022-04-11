@@ -47,6 +47,7 @@ class Article::Page::Importer
     raise I18n.t('errors.messages.auth_error') unless item.allowed?(:import, user, site: site, node: node)
 
     item.site = site
+    item.event_recurrences = nil
     set_page_attributes(row, item)
     raise I18n.t('errors.messages.auth_error') unless item.allowed?(:import, user, site: site, node: node)
 
@@ -153,7 +154,12 @@ class Article::Page::Importer
 
   def define_importer_event(importer)
     importer.simple_column :event_name
-    importer.simple_column :event_dates
+    Event::MAX_RECURRENCES_TO_IMPORT_EXPORT.times do |index|
+      column_name = "#{Cms::Page.t(:event_recurrences)}_#{index + 1}_開始日"
+      importer.simple_column "event_recurrence_#{index}".to_sym, name: column_name do |row, item, head, value|
+        import_event_recurrence(index, row, item, head, value)
+      end
+    end
     importer.simple_column :event_deadline
   end
 
@@ -238,5 +244,40 @@ class Article::Page::Importer
     end
     column_value.import_csv(values)
     column_value
+  end
+
+  def import_event_recurrence(index, row, item, head, start_on)
+    return if start_on.blank?
+
+    until_on = row["#{Cms::Page.t(:event_recurrences)}_#{index + 1}_終了日"].try(:strip).presence
+    start_time = row["#{Cms::Page.t(:event_recurrences)}_#{index + 1}_開始時刻"].try(:strip).presence
+    end_time = row["#{Cms::Page.t(:event_recurrences)}_#{index + 1}_終了時刻"].try(:strip).presence
+    wdays = row["#{Cms::Page.t(:event_recurrences)}_#{index + 1}_曜日"].try(:strip).presence
+    exclude_dates = row["#{Cms::Page.t(:event_recurrences)}_#{index + 1}_除外日"].try(:strip).presence
+
+    wdays = to_array(wdays, delim: ",") if wdays
+    exclude_dates = to_array(exclude_dates) if exclude_dates
+
+    recurrence = {
+      in_update_from_view: 1, in_start_on: start_on, in_until_on: until_on,
+      in_start_time: start_time, in_end_time: end_time, in_by_days: wdays, in_exclude_dates: exclude_dates
+    }
+
+    recurrences = item.event_recurrences.try(:to_a)
+    recurrences = recurrences ? recurrences.dup : []
+    recurrences << recurrence
+    item.event_recurrences = recurrences
+  end
+
+  def parse_wdays(wdays)
+    wdays = wdays.to_s.split(",").map(&:strip).select(&:present?)
+    abbr_day_names = I18n.t("date.abbr_day_names")
+
+    wdays.map { |wday| abbr_day_names.find_index(abbr_day_names) }.compact
+  end
+
+  def parse_exclude_dates(dates)
+    dates = dates.to_s.split(/\R/).map(&:strip).select(&:present?)
+    dates.map(&:in_time_zone).select(&:present?).map(&:to_date)
   end
 end

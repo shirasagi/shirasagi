@@ -32,7 +32,14 @@ class Event::Extensions::Recurrences
     # this custom class from it.
     def demongoize(object)
       return new(values: []) if object.nil?
-      values = object.map { |value| Event::Extensions::Recurrence.demongoize(value) }
+      values = object.map do |value|
+        case value
+        when Event::Extensions::Recurrence
+          value
+        when Hash
+          Event::Extensions::Recurrence.demongoize(value)
+        end
+      end
       values.compact!
       new(values: values)
     end

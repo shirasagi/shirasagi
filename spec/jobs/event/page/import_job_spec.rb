@@ -11,13 +11,46 @@ describe Event::Page::ImportJob, dbscope: :example do
   let(:role) { create(:cms_role_admin, site_id: site.id, permissions: %w(import_private_event_pages)) }
   let(:user) { create(:cms_user, uid: unique_id, name: unique_id, group_ids: [ group.id ], role: role) }
 
-  let!(:file_path) { "#{::Rails.root}/spec/fixtures/event/import_job/event_pages.csv" }
-  let!(:in_file) { Fs::UploadedFile.create_from_file(file_path) }
-  let!(:ss_file) { create(:ss_file, site: site, in_file: in_file ) }
+  let!(:ss_file) { tmp_ss_file contents: "", basename: "event_pages.csv" }
 
   describe ".perform_later" do
     context "with node" do
+      let(:basename) { "page1.html" }
+      let(:name) { "住民相談会を開催します。" }
+      let(:schedule) { "〇〇年○月〇日" }
+      let(:venue) { "○○○○○○○○○○" }
+      let(:content) { "○○○○○○○○○○○○○○○○○○○○" }
+      let(:cost) { "○○○○○○○○○○" }
+      let(:related_url) { "http://demo.ss-proj.org/" }
+      let(:event_name) { "住民相談会" }
+      let(:event_recurrence) do
+        { kind: "date", start_at: "2016/09/07", frequency: "daily", until_on: "2016/09/27" }
+      end
+      let(:event_deadline) { "2016/8/13" }
+      let(:released_type) { "fixed" }
+      let(:released) { "2016/09/07 19:11" }
+      let(:state) { "closed" }
+      let(:event_dates) do
+        Range.new(event_recurrence[:start_at].in_time_zone.to_date, event_recurrence[:until_on].in_time_zone.to_date).to_a
+      end
+
       before do
+        template_event_node = create(:event_node_page, cur_site: site)
+        create(
+          :event_page, cur_site: site, cur_node: template_event_node, layout: layout, basename: basename, name: name,
+          schedule: schedule, venue: venue, content: content, cost: cost, related_url: related_url,
+          event_name: event_name, event_recurrences: [ event_recurrence ], event_deadline: event_deadline,
+          released_type: released_type, released: released, state: state, group_ids: [ group.id ]
+        )
+
+        criteria = Event::Page.site(site).node(template_event_node)
+        exporter = Cms::PageExporter.new(mode: "event", site: @cur_site, criteria: criteria)
+        enumerable = exporter.enum_csv(encoding: "Shift_JIS")
+
+        ::File.open(ss_file.path, "wb") do |f|
+          enumerable.each { |csv| f.write(csv) }
+        end
+
         job_class = described_class.bind(site_id: site, node_id: node, user_id: user)
         expect { job_class.perform_now(ss_file.id) }.to output(include("import start event_pages.csv\n")).to_stdout
       end
@@ -28,32 +61,28 @@ describe Event::Page::ImportJob, dbscope: :example do
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
 
         items = Event::Page.site(site).where(filename: /^#{node.filename}\//, depth: 2)
-        expect(items.count).to be 4
+        expect(items.count).to be 1
 
-        item = items.where(filename: "#{node.filename}/page1.html").first
-        expect(item.name).to eq "住民相談会を開催します。"
-        expect(item.layout.try(:name)).to eq "イベントカレンダー"
-        expect(item.order).to be 0
+        item = items.where(filename: "#{node.filename}/#{basename}").first
+        expect(item.name).to eq name
+        expect(item.layout.try(:name)).to eq layout.name
+        expect(item.order).to eq 0
 
-        expect(item.schedule).to eq "〇〇年○月〇日"
-        expect(item.venue).to eq "○○○○○○○○○○"
-        expect(item.content).to eq "○○○○○○○○○○○○○○○○○○○○"
-        expect(item.cost).to eq "○○○○○○○○○○"
-        expect(item.related_url).to eq "http://demo.ss-proj.org/"
-        expect(item.event_name).to eq "住民相談会"
-        expect(item.event_dates).to eq %w(
-          2016/09/07 2016/09/08 2016/09/09 2016/09/10 2016/09/11 2016/09/12 2016/09/13
-          2016/09/14 2016/09/15 2016/09/16 2016/09/17 2016/09/18 2016/09/19 2016/09/20
-          2016/09/21 2016/09/22 2016/09/23 2016/09/24 2016/09/25 2016/09/26 2016/09/27
-        ).map { |d| d.in_time_zone.to_date }
-        expect(item.event_deadline).to eq "2016/8/13".in_time_zone
-        expect(item.released_type).to eq "fixed"
-        expect(item.released.try(:strftime, "%Y/%m/%d %H:%M")).to eq "2016/09/07 19:11"
-        expect(item.groups.pluck(:name)).to match_array ["シラサギ市/企画政策部/政策課"]
+        expect(item.schedule).to eq schedule
+        expect(item.venue).to eq venue
+        expect(item.content).to eq content
+        expect(item.cost).to eq cost
+        expect(item.related_url).to eq related_url
+        expect(item.event_name).to eq event_name
+        expect(item.event_dates).to eq event_dates
+        expect(item.event_deadline).to eq event_deadline.in_time_zone
+        expect(item.released_type).to eq released_type
+        expect(item.released).to eq released.in_time_zone
+        expect(item.groups.pluck(:name)).to match_array [ group.name ]
         unless SS.config.ss.disable_permission_level
           expect(item.permission_level).to be 2
         end
-        expect(item.state).to eq "closed"
+        expect(item.state).to eq state
       end
     end
   end

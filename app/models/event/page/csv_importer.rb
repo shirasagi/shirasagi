@@ -127,7 +127,7 @@ class Event::Page::CsvImporter
 
     # event
     item.event_name = value(row, :event_name)
-    item.event_dates = value(row, :event_dates)
+    set_event_recurrences(row, item)
     item.event_deadline = value(row, :event_deadline)
 
     # related pages
@@ -154,5 +154,51 @@ class Event::Page::CsvImporter
     # state
     state = label_value(item, row, :state)
     item.state = state || "public"
+  end
+
+  def set_event_recurrences(row, item)
+    recurrences = []
+
+    Event::MAX_RECURRENCES_TO_IMPORT_EXPORT.times do |index|
+      start_on = row["#{Cms::Page.t(:event_recurrences)}_#{index + 1}_開始日"]
+      next if start_on.blank?
+
+      until_on = row["#{Cms::Page.t(:event_recurrences)}_#{index + 1}_終了日"]
+      start_time = row["#{Cms::Page.t(:event_recurrences)}_#{index + 1}_開始時刻"]
+      end_time = row["#{Cms::Page.t(:event_recurrences)}_#{index + 1}_終了時刻"]
+      wdays = row["#{Cms::Page.t(:event_recurrences)}_#{index + 1}_曜日"]
+      exclude_dates = row["#{Cms::Page.t(:event_recurrences)}_#{index + 1}_除外日"]
+
+      kind = start_time.present? ? "datetime" : "date"
+      start_on = start_on.in_time_zone.to_date
+      start_at = Event.make_time(start_on, start_time) if start_time.present?
+      end_at = Event.make_time(start_on, end_time) if end_time.present?
+      until_on = until_on.in_time_zone.to_date if until_on.present?
+      if wdays.present?
+        includes_holiday = wdays.include?("祝日")
+        by_days = parse_wdays(wdays)
+      end
+      frequency = by_days.present? || includes_holiday ? "weekly" : "daily"
+      exclude_dates = parse_exclude_dates(exclude_dates) if exclude_dates.present?
+
+      recurrences << {
+        kind: kind, start_at: start_at || start_on, end_at: end_at, frequency: frequency, until_on: until_on,
+        by_days: by_days, includes_holiday: includes_holiday, exclude_dates: exclude_dates
+      }
+    end
+
+    item.event_recurrences = recurrences
+  end
+
+  def parse_wdays(wdays)
+    wdays = wdays.to_s.split(",").map(&:strip).select(&:present?)
+    abbr_day_names = I18n.t("date.abbr_day_names")
+
+    wdays.map { |wday| abbr_day_names.find_index(abbr_day_names) }.compact
+  end
+
+  def parse_exclude_dates(dates)
+    dates = dates.to_s.split(/\R/).map(&:strip).select(&:present?)
+    dates.map(&:in_time_zone).select(&:present?).map(&:to_date)
   end
 end

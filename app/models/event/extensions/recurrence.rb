@@ -23,8 +23,6 @@ class Event::Extensions::Recurrence
   # 除外日
   attribute :exclude_dates
 
-  attr_accessor :in_update_from_view, :in_start_time, :in_end_time, :in_exclude_dates
-
   validates :kind, presence: true, inclusion: { in: %w(date datetime), allow_blank: true }
   validates :start_at, presence: true
   validates :end_at, presence: true

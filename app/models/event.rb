@@ -4,6 +4,7 @@ module Event
   DATE_TIME_SEPARATOR = "　".freeze
   START_AND_END_TIME_SEPARATOR = I18n.t("ss.wave_dash").dup.freeze
   MULTI_START_TIME_SEPARATOR = "／".freeze
+  MAX_RECURRENCES_TO_IMPORT_EXPORT = 10
 
   def cluster_dates(dates)
     ret = []
@@ -168,14 +169,19 @@ module Event
         end
 
         part = parts.join
-        if part == "日土"
+        case part
+        when "日土"
           part = "土日"
-        elsif part == "日土祝"
+        when "日土祝"
           part = "土日祝"
         end
 
         "毎週" + part
       end
     end
+  end
+
+  def make_time(date, time_part)
+    time_part.in_time_zone.change(year: date.year, month: date.month, day: date.day)
   end
 end
