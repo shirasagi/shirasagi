@@ -5,7 +5,8 @@ class Guide::Diagram::Point
   include SS::Reference::Site
   include Cms::Reference::Node
 
-  attr_accessor :transitions, :applicable_transitions, :not_applicable_transitions, :necessary_transitions
+  attr_accessor :transitions, :applicable_transitions, :not_applicable_transitions, :necessary_transitions,
+    :optional_necessary_transitions
 
   field :name, type: String
   field :id_name, type: String
@@ -30,6 +31,9 @@ class Guide::Diagram::Point
       end
       if edge.necessary_point_ids.include?(id)
         label << I18n.t('guide.labels.necessary')
+      end
+      if edge.optional_necessary_point_ids.include?(id)
+        label << I18n.t('guide.labels.optional_necessary')
       end
     end
     "[#{label.join(':')}] #{id_name}"

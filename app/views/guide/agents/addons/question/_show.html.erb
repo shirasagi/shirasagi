@@ -30,6 +30,7 @@
               </td>
               <td><%= edge.not_applicable_point_ids.include?(point.id) ? t('guide.labels.not_applicable') : t('guide.labels.applicable') %></td>
               <td><%= t('guide.labels.necessary') if edge.necessary_point_ids.include?(point.id) %></td>
+              <td><%= t('guide.labels.optional_necessary') if edge.optional_necessary_point_ids.include?(point.id) %></td>
             </tr>
           <% end %>
           </tbody>

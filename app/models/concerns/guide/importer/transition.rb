@@ -53,7 +53,8 @@ module Guide::Importer::Transition
         value: edge.value,
         point_ids: edge.point_ids,
         not_applicable_point_ids: edge.not_applicable_point_ids,
-        necessary_point_ids: edge.necessary_point_ids
+        necessary_point_ids: edge.necessary_point_ids,
+        optional_necessary_point_ids: edge.optional_necessary_point_ids,
       )
     end
 
@@ -69,6 +70,7 @@ module Guide::Importer::Transition
       point_ids = []
       not_applicable_point_ids = []
       necessary_point_ids = []
+      optional_necessary_point_ids = []
       v.split(/\n/).each do |line|
         line.scan(/^\[(.+?)\](.+?)$/).each do |type, id_name|
           id_name = id_name.squish
@@ -77,32 +79,27 @@ module Guide::Importer::Transition
           case type
           when /#{::Regexp.escape(I18n.t("guide.procedure"))}/
             point = Guide::Procedure.site(cur_site).node(cur_node).where(id_name: id_name).first
-            if point
-              point_ids << point.id
-              if type.match?(I18n.t("guide.labels.not_applicable"))
-                not_applicable_point_ids << point.id
-              end
-              if type.match?(I18n.t("guide.labels.necessary"))
-                necessary_point_ids << point.id
-              end
-            end
           when /#{::Regexp.escape(I18n.t("guide.question"))}/
             point = Guide::Question.site(cur_site).node(cur_node).where(id_name: id_name).first
-            if point
-              point_ids << point.id
-              if type.match?(I18n.t("guide.labels.not_applicable"))
-                not_applicable_point_ids << point.id
-              end
-              if type.match?(I18n.t("guide.labels.necessary"))
-                necessary_point_ids << point.id
-              end
-            end
+          end
+
+          next unless point
+
+          point_ids << point.id
+          if type.match?(I18n.t("guide.labels.not_applicable"))
+            not_applicable_point_ids << point.id
+          end
+          if type.match?(I18n.t("guide.labels.optional_necessary"))
+            optional_necessary_point_ids << point.id
+          elsif type.match?(I18n.t("guide.labels.necessary"))
+            necessary_point_ids << point.id
           end
         end
       end
       in_edges[idx][:point_ids] = point_ids
       in_edges[idx][:not_applicable_point_ids] = not_applicable_point_ids
       in_edges[idx][:necessary_point_ids] = necessary_point_ids
+      in_edges[idx][:optional_necessary_point_ids] = optional_necessary_point_ids
     end
 
     item.in_edges = in_edges

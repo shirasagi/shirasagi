@@ -11,6 +11,7 @@ class Guide::QuestionDiagram
 
     @procedures = {}
     @procedure_necessary_count = {}
+    @procedure_optional_necessary_count = {}
     @questions = []
 
     @queue = []
@@ -50,11 +51,17 @@ class Guide::QuestionDiagram
               next_point
             end
           else
+            @procedure_necessary_count[next_point.id] ||= 0
+            @procedure_optional_necessary_count[next_point.id] ||= 0
             if point.necessary_transitions[key].present? && point.necessary_transitions[key].to_a.include?(next_point)
-              @procedure_necessary_count[next_point.id] ||= 0
               @procedure_necessary_count[next_point.id] += 1
             end
-            if next_point.necessary_count.zero? || next_point.necessary_count <= @procedure_necessary_count[next_point.id]
+            if point.optional_necessary_transitions[key].present? &&
+               point.optional_necessary_transitions[key].to_a.include?(next_point)
+              @procedure_optional_necessary_count[next_point.id] += 1
+            end
+            if (next_point.necessary_count.zero? || next_point.necessary_count <= @procedure_necessary_count[next_point.id]) &&
+               (next_point.optional_necessary_count.zero? || @procedure_optional_necessary_count[next_point.id] > 0)
               @procedures[next_point.id] = next_point
             end
             nil
@@ -94,6 +101,7 @@ class Guide::QuestionDiagram
     point.applicable_transitions = {}
     point.not_applicable_transitions = {}
     point.necessary_transitions = {}
+    point.optional_necessary_transitions = {}
 
     if point.question?
       point.edges.each do |edge|
@@ -101,6 +109,7 @@ class Guide::QuestionDiagram
         point.applicable_transitions[edge.transition] = []
         point.not_applicable_transitions[edge.transition] = []
         point.necessary_transitions[edge.transition] = []
+        point.optional_necessary_transitions[edge.transition] = []
         edge.points.each do |next_point|
           point.transitions[edge.transition] << build_diagram(next_point)
         end
@@ -112,6 +121,9 @@ class Guide::QuestionDiagram
         end
         edge.necessary_points.each do |next_point|
           point.necessary_transitions[edge.transition] << build_diagram(next_point)
+        end
+        edge.optional_necessary_points.each do |next_point|
+          point.optional_necessary_transitions[edge.transition] << build_diagram(next_point)
         end
       end
     else

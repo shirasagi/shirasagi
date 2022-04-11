@@ -72,5 +72,13 @@ module Guide::Addon
       end
       edges.count
     end
+
+    def optional_necessary_count
+      edges = Guide::Diagram::Edge.none
+      referenced_questions.each do |question|
+        edges += question.edges.in(optional_necessary_point_ids: [id])
+      end
+      edges.count
+    end
   end
 end
