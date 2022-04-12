@@ -224,6 +224,7 @@ li.webmail-accounts {
     .from, .to {
       width: 200px;
       padding-right: 5px;
+      a { color: inherit; }
     }
     .icon-reply {
       margin-right: 0.2rem;
