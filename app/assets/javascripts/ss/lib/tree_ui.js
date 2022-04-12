@@ -28,6 +28,7 @@ this.SS_TreeUI = (function () {
   };
 
   SS_TreeUI.openSelectedGroupsTree = function (current_tr) {
+    current_tr.addClass("current");
     for (i = 0; i < parseInt(current_tr.attr("data-depth")); i++) {
       var tr = current_tr.prevAll('tr[data-depth=' + i.toString() + ']:first');
       var img = tr.find(".toggle:first");
@@ -122,7 +123,7 @@ this.SS_TreeUI = (function () {
     } else if (collapse_all) {
       SS_TreeUI.closeImage(self.tree.find("tbody tr img"));
     } else if (expand_group && $("tbody tr.current").attr("data-depth") !== "0") {
-      SS_TreeUI.openSelectedGroupsTree(self.tree.find("tbody tr.current"));
+      SS_TreeUI.openSelectedGroupsTree(self.tree.find("tbody tr[data-id='" + expand_group + "']"));
     } else {
       self.tree.find("tr[data-depth='" + root + "'] img").trigger("click");
     }

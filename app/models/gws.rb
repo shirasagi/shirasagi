@@ -1,6 +1,8 @@
 module Gws
   extend Sys::ModulePermission
 
+  FRAGMENT_CACHE_EXPIRES_IN = 1.day
+
   module_function
 
   mattr_accessor(:module_usable_handlers) { {} }
