@@ -8,7 +8,7 @@ module Category::CategoryHelper
       @unreadable_categories = []
 
       cate_options ||= {}
-      @readable = !cate_options[:readable_categories]
+      @readable = !cate_options[:readable_categories].nil?
       @readable_category_ids = cate_options[:readable_categories].map(&:id) if @readable
 
       @root_and_descendants = cate_options[:root_and_descendants]
