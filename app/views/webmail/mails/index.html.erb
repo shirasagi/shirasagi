@@ -81,7 +81,10 @@
             <span class="field from"><%= t("webmail.no_senders") %></span>
           <% end %>
         <% end %>
-        <%= link_to item.display_subject, { action: :show, id: item.uid }, class: "field title", title: item.display_subject %>
+        <%= link_to({ action: :show, id: item.uid }, class: "field title", title: item.display_subject) do %>
+          <% title_flag = %(<i class="material-icons md-18 icon-reply">&#xE15E;</i>) if item.answered? %>
+          <%== title_flag %><%= item.display_subject %>
+        <% end %>
         <span class="field datetime"><%= tryb { item.internal_date.strftime("%Y/%m/%d %H:%M") } %></span>
         <span class="field size"><%= item.display_size %></span>
       </div>

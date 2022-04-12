@@ -17,7 +17,7 @@ module Webmail::Mail::Updater
     flags.to_a.include?(:Draft)
   end
 
-  def answerd?
+  def answered?
     flags.to_a.include?(:Answered)
   end
 
