@@ -15,7 +15,7 @@ module Guide::Addon
       permit_params :question_type
       permit_params :check_type
       permit_params in_edges: [
-        :value, :question_type, point_ids: [], not_applicable_point_ids: [], necessary_point_ids: [],
+        :value, :question_type, :explanation, point_ids: [], not_applicable_point_ids: [], necessary_point_ids: [],
         optional_necessary_point_ids: []
       ]
 

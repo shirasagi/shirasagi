@@ -11,6 +11,9 @@
     <% if @item.question_type == "choices" %>
       <dt><%= "#{t("guide.labels.choices")}#{no + 1}" %></dt>
       <dd><%= edge.value %></dd>
+      <% if edge.explanation.present? %>
+        <dd><%= edge.explanation %></dd>
+      <% end %>
     <% else %>
       <dt><%= edge.value %></dt>
     <% end %>

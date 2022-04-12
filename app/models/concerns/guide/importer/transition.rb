@@ -51,10 +51,11 @@ module Guide::Importer::Transition
       OpenStruct.new(
         question_type: edge.question_type,
         value: edge.value,
+        explanation: edge.explanation,
         point_ids: edge.point_ids,
         not_applicable_point_ids: edge.not_applicable_point_ids,
         necessary_point_ids: edge.necessary_point_ids,
-        optional_necessary_point_ids: edge.optional_necessary_point_ids,
+        optional_necessary_point_ids: edge.optional_necessary_point_ids
       )
     end
 
