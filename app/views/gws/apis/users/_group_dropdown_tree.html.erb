@@ -16,27 +16,4 @@
   $("form.search [name='s[group]']").val(<%== @group.id.to_json %>);
 <% end %>
 
-<%= cache("gws/apis/users/group_dropdown_tree/#{@cur_site.id}", expires_in: Gws::FRAGMENT_CACHE_EXPIRES_IN) do %>
-  <% groups = @cur_site.descendants.active.tree_sort(root_name: @cur_site.name) %>
-  <button class="dropdown btn" type="button" <% if groups.count == 0 %>disabled<% end %>><span class="current-group"></span> <span class="caret">&#x25BC;</span></button>
-
-  <%= hidden_field_tag "s[group]", "", id: nil %>
-  <div class="dropdown-container">
-    <table class="index groups">
-      <tbody>
-      <tr data-depth="0" class="toggle">
-        <td class="expandable">
-          <%= link_to @cur_site.i18n_name, "#", class: "select-group", data: { id: @cur_site.id } %>
-        </td>
-      </tr>
-      <% groups.each do |item| %>
-        <tr data-depth="<%= item.depth - @cur_site.depth + 1 %>" class="toggle">
-          <td class="expandable">
-            <%= link_to item.i18n_trailing_name, "#", class: "select-group", data: { id: item.id } %>
-          </td>
-        </tr>
-      <% end %>
-      </tbody>
-    </table>
-  </div>
-<% end %>
+<%= render Gws::Apis::GroupDropdownTreeComponent.new(cur_site: @cur_site) %>

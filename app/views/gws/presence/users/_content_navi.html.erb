@@ -6,10 +6,10 @@
 <%= jquery do %>
   var tree = SS_TreeUI.render(".tree-groups .index.groups", <%== opts.to_json %>);
   $(".expand-all").on("click", function() {
-    tree.expandAll();
+  tree.expandAll();
   });
   $(".collapse-all").on("click", function() {
-    tree.collapseAll();
+  tree.collapseAll();
   });
 <% end %>
 
@@ -24,26 +24,7 @@
     </div>
 
     <% if @cur_site.present? %>
-      <%= cache("gws/presence/main/tree-groups/#{@cur_site.id}", expires_in: Riken::FRAGMENT_CACHE_EXPIRES_IN) do %>
-        <% groups = @cur_site.root.descendants_and_self.active.tree_sort %>
-        <div class="tree-groups">
-          <table class="index groups">
-            <tbody class="items">
-            <tr data-depth="0">
-              <td>
-                <button class="btn expand-all" type="button"><%= t('gws/presence.operations.expand_all') %></button>
-                <button class="btn collapse-all" type="button"><%= t('gws/presence.operations.collapse_all') %></button>
-              </td>
-            </tr>
-            <% groups.each do |item| %>
-              <%= tag.tr class: "list-item", data: { id: item.id, depth: item.depth } do %>
-                <td class="expandable"><%= link_to item.trailing_name, gws_presence_group_users_path(group: item.id) %></td>
-              <% end %>
-            <% end %>
-            </tbody>
-          </table>
-        </div>
-      <% end %>
+      <%= render Gws::Presence::TreeGroupComponent.new(cur_site: @cur_site) %>
     <% end %>
 
     <% if @custom_groups.present? %>
