@@ -125,7 +125,7 @@ class Gws::Affair::Attendance::TimeCard::GroupsController < ApplicationControlle
     @overtime_files = {}
     Gws::Affair::OvertimeFile.site(@cur_site).in(target_user_id: @users.map(&:id)).and(
       { "state" => "approve" },
-      { "date" => @cur_day },
+      { "date" => @cur_day }
     ).each do |item|
       @overtime_files[item.target_user_id] ||= []
       @overtime_files[item.target_user_id] << item
@@ -137,8 +137,8 @@ class Gws::Affair::Attendance::TimeCard::GroupsController < ApplicationControlle
     Gws::Affair::LeaveFile.site(@cur_site).where(state: "approve").
       in(target_user_id: @users.map(&:id)).
       in("leave_dates.date" => @cur_day).each do |item|
-        @leave_files[item.target_user_id] ||= []
-        @leave_files[item.target_user_id] << item
+      @leave_files[item.target_user_id] ||= []
+      @leave_files[item.target_user_id] << item
     end
   end
 
@@ -165,9 +165,7 @@ class Gws::Affair::Attendance::TimeCard::GroupsController < ApplicationControlle
     @users = Gws::User.active.in(group_ids: @group.id).order_by_title(@cur_site)
     @items = @model.site(@cur_site).in(user_id: @users.map(&:id)).
       where(date: @cur_day.change(day: 1)).
-      map { |item| [item.user_id, item] }.
-      to_h
-
+      index_by(&:user_id)
     set_overtime_files
     set_leave_files
   end

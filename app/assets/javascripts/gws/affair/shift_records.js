@@ -27,7 +27,7 @@ Gws_Affair_ShiftRecords.prototype.setFocus = function($cell) {
   $cell.addClass('focus');
 };
 
-Gws_Affair_ShiftRecords.prototype.onClickCell = function($cell, urlTemplate) {
+Gws_Affair_ShiftRecords.prototype.onClickCell = function($cell) {
   this.setFocus($cell);
 
   var day = $cell.data('day');

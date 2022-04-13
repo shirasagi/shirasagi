@@ -34,7 +34,7 @@ class Gws::Affair::Overtime::Management::Aggregate::RkkController < ApplicationC
   end
 
   def download
-    return if request.get?
+    return if request.get? || request.head?
 
     @groups = Gws::Group.in_group(@cur_site).active.to_a
     @users = Gws::User.active.in(group_ids: @groups.map(&:id))

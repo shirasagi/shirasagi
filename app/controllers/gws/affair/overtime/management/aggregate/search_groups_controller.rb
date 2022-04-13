@@ -51,7 +51,7 @@ class Gws::Affair::Overtime::Management::Aggregate::SearchGroupsController < App
   end
 
   def download
-    return if request.get?
+    return if request.get? || request.head?
 
     results
     @encoding = params.dig(:s, :encoding)

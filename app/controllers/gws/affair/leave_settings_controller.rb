@@ -55,7 +55,7 @@ class Gws::Affair::LeaveSettingsController < ApplicationController
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
 
     @item = @cur_year.leave_setting_day_count(@cur_user)
-    return if request.get?
+    return if request.get? || request.head?
 
     enum_csv = @item.enum_csv
     send_enum(enum_csv,
@@ -78,7 +78,7 @@ class Gws::Affair::LeaveSettingsController < ApplicationController
   def import
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
 
-    return if request.get?
+    return if request.get? || request.head?
     @item = @model.new get_params
     result = @item.import
     flash.now[:notice] = t("ss.notice.saved") if !result && @item.imported > 0
@@ -88,7 +88,7 @@ class Gws::Affair::LeaveSettingsController < ApplicationController
   def import_member
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
 
-    return if request.get?
+    return if request.get? || request.head?
 
     @item = @cur_year.leave_setting_member(@cur_user)
     @item.attributes = get_params

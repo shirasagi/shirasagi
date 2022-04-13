@@ -27,19 +27,12 @@ class Gws::Affair::OvertimeFile
   default_scope -> { order_by updated: -1 }
 
   def status
-    if result_closed?
-      'result_closed'
-    elsif state == 'approve'
-      'approve'
-    elsif workflow_state == 'cancelled'
-      'draft'
-    elsif workflow_state.present?
-      workflow_state
-    elsif state == 'closed'
-      'draft'
-    else
-      state
-    end
+    return 'result_closed' if result_closed?
+    return 'approve' if state == 'approve'
+    return 'draft' if workflow_state == 'cancelled'
+    return workflow_state if workflow_state.present?
+    return 'draft' if state == 'closed'
+    state
   end
 
   def status_options

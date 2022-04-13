@@ -52,7 +52,7 @@ class Gws::Affair::SpecialLeavesController < ApplicationController
   def import
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
 
-    return if request.get?
+    return if request.get? || request.head?
     @item = @model.new get_params
     @item.cur_site = @cur_site
     @item.cur_user = @cur_user
