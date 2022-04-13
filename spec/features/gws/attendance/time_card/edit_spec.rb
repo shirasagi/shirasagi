@@ -43,7 +43,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
     end
 
     context "edit cell in today row" do
-      it do
+      xit do
         # edit
         within ".today .action .#{cell_type}" do
           click_on I18n.t('ss.buttons.edit')
@@ -88,7 +88,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
     end
 
     context "edit in monthly table" do
-      it do
+      xit do
         # edit
         within "table.time-card" do
           within "tr.current" do
@@ -148,7 +148,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
     include_context "edit time cell"
 
     context "when reason remains blank" do
-      it do
+      xit do
         within "table.time-card" do
           within "tr.current" do
             first("td.#{cell_type}").click
@@ -212,7 +212,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
     end
 
     context "edit cell in today row" do
-      it do
+      xit do
         visit gws_attendance_main_path(site)
         within '.today .action .memo' do
           click_on I18n.t('ss.buttons.edit')
@@ -235,7 +235,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
     end
 
     context "edit in monthly table" do
-      it do
+      xit do
         visit gws_attendance_main_path(site)
 
         within "table.time-card" do

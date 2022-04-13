@@ -27,7 +27,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
   before { login_user user }
 
   context 'move next' do
-    it do
+    xit do
       visit gws_attendance_main_path(site)
 
       within ".nav-group" do
@@ -46,7 +46,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
   end
 
   context 'move prev' do
-    it do
+    xit do
       visit gws_attendance_main_path(site)
 
       within ".nav-group" do
@@ -65,7 +65,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
   end
 
   context 'select year/month' do
-    it do
+    xit do
       visit gws_attendance_main_path(site)
 
       within ".nav-group" do
@@ -87,7 +87,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
   end
 
   describe "https://github.com/shirasagi/shirasagi/issues/3208" do
-    it do
+    xit do
       visit gws_attendance_main_path(site)
 
       within ".nav-group" do
