@@ -1,5 +1,5 @@
 def create_affair_users
-  site = Gws::Group.create(name: "那珂川市", order: 10)
+  site = Gws::Group.create(name: "庶務事務市", order: 10)
   role = Gws::Role.create(
     name: I18n.t('gws.roles.admin'),
     site_id: site.id,
@@ -78,13 +78,13 @@ def create_affair_users
     project_code: 693,
     detail_code: 78
   )
-  g = Gws::Group.find_by(name: "那珂川市/市長・副市長/総務部/総務課")
+  g = Gws::Group.find_by(name: "庶務事務市/市長・副市長/総務部/総務課")
   item.member_group_ids = [g.id] + g.descendants.pluck(:id)
   item.save!
 end
 
 def affair_site
-  Gws::Group.find_by(name: "那珂川市")
+  Gws::Group.find_by(name: "庶務事務市")
 end
 
 def affair_user(uid)

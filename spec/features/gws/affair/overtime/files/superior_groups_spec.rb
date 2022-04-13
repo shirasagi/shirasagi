@@ -8,19 +8,19 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
     let(:user_sup) { affair_user("sup") }
 
     # 市長・副市長
-    let(:user_716) { affair_user(716) } # 那珂川市/市長・副市長
+    let(:user_716) { affair_user(716) } # 庶務事務市/市長・副市長
 
     # 総務部
-    let(:user_461) { affair_user(461) } # 那珂川市/市長・副市長/総務部
-    let(:user_545) { affair_user(545) } # 那珂川市/市長・副市長/総務部/総務課
-    let(:user_683) { affair_user(638) } # 那珂川市/市長・副市長/総務部/総務課/人事担当
-    let(:user_586) { affair_user(586) } # 那珂川市/市長・副市長/総務部/総務課/秘書広報担当
+    let(:user_461) { affair_user(461) } # 庶務事務市/市長・副市長/総務部
+    let(:user_545) { affair_user(545) } # 庶務事務市/市長・副市長/総務部/総務課
+    let(:user_683) { affair_user(638) } # 庶務事務市/市長・副市長/総務部/総務課/人事担当
+    let(:user_586) { affair_user(586) } # 庶務事務市/市長・副市長/総務部/総務課/秘書広報担当
 
     # 市民生活部
-    let(:user_502) { affair_user(502) } # 那珂川市/市長・副市長/市民生活部
-    let(:user_510) { affair_user(510) } # 那珂川市/市長・副市長/市民生活部/税務課
-    let(:user_565) { affair_user(565) } # 那珂川市/市長・副市長/市民生活部/税務課/市民税担当
-    let(:user_492) { affair_user(492) } # 那珂川市/市長・副市長/市民生活部/税務課/固定資産税担当
+    let(:user_502) { affair_user(502) } # 庶務事務市/市長・副市長/市民生活部
+    let(:user_510) { affair_user(510) } # 庶務事務市/市長・副市長/市民生活部/税務課
+    let(:user_565) { affair_user(565) } # 庶務事務市/市長・副市長/市民生活部/税務課/市民税担当
+    let(:user_492) { affair_user(492) } # 庶務事務市/市長・副市長/市民生活部/税務課/固定資産税担当
 
     let(:new_path) { new_gws_affair_overtime_file_path(site: site, state: "mine") }
     let(:import_path) { import_gws_groups_path(site: site) }
@@ -66,10 +66,10 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         capital.member_ids = Gws::User.all.map(&:id)
         capital.save!
 
-        check_superior(user_461, "那珂川市/市長・副市長")
-        check_superior(user_545, "那珂川市/市長・副市長/総務部")
-        check_superior(user_683, "那珂川市/市長・副市長/総務部")
-        check_superior(user_586, "那珂川市/市長・副市長/総務部")
+        check_superior(user_461, "庶務事務市/市長・副市長")
+        check_superior(user_545, "庶務事務市/市長・副市長/総務部")
+        check_superior(user_683, "庶務事務市/市長・副市長/総務部")
+        check_superior(user_586, "庶務事務市/市長・副市長/総務部")
       end
     end
   end
