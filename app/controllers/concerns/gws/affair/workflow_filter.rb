@@ -9,7 +9,8 @@ module Gws::Affair::WorkflowFilter
     notifier = Gws::Affair::Notifier.new(@item)
 
     current_level = @item.workflow_current_level
-    current_workflow_approvers = @item.workflow_approvers_at(current_level).reject{|approver| approver[:user_id] == @cur_user.id}
+    current_workflow_approvers = @item.workflow_approvers_at(current_level).
+      reject { |approver| approver[:user_id] == @cur_user.id }
     current_workflow_approvers.each do |workflow_approver|
 
       # deliver_workflow_request
@@ -26,10 +27,8 @@ module Gws::Affair::WorkflowFilter
   def request_update
     set_item
 
-    raise "403" unless @item.allowed?(:edit, @cur_user)
-    if @item.workflow_requested?
-      raise "403" unless @item.allowed?(:reroute, @cur_user)
-    end
+    raise "403" if !@item.allowed?(:edit, @cur_user)
+    raise "403" if @item.workflow_requested? && !@item.allowed?(:reroute, @cur_user)
 
     @item.approved = nil
     if params[:workflow_agent_type].to_s == "agent"
@@ -145,7 +144,7 @@ module Gws::Affair::WorkflowFilter
     workflow_state = @item.workflow_state
     if workflow_state == @model::WORKFLOW_STATE_APPROVE
       # finished workflow
-      to_user_ids = ([ @item.workflow_user_id, @item.workflow_agent_id ].compact) - [@cur_user.id]
+      to_user_ids = [ @item.workflow_user_id, @item.workflow_agent_id ].compact - [ @cur_user.id ]
       to_users = Gws::User.and_enabled.in(id: to_user_ids).select { |user| user.use_notice?(@item) }.to_a
 
       if to_users.present?
@@ -159,7 +158,7 @@ module Gws::Affair::WorkflowFilter
 
       if @item.move_workflow_circulation_next_step
         current_circulation_users = @item.workflow_current_circulation_users.nin(id: @cur_user.id).active
-        current_circulation_users = current_circulation_users.select{|user| user.use_notice?(@item)}
+        current_circulation_users = current_circulation_users.select { |user| user.use_notice?(@item) }
         if current_circulation_users.present?
 
           # deliver_workflow_circulations
@@ -203,10 +202,7 @@ module Gws::Affair::WorkflowFilter
         item.workflow_state = @model::WORKFLOW_STATE_APPROVE
         item.state = "approve"
       end
-
-      if !item.save
-        next
-      end
+      next if !item.save
 
       notify_url = ::File.join(request.base_url, item.private_show_path)
       current_level = item.workflow_current_level
@@ -214,7 +210,8 @@ module Gws::Affair::WorkflowFilter
         # escalate workflow
         notifier = Gws::Affair::Notifier.new(item)
         current_level = item.workflow_current_level
-        current_workflow_approvers = item.workflow_approvers_at(current_level).reject{|approver| approver[:user_id] == @cur_user.id}
+        current_workflow_approvers = item.workflow_approvers_at(current_level).
+          reject { |approver| approver[:user_id] == @cur_user.id }
         current_workflow_approvers.each do |workflow_approver|
           # deliver_workflow_request
           to_users = Gws::User.where(id: workflow_approver[:user_id]).to_a
@@ -228,7 +225,7 @@ module Gws::Affair::WorkflowFilter
       workflow_state = item.workflow_state
       if workflow_state == @model::WORKFLOW_STATE_APPROVE
         # finished workflow
-        to_user_ids = ([ item.workflow_user_id, item.workflow_agent_id ].compact) - [@cur_user.id]
+        to_user_ids = [ @item.workflow_user_id, @item.workflow_agent_id ].compact - [ @cur_user.id ]
         to_users = Gws::User.and_enabled.in(id: to_user_ids).select { |user| user.use_notice?(item) }.to_a
 
         if to_users.present?
@@ -239,9 +236,8 @@ module Gws::Affair::WorkflowFilter
 
         if item.move_workflow_circulation_next_step
           current_circulation_users = item.workflow_current_circulation_users.nin(id: @cur_user.id).active
-          current_circulation_users = current_circulation_users.select{|user| user.use_notice?(item)}
+          current_circulation_users = current_circulation_users.select { |user| user.use_notice?(item) }
           if current_circulation_users.present?
-
             # deliver_workflow_circulations
             notifier = Gws::Affair::Notifier.new(item)
             notifier.deliver_workflow_circulations(current_circulation_users, url: notify_url)
@@ -250,11 +246,10 @@ module Gws::Affair::WorkflowFilter
         end
       end
 
-      if item.state == "approve"
-        set_week_in_leave_file(item)
-        set_week_out_leave_file(item)
-        set_holiday_leave_file(item)
-      end
+      next if item.state != "approve"
+      set_week_in_leave_file(item)
+      set_week_out_leave_file(item)
+      set_holiday_leave_file(item)
     end
 
     respond_to do |format|
@@ -280,7 +275,7 @@ module Gws::Affair::WorkflowFilter
         recipients << @item.workflow_agent_id if @item.workflow_agent_id.present?
       else
         prev_level_approvers = @item.workflow_approvers_at(@item.workflow_current_level)
-        recipients += prev_level_approvers.map { |hash| hash[:user_id] }
+        recipients += prev_level_approvers.pluck(:user_id)
       end
       recipients -= [@cur_user.id]
 
@@ -304,7 +299,7 @@ module Gws::Affair::WorkflowFilter
 
     raise "403" unless @item.allowed?(:edit, @cur_user)
 
-    return if request.get?
+    return if request.get? || request.head?
 
     @item.approved = nil
     # @item.workflow_user_id = nil
@@ -326,7 +321,7 @@ module Gws::Affair::WorkflowFilter
       return
     end
 
-    to_users = ([ @item.workflow_user, @item.workflow_agent ].compact) - [@cur_user]
+    to_users = [ @item.workflow_user, @item.workflow_agent ].compact - [@cur_user]
     to_users.select! { |user| user.use_notice?(@item) }
 
     if (comment.present? || file_ids.present?) && to_users.present?
@@ -340,7 +335,7 @@ module Gws::Affair::WorkflowFilter
 
     if @item.workflow_current_circulation_completed? && @item.move_workflow_circulation_next_step
       current_circulation_users = @item.workflow_current_circulation_users.nin(id: @cur_user.id).active
-      current_circulation_users = current_circulation_users.select{|user| user.use_notice?(@item)}
+      current_circulation_users = current_circulation_users.select { |user| user.use_notice?(@item) }
       if current_circulation_users.present?
 
         # deliver_workflow_circulations
@@ -363,8 +358,8 @@ module Gws::Affair::WorkflowFilter
   def set_week_in_leave_file(item)
     return if !item.respond_to?(:week_in_compensatory_minute)
 
+    leave_file = item.week_in_leave_file
     if item.week_in_start_at.present? && item.week_in_compensatory_minute.to_i > 0
-      leave_file = item.week_in_leave_file
       leave_file ||= Gws::Affair::LeaveFile.new
 
       leave_file.cur_user = item.user
@@ -396,21 +391,20 @@ module Gws::Affair::WorkflowFilter
       leave_file.workflow_approvers = item.workflow_approvers
       leave_file.workflow_required_counts = item.workflow_required_counts
       leave_file.workflow_circulations = item.workflow_circulations
-      leave_file.workflow_current_circulation_level =  item.workflow_current_circulation_level
+      leave_file.workflow_current_circulation_level = item.workflow_current_circulation_level
       leave_file.approved = item.approved
 
       leave_file.save
-    else
-      leave_file = item.week_in_leave_file
-      leave_file.destroy if leave_file
+    elsif leave_file
+      leave_file.destroy
     end
   end
 
   def set_week_out_leave_file(item)
     return if !item.respond_to?(:week_out_compensatory_minute)
 
+    leave_file = item.week_out_leave_file
     if item.week_out_start_at.present? && item.week_out_compensatory_minute.to_i > 0
-      leave_file = item.week_out_leave_file
       leave_file ||= Gws::Affair::LeaveFile.new
 
       leave_file.cur_user = item.user
@@ -442,21 +436,20 @@ module Gws::Affair::WorkflowFilter
       leave_file.workflow_approvers = item.workflow_approvers
       leave_file.workflow_required_counts = item.workflow_required_counts
       leave_file.workflow_circulations = item.workflow_circulations
-      leave_file.workflow_current_circulation_level =  item.workflow_current_circulation_level
+      leave_file.workflow_current_circulation_level = item.workflow_current_circulation_level
       leave_file.approved = item.approved
 
       leave_file.save
-    else
-      leave_file = item.week_out_leave_file
-      leave_file.destroy if leave_file
+    elsif leave_file
+      leave_file.destroy
     end
   end
 
   def set_holiday_leave_file(item)
     return if !item.respond_to?(:holiday_compensatory_minute)
 
+    leave_file = item.holiday_compensatory_leave_file
     if item.holiday_compensatory_start_at.present? && item.holiday_compensatory_minute.to_i > 0
-      leave_file = item.holiday_compensatory_leave_file
       leave_file ||= Gws::Affair::LeaveFile.new
 
       leave_file.cur_user = item.user
@@ -492,9 +485,8 @@ module Gws::Affair::WorkflowFilter
       leave_file.approved = item.approved
 
       leave_file.save
-    else
-      leave_file = item.holiday_compensatory_leave_file
-      leave_file.destroy if leave_file
+    elsif leave_file
+      leave_file.destroy
     end
   end
 end

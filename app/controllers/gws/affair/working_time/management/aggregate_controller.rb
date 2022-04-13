@@ -76,7 +76,7 @@ class Gws::Affair::WorkingTime::Management::AggregateController < ApplicationCon
     set_items
     set_time_cards
 
-    return if request.get?
+    return if request.get? || request.head?
 
     safe_params = params.require(:s).permit(:encoding)
     encoding = safe_params[:encoding]

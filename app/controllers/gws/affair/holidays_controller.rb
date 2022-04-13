@@ -126,7 +126,7 @@ class Gws::Affair::HolidaysController < ApplicationController
   end
 
   def import
-    return if request.get?
+    return if request.get? || request.head?
     @item = @model.new get_params
     @item.cur_site = @cur_site
     @item.cur_user = @cur_user

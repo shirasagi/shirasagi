@@ -53,7 +53,7 @@ class Gws::Affair::CapitalsController < ApplicationController
   def import
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
 
-    return if request.get?
+    return if request.get? || request.head?
     @item = @model.new get_params
     result = @item.import
     flash.now[:notice] = t("ss.notice.saved") if !result && @item.imported > 0
@@ -63,7 +63,7 @@ class Gws::Affair::CapitalsController < ApplicationController
   def import_member
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
 
-    return if request.get?
+    return if request.get? || request.head?
     @item = @model.new get_params
     result = @item.import_member
     flash.now[:notice] = t("ss.notice.saved") if !result && @item.imported > 0
@@ -75,13 +75,14 @@ class Gws::Affair::CapitalsController < ApplicationController
 
     set_items
     csv = @model.in(id: @items.pluck(:id)).member_to_csv(@cur_site)
-    send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "gws_affair_capital_members_#{Time.zone.now.to_i}.csv"
+    filename = "gws_affair_capital_members_#{Time.zone.now.to_i}.csv"
+    send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: filename
   end
 
   def import_group
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
 
-    return if request.get?
+    return if request.get? || request.head?
     @item = @model.new get_params
     result = @item.import_group
     flash.now[:notice] = t("ss.notice.saved") if !result && @item.imported > 0
@@ -93,6 +94,7 @@ class Gws::Affair::CapitalsController < ApplicationController
 
     set_items
     csv = @model.in(id: @items.pluck(:id)).group_to_csv(@cur_site)
-    send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "gws_affair_capital_groups_#{Time.zone.now.to_i}.csv"
+    filename = "gws_affair_capital_groups_#{Time.zone.now.to_i}.csv"
+    send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: filename
   end
 end

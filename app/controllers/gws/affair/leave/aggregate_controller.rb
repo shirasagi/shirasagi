@@ -31,7 +31,7 @@ class Gws::Affair::Leave::AggregateController < ApplicationController
     raise "403" if !@model.allowed_aggregate?(:manage, @cur_user, @cur_site)
 
     set_items
-    return if request.get?
+    return if request.get? || request.head?
 
     start_at = @cur_month.change(day: 1)
     end_at = @cur_month.end_of_month

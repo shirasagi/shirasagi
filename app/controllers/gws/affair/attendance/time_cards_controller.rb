@@ -161,7 +161,7 @@ class Gws::Affair::Attendance::TimeCardsController < ApplicationController
     end
 
     now = Time.zone.now
-    if params[:date] =~ /yesterday/
+    if params[:date] && params[:date].match?(/yesterday/)
       date = Time.zone.now.yesterday
     else
       date = now

@@ -6,17 +6,11 @@ module Gws::Addon::Affair
     include Workflow::MemberApprover
 
     def status
-      if state == 'approve'
-        state
-      elsif workflow_state == 'cancelled'
-        'draft'
-      elsif workflow_state.present?
-        workflow_state
-      elsif state == 'closed'
-        'draft'
-      else
-        state
-      end
+      return 'approve' if state == 'approve'
+      return 'draft' if workflow_state == 'cancelled'
+      return workflow_state if workflow_state.present?
+      return 'draft' if state == 'closed'
+      state
     end
 
     def status_options

@@ -39,7 +39,7 @@ module Gws::Attendance::TimeCardFilter
     Gws::Affair::OvertimeFile.site(@cur_site).where(target_user_id: @item.user_id).and(
       { "state" => "approve" },
       { "date" => { "$gte" => @cur_month } },
-      { "date" => { "$lte" => @cur_month.end_of_month } },
+      { "date" => { "$lte" => @cur_month.end_of_month } }
     ).each do |item|
       date = item.date.localtime.to_date
       @overtime_files[date] ||= []
