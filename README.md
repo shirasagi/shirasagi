@@ -24,7 +24,7 @@ Platform
 --------
 
 - CentOS, Ubuntu
-- Ruby 2.7
+- Ruby 2.6 or 3.0 (2.7 might work but not supported)
 - Ruby on Rails 6.1
 - MongoDB 4.4 or above
 - Unicorn

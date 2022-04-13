@@ -150,12 +150,9 @@ class Gws::Memo::MessageImporter
 
     to_webmail_address_group_ids = []
     to_shared_address_group_ids = []
-    msg.to.each do |address|
-      webmail_address_group = find_webmail_address_group(address)
-      to_webmail_address_group_ids << webmail_address_group.id if webmail_address_group
-
-      shared_address_group = find_shared_address_group(address)
-      to_shared_address_group_ids << shared_address_group.id if shared_address_group
+    msg_to(msg.to).each do |address|
+      to_webmail_address_group_ids << web_mail_address_group_id(address)
+      to_shared_address_group_ids << to_shared_address_group_id(address)
     end
     item.to_webmail_address_group_ids = to_webmail_address_group_ids
     item.to_shared_address_group_ids = to_shared_address_group_ids
@@ -174,12 +171,9 @@ class Gws::Memo::MessageImporter
 
     cc_webmail_address_group_ids = []
     cc_shared_address_group_ids = []
-    msg.cc.each do |address|
-      webmail_address_group = find_webmail_address_group(address)
-      cc_webmail_address_group_ids << webmail_address_group.id if webmail_address_group
-
-      shared_address_group = find_shared_address_group(address)
-      cc_shared_address_group_ids << shared_address_group.id if shared_address_group
+    msg_to(msg.cc).each do |address|
+      cc_webmail_address_group_ids << web_mail_address_group_id(address)
+      cc_shared_address_group_ids << to_shared_address_group_id(address)
     end
     item.cc_webmail_address_group_ids = cc_webmail_address_group_ids
     item.cc_shared_address_group_ids = cc_shared_address_group_ids
@@ -196,17 +190,34 @@ class Gws::Memo::MessageImporter
 
     bcc_webmail_address_group_ids = []
     bcc_shared_address_group_ids = []
-    msg.bbc.each do |address|
-      webmail_address_group = find_webmail_address_group(address)
-      bcc_webmail_address_group_ids << webmail_address_group.id if webmail_address_group
-
-      shared_address_group = find_shared_address_group(address)
-      bcc_shared_address_group_ids << shared_address_group.id if shared_address_group
+    msg_to(msg.bbc).each do |address|
+      bcc_webmail_address_group_ids << web_mail_address_group_id(address)
+      bcc_shared_address_group_ids << to_shared_address_group_id(address)
     end
     item.bcc_webmail_address_group_ids = bcc_webmail_address_group_ids
     item.bcc_shared_address_group_ids = bcc_shared_address_group_ids
 
     item
+  end
+
+  def msg_to(msg_to)
+    msg_to = msg_to.split(", ") if msg_to.instance_of?(String)
+
+    msg_to
+  end
+
+  def web_mail_address_group_id(address)
+    webmail_address_group = find_webmail_address_group(address)
+    return if webmail_address_group.blank?
+
+    webmail_address_group.id
+  end
+
+  def to_shared_address_group_id(address)
+    shared_address_group = find_shared_address_group(address)
+    return if shared_address_group.blank?
+
+    shared_address_group.id
   end
 
   def get_folder_name(entry_name)

@@ -4,6 +4,7 @@ require:
   - rubocop-rails
 
 AllCops:
+  # be sure to set minimal support version
   TargetRubyVersion: 2.6
   NewCops: enable
   Exclude:

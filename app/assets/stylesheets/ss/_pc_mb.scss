@@ -1168,12 +1168,6 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   .icon-todo:hover:before {
     background-position: -32px -352px !important;
   }
-  .icon-bookmark:before {
-    background-position: left -352px !important;
-  }
-  .icon-bookmark:hover:before {
-    background-position: -32px -352px !important;
-  }
   .icon-facility:before {
     background-position: left -384px !important;
   }
@@ -1574,7 +1568,6 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
 }
 .toggle-head {
   cursor: pointer;
-  &:hover { background: #f4f4f4; }
   &:hover { background: $orange2; }
 }
 .addon-view, .search-pages, .index-search, .search-form {
@@ -1835,6 +1828,11 @@ footer.send {
 }
 .field_with_errors {
   display: inline;
+
+  input, textarea, select {
+    display: inline-block;
+    border: 1px solid #e00;
+  }
 }
 .column-with-errors {
   border: 1px solid #e00;
@@ -1903,6 +1901,9 @@ footer.send {
     display: inline-block;
     margin: 0 20px;
     color: #b30;
+  }
+  .upload-file-order {
+    margin: 20px 0;
   }
   .file-dragenter {
     background: #fbeee8;
@@ -2283,6 +2284,10 @@ div.index {
 }
 .list-head-action-destroy {
   display: inline-block;
+}
+.list-head-action-update {
+  display: inline-block;
+  margin-left: 40px;
 }
 .list-head-search {
   margin: 0 0 10px;
@@ -2884,7 +2889,7 @@ form .CodeMirror {
 // common
 
 .monospace {
-  font-family: "Osaka−等幅", "ＭＳ ゴシック", "MS Gothic", "monospace";
+  font-family: "Osaka−等幅", "ＭＳ ゴシック", "MS Gothic", monospace;
 }
 .pagination {
   @include clear;
@@ -3060,39 +3065,40 @@ form .CodeMirror {
   font-size: 12px;
   -webkit-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, .2));
   filter: drop-shadow(0 1px 4px rgba(0, 0, 0, .2));
-}
-#marker-popup:after, #marker-popup:before {
-  content: " ";
-  position: absolute;
-  top: 100%;
-  width: 0;
-  height: 0;
-  border: solid transparent;
-  pointer-events: none;
-}
-#marker-popup:after {
-  left: 48px;
-  margin-left: -10px;
-  border-width: 10px;
-  border-top-color: #fff;
-}
-#marker-popup:before {
-  left: 48px;
-  margin-left: -11px;
-  border-width: 11px;
-  border-top-color: #ccc;
-}
-#marker-popup .closer {
-  position: absolute;
-  top: 2px;
-  right: 8px;
-  text-decoration: none;
-  cursor: pointer;
-}
-#marker-popup .closer:after {
-  content: "×";
-}
-#marker-popup {
+
+  &:after, &:before {
+    content: " ";
+    position: absolute;
+    top: 100%;
+    width: 0;
+    height: 0;
+    border: solid transparent;
+    pointer-events: none;
+  }
+  &:after {
+    left: 48px;
+    margin-left: -10px;
+    border-width: 10px;
+    border-top-color: #fff;
+  }
+  &:before {
+    left: 48px;
+    margin-left: -11px;
+    border-width: 11px;
+    border-top-color: #ccc;
+  }
+
+  .closer {
+    position: absolute;
+    top: 2px;
+    right: 8px;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .closer:after {
+    content: "×";
+  }
+
   .post-head {
     padding: 0;
   }
@@ -3222,9 +3228,9 @@ body.ss-ajax-in-iframe {
       box-sizing: border-box;
       height: 33px;
       padding: 5px 10px;
+      *zoom: 1;
       border-radius: 3px;
       @include background(linear-gradient(top, #fff, #ebecec));
-      *zoom: 1;
       filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFFFFFFF', endColorstr='#FFEBECEC');
       filter: none \9;
     }
@@ -3265,6 +3271,110 @@ body.ss-ajax-in-iframe {
       padding: 20px 10px;
       border-collapse: collapse;
       font-size: $px16;
+    }
+  }
+
+  .table-menu {
+    display: none;
+    position: absolute;
+    z-index: 1000;
+    width: 200px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    @include box-shadow(1px 1px 1px rgba(0, 0, 0, .2));
+  }
+  .table-menu.show {
+    display: block;
+  }
+  .table-menu ul {
+    margin: 0;
+    padding: 6px 0;
+    list-style: none;
+    li {
+      padding: 4px 10px;
+    }
+  }
+  .column-table-height, .column-table-width {
+    width: 8em !important;
+    margin-right: 1em;
+    @include mb {
+      input {
+        width: 4em !important;
+        margin-right: 5px;
+      }
+    }
+  }
+  .column-table-caption {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+  }
+  .table-editor {
+    overflow-x: scroll;
+    .control {
+      @include transition(.3s);
+      padding: 0;
+      border: 1px solid #f2f2f2;
+      background-color: $black;
+      cursor: pointer;
+      &:hover {
+        opacity: .8;
+      }
+    }
+    table {
+      border-collapse: collapse;
+    }
+    tr:first-child th:first-child {
+      width: 100px;
+      min-width: initial;
+    }
+    th ,td {
+      min-width: 200px;
+      max-width: 400px;
+      padding: 3px 5px;
+      border: solid 1px $black;
+      textarea {
+        min-width: 200px !important;
+        max-width: 400px;
+        margin: -3px -5px;
+        padding: 3px 5px;
+        border: 0;
+        border-radius: 0;
+      }
+    }
+    th {
+      background-color: #777;
+    }
+    .control-top {
+      height: 25px;
+      &:before {
+        @include display-flex;
+        @include align-items(center);
+        @include justify-content(center);
+        content: "▼";
+        float: none;
+        color: $white;
+        text-align: center;
+      }
+    }
+    .control-left {
+      width: 100px;
+      min-width: 100px;
+      &:before {
+        @include display-flex;
+        @include align-items(center);
+        @include justify-content(center);
+        content: "▶︎";
+        float: none;
+        color: $white;
+        text-align: center;
+      }
+    }
+    tbody tr:first-child th:last-child {
+      border-right: 1px solid $black;
+    }
+    tbody tr:last-child th:first-child {
+      border-bottom: 1px solid $black;
     }
   }
 }
@@ -3397,6 +3507,7 @@ body.ss-ajax-in-iframe {
     cursor: move;
   }
 }
+
 .column-value-cms-column-table {
   .table-menu {
     display: none;
@@ -3650,8 +3761,8 @@ body.ss-ajax-in-iframe {
 
 .ss-popup {
   text-decoration-line: underline;
-  text-decoration-style: dotted;
   text-decoration-color: $gray3;
+  text-decoration-style: dotted;
 
   &:hover {
     cursor: help;

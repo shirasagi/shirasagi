@@ -4,7 +4,7 @@ this.Map_Lgwan_Form = (function () {
 
   Map_Lgwan_Form.maxPointForm = 10;
 
-  Map_Lgwan_Form.deleteMessage = "<%= I18n.t('map.confirm.delete_marker') %>";
+  Map_Lgwan_Form.deleteMessage = <%= I18n.t('map.confirm.delete_marker').to_json %>;
 
   Map_Lgwan_Form.renderEvents = function () {
     $(".mod-map .add-marker").on('click', function (e) {
@@ -30,6 +30,7 @@ this.Map_Lgwan_Form = (function () {
         return false;
       }
     });
+    Map_Lgwan_Form.toggleAddMarker();
   };
 
   Map_Lgwan_Form.clonePointForm = function () {
@@ -63,9 +64,7 @@ this.Map_Lgwan_Form = (function () {
         }
       });
     }
-    if ($(".mod-map dd.marker").length === Map_Lgwan_Form.maxPointForm) {
-      $(".mod-map dd .add-marker").parent().hide();
-    }
+    Map_Lgwan_Form.toggleAddMarker();
   };
 
   Map_Lgwan_Form.clearPointForm = function (ele) {
@@ -84,16 +83,24 @@ this.Map_Lgwan_Form = (function () {
         ele.remove();
       }
     }
-    $(".mod-map dd .add-marker").parent().show();
+    Map_Lgwan_Form.toggleAddMarker();
   };
+
+  Map_Lgwan_Form.toggleAddMarker = function () {
+    if ($(".mod-map dd.marker").length < Map_Lgwan_Form.maxPointForm) {
+      $(".mod-map dd .add-marker").parent().show();
+    } else {
+      $(".mod-map dd .add-marker").parent().hide();
+    }
+  }
 
   Map_Lgwan_Form.createMarker = function (ele) {
     var loc = null;
     if (ele.find(".marker-loc-input").val()) {
-      if (Map_Lgwan_Form.validateLoc(ele.find(".marker-loc-input"))) {
+      if (Map_Lgwan_Form.validateLoc(ele.find(".marker-loc-input").val())) {
         loc = ele.find(".marker-loc-input").val();
       } else {
-        alert("<%= I18n.t('map.alert.invalid_location').join('\n') %>");
+        alert(<%= Array(I18n.t('map.alert.invalid_location')).join('\n').to_json %>);
       }
     }
     if (loc) {
@@ -102,23 +109,7 @@ this.Map_Lgwan_Form = (function () {
     }
   };
 
-  Map_Lgwan_Form.validateLoc = function (ele) {
-    var lat, latlon, lon;
-    latlon = ele.val().split(',');
-    lat = parseFloat(latlon[0]);
-    lon = parseFloat(latlon[1]);
-    if (!(lat && !isNaN(lat))) {
-      return false;
-    }
-    if (!(lon && !isNaN(lon))) {
-      return false;
-    }
-    if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
-      return true;
-    } else {
-      return false;
-    }
-  };
+  Map_Lgwan_Form.validateLoc = Openlayers_Map_Form.validateLoc;
 
   return Map_Lgwan_Form;
 })();

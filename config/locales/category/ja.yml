@@ -22,6 +22,9 @@ ja:
       cms/model/page:
         st_categories: カテゴリー
         st_category_ids: カテゴリー
+      category/addon/setting:
+        st_categories: カテゴリー
+        st_category_ids: カテゴリー
       category/addon/split:
         split_master_node: 分割元フォルダー
         split_partial_node: 新規フォルダー

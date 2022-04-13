@@ -30,11 +30,15 @@ class Cms::Apis::ReplaceFilesController < ApplicationController
   end
 
   def items_json
-    [@item, @item.thumb].compact.map do |item|
-      attr = item.attributes
-      attr["url"] = item.url
-      attr["updated_to_i"] = item.updated.to_i
-      attr
+    [ @item, @item.thumb ].select { |item| Fs.file?(item.path) }.map do |item|
+      {
+        name: item.name,
+        filename: item.filename,
+        content_type: item.content_type,
+        size: item.size,
+        url: item.url,
+        updated_to_i: item.updated.to_i,
+      }
     end.to_json
   end
 

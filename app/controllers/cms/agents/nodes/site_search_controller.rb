@@ -17,12 +17,15 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
   end
 
   def save_search_history
-    keyword = get_params[:keyword].to_s.strip.gsub(/　/, " ")
-    return if keyword.blank?
+    return if search_query.blank?
+
+    query = search_query
+    query[:keyword] = query[:keyword].to_s.strip.gsub(/　/, " ")
+    return if query.values.flatten.reject(&:blank?).blank?
 
     history_log = Cms::SiteSearch::History::Log.new(
       site: @cur_site,
-      query: { keyword: keyword },
+      query: query.to_h,
       remote_addr: remote_addr,
       user_agent: request.user_agent
     )
@@ -30,11 +33,11 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
   end
 
   def fix_params
-    { setting: @setting }
+    { setting: @setting, aggregate_size: SS.config.cms.elasticsearch['aggregate_size'] }
   end
 
   def permit_fields
-    [:keyword, :target]
+    [:keyword, :target, :category_name, category_names: []]
   end
 
   def get_params
@@ -45,24 +48,44 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
     end
   end
 
+  def search_query
+    return if params[:s].blank?
+
+    params.require(:s).permit(permit_fields)
+  end
+
   public
 
   def index
     @s = @item = @model.new(get_params)
+    @aggregate_result = @model.new(fix_params).search
 
-    if @s.keyword.present?
-      if @cur_site.elasticsearch_sites.present?
-        @s.index = @cur_site.elasticsearch_sites.collect { |site| "s#{site.id}" }.join(",")
-      end
+    return if search_query.blank? || search_query.values.flatten.reject(&:blank?).blank?
 
-      if params[:target] == 'outside' && @cur_site.elasticsearch_outside_enabled?
-        indexes = @cur_site.elasticsearch_indexes.presence || [@s.index, "fess.search"]
-        @s.index = [indexes].flatten.join(",")
-      end
-
-      @s.field_name = %w(text_index content title)
-      @s.from = (params[:page].to_i - 1) * @s.size if params[:page].present?
-      @result = @s.search
+    if @cur_site.elasticsearch_sites.present?
+      @s.index = @cur_site.elasticsearch_sites.collect { |site| "s#{site.id}" }.join(",")
     end
+
+    if params[:target] == 'outside' && @cur_site.elasticsearch_outside_enabled?
+      indexes = @cur_site.elasticsearch_indexes.presence || [@s.index, "fess.search"]
+      @s.index = [indexes].flatten.join(",")
+    end
+
+    @s.field_name = %w(text_index content title)
+    @s.from = (params[:page].to_i - 1) * @s.size if params[:page].present?
+    @result = @s.search
+  end
+
+  def categories
+    @s = @item = @model.new(get_params)
+
+    if @cur_node.st_categories.present?
+      @items = @cur_node.st_categories
+    else
+      @aggregate_result = @s.search
+    end
+
+    @cur_node.layout_id = nil
+    render layout: 'cms/ajax'
   end
 end

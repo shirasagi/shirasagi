@@ -10,4 +10,10 @@
 
   <dt><%= @model.t :show_google_maps_search %></dt>
   <dd><%= @item.label :show_google_maps_search %></dd>
+
+  <dt><%= @model.t :map_center %></dt>
+  <dd><%= Map.center(@item).try { |center| link_to "#{center.lng},#{center.lat} (#{t("map.links.google_maps_search")})", "#{SS.config.map.googlemaps_search_end_point}?#{ { api: 1, query: "#{center.lat},#{center.lng}" }.to_query }", target: "_blank", rel: "noopener" } %></dd>
+
+  <dt><%= @model.t :map_max_number_of_markers %></dt>
+  <dd><%= Map.max_number_of_markers(@item).to_s(:delimited) %></dd>
 </dl>

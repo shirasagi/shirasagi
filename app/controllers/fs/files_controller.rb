@@ -19,7 +19,11 @@ class Fs::FilesController < ApplicationController
   def cms_sites
     # サブディレクトリ型サブサイトの /fs と親サイトの /fs とは区別がつかない。
     # つまり、リクエスト・ホストからは一意にどのサイトの /fs にアクセスしているのか、容易に判別することはできない。
-    @cms_sites ||= SS::Site.all.in(domains: request_host).order_by(id: 1).to_a
+    @cms_sites ||= begin
+      sites = SS::Site.all.and("$or" => [ { domains: request_host }, { mypage_domain: request_host } ])
+      sites = sites.order_by(id: 1)
+      sites.to_a
+    end
   end
 
   def canonical_site
@@ -42,30 +46,27 @@ class Fs::FilesController < ApplicationController
   end
 
   def cur_item
-    @cur_item ||= begin
-      id = params[:id_path].present? ? params[:id_path].delete('/') : params[:id]
-      name_or_filename = params[:filename]
-      name_or_filename << ".#{params[:format]}" if params[:format].present?
+    return @cur_item if @cur_item
 
-      begin
-        item = SS::File.find(id)
-      rescue Mongoid::Errors::DocumentNotFound
-        Rails.logger.warn { "#{id} is not found" }
-        raise
-      end
-      if item.name != name_or_filename && item.filename != name_or_filename
-        Rails.logger.warn { "name or filename is not matched" }
-        raise "404"
-      end
+    id = params[:id_path].present? ? params[:id_path].delete('/') : params[:id]
+    name_or_filename = params[:filename]
+    name_or_filename << ".#{params[:format]}" if params[:format].present?
 
-      item = item.becomes_with_model
-      if item.try(:thumb?)
-        Rails.logger.warn { "requested file is a thumbnail file" }
-        raise "404"
-      end
-
-      item
+    item = SS::File.find(id)
+    if item.name == name_or_filename || item.filename == name_or_filename
+      @cur_item = item.becomes_with_model
+      @cur_variant = nil
+      return
     end
+
+    item = item.becomes_with_model
+    variant = item.variants.from_filename(name_or_filename)
+    raise "404" if !variant
+
+    @cur_item = item
+    @cur_variant = variant
+
+    @cur_item
   end
 
   def cur_site
@@ -131,33 +132,15 @@ class Fs::FilesController < ApplicationController
   end
 
   def send_item(disposition = :inline)
+    path = @cur_variant ? @cur_variant.path : @cur_item.path
+    @cur_variant.create! if @cur_variant
+    raise "404" unless Fs.file?(path)
+
     set_last_modified
 
-    if Fs.mode == :file && Fs.file?(cur_item.path)
-      send_file cur_item.path, type: cur_item.content_type, filename: cur_item.download_filename,
-                disposition: disposition, x_sendfile: true
-    else
-      send_enum cur_item.to_io, type: cur_item.content_type, filename: cur_item.download_filename,
-                disposition: disposition
-    end
-  end
-
-  def send_thumb(file, opts = {})
-    width  = opts.delete(:width).to_i
-    height = opts.delete(:height).to_i
-
-    width  = (width  > 0) ? width  : SS::ImageConverter::DEFAULT_THUMB_WIDTH
-    height = (height > 0) ? height : SS::ImageConverter::DEFAULT_THUMB_HEIGHT
-
-    converter = SS::ImageConverter.open(file.path)
-    converter.resize_to_fit!(width, height)
-
-    send_enum converter.to_enum, opts
-    converter = nil
-  ensure
-    if converter
-      converter.close rescue nil
-    end
+    content_type = @cur_variant ? @cur_variant.content_type : @cur_item.content_type
+    download_filename = @cur_variant ? @cur_variant.download_filename : @cur_item.download_filename
+    ss_send_file @cur_variant || @cur_item, type: content_type, filename: download_filename, disposition: disposition
   end
 
   public
@@ -169,21 +152,22 @@ class Fs::FilesController < ApplicationController
   def thumb
     size   = params[:size]
     width  = params[:width]
+    width  = width.numeric? ? width.to_i : nil
     height = params[:height]
+    height = height.numeric? ? height.to_i : nil
 
-    if width.present? && height.present?
-      set_last_modified
-      send_thumb cur_item, type: cur_item.content_type, filename: cur_item.filename,
-        disposition: :inline, width: width, height: height
-    elsif thumb = cur_item.try(:thumb, size)
-      @cur_item = thumb
-      index
+    if width.present? && height.present? && width > 0 && height > 0
+      @cur_variant = @cur_item.variants[{ width: width, height: height }]
+    elsif size.present? && (variant = @cur_item.variants[size.to_s.to_sym])
+      @cur_variant = variant
     else
-      set_last_modified
-      send_thumb cur_item, type: cur_item.content_type, filename: cur_item.filename,
-        disposition: :inline
+      @cur_variant = @cur_item.variants[:thumb]
     end
+
+    set_last_modified
+    send_item
   rescue => e
+    logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     raise "500"
   end
 

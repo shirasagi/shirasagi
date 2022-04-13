@@ -55,13 +55,10 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         # wait until events are rendered
         expect(page).to have_css('.fc-view a.fc-event', text: name)
 
-        # click popup
-        first('.fc-view a.fc-event').click
-        within '.gws-popup' do
-          click_on I18n.t('ss.links.delete')
-        end
-
         # do soft delete at first item
+        item = Gws::Schedule::Plan.site(site).without_deleted.member(gws_user).order_by(start_at: 1).second
+        visit soft_delete_gws_schedule_plan_path(site, item)
+
         within 'form' do
           click_on I18n.t('ss.buttons.delete')
         end

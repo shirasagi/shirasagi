@@ -123,7 +123,7 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
       item.errors.add :base, :auth_error
       @items << item
     end
-    render_destroy_all(entries.size != @items.size)
+    render_confirmed_all(entries.size != @items.size)
   end
 
   def download

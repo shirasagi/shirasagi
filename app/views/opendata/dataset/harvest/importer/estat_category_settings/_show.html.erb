@@ -11,7 +11,7 @@
       <tbody>
         <% @item.conditions.each do |cond| %>
           <tr data-base="true">
-            <td style="height: 40px; width: 140px;"><%= t("opendata.type_condition_options.#{cond["type"]}") %></td>
+            <td style="height: 40px; width: 180px;"><%= t("opendata.type_condition_options.#{cond["type"]}") %></td>
             <td><%= cond["value"] %></td>
             <td style="height: 40px; width: 120px;"><%= t("opendata.operator_condition_options.#{cond["operator"]}") %></td>
           </tr>
