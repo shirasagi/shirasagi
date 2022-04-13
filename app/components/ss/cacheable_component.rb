@@ -4,9 +4,10 @@ module SS::CacheableComponent
   class_methods do
     cattr_accessor :expires_in, :cache_key, :perform_caching
     self.expires_in = 1.day
-    self.perform_caching = true
+    self.perform_caching = !Rails.env.test?
   end
 
+  # override ViewComponent::Base#perform_render to cache content
   def perform_render
     if cache_configured?
       content = Rails.cache.fetch(cache_key || {}, expires_in: self.class.expires_in) do

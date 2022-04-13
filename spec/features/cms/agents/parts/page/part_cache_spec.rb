@@ -43,6 +43,10 @@ describe "cms_agents_parts_page", type: :feature, dbscope: :example, js: true do
         ajax_view: "enabled", ajax_view_expire_seconds: 10)
     end
 
+    after do
+      Rails.cache.clear
+    end
+
     it "#index" do
       expect(part.ajax_view_cache_enabled?).to be true
 

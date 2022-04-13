@@ -1,19 +1,19 @@
+<%= render Gws::Apis::GroupDropdownTreeComponent.new(cur_site: @cur_site) %>
+
 <%= jquery do %>
   SS_TreeUI.render("form.search .index.groups", { descendants_check: true });
   SS_Dropdown.render();
 
-  $("form.search .index.groups .select-group").on("click", function(e) {
-    $("#ajax-box #s_group").val($(e.target).data("id"));
-    SS_SearchUI.selectItems()
-    $("#ajax-box form.search").submit()
+  $("form.search .index.groups .select-group").on("click", function(ev) {
+    $("form.search [name='s[group]']").val($(ev.target).data("id"));
+    SS_SearchUI.selectItems();
+    $("form.search").submit();
 
-    e.preventDefault();
-    e.stopPropagation();
+    ev.preventDefault();
+    ev.stopPropagation();
     return false;
   });
 
   $("form.search .current-group").text(<%== @group.name.to_json %>);
   $("form.search [name='s[group]']").val(<%== @group.id.to_json %>);
 <% end %>
-
-<%= render Gws::Apis::GroupDropdownTreeComponent.new(cur_site: @cur_site) %>

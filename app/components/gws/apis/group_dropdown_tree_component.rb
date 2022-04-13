@@ -11,11 +11,15 @@ class Gws::Apis::GroupDropdownTreeComponent < ApplicationComponent
 
   attr_reader :cur_site
 
+  def site_root
+    @site_root ||= @cur_site.root
+  end
+
   def groups
-    @groups ||= @cur_site.descendants.active.tree_sort(root_name: @cur_site.name)
+    @groups ||= site_root.descendants.active.tree_sort(root_name: @cur_site.name)
   end
 
   def max_updated
-    @max_updated ||= @cur_site.descendants.active.max(:updated)
+    @max_updated ||= site_root.descendants.active.max(:updated)
   end
 end
