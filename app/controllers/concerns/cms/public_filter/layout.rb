@@ -84,10 +84,17 @@ module Cms::PublicFilter::Layout
     layout_perf_log(layout) do
       init_render_layout_context(layout)
 
-      html = @cur_layout.body.to_s
+      layout_cache = SS.layout_cache || {}
+      html = @cur_page ? layout_cache.dig(@cur_site.id, @cur_page.dirname) : nil
+
+      unless html
+        html = @cur_layout.body.to_s
+        html = render_layout_parts(html)
+        SS.layout_cache = { @cur_site.id => { @cur_page.dirname => html } } if @cur_page
+      end
+
       html = render_body_class(html)
       html = render_conditional_tag(html)
-      html = render_layout_parts(html)
       html = render_kana_tool(html)
       html = render_theme_tool(html)
       html = render_template_variables(html)

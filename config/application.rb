@@ -78,6 +78,7 @@ module SS
       Thread.current["ss.site"] = nil
       Thread.current["ss.user"] = nil
       Thread.current["ss.organization"] = nil
+      Thread.current["ss.layout_cache"] = nil
     end
 
     def current_env
@@ -173,6 +174,14 @@ module SS
 
   def self.current_organization=(group)
     Thread.current["ss.organization"] = group
+  end
+
+  def self.layout_cache
+    Thread.current["ss.layout_cache"]
+  end
+
+  def self.layout_cache=(cache)
+    Thread.current["ss.layout_cache"] = cache
   end
 end
 
