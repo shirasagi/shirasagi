@@ -1,3 +1,5 @@
+<% @groups ||= @cur_site.descendants_and_self.active.tree_sort(root_name: @cur_site.name) %>
+
 <%= jquery do %>
   SS_TreeUI.render("form.search .index.groups", { descendants_check: true });
   SS_Dropdown.render();

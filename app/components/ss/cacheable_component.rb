@@ -4,7 +4,7 @@ module SS::CacheableComponent
   class_methods do
     cattr_accessor :expires_in, :cache_key, :perform_caching
     self.expires_in = 1.day
-    self.perform_caching = !Rails.env.test?
+    self.perform_caching = Rails.application.config.action_controller.perform_caching
   end
 
   # override ViewComponent::Base#perform_render to cache content
@@ -13,9 +13,20 @@ module SS::CacheableComponent
       content = Rails.cache.fetch(cache_key || {}, expires_in: self.class.expires_in) do
         capture { super }
       end
+
+      if content.include?("<%")
+        template = ::ERB.new(content)
+        content = template.result(binding)
+      end
+
       safe_concat(content)
     else
-      super
+      content = super
+      if content.include?("<%")
+        template = ::ERB.new(content)
+        content = template.result(binding)
+      end
+      content
     end
   end
 

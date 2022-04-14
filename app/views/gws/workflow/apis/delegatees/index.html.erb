@@ -4,10 +4,21 @@
   <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
     <%= hidden_field_tag :single, params[:single] %>
     <dl class="see">
-      <% if browser.ie?(["<10"]) %>
-        <%= render partial: 'workflow/search_approvers/group_dropdown_normal' %>
+      <% if @ss_mode == :gws %>
+        <dt><%= t("mongoid.models.ss/group") %></dt>
+        <dd>
+          <% if browser.ie?(["<10"]) %>
+            <%= render partial: 'gws/apis/users/group_dropdown_normal' %>
+          <% else %>
+            <%= render partial: 'gws/apis/users/group_dropdown_tree' %>
+          <% end %>
+        </dd>
       <% else %>
-        <%= render partial: 'workflow/search_approvers/group_dropdown_tree' %>
+        <% if browser.ie?(["<10"]) %>
+          <%= render partial: 'workflow/search_approvers/group_dropdown_normal' %>
+        <% else %>
+          <%= render partial: 'workflow/search_approvers/group_dropdown_tree' %>
+        <% end %>
       <% end %>
       <dt><%= t "cms.user" %></dt>
       <dd><%= f.text_field :keyword %>

@@ -1,0 +1,58 @@
+<%#
+  # single か multi かは実行時に決定するが、本レンダリング結果はキャッシュされる
+  # そこで、一部の ERB 記法をエスケープし、本レンダリング結果を ERB 形式のテンプレートとして返す。
+  #%>
+<%= javascript_tag(defer: true) do %>
+  $(function() {
+    <%% unless multi %>
+      $('[name="single"]').val(1);
+    <%% end %>
+    SS_SearchUI.modal();
+    SS_TreeUI.render(".index.groups", { descendants_check: true });
+  });
+<% end %>
+
+<div class="search-ui-form">
+  <%= form_for :s, url: gws_apis_groups_path(site: cur_site), html: { method: "GET", class: :search } do |f| %>
+    <%= hidden_field_tag :single, nil %>
+    <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
+    <%= f.submit t("ss.buttons.search"), class: :btn %>
+  <% end %>
+</div>
+
+<table class="index groups">
+  <thead class="list-head">
+  <tr>
+    <%% if multi %>
+      <th class="checkbox"><input type="checkbox"/></th>
+    <%% end %>
+    <th class="name"><%= Gws::Group.t :name %></th>
+  </tr>
+  </thead>
+  <tbody class="items">
+  <% groups.each do |item| %>
+    <tr class="list-item" data-id="<%= item.id %>" data-depth="<%= item.depth %>">
+      <%% if multi %>
+        <td class="checkbox">
+          <input type="checkbox" name="ids[]" value="<%= item.id %>"/>
+        </td>
+      <%% end %>
+      <td class="expandable">
+        <%% if multi %>
+          <%= link_to item.trailing_name, "#", class: "select-item" %>
+        <%% else %>
+        <%= link_to item.trailing_name, "#", class: "select-single-item" %>
+        <%% end %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<%% if multi %>
+  <div class="search-ui-select">
+    <%= button_tag t("ss.links.select"), { type: :button, class: "select-items btn" } %>
+  </div>
+<%% end %>
+
+<%= paginate groups if groups.try(:current_page) %>
