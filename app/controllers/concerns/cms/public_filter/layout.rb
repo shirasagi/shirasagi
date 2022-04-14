@@ -85,12 +85,12 @@ module Cms::PublicFilter::Layout
       init_render_layout_context(layout)
 
       layout_cache = SS.page_layout_cache || {}
-      html = @cur_page ? layout_cache.dig(@cur_page.site_id, @cur_page.dirname) : nil
+      html = @cur_page ? layout_cache["#{@cur_page.site_id}-#{@cur_page.dirname}-#{layout.id}"] : nil
 
       unless html
         html = @cur_layout.body.to_s
         html = render_layout_parts(html)
-        SS.page_layout_cache = { @cur_page.site_id => { @cur_page.dirname => html } } if @cur_page
+        SS.page_layout_cache = { "#{@cur_page.site_id}-#{@cur_page.dirname}-#{layout.id}" => html } if @cur_page
       end
 
       html = render_body_class(html)
