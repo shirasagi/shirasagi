@@ -176,11 +176,11 @@ module SS
     Thread.current["ss.organization"] = group
   end
 
-  def self.layout_cache
+  def self.page_layout_cache
     Thread.current["ss.layout_cache"]
   end
 
-  def self.layout_cache=(cache)
+  def self.page_layout_cache=(cache)
     Thread.current["ss.layout_cache"] = cache
   end
 end

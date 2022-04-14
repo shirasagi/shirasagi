@@ -84,13 +84,13 @@ module Cms::PublicFilter::Layout
     layout_perf_log(layout) do
       init_render_layout_context(layout)
 
-      layout_cache = SS.layout_cache || {}
+      layout_cache = SS.page_layout_cache || {}
       html = @cur_page ? layout_cache.dig(@cur_site.id, @cur_page.dirname) : nil
 
       unless html
         html = @cur_layout.body.to_s
         html = render_layout_parts(html)
-        SS.layout_cache = { @cur_site.id => { @cur_page.dirname => html } } if @cur_page
+        SS.page_layout_cache = { @cur_site.id => { @cur_page.dirname => html } } if @cur_page
       end
 
       html = render_body_class(html)
