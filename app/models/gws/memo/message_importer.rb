@@ -71,8 +71,6 @@ class Gws::Memo::MessageImporter
     # bcc_member_ids
     item = import_bcc_members(msg, item) if msg.bcc.present?
 
-    item.member_ids = member_ids(item).sort
-
     # check member_ids
     unless item.draft?
       if item.to_member_ids.blank?
@@ -82,6 +80,8 @@ class Gws::Memo::MessageImporter
         item.to_member_ids += [cur_user.id]
       end
     end
+
+    item.member_ids = member_ids(item).sort
 
     # deleted
     item.deleted = {}
@@ -128,7 +128,7 @@ class Gws::Memo::MessageImporter
     end
 
     if path != "INBOX.Draft"
-      item.move(cur_user, path).update
+      item.move(cur_user, path).save
     else
       item.state = "closed"
       item.update
