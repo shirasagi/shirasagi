@@ -26,7 +26,7 @@ module Gws::Memo::Helper
     "<#{data["id"].to_s.presence || data["_id"].to_s.presence || SecureRandom.uuid}@#{@domain_for_message_id}>"
   end
 
-  def write_body_to_eml(file, data)
+  def serialize_body(data)
     if data["format"] == "html"
       content_type = "text/html"
       sanitized_html = sanitize_content(data["html"])
@@ -37,17 +37,25 @@ module Gws::Memo::Helper
       base64 = Mail::Encodings::Base64.encode(sanitized_text)
     end
 
-    file.puts "Content-Type: #{content_type}; charset=UTF-8"
-    file.puts "Content-Transfer-Encoding: base64"
+    header = {
+      "Content-Type" => "#{content_type}; charset=UTF-8",
+      "Content-Transfer-Encoding" => "base64"
+    }
+
+    [ header, base64 ]
+  end
+
+  def write_body_to_eml(file, data)
+    header, body = serialize_body(data)
+    header.each do |key, value|
+      file.puts "#{key}: #{value}"
+    end
     file.puts ""
-    file.puts base64
+    file.puts body
   end
 
   def sanitize_content(text)
-    sanitized_content = text.gsub(/<script[^>]*>[^<]+<\/script>/i, "").
-      gsub(/<style[^>]*>[^<]+<\/style>/i, "").
-      gsub(/\s?style="(.*?)"/i, "")
-
-    sanitized_content
+    return text if text.blank?
+    ApplicationController.helpers.sanitize(text)
   end
 end

@@ -28,71 +28,16 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
 
   def export_gws_memo_messages
     each_message_with_rescue do |item|
-      data = item.attributes
-
-      if item.user
-        data['user'] = user_attributes(item.user)
-      end
-      if item.members.present?
-        data['members'] = item.members.map { |u| user_attributes(u) }
-      end
-      if item.to_members.present?
-        data['to_members'] = item.to_members.map { |u| user_attributes(u) }
-        data['to_members_name_email'] = item.to_members.map { |u| user_name_email(u) }
-        data['to_member_ids'] = item.to_members.map(&:id)
-      end
-
-      data['to_members_name_email'] =[] if data['to_members_name_email'].nil?
-      if item.to_shared_address_group_ids.present?
-        item.to_shared_address_group_ids.each do |u|
-          data['to_members_name_email'] << shared_address_group_name(u)
-        end
-      end
-
-      if item.to_webmail_address_group_ids
-        item.to_webmail_address_group_ids.each do |u|
-          data['to_members_name_email'] << webmail_address_group_name(u)
-        end
-      end
-
-      if item.cc_members.present?
-        data['cc_members'] = item.cc_members.map { |u| user_attributes(u) }
-        data['cc_members_name_email'] = item.cc_members.map { |u| user_name_email(u) }
-        data['cc_member_ids'] = item.cc_members.map(&:id)
-      end
-
-      data['cc_members_name_email'] = [] if data['cc_members_name_email'].nil?
-      if item.cc_shared_address_group_ids
-        item.cc_shared_address_group_ids.map do |u|
-          data['cc_members_name_email'] << shared_address_group_name(u)
-        end
-      end
-
-      if item.cc_webmail_address_group_ids
-        item.cc_webmail_address_group_ids.map do |u|
-          data['cc_members_name_email'] << webmail_address_group_name(u)
-        end
-      end
-
-      if item.bcc_members.present?
-        data['bcc_members'] = item.bcc_members.select{ |u| u.id == user.id }.map { |u| user_attributes(u) }
-      end
-      if item.files.present?
-        data['files'] = item.files.map { |file| file_attributes(file) }
-      end
-      if item.from
-        data['from_name_email'] = user_name_email(item.from)
-      end
-      data['export_info'] = { 'version' => SS.version, 'exported' => @datetime }
-
       basename = sanitize_filename("#{item.id}_#{item.display_subject}")
       folder_name = item_folder_name(item)
       if folder_name.present?
         folder_name = folder_name.split("/").map { |path| sanitize_filename(path) }.join("/")
         basename = "#{folder_name}/#{basename}"
       end
-      write_eml(basename, data)
 
+      @output_zip.create_entry("#{basename}.eml") do |f|
+        write_eml(f, item)
+      end
       @exported_items += 1
     end
   end
@@ -108,11 +53,13 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
 
     all_ids.each_slice(100) do |ids|
       Gws::Memo::Message.in(id: ids).to_a.each do |item|
-        begin
+        item = Gws::Memo::ListMessage.find(item.id) if item.attributes[:list_id].present?
+
+        Rails.logger.tagged("#{item.id}_#{item.display_subject}") do
           yield item
         rescue => e
-          Rails.logger.warn("#{item.name}(#{item.id}) をエクスポート中に例外が発生しました。")
-          Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+          Rails.logger.warn { "#{item.name}(#{item.id}) をエクスポート中に例外が発生しました。" }
+          Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
         end
       end
     end
@@ -126,9 +73,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
 
     @sent_ids = Gws::Memo::Message.folder(sent_folder, user).pluck(:id).map(&:to_s)
     @draft_ids = Gws::Memo::Message.folder(draft_folder, user).pluck(:id).map(&:to_s)
-    sent_and_draft_ids = @sent_ids + @draft_ids
-
-    sent_and_draft_ids
+    @sent_ids + @draft_ids
   end
 
   def item_folder_name(item)
@@ -172,67 +117,165 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
     item.save!
   end
 
-  def write_eml(name, data)
-    @output_zip.create_entry("#{name}.eml") do |f|
-      sanitized_subject = sanitize_content(data["subject"].slice(0..79))
-      f.puts Mail::Field.new("Subject", sanitized_subject, "utf-8").encoded
-      f.puts Mail::Field.new("Date", data["created"].in_time_zone.rfc822, "utf-8").encoded
-      f.puts Mail::Field.new("Message-ID", gen_message_id(data), "utf-8").encoded
-      f.puts Mail::Field.new("From", data['from_name_email'], "utf-8").encoded
-      f.puts Mail::Field.new("To", data['to_members_name_email'], "utf-8").encoded
-      f.puts Mail::Field.new("X-Shirasagi-Member-IDs", data['to_member_ids'], "utf-8").encoded
-      f.puts Mail::Field.new("Cc-IDs", data['cc_member_ids'], "utf-8").encoded
-      f.puts Mail::Field.new("Cc", data['cc_members_name_email'], "utf-8").encoded if data['cc_members_name_email'].present?
-      user_settings = data["user_settings"]
-      s_status = []
-      if user_settings.present?
-        if user_settings.any? { |user_setting| user_setting["user_id"] == user.id && user_setting["seen_at"].present? }
-          s_status << "既読"
-        else
-          s_status << "未読"
-        end
-      end
-      if data["star"].any? { |key, value| key == user.id.to_s }
-        s_status << "スター"
-      end
-      if s_status.present?
-        f.puts Mail::Field.new("X-Shirasagi-Status", s_status, "utf-8").encoded
-      end
-      f.puts Mail::Field.new("X-Shirasagi-Version", SS.version, "utf-8").encoded
-      f.puts Mail::Field.new("X-Shirasagi-Exported", @datetime.rfc822, "utf-8").encoded
-      if data["files"].present?
-        boundary = "--==_mimepart_#{SecureRandom.hex(16)}"
-        f.puts "Content-Type: multipart/mixed;"
-        f.puts " boundary=\"#{boundary}\""
-        f.puts ""
-        f.puts ""
-        f.puts "--#{boundary}"
-        write_body_to_eml(f, data)
-        f.puts ""
-        f.puts "--#{boundary}"
-        data["files"].each do |file|
-          f.puts "Content-Type: #{file['content_type']};"
-          f.puts " filename=#{file['filename'].toutf8}"
-          f.puts "Content-Transfer-Encoding: base64"
-          f.puts "Content-Disposition: attachment;"
-          f.puts " filename=#{file['filename'].toutf8};"
-          f.puts " charset=UTF-8"
-          f.puts ""
-          f.puts file["base64"]
-          f.puts ""
-          f.puts "--#{boundary}--"
-        end
-      else
-        write_body_to_eml(f, data)
+  def write_eml(io, item)
+    io.puts encoded_eml_field("Subject", sanitize_content(item.subject))
+    io.puts encoded_eml_field("Date", item.created.in_time_zone.rfc822)
+    io.puts encoded_eml_field("Message-ID", gen_message_id(item))
+    if item.try(:from)
+      io.puts encoded_eml_field("From", user_name_email(item.from))
+    elsif item.from_member_name.present?
+      io.puts encoded_eml_field("From", to_rfc2822_mailbox(name: item.from_member_name))
+    end
+    build_to_members_name_email(item).try { |value| io.puts encoded_eml_field("To", value) }
+    build_to_member_ids(item).try { |value| io.puts encoded_eml_field("X-Shirasagi-Member-IDs", value) }
+    build_cc_member_ids(item).try { |value| io.puts encoded_eml_field("X-Shirasagi-Cc-IDs", value) }
+    build_cc_members_name_email(item).try { |value| io.puts encoded_eml_field("Cc", value) }
+    build_status(item).try { |value| io.puts encoded_eml_field("X-Shirasagi-Status", value) }
+    io.puts encoded_eml_field("X-Shirasagi-Version", SS.version)
+    io.puts encoded_eml_field("X-Shirasagi-Exported", @datetime.rfc822)
+    if item.files.blank?
+      write_body_to_eml(io, item)
+      return
+    end
+
+    enumerator = Enumerator.new do |y|
+      y << serialize_body(item)
+
+      SS.each_file(item.file_ids) do |file|
+        header = {
+          "Content-Type" => "#{file.content_type}; filename=#{file.filename.toutf8}",
+          "Content-Transfer-Encoding" => "base64",
+          "Content-Disposition" => "attachment; filename=#{file.filename.toutf8}; charset=UTF-8"
+        }
+
+        y << [ header, Base64.strict_encode64(::File.binread(file.path)) ]
       end
     end
+
+    serialize_multi_part io, enumerator
+  end
+
+  def encoded_eml_field(field_name, value, charset: "utf-8")
+    Mail::Field.new(field_name, value, charset).encoded
+  end
+
+  def build_to_members_name_email(item)
+    if item.to_members.present?
+      to_members_name_email = item.to_members.map { |u| user_name_email(u) }
+    else
+      to_members_name_email = []
+    end
+
+    to_members_name_email = [] if to_members_name_email.nil?
+    if item.to_shared_address_group_ids.present?
+      item.to_shared_address_group_ids.each do |u|
+        to_members_name_email << shared_address_group_name(u)
+      end
+    end
+
+    if item.to_webmail_address_group_ids
+      item.to_webmail_address_group_ids.each do |u|
+        to_members_name_email << webmail_address_group_name(u)
+      end
+    end
+
+    to_members_name_email.presence
+  end
+
+  def build_to_member_ids(item)
+    return if item.to_members.blank?
+    item.to_members.map(&:id).presence
+  end
+
+  def build_cc_member_ids(item)
+    return if item.cc_members.blank?
+    item.cc_members.map(&:id).presence
+  end
+
+  def build_cc_members_name_email(item)
+    if item.cc_members.present?
+      cc_members_name_email = item.cc_members.map { |u| user_name_email(u) }
+    end
+
+    cc_members_name_email ||= []
+    if item.cc_shared_address_group_ids
+      item.cc_shared_address_group_ids.map do |u|
+        cc_members_name_email << shared_address_group_name(u)
+      end
+    end
+
+    if item.cc_webmail_address_group_ids
+      item.cc_webmail_address_group_ids.map do |u|
+        cc_members_name_email << webmail_address_group_name(u)
+      end
+    end
+
+    cc_members_name_email.presence
+  end
+
+  def build_status(item)
+    statuses = []
+
+    user_settings = item.user_settings
+    if user_settings.present?
+      if user_settings.any? { |user_setting| user_setting["user_id"] == user.id && user_setting["seen_at"].present? }
+        statuses << "既読"
+      else
+        statuses << "未読"
+      end
+    end
+    if item.star.any? { |key, _value| key == user.id.to_s }
+      statuses << "スター"
+    end
+
+    statuses.presence
   end
 
   def shared_address_group_name(id)
-    Gws::SharedAddress::Group.find(id).try(:name)
+    groups = Gws::SharedAddress::Group.find(id) rescue nil
+    to_rfc2822_mailbox(name: groups.try(:name))
   end
 
   def webmail_address_group_name(id)
-    Webmail::AddressGroup.find(id).try(:name)
+    group = Webmail::AddressGroup.find(id) rescue nil
+    to_rfc2822_mailbox(name: group.try(:name))
+  end
+
+  # mailbox         =       name-addr / addr-spec
+  # name-addr       =       [display-name] angle-addr
+  # angle-addr      =       [CFWS] "<" addr-spec ">" [CFWS] / obs-angle-addr
+  # addr-spec       =       local-part "@" domain
+  def to_rfc2822_mailbox(name: nil, email: nil)
+    return if name.blank? && email.blank?
+
+    address = Mail::Address.new
+    address.display_name = name if name.present?
+    if email.present?
+      address.address = email
+    else
+      local_part = ::Addressable::IDNA.to_ascii(name)
+      domain = site.canonical_domain.presence || SS.config.gws.canonical_domain.presence || "localhost.local"
+      address.address = "#{local_part}@#{domain}"
+    end
+
+    address.to_s
+  end
+
+  def serialize_multi_part(io, enumerator)
+    boundary = "--==_mimepart_#{SecureRandom.hex(16)}"
+    io.puts "Content-Type: multipart/mixed;"
+    io.puts " boundary=\"#{boundary}\""
+    io.puts ""
+    io.puts ""
+    io.puts "--#{boundary}"
+    enumerator.each do |header, body|
+      header.each do |key, value|
+        io.puts "#{key}: #{value}"
+      end
+      io.puts ""
+      io.puts body
+      io.puts ""
+      io.puts "--#{boundary}--"
+    end
   end
 end

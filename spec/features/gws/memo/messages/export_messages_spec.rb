@@ -191,7 +191,10 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
     context "with html message" do
       let!(:memo) do
-        create(:gws_memo_message, user: user, site: site, format: "html", subject: ss_japanese_text, html: "<p>#{ss_japanese_text}</p>")
+        create(
+          :gws_memo_message, user: user, site: site, format: "html",
+          subject: ss_japanese_text, html: "<p>#{ss_japanese_text}</p>"
+        )
       end
 
       it do
@@ -226,39 +229,49 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       end
     end
 
-    context "with message" do
-      let!(:memo) do
-        create(:gws_memo_message, user: user, site: site, format: "html", subject: ss_japanese_text, html: "<p>#{ss_japanese_text}</p>")
-      end
+    context "with list message" do
+      let!(:list) { create :gws_memo_list, cur_site: site }
 
-      it do
-        exported = export_memo(memo)
+      context "with public" do
+        let!(:memo) do
+          create(
+            :gws_memo_list_message, cur_user: user, cur_site: site,
+            list: list, from_member_name: list.sender_name, member_ids: list.overall_members.map(&:id),
+            in_validate_presence_member: true, in_append_signature: true, in_skip_validates_sender_quota: true,
+            subject: ss_japanese_text, text: ss_japanese_text, state: "public"
+          )
+        end
 
-        expect(exported).to have(1).items
-        filename = memo.subject.encode('cp932', invalid: :replace, undef: :replace, replace: "_")
-        filename = filename.encode("UTF-8")
-        expect(exported.keys).to include(include(filename))
-        exported.values.first.tap do |mail|
-          expect(mail.message_id.to_s).to eq "#{memo.id}@#{site.canonical_domain}"
-          expect(mail.sender).to be_nil
-          expect(mail.date.to_s).to eq memo.created.to_s
-          expect(mail[:from].to_s).to eq "#{memo.from.name} <#{memo.from.email}>"
-          expect(mail[:to].to_s).to eq memo.to_members.map { |u| "#{u.name} <#{u.email}>" }.join(", ")
-          expect(mail[:cc]).to be_nil
-          expect(mail[:bcc]).to be_nil
-          expect(mail[:reply_to]).to be_nil
-          expect(mail["X-Shirasagi-Status"].decoded).to eq "未読"
-          expect(mail["X-Shirasagi-Version"].decoded).to eq SS.version
-          expect(mail["X-Shirasagi-Exported"].decoded).to be_present
-          expect(mail.in_reply_to).to be_nil
-          expect(mail.references).to be_nil
-          expect(mail.subject).to eq memo.subject
-          expect(mail.mime_type).to eq "text/html"
-          expect(mail.multipart?).to be_falsey
-          expect(mail.parts).to be_blank
-          body = mail.body.decoded
-          body.force_encoding("UTF-8")
-          expect(body).to include(memo.html)
+        it do
+          expect(memo.from_member_name).to eq list.sender_name
+          exported = export_memo(memo)
+
+          expect(exported).to have(1).items
+          filename = memo.subject.encode('cp932', invalid: :replace, undef: :replace, replace: "_")
+          filename = filename.encode("UTF-8")
+          expect(exported.keys).to include(include(filename))
+          exported.values.first.tap do |mail|
+            expect(mail.message_id.to_s).to eq "#{memo.id}@#{site.canonical_domain}"
+            expect(mail.sender).to be_nil
+            expect(mail.date.to_s).to eq memo.created.to_s
+            expect(mail[:from].to_s).to include list.sender_name
+            expect(mail[:to].to_s).to eq memo.to_members.map { |u| "#{u.name} <#{u.email}>" }.join(", ")
+            expect(mail[:cc]).to be_nil
+            expect(mail[:bcc]).to be_nil
+            expect(mail[:reply_to]).to be_nil
+            expect(mail["X-Shirasagi-Status"].decoded).to eq "未読"
+            expect(mail["X-Shirasagi-Version"].decoded).to eq SS.version
+            expect(mail["X-Shirasagi-Exported"].decoded).to be_present
+            expect(mail.in_reply_to).to be_nil
+            expect(mail.references).to be_nil
+            expect(mail.subject).to eq memo.subject
+            expect(mail.mime_type).to eq "text/plain"
+            expect(mail.multipart?).to be_falsey
+            expect(mail.parts).to be_blank
+            body = mail.body.decoded
+            body.force_encoding("UTF-8")
+            expect(body).to include(memo.text)
+          end
         end
       end
     end
@@ -300,7 +313,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
   describe 'export all message' do
     let(:user1) { create :gws_user, email: nil, gws_role_ids: gws_user.gws_role_ids }
     let(:file) { create :ss_file, cur_user: gws_user }
-    let!(:folder1) { create(:gws_memo_folder, user: user, site: site, name: "#{ss_japanese_text}") }
+    let!(:folder1) { create(:gws_memo_folder, user: user, site: site, name: ss_japanese_text) }
     let!(:folder2) { create(:gws_memo_folder, user: user, site: site, name: "#{folder1.name}/#{ss_japanese_text}") }
     let!(:memo1) do
       create(
