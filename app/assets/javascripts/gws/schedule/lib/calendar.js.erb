@@ -144,7 +144,9 @@ this.Gws_Schedule_Calendar = (function ($) {
       eventRender: function(event, element) {
         if (event.className.includes('fc-event-range')) {
           var end = event.end.toDate();
-          end.setDate(end.getDate() - 1);
+          if (event.className.includes('fc-event-allday')) {
+            end.setDate(end.getDate() - 1);
+          }
           var formatted = (end.getMonth()+1).toString().padStart(2, '0') + '/' + end.getDate().toString().padStart(2, '0');
           formatted = formatted.replace(/\n|\r/g, '');
           if (event.start.format('MM/DD') === formatted) {
