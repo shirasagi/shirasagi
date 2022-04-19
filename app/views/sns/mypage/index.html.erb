@@ -30,7 +30,7 @@
       <% @cms_sites.each do |item| %>
       <li class="list-item">
         <div class="info">
-          <% if item.is_maint_mode? && !item.allowed_maint_user?(@cur_user.id) %>
+          <% if item.maint_mode? && !item.allowed_maint_user?(@cur_user.id) %>
             <%= item.name %>
           <% else %>
             <%= link_to item.name, cms_contents_path(site: item), class: "title" %>
@@ -38,7 +38,7 @@
 
           <div class="meta">
             <span class="id"><%= item.full_url %></span>
-            <% if item.is_maint_mode? %>
+            <% if item.maint_mode? %>
               <span class="id"><%= t('ss.under_maint_mode') %></span>
             <% end %>
           </div>

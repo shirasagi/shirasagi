@@ -102,7 +102,7 @@
       <tbody>
       <% @item.maint_excluded_users.each do |user| %>
         <tr data-id="<%= user.id %>">
-          <td><%= f.hidden_field "maint_excluded_user_ids[]", value: user.id %> <%= user.name %></td>
+          <td><%= f.hidden_field "maint_excluded_user_ids[]", value: user.id, id: nil %> <%= user.name %></td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>

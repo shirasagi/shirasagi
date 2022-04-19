@@ -23,7 +23,6 @@ module SS::Model::Site
     field :upload_policy, type: String
     field :maint_mode, type: String, default: "disabled"
     field :maint_remarks, type: String
-    field :maint_excluded_user_ids, type: Array
     embeds_ids :groups, class_name: "SS::Group"
     embeds_ids :maint_excluded_users, class_name: "SS::User"
     belongs_to :parent, class_name: "SS::Site"
@@ -37,7 +36,7 @@ module SS::Model::Site
     validates :domains, presence: true, domain: true
     validates :subdir, presence: true, if: -> { parent.present? }
     validates :parent_id, presence: true, if: -> { subdir.present? }
-    validate :validate_maint_excluded_user_ids
+    validates :maint_excluded_user_ids, presence: true, if: -> { maint_mode == "enabled" }
 
     validate :validate_domains, if: ->{ domains.present? }
 
@@ -143,8 +142,8 @@ module SS::Model::Site
       sites.find { |site| path.start_with?(site.url) }
     end
 
-    def is_maint_mode?
-      maint_mode == "enabled" ? true : false
+    def maint_mode?
+      maint_mode == "enabled"
     end
 
     def allowed_maint_user?(user_id)
@@ -163,13 +162,6 @@ module SS::Model::Site
       if self.class.ne(id: id).any_in(domains_with_subdir: domains_with_subdir).exists?
         errors.add :domains_with_subdir, :duplicate
       end
-    end
-
-    def validate_maint_excluded_user_ids
-      return if maint_mode == "disabled"
-      return if maint_excluded_user_ids.present?
-
-      errors.add :maint_excluded_user_ids, :not_selected
     end
 
     def move_public_file
