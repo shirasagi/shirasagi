@@ -5,34 +5,36 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
   let(:name2) { "modify-#{unique_id}" }
   let(:host) { unique_id }
   let(:domain) { unique_domain }
-  let!(:site1) { create(:cms_site, name: unique_id, host: unique_id, domains: unique_domain, group_ids: cms_user.group_ids) }
+  let!(:site1) { cms_site }
   let!(:site2) { create(:cms_site, name: unique_id, host: unique_id, domains: unique_domain, group_ids: cms_user.group_ids) }
-  let(:user1) { create :sys_user, group_ids: cms_user.group_ids, sys_role_ids: [sys_role.id] }
-  let(:user2) { create :sys_user, group_ids: cms_user.group_ids, sys_role_ids: [sys_role.id], email: unique_email }
+  let(:index_path) { cms_site_path site1.id }
+  let!(:user1) { create :sys_user, group_ids: cms_user.group_ids, sys_role_ids: [sys_role.id] }
+  let!(:user2) { create :sys_user, group_ids: cms_user.group_ids, sys_role_ids: [sys_role.id], email: unique_email }
 
-  before { login_user user1 }
+  before { login_cms_user }
 
-  it "disabled" do
-    visit sns_mypage_path
-    click_on site1.name
-    expect(page).to have_no_css(".maint-mode-text")
-  end
+  # it "disabled" do
+  #   visit index_path
+  #   expect(page).to have_no_css(".maint-mode-text")
+  # end
 
   it "enabled" do
-    visit sys_sites_path
-    click_on site1.name
+    visit index_path
     click_on I18n.t("ss.links.edit")
     find("#addon-ss-agents-addons-maint_mode").click
     within "form#item-form" do
       find("#item_maint_mode").find("option[value='enabled']").select_option
       fill_in "item[maint_remarks]", with: "今日から明日までメンテナンスになります。"
-      within ".maint-mode" do
-        click_on "ユーザーを選択する"
+      wait_cbox_open do
+        within ".maint-mode" do
+          click_on "ユーザーを選択する"
+        end
       end
     end
     wait_for_cbox do
       within ".items" do
-        click_on user1.name
+        save_full_screenshot
+        click_on cms_user.name
       end
     end
     within "#item-form" do

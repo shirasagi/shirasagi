@@ -506,6 +506,7 @@ ja:
       ss/generate_lock: 書き出し停止
       ss/partner_site: 提携サイト設定
       ss/inquiry_setting: お問い合わせフォーム設定
+      ss/maint_mode: メンテナンスモード
 
   activemodel:
     attributes:

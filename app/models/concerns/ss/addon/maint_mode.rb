@@ -1,0 +1,33 @@
+module SS::Addon
+  module MaintMode
+    extend ActiveSupport::Concern
+    extend SS::Addon
+
+    included do
+      field :maint_mode, type: String, default: "disabled"
+      field :maint_remarks, type: String
+      field :maint_excluded_user_ids, type: Array
+      embeds_ids :maint_excluded_users, class_name: "SS::User"
+      belongs_to :parent, class_name: "SS::Site"
+
+      permit_params :maint_mode, :maint_remarks, maint_excluded_user_ids: []
+
+      validates :maint_excluded_user_ids, presence: true, if: -> { maint_mode == "enabled" }
+    end
+
+    def maint_mode_options
+      [
+        [I18n.t("ss.options.state.enabled"), "enabled"],
+        [I18n.t("ss.options.state.disabled"), "disabled"]
+      ]
+    end
+
+    def maint_mode?
+      maint_mode == "enabled"
+    end
+
+    def allowed_maint_user?(user_id)
+      maint_excluded_user_ids.include?(user_id)
+    end
+  end
+end

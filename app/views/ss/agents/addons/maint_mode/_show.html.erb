@@ -1,0 +1,10 @@
+<dl class="see mod-ss-maint-mode">
+  <dt><%= @model.t :maint_mode %></dt>
+  <dd><%= @item.label :maint_mode %></dd>
+
+  <dt><%= @model.t :maint_remarks %></dt>
+  <dd><%=br @item.maint_remarks %></dd>
+
+  <dt><%= @model.t :maint_excluded_user_ids %></dt>
+  <dd><%=br @item.maint_excluded_users.pluck(:name) %>
+</dl>
