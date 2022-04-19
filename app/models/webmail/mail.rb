@@ -149,7 +149,16 @@ class Webmail::Mail
       return false
     end
 
-    replied_mail.set_answered if replied_mail
+    # set_answered
+    if replied_mail
+      replied_mail.set_answered
+    elsif in_reply_to
+      cond = imap.account_scope.merge(message_id: in_reply_to)
+      if ref_mail = Webmail::Mail.where(cond).first
+        imap.select(ref_mail.mailbox)
+        imap.conn.uid_store(ref_mail.uid, '+FLAGS', [:Answered])
+      end
+    end
 
     # save all headers
     msg.header.fields.each do |field|
