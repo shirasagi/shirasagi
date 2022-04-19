@@ -3,7 +3,7 @@ module Event::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
-    MAX_EVENT_DATES_SIZE = 180
+    MAX_EVENT_DATES_SIZE = 500
 
     included do
       field :event_name, type: String
