@@ -144,6 +144,21 @@ class Event::Extensions::Recurrence
 
   liquidize do
     export :to_long_html
+    export :start_date
+    export :start_datetime
+    export :end_date
+    export :end_datetime
+    export as: :until_date do |_context|
+      until_on || start_date
+    end
+    export :includes_holiday
+    export :exclude_dates
+    export as: :day_of_weeks do |_context|
+      if frequency == "weekly" && by_days.present?
+        week_days = I18n.t("date.abbr_day_names")
+        by_days.map { |wday| week_days[wday] }
+      end
+    end
   end
 
   def collect_event_dates(excludes: true)
