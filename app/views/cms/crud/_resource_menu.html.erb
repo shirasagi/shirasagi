@@ -1,6 +1,7 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /edit|update|delete/ %>
     <%= link_to t('ss.links.back_to_show'), action: :show %>
+  <% elsif @cur_site.is_maint_mode? && !@cur_site.allowed_maint_user?(@cur_user.id) %>
   <% else %>
     <%= link_to t('ss.links.edit'), action: :edit if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
   <% end %>
