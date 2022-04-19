@@ -21,18 +21,23 @@ module SS::Model::Site
     field :mypage_scheme, type: String, default: 'http'
     field :mypage_domain, type: String
     field :upload_policy, type: String
+    field :maint_mode, type: String, default: "disabled"
+    field :maint_remarks, type: String
+    field :maint_excluded_user_ids, type: Array
     embeds_ids :groups, class_name: "SS::Group"
+    embeds_ids :maint_excluded_users, class_name: "SS::User"
     belongs_to :parent, class_name: "SS::Site"
 
     attr_accessor :cur_domain
 
     permit_params :name, :host, :domains, :subdir, :parent_id, :https, :document_root, group_ids: []
-    permit_params :mypage_scheme, :mypage_domain
+    permit_params :mypage_scheme, :mypage_domain, :maint_mode, :maint_remarks, maint_excluded_user_ids: []
     validates :name, presence: true, length: { maximum: 40 }
     validates :host, uniqueness: true, presence: true, length: { minimum: 3, maximum: 16 }
     validates :domains, presence: true, domain: true
     validates :subdir, presence: true, if: -> { parent.present? }
     validates :parent_id, presence: true, if: -> { subdir.present? }
+    validate :validate_maint_excluded_user_ids
 
     validate :validate_domains, if: ->{ domains.present? }
 
@@ -122,6 +127,13 @@ module SS::Model::Site
       SS::UploadPolicy.upload_policy_options
     end
 
+    def maint_mode_options
+      [
+        [I18n.t("ss.options.state.enabled"), "enabled"],
+        [I18n.t("ss.options.state.disabled"), "disabled"]
+      ]
+    end
+
     def same_domain_sites
       @_same_domain_sites ||= SS::Site.all.select { |site| self.full_root_url == site.full_root_url }
     end
@@ -129,6 +141,14 @@ module SS::Model::Site
     def same_domain_site_from_path(path)
       sites = same_domain_sites.sort_by { |site| site.url.count("/") }.reverse
       sites.find { |site| path.start_with?(site.url) }
+    end
+
+    def is_maint_mode?
+      maint_mode == "enabled" ? true : false
+    end
+
+    def allowed_maint_user?(user_id)
+      maint_excluded_user_ids.include?(user_id)
     end
 
     private
@@ -143,6 +163,13 @@ module SS::Model::Site
       if self.class.ne(id: id).any_in(domains_with_subdir: domains_with_subdir).exists?
         errors.add :domains_with_subdir, :duplicate
       end
+    end
+
+    def validate_maint_excluded_user_ids
+      return if maint_mode == "disabled"
+      return if maint_excluded_user_ids.present?
+
+      errors.add :maint_excluded_user_ids, :not_selected
     end
 
     def move_public_file
