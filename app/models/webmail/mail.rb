@@ -151,12 +151,17 @@ class Webmail::Mail
 
     # set_answered
     if replied_mail
+      imap.select(mailbox)
       replied_mail.set_answered
     elsif in_reply_to
       cond = imap.account_scope.merge(message_id: in_reply_to)
       if ref_mail = Webmail::Mail.where(cond).first
-        imap.select(ref_mail.mailbox)
-        imap.conn.uid_store(ref_mail.uid, '+FLAGS', [:Answered])
+        begin
+          imap.select(ref_mail.mailbox)
+          imap.conn.uid_store(ref_mail.uid, '+FLAGS', [:Answered])
+        rescue => e
+          Rails.logger.error("#{e.class} (#{e.message})")
+        end
       end
     end
 
