@@ -188,6 +188,7 @@ ja:
       division_before_blank: 分割元が入力されていません。
       division_after_blank: １番目の分割先が入力されていません。
       add_after_blank: 新設先が入力されていません。
+      malformed_duration: は不正な期間です。
     template:
       body: 次の項目を確認してください。
       header:
