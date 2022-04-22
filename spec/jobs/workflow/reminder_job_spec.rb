@@ -167,7 +167,9 @@ describe Workflow::ReminderJob, dbscope: :example do
             expect(notifiction.group_id).to be_blank
             expect(notifiction.member_ids).to eq [ user2.id ]
             expect(notifiction.user_id).to eq user1.id
-            expect(notifiction.subject).to eq I18n.t("workflow.notice.remind.subject", page_name: page1.name, site_name: site.name)
+            I18n.t("workflow.notice.remind.subject", page_name: page1.name, site_name: site.name).tap do |subject|
+              expect(notifiction.subject).to eq subject
+            end
             expect(notifiction.text).to include(user1.name, page1.name, page1.private_show_path)
             expect(notifiction.html).to be_blank
             expect(notifiction.format).to eq "text"
@@ -274,7 +276,9 @@ describe Workflow::ReminderJob, dbscope: :example do
             expect(notifiction.group_id).to be_blank
             expect(notifiction.member_ids).to eq [ user2.id ]
             expect(notifiction.user_id).to eq user1.id
-            expect(notifiction.subject).to eq I18n.t("workflow.notice.remind.subject", page_name: page1.name, site_name: site.name)
+            I18n.t("workflow.notice.remind.subject", page_name: page1.name, site_name: site.name).tap do |subject|
+              expect(notifiction.subject).to eq subject
+            end
             expect(notifiction.text).to include(user1.name, page1.name, page1.private_show_path)
             expect(notifiction.html).to be_blank
             expect(notifiction.format).to eq "text"
@@ -347,7 +351,9 @@ describe Workflow::ReminderJob, dbscope: :example do
             expect(notifiction.group_id).to be_blank
             expect(notifiction.member_ids).to eq [ user3.id ]
             expect(notifiction.user_id).to eq user1.id
-            expect(notifiction.subject).to eq I18n.t("workflow.notice.remind.subject", page_name: page1.name, site_name: site.name)
+            I18n.t("workflow.notice.remind.subject", page_name: page1.name, site_name: site.name).tap do |subject|
+              expect(notifiction.subject).to eq subject
+            end
             expect(notifiction.text).to include(user1.name, page1.name, page1.private_show_path)
             expect(notifiction.html).to be_blank
             expect(notifiction.format).to eq "text"
