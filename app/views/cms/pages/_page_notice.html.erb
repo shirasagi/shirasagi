@@ -1,0 +1,15 @@
+<%
+  return if @item.workflow_state != Workflow::Approver::WORKFLOW_STATE_REQUEST
+
+  duration = SS::Duration.parse(@cur_site.approve_remind_later)
+  return unless Workflow.exceed_remind_limit?(duration, @item)
+%>
+
+<div class="errorExplanation">
+  <h2><%= t("workflow.notice.content_remind.head") %></h2>
+  <ul>
+    <% t("workflow.notice.content_remind.body", duration: SS::Duration.format(duration)).each do |text| %>
+      <li><%= text %></li>
+    <% end %>
+  </ul>
+</div>

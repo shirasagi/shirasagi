@@ -29,7 +29,7 @@ class Workflow::ReminderJob < Cms::ApplicationJob
     all_ids.each_slice(100) do |ids|
       pages = criteria.in(id: ids).to_a
       pages.each do |page|
-        next if now <= page.updated + duration
+        next unless Workflow.exceed_remind_limit?(duration, page, now: now)
         next if page.workflow_reminder_sent_at.present? && now <= page.workflow_reminder_sent_at + 1.day
 
         yield page

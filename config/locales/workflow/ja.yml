@@ -19,6 +19,7 @@ ja:
     circulation_step: 回覧
     circulation_comment: コメント
     comment: コメント
+    state_remind_suffix: （至急）
     state:
       request: 申請中
       approve: 承認
@@ -107,6 +108,11 @@ ja:
           
           - 記事URL
           %{show_path}
+      content_remind:
+        head: 承認してください
+        body:
+          - 承認依頼を送ってから%{duration}以上経過しいています。
+          - 至急、ページ内容を確認の上、承認か差し戻しをしてください。
     dialogue:
       edit_branch_html: |-
         差し替えページが作成されています。<a href="%{show_path}">「差し替えページ」</a>へ移動し編集してください。
