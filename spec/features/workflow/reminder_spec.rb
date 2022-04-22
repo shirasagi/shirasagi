@@ -32,19 +32,25 @@ describe "workflow_remind", type: :feature, dbscope: :example, js: true do
     end
 
     it do
-      Timecop.freeze(page1.updated + 1.day - 1.second) do
-        login_cms_user
-        visit article_pages_path(site: site, cid: node)
-
-        expect(page).to have_css(".list-item[data-id='#{page1.id}'] .state-request", text: I18n.t("ss.state.request"))
-        expect(page).to have_css(".list-item[data-id='#{page2.id}'] .state-edit", text: I18n.t("ss.state.edit"))
-      end
       Timecop.freeze(page1.updated + 1.day) do
         login_cms_user
         visit article_pages_path(site: site, cid: node)
 
         expect(page).to have_css(".list-item[data-id='#{page1.id}'] .state-request", text: I18n.t("ss.state.request"))
         expect(page).to have_css(".list-item[data-id='#{page2.id}'] .state-edit", text: I18n.t("ss.state.edit"))
+
+        click_on page1.name
+        expect(page).to have_no_css(".workflow-remind")
+      end
+      Timecop.freeze(page1.updated + 1.day + 1.second) do
+        login_cms_user
+        visit article_pages_path(site: site, cid: node)
+
+        expect(page).to have_css(".list-item[data-id='#{page1.id}'] .state-request", text: I18n.t("ss.state.request"))
+        expect(page).to have_css(".list-item[data-id='#{page2.id}'] .state-edit", text: I18n.t("ss.state.edit"))
+
+        click_on page1.name
+        expect(page).to have_no_css(".workflow-remind")
       end
     end
   end
@@ -64,14 +70,17 @@ describe "workflow_remind", type: :feature, dbscope: :example, js: true do
     end
 
     it do
-      Timecop.freeze(page1.updated + 1.day - 1.second) do
+      Timecop.freeze(page1.updated + 1.day) do
         login_cms_user
         visit article_pages_path(site: site, cid: node)
 
         expect(page).to have_css(".list-item[data-id='#{page1.id}'] .state-request", text: I18n.t("ss.state.request"))
         expect(page).to have_css(".list-item[data-id='#{page2.id}'] .state-edit", text: I18n.t("ss.state.edit"))
+
+        click_on page1.name
+        expect(page).to have_no_css(".workflow-remind")
       end
-      Timecop.freeze(page1.updated + 1.day) do
+      Timecop.freeze(page1.updated + 1.day + 1.second) do
         login_cms_user
         visit article_pages_path(site: site, cid: node)
 
@@ -79,6 +88,9 @@ describe "workflow_remind", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css(".list-item[data-id='#{page1.id}'] .state-request-remind", text: text)
         end
         expect(page).to have_css(".list-item[data-id='#{page2.id}'] .state-edit", text: I18n.t("ss.state.edit"))
+
+        click_on page1.name
+        expect(page).to have_css(".workflow-remind", text: I18n.t("workflow.notice.content_remind.head"))
       end
     end
   end

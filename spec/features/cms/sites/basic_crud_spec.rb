@@ -4,9 +4,9 @@ describe "cms_sites", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:index_path) { cms_site_path site.id }
 
-  context "basic crud" do
-    before { login_cms_user }
+  before { login_cms_user }
 
+  context "basic crud" do
     it do
       visit index_path
       expect(status_code).to eq 200
@@ -31,16 +31,16 @@ describe "cms_sites", type: :feature, dbscope: :example do
     let(:approve_remind_state) { %w(enabled disabled).sample }
     let(:approve_remind_state_label) { I18n.t("ss.options.state.#{approve_remind_state}") }
     let(:approve_remind_later) { %w(1.day 2.days 3.days 4.days 5.days 6.days 1.week 2.weeks).sample }
-    let(:approve_remind_state_label) { I18n.t("ss.options.approve_remind_state.#{approve_remind_later}") }
+    let(:approve_remind_later_label) { I18n.t("ss.options.approve_remind_later.#{approve_remind_later.sub('.', '_')}") }
 
     it do
       visit index_path
       click_on I18n.t("ss.links.edit")
       within "form#item-form" do
-        select forced_update_label, from: "s[forced_update]"
-        select close_confirmation_label, from: "s[close_confirmation]"
-        select approve_remind_state_label, from: "s[approve_remind_state]"
-        select approve_remind_later_label, from: "s[approve_remind_later]"
+        select forced_update_label, from: "item[forced_update]"
+        select close_confirmation_label, from: "item[close_confirmation]"
+        select approve_remind_state_label, from: "item[approve_remind_state]"
+        select approve_remind_later_label, from: "item[approve_remind_later]"
 
         click_on I18n.t('ss.buttons.save')
       end

@@ -52,9 +52,8 @@ module Cms::NodeHelper
       css_class = "state-#{item.status}"
       content = t("ss.state.#{item.status}")
       if item.status == "request" && @cur_site.try(:approve_remind_state_enabled?)
-        now = Time.zone.now
         duration = SS::Duration.parse(@cur_site.approve_remind_later)
-        if Workflow.exceed_remind_limit?(duration, item, now: now)
+        if Workflow.exceed_remind_limit?(duration, item)
           css_class = "state-#{item.status}-remind"
           content += t("workflow.state_remind_suffix")
         end
