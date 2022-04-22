@@ -5,7 +5,7 @@
   return if @item.updated >= @cur_site.page_expiration_at
 %>
 
-<div class="errorExplanation">
+<div class="errorExplanation page-expiration">
   <h2><%= t("cms.notices.page_expiration_header") %></h2>
   <ul>
     <% t("cms.notices.page_expiration_body").each do |message| %>

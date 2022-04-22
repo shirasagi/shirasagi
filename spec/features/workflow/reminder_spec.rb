@@ -56,12 +56,6 @@ describe "workflow_remind", type: :feature, dbscope: :example, js: true do
   end
 
   context "when approve_remind_state is enabled" do
-    let!(:user1) { create :cms_test_user, group_ids: cms_user.group_ids, cms_role_ids: cms_user.cms_role_ids }
-    let!(:user2) { create :cms_test_user, group_ids: cms_user.group_ids, cms_role_ids: cms_user.cms_role_ids }
-    let!(:node) { create :article_node_page, cur_site: site }
-    let!(:page1) { create :article_page, cur_site: site, cur_node: node, state: "closed" }
-    let!(:page2) { create :article_page, cur_site: site, cur_node: node, state: "closed" }
-
     before do
       site.mypage_domain = unique_domain
       site.approve_remind_state = "enabled"

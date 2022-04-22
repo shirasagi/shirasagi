@@ -10,7 +10,7 @@ module SS::Addon::ApproveSetting
     validates :forced_update, inclusion: { in: %w(enabled disabled), allow_blank: true }
     validates :close_confirmation, inclusion: { in: %w(enabled disabled), allow_blank: true }
     validates :approve_remind_state, inclusion: { in: %w(enabled disabled), allow_blank: true }
-    validates :approve_remind_later, "sys/duration" => true
+    validates :approve_remind_later, "ss/duration" => true
     validates :approve_remind_later, presence: true, if: ->{ approve_remind_state_enabled? }
     permit_params :forced_update, :close_confirmation, :approve_remind_state, :approve_remind_later
   end

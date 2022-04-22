@@ -99,6 +99,7 @@ ja:
     preview_date: プレビュー日時
     translate: 自動翻訳
     list_menu_of_monthly_page: 月別ページ一覧メニュー
+    state_expired_suffix: （期限切れ）
     column_file_upload:
       image:
         file_label: 代替テキスト

@@ -27,9 +27,9 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
       described_class.bind(site_id: site).perform_now
 
       Job::Log.first.tap do |log|
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
-        expect(log.logs).to include(include("公開期限警告が無効です。"))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        expect(log.logs).to include(/公開期限警告が無効です。/)
       end
     end
   end
@@ -37,13 +37,13 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
   context "when page_expiration_state is enabled" do
     let(:expiration_state) { "enabled" }
     let(:group1) do
-      create :cms_group, code: unique_id, name: "#{site.groups.first.name}/#{unique_id}", contact_email: unique_email
+      create :cms_group, name: "#{site.groups.first.name}/#{unique_id}", contact_email: unique_email
     end
     let(:group2) do
-      create :cms_group, code: unique_id, name: "#{site.groups.first.name}/#{unique_id}", contact_email: unique_email
+      create :cms_group, name: "#{site.groups.first.name}/#{unique_id}", contact_email: unique_email
     end
     let(:group3) do
-      create :cms_group, code: unique_id, name: "#{site.groups.first.name}/#{unique_id}", contact_email: unique_email
+      create :cms_group, name: "#{site.groups.first.name}/#{unique_id}", contact_email: unique_email
     end
 
     context "with cms/page on root" do
@@ -65,9 +65,9 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
         described_class.bind(site_id: site).perform_now
 
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include("INFO -- : Started Job"))
-          expect(log.logs).to include(include("INFO -- : Completed Job"))
-          expect(log.logs).not_to include(include("公開期限警告が無効です。"))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+          expect(log.logs).not_to include(/公開期限警告が無効です。/)
         end
 
         expect(ActionMailer::Base.deliveries.length).to eq 1
@@ -101,9 +101,9 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
         described_class.bind(site_id: site).perform_now
 
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include("INFO -- : Started Job"))
-          expect(log.logs).to include(include("INFO -- : Completed Job"))
-          expect(log.logs).not_to include(include("公開期限警告が無効です。"))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+          expect(log.logs).not_to include(/公開期限警告が無効です。/)
         end
 
         expect(ActionMailer::Base.deliveries.length).to eq 1
@@ -137,9 +137,9 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
         described_class.bind(site_id: site).perform_now
 
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include("INFO -- : Started Job"))
-          expect(log.logs).to include(include("INFO -- : Completed Job"))
-          expect(log.logs).not_to include(include("公開期限警告が無効です。"))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+          expect(log.logs).not_to include(/公開期限警告が無効です。/)
         end
 
         expect(ActionMailer::Base.deliveries.length).to eq 1

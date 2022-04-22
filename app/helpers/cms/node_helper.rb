@@ -57,6 +57,11 @@ module Cms::NodeHelper
           css_class = "state-#{item.status}-remind"
           content += t("workflow.state_remind_suffix")
         end
+      elsif item.status == "public" && @cur_site.try(:page_expiration_enabled?)
+        if item.updated < @cur_site.page_expiration_at
+          css_class = "state-#{item.status}-expired"
+          content += t("cms.state_expired_suffix")
+        end
       end
     elsif item.first_released.blank?
       css_class = "state-edit"

@@ -18,6 +18,8 @@ module Cms::Addon
       permit_params :max_name_length
       permit_params :page_expiration_state, :page_expiration_before, :page_expiration_mail_subject
       permit_params :page_expiration_mail_upper_text
+
+      validates :page_expiration_before, "ss/duration" => true
     end
 
     def auto_keywords_options
