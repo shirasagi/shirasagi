@@ -13,7 +13,8 @@ module Event::Addon
 
       permit_params :event_name, :event_deadline
       permit_params event_recurrences: [
-        :in_update_from_view, :in_start_on, :in_until_on, :in_start_time, :in_end_time, :in_exclude_dates, in_by_days: []
+        :in_update_from_view, :in_start_on, :in_until_on, :in_all_day, :in_start_time, :in_end_time, :in_exclude_dates,
+        in_by_days: []
       ]
 
       before_validation :set_event_dates_from_recurrences

@@ -5,7 +5,7 @@
   week_days = I18n.t("date.abbr_day_names")
 %>
 
-<% render_recurrence = proc do |recurr| %>
+<% render_recurrence = proc do |recurr, index| %>
   <div class="event-recurrence">
     <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_update_from_view]", "1" %>
 
@@ -18,9 +18,16 @@
       </div>
 
       <div class="event-recurrence-time">
-        <%= time_field_tag "#{f.object_name}[event_recurrences][][in_start_time]", recurr.start_datetime.try { |time| I18n.l(time, format: :zoo_hh_mm) } || "10:00" %>
-        <%= t("ss.wave_dash") %>
-        <%= time_field_tag "#{f.object_name}[event_recurrences][][in_end_time]", recurr.end_datetime.try { |time| I18n.l(time, format: :zoo_hh_mm) } || "17:00" %>
+        <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_all_day]", recurr.kind == "date" ? "1" : "0", id: nil %>
+        <div class="event-recurrence-time-row">
+          <label><%= radio_button_tag "all_day_#{index}", "1", recurr.kind == "date", id: nil, class: "event-recurrence-all-day-radio" %> 終日</label>
+        </div>
+        <div class="event-recurrence-time-row">
+          <label><%= radio_button_tag "all_day_#{index}", "0", recurr.kind != "date", id: nil, class: "event-recurrence-all-day-radio" %></label>
+          <%= time_field_tag "#{f.object_name}[event_recurrences][][in_start_time]", recurr.start_datetime.try { |time| I18n.l(time, format: :zoo_hh_mm) } || "10:00" %>
+          <%= t("ss.wave_dash") %>
+          <%= time_field_tag "#{f.object_name}[event_recurrences][][in_end_time]", recurr.end_datetime.try { |time| I18n.l(time, format: :zoo_hh_mm) } || "17:00" %>
+        </div>
       </div>
 
       <div class="event-recurrence-excludes">
@@ -48,17 +55,19 @@
 
   <dt><%= @model.t :event_recurrences %><%= @model.tt :event_recurrences %></dt>
   <dd>
+    <% if false %>
     <div class="event-recurrence">
       <div class="event-recurrence-row">
         終日イベントの場合は、開始時刻に 10:00 を、終了時刻に 17:00 をセットしてください。
       </div>
     </div>
-    <% @item.event_recurrences.each do |recurr| %>
-      <% render_recurrence.call recurr %>
+    <% end %>
+    <% @item.event_recurrences.each_with_index do |recurr, index| %>
+      <% render_recurrence.call recurr, index %>
     <% end %>
 
     <%# for new record %>
-    <% render_recurrence.call OpenStruct.new %>
+    <% render_recurrence.call OpenStruct.new, @item.event_recurrences.length  %>
 
     <div class="event-recurrence">
       <div class="event-recurrence-row">
@@ -66,7 +75,7 @@
       </div>
     </div>
     <script type="text/html" id="event-recurrence-template">
-      <% render_recurrence.call OpenStruct.new %>
+      <% render_recurrence.call OpenStruct.new, @item.event_recurrences.length + 1 %>
     </script>
   </dd>
 

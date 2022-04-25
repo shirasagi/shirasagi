@@ -290,7 +290,36 @@ describe Event::Page, dbscope: :example do
             {
               in_update_from_view: 1,
               in_start_on: I18n.l(today, format: :picker), in_until_on: I18n.l(today + 1.day, format: :picker),
-              in_start_time: "", in_end_time: ""
+              in_all_day: "1", in_start_time: "10:00", in_end_time: "17:00"
+            }
+          end
+
+          it do
+            expect(subject.event_recurrences).to have(1).items
+            subject.event_recurrences.first.tap do |recurr|
+              expect(recurr).to be_a(Event::Extensions::Recurrence)
+              expect(recurr.kind).to eq "date"
+              expect(recurr.start_at).to eq today
+              expect(recurr.end_at).to eq today + 1
+              expect(recurr.frequency).to eq "daily"
+              expect(recurr.until_on).to eq today + 1.day
+              expect(recurr.by_days).to be_blank
+              expect(recurr.includes_holiday).to be_falsey
+              expect(recurr.exclude_dates).to be_blank
+            end
+            # event_recurrences をセットすると、検索用の event_dates が自動的にセットされる
+            expect(subject.event_dates).to have(2).items
+            expect(subject.event_dates[0]).to eq today
+            expect(subject.event_dates[1]).to eq today + 1.day
+          end
+        end
+
+        context "in_dall_day is 0, but both in_start_time and in_end_time are blank" do
+          let(:event_recurrence) do
+            {
+              in_update_from_view: 1,
+              in_start_on: I18n.l(today, format: :picker), in_until_on: I18n.l(today + 1.day, format: :picker),
+              in_all_day: "0"
             }
           end
 
@@ -320,7 +349,7 @@ describe Event::Page, dbscope: :example do
             {
               in_update_from_view: 1,
               in_start_on: I18n.l(today, format: :picker), in_until_on: I18n.l(after_1week - 1.day, format: :picker),
-              in_start_time: "", in_end_time: "", in_by_days: [ "", "0", "1" ]
+              in_all_day: "1", in_start_time: "10:00", in_end_time: "17:00", in_by_days: [ "", "0", "1" ]
             }
           end
           let(:sunday_in_week) { (today..after_1week).find { |date| date.wday == 0 } }
@@ -352,7 +381,8 @@ describe Event::Page, dbscope: :example do
             {
               in_update_from_view: 1,
               in_start_on: I18n.l(today, format: :picker), in_until_on: I18n.l(today + 1.day, format: :picker),
-              in_start_time: I18n.l(now, format: :zoo_hh_mm), in_end_time: I18n.l(now + 1.hour, format: :zoo_hh_mm)
+              in_all_day: "0", in_start_time: I18n.l(now, format: :zoo_hh_mm),
+              in_end_time: I18n.l(now + 1.hour, format: :zoo_hh_mm)
             }
           end
 
@@ -382,8 +412,8 @@ describe Event::Page, dbscope: :example do
             {
               in_update_from_view: 1,
               in_start_on: I18n.l(today, format: :picker), in_until_on: I18n.l(after_1week - 1.day, format: :picker),
-              in_start_time: I18n.l(now, format: :zoo_hh_mm), in_end_time: I18n.l(now + 1.hour, format: :zoo_hh_mm),
-              in_by_days: [ "", "0", "1" ]
+              in_all_day: "0", in_start_time: I18n.l(now, format: :zoo_hh_mm),
+              in_end_time: I18n.l(now + 1.hour, format: :zoo_hh_mm), in_by_days: [ "", "0", "1" ]
             }
           end
           let(:sunday_in_week) { (today..after_1week).find { |date| date.wday == 0 } }
@@ -414,7 +444,7 @@ describe Event::Page, dbscope: :example do
           let(:event_recurrence) do
             {
               in_update_from_view: 1, in_start_on: "2022/04/01", in_until_on: "2023/03/31",
-              in_start_time: "11:00", in_end_time: "11:45",
+              in_all_day: "0", in_start_time: "11:00", in_end_time: "11:45",
               in_by_days: [ "", "holiday" ]
             }
           end

@@ -20,6 +20,9 @@ this.Event_Form = (function () {
     self.$el.on("click", ".event-recurrence-exclude-dates-btn", function() {
       self.openExcludeDates(this);
     });
+    self.$el.on("change", ".event-recurrence-all-day-radio", function() {
+      self.changeAllDay(this);
+    });
 
     self.resetIndex();
   };
@@ -29,7 +32,10 @@ this.Event_Form = (function () {
 
     var index = 0;
     self.$el.find('[name="item[event_recurrences][][in_update_from_view]"]').each(function() {
-      $(this).closest(".event-recurrence").attr("data-index", index);
+      var $eventRecurrence = $(this).closest(".event-recurrence");
+      $eventRecurrence.attr("data-index", index);
+      $eventRecurrence.find(".event-recurrence-all-day-radio").attr("name", "all_day_" + index);
+
       index += 1;
     });
   }
@@ -111,6 +117,12 @@ this.Event_Form = (function () {
     $eventRecurrence.find('[name="item[event_recurrences][][in_exclude_dates]"]').val(serialized);
     $eventRecurrence.find('.event-recurrence-excludes-summary').text(serialized).attr("title", serialized);
   };
+
+  Event_Form.prototype.changeAllDay = function(el) {
+    var self = this;
+    var $el = $(el);
+    $el.closest(".event-recurrence").find('[name="item[event_recurrences][][in_all_day]"]').val($el.val());
+  }
 
   Event_ExcludeDatesForm = function(container, el, commitCallback) {
     this.container = container;

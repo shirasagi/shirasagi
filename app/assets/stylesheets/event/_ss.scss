@@ -8,9 +8,13 @@
   margin: 3px 0;
   padding: 0 5px;
 
-  * ~ * {
+  > * ~ * {
     margin-left: 5px;
   }
+}
+.event-recurrence-time {
+  display: flex;
+  flex-direction: column;
 }
 .event-recurrence-excludes {
   display: flex;

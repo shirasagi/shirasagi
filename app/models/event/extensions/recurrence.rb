@@ -116,12 +116,12 @@ class Event::Extensions::Recurrence
 
       ret = {}
 
-      if object["in_start_time"].blank?
+      if object["in_all_day"] == "1" || object["in_start_time"].blank?
         ret["start_at"] = object["in_start_on"]
       else
         ret["start_at"] = "#{object["in_start_on"]} #{object["in_start_time"]}"
       end
-      if object["in_end_time"].blank?
+      if object["in_all_day"] == "1" || object["in_end_time"].blank?
         # end_on は start_on から自動で計算されるので未セットとする
         # ret["end_on"] = object["in_start_on"]
       else
@@ -135,7 +135,13 @@ class Event::Extensions::Recurrence
       if object["in_exclude_dates"].present?
         ret["exclude_dates"] = normalize_exclude_dates(object["in_exclude_dates"])
       end
-      ret["kind"] = object["in_start_time"].present? || object["in_end_time"].present? ? "datetime" : "date"
+      if object["in_all_day"] == "1"
+        ret["kind"] =  "date"
+      elsif object["in_all_day"] != "1" && object["in_start_time"].present? || object["in_end_time"].present?
+        ret["kind"] =  "datetime"
+      else
+        ret["kind"] =  "date"
+      end
       ret["frequency"] = ret["by_days"].present? || ret["includes_holiday"] ? "weekly" : "daily"
 
       ret
