@@ -208,7 +208,7 @@ class Event::Extensions::Recurrence
   def start_time_between?(from_time, to_time)
     from_time = I18n.l(from_time, format: :zoo_hh_mm)
     to_time = I18n.l(to_time, format: :zoo_hh_mm)
-    start_time = I18n.l(start_datetime, format: :zoo_h_mm)
+    start_time = I18n.l(start_datetime, format: :zoo_hh_mm)
 
     from_time <= start_time && start_time < to_time
   end
