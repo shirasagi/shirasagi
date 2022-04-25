@@ -161,6 +161,10 @@ class Event::Extensions::Recurrence
     end
   end
 
+  def event_dates
+    @event_dates ||= collect_event_dates
+  end
+
   def collect_event_dates(excludes: true)
     case frequency
     when "daily"
@@ -215,7 +219,10 @@ class Event::Extensions::Recurrence
 
   def included_date?(date)
     return true if exclude_dates.blank?
+
+    date = date.in_time_zone.to_date unless date.is_a?(Date)
     return false if exclude_dates.include?(date)
+
     true
   end
 
