@@ -6,7 +6,6 @@ module SS::Addon
     included do
       field :maint_mode, type: String, default: "disabled"
       field :maint_remarks, type: String
-      field :maint_excluded_user_ids, type: Array
       embeds_ids :maint_excluded_users, class_name: "SS::User"
       belongs_to :parent, class_name: "SS::Site"
 

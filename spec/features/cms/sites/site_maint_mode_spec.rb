@@ -13,10 +13,10 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
 
   before { login_cms_user }
 
-  # it "disabled" do
-  #   visit index_path
-  #   expect(page).to have_no_css(".maint-mode-text")
-  # end
+  it "disabled" do
+    visit index_path
+    expect(page).to have_no_css(".maint-mode-text")
+  end
 
   it "enabled" do
     visit index_path
