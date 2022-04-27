@@ -7,6 +7,11 @@ Rails.application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
+  concern :change_state do
+    get :state, on: :member
+    put :change_state_all, on: :collection, path: ''
+  end
+
   concern :integration do
     get :split, on: :member
     post :split, on: :member
@@ -16,7 +21,7 @@ Rails.application.routes.draw do
 
   content "category" do
     get "/" => redirect { |p, req| "#{req.path}/nodes" }, as: :main
-    resources :nodes, concerns: [:deletion, :integration]
+    resources :nodes, concerns: [:deletion, :change_state, :integration]
     resources :pages
 
     get "conf/split" => "node/confs#split"

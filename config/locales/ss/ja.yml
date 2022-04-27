@@ -192,6 +192,7 @@ ja:
       make_them_close: 非公開にする
       file_name_order: 名前順
       file_upload_order: アップロード順
+      make_them_closed: 非公開にする
     confirm:
       change_state: 公開状態を変更してよろしいですか？
       delete: 削除してよろしいですか？
@@ -222,7 +223,7 @@ ja:
       not_contains_links_in_file: 被リンクがないので削除できます。
       target_to_delete: 削除対象の確認
       target_to_public: 公開対象の確認
-      target_to_close: 非公開対象の確認
+      target_to_closed: 非公開対象の確認
     notice:
       saved: 保存しました。
       deleted: 削除しました。

@@ -7,6 +7,11 @@ SS::Application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
+  concern :change_state do
+    get :state, on: :member
+    put :change_state_all, on: :collection, path: ''
+  end
+
   concern :download do
     get :download, on: :collection
     get :download_record_phrases, on: :collection
