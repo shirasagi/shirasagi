@@ -30,6 +30,9 @@ namespace :ss do
       # history_logの削除
       ::Tasks::SS.invoke_task("history:history_log:purge")
 
+      # 期限の切れた公開ページのお知らせ
+      ::Tasks::SS.invoke_task("cms:expiration_notices")
+
       ::Tasks::Cms.each_sites do |site|
         # クローリングリソースの更新
         ::Tasks::SS.invoke_task("opendata:crawl", site.host)
