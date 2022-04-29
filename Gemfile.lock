@@ -299,7 +299,6 @@ GEM
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
     levenshtein (0.2.2)
-    libv8-node (15.14.0.1)
     line-bot-api (1.22.0)
     link_header (0.0.8)
     liquid (5.0.1)
@@ -327,8 +326,6 @@ GEM
     mini_magick (4.11.0)
     mini_mime (1.1.1)
     mini_portile2 (2.8.0)
-    mini_racer (0.4.0)
-      libv8-node (~> 15.14.0.0)
     minitest (5.14.4)
     momentjs-rails (2.20.1)
       railties (>= 3.1)
@@ -748,7 +745,6 @@ DEPENDENCIES
   marcel
   marked-rails
   mini_magick
-  mini_racer
   momentjs-rails
   mongo_session_store
   mongoid!

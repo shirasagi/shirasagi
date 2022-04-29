@@ -9,7 +9,6 @@ gem 'sass'
 gem 'sassc-rails'
 gem 'uglifier'
 gem 'coffee-rails'
-gem 'mini_racer'
 gem 'jbuilder'
 gem 'sdoc', group: :doc
 
