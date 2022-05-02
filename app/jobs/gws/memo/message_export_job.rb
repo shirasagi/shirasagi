@@ -36,7 +36,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
       basename = "#{folder_name}/#{basename}"
 
       @output_zip.create_entry("#{basename}.eml") do |f|
-        write_eml(f, item)
+        item.write_as_eml(user, f, site: site)
       end
       @exported_items += 1
     end
@@ -53,7 +53,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
 
     all_ids.each_slice(100) do |ids|
       Gws::Memo::Message.in(id: ids).to_a.each do |item|
-        item = Gws::Memo::ListMessage.find(item.id) if item.attributes[:list_id].present?
+        item = item.to_list_message if item.list_message?
 
         Rails.logger.tagged("#{item.id}_#{item.display_subject}") do
           yield item
@@ -115,153 +115,5 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
     end
 
     item.save!
-  end
-
-  def write_eml(io, item)
-    io.puts encoded_eml_field("Subject", sanitize_content(item.subject))
-    io.puts encoded_eml_field("Date", item.created.in_time_zone.rfc822)
-    io.puts encoded_eml_field("Message-ID", gen_message_id(item))
-    if item.try(:from)
-      io.puts encoded_eml_field("From", user_name_email(item.from))
-    elsif list = item.try(:list)
-      name = list.sender_name.presence || list.name
-      io.puts encoded_eml_field("From", Gws::Memo.rfc2822_mailbox(site: site, name: name, sub: "lists"))
-    elsif item.from_member_name.present?
-      name = item.from_member_name
-      io.puts encoded_eml_field("From", Gws::Memo.rfc2822_mailbox(site: site, name: name, sub: "others"))
-    end
-    build_to_members_name_email(item).try { |value| io.puts encoded_eml_field("To", value) }
-    build_cc_members_name_email(item).try { |value| io.puts encoded_eml_field("Cc", value) }
-    build_status(item).try { |value| io.puts encoded_eml_field("X-Shirasagi-Status", value) }
-    io.puts encoded_eml_field("X-Shirasagi-Version", SS.version)
-    io.puts encoded_eml_field("X-Shirasagi-Exported", @datetime.rfc822)
-    io.puts encoded_eml_field("X-Shirasagi-Tenant", SS::Crypt.crypt("#{site.id}:#{site.name}"))
-    if item.files.blank?
-      write_body_to_eml(io, item)
-      return
-    end
-
-    enumerator = Enumerator.new do |y|
-      y << serialize_body(item)
-
-      SS.each_file(item.file_ids) do |file|
-        header = {
-          "Content-Type" => "#{file.content_type}; filename=#{file.filename.toutf8}",
-          "Content-Transfer-Encoding" => "base64",
-          "Content-Disposition" => "attachment; filename=#{file.filename.toutf8}; charset=UTF-8"
-        }
-
-        y << [ header, Base64.strict_encode64(::File.binread(file.path)) ]
-      end
-    end
-
-    serialize_multi_part io, enumerator
-  end
-
-  def encoded_eml_field(field_name, value, charset: "utf-8")
-    Mail::Field.new(field_name, value, charset).encoded
-  end
-
-  def build_to_members_name_email(item)
-    if item.to_members.present?
-      to_members_name_email = item.to_members.map { |u| user_name_email(u) }
-    else
-      to_members_name_email = []
-    end
-
-    list = item.try(:list)
-    if list.present?
-      to_members_name_email << Gws::Memo.rfc2822_mailbox(site: site, name: list.name, sub: "lists")
-    end
-
-    to_members_name_email = [] if to_members_name_email.nil?
-    if item.to_shared_address_group_ids.present?
-      item.to_shared_address_group_ids.each do |u|
-        to_members_name_email << shared_address_group_name(u)
-      end
-    end
-
-    if item.to_webmail_address_group_ids
-      item.to_webmail_address_group_ids.each do |u|
-        to_members_name_email << webmail_address_group_name(u)
-      end
-    end
-
-    to_members_name_email.presence
-  end
-
-  def build_to_member_ids(item)
-    return if item.to_members.blank?
-    item.to_members.map(&:id).presence
-  end
-
-  def build_cc_member_ids(item)
-    return if item.cc_members.blank?
-    item.cc_members.map(&:id).presence
-  end
-
-  def build_cc_members_name_email(item)
-    if item.cc_members.present?
-      cc_members_name_email = item.cc_members.map { |u| user_name_email(u) }
-    end
-
-    cc_members_name_email ||= []
-    if item.cc_shared_address_group_ids
-      item.cc_shared_address_group_ids.map do |u|
-        cc_members_name_email << shared_address_group_name(u)
-      end
-    end
-
-    if item.cc_webmail_address_group_ids
-      item.cc_webmail_address_group_ids.map do |u|
-        cc_members_name_email << webmail_address_group_name(u)
-      end
-    end
-
-    cc_members_name_email.presence
-  end
-
-  def build_status(item)
-    statuses = []
-
-    if item.seen_at(user).present?
-      statuses << "既読"
-    else
-      statuses << "未読"
-    end
-
-    if item.star?(user)
-      statuses << "スター"
-    end
-
-    statuses.presence
-  end
-
-  def shared_address_group_name(id)
-    group = Gws::SharedAddress::Group.find(id) rescue nil
-    Gws::Memo.rfc2822_mailbox(site: site, name: group.try(:name), sub: "shared-groups")
-  end
-
-  def webmail_address_group_name(id)
-    group = Webmail::AddressGroup.find(id) rescue nil
-    Gws::Memo.rfc2822_mailbox(site: site, name: group.try(:name), sub: "personal-groups")
-  end
-
-  def serialize_multi_part(io, enumerator)
-    boundary = "--==_mimepart_#{SecureRandom.hex(16)}"
-    io.puts "Content-Type: multipart/mixed;"
-    io.puts " boundary=\"#{boundary}\""
-    io.puts ""
-    io.puts ""
-    io.puts "--#{boundary}"
-    enumerator.each do |header, body|
-      header.each do |key, value|
-        io.puts "#{key}: #{value}"
-      end
-      io.puts ""
-      io.puts body
-      io.puts ""
-      io.puts "--#{boundary}--"
-    end
   end
 end

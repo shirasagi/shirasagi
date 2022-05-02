@@ -456,6 +456,10 @@ module Gws::Model
       Gws::Memo::ListMessage.find(self.id)
     end
 
+    def write_as_eml(user, io, site: nil)
+      Gws::Memo::Message::Eml.write(user, self, io, site: site)
+    end
+
     module ClassMethods
       def search(params)
         all.search_keyword(params).

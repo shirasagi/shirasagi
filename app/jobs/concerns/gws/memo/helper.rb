@@ -43,10 +43,11 @@ module Gws::Memo::Helper
   def write_body_to_eml(file, data)
     header, body = serialize_body(data)
     header.each do |key, value|
-      file.puts "#{key}: #{value}"
+      file.write "#{key}: #{value}\r\n"
     end
-    file.puts ""
-    file.puts body
+    file.write "\r\n"
+    file.write body
+    file.write "\r\n"
   end
 
   def sanitize_content(text)
