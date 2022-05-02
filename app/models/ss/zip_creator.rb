@@ -1,6 +1,5 @@
 class SS::ZipCreator
   include ActiveModel::Model
-  include SS::ExportHelper
 
   attr_reader :cur_site, :cur_user, :file
 
@@ -16,7 +15,7 @@ class SS::ZipCreator
   end
 
   def add_file(file)
-    create_entry(sanitize_filename(file.name)) do |f|
+    create_entry(::Fs.sanitize_filename(file.name)) do |f|
       ::IO.copy_stream(file.path, f)
     end
   end

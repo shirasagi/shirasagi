@@ -28,12 +28,12 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
 
   def export_gws_memo_messages
     each_message_with_rescue do |item|
-      basename = sanitize_filename("#{item.id}_#{item.display_subject}")
+      basename = ::Fs.sanitize_filename("#{item.id}_#{item.display_subject}")
       folder_name = item_folder_name(item)
-      if folder_name.present?
-        folder_name = folder_name.split("/").map { |path| sanitize_filename(path) }.join("/")
-        basename = "#{folder_name}/#{basename}"
-      end
+      next if folder_name.blank?
+
+      folder_name = folder_name.split("/").map { |path| ::Fs.sanitize_filename(path) }.join("/")
+      basename = "#{folder_name}/#{basename}"
 
       @output_zip.create_entry("#{basename}.eml") do |f|
         write_eml(f, item)
@@ -123,16 +123,19 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
     io.puts encoded_eml_field("Message-ID", gen_message_id(item))
     if item.try(:from)
       io.puts encoded_eml_field("From", user_name_email(item.from))
+    elsif list = item.try(:list)
+      name = list.sender_name.presence || list.name
+      io.puts encoded_eml_field("From", Gws::Memo.rfc2822_mailbox(site: site, name: name, sub: "lists"))
     elsif item.from_member_name.present?
-      io.puts encoded_eml_field("From", to_rfc2822_mailbox(name: item.from_member_name))
+      name = item.from_member_name
+      io.puts encoded_eml_field("From", Gws::Memo.rfc2822_mailbox(site: site, name: name, sub: "others"))
     end
     build_to_members_name_email(item).try { |value| io.puts encoded_eml_field("To", value) }
-    build_to_member_ids(item).try { |value| io.puts encoded_eml_field("X-Shirasagi-Member-IDs", value) }
-    build_cc_member_ids(item).try { |value| io.puts encoded_eml_field("X-Shirasagi-Cc-IDs", value) }
     build_cc_members_name_email(item).try { |value| io.puts encoded_eml_field("Cc", value) }
     build_status(item).try { |value| io.puts encoded_eml_field("X-Shirasagi-Status", value) }
     io.puts encoded_eml_field("X-Shirasagi-Version", SS.version)
     io.puts encoded_eml_field("X-Shirasagi-Exported", @datetime.rfc822)
+    io.puts encoded_eml_field("X-Shirasagi-Tenant", SS::Crypt.crypt("#{site.id}:#{site.name}"))
     if item.files.blank?
       write_body_to_eml(io, item)
       return
@@ -164,6 +167,11 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
       to_members_name_email = item.to_members.map { |u| user_name_email(u) }
     else
       to_members_name_email = []
+    end
+
+    list = item.try(:list)
+    if list.present?
+      to_members_name_email << Gws::Memo.rfc2822_mailbox(site: site, name: list.name, sub: "lists")
     end
 
     to_members_name_email = [] if to_members_name_email.nil?
@@ -216,15 +224,13 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
   def build_status(item)
     statuses = []
 
-    user_settings = item.user_settings
-    if user_settings.present?
-      if user_settings.any? { |user_setting| user_setting["user_id"] == user.id && user_setting["seen_at"].present? }
-        statuses << "既読"
-      else
-        statuses << "未読"
-      end
+    if item.seen_at(user).present?
+      statuses << "既読"
+    else
+      statuses << "未読"
     end
-    if item.star.any? { |key, _value| key == user.id.to_s }
+
+    if item.star?(user)
       statuses << "スター"
     end
 
@@ -232,33 +238,13 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
   end
 
   def shared_address_group_name(id)
-    groups = Gws::SharedAddress::Group.find(id) rescue nil
-    to_rfc2822_mailbox(name: groups.try(:name))
+    group = Gws::SharedAddress::Group.find(id) rescue nil
+    Gws::Memo.rfc2822_mailbox(site: site, name: group.try(:name), sub: "shared-groups")
   end
 
   def webmail_address_group_name(id)
     group = Webmail::AddressGroup.find(id) rescue nil
-    to_rfc2822_mailbox(name: group.try(:name))
-  end
-
-  # mailbox         =       name-addr / addr-spec
-  # name-addr       =       [display-name] angle-addr
-  # angle-addr      =       [CFWS] "<" addr-spec ">" [CFWS] / obs-angle-addr
-  # addr-spec       =       local-part "@" domain
-  def to_rfc2822_mailbox(name: nil, email: nil)
-    return if name.blank? && email.blank?
-
-    address = Mail::Address.new
-    address.display_name = name if name.present?
-    if email.present?
-      address.address = email
-    else
-      local_part = ::Addressable::IDNA.to_ascii(name)
-      domain = site.canonical_domain.presence || SS.config.gws.canonical_domain.presence || "localhost.local"
-      address.address = "#{local_part}@#{domain}"
-    end
-
-    address.to_s
+    Gws::Memo.rfc2822_mailbox(site: site, name: group.try(:name), sub: "personal-groups")
   end
 
   def serialize_multi_part(io, enumerator)

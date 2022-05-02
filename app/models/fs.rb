@@ -88,4 +88,8 @@ module Fs
     Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
     []
   end
+
+  def sanitize_filename(filename)
+    filename.gsub(/[<>:"\/\\|?*]/, '_').slice(0..60)
+  end
 end

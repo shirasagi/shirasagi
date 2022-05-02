@@ -138,15 +138,7 @@ class Gws::Memo::MessageImporter
   end
 
   def import_to_members(msg, item)
-    to_member_ids = []
-    item.to_member_ids = []
-    to_webmail_address_group_ids = []
-    to_shared_address_group_ids = []
-    msg.header["X-Shirasagi-Member-IDs"].value.split(",").each do |id|
-      receiver = find_user(id.to_i)
-      to_member_ids << receiver.id if receiver
-    end
-    item.to_member_ids = to_member_ids if to_member_ids.present?
+    item.to_member_ids = resolve_members(msg, "X-Shirasagi-Member-IDs")
 
     to_webmail_address_group_ids = []
     to_shared_address_group_ids = []
@@ -163,11 +155,7 @@ class Gws::Memo::MessageImporter
   end
 
   def import_cc_members(msg, item)
-    item.cc_member_ids = []
-    msg.header["Cc-IDs"].value.split(",").each do |id|
-      receiver = find_user(id.to_i)
-      item.cc_member_ids += [receiver.id] if receiver
-    end
+    item.cc_member_ids = resolve_members(msg, "X-Shirasagi-Cc-IDs", "Cc-IDs")
 
     cc_webmail_address_group_ids = []
     cc_shared_address_group_ids = []
@@ -182,11 +170,7 @@ class Gws::Memo::MessageImporter
   end
 
   def import_bcc_members(msg, item)
-    item.bcc_member_ids = []
-    msg.header["Bcc-IDs"].value.split(",").each do |id|
-      receiver = find_user(id.to_i)
-      item.bcc_member_ids += [receiver.id] if receiver
-    end
+    item.bcc_member_ids = resolve_members(msg, "X-Shirasagi-Bcc-IDs", "Bcc-IDs")
 
     bcc_webmail_address_group_ids = []
     bcc_shared_address_group_ids = []
@@ -198,6 +182,16 @@ class Gws::Memo::MessageImporter
     item.bcc_shared_address_group_ids = bcc_shared_address_group_ids
 
     item
+  end
+
+  def resolve_members(msg, *header_names)
+    header = header_names.map { |header_name| msg.header[header_name] }.compact.first
+    return [] unless header
+
+    value = header.value
+    return [] if value.blank?
+
+    value.split(",").map { |id| find_user(id.to_i).try(:id) }.compact.uniq
   end
 
   def msg_to(msg_to)

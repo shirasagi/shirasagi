@@ -1,5 +1,4 @@
 module Gws::Memo::Helper
-  include SS::ExportHelper
 
   private
 
@@ -14,11 +13,7 @@ module Gws::Memo::Helper
   end
 
   def user_name_email(user)
-    if user.email.present?
-      "#{user.name} <#{user.email}>"
-    else
-      user.name
-    end
+    Gws::Memo.rfc2822_mailbox(site: site, name: user.name, email: user.email, sub: "users")
   end
 
   def gen_message_id(data)
