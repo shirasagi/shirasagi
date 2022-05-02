@@ -17,7 +17,6 @@ class Gws::Memo::MessageImporter
     @gws_users_map = {}
     @restored_folders = {}
 
-    Zip.unicode_names = true
     Zip::File.open(in_file.path) do |entries|
       entries.each do |entry|
         next if entry.directory?
