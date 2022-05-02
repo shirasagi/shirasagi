@@ -150,7 +150,7 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
   end
 
   context "when to, cc and bcc are empty" do
-    let(:eml_file_path) { "#{Rails.root}/spec/fixtures/gws/memo/list-message-1.eml" }
+    let(:eml_file_path) { "#{Rails.root}/spec/fixtures/gws/memo/old-list-message-1.eml" }
     let(:eml_entry_path) { "#{I18n.t('gws/memo/folder.inbox')}/message-1.eml" }
     let(:zip_file_path) do
       path = tmpfile(extname: ".zip", binary: true) { |f| f.write '' }
