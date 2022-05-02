@@ -1,0 +1,48 @@
+<%
+
+
+%>
+<dl class="see mod-cms-form-import">
+  <dt><%= @model.t :import_url %></dt>
+  <dd><%= @item.send :import_url %></dd>
+
+  <dt><%= @model.t :import_primary_key %></dt>
+  <dd><%= @item.send :import_primary_key %></dd>
+
+  <dt><%= @model.t :import_name %></dt>
+  <dd><%= @item.send :import_name %></dd>
+
+  <dt><%= @model.t :import_column_options %></dt>
+  <dd>
+    <% @item.import_column_options.each do |options, i| %>
+      <div>
+        <b>"<%= options['name'] %>"</b>
+        <%= t("ss.options.search.kind.#{options['kind'].presence || 'any_of'}") %>
+        <b>"<%= options['values'].join(" , ") if options['values'] %>"</b>
+      </div>
+    <% end %>
+  </dd>
+
+  <%
+    import_options = []
+    import_options << @model.t(:import_map) if @item.import_map == 1
+    import_options << @model.t(:pippi_import_category) if @item.pippi_import_category == 1
+  %>
+  <dt><%= @model.t :import_misc_options %></dt>
+  <dd>
+    <% import_options.each do |option| %>
+      <%= option %><br>
+    <% end %>
+  </dd>
+
+  <% if @item.import_logs.size > 0 %>
+  <dt><%= t "mongoid.models.cms/form_db/import_log" %></dt>
+  <dd>
+    <div style="overflow-y: auto; width: max-content; max-height: 5.5rem; padding: 0 10px 0 0;">
+    <% @item.import_logs.order(created: -1).each do |log| %>
+      <%= link_to l(log.created, format: :long), cms_form_db_import_log_path(db_id: @item.id, id: log.id), target: :_blank %><br>
+    <% end %>
+    </div>
+  </dd>
+  <% end %>
+</dl>

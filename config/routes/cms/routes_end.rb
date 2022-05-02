@@ -136,9 +136,11 @@ Rails.application.routes.draw do
 
     namespace "form" do
       resources :dbs, concerns: [:deletion] do
+        resources :import_logs, only: [:show]
         resources :docs, concerns: [:deletion] do
           match :import, via: [:get, :post], on: :collection
           match :download_all, via: [:get, :post], on: :collection
+          match :import_url, via: [:get, :post], on: :collection
         end
       end
     end

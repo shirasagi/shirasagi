@@ -481,6 +481,12 @@ ja:
         "6_days": ６日後
         "1_week": １週間後
         "2_weeks": ２週間後
+      search:
+        kind:
+          any_of: が次と一致する
+          none_of: が次と一致しない
+          start_with: が次から始まる
+          end_with: が次で終わる
 
     tasks:
       started: 開始しました。

@@ -733,6 +733,7 @@ ja:
       cms/child_list: 子リスト表示
       cms/form/node: 定型フォーム
       cms/form/page: 定型フォーム
+      cms/form/import: 定型インポート
       cms/column/layout: レイアウト
       cms/column/text_like: 制約条件
       cms/column/select_like: 選択
@@ -799,6 +800,7 @@ ja:
       cms/command: コマンド
       cms/form: 定型フォーム
       cms/form_db: 定型フォーム - DB
+      cms/form_db/import_log: インポートログ
       cms/init_column: 初期ブロック
       cms/column/base: 入力項目
       cms/column/text_field: 一行入力
@@ -1141,7 +1143,6 @@ ja:
         order: 並び順
         form_id: 定型フォーム
         node_id: 記事フォルダー
-        import_url: インポートURL
         size: 登録件数
       cms/addon/form/node:
         st_form_ids: 定型フォーム設定
@@ -1150,6 +1151,14 @@ ja:
         column_values: 定型フォーム値
         column_values_updated: 定型フォーム更新日
         form_contains_urls: 定型フォームURL一覧
+      cms/addon/form/import:
+        import_url: インポートURL
+        import_primary_key: 主キーのカラム
+        import_name: 記事タイトルのカラム
+        import_column_options: 値による条件設定
+        import_misc_options: その他の設定
+        import_map: 地図座標を取り込む
+        pippi_import_category: カテゴリーを変換して取り込む
       cms/init_column:
         name: 名前
         order: 並び順

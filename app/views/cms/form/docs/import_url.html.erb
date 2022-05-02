@@ -1,0 +1,19 @@
+<%= form_for :item, url: { action: :import_url }, html: { id: "task-form", method: :post, multipart: true } do |f| %>
+  <%= error_messages_for :item %>
+
+  <section class="main-box">
+    <header><h2><%= t :"modules.addons.cms/form/import" %></h2></header>
+
+    <dl class="see">
+      <dt><%= @db.t :import_url %></dt>
+      <dd><%= @db.import_url %></dd>
+    </dl>
+  </section>
+
+  <%= render "ss/tasks/box", task: @task, url: url_for(action: :import_url, format: :json) %>
+
+  <footer class="send">
+    <%= f.submit t("ss.buttons.import"), class: :save, data: { disable_with: t("ss.buttons.importing") } %>
+    <%= f.button t("ss.buttons.cancel"), type: :reset, class: "btn-default", onclick: "location.href='#{cms_contents_path}'; return false;" %>
+  </footer>
+<% end %>

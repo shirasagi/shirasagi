@@ -6,6 +6,7 @@
   <div>
     <%= link_to 'CSV Export', { action: :download_all }, class: 'btn head-link' %>
     <%= link_to 'CSV Import', { action: :import }, class: 'btn head-link' if @db.node %>
+    <%= link_to 'URL Import', { action: :import_url }, class: 'btn head-link' if @db.node %>
   </div>
 </header>
 
