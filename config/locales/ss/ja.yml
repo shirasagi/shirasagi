@@ -89,6 +89,8 @@ ja:
       make_them_close: 非公開にする
       delete: 削除する
       import: インポート
+      import_csv: CSVインポート
+      import_url: URLインポート
       reply: 返信する
       back: 戻る
       deliver: 配信する
@@ -113,6 +115,7 @@ ja:
       split: 分割する
       integrate: 統合する
       download: ダウンロード
+      download_csv: CSVダウンロード
       download_template: 雛形をダウンロード
       download_sample_csv: サンプルCSVをダウンロード
       export: エクスポート

@@ -1,25 +1,44 @@
 class Cms::Agents::Tasks::FormDb::ImportController < ApplicationController
   def import_url
-    @task.log("Import pages")
-    @task.log("node: #{@node.name}")
-
     @db = Cms::FormDb.site(@site).find(@db_id)
-    @form = @db.form
-    @task.log("form: #{@form.name}")
 
-    Tempfile.create('import_csv') do |tempfile|
-      @task.log("templfile: #{tempfile.path}")
-      @task.log("download: #{@import_url}")
+    return error('Form: undefined') unless @db.form
+    return error('Node: undefined') unless @db.node
+    return error('URL: invalid') unless @import_url.to_s.start_with?('http')
 
-      URI.open(@import_url) do |res|
-        IO.copy_stream(res, tempfile.path)
-        @task.log("download: success")
+    @task.log("DB: #{@db.name}")
+    @task.log("Form: #{@db.form.name}")
+    @task.log("Node: #{@db.node.name}")
+    @task.log("URL: #{@import_url}")
 
-        @db.import_csv(file: tempfile, task: @task)
+    begin
+      Tempfile.create('import_csv') do |tempfile|
+        @task.log("Download: start")
+
+        URI.open(@import_url) do |res|
+          IO.copy_stream(res, tempfile.path)
+          @task.log("Download: success")
+          @task.log("Import: start")
+
+          @db.import_csv(file: tempfile, task: @task)
+        end
       end
+    rescue => e
+      @task.log("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     end
 
+    terminate
+  end
+
+  def error(message)
+    @task.log(message)
+    terminate
+  end
+
+  def terminate
     @db.save_log(@task.logs.join("\n"))
+    @db.trauncate_import_logs
 
     head :ok
   end

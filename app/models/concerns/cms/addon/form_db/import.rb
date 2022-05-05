@@ -1,16 +1,20 @@
-module Cms::Addon::Form::Import
+module Cms::Addon::FormDb::Import
   extend ActiveSupport::Concern
   extend SS::Addon
+
+  PAGE_DELETE_LIMIT = 40.hours.freeze
 
   included do
     field :import_url, type: String
     field :import_primary_key, type: String
-    field :import_name, type: String
+    field :import_page_name, type: String
     field :import_column_options, type: SS::Extensions::ArrayOfHash, default: []
     field :import_map, type: Integer
     field :pippi_import_category, type: Integer
 
-    permit_params :import_url, :import_primary_key, :import_name, :import_map
+    has_many :import_logs, class_name: 'Cms::FormDb::ImportLog', dependent: :destroy
+
+    permit_params :import_url, :import_primary_key, :import_page_name, :import_map
     permit_params :pippi_import_category
     permit_params import_column_options: [:name, :kind, :values]
 
@@ -69,7 +73,7 @@ module Cms::Addon::Form::Import
         next unless result
       end
 
-      page_name = params[import_name.presence || Article::Page.t(:name)]
+      page_name = params[import_page_name.presence || Article::Page.t(:name)]
       next unless page_name.present?
 
       if import_primary_key.present?
@@ -84,6 +88,7 @@ module Cms::Addon::Form::Import
       item.name = page_name
       item.map_points = validate_row_map_points(params) if import_map
       item.category_ids = pippi_validate_row_category_ids(params) if pippi_import_category
+      item.state = 'public'
 
       item_changed = item.changed?
 
@@ -99,7 +104,7 @@ module Cms::Addon::Form::Import
       end
     end
 
-    delete_conditions = { updated: { '$lt': Time.zone.now.ago(1.month) } }
+    delete_conditions = { updated: { '$lt': Time.zone.now.ago(PAGE_DELETE_LIMIT) } }
     Article::Page.site(site).node(node).where(form_id: form_id).where(delete_conditions).each do |item|
       if item.destroy && @task
         @task.log("削除: #{item.id} #{item.name}")
@@ -163,5 +168,9 @@ module Cms::Addon::Form::Import
     Category::Node::Base.site(site).where(filename: /event\//).only(:id, :name).select do |node|
       [row['区'], row['場所名称'], category_name].include?(node.name)
     end.collect(&:id)
+  end
+
+  def trauncate_import_logs
+    import_logs.order(created: -1).skip(30).destroy_all
   end
 end

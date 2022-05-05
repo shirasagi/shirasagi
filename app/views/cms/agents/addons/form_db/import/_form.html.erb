@@ -5,8 +5,8 @@
   <dt><%= @model.t :import_primary_key %><%= @model.tt :import_primary_key %></dt>
   <dd><%= f.text_field :import_primary_key %></dd>
 
-  <dt><%= @model.t :import_name %><%= @model.tt :import_name %></dt>
-  <dd><%= f.text_field :import_name, placeholder: Article::Page.t(:name) %></dd>
+  <dt><%= @model.t :import_page_name %><%= @model.tt :import_page_name %></dt>
+  <dd><%= f.text_field :import_page_name, placeholder: Article::Page.t(:name) %></dd>
 
   <dt><%= @model.t :import_column_options %><%= @model.tt :import_column_options %></dt>
   <dd>
@@ -20,7 +20,7 @@
       </tr>
       </thead>
       <tbody>
-      <% 2.times.each do |i| %>
+      <% 3.times.each do |i| %>
         <%
           name = tryb { @item.import_column_options[i]['name'] }
           kind = tryb { @item.import_column_options[i]['kind'] }

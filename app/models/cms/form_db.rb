@@ -2,7 +2,7 @@ class Cms::FormDb
   extend SS::Translation
   include SS::Document
   include Cms::Reference::Site
-  include Cms::Addon::Form::Import
+  include Cms::Addon::FormDb::Import
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
 
@@ -16,7 +16,6 @@ class Cms::FormDb
 
   belongs_to :form, class_name: 'Cms::Form'
   belongs_to :node, class_name: 'Article::Node::Page'
-  has_many :import_logs, class_name: 'Cms::FormDb::ImportLog', dependent: :destroy
 
   permit_params :name, :form_id, :node_id
 
@@ -77,11 +76,12 @@ class Cms::FormDb
 
     form.columns.order_by(order: 1).each do |col|
       col_val = item.column_values.to_a.find { |cv| cv.name == col.name }
-      col_val ||= item.column_values.build(
-        _type: col.value_type.name, column: col, name: col.name, order: col.order
-      )
+      col_val ||= col.value_type.new(column: col)
+
       col_val.attributes = { cur_user: @cur_user, cur_site: @cur_site }
       col_val.import_csv_cell(params[col.name])
+
+      item.column_values << col_val if col_val.new_record?
     end
 
     item.save
@@ -95,7 +95,7 @@ class Cms::FormDb
 
   def export_csv(form, items, options = {})
     column_names = form.column_names
-    headers = [import_name.presence || Article::Page.t(:name), *column_names]
+    headers = [import_page_name.presence || Article::Page.t(:name), *column_names]
 
     require "csv"
     csv = CSV.generate do |data|
