@@ -8,10 +8,6 @@
     </dl>
   </section>
 
-  <%
-  @db.import_logs.order(created: -1).skip(30).destroy_all
-  %>
-
   <%= render "ss/tasks/box", task: @task, url: url_for(action: :import_url, format: :json) %>
 
   <section class="main-box py-1">

@@ -1,0 +1,45 @@
+<%= jquery do %>
+  $('#item_form_id').on('change', function() {
+    var formId = $(this).val();
+    if (!formId) {
+      $('#example_export_columns').val('');
+      return;
+    }
+
+    var columnsUrl = '<%= cms_apis_form_column_names_path(id: 'FORM_ID', format: :json) %>';
+    columnsUrl = columnsUrl.replace('FORM_ID', formId);
+    $('#example_export_columns').val('Loading...');
+
+    $.ajax({
+      url: columnsUrl,
+      type: "GET",
+      success: function (data) {
+        $('#example_export_columns').val(data.join("\n"));
+      }
+    });
+  });
+
+  $('#item_form_id').change();
+<% end %>
+
+<dl class="see mod-article-form-export">
+  <dt><%= @model.t :form_id %><%= @model.tt :form_id %></dt>
+  <dd><%= f.select :form_id, @item.form_options, include_blank: '' %></dd>
+
+  <dt><%= @model.t :export_columns %><%= @model.tt :export_columns %></dt>
+  <dd>
+    <%= f.text_area :export_columns, placeholder: t('ss.all'),
+      style: 'margin: 0 .25rem .25rem 0; width: 20rem; height: 16rem;' %>
+    <%= text_area_tag 'example_export_columns', '', readonly: true,
+      style: 'margin: 0 .25rem .25rem 0; width: 20rem; height: 16rem; background: #f2f2f2;' %>
+  </dd>
+
+  <dt><%= @model.t :export_page_name %><%= @model.tt :export_page_name %></dt>
+  <dd><%= f.text_field :export_page_name, placeholder: Article::Page.t(:name) %></dd>
+
+  <dt><%= @model.t :node_id %><%= @model.tt :node_id %></dt>
+  <dd><%= f.select :node_id, @item.node_options, include_blank: '' %></dd>
+
+  <dt><%= @model.t :export_filename %><%= @model.tt :export_filename %></dt>
+  <dd><%= f.text_field :export_filename, placeholder: @item.name %></dd>
+</dl>

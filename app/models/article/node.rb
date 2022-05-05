@@ -31,6 +31,18 @@ module Article::Node
     self.use_condition_forms = true
   end
 
+  class FormExport
+    include Cms::Model::Node
+    include Cms::Addon::NodeSetting
+    include Cms::Addon::Meta
+    include Article::Addon::FormExport
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "article/form_export") }
+  end
+
   class MapSearch
     include Cms::Model::Node
     include Cms::Addon::NodeSetting

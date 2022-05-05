@@ -287,6 +287,7 @@ Rails.application.routes.draw do
       get "forms" => "forms#index"
       get "forms/temp_file/:id/select" => "forms#select_temp_file", as: :form_temp_file_select
       get "forms/:id/form" => "forms#form", as: :form
+      get "forms/:id/column_names" => "forms#column_names", as: :form_column_names
       get "forms/:id/columns/:column_id/new" => "forms#new_column", as: :form_column_new
       match "forms/:id/html" => "forms#html", as: :form_html, via: %i[post put]
       match "forms/:id/link_check" => "forms#link_check", as: :form_link_check, via: %i[post put]
