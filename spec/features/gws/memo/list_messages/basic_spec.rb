@@ -72,7 +72,8 @@ describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true d
       Gws::Memo::ListMessage.all.and_list_message.first.tap do |message|
         expect(message.list).to eq list
         expect(message.subject).to eq subject2
-        expect(message.text).to eq text2
+        expect(message.text).to include(text2)
+        expect(message.text).to include(list.signature)
         expect(message.format).to eq "text"
         expect(message.state).to eq "public"
         expect(message.size).to eq 1024

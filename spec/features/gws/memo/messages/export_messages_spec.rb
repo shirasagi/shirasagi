@@ -255,7 +255,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
             expect(mail.sender).to be_nil
             expect(mail.date.to_s).to eq memo.created.to_s
             expect(mail[:from].to_s).to include list.sender_name
-            expect(mail[:to].to_s).to eq memo.to_members.map { |u| "#{u.name} <#{u.email}>" }.join(", ")
+            expect(mail[:to].to_s).to eq "#{list.name} <#{list.name}@lists.#{site.canonical_domain}>"
             expect(mail[:cc]).to be_nil
             expect(mail[:bcc]).to be_nil
             expect(mail[:reply_to]).to be_nil
