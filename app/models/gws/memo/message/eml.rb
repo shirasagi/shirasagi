@@ -335,6 +335,7 @@ class Gws::Memo::Message
       attributes = {
         model: "gws/memo/message", name: part.filename, filename: part.filename, content_type: content_type
       }
+      attributes[:cur_user] = message.cur_user if message.cur_user
       SS::File.create_empty!(attributes) do |new_file|
         IO.copy_stream(StringIO.new(part.decoded), new_file.path)
         new_file.sanitizer_copy_file
@@ -371,14 +372,14 @@ class Gws::Memo::Message
       enumerator = Enumerator.new do |y|
         y << serialize_body(message)
 
-        SS.each_file(message.file_ids) do |file|
+        SS::File.each_file(message.file_ids) do |file|
           header = {
             "Content-Type" => "#{file.content_type}; filename=#{file.filename.toutf8}",
             "Content-Transfer-Encoding" => "base64",
             "Content-Disposition" => "attachment; filename=#{file.filename.toutf8}; charset=UTF-8"
           }
 
-          y << [ header, Base64.strict_encode64(::File.binread(file.path)) ]
+          y << [ header, Mail::Encodings::Base64.encode(::File.binread(file.path)) ]
         end
       end
 
@@ -539,18 +540,16 @@ class Gws::Memo::Message
       io.write "Content-Type: multipart/mixed;\r\n"
       io.write " boundary=\"#{boundary}\"\r\n"
       io.write "\r\n"
-      io.write "\r\n"
-      io.write "--#{boundary}\r\n"
       enumerator.each do |header, body|
+        io.write "--#{boundary}\r\n"
         header.each do |key, value|
           io.write "#{key}: #{value}\r\n"
         end
         io.write "\r\n"
         io.write body
         io.write "\r\n"
-        io.write "\r\n"
-        io.write "--#{boundary}--\r\n"
       end
+      io.write "--#{boundary}--\r\n"
     end
   end
 end

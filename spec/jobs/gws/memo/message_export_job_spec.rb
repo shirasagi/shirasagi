@@ -276,6 +276,82 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
     end
   end
 
+  context "with attachments" do
+    let(:user1) { create :gws_user, cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids }
+    let(:user2) { create :gws_user, cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids }
+    let(:user3) { create :gws_user, cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids }
+    let(:file1) do
+      tmp_ss_file cur_user: user1, contents: "#{Rails.root}/spec/fixtures/ss/logo.png", model: "ss/temp_file"
+    end
+    let(:file2) do
+      tmp_ss_file cur_user: user1, contents: "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf", model: "ss/temp_file"
+    end
+    let!(:message) do
+      create(
+        :gws_memo_message, cur_site: site, cur_user: user1, in_to_members: [ user2.id, user3.id ],
+        file_ids: [ file1.id, file2.id ]
+      )
+    end
+
+    it do
+      Gws::Memo::Message.find(message.id).tap do |message|
+        expect(message.file_ids).to have(2).items
+      end
+
+      export_message.call
+      expect(@exported.size).to eq 1
+
+      basename = ::Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
+      expect(@exported.key?("#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml")).to be_truthy
+
+      @exported["#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml"].tap do |mail|
+        expect(mail.message_id.to_s).to eq "#{message.id}@#{canonical_domain}"
+        expect(mail.sender).to be_nil
+        expect(mail.date.to_s).to eq message.created.to_s
+        expect(mail.subject).to eq message.subject
+        expect(mail.mime_type).to eq "multipart/mixed"
+        expect(mail.multipart?).to be_truthy
+        mail[:from].to_s.tap do |rfc2822_address|
+          address = Mail::Address.new(rfc2822_address)
+          expect(address.display_name).to eq user1.name
+          expect(address.address).to eq user1.email
+        end
+        mail[:to].to_s.tap do |rfc2822_address_list|
+          address_list = Mail::AddressList.new(rfc2822_address_list)
+          expect(address_list.addresses.count).to eq 2
+          expect(address_list.addresses.map(&:display_name)).to include(user2.name, user3.name)
+          expect(address_list.addresses.map(&:address)).to include(user2.email, user3.email)
+        end
+        expect(mail[:cc]).to be_nil
+        expect(mail[:bcc]).to be_nil
+        expect(mail[:reply_to]).to be_nil
+        expect(mail[:in_reply_to]).to be_nil
+        expect(mail[:references]).to be_nil
+        expect(mail["X-Shirasagi-Status"].decoded).to eq "未読"
+        expect(mail["X-Shirasagi-Version"].decoded).to eq SS.version
+        expect(mail["X-Shirasagi-Exported"].decoded).to be_present
+        expect(mail["X-Shirasagi-Tenant"].decoded).to eq SS::Crypt.crypt("#{site.id}:#{site.name}")
+        body_part = mail.text_part
+        expect(body_part.mime_type).to eq "text/plain"
+        body = body_part.decoded
+        body.force_encoding("UTF-8")
+        expect(body).to include(message.text)
+        expect(mail.parts).to be_truthy
+        expect(mail.parts.size).to eq 3
+        mail.parts.each do |part|
+          next if part == body_part
+
+          case part.mime_type
+          when "image/png"
+            expect(Fs.compare_stream_head(StringIO.new(part.body.decoded), file1.to_io)).to be_truthy
+          when "application/pdf"
+            expect(Fs.compare_stream_head(StringIO.new(part.body.decoded), file2.to_io)).to be_truthy
+          end
+        end
+      end
+    end
+  end
+
   context "with webmail/address_group" do
     let(:user1) { create :gws_user, cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids }
     let(:user2) { create :gws_user, cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids }

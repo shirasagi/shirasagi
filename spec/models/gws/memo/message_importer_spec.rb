@@ -288,6 +288,62 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
       end
     end
 
+    context "with attachments" do
+      let!(:user1) { create :gws_user, cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids }
+      let!(:user2) { create :gws_user, cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids }
+      let!(:user3) { create :gws_user, cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids }
+      let(:file1) do
+        tmp_ss_file cur_user: user1, contents: "#{Rails.root}/spec/fixtures/ss/logo.png", model: "ss/temp_file"
+      end
+      let(:file2) do
+        tmp_ss_file cur_user: user1, contents: "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf", model: "ss/temp_file"
+      end
+      let(:user) { user2 }
+      let(:eml_entry_path) { "#{I18n.t('gws/memo/folder.inbox')}/message-1.eml" }
+
+      let!(:source_message) do
+        build(
+          :gws_memo_message, cur_site: site, cur_user: user1, in_to_members: [ user2.id, user3.id ],
+          file_ids: [ file1.id, file2.id ]
+        )
+      end
+
+      it do
+        expect(Gws::Memo::Message.all.count).to eq 1
+        Gws::Memo::Message.all.first.tap do |message|
+          expect(message.site_id).to eq site.id
+          expect(message.subject).to eq source_message.subject
+          expect(message.from_member_name).to eq user1.long_name
+          expect(message.to_member_ids).to have(2).items
+          expect(message.to_member_ids).to include(user2.id, user3.id)
+          expect(message.member_ids).to have(1).items
+          expect(message.member_ids).to include(user2.id)
+          expect(message.user_settings).to have(1).items
+          expect(message.user_settings).to include("user_id" => user2.id, "path" => "INBOX")
+          expect(message.file_ids).to have(2).items
+          message.files.each do |file|
+            case file.content_type
+            when "image/png"
+              expect(file.name).to eq file1.name
+              expect(file.filename).to eq file1.filename
+              expect(file.content_type).to eq file1.content_type
+              expect(file.size).to eq file1.size
+              expect(Fs.compare_file_head(file.path, file1.path)).to be_truthy
+            when "application/pdf"
+              expect(file.name).to eq file2.name
+              expect(file.filename).to eq file2.filename
+              expect(file.content_type).to eq file2.content_type
+              expect(file.size).to eq file2.size
+              expect(Fs.compare_file_head(file.path, file2.path)).to be_truthy
+            end
+            expect(file.owner_item_id).to eq message.id
+            expect(file.owner_item_type).to eq message.class.name
+            expect(file.site_id).to be_blank
+          end
+        end
+      end
+    end
+
     context "with gws/shared_address/group" do
       let(:user1) { create :gws_user, cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids }
       let(:user2) { create :gws_user, cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids }
