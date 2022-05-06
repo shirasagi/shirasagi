@@ -1,4 +1,347 @@
 class Gws::Memo::Message
+  module Eml
+    module_function
+
+    def read(user, io, site:)
+      reader = Gws::Memo::Message::EmlReader.new(site: site, user: user, io: io)
+      reader.call
+    end
+
+    def write(user, message, io, site: nil)
+      writer = Gws::Memo::Message::EmlWriter.new(site: site || message.site, user: user, message: message, io: io)
+      writer.call
+    end
+
+    def address_type(address)
+      if address.include?("@users.")
+        :users
+      elsif address.include?("@shared-groups.")
+        :shared_groups
+      elsif address.include?("@personal-groups.")
+        :personal_groups
+      elsif address.include?("@lists.")
+        :lists
+      else
+        :others
+      end
+    end
+
+    def decode_local_part(address)
+      local_part, = address.split("@", 2)
+      ::Addressable::IDNA.to_unicode(local_part)
+    end
+  end
+
+  class AddressListResolver
+    include ActiveModel::Model
+
+    attr_accessor :site, :user, :lists
+    attr_reader :user_criterias, :shared_group_names, :personal_group_names, :list_names
+
+    private_class_method :new
+
+    def initialize(*args)
+      super
+
+      @user_criterias = []
+      @shared_group_names = []
+      @personal_group_names = []
+      @list_names = []
+    end
+
+    def self.parse(site, user, address_list, lists: true)
+      struct = new(lists: lists, site: site, user: user)
+
+      address_list = Mail::AddressList.new(address_list)
+      address_list.addresses.each do |address|
+        email = address.address
+        case Eml.address_type(email)
+        when :users
+          name = Eml.decode_local_part(email)
+          if name.present?
+            struct.user_criterias << { name: name }
+          end
+        when :shared_groups
+          name = Eml.decode_local_part(email)
+          if name.present?
+            struct.shared_group_names << name
+          end
+        when :personal_groups
+          name = Eml.decode_local_part(email)
+          if name.present?
+            struct.personal_group_names << name
+          end
+        when :lists
+          if lists
+            name = Eml.decode_local_part(email)
+            if name.present?
+              struct.list_names << name
+            end
+          end
+        else
+          struct.user_criterias << { email: email }
+        end
+      end
+
+      struct
+    end
+
+    def user_ids
+      return if user_criterias.blank?
+
+      users = Gws::User.all.site(site).where("$and" => [{ "$or" => user_criterias }])
+      return users.pluck(:id) if users.count == user_criterias.length
+
+      # name の重複がある。重複したユーザーは除外する。
+      users = users.to_a.group_by { |user| user.name }
+      users = users.map { |_name, users| users }.select { |users| users.length == 1 }
+      users.map! { |users| users.first }
+      return if users.blank?
+
+      users.map(&:id)
+    end
+
+    def shared_group_ids
+      return if shared_group_names.blank?
+
+      group_ids = Gws::SharedAddress::Group.all.site(site).in(name: shared_group_names).pluck(:id)
+      return if group_ids.blank?
+
+      group_ids
+    end
+
+    def personal_group_ids
+      return if personal_group_names.blank?
+
+      group_ids = Webmail::AddressGroup.all.where(user_id: user.id).in(name: personal_group_names).pluck(:id)
+      return if group_ids.blank?
+
+      group_ids
+    end
+
+    def list
+      return if !lists || list_names.blank?
+
+      lists = Gws::Memo::List.all.site(site).in(name: list_names)
+      return  if lists.count != 1
+
+      lists.order_by(name: 1, id: 1).first
+    end
+  end
+
+  class EmlReader
+    include ActiveModel::Model
+
+    attr_accessor :site, :user, :io, :now
+    attr_reader :message, :mail
+
+    HEADER_READERS = %i[
+      read_tenant read_version read_exported
+      read_subject read_date read_message_id read_from read_to read_cc read_status
+    ].freeze
+
+    def initialize(*args)
+      super
+
+      self.site ||= message.site
+      self.now ||= Time.zone.now
+
+      @mail = Mail.new(io.read)
+    end
+
+    def call
+      if list_message?
+        @message = Gws::Memo::ListMessage.new
+      else
+        @message = Gws::Memo::Message.new
+      end
+      message.cur_site = site
+      message.member_ids = [ user.id ]
+
+      read_headers
+      read_body_and_attachments
+
+      message
+    end
+
+    private
+
+    def list_message?
+      address_list = Mail::AddressList.new(mail[:from].to_s)
+      address_list.addresses.any? { |address| address.address.include?("@lists.") }
+    end
+
+    def read_headers
+      HEADER_READERS.each do |handler|
+        send(handler)
+      end
+    end
+
+    def read_tenant
+      tenant = mail.header["X-Shirasagi-Tenant"]
+      return unless tenant
+
+      @tenant_matched = tenant.to_s == SS::Crypt.crypt("#{site.id}:#{site.name}")
+    end
+
+    def read_version
+      version = mail.header["X-Shirasagi-Version"]
+      return unless version
+
+      @version_matched = version.to_s == SS.version
+    end
+
+    def read_exported
+      # nothing to do
+    end
+
+    def read_subject
+      message.subject = mail.subject
+    end
+
+    def read_date
+      message.send_date = mail.date.try(:in_time_zone)
+    end
+
+    def read_message_id
+      # nothing to do
+    end
+
+    def read_from
+      if @tenant_matched
+        address_list = Mail::AddressList.new(mail[:from].to_s)
+        address_list.addresses.any? do |address|
+          case address_type = Eml.address_type(address.address)
+          when :users, :others
+            criteria = Gws::User.all.site(site)
+            if address_type == :users
+              name = Eml.decode_local_part(address.address)
+              users = criteria.where(name: name)
+            else
+              users = criteria.where(email: address.address)
+            end
+            if users.count == 1
+              from = users.first
+              message.cur_user = from
+              message.user_id = from.id
+              message.user_uid = from.uid
+              message.user_name = from.name
+              message.from_member_name = from.long_name
+              true
+            end
+          when :shared_groups, :personal_groups, :lists
+            message.cur_user = nil
+            message.from_member_name = address.display_name.presence || Eml.decode_local_part(address.address)
+            true
+          end
+        end
+      else
+        message.user_id = nil
+        message.from_member_name = mail[:from].to_s
+      end
+    end
+
+    def read_to
+      unless @tenant_matched
+        message.to_member_name = mail[:to].to_s
+        return
+      end
+
+      resolved = Gws::Memo::Message::AddressListResolver.parse(site, user, mail[:to].to_s, lists: true)
+      resolved.user_ids.try do |user_id|
+        message.to_member_ids = user_id if user_id.present?
+      end
+      resolved.shared_group_ids.try do |group_ids|
+        message.to_shared_address_group_ids = group_ids if group_ids.present?
+      end
+      resolved.personal_group_ids.try do |group_ids|
+        message.to_webmail_address_group_ids = group_ids if group_ids.present?
+      end
+      resolved.list.try do |list|
+        message.list = list
+      end
+    end
+
+    def read_cc
+      unless @tenant_matched
+        # message.cc_member_name = mail[:to].to_s
+        return
+      end
+
+      resolved = Gws::Memo::Message::AddressListResolver.parse(site, user, mail[:cc].to_s, lists: false)
+      resolved.user_ids.try do |user_id|
+        message.cc_member_ids = user_id if user_id.present?
+      end
+      resolved.shared_group_ids.try do |group_ids|
+        message.cc_shared_address_group_ids = group_ids if group_ids.present?
+      end
+      resolved.personal_group_ids.try do |group_ids|
+        message.cc_webmail_address_group_ids = group_ids if group_ids.present?
+      end
+    end
+
+    def read_status
+      return unless @tenant_matched
+
+      status_list = mail["X-Shirasagi-Status"]
+      return if status_list.blank?
+
+      statuses = status_list.to_s.split(",").map(&:strip)
+      if statuses.include?("スター")
+        message.set_star(user)
+      end
+    end
+
+    def read_body_and_attachments
+      if mail.attachments.present?
+        body_part = mail.text_part
+
+        mime_type = body_part.mime_type
+        body = body_part.decoded
+      else
+        mime_type = mail.mime_type
+        body = mail.body.decoded
+      end
+
+      message.format = "text"
+      message.html = nil
+      message.text = nil
+      if body.present?
+        if mime_type == "text/html"
+          message.format = "html"
+          message.html = body
+        else
+          message.format = "text"
+          message.text = NKF.nkf("-Ww", body)
+        end
+      end
+
+      if mail.attachments.present?
+        files = []
+        mail.attachments.each do |part|
+          next if body_part && part == body_part
+
+          files << save_part(part)
+        end
+
+        message.file_ids = files.map(&:id)
+      end
+    end
+
+    def save_part(part)
+      ext = ::File.extname(part.filename)
+      ext = ext[1..-1] if ext && ext.start_with?(".")
+      content_type = SS::MimeType.find(ext)
+      attributes = {
+        model: "gws/memo/message", name: part.filename, filename: part.filename, content_type: content_type
+      }
+      SS::File.create_empty!(attributes) do |new_file|
+        IO.copy_stream(StringIO.new(part.decoded), new_file.path)
+        new_file.sanitizer_copy_file
+      end
+    end
+  end
+
   class EmlWriter
     include ActiveModel::Model
     include Gws::Memo::Helper
@@ -208,13 +551,6 @@ class Gws::Memo::Message
         io.write "\r\n"
         io.write "--#{boundary}--\r\n"
       end
-    end
-  end
-
-  class Eml
-    def self.write(user, message, io, site: nil)
-      writer = EmlWriter.new(site: site || message.site, user: user, message: message, io: io)
-      writer.call
     end
   end
 end
