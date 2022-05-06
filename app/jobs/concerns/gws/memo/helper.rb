@@ -24,12 +24,10 @@ module Gws::Memo::Helper
   def serialize_body(data)
     if data["format"] == "html"
       content_type = "text/html"
-      sanitized_html = sanitize_content(data["html"])
-      base64 = Mail::Encodings::Base64.encode(sanitized_html)
+      body = sanitize_content(data["html"])
     else
       content_type = "text/plain"
-      sanitized_text = sanitize_content(data["text"])
-      base64 = Mail::Encodings::Base64.encode(sanitized_text)
+      body = sanitize_content(data["text"])
     end
 
     header = {
@@ -37,7 +35,7 @@ module Gws::Memo::Helper
       "Content-Transfer-Encoding" => "base64"
     }
 
-    [ header, base64 ]
+    [ header, StringIO.new(body) ]
   end
 
   def write_body_to_eml(file, data)
@@ -46,7 +44,7 @@ module Gws::Memo::Helper
       file.write "#{key}: #{value}\r\n"
     end
     file.write "\r\n"
-    file.write body
+    file.write Mail::Encodings::Base64.encode(body.read)
     file.write "\r\n"
   end
 

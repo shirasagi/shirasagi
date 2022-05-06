@@ -30,6 +30,37 @@ class Gws::Memo::Message
       local_part, = address.split("@", 2)
       ::Addressable::IDNA.to_unicode(local_part)
     end
+
+    def multi_part?(mail_header)
+      return false unless mail_header
+
+      content_type = mail_header.header[:content_type]
+      return false unless content_type
+
+      mime_type = content_type.string
+      return false unless mime_type
+
+      mime_type = mime_type.downcase
+      return false if mime_type != "multipart/mixed"
+
+      boundary = content_type.parameters["boundary"]
+      return false if boundary.blank?
+
+      true
+    end
+
+    def text_part?(mail_header)
+      return false unless mail_header
+
+      content_type = mail_header.header[:content_type]
+      return false unless content_type
+
+      mime_type = content_type.string
+      return false unless mime_type
+
+      mime_type = mime_type.downcase
+      mime_type.start_with?("text/")
+    end
   end
 
   class AddressListResolver
@@ -129,11 +160,91 @@ class Gws::Memo::Message
     end
   end
 
+  class RawReader
+    private_class_method :new
+
+    class << self
+      def wrap(reader)
+        new(reader)
+      end
+
+      def header_line?(line)
+        line.present? && (line.include?(":") || [ " ", "\t" ].include?(line[0]))
+      end
+    end
+
+    def initialize(reader)
+      @reader = reader
+    end
+
+    def headers
+      return @headers if @headers
+
+      @headers = []
+
+      @reader.each_line do |line|
+        if !self.class.header_line?(line)
+          @pending_line = line if line.present?
+          break
+        end
+
+        line.chomp!
+        @headers << line
+      end
+
+      @headers
+    end
+
+    def remains
+      Enumerator.new do |y|
+        y << @pending_line if @pending_line.present?
+        @reader.each_line do |line|
+          y << line
+        end
+      end
+    end
+
+    def each_part(boundary)
+      if !@pending_line || !@pending_line.start_with?("--#{boundary}")
+        @reader.each_line do |line|
+          break if line.start_with?("--#{boundary}")
+        end
+      end
+
+      loop do
+        part_headers = []
+        pending_line = nil
+        @reader.each_line do |line|
+          unless self.class.header_line?(line)
+            pending_line = line if line.present?
+            break
+          end
+
+          part_headers << line
+        end
+        break if part_headers.blank?
+
+        part_header = Mail.new(part_headers.join)
+
+        body_enumerable = Enumerator.new do |y|
+          y << pending_line if pending_line
+
+          @reader.each_line do |line|
+            break if line.start_with?("--#{boundary}")
+            y << line
+          end
+        end
+
+        yield part_header, body_enumerable
+      end
+    end
+  end
+
   class EmlReader
     include ActiveModel::Model
 
     attr_accessor :site, :user, :io, :now
-    attr_reader :message, :mail
+    attr_reader :message, :raw_reader
 
     HEADER_READERS = %i[
       read_tenant read_version read_exported
@@ -146,7 +257,7 @@ class Gws::Memo::Message
       self.site ||= message.site
       self.now ||= Time.zone.now
 
-      @mail = Mail.new(io.read)
+      @raw_reader = RawReader.wrap(io)
     end
 
     def call
@@ -166,8 +277,12 @@ class Gws::Memo::Message
 
     private
 
+    def mail_header
+      @mail_header ||= Mail.new(raw_reader.headers.join("\r\n"))
+    end
+
     def list_message?
-      address_list = Mail::AddressList.new(mail[:from].to_s)
+      address_list = Mail::AddressList.new(mail_header[:from].to_s)
       address_list.addresses.any? { |address| address.address.include?("@lists.") }
     end
 
@@ -178,14 +293,14 @@ class Gws::Memo::Message
     end
 
     def read_tenant
-      tenant = mail.header["X-Shirasagi-Tenant"]
+      tenant = mail_header.header["X-Shirasagi-Tenant"]
       return unless tenant
 
       @tenant_matched = tenant.to_s == SS::Crypt.crypt("#{site.id}:#{site.name}")
     end
 
     def read_version
-      version = mail.header["X-Shirasagi-Version"]
+      version = mail_header.header["X-Shirasagi-Version"]
       return unless version
 
       @version_matched = version.to_s == SS.version
@@ -196,11 +311,11 @@ class Gws::Memo::Message
     end
 
     def read_subject
-      message.subject = mail.subject
+      message.subject = mail_header.subject
     end
 
     def read_date
-      message.send_date = mail.date.try(:in_time_zone)
+      message.send_date = mail_header.date.try(:in_time_zone)
     end
 
     def read_message_id
@@ -209,7 +324,7 @@ class Gws::Memo::Message
 
     def read_from
       if @tenant_matched
-        address_list = Mail::AddressList.new(mail[:from].to_s)
+        address_list = Mail::AddressList.new(mail_header[:from].to_s)
         address_list.addresses.any? do |address|
           case address_type = Eml.address_type(address.address)
           when :users, :others
@@ -237,17 +352,17 @@ class Gws::Memo::Message
         end
       else
         message.user_id = nil
-        message.from_member_name = mail[:from].to_s
+        message.from_member_name = mail_header[:from].to_s
       end
     end
 
     def read_to
       unless @tenant_matched
-        message.to_member_name = mail[:to].to_s
+        message.to_member_name = mail_header[:to].to_s
         return
       end
 
-      resolved = Gws::Memo::Message::AddressListResolver.parse(site, user, mail[:to].to_s, lists: true)
+      resolved = Gws::Memo::Message::AddressListResolver.parse(site, user, mail_header[:to].to_s, lists: true)
       resolved.user_ids.try do |user_id|
         message.to_member_ids = user_id if user_id.present?
       end
@@ -264,11 +379,11 @@ class Gws::Memo::Message
 
     def read_cc
       unless @tenant_matched
-        # message.cc_member_name = mail[:to].to_s
+        # message.cc_member_name = mail_header[:to].to_s
         return
       end
 
-      resolved = Gws::Memo::Message::AddressListResolver.parse(site, user, mail[:cc].to_s, lists: false)
+      resolved = Gws::Memo::Message::AddressListResolver.parse(site, user, mail_header[:cc].to_s, lists: false)
       resolved.user_ids.try do |user_id|
         message.cc_member_ids = user_id if user_id.present?
       end
@@ -283,7 +398,7 @@ class Gws::Memo::Message
     def read_status
       return unless @tenant_matched
 
-      status_list = mail["X-Shirasagi-Status"]
+      status_list = mail_header["X-Shirasagi-Status"]
       return if status_list.blank?
 
       statuses = status_list.to_s.split(",").map(&:strip)
@@ -293,53 +408,92 @@ class Gws::Memo::Message
     end
 
     def read_body_and_attachments
-      if mail.attachments.present?
-        body_part = mail.text_part
-
-        mime_type = body_part.mime_type
-        body = body_part.decoded
-      else
-        mime_type = mail.mime_type
-        body = mail.body.decoded
+      if !Eml.multi_part?(mail_header)
+        read_body mail_header, raw_reader.remains
+        return
       end
 
-      message.format = "text"
-      message.html = nil
-      message.text = nil
-      if body.present?
-        if mime_type == "text/html"
-          message.format = "html"
-          message.html = body
-        else
-          message.format = "text"
-          message.text = NKF.nkf("-Ww", body)
-        end
-      end
+      content_type = mail_header.header[:content_type]
+      boundary = content_type.parameters["boundary"]
 
-      if mail.attachments.present?
-        files = []
-        mail.attachments.each do |part|
-          next if body_part && part == body_part
-
-          files << save_part(part)
+      index = 0
+      raw_reader.each_part(boundary) do |part_header, part_body_enum|
+        if index == 0 && Eml.text_part?(part_header)
+          read_body part_header, part_body_enum
+          index += 1
+          next
         end
 
-        message.file_ids = files.map(&:id)
+        read_part part_header, part_body_enum
+        index += 1
       end
     end
 
-    def save_part(part)
-      ext = ::File.extname(part.filename)
-      ext = ext[1..-1] if ext && ext.start_with?(".")
-      content_type = SS::MimeType.find(ext)
+    def read_body(part_header, part_body_enum)
+      message.format = "text"
+      message.html = nil
+      message.text = nil
+
+      body = part_body_enum.to_a
+      return if body.blank?
+
+      body.map!(&:chomp)
+      body.select!(&:present?)
+      return if body.blank?
+
+      content_transfer_encoding = part_header.header[:content_transfer_encoding]
+      if content_transfer_encoding && content_transfer_encoding.encoding.present?
+        case content_transfer_encoding.encoding.downcase
+        when "base64"
+          body = Mail::Encodings::Base64.decode(body.join("\r\n"))
+        when "quoted-printable"
+          body = Mail::Encodings::QuotedPrintable.decode(body.join("\r\n"))
+        else # 7bit
+          body = body.join("\r\n")
+        end
+      else
+        body = body.join("\r\n")
+      end
+
+      body = NKF.nkf("-Ww", body)
+
+      content_type = mail_header.header[:content_type]
+      if content_type && content_type.string == "text/html"
+        message.format = "html"
+        message.html = body
+      else
+        message.format = "text"
+        message.text = body
+      end
+    end
+
+    def read_part(part_header, part_body_enum)
+      content_type = part_header.header[:content_type]
+      filename = content_type.parameters["filename"] if content_type && content_type.parameters
+      if filename.present?
+        ext = ::File.extname(filename)
+        ext = ext[1..-1] if ext && ext.start_with?(".")
+      end
+      if ext.present?
+        content_type = SS::MimeType.find(ext)
+      else
+        content_type = SS::MimeType::DEFAULT_MIME_TYPE
+      end
+      filename ||= "no_name"
       attributes = {
-        model: "gws/memo/message", name: part.filename, filename: part.filename, content_type: content_type
+        model: "gws/memo/message", name: filename, filename: filename, content_type: content_type
       }
       attributes[:cur_user] = message.cur_user if message.cur_user
-      SS::File.create_empty!(attributes) do |new_file|
-        IO.copy_stream(StringIO.new(part.decoded), new_file.path)
-        new_file.sanitizer_copy_file
+      file = SS::File.create_empty!(attributes) do |new_file|
+        ::File.open(new_file.path, "wb") do |writer|
+          part_body_enum.each do |line|
+            data = Base64.strict_decode64(line.strip)
+            writer.write data
+          end
+        end
       end
+
+      message.file_ids = Array(message.file_ids) + [ file.id ]
     end
   end
 
@@ -379,7 +533,9 @@ class Gws::Memo::Message
             "Content-Disposition" => "attachment; filename=#{file.filename.toutf8}; charset=UTF-8"
           }
 
-          y << [ header, Mail::Encodings::Base64.encode(::File.binread(file.path)) ]
+          file.to_io do |io|
+            y << [ header, io ]
+          end
         end
       end
 
@@ -537,6 +693,8 @@ class Gws::Memo::Message
 
     def serialize_multi_part(io, enumerator)
       boundary = "--==_mimepart_#{SecureRandom.hex(16)}"
+      buff = ""
+
       io.write "Content-Type: multipart/mixed;\r\n"
       io.write " boundary=\"#{boundary}\"\r\n"
       io.write "\r\n"
@@ -546,7 +704,12 @@ class Gws::Memo::Message
           io.write "#{key}: #{value}\r\n"
         end
         io.write "\r\n"
-        io.write body
+        # io.write body
+        while body.read(45, buff)
+          io.write Base64.strict_encode64(buff)
+          io.write "\r\n"
+        end
+
         io.write "\r\n"
       end
       io.write "--#{boundary}--\r\n"
