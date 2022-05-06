@@ -604,7 +604,7 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
           expect(file.image_dimension).to eq [ 712, 475 ]
           expect(file.owner_item_id).to eq message.id
           expect(file.owner_item_type).to eq message.class.name
-          # expect(file.site_id).to be_blank
+          expect(file.site_id).to be_blank
         end
       end
     end
