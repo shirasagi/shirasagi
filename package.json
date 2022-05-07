@@ -10,6 +10,8 @@
   },
   "devDependencies": {
     "css-loader": "^6.7.1",
+    "postcss": "^8.4.13",
+    "postcss-loader": "^6.2.1",
     "sass": "^1.51.0",
     "sass-loader": "^12.6.0"
   }
