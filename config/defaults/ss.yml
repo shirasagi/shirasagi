@@ -8,7 +8,7 @@ production: &production
   application_logo_html: '<div class="ss-logo-wrap"><img src="/assets/img/logo.png" alt="SHIRASAGI"><span class="ss-logo-application-name">SHIRASAGI</span></div>'
 
   # StyleSheets on management pages.
-  stylesheets: ["ss/style", "ss/cke"]
+  stylesheets: ["application", "ss/style", "ss/cke"]
 
   # JavaScripts on management pages.
   javascripts: ["application", "ss/script"]
