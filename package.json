@@ -9,6 +9,8 @@
     "build": "webpack --config webpack.config.js"
   },
   "devDependencies": {
-    "css-loader": "^6.7.1"
+    "css-loader": "^6.7.1",
+    "sass": "^1.51.0",
+    "sass-loader": "^12.6.0"
   }
 }
