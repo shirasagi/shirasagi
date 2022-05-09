@@ -8,7 +8,7 @@
   return unless Workflow.exceed_remind_limit?(duration, @item)
 %>
 
-<div class="errorExplanation workflow-remind">
+<div class="cms-notice workflow-remind">
   <h2><%= t("workflow.notice.content_remind.head") %></h2>
   <ul>
     <% t("workflow.notice.content_remind.body", duration: SS::Duration.format(duration)).each do |text| %>
