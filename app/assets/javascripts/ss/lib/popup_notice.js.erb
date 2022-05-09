@@ -19,7 +19,7 @@ this.SS_PopupNotice = (function () {
 
   function SS_PopupNotice(target) {
     this.target = target;
-    this.loading = '<%= ApplicationController.helpers.loading %>';
+    this.loading = SS.loading;
   }
 
   SS_PopupNotice.prototype.render = function () {

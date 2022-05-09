@@ -147,16 +147,17 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       within ".operations" do
         click_on "CSV"
       end
+
       within "form#item-form" do
         click_on I18n.t("ss.buttons.download")
       end
       wait_for_download
 
-      csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+      csv = ::CSV.read(downloads.first, headers: true)
       expect(csv.length).to eq 2
-      expect(csv[0][Gws::Survey::File.t(:updated)].present?).to be_truthy
-      expect(csv[0][Gws::User.t(:name)]).to eq user1.name
-      expect(csv[0][Gws::User.t(:organization_uid)]).to eq user1.organization_uid
+      expect(csv[0][0].present?).to be_truthy
+      expect(csv[0][1]).to eq user1.name
+      expect(csv[0][2]).to eq user1.organization_uid
 
       # zip
       click_on I18n.t("ss.links.back_to_index")

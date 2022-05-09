@@ -17,4 +17,14 @@
 
   <dt><%= @model.t :map_api_mypage %><%= @model.tt :map_api_mypage %></dt>
   <dd><%= f.select :map_api_mypage, @item.map_api_mypage_options %></dd>
+
+  <dt><%= @model.t :map_center %><%= @model.tt :map_center %></dt>
+  <dd></dd>
+  <dt class="depth-2"><%= t("map.longitude") %></dt>
+  <dd class="depth-2"><%= text_field_tag "#{f.object_name}[map_center][lng]", @item.map_center.try(:lng) %></dd>
+  <dt class="depth-2"><%= t("map.latitude") %></dt>
+  <dd class="depth-2"><%= text_field_tag "#{f.object_name}[map_center][lat]", @item.map_center.try(:lat) %></dd>
+
+  <dt><%= @model.t :map_max_number_of_markers %><%= @model.tt :map_max_number_of_markers %></dt>
+  <dd><%= f.number_field :map_max_number_of_markers %></dd>
 </dl>

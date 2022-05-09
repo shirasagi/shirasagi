@@ -1,0 +1,16 @@
+<% if @cur_site.menu_bookmark_visible? && Gws::Bookmark.allowed?(:read, @cur_user, site: @cur_site) %>
+  <div class="gws-bookmark dropdown dropdown-toggle">
+    <% bookmark = Gws::Bookmark.find_by(user: @cur_user, site: @cur_site, url: request.fullpath) rescue nil %>
+    <%= jquery do %>
+      new Gws_Bookmark().render({
+        id: '<%= bookmark.try(:id) %>',
+        name: '<%= bookmark.try(:name) %>',
+        default_name: '<%= window_name %>',
+        url: '<%= gws_apis_bookmarks_path %>',
+        model: '<%= @model.name.underscore if @model %>',
+        save: '<%= I18n.t('ss.buttons.save') %>',
+        delete: '<%= I18n.t('ss.buttons.delete') %>'
+      });
+    <% end %>
+  </div>
+<% end %>

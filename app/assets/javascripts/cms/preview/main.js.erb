@@ -71,7 +71,7 @@ SS_Preview = (function () {
 
   SS_Preview.jqueryDialogMargin = { height: 60 };
 
-  SS_Preview.pageTitle = "<%= I18n.t("modules.addons.cms/body") %>";
+  SS_Preview.pageTitle = <%= I18n.t("modules.addons.cms/body").to_json %>;
 
   SS_Preview.userInplaceEdit = true;
 

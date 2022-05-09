@@ -18,7 +18,7 @@ module SS::Relation::FileHistory
 
     source.class.create_empty!(source.attributes) do |new_file|
       ::FileUtils.copy(self.path, new_file.path)
-      new_file.disable_thumb = true
+      new_file.in_disable_variant_processing = true
       new_file.save!
       new_file.sanitizer_copy_file
     end

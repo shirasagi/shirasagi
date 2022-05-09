@@ -53,7 +53,7 @@ module Cms::Addon
       if html.blank?
         self.contains_urls = []
       else
-        self.contains_urls = html.scan(/(?:href|src)="(.*?)"/).flatten.uniq
+        self.contains_urls = html.scan(/(?:href|src)="(.*?)"/).flatten.uniq.compact.collect(&:strip)
       end
     end
 

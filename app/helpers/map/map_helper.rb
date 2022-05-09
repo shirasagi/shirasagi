@@ -1,4 +1,6 @@
 module Map::MapHelper
+  DEFAULT_GOOGLEMAPS_API_END_POINT = "https://maps.googleapis.com/maps/api/js".freeze
+
   def map_enabled?(opts = {})
     return true unless opts[:site]
     return true if opts[:site].map_api_mypage == "active"
@@ -46,7 +48,7 @@ module Map::MapHelper
     params[:key] = key if key.present?
     params[:language] = language if language.present?
     params[:region] = region if region.present?
-    controller.javascript "//maps.googleapis.com/maps/api/js?#{params.to_query}"
+    controller.javascript "#{SS.config.map.googlemaps_api_end_point || DEFAULT_GOOGLEMAPS_API_END_POINT}?#{params.to_query}"
   end
 
   def include_openlayers_api
@@ -59,6 +61,7 @@ module Map::MapHelper
 
     markers = opts[:markers]
     map_options = opts[:map] || {}
+    center = opts[:center] || Map.center(opts[:site])
     s = []
 
     case default_map_api(opts)
@@ -71,6 +74,8 @@ module Map::MapHelper
       map_options[:layers] = effective_layers(opts)
       map_options[:showGoogleMapsSearch] = show_google_maps_search(opts)
 
+      s << "Openlayers_Map.defaultCenter = [#{center.lat}, #{center.lng}];" if center
+      s << "Openlayers_Map.defaultZoom = #{SS.config.map.openlayers_zoom_level};"
       s << 'var canvas = $("' + selector + '")[0];'
       s << "var opts = #{map_options.to_json};"
       s << 'var map = new Openlayers_Map(canvas, opts);'
@@ -78,6 +83,8 @@ module Map::MapHelper
       include_googlemaps_api(opts)
       map_options[:showGoogleMapsSearch] = show_google_maps_search(opts)
 
+      s << "Googlemaps_Map.defaultCenter = [#{center.lat}, #{center.lng}];" if center
+      s << "Googlemaps_Map.defaultZoom = #{SS.config.map.googlemaps_zoom_level};"
       s << "Googlemaps_Map.load(\"" + selector + "\", #{map_options.to_json});"
       s << 'Googlemaps_Map.setMarkers(' + markers.to_json + ');' if markers.present?
     end
@@ -88,9 +95,10 @@ module Map::MapHelper
   def render_map_form(selector, opts = {})
     return "" unless map_enabled?(opts)
 
-    max_point_form = opts[:max_point_form] || SS.config.map.map_max_point_form
+    max_point_form = opts[:max_point_form] || Map.max_number_of_markers(opts[:site])
     map_options = opts[:map] || {}
     markers = opts[:markers]
+    center = opts[:center] || Map.center(opts[:site])
     s = []
     s << 'SS_AddonTabs.findAddonView(".mod-map").one("ss:addonShown", function() {'
 
@@ -106,6 +114,8 @@ module Map::MapHelper
       map_options[:showGoogleMapsSearch] = show_google_maps_search(opts)
 
       # 初回アドオン表示後に地図を描画しないと、クリックした際にマーカーがずれてしまう
+      s << "  Openlayers_Map.defaultCenter = [#{center.lat}, #{center.lng}];" if center
+      s << "Openlayers_Map.defaultZoom = #{SS.config.map.openlayers_zoom_level};"
       s << '  var canvas = $("' + selector + '")[0];'
       s << "  var opts = #{map_options.to_json};"
       s << '  var map = new Openlayers_Map_Form(canvas, opts);'
@@ -115,6 +125,8 @@ module Map::MapHelper
 
       # 初回アドオン表示後に地図を描画しないと、ズームが 2 に初期設定されてしまう。
       s << "  Map_Form.maxPointForm = #{max_point_form.to_json};" if max_point_form.present?
+      s << "  Googlemaps_Map.defaultCenter = [#{center.lat}, #{center.lng}];" if center
+      s << "  Googlemaps_Map.defaultZoom = #{SS.config.map.googlemaps_zoom_level};"
       s << '  Googlemaps_Map.setForm(Map_Form);'
       s << "  Googlemaps_Map.load(#{selector.to_json}, #{map_options.to_json});"
       s << '  Googlemaps_Map.renderMarkers();'
@@ -162,6 +174,7 @@ module Map::MapHelper
 
     map_options = opts[:map] || {}
     markers = opts[:markers]
+    center = opts[:center] || Map.center(opts[:site])
 
     s = []
     case default_map_api(opts)
@@ -174,6 +187,8 @@ module Map::MapHelper
       map_options[:markers] = markers if markers.present?
       map_options[:layers] = effective_layers(opts)
 
+      s << "Openlayers_Map.defaultCenter = [#{center.lat}, #{center.lng}];" if center
+      s << "Openlayers_Map.defaultZoom = #{SS.config.map.openlayers_zoom_level};"
       s << 'var canvas = $("' + selector + '")[0];'
       s << "var opts = #{map_options.to_json};"
       s << 'var map = new Openlayers_Member_Photo_Form(canvas, opts);'
@@ -182,6 +197,8 @@ module Map::MapHelper
       include_googlemaps_api(opts)
       controller.javascript "/assets/js/exif-js.js"
 
+      s << "Googlemaps_Map.defaultCenter = [#{center.lat}, #{center.lng}];" if center
+      s << "Googlemaps_Map.defaultZoom = #{SS.config.map.googlemaps_zoom_level};"
       s << 'Googlemaps_Map.setForm(Member_Photo_Form);'
       s << "Googlemaps_Map.load(\"" + selector + "\", #{map_options.to_json});"
       s << 'Googlemaps_Map.renderMarkers();'

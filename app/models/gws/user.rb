@@ -19,20 +19,26 @@ class Gws::User
 
   cattr_reader(:group_class) { Gws::Group }
 
-  attr_accessor :in_title_id, :in_occupation_id, :in_gws_main_group_id
+  attr_accessor :in_title_id, :in_occupation_id, :in_gws_main_group_id, :in_gws_default_group_id
 
+  # 管理者がユーザ管理画面で設定した主グループ。ユーザーの主務を表しており、あまり変更はない。
   field :gws_main_group_ids, type: Hash, default: {}
+  # ユーザーがグループ切り替え機能を用いて設定したアクティブグループ。ユーザーの兼務を表しており、しょっちゅう変わる。
   field :gws_default_group_ids, type: Hash, default: {}
 
   embeds_ids :groups, class_name: "Gws::Group"
 
-  permit_params :in_title_id, :in_occupation_id, :in_gws_main_group_id
+  permit_params :in_title_id, :in_occupation_id, :in_gws_main_group_id, :in_gws_default_group_id
 
   before_validation :set_title_ids, if: ->{ in_title_id }
   before_validation :set_occupation_ids, if: ->{ in_occupation_id }
   before_validation :set_gws_main_group_id, if: ->{ @cur_site && in_gws_main_group_id }
+  before_validation if: ->{ @cur_site && in_gws_default_group_id } do
+    set_gws_default_group_id(in_gws_default_group_id)
+  end
   validate :validate_groups
   validate :validate_gws_main_group, if: ->{ @cur_site }
+  validate :validate_gws_default_group, if: ->{ @cur_site }
 
   # reset default order
   self.default_scoping = nil if default_scopable?
@@ -69,16 +75,23 @@ class Gws::User
 
   def set_gws_default_group_id(group_id)
     ids = gws_default_group_ids.presence || {}
-    ids[@cur_site.id.to_s] = group_id
+    if group_id.numeric?
+      ids[@cur_site.id.to_s] = group_id.to_i
+    else
+      ids.delete(@cur_site.id.to_s)
+    end
+
     self.gws_default_group_ids = ids
-    save
   end
 
-  def gws_default_group
+  def gws_default_group(site = nil)
     return @gws_default_group if @gws_default_group
-    return nil unless @cur_site
-    @gws_default_group = find_gws_default_group(@cur_site)
-    @gws_default_group ||= find_gws_main_group(@cur_site)
+
+    site ||= @cur_site
+    return nil unless site
+
+    @gws_default_group = find_gws_default_group(site)
+    @gws_default_group ||= find_gws_main_group(site)
   end
 
   def find_gws_default_group(site = nil)
@@ -88,6 +101,7 @@ class Gws::User
     group_id = gws_default_group_ids[site.id.to_s]
     return if group_id.blank?
 
+    group_id = group_id.to_i if group_id.numeric? # for backwards compatibility
     ids = Array(group_id).compact & self.group_ids
     return if ids.blank?
 
@@ -123,8 +137,13 @@ class Gws::User
 
   def set_gws_main_group_id
     group_ids = gws_main_group_ids
-    group_ids[@cur_site.id.to_s] = in_gws_main_group_id.present? ? in_gws_main_group_id.to_i : nil
-    self.gws_main_group_ids = group_ids.select { |k, v| v.present? }
+    if in_gws_main_group_id.numeric?
+      group_ids[@cur_site.id.to_s] = in_gws_main_group_id.to_i
+    else
+      group_ids.delete(@cur_site.id.to_s)
+    end
+
+    self.gws_main_group_ids = group_ids
   end
 
   def validate_groups
@@ -132,9 +151,22 @@ class Gws::User
   end
 
   def validate_gws_main_group
+    return true if @cur_site.blank?
+
     group_id = gws_main_group_ids[@cur_site.id.to_s]
     return true if group_id.blank?
-    return true if group_ids.include?(group_id)
+    return true if group_ids.include?(group_id) && @cur_site.descendants_and_self.active.where(id: group_id).present?
+
     errors.add :gws_main_group_ids, :invalid
+  end
+
+  def validate_gws_default_group
+    return true if @cur_site.blank?
+
+    group_id = gws_default_group_ids[@cur_site.id.to_s]
+    return true if group_id.blank?
+    return true if group_ids.include?(group_id) && @cur_site.descendants_and_self.active.where(id: group_id).present?
+
+    errors.add :gws_default_group_ids, :invalid
   end
 end

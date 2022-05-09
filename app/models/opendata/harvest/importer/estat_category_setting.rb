@@ -70,57 +70,36 @@ class Opendata::Harvest::Importer
       ckan_groups = imported_item.harvest_ckan_groups
       ckan_tags = imported_item.harvest_ckan_tags
       shirasagi_categories = imported_item.harvest_shirasagi_categories
+      shirasagi_estat_categories = imported_item.harvest_shirasagi_estat_categories
       shirasagi_areas = imported_item.harvest_shirasagi_areas
 
       conditions.each do |cond|
-        if cond["type"] == "string" && cond["operator"] == "match"
+        result = case cond["type"]
+                 when 'string'
+                   text_index.include?(cond["value"])
+                 when 'regexp'
+                   text_index.match?(::Regexp.new(cond["value"]))
+                 when 'ckan_group'
+                   ckan_groups.include?(cond["value"])
+                 when 'ckan_tag'
+                   ckan_tags.include?(cond["value"])
+                 when 'shirasagi_category'
+                   shirasagi_categories.include?(cond["value"])
+                 when 'shirasagi_estat_category'
+                   shirasagi_estat_categories.include?(cond["value"])
+                 when 'shirasagi_area'
+                   shirasagi_areas.include?(cond["value"])
+                 else
+                   nil
+                 end
 
-          return false if !text_index.include?(cond["value"])
+        next if result.nil?
 
-        elsif cond["type"] == "string" && cond["operator"] == "unmatch"
-
-          return false if text_index.include?(cond["value"])
-
-        elsif cond["type"] == "regexp" && cond["operator"] == "match"
-
-          return false if !text_index.match(::Regexp.new(cond["value"]))
-
-        elsif cond["type"] == "regexp" && cond["operator"] == "unmatch"
-
-          return false if text_index.match(::Regexp.new(cond["value"]))
-
-        elsif cond["type"] == "ckan_group" && cond["operator"] == "match"
-
-          return false if !ckan_groups.include?(cond["value"])
-
-        elsif cond["type"] == "ckan_group" && cond["operator"] == "unmatch"
-
-          return false if ckan_groups.include?(cond["value"])
-
-        elsif cond["type"] == "ckan_tag" && cond["operator"] == "match"
-
-          return false if !ckan_tags.include?(cond["value"])
-
-        elsif cond["type"] == "ckan_tag" && cond["operator"] == "unmatch"
-
-          return false if ckan_tags.include?(cond["value"])
-
-        elsif cond["type"] == "shirasagi_category" && cond["operator"] == "unmatch"
-
-          return false if shirasagi_categories.include?(cond["value"])
-
-        elsif cond["type"] == "shirasagi_category" && cond["operator"] == "match"
-
-          return false if !shirasagi_categories.include?(cond["value"])
-
-        elsif cond["type"] == "shirasagi_area" && cond["operator"] == "unmatch"
-
-          return false if shirasagi_areas.include?(cond["value"])
-
-        elsif cond["type"] == "shirasagi_area" && cond["operator"] == "match"
-
-          return false if !shirasagi_areas.include?(cond["value"])
-
+        case cond["operator"]
+        when 'match'
+          return false if !result
+        when 'unmatch'
+          return false if result
         end
       end
       true

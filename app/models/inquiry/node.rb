@@ -16,7 +16,7 @@ module Inquiry::Node
     include Inquiry::Addon::Aggregation
     include Inquiry::Addon::Faq
     include Cms::Addon::ForMemberNode
-    include Inquiry::Addon::ReleasePlan
+    include Cms::Addon::ReleasePlan
     include Inquiry::Addon::ReceptionPlan
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission

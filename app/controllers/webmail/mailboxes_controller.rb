@@ -88,6 +88,6 @@ class Webmail::MailboxesController < ApplicationController
       end
       @items << item
     end
-    render_destroy_all(entries.size != @items.size)
+    render_confirmed_all(entries.size != @items.size)
   end
 end

@@ -5,7 +5,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
   let(:use_plan_role) { create :gws_role, permissions: %w(use_private_gws_schedule_plans) }
   let!(:user0) { gws_user }
   let!(:user1) { create :gws_user, group_ids: user0.group_ids, gws_role_ids: [ use_plan_role.id ] }
-  let!(:item) { create :gws_schedule_plan, cur_site: site, cur_user: user0, member_ids: [ user1.id ] }
+  let!(:item) { create :gws_schedule_facility_plan_few_days, cur_site: site, cur_user: user0, member_ids: [ user1.id ] }
 
   before { login_user user1 }
 
@@ -13,12 +13,12 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
     it do
       visit gws_schedule_plans_path(site: site)
       within ".fc-view" do
-        expect(page).to have_css(".fc-content", text: item.name)
+        expect(page).to have_css(".fc-event-allday .fc-content", text: item.name)
       end
 
       within ".fc-view" do
         # click_on item.name
-        find(".fc-content", text: item.name).click
+        find(".fc-event-allday .fc-content", text: item.name).click
       end
 
       within ".gws-popup" do
