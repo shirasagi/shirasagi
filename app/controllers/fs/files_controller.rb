@@ -10,10 +10,8 @@ class Fs::FilesController < ApplicationController
 
   private
 
-  def around_tagged_url
-    Rails.logger.tagged(request.url) do
-      yield
-    end
+  def around_tagged_url(&block)
+    Rails.logger.tagged(request.url, &block)
   end
 
   def cms_sites

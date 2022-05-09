@@ -25,7 +25,10 @@ describe SS::Addon::FileSetting::BasicAuthMatcher, dbscope: :example do
     expect(matcher.match?(ActionDispatch::Request.new("HTTP_AUTHORIZATION" => "Basic #{unique_id}"))).to be_falsey
     expect(matcher.match?(ActionDispatch::Request.new({}))).to be_falsey
 
-    expect { SS::LogSupport.stdout_logger.disable(true) }.to \
-        output(include("authorization is not presented", "authorization type is not 'basic'", "authorization credential is not matched")).to_stdout
+    [ "authorization is not presented",
+      "authorization type is not 'basic'",
+      "authorization credential is not matched" ].tap do |messages|
+      expect { SS::LogSupport.stdout_logger.disable(true) }.to output(include(*messages)).to_stdout
+    end
   end
 end
