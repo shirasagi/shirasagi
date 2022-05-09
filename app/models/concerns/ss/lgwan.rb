@@ -17,7 +17,7 @@ module SS::Lgwan
   end
 
   def map_layers
-    @_map_layers ||= SS.config.lgwan.map.dig("layers").to_a
+    @_map_layers ||= SS.config.lgwan.map["layers"].to_a
   end
 
   def map_effective_layers(site)

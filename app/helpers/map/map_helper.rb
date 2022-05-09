@@ -1,7 +1,7 @@
 module Map::MapHelper
   def map_enabled?(opts = {})
     return true unless opts[:site]
-    return true if (opts[:site].map_api_mypage == "active")
+    return true if opts[:site].map_api_mypage == "active"
     (opts[:mypage] || opts[:preview]) ? false : true
   end
 
@@ -197,9 +197,8 @@ module Map::MapHelper
     h << %(<div class="marker-info" data-id="#{item.id}">)
     h << %(<p class="name">#{item.name}</p>)
     h << %(<p class="address">#{item.address}</p>) if item.try(:address)
-    if point
-      h << %(<p class="point-name">#{point[:name]}</p>) if point[:name].present?
-      # h << %(<p class="point-text">#{point[:text]}</p>) if point[:text].present?
+    if point && point[:name].present?
+      h << %(<p class="point-name">#{point[:name]}</p>)
     end
     h << %(<p class="show">#{link_to t('ss.links.show'), item.url}</p>)
     h << %(</div>)
