@@ -32,6 +32,9 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
     let(:show_google_maps_search_label) { I18n.t("ss.options.state.#{show_google_maps_search}") }
     let(:map_api_mypage) { %w(active expired).sample }
     let(:map_api_mypage_label) { I18n.t("ss.options.state.#{map_api_mypage}") }
+    let(:map_center_lng) { 138 }
+    let(:map_center_lat) { 36 }
+    let(:map_max_number_of_markers) { rand(1..20) }
 
     it do
       visit index_path
@@ -44,6 +47,9 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
         select map_api_layer_label, from: "item[map_api_layer]"
         select show_google_maps_search_label, from: "item[show_google_maps_search]"
         select map_api_mypage_label, from: "item[map_api_mypage]"
+        fill_in "item[map_center][lng]", with: map_center_lng
+        fill_in "item[map_center][lat]", with: map_center_lat
+        fill_in "item[map_max_number_of_markers]", with: map_max_number_of_markers
 
         click_on I18n.t("ss.buttons.save")
       end
@@ -55,6 +61,9 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
       expect(site.map_api_layer).to eq map_api_layer
       expect(site.show_google_maps_search).to eq show_google_maps_search
       expect(site.map_api_mypage).to eq map_api_mypage
+      expect(site.map_center.lng).to eq map_center_lng
+      expect(site.map_center.lat).to eq map_center_lat
+      expect(site.map_max_number_of_markers).to eq map_max_number_of_markers
     end
   end
 end
