@@ -2826,7 +2826,7 @@ form .CodeMirror {
     text-align: center;
   }
 }
-.errorExplanation {
+.errorExplanation, .cms-notice {
   margin: 0 0 20px;
   padding: 20px;
   border: 1px solid $orange;
