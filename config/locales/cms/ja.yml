@@ -83,6 +83,7 @@ ja:
     source_cleaner: ソースクリーニング
     source_cleaner_template: ソースクリーニング
     syntax_check: アクセシビリティチェック
+    backlink_check: 被リンクチェック
     sns_post: SNS投稿連携
     sns_post_log: 投稿履歴
     theme_template: Theme切り替え
@@ -950,7 +951,9 @@ ja:
       cms/copy_nodes_task:
         target_node_name: 複製先フォルダー名
       cms/addon/source_cleaner:
-        target: 対象
+        target_type: 対象の種別
+        target_value: 対象の名称
+        replace_source: 対象の属性値
         action: 操作
         replaced_value: 置換後の値
       cms/addon/opendata_ref/site:
@@ -1199,7 +1202,6 @@ ja:
       branch_page_can_not_move: 差し替え用ページは移動できません。
       check_html: 本文のアクセシビリティチェックを確認してください。
       set_img_alt: 画像の代替テキストを確認してください。
-      set_applet_alt: アプレット要素の代替テキストを確認してください。
       set_area_alt: エリア要素の代替テキストを確認してください。
       invalid_img_scheme: 画像のURIにバイナリー文字列が含まれています。
       set_table_caption: 表にキャプションが設定されていません。
@@ -1218,11 +1220,11 @@ ja:
       mobile_size_check_failure: 失敗
       mobile_size_check_disable: モバイルサイズが設定されていません。
       mobile_size_check_size: 本文のデータサイズはOKです。
-      mobile_size_check_failed_to_size: 携帯で表示する場合、本文のデータサイズが%{mobile_size}以下になるようにしてください。
+      mobile_size_check_failed_to_size: "携帯で表示する場合、本文のデータサイズが%{mobile_size}以下になるようにしてください。(本文サイズ：%{size})"
       mobile_size_check_server_error: 本文データサイズのチェック中にサーバーエラーが発生しました。
       not_a_child_group: はサイトに所属するグループを設定してください。
       not_found_parent_group: 親グループが存在しません。
-      plz_check_targets_to_delete: 削除対象が選択されておりません。チェックボックスにチェックを入れた上で削除をお願いします。
+      plz_check_targets_to_change_state: 公開ステータス変更対象が選択されておりません。チェックボックスにチェックを入れた上で変更をお願いします。
       invalid_order_of_h: 見出し(H)の順番が不正です。
       invalid_multibyte_character: 英数字は半角文字を入力してください。
       invalid_kana_character: 半角カナ文字が含まれています。
@@ -1230,17 +1232,16 @@ ja:
       invalid_adjacent_a: 隣接する同じリンクを一つのリンクにまとめてください。
       check_interword_space: 単語の文字間のスペースを確認してください。
       check_link_text: リンクのテキストを確認してください。
-      check_object_text: オブジェクト要素のボディに適切な代替テキストを記述してください。
       check_embedded_media: 動画や音声を含む場合、説明があるか確認してください。
-      replace_word: 使用が好ましくない単語が含まれています。
+      replace_word: 使用が好ましくない単語が含まれています。「%{from}」→「%{to}」
       replace_word_validation: に使用が好ましくない単語が含まれています。
       alt_is_included_in_filename: 代替テキストがファイル名に含まれています。
       cms_form_db_required_node: データの登録には記事フォルダーの設定が必要です。
+      syntax_check_server_error: アクセシビリティチェック中にサーバーエラーが発生しました。
+      invalid_url_scheme: 「http://」や 「https://」で始まるURLのみにしてください。
       syntax_check_detail:
         set_img_alt:
           - 画像の内容を示す代替テキストを設定してください。
-        set_applet_alt:
-          - アプレットの内容を示す代替テキストを設定してください。
         set_area_alt:
           - エリア要素の内容を示す代替テキストを設定してください。
         invalid_img_scheme:
@@ -1270,14 +1271,15 @@ ja:
           - 単語の文字間に不要なスペースが含まれている場合は削除してください。
         check_link_text:
           - リンク内のテキストは遷移先を表すものを設定してください。
-        check_object_text:
-          - オブジェクト要素が正しく読み込まれなかった場合の説明を要素内に記述してください。
         check_embedded_media:
           - 動画や音声を本文に埋め込む場合は説明を記述してください。
         alt_is_included_in_filename:
           - 代替テキストの一部もしくは全部がファイル名に含まれています。
           - 一般的にファイル名をそのまま代替テキストに設定するのは好ましくないと考えられます。
           - 設定している代替テキストが妥当かどうか確認してください。
+        invalid_url_scheme:
+          - 「http://」や 「https://」で始まるURLのみにしてください
+          - "参照: 『安全なウェブサイトの作り方 5-(ii)』"
       thums_is_not_an_image: には画像ファイルを指定してください。
       unsupported_encoding: 対応していない文字コードです。
       thumb_is_blank: サムネイル画像が登録されていません。
@@ -1882,13 +1884,26 @@ ja:
         - アクセシビリティチェックの有効無効を設定します。
 
     cms/addon/source_cleaner:
-      target:
-        - クリーニングの対象を設定します。
-        - タグ、属性、文字列の中から種別を選択し、右欄に対象を入力します。
+      target_type:
+        - |-
+          クリーニング対象の種別を設定します。
+          クリーニング対象は置換または削除されます。
+          タグ ... HTMLタグを設定します。
+          属性 ... HTMLタグの属性(attribute)を設定します。
+          文字列 ... 文字列を設定します。
+          正規表現 ... 正規表現にマッチする文字列を設定します。
+      target_value:
+        - 置換または削除対象のタグや属性の名称、文字列を設定します。
+      replace_source:
+        - 置換または削除対象の属性の値を設定します。
       action:
-        - 対象のクリーニング方法を設定します。
-        - 置換または削除が選択できます。
-        - 置換後のタグや属性の値、文字列を右欄に入力します。
+        - |-
+          対象のクリーニング方法を設定します。
+          クリーニング対象のタグや属性の値、文字列を置換または削除します。
+          削除 ... クリーニング対象を削除します。
+          置換 ... クリーニング対象を特定の値に置換します。
+      replaced_value:
+        - 置換後のタグや属性の値、文字列を設定します。
 
     cms/addon/opendata_ref/site:
       opendata_site_ids:
@@ -2117,6 +2132,9 @@ ja:
     cms/addon/form/page:
       form_id:
         - 定型フォームを設定します。
+      file_order:
+        - 管理画面上で表示されているファイルの並び順を変更し、ファイルを見つけやすくします。
+        - ただし、並び順は保存されません。
     cms/init_column:
       order:
         - 表示順を入力します。
@@ -2315,6 +2333,11 @@ ja:
         - 下部HTMLを入力します。
       placeholder:
         - プレースホルダーを入力します。
+
+    cms/node/site_search:
+      st_categories:
+        - サイト内検索で使用するカテゴリーを設定します。
+        - 設定されていない場合は全カテゴリーが対象となります。
 
   all_content:
     page_id: ページID

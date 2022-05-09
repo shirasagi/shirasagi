@@ -69,6 +69,13 @@ class ApplicationController < ActionController::Base
     headers['Transfer-Encoding'] = 'chunked'
     headers.delete('Content-Length')
 
+    # Unfortunately Rack::ETag (https://github.com/rack/rack/blob/master/lib/rack/etag.rb#L54) above 2.2
+    # forcibly calculate etag even though the response is streaming. So, streaming response doesn't work properly.
+    # To fix this issue, you must set "Last-Modified" header explicitly
+    #
+    # see: https://qiita.com/snaka/items/133edf3e1a4cabd9ce45
+    headers['Last-Modified'] = Time.zone.now.rfc2822
+
     # output csv by streaming
     self.response_body = CloseableChunkedBody.new(enum)
   end
@@ -87,12 +94,38 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def ss_send_file(file, opts = {})
-    if Fs.mode == :file
-      opts[:x_sendfile] = true unless opts.key?(:x_sendfile)
-      send_file file, opts
+  def ss_send_file_file(file_or_path, opts = {})
+    opts[:x_sendfile] = true unless opts.key?(:x_sendfile)
+    if file_or_path.respond_to?(:path)
+      path = file_or_path.path
     else
-      send_data Fs.binread(file), opts
+      path = file_or_path
+    end
+    send_file path, opts
+  end
+
+  def ss_send_file_grid_fs(file_or_path, opts = {})
+    if file_or_path.respond_to?(:to_io)
+      io = file_or_path.to_io
+    else
+      io = Fs.to_io(file_or_path)
+    end
+    send_enum io, opts
+  end
+
+  if Rails.env.test?
+    def ss_send_file(*args)
+      if Fs.mode == :file
+        ss_send_file_file(*args)
+      else
+        ss_send_file_grid_fs(*args)
+      end
+    end
+  else
+    if Fs.mode == :file
+      alias ss_send_file ss_send_file_file
+    else
+      alias ss_send_file ss_send_file_grid_fs
     end
   end
 

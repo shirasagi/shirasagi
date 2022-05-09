@@ -25,7 +25,7 @@ sort.renderItems(<%== @item.conditions.to_json %>);
       </thead>
       <tbody>
         <tr data-base="true">
-          <td style="height: 40px; width: 140px;"><%= select_tag "item[conditions][][type]", options_for_select(@item.type_condition_options) %></td>
+          <td style="height: 40px; width: 180px;"><%= select_tag "item[conditions][][type]", options_for_select(@item.type_condition_options) %></td>
           <td><%= text_field_tag "item[conditions][][value]", "" %></td>
           <td style="height: 40px; width: 120px;"><%= select_tag "item[conditions][][operator]", options_for_select(@item.operator_condition_options) %></td>
         </tr>

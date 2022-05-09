@@ -47,10 +47,7 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css('.fc-view a.fc-event-todo', text: item.name)
       # click_on item.name
       first('.fc-view a.fc-event-todo').click
-      within '.gws-popup' do
-        expect(page).to have_content(item.name)
-        expect(page).to have_content(item.text)
-      end
+      expect(current_path).to eq gws_discussion_forum_todo_path(site: site, mode: '-', forum_id: forum.id, id: item.id)
 
       #
       # Update

@@ -22,8 +22,8 @@ this.Openlayers_Member_Photo_Form = (function () {
 
     this.popup = null;
     this.maxPointForm = 10;
-    this.deleteMessage = "<%= I18n.t('map.confirm.delete_marker') %>";
-    this.setExifMessage = "<%= I18n.t('map.confirm.find_exif') %>";
+    this.deleteMessage = <%= I18n.t('map.confirm.delete_marker').to_json %>;
+    this.setExifMessage = <%= I18n.t('map.confirm.find_exif').to_json %>;
     this.dataID = 0;
     this.markerIcon = Openlayers_Map.markerIcon;
     this.clickIcon = Openlayers_Map.clickIcon;

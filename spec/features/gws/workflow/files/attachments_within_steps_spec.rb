@@ -91,11 +91,15 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: approve_comment1
-        click_on I18n.t("workflow.links.approver_file_upload")
+        wait_cbox_open do
+          click_on I18n.t("workflow.links.approver_file_upload")
+        end
       end
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-        click_on I18n.t("ss.buttons.attach")
+        wait_cbox_close do
+          click_on I18n.t("ss.buttons.attach")
+        end
       end
       within ".mod-workflow-approve" do
         click_on I18n.t("workflow.buttons.approve")
@@ -142,11 +146,15 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: circulation_comment2
-        click_on I18n.t("workflow.links.approver_file_upload")
+        wait_cbox_open do
+          click_on I18n.t("workflow.links.approver_file_upload")
+        end
       end
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-        click_on I18n.t("ss.buttons.attach")
+        wait_cbox_close do
+          click_on I18n.t("ss.buttons.attach")
+        end
       end
       within ".mod-workflow-approve" do
         click_on I18n.t("workflow.links.set_seen")

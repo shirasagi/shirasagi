@@ -105,7 +105,23 @@ Cms_TemplateForm.prototype.loadAndActivateForm = function(formId) {
   });
 };
 
+Cms_TemplateForm.prototype.deleteEditors = function() {
+  this.$formPage.find("textarea").each(function() {
+    if (!this.id) {
+      return;
+    }
+
+    var editor = CKEDITOR.instances[this.id];
+    if (!editor) {
+      return;
+    }
+
+    editor.destroy();
+  });
+};
+
 Cms_TemplateForm.prototype.loadForm = function(html) {
+  this.deleteEditors();
   this.$formPage.html($(html).html());
   // SS.render();
   SS.renderAjaxBox();
@@ -463,5 +479,7 @@ Cms_TemplateForm.prototype.remove = function($evTarget) {
     $columnValue.remove();
     self.resetOrder();
     Cms_Form.activateSyntaxChecks();
+
+    self.$el.trigger("ss:columnDeleted");
   });
 };
