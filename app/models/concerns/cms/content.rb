@@ -7,7 +7,7 @@ module Cms::Content
   include SS::Reference::User
   include SS::Reference::Site
   include Cms::GroupPermission
-  include Cms::Addon::CheckLinks
+  include Cms::CheckLinks
   include Fs::FilePreviewable
   include History::Addon::Trash
   include Cms::ContentLiquid
