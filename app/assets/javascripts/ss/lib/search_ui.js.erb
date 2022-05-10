@@ -140,7 +140,8 @@ this.SS_SearchUI = (function () {
         $(this).ajaxSubmit({
           url: $(this).attr("action"),
           success: function (data) {
-            $el.closest("#cboxLoadedContent").html(data);
+            var $data = $("<div />").html(data);
+            $.colorbox.prep($data.contents());
           },
           error: function (data, status) {
             $div.html("== Error ==");

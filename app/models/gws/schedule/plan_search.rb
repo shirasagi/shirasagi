@@ -63,7 +63,10 @@ class Gws::Schedule::PlanSearch
           plan_times[key].uniq!
 
           facility_times[key] ||= {}
-          fids.each { |fid| facility_times[key][fid] = plan }
+          fids.each do |fid|
+            facility_times[key][fid] ||= []
+            facility_times[key][fid] << plan
+          end
         end
         time += 1.hour
       end
@@ -84,11 +87,13 @@ class Gws::Schedule::PlanSearch
           datetime = (date + i.hours).to_datetime
           @facilities.each do |facility|
             if plan_times.key?("#{ymd} #{i}") && plan_times["#{ymd} #{i}"].index(facility.id)
-              plan = facility_times["#{ymd} #{i}"][facility.id]
+              plans = facility_times["#{ymd} #{i}"][facility.id]
 
               p_hours[facility.id] ||= {}
               p_hours[facility.id][i] ||= []
-              p_hours[facility.id][i] = plan_attributes(plan)
+              plans.each do |plan|
+                p_hours[facility.id][i] << plan_attributes(plan)
+              end
               next
             end
 

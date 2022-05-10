@@ -81,6 +81,8 @@ ja:
       copy: 複製する
       command: コマンド
       input: 入力する
+      make_them_public: 公開にする
+      make_them_close: 非公開にする
       delete: 削除する
       import: インポート
       reply: 返信する
@@ -186,7 +188,12 @@ ja:
       file_histories: ファイル履歴
       translate: 翻訳
       replace_save: 差し替え保存
+      make_them_public: 公開にする
+      make_them_close: 非公開にする
+      file_name_order: 名前順
+      file_upload_order: アップロード順
     confirm:
+      change_state: 公開状態を変更してよろしいですか？
       delete: 削除してよろしいですか？
       soft_delete: 削除してよろしいですか？
       hard_delete: 完全に削除してよろしいですか？
@@ -214,6 +221,8 @@ ja:
       contains_links_in_file_ignoring_alert: 被リンクを確認の上、チェックボックスをクリックして削除してください。
       not_contains_links_in_file: 被リンクがないので削除できます。
       target_to_delete: 削除対象の確認
+      target_to_public: 公開対象の確認
+      target_to_close: 非公開対象の確認
     notice:
       saved: 保存しました。
       deleted: 削除しました。
@@ -710,6 +719,9 @@ ja:
         map_api_key: APIキー
         map_api_layer: 地図レイヤー
         show_google_maps_search: Googleマップへのリンク
+        map_api_mypage: 管理画面での地図表示
+        map_center: 地図の中心座標
+        map_max_number_of_markers: 最大地点数
       ss/addon/kana_setting:
         kana_format: ふりがなの形式
       ss/addon/facebook_setting:
@@ -1007,6 +1019,9 @@ ja:
         - 編集を許可するユーザーを選択します。
       import:
         - CSVファイルに記載された施設の種類、地域、用途、または管理グループが事前に作成されていない場合、該当する施設は登録されません
+      file_order:
+        - 管理画面上でのファイルの並び順をリアルタイムで変更し、ファイルを見つけやすくします。
+        - ただし、並び順は保存されません。
     ss/model/file:
       in_file:
         - ファイルを選択します。
@@ -1128,6 +1143,13 @@ ja:
         - サイトで使用するOpenLayersのレイヤーを選択します。
       show_google_maps_search:
         - 有効にすると、地図マーカーに「Googleマップで見る」リンクが表示されます。
+      map_api_mypage:
+        - 管理画面で地図を表示するか設定します。
+      map_center:
+        - 地図の中心座標を経度、緯度の順に入力します。
+        - Googleマップは緯度、経度の順で表示しますが、これとは順番が逆になっているので注意してください。
+      map_max_number_of_markers:
+        - 1ページあたりのマーカー数の最大個数を入力します。
     ss/addon/kana_setting:
       kana_format:
         - かな機能にて公開画面にふりがなを付与した際の表記形式を設定します。

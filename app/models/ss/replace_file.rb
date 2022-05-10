@@ -1,7 +1,6 @@
 class SS::ReplaceFile
   include SS::Model::File
   include SS::Reference::Site
-  include SS::Relation::Thumb
   include SS::Relation::FileHistory
   include SS::Liquidization
 
@@ -13,10 +12,6 @@ class SS::ReplaceFile
   # history_file
   before_save :save_history_file, if: -> { in_file.present? }
   before_save :save_file
-
-  # thumbs
-  after_save :destroy_thumbs, if: -> { in_file || resizing }
-  after_save :save_thumbs, if: -> { disable_thumb.blank? && image? }
 
   # owner item
   after_save :update_owner_item
@@ -60,7 +55,7 @@ class SS::ReplaceFile
 
     @source.class.create_empty!(source_attributes) do |new_file|
       ::FileUtils.copy(self.path, new_file.path)
-      new_file.disable_thumb = true
+      new_file.in_disable_variant_processing = true
       new_file.save!
       new_file.sanitizer_copy_file
     end

@@ -205,7 +205,7 @@ class Gws::UsersController < ApplicationController
       end
       @items << item
     end
-    render_destroy_all(entries.size != @items.size, notice: t('ss.notice.lock_user_all'))
+    render_confirmed_all(entries.size != @items.size, notice: t('ss.notice.lock_user_all'))
   end
 
   def unlock_all
@@ -221,6 +221,6 @@ class Gws::UsersController < ApplicationController
       end
       @items << item
     end
-    render_destroy_all(entries.size != @items.size, notice: t('ss.notice.unlock_user_all'))
+    render_confirmed_all(entries.size != @items.size, notice: t('ss.notice.unlock_user_all'))
   end
 end

@@ -24,26 +24,43 @@ describe 'gws_memo_lists', type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         fill_in 'item[name]', with: name1
         within '#addon-gws-agents-addons-member' do
-          click_on I18n.t('ss.apis.users.index')
+          wait_cbox_open do
+            click_on I18n.t('ss.apis.users.index')
+          end
         end
       end
 
       wait_for_cbox do
-        click_on gws_user.name
+        wait_cbox_close do
+          click_on gws_user.name
+        end
       end
 
       within 'form#item-form' do
-        click_on I18n.t('gws.apis.categories.index')
+        within '#addon-gws-agents-addons-member' do
+          expect(page).to have_css(".ajax-selected", text: gws_user.name)
+        end
+        within "#addon-basic" do
+          wait_cbox_open do
+            click_on I18n.t('gws.apis.categories.index')
+          end
+        end
       end
 
       wait_for_cbox do
-        fill_in 's[keyword]', with: category.name
-        click_on I18n.t('ss.buttons.search')
-        wait_for_ajax
-        click_on category.name
+        wait_event_to_fire("cbox_complete") do
+          fill_in 's[keyword]', with: category.name
+          click_on I18n.t('ss.buttons.search')
+        end
+        wait_cbox_close do
+          click_on category.name
+        end
       end
 
       within 'form#item-form' do
+        within "#addon-basic" do
+          expect(page).to have_css(".ajax-selected", text: category.name)
+        end
         click_on I18n.t('ss.buttons.save')
       end
       wait_for_notice I18n.t('ss.notice.saved')

@@ -3,7 +3,43 @@ require 'spec_helper'
 describe SS::File, dbscope: :example do
   context "with empty" do
     subject { described_class.new }
-    its(:valid?) { is_expected.to be_falsey }
+
+    it do
+      expect(subject).to be_invalid
+      expect(subject.errors.count).to eq 4
+      expect(subject.errors[:model]).to include I18n.t("errors.messages.blank")
+      expect(subject.errors[:name]).to include I18n.t("errors.messages.blank")
+      expect(subject.errors[:filename]).to include I18n.t("errors.messages.blank")
+      expect(subject.errors[:content_type]).to include I18n.t("errors.messages.blank")
+    end
+  end
+
+  context "create file with empty contents" do
+    let(:filename) { "#{unique_id}.png" }
+    let(:basename) { ::File.basename(filename, ".*") }
+    subject! { described_class.create(model: described_class.name.underscore, filename: filename) }
+
+    it do
+      expect(subject).to be_valid
+      expect(subject.site_id).to be_blank
+      expect(subject.user_id).to be_blank
+      expect(subject.model).to eq described_class.name.underscore
+      expect(subject.state).to eq "closed"
+      expect(subject.name).to eq filename
+      expect(subject.filename).to eq filename
+      expect(subject.size).to eq 0
+      expect(subject.content_type).to eq "image/png"
+      expect(subject.owner_item_type).to be_blank
+      expect(subject.owner_item_id).to be_blank
+      expect(subject.geo_location).to be_blank
+      expect(subject.csv_headers).to be_blank
+      expect(subject.sanitizer_state).to be_blank
+      expect(subject.path).to eq "#{SS::File.root}/ss_files/#{subject.id}/_/#{subject.id}"
+      expect(Fs.exist?(subject.path)).to be_falsey
+      expect(subject.url).to eq "/fs/#{subject.id}/_/#{subject.filename}"
+      expect(subject.thumb).to be_present
+      expect(subject.thumb_url).to eq "/fs/#{subject.id}/_/#{basename}_thumb.png"
+    end
   end
 
   context "with 'filename' as SS.config.ss.file_url_with" do
@@ -23,7 +59,8 @@ describe SS::File, dbscope: :example do
     its(:valid?) { is_expected.to be_truthy }
     its(:path) { is_expected.to eq "#{SS::File.root}/ss_files/#{subject.id}/_/#{subject.id}" }
     its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{subject.filename}" }
-    its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/thumb/#{subject.filename}" }
+    let(:thumb_basename) { "#{::File.basename(subject.filename, ".*")}_thumb.#{subject.extname}" }
+    its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/#{thumb_basename}" }
     its(:public?) { is_expected.to be_falsey }
     its(:public_dir) { is_expected.to be_nil }
     its(:public_path) { is_expected.to be_nil }
@@ -53,7 +90,8 @@ describe SS::File, dbscope: :example do
     its(:valid?) { is_expected.to be_truthy }
     its(:path) { is_expected.to eq "#{SS::File.root}/ss_files/#{subject.id}/_/#{subject.id}" }
     its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{CGI.escape(subject.name)}" }
-    its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/thumb/#{subject.filename}" }
+    let(:thumb_basename) { "#{::File.basename(subject.name, ".*")}_thumb.#{subject.extname}" }
+    its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/#{CGI.escape(thumb_basename)}" }
     its(:public?) { is_expected.to be_falsey }
     its(:public_dir) { is_expected.to be_nil }
     its(:public_path) { is_expected.to be_nil }
@@ -84,7 +122,8 @@ describe SS::File, dbscope: :example do
     its(:valid?) { is_expected.to be_truthy }
     its(:path) { is_expected.to eq "#{SS::File.root}/ss_files/#{subject.id}/_/#{subject.id}" }
     its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{CGI.escape(subject.name)}" }
-    its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/thumb/#{subject.filename}" }
+    let(:thumb_basename) { "#{::File.basename(subject.name, ".*")}_thumb.#{subject.extname}" }
+    its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/#{CGI.escape(thumb_basename)}" }
     its(:public?) { is_expected.to be_falsey }
     its(:public_dir) { is_expected.to eq "#{site.root_path}/fs/#{subject.id}/_" }
     its(:public_path) { is_expected.to eq "#{site.root_path}/fs/#{subject.id}/_/#{subject.filename}" }
@@ -116,7 +155,8 @@ describe SS::File, dbscope: :example do
     its(:valid?) { is_expected.to be_truthy }
     its(:path) { is_expected.to eq "#{SS::File.root}/ss_files/#{subject.id}/_/#{subject.id}" }
     its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{CGI.escape(subject.name)}" }
-    its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/thumb/#{subject.filename}" }
+    let(:thumb_basename) { "#{::File.basename(subject.name, ".*")}_thumb.#{subject.extname}" }
+    its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/#{CGI.escape(thumb_basename)}" }
     its(:public?) { is_expected.to be_falsey }
     its(:public_dir) { is_expected.to eq "#{site0.root_path}/fs/#{subject.id}/_" }
     its(:public_path) { is_expected.to eq "#{site0.root_path}/fs/#{subject.id}/_/#{subject.filename}" }
@@ -310,7 +350,7 @@ describe SS::File, dbscope: :example do
       let(:copy) { src.copy }
 
       it do
-        expect(src.thumb).to be_blank
+        # expect(src.thumb).to be_blank
 
         expect(copy.id).not_to eq src.id
         expect(copy.name).to eq src.name
@@ -318,7 +358,7 @@ describe SS::File, dbscope: :example do
         expect(copy.content_type).to eq src.content_type
         expect(copy.size).to eq src.size
         expect(copy.model).to eq "ss/temp_file"
-        expect(copy.thumb).to be_nil
+        expect(copy.thumb).to be_present
       end
     end
 
@@ -343,7 +383,7 @@ describe SS::File, dbscope: :example do
         expect(copy.content_type).to eq src.content_type
         expect(copy.size).to eq src.size
         expect(copy.model).to eq "ss/temp_file"
-        expect(copy.thumb.id).not_to eq src.thumb.id
+        expect(copy.thumb.to_json).not_to eq src.thumb.to_json
       end
     end
 
@@ -474,7 +514,7 @@ describe SS::File, dbscope: :example do
         expect(subject.filename).to eq file.filename
         expect(subject.basename).to eq file.basename
         expect(subject.url).to eq file.url
-        expect(subject.thumb_url).to be_blank
+        expect(subject.thumb_url).to be_present
         expect(subject.image?).to be_falsey
       end
     end
@@ -793,40 +833,6 @@ describe SS::File, dbscope: :example do
           expect(subject.owner_item_type).to be_blank
           expect(subject.owner_item_id).to be_blank
         end
-      end
-    end
-  end
-
-  describe ".create_from_upload!" do
-    let(:file_path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
-
-    context "without resizing" do
-      subject do
-        Fs::UploadedFile.create_from_file(file_path, basename: "logo.png") do |upload_file|
-          described_class.create_from_upload!(upload_file)
-        end
-      end
-
-      it do
-        expect(subject).to be_persisted
-        expect(subject).to be_valid
-        expect(::Fs.size(subject.path)).to be > 0
-        expect(subject.image_dimension).to eq [ 160, 160 ]
-      end
-    end
-
-    context "with resizing" do
-      subject do
-        Fs::UploadedFile.create_from_file(file_path, basename: "logo.png") do |upload_file|
-          described_class.create_from_upload!(upload_file, resizing: [ 90, 90 ])
-        end
-      end
-
-      it do
-        expect(subject).to be_persisted
-        expect(subject).to be_valid
-        expect(::Fs.size(subject.path)).to be > 0
-        expect(subject.image_dimension).to eq [ 90, 90 ]
       end
     end
   end

@@ -41,11 +41,11 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
         wait_for_download
 
-        csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+        csv = ::CSV.read(downloads.first, headers: true)
         expect(csv.length).to eq this_month.end_of_month.day
-        expect(csv[0][Gws::User.t(:uid)]).to eq user.uid
-        expect(csv[0][Gws::User.t(:name)]).to eq user.name
-        expect(csv[0][Gws::Attendance::Record.t(:date)]).to eq this_month.to_date.iso8601
+        expect(csv[0][0]).to eq user.uid
+        expect(csv[0][1]).to eq user.name
+        expect(csv[0][2]).to eq this_month.to_date.iso8601
       end
     end
 
@@ -67,9 +67,9 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
         csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
         expect(csv.length).to eq this_month.end_of_month.day
-        expect(csv[0][Gws::User.t(:uid)]).to eq user.uid
-        expect(csv[0][Gws::User.t(:name)]).to eq user.name
-        expect(csv[0][Gws::Attendance::Record.t(:date)]).to eq this_month.to_date.iso8601
+        expect(csv[0][0]).to eq user.uid
+        expect(csv[0][1]).to eq user.name
+        expect(csv[0][2]).to eq this_month.to_date.iso8601
       end
     end
 
@@ -89,11 +89,11 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
         wait_for_download
 
-        csv = ::CSV.read(downloads.first, headers: true, encoding: 'BOM|UTF-8')
+        csv = ::CSV.read(downloads.first, headers: true)
         expect(csv.length).to eq this_month.end_of_month.day
-        expect(csv[0][Gws::User.t(:uid)]).to eq user.uid
-        expect(csv[0][Gws::User.t(:name)]).to eq user.name
-        expect(csv[0][Gws::Attendance::Record.t(:date)]).to eq this_month.to_date.iso8601
+        expect(csv[0][0]).to eq user.uid
+        expect(csv[0][1]).to eq user.name
+        expect(csv[0][2]).to eq this_month.to_date.iso8601
       end
     end
   end

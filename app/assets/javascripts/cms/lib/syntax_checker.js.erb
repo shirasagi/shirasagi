@@ -42,6 +42,10 @@ this.Syntax_Checker = (function () {
     return this;
   }
 
+  ResultBox.prototype.showServerError = function() {
+    this.showMessage(<%= raw I18n.t("errors.messages.syntax_check_server_error").to_json %>);
+  }
+
   ResultBox.prototype.showChecking = function() {
     return this.showMessage(SS.loading);
   };
@@ -132,6 +136,44 @@ this.Syntax_Checker = (function () {
             });
             li.append(correct)
           }
+          if (error["collector"]) {
+            correct = $('<button />', { type: "button", class: "btn btn-auto-correct" }).text("<%= I18n.t('cms.auto_correct.link') %>");
+            correct.on("click", function (ev) {
+              ev.target.disabled = true;
+
+              var setContent = check["setContent"];
+              var getContent = check["getContent"];
+              var resolve = check["resolve"];
+              var type = check["type"];
+
+              var token = $('meta[name="csrf-token"]').attr('content');
+              $.ajax({
+                type: "POST",
+                url: Syntax_Checker.correct_url,
+                cache: false,
+                data: {
+                  authenticity_token: token,
+                  content: { content: getContent(), resolve: resolve, type: type },
+                  collector: error["collector"],
+                  params: error["collector_params"]
+                },
+                success: function(data, textStatus, xhr) {
+                  setContent(data["result"]);
+                  $(self.form.addonSelector).find("button.syntax-check").trigger("click");
+                },
+                error: function (xhr, status, error) {
+                  console.log(error);
+                },
+                complete: function (xhr, status) {
+                  ev.target.disabled = false;
+                }
+              });
+
+              ev.preventDefault();
+              return false;
+            });
+            li.append(correct)
+          }
         });
       }
     });
@@ -172,24 +214,14 @@ this.Syntax_Checker = (function () {
     });
   };
 
-  Syntax_Checker.config = {};
+  Syntax_Checker.validServerParams = [ "content", "resolve", "type" ];
 
   Syntax_Checker.asyncCheck = function () {
     var defer = $.Deferred();
 
-    var resolve = function() {
-
-      try {
-        Syntax_Checker.check();
-        Syntax_Checker.resultBox.showResult(Syntax_Checker.checks, Syntax_Checker.errors);
-        defer.resolve({ status: Syntax_Checker.errors.length == 0 ? "ok" : "failed" });
-      } catch (e) {
-        Syntax_Checker.resultBox.showMessage("<p>" + e + "</p>");
-        defer.reject(null, null, e);
-      }
-    };
-
-    resolve();
+    Syntax_Checker.resultBox.showChecking();
+    Syntax_Checker.reset();
+    Syntax_Checker.check(defer);
 
     return defer.promise();
   };
@@ -220,6 +252,10 @@ this.Syntax_Checker = (function () {
     Syntax_Checker.errorCount = 0;
   };
 
+  Syntax_Checker.reset = function () {
+    this.errors = [];
+  };
+
   Syntax_Checker.getContents = function () {
     var contents = {};
 
@@ -230,21 +266,50 @@ this.Syntax_Checker = (function () {
     return contents;
   };
 
-  Syntax_Checker.check = function () {
-    var contents, afterCheck;
-
-    Syntax_Checker.reset();
-
-    contents = Syntax_Checker.getContents();
+  Syntax_Checker.check = function (defer) {
+    var token = $('meta[name="csrf-token"]').attr('content');
+    var contents = Syntax_Checker.getContents();
+    var params = [];
     $.each(contents, function(id, content) {
-      if (content["resolve"] == "html") {
-        Syntax_Checker.checkHtml(id, content);
-      }
-      else {
-        Syntax_Checker.checkText(id, content);
-      }
+      var param = {};
+      $.each(Syntax_Checker.validServerParams, function() {
+        if (content[this]) {
+          param[this] = content[this];
+        }
+      });
 
-      afterCheck = content["afterCheck"];
+      if (Object.keys(param).length > 0) {
+        param["id"] = id;
+        params.push(param);
+      }
+    });
+
+    $.ajax({
+      type: "POST",
+      url: Syntax_Checker.url,
+      data: JSON.stringify({ authenticity_token: token, item: { contents: params } }),
+      contentType: "application/json",
+      success: function(data, textStatus, xhr) {
+        Syntax_Checker.showServerResult(contents, data, textStatus, xhr);
+        defer.resolve({ status: Syntax_Checker.errors.length == 0 ? "ok" : "failed" });
+      },
+      error: function (xhr, status, error) {
+        Syntax_Checker.resultBox.showServerError();
+        defer.reject(null, null, error);
+      },
+      complete: function (xhr, status) {
+        defer.resolve({ status: Syntax_Checker.errors.length == 0 ? "ok" : "failed" });
+      }
+    });
+  };
+
+  Syntax_Checker.showServerResult = function (contents, data, textStatus, xhr) {
+    $.each(data.errors, function() {
+      Syntax_Checker.errors.push(this);
+    });
+
+    $.each(contents, function(id, content) {
+      var afterCheck = content["afterCheck"];
       if (afterCheck) {
         afterCheck(id, content);
       }
@@ -252,965 +317,20 @@ this.Syntax_Checker = (function () {
 
     if (Syntax_Checker.afterCheck) {
       Syntax_Checker.afterCheck();
-    };
-
-    return Syntax_Checker.errors;
-  };
-
-  Syntax_Checker.reset = function () {
-    this.errors = [];
-  };
-
-  Syntax_Checker.checkHtml =  function (id, content) {
-    Syntax_Checker.checkDateFormat(id, content);
-    Syntax_Checker.checkInterwordSpace(id, content);
-    Syntax_Checker.checkKanaCharacter(id, content);
-    Syntax_Checker.checkMultibyteCharacter(id, content);
-    Syntax_Checker.checkReplaceWords(id, content);
-
-    Syntax_Checker.checkAdjacentA(id, content);
-    Syntax_Checker.checkAppletAlt(id, content);
-    Syntax_Checker.checkAreaAlt(id, content);
-    Syntax_Checker.checkEmbeddedMedia(id, content);
-    Syntax_Checker.checkImgAlt(id, content);
-    Syntax_Checker.checkImgDataUriScheme(id, content);
-    Syntax_Checker.checkLinkText(id, content);
-    Syntax_Checker.checkObjectText(id, content);
-    Syntax_Checker.checkOrderOfH(id, content);
-    Syntax_Checker.checkTable(id, content);
-  }
-
-  Syntax_Checker.checkText =  function (id, content) {
-    Syntax_Checker.checkDateFormat(id, content);
-    Syntax_Checker.checkInterwordSpace(id, content);
-    Syntax_Checker.checkKanaCharacter(id, content);
-    Syntax_Checker.checkMultibyteCharacter(id, content);
-    Syntax_Checker.checkReplaceWords(id, content);
-  }
-
-  Syntax_Checker.isValidDate = function (date) {
-    if (Object.prototype.toString.call(date) !== "[object Date]") {
-      return false;
     }
-    if (!isNaN(date.getTime()) && date.getYear() > 0) {
-      return true;
-    } else {
-      return false;
-    }
-  };
 
-  Syntax_Checker.justText = function (ele) {
-    return $(ele).clone().children().remove().end().text();
-  };
-
-  Syntax_Checker.outerHtmlSummary = function (ele) {
-    return $(ele).get(0).outerHTML.replace(/[\r\n]|&nbsp;/g, "");
-  };
+    Syntax_Checker.resultBox.showResult(Syntax_Checker.checks, Syntax_Checker.errors);
+  }
 
   // javascript syntax check
 
   Syntax_Checker.message = {
-    notSetImgAlt: "<%= I18n.t('errors.messages.set_img_alt') %>",
-    notSetAppletAlt: "<%= I18n.t('errors.messages.set_applet_alt') %>",
-    notSetAreaAlt: "<%= I18n.t('errors.messages.set_area_alt') %>",
-    invalidImgScheme: "<%= I18n.t('errors.messages.invalid_img_scheme') %>",
-    notSetTableCaption: "<%= I18n.t('errors.messages.set_table_caption') %>",
-    notSetThScope: "<%= I18n.t('errors.messages.set_th_scope') %>",
     invalidOrderOfH: "<%= I18n.t('errors.messages.invalid_order_of_h') %>",
-    invalidMultibyteCharacter: "<%= I18n.t('errors.messages.invalid_multibyte_character') %>",
-    invalidKanaCharacter: "<%= I18n.t('errors.messages.invalid_kana_character') %>",
-    invalidDateFormat: "<%= I18n.t('errors.messages.invalid_date_format') %>",
-    invalidAdjacentA: "<%= I18n.t('errors.messages.invalid_adjacent_a') %>",
-    checkInterwordSpace: "<%= I18n.t('errors.messages.check_interword_space') %>",
     checkLinkText: "<%= I18n.t('errors.messages.check_link_text') %>",
-    checkObjectText: "<%= I18n.t('errors.messages.check_object_text') %>",
-    checkEmbeddedMedia: "<%= I18n.t('errors.messages.check_embedded_media') %>",
-    replaceWord: "<%= I18n.t('errors.messages.replace_word') %>",
-    altIsIncludedInFilename: "<%= I18n.t('errors.messages.alt_is_included_in_filename') %>"
   };
   Syntax_Checker.detail = {
-    notSetImgAlt: <%= I18n.t('errors.messages.syntax_check_detail.set_img_alt').to_json %>,
-    notSetAppletAlt: <%= I18n.t('errors.messages.syntax_check_detail.set_applet_alt').to_json %>,
-    notSetAreaAlt: <%= I18n.t('errors.messages.syntax_check_detail.set_area_alt').to_json %>,
-    invalidImgScheme: <%= I18n.t('errors.messages.syntax_check_detail.invalid_img_scheme').to_json %>,
-    notSetTableCaption: <%= I18n.t('errors.messages.syntax_check_detail.set_table_caption').to_json %>,
-    notSetThScope: <%= I18n.t('errors.messages.syntax_check_detail.set_th_scope').to_json %>,
     invalidOrderOfH: <%= I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h').to_json %>,
-    invalidMultibyteCharacter: <%= I18n.t('errors.messages.syntax_check_detail.invalid_multibyte_character').to_json %>,
-    invalidKanaCharacter: <%= I18n.t('errors.messages.syntax_check_detail.invalid_kana_character').to_json %>,
-    invalidDateFormat: <%= I18n.t('errors.messages.syntax_check_detail.invalid_date_format').to_json %>,
-    invalidAdjacentA: <%= I18n.t('errors.messages.syntax_check_detail.invalid_adjacent_a').to_json %>,
-    checkInterwordSpace: <%= I18n.t('errors.messages.syntax_check_detail.check_interword_space').to_json %>,
     checkLinkText: <%= I18n.t('errors.messages.syntax_check_detail.check_link_text').to_json %>,
-    checkObjectText: <%= I18n.t('errors.messages.syntax_check_detail.check_object_text').to_json %>,
-    checkEmbeddedMedia: <%= I18n.t('errors.messages.syntax_check_detail.check_embedded_media').to_json %>,
-    altIsIncludedInFilename: <%= I18n.t('errors.messages.syntax_check_detail.alt_is_included_in_filename').to_json %>
-  };
-  Syntax_Checker.mediaExtensions = [
-    "aac", "aif", "aiff", "au", "avi", "flac", "flv", "mid",
-    "midi", "mp3", "m4a", "mp4", "mpg", "mpeg", "oga", "ogg",
-    "tta", "vdo", "wav", "wma", "wmv"
-  ];
-
-  Syntax_Checker.formatContent = function (content) {
-    var value = content["content"];
-    var resolve = content["resolve"];
-    var type = content["type"];
-    var array = [];
-
-    if (type == "array") {
-      $.each(value, function(_, v) {
-        v = v || "";
-        if (resolve == "html") {
-          array.push(v);
-        }
-        else {
-          array.push("<div>" + v + "</div>");
-        }
-      });
-    } else {
-      value = value || "";
-      if (resolve == "html") {
-        array.push(value);
-      }
-      else {
-        array.push("<div>" + value + "</div>");
-      }
-    }
-    return array;
-  }
-
-  // MultibyteCharacter
-  Syntax_Checker.checkMultibyteCharacter = function (id, content) {
-    var array, chars;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      chars = [];
-      $(html).find(":not(iframe)").addBack().contents().filter(function () {
-        return this.nodeType == 3;
-      }).each(function () {
-        var c;
-        c = this.textContent.match(/[Ａ-Ｚａ-ｚ０-９]/g);
-        if (c) {
-          return chars.push(c);
-        }
-      });
-      if (!SS.isEmptyObject(chars)) {
-        Syntax_Checker.errors.push(
-          {
-            id: id,
-            idx: idx,
-            code: chars.join(","),
-            ele: html,
-            msg: Syntax_Checker.message["invalidMultibyteCharacter"],
-            detail: Syntax_Checker.detail["invalidMultibyteCharacter"],
-            correctContent: Syntax_Checker.correctMultibyteCharacter
-          }
-        );
-      }
-    });
-  };
-  Syntax_Checker.correctMultibyteCharacter = function (id, content, error) {
-    var array, ret;
-
-    ret = [];
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      html = $(html);
-      html.find(":not(iframe)").addBack().contents().filter(function () {
-        return this.nodeType == 3;
-      }).each(function () {
-        var text;
-        text = this.textContent.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function (c) {
-          return String.fromCharCode(c.charCodeAt(0) - 0xFEE0);
-        });
-        return this.textContent = text;
-      });
-      ret.push(html.html());
-    });
-
-    if (content["type"] == "array") {
-      return ret;
-    } else {
-      return ret[0];
-    }
-  };
-
-  // KanaCharacter
-  Syntax_Checker.checkKanaCharacter = function (id, content) {
-    var array, chars;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      chars = html.match(/[｡-ﾟ]/g);
-      if (!SS.isEmptyObject(chars)) {
-        Syntax_Checker.errors.push(
-          {
-            id: id,
-            idx: idx,
-            code: chars.join(","),
-            ele: html,
-            msg: Syntax_Checker.message["invalidKanaCharacter"],
-            detail: Syntax_Checker.detail["invalidKanaCharacter"],
-            correctContent: Syntax_Checker.correctKanaCharacter
-          }
-        );
-      }
-    });
-  };
-  Syntax_Checker.correctKanaCharacter = function (id, content, error) {
-    var array, ret, kanaMap, markedkanaMap;
-
-    ret = [];
-    array = Syntax_Checker.formatContent(content);
-
-    kanaMap = {
-      '｡': '。', '｢': '「', '｣': '」', '､': '、', '･': '・', 'ｦ': 'ヲ',
-      'ｧ': 'ァ', 'ｨ': 'ィ', 'ｩ': 'ゥ', 'ｪ': 'ェ', 'ｫ': 'ォ', 'ｬ': 'ャ',
-      'ｭ': 'ュ', 'ｮ': 'ョ', 'ｯ': 'ッ', 'ｰ': 'ー', 'ｱ': 'ア', 'ｲ': 'イ',
-      'ｳ': 'ウ', 'ｴ': 'エ', 'ｵ': 'オ', 'ｶ': 'カ', 'ｷ': 'キ', 'ｸ': 'ク',
-      'ｹ': 'ケ', 'ｺ': 'コ', 'ｻ': 'サ', 'ｼ': 'シ', 'ｽ': 'ス', 'ｾ': 'セ',
-      'ｿ': 'ソ', 'ﾀ': 'タ', 'ﾁ': 'チ', 'ﾂ': 'ツ', 'ﾃ': 'テ', 'ﾄ': 'ト',
-      'ﾅ': 'ナ', 'ﾆ': 'ニ', 'ﾇ': 'ヌ', 'ﾈ': 'ネ', 'ﾉ': 'ノ', 'ﾊ': 'ハ',
-      'ﾋ': 'ヒ', 'ﾌ': 'フ', 'ﾍ': 'ヘ', 'ﾎ': 'ホ', 'ﾏ': 'マ', 'ﾐ': 'ミ',
-      'ﾑ': 'ム', 'ﾒ': 'メ', 'ﾓ': 'モ', 'ﾔ': 'ヤ', 'ﾕ': 'ユ', 'ﾖ': 'ヨ',
-      'ﾗ': 'ラ', 'ﾘ': 'リ', 'ﾙ': 'ル', 'ﾚ': 'レ', 'ﾛ': 'ロ', 'ﾜ': 'ワ',
-      'ﾝ': 'ン', 'ﾞ': '゛', 'ﾟ': '゜'
-    }
-
-    markedkanaMap = {
-      'ｶﾞ': 'ガ', 'ｷﾞ': 'ギ', 'ｸﾞ': 'グ', 'ｹﾞ': 'ゲ', 'ｺﾞ': 'ゴ',
-      'ｻﾞ': 'ザ', 'ｼﾞ': 'ジ', 'ｽﾞ': 'ズ', 'ｾﾞ': 'ゼ', 'ｿﾞ': 'ゾ',
-      'ﾀﾞ': 'ダ', 'ﾁﾞ': 'ヂ', 'ﾂﾞ': 'ヅ', 'ﾃﾞ': 'デ', 'ﾄﾞ': 'ド',
-      'ﾊﾞ': 'バ', 'ﾋﾞ': 'ビ', 'ﾌﾞ': 'ブ', 'ﾍﾞ': 'ベ', 'ﾎﾞ': 'ボ',
-      'ﾊﾟ': 'パ', 'ﾋﾟ': 'ピ', 'ﾌﾟ': 'プ', 'ﾍﾟ': 'ペ', 'ﾎﾟ': 'ポ',
-      'ｳﾞ': 'ヴ', 'ﾜﾞ': 'ヷ', 'ｦﾞ': 'ヺ'
-    }
-
-    $.each(array, function(idx, html) {
-      html = $(html);
-      html.find(":not(iframe)").addBack().contents().filter(function () {
-        return this.nodeType === 3;
-      }).each(function () {
-        var text = this.textContent;
-
-        $.each(markedkanaMap, function(k, v) {
-          text = text.replace(new RegExp(k, 'g'), v);
-        });
-
-        text = text.replace(/[｡-ﾟ]/g, function (c) {
-          return kanaMap[c];
-        });
-
-        this.textContent = text;
-      });
-
-      ret.push(html.html());
-    });
-
-    if (content["type"] == "array") {
-      return ret;
-    } else {
-      return ret[0];
-    }
-  };
-
-  // ReplaceWords
-  Syntax_Checker.checkReplaceWords = function (id, content) {
-    var array, words;
-
-    array = Syntax_Checker.formatContent(content);
-    words = Syntax_Checker.config["replace_words"];
-
-    if (!words) {
-      return;
-    }
-
-    $.each(array, function(idx, html) {
-      var c, k, v;
-
-      for (k in words) {
-        v = words[k];
-        c = html.match(RegExp("" + k.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1'), "g"));
-        if (!SS.isEmptyObject(c)) {
-          Syntax_Checker.errors.push(
-            {
-              id: id,
-              idx: idx,
-              code: c[0],
-              ele: html,
-              msg: Syntax_Checker.message["replaceWord"] + ("「" + k + "」→「" + v + "」"),
-              correctContent: Syntax_Checker.correctReplaceWords,
-              replaceKey: k,
-              replaceValue: v,
-            }
-          );
-        }
-      }
-    });
-  };
-  Syntax_Checker.correctReplaceWords = function (id, content, error) {
-    var key, value, array, ret, regexp, alt;
-
-    array = Syntax_Checker.formatContent(content);
-    key = error["replaceKey"];
-    value = error["replaceValue"];
-    ret = [];
-    regexp = RegExp("" + key.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1', "g"));
-
-    if (!(key || value)) {
-      return;
-    }
-
-    $.each(array, function(idx, html) {
-      html = $(html);
-      html.find(":not(iframe)").addBack().contents().filter(function () {
-        return this.nodeType === 3;
-      }).each(function () {
-        var text;
-        text = this.textContent.replace(regexp, value);
-        this.textContent = text;
-      });
-      html.find("img[alt]").each(function () {
-        alt = $(this).attr("alt").replace(regexp, value);
-        $(this).attr("alt", alt);
-      });
-      ret.push(html.html());
-    });
-
-    if (content["type"] == "array") {
-      return ret;
-    } else {
-      return ret[0];
-    }
-  };
-
-  // DateFormat
-  Syntax_Checker.checkDateFormat = function (id, content) {
-    var array, dates;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      dates = [];
-
-      $(html).find(":not(iframe)").addBack().contents().filter(function () {
-        return this.nodeType === 3;
-      }).each(function () {
-        var d;
-        d = this.textContent.match(/\d{4}[\.\-\/]\d{1,2}[\.\-\/]\d{1,2}/g);
-        if (d) {
-          dates = $.merge(dates, d);
-        }
-      });
-      if (SS.isEmptyObject(dates)) {
-        return;
-      }
-      dates = $.grep(dates, function (date) {
-        return Syntax_Checker.isValidDate(new Date(date));
-      });
-      if (!SS.isEmptyObject(dates)) {
-        Syntax_Checker.errors.push(
-          {
-            id: id,
-            idx: idx,
-            code: dates.join(","),
-            ele: html,
-            msg: Syntax_Checker.message["invalidDateFormat"],
-            detail: Syntax_Checker.detail["invalidDateFormat"],
-            correctContent: Syntax_Checker.correctDateFormat
-          }
-        );
-      }
-    });
-  };
-  Syntax_Checker.correctDateFormat = function (id, content, error) {
-    var ret, array;
-
-    array = Syntax_Checker.formatContent(content);
-    ret = [];
-
-    $.each(array, function(idx, html) {
-      html = $(html);
-      html.find(":not(iframe)").addBack().contents().filter(function () {
-        return this.nodeType === 3;
-      }).each(function () {
-        var text;
-        text = this.textContent.replace(/(\d{4})[\.\-\/](\d{1,2})[\.\-\/](\d{1,2})/g, function (date, y, m, d) {
-          if (Syntax_Checker.isValidDate(new Date([y, m, d].join("/")))) {
-            return y + "<%= I18n.t('datetime.prompts.year') %>" + m + "<%= I18n.t('datetime.prompts.month') %>" + d + "<%= I18n.t('datetime.prompts.day') %>";
-          } else {
-            return date;
-          }
-        });
-        return this.textContent = text;
-      });
-      ret.push(html.html());
-    });
-
-    if (content["type"] == "array") {
-      return ret;
-    } else {
-      return ret[0];
-    }
-  };
-
-  // ImgAlt
-  Syntax_Checker.checkImgAlt = function (id, content) {
-    var array;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      $(html).find('img').each(function () {
-        var alt = this.alt;
-        if (alt) {
-          alt = $.trim(alt);
-        }
-        if (!alt) {
-          Syntax_Checker.errors.push(
-            {
-              id: id,
-              idx: idx,
-              code: Syntax_Checker.outerHtmlSummary(this),
-              ele: this,
-              msg: Syntax_Checker.message["notSetImgAlt"],
-              detail: Syntax_Checker.detail["notSetImgAlt"]
-            }
-          );
-        }
-
-        var src = this.src;
-        if (src) {
-          src = $.trim(src);
-        }
-        if (alt && src && src.toLowerCase().includes(alt.toLowerCase())) {
-          Syntax_Checker.errors.push(
-            {
-              id: id,
-              idx: idx,
-              code: Syntax_Checker.outerHtmlSummary(this),
-              ele: this,
-              msg: Syntax_Checker.message["altIsIncludedInFilename"],
-              detail: Syntax_Checker.detail["altIsIncludedInFilename"]
-            }
-          );
-        }
-      });
-    });
-  };
-
-  // AppletAlt
-  Syntax_Checker.checkAppletAlt = function (id, content) {
-    var array;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      $(html).find('applet').each(function () {
-        var alt, errors;
-        alt = $(this).attr('alt');
-        if (!alt || $.trim(alt) === "" || /^[\w\s\.\-]*$/.test(alt)) {
-          Syntax_Checker.errors.push(
-            {
-              id: id,
-              idx: idx,
-              code: Syntax_Checker.outerHtmlSummary(this),
-              ele: this,
-              msg: Syntax_Checker.message["notSetAppletAlt"],
-              detail: Syntax_Checker.detail["notSetAppletAlt"]
-            }
-          );
-        }
-      });
-    });
-  };
-
-  // AreaAlt
-  Syntax_Checker.checkAreaAlt = function (id, content) {
-    var array;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      $(html).find('area').each(function () {
-        var alt, errors;
-        alt = $(this).attr('alt');
-        if (!alt || $.trim(alt) === "" || /^[\w\s\.\-]*$/.test(alt)) {
-          Syntax_Checker.errors.push(
-            {
-              id: id,
-              idx: idx,
-              code: Syntax_Checker.outerHtmlSummary(this),
-              ele: this,
-              msg: Syntax_Checker.message["notSetAreaAlt"],
-              detail: Syntax_Checker.detail["notSetAreaAlt"]
-            }
-          );
-        }
-      });
-    });
-  };
-
-  // ImgDataUriScheme
-  Syntax_Checker.checkImgDataUriScheme = function (id, content) {
-    var array;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      $(html).find('img[src]').each(function () {
-        var errors, src;
-        src = $(this).attr('src');
-        if (/^data:.*?,.*?$/.test(src)) {
-          Syntax_Checker.errors.push(
-            {
-              id: id,
-              idx: idx,
-              code: Syntax_Checker.outerHtmlSummary(this),
-              ele: this,
-              msg: Syntax_Checker.message["invalidImgScheme"],
-              detail: Syntax_Checker.detail["invalidImgScheme"]
-            }
-          );
-        }
-      });
-    });
-  };
-
-  // Table
-  Syntax_Checker.checkTable = function (id, content) {
-    var array;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      $(html).find("table").each(function () {
-        var caption, errors, table;
-        table = this;
-        caption = $(this).find('caption');
-        errors = [];
-        if (!caption || $.trim(caption.text()) === "") {
-          Syntax_Checker.errors.push(
-            {
-              id: id,
-              idx: idx,
-              code: Syntax_Checker.outerHtmlSummary(this),
-              ele: table,
-              msg: Syntax_Checker.message["notSetTableCaption"],
-              detail: Syntax_Checker.detail["notSetTableCaption"],
-              correctContent: Syntax_Checker.correctTableCaption
-            }
-          );
-        }
-        $(table).find('th').each(function () {
-          if (!$(this).attr("scope")) {
-            Syntax_Checker.errors.push(
-              {
-                id: id,
-                idx: idx,
-                code: Syntax_Checker.outerHtmlSummary(this),
-                ele: table,
-                msg: Syntax_Checker.message["notSetThScope"],
-                detail: Syntax_Checker.detail["notSetThScope"],
-                correctContent:  Syntax_Checker.correctTableScope
-              }
-            );
-            return false;
-          }
-        });
-      });
-    });
-  };
-  Syntax_Checker.correctTableCaption = function (id, content) {
-    var ret, array;
-
-    array = Syntax_Checker.formatContent(content);
-    ret = [];
-
-    $.each(array, function(idx, html) {
-      html = $(html).find("table");
-      $(html).find('caption').remove();
-      $(html).prepend('<caption>' + "<%= I18n.t('cms.auto_correct.caption') %>" + '</caption>');
-      html = $(html).parents().last().html() || $(html).html();
-      ret.push(html);
-    });
-
-    if (content["type"] == "array") {
-      return ret;
-    } else {
-      return ret[0];
-    }
-  };
-  Syntax_Checker.correctTableScope = function (id, content, error) {
-    var array, ret, scope;
-
-    array = Syntax_Checker.formatContent(content);
-    ret = [];
-
-    $.each(array, function(idx, html) {
-      html = $(html).find("table");
-      if ($(html).find("tr:first th").length == 1) {
-        scope = "row";
-      } else {
-        scope = "col";
-      }
-      $(html).find("tr:first th").each(function () {
-        if (!$(this).attr("scope")) {
-          return $(this).attr("scope", scope);
-        }
-      });
-      $(html).find("tr:not(:first) th").each(function () {
-        if (!$(this).attr("scope")) {
-          return $(this).attr("scope", "row");
-        }
-      });
-      html = $(html).parents().last().html() || $(html).html();
-      ret.push(html);
-    });
-
-    if (content["type"] == "array") {
-      return ret;
-    } else {
-      return ret[0];
-    }
-  };
-
-  // OrderOfH
-  Syntax_Checker.checkOrderOfH = function (id, content) {
-    var array, code, h, i, j, ref;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      html = $(html);
-      h = $(html).find("h1,h2,h3,h4,h5,h6");
-
-      if (!h.length) {
-        return false;
-      }
-
-      code = "";
-      for (i = j = 0, ref = h.length - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
-        if (i === 0) {
-          if (!/h[12]/i.test(h[i].tagName)) {
-            code += h[i].tagName + " ";
-          }
-        } else {
-          if (/h3/i.test(h[i].tagName)) {
-            if (!/h[23456]/i.test(h[i - 1].tagName)) {
-              code += h[i].tagName + " ";
-            }
-          } else if (/h4/i.test(h[i].tagName)) {
-            if (!/h[3456]/i.test(h[i - 1].tagName)) {
-              code += h[i].tagName + " ";
-            }
-          } else if (/h5/i.test(h[i].tagName)) {
-            if (!/h[456]/i.test(h[i - 1].tagName)) {
-              code += h[i].tagName + " ";
-            }
-          } else if (/h6/i.test(h[i].tagName)) {
-            if (!/h[56]/i.test(h[i - 1].tagName)) {
-              code += h[i].tagName + " ";
-            }
-          }
-        }
-      }
-      if (code !== "") {
-        Syntax_Checker.errors.push(
-          {
-            id: id,
-            idx: idx,
-            code: code,
-            ele: html,
-            msg: Syntax_Checker.message["invalidOrderOfH"],
-            detail: Syntax_Checker.detail["invalidOrderOfH"],
-            correctContent:  Syntax_Checker.correctOrderOfH
-          }
-        );
-      }
-    });
-  };
-  Syntax_Checker.correctOrderOfH = function (id, content) {
-    var array, ret;
-    var h, i, j, ref, replace;
-
-    array = Syntax_Checker.formatContent(content);
-    ret = [];
-
-    $.each(array, function(idx, html) {
-      html = $(html);
-      h = $(html).find("h1,h2,h3,h4,h5,h6");
-      if (h.length) {
-
-        replace = html;
-        for (i = j = 0, ref = h.length - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
-          if (i === 0) {
-            if (!/h[12]/i.test(h[i].tagName)) {
-              replace = $('<h1>' + $(h[i]).html() + '</h1>');
-              $(h[i]).after(replace).remove();
-              h[i] = replace[0];
-            }
-          } else {
-            if (/h3/i.test(h[i].tagName)) {
-              if (!/h[23456]/i.test(h[i - 1].tagName)) {
-                replace = $('<' + h[i - 1].tagName.replace("1", "2") + '>');
-                replace.html($(h[i]).html());
-                $(h[i]).after(replace).remove();
-                h[i] = replace[0];
-              }
-            } else if (/h4/i.test(h[i].tagName)) {
-              if (!/h[3456]/i.test(h[i - 1].tagName)) {
-                replace = $('<' + h[i - 1].tagName.replace("1", "2") + '>');
-                replace.html($(h[i]).html());
-                $(h[i]).after(replace).remove();
-                h[i] = replace[0];
-              }
-            } else if (/h5/i.test(h[i].tagName)) {
-              if (!/h[456]/i.test(h[i - 1].tagName)) {
-                replace = $('<' + h[i - 1].tagName.replace("1", "2") + '>');
-                replace.html($(h[i]).html());
-                $(h[i]).after(replace).remove();
-                h[i] = replace[0];
-              }
-            } else if (/h6/i.test(h[i].tagName)) {
-              if (!/h[56]/i.test(h[i - 1].tagName)) {
-                replace = $('<' + h[i - 1].tagName.replace("1", "2") + '>');
-                replace.html($(h[i]).html());
-                $(h[i]).after(replace).remove();
-                h[i] = replace[0];
-              }
-            }
-          }
-        }
-        replace = $(replace).parents().last().html() || $(replace).html();
-        ret.push(replace);
-      }
-      else {
-        ret.push($(html).parents().last().html());
-      }
-    });
-
-    if (content["type"] == "array") {
-      return ret;
-    } else {
-      return ret[0];
-    }
-  };
-
-  // AdjacentA
-  Syntax_Checker.checkAdjacentA = function (id, content) {
-    var array;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      html = $(html);
-      $(html).find("a[href]").each(function () {
-        var errors, next, href;
-
-        href = $(this).attr("href");
-        next = $(this).next("a[href]");
-
-        if (next.length && href == next.attr("href")) {
-          Syntax_Checker.errors.push(
-            {
-              id: id,
-              idx: idx,
-              code: Syntax_Checker.outerHtmlSummary(this) + Syntax_Checker.outerHtmlSummary(next),
-              ele: this,
-              msg: Syntax_Checker.message["invalidAdjacentA"],
-              detail: Syntax_Checker.detail["invalidAdjacentA"],
-              correctContent: Syntax_Checker.correctAdjacentA
-            }
-          );
-        }
-      });
-    });
-  };
-  Syntax_Checker.correctAdjacentA = function (id, content, error) {
-    var array, ret, next, href;
-
-    array = Syntax_Checker.formatContent(content);
-    ret = [];
-
-    $.each(array, function(idx, html) {
-      html = $(html);
-
-      href = $(html).attr("href");
-      next = $(html).next("a[href]");
-
-      if (next.length && href == next.attr("href")) {
-        if ($(html).html() !== $(next).html()) {
-          $(html).html($(html).html() + $(next).html());
-        }
-        next.remove();
-      }
-
-      html = $(html).parents().last().html() || $(html).html();
-      ret.push(html);
-    });
-
-    if (content["type"] == "array") {
-      return ret;
-    } else {
-      return ret[0];
-    }
-  };
-
-  // InterwordSpace
-  Syntax_Checker.checkInterwordSpace = function (id, content) {
-    var array;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      html = $(html);
-
-      $(html).find(":not(iframe)").addBack().contents().filter(function () {
-        return this.nodeType == 3;
-      }).each(function () {
-        var i, j, ref, text;
-        text = $.trim(Syntax_Checker.justText(this));
-        if (/[　]/.test(text)) {
-          for (i = j = 0, ref = text.length - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
-            if (text.charCodeAt(i) >= 256) {
-              Syntax_Checker.errors.push(
-                {
-                  id: id,
-                  idx: idx,
-                  code: text,
-                  msg: Syntax_Checker.message["checkInterwordSpace"],
-                  detail: Syntax_Checker.detail["checkInterwordSpace"]
-                }
-              );
-              break;
-            }
-          }
-        }
-      });
-    });
-  };
-
-  // LinkText
-  Syntax_Checker.checkLinkText = function (id, content) {
-    var array;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      $(html).find("a[href]").each(function () {
-        var $this = $(this);
-        var text = $this.text();
-        if (text.length <= 3) {
-          var $imgWithAlt = $this.find("img[alt]");
-          if ($imgWithAlt[0]) {
-            text = $imgWithAlt.attr('alt');
-          }
-        }
-        if (!text || text.length <= 3) {
-          Syntax_Checker.errors.push(
-            {
-              id: id,
-              idx: idx,
-              code: Syntax_Checker.outerHtmlSummary(this),
-              msg: Syntax_Checker.message["checkLinkText"],
-              detail: Syntax_Checker.detail["checkLinkText"]
-            }
-          );
-        }
-      });
-    });
-  };
-
-  // ObjectText
-  Syntax_Checker.checkObjectText = function (id, content) {
-    var array;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      html = $(html);
-      $(html).find("object").each(function () {
-        var errors, text;
-        text = $(this).text();
-        if (!$.trim(text)) {
-          Syntax_Checker.errors.push(
-            {
-              id: id,
-              idx: idx,
-              code: Syntax_Checker.outerHtmlSummary(this),
-              msg: Syntax_Checker.message["checkObjectText"],
-              detail: Syntax_Checker.detail["checkObjectText"]
-            }
-          );
-        }
-      });
-    });
-  };
-
-  // EmbeddedMedia
-  Syntax_Checker.checkEmbeddedMedia = function (id, content) {
-    var array, regExt, regSite;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      html = $(html);
-
-      $(html).find("embed,video").each(function () {
-        Syntax_Checker.errors.push(
-          {
-            id: id,
-            idx: idx,
-            code: Syntax_Checker.outerHtmlSummary(this),
-            msg: Syntax_Checker.message["checkEmbeddedMedia"],
-            detail: Syntax_Checker.detail["checkEmbeddedMedia"]
-          }
-        );
-      });
-
-      regExt = new RegExp("(" + Syntax_Checker.mediaExtensions.join("|") + ")", "i");
-      regSite = /https?:\/\/www\.youtube\.com\//;
-
-      $(html).find("iframe[src]").each(function () {
-        var errors, ext, src;
-        src = $(this).attr("src");
-        ext = src.replace(/\?.*$/, "").replace(/.*\//, '').split(".").pop();
-        if (regExt.test(ext) || regSite.test(src)) {
-          Syntax_Checker.errors.push(
-            {
-              id: id,
-              idx: idx,
-              code: Syntax_Checker.outerHtmlSummary(this),
-              msg: Syntax_Checker.message["checkEmbeddedMedia"],
-              detail: Syntax_Checker.detail["checkEmbeddedMedia"]
-            }
-          );
-        }
-      });
-
-      $(html).find("a[href]").each(function () {
-        var ext, href;
-        href = $(this).attr("href");
-        ext = href.replace(/\?.*$/, "").replace(/.*\//, '').split(".").pop();
-        if (regExt.test(ext) || regSite.test(href)) {
-          Syntax_Checker.errors.push(
-            {
-              id: id,
-              idx: idx,
-              code: Syntax_Checker.outerHtmlSummary(this),
-              msg: Syntax_Checker.message["checkEmbeddedMedia"],
-              detail: Syntax_Checker.detail["checkEmbeddedMedia"]
-            }
-          );
-        }
-      });
-    });
   };
 
   return Syntax_Checker;

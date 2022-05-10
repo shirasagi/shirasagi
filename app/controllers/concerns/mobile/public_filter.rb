@@ -18,11 +18,7 @@ module Mobile::PublicFilter
     return super unless mobile_path?
     return super unless Fs.file?(@file)
 
-    if Fs.mode == :file
-      send_file @file, disposition: :inline, x_sendfile: true
-    else
-      send_data Fs.binread(@file), type: Fs.content_type(@file)
-    end
+    ss_send_file @file, type: Fs.content_type(@file), disposition: :inline
   end
 
   def render_mobile

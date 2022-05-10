@@ -63,8 +63,7 @@ describe Article::Page, dbscope: :example do
           expect(subject.html).to include file1.url
           expect(subject.html).to include file2.url
 
-          # サムネイルを含めると、全部でファイルは 4 つあるはず
-          expect(SS::File.all.count).to eq 4
+          expect(SS::File.all.count).to eq 2
         end
       end
 
@@ -137,8 +136,7 @@ describe Article::Page, dbscope: :example do
           expect(item.files.count).to eq 2
           expect(item.files.pluck(:id)).to include(file1.id, file2.id)
 
-          # サムネイルを含めると、全部でファイルは 8 つあるはず
-          expect(SS::File.all.count).to eq 8
+          expect(SS::File.all.count).to eq 4
         end
       end
 
@@ -218,8 +216,7 @@ describe Article::Page, dbscope: :example do
             expect(item.html).to include file1.url
             expect(item.html).to include file2.url
 
-            # サムネイルを含めると、全部でファイルは 4 つあるはず
-            expect(SS::File.all.count).to eq 4
+            expect(SS::File.all.count).to eq 2
 
             expect(History::Trash.all.count).to eq 1
             History::Trash.all.first.tap do |trash|
@@ -282,8 +279,7 @@ describe Article::Page, dbscope: :example do
             expect(branch_file.owner_item_type).to eq item.class.name
             expect(branch_file.owner_item_id).to eq item.id
 
-            # サムネイルを含めると、全部でファイルは 4 つあるはず
-            expect(SS::File.all.count).to eq 4
+            expect(SS::File.all.count).to eq 2
 
             expect(History::Trash.all.count).to eq 1
             History::Trash.all.first.tap do |trash|

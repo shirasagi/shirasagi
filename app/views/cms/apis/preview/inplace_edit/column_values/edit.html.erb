@@ -1,6 +1,4 @@
 <%
-  replace_words_conf = Cms::WordDictionary.site(@cur_site).to_config
-
   @inplace_form_check = @cur_column.form_check_enabled?
 
   @inplace_syntax_check = cms_syntax_check_enabled?(column: true, parent: true)
@@ -10,9 +8,8 @@
   form_class = "inplace-edit #{@cur_column.type_name}"
 %>
 <%= jquery do %>
-  <% if replace_words_conf[:replace_words].present? %>
-    Syntax_Checker.config = <%= raw replace_words_conf.to_json %>
-  <% end %>
+  Syntax_Checker.url = <%= raw cms_apis_check_syntax_check_path(format: "json").to_json %>
+  Syntax_Checker.correct_url = <%= raw cms_apis_correct_syntax_check_path(format: "json").to_json %>
 
   Cms_Inplace_Form.form_link_check_path = <%== url_for(action: :link_check).to_json %>;
   Cms_Inplace_Form.form_check_path = <%== url_for(action: :form_check).to_json %>;
