@@ -20,7 +20,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   let(:after_csv) { "#{Rails.root}/spec/fixtures/ss/replace_file/after_csv.csv" }
 
   let(:before_image) { "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif" }
-  let(:after_image) { "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg" }
+  # let(:after_image) { "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg" }
+  let(:after_image) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
 
   context "replace file" do
     context "in cms addon file" do
@@ -396,6 +397,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_notice I18n.t('ss.notice.saved')
 
         file = item.class.find(item.id).attached_files.first
+        expect(file.filename).to eq ::File.basename(before_image)
+        expect(file.name).to eq file.filename
+        expect(file.state).to eq "public"
+        expect(file.thumb.image_dimension).to eq [ 120, 35 ]
 
         # open replace file dialog
         within ".column-value-cms-column-fileupload" do
@@ -456,9 +461,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(replaced_page.attached_files.size).to eq 1
 
         replaced_file = replaced_page.attached_files.first
+        expect(replaced_file.id).to eq file.id
         expect(replaced_file.filename).to eq ::File.basename(after_image)
         expect(replaced_file.name).to eq "replaced"
         expect(replaced_file.state).to eq "public"
+        expect(replaced_file.thumb.image_dimension).to eq [ 90, 90 ]
         #expect(Fs.cmp(replaced_file.path, after_image)).to be true
 
         # history files
@@ -466,7 +473,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         history_file = replaced_file.history_files.first
 
         expect(history_file.filename).to eq ::File.basename(before_image)
-        expect(history_file.name).to eq ::File.basename(before_image)
+        expect(history_file.name).to eq history_file.filename
         expect(history_file.state).to eq "closed"
         #expect(Fs.cmp(history_file.path, before_csv)).to be true
       end

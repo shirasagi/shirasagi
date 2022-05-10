@@ -7,6 +7,18 @@ production: &production
   # copy private files from GATEWAY Segment.
   pull_private_files_command: "/root/shell/pull_publish.sh"
 
+  # map layers in LGWAN Segment.
+  map:
+    layers:
+      - name: '国土地理院地図'
+        source: "XYZ"
+        url: "https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png"
+        projection: "EPSG:3857"
+      - name: 'OpenStreetMap'
+        source: "OSM"
+        url: "https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        projection: "EPSG:3857"
+
 test:
   <<: *production
 

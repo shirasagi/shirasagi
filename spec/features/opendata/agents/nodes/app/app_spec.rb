@@ -70,12 +70,32 @@ describe "opendata_agents_nodes_app", type: :feature, dbscope: :example, js: tru
     expect(page).to have_css(".licenses .name", text: licenses.first["id"])
   end
 
-  it "#download" do
-    visit index_path
-    within "article.tab-released" do
-      click_on app.name
+  context "#download" do
+    before do
+      clear_downloads
     end
-    click_on "一括ダウンロード"
+
+    after do
+      clear_downloads
+    end
+
+    it do
+      visit index_path
+      within "article.tab-released" do
+        click_on app.name
+      end
+      click_on I18n.t("opendata.search_datasets.bluk_download")
+
+      wait_for_download
+
+      entry_count = 0
+      Zip::File.open(downloads.first) do |archive|
+        archive.each do |_entry|
+          entry_count += 1
+        end
+      end
+      expect(entry_count).to be > 0
+    end
   end
 
   it "#rss" do

@@ -67,7 +67,7 @@ class Cms::FormDb
   end
 
   def pages
-    pages = Article::Page.site(site).where(form_id: id)
+    pages = Article::Page.site(site).where(form_id: form_id)
     node ? pages.node(node) : pages
   end
 
@@ -90,7 +90,7 @@ class Cms::FormDb
     if item.new_record?
       item.state = node.state
       item.layout_id = node.page_layout_id || node.layout_id
-      item.form_id = id
+      item.form_id = form_id
     end
 
     form.columns.order_by(order: 1).each do |col|
@@ -109,17 +109,15 @@ class Cms::FormDb
     errors.add(:base, :invalid_csv) if in_file.blank?
     return false if errors.present?
 
-    require "csv"
-    ::CSV.foreach(in_file.path, headers: true, encoding: 'SJIS:UTF-8') do |csv_row|
+    SS::Csv.foreach_row(in_file.path, headers: true) do |csv_row|
       params = csv_row.to_hash
       page_name = params.shift[1].presence
       next unless page_name
 
-      item = Article::Page.find_by(name: page_name) rescue nil
+      item = Article::Page.site(site).node(node).where(form_id: form_id, name: page_name).first
       item ||= Article::Page.new(name: page_name, cur_site: site, cur_user: @cur_user, cur_node: node)
 
       unless save_page(item, params)
-        dump item.errors.full_messages
         errors.add :base, item.errors.full_messages.join('/')
       end
     end

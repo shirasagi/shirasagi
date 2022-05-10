@@ -294,6 +294,7 @@ ja:
       ckan_group: CKANグループ
       ckan_tag: CKANタグ
       shirasagi_category: SHIRASAGI分野
+      shirasagi_estat_category: SHIRASAGI eStat分野
       shirasagi_area: SHIRASAGI地域
     operator_condition_options:
       match: 一致する

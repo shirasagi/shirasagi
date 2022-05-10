@@ -1,40 +1,93 @@
 class Fs::FilesController < ApplicationController
   include SS::AuthFilter
   include Member::AuthFilter
-  include Cms::PublicFilter::Site
 
-  before_action :set_user
-  before_action :set_item
+  before_action :cur_user
+  before_action :cur_item
   before_action :deny
   rescue_from StandardError, with: :rescue_action
 
   private
 
-  def set_user
-    @cur_user, _login_path, _logout_path = get_user_by_access_token
-    @cur_user ||= get_user_by_session
-    SS.current_user = @cur_user
+  def cms_sites
+    # サブディレクトリ型サブサイトの /fs と親サイトの /fs とは区別がつかない。
+    # つまり、リクエスト・ホストからは一意にどのサイトの /fs にアクセスしているのか、容易に判別することはできない。
+    @cms_sites ||= begin
+      sites = SS::Site.all.and("$or" => [ { domains: request_host }, { mypage_domain: request_host } ])
+      sites = sites.order_by(id: 1)
+      sites.to_a
+    end
   end
 
-  def set_item
+  def canonical_site
+    @canonical_site ||= begin
+      if cms_sites.length <= 1
+        cms_sites.first
+      else
+        cms_sites.find { |site| site.parent_id.blank? } || cms_sites.first
+      end
+    end
+  end
+
+  def cur_user
+    @cur_user ||= begin
+      user, _login_path, _logout_path = get_user_by_access_token
+      user ||= get_user_by_session
+      SS.current_user = user
+      user
+    end
+  end
+
+  def cur_item
+    return @cur_item if @cur_item
+
     id = params[:id_path].present? ? params[:id_path].delete('/') : params[:id]
     name_or_filename = params[:filename]
     name_or_filename << ".#{params[:format]}" if params[:format].present?
 
     item = SS::File.find(id)
-    raise "404" if item.name != name_or_filename && item.filename != name_or_filename
+    if item.name == name_or_filename || item.filename == name_or_filename
+      @cur_item = item.becomes_with_model
+      @cur_variant = nil
+      return
+    end
 
-    @item = item.becomes_with_model
-    raise "404" if @item.try(:thumb?)
+    item = item.becomes_with_model
+    variant = item.variants.from_filename(name_or_filename)
+    raise "404" if !variant
+
+    @cur_item = item
+    @cur_variant = variant
+
+    @cur_item
+  end
+
+  def cur_site
+    @cur_site ||= begin
+      if cms_sites.length <= 1
+        # リクエスト・ホストから一意にサイトが決まるケース
+        cms_sites.first
+      else
+        # リクエスト・ホストから一意にサイトが決まらないケース
+        owner_item = cur_item.send(:effective_owner_item)
+        if owner_item.try(:site) && owner_item.site.is_a?(SS::Model::Site)
+          # owner_item is a cms object.
+          cms_sites.find { |site| site.id == owner_item.site_id }
+        elsif cur_item.try(:site) && cur_item.site.is_a?(SS::Model::Site)
+          # cur_item is a cms object.
+          cms_sites.find { |site| site.id == cur_item.site_id }
+        end
+      end
+    end
   end
 
   def deny
-    raise "404" unless @item.previewable?(site: @cur_site, user: @cur_user, member: get_member_by_session)
+    raise "404" unless cur_item.previewable?(site: cur_site, user: cur_user, member: get_member_by_session)
     set_last_logged_in
   end
 
   def set_last_modified
-    response.headers["Last-Modified"] = CGI::rfc1123_date(@item.updated.in_time_zone)
+    response.headers["Last-Modified"] = CGI::rfc1123_date(cur_item.updated.in_time_zone)
   end
 
   def rescue_action(error = nil)
@@ -52,8 +105,8 @@ class Fs::FilesController < ApplicationController
   end
 
   def error_html_file(status)
-    if @cur_site && @cur_user.nil?
-      file = "#{@cur_site.path}/#{status}.html"
+    if canonical_site && cur_user.nil?
+      file = "#{canonical_site.path}/#{status}.html"
       return file if Fs.exist?(file)
     end
 
@@ -62,33 +115,15 @@ class Fs::FilesController < ApplicationController
   end
 
   def send_item(disposition = :inline)
+    path = @cur_variant ? @cur_variant.path : @cur_item.path
+    @cur_variant.create! if @cur_variant
+    raise "404" unless Fs.file?(path)
+
     set_last_modified
 
-    if Fs.mode == :file && Fs.file?(@item.path)
-      send_file @item.path, type: @item.content_type, filename: @item.download_filename,
-                disposition: disposition, x_sendfile: true
-    else
-      send_enum @item.to_io, type: @item.content_type, filename: @item.download_filename,
-                disposition: disposition
-    end
-  end
-
-  def send_thumb(file, opts = {})
-    width  = opts.delete(:width).to_i
-    height = opts.delete(:height).to_i
-
-    width  = (width  > 0) ? width  : SS::ImageConverter::DEFAULT_THUMB_WIDTH
-    height = (height > 0) ? height : SS::ImageConverter::DEFAULT_THUMB_HEIGHT
-
-    converter = SS::ImageConverter.open(file.path)
-    converter.resize_to_fit!(width, height)
-
-    send_enum converter.to_enum, opts
-    converter = nil
-  ensure
-    if converter
-      converter.close rescue nil
-    end
+    content_type = @cur_variant ? @cur_variant.content_type : @cur_item.content_type
+    download_filename = @cur_variant ? @cur_variant.download_filename : @cur_item.download_filename
+    ss_send_file @cur_variant || @cur_item, type: content_type, filename: download_filename, disposition: disposition
   end
 
   public
@@ -100,21 +135,22 @@ class Fs::FilesController < ApplicationController
   def thumb
     size   = params[:size]
     width  = params[:width]
+    width  = width.numeric? ? width.to_i : nil
     height = params[:height]
+    height = height.numeric? ? height.to_i : nil
 
-    if width.present? && height.present?
-      set_last_modified
-      send_thumb @item, type: @item.content_type, filename: @item.filename,
-        disposition: :inline, width: width, height: height
-    elsif thumb = @item.try(:thumb, size)
-      @item = thumb
-      index
+    if width.present? && height.present? && width > 0 && height > 0
+      @cur_variant = @cur_item.variants[{ width: width, height: height }]
+    elsif size.present? && (variant = @cur_item.variants[size.to_s.to_sym])
+      @cur_variant = variant
     else
-      set_last_modified
-      send_thumb @item, type: @item.content_type, filename: @item.filename,
-        disposition: :inline
+      @cur_variant = @cur_item.variants[:thumb]
     end
+
+    set_last_modified
+    send_item
   rescue => e
+    logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     raise "500"
   end
 

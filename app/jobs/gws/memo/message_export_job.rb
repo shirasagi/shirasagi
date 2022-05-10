@@ -102,6 +102,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
     if @export_filter == "all"
       all_ids = criteria.pluck(:id).map(&:to_s) + extract_sent_and_draft_ids
     else
+      extract_sent_and_draft_ids
       all_ids = @message_ids
     end
 

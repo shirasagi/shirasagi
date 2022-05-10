@@ -178,41 +178,66 @@ describe "sys_password_policies", type: :feature, dbscope: :example, js: true do
 
     def fill_password_and_save(password)
       visit sns_cur_user_account_path
-      click_on I18n.t("ss.links.edit")
+      click_on I18n.t("ss.links.edit_password")
 
       within "form#item-form" do
-        fill_in "item[in_password]", with: password
+        fill_in "item[old_password]", with: user.in_password
+        fill_in "item[new_password]", with: password
+        fill_in "item[new_password_again]", with: password
         click_on I18n.t("ss.buttons.save")
       end
     end
 
-    it do
-      fill_password_and_save(upcase_only_password)
-      msg = I18n.t("errors.messages.password_short_downcase", count: setting.password_min_downcase_length)
-      expect(page).to have_css("div#errorExplanation", text: msg)
+    context "when upcase_only_password is given" do
+      it do
+        fill_password_and_save(upcase_only_password)
+        msg = I18n.t("errors.messages.password_short_downcase", count: setting.password_min_downcase_length)
+        expect(page).to have_css("div#errorExplanation", text: msg)
+      end
+    end
 
-      fill_password_and_save(downcase_only_password)
-      msg = I18n.t("errors.messages.password_short_digit", count: setting.password_min_digit_length)
-      expect(page).to have_css("div#errorExplanation", text: msg)
+    context "when downcase_only_password is given" do
+      it do
+        fill_password_and_save(downcase_only_password)
+        msg = I18n.t("errors.messages.password_short_digit", count: setting.password_min_digit_length)
+        expect(page).to have_css("div#errorExplanation", text: msg)
+      end
+    end
 
-      fill_password_and_save(digit_only_password)
-      msg = I18n.t("errors.messages.password_short_symbol", count: setting.password_min_symbol_length)
-      expect(page).to have_css("div#errorExplanation", text: msg)
+    context "when digit_only_password is given" do
+      it do
+        fill_password_and_save(digit_only_password)
+        msg = I18n.t("errors.messages.password_short_symbol", count: setting.password_min_symbol_length)
+        expect(page).to have_css("div#errorExplanation", text: msg)
+      end
+    end
 
-      fill_password_and_save(symbol_only_password)
-      msg = I18n.t("errors.messages.password_short_upcase", count: setting.password_min_upcase_length)
-      expect(page).to have_css("div#errorExplanation", text: msg)
+    context "when symbol_only_password is given" do
+      it do
+        fill_password_and_save(symbol_only_password)
+        msg = I18n.t("errors.messages.password_short_upcase", count: setting.password_min_upcase_length)
+        expect(page).to have_css("div#errorExplanation", text: msg)
+      end
+    end
 
-      fill_password_and_save(password_contained_prohibited_chars)
-      msg = I18n.t("errors.messages.password_contains_prohibited_chars", prohibited_chars: prohibited_chars.join)
-      expect(page).to have_css("div#errorExplanation", text: msg)
+    context "when password_contained_prohibited_chars is given" do
+      it do
+        fill_password_and_save(password_contained_prohibited_chars)
+        msg = I18n.t("errors.messages.password_contains_prohibited_chars", prohibited_chars: prohibited_chars.join)
+        expect(page).to have_css("div#errorExplanation", text: msg)
+      end
+    end
 
-      fill_password_and_save(password1)
-      wait_for_notice I18n.t('ss.notice.saved')
+    context "when successful password is given, and then insufficient_password is given" do
+      it do
+        fill_password_and_save(password1)
+        wait_for_notice I18n.t('ss.notice.saved')
 
-      fill_password_and_save(insufficient_password)
-      msg = I18n.t("errors.messages.password_min_change_chars", count: setting.password_min_change_char_count)
-      expect(page).to have_css("div#errorExplanation", text: msg)
+        user.in_password = password1
+        fill_password_and_save(insufficient_password)
+        msg = I18n.t("errors.messages.password_min_change_chars", count: setting.password_min_change_char_count)
+        expect(page).to have_css("div#errorExplanation", text: msg)
+      end
     end
   end
 end

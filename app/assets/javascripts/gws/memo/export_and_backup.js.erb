@@ -18,7 +18,7 @@ Gws_Memo_ExportAndBackup.prototype.render = function() {
     var $newTr    = $('<tr />').attr('data-id', id);
     var $newInput = SS_SearchUI.anchorAjaxBox.closest('dl').find('.hidden-ids').clone(false);
     $newInput     = $newInput.val(id).removeClass('hidden-ids');
-    var $newA     = $('<a>').attr('class','deselect btn').attr('href','#').text('<%= I18n.t "ss.buttons.delete" %>').on('click', SS_SearchUI.deselect);
+    var $newA     = $('<a>').attr('class','deselect btn').attr('href','#').text(<%= I18n.t("ss.buttons.delete").to_json %>).on('click', SS_SearchUI.deselect);
 
     var icon = $('<i class="material-icons md-15">&#xE226;</i>');
     if (!attachments) {

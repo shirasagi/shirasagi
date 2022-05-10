@@ -285,7 +285,7 @@ save_page route: "article/page", filename: "docs/page29.html", name: "シラサ�
   group_ids: [@g_seisaku.id]
 
 save_page route: "article/page", filename: "docs/page30.html", name: "ふれあいフェスティバル開催報告",
-  layout_id: @layouts["pages"].id, form_id: @form2.id, keywords: "記事, イベント", released: '2019/01/30 10:52',
+  layout_id: @layouts["pages"].id, form_id: @form2.id, keywords: "記事, イベント",
   category_ids: [@categories["oshirase/event"].id],
   column_values: [
     @form_columns2[0].value_type.new(column: @form_columns2[0], file_id: file_10_7.id, file_label: "画像1",

@@ -47,7 +47,9 @@ module SS::Model::Task
   module ClassMethods
     def ready(cond, &block)
       task = self.find_or_create_by(cond)
-      task.run_with(rejected: ->{ false }, &block)
+      task.run_with(rejected: ->{ false }) do
+        yield task if block_given?
+      end
     end
 
     def search(params)

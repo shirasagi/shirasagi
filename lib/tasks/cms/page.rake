@@ -1,8 +1,4 @@
 namespace :cms do
-  task generate_nodes: :environment do
-    ::Tasks::Cms.generate_nodes
-  end
-
   task generate_pages: :environment do
     ::Tasks::Cms.generate_pages
   end

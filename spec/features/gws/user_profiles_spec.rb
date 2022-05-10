@@ -1,39 +1,102 @@
 require 'spec_helper'
 
-describe "gws_user_profiles", type: :feature, dbscope: :example do
+describe "gws_user_profiles", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
-  let(:user) { gws_user }
-  let(:states) { Gws::UserPresence.new.state_options.map(&:reverse).to_h }
-  let(:presence) do
-    item = Gws::UserPresence.new(cur_user: user, cur_site: site)
-    item.presence_state = 'available'
-    item.presence_plan = unique_id
-    item.presence_memo = unique_id
-    item.save ? item : nil
-  end
 
-  context "with auth" do
-    before { login_gws_user }
+  shared_examples "what gws/user_profiles is" do
+    context "basic crud" do
+      let(:name) { unique_id }
+      let(:kana) { unique_id }
+      let(:email) { unique_email }
+      let(:tel) { unique_tel }
+      let(:tel_ext) { unique_tel }
 
-    it "#show" do
-      expect(presence.present?).to be_truthy
+      it do
+        visit gws_user_profile_path(site: site)
+        within '#addon-basic' do
+          expect(page).to have_content(user.name)
+        end
 
-      visit gws_user_profile_path(site: site)
-      within '.main-box' do
-        expect(page).to have_content(user.name)
+        click_on I18n.t("ss.links.edit")
+        within "#item-form" do
+          fill_in "item[name]", with: name
+          fill_in "item[kana]", with: kana
+          fill_in "item[email]", with: email
+          fill_in "item[tel]", with: tel
+          fill_in "item[tel_ext]", with: tel_ext
+
+          click_on I18n.t('ss.buttons.save')
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
+
+        user.reload
+        expect(user.name).to eq name
+        expect(user.kana).to eq kana
+        expect(user.email).to eq email
+        expect(user.tel).to eq tel
+        expect(user.tel_ext).to eq tel_ext
+      end
+    end
+
+    context "edit password" do
+      let(:model) { SS::PasswordUpdateService }
+      let(:new_password) { unique_id }
+
+      # If you want to see specs for password policies, you can see here: spec/features/sys/password_policy_spec.rb
+
+      context "basic crud" do
+        it do
+          visit gws_user_profile_path(site: site)
+          click_on I18n.t("ss.links.edit_password")
+
+          within "form#item-form" do
+            fill_in "item[old_password]", with: user.in_password
+            fill_in "item[new_password]", with: new_password
+            fill_in "item[new_password_again]", with: new_password
+
+            click_on I18n.t('ss.buttons.save')
+          end
+          wait_for_notice I18n.t("ss.notice.saved")
+
+          user.reload
+          expect(SS::User.authenticate(user.email, new_password)).to be_truthy
+        end
       end
 
-      visit gws_user_profile_path(site: site, format: :json)
-      json = JSON.parse(page.body)
+      context "when old password is missed" do
+        it do
+          visit gws_user_profile_path(site: site)
+          click_on I18n.t("ss.links.edit_password")
 
-      expect(json['user']['_id']).to eq user.id
-      expect(json['user']['presence_state']).to eq 'available'
-      expect(json['user']['presence_state_label']).to eq states['available'] # 在席
-      expect(json['user']['presence_state_style']).to eq 'active'
-      expect(json['user']['presence_plan'].present?).to be_truthy
-      expect(json['user']['presence_memo'].present?).to be_truthy
-      expect(json['group']['_id'].present?).to be_truthy
-      expect(json['imap_setting']['address'].present?).to be_truthy
+          within "form#item-form" do
+            fill_in "item[new_password]", with: new_password
+            fill_in "item[new_password_again]", with: new_password
+
+            click_on I18n.t('ss.buttons.save')
+          end
+
+          attribute = model.human_attribute_name(:old_password)
+          message = I18n.t("errors.messages.blank")
+          message = I18n.t("errors.format", attribute: attribute, message: message)
+          expect(page).to have_css("div#errorExplanation", text: message)
+        end
+      end
     end
+  end
+
+  context "with super user" do
+    let(:user) { gws_user }
+
+    before { login_user user }
+
+    it_behaves_like "what gws/user_profiles is"
+  end
+
+  context "with regular user" do
+    let(:user) { create :gws_user, group_ids: gws_user.group_ids }
+
+    before { login_user user }
+
+    it_behaves_like "what gws/user_profiles is"
   end
 end

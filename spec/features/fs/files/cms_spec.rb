@@ -46,8 +46,18 @@ describe "fs_files", type: :feature, dbscope: :example do
           expect(status_code).to eq 200
         end
 
-        it "via thumb_url" do
+        it "#index with new thumbnail" do
           visit file.thumb_url
+          expect(status_code).to eq 200
+        end
+
+        it "#index with custom variant" do
+          visit file.variants[{ width: 240, height: 180 }].url
+          expect(status_code).to eq 200
+        end
+
+        it "#thumb" do
+          visit "/fs/#{file.id.to_s.chars.join("/")}/_/thumb/#{file.filename}"
           expect(status_code).to eq 200
         end
       end
@@ -67,8 +77,18 @@ describe "fs_files", type: :feature, dbscope: :example do
           expect(status_code).to eq 404
         end
 
-        it "via thumb_url" do
+        it "#index with new thumbnail" do
           visit file.thumb_url
+          expect(status_code).to eq 404
+        end
+
+        it "#index with custom variant" do
+          visit file.variants[{ width: 240, height: 180 }].url
+          expect(status_code).to eq 404
+        end
+
+        it "#thumb" do
+          visit "/fs/#{file.id.to_s.chars.join("/")}/_/thumb/#{file.filename}"
           expect(status_code).to eq 404
         end
       end
@@ -96,8 +116,18 @@ describe "fs_files", type: :feature, dbscope: :example do
             expect(status_code).to eq 200
           end
 
-          it "via thumb_url" do
+          it "#index with new thumbnail" do
             visit file.thumb_url
+            expect(status_code).to eq 200
+          end
+
+          it "#index with custom variant" do
+            visit file.variants[{ width: 240, height: 180 }].url
+            expect(status_code).to eq 200
+          end
+
+          it "#thumb" do
+            visit "/fs/#{file.id.to_s.chars.join("/")}/_/thumb/#{file.filename}"
             expect(status_code).to eq 200
           end
         end
@@ -115,8 +145,18 @@ describe "fs_files", type: :feature, dbscope: :example do
             expect(status_code).to eq 200
           end
 
-          it "via thumb_url" do
+          it "#index with new thumbnail" do
             visit file.thumb_url
+            expect(status_code).to eq 200
+          end
+
+          it "#index with custom variant" do
+            visit file.variants[{ width: 240, height: 180 }].url
+            expect(status_code).to eq 200
+          end
+
+          it "#thumb" do
+            visit "/fs/#{file.id.to_s.chars.join("/")}/_/thumb/#{file.filename}"
             expect(status_code).to eq 200
           end
         end
@@ -163,8 +203,18 @@ describe "fs_files", type: :feature, dbscope: :example do
             expect(status_code).to eq 404
           end
 
-          it "via thumb_url" do
+          it "#index with new thumbnail" do
             visit file.thumb_url
+            expect(status_code).to eq 404
+          end
+
+          it "#index with custom variant" do
+            visit file.variants[{ width: 240, height: 180 }].url
+            expect(status_code).to eq 404
+          end
+
+          it "#thumb" do
+            visit "/fs/#{file.id.to_s.chars.join("/")}/_/thumb/#{file.filename}"
             expect(status_code).to eq 404
           end
         end
@@ -182,11 +232,127 @@ describe "fs_files", type: :feature, dbscope: :example do
             expect(status_code).to eq 200
           end
 
-          it "via thumb_url" do
+          it "#index with new thumbnail" do
             visit file.thumb_url
             expect(status_code).to eq 200
           end
+
+          it "#index with custom variant" do
+            visit file.variants[{ width: 240, height: 180 }].url
+            expect(status_code).to eq 200
+          end
+
+          it "#thumb" do
+            visit "/fs/#{file.id.to_s.chars.join("/")}/_/thumb/#{file.filename}"
+            expect(status_code).to eq 200
+          end
         end
+      end
+
+      context "with mypage domain" do
+        let(:state) { "public" }
+
+        before do
+          site.mypage_domain = unique_domain
+          site.save!
+
+          SS::Application.request_interceptor = proc do |env|
+            env["HTTP_X_FORWARDED_HOST"] = site.mypage_domain
+          end
+        end
+
+        after do
+          SS::Application.request_interceptor = nil
+        end
+
+        it "via url" do
+          visit file.url
+          expect(status_code).to eq 200
+        end
+
+        it "via thumb_url" do
+          visit file.thumb_url
+          expect(status_code).to eq 200
+        end
+      end
+    end
+
+    context "with sub-directory sub-site" do
+      let!(:sub_site) { create :cms_site_subdir, parent: site, domains: site.domains, group_ids: site.group_ids }
+      let(:html) do
+        <<~HTML.freeze
+          <p><img alt="#{file.name}" src="#{file.url}" /></p>
+        HTML
+      end
+      let!(:item) { create :cms_page, cur_site: sub_site, cur_user: user, html: html, file_ids: [ file.id ], state: state }
+
+      context "with public page" do
+        let(:state) { "public" }
+
+        it "via url" do
+          visit file.url
+          expect(status_code).to eq 200
+        end
+
+        it "via full_url" do
+          visit file.full_url
+          expect(status_code).to eq 200
+        end
+
+        it "via thumb_url" do
+          visit file.thumb_url
+          expect(status_code).to eq 200
+        end
+      end
+
+      context "with public page via other site" do
+        let(:site2) { create :cms_site_unique }
+        let(:state) { "public" }
+
+        it "via full_url" do
+          file.site_id = site2.id
+          expect(file.full_url).to start_with(site2.full_url)
+
+          visit file.full_url
+          expect(status_code).to eq 404
+        end
+      end
+    end
+
+    context "with sub-directory sub-site via mypage domain" do
+      let(:mypage_domain) { unique_domain }
+      let!(:sub_site) do
+        create :cms_site_subdir, parent: site, domains: site.domains, group_ids: site.group_ids, mypage_domain: mypage_domain
+      end
+      let(:html) do
+        <<~HTML.freeze
+          <p><img alt="#{file.name}" src="#{file.url}" /></p>
+        HTML
+      end
+      let!(:item) { create :cms_page, cur_site: sub_site, cur_user: user, html: html, file_ids: [ file.id ], state: state }
+      let(:state) { "public" }
+
+      before do
+        site.mypage_domain = mypage_domain
+        site.save!
+
+        SS::Application.request_interceptor = proc do |env|
+          env["HTTP_X_FORWARDED_HOST"] = mypage_domain
+        end
+      end
+
+      after do
+        SS::Application.request_interceptor = nil
+      end
+
+      it "via url" do
+        visit file.url
+        expect(status_code).to eq 200
+      end
+
+      it "via thumb_url" do
+        visit file.thumb_url
+        expect(status_code).to eq 200
       end
     end
   end

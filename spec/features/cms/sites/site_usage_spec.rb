@@ -39,7 +39,7 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
       site.reload
       expect(site.usage_node_count).to eq 1
       expect(site.usage_page_count).to eq 1
-      expect(site.usage_file_count).to eq 2
+      expect(site.usage_file_count).to eq 1
       expect(site.usage_db_size).to be > 100
       expect(site.usage_group_count).to be > 0
       expect(site.usage_user_count).to be > 0

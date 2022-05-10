@@ -1,9 +1,0 @@
-<div class="main-box">
-  <dl class="see">
-    <dt><%= @model.t :name %></dt>
-    <dd><%= @item.send :name %></dd>
-
-    <dt><%= @model.t :group_ids %></dt>
-    <dd><%= @item.groups.site(@cur_site).map {|m| m.name }.join(", ") %></dd>
-  </dl>
-</div>
