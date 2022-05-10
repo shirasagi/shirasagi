@@ -39,22 +39,21 @@ class Gws::Memo::MessageImporter
 
   private
 
+  # rubocop:disable Lint/DuplicateBranch
   def ensure_to_have_folder(entry)
     folder_name = get_folder_name(entry.name)
     case folder_name
     when I18n.t('gws/memo/folder.inbox')
       "INBOX"
-    when I18n.t('gws/memo/folder.inbox_sent')
-      "INBOX.Sent"
-    when I18n.t('gws/memo/folder.inbox_draft')
-      "INBOX.Draft"
-    when I18n.t('gws/memo/folder.inbox_trash')
-      "INBOX.Trash"
+    when I18n.t('gws/memo/folder.inbox_sent'), I18n.t('gws/memo/folder.inbox_draft'), I18n.t('gws/memo/folder.inbox_trash')
+      # システムフォルダー下へはインポートできないので、受信トレイにリダイレクト
+      "INBOX"
     else
       restore_folder(folder_name)
       @restored_folders[folder_name]
     end
   end
+  # rubocop:enable Lint/DuplicateBranch
 
   def get_folder_name(entry_name)
     normalized = NKF.nkf("-Ww", entry_name)

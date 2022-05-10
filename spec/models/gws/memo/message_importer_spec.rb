@@ -42,6 +42,7 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
           expect(Gws::Memo::Message.all.count).to eq 1
           Gws::Memo::Message.all.first.tap do |message|
             expect(message.site_id).to eq site.id
+            expect(message.state).to eq "public"
             expect(message.subject).to eq source_message.subject
             expect(message.send_date).to eq source_message.created.in_time_zone.change(usec: 0)
             expect(message.format).to eq "text"
@@ -259,6 +260,7 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
         expect(Gws::Memo::Message.all.count).to eq 1
         Gws::Memo::Message.all.first.tap do |message|
           expect(message.site_id).to eq site.id
+          expect(message.state).to eq "public"
           expect(message.subject).to eq source_message.subject
           expect(message.send_date).to eq source_message.created.in_time_zone.change(usec: 0)
           expect(message.format).to eq "text"
@@ -312,6 +314,7 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
         expect(Gws::Memo::Message.all.count).to eq 1
         Gws::Memo::Message.all.first.tap do |message|
           expect(message.site_id).to eq site.id
+          expect(message.state).to eq "public"
           expect(message.subject).to eq source_message.subject
           expect(message.from_member_name).to eq user1.long_name
           expect(message.to_member_ids).to have(2).items
@@ -373,6 +376,7 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
         expect(Gws::Memo::Message.all.count).to eq 1
         Gws::Memo::Message.all.first.tap do |message|
           expect(message.site_id).to eq site.id
+          expect(message.state).to eq "public"
           expect(message.subject).to eq source_message.subject
           expect(message.send_date).to eq source_message.created.in_time_zone.change(usec: 0)
           expect(message.format).to eq "text"
@@ -424,6 +428,7 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
         expect(Gws::Memo::Message.all.count).to eq 1
         Gws::Memo::Message.all.first.tap do |message|
           expect(message.site_id).to eq site.id
+          expect(message.state).to eq "public"
           expect(message.subject).to eq source_message.subject
           expect(message.send_date).to eq source_message.created.in_time_zone.change(usec: 0)
           expect(message.format).to eq "text"
@@ -472,6 +477,7 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
         expect(Gws::Memo::ListMessage.all.count).to eq 1
         Gws::Memo::ListMessage.all.first.tap do |message|
           expect(message.site_id).to eq site.id
+          expect(message.state).to eq "public"
           expect(message.subject).to eq source_message.subject
           expect(message.send_date).to eq source_message.created.in_time_zone.change(usec: 0)
           expect(message.format).to eq "text"
@@ -513,6 +519,7 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
       expect(Gws::Memo::Message.all.count).to eq 8
       Gws::Memo::Message.all.find_by(subject: "宛先　→ 共有アドレスメッセージ").tap do |message|
         expect(message.site_id).to eq site.id
+        expect(message.state).to eq "public"
         expect(message.send_date).to eq "Tue, 26 Oct 2021 19:45:32 +0900".in_time_zone
         expect(message.format).to eq "text"
         expect(message.text).to include("宛先　→ 共有アドレスメッセージ")
@@ -530,6 +537,7 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
       end
       Gws::Memo::Message.all.find_by(subject: "宛先に高橋、伊藤　ccにサイト管理者").tap do |message|
         expect(message.site_id).to eq site.id
+        expect(message.state).to eq "public"
         expect(message.send_date).to eq "Tue, 26 Oct 2021 19:45:32 +0900".in_time_zone
         expect(message.format).to eq "text"
         expect(message.text).to include("宛先に高橋、伊藤　ccにサイト管理者")
@@ -547,6 +555,7 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
       end
       Gws::Memo::Message.all.find_by(subject: "権限MAXノヒトタチヘ").tap do |message|
         expect(message.site_id).to eq site.id
+        expect(message.state).to eq "public"
         expect(message.send_date).to eq "Tue, 26 Oct 2021 19:45:32 +0900".in_time_zone
         expect(message.format).to eq "text"
         expect(message.text).to include("テスト")
@@ -564,6 +573,7 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
       end
       Gws::Memo::Message.all.find_by(subject: "adminさんへのメッセージ").tap do |message|
         expect(message.site_id).to eq site.id
+        expect(message.state).to eq "public"
         expect(message.send_date).to eq "Tue, 26 Oct 2021 19:45:32 +0900".in_time_zone
         expect(message.format).to eq "text"
         expect(message.text).to include("adminさんへのメッセージ本文")
@@ -581,6 +591,7 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
       end
       Gws::Memo::Message.all.find_by(subject: "システム管理者とサイト管理者").tap do |message|
         expect(message.site_id).to eq site.id
+        expect(message.state).to eq "public"
         expect(message.send_date).to eq "Tue, 26 Oct 2021 19:45:31 +0900".in_time_zone
         expect(message.format).to eq "text"
         expect(message.text).to include("システム管理者とサイト管理者")
@@ -598,6 +609,7 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
       end
       Gws::Memo::Message.all.find_by(subject: "parentフォルダー").tap do |message|
         expect(message.site_id).to eq site.id
+        expect(message.state).to eq "public"
         expect(message.send_date).to eq "Tue, 26 Oct 2021 19:45:32 +0900".in_time_zone
         expect(message.format).to eq "text"
         expect(message.text).to be_blank
@@ -616,6 +628,7 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
       end
       Gws::Memo::Message.all.find_by(subject: "childフォルダー").tap do |message|
         expect(message.site_id).to eq site.id
+        expect(message.state).to eq "public"
         expect(message.send_date).to eq "Tue, 26 Oct 2021 19:45:32 +0900".in_time_zone
         expect(message.format).to eq "text"
         expect(message.text).to be_blank
@@ -634,6 +647,7 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
       end
       Gws::Memo::Message.all.find_by(subject: "grandchildフォルダー").tap do |message|
         expect(message.site_id).to eq site.id
+        expect(message.state).to eq "public"
         expect(message.send_date).to eq "Tue, 26 Oct 2021 19:45:32 +0900".in_time_zone
         expect(message.format).to eq "text"
         expect(message.text).to be_blank
@@ -687,6 +701,7 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
       expect(Gws::Memo::Message.all.count).to eq 1
       Gws::Memo::Message.all.first.tap do |message|
         expect(message.site_id).to eq site.id
+        expect(message.state).to eq "public"
         expect(message.subject).to eq "622592292742916363836bd4"
         expect(message.send_date).to eq "Mon, 07 Mar 2022 14:03:19 +0900".in_time_zone
         expect(message.format).to eq "text"
