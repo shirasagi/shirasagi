@@ -45,7 +45,7 @@ production: &production
     # readonly options override base options when mode is readonly
     readonly_options:
       readOnly: true
-      toolbar: ''
+      toolbar: []
     # public-side options override base options when mode is public-side
     public_side_options:
       templates:
