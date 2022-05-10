@@ -116,7 +116,7 @@ module Job::LogsFilter
     end
     num = items.destroy_all
 
-    compact
+    compact unless Rails.env.test?
 
     render_destroy num
   rescue
