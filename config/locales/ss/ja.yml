@@ -719,6 +719,7 @@ ja:
         map_api_key: APIキー
         map_api_layer: 地図レイヤー
         show_google_maps_search: Googleマップへのリンク
+        map_api_mypage: 管理画面での地図表示
         map_center: 地図の中心座標
         map_max_number_of_markers: 最大地点数
       ss/addon/kana_setting:
@@ -1142,6 +1143,8 @@ ja:
         - サイトで使用するOpenLayersのレイヤーを選択します。
       show_google_maps_search:
         - 有効にすると、地図マーカーに「Googleマップで見る」リンクが表示されます。
+      map_api_mypage:
+        - 管理画面で地図を表示するか設定します。
       map_center:
         - 地図の中心座標を経度、緯度の順に入力します。
         - Googleマップは緯度、経度の順で表示しますが、これとは順番が逆になっているので注意してください。
