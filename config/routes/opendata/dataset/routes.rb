@@ -7,6 +7,12 @@ Rails.application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
+  concern :change_state do
+    get :state, on: :member
+    put :change_state_all, on: :collection, path: ''
+  end
+
+
   concern :copy do
     get :copy, on: :member
     put :copy, on: :member
@@ -31,7 +37,7 @@ Rails.application.routes.draw do
     put 'export_datasets' => 'dataset/export_datasets#export'
     get 'start_export_datasets' => 'dataset/export_datasets#start_export'
     match 'import_datasets' => 'dataset/import_datasets#import', via: [:get, :put]
-    resources :datasets, concerns: [:deletion, :copy, :command], module: :dataset do
+    resources :datasets, concerns: [:deletion, :copy, :command, :change_state], module: :dataset do
 
       get "search" => "datasets/search#index", on: :collection
       get :check_for_update, on: :member

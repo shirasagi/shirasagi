@@ -7,6 +7,11 @@ Rails.application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
+  concern :change_state do
+    get :state, on: :member
+    put :change_state_all, on: :collection, path: ''
+  end
+
   concern :command do
     get :command, on: :member
     post :command, on: :member
@@ -14,7 +19,7 @@ Rails.application.routes.draw do
 
   content "ezine" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
-    resources :pages, concerns: [:deletion, :command] do
+    resources :pages, concerns: [:deletion, :command, :change_state] do
       get :delivery_confirmation, on: :member
       get :delivery_test_confirmation, on: :member
       get :sent_logs, on: :member
@@ -29,7 +34,7 @@ Rails.application.routes.draw do
     resources :columns, concerns: :deletion
     resources :backnumbers, concerns: :deletion
 
-    resources :member_pages, module: :member_page, controller: :main, concerns: [:deletion, :command] do
+    resources :member_pages, module: :member_page, controller: :main, concerns: [:deletion, :command, :change_state] do
       get :delivery_confirmation, on: :member
       get :delivery_test_confirmation, on: :member
       get :sent_logs, on: :member

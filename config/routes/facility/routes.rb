@@ -7,6 +7,11 @@ Rails.application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
+  concern :change_state do
+    get :state, on: :member
+    put :change_state_all, on: :collection, path: ''
+  end
+
   concern :download do
     get :download, on: :collection
   end
@@ -27,12 +32,12 @@ Rails.application.routes.draw do
 
   content "facility" do
     get "/" => redirect { |p, req| "#{req.path}/searches" }, as: :main
-    resources :pages, concerns: [:deletion, :download, :import]
-    resources :nodes, concerns: :deletion
-    resources :searches, concerns: :deletion
-    resources :services, concerns: :deletion
-    resources :locations, concerns: :deletion
-    resources :categories, concerns: :deletion
+    resources :pages, concerns: [:deletion, :download, :import, :change_state]
+    resources :nodes, concerns: [:deletion, :change_state]
+    resources :searches, concerns: [:deletion, :change_state]
+    resources :services, concerns: [:deletion, :change_state]
+    resources :locations, concerns: [:deletion, :change_state]
+    resources :categories, concerns: [:deletion, :change_state]
 
     resources :images, concerns: :deletion
     resources :maps, concerns: :deletion
