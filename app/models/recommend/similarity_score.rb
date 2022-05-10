@@ -30,7 +30,7 @@ class Recommend::SimilarityScore
     node = Cms::Node.site(site).where(filename: filename).first
     return node if node
 
-    return nil
+    nil
   end
 
   class << self

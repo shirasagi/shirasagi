@@ -30,6 +30,8 @@ class Recommend::History::Log
   end
 
   def content
+    return unless site
+
     filename = path.sub(/^#{::Regexp.escape(site.url)}/, "")
     page = Cms::Page.site(site).where(filename: filename).first
     return page if page
@@ -38,7 +40,7 @@ class Recommend::History::Log
     node = Cms::Node.site(site).where(filename: filename).first
     return node if node
 
-    return nil
+    nil
   end
 
   class << self
