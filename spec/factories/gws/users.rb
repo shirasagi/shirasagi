@@ -12,8 +12,9 @@ FactoryBot.define do
     uid { "uid-#{unique_id}" }
     email { "#{uid}@example.jp" }
     in_password { "pass" }
+    type { SS::Model::User::TYPE_SNS }
+    login_roles { [SS::Model::User::LOGIN_ROLE_DBPASSWD] }
   end
 
-  factory :gws_user, class: Gws::User, traits: [:gws_user_base] do
-  end
+  factory :gws_user, class: Gws::User, traits: [:gws_user_base]
 end
