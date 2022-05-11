@@ -12,3 +12,6 @@
   <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
 <% end %>
 <%= colored_state_label(item) %>
+<% if !item.try(:state_changeable?) && action == "change_state_all" %>
+  <span class="">公開設定がないので変更はできません。</span>
+<% end %>
