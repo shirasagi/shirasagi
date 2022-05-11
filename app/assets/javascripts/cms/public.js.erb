@@ -67,24 +67,37 @@ this.SS_Kana = (function () {
   SS_Kana.kanaUrl = "<%= SS.config.kana.location %>" + "/";
 
   SS_Kana.render = function () {
-    var bind, url, html;
+    var $kana = $("#ss-kana");
+    if (!$kana[0]) {
+      return;
+    }
+
     if (SS.config["site_url"] && SS.config["kana_url"]) {
       SS_Kana.siteUrl = SS.config["site_url"];
       SS_Kana.kanaUrl = SS.config["kana_url"];
     }
+
+    var pathname = location.pathname;
+    var url, cssClass;
     if ($("body").data("kana")) {
-      url = SS_Kana.url(location.pathname, false);
+      url = SS_Kana.url(pathname, false);
       url = SS_Translate.url(url);
-      bind = 'onclick="location.href=\'' + url + '\'; return false"';
-      html = $("#ss-kana").html();
-      return $("#ss-kana").html("<a class=\"off\" href=\"#" + url + "\" " + bind + ">" + html + "</a>");
+      cssClass = "off";
     } else {
-      url = SS_Translate.url(location.pathname, false)
+      url = SS_Translate.url(pathname, false)
       url = SS_Kana.url(url, true);
-      bind = 'onclick="location.href=\'' + url + '\'; return false"';
-      html = $("#ss-kana").html();
-      return $("#ss-kana").html("<a class=\"on\" href=\"#" + url + "\" " + bind + ">"  + html + "</a>");
+      cssClass = "on";
     }
+
+    var html = $kana.html();
+    var $anchor = $("<a />", { class: cssClass, href: "#" + url, rel: "nofollow" }).html(html)
+    $kana.html($anchor);
+
+    $anchor.on("click", function(ev) {
+      ev.preventDefault();
+      location.href = url;
+      return false;
+    });
   };
 
   SS_Kana.url = function (url, bool) {
