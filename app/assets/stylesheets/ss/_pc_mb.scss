@@ -941,6 +941,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       background: url(/assets/img/ic-setting.png) no-repeat 35px center;
     }
     &.trash {
+      padding-left: 55px;
       background: url(/assets/img/ic-trash.png) no-repeat 35px center;
     }
     color: $black;
@@ -964,6 +965,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       text-decoration: none;
     }
     &.trash:hover {
+      padding-left: 55px;
       background: $gray1 url(/assets/img/ic-trash.png) no-repeat 35px center;
       color: $orange;
       text-decoration: none;
@@ -3270,8 +3272,8 @@ body.ss-ajax-in-iframe {
       box-sizing: border-box;
       height: 33px;
       padding: 5px 10px;
-      *zoom: 1;
       border-radius: 3px;
+      *zoom: 1;
       @include background(linear-gradient(top, #fff, #ebecec));
       filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFFFFFFF', endColorstr='#FFEBECEC');
       filter: none \9;
