@@ -941,7 +941,6 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       background: url(/assets/img/ic-setting.png) no-repeat 35px center;
     }
     &.trash {
-      padding-left: 55px;
       background: url(/assets/img/ic-trash.png) no-repeat 35px center;
     }
     color: $black;
@@ -965,7 +964,6 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       text-decoration: none;
     }
     &.trash:hover {
-      padding-left: 55px;
       background: $gray1 url(/assets/img/ic-trash.png) no-repeat 35px center;
       color: $orange;
       text-decoration: none;
@@ -1013,7 +1011,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   }
   @include mb {
     h3 {
-      a, a:hover, a.management, a:hover.management, span {
+      a, a:hover, a.management, a:hover.management, a.trash, a:hover.trash, span {
         padding: 5px 15px 5px 35px;
         background-position: 15px center;
       }
