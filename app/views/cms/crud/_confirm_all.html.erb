@@ -7,6 +7,8 @@
   <label class="check">
     <% if is_changeable || action == "destroy_all" %>
       <%= f.check_box_tag 'ids[]', item.id.to_s, checked: true %>
+    <% elsif item.class == Uploader::File %>
+      <%= f.check_box_tag 'ids[]', item.path.sub(@cur_site.path, ""), checked: true %>
     <% else %>
       <%= f.check_box_tag 'ids[]', false, false, { disabled: true } %>
     <% end %>
@@ -15,7 +17,12 @@
     <% if is_changeable %>
       <%= f.hidden_field_tag 'ids[]', item.id.to_s %>
     <% end %>
-    <%= link_to item.try(:name), { action: :show, id: item }, class: "title", target: "_blank", rel: "noopener" %>
+    <% if item.class == Uploader::File %>
+      <% filename = item.path.sub("#{@cur_site.path}/", "") %>
+      <%= link_to filename, action: :file, filename: filename, do: :show, class: "title", target: "_blank", rel: "noopener" %>
+    <% else %>
+      <%= link_to item.try(:name), { action: :show, id: item }, class: "title", target: "_blank", rel: "noopener" %>
+    <% end %>
     <div class="meta">
       <%= render "cms/crud/destroy_info", item: item, action: action %>
       <% if item.try(:tags) %>
