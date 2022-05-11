@@ -120,7 +120,7 @@ this.SS_Addon_Markdown = (function () {
       success: function(data) {
         self.$el.find("." + SS_Addon_Markdown.preview).html(data);
       },
-      error: function(xhr, status, error) {
+      error: function(xhr, _status, _error) {
         self.$el.find("." + SS_Addon_Markdown.preview).html("<p>Error!!</p><br/><p>" + xhr["statusText"] + "</p>");
       }
     });
