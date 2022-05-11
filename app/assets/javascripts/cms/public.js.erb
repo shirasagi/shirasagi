@@ -93,6 +93,11 @@ this.SS_Kana = (function () {
       url = SS_Kana.url(url, true);
       cssClass = "on";
     }
+    if (url[0] !== '/') {
+      // "javascript:alert('xss')" のような URL を location.href にセットしてしまうと xss とダイアログが表示されてしまう。
+      // 先頭が "/" かどうかをチェックすることで、この種の脆弱性を防ぐ。
+      return;
+    }
 
     var html = $kana.html();
     var $anchor = $("<a />", { class: cssClass, href: "#" + url, rel: "nofollow" }).html(html)
