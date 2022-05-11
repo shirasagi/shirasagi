@@ -519,6 +519,7 @@ module Workflow::Approver
     not_owned_file_ids.each_slice(20) do |ids|
       ::SS::File.in(id: ids).each do |file|
         file.model = model
+        file.owner_item = SS::Model.container_of(self)
         file.save
       end
     end
