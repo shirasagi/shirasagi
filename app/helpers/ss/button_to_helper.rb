@@ -17,7 +17,9 @@ module SS::ButtonToHelper
     url    = options.is_a?(String) ? options : url_for(options)
     remote = html_options.delete("remote")
     method = html_options.delete("method").to_s
-    confirm = html_options.delete("confirm")
+    if options.is_a?(Hash) && confirmation_required?(options[:model])
+      confirm = html_options.delete("confirm")
+    end
     params = html_options.delete("params")
 
     html_options["type"] ||= "button"
@@ -28,7 +30,7 @@ module SS::ButtonToHelper
     html_options["data"]["ss-button-to-action"] = url
     html_options["data"]["ss-button-to-method"] = method.presence || "post"
     # rails の confirm が勝ってしまって上手く動作しないので data-ss-confirmation に設定しなおす
-    html_options["data"]["ss-confirmation"] = confirm if confirm.present?
+    html_options["data"]["ss-confirmation"] = confirm if confirm.try(:present?)
     html_options["data"]["ss-button-to-params"] = params if params.present?
 
     if block_given?
@@ -38,5 +40,17 @@ module SS::ButtonToHelper
     end
 
     button
+  end
+
+  def confirmation_required?(model)
+    sys_setting?(model) || gws_site?(model)
+  end
+
+  def sys_setting?(model)
+    model.to_s.start_with?("Sys::")
+  end
+
+  def gws_site?(model)
+    model.to_s.start_with?("Gws::")
   end
 end
