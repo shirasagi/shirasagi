@@ -58,6 +58,7 @@ Rails.application.routes.draw do
       resource :server, only: [] do
         match :show, on: :member, via: [:get, :post, :put, :delete]
       end
+      resource :app_log, only: [:show]
     end
 
     namespace "apis" do

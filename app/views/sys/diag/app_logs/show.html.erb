@@ -1,0 +1,10 @@
+<div class="addon-views">
+  <%= render "ss/crud/addon", addon: { id: "app_log", head: "#{relative_log_file_path}@#{Rails.application.hostname}(#{Rails.application.ip_address})", toggle: true } do %>
+    <div>
+      <%= text_area_tag "app_log", tail_log, style: "height: 20.5em;" %>
+    </div>
+    <div>
+      Show recent logs at most <%= ::Fs::DEFAULT_TAIL_BYTES.to_s(:human_size) %>
+    </div>
+  <% end %>
+</div>
