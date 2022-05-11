@@ -2489,6 +2489,11 @@ div.index {
     }
   }
 }
+.list-foot {
+  padding: 10px;
+  border-top: $border-gray1;
+  text-align: center;
+}
 .wrap-table {
   @include mb {
     overflow: scroll;

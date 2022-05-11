@@ -25,12 +25,12 @@ describe "gws_discussion_comments", type: :feature, dbscope: :example, js: true 
     after { ActionMailer::Base.deliveries.clear }
 
     it do
-      visit gws_discussion_main_path(site: site)
+      visit gws_discussion_forums_path(site: site, mode: '-')
       click_on forum.name
-      click_on I18n.t("gws/discussion.links.topic.reply")
+      click_link I18n.t("gws/discussion.links.topic.reply")
       within "form" do
         fill_in "item[text]", with: post_texts.join("\n")
-        click_on I18n.t("ss.links.reply")
+        click_button I18n.t("gws/discussion.links.topic.reply")
       end
       expect(page).to have_css("#notice", text: I18n.t('ss.notice.saved'))
 

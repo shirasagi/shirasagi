@@ -1,0 +1,73 @@
+<div class="gws-discussion gws-discussion-thread">
+  <div class="addon-view gws-discussion-navi-item">
+    <div class="addon-head"><h2><%= t('gws/discussion.navi.portal.comment') %></h2></div>
+    <div class="addon-body">
+      <ul class="list-items">
+        <% @items.each do |item| %>
+          <li class="list-item">
+            <% if forum = item.forum %>
+              <nav class="tap-menu">
+                <%= link_to t('gws/discussion.navi.topic.portal'), gws_discussion_forum_topics_path(forum_id: forum) %>
+                <%= link_to t('gws/discussion.navi.topic.readable'), all_gws_discussion_forum_topics_path(forum_id: forum) %>
+                <%= link_to t('gws/discussion.navi.todo.readable'), gws_discussion_forum_todos_path(forum_id: forum) %>
+              </nav>
+            <% end %>
+            <div class="info">
+              <% title = item.text.truncate(40) %>
+              <%= link_to title, gws_discussion_forum_topic_comments_path(forum_id: item.forum_id, topic_id: item.parent_id, anchor: "comment-#{item.id}"), class: "title" %>
+              <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
+              <div class="meta">
+                <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+                <span class="user"><%= item.user.try(:name) %></span>
+                <%= link_to item.forum.try(:name), gws_discussion_forum_topics_path(forum_id: item.forum_id), class: 'gws-category-label' %>
+                &gt; <%= link_to item.parent.try(:name), gws_discussion_forum_topic_comments_path(forum_id: item.forum_id, topic_id: item.parent_id), class: 'gws-category-label' %>
+              </div>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="gws-discussion-navi">
+  <div class="addon-view gws-discussion-navi-item gws-discussion-navi-forums">
+    <div class="addon-head toggle-head"><h2><%= t('gws/discussion.navi.portal.forum') %></h2></div>
+    <div class="addon-body toggle-body">
+      <ul class="list-items">
+        <% @recent_forums.each do |item| %>
+          <li class="list-item">
+            <div class="info">
+              <%= link_to item.name, gws_discussion_forum_topics_path(forum_id: item) %>
+              <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
+              <div class="meta">
+                <span class="datetime"><%= item.created.strftime("%Y/%m/%d %H:%M") %></span>
+              </div>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+      <div class="list-foot"><%= link_to t('gws/discussion.navi.forum.readable'), gws_discussion_forums_path %></div>
+    </div>
+  </div>
+
+  <div class="addon-view gws-discussion-navi-item gws-discussion-navi-topics">
+    <div class="addon-head toggle-head"><h2><%= t('gws/discussion.navi.portal.topic') %></h2></div>
+    <div class="addon-body toggle-body">
+      <ul class="list-items">
+        <% @recent_topics.each do |item| %>
+          <li class="list-item">
+            <div class="info">
+              <%= link_to item.name, gws_discussion_forum_topic_comments_path(forum_id: item.forum_id, topic_id: item.id) %>
+              <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
+              <div class="meta">
+                <span class="datetime"><%= item.created.strftime("%Y/%m/%d %H:%M") %></span>
+                <%= link_to item.forum.try(:name), gws_discussion_forum_topics_path(forum_id: item.forum_id), class: 'gws-category-label' %>
+              </div>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
