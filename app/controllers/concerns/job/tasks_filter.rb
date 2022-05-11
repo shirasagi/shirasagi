@@ -47,7 +47,7 @@ module Job::TasksFilter
       next if item.destroy
       @items << item
     end
-    render_destroy_all(entries.size != @items.size)
+    render_confirmed_all(entries.size != @items.size)
   end
 
   def reset_state
