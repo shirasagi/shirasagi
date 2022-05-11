@@ -70,8 +70,13 @@ Rails.application.routes.draw do
 
     namespace "db" do
       get "/" => redirect { |p, req| "#{req.path}/colls" }
-      resources :colls, concerns: :deletion
-      resources :docs, concerns: :deletion, path: "colls/:coll/docs"
+      resources :colls, only: [:index, :show] do
+        get :info, on: :collection
+      end
+      resources :docs, only: [:index, :show], path: "colls/:coll/docs" do
+        get :indexes, on: :collection
+        get :stats, on: :collection
+      end
     end
 
     namespace "auth" do
