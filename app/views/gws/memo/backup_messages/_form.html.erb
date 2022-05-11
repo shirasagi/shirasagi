@@ -1,7 +1,3 @@
-<%= jquery do %>
-  new Gws_Memo_ExportAndBackup($('.export-and-backup-msg-component'))
-<% end %>
-
 <%= error_messages_for :item %>
 <%= f.hidden_field "root_url", value: root_url, class: "hidden-ids" %>
 <div class="export-and-backup-msg-component">
@@ -27,7 +23,7 @@
           <dt><%= t "gws/memo/message.message" %><%= @model.tt :from_member_ids %></dt>
           <dd>
             <%= f.hidden_field "message_ids[]", value: "", class: "hidden-ids" %>
-            <%= link_to t("ss.links.select"), gws_memo_apis_messages_path(site: @cur_site), class: "ajax-box" %>
+            <%= link_to t("ss.links.select"), gws_memo_apis_messages_path(site: @cur_site), class: "ajax-box", "data-template" => "backup-message-template" %>
           </dd>
           <dd>
             <table class="index ajax-selected" style="display: none;">
@@ -46,6 +42,26 @@
               </thead>
               <tbody></tbody>
             </table>
+            <script id="backup-message-template" type="text/x-ejs">
+              <tr data-id="<%%= data.id %>">
+                <td>
+                  <%% if (data.attachments) { %>
+                    <i class="material-icons md-15">&#xE226;</i>
+                  <%% } else { %>
+                    <i class="material-icons md-15" style="visibility: hidden;">&#xE226;</i>
+                  <%% } %>
+                  <%%= data.from %>
+                </td>
+                <td>
+                  <input type="hidden" name="item[message_ids][]" value="<%%= data.id %>">
+                  <%%= data.name %>
+                </td>
+                <td><%%= data.priority %></td>
+                <td><%%= data.send_date %></td>
+                <td><%%= data.display_size %></td>
+                <td><a class="deselect btn" href="#"><%= I18n.t "ss.buttons.delete" %></a></td>
+              </tr>
+            </script>
           </dd>
         </dl>
       </div>

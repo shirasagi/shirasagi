@@ -2,8 +2,8 @@
 window.deleteContent = function (id) {
   $('#item-form .file-view[data-id="' + id + '"]').remove();
 };
-$('.mod-photo a.ajax-box').data('on-select', function(item) {
-  var $div = $(item).closest("[data-id]");
+$('.mod-photo a.ajax-box').data('on-select', function($item) {
+  var $div = $item.closest("[data-id]");
   var id = $div.attr("data-id");
 
   if (!$("#selected-files").find("[data-id=" + id + "]").length) {
