@@ -69,9 +69,9 @@ this.Mobile_Size_Checker = (function () {
   Mobile_Size_Checker.url = null;
 
   Mobile_Size_Checker.message = {
-    header: "<%= I18n.t('cms.mobile_size_check') %>",
-    mobileCheck: "<%= I18n.t('errors.messages.mobile_size_check_size') %>",
-    sizeCheckServerError: "<%= I18n.t('errors.messages.mobile_size_check_server_error') %>"
+    header: <%= I18n.t('cms.mobile_size_check').to_json %>,
+    mobileCheck: <%= I18n.t('errors.messages.mobile_size_check_size').to_json %>,
+    sizeCheckServerError: <%= I18n.t('errors.messages.mobile_size_check_server_error').to_json %>
   };
 
   Mobile_Size_Checker.errors = [];
@@ -181,7 +181,7 @@ this.Mobile_Size_Checker = (function () {
 
       for (var j = 0, len = Mobile_Size_Checker.errors.length; j < len; j++) {
         var err = Mobile_Size_Checker.errors[j];
-        Form_Alert.add("<%= I18n.t('cms.mobile_size_check') %>", this, err);
+        Form_Alert.add(<%= I18n.t('cms.mobile_size_check').to_json %>, this, err);
       }
     });
 

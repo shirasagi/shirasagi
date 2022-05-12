@@ -39,6 +39,7 @@ ja:
       add_changesets: &group_props
         name: グループ名
         order: 表示順
+        contact_group_name: 担当部署
         contact_tel: 電話番号
         contact_fax: ファックス番号
         contact_email: メールアドレス
@@ -197,6 +198,8 @@ ja:
           order:
             - グループ画面での表示順を入力します。
             - 数字が小さいほど上位に表示されます。
+          contact_group_name:
+            - 新設するグループの担当部署を入力します。
           contact_tel:
             - 新設するグループの電話番号を入力します。
           contact_fax:
@@ -218,6 +221,8 @@ ja:
           order:
             - グループ画面での表示順を入力します。
             - 数字が小さいほど上位に表示されます。
+          contact_group_name:
+            - 分割後のグループの担当部署を入力します。
           contact_tel:
             - 分割後のグループの電話番号を入力します。
           contact_fax:
@@ -238,6 +243,8 @@ ja:
           order:
             - グループ画面での表示順を入力します。
             - 数字が小さいほど上位に表示されます。
+          contact_group_name:
+            - 移動先グループの担当部署を入力します。
           contact_tel:
             - 移動先グループの電話番号を入力します。
           contact_fax:
@@ -258,6 +265,8 @@ ja:
           order:
             - グループ画面での表示順を入力します。
             - 数字が小さいほど上位に表示されます。
+          contact_group_name:
+            - 統合先グループの担当部署を入力します。
           contact_tel:
             - 統合先グループの電話番号を入力します。
           contact_fax:
@@ -272,4 +281,3 @@ ja:
             - LDAPを利用している場合は統合先グループの識別子(DN)を入力します。
           before_name:
             - 統合元のグループ名を選択します。
-

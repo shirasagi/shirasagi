@@ -18,9 +18,9 @@ this.Googlemaps_Map = (function () {
 
   Googlemaps_Map.markerClusterer = null;
 
-  Googlemaps_Map.markerIcon = "<%= SS.config.map.dig("map_marker_images", "googlemaps", "default", "marker") %>";
+  Googlemaps_Map.markerIcon = <%= SS.config.map.dig("map_marker_images", "googlemaps", "default", "marker").to_json %>;
 
-  Googlemaps_Map.clickIcon = "<%= SS.config.map.dig("map_marker_images", "googlemaps", "default", "click") %>";
+  Googlemaps_Map.clickIcon = <%= SS.config.map.dig("map_marker_images", "googlemaps", "default", "click").to_json %>;
 
   Googlemaps_Map.openedInfo = null;
 
@@ -318,7 +318,7 @@ this.Googlemaps_Map = (function () {
 
   Googlemaps_Map.getMapsSearchHtml = function(lat, lng) {
     var url = Googlemaps_Map.mapsSearchUrl + lat + "," + lng;
-    return '<p><a href="' + url + '">' + "<%= I18n.t("map.links.google_maps_search") %>" + '</a></p>';
+    return '<p><a href="' + url + '">' + <%= I18n.t("map.links.google_maps_search").to_json %> + '</a></p>';
   };
 
   return Googlemaps_Map;

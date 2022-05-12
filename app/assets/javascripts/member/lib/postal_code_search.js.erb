@@ -6,7 +6,7 @@ PostalCodeSearch = (function () {
     postal_code: "input[name='item[postal_code]']",
     addr: "input[name='item[addr]']",
     error: '.postal-code-search-error',
-    error_message: "<%= I18n.t('errors.messages.not_found_postal_code') %>"
+    error_message: <%= I18n.t('errors.messages.not_found_postal_code').to_json %>
   };
 
   function PostalCodeSearch(el, options) {

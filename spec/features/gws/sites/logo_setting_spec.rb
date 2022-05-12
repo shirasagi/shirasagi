@@ -32,10 +32,27 @@ describe "gws_sites", type: :feature, dbscope: :example, tmpdir: true, js: true 
 
         site.reload
         expect(site.logo_application_name).to eq logo_application_name
-        expect(site.logo_application_image).to be_present
+        site.logo_application_image.tap do |image_file|
+          expect(image_file.name).to eq "keyvisual.jpg"
+          expect(image_file.filename).to eq "keyvisual.jpg"
+          expect(image_file.site_id).to be_blank
+          expect(image_file.model).to eq "ss/logo_file"
+          expect(image_file.owner_item_id).to eq site.id
+          expect(image_file.owner_item_type).to eq site.class.name
+        end
 
         # check that logs is appeared on portal
         visit gws_portal_path(site: site)
+        within ".ss-logo-wrap" do
+          expect(page).to have_css("img[alt='#{logo_application_name}']")
+
+          info = image_element_info(first("img[alt='#{logo_application_name}']"))
+          expect(info[:naturalWidth]).to be <= SS::Model::LogoSetting::LOGO_APPLICATION_IMAGE_WIDTH
+          expect(info[:naturalHeight]).to be <= SS::Model::LogoSetting::LOGO_APPLICATION_IMAGE_HEIGHT
+        end
+
+        # check that logs is appeared on login form
+        visit gws_login_path(site: site)
         within ".ss-logo-wrap" do
           expect(page).to have_css("img[alt='#{logo_application_name}']")
 
