@@ -91,7 +91,7 @@ module Cms::FileRepair::Issuer
     end
 
     def each_fs_files
-      file_urls = html.scan(/\"(\/fs\/(.+?)\/_\/.+?)\"/)
+      file_urls = html.scan(/"(\/fs\/(.+?)\/_\/.+?)"/)
       file_urls.each do |file_url, file_id|
         file_id = file_id.delete("/").to_i
         file = SS::File.find(file_id) rescue nil

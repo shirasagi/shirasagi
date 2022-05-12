@@ -1,20 +1,16 @@
 module Cms::FileRepair::Issuer
   class Duplicate < Base
     def check_duplicates
-      @issues = []
-      @fixes = []
-      delete_duplicates(false)
+      delete_duplicates(deletes: false)
     end
 
-    def delete_duplicates(delete = true)
+    def delete_duplicates(deletes: true)
       @issues = []
       @fixes = []
-      return if !body.respond_to?(:file_ids)
-      return if !body.respond_to?(:files)
       return if html.blank?
-      return if body.files.blank?
+      return if !body.respond_to?(:files) || body.files.blank?
 
-      file_urls = html.scan(/\"(\/fs\/.+?)\"/).flatten
+      file_urls = html.scan(/"(\/fs\/.+?)"/).flatten
       return if file_urls.blank?
 
       delete_files = {}
@@ -30,7 +26,7 @@ module Cms::FileRepair::Issuer
         end
       end
       delete_files.values.each do |file, ref|
-        if delete
+        if deletes
           file.destroy
           add_fixes("重複元 #{ref}", file.id, file.url)
         else
@@ -38,8 +34,6 @@ module Cms::FileRepair::Issuer
         end
       end
     end
-
-    public
 
     class << self
       def header
