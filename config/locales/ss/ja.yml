@@ -579,7 +579,7 @@ ja:
         domains_with_subdir: サブディレクトリを含めたドメイン
         upload_policy: アップロード制限
         maint_mode: メンテナンスモード
-        maint_remarks: メンテナンス備考
+        maint_remark: メンテナンス備考
         maint_excluded_user_ids: 除外ユーザー
       ss/model/user:
         name: 氏名

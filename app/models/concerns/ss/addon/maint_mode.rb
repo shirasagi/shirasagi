@@ -5,11 +5,10 @@ module SS::Addon
 
     included do
       field :maint_mode, type: String, default: "disabled"
-      field :maint_remarks, type: String
+      field :maint_remark, type: String
       embeds_ids :maint_excluded_users, class_name: "SS::User"
-      belongs_to :parent, class_name: "SS::Site"
 
-      permit_params :maint_mode, :maint_remarks, maint_excluded_user_ids: []
+      permit_params :maint_mode, :maint_remark, maint_excluded_user_ids: []
 
       validates :maint_excluded_user_ids, presence: true, if: -> { maint_mode == "enabled" }
     end

@@ -25,7 +25,7 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
     find("#addon-ss-agents-addons-maint_mode").click
     within "form#item-form" do
       find("#item_maint_mode").find("option[value='enabled']").select_option
-      fill_in "item[maint_remarks]", with: "今日から明日までメンテナンスになります。"
+      fill_in "item[maint_remark]", with: "今日から明日までメンテナンスになります。"
       within ".maint-mode" do
         click_on "ユーザーを選択する"
       end
@@ -57,9 +57,9 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
     expect(page).to have_text(I18n.t("ss.under_maint_mode"))
     expect(page).not_to have_link(site1.name, href: "/.s#{site1.id}/cms/contents")
     visit cms_contents_path(site: site1)
-    expect(page).to have_text(site1.maint_remarks)
+    expect(page).to have_text(site1.maint_remark)
 
     visit cms_contents_path(site: site2)
-    expect(page).not_to have_text(site1.maint_remarks)
+    expect(page).not_to have_text(site1.maint_remark)
   end
 end
