@@ -89,7 +89,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
     scope.pluck(:id).each do |id|
       item = model.unscoped.find(id)
       yield(item) if block
-      json.write(item.to_json(methods: "_type"))
+      json.write(item.to_json(methods: %i[_type route]))
       store_file_ids(item)
     end
     json.close
@@ -241,11 +241,6 @@ class Sys::SiteExportJob < SS::ApplicationJob
 
       item[:export_path] = copy_file(item)
       json.write(item.to_json)
-
-      item.thumbs.each do |thumb|
-        thumb[:export_path] = copy_file(thumb)
-        json.write(thumb.to_json)
-      end
     end
     json.close
   end

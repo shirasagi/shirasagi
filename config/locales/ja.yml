@@ -111,6 +111,7 @@ ja:
       auth_error: 権限がありません。
       blank: を入力してください。
       present: は入力しないでください。
+      mismatch: が一致しません。
       confirmation: と%{attribute}の入力が一致しません。
       empty: を入力してください。
       equal_to: は%{count}にしてください。

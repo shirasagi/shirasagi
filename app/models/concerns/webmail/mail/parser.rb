@@ -192,7 +192,7 @@ module Webmail::Mail::Parser
     return str if src_encoding == 'UTF-8'
 
     src_encoding = 'CP50220' if src_encoding.try(:upcase) == 'ISO-2022-JP'
-    str.encode('UTF-8', src_encoding, invalid: :replace, undef: :replace)
+    str.encode('UTF-8', src_encoding, invalid: :replace, undef: :replace) rescue str
   end
 
   def flatten_all_parts(part, pos = [], buf = {})

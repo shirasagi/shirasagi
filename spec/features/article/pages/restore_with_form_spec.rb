@@ -91,12 +91,16 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
         within ".column-value-cms-column-fileupload" do
           fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text
-          click_on I18n.t("ss.links.upload")
+          wait_cbox_open do
+            click_on I18n.t("ss.links.upload")
+          end
         end
       end
       wait_for_cbox do
         attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/logo.png"
-        click_on I18n.t('ss.buttons.attach')
+        wait_cbox_close do
+          click_on I18n.t('ss.buttons.attach')
+        end
       end
       within 'form#item-form' do
         within ".column-value-cms-column-fileupload" do
@@ -107,7 +111,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(Article::Page.all.count).to eq 1
-      expect(SS::File.all.unscoped.count).to eq 2
+      expect(SS::File.all.unscoped.count).to eq 1
 
       # Update
       visit article_pages_path(site: site, cid: node)
@@ -138,12 +142,16 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
         within ".column-value-cms-column-fileupload" do
           fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text2
-          click_on I18n.t("ss.links.upload")
+          wait_cbox_open do
+            click_on I18n.t("ss.links.upload")
+          end
         end
       end
       wait_for_cbox do
         attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-        click_on I18n.t('ss.buttons.attach')
+        wait_cbox_close do
+          click_on I18n.t('ss.buttons.attach')
+        end
       end
       within 'form#item-form' do
         within ".column-value-cms-column-fileupload" do
@@ -154,7 +162,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(Article::Page.all.count).to eq 1
-      expect(SS::File.all.unscoped.count).to eq 2
+      expect(SS::File.all.unscoped.count).to eq 1
 
       # Restore
       visit article_pages_path(site: site, cid: node)
@@ -187,7 +195,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         expect(item.column_values.find_by(column_id: column8.id).file_label).to eq column8_image_text
         expect(item.backups.count).to eq 2
       end
-      expect(SS::File.all.unscoped.count).to eq 4
+      expect(SS::File.all.unscoped.count).to eq 2
     end
   end
 end

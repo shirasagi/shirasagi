@@ -74,6 +74,8 @@ module SS::FileFilter
 
   def view
     set_item
+    raise "404" unless Fs.file?(@item.path)
+
     set_last_modified
 
     if @item.image? && request.xhr?
@@ -81,34 +83,25 @@ module SS::FileFilter
       return
     end
 
-    if Fs.mode == :file && Fs.file?(@item.path)
-      send_file @item.path, type: @item.content_type, filename: @item.filename,
-                disposition: :inline, x_sendfile: true
-    else
-      send_enum @item.to_io, type: @item.content_type, filename: @item.filename,
-                disposition: :inline
-    end
+    ss_send_file @item, type: @item.content_type, filename: @item.filename, disposition: :inline
   end
 
   def thumb
     set_item
+    raise "404" unless Fs.file?(@item.path)
+
     set_last_modified
 
-    if @item.try(:thumb)
-      if Fs.mode == :file && Fs.file?(@item.thumb.path)
-        send_file @item.thumb.path, type: @item.thumb.content_type, filename: @item.thumb.filename,
-          disposition: :inline, x_sendfile: true
-      else
-        send_enum @item.thumb.to_io, type: @item.thumb.content_type, filename: @item.thumb.filename,
-          disposition: :inline
-      end
-    else
-      converter = SS::ImageConverter.open(@item.path)
-      converter.resize_to_fit!
-
-      send_enum converter.to_enum, type: @item.content_type, filename: @item.filename, disposition: :inline
-      converter = nil
+    if (thumb = @item.try(:thumb)) && Fs.file?(thumb.path)
+      ss_send_file thumb, type: thumb.content_type, filename: thumb.filename, disposition: :inline
+      return
     end
+
+    converter = SS::ImageConverter.open(@item.path)
+    converter.resize_to_fit!
+
+    send_enum converter.to_enum, type: @item.content_type, filename: @item.filename, disposition: :inline
+    converter = nil
   rescue => e
     raise if e.to_s.numeric?
     raise "500"
@@ -120,15 +113,11 @@ module SS::FileFilter
 
   def download
     set_item
+    raise "404" unless Fs.file?(@item.path)
+
     set_last_modified
 
-    if Fs.mode == :file && Fs.file?(@item.path)
-      send_file @item.path, type: @item.content_type, filename: @item.download_filename,
-        disposition: :attachment, x_sendfile: true
-    else
-      send_enum @item.to_io, type: @item.content_type, filename: @item.download_filename,
-        disposition: :attachment
-    end
+    ss_send_file @item.path, type: @item.content_type, filename: @item.download_filename, disposition: :attachment
   end
 
   def resize

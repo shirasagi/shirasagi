@@ -13,6 +13,12 @@ module Tasks
         end
       end
 
+      def release_nodes
+        each_sites do |site|
+          perform_job(::Cms::Node::ReleaseJob, site: site)
+        end
+      end
+
       def generate_pages
         each_sites do |site|
           if ENV.key?("node")

@@ -13,6 +13,7 @@
 //= require ss/lib/mobile
 //= require ss/lib/clipboard
 //= require ss/lib/file_view
+//= require cms/lib/site_search
 //= require cms/lib/site_search_history
 //= require cms/lib/history
 //= require ss/lib/search_ui
@@ -64,11 +65,11 @@ this.SS_Kana = (function () {
   function SS_Kana() {
   }
 
-  SS_Kana.dir = "<%= SS.config.kana.location %>";
+  SS_Kana.dir = <%= SS.config.kana.location.to_json %>;
 
   SS_Kana.siteUrl = "/";
 
-  SS_Kana.kanaUrl = "<%= SS.config.kana.location %>" + "/";
+  SS_Kana.kanaUrl = <%= SS.config.kana.location.to_json %> + "/";
 
   SS_Kana.render = function () {
     var bind, url, html;
@@ -129,11 +130,11 @@ this.SS_Translate = (function () {
   function SS_Translate() {
   }
 
-  SS_Translate.dir = "<%= SS.config.translate.location %>";
+  SS_Translate.dir = <%= SS.config.translate.location.to_json %>;
 
   SS_Translate.siteUrl = "/";
 
-  SS_Translate.translateUrl = "<%= SS.config.translate.location %>" + "/";
+  SS_Translate.translateUrl = <%= SS.config.translate.location.to_json %> + "/";
 
   SS_Translate.url = function (url, target) {
     if (target) {
@@ -233,7 +234,7 @@ this.SS_AdobeReader = (function () {
   SS_AdobeReader.render = function () {
     if ($("a[href$='.pdf']").length) {
       return $("#ss-adobe-reader, .ss-adobe-reader").each(function () {
-        return $(this).html('<%= I18n.t("cms.adobe_reader.remark").join %>').show();
+        return $(this).html(<%= Array(I18n.t("cms.adobe_reader.remark")).join.to_json %>).show();
       });
     }
   };
@@ -314,10 +315,10 @@ this.SS_Voice = (function () {
   }
 
   SS_Voice.voiceConfig = {
-    'location': "<%= SS.config.voice.controller['location'] %>",
-    'loading-resource': "<%= SS.config.voice.resource['loading'] %>",
-    'disabled-resource': "<%= SS.config.voice.resource['disabled'] %>",
-    'overload-resource': "<%= SS.config.voice.resource['overload'] %>"
+    'location': <%= SS.config.voice.controller['location'].to_json %>,
+    'loading-resource': <%= SS.config.voice.resource['loading'].to_json %>,
+    'disabled-resource': <%= SS.config.voice.resource['disabled'].to_json %>,
+    'overload-resource': <%= SS.config.voice.resource['overload'].to_json %>
   };
 
   SS_Voice.url = null;
@@ -534,7 +535,7 @@ this.SS_VoiceController = (function () {
         remainingDuration: true,
         smoothPlayBar: true,
         supplied: "mp3",
-        swfPath: "<%= SS.config.voice.resource['jplayer_path'] %>",
+        swfPath: <%= SS.config.voice.resource['jplayer_path'].to_json %>,
         toggleDuration: true,
         useStateClassSkin: true
       });
