@@ -982,6 +982,8 @@ ja:
         loop_liquid: ループHTML
         no_items_display_state: ページ未検出時表示
         substitute_html: 代替HTML
+        sort_column_name: 並び順
+        sort_column_direction: 並び順(方向)
       cms/addon/page_group_list:
         condition_groups: 検索条件(グループ)
       cms/addon/tabs:
@@ -1157,9 +1159,11 @@ ja:
         import_page_name: 記事タイトルのカラム
         import_column_options: 値による条件設定
         import_misc_options: その他の設定
+        import_event: イベント日時を取り込む
         import_map: 地図座標を取り込む
         import_logs: インポートログ
-        pippi_import_category: カテゴリーを変換して取り込む
+        pippi_import_category: カテゴリーを取り込む
+        pippi_import_maru_columns: 〇を変換するカラム
       cms/init_column:
         name: 名前
         order: 並び順
@@ -2091,6 +2095,9 @@ ja:
           {% endfor %}
       new_days:
         - 設定した期間内に作成されたページへのリンクにNEWマークを付与するためのclassがふられます。
+      sort_column_name:
+        - 定型フォームを利用した並び替え方法を指定します。
+        - 通常の並び順よりもこちらを優先します。
 
     cms/addon/tabs:
       conditions:

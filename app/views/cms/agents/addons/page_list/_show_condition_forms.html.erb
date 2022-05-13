@@ -35,3 +35,8 @@
     </table>
   <% end %>
 </dd>
+
+<% if @item.is_a?(Article::Part::Page) %>
+<dt><%= @model.t :sort_column_name %></dt>
+<dd><%= @item.sort_column_name %> - <%= @item.label :sort_column_direction %></dd>
+<% end %>

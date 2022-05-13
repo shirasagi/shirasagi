@@ -426,6 +426,9 @@ ja:
         filename: ファイル名
         filename_asc: ファイル名(昇順)
         filename_desc: ファイル名(降順)
+      sort_direction:
+        asc: 昇順
+        desc: 降順
       restriction:
         none: 制限なし
         api_only: API利用のみ

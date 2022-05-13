@@ -2,7 +2,7 @@
   condition_form = @item.condition_forms.to_edit_form
   column_names = Cms::Column::Base.site(@cur_site).in(form_id: condition_form.forms.map(&:id)).pluck(:name)
   column_names.uniq!
-  # column_names.sort!
+  column_names.sort!
 
   addon ||= local_assigns.fetch(:addon, {})
 %>
@@ -60,8 +60,16 @@
       </tbody>
     </table>
   </dd>
+
+  <% if @item.is_a?(Article::Part::Page) %>
+  <dt class="depth-2"><%= @model.t :sort_column_name %><%= @model.tt :sort_column_name %></dt>
   <dd>
+    <%= f.select :sort_column_name, options_for_select(column_names, selected: @item.sort_column_name), include_blank: true %>
+    <%= f.select :sort_column_direction, @item.sort_column_direction_options, include_blank: true %>
   </dd>
+  <% end %>
+
+  <dd></dd>
 </dl>
 
 <%= jquery do %>

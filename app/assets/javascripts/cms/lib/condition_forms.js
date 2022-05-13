@@ -51,8 +51,12 @@ Cms_ConditionForms.prototype.clearAndSetColumnList = function(data) {
   console.log("clearAndSetColumnList");
   var self = this;
   var columnNames = data["column_names"];
+  var targets = [];
 
-  self.$el.find("[name=\"item[condition_forms][filters][][column_name]\"]").each(function() {
+  targets.push('[name="item[condition_forms][filters][][column_name]"]');
+  targets.push('[name="item[sort_column_name]"]');
+
+  self.$el.find(targets.join(',')).each(function() {
     var $select = $(this);
     var currentValue = $select.val();
 

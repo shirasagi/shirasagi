@@ -45,8 +45,14 @@
     </table>
   </dd>
 
+  <dt><%= @model.t :pippi_import_maru_columns %><%= @model.tt :pippi_import_maru_columns %></dt>
+  <dd><%= f.text_area :pippi_import_maru_columns, style: 'max-width: 20rem; height: 10rem;' %></dd>
+
   <dt><%= @model.t :import_misc_options %></dt>
   <dd>
+    <%= f.hidden_field :import_event, value: 0 %>
+    <label><%= f.check_box :import_event, {}, 1 %> <%= @model.t :import_event %></label>
+
     <%= f.hidden_field :import_map, value: 0 %>
     <label><%= f.check_box :import_map, {}, 1 %> <%= @model.t :import_map %></label>
 

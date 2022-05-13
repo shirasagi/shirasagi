@@ -19,8 +19,12 @@
     <% end %>
   </dd>
 
+  <dt><%= @model.t :pippi_import_maru_columns %></dt>
+  <dd><%=br @item.pippi_import_maru_columns.join("\n") %></dd>
+
   <%
     import_options = []
+    import_options << @model.t(:import_event) if @item.import_event == 1
     import_options << @model.t(:import_map) if @item.import_map == 1
     import_options << @model.t(:pippi_import_category) if @item.pippi_import_category == 1
   %>
