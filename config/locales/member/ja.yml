@@ -406,7 +406,6 @@ ja:
     messages:
       not_input: を入力してください。
       input_again: をもう一度入力してください。
-      mismatch: が一致しません。
       not_registerd: は登録されていません。
       already_registerd: は、確認済みです。
       password_short: "は%{count}文字以上にしてください。"

@@ -181,4 +181,7 @@ module SS::CrudFilter
       format.json { head json: errors }
     end
   end
+
+  # for backwards compatibility
+  alias render_destroy_all render_confirmed_all
 end

@@ -9,14 +9,27 @@ module SS::Addon
       permit_params :text, :text_type
     end
 
-    def text_type_options
-      [:plain, :markdown].map { |m| [I18n.t("ss.options.text_type.#{m}"), m] }
+    module ClassMethods
+      def text_type_options
+        [:plain, :cke, :markdown].map { |m| [I18n.t("ss.options.text_type.#{m}"), m] }
+      end
     end
 
-    def html
+    delegate :text_type_options, to: :class
+
+    def html(**options)
       return nil if text.blank?
-      if text_type == 'markdown'
+
+      text = self.text
+      if options.key?(:truncate)
+        text = text.truncate(options[:truncate], options.slice(:separator, :omission))
+      end
+
+      case text_type
+      when 'markdown'
         SS::Addon::Markdown.text_to_html(text)
+      when 'cke'
+        "<div class=\"ss-cke\">#{ApplicationController.helpers.sanitize(text)}</div>".html_safe
       else
         ERB::Util.h(text).gsub(/(\r\n?)|(\n)/, "<br />").html_safe
       end

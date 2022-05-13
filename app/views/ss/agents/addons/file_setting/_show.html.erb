@@ -4,4 +4,16 @@
 
   <dt><%= @model.t :multibyte_filename_state %></dt>
   <dd><%= @item.label :multibyte_filename_state %></dd>
+
+  <dt><%= @model.t :file_fs_access_restriction_state %></dt>
+  <dd><%= @item.label :file_fs_access_restriction_state %></dd>
+
+  <dt class="depth-2"><%= @model.t :file_fs_access_restriction_allowed_ip_addresses %></dt>
+  <dd class="depth-2"><%= br @item.file_fs_access_restriction_allowed_ip_addresses %></dd>
+
+  <dt class="depth-2"><%= @model.t :file_fs_access_restriction_basic_auth %></dt>
+  <dd class="depth-2"><%= @item.file_fs_access_restriction_basic_auth_id %> <%= @item.file_fs_access_restriction_basic_auth_password.present? ? "*" * 8 : "" %></dd>
+
+  <dt class="depth-2"><%= @model.t :file_fs_access_restriction_env %></dt>
+  <dd class="depth-2"><%= @item.file_fs_access_restriction_env_key %> <%= @item.file_fs_access_restriction_env_value %></dd>
 </dl>

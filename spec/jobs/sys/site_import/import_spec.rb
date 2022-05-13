@@ -3,13 +3,38 @@ require 'spec_helper'
 describe Sys::SiteImportJob, dbscope: :example do
   let(:destination_site) { create :cms_site_unique }
 
-  def execute(site, file_path)
+  before do
+    base = 2_000_000
+    SS::Sequence.create(_id: "cms_body_layouts_id", value: rand(0..999) * base)
+    SS::Sequence.create(_id: "cms_editor_templates_id", value: rand(0..999) * base)
+    SS::Sequence.create(_id: "cms_forms_id", value: rand(0..999) * base)
+    SS::Sequence.create(_id: "cms_layouts_id", value: rand(0..999) * base)
+    SS::Sequence.create(_id: "cms_loop_settings_id", value: rand(0..999) * base)
+    SS::Sequence.create(_id: "cms_members_id", value: rand(0..999) * base)
+    SS::Sequence.create(_id: "cms_nodes_id", value: rand(0..999) * base)
+    SS::Sequence.create(_id: "cms_page_searches_id", value: rand(0..999) * base)
+    SS::Sequence.create(_id: "cms_pages_id", value: rand(0..999) * base)
+    SS::Sequence.create(_id: "cms_parts_id", value: rand(0..999) * base)
+    SS::Sequence.create(_id: "cms_roles_id", value: rand(0..999) * base)
+    SS::Sequence.create(_id: "cms_source_cleaner_templates_id", value: rand(0..999) * base)
+    SS::Sequence.create(_id: "cms_theme_templates_id", value: rand(0..999) * base)
+    SS::Sequence.create(_id: "cms_word_dictionaries_id", value: rand(0..999) * base)
+    SS::Sequence.create(_id: "ezine_columns_id", value: rand(0..999) * base)
+    SS::Sequence.create(_id: "inquiry_answers_id", value: rand(0..999) * base)
+    SS::Sequence.create(_id: "inquiry_columns_id", value: rand(0..999) * base)
+    SS::Sequence.create(_id: "ss_files_id", value: rand(0..999) * base)
+    SS::Sequence.create(_id: "ss_groups_id", value: rand(0..999) * base)
+    SS::Sequence.create(_id: "ss_max_file_sizes_id", value: rand(0..999) * base)
+    SS::Sequence.create(_id: "ss_sites_id", value: rand(0..999) * base)
+    SS::Sequence.create(_id: "ss_users_id", value: rand(0..999) * base)
+    SS::Sequence.create(_id: "sys_roles_id", value: rand(0..999) * base)
+    SS::Sequence.create(_id: "workflow_routes_id", value: rand(0..999) * base)
+
     task = OpenStruct.new(
-      target_site_id: site.id,
+      target_site_id: destination_site.id,
       import_file: file_path
     )
     def task.log(msg)
-      puts(msg)
     end
 
     job = ::Sys::SiteImportJob.new
@@ -17,165 +42,163 @@ describe Sys::SiteImportJob, dbscope: :example do
     job.perform
   end
 
-  before do
-    execute(destination_site, file_path)
-  end
-
   context 'with pages' do
     let(:file_path) { "#{Rails.root}/spec/fixtures/sys/site-exports-1.zip" }
 
-    it do
-      expect(Cms::Group.unscoped).to be_present
-      expect(Cms::User.unscoped).to be_present
+    context "when default multibyte_filename and file_url_with" do
+      it do
+        expect(Cms::Group.unscoped).to be_present
+        expect(Cms::User.unscoped).to be_present
 
-      expect(Cms::Form.unscoped.site(destination_site)).to have(2).items
-      Cms::Form.unscoped.site(destination_site).pluck(:id).sort.tap do |ids|
-        Cms::Form.find(ids[0]).tap do |form|
-          expect(form.state).to eq "public"
-          expect(form.sub_type).to eq "static"
-          expect(form.columns).to have(3).items
+        expect(Cms::Form.unscoped.site(destination_site)).to have(2).items
+        Cms::Form.unscoped.site(destination_site).pluck(:id).sort.tap do |ids|
+          Cms::Form.find(ids[0]).tap do |form|
+            expect(form.state).to eq "public"
+            expect(form.sub_type).to eq "static"
+            expect(form.columns).to have(3).items
 
-          form.columns.pluck(:id).map(&:to_s).sort.tap do |ids|
-            Cms::Column::Base.find(ids[0]).tap do |column|
-              expect(column).to be_a(Cms::Column::TextField)
-              expect(column.order).to eq 10
-            end
-            Cms::Column::Base.find(ids[1]).tap do |column|
-              expect(column).to be_a(Cms::Column::FileUpload)
-              expect(column.order).to eq 20
-            end
-            Cms::Column::Base.find(ids[2]).tap do |column|
-              expect(column).to be_a(Cms::Column::Free)
-              expect(column.order).to eq 30
+            form.columns.pluck(:id).map(&:to_s).sort.tap do |ids|
+              Cms::Column::Base.find(ids[0]).tap do |column|
+                expect(column).to be_a(Cms::Column::TextField)
+                expect(column.order).to eq 10
+              end
+              Cms::Column::Base.find(ids[1]).tap do |column|
+                expect(column).to be_a(Cms::Column::FileUpload)
+                expect(column.order).to eq 20
+              end
+              Cms::Column::Base.find(ids[2]).tap do |column|
+                expect(column).to be_a(Cms::Column::Free)
+                expect(column.order).to eq 30
+              end
             end
           end
-        end
-        Cms::Form.find(ids[1]).tap do |form|
-          expect(form.state).to eq "public"
-          expect(form.sub_type).to eq "entry"
-          expect(form.columns).to have(3).items
+          Cms::Form.find(ids[1]).tap do |form|
+            expect(form.state).to eq "public"
+            expect(form.sub_type).to eq "entry"
+            expect(form.columns).to have(3).items
 
-          form.columns.pluck(:id).map(&:to_s).sort.tap do |ids|
-            Cms::Column::Base.find(ids[0]).tap do |column|
-              expect(column).to be_a(Cms::Column::TextField)
-              expect(column.order).to eq 10
-            end
-            Cms::Column::Base.find(ids[1]).tap do |column|
-              expect(column).to be_a(Cms::Column::FileUpload)
-              expect(column.order).to eq 20
-            end
-            Cms::Column::Base.find(ids[2]).tap do |column|
-              expect(column).to be_a(Cms::Column::Free)
-              expect(column.order).to eq 30
-            end
-          end
-        end
-      end
-
-      expect(Cms::Column::Base.unscoped.site(destination_site)).to have(6).items
-      expect(Cms::Page.unscoped.site(destination_site)).to have(3).items
-      expect(Article::Page.unscoped.site(destination_site)).to have(3).items
-      Article::Page.unscoped.site(destination_site).pluck(:id).sort.tap do |ids|
-        Article::Page.find(ids[0]).tap do |page|
-          expect(page.form).to be_blank
-          expect(page.html).to be_present
-          expect(page.files).to have(1).items
-          page.files.first.tap do |file|
-            expect(file.owner_item_id).to eq page.id
-          end
-          expect(page.html).to include(page.files.first.url)
-        end
-
-        Article::Page.find(ids[1]).tap do |page|
-          expect(page.html).to be_blank
-          expect(page.form).to be_present
-          expect(page.form.sub_type).to eq "static"
-          expect(page.column_values).to have(3).items
-          page.column_values.reorder(order: 1).to_a.tap do |column_values|
-            column_values[0].tap do |column_value|
-              expect(column_value).to be_a(Cms::Column::Value::TextField)
-              expect(column_value.column).to be_present
-              expect(page.form.columns.find(column_value.column_id)).to be_present
-              expect(column_value.value).to be_present
-            end
-
-            column_values[1].tap do |column_value|
-              expect(column_value).to be_a(Cms::Column::Value::FileUpload)
-              expect(column_value.column).to be_present
-              expect(page.form.columns.find(column_value.column_id)).to be_present
-              expect(column_value.file).to be_present
-              expect(column_value.file.owner_item_id).to eq page.id
-            end
-
-            column_values[2].tap do |column_value|
-              expect(column_value).to be_a(Cms::Column::Value::Free)
-              expect(column_value.column).to be_present
-              expect(page.form.columns.find(column_value.column_id)).to be_present
-              expect(column_value.files).to have(1).items
-              expect(column_value.files.first.owner_item_id).to eq page.id
-              expect(column_value.value).to be_present
-              expect(column_value.value).to include(column_value.files.first.url)
+            form.columns.pluck(:id).map(&:to_s).sort.tap do |ids|
+              Cms::Column::Base.find(ids[0]).tap do |column|
+                expect(column).to be_a(Cms::Column::TextField)
+                expect(column.order).to eq 10
+              end
+              Cms::Column::Base.find(ids[1]).tap do |column|
+                expect(column).to be_a(Cms::Column::FileUpload)
+                expect(column.order).to eq 20
+              end
+              Cms::Column::Base.find(ids[2]).tap do |column|
+                expect(column).to be_a(Cms::Column::Free)
+                expect(column.order).to eq 30
+              end
             end
           end
         end
 
-        Article::Page.find(ids[2]).tap do |page|
-          expect(page.form).to be_present
-          expect(page.html).to be_blank
-          expect(page.form.sub_type).to eq "entry"
-          expect(page.column_values).to have(6).items
-
-          page.column_values.reorder(order: 1).to_a.tap do |column_values|
-            column_values[0].tap do |column_value|
-              expect(column_value).to be_a(Cms::Column::Value::TextField)
-              expect(column_value.column).to be_present
-              expect(page.form.columns.find(column_value.column_id)).to be_present
-              expect(column_value.value).to be_present
+        expect(Cms::Column::Base.unscoped.site(destination_site)).to have(6).items
+        expect(Cms::Page.unscoped.site(destination_site)).to have(3).items
+        expect(Article::Page.unscoped.site(destination_site)).to have(3).items
+        Article::Page.unscoped.site(destination_site).pluck(:id).sort.tap do |ids|
+          Article::Page.find(ids[0]).tap do |page|
+            expect(page.form).to be_blank
+            expect(page.html).to be_present
+            expect(page.files).to have(1).items
+            page.files.first.tap do |file|
+              expect(file.owner_item_id).to eq page.id
             end
+            expect(page.html).to include(page.files.first.url)
+          end
 
-            column_values[1].tap do |column_value|
-              expect(column_value).to be_a(Cms::Column::Value::TextField)
-              expect(column_value.column).to be_present
-              expect(page.form.columns.find(column_value.column_id)).to be_present
-              expect(column_value.value).to be_present
+          Article::Page.find(ids[1]).tap do |page|
+            expect(page.html).to be_blank
+            expect(page.form).to be_present
+            expect(page.form.sub_type).to eq "static"
+            expect(page.column_values).to have(3).items
+            page.column_values.reorder(order: 1).to_a.tap do |column_values|
+              column_values[0].tap do |column_value|
+                expect(column_value).to be_a(Cms::Column::Value::TextField)
+                expect(column_value.column).to be_present
+                expect(page.form.columns.find(column_value.column_id)).to be_present
+                expect(column_value.value).to be_present
+              end
+
+              column_values[1].tap do |column_value|
+                expect(column_value).to be_a(Cms::Column::Value::FileUpload)
+                expect(column_value.column).to be_present
+                expect(page.form.columns.find(column_value.column_id)).to be_present
+                expect(column_value.file).to be_present
+                expect(column_value.file.owner_item_id).to eq page.id
+              end
+
+              column_values[2].tap do |column_value|
+                expect(column_value).to be_a(Cms::Column::Value::Free)
+                expect(column_value.column).to be_present
+                expect(page.form.columns.find(column_value.column_id)).to be_present
+                expect(column_value.files).to have(1).items
+                expect(column_value.files.first.owner_item_id).to eq page.id
+                expect(column_value.value).to be_present
+                expect(column_value.value).to include(column_value.files.first.url)
+              end
             end
+          end
 
-            column_values[2].tap do |column_value|
-              expect(column_value).to be_a(Cms::Column::Value::FileUpload)
-              expect(column_value.column).to be_present
-              expect(page.form.columns.find(column_value.column_id)).to be_present
-              expect(column_value.value).to be_present
-              expect(column_value.file).to be_present
-              expect(column_value.file.owner_item_id).to eq page.id
-            end
+          Article::Page.find(ids[2]).tap do |page|
+            expect(page.form).to be_present
+            expect(page.html).to be_blank
+            expect(page.form.sub_type).to eq "entry"
+            expect(page.column_values).to have(6).items
 
-            column_values[3].tap do |column_value|
-              expect(column_value).to be_a(Cms::Column::Value::FileUpload)
-              expect(column_value.column).to be_present
-              expect(page.form.columns.find(column_value.column_id)).to be_present
-              expect(column_value.value).to be_present
-              expect(column_value.file).to be_present
-              expect(column_value.file.owner_item_id).to eq page.id
-            end
+            page.column_values.reorder(order: 1).to_a.tap do |column_values|
+              column_values[0].tap do |column_value|
+                expect(column_value).to be_a(Cms::Column::Value::TextField)
+                expect(column_value.column).to be_present
+                expect(page.form.columns.find(column_value.column_id)).to be_present
+                expect(column_value.value).to be_present
+              end
 
-            column_values[4].tap do |column_value|
-              expect(column_value).to be_a(Cms::Column::Value::Free)
-              expect(column_value.column).to be_present
-              expect(page.form.columns.find(column_value.column_id)).to be_present
-              expect(column_value.files).to have(1).items
-              expect(column_value.value).to be_present
-              expect(column_value.value).to include(column_value.files.first.url)
-              expect(column_value.files.first.owner_item_id).to eq page.id
-            end
+              column_values[1].tap do |column_value|
+                expect(column_value).to be_a(Cms::Column::Value::TextField)
+                expect(column_value.column).to be_present
+                expect(page.form.columns.find(column_value.column_id)).to be_present
+                expect(column_value.value).to be_present
+              end
 
-            column_values[5].tap do |column_value|
-              expect(column_value).to be_a(Cms::Column::Value::Free)
-              expect(column_value.column).to be_present
-              expect(page.form.columns.find(column_value.column_id)).to be_present
-              expect(column_value.files).to have(1).items
-              expect(column_value.value).to be_present
-              expect(column_value.value).to include(column_value.files.first.url)
-              expect(column_value.files.first.owner_item_id).to eq page.id
+              column_values[2].tap do |column_value|
+                expect(column_value).to be_a(Cms::Column::Value::FileUpload)
+                expect(column_value.column).to be_present
+                expect(page.form.columns.find(column_value.column_id)).to be_present
+                expect(column_value.value).to be_present
+                expect(column_value.file).to be_present
+                expect(column_value.file.owner_item_id).to eq page.id
+              end
+
+              column_values[3].tap do |column_value|
+                expect(column_value).to be_a(Cms::Column::Value::FileUpload)
+                expect(column_value.column).to be_present
+                expect(page.form.columns.find(column_value.column_id)).to be_present
+                expect(column_value.value).to be_present
+                expect(column_value.file).to be_present
+                expect(column_value.file.owner_item_id).to eq page.id
+              end
+
+              column_values[4].tap do |column_value|
+                expect(column_value).to be_a(Cms::Column::Value::Free)
+                expect(column_value.column).to be_present
+                expect(page.form.columns.find(column_value.column_id)).to be_present
+                expect(column_value.files).to have(1).items
+                expect(column_value.value).to be_present
+                expect(column_value.value).to include(column_value.files.first.url)
+                expect(column_value.files.first.owner_item_id).to eq page.id
+              end
+
+              column_values[5].tap do |column_value|
+                expect(column_value).to be_a(Cms::Column::Value::Free)
+                expect(column_value.column).to be_present
+                expect(page.form.columns.find(column_value.column_id)).to be_present
+                expect(column_value.files).to have(1).items
+                expect(column_value.value).to be_present
+                expect(column_value.value).to include(column_value.files.first.url)
+                expect(column_value.files.first.owner_item_id).to eq page.id
+              end
             end
           end
         end

@@ -137,7 +137,14 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       end
       file.column_values.where(column_id: column9.id).first.tap do |cv|
         expect(cv.files.count).to eq 1
-        expect(cv.files.first.name).to eq "logo.png"
+        cv.files.first.tap do |cv_file|
+          expect(cv_file.name).to eq "logo.png"
+          expect(cv_file.filename).to eq "logo.png"
+          expect(cv_file.site_id).to be_blank
+          expect(cv_file.model).to eq "Gws::Report::File"
+          expect(cv_file.owner_item_id).to eq file.id
+          expect(cv_file.owner_item_type).to eq file.class.name
+        end
       end
       expect(file.state).to eq "closed"
       expect(file.deleted).to be_blank

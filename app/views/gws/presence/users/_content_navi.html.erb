@@ -1,6 +1,7 @@
 <%
   group = @group || @custom_group
-  opts = { expand_group: true } if group
+  opts = { descendants_check: true }
+  opts[:expand_group] = true if group
 %>
 <%= jquery do %>
 var tree = SS_TreeUI.render(".tree-groups .index.groups", <%== opts.to_json %>);

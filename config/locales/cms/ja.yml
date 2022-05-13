@@ -83,6 +83,7 @@ ja:
     source_cleaner: ソースクリーニング
     source_cleaner_template: ソースクリーニング
     syntax_check: アクセシビリティチェック
+    backlink_check: 被リンクチェック
     sns_post: SNS投稿連携
     sns_post_log: 投稿履歴
     theme_template: Theme切り替え

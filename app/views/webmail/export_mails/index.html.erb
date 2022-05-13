@@ -1,32 +1,3 @@
-<%= jquery do %>
-$('a.ajax-box').data('on-select', function($item) {
-  var data        = $item.closest("[data-id]");
-  var id          = data.data("id");
-  var attachments = data.data("attachments");
-  var from        = data.data("from");
-  var name        = data.data("name");
-  var send_date   = data.data("send_date");
-  var size        = data.data("display_size");
-
-  tr    = $("<tr />").attr("data-id", id);
-  input = SS_SearchUI.anchorAjaxBox.closest("dl").find(".hidden-ids").clone(false);
-  input = input.val(id).removeClass("hidden-ids");
-  a     = $('<a class="deselect btn" href="#"><%= I18n.t "ss.buttons.delete" %></a>').on("click", SS_SearchUI.deselect);
-
-  var icon = $('<i class="material-icons md-15">&#xE226;</i>');
-  if (!attachments) {
-    icon.css("visibility","hidden");
-  }
-  tr.append($('<td />').text(from).prepend(icon));
-  tr.append($('<td />').append(input).append(name));
-  tr.append($('<td />').text(send_date));
-  tr.append($('<td />').text(size));
-  tr.append($('<td />').append(a));
-  SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tbody").prepend(tr);
-  SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected").trigger("change");
-});
-<% end %>
-
 <%= form_for :item, url: { action: :export }, html: { id: "item-form", method: :put, multipart: true } do |f| %>
   <%= error_messages_for :item %>
   <%= f.hidden_field "root_url", value: root_url, class: "hidden-ids" %>
@@ -44,7 +15,7 @@ $('a.ajax-box').data('on-select', function($item) {
           <dt><%= t "webmail.mail" %></dt>
           <dd>
             <%= f.hidden_field "mail_ids[]", value: "", class: "hidden-ids" %>
-            <%= link_to t("ss.links.select"), webmail_apis_mails_path(account: params[:account] || @cur_user.imap_default_index), class: "ajax-box" %>
+            <%= link_to t("ss.links.select"), webmail_apis_mails_path(account: params[:account] || @cur_user.imap_default_index), class: "ajax-box", "data-template" => "webmail-export-template" %>
           </dd>
           <dd>
             <table class="index ajax-selected" style="display: none;">
@@ -62,6 +33,25 @@ $('a.ajax-box').data('on-select', function($item) {
               </thead>
               <tbody></tbody>
             </table>
+            <script id="webmail-export-template" type="text/x-ejs">
+              <tr data-id="<%%= data.id %>">
+                <td>
+                  <%% if (data.attachments) { %>
+                    <i class="material-icons md-15">&#xE226;</i>
+                  <%% } else { %>
+                    <i class="material-icons md-15" style="visibility: hidden;">&#xE226;</i>
+                  <%% } %>
+                  <%%= data.name %>
+                </td>
+                <td>
+                  <input type="hidden" name="item[mail_ids][]" value="<%%= data.id %>">
+                  <%%= data.name %>
+                </td>
+                <td><%%= data.send_date %></td>
+                <td><%%= data.display_size %></td>
+                <td><a class="deselect btn" href="#"><%= I18n.t "ss.buttons.delete" %></a></td>
+              </tr>
+            </script>
           </dd>
         </dl>
       </div>

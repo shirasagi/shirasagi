@@ -84,7 +84,7 @@
       var data = $item.closest("[data-id]");
       var href = hostUrl + data.find(".filename").text();
       var label = data.find(".select-item").text();
-      var text = "<a href='" + href + "'>" + label + '</a>';
+      var text = ejs.render("<a href=\"<%%= href %>\"><%%= label %></a>", { href: href, label: label });
       SS_FileView.insertContent(text);
     });
   <% end %>

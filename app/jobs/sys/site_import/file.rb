@@ -19,8 +19,8 @@ module Sys::SiteImport::File
 
       if item.save
         src = SS::File.new(id: id, filename: item.filename)
+        src = src.becomes_with_model
         @ss_files_map[id] = item.id
-        @ss_files_url[src.thumb_url] = item.thumb_url
         @ss_files_url[src.url] = item.url
         FileUtils.mkdir_p(File.dirname(item.path))
         FileUtils.cp(path, item.path) # FileUtils.mv
