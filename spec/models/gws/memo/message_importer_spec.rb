@@ -719,4 +719,52 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
       end
     end
   end
+
+  context "with multipart/alternative" do
+    let(:user) { gws_user }
+    let(:eml_file_path) { "#{Rails.root}/spec/fixtures/gws/memo/multipart_alternative.eml" }
+    let(:eml_entry_path) { "#{I18n.t('gws/memo/folder.inbox')}/message-1.eml" }
+    let(:zip_file_path) do
+      path = tmpfile(extname: ".zip", binary: true) { |f| f.write '' }
+      Zip.unicode_names = true
+      Zip::File.open(path, Zip::File::CREATE) do |zip|
+        zip.add(eml_entry_path, eml_file_path)
+      end
+      path
+    end
+    let!(:file) { Fs::UploadedFile.create_from_file(zip_file_path, content_type: 'application/zip') }
+
+    it do
+      importer = described_class.new(cur_site: site, cur_user: user, in_file: file)
+      importer.import_messages
+
+      expect(Gws::Memo::Message.all.count).to eq 1
+      Gws::Memo::Message.all.first.tap do |message|
+        expect(message.site_id).to eq site.id
+        expect(message.state).to eq "public"
+        expect(message.subject).to eq "subject-i61192207c8"
+        expect(message.send_date).to eq "Fri, 13 May 2022 15:26:26 +0900".in_time_zone
+        expect(message.format).to eq "text"
+        expect(message.text).to eq "m55ee4e7dbe"
+        expect(message.from).to be_blank
+        expect(message.from_member_name).to eq "name-l1e3db2852e <uid-p1e4dc2a870@example.jp>"
+        expect(message.to_member_ids).to be_blank
+        expect(message.to_member_name).to be_blank
+        expect(message.cc_member_ids).to be_blank
+        expect(message.bcc_member_ids).to be_blank
+        expect(message.member_ids).to have(1).items
+        expect(message.member_ids).to include(user.id)
+        expect(message.user_settings).to have(1).items
+        expect(message.user_settings).to include("user_id" => user.id, path: "INBOX")
+        expect(message.file_ids).to have(1).items
+        message.files.first.tap do |file|
+          expect(file.name).to eq "no_name"
+          expect(file.filename).to eq "no_name"
+          expect(file.content_type).to eq "application/octet-stream"
+          expect(file.size).to be > 0
+          expect(::File.read(message.files.first.path)).to eq "<p>#{message.text}</p>"
+        end
+      end
+    end
+  end
 end

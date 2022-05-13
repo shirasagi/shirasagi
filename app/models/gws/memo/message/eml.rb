@@ -40,8 +40,9 @@ class Gws::Memo::Message
       mime_type = content_type.string
       return false unless mime_type
 
+      # multipart's mime type can be "multipart/mixed" or "multipart/alternative"
       mime_type = mime_type.downcase
-      return false if mime_type != "multipart/mixed"
+      return false unless mime_type.start_with?("multipart/")
 
       boundary = content_type.parameters["boundary"]
       return false if boundary.blank?
