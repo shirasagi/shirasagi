@@ -458,7 +458,7 @@ class Gws::Memo::Message
 
       body = NKF.nkf("-Ww", body)
 
-      content_type = mail_header.header[:content_type]
+      content_type = part_header.header[:content_type]
       if content_type && content_type.string == "text/html"
         message.format = "html"
         message.html = body

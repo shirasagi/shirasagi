@@ -303,45 +303,99 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
       let(:user) { user2 }
       let(:eml_entry_path) { "#{I18n.t('gws/memo/folder.inbox')}/message-1.eml" }
 
-      let!(:source_message) do
-        build(
-          :gws_memo_message, cur_site: site, cur_user: user1, in_to_members: [ user2.id, user3.id ],
-          file_ids: [ file1.id, file2.id ]
-        )
+      context "with text message" do
+        let!(:source_message) do
+          build(
+            :gws_memo_message, cur_site: site, cur_user: user1, in_to_members: [ user2.id, user3.id ],
+            file_ids: [ file1.id, file2.id ]
+          )
+        end
+
+        it do
+          expect(Gws::Memo::Message.all.count).to eq 1
+          Gws::Memo::Message.all.first.tap do |message|
+            expect(message.site_id).to eq site.id
+            expect(message.state).to eq "public"
+            expect(message.subject).to eq source_message.subject
+            expect(message.format).to eq "text"
+            expect(message.html).to be_blank
+            expect(message.text).to eq source_message.text
+            expect(message.from_member_name).to eq user1.long_name
+            expect(message.to_member_ids).to have(2).items
+            expect(message.to_member_ids).to include(user2.id, user3.id)
+            expect(message.member_ids).to have(1).items
+            expect(message.member_ids).to include(user2.id)
+            expect(message.user_settings).to have(1).items
+            expect(message.user_settings).to include("user_id" => user2.id, "path" => "INBOX")
+            expect(message.file_ids).to have(2).items
+            message.files.each do |file|
+              case file.content_type
+              when "image/png"
+                expect(file.name).to eq file1.name
+                expect(file.filename).to eq file1.filename
+                expect(file.content_type).to eq file1.content_type
+                expect(file.size).to eq file1.size
+                expect(Fs.compare_file_head(file.path, file1.path)).to be_truthy
+              when "application/pdf"
+                expect(file.name).to eq file2.name
+                expect(file.filename).to eq file2.filename
+                expect(file.content_type).to eq file2.content_type
+                expect(file.size).to eq file2.size
+                expect(Fs.compare_file_head(file.path, file2.path)).to be_truthy
+              end
+              expect(file.owner_item_id).to eq message.id
+              expect(file.owner_item_type).to eq message.class.name
+              expect(file.site_id).to be_blank
+            end
+          end
+        end
       end
 
-      it do
-        expect(Gws::Memo::Message.all.count).to eq 1
-        Gws::Memo::Message.all.first.tap do |message|
-          expect(message.site_id).to eq site.id
-          expect(message.state).to eq "public"
-          expect(message.subject).to eq source_message.subject
-          expect(message.from_member_name).to eq user1.long_name
-          expect(message.to_member_ids).to have(2).items
-          expect(message.to_member_ids).to include(user2.id, user3.id)
-          expect(message.member_ids).to have(1).items
-          expect(message.member_ids).to include(user2.id)
-          expect(message.user_settings).to have(1).items
-          expect(message.user_settings).to include("user_id" => user2.id, "path" => "INBOX")
-          expect(message.file_ids).to have(2).items
-          message.files.each do |file|
-            case file.content_type
-            when "image/png"
-              expect(file.name).to eq file1.name
-              expect(file.filename).to eq file1.filename
-              expect(file.content_type).to eq file1.content_type
-              expect(file.size).to eq file1.size
-              expect(Fs.compare_file_head(file.path, file1.path)).to be_truthy
-            when "application/pdf"
-              expect(file.name).to eq file2.name
-              expect(file.filename).to eq file2.filename
-              expect(file.content_type).to eq file2.content_type
-              expect(file.size).to eq file2.size
-              expect(Fs.compare_file_head(file.path, file2.path)).to be_truthy
+      context "with html message" do
+        let!(:source_message) do
+          build(
+            :gws_memo_message, cur_site: site, cur_user: user1, in_to_members: [ user2.id, user3.id ],
+            format: "html", text: nil, html: "<p>#{unique_id}</p>",
+            file_ids: [ file1.id, file2.id ]
+          )
+        end
+
+        it do
+          expect(Gws::Memo::Message.all.count).to eq 1
+          Gws::Memo::Message.all.first.tap do |message|
+            expect(message.site_id).to eq site.id
+            expect(message.state).to eq "public"
+            expect(message.subject).to eq source_message.subject
+            expect(message.format).to eq "html"
+            expect(message.html).to eq source_message.html
+            expect(message.text).to be_blank
+            expect(message.from_member_name).to eq user1.long_name
+            expect(message.to_member_ids).to have(2).items
+            expect(message.to_member_ids).to include(user2.id, user3.id)
+            expect(message.member_ids).to have(1).items
+            expect(message.member_ids).to include(user2.id)
+            expect(message.user_settings).to have(1).items
+            expect(message.user_settings).to include("user_id" => user2.id, "path" => "INBOX")
+            expect(message.file_ids).to have(2).items
+            message.files.each do |file|
+              case file.content_type
+              when "image/png"
+                expect(file.name).to eq file1.name
+                expect(file.filename).to eq file1.filename
+                expect(file.content_type).to eq file1.content_type
+                expect(file.size).to eq file1.size
+                expect(Fs.compare_file_head(file.path, file1.path)).to be_truthy
+              when "application/pdf"
+                expect(file.name).to eq file2.name
+                expect(file.filename).to eq file2.filename
+                expect(file.content_type).to eq file2.content_type
+                expect(file.size).to eq file2.size
+                expect(Fs.compare_file_head(file.path, file2.path)).to be_truthy
+              end
+              expect(file.owner_item_id).to eq message.id
+              expect(file.owner_item_type).to eq message.class.name
+              expect(file.site_id).to be_blank
             end
-            expect(file.owner_item_id).to eq message.id
-            expect(file.owner_item_type).to eq message.class.name
-            expect(file.site_id).to be_blank
           end
         end
       end
