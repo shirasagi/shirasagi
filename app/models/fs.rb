@@ -2,6 +2,7 @@ module Fs
   MAX_COMPARE_FILE_SIZE = SS.config.env.max_compare_file_size || 100 * 1_024
   DEFAULT_BUFFER_SIZE = 4 * 1_024
   DEFAULT_HEAD_LOGS = SS.config.job.head_logs || 1_000
+  DEFAULT_TAIL_BYTES = 16 * 1_024
 
   if SS.config.env.storage == "grid_fs"
     include ::Fs::GridFs
@@ -87,5 +88,58 @@ module Fs
   rescue => e
     Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
     []
+  end
+
+  def tail_lines(path, limit_in_bytes: nil)
+    limit_in_bytes ||= DEFAULT_TAIL_BYTES
+    limit_in_bytes = DEFAULT_TAIL_BYTES if limit_in_bytes < 256
+
+    Fs.to_io(path) do |f|
+      size = f.size
+      if size <= limit_in_bytes
+        ret = f.read
+        next "" if ret.blank?
+
+        ret.force_encoding(Encoding::UTF_8)
+        next ret
+      end
+
+      f.seek(- limit_in_bytes, ::IO::SEEK_END)
+      ret = f.read(limit_in_bytes)
+      next "" if ret.blank?
+
+      # UTF-8 として不正な位置から読み出している可能性がある。
+      # 以下のループで、UTF-8 として正しい位置を求める。
+      succeeded = false
+      6.times do |tail_pos|
+        6.times do |head_pos|
+          tmp = ret[head_pos..-(tail_pos + 1)]
+          tmp.force_encoding(Encoding::UTF_8)
+
+          byte_count = 0
+          tmp.each_codepoint { |cp| byte_count += cp.chr(Encoding::UTF_8).bytes.length }
+
+          ret = tmp
+          succeeded = true
+          break
+        rescue => e
+          Rails.logger.debug { "#{e.class} (#{e.message})" }
+          next
+        end
+
+        break if succeeded
+      end
+      # UTF-8 として正しい位置を求められなかった
+      return "" unless succeeded
+
+      # 先頭行は中途半端な行の可能性が高いので削除する
+      lf_pos = ret.index("\n")
+      ret = ret[lf_pos + 1..-1] if lf_pos
+
+      ret
+    end
+  rescue => e
+    Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+    ""
   end
 end

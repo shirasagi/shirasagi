@@ -151,7 +151,7 @@ class Opendata::Dataset::Importer
     # basic
     item.name = value(row, item, :name)
     item.text = value(row, item, :text)
-    item.tags = value(row, item, :tags).to_s.split(",")
+    item.tags = array_value(row, item, :tags)
 
     # category
     category_name_tree = array_value(row, item, :category_ids)

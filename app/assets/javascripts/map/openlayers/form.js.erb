@@ -33,7 +33,7 @@ this.Openlayers_Map_Form = (function () {
 
     this.popup = null;
     this.maxPointForm = opts['max_point_form'] || 10;
-    this.deleteMessage = "<%= I18n.t('map.confirm.delete_marker') %>";
+    this.deleteMessage = <%= I18n.t('map.confirm.delete_marker').to_json %>;
     this.dataID = 0;
     this.markerIcon = Openlayers_Map.markerIcon;
     this.clickIcon = Openlayers_Map.clickIcon;
@@ -510,7 +510,7 @@ this.Openlayers_Map_Form = (function () {
     var dataId, opts, image;
 
     if (!Openlayers_Map_Form.validateLoc(loc)) {
-      alert("<%= I18n.t('map.alert.invalid_location').join('\n') %>");
+      alert(<%= Array(I18n.t('map.alert.invalid_location')).join('\n').to_json %>);
       return;
     }
 

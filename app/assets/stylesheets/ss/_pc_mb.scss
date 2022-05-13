@@ -635,7 +635,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
         }
       }
     }
-    .gws-contrast {
+    .gws-contrast, .gws-group-switch {
       padding: 8px 10px;
       border-bottom: 1px solid  #f2f2f2;
       .caret {
@@ -679,6 +679,32 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     }
     .gws-contrast, .user-contrast-menu-header {
       .material-icons { line-height: .8; }
+    }
+
+    #gws-group-switch-menu {
+      height: auto;
+      min-height: 200px;
+      max-height: 400px;
+      overflow-y: auto;
+      .gws-group-switch-menu-header {
+        border-bottom: 1px solid  #f2f2f2;
+        font-weight: bold;
+        .cascade-back { padding: 8px 10px; }
+        .caret { float: left; }
+      }
+      .gws-group-switch-item {
+        display: block;
+        padding: 8px 10px 8px 12px;
+        cursor: pointer;
+        input[type="radio"] {
+          margin: 4px 7px 3px 4px;
+          vertical-align: top;
+        }
+        .gws-group-switch-name {
+          display: inline-block;
+          width: calc(100% - 32px);
+        }
+      }
     }
   }
   .sp-menu-button {
@@ -1753,6 +1779,22 @@ dl.see {
       }
     }
   }
+  > dt.depth-4 {
+    padding-left: 60px;
+    @include mb {
+      + dd {
+        padding-left: 40px;
+      }
+    }
+  }
+  > dt.depth-5 {
+    padding-left: 80px;
+    @include mb {
+      + dd {
+        padding-left: 40px;
+      }
+    }
+  }
 }
 :root dl.see > dd input, :root dl.see > dd select {
   vertical-align: middle\0;
@@ -2284,6 +2326,10 @@ div.index {
 }
 .list-head-action-destroy {
   display: inline-block;
+}
+.list-head-action-update {
+  display: inline-block;
+  margin-left: 40px;
 }
 .list-head-search {
   margin: 0 0 10px;

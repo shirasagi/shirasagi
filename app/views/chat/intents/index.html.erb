@@ -3,7 +3,7 @@
   @reject_items = {}
 %>
 <%= jquery do %>
-SS_TreeUI.render(".index.items", { collapse_all: true });
+SS_TreeUI.render(".index.items", { collapse_all: true, descendants_check: true });
 <% end %>
 
 <div class="main-box">

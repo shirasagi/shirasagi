@@ -1,0 +1,16 @@
+<%
+  if SS.config.gws.disable.blank?
+    gws_user = @cur_user.gws_user
+    sites = gws_user.root_groups.select do |site|
+      Gws::Memo::Message.allowed?(:edit, gws_user, site: site)
+    end
+    if sites.present?
+      site = sites.sort_by { |site| site.id }.first
+      count = Gws::Memo::Message.unseens(@cur_user, site).size
+      span_unseen = content_tag("span", count, class: "unseen") if count > 0
+      @output_buffer << link_to(gws_memo_messages_path(site: site), class: "user-message") do
+        span_unseen
+      end
+    end
+  end
+%>

@@ -48,10 +48,6 @@ module Gws::BaseFilter
 
   def set_account_menu
     @account_menu = []
-    @cur_user.groups.in_group(@cur_site).each do |group|
-      next if @cur_user.gws_default_group.id == group.id
-      @account_menu << [group.section_name, gws_default_group_path(default_group: group)]
-    end
     @account_menu << [I18n.t("mongoid.models.gws/user_setting"), gws_user_setting_path]
   end
 
