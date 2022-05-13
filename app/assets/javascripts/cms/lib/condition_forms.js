@@ -26,7 +26,7 @@ Cms_ConditionForms.prototype.reloadColumnList = function() {
 
   if (formIds.length === 0) {
     self.$el.find(".empty-message").removeClass("hide");
-    self.$el.find(".filter-table").addClass("hide");
+    self.$el.find(".filter-table, .sort-column").addClass("hide");
     self.clearAndSetColumnList({ column_names: [] });
     return;
   }
@@ -40,7 +40,7 @@ Cms_ConditionForms.prototype.reloadColumnList = function() {
       self.clearAndSetColumnList(data);
 
       self.$el.find(".empty-message").addClass("hide");
-      self.$el.find(".filter-table").removeClass("hide");
+      self.$el.find(".filter-table, .sort-column").removeClass("hide");
     },
     error: function (_xhr, _status, _error) {
     },

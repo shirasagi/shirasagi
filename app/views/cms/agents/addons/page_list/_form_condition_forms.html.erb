@@ -63,9 +63,12 @@
 
   <% if @item.is_a?(Article::Part::Page) %>
   <dt class="depth-2"><%= @model.t :sort_column_name %><%= @model.tt :sort_column_name %></dt>
-  <dd>
-    <%= f.select :sort_column_name, options_for_select(column_names, selected: @item.sort_column_name), include_blank: true %>
-    <%= f.select :sort_column_direction, @item.sort_column_direction_options, include_blank: true %>
+  <dd class="depth-2">
+    <div class="empty-message<% if column_names.present? %> hide<% end %>"><%= t("cms.condition_form.choose_forms_at_first") %></div>
+    <div class="sort-column<% if column_names.blank? %> hide<% end %>">
+      <%= f.select :sort_column_name, options_for_select(column_names, selected: @item.sort_column_name), include_blank: true %>
+      <%= f.select :sort_column_direction, @item.sort_column_direction_options, include_blank: true %>
+    </div>
   </dd>
   <% end %>
 

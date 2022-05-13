@@ -187,6 +187,13 @@ module Cms::Addon::List
       { '$or' => conditions }
     end
 
+    def sort_by_column_name(pages)
+      pages = pages.entries.sort_by do |a|
+        a ? a.column_values.entries.find { |cv| cv.name == sort_column_name }.try(:export_csv_cell) : nil
+      end
+      sort_column_direction == "desc" ? pages.reverse : pages
+    end
+
     def render_loop_html(item, opts = {})
       item.render_template(opts[:html] || loop_html, self)
     end

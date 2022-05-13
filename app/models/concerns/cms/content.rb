@@ -28,6 +28,7 @@ module Cms::Content
     field :released, type: DateTime
     field :released_type, type: String, default: ->{ self.class.default_released_type }
     field :first_released, type: DateTime
+    field :imported, type: DateTime
     field :md5, type: String
 
     permit_params :state, :name, :index_name, :filename, :basename, :order, :released, :released_type, :route

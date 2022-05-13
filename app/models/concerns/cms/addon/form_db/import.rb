@@ -75,7 +75,7 @@ module Cms::Addon::FormDb::Import
         next unless result
       end
 
-      page_name = params[import_page_name.presence || Article::Page.t(:name)]
+      page_name = params[import_page_name.presence || Article::Page.t(:name)].to_s.gsub(/[\r\n]+/, ' ')
       next unless page_name.present?
 
       if import_primary_key.present?
@@ -96,6 +96,7 @@ module Cms::Addon::FormDb::Import
       pippi_import_maru_columns.each { |c| params[c] = c if params[c] == '○' }
 
       item_changed = item.changed?
+      item.imported = Time.zone.now
 
       if save_page(item, params)
         if @task
