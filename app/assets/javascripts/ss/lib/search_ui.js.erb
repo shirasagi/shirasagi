@@ -31,7 +31,9 @@ this.SS_SearchUI = (function () {
 
     var $data = $item.closest("[data-id]");
     var data = $data[0].dataset;
-    data.name ||= $data.find(".select-item").text() || $item.text() || $data.text();
+    if (!data.name) {
+      data.name = $data.find(".select-item").text() || $item.text() || $data.text();
+    }
 
     var tr = ejs.render(template, { data: data, attr: attr });
 
