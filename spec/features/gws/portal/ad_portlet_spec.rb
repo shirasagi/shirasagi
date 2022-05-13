@@ -62,6 +62,12 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         expect(portlet.ad_pause).to eq ad_pause
         expect(portlet.ad_files.count).to eq 1
         portlet.ad_files.first.becomes_with(SS::LinkFile).tap do |file|
+          expect(file.name).to eq "logo.png"
+          expect(file.filename).to eq "logo.png"
+          expect(file.site_id).to be_blank
+          expect(file.model).to eq Gws::Portal::UserPortlet.model_name.i18n_key.to_s
+          expect(file.owner_item_id).to eq portlet.id
+          expect(file.owner_item_type).to eq portlet.class.name
           expect(file.link_url).to eq url
         end
       end

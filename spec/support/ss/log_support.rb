@@ -15,7 +15,7 @@ module SS
         if @tmp_file
           if puts_to_console
             @tmp_file.rewind
-            IO.copy_stream(@tmp_file, STDOUT)
+            IO.copy_stream(@tmp_file, $stdout)
           end
 
           @tmp_file.close rescue nil
@@ -75,9 +75,7 @@ module SS
   end
 end
 
-if ENV["ECHO_LOGS_ON_FAILURE"] == "enable"
-  RSpec.configuration.extend(SS::LogSupport)
-  RSpec.configuration.before(:suite) do
-    SS::LogSupport.install_stdout_logger
-  end
+RSpec.configuration.extend(SS::LogSupport)
+RSpec.configuration.before(:suite) do
+  SS::LogSupport.install_stdout_logger
 end

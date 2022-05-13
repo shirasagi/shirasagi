@@ -31,7 +31,14 @@ describe "gws_sites", type: :feature, dbscope: :example, tmpdir: true, js: true 
 
       site.reload
       expect(site.logo_application_name).to eq logo_application_name
-      expect(site.logo_application_image).to be_present
+      site.logo_application_image.tap do |image_file|
+        expect(image_file.name).to eq "keyvisual.jpg"
+        expect(image_file.filename).to eq "keyvisual.jpg"
+        expect(image_file.site_id).to be_blank
+        expect(image_file.model).to eq "ss/logo_file"
+        expect(image_file.owner_item_id).to eq site.id
+        expect(image_file.owner_item_type).to eq site.class.name
+      end
 
       # check that logs is appeared on portal
       visit gws_portal_path(site: site)

@@ -472,6 +472,27 @@ describe Article::Page, dbscope: :example do
         expect(::File.exist?(file.public_path)).to be_falsey
       end
     end
+
+    context "when page is published with /fs access restricted" do
+      subject { create :article_page, cur_node: node, state: "closed", html: body, file_ids: [ file.id ] }
+
+      it do
+        expect(file.site_id).to eq cms_site.id
+        expect(file.user_id).to eq cms_user.id
+        expect(subject.file_ids).to include(file.id)
+
+        expect(::File.exist?(file.public_path)).to be_falsey
+        expect(::File.exist?(subject.path)).to be_falsey
+
+        cms_site.update(file_fs_access_restriction_state: "enabled")
+
+        subject.state = "public"
+        subject.save!
+
+        expect(::File.exist?(file.public_path)).to be_falsey
+        expect(::File.size(subject.path)).to be > 0
+      end
+    end
   end
 
   describe "what article/page exports to liquid" do

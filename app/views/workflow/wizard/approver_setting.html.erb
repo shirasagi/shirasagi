@@ -33,58 +33,7 @@ end
       });
     }
   });
-  $(".btn.deselect").on("click", SS_SearchUI.deselect);
-
-  var approverSelector = function($item) {
-    var $dl = SS_SearchUI.anchorAjaxBox.closest("dl");
-
-    var data = $item.closest("[data-id]");
-    var levelAndId = data.data("id").split(',');
-    var level = levelAndId[0];
-    var id = levelAndId[1];
-    var name = data.data("name") || data.find(".select-item").text() || $item.text() || data.text();
-
-    var $input = $('<input type="hidden" name="workflow_approvers">');
-    $input.val(level + "," + id + ",,pending,");
-
-    var $a = $('<a class="deselect btn" href="#"><%= I18n.t "ss.buttons.delete" %></a>');
-    $a.on("click", SS_SearchUI.deselect);
-
-    var $tr = $("<tr />").attr("data-id", levelAndId.join(','));
-    $tr.append($('<td />').append($input).append(name));
-    $tr.append($('<td />').append($a));
-    SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tbody").prepend($tr);
-    SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected").trigger("change");
-  };
-
-  $('a.ajax-box.approvers').data('on-select', function($item) {
-    approverSelector($item);
-  });
-
-  var circulationSelector = function($item) {
-    var $dl = SS_SearchUI.anchorAjaxBox.closest("dl");
-
-    var data = $item.closest("[data-id]");
-    var levelAndId = data.data("id").split(',');
-    var id = levelAndId[1];
-    var name = data.data("name") || data.find(".select-item").text() || $item.text() || data.text();
-
-    var $input = $('<input type="hidden" name="workflow_circulations">');
-    $input.val("<%= level %>," + id + ",pending,");
-
-    var $a = $('<a class="deselect btn" href="#"><%= I18n.t "ss.buttons.delete" %></a>');
-    $a.on("click", SS_SearchUI.deselect);
-
-    var $tr = $("<tr />").attr("data-id", levelAndId.join(','));
-    $tr.append($('<td />').append($input).append(name));
-    $tr.append($('<td />').append($a));
-    SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tbody").prepend($tr);
-    SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected").trigger("change");
-  };
-
-  $('a.ajax-box.circulations').data('on-select', function($item) {
-    circulationSelector($item);
-  });
+  $(".mod-workflow-request").on("click", ".btn.deselect", SS_SearchUI.deselect);
 
   <% if use_agent %>
   $('input[name=agent_type]').on('change', function() {
@@ -124,7 +73,7 @@ end
   <dt><%= @model.t :workflow_approvers %><%= @model.tt :workflow_approvers %></dt>
   <dd>
     <%= hidden_field_tag "workflow_required_counts", false %>
-    <%= link_to t("workflow.search_approvers.index"), approvers_path(level: level, approver_ids: approver_ids), class: "btn ajax-box approvers" %>
+    <%= link_to t("workflow.search_approvers.index"), approvers_path(level: level, approver_ids: approver_ids), class: "btn ajax-box approvers", "data-template" => "approver-template" %>
   </dd>
   <dd>
     <table class="index ajax-selected approvers" style="display: none;">
@@ -137,13 +86,22 @@ end
       <tbody>
       </tbody>
     </table>
+    <script id="approver-template" type="text/x-ejs">
+      <tr data-id="<%%= data.id %>">
+        <td>
+          <input type="hidden" name="workflow_approvers" value="<%%= data.id %>,,pending,">
+          <%%= data.name %>
+        </td>
+        <td><a class="deselect btn" href="#"><%= I18n.t "ss.buttons.delete" %></a></td>
+      </tr>
+    </script>
   </dd>
 </dl>
 <% if @ss_mode == :gws %>
 <dl class="see request-setting">
   <dt><%= @model.t :workflow_circulations %><%= @model.tt :workflow_circulations %></dt>
   <dd>
-    <%= link_to t("workflow.search_circulations.index"), approvers_path(level: "circulation#{level}"), class: "btn ajax-box circulations" %>
+    <%= link_to t("workflow.search_circulations.index"), approvers_path(level: "circulation#{level}"), class: "btn ajax-box circulations", "data-template" => "circulation-template" %>
   </dd>
   <dd>
     <table class="index ajax-selected circulations" style="display: none;">
@@ -156,6 +114,15 @@ end
       <tbody>
       </tbody>
     </table>
+    <script id="circulation-template" type="text/x-ejs">
+      <tr data-id="<%%= data.id %>">
+        <td>
+          <input type="hidden" name="workflow_circulations" value="<%= level %>,<%%= data.id.split(',')[1] %>,pending,">
+          <%%= data.name %>
+        </td>
+        <td><a class="deselect btn" href="#"><%= I18n.t "ss.buttons.delete" %></a></td>
+      </tr>
+    </script>
   </dd>
 </dl>
 <% end %>

@@ -92,6 +92,7 @@ Rails.application.routes.draw do
       put "reload_site_usages" => "site_usages#reload"
       post "validation" => "validation#validate"
       post "default_group" => "default_groups#update"
+      get "cke_config" => "cke_config#index"
 
       resources :files, concerns: [:deletion, :file_api]
     end

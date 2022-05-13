@@ -117,7 +117,7 @@ module SS::Addon
         ss_file.user_id = @cur_user.try(:id) || try(:user_id)
         ss_file.site_id = @cur_site.try(:id) || try(:site_id)
         ss_file.in_file = file
-        ss_file.owner_item = self
+        ss_file.owner_item = SS::Model.container_of(self)
         ss_file.state = "public"
         ss_file.save
 

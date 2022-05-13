@@ -111,6 +111,10 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       file1 = SS::File.all.where(model: "workflow/approver_file").order_by(id: -1).first
       expect(file1.name).to eq "logo.png"
       expect(file1.filename).to eq "logo.png"
+      expect(file1.site_id).to be_blank
+      expect(file1.model).to eq "workflow/approver_file"
+      expect(file1.owner_item_id).to eq item.id
+      expect(file1.owner_item_type).to eq item.class.name
 
       item.reload
       expect(item.workflow_user_id).to eq admin.id
@@ -166,6 +170,10 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       file2 = SS::File.all.where(model: "workflow/approver_file").order_by(id: -1).first
       expect(file2.name).to eq "logo.png"
       expect(file2.filename).to eq "logo.png"
+      expect(file2.site_id).to be_blank
+      expect(file2.model).to eq "workflow/approver_file"
+      expect(file2.owner_item_id).to eq item.id
+      expect(file2.owner_item_type).to eq item.class.name
 
       item.reload
       expect(item.workflow_user_id).to eq admin.id
