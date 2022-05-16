@@ -67,6 +67,8 @@ production: &production
   markdown:
     help_url: "https://help.github.com/articles/basic-writing-and-formatting-syntax/"
 
+  updates_and_reloads_nginx_conf: false
+
 test:
   <<: *production
   disable: false
