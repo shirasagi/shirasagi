@@ -27,7 +27,7 @@ Rails.application.routes.draw do
     resources :test_members, concerns: :deletion
     resources :entries, concerns: :deletion
     resources :columns, concerns: :deletion
-    resources :backnumbers, concerns: :deletion
+    resources :backnumbers, only: [:index]
 
     resources :member_pages, module: :member_page, controller: :main, concerns: [:deletion, :command] do
       get :delivery_confirmation, on: :member
@@ -37,7 +37,7 @@ Rails.application.routes.draw do
       post :delivery_test, on: :member
       get :members, module: :member_page, controller: :members, action: :index, on: :collection
     end
-    resources :category_nodes, concerns: :deletion
+    resources :category_nodes, only: [:index]
   end
 
   node "ezine" do

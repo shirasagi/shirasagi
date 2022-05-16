@@ -53,7 +53,7 @@ Rails.application.routes.draw do
     resources :photo_categories, concerns: :deletion
     resources :photo_locations, concerns: :deletion
     resources :photo_spots, concerns: [:deletion, :command]
-    resources :registrations, concerns: :deletion
+    resources :registrations, only: [:index]
 
     # resources :groups, concerns: :deletion do
     #   resources :members, controller: :group_members, concerns: :deletion

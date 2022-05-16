@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   content "ckan" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
-    resources :pages, concerns: [:deletion]
+    resources :pages, only: [:index]
   end
 
   node "ckan" do
