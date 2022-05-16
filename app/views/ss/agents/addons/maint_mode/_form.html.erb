@@ -38,11 +38,13 @@
 </dl>
 
 <%= jquery do %>
-  var maintModeVal = $('#item_maint_mode').val();
+  var maintModeVal = $("#item_maint_mode").val();
   if (maintModeVal === "disabled") {
-    $('.maint-mode').hide();
+    $(".maint-mode").hide();
   }
-  $('#item_maint_mode').on('change', function() {
-    $('.maint-mode').toggle();
+
+  $("#item_maint_mode").on("change", function() {
+    var val = $(this).val();
+    $(".maint-mode").toggle(val === "enabled");
   });
 <% end %>
