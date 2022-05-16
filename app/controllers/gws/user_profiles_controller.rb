@@ -2,18 +2,36 @@ class Gws::UserProfilesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  menu_view false
+  navi_view "gws/user_settings/navi"
+  menu_view "sns/user_accounts/menu"
 
   model Gws::User
+
+  private
+
+  def set_crumbs
+    @crumbs << [ t("sns.profile"), action: :show ]
+  end
+
+  def append_view_paths
+    append_view_path "app/views/sns/user_accounts"
+    super
+  end
+
+  def permit_fields
+    [ :name, :kana, :email, :tel, :tel_ext ]
+  end
 
   def set_item
     @item = @cur_user
   end
 
+  public
+
   def show
     respond_to do |format|
       format.html { render }
-      format.json {
+      format.json do
         index = @cur_user.imap_default_index || 0
         user_setting = @cur_user.imap_settings[index]
         base_setting = @cur_user.imap_default_settings
@@ -36,7 +54,31 @@ class Gws::UserProfilesController < ApplicationController
 
         data[:user][:password] = nil
         render json: data.to_json
-      }
+      end
     end
+  end
+
+  def edit
+    render
+  end
+
+  def update
+    @item.attributes = get_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    render_update @item.save
+  end
+
+  def edit_password
+    @model = SS::PasswordUpdateService
+    @item = SS::PasswordUpdateService.new(cur_user: @cur_user)
+    render
+  end
+
+  def update_password
+    @model = SS::PasswordUpdateService
+    @item = SS::PasswordUpdateService.new(cur_user: @cur_user)
+    @item.attributes = params.require(:item).permit(:old_password, :new_password, :new_password_again)
+    @item.in_updated = params[:_updated].to_s
+    render_update @item.update_password, render: { template: "edit_password" }
   end
 end

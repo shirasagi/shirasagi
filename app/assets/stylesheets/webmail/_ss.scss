@@ -224,6 +224,12 @@ li.webmail-accounts {
     .from, .to {
       width: 200px;
       padding-right: 5px;
+      a { color: inherit; }
+    }
+    .icon-reply {
+      margin-right: .2rem;
+      color: #a5f;
+      vertical-align: top;
     }
     .title {
       width: calc(100% - 400px);

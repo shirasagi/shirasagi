@@ -18,7 +18,10 @@ Rails.application.routes.draw do
     get "connection" => "connection#index", as: :connection
 
     resource :user_profile, as: :cur_user_profile, only: [:show]
-    resource :user_account, as: :cur_user_account
+    resource :user_account, as: :cur_user_account do
+      get :edit_password, on: :member
+      post :update_password, on: :member
+    end
 
     resources :user_files, concerns: [:deletion, :file_api], as: :cur_user_files do
       get :resize, on: :member

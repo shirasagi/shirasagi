@@ -1,26 +1,26 @@
 <dl class="see">
   <dt><%= @model.t :name %></dt>
-  <dd><%= @item.send :name %></dd>
+  <dd><%= @item.name %></dd>
 
   <dt><%= @model.t :kana %></dt>
-  <dd><%= @item.send :kana %></dd>
+  <dd><%= @item.kana %></dd>
 
   <dt><%= @model.t :uid %></dt>
   <dd><%= @item.uid %></dd>
 
   <% if @item.organization_uid.present? %>
   <dt><%= @model.t :organization_uid %></dt>
-  <dd><%= @item.send :organization_uid %></dd>
+  <dd><%= @item.organization_uid %></dd>
   <% end %>
 
   <dt><%= @model.t :email %></dt>
-  <dd><%= @item.send :email %></dd>
+  <dd><%= @item.email %></dd>
 
   <dt><%= @model.t :tel %></dt>
-  <dd><%= @item.send :tel %></dd>
+  <dd><%= @item.tel %></dd>
 
   <dt><%= @model.t :tel_ext %></dt>
-  <dd><%= @item.send :tel_ext %></dd>
+  <dd><%= @item.tel_ext %></dd>
 
   <dt><%= @model.t :type %></dt>
   <dd><%= @item.label :type %></dd>
@@ -56,16 +56,29 @@
   <dt><%= @model.t :deletion_lock_state %></dt>
   <dd><%= @item.label :deletion_lock_state %></dd>
 
-  <% if @item.organization.present? %>
+  <% if @ss_mode != :gws && @item.organization.present? %>
   <dt><%= @model.t :organization_id %></dt>
   <dd><%= @item.organization.name %></dd>
   <% end %>
 
   <dt><%= @model.t :group_ids %></dt>
-  <dd><%=br @item.groups.order_by(name: 1).map{|c| c.name } %></dd>
+  <% if @ss_mode == :gws %>
+    <% main_group = @item.gws_main_group(@cur_site) %>
+    <dd>
+      <% @item.groups.site(@cur_site).active.order_by(name: 1).each do |c| %>
+        <% if main_group && main_group.id == c.id %>
+          <strong><b><%= c.name %></b></strong><br />
+        <% else %>
+          <%= c.name %><br />
+        <% end %>
+      <% end %>
+    </dd>
+  <% else %>
+    <dd><%= br @item.groups.order_by(name: 1).map { |c| c.name } %></dd>
+  <% end %>
 
   <% if @item.remark.present? %>
   <dt><%= @model.t :remark %></dt>
-  <dd><%=br @item.send :remark %></dd>
+  <dd><%= br @item.remark %></dd>
   <% end %>
 </dl>

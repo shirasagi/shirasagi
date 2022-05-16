@@ -228,6 +228,11 @@ module Gws::Model::File
   end
 
   def generate_public_file
+    if site && site.try(:file_fs_access_restricted?)
+      remove_public_file
+      return
+    end
+
     dir = public_dir
     return if dir.blank?
 
