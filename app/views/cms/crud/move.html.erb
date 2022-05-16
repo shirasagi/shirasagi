@@ -5,7 +5,7 @@ confirm = <%= @link_check.present? %>;
 if (confirm) {
   path = "<%= cms_apis_contents_html_path %>";
   keyword = "<%= @source %>";
-  option = "url";
+  option = "string";
   data = {
     s: {
       keyword: keyword,

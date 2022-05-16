@@ -682,9 +682,11 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     }
 
     #gws-group-switch-menu {
+      max-width: 200px;
       height: auto;
       min-height: 200px;
       max-height: 400px;
+      overflow-x: auto;
       overflow-y: auto;
       .gws-group-switch-menu-header {
         border-bottom: 1px solid  #f2f2f2;
@@ -693,7 +695,8 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
         .caret { float: left; }
       }
       .gws-group-switch-item {
-        display: block;
+        display: flex;
+        align-items: center;
         padding: 8px 10px 8px 12px;
         cursor: pointer;
         input[type="radio"] {
@@ -702,7 +705,11 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
         }
         .gws-group-switch-name {
           display: inline-block;
-          width: calc(100% - 32px);
+          width: 100%;
+          max-width: unset;
+          overflow: unset;
+          text-overflow: unset;
+          white-space: normal;
         }
       }
     }
@@ -1773,6 +1780,22 @@ dl.see {
   }
   > dt.depth-3 {
     padding-left: 40px;
+    @include mb {
+      + dd {
+        padding-left: 40px;
+      }
+    }
+  }
+  > dt.depth-4 {
+    padding-left: 60px;
+    @include mb {
+      + dd {
+        padding-left: 40px;
+      }
+    }
+  }
+  > dt.depth-5 {
+    padding-left: 80px;
     @include mb {
       + dd {
         padding-left: 40px;

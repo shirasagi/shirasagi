@@ -8,11 +8,12 @@ module SS::Addon
       field :map_api_key, type: String
       field :map_api_layer, type: String
       field :show_google_maps_search, type: String, default: "active"
+      field :map_api_mypage, type: String, default: "active"
       field :map_center, type: Map::Extensions::Loc
       field :map_max_number_of_markers, type: Integer
 
-      permit_params :map_api, :map_api_key, :map_api_layer, :show_google_maps_search, :map_max_number_of_markers
-      permit_params map_center: %i[lat lng]
+      permit_params :map_api, :map_api_key, :map_api_layer, :show_google_maps_search, :map_api_mypage
+      permit_params :map_max_number_of_markers, map_center: %i[lat lng]
 
       validates :map_max_number_of_markers, numericality: { only_integer: true, greater_than: 0, allow_blank: true }
       validate :validate_map_max_number_of_markers
@@ -45,6 +46,12 @@ module SS::Addon
     def map_effective_layers
       layer = map_layers[map_api_layer] || map_layers[map_layers.keys.first]
       [layer]
+    end
+
+    def map_api_mypage_options
+      %w(active expired).collect do |k|
+        [I18n.t("ss.options.state.#{k}"), k]
+      end
     end
 
     def map_setting

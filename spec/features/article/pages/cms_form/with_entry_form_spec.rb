@@ -367,7 +367,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             find("input.height").set(column12_height2)
             find("input.width").set(column12_width2)
             find("input.caption").set(column12_caption2)
-            click_on "表を作成する"
+            click_on I18n.t("cms.column_table.create")
           end
           within ".column-value-cms-column-youtube" do
             fill_in "item[column_values][][in_wrap][url]", with: column13_url2
@@ -602,7 +602,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             find("input.height").set(column12_height1)
             find("input.width").set(column12_width1)
             find("input.caption").set(column12_caption1)
-            click_on "表を作成する"
+            click_on I18n.t("cms.column_table.create")
           end
 
           within ".column-value-palette" do
@@ -754,7 +754,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             find("input.height").set(column12_height2)
             find("input.width").set(column12_width2)
             find("input.caption").set(column12_caption2)
-            click_on "表を作成する"
+            click_on I18n.t("cms.column_table.create")
           end
           within ".column-value-cms-column-youtube" do
             fill_in "item[column_values][][in_wrap][url]", with: column13_url2

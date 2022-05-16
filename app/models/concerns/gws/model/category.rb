@@ -72,6 +72,7 @@ module Gws::Model::Category
   end
 
   def dependant_scope
-    self.class.site(@cur_site || site)
+    s = @cur_site || site
+    s ? self.class.site(s) : self.class.none
   end
 end

@@ -73,7 +73,7 @@ class Gws::Column::Value::FileUpload < Gws::Column::Value::Base
       next if file.model == model_name
 
       file.model = model_name
-      file.owner_item = _parent
+      file.owner_item = SS::Model.container_of(self)
       file.save!
     end
   end

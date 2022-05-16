@@ -2,28 +2,27 @@ class Sys::Db::CollsController < ApplicationController
   include Sys::BaseFilter
   include Sys::CrudFilter
 
-  before_action :set_db
-
   menu_view nil
+  helper_method :db
 
   private
 
-  def set_crumbs
-    @crumbs << [t("sys.db_tool"), sys_db_path]
+  def db
+    @db ||= begin
+      raise "404" unless SS::User.allowed?(:edit, @cur_user)
+      Mongoid.default_client
+    end
   end
 
-  def set_db
-    raise '500' unless Rails.env.match?(/development|test/)
-    @db = SS::User.collection.database
+  def set_crumbs
+    @crumbs << [ t("sys.db_tool"), sys_db_path ]
   end
 
   public
 
   def index
-    raise "403" unless SS::User.allowed?(:edit, @cur_user)
-
-    @items = @db.collections
-    @items = @items.select { |m| m.name !~ /^fs\./ }
+    @items = db.collections
+    @items = @items.sort_by { |item| item.name }
   end
 
   def new
@@ -40,5 +39,9 @@ class Sys::Db::CollsController < ApplicationController
 
   def destroy
     raise
+  end
+
+  def info
+    render
   end
 end

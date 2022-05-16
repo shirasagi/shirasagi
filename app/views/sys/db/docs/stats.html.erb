@@ -1,0 +1,29 @@
+<div class="cms-tabs">
+  <% path = url_for(action: :index) %>
+  <%= link_to(path, class: [ params[:action] == "index" ? 'current' : nil ]) do %>
+    <span class="tab-name">Documents</span>
+  <% end %>
+  <% path = url_for(action: :indexes) %>
+  <%= link_to(path, class: [ params[:action] == "indexes" ? 'current' : nil ]) do %>
+    <span class="tab-name">Indexes</span>
+  <% end %>
+  <% path = url_for(action: :stats) %>
+  <%= link_to(path, class: [ params[:action] == "stats" ? 'current' : nil ]) do %>
+    <span class="tab-name">Stats</span>
+  <% end %>
+</div>
+
+<div class="addon-views">
+  <%= render "ss/crud/addon", addon: { id: "addon-stats", head: "Stats" } do %>
+    <%= link_to "https://docs.mongodb.com/manual/reference/command/collStats/#mongodb-dbcommand-dbcmd.collStats", "https://docs.mongodb.com/manual/reference/command/collStats/#mongodb-dbcommand-dbcmd.collStats", target: "_blank", rel: "noopener" %>
+    <%=
+      begin
+        db.command(collStats: params[:coll]).documents.first.try do |result|
+          content_tag(:dl, class: "see") { render "sys/db/colls/bson_document", result: result, depth: 1 }
+        end
+      rescue => e
+        e.to_s
+      end
+    %>
+  <% end %>
+</div>

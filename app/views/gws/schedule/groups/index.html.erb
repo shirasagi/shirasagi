@@ -1,5 +1,5 @@
 <%= jquery do %>
-var tree = SS_TreeUI.render(".index.groups");
+var tree = SS_TreeUI.render(".index.groups", { descendants_check: true });
 $(".expand-all").on("click", function() {
   tree.expandAll();
 });

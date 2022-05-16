@@ -166,7 +166,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
       self.contains_urls.clear if self.contains_urls.present?
     else
       begin
-        self.contains_urls = value.scan(/(?:href|src)="(.*?)"/).flatten.uniq
+        self.contains_urls = value.scan(/(?:href|src)="(.*?)"/).flatten.uniq.compact.collect(&:strip)
       rescue
         self.contains_urls
       end

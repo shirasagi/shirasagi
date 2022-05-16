@@ -4,7 +4,7 @@ class Sns::UserAccountsController < ApplicationController
 
   model SS::User
 
-  menu_view "ss/crud/resource_menu"
+  # menu_view "ss/crud/resource_menu"
 
   private
 
@@ -17,7 +17,7 @@ class Sns::UserAccountsController < ApplicationController
   end
 
   def permit_fields
-    [:name, :kana, :email, :in_password, :tel, :tel_ext]
+    [ :name, :kana, :email, :tel, :tel_ext ]
   end
 
   def get_params
@@ -28,5 +28,21 @@ class Sns::UserAccountsController < ApplicationController
 
   def set_item
     @item = @sns_user
+  end
+
+  public
+
+  def edit_password
+    @model = SS::PasswordUpdateService
+    @item = SS::PasswordUpdateService.new(cur_user: @sns_user)
+    render
+  end
+
+  def update_password
+    @model = SS::PasswordUpdateService
+    @item = SS::PasswordUpdateService.new(cur_user: @sns_user)
+    @item.attributes = params.require(:item).permit(:old_password, :new_password, :new_password_again)
+    @item.in_updated = params[:_updated].to_s
+    render_update @item.update_password, render: { template: "edit_password" }
   end
 end
