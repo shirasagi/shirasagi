@@ -259,7 +259,7 @@ module Cms::Content
   end
 
   def state_changeable?
-    self.class.include?(Cms::Addon::Release)
+    self.is_a?(Cms::Addon::Release)
   end
 
   private
