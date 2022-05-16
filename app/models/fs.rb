@@ -90,6 +90,10 @@ module Fs
     []
   end
 
+  def sanitize_filename(filename)
+    filename.gsub(/[<>:"\/\\|?*]/, '_').slice(0..60)
+  end
+
   def tail_lines(path, limit_in_bytes: nil)
     limit_in_bytes ||= DEFAULT_TAIL_BYTES
     limit_in_bytes = DEFAULT_TAIL_BYTES if limit_in_bytes < 256

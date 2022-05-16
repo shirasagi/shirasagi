@@ -57,8 +57,6 @@ module Webmail
   end
 
   class MailExportJob < Webmail::ApplicationJob
-    include SS::ExportHelper
-
     def perform(opts = {})
       @datetime = Time.zone.now
       @mail_ids = opts[:mail_ids]
@@ -86,10 +84,10 @@ module Webmail
           @imap.select(m.mailbox)
           mail = @imap.mails.find(m.uid, :rfc822)
 
-          basename = sanitize_filename("#{mail.id}_#{mail.subject}")
+          basename = ::Fs.sanitize_filename("#{mail.id}_#{mail.subject}")
           mailbox = enum.mailbox_locale_name(m.mailbox)
           if mailbox.present?
-            mailbox = sanitize_filename(mailbox)
+            mailbox = ::Fs.sanitize_filename(mailbox)
             mailbox = mailbox.tr(".", "/")
             basename = "#{mailbox}/#{basename}"
           end
