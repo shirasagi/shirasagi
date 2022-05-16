@@ -247,7 +247,6 @@ class Uploader::FilesController < ApplicationController
       params[:ids].include?(File.basename(file.saved_path))
     end
 
-
     if params[:destroy_all]
       render_confirmed_all(destroy_items, location: "#{uploader_files_path}/#{@item.filename}")
       return

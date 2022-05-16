@@ -17,7 +17,7 @@ module SS::ButtonToHelper
     url    = options.is_a?(String) ? options : url_for(options)
     remote = html_options.delete("remote")
     method = html_options.delete("method").to_s
-    if options.is_a?(Hash) && confirmation_required?(options[:model])
+    if options.is_a?(Hash) && confirmation_required?(html_options[:model])
       confirm = html_options.delete("confirm")
     end
     params = html_options.delete("params")
