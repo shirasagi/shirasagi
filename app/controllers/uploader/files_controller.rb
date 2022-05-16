@@ -263,7 +263,10 @@ class Uploader::FilesController < ApplicationController
     @items = []
 
     params[:ids].each do |path|
-      item = @model.file("#{@cur_site.path}/#{path}")
+      target_path = File.expand_path("#{@cur_site.path}/#{path}")
+      next if !target_path.start_with?(@cur_site.path)
+
+      item = @model.file(target_path)
       item.destroy
       @items << item
     end
