@@ -39,7 +39,6 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
       visit cms_forms_path(site: site)
       first(".list-head [type='checkbox']").click
 
-      save_full_screenshot
       within ".list-head-action" do
         click_on I18n.t("ss.links.delete")
       end

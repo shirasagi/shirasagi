@@ -43,7 +43,12 @@ module SS::ButtonToHelper
   end
 
   def confirmation_required?(model)
-    sys_setting?(model) || gws_site?(model) || ss_setting?(model) || webmail?(model) || opendata?(model)
+    sys_setting?(model) ||
+      ss_setting?(model) ||
+      opendata?(model) ||
+      gws_site?(model) ||
+      job_task?(model) ||
+      webmail?(model)
   end
 
   def sys_setting?(model)
@@ -64,5 +69,9 @@ module SS::ButtonToHelper
 
   def opendata?(model)
     model.to_s.start_with?("Opendata::")
+  end
+
+  def job_task?(model)
+    model == Job::Task
   end
 end
