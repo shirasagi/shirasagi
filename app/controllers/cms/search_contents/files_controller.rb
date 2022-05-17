@@ -7,6 +7,10 @@ class Cms::SearchContents::FilesController < ApplicationController
 
   navi_view "cms/search_contents/navi"
 
+  if Rails.env.development?
+    before_action { ::Rails.application.eager_load! }
+  end
+
   private
 
   def set_crumbs
@@ -20,11 +24,9 @@ class Cms::SearchContents::FilesController < ApplicationController
   public
 
   def index
-    file_ids = Cms::Page.site(@cur_site).pluck(:file_ids).flatten.uniq.compact
-    @items = @model.where(site_id: @cur_site).
-      search(params[:s]).
-      in(id: file_ids).
-      order_by(filename: 1).
-      page(params[:page]).per(50)
+    service = Cms::FileSearchService.new(cur_site: @cur_site, cur_user: @cur_user)
+    service.s = params.require(:s).permit(:keyword) if params[:s]
+    service.page = params[:page].try { |page| page.to_s.numeric? ? page.to_s.to_i - 1 : nil } || 0
+    @items = service.call
   end
 end

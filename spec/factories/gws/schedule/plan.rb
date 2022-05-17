@@ -22,8 +22,16 @@ FactoryBot.define do
 
     factory :gws_schedule_facility_plan_few_days do
       allday { 'allday' }
-      start_on { Time.zone.yesterday.change(hour: 10, minute: 0, second: 0).to_date }
-      end_on { start_at + 2.days }
+      start_on do
+        # stick to Tuesday
+        date = Time.zone.today
+        date += (2 - date.wday).days if date.wday < 2
+        date -= (date.wday - 2).days if date.wday > 2
+        date
+      end
+      start_at { nil }
+      end_on { start_on + 2.days }
+      end_at { nil }
     end
   end
 end

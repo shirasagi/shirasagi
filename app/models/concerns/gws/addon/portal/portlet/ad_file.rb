@@ -37,7 +37,7 @@ module Gws::Addon::Portal::Portlet
       ad_files.each do |file|
         file = file.becomes_with(SS::LinkFile)
         file.update!(
-          site_id: site_id, model: model_name.i18n_key, state: "closed", owner_item: self,
+          model: model_name.i18n_key, state: "closed", owner_item: self,
           link_url: link_urls[file.id.to_s]
         )
         ids << file.id

@@ -125,6 +125,7 @@ ja:
       send_message: メッセージを作成する
       copy_email_address: メールアドレスをコピー
       closed_save: 非公開にする
+      edit_password: パスワード変更
     buttons:
       save: 保存
       saving: 保存中
@@ -368,6 +369,7 @@ ja:
       text_type:
         plain: テキスト形式
         markdown: Markdown形式
+        cke: 書式編集
       wareki:
         seireki: 西暦
         meiji: 明治
@@ -521,6 +523,10 @@ ja:
         encoding: 文字コード
       ss/import_param:
         in_file: ファイル
+      ss/password_update_service:
+        new_password: 新しいパスワード
+        new_password_again: 新しいパスワード（入力確認）
+        old_password: 現在のパスワード
 
   mongoid:
     models:
@@ -728,6 +734,7 @@ ja:
         map_api_key: APIキー
         map_api_layer: 地図レイヤー
         show_google_maps_search: Googleマップへのリンク
+        map_api_mypage: 管理画面での地図表示
         map_center: 地図の中心座標
         map_max_number_of_markers: 最大地点数
       ss/addon/kana_setting:
@@ -757,6 +764,14 @@ ja:
         file_resizing_height: 高さ
         file_resizing_label: "%{size}（サイト設定）"
         multibyte_filename_state: 日本語ファイル名
+        file_fs_access_restriction_state: /fs のアクセス制限
+        file_fs_access_restriction_allowed_ip_addresses: 許可IPアドレス
+        file_fs_access_restriction_basic_auth: Basic認証
+        file_fs_access_restriction_basic_auth_id: Basic認証（ID）
+        file_fs_access_restriction_basic_auth_password: Basic認証（パスワード）
+        file_fs_access_restriction_env: 環境変数
+        file_fs_access_restriction_env_key: 環境変数（キー）
+        file_fs_access_restriction_env_value: 環境変数（値）
       ss/addon/trash_setting:
         trash_threshold: ゴミ箱保持期間
         trash_threshold_unit: ゴミ箱保持期間単位
@@ -1153,6 +1168,8 @@ ja:
         - サイトで使用するOpenLayersのレイヤーを選択します。
       show_google_maps_search:
         - 有効にすると、地図マーカーに「Googleマップで見る」リンクが表示されます。
+      map_api_mypage:
+        - 管理画面で地図を表示するか設定します。
       map_center:
         - 地図の中心座標を経度、緯度の順に入力します。
         - Googleマップは緯度、経度の順で表示しますが、これとは順番が逆になっているので注意してください。
@@ -1214,6 +1231,28 @@ ja:
         -
         - "アップロード可: 日本語ファイルはアップロード可ですが、日本語部分がアンダースコアに置き換わります。既定の動作です。"
         - "アップロード不可: 日本語ファイルをアップロードすることができなくなり、英数字・ハイフン・アンダースコアのみで構成されたファイルのみをアップロードすることができるようになります。"
+      file_fs_access_restriction_state:
+        - /fs 以下のアクセスを制限する場合、「有効」を選択してください。
+        - そして、有効にする場合、「許可IPアドレス」「Basic認証」「環境変数」のいずれかのフィールドに適切な設定を入力してください。
+        -
+        - この設定は、サブディレクトリ型サブサイトにおいて、nginx と協働でアクセス制限を実施するもので、
+        - 本設定のみでアクセス制限が有効になるわけではありません。
+      file_fs_access_restriction_allowed_ip_addresses:
+        - アクセスを許可する IP アドレスを設定します。
+        - 複数の IP アドレスを設定する場合は、改行で区切って設定します。
+        - "\"192.168.10.0/24\" や \"192.168.10.0/255.255.255.0\" のようなネットワークアドレスも設定することができます。"
+      file_fs_access_restriction_env:
+        - 許可する環境変数を設定します。
+        -
+        - これが想定するユースケースですが、nginx はクライアント証明書を認証すると、認証した Subject DN を $ssl_client_s_dn に、Issuer DN を $ssl_client_i_dn にセットします。
+        - これらを nginx の proxy_set_header でシラサギへ伝播し、シラサギで設定内容を確認するというケースを想定しています。
+        -
+        - "nginx の設定例:"
+        - proxy_set_header X-SSL_CLIENT_S_DN \$ssl_client_s_dn
+        -
+        - "シラサギの設定例:"
+        - "  環境変数（キー）: X-SSL_CLIENT_S_DN"
+        - "  環境変数（値）: 証明書 Subject DN"
     ss/addon/trash_setting:
       trash_threshold:
         - ゴミ箱の保持期間を設定できます。

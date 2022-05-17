@@ -35,7 +35,11 @@
         <li><%= link_to t("sns.profile"), sns_cur_user_profile_path %></li>
       <% end %>
 
-      <li><%= link_to t("job.task_manager"), job_sns_logs_path %></li>
+      <% if @ss_mode == :gws %>
+        <li><%= link_to t("job.task_manager"), gws_job_user_main_path %></li>
+      <% else %>
+        <li><%= link_to t("job.task_manager"), job_sns_logs_path %></li>
+      <% end %>
 
       <li>
         <div class="text-zoom" data-notice="<%= t('ss.notice.text_zoomed', count: ':size') %>">

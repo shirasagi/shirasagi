@@ -65,17 +65,17 @@ describe Cms::Page::GenerateJob, dbscope: :example do
       Fs.rm_rf ss_file3.public_path
       Fs.rm_rf ss_file4.public_path
 
-      described_class.bind(site_id: site).perform_now
+      expect { described_class.bind(site_id: site).perform_now }.to output(include(page1.url, page2.url)).to_stdout
     end
 
     it do
-      expect(File.exist?(page1.path)).to be_truthy
-      expect(File.exist?(ss_file1.public_path)).to be_truthy
+      expect(File.size(page1.path)).to be > 0
+      expect(File.size(ss_file1.public_path)).to be > 0
 
-      expect(File.exist?(page2.path)).to be_truthy
-      expect(File.exist?(ss_file2.public_path)).to be_truthy
-      expect(File.exist?(ss_file3.public_path)).to be_truthy
-      expect(File.exist?(ss_file4.public_path)).to be_truthy
+      expect(File.size(page2.path)).to be > 0
+      expect(File.size(ss_file2.public_path)).to be > 0
+      expect(File.size(ss_file3.public_path)).to be > 0
+      expect(File.size(ss_file4.public_path)).to be > 0
       expect(Cms::Task.count).to eq 2
       Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_pages').first.tap do |task|
         expect(task.state).to eq 'completed'
@@ -86,7 +86,7 @@ describe Cms::Page::GenerateJob, dbscope: :example do
         expect(task.logs).to include(include(page1.filename))
         expect(task.node_id).to be_nil
         # logs are saved in a file
-        expect(::File.exist?(task.log_file_path)).to be_truthy
+        expect(::File.size(task.log_file_path)).to be > 0
         # and there are no `logs` field
         expect(task[:logs]).to be_nil
       end
@@ -114,17 +114,18 @@ describe Cms::Page::GenerateJob, dbscope: :example do
       Fs.rm_rf ss_file3.public_path
       Fs.rm_rf ss_file4.public_path
 
-      described_class.bind(site_id: site, node_id: node).perform_now
+      expect { described_class.bind(site_id: site, node_id: node).perform_now }.to \
+        output(include(page1.url, page2.url)).to_stdout
     end
 
     it do
-      expect(File.exist?(page1.path)).to be_truthy
-      expect(File.exist?(ss_file1.public_path)).to be_truthy
+      expect(File.size(page1.path)).to be > 0
+      expect(File.size(ss_file1.public_path)).to be > 0
 
-      expect(File.exist?(page2.path)).to be_truthy
-      expect(File.exist?(ss_file2.public_path)).to be_truthy
-      expect(File.exist?(ss_file3.public_path)).to be_truthy
-      expect(File.exist?(ss_file4.public_path)).to be_truthy
+      expect(File.size(page2.path)).to be > 0
+      expect(File.size(ss_file2.public_path)).to be > 0
+      expect(File.size(ss_file3.public_path)).to be > 0
+      expect(File.size(ss_file4.public_path)).to be > 0
 
       expect(Cms::Task.count).to eq 2
       Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_pages').first.tap do |task|
@@ -164,7 +165,8 @@ describe Cms::Page::GenerateJob, dbscope: :example do
       Fs.rm_rf ss_file3.public_path
       Fs.rm_rf ss_file4.public_path
 
-      described_class.bind(site_id: site).perform_now
+      expect { described_class.bind(site_id: site).perform_now }.to \
+        output(include(I18n.t("mongoid.attributes.ss/addon/generate_lock.generate_locked"))).to_stdout
     end
 
     after do
@@ -190,7 +192,7 @@ describe Cms::Page::GenerateJob, dbscope: :example do
         expect(task.logs).not_to include(include(page1.filename))
         expect(task.node_id).to be_nil
         # logs are saved in a file
-        expect(::File.exist?(task.log_file_path)).to be_truthy
+        expect(::File.size(task.log_file_path)).to be > 0
         # and there are no `logs` field
         expect(task[:logs]).to be_nil
       end
@@ -204,6 +206,43 @@ describe Cms::Page::GenerateJob, dbscope: :example do
         expect(log.logs).to include(include(I18n.t('mongoid.attributes.ss/addon/generate_lock.generate_locked')))
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
+    end
+  end
+
+  describe "fist /fs is not restricted, and then /fs is restricted" do
+    before do
+      Fs.rm_rf node.path
+
+      Fs.rm_rf page1.path
+      Fs.rm_rf ss_file1.public_path
+
+      Fs.rm_rf page2.path
+      Fs.rm_rf ss_file2.public_path
+      Fs.rm_rf ss_file3.public_path
+      Fs.rm_rf ss_file4.public_path
+    end
+
+    it do
+      expect { described_class.bind(site_id: site).perform_now }.to output(include(page1.url, page2.url)).to_stdout
+
+      expect(File.size(page1.path)).to be > 0
+      expect(File.size(ss_file1.public_path)).to be > 0
+      expect(File.size(page2.path)).to be > 0
+      expect(File.size(ss_file2.public_path)).to be > 0
+      expect(File.size(ss_file3.public_path)).to be > 0
+      expect(File.size(ss_file4.public_path)).to be > 0
+
+      site.file_fs_access_restriction_state = "enabled"
+      site.save!
+
+      expect { described_class.bind(site_id: site).perform_now }.not_to output(include(page1.url, page2.url)).to_stdout
+
+      expect(File.size(page1.path)).to be > 0
+      expect(File.exist?(ss_file1.public_path)).to be_falsey
+      expect(File.size(page2.path)).to be > 0
+      expect(File.exist?(ss_file2.public_path)).to be_falsey
+      expect(File.exist?(ss_file3.public_path)).to be_falsey
+      expect(File.exist?(ss_file4.public_path)).to be_falsey
     end
   end
 end

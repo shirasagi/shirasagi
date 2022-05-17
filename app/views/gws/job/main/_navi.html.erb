@@ -1,0 +1,8 @@
+<nav class="mod-navi">
+  <h2><%= link_to t("job.task_manager"), gws_job_user_main_path %></h2>
+
+  <h3><%= link_to t('mongoid.models.gws/job/log'), gws_job_user_logs_path %></h3>
+  <h3><%= link_to t('gws/job.reservation'), gws_job_user_reservations_path %></h3>
+</nav>
+
+<%= render partial: 'gws/main/navi' %>

@@ -5,8 +5,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
   subject(:index_path) { cms_pages_path site.id }
 
   around do |example|
-    save_config = SS.config.cms.replace_urls_after_move
-    SS.config.replace_value_at(:cms, 'replace_urls_after_move', true)
+    save_config = SS.config.replace_value_at(:cms, 'replace_urls_after_move', true)
     perform_enqueued_jobs do
       example.run
     end
@@ -16,14 +15,14 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
   context "with auth", js: true do
     let(:page_html) { '<a href="/A/B/C/">/A/B/C/</a>' }
     let(:page2_html) { '<a href="/page.html">page.html</a>' }
-    let(:layout_layout_html) { '<a href="/page.html">page.html</a><a href="/A/B/C/">/A/B/C/</a>' }
-    let(:part_part_html) { '<a href="/page.html">page.html</a><a href="/A/B/C/">/A/B/C/</a>' }
+    let(:layout_layout_html) { "<a href='#{site.full_url}page.html'>page.html</a><a href='#{site.full_url}A/B/C/'>/A/B/C/</a>" }
+    let(:part_part_html) { '<a href="/page.html ">page.html</a><a href="/A/B/C/ ">/A/B/C/</a>' }
 
     before { login_cms_user }
     before(:each) do
       create(:cms_page, filename: "page.html", name: "page", html: page_html)
       create(:cms_page, filename: "A/B/C/page2.html", name: "page2", html: page2_html)
-      create(:cms_layout, filename: "layout.layout.html", name: "latyout", html: layout_layout_html)
+      create(:cms_layout, filename: "layout.layout.html", name: "layout", html: layout_layout_html)
       create(:cms_part_free, filename: "part.part.html", name: "part", html: part_part_html)
       create(:cms_node_page, site: site, filename: "A", name: "A")
       create(:cms_node_page, site: site, filename: "A/B", name: "B" )

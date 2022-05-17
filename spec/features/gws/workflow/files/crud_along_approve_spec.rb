@@ -47,7 +47,13 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, js: true do
       expect(item.name).to eq item_name
       expect(item.text).to eq item_text
       expect(item.files.count).to eq 1
-      expect(item.files.first.id).to eq file.id
+      item.files.first.tap do |item_file|
+        expect(item_file.id).to eq file.id
+        expect(item_file.site_id).to be_blank
+        expect(item_file.model).to eq "gws/workflow/file"
+        expect(item_file.owner_item_id).to eq item.id
+        expect(item_file.owner_item_type).to eq item.class.name
+      end
 
       #
       # Update
@@ -66,7 +72,13 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, js: true do
       expect(item.name).to eq item_name2
       expect(item.text).to eq item_text2
       expect(item.files.count).to eq 1
-      expect(item.files.first.id).to eq file.id
+      item.files.first.tap do |item_file|
+        expect(item_file.id).to eq file.id
+        expect(item_file.site_id).to be_blank
+        expect(item_file.model).to eq "gws/workflow/file"
+        expect(item_file.owner_item_id).to eq item.id
+        expect(item_file.owner_item_type).to eq item.class.name
+      end
 
       #
       # Soft Delete
