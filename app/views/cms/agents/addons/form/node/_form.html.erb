@@ -1,7 +1,7 @@
 <% render_form = proc do |form_id, form_name| %>
   <tr data-id="<%= form_id %>">
-    <td><%= f.hidden_field 'st_form_ids[]', value: form_id %> <%= form_name %></td>
-    <td><%= check_box_tag "#{f.object_name}[st_form_default_id]", form_id, @item.st_form_default_id == form_id %></td>
+    <td><%= f.hidden_field 'st_form_ids[]', value: form_id, id: nil %> <%= form_name %></td>
+    <td><%= radio_button_tag "#{f.object_name}[st_form_default_id]", form_id, @item.st_form_default_id == form_id, id: nil %></td>
     <td><%= link_to t('ss.buttons.delete'), '#', class: 'deselect btn' %></td>
   </tr>
 <% end %>
@@ -30,8 +30,8 @@
   </dd>
 </dl>
 
-<script type="text/html" class="form-template">
-  <% render_form.call(":id", ":name") %>
+<script type="text/ejs" class="form-template">
+  <% render_form.call("{%= id %}", "{%= name %}") %>
 </script>
 
 <%= jquery do %>
@@ -45,7 +45,7 @@
       return;
     }
 
-    var html = template.replace(/:id/g, formId).replace(/:name/, formName);
+    var html = ejs.render(template, { id: formId, name: formName }, { openDelimiter: "{", closeDelimiter: "}" });
 
     var $tbody = $("#addon-cms-agents-addons-form-node table.ajax-selected tbody");
     $tbody.prepend(html);

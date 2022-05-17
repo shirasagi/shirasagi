@@ -1,0 +1,32 @@
+<div class="cms-tabs">
+  <% path = url_for(action: :index) %>
+  <%= link_to(path, class: [ params[:action] == "index" ? 'current' : nil ]) do %>
+    <span class="tab-name">Documents</span>
+  <% end %>
+  <% path = url_for(action: :indexes) %>
+  <%= link_to(path, class: [ params[:action] == "indexes" ? 'current' : nil ]) do %>
+    <span class="tab-name">Indexes</span>
+  <% end %>
+  <% path = url_for(action: :stats) %>
+  <%= link_to(path, class: [ params[:action] == "stats" ? 'current' : nil ]) do %>
+    <span class="tab-name">Stats</span>
+  <% end %>
+</div>
+
+<div class="addon-views">
+  <%= render "ss/crud/addon", addon: { id: "addon-stats", head: "Indexes" } do %>
+    <dl class="see">
+      <% coll.indexes.each do |index| %>
+        <dt>name</dt>
+        <dd><%= index["name"] %></dd>
+
+        <% index.each do |key, value| %>
+          <% next if key == "name" %>
+
+          <dt class="depth-2"><%= key %></dt>
+          <dd class="depth-2"><%= value %></dd>
+        <% end %>
+      <% end %>
+    </dl>
+  <% end %>
+</div>

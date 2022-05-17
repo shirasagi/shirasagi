@@ -93,7 +93,11 @@ class Gws::Memo::Folder
   end
 
   def messages
-    Gws::Memo::Message.folder(self, user)
+    if user
+      Gws::Memo::Message.folder(self, user)
+    else
+      Gws::Memo::Message.none
+    end
   end
 
   def unseens
@@ -121,7 +125,11 @@ class Gws::Memo::Folder
   end
 
   def dependant_scope
-    self.class.site(site).user(user)
+    if site && user
+      self.class.site(site).user(user)
+    else
+      self.class.none
+    end
   end
 
   def sent_box?

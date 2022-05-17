@@ -189,7 +189,13 @@ module Cms::Addon::Form::Page
       form_contains_urls << column_value.link_url
     end
 
-    self.form_contains_urls = form_contains_urls.flatten.uniq
+    column_values.select{ |c| c[:_type] == 'Cms::Column::Value::FileUpload' }.each do |column_value|
+      if column_value.link_url.present?
+        form_contains_urls << column_value.link_url
+      end
+    end
+
+    self.form_contains_urls = form_contains_urls.flatten.uniq.compact.collect(&:strip)
   end
 
   def _delegate_callback_to_column_values(kind, &block)

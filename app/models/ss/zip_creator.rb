@@ -1,6 +1,5 @@
 class SS::ZipCreator
   include ActiveModel::Model
-  include SS::ExportHelper
 
   attr_reader :cur_site, :cur_user, :file
 
@@ -16,7 +15,7 @@ class SS::ZipCreator
   end
 
   def add_file(file)
-    create_entry(sanitize_filename(file.name)) do |f|
+    create_entry(::Fs.sanitize_filename(file.name)) do |f|
       ::IO.copy_stream(file.path, f)
     end
   end
@@ -33,20 +32,12 @@ class SS::ZipCreator
 
     ::FileUtils.rm_f(@path)
     ::FileUtils.mv(@tmp_path, @path)
-
-    ::Zip.write_zip64_support = @save_write_zip64_support if !@save_write_zip64_support.nil?
-    ::Zip.unicode_names = @save_unicode_names if !@save_unicode_names.nil?
   end
 
   private
 
   def zip
     @zip ||= begin
-      @save_write_zip64_support = Zip.write_zip64_support
-      @save_unicode_names = Zip.unicode_names
-      ::Zip.write_zip64_support = true
-      ::Zip.unicode_names = true
-
       ::FileUtils.mkdir_p(File.dirname(@tmp_path))
       ::FileUtils.rm_rf(@tmp_path)
       ::Zip::File.open(@tmp_path, Zip::File::CREATE)

@@ -182,6 +182,15 @@ module SS::Model::File
 
       false
     end
+
+    def fs_access_allowed?(file, owner_item, request)
+      # 現在 /fs 以下のアクセス制限が可能なのは CMS のみ。CMS 以外のオブジェクトについては常にアクセスを許可する。
+      return true unless Utils.cms_object?(file, owner_item)
+      # /fs 以下のアクセスが制限されていない場合はアクセスを許可する。
+      return true unless owner_item.site.file_fs_access_restricted?
+
+      owner_item.site.file_fs_access_allowed?(request)
+    end
   end
 
   def public?
@@ -199,6 +208,11 @@ module SS::Model::File
     # be careful: cur_user and item may be nil
     item = effective_owner_item
     if site && Utils.cms_object?(self, item) && !Utils.same_cms_site?(self, item, site: site)
+      Rails.logger.warn { "file is requested in different site" }
+      return false
+    end
+    unless Utils.fs_access_allowed?(self, item, Rails.application.current_request)
+      Rails.logger.warn { "access to /fs is not allowed" }
       return false
     end
     if user && item && Utils.readable_by_user?(self, item, user: user)
@@ -210,6 +224,7 @@ module SS::Model::File
     # special delegation if item implements previewable?
     return true if Utils.previewable_by_owner?(self, item, site: site, user: user, member: member)
 
+    Rails.logger.warn { "file access is not allowed" }
     false
   end
 
@@ -260,6 +275,11 @@ module SS::Model::File
   end
 
   def generate_public_file
+    if site && site.try(:file_fs_access_restricted?)
+      remove_public_file
+      return
+    end
+
     dir = public_dir
     return if dir.blank?
 

@@ -1,5 +1,4 @@
 module Gws::Memo::Helper
-  include SS::ExportHelper
 
   private
 
@@ -14,11 +13,7 @@ module Gws::Memo::Helper
   end
 
   def user_name_email(user)
-    if user.email.present?
-      "#{user.name} <#{user.email}>"
-    else
-      user.name
-    end
+    Gws::Memo.rfc2822_mailbox(site: site, name: user.name, email: user.email, sub: "users")
   end
 
   def gen_message_id(data)
@@ -26,28 +21,35 @@ module Gws::Memo::Helper
     "<#{data["id"].to_s.presence || data["_id"].to_s.presence || SecureRandom.uuid}@#{@domain_for_message_id}>"
   end
 
-  def write_body_to_eml(file, data)
+  def serialize_body(data)
     if data["format"] == "html"
       content_type = "text/html"
-      sanitized_html = sanitize_content(data["html"])
-      base64 = Mail::Encodings::Base64.encode(sanitized_html)
+      body = sanitize_content(data["html"])
     else
       content_type = "text/plain"
-      sanitized_text = sanitize_content(data["text"])
-      base64 = Mail::Encodings::Base64.encode(sanitized_text)
+      body = sanitize_content(data["text"])
     end
 
-    file.puts "Content-Type: #{content_type}; charset=UTF-8"
-    file.puts "Content-Transfer-Encoding: base64"
-    file.puts ""
-    file.puts base64
+    header = {
+      "Content-Type" => "#{content_type}; charset=UTF-8",
+      "Content-Transfer-Encoding" => "base64"
+    }
+
+    [ header, StringIO.new(body) ]
+  end
+
+  def write_body_to_eml(file, data)
+    header, body = serialize_body(data)
+    header.each do |key, value|
+      file.write "#{key}: #{value}\r\n"
+    end
+    file.write "\r\n"
+    file.write Mail::Encodings::Base64.encode(body.read)
+    file.write "\r\n"
   end
 
   def sanitize_content(text)
-    sanitized_content = text.gsub(/<script[^>]*>[^<]+<\/script>/i, "").
-      gsub(/<style[^>]*>[^<]+<\/style>/i, "").
-      gsub(/\s?style="(.*?)"/i, "")
-
-    sanitized_content
+    return text if text.blank?
+    ApplicationController.helpers.sanitize(text)
   end
 end
