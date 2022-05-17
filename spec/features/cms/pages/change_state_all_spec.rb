@@ -33,9 +33,7 @@ describe "cms_page_pages", type: :feature, dbscope: :example do
 
       find('.list-head input[type="checkbox"]').set(true)
       within ".list-head-action-update" do
-        page.accept_alert do
-          click_button I18n.t('ss.links.make_them_public')
-        end
+        click_button I18n.t('ss.links.make_them_public')
       end
 
       wait_for_ajax

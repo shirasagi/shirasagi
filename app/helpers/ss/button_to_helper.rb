@@ -43,7 +43,7 @@ module SS::ButtonToHelper
   end
 
   def confirmation_required?(model)
-    sys_setting?(model) || gws_site?(model) || ss_notification?(model)
+    sys_setting?(model) || gws_site?(model) || ss_setting?(model) || webmail?(model) || opendata?(model)
   end
 
   def sys_setting?(model)
@@ -54,7 +54,15 @@ module SS::ButtonToHelper
     model.to_s.start_with?("Gws::")
   end
 
-  def ss_notification?(model)
-    model == SS::Notification
+  def ss_setting?(model)
+    model.to_s.start_with?("SS::")
+  end
+
+  def webmail?(model)
+    model.to_s.start_with?("Webmail::")
+  end
+
+  def opendata?(model)
+    model.to_s.start_with?("Opendata::")
   end
 end
