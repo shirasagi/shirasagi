@@ -17,9 +17,7 @@ describe "cms_node_nodes", type: :feature, dbscope: :example do
 
       find('.list-head input[type="checkbox"]').set(true)
       within ".list-head-action-update" do
-        page.accept_alert do
-          click_button I18n.t('ss.links.make_them_close')
-        end
+        click_button I18n.t('ss.links.make_them_close')
       end
 
       wait_for_ajax
@@ -35,9 +33,7 @@ describe "cms_node_nodes", type: :feature, dbscope: :example do
 
       find('.list-head input[type="checkbox"]').set(true)
       within ".list-head-action-update" do
-        page.accept_alert do
-          click_button I18n.t('ss.links.make_them_public')
-        end
+        click_button I18n.t('ss.links.make_them_public')
       end
 
       wait_for_ajax
