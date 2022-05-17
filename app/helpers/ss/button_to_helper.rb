@@ -43,7 +43,7 @@ module SS::ButtonToHelper
   end
 
   def confirmation_required?(model)
-    sys_setting?(model) || gws_site?(model)
+    sys_setting?(model) || gws_site?(model) || ss_notification?(model)
   end
 
   def sys_setting?(model)
@@ -52,5 +52,9 @@ module SS::ButtonToHelper
 
   def gws_site?(model)
     model.to_s.start_with?("Gws::")
+  end
+
+  def ss_notification?(model)
+    model == SS::Notification
   end
 end
