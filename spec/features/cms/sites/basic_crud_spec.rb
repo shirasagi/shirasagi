@@ -65,8 +65,8 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
     let(:show_google_maps_search_label) { I18n.t("ss.options.state.#{show_google_maps_search}") }
     let(:map_api_mypage) { %w(active expired).sample }
     let(:map_api_mypage_label) { I18n.t("ss.options.state.#{map_api_mypage}") }
-    let(:map_center_lng) { 138 }
-    let(:map_center_lat) { 36 }
+    let(:map_center_lng) { rand(13_800..13_900) / 100.0 }
+    let(:map_center_lat) { rand(3600..3700) / 100.0 }
     let(:map_max_number_of_markers) { rand(1..20) }
 
     it do
@@ -94,8 +94,8 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
       expect(site.map_api_layer).to eq map_api_layer
       expect(site.show_google_maps_search).to eq show_google_maps_search
       expect(site.map_api_mypage).to eq map_api_mypage
-      expect(site.map_center.lng).to eq map_center_lng
-      expect(site.map_center.lat).to eq map_center_lat
+      expect(site.map_center.lng).to be_within(0.1).of(map_center_lng)
+      expect(site.map_center.lat).to be_within(0.1).of(map_center_lat)
       expect(site.map_max_number_of_markers).to eq map_max_number_of_markers
     end
   end
