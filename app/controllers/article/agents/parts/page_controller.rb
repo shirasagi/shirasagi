@@ -8,7 +8,7 @@ class Article::Agents::Parts::PageController < ApplicationController
     if @cur_part.sort_column_name.present?
       @items = @cur_part.sort_by_column_name(@items).slice(0, @cur_part.limit)
     else
-      @items.order_by(@cur_part.sort_hash).limit(@cur_part.limit)
+      @items = @items.order_by(@cur_part.sort_hash).limit(@cur_part.limit)
     end
   end
 end
