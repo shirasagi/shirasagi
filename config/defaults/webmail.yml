@@ -76,8 +76,7 @@ production: &production
     # readonly options override base options when mode is readonly
     readonly_options:
       readOnly: true
-      removePlugins:
-        - toolbar
+      toolbar: []
     # advanced options override base options when mode is advanced
     advanced_options:
       removeButtons: 'Strike,Underline,Subscript,Superscript,Font,BGColor'
