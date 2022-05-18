@@ -87,7 +87,7 @@ describe "sns_job_logs", type: :feature, dbscope: :example, js: true do
     end
   end
 
-  context "move with buttons" do
+  context "move with directly inputting date value" do
     it do
       login_user user
       visit job_sns_logs_path(site: site)
