@@ -43,35 +43,6 @@ module SS::ButtonToHelper
   end
 
   def confirmation_required?(model)
-    sys_setting?(model) ||
-      ss_setting?(model) ||
-      opendata?(model) ||
-      gws_site?(model) ||
-      job_task?(model) ||
-      webmail?(model)
-  end
-
-  def sys_setting?(model)
-    model.to_s.start_with?("Sys::")
-  end
-
-  def gws_site?(model)
-    model.to_s.start_with?("Gws::")
-  end
-
-  def ss_setting?(model)
-    model.to_s.start_with?("SS::")
-  end
-
-  def webmail?(model)
-    model.to_s.start_with?("Webmail::")
-  end
-
-  def opendata?(model)
-    model.to_s.start_with?("Opendata::")
-  end
-
-  def job_task?(model)
-    model == Job::Task
+    model.to_s.match(/\A(Sys|Gws|SS|Webmail|Opendata|Job)::/).present?
   end
 end
