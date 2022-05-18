@@ -53,7 +53,10 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         item.map_points.first.tap do |map_point|
           expect(map_point["name"]).to eq marker_name
           expect(map_point["text"]).to eq marker_text.join("\r\n")
-          expect(map_point["loc"]).to eq [ marker_lng.to_f, marker_lat.to_f ]
+          map_point["loc"].tap do |lng, lat|
+            expect(lng).to be_within(0.001).of(marker_lng.to_f)
+            expect(lat).to be_within(0.001).of(marker_lat.to_f)
+          end
           expect(map_point["image"]).to eq image_path
         end
         expect(item.map_zoom_level).to eq map_zoom_level
@@ -136,7 +139,10 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         item.map_points.first.tap do |map_point|
           expect(map_point["name"]).to eq marker_name1
           expect(map_point["text"]).to eq marker_text1.join("\r\n")
-          expect(map_point["loc"]).to eq [ marker_lng1.to_f, marker_lat1.to_f ]
+          map_point["loc"].tap do |lng, lat|
+            expect(lng).to be_within(0.001).of(marker_lng1.to_f)
+            expect(lat).to be_within(0.001).of(marker_lat1.to_f)
+          end
         end
         expect(item.map_zoom_level).to eq map_zoom_level
         expect(item.center_setting).to eq "designated_location"
@@ -257,9 +263,16 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
       item.map_points.first.tap do |map_point|
         expect(map_point["name"]).to eq marker_name
         expect(map_point["text"]).to eq marker_text.join("\r\n")
-        expect(map_point["loc"]).to eq [ marker_lng.to_f, marker_lat.to_f ]
+        map_point["loc"].tap do |lng, lat|
+          expect(lng).to be_within(0.001).of(marker_lng.to_f)
+          expect(lat).to be_within(0.001).of(marker_lat.to_f)
+        end
       end
-      expect(item.map_zoom_level).to be_blank
+      if map_api == "openlayers"
+        expect(item.map_zoom_level).to be_blank
+      else
+        expect(item.map_zoom_level).to eq 13
+      end
       expect(item.center_setting).to eq "auto"
       expect(item.set_center_position).to be_blank
       expect(item.zoom_setting).to eq "auto"
