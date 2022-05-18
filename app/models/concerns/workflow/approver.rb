@@ -33,6 +33,7 @@ module Workflow::Approver
     field :workflow_circulations, type: Workflow::Extensions::WorkflowCirculations
     field :workflow_circulation_attachment_uses, type: Array
     field :approved, type: DateTime
+    field :workflow_reminder_sent_at, type: DateTime
 
     permit_params :workflow_user_id, :workflow_state, :workflow_comment, :workflow_pull_up, :workflow_on_remand
     permit_params workflow_approvers: []

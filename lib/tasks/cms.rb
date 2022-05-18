@@ -27,6 +27,7 @@ module Tasks
             end
           else
             perform_job(::Cms::Page::GenerateJob, site: site)
+            perform_job(::Workflow::ReminderJob, site: site)
           end
         end
       end

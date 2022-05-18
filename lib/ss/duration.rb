@@ -24,4 +24,17 @@ class SS::Duration
       raise "malformed duration: #{name}"
     end
   end
+
+  def self.format(duration)
+    parts = duration.parts
+
+    ret = []
+    %i[years months weeks days hours minutes seconds].each do |key|
+      if parts.key?(key)
+        ret << I18n.t("datetime.distance_in_words.x_#{key}", count: parts[key])
+      end
+    end
+
+    ret.join
+  end
 end

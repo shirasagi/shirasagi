@@ -19,6 +19,7 @@ ja:
     circulation_step: 回覧
     circulation_comment: コメント
     comment: コメント
+    state_remind_suffix: （督促）
     state:
       request: 申請中
       approve: 承認
@@ -90,6 +91,28 @@ ja:
       request_cancelled: 申請を取り消しました。
       approver_file_droppable: ファイル追加ボタンをクリックするか、ここにファイルをドロップしてください。
       created_branch_page: 差し替えページを作成しました。
+      remind:
+        subject: "[承認申請 再通知]%{page_name} - %{site_name}"
+        text: |-
+          %{from_name}さんより次の記事について承認依頼が届きました。
+          承認作業を行ってください。
+          
+          - タイトル
+          %{page_name}
+          
+          - 申請者
+          %{from_name}
+          
+          - 申請者コメント
+          %{workflow_comment}
+          
+          - 記事URL
+          %{show_path}
+      content_remind:
+        head: 承認してください
+        body:
+          - 承認依頼を受け取ってから%{duration}以上経過しいています。
+          - ページ内容をご確認の上、「承認」あるいは「差し戻し」を実行してください。
     dialogue:
       edit_branch_html: |-
         差し替えページが作成されています。<a href="%{show_path}">「差し替えページ」</a>へ移動し編集してください。
@@ -212,3 +235,7 @@ ja:
         - 承認者によるファイル追加を許可する場合は「有効」を、それ以外は「無効」を選択してください。
       circulation_attachment_uses:
         - 回覧者によるファイル追加を許可する場合は「有効」を、それ以外は「無効」を選択してください。
+
+  job:
+    models:
+      workflow/reminder_job: 承認督促
