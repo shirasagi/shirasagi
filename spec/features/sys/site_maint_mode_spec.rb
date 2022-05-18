@@ -22,9 +22,9 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
     visit sys_sites_path
     click_on site1.name
     click_on I18n.t("ss.links.edit")
-    find("#addon-ss-agents-addons-maint_mode").click
+    find("#addon-ss-agents-addons-maintenance_mode").click
     within "form#item-form" do
-      find("#item_maint_mode").find("option[value='enabled']").select_option
+      find("#item_maintenance_mode").find("option[value='enabled']").select_option
       fill_in "item[maint_remark]", with: "今日から明日までメンテナンスになります。"
       within ".maint-mode" do
         click_on "ユーザーを選択する"
@@ -39,10 +39,10 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.buttons.save")
     end
     site1.reload
-    expect(site1.maint_mode).to eq "enabled"
+    expect(site1.maintenance_mode).to eq "enabled"
 
     visit sns_mypage_path
-    expect(page).to have_text(I18n.t("ss.under_maint_mode"))
+    expect(page).to have_text(I18n.t("ss.under_maintenance_mode"))
     expect(page).to have_link(site1.name, href: "/.s#{site1.id}/cms/contents")
     click_on site1.name
     expect(page).to have_no_css(".maint-mode-text")
@@ -54,7 +54,7 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
       fill_in "item[password]", with: "pass"
       click_button I18n.t("ss.login")
     end
-    expect(page).to have_text(I18n.t("ss.under_maint_mode"))
+    expect(page).to have_text(I18n.t("ss.under_maintenance_mode"))
     expect(page).not_to have_link(site1.name, href: "/.s#{site1.id}/cms/contents")
     visit cms_contents_path(site: site1)
     expect(page).to have_text(site1.maint_remark)

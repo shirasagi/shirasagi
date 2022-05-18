@@ -72,7 +72,7 @@
 
     <article id="main">
       <% if @cur_user.present? %>
-        <% if !@ss_maint_mode %>
+        <% if !@ss_maintenance_mode %>
           <% if @cur_user.initial_password_warning.present? %>
           <div class="warning">
             <%= link_to t("ss.warning.initial_password"), sns_cur_user_account_path %>
@@ -94,7 +94,7 @@
           <% end %>
         <% end %>
       <% end %>
-      <% if !@ss_maint_mode %>
+      <% if !@ss_maintenance_mode %>
         <ol class="breadcrumb" id="crumbs">
           <% if @crumbs.size > 0 && (!@ss_rescue || @ss_rescue && (@ss_mode == :cms || @ss_mode == :gws)) %>
             <% @crumbs.each_with_index do |item, idx| %>
@@ -122,7 +122,7 @@
 
       <div class="wrap">
         <% if !@ss_rescue %>
-          <% if !@ss_maint_mode %>
+          <% if !@ss_maintenance_mode %>
             <% if ::File.exist?("#{Rails.root}/app/views/#{params[:controller]}/_content_navi.html.erb") %>
             <%= render partial: 'content_navi' %>
             <% elsif @tree_navi %>

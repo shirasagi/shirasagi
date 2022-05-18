@@ -34,9 +34,9 @@ module Cms::BaseFilter
     @ss_mode = :cms
     @cur_site = SS.current_site = Cms::Site.find params[:site]
 
-    if @cur_site.maint_mode? && !@cur_site.allowed_maint_user?(@cur_user.id)
-      @ss_maint_mode = true
-      render "cms/maint_mode_notice/index.html", layout: "ss/base"
+    if @cur_site.maintenance_mode? && !@cur_site.allowed_maint_user?(@cur_user.id)
+      @ss_maintenance_mode = true
+      render "cms/maintenance_mode_notice/index.html", layout: "ss/base"
       return
     end
 
