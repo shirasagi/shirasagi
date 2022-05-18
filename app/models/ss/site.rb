@@ -21,4 +21,5 @@ class SS::Site
   include SS::Addon::SourceCleaner::SiteSetting
   include SS::Addon::SiteUsage
   include SS::Addon::GenerateLock
+  include SS::Addon::MaintenanceMode
 end

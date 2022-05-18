@@ -62,6 +62,7 @@ Rails.application.routes.draw do
     end
 
     namespace "apis" do
+      get "users" => "users#index"
       get "groups" => "groups#index"
       get "sites" => "sites#index"
       get "postal_codes" => "postal_codes#index"

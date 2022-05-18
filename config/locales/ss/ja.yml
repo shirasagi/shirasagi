@@ -52,6 +52,7 @@ ja:
     resize_image_auto: 画像リサイズ(自動)
     input_example: 記入例
     csv_file: CSVファイル
+    under_maintenance_mode: 現在メンテナンス中です。
 
     views:
       login/login:
@@ -516,6 +517,7 @@ ja:
       ss/generate_lock: 書き出し停止
       ss/partner_site: 提携サイト設定
       ss/inquiry_setting: お問い合わせフォーム設定
+      ss/maintenance_mode: メンテナンスモード
 
   activemodel:
     attributes:
@@ -561,6 +563,8 @@ ja:
           invalid_code: "は不正です。"
         ss/addon/generate_lock:
           disallow_datetime_by_system: の日時はシステムにより許可されていません。より短い日時を入力してください。
+      messages:
+        not_selected: を選択してください。
     attributes:
       ss/document:
         id: id
@@ -589,6 +593,9 @@ ja:
         group_ids: グループ
         domains_with_subdir: サブディレクトリを含めたドメイン
         upload_policy: アップロード制限
+        maintenance_mode: メンテナンスモード
+        maint_remark: メンテナンス備考
+        maint_excluded_user_ids: 除外ユーザー
       ss/model/user:
         name: 氏名
         kana: カナ
@@ -1047,6 +1054,11 @@ ja:
       file_order:
         - 管理画面上でのファイルの並び順をリアルタイムで変更し、ファイルを見つけやすくします。
         - ただし、並び順は保存されません。
+      maintenance_mode:
+        - 除外ユーザーのみ操作可能になります。
+        - それ以外のユーザー操作できません。
+      maint_excluded_user_ids:
+        - メンテナンスモード時に操作することができるユーザーを選択します。
     ss/model/file:
       in_file:
         - ファイルを選択します。

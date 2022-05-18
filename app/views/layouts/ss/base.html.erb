@@ -72,57 +72,64 @@
 
     <article id="main">
       <% if @cur_user.present? %>
-        <% if @cur_user.initial_password_warning.present? %>
-        <div class="warning">
-          <%= link_to t("ss.warning.initial_password"), sns_cur_user_account_path %>
-        </div>
-        <% elsif @cur_setting.present? %>
-          <%
-            message = case @cur_setting.password_expired(@cur_user)
-            when :expired
-              t("ss.warning.password_expired")
-            when :nearly_expired
-              t("ss.warning.password_neary_expired")
-            end
-          %>
-          <% if message %>
+        <% if !@ss_maintenance_mode %>
+          <% if @cur_user.initial_password_warning.present? %>
           <div class="warning">
-            <%= link_to(message, sns_cur_user_account_path) %>
+            <%= link_to t("ss.warning.initial_password"), sns_cur_user_account_path %>
           </div>
+          <% elsif @cur_setting.present? %>
+            <%
+              message = case @cur_setting.password_expired(@cur_user)
+              when :expired
+                t("ss.warning.password_expired")
+              when :nearly_expired
+                t("ss.warning.password_neary_expired")
+              end
+            %>
+            <% if message %>
+            <div class="warning">
+              <%= link_to(message, sns_cur_user_account_path) %>
+            </div>
+            <% end %>
           <% end %>
         <% end %>
       <% end %>
+      <% if !@ss_maintenance_mode %>
+        <ol class="breadcrumb" id="crumbs">
+          <% if @crumbs.size > 0 && (!@ss_rescue || @ss_rescue && (@ss_mode == :cms || @ss_mode == :gws)) %>
+            <% @crumbs.each_with_index do |item, idx| %>
+              <li <%== %(class="active") if @crumbs.size == idx + 1 %>><%= link_to *item %></li>
+              <% break if @ss_rescue %><%# only one crumb in rescue mode %>
+            <% end %>
 
-      <ol class="breadcrumb" id="crumbs">
-        <% if @crumbs.size > 0 && (!@ss_rescue || @ss_rescue && (@ss_mode == :cms || @ss_mode == :gws)) %>
-          <% @crumbs.each_with_index do |item, idx| %>
-            <li <%== %(class="active") if @crumbs.size == idx + 1 %>><%= link_to *item %></li>
-            <% break if @ss_rescue %><%# only one crumb in rescue mode %>
+            <% if @webmail_other_account_path && webmail_other_account?(@webmail_other_account_path) && !@ss_rescue %>
+              <li class="webmail-accounts">
+                <span><%= t('webmail.links.select_account') %></span>
+                <%= webmail_other_account_select(@webmail_other_account_path) %>
+              </li>
+            <% end %>
           <% end %>
-
-          <% if @webmail_other_account_path && webmail_other_account?(@webmail_other_account_path) && !@ss_rescue %>
-            <li class="webmail-accounts">
-              <span><%= t('webmail.links.select_account') %></span>
-              <%= webmail_other_account_select(@webmail_other_account_path) %>
-            </li>
-          <% end %>
-        <% end %>
-      </ol>
+        </ol>
+      <% end %>
 
       <% if !@ss_rescue %>
-        <% if ::File.exist?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>
-        <div id="menu"><%= render partial: "menu" %></div>
-        <% elsif controller.menu_view_file %>
-        <div id="menu"><%= render partial: controller.menu_view_file %></div>
+        <% if !@ss_maintenance_mode %>
+          <% if ::File.exist?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>
+          <div id="menu"><%= render partial: "menu" %></div>
+          <% elsif controller.menu_view_file %>
+          <div id="menu"><%= render partial: controller.menu_view_file %></div>
+          <% end %>
         <% end %>
       <% end %>
 
       <div class="wrap">
         <% if !@ss_rescue %>
-          <% if ::File.exist?("#{Rails.root}/app/views/#{params[:controller]}/_content_navi.html.erb") %>
-          <%= render partial: 'content_navi' %>
-          <% elsif @tree_navi %>
-          <div id="content-navi"><%= render template: '_tree_navi' %></div>
+          <% if !@ss_maintenance_mode %>
+            <% if ::File.exist?("#{Rails.root}/app/views/#{params[:controller]}/_content_navi.html.erb") %>
+            <%= render partial: 'content_navi' %>
+            <% elsif @tree_navi %>
+            <div id="content-navi"><%= render template: '_tree_navi' %></div>
+            <% end %>
           <% end %>
         <% end %>
 
