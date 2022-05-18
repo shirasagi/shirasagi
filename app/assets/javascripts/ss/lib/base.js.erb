@@ -489,10 +489,10 @@ this.SS = (function () {
         scrollInput: false
       };
       data = $(this).data();
-      if (data.minDate) {
+      if ("minDate" in data) {
         opts.minDate = data.minDate;
       }
-      if (data.maxDate) {
+      if ("maxDate" in data) {
         opts.maxDate = data.maxDate;
       }
       return $(this).attr('autocomplete', 'off').datetimepicker(opts);
@@ -504,13 +504,13 @@ this.SS = (function () {
         step: 30
       };
       data = $(this).data();
-      if (data.minDate) {
+      if ("minDate" in data) {
         opts.minDate = data.minDate;
       }
-      if (data.maxDate) {
+      if ("maxDate" in data) {
         opts.maxDate = data.maxDate;
       }
-      if (data.step) {
+      if ("step" in data) {
         opts.step = data.step;
       }
       return $(this).attr('autocomplete', 'off').datetimepicker(opts);
