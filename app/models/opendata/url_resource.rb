@@ -140,7 +140,7 @@ class Opendata::UrlResource
           @download_temp_file = SS::File.new
           @download_temp_file.in_file = ActionDispatch::Http::UploadedFile.new(tempfile: temp_file,
             filename: self.filename,
-            type: 'application/octet-stream')
+            type: SS::MimeType::DEFAULT_MIME_TYPE)
           @download_temp_file.site_id = dataset.site_id
           @download_temp_file.model = self.class.to_s.underscore
 

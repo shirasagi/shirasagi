@@ -48,11 +48,18 @@
     <li class="list-item <%= item.flags.map(&:downcase).join(' ') %> <%= 'unseen' if item.unseen? %> mail-draggable" data-uid="<%= item.uid %>">
       <nav class="tap-menu">
         <%= link_to t('ss.links.show'), action: :show, id: item.uid %>
-        <%= link_to t('webmail.links.reply'), action: :reply, id: item.uid unless item.draft? %>
-        <%= link_to t('webmail.links.reply_without_body'), { action: :reply, id: item.uid, without_body: true } unless item.draft? %>
-        <%= link_to t('webmail.links.reply_all'), action: :reply_all, id: item.uid unless item.draft? %>
-        <%= link_to t('webmail.links.reply_all_without_body'), { action: :reply_all, id: item.uid, without_body: true } unless item.draft? %>
-        <%= link_to t('webmail.links.forward'), action: :forward, id: item.uid unless item.draft? %>
+        <%= link_to t('ss.links.edit'), { action: :edit, id: item.uid },
+          { class: 'ss-open-in-new-window' } if item.draft? %>
+        <%= link_to t('webmail.links.reply'), { action: :reply, id: item.uid },
+          { class: 'ss-open-in-new-window' } unless item.draft? %>
+        <%= link_to t('webmail.links.reply_without_body'), { action: :reply, id: item.uid, without_body: true },
+          { class: 'ss-open-in-new-window' } unless item.draft? %>
+        <%= link_to t('webmail.links.reply_all'), { action: :reply_all, id: item.uid },
+          { class: 'ss-open-in-new-window' } unless item.draft? %>
+        <%= link_to t('webmail.links.reply_all_without_body'), { action: :reply_all, id: item.uid, without_body: true },
+          { class: 'ss-open-in-new-window' } unless item.draft? %>
+        <%= link_to t('webmail.links.forward'), { action: :forward, id: item.uid },
+          { class: 'ss-open-in-new-window' } unless item.draft? %>
         <%= link_to t('ss.links.delete'), action: :delete, id: item.uid %>
       </nav>
 
@@ -81,7 +88,10 @@
             <span class="field from"><%= t("webmail.no_senders") %></span>
           <% end %>
         <% end %>
-        <%= link_to item.display_subject, { action: :show, id: item.uid }, class: "field title", title: item.display_subject %>
+        <%= link_to({ action: :show, id: item.uid }, class: "field title", title: item.display_subject) do %>
+          <% title_flag = item.answered? ? %(<i class="material-icons md-18 icon-reply">&#xE15E;</i>) : nil %>
+          <%== title_flag %><%= item.display_subject %>
+        <% end %>
         <span class="field datetime"><%= tryb { item.internal_date.strftime("%Y/%m/%d %H:%M") } %></span>
         <span class="field size"><%= item.display_size %></span>
       </div>

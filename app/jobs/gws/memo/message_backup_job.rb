@@ -56,10 +56,10 @@ class Gws::Memo::MessageBackupJob < Gws::ApplicationJob
       end
       data['export_info'] = { 'version' => SS.version, 'exported' => @datetime }
 
-      basename = sanitize_filename("#{item.id}_#{item.display_subject}")
+      basename = ::Fs.sanitize_filename("#{item.id}_#{item.display_subject}")
       folder_name = item_folder_name(item)
       if folder_name.present?
-        folder_name = folder_name.split("/").map { |path| sanitize_filename(path) }.join("/")
+        folder_name = folder_name.split("/").map { |path| ::Fs.sanitize_filename(path) }.join("/")
         basename = "#{folder_name}/#{basename}"
       end
       if @output_format == "eml"

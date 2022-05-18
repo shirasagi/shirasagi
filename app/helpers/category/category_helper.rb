@@ -8,7 +8,7 @@ module Category::CategoryHelper
       @unreadable_categories = []
 
       cate_options ||= {}
-      @readable = (cate_options[:readable_categories] != nil)
+      @readable = !cate_options[:readable_categories].nil?
       @readable_category_ids = cate_options[:readable_categories].map(&:id) if @readable
 
       @root_and_descendants = cate_options[:root_and_descendants]
@@ -43,25 +43,29 @@ module Category::CategoryHelper
           children.each { |c| render_cate_form0 categories, c }
         end
       elsif children.present?
-        @caller.output_buffer << @caller.content_tag("div", class: "parent") do
+        @caller.output_buffer << @caller.tag.div(class: "parent") do
           cc = children.map { |c| children(categories, c).size }.max != 0
-          @caller.output_buffer << @caller.content_tag("label", class: "parent") do
-            @caller.output_buffer << @caller.check_box_tag("item[#{@item_name}][]", item.id, @item.send(@item_name).include?(item.id), {data: {url: item.filename}})
+          @caller.output_buffer << @caller.tag.label(class: "parent") do
+            @caller.output_buffer << @caller.check_box_tag(
+              "item[#{@item_name}][]", item.id, @item.send(@item_name).include?(item.id), id: nil, data: { url: item.filename })
             @caller.output_buffer << " "
             @caller.output_buffer << item.name
           end
+          @caller.output_buffer << "\n"
 
-          @caller.output_buffer << @caller.content_tag("div", class: ["child", cc ? "grandchild" : nil]) do
+          @caller.output_buffer << @caller.tag.div(class: ["child", cc ? "grandchild" : nil]) do
             children.each { |c| render_cate_form1 categories, c }
           end
         end
       else
-        @caller.output_buffer << @caller.content_tag("div", class: "parent") do
-          @caller.output_buffer << @caller.content_tag("label") do
-            @caller.output_buffer << @caller.check_box_tag("item[#{@item_name}][]", item.id, @item.send(@item_name).include?(item.id), {data: {url: item.filename}})
+        @caller.output_buffer << @caller.tag.div(class: "parent") do
+          @caller.output_buffer << @caller.tag.label do
+            @caller.output_buffer << @caller.check_box_tag(
+              "item[#{@item_name}][]", item.id, @item.send(@item_name).include?(item.id), id: nil, data: { url: item.filename })
             @caller.output_buffer << " "
             @caller.output_buffer << item.name
           end
+          @caller.output_buffer << "\n"
         end
       end
 
@@ -78,31 +82,36 @@ module Category::CategoryHelper
         end
       elsif children.present?
         cc = children.map { |c| children(categories, c).size }.max != 0
-        @caller.output_buffer << @caller.content_tag("label", class: "parent") do
-          @caller.output_buffer << @caller.check_box_tag("item[#{@item_name}][]", item.id, @item.send(@item_name).include?(item.id), {data: {url: item.filename}})
+        @caller.output_buffer << @caller.tag.label(class: "parent") do
+          @caller.output_buffer << @caller.check_box_tag(
+            "item[#{@item_name}][]", item.id, @item.send(@item_name).include?(item.id), id: nil, data: { url: item.filename })
           @caller.output_buffer << " "
           @caller.output_buffer << item.name
         end
+        @caller.output_buffer << "\n"
 
-        @caller.output_buffer << @caller.content_tag("div", class: ["child", cc ? "grandchild" : nil]) do
+        @caller.output_buffer << @caller.tag.div(class: ["child", cc ? "grandchild" : nil]) do
           children.each { |c| render_cate_form1 categories, c }
         end
       else
-        @caller.output_buffer << @caller.content_tag("label") do
-          @caller.output_buffer << @caller.check_box_tag("item[#{@item_name}][]", item.id, @item.send(@item_name).include?(item.id), {data: {url: item.filename}})
+        @caller.output_buffer << @caller.tag.label do
+          @caller.output_buffer << @caller.check_box_tag(
+            "item[#{@item_name}][]", item.id, @item.send(@item_name).include?(item.id), id: nil, data: { url: item.filename })
           @caller.output_buffer << " "
           @caller.output_buffer << item.name
         end
+        @caller.output_buffer << "\n"
       end
 
       categories.delete(item)
     end
 
     def render_unreadable_categories
-      @caller.output_buffer << @caller.content_tag("div", class: "unreadable", style: "display:none;") do
+      @caller.output_buffer << @caller.tag.div(class: "unreadable", style: "display:none;") do
         @unreadable_categories.each do |item|
-          @caller.output_buffer << @caller.content_tag("label") do
-            @caller.output_buffer << @caller.check_box_tag("item[#{@item_name}][]", item.id, @item.send(@item_name).include?(item.id), {data: {url: item.filename}})
+          @caller.output_buffer << @caller.tag.label do
+            @caller.output_buffer << @caller.check_box_tag(
+              "item[#{@item_name}][]", item.id, @item.send(@item_name).include?(item.id), id: nil, data: { url: item.filename })
             @caller.output_buffer << " "
             @caller.output_buffer << item.name
           end

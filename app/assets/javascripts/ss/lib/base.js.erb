@@ -507,10 +507,10 @@ this.SS = (function () {
         enterLikeTab: false
       };
       var data = $this.data();
-      if (data.minDate) {
+      if ("minDate" in data) {
         opts.minDate = data.minDate;
       }
-      if (data.maxDate) {
+      if ("maxDate" in data) {
         opts.maxDate = data.maxDate;
       }
       $this.attr('autocomplete', 'off')
@@ -531,13 +531,13 @@ this.SS = (function () {
         enterLikeTab: false
       };
       var data = $this.data();
-      if (data.minDate) {
+      if ("minDate" in data) {
         opts.minDate = data.minDate;
       }
-      if (data.maxDate) {
+      if ("maxDate" in data) {
         opts.maxDate = data.maxDate;
       }
-      if (data.step) {
+      if ("step" in data) {
         opts.step = data.step;
       }
       $this.attr('autocomplete', 'off')

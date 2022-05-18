@@ -18,7 +18,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
       within ".fc-view" do
         # click_on item.name
-        find(".fc-event-allday .fc-content", text: item.name).click
+        first(".fc-event-allday .fc-content", text: item.name).click
       end
 
       within ".gws-popup" do

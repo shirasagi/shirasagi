@@ -1,7 +1,7 @@
 module SS::AttachmentSupport
   extend ActiveSupport::Concern
 
-  DEFAULT_BINARY_TYPE = "application/octet-stream".freeze
+  DEFAULT_BINARY_TYPE = SS::MimeType::DEFAULT_MIME_TYPE
 
   def add_attachment_file(file)
     part = { body: file.read }

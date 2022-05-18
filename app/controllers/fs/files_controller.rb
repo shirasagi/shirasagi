@@ -152,6 +152,7 @@ class Fs::FilesController < ApplicationController
     set_last_modified
 
     content_type = cur_variant ? cur_variant.content_type : cur_item.content_type
+    content_type = content_type.presence || SS::MimeType::DEFAULT_MIME_TYPE
     download_filename = cur_variant ? cur_variant.download_filename : cur_item.download_filename
     ss_send_file cur_variant || cur_item, type: content_type, filename: download_filename, disposition: disposition
   end

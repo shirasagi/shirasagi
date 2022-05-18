@@ -1,13 +1,16 @@
-class ApplicationMailer
+class ApplicationMailer < ActionMailer::Base
   class << self
     def set(option)
       if option == :load_settings
         conf = SS.config.mail
-        ActionMailer::Base.delivery_method = conf['delivery_method'].to_sym
+        delivery_method = conf['delivery_method'].to_sym
+        ActionMailer::Base.delivery_method = delivery_method
         ActionMailer::Base.default from: conf['default_from'], charset: conf['default_charset']
-        if conf['delivery_method'] == 'smtp'
+
+        case delivery_method
+        when :smtp
           set_smtp conf
-        elsif conf['delivery_method'] == 'sendmail'
+        when :sendmail
           set_sendmail conf
         end
       end

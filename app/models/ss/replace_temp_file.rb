@@ -1,6 +1,5 @@
 class SS::ReplaceTempFile
   include SS::Model::File
-  # include SS::Relation::Thumb
   include SS::UserPermission
 
   default_scope ->{ where(model: "ss/replace_temp_file") }
