@@ -182,8 +182,9 @@ ja:
       check_links_report:
         - "%{time} 時点でのレポートです。"
         - "リンク切れを修正した場合、再度リンクチェックを実行し、新しいレポートを作成してください。"
-      check_links_report_annotation: ※リンクチェックの実行タイミングや通信先サーバーの負荷状況によっては誤検出の場合があります。
-      check_links_report_created: "%{time} 時点"
+      check_links_report_header: "リンク切れが%{count}件あります（%{time}時点）"
+      check_links_report_body: ページ内に次のリンク切れが検出されました。プレビューなどで確認の上、修正してください。
+      check_links_report_annotation: ※正常なリンクであっても、ネットワークの混雑状況や通信先サーバーの負荷状況などによって誤ってリンク切れと判定される場合があります。
       delete_forum_column: 入力項目を削除する
       confirm_column_deletion_whose_form_is_in_use: "定型フォームは利用中のため入力項目を削除するとページが正しく表示されなくなる場合があります。"
       page_expiration_header: ページの公開期限が切れています。
@@ -658,7 +659,6 @@ ja:
       cms/site_search/keyword: 注目ワード
       cms/line_poster: LINE連携
       cms/content_quota: 容量制限
-      cms/check_links: リンクチェック実行結果
       cms/history_list: 閲覧履歴
       cms/member_reference: メンバー
 
