@@ -106,7 +106,7 @@ this.Gws_Presence_User = (function () {
         return false;
       });
       form.keypress(function (e) {
-        if (e.which == 13) {
+        if (e.which == SS.KEY_ENTER) {
           var data = {
             _method: 'put',
             authenticity_token: $('meta[name="csrf-token"]').attr('content'),

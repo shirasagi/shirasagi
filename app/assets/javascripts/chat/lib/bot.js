@@ -9,7 +9,7 @@ this.Chat_Bot = (function () {
   Chat_Bot.prototype.render = function () {
     var _this = this;
     _this.$el.on("keypress", '.chat-text', function (ev) {
-      if ((ev.which && ev.which === 13) || (ev.keyCode && ev.keyCode === 13)) {
+      if ((ev.which && ev.which === SS.KEY_ENTER) || (ev.keyCode && ev.keyCode === SS.KEY_ENTER)) {
         _this.sendChatRequest($(this));
       }
     });
