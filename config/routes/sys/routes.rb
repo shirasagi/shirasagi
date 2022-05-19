@@ -58,20 +58,28 @@ Rails.application.routes.draw do
       resource :server, only: [] do
         match :show, on: :member, via: [:get, :post, :put, :delete]
       end
+      resource :app_log, only: [:show]
     end
 
     namespace "apis" do
+      get "users" => "users#index"
       get "groups" => "groups#index"
       get "sites" => "sites#index"
       get "postal_codes" => "postal_codes#index"
       get "prefecture_codes" => "prefecture_codes#index"
       post "validation" => "validation#validate"
+      get "cke_config" => "cke_config#index"
     end
 
     namespace "db" do
       get "/" => redirect { |p, req| "#{req.path}/colls" }
-      resources :colls, concerns: :deletion
-      resources :docs, concerns: :deletion, path: "colls/:coll/docs"
+      resources :colls, only: [:index, :show] do
+        get :info, on: :collection
+      end
+      resources :docs, only: [:index, :show], path: "colls/:coll/docs" do
+        get :indexes, on: :collection
+        get :stats, on: :collection
+      end
     end
 
     namespace "auth" do

@@ -29,9 +29,9 @@
 
     <script type="text/html" class="template">
       <%= render "ss/agents/addons/link_file/file_view",
-        f: f, file_id: ":file_id", file_humanized_name: ":file_humanized_name",
-        file_url: ":file_url", file_thumb_url: ":file_thumb_url", file_link_url: ":file_link_url",
-        file_is_image: true, file_extname: ":file_extname" %>
+        f: f, file_id: "{%= file_id %}", file_humanized_name: "{%= file_humanized_name %}",
+        file_url: "{%= file_url %}", file_thumb_url: "{%= file_thumb_url %}", file_link_url: "{%= file_link_url %}",
+        file_is_image: true, file_extname: "{%= file_extname %}" %>
     </script>
   </dd>
 </dl>
@@ -49,12 +49,15 @@
       return;
     }
 
-    var html = template.replace(/:file_id/g, $data.data("id"));
-    html = html.replace(/:file_humanized_name/g, $data.data("humanized-name"));
-    html = html.replace(/:file_url/g, $data.data("url"));
-    html = html.replace(/:file_thumb_url/g, $data.data("thumb-url"));
-    html = html.replace(/:file_extname/g, $data.data("extname"));
-    html = html.replace(/:file_link_url/g, "");
+    var data = {
+      file_id: $data.data("id"),
+      file_humanized_name: $data.data("humanized-name"),
+      file_url: $data.data("url"),
+      file_thumb_url: $data.data("thumb-url"),
+      file_extname: $data.data("extname"),
+      file_link_url: ""
+    };
+    var html = ejs.render(template, data, { openDelimiter: "{", closeDelimiter: "}" });
     var $html = $(html);
     if (!$data.data("image?")) {
       $html.find(".column-thumb .thumb img").remove();

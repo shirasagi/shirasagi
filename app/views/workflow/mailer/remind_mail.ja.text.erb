@@ -1,0 +1,20 @@
+<% message.subject = I18n.t("workflow.notice.remind.subject", page_name: @page.name, site_name: @site.name) %>
+<%= @from_user.name %>さん<% if @page.workflow_agent.present? %>（代理：<%= @page.workflow_agent.name %>さん）<% end %>より次の記事について承認依頼が届きました。
+承認作業を行ってください。
+
+- タイトル
+<%= @page.name %>
+
+<% if @page.workflow_user.present? %>
+- 申請者
+<%= @page.workflow_user.name %>
+<% if @page.workflow_agent %>
+（代理: <%= @page.workflow_agent.name %>）
+<% end %>
+<% end %>
+
+- 申請者コメント
+<%= @page.workflow_comment %>
+
+- 記事URL
+<%= URI.join(@site.mypage_full_url, @page.private_show_path).to_s %>

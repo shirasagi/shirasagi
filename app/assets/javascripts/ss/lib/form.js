@@ -25,11 +25,11 @@ this.SS_Form = (function () {
     }
     if (selector) {
       return $(selector).on('keypress', function (ev) {
-        return ev.which !== 13;
+        return ev.which !== SS.KEY_ENTER;
       });
     } else {
       return $(document).on('keypress', 'input:not(.allow-submit)', function (ev) {
-        return ev.which !== 13;
+        return ev.which !== SS.KEY_ENTER;
       });
     }
   };

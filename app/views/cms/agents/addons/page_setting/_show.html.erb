@@ -12,4 +12,19 @@
 
   <dt><%= @model.t :max_name_length %></dt>
   <dd><%= @item.label :max_name_length %></dd>
+
+  <dt><%= @model.t :page_expiration_state %></dt>
+  <dd><%= @item.label :page_expiration_state %></dd>
+
+  <dt><%= @model.t :page_expiration_before %></dt>
+  <dd><%= @item.label :page_expiration_before %></dd>
+
+  <dt><%= t("cms.page_expiration_mail.title") %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= t("cms.page_expiration_mail.subject") %></dt>
+  <dd class="depth-2"><%= @item.page_expiration_mail_subject %></dd>
+
+  <dt class="depth-2"><%= t("cms.page_expiration_mail.upper_text") %></dt>
+  <dd class="depth-2"><%= br @item.page_expiration_mail_upper_text %></dd>
 </dl>

@@ -9,7 +9,7 @@ module Category::Addon
       define_method(:st_categories) do
         if st_categories_sortable?
           items = ::Category::Node::Base.in(id: st_category_ids).to_a
-          return st_category_ids.map { |id| items.find { |item| item.id == id } }
+          return items.sort_by { |item| st_category_ids.index(item.id) }
         end
 
         ::Category::Node::Base.in(id: st_category_ids)

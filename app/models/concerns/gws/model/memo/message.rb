@@ -84,7 +84,7 @@ module Gws::Model
       self.user_settings = member_ids.collect do |member_id|
         user_setting_was = (user_settings_was.presence || []).find{ |setting| setting['user_id'] == member_id }
         path = in_path.try(:[], member_id.to_s).presence || user_setting_was.try(:[], 'path').presence || 'INBOX'
-        seen_at = user_settings.find{ |setting| setting['user_id'] == member_id }.try(:[], 'seen_at')
+        seen_at = user_settings.find { |setting| setting['user_id'] == member_id }.try(:[], 'seen_at')
         user_setting = { 'user_id' => member_id, 'path' => path }
         user_setting['seen_at'] = seen_at.in_time_zone.utc if seen_at.present?
         user_setting
@@ -264,7 +264,7 @@ module Gws::Model
     def unseen?(user)
       return false unless user
 
-      user_settings.find{ |setting| setting['user_id'] == user.id && setting['seen_at'].present? }.blank?
+      user_settings.find { |setting| setting['user_id'] == user.id && setting['seen_at'].present? }.blank?
     end
 
     def seen_at(user)
@@ -456,7 +456,19 @@ module Gws::Model
       Gws::Memo::ListMessage.find(self.id)
     end
 
+    def write_as_eml(user, io, site: nil)
+      Gws::Memo::Message::Eml.write(user, self, io, site: site)
+    end
+
     module ClassMethods
+      def create_from_eml(user, path, io, site:)
+        message = Gws::Memo::Message::Eml.read(user, io, site: site)
+        # message.user_settings = [{ "user_id" => user.id, "path" => path }]
+        message.move(user, path)
+        message.save
+        message
+      end
+
       def search(params)
         all.search_keyword(params).
           search_from_member_name(params).

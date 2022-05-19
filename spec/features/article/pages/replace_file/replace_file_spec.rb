@@ -11,7 +11,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
   let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'entry', group_ids: [cms_group.id]) }
   let!(:column1) { create(:cms_column_free, cur_site: site, cur_form: form, required: "optional", order: 1) }
-  let!(:column2) { create(:cms_column_file_upload, cur_site: site, cur_form: form, required: "optional", order: 2) }
+  let!(:column2) do
+    create(:cms_column_file_upload, cur_site: site, cur_form: form, file_type: "attachment", required: "optional", order: 2)
+  end
   let!(:column3) do
     create(:cms_column_file_upload, cur_site: site, cur_form: form, file_type: 'image', required: "optional", order: 3)
   end

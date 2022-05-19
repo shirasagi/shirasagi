@@ -108,11 +108,11 @@ this.Cms_Site_Search_History = (function () {
         _this.keyword.off("blur");
       });
       this.keyword.on("keydown", function(e) {
-        if (e.which != 13 && e.which != 38 && e.which != 40) {
+        if (e.which != SS.KEY_ENTER && e.which != 38 && e.which != 40) {
           return;
         }
 
-        if (e.which == 13) {
+        if (e.which == SS.KEY_ENTER) {
           if ((_this.index - 1) >= 0) {
             _this.keyword.val(_this.histories[_this.index - 1]);
           }

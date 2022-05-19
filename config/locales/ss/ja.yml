@@ -52,6 +52,7 @@ ja:
     resize_image_auto: 画像リサイズ(自動)
     input_example: 記入例
     csv_file: CSVファイル
+    under_maintenance_mode: 現在メンテナンス中です。
 
     views:
       login/login:
@@ -379,6 +380,7 @@ ja:
       text_type:
         plain: テキスト形式
         markdown: Markdown形式
+        cke: 書式編集
       wareki:
         seireki: 西暦
         meiji: 明治
@@ -469,6 +471,15 @@ ja:
       image_resizes_disabled:
         enabled: 自動リサイズ有効
         disabled: 自動リサイズ無効
+      approve_remind_later:
+        "1_day": １日後
+        "2_days": ２日後
+        "3_days": ３日後
+        "4_days": ４日後
+        "5_days": ５日後
+        "6_days": ６日後
+        "1_week": １週間後
+        "2_weeks": ２週間後
 
     tasks:
       started: 開始しました。
@@ -516,6 +527,7 @@ ja:
       ss/generate_lock: 書き出し停止
       ss/partner_site: 提携サイト設定
       ss/inquiry_setting: お問い合わせフォーム設定
+      ss/maintenance_mode: メンテナンスモード
 
   activemodel:
     attributes:
@@ -561,6 +573,8 @@ ja:
           invalid_code: "は不正です。"
         ss/addon/generate_lock:
           disallow_datetime_by_system: の日時はシステムにより許可されていません。より短い日時を入力してください。
+      messages:
+        not_selected: を選択してください。
     attributes:
       ss/document:
         id: id
@@ -589,6 +603,9 @@ ja:
         group_ids: グループ
         domains_with_subdir: サブディレクトリを含めたドメイン
         upload_policy: アップロード制限
+        maintenance_mode: メンテナンスモード
+        maint_remark: メンテナンス備考
+        maint_excluded_user_ids: 除外ユーザー
       ss/model/user:
         name: 氏名
         kana: カナ
@@ -766,12 +783,22 @@ ja:
         file_resizing_height: 高さ
         file_resizing_label: "%{size}（サイト設定）"
         multibyte_filename_state: 日本語ファイル名
+        file_fs_access_restriction_state: /fs のアクセス制限
+        file_fs_access_restriction_allowed_ip_addresses: 許可IPアドレス
+        file_fs_access_restriction_basic_auth: Basic認証
+        file_fs_access_restriction_basic_auth_id: Basic認証（ID）
+        file_fs_access_restriction_basic_auth_password: Basic認証（パスワード）
+        file_fs_access_restriction_env: 環境変数
+        file_fs_access_restriction_env_key: 環境変数（キー）
+        file_fs_access_restriction_env_value: 環境変数（値）
       ss/addon/trash_setting:
         trash_threshold: ゴミ箱保持期間
         trash_threshold_unit: ゴミ箱保持期間単位
       ss/addon/approve_setting:
         forced_update: メールアドレス注意設定
         close_confirmation: 非公開保存の警告表示設定
+        approve_remind_state: 承認督促
+        approve_remind_later: 承認督促期間
       ss/addon/generate_lock:
         generate_lock_until: 書き出し停止期限
         generate_lock: 書き出し停止
@@ -1039,6 +1066,11 @@ ja:
       file_order:
         - 管理画面上でのファイルの並び順をリアルタイムで変更し、ファイルを見つけやすくします。
         - ただし、並び順は保存されません。
+      maintenance_mode:
+        - 除外ユーザーのみ操作可能になります。
+        - それ以外のユーザー操作できません。
+      maint_excluded_user_ids:
+        - メンテナンスモード時に操作することができるユーザーを選択します。
     ss/model/file:
       in_file:
         - ファイルを選択します。
@@ -1229,6 +1261,28 @@ ja:
         -
         - "アップロード可: 日本語ファイルはアップロード可ですが、日本語部分がアンダースコアに置き換わります。既定の動作です。"
         - "アップロード不可: 日本語ファイルをアップロードすることができなくなり、英数字・ハイフン・アンダースコアのみで構成されたファイルのみをアップロードすることができるようになります。"
+      file_fs_access_restriction_state:
+        - /fs 以下のアクセスを制限する場合、「有効」を選択してください。
+        - そして、有効にする場合、「許可IPアドレス」「Basic認証」「環境変数」のいずれかのフィールドに適切な設定を入力してください。
+        -
+        - この設定は、サブディレクトリ型サブサイトにおいて、nginx と協働でアクセス制限を実施するもので、
+        - 本設定のみでアクセス制限が有効になるわけではありません。
+      file_fs_access_restriction_allowed_ip_addresses:
+        - アクセスを許可する IP アドレスを設定します。
+        - 複数の IP アドレスを設定する場合は、改行で区切って設定します。
+        - "\"192.168.10.0/24\" や \"192.168.10.0/255.255.255.0\" のようなネットワークアドレスも設定することができます。"
+      file_fs_access_restriction_env:
+        - 許可する環境変数を設定します。
+        -
+        - これが想定するユースケースですが、nginx はクライアント証明書を認証すると、認証した Subject DN を $ssl_client_s_dn に、Issuer DN を $ssl_client_i_dn にセットします。
+        - これらを nginx の proxy_set_header でシラサギへ伝播し、シラサギで設定内容を確認するというケースを想定しています。
+        -
+        - "nginx の設定例:"
+        - proxy_set_header X-SSL_CLIENT_S_DN \$ssl_client_s_dn
+        -
+        - "シラサギの設定例:"
+        - "  環境変数（キー）: X-SSL_CLIENT_S_DN"
+        - "  環境変数（値）: 証明書 Subject DN"
     ss/addon/trash_setting:
       trash_threshold:
         - ゴミ箱の保持期間を設定できます。

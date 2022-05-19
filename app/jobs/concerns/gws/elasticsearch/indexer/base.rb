@@ -15,7 +15,7 @@ module Gws::Elasticsearch::Indexer::Base
       before_file_ids = collect_file_ids_was_for_save(item)
 
       ret = yield
-      return ret unless site.menu_elasticsearch_visible?
+      return ret unless site.try(:menu_elasticsearch_visible?)
 
       after_file_ids = collect_file_ids_for_save(item)
       remove_file_ids = before_file_ids - after_file_ids
@@ -41,10 +41,11 @@ module Gws::Elasticsearch::Indexer::Base
       file_ids = collect_file_ids_for_destroy(item)
 
       ret = yield
-      return ret unless item.site.menu_elasticsearch_visible?
 
-      job = self.bind(site_id: site)
-      job.perform_later(action: 'delete', id: id.to_s, remove_file_ids: file_ids.map(&:to_s))
+      if item.site.try(:menu_elasticsearch_visible?)
+        job = self.bind(site_id: site)
+        job.perform_later(action: 'delete', id: id.to_s, remove_file_ids: file_ids.map(&:to_s))
+      end
 
       ret
     end

@@ -71,8 +71,14 @@ module Sitemap::Addon
       entries = []
       tree.flatten("/", entries)
 
-      urls = entries.map { |m| opts[:name] ? "#{m.url.sub(m.site.url, '/')} ##{m.name}" : m.url.sub(m.site.url, '/') }
-      urls
+      entries.map do |m|
+        if m.is_a?(Cms::Model::Node)
+          url = "/#{m.filename}/"
+        else
+          url = "/#{m.filename}"
+        end
+        opts[:name] ? "#{url} ##{m.name}" : url
+      end
     end
 
     def sitemap_list
@@ -87,8 +93,10 @@ module Sitemap::Addon
         name = url.sub(/^.*?\s*#/, "") if /#/.match?(url)
         url = url.sub(/\s*#.*/, "").strip.sub(/\/$/, "")
         model = /(^|\/)[^.]+$/.match?(url) ? Cms::Node : Cms::Page
-        if item = model.where(site_id: site_id).and_public.filename(url).first
-          data = { url: item.url, name: name.presence || item.name, depth: depth }
+
+        if item = model.site(site).and_public.filename(url).first
+          url = item.url
+          data = { url: url, name: name.presence || item.name, depth: depth }
         else
           data = { url: url, name: name.presence || url, depth: depth }
         end

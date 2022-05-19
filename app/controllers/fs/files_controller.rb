@@ -2,12 +2,17 @@ class Fs::FilesController < ApplicationController
   include SS::AuthFilter
   include Member::AuthFilter
 
+  around_action :around_tagged_url
   before_action :cur_user
   before_action :cur_item
   before_action :deny
   rescue_from StandardError, with: :rescue_action
 
   private
+
+  def around_tagged_url(&block)
+    Rails.logger.tagged(request.url, &block)
+  end
 
   def cms_sites
     # サブディレクトリ型サブサイトの /fs と親サイトの /fs とは区別がつかない。
@@ -45,21 +50,36 @@ class Fs::FilesController < ApplicationController
     name_or_filename = params[:filename]
     name_or_filename << ".#{params[:format]}" if params[:format].present?
 
-    item = SS::File.find(id)
+    begin
+      item = SS::File.find(id)
+    rescue Mongoid::Errors::DocumentNotFound
+      Rails.logger.warn { "#{id} is not found" }
+      raise
+    end
+
+    item = item.becomes_with_model
+
     if item.name == name_or_filename || item.filename == name_or_filename
-      @cur_item = item.becomes_with_model
+      @cur_item = item
       @cur_variant = nil
       return
     end
 
-    item = item.becomes_with_model
     variant = item.variants.from_filename(name_or_filename)
-    raise "404" if !variant
+    if !variant
+      Rails.logger.warn { "name or filename '#{name_or_filename}' is mismatched" }
+      raise "404"
+    end
 
     @cur_item = item
     @cur_variant = variant
 
     @cur_item
+  end
+
+  def cur_variant
+    cur_item
+    @cur_variant
   end
 
   def cur_site
@@ -82,8 +102,18 @@ class Fs::FilesController < ApplicationController
   end
 
   def deny
-    raise "404" unless cur_item.previewable?(site: cur_site, user: cur_user, member: get_member_by_session)
-    set_last_logged_in
+    member = get_member_by_session
+
+    tags = []
+    tags << "file:#{cur_item.id}(#{cur_item.filename})" if cur_item
+    tags << "site:#{cur_site.host}(#{cur_site.name})" if cur_site
+    tags << "user:#{cur_user.long_name}" if cur_user
+    tags << "member:#{member.id}(#{member.name})" if member
+
+    Rails.logger.tagged(*tags) do
+      raise "404" unless cur_item.previewable?(site: cur_site, user: cur_user, member: member)
+      set_last_logged_in
+    end
   end
 
   def set_last_modified
@@ -115,15 +145,16 @@ class Fs::FilesController < ApplicationController
   end
 
   def send_item(disposition = :inline)
-    path = @cur_variant ? @cur_variant.path : @cur_item.path
-    @cur_variant.create! if @cur_variant
+    path = cur_variant ? cur_variant.path : cur_item.path
+    cur_variant.create! if cur_variant
     raise "404" unless Fs.file?(path)
 
     set_last_modified
 
-    content_type = @cur_variant ? @cur_variant.content_type : @cur_item.content_type
-    download_filename = @cur_variant ? @cur_variant.download_filename : @cur_item.download_filename
-    ss_send_file @cur_variant || @cur_item, type: content_type, filename: download_filename, disposition: disposition
+    content_type = cur_variant ? cur_variant.content_type : cur_item.content_type
+    content_type = content_type.presence || SS::MimeType::DEFAULT_MIME_TYPE
+    download_filename = cur_variant ? cur_variant.download_filename : cur_item.download_filename
+    ss_send_file cur_variant || cur_item, type: content_type, filename: download_filename, disposition: disposition
   end
 
   public
@@ -140,17 +171,16 @@ class Fs::FilesController < ApplicationController
     height = height.numeric? ? height.to_i : nil
 
     if width.present? && height.present? && width > 0 && height > 0
-      @cur_variant = @cur_item.variants[{ width: width, height: height }]
-    elsif size.present? && (variant = @cur_item.variants[size.to_s.to_sym])
+      @cur_variant = cur_item.variants[{ width: width, height: height }]
+    elsif size.present? && (variant = cur_item.variants[size.to_s.to_sym])
       @cur_variant = variant
     else
-      @cur_variant = @cur_item.variants[:thumb]
+      @cur_variant = cur_item.variants[:thumb]
     end
 
-    set_last_modified
     send_item
   rescue => e
-    logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
     raise "500"
   end
 

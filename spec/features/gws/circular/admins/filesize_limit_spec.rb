@@ -58,6 +58,18 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
       expect(Gws::Circular::Post.all.topic.count).to eq 1
+      Gws::Circular::Post.all.topic.first.tap do |topic|
+        expect(topic.name).to eq name
+        expect(topic.files.count).to eq 1
+        topic.files.first.tap do |topic_file|
+          expect(topic_file.name).to eq ::File.basename(file_path)
+          expect(topic_file.filename).to eq ::File.basename(file_path)
+          expect(topic_file.site_id).to be_blank
+          expect(topic_file.model).to eq "gws/circular/post"
+          expect(topic_file.owner_item_id).to eq topic.id
+          expect(topic_file.owner_item_type).to eq topic.class.name
+        end
+      end
 
       expect(SS::Notification.all.count).to eq 0
     end

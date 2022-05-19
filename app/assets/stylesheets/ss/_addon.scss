@@ -6,10 +6,6 @@
   .btn {
     margin-left: 5px;
   }
-  .active {
-    background: #ddd;
-    color: #888;
-  }
   .ss-addon-markdown-help-button {
     margin: 14px 0 0;
     float: right;
@@ -41,7 +37,7 @@
       padding: 5px;
       overflow: hidden;
       text-overflow: ellipsis;
-      word-wrap: nowrap;
+      overflow-wrap: normal;
       white-space: nowrap;
     }
   }

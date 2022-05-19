@@ -33,6 +33,13 @@ module Cms::BaseFilter
   def set_site
     @ss_mode = :cms
     @cur_site = SS.current_site = Cms::Site.find params[:site]
+
+    if @cur_site.maintenance_mode? && !@cur_site.allowed_maint_user?(@cur_user.id)
+      @ss_maintenance_mode = true
+      render "cms/maintenance_mode_notice/index.html", layout: "ss/base"
+      return
+    end
+
     request.env["ss.site"] = @cur_site
     @crumbs << [@cur_site.name, cms_contents_path]
   end

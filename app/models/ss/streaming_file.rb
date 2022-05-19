@@ -1,6 +1,5 @@
 class SS::StreamingFile
   include SS::Model::File
-  # include SS::Relation::Thumb
 
   attr_accessor :in_remote_url, :in_size_limit, :in_remote_basic_authentication
 
@@ -14,7 +13,7 @@ class SS::StreamingFile
     basename = ::File.basename(::Addressable::URI.unencode(in_remote_url))
     self.name = basename if name.blank?
     self.filename = basename if filename.blank?
-    self.content_type = ::SS::MimeType.find(filename, "application/octet-stream")
+    self.content_type = ::SS::MimeType.find(filename, SS::MimeType::DEFAULT_MIME_TYPE)
   end
 
   # not implemented save_file for grid-fs mode
