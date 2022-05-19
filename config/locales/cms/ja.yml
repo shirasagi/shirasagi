@@ -99,6 +99,7 @@ ja:
     preview_date: プレビュー日時
     translate: 自動翻訳
     list_menu_of_monthly_page: 月別ページ一覧メニュー
+    state_expired_suffix: （期限切れ）
     column_file_upload:
       image:
         file_label: 代替テキスト
@@ -185,6 +186,9 @@ ja:
       check_links_report_created: "%{time} 時点"
       delete_forum_column: 入力項目を削除する
       confirm_column_deletion_whose_form_is_in_use: "定型フォームは利用中のため入力項目を削除するとページが正しく表示されなくなる場合があります。"
+      page_expiration_header: ページの公開期限が切れています。
+      page_expiration_body:
+        - "ページの公開期限が切れていますので確認の上、対応を願いいたします。"
     apis:
       categories:
         index: カテゴリーを選択する
@@ -382,6 +386,13 @@ ja:
       sns_post_log_state:
         success: 成功
         error: エラー
+      page_expiration_before:
+        90_days: 90日
+        180_days: 180日
+        1_year: 1年
+        2_years: 2年
+        3_years: 3年
+
     sns_share:
       fb_like: Facebook いいね！
       fb_share: Facebook シェア
@@ -400,6 +411,14 @@ ja:
       text: 説明
       state: 登録方法
 
+    page_expiration_mail:
+      title: 公開期限お知らせメール
+      subject: 件名
+      upper_text: 上部テキスト
+      default_subject: "公開期限通知"
+      default_upper_text:
+        - "次のページの公開期限が切れています。"
+        - "確認の上、対応をお願いいたします。"
   #cms:
     nodes:
       cms/node: フォルダーリスト
@@ -758,11 +777,15 @@ ja:
         page_layout_id: ページレイアウト
       cms/reference/member:
         member_id: メンバー
-      cms/site:
+      cms/addon/page_setting:
         auto_keywords: キーワード自動設定
         auto_description: 概要自動設定
         max_name_length: ページタイトル文字数制限
         keywords: 追加キーワード
+        page_expiration_state: 公開期限警告
+        page_expiration_before: 公開期限
+        page_expiration_mail_subject: 公開期限お知らせメール（件名）
+        page_expiration_mail_upper_text: 公開期限お知らせメール（上部テキスト）
       cms/model/member:
         name: 氏名
         email: メールアドレス
@@ -1541,6 +1564,8 @@ ja:
         - 管理画面（マイページ）のドメインを入力します。
         - 公開画面と管理画面のドメインが異なる場合は、必ず入力してください。
         - 入力しないと、micheckerなど、一部の機能が正常に動作しなくなります。
+
+    cms/addon/page_setting:
       auto_keywords:
         - ページ、フォルダー保存時にメタ情報のキーワードを入力しない場合、自動で入力するかを選択します。
         - 自動入力されるキーワードは親フォルダー名と設定カテゴリー名から生成されます。
@@ -1551,6 +1576,14 @@ ja:
         - キーワード自動設定が有効時にこの項目が自動入力に追加されます。
       max_name_length:
         - ページタイトルの文字数設定の最大テキスト長を設定します。
+      page_expiration_state:
+        - 公開期限の期限切れ警告を有効にするかどうかを選択します。
+      page_expiration_before:
+        - 公開期限の期限を選択します。
+      page_expiration_mail_subject:
+        - 公開期限が切れたページについて、そのページの担当部署宛にお知らせメールを送ります。そのメールの件名を入力します。
+      page_expiration_mail_upper_text:
+        - 公開期限が切れたページについて、そのページの担当部署宛にお知らせメールを送ります。そのメールの上部テキストを入力します。
     cms/model/part:
       route:
         - |-
@@ -2412,6 +2445,7 @@ ja:
       cms/page/remove_job: ページ削除
       cms/page/update_job: ページ更新
       cms/page/move_job: ページ移動
+      cms/page/expiration_notice_job: 公開期限お知らせ
       cms/check_links_job: リンクチェック
       cms/node/copy_nodes_job: フォルダー複製
       cms/import_files_job: ページ/フォルダー取り込み

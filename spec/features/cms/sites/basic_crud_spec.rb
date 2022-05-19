@@ -22,6 +22,54 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
     end
   end
 
+  context "addon-cms-agents-addons-page_setting" do
+    let(:auto_keywords) { %w(enabled disabled).sample }
+    let(:auto_keywords_label) { I18n.t("ss.options.state.#{auto_keywords}") }
+    let(:keywords) { Array.new(2) { unique_id } }
+    let(:auto_description) { %w(enabled disabled).sample }
+    let(:auto_description_label) { I18n.t("ss.options.state.#{auto_description}") }
+    let(:max_name_length) { [ 80, 0 ].sample }
+    let(:max_name_length_label) { I18n.t("cms.options.max_name_length.#{max_name_length}") }
+    let(:page_expiration_state) { %w(enabled disabled).sample }
+    let(:page_expiration_state_label) { I18n.t("ss.options.state.#{page_expiration_state}") }
+    let(:page_expiration_before) { %w(90.days 180.days 1.year 2.years 3.years).sample }
+    let(:page_expiration_before_label) do
+      I18n.t("cms.options.page_expiration_before.#{page_expiration_before.sub(".", "_")}")
+    end
+    let(:page_expiration_mail_subject) { unique_id }
+    let(:page_expiration_mail_upper_text) { Array.new(2) { unique_id } }
+
+    it do
+      visit index_path
+      click_on I18n.t("ss.links.edit")
+
+      ensure_addon_opened("#addon-cms-agents-addons-page_setting")
+      within "form#item-form" do
+        select auto_keywords_label, from: "item[auto_keywords]"
+        fill_in "item[keywords]", with: keywords.join(" ")
+        select auto_description_label, from: "item[auto_description]"
+        select max_name_length_label, from: "item[max_name_length]"
+        select page_expiration_state_label, from: "item[page_expiration_state]"
+        select page_expiration_before_label, from: "item[page_expiration_before]"
+        fill_in "item[page_expiration_mail_subject]", with: page_expiration_mail_subject
+        fill_in "item[page_expiration_mail_upper_text]", with: page_expiration_mail_upper_text.join("\n")
+
+        click_on I18n.t('ss.buttons.save')
+      end
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+      site.reload
+      expect(site.auto_keywords).to eq auto_keywords
+      expect(site.keywords).to eq keywords
+      expect(site.auto_description).to eq auto_description
+      expect(site.max_name_length).to eq max_name_length
+      expect(site.page_expiration_state).to eq page_expiration_state
+      expect(site.page_expiration_before).to eq page_expiration_before
+      expect(site.page_expiration_mail_subject).to eq page_expiration_mail_subject
+      expect(site.page_expiration_mail_upper_text).to eq page_expiration_mail_upper_text.join("\r\n")
+    end
+  end
+
   context "addon-ss-agents-addons-approve_setting" do
     let(:forced_update) { %w(enabled disabled).sample }
     let(:forced_update_label) { I18n.t("ss.options.state.#{forced_update}") }
