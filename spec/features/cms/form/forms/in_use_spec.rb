@@ -40,10 +40,10 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
       first(".list-head [type='checkbox']").click
 
       within ".list-head-action" do
-        page.accept_confirm do
-          click_on I18n.t("ss.links.delete")
-        end
+        click_on I18n.t("ss.links.delete")
       end
+      expect(page).to have_content I18n.t('ss.confirm.target_to_delete')
+      click_button I18n.t('ss.buttons.delete')
 
       click_button I18n.t('ss.buttons.delete')
 

@@ -7,6 +7,11 @@ Rails.application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
+  concern :change_state do
+    get :state, on: :member
+    put :change_state_all, on: :collection, path: ''
+  end
+
   concern :command do
     get :command, on: :member
     post :command, on: :member
@@ -14,7 +19,7 @@ Rails.application.routes.draw do
 
   content "ads" do
     get "/" => redirect { |p, req| "#{req.path}/banners" }, as: :main
-    resources :banners, concerns: [:deletion, :command]
+    resources :banners, concerns: [:deletion, :change_state, :command]
     get "access_logs" => "access_logs#index", as: :access_logs
     get "access_logs/download" => "access_logs#download", as: :access_logs_download
   end

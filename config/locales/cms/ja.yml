@@ -1247,7 +1247,7 @@ ja:
       mobile_size_check_server_error: 本文データサイズのチェック中にサーバーエラーが発生しました。
       not_a_child_group: はサイトに所属するグループを設定してください。
       not_found_parent_group: 親グループが存在しません。
-      plz_check_targets_to_change_state: 公開ステータス変更対象が選択されておりません。チェックボックスにチェックを入れた上で変更をお願いします。
+      plz_check_targets_to_change_state: 公開ステータス変更対象が選択されておりません。対象のチェックボックスにチェックを入れてください。
       invalid_order_of_h: 見出し(H)の順番が不正です。
       invalid_multibyte_character: 英数字は半角文字を入力してください。
       invalid_kana_character: 半角カナ文字が含まれています。

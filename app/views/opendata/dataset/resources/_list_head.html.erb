@@ -4,7 +4,7 @@
   <label class="check"><input type="checkbox" /></label>
   <div class="list-head-action">
     <div class="list-head-action-destroy">
-      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn", method: "delete", confirm: t('ss.confirm.delete') %>
+      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", model: @model, method: "delete", confirm: t('ss.confirm.delete') %>
     </div>
   </div>
   <% end %>

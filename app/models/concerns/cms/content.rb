@@ -258,6 +258,10 @@ module Cms::Content
     end
   end
 
+  def state_changeable?
+    self.is_a?(Cms::Addon::Release)
+  end
+
   private
 
   def set_filename

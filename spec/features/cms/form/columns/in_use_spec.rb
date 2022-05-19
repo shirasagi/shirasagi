@@ -70,9 +70,7 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
       first(".list-head [type='checkbox']").click
 
       within ".list-head-action" do
-        page.accept_confirm do
-          click_on I18n.t("ss.links.delete")
-        end
+        click_on I18n.t("ss.links.delete")
       end
       wait_for_notice I18n.t("errors.messages.unable_to_delete_all_columns_if_form_is_in_use")
 

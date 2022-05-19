@@ -7,6 +7,11 @@ Rails.application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
+  concern :change_state do
+    get :state, on: :member
+    put :change_state_all, on: :collection, path: ''
+  end
+
   concern :download do
     get :download, on: :collection
   end
@@ -19,15 +24,15 @@ Rails.application.routes.draw do
 
   content "garbage" do
     get "/" => redirect { |p, req| "#{req.path}/searches" }, as: :main
-    resources :pages, concerns: :deletion
-    resources :nodes, concerns: [:deletion, :download, :import]
-    resources :searches, concerns: :deletion
-    resources :category_lists, concerns: [:deletion, :download, :import]
-    resources :categories, concerns: :deletion
-    resources :area_lists, concerns: [:deletion, :download, :import]
-    resources :areas, concerns: :deletion
-    resources :center_lists, concerns: [:deletion, :download, :import]
-    resources :centers, concerns: :deletion
+    resources :pages, concerns: [:deletion, :change_state]
+    resources :nodes, concerns: [:deletion, :download, :import, :change_state]
+    resources :searches, concerns: [:deletion, :change_state]
+    resources :category_lists, concerns: [:deletion, :download, :import, :change_state]
+    resources :categories, concerns: [:deletion, :change_state]
+    resources :area_lists, concerns: [:deletion, :download, :import, :change_state]
+    resources :areas, concerns: [:deletion, :change_state]
+    resources :center_lists, concerns: [:deletion, :download, :import, :change_state]
+    resources :centers, concerns: [:deletion, :change_state]
   end
 
   namespace "garbage", path: ".s:site/garbage" do

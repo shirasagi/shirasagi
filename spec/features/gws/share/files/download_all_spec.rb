@@ -16,6 +16,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
     context "when zip file is created on the fly" do
       it do
         visit index_path
+        puts index_path
         find('.list-head label.check input').click
         page.accept_confirm do
           find('.download-all').click

@@ -113,7 +113,7 @@ Rails.application.routes.draw do
       get :routes, on: :collection
     end
 
-    resources :pages, concerns: [:deletion, :copy, :move, :command, :lock, :contains_urls, :michecker]
+    resources :pages, concerns: [:deletion, :copy, :move, :command, :lock, :contains_urls, :michecker, :change_state]
     resources :layouts, concerns: :deletion
     resources :body_layouts, concerns: :deletion
     resources :editor_templates, concerns: [:deletion, :template]
@@ -126,7 +126,7 @@ Rails.application.routes.draw do
     resources :word_dictionaries, concerns: [:deletion, :template]
 
     scope module: "form" do
-      resources :forms, concerns: [:deletion] do
+      resources :forms, concerns: [:deletion, :change_state] do
         resources :init_columns, concerns: [:deletion]
         resources :columns, concerns: [:deletion]
       end
@@ -351,10 +351,10 @@ Rails.application.routes.draw do
     end
     resources :max_file_sizes, concerns: :deletion
     resources :image_resizes, concerns: :deletion
-    resources :nodes, concerns: :deletion
-    resources :pages, concerns: [:deletion, :copy, :move, :lock, :command, :contains_urls, :michecker]
-    resources :import_pages, concerns: [:deletion, :convert]
-    resources :import_nodes, concerns: [:deletion]
+    resources :nodes, concerns: [:deletion, :change_state]
+    resources :pages, concerns: [:deletion, :copy, :move, :lock, :command, :contains_urls, :michecker, :change_state]
+    resources :import_pages, concerns: [:deletion, :convert, :change_state]
+    resources :import_nodes, concerns: [:deletion, :change_state]
     get "/group_pages" => redirect { |p, req| "#{req.path.sub(/\/group_pages$/, "")}/nodes" }
     resources :parts, concerns: :deletion
     resources :layouts, concerns: :deletion
