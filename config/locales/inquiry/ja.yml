@@ -193,7 +193,6 @@ ja:
 
       inquiry/addon/kintone_app/setting:
         kintone_app_activation: 連携
-        kintone_app_domain: ドメイン
         kintone_app_api_token: APIトークン
         kintone_app_key: アプリID
 
