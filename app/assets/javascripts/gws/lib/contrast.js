@@ -1,7 +1,8 @@
 function Gws_Contrast(opts) {
   this.opts = opts;
   this.$el = $('#user-contrast-menu');
-  this.template = 'body * { color: :color !important; border-color: :color !important; background: :background !important; }';
+  this.template = 'body * { color: :color !important; border-color: :color !important; background: :background !important; } ' +
+                  'body *:after { background: :background !important; }';
 
   this.render();
 }
