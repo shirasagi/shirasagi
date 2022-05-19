@@ -309,6 +309,7 @@ Rails.application.routes.draw do
         resources :nodes, param: :cid, only: [] do
           post :publish, on: :member
           get :new_page, on: :member
+          get :new_page, on: :collection
         end
         resources :pages, only: [] do
           post :publish, on: :member

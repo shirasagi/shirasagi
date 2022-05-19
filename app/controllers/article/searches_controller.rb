@@ -1,9 +1,6 @@
 class Article::SearchesController < ApplicationController
   include Cms::BaseFilter
+  include Cms::PageFilter
 
-  prepend_before_action ->{ redirect_to article_pages_path }, only: :index
-
-  def index
-    # redirect
-  end
+  prepend_before_action ->{ redirect_to url_for(controller: 'article/pages', action: params[:action]) }
 end
