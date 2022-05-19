@@ -1018,7 +1018,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   }
   @include mb {
     h3 {
-      a, a:hover, a.management, a:hover.management, span {
+      a, a:hover, a.management, a:hover.management, a.trash, a:hover.trash, span {
         padding: 5px 15px 5px 35px;
         background-position: 15px center;
       }
