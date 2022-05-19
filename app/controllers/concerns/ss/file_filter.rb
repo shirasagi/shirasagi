@@ -141,4 +141,8 @@ module SS::FileFilter
 
     render json: { contrast_ratio: ret, contrast_ratio_human: ret.round(2).to_s }
   end
+
+  def new_large_cms_files
+    render :new_large_files
+  end
 end

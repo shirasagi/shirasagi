@@ -114,6 +114,7 @@ ja:
       set_tag: タグ設定
       reset_tags: タグ解除
       upload: アップロード
+      large_upload: 大容量アップロード
       decode: デコードする
       print: 印刷する
       initialize: 初期化する
