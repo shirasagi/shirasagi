@@ -1,15 +1,19 @@
 class SS::BasicAuth
   class << self
-    def find_by_domain(domain)
-      credentials[domain]
+    def find_by_domain(site)
+      credentials(site)
     end
 
-    def credentials
+    def credentials(site)
       @@credentials ||= begin
-        SS.config.basic_auth.credentials.to_a.map do |item|
+        basic_auth_credentials(site).map do |item|
           [item["domain"], OpenStruct.new(item)]
         end.to_h
       end
+    end
+
+    def basic_auth_credentials(site)
+      [{ "domain"=>site.kintone_domain, "user"=>site.kintone_user, "password"=>SS::Crypt.decrypt(site.kintone_password) }]
     end
   end
 end

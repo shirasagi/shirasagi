@@ -526,6 +526,7 @@ ja:
       ss/facebook_setting: Facebook設定
       ss/twitter_setting: Twitter設定
       ss/line_setting: LINE設定
+      ss/kintone_setting: kintone設定
       ss/approve_setting: 承認設定
       ss/editor_setting: エディタ設定
       ss/mail_setting: メール設定
@@ -789,6 +790,10 @@ ja:
         line_poster_state: ページ連携
         line_channel_secret: チャネルシークレット
         line_channel_access_token: チャネルアクセストークン
+      ss/addon/kintone_setting:
+        kintone_domain: kintone ドメイン
+        kintone_user: Basic認証ユーザー
+        kintone_password: Basic認証パスワード
       ss/addon/site_auto_post_setting:
         site_twitter_auto_post: Twitter自動投稿
         site_edit_auto_post: 編集時に自動投稿

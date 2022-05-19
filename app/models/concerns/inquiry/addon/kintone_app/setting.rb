@@ -27,10 +27,14 @@ module Inquiry::Addon
     end
 
     def kintone_api
-      basic_auth = SS::BasicAuth.find_by_domain(kintone_app_domain)
+      basic_auth = SS::BasicAuth.find_by_domain(cms_site(site.id))
       ::Kintone::Api.new(kintone_app_domain, kintone_app_api_token) do |conn|
         conn.basic_auth(basic_auth.user, basic_auth.password) if basic_auth
       end
+    end
+
+    def cms_site(site_id)
+      Cms::Site.find(site_id)
     end
   end
 end

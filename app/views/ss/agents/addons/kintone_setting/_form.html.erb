@@ -1,0 +1,14 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+<dl class="see mod-ss-kintone-setting">
+  <dt><%= @model.t :kintone_domain %><%= @model.tt :kintone_domain %></dt>
+  <dd><%= f.text_field :kintone_domain %></dd>
+
+  <dt><%= @model.t :kintone_user %><%= @model.tt :kintone_user %></dt>
+  <dd><%= f.text_field :kintone_user %></dd>
+
+  <dt><%= @model.t :kintone_password %><%= @model.tt :kintone_password %></dt>
+  <dd><%= f.password_field :in_kintone_password %></dd>
+</dl>
