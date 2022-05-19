@@ -48,7 +48,7 @@ module Gws::Schedule::CalendarFormat
       data[:className] += ' fc-event-repeat'
     end
 
-    if data[:readable] && private_plan?(user)
+    if (data[:readable] && private_plan?(user)) || data[:title] == I18n.t("gws/schedule.private_plan")
       data[:className] += ' fc-event-private'
     end
 
