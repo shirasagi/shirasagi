@@ -1,4 +1,4 @@
-class Ezine::Mailer < ActionMailer::Base
+class Ezine::Mailer < ApplicationMailer
   # Deliver a verification e-mail to the entry.
   #
   # 購読申し込みに対して確認メールを配信する。

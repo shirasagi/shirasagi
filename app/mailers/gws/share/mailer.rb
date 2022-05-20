@@ -1,4 +1,4 @@
-class Gws::Share::Mailer < ActionMailer::Base
+class Gws::Share::Mailer < ApplicationMailer
   def compressed_mail(site, user, compressor)
     @item = compressor
     @user = user

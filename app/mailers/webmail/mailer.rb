@@ -1,4 +1,4 @@
-class Webmail::Mailer < ActionMailer::Base
+class Webmail::Mailer < ApplicationMailer
   include SS::AttachmentSupport
 
   def rescue_deliver(e)

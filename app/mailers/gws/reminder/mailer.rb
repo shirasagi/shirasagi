@@ -1,4 +1,4 @@
-class Gws::Reminder::Mailer < ActionMailer::Base
+class Gws::Reminder::Mailer < ApplicationMailer
   helper Gws::Schedule::PlanHelper
   helper Gws::PublicUserProfile
 

@@ -1,4 +1,4 @@
-class Gws::Memo::Mailer < ActionMailer::Base
+class Gws::Memo::Mailer < ApplicationMailer
   include SS::AttachmentSupport
 
   helper_method :format_email

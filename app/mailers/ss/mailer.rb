@@ -1,4 +1,4 @@
-class SS::Mailer < ActionMailer::Base
+class SS::Mailer < ApplicationMailer
   def new_message(args)
     mail(args)
   end

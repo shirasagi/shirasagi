@@ -1,4 +1,4 @@
-class Jmaxml::Mailer::Main < ActionMailer::Base
+class Jmaxml::Mailer::Main < ApplicationMailer
   include Jmaxml::Helper::Main
 
   def self.inherited(child)

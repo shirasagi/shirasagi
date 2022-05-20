@@ -1,4 +1,4 @@
-class Cms::Mailer < ActionMailer::Base
+class Cms::Mailer < ApplicationMailer
   def expiration_page_notice(site, group, pages)
     return if group.contact_email.blank?
 
