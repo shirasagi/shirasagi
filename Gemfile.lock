@@ -801,6 +801,7 @@ DEPENDENCIES
   sparql-client
   spring (~> 2.0.2)
   sprockets (< 4.0)
+  stringio
   terminal-notifier-guard
   test-queue
   thinreports
