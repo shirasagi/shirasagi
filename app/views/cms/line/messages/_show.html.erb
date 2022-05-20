@@ -1,0 +1,12 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :deliver_state %></dt>
+  <dd><%= @item.label :deliver_state %></dd>
+
+  <% if @item.completed.present? %>
+    <dt><%= @item.t :completed %></dt>
+    <dd><%= tryb{ @item.completed.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <% end %>
+</dl>

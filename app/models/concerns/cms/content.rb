@@ -7,7 +7,7 @@ module Cms::Content
   include SS::Reference::User
   include SS::Reference::Site
   include Cms::GroupPermission
-  include Cms::Addon::CheckLinks
+  include Cms::CheckLinks
   include Fs::FilePreviewable
   include History::Addon::Trash
   include Cms::ContentLiquid
@@ -256,6 +256,10 @@ module Cms::Content
     %w(fixed same_as_updated same_as_created same_as_first_released).map do |v|
       [ I18n.t("cms.options.released_type.#{v}"), v ]
     end
+  end
+
+  def state_changeable?
+    self.is_a?(Cms::Addon::Release)
   end
 
   private

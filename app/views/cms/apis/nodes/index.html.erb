@@ -1,6 +1,6 @@
 <%= jquery do %>
   <% if params[:layout] == "iframe" %>
-    window.top.SS_SearchUI.modal({ $el: $("#ajax-box") });
+    window.top.SS_SearchUI.modal({ $el: $(".ss-ajax-in-iframe-content") });
   <% else %>
     SS_SearchUI.modal();
   <% end %>

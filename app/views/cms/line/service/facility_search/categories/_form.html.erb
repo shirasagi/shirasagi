@@ -1,0 +1,26 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :image_id %><%= @model.tt :image_id %></dt>
+  <dd>
+    <% if @item.image %>
+      <div style="padding: 5px 0px 10px 0px;">
+        <label>
+          <%= @item.image.name %>
+          <%= f.check_box :rm_image %><%= t "ss.buttons.delete" %>
+        </label>
+      </div>
+    <% end %>
+    <%= f.file_field :in_image %>
+  </dd>
+
+  <dt><%= @model.t :summary %><%= @model.tt :summary %></dt>
+  <dd><%= f.text_area :summary %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+
+  <dt><%= @model.t :state %><%= @model.tt :state %></dt>
+  <dd><%= f.select :state, @item.state_options %></dd>
+</dl>

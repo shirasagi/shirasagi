@@ -31,6 +31,21 @@ ja:
     input_directly: 直接入力する
     layout: レイアウト
     link_check: リンクチェック
+    line: LINE
+    line_service: サービス
+    line_service_hook: イベントフック
+    line_richmenu: リッチメニュー
+    line_richmenu_menu: メニュー設定
+    line_facility_search_category: 施設カテゴリー
+    line_message: メッセージ
+    line_template: テンプレート
+    line_deliver_log: 配信ログ
+    line_deliver_condition: 配信条件
+    line_deliver_category: 配信カテゴリー
+    line_deliver_category_setting: カテゴリー
+    line_deliver_age_setting: 年齢設定
+    line_test_member: テストメンバー
+    line_event_session: セッション
     form_check: 制約チェック
     list_view: リスト表示
     row_error: 'error %{row_num}行目'
@@ -157,6 +172,10 @@ ja:
       save_as_branch: 差し替え保存
       ignore_alerts_and_save_as_branch: 警告を無視して差替保存
       column_add_list: リストを追加する
+      apply: 反映する
+      setting: 設定する
+      apply_richmenu: リッチメニューを反映する
+      add_template: "テンプレートを追加する（最大5個）"
     confirm:
       delete_item: 項目を削除してよろしいですか？
       close: 非公開状態で保存しようとしています
@@ -172,6 +191,7 @@ ja:
       twitter_post_enabled: Twitter投稿が有効になっています。連携しない場合は、設定を解除してください。
       source_clean: "ソースクリーニングを実行してよろしいですか。\nソースクリーニングにより表示が崩れる可能性があります。"
       change_form: 定型フォームを変更してよろしいですか？
+      line_apply_richmenu: リッチメニューの反映処理を開始してよろしいですか？
     notices:
       import_with_entry_form_is_not_supported: 次のフォームでは本文ブロックは出力されません。
       restoring_public_content_from_trash: 非公開で復元されます。復元後、内容を確認うえ、公開してください。
@@ -182,10 +202,21 @@ ja:
       check_links_report:
         - "%{time} 時点でのレポートです。"
         - "リンク切れを修正した場合、再度リンクチェックを実行し、新しいレポートを作成してください。"
-      check_links_report_annotation: ※リンクチェックの実行タイミングや通信先サーバーの負荷状況によっては誤検出の場合があります。
-      check_links_report_created: "%{time} 時点"
+      check_links_report_header: "リンク切れが%{count}件あります（%{time}時点）"
+      check_links_report_body: ページ内に次のリンク切れが検出されました。プレビューなどで確認の上、修正してください。
+      check_links_report_annotation: ※正常なリンクであっても、ネットワークの混雑状況や通信先サーバーの負荷状況などによって誤ってリンク切れと判定される場合があります。
       delete_forum_column: 入力項目を削除する
       confirm_column_deletion_whose_form_is_in_use: "定型フォームは利用中のため入力項目を削除するとページが正しく表示されなくなる場合があります。"
+      line_apply_richmenu:
+        - 以下のリッチメニューグループをLINEに反映します。
+        - 反映するボタンを押下すると反映処理が開始されます。
+      line_remand_richmenu:
+        - 公開状態のリッチメニューグループが存在しません。
+        - この状態で反映処理を行うと、反映されているリッチメニューが取り下げられます。
+        - 反映するボタンを押下すると反映処理が開始されます。
+      line_deliver_directly: 即時配信（予約日時無し）
+      line_deliver_plans_empty: 配信日時が設定されていません。
+      line_hub_node_emtpy: "「標準機能/LINE HUB」フォルダーが公開状態で設置されていません。"
       page_expiration_header: ページの公開期限が切れています。
       page_expiration_body:
         - "ページの公開期限が切れていますので確認の上、対応を願いいたします。"
@@ -380,6 +411,46 @@ ja:
         thumb_carousel: サムネイル画像とLINEメッセージ
         body_carousel: 本文内の最初の画像とLINEメッセージ
         message_only_carousel: LINEメッセージ
+      line_service_type:
+        hub: サービスHUB
+        chat: チャットボット
+        facility_search: 施設検索
+        image_map: イメージマップ
+        json_template: JSONテンプレート
+        api: API連携
+      line_deliver_condition_state:
+        multicast_with_no_condition: 登録メンバー全員に配信する
+        multicast_with_registered_condition: 登録メンバーに条件配信する（配信条件を設定）
+        multicast_with_input_condition: 登録メンバーに条件配信する（配信条件を入力）
+        #broadcast: 友達登録者全員に配信する
+      line_template_type:
+        text: テキスト
+        image: 画像
+        page: 記事ページ
+      line_template_thumb_state:
+        none: 表示しない
+        thumb_carousel: 記事のサムネイル画像
+        body_carousel: 本文内の最初の画像
+      line_deliver_category_type:
+        category: カテゴリー
+        child_age: 子どもの年齢
+      line_richmenu_target:
+        default: デフォルト
+        member: メンバー
+        switch: タブ切替
+      line_action_type:
+        message: メッセージ
+        uri: URI
+        postback: ポストバック
+        richmenuswitch: リッチメニュー切替
+      deliver_state:
+        draft: 下書き
+        ready: 配信待ち
+        completed: 配信完了
+        expired: 期限切れ
+      deliver_mode:
+        main: 本配信
+        test: テスト配信
       sns_post_log_type:
         twitter: Twitter投稿
         line: LINE投稿
@@ -428,6 +499,7 @@ ja:
       cms/photo_album: 写真一覧
       cms/group_page: グループ別ページリスト
       cms/site_search: サイト内検索
+      cms/line_hub: "LINE HUB"
     parts:
       cms/free: HTML記述
       cms/node: フォルダーリスト
@@ -593,6 +665,10 @@ ja:
     edit_cms_image_resizes: 画像リサイズの編集
     delete_cms_image_resizes: 画像リサイズの削除
     disable_cms_image_resizes: 画像リサイズの無効化
+    use_other_cms_line_messages: LINEメッセージの利用（全て）
+    use_private_cms_line_messages: LINEメッセージの利用（所有）
+    use_cms_line_deliver_categories: LINE配信カテゴリーの管理
+    use_cms_line_services: LINEサービスの管理
 
   modules:
     cms: 標準機能
@@ -658,9 +734,29 @@ ja:
       cms/site_search/keyword: 注目ワード
       cms/line_poster: LINE連携
       cms/content_quota: 容量制限
-      cms/check_links: リンクチェック実行結果
       cms/history_list: 閲覧履歴
       cms/member_reference: メンバー
+      cms/line/service/hub: HUB設定
+      cms/line/service/hook: イベントフック
+      cms/line/service/facility_search: 施設検索
+      cms/line/service/api: API連携
+      cms/line/service/page_list: ページリスト
+      cms/line/service/area: タップ領域
+      cms/line/service/json_body: JSONテンプレート
+      cms/line/deliver_condition/body: 配信条件
+      cms/line/message/body: 本文
+      cms/line/message/deliver_condition: 配信条件
+      cms/line/message/deliver_plan: 配信予約
+      cms/line/template/text: テンプレート：テキスト
+      cms/line/template/image: テンプレート：画像
+      cms/line/template/page: テンプレート：記事ページ
+      cms/line/template/json_body: テンプレート：JSON
+      cms/line/deliver_category/child_age: 子どもの年齢
+      cms/line/deliver_category/pickup: ピックアップ
+      cms/line/richmenu/menu: メニュー設定
+      cms/line/richmenu/area: タップ領域
+      cms/line/deliver_plan/repeat: 繰り返し
+      cms/line/service/image_map: イメージマップ
 
   mongoid:
     models:
@@ -1170,7 +1266,13 @@ ja:
         name: タイトル
         type: 投稿SNS
         state: ステータス
-        page_id: 連携ページ
+        source_id: 連携対象
+        action: アクション
+        response_code: レスポンスコード
+        response_body: レスポンスボディ
+        messages: リクエストメッセージ
+        multicast_user_ids: multicastユーザーID
+        member_ids: 配信メンバー
       cms/addon/content_quota:
         content_quota: 容量制限
       cms/check_links/error/base:
@@ -1183,6 +1285,160 @@ ja:
         group_ids: 管理グループ
       cms/check_links/ignore_url:
         name: 除外URL
+      cms/line/message:
+        name: タイトル
+        body: JSON
+        deliver_state: 配信ステータス
+        completed: 配信日時
+        test_completed: テスト配信日時
+      cms/line/service/hook/base:
+        type: 種別
+        name: タイトル
+        order: 並び順
+        action_type: アクション
+        action_data: データ
+        json_body: JSON
+      cms/addon/line/service/hub:
+        line/service: サービス
+        line/action_type: "Trigger Type"
+        line/action_data: "Trigger Data"
+        expired_text: 有効期限切れメッセージ
+        expired_minutes: 有効期限（分）
+      cms/addon/line/service/api:
+        api_url: "API URL"
+        api_log_filename: "API ログファイル名"
+      cms/addon/line/service/page_list:
+        no_image_id: NO IMAGE画像
+        conditions: 検索条件
+        loop_liquid: 表示テキスト
+        limit: 表示件数
+      cms/addon/line/service/facility_search:
+        category_ids: 施設カテゴリー
+      cms/line/facility_search/category:
+        name: タイトル
+        image_id: サムネイル画像
+        summary: サマリー
+        order: 並び順
+        category_ids: 施設の種類
+        state: ステータス
+      cms/line/deliver_condition:
+        name: タイトル
+        order: 並び順
+      cms/line/deliver_category/base:
+        type: 種別
+        name: タイトル
+        order: 並び順
+        state: ステータス
+      cms/addon/line/deliver_category/child_age:
+        year1: 年齢
+        lower_year1: 年齢1（下限）
+        upper_year1: 年齢1（上限）
+      cms/addon/line/deliver_category/pick_up:
+        st_page_ids: ページ
+      cms/line/test_member:
+        name: 名前
+        oauth_id: OAuth ID (ユーザーID)
+      cms/addon/line/deliver_condition/body: &line_deliver_condition
+        year1: 年齢1
+        year2: 年齢2
+        year3: 年齢3
+        year4: 年齢4
+        year5: 年齢5
+        lower_year1: 年齢1（下限）
+        lower_year2: 年齢2（下限）
+        lower_year3: 年齢3（下限）
+        lower_year4: 年齢4（下限）
+        lower_year5: 年齢5（下限）
+        upper_year1: 年齢1（上限）
+        upper_year2: 年齢2（上限）
+        upper_year3: 年齢3（上限）
+        upper_year4: 年齢4（上限）
+        upper_year5: 年齢5（上限）
+        lower_month1: 年齢1（下限）
+        lower_month2: 年齢2（下限）
+        lower_month3: 年齢3（下限）
+        lower_month4: 年齢4（下限）
+        lower_month5: 年齢5（下限）
+        upper_month1: 年齢1（上限）
+        upper_month2: 年齢2（上限）
+        upper_month3: 年齢3（上限）
+        upper_month4: 年齢4（上限）
+        upper_month5: 年齢5（上限）
+      cms/addon/line/message/deliver_condition:
+        deliver_condition_state: 設定
+        deliver_condition_id: 配信条件
+        <<: *line_deliver_condition
+      cms/addon/line/message/deliver_plan:
+        deliver_date: 配信日時(予約)
+      cms/line/service/group:
+        name: タイトル
+        order: 並び順
+        start_date: 開始日時
+        close_date: 終了日時
+        state: ステータス
+        term: 期間
+        menus: メニュー
+      cms/line/richmenu/group:
+        name: タイトル
+        order: 並び順
+        start_date: 開始日時
+        close_date: 終了日時
+        state: ステータス
+        term: 期間
+        menus: メニュー
+      cms/line/richmenu/menu:
+        name: メニュー名
+        order: 並び順
+        target: 適用区分
+        image_id: 画像
+        width: 幅
+        height: 高さ
+        area_size: タップ領域数
+        chat_bar_text: メニューテキスト
+        state: ステータス
+        areas: タップ領域
+      cms/line/area:
+        x: X
+        y: Y
+        width: W
+        height: H
+        type: アクション
+        text: メッセージ
+        data: データ
+        uri: URI
+        menu_id: 切替メニュー
+      cms/addon/line/deliver_plan/repeat:
+        repeat_type: 繰り返し設定
+        interval: 繰り返し間隔
+        repeat_start: 開始日
+        repeat_end: 終了日
+        repeat_base: 繰り返しの基準
+        wdays: 曜日
+      cms/line/deliver_plan:
+        name: 配信日時(予約)
+        deliver_date: 配信日時（予約）
+        state: ステータス
+      cms/addon/line/service/image_map:
+        width: 幅
+        height: 高さ
+        area_size: タップ領域数
+        alt_text: ALTテキスト
+        image1040_id: 画像（幅1040）
+        image700_id: 画像（幅700）
+        image460_id: 画像（幅460）
+        image300_id: 画像（幅300）
+        image240_id: 画像（幅240）
+      cms/addon/line/service/json_body:
+        json_body: JSON
+      cms/line/template/base:
+        type: テンプレートタイプ
+        text: メッセージ
+        image_id: 画像
+        page_id: ページ
+        title: タイトル
+        summary: メッセージ
+        thumb_state: サムネイル画像
+        json_body: JSON
 
   activemodel:
     attributes:
@@ -1247,7 +1503,7 @@ ja:
       mobile_size_check_server_error: 本文データサイズのチェック中にサーバーエラーが発生しました。
       not_a_child_group: はサイトに所属するグループを設定してください。
       not_found_parent_group: 親グループが存在しません。
-      plz_check_targets_to_change_state: 公開ステータス変更対象が選択されておりません。チェックボックスにチェックを入れた上で変更をお願いします。
+      plz_check_targets_to_change_state: 公開ステータス変更対象が選択されておりません。対象のチェックボックスにチェックを入れてください。
       invalid_order_of_h: 見出し(H)の順番が不正です。
       invalid_multibyte_character: 英数字は半角文字を入力してください。
       invalid_kana_character: 半角カナ文字が含まれています。
@@ -1260,6 +1516,7 @@ ja:
       replace_word_validation: に使用が好ましくない単語が含まれています。
       alt_is_included_in_filename: 代替テキストがファイル名に含まれています。
       cms_form_db_required_node: データの登録には記事フォルダーの設定が必要です。
+      richmenu_target_taken: は既にリッチメニューグループ内に登録されています。
       syntax_check_server_error: アクセシビリティチェック中にサーバーエラーが発生しました。
       invalid_url_scheme: 「http://」や 「https://」で始まるURLのみにしてください。
       internal_link_shouldnt_contain_domains: 内部リンクにはドメインを含めないようにしてください。
@@ -1550,6 +1807,84 @@ ja:
       destination_filename:
         - ページやフォルダーを移動します。
         - 移動先をフルパスで設定します。
+
+    cms/line/service/base:
+      service:
+        - サービス種別を選択します。
+      name:
+        - サービス名を入力します。
+      order:
+        - 並び順を入力します。
+      json_body:
+        - JSONを入力します。
+
+    cms/line/service/group:
+      name:
+        - タイトルを入力します。
+      order:
+        - 並び順を入力します。
+        - 値が小さいほど先頭に表示され、優先度が高くなります。
+      start_date:
+        - 開始日時を入力します。
+      close_date:
+        - 終了日時を入力します。
+      state:
+        - 公開/非公開を設定します。
+
+    cms/line/service/hook/base:
+      name:
+        - タイトルを入力します。
+      order:
+        - 並び順を入力します。
+        - 値が小さいほど先頭に表示され、優先度が高くなります。
+      action_type:
+        - トリガーとなるアクションを設定します。
+      action_data:
+        - トリガーとなるデータを入力します。
+      json_body:
+        - JSONを入力します。
+
+    cms/line/template:
+      name:
+        - タイトルを入力します。
+      body:
+        - テンプレートのJSON本文を入力します。
+
+    cms/line/richmenu/group:
+      name:
+        - タイトルを入力します。
+      order:
+        - 並び順を入力します。
+        - 値が小さいほど先頭に表示され、優先度が高くなります。
+      start_date:
+        - 開始日時を入力します。
+      close_date:
+        - 終了日時を入力します。
+      state:
+        - 公開/非公開を設定します。
+
+    cms/line/richmenu/menu:
+      name:
+        - メニュー名を入力します。
+      order:
+        - 並び順を入力します。
+        - 値が小さいほど先頭に表示されます。
+      target:
+        - 適用区分を設定します。
+        - ""
+        - デフォルト... デフォルトのメニューとして登録します。
+        - メンバー... メンバー登録ユーザーのメニューとして登録します。
+        - タブ切替... デフォルトやメンバーのタブを作成する場合、この区分を登録します。
+      image_id:
+        - メニュー画像を入力します。
+      width:
+        - メニュー画像の幅を入力します。
+      height:
+        - メニュー画像の高さを入力します。
+      area_size:
+        - タップ領域数を入力します。
+      chat_bar_text:
+        - トーク画面下部のメニューバーのテキストを入力します。
 
     cms/site:
       name:
@@ -2382,6 +2717,111 @@ ja:
       placeholder:
         - プレースホルダーを入力します。
 
+    cms/line/facility_search/category:
+      name:
+        - タイトルを入力します。
+      image_id:
+        - サムネイル画像を入力します。
+      summary:
+        - サマリーを入力します。
+      order:
+        - 並び順を入力します。
+      category_ids:
+        - 施設の種類を選択します。
+      state:
+        - ステータスを入力します。
+      loop_liquid:
+        - 検索結果ページのテキスト表示部分を Liquid 形式で記述します。
+        - 以下の参照が利用できます。
+        - ページ：page
+        - 距離：distance
+        - ""
+        - |-
+          使用例：
+          距離：{{ distance }}
+          所在地：{{ page.values["所在地"].value }}
+
+    cms/line/service/hook/my_paln:
+      loop_liquid:
+        - 検索結果ページのテキスト表示部分を Liquid 形式で記述します。
+        - 以下の参照が利用できます。
+        - ページ：page
+        - イベント日時：event_dates
+        - ""
+        - |-
+          使用例：
+          日時：{{ event_dates }}
+          内容：{{ page.values["内容"].value }}
+
+    cms/addon/line/service/page_list:
+      no_image_id:
+        - "NO IMAGE画像を設定します。"
+      loop_liquid:
+        - 検索結果ページのテキスト表示部分を Liquid 形式で記述します。
+
+    cms/line/test_member:
+      name: 名前を入力します。
+      oauth_id:
+        - メンバーの OAuth ID を入力します。
+        - LINE Messaging API の ユーザーID と同じです。
+
+    cms/line/message:
+      name:
+       - タイトルを入力します。
+      title:
+       - タイトルを入力します。
+
+    cms/addon/line/message/deliver_condition:
+      deliver_condition_state:
+        - 設定を入力します。
+
+      deliver_condition_id:
+        - 配信条件を入力します。
+
+    cms/addon/line/message/deliver_plan:
+      deliver_date:
+        - 配信日時(予約)を入力します。
+
+    cms/line/template/base:
+      text: メッセージを入力します。
+      image_id: 画像を入力します。
+      page_id: ページを選択します。
+      title: タイトルを入力します。
+      summary: メッセージを入力します。
+      thumb_state:
+        - サムネイル画像を選択します。
+        -
+        - ・表示しない
+        - サムネイル画像を表示しません。
+        -
+        - ・記事のサムネイル画像
+        - 記事のサムネイル画像を設定します。
+        -
+        - ・本文内の最初の画像
+        - 記事本文内の最初の画像を設定します。
+      json_body:
+        - JSONを入力してください。
+
+    cms/line/deliver_condition:
+      name:
+       - タイトルを入力します。
+      order:
+       - 並び順を入力します。
+       - 数字が小さいほど上位に表示されます。
+
+    cms/line/deliver_category/base:
+      name:
+       - タイトルを入力します。
+      order:
+       - 並び順を入力します。
+       - 数字が小さいほど上位に表示されます。
+      state:
+       - 公開、非公開を選択します。
+
+    cms/line/deliver_plan:
+      deliver_date:
+        - 配信日時（予約）を入力します。
+
     cms/node/site_search:
       st_categories:
         - サイト内検索で使用するカテゴリーを設定します。
@@ -2454,3 +2894,7 @@ ja:
       cms/michecker_job: miChecker
       cms/sns_post/twitter_job: Twitterページ投稿
       cms/sns_post/line_job: LINEページ投稿
+      cms/line/deliver_job: LINE配信
+      cms/line/test_deliver_job: LINEテスト配信
+      cms/line/deliver_reserved_job: LINE予約配信
+      cms/line/apply_richmenu_job: LINEリッチメニュー登録

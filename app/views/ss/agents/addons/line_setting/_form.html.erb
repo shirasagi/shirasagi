@@ -3,6 +3,9 @@
   addon[:display_body] = "hide"
 %>
 <dl class="see mod-ss-line-setting">
+  <dt><%= @model.t :line_poster_state %><%= @model.tt :line_poster_state %></dt>
+  <dd><%= f.select :line_poster_state, @item.line_poster_state_options %></dd>
+
   <dt><%= @model.t :line_channel_secret %><%= @model.tt :line_channel_secret %></dt>
   <dd><%= f.text_field :line_channel_secret %></dd>
 

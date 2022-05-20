@@ -7,6 +7,11 @@ Rails.application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
+  concern :change_state do
+    get :state, on: :member
+    put :change_state_all, on: :collection, path: ''
+  end
+
   concern :copy do
     get :copy, on: :member
     put :copy, on: :member
@@ -59,7 +64,8 @@ Rails.application.routes.draw do
     get "generate" => "generate#index"
     post "generate" => "generate#run"
     resources :pages, concerns: [
-      :deletion, :copy, :move, :lock, :download_all, :import, :command, :opendata_ref, :contains_urls, :tag, :michecker
+      :deletion, :copy, :move, :lock, :download_all, :import, :command,
+      :opendata_ref, :contains_urls, :tag, :michecker, :change_state
     ]
     resources :map_searches, only: [:index]
     resources :searches, concerns: :deletion

@@ -1,0 +1,29 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.order %></dd>
+
+  <dt><%= @model.t :target %></dt>
+  <dd><%= @item.label :target %></dd>
+
+  <dt><%= @model.t :image_id %></dt>
+  <dd>
+    <% if @item.image %>
+      <%= link_to @item.image.name, @item.image.url %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :width %></dt>
+  <dd><%= @item.width %></dd>
+
+  <dt><%= @model.t :height %></dt>
+  <dd><%= @item.height %></dd>
+
+  <dt><%= @model.t :area_size %></dt>
+  <dd><%= @item.area_size %></dd>
+
+  <dt><%= @model.t :chat_bar_text %></dt>
+  <dd><%= @item.chat_bar_text %></dd>
+</dl>

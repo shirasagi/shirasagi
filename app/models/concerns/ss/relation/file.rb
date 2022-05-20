@@ -171,7 +171,7 @@ module SS::Relation::File
       new_file.site_id = owner_item.site_id if owner_item.respond_to?(:site_id)
       new_file.user_id = cur_user.id if cur_user
       new_file.model ||= begin
-        if class_name == DEFAULT_FILE_CLASS_NAME
+        if class_name == DEFAULT_FILE_CLASS_NAME || class_name == "Cms::Line::File"
           owner_item.class.name.underscore
         else
           default_model(class_name)

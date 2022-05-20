@@ -1,0 +1,11 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), action: :show, id: item %>
+  <%= link_to t('ss.links.edit'), action: :edit, id: item %>
+  <%= link_to t('ss.links.delete'), action: :delete, id: item %>
+<% end %>
+
+<% @index_title = proc do |item| %>
+  <%= link_to item.name_with_order, { action: :show, id: item }, class: 'title' %>
+<% end %>
+
+<%= render template: "ss/crud/index" %>

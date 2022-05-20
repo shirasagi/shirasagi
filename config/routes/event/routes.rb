@@ -7,6 +7,11 @@ Rails.application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
+  concern :change_state do
+    get :state, on: :member
+    put :change_state_all, on: :collection, path: ''
+  end
+
   concern :crud do
     get :move, on: :member
     put :move, on: :member
@@ -51,7 +56,7 @@ Rails.application.routes.draw do
 
   content "event" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
-    resources :pages, concerns: [:deletion, :crud, :download, :import, :ical_refresh, :command, :contains_urls, :tag, :michecker]
+    resources :pages, concerns: [:deletion, :crud, :download, :import, :ical_refresh, :command, :contains_urls, :tag, :michecker, :change_state]
     resources :searches, only: [:index]
   end
 

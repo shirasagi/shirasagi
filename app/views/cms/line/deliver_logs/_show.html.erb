@@ -1,0 +1,68 @@
+<%
+  @source = @item.source
+
+  def allowed_source?(source)
+    return false if !source.respond_to?(:allowed?)
+    return false if !source.respond_to?(:private_show_path)
+    source.allowed?(:read, @cur_user, site: @cur_site)
+  end
+
+  def try_parse_json(json)
+    JSON.parse(json) rescue json
+  end
+%>
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.deliver_name %></dd>
+
+  <dt><%= @model.t :created %></dt>
+  <dd><%= tryb{ @item.created.strftime('%Y/%m/%d %H:%M') } %></dd>
+
+  <dt><%= @model.t :type %></dt>
+  <dd><%= @item.type %></dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= @item.label(:state) %></dd>
+
+  <% if @source %>
+    <dt><%= @model.t :source_id %></dt>
+    <% if allowed_source?(@source) %>
+      <dd><%= link_to @source.name, @source.private_show_path %></dd>
+    <% else %>
+      <dd><%= @source.name %></dd>
+    <% end %>
+  <% elsif @item.source_name.present? %>
+    <dt><%= @model.t :source_id %></dt>
+    <dd><%= @item.source_name %></dd>
+  <% end %>
+
+  <% if @item.error.present? %>
+    <dt><%= @model.t :error %></dt>
+    <dd><%= @item.error %></dd>
+  <% end %>
+
+  <dt><%= @model.t :action %></dt>
+  <dd><%= @item.action %></dd>
+
+  <% if @item.action == "multicast" %>
+    <dt><%= @model.t :member_ids %></dt>
+    <dd>
+      <%= t("cms.member") %><%= @item.extract_deliver_members.size %><%= t("ss.units.count") %>
+      <%= link_to "確認する", cms_apis_line_deliver_members_path(id: @item, model: "line_deliver"), { class: "btn ajax-box" } %>
+    </dd>
+  <% end %>
+
+  <dt><%= @model.t :messages %></dt>
+  <dd><%= @item.messages %></dd>
+
+  <!--
+  <dt><%= @model.t :multicast_user_ids %></dt>
+  <dd><%=br @item.multicast_user_ids.join("\n") %></dd>
+  -->
+
+  <dt><%= @model.t :response_code %></dt>
+  <dd><%= @item.response_code %></dd>
+
+  <dt><%= @model.t :response_body %></dt>
+  <dd><%= try_parse_json(@item.response_body) %></dd>
+</dl>

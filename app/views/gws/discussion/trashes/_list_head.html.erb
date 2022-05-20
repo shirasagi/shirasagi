@@ -4,7 +4,7 @@
 
   <div class="list-head-action">
     <div class="list-head-action-destroy">
-      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.hard_delete') %>
+      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", model: @model, method: "delete", confirm: t('ss.confirm.hard_delete') %>
     </div>
   </div>
   <% end %>

@@ -1,0 +1,16 @@
+<dl class="see">
+  <% 1.upto(1) do |i| %>
+    <dt><%= @model.t("year#{i}") %></dt>
+    <dd>
+      <%= f.number_field "lower_year#{i}", min: 0, style: "width: 80px !important;" %>
+      <%= "歳" %>
+      <%= f.number_field "lower_month#{i}", min: 0, max: 11, style: "width: 80px !important;" %>
+      <%= "ヶ月" %>
+      <%= t("ss.wave_dash") %>
+      <%= f.number_field "upper_year#{i}", min: 0, style: "width: 80px !important;" %>
+      <%= "歳" %>
+      <%= f.number_field "upper_month#{i}", min: 0, max: 11, style: "width: 80px !important;" %>
+      <%= "ヶ月" %>
+    </dd>
+  <% end %>
+</dl>

@@ -1,0 +1,17 @@
+<% return if addons.blank? %>
+<%
+  def crop_partial_path(addon)
+    "#{addon.path}/crop" if File.exists?("#{Rails.root}/app/views/#{addon.path}/_crop.html.erb")
+  end
+%>
+<% css_classes ||= [] %>
+<% css_classes = Array(css_classes).flatten.compact %>
+<% addons.each do |addon| %>
+  <% addon_options = { id: "addon-#{addon.id}", head: addon.name, class: css_classes.dup, toggle: true } %>
+  <% buf = render crop_partial_path(addon), f: f, addon: addon_options if crop_partial_path(addon) %>
+  <% next if buf.blank? %>
+
+  <%= render "ss/crud/addon", addon: addon_options do %>
+    <%= buf %>
+  <% end %>
+<% end %>

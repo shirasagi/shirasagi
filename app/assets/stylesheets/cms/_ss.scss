@@ -89,7 +89,7 @@
     &.state-public, &.state-public-expired, &.state-closed, &.state-ready, &.state-request, &.state-request-remind, &.state-edit, &.state-remand, &.state-deletion-locked {
       color: #fff;
     }
-    &.state-public {
+    &.state-public, &.state-completed {
       background-color: #2f7e42;
     }
     &.state-public-expired {

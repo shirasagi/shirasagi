@@ -69,6 +69,7 @@ gem 'rubyzip', '~> 2.3.0'
 gem 'stringio'
 gem 'thinreports'
 gem 'ungarbled'
+gem 'mongoid-geospatial'
 
 # OAuth
 gem 'oauth2'

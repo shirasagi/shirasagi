@@ -1,0 +1,43 @@
+<%= jquery do %>
+$('[name="item[in_image1040]"]').on("change", function(){
+  var file = this.files[0];
+  if (file) {
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function (e) {
+      var image = new Image();
+      image.src = e.target.result;
+      image.onload = function () {
+        $('[name="item[width]"]').val(this.width);
+        $('[name="item[height]"]').val(this.height);
+      }
+    }
+  }
+});
+<% end %>
+
+<dl class="see">
+  <dt><%= @model.t :area_size %><%= @model.tt :area_size %></dt>
+  <dd><%= f.number_field :area_size %></dd>
+
+  <dt><%= @model.t :width %><%= @model.tt :width %></dt>
+  <dd><%= f.number_field :width %></dd>
+
+  <dt><%= @model.t :height %><%= @model.tt :height %></dt>
+  <dd><%= f.number_field :height %></dd>
+
+  <% %w(1040 700 460 300 240).each do |size| %>
+    <dt><%= @model.t "image#{size}_id" %><%= @model.tt "image#{size}_id" %></dt>
+    <dd>
+      <% if @item.send("image#{size}") %>
+        <div style="padding: 5px 0px 10px 0px;">
+          <%= @item.send("image#{size}").name %>
+        </div>
+      <% end %>
+      <%= f.file_field "in_image#{size}" %>
+    </dd>
+  <% end %>
+
+  <dt><%= @model.t :alt_text %><%= @model.tt :alt_text %></dt>
+  <dd><%= f.text_field :alt_text %></dd>
+</dl>

@@ -1,0 +1,47 @@
+<%
+  return if params[:action] !~ /(new|create)/
+  @item.wdays ||= []
+%>
+
+<%= jquery do %>
+  Cms_Line_Message_Repeat_Plan.renderForm();
+<% end %>
+
+<dl class="see">
+  <dt><%= @model.t :repeat_type %><%= @model.tt :repeat_type %></dt>
+  <dd><%= f.select :repeat_type, @item.repeat_type_options, include_blank: t("gws/schedule.options.repeat_type.none") %></dd>
+</dl>
+
+<dl class="see cms-line-message-repeat hide" style="margin-top: 15px;">
+  <dt><%= @model.t :interval %><%= @model.tt :interval %></dt>
+  <dd>
+    <%= f.select :interval, @item.interval_options %>
+    <span class="repeat-daily"><%= t "gws/schedule.options.interval.daily" %></span>
+    <span class="repeat-weekly"><%= t "gws/schedule.options.interval.weekly" %></span>
+    <span class="repeat-monthly"><%= t "gws/schedule.options.interval.monthly" %></span>
+  </dd>
+
+  <dt class="repeat-monthly"><%= @model.t :repeat_base %><%= @model.tt :repeat_base %></dt>
+  <dd class="repeat-monthly">
+    <div class="<%= 'checks_with_errors' if @item.errors[:repeat_base].size > 0 %>">
+      <label><%= f.radio_button :repeat_base, "date" %> <%= t "gws/schedule.options.repeat_base.date" %></label>
+      <label><%= f.radio_button :repeat_base, "wday" %> <%= t "gws/schedule.options.repeat_base.wday" %></label>
+    </div>
+  </dd>
+
+  <dt class="repeat-weekly"><%= @model.t :wdays %><%= @model.tt :wdays %></dt>
+  <dd class="repeat-weekly">
+    <div class="<%= 'checks_with_errors' if @item.errors[:wdays].size > 0 %>">
+      <%= f.hidden_field "wdays[]", value: "" %>
+      <% (0..6).each do |i| %>
+      <label><%= f.check_box "wdays[]", { checked: @item.wdays.to_a.include?(i) }, i.to_s %> <%= t("date.abbr_day_names")[i] %></label>
+      <% end %>
+    </div>
+  </dd>
+
+  <dt><%= @model.t :repeat_start %><%= @model.tt :repeat_start %></dt>
+  <dd><%= f.text_field :repeat_start, class: "js-date date repeat_start", value: tryb{@item.repeat_start.strftime("%Y/%m/%d")} %></dd>
+
+  <dt><%= @model.t :repeat_end %><%= @model.tt :repeat_end %></dt>
+  <dd><%= f.text_field :repeat_end, class: "js-date date repeat_end", value: tryb{@item.repeat_end.strftime("%Y/%m/%d")} %></dd>
+</dl>

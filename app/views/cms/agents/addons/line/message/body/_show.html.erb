@@ -1,0 +1,58 @@
+<%= jquery do %>
+$(".remove-template").on("click", function(){
+  if (!confirm("<%= t("ss.confirm.delete") %>")) {
+    return false;
+  };
+});
+
+$(".message-type.page .img-warp img").load(function (){
+  var warp = $(this).parent();
+  var naturalWidth = this.naturalWidth;
+  var naturalHeight = this.naturalHeight;
+
+  if (naturalHeight >= naturalWidth) {
+    var diff = $(this).height() - $(warp).height();
+    if (diff > 0) {
+      $(this).css("margin-top", -1 * Math.floor(diff / 2));
+    }
+  } else if (naturalHeight > $(warp).height()) {
+    var diff = naturalWidth - $(warp).width();
+
+    $(warp).css("width", naturalWidth);
+    $(this).css("height", "100%");
+    if (diff > 0) {
+      $(this).css("margin-left", -1 * diff);
+    }
+  }
+});
+<% end %>
+
+<dl class="see line-talk-view">
+  <dd class="wide">
+    <% if @item.templates.present? %>
+      <div class="talk-area">
+        <% @item.templates.order_by(order: 1).each_with_index do |template, idx| %>
+          <div class="template template<%= idx %> <%= template.type %>">
+            <%== template.balloon_html %>
+            <div class="actions">
+              <%= link_to(edit_cms_line_message_template_path(message_id: @item, id: template), { class: "edit-template" }) do %>
+                <i class="material-icons md-18">edit</i>
+              <% end %>
+              <%= link_to(cms_line_message_template_path(message_id: @item, id: template), { method: :delete, class: "remove-template" }) do %>
+                <i class="material-icons md-18">delete</i>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div>テンプレートが設定されていません。</div>
+    <% end %>
+
+    <% if @item.templates.size >= @model.max_templates %>
+      <%= link_to t("cms.buttons.add_template"), "", class: "btn btn-disabled", style: "margin-top: 10px;", onclick: "return false;" %>
+    <% else %>
+      <%= link_to t("cms.buttons.add_template"), new_cms_line_message_template_path(message_id: @item), class: "btn", style: "margin-top: 10px;" %>
+    <% end %>
+  </dd>
+</dl>

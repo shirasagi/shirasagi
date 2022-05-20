@@ -1,0 +1,16 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+
+  <dt><%= @model.t :start_date %><%= @model.tt :start_date %></dt>
+  <dd><%= f.text_field :start_date, value: tryb { @item.start_date.strftime("%Y/%m/%d") }, class: "date js-date" %></dd>
+
+  <dt><%= @model.t :close_date %><%= @model.tt :close_date %></dt>
+  <dd><%= f.text_field :close_date, value: tryb { @item.close_date.strftime("%Y/%m/%d") }, class: "date js-date" %></dd>
+
+  <dt><%= @model.t :state %><%= @model.tt :state %></dt>
+  <dd><%= f.select :state, @item.state_options %></dd>
+</dl>

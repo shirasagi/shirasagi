@@ -1,0 +1,32 @@
+<div class="main-box">
+  <table class="index">
+    <thead>
+      <tr>
+        <th class="list-head" style="width: 120px;">
+          <label class="check"><input type="checkbox" /></label>
+          <div class="list-head-action-destroy">
+            <%= ss_button_to t("ss.buttons.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.delete') %>
+          </div>
+        </th>
+        <th><%= @model.t :deliver_date %></th>
+        <th><%= @model.t :state %></th>
+        <th style="width: 120px;"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @items.each do |item| %>
+        <tr class="list-item">
+          <td>
+            <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>"/></label>
+          </td>
+          <td class="date"><%= item.name %></td>
+          <td><%= item.label :state %></td>
+          <td>
+            <%= link_to(t("ss.buttons.edit"), { action: :edit, id: item }) %>|
+            <%= link_to(t("ss.buttons.delete"), { action: :delete, id: item }) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
