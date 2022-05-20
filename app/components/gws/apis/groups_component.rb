@@ -1,7 +1,6 @@
 class Gws::Apis::GroupsComponent < ApplicationComponent
   include SS::CacheableComponent
 
-  self.expires_in = Gws::FRAGMENT_CACHE_EXPIRES_IN
   self.cache_key = ->{ [ @cur_site.id, max_updated.to_i ] }
 
   def initialize(cur_site:, multi:)

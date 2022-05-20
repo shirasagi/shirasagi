@@ -7,27 +7,19 @@ module SS::CacheableComponent
     self.perform_caching = Rails.application.config.action_controller.perform_caching
   end
 
-  # override ViewComponent::Base#perform_render to cache content
-  def perform_render
+  def cache_component(&block)
     if cache_configured?
-      content = Rails.cache.fetch(cache_key || {}, expires_in: self.class.expires_in) do
-        capture { super }
+      Rails.cache.fetch(cache_key || {}, expires_in: self.class.expires_in) do
+        capture(&block)
       end
-
-      if content.include?("<%")
-        template = ::ERB.new(content)
-        content = template.result(binding)
-      end
-
-      safe_concat(content)
     else
-      content = super
-      if content.include?("<%")
-        template = ::ERB.new(content)
-        content = template.result(binding)
-      end
-      content
+      capture(&block)
     end
+  end
+
+  def render_erb(erb_html)
+    template = ::ERB.new(erb_html)
+    template.result(binding)
   end
 
   def cache_exist?
