@@ -29,6 +29,7 @@ class Cms::Line::Service::HooksController < ApplicationController
   end
 
   def set_item
+    @model = Cms::Line::Service::Hook::Base
     super
     @type = @item.type
     @model = @item.class

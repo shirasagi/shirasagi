@@ -764,7 +764,6 @@ ja:
       cms/line/template/image: テンプレート：画像
       cms/line/template/page: テンプレート：記事ページ
       cms/line/template/json_body: テンプレート：JSON
-      cms/line/deliver_category/child_age: 子どもの年齢
       cms/line/deliver_category/condition: 条件設定
       cms/line/deliver_category/category: 選択肢設定
       cms/line/deliver_category/pickup: ピックアップ
@@ -1329,6 +1328,8 @@ ja:
         limit: 表示件数
       cms/addon/line/service/facility_search:
         category_ids: 施設カテゴリー
+      cms/addon/line/service/chat:
+        node_id: フォルダー
       cms/line/facility_search/category:
         name: タイトル
         image_id: サムネイル画像
@@ -1344,10 +1345,6 @@ ja:
         name: タイトル
         order: 並び順
         state: ステータス
-      cms/addon/line/deliver_category/child_age:
-        year1: 年齢
-        lower_year1: 年齢1（下限）
-        upper_year1: 年齢1（上限）
       cms/addon/line/deliver_category/pick_up:
         st_page_ids: ページ
       cms/line/test_member:
@@ -2802,6 +2799,10 @@ ja:
     cms/addon/line/message/deliver_plan:
       deliver_date:
         - 配信日時(予約)を入力します。
+
+    cms/addon/line/service/chat:
+      node_id:
+        - チャットボットフォルダーを設定します。
 
     cms/line/template/base:
       text: メッセージを入力します。
