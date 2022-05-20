@@ -2,9 +2,10 @@ require 'spec_helper'
 
 describe "cms/line/deliver_category", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
-  let!(:parent) { create :cms_line_deliver_category_category }
-  let(:item) { create :cms_line_deliver_category_category, parent: parent }
+  let!(:parent) { create :cms_line_deliver_category_category, filename: unique_id }
+  let(:item) { create :cms_line_deliver_category_selection, parent: parent, filename: "#{parent.filename}/#{unique_id}" }
   let(:name) { unique_id }
+  let(:basename) { unique_id }
 
   let(:index_path) { cms_line_deliver_category_categories_path site, parent }
   let(:new_path) { new_cms_line_deliver_category_category_path site, parent }
@@ -28,6 +29,7 @@ describe "cms/line/deliver_category", type: :feature, dbscope: :example, js: tru
       visit new_path
       within "form#item-form" do
         fill_in "item[name]", with: name
+        fill_in "item[basename]", with: basename
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
