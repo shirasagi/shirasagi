@@ -68,6 +68,7 @@ gem 'rss'
 gem 'rubyzip', '~> 2.3.0'
 gem 'thinreports'
 gem 'ungarbled'
+gem 'mongoid-geospatial'
 
 # OAuth
 gem 'oauth2'

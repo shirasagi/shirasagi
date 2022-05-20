@@ -5,7 +5,7 @@ module Cms::SnsHelper
     site = @item.site
     item = (@item.respond_to?(:master) && @item.master) ? @item.master : @item
 
-    return false if !site.line_token_enabled?
+    return false if !site.line_poster_enabled?
     return false if !@item.use_line_post?
 
     if @item.line_edit_auto_post_enabled?

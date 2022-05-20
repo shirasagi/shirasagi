@@ -1,0 +1,19 @@
+<%= render partial: "menu" %>
+
+<%= form_for :item, url: "#{@cur_node.url}confirm_leave.html", html: { method: "POST", class: "mypage-leave member-profile" } do |f| %>
+
+<div class="mypage-form member-profile">
+  <div>
+    <p>退会して、登録情報を削除します。</p>
+    <p>LINEアカウント認証はログアウトされません。</p>
+  </div>
+
+  <div class="columns">
+    <footer class="send">
+      <%= f.submit I18n.t("member.buttons.leave"), name: :submit %>
+      <%= f.submit I18n.t("member.buttons.back"), name: :back %>
+    </footer>
+  </div>
+</div>
+
+<% end %>

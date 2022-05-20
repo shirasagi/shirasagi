@@ -33,7 +33,7 @@ class Service::LoginController < ApplicationController
 
   def logout
     # discard all session info
-    reset_session
+    reset_session if SS.config.sns.logged_in_reset_session
     respond_to do |format|
       format.html { redirect_to service_login_path }
       format.json { head :no_content }

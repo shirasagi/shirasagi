@@ -90,7 +90,7 @@ module Sns::LoginFilter
   def logout
     put_history_log
     # discard all session info
-    reset_session
+    reset_session if SS.config.sns.logged_in_reset_session
     respond_to do |format|
       format.html { redirect_to login_path_by_cookie }
       format.json { head :no_content }

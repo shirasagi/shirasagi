@@ -298,7 +298,7 @@ GEM
       kramdown (~> 2.0)
     levenshtein (0.2.2)
     libv8-node (15.14.0.1)
-    line-bot-api (1.21.0)
+    line-bot-api (1.22.0)
     link_header (0.0.8)
     liquid (5.0.1)
     listen (3.7.0)
@@ -338,6 +338,8 @@ GEM
     mongoid-compatibility (0.5.1)
       activesupport
       mongoid (>= 2.0)
+    mongoid-geospatial (5.1.0)
+      mongoid (>= 4.0.0)
     mongoid-grid_fs (2.4.0)
       mime-types (>= 1.0, < 4.0)
       mongoid (>= 3.0, < 8.0)
@@ -741,6 +743,7 @@ DEPENDENCIES
   momentjs-rails
   mongo_session_store
   mongoid!
+  mongoid-geospatial
   mongoid-grid_fs
   mongoid-rspec
   net-ldap

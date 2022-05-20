@@ -1,0 +1,57 @@
+<%= jquery do %>
+new Cms_Line_Area_Cropper(".line-crop-area");
+<% end %>
+<div class="line-crop-area">
+  <div class="image-warp">
+    <%= image_tag(@item.image.url, class: "image") %>
+  </div>
+  <div class="area-form">
+    <div class="area-names">
+      <% 1.upto(@item.area_size).each do |i| %>
+        <%= link_to "領域#{i}", "", class: "btn area-name", "data-area": i %>
+      <% end %>
+    </div>
+    <div class="areas">
+      <% 1.upto(@item.area_size).each do |i| %>
+        <%
+          area = @item.areas[i - 1]
+          if @item.in_areas.present? && @item.in_areas[i - 1]
+            area = Cms::Line::Area.new(@item.in_areas[i - 1])
+          end
+          area ||= Cms::Line::Area.new
+        %>
+        <div class="area area<%= i %>" data-area="<%= i %>" style="display: none;">
+          <div class="points">
+            <label class="point">X <%= number_field_tag "item[in_areas][][x]", area.x, readonly: "readonly" %></label>
+            <label class="point">Y <%= number_field_tag "item[in_areas][][y]", area.y, readonly: "readonly" %></label>
+            <label class="point">W <%= number_field_tag "item[in_areas][][width]", area.width, readonly: "readonly" %></label>
+            <label class="point">H <%= number_field_tag "item[in_areas][][height]", area.height, readonly: "readonly" %></label>
+          </div>
+          <div class="action">
+            <div class="action-type">
+              <label class="type">
+                <span>アクション</span>
+                <%= select_tag "item[in_areas][][type]", options_for_select(area.type_options, area.type) %>
+              </label>
+            </div>
+            <div class="action-values">
+              <label class="value" data-type="message">
+                <span>メッセージ</span>
+                <%= text_field_tag "item[in_areas][][text]", area.text %>
+              </label>
+              <label class="value" data-type="uri">
+                <span>URI</span>
+                <%= text_field_tag "item[in_areas][][uri]", area.uri %>
+              </label>
+              <label class="value" data-type="postback">
+                <span>データ</span>
+                <%= text_field_tag "item[in_areas][][data]", area.data %>
+              </label>
+            </div>
+          </div>
+          <%= link_to "リセット", "", class: "btn reset-area" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

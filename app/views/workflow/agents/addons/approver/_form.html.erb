@@ -40,7 +40,7 @@
     var linePostEnabled, lineTokenEnabled, linePosted, lineAutoPost, lineEditAutoPost;
 
     linePostEnabled = <%== @item.class.include?(Cms::Addon::LinePoster) %>;
-    lineTokenEnabled = <%== @cur_site.line_token_enabled? %>
+    lineTokenEnabled = <%== @cur_site.line_poster_enabled? %>
     lineAutoPost = $('[name="item[line_auto_post]"]').length && ($('[name="item[line_auto_post]"]').val() == "active");
     lineEditAutoPost = $('[name="item[line_edit_auto_post]"]').length && ($('[name="item[line_edit_auto_post]"]').val() == "enabled");
 

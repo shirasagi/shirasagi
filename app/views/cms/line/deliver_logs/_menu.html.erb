@@ -1,0 +1,6 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /show/ %>
+    <%= link_to(t('ss.links.delete'), { action: :delete, id: @item }, class: :delete) if @model.allowed?(:delete, @cur_user, site: @cur_site) %>
+    <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
+  <% end %>
+</nav>
