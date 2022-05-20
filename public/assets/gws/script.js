@@ -5213,7 +5213,7 @@ this.Gws_Member = (function () {
     return $('.save').on('click', function () {
 //$(submit).trigger("click")
       if ($('.gws-addon-readable-setting tbody tr').length === 0) {
-        return confirm('閲覧者が入力されていません。\n全員に表示されますがよろしいですか？');
+        return confirm("閲覧者が入力されていません。\\n全員に表示されますがよろしいですか？");
       }
     });
   };
@@ -5542,7 +5542,8 @@ Gws_ReadableSetting.prototype.hideSelectForm = function() {
 function Gws_Contrast(opts) {
   this.opts = opts;
   this.$el = $('#user-contrast-menu');
-  this.template = 'body * { color: :color !important; border-color: :color !important; background: :background !important; }';
+  this.template = 'body * { color: :color !important; border-color: :color !important; background: :background !important; } ' +
+                  'body *:after { background: :background !important; }';
 
   this.render();
 }
@@ -5827,9 +5828,9 @@ this.Gws_Schedule_Repeat_Plan = (function () {
     var b1, b2, b3, buttons, form, sp;
     form = $("#main form");
     sp = '<span class="gws-schedule-btn-space"></span>';
-    b1 = $('<input type="button" class="btn" value="今回のみ" />');
-    b2 = $('<input type="button" class="btn" value="以降すべて" />');
-    b3 = $('<input type="button" class="btn" value="一連のスケジュールすべて" />');
+    b1 = $('<input type="button" class="btn" value="' + "今回のみ" + '" />');
+    b2 = $('<input type="button" class="btn" value="' + "以降すべて" + '" />');
+    b3 = $('<input type="button" class="btn" value="' + "一連のスケジュールすべて" + '" />');
     b1.bind('click', function () {
       return form.append('<input type="hidden" name="item[edit_range]" value="one" />').submit();
     });
@@ -6266,42 +6267,6 @@ function Gws_Memo_Filter() {
 
 Gws_Memo_Filter.render = function () {
   return $("#addon-gws-agents-addons-group_permission").hide();
-};
-function Gws_Memo_ExportAndBackup($el) {
-  this.$el = $el;
-
-  this.render();
-}
-
-Gws_Memo_ExportAndBackup.prototype.render = function() {
-  this.$el.find('a.ajax-box').data('on-select', function($item) {
-    var $data       = $item.closest('[data-id]');
-    var id          = $data.attr('data-id');
-    var attachments = $data.data('attachments');
-    var from        = $data.data('from');
-    var name        = $data.data('name');
-    var priority    = $data.data('priority');
-    var send_date   = $data.data('send_date');
-    var size        = $data.data('display_size');
-
-    var $newTr    = $('<tr />').attr('data-id', id);
-    var $newInput = SS_SearchUI.anchorAjaxBox.closest('dl').find('.hidden-ids').clone(false);
-    $newInput     = $newInput.val(id).removeClass('hidden-ids');
-    var $newA     = $('<a>').attr('class','deselect btn').attr('href','#').text('削除').on('click', SS_SearchUI.deselect);
-
-    var icon = $('<i class="material-icons md-15">&#xE226;</i>');
-    if (!attachments) {
-      icon.css('visibility','hidden');
-    }
-    $newTr.append($('<td />').text(from).prepend(icon));
-    $newTr.append($('<td />').append($newInput).append(name));
-    $newTr.append($('<td />').text(priority));
-    $newTr.append($('<td />').text(send_date));
-    $newTr.append($('<td />').text(size));
-    $newTr.append($('<td />').append($newA));
-    SS_SearchUI.anchorAjaxBox.closest('dl').find('.ajax-selected tbody').prepend($newTr);
-    SS_SearchUI.anchorAjaxBox.closest('dl').find('.ajax-selected').trigger('change');
-  });
 };
 this.Gws_Monitor_Topic = (function () {
   function Gws_Monitor_Topic() {
@@ -7047,7 +7012,7 @@ this.Gws_Presence_User = (function () {
         return false;
       });
       form.keypress(function (e) {
-        if (e.which == 13) {
+        if (e.which == SS.KEY_ENTER) {
           var data = {
             _method: 'put',
             authenticity_token: $('meta[name="csrf-token"]').attr('content'),
@@ -7266,7 +7231,6 @@ Gws_Share_FolderToolbar.prototype.refreshFolder = function () {
 
   this.options.treeNavi.refresh();
 };
-
 
 
 

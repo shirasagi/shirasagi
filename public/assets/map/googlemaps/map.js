@@ -16,6 +16,8 @@ this.Googlemaps_Map = (function () {
 
   Googlemaps_Map.markers = null;
 
+  Googlemaps_Map.markerClusterer = null;
+
   Googlemaps_Map.markerIcon = "/assets/img/googlemaps/marker1.png";
 
   Googlemaps_Map.clickIcon = "/assets/img/googlemaps/marker17.png";
@@ -122,7 +124,7 @@ this.Googlemaps_Map = (function () {
     }
   };
 
-  Googlemaps_Map.setMarkers = function (markers) {
+  Googlemaps_Map.setMarkers = function (markers, opts) {
     var markerBounds, zoomChangeBoundsListener;
     Googlemaps_Map.markers = markers;
     markerBounds = new google.maps.LatLngBounds();
@@ -168,13 +170,70 @@ this.Googlemaps_Map = (function () {
       }
       if (markerHtml) {
         Googlemaps_Map.markers[id]["window"] = new google.maps.InfoWindow({
-          content: markerHtml
+          content: markerHtml,
+          pixelOffset: new google.maps.Size(0, 0),
         });
         Googlemaps_Map.attachMessage(id);
       }
     });
 
+    if (opts['markerCluster']) {
+      Googlemaps_Map.renderMarkerCluster();
+    }
     Googlemaps_Map.adjustMarkerBounds(Googlemaps_Map.markers.length, markerBounds);
+  };
+
+  Googlemaps_Map.renderMarkerCluster = function () {
+    var clusterMarkers = $.map(Googlemaps_Map.markers, function(data) {
+      return data.marker;
+    });
+    Googlemaps_Map.markerClusterer = new MarkerClusterer(Googlemaps_Map.map, clusterMarkers, {
+      // zoomOnClick: false,
+      imagePath: '/assets/img/marker-clusterer/m',
+    });
+
+    google.maps.event.addListener(Googlemaps_Map.map, 'zoom_changed', function() {
+      Googlemaps_Map.closeMarkerClusterInfo();
+    });
+
+    ClusterIcon.prototype.triggerClusterClick = function(event) {
+      var cluster = this.cluster_;
+      var markers = cluster.getMarkers();
+      var positions = markers.map(function(marker) {
+        return marker.position.toUrlValue();
+      });
+      var clusterMarkers = Googlemaps_Map.markers.filter(function(marker) {
+        return positions.indexOf([marker.loc[1], marker.loc[0]].toString()) !== -1;
+      });
+      var contents = clusterMarkers.map(function(marker){
+        return marker.html;
+      });
+      var infoWindow = new google.maps.InfoWindow({
+        content: '<div class="marker-cluster-info">' + contents.join('') + '</div>',
+        position: markers[0].position,
+        pixelOffset: new google.maps.Size(0, -15),
+        markerType: 'cluster', // custom parameter
+      });
+
+      Googlemaps_Map.openMarkerClusterInfo(infoWindow);
+    };
+  };
+
+  Googlemaps_Map.openMarkerClusterInfo = function (infoWindow) {
+    if (Googlemaps_Map.openedInfo) {
+      Googlemaps_Map.openedInfo.close();
+    }
+    Googlemaps_Map.openedInfo = infoWindow;
+
+    infoWindow.open({
+      map: Googlemaps_Map.map,
+    });
+  };
+
+  Googlemaps_Map.closeMarkerClusterInfo = function () {
+    if (Googlemaps_Map.openedInfo && Googlemaps_Map.openedInfo.markerType === 'cluster') {
+      Googlemaps_Map.openedInfo.close();
+    }
   };
 
   Googlemaps_Map.setKmlLayer = function (url) {

@@ -120,12 +120,12 @@ this.Map_Form = (function () {
         return Map_Form.clickSetMarker(cln);
       });
       cln.find(".marker-name").on('keypress', function (e) {
-        if (e.which === 13) {
+        if (e.which === SS.KEY_ENTER) {
           return false;
         }
       });
       cln.find(".marker-loc-input").on('keypress', function (e) {
-        if (e.which === 13) {
+        if (e.which === SS.KEY_ENTER) {
           $(this).closest("dd.marker").find(".set-marker").trigger("click");
           return false;
         }
@@ -153,9 +153,7 @@ this.Map_Form = (function () {
       //  Map_Form.setMarkerThumb(this);
       //});
     }
-    if ($(".mod-map dd.marker").length === Map_Form.maxPointForm) {
-      $(".mod-map dd .add-marker").parent().hide();
-    }
+    Map_Form.toggleAddMarker();
   };
 
   Map_Form.clearPointForm = function (ele) {
@@ -180,7 +178,15 @@ this.Map_Form = (function () {
         ele.remove();
       }
     }
-    $(".mod-map dd .add-marker").parent().show();
+    Map_Form.toggleAddMarker();
+  };
+
+  Map_Form.toggleAddMarker = function () {
+    if ($(".mod-map dd.marker").length < Map_Form.maxPointForm) {
+      $(".mod-map dd .add-marker").parent().show();
+    } else {
+      $(".mod-map dd .add-marker").parent().hide();
+    }
   };
 
   Map_Form.openMarkerImages = function (marker) {
@@ -254,7 +260,7 @@ this.Map_Form = (function () {
     var dataId, opts, image;
 
     if (!Map_Form.validateLoc(loc)) {
-      alert("正しい座標をカンマ(,)区切りで入力してください。\n例）133.6806607,33.8957612");
+      alert("正しい座標をカンマ(,)区切りで入力してください。\\n例）133.6806607,33.8957612");
       return;
     }
 
@@ -317,6 +323,7 @@ this.Map_Form = (function () {
       Map_Form.dataID += 1;
     });
 
+    Map_Form.toggleAddMarker();
     Googlemaps_Map.adjustMarkerBounds(Googlemaps_Map.markers.length, markerBounds);
   };
 
@@ -364,18 +371,18 @@ this.Map_Form = (function () {
       return false;
     });
     $(".mod-map .keyword").on('keypress', function (e) {
-      if (e.which === 13) {
+      if (e.which === SS.KEY_ENTER) {
         Map_Form.geocoderSearch($(this).val());
         return false;
       }
     });
     $(".mod-map .marker-name").on('keypress', function (e) {
-      if (e.which === 13) {
+      if (e.which === SS.KEY_ENTER) {
         return false;
       }
     });
     $(".mod-map .marker-loc-input").on('keypress', function (e) {
-      if (e.which === 13) {
+      if (e.which === SS.KEY_ENTER) {
         $(this).closest("dd.marker").find(".set-marker").trigger("click");
         return false;
       }

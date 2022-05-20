@@ -53,7 +53,7 @@ this.Openlayers_Map_Form = (function () {
     ele.val(lat.toFixed(6) + "," + lon.toFixed(6));
   };
 
-  Openlayers_Map_Form.prototype.validateLoc = function (loc) {
+  Openlayers_Map_Form.validateLoc = function (loc) {
     var lat, lonlat, lon;
     if (!loc) {
       return false;
@@ -96,6 +96,7 @@ this.Openlayers_Map_Form = (function () {
     this.initPopup();
     this.resize();
     this.renderEvents();
+    this.toggleAddMarker();
   };
 
   Openlayers_Map_Form.prototype.createLayers = function (layerOpts) {
@@ -392,12 +393,12 @@ this.Openlayers_Map_Form = (function () {
       };
     })(this));
     $(".mod-map .marker-name").on('keypress', function (e) {
-      if (e.which === 13) {
+      if (e.which === SS.KEY_ENTER) {
         return false;
       }
     });
     $(".mod-map .marker-loc-input").on('keypress', function (e) {
-      if (e.which === 13) {
+      if (e.which === SS.KEY_ENTER) {
         $(this).closest("dd.marker").find(".set-marker").trigger("click");
         return false;
       }
@@ -453,13 +454,13 @@ this.Openlayers_Map_Form = (function () {
       })(this));
       cln.find(".marker-name").on('keypress', (function (_this) {
         return function (e) {
-          if (e.which === 13) {
+          if (e.which === SS.KEY_ENTER) {
             return false;
           }
         };
       })(this));
       cln.find(".marker-loc-input").on('keypress', function (e) {
-        if (e.which === 13) {
+        if (e.which === SS.KEY_ENTER) {
           $(e.target).closest("dd.marker").find(".set-marker").trigger("click");
           return false;
         }
@@ -488,9 +489,7 @@ this.Openlayers_Map_Form = (function () {
         };
       })(this));
     }
-    if ($(".mod-map dd.marker").length === this.maxPointForm) {
-      $(".mod-map dd .add-marker").parent().hide();
-    }
+    this.toggleAddMarker();
   };
 
   Openlayers_Map_Form.prototype.clickSetMarker = function (ele) {
@@ -510,8 +509,8 @@ this.Openlayers_Map_Form = (function () {
   Openlayers_Map_Form.prototype.createMarker = function (ele, loc) {
     var dataId, opts, image;
 
-    if (!this.validateLoc(loc)) {
-      alert("正しい座標をカンマ(,)区切りで入力してください。\n例）133.6806607,33.8957612");
+    if (!Openlayers_Map_Form.validateLoc(loc)) {
+      alert("正しい座標をカンマ(,)区切りで入力してください。\\n例）133.6806607,33.8957612");
       return;
     }
 
@@ -551,7 +550,15 @@ this.Openlayers_Map_Form = (function () {
         ele.remove();
       }
     }
-    $(".mod-map dd .add-marker").parent().show();
+    this.toggleAddMarker();
+  };
+
+  Openlayers_Map_Form.prototype.toggleAddMarker = function () {
+    if ($(".mod-map dd.marker").length < this.maxPointForm) {
+      $(".mod-map dd .add-marker").parent().show();
+    } else {
+      $(".mod-map dd .add-marker").parent().hide();
+    }
   };
 
   Openlayers_Map_Form.prototype.resize = function () {

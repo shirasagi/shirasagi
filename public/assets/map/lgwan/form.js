@@ -20,16 +20,17 @@ this.Map_Lgwan_Form = (function () {
       return false;
     });
     $(".mod-map .marker-name").on('keypress', function (e) {
-      if (e.which === 13) {
+      if (e.which === SS.KEY_ENTER) {
         return false;
       }
     });
     $(".mod-map .marker-loc-input").on('keypress', function (e) {
-      if (e.which === 13) {
+      if (e.which === SS.KEY_ENTER) {
         $(this).closest("dd.marker").find(".set-marker").trigger("click");
         return false;
       }
     });
+    Map_Lgwan_Form.toggleAddMarker();
   };
 
   Map_Lgwan_Form.clonePointForm = function () {
@@ -52,20 +53,18 @@ this.Map_Lgwan_Form = (function () {
         return false;
       });
       cln.find(".marker-name").on('keypress', function (e) {
-        if (e.which === 13) {
+        if (e.which === SS.KEY_ENTER) {
           return false;
         }
       });
       cln.find(".marker-loc-input").on('keypress', function (e) {
-        if (e.which === 13) {
+        if (e.which === SS.KEY_ENTER) {
           $(this).closest("dd.marker").find(".set-marker").trigger("click");
           return false;
         }
       });
     }
-    if ($(".mod-map dd.marker").length === Map_Lgwan_Form.maxPointForm) {
-      $(".mod-map dd .add-marker").parent().hide();
-    }
+    Map_Lgwan_Form.toggleAddMarker();
   };
 
   Map_Lgwan_Form.clearPointForm = function (ele) {
@@ -84,16 +83,24 @@ this.Map_Lgwan_Form = (function () {
         ele.remove();
       }
     }
-    $(".mod-map dd .add-marker").parent().show();
+    Map_Lgwan_Form.toggleAddMarker();
   };
+
+  Map_Lgwan_Form.toggleAddMarker = function () {
+    if ($(".mod-map dd.marker").length < Map_Lgwan_Form.maxPointForm) {
+      $(".mod-map dd .add-marker").parent().show();
+    } else {
+      $(".mod-map dd .add-marker").parent().hide();
+    }
+  }
 
   Map_Lgwan_Form.createMarker = function (ele) {
     var loc = null;
     if (ele.find(".marker-loc-input").val()) {
-      if (Map_Lgwan_Form.validateLoc(ele.find(".marker-loc-input"))) {
+      if (Map_Lgwan_Form.validateLoc(ele.find(".marker-loc-input").val())) {
         loc = ele.find(".marker-loc-input").val();
       } else {
-        alert("正しい座標をカンマ(,)区切りで入力してください。\n例）133.6806607,33.8957612");
+        alert("正しい座標をカンマ(,)区切りで入力してください。\\n例）133.6806607,33.8957612");
       }
     }
     if (loc) {
@@ -102,23 +109,7 @@ this.Map_Lgwan_Form = (function () {
     }
   };
 
-  Map_Lgwan_Form.validateLoc = function (ele) {
-    var lat, latlon, lon;
-    latlon = ele.val().split(',');
-    lat = parseFloat(latlon[0]);
-    lon = parseFloat(latlon[1]);
-    if (!(lat && !isNaN(lat))) {
-      return false;
-    }
-    if (!(lon && !isNaN(lon))) {
-      return false;
-    }
-    if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
-      return true;
-    } else {
-      return false;
-    }
-  };
+  Map_Lgwan_Form.validateLoc = Openlayers_Map_Form.validateLoc;
 
   return Map_Lgwan_Form;
 })();
