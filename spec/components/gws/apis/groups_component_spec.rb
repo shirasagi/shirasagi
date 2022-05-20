@@ -34,13 +34,11 @@ describe Gws::Apis::GroupsComponent, type: :component, dbscope: :example do
     html = render_inline described_class.new(cur_site: site, multi: true)
     html.css("tr[data-id='#{site.id}']").tap do |tr|
       expect(tr).to have(1).items
-      expect(tr.css(".checkbox")).to be_present
       expect(tr.to_html).to include(site.name)
     end
     site.descendants_and_self.each do |group|
       html.css("tr[data-id='#{group.id}']").tap do |tr|
         expect(tr).to have(1).items
-        expect(tr.css(".checkbox")).to be_present
         expect(tr.to_html).to include(group.trailing_name)
       end
     end
@@ -50,13 +48,11 @@ describe Gws::Apis::GroupsComponent, type: :component, dbscope: :example do
     html = render_inline described_class.new(cur_site: site, multi: false)
     html.css("tr[data-id='#{site.id}']").tap do |tr|
       expect(tr).to have(1).items
-      expect(tr.css(".checkbox")).to be_blank
       expect(tr.to_html).to include(site.name)
     end
     site.descendants_and_self.each do |group|
       html.css("tr[data-id='#{group.id}']").tap do |tr|
         expect(tr).to have(1).items
-        expect(tr.css(".checkbox")).to be_blank
         expect(tr.to_html).to include(group.trailing_name)
       end
     end

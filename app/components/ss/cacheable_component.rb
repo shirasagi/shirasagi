@@ -17,11 +17,6 @@ module SS::CacheableComponent
     end
   end
 
-  def render_erb(erb_html)
-    template = ::ERB.new(erb_html)
-    template.result(binding)
-  end
-
   def cache_exist?
     if cache_configured?
       Rails.cache.exist?(cache_key || {})
