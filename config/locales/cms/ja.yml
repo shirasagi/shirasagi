@@ -446,7 +446,7 @@ ja:
         body_carousel: 本文内の最初の画像
       line_deliver_category_type:
         category: カテゴリー
-        child_age: 子どもの年齢
+        selection: 選択肢
       line_richmenu_target:
         default: デフォルト
         member: メンバー

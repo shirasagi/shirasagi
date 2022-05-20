@@ -1,34 +1,18 @@
 <%= render partial: "menu" %>
+<%= form_for :item, url: "#{@cur_node.url}", html: { method: :put, multipart: true, autocomplete: :off, class: "mypage-edit member-profile" } do |f| %>
 
-<div class="mypage-show member-profile">
+<div class="mypage-form member-profile">
+  <%= error_messages_for :item, header_message: false %>
+
   <div class="columns">
-    <dl class="column name">
-      <dt><%= @model.t :name %></dt>
-      <dd><%= @item.name %></dd>
-    </dl>
-
-    <dl class="column subscribe-line-message">
-      <dt><%= @item.t :subscribe_line_message %></dt>
-      <dd><%= @item.label :subscribe_line_message %></dd>
-    </dl>
-
-    <% 1.upto(Cms::Member::CHILD_MAX_SIZE) do |i| %>
-      <% next if @item.send("child#{i}_name").blank? %>
-      <dl class="column child-name child-<%= i %>">
-        <dt><%= @model.t("child#{i}_name") %></dt>
-        <dd><%= @item.send("child#{i}_name") %></dd>
-      </dl>
-
-      <dl class="column child-birthday child-<%= i %>">
-        <dt><%= @model.t("child#{i}_birthday") %></dt>
-        <dd><%= @item.send("child#{i}_birthday_label") %></dd>
-      </dl>
-    <% end %>
-    <% Cms::Line::DeliverCategory::Category.site(@cur_site).each_public do |root, children| %>
-      <dl class="column">
-        <dt><%= root.name %></dt>
-        <dd><%= children.select { |category| @item.deliver_category_ids.include?(category.id) }.map(&:name).join(", ") %></dd>
-      </dl>
-    <% end %>
+    <%= render template: "_basic_form", locals: { f: f }  %>
+    <%= render template: "_condition_form", locals: { f: f }  %>
   </div>
+
+  <footer class="send">
+    <%= f.submit t("ss.buttons.save"), data: { disable_with: t("ss.buttons.saving") } %>
+    <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{@cur_node.url}'; return false;" %>
+  </footer>
 </div>
+
+<% end %>
