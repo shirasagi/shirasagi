@@ -1,0 +1,19 @@
+<%= tag.table id: id.presence, class: "facility-page-table" do %>
+  <caption><%= caption %></caption>
+  <thead>
+  <tr>
+    <th scope="col"><%= Facility::Node::Page.t :name %></th>
+    <th scope="col"><%= Facility::Node::Page.t :address %></th>
+    <th scope="col"><%= Facility::Node::Page.t :tel %></th>
+  </tr>
+  </thead>
+  <tbody class="facility-page-list">
+  <% items.each do |item| %>
+    <tr class="facility-page">
+      <td class="facility-page-name"><%= link_to item.name, item.url %></td>
+      <td class="facility-page-address"><%= item.address %></td>
+      <td class="facility-page-tel"><%= item.tel %></td>
+    </tr>
+  <% end %>
+  </tbody>
+<% end %>
