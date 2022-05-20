@@ -38,12 +38,12 @@ describe Gws::Apis::GroupDropdownTreeComponent, type: :component, dbscope: :exam
           html = render_inline component
           html.css("a[data-id='#{site.id}']").tap do |anchor|
             expect(anchor).to have(1).items
-            expect(anchor.to_html).to include(site.i18n_trailing_name)
+            expect(anchor.to_html).to include(site.trailing_name)
           end
           site.descendants_and_self.each do |group|
             html.css("a[data-id='#{group.id}']").tap do |anchor|
               expect(anchor).to have(1).items
-              expect(anchor.to_html).to include(group.i18n_trailing_name)
+              expect(anchor.to_html).to include(group.trailing_name)
             end
           end
 
@@ -58,12 +58,12 @@ describe Gws::Apis::GroupDropdownTreeComponent, type: :component, dbscope: :exam
           html = render_inline component
           html.css("a[data-id='#{site.id}']").tap do |anchor|
             expect(anchor).to have(1).items
-            expect(anchor.to_html).to include(site.i18n_trailing_name)
+            expect(anchor.to_html).to include(site.trailing_name)
           end
           site.descendants_and_self.each do |group|
             html.css("a[data-id='#{group.id}']").tap do |anchor|
               expect(anchor).to have(1).items
-              expect(anchor.to_html).to include(group.i18n_trailing_name)
+              expect(anchor.to_html).to include(group.trailing_name)
             end
           end
 
@@ -81,12 +81,12 @@ describe Gws::Apis::GroupDropdownTreeComponent, type: :component, dbscope: :exam
           html = render_inline component
           html.css("a[data-id='#{site.id}']").tap do |anchor|
             expect(anchor).to have(1).items
-            expect(anchor.to_html).to include(site.i18n_trailing_name)
+            expect(anchor.to_html).to include(site.trailing_name)
           end
           site.descendants_and_self.each do |group|
             html.css("a[data-id='#{group.id}']").tap do |anchor|
               expect(anchor).to have(1).items
-              expect(anchor.to_html).to include(group.i18n_trailing_name)
+              expect(anchor.to_html).to include(group.trailing_name)
             end
           end
 
@@ -104,12 +104,12 @@ describe Gws::Apis::GroupDropdownTreeComponent, type: :component, dbscope: :exam
           html = render_inline component
           html.css("a[data-id='#{site.id}']").tap do |anchor|
             expect(anchor).to have(1).items
-            expect(anchor.to_html).to include(site.i18n_trailing_name)
+            expect(anchor.to_html).to include(site.trailing_name)
           end
           site.descendants_and_self.each do |group|
             html.css("a[data-id='#{group.id}']").tap do |anchor|
               expect(anchor).to have(1).items
-              expect(anchor.to_html).to include(group.i18n_trailing_name)
+              expect(anchor.to_html).to include(group.trailing_name)
             end
           end
 
@@ -132,12 +132,12 @@ describe Gws::Apis::GroupDropdownTreeComponent, type: :component, dbscope: :exam
           html = render_inline component
           html.css("a[data-id='#{site.id}']").tap do |anchor|
             expect(anchor).to have(1).items
-            expect(anchor.to_html).to include(site.i18n_trailing_name)
+            expect(anchor.to_html).to include(site.trailing_name)
           end
           site.descendants_and_self.each do |group|
             html.css("a[data-id='#{group.id}']").tap do |anchor|
               expect(anchor).to have(1).items
-              expect(anchor.to_html).to include(group.i18n_trailing_name)
+              expect(anchor.to_html).to include(group.trailing_name)
             end
           end
 
@@ -152,12 +152,12 @@ describe Gws::Apis::GroupDropdownTreeComponent, type: :component, dbscope: :exam
           html = render_inline component
           html.css("a[data-id='#{site.id}']").tap do |anchor|
             expect(anchor).to have(1).items
-            expect(anchor.to_html).to include(site.i18n_trailing_name)
+            expect(anchor.to_html).to include(site.trailing_name)
           end
           site.descendants_and_self.each do |group|
             html.css("a[data-id='#{group.id}']").tap do |anchor|
               expect(anchor).to have(1).items
-              expect(anchor.to_html).to include(group.i18n_trailing_name)
+              expect(anchor.to_html).to include(group.trailing_name)
             end
           end
 
@@ -175,12 +175,12 @@ describe Gws::Apis::GroupDropdownTreeComponent, type: :component, dbscope: :exam
           html = render_inline component
           html.css("a[data-id='#{site.id}']").tap do |anchor|
             expect(anchor).to have(1).items
-            expect(anchor.to_html).to include(site.i18n_trailing_name)
+            expect(anchor.to_html).to include(site.trailing_name)
           end
           site.descendants_and_self.each do |group|
             html.css("a[data-id='#{group.id}']").tap do |anchor|
               expect(anchor).to have(1).items
-              expect(anchor.to_html).to include(group.i18n_trailing_name)
+              expect(anchor.to_html).to include(group.trailing_name)
             end
           end
 
