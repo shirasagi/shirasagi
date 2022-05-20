@@ -20,12 +20,6 @@ module Cms::Addon
       # deliver_condition
       item.deliver_condition_state = deliver_condition_state
       item.deliver_condition = deliver_condition
-      1.upto(self.class::CHILD_CONDITION_MAX_SIZE) do |i|
-        item.send("lower_year#{i}=", item.send("lower_year#{i}"))
-        item.send("upper_year#{i}=", item.send("upper_year#{i}"))
-        item.send("lower_month#{i}=", item.send("lower_month#{i}"))
-        item.send("upper_month#{i}=", item.send("upper_month#{i}"))
-      end
       item.deliver_category_ids = deliver_category_ids
 
       item.attributes = attributes
