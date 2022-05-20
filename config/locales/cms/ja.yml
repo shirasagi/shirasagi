@@ -1162,8 +1162,6 @@ ja:
         import_event: イベント日時を取り込む
         import_map: 地図座標を取り込む
         import_logs: インポートログ
-        pippi_import_category: カテゴリーを取り込む
-        pippi_import_maru_columns: 〇を変換するカラム
       cms/init_column:
         name: 名前
         order: 並び順

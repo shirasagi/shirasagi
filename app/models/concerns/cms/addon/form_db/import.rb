@@ -11,13 +11,10 @@ module Cms::Addon::FormDb::Import
     field :import_column_options, type: SS::Extensions::ArrayOfHash, default: []
     field :import_event, type: Integer
     field :import_map, type: Integer
-    field :pippi_import_category, type: Integer
-    field :pippi_import_maru_columns, type: SS::Extensions::Lines
 
     has_many :import_logs, class_name: 'Cms::FormDb::ImportLog', dependent: :destroy
 
     permit_params :import_url, :import_primary_key, :import_page_name, :import_event, :import_map
-    permit_params :pippi_import_category, :pippi_import_maru_columns
     permit_params import_column_options: [:name, :kind, :values]
 
     validates :import_url, format: /\Ahttps?:\/\//, if: -> { import_url.present? }
@@ -92,8 +89,6 @@ module Cms::Addon::FormDb::Import
 
       import_row_events(item, params) if import_event
       import_row_map_points(item, params) if import_map
-      pippi_import_row_category_ids(item, params) if pippi_import_category
-      pippi_import_maru_columns.each { |c| params[c] = c if params[c] == '○' }
 
       item_changed = item.changed?
       item.imported = Time.zone.now
@@ -170,35 +165,6 @@ module Cms::Addon::FormDb::Import
     else
       item.map_points = [{ name: '', loc: [row['経度'], row['緯度']], text: '', image: '' }]
     end
-  end
-
-  def pippi_import_row_category_ids(item, row)
-    case row['カテゴリー']
-    when 'イベント'
-      category_name = '体験・ワークショップ'
-    when 'スポーツ'
-      category_name = 'スポーツ'
-    when '講座・教室'
-      category_name = '教室・セミナー'
-    when 'おんがく'
-      category_name = '文化芸術'
-    when 'そうだん'
-      category_name = '相談'
-    when 'こそだて'
-      if row['イベント名'].start_with?('ブックスタート', 'もぐもぐ元気っこ教室', '離乳食教室')
-        category_name = '教室・セミナー'
-      elsif %w(浜松こども館 浜松科学館みらいーら 青少年の家).include?(row['連絡先名称'])
-        category_name = '体験・ワークショップ'
-      else
-        category_name = 'その他'
-      end
-    else
-      category_name = 'その他'
-    end
-
-    item.category_ids = Category::Node::Base.site(site).where(filename: /event\//).only(:id, :name).select do |node|
-      [row['区'], row['場所名称'], category_name].include?(node.name)
-    end.collect(&:id)
   end
 
   def trauncate_import_logs
