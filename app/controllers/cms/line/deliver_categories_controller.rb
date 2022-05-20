@@ -2,7 +2,7 @@ class Cms::Line::DeliverCategoriesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  model Cms::Line::DeliverCategory::Base
+  model Cms::Line::DeliverCategory::Category
 
   navi_view "cms/line/main/navi"
 
@@ -10,14 +10,6 @@ class Cms::Line::DeliverCategoriesController < ApplicationController
 
   def set_crumbs
     @crumbs << [t("cms.line_deliver_category"), cms_line_deliver_categories_path]
-  end
-
-  def set_model
-    @addons = []
-    return super if params[:action] != "create"
-
-    type = params.dig(:item, :type)
-    @model = "Cms::Line::DeliverCategory::#{type.classify}".constantize
   end
 
   def fix_params

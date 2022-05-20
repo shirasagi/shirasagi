@@ -217,6 +217,19 @@ ja:
       line_deliver_directly: 即時配信（予約日時無し）
       line_deliver_plans_empty: 配信日時が設定されていません。
       line_hub_node_emtpy: "「標準機能/LINE HUB」フォルダーが公開状態で設置されていません。"
+      line_deliver_condition:
+        multicast_with_no_condition:
+          - メンバー登録者全員に配信します。
+          - 「LINEメッセージを受信する」になっているメンバーのみに配信されます。
+        multicast_with_registered_condition:
+          -  あらかじめ作成した配信条件を設定して、条件に該当するメンバー登録者に配信します。
+          - 「LINEメッセージを受信する」になっているメンバーのみに配信されます。
+        multicast_with_input_condition:
+          - 配信条件を入力し、条件に該当するメンバー登録者に配信します。
+          - 「LINEメッセージを受信する」になっているメンバーのみに配信されます。
+        broadcast:
+          - LINEの友達登録者全員に配信されます。
+          - 「LINEメッセージを受信する/しない」に関わらず送信されます。
       page_expiration_header: ページの公開期限が切れています。
       page_expiration_body:
         - "ページの公開期限が切れていますので確認の上、対応を願いいたします。"
@@ -422,7 +435,7 @@ ja:
         multicast_with_no_condition: 登録メンバー全員に配信する
         multicast_with_registered_condition: 登録メンバーに条件配信する（配信条件を設定）
         multicast_with_input_condition: 登録メンバーに条件配信する（配信条件を入力）
-        #broadcast: 友達登録者全員に配信する
+        broadcast: 友達登録者全員に配信する
       line_template_type:
         text: テキスト
         image: 画像
@@ -752,6 +765,8 @@ ja:
       cms/line/template/page: テンプレート：記事ページ
       cms/line/template/json_body: テンプレート：JSON
       cms/line/deliver_category/child_age: 子どもの年齢
+      cms/line/deliver_category/condition: 条件設定
+      cms/line/deliver_category/category: 選択肢設定
       cms/line/deliver_category/pickup: ピックアップ
       cms/line/richmenu/menu: メニュー設定
       cms/line/richmenu/area: タップ領域
@@ -1430,6 +1445,12 @@ ja:
         image240_id: 画像（幅240）
       cms/addon/line/service/json_body:
         json_body: JSON
+      cms/addon/line/deliver_category/category:
+        select_type: 選択肢
+        required: 必須入力
+      cms/addon/line/deliver_category/condition:
+        condition_state: 配信条件
+        conditions: 条件設定
       cms/line/template/base:
         type: テンプレートタイプ
         text: メッセージ

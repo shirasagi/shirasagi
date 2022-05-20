@@ -134,3 +134,84 @@ this.Cms_Line_Area_Cropper = (function () {
 
   return Cms_Line_Area_Cropper;
 })();
+
+
+this.Cms_Line_Deliver_Condition =  (function () {
+  function Cms_Line_Deliver_Condition() {
+    this.render();
+  };
+
+  Cms_Line_Deliver_Condition.prototype.render = function () {
+    $(".select-deliver-category").on("change", this.toggleDeliverCategory);
+    $(".select-deliver-category").on("change", this.toggleDeliverCategoryRemark);
+    $(".remarks-button").on("click", this.toggleRemarkText);
+    this.toggleDeliverCategory();
+    this.toggleDeliverCategoryRemark();
+  };
+
+  Cms_Line_Deliver_Condition.prototype.toggleDeliverCategory = function(){
+    var selected = {};
+    $(".deliver-category").each(function(){
+      var category = this;
+
+      // select
+      var id = $(this).find("select").val();
+      if (id) {
+        selected[id] = $(category);
+      }
+      // checkbox
+      $(this).find("input:checked").each(function(){
+        var id = $(this).val();
+        selected[id] = $(category);
+      });
+    });
+
+    $(".deliver-category[data-required]").each(function() {
+      var ids = $(this).attr("data-required").split(",");
+      var required = false;
+      $.each(ids, function() {
+        var id = this;
+        if (selected[id] && selected[id].is(':visible')) {
+          required = true;
+        }
+      });
+      if (required) {
+        $(this).show();
+        $(this).find("[name]").attr("name", "item[deliver_category_ids][]");
+      } else {
+        $(this).hide();
+        $(this).find("[name]").attr("name", "");
+      }
+    });
+  };
+
+  Cms_Line_Deliver_Condition.prototype.toggleDeliverCategoryRemark = function () {
+    $(".deliver-remarks").hide();
+    $(".deliver-category").each(function () {
+      // select
+      var id = $(this).find("select").val();
+      $(".remark-" + id).show();
+      $(".remark-" + id).text("＋ 詳細を開く");
+    });
+
+    // checkbox
+    $(this).find("input:checked").each(function(){
+      var id = $(this).val();
+      $(".remark-" + id).show();
+      $(".remark-" + id).text("＋ 詳細を開く");
+    });
+
+  };
+
+  Cms_Line_Deliver_Condition.prototype.toggleRemarkText = function () {
+    className = $(this).attr("class").split(" ")[0];
+    $( "." + className + "-text").toggle();
+    if ($(this).text() == "＋ 詳細を開く") {
+      $(this).text("− 詳細を閉じる");
+    } else {
+      $(this).text("＋ 詳細を開く");
+    }
+  };
+
+  return Cms_Line_Deliver_Condition;
+})();

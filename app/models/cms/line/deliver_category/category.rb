@@ -1,12 +1,10 @@
 class Cms::Line::DeliverCategory::Category < Cms::Line::DeliverCategory::Base
-  include Category::Addon::Setting
+  include Cms::Addon::Line::DeliverCategory::Category
+  include Cms::Addon::Line::DeliverCategory::Condition
 
   seqid :id
 
-  class << self
-    def page_condition
-      st_category_ids = criteria.pluck(:st_category_ids).flatten
-      { category_ids: { '$in' => st_category_ids } }
-    end
+  def type
+    "category"
   end
 end
