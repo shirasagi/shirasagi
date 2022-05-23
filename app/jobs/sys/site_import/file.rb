@@ -15,7 +15,10 @@ module Sys::SiteImport::File
       item = SS::File.unscoped.where(data.reject { |k, v| v.blank? }).first || dummy_ss_file(data)
       item.record_timestamps = false
       item.in_disable_variant_processing = true
-      data.each { |k, v| item[k] = v }
+      data.each do |k, v|
+        next if %w(owner_item_type owner_item_id).include?(k)
+        item[k] = v
+      end
 
       if item.save
         src = SS::File.new(id: id, filename: item.filename)
