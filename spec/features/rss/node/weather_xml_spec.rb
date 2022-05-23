@@ -75,7 +75,9 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
       fill_in 'item[lower_mail_text]', with: unique_id
       select I18n.t("rss.options.earthquake_intensity.6-"), from: 'item[earthquake_intensity]'
 
-      click_on I18n.t("jmaxml.apis.quake_regions.index")
+      wait_cbox_open do
+        click_on I18n.t("jmaxml.apis.quake_regions.index")
+      end
       wait_for_cbox do
         click_on region.name
       end
@@ -89,7 +91,7 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
         end
       end
       wait_for_cbox do
-        expect(page).to have_css("span.select-item", text: member_node_my_anpi_post.name)
+        expect(page).to have_css("span.select-single-item", text: member_node_my_anpi_post.name)
         wait_cbox_close do
           find("#cboxClose").click
         end
@@ -104,7 +106,7 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
         end
       end
       wait_for_cbox do
-        expect(page).to have_css("span.select-item", text: ezine_node_member_page.name)
+        expect(page).to have_css("span.select-single-item", text: ezine_node_member_page.name)
         wait_cbox_close do
           find("#cboxClose").click
         end

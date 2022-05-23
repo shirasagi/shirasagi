@@ -198,7 +198,7 @@ this.SS_SearchUI = (function () {
         var html = $this.html();
 
         var disabledHtml = $("<span />", { class: $this.prop("class"), style: 'color: #888' }).html(html);
-        $this.html(disabledHtml);
+        $this.replaceWith(disabledHtml);
       });
     });
     $el.find("table.index").each(function() {
