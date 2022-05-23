@@ -234,7 +234,7 @@ module Tasks
         return if all_site_ids.blank?
 
         all_site_ids.each_slice(20) do |site_ids|
-          sites = Cms::Site.all.in(id: site_ids).to_a
+          sites = ::Cms::Site.all.in(id: site_ids).to_a
           sites.each(&block)
         end
       end
