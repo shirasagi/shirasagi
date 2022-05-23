@@ -151,7 +151,7 @@ module Tasks
 
         min_downloaded = min_downloaded.in_time_zone
         target = min_downloaded.beginning_of_month
-        today = Time.zone.now.beginning_of_day
+        today = ::Time.zone.now.beginning_of_day
         loop do
           break if target > today
 
@@ -177,7 +177,7 @@ module Tasks
 
         min_previewed = min_previewed.in_time_zone
         target = min_previewed.beginning_of_month
-        today = Time.zone.now.beginning_of_day
+        today = ::Time.zone.now.beginning_of_day
         loop do
           break if target > today
 
@@ -251,7 +251,7 @@ module Tasks
 
         min_downloaded = min_downloaded.in_time_zone
         target = min_downloaded.beginning_of_month
-        today = Time.zone.now.beginning_of_day
+        today = ::Time.zone.now.beginning_of_day
         loop do
           break if target > today
 
@@ -302,7 +302,7 @@ module Tasks
 
         min_created = min_created.in_time_zone
         target = min_created.beginning_of_month
-        today = Time.zone.now.beginning_of_day
+        today = ::Time.zone.now.beginning_of_day
         loop do
           break if target > today
 
