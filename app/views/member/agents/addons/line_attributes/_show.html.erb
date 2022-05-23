@@ -1,8 +1,3 @@
-<%= jquery do %>
-  $("#addon-member-agents-addons-additional_attributes").hide();
-  $("#addon-ezine-agents-addons-subscription").hide();
-<% end %>
-
 <dl class="see mod-line-member-additional-attributes">
   <dt><%= @item.t(:first_registered) %></dt>
   <dd><%= tryb{ @item.first_registered.strftime("%Y/%m/%d %H:%M") } %></dd>
