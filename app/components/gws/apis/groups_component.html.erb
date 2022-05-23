@@ -37,10 +37,10 @@
 <%= javascript_tag(defer: true) do %>
   $(function() {
     <% if multi %>
-      $("#ajax-box .only-single").addClass("hide");
+      $("#ajax-box .only-single").remove();
     <% else %>
       $('[name="single"]').val(1);
-      $("#ajax-box .only-multi").addClass("hide");
+      $("#ajax-box .only-multi").remove();
     <% end %>
     SS_SearchUI.modal();
     SS_TreeUI.render(".index.groups", { descendants_check: true });
