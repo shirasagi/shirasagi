@@ -17,7 +17,7 @@ gem 'unicorn'
 gem 'unicorn-worker-killer'
 
 # Database
-gem 'mongoid'
+gem 'mongoid', github: 'shirasagi/mongoid', branch: '7.3-stable-MONGOID-5183'
 gem 'mongo_session_store'
 gem 'mongoid-grid_fs'
 
