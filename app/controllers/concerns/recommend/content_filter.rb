@@ -11,18 +11,20 @@ module Recommend::ContentFilter
     return @items if @contents.blank? || cur_item.blank?
 
     @contents.each do |content|
-      content.cur_site = @cur_site if content.respond_to?(:cur_site=) && content.site_id == @cur_site.id
+      content.try(:cur_site=, @cur_site) if content.site_id == @cur_site.id
       next if display_list.index(content.path)
 
       item = content.content
-      next unless item
-      next unless item.public?
+      next unless item.try(:public?)
       case cur_item.display_target
       when 'page_only'
-        next unless item.is_a?(Cms::Model::Page)
+        model = Cms::Model::Page
       when 'node_only'
-        next unless item.is_a?(Cms::Model::Node)
+        model = Cms::Model::Node
+      else
+        model = Cms::Content
       end
+      next unless item.is_a?(model)
 
       display_list << content.path
       @items << item
