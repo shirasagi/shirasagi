@@ -1,48 +1,48 @@
 require 'spec_helper'
 
 describe Cms::Line::Message, type: :model, dbscope: :example do
-  let!(:deliver_category1) do
+  let!(:deliver_category_first) do
     create(:cms_line_deliver_category_category, filename: "c1", select_type: "checkbox")
   end
-  let!(:deliver_category1_1) do
-    create(:cms_line_deliver_category_selection, parent: deliver_category1, filename: "1")
+  let!(:deliver_category_first1) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_first, filename: "1")
   end
-  let!(:deliver_category1_2) do
-    create(:cms_line_deliver_category_selection, parent: deliver_category1, filename: "2")
+  let!(:deliver_category_first2) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_first, filename: "2")
   end
-  let!(:deliver_category1_3) do
-    create(:cms_line_deliver_category_selection, parent: deliver_category1, filename: "3")
+  let!(:deliver_category_first3) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_first, filename: "3")
   end
-  let!(:deliver_category2) do
+  let!(:deliver_category_second) do
     create(:cms_line_deliver_category_category, filename: "c2", select_type: "checkbox")
   end
-  let!(:deliver_category2_1) do
-    create(:cms_line_deliver_category_selection, parent: deliver_category2, filename: "1")
+  let!(:deliver_category_second1) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_second, filename: "1")
   end
-  let!(:deliver_category2_2) do
-    create(:cms_line_deliver_category_selection, parent: deliver_category2, filename: "2")
+  let!(:deliver_category_second2) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_second, filename: "2")
   end
-  let!(:deliver_category2_3) do
-    create(:cms_line_deliver_category_selection, parent: deliver_category2, filename: "3")
+  let!(:deliver_category_second3) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_second, filename: "3")
   end
 
   # active members
   let!(:member1) { create(:cms_line_member) }
   let!(:member2) do
     create(:cms_line_member,
-      deliver_category_ids: [deliver_category1_1.id])
+      deliver_category_ids: [deliver_category_first1.id])
   end
   let!(:member3) do
     create(:cms_line_member,
-      deliver_category_ids: [deliver_category1_2.id])
+      deliver_category_ids: [deliver_category_first2.id])
   end
   let!(:member4) do
     create(:cms_line_member,
-      deliver_category_ids: [deliver_category1_1.id, deliver_category1_3.id])
+      deliver_category_ids: [deliver_category_first1.id, deliver_category_first3.id])
   end
   let!(:member5) do
     create(:cms_line_member,
-      deliver_category_ids: [deliver_category1_2.id, deliver_category1_3.id, deliver_category2_1.id])
+      deliver_category_ids: [deliver_category_first2.id, deliver_category_first3.id, deliver_category_second1.id])
   end
 
   # expired members
@@ -65,7 +65,7 @@ describe Cms::Line::Message, type: :model, dbscope: :example do
   context do "multicast_with_registered_condition"
     let!(:deliver_condition) do
       create(:cms_line_deliver_condition,
-        deliver_category_ids: [deliver_category1_1.id])
+        deliver_category_ids: [deliver_category_first1.id])
     end
     let!(:item) do
       create(:cms_line_message,
@@ -79,11 +79,11 @@ describe Cms::Line::Message, type: :model, dbscope: :example do
   end
 
   context do "multicast_with_input_condition"
-    context "deliver_category1_1" do
+    context "deliver_category_first1" do
       let!(:item) do
         create(:cms_line_message,
           deliver_condition_state: "multicast_with_input_condition",
-          deliver_category_ids: [deliver_category1_1.id])
+          deliver_category_ids: [deliver_category_first1.id])
       end
 
       it do
@@ -92,11 +92,11 @@ describe Cms::Line::Message, type: :model, dbscope: :example do
     end
 
 
-    context "deliver_category1_1 or deliver_category1_2" do
+    context "deliver_category_first1 or deliver_category_first2" do
       let!(:item) do
         create(:cms_line_message,
           deliver_condition_state: "multicast_with_input_condition",
-          deliver_category_ids: [deliver_category1_1.id, deliver_category1_2.id])
+          deliver_category_ids: [deliver_category_first1.id, deliver_category_first2.id])
       end
 
       it do
@@ -104,11 +104,11 @@ describe Cms::Line::Message, type: :model, dbscope: :example do
       end
     end
 
-    context "deliver_category1_3 and deliver_category2_1" do
+    context "deliver_category_first3 and deliver_category_second1" do
       let!(:item) do
         create(:cms_line_message,
           deliver_condition_state: "multicast_with_input_condition",
-          deliver_category_ids: [deliver_category1_3.id, deliver_category2_1.id])
+          deliver_category_ids: [deliver_category_first3.id, deliver_category_second1.id])
       end
 
       it do

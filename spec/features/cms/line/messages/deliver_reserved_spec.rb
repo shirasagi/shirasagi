@@ -10,35 +10,35 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
   let(:name) { unique_id }
   let(:today) { Time.zone.today }
 
-  let!(:deliver_category1) do
+  let!(:deliver_category_first) do
     create(:cms_line_deliver_category_category, filename: "c1", select_type: "checkbox")
   end
-  let!(:deliver_category1_1) do
-    create(:cms_line_deliver_category_selection, parent: deliver_category1, filename: "1")
+  let!(:deliver_category_first1) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_first, filename: "1")
   end
-  let!(:deliver_category1_2) do
-    create(:cms_line_deliver_category_selection, parent: deliver_category1, filename: "2")
+  let!(:deliver_category_first2) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_first, filename: "2")
   end
-  let!(:deliver_category1_3) do
-    create(:cms_line_deliver_category_selection, parent: deliver_category1, filename: "3")
+  let!(:deliver_category_first3) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_first, filename: "3")
   end
-  let!(:deliver_category2) do
+  let!(:deliver_category_second) do
     create(:cms_line_deliver_category_category, filename: "c2", select_type: "checkbox")
   end
-  let!(:deliver_category2_1) do
-    create(:cms_line_deliver_category_selection, parent: deliver_category2, filename: "1")
+  let!(:deliver_category_second_1) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_second, filename: "1")
   end
-  let!(:deliver_category2_2) do
-    create(:cms_line_deliver_category_selection, parent: deliver_category2, filename: "2")
+  let!(:deliver_category_second_2) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_second, filename: "2")
   end
-  let!(:deliver_category2_3) do
-    create(:cms_line_deliver_category_selection, parent: deliver_category2, filename: "3")
+  let!(:deliver_category_second_3) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_second, filename: "3")
   end
 
   # active members
   let!(:member1) { create(:cms_line_member, name: "member1") }
   let!(:member2) { create(:cms_line_member, name: "member2") }
-  let!(:member3) { create(:cms_line_member, name: "member3", deliver_category_ids: [deliver_category1_1.id]) }
+  let!(:member3) { create(:cms_line_member, name: "member3", deliver_category_ids: [deliver_category_first1.id]) }
 
   # expired members
   let!(:member4) { create(:cms_member, name: "member4", subscribe_line_message: "active") }
@@ -265,7 +265,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
         within "form#item-form" do
           fill_in "item[name]", with: name
           select I18n.t("cms.options.line_deliver_condition_state.multicast_with_input_condition"), from: 'item[deliver_condition_state]'
-          find("input[name='item[deliver_category_ids][]'][value='#{deliver_category1_1.id}']").set(true)
+          find("input[name='item[deliver_category_ids][]'][value='#{deliver_category_first1.id}']").set(true)
           click_on I18n.t("ss.buttons.save")
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -414,7 +414,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
         within "form#item-form" do
           fill_in "item[name]", with: name
           select I18n.t("cms.options.line_deliver_condition_state.multicast_with_input_condition"), from: 'item[deliver_condition_state]'
-          find("input[name='item[deliver_category_ids][]'][value='#{deliver_category1_1.id}']").set(true)
+          find("input[name='item[deliver_category_ids][]'][value='#{deliver_category_first1.id}']").set(true)
           click_on I18n.t("ss.buttons.save")
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
