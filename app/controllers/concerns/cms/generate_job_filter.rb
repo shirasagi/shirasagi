@@ -1,8 +1,6 @@
 module Cms::GenerateJobFilter
   extend ActiveSupport::Concern
 
-  public
-
   def index
     respond_to do |format|
       format.html { render file: "cms/generate_tasks/index" }
