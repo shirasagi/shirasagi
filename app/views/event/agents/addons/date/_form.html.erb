@@ -8,6 +8,7 @@
 <% render_recurrence = proc do |recurr, index| %>
   <div class="event-recurrence">
     <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_update_from_view]", "1" %>
+    <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_all_day]", "1", id: nil %>
 
     <div class="event-recurrence-row">
       <%= button_tag t("ss.buttons.delete"), type: "button", class: "btn event-recurrence-delete-btn" %>
@@ -17,6 +18,7 @@
         <%= text_field_tag "#{f.object_name}[event_recurrences][][in_until_on]", recurr.until_on.try { |time| I18n.l(time.to_date, format: :picker) }, class: "date js-date", id: nil %>
       </div>
 
+      <% if false %>
       <div class="event-recurrence-time">
         <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_all_day]", recurr.kind == "date" ? "1" : "0", id: nil %>
         <div class="event-recurrence-time-row">
@@ -29,6 +31,7 @@
           <%= time_field_tag "#{f.object_name}[event_recurrences][][in_end_time]", recurr.end_datetime.try { |time| I18n.l(time, format: :zoo_hh_mm) } || "17:00" %>
         </div>
       </div>
+      <% end %>
 
       <div class="event-recurrence-excludes">
         <% disp = recurr.exclude_dates.try { |dates| dates.map { |date| I18n.l(date.to_date, format: :picker) }.join(",") } %>
@@ -55,13 +58,6 @@
 
   <dt><%= @model.t :event_recurrences %><%= @model.tt :event_recurrences %></dt>
   <dd>
-    <% if false %>
-    <div class="event-recurrence">
-      <div class="event-recurrence-row">
-        終日イベントの場合は、開始時刻に 10:00 を、終了時刻に 17:00 をセットしてください。
-      </div>
-    </div>
-    <% end %>
     <% @item.event_recurrences.each_with_index do |recurr, index| %>
       <% render_recurrence.call recurr, index %>
     <% end %>
