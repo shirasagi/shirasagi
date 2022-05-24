@@ -5,7 +5,9 @@
   <div class="head-link">
     <%= link_to t('ss.links.download_csv'), { action: :download_all }, class: 'link-item' %>
     | <%= link_to t('ss.links.import_csv'), { action: :import }, class: 'link-item' if @db.node %>
-    | <%= link_to t('ss.links.import_url'), { action: :import_url }, class: 'link-item' if @db.node && @db.import_url.present? %>
+    <% if @db.node && @db.import_url.present? %>
+    | <%= link_to t('ss.links.import_url'), { action: :import_url }, class: 'link-item' %>
+    <% end %>
   </div>
 </header>
 

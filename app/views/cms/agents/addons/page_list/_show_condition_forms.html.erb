@@ -37,6 +37,6 @@
 </dd>
 
 <% if @item.is_a?(Article::Part::Page) && @item.sort_column_name.present? %>
-<dt><%= @model.t :sort_column_name %></dt>
+<dt class="depth-2"><%= @model.t :sort_column_name %></dt>
 <dd><%= @item.sort_column_name %> <%= @item.label :sort_column_direction %></dd>
 <% end %>

@@ -95,7 +95,8 @@ class Cms::FormDb
 
   def export_csv(form, items, options = {})
     column_names = form.column_names
-    headers = [import_page_name.presence || Article::Page.t(:name), *column_names]
+    headers = column_names
+    headers.unshift(Article::Page.t(:name)) if import_page_name.blank?
 
     require "csv"
     csv = CSV.generate do |data|
