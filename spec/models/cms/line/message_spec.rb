@@ -91,7 +91,6 @@ describe Cms::Line::Message, type: :model, dbscope: :example do
       end
     end
 
-
     context "deliver_category_first1 or deliver_category_first2" do
       let!(:item) do
         create(:cms_line_message,

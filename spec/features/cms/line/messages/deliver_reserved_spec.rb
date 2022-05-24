@@ -25,13 +25,13 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
   let!(:deliver_category_second) do
     create(:cms_line_deliver_category_category, filename: "c2", select_type: "checkbox")
   end
-  let!(:deliver_category_second_1) do
+  let!(:deliver_category_second1) do
     create(:cms_line_deliver_category_selection, parent: deliver_category_second, filename: "1")
   end
-  let!(:deliver_category_second_2) do
+  let!(:deliver_category_second2) do
     create(:cms_line_deliver_category_selection, parent: deliver_category_second, filename: "2")
   end
-  let!(:deliver_category_second_3) do
+  let!(:deliver_category_second3) do
     create(:cms_line_deliver_category_selection, parent: deliver_category_second, filename: "3")
   end
 
