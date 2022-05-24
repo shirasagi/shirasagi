@@ -104,8 +104,8 @@ module Event
 
       if times.length == 1
         _, _, start_at, end_at = *times[0]
-        start_at = I18n.l(start_at, format: :zoo_h_mm)
-        end_at = I18n.l(end_at, format: :zoo_h_mm)
+        start_at = I18n.l(start_at, format: :h_mm)
+        end_at = I18n.l(end_at, format: :h_mm)
 
         if start_at != "10:00" && end_at != "17:00"
           ret << DATE_TIME_SEPARATOR
@@ -117,7 +117,7 @@ module Event
         return ret
       end
 
-      time_parts = times.map { |_, _, start_at, _| I18n.l(start_at, format: :zoo_h_mm) + START_AND_END_TIME_SEPARATOR }
+      time_parts = times.map { |_, _, start_at, _| I18n.l(start_at, format: :h_mm) + START_AND_END_TIME_SEPARATOR }
       ret + DATE_TIME_SEPARATOR + time_parts.join(MULTI_START_TIME_SEPARATOR)
     end
 

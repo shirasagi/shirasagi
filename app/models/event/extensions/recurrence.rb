@@ -206,19 +206,19 @@ class Event::Extensions::Recurrence
   def all_day?
     return true if kind == "date"
 
-    start_time = I18n.l(start_datetime, format: :zoo_h_mm)
+    start_time = I18n.l(start_datetime, format: :h_mm)
     return false if start_time != "10:00"
 
-    end_time = I18n.l(end_datetime, format: :zoo_h_mm)
+    end_time = I18n.l(end_datetime, format: :h_mm)
     return false if end_time != "17:00"
 
     true
   end
 
   def start_time_between?(from_time, to_time)
-    from_time = I18n.l(from_time, format: :zoo_hh_mm)
-    to_time = I18n.l(to_time, format: :zoo_hh_mm)
-    start_time = I18n.l(start_datetime, format: :zoo_hh_mm)
+    from_time = I18n.l(from_time, format: :hh_mm)
+    to_time = I18n.l(to_time, format: :hh_mm)
+    start_time = I18n.l(start_datetime, format: :hh_mm)
 
     from_time <= start_time && start_time < to_time
   end
@@ -238,15 +238,15 @@ class Event::Extensions::Recurrence
 
   def to_long_html
     parts = [
-      I18n.l(start_date, format: :zoo_m_d_a),
+      I18n.l(start_date, format: :m_d_a),
       I18n.t("ss.wave_dash"),
-      I18n.l(until_on, format: :zoo_m_d_a),
+      I18n.l(until_on, format: :m_d_a),
     ]
     if kind == "datetime"
       parts << " "
-      parts << I18n.l(start_datetime, format: :zoo_h_mm)
+      parts << I18n.l(start_datetime, format: :h_mm)
       parts << I18n.t("ss.wave_dash")
-      parts << I18n.l(end_datetime, format: :zoo_h_mm)
+      parts << I18n.l(end_datetime, format: :h_mm)
     end
     if frequency == "weekly" && by_days.present?
       week_days = I18n.t("date.abbr_day_names")

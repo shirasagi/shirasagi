@@ -381,8 +381,8 @@ describe Event::Page, dbscope: :example do
             {
               in_update_from_view: 1,
               in_start_on: I18n.l(today, format: :picker), in_until_on: I18n.l(today + 1.day, format: :picker),
-              in_all_day: "0", in_start_time: I18n.l(now, format: :zoo_hh_mm),
-              in_end_time: I18n.l(now + 1.hour, format: :zoo_hh_mm)
+              in_all_day: "0", in_start_time: I18n.l(now, format: :hh_mm),
+              in_end_time: I18n.l(now + 1.hour, format: :hh_mm)
             }
           end
 
@@ -412,8 +412,8 @@ describe Event::Page, dbscope: :example do
             {
               in_update_from_view: 1,
               in_start_on: I18n.l(today, format: :picker), in_until_on: I18n.l(after_1week - 1.day, format: :picker),
-              in_all_day: "0", in_start_time: I18n.l(now, format: :zoo_hh_mm),
-              in_end_time: I18n.l(now + 1.hour, format: :zoo_hh_mm), in_by_days: [ "", "0", "1" ]
+              in_all_day: "0", in_start_time: I18n.l(now, format: :hh_mm),
+              in_end_time: I18n.l(now + 1.hour, format: :hh_mm), in_by_days: [ "", "0", "1" ]
             }
           end
           let(:sunday_in_week) { (today..after_1week).find { |date| date.wday == 0 } }

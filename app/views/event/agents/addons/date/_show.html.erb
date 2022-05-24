@@ -16,9 +16,9 @@
         <div class="event-recurrence-time">終日</div>
       <% else %>
         <div class="event-recurrence-time">
-          <%= recurr.start_datetime.try { |time| I18n.l(time, format: :zoo_hh_mm) } %>
+          <%= recurr.start_datetime.try { |time| I18n.l(time, format: :hh_mm) } %>
           <%= t("ss.wave_dash") %>
-          <%= recurr.end_datetime.try { |time| I18n.l(time, format: :zoo_hh_mm) } %>
+          <%= recurr.end_datetime.try { |time| I18n.l(time, format: :hh_mm) } %>
         </div>
       <% end %>
       <% if recurr.exclude_dates.present? %>

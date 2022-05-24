@@ -17,7 +17,7 @@ describe Event, dbscope: :example do
         expected = [
           I18n.l(now.to_date, format: :full),
           Event::DATE_TIME_SEPARATOR,
-          I18n.l(now, format: :zoo_h_mm), Event::START_AND_END_TIME_SEPARATOR, I18n.l(now + 45.minutes, format: :zoo_h_mm)
+          I18n.l(now, format: :h_mm), Event::START_AND_END_TIME_SEPARATOR, I18n.l(now + 45.minutes, format: :h_mm)
         ].join
         expect(subject).to eq expected
       end
@@ -40,9 +40,9 @@ describe Event, dbscope: :example do
         expected = [
           I18n.l(start_at1.to_date, format: :full),
           Event::DATE_TIME_SEPARATOR,
-          I18n.l(start_at1, format: :zoo_h_mm), Event::START_AND_END_TIME_SEPARATOR,
+          I18n.l(start_at1, format: :h_mm), Event::START_AND_END_TIME_SEPARATOR,
           "／",
-          I18n.l(start_at2, format: :zoo_h_mm), Event::START_AND_END_TIME_SEPARATOR
+          I18n.l(start_at2, format: :h_mm), Event::START_AND_END_TIME_SEPARATOR
         ].join
         expect(subject).to eq expected
       end
@@ -52,12 +52,12 @@ describe Event, dbscope: :example do
       let(:start_at1) { now.change(day: 16, hour: 10) }
       let(:recurrence1) do
         Event::Extensions::Recurrence.demongoize(
-          kind: "datetime", start_at: start_at1, end_at: start_at1 + 45.minutes, frequency: "daily", until_on: now.to_date)
+          kind: "datetime", start_at: start_at1, end_at: start_at1 + 45.minutes, frequency: "daily", until_on: start_at1.to_date)
       end
       let(:start_at2) { start_at1 + 7.days }
       let(:recurrence2) do
         Event::Extensions::Recurrence.demongoize(
-          kind: "datetime", start_at: start_at2, end_at: start_at2 + 45.minutes, frequency: "daily", until_on: now.to_date)
+          kind: "datetime", start_at: start_at2, end_at: start_at2 + 45.minutes, frequency: "daily", until_on: start_at2.to_date)
       end
       let(:recurrences) { [ recurrence1, recurrence2 ] }
 
@@ -74,12 +74,12 @@ describe Event, dbscope: :example do
       let(:start_at1) { now.change(mon: 7, day: 16, hour: 10) }
       let(:recurrence1) do
         Event::Extensions::Recurrence.demongoize(
-          kind: "datetime", start_at: start_at1, end_at: start_at1 + 45.minutes, frequency: "daily", until_on: now.to_date)
+          kind: "datetime", start_at: start_at1, end_at: start_at1 + 45.minutes, frequency: "daily", until_on: start_at1.to_date)
       end
       let(:start_at2) { start_at1 + 1.month }
       let(:recurrence2) do
         Event::Extensions::Recurrence.demongoize(
-          kind: "datetime", start_at: start_at2, end_at: start_at2 + 45.minutes, frequency: "daily", until_on: now.to_date)
+          kind: "datetime", start_at: start_at2, end_at: start_at2 + 45.minutes, frequency: "daily", until_on: start_at2.to_date)
       end
       let(:recurrences) { [ recurrence1, recurrence2 ] }
 

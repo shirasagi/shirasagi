@@ -418,14 +418,14 @@ class Cms::PageExporter
     event_recurrence = item.event_recurrences[index]
     return if event_recurrence.blank? || event_recurrence.kind != "datetime"
 
-    event_recurrence.start_datetime.try { |time| I18n.l(time, format: :zoo_hh_mm) }
+    event_recurrence.start_datetime.try { |time| I18n.l(time, format: :hh_mm) }
   end
 
   def format_event_recurrence_end_time(item, index)
     event_recurrence = item.event_recurrences[index]
     return if event_recurrence.blank? || event_recurrence.kind != "datetime"
 
-    event_recurrence.end_datetime.try { |time| I18n.l(time, format: :zoo_hh_mm) }
+    event_recurrence.end_datetime.try { |time| I18n.l(time, format: :hh_mm) }
   end
 
   def format_event_recurrence_by_days(item, index)
