@@ -2,7 +2,7 @@
   new Cms_Line_Deliver_Condition
 <% end %>
 
-<dl class="see mod-pippi-member-additional-attributes">
+<dl class="see mod-line-member-additional-attributes">
   <dt><%= @item.t(:first_registered) %></dt>
   <dd><%= f.text_field :first_registered, class: 'datetime js-datetime', value: tryb{ @item.first_registered.strftime("%Y/%m/%d %H:%M") } %></dd>
 
