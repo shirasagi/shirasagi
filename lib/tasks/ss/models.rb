@@ -1,5 +1,5 @@
 module Tasks
-  class SS
+  module SS
     class Models
       class << self
         def call
