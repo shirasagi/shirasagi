@@ -18,18 +18,12 @@ module Recommend::Addon
     def condition_hash(options = {})
       cond = []
       if conditions.present?
-        paths = conditions.map { |path| path.start_with?("/") ? /^#{path}/ : /^\/#{path}/ }
+        paths = conditions.map { |path| path.start_with?("/") ? /\A#{path}/ : /\A\/#{path}/ }
         cond << { path: { "$in" => paths } }
       end
       if exclude_paths.present?
-        paths = exclude_paths.map { |path| path.start_with?("/") ? /^#{path}/ : /^\/#{path}/ }
+        paths = exclude_paths.map { |path| path.start_with?("/") ? /\A#{path}/ : /\A\/#{path}/ }
         cond << { path: { "$nin" => paths } }
-      end
-      if display_target == "page_only"
-        cond << { target_class: { "$not" => /::Node/ } }
-      end
-      if display_target == "node_only"
-        cond << { target_class: { "$not" => /::Page/ } }
       end
       cond.present? ? { "$and" => cond } : {}
     end

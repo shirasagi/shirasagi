@@ -1,6 +1,7 @@
 class Recommend::Agents::Parts::HistoryController < ApplicationController
   include Cms::PartFilter::View
-  helper Recommend::ListHelper
+  include Recommend::ContentFilter
+  helper Cms::ListHelper
 
   def index
     token = cookies["_ss_recommend"] rescue nil
@@ -8,6 +9,6 @@ class Recommend::Agents::Parts::HistoryController < ApplicationController
       where(token: token.to_s.presence).
       where(@cur_part.condition_hash).
       limit(100)
-    @limit = @cur_part.limit
+    set_items
   end
 end
