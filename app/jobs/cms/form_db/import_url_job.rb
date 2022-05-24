@@ -1,7 +1,7 @@
 class Cms::FormDb::ImportUrlJob < Cms::ApplicationJob
   include Job::SS::TaskFilter
 
-  self.task_class = Cms::Task
+  self.task_class = Cms::FormDb::ImportTask
   self.task_name = "cms:form_db:import_url"
   self.controller = Cms::Agents::Tasks::FormDb::ImportController
   self.action = :import_url
