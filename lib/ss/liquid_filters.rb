@@ -134,12 +134,13 @@ module SS::LiquidFilters
     ApplicationController.helpers.sanitize(input.to_s)
   end
 
-  def public_list(input, limit = 3)
+  def public_list(input, limit = nil)
     node = input.try(:delegatee)
     return unless node
-    return unless node.class.include?(Cms::Model::Node)
+    return unless node.is_a?(Cms::Model::Node)
     criteria = Cms::Page.public_list(site: node.site, node: node)
-    criteria.limit(limit).to_a
+    criteria = criteria.limit(limit) if limit.present?
+    criteria.to_a
   end
 
   def filter_by_column_value(pages, key_value)
@@ -148,7 +149,7 @@ module SS::LiquidFilters
     return [] if key.blank?
     return [] if value.blank?
     pages.select do |page|
-      page.column_values.to_a.select { |v| v.column.try(:name) == key && v.value == value }.present?
+      page.column_values.to_a.index { |v| v.column.try(:name) == key && v.value == value }
     end
   end
 
@@ -166,9 +167,9 @@ module SS::LiquidFilters
   def same_name_pages(input, filename = nil)
     page = input.try(:delegatee)
     return unless page
-    return unless page.class.include?(Cms::Model::Page)
+    return unless page.is_a?(Cms::Model::Page)
     criteria = Cms::Page.site(page.site)
-    criteria = criteria.where(filename: /^#{filename}\//) if filename.present?
+    criteria = criteria.where(filename: /\A#{filename}\//) if filename.present?
     criteria.where(name: page.name).nin(id: page.id).to_a
   end
 end
