@@ -356,10 +356,10 @@ describe History::Trash, type: :model, dbscope: :example do
       let!(:event_name) { "event_name-#{unique_id}" }
       let!(:event_dates) { %w(2022/01/12 2022/01/13 2022/01/19 2022/01/20).map { |d| Date.parse(d) } }
       let!(:event_recurr1) do
-        { kind: "date", start_on: "2022/01/12", frequency: "daily", until_on: "2022/01/13" }
+        { kind: "date", start_at: "2022/01/12", frequency: "daily", until_on: "2022/01/13" }
       end
       let!(:event_recurr2) do
-        { kind: "date", start_on: "2022/01/19", frequency: "daily", until_on: "2022/01/20" }
+        { kind: "date", start_at: "2022/01/19", frequency: "daily", until_on: "2022/01/20" }
       end
       let!(:event_deadline) { Time.zone.parse("2021/12/15 17:30") }
       let!(:item) do
