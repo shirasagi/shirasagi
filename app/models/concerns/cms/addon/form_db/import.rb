@@ -160,11 +160,9 @@ module Cms::Addon::FormDb::Import
   end
 
   def import_row_map_points(item, row)
-    if row['緯度'].blank? || row['経度'].blank?
-      item.map_points = []
-    else
-      item.map_points = [{ name: '', loc: [row['経度'], row['緯度']], text: '', image: '' }]
-    end
+    lng = row['経度'].presence || row['lng'].presence
+    lat = row['緯度'].presence || row['lat'].presence
+    item.map_points = (lng && lat) ? [{ name: '', loc: [lng, lat], text: '', image: '' }] : []
   end
 
   def trauncate_import_logs

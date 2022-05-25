@@ -48,9 +48,12 @@
   <dt><%= @model.t :import_misc_options %></dt>
   <dd>
     <%= f.hidden_field :import_event, value: 0 %>
-    <label><%= f.check_box :import_event, {}, 1 %> <%= @model.t :import_event %></label>
-
+    <label class="mr-0"><%= f.check_box :import_event, {}, 1 %> <%= @model.t :import_event %></label>
+    <%= @model.tt :import_event %>
+  </dd>
+  <dd>
     <%= f.hidden_field :import_map, value: 0 %>
-    <label><%= f.check_box :import_map, {}, 1 %> <%= @model.t :import_map %></label>
+    <label class="mr-0"><%= f.check_box :import_map, {}, 1 %> <%= @model.t :import_map %></label>
+    <%= @model.tt :import_map %>
   </dd>
 </dl>
