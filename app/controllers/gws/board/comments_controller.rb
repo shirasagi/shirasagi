@@ -82,12 +82,11 @@ class Gws::Board::CommentsController < ApplicationController
   def edit
     raise "403" unless editable?
 
-    if @item.is_a?(Cms::Addon::EditLock)
-      unless @item.acquire_lock
-        redirect_to action: :lock
-        return
-      end
+    if @item.is_a?(Cms::Addon::EditLock) && !@item.acquire_lock
+      redirect_to action: :lock
+      return
     end
+
     render
   end
 
