@@ -47,6 +47,7 @@ load "#{Rails.root}/db/seeds/cms/contents/source_cleaner_templates.rb"
 load "#{Rails.root}/db/seeds/cms/contents/postal_code.rb"
 load "#{Rails.root}/db/seeds/cms/contents/word_dictionary.rb"
 load "#{Rails.root}/db/seeds/cms/contents/translate_lang.rb"
+load "#{Rails.root}/db/seeds/cms/contents/line.rb"
 
 if @site.subdir.present?
   # rake cms:set_subdir_url site=@site.host

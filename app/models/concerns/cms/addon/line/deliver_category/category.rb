@@ -11,15 +11,15 @@ module Cms::Addon
 
     def select_type_options
       [
-        %(プルダウン select),
-        %(チェックボックス checkbox)
+        %w(プルダウン select),
+        %w(チェックボックス checkbox)
       ]
     end
 
     def required_options
       [
-        %(必須 required),
-        %(任意 optional)
+        %w(必須 required),
+        %w(任意 optional)
       ]
     end
 
