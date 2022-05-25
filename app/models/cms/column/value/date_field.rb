@@ -10,6 +10,22 @@ class Cms::Column::Value::DateField < Cms::Column::Value::Base
     export :date
   end
 
+  class << self
+    def build_mongo_query(operator, condition_values)
+      condition_values = condition_values.map do |date_like|
+        date_like.in_time_zone rescue date_like
+      end
+
+      # start_with and end_with are not supported
+      case operator
+      when "any_of"
+        { date: { "$in" => condition_values } }
+      when "none_of"
+        { date: { "$nin" => condition_values } }
+      end
+    end
+  end
+
   def html_additional_attr_to_h
     return {} if html_additional_attr.blank?
     html_additional_attr.scan(/\S+?=".+?"/m).

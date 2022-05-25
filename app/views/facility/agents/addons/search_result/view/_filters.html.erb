@@ -7,6 +7,14 @@
         </li>
       <% end %>
     </ul>
+  <% elsif @filter_categories_array %>
+    <ul>
+      <% @filter_categories_array.each do |cate| %>
+        <li class="<%= cate.basename %>">
+          <%= link_to cate.name, "#", class: 'clicked', "data-id" => cate.id %>
+        </li>
+      <% end %>
+    </ul>
   <% end %>
   <% if @filter_locations.present? %>
     <%= select_tag :focus, options_for_select(@focus_options), class: :focus %>

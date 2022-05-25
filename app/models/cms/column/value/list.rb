@@ -10,6 +10,21 @@ class Cms::Column::Value::List < Cms::Column::Value::Base
     export :lists
   end
 
+  class << self
+    def build_mongo_query(operator, condition_values)
+      case operator
+      when "any_of"
+        { lists: { "$in" => condition_values } }
+      when "none_of"
+        { lists: { "$nin" => condition_values } }
+      when "start_with"
+        { lists: { "$in" => condition_values.map { |str| /^#{::Regexp.escape(str)}/ } } }
+      when "end_with"
+        { lists: { "$in" => condition_values.map { |str| /#{::Regexp.escape(str)}$/ } } }
+      end
+    end
+  end
+
   def import_csv(values)
     super
 

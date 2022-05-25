@@ -1,0 +1,42 @@
+<% render_condition_form_filter = proc do |filter| %>
+  <td class="filter-column"><%= filter.column.try(:name) || filter.column_id %></td>
+  <td class="filter-condition-value"><%= filter.condition_values.join(", ") %></td>
+<% end %>
+
+<dt><%= @model.t :condition_form_ids %></dt>
+<dd>
+  <% if @item.condition_forms.present? %>
+    <table class="index">
+      <thead>
+      <tr>
+        <th class="name"><%= t("cms.condition_form.form_name") %></th>
+        <th class="filter-column"><%= t("cms.condition_form.column_name") %></th>
+        <th class="filter-condition-value"><%= t("cms.condition_form.column_value") %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.condition_forms.each do |condition_form| %>
+        <tr data-id="<%= condition_form.form_id %>">
+          <% row_span = condition_form.filters.present? ? condition_form.filters.count : 1 %>
+          <td rowspan="<%= row_span %>"><%= condition_form.form.try(:name) || condition_form.form_id %></td>
+          <% if condition_form.filters.present? %>
+            <% render_condition_form_filter.call(condition_form.filters.first) %>
+          <% else %>
+            <td colspan="3"><%= t("cms.condition_form.select_all") %></td>
+          <% end %>
+        </tr>
+        <% condition_form.filters.drop(1).each do |filter| %>
+          <tr data-id="<%= condition_form.form_id %>">
+            <% render_condition_form_filter.call(filter) %>
+          </tr>
+        <% end %>
+      <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</dd>
+
+<% if @item.is_a?(Article::Part::Page) && @item.sort_column_name.present? %>
+<dt class="depth-2"><%= @model.t :sort_column_name %></dt>
+<dd><%= @item.sort_column_name %> <%= @item.label :sort_column_direction %></dd>
+<% end %>

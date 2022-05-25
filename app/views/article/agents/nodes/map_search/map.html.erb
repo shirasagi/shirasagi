@@ -1,23 +1,17 @@
 <%= javascript_include_tag "/assets/js/jquery.colorbox.js" %>
 <%= stylesheet_link_tag "/assets/css/colorbox/colorbox.css", media: 'all' %>
 
-<%= render_facility_search_map "#map-canvas", markers: @markers, markerCluster: true, site: @cur_site, preview: @preview %>
-<%= render "upper" %>
+<div class="map-search-index">
+  <%= render_facility_search_map "#map-canvas", markers: @markers, markerCluster: true, site: @cur_site, preview: @preview %>
+  <%= render "upper" %>
 
-<%
-  map_html = @cur_node.map_html.presence || @cur_node.default_map_html
-  map_html = map_html.gsub(/\{\{ ?(.*?) ?\}\}/) do |m|
-    defined = /(sidebar|canvas|filters)/.match?($1)
-    defined ? render(template: "_#{$1}", locals: { current: "map" }) : m
-  end
-%>
-<%= raw map_html %>
+  <%
+    map_html = @cur_node.map_html.presence || @cur_node.default_map_html
+    map_html = map_html.gsub(/\{\{ ?(.*?) ?\}\}/) do |m|
+      defined = /(sidebar|canvas|filters)/.match?($1)
+      defined ? render(template: "_#{$1}", locals: { current: "map" }) : m
+    end
+  %>
 
-<%= jquery do %>
-  $(".ajax-box").on("click", function () {
-    $.colorbox({
-      html: "<%=j render(partial: 'modal', locals: { search_path: './map.html' }) %>"
-    });
-    return false;
-  });
-<% end %>
+  <%= raw map_html %>
+</div>

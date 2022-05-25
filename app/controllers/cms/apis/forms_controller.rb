@@ -47,6 +47,12 @@ class Cms::Apis::FormsController < ApplicationController
     render layout: false
   end
 
+  def column_names
+    @item = Cms::Form.site(@cur_site).find(params[:id])
+    names = @item.columns.order(order: 1).map(&:name)
+    render json: names.to_json
+  end
+
   def new_column
     @item = Cms::Form.site(@cur_site).find(params[:id])
     @cur_node = Cms::Node.find(params[:node]) rescue nil

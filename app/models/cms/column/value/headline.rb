@@ -9,6 +9,21 @@ class Cms::Column::Value::Headline < Cms::Column::Value::Base
     export :text
   end
 
+  class << self
+    def build_mongo_query(operator, condition_values)
+      case operator
+      when "any_of"
+        { text: { "$in" => condition_values } }
+      when "none_of"
+        { text: { "$nin" => condition_values } }
+      when "start_with"
+        { text: { "$in" => condition_values.map { |str| /^#{::Regexp.escape(str)}/ } } }
+      when "end_with"
+        { text: { "$in" => condition_values.map { |str| /#{::Regexp.escape(str)}$/ } } }
+      end
+    end
+  end
+
   def import_csv(values)
     super
 

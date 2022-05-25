@@ -1,8 +1,9 @@
 module Article
   class Initializer
     Cms::Node.plugin "article/page"
-    Cms::Node.plugin 'article/map_search'
     Cms::Node.plugin "article/search"
+    Cms::Node.plugin 'article/map_search'
+    Cms::Node.plugin "article/form_export"
     Cms::Part.plugin "article/page"
     Cms::Part.plugin "article/page_navi"
     Cms::Part.plugin "article/search"

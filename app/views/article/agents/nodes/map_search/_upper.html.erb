@@ -1,6 +1,22 @@
-<dl class="condition">
+<%= jquery do %>
+  $(".map-search-change").on("click", function () {
+    $.colorbox({
+      html: "<%=j render(partial: 'modal') %>"
+    });
+    return false;
+  });
+<% end %>
+
+<dl class="condition map-search-condition">
   <dt class="keyword"><%= t("facility.keyword") %></dt>
   <dd><%= @keyword %></dd>
+
+  <% if @categories %>
+    <dt class="category"><%= t("facility.category.name") %></dt>
+    <dd class="category-settings" data-category-settings="<%= @categories.join(',') %>">
+      <%= @categories.join(', ') %>
+    </dd>
+  <% end %>
 
   <% @cur_node.map_search_options.each_with_index do |options, idx| %>
     <%
@@ -11,13 +27,13 @@
   <% end %>
 </dl>
 
-<%= render template: "_settings" %>
+<nav class="settings map-search-settings">
+  <%= link_to t("facility.submit.change"), "#", class: "ajax-box map-search-change" %>
+</nav>
 
-<section class="result">
+<section class="result map-search-result">
   <h2>
     <%= t("facility.result") %>
     <span class="number"><%= @items.count %></span><%= t("facility.count") %>
   </h2>
 </section>
-
-<%= render "tabs" %>

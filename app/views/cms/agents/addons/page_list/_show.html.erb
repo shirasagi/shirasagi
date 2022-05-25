@@ -7,8 +7,11 @@
     <dd><%=br @item.conditions %></dd>
   <% end %>
 
-  <% if @model.use_no_archive_html %>
+  <% if @model.use_condition_forms %>
+    <%= render "cms/agents/addons/page_list/show_condition_forms", local_assigns %>
+  <% end %>
 
+  <% if @model.use_no_archive_html %>
     <% if @model.use_sort %>
       <dt><%= @model.t :sort %></dt>
       <dd>

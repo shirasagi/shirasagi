@@ -223,5 +223,18 @@ class Cms::Column::Value::Base
       h << %({% endif %})
       h.join("\n")
     end
+
+    def build_mongo_query(operator, condition_values)
+      case operator
+      when "any_of"
+        { value: { "$in" => condition_values } }
+      when "none_of"
+        { value: { "$nin" => condition_values } }
+      when "start_with"
+        { value: { "$in" => condition_values.map { |str| /^#{::Regexp.escape(str)}/ } } }
+      when "end_with"
+        { value: { "$in" => condition_values.map { |str| /#{::Regexp.escape(str)}$/ } } }
+      end
+    end
   end
 end

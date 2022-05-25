@@ -1,15 +1,16 @@
 <%= jquery do %>
-  $(".reset").on("click", function () {
-    $(".prop").prop("checked", false);
-    $(".keyword").val("");
+  $(".map-search-reset").on("click", function () {
+    var $form = $(".map-search-settings");
+    $form.find(".prop").prop("checked", false);
+    $form.find(".keyword").val("");
     return false;
   });
 <% end %>
 
-<%= form_tag search_path, multipart: true, method: "get" do %>
+<%= form_tag search_path, multipart: true, method: "get", class: "map-search-settings" do %>
   <%= render "settings" %>
   <footer class="send">
     <%= submit_tag t('facility.submit.search'), name: nil %>
-    <%= submit_tag t('facility.submit.reset'), type: :reset, name: nil, class: :reset %>
+    <%= submit_tag t('facility.submit.reset'), type: :reset, name: nil, class: "reset map-search-reset" %>
   </footer>
 <% end %>

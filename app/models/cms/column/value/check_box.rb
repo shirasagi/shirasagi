@@ -8,6 +8,21 @@ class Cms::Column::Value::CheckBox < Cms::Column::Value::Base
     export :values
   end
 
+  class << self
+    def build_mongo_query(operator, condition_values)
+      case operator
+      when "any_of"
+        { values: { "$in" => condition_values } }
+      when "none_of"
+        { values: { "$nin" => condition_values } }
+      when "start_with"
+        { values: { "$in" => condition_values.map { |str| /^#{::Regexp.escape(str)}/ } } }
+      when "end_with"
+        { values: { "$in" => condition_values.map { |str| /#{::Regexp.escape(str)}$/ } } }
+      end
+    end
+  end
+
   def value
     values.join(', ')
   end

@@ -1,0 +1,42 @@
+<dl class="see mod-cms-form-import">
+  <dt><%= @model.t :import_url %></dt>
+  <dd><%= @item.send :import_url %></dd>
+
+  <dt><%= @model.t :import_primary_key %></dt>
+  <dd><%= @item.send :import_primary_key %></dd>
+
+  <dt><%= @model.t :import_page_name %></dt>
+  <dd><%= @item.send :import_page_name %></dd>
+
+  <dt><%= @model.t :import_column_options %></dt>
+  <dd>
+    <% @item.import_column_options.each do |options, i| %>
+      <div>
+        <b>"<%= options['name'] %>"</b>
+        <%= t("ss.options.search.kind.#{options['kind'].presence || 'any_of'}") %>
+        <b>"<%= options['values'].join(" , ") if options['values'] %>"</b>
+      </div>
+    <% end %>
+  </dd>
+
+  <%
+    import_options = []
+    import_options << @model.t(:import_event) if @item.import_event == 1
+    import_options << @model.t(:import_map) if @item.import_map == 1
+  %>
+  <dt><%= @model.t :import_misc_options %></dt>
+  <dd>
+    <% import_options.each do |option| %>
+      <%= option %><br>
+    <% end %>
+  </dd>
+
+  <dt><%= Cms::FormDb.t :import_logs %></dt>
+  <dd>
+    <% @item.import_logs.order(created: -1).each do |log| %>
+      <span style="display: inline-block; margin-right: 1rem;">
+        <%= link_to log.created.strftime('%m/%d %H:%M'), cms_form_db_import_log_path(db_id: @item.id, id: log.id), target: :_blank %>
+      </span>
+    <% end %>
+  </dd>
+</dl>

@@ -3,12 +3,21 @@ module Cms::Addon::Column::SelectLike
   extend SS::Addon
 
   included do
+    cattr_accessor :use_parent_column_name, instance_accessor: false
+    self.use_parent_column_name = false
+
+    field :parent_column_name, type: String
     field :select_options, type: SS::Extensions::Lines, default: ''
 
-    permit_params :select_options
+    permit_params :parent_column_name, :select_options
 
     before_validation :normalize_select_options
     validate :validate_select_options
+  end
+
+  def parent_column
+    return unless self.class.use_parent_column_name
+    form.columns.where(name: parent_column_name).first
   end
 
   private

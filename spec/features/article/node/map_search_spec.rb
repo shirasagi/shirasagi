@@ -34,8 +34,6 @@ describe "article_node_map_search", type: :feature, dbscope: :example, js: true 
         fill_in "item[name]", with: name
         fill_in "item[basename]", with: basename
         select layout.name, from: "item[layout_id]"
-        select form.name, from: "item[form_id]"
-        select article_node.name, from: "item[node_id]"
         within ".map-search-options-name0" do
           fill_in "item[map_search_options][][name]", with: col1.name
         end
@@ -64,17 +62,13 @@ describe "article_node_map_search", type: :feature, dbscope: :example, js: true 
       # public node
       node = Article::Node::MapSearch.first
       visit node.full_url
-      expect(first('fieldset.category legend')).to have_text(col1.name)
+      expect(first('fieldset.columns legend')).to have_text(col1.name)
       click_on I18n.t("facility.submit.search")
 
       # map
       expect(page).to have_css("#map-sidebar")
       expect(page).to have_css("#map-canvas")
       expect(page).to have_css(".filters")
-
-      # result
-      find('.tab.list a').click
-      expect(page).to have_css(".columns")
     end
   end
 end

@@ -18,9 +18,11 @@ module Cms::Addon::List
       cattr_accessor(:use_liquid, instance_accessor: false) { true }
       cattr_accessor(:use_sort, instance_accessor: false) { true }
       cattr_accessor(:use_conditions, instance_accessor: false) { true }
+      cattr_accessor(:use_condition_forms, instance_accessor: false) { false }
       attr_accessor :cur_date
 
       field :conditions, type: SS::Extensions::Words
+      field :condition_forms, type: Cms::Extensions::ConditionForms
       field :sort, type: String
       field :limit, type: Integer, default: -> { self.class.default_limit }
       field :loop_html, type: String
@@ -31,11 +33,15 @@ module Cms::Addon::List
       field :loop_liquid, type: String
       field :no_items_display_state, type: String
       field :substitute_html, type: String
+      field :sort_column_name, type: String
+      field :sort_column_direction, type: String
 
       belongs_to :loop_setting, class_name: 'Cms::LoopSetting'
 
       permit_params :conditions, :sort, :limit, :loop_html, :loop_setting_id, :upper_html, :lower_html, :new_days
       permit_params :no_items_display_state, :substitute_html, :loop_format, :loop_liquid
+      permit_params :sort_column_name, :sort_column_direction
+      permit_params condition_forms: [ form_ids: [], filters: [ :column_name, :condition_values ] ]
 
       before_validation :validate_conditions
 
@@ -46,6 +52,10 @@ module Cms::Addon::List
 
     def sort_options
       []
+    end
+
+    def sort_column_direction_options
+      %w(asc desc).map { |v| [ I18n.t("ss.options.sort_direction.#{v}"), v ] }
     end
 
     def no_items_display_state_options
@@ -175,6 +185,13 @@ module Cms::Addon::List
       return { "$and" => [{ id: -1 }] } if conditions.blank?
 
       { '$or' => conditions }
+    end
+
+    def sort_by_column_name(pages)
+      pages = pages.entries.sort_by do |a|
+        a ? a.column_values.entries.find { |cv| cv.name == sort_column_name }.try(:export_csv_cell) : nil
+      end
+      sort_column_direction == "desc" ? pages.reverse : pages
     end
 
     def render_loop_html(item, opts = {})

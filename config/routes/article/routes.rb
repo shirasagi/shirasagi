@@ -67,6 +67,7 @@ Rails.application.routes.draw do
       :deletion, :copy, :move, :lock, :download_all, :import, :command,
       :opendata_ref, :contains_urls, :tag, :michecker, :change_state
     ]
+    resources :form_exports, only: [:index]
     resources :map_searches, only: [:index]
     resources :searches, concerns: :deletion
   end
@@ -83,9 +84,9 @@ Rails.application.routes.draw do
   node "article" do
     get "page/(index.:format)" => "public#index", cell: "nodes/page"
     get "page/rss.xml" => "public#rss", cell: "nodes/page", format: "xml"
+    get "form_export/:filename.:format" => "public#index", cell: "nodes/form_export"
     get "map_search/(index.:format)" => "public#index", cell: "nodes/map_search"
     get "map_search/(map.:format)" => "public#map", cell: "nodes/map_search"
-    get "map_search/(result.:format)" => "public#result", cell: "nodes/map_search"
     get "search/(index.:format)" => "public#index", cell: "nodes/search"
   end
 

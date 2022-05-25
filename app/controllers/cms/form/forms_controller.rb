@@ -81,4 +81,17 @@ class Cms::Form::FormsController < ApplicationController
   def column_form
     set_item
   end
+
+  def column_names
+    safe_params = params.permit(ids: [])
+    ids = safe_params[:ids]
+    ids.select!(&:numeric?)
+    ids.map!(&:to_i)
+
+    column_names = Cms::Column::Base.site(@cur_site).in(form_id: ids).pluck(:name)
+    column_names.uniq!
+    column_names.sort!
+
+    render json: { column_names: column_names }
+  end
 end

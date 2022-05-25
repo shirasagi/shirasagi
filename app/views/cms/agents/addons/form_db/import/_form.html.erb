@@ -1,0 +1,59 @@
+<dl class="see mod-cms-form-import">
+  <dt><%= @model.t :import_url %><%= @model.tt :import_url %></dt>
+  <dd><%= f.text_field :import_url %></dd>
+
+  <dt><%= @model.t :import_primary_key %><%= @model.tt :import_primary_key %></dt>
+  <dd><%= f.text_field :import_primary_key %></dd>
+
+  <dt><%= @model.t :import_page_name %><%= @model.tt :import_page_name %></dt>
+  <dd><%= f.text_field :import_page_name, placeholder: Article::Page.t(:name) %></dd>
+
+  <dt><%= @model.t :import_column_options %><%= @model.tt :import_column_options %></dt>
+  <dd>
+    <%= hidden_field_tag "item[import_column_options][0][name]", value: nil %>
+    <table class="index">
+      <thead>
+      <tr>
+        <th style="width: 32%;"><%= t("cms.condition_form.column_name") %></th>
+        <th style="width: 180px"></th>
+        <th><%= t("cms.condition_form.column_value") %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% 3.times.each do |i| %>
+        <%
+          name = tryb { @item.import_column_options[i]['name'] }
+          kind = tryb { @item.import_column_options[i]['kind'] }
+          values = tryb { @item.import_column_options[i]['values'].join("\n") }
+        %>
+        <tr class="filter-setting">
+          <td>
+            <%= text_field_tag "item[import_column_options][#{i}][name]", "", value: name,
+              id: nil, style: "width: 100%;" %>
+          </td>
+          <td>
+            <%= select_tag "item[import_column_options][#{i}][kind]", options_for_select(@item.search_kind_options, kind),
+              id: nil, style: "max-width: 30rem;" %>
+          </td>
+          <td>
+            <%= text_area_tag "item[import_column_options][#{i}][values]", values,
+              id: nil, style: "max-width: 30rem; height: 4rem;" %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+
+  <dt><%= @model.t :import_misc_options %></dt>
+  <dd>
+    <%= f.hidden_field :import_event, value: 0 %>
+    <label class="mr-0"><%= f.check_box :import_event, {}, 1 %> <%= @model.t :import_event %></label>
+    <%= @model.tt :import_event %>
+  </dd>
+  <dd>
+    <%= f.hidden_field :import_map, value: 0 %>
+    <label class="mr-0"><%= f.check_box :import_map, {}, 1 %> <%= @model.t :import_map %></label>
+    <%= @model.tt :import_map %>
+  </dd>
+</dl>

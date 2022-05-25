@@ -1,0 +1,22 @@
+<dl class="see">
+  <dt><%= @model.t :export_url %></dt>
+  <dd>
+    <%= link_to @item.export_csv_url, @item.export_csv_url, target: '_blank' %><br>
+    <%= link_to @item.export_json_url, @item.export_json_url, target: '_blank' %>
+  </dd>
+
+  <dt><%= @model.t :form_id %></dt>
+  <dd><%= tryb { @item.form.name } %></dd>
+
+  <dt><%= @model.t :export_columns %></dt>
+  <dd><%= br(@item.export_columns.join("\n").presence || t('ss.all')) %></dd>
+
+  <dt><%= @model.t :export_page_name %></dt>
+  <dd><%= @item.send :resolve_page_name %></dd>
+
+  <dt><%= @model.t :node_id %></dt>
+  <dd><%= tryb { @item.node.name } %></dd>
+
+  <dt><%= @model.t :export_filename %></dt>
+  <dd><%= @item.send :resolve_filename %></dd>
+</dl>

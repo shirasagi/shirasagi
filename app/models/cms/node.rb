@@ -54,6 +54,8 @@ class Cms::Node
     include Cms::ChildList
 
     default_scope ->{ where(route: "cms/page") }
+
+    self.use_condition_forms = true
   end
 
   class ImportNode
