@@ -15,10 +15,11 @@ class Gws::Board::CommentsController < ApplicationController
   end
 
   def pre_params
+    @topic.groups.active.pluck(:id) + @cur_user.groups.site(@cur_site).active.pluck(:id)
     {
       name: "Re: #{@parent.name}",
-      group_ids: (@topic.group_ids + @cur_user.group_ids).uniq,
-      user_ids: (@topic.user_ids + [ @cur_user.id ]).uniq
+      group_ids: (@topic.groups.active.pluck(:id) + @cur_user.groups.site(@cur_site).active.pluck(:id)).uniq,
+      user_ids: (@topic.users.active.pluck(:id) + [ @cur_user.id ]).uniq
     }
   end
 
