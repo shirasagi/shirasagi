@@ -155,6 +155,6 @@ file.save!
 service_group = create_service_group(name: "アクション", order: 0, state: "public")
 chat_node = Chat::Node::Bot.first
 create_servive_chat(
-  name: "チャットボット", order: 0, action_type: "message", group_id: service_group.id,
+  name: "チャットボット", order: 0, action_type: "postback", group_id: service_group.id,
   action_data: "チャットボット", type: "Cms::Line::Service::Hook::Chat", node_id: chat_node.id
 )
