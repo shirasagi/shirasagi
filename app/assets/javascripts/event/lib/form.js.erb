@@ -119,7 +119,6 @@ this.Event_Form = (function () {
   };
 
   Event_Form.prototype.changeAllDay = function(el) {
-    var self = this;
     var $el = $(el);
     $el.closest(".event-recurrence").find('[name="item[event_recurrences][][in_all_day]"]').val($el.val());
   }
