@@ -229,7 +229,7 @@ module Map::MapHelper
     h << %(<p class="name">#{item.name}</p>)
 
     if point && point[:name].present?
-      h << %(<p class="point-name">#{point[:name]}</p>) if point[:name].present?
+      h << %(<p class="point-name">#{point[:name]}</p>)
     end
 
     h << %(<p class="form-name">#{cate2.name}</p>) if cate2

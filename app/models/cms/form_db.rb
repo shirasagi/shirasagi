@@ -22,7 +22,7 @@ class Cms::FormDb
   validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
   validates :form_id, presence: true
 
-  scope :import_setted, ->() { where(:form_id.exists => true, :node_id.exists => true, :import_url.exists => true) }
+  scope :import_setted, -> { where(:form_id.exists => true, :node_id.exists => true, :import_url.exists => true) }
 
   class << self
     def search(params = {})
@@ -56,7 +56,7 @@ class Cms::FormDb
     column = form.columns_hash[name]
     col_val = item.column_values.to_a.find { |col| col['name'] == name }
     value = col_val.try(:export_csv_cell).to_s
-    width = value.length + value.chars.reject(&:ascii_only?).length
+    width = value.length + value.chars.count { |c| !c.ascii_only? }
 
     {
       type: I18n.t("mongoid.models.#{column._type.underscore}", default: column._type),

@@ -39,8 +39,8 @@ module Cms::Extensions
         include Enumerable
 
         def_delegators :values, :[], :[]=, :length, :size, :each, :sort_by, :count, :find, :find_index, :select, :reject,
-                       :map, :group_by, :all?, :any?, :each_with_index, :reverse_each, :each_slice, :take, :drop,
-                       :empty?, :present?, :blank?
+          :map, :group_by, :all?, :any?, :each_with_index, :reverse_each, :each_slice, :take, :drop,
+          :empty?, :present?, :blank?
 
         cattr_accessor :model
         self.model = klass

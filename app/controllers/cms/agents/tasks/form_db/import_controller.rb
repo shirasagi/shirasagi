@@ -15,7 +15,7 @@ class Cms::Agents::Tasks::FormDb::ImportController < ApplicationController
       Tempfile.create('import_csv') do |tempfile|
         @task.log("Download: start")
 
-        URI.open(@import_url) do |res|
+        URI.parse(@import_url).open do |res|
           IO.copy_stream(res, tempfile.path)
           @task.log("Download: success")
           @task.log("Import: start")
