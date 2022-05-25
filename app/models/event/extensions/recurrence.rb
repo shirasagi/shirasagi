@@ -111,37 +111,51 @@ class Event::Extensions::Recurrence
 
     private
 
+    module Private
+      module_function
+
+      def start_at(object)
+        if object["in_all_day"] == "1" || object["in_start_time"].blank?
+          object["in_start_on"]
+        else
+          "#{object["in_start_on"]} #{object["in_start_time"]}"
+        end
+      end
+
+      def kind(object)
+        if object["in_all_day"] != "1" && (object["in_start_time"].present? || object["in_end_time"].present?)
+          "datetime"
+        else
+          "date"
+        end
+      end
+    end
+
     def convert_from_view_params(object)
       return if object["in_start_on"].blank?
 
-      ret = {}
+      ret = { "start_at" => Private.start_at(object), "kind" => Private.kind(object) }
 
-      if object["in_all_day"] == "1" || object["in_start_time"].blank?
-        ret["start_at"] = object["in_start_on"]
-      else
-        ret["start_at"] = "#{object["in_start_on"]} #{object["in_start_time"]}"
-      end
       if object["in_all_day"] == "1" || object["in_end_time"].blank?
         # end_on は start_on から自動で計算されるので未セットとする
         # ret["end_on"] = object["in_start_on"]
       else
         ret["end_at"] = "#{object["in_start_on"]} #{object["in_end_time"]}"
       end
-      ret["until_on"] = object["in_until_on"] if object["in_until_on"].present?
-      if object["in_by_days"].present?
-        ret["by_days"] = normalize_by_days(object["in_by_days"])
-        ret["includes_holiday"] = object["in_by_days"].include?("holiday")
+
+      if (until_on = object["in_until_on"]).present?
+        ret["until_on"] = until_on
       end
-      if object["in_exclude_dates"].present?
-        ret["exclude_dates"] = normalize_exclude_dates(object["in_exclude_dates"])
+
+      if (by_days = object["in_by_days"]).present?
+        ret["by_days"] = normalize_by_days(by_days)
+        ret["includes_holiday"] = by_days.include?("holiday")
       end
-      if object["in_all_day"] == "1"
-        ret["kind"] =  "date"
-      elsif object["in_all_day"] != "1" && object["in_start_time"].present? || object["in_end_time"].present?
-        ret["kind"] =  "datetime"
-      else
-        ret["kind"] =  "date"
+
+      if (exclude_dates = object["in_exclude_dates"]).present?
+        ret["exclude_dates"] = normalize_exclude_dates(exclude_dates)
       end
+
       ret["frequency"] = ret["by_days"].present? || ret["includes_holiday"] ? "weekly" : "daily"
 
       ret
