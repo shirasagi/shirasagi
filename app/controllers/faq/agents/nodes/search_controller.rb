@@ -23,12 +23,11 @@ class Faq::Agents::Nodes::SearchController < ApplicationController
     @query = {}
     @query[:category] = @category.blank? ? {} : { :category_ids.in => [ @category ] }
     @query[:category_ids] = @category_ids.blank? ? {} : { :category_ids.in => @category_ids }
-    @query[:keyword] = @keyword.blank? ? {} : @keyword.split(/[\s　]+/).uniq.compact.map(&method(:make_query))
 
     @items = pages.
       and(@query[:category]).
       and(@query[:category_ids]).
-      and(@query[:keyword]).
+      keyword_in(@keyword, :name, :html, :question).
       order_by(@cur_node.sort_hash).
       page(params[:page]).
       per(@cur_node.limit)
@@ -41,11 +40,5 @@ class Faq::Agents::Nodes::SearchController < ApplicationController
       limit(@cur_node.limit)
 
     render_rss @cur_node, @items
-  end
-
-  private
-
-  def make_query(query)
-    { name: /#{::Regexp.escape(query)}/ }
   end
 end
