@@ -212,7 +212,7 @@ module Map::MapHelper
   def map_marker_address(item)
     if item.respond_to?(:column_values)
       item.column_values.each do |col|
-        next unless %w(所在地_住所1 所在地1 所在地).include?(col.name)
+        next unless col.name.start_with?('所在地', '住所')
         return col.value if col.value.present?
       end
     end

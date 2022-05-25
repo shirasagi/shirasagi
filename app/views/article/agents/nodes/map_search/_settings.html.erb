@@ -8,7 +8,7 @@
 
 <fieldset class="category">
   <%= hidden_field_tag "categories[]", '' %>
-  <legend>種類</legend>
+  <legend><%= t("facility.category.name") %></legend>
 
   <div class="category">
     <% @cur_node.map_category_options.each do |name, id| %>

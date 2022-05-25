@@ -27,18 +27,6 @@ describe "article_agents_nodes_map_search", type: :feature, dbscope: :example, j
       end
       expect(page).to have_css(".map-search-result")
       expect(page).to have_css("#map-canvas")
-
-      # list
-      # find('.map-search-tabs').click_link I18n.t("facility.tab.result")
-      # expect(page).to have_css(".map-search-result")
-      # expect(page).not_to have_css("#map-canvas")
-
-      # find('.map-search-change').click
-      # wait_for_cbox do
-      #   click_button I18n.t('facility.submit.search')
-      # end
-      # expect(page).to have_css(".map-search-result")
-      # expect(page).not_to have_css("#map-canvas")
     end
   end
 end

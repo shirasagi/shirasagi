@@ -78,15 +78,4 @@ class Article::Agents::Nodes::MapSearchController < ApplicationController
     @current = "map"
     render 'map'
   end
-
-  def result
-    set_items
-
-    @items = Kaminari.paginate_array(@items).
-      page(params[:page]).
-      per(@cur_node.limit)
-
-    @current = "result"
-    render 'result'
-  end
 end
