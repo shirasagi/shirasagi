@@ -74,11 +74,7 @@ this.Facility_Search = (function () {
     //setup category filter
     $(".filters a").on("click", function () {
       var dataIDs;
-      if ($(this).hasClass("clicked")) {
-        $(this).removeClass("clicked");
-      } else {
-        $(this).addClass("clicked");
-      }
+      $(this).toggleClass("clicked").blur();
       dataIDs = [];
       $(".filters a.clicked").each(function () {
         return dataIDs.push(parseInt($(this).attr("data-id")));
@@ -103,6 +99,25 @@ this.Facility_Search = (function () {
           return column.hide();
         }
       });
+
+      $('#map-sidebar .column[data-cate-id]').each(function() {
+        var column = $(this);
+        var cateID = parseInt(column.attr('data-cate-id'));
+        var exists = $.inArray(cateID, dataIDs) >= 0;
+        column.toggle(exists);
+      });
+
+      var resultSize = $('#map-sidebar .column:visible').length;
+      $('.map-search-result .number').text(resultSize);
+
+      if (Googlemaps_Map.openedInfo) {
+        Googlemaps_Map.openedInfo.close();
+        Googlemaps_Map.openedInfo = null;
+      }
+      if (Googlemaps_Map.markerClusterer) {
+        Googlemaps_Map.markerClusterer.repaint();
+        Googlemaps_Map.closeMarkerClusterInfo();
+      }
       return false;
     });
     //setup location filter

@@ -70,6 +70,7 @@ gem 'rubyzip', '~> 2.3.0'
 gem 'thinreports'
 gem 'ungarbled'
 gem 'view_component'
+gem 'wareki'
 
 # OAuth
 gem 'oauth2'

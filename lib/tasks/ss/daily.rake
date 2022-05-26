@@ -23,6 +23,9 @@ namespace :ss do
     # 動的パーツキャッシュの削除
     ::Tasks::SS.invoke_task("ss:cleanup_file_store_cache")
 
+    # FormDB URL インポート
+    ::Tasks::SS.invoke_task("cms:form_db:import")
+
     if ::SS.config.cms.disable.blank?
       # ゴミ箱の掃除
       ::Tasks::SS.invoke_task("history:trash:purge")

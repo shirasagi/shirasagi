@@ -89,6 +89,8 @@ ja:
       make_them_close: 非公開にする
       delete: 削除する
       import: インポート
+      import_csv: CSVインポート
+      import_url: URLインポート
       reply: 返信する
       back: 戻る
       deliver: 配信する
@@ -113,6 +115,7 @@ ja:
       split: 分割する
       integrate: 統合する
       download: ダウンロード
+      download_csv: CSVダウンロード
       download_template: 雛形をダウンロード
       download_sample_csv: サンプルCSVをダウンロード
       export: エクスポート
@@ -423,6 +426,9 @@ ja:
         filename: ファイル名
         filename_asc: ファイル名(昇順)
         filename_desc: ファイル名(降順)
+      sort_direction:
+        asc: 昇順
+        desc: 降順
       restriction:
         none: 制限なし
         api_only: API利用のみ
@@ -481,6 +487,12 @@ ja:
         "6_days": ６日後
         "1_week": １週間後
         "2_weeks": ２週間後
+      search:
+        kind:
+          any_of: が次と一致する
+          none_of: が次と一致しない
+          start_with: が次から始まる
+          end_with: が次で終わる
 
     tasks:
       started: 開始しました。

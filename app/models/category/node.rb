@@ -14,6 +14,7 @@ module Category::Node
     include Cms::Addon::Meta
     include Cms::Addon::NodeList
     include Cms::Addon::ChildList
+    include Category::Addon::MapSetting
     include Cms::Addon::Release
     include Cms::Addon::ReadableSetting
     include Cms::Addon::GroupPermission
@@ -31,6 +32,7 @@ module Category::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
     include Event::Addon::PageList
+    include Category::Addon::MapSetting
     include Cms::Addon::Release
     include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::MaxFileSizeSetting

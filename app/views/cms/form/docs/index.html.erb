@@ -32,7 +32,9 @@
           </label>
         </th>
         <td class="text-nowrap" title="<%= item.name %>">
-          <div class="text-truncate" style="width: 100px;"><%= item.name %></div>
+          <div class="text-truncate" style="width: 100px;">
+            <%= link_to item.name, { action: 'show', id: item.id }, class: 'link-inherit' %>
+          </div>
         </td>
 
         <% @column_names.each do |col_name| %>
@@ -51,7 +53,7 @@
 
 <% pager = paginate(@items) %>
 <% if pager.present? %>
-  <div class="form-db-foot position-fixed">
+  <footer class="send">
     <%= pager %>
-  </div>
+  </footer>
 <% end %>

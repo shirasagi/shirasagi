@@ -7,6 +7,8 @@ module Article::Part
     include History::Addon::Backup
 
     default_scope ->{ where(route: "article/page") }
+
+    self.use_condition_forms = true
   end
 
   class PageNavi

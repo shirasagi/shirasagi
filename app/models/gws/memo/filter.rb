@@ -29,15 +29,22 @@ class Gws::Memo::Filter
 
   default_scope -> { order_by order: 1 }
 
-  scope :enabled, -> { where state: 'enabled' }
+  class << self
+    def enabled
+      all.where(state: 'enabled')
+    end
 
-  scope :search, ->(params) {
-    criteria = where({})
-    return criteria if params.blank?
+    def search(params)
+      return all if params.blank? || params[:keyword].blank?
+      all.keyword_in(params[:keyword], :name)
+    end
 
-    criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
-    criteria
-  }
+    def folder_options(site:, user:)
+      Gws::Memo::Folder.all.site(site).user(user).map do |folder|
+        [ ERB::Util.html_escape(folder.name).html_safe, folder.id ]
+      end
+    end
+  end
 
   private
 
@@ -55,12 +62,6 @@ class Gws::Memo::Filter
 
   def action_options
     %w(move trash).map { |m| [I18n.t(m, scope: 'gws/memo/filter.options.action'), m] }
-  end
-
-  def folder_options(user)
-    Gws::Memo::Folder.user(user).map do |folder|
-      [ ERB::Util.html_escape(folder.name).html_safe, folder.id ]
-    end
   end
 
   def state_name

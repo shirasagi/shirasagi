@@ -2,6 +2,7 @@ class Cms::FormDb
   extend SS::Translation
   include SS::Document
   include Cms::Reference::Site
+  include Cms::Addon::FormDb::Import
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
 
@@ -12,16 +13,16 @@ class Cms::FormDb
   seqid :id
   field :name, type: String
   field :order, type: Integer, default: 0
-  field :import_url, type: String
 
   belongs_to :form, class_name: 'Cms::Form'
   belongs_to :node, class_name: 'Article::Node::Page'
 
-  permit_params :name, :form_id, :node_id, :import_url
+  permit_params :name, :form_id, :node_id
 
   validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
   validates :form_id, presence: true
-  validates :import_url, format: /\Ahttps?:\/\//, if: -> { import_url.present? }
+
+  scope :import_setted, -> { where(:form_id.exists => true, :node_id.exists => true, :import_url.exists => true) }
 
   class << self
     def search(params = {})
@@ -35,26 +36,6 @@ class Cms::FormDb
         criteria = criteria.keyword_in params[:keyword], :name
       end
       criteria
-    end
-
-    def export_csv(form, items, options = {})
-      column_names = form.column_names
-      headers = [Article::Page.t(:name), *column_names]
-
-      require "csv"
-      csv = CSV.generate do |data|
-        data << headers
-        items.each do |item|
-          row = [item.name]
-          column_names.each do |col_name|
-            col_val = item.column_values.to_a.find { |cv| cv.name == col_name }
-            row << col_val.try(:export_csv_cell)
-          end
-          data << row
-        end
-      end
-      encoding = options['encoding'] || 'Shift_JIS'
-      csv.encode(encoding, invalid: :replace, undef: :replace)
     end
   end
 
@@ -75,7 +56,7 @@ class Cms::FormDb
     column = form.columns_hash[name]
     col_val = item.column_values.to_a.find { |col| col['name'] == name }
     value = col_val.try(:export_csv_cell).to_s
-    width = value.length + value.chars.reject(&:ascii_only?).length
+    width = value.length + value.chars.count { |c| !c.ascii_only? }
 
     {
       type: I18n.t("mongoid.models.#{column._type.underscore}", default: column._type),
@@ -95,34 +76,47 @@ class Cms::FormDb
 
     form.columns.order_by(order: 1).each do |col|
       col_val = item.column_values.to_a.find { |cv| cv.name == col.name }
-      col_val ||= item.column_values.build(
-        _type: col.value_type.name, column: col, name: col.name, order: col.order
-      )
+      col_val ||= col.value_type.new(column: col)
+
       col_val.attributes = { cur_user: @cur_user, cur_site: @cur_site }
       col_val.import_csv_cell(params[col.name])
+
+      item.column_values << col_val if col_val.new_record?
     end
 
     item.save
   end
 
-  def import_csv
-    errors.add(:base, :invalid_csv) if in_file.blank?
-    return false if errors.present?
+  def save_log(data)
+    item = Cms::FormDb::ImportLog.new(site_id: site_id, db_id: id, form_id: form_id, node_id: node_id)
+    item.data = data
+    item.save
+  end
 
-    SS::Csv.foreach_row(in_file.path, headers: true) do |csv_row|
-      params = csv_row.to_hash
-      page_name = params.shift[1].presence
-      next unless page_name
+  def export_csv(form, items, options = {})
+    column_names = form.column_names
+    headers = column_names
+    headers.unshift(Article::Page.t(:name)) if import_page_name.blank?
 
-      item = Article::Page.site(site).node(node).where(form_id: form_id, name: page_name).first
-      item ||= Article::Page.new(name: page_name, cur_site: site, cur_user: @cur_user, cur_node: node)
-
-      unless save_page(item, params)
-        errors.add :base, item.errors.full_messages.join('/')
+    require "csv"
+    csv = CSV.generate do |data|
+      data << headers
+      items.each do |item|
+        row = [item.name]
+        column_names.each do |col_name|
+          col_val = item.column_values.to_a.find { |cv| cv.name == col_name }
+          row << col_val.try(:export_csv_cell)
+        end
+        data << row
       end
     end
+    encoding = options['encoding'] || 'Shift_JIS'
+    csv.encode(encoding, invalid: :replace, undef: :replace)
+  end
 
-    errors.blank?
+  def perform_import
+    job = Cms::FormDb::ImportUrlJob.bind(site_id: site_id, node_id: node_id)
+    job.perform_later(db_id: id, import_url: import_url)
   end
 
   # for debug

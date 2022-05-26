@@ -4,30 +4,25 @@ class Article::Agents::Nodes::MapSearchController < ApplicationController
   append_view_path "app/views/facility/agents/addons/search_setting/view"
   append_view_path "app/views/facility/agents/addons/search_result/view"
 
-  before_action :set_form
   before_action :set_query, only: [:index, :map, :result]
 
   private
-
-  def set_form
-    @form = @cur_node.form
-  end
 
   def set_query
     @keyword = params[:keyword].try { |keyword| keyword.to_s }
     @columns = params[:columns].permit! rescue []
     @columns = @columns.to_h.map { |k, v| v }
+    @categories = (params[:categories] || []).reject(&:blank?)
   end
 
   def pages
-    @cur_node.pages.public_list(site: @cur_site, date: @cur_date)
+    Article::Page.public_list(site: @cur_site, node: @cur_node, date: @cur_date)
   end
 
   def set_items
     @items = pages.
-      where(@cur_node.condition_hash).
       search(name: @keyword).
-      order_by(name: 1)
+      order_by(@cur_node.sort_hash)
 
     @items = @items.select { |item| search_columns(item) }
   end
@@ -39,6 +34,7 @@ class Article::Agents::Nodes::MapSearchController < ApplicationController
     end.to_h
 
     @columns_hash.each do |name, values|
+      next if values.blank?
       col_val = item.column_values.to_a.find { |cv| cv['name'] == name }
       return false unless col_val
       return false if values.present? && !col_val.search_values(values)
@@ -64,6 +60,11 @@ class Article::Agents::Nodes::MapSearchController < ApplicationController
     end
   end
 
+  def set_filter_items
+    category_ids = @items.map(&:category_ids).flatten.uniq
+    @filter_categories_array = @cur_node.st_categories.select { |c| category_ids.include?(c.id) }
+  end
+
   public
 
   def index
@@ -73,19 +74,8 @@ class Article::Agents::Nodes::MapSearchController < ApplicationController
   def map
     set_items
     set_markers
-
+    set_filter_items
     @current = "map"
     render 'map'
-  end
-
-  def result
-    set_items
-
-    @items = Kaminari.paginate_array(@items).
-      page(params[:page]).
-      per(50)
-
-    @current = "result"
-    render 'result'
   end
 end

@@ -473,6 +473,13 @@ ja:
       hatena: はてなブックマーク
       hatena_add: このエントリーをはてなブックマークに追加
       line: LINEで送る
+    condition_form:
+      form_name: 定型フォーム名
+      filters: 条件
+      column_name: 項目名
+      column_value: 値
+      select_all: すべて選択
+      choose_forms_at_first: 定型フォームを選択してください。
 
     opendata_ref/license:
       ref_opendata: オープンデータ側の設定にしたがう
@@ -726,6 +733,7 @@ ja:
       cms/child_list: 子リスト表示
       cms/form/node: 定型フォーム
       cms/form/page: 定型フォーム
+      cms/form_db/import: 定型インポート
       cms/column/layout: レイアウト
       cms/column/text_like: 制約条件
       cms/column/select_like: 選択
@@ -792,6 +800,7 @@ ja:
       cms/command: コマンド
       cms/form: 定型フォーム
       cms/form_db: 定型フォーム - DB
+      cms/form_db/import_log: インポートログ
       cms/init_column: 初期ブロック
       cms/column/base: 入力項目
       cms/column/text_field: 一行入力
@@ -963,6 +972,8 @@ ja:
         readable_members_hash: 閲覧ユーザー(ハッシュ)
       cms/addon/list/model:
         conditions: 検索条件(URL)
+        condition_forms: 検索条件(定型フォーム)
+        condition_form_ids: 検索条件(定型フォーム)
         loop_html: ループHTML
         upper_html: 上部HTML
         lower_html: 下部HTML
@@ -971,6 +982,8 @@ ja:
         loop_liquid: ループHTML
         no_items_display_state: ページ未検出時表示
         substitute_html: 代替HTML
+        sort_column_name: 並び順
+        sort_column_direction: 並び順(方向)
       cms/addon/page_group_list:
         condition_groups: 検索条件(グループ)
       cms/addon/tabs:
@@ -1132,7 +1145,6 @@ ja:
         order: 並び順
         form_id: 定型フォーム
         node_id: 記事フォルダー
-        import_url: インポートURL
         size: 登録件数
       cms/addon/form/node:
         st_form_ids: 定型フォーム設定
@@ -1141,6 +1153,15 @@ ja:
         column_values: 定型フォーム値
         column_values_updated: 定型フォーム更新日
         form_contains_urls: 定型フォームURL一覧
+      cms/addon/form_db/import:
+        import_url: インポートURL
+        import_primary_key: 主キーのカラム
+        import_page_name: 記事タイトルのカラム
+        import_column_options: 値による条件設定
+        import_misc_options: その他の設定
+        import_event: イベント日時を取り込む
+        import_map: 地図座標を取り込む
+        import_logs: インポートログ
       cms/init_column:
         name: 名前
         order: 並び順
@@ -1178,6 +1199,7 @@ ja:
         place_holder: プレースホルダー
         additional_attr: 追加属性
       cms/addon/column/select_like:
+        parent_column_name: 親項目名
         select_options: 選択肢
       cms/addon/column/layout:
         layout: レイアウト
@@ -1977,6 +1999,8 @@ ja:
           oshirase
           oshirase/event
           shisei/jinji
+      condition_form_ids:
+        - 指定の定型フォームをもつページのみを一覧に表示することができます。
       sort:
         - リストの並び替え方法を指定します。
       limit:
@@ -2069,6 +2093,9 @@ ja:
           {% endfor %}
       new_days:
         - 設定した期間内に作成されたページへのリンクにNEWマークを付与するためのclassがふられます。
+      sort_column_name:
+        - 定型フォームを利用した並び替え方法を指定します。
+        - 通常の並び順よりもこちらを優先します。
 
     cms/addon/tabs:
       conditions:
@@ -2589,6 +2616,25 @@ ja:
         - 出力される入力形式のHTMLに属性を追加することが可能です。
 
     cms/addon/column/select_like:
+      parent_column_name:
+        - 親項目の項目名を入力します。
+        - 親項目を設定すると、親項目の選択肢に応じて本項目の選択肢が自動で変化します。
+        - "例として、親項目の選択肢を次のように設定:"
+        -
+        - "親アイテム1"
+        - "親アイテム2"
+        - "親アイテム3"
+        -
+        - "次に、本項目の選択肢を次のように設定した場合:"
+        -
+        - "親アイテム1/子アイテム1"
+        - "親アイテム1/子アイテム2"
+        - "親アイテム2/子アイテム3"
+        - "親アイテム2/子アイテム4"
+        - "親アイテム2/子アイテム5"
+        - "親アイテム3/子アイテム6"
+        -
+        - '親項目で「親アイテム2」が選択されると、本項目の選択肢が "子アイテム3", "子アイテム4", "子アイテム5" の 3 つに変化します。'
       select_options:
         - 回答の選択肢を入力します。
         - テキストを改行で区切ることで複数の選択肢を入力することができます。
@@ -2611,6 +2657,21 @@ ja:
       node_ids:
         - 記事フォルダーを設定します。
         - 設定した記事フォルダー配下のページを選択可能です。
+
+    cms/addon/form_db/import:
+      import_url: |-
+        インポートするCSVファイルのURLを入力します。
+        入力されている場合、定期的にファイルを取得してデータを保存します。
+      import_primary_key: |-
+        指定したカラムに同じ値のデータが存在する場合、新規登録ではなく更新します。
+      import_page_name: |-
+        指定したカラムの値を記事のタイトルとして保存します。
+      import_column_options: |-
+        指定した条件に一致するデータのみ保存します。
+      import_event: |-
+        "開始日"と"終了日"のカラムをイベントの日時として保存します。
+      import_map: |-
+        "緯度"と"経度"のカラムを地図のマーカーとして保存します。
 
     cms/addon/node_twitter_post_setting:
       node_twitter_auto_post:
@@ -2890,6 +2951,7 @@ ja:
       cms/node/copy_nodes_job: フォルダー複製
       cms/import_files_job: ページ/フォルダー取り込み
       cms/role/import_job: 権限インポート
+      cms/form_db/import_url_job: 定型DBインポート
       cms/all_contents_import_job: 全コンテンツ一括設定
       cms/michecker_job: miChecker
       cms/sns_post/twitter_job: Twitterページ投稿
