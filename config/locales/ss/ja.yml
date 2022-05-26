@@ -240,6 +240,7 @@ ja:
       deleted: 削除しました。
       unable_to_delete: '%{items} を削除できませんでした。'
       copied: 複製しました。
+      imported: インポートしました。
       started_import: インポートを開始しました。
       started_upload: アップロードを開始しました。
       started_deliver: 配信を開始しました。
