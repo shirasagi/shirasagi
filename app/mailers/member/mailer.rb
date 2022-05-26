@@ -1,4 +1,4 @@
-class Member::Mailer < ActionMailer::Base
+class Member::Mailer < ApplicationMailer
   def notify_mail(member)
     @member = member
     @node = Member::Node::Registration.site(member.site).and_public.first

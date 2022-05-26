@@ -1,4 +1,4 @@
-class Opendata::Mailer < ActionMailer::Base
+class Opendata::Mailer < ApplicationMailer
   def request_resource_mail(args)
     @from_user = Cms::Member.find(args[:m_id])
     @to_user   = SS::User.find(args[:t_uid])

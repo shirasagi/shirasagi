@@ -151,7 +151,7 @@ module Tasks
 
         min_downloaded = min_downloaded.in_time_zone
         target = min_downloaded.beginning_of_month
-        today = Time.zone.now.beginning_of_day
+        today = ::Time.zone.now.beginning_of_day
         loop do
           break if target > today
 
@@ -177,7 +177,7 @@ module Tasks
 
         min_previewed = min_previewed.in_time_zone
         target = min_previewed.beginning_of_month
-        today = Time.zone.now.beginning_of_day
+        today = ::Time.zone.now.beginning_of_day
         loop do
           break if target > today
 
@@ -234,7 +234,7 @@ module Tasks
         return if all_site_ids.blank?
 
         all_site_ids.each_slice(20) do |site_ids|
-          sites = Cms::Site.all.in(id: site_ids).to_a
+          sites = ::Cms::Site.all.in(id: site_ids).to_a
           sites.each(&block)
         end
       end
@@ -251,7 +251,7 @@ module Tasks
 
         min_downloaded = min_downloaded.in_time_zone
         target = min_downloaded.beginning_of_month
-        today = Time.zone.now.beginning_of_day
+        today = ::Time.zone.now.beginning_of_day
         loop do
           break if target > today
 
@@ -302,7 +302,7 @@ module Tasks
 
         min_created = min_created.in_time_zone
         target = min_created.beginning_of_month
-        today = Time.zone.now.beginning_of_day
+        today = ::Time.zone.now.beginning_of_day
         loop do
           break if target > today
 
