@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Gws::Schedule::TreeGroupComponent, type: :component, dbscope: :example do
   let!(:site) { gws_site }
   let!(:component) { described_class.new(cur_site: site) }
+
   before do
     @save_perform_caching = described_class.perform_caching
     described_class.perform_caching = true
