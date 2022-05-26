@@ -1,15 +1,15 @@
 module SS::CacheableComponent
   extend ActiveSupport::Concern
 
-  class_methods do
-    cattr_accessor :expires_in, :cache_key, :perform_caching
+  included do
+    cattr_accessor :expires_in, :perform_caching, :cache_key, instance_accessor: false
     self.expires_in = 1.day
     self.perform_caching = Rails.application.config.action_controller.perform_caching
   end
 
   def cache_component(&block)
     if cache_configured?
-      Rails.cache.fetch(cache_key || {}, expires_in: self.class.expires_in) do
+      Rails.cache.fetch(component_cache_key || {}, expires_in: self.class.expires_in) do
         capture(&block)
       end
     else
@@ -19,14 +19,12 @@ module SS::CacheableComponent
 
   def cache_exist?
     if cache_configured?
-      Rails.cache.exist?(cache_key || {})
+      Rails.cache.exist?(component_cache_key || {})
     end
   end
 
   def delete_cache
-    if cache_configured?
-      Rails.cache.delete(cache_key || {}) rescue nil
-    end
+    Rails.cache.delete(component_cache_key || {}) rescue nil
   end
 
   def cache_configured?
@@ -35,7 +33,7 @@ module SS::CacheableComponent
 
   private
 
-  def cache_key
+  def component_cache_key
     key = _effective_cache_key
     if key
       [ :components, virtual_path, key ]
