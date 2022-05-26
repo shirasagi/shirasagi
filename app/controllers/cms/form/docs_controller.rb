@@ -87,7 +87,7 @@ class Cms::Form::DocsController < ApplicationController
     @db.in_file = in_params[:in_file]
     return unless @db.import_csv
 
-    redirect_to({ action: :import }, { notice: 'インポートしました。' })
+    redirect_to({ action: :index }, { notice: I18n.t("ss.notice.imported") })
   end
 
   def import_url

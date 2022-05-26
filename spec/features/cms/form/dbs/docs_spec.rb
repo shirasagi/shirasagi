@@ -9,27 +9,13 @@ describe Cms::Form::DocsController, type: :feature, dbscope: :example, js: true 
   let!(:col3) { create!(:cms_column_check_box, cur_site: site, cur_form: form, required: 'optional', order: 7) }
   let(:layout) { create_cms_layout }
   let!(:article_node) { create!(:article_node_page, cur_site: site, layout_id: layout) }
+  let!(:form_db) { create(:cms_form_db, cur_site: site, form_id: form.id, node_id: article_node.id) }
 
   context 'basic crud' do
     before { login_cms_user }
 
     it do
-      visit cms_form_dbs_path(site)
-      click_on I18n.t('ss.links.new')
-
-      # create db
-      within 'form#item-form' do
-        fill_in 'item[name]', with: name
-        select form.name, from: "item[form_id]"
-        select article_node.name, from: "item[node_id]"
-        click_on I18n.t('ss.buttons.save')
-      end
-
-      wait_for_notice I18n.t("ss.notice.saved")
-      expect(Cms::FormDb.all.size).to eq 1
-
       # index
-      form_db = Cms::FormDb.first
       visit cms_form_db_docs_path(site: site.id, db_id: form_db.id)
       click_on I18n.t('ss.links.new')
 
