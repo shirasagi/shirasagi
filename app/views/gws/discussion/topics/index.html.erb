@@ -1,3 +1,8 @@
+<%
+  SS.config.cms.ckeditor.fetch('javascripts', []).each do |js|
+    controller.javascript js
+  end
+%>
 <%= jquery do %>
   Gws_Discussion_Thread.render(<%= @cur_user.id %>);
   <% if @cur_site.discussion_unseen_interval.present? %>
