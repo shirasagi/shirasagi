@@ -30,7 +30,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("cms.part")
     end
     within first(".main-navi") do
-      expect(page).to have_css(".current[href='#{node_parts_path(site: site)}']")
+      expect(page).to have_css(".current[href='#{node_parts_path(site: site, cid: node1)}']")
     end
     # フォルダーツリーの描画完了まで待機
     within ".tree-navi" do
