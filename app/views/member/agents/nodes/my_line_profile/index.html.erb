@@ -1,18 +1,24 @@
 <%= render partial: "menu" %>
-<%= form_for :item, url: "#{@cur_node.url}", html: { method: :put, multipart: true, autocomplete: :off, class: "mypage-edit member-profile" } do |f| %>
 
-<div class="mypage-form member-profile">
-  <%= error_messages_for :item, header_message: false %>
-
+<div class="mypage-show member-profile">
   <div class="columns">
-    <%= render template: "_basic_form", locals: { f: f }  %>
-    <%= render template: "_condition_form", locals: { f: f }  %>
+    <dl class="column name">
+      <dt><%= @model.t :name %></dt>
+      <dd><%= @item.name %></dd>
+    </dl>
+
+    <dl class="column subscribe-line-message">
+      <dt><%= @item.t :subscribe_line_message %></dt>
+      <dd><%= @item.label :subscribe_line_message %></dd>
+    </dl>
+
+    <% @item.each_deliver_categories do |root, children| %>
+      <% if root.effective_with?(@item.deliver_category_ids) %>
+        <dl class="column column--<%= root.filename %>">
+          <dt><%= root.name %></dt>
+          <dd><%= children.map(&:name).join(", ") %></dd>
+        </dl>
+      <% end %>
+    <% end %>
   </div>
-
-  <footer class="send">
-    <%= f.submit t("ss.buttons.save"), data: { disable_with: t("ss.buttons.saving") } %>
-    <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{@cur_node.url}'; return false;" %>
-  </footer>
 </div>
-
-<% end %>

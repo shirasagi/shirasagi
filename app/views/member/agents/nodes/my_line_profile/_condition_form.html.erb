@@ -8,7 +8,7 @@
     <legend>
       <%= root.name %>
     </legend>
-    <div>
+    <dd>
       <% if root.select_type == "select" %>
         <%
           category_options = []
@@ -38,6 +38,6 @@
           </label>
         <% end %>
       <% end %>
-    </div>
+    </dd>
   </fieldset>
 <% end %>
