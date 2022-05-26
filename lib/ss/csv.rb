@@ -263,7 +263,9 @@ class SS::Csv
 
         column_values = import_form(heads.first) do
           chunk.slice_when { |lhs, rhs| lhs.first.second != rhs.first.second }.map do |columns|
-            _form_name, column_name, _value_name = columns.first.first
+            _form_name, = columns.first.first.shift
+            _value_name, = columns.first.first.pop
+            column_name, = columns.first.first.join("/")
             column = @form.columns.where(name: column_name).first
             next if column.blank?
 
