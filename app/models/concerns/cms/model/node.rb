@@ -130,6 +130,22 @@ module Cms::Model::Node
     nodes.where(cond).gt(depth: depth)
   end
 
+  def any_ancestor_nodes_for_member_enabled?
+    enabled_nodes = all_ancestor_nodes.find do |node|
+      node.try(:for_member_state) == "enabled"
+    end
+
+    enabled_nodes.present?
+  end
+
+  def all_ancestor_nodes
+    filenames = []
+    self.filename.split("/").map do |v|
+      filenames << v
+      Cms::Node.find_by(site_id: site_id, filename: filenames.join("/")) rescue nil
+    end
+  end
+
   def pages
     Cms::Page.where(site_id: site_id, filename: /^#{::Regexp.escape(filename)}\//)
   end

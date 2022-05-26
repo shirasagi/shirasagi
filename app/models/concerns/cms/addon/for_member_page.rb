@@ -17,7 +17,7 @@ module Cms::Addon
     end
 
     def serve_static_file?
-      return false if for_member_enabled?
+      return false if parent.try(:any_ancestor_nodes_for_member_enabled?)
       super
     end
   end

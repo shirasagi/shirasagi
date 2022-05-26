@@ -1,5 +1,6 @@
 class Cms::Agents::Nodes::GroupPageController < ApplicationController
   include Cms::NodeFilter::View
+  include Cms::ForMemberFilter::Node
   helper Cms::ListHelper
 
   before_action :accept_cors_request, only: [:rss]

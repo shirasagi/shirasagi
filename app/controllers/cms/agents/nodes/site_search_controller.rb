@@ -1,5 +1,6 @@
 class Cms::Agents::Nodes::SiteSearchController < ApplicationController
   include Cms::NodeFilter::View
+  include Cms::ForMemberFilter::Node
   helper Cms::ListHelper
 
   before_action :set_setting
