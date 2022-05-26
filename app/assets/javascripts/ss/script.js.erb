@@ -132,12 +132,6 @@ $(function () {
       });
     });
   }
-  //crumbs
-  var crumbs = $('#crumbs a[href]').map(function () {
-    return $(this).attr('href');
-  });
-  crumbs = crumbs.get();
-  crumbs.shift();
   // navi
   var path = location.pathname + "/";
   var longestMatchedElement = function (selector) {
@@ -148,7 +142,7 @@ $(function () {
       if (!href) {
         return true;
       }
-      if (path.match(new RegExp('^' + href.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1') + '(\/|$)'))) {
+      if (path === href || path.startsWith(href + "/")) {
         if (hrefLength < href.length) {
           matchedElement = this;
           hrefLength = href.length;
