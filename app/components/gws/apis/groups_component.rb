@@ -1,7 +1,7 @@
 class Gws::Apis::GroupsComponent < ApplicationComponent
   include SS::CacheableComponent
 
-  self.cache_key = ->{ [ @cur_site.id, max_updated.to_i ] }
+  self.cache_key = ->{ [ cur_site.id, max_updated.to_i ] }
 
   def initialize(cur_site:, multi:)
     super()

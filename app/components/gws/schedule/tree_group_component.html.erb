@@ -1,0 +1,48 @@
+<%= cache_component do %>
+  <section class="main-box">
+    <header><h2><%= t('gws/schedule.tabs.group') %></h2></header>
+
+    <div class="gws-groups-operation">
+      <button class="btn expand-all"><%= t('gws/schedule.operations.expand_all') %></button>
+      <button class="btn collapse-all"><%= t('gws/schedule.operations.collapse_all') %></button>
+    </div>
+
+    <table class="index groups">
+      <tbody>
+      <tr data-depth="0" data-id="<%= cur_site.id %>">
+        <td class="expandable">
+          <% if cur_site.users.size > 0 %>
+            <%= link_to cur_site.name, gws_schedule_group_plans_path(site: cur_site, group: cur_site.id) %>
+          <% else %>
+            <span class="toggle"><%= cur_site.name %></span>
+          <% end %>
+        </td>
+      </tr>
+
+      <% groups.each do |group| %>
+        <tr data-depth="<%= group.depth - cur_site.depth + 1 %>" data-id="<%= group.id %>">
+          <td class="expandable">
+            <% if group.users.size > 0 %>
+              <%= link_to group.trailing_name, gws_schedule_group_plans_path(site: cur_site, group: group.id) %>
+            <% else %>
+              <span class="toggle"><%= group.trailing_name %></span>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </section>
+
+  <%= javascript_tag(defer: true) do %>
+    $(function() {
+      var tree = SS_TreeUI.render(".index.groups", { descendants_check: true });
+      $(".expand-all").on("click", function() {
+        tree.expandAll();
+      });
+      $(".collapse-all").on("click", function() {
+        tree.collapseAll();
+      });
+    });
+  <% end %>
+<% end %>
