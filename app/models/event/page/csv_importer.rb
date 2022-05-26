@@ -1,204 +1,34 @@
 class Event::Page::CsvImporter
-  include Cms::CsvImportBase
+  include Cms::PageImportBase
 
-  self.required_headers = [ Event::Page.t(:filename) ]
-
-  attr_reader :site, :node, :user
-
-  def initialize(site, node, user)
-    @site = site
-    @node = node
-    @user = user
-  end
-
-  def import(file, opts = {})
-    @task = opts[:task]
-    put_log("import start " + ::File.basename(file.name))
-    import_csv(file)
-  end
+  self.model = Event::Page
 
   private
 
-  def model
-    Event::Page
+  def create_importer
+    @importer ||= SS::Csv.draw(:import, context: self, model: self.class.model) do |importer|
+      define_importer_basic(importer)
+      define_importer_meta(importer)
+      define_importer_body(importer)
+      define_importer_category(importer)
+      define_importer_parent_crumb(importer)
+      define_importer_event_body(importer)
+      define_importer_event_date(importer)
+      define_importer_related_pages(importer)
+      # define_importer_contact_page(importer)
+      define_importer_released(importer)
+      define_importer_groups(importer)
+      define_importer_state(importer)
+      # define_importer_forms(importer)
+    end.create
   end
 
-  def put_log(message)
-    if @task
-      @task.log(message)
-    else
-      Rails.logger.info(message)
-    end
-  end
-
-  def import_csv(file)
-    SS::Csv.foreach_row(file, headers: true) do |row, i|
-      item = update_row(row)
-      put_log("update #{i + 1}: #{item.name}")
-    rescue => e
-      put_log("error  #{i + 1}: #{e}")
-    end
-  end
-
-  def update_row(row)
-    filename = "#{node.filename}/#{row[model.t(:filename)]}"
-    item = model.find_or_initialize_by(site_id: site.id, filename: filename)
-    raise I18n.t('errors.messages.auth_error') unless item.allowed?(:import, user, site: site, node: node)
-    item.site = site
-    set_page_attributes(row, item)
-    raise I18n.t('errors.messages.auth_error') unless item.allowed?(:import, user, site: site, node: node)
-
-    if item.save
-      item
-    else
-      raise item.errors.full_messages.join(", ")
-    end
-  end
-
-  def value(row, key)
-    row[model.t(key)].try(:strip)
-  end
-
-  def ary_value(row, key)
-    row[model.t(key)].to_s.split(/\n/).map(&:strip)
-  end
-
-  def label_value(item, row, key)
-    item.send("#{key}_options").to_h[value(row, key)]
-  end
-
-  def category_name_tree_to_ids(name_trees)
-    category_ids = []
-    name_trees.each do |cate|
-      names = cate.split("/")
-
-      last_index = names.size - 1
-      last_name = names[last_index]
-
-      parent_names = names.slice(0...(names.size - 1))
-
-      cond = { name: last_name, depth: last_index + 1, route: /^category\// }
-      node_ids = Cms::Node.site(site).where(cond).pluck(:id)
-      node_ids.each do |node_id|
-        cate = Cms::Node.find(node_id)
-
-        if parent_names == cate.parents.pluck(:name)
-          category_ids << cate.id
-        end
-      end
-    end
-    category_ids
-  end
-
-  def set_page_attributes(row, item)
-    # basic
-    layout = Cms::Layout.site(site).where(name: value(row, :layout)).first
-    item.name = value(row, :name)
-    item.index_name = value(row, :index_name)
-    item.layout = layout
-    item.order = value(row, :order)
-
-    # meta
-    item.keywords = value(row, :keywords)
-    item.description = value(row, :description)
-    item.summary_html = value(row, :summary_html)
-
-    # body
-    item.html = value(row, :html)
-
-    # event body
-    item.schedule = value(row, :schedule)
-    item.venue = value(row, :venue)
-    item.content = value(row, :content)
-    item.cost = value(row, :cost)
-    item.related_url = value(row, :related_url)
-    item.contact = value(row, :contact)
-
-    # category
-    category_name_tree = ary_value(row, :categories)
-    category_ids = category_name_tree_to_ids(category_name_tree)
-    categories = Category::Node::Base.site(site).in(id: category_ids)
-    #if node.st_categories.present?
-    #  filenames = node.st_categories.pluck(:filename)
-    #  filenames += node.st_categories.map { |c| /^#{c.filename}\// }
-    #  categories = categories.in(filename: filenames)
-    #end
-    item.category_ids = categories.pluck(:id)
-
-    # event
-    item.event_name = value(row, :event_name)
-    set_event_recurrences(row, item)
-    item.event_deadline = value(row, :event_deadline)
-
-    # related pages
-    page_names = ary_value(row, :related_pages)
-    item.related_page_ids = Cms::Page.site(site).in(filename: page_names).pluck(:id)
-
-    # crumb
-    item.parent_crumb_urls = value(row, :parent_crumb)
-
-    # released
-    released_type = label_value(item, row, :released_type)
-    item.released_type = released_type
-    item.released = value(row, :released)
-    item.release_date = value(row, :release_date)
-    item.close_date = value(row, :close_date)
-
-    # groups
-    group_names = ary_value(row, :groups)
-    item.group_ids = SS::Group.in(name: group_names).pluck(:id)
-    unless SS.config.ss.disable_permission_level
-      item.permission_level = value(row, :permission_level)
-    end
-
-    # state
-    state = label_value(item, row, :state)
-    item.state = state || "public"
-  end
-
-  def set_event_recurrences(row, item)
-    recurrences = []
-
-    Event::MAX_RECURRENCES_TO_IMPORT_EXPORT.times do |index|
-      start_on = row["#{Cms::Page.t(:event_recurrences)}_#{index + 1}_開始日"]
-      next if start_on.blank?
-
-      until_on = row["#{Cms::Page.t(:event_recurrences)}_#{index + 1}_終了日"]
-      start_time = row["#{Cms::Page.t(:event_recurrences)}_#{index + 1}_開始時刻"]
-      end_time = row["#{Cms::Page.t(:event_recurrences)}_#{index + 1}_終了時刻"]
-      wdays = row["#{Cms::Page.t(:event_recurrences)}_#{index + 1}_曜日"]
-      exclude_dates = row["#{Cms::Page.t(:event_recurrences)}_#{index + 1}_除外日"]
-
-      kind = start_time.present? ? "datetime" : "date"
-      start_on = start_on.in_time_zone.to_date
-      start_at = Event.make_time(start_on, start_time) if start_time.present?
-      end_at = Event.make_time(start_on, end_time) if end_time.present?
-      until_on = until_on.in_time_zone.to_date if until_on.present?
-      if wdays.present?
-        includes_holiday = wdays.include?("祝日")
-        by_days = parse_wdays(wdays)
-      end
-      frequency = by_days.present? || includes_holiday ? "weekly" : "daily"
-      exclude_dates = parse_exclude_dates(exclude_dates) if exclude_dates.present?
-
-      recurrences << {
-        kind: kind, start_at: start_at || start_on, end_at: end_at, frequency: frequency, until_on: until_on,
-        by_days: by_days, includes_holiday: includes_holiday, exclude_dates: exclude_dates
-      }
-    end
-
-    item.event_recurrences = recurrences
-  end
-
-  def parse_wdays(wdays)
-    wdays = wdays.to_s.split(",").map(&:strip).select(&:present?)
-    abbr_day_names = I18n.t("date.abbr_day_names")
-
-    wdays.map { |wday| abbr_day_names.find_index(abbr_day_names) }.compact
-  end
-
-  def parse_exclude_dates(dates)
-    dates = dates.to_s.split(/\R/).map(&:strip).select(&:present?)
-    dates.map(&:in_time_zone).select(&:present?).map(&:to_date)
+  def define_importer_event_body(importer)
+    importer.simple_column :schedule
+    importer.simple_column :venue
+    importer.simple_column :content
+    importer.simple_column :cost
+    importer.simple_column :related_url
+    importer.simple_column :contact
   end
 end
