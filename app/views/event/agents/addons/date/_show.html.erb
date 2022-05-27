@@ -51,10 +51,6 @@
       <% render_recurr.call(recurr) %>
     <% end %>
   </dd>
-  <dd>
-    <% summary = Event.recurrence_summary(@item.event_recurrences) %>
-    <%= button_tag t("mongoid.attributes.cms/addon/meta.description"), type: "button", class: "btn ss-popup", title: summary, "data-ss-popup-inline" => true, "data-ss-popup-html" => summary %>
-  </dd>
 
   <dt><%= @model.t :event_deadline %></dt>
   <dd><%= tryb { I18n.l(@item.event_deadline) } %></dd>
