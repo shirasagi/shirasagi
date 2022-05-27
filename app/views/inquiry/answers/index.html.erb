@@ -24,6 +24,9 @@
   <% elsif item.inquiry_page_name.present? %>
     <span class="name"><%= item.inquiry_page_name %></span>
   <% end %>
+  <% if item.member.present? %>
+    <span class="name"><%= item.member.name %></span>
+  <% end %>
   <% if item.groups.present? %>
     <% item.groups.each do |group| %>
       <span class="group"><%= group.section_name %></span>
