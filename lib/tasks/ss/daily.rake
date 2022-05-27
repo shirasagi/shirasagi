@@ -23,6 +23,9 @@ namespace :ss do
     # 動的パーツキャッシュの削除
     ::Tasks::SS.invoke_task("ss:cleanup_file_store_cache")
 
+    # FormDB URL インポート
+    ::Tasks::SS.invoke_task("cms:form_db:import")
+
     if ::SS.config.cms.disable.blank?
       # ゴミ箱の掃除
       ::Tasks::SS.invoke_task("history:trash:purge")
@@ -62,6 +65,9 @@ namespace :ss do
 
       # 各種使用率の更新
       ::Tasks::SS.invoke_task("gws:reload_site_usage")
+
+      # グループツリーなど一部の HTML はキャッシュされている。それを更新する
+      ::Tasks::SS.invoke_task("gws:cache:rebuild")
     end
   end
 end

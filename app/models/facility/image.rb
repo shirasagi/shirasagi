@@ -11,7 +11,13 @@ class Facility::Image
 
   default_scope ->{ where(route: "facility/image") }
 
+  after_save :save_facility
+
   private
+
+  def save_facility
+    parent.becomes_with_route.save rescue nil
+  end
 
   def serve_static_file?
     false

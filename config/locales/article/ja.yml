@@ -16,12 +16,14 @@ ja:
   modules:
     article: 記事
     addons:
+      article/form_export: 定型エクスポート
       article/map_search: 検索設定
       article/map_search_result: 検索結果
       article/search: 記事検索
 
   cms:
     nodes:
+      article/form_export: 定型エクスポート
       article/map_search: 地図検索
       article/page: 記事リスト
       article/search: 記事検索
@@ -57,9 +59,14 @@ ja:
       article/node/page: 記事リスト
       article/part/node: 記事リスト
     attributes:
-      article/addon/map_search:
+      article/addon/form_export:
         form_id: 定型フォーム
         node_id: 記事フォルダー
+        export_columns: 出力するカラム
+        export_page_name: 記事タイトルのカラム
+        export_filename: 出力ファイル名
+        export_url: 出力URL
+      article/addon/map_search:
         map_search_options: 検索オプション
         column_name: 項目名
         column_values: 選択肢
@@ -73,6 +80,19 @@ ja:
       article/page/import_job: 記事ページインポート
 
   tooltip:
+    article/addon/form_export:
+      form_id: |-
+        出力する記事の定型フォームを選択します。
+      node_id: |-
+        出力する記事をフォルダーで絞り込みます。
+      export_columns: |-
+        出力するカラムを改行区切りで入力します。
+        未入力の場合はすべてのカラムを出力します。
+      export_page_name: |-
+        出力する記事タイトルのカラム名を入力ます。
+      export_filename: |-
+        出力するファイル名を入力します。
+        拡張子は含めないでください。
     article/addon/map_search:
       form_id: |-
         一覧を絞り込むための定型フォームを指定します。

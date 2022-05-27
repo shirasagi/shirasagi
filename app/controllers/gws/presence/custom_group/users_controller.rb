@@ -17,7 +17,6 @@ class Gws::Presence::CustomGroup::UsersController < ApplicationController
     @custom_group = Gws::CustomGroup.site(@cur_site).find(params[:group])
     raise "404" unless @custom_group.member_ids.include?(@cur_user.id)
 
-    @groups = @cur_site.root.descendants_and_self.active.tree_sort
     @custom_groups = Gws::CustomGroup.site(@cur_site).member(@cur_user)
   end
 

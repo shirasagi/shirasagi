@@ -8,10 +8,13 @@ class Cms::Line::DeliverCategory::Base
 
   set_permission_name "cms_line_deliver_categories", :use
 
+  attr_accessor :basename
+
   seqid :id
   field :name
-  field :type, type: String
+  field :filename
   field :order, type: Integer, default: 0
+  field :remarks, type: String
   field :depth, type: Integer
   field :state, type: String, default: 'public'
 
@@ -19,15 +22,20 @@ class Cms::Line::DeliverCategory::Base
   has_many :children, class_name: "Cms::Line::DeliverCategory::Base", dependent: :destroy, inverse_of: :parent,
     order: { order: 1 }
 
-  permit_params :name, :type, :order, :state
+  permit_params :name, :filename, :basename, :type, :order, :state, :remarks
 
-  before_validation :set_type
   before_validation :set_depth
-
+  before_validation :set_filename
+  before_validation :validate_filename
   validates :name, presence: true
+  validates :filename, uniqueness: { scope: :site_id }, length: { maximum: 200 }
   validates :depth, presence: true
+  after_save :rename_children, if: ->{ @db_changes }
 
   default_scope -> { order_by(order: 1) }
+
+  def type
+  end
 
   def type_options
     self.class.type_options
@@ -37,21 +45,50 @@ class Cms::Line::DeliverCategory::Base
     %w(public closed).map { |v| [ I18n.t("ss.options.state.#{v}"), v ] }
   end
 
+  def basename
+    @basename.presence || filename.to_s.sub(/.*\//, "").presence
+  end
+
+  def effective_with?(other_ids)
+    true
+  end
+
   private
 
-  def set_type
-    self.type = self.class.inherit_types[self.class]
+  def validate_filename
+    if @basename
+      return errors.add :basename, :empty if @basename.blank?
+      errors.add :basename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+$/
+      errors.add :basename, :invalid if @basename !~ /^([\w\-]+\/)*[\w\-]+$/
+    else
+      return errors.add :filename, :empty if filename.blank?
+      errors.add :filename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+$/
+    end
+  end
+
+  def set_filename
+    if parent
+      self.filename = "#{parent.filename}/#{basename}"
+    elsif @basename
+      self.filename = basename
+    end
   end
 
   def set_depth
     self.depth = parent ? (parent.depth + 1) : 1
   end
 
+  def rename_children
+    return unless @db_changes["filename"]
+    return unless @db_changes["filename"][0]
+    children.each(&:save)
+  end
+
   class << self
     def inherit_types
       [
         [Cms::Line::DeliverCategory::Category, "category"],
-        [Cms::Line::DeliverCategory::ChildAge, "child_age"]
+        [Cms::Line::DeliverCategory::Selection, "selection"]
       ].to_h
     end
 

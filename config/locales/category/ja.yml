@@ -10,6 +10,7 @@ ja:
       category/category: カテゴリー
       category/setting: カテゴリー
       category/summary_page: サマリーページ
+      category/map_setting: 地図設定
 
   cms:
     nodes:
@@ -35,6 +36,8 @@ ja:
         integration_partial_node: 対象フォルダー
       category/addon/summary_page:
         summary_page_id: サマリーページ
+      category/addon/map_setting:
+        map_icon_url: マーカアイコンURL
 
   errors:
     messages:

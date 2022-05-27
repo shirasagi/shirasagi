@@ -5,12 +5,10 @@
 
   <%= render template: "_form", locals: { f: f } %>
 
-  <div class="form-db-foot position-fixed">
-    <footer class="send p-0">
-      <%= f.submit t("ss.buttons.save"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.saving") } %>
-      <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
-    </footer>
-  </div>
+  <footer class="send">
+    <%= f.submit t("ss.buttons.save"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.saving") } %>
+    <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+  </footer>
 <% end %>
 
 <%= jquery do %> SS.confirmUnloading(); <% end %>

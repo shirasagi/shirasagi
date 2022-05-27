@@ -43,7 +43,7 @@ class Cms::Line::Template::Base
     message.state
   end
 
-  def file_previewable?(file, user:, member:)
+  def file_previewable?(file, site:, user:, member:)
     state == "public"
   end
 
@@ -58,6 +58,15 @@ class Cms::Line::Template::Base
     item.user = user
     item.order = order
     item
+  end
+
+  def owned_files
+    files = SS::File.where(owner_item_type: self.class.name, owner_item_id: id).to_a
+    if page
+      _page = page.becomes_with_route
+      files += SS::File.where(owner_item_type: _page.class.name, owner_item_id: _page.id).to_a
+    end
+    files
   end
 
   private

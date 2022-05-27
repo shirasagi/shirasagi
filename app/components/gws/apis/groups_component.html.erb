@@ -1,0 +1,48 @@
+<%= cache_component do %>
+  <div class="search-ui-form">
+    <%= form_for :s, url: gws_apis_groups_path(site: cur_site), html: { method: "GET", class: :search } do |f| %>
+      <%= hidden_field_tag :single, nil %>
+      <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
+      <%= f.submit t("ss.buttons.search"), class: :btn %>
+    <% end %>
+  </div>
+
+  <table class="index groups">
+    <thead class="list-head">
+    <tr>
+      <th class="checkbox only-multi"><input type="checkbox"/></th>
+      <th class="name"><%= Gws::Group.t :name %></th>
+    </tr>
+    </thead>
+    <tbody class="items">
+    <% groups.each do |item| %>
+      <tr class="list-item" data-id="<%= item.id %>" data-depth="<%= item.depth %>">
+        <td class="checkbox only-multi">
+          <input type="checkbox" name="ids[]" value="<%= item.id %>"/>
+        </td>
+        <td class="expandable">
+          <%= link_to item.trailing_name, "#", class: "select-item only-multi" %>
+          <%= link_to item.trailing_name, "#", class: "select-single-item only-single" %>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+
+  <div class="search-ui-select only-multi">
+    <%= button_tag t("ss.links.select"), { type: :button, class: "select-items btn" } %>
+  </div>
+<% end %>
+
+<%= javascript_tag(defer: true) do %>
+  $(function() {
+    <% if multi %>
+      $("#ajax-box .only-single").remove();
+    <% else %>
+      $('[name="single"]').val(1);
+      $("#ajax-box .only-multi").remove();
+    <% end %>
+    SS_SearchUI.modal();
+    SS_TreeUI.render(".index.groups", { descendants_check: true });
+  });
+<% end %>

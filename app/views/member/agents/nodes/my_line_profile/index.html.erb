@@ -12,23 +12,13 @@
       <dd><%= @item.label :subscribe_line_message %></dd>
     </dl>
 
-    <% 1.upto(Cms::Member::CHILD_MAX_SIZE) do |i| %>
-      <% next if @item.send("child#{i}_name").blank? %>
-      <dl class="column child-name child-<%= i %>">
-        <dt><%= @model.t("child#{i}_name") %></dt>
-        <dd><%= @item.send("child#{i}_name") %></dd>
-      </dl>
-
-      <dl class="column child-birthday child-<%= i %>">
-        <dt><%= @model.t("child#{i}_birthday") %></dt>
-        <dd><%= @item.send("child#{i}_birthday_label") %></dd>
-      </dl>
-    <% end %>
-    <% Cms::Line::DeliverCategory::Category.site(@cur_site).each_public do |root, children| %>
-      <dl class="column">
-        <dt><%= root.name %></dt>
-        <dd><%= children.select { |category| @item.deliver_category_ids.include?(category.id) }.map(&:name).join(", ") %></dd>
-      </dl>
+    <% @item.each_deliver_categories do |root, children| %>
+      <% if root.effective_with?(@item.deliver_category_ids) %>
+        <dl class="column column--<%= root.filename %>">
+          <dt><%= root.name %></dt>
+          <dd><%= children.map(&:name).join(", ") %></dd>
+        </dl>
+      <% end %>
     <% end %>
   </div>
 </div>

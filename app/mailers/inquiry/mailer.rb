@@ -1,4 +1,4 @@
-class Inquiry::Mailer < ActionMailer::Base
+class Inquiry::Mailer < ApplicationMailer
   helper Inquiry::MailerHelper
 
   def notify_mail(site, node, answer, notice_email)
