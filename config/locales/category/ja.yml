@@ -9,6 +9,7 @@ ja:
     addons:
       category/category: カテゴリー
       category/setting: カテゴリー
+      category/summary_page: サマリーページ
       category/map_setting: 地図設定
 
   cms:
@@ -33,6 +34,8 @@ ja:
         partial_node: フォルダー
         integration_master_node: 統合元フォルダー
         integration_partial_node: 対象フォルダー
+      category/addon/summary_page:
+        summary_page_id: サマリーページ
       category/addon/map_setting:
         map_icon_url: マーカアイコンURL
 
@@ -58,3 +61,7 @@ ja:
       integration_partial_node:
         - 統合対象となるフォルダーを選択します。
         - 統合後は削除されます。
+    category/addon/summary_page:
+      summary_page_id:
+        - サマリーとなるページを設定できます。
+        - 設定したページは、Liquid形式のループHTMLより参照できます。

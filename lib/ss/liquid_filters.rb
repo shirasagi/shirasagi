@@ -133,4 +133,43 @@ module SS::LiquidFilters
   def sanitize(input)
     ApplicationController.helpers.sanitize(input.to_s)
   end
+
+  def public_list(input, limit = nil)
+    node = input.try(:delegatee)
+    return unless node
+    return unless node.is_a?(Cms::Model::Node)
+    criteria = Cms::Page.public_list(site: node.site, node: node)
+    criteria = criteria.limit(limit) if limit.present?
+    criteria.to_a
+  end
+
+  def filter_by_column_value(pages, key_value)
+    key, value = key_value.split(".")
+    return [] if pages.blank?
+    return [] if key.blank?
+    return [] if value.blank?
+    pages.select do |page|
+      page.column_values.to_a.index { |v| v.column.try(:name) == key && v.value == value }
+    end
+  end
+
+  def sort_by_column_value(pages, key)
+    return [] if pages.blank?
+    return [] if key.blank?
+    sorted = []
+    pages.each do |page|
+      value = page.column_values.to_a.find { |value| value.column.try(:name) == key }
+      sorted << [value.try(:value), page]
+    end
+    sorted.sort_by { |item| item[0] }.map { |item| item[1] }
+  end
+
+  def same_name_pages(input, filename = nil)
+    page = input.try(:delegatee)
+    return unless page
+    return unless page.is_a?(Cms::Model::Page)
+    criteria = Cms::Page.site(page.site)
+    criteria = criteria.where(filename: /\A#{filename}\//) if filename.present?
+    criteria.where(name: page.name).nin(id: page.id).to_a
+  end
 end

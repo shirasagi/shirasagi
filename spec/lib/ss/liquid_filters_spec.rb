@@ -1,6 +1,22 @@
 require 'spec_helper'
 
-describe SS::LiquidFilters do
+describe SS::LiquidFilters, dbscope: :example do
+  let(:site) { cms_site }
+  let(:form) { create :cms_form, cur_site: site, state: 'public', sub_type: 'entry' }
+  let(:column) { create(:cms_column_text_field, cur_site: site, name: "column1", cur_form: form, required: 'optional') }
+  let(:column_values1) { [ column.value_type.new(column: column, value: "column_value1") ] }
+  let(:column_values2) { [ column.value_type.new(column: column, value: "column_value2") ] }
+  let(:column_values3) { [ column.value_type.new(column: column, value: "column_value3") ] }
+  let(:node) { create :article_node_page }
+  let!(:page1) do
+    create :article_page, cur_site: site, cur_node: node, name: 'name', form: form, column_values: column_values1
+  end
+  let!(:page2) do
+    create :article_page, cur_site: site, cur_node: node, name: 'name', form: form, column_values: column_values2
+  end
+  let!(:page3) do
+    create :article_page, cur_site: site, cur_node: node, name: 'name', form: form, column_values: column_values3
+  end
   let(:assigns) { { "value" => value } }
   let(:template) { Liquid::Template.parse(source) }
   subject { template.render(assigns).to_s }
@@ -232,6 +248,160 @@ describe SS::LiquidFilters do
     context "with <script> which is unsafe" do
       let(:value) { "<script>alert('hello')</script>" }
       it { is_expected.to eq "alert('hello')" }
+    end
+  end
+
+  describe "public_list" do
+    let(:source) do
+      templ = []
+      templ << '{% assign pages = value | public_list %}'
+      templ << '<div class="middle dw">'
+      templ << '{% for page in pages %}'
+      templ << '<div><h2><a href="{{ page.url }}">{{ page.index_name | default: page.name }}</a></h2></div>'
+      templ << '{% endfor %}'
+      templ << '</div>'
+      templ.join("\n")
+    end
+
+    context "with blank" do
+      let(:value) { "" }
+      it do
+        is_expected.not_to include(page1.url)
+        is_expected.not_to include(page2.url)
+        is_expected.not_to include(page3.url)
+      end
+    end
+
+    context "with node" do
+      let(:value) { node.to_liquid }
+      it do
+        is_expected.to include(page1.url)
+        is_expected.to include(page2.url)
+        is_expected.to include(page3.url)
+      end
+
+      context 'with limit' do
+        let(:source) do
+          templ = []
+          templ << '{% assign pages = value | public_list: 2 %}'
+          templ << '<div class="middle dw">'
+          templ << '{% for page in pages %}'
+          templ << '<div><h2><a href="{{ page.url }}">{{ page.index_name | default: page.name }}</a></h2></div>'
+          templ << '{% endfor %}'
+          templ << '</div>'
+          templ.join("\n")
+        end
+        it do
+          is_expected.to include(page1.url)
+          is_expected.to include(page2.url)
+          is_expected.not_to include(page3.url)
+        end
+      end
+    end
+  end
+
+  describe "filter_by_column_value" do
+    let(:source) do
+      templ = []
+      templ << '{% assign pages = value | filter_by_column_value: "column1.column_value1" %}'
+      templ << '<div class="middle dw">'
+      templ << '{% for page in pages %}'
+      templ << '<div><h2><a href="{{ page.url }}">{{ page.index_name | default: page.name }}</a></h2></div>'
+      templ << '{% endfor %}'
+      templ << '</div>'
+      templ.join("\n")
+    end
+
+    context "with blank" do
+      let(:value) { "" }
+      it do
+        is_expected.not_to include(page1.url)
+        is_expected.not_to include(page2.url)
+        is_expected.not_to include(page3.url)
+      end
+    end
+
+    context "with page" do
+      let(:value) { Article::Page.all.to_a }
+      it do
+        is_expected.to include(page1.url)
+        is_expected.not_to include(page2.url)
+        is_expected.not_to include(page3.url)
+      end
+    end
+  end
+
+  describe "sort_by_column_value" do
+    let(:source) do
+      templ = []
+      templ << '{% assign pages = value | sort_by_column_value: "column1" %}'
+      templ << '{% for page in pages %}'
+      templ << '<p>{{ page.url }}</p>'
+      templ << '{% endfor %}'
+      templ.join
+    end
+
+    context "with blank" do
+      let(:value) { "" }
+      it do
+        is_expected.not_to include("<p>#{page1.url}</p><p>#{page2.url}</p><p>#{page3.url}</p>")
+      end
+    end
+
+    context "with pages" do
+      let(:value) { Article::Page.all.to_a.reverse }
+      it do
+        is_expected.to include("<p>#{page1.url}</p><p>#{page2.url}</p><p>#{page3.url}</p>")
+      end
+    end
+  end
+
+  describe "same_name_pages" do
+    let(:source) do
+      templ = []
+      templ << '{% assign pages = value | same_name_pages %}'
+      templ << '<div class="middle dw">'
+      templ << '{% for page in pages %}'
+      templ << '<div><h2><a href="{{ page.url }}">{{ page.index_name | default: page.name }}</a></h2></div>'
+      templ << '{% endfor %}'
+      templ << '</div>'
+      templ.join("\n")
+    end
+
+    context "with blank" do
+      let(:value) { "" }
+      it do
+        is_expected.not_to include(page1.url)
+        is_expected.not_to include(page2.url)
+        is_expected.not_to include(page3.url)
+      end
+    end
+
+    context "with page" do
+      let(:value) { page1.to_liquid }
+      it do
+        is_expected.not_to include(page1.url)
+        is_expected.to include(page2.url)
+        is_expected.to include(page3.url)
+      end
+
+      context 'with filename' do
+        let(:source) do
+          templ = []
+          templ << "{% assign pages = value | same_name_pages: #{node.filename} %}"
+          templ << '<div class="middle dw">'
+          templ << '{% for page in pages %}'
+          templ << '<div><h2><a href="{{ page.url }}">{{ page.index_name | default: page.name }}</a></h2></div>'
+          templ << '{% endfor %}'
+          templ << '</div>'
+          templ.join("\n")
+        end
+        it do
+          is_expected.not_to include(page1.url)
+          is_expected.to include(page2.url)
+          is_expected.to include(page3.url)
+        end
+      end
     end
   end
 end
