@@ -16,7 +16,7 @@ module Cms::Model::Node
     store_in collection: "cms_nodes"
     set_permission_name "cms_nodes"
 
-    attr_accessor :window_name
+    attr_accessor :window_name, :skip_remove_files_recursively
 
     field :route, type: String
     field :view_route, type: String
@@ -217,6 +217,7 @@ module Cms::Model::Node
   end
 
   def remove_files_recursively?
+    return false if skip_remove_files_recursively
     return true if @db_changes && @db_changes["state"] && !public?
     return true if @db_changes && @db_changes["route"] && public?
     false
