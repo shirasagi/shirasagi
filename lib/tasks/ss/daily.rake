@@ -65,6 +65,9 @@ namespace :ss do
 
       # 各種使用率の更新
       ::Tasks::SS.invoke_task("gws:reload_site_usage")
+
+      # グループツリーなど一部の HTML はキャッシュされている。それを更新する
+      ::Tasks::SS.invoke_task("gws:cache:rebuild")
     end
   end
 end

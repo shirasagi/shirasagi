@@ -1,2 +1,4 @@
-<dt><%= t "cms.group" %></dt>
+<% @groups ||= @cur_site.descendants_and_self.active.tree_sort(root_name: @cur_site.name) %>
+
+<dt><%= t "mongoid.models.ss/group" %></dt>
 <dd><%= select_tag("s[group]", options_for_select(@groups.to_options, @group.try(:id))) %></dd>

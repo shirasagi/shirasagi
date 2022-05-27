@@ -3,10 +3,21 @@
 <div class="search-ui-form">
   <%= form_for :s, url: { action: :index, level: @level, approver_ids: @approver_ids }, html: { method: "GET", class: :search } do |f| %>
     <dl class="see">
-      <% if browser.ie?(["<10"]) %>
-        <%= render partial: 'workflow/search_approvers/group_dropdown_normal' %>
+      <% if @ss_mode == :gws %>
+        <dt><%= t("mongoid.models.ss/group") %></dt>
+        <dd>
+          <% if browser.ie?(["<10"]) %>
+            <%= render partial: 'gws/apis/users/group_dropdown_normal' %>
+          <% else %>
+            <%= render partial: 'gws/apis/users/group_dropdown_tree' %>
+          <% end %>
+        </dd>
       <% else %>
-        <%= render partial: 'workflow/search_approvers/group_dropdown_tree' %>
+        <% if browser.ie?(["<10"]) %>
+          <%= render partial: 'workflow/search_approvers/group_dropdown_normal' %>
+        <% else %>
+          <%= render partial: 'workflow/search_approvers/group_dropdown_tree' %>
+        <% end %>
       <% end %>
       <dt><%= t "cms.user" %></dt>
       <dd><%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
@@ -28,7 +39,7 @@
         <td class="checkbox">
           <input type="checkbox" name="ids[]" value="<%= item.id %>" />
         </td>
-        <td class="name"><%= link_to item.long_name, "#", class: "select-item" %></td>
+        <td class="name"><%= link_to workflow_user_long_name(item), "#", class: "select-item" %></td>
       </tr>
     <% end %>
   </tbody>

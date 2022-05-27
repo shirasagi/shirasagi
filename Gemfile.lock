@@ -669,6 +669,9 @@ GEM
     unicorn-worker-killer (0.4.5)
       get_process_mem (~> 0)
       unicorn (>= 4, < 7)
+    view_component (2.52.0)
+      activesupport (>= 5.0.0, < 8.0)
+      method_source (~> 1.0)
     wareki (1.1.0)
       ya_kansuji (> 0.0.9, < 2.0.0)
     webdrivers (4.6.1)
@@ -811,6 +814,7 @@ DEPENDENCIES
   ungarbled
   unicorn
   unicorn-worker-killer
+  view_component
   wareki
   webdrivers
   webmock

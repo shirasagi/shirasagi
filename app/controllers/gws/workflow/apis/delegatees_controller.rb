@@ -47,7 +47,5 @@ class Gws::Workflow::Apis::DelegateesController < ApplicationController
     criteria = criteria.search(@s)
     criteria = criteria.in(group_ids: @groups.in_group(@group).pluck(:id))
     @items = criteria.order_by_title(@cur_site).page(params[:page]).per(50)
-
-    @groups = @groups.tree_sort(root_name: @cur_site.name)
   end
 end
