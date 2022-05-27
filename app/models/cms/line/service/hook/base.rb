@@ -100,7 +100,6 @@ module Cms::Line::Service::Hook
           Cms::Line::Service::Hook::Chat,
           Cms::Line::Service::Hook::ImageMap,
           Cms::Line::Service::Hook::JsonTemplate,
-          Cms::Line::Service::Hook::Api,
         ].map { |klass| klass.new.type }
         hooks.map { |k| [I18n.t("cms.options.line_service_type.#{k}"), k] }
       end

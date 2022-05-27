@@ -23,7 +23,7 @@ class Cms::Line::Service::HooksController < ApplicationController
   end
 
   def set_model
-    @type = %w(facility_search chat image_map json_template api -).find do |type|
+    @type = %w(facility_search chat image_map json_template -).find do |type|
       type == params[:type].presence
     end
     raise "400" if @type.nil?
