@@ -12,8 +12,8 @@ module Article::Addon
     def default_map_html
       <<~HTML
         {{ sidebar }}
-        {{ canvas }}
         {{ filters }}
+        {{ canvas }}
       HTML
     end
 

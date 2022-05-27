@@ -10,26 +10,35 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
   let(:name) { unique_id }
   let(:today) { Time.zone.today }
 
-  let(:brithday1) { today.advance(years: -1) }
-  let(:brithday2) { today.advance(years: -1, days: 3) }
-
-  let(:child1_birth) { { era: "seireki", year: brithday1.year, month: brithday1.month, day: brithday1.day } }
-  let(:child2_birth) { { era: "seireki", year: brithday2.year, month: brithday2.month, day: brithday2.day } }
-
-  let!(:deliver_category1) { create :cms_line_deliver_category_category }
-  let!(:deliver_category1_1) { create :cms_line_deliver_category_category, parent: deliver_category1 }
-  let!(:deliver_category1_2) { create :cms_line_deliver_category_category, parent: deliver_category1 }
-  let!(:deliver_category1_3) { create :cms_line_deliver_category_category, parent: deliver_category1 }
-
-  let!(:deliver_category2) { create :cms_line_deliver_category_category }
-  let!(:deliver_category2_1) { create :cms_line_deliver_category_category, parent: deliver_category2 }
-  let!(:deliver_category2_2) { create :cms_line_deliver_category_category, parent: deliver_category2 }
-  let!(:deliver_category2_3) { create :cms_line_deliver_category_category, parent: deliver_category2 }
+  let!(:deliver_category_first) do
+    create(:cms_line_deliver_category_category, filename: "c1", select_type: "checkbox")
+  end
+  let!(:deliver_category_first1) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_first, filename: "1")
+  end
+  let!(:deliver_category_first2) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_first, filename: "2")
+  end
+  let!(:deliver_category_first3) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_first, filename: "3")
+  end
+  let!(:deliver_category_second) do
+    create(:cms_line_deliver_category_category, filename: "c2", select_type: "checkbox")
+  end
+  let!(:deliver_category_second1) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_second, filename: "1")
+  end
+  let!(:deliver_category_second2) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_second, filename: "2")
+  end
+  let!(:deliver_category_second3) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_second, filename: "3")
+  end
 
   # active members
   let!(:member1) { create(:cms_line_member, name: "member1") }
-  let!(:member2) { create(:cms_line_member, name: "member2", child1_name: unique_id, in_child1_birth: child1_birth) }
-  let!(:member3) { create(:cms_line_member, name: "member3", child1_name: unique_id, in_child1_birth: child2_birth) }
+  let!(:member2) { create(:cms_line_member, name: "member2") }
+  let!(:member3) { create(:cms_line_member, name: "member3", deliver_category_ids: [deliver_category_first1.id]) }
 
   # expired members
   let!(:member4) { create(:cms_member, name: "member4", subscribe_line_message: "active") }
@@ -242,11 +251,11 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
       end
     end
 
-    context "multicast_with_input_condition (year)" do
+    context "multicast_with_input_condition (deliver_category)" do
       let(:deliver_date) { Time.zone.today.advance(days: 1).strftime("%Y/%m/%d %H:%M") }
 
-      let(:targets) { [member2] }
-      let(:non_targets) { [member1, member3, member4, member5, member6] }
+      let(:targets) { [member3] }
+      let(:non_targets) { [member1, member2, member4, member5, member6] }
       let(:targets_count) { "#{I18n.t("cms.member")}#{targets.size}#{I18n.t("ss.units.count")}" }
 
       before { login_cms_user }
@@ -256,8 +265,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
         within "form#item-form" do
           fill_in "item[name]", with: name
           select I18n.t("cms.options.line_deliver_condition_state.multicast_with_input_condition"), from: 'item[deliver_condition_state]'
-          fill_in "item[lower_year1]", with: 1
-          fill_in "item[upper_year1]", with: 1
+          find("input[name='item[deliver_category_ids][]'][value='#{deliver_category_first1.id}']").set(true)
           click_on I18n.t("ss.buttons.save")
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -392,11 +400,11 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
       end
     end
 
-    context "multicast_with_input_condition (year)" do
-      let(:deliver_date) { Time.zone.today.advance(days: 3).strftime("%Y/%m/%d %H:%M") }
+    context "multicast_with_input_condition (deliver_category)" do
+      let(:deliver_date) { today.advance(days: 3).strftime("%Y/%m/%d %H:%M") }
 
-      let(:targets) { [member2, member3] }
-      let(:non_targets) { [member1, member4, member5, member6] }
+      let(:targets) { [member3] }
+      let(:non_targets) { [member1, member2, member4, member5, member6] }
       let(:targets_count) { "#{I18n.t("cms.member")}#{targets.size}#{I18n.t("ss.units.count")}" }
 
       before { login_cms_user }
@@ -406,8 +414,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
         within "form#item-form" do
           fill_in "item[name]", with: name
           select I18n.t("cms.options.line_deliver_condition_state.multicast_with_input_condition"), from: 'item[deliver_condition_state]'
-          fill_in "item[lower_year1]", with: 1
-          fill_in "item[upper_year1]", with: 1
+          find("input[name='item[deliver_category_ids][]'][value='#{deliver_category_first1.id}']").set(true)
           click_on I18n.t("ss.buttons.save")
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -474,7 +481,6 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
   context "deliver 1,3,5 days ago" do
     context "multicast_with_no_condition" do
       let(:deliver_dates) do
-        today = Time.zone.today
         [-1, 1, 3, 5].map { |days| today.advance(days: days).strftime("%Y/%m/%d %H:%M") }
       end
       let(:targets) { [member1, member2, member3] }

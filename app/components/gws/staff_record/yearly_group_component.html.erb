@@ -1,0 +1,16 @@
+<%= cache_component do %>
+  <%= select_tag "s[section_name]", options_for_select(section_options), include_blank: t('gws/staff_record.search.section'), id: nil %>
+<% end %>
+
+<% if selected.present? %>
+  <%= javascript_tag(defer: true) do %>
+    $(function() {
+      var $select = $("[name='s[section_name]']");
+      var $option = $select.find("option[value='<%== selected %>']");
+      if ($option[0]) {
+        $option.prop("selected", true);
+        $select.removeClass("blank-value");
+      }
+    });
+  <% end %>
+<% end %>

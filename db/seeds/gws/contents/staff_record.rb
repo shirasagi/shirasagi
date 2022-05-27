@@ -42,11 +42,22 @@ def create_staff_record_user_titles(data)
   item
 end
 
-@staff_record_years = [
-  create_staff_record_year(name: "平成27年度", code: 2015, start_date: '2015/4/1', close_date: '2016/3/31'),
-  create_staff_record_year(name: "平成28年度", code: 2016, start_date: '2016/4/1', close_date: '2017/3/31'),
-  create_staff_record_year(name: "平成29年度", code: 2017, start_date: '2017/4/1', close_date: '2018/3/31')
-].each do |year|
+@staff_record_years = begin
+  now = Time.zone.now
+  this_nendo = now.month <= 3 ? now.change(year: now.year - 1, month: 4, day: 1).to_date : now.change(month: 4, day: 1).to_date
+
+  Array.new(3) do |i|
+    start_date = this_nendo.change(year: this_nendo.year - i - 1)
+    close_date = start_date.change(year: start_date.year + 1, month: 3, day: 31)
+
+    create_staff_record_year(
+      name: start_date.to_wareki_date.strftime("%Jy") + "年度", code: start_date.year,
+      start_date: I18n.l(start_date, format: :picker), close_date: I18n.l(close_date, format: :picker)
+    )
+  end
+end
+
+@staff_record_years.each do |year|
   sections = [
     create_staff_record_group(year_id: year.id, name: @site.name, order: 10, seating_chart_url: ''),
     create_staff_record_group(year_id: year.id, name: '企画政策部', order: 20, seating_chart_url: ''),

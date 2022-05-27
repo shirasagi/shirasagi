@@ -8,23 +8,36 @@ describe "cms/line/messages test_deliver", type: :feature, dbscope: :example, js
   let(:logs_path) { cms_line_deliver_logs_path site }
 
   let(:name) { unique_id }
-  let(:today) { Time.zone.today }
-  let(:child1_birth) { { era: "seireki", year: (today.year - 1), month: today.month, day: today.day } }
 
-  let!(:deliver_category1) { create :cms_line_deliver_category_category }
-  let!(:deliver_category1_1) { create :cms_line_deliver_category_category, parent: deliver_category1 }
-  let!(:deliver_category1_2) { create :cms_line_deliver_category_category, parent: deliver_category1 }
-  let!(:deliver_category1_3) { create :cms_line_deliver_category_category, parent: deliver_category1 }
-
-  let!(:deliver_category2) { create :cms_line_deliver_category_category }
-  let!(:deliver_category2_1) { create :cms_line_deliver_category_category, parent: deliver_category2 }
-  let!(:deliver_category2_2) { create :cms_line_deliver_category_category, parent: deliver_category2 }
-  let!(:deliver_category2_3) { create :cms_line_deliver_category_category, parent: deliver_category2 }
+  let!(:deliver_category_first) do
+    create(:cms_line_deliver_category_category, filename: "c1", select_type: "checkbox")
+  end
+  let!(:deliver_category_first1) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_first, filename: "1")
+  end
+  let!(:deliver_category_first2) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_first, filename: "2")
+  end
+  let!(:deliver_category_first3) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_first, filename: "3")
+  end
+  let!(:deliver_category_second) do
+    create(:cms_line_deliver_category_category, filename: "c2", select_type: "checkbox")
+  end
+  let!(:deliver_category_second1) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_second, filename: "1")
+  end
+  let!(:deliver_category_second2) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_second, filename: "2")
+  end
+  let!(:deliver_category_second3) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_second, filename: "3")
+  end
 
   # active members
   let!(:member1) { create(:cms_line_member, name: "member1") }
-  let!(:member2) { create(:cms_line_member, name: "member2", child1_name: unique_id, in_child1_birth: child1_birth) }
-  let!(:member3) { create(:cms_line_member, name: "member3", deliver_category_ids: [deliver_category1_1.id]) }
+  let!(:member2) { create(:cms_line_member, name: "member2") }
+  let!(:member3) { create(:cms_line_member, name: "member3", deliver_category_ids: [deliver_category_first1.id]) }
 
   # expired members
   let!(:member4) { create(:cms_member, name: "member4", subscribe_line_message: "active") }

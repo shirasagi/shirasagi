@@ -6,8 +6,25 @@
   </div>
 </fieldset>
 
+<fieldset class="category">
+  <%= hidden_field_tag "categories[]", '' %>
+  <legend><%= t("facility.category.name") %></legend>
+
+  <div class="category">
+    <% @cur_node.map_category_options.each do |name, id| %>
+      <div>
+        <% checked = @categories ? @categories.include?(name) : false %>
+        <label for=<%= id %>>
+          <%= check_box_tag "categories[]", name, checked, { id: id, class: "prop"} %>
+          <%= name %>
+        </label>
+      </div>
+    <% end %>
+  </div>
+</fieldset>
+
 <% @cur_node.map_search_options.each_with_index do |options, idx| %>
-  <fieldset class="category">
+  <fieldset class="category columns">
     <%= hidden_field_tag "columns[#{idx}][]", '' %>
     <legend><%= options['name'] %></legend>
 

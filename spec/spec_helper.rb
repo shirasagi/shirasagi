@@ -103,6 +103,7 @@ RSpec.configure do |config|
   config.include ActiveJob::TestHelper
   config.include ActiveSupport::Testing::TimeHelpers
   config.include FactoryBot::Syntax::Methods
+  config.include ViewComponent::TestHelpers, type: :component
 
   config.add_setting :default_dbscope, default: :context
 
@@ -128,6 +129,10 @@ RSpec.configure do |config|
   config.before(:context) do
     FactoryBot.reload
     Capybara.app_host = nil
+  end
+
+  config.after(:example) do |example|
+    Rails.cache.clear if Rails.cache
   end
 
   config.before(:example, type: :feature) do |example|

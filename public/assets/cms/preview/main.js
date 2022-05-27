@@ -101,7 +101,7 @@ this.Cms_Form = (function () {
             id: id,
             idx: 0,
             code: attr,
-            msg: (attr + 'を入力してください。'),
+            msg: (attr + "を入力してください。"),
             ele: this
           }
         );
@@ -221,7 +221,7 @@ this.Form_Alert = (function () {
       var resolved = function(html) {
         var promise = Form_Alert.asyncValidate(form, submit, { html: html });
         promise.done(function() {
-          if (! SS.isEmptyObject(Form_Alert.alerts)) {
+          if (!SS.isEmptyObject(Form_Alert.alerts) || !SS.isEmptyObject(Form_Alert.staticAlerts)) {
             Form_Alert.showAlert(form, submit);
             return;
           }
@@ -268,35 +268,48 @@ this.Form_Alert = (function () {
     });
   };
 
+  Form_Alert.staticAlerts = {};
+
+  Form_Alert.addStaticAlerts = function(key, messages) {
+    if (! Form_Alert.staticAlerts[key]) {
+      Form_Alert.staticAlerts[key] = []
+    }
+
+    for (var i = 0; i < messages.length; i++) {
+      Form_Alert.staticAlerts[key].push({ msg: messages[i] });
+    }
+  };
+
   Form_Alert.showAlert = function (form, submit) {
-    var div = $('<div id="alertExplanation" class="errorExplanation">');
-    div.append("<h2>警告</h2>");
-    var ref = Form_Alert.alerts;
-    var alert_msg = $(submit).attr("data-alert-msg");
-    for (var addon in ref) {
-      var fields = ref[addon];
-      div.append('<p>' + addon + '</p>');
-      if　(alert_msg)　{
-        div.append("<p>" + alert_msg + "</p>");
-      }
-      var ul = $("<ul>").appendTo(div);
-      var i, j, len;
-      for (i = j = 0, len = fields.length; j < len; i = ++j) {
-        var field = fields[i];
-        if (field["msg"]) {
-          ul.append('<li>' + field["msg"] + '</li>');
+    var $div = $('<div/>', { id: "alertExplanation", class: "errorExplanation" });
+    $div.append("<h2>警告</h2>");
+
+    var appendAlerts = function (alerts) {
+      for (var addon in alerts) {
+        var fields = alerts[addon];
+        $div.append('<p>' + addon + '</p>');
+        var $ul = $("<ul>").appendTo($div);
+        var i, j, len;
+        for (i = j = 0, len = fields.length; j < len; i = ++j) {
+          var field = fields[i];
+          if (field["msg"]) {
+            $ul.append('<li>' + field["msg"] + '</li>');
+          }
         }
       }
     }
+    appendAlerts(Form_Alert.alerts);
+    appendAlerts(Form_Alert.staticAlerts);
+
     // caution: below IE8, you must use document.createElement() method to create <footer>
-    var footer = $(document.createElement("footer")).addClass('send');
+    var $footer = $(document.createElement("footer")).addClass('send');
     
-    if (!alert_msg) {
-      footer.append('<button name="button" type="button" class="btn-primary save">警告を無視する</button>');
+    if (SS.isEmptyObject(Form_Alert.staticAlerts)) {
+      $footer.append('<button name="button" type="button" class="btn-primary save">警告を無視する</button>');
     }
-    footer.append('<button name="button" type="button" class="btn-default cancel">キャンセル</button>');
+    $footer.append('<button name="button" type="button" class="btn-default cancel">キャンセル</button>');
     $.colorbox({
-      html: div.get(0).outerHTML + footer.get(0).outerHTML,
+      html: $div.get(0).outerHTML + $footer.get(0).outerHTML,
       maxHeight: "80%",
       fixed: true
     });
@@ -325,18 +338,6 @@ this.Form_Alert = (function () {
     return promise;
   };
 
-  Form_Alert.presence = function (form, submit) {
-    return $(form).find("input.presence,textarea.presence").each(function () {
-      var addonName, fieldName;
-      if ($(this).val() === "") {
-        $(this).closest("dl").show();
-        addonName = $(this).closest(".addon-view").find("header").text();
-        fieldName = Form_Alert.justText($(this).closest("dd").prev("dt"));
-        return Form_Alert.add(addonName, this, fieldName + "を入力してください。");
-      }
-    });
-  };
-
   Form_Alert.wrapDeferred = function (validate) {
     return function (form, submit) {
       var d = $.Deferred();
@@ -361,10 +362,10 @@ this.Form_Alert = (function () {
   Form_Alert.closeConfirmation = function (form, submit) {
     var addonName, msg;
     if ($(submit).attr("data-close-confirmation")) {
-      addonName = '非公開状態で保存しようとしています';
+      addonName = "非公開状態で保存しようとしています";
       msg = null;
       if ($(submit).attr("data-contain-links-path")) {
-        msg = '<a href="' + $(submit).attr("data-contain-links-path") + '" target="_blank" rel="noopener">' + 'このページへのリンクを確認する。' + '</a>';
+        msg = '<a href="' + $(submit).attr("data-contain-links-path") + '" target="_blank" rel="noopener">' + "このページへのリンクを確認する。" + '</a>';
       }
       return Form_Alert.add(addonName, null, msg);
     }
@@ -379,7 +380,7 @@ this.Form_Alert = (function () {
       messages = f();
     }
 
-    addonName = 'SNS投稿連携';
+    addonName = "SNS投稿連携";
     $.each(messages, function() {
       Form_Alert.add(addonName, null, this);
     });
@@ -392,35 +393,6 @@ this.Form_Alert = (function () {
       "ele": ele,
       "msg": msg
     });
-  };
-
-  Form_Alert.justText = function (ele) {
-    return $(ele).clone().children().remove().end().text();
-  };
-
-  Form_Alert.validateReplaceWord = function (form, submit) {
-    var addonIds, excludes, k, results, v, words;
-    words = Syntax_Checker.config["replace_words"];
-    if (!words) {
-      return;
-    }
-    addonIds = ["#addon-basic", "#addon-cms-agents-addons-meta", "#addon-event-agents-addons-date", "#addon-map-agents-addons-page"];
-    excludes = ['[name="item[basename]"]', "location-search.keyword"];
-    results = [];
-    for (k in words) {
-      v = words[k];
-      results.push($(form).find(addonIds.join(",")).find("input,textarea").not(excludes.join(",")).each(function () {
-        var addonName, fieldName, val;
-        val = $(this).val();
-        if (val && !SS.isEmptyObject(val.match(RegExp("" + k.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1'), "g")))) {
-          $(this).closest("dl").show();
-          addonName = $(this).closest(".addon-view").find(".addon-head").text();
-          fieldName = Form_Alert.justText($(this).closest("dd").prev("dt"));
-          return Form_Alert.add(addonName, this, fieldName + "に使用が好ましくない単語が含まれています。" + ("「" + k + "」→「" + v + "」"));
-        }
-      }));
-    }
-    return results;
   };
 
   return Form_Alert;
@@ -581,7 +553,7 @@ this.Cms_Inplace_Form = (function () {
             id: id,
             idx: 0,
             code: attr,
-            msg: (attr + 'を入力してください。'),
+            msg: (attr + "を入力してください。"),
             ele: this
           }
         );
@@ -675,6 +647,10 @@ this.Syntax_Checker = (function () {
     return this;
   }
 
+  ResultBox.prototype.showServerError = function() {
+    this.showMessage("アクセシビリティチェック中にサーバーエラーが発生しました。");
+  }
+
   ResultBox.prototype.showChecking = function() {
     return this.showMessage(SS.loading);
   };
@@ -765,6 +741,44 @@ this.Syntax_Checker = (function () {
             });
             li.append(correct)
           }
+          if (error["collector"]) {
+            correct = $('<button />', { type: "button", class: "btn btn-auto-correct" }).text("自動修正");
+            correct.on("click", function (ev) {
+              ev.target.disabled = true;
+
+              var setContent = check["setContent"];
+              var getContent = check["getContent"];
+              var resolve = check["resolve"];
+              var type = check["type"];
+
+              var token = $('meta[name="csrf-token"]').attr('content');
+              $.ajax({
+                type: "POST",
+                url: Syntax_Checker.correct_url,
+                cache: false,
+                data: {
+                  authenticity_token: token,
+                  content: { content: getContent(), resolve: resolve, type: type },
+                  collector: error["collector"],
+                  params: error["collector_params"]
+                },
+                success: function(data, textStatus, xhr) {
+                  setContent(data["result"]);
+                  $(self.form.addonSelector).find("button.syntax-check").trigger("click");
+                },
+                error: function (xhr, status, error) {
+                  console.log(error);
+                },
+                complete: function (xhr, status) {
+                  ev.target.disabled = false;
+                }
+              });
+
+              ev.preventDefault();
+              return false;
+            });
+            li.append(correct)
+          }
         });
       }
     });
@@ -805,24 +819,14 @@ this.Syntax_Checker = (function () {
     });
   };
 
-  Syntax_Checker.config = {};
+  Syntax_Checker.validServerParams = [ "content", "resolve", "type" ];
 
   Syntax_Checker.asyncCheck = function () {
     var defer = $.Deferred();
 
-    var resolve = function() {
-
-      try {
-        Syntax_Checker.check();
-        Syntax_Checker.resultBox.showResult(Syntax_Checker.checks, Syntax_Checker.errors);
-        defer.resolve({ status: Syntax_Checker.errors.length == 0 ? "ok" : "failed" });
-      } catch (e) {
-        Syntax_Checker.resultBox.showMessage("<p>" + e + "</p>");
-        defer.reject(null, null, e);
-      }
-    };
-
-    resolve();
+    Syntax_Checker.resultBox.showChecking();
+    Syntax_Checker.reset();
+    Syntax_Checker.check(defer);
 
     return defer.promise();
   };
@@ -853,6 +857,10 @@ this.Syntax_Checker = (function () {
     Syntax_Checker.errorCount = 0;
   };
 
+  Syntax_Checker.reset = function () {
+    this.errors = [];
+  };
+
   Syntax_Checker.getContents = function () {
     var contents = {};
 
@@ -863,21 +871,50 @@ this.Syntax_Checker = (function () {
     return contents;
   };
 
-  Syntax_Checker.check = function () {
-    var contents, afterCheck;
-
-    Syntax_Checker.reset();
-
-    contents = Syntax_Checker.getContents();
+  Syntax_Checker.check = function (defer) {
+    var token = $('meta[name="csrf-token"]').attr('content');
+    var contents = Syntax_Checker.getContents();
+    var params = [];
     $.each(contents, function(id, content) {
-      if (content["resolve"] == "html") {
-        Syntax_Checker.checkHtml(id, content);
-      }
-      else {
-        Syntax_Checker.checkText(id, content);
-      }
+      var param = {};
+      $.each(Syntax_Checker.validServerParams, function() {
+        if (content[this]) {
+          param[this] = content[this];
+        }
+      });
 
-      afterCheck = content["afterCheck"];
+      if (Object.keys(param).length > 0) {
+        param["id"] = id;
+        params.push(param);
+      }
+    });
+
+    $.ajax({
+      type: "POST",
+      url: Syntax_Checker.url,
+      data: JSON.stringify({ authenticity_token: token, item: { contents: params } }),
+      contentType: "application/json",
+      success: function(data, textStatus, xhr) {
+        Syntax_Checker.showServerResult(contents, data, textStatus, xhr);
+        defer.resolve({ status: Syntax_Checker.errors.length == 0 ? "ok" : "failed" });
+      },
+      error: function (xhr, status, error) {
+        Syntax_Checker.resultBox.showServerError();
+        defer.reject(null, null, error);
+      },
+      complete: function (xhr, status) {
+        defer.resolve({ status: Syntax_Checker.errors.length == 0 ? "ok" : "failed" });
+      }
+    });
+  };
+
+  Syntax_Checker.showServerResult = function (contents, data, textStatus, xhr) {
+    $.each(data.errors, function() {
+      Syntax_Checker.errors.push(this);
+    });
+
+    $.each(contents, function(id, content) {
+      var afterCheck = content["afterCheck"];
       if (afterCheck) {
         afterCheck(id, content);
       }
@@ -885,965 +922,20 @@ this.Syntax_Checker = (function () {
 
     if (Syntax_Checker.afterCheck) {
       Syntax_Checker.afterCheck();
-    };
-
-    return Syntax_Checker.errors;
-  };
-
-  Syntax_Checker.reset = function () {
-    this.errors = [];
-  };
-
-  Syntax_Checker.checkHtml =  function (id, content) {
-    Syntax_Checker.checkDateFormat(id, content);
-    Syntax_Checker.checkInterwordSpace(id, content);
-    Syntax_Checker.checkKanaCharacter(id, content);
-    Syntax_Checker.checkMultibyteCharacter(id, content);
-    Syntax_Checker.checkReplaceWords(id, content);
-
-    Syntax_Checker.checkAdjacentA(id, content);
-    Syntax_Checker.checkAppletAlt(id, content);
-    Syntax_Checker.checkAreaAlt(id, content);
-    Syntax_Checker.checkEmbeddedMedia(id, content);
-    Syntax_Checker.checkImgAlt(id, content);
-    Syntax_Checker.checkImgDataUriScheme(id, content);
-    Syntax_Checker.checkLinkText(id, content);
-    Syntax_Checker.checkObjectText(id, content);
-    Syntax_Checker.checkOrderOfH(id, content);
-    Syntax_Checker.checkTable(id, content);
-  }
-
-  Syntax_Checker.checkText =  function (id, content) {
-    Syntax_Checker.checkDateFormat(id, content);
-    Syntax_Checker.checkInterwordSpace(id, content);
-    Syntax_Checker.checkKanaCharacter(id, content);
-    Syntax_Checker.checkMultibyteCharacter(id, content);
-    Syntax_Checker.checkReplaceWords(id, content);
-  }
-
-  Syntax_Checker.isValidDate = function (date) {
-    if (Object.prototype.toString.call(date) !== "[object Date]") {
-      return false;
     }
-    if (!isNaN(date.getTime()) && date.getYear() > 0) {
-      return true;
-    } else {
-      return false;
-    }
-  };
 
-  Syntax_Checker.justText = function (ele) {
-    return $(ele).clone().children().remove().end().text();
-  };
-
-  Syntax_Checker.outerHtmlSummary = function (ele) {
-    return $(ele).get(0).outerHTML.replace(/[\r\n]|&nbsp;/g, "");
-  };
+    Syntax_Checker.resultBox.showResult(Syntax_Checker.checks, Syntax_Checker.errors);
+  }
 
   // javascript syntax check
 
   Syntax_Checker.message = {
-    notSetImgAlt: "画像の代替テキストを確認してください。",
-    notSetAppletAlt: "アプレット要素の代替テキストを確認してください。",
-    notSetAreaAlt: "エリア要素の代替テキストを確認してください。",
-    invalidImgScheme: "画像のURIにバイナリー文字列が含まれています。",
-    notSetTableCaption: "表にキャプションが設定されていません。",
-    notSetThScope: "表のヘッダーにスコープ属性が設定されていません。",
     invalidOrderOfH: "見出し(H)の順番が不正です。",
-    invalidMultibyteCharacter: "英数字は半角文字を入力してください。",
-    invalidKanaCharacter: "半角カナ文字が含まれています。",
-    invalidDateFormat: "日付の表記は○年○月○日としてください。",
-    invalidAdjacentA: "隣接する同じリンクを一つのリンクにまとめてください。",
-    checkInterwordSpace: "単語の文字間のスペースを確認してください。",
     checkLinkText: "リンクのテキストを確認してください。",
-    checkObjectText: "オブジェクト要素のボディに適切な代替テキストを記述してください。",
-    checkEmbeddedMedia: "動画や音声を含む場合、説明があるか確認してください。",
-    replaceWord: "使用が好ましくない単語が含まれています。",
-    altIsIncludedInFilename: "代替テキストがファイル名に含まれています。"
   };
   Syntax_Checker.detail = {
-    notSetImgAlt: ["画像の内容を示す代替テキストを設定してください。"],
-    notSetAppletAlt: ["アプレットの内容を示す代替テキストを設定してください。"],
-    notSetAreaAlt: ["エリア要素の内容を示す代替テキストを設定してください。"],
-    invalidImgScheme: ["画像のSRC属性にデータ形式のURIスキームが存在します。","他のURIスキームを使用してください。"],
-    notSetTableCaption: ["表に見出し(CAPTION)が設定されていません","TABLEタグの中にCAPTIONタグを追記してください。"],
-    notSetThScope: ["表のヘッダー(TH)に見出しの方向であるSCOPE属性が設定されていません。","行方向であればscope=\"colを設定してください。","列方向であればscope=\"row\"を設定してください。"],
     invalidOrderOfH: ["適切な順に配置してください。"],
-    invalidMultibyteCharacter: ["本文に全角英数が含まれています。","半角英数に置き換えるか削除してください。"],
-    invalidKanaCharacter: ["本文に半角カナ文字が含まれています。","全角文字に置き換えるか削除してください。"],
-    invalidDateFormat: ["日付の形式を修正してください。"],
-    invalidAdjacentA: ["隣り合うリンク(A)に同じリンク先が設定されています。","一つのリンク(A)にマークアップしてください。"],
-    checkInterwordSpace: ["単語の文字間に不要なスペースが含まれている場合は削除してください。"],
     checkLinkText: ["リンク内のテキストは遷移先を表すものを設定してください。"],
-    checkObjectText: ["オブジェクト要素が正しく読み込まれなかった場合の説明を要素内に記述してください。"],
-    checkEmbeddedMedia: ["動画や音声を本文に埋め込む場合は説明を記述してください。"],
-    altIsIncludedInFilename: ["代替テキストの一部もしくは全部がファイル名に含まれています。","一般的にファイル名をそのまま代替テキストに設定するのは好ましくないと考えられます。","設定している代替テキストが妥当かどうか確認してください。"]
-  };
-  Syntax_Checker.mediaExtensions = [
-    "aac", "aif", "aiff", "au", "avi", "flac", "flv", "mid",
-    "midi", "mp3", "m4a", "mp4", "mpg", "mpeg", "oga", "ogg",
-    "tta", "vdo", "wav", "wma", "wmv"
-  ];
-
-  Syntax_Checker.formatContent = function (content) {
-    var value = content["content"];
-    var resolve = content["resolve"];
-    var type = content["type"];
-    var array = [];
-
-    if (type == "array") {
-      $.each(value, function(_, v) {
-        v = v || "";
-        if (resolve == "html") {
-          array.push(v);
-        }
-        else {
-          array.push("<div>" + v + "</div>");
-        }
-      });
-    } else {
-      value = value || "";
-      if (resolve == "html") {
-        array.push(value);
-      }
-      else {
-        array.push("<div>" + value + "</div>");
-      }
-    }
-    return array;
-  }
-
-  // MultibyteCharacter
-  Syntax_Checker.checkMultibyteCharacter = function (id, content) {
-    var array, chars;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      chars = [];
-      $(html).find(":not(iframe)").addBack().contents().filter(function () {
-        return this.nodeType == 3;
-      }).each(function () {
-        var c;
-        c = this.textContent.match(/[Ａ-Ｚａ-ｚ０-９]/g);
-        if (c) {
-          return chars.push(c);
-        }
-      });
-      if (!SS.isEmptyObject(chars)) {
-        Syntax_Checker.errors.push(
-          {
-            id: id,
-            idx: idx,
-            code: chars.join(","),
-            ele: html,
-            msg: Syntax_Checker.message["invalidMultibyteCharacter"],
-            detail: Syntax_Checker.detail["invalidMultibyteCharacter"],
-            correctContent: Syntax_Checker.correctMultibyteCharacter
-          }
-        );
-      }
-    });
-  };
-  Syntax_Checker.correctMultibyteCharacter = function (id, content, error) {
-    var array, ret;
-
-    ret = [];
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      html = $(html);
-      html.find(":not(iframe)").addBack().contents().filter(function () {
-        return this.nodeType == 3;
-      }).each(function () {
-        var text;
-        text = this.textContent.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function (c) {
-          return String.fromCharCode(c.charCodeAt(0) - 0xFEE0);
-        });
-        return this.textContent = text;
-      });
-      ret.push(html.html());
-    });
-
-    if (content["type"] == "array") {
-      return ret;
-    } else {
-      return ret[0];
-    }
-  };
-
-  // KanaCharacter
-  Syntax_Checker.checkKanaCharacter = function (id, content) {
-    var array, chars;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      chars = html.match(/[｡-ﾟ]/g);
-      if (!SS.isEmptyObject(chars)) {
-        Syntax_Checker.errors.push(
-          {
-            id: id,
-            idx: idx,
-            code: chars.join(","),
-            ele: html,
-            msg: Syntax_Checker.message["invalidKanaCharacter"],
-            detail: Syntax_Checker.detail["invalidKanaCharacter"],
-            correctContent: Syntax_Checker.correctKanaCharacter
-          }
-        );
-      }
-    });
-  };
-  Syntax_Checker.correctKanaCharacter = function (id, content, error) {
-    var array, ret, kanaMap, markedkanaMap;
-
-    ret = [];
-    array = Syntax_Checker.formatContent(content);
-
-    kanaMap = {
-      '｡': '。', '｢': '「', '｣': '」', '､': '、', '･': '・', 'ｦ': 'ヲ',
-      'ｧ': 'ァ', 'ｨ': 'ィ', 'ｩ': 'ゥ', 'ｪ': 'ェ', 'ｫ': 'ォ', 'ｬ': 'ャ',
-      'ｭ': 'ュ', 'ｮ': 'ョ', 'ｯ': 'ッ', 'ｰ': 'ー', 'ｱ': 'ア', 'ｲ': 'イ',
-      'ｳ': 'ウ', 'ｴ': 'エ', 'ｵ': 'オ', 'ｶ': 'カ', 'ｷ': 'キ', 'ｸ': 'ク',
-      'ｹ': 'ケ', 'ｺ': 'コ', 'ｻ': 'サ', 'ｼ': 'シ', 'ｽ': 'ス', 'ｾ': 'セ',
-      'ｿ': 'ソ', 'ﾀ': 'タ', 'ﾁ': 'チ', 'ﾂ': 'ツ', 'ﾃ': 'テ', 'ﾄ': 'ト',
-      'ﾅ': 'ナ', 'ﾆ': 'ニ', 'ﾇ': 'ヌ', 'ﾈ': 'ネ', 'ﾉ': 'ノ', 'ﾊ': 'ハ',
-      'ﾋ': 'ヒ', 'ﾌ': 'フ', 'ﾍ': 'ヘ', 'ﾎ': 'ホ', 'ﾏ': 'マ', 'ﾐ': 'ミ',
-      'ﾑ': 'ム', 'ﾒ': 'メ', 'ﾓ': 'モ', 'ﾔ': 'ヤ', 'ﾕ': 'ユ', 'ﾖ': 'ヨ',
-      'ﾗ': 'ラ', 'ﾘ': 'リ', 'ﾙ': 'ル', 'ﾚ': 'レ', 'ﾛ': 'ロ', 'ﾜ': 'ワ',
-      'ﾝ': 'ン', 'ﾞ': '゛', 'ﾟ': '゜'
-    }
-
-    markedkanaMap = {
-      'ｶﾞ': 'ガ', 'ｷﾞ': 'ギ', 'ｸﾞ': 'グ', 'ｹﾞ': 'ゲ', 'ｺﾞ': 'ゴ',
-      'ｻﾞ': 'ザ', 'ｼﾞ': 'ジ', 'ｽﾞ': 'ズ', 'ｾﾞ': 'ゼ', 'ｿﾞ': 'ゾ',
-      'ﾀﾞ': 'ダ', 'ﾁﾞ': 'ヂ', 'ﾂﾞ': 'ヅ', 'ﾃﾞ': 'デ', 'ﾄﾞ': 'ド',
-      'ﾊﾞ': 'バ', 'ﾋﾞ': 'ビ', 'ﾌﾞ': 'ブ', 'ﾍﾞ': 'ベ', 'ﾎﾞ': 'ボ',
-      'ﾊﾟ': 'パ', 'ﾋﾟ': 'ピ', 'ﾌﾟ': 'プ', 'ﾍﾟ': 'ペ', 'ﾎﾟ': 'ポ',
-      'ｳﾞ': 'ヴ', 'ﾜﾞ': 'ヷ', 'ｦﾞ': 'ヺ'
-    }
-
-    $.each(array, function(idx, html) {
-      html = $(html);
-      html.find(":not(iframe)").addBack().contents().filter(function () {
-        return this.nodeType === 3;
-      }).each(function () {
-        var text = this.textContent;
-
-        $.each(markedkanaMap, function(k, v) {
-          text = text.replace(new RegExp(k, 'g'), v);
-        });
-
-        text = text.replace(/[｡-ﾟ]/g, function (c) {
-          return kanaMap[c];
-        });
-
-        this.textContent = text;
-      });
-
-      ret.push(html.html());
-    });
-
-    if (content["type"] == "array") {
-      return ret;
-    } else {
-      return ret[0];
-    }
-  };
-
-  // ReplaceWords
-  Syntax_Checker.checkReplaceWords = function (id, content) {
-    var array, words;
-
-    array = Syntax_Checker.formatContent(content);
-    words = Syntax_Checker.config["replace_words"];
-
-    if (!words) {
-      return;
-    }
-
-    $.each(array, function(idx, html) {
-      var c, k, v;
-
-      for (k in words) {
-        v = words[k];
-        c = html.match(RegExp("" + k.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1'), "g"));
-        if (!SS.isEmptyObject(c)) {
-          Syntax_Checker.errors.push(
-            {
-              id: id,
-              idx: idx,
-              code: c[0],
-              ele: html,
-              msg: Syntax_Checker.message["replaceWord"] + ("「" + k + "」→「" + v + "」"),
-              correctContent: Syntax_Checker.correctReplaceWords,
-              replaceKey: k,
-              replaceValue: v,
-            }
-          );
-        }
-      }
-    });
-  };
-  Syntax_Checker.correctReplaceWords = function (id, content, error) {
-    var key, value, array, ret, regexp, alt;
-
-    array = Syntax_Checker.formatContent(content);
-    key = error["replaceKey"];
-    value = error["replaceValue"];
-    ret = [];
-    regexp = RegExp("" + key.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1', "g"));
-
-    if (!(key || value)) {
-      return;
-    }
-
-    $.each(array, function(idx, html) {
-      html = $(html);
-      html.find(":not(iframe)").addBack().contents().filter(function () {
-        return this.nodeType === 3;
-      }).each(function () {
-        var text;
-        text = this.textContent.replace(regexp, value);
-        this.textContent = text;
-      });
-      html.find("img[alt]").each(function () {
-        alt = $(this).attr("alt").replace(regexp, value);
-        $(this).attr("alt", alt);
-      });
-      ret.push(html.html());
-    });
-
-    if (content["type"] == "array") {
-      return ret;
-    } else {
-      return ret[0];
-    }
-  };
-
-  // DateFormat
-  Syntax_Checker.checkDateFormat = function (id, content) {
-    var array, dates;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      dates = [];
-
-      $(html).find(":not(iframe)").addBack().contents().filter(function () {
-        return this.nodeType === 3;
-      }).each(function () {
-        var d;
-        d = this.textContent.match(/\d{4}[\.\-\/]\d{1,2}[\.\-\/]\d{1,2}/g);
-        if (d) {
-          dates = $.merge(dates, d);
-        }
-      });
-      if (SS.isEmptyObject(dates)) {
-        return;
-      }
-      dates = $.grep(dates, function (date) {
-        return Syntax_Checker.isValidDate(new Date(date));
-      });
-      if (!SS.isEmptyObject(dates)) {
-        Syntax_Checker.errors.push(
-          {
-            id: id,
-            idx: idx,
-            code: dates.join(","),
-            ele: html,
-            msg: Syntax_Checker.message["invalidDateFormat"],
-            detail: Syntax_Checker.detail["invalidDateFormat"],
-            correctContent: Syntax_Checker.correctDateFormat
-          }
-        );
-      }
-    });
-  };
-  Syntax_Checker.correctDateFormat = function (id, content, error) {
-    var ret, array;
-
-    array = Syntax_Checker.formatContent(content);
-    ret = [];
-
-    $.each(array, function(idx, html) {
-      html = $(html);
-      html.find(":not(iframe)").addBack().contents().filter(function () {
-        return this.nodeType === 3;
-      }).each(function () {
-        var text;
-        text = this.textContent.replace(/(\d{4})[\.\-\/](\d{1,2})[\.\-\/](\d{1,2})/g, function (date, y, m, d) {
-          if (Syntax_Checker.isValidDate(new Date([y, m, d].join("/")))) {
-            return y + "年" + m + "月" + d + "日";
-          } else {
-            return date;
-          }
-        });
-        return this.textContent = text;
-      });
-      ret.push(html.html());
-    });
-
-    if (content["type"] == "array") {
-      return ret;
-    } else {
-      return ret[0];
-    }
-  };
-
-  // ImgAlt
-  Syntax_Checker.checkImgAlt = function (id, content) {
-    var array;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      $(html).find('img').each(function () {
-        var alt = this.alt;
-        if (alt) {
-          alt = $.trim(alt);
-        }
-        if (!alt) {
-          Syntax_Checker.errors.push(
-            {
-              id: id,
-              idx: idx,
-              code: Syntax_Checker.outerHtmlSummary(this),
-              ele: this,
-              msg: Syntax_Checker.message["notSetImgAlt"],
-              detail: Syntax_Checker.detail["notSetImgAlt"]
-            }
-          );
-        }
-
-        var src = this.src;
-        if (src) {
-          src = $.trim(src);
-        }
-        if (alt && src && src.toLowerCase().includes(alt.toLowerCase())) {
-          Syntax_Checker.errors.push(
-            {
-              id: id,
-              idx: idx,
-              code: Syntax_Checker.outerHtmlSummary(this),
-              ele: this,
-              msg: Syntax_Checker.message["altIsIncludedInFilename"],
-              detail: Syntax_Checker.detail["altIsIncludedInFilename"]
-            }
-          );
-        }
-      });
-    });
-  };
-
-  // AppletAlt
-  Syntax_Checker.checkAppletAlt = function (id, content) {
-    var array;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      $(html).find('applet').each(function () {
-        var alt, errors;
-        alt = $(this).attr('alt');
-        if (!alt || $.trim(alt) === "" || /^[\w\s\.\-]*$/.test(alt)) {
-          Syntax_Checker.errors.push(
-            {
-              id: id,
-              idx: idx,
-              code: Syntax_Checker.outerHtmlSummary(this),
-              ele: this,
-              msg: Syntax_Checker.message["notSetAppletAlt"],
-              detail: Syntax_Checker.detail["notSetAppletAlt"]
-            }
-          );
-        }
-      });
-    });
-  };
-
-  // AreaAlt
-  Syntax_Checker.checkAreaAlt = function (id, content) {
-    var array;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      $(html).find('area').each(function () {
-        var alt, errors;
-        alt = $(this).attr('alt');
-        if (!alt || $.trim(alt) === "" || /^[\w\s\.\-]*$/.test(alt)) {
-          Syntax_Checker.errors.push(
-            {
-              id: id,
-              idx: idx,
-              code: Syntax_Checker.outerHtmlSummary(this),
-              ele: this,
-              msg: Syntax_Checker.message["notSetAreaAlt"],
-              detail: Syntax_Checker.detail["notSetAreaAlt"]
-            }
-          );
-        }
-      });
-    });
-  };
-
-  // ImgDataUriScheme
-  Syntax_Checker.checkImgDataUriScheme = function (id, content) {
-    var array;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      $(html).find('img[src]').each(function () {
-        var errors, src;
-        src = $(this).attr('src');
-        if (/^data:.*?,.*?$/.test(src)) {
-          Syntax_Checker.errors.push(
-            {
-              id: id,
-              idx: idx,
-              code: Syntax_Checker.outerHtmlSummary(this),
-              ele: this,
-              msg: Syntax_Checker.message["invalidImgScheme"],
-              detail: Syntax_Checker.detail["invalidImgScheme"]
-            }
-          );
-        }
-      });
-    });
-  };
-
-  // Table
-  Syntax_Checker.checkTable = function (id, content) {
-    var array;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      $(html).find("table").each(function () {
-        var caption, errors, table;
-        table = this;
-        caption = $(this).find('caption');
-        errors = [];
-        if (!caption || $.trim(caption.text()) === "") {
-          Syntax_Checker.errors.push(
-            {
-              id: id,
-              idx: idx,
-              code: Syntax_Checker.outerHtmlSummary(this),
-              ele: table,
-              msg: Syntax_Checker.message["notSetTableCaption"],
-              detail: Syntax_Checker.detail["notSetTableCaption"],
-              correctContent: Syntax_Checker.correctTableCaption
-            }
-          );
-        }
-        $(table).find('th').each(function () {
-          if (!$(this).attr("scope")) {
-            Syntax_Checker.errors.push(
-              {
-                id: id,
-                idx: idx,
-                code: Syntax_Checker.outerHtmlSummary(this),
-                ele: table,
-                msg: Syntax_Checker.message["notSetThScope"],
-                detail: Syntax_Checker.detail["notSetThScope"],
-                correctContent:  Syntax_Checker.correctTableScope
-              }
-            );
-            return false;
-          }
-        });
-      });
-    });
-  };
-  Syntax_Checker.correctTableCaption = function (id, content) {
-    var ret, array;
-
-    array = Syntax_Checker.formatContent(content);
-    ret = [];
-
-    $.each(array, function(idx, html) {
-      html = $(html).find("table");
-      $(html).find('caption').remove();
-      $(html).prepend('<caption>' + "キャプション" + '</caption>');
-      html = $(html).parents().last().html() || $(html).html();
-      ret.push(html);
-    });
-
-    if (content["type"] == "array") {
-      return ret;
-    } else {
-      return ret[0];
-    }
-  };
-  Syntax_Checker.correctTableScope = function (id, content, error) {
-    var array, ret, scope;
-
-    array = Syntax_Checker.formatContent(content);
-    ret = [];
-
-    $.each(array, function(idx, html) {
-      html = $(html).find("table");
-      if ($(html).find("tr:first th").length == 1) {
-        scope = "row";
-      } else {
-        scope = "col";
-      }
-      $(html).find("tr:first th").each(function () {
-        if (!$(this).attr("scope")) {
-          return $(this).attr("scope", scope);
-        }
-      });
-      $(html).find("tr:not(:first) th").each(function () {
-        if (!$(this).attr("scope")) {
-          return $(this).attr("scope", "row");
-        }
-      });
-      html = $(html).parents().last().html() || $(html).html();
-      ret.push(html);
-    });
-
-    if (content["type"] == "array") {
-      return ret;
-    } else {
-      return ret[0];
-    }
-  };
-
-  // OrderOfH
-  Syntax_Checker.checkOrderOfH = function (id, content) {
-    var array, code, h, i, j, ref;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      html = $(html);
-      h = $(html).find("h1,h2,h3,h4,h5,h6");
-
-      if (!h.length) {
-        return false;
-      }
-
-      code = "";
-      for (i = j = 0, ref = h.length - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
-        if (i === 0) {
-          if (!/h[12]/i.test(h[i].tagName)) {
-            code += h[i].tagName + " ";
-          }
-        } else {
-          if (/h3/i.test(h[i].tagName)) {
-            if (!/h[23456]/i.test(h[i - 1].tagName)) {
-              code += h[i].tagName + " ";
-            }
-          } else if (/h4/i.test(h[i].tagName)) {
-            if (!/h[3456]/i.test(h[i - 1].tagName)) {
-              code += h[i].tagName + " ";
-            }
-          } else if (/h5/i.test(h[i].tagName)) {
-            if (!/h[456]/i.test(h[i - 1].tagName)) {
-              code += h[i].tagName + " ";
-            }
-          } else if (/h6/i.test(h[i].tagName)) {
-            if (!/h[56]/i.test(h[i - 1].tagName)) {
-              code += h[i].tagName + " ";
-            }
-          }
-        }
-      }
-      if (code !== "") {
-        Syntax_Checker.errors.push(
-          {
-            id: id,
-            idx: idx,
-            code: code,
-            ele: html,
-            msg: Syntax_Checker.message["invalidOrderOfH"],
-            detail: Syntax_Checker.detail["invalidOrderOfH"],
-            correctContent:  Syntax_Checker.correctOrderOfH
-          }
-        );
-      }
-    });
-  };
-  Syntax_Checker.correctOrderOfH = function (id, content) {
-    var array, ret;
-    var h, i, j, ref, replace;
-
-    array = Syntax_Checker.formatContent(content);
-    ret = [];
-
-    $.each(array, function(idx, html) {
-      html = $(html);
-      h = $(html).find("h1,h2,h3,h4,h5,h6");
-      if (h.length) {
-
-        replace = html;
-        for (i = j = 0, ref = h.length - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
-          if (i === 0) {
-            if (!/h[12]/i.test(h[i].tagName)) {
-              replace = $('<h1>' + $(h[i]).html() + '</h1>');
-              $(h[i]).after(replace).remove();
-              h[i] = replace[0];
-            }
-          } else {
-            if (/h3/i.test(h[i].tagName)) {
-              if (!/h[23456]/i.test(h[i - 1].tagName)) {
-                replace = $('<' + h[i - 1].tagName.replace("1", "2") + '>');
-                replace.html($(h[i]).html());
-                $(h[i]).after(replace).remove();
-                h[i] = replace[0];
-              }
-            } else if (/h4/i.test(h[i].tagName)) {
-              if (!/h[3456]/i.test(h[i - 1].tagName)) {
-                replace = $('<' + h[i - 1].tagName.replace("1", "2") + '>');
-                replace.html($(h[i]).html());
-                $(h[i]).after(replace).remove();
-                h[i] = replace[0];
-              }
-            } else if (/h5/i.test(h[i].tagName)) {
-              if (!/h[456]/i.test(h[i - 1].tagName)) {
-                replace = $('<' + h[i - 1].tagName.replace("1", "2") + '>');
-                replace.html($(h[i]).html());
-                $(h[i]).after(replace).remove();
-                h[i] = replace[0];
-              }
-            } else if (/h6/i.test(h[i].tagName)) {
-              if (!/h[56]/i.test(h[i - 1].tagName)) {
-                replace = $('<' + h[i - 1].tagName.replace("1", "2") + '>');
-                replace.html($(h[i]).html());
-                $(h[i]).after(replace).remove();
-                h[i] = replace[0];
-              }
-            }
-          }
-        }
-        replace = $(replace).parents().last().html() || $(replace).html();
-        ret.push(replace);
-      }
-      else {
-        ret.push($(html).parents().last().html());
-      }
-    });
-
-    if (content["type"] == "array") {
-      return ret;
-    } else {
-      return ret[0];
-    }
-  };
-
-  // AdjacentA
-  Syntax_Checker.checkAdjacentA = function (id, content) {
-    var array;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      html = $(html);
-      $(html).find("a[href]").each(function () {
-        var errors, next, href;
-
-        href = $(this).attr("href");
-        next = $(this).next("a[href]");
-
-        if (next.length && href == next.attr("href")) {
-          Syntax_Checker.errors.push(
-            {
-              id: id,
-              idx: idx,
-              code: Syntax_Checker.outerHtmlSummary(this) + Syntax_Checker.outerHtmlSummary(next),
-              ele: this,
-              msg: Syntax_Checker.message["invalidAdjacentA"],
-              detail: Syntax_Checker.detail["invalidAdjacentA"],
-              correctContent: Syntax_Checker.correctAdjacentA
-            }
-          );
-        }
-      });
-    });
-  };
-  Syntax_Checker.correctAdjacentA = function (id, content, error) {
-    var array, ret, next, href;
-
-    array = Syntax_Checker.formatContent(content);
-    ret = [];
-
-    $.each(array, function(idx, html) {
-      html = $(html);
-
-      href = $(html).attr("href");
-      next = $(html).next("a[href]");
-
-      if (next.length && href == next.attr("href")) {
-        if ($(html).html() !== $(next).html()) {
-          $(html).html($(html).html() + $(next).html());
-        }
-        next.remove();
-      }
-
-      html = $(html).parents().last().html() || $(html).html();
-      ret.push(html);
-    });
-
-    if (content["type"] == "array") {
-      return ret;
-    } else {
-      return ret[0];
-    }
-  };
-
-  // InterwordSpace
-  Syntax_Checker.checkInterwordSpace = function (id, content) {
-    var array;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      html = $(html);
-
-      $(html).find(":not(iframe)").addBack().contents().filter(function () {
-        return this.nodeType == 3;
-      }).each(function () {
-        var i, j, ref, text;
-        text = $.trim(Syntax_Checker.justText(this));
-        if (/[　]/.test(text)) {
-          for (i = j = 0, ref = text.length - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
-            if (text.charCodeAt(i) >= 256) {
-              Syntax_Checker.errors.push(
-                {
-                  id: id,
-                  idx: idx,
-                  code: text,
-                  msg: Syntax_Checker.message["checkInterwordSpace"],
-                  detail: Syntax_Checker.detail["checkInterwordSpace"]
-                }
-              );
-              break;
-            }
-          }
-        }
-      });
-    });
-  };
-
-  // LinkText
-  Syntax_Checker.checkLinkText = function (id, content) {
-    var array;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      $(html).find("a[href]").each(function () {
-        var $this = $(this);
-        var text = $this.text();
-        if (text.length <= 3) {
-          var $imgWithAlt = $this.find("img[alt]");
-          if ($imgWithAlt[0]) {
-            text = $imgWithAlt.attr('alt');
-          }
-        }
-        if (!text || text.length <= 3) {
-          Syntax_Checker.errors.push(
-            {
-              id: id,
-              idx: idx,
-              code: Syntax_Checker.outerHtmlSummary(this),
-              msg: Syntax_Checker.message["checkLinkText"],
-              detail: Syntax_Checker.detail["checkLinkText"]
-            }
-          );
-        }
-      });
-    });
-  };
-
-  // ObjectText
-  Syntax_Checker.checkObjectText = function (id, content) {
-    var array;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      html = $(html);
-      $(html).find("object").each(function () {
-        var errors, text;
-        text = $(this).text();
-        if (!$.trim(text)) {
-          Syntax_Checker.errors.push(
-            {
-              id: id,
-              idx: idx,
-              code: Syntax_Checker.outerHtmlSummary(this),
-              msg: Syntax_Checker.message["checkObjectText"],
-              detail: Syntax_Checker.detail["checkObjectText"]
-            }
-          );
-        }
-      });
-    });
-  };
-
-  // EmbeddedMedia
-  Syntax_Checker.checkEmbeddedMedia = function (id, content) {
-    var array, regExt, regSite;
-
-    array = Syntax_Checker.formatContent(content);
-
-    $.each(array, function(idx, html) {
-      html = $(html);
-
-      $(html).find("embed,video").each(function () {
-        Syntax_Checker.errors.push(
-          {
-            id: id,
-            idx: idx,
-            code: Syntax_Checker.outerHtmlSummary(this),
-            msg: Syntax_Checker.message["checkEmbeddedMedia"],
-            detail: Syntax_Checker.detail["checkEmbeddedMedia"]
-          }
-        );
-      });
-
-      regExt = new RegExp("(" + Syntax_Checker.mediaExtensions.join("|") + ")", "i");
-      regSite = /https?:\/\/www\.youtube\.com\//;
-
-      $(html).find("iframe[src]").each(function () {
-        var errors, ext, src;
-        src = $(this).attr("src");
-        ext = src.replace(/\?.*$/, "").replace(/.*\//, '').split(".").pop();
-        if (regExt.test(ext) || regSite.test(src)) {
-          Syntax_Checker.errors.push(
-            {
-              id: id,
-              idx: idx,
-              code: Syntax_Checker.outerHtmlSummary(this),
-              msg: Syntax_Checker.message["checkEmbeddedMedia"],
-              detail: Syntax_Checker.detail["checkEmbeddedMedia"]
-            }
-          );
-        }
-      });
-
-      $(html).find("a[href]").each(function () {
-        var ext, href;
-        href = $(this).attr("href");
-        ext = href.replace(/\?.*$/, "").replace(/.*\//, '').split(".").pop();
-        if (regExt.test(ext) || regSite.test(href)) {
-          Syntax_Checker.errors.push(
-            {
-              id: id,
-              idx: idx,
-              code: Syntax_Checker.outerHtmlSummary(this),
-              msg: Syntax_Checker.message["checkEmbeddedMedia"],
-              detail: Syntax_Checker.detail["checkEmbeddedMedia"]
-            }
-          );
-        }
-      });
-    });
   };
 
   return Syntax_Checker;
@@ -2032,11 +1124,11 @@ this.Mobile_Size_Checker = (function () {
   };
 
   ResultBox.prototype.showResult = function () {
-    if (Mobile_Size_Checker.error.length === 0) {
-      return this.showMessage("<p>" + Mobile_Size_Checker.message["mobile_check"] + "</p>");
+    if (Mobile_Size_Checker.errors.length === 0) {
+      return this.showMessage("<p>" + Mobile_Size_Checker.message["mobileCheck"] + "</p>");
     }
 
-    var ref = Mobile_Size_Checker.error;
+    var ref = Mobile_Size_Checker.errors;
     this.$elBody.html('');
     for (var j = 0, len = ref.length; j < len; j++) {
       var err = ref[j];
@@ -2049,146 +1141,95 @@ this.Mobile_Size_Checker = (function () {
   function Mobile_Size_Checker() {
   }
 
+  Mobile_Size_Checker.enabled = false;
+
+  Mobile_Size_Checker.url = null;
+
   Mobile_Size_Checker.message = {
     header: "携帯データサイズチェック",
-    body: "",
-    success: "成功",
-    failure: "失敗",
-    mobile_disable: "モバイルサイズが設定されていません。",
-    mobile_check: "本文のデータサイズはOKです。",
-    SizeCheckServerError: "本文データサイズのチェック中にサーバーエラーが発生しました。"
+    mobileCheck: "本文のデータサイズはOKです。",
+    sizeCheckServerError: "本文データサイズのチェック中にサーバーエラーが発生しました。"
   };
 
-  Mobile_Size_Checker.error = [];
-
-  Mobile_Size_Checker.url = "/.cms/mobile_size_check/check.json";
-
-  Mobile_Size_Checker.rootUrl = "";
-
-  Mobile_Size_Checker.imgs = [];
-
-  Mobile_Size_Checker.hostFullUrl = "";
+  Mobile_Size_Checker.errors = [];
 
   Mobile_Size_Checker.resultBox = new ResultBox();
 
   Mobile_Size_Checker.render = function () {
-    return $(document).on("click", "button.mobile-size-check", function () {
-
-      if (!Mobile_Size_Checker.enabled) {
-        Mobile_Size_Checker.resultBox.showMessage("<p>" + Mobile_Size_Checker.message["mobile_disable"] + "</p>");
-        return;
-      }
-
-      var button = this;
-      button.disabled = true;
-
-      Mobile_Size_Checker.resultBox.showChecking();
-      Mobile_Size_Checker.reset();
-
-      var resolved = function(html) {
-        Mobile_Size_Checker.check(html, function () {
-          Mobile_Size_Checker.resultBox.showResult();
-          button.disabled = false;
-        });
-      };
-
-      var rejected = function(xhr, status, error) {
-        Mobile_Size_Checker.resultBox.showMessage("<p>" + Mobile_Size_Checker.message["SizeCheckServerError"] + "</p>");
-        button.disabled = false;
-      }
-
-      Cms_Form.getHtml(resolved, rejected);
-    });
+    $(document).on("click", "button.mobile-size-check", Mobile_Size_Checker.mobileSizeClicked);
   };
 
   Mobile_Size_Checker.reset = function () {
-    this.message["body"] = "";
-    this.imgs = {};
-    this.error = "";
+    Mobile_Size_Checker.errors = [];
   };
 
-  Mobile_Size_Checker.get_str_byte = function (str) {
-    var ESCAPECHAR, ESCAPEDLEN_TABLE, char, i, size;
-    ESCAPECHAR = ";,/?:@&=+$ ";
-    ESCAPEDLEN_TABLE = [0, 1, 1, 1, 2, 3, 2, 3, 4, 3];
-    size = 0;
-    if (str === null || str === "") {
-      return size;
+  Mobile_Size_Checker.mobileSizeClicked = function(ev) {
+    if (!Mobile_Size_Checker.enabled || !Mobile_Size_Checker.url) {
+      return;
     }
-    for (i in str) {
-      char = str[i];
-      if (ESCAPECHAR.indexOf(char) >= 0) {
-        size++;
-      } else {
-        try {
-          size += ESCAPEDLEN_TABLE[encodeURI(char).length];
-        } catch (e) {
-          console.error("Mobile_Size_Checker.get_str_byte failed : " + e);
-        }
-      }
+
+    var button = ev.target;
+    button.disabled = true;
+
+    Mobile_Size_Checker.resultBox.showChecking();
+    Mobile_Size_Checker.reset();
+
+    var resolved = function(html) {
+      Mobile_Size_Checker.check(html, function () {
+        Mobile_Size_Checker.resultBox.showResult();
+        button.disabled = false;
+        $(button).trigger("ss:mobileSizeCheckCompleted");
+      });
+    };
+
+    var rejected = function(xhr, status, error) {
+      Mobile_Size_Checker.resultBox.showMessage("<p>" + Mobile_Size_Checker.message["sizeCheckServerError"] + "</p>");
+      button.disabled = false;
+      $(button).trigger("ss:mobileSizeCheckCompleted");
     }
-    return size;
+
+    Cms_Form.getHtml(resolved, rejected);
   };
 
   Mobile_Size_Checker.check = function (html, complete) {
-    var err_str, imgs, isThumb, j, len, mobile_size, numOfImage, ref, size, src, str_id, str_src;
-    mobile_size = Mobile_Size_Checker.mobile_size;
-    size = Mobile_Size_Checker.get_str_byte(html);
-    if (mobile_size < size) {
-      err_str = "<p class=\"error\">";
-      err_str += Mobile_Size_Checker.message["SizeCheckError"];
-      err_str += "(本文サイズ：" + (parseInt(size / 1024)) + "KB)";
-      err_str += "</p>";
-      Mobile_Size_Checker.error = [err_str];
-      complete();
-      return;
-    }
-    imgs = [];
-    isThumb = {};
-    ref = $(html).find('img[src]');
-    for (j = 0, len = ref.length; j < len; j++) {
-      src = ref[j];
-      str_src = $(src).attr('src');
-      str_src = str_src.replace(Mobile_Size_Checker.hostFullUrl.replace(/\/$/, ""), "");
-      str_id = str_src.match(/^\/fs\/(.+?)\/_\//);
-      if (str_id) {
-        isThumb[str_id[1].replace(/\//g, "")] = str_src.match(/_\/thumb\//);
-        imgs.push(parseInt(str_id[1].replace(/\//g, "")));
-      }
-    }
-    if (imgs.length == 0) {
-      complete();
-      return;
-    }
+    var token = $('meta[name="csrf-token"]').attr('content');
+
     $.ajax({
       type: "POST",
       url: Mobile_Size_Checker.url,
       cache: false,
-      data: JSON.stringify({
-        img_ids: imgs,
-        mobile_size: mobile_size,
-        is_thumb: isThumb
-      }),
-      contentType: 'application/json',
-      dataType: "json",
+      data: {
+        authenticity_token: token,
+        html: html
+      },
       crossDomain: true,
-      success: function (res, status) {
-        if (res["errors"].length > 0) {
-          return Mobile_Size_Checker.error = res["errors"];
-        }
+      success: function(data, textStatus, xhr) {
+        Mobile_Size_Checker.showResult(data);
       },
       error: function (xhr, status, error) {
-        var str_err;
-        str_err = "<p>";
-        str_err += Mobile_Size_Checker.message["SizeCheckServerError"];
-        str_err += "</p>";
-        Mobile_Size_Checker.error = [str_err];
+        Mobile_Size_Checker.showError();
       },
       complete: function (xhr, status) {
         complete();
       }
     });
   };
+  Mobile_Size_Checker.showResult = function(data) {
+    if (!data || !data.errors) {
+      return;
+    }
+
+    var errors = data.errors;
+    if (errors.length > 0) {
+      $.each(errors, function() {
+        Mobile_Size_Checker.errors.push("<p class=\"error\">" + this + "</p>");
+      })
+    }
+  }
+
+  Mobile_Size_Checker.showError = function() {
+    Mobile_Size_Checker.errors.push("<p class=\"error\">" + Mobile_Size_Checker.message["sizeCheckServerError"] + "</p>");
+  }
 
   Mobile_Size_Checker.asyncCheckHtmlSize = function (html) {
     var defer = $.Deferred();
@@ -2211,12 +1252,12 @@ this.Mobile_Size_Checker = (function () {
   Mobile_Size_Checker.asyncValidateHtml = function (form, submit, opts) {
     var promise = Mobile_Size_Checker.asyncCheckHtmlSize(opts.html);
     promise.done(function() {
-      if (Mobile_Size_Checker.error.length === 0) {
+      if (Mobile_Size_Checker.errors.length === 0) {
         return;
       }
 
-      for (var j = 0, len = Mobile_Size_Checker.error.length; j < len; j++) {
-        var err = Mobile_Size_Checker.error[j];
+      for (var j = 0, len = Mobile_Size_Checker.errors.length; j < len; j++) {
+        var err = Mobile_Size_Checker.errors[j];
         Form_Alert.add("携帯データサイズチェック", this, err);
       }
     });
@@ -2225,7 +1266,6 @@ this.Mobile_Size_Checker = (function () {
   };
 
   return Mobile_Size_Checker;
-
 })();
 this.Link_Checker = (function () {
   function ResultBox(form) {
@@ -2616,7 +1656,23 @@ Cms_TemplateForm.prototype.loadAndActivateForm = function(formId) {
   });
 };
 
+Cms_TemplateForm.prototype.deleteEditors = function() {
+  this.$formPage.find("textarea").each(function() {
+    if (!this.id) {
+      return;
+    }
+
+    var editor = CKEDITOR.instances[this.id];
+    if (!editor) {
+      return;
+    }
+
+    editor.destroy();
+  });
+};
+
 Cms_TemplateForm.prototype.loadForm = function(html) {
+  this.deleteEditors();
   this.$formPage.html($(html).html());
   // SS.render();
   SS.renderAjaxBox();
@@ -2974,6 +2030,8 @@ Cms_TemplateForm.prototype.remove = function($evTarget) {
     $columnValue.remove();
     self.resetOrder();
     Cms_Form.activateSyntaxChecks();
+
+    self.$el.trigger("ss:columnDeleted");
   });
 };
 SS_Workflow = function (el, options) {
@@ -3752,20 +2810,42 @@ this.SS_SearchUI = (function () {
 
   SS_SearchUI.anchorAjaxBox;
 
-  SS_SearchUI.defaultSelector = function (item) {
-    var a, data, id, input, name, self, tr;
-    self = this;
-    data = item.closest("[data-id]");
-    id = data.data("id");
-    name = data.data("name") || data.find(".select-item").text() || item.text() || data.text();
-    tr = $("<tr />").attr("data-id", id);//attr
-    input = self.anchorAjaxBox.closest("dl").find(".hidden-ids").clone(false);
-    input = input.val(id).removeClass("hidden-ids");
-    a = $('<a class="deselect btn" href="#">削除</a>');
-    tr.append($('<td />').append(input).append(name));
-    tr.append($('<td />').append(a));
-    self.anchorAjaxBox.closest("dl").find(".ajax-selected tbody").prepend(tr);
-    self.anchorAjaxBox.closest("dl").find(".ajax-selected").trigger("change");
+  SS_SearchUI.defaultTemplate = " \
+    <tr data-id=\"<%= data.id %>\"> \
+      <td> \
+        <input type=\"<%= attr.type %>\" name=\"<%= attr.name %>\" value=\"<%= data.id %>\" class=\"<%= attr.class %>\"> \
+        <%= data.name %> \
+      </td> \
+      <td><a class=\"deselect btn\" href=\"#\">削除</a></td> \
+    </tr>";
+
+  SS_SearchUI.defaultSelector = function ($item) {
+    var self = this;
+
+    var templateId = self.anchorAjaxBox.data("template");
+    var templateEl = templateId ? document.getElementById(templateId) : null;
+    var template, attr;
+    if (templateEl) {
+      template = templateEl.innerHTML;
+      attr = {};
+    } else {
+      template = SS_SearchUI.defaultTemplate;
+
+      var $input = self.anchorAjaxBox.closest("dl").find(".hidden-ids");
+      attr = { name: $input.attr("name"), type: $input.attr("type"), class: $input.attr("class").replace("hidden-ids", "") }
+    }
+
+    var $data = $item.closest("[data-id]");
+    var data = $data[0].dataset;
+    if (!data.name) {
+      data.name = $data.find(".select-item").text() || $item.text() || $data.text();
+    }
+
+    var tr = ejs.render(template, { data: data, attr: attr });
+
+    var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
+    $ajaxSelected.find("tbody").prepend(tr);
+    $ajaxSelected.trigger("change");
   };
 
   SS_SearchUI.defaultDeselector = function (item) {
@@ -3868,7 +2948,8 @@ this.SS_SearchUI = (function () {
         $(this).ajaxSubmit({
           url: $(this).attr("action"),
           success: function (data) {
-            $el.closest("#cboxLoadedContent").html(data);
+            var $data = $("<div />").html(data);
+            $.colorbox.prep($data.contents());
           },
           error: function (data, status) {
             $div.html("== Error ==");
@@ -3909,7 +2990,12 @@ this.SS_SearchUI = (function () {
       self.selectItems($el);
       return $el.find("form.search").submit();
     });
-    self.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").each(function () {
+
+    var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
+    if (!$ajaxSelected.length) {
+      $ajaxSelected = self.anchorAjaxBox.parent().find(".ajax-selected");
+    }
+    $ajaxSelected.find("tr[data-id]").each(function () {
       var id, item, tr;
       id = $(this).data("id");
       tr = $("#colorbox .items [data-id='" + id + "']");
@@ -4002,6 +3088,9 @@ this.SS_ListUI = (function () {
           return;
         }
         menu = list.find(".tap-menu");
+        if (menu.is(':visible')) {
+          return menu.hide();
+        }
         if (menu.hasClass("tap-menu-relative")) {
           offset = $(this).offset();
           relX = e.pageX - offset.left;
@@ -4113,14 +3202,15 @@ this.SS_TreeUI = (function () {
       opts = {}
     }
 
-    this.tree = $(tree);
+    var self = this;
+    self.tree = $(tree);
 
     var root = [];
     var expand_all = opts["expand_all"];
     var collapse_all = opts["collapse_all"];
     var expand_group = opts["expand_group"];
 
-    this.tree.find("tbody tr").each(function () {
+    self.tree.find("tbody tr").each(function () {
       return root.push(parseInt($(this).attr("data-depth")));
     });
     root = Math.min.apply(null, root);
@@ -4128,7 +3218,7 @@ this.SS_TreeUI = (function () {
     if (isNaN(root) || root < 0) {
       return;
     }
-    this.tree.find("tbody tr").each(function () {
+    self.tree.find("tbody tr").each(function () {
       var d, depth, i, j, ref, ref1, td;
       td = $(this).find(".expandable");
       depth = parseInt($(this).attr("data-depth"));
@@ -4147,11 +3237,11 @@ this.SS_TreeUI = (function () {
         return i.replaceWith('<span class="padding">');
       }
     });
-    this.tree.find(".toggle").on("mousedown mouseup", function (e) {
+    self.tree.find(".toggle").on("mousedown mouseup", function (e) {
       e.stopPropagation();
       return false;
     });
-    this.tree.find(".toggle").on("click", function (e) {
+    self.tree.find(".toggle").on("click", function (e) {
       var depth, img, tr;
       tr = $(this).closest("tr");
       img = tr.find(".toggle:first");
@@ -4175,14 +3265,19 @@ this.SS_TreeUI = (function () {
       e.stopPropagation();
       return false;
     });
+    if (opts.descendants_check) {
+      self.tree.on("click", "[type='checkbox']", function (_ev) {
+        self.checkAllChildren(this, this.checked);
+      });
+    }
     if (expand_all) {
-      SS_TreeUI.openImage(this.tree.find("tbody tr img"));
+      SS_TreeUI.openImage(self.tree.find("tbody tr img"));
     } else if (collapse_all) {
-      SS_TreeUI.closeImage(this.tree.find("tbody tr img"));
+      SS_TreeUI.closeImage(self.tree.find("tbody tr img"));
     } else if (expand_group && $("tbody tr.current").attr("data-depth") !== "0") {
-      SS_TreeUI.openSelectedGroupsTree(this.tree.find("tbody tr.current"));
+      SS_TreeUI.openSelectedGroupsTree(self.tree.find("tbody tr.current"));
     } else {
-      this.tree.find("tr[data-depth='" + root + "'] img").trigger("click");
+      self.tree.find("tr[data-depth='" + root + "'] img").trigger("click");
     }
   }
 
@@ -4193,6 +3288,30 @@ this.SS_TreeUI = (function () {
   SS_TreeUI.prototype.collapseAll = function () {
     return $(this.tree.find("tr img.toggle.opened").get().reverse()).each(function () {
       return $(this).trigger("click");
+    });
+  };
+
+  SS_TreeUI.prototype.checkAllChildren = function (checkboxEl, checked) {
+    var $checkboxEl = $(checkboxEl);
+    var $tr = $checkboxEl.closest("[data-depth]");
+    var depth = $tr.data("depth");
+    if (!Number.isInteger(depth)) {
+      return;
+    }
+
+    var breakLoop = false;
+    $tr.nextAll("[data-depth]").each(function() {
+      if (breakLoop) {
+        return;
+      }
+
+      var $nextEl = $(this);
+      if ($nextEl.data("depth") <= depth) {
+        breakLoop = true;
+        return;
+      }
+
+      $nextEl.find("[type='checkbox']").prop("checked", checked);
     });
   };
 

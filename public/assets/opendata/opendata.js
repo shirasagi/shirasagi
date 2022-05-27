@@ -39,7 +39,7 @@ this.Opendata = (function () {
   function Opendata() {
   }
 
-  Opendata.loading = '<img style="vertical-align:middle" alt="loading.." border="0" widtth="16" height="11" class="ss-base-loading" src="/assets/img/loading.gif" />';
+  Opendata.loading = "\u003cimg style=\"vertical-align:middle\" alt=\"loading..\" border=\"0\" widtth=\"16\" height=\"11\" class=\"ss-base-loading\" src=\"/assets/img/loading.gif\" /\u003e";
 
   Opendata.render = function (box) {
     var anchorCallback;

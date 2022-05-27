@@ -1,6 +1,7 @@
 class Cms::GeneratePagesController < ApplicationController
   include Cms::BaseFilter
   include SS::JobFilter
+  include Cms::GenerateJobFilter
 
   navi_view "cms/main/navi"
 
@@ -11,17 +12,15 @@ class Cms::GeneratePagesController < ApplicationController
   end
 
   def job_bindings
-    {
-      site_id: @cur_site.id
-    }
+    { site_id: @cur_site.id }
   end
 
   def task_name
     job_class.task_name
   end
 
-  def set_item
-    @item = Cms::Task.find_or_create_by name: task_name, site_id: @cur_site.id, node_id: nil
+  def generate_segments
+    @cur_site.generate_page_segments
   end
 
   public

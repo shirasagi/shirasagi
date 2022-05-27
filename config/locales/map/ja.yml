@@ -39,11 +39,19 @@ ja:
         degree: "°度"
         minutes: "'分"
         seconds: '"秒'
+    options:
+      map_reference_method:
+        direct: 地図上で個別に地点を選択する
+        page: 定型フォームで選択されたページの地点を参照する
 
   modules:
     map: 地図
     addons:
       map/page: 地図
+
+  cms:
+    parts:
+      map/geolocation_page: 近傍ページリスト
 
   mongoid:
     attributes:
@@ -56,6 +64,8 @@ ja:
         marker_link: リンク
         set_center_position: 中心位置
         set_zoom_level: ズームレベル
+        map_reference_method: 指定方法
+        map_reference_column_name: 項目名
 
   tooltip:
     map/addon/page:
@@ -102,3 +112,10 @@ ja:
         -
         - マーカー名、説明にはマーカーの吹き出しテキストを入力します。
         - 「マーカーを追加する」を選択することで複数のマーカーを設定することが可能です。
+      map_reference_method:
+        - 地点の指定方法を選択します。
+        -
+        - 「地図上で個別に地点を選択する」を選択した場合、下の地図上で地点を選択してください。
+        - 選択された地点が公開画面に表示されます。
+        -
+        - 項目名を選択した場合、選択した項目名に設定されているページの地点が公開画面に表示されます。

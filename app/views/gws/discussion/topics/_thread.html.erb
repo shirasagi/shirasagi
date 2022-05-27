@@ -111,14 +111,7 @@
         <% end %>
 
         <!-- text -->
-        <div class="ss-addon-markdown">
-          <div class="ss-addon-markdown-toolbar">
-            <%= f.select :text_type, topic.text_type_options, {}, { value: 'plain', class: "ss-addon-markdown-type" } %>
-          </div>
-          <div class="ss-addon-markdown-content">
-            <%= f.text_area :text, value: "", class: "markdown", style: "height: 240px;", required: true %>
-          </div>
-        </div>
+        <%= render "ss/agents/addons/markdown/form_markdown", f: f, item: topic %>
 
         <!-- files -->
         <div class="comment-files">
@@ -164,3 +157,7 @@
     <% end %>
   <% end %>
 </div>
+
+<%= jquery do %>
+  new SS_Addon_Markdown(<%== "#topic-#{topic.id}".to_json %>, <%== { customCkeConfig: gws_apis_cke_config_path(format: "js") }.to_json %>);
+<% end %>

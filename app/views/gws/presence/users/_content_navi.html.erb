@@ -1,16 +1,16 @@
 <%
   group = @group || @custom_group
   opts = { descendants_check: true }
-  opts[:expand_group] = true if group
+  opts[:expand_group] = @group.id if @group
 %>
 <%= jquery do %>
-var tree = SS_TreeUI.render(".tree-groups .index.groups", <%== opts.to_json %>);
-$(".expand-all").on("click", function() {
+  var tree = SS_TreeUI.render(".tree-groups .index.groups", <%== opts.to_json %>);
+  $(".expand-all").on("click", function() {
   tree.expandAll();
-});
-$(".collapse-all").on("click", function() {
+  });
+  $(".collapse-all").on("click", function() {
   tree.collapseAll();
-});
+  });
 <% end %>
 
 <div id="content-navi" class="presence-groups">
@@ -19,34 +19,20 @@ $(".collapse-all").on("click", function() {
   </h2>
 
   <div class="tree-navi">
-    <div class="all-groups list-item <%= group ?  "" : "current" %>">
+    <div class="all-groups list-item <%= group ? "" : "current" %>">
       <%= link_to t('gws/presence.links.all_groups'), gws_presence_users_path %>
     </div>
 
-    <div class="tree-groups">
-      <table class="index groups">
-        <tbody class="items">
-        <tr data-depth="0">
-          <td>
-            <button class="btn expand-all"><%= t('gws/presence.operations.expand_all') %></button>
-            <button class="btn collapse-all"><%= t('gws/presence.operations.collapse_all') %></button>
-          </td>
-        </tr>
-        <% @groups.each do |item| %>
-          <tr data-id="<%= item.id %>" class="list-item <%= (item.id == group.try(:id)) ? "current" : "" %>" data-depth="<%= item.depth %>">
-            <td class="expandable"><%= link_to item.trailing_name, gws_presence_group_users_path(group: item.id) %></td>
-          </tr>
-        <% end %>
-        </tbody>
-      </table>
-    </div>
+    <% if @cur_site.present? %>
+      <%= render Gws::Presence::TreeGroupComponent.new(cur_site: @cur_site) %>
+    <% end %>
 
     <% if @custom_groups.present? %>
       <div class="custom-groups">
         <table class="index groups">
           <tbody class="items">
           <% @custom_groups.each do |item| %>
-            <tr class="list-item <%= (item.id == group.try(:id)) ? "current" : "" %>">
+            <tr class="list-item <%= (item.id == @custom_group.try(:id)) ? "current" : "" %>">
               <td><%= link_to item.name, gws_presence_custom_group_users_path(group: item.id) %></td>
             </tr>
           <% end %>

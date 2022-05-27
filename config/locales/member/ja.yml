@@ -350,24 +350,6 @@ ja:
         subscribe_line_message: LINEメッセージ
         first_registered: 初回登録日時
         subscribe_richmenu_id: LINEリッチメニューID
-        child_name: 子ども名前
-        child_birthday: 生年月日
-        child_ages: 子どもの年齢
-        child1: "子ども1"
-        child2: "子ども2"
-        child3: "子ども3"
-        child4: "子ども4"
-        child5: "子ども5"
-        child1_name: "子ども1の名前"
-        child2_name: "子ども2の名前"
-        child3_name: "子ども3の名前"
-        child4_name: "子ども4の名前"
-        child5_name: "子ども5の名前"
-        child1_birthday: "子ども1の生年月日"
-        child2_birthday: "子ども2の生年月日"
-        child3_birthday: "子ども3の生年月日"
-        child4_birthday: "子ども4の生年月日"
-        child5_birthday: "子ども5の生年月日"
 
   cms_role:
     read_other_member_blogs: メンバーブログの閲覧（全て）

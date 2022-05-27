@@ -4250,7 +4250,7 @@
 			} )
 			.on( 'keypress.DT', function(e) {
 				/* Prevent form submission */
-				if ( e.keyCode == 13 ) {
+				if ( e.keyCode == SS.KEY_ENTER ) {
 					return false;
 				}
 			} )

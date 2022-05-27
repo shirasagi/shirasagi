@@ -11,6 +11,10 @@ FactoryBot.define do
     end
   end
 
+  factory :article_node_map_search, class: Article::Node::MapSearch, traits: [:cms_node] do
+    route { "article/map_search" }
+  end
+
   factory :article_node_search, class: Article::Node::Search, traits: [:cms_node] do
     route { "article/search" }
   end

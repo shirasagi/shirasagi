@@ -8,7 +8,7 @@
   if @ss_rescue
     window_name = "#{@ss_rescue[:status]} #{::Rack::Utils::HTTP_STATUS_CODES[@ss_rescue[:status]]}"
   else
-    window_name = @form.name
+    window_name = @db.name
   end
   if window_name.present?
     title = "#{window_name} | #{SS.config.ss.application_name}"

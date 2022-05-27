@@ -27,7 +27,11 @@ class Cms::Line::TemplatesController < ApplicationController
   end
 
   def set_model
-    @type = params[:type].presence
+    @type = %w(text image page json_body -).find do |type|
+      type == params[:type].presence
+    end
+    raise "400" if @type.nil?
+
     @type = nil if @type == "-"
     @model = @type ? "#{Cms::Line::Template}::#{@type.classify}".constantize : Cms::Line::Template::Base
   end

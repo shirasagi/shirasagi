@@ -50,6 +50,7 @@ describe Sys::SiteImportJob, dbscope: :example do
         expect(Cms::Group.unscoped).to be_present
         expect(Cms::User.unscoped).to be_present
 
+        expect(SS::File.unscoped.where(site_id: destination_site.id)).to have(7).items
         expect(Cms::Form.unscoped.site(destination_site)).to have(2).items
         Cms::Form.unscoped.site(destination_site).pluck(:id).sort.tap do |ids|
           Cms::Form.find(ids[0]).tap do |form|
@@ -220,6 +221,7 @@ describe Sys::SiteImportJob, dbscope: :example do
         expect(Cms::Group.unscoped).to be_present
         expect(Cms::User.unscoped).to be_present
 
+        expect(SS::File.unscoped.where(site_id: destination_site.id)).to have(7).items
         expect(Cms::Form.unscoped.site(destination_site)).to have(2).items
         Cms::Form.unscoped.site(destination_site).pluck(:id).sort.tap do |ids|
           Cms::Form.find(ids[0]).tap do |form|

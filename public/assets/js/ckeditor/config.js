@@ -40,16 +40,16 @@ CKEDITOR.editorConfig = function( config ) {
 
 	config.removePlugins = 'iframe';
 
-	config.fontSize_style = {
-		element: 'strong',
-		styles: { 'font-size': '#(size)' },
-		overrides: [ { element: 'font', attributes: { 'size': null } } ]
-	};
+	// config.fontSize_style = {
+	// 	  element: 'style',
+	// 	  styles: { 'font-size': '#(size)' },
+	// 	  overrides: [ { element: 'font', attributes: { 'size': null } } ]
+	// };
 
-	config.colorButton_foreStyle = {
-		element: 'strong',
-		styles: { color: '#(color)' }
-	};
+	// config.colorButton_foreStyle = {
+	// 	  element: 'style',
+	// 	  styles: { color: '#(color)' }
+	// };
 
 	config.templates_replaceContent = false;
 };

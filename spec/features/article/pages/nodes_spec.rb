@@ -71,13 +71,17 @@ describe "cms_nodes", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: name
         fill_in "item[basename]", with: basename
 
-        wait_cbox_open do
-          click_on I18n.t("cms.apis.forms.index")
+        within "#addon-cms-agents-addons-form-node" do
+          wait_cbox_open do
+            click_on I18n.t("cms.apis.forms.index")
+          end
         end
       end
 
       wait_for_cbox do
-        click_on form.name
+        wait_cbox_close do
+          click_on form.name
+        end
       end
 
       within "#item-form" do
