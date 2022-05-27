@@ -1,0 +1,7 @@
+<dl class="see">
+  <dt><%= @item.t :condition_state %><%= @item.tt :condition_state %></dt>
+  <dd><%= f.select :condition_state, @item.condition_state_options %></dd>
+
+  <dt><%= @item.t :conditions %><%= @item.tt :conditions %></dt>
+  <dd><%= f.text_area :conditions %></dd>
+</dl>

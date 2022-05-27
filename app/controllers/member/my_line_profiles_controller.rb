@@ -1,4 +1,4 @@
-class Member::PippiProfilesController < ApplicationController
+class Member::MyLineProfilesController < ApplicationController
   include Cms::BaseFilter
   include Cms::NodeFilter
 

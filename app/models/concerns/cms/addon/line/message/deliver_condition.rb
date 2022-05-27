@@ -5,10 +5,11 @@ module Cms::Addon
     include Cms::Addon::Line::DeliverCondition::Model
 
     included do
-      field :deliver_condition_state, type: String, default: 'broadcast'
+      field :deliver_condition_state, type: String, default: 'multicast_with_no_condition'
       belongs_to :deliver_condition, class_name: "Cms::Line::DeliverCondition"
 
       validates :deliver_condition_state, presence: true
+      validates :deliver_condition_id, presence: true, if: ->{ deliver_condition_state == "multicast_with_registered_condition" }
       permit_params :deliver_condition_state, :deliver_condition_id
     end
 

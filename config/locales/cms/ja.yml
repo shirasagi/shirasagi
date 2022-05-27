@@ -217,6 +217,19 @@ ja:
       line_deliver_directly: 即時配信（予約日時無し）
       line_deliver_plans_empty: 配信日時が設定されていません。
       line_hub_node_emtpy: "「標準機能/LINE HUB」フォルダーが公開状態で設置されていません。"
+      line_deliver_condition:
+        multicast_with_no_condition:
+          - メンバー登録者全員に配信します。
+          - 「LINEメッセージを受信する」になっているメンバーのみに配信されます。
+        multicast_with_registered_condition:
+          -  あらかじめ作成した配信条件を設定して、条件に該当するメンバー登録者に配信します。
+          - 「LINEメッセージを受信する」になっているメンバーのみに配信されます。
+        multicast_with_input_condition:
+          - 配信条件を入力し、条件に該当するメンバー登録者に配信します。
+          - 「LINEメッセージを受信する」になっているメンバーのみに配信されます。
+        broadcast:
+          - LINEの友達登録者全員に配信されます。
+          - 「LINEメッセージを受信する/しない」に関わらず送信されます。
       page_expiration_header: ページの公開期限が切れています。
       page_expiration_body:
         - "ページの公開期限が切れていますので確認の上、対応を願いいたします。"
@@ -422,7 +435,7 @@ ja:
         multicast_with_no_condition: 登録メンバー全員に配信する
         multicast_with_registered_condition: 登録メンバーに条件配信する（配信条件を設定）
         multicast_with_input_condition: 登録メンバーに条件配信する（配信条件を入力）
-        #broadcast: 友達登録者全員に配信する
+        broadcast: 友達登録者全員に配信する
       line_template_type:
         text: テキスト
         image: 画像
@@ -433,7 +446,7 @@ ja:
         body_carousel: 本文内の最初の画像
       line_deliver_category_type:
         category: カテゴリー
-        child_age: 子どもの年齢
+        selection: 選択肢
       line_richmenu_target:
         default: デフォルト
         member: メンバー
@@ -751,6 +764,7 @@ ja:
       cms/line/service/page_list: ページリスト
       cms/line/service/area: タップ領域
       cms/line/service/json_body: JSONテンプレート
+      cms/line/service/chat: チャットボット
       cms/line/deliver_condition/body: 配信条件
       cms/line/message/body: 本文
       cms/line/message/deliver_condition: 配信条件
@@ -759,7 +773,8 @@ ja:
       cms/line/template/image: テンプレート：画像
       cms/line/template/page: テンプレート：記事ページ
       cms/line/template/json_body: テンプレート：JSON
-      cms/line/deliver_category/child_age: 子どもの年齢
+      cms/line/deliver_category/condition: 条件設定
+      cms/line/deliver_category/category: 選択肢設定
       cms/line/deliver_category/pickup: ピックアップ
       cms/line/richmenu/menu: メニュー設定
       cms/line/richmenu/area: タップ領域
@@ -1336,6 +1351,8 @@ ja:
         limit: 表示件数
       cms/addon/line/service/facility_search:
         category_ids: 施設カテゴリー
+      cms/addon/line/service/chat:
+        node_id: フォルダー
       cms/line/facility_search/category:
         name: タイトル
         image_id: サムネイル画像
@@ -1351,10 +1368,6 @@ ja:
         name: タイトル
         order: 並び順
         state: ステータス
-      cms/addon/line/deliver_category/child_age:
-        year1: 年齢
-        lower_year1: 年齢1（下限）
-        upper_year1: 年齢1（上限）
       cms/addon/line/deliver_category/pick_up:
         st_page_ids: ページ
       cms/line/test_member:
@@ -1452,6 +1465,12 @@ ja:
         image240_id: 画像（幅240）
       cms/addon/line/service/json_body:
         json_body: JSON
+      cms/addon/line/deliver_category/category:
+        select_type: 選択肢
+        required: 必須入力
+      cms/addon/line/deliver_category/condition:
+        condition_state: 配信条件
+        conditions: 条件設定
       cms/line/template/base:
         type: テンプレートタイプ
         text: メッセージ
@@ -2843,6 +2862,10 @@ ja:
     cms/addon/line/message/deliver_plan:
       deliver_date:
         - 配信日時(予約)を入力します。
+
+    cms/addon/line/service/chat:
+      node_id:
+        - チャットボットフォルダーを設定します。
 
     cms/line/template/base:
       text: メッセージを入力します。

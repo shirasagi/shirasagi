@@ -1,9 +1,11 @@
 class Cms::Line::Service::Processor::Chat < Cms::Line::Service::Processor::Base
   def bot_node
-    @_node ||= Chat::Node::Bot.site(site).first
+    service.node
   end
 
   def start_messages
+    return unless bot_node
+
     templates = []
 
     if bot_node.first_text.present?
@@ -59,6 +61,8 @@ class Cms::Line::Service::Processor::Chat < Cms::Line::Service::Processor::Base
   end
 
   def call
+    return unless bot_node
+
     events.each do |event|
       save_linebot_user(event)
       case event

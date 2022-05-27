@@ -1,0 +1,22 @@
+<%
+  deliver_action = @item.deliver_action
+  condition_label = @item.deliver_condition_label
+  model = @item.is_a?(Cms::Line::Message) ? "message" : "deliver_condition"
+%>
+<% if condition_label.present? %>
+  <dt><%= t("cms.line_deliver_condition") %></dt>
+  <dd><%=br condition_label %></dd>
+<% end %>
+
+<dt><%= "対象" %></dt>
+<dd>
+  <% if deliver_action == "broadcast" %>
+    <%= "友達登録者全員（broadcast）" %>
+  <% elsif deliver_action == "multicast" %>
+    <%= t("cms.member") %><%= @item.extract_deliver_members.size %><%= t("ss.units.count") %>
+    <%= link_to "確認する", cms_apis_line_deliver_members_path(id: @item, model: model), { class: "btn ajax-box" } %>
+    <div style="padding-top: 10px; color: red;">
+      ※<%= Time.zone.now.strftime("%Y/%m/%d %H:%M") %> 時点での対象メンバーです。
+    </div>
+  <% end %>
+</dd>
