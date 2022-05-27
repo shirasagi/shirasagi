@@ -101,6 +101,7 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
         next unless node
         next unless node.public?
         next unless node.public_node?
+        next unless !node.try(:any_ancestor_nodes_for_member_enabled?)
 
         @task.performance.collect_node(node) do
           # ex: "article/page" => "article/agents/nodes/page"
