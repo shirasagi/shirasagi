@@ -18,8 +18,8 @@ class Gws::Board::CommentsController < ApplicationController
     @topic.groups.active.pluck(:id) + @cur_user.groups.site(@cur_site).active.pluck(:id)
     {
       name: "Re: #{@parent.name}",
-      group_ids: (@topic.groups.active.pluck(:id) + @cur_user.groups.site(@cur_site).active.pluck(:id)).uniq,
-      user_ids: (@topic.users.active.pluck(:id) + [ @cur_user.id ]).uniq
+      group_ids: (@topic.groups.site(@cur_site).active.pluck(:id) + @cur_user.groups.site(@cur_site).active.pluck(:id)).uniq,
+      user_ids: (@topic.users.site(@cur_site).active.pluck(:id) + [ @cur_user.id ]).uniq
     }
   end
 
