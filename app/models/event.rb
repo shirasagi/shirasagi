@@ -180,4 +180,8 @@ module Event
   def make_time(date, time_part)
     time_part.in_time_zone.change(year: date.year, month: date.month, day: date.day)
   end
+
+  def to_rfc5545_date(date)
+    date.strftime("%Y%m%d")
+  end
 end

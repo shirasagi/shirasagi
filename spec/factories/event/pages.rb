@@ -16,6 +16,8 @@ FactoryBot.define do
     cost { "cost-#{unique_id}" }
     contact { "contact-#{unique_id}" }
 
+    ical_link { unique_url }
+
     factory :event_page_basename_invalid do
       basename { "pa/ge.html" }
     end
