@@ -1,6 +1,7 @@
 class Cms::Node::GeneratePagesController < ApplicationController
   include Cms::BaseFilter
   include SS::JobFilter
+  include Cms::GenerateJobFilter
 
   navi_view "cms/node/main/navi"
 
@@ -22,7 +23,7 @@ class Cms::Node::GeneratePagesController < ApplicationController
   end
 
   def set_item
-    @item = Cms::Task.find_or_create_by name: task_name, site_id: @cur_site.id, node_id: @cur_node.id
+    @item = Cms::Task.find_or_create_by name: task_name, site_id: @cur_site.id, node_id: @cur_node.id, segment: nil
   end
 
   public

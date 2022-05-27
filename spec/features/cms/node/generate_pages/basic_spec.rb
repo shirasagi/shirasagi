@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe "cms_generate_nodes", type: :feature, dbscope: :example do
+describe "node_generate_pages", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create :cms_node }
-  let(:index_path) { node_generate_nodes_path site.id, node }
+  let(:index_path) { node_generate_pages_path site.id, node }
 
   context "with auth" do
     before { login_cms_user }
@@ -31,13 +31,13 @@ describe "cms_generate_nodes", type: :feature, dbscope: :example do
       # task should be started within a minute.
       Timeout.timeout(60) do
         loop do
-          task = Cms::Task.where(name: "cms:generate_nodes", site_id: site.id, node_id: node.id).first
+          task = Cms::Task.where(name: "cms:generate_pages", site_id: site.id, node_id: node.id).first
           break if task.state != "ready"
           sleep 0.1
         end
       end
-      task = Cms::Task.where(name: "cms:generate_nodes", site_id: site.id, node_id: node.id).first
-      expect(task.started).to be >= start_at if task.state != "stop"
+      task = Cms::Task.where(name: "cms:generate_pages", site_id: site.id, node_id: node.id).first
+      expect(task.started).to be >= start_at if task.state != "completed"
       expect(task.state).to satisfy { |v| %w(running completed).include?(v) }
     end
   end

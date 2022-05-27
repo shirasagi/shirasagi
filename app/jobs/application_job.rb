@@ -9,6 +9,10 @@ class ApplicationJob < ActiveJob::Base
 
   after_perform :purge_old_job_logs
 
+  def segment
+    nil
+  end
+
   private
 
   def purge_old_job_logs

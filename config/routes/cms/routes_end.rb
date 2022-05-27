@@ -232,11 +232,15 @@ Rails.application.routes.draw do
     get "check_links" => "check_links#index"
     post "check_links" => "check_links#run"
     get "generate_nodes" => "generate_nodes#index"
+    get "generate_nodes/segment/:segment" => "generate_nodes#index", as: :segment_generate_nodes
     post "generate_nodes" => "generate_nodes#run"
     get "generate_nodes/download_logs" => "generate_nodes#download_logs"
+    post "generate_nodes/segment/:segment" => "generate_nodes#run"
     get "generate_pages" => "generate_pages#index"
+    get "generate_pages/segment/:segment" => "generate_pages#index", as: :segment_generate_pages
     post "generate_pages" => "generate_pages#run"
     get "generate_pages/download_logs" => "generate_pages#download_logs"
+    post "generate_pages/segment/:segment" => "generate_pages#run"
     get "import" => "import#import"
     post "import" => "import#import"
     get "import/download_logs" => "import#download_logs"

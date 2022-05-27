@@ -707,6 +707,7 @@ ja:
         total_count: 全体件数
         current_count: 処理件数
         logs: ログ
+        segment: セグメント
       ss/model/file:
         in_file: ファイル
         in_files: ファイル
