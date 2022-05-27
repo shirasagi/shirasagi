@@ -13,7 +13,7 @@
         <%= recurr.until_on.try { |time| I18n.l(time.to_date, format: :picker) } %>
       </div>
       <% if recurr.kind == "date" %>
-        <div class="event-recurrence-time">終日</div>
+        <div class="event-recurrence-time"><%= t("event.all_day") %></div>
       <% else %>
         <div class="event-recurrence-time">
           <%= recurr.start_datetime.try { |time| I18n.l(time, format: :hh_mm) } %>
@@ -22,7 +22,7 @@
         </div>
       <% end %>
       <% if recurr.exclude_dates.present? %>
-        <div class="event-recurrence-excludes">(除外日:
+        <div class="event-recurrence-excludes">(<%= t("event.exclude_dates") %>:
           <%= recurr.exclude_dates.try { |dates| dates.map { |date| I18n.l(date.to_date, format: :picker) }.join(",") } %>)
         </div>
       <% end %>
@@ -31,7 +31,7 @@
           <%
             wdays = recurr.by_days.map { |by_day| week_days[by_day] }
             if recurr.includes_holiday
-              wdays << "祝日"
+              wdays << t("event.holiday")
             end
           %>
           <%= wdays.join(",") %>

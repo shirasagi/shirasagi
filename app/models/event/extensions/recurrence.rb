@@ -218,15 +218,7 @@ class Event::Extensions::Recurrence
   end
 
   def all_day?
-    return true if kind == "date"
-
-    start_time = I18n.l(start_datetime, format: :h_mm)
-    return false if start_time != "10:00"
-
-    end_time = I18n.l(end_datetime, format: :h_mm)
-    return false if end_time != "17:00"
-
-    true
+    kind == "date"
   end
 
   def start_time_between?(from_time, to_time)

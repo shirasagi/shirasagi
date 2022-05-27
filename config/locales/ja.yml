@@ -42,7 +42,8 @@ ja:
       iso_month: ! '%Y-%m'
       long_month: ! '%Y年%1m月'
       picker: ! '%Y/%m/%d'
-      m_d_a: "%1m月%1d日(%a)"
+      m_d_a: "%1m月%1d日 (%a)"
+      d_a: "%1d日 (%a)"
     month_names:
     -
     - 1月

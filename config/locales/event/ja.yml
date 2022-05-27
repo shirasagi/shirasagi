@@ -12,9 +12,15 @@ ja:
     next_day: 次の日へ
     prev_day: 前の日へ
     current_month: 今月
+    prev_next_navi: カレンダーメニュー
     filter_all: 全て
     date_range_delimiter: ～
     keyword: キーワード
+    weekly: 毎週
+    holiday: 祝日
+    holiday_short: 祝
+    all_day: 終日
+    exclude_dates: 除外日
     dates:
       setting: 開催期間
       start_date: 開始

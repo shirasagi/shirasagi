@@ -26,9 +26,9 @@
         </div>
         <div class="event-recurrence-time-row">
           <label><%= radio_button_tag "all_day_#{index}", "0", recurr.kind != "date", id: nil, class: "event-recurrence-all-day-radio" %></label>
-          <%= time_field_tag "#{f.object_name}[event_recurrences][][in_start_time]", recurr.start_datetime.try { |time| I18n.l(time, format: :hh_mm) } || "10:00" %>
+          <%= time_field_tag "#{f.object_name}[event_recurrences][][in_start_time]", recurr.start_datetime.try { |time| I18n.l(time, format: :hh_mm) } %>
           <%= t("ss.wave_dash") %>
-          <%= time_field_tag "#{f.object_name}[event_recurrences][][in_end_time]", recurr.end_datetime.try { |time| I18n.l(time, format: :hh_mm) } || "17:00" %>
+          <%= time_field_tag "#{f.object_name}[event_recurrences][][in_end_time]", recurr.end_datetime.try { |time| I18n.l(time, format: :hh_mm) } %>
         </div>
       </div>
       <% end %>
@@ -36,7 +36,7 @@
       <div class="event-recurrence-excludes">
         <% disp = recurr.exclude_dates.try { |dates| dates.map { |date| I18n.l(date.to_date, format: :picker) }.join(",") } %>
         <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_exclude_dates]", disp %>
-        <%= button_tag "除外日", type: "button", class: "btn event-recurrence-exclude-dates-btn", data: { url: event_apis_edit_exclude_dates_path } %>
+        <%= button_tag t("event.exclude_dates"), type: "button", class: "btn event-recurrence-exclude-dates-btn", data: { url: event_apis_edit_exclude_dates_path } %>
         <div class="event-recurrence-excludes-summary" title="<%= disp %>"><%= disp %></div>
       </div>
     </div>

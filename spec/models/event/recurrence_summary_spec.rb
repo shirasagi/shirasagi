@@ -103,7 +103,11 @@ describe Event, dbscope: :example do
         expected = [
           I18n.l("2022/03/12".in_time_zone.to_date, format: :full),
           I18n.t("ss.wave_dash"),
-          I18n.l("2022/05/15".in_time_zone.to_date, format: "%1m月%1d日 (%a)")
+          I18n.l("2022/05/15".in_time_zone.to_date, format: "%1m月%1d日 (%a)"),
+          Event::DATE_TIME_SEPARATOR,
+          "10:00",
+          I18n.t("ss.wave_dash"),
+          "17:00"
         ].join
         expect(subject).to eq expected
       end

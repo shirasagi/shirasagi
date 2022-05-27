@@ -10,7 +10,7 @@ class Event::Apis::EditExcludeDatesController < ApplicationController
 
     @item = @edit_params.cur_event_recurrence
     if @item.blank? || @item.start_date.blank?
-      render json: [ "開始日を入力してください。" ], status: :bad_request
+      render json: [ I18n.t("event.apis.repeat_dates.start_blank") ], status: :bad_request
       return
     end
 

@@ -4,6 +4,7 @@ module Event
   DATE_TIME_SEPARATOR = "　".freeze
   START_AND_END_TIME_SEPARATOR = I18n.t("ss.wave_dash").dup.freeze
   MULTI_START_TIME_SEPARATOR = "／".freeze
+  ELLIPSIS = "・・・".freeze
   MAX_RECURRENCES_TO_IMPORT_EXPORT = 10
 
   def cluster_dates(dates)
@@ -59,16 +60,16 @@ module Event
         if prev_date.blank? || prev_date.year != start_date.year
           format = :full
         elsif prev_date.month != start_date.month
-          format = "%1m月%1d日 (%a)"
+          format = :m_d_a
         else
-          format = "%1d日 (%a)"
+          format = :d_a
         end
 
         parts << Private.format_start_and_end_date(start_date, end_date, format: format)
         prev_date = end_date
       end
       if dates.length > 12
-        parts << "・・・"
+        parts << ELLIPSIS
       end
 
       parts.join(" , ")
@@ -87,13 +88,13 @@ module Event
         [
           I18n.l(start_date, format: format),
           I18n.t("ss.wave_dash"),
-          I18n.l(end_date, format: "%1m月%1d日 (%a)")
+          I18n.l(end_date, format: :m_d_a)
         ].join
       else
         [
           I18n.l(start_date, format: format),
           I18n.t("ss.wave_dash"),
-          I18n.l(end_date, format: "%1d日 (%a)")
+          I18n.l(end_date, format: :d_a)
         ].join
       end
     end
@@ -107,12 +108,10 @@ module Event
         start_at = I18n.l(start_at, format: :h_mm)
         end_at = I18n.l(end_at, format: :h_mm)
 
-        if start_at != "10:00" && end_at != "17:00"
-          ret << DATE_TIME_SEPARATOR
-          ret << start_at
-          ret << START_AND_END_TIME_SEPARATOR
-          ret << end_at
-        end
+        ret << DATE_TIME_SEPARATOR
+        ret << start_at
+        ret << START_AND_END_TIME_SEPARATOR
+        ret << end_at
 
         return ret
       end
@@ -150,7 +149,7 @@ module Event
       end
 
       if recurrences.length > 3
-        ret << "・・・"
+        ret << ELLIPSIS
       end
 
       ret.join(MULTI_START_TIME_SEPARATOR)
@@ -158,25 +157,22 @@ module Event
 
     def format_week_of_day(recurrence)
       if recurrence.by_days.length == 1 && !recurrence.includes_holiday
-        "毎週" + I18n.t("date.day_names")[recurrence.by_days.first]
+        I18n.t("event.weekly") + I18n.t("date.day_names")[recurrence.by_days.first]
       elsif recurrence.by_days.blank? && recurrence.includes_holiday
-        "祝日"
+        I18n.t("event.holiday")
       else
         abbr_day_names = I18n.t("date.abbr_day_names")
         parts = recurrence.by_days.map { |wday| abbr_day_names[wday] }
         if recurrence.includes_holiday
-          parts << "祝"
+          parts << I18n.t("event.holiday_short")
         end
 
         part = parts.join
-        case part
-        when "日土"
-          part = "土日"
-        when "日土祝"
-          part = "土日祝"
+        if part.start_with?("#{abbr_day_names[0]}#{abbr_day_names[6]}") # "日土..."
+          part[0], part[1] = part[1], part[0] # "土日..."
         end
 
-        "毎週" + part
+        I18n.t("event.weekly") + part
       end
     end
   end

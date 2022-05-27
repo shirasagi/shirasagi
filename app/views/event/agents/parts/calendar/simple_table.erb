@@ -1,7 +1,7 @@
 <%= jquery do %> Event_Calendar.render("<%= raw @render_url %>"); <% end %>
 
 <div class="event-calendar">
-  <nav class="calendar-nav" aria-label="カレンダーメニュー">
+  <nav class="calendar-nav" aria-label="<%= t("event.prev_next_navi") %>">
     <ul>
       <li class="prev">
         <% if within_one_year?(@prev_month_date) %>
@@ -11,8 +11,7 @@
         <% end %>
       </li>
       <li class="current">
-        <%= link_to t("event.current_month"), "#", class: :paginate,
-          "data-year" => Time.zone.today.year, "data-month" => Time.zone.today.month %>
+        <%= link_to t("event.current_month"), "#", class: "paginate", data: { year: Time.zone.today.year, month: Time.zone.today.month } %>
       </li>
       <li class="next">
         <% if within_one_year?(@next_month_date) %>
