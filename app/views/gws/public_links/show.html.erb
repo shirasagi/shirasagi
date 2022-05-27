@@ -6,7 +6,7 @@
     <li class="list-item">
       <div class="info">
         <% if item[:url].present? %>
-          <%= link_to item[:name].presence || item[:url], item[:url] %>
+          <%= link_to item[:name].presence || item[:url], sns_redirect_path(ref: item[:url]) %>
         <% elsif item[:name].present? %>
           <%= item[:name] %>
         <% end %>

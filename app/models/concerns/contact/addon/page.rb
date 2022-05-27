@@ -13,7 +13,7 @@ module Contact::Addon
       field :contact_link_name, type: String
       belongs_to :contact_group, class_name: "Cms::Group"
 
-      validates :contact_link_url, "sys/trusted_url" => true
+      validates :contact_link_url, "sys/trusted_url" => true, if: ->{ Sys::TrustedUrlValidator.url_restricted? }
 
       permit_params :contact_state, :contact_group_id, :contact_charge
       permit_params :contact_tel, :contact_fax, :contact_email
