@@ -430,7 +430,6 @@ ja:
         facility_search: 施設検索
         image_map: イメージマップ
         json_template: JSONテンプレート
-        api: API連携
       line_deliver_condition_state:
         multicast_with_no_condition: 登録メンバー全員に配信する
         multicast_with_registered_condition: 登録メンバーに条件配信する（配信条件を設定）
@@ -760,7 +759,6 @@ ja:
       cms/line/service/hub: HUB設定
       cms/line/service/hook: イベントフック
       cms/line/service/facility_search: 施設検索
-      cms/line/service/api: API連携
       cms/line/service/page_list: ページリスト
       cms/line/service/area: タップ領域
       cms/line/service/json_body: JSONテンプレート
@@ -1341,9 +1339,6 @@ ja:
         line/action_data: "Trigger Data"
         expired_text: 有効期限切れメッセージ
         expired_minutes: 有効期限（分）
-      cms/addon/line/service/api:
-        api_url: "API URL"
-        api_log_filename: "API ログファイル名"
       cms/addon/line/service/page_list:
         no_image_id: NO IMAGE画像
         conditions: 検索条件
