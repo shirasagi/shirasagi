@@ -155,8 +155,8 @@ Rails.application.routes.draw do
       get :download, on: :member
       get :resize, on: :member
       post :resize, on: :member
-      get :new_large, on: :collection
       get :contrast_ratio, on: :collection
+      get :large_file_upload, on: :collection
     end
 
     resources :page_searches, concerns: :deletion do
@@ -242,11 +242,11 @@ Rails.application.routes.draw do
       match "forms/:id/html" => "forms#html", as: :form_html, via: %i[post put]
       match "forms/:id/link_check" => "forms#link_check", as: :form_link_check, via: %i[post put]
       post "validation" => "validation#validate"
-      post "initialize" => "large_files#init_bid_files"
-      post "upload" => "large_files#create"
-      put "finalize" => "large_files#finalize"
-      post "run" => "large_files#run"
-      delete "delete_init_files" => "large_files#delete_init_files"
+      post "initialize" => "large_file_upload#init_files"
+      post "upload" => "large_file_upload#create"
+      put "finalize" => "large_file_upload#finalize"
+      post "run" => "large_file_upload#run"
+      delete "delete_init_files" => "large_file_upload#delete_init_files"
 
       resources :files, path: ":cid/files", concerns: [:deletion, :file_api] do
         get :contrast_ratio, on: :collection

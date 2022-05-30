@@ -1,0 +1,53 @@
+<style>
+  .progress .file-list {
+    display: inline-block;
+  }
+  .progress .file-list li {
+    display: flex;
+    align-items: center;
+  }
+</style>
+
+<%
+  controller_name = "cms/apis/large_file_upload"
+  init_url  = url_for(controller: controller_name, action: "init_files", format: "json");
+  create_url = url_for(controller: controller_name, action: "create", format: "json");
+  finalize_url = url_for(controller: controller_name, action: "finalize", format: "json");
+%>
+<%= form_for :item, url: { action: :create }, html: { id: "item-form", method: :post, multipart: true } do |f| %>
+  <%= error_messages_for :item %>
+
+  <section class="main-box">
+    <header><h2><%= t("ss.large_file_upload") %></h2></header>
+    <dl class="see">
+      <dd>
+        <% if @is_ie %>
+          <p class="mb-4" style="color: red;">
+            <%= t('ss.info.ie_browser') %>
+          </p>
+        <% end %>
+        <input type="file" id="file-picker" name="fileList" webkitdirectory multiple />
+        <%= button_tag t('ss.buttons.upload'), type: "button", class: "import-button", disabled: true %>
+      </dd>
+    </dl>
+  </section>
+
+  <section class="main-box progress">
+    <header>
+      <h2><%= t('ss.upload_progress') %></h2>
+    </header>
+    <dd></dd>
+  </section>
+<% end %>
+
+<script src="/assets/ss/large_file_upload.js"></script>
+
+<%= jquery do %>
+new SS_Large_File_Upload(
+  $('.import-button'), {
+    initUrl: '<%= init_url %>',
+    createUrl: '<%= create_url %>',
+    finalizeUrl: '<%= finalize_url %>'
+    }
+)
+<% end %>

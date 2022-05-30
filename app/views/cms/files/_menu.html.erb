@@ -2,9 +2,11 @@
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to t('ss.links.new'), { action: :new }, class: :new %>
-      <%= link_to t('ss.links.large_upload'), { action: :new_large }, class: "icon-page" %>
+      <% if !@is_ie && @model.allowed?(:use, @cur_user, site: @cur_site, node: @cur_node) %>
+        <%= link_to t('ss.links.large_file_upload'), { action: :large_file_upload }, class: "icon-page" %>
+      <% end %>
     <% end %>
-  <% elsif params[:action] =~ /new|create|lock|destroy_all/ %>
+  <% elsif params[:action] =~ /new|create|lock|destroy_all|large_file_upload/ %>
     <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
   <% elsif params[:action] =~ /edit|update|delete|move|resize/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>

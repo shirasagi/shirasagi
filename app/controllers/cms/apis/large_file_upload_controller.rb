@@ -1,22 +1,26 @@
-class Cms::Apis::LargeFilesController < ApplicationController
+class Cms::Apis::LargeFileUploadController < ApplicationController
   include Cms::ApiFilter
   protect_from_forgery
   skip_before_action :verify_authenticity_token
 
-  def init_bid_files
+  def init_files
     files = {}
+    excluded_files = []
     filenames = params[:filenames]
     extensions = SS::MaxFileSize.all.map(&:extensions).flatten
 
     filenames.each do |filename|
-      next if !extensions.include?(File.extname(filename).sub(/\./, ""))
+      if !extensions.include?(File.extname(filename).sub(/\./, ""))
+        excluded_files << filename
+        next
+      end
 
       file = Cms::File.create(site_id: @cur_site.id, name: filename, filename: filename, model: "cms/file")
       files["#{file.name}"] = file.id
     end
 
     respond_to do |format|
-      format.json { render json: { files: files, cur_site_id: @cur_site.id } }
+      format.json { render json: { files: files, cur_site_id: @cur_site.id, excluded_files: excluded_files } }
     end
   end
 
@@ -47,17 +51,10 @@ class Cms::Apis::LargeFilesController < ApplicationController
     end
   end
 
-  def delete_init_files
-    SS::File.where(content_type: "application/zip", model: "BidInfo::Node::BidInfo").destroy_all
-    respond_to do |format|
-      format.json { render json: "" }
-    end
-  end
-
   private
 
   def set_task
-    @task = Cms::LargeFileTask.find_or_create_by(name: task_name, site_id: @cur_site.id)
+    @task = Cms::LargeFileUploadTask.find_or_create_by(name: task_name, site_id: @cur_site.id)
   end
 
   def task_name

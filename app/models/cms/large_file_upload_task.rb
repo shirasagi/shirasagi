@@ -1,4 +1,4 @@
-class Cms::LargeFileTask
+class Cms::LargeFileUploadTask
   include SS::Model::Task
 
   embeds_ids :files, class_name: "Cms::File"
@@ -16,12 +16,6 @@ class Cms::LargeFileTask
 
     JSON.parse(files).each do |filename, id|
       tmp_path = "#{tmp_file_path}/#{filename}"
-      # file = Fs::UploadedFile.new('large_file')
-      # file.binmode
-      # file.write(File.read(tmp_path))
-      # file.rewind
-      # file.original_filename = filename
-
       tmp_file = Cms::File.create_empty!(filename: filename, site_id: cur_site_id) do |file|
         ::FileUtils.copy(tmp_path, file.path)
       end
