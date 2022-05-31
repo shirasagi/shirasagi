@@ -134,22 +134,22 @@ module Cms::Elasticsearch::Indexer::Base
     es_client = self.site.elasticsearch_client
     return unless es_client
 
-    with_rescue(Elasticsearch::Transport::Transport::ServerError) do
+    with_rescue(Elasticsearch::Transport::Transport::ServerError, severity: ::Logger::Severity::DEBUG) do
       es_client.delete(index: index_name, type: index_type, id: index_item_id)
     end
 
     if remove_file_ids.present?
       remove_file_ids.uniq.each do |id|
-        with_rescue(Elasticsearch::Transport::Transport::ServerError) do
+        with_rescue(Elasticsearch::Transport::Transport::ServerError, severity: ::Logger::Severity::DEBUG) do
           es_client.delete(index: index_name, type: index_type, id: "file-#{id}")
         end
       end
     end
   end
 
-  def with_rescue(klass)
+  def with_rescue(klass, severity: ::Logger::Severity::WARN)
     yield
   rescue klass => e
-    Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    Rails.logger.add(severity) { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
   end
 end
