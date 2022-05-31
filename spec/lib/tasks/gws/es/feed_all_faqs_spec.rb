@@ -1,10 +1,6 @@
 require 'spec_helper'
 
-describe Tasks::Gws::Es, dbscope: :example do
-  let(:es_host) { unique_domain }
-  let(:es_url) { "http://#{es_host}" }
-  let(:requests) { [] }
-
+describe Tasks::Gws::Es, dbscope: :example, es: true do
   before do
     @save = {}
     ENV.each do |key, value|
@@ -20,7 +16,7 @@ describe Tasks::Gws::Es, dbscope: :example do
   end
 
   describe ".feed_all_faqs" do
-    let!(:site) { create :gws_group, menu_elasticsearch_state: "show", elasticsearch_hosts: es_url }
+    let!(:site) { create :gws_group, menu_elasticsearch_state: "show", elasticsearch_hosts: "http://#{unique_domain}" }
     let!(:user) { create(:gws_user, group_ids: [ site.id ], gws_role_ids: gws_user.gws_role_ids) }
     let(:category) { create(:gws_faq_category, cur_site: site, cur_user: user) }
     let!(:file) do
@@ -32,18 +28,7 @@ describe Tasks::Gws::Es, dbscope: :example do
     let!(:post) { create(:gws_faq_post, cur_site: site, cur_user: user, topic: topic, parent: topic) }
 
     before do
-      WebMock.reset!
-
-      stub_request(:any, /#{::Regexp.escape(es_host)}/).to_return do |request|
-        requests << request.as_json.dup
-        { body: '{}', status: 200, headers: { 'Content-Type' => 'application/json; charset=UTF-8' } }
-      end
-
       ENV['site'] = site.name
-    end
-
-    after do
-      WebMock.reset!
     end
 
     it do

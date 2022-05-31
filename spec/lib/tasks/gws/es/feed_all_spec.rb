@@ -1,10 +1,7 @@
 require 'spec_helper'
 
-describe Tasks::Gws::Es, dbscope: :example do
-  let(:es_host) { unique_domain }
-  let(:es_url) { "http://#{es_host}" }
-  let!(:site) { create :gws_group, menu_elasticsearch_state: "show", elasticsearch_hosts: es_url }
-  let(:requests) { [] }
+describe Tasks::Gws::Es, dbscope: :example, es: true do
+  let!(:site) { create :gws_group, menu_elasticsearch_state: "show", elasticsearch_hosts: "http://#{unique_domain}" }
 
   before do
     @save = {}
