@@ -4,7 +4,6 @@ class Cms::LargeFileUploadTask
   embeds_ids :files, class_name: "Cms::File"
   permit_params file_ids: []
 
-
   def execute(file_ids, cur_site_id)
     create_files(file_ids, cur_site_id)
   end
@@ -30,6 +29,6 @@ class Cms::LargeFileUploadTask
   end
 
   def tmp_file_path
-    "#{SS::File.root}/ss_tasks/#{self.id.to_s.split(//).join("/")}"
+    "#{SS::File.root}/ss_tasks/#{self.id.to_s.chars.join("/")}"
   end
 end

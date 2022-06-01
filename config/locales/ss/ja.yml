@@ -53,7 +53,7 @@ ja:
     input_example: 記入例
     csv_file: CSVファイル
     large_file_upload: 大容量アップロード
-    upload_progress: アップロードプログレス
+    upload_status: アップロード状況
 
     views:
       login/login:
