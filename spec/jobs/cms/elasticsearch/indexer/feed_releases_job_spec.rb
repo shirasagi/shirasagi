@@ -139,8 +139,7 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
     expect(Cms::PageRelease.all.count).to eq 3
     expect(Cms::PageIndexQueue.all.count).to eq 0
     site.elasticsearch_client.search(index: "s#{site.id}", size: 100, q: "*:*").tap do |es_docs|
-      # TODO: 添付ファイルを削除するリクエストが発行されていないので、添付ファイルが ES 上に残ってしまう。これは間違いなくバグ。
-      expect(es_docs["hits"]["hits"].length).to eq 1
+      expect(es_docs["hits"]["hits"].length).to eq 0
     end
   end
 end
