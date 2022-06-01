@@ -3,12 +3,22 @@ require 'spec_helper'
 describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: true do
   let(:site) { cms_site }
   let(:user) { cms_user }
-  let(:file_path) { Rails.root.join('spec', 'fixtures', 'ss', 'logo.png') }
+  let(:file_path) { Rails.root.join('spec/fixtures/ss/shirasagi.pdf') }
   let(:file) { tmp_ss_file(user: user, contents: file_path, binary: true, content_type: 'image/png') }
   let!(:node) { create(:article_node_page, cur_site: site) }
   let!(:page) { create(:article_page, cur_site: site, cur_node: node, file_ids: [file.id], state: "closed") }
 
+  before do
+    # cms:es:ingest:init
+    ::Cms::Elasticsearch.init_ingest(site: site)
+    # cms:es:drop
+    ::Cms::Elasticsearch.drop_index(site: site) rescue nil
+    # cms:es:create_indexes
+    ::Cms::Elasticsearch.create_index(site: site)
+  end
+
   it do
+    # 非公開ページを作成した直後
     expect(page.state).to eq 'closed'
     expect(Job::Log.all.count).to eq 0
     expect(Cms::PageRelease.all.count).to eq 1
@@ -25,10 +35,12 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
       expect(page_index_queue.filename).to eq page.filename
       expect(page_index_queue.action).to eq "close"
     end
-    expect(es_requests.length).to eq 0
+    site.elasticsearch_client.search(index: "s#{site.id}", size: 100, q: "*:*").tap do |es_docs|
+      expect(es_docs["hits"]["hits"].length).to eq 0
+    end
 
     # cms:es:fee_releases タスクに相当するジョブ（毎時実行する処理）を実行
-    described_class.bind(site_id: site).perform_now
+    expect { described_class.bind(site_id: site).perform_now }.to output(include(site.name)).to_stdout
 
     expect(Job::Log.all.count).to eq 2
     Job::Log.all.each do |log|
@@ -37,14 +49,9 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
     end
     expect(Cms::PageRelease.all.count).to eq 1
     expect(Cms::PageIndexQueue.all.count).to eq 0
-    expect(es_requests.length).to eq 1
-    es_requests[0].tap do |request|
-      expect(request['method']).to eq 'delete'
-      expect(request['uri']['path']).to end_with("/#{CGI.escape(page.filename)}")
-      expect(request['body']).to be_blank
+    site.elasticsearch_client.search(index: "s#{site.id}", size: 100, q: "*:*").tap do |es_docs|
+      expect(es_docs["hits"]["hits"].length).to eq 0
     end
-    # TODO: 添付ファイルを削除するリクエストが発行されていないがいいのだろうか？
-    es_requests.clear
 
     # publish page and then ...
     page.state = "public"
@@ -66,10 +73,14 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
       expect(page_index_queue.filename).to eq page.filename
       expect(page_index_queue.action).to eq "release"
     end
-    expect(es_requests.length).to eq 0
+    site.elasticsearch_client.search(index: "s#{site.id}", size: 100, q: "*:*").tap do |es_docs|
+      expect(es_docs["hits"]["hits"].length).to eq 0
+    end
 
     # cms:es:fee_releases タスクに相当するジョブ（毎時実行する処理）を実行
-    described_class.bind(site_id: site).perform_now
+    expect { described_class.bind(site_id: site).perform_now }.to output(include(site.name)).to_stdout
+    # wait for indexing
+    ::Cms::Elasticsearch.refresh_index(site: site)
 
     expect(Job::Log.all.count).to eq 4
     Job::Log.all.each do |log|
@@ -78,21 +89,19 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
     end
     expect(Cms::PageRelease.all.count).to eq 2
     expect(Cms::PageIndexQueue.all.count).to eq 0
-    expect(es_requests.length).to eq 2
-    es_requests[0].tap do |request|
-      expect(request['method']).to eq 'put'
-      expect(request['uri']['path']).to end_with("/#{CGI.escape(page.filename)}")
-      body = JSON.parse(request['body'])
-      expect(body['url']).to eq page.url
+    site.elasticsearch_client.search(index: "s#{site.id}", size: 100, q: "*:*").tap do |es_docs|
+      expect(es_docs["hits"]["hits"].length).to eq 2
+      es_docs["hits"]["hits"][0].tap do |es_doc|
+        expect(es_doc["_id"]).to eq page.filename
+        source = es_doc["_source"]
+        expect(source['url']).to eq page.url
+      end
+      es_docs["hits"]["hits"][1].tap do |es_doc|
+        expect(es_doc["_id"]).to eq "file-#{file.id}"
+        source = es_doc["_source"]
+        expect(source['url']).to eq page.url
+      end
     end
-    es_requests[1].tap do |request|
-      expect(request['method']).to eq 'put'
-      expect(request['uri']['path']).to end_with("/file-#{file.id}")
-      body = JSON.parse(request['body'])
-      # TODO: 添付ファイルの URL が、ページの URL と同じでいいの？
-      expect(body['url']).to eq page.url
-    end
-    es_requests.clear
 
     page.state = "closed"
     page.save!
@@ -112,10 +121,15 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
       expect(page_index_queue.filename).to eq page.filename
       expect(page_index_queue.action).to eq "close"
     end
-    expect(es_requests.length).to eq 0
+    # ページを非公開にしても、即座に全文検索には反映されない
+    site.elasticsearch_client.search(index: "s#{site.id}", size: 100, q: "*:*").tap do |es_docs|
+      expect(es_docs["hits"]["hits"].length).to eq 2
+    end
 
     # cms:es:fee_releases タスクに相当するジョブ（毎時実行する処理）を実行
-    described_class.bind(site_id: site).perform_now
+    expect { described_class.bind(site_id: site).perform_now }.to output(include(site.name)).to_stdout
+    # wait for indexing
+    ::Cms::Elasticsearch.refresh_index(site: site)
 
     expect(Job::Log.all.count).to eq 6
     Job::Log.all.each do |log|
@@ -124,18 +138,9 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
     end
     expect(Cms::PageRelease.all.count).to eq 3
     expect(Cms::PageIndexQueue.all.count).to eq 0
-    expect(es_requests.length).to eq 1
-    es_requests[0].tap do |request|
-      expect(request['method']).to eq 'delete'
-      expect(request['uri']['path']).to end_with("/#{CGI.escape(page.filename)}")
-      expect(request['body']).to be_blank
+    site.elasticsearch_client.search(index: "s#{site.id}", size: 100, q: "*:*").tap do |es_docs|
+      # TODO: 添付ファイルを削除するリクエストが発行されていないので、添付ファイルが ES 上に残ってしまう。これは間違いなくバグ。
+      expect(es_docs["hits"]["hits"].length).to eq 1
     end
-    # TODO: 添付ファイルを削除するリクエストが発行されていないが、これは間違いなくバグだ。添付ファイルが ES 上に残ってしまう。
-    # es_requests[1].tap do |request|
-    #   expect(request['method']).to eq 'delete'
-    #   expect(request['uri']['path']).to end_with("/file-#{file.id}")
-    #   expect(request['body']).to be_blank
-    # end
-    es_requests.clear
   end
 end

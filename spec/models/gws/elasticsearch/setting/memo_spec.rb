@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Gws::Elasticsearch::Setting::Memo, type: :model, dbscope: :example, es: true do
+describe Gws::Elasticsearch::Setting::Memo, type: :model, dbscope: :example do
   let(:site) { gws_site }
   let(:user) { gws_user }
   subject { described_class.new(cur_site: site, cur_user: user) }

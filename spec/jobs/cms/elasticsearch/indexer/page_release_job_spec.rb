@@ -8,6 +8,15 @@ describe Cms::Elasticsearch::Indexer::PageReleaseJob, dbscope: :example, es: tru
   let(:file) { tmp_ss_file(user: user, contents: File.binread(file_path), binary: true, content_type: 'image/png') }
   let(:file_path) { Rails.root.join('spec', 'fixtures', 'ss', 'logo.png') }
 
+  before do
+    # cms:es:ingest:init
+    ::Cms::Elasticsearch.init_ingest(site: site)
+    # cms:es:drop
+    ::Cms::Elasticsearch.drop_index(site: site) rescue nil
+    # cms:es:create_indexes
+    ::Cms::Elasticsearch.create_index(site: site)
+  end
+
   describe 'feed_all' do
     it do
       expect(page.status).to eq 'public'

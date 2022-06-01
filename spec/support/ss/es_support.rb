@@ -1,66 +1,109 @@
+require 'docker'
+
 module SS
   module EsSupport
     module_function
 
-    def es_hosts
-      @es_hosts ||= 'http://localhost:9200'
+    def es_port
+      @es_port ||= rand(29_200..39_200)
     end
 
-    def es_requests
-      @es_requests ||= []
+    def es_url
+      "http://localhost:#{SS::EsSupport.es_port}"
     end
 
-    def es_indexes
-      @es_indexes ||= {}
+    def docker_image_id
+      @docker_image_id ||= "shirasagi/elasticsearch"
+    end
+
+    def docker_container
+      @docker_container
+    end
+
+    def docker_container=(container)
+      @docker_container = container
+    end
+
+    def init
+      RSpec.configuration.extend(SS::EsSupport::Hooks, es: true)
+      RSpec.configuration.after(:suite) do
+        SS::EsSupport.after_suite
+      end
+    end
+
+    def before_example
+      container = SS::EsSupport.docker_container
+      return if container.present? # already running
+
+      image_id = SS::EsSupport.docker_image_id
+      image = Docker::Image.get(image_id) rescue nil
+      if image.blank?
+        puts "image '#{image_id}' is not found"
+        return
+      end
+
+      es_port = SS::EsSupport.es_port
+      container = Docker::Container.create(
+        'Image' => image_id,
+        'ExposedPorts' => { '9200/tcp' => {} },
+        'Env' => %w(discovery.type=single-node),
+        'HostConfig' => {
+          'PortBindings' => {
+            '9200/tcp' => [{ 'HostPort' => es_port.to_s }]
+          }
+        }
+      )
+
+      container.start
+      Timeout.timeout(60) do
+        loop do
+          break if container.logs(stdout: true).include?("Cluster health status changed from [YELLOW] to [GREEN]")
+
+          sleep 0.1
+        end
+      end
+
+      SS::EsSupport.docker_container = container
+      puts "image '#{image_id}' successfully launched as container '#{container.id[0, 12]}' listening on #{es_port}"
+    rescue => e
+      puts "#{e}: failed to start '#{SS::EsSupport.docker_image_id}'"
+      puts container.logs(stdout: true) if container
+      raise
+    end
+
+    def after_example
+    end
+
+    def after_suite
+      container = SS::EsSupport.docker_container
+      return if container.blank?
+
+      SS::EsSupport.docker_container = nil
+      container.stop
+      container.delete(force: true)
+      puts "container '#{container.id[0, 12]}' is deleted"
     end
 
     module Hooks
       def self.extended(obj)
         obj.class_eval do
-          delegate :es_hosts, :es_requests, :es_indexes, to: ::SS::EsSupport
+          delegate :es_url, to: ::SS::EsSupport
         end
 
-        obj.before do
+        obj.before(:example) do
+          SS::EsSupport.before_example
+
           if site.elasticsearch_hosts.blank?
-            site.elasticsearch_hosts = SS::EsSupport.es_hosts
+            site.elasticsearch_hosts = SS::EsSupport.es_url
             site.save!
           end
-
-          WebMock.reset!
-          stub_request(:any, /#{::Regexp.escape(site.elasticsearch_hosts.first)}/).to_return do |request|
-            ::SS::EsSupport.es_requests << request.as_json.dup
-
-            method = request.method
-            uri = request.uri.to_s
-            case method
-            when :head # like "ping"
-              { body: '{}', status: 200, headers: { 'Content-Type' => 'application/json; charset=UTF-8' } }
-            when :put
-              ::SS::EsSupport.es_indexes[uri] ||= 0
-              ::SS::EsSupport.es_indexes[uri] += 1
-              { body: '{}', status: 200, headers: { 'Content-Type' => 'application/json; charset=UTF-8' } }
-            when :delete
-              if ::SS::EsSupport.es_indexes.key?(uri)
-                ::SS::EsSupport.es_indexes.delete(uri)
-                { body: '{}', status: 200, headers: { 'Content-Type' => 'application/json; charset=UTF-8' } }
-              else
-                { body: '{}', status: 404, headers: { 'Content-Type' => 'application/json; charset=UTF-8' } }
-              end
-            else
-              # method not allowed
-              { body: '{}', status: 405, headers: { 'Content-Type' => 'application/json; charset=UTF-8' } }
-            end
-          end
         end
-
-        obj.after do
-          WebMock.reset!
-          SS::EsSupport.es_requests.clear
-          SS::EsSupport.es_indexes.clear
+        obj.after(:example) do
+          SS::EsSupport.after_example
         end
       end
     end
   end
 end
 
-RSpec.configuration.extend(SS::EsSupport::Hooks, es: true)
+SS::EsSupport.init

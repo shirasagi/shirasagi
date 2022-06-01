@@ -44,6 +44,8 @@ jobs:
           docker run --name test_mail -d -p 10143:143 -p 10587:587 shirasagi/mail
       - name: Prepare Michecker
         run: docker pull shirasagi/michecker
+      - name: Prepare Elasticsearch
+        run: docker pull shirasagi/elasticsearch
       - name: Install pre requisites
         run: |
           sudo apt-get update

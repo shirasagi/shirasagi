@@ -80,7 +80,7 @@ module Tasks
             break
           end
 
-          puts site.elasticsearch_client.indices.delete(index: "g#{site.id}").to_json
+          puts ::Gws::Elasticsearch.drop_index(site: site).to_json
         end
       end
 
@@ -96,17 +96,7 @@ module Tasks
             break
           end
 
-          settings = ::File.read(Rails.root.join('vendor', 'elasticsearch', 'settings.json'))
-          settings = JSON.parse(settings)
-
-          mappings = ::File.read(Rails.root.join('vendor', 'elasticsearch', 'mappings.json'))
-          mappings = JSON.parse(mappings)
-
-          result = site.elasticsearch_client.indices.create(
-            index: "g#{site.id}",
-            body: { settings: settings, mappings: mappings }
-          )
-          puts result.to_json
+          puts ::Gws::Elasticsearch.create_index(site: site, synonym: ENV.key?("synonym")).to_json
         end
       end
 
@@ -376,10 +366,7 @@ module Tasks
               break
             end
 
-            settings = ::File.read(Rails.root.join('vendor', 'elasticsearch', 'ingest_attachment.json'))
-            settings = JSON.parse(settings)
-
-            puts site.elasticsearch_client.ingest.put_pipeline(id: 'attachment', body: settings).to_json
+            puts ::Gws::Elasticsearch.init_ingest(site: site).to_json
           end
         end
 

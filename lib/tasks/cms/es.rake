@@ -25,45 +25,28 @@ namespace :cms do
           end
         end
 
-        Cms::PageIndexQueue.site(site).where(action: 'release').destroy_all
+        ::Cms::PageIndexQueue.site(site).where(action: 'release').destroy_all
       end
     end
 
     task :feed_releases, [:site] => :environment do |task, args|
       ::Tasks::Cms::Base.with_site(args[:site] || ENV['site']) do |site|
         break unless es_validator.call(site)
-        Cms::Elasticsearch::Indexer::FeedReleasesJob.bind(site_id: site).perform_now
+        ::Cms::Elasticsearch::Indexer::FeedReleasesJob.bind(site_id: site).perform_now
       end
     end
 
     task drop: :environment do
       ::Tasks::Cms::Base.with_site(ENV['site']) do |site|
         break unless es_validator.call(site)
-
-        puts site.elasticsearch_client.indices.delete(index: "s#{site.id}").to_json
+        puts ::Cms::Elasticsearch.drop_index(site: site).to_json
       end
     end
 
     task create_indexes: :environment do
       ::Tasks::Cms::Base.with_site(ENV['site']) do |site|
         break unless es_validator.call(site)
-
-        settings = ::File.read(Rails.root.join('vendor', 'elasticsearch', 'settings.json'))
-        settings = JSON.parse(settings)
-
-        if ENV['synonym']
-          settings["analysis"]["analyzer"]["my_ja_analyzer"]["filter"].push("synonym")
-          settings["analysis"]["filter"]["synonym"] = {
-            type: "synonym",
-            synonyms_path: "/etc/elasticsearch/synonym.txt"
-          }
-        end
-
-        mappings = ::File.read(Rails.root.join('vendor', 'elasticsearch', 'mappings.json'))
-        mappings = JSON.parse(mappings)
-
-        body = { settings: settings, mappings: mappings }
-        puts site.elasticsearch_client.indices.create(index: "s#{site.id}", body: body).to_json
+        puts ::Cms::Elasticsearch.create_index(site: site, synonym: ENV.key?("synonym")).to_json
       end
     end
 
@@ -79,11 +62,7 @@ namespace :cms do
       task init: :environment do
         ::Tasks::Cms::Base.with_site(ENV['site']) do |site|
           break unless es_validator.call(site)
-
-          settings = ::File.read(Rails.root.join('vendor', 'elasticsearch', 'ingest_attachment.json'))
-          settings = JSON.parse(settings)
-
-          puts site.elasticsearch_client.ingest.put_pipeline(id: 'attachment', body: settings).to_json
+          puts Cms::Elasticsearch.init_ingest(site: site).to_json
         end
       end
 

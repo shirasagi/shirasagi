@@ -37,20 +37,21 @@ describe Tasks::Gws::Es, dbscope: :example, es: true do
     end
 
     context "when elasticsearch is configured" do
-      let!(:site) { create :gws_group, menu_elasticsearch_state: "show", elasticsearch_hosts: "http://#{unique_domain}" }
+      let!(:site) { create :gws_group, menu_elasticsearch_state: "show", elasticsearch_hosts: es_url }
 
       before do
         ENV['site'] = site.name
+
+        # gws:es:ingest:init
+        ::Gws::Elasticsearch.init_ingest(site: site)
+        # gws:es:drop
+        ::Gws::Elasticsearch.drop_index(site: site) rescue nil
+        # gws:es:create_indexes
+        ::Gws::Elasticsearch.create_index(site: site)
       end
 
       it do
         expect { described_class.ping }.to output(include("true\n")).to_stdout
-
-        expect(es_requests.length).to eq 1
-        es_requests.first.tap do |request|
-          expect(request['method']).to eq 'head'
-          expect(request['uri']['path']).to end_with("/")
-        end
       end
     end
   end
