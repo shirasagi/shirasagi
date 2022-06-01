@@ -134,13 +134,13 @@ module Cms::Elasticsearch::Indexer::Base
     es_client = self.site.elasticsearch_client
     return unless es_client
 
-    with_rescue(Elasticsearch::Transport::Transport::ServerError, severity: ::Logger::Severity::DEBUG) do
+    with_rescue(Elasticsearch::Transport::Transport::ServerError, severity: -1) do
       es_client.delete(index: index_name, type: index_type, id: index_item_id)
     end
 
     if remove_file_ids.present?
       remove_file_ids.uniq.each do |id|
-        with_rescue(Elasticsearch::Transport::Transport::ServerError, severity: ::Logger::Severity::DEBUG) do
+        with_rescue(Elasticsearch::Transport::Transport::ServerError, severity: -1) do
           es_client.delete(index: index_name, type: index_type, id: "file-#{id}")
         end
       end
@@ -150,6 +150,8 @@ module Cms::Elasticsearch::Indexer::Base
   def with_rescue(klass, severity: ::Logger::Severity::WARN)
     yield
   rescue klass => e
+    # negative severity means 'suppress' or 'quiet'
+    return if severity.numeric? && severity < 0
     Rails.logger.add(severity) { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
   end
 end
