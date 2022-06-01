@@ -23111,7 +23111,7 @@ this.Gws_Schedule_Calendar = (function ($) {
   }
 
   Gws_Schedule_Calendar.messages = {
-    noPlan: '予定はありません'
+    noPlan: "予定はありません"
   };
 
   Gws_Schedule_Calendar.render = function (selector, opts, init) {
@@ -23249,6 +23249,34 @@ this.Gws_Schedule_Calendar = (function ($) {
           return $(this).find('.fc-loading').remove();
         }
       },
+      eventRender: function(event, element) {
+        if (event.className.includes('fc-event-range')) {
+          var fcClass = 'fc-datetime';
+          var format = 'MM/DD HH:mm';
+          var end = moment(event.end);
+          if (event.className.includes('fc-event-allday')) {
+            fcClass = 'fc-date';
+            format = 'MM/DD';
+            end = end.add(-1, 'days')
+          } else {
+            element.find('span.fc-time').remove();
+          }
+          var content = (event.start.format(format) + ' - ' + end.format(format));
+          if (event.start.format(format) === end.format(format)) {
+            content = end.format(format);
+          }
+          var span = $('<span></span>').addClass(fcClass).append(content);
+          element.find('span.fc-title').before(span);
+        }
+        if (event.category) {
+          var span = $('<span class="fc-category"></span>').append(event.category);
+          element.find('span.fc-title').prepend(span);
+        }
+        if (event.facility) {
+          var span = $('<span class="fc-facility"></span>').append(event.facility);
+          element.find('span.fc-title').after(span);
+        }
+      },
       eventAfterAllRender: function (view) {
         var attendance, todo;
         todo = $('.fc .fc-withTodo-button');
@@ -23331,19 +23359,25 @@ this.Gws_Schedule_Calendar = (function ($) {
   };
 
   Gws_Schedule_Calendar.editableParams = function (selector, opts) {
-    var url;
-    url = opts['restUrl'];
+    var url = opts['restUrl'];
+    var token = $('meta[name="csrf-token"]').attr('content');
     return {
       editable: true,
       eventClick: function (event, jsEvent, view) {
-        var popup_url, state, target;
         if (event.noPopup) {
           return;
         }
-        target = $(this);
+        var popup_url = event.restUrl ? event.restUrl : url;
+        var state = ("calendar[date]=" + (event.start.format('YYYY-MM-DD')) + "&") + Gws_Schedule_Calendar.viewStateQuery(view);
+        if (event.className.includes('fc-event-point') && !event.className.includes('fc-event-private')) {
+          jsEvent.preventDefault();
+          event.url = popup_url + "/" + event.id + "?" + state;
+          location.href = event.url;
+          return;
+        }
+        var target = $(this);
         Gws_Popup.render(target, "<div class='fc-popup'><span class='fc-loading'>読み込み中</span></div>");
-        popup_url = event.restUrl ? event.restUrl : url;
-        state = ("calendar[date]=" + (event.start.format('YYYY-MM-DD')) + "&") + Gws_Schedule_Calendar.viewStateQuery(view);
+
         return $.ajax({
           url: popup_url + "/" + event.id + "/popup",
           success: function (data) {
@@ -23370,7 +23404,8 @@ this.Gws_Schedule_Calendar = (function ($) {
               api: 'drop',
               api_start: event.start.format(),
               api_end: end
-            }
+            },
+            authenticity_token: token
           },
           success: function (data, dataType) {
             var viewId;
@@ -23383,7 +23418,7 @@ this.Gws_Schedule_Calendar = (function ($) {
           }
         });
       },
-      eventResize: function (event, delta, revertFunc) {
+      eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
         return $.ajax({
           type: 'PUT',
           url: (url + "/") + event.id + ".json",
@@ -23392,7 +23427,8 @@ this.Gws_Schedule_Calendar = (function ($) {
               api: 'resize',
               api_start: event.start.format(),
               api_end: event.end.format()
-            }
+            },
+            authenticity_token: token
           },
           success: function (data, dataType) {
             var viewId;
@@ -23988,6 +24024,32 @@ this.Gws_Schedule_Multiple_Calendar = (function ($) {
   Gws_Schedule_Multiple_Calendar.contentParams = function (selector, opts) {
     return {
       eventRender: function (event, element, view) {
+        if (event.className.includes('fc-event-range')) {
+          var fcClass = 'fc-datetime';
+          var format = 'MM/DD HH:mm';
+          var end = moment(event.end);
+          if (event.className.includes('fc-event-allday')) {
+            fcClass = 'fc-date';
+            format = 'MM/DD';
+            end = end.add(-1, 'days')
+          } else {
+            element.find('span.fc-time').remove();
+          }
+          var content = (event.start.format(format) + ' - ' + end.format(format));
+          if (event.start.format(format) === end.format(format)) {
+            content = end.format(format);
+          }
+          var span = $('<span></span>').addClass(fcClass).append(content);
+          element.find('span.fc-title').before(span);
+        }
+        if (event.category) {
+          var span = $('<span class="fc-category"></span>').append(event.category);
+          element.find('span.fc-title').prepend(span);
+        }
+        if (event.facility) {
+          var span = $('<span class="fc-facility"></span>').append(event.facility);
+          element.find('span.fc-title').after(span);
+        }
         if (view.name === 'basicHour') {
           return BasicHourView.eventRender(event, element, view);
         }

@@ -23,6 +23,10 @@
 <% end %>
 
 <nav class="main-navi">
+  <% if Cms::Line::Message.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h2><%= link_to t("cms.line"), cms_line_messages_path, class: "icon-conv" %></h2>
+  <% end %>
+
   <h2><%= link_to t("cms.file"), cms_files_path, class: "icon-conv" %></h2>
   <h2><%= link_to t("cms.search_contents"), cms_search_contents_pages_path, class: "icon-conv" %></h2>
 

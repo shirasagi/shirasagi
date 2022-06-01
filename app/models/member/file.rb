@@ -1,6 +1,5 @@
 class Member::File
   include SS::Model::File
-  # include SS::Relation::Thumb
   include Cms::Reference::Member
   include Cms::MemberPermission
 

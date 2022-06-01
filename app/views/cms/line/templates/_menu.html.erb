@@ -1,0 +1,5 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /select_type|new|create|edit|update|delete/ %>
+    <%= link_to t('ss.links.back'), cms_line_message_path(id: @message), class: "back-to-show" %>
+  <% end %>
+</nav>

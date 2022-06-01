@@ -1,5 +1,6 @@
 class Cms::Agents::Nodes::ArchiveController < ApplicationController
   include Cms::NodeFilter::View
+  include Cms::ForMemberFilter::Node
   helper Cms::ListHelper
   helper Cms::ArchiveHelper
   helper Event::EventHelper

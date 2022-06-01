@@ -54,6 +54,8 @@ class Cms::Node
     include Cms::ChildList
 
     default_scope ->{ where(route: "cms/page") }
+
+    self.use_condition_forms = true
   end
 
   class ImportNode
@@ -145,5 +147,16 @@ class Cms::Node
     def st_categories_sortable?
       true
     end
+  end
+
+  class LineHub
+    include Cms::Model::Node
+    include Cms::Addon::NodeSetting
+    include Cms::Addon::Meta
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "cms/line_hub") }
   end
 end

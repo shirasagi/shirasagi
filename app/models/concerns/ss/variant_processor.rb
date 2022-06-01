@@ -127,7 +127,11 @@ module SS::VariantProcessor
     attr_accessor :file, :variant_name, :variant_options
 
     class << self
-      delegate :root, to: SS::File
+      def root
+        # don't use `delegate :root, to: SS::File`
+        # this delegate cause a auto loading problem of SS::File on production
+        SS::File.root
+      end
     end
 
     delegate :id, :_id, :site, :site_id, :cur_user, :user, :user_id, :content_type, :updated, :created, to: :file

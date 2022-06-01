@@ -1,12 +1,30 @@
+<%
+  action = params[:action]
+  is_changeable = item.try(:state_changeable?) || action == "destroy_all"
+%>
+
 <li class="list-item">
   <label class="check">
-    <%= f.check_box_tag 'ids[]', item.id.to_s, checked: true %>
+    <% if is_changeable || action == "destroy_all" %>
+      <%= f.check_box_tag 'ids[]', item.id.to_s, checked: true %>
+    <% elsif item.is_a?(Uploader::File) %>
+      <%= f.check_box_tag 'ids[]', item.path.sub(@cur_site.path, ""), checked: true %>
+    <% else %>
+      <%= f.check_box_tag 'ids[]', false, false, { disabled: true } %>
+    <% end %>
   </label>
   <div class="info">
-    <%= f.hidden_field_tag 'ids[]', item.id.to_s %>
-    <%= link_to item.try(:name), { action: :show, id: item }, class: "title", target: "_blank", rel: "noopener" %>
+    <% if is_changeable %>
+      <%= f.hidden_field_tag 'ids[]', item.id.to_s %>
+    <% end %>
+    <% if item.is_a?(Uploader::File)%>
+      <% filename = item.path.sub("#{@cur_site.path}/", "") %>
+      <%= link_to filename, action: :file, filename: filename, do: :show, class: "title", target: "_blank", rel: "noopener" %>
+    <% else %>
+      <%= link_to item.try(:name), { action: :show, id: item }, class: "title", target: "_blank", rel: "noopener" %>
+    <% end %>
     <div class="meta">
-      <%= render "cms/crud/destroy_info", item: item %>
+      <%= render "cms/crud/destroy_info", item: item, action: action %>
       <% if item.try(:tags) %>
         <span class="tags"><%= item.tags.join(",") %></span>
       <% end %>

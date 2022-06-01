@@ -36,9 +36,9 @@
     </div>
 
     <div class="btn-group">
-      <%= button_tag(t('gws.history.days.next_day'), btn_next_attr) %>
-      <%= text_field_tag(:ymd, @cur_ymd.strftime('%Y/%m/%d'), class: 'datetime js-date', data: { min_date: threshold.strftime('%Y/%m/%d'), max_date: 0}) %>
       <%= button_tag(t('gws.history.days.prev_day'), btn_prev_attr) %>
+      <%= text_field_tag(:ymd, @cur_ymd.strftime('%Y/%m/%d'), class: 'datetime js-date', data: { min_date: threshold.strftime('%Y/%m/%d'), max_date: 0}) %>
+      <%= button_tag(t('gws.history.days.next_day'), btn_next_attr) %>
     </div>
 
     <div class="btn-group">

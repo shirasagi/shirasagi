@@ -1,0 +1,29 @@
+<dl class="see line-richmenu-menu">
+  <dd class="wide">
+    <%= link_to t("cms.buttons.setting"), cms_line_richmenu_group_menus_path(group_id: @item.id), class: "btn", style: "margin-bottom: 10px;" %>
+    <% if @item.menus.present? %>
+      <table class="index">
+        <thead>
+          <tr>
+            <th><%= Cms::Line::Richmenu::Menu.t :order %></th>
+            <th><%= Cms::Line::Richmenu::Menu.t :name %></th>
+            <th><%= Cms::Line::Richmenu::Menu.t :target %></th>
+            <th><%= Cms::Line::Richmenu::Menu.t :image_id %></th>
+            <th><%= Cms::Line::Richmenu::Menu.t :area_size %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @item.menus.each do |menu| %>
+            <tr>
+              <td><%= menu.order %></td>
+              <td><%= menu.name %></td>
+              <td><%= menu.label :target %></td>
+              <td><%= image_tag(menu.image.url, style: "width: 120px;") %></td>
+              <td><%= menu.richmenu_areas.size %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </dd>
+</dl>

@@ -42,7 +42,8 @@ RSpec.describe SS::EditorHelper, type: :helper do
       it do
         expect(subject.delete(:readOnly)).to eq true
         expect(subject.delete(:extraPlugins)).to eq 'templates,justify,panelbutton,colorbutton,font,youtube'
-        expect(subject.delete(:removePlugins)).to eq 'toolbar'
+        expect(subject.delete(:removePlugins)).to eq ''
+        expect(subject.delete(:toolbar)).to eq []
         expect(subject.delete(:allowedContent)).to eq true
         expect(subject.delete(:height)).to eq '360px'
         expect(subject.delete(:templates)).to eq 'shirasagi'
@@ -77,7 +78,8 @@ RSpec.describe SS::EditorHelper, type: :helper do
       it do
         expect(subject.delete(:readOnly)).to eq true
         expect(subject.delete(:extraPlugins)).to eq 'templates,justify,panelbutton,colorbutton,font,youtube'
-        expect(subject.delete(:removePlugins)).to eq 'toolbar'
+        expect(subject.delete(:removePlugins)).to eq ''
+        expect(subject.delete(:toolbar)).to eq []
         expect(subject.delete(:allowedContent)).to eq true
         expect(subject.delete(:height)).to eq '400px'
         expect(subject.delete(:templates)).to eq 'shirasagi'

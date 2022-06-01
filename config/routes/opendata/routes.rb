@@ -19,14 +19,14 @@ Rails.application.routes.draw do
 
   content "opendata" do
     get "/" => "main#index", as: :main
-    resources :categories, concerns: :deletion
-    resources :estat_categories, concerns: :deletion
-    resources :areas, concerns: :deletion
+    resources :categories, only: [:index]
+    resources :estat_categories, only: [:index]
+    resources :areas, only: [:index]
 
     resources :licenses, concerns: :deletion
 
-    resources :sparqls, concerns: :deletion
-    resources :apis, concerns: :deletion
+    resources :sparqls, only: [:index]
+    resources :apis, only: [:index]
     resources :members, only: [:index]
 
     namespace "workflow" do

@@ -131,9 +131,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         visit index_path
         find('.list-head input[type="checkbox"]').set(true)
         within ".list-head-action" do
-          page.accept_alert do
-            click_button I18n.t('ss.buttons.delete')
-          end
+          click_button I18n.t('ss.buttons.delete')
         end
         expect(page).to have_content I18n.t('ss.confirm.contains_links_in_file')
         expect(page).to have_content I18n.t('ss.confirm.target_to_delete')
@@ -147,9 +145,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         visit index_path
         find('.list-head input[type="checkbox"]').set(true)
         within ".list-head-action" do
-          page.accept_alert do
-            click_button I18n.t('ss.buttons.delete')
-          end
+          click_button I18n.t('ss.buttons.delete')
         end
         wait_for_ajax
 
@@ -161,9 +157,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         find('.list-head input[type="checkbox"]').set(true)
 
         within ".list-head-action" do
-          page.accept_alert do
-            click_button I18n.t('ss.buttons.delete')
-          end
+          click_button I18n.t('ss.buttons.delete')
         end
         wait_for_ajax
 

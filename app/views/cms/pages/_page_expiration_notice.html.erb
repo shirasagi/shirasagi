@@ -1,0 +1,15 @@
+<%
+  return unless @cur_site.page_expiration_enabled?
+  return if @item.state != "public"
+  # be sure to match the condition defined at method "all_expired_pages" in app/jobs/cms/page/expiration_notice_job.rb
+  return if @item.updated >= @cur_site.page_expiration_at
+%>
+
+<div class="cms-notice page-expiration">
+  <h2><%= t("cms.notices.page_expiration_header") %></h2>
+  <ul>
+    <% t("cms.notices.page_expiration_body").each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+  </ul>
+</div>

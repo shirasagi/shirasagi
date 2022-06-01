@@ -8,6 +8,8 @@ production: &production
   # Redirects the page after login.
   logged_in_page: /.mypage
 
+  logged_in_reset_session: true
+
   # Session Lifetime in seconds
   session_lifetime: 1800
 

@@ -28,7 +28,7 @@ describe "cms/check_links/pages", type: :feature, dbscope: :example, js: true, r
 
   let(:index_path) { cms_check_links_reports_path site.id }
   let(:page_count) { "#{I18n.t("ss.page")}2#{I18n.t("ss.units.count")}" }
-  let(:link_count) { "#{I18n.t("ss.broken_link")}2#{I18n.t("ss.units.count")}" }
+  let(:link_count) { 2 }
   let(:index_report_created) { index.latest_check_links_report.created }
   let(:page1_report_created) { docs_page1.latest_check_links_report.created }
 
@@ -73,9 +73,12 @@ describe "cms/check_links/pages", type: :feature, dbscope: :example, js: true, r
         click_on index.name
       end
 
-      within "#addon-cms-agents-addons-check_links" do
-        expect(page).to have_text(link_count)
-        expect(page).to have_text(report_label(index_report_created))
+      within ".check-links" do
+        header = I18n.t(
+          "cms.notices.check_links_report_header",
+          count: link_count, time: I18n.l(index_report_created, format: :picker)
+        )
+        expect(page).to have_css("h2", text: header)
       end
 
       visit_latest_report_pages
@@ -83,9 +86,12 @@ describe "cms/check_links/pages", type: :feature, dbscope: :example, js: true, r
         click_on docs_page1.name
       end
 
-      within "#addon-cms-agents-addons-check_links" do
-        expect(page).to have_text(link_count)
-        expect(page).to have_text(report_label(page1_report_created))
+      within ".check-links" do
+        header = I18n.t(
+          "cms.notices.check_links_report_header",
+          count: link_count, time: I18n.l(page1_report_created, format: :picker)
+        )
+        expect(page).to have_css("h2", text: header)
       end
       click_on I18n.t("ss.links.back_to_index")
 

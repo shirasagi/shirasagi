@@ -113,7 +113,7 @@ Rails.application.routes.draw do
       get :routes, on: :collection
     end
 
-    resources :pages, concerns: [:deletion, :copy, :move, :command, :lock, :contains_urls, :michecker]
+    resources :pages, concerns: [:deletion, :copy, :move, :command, :lock, :contains_urls, :michecker, :change_state]
     resources :layouts, concerns: :deletion
     resources :body_layouts, concerns: :deletion
     resources :editor_templates, concerns: [:deletion, :template]
@@ -126,17 +126,21 @@ Rails.application.routes.draw do
     resources :word_dictionaries, concerns: [:deletion, :template]
 
     scope module: "form" do
-      resources :forms, concerns: [:deletion] do
+      resources :forms, concerns: [:deletion, :change_state] do
         resources :init_columns, concerns: [:deletion]
         resources :columns, concerns: [:deletion]
+
+        get :column_names, on: :collection
       end
     end
 
     namespace "form" do
       resources :dbs, concerns: [:deletion] do
+        resources :import_logs, only: [:show]
         resources :docs, concerns: [:deletion] do
           match :import, via: [:get, :post], on: :collection
           match :download_all, via: [:get, :post], on: :collection
+          match :import_url, via: [:get, :post], on: :collection
         end
       end
     end
@@ -180,14 +184,64 @@ Rails.application.routes.draw do
       resource :site_setting
     end
 
+    namespace "line" do
+      # messages
+      resources :messages, concerns: :deletion do
+        get :deliver, on: :member
+        post :deliver, on: :member
+        get :test_deliver, on: :member
+        post :test_deliver, on: :member
+        get :copy, on: :member
+        put :copy, on: :member
+        resources :templates, path: "template/:type/templates", defaults: { type: '-' }, concerns: :deletion do
+          get :select_type, on: :collection
+        end
+        resources :deliver_plans, concerns: :deletion
+      end
+      resources :test_members, concerns: :deletion
+      resources :deliver_logs, only: [:index, :show, :destroy], concerns: [:deletion]
+      resources :deliver_conditions, concerns: :deletion
+      resources :deliver_categories, concerns: :deletion do
+        resources :categories, concerns: :deletion, controller: "deliver_category/categories"
+      end
+
+      # services
+      namespace "richmenu" do
+        resources :groups, concerns: :deletion do
+          get :apply, on: :collection
+          post :apply, on: :collection
+          resources :menus, concerns: :deletion do
+            get :crop, on: :member
+            put :crop, on: :member
+          end
+        end
+      end
+      namespace "service" do
+        resources :groups, concerns: :deletion do
+          resources :hooks, path: "hook/:type/hooks", defaults: { type: '-' }, concerns: :deletion do
+            get :crop, on: :member
+            put :crop, on: :member
+            namespace "facility_search" do
+              resources :categories, concerns: :deletion
+            end
+          end
+        end
+      end
+      resources :event_sessions, only: [:index, :show, :destroy], concerns: :deletion
+    end
+
     get "check_links" => "check_links#index"
     post "check_links" => "check_links#run"
     get "generate_nodes" => "generate_nodes#index"
+    get "generate_nodes/segment/:segment" => "generate_nodes#index", as: :segment_generate_nodes
     post "generate_nodes" => "generate_nodes#run"
     get "generate_nodes/download_logs" => "generate_nodes#download_logs"
+    post "generate_nodes/segment/:segment" => "generate_nodes#run"
     get "generate_pages" => "generate_pages#index"
+    get "generate_pages/segment/:segment" => "generate_pages#index", as: :segment_generate_pages
     post "generate_pages" => "generate_pages#run"
     get "generate_pages/download_logs" => "generate_pages#download_logs"
+    post "generate_pages/segment/:segment" => "generate_pages#run"
     get "import" => "import#import"
     post "import" => "import#import"
     get "import/download_logs" => "import#download_logs"
@@ -238,6 +292,7 @@ Rails.application.routes.draw do
       get "forms" => "forms#index"
       get "forms/temp_file/:id/select" => "forms#select_temp_file", as: :form_temp_file_select
       get "forms/:id/form" => "forms#form", as: :form
+      get "forms/:id/column_names" => "forms#column_names", as: :form_column_names
       get "forms/:id/columns/:column_id/new" => "forms#new_column", as: :form_column_new
       match "forms/:id/html" => "forms#html", as: :form_html, via: %i[post put]
       match "forms/:id/link_check" => "forms#link_check", as: :form_link_check, via: %i[post put]
@@ -315,6 +370,7 @@ Rails.application.routes.draw do
         resources :nodes, param: :cid, only: [] do
           post :publish, on: :member
           get :new_page, on: :member
+          get :new_page, on: :collection
         end
         resources :pages, only: [] do
           post :publish, on: :member
@@ -325,6 +381,12 @@ Rails.application.routes.draw do
 
       namespace "translate" do
         get "langs" => "langs#index"
+      end
+
+      namespace "line" do
+        get "deliver_members/:model/:id" => "deliver_members#index", model: /message|deliver_condition|line_deliver/, as: :deliver_members
+        get "deliver_members/:model/:id/download" => "deliver_members#download", model: /message|deliver_condition|line_deliver/
+        get "temp_files/:id" => "temp_files#select", as: :select_temp_file
       end
 
       match "mobile_size_check/check" => "mobile_size_check#check", via: [:post, :options], as: "mobile_size_check"
@@ -357,10 +419,10 @@ Rails.application.routes.draw do
     end
     resources :max_file_sizes, concerns: :deletion
     resources :image_resizes, concerns: :deletion
-    resources :nodes, concerns: :deletion
-    resources :pages, concerns: [:deletion, :copy, :move, :lock, :command, :contains_urls, :michecker]
-    resources :import_pages, concerns: [:deletion, :convert]
-    resources :import_nodes, concerns: [:deletion]
+    resources :nodes, concerns: [:deletion, :change_state]
+    resources :pages, concerns: [:deletion, :copy, :move, :lock, :command, :contains_urls, :michecker, :change_state]
+    resources :import_pages, concerns: [:deletion, :convert, :change_state]
+    resources :import_nodes, concerns: [:deletion, :change_state]
     get "/group_pages" => redirect { |p, req| "#{req.path.sub(/\/group_pages$/, "")}/nodes" }
     resources :parts, concerns: :deletion
     resources :layouts, concerns: :deletion
@@ -369,6 +431,7 @@ Rails.application.routes.draw do
     resources :site_searches, only: [:index]
     get "search_contents/:id" => "page_search_contents#show", as: "page_search_contents"
     get "search_contents/:id/download" => "page_search_contents#download", as: "download_page_search_contents"
+    resources :line_hubs, only: [:index]
   end
 
   node "cms" do
@@ -383,6 +446,9 @@ Rails.application.routes.draw do
     get "archive" => "public#redirect_to_archive_index", cell: "nodes/archive"
     get "photo_album" => "public#index", cell: "nodes/photo_album"
     get "site_search/(index.:format)" => "public#index", cell: "nodes/site_search"
+    get "line_hub/line" => "public#index", cell: "nodes/line_hub"
+    post "line_hub/line" => "public#index", cell: "nodes/line_hub"
+    get "line_hub/image-map/:id/:size" => "public#image_map", cell: "nodes/line_hub"
     get "site_search/categories(.:format)" => "public#categories", cell: "nodes/site_search"
   end
 

@@ -1,0 +1,8 @@
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <% if item.try(:updated) %>
+    <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <% end %>
+<% end %>
+
+<%= render template: "cms/crud/index" %>

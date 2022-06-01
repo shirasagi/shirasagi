@@ -1,0 +1,60 @@
+<%
+  confirm_message = "配信を開始してよろしいですか？"
+%>
+
+<%= form_for :item, url: { action: :deliver }, html: { id: "item-form", method: :post, multipart: true, autocomplete: :off } do |f| %>
+  <%= error_messages_for :item %>
+
+  <section class="main-box">
+    <header><h2>本配信</h2></header>
+    <div class="main-body">
+      <div style="font-weight: bold; padding: 5px 0px 10px 0px;">
+        配信対象に本文を配信します。<br>
+        配信するボタンを押下すると本配信処理が開始されます。
+      </div>
+
+      <dl class="see">
+        <dt><%= @model.t :name %></dt>
+        <dd><%= @item.name %></dd>
+
+        <dt><%= @item.t :deliver_condition_state %></dt>
+        <dd><%= @item.label :deliver_condition_state %></dd>
+
+        <%= render template: "cms/agents/addons/line/deliver_condition/body/_condition" %>
+
+        <dt><%= t("modules.addons.cms/line/message/deliver_plan") %></dt>
+        <dd>
+          <% if @item.ready_plans.present? %>
+            <div style="max-height: 200px; overflow: auto; margin-bottom: 10px;">
+              <table class="index">
+                <thead>
+                  <tr>
+                    <th><%= Cms::Line::DeliverPlan.t :deliver_date %></th>
+                  </tr>
+                </thead>
+                <tbody class="items">
+                  <% @item.ready_plans.each do |item| %>
+                    <% tr_css_classes = [ "day-#{item.date.day}" ] %>
+                    <% tr_css_classes << if item.holiday?; 'holiday' elsif item.date.wday == 0; 'sunday' elsif item.date.wday == 6; 'saturday' end %>
+                    <tr class="<%= tr_css_classes.compact.join(' ') %>">
+                      <td class="date"><%= item.name %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% else %>
+            <%= I18n.t("cms.notices.line_deliver_directly") %>
+          <% end %>
+        </dd>
+      </dl>
+    </div>
+  </section>
+
+  <footer class="send">
+    <%= f.submit t('ss.links.deliver'), class: 'btn-primary save', onclick: "return confirm('#{confirm_message}')" %>
+    <%= link_to t('ss.buttons.cancel'), { action: :show }, { class: 'btn-default' } %>
+  </footer>
+<% end %>
+
+<%= jquery do %> SS.confirmUnloading();<% end %>

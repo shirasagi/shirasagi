@@ -1,6 +1,4 @@
 <%
-  return if @item.map_points.blank?
-
   addon ||= local_assigns.fetch(:addon, {})
 %>
 
@@ -8,31 +6,42 @@
 
 <%= render_map "##{addon[:id]} .map-canvas", site: @cur_site, map: @item.map_options, markers: @item.map_points, preview: @preview %>
 
-<dl class="see mod-page">
-  <div class="map-canvas" style="width: 100%; height: 320px"></div>
-</dl>
-
-<div class="map-position">
-  <div class="center-position">
-    <span><%= t("map.center_position") %></span>
-    <% if @item.center_setting == "designated_location" && @item.set_center_position %>
-      <span>[<%= @item.set_center_position %>]</span>
-    <% else %>
-      <span><%= t("map.auto") %></span>
-    <% end %>
-  </div>
-  <div class="zoom-level">
-    <span><%= t("map.zoom_level") %></span>
-    <% if @item.zoom_setting == "designated_level" && @item.set_zoom_level %>
-      <span><%= @item.set_zoom_level %></span>
-    <% else %>
-      <span><%= t("map.auto") %></span>
-    <% end %>
-  </div>
+<div class="mod-map">
+  <dl class="see">
+    <dt><%= @model.t :map_reference_method %></dt>
+    <dd>
+      <%= @item.label :map_reference_method %>
+      <% if @item.map_reference_method == "page" %>
+        (<%= t("mongoid.models.cms/column/base") %>: <%= @item.map_reference_column_name %>)
+      <% end %>
+    </dd>
+    <dt><%= t("map.center_position") %></dt>
+    <dd>
+      <% if @item.center_setting == "designated_location" && @item.set_center_position %>
+        <span>[<%= @item.set_center_position %>]</span>
+      <% else %>
+        <span><%= t("map.auto") %></span>
+      <% end %>
+    </dd>
+    <dt><%= t("map.zoom") %></dt>
+    <dd>
+      <% if @item.zoom_setting == "designated_level" && @item.set_zoom_level %>
+        <span><%= @item.set_zoom_level %></span>
+      <% else %>
+        <span><%= t("map.auto") %></span>
+      <% end %>
+    </dd>
+  </dl>
 </div>
 
-<% @item.map_points.each do |map_point| %>
-  <p><%= "#{map_point[:name]} #{map_point[:loc]}" %></p>
+<% if @item.map_points.present? %>
+  <dl class="see mod-page">
+    <div class="map-canvas" style="width: 100%; height: 320px"></div>
+  </dl>
+
+  <% @item.map_points.each do |map_point| %>
+    <p><%= "#{map_point[:name]} #{map_point[:loc]}" %></p>
+  <% end %>
 <% end %>
 
 <% else %>

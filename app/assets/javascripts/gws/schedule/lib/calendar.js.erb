@@ -143,15 +143,21 @@ this.Gws_Schedule_Calendar = (function ($) {
       },
       eventRender: function(event, element) {
         if (event.className.includes('fc-event-range')) {
-          var end = event.end.toDate();
-          end.setDate(end.getDate() - 1);
-          var formatted = (end.getMonth()+1).toString().padStart(2, '0') + '/' + end.getDate().toString().padStart(2, '0');
-          formatted = formatted.replace(/\n|\r/g, '');
-          if (event.start.format('MM/DD') === formatted) {
-            var span = $('<span class="fc-date"></span>').append(formatted);
+          var fcClass = 'fc-datetime';
+          var format = 'MM/DD HH:mm';
+          var end = moment(event.end);
+          if (event.className.includes('fc-event-allday')) {
+            fcClass = 'fc-date';
+            format = 'MM/DD';
+            end = end.add(-1, 'days')
           } else {
-            var span = $('<span class="fc-date"></span>').append(event.start.format('MM/DD') + ' - ' + formatted);
+            element.find('span.fc-time').remove();
           }
+          var content = (event.start.format(format) + ' - ' + end.format(format));
+          if (event.start.format(format) === end.format(format)) {
+            content = end.format(format);
+          }
+          var span = $('<span></span>').addClass(fcClass).append(content);
           element.find('span.fc-title').before(span);
         }
         if (event.category) {
@@ -255,7 +261,7 @@ this.Gws_Schedule_Calendar = (function ($) {
         }
         var popup_url = event.restUrl ? event.restUrl : url;
         var state = ("calendar[date]=" + (event.start.format('YYYY-MM-DD')) + "&") + Gws_Schedule_Calendar.viewStateQuery(view);
-        if (event.className.includes('fc-event-point')) {
+        if (event.className.includes('fc-event-point') && !event.className.includes('fc-event-private')) {
           jsEvent.preventDefault();
           event.url = popup_url + "/" + event.id + "?" + state;
           location.href = event.url;

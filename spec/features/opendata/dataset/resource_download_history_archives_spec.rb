@@ -62,8 +62,8 @@ describe Opendata::Dataset::ResourceDownloadHistoryArchivesController, type: :fe
     it do
       visit opendata_dataset_history_download_archives_path(site: site, cid: node)
       first(".list-head input[type='checkbox']").click
-      page.accept_confirm do
-        within ".list-head-action" do
+      within ".list-head-action" do
+        page.accept_alert do
           click_on I18n.t("ss.links.delete")
         end
       end

@@ -1,9 +1,16 @@
 <%
+  @source = @item.source
+
+  def allowed_source?(source)
+    return false if !source.respond_to?(:allowed?)
+    return false if !source.respond_to?(:private_show_path)
+    source.allowed?(:read, @cur_user, site: @cur_site)
+  end
+
   def try_parse_json(json)
     JSON.parse(json) rescue json
   end
 %>
-
 <dl class="see">
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.name %></dd>
@@ -17,15 +24,16 @@
   <dt><%= @model.t :state %></dt>
   <dd><%= @item.label(:state) %></dd>
 
-  <% if @item.page %>
-    <% page = @item.page %>
-    <dt><%= @model.t :page_id %></dt>
-
-    <% if page.allowed?(:read, @cur_user, site: @cur_site) %>
-      <dd><%= link_to page.name, page.private_show_path %></dd>
+  <% if @source %>
+    <dt><%= @model.t :source_id %></dt>
+    <% if allowed_source?(@source) %>
+      <dd><%= link_to @source.name, @source.private_show_path %></dd>
     <% else %>
-      <dd><%= page.name %></dd>
+      <dd><%= @source.name %></dd>
     <% end %>
+  <% elsif @item.source_name.present? %>
+    <dt><%= @model.t :source_id %></dt>
+    <dd><%= @item.source_name %></dd>
   <% end %>
 
   <% if @item.error.present? %>
@@ -39,6 +47,9 @@
   <% if @item.type == "line" %>
     <dt><%= @model.t :messages %></dt>
     <dd><%= @item.messages %></dd>
+
+    <dt><%= @model.t :multicast_user_ids %></dt>
+    <dd><%=br @item.multicast_user_ids.join("\n") %></dd>
 
     <dt><%= @model.t :response_code %></dt>
     <dd><%= @item.response_code %></dd>

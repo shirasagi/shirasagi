@@ -5,7 +5,7 @@ module Member::Addon::LoginLink
   included do
     field :login_link_url, type: String
     permit_params :login_link_url
-    validates :login_link_url, "sys/trusted_url" => true
+    validates :login_link_url, "sys/trusted_url" => true, if: ->{ Sys::TrustedUrlValidator.url_restricted? }
   end
 
   def find_login_link_url

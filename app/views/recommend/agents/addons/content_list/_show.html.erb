@@ -1,40 +1,11 @@
-<%= code_editor ".mod-recommend-contentlist .html", mode: :html, readonly: true %>
+<%= render "cms/agents/addons/page_list/show", local_assigns %>
 
-<dl class="see mod-recommend-contentlist">
-  <dt><%= @model.t :limit %></dt>
-  <dd><%= @item.send :limit %></dd>
-
-  <dt><%= @model.t :upper_html %></dt>
-  <dd>
-    <% if @item.upper_html.present? %>
-    <%= text_area_tag :upper_html, @item.upper_html, class: "html" %>
-    <% end %>
-  </dd>
-
-  <dt><%= @model.t :loop_html %></dt>
-  <% if @item.send(:loop_setting).present? %>
-  <dd><%= tryb{@item.loop_setting.name} %></dd>
-  <% end %>
-  <dd>
-    <% if @item.loop_html.present? %>
-    <%= text_area_tag :loop_html, @item.loop_html, class: "html", style: "height: 100px;"  %>
-    <% end %>
-  </dd>
-
-  <dt><%= @model.t :lower_html %></dt>
-  <dd>
-    <% if @item.lower_html.present? %>
-    <%= text_area_tag :lower_html, @item.lower_html, class: "html" %>
-    <% end %>
-  </dd>
-
-  <dt><%= @model.t :substitute_html %></dt>
-  <dd>
-    <% if @item.substitute_html.present? %>
-      <%= text_area_tag :substitute_html, @item.substitute_html, class: "html" %>
-    <% end %>
-  </dd>
-
+<dl class="see">
   <dt><%= @model.t :exclude_paths %></dt>
   <dd><%=br @item.exclude_paths %></dd>
+
+  <% if @model.use_display_target %>
+    <dt><%= @model.t :display_target %></dt>
+    <dd><%= @item.label :display_target %></dd>
+  <% end %>
 </dl>

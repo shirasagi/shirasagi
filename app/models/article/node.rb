@@ -27,19 +27,42 @@ module Article::Node
     include History::Addon::Backup
 
     default_scope ->{ where(route: "article/page") }
+
+    self.use_condition_forms = true
+  end
+
+  class FormExport
+    include Cms::Model::Node
+    include Cms::Addon::NodeSetting
+    include Cms::Addon::Meta
+    include Article::Addon::FormExport
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "article/form_export") }
   end
 
   class MapSearch
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
+    include Event::Addon::PageList
     include Article::Addon::MapSearch
     include Article::Addon::MapSearchResult
+    include Category::Addon::Setting
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
     default_scope ->{ where(route: "article/map_search") }
+
+    self.use_condition_forms = true
+    self.use_loop_settings = false
+
+    def st_categories_sortable?
+      true
+    end
   end
 
   class Search

@@ -68,6 +68,7 @@
 //= require ss/lib/replace_file
 //= require ss/lib/button_to
 //= require ss/lib/open_in_new_window
+//= require ss/lib/emoji
 //= require chat/lib/chart
 //= require cms/lib/editor
 //= require cms/lib/form
@@ -78,9 +79,11 @@
 //= require cms/lib/column_list
 //= require cms/lib/column_table
 //= require cms/lib/column_radio_button
+//= require cms/lib/column_select
 //= require cms/lib/column_select_page
 //= require cms/lib/file_highlighter
 //= require cms/lib/branch
+//= require cms/lib/line
 //= require cms/lib/upload_file_order
 //= require event/lib/form
 //= require map/googlemaps/map
@@ -92,6 +95,7 @@
 //= require map/openlayers/facility/search
 //= require map/openlayers/member/photo/form
 //= require map/lgwan/form
+//= require map/reference
 //= require webmail/lib/mail
 //= require webmail/lib/address
 //= require cropperjs/cropper.min.js
@@ -99,6 +103,7 @@
 //= require flexibility-1.0.6.js
 //= require cms/lib/readable_setting
 //= require cms/lib/michecker
+//= require cms/lib/condition_forms
 //= require ss/lib/usage
 //= require key_visual/lib/swiper_slide
 //= require cms/preview/jquery-ui
@@ -127,12 +132,6 @@ $(function () {
       });
     });
   }
-  //crumbs
-  var crumbs = $('#crumbs a[href]').map(function () {
-    return $(this).attr('href');
-  });
-  crumbs = crumbs.get();
-  crumbs.shift();
   // navi
   var path = location.pathname + "/";
   var longestMatchedElement = function (selector) {
@@ -143,7 +142,7 @@ $(function () {
       if (!href) {
         return true;
       }
-      if (path.match(new RegExp('^' + href.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1') + '(\/|$)')) || crumbs.indexOf(href) !== -1) {
+      if (path === href || path.startsWith(href + "/")) {
         if (hrefLength < href.length) {
           matchedElement = this;
           hrefLength = href.length;
@@ -217,4 +216,5 @@ $(function () {
   SS_ButtonTo.render();
   SS.enableDoubleClickGuard();
   SS_OpenInNewWindow.render();
+  SS_Emoji.render();
 });

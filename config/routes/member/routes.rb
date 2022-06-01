@@ -43,7 +43,6 @@ Rails.application.routes.draw do
     resources :blogs, concerns: :deletion
     resources :blog_pages, concerns: :deletion
     resources :blog_page_locations, concerns: :deletion
-
     resources :photos, concerns: [:deletion, :command] do
       get :index_listable, on: :collection
       get :index_slideable, on: :collection
@@ -53,11 +52,13 @@ Rails.application.routes.draw do
     resources :photo_categories, concerns: :deletion
     resources :photo_locations, concerns: :deletion
     resources :photo_spots, concerns: [:deletion, :command]
-    resources :registrations, concerns: :deletion
+    resources :registrations, only: [:index]
 
     # resources :groups, concerns: :deletion do
     #   resources :members, controller: :group_members, concerns: :deletion
     # end
+
+    resources :my_line_profiles, concerns: :deletion
   end
 
   node "member" do
@@ -98,6 +99,11 @@ Rails.application.routes.draw do
     post "my_profile/confirm_password(.:format)" => "public#confirm_password", cell: "nodes/my_profile"
     get "my_profile/complete_password(.:format)" => "public#complete_password", cell: "nodes/my_profile"
     post "my_profile/postal_code(.:format)" => "public#postal_code", cell: "nodes/my_profile"
+    get "my_line_profile(index.:format)" => "public#index", cell: "nodes/my_line_profile"
+    resource :my_line_profile, controller: "public", cell: "nodes/my_line_profile", only: [:edit, :update]
+    get "my_line_profile/leave(.:format)" => "public#leave", cell: "nodes/my_line_profile"
+    post "my_line_profile/confirm_leave(.:format)" => "public#confirm_leave", cell: "nodes/my_line_profile"
+    post "my_line_profile/complete_leave(.:format)" => "public#complete_leave", cell: "nodes/my_line_profile"
 
     scope "my_blog" do
       resource :setting, controller: "public", cell: "nodes/my_blog/setting", except: [:index, :show, :destroy]

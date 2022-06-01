@@ -393,12 +393,12 @@ this.Openlayers_Map_Form = (function () {
       };
     })(this));
     $(".mod-map .marker-name").on('keypress', function (e) {
-      if (e.which === 13) {
+      if (e.which === SS.KEY_ENTER) {
         return false;
       }
     });
     $(".mod-map .marker-loc-input").on('keypress', function (e) {
-      if (e.which === 13) {
+      if (e.which === SS.KEY_ENTER) {
         $(this).closest("dd.marker").find(".set-marker").trigger("click");
         return false;
       }
@@ -454,13 +454,13 @@ this.Openlayers_Map_Form = (function () {
       })(this));
       cln.find(".marker-name").on('keypress', (function (_this) {
         return function (e) {
-          if (e.which === 13) {
+          if (e.which === SS.KEY_ENTER) {
             return false;
           }
         };
       })(this));
       cln.find(".marker-loc-input").on('keypress', function (e) {
-        if (e.which === 13) {
+        if (e.which === SS.KEY_ENTER) {
           $(e.target).closest("dd.marker").find(".set-marker").trigger("click");
           return false;
         }

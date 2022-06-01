@@ -1,40 +1,19 @@
+<%= render Gws::Apis::GroupDropdownTreeComponent.new(cur_site: @cur_site) %>
+
 <%= jquery do %>
   SS_TreeUI.render("form.search .index.groups", { descendants_check: true });
   SS_Dropdown.render();
 
-  $("form.search .index.groups .select-group").on("click", function(e) {
-    $("#ajax-box #s_group").val($(e.target).data("id"));
-    SS_SearchUI.selectItems()
-    $("#ajax-box form.search").submit()
+  $("form.search .index.groups .select-group").on("click", function(ev) {
+    $("form.search [name='s[group]']").val($(ev.target).data("id"));
+    SS_SearchUI.selectItems();
+    $("form.search").submit();
 
-    e.preventDefault();
-    e.stopPropagation();
+    ev.preventDefault();
+    ev.stopPropagation();
     return false;
   });
-<% end %>
 
-<% if @groups.count > 0 %>
-  <button class="dropdown btn" type="button"><%= @group.name %> <span class="caret">&#x25BC;</span></button>
-<% else %>
-  <%= @group.name %>
+  $("form.search .current-group").text(<%== @group.name.to_json %>);
+  $("form.search [name='s[group]']").val(<%== @group.id.to_json %>);
 <% end %>
-
-<%= hidden_field_tag("s[group]", @group.id) %>
-<div class="dropdown-container">
-  <table class="index groups">
-    <tbody>
-    <tr data-depth="0" class="toggle">
-      <td class="expandable">
-        <%= link_to @cur_site.name, "#", class: "select-group", data: { id: @cur_site.id } %>
-      </td>
-    </tr>
-    <% @groups.each do |item| %>
-      <tr data-depth="<%= item.depth - @cur_site.depth + 1 %>" class="toggle">
-        <td class="expandable">
-          <%= link_to item.trailing_name, "#", class: "select-group", data: { id: item.id } %>
-        </td>
-      </tr>
-    <% end %>
-    </tbody>
-  </table>
-</div>

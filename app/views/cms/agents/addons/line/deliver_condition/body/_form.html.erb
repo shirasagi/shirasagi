@@ -1,0 +1,33 @@
+<%= jquery do %>
+  new Cms_Line_Deliver_Condition
+<% end %>
+
+<%= hidden_field_tag "#{f.object_name}[deliver_category_ids][]", nil %>
+<% Cms::Line::DeliverCategory::Category.site(@cur_site).each_public do |root, children| %>
+  <% next unless root.condition_enabled? %>
+  <dl class="see deliver-category" <%== root.data_required_html %> style="padding-bottom: 10px;">
+    <dt><%= root.name %></dt>
+    <dd>
+      <% if root.select_type == "select" %>
+        <%
+          category_options = []
+          selected = nil
+          children.each do |category|
+            selected = category.id if @item.deliver_category_ids.include?(category.id)
+            category_options << [category.name, category.id]
+          end
+          select_options = { class: "select-deliver-category" }
+          select_options[:include_blank] = true
+        %>
+        <%= select_tag "#{f.object_name}[deliver_category_ids][]", options_for_select(category_options, selected), select_options %>
+      <% elsif root.select_type == "checkbox" %>
+        <% children.each do |category| %>
+          <label>
+            <%= check_box_tag "#{f.object_name}[deliver_category_ids][]", category.id, @item.deliver_category_ids.include?(category.id) %>
+            <%= category.name %>
+          </label>
+        <% end %>
+      <% end %>
+    </dd>
+  </dl>
+<% end %>

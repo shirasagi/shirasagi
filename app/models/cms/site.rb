@@ -24,6 +24,7 @@ class Cms::Site
   include SS::Addon::SourceCleaner::SiteSetting
   include SS::Addon::SiteUsage
   include SS::Addon::GenerateLock
+  include SS::Addon::MaintenanceMode
 
   set_permission_name "cms_sites", :edit
 end

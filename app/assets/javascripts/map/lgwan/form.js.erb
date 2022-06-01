@@ -20,12 +20,12 @@ this.Map_Lgwan_Form = (function () {
       return false;
     });
     $(".mod-map .marker-name").on('keypress', function (e) {
-      if (e.which === 13) {
+      if (e.which === SS.KEY_ENTER) {
         return false;
       }
     });
     $(".mod-map .marker-loc-input").on('keypress', function (e) {
-      if (e.which === 13) {
+      if (e.which === SS.KEY_ENTER) {
         $(this).closest("dd.marker").find(".set-marker").trigger("click");
         return false;
       }
@@ -53,12 +53,12 @@ this.Map_Lgwan_Form = (function () {
         return false;
       });
       cln.find(".marker-name").on('keypress', function (e) {
-        if (e.which === 13) {
+        if (e.which === SS.KEY_ENTER) {
           return false;
         }
       });
       cln.find(".marker-loc-input").on('keypress', function (e) {
-        if (e.which === 13) {
+        if (e.which === SS.KEY_ENTER) {
           $(this).closest("dd.marker").find(".set-marker").trigger("click");
           return false;
         }

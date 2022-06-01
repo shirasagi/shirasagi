@@ -37,7 +37,7 @@ module Cms::NodeFilter::ListView
     mime = rendered_format
 
     if @cur_node.view_layout == "cms/redirect" && !mobile_path?
-      @redirect_link = trusted_url!(@cur_node.redirect_link)
+      @redirect_link = Sys::TrustedUrlValidator.url_restricted? ? trusted_url!(@cur_node.redirect_link) : @cur_node.redirect_link
       body = render_to_string(html: "", layout: "cms/redirect")
     elsif mime.html? && @cur_node.layout
       @last_rendered_layout = nil if @last_rendered_node_filename != @cur_node.filename

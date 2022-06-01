@@ -62,7 +62,7 @@ Webmail_Address_Autocomplete.render = function(selector, opts) {
   };
 
   $(autocomplete).on('keypress', function(e) {
-    if (e.which !== 13) {
+    if (e.which !== SS.KEY_ENTER) {
       return true;
     }
 

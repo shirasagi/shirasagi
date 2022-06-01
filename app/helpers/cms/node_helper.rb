@@ -1,6 +1,6 @@
 module Cms::NodeHelper
   def contents_path(node)
-    route = node.view_route.present? ? node.view_route : node.route
+    route = node.view_route.presence || node.route
     "/.s#{node.site.id}/" + route.pluralize.sub("/", "#{node.id}/")
   rescue StandardError => e
     raise(e) unless Rails.env.production?
@@ -47,15 +47,31 @@ module Cms::NodeHelper
 
   def colored_state_label(item)
     return "" unless item.respond_to?(:status)
-    if item.status =~ /public|ready|request/
-      %(<span class="state state-#{item.status}">#{t("ss.state.#{item.status}")}</span>)
-    elsif item.respond_to?(:workflow_state) && item.workflow_state == "remand"
-      %(<span class="state state-remand">#{t("ss.state.#{item.status}")}</span>)
+
+    if %w(public ready request remand).include?(item.status)
+      css_class = "state-#{item.status}"
+      content = t("ss.state.#{item.status}")
+      if item.status == "request" && @cur_site.try(:approve_remind_state_enabled?)
+        duration = SS::Duration.parse(@cur_site.approve_remind_later)
+        if Workflow.exceed_remind_limit?(duration, item)
+          css_class = "state-#{item.status}-remind"
+          content += t("workflow.state_remind_suffix")
+        end
+      elsif item.status == "public" && @cur_site.try(:page_expiration_enabled?)
+        if item.updated < @cur_site.page_expiration_at
+          css_class = "state-#{item.status}-expired"
+          content += t("cms.state_expired_suffix")
+        end
+      end
     elsif item.first_released.blank?
-      %(<span class="state state-edit">#{t("ss.state.edit")}</span>)
+      css_class = "state-edit"
+      content = t("ss.state.edit")
     else
-      %(<span class="state state-closed">#{t("ss.state.closed")}</span>)
-    end.html_safe
+      css_class = "state-closed"
+      content = t("ss.state.closed")
+    end
+
+    tag.span(content, class: [ "state", css_class ])
   end
 
   def cms_syntax_check_enabled?(options = nil)

@@ -1,4 +1,4 @@
-class Workflow::Mailer < ActionMailer::Base
+class Workflow::Mailer < ApplicationMailer
   def request_mail(args)
     @from_user = SS::User.find(args[:f_uid]) rescue nil
     @to_user   = SS::User.find(args[:t_uid]) rescue nil
@@ -75,6 +75,18 @@ class Workflow::Mailer < ActionMailer::Base
       m = self.remand_mail(args)
       m.deliver_now if m
     end
+  end
+
+  def remind_mail(site:, page:, user:)
+    @from_user = page.workflow_user
+    @to_user   = user
+    from_email = format_email(@from_user) || site_sender(site) || Cms::DEFAULT_SENDER_ADDRESS
+    to_email = format_email(@to_user)
+    return nil if from_email.blank? || to_email.blank?
+
+    @site = site
+    @page = page
+    mail from: from_email, to: to_email, message_id: Cms.generate_message_id(site)
   end
 
   private

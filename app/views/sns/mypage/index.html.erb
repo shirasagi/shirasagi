@@ -30,10 +30,17 @@
       <% @cms_sites.each do |item| %>
       <li class="list-item">
         <div class="info">
-          <%= link_to item.name, cms_contents_path(site: item), class: "title" %>
+          <% if item.maintenance_mode? && !item.allowed_maint_user?(@cur_user.id) %>
+            <%= item.name %>
+          <% else %>
+            <%= link_to item.name, cms_contents_path(site: item), class: "title" %>
+          <% end %>
 
           <div class="meta">
             <span class="id"><%= item.full_url %></span>
+            <% if item.maintenance_mode? %>
+              <span class="id"><%= t('ss.under_maintenance_mode') %></span>
+            <% end %>
           </div>
         </div>
       </li>

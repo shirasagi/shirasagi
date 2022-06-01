@@ -1,0 +1,9 @@
+<%= @site.page_expiration_mail_upper_text.presence || t("cms.page_expiration_mail.default_upper_text").join("\n") %>
+
+<% @pages.each do |page| %>
+- <%= page.name %><% if @site.mypage_domain.present? %> (<%= @site.mypage_scheme.presence || "http" %>://<%= @site.mypage_domain %><%= page.private_show_path %>)<% end %>
+<% end %>
+<% if @site.mail_signature.present? %>
+
+<%= @site.mail_signature %>
+<% end %>

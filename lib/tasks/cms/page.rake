@@ -22,4 +22,8 @@ namespace :cms do
   task import_files: :environment do
     ::Tasks::Cms.import_files
   end
+
+  task expiration_notices: :environment do
+    ::Tasks::Cms.expiration_notices
+  end
 end

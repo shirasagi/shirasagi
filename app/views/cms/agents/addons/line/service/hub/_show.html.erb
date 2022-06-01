@@ -1,0 +1,10 @@
+<dl class="see" style="margin-bottom: 30px;">
+  <dt><%= @item.t :expired_minutes %></dt>
+  <dd>
+    <%= @item.expired_minutes %>
+    <%= t("datetime.prompts.minute") %>
+  </dd>
+
+  <dt><%= @item.t :expired_text %></dt>
+  <dd><%=br @item.expired_text %></dd>
+</dl>

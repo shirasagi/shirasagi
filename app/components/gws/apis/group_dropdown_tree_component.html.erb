@@ -1,0 +1,23 @@
+<%= cache_component do %>
+  <button class="dropdown btn" type="button" <% if groups.count == 0 %>disabled<% end %>><span class="current-group"></span> <span class="caret">&#x25BC;</span></button>
+
+  <%= hidden_field_tag "s[group]", "", id: nil %>
+  <div class="dropdown-container">
+    <table class="index groups">
+      <tbody>
+      <tr data-depth="0" class="toggle">
+        <td class="expandable">
+          <%= link_to site_root.name, "#", class: "select-group", data: { id: site_root.id } %>
+        </td>
+      </tr>
+      <% groups.each do |item| %>
+        <tr data-depth="<%= item.depth - cur_site.depth + 1 %>" class="toggle">
+          <td class="expandable">
+            <%= link_to item.trailing_name, "#", class: "select-group", data: { id: item.id } %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>

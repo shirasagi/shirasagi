@@ -17,7 +17,7 @@ describe "cms/check_links/nodes", type: :feature, dbscope: :example, js: true, r
 
   let(:index_path) { cms_check_links_reports_path site.id }
   let(:node_count) { "#{I18n.t("ss.node")}1#{I18n.t("ss.units.count")}" }
-  let(:link_count) { "#{I18n.t("ss.broken_link")}1#{I18n.t("ss.units.count")}" }
+  let(:link_count) { 1 }
   let(:index_report_created) { index.latest_check_links_report.created }
   let(:page1_error_label) { docs_page1.latest_check_links_report.created }
 
@@ -76,9 +76,12 @@ describe "cms/check_links/nodes", type: :feature, dbscope: :example, js: true, r
         click_on docs.name
       end
 
-      within "#addon-cms-agents-addons-check_links" do
-        expect(page).to have_text(link_count)
-        expect(page).to have_text(report_label(index_report_created))
+      within ".check-links" do
+        header = I18n.t(
+          "cms.notices.check_links_report_header",
+          count: link_count, time: I18n.l(index_report_created, format: :picker)
+        )
+        expect(page).to have_css("h2", text: header)
       end
 
       visit_latest_report_nodes

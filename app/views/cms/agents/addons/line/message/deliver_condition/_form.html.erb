@@ -1,0 +1,56 @@
+<%
+  def deliver_condition_options
+    options = Cms::Line::DeliverCondition.site(@cur_site).allow(:read, @cur_user, site: @cur_site).to_a.
+      map { |item| [item.name_with_order, item.id] }
+
+    condition = @item.deliver_condition
+    if condition
+      options.unshift([condition.name_with_order, condition.id])
+      options.uniq!
+    end
+    options
+  end
+%>
+
+<%= jquery do %>
+  var toggleDeliverCondition = function(){
+    var state = $('[name="item[deliver_condition_state]"]').val();
+    if (state) {
+      $(".deliver_condition").hide();
+      $(".deliver_condition." + state).show();
+    }
+  };
+  $('[name="item[deliver_condition_state]"]').on("change", toggleDeliverCondition);
+  toggleDeliverCondition();
+<% end %>
+
+<dl class="see" style="padding-bottom: 5px;">
+  <dt><%= @model.t :deliver_condition_state %></dt>
+  <dd><%= f.select :deliver_condition_state, @item.deliver_condition_state_options %></dd>
+</dl>
+
+<dl class="see deliver_condition multicast_with_no_condition">
+  <dt></dt>
+  <dd><%=br t("cms.notices.line_deliver_condition.multicast_with_no_condition") %></dd>
+</dl>
+
+<dl class="see deliver_condition multicast_with_registered_condition">
+  <dt></dt>
+  <dd><%=br t("cms.notices.line_deliver_condition.multicast_with_registered_condition") %></dd>
+
+  <dt><%= @model.t :deliver_condition_id %></dt>
+  <dd><%= f.select :deliver_condition_id, deliver_condition_options %></dd>
+</dl>
+
+<div class="deliver_condition multicast_with_input_condition">
+  <dl class="see">
+    <dt></dt>
+    <dd><%=br t("cms.notices.line_deliver_condition.multicast_with_input_condition") %></dd>
+  </dl>
+  <%= render template: "cms/agents/addons/line/deliver_condition/body/_condition_form", locals: { f: f } %>
+</div>
+
+<dl class="see deliver_condition broadcast">
+  <dt></dt>
+  <dd><%=br t("cms.notices.line_deliver_condition.broadcast") %></dd>
+</dl>

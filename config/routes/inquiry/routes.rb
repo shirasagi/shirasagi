@@ -7,13 +7,18 @@ Rails.application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
+  concern :change_state do
+    get :state, on: :member
+    put :change_state_all, on: :collection, path: ''
+  end
+
   concern :download do
     get :download, on: :collection
   end
 
   content "inquiry" do
     get "/" => redirect { |p, req| "#{req.path}/columns" }, as: :main
-    resources :nodes, concerns: :deletion
+    resources :nodes, concerns: [:deletion, :change_state]
     resources :forms, only: [:index]
     resources :columns, concerns: :deletion
     resources :answers, concerns: [:deletion, :download], only: [:index, :show, :edit, :update, :destroy] do

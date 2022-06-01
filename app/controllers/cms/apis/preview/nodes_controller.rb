@@ -31,7 +31,8 @@ class Cms::Apis::Preview::NodesController < ApplicationController
 
   def new_page
     if @cur_node.present?
-      location = url_for(controller: "/" + @cur_node.route.pluralize, action: :new) rescue nil
+      route = @cur_node.view_route.presence || @cur_node.route
+      location = url_for(controller: "/" + route.pluralize, action: :new) rescue nil
       location ||= new_node_page_path(cid: @cur_node)
     else
       location = new_cms_page_path

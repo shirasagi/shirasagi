@@ -394,6 +394,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           end
         end
 
+        expect(page).to have_css("#workflow_route", text: I18n.t("workflow.restart_workflow"))
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(I18n.t("workflow.state.cancelled"))}/)
 
         item.reload

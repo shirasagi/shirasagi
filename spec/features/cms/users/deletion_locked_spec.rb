@@ -65,10 +65,11 @@ describe "cms_users", type: :feature, dbscope: :example, js: true do
 
       find('.list-head input[type="checkbox"]').set(true)
       within ".list-head-action" do
-        page.accept_alert do
-          click_button I18n.t('ss.buttons.delete')
-        end
+        click_button I18n.t('ss.buttons.delete')
       end
+
+      expect(page).to have_content I18n.t('ss.confirm.target_to_delete')
+      click_button I18n.t('ss.buttons.delete')
 
       expect(page).to have_css(".list-items", text: user.name)
       expect(page).to have_no_css(".list-items", text: user1.name)

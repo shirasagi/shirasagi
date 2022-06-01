@@ -12,6 +12,7 @@ module Sys::SiteImport::Contents
   def import_cms_nodes
     @cms_nodes_map = import_documents "cms_nodes", Cms::Node, %w(site_id filename) do |item|
       item[:opendata_site_ids] = [] if item[:opendata_site_ids].present?
+      item.skip_remove_files_recursively = true
     end
   end
 

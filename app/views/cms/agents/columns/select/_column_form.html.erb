@@ -1,5 +1,25 @@
 <% value ||= nil %>
 <% controller ||= false %>
-<%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do %>
-  <%= select_tag("#{f.object_name}[][in_wrap][value]", options_for_select(column.select_options, selected: value.try(:value)), column.form_options.merge(include_blank: column.place_holder.presence || true)) %>
+<% parent_column = column.parent_column %>
+<%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
+  <% if parent_column %>
+    <%= select_tag("#{f.object_name}[][in_wrap][value]", nil, column.form_options.merge(include_blank: column.place_holder.presence || true, "data-initially-selected" => value.try(:value))) %>
+
+    <datalist id="<%= id %>-date-list">
+      <% column.select_options.each do |option| %>
+        <% next if option.blank? %>
+        <% parent_option, child_option = option.split("/", 2) %>
+        <% next if child_option.blank? %>
+
+        <option value="<%= option %>" data-parent="<%= parent_option %>"><%= child_option %></option>
+      <% end %>
+    </datalist>
+
+    <%= jquery do %>
+      Cms_Column_Select.renderChild(<%== "##{id}".to_json %>, <%== { parent_column_id: parent_column.id.to_s }.to_json %>);
+    <% end %>
+  <% else %>
+    <% options = options_for_select(column.select_options, selected: value.try(:value)) %>
+    <%= select_tag("#{f.object_name}[][in_wrap][value]", options, column.form_options.merge(include_blank: column.place_holder.presence || true)) %>
+  <% end %>
 <% end %>

@@ -152,13 +152,39 @@ class Cms::Form::ColumnsController < ApplicationController
     end
     raise '403' unless @cur_form.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
 
-    entries = @items.entries
-    @items = []
+    if params[:destroy_all]
+      render_destroy_all(destroy_items, location: request.path)
+      return
+    end
 
+    respond_to do |format|
+      format.html { render "cms/crud/destroy_all" }
+      format.json { head json: errors }
+    end
+  end
+
+  def destroy_items
+    entries = @items.entries
     entries.each do |item|
       next if item.destroy
       @items << item
     end
-    render_destroy_all(entries.size != @items.size)
+
+    entries.size != @items.size
+  end
+
+  def render_destroy_all(result, opts = {})
+    location = opts[:location].presence || crud_redirect_url || { action: :index }
+    if result
+      notice = { notice: opts[:notice].presence || t("ss.notice.deleted") }
+    else
+      notice = { notice: t("ss.notice.unable_to_delete", items: @items.pluck(:name).join("、")) }
+    end
+    errors = @items.map { |item| [item.id, item.errors.full_messages] }
+
+    respond_to do |format|
+      format.html { redirect_to location, notice }
+      format.json { head json: errors }
+    end
   end
 end

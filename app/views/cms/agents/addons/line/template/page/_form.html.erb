@@ -1,0 +1,45 @@
+<%= jquery do %>
+$('.mod-cms-line-template a.ajax-box').data('on-select', function($item) {
+  $('[name="item[title]"]').val($item.text());
+  SS_SearchUI.defaultSelector($item);
+});
+<% end %>
+
+<dl class="see mod-cms-line-template">
+  <dt><%= @model.t :page_id %><%= @model.tt :page_id %></dt>
+  <dd>
+    <%= f.hidden_field "page_id", value: "", class: "hidden-ids" %>
+    <%
+      page_params = { single: 1 }
+      page_params[:s] = { statuses: %w(public) }
+    %>
+    <%= link_to t("cms.apis.pages.index"), cms_apis_pages_path(page_params), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+        <tr>
+          <th class="name"><%= Cms::Page.t :name %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @item.page %>
+          <tr data-id="<%= @item.page.id %>">
+            <td><%= f.hidden_field "page_id", value: @item.page.id %> <%= @item.page.name %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+
+  <dt><%= @model.t :title %><%= @model.tt :title %></dt>
+  <dd><%= f.text_field :title, class: "js-emoji js-inline" %></dd>
+
+  <dt><%= @model.t :summary %><%= @model.tt :summary %></dt>
+  <dd><%= f.text_area :summary, class: "js-emoji" %></dd>
+
+  <dt><%= @model.t :thumb_state %><%= @model.tt :thumb_state %></dt>
+  <dd><%= f.select :thumb_state, @item.thumb_state_options %></dd>
+</dl>

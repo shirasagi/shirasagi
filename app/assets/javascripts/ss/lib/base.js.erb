@@ -32,6 +32,8 @@ this.SS = (function () {
 
   SS.defaultTimeoutMillis = 2000;
 
+  SS.KEY_ENTER = 13;
+
   // $.isEmptyObject には IE11 で非互換がある。
   //
   //                            | Chrome 84 | IE 11  |
@@ -478,42 +480,75 @@ this.SS = (function () {
 
   // datetimepicker
 
+  // 注意:
+  // datetimepicker にはバグがある。
+  // このコントールの次の要素が disabled の場合、コントロール内で Enter キーを押しても、入力した日時が確定しない。
+  //
+  // datetimepicker では、コントロール内で Enter キーを押すと次の要素にフォーカスを移動させる。
+  // フォーカスを移動させることでイベント "blur" が発生し、入力が確定 → onChangeDateTime イベント発生という順で処理が進む。
+  //
+  // しかし、次の要素が disabled の場合、フォーカスを移動させれず、イベント "blur" が発生しない。
+  // このため、入力が確定せず、onChangeDateTime イベントも発生しない。
+  //
+  // 問題となるソースコードは https://github.com/xdan/datetimepicker/blob/master/jquery.datetimepicker.js#L2591
+  // 要素セレクターに ":enabled" の条件がない。
+  //
+  // そこで、Enter キーが押されたら、イベント "blur" を発生させ、入力が確定 → onChangeDateTime イベント発生という順で処理が進むようにする。
+  // また、念の為 Enter キーでフォーカスを移動させないようにするため enterLikeTab を false にする。
   SS.renderDateTimePicker = function () {
     $.datetimepicker.setLocale('ja');
     $.each($(".js-date"), function () {
-      var data, opts;
-      opts = {
+      var $this = $(this);
+      var opts = {
         timepicker: false,
         format: 'Y/m/d',
         closeOnDateSelect: true,
-        scrollInput: false
+        scrollInput: false,
+        enterLikeTab: false
       };
-      data = $(this).data();
-      if (data.minDate) {
+      var data = $this.data();
+      if ("minDate" in data) {
         opts.minDate = data.minDate;
       }
-      if (data.maxDate) {
+      if ("maxDate" in data) {
         opts.maxDate = data.maxDate;
       }
-      return $(this).attr('autocomplete', 'off').datetimepicker(opts);
+      $this.attr('autocomplete', 'off')
+        .datetimepicker(opts)
+        .on("keydown", function(ev) {
+          var key = ev.which;
+          if (key === SS.KEY_ENTER) {
+            $this.trigger("blur.xdsoft")
+          }
+          return true;
+        });
     });
     $.each($(".js-datetime"), function () {
-      var data, opts;
-      opts = {
+      var $this = $(this);
+      var opts = {
         roundTime: 'ceil',
-        step: 30
+        step: 30,
+        enterLikeTab: false
       };
-      data = $(this).data();
-      if (data.minDate) {
+      var data = $this.data();
+      if ("minDate" in data) {
         opts.minDate = data.minDate;
       }
-      if (data.maxDate) {
+      if ("maxDate" in data) {
         opts.maxDate = data.maxDate;
       }
-      if (data.step) {
+      if ("step" in data) {
         opts.step = data.step;
       }
-      return $(this).attr('autocomplete', 'off').datetimepicker(opts);
+      $this.attr('autocomplete', 'off')
+        .datetimepicker(opts)
+        .on("keydown", function(ev) {
+          var key = ev.which;
+          if (key === SS.KEY_ENTER) {
+            $this.trigger("blur.xdsoft")
+          }
+          return true;
+        });
     });
   };
 

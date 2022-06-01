@@ -51,7 +51,7 @@ module Cms::Addon
     end
 
     def twitter_post_enabled?
-      token_enabled = (site || @cur_site).try(:twitter_token_enabled?)
+      token_enabled = (site || @cur_site).try(:twitter_poster_enabled?)
 
       return false if !token_enabled
       return false if skip_twitter_post.present?

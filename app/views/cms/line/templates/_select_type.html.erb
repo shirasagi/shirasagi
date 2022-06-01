@@ -1,0 +1,44 @@
+<div class="line-select-message-type">
+  <div>作成するテンプレートを選択してください。</div>
+  <div class="message-types">
+    <div class="message-type-wrap">
+      <%= link_to({ action: :new, type: "text" }, { class: "message-type text #{(@type == "text") ? "current" : ""}" }) do %>
+        <%= image_tag("/assets/img/line/templates/text.jpg", alt: "text") %>
+        <div class="description">
+          <h2 class="title">テキスト</h2>
+          <div class="summary">通常のテキストメッセージです。</div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="message-type-wrap">
+      <%= link_to({ action: :new, type: "image" }, { class: "message-type image #{(@type == "image") ? "current" : ""}" }) do %>
+        <%= image_tag("/assets/img/line/templates/image.jpg", alt: "image") %>
+        <div class="description">
+          <h2 class="title">画像</h2>
+          <div class="summary">画像を送信します。</div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="message-type-wrap">
+      <%= link_to({ action: :new, type: "page" }, { class: "message-type page #{(@type == "page") ? "current" : ""}" }) do %>
+        <%= image_tag("/assets/img/line/templates/page.jpg", alt: "page") %>
+        <div class="description">
+          <h2 class="title">記事ページ</h2>
+          <div class="summary">記事ページへのリンクとサマリーを送信します。</div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="message-type-wrap">
+      <%= link_to({ action: :new, type: "json_body" }, { class: "message-type json_body #{(@type == "json_body") ? "current" : ""}" }) do %>
+        <%= image_tag("/assets/img/line/templates/json_body.jpg", alt: "json_body") %>
+        <div class="description">
+          <h2 class="title">JSON</h2>
+          <div class="summary">JSONテンプレートを直接入力します。</div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

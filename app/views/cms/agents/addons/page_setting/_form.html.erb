@@ -3,17 +3,30 @@
   addon[:display_body] = "hide"
 %>
 <dl class="see mod-cms-page-setting">
-  <dl class="see">
-    <dt><%= @model.t :auto_keywords %><%= @model.tt :auto_keywords %></dt>
-    <dd><%= f.select :auto_keywords, @item.auto_keywords_options %></dd>
+  <dt><%= @model.t :auto_keywords %><%= @model.tt :auto_keywords %></dt>
+  <dd><%= f.select :auto_keywords, @item.auto_keywords_options %></dd>
 
-    <dt><%= @model.t :keywords %><%= @model.tt :keywords %></dt>
-    <dd><%= f.text_field :keywords %></dd>
+  <dt><%= @model.t :keywords %><%= @model.tt :keywords %></dt>
+  <dd><%= f.text_field :keywords %></dd>
 
-    <dt><%= @model.t :auto_description %><%= @model.tt :auto_description %></dt>
-    <dd><%= f.select :auto_description, @item.auto_description_options %></dd>
+  <dt><%= @model.t :auto_description %><%= @model.tt :auto_description %></dt>
+  <dd><%= f.select :auto_description, @item.auto_description_options %></dd>
 
-     <dt><%= @model.t :max_name_length %><%= @model.tt :max_name_length %></dt>
-    <dd><%= f.select :max_name_length, @item.max_name_length_options %></dd>
-  </dl>
+  <dt><%= @model.t :max_name_length %><%= @model.tt :max_name_length %></dt>
+  <dd><%= f.select :max_name_length, @item.max_name_length_options %></dd>
+
+  <dt><%= @model.t :page_expiration_state %><%= @model.tt :page_expiration_state %></dt>
+  <dd><%= f.select :page_expiration_state, @item.page_expiration_state_options %></dd>
+
+  <dt><%= @model.t :page_expiration_before %><%= @model.tt :page_expiration_before %></dt>
+  <dd><%= f.select :page_expiration_before, @item.page_expiration_before_options %></dd>
+
+  <dt><%= t("cms.page_expiration_mail.title") %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= t("cms.page_expiration_mail.subject") %><%= @model.tt :page_expiration_mail_subject %></dt>
+  <dd class="depth-2"><%= f.text_field :page_expiration_mail_subject, placeholder: t("cms.page_expiration_mail.default_subject") %></dd>
+
+  <dt class="depth-2"><%= t("cms.page_expiration_mail.upper_text") %><%= @model.tt :page_expiration_mail_upper_text %></dt>
+  <dd class="depth-2"><%= f.text_area :page_expiration_mail_upper_text, placeholder: t("cms.page_expiration_mail.default_upper_text").join("\n") %></dd>
 </dl>

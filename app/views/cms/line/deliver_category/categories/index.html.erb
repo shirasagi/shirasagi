@@ -1,0 +1,43 @@
+<div class="index">
+  <%= render template: "_list_head" %>
+
+  <ul class="list-items">
+    <li class="list-item">
+      <div class="info">
+        <%= link_to t('ss.links.parent_directory'), cms_line_deliver_categories_path, class: "up" %>
+      </div>
+    </li>
+
+    <% @items.each do |item| %>
+      <li class="list-item">
+        <nav class="tap-menu">
+          <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+
+          <% if item.try(:image) %>
+            <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank", rel: "noopener" } %>
+          <% elsif item.try(:image?) %>
+            <%= link_to image_tag("#{item.thumb_url}?_=#{item.updated.to_i}", alt: ''), item.url, { class: "thumb", target: "_blank", rel: "noopener" } %>
+          <% end %>
+        </nav>
+
+        <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
+        <div class="info">
+          <%= link_to item.name, { action: :show, id: item }, class: "title" %>
+
+          <div class="meta">
+            <span class="id">#<%= item.id %></span>
+            <% if item.try(:updated) %>
+              <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+            <% end %>
+              <span class="type"><%= item.label :type %></span>
+            <span class="state state-<%= item.state %>"><%= t("ss.state.#{item.state}") %></span>
+          </div>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

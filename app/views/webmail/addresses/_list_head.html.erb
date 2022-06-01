@@ -27,7 +27,7 @@
   <div class="list-head-action webmail-address-head">
     <%= render template: "_list_head_tags" %>
     <div class="list-head-action-destroy">
-      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn", method: "delete", confirm: t('ss.confirm.delete') %>
+      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", model: @model, method: "delete", confirm: t('ss.confirm.delete') %>
     </div>
     <div class="dropdown dropdown-toggle">
       <button class="btn move" data-href="#">

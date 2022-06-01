@@ -1,0 +1,19 @@
+
+<fieldset class="column name">
+  <legend>
+    <%= @model.t :name %>
+  </legend>
+  <dd>
+    <%= @item.name %>
+  </dd>
+</fieldset>
+
+<fieldset class="column subscribe-line-message">
+  <legend>
+    <%= @model.t(:subscribe_line_message) %>
+  </legend>
+  <dd>
+    <%= f.select :subscribe_line_message, @item.subscribe_line_message_options %>
+    <%= remarks :subscribe_line_message %>
+  </dd>
+</fieldset>

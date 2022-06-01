@@ -211,7 +211,7 @@ module Cms::PublicFilter
 
   def send_page(page)
     if page.view_layout == "cms/redirect" && !mobile_path?
-      @redirect_link = trusted_url!(page.redirect_link)
+      @redirect_link = Sys::TrustedUrlValidator.url_restricted? ? trusted_url!(page.redirect_link) : page.redirect_link
       render html: "", layout: "cms/redirect"
     elsif response.media_type == "text/html" && page.layout
       render html: render_layout(page.layout).html_safe, layout: (request.xhr? ? false : "cms/page")

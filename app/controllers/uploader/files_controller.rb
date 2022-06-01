@@ -243,12 +243,50 @@ class Uploader::FilesController < ApplicationController
   end
 
   def destroy_all
-    @paths = params[:ids]
-    @paths.each do |path|
-      item = @model.file("#{@item.path}/#{path}")
-      item.destroy
+    @selected_items = @model.search(@item.path, params[:s]).select do |file|
+      params[:ids].include?(File.basename(file.saved_path))
     end
-    render_destroy true, location: "#{uploader_files_path}/#{@item.filename}"
+
+    if params[:destroy_all]
+      render_confirmed_all(destroy_items, location: "#{uploader_files_path}/#{@item.filename}")
+      return
+    end
+
+    respond_to do |format|
+      format.html { render "cms/crud/destroy_all" }
+      format.json { head json: errors }
+    end
+  end
+
+  def destroy_items
+    entries = @selected_items.entries
+    @items = []
+
+    params[:ids].each do |path|
+      target_path = File.expand_path("#{@cur_site.path}/#{path}")
+      next if !target_path.start_with?(@cur_node.path)
+
+      item = @model.file(target_path)
+      item.destroy
+      @items << item
+    end
+
+    entries.size != @items.size
+  end
+
+  def render_confirmed_all(result, opts = {})
+    location = opts[:location].presence || crud_redirect_url || { action: :index }
+    if result
+      notice = { notice: opts[:notice].presence || t("ss.notice.deleted") }
+    else
+      notice = { notice: t("ss.notice.unable_to_delete", items: @items.pluck(:name).join("、")) }
+    end
+    errors = @items.map { |item| [item.path, item.errors.full_messages] }
+
+    respond_to do |format|
+      format.html { redirect_to location, notice }
+      format.json { head json: errors }
+    end
   end
 
   def check

@@ -9,6 +9,6 @@ module Cms::ForMemberFilter::Page
   private
 
   def for_member_enabled?
-    @cur_page.try(:for_member_enabled?) && !@preview
+    @cur_page.parent.try(:any_ancestor_nodes_for_member_enabled?) && !@preview
   end
 end

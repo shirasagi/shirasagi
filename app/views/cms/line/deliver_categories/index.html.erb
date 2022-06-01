@@ -1,0 +1,14 @@
+<% @index_title = proc do |item| %>
+  <%= link_to item.name, cms_line_deliver_category_categories_path(deliver_category_id: item), class: 'title' %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <% if item.try(:updated) %>
+    <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <% end %>
+  <span class="type"><%= item.label :type %></span>
+  <span class="state state-<%= item.state %>"><%= t("ss.state.#{item.state}") %></span>
+<% end %>
+
+<%= render template: "cms/crud/index" %>

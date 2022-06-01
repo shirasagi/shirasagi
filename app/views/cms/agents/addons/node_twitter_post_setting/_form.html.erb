@@ -1,5 +1,5 @@
 <%
-  return "" unless @cur_site.twitter_token_enabled?
+  return "" unless @cur_site.twitter_poster_enabled?
 
   addon ||= local_assigns.fetch(:addon, {})
   addon[:display_body] = "hide"

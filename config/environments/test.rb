@@ -36,7 +36,7 @@ Rails.application.configure do
   # Show full error reports and disable caching.
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
-  config.cache_store = :null_store
+  config.cache_store = :file_store, "#{Rails.root}/tmp/rspec_#{$PID}/cache_store"
 
   # Raise exceptions instead of rendering exception templates.
   config.action_dispatch.show_exceptions = false
@@ -77,7 +77,6 @@ Rails.application.configure do
   # ActiveJob Queue Adapter
   config.active_job.queue_adapter = :test
 
-  config.cache_store = ActiveSupport::Cache.lookup_store(:memory_store)
   config.assets.cache_store = ActiveSupport::Cache.lookup_store(:memory_store)
   config.assets.configure do |env|
     env.cache = ActiveSupport::Cache.lookup_store(:memory_store)

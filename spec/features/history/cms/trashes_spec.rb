@@ -76,9 +76,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
 
       within '.list-head' do
         check(nil)
-        page.accept_confirm do
-          click_button I18n.t('ss.links.delete')
-        end
+        click_button I18n.t('ss.links.delete')
       end
 
       expect(page).to have_content I18n.t('ss.confirm.target_to_delete')

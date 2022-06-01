@@ -8,7 +8,7 @@ class Cms::Form::DocsController < ApplicationController
 
   before_action :set_db
   before_action :set_form
-  before_action :require_node, only: [:new, :create, :edit, :update, :import]
+  before_action :require_node, only: [:new, :create, :edit, :update, :import, :import_url]
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
 
   private
@@ -17,7 +17,7 @@ class Cms::Form::DocsController < ApplicationController
   end
 
   def set_db
-    @db = Cms::FormDb.find(params[:db_id])
+    @db = Cms::FormDb.site(@cur_site).find(params[:db_id])
     @db.attributes = { cur_site: @cur_site, cur_user: @cur_user }
   end
 
@@ -74,7 +74,7 @@ class Cms::Form::DocsController < ApplicationController
     @items = @db.pages.order(name: 1)
 
     csv_params = params.require(:item).permit(:encoding)
-    csv = Cms::FormDb.export_csv(@form, @items, csv_params)
+    csv = @db.export_csv(@form, @items, csv_params)
     send_data csv, filename: "pages_#{Time.zone.now.to_i}.csv"
   end
 
@@ -87,6 +87,23 @@ class Cms::Form::DocsController < ApplicationController
     @db.in_file = in_params[:in_file]
     return unless @db.import_csv
 
-    redirect_to({ action: :import }, { notice: 'インポートしました。' })
+    redirect_to({ action: :index }, { notice: I18n.t("ss.notice.imported") })
+  end
+
+  def import_url
+    task_name = "cms:form_db:import_url"
+    @task = Cms::Task.find_or_create_by name: task_name, site_id: @cur_site.id
+
+    if request.head? || request.get?
+      respond_to do |format|
+        format.html { render }
+        format.json { render template: "ss/tasks/index", content_type: json_content_type, locals: { item: @task } }
+      end
+      return
+    end
+
+    @db.perform_import
+
+    render_create true, location: { action: :import_url }, notice: t("ss.notice.started_import")
   end
 end

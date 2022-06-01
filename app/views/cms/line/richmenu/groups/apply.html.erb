@@ -1,0 +1,41 @@
+<%= form_for :item, url: { action: :apply }, html: { method: :post, id: "task-form" } do |f| %>
+  <%= error_messages_for :item %>
+
+  <section class="main-box">
+    <header><h2><%= I18n.t("ss.buttons.upload") %></h2></header>
+
+    <div class="main-body">
+      <% if @item %>
+        <div style="font-weight: bold; padding: 5px 0px 10px 0px;">
+          <%=br t("cms.notices.line_apply_richmenu").join("\n") %>
+        </div>
+        <dl class="see">
+          <dt><%= @item.t(:name) %></dt>
+          <dd>
+            <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
+              <%= link_to @item.name, cms_line_richmenu_group_path(id: @item.id), target: "_blank", rel: "noopener" %>
+            <% else %>
+              <%= @item.name %>
+            <% end %>
+          </dd>
+
+          <% if @item.term_label.present? %>
+            <dt><%= @item.t(:term) %></dt>
+            <dd><%= @item.term_label %></dd>
+          <% end %>
+        </dl>
+      <% else %>
+        <div style="font-weight: bold; padding: 5px 0px 10px 0px;">
+          <%=br t("cms.notices.line_remand_richmenu").join("\n") %>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <%= render "ss/tasks/box", task: @task, url: url_for(action: :apply, format: :json) %>
+
+  <footer class="send">
+    <%= f.submit t("cms.buttons.apply"), class: "save", data: { confirm: t("cms.confirm.line_apply_richmenu"), disable_with: t("cms.buttons.apply") } %>
+    <%= f.button t("ss.buttons.cancel"), class: "btn-default", onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+  </footer>
+<% end %>

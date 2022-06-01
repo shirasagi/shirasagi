@@ -5,10 +5,10 @@ module Tasks
         each_sites do |site|
           if ENV.key?("node")
             with_node(site, ENV["node"]) do |node|
-              perform_job(::Cms::Node::GenerateJob, site: site, node: node)
+              perform_job(::Cms::Node::GenerateJob, site: site, node: node, segment: ENV["segment"])
             end
           else
-            perform_job(::Cms::Node::GenerateJob, site: site)
+            perform_job(::Cms::Node::GenerateJob, site: site, segment: ENV["segment"])
           end
         end
       end
@@ -23,10 +23,11 @@ module Tasks
         each_sites do |site|
           if ENV.key?("node")
             with_node(site, ENV["node"]) do |node|
-              perform_job(::Cms::Page::GenerateJob, site: site, node: node)
+              perform_job(::Cms::Page::GenerateJob, site: site, node: node, segment: ENV["segment"])
             end
           else
-            perform_job(::Cms::Page::GenerateJob, site: site)
+            perform_job(::Cms::Page::GenerateJob, site: site, segment: ENV["segment"])
+            perform_job(::Workflow::ReminderJob, site: site)
           end
         end
       end
@@ -70,6 +71,12 @@ module Tasks
       def import_files
         each_sites do |site|
           perform_job(::Cms::ImportFilesJob, site: site)
+        end
+      end
+
+      def expiration_notices
+        each_sites do |site|
+          perform_job(::Cms::Page::ExpirationNoticeJob, site: site)
         end
       end
 

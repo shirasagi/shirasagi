@@ -8,4 +8,10 @@
 
   <dt><%= @model.t :close_confirmation %><%= @model.tt :close_confirmation %></dt>
   <dd><%= f.select :close_confirmation, @item.close_confirmation_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :approve_remind_state %><%= @model.tt :approve_remind_state %></dt>
+  <dd><%= f.select :approve_remind_state, @item.approve_remind_state_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :approve_remind_later %><%= @model.tt :approve_remind_later %></dt>
+  <dd><%= f.select :approve_remind_later, @item.approve_remind_later_options, include_blank: true %></dd>
 </dl>

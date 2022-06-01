@@ -1,0 +1,30 @@
+<nav class="mod-navi">
+  <h2><%= t("cms.line") %></h2>
+  <% if Cms::Line::Message.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t("cms.line_message"), cms_line_messages_path %></h3>
+  <% end %>
+  <% if Cms::SnsPostLog::LineDeliver.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t("cms.line_deliver_log"), cms_line_deliver_logs_path %></h3>
+  <% end %>
+  <% if Cms::Line::DeliverCondition.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t("cms.line_deliver_condition"), cms_line_deliver_conditions_path %></h3>
+  <% end %>
+  <% if Cms::Line::DeliverCategory::Base.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t("cms.line_deliver_category"), cms_line_deliver_categories_path %></h3>
+  <% end %>
+  <% if Cms::Line::TestMember.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t("cms.line_test_member"), cms_line_test_members_path %></h3>
+  <% end %>
+  <% if Cms::Line::Richmenu::Group.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t("cms.line_richmenu"), cms_line_richmenu_groups_path %></h3>
+    <ul class="narrow-page">
+      <li><%= link_to t("cms.line_richmenu_menu"), cms_line_richmenu_group_menus_path %></li>
+    </ul>
+  <% end %>
+  <% if Cms::Line::Service::Group.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t("cms.line_service"), cms_line_service_groups_path %></h3>
+    <h3><%= link_to t("cms.line_event_session"), cms_line_event_sessions_path %></h3>
+  <% end %>
+</nav>
+
+<%= render partial: "cms/main/navi" %>

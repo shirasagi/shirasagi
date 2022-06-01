@@ -3,9 +3,9 @@
 
   <div class="list-head-action">
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= ss_button_to t("ss.links.delete"), url_for(action: :soft_delete_all), class: "soft-delete-all btn btn-list-head-action", method: "post", confirm: t('ss.confirm.soft_delete') %>
+      <%= ss_button_to t("ss.links.delete"), url_for(action: :soft_delete_all), model: @model, class: "soft-delete-all btn btn-list-head-action", method: "post", confirm: t('ss.confirm.soft_delete') %>
     <% end %>
-    <%= ss_button_to t('gws/circular.post.download'), url_for(action: :download_all), class: "download-all btn btn-list-head-action", method: "post", confirm: t('gws/circular.confirm.download') %>
+    <%= ss_button_to t('gws/circular.post.download'), url_for(action: :download_all), model: @model, class: "download-all btn btn-list-head-action", method: "post", confirm: t('gws/circular.confirm.download') %>
   </div>
 
   <div class="list-head-search">

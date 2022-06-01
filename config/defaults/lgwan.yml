@@ -21,6 +21,16 @@ production: &production
 
 test:
   <<: *production
+  map:
+    layers:
+      - name: '国土地理院地図'
+        source: "XYZ"
+        url: "https://via.placeholder.com/256.png?text=CyberJapandata,LGWAN"
+        projection: "EPSG:3857"
+      - name: 'OpenStreetMap'
+        source: "OSM"
+        url: "https://via.placeholder.com/256.png?text=OSM,LGWAN"
+        projection: "EPSG:3857"
 
 development:
   <<: *production

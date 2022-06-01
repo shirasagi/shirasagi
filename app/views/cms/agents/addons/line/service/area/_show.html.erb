@@ -1,0 +1,62 @@
+<%= jquery do %>
+new Cms_Line_Area_Cropper(".line-crop-area", { readonly: true });
+<% end %>
+
+<% if @item.area_size > 0 %>
+<%= link_to t("ss.links.edit"), { action: :crop }, { class: "btn", style: "margin-bottom: 20px;" } %>
+<% end %>
+
+<div class="line-crop-area">
+  <div class="image-warp">
+    <%= image_tag(@item.image.url, class: "image") %>
+  </div>
+  <div class="area-form">
+    <div class="area-names">
+      <% 1.upto(@item.area_size).each do |i| %>
+        <%= link_to "領域#{i}", "", class: "btn area-name", "data-area": i %>
+      <% end %>
+    </div>
+    <div class="areas">
+      <% 1.upto(@item.area_size).each do |i| %>
+        <% area = @item.areas[i - 1] %>
+        <div class="area area<%= i %>" data-area="<%= i %>" style="display: none;">
+          <% if area %>
+          <div class="points">
+            <label class="point">X <%= number_field_tag "item[in_areas][][x]", area.x, readonly: "readonly" %></label>
+            <label class="point">Y <%= number_field_tag "item[in_areas][][y]", area.y, readonly: "readonly" %></label>
+            <label class="point">W <%= number_field_tag "item[in_areas][][width]", area.width, readonly: "readonly" %></label>
+            <label class="point">H <%= number_field_tag "item[in_areas][][height]", area.height, readonly: "readonly" %></label>
+          </div>
+          <div class="action">
+            <div class="action-type">
+              <label class="type">
+                <span>アクション</span>
+                <span>
+                  <%= t("cms.options.line_action_type.#{area.type}") %>
+                  <%= select_tag "item[in_areas][][type]", options_for_select(area.type_options, area.type), style: "display: none;" %>
+                </span>
+              </label>
+            </div>
+            <div class="action-values">
+              <label class="value" data-type="message">
+                <span>メッセージ</span>
+                <span><%= area.text %></span>
+              </label>
+              <label class="value" data-type="uri">
+                <span>URI</span>
+                <span><%= area.uri %></span>
+              </label>
+              <label class="value" data-type="postback">
+                <span>データ</span>
+                <span><%= area.data %></span>
+              </label>
+            </div>
+          </div>
+          <% else %>
+            <div style="padding: 5px;">設定されていません。</div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

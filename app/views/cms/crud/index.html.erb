@@ -13,7 +13,7 @@
 
     <% @items.each do |item| %>
       <% item = @item_decorator.call(item) if @item_decorator %>
-      <li class="list-item">
+      <li class="list-item" data-id="<%= item.try(:id) %>">
         <nav class="tap-menu">
           <% if @tap_menu %>
             <% @tap_menu.call item %>

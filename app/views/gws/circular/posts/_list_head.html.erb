@@ -2,8 +2,8 @@
   <label class="check"><input type="checkbox" /></label>
 
   <div class="list-head-action">
-    <%= ss_button_to t('gws/circular.post.unset_seen'), url_for(action: :unset_seen_all), class: "btn unset-seen-all btn-list-head-action", method: "post", confirm: t('gws/circular.confirm.unset_seen_all') %>
-    <%= ss_button_to t('gws/circular.post.set_seen'), url_for(action: :set_seen_all), class: "btn set-seen-all btn-list-head-action", method: "post", confirm: t('gws/circular.confirm.set_seen_all') %>
+    <%= ss_button_to t('gws/circular.post.unset_seen'), url_for(action: :unset_seen_all), model: @model, class: "btn unset-seen-all btn-list-head-action", method: "post", confirm: t('gws/circular.confirm.unset_seen_all') %>
+    <%= ss_button_to t('gws/circular.post.set_seen'), url_for(action: :set_seen_all), model: @model, class: "btn set-seen-all btn-list-head-action", method: "post", confirm: t('gws/circular.confirm.set_seen_all') %>
   </div>
 
   <div class="list-head-search">

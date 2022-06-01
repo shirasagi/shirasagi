@@ -32,6 +32,9 @@ module Member
     Cms::Part.plugin "member/photo_slide"
     Cms::Part.plugin "member/invited_group"
 
+    # line
+    Cms::Node.plugin "member/my_line_profile"
+
     Cms::Role.permission :read_other_member_blogs
     Cms::Role.permission :read_private_member_blogs
     Cms::Role.permission :edit_other_member_blogs

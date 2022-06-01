@@ -1,5 +1,7 @@
 <%
-  if @selected_items.klass.ancestors.include?(Cms::Model::Page)
+  if @selected_items.is_a?(Array)
+    template_path = "cms/crud/confirm_all"
+  elsif @selected_items.klass.ancestors.include?(Cms::Model::Page)
     template_path = "cms/crud/destroy_pages"
   else
     template_path = "cms/crud/confirm_all"

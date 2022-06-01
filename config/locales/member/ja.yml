@@ -50,6 +50,9 @@ ja:
       member_joins_to_invited_group:
         manual: 手動
         auto: 自動
+      subscribe_line_message:
+        active: LINEメッセージを受信する
+        expired: LINEメッセージを受信しない
     view:
       email: メールアドレス
       password: パスワード
@@ -115,6 +118,8 @@ ja:
         notify: 会員登録申請
         verification: 会員登録確認
         completed: 会員登録完了
+    placeholder:
+      member_name: お子さんの愛称、ニックネームを入力ください
 
   modules:
     member: メンバー
@@ -156,6 +161,7 @@ ja:
       member/member_invitation_setting: 会員招待メール
       member/login_link: ログイン
       member/editor_setting: エディタ設定
+      member/line_attributes: LINE配信属性
 
   cms:
     nodes:
@@ -174,6 +180,7 @@ ja:
       member/photo_location: フォトロケーション
       member/photo_search: フォトサーチ
       member/photo_spot: フォトスポット
+      member/my_line_profile: LINEプロフィール
 
     parts:
       member/blog_page: ブログページ一覧
@@ -339,6 +346,10 @@ ja:
         member_joins_to_invited_group: 招待グループへの参加
       member/addon/login_link:
         login_link_url: ログインURL
+      member/addon/line_attributes:
+        subscribe_line_message: LINEメッセージ
+        first_registered: 初回登録日時
+        subscribe_richmenu_id: LINEリッチメニューID
 
   cms_role:
     read_other_member_blogs: メンバーブログの閲覧（全て）

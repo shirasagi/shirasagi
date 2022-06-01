@@ -13,6 +13,11 @@ class Member::Agents::Nodes::LoginController < ApplicationController
   end
 
   def set_member_and_redirect(member)
+    ref = @cur_node.make_trusted_full_url(params[:ref] || flash[:ref])
+    ref = @cur_node.redirect_full_url if ref.blank?
+    ref = @cur_site.full_url if ref.blank?
+    flash.discard(:ref)
+
     set_member member
     Member::ActivityLog.create(
       cur_site: @cur_site,
@@ -20,11 +25,6 @@ class Member::Agents::Nodes::LoginController < ApplicationController
       activity_type: "login",
       remote_addr: remote_addr,
       user_agent: request.user_agent)
-
-    ref = @cur_node.make_trusted_full_url(params[:ref] || flash[:ref])
-    ref = @cur_node.redirect_full_url if ref.blank?
-    ref = @cur_site.full_url if ref.blank?
-    flash.discard(:ref)
 
     redirect_to ref
   end
@@ -51,18 +51,26 @@ class Member::Agents::Nodes::LoginController < ApplicationController
 
   def logout
     # discard all session info
-    reset_session
+    reset_session if SS.config.sns.logged_in_reset_session
     flash.discard(:ref)
     redirect_to member_login_path
   end
 
   def callback
     auth = request.env["omniauth.auth"]
-    member = Cms::Member.site(@cur_site).and_enabled.where(oauth_type: auth.provider, oauth_id: auth.uid).first
+    member = Cms::Member.unscoped.site(@cur_site).where(oauth_type: auth.provider, oauth_id: auth.uid).first
     if member.blank?
       # 外部認証していない場合、ログイン情報を保存してから、ログインさせる
       Cms::Member.create_auth_member(auth, @cur_site)
       member = Cms::Member.site(@cur_site).and_enabled.where(oauth_type: auth.provider, oauth_id: auth.uid).first
+    else
+      # auth info の名前が変わっていたら上書きする
+      name = Cms::Member.name_of(auth.info)
+      member.name = name if member.name != name
+
+      # 無効状態の場合は有効にする
+      member.state = "enabled" if !member.enabled?
+      member.update if member.changed?
     end
 
     set_member_and_redirect member

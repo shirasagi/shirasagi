@@ -9,7 +9,7 @@ Rails.application.routes.draw do
 
   content "recommend" do
     get "/" => redirect { |p, req| "#{req.path}/receivers" }, as: :main
-    resources :receivers, concerns: :deletion
+    resources :receivers, only: [:index]
   end
 
   namespace "recommend", path: ".s:site/recommend" do

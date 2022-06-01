@@ -1,4 +1,4 @@
-class Gws::Report::Mailer < ActionMailer::Base
+class Gws::Report::Mailer < ApplicationMailer
   def publish_mail(site, item, opts = {})
     @site = site
     @item = item

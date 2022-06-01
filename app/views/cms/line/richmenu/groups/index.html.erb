@@ -1,0 +1,10 @@
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= t("ss.views.index.updated", updated: item.updated.strftime("%Y/%m/%d %H:%M")) %></span>
+  <% if item.term_label.present? %>
+  <span class="datetime"><%= t("ss.views.index.term", term: item.term_label) %></span>
+  <% end %>
+  <span class="state state-<%= item.state %>"><%= item.label :state %></span>
+<% end %>
+
+<%= render template: "cms/crud/index" %>

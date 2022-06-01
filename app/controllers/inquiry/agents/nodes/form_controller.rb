@@ -70,6 +70,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     @answer = Inquiry::Answer.new(cur_site: @cur_site, cur_node: @cur_node)
     @answer.remote_addr = remote_addr
     @answer.user_agent = request.user_agent
+    @answer.member = get_member_by_session
     @answer.source_url = params[:item].try(:[], :source_url)
     @answer.set_data(@data)
   end

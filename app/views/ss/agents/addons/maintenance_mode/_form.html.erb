@@ -1,0 +1,50 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+
+<dl class="see">
+  <dt><%= @model.t :maintenance_mode %><%= @model.tt :maintenance_mode %></dt>
+  <dd><%= f.select :maintenance_mode, @item.maintenance_mode_options %></dd>
+</dl>
+
+<dl class="see maint-mode">
+  <dt><%= @model.t :maint_remark %><%= @model.tt :maint_remark%></dt>
+  <dd><%= f.text_area :maint_remark %></dd>
+
+  <dt><%= @model.t :maint_excluded_user_ids %><%= @model.tt :maint_excluded_user_ids %></dt>
+  <dd>
+    <%= f.hidden_field "maint_excluded_user_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("ss.apis.users.index"), sys_apis_users_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= SS::Site.t :name %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.maint_excluded_users.each do |user| %>
+        <tr data-id="<%= user.id %>">
+          <td><%= f.hidden_field "maint_excluded_user_ids[]", value: user.id, id: nil %> <%= user.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<%= jquery do %>
+  var maintModeVal = $("#item_maintenance_mode").val();
+  if (maintModeVal === "disabled") {
+    $(".maint-mode").hide();
+  }
+
+  $("#item_maintenance_mode").on("change", function() {
+    var val = $(this).val();
+    $(".maint-mode").toggle(val === "enabled");
+  });
+<% end %>

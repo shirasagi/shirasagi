@@ -1,0 +1,23 @@
+<dl class="see">
+  <dd class="wide">
+    <% if @item.ready_plans.present? %>
+      <div style="max-height: 160px; overflow: auto; margin-bottom: 10px;">
+        <table class="index">
+          <thead>
+            <tr>
+              <th><%= Cms::Line::DeliverPlan.t :deliver_date %></th>
+            </tr>
+          </thead>
+          <tbody class="items">
+            <% @item.ready_plans.each do |item| %>
+              <tr><td class="date"><%= item.name %></td></tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div style="margin-bottom: 10px;"><%= t("cms.notices.line_deliver_plans_empty") %></div>
+    <% end %>
+    <%= link_to t("cms.buttons.setting"), cms_line_message_deliver_plans_path(message_id: @item), class: "btn" %>
+  </dd>
+</dl>

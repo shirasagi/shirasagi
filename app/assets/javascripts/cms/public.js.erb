@@ -6,6 +6,7 @@
 //= require jquery.form
 //= require jquery.datetimepicker
 //= require crypto-js/3.2.0/crypto-js.min.js
+//= require gmaps-marker-clusterer/src/markerclusterer.js
 //= require_self
 //= require ss/lib/base
 //= require ss/lib/font
@@ -15,6 +16,7 @@
 //= require ss/lib/file_view
 //= require cms/lib/site_search
 //= require cms/lib/site_search_history
+//= require cms/lib/line
 //= require cms/lib/history
 //= require ss/lib/search_ui
 //= require ss/lib/ajax_file
@@ -28,7 +30,6 @@
 //= require key_visual/lib/slide
 //= require key_visual/lib/swiper_slide
 //= require map/googlemaps/map
-//= require map/googlemaps/markerclusterer.js
 //= require map/googlemaps/facility/search
 //= require map/googlemaps/member/photo/form
 //= require map/openlayers/map
@@ -72,24 +73,42 @@ this.SS_Kana = (function () {
   SS_Kana.kanaUrl = <%= SS.config.kana.location.to_json %> + "/";
 
   SS_Kana.render = function () {
-    var bind, url, html;
+    var $kana = $("#ss-kana");
+    if (!$kana[0]) {
+      return;
+    }
+
     if (SS.config["site_url"] && SS.config["kana_url"]) {
       SS_Kana.siteUrl = SS.config["site_url"];
       SS_Kana.kanaUrl = SS.config["kana_url"];
     }
+
+    var pathname = location.pathname;
+    var url, cssClass;
     if ($("body").data("kana")) {
-      url = SS_Kana.url(location.pathname, false);
+      url = SS_Kana.url(pathname, false);
       url = SS_Translate.url(url);
-      bind = 'onclick="location.href=\'' + url + '\'; return false"';
-      html = $("#ss-kana").html();
-      return $("#ss-kana").html("<a class=\"off\" href=\"#" + url + "\" " + bind + ">" + html + "</a>");
+      cssClass = "off";
     } else {
-      url = SS_Translate.url(location.pathname, false)
+      url = SS_Translate.url(pathname, false)
       url = SS_Kana.url(url, true);
-      bind = 'onclick="location.href=\'' + url + '\'; return false"';
-      html = $("#ss-kana").html();
-      return $("#ss-kana").html("<a class=\"on\" href=\"#" + url + "\" " + bind + ">"  + html + "</a>");
+      cssClass = "on";
     }
+    if (url[0] !== '/') {
+      // "javascript:alert('xss')" のような URL を location.href にセットしてしまうと xss とダイアログが表示されてしまう。
+      // 先頭が "/" かどうかをチェックすることで、この種の脆弱性を防ぐ。
+      return;
+    }
+
+    var html = $kana.html();
+    var $anchor = $("<a />", { class: cssClass, href: "#" + url, rel: "nofollow" }).html(html)
+    $kana.html($anchor);
+
+    $anchor.on("click", function(ev) {
+      ev.preventDefault();
+      location.href = url;
+      return false;
+    });
   };
 
   SS_Kana.url = function (url, bool) {
@@ -284,7 +303,9 @@ this.SS_Tabs = (function () {
       html = "<article id='" + view_id + "' class='" + body_css + "' " + disp + ">";
       html += "<h2 style='display: none'>" + name + "</h2>";
       html += "<div class='pages'>" + tab.find(".pages").html() + "</div>";
-      html += "<nav>" + tab.find('nav').html() + "</nav>";
+      if (tab.find('nav').length) {
+        html += "<nav>" + tab.find('nav').html() + "</nav>";
+      }
       html += "</article>";
       box.append(html);
       return tab.remove();

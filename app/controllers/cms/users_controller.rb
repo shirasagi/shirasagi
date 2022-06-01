@@ -67,7 +67,54 @@ class Cms::UsersController < ApplicationController
   end
 
   def destroy_all
-    disable_all
+    raise "400" if @selected_items.blank?
+
+    if params[:destroy_all]
+      render_destroy_all(disable_all, location: request.path)
+      return
+    end
+
+    respond_to do |format|
+      format.html { render "cms/crud/destroy_all" }
+      format.json { head json: errors }
+    end
+  end
+
+  def disable_all
+    raise "400" if @selected_items.blank?
+
+    entries = @selected_items.entries
+    @items = []
+
+    entries.each do |item|
+      if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+        if item.deletion_unlocked? && item.disabled?
+          item.destroy
+          next
+        end
+        next if item.disable
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+
+    entries.size != @items.size
+  end
+
+  def render_destroy_all(result, opts = {})
+    location = opts[:location].presence || crud_redirect_url || { action: :index }
+    if result
+      notice = { notice: opts[:notice].presence || t("ss.notice.deleted") }
+    else
+      notice = { notice: t("ss.notice.unable_to_delete", items: @items.pluck(:name).join("、")) }
+    end
+    errors = @items.map { |item| [item.id, item.errors.full_messages] }
+
+    respond_to do |format|
+      format.html { redirect_to location, notice }
+      format.json { head json: errors }
+    end
   end
 
   def download

@@ -98,7 +98,8 @@ describe "cms_users", type: :feature, dbscope: :example do
 
       find('.list-head label.check input').set(true)
       click_button I18n.t("ss.links.delete")
-      page.accept_alert
+      expect(page).to have_content I18n.t('ss.confirm.target_to_delete')
+      click_button I18n.t('ss.buttons.delete')
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
 
       within ".index-search" do
