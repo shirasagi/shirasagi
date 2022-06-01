@@ -1,224 +1,218 @@
 function SS_Large_File_Upload($el, urls) {
   this.$el = $el;
+  this.urls = urls;
 
-  this.render(urls);
+  this.render();
 }
 
-SS_Large_File_Upload.prototype.render = function (urls) {
+SS_Large_File_Upload.prototype.render = function () {
   this.$el.on('click', () => {
     $(".main-box .import-button").prop("disabled", true);
     $('.progress dd').empty();
-    appendLoadingWrapper();
-    importFiles();
+    this.appendLoadingWrapper();
+    this.importFiles();
   });
 
   $('#file-picker').on('change', () => {
     $(".main-box .import-button").prop("disabled", false);
   })
+}
 
-  const importFiles = () => {
-    let allFiles = document.getElementById("file-picker").files;
-    let arrayFiles = Array.from(allFiles);
+SS_Large_File_Upload.prototype.importFiles = function () {
+  let filesFormData = new FormData();
+  let filenamesFormData = new FormData();
+  let allFiles = document.getElementById("file-picker").files;
+  let arrayFiles = Array.from(allFiles);
+  let selectedFilenames = this.setFilenames(arrayFiles, filenamesFormData);
+  let selectedFiles = this.setFiles(arrayFiles, filesFormData);
 
-    arrayFiles.sort((a, b) => {
-      let nameA = a.name.toUpperCase();
-      let nameB = b.name.toUpperCase();
-      if (nameA < nameB) {
-        return -1;
-      }
-      if (nameA > nameB) {
-        return 1;
-      }
-
-      return 0;
-    });
-
-    let filenamesFormData = new FormData();
-    let filesFormData = new FormData();
-    let selectedFilenames = setFilenames(arrayFiles, filenamesFormData);
-    let selectedFiles = setFiles(arrayFiles, filesFormData);
-
-    fetch(urls['initUrl'], {
-      method: "POST",
-      body: selectedFilenames,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        let promises = [];
-        let formData = new FormData();
-        let resFiles = JSON.stringify(data["files"]);
-        appendFileList();
-        appendExcludedFiles(data["excluded_files"]);
-
-        selectedFiles.forEach((file) => {
-          if( !data["files"][file.name] ){ return; }
-
-          let promise = sendFile(file);
-          formData.append("files", resFiles);
-          formData.append("cur_site_id", data["cur_site_id"]);
-          promises.push(promise);
-        });
-
-        Promise.all(promises).then(() => {
-          fetch(urls['finalizeUrl'], {
-            method: "PUT",
-            body: formData,
+  fetch(this.urls["initUrl"], {
+    method: "POST",
+    body: selectedFilenames,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      let formData = new FormData();
+      let resFiles = JSON.stringify(data["files"]);
+      this.appendFileList();
+      this.appendExcludedFiles(data["excluded_files"]);
+      data["resFiles"] = resFiles;
+      data["selectedFiles"] = selectedFiles;
+      let promises = this.promisesPush(formData, data);
+      Promise.all(promises).then(() => {
+        fetch(this.urls["finalizeUrl"], {
+          method: "PUT",
+          body: formData,
+        })
+          .then((response) => {
+            $(".loading-img").remove();
+            $(".waiting-text").text("アップロードが完了しました");
           })
-            .then((response) => {
-              $(".loading-img").remove();
-              $(".waiting-text").text("アップロードが完了しました");
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        });
-      })
-      .catch((err) => {
-        console.log(err);
+          .catch((err) => {
+            console.log(err);
+          });
       });
-  }
-
-  const appendLoadingWrapper = () => {
-    let $loadingWrapper = $("<div/>").attr({
-      class: "loading-wrapper",
+    })
+    .catch((err) => {
+      console.log(err);
     });
-    let $loadingImg = $("<img/>").attr({
-      src: "/assets/img/loading.gif",
-      class: "loading-img",
-    });
-    let $waitingText = $("<p/>")
-      .text("アップロードが完了するまでお待ちください。")
-      .attr({ class: "waiting-text d-inline-block" });
+};
 
-    $(".progress dd").append($loadingWrapper);
-    $($loadingWrapper).append($waitingText);
-    $($loadingWrapper).append($loadingImg);
-  };
+SS_Large_File_Upload.prototype.appendLoadingWrapper = function() {
+  let $loadingWrapper = $("<div/>").attr({
+    class: "loading-wrapper",
+  });
+  let $loadingImg = $("<img/>").attr({
+    src: "/assets/img/loading.gif",
+    class: "loading-img",
+  });
+  let $waitingText = $("<p/>")
+    .text("アップロードが完了するまでお待ちください。")
+    .attr({ class: "waiting-text d-inline-block" });
+  $(".progress dd").append($loadingWrapper);
+  $($loadingWrapper).append($waitingText);
+  $($loadingWrapper).append($loadingImg);
+};
 
-  const appendExcludedFiles = (excludedFilesAry) => {
-    let excludedFiles = excludedFilesAry.join("・");
-    let $excludedFilesWrapper = $("<div/>").attr({
-      class: "excluded-files-wrapper",
-    });
-    let $alertP = $("<p/>")
-      .attr("class", "mt-2")
-      .text(
+SS_Large_File_Upload.prototype.appendExcludedFiles = function(excludedFilesAry) {
+  let excludedFiles = excludedFilesAry.join("・");
+  let $excludedFilesWrapper = $("<div/>").attr({
+    class: "excluded-files-wrapper",
+  });
+  let $alertP = $("<p/>")
+    .attr("class", "mt-2")
+    .text(
       `以下のファイルは許可された拡張子ではないため、アップロードできませんでした。`
     );
-    let $excludedFilesP = $("<p/>").text(excludedFiles);
+  let $excludedFilesP = $("<p/>").text(excludedFiles);
+  $(".progress dd").append($excludedFilesWrapper);
+  $($excludedFilesWrapper).append($alertP);
+  $($excludedFilesWrapper).append($excludedFilesP);
+};
 
-    $(".progress dd").append($excludedFilesWrapper);
-    $($excludedFilesWrapper).append($alertP);
-    $($excludedFilesWrapper).append($excludedFilesP);
-  };
+SS_Large_File_Upload.prototype.promisesPush = function (formData, data) {
+  let promises = [];
+  data["selectedFiles"].forEach((file) => {
+    if (!data["files"][file.name]) {
+      return;
+    }
+    let promise = this.sendFile(file);
+    formData.append("files", data["resFiles"]);
+    formData.append("cur_site_id", data["cur_site_id"]);
+    promises.push(promise);
+  });
 
-  const setFilenames = (files, filenamesFormData) => {
-    files.forEach((file) => {
-      filenamesFormData.append("filenames[]", file.name);
+  return promises;
+};
+
+SS_Large_File_Upload.prototype.setFilenames = function(files, filenamesFormData) {
+  files.forEach((file) => {
+    filenamesFormData.append("filenames[]", file.name);
+  });
+  return filenamesFormData;
+};
+
+SS_Large_File_Upload.prototype.setFiles = function(files, filesFormData) {
+  files.forEach((file, i) => {
+    filesFormData.append("files[]", files[i], files[i].name);
+  });
+  return filesFormData;
+};
+
+SS_Large_File_Upload.prototype.appendFileList = function() {
+  let $fileList = $("<ol />").attr("class", "file-list");
+  $(".progress dd").prepend($fileList);
+};
+
+SS_Large_File_Upload.prototype.sendFile = async function(file) {
+  let chunkSize = 1024 * 1024; //1MBずつ
+  let totalChunks = Math.ceil(file.size / chunkSize);
+  for (let i = 0; i < totalChunks; i++) {
+    let start = i * chunkSize;
+    let stop = start + chunkSize;
+    let blob = file.slice(start, stop);
+    let numChunk = i + 1;
+    const formData = new FormData();
+    formData.append(
+      "blob",
+      new Blob([blob], { type: "application/octet-stream" })
+    );
+    formData.append("filename", file.name);
+    await this.fetch_retry({
+      createUrl: this.urls["createUrl"],
+      formData: formData,
+      numRetry: 5,
+      numChunk: numChunk,
+      totalChunks: totalChunks,
+      filename: file.name,
+    }).catch((err) => {
+      console.log(err);
     });
+  }
+};
 
-    return filenamesFormData;
-  };
-
-  const setFiles = (files, filesFormData) => {
-    files.forEach((file, i) => {
-      filesFormData.append("files[]", files[i], files[i].name);
-    });
-
-    return filesFormData;
-  };
-
-  const appendFileList = () => {
-    let $fileList = $("<ol />").attr("class", "file-list");
-    $(".progress dd").prepend($fileList);
-  };
-
-  const sendFile = async (file) => {
-    let chunkSize = 1024 * 1024; //1MBずつ
-    let totalChunks = Math.ceil(file.size / chunkSize);
-
-    for (let i = 0; i < totalChunks; i++) {
-      let start = i * chunkSize;
-      let stop = start + chunkSize;
-      let blob = file.slice(start, stop);
-      let numChunk = i + 1;
-
-      const formData = new FormData();
-      formData.append(
-        'blob',
-        new Blob([blob], { type: 'application/octet-stream' })
-      );
-      formData.append('filename', file.name);
-
-      await fetch_retry({
-        createUrl: urls['createUrl'],
-        formData: formData,
-        numRetry: 5,
-        numChunk: numChunk,
-        totalChunks: totalChunks,
-        filename: file.name
+SS_Large_File_Upload.prototype.fetch_retry = function(data) {
+  return fetch(data["createUrl"], {
+    method: "POST",
+    body: data["formData"],
+  })
+    .then((res) => {
+      if (res.ok) {
+        this.updateProgress(
+          data["numChunk"],
+          data["totalChunks"],
+          data["filename"]
+        );
       }
-      ).catch((err) => {
-        console.log(err);
-      });
-    }
-  };
-
-  const fetch_retry = (data) => {
-    return fetch(data["createUrl"], {
-      method: 'POST',
-      body: data["formData"],
     })
-      .then((res) => {
-        if (res.ok) {
-          updateProgress(data["numChunk"], data["totalChunks"], data["filename"]);
-        }
-      })
-      .catch((err) => {
-        if (numRetry === 0) throw err;
+    .catch((err) => {
+      if (data["numRetry"] === 0) throw err;
+      data["numRetry"] -= 1;
+      return this.fetch_retry(data);
+    });
+};
 
-        data["numRetry"] -= 1;
-        return fetch_retry(data);
-      });
-  };
+SS_Large_File_Upload.prototype.updateProgress = function(numChunk, totalChunks, filename) {
+  let progressRate = Math.ceil((100 * numChunk) / totalChunks).toString();
+  let fileWithoutExtension = this.getFileWithoutExtension(filename);
+  if ($(".file-list li").hasClass(fileWithoutExtension)) {
+    $(`.file-list li.${fileWithoutExtension} progress`).attr(
+      "value",
+      progressRate
+    );
+    this.showCompletedStatus(filename, progressRate);
+  } else {
+    let $newFileWrapper = $("<li />").attr("class", fileWithoutExtension);
+    let $newLabel = $("<label />").text(filename).attr({
+      for: "file",
+      class: "mr-4",
+    });
+    let $newProgress = $("<progress />").attr({
+      max: "100",
+      value: progressRate,
+    });
+    $newFileWrapper.append($newLabel);
+    $newFileWrapper.append($newProgress);
+    $(".progress .file-list").append($newFileWrapper);
+    this.showCompletedStatus(filename, progressRate);
+  }
+};
 
-  const updateProgress = (numChunk, totalChunks, filename) => {
-    let progressRate = Math.ceil((100 * numChunk) / totalChunks).toString();
-    let fileWithoutExtension = getFileWithoutExtension(filename);
+SS_Large_File_Upload.prototype.showCompletedStatus = function(filename, progressRate) {
+  let fileWithoutExtension = this.getFileWithoutExtension(filename);
+  if (progressRate !== "100") {
+    return;
+  }
+  if ($(`.file-list .completed-${fileWithoutExtension}`).length) {
+    return;
+  }
+  let $completedTag = $("<span />")
+    .text("完了")
+    .attr("class", `completed-${fileWithoutExtension} ml-1`)
+    .attr("style", "width: 30px");
+  $(`li.${fileWithoutExtension}`).append($completedTag);
+};
 
-    if ($(".file-list li").hasClass(fileWithoutExtension)) {
-      $(`.file-list li.${fileWithoutExtension} progress`).attr("value", progressRate);
-      showCompletedStatus(filename, progressRate);
-    } else {
-      let $newFileWrapper = $("<li />").attr("class", fileWithoutExtension);
-      let $newLabel = $("<label />").text(filename).attr({
-        for: "file",
-        class: "mr-4",
-      });
-      let $newProgress = $("<progress />").attr({
-        max: "100",
-        value: progressRate,
-      });
-      $newFileWrapper.append($newLabel);
-      $newFileWrapper.append($newProgress);
-      $(".progress .file-list").append($newFileWrapper);
-      showCompletedStatus(filename, progressRate);
-    }
-  };
-
-  const showCompletedStatus = (filename, progressRate) => {
-    let fileWithoutExtension = getFileWithoutExtension(filename);
-    if (progressRate !== "100") { return; }
-    if ($(`.file-list .completed-${fileWithoutExtension}`).length) { return; }
-
-    let $completedTag = $("<span />")
-      .text("完了")
-      .attr("class", `completed-${fileWithoutExtension} ml-1`)
-      .attr("style", "width: 30px")
-    $(`li.${fileWithoutExtension}`).append($completedTag);
-  };
-
-  const getFileWithoutExtension = (filename) => {
-    return filename.replace(/\.[^/.]+$/, "");
-  };
-}
+SS_Large_File_Upload.prototype.getFileWithoutExtension = function(filename) {
+  return filename.replace(/\.[^/.]+$/, "");
+};

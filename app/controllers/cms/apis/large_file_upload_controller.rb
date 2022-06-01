@@ -15,7 +15,10 @@ class Cms::Apis::LargeFileUploadController < ApplicationController
         next
       end
 
-      file = Cms::File.create(site_id: @cur_site.id, name: filename, filename: filename, model: "cms/file")
+      file = Cms::File.create(
+        site_id: @cur_site.id, name: filename, filename: filename,
+        model: "cms/file", user_id: @cur_user.id, group_ids: @cur_user.group_ids
+      )
       files["#{file.name}"] = file.id
     end
 
@@ -62,6 +65,6 @@ class Cms::Apis::LargeFileUploadController < ApplicationController
   end
 
   def tmp_file_path
-    "#{SS::File.root}/ss_tasks/#{@task.id.to_s.split(//).join("/")}"
+    "#{SS::File.root}/ss_tasks/#{@task.id.to_s.chars.join("/")}"
   end
 end
