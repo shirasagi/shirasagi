@@ -1,19 +1,10 @@
-<style>
-  .progress .file-list {
-    display: inline-block;
-  }
-  .progress .file-list li {
-    display: flex;
-    align-items: center;
-  }
-</style>
-
 <%
   controller_name = "cms/apis/large_file_upload"
   init_url  = url_for(controller: controller_name, action: "init_files", format: "json");
   create_url = url_for(controller: controller_name, action: "create", format: "json");
   finalize_url = url_for(controller: controller_name, action: "finalize", format: "json");
 %>
+
 <%= form_for :item, url: { action: :create }, html: { id: "item-form", method: :post, multipart: true } do |f| %>
   <%= error_messages_for :item %>
 
@@ -39,6 +30,33 @@
     <dd></dd>
   </section>
 <% end %>
+
+<style>
+  .file-list {
+    display: inline-block;
+    padding: 10px 30px;
+    height: 160px;
+    overflow: scroll;
+  }
+
+  ::-webkit-scrollbar {
+      -webkit-appearance: none;
+      width: 7px;
+  }
+  ::-webkit-scrollbar-thumb {
+      border-radius: 4px;
+      background-color: rgba(0,0,0,.5);
+      box-shadow: 0 0 1px rgba(255,255,255,.5);
+  }
+
+  .file-list li {
+    display: flex;
+  }
+
+  .file-list li .mr-4 {
+    flex-basis: calc(100% - 160px);
+  }
+</style>
 
 <script src="/assets/ss/large_file_upload.js"></script>
 

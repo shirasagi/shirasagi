@@ -13,15 +13,15 @@ SS_Large_File_Upload.prototype.render = function () {
     this.importFiles();
   });
 
-  $('#file-picker').on('change', () => {
+  $(".main-box #file-picker").on("change", () => {
     $(".main-box .import-button").prop("disabled", false);
-  })
+  });
 }
 
 SS_Large_File_Upload.prototype.importFiles = function () {
   let filesFormData = new FormData();
   let filenamesFormData = new FormData();
-  let allFiles = document.getElementById("file-picker").files;
+  let allFiles = this.$el.prev().prop("files");
   let arrayFiles = Array.from(allFiles);
   let selectedFilenames = this.setFilenames(arrayFiles, filenamesFormData);
   let selectedFiles = this.setFiles(arrayFiles, filesFormData);
@@ -34,10 +34,16 @@ SS_Large_File_Upload.prototype.importFiles = function () {
     .then((data) => {
       let formData = new FormData();
       let resFiles = JSON.stringify(data["files"]);
-      this.appendFileList();
-      this.appendExcludedFiles(data["excluded_files"]);
       data["resFiles"] = resFiles;
       data["selectedFiles"] = selectedFiles;
+
+      if (resFiles === "{}") {
+        this.noUploadableFile(data["excluded_files"]);
+        return
+      }
+
+      this.appendFileList();
+      this.appendExcludedFiles(data["excluded_files"]);
       let promises = this.promisesPush(formData, data);
       Promise.all(promises).then(() => {
         fetch(this.urls["finalizeUrl"], {
@@ -45,8 +51,9 @@ SS_Large_File_Upload.prototype.importFiles = function () {
           body: formData,
         })
           .then((response) => {
-            $(".loading-img").remove();
-            $(".waiting-text").text("アップロードが完了しました");
+            $(".loading-wrapper .loading-img").remove();
+            $(".loading-wrapper .waiting-text").text("アップロードが完了しました。");
+            $(".main-box #file-picker").val("");
           })
           .catch((err) => {
             console.log(err);
@@ -61,6 +68,7 @@ SS_Large_File_Upload.prototype.importFiles = function () {
 SS_Large_File_Upload.prototype.appendLoadingWrapper = function() {
   let $loadingWrapper = $("<div/>").attr({
     class: "loading-wrapper",
+    style: "margin-top: 50px;"
   });
   let $loadingImg = $("<img/>").attr({
     src: "/assets/img/loading.gif",
@@ -69,7 +77,7 @@ SS_Large_File_Upload.prototype.appendLoadingWrapper = function() {
   let $waitingText = $("<p/>")
     .text("アップロードが完了するまでお待ちください。")
     .attr({ class: "waiting-text d-inline-block" });
-  $(".progress dd").append($loadingWrapper);
+  $(".progress dd").prepend($loadingWrapper);
   $($loadingWrapper).append($waitingText);
   $($loadingWrapper).append($loadingImg);
 };
@@ -84,8 +92,11 @@ SS_Large_File_Upload.prototype.appendExcludedFiles = function(excludedFilesAry) 
     .text(
       `以下のファイルは許可された拡張子ではないため、アップロードできませんでした。`
     );
-  let $excludedFilesP = $("<p/>").text(excludedFiles);
-  $(".progress dd").append($excludedFilesWrapper);
+  let $excludedFilesP = $("<p/>")
+    .attr("class", "excluded-files")
+    .attr("style", "margin-left: 1em;")
+    .text(excludedFiles);
+  $(".progress .loading-wrapper").before($excludedFilesWrapper);
   $($excludedFilesWrapper).append($alertP);
   $($excludedFilesWrapper).append($excludedFilesP);
 };
@@ -119,9 +130,18 @@ SS_Large_File_Upload.prototype.setFiles = function(files, filesFormData) {
   return filesFormData;
 };
 
+SS_Large_File_Upload.prototype.noUploadableFile = function (excluded_files) {
+  $(".loading-wrapper .waiting-text").text(
+    "アップロードできるファイルがありませんでした。サイト設定を変更するなどしてアップロードし直してください。"
+  );
+  $(".loading-wrapper .loading-img").remove();
+  $("#file-picker").val("");
+  this.appendExcludedFiles(excluded_files);
+};
+
 SS_Large_File_Upload.prototype.appendFileList = function() {
   let $fileList = $("<ol />").attr("class", "file-list");
-  $(".progress dd").prepend($fileList);
+  $(".progress dd").append($fileList);
 };
 
 SS_Large_File_Upload.prototype.sendFile = async function(file) {

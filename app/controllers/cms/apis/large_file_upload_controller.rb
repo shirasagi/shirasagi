@@ -15,11 +15,8 @@ class Cms::Apis::LargeFileUploadController < ApplicationController
         next
       end
 
-      file = Cms::File.create(
-        site_id: @cur_site.id, name: filename, filename: filename,
-        model: "cms/file", user_id: @cur_user.id, group_ids: @cur_user.group_ids
-      )
-      files["#{file.name}"] = file.id
+      file = create_file(filename)
+      files[file.name] = file.id
     end
 
     respond_to do |format|
@@ -55,6 +52,19 @@ class Cms::Apis::LargeFileUploadController < ApplicationController
   end
 
   private
+
+  def create_file(filename)
+    file = Cms::File.create(
+      site_id: @cur_site.id, name: filename, filename: filename,
+      model: "cms/file", user_id: @cur_user.id, group_ids: @cur_user.group_ids
+    )
+
+    dirname = File.dirname(file.path)
+    ::FileUtils.mkdir_p(dirname) unless Dir.exist?(dirname)
+    ::FileUtils.touch(file.path) unless File.exist?(file.path)
+
+    return file
+  end
 
   def set_task
     @task = Cms::LargeFileUploadTask.find_or_create_by(name: task_name, site_id: @cur_site.id)
