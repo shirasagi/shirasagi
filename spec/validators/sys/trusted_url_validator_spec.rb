@@ -19,8 +19,7 @@ describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
     Thread.current["ss.env"] = request
     Thread.current["ss.request"] = request
 
-    @save_trusted_urls = SS.config.cms.trusted_urls
-    SS.config.replace_value_at(:sns, :trusted_urls, trusted_urls)
+    @save_trusted_urls = SS.config.replace_value_at(:sns, :trusted_urls, trusted_urls)
     described_class.send(:clear_trusted_urls)
   end
 
@@ -78,8 +77,7 @@ describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
 
   describe ".valid_url?" do
     before do
-      @save_url_type = SS.config.sns.url_type
-      SS.config.replace_value_at(:sns, :url_type, "restricted")
+      @save_url_type = SS.config.replace_value_at(:sns, :url_type, "restricted")
       Sys::TrustedUrlValidator.send(:clear_trusted_urls)
     end
 
@@ -89,6 +87,8 @@ describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
     end
 
     it do
+      expect(described_class.url_restricted?).to be_truthy
+
       # relative: path only
       expect(described_class.valid_url?(::Addressable::URI.parse("/a/b/c"))).to be_truthy
       expect(described_class.valid_url?(::Addressable::URI.parse("a/b/c"))).to be_truthy
@@ -105,8 +105,7 @@ describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
 
   describe ".valid_url? with any url allowed" do
     before do
-      @save_url_type = SS.config.cms.url_type
-      SS.config.replace_value_at(:sns, :url_type, 'any')
+      @save_url_type = SS.config.replace_value_at(:sns, :url_type, 'any')
       described_class.send(:clear_trusted_urls)
     end
 
@@ -116,6 +115,8 @@ describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
     end
 
     it do
+      expect(described_class.url_restricted?).to be_falsey
+
       # relative: path only
       expect(described_class.valid_url?(::Addressable::URI.parse("/a/b/c"))).to be_truthy
       expect(described_class.valid_url?(::Addressable::URI.parse("a/b/c"))).to be_truthy
@@ -124,9 +125,9 @@ describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
       expect(described_class.valid_url?(::Addressable::URI.parse("//#{request_domain}"))).to be_truthy
       expect(described_class.valid_url?(::Addressable::URI.parse("//#{request_domain}/"))).to be_truthy
       expect(described_class.valid_url?(::Addressable::URI.parse("//#{request_domain}/#{unique_id}"))).to be_truthy
-      expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}"))).to be_truthy
-      expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}/"))).to be_truthy
-      expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}#{request_path}"))).to be_truthy
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}"))).to be_falsey
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}/"))).to be_falsey
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}#{request_path}"))).to be_falsey
     end
   end
 end
