@@ -163,7 +163,6 @@ class Event::Extensions::Recurrence
   end
 
   liquidize do
-    export :to_long_html
     export :start_date
     export :start_datetime
     export :end_date
@@ -240,28 +239,6 @@ class Event::Extensions::Recurrence
 
   def excluded_date?(date)
     !included_date?(date)
-  end
-
-  def to_long_html
-    parts = [
-      I18n.l(start_date, format: :m_d_a),
-      I18n.t("ss.wave_dash"),
-      I18n.l(until_on, format: :m_d_a),
-    ]
-    if kind == "datetime"
-      parts << " "
-      parts << I18n.l(start_datetime, format: :h_mm)
-      parts << I18n.t("ss.wave_dash")
-      parts << I18n.l(end_datetime, format: :h_mm)
-    end
-    if frequency == "weekly" && by_days.present?
-      week_days = I18n.t("date.abbr_day_names")
-      parts << " ("
-      parts << (by_days.map { |wday| week_days[wday] }.join(","))
-      parts << ")"
-    end
-
-    parts.join
   end
 
   private
