@@ -52,7 +52,7 @@ jobs:
           ruby-version: 2.6
           bundler-cache: true
       - name: Set up Node
-        uses: ruby/setup-node@v3
+        uses: actions/setup-node@v3
         with:
           node-version: 18
       - name: Install MeCab Ruby
