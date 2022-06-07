@@ -38,7 +38,7 @@ describe "sys/auth/saml", type: :feature, dbscope: :example do
       expect(item.entity_id).to eq entity_id
       expect(item.sso_url).to eq sso_url
       expect(item.force_authn_state).to eq force_authn_state
-      expect(SS::Crypt.decrypt(item.x509_cert)).not_to be_nil
+      expect(SS::Crypto.decrypt(item.x509_cert)).not_to be_nil
     end
 
     #
@@ -62,7 +62,7 @@ describe "sys/auth/saml", type: :feature, dbscope: :example do
       expect(item.entity_id).to eq entity_id2
       expect(item.sso_url).to eq sso_url
       expect(item.force_authn_state).to eq force_authn_state
-      expect(SS::Crypt.decrypt(item.x509_cert)).not_to be_nil
+      expect(SS::Crypto.decrypt(item.x509_cert)).not_to be_nil
     end
 
     #

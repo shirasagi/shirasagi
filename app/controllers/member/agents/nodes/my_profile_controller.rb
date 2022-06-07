@@ -51,7 +51,7 @@ class Member::Agents::Nodes::MyProfileController < ApplicationController
       return false
     end
 
-    if @item.password != SS::Crypt.crypt(params[:item][:in_password])
+    if @item.password != SS::Crypto.crypt(params[:item][:in_password])
       @item.errors.add I18n.t("member.view.old_password"), I18n.t("errors.messages.mismatch")
       return false
     end
@@ -82,7 +82,7 @@ class Member::Agents::Nodes::MyProfileController < ApplicationController
       return
     end
 
-    if @item.password != SS::Crypt.crypt(params[:item][:in_password])
+    if @item.password != SS::Crypto.crypt(params[:item][:in_password])
       @item.errors.add :in_password, I18n.t("errors.messages.mismatch")
       render action: :leave
       return

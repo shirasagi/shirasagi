@@ -25,7 +25,7 @@ module Ckan::Addon
     private
 
     def set_ckan_basicauth_password
-      self.ckan_basicauth_password = SS::Crypt.encrypt(in_ckan_basicauth_password)
+      self.ckan_basicauth_password = SS::Crypto.encrypt(in_ckan_basicauth_password)
     end
 
     def find_template_variable_handler(name)
@@ -60,7 +60,7 @@ module Ckan::Addon
       http.use_ssl = true if uri.scheme == 'https'
       req = Net::HTTP::Get.new(uri.path + '?' + uri.query)
       if ckan_basicauth_enabled?
-        req.basic_auth(ckan_basicauth_username, SS::Crypt.decrypt(ckan_basicauth_password))
+        req.basic_auth(ckan_basicauth_username, SS::Crypto.decrypt(ckan_basicauth_password))
       end
       res = begin
         res = http.request(req)

@@ -50,7 +50,7 @@ describe "webmail_users", type: :feature, dbscope: :example do
       expect(user1.uid).to eq "test-user1"
       expect(user1.organization_uid).to eq "100002"
       expect(user1.email).to eq "test-user1@example.jp"
-      expect(user1.password).to eq SS::Crypt.crypt("pass-user1")
+      expect(user1.password).to eq SS::Crypto.crypt("pass-user1")
       expect(user1.tel).to eq "0000-0001"
       expect(user1.tel_ext).to eq "01-001"
       expect(user1.type).to eq "sns"

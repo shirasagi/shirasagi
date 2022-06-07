@@ -12,7 +12,7 @@ describe Webmail::Addon::GroupExtension, type: :model, dbscope: :example do
       expect(setting.imap_sent_box).to eq 'INBOX.Sent'
       expect(setting.imap_draft_box).to eq 'INBOX.Draft'
       expect(setting.imap_trash_box).to eq 'INBOX.Trash'
-      expect(setting.imap_password).to eq SS::Crypt.encrypt(setting.decrypt_imap_password)
+      expect(setting.imap_password).to eq SS::Crypto.encrypt(setting.decrypt_imap_password)
     end
   end
 

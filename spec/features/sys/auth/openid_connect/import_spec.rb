@@ -33,7 +33,7 @@ describe "sys/auth/open_id_connects", type: :feature, dbscope: :example do
         expect(item.filename).to eq filename
 
         expect(item.client_id).to eq client_id
-        expect(item.client_secret).to eq SS::Crypt.encrypt(client_secret)
+        expect(item.client_secret).to eq SS::Crypto.encrypt(client_secret)
 
         expect(item.issuer).to eq "https://example.com/"
         expect(item.auth_url).to eq "https://example.com/authorize"
@@ -74,7 +74,7 @@ describe "sys/auth/open_id_connects", type: :feature, dbscope: :example do
         expect(item.filename).to eq filename
 
         expect(item.client_id).to eq client_id
-        expect(item.client_secret).to eq SS::Crypt.encrypt(client_secret)
+        expect(item.client_secret).to eq SS::Crypto.encrypt(client_secret)
 
         expect(item.issuer).to eq "https://accounts.google.com"
         expect(item.auth_url).to eq "https://accounts.google.com/o/oauth2/v2/auth"

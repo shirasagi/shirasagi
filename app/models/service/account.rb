@@ -124,7 +124,7 @@ class Service::Account
   private
 
   def encrypt_password
-    self.password = SS::Crypt.crypt(in_password)
+    self.password = SS::Crypto.crypt(in_password)
   end
 
   def set_add_role
@@ -151,7 +151,7 @@ class Service::Account
       return nil if account.blank? || password.blank?
       item = where(account: account).first
       return nil unless item
-      return SS::Crypt.crypt(password) == item.password ? item : nil
+      return SS::Crypto.crypt(password) == item.password ? item : nil
     end
   end
 end

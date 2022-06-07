@@ -85,7 +85,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
           expect(mail["X-Shirasagi-Status"].decoded).to eq "未読"
           expect(mail["X-Shirasagi-Version"].decoded).to eq SS.version
           expect(mail["X-Shirasagi-Exported"].decoded).to be_present
-          expect(mail["X-Shirasagi-Tenant"].decoded).to eq SS::Crypt.crypt("#{site.id}:#{site.name}")
+          expect(mail["X-Shirasagi-Tenant"].decoded).to eq SS::Crypto.crypt("#{site.id}:#{site.name}")
           body = mail.body.decoded
           body.force_encoding("UTF-8")
           expect(body).to include(message.text)
@@ -201,7 +201,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
         expect(mail["X-Shirasagi-Status"].decoded).to eq "未読"
         expect(mail["X-Shirasagi-Version"].decoded).to eq SS.version
         expect(mail["X-Shirasagi-Exported"].decoded).to be_present
-        expect(mail["X-Shirasagi-Tenant"].decoded).to eq SS::Crypt.crypt("#{site.id}:#{site.name}")
+        expect(mail["X-Shirasagi-Tenant"].decoded).to eq SS::Crypto.crypt("#{site.id}:#{site.name}")
         body = mail.body.decoded
         body.force_encoding("UTF-8")
         expect(body).to include(message.text)
@@ -267,7 +267,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
         expect(mail["X-Shirasagi-Status"].decoded).to eq "未読"
         expect(mail["X-Shirasagi-Version"].decoded).to eq SS.version
         expect(mail["X-Shirasagi-Exported"].decoded).to be_present
-        expect(mail["X-Shirasagi-Tenant"].decoded).to eq SS::Crypt.crypt("#{site.id}:#{site.name}")
+        expect(mail["X-Shirasagi-Tenant"].decoded).to eq SS::Crypto.crypt("#{site.id}:#{site.name}")
         body = mail.body.decoded
         body.force_encoding("UTF-8")
         expect(body).to include(message.text)
@@ -330,7 +330,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
         expect(mail["X-Shirasagi-Status"].decoded).to eq "未読"
         expect(mail["X-Shirasagi-Version"].decoded).to eq SS.version
         expect(mail["X-Shirasagi-Exported"].decoded).to be_present
-        expect(mail["X-Shirasagi-Tenant"].decoded).to eq SS::Crypt.crypt("#{site.id}:#{site.name}")
+        expect(mail["X-Shirasagi-Tenant"].decoded).to eq SS::Crypto.crypt("#{site.id}:#{site.name}")
         body_part = mail.text_part
         expect(body_part.mime_type).to eq "text/plain"
         body = body_part.decoded
@@ -403,7 +403,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
         expect(mail["X-Shirasagi-Status"].decoded).to eq "未読"
         expect(mail["X-Shirasagi-Version"].decoded).to eq SS.version
         expect(mail["X-Shirasagi-Exported"].decoded).to be_present
-        expect(mail["X-Shirasagi-Tenant"].decoded).to eq SS::Crypt.crypt("#{site.id}:#{site.name}")
+        expect(mail["X-Shirasagi-Tenant"].decoded).to eq SS::Crypto.crypt("#{site.id}:#{site.name}")
         body = mail.body.decoded
         body.force_encoding("UTF-8")
         expect(body).to include(message.text)
@@ -462,7 +462,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
         expect(mail["X-Shirasagi-Status"].decoded).to eq "未読"
         expect(mail["X-Shirasagi-Version"].decoded).to eq SS.version
         expect(mail["X-Shirasagi-Exported"].decoded).to be_present
-        expect(mail["X-Shirasagi-Tenant"].decoded).to eq SS::Crypt.crypt("#{site.id}:#{site.name}")
+        expect(mail["X-Shirasagi-Tenant"].decoded).to eq SS::Crypto.crypt("#{site.id}:#{site.name}")
         body = mail.body.decoded
         body.force_encoding("UTF-8")
         expect(body).to include(message.text)

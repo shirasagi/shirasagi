@@ -1,9 +1,9 @@
 namespace :ss do
   task crypt: :environment do
-    puts SS::Crypt.crypt(ENV["value"])
+    puts SS::Crypto.crypt(ENV["value"])
   end
 
   task encrypt: :environment do
-    puts SS::Crypt.encrypt(ENV["value"])
+    puts SS::Crypto.encrypt(ENV["value"])
   end
 end
