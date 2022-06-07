@@ -181,7 +181,7 @@ SS.renderClipboardCopy();
             <h1><%= t("opendata.labels.resource") %></h1>
           </header>
 
-          <% if @cur_page.zip_exists? %>
+          <% if @cur_page.zip_exist? %>
             <div class="bulk-download">
               <% if @cur_site.anti_bot_use_button_for_bulk_download? %>
                 <%= form_tag search_dataset_download_path(@cur_page), method: "post" do %>
