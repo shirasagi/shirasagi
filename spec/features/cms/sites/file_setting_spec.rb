@@ -42,7 +42,7 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
     expect(site.multibyte_filename_state).to eq multibyte_filename_state
     expect(site.file_fs_access_restriction_state).to eq access_restriction_state
     expect(site.file_fs_access_restriction_basic_auth_id).to eq basic_auth_id
-    expect(site.file_fs_access_restriction_basic_auth_password).to eq SS::Crypt.encrypt(basic_auth_password)
+    expect(site.file_fs_access_restriction_basic_auth_password).to eq SS::Crypto.encrypt(basic_auth_password)
     expect(site.file_fs_access_restriction_env_key).to eq env_key
     expect(site.file_fs_access_restriction_env_value).to eq env_value
   end

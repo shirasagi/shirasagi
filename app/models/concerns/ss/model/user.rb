@@ -369,7 +369,7 @@ module SS::Model::User
   def dbpasswd_authenticate(in_passwd)
     return false unless login_roles.include?(LOGIN_ROLE_DBPASSWD)
     return false if password.blank?
-    password == SS::Crypt.crypt(in_passwd)
+    password == SS::Crypto.crypt(in_passwd)
   end
 
   def validate_type

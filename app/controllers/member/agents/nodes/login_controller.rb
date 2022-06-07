@@ -40,7 +40,7 @@ class Member::Agents::Nodes::LoginController < ApplicationController
     end
 
     @item.attributes = get_params
-    member = Cms::Member.site(@cur_site).and_enabled.where(email: @item.email, password: SS::Crypt.crypt(@item.password)).first
+    member = Cms::Member.site(@cur_site).and_enabled.where(email: @item.email, password: SS::Crypto.crypt(@item.password)).first
     unless member
       @error = t "sns.errors.invalid_login"
       return

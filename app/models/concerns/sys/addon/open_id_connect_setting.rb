@@ -108,7 +108,7 @@ module Sys::Addon
     end
 
     def set_client_secret
-      self.client_secret = SS::Crypt.encrypt(in_client_secret)
+      self.client_secret = SS::Crypto.encrypt(in_client_secret)
     end
 
     def reset_client_secret

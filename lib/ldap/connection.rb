@@ -48,7 +48,7 @@ class Ldap::Connection
     end
 
     def decrypt(password)
-      ret = SS::Crypt.decrypt(password)
+      ret = SS::Crypto.decrypt(password)
       ret.present? ? ret : password
     end
 

@@ -8,7 +8,7 @@ describe Sys::PostalCodesController, type: :request, dbscope: :example do
     {
       item: {
         email: user.email,
-        password: SS::Crypt.encrypt("pass", type: "AES-256-CBC"),
+        password: SS::Crypto.encrypt("pass", type: "AES-256-CBC"),
         encryption_type: "AES-256-CBC"
       }
     }

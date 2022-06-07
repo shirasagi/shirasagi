@@ -30,7 +30,7 @@ class Sns::LoginController < ApplicationController
     encryption_type = safe_params[:encryption_type]
 
     if encryption_type.present?
-      password = SS::Crypt.decrypt(password, type: encryption_type) rescue nil
+      password = SS::Crypto.decrypt(password, type: encryption_type) rescue nil
     end
 
     @item = begin

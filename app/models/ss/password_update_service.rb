@@ -31,7 +31,7 @@ class SS::PasswordUpdateService
 
   def validate_old_password
     return if old_password.blank?
-    return if SS::Crypt.crypt(old_password) == cur_user.password
+    return if SS::Crypto.crypt(old_password) == cur_user.password
 
     errors.add :old_password, :mismatch
   end

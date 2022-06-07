@@ -6,7 +6,7 @@ describe Ldap::Connection, ldap: true do
     let(:base_dn) { "dc=example,dc=jp" }
     let(:auth_method) { SS.config.ldap.auth_method.presence || "simple" }
     let(:username) { "cn=admin,dc=example,dc=jp" }
-    let(:password) { SS::Crypt.encrypt("admin") }
+    let(:password) { SS::Crypto.encrypt("admin") }
 
     describe ".connect" do
       context "when valid config is given" do
@@ -49,7 +49,7 @@ describe Ldap::Connection, ldap: true do
 
       context "when encrypted password is given" do
         let(:username) { "uid=user1,ou=001001政策課,ou=001企画政策部,dc=example,dc=jp" }
-        let(:password) { SS::Crypt.encrypt("pass") }
+        let(:password) { SS::Crypto.encrypt("pass") }
         it do
           expect(Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
             username: username, password: password)).not_to be_nil

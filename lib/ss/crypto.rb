@@ -2,7 +2,7 @@ require 'digest/md5'
 require 'openssl'
 require 'base64'
 
-module SS::Crypt
+module SS::Crypto
   @@salt = Rails.application.secrets.secret_key_base || "ss-salt"
   DEFAULT_CIPHER_TYPE = "AES-256-CBC".freeze
 

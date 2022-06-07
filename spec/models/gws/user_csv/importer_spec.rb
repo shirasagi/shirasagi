@@ -22,7 +22,7 @@ describe Gws::UserCsv::Importer, type: :model, dbscope: :example do
         expect(user.kana).to eq 'ユーザー4'
         expect(user.organization_uid).to eq 'user4'
         expect(user.email).to eq 'user4@example.jp'
-        expect(user.password).to eq SS::Crypt.crypt('pass')
+        expect(user.password).to eq SS::Crypto.crypt('pass')
         expect(user.tel).to eq '000-0000-0001'
         expect(user.tel_ext).to eq '1000'
         expect(user.title_ids).to eq [title.id]

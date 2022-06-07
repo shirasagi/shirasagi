@@ -8,7 +8,7 @@ describe Ldap::User, ldap: true do
 
   describe "#find" do
     let(:username) { "cn=admin,dc=example,dc=jp" }
-    let(:password) { SS::Crypt.encrypt("admin") }
+    let(:password) { SS::Crypto.encrypt("admin") }
 
     context "existing dn is given" do
       let(:dn) { "uid=admin, ou=001001政策課, ou=001企画政策部, dc=example, dc=jp" }
@@ -35,7 +35,7 @@ describe Ldap::User, ldap: true do
     let(:dn) { "uid=admin, ou=001001政策課, ou=001企画政策部, dc=example, dc=jp" }
     let(:parent_dn) { dn[dn.index(",") + 1..-1] }
     let(:username) { "cn=admin,dc=example,dc=jp" }
-    let(:password) { SS::Crypt.encrypt("admin") }
+    let(:password) { SS::Crypto.encrypt("admin") }
     let(:connection) do
       Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
         username: username, password: password)

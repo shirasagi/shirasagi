@@ -297,7 +297,7 @@ class Gws::Memo::Message
       tenant = mail_header.header["X-Shirasagi-Tenant"]
       return unless tenant
 
-      @tenant_matched = tenant.to_s == SS::Crypt.crypt("#{site.id}:#{site.name}")
+      @tenant_matched = tenant.to_s == SS::Crypto.crypt("#{site.id}:#{site.name}")
     end
 
     def read_version
@@ -616,7 +616,7 @@ class Gws::Memo::Message
     end
 
     def write_tenant
-      io.write encoded_eml_field("X-Shirasagi-Tenant", SS::Crypt.crypt("#{site.id}:#{site.name}"))
+      io.write encoded_eml_field("X-Shirasagi-Tenant", SS::Crypto.crypt("#{site.id}:#{site.name}"))
     end
 
     def encoded_eml_field(field_name, value, charset: "utf-8")

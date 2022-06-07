@@ -41,7 +41,7 @@ module Sys::Addon
     end
 
     def fingerprint
-      cert = OpenSSL::X509::Certificate.new(SS::Crypt.decrypt(x509_cert))
+      cert = OpenSSL::X509::Certificate.new(SS::Crypto.decrypt(x509_cert))
       Digest::SHA1.hexdigest(cert.to_der).upcase.scan(/../).join(":")
     end
 
@@ -58,11 +58,11 @@ module Sys::Addon
       self.name_id_format = settings.name_identifier_format
       self.sso_url = settings.idp_sso_target_url || settings.idp_sso_service_url
       self.slo_url = settings.idp_slo_target_url || settings.idp_slo_service_url
-      self.x509_cert = SS::Crypt.encrypt(Base64.decode64(settings.idp_cert))
+      self.x509_cert = SS::Crypto.encrypt(Base64.decode64(settings.idp_cert))
     end
 
     def set_x509_cert
-      self.x509_cert = SS::Crypt.encrypt(in_x509_cert.read)
+      self.x509_cert = SS::Crypto.encrypt(in_x509_cert.read)
     end
 
     def validate_x509_cert

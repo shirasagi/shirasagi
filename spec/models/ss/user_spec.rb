@@ -11,7 +11,7 @@ describe SS::User, dbscope: :example do
       let(:entity) do
         {
           email: "u#{r}@example.jp",
-          password: SS::Crypt.crypt("p#{r}"),
+          password: SS::Crypto.crypt("p#{r}"),
           group_ids: [ group.id ]
         }
       end
@@ -27,7 +27,7 @@ describe SS::User, dbscope: :example do
       let(:entity) do
         {
           name: "u#{r}",
-          password: SS::Crypt.crypt("p#{r}"),
+          password: SS::Crypto.crypt("p#{r}"),
           group_ids: [ group.id ]
         }
       end
@@ -43,7 +43,7 @@ describe SS::User, dbscope: :example do
       let(:entity) do
         {
           name: "u#{r}",
-          password: SS::Crypt.crypt("p#{r}"),
+          password: SS::Crypto.crypt("p#{r}"),
           group_ids: [ group.id ],
           uid: "u#{r}@example.jp"
         }
@@ -77,7 +77,7 @@ describe SS::User, dbscope: :example do
         {
           name: "u#{r}",
           email: "u#{r}@example.jp",
-          password: SS::Crypt.crypt("p#{r}"),
+          password: SS::Crypto.crypt("p#{r}"),
           type: "t#{r}",
           group_ids: [ group.id ]
         }
@@ -98,7 +98,7 @@ describe SS::User, dbscope: :example do
         {
           name: "u#{r1}",
           email: "u#{r0}@example.jp",
-          password: SS::Crypt.crypt("p#{r1}"),
+          password: SS::Crypto.crypt("p#{r1}"),
           group_ids: [ group.id ]
         }
       end
@@ -106,7 +106,7 @@ describe SS::User, dbscope: :example do
         {
           name: "u#{r2}",
           email: "u#{r0}@example.jp",
-          password: SS::Crypt.crypt("p#{r2}"),
+          password: SS::Crypto.crypt("p#{r2}"),
           group_ids: [ group.id ]
         }
       end
@@ -123,7 +123,7 @@ describe SS::User, dbscope: :example do
         {
           name: "u#{r}",
           email: "u#{r}@example.jp",
-          password: SS::Crypt.crypt("p#{r}"),
+          password: SS::Crypto.crypt("p#{r}"),
           type: "sns",
           group_ids: [ group.id ]
         }

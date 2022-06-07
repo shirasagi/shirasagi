@@ -87,7 +87,7 @@ module Service::BaseFilter
         "last_logged_in" => Time.zone.now.to_i
       }
       if opts[:password].present?
-        session[:service_account]["password"] = SS::Crypt.encrypt(opts[:password])
+        session[:service_account]["password"] = SS::Crypto.encrypt(opts[:password])
       end
     end
     redirect_to service_main_path if opts[:redirect]

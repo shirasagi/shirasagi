@@ -5,7 +5,7 @@ production: &production
   proxy_http_basic_authentication:
     proxy_uri: "http://127.0.0.1:8080"
     proxy_username: "username"
-    # to get password encrypted, run command: `bin/rails runner 'puts SS::Crypt.encrypt("password")'`
+    # to get password encrypted, run command: `bin/rails runner 'puts SS::Crypto.encrypt("password")'`
     proxy_password: "GqI7kIUuYXGKeIt/0+lnQw=="
     # we also support clear text password
     # proxy_password: "password"

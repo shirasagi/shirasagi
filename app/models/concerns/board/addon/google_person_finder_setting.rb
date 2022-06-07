@@ -18,7 +18,7 @@ module Board::Addon
     end
 
     def accessor
-      Google::PersonFinder.new(repository: gpf_repository, domain_name: gpf_domain_name, api_key: SS::Crypt.decrypt(gpf_api_key))
+      Google::PersonFinder.new(repository: gpf_repository, domain_name: gpf_domain_name, api_key: SS::Crypto.decrypt(gpf_api_key))
     end
 
     def gpf_state_options
@@ -37,7 +37,7 @@ module Board::Addon
     private
 
     def set_gpf_api_key
-      self.gpf_api_key = SS::Crypt.encrypt(in_gpf_api_key) if in_gpf_api_key.present?
+      self.gpf_api_key = SS::Crypto.encrypt(in_gpf_api_key) if in_gpf_api_key.present?
     end
 
     def raw_mode

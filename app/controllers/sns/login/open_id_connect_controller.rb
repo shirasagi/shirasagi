@@ -167,7 +167,7 @@ class Sns::Login::OpenIdConnectController < ApplicationController
         email: @item.text.try { |s| s.strip }
       }
       id_token = JSON::JWT.new(claims)
-      id_token = id_token.sign(SS::Crypt.decrypt(@item.client_secret))
+      id_token = id_token.sign(SS::Crypto.decrypt(@item.client_secret))
 
       resp = {
         id_token: id_token.to_s,
@@ -201,7 +201,7 @@ class Sns::Login::OpenIdConnectController < ApplicationController
         email: @item.text.try { |s| s.strip }
       }
       id_token = JSON::JWT.new(claims)
-      id_token = id_token.sign(SS::Crypt.decrypt(@item.client_secret))
+      id_token = id_token.sign(SS::Crypto.decrypt(@item.client_secret))
 
       resp = {
         access_token: SecureRandom.hex(24),

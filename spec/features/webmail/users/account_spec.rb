@@ -63,7 +63,7 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
         expect(setting[:imap_ssl_use]).to eq imap_ssl_use
         expect(setting[:imap_auth_type]).to eq imap_auth_type
         expect(setting[:imap_account]).to eq imap_account
-        expect(setting[:imap_password]).to eq SS::Crypt.encrypt(imap_password)
+        expect(setting[:imap_password]).to eq SS::Crypto.encrypt(imap_password)
         expect(setting[:imap_sent_box]).to eq imap_sent_box
         expect(setting[:imap_draft_box]).to eq imap_draft_box
         expect(setting[:imap_trash_box]).to eq imap_trash_box
@@ -121,7 +121,7 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
         expect(setting[:imap_ssl_use]).to eq imap_ssl_use
         expect(setting[:imap_auth_type]).to eq imap_auth_type
         expect(setting[:imap_account]).to eq imap_account
-        expect(setting[:imap_password]).to eq SS::Crypt.encrypt(imap_password)
+        expect(setting[:imap_password]).to eq SS::Crypto.encrypt(imap_password)
         expect(setting[:imap_sent_box]).to eq imap_sent_box
         expect(setting[:imap_draft_box]).to eq imap_draft_box
         expect(setting[:imap_trash_box]).to eq imap_trash_box
