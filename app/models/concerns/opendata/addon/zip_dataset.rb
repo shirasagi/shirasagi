@@ -11,16 +11,16 @@ module Opendata::Addon::ZipDataset
     "#{Rails.root}/private/opendata/datasets/#{id.to_s.chars.join("/")}/_/opendata-datasets-#{id}.zip"
   end
 
-  def zip_exists?
+  def zip_exist?
     File.exist?(zip_path)
   end
 
   def zip_size
-    zip_exists? ? ::File.size(zip_path) : 0
+    zip_exist? ? ::File.size(zip_path) : 0
   end
 
   def compression_dataset
-    ::FileUtils.rm_rf(zip_path) if zip_exists?
+    ::FileUtils.rm_rf(zip_path) if zip_exist?
     return if resources.blank?
 
     name_util = SS::FilenameUtils.new
@@ -64,7 +64,7 @@ module Opendata::Addon::ZipDataset
   end
 
   def remove_dataset_zip
-    ::FileUtils.rm_rf(zip_path) if zip_exists?
+    ::FileUtils.rm_rf(zip_path) if zip_exist?
   rescue => e
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
   end

@@ -39,7 +39,7 @@ module Inquiry::Addon
       reply_content_state.blank? || reply_content_state == "static"
     end
 
-    def email_column_exists?
+    def email_column_exist?
       return false if !respond_to?(:columns)
       columns.select { |column| column.input_type == "email_field" && column.state == "public" }.present?
     end

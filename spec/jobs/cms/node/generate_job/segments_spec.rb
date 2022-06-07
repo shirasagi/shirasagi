@@ -69,9 +69,9 @@ describe Cms::Node::GenerateJob, dbscope: :example do
 
     it do
       expect(Job::Log.count).to eq 1
-      web01_expected_path.each { |path| expect(::File.exists?(path)).to be_truthy }
-      web02_expected_path.each { |path| expect(::File.exists?(path)).to be_truthy }
-      web03_expected_path.each { |path| expect(::File.exists?(path)).to be_truthy }
+      web01_expected_path.each { |path| expect(::File.exist?(path)).to be_truthy }
+      web02_expected_path.each { |path| expect(::File.exist?(path)).to be_truthy }
+      web03_expected_path.each { |path| expect(::File.exist?(path)).to be_truthy }
     end
   end
 
@@ -83,9 +83,9 @@ describe Cms::Node::GenerateJob, dbscope: :example do
 
     it do
       expect(Job::Log.count).to eq 1
-      web01_expected_path.each { |path| expect(::File.exists?(path)).to be_truthy }
-      web02_expected_path.each { |path| expect(::File.exists?(path)).to be_falsey }
-      web03_expected_path.each { |path| expect(::File.exists?(path)).to be_falsey }
+      web01_expected_path.each { |path| expect(::File.exist?(path)).to be_truthy }
+      web02_expected_path.each { |path| expect(::File.exist?(path)).to be_falsey }
+      web03_expected_path.each { |path| expect(::File.exist?(path)).to be_falsey }
     end
   end
 
@@ -97,9 +97,9 @@ describe Cms::Node::GenerateJob, dbscope: :example do
 
     it do
       expect(Job::Log.count).to eq 1
-      web01_expected_path.each { |path| expect(::File.exists?(path)).to be_falsey }
-      web02_expected_path.each { |path| expect(::File.exists?(path)).to be_truthy }
-      web03_expected_path.each { |path| expect(::File.exists?(path)).to be_falsey }
+      web01_expected_path.each { |path| expect(::File.exist?(path)).to be_falsey }
+      web02_expected_path.each { |path| expect(::File.exist?(path)).to be_truthy }
+      web03_expected_path.each { |path| expect(::File.exist?(path)).to be_falsey }
     end
   end
 
@@ -111,9 +111,9 @@ describe Cms::Node::GenerateJob, dbscope: :example do
 
     it do
       expect(Job::Log.count).to eq 1
-      web01_expected_path.each { |path| expect(::File.exists?(path)).to be_falsey }
-      web02_expected_path.each { |path| expect(::File.exists?(path)).to be_falsey }
-      web03_expected_path.each { |path| expect(::File.exists?(path)).to be_truthy }
+      web01_expected_path.each { |path| expect(::File.exist?(path)).to be_falsey }
+      web02_expected_path.each { |path| expect(::File.exist?(path)).to be_falsey }
+      web03_expected_path.each { |path| expect(::File.exist?(path)).to be_truthy }
     end
   end
 end
