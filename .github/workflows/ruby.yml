@@ -57,6 +57,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: npm
+      - run: npm install
       - name: Install MeCab Ruby
         run: |
           tar xzf vendor/mecab/mecab-ruby-0.996.tar.gz
