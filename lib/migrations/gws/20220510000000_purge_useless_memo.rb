@@ -15,6 +15,10 @@ class SS::Migration20220510000000
         { user_settings: nil }
       ]
     }
-    Gws::Memo::Message.all.where("$and" => [ cond ]).destroy_all
+    criteria = Gws::Memo::Message.all.where("$and" => [ cond ])
+    all_ids = criteria.pluck(:id)
+    all_ids.each_slice(1000) do |ids|
+      criteria.in(id: ids).destroy_all
+    end
   end
 end
