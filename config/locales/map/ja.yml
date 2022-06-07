@@ -49,10 +49,6 @@ ja:
     addons:
       map/page: 地図
 
-  cms:
-    parts:
-      map/geolocation_page: 近傍ページリスト
-
   mongoid:
     attributes:
       map/addon/page:
