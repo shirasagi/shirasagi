@@ -1,7 +1,7 @@
 <% return if addons.blank? %>
 <%
   def crop_partial_path(addon)
-    "#{addon.path}/crop" if File.exists?("#{Rails.root}/app/views/#{addon.path}/_crop.html.erb")
+    "#{addon.path}/crop" if File.exist?("#{Rails.root}/app/views/#{addon.path}/_crop.html.erb")
   end
 %>
 <% css_classes ||= [] %>

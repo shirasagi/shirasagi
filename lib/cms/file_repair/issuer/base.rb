@@ -72,7 +72,7 @@ module Cms::FileRepair::Issuer
     end
 
     def emtpy_file?(file)
-      return true if !::File.exists?(file.path)
+      return true if !::File.exist?(file.path)
       return true if ::File.binread(file.path, 20).blank?
       false
     end
