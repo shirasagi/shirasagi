@@ -67,7 +67,7 @@ Rails.application.configure do
 
   # Compress using a preprocessor.
   # config.assets.js_compressor = :uglifier
-  config.assets.css_compressor = :sass
+  # config.assets.css_compressor = :sass
 
   # other assets configurations
   config.assets.compress = true

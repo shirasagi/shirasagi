@@ -53,6 +53,12 @@ jobs:
         with:
           ruby-version: 2.6
           bundler-cache: true
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+      - run: npm install
       - name: Install MeCab Ruby
         run: |
           tar xzf vendor/mecab/mecab-ruby-0.996.tar.gz
@@ -83,6 +89,8 @@ jobs:
           cat policy.xml
       - name: Running Docker Containers
         run: docker ps -a
+      - name: Bundle assets
+        run: npx webpack-cli build
       - name: Run tests
         run: |
           file_list=$(bundle exec ruby .travis.d/split_specs.rb -p ${{ matrix.parallelism }} -i ${{ matrix.id }})
