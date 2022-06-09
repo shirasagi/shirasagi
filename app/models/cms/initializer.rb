@@ -48,8 +48,8 @@ module Cms
     Cms::Role.permission :delete_cms_commands
     Cms::Role.permission :use_cms_commands
     Cms::Role.permission :use_cms_tools
+    Cms::Role.permission :use_cms_editor_extensions
     Cms::Role.permission :use_other_cms_files
-    Cms::Role.permission :use_cms_large_files_upload
     Cms::Role.permission :read_cms_generate_lock
     Cms::Role.permission :edit_cms_generate_lock
     Cms::Role.permission :read_other_cms_nodes
