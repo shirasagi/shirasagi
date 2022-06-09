@@ -24,6 +24,7 @@ class Inquiry::Answer
   field :inquiry_page_name, type: String
 
   belongs_to :node, foreign_key: :node_id, class_name: "Inquiry::Node::Form"
+  belongs_to :member, class_name: "Cms::Member"
   embeds_many :data, class_name: "Inquiry::Answer::Data"
 
   permit_params :id, :node_id, :remote_addr, :user_agent

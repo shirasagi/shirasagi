@@ -20,14 +20,14 @@ module Board::Addon
       Google::PersonFinder.new(
         repository: gpf_repository,
         domain_name: gpf_domain_name,
-        api_key: SS::Crypt.decrypt(gpf_api_key))
+        api_key: SS::Crypto.decrypt(gpf_api_key))
     end
 
     def upload_to_gpf(accessor = @cur_node.accessor)
       accessor.upload(self.to_pfif)
       self.gpf_repository = accessor.repository
       self.gpf_domain_name = accessor.domain_name
-      self.gpf_api_key = SS::Crypt.encrypt(accessor.api_key)
+      self.gpf_api_key = SS::Crypto.encrypt(accessor.api_key)
     end
 
     def find_gpf(accessor = self.accessor)

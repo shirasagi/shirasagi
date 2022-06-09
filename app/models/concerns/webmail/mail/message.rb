@@ -60,8 +60,10 @@ module Webmail::Mail::Message
     self.edit_as_new_uid = ref.uid
     self.to = ref.to
     self.cc = ref.cc
+    self.bcc = ref.bcc
     self.to_text = self.to.join('; ')
     self.cc_text = self.cc.join('; ')
+    self.bcc_text = self.bcc.join('; ')
     self.subject = ref.display_subject
     self.format = ref.format
     self.text = ref.text

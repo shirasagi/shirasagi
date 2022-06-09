@@ -70,7 +70,7 @@ class Sys::Auth::OpenIdConnect::TokenRequest
   end
 
   def make_basic_auth
-    user_pass = "#{cur_item.client_id}:#{SS::Crypt.decrypt(cur_item.client_secret)}"
+    user_pass = "#{cur_item.client_id}:#{SS::Crypto.decrypt(cur_item.client_secret)}"
     base64_user_pass = Base64.strict_encode64(user_pass)
     "Basic #{base64_user_pass}"
   end

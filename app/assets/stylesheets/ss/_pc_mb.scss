@@ -2144,12 +2144,26 @@ footer.send {
 .mod-map {
   padding: 0 10px;
   @include mb { padding: 0 10px; }
+  .reference-column-name, .center-input {
+    width: 260px;
+    margin: 0;
+  }
+  .zoom-input {
+    margin: 0;
+  }
+  .set-zoom-level {
+    @include mb {
+      margin: 0;
+    }
+  }
   .keyword {
     max-width: 400px;
     @include mb { max-width: 75%; }
   }
-  .location-search { margin-bottom: 20px; }
-  > button { @include mb { margin-bottom: 10px; } }
+  .location-search {
+    margin-top: 20px;
+    margin-bottom: 5px;
+  }
   .marker-setting {
     @include clear;
     margin: 20px 0 0;
@@ -2217,17 +2231,6 @@ footer.send {
   .add-marker {
     @include btn-orange;
     margin: 10px 0 28px;
-  }
-}
-.map-position {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 5px 0;
-  .center-position {
-    padding-right: 10px;
-    .center-input {
-      width: 260px;
-    }
   }
 }
 #map-canvas {

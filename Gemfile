@@ -4,11 +4,11 @@ git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 gem 'rails', '~> 6.1.0'
 gem 'sprockets', '< 4.0'
+gem 'jsbundling-rails'
 gem 'sass'
 gem 'sassc-rails'
 gem 'uglifier'
 gem 'coffee-rails'
-gem 'mini_racer'
 gem 'jbuilder'
 gem 'sdoc', group: :doc
 
@@ -55,6 +55,7 @@ gem 'liquid'
 gem 'mail-iso-2022-jp'
 gem 'marcel'
 gem 'mini_magick'
+gem 'mongoid-geospatial'
 gem 'net-ldap'
 gem 'non-stupid-digest-assets'
 gem 'oj'
@@ -68,7 +69,8 @@ gem 'rss'
 gem 'rubyzip', '~> 2.3.0'
 gem 'thinreports'
 gem 'ungarbled'
-gem 'mongoid-geospatial'
+gem 'view_component'
+gem 'wareki'
 
 # OAuth
 gem 'oauth2'

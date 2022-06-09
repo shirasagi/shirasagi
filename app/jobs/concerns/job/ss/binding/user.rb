@@ -12,7 +12,7 @@ module Job::SS::Binding::User
     return nil if user_id.blank?
     @user ||= begin
       user = self.class.user_class.where("$or" => [{ id: user_id }, { uid: user_id }, { email: user_id }]).first
-      user.decrypted_password = SS::Crypt.decrypt(self.user_password) if user && self.user_password
+      user.decrypted_password = SS::Crypto.decrypt(self.user_password) if user && self.user_password
       user
     end
   end

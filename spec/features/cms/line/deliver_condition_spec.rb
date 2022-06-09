@@ -2,8 +2,33 @@ require 'spec_helper'
 
 describe "cms/line/deliver_conditions", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
-  let(:item) { create(:cms_line_deliver_condition, lower_year1: 1, upper_year1: 1) }
+  let(:item) { create(:cms_line_deliver_condition, deliver_category_ids: [deliver_category_first1.id]) }
   let(:name) { unique_id }
+
+  let!(:deliver_category_first) do
+    create(:cms_line_deliver_category_category, filename: "c1", select_type: "checkbox")
+  end
+  let!(:deliver_category_first1) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_first, filename: "1")
+  end
+  let!(:deliver_category_first2) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_first, filename: "2")
+  end
+  let!(:deliver_category_first3) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_first, filename: "3")
+  end
+  let!(:deliver_category_second) do
+    create(:cms_line_deliver_category_category, filename: "c2", select_type: "checkbox")
+  end
+  let!(:deliver_category_second1) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_second, filename: "1")
+  end
+  let!(:deliver_category_second2) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_second, filename: "2")
+  end
+  let!(:deliver_category_second3) do
+    create(:cms_line_deliver_category_selection, parent: deliver_category_second, filename: "3")
+  end
 
   let(:index_path) { cms_line_deliver_conditions_path site }
   let(:new_path) { new_cms_line_deliver_condition_path site }
@@ -18,8 +43,7 @@ describe "cms/line/deliver_conditions", type: :feature, dbscope: :example, js: t
       visit new_path
       within "form#item-form" do
         fill_in "item[name]", with: name
-        fill_in "item[lower_year1]", with: 2
-        fill_in "item[upper_year1]", with: 3
+        find("input[name='item[deliver_category_ids][]'][value='#{deliver_category_first1.id}']").set(true)
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -34,8 +58,7 @@ describe "cms/line/deliver_conditions", type: :feature, dbscope: :example, js: t
     it "#edit" do
       visit edit_path
       within "form#item-form" do
-        fill_in "item[lower_year2]", with: 4
-        fill_in "item[upper_year2]", with: 5
+        find("input[name='item[deliver_category_ids][]'][value='#{deliver_category_first2.id}']").set(true)
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))

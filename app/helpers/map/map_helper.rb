@@ -209,15 +209,60 @@ module Map::MapHelper
     jquery { s.join("\n").html_safe }
   end
 
+  def map_marker_address(item)
+    if item.respond_to?(:column_values)
+      item.column_values.each do |col|
+        next unless col.name.start_with?('所在地', '住所')
+        return col.value if col.value.present?
+      end
+    end
+    return item.try(:address) ? item.address.presence : nil
+  end
+
   def render_marker_info(item, point = nil)
+    categories = item.categories.order(depth: 1).entries
+    cate1 = categories.first
+    cate2 = categories.last
+
     h = []
-    h << %(<div class="marker-info" data-id="#{item.id}">)
+    h << %(<div class="marker-info" data-id="#{item.id}" data-cate-id="#{cate1.try(:id)}">)
     h << %(<p class="name">#{item.name}</p>)
-    h << %(<p class="address">#{item.address}</p>) if item.try(:address)
+
     if point && point[:name].present?
       h << %(<p class="point-name">#{point[:name]}</p>)
     end
-    h << %(<p class="show">#{link_to t('ss.links.show'), item.url}</p>)
+
+    h << %(<p class="form-name">#{cate2.name}</p>) if cate2
+
+    if address = map_marker_address(item)
+      h << %(<p class="address">#{address}</p>)
+    end
+
+    h << %(<p class="show"><a href="#{item.url}">#{I18n.t('ss.links.show')}</a></p>)
+    h << %(</div>)
+
+    h.join("\n")
+  end
+
+  def render_map_sidebar(item)
+    categories = item.categories.order(depth: 1).entries
+    cate1 = categories.first
+    cate2 = categories.last
+
+    h = []
+    h << %(<div class="column" data-id="#{item.id}" data-cate-id="#{cate1.try(:id)}">)
+    h << %(<p class="name"><a href="#{item.url}">#{item.name}</a></p>)
+    h << %(<p class="form-name">#{cate2.name}</p>) if cate2
+
+    if address = map_marker_address(item)
+      h << %(<p class="address">#{address}</p>)
+    end
+
+    if item.map_points.present?
+      h << %(<p><a href="#" class="click-marker">#{I18n.t("facility.sidebar.click_marker")}</a></p>)
+    else
+      h << %(<div class="no-marker">#{I18n.t("facility.sidebar.no_marker")}</div>)
+    end
     h << %(</div>)
 
     h.join("\n")

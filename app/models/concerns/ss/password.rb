@@ -28,7 +28,7 @@ module SS::Password
   end
 
   def encrypt_password
-    self.password = SS::Crypt.crypt(in_password)
+    self.password = SS::Crypto.crypt(in_password)
   end
 
   def password_expired
@@ -57,6 +57,6 @@ module SS::Password
     session = Rails.application.current_request.session
     return if session.blank?
     return if session[:user].blank?
-    session[:user]["password"] = SS::Crypt.encrypt(in_password)
+    session[:user]["password"] = SS::Crypto.encrypt(in_password)
   end
 end

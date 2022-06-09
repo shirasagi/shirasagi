@@ -1,4 +1,9 @@
 <dl class="see mod-cms-column-select-like">
+  <% if @model.use_parent_column_name %>
+    <dt><%= @model.t :parent_column_name %></dt>
+    <dd><%= @item.parent_column_name %></dd>
+  <% end %>
+
   <dt><%= @model.t :select_options %></dt>
   <dd><%= br @item.select_options %></dd>
 </dl>

@@ -15,7 +15,7 @@ module Cms::NodeFilter::ListView
     prepend_view_path "app/views/#{params[:controller]}"
   end
 
-  def index_page_exists?
+  def index_page_exist?
     path = "#{@cur_node.filename}/index.html"
     Cms::Page.site(@cur_site).and_public.filename(path).present?
   end
@@ -37,7 +37,7 @@ module Cms::NodeFilter::ListView
     mime = rendered_format
 
     if @cur_node.view_layout == "cms/redirect" && !mobile_path?
-      @redirect_link = trusted_url!(@cur_node.redirect_link)
+      @redirect_link = Sys::TrustedUrlValidator.url_restricted? ? trusted_url!(@cur_node.redirect_link) : @cur_node.redirect_link
       body = render_to_string(html: "", layout: "cms/redirect")
     elsif mime.html? && @cur_node.layout
       @last_rendered_layout = nil if @last_rendered_node_filename != @cur_node.filename
@@ -98,7 +98,7 @@ module Cms::NodeFilter::ListView
   end
 
   def generate
-    if index_page_exists? || !@cur_node.serve_static_file?
+    if index_page_exist? || !@cur_node.serve_static_file?
       cleanup_index_files(1)
       return true
     end

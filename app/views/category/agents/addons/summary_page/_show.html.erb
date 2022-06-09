@@ -1,0 +1,6 @@
+<% return if @item.summary_page.blank? %>
+
+<dl class="see">
+  <dt><%= @item.t :summary_page_id %></dt>
+  <dd><%= @item.summary_page.name %></dd>
+</dl>

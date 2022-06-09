@@ -1,9 +1,8 @@
 <%= jquery do %>
-  $("#addon-member-agents-addons-additional_attributes").hide();
-  $("#addon-ezine-agents-addons-subscription").hide();
+  new Cms_Line_Deliver_Condition
 <% end %>
 
-<dl class="see mod-pippi-member-additional-attributes">
+<dl class="see mod-line-member-additional-attributes">
   <dt><%= @item.t(:first_registered) %></dt>
   <dd><%= f.text_field :first_registered, class: 'datetime js-datetime', value: tryb{ @item.first_registered.strftime("%Y/%m/%d %H:%M") } %></dd>
 
@@ -11,43 +10,34 @@
   <dd><%= f.text_field :subscribe_richmenu_id %></dd>
 
   <dt><%= @item.t(:subscribe_line_message) %></dt>
-  <dd><%= f.select :subscribe_line_message, @item.subscribe_line_message_options %></dd>
+  <dd style="margin-bottom: 10px;"><%= f.select :subscribe_line_message, @item.subscribe_line_message_options %></dd>
+</dl>
 
-  <% 1.upto(Cms::Member::CHILD_MAX_SIZE) do |i| %>
-    <dt style="margin-top: 5px;"><%= @model.t("child#{i}") %></dt>
-    <dd style="margin-top: 5px;"></dd>
-
-    <dt class="depth-2" style="margin-top: 5px;"><%= @model.t("child_name") %></dt>
-    <dd style="margin-top: 5px;"><%= f.text_field "child#{i}_name", placeholder: t("member.placeholder.member_name"), style: "width: 60%;" %></dd>
-
-    <dt class="depth-2" style="margin-top: 5px;"><%= @model.t("child_birthday") %></dt>
-    <dd style="margin-top: 5px;">
-      <%= f.fields_for "in_child#{i}_birth" do |birth_f| %>
-        <% era, year, month, day = @item.send("parse_in_child#{i}_birth") %>
-        <%= birth_f.number_field :year, value: (year || Time.zone.today.year) %>
-        <%= t("datetime.prompts.year") %>
-        <%= birth_f.select :month, options_for_select((1..12).to_a, month), include_blank: true  %>
-        <%= t("datetime.prompts.month") %>
-        <%= birth_f.select :day, options_for_select((1..31).to_a, day), include_blank: true %>
-        <%= t("datetime.prompts.day") %>
-      <% end %>
-    </dd>
-  <% end %>
-
-  <%= hidden_field_tag "item[deliver_category_ids][]" %>
-  <% @item.deliver_categories.and_closed.each do |item| %>
-    <%= hidden_field_tag "item[deliver_category_ids][]", item.id %>
-  <% end %>
-
-  <% Cms::Line::DeliverCategory::Category.site(@cur_site).each_public do |root, children| %>
+<%= hidden_field_tag "#{f.object_name}[deliver_category_ids][]", nil %>
+<% Cms::Line::DeliverCategory::Category.site(@cur_site).each_public do |root, children| %>
+  <dl class="see deliver-category" <%== root.data_required_html %> style="padding-bottom: 10px;">
     <dt><%= root.name %></dt>
     <dd>
-      <% children.each do |category| %>
-        <label>
-          <%= check_box_tag "#{f.object_name}[deliver_category_ids][]", category.id, @item.deliver_category_ids.include?(category.id) %>
-          <%= category.name %>
-        </label>
+      <% if root.select_type == "select" %>
+        <%
+          category_options = []
+          selected = nil
+          children.each do |category|
+            selected = category.id if @item.deliver_category_ids.include?(category.id)
+            category_options << [category.name, category.id]
+          end
+          select_options = { class: "select-deliver-category" }
+          select_options[:include_blank] = "回答無し" if !root.required?
+        %>
+        <%= select_tag "#{f.object_name}[deliver_category_ids][]", options_for_select(category_options, selected), select_options %>
+      <% elsif root.select_type == "checkbox" %>
+        <% children.each do |category| %>
+          <label>
+            <%= check_box_tag "#{f.object_name}[deliver_category_ids][]", category.id, @item.deliver_category_ids.include?(category.id) %>
+            <%= category.name %>
+          </label>
+        <% end %>
       <% end %>
     </dd>
-  <% end %>
-</dl>
+  </dl>
+<% end %>

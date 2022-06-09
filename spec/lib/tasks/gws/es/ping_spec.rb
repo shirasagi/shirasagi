@@ -1,9 +1,7 @@
 require 'spec_helper'
 
-describe Tasks::Gws::Es, dbscope: :example do
-  let(:es_host) { unique_domain }
-  let(:es_url) { "http://#{es_host}" }
-  let(:requests) { [] }
+describe Tasks::Gws::Es, dbscope: :example, es: true do
+  let!(:site) { create :gws_group }
 
   before do
     @save = {}
@@ -42,28 +40,18 @@ describe Tasks::Gws::Es, dbscope: :example do
       let!(:site) { create :gws_group, menu_elasticsearch_state: "show", elasticsearch_hosts: es_url }
 
       before do
-        WebMock.reset!
-
-        stub_request(:any, /#{::Regexp.escape(es_host)}/).to_return do |request|
-          requests << request.as_json.dup
-          { body: '{}', status: 200, headers: { 'Content-Type' => 'application/json; charset=UTF-8' } }
-        end
-
         ENV['site'] = site.name
-      end
 
-      after do
-        WebMock.reset!
+        # gws:es:ingest:init
+        ::Gws::Elasticsearch.init_ingest(site: site)
+        # gws:es:drop
+        ::Gws::Elasticsearch.drop_index(site: site) rescue nil
+        # gws:es:create_indexes
+        ::Gws::Elasticsearch.create_index(site: site)
       end
 
       it do
         expect { described_class.ping }.to output(include("true\n")).to_stdout
-
-        expect(requests.length).to eq 1
-        requests.first.tap do |request|
-          expect(request['method']).to eq 'head'
-          expect(request['uri']['path']).to end_with("/")
-        end
       end
     end
   end

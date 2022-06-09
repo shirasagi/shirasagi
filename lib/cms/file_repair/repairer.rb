@@ -20,7 +20,7 @@ module Cms::FileRepair
     end
 
     def csv_open
-      Fs.rm_rf(csv_path) if ::File.exists?(csv_path)
+      Fs.rm_rf(csv_path) if ::File.exist?(csv_path)
       Fs.mkdir_p(::File.dirname(csv_path))
       file = ::File.open(csv_path, "w")
       file.print UTF8_BOM
@@ -112,7 +112,7 @@ module Cms::FileRepair
       end
 
       def clean
-        if ::File.exists?(output_path)
+        if ::File.exist?(output_path)
           puts "remove: #{output_path}"
           Fs.rm_rf(output_path)
         end

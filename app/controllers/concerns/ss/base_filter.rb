@@ -127,7 +127,7 @@ module SS::BaseFilter
         "user_agent" => request.user_agent,
         "last_logged_in" => Time.zone.now.to_i
       }
-      session[:user]["password"] = SS::Crypt.encrypt(opts[:password]) if opts[:password].present?
+      session[:user]["password"] = SS::Crypto.encrypt(opts[:password]) if opts[:password].present?
       Rails.logger.info("renew session: old id=#{old_session_id}, new id=#{session.id}")
     end
     set_login_path_to_cookie(opts[:login_path] || request_path)

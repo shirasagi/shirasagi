@@ -6,7 +6,7 @@ module Cms::RedirectPage
     permit_params :redirect_link
 
     before_validation :normalize_redirect_link, if: ->{ redirect_link.present? }
-    validates :redirect_link, "sys/trusted_url" => true
+    validates :redirect_link, "sys/trusted_url" => true, if: ->{ Sys::TrustedUrlValidator.url_restricted? }
   end
 
   def view_layout

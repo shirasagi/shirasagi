@@ -1,0 +1,80 @@
+<%
+  condition_form = @item.condition_forms.to_edit_form
+  column_names = Cms::Column::Base.site(@cur_site).in(form_id: condition_form.forms.map(&:id)).pluck(:name)
+  column_names.uniq!
+  column_names.sort!
+
+  addon ||= local_assigns.fetch(:addon, {})
+%>
+<dl class="see condition-forms">
+  <dt><%= @model.t :condition_form_ids %><%= @model.tt :condition_form_ids %></dt>
+  <dd>
+    <%= hidden_field_tag "#{f.object_name}[condition_forms][form_ids][]", '', id: nil, class: 'hidden-ids' %>
+    <%= link_to t('cms.apis.forms.index'), cms_apis_forms_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index form-table ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= t("cms.condition_form.form_name") %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+        <% condition_form.forms.each do |form| %>
+        <tr data-id="<%= form.id %>">
+          <td><%= form.name %> <%= hidden_field_tag "#{f.object_name}[condition_forms][form_ids][]", form.id, id: nil %></td>
+          <td><%= link_to t('ss.buttons.delete'), '#', class: 'deselect btn' %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+  <dt class="depth-2"><%= t("cms.condition_form.filters") %> <%= @model.tt :condition_form_ids %></dt>
+  <dd class="depth-2">
+    <div class="empty-message<% if column_names.present? %> hide<% end %>"><%= t("cms.condition_form.choose_forms_at_first") %></div>
+    <table class="index filter-table<% if column_names.blank? %> hide<% end %>">
+      <thead>
+      <tr>
+        <th><%= t("cms.condition_form.column_name") %></th>
+        <th><%= t("cms.condition_form.column_value") %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% condition_form.filters.each do |filter| %>
+        <tr class="filter-setting">
+          <td><%= select_tag "#{f.object_name}[condition_forms][filters][][column_name]", options_for_select(column_names, selected: filter.column_name), id: nil, include_blank: true %></td>
+          <td><%= text_area_tag "#{f.object_name}[condition_forms][filters][][condition_values]", filter.condition_values.try(:join, ", "), id: nil, rows: 1, style: "height: unset;" %></td>
+          <td class="operations"><%= link_to t('ss.buttons.delete'), '#', class: 'deselect btn' %></td>
+        </tr>
+      <% end %>
+      <tr class="filter-setting new-filter">
+        <td><%= select_tag "#{f.object_name}[condition_forms][filters][][column_name]", options_for_select(column_names), id: nil, include_blank: true %></td>
+        <td><%= text_area_tag "#{f.object_name}[condition_forms][filters][][condition_values]", '', id: nil, rows: 1, style: "height: unset; min-height: 1em;" %></td>
+        <td class="operations"><script type="text/html"><%= link_to t('ss.buttons.delete'), '#', class: 'deselect btn' %></script></td>
+      </tr>
+      <tr class="operations">
+        <td colspan="3"><%= button_tag t("ss.buttons.add"), type: "button", class: "btn add-filter-btn" %></td>
+      </tr>
+      </tbody>
+    </table>
+  </dd>
+
+  <% if @item.is_a?(Article::Part::Page) %>
+  <dt class="depth-2"><%= @model.t :sort_column_name %><%= @model.tt :sort_column_name %></dt>
+  <dd class="depth-2">
+    <div class="empty-message<% if column_names.present? %> hide<% end %>"><%= t("cms.condition_form.choose_forms_at_first") %></div>
+    <div class="sort-column<% if column_names.blank? %> hide<% end %>">
+      <%= f.select :sort_column_name, options_for_select(column_names, selected: @item.sort_column_name), include_blank: true %>
+      <%= f.select :sort_column_direction, @item.sort_column_direction_options, include_blank: true %>
+    </div>
+  </dd>
+  <% end %>
+
+  <dd></dd>
+</dl>
+
+<%= jquery do %>
+  new Cms_ConditionForms(<%== "##{addon[:id]} .condition-forms".to_json %>, { url: <%== column_names_cms_forms_path(format: "json").to_json %> });
+<% end %>

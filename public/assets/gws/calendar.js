@@ -23369,7 +23369,7 @@ this.Gws_Schedule_Calendar = (function ($) {
         }
         var popup_url = event.restUrl ? event.restUrl : url;
         var state = ("calendar[date]=" + (event.start.format('YYYY-MM-DD')) + "&") + Gws_Schedule_Calendar.viewStateQuery(view);
-        if (event.className.includes('fc-event-point')) {
+        if (event.className.includes('fc-event-point') && !event.className.includes('fc-event-private')) {
           jsEvent.preventDefault();
           event.url = popup_url + "/" + event.id + "?" + state;
           location.href = event.url;

@@ -13,7 +13,7 @@ class Cms::Column::Value::TextField < Cms::Column::Value::Base
     return if column.blank?
 
     if column.required? && value.blank?
-      self.errors.add(:base, :blank)
+      self.errors.add(:value, :blank)
     end
 
     return if value.blank?

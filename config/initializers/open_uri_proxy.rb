@@ -5,7 +5,7 @@ module OpenURI
     proxy_uri = SS.config.proxy.proxy_http_basic_authentication["proxy_uri"]
     proxy_username = SS.config.proxy.proxy_http_basic_authentication["proxy_username"]
     proxy_password = SS.config.proxy.proxy_http_basic_authentication["proxy_password"]
-    proxy_password = SS::Crypt.decrypt(proxy_password) || proxy_password if proxy_password.present?
+    proxy_password = SS::Crypto.decrypt(proxy_password) || proxy_password if proxy_password.present?
     ssl_verify_mode = SS.config.proxy.ssl_verify_mode
 
     options = rest.first || {}

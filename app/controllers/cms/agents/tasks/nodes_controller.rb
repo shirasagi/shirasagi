@@ -19,10 +19,22 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
     end
   end
 
+  def filter_by_segment(ids)
+    return ids if @segment.blank?
+
+    keys = @site.generate_node_segments
+    return ids if keys.blank?
+    return ids if keys.index(@segment).nil?
+
+    @task.log "# filter by #{@segment}"
+    ids.select { |id| (id % keys.size) == keys.index(@segment) }
+  end
+
   def each_node(&block)
     nodes = base_criteria = Cms::Node.site(@site)
     nodes = nodes.where(filename: /^#{::Regexp.escape(@node.filename)}(\/|$)/) if @node
     all_ids = nodes.pluck(:id)
+    all_ids = filter_by_segment(all_ids)
     all_ids.each_slice(PER_BATCH) do |ids|
       base_criteria.in(id: ids).to_a.each(&block)
     end
@@ -40,6 +52,7 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
     base_criteria = Cms::Page.site(@site).and_public
     pages = base_criteria.where(filename: /^[^\/]+$/, depth: 1)
     all_ids = pages.pluck(:id)
+    all_ids = filter_by_segment(all_ids)
     all_ids.each_slice(PER_BATCH) do |ids|
       Cms::Page.in(id: ids).to_a.each(&block)
     end
@@ -88,6 +101,7 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
         next unless node
         next unless node.public?
         next unless node.public_node?
+        next if node.try(:any_ancestor_nodes_for_member_enabled?)
 
         @task.performance.collect_node(node) do
           # ex: "article/page" => "article/agents/nodes/page"

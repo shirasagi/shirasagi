@@ -15,7 +15,7 @@ describe Cms::Site, type: :model, dbscope: :example do
       site.file_fs_access_restriction_state = "enabled"
       site.file_fs_access_restriction_allowed_ip_addresses = ip_address
       site.file_fs_access_restriction_basic_auth_id = basic_auth_id
-      site.file_fs_access_restriction_basic_auth_password = SS::Crypt.encrypt(basic_auth_password)
+      site.file_fs_access_restriction_basic_auth_password = SS::Crypto.encrypt(basic_auth_password)
       site.file_fs_access_restriction_env_key = env_key
       site.file_fs_access_restriction_env_value = env_value
       site.save!

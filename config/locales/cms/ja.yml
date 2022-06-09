@@ -217,6 +217,19 @@ ja:
       line_deliver_directly: 即時配信（予約日時無し）
       line_deliver_plans_empty: 配信日時が設定されていません。
       line_hub_node_emtpy: "「標準機能/LINE HUB」フォルダーが公開状態で設置されていません。"
+      line_deliver_condition:
+        multicast_with_no_condition:
+          - メンバー登録者全員に配信します。
+          - 「LINEメッセージを受信する」になっているメンバーのみに配信されます。
+        multicast_with_registered_condition:
+          -  あらかじめ作成した配信条件を設定して、条件に該当するメンバー登録者に配信します。
+          - 「LINEメッセージを受信する」になっているメンバーのみに配信されます。
+        multicast_with_input_condition:
+          - 配信条件を入力し、条件に該当するメンバー登録者に配信します。
+          - 「LINEメッセージを受信する」になっているメンバーのみに配信されます。
+        broadcast:
+          - LINEの友達登録者全員に配信されます。
+          - 「LINEメッセージを受信する/しない」に関わらず送信されます。
       page_expiration_header: ページの公開期限が切れています。
       page_expiration_body:
         - "ページの公開期限が切れていますので確認の上、対応を願いいたします。"
@@ -417,12 +430,11 @@ ja:
         facility_search: 施設検索
         image_map: イメージマップ
         json_template: JSONテンプレート
-        api: API連携
       line_deliver_condition_state:
         multicast_with_no_condition: 登録メンバー全員に配信する
         multicast_with_registered_condition: 登録メンバーに条件配信する（配信条件を設定）
         multicast_with_input_condition: 登録メンバーに条件配信する（配信条件を入力）
-        #broadcast: 友達登録者全員に配信する
+        broadcast: 友達登録者全員に配信する
       line_template_type:
         text: テキスト
         image: 画像
@@ -433,7 +445,7 @@ ja:
         body_carousel: 本文内の最初の画像
       line_deliver_category_type:
         category: カテゴリー
-        child_age: 子どもの年齢
+        selection: 選択肢
       line_richmenu_target:
         default: デフォルト
         member: メンバー
@@ -473,6 +485,13 @@ ja:
       hatena: はてなブックマーク
       hatena_add: このエントリーをはてなブックマークに追加
       line: LINEで送る
+    condition_form:
+      form_name: 定型フォーム名
+      filters: 条件
+      column_name: 項目名
+      column_value: 値
+      select_all: すべて選択
+      choose_forms_at_first: 定型フォームを選択してください。
 
     opendata_ref/license:
       ref_opendata: オープンデータ側の設定にしたがう
@@ -726,6 +745,7 @@ ja:
       cms/child_list: 子リスト表示
       cms/form/node: 定型フォーム
       cms/form/page: 定型フォーム
+      cms/form_db/import: 定型インポート
       cms/column/layout: レイアウト
       cms/column/text_like: 制約条件
       cms/column/select_like: 選択
@@ -739,10 +759,10 @@ ja:
       cms/line/service/hub: HUB設定
       cms/line/service/hook: イベントフック
       cms/line/service/facility_search: 施設検索
-      cms/line/service/api: API連携
       cms/line/service/page_list: ページリスト
       cms/line/service/area: タップ領域
       cms/line/service/json_body: JSONテンプレート
+      cms/line/service/chat: チャットボット
       cms/line/deliver_condition/body: 配信条件
       cms/line/message/body: 本文
       cms/line/message/deliver_condition: 配信条件
@@ -751,7 +771,8 @@ ja:
       cms/line/template/image: テンプレート：画像
       cms/line/template/page: テンプレート：記事ページ
       cms/line/template/json_body: テンプレート：JSON
-      cms/line/deliver_category/child_age: 子どもの年齢
+      cms/line/deliver_category/condition: 条件設定
+      cms/line/deliver_category/category: 選択肢設定
       cms/line/deliver_category/pickup: ピックアップ
       cms/line/richmenu/menu: メニュー設定
       cms/line/richmenu/area: タップ領域
@@ -792,6 +813,7 @@ ja:
       cms/command: コマンド
       cms/form: 定型フォーム
       cms/form_db: 定型フォーム - DB
+      cms/form_db/import_log: インポートログ
       cms/init_column: 初期ブロック
       cms/column/base: 入力項目
       cms/column/text_field: 一行入力
@@ -963,6 +985,8 @@ ja:
         readable_members_hash: 閲覧ユーザー(ハッシュ)
       cms/addon/list/model:
         conditions: 検索条件(URL)
+        condition_forms: 検索条件(定型フォーム)
+        condition_form_ids: 検索条件(定型フォーム)
         loop_html: ループHTML
         upper_html: 上部HTML
         lower_html: 下部HTML
@@ -971,6 +995,8 @@ ja:
         loop_liquid: ループHTML
         no_items_display_state: ページ未検出時表示
         substitute_html: 代替HTML
+        sort_column_name: 並び順
+        sort_column_direction: 並び順(方向)
       cms/addon/page_group_list:
         condition_groups: 検索条件(グループ)
       cms/addon/tabs:
@@ -1132,7 +1158,6 @@ ja:
         order: 並び順
         form_id: 定型フォーム
         node_id: 記事フォルダー
-        import_url: インポートURL
         size: 登録件数
       cms/addon/form/node:
         st_form_ids: 定型フォーム設定
@@ -1141,6 +1166,15 @@ ja:
         column_values: 定型フォーム値
         column_values_updated: 定型フォーム更新日
         form_contains_urls: 定型フォームURL一覧
+      cms/addon/form_db/import:
+        import_url: インポートURL
+        import_primary_key: 主キーのカラム
+        import_page_name: 記事タイトルのカラム
+        import_column_options: 値による条件設定
+        import_misc_options: その他の設定
+        import_event: イベント日時を取り込む
+        import_map: 地図座標を取り込む
+        import_logs: インポートログ
       cms/init_column:
         name: 名前
         order: 並び順
@@ -1178,6 +1212,7 @@ ja:
         place_holder: プレースホルダー
         additional_attr: 追加属性
       cms/addon/column/select_like:
+        parent_column_name: 親項目名
         select_options: 選択肢
       cms/addon/column/layout:
         layout: レイアウト
@@ -1304,9 +1339,6 @@ ja:
         line/action_data: "Trigger Data"
         expired_text: 有効期限切れメッセージ
         expired_minutes: 有効期限（分）
-      cms/addon/line/service/api:
-        api_url: "API URL"
-        api_log_filename: "API ログファイル名"
       cms/addon/line/service/page_list:
         no_image_id: NO IMAGE画像
         conditions: 検索条件
@@ -1314,6 +1346,8 @@ ja:
         limit: 表示件数
       cms/addon/line/service/facility_search:
         category_ids: 施設カテゴリー
+      cms/addon/line/service/chat:
+        node_id: フォルダー
       cms/line/facility_search/category:
         name: タイトル
         image_id: サムネイル画像
@@ -1329,10 +1363,6 @@ ja:
         name: タイトル
         order: 並び順
         state: ステータス
-      cms/addon/line/deliver_category/child_age:
-        year1: 年齢
-        lower_year1: 年齢1（下限）
-        upper_year1: 年齢1（上限）
       cms/addon/line/deliver_category/pick_up:
         st_page_ids: ページ
       cms/line/test_member:
@@ -1430,6 +1460,12 @@ ja:
         image240_id: 画像（幅240）
       cms/addon/line/service/json_body:
         json_body: JSON
+      cms/addon/line/deliver_category/category:
+        select_type: 選択肢
+        required: 必須入力
+      cms/addon/line/deliver_category/condition:
+        condition_state: 配信条件
+        conditions: 条件設定
       cms/line/template/base:
         type: テンプレートタイプ
         text: メッセージ
@@ -1977,6 +2013,8 @@ ja:
           oshirase
           oshirase/event
           shisei/jinji
+      condition_form_ids:
+        - 指定の定型フォームをもつページのみを一覧に表示することができます。
       sort:
         - リストの並び替え方法を指定します。
       limit:
@@ -2069,6 +2107,9 @@ ja:
           {% endfor %}
       new_days:
         - 設定した期間内に作成されたページへのリンクにNEWマークを付与するためのclassがふられます。
+      sort_column_name:
+        - 定型フォームを利用した並び替え方法を指定します。
+        - 通常の並び順よりもこちらを優先します。
 
     cms/addon/tabs:
       conditions:
@@ -2589,6 +2630,25 @@ ja:
         - 出力される入力形式のHTMLに属性を追加することが可能です。
 
     cms/addon/column/select_like:
+      parent_column_name:
+        - 親項目の項目名を入力します。
+        - 親項目を設定すると、親項目の選択肢に応じて本項目の選択肢が自動で変化します。
+        - "例として、親項目の選択肢を次のように設定:"
+        -
+        - "親アイテム1"
+        - "親アイテム2"
+        - "親アイテム3"
+        -
+        - "次に、本項目の選択肢を次のように設定した場合:"
+        -
+        - "親アイテム1/子アイテム1"
+        - "親アイテム1/子アイテム2"
+        - "親アイテム2/子アイテム3"
+        - "親アイテム2/子アイテム4"
+        - "親アイテム2/子アイテム5"
+        - "親アイテム3/子アイテム6"
+        -
+        - '親項目で「親アイテム2」が選択されると、本項目の選択肢が "子アイテム3", "子アイテム4", "子アイテム5" の 3 つに変化します。'
       select_options:
         - 回答の選択肢を入力します。
         - テキストを改行で区切ることで複数の選択肢を入力することができます。
@@ -2611,6 +2671,22 @@ ja:
       node_ids:
         - 記事フォルダーを設定します。
         - 設定した記事フォルダー配下のページを選択可能です。
+
+    cms/addon/form_db/import:
+      import_url: |-
+        インポートするCSVファイルのURLを入力します。
+        入力されている場合、定期的にファイルを取得してデータを保存します。
+      import_primary_key: |-
+        指定したカラムの値と同じデータが存在する場合、該当する記事を更新します。
+        存在しない場合は、新規に登録します。
+      import_page_name: |-
+        指定したカラムの値を記事タイトルとして保存します。
+      import_column_options: |-
+        指定した条件に一致するデータのみ保存します。
+      import_event: |-
+        "開始日"と"終了日"のカラムをイベントの日時として保存します。
+      import_map: |-
+        "緯度"と"経度"のカラムを地図のマーカーとして保存します。
 
     cms/addon/node_twitter_post_setting:
       node_twitter_auto_post:
@@ -2782,6 +2858,10 @@ ja:
       deliver_date:
         - 配信日時(予約)を入力します。
 
+    cms/addon/line/service/chat:
+      node_id:
+        - チャットボットフォルダーを設定します。
+
     cms/line/template/base:
       text: メッセージを入力します。
       image_id: 画像を入力します。
@@ -2890,6 +2970,7 @@ ja:
       cms/node/copy_nodes_job: フォルダー複製
       cms/import_files_job: ページ/フォルダー取り込み
       cms/role/import_job: 権限インポート
+      cms/form_db/import_url_job: 定型DBインポート
       cms/all_contents_import_job: 全コンテンツ一括設定
       cms/michecker_job: miChecker
       cms/sns_post/twitter_job: Twitterページ投稿

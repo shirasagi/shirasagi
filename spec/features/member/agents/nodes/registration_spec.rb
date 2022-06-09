@@ -454,7 +454,7 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       end
 
       member.reload
-      expect(member.password).to eq SS::Crypt.crypt(new_password)
+      expect(member.password).to eq SS::Crypto.crypt(new_password)
     end
   end
 

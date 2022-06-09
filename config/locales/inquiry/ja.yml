@@ -181,6 +181,7 @@ ja:
         comment: コメント
         inquiry_page_url: お問い合わせページURL
         inquiry_page_name: お問い合わせページタイトル
+        member_id: 回答メンバー
 
       inquiry/addon/feedback_setting:
         upper_html: 上部HTML

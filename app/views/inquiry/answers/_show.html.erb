@@ -2,6 +2,17 @@
   <dt><%= @item.t :data_summary %></dt>
   <dd><%= @item.data_summary %></dd>
 
+  <% if @item.member %>
+    <dt><%= @item.t :member_id %></dt>
+    <dd>
+      <% if @item.member.allowed?(:read, @cur_user, site: @cur_site) %>
+        <%= link_to @item.member.name, @item.member.private_show_path %>
+      <% else %>
+        <%= @item.member.name %>
+      <% end %>
+    </dd>
+  <% end %>
+
   <dt><%= @item.t :state %></dt>
   <dd>
     <span class="answer-state state-<%= @item.state %>"><%= @item.label :state %></span>

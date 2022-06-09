@@ -10,7 +10,7 @@
     <% (@item.links || []).each do |item| %>
     <tr>
       <td><%= item[:name] %></td>
-      <td><%= link_to item[:url], item[:url] if item[:url].present? %></td>
+      <td><%= link_to item[:url], sns_redirect_path(ref: item[:url]) if item[:url].present? %></td>
     </tr>
     <% end %>
   </tbody>

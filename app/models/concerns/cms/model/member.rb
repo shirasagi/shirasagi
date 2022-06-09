@@ -66,17 +66,17 @@ module Cms::Model::Member
     scope :and_enabled, -> { self.where("$or" => [{ state: 'enabled' }, { state: nil }]) }
     scope :and_temporary, -> { where(state: 'temporary') }
     scope :and_verification_token, ->(token) do
-      email = SS::Crypt.decrypt(token) rescue nil
+      email = SS::Crypto.decrypt(token) rescue nil
       where(email: email)
     end
   end
 
   def encrypt_password
-    self.password = SS::Crypt.crypt(in_password)
+    self.password = SS::Crypto.crypt(in_password)
   end
 
   def verification_token
-    SS::Crypt.encrypt(email)
+    SS::Crypto.encrypt(email)
   end
 
   def enabled?

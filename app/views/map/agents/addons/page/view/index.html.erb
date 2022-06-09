@@ -1,6 +1,9 @@
-<% return if @cur_page.map_points.blank? %>
+<%
+  map_points, map_options = @cur_page.effective_map_points_and_options
+  return if map_points.blank?
+%>
 
-<%= render_map "#map-canvas", site: @cur_site, map: @cur_page.map_options, markers: @cur_page.map_points, preview: @preview %>
+<%= render_map "#map-canvas", site: @cur_site, map: map_options, markers: map_points, preview: @preview %>
 
 <section class="map-page">
   <% if local_assigns && !local_assigns[:no_header] %>

@@ -35,7 +35,7 @@ class Member::Renderer::MemberInvitation
 
     params = { token: recipent.verification_token }
     if my_group_node && my_group_node.member_joins_to_invited_group == 'auto'
-      params[:group] = SS::Crypt.encrypt(group.id.to_s)
+      params[:group] = SS::Crypto.encrypt(group.id.to_s)
     end
     "#{registration_node.full_url}verify?#{params.to_query}"
   end

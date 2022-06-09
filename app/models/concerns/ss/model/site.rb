@@ -131,6 +131,14 @@ module SS::Model::Site
       sites.find { |site| path.start_with?(site.url) }
     end
 
+    def generate_node_segments
+      SS.config.cms.generate_segments["node"][host] rescue nil
+    end
+
+    def generate_page_segments
+      SS.config.cms.generate_segments["page"][host] rescue nil
+    end
+
     private
 
     def validate_domains

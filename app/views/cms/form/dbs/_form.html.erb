@@ -10,7 +10,4 @@
 
   <dt><%= @model.t :node_id %><%= @model.tt :node_id %></dt>
   <dd><%= f.select :node_id, @item.node_options, include_blank: '' %></dd>
-
-  <dt><%= @model.t :import_url %><%= @model.tt :import_url %></dt>
-  <dd><%= f.text_field :import_url %></dd>
 </dl>

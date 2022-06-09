@@ -1,5 +1,6 @@
 class Cms::Agents::Nodes::PhotoAlbumController < ApplicationController
   include Cms::NodeFilter::View
+  include Cms::ForMemberFilter::Node
   helper Cms::ListHelper
 
   before_action :becomes_with_route_node

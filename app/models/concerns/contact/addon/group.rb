@@ -11,7 +11,7 @@ module Contact::Addon
       field :contact_link_url, type: String
       field :contact_link_name, type: String
 
-      validates :contact_link_url, "sys/trusted_url" => true
+      validates :contact_link_url, "sys/trusted_url" => true, if: ->{ Sys::TrustedUrlValidator.url_restricted? }
 
       permit_params :contact_group_name, :contact_tel, :contact_fax, :contact_email
       permit_params :contact_link_url, :contact_link_name

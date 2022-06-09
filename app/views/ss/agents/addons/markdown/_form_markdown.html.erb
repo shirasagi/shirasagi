@@ -1,0 +1,14 @@
+<%# HTML 部分は GWS の電子会議室と共用 %>
+<div class="ss-addon-markdown">
+  <div class="ss-addon-markdown-toolbar">
+    <%= f.select :text_type, item.text_type_options, {},  class: "ss-addon-markdown-type" %>
+    <span class="ss-addon-markdown-options">
+      <%= button_tag I18n.t("ss.links.preview"), type: "button", class: "btn ss-addon-markdown-preview-button", aria: { pressed: false } %>
+      <%= link_to I18n.t("ss.links.markdown_help"), SS.config.ss.markdown["help_url"], class: "ss-addon-markdown-help-button", target: "_blank", rel: "noopener" %>
+    </span>
+  </div>
+  <div class="ss-addon-markdown-content">
+    <%= f.text_area :text, class: "markdown ss-markdown-area", style: "height: 240px;" %>
+  </div>
+  <div class="ss-addon-markdown-preview markdown-body ss-cke hide"></div>
+</div>

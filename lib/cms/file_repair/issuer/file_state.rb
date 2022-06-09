@@ -127,8 +127,8 @@ module Cms::FileRepair::Issuer
       end
 
       if state == "closed"
-        Fs.rm_rf(file.public_path) if ::File.exists?(file.public_path)
-        if thumb && thumb.respond_to?(:public_path) && ::File.exists?(thumb.public_path)
+        Fs.rm_rf(file.public_path) if ::File.exist?(file.public_path)
+        if thumb && thumb.respond_to?(:public_path) && ::File.exist?(thumb.public_path)
           Fs.rm_rf(thumb.public_path)
         end
       end

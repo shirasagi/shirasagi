@@ -23,12 +23,17 @@ class Cms::Line::Service::HooksController < ApplicationController
   end
 
   def set_model
-    @type = params[:type].presence
+    @type = %w(facility_search chat image_map json_template -).find do |type|
+      type == params[:type].presence
+    end
+    raise "400" if @type.nil?
+
     @type = nil if @type == "-"
     @model = @type ? "#{Cms::Line::Service::Hook}::#{@type.classify}".constantize : Cms::Line::Service::Hook::Base
   end
 
   def set_item
+    @model = Cms::Line::Service::Hook::Base
     super
     @type = @item.type
     @model = @item.class

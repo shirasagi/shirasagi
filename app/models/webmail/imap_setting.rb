@@ -57,7 +57,7 @@ class Webmail::ImapSetting < Hash
   end
 
   def decrypt_imap_password
-    SS::Crypt.decrypt(imap_password.to_s)
+    SS::Crypto.decrypt(imap_password.to_s)
   end
 
   def imap_sent_box
@@ -82,7 +82,7 @@ class Webmail::ImapSetting < Hash
 
   def set_imap_password
     return if self[:in_imap_password].blank?
-    self[:imap_password] = SS::Crypt.encrypt(self[:in_imap_password])
+    self[:imap_password] = SS::Crypto.encrypt(self[:in_imap_password])
     self.delete(:in_imap_password)
   end
 

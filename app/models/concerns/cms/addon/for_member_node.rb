@@ -42,7 +42,9 @@ module Cms::Addon
 
     def set_children_state
       return if self.for_member_disabled?
+
       self.all_children.each do |c_node|
+        next if !c_node.respond_to?(:for_member_state)
         c_node.set(for_member_state: 'enabled')
       end
     end

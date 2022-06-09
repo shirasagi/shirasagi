@@ -26,7 +26,7 @@ describe "sys/auth/saml", type: :feature, dbscope: :example do
       expect(item.filename).to eq filename
       expect(item.entity_id).not_to be_nil
       expect(item.sso_url).not_to be_nil
-      expect(SS::Crypt.decrypt(item.x509_cert)).not_to be_nil
+      expect(SS::Crypto.decrypt(item.x509_cert)).not_to be_nil
     end
   end
 end

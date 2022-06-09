@@ -25,7 +25,7 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
     group_id = params[:group].presence
     return if group_id.blank?
 
-    group_id = SS::Crypt.decrypt(group_id) rescue nil
+    group_id = SS::Crypto.decrypt(group_id) rescue nil
     return if group_id.blank?
 
     group = Member::Group.site(@cur_site).where(id: group_id).first

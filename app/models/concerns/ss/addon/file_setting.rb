@@ -69,7 +69,7 @@ module SS::Addon
         return true if matcher.match?(request)
       end
       if file_fs_access_restriction_basic_auth_id.present? && file_fs_access_restriction_basic_auth_password.present?
-        password = SS::Crypt.decrypt(file_fs_access_restriction_basic_auth_password)
+        password = SS::Crypto.decrypt(file_fs_access_restriction_basic_auth_password)
         matcher = BasicAuthMatcher.new(file_fs_access_restriction_basic_auth_id, password)
         return true if matcher.match?(request)
       end
@@ -150,7 +150,7 @@ module SS::Addon
 
     def encrypt_file_fs_access_restriction_basic_auth_password
       return if in_file_fs_access_restriction_basic_auth_password.blank?
-      self.file_fs_access_restriction_basic_auth_password = SS::Crypt.encrypt(in_file_fs_access_restriction_basic_auth_password)
+      self.file_fs_access_restriction_basic_auth_password = SS::Crypto.encrypt(in_file_fs_access_restriction_basic_auth_password)
     end
   end
 end

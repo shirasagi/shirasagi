@@ -1,3 +1,13 @@
+<% if @segments.present? %>
+  <div class="cms-tabs">
+    <% @segments.each do |segment| %>
+      <%= link_to({ segment: segment }, { class: (@segment == segment) ? "current" : "" }) do %>
+        <span class="tab-name"><%= segment %></span>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>
+
 <%= form_tag({ action: :run }, { id: "task-form" }) do |f| %>
   <% if @cur_site.generate_locked? %>
     <div class="main-box">

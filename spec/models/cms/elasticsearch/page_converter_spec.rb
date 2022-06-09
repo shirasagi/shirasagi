@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cms::Elasticsearch::PageConverter, type: :model, dbscope: :example, es: true do
+describe Cms::Elasticsearch::PageConverter, type: :model, dbscope: :example do
   let(:group) { cms_group }
   let(:site) { cms_site }
   let(:user) { cms_user }

@@ -21,7 +21,6 @@ class Gws::Circular::Apis::ArticleStatesController < ApplicationController
     end
 
     @group ||= @cur_site
-    @groups = @cur_site.descendants.active.tree_sort(root_name: @cur_site.name)
   end
 
   def set_custom_group

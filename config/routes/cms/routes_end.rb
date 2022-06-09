@@ -129,14 +129,18 @@ Rails.application.routes.draw do
       resources :forms, concerns: [:deletion, :change_state] do
         resources :init_columns, concerns: [:deletion]
         resources :columns, concerns: [:deletion]
+
+        get :column_names, on: :collection
       end
     end
 
     namespace "form" do
       resources :dbs, concerns: [:deletion] do
+        resources :import_logs, only: [:show]
         resources :docs, concerns: [:deletion] do
           match :import, via: [:get, :post], on: :collection
           match :download_all, via: [:get, :post], on: :collection
+          match :import_url, via: [:get, :post], on: :collection
         end
       end
     end
@@ -228,11 +232,15 @@ Rails.application.routes.draw do
     get "check_links" => "check_links#index"
     post "check_links" => "check_links#run"
     get "generate_nodes" => "generate_nodes#index"
+    get "generate_nodes/segment/:segment" => "generate_nodes#index", as: :segment_generate_nodes
     post "generate_nodes" => "generate_nodes#run"
     get "generate_nodes/download_logs" => "generate_nodes#download_logs"
+    post "generate_nodes/segment/:segment" => "generate_nodes#run"
     get "generate_pages" => "generate_pages#index"
+    get "generate_pages/segment/:segment" => "generate_pages#index", as: :segment_generate_pages
     post "generate_pages" => "generate_pages#run"
     get "generate_pages/download_logs" => "generate_pages#download_logs"
+    post "generate_pages/segment/:segment" => "generate_pages#run"
     get "import" => "import#import"
     post "import" => "import#import"
     get "import/download_logs" => "import#download_logs"
@@ -283,6 +291,7 @@ Rails.application.routes.draw do
       get "forms" => "forms#index"
       get "forms/temp_file/:id/select" => "forms#select_temp_file", as: :form_temp_file_select
       get "forms/:id/form" => "forms#form", as: :form
+      get "forms/:id/column_names" => "forms#column_names", as: :form_column_names
       get "forms/:id/columns/:column_id/new" => "forms#new_column", as: :form_column_new
       match "forms/:id/html" => "forms#html", as: :form_html, via: %i[post put]
       match "forms/:id/link_check" => "forms#link_check", as: :form_link_check, via: %i[post put]

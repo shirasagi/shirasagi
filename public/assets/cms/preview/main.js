@@ -2996,12 +2996,16 @@ this.SS_SearchUI = (function () {
       $ajaxSelected = self.anchorAjaxBox.parent().find(".ajax-selected");
     }
     $ajaxSelected.find("tr[data-id]").each(function () {
-      var id, item, tr;
-      id = $(this).data("id");
-      tr = $("#colorbox .items [data-id='" + id + "']");
+      var id = $(this).data("id");
+      var tr = $("#colorbox .items [data-id='" + id + "']");
       tr.find("input[type=checkbox]").remove();
-      item = tr.find(".select-item,.select-single-item").html();
-      return tr.find(".select-item,.select-single-item").replaceWith("<span class='select-item' style='color: #888'>" + item + "</span>");
+      tr.find(".select-item,.select-single-item").each(function() {
+        var $this = $(this);
+        var html = $this.html();
+
+        var disabledHtml = $("<span />", { class: $this.prop("class"), style: 'color: #888' }).html(html);
+        $this.replaceWith(disabledHtml);
+      });
     });
     $el.find("table.index").each(function() {
       SS_ListUI.render(this);
@@ -3181,6 +3185,7 @@ this.SS_TreeUI = (function () {
   };
 
   SS_TreeUI.openSelectedGroupsTree = function (current_tr) {
+    current_tr.addClass("current");
     for (i = 0; i < parseInt(current_tr.attr("data-depth")); i++) {
       var tr = current_tr.prevAll('tr[data-depth=' + i.toString() + ']:first');
       var img = tr.find(".toggle:first");
@@ -3275,7 +3280,7 @@ this.SS_TreeUI = (function () {
     } else if (collapse_all) {
       SS_TreeUI.closeImage(self.tree.find("tbody tr img"));
     } else if (expand_group && $("tbody tr.current").attr("data-depth") !== "0") {
-      SS_TreeUI.openSelectedGroupsTree(self.tree.find("tbody tr.current"));
+      SS_TreeUI.openSelectedGroupsTree(self.tree.find("tbody tr[data-id='" + expand_group + "']"));
     } else {
       self.tree.find("tr[data-depth='" + root + "'] img").trigger("click");
     }

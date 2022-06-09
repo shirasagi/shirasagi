@@ -1,5 +1,6 @@
 class Cms::Agents::Nodes::ImportNodeController < ApplicationController
   include Cms::NodeFilter::View
+  include Cms::ForMemberFilter::Node
   helper Cms::ListHelper
 
   def index

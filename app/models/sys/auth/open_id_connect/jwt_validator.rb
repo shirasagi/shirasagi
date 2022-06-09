@@ -46,7 +46,7 @@ class Sys::Auth::OpenIdConnect::JwtValidator < ActiveModel::Validator
   end
 
   def validate_jwt_hmac_signature(item)
-    item.jwt.verify!(SS::Crypt.decrypt(item.cur_item.client_secret))
+    item.jwt.verify!(SS::Crypto.decrypt(item.cur_item.client_secret))
   end
 
   def validate_jwt_rsa_signature(item)
