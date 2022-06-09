@@ -114,7 +114,9 @@ module SS::BaseFilter
 
     # persistent session to database by redirecting to self path
     redirect = SS::AccessToken.remove_access_token_from_query(request.fullpath)
-    redirect_to redirect
+    redirect = ::Addressable::URI.parse(redirect)
+    # redirect_to [ redirect.path, redirect.query.presence ].compact.join("?")
+    redirect_to redirect.request_uri
     true
   end
 
