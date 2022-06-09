@@ -1,31 +1,22 @@
 require 'spec_helper'
 
-describe Gws::Elasticsearch::Indexer::WorkflowFileJob, dbscope: :example do
+describe Gws::Elasticsearch::Indexer::WorkflowFileJob, dbscope: :example, es: true do
   let(:site) { create(:gws_group) }
   let(:user) { gws_user }
   let(:file_path) { Rails.root.join('spec', 'fixtures', 'ss', 'logo.png') }
-  let(:es_host) { "#{unique_id}.example.jp" }
-  let(:es_url) { "http://#{es_host}" }
   let(:attachment) { tmp_ss_file(user: user, contents: File.binread(file_path), binary: true, content_type: 'image/png') }
-  let(:requests) { [] }
 
   before do
     # enable elastic search
     site.menu_elasticsearch_state = 'show'
-    site.elasticsearch_hosts = es_url
     site.save!
-  end
 
-  before do
-    stub_request(:any, /#{::Regexp.escape(es_host)}/).to_return do |request|
-      # examine request later
-      requests << request.as_json.dup
-      { body: '{}', status: 200, headers: { 'Content-Type' => 'application/json; charset=UTF-8' } }
-    end
-  end
-
-  after do
-    WebMock.reset!
+    # gws:es:ingest:init
+    ::Gws::Elasticsearch.init_ingest(site: site)
+    # gws:es:drop
+    ::Gws::Elasticsearch.drop_index(site: site) rescue nil
+    # gws:es:create_indexes
+    ::Gws::Elasticsearch.create_index(site: site)
   end
 
   describe '.callback' do
@@ -39,24 +30,27 @@ describe Gws::Elasticsearch::Indexer::WorkflowFileJob, dbscope: :example do
           expectation.to change { performed_jobs.size }.by(1)
         end
 
+        # wait for indexing
+        ::Gws::Elasticsearch.refresh_index(site: site)
+
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
-        expect(requests.length).to eq 2
-        requests.first.tap do |request|
-          expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/gws_workflow_files-workflow-#{workflow.id}")
-          body = JSON.parse(request['body'])
-          expect(body['url']).to eq "/.g#{site.id}/workflow/files/all/#{workflow.id}"
-        end
-        requests.second.tap do |request|
-          expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/file-#{attachment.id}")
-          body = JSON.parse(request['body'])
-          expect(body['url']).to eq "/.g#{site.id}/workflow/files/all/#{workflow.id}#file-#{attachment.id}"
+        site.elasticsearch_client.search(index: "g#{site.id}", size: 100, q: "*:*").tap do |es_docs|
+          expect(es_docs["hits"]["hits"].length).to eq 2
+          es_docs["hits"]["hits"][0].tap do |es_doc|
+            expect(es_doc["_id"]).to eq "gws_workflow_files-workflow-#{workflow.id}"
+            source = es_doc["_source"]
+            expect(source['url']).to eq "/.g#{site.id}/workflow/files/all/#{workflow.id}"
+          end
+          es_docs["hits"]["hits"][1].tap do |es_doc|
+            expect(es_doc["_id"]).to eq "file-#{attachment.id}"
+            source = es_doc["_source"]
+            expect(source['url']).to eq "/.g#{site.id}/workflow/files/all/#{workflow.id}#file-#{attachment.id}"
+          end
         end
       end
     end
@@ -76,23 +70,23 @@ describe Gws::Elasticsearch::Indexer::WorkflowFileJob, dbscope: :example do
           expectation.to change { performed_jobs.size }.by(1)
         end
 
+        # wait for indexing
+        ::Gws::Elasticsearch.refresh_index(site: site)
+
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
-        expect(requests.length).to eq 2
-        requests.first.tap do |request|
-          expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/gws_workflow_files-workflow-#{workflow.id}")
-          body = JSON.parse(request['body'])
-          expect(body['url']).to eq "/.g#{site.id}/workflow/files/all/#{workflow.id}"
-        end
-        # file was removed from topic
-        requests.second.tap do |request|
-          expect(request['method']).to eq 'delete'
-          expect(request['uri']['path']).to end_with("/file-#{attachment.id}")
+        site.elasticsearch_client.search(index: "g#{site.id}", size: 100, q: "*:*").tap do |es_docs|
+          # confirm that file was removed from topic
+          expect(es_docs["hits"]["hits"].length).to eq 1
+          es_docs["hits"]["hits"][0].tap do |es_doc|
+            expect(es_doc["_id"]).to eq "gws_workflow_files-workflow-#{workflow.id}"
+            source = es_doc["_source"]
+            expect(source['url']).to eq "/.g#{site.id}/workflow/files/all/#{workflow.id}"
+          end
         end
       end
     end
@@ -110,21 +104,17 @@ describe Gws::Elasticsearch::Indexer::WorkflowFileJob, dbscope: :example do
           expectation.to change { performed_jobs.size }.by(1)
         end
 
+        # wait for indexing
+        ::Gws::Elasticsearch.refresh_index(site: site)
+
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
-        expect(requests.length).to eq 2
-        requests.first.tap do |request|
-          expect(request['method']).to eq 'delete'
-          expect(request['uri']['path']).to end_with("/gws_workflow_files-workflow-#{workflow.id}")
-        end
-        # file was removed from topic
-        requests.second.tap do |request|
-          expect(request['method']).to eq 'delete'
-          expect(request['uri']['path']).to end_with("/file-#{attachment.id}")
+        site.elasticsearch_client.search(index: "g#{site.id}", size: 100, q: "*:*").tap do |es_docs|
+          expect(es_docs["hits"]["hits"].length).to eq 0
         end
       end
     end
@@ -143,21 +133,17 @@ describe Gws::Elasticsearch::Indexer::WorkflowFileJob, dbscope: :example do
           expectation.to change { performed_jobs.size }.by(1)
         end
 
+        # wait for indexing
+        ::Gws::Elasticsearch.refresh_index(site: site)
+
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
-        expect(requests.length).to eq 2
-        requests.first.tap do |request|
-          expect(request['method']).to eq 'delete'
-          expect(request['uri']['path']).to end_with("/gws_workflow_files-workflow-#{workflow.id}")
-        end
-        # file was removed from topic
-        requests.second.tap do |request|
-          expect(request['method']).to eq 'delete'
-          expect(request['uri']['path']).to end_with("/file-#{attachment.id}")
+        site.elasticsearch_client.search(index: "g#{site.id}", size: 100, q: "*:*").tap do |es_docs|
+          expect(es_docs["hits"]["hits"].length).to eq 0
         end
       end
     end

@@ -1,33 +1,24 @@
 require 'spec_helper'
 
-describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example do
+describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, es: true do
   let(:site) { create(:gws_group) }
   let(:user) { gws_user }
   let(:recipient) { create(:gws_user) }
   let(:file_path) { Rails.root.join('spec', 'fixtures', 'ss', 'logo.png') }
-  let(:es_host) { "#{unique_id}.example.jp" }
-  let(:es_url) { "http://#{es_host}" }
   let(:file) { tmp_ss_file(user: user, contents: File.binread(file_path), binary: true, content_type: 'image/png') }
   let(:category) { create(:gws_board_category, cur_site: site) }
-  let(:requests) { [] }
 
   before do
     # enable elastic search
     site.menu_elasticsearch_state = 'show'
-    site.elasticsearch_hosts = es_url
     site.save!
-  end
 
-  before do
-    stub_request(:any, /#{::Regexp.escape(es_host)}/).to_return do |request|
-      # examine request later
-      requests << request.as_json.dup
-      { body: '{}', status: 200, headers: { 'Content-Type' => 'application/json; charset=UTF-8' } }
-    end
-  end
-
-  after do
-    WebMock.reset!
+    # gws:es:ingest:init
+    ::Gws::Elasticsearch.init_ingest(site: site)
+    # gws:es:drop
+    ::Gws::Elasticsearch.drop_index(site: site) rescue nil
+    # gws:es:create_indexes
+    ::Gws::Elasticsearch.create_index(site: site)
   end
 
   describe '#index' do
@@ -47,44 +38,46 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example do
         job = described_class.bind(site_id: site)
         job.perform_now(action: 'index', id: message.id.to_s)
 
+        # wait for indexing
+        ::Gws::Elasticsearch.refresh_index(site: site)
+
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
-        expect(requests.length).to eq 2
-        requests.first.tap do |request|
-          expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/gws_memo_messages-message-#{message.id}")
-          body = JSON.parse(request['body'])
-          expect(body['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#message-#{message.id}"
-          expect(body['name']).to eq message.subject
-          expect(body['mode']).to eq message.format
-          expect(body['text']).to eq message.text
-          expect(body['released']).to eq message.send_date.iso8601
-          expect(body['state']).to eq message.state
-          expect(body['user_name']).to eq message.user_long_name
-          expect(body['user_ids']).to eq [ message.user_id ]
-          expect(body['readable_member_ids']).to eq [ recipient0.id, recipient1.id, recipient2.id ]
-          expect(body['updated']).to be_present
-          expect(body['created']).to be_present
-        end
-        requests.second.tap do |request|
-          expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/file-#{file.id}")
-          body = JSON.parse(request['body'])
-          expect(body['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#file-#{file.id}"
-          expect(body['name']).to eq file.name
-          expect(body['data']).to be_present
-          expect(body['file']['extname']).to eq file.extname.upcase
-          expect(body['file']['size']).to eq file.size
-          expect(body['released']).to eq message.send_date.iso8601
-          expect(body['state']).to eq message.state
-          expect(body['user_ids']).to eq [ message.user_id ]
-          expect(body['readable_member_ids']).to eq [ recipient0.id, recipient1.id, recipient2.id ]
-          expect(body['updated']).to be_present
-          expect(body['created']).to be_present
+        site.elasticsearch_client.search(index: "g#{site.id}", size: 100, q: "*:*").tap do |es_docs|
+          expect(es_docs["hits"]["hits"].length).to eq 2
+          es_docs["hits"]["hits"][0].tap do |es_doc|
+            expect(es_doc["_id"]).to eq "gws_memo_messages-message-#{message.id}"
+            source = es_doc["_source"]
+            expect(source['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#message-#{message.id}"
+            expect(source['name']).to eq message.subject
+            expect(source['mode']).to eq message.format
+            expect(source['text']).to eq message.text
+            expect(source['released']).to eq message.send_date.iso8601
+            expect(source['state']).to eq message.state
+            expect(source['user_name']).to eq message.user_long_name
+            expect(source['user_ids']).to eq [ message.user_id ]
+            expect(source['readable_member_ids']).to eq [ recipient0.id, recipient1.id, recipient2.id ]
+            expect(source['updated']).to be_present
+            expect(source['created']).to be_present
+          end
+          es_docs["hits"]["hits"][1].tap do |es_doc|
+            expect(es_doc["_id"]).to eq "file-#{file.id}"
+            source = es_doc["_source"]
+            expect(source['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#file-#{file.id}"
+            expect(source['name']).to eq file.name
+            expect(source['file']['extname']).to eq file.extname.upcase
+            expect(source['file']['size']).to eq file.size
+            expect(source['released']).to eq message.send_date.iso8601
+            expect(source['state']).to eq message.state
+            expect(source['user_ids']).to eq [ message.user_id ]
+            expect(source['readable_member_ids']).to eq [ recipient0.id, recipient1.id, recipient2.id ]
+            expect(source['updated']).to be_present
+            expect(source['created']).to be_present
+          end
         end
       end
     end
@@ -98,44 +91,46 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example do
         job = described_class.bind(site_id: site)
         job.perform_now(action: 'index', id: message.id.to_s)
 
+        # wait for indexing
+        ::Gws::Elasticsearch.refresh_index(site: site)
+
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
-        expect(requests.length).to eq 2
-        requests.first.tap do |request|
-          expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/gws_memo_messages-message-#{message.id}")
-          body = JSON.parse(request['body'])
-          expect(body['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#message-#{message.id}"
-          expect(body['name']).to eq message.subject
-          expect(body['mode']).to eq message.format
-          expect(body['text']).to eq message.text
-          expect(body['released']).to eq message.send_date.iso8601
-          expect(body['state']).to eq message.state
-          expect(body['user_name']).to eq message.user_long_name
-          expect(body['user_ids']).to eq [ message.user_id ]
-          expect(body['readable_member_ids']).to eq [ recipient1.id, recipient2.id ]
-          expect(body['updated']).to be_present
-          expect(body['created']).to be_present
-        end
-        requests.second.tap do |request|
-          expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/file-#{file.id}")
-          body = JSON.parse(request['body'])
-          expect(body['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#file-#{file.id}"
-          expect(body['name']).to eq file.name
-          expect(body['data']).to be_present
-          expect(body['file']['extname']).to eq file.extname.upcase
-          expect(body['file']['size']).to eq file.size
-          expect(body['released']).to eq message.send_date.iso8601
-          expect(body['state']).to eq message.state
-          expect(body['user_ids']).to eq [ message.user_id ]
-          expect(body['readable_member_ids']).to eq [ recipient1.id, recipient2.id ]
-          expect(body['updated']).to be_present
-          expect(body['created']).to be_present
+        site.elasticsearch_client.search(index: "g#{site.id}", size: 100, q: "*:*").tap do |es_docs|
+          expect(es_docs["hits"]["hits"].length).to eq 2
+          es_docs["hits"]["hits"][0].tap do |es_doc|
+            expect(es_doc["_id"]).to eq "gws_memo_messages-message-#{message.id}"
+            source = es_doc["_source"]
+            expect(source['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#message-#{message.id}"
+            expect(source['name']).to eq message.subject
+            expect(source['mode']).to eq message.format
+            expect(source['text']).to eq message.text
+            expect(source['released']).to eq message.send_date.iso8601
+            expect(source['state']).to eq message.state
+            expect(source['user_name']).to eq message.user_long_name
+            expect(source['user_ids']).to eq [ message.user_id ]
+            expect(source['readable_member_ids']).to eq [ recipient1.id, recipient2.id ]
+            expect(source['updated']).to be_present
+            expect(source['created']).to be_present
+          end
+          es_docs["hits"]["hits"][1].tap do |es_doc|
+            expect(es_doc["_id"]).to eq "file-#{file.id}"
+            source = es_doc["_source"]
+            expect(source['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#file-#{file.id}"
+            expect(source['name']).to eq file.name
+            expect(source['file']['extname']).to eq file.extname.upcase
+            expect(source['file']['size']).to eq file.size
+            expect(source['released']).to eq message.send_date.iso8601
+            expect(source['state']).to eq message.state
+            expect(source['user_ids']).to eq [ message.user_id ]
+            expect(source['readable_member_ids']).to eq [ recipient1.id, recipient2.id ]
+            expect(source['updated']).to be_present
+            expect(source['created']).to be_present
+          end
         end
       end
     end
@@ -149,44 +144,46 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example do
         job = described_class.bind(site_id: site)
         job.perform_now(action: 'index', id: message.id.to_s)
 
+        # wait for indexing
+        ::Gws::Elasticsearch.refresh_index(site: site)
+
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
-        expect(requests.length).to eq 2
-        requests.first.tap do |request|
-          expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/gws_memo_messages-message-#{message.id}")
-          body = JSON.parse(request['body'])
-          expect(body['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#message-#{message.id}"
-          expect(body['name']).to eq message.subject
-          expect(body['mode']).to eq message.format
-          expect(body['text']).to eq message.text
-          expect(body['released']).to eq message.send_date.iso8601
-          expect(body['state']).to eq message.state
-          expect(body['user_name']).to eq message.user_long_name
-          expect(body['user_ids']).to eq [ message.user_id ]
-          expect(body['readable_member_ids']).to eq [ recipient0.id, recipient1.id ]
-          expect(body['updated']).to be_present
-          expect(body['created']).to be_present
-        end
-        requests.second.tap do |request|
-          expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/file-#{file.id}")
-          body = JSON.parse(request['body'])
-          expect(body['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#file-#{file.id}"
-          expect(body['name']).to eq file.name
-          expect(body['data']).to be_present
-          expect(body['file']['extname']).to eq file.extname.upcase
-          expect(body['file']['size']).to eq file.size
-          expect(body['released']).to eq message.send_date.iso8601
-          expect(body['state']).to eq message.state
-          expect(body['user_ids']).to eq [ message.user_id ]
-          expect(body['readable_member_ids']).to eq [ recipient0.id, recipient1.id ]
-          expect(body['updated']).to be_present
-          expect(body['created']).to be_present
+        site.elasticsearch_client.search(index: "g#{site.id}", size: 100, q: "*:*").tap do |es_docs|
+          expect(es_docs["hits"]["hits"].length).to eq 2
+          es_docs["hits"]["hits"][0].tap do |es_doc|
+            expect(es_doc["_id"]).to eq "gws_memo_messages-message-#{message.id}"
+            source = es_doc["_source"]
+            expect(source['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#message-#{message.id}"
+            expect(source['name']).to eq message.subject
+            expect(source['mode']).to eq message.format
+            expect(source['text']).to eq message.text
+            expect(source['released']).to eq message.send_date.iso8601
+            expect(source['state']).to eq message.state
+            expect(source['user_name']).to eq message.user_long_name
+            expect(source['user_ids']).to eq [ message.user_id ]
+            expect(source['readable_member_ids']).to eq [ recipient0.id, recipient1.id ]
+            expect(source['updated']).to be_present
+            expect(source['created']).to be_present
+          end
+          es_docs["hits"]["hits"][1].tap do |es_doc|
+            expect(es_doc["_id"]).to eq "file-#{file.id}"
+            source = es_doc["_source"]
+            expect(source['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#file-#{file.id}"
+            expect(source['name']).to eq file.name
+            expect(source['file']['extname']).to eq file.extname.upcase
+            expect(source['file']['size']).to eq file.size
+            expect(source['released']).to eq message.send_date.iso8601
+            expect(source['state']).to eq message.state
+            expect(source['user_ids']).to eq [ message.user_id ]
+            expect(source['readable_member_ids']).to eq [ recipient0.id, recipient1.id ]
+            expect(source['updated']).to be_present
+            expect(source['created']).to be_present
+          end
         end
       end
     end
@@ -202,44 +199,46 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example do
         job = described_class.bind(site_id: site)
         job.perform_now(action: 'index', id: message.id.to_s)
 
+        # wait for indexing
+        ::Gws::Elasticsearch.refresh_index(site: site)
+
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
-        expect(requests.length).to eq 2
-        requests.first.tap do |request|
-          expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/gws_memo_messages-message-#{message.id}")
-          body = JSON.parse(request['body'])
-          expect(body['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#message-#{message.id}"
-          expect(body['name']).to eq message.subject
-          expect(body['mode']).to eq message.format
-          expect(body['text']).to eq message.text
-          expect(body['released']).to eq message.send_date.iso8601
-          expect(body['state']).to eq message.state
-          expect(body['user_name']).to eq message.user_long_name
-          expect(body['user_ids']).to eq [ message.user_id ]
-          expect(body['readable_member_ids']).to be_blank
-          expect(body['updated']).to be_present
-          expect(body['created']).to be_present
-        end
-        requests.second.tap do |request|
-          expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/file-#{file.id}")
-          body = JSON.parse(request['body'])
-          expect(body['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#file-#{file.id}"
-          expect(body['name']).to eq file.name
-          expect(body['data']).to be_present
-          expect(body['file']['extname']).to eq file.extname.upcase
-          expect(body['file']['size']).to eq file.size
-          expect(body['released']).to eq message.send_date.iso8601
-          expect(body['state']).to eq message.state
-          expect(body['user_ids']).to eq [ message.user_id ]
-          expect(body['readable_member_ids']).to be_blank
-          expect(body['updated']).to be_present
-          expect(body['created']).to be_present
+        site.elasticsearch_client.search(index: "g#{site.id}", size: 100, q: "*:*").tap do |es_docs|
+          expect(es_docs["hits"]["hits"].length).to eq 2
+          es_docs["hits"]["hits"][0].tap do |es_doc|
+            expect(es_doc["_id"]).to eq "gws_memo_messages-message-#{message.id}"
+            source = es_doc["_source"]
+            expect(source['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#message-#{message.id}"
+            expect(source['name']).to eq message.subject
+            expect(source['mode']).to eq message.format
+            expect(source['text']).to eq message.text
+            expect(source['released']).to eq message.send_date.iso8601
+            expect(source['state']).to eq message.state
+            expect(source['user_name']).to eq message.user_long_name
+            expect(source['user_ids']).to eq [ message.user_id ]
+            expect(source['readable_member_ids']).to be_blank
+            expect(source['updated']).to be_present
+            expect(source['created']).to be_present
+          end
+          es_docs["hits"]["hits"][1].tap do |es_doc|
+            expect(es_doc["_id"]).to eq "file-#{file.id}"
+            source = es_doc["_source"]
+            expect(source['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#file-#{file.id}"
+            expect(source['name']).to eq file.name
+            expect(source['file']['extname']).to eq file.extname.upcase
+            expect(source['file']['size']).to eq file.size
+            expect(source['released']).to eq message.send_date.iso8601
+            expect(source['state']).to eq message.state
+            expect(source['user_ids']).to eq [ message.user_id ]
+            expect(source['readable_member_ids']).to be_blank
+            expect(source['updated']).to be_present
+            expect(source['created']).to be_present
+          end
         end
       end
     end
@@ -253,44 +252,46 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example do
         job = described_class.bind(site_id: site)
         job.perform_now(action: 'index', id: message.id.to_s)
 
+        # wait for indexing
+        ::Gws::Elasticsearch.refresh_index(site: site)
+
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
-        expect(requests.length).to eq 2
-        requests.first.tap do |request|
-          expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/gws_memo_messages-message-#{message.id}")
-          body = JSON.parse(request['body'])
-          expect(body['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#message-#{message.id}"
-          expect(body['name']).to eq message.subject
-          expect(body['mode']).to eq message.format
-          expect(body['text']).to eq message.text
-          expect(body['released']).to eq message.send_date.iso8601
-          expect(body['state']).to eq message.state
-          expect(body['user_name']).to eq message.user_long_name
-          expect(body['user_ids']).to be_blank
-          expect(body['readable_member_ids']).to eq [ recipient0.id, recipient1.id, recipient2.id ]
-          expect(body['updated']).to be_present
-          expect(body['created']).to be_present
-        end
-        requests.second.tap do |request|
-          expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/file-#{file.id}")
-          body = JSON.parse(request['body'])
-          expect(body['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#file-#{file.id}"
-          expect(body['name']).to eq file.name
-          expect(body['data']).to be_present
-          expect(body['file']['extname']).to eq file.extname.upcase
-          expect(body['file']['size']).to eq file.size
-          expect(body['released']).to eq message.send_date.iso8601
-          expect(body['state']).to eq message.state
-          expect(body['user_ids']).to be_blank
-          expect(body['readable_member_ids']).to eq [ recipient0.id, recipient1.id, recipient2.id ]
-          expect(body['updated']).to be_present
-          expect(body['created']).to be_present
+        site.elasticsearch_client.search(index: "g#{site.id}", size: 100, q: "*:*").tap do |es_docs|
+          expect(es_docs["hits"]["hits"].length).to eq 2
+          es_docs["hits"]["hits"][0].tap do |es_doc|
+            expect(es_doc["_id"]).to eq "gws_memo_messages-message-#{message.id}"
+            source = es_doc["_source"]
+            expect(source['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#message-#{message.id}"
+            expect(source['name']).to eq message.subject
+            expect(source['mode']).to eq message.format
+            expect(source['text']).to eq message.text
+            expect(source['released']).to eq message.send_date.iso8601
+            expect(source['state']).to eq message.state
+            expect(source['user_name']).to eq message.user_long_name
+            expect(source['user_ids']).to be_blank
+            expect(source['readable_member_ids']).to eq [ recipient0.id, recipient1.id, recipient2.id ]
+            expect(source['updated']).to be_present
+            expect(source['created']).to be_present
+          end
+          es_docs["hits"]["hits"][1].tap do |es_doc|
+            expect(es_doc["_id"]).to eq "file-#{file.id}"
+            source = es_doc["_source"]
+            expect(source['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#file-#{file.id}"
+            expect(source['name']).to eq file.name
+            expect(source['file']['extname']).to eq file.extname.upcase
+            expect(source['file']['size']).to eq file.size
+            expect(source['released']).to eq message.send_date.iso8601
+            expect(source['state']).to eq message.state
+            expect(source['user_ids']).to be_blank
+            expect(source['readable_member_ids']).to eq [ recipient0.id, recipient1.id, recipient2.id ]
+            expect(source['updated']).to be_present
+            expect(source['created']).to be_present
+          end
         end
       end
     end
@@ -309,22 +310,17 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example do
       job = described_class.bind(site_id: site)
       job.perform_now(action: 'delete', id: message.id.to_s, remove_file_ids: message.file_ids)
 
+      # wait for indexing
+      ::Gws::Elasticsearch.refresh_index(site: site)
+
       expect(Gws::Job::Log.count).to eq 1
       Gws::Job::Log.first.tap do |log|
         expect(log.logs).to include(/INFO -- : .* Started Job/)
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
-      expect(requests.length).to eq 2
-      requests.first.tap do |request|
-        expect(request['method']).to eq 'delete'
-        expect(request['uri']['path']).to end_with("/gws_memo_messages-message-#{message.id}")
-        expect(request['body']).to be_blank
-      end
-      requests.second.tap do |request|
-        expect(request['method']).to eq 'delete'
-        expect(request['uri']['path']).to end_with("/file-#{file.id}")
-        expect(request['body']).to be_blank
+      site.elasticsearch_client.search(index: "g#{site.id}", size: 100, q: "*:*").tap do |es_docs|
+        expect(es_docs["hits"]["hits"].length).to eq 0
       end
     end
   end
@@ -389,50 +385,52 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example do
           )
         end
 
+        # wait for indexing
+        ::Gws::Elasticsearch.refresh_index(site: site)
+
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
-        expect(requests.length).to eq 2
-        requests.first.tap do |request|
-          expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/gws_memo_messages-message-#{message.id}")
-          body = JSON.parse(request['body'])
-          expect(body['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#message-#{message.id}"
-          expect(body['name']).to eq message.subject
-          expect(body['mode']).to eq message.format
-          expect(body['text']).to eq message.text
-          expect(body['released']).to eq message.send_date.iso8601
-          expect(body['state']).to eq message.state
-          expect(body['user_name']).to eq message.from_member_name
-          expect(body['user_ids']).to eq list.user_ids
-          expect(body['group_ids']).to eq list.group_ids
-          expect(body['custom_group_ids']).to eq list.custom_group_ids
-          expect(body['permission_level']).to eq list.permission_level
-          expect(body['readable_member_ids']).to eq [ user.id, recipient.id ]
-          expect(body['updated']).to be_present
-          expect(body['created']).to be_present
-        end
-        requests.second.tap do |request|
-          expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/file-#{file.id}")
-          body = JSON.parse(request['body'])
-          expect(body['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#file-#{file.id}"
-          expect(body['name']).to eq file.name
-          expect(body['data']).to be_present
-          expect(body['file']['extname']).to eq file.extname.upcase
-          expect(body['file']['size']).to eq file.size
-          expect(body['released']).to eq message.send_date.iso8601
-          expect(body['state']).to eq message.state
-          expect(body['user_ids']).to eq list.user_ids
-          expect(body['group_ids']).to eq list.group_ids
-          expect(body['custom_group_ids']).to eq list.custom_group_ids
-          expect(body['permission_level']).to eq list.permission_level
-          expect(body['readable_member_ids']).to eq [ user.id, recipient.id ]
-          expect(body['updated']).to be_present
-          expect(body['created']).to be_present
+        site.elasticsearch_client.search(index: "g#{site.id}", size: 100, q: "*:*").tap do |es_docs|
+          expect(es_docs["hits"]["hits"].length).to eq 2
+          es_docs["hits"]["hits"][0].tap do |es_doc|
+            expect(es_doc["_id"]).to eq "gws_memo_messages-message-#{message.id}"
+            source = es_doc["_source"]
+            expect(source['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#message-#{message.id}"
+            expect(source['name']).to eq message.subject
+            expect(source['mode']).to eq message.format
+            expect(source['text']).to eq message.text
+            expect(source['released']).to eq message.send_date.iso8601
+            expect(source['state']).to eq message.state
+            expect(source['user_name']).to eq message.from_member_name
+            expect(source['user_ids']).to eq list.user_ids
+            expect(source['group_ids']).to eq list.group_ids
+            expect(source['custom_group_ids']).to eq list.custom_group_ids
+            expect(source['permission_level']).to eq list.permission_level
+            expect(source['readable_member_ids']).to eq [ user.id, recipient.id ]
+            expect(source['updated']).to be_present
+            expect(source['created']).to be_present
+          end
+          es_docs["hits"]["hits"][1].tap do |es_doc|
+            expect(es_doc["_id"]).to eq "file-#{file.id}"
+            source = es_doc["_source"]
+            expect(source['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#file-#{file.id}"
+            expect(source['name']).to eq file.name
+            expect(source['file']['extname']).to eq file.extname.upcase
+            expect(source['file']['size']).to eq file.size
+            expect(source['released']).to eq message.send_date.iso8601
+            expect(source['state']).to eq message.state
+            expect(source['user_ids']).to eq list.user_ids
+            expect(source['group_ids']).to eq list.group_ids
+            expect(source['custom_group_ids']).to eq list.custom_group_ids
+            expect(source['permission_level']).to eq list.permission_level
+            expect(source['readable_member_ids']).to eq [ user.id, recipient.id ]
+            expect(source['updated']).to be_present
+            expect(source['created']).to be_present
+          end
         end
       end
     end
@@ -451,36 +449,35 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example do
           message.save!
         end
 
+        # wait for indexing
+        ::Gws::Elasticsearch.refresh_index(site: site)
+
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
-        expect(requests.length).to eq 2
-        requests.first.tap do |request|
-          expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/gws_memo_messages-message-#{message.id}")
-          body = JSON.parse(request['body'])
-          expect(body['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#message-#{message.id}"
-          expect(body['name']).to eq message.subject
-          expect(body['mode']).to eq message.format
-          expect(body['text']).to eq message.text
-          expect(body['released']).to eq message.send_date.iso8601
-          expect(body['state']).to eq message.state
-          expect(body['user_name']).to eq message.from_member_name
-          expect(body['user_ids']).to eq list.user_ids
-          expect(body['group_ids']).to eq list.group_ids
-          expect(body['custom_group_ids']).to eq list.custom_group_ids
-          expect(body['permission_level']).to eq list.permission_level
-          expect(body['readable_member_ids']).to eq [ user.id, recipient.id ]
-          expect(body['updated']).to be_present
-          expect(body['created']).to be_present
-        end
-        requests.second.tap do |request|
-          expect(request['method']).to eq 'delete'
-          expect(request['uri']['path']).to end_with("/file-#{file.id}")
-          expect(request['body']).to be_blank
+        site.elasticsearch_client.search(index: "g#{site.id}", size: 100, q: "*:*").tap do |es_docs|
+          expect(es_docs["hits"]["hits"].length).to eq 1
+          es_docs["hits"]["hits"][0].tap do |es_doc|
+            expect(es_doc["_id"]).to eq "gws_memo_messages-message-#{message.id}"
+            source = es_doc["_source"]
+            expect(source['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#message-#{message.id}"
+            expect(source['name']).to eq message.subject
+            expect(source['mode']).to eq message.format
+            expect(source['text']).to eq message.text
+            expect(source['released']).to eq message.send_date.iso8601
+            expect(source['state']).to eq message.state
+            expect(source['user_name']).to eq message.from_member_name
+            expect(source['user_ids']).to eq list.user_ids
+            expect(source['group_ids']).to eq list.group_ids
+            expect(source['custom_group_ids']).to eq list.custom_group_ids
+            expect(source['permission_level']).to eq list.permission_level
+            expect(source['readable_member_ids']).to eq [ user.id, recipient.id ]
+            expect(source['updated']).to be_present
+            expect(source['created']).to be_present
+          end
         end
       end
     end
@@ -500,50 +497,52 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example do
           message.destroy_from_member(user)
         end
 
+        # wait for indexing
+        ::Gws::Elasticsearch.refresh_index(site: site)
+
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
-        expect(requests.length).to eq 2
-        requests.first.tap do |request|
-          expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/gws_memo_messages-message-#{message.id}")
-          body = JSON.parse(request['body'])
-          expect(body['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#message-#{message.id}"
-          expect(body['name']).to eq message.subject
-          expect(body['mode']).to eq message.format
-          expect(body['text']).to eq message.text
-          expect(body['released']).to eq message.send_date.iso8601
-          expect(body['state']).to eq message.state
-          expect(body['user_name']).to eq message.from_member_name
-          expect(body['user_ids']).to eq list.user_ids
-          expect(body['group_ids']).to eq list.group_ids
-          expect(body['custom_group_ids']).to eq list.custom_group_ids
-          expect(body['permission_level']).to eq list.permission_level
-          expect(body['readable_member_ids']).to eq [ recipient.id ]
-          expect(body['updated']).to be_present
-          expect(body['created']).to be_present
-        end
-        requests.second.tap do |request|
-          expect(request['method']).to eq 'put'
-          expect(request['uri']['path']).to end_with("/file-#{file.id}")
-          body = JSON.parse(request['body'])
-          expect(body['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#file-#{file.id}"
-          expect(body['name']).to eq file.name
-          expect(body['data']).to be_present
-          expect(body['file']['extname']).to eq file.extname.upcase
-          expect(body['file']['size']).to eq file.size
-          expect(body['released']).to eq message.send_date.iso8601
-          expect(body['state']).to eq message.state
-          expect(body['user_ids']).to eq list.user_ids
-          expect(body['group_ids']).to eq list.group_ids
-          expect(body['custom_group_ids']).to eq list.custom_group_ids
-          expect(body['permission_level']).to eq list.permission_level
-          expect(body['readable_member_ids']).to eq [ recipient.id ]
-          expect(body['updated']).to be_present
-          expect(body['created']).to be_present
+        site.elasticsearch_client.search(index: "g#{site.id}", size: 100, q: "*:*").tap do |es_docs|
+          expect(es_docs["hits"]["hits"].length).to eq 2
+          es_docs["hits"]["hits"][0].tap do |es_doc|
+            expect(es_doc["_id"]).to eq "gws_memo_messages-message-#{message.id}"
+            source = es_doc["_source"]
+            expect(source['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#message-#{message.id}"
+            expect(source['name']).to eq message.subject
+            expect(source['mode']).to eq message.format
+            expect(source['text']).to eq message.text
+            expect(source['released']).to eq message.send_date.iso8601
+            expect(source['state']).to eq message.state
+            expect(source['user_name']).to eq message.from_member_name
+            expect(source['user_ids']).to eq list.user_ids
+            expect(source['group_ids']).to eq list.group_ids
+            expect(source['custom_group_ids']).to eq list.custom_group_ids
+            expect(source['permission_level']).to eq list.permission_level
+            expect(source['readable_member_ids']).to eq [ recipient.id ]
+            expect(source['updated']).to be_present
+            expect(source['created']).to be_present
+          end
+          es_docs["hits"]["hits"][1].tap do |es_doc|
+            expect(es_doc["_id"]).to eq "file-#{file.id}"
+            source = es_doc["_source"]
+            expect(source['url']).to eq "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}#file-#{file.id}"
+            expect(source['name']).to eq file.name
+            expect(source['file']['extname']).to eq file.extname.upcase
+            expect(source['file']['size']).to eq file.size
+            expect(source['released']).to eq message.send_date.iso8601
+            expect(source['state']).to eq message.state
+            expect(source['user_ids']).to eq list.user_ids
+            expect(source['group_ids']).to eq list.group_ids
+            expect(source['custom_group_ids']).to eq list.custom_group_ids
+            expect(source['permission_level']).to eq list.permission_level
+            expect(source['readable_member_ids']).to eq [ recipient.id ]
+            expect(source['updated']).to be_present
+            expect(source['created']).to be_present
+          end
         end
       end
     end
@@ -560,22 +559,17 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example do
           message.destroy
         end
 
+        # wait for indexing
+        ::Gws::Elasticsearch.refresh_index(site: site)
+
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
-        expect(requests.length).to eq 2
-        requests.first.tap do |request|
-          expect(request['method']).to eq 'delete'
-          expect(request['uri']['path']).to end_with("/gws_memo_messages-message-#{message.id}")
-          expect(request['body']).to be_blank
-        end
-        requests.second.tap do |request|
-          expect(request['method']).to eq 'delete'
-          expect(request['uri']['path']).to end_with("/file-#{file.id}")
-          expect(request['body']).to be_blank
+        site.elasticsearch_client.search(index: "g#{site.id}", size: 100, q: "*:*").tap do |es_docs|
+          expect(es_docs["hits"]["hits"].length).to eq 0
         end
       end
     end
@@ -595,22 +589,17 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example do
           message.destroy
         end
 
+        # wait for indexing
+        ::Gws::Elasticsearch.refresh_index(site: site)
+
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
-        expect(requests.length).to eq 2
-        requests.first.tap do |request|
-          expect(request['method']).to eq 'delete'
-          expect(request['uri']['path']).to end_with("/gws_memo_messages-message-#{message.id}")
-          expect(request['body']).to be_blank
-        end
-        requests.second.tap do |request|
-          expect(request['method']).to eq 'delete'
-          expect(request['uri']['path']).to end_with("/file-#{file.id}")
-          expect(request['body']).to be_blank
+        site.elasticsearch_client.search(index: "g#{site.id}", size: 100, q: "*:*").tap do |es_docs|
+          expect(es_docs["hits"]["hits"].length).to eq 0
         end
       end
     end
