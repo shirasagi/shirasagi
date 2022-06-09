@@ -26,25 +26,39 @@ module Inquiry::Addon
     end
 
     def update_kintone_record
-      if !node.kintone_app_enabled?
-        raise "update_kintone_record : kintone app disabled"
-      end
-
       record = to_kintone_record
       if record.blank?
-        raise "update_kintone_record : update record is blank"
+        update_error_msg("update_kintone_record : update record is blank")
+        return
       end
 
-      api = node.kintone_api
-      res = api.record.register(node.kintone_app_key, record)
+      begin
+        Retriable.retriable(on_retry: method(:on_each_retry)) do
+          @res = node.kintone_api.record.register(node.kintone_app_key, record)
+        end
+      rescue => e
+        Rails.logger.error("update_kintone_record : #{e.message}")
+        update_error_msg("update_kintone_record : #{e.message}")
+        return
+      end
 
-      self.kintone_record_key = res["id"]
-      self.kintone_revision = res["revision"]
-      self.kintone_update_error_message = nil
+      update_kintone_res
+    end
+
+    def update_error_msg(msg)
+      self.kintone_update_error_message = msg
       update
-    rescue => e
-      Rails.logger.error("update_kintone_record : #{e.message}")
-      self.kintone_update_error_message = e.message
+    end
+
+    def on_each_retry(err, try, elapsed, interval)
+      Rails.logger.warn(
+        "#{err.class}: '#{err.message}' - #{try} tries in #{elapsed} seconds and #{interval} seconds until the next try."
+      )
+    end
+
+    def update_kintone_res
+      self.kintone_record_key = @res["id"]
+      self.kintone_revision = @res["revision"]
       update
     end
   end

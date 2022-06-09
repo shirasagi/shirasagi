@@ -27,7 +27,7 @@ module Inquiry::Addon
     def kintone_api
       set_cms_site(site.id)
       kintone_domain = @cms_site.kintone_domain
-      basic_auth = SS::BasicAuth.find_by_domain(@cms_site)
+      basic_auth = credentials
       ::Kintone::Api.new(kintone_domain, kintone_app_api_token) do |conn|
         conn.basic_auth(basic_auth[kintone_domain].user, basic_auth[kintone_domain].password) if basic_auth
       end
@@ -35,6 +35,24 @@ module Inquiry::Addon
 
     def set_cms_site(site_id)
       @cms_site = Cms::Site.find(site_id)
+    end
+
+    def credentials
+      @@credentials ||= begin
+        basic_auth_credentials.map do |item|
+          [item["domain"], OpenStruct.new(item)]
+        end.to_h
+      end
+    end
+
+    def basic_auth_credentials
+      [
+        {
+          "domain"=>@cms_site.kintone_domain,
+          "user"=>@cms_site.kintone_user,
+          "password"=>SS::Crypt.decrypt(@cms_site.kintone_password)
+        }
+      ]
     end
   end
 end
