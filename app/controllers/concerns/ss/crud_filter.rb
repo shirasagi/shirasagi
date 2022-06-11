@@ -168,11 +168,13 @@ module SS::CrudFilter
   end
 
   def render_confirmed_all(result, opts = {})
+    action = params[:action].match?(/delete|destroy/) ? 'delete' : 'change'
+
     location = opts[:location].presence || crud_redirect_url || { action: :index }
     if result
-      notice = { notice: opts[:notice].presence || t("ss.notice.deleted") }
+      notice = { notice: opts[:notice].presence || t("ss.notice.#{action}d") }
     else
-      notice = { notice: t("ss.notice.unable_to_delete", items: @items.pluck(:name).join("、")) }
+      notice = { notice: t("ss.notice.unable_to_#{action}", items: @items.pluck(:name).join("、")) }
     end
     errors = @items.map { |item| [item.id, item.errors.full_messages] }
 

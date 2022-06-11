@@ -52,8 +52,10 @@ module Cms::CrudFilter
     entries = @selected_items.entries
     @items = []
 
+    role_action = @state ? :release : :edit
+
     entries.each do |item|
-      if item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+      if item.allowed?(role_action, @cur_user, site: @cur_site, node: @cur_node)
         item.state = @state if item.respond_to?(:state)
         next if item.save
       else
