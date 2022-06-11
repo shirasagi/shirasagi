@@ -18,7 +18,7 @@ class SS::Migration20220215000000
         ARRAY_FIELDS.each do |key|
           next if page.try(key).blank?
 
-          attributes[key] = page[key].collect { |c| c.try(:strip) }
+          attributes[key] = page[key].collect { |c| c.try(:strip) }.compact
           page[key] = attributes[key]
         end
 
