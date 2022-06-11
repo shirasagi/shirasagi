@@ -168,7 +168,7 @@ module SS::CrudFilter
   end
 
   def render_confirmed_all(result, opts = {})
-    action = params[:action].match?(/delete|destroy/) ? 'delete' : 'change'
+    action = params[:action].match?(/change/) ? 'change' : 'delete'
 
     location = opts[:location].presence || crud_redirect_url || { action: :index }
     if result
