@@ -52,7 +52,8 @@ module Cms::CrudFilter
     entries = @selected_items.entries
     @items = []
 
-    role_action = @state ? :release : :edit
+    role_action = :edit
+    role_action = :release if @state && @item.class.include?(Cms::Addon::Release)
 
     entries.each do |item|
       if item.allowed?(role_action, @cur_user, site: @cur_site, node: @cur_node)

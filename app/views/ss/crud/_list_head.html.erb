@@ -1,8 +1,9 @@
 <%
 
-deletable = @model.allowed?(:delete, @cur_user, site: @cur_site, owned: true) rescue true # for uploader
-releasable = @model.allowed?(:release, @cur_user, site: @cur_site, owned: true) rescue false
+# deletable = @model.allowed?(:delete, @cur_user, site: @cur_site, owned: true) rescue true # for uploader
+releasable = false
 releasable = @model.allowed?(:edit, @cur_user, site: @cur_site, owned: true) if @model.include?(Cms::Model::Node)
+releasable = @model.allowed?(:release, @cur_user, site: @cur_site, owned: true) if @model.include?(Cms::Addon::Release)
 
 %>
 <div class="list-head">
@@ -10,12 +11,10 @@ releasable = @model.allowed?(:edit, @cur_user, site: @cur_site, owned: true) if 
 
   <div class="list-head-action">
     <%= render template: "_list_head_tags" %>
-    <% if deletable %>
-      <div class="list-head-action-destroy">
-        <%= ss_button_to t("ss.links.delete"), "",
-          class: "destroy-all btn btn-list-head-action", model: @model, method: "delete", confirm: t('ss.confirm.delete') %>
-      </div>
-    <% end %>
+    <div class="list-head-action-destroy">
+      <%= ss_button_to t("ss.links.delete"), "",
+        class: "destroy-all btn btn-list-head-action", model: @model, method: "delete", confirm: t('ss.confirm.delete') %>
+    </div>
     <% if releasable %>
       <div class="list-head-action-update">
         <%= ss_button_to t("ss.links.make_them_public"), "",
