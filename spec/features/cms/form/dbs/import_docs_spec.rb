@@ -66,6 +66,7 @@ describe Cms::Form::DocsController, type: :feature, dbscope: :example, js: true 
       visit download_all_cms_form_db_docs_path(site: site.id, db_id: form_db.id)
       expect(current_path).not_to eq sns_login_path
 
+      # choose 'item[encoding]', option: 'UTF-8'
       click_on I18n.t("ss.links.download")
       wait_for_download
 
@@ -110,6 +111,7 @@ describe Cms::Form::DocsController, type: :feature, dbscope: :example, js: true 
       visit download_all_cms_form_db_docs_path(site: site.id, db_id: form_db.id)
       expect(current_path).not_to eq sns_login_path
 
+      # choose 'item[encoding]', option: 'UTF-8'
       click_on I18n.t("ss.links.download")
       wait_for_download
 

@@ -22,7 +22,7 @@ class Cms::FormDb
   validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
   validates :form_id, presence: true
 
-  scope :import_setted, -> { where(:form_id.exists => true, :node_id.exists => true, :import_url.exists => true) }
+  scope :import_url_setted, -> { where(:form_id.exists => true, :node_id.exists => true, :import_url.exists => true) }
 
   class << self
     def search(params = {})
@@ -67,7 +67,7 @@ class Cms::FormDb
     }
   end
 
-  def save_page(item, params)
+  def set_page_attributes(item, params)
     if item.new_record?
       item.state = node.state
       item.layout_id = node.page_layout_id || node.layout_id
@@ -75,6 +75,8 @@ class Cms::FormDb
     end
 
     form.columns.order_by(order: 1).each do |col|
+      next unless params.key?(col.name)
+
       col_val = item.column_values.to_a.find { |cv| cv.name == col.name }
       col_val ||= col.value_type.new(column: col)
 
@@ -83,7 +85,10 @@ class Cms::FormDb
 
       item.column_values << col_val if col_val.new_record?
     end
+  end
 
+  def save_page(item, params)
+    set_page_attributes(item, params)
     item.save
   end
 
@@ -113,9 +118,21 @@ class Cms::FormDb
     csv.encode(encoding, invalid: :replace, undef: :replace)
   end
 
-  def perform_import
-    job = Cms::FormDb::ImportUrlJob.bind(site_id: site_id, node_id: node_id)
-    job.perform_later(db_id: id, import_url: import_url)
+  def import_task
+    task_name = "cms:form_db:import_url"
+    Cms::FormDb::ImportTask.find_or_create_by name: task_name, site_id: site_id, db_id: id
+  end
+
+  def import_job
+    job = Cms::FormDb::ImportUrlJob.bind(site_id: site_id, node_id: node_id, db_id: id)
+  end
+
+  def perform_import(options = {})
+    import_job.perform_now({ db_id: id, import_url: import_url }.merge(options))
+  end
+
+  def perform_import_later(options = {})
+    import_job.perform_later({ db_id: id, import_url: import_url }.merge(options))
   end
 
   # for debug
