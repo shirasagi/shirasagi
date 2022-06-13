@@ -41,7 +41,7 @@ module Workflow::Approver
     permit_params :workflow_reset, :workflow_cancel_request
     permit_params workflow_circulations: []
 
-    before_validation :reset_workflow, if: -> { workflow_reset }
+    before_validation :reset_workflow, if: -> { workflow_reset.present? && workflow_reset }
     validates :approved, datetime: true
     validate :validate_workflow_approvers_presence, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
     validate :validate_workflow_approvers_level_consecutiveness, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
