@@ -72,13 +72,19 @@ class SS::FilenameUtils
       "#{SecureRandom.hex(16)}#{::File.extname(filename)}"
     end
 
-    case SS.config.env.multibyte_filename
-    when "sequence"
-      alias convert convert_by_sequence
-    when "hex"
-      alias convert convert_by_hex
+    if Rails.env.test?
+      def convert(filename, options)
+        send("convert_by_#{SS.config.env.multibyte_filename}", filename, options)
+      end
     else
-      alias convert convert_by_underscore
+      case SS.config.env.multibyte_filename
+      when "sequence"
+        alias convert convert_by_sequence
+      when "hex"
+        alias convert convert_by_hex
+      else
+        alias convert convert_by_underscore
+      end
     end
 
     def make_tmpname(prefix = nil, suffix = nil)
