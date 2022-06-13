@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'spec_helper'
 
 describe "multi_stage", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
