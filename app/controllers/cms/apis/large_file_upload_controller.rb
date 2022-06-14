@@ -26,7 +26,7 @@ class Cms::Apis::LargeFileUploadController < ApplicationController
 
   def create
     set_task
-    filename = params[:filename]
+    filename = sanitize(params[:filename])
     tmp_file = "#{tmp_file_path}/#{filename}"
     binary = params[:blob].read
 
@@ -76,5 +76,9 @@ class Cms::Apis::LargeFileUploadController < ApplicationController
 
   def tmp_file_path
     "#{SS::File.root}/ss_tasks/#{@task.id.to_s.chars.join("/")}"
+  end
+
+  def sanitize(filename)
+    filename.gsub(/[^0-9A-Z]/i, '_')
   end
 end
