@@ -26,8 +26,13 @@ class Cms::Apis::LargeFileUploadController < ApplicationController
 
   def create
     set_task
-    filename = sanitize(params[:filename])
-    tmp_file = "#{tmp_file_path}/#{filename}"
+    filename = params[:filename]
+    tmp_file = ::File.expand_path("#{tmp_file_path}/#{filename}")
+
+    if !tmp_file.start_with?(tmp_file_path)
+      raise "400"
+    end
+
     binary = params[:blob].read
 
     Retriable.retriable do
