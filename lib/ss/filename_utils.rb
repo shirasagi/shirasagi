@@ -39,6 +39,8 @@ class SS::FilenameUtils
   # ピリオド直前の連続する記号にマッチする正規表現（削除する目的で利用する）
   RE4 = /([^.])(#{(FILESYSTEM_AND_URL_SAFE_SYMBOLS - [")"]).map { |s| ::Regexp.escape(s) }.join("|")})+\./.freeze
 
+  NON_ASCII_RE = /[^\w\-.]/.freeze
+
   attr_accessor :duplicate_filenames
 
   def initialize
@@ -60,12 +62,13 @@ class SS::FilenameUtils
 
   class << self
     def convert_by_sequence(filename, opts)
+      return filename unless NON_ASCII_RE.match?(filename)
       id = opts[:id]
       "#{id}#{::File.extname(filename)}"
     end
 
     def convert_by_underscore(filename, _opts = nil)
-      filename.gsub(/[^\w\-.]/, "_")
+      filename.gsub(NON_ASCII_RE, "_")
     end
 
     def convert_by_hex(filename, _opts = nil)
