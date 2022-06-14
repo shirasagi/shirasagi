@@ -18,7 +18,7 @@ class SS::Migration20150619114301
           end
         end
       rescue => e
-        Rails.logger.debug("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+        Rails.logger.debug { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
       end
     end
 
