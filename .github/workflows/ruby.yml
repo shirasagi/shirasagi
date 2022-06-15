@@ -60,7 +60,10 @@ jobs:
         with:
           node-version: 18
           cache: npm
-      - run: npm install
+      - name: Install yarn
+        run: npm install -g yarn
+      - name: Install node modules
+        run: yarn install
       - name: Install MeCab Ruby
         run: |
           tar xzf vendor/mecab/mecab-ruby-0.996.tar.gz
