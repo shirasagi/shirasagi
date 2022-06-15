@@ -281,6 +281,11 @@ ansi-styles@^3.2.1:
   dependencies:
     color-convert "^1.9.0"
 
+ansis@^1.3.6:
+  version "1.3.6"
+  resolved "https://registry.yarnpkg.com/ansis/-/ansis-1.3.6.tgz#5370d9cc7b20d054967cc003cf051c2acf395b2c"
+  integrity sha512-TMXlWGGK5cOYT//DNX8V4zGnr824j95Oh888GV2J3eVFwKnolgdym9jje9MNLa3a8YNl0MnyX7C5tVj8dw5amA==
+
 anymatch@~3.1.2:
   version "3.1.2"
   resolved "https://registry.npmjs.org/anymatch/-/anymatch-3.1.2.tgz"
@@ -1420,11 +1425,6 @@ webpack-cli@^4.9.2:
     rechoir "^0.7.0"
     webpack-merge "^5.7.3"
 
-webpack-fix-style-only-entries@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.npmjs.org/webpack-fix-style-only-entries/-/webpack-fix-style-only-entries-0.6.1.tgz"
-  integrity sha512-wyIhoxS3DD3Fr9JA8hQPA+ZmaWnqPxx12Nv166wcsI/0fbReqyEtiIk2llOFYIg57WVS3XX5cZJxw2ji70R0sA==
-
 webpack-merge@^5.7.3:
   version "5.8.0"
   resolved "https://registry.npmjs.org/webpack-merge/-/webpack-merge-5.8.0.tgz"
@@ -1432,6 +1432,13 @@ webpack-merge@^5.7.3:
   dependencies:
     clone-deep "^4.0.1"
     wildcard "^2.0.0"
+
+webpack-remove-empty-scripts@^0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/webpack-remove-empty-scripts/-/webpack-remove-empty-scripts-0.8.1.tgz#65cbad32fe8706cd139825261df4842ad0c89218"
+  integrity sha512-61hc2jfZOI6SAFDpIAQ910VFWc7ic+JWyjU0H/5A+1poKD9nOQRHnXaaixwsxXWI0+N1HUvmiREC3h9Dqn9xWw==
+  dependencies:
+    ansis "^1.3.6"
 
 webpack-sources@^3.2.3:
   version "3.2.3"

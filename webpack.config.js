@@ -1,7 +1,7 @@
 const path = require("path")
 const webpack = require("webpack")
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
@@ -36,7 +36,7 @@ module.exports = {
     new CleanWebpackPlugin({
       cleanOnceBeforeBuildPatterns: [ "**/*.js", "**/*.css" ]
     }),
-    new FixStyleOnlyEntriesPlugin({ silent: true }),
+    new RemoveEmptyScriptsPlugin(),
     new MiniCssExtractPlugin({
       filename: '[name]'
     })
