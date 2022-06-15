@@ -34,9 +34,9 @@ module.exports = {
       maxChunks: 1
     }),
     new CleanWebpackPlugin({
-      cleanOnceBeforeBuildPatterns: [ "**/*" ]
+      cleanOnceBeforeBuildPatterns: [ "**/*.js", "**/*.css" ]
     }),
-    new FixStyleOnlyEntriesPlugin(),
+    new FixStyleOnlyEntriesPlugin({ silent: true }),
     new MiniCssExtractPlugin({
       filename: '[name]'
     })
