@@ -121,7 +121,7 @@ describe "sys_password_policies", type: :feature, dbscope: :example, js: true do
       context "when @ss_mode is gws" do
         it do
           gws_user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_limit_days.days)
-          visit gws_main_path(site: gws_site)
+          visit gws_portal_path(site: gws_site)
           within "div.warning" do
             expect(page).to have_link(I18n.t("ss.warning.password_expired"), href: gws_user_profile_path(site: gws_site))
           end
@@ -163,7 +163,7 @@ describe "sys_password_policies", type: :feature, dbscope: :example, js: true do
       context "when @ss_mode is gws" do
         it do
           gws_user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_warning_days.days)
-          visit gws_main_path(site: gws_site)
+          visit gws_portal_path(site: gws_site)
           within "div.warning" do
             expect(page).to have_link(I18n.t("ss.warning.password_neary_expired"), href: gws_user_profile_path(site: gws_site))
           end
