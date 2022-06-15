@@ -94,13 +94,15 @@ describe "sys_password_policies", type: :feature, dbscope: :example, js: true do
     end
 
     before do
-      login_sys_user
+      login_user user
     end
 
     context "when password is expired" do
       context "when @ss_mode is nil" do
+        let(:user) { sys_user }
+
         it do
-          sys_user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_limit_days.days)
+          user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_limit_days.days)
           visit sns_mypage_path
           within "div.warning" do
             expect(page).to have_link(I18n.t("ss.warning.password_expired"), href: sns_cur_user_account_path)
@@ -109,8 +111,10 @@ describe "sys_password_policies", type: :feature, dbscope: :example, js: true do
       end
 
       context "when @ss_mode is cms" do
+        let(:user) { cms_user }
+
         it do
-          cms_user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_limit_days.days)
+          user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_limit_days.days)
           visit cms_main_path(site: cms_site)
           within "div.warning" do
             expect(page).to have_link(I18n.t("ss.warning.password_expired"), href: sns_cur_user_account_path)
@@ -119,8 +123,10 @@ describe "sys_password_policies", type: :feature, dbscope: :example, js: true do
       end
 
       context "when @ss_mode is gws" do
+        let(:user) { gws_user }
+
         it do
-          gws_user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_limit_days.days)
+          user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_limit_days.days)
           visit gws_portal_path(site: gws_site)
           within "div.warning" do
             expect(page).to have_link(I18n.t("ss.warning.password_expired"), href: gws_user_profile_path(site: gws_site))
@@ -129,11 +135,13 @@ describe "sys_password_policies", type: :feature, dbscope: :example, js: true do
       end
 
       context "when @ss_mode is webmail" do
+        let(:user) { webmail_user }
+
         it do
-          webmail_user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_limit_days.days)
+          user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_limit_days.days)
           visit webmail_main_path
           within "div.warning" do
-            expect(page).to have_link(I18n.t("ss.warning.password_expired"), href: gws_cur_user_account_path)
+            expect(page).to have_link(I18n.t("ss.warning.password_expired"), href: sns_cur_user_account_path)
           end
         end
       end
@@ -141,8 +149,10 @@ describe "sys_password_policies", type: :feature, dbscope: :example, js: true do
 
     context "when password is nearly expired" do
       context "when @ss_mode is nil" do
+        let(:user) { sys_user }
+
         it do
-          sys_user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_warning_days.days)
+          user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_warning_days.days)
           visit sns_mypage_path
           within "div.warning" do
             expect(page).to have_link(I18n.t("ss.warning.password_neary_expired"), href: sns_cur_user_account_path)
@@ -151,8 +161,10 @@ describe "sys_password_policies", type: :feature, dbscope: :example, js: true do
       end
 
       context "when @ss_mode is cms" do
+        let(:user) { cms_user }
+
         it do
-          cms_user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_warning_days.days)
+          user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_warning_days.days)
           visit cms_main_path(site: cms_site)
           within "div.warning" do
             expect(page).to have_link(I18n.t("ss.warning.password_neary_expired"), href: sns_cur_user_account_path)
@@ -161,8 +173,10 @@ describe "sys_password_policies", type: :feature, dbscope: :example, js: true do
       end
 
       context "when @ss_mode is gws" do
+        let(:user) { gws_user }
+
         it do
-          gws_user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_warning_days.days)
+          user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_warning_days.days)
           visit gws_portal_path(site: gws_site)
           within "div.warning" do
             expect(page).to have_link(I18n.t("ss.warning.password_neary_expired"), href: gws_user_profile_path(site: gws_site))
@@ -171,8 +185,10 @@ describe "sys_password_policies", type: :feature, dbscope: :example, js: true do
       end
 
       context "when @ss_mode is webmail" do
+        let(:user) { webmail_user }
+
         it do
-          webmail_user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_warning_days.days)
+          user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_warning_days.days)
           visit webmail_main_path
           within "div.warning" do
             expect(page).to have_link(I18n.t("ss.warning.password_neary_expired"), href: sns_cur_user_account_path)
@@ -183,6 +199,8 @@ describe "sys_password_policies", type: :feature, dbscope: :example, js: true do
 
     context "when password is alived" do
       context "when @ss_mode is nil" do
+        let(:user) { sys_user }
+
         it do
           visit sns_mypage_path
           expect(page).to have_no_css("div.warning")
