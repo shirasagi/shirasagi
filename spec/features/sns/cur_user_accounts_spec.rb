@@ -29,6 +29,7 @@ describe "sns_cur_user_accounts", type: :feature, dbscope: :example, js: true do
         expect(user.email).to eq email
         expect(user.tel).to eq tel
         expect(user.tel_ext).to eq tel_ext
+        expect(user.initial_password_warning).to be_present
       end
     end
 
@@ -54,6 +55,7 @@ describe "sns_cur_user_accounts", type: :feature, dbscope: :example, js: true do
 
           user.reload
           expect(SS::User.authenticate(user.email, new_password)).to be_truthy
+          expect(user.initial_password_warning).to be_blank
         end
       end
 
@@ -157,7 +159,11 @@ describe "sns_cur_user_accounts", type: :feature, dbscope: :example, js: true do
   end
 
   context "with super user" do
-    let(:user) { ss_user }
+    let(:user) do
+      user = ss_user
+      user.update(initial_password_warning: 1)
+      user
+    end
 
     before { login_user user }
 
@@ -165,7 +171,11 @@ describe "sns_cur_user_accounts", type: :feature, dbscope: :example, js: true do
   end
 
   context "with regular user" do
-    let(:user) { create :ss_user, name: unique_id, email: unique_email }
+    let(:user) do
+      user = create :ss_user, name: unique_id, email: unique_email
+      user.update(initial_password_warning: 1)
+      user
+    end
 
     before { login_user user }
 

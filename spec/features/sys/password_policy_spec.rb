@@ -98,29 +98,95 @@ describe "sys_password_policies", type: :feature, dbscope: :example, js: true do
     end
 
     context "when password is expired" do
-      it do
-        sys_user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_limit_days.days)
-        visit sns_mypage_path
-        within "div.warning" do
-          expect(page).to have_link(I18n.t("ss.warning.password_expired"), href: sns_cur_user_account_path)
+      context "when @ss_mode is nil" do
+        it do
+          sys_user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_limit_days.days)
+          visit sns_mypage_path
+          within "div.warning" do
+            expect(page).to have_link(I18n.t("ss.warning.password_expired"), href: sns_cur_user_account_path)
+          end
+        end
+      end
+
+      context "when @ss_mode is cms" do
+        it do
+          cms_user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_limit_days.days)
+          visit cms_main_path(site: cms_site)
+          within "div.warning" do
+            expect(page).to have_link(I18n.t("ss.warning.password_expired"), href: sns_cur_user_account_path)
+          end
+        end
+      end
+
+      context "when @ss_mode is gws" do
+        it do
+          gws_user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_limit_days.days)
+          visit gws_main_path(site: gws_site)
+          within "div.warning" do
+            expect(page).to have_link(I18n.t("ss.warning.password_expired"), href: gws_user_profile_path(site: gws_site))
+          end
+        end
+      end
+
+      context "when @ss_mode is webmail" do
+        it do
+          webmail_user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_limit_days.days)
+          visit webmail_main_path
+          within "div.warning" do
+            expect(page).to have_link(I18n.t("ss.warning.password_expired"), href: gws_cur_user_account_path)
+          end
         end
       end
     end
 
     context "when password is nearly expired" do
-      it do
-        sys_user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_warning_days.days)
-        visit sns_mypage_path
-        within "div.warning" do
-          expect(page).to have_link(I18n.t("ss.warning.password_neary_expired"), href: sns_cur_user_account_path)
+      context "when @ss_mode is nil" do
+        it do
+          sys_user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_warning_days.days)
+          visit sns_mypage_path
+          within "div.warning" do
+            expect(page).to have_link(I18n.t("ss.warning.password_neary_expired"), href: sns_cur_user_account_path)
+          end
+        end
+      end
+
+      context "when @ss_mode is cms" do
+        it do
+          cms_user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_warning_days.days)
+          visit cms_main_path(site: cms_site)
+          within "div.warning" do
+            expect(page).to have_link(I18n.t("ss.warning.password_neary_expired"), href: sns_cur_user_account_path)
+          end
+        end
+      end
+
+      context "when @ss_mode is gws" do
+        it do
+          gws_user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_warning_days.days)
+          visit gws_main_path(site: gws_site)
+          within "div.warning" do
+            expect(page).to have_link(I18n.t("ss.warning.password_neary_expired"), href: gws_user_profile_path(site: gws_site))
+          end
+        end
+      end
+
+      context "when @ss_mode is webmail" do
+        it do
+          webmail_user.set(password_changed_at: Time.zone.now.beginning_of_hour - setting.password_warning_days.days)
+          visit webmail_main_path
+          within "div.warning" do
+            expect(page).to have_link(I18n.t("ss.warning.password_neary_expired"), href: sns_cur_user_account_path)
+          end
         end
       end
     end
 
     context "when password is alived" do
-      it do
-        visit sns_mypage_path
-        expect(page).to have_no_css("div.warning")
+      context "when @ss_mode is nil" do
+        it do
+          visit sns_mypage_path
+          expect(page).to have_no_css("div.warning")
+        end
       end
     end
   end
