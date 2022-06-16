@@ -52,6 +52,8 @@ ja:
     resize_image_auto: 画像リサイズ(自動)
     input_example: 記入例
     csv_file: CSVファイル
+    large_file_upload: 大容量アップロード
+    upload_status: アップロード状況
     under_maintenance_mode: 現在メンテナンス中です。
 
     views:
@@ -123,6 +125,7 @@ ja:
       set_tag: タグ設定
       reset_tags: タグ解除
       upload: アップロード
+      large_file_upload: 大容量アップロード
       decode: デコードする
       print: 印刷する
       initialize: 初期化する
@@ -286,6 +289,7 @@ ja:
       soft_delete_locked: 削除状態が削除不可になっている為、削除できません。
       history_is_blank: 履歴はありません。
       branch_pages_history_is_blank: 差し替えページのため、履歴はありません。
+      ie_browser: ご利用のブラウザ（IE）では大容量アップロードを実行できません。他のブラウザ（Google Chrome等）をご利用ください。
     warning:
       initial_password: 初期パスワードを変更してください。
       session_timeout: セッションの有効期限が切れました。

@@ -606,6 +606,7 @@ ja:
     use_cms_commands: コマンドの実行
     use_cms_tools: 運用ツールの利用
     use_cms_editor_extensions: エディターの高度な利用
+    use_cms_large_files_upload: 大容量アップロードの利用
     read_cms_generate_lock: 書き出し停止の閲覧
     edit_cms_generate_lock: 書き出し停止の編集
     read_other_cms_nodes: フォルダーの閲覧（全て）
@@ -653,6 +654,7 @@ ja:
     edit_private_cms_files: 共有ファイルの編集（所有）
     delete_other_cms_files: 共有ファイルの削除（全て）
     delete_private_cms_files: 共有ファイルの削除（所有）
+    use_other_cms_files: 大容量アップロードの使用
     read_other_cms_notices: お知らせの閲覧（全て）
     read_private_cms_notices: お知らせの閲覧（所有）
     edit_other_cms_notices: お知らせの編集（全て）
