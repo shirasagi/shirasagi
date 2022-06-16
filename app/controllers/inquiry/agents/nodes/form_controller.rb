@@ -150,7 +150,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       mail.deliver_now if mail.present?
     end
 
-    if @cur_node.kintone_app_enabled?
+    if @cur_node.try(:kintone_app_enabled?)
       @answer.update_kintone_record
     end
 

@@ -17,14 +17,12 @@ class Inquiry::Column
   set_permission_name "inquiry_columns"
 
   seqid :id
-  field :node_id, type: Integer
+  belongs_to :node, class_name: "Cms::Node"
   field :state, type: String, default: "public"
   field :name, type: String
   field :html, type: String, default: ""
   field :order, type: Integer, default: 0
   field :max_upload_file_size, type: Integer, default: 0, overwrite: true
-
-  belongs_to :node, foreign_key: :node_id, class_name: "Inquiry::Node::Form"
 
   permit_params :id, :node_id, :state, :name, :html, :order, :max_upload_file_size
 

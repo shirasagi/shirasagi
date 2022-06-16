@@ -1,4 +1,4 @@
-<% return unless @item.node.kintone_app_enabled? %>
+<% return unless @item.node.try(:kintone_app_enabled?) %>
 
 <dl class="see mod-kintone_app-answer">
   <dt><%= @model.t :kintone_record_key %></dt>
