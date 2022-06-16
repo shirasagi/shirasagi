@@ -23,8 +23,8 @@ module Inquiry::Node
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
-    has_many :columns, class_name: "Inquiry::Column"
-    has_many :answers, class_name: "Inquiry::Answer"
+    has_many :columns, foreign_key: :node_id, class_name: "Inquiry::Column"
+    has_many :answers, foreign_key: :node_id, class_name: "Inquiry::Answer"
 
     default_scope ->{ where(route: "inquiry/form") }
 

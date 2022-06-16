@@ -12,7 +12,7 @@ class Inquiry::Answer
   set_permission_name "inquiry_answers"
 
   seqid :id
-  field :node_id, type: Integer
+  belongs_to :node, class_name: "Inquiry::Node::Form"
   field :remote_addr, type: String
   field :user_agent, type: String
   field :source_url, type: String
@@ -24,7 +24,6 @@ class Inquiry::Answer
   field :inquiry_page_url, type: String
   field :inquiry_page_name, type: String
 
-  belongs_to :node, foreign_key: :node_id, class_name: "Inquiry::Node::Form"
   belongs_to :member, class_name: "Cms::Member"
   embeds_many :data, class_name: "Inquiry::Answer::Data"
 

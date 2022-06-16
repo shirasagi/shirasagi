@@ -17,7 +17,7 @@ class Inquiry::Column
   set_permission_name "inquiry_columns"
 
   seqid :id
-  belongs_to :node, class_name: "Cms::Node"
+  belongs_to :node, class_name: "Inquiry::Node::Form"
   field :state, type: String, default: "public"
   field :name, type: String
   field :html, type: String, default: ""
