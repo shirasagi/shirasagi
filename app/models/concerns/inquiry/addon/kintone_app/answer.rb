@@ -13,10 +13,9 @@ module Inquiry::Addon
       record = {}
       data.each do |d|
         column = d.column
-        next if column.nil?
-        next if column.kintone_field_code.blank?
+        next if column.nil? || column.kintone_field_code.blank?
 
-        if column.input_type =~ /^(text_field|text_area|email_field|radio_button|select)$/
+        if %w(text_field text_area email_field radio_button select).include?(column.input_type)
           record[column.kintone_field_code] = { "value" => d.value }
         elsif column.input_type == "check_box"
           record[column.kintone_field_code] = { "value" => d.values }
