@@ -27,7 +27,7 @@ class Cms::Apis::LargeFileUploadController < ApplicationController
   def create
     set_task
     filename = params[:filename]
-    tmp_file = ::File.expand_path("#{tmp_file_path}/#{filename}")
+    tmp_file = ::File.expand_path(filename, tmp_file_path)
 
     if !tmp_file.start_with?(tmp_file_path)
       raise "400"
@@ -38,7 +38,7 @@ class Cms::Apis::LargeFileUploadController < ApplicationController
     Retriable.retriable do
       dirname = ::File.dirname(tmp_file)
       ::FileUtils.mkdir_p(dirname) unless ::Dir.exist?(dirname)
-      File.open(tmp_file, "ab") do |f|
+      ::File.open(tmp_file, "ab") do |f|
         f.write binary
       end
     end
@@ -81,9 +81,5 @@ class Cms::Apis::LargeFileUploadController < ApplicationController
 
   def tmp_file_path
     "#{SS::File.root}/ss_tasks/#{@task.id.to_s.chars.join("/")}"
-  end
-
-  def sanitize(filename)
-    filename.gsub(/[^0-9A-Z]/i, '_')
   end
 end
