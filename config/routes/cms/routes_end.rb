@@ -386,6 +386,7 @@ Rails.application.routes.draw do
       match "mobile_size_check/check" => "mobile_size_check#check", via: [:post, :options], as: "mobile_size_check"
       post "syntax_check/check" => "syntax_check#check", as: "check_syntax_check"
       post "syntax_check/correct" => "syntax_check#correct", as: "correct_syntax_check"
+      post "backlink_check/check" => "backlink_check#check", as: "backlink_check"
     end
   end
 
