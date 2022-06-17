@@ -32,7 +32,7 @@ class Cms::Line::MessagesController < ApplicationController
     end
 
     @copy = @item.copy_and_save(name: get_params["name"])
-    render_update @copy.errors.empty?, location: { action: :index }, render: { file: :copy }
+    render_update @copy.errors.empty?, location: { action: :index }, render: { action: :copy }
   end
 
   def deliver
