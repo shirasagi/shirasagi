@@ -1,4 +1,12 @@
 GIT
+  remote: https://github.com/jue58/kintone.git
+  revision: 6308d7ade1f7d40ddbba10df6a0386306ed22147
+  specs:
+    kintone (0.1.5)
+      faraday (>= 0.9.2)
+      faraday_middleware (>= 0.10.0)
+
+GIT
   remote: https://github.com/shirasagi/mongoid
   revision: ca2d42c4a88625a4b145e55a80db5df5eb880ba8
   branch: 7.3-stable-MONGOID-5183
@@ -154,6 +162,8 @@ GEM
       railties (>= 5.0.0)
     faraday (0.17.4)
       multipart-post (>= 1.2, < 3)
+    faraday_middleware (0.14.0)
+      faraday (>= 0.7.4, < 1.0)
     fast_blank (1.0.1)
     fastimage (2.2.5)
     ffi (1.12.2)
@@ -736,6 +746,7 @@ DEPENDENCIES
   jwt
   kaminari
   kaminari-mongoid
+  kintone!
   kramdown
   kramdown-parser-gfm
   levenshtein
