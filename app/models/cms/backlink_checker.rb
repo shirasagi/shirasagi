@@ -20,7 +20,7 @@ class Cms::BacklinkChecker
   end
 
   def contains_urls
-    @contains_urls ||= Cms.contains_urls_items(item, site: cur_site)
+    @contains_urls ||= Cms::Page.all.site(cur_site).and_linking_pages(item)
   end
 
   def validate_backlink

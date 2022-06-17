@@ -222,26 +222,4 @@ module Cms
       updated || created
     end
   end
-
-  def self.contains_urls_items(item, site:)
-    return Cms::Page.none if !item.is_a?(Cms::Model::Page) || item.try(:branch?)
-
-    cond = []
-    if item.respond_to?(:url) && item.respond_to?(:full_url)
-      cond << { contains_urls: { '$in' => [ item.url, item.full_url ] } }
-      cond << { form_contains_urls: { '$in' => [ item.url, item.full_url ] } }
-    end
-
-    if item.respond_to?(:files) && item.files.present?
-      cond << { contains_urls: { '$in' => item.files.map(&:url) } }
-    end
-
-    if item.respond_to?(:related_page_ids)
-      cond << { related_page_ids: { '$in' => [ item.id ] } }
-    end
-
-    return Cms::Page.none if cond.blank?
-
-    Cms::Page.site(site).where(:id.ne => item.id).where("$or" => cond)
-  end
 end
