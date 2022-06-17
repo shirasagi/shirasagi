@@ -39,6 +39,8 @@ class SS::FilenameUtils
   # ピリオド直前の連続する記号にマッチする正規表現（削除する目的で利用する）
   RE4 = /([^\.])(#{(FILESYSTEM_AND_URL_SAFE_SYMBOLS - [")"]).map { |s| ::Regexp.escape(s) }.join("|")})+\./.freeze
 
+  NON_ASCII_RE = /[^\w\-.]/.freeze
+
   attr_accessor :duplicate_filenames
 
   def initialize
@@ -60,25 +62,32 @@ class SS::FilenameUtils
 
   class << self
     def convert_by_sequence(filename, opts)
+      return filename unless NON_ASCII_RE.match?(filename)
       id = opts[:id]
       "#{id}#{::File.extname(filename)}"
     end
 
     def convert_by_underscore(filename, _opts = nil)
-      filename.gsub(/[^\w\-\.]/, "_")
+      filename.gsub(NON_ASCII_RE, "_")
     end
 
     def convert_by_hex(filename, _opts = nil)
       "#{SecureRandom.hex(16)}#{::File.extname(filename)}"
     end
 
-    case SS.config.env.multibyte_filename
-    when "sequence"
-      alias convert convert_by_sequence
-    when "hex"
-      alias convert convert_by_hex
+    if Rails.env.test?
+      def convert(filename, options)
+        send("convert_by_#{SS.config.env.multibyte_filename}", filename, options)
+      end
     else
-      alias convert convert_by_underscore
+      case SS.config.env.multibyte_filename
+      when "sequence"
+        alias convert convert_by_sequence
+      when "hex"
+        alias convert convert_by_hex
+      else
+        alias convert convert_by_underscore
+      end
     end
 
     def make_tmpname(prefix = nil, suffix = nil)

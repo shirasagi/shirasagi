@@ -10,11 +10,15 @@ class SS::Migration20150619114301
       next unless item
 
       begin
-        unless item.save
-          Rails.logger.fatal("ss_file save failed #{id}: #{item.errors.full_messages}")
+        if SS::FilenameUtils::NON_ASCII_RE.match?(item.filename)
+          item.name = SS::FilenameUtils.convert_to_url_safe_japanese(item.filename) if item[:name].blank? && item.filename.present?
+          item.filename = SS::FilenameUtils.convert(SS::FilenameUtils.normalize(item.filename), id: item.id)
+          unless item.save
+            Rails.logger.fatal("ss_file save failed #{id}: #{item.errors.full_messages}")
+          end
         end
       rescue => e
-        Rails.logger.debug("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+        Rails.logger.debug { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
       end
     end
 
