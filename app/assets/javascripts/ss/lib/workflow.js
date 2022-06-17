@@ -588,7 +588,7 @@ SS_WorkflowApprover.prototype.onClickSave = function () {
   var self = this;
 
   self.addOrUpdateInput("item[state]", "closed");
-  self.addOrUpdateInput("item[workflow_reset]", null);
+  self.removeInput("item[workflow_reset]");
 };
 
 SS_WorkflowApprover.prototype.onPublishSaveClicked = function () {
@@ -609,4 +609,8 @@ SS_WorkflowApprover.prototype.addOrUpdateInput = function (name, value) {
     .attr("name", name)
     .attr("value", value)
     .appendTo("#item-form");
+};
+
+SS_WorkflowApprover.prototype.removeInput = function (name) {
+  $("#item-form").find("input[name='" + name + "']").remove();
 };
