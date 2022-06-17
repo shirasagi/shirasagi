@@ -429,6 +429,7 @@ Rails.application.routes.draw do
     resources :archives, only: [:index]
     resources :photo_albums, only: [:index]
     resources :site_searches, only: [:index]
+    resources :form_searches, only: [:index]
     get "search_contents/:id" => "page_search_contents#show", as: "page_search_contents"
     get "search_contents/:id/download" => "page_search_contents#download", as: "download_page_search_contents"
     resources :line_hubs, only: [:index]
@@ -450,6 +451,7 @@ Rails.application.routes.draw do
     post "line_hub/line" => "public#index", cell: "nodes/line_hub"
     get "line_hub/image-map/:id/:size" => "public#image_map", cell: "nodes/line_hub"
     get "site_search/categories(.:format)" => "public#categories", cell: "nodes/site_search"
+    get "form_search/(index.:format)" => "public#index", cell: "nodes/form_search"
   end
 
   part "cms" do

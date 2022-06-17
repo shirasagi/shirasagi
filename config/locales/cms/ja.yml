@@ -519,6 +519,7 @@ ja:
       cms/group_page: グループ別ページリスト
       cms/site_search: サイト内検索
       cms/line_hub: "LINE HUB"
+      cms/form_search: 定型フォーム絞込
     parts:
       cms/free: HTML記述
       cms/node: フォルダーリスト

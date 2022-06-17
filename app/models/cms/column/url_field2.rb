@@ -60,4 +60,8 @@ class Cms::Column::UrlField2 < Cms::Column::Base
   def db_form_type
     { type: 'textarea', rows: 2 }
   end
+
+  def exact_match_to_value(value)
+    { link_label: value }
+  end
 end
