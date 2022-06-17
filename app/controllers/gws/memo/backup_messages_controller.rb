@@ -26,14 +26,14 @@ class Gws::Memo::BackupMessagesController < ApplicationController
     if backup_filter != 'all' && message_ids.blank?
       @item = @model.new
       @item.errors.add(:base, I18n.t("gws/memo/message.errors.blank_message"))
-      render file: :index
+      render action: :index
       return
     end
 
     unless Gws::Memo::MessageBackupJob.check_size_limit_per_user?(@cur_user.id)
       @item = @model.new
       @item.errors.add(:base, t('job.notice.size_limit_exceeded'))
-      render file: :index
+      render action: :index
       return
     end
 
