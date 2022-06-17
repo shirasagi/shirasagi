@@ -378,13 +378,17 @@ module SS::Model::File
   def normalize_attributes
     # name
     self.name = filename if name.blank? && filename.present?
-    self.name = SS::FilenameUtils.convert_to_url_safe_japanese(name) if name.present?
+    if (new_record? || name_changed?) && name.present?
+      self.name = SS::FilenameUtils.convert_to_url_safe_japanese(name)
+    end
 
     # filename
-    self.filename = SS::FilenameUtils.normalize(self.filename) if self.filename
+    if (new_record? || filename_changed?) && filename.present?
+      self.filename = SS::FilenameUtils.normalize(filename)
+    end
 
     # content_type
-    self.content_type = SS::MimeType.find(self.filename) if self.filename
+    self.content_type = SS::MimeType.find(filename) if filename.present?
   end
 
   def multibyte_filename_disabled?
@@ -399,8 +403,10 @@ module SS::Model::File
   end
 
   def mangle_filename
-    set_sequence
-    self.filename = SS::FilenameUtils.convert(filename, id: id)
+    if new_record? || filename_changed?
+      set_sequence
+      self.filename = SS::FilenameUtils.convert(filename, id: id)
+    end
   end
 
   def save_file
