@@ -407,7 +407,9 @@ describe Article::Page::ImportJob, dbscope: :example do
         page6 = Article::Page.site(site).find_by(name: "page6")
 
         expect(page1.category_ids).to match_array [cate1_depth3.id, cate2_depth3.id]
-        expect(page2.category_ids).to match_array [cate1_depth3.id, cate2_depth3.id, cate1_depth2.id, cate2_depth2.id, cate1_depth1.id, cate2_depth1.id]
+        [cate1_depth3.id, cate2_depth3.id, cate1_depth2.id, cate2_depth2.id, cate1_depth1.id, cate2_depth1.id].tap do |ary|
+          expect(page2.category_ids).to match_array ary
+        end
         expect(page3.category_ids).to match_array [cate3_depth3.id]
         expect(page4.category_ids).to match_array [cate3_depth2.id, cate2_depth4.id]
         expect(page5.category_ids).to match_array []

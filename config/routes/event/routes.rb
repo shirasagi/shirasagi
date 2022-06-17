@@ -7,11 +7,6 @@ Rails.application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
-  concern :change_state do
-    get :state, on: :member
-    put :change_state_all, on: :collection, path: ''
-  end
-
   concern :crud do
     get :move, on: :member
     put :move, on: :member
@@ -27,11 +22,6 @@ Rails.application.routes.draw do
     get :import, on: :collection
     post :import, on: :collection
     get :download_logs, on: :collection
-  end
-
-  concern :ical_refresh do
-    get :ical_refresh, on: :collection
-    post :ical_refresh, on: :collection
   end
 
   concern :command do
@@ -56,7 +46,11 @@ Rails.application.routes.draw do
 
   content "event" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
-    resources :pages, concerns: [:deletion, :crud, :download, :import, :ical_refresh, :command, :contains_urls, :tag, :michecker, :change_state]
+    resources :pages, concerns: [:deletion, :crud, :download, :import, :command, :contains_urls, :tag, :michecker] do
+      match :ical_refresh, on: :collection, via: %i[get post]
+      get :state, on: :member
+      put :change_state_all, on: :collection, path: ''
+    end
     resources :searches, only: [:index]
   end
 
