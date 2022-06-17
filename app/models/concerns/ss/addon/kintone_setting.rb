@@ -15,7 +15,7 @@ module SS::Addon
     end
 
     def encrypt_password
-      self.kintone_password = SS::Crypt.encrypt(in_kintone_password)
+      self.kintone_password = SS::Crypto.encrypt(in_kintone_password)
     end
   end
 end

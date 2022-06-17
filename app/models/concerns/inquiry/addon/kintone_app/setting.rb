@@ -50,7 +50,7 @@ module Inquiry::Addon
         {
           "domain"=>@cms_site.kintone_domain,
           "user"=>@cms_site.kintone_user,
-          "password"=>SS::Crypt.decrypt(@cms_site.kintone_password)
+          "password"=>SS::Crypto.decrypt(@cms_site.kintone_password)
         }
       ]
     end
