@@ -93,8 +93,4 @@
     return messages;
   });
   <% end %>
-
-  <% if params[:action] =~ /edit|delete/ && @cur_user.respond_to?(:cms_role_permit_any?) && !@cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_alert)) && @contains_urls.try(:and_public).present? %>
-    Form_Alert.addStaticAlerts("<%= t("cms.backlink_check") %>", [ "<%= t('ss.confirm.contains_url_expect') %>" ]);
-  <% end %>
 <% end %>
