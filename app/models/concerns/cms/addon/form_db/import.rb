@@ -84,9 +84,7 @@ module Cms::Addon::FormDb::Import
 
       item ||= Article::Page.new(cur_site: site, cur_user: @cur_user, cur_node: node)
       item_new_record = item.new_record?
-
       item.name = page_name
-      item.state = 'public'
 
       import_row_events(item, params) if import_event == 1
       import_row_map_points(item, params) if import_map == 1
@@ -112,17 +110,19 @@ module Cms::Addon::FormDb::Import
       else
         add_import_error("#{item.name} " + item.errors.full_messages.join('/'))
       end
+
+      # end foreach_row
     end
 
-    if @task
-      @task.log("[Sync] delete before '#{I18n.l(delete_limit)}'")
+    # if @task
+    #   @task.log("[Sync] delete before '#{I18n.l(delete_limit)}'")
 
-      criteria = Article::Page.site(site).node(node).where(form_id: form_id).where(imported: { '$lt': delete_limit })
-      count = criteria.destroy_all
-      @task.log("deleted: #{count} pages")
+    #   criteria = Article::Page.site(site).node(node).where(form_id: form_id).where(imported: { '$lt': delete_limit })
+    #   count = criteria.destroy_all
+    #   @task.log("deleted: #{count} pages")
 
-      self.set(import_url_hash: csv_hash)
-    end
+    #   self.set(import_url_hash: csv_hash)
+    # end
 
     errors.blank?
   end
@@ -198,6 +198,9 @@ module Cms::Addon::FormDb::Import
       event_dates += format_event_date(row['開始日'], row['終了日'])
       event_dates.uniq!
       item.event_dates = event_dates.map { |d| d.strftime("%Y/%m/%d") }.join("\r\n")
+
+      event_end_date = item.event_dates.last
+      item.close_date = event_end_date + 1.month if event_end_date
     end
 
     if row['参加申込終了日'].blank?
