@@ -88,7 +88,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     URI.parse(url).open do |f|
       attributes = {
         model: 'ss/temp_file',
-        filename: ::File.basename(value),
+        filename: ::File.basename(url),
         content_type: f.content_type,
         user_id: @cur_user.try(:id),
         site_id: @cur_site.try(:id),
