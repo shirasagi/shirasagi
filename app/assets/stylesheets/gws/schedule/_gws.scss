@@ -367,7 +367,8 @@
 // events
 @mixin fc_event_prefix {
   display: inline-block;
-  margin-right: 2px;
+  margin-top: 1px;
+  margin-right: 1px;
   padding: 0 2px;
   border-radius: 2px;
   color: $white;
@@ -390,11 +391,10 @@
     .fc-facility:before {
       @include fc_event_prefix;
       content: "設";
-      background-color: $orange;
+      background-color: #777;
     }
     .fc-title,.fc-facility {
       display: block;
-      margin-left: 5px;
     }
   }
 }
@@ -406,9 +406,6 @@
 }
 .fc-time-grid-event .fc-time, .fc-time-grid-event.fc-short .fc-title {
   font-size: 90%;
-}
-.fc-day-grid-event .fc-time {
-  font-weight: normal;
 }
 .fc-event-allday {
   border-right: 2px solid #000;
@@ -464,32 +461,32 @@
   background-color: #bdf;
   color: #000;
 }
-.fc-event-private .fc-content:before {
+.fc-event-private .fc-title:before {
   @include fc_event_prefix;
   content: "秘";
   background-color: #f2b;
 }
-.fc-event-user-attendance-unknown .fc-content:before {
+.fc-event-user-attendance-unknown .fc-title:before {
   @include fc_event_prefix;
   content: "未";
   background-color: $orange;
 }
-.fc-event-user-attendance-absence .fc-content:before {
+.fc-event-user-attendance-absence .fc-title:before {
   @include fc_event_prefix;
   content: "不";
   background-color: $orange;
 }
-.fc-event-approval-request .fc-content:before {
+.fc-event-approval-request .fc-title:before {
   @include fc_event_prefix;
   content: "申";
   background-color: #84e;
 }
-.fc-event-approval-approve .fc-content:before {
+.fc-event-approval-approve .fc-title:before {
   @include fc_event_prefix;
   content: "認";
   background-color: #84e;
 }
-.fc-event-approval-deny .fc-content:before {
+.fc-event-approval-deny .fc-title:before {
   @include fc_event_prefix;
   content: "否";
   background-color: #84e;
@@ -779,6 +776,11 @@
   ~ .calendar .fc-row-name td {
     border-top-width: 0;
   }
+}
+
+// facility calendar
+.calendar.facility .fc-facility {
+  display: none;
 }
 
 // category
