@@ -4,7 +4,7 @@ class SS::PasswordUpdateService
   include ActiveModel::Validations
   extend SS::Translation
 
-  attr_accessor :cur_user
+  attr_accessor :cur_user, :self_edit
 
   attribute :old_password, :string
   attribute :new_password, :string
@@ -21,6 +21,7 @@ class SS::PasswordUpdateService
   def update_password
     return if invalid?
 
+    cur_user.self_edit = self_edit
     cur_user.in_password = new_password
     result = cur_user.save
     SS::Model.copy_errors(cur_user, self) unless result

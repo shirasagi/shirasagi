@@ -15,7 +15,7 @@ module SS::Password
     before_validation :encrypt_password, if: ->{ in_password.present? }
     validate :validate_password, if: -> { in_password.present? }
     validates :password, presence: true, if: ->{ ldap_dn.blank? }
-    before_save :reset_initial_password_warning, if: -> { self_edit }
+    before_save :reset_initial_password_warning, if: -> { self_edit.present? && self_edit }
     before_save :update_password_changed_at, if: -> { password_changed? }
     after_save :update_password_in_session, if: -> { password_changed? }
   end

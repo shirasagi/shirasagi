@@ -12,10 +12,6 @@ class Sns::UserAccountsController < ApplicationController
     @crumbs << [t("sns.account"), params.include?(:user) ? sns_user_account_path : sns_cur_user_account_path]
   end
 
-  def fix_params
-    { self_edit: true }
-  end
-
   def permit_fields
     [ :name, :kana, :email, :tel, :tel_ext ]
   end
@@ -34,13 +30,13 @@ class Sns::UserAccountsController < ApplicationController
 
   def edit_password
     @model = SS::PasswordUpdateService
-    @item = SS::PasswordUpdateService.new(cur_user: @sns_user)
+    @item = SS::PasswordUpdateService.new(cur_user: @sns_user, self_edit: true)
     render
   end
 
   def update_password
     @model = SS::PasswordUpdateService
-    @item = SS::PasswordUpdateService.new(cur_user: @sns_user)
+    @item = SS::PasswordUpdateService.new(cur_user: @sns_user, self_edit: true)
     @item.attributes = params.require(:item).permit(:old_password, :new_password, :new_password_again)
     @item.in_updated = params[:_updated].to_s
     render_update @item.update_password, render: { template: "edit_password" }
