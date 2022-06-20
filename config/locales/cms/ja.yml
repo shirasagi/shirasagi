@@ -1174,10 +1174,13 @@ ja:
         import_primary_key: 主キーのカラム
         import_page_name: 記事タイトルのカラム
         import_column_options: 値による条件設定
+        import_exclude_columns: 除外するカラム
         import_misc_options: その他の設定
         import_event: イベント日時を取り込む
         import_map: 地図座標を取り込む
         import_logs: インポートログ
+        import_skip_same_file: 同じファイルはインポートしない
+        generate_on_import: 記事ページを書き出す
       cms/init_column:
         name: 名前
         order: 並び順
@@ -1524,6 +1527,9 @@ ja:
       invalid_img_scheme: 画像のURIにバイナリー文字列が含まれています。
       set_table_caption: 表にキャプションが設定されていません。
       set_th_scope: 表のヘッダーにスコープ属性が設定されていません。
+      form_db_column_not_found: "%{column}が見つかりません。 (%{summary})"
+      form_db_same_file: 前回のファイルと同一のため、インポートを終了します。
+      forn_db_invalid_primary_key: 主キーのカラムを正しく設定してください。
       link_check_success: "[成功]"
       link_check_failure: "[失敗]"
       link_check_failed_to_connect: リンクチェックに失敗しました。次のURLに接続できません。
@@ -2686,10 +2692,18 @@ ja:
         指定したカラムの値を記事タイトルとして保存します。
       import_column_options: |-
         指定した条件に一致するデータのみ保存します。
+      import_exclude_columns: |-
+        指定したカラムの値は保存しません。
       import_event: |-
         "開始日"と"終了日"のカラムをイベントの日時として保存します。
       import_map: |-
         "緯度"と"経度"のカラムを地図のマーカーとして保存します。
+      import_skip_same_file: |-
+        ファイルの内容が前回と同じ時はインポートを終了します。
+        データの更新、同期のための削除も実行されません。
+        速度向上や負荷低減のためにご利用ください。
+      generate_on_import: |-
+        インポートした際に記事ページを書き出します。
 
     cms/addon/node_twitter_post_setting:
       node_twitter_auto_post:

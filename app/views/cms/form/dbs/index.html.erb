@@ -5,7 +5,7 @@
 
 <% @index_title = proc do |item| %>
   <%= link_to item.name, { action: :show, id: item.id }, class: "title" %>
-  <div class="float-start mt-1 mr-4 ml-1">
+  <div class="float-start mt-1 mr-3 ml-1">
     <%= link_to t('cms.buttons.manage_db'), cms_form_db_docs_path(db_id: item.id), target: '_blank', class: 'btn' %>
   </div>
 <% end %>
