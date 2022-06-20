@@ -1,19 +1,12 @@
 class Cms::SyntaxChecker::MultibyteCharacterChecker
   include Cms::SyntaxChecker::Base
 
-  SP = " ".freeze
-  FULL_WIDTH_SPACE = Cms::SyntaxChecker::InterwordSpaceChecker::FULL_WIDTH_SPACE
-  FULL_AL_NUM_PAT = "Ａ-Ｚａ-ｚ０-９".freeze
-  AL_NUM_PAT = "A-Za-z0-9#{FULL_AL_NUM_PAT}".freeze
-  AL_NUM_SP_PAT = "#{AL_NUM_PAT}#{SP}#{FULL_WIDTH_SPACE}".freeze
-  AL_NUM_REGEX = /[#{AL_NUM_PAT}]([#{AL_NUM_SP_PAT}]*[#{AL_NUM_PAT}])?/.freeze
-
   def check(context, id, idx, raw_html, fragment)
     chars = []
     Cms::SyntaxChecker::Base.each_text_node(fragment) do |text_node|
       each_match(text_node.content) do |matched|
         matched = matched.to_s
-        if matched.index(/[#{FULL_AL_NUM_PAT}#{FULL_WIDTH_SPACE}]/)
+        if matched.index(/[#{Cms::SyntaxChecker::FULL_AL_NUM_PAT}]/)
           chars << matched
         end
       end
@@ -38,8 +31,8 @@ class Cms::SyntaxChecker::MultibyteCharacterChecker
       fragment = Nokogiri::HTML5.fragment(html)
 
       Cms::SyntaxChecker::Base.each_text_node(fragment) do |text_node|
-        text_node.content = text_node.content.gsub(AL_NUM_REGEX) do |matched|
-          matched.to_s.tr("Ａ-Ｚａ-ｚ０-９#{FULL_WIDTH_SPACE}", "A-Za-z0-9#{SP}")
+        text_node.content = text_node.content.gsub(Cms::SyntaxChecker::AL_NUM_REGEX) do |matched|
+          matched.to_s.tr(Cms::SyntaxChecker::FULL_AL_NUM_PAT, Cms::SyntaxChecker::HALF_AL_NUM_PAT)
         end
       end
 
@@ -54,7 +47,7 @@ class Cms::SyntaxChecker::MultibyteCharacterChecker
   def each_match(text)
     pos = 0
     loop do
-      matched = AL_NUM_REGEX.match(text, pos)
+      matched = Cms::SyntaxChecker::AL_NUM_REGEX.match(text, pos)
       break if matched.nil?
 
       yield matched

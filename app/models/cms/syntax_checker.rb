@@ -1,6 +1,14 @@
 module Cms::SyntaxChecker
   extend SS::RescueWith
 
+  FULL_WIDTH_SPACE = '　'.freeze
+  SP = " ".freeze
+  HALF_AL_NUM_PAT = "A-Za-z0-9".freeze
+  FULL_AL_NUM_PAT = "Ａ-Ｚａ-ｚ０-９".freeze
+  AL_NUM_PAT = "#{HALF_AL_NUM_PAT}#{FULL_AL_NUM_PAT}".freeze
+  AL_NUM_SP_PAT = "#{AL_NUM_PAT}#{SP}".freeze
+  AL_NUM_REGEX = /[#{AL_NUM_PAT}]([#{AL_NUM_SP_PAT}]*[#{AL_NUM_PAT}])?/.freeze
+
   CheckerContext = Struct.new(:cur_site, :cur_user, :contents, :errors)
   CorrectorContext = Struct.new(:cur_site, :cur_user, :content, :params, :result) do
     def set_result(ret)
