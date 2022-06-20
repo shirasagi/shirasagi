@@ -252,6 +252,8 @@ ja:
       saved: 保存しました。
       deleted: 削除しました。
       unable_to_delete: '%{items} を削除できませんでした。'
+      changed: 変更しました。
+      unable_to_change: '%{items} を変更できませんでした。'
       copied: 複製しました。
       imported: インポートしました。
       started_import: インポートを開始しました。
