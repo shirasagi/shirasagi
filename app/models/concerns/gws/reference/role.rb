@@ -26,7 +26,9 @@ module Gws::Reference
 
       @gws_role_permissions ||= {}
       gws_roles.each do |role|
-        role.permissions.each do |name|
+        permissions = role.permissions
+        permissions &= SS.current_token.scopes if SS.current_token
+        permissions.each do |name|
           key = "#{name}_#{role.site_id}"
           if level = @gws_role_permissions[key]
             @gws_role_permissions[key] = [level, role.permission_level].max

@@ -1,3 +1,3 @@
-class Oauth::YahooJp < OmniAuth::Strategies::YahooJp
-  include Oauth::Base
+class OAuth::YahooJp < OmniAuth::Strategies::YahooJp
+  include OAuth::Base
 end

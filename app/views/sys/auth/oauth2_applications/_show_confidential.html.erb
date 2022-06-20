@@ -1,0 +1,20 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= @item.label :state %></dd>
+
+  <dt><%= @model.t :client_id %></dt>
+  <dd><%= @item.client_id %> <%= button_tag(t("ss.buttons.copy"), type: "button", class: "btn clipboard-copy-button", data: { text: @item.client_id }) %></dd>
+
+  <dt><%= @model.t :client_secret %></dt>
+  <dd><%= @item.client_secret %> <%= button_tag(t("ss.buttons.copy"), type: "button", class: "btn clipboard-copy-button", data: { text: @item.client_secret }) %></dd>
+
+  <dt><%= @model.t :redirect_uris %></dt>
+  <dd><%= br @item.redirect_uris %></dd>
+</dl>
+
+<%= jquery do %>
+  SS_Clipboard.renderCopy();
+<% end %>

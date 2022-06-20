@@ -11,13 +11,13 @@ module Member::Node
     include Cms::Addon::Meta
     include Member::Addon::Redirection
     include Member::Addon::FormAuth
-    include Member::Addon::TwitterOauth
-    include Member::Addon::FacebookOauth
-    include Member::Addon::YahooJpOauth
-    include Member::Addon::YahooJpOauthV2
-    include Member::Addon::GoogleOauth
-    include Member::Addon::GithubOauth
-    include Member::Addon::LineOauth
+    include Member::Addon::TwitterOAuth
+    include Member::Addon::FacebookOAuth
+    include Member::Addon::YahooJpOAuth
+    include Member::Addon::YahooJpOAuthV2
+    include Member::Addon::GoogleOAuth
+    include Member::Addon::GithubOAuth
+    include Member::Addon::LineOAuth
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup

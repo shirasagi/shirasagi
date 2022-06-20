@@ -1,5 +1,5 @@
 module Member::Addon
-  module BaseOauth
+  module BaseOAuth
     extend ActiveSupport::Concern
 
     module ClassMethods

@@ -10,51 +10,6 @@
   <dt><%= @model.t :permissions %><%= @model.tt :permissions %></dt>
   <dd class="role-permissions">
     <%= hidden_field_tag "item[permissions][]" %>
-
-    <% @model.module_permission_names(separator: true).each do |mod, names| %>
-    <div class="module">
-      <p class="buttons">
-        <%= button_tag t('ss.buttons.select_all'), type: 'button', class: %w(btn select-all) %>
-        <%= button_tag t('ss.buttons.deselect_all'), type: 'button', class: %w(btn deselect-all) %>
-      </p>
-      <p class="module-name">
-        <%= @model.mod_name(mod) %>
-      </p>
-      <div class="permissions">
-        <% names.each do |name| %>
-          <% if name == :separator %>
-            <div style="height: 1em;"></div>
-            <% next %>
-          <% end %>
-          <label><%= f.check_box("permissions[]", {}, name.to_s) %> <%= t("#{@model.collection_name.to_s.singularize}.#{name}") %></label>
-        <% end %>
-      </div>
-    </div>
-    <% end %>
+    <%= render "ss/roles/form_permissions", f: f, model: @model %>
   </dd>
 </dl>
-
-<%= jquery do %>
-  var modifyCheckBoxAll = function($permissions, state) {
-    var $checkboxes = $permissions.find('input[type=checkbox]');
-    $checkboxes.each(function() {
-      $(this).prop('checked', state).trigger("change");
-    });
-  }
-
-  $('.select-all').on('click', function() {
-    var $permissions = $(this).closest('.module').find('.permissions');
-    modifyCheckBoxAll($permissions, true);
-  });
-
-  $('.deselect-all').on('click', function() {
-    var $permissions = $(this).closest('.module').find('.permissions');
-    modifyCheckBoxAll($permissions, false);
-  });
-
-  $('.role-permissions input[type="checkbox"]').on('change', function() {
-    var color = $(this).prop("checked") ? '#333' : '#aaa';
-    $(this).closest('label').css('color', color);
-  });
-  $('.role-permissions input[type="checkbox"]').trigger("change");
-<% end %>

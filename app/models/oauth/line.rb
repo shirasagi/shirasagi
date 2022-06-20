@@ -1,3 +1,3 @@
-class Oauth::Line < OmniAuth::Strategies::Line
-  include Oauth::Base
+class OAuth::Line < OmniAuth::Strategies::Line
+  include OAuth::Base
 end

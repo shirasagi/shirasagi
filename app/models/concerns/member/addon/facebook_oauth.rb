@@ -1,8 +1,8 @@
 module Member::Addon
-  module FacebookOauth
+  module FacebookOAuth
     extend SS::Addon
     extend ActiveSupport::Concern
-    include Member::Addon::BaseOauth
+    include Member::Addon::BaseOAuth
 
     included do
       define_oauth_fields(:facebook)

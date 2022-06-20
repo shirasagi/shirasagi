@@ -1,0 +1,25 @@
+<% prefix = model.collection_name.to_s.singularize %>
+<% model.module_permission_names(separator: true).each do |mod, names| %>
+  <div class="module">
+    <p class="buttons">
+      <%= button_tag t('ss.buttons.select_all'), type: 'button', class: %w(btn select-all) %>
+      <%= button_tag t('ss.buttons.deselect_all'), type: 'button', class: %w(btn deselect-all) %>
+    </p>
+    <p class="module-name">
+      <%= model.mod_name(mod) %>
+    </p>
+    <div class="permissions">
+      <% names.each do |name| %>
+        <% if name == :separator %>
+          <div style="height: 1em;"></div>
+          <% next %>
+        <% end %>
+        <label><%= f.check_box("permissions[]", {}, name.to_s) %> <%= t("#{prefix}.#{name}") %></label>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<%= jquery do %>
+  SS_Role();
+<% end %>
