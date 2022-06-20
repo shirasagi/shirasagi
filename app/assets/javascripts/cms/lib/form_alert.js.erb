@@ -17,7 +17,7 @@ this.Form_Alert = (function () {
       var resolved = function(html) {
         var promise = Form_Alert.asyncValidate(form, submit, { html: html });
         promise.done(function() {
-          if (!SS.isEmptyObject(Form_Alert.alerts) || !SS.isEmptyObject(Form_Alert.staticAlerts)) {
+          if (!SS.isEmptyObject(Form_Alert.alerts)) {
             Form_Alert.showAlert(form, submit);
             return;
           }
@@ -64,18 +64,6 @@ this.Form_Alert = (function () {
     });
   };
 
-  Form_Alert.staticAlerts = {};
-
-  Form_Alert.addStaticAlerts = function(key, messages) {
-    if (! Form_Alert.staticAlerts[key]) {
-      Form_Alert.staticAlerts[key] = []
-    }
-
-    for (var i = 0; i < messages.length; i++) {
-      Form_Alert.staticAlerts[key].push({ msg: messages[i] });
-    }
-  };
-
   Form_Alert.showAlert = function (form, submit) {
     var $div = $('<div/>', { id: "alertExplanation", class: "errorExplanation" });
     $div.append("<h2><%= I18n.t('cms.alert') %></h2>");
@@ -95,12 +83,11 @@ this.Form_Alert = (function () {
       }
     }
     appendAlerts(Form_Alert.alerts);
-    appendAlerts(Form_Alert.staticAlerts);
 
     // caution: below IE8, you must use document.createElement() method to create <footer>
     var $footer = $(document.createElement("footer")).addClass('send');
     
-    if (SS.isEmptyObject(Form_Alert.staticAlerts)) {
+    if (SS.isEmptyObject(Form_Alert.alerts[<%= I18n.t("cms.backlink_check").to_json %>])) {
       $footer.append('<button name="button" type="button" class="btn-primary save"><%= I18n.t("ss.buttons.ignore_alert") %></button>');
     }
     $footer.append('<button name="button" type="button" class="btn-default cancel"><%= I18n.t("ss.buttons.cancel") %></button>');

@@ -7,6 +7,7 @@
 //= require cms/lib/form_checker
 //= require cms/lib/mobile_size_checker
 //= require cms/lib/link_checker
+//= require cms/lib/backlink_checker
 
 this.Cms_Form = (function () {
   function Cms_Form() {};
@@ -34,6 +35,7 @@ this.Cms_Form = (function () {
       Form_Alert.addAsyncValidation(Form_Alert.asyncValidateSyntaxCheck);
     }
     Form_Alert.addAsyncValidation(Mobile_Size_Checker.asyncValidateHtml);
+    Form_Alert.addAsyncValidation(Backlink_Checker.asyncCheck);
     Form_Alert.render();
 
     // handle Form_Preview

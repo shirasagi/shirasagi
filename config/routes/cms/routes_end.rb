@@ -275,6 +275,8 @@ Rails.application.routes.draw do
       namespace "translate" do
         get "langs" => "langs#index"
       end
+
+      post "backlink_check/check" => "backlink_check#check", as: "backlink_check"
     end
   end
 

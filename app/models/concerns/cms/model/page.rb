@@ -45,6 +45,45 @@ module Cms::Model::Page
     end
   end
 
+  module ClassMethods
+    def and_linking_pages(page)
+      cond = []
+
+      if page.respond_to?(:url) && page.respond_to?(:full_url)
+        cond << { contains_urls: { '$in' => [ page.url, page.full_url ] } }
+        cond << { form_contains_urls: { '$in' => [ page.url, page.full_url ] } }
+      end
+
+      if page.respond_to?(:files) && page.files.present?
+        cond << { contains_urls: { '$in' => page.files.map(&:url) } }
+      end
+
+      if page.respond_to?(:related_page_ids)
+        cond << { related_page_ids: page.id }
+      end
+
+      return all.none if cond.blank?
+
+      all.where(:id.ne => page.id).where("$and" => [{ "$or" => cond }])
+    end
+
+    def custom_order(key)
+      if key.start_with?('updated_')
+        all.order_by(updated: key.end_with?('_asc') ? 1 : -1)
+      elsif key.start_with?('released_')
+        all.order_by(released: key.end_with?('_asc') ? 1 : -1)
+      else
+        all
+      end
+    end
+
+    private
+
+    def set_show_path(show_path)
+      class_variable_set(:@@_show_path, show_path)
+    end
+  end
+
   def preview_path
     (@cur_site || site).then do |s|
       s.subdir ? "#{s.subdir}/#{filename}" : filename
@@ -225,23 +264,5 @@ module Cms::Model::Page
     end
 
     ret.join("\n").html_safe
-  end
-
-  module ClassMethods
-    def custom_order(key)
-      if key.start_with?('updated_')
-        all.order_by(updated: key.end_with?('_asc') ? 1 : -1)
-      elsif key.start_with?('released_')
-        all.order_by(released: key.end_with?('_asc') ? 1 : -1)
-      else
-        all
-      end
-    end
-
-    private
-
-    def set_show_path(show_path)
-      class_variable_set(:@@_show_path, show_path)
-    end
   end
 end
