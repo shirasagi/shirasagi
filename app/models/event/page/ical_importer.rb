@@ -208,6 +208,7 @@ class Event::Page::IcalImporter
   end
 
   def find_or_new(event)
+    uid = extract_text(event.uid)
     parent_uid = extract_text(event.x_shirasagi_parent_uid)
     if parent_uid.present?
       item = model.site(site).node(node).where(ical_uid: parent_uid).first
@@ -220,11 +221,11 @@ class Event::Page::IcalImporter
 
   def add_event_recurrences(item, event)
     recurrences = Array(item.event_recurrences)
-    if event.rrule.present? || event.rdate.blank?
+    if event.rrule.present? || event.rdate.present?
       recurrences_with_rrule(recurrences, item, event) if event.rrule.present?
-      recurrences_with_rdate(recurrences, item, event) if event.rdate.blank?
+      recurrences_with_rdate(recurrences, item, event) if event.rdate.present?
     else
-      recurrences_without_rcur(recurrences, item, event)
+      recurrences_without_recur(recurrences, item, event)
     end
 
     item.event_recurrences = recurrences
@@ -241,9 +242,9 @@ class Event::Page::IcalImporter
     Array(event.rrule).each do |rrule|
       case rrule
       when Icalendar::Values::Recur
-        recurrences = evaluate_recur(rrule, kind: kind, start_at: start_at, end_at: end_at, excludes: exclude_dates)
-        if recurrences.present?
-          recurrences += recurrences
+        items = evaluate_recur(rrule, kind: kind, start_at: start_at, end_at: end_at, excludes: exclude_dates)
+        if items.present?
+          recurrences.append(*items) # don't use `+=` to append
         end
       end
     end
@@ -258,11 +259,12 @@ class Event::Page::IcalImporter
     recurrence_dates = evaluate_rdate(event.rdate)
     start_at = extract_time(event.dtstart)
     end_at = extract_time(event.dtend) if event.dtend
-    recurrences += recurrences_from_dates(recurrence_dates, start_at: start_at, end_at: end_at, excludes: exclude_dates)
+    # don't use `+=` to append
+    recurrences.append(*recurrences_from_dates(recurrence_dates, start_at: start_at, end_at: end_at, excludes: exclude_dates))
     recurrences
   end
 
-  def recurrences_without_rcur(recurrences, item, event)
+  def recurrences_without_recur(recurrences, item, event)
     exclude_dates = Array(event.exdate).map { |v| extract_time(v) }.map(&:to_date)
     from = extract_time(event.dtstart)
     to = extract_time(event.dtend) if event.dtend
