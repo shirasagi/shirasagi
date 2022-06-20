@@ -35,6 +35,7 @@ describe "gws_user_profiles", type: :feature, dbscope: :example, js: true do
         expect(user.email).to eq email
         expect(user.tel).to eq tel
         expect(user.tel_ext).to eq tel_ext
+        expect(user.initial_password_warning).to be_present
       end
     end
 
@@ -60,6 +61,7 @@ describe "gws_user_profiles", type: :feature, dbscope: :example, js: true do
 
           user.reload
           expect(SS::User.authenticate(user.email, new_password)).to be_truthy
+          expect(user.initial_password_warning).to be_blank
         end
       end
 
@@ -85,7 +87,11 @@ describe "gws_user_profiles", type: :feature, dbscope: :example, js: true do
   end
 
   context "with super user" do
-    let(:user) { gws_user }
+    let(:user) do
+      user = gws_user
+      user.update(initial_password_warning: 1)
+      user
+    end
 
     before { login_user user }
 
@@ -93,7 +99,11 @@ describe "gws_user_profiles", type: :feature, dbscope: :example, js: true do
   end
 
   context "with regular user" do
-    let(:user) { create :gws_user, group_ids: gws_user.group_ids }
+    let(:user) do
+      user = create :gws_user, group_ids: gws_user.group_ids
+      user.update(initial_password_warning: 1)
+      user
+    end
 
     before { login_user user }
 

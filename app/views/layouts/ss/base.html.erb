@@ -71,29 +71,7 @@
     </div>
 
     <article id="main">
-      <% if @cur_user.present? %>
-        <% if !@ss_maintenance_mode %>
-          <% if @cur_user.initial_password_warning.present? %>
-          <div class="warning">
-            <%= link_to t("ss.warning.initial_password"), sns_cur_user_account_path %>
-          </div>
-          <% elsif @cur_setting.present? %>
-            <%
-              message = case @cur_setting.password_expired(@cur_user)
-              when :expired
-                t("ss.warning.password_expired")
-              when :nearly_expired
-                t("ss.warning.password_neary_expired")
-              end
-            %>
-            <% if message %>
-            <div class="warning">
-              <%= link_to(message, sns_cur_user_account_path) %>
-            </div>
-            <% end %>
-          <% end %>
-        <% end %>
-      <% end %>
+      <%= render "layouts/ss/password_warn" %>
       <% if !@ss_maintenance_mode %>
         <ol class="breadcrumb" id="crumbs">
           <% if @crumbs.size > 0 && (!@ss_rescue || @ss_rescue && (@ss_mode == :cms || @ss_mode == :gws)) %>
