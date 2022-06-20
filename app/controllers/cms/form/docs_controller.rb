@@ -91,8 +91,7 @@ class Cms::Form::DocsController < ApplicationController
   end
 
   def import_url
-    task_name = "cms:form_db:import_url"
-    @task = Cms::Task.find_or_create_by name: task_name, site_id: @cur_site.id
+    @task = @db.import_task
 
     if request.head? || request.get?
       respond_to do |format|
@@ -102,7 +101,7 @@ class Cms::Form::DocsController < ApplicationController
       return
     end
 
-    @db.perform_import
+    @db.perform_import_later(import_manually: 1)
 
     render_create true, location: { action: :import_url }, notice: t("ss.notice.started_import")
   end

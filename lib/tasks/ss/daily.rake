@@ -11,6 +11,7 @@ namespace :ss do
 
     # 一時ファイルの削除（アクセストークン）
     ::Tasks::SS.invoke_task("ss:delete_access_tokens")
+
     # SSO トークン
     ::Tasks::SS.invoke_task("ss:delete_sso_tokens")
 
@@ -24,7 +25,7 @@ namespace :ss do
     ::Tasks::SS.invoke_task("ss:cleanup_file_store_cache")
 
     # FormDB URL インポート
-    ::Tasks::SS.invoke_task("cms:form_db:import")
+    ::Tasks::SS.invoke_task("cms:form_db:import_later")
 
     if ::SS.config.cms.disable.blank?
       # ゴミ箱の掃除

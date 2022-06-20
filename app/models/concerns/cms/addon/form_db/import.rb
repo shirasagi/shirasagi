@@ -6,23 +6,30 @@ module Cms::Addon::FormDb::Import
 
   included do
     field :import_url, type: String
+    field :import_url_hash, type: String
     field :import_primary_key, type: String
     field :import_page_name, type: String
     field :import_column_options, type: SS::Extensions::ArrayOfHash, default: []
+    field :import_exclude_columns, type: SS::Extensions::Lines
     field :import_event, type: Integer
     field :import_map, type: Integer
+    field :import_skip_same_file, type: Integer
+    field :generate_on_import, type: Integer
 
     has_many :import_logs, class_name: 'Cms::FormDb::ImportLog', dependent: :destroy
 
-    permit_params :import_url, :import_primary_key, :import_page_name, :import_event, :import_map
+    permit_params :import_url, :import_primary_key, :import_page_name, :import_exclude_columns,
+      :import_event, :import_map, :import_skip_same_file, :generate_on_import
     permit_params import_column_options: [:name, :kind, :values]
 
     validates :import_url, format: /\Ahttps?:\/\//, if: -> { import_url.present? }
-    validate :validate_import_import_column_options
+    validate :validate_import_import_column_options, if: -> { import_column_options.dig(0, 1) }
   end
 
   def validate_import_import_column_options
     self.import_column_options = import_column_options.map do |idx, option|
+      next if option.blank?
+
       name = option['name']
       kind = option['kind'].presence || 'any_of'
       values = option['values'].to_s.split(/\R/).compact
@@ -31,49 +38,42 @@ module Cms::Addon::FormDb::Import
   end
 
   def search_kind_options
-    %w(any_of start_with end_with none_of).map { |v| [ I18n.t("ss.options.search.kind.#{v}"), v ] }
+    %w(any_of none_of start_with end_with include_any_of include_none_of).map do |v|
+      [ I18n.t("ss.options.search.kind.#{v}"), v ]
+    end
   end
 
   def import_csv(options = {})
-    @task = options[:task]
+    @task = options[:task] # import_url
+    manually = options[:manually] == 1 # import_url on the web
+    started = Time.zone.now
+    delete_limit = started #.ago(PAGE_DELETE_LIMIT)
 
-    if options[:file].blank?
-      errors.add(:base, :invalid_csv) if in_file.blank?
-      return false if errors.present?
-    end
     csv_file = options[:file].presence || in_file
+    return add_import_error(I18n.t('errors.messages.invalid_csv')) if csv_file.blank?
 
-    if import_primary_key.present?
-      primary_column = form.columns.entries.find { |col| col.name == import_primary_key }
-      unless primary_column
-        errors.add :base, 'invalid primary key column'
-        return false
-      end
+    csv_hash = Digest::MD5.file(csv_file.path).to_s
+    if import_skip_same_file == 1 && @task && !manually && import_url_hash == csv_hash
+      @task.log I18n.t('errors.messages.form_db_same_file')
+      return true
     end
+
+    page_name_key = import_page_name.presence || Article::Page.t(:name)
+    primary_column = resolve_import_primary_column
+    return false if errors.present?
 
     SS::Csv.foreach_row(csv_file.path, headers: true) do |csv_row|
       params = csv_row.to_hash
+      summary = csv_row.to_s.slice(0..30)
+      next unless import_column_options_match?(params)
 
-      if import_column_options.present?
-        result = import_column_options.all? do |option|
-          value = params[option['name']].to_s
-
-          case option['kind']
-          when 'start_with'
-            value.start_with?(option['values'].first.to_s)
-          when 'end_with'
-            value.end_with?(option['values'].first.to_s)
-          when 'none_of'
-            option['values'].none?(value)
-          else # 'any_of'
-            option['values'].any?(value)
-          end
-        end
-        next unless result
+      page_name = params[page_name_key].to_s.gsub(/[\r\n]+/, ' ').strip
+      if page_name.blank?
+        add_import_error I18n.t('errors.messages.form_db_column_not_found', column: page_name_key, summary: summary)
+        next
       end
 
-      page_name = params[import_page_name.presence || Article::Page.t(:name)].to_s.gsub(/[\r\n]+/, ' ')
-      next unless page_name.present?
+      params.except!(*import_exclude_columns) if import_exclude_columns.present?
 
       if import_primary_key.present?
         condition = search_column_condition(primary_column, params[import_primary_key])
@@ -83,36 +83,63 @@ module Cms::Addon::FormDb::Import
       end
 
       item ||= Article::Page.new(cur_site: site, cur_user: @cur_user, cur_node: node)
-
+      item_new_record = item.new_record?
       item.name = page_name
-      item.state = 'public'
 
-      import_row_events(item, params) if import_event
-      import_row_map_points(item, params) if import_map
+      import_row_events(item, params) if import_event == 1
+      import_row_map_points(item, params) if import_map == 1
 
-      item_changed = item.changed?
-      item.imported = Time.zone.now
-
-      if save_page(item, params)
-        if @task
-          flag = item_changed ? "更新" : "----"
-          @task.log("#{flag}: #{item.id} #{item.name}")
+      if generate_on_import != 1
+        def item.serve_static_file?
+          false
         end
-      else
-        message = "#{item.id} #{item.name}" + item.errors.full_messages.join('/')
-        errors.add :base, message
-        @task.log(message) if @task
       end
+
+      set_page_attributes(item, params)
+
+      if !item.changed?
+        item.set(imported: started)
+        @task.log("-------: #{item.id} #{item.name}") if @task
+        next
+      end
+
+      item.imported = started
+      if item.save
+        flag = item_new_record ? "created" : "updated"
+        @task.log("#{flag}: #{item.id} #{item.name}") if @task
+      else
+        add_import_error("#{item.name} " + item.errors.full_messages.join('/'))
+      end
+
+      # end foreach_row
     end
 
-    if @task # import_url
-      delete_conditions = { updated: { '$lt': Time.zone.now.ago(PAGE_DELETE_LIMIT) } }
-      Article::Page.site(site).node(node).where(form_id: form_id).where(delete_conditions).each do |item|
-        @task.log("削除: #{item.id} #{item.name}") if item.destroy
-      end
-    end
+    # if @task
+    #   @task.log("[Sync] delete before '#{I18n.l(delete_limit)}'")
+
+    #   criteria = Article::Page.site(site).node(node).where(form_id: form_id).where(imported: { '$lt': delete_limit })
+    #   count = criteria.destroy_all
+    #   @task.log("deleted: #{count} pages")
+
+    #   self.set(import_url_hash: csv_hash)
+    # end
 
     errors.blank?
+  end
+
+  def add_import_error(message)
+    @task.log(message) if @task
+    errors.add :base, message
+    false
+  end
+
+  def resolve_import_primary_column
+    return if import_primary_key.blank?
+
+    primary_column = form.columns.entries.find { |col| col.name == import_primary_key }
+    return primary_column if primary_column
+
+    add_import_error(I18n.t('errors.messages.forn_db_invalid_primary_key'))
   end
 
   def search_column_condition(column, value)

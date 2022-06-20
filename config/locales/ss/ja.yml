@@ -497,6 +497,8 @@ ja:
           none_of: が次と一致しない
           start_with: が次から始まる
           end_with: が次で終わる
+          include_any_of: が次を含む
+          include_none_of: が次を含まない
 
     tasks:
       started: 開始しました。

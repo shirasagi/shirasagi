@@ -10,13 +10,14 @@ class Cms::FormDb::ImportUrlJob < Cms::ApplicationJob
     task.process self.class.controller, self.class.action, opts.merge(site: site, node: node)
   end
 
+  private
+
   def task_cond
-    args = arguments[0]
+    args = arguments[0].with_indifferent_access
 
     cond = { name: self.class.task_name }
     cond[:site_id] = site_id
-    cond[:db_id] = args['db_id']
-    cond[:import_url] = args['import_url']
+    cond[:db_id] = args[:db_id]
     cond
   end
 end
