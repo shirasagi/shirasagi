@@ -1,10 +1,10 @@
 <%= form_with url: request.url, method: :put do |f| %>
   <%= hidden_field_tag "change_state_all", true %>
-  <%= hidden_field_tag "state", @state %>
+  <%= hidden_field_tag "state", @change_state %>
   <div class="addon-views"></div>
     <div class="addon-view" id="addon-basic">
       <div class="addon-head">
-        <h2><%= t("ss.confirm.target_to_#{@state}") %></h2>
+        <h2><%= t("ss.confirm.target_to_#{@change_state}") %></h2>
       </div>
       <div class="addon-body">
         <div class="index">
@@ -17,7 +17,7 @@
       </div>
     </div>
     <footer class="send">
-      <%= f.submit t("ss.buttons.make_them_#{@state}"), class: "btn-danger delete" %>
+      <%= f.submit t("ss.buttons.make_them_#{@change_state}"), class: "btn-danger delete" %>
       <%= f.button t("ss.buttons.cancel"), class: "btn-default", type: :reset, onclick: "location.href='#{request.url}'; return false;" %>
     </footer>
   </div>
