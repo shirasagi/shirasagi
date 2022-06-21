@@ -25,6 +25,10 @@ class Cms::Form::FormsController < ApplicationController
     @form_is_in_use = Cms::Page.site(@cur_site).where(form_id: @item.id).present?
   end
 
+  def set_items
+    @items = super.order_by(order: 1, name: 1)
+  end
+
   def destroy_items
     raise "400" if @selected_items.blank?
 

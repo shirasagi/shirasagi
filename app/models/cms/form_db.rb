@@ -40,11 +40,11 @@ class Cms::FormDb
   end
 
   def form_options
-    Cms::Form.where(site_id: @cur_site.id, sub_type: 'static').map { |item| [item.name, item.id] }
+    Cms::Form.where(site_id: @cur_site.id, sub_type: 'static').order_by(order: 1, name: 1).map { |item| [item.name, item.id] }
   end
 
   def node_options
-    Article::Node::Page.where(site_id: @cur_site.id).map { |item| [item.name, item.id] }
+    Article::Node::Page.where(site_id: @cur_site.id).order_by(order: 1, name: 1).map { |item| [item.name, item.id] }
   end
 
   def pages

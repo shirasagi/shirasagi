@@ -180,9 +180,9 @@ module Cms::Addon::FormDb::Import
     when 'none_of'
       needles.none?(value)
     when 'start_with'
-      value.start_with?(needles.first.to_s)
+      needles.any? { |v| value.start_with?(v) }
     when 'end_with'
-      value.end_with?(needles.first.to_s)
+      needles.any? { |v| value.end_with?(v) }
     when 'include_any_of'
       needles.any? { |v| value.include?(v) }
     when 'include_none_of'
@@ -194,13 +194,13 @@ module Cms::Addon::FormDb::Import
 
   def import_row_events(item, row)
     if row['開始日'].present?
-      event_dates = []
-      event_dates += format_event_date(row['開始日'], row['終了日'])
+      event_dates = format_event_date(row['開始日'], row['終了日'])
       event_dates.uniq!
       item.event_dates = event_dates.map { |d| d.strftime("%Y/%m/%d") }.join("\r\n")
-
-      event_end_date = item.event_dates.last
-      item.close_date = event_end_date + 1.month if event_end_date
+      item.close_date = item.event_dates.present? ? item.event_dates.last + 1.month : []
+    else
+      item.event_dates = []
+      item.close_date = nil
     end
 
     if row['参加申込終了日'].blank?
