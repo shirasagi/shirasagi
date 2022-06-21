@@ -136,12 +136,44 @@ module Cms::Addon::FormDb::Import
     end
   end
 
+  def import_column_options_match?(params)
+    return true if import_column_options.blank?
+
+    import_column_options.all? do |option|
+      condition_match?(params[option['name']], option['kind'], option['values'])
+    end
+  end
+
+  def condition_match?(value, kind, needles)
+    value = value.to_s
+
+    case kind
+    when 'any_of'
+      needles.any?(value)
+    when 'none_of'
+      needles.none?(value)
+    when 'start_with'
+      needles.any? { |v| value.start_with?(v) }
+    when 'end_with'
+      needles.any? { |v| value.end_with?(v) }
+    when 'include_any_of'
+      needles.any? { |v| value.include?(v) }
+    when 'include_none_of'
+      needles.none? { |v| value.include?(v) }
+    else
+      false
+    end
+  end
+
   def import_row_events(item, row)
     if row['開始日'].present?
-      event_dates = []
-      event_dates += format_event_date(row['開始日'], row['終了日'])
+      event_dates = format_event_date(row['開始日'], row['終了日'])
       event_dates.uniq!
       item.event_dates = event_dates.map { |d| d.strftime("%Y/%m/%d") }.join("\r\n")
+      item.close_date = item.event_dates.present? ? item.event_dates.last + 1.month : []
+    else
+      item.event_dates = []
+      item.close_date = nil
     end
 
     if row['参加申込終了日'].blank?
