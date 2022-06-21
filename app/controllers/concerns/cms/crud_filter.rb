@@ -53,11 +53,11 @@ module Cms::CrudFilter
     @items = []
 
     role_action = :edit
-    role_action = :release if @state && @item.class.include?(Cms::Addon::Release)
+    role_action = :release if @change_state && @item.class.include?(Cms::Addon::Release)
 
     entries.each do |item|
       if item.allowed?(role_action, @cur_user, site: @cur_site, node: @cur_node)
-        item.state = @state if item.respond_to?(:state)
+        item.state = @change_state if item.respond_to?(:state)
         next if item.save
       else
         item.errors.add :base, :auth_error
@@ -124,7 +124,7 @@ module Cms::CrudFilter
   def change_state_all
     raise "400" if @selected_items.blank?
 
-    @state = params[:state]
+    @change_state = params[:state]
     if params[:change_state_all]
       render_confirmed_all(change_items_state, location: request.path)
       return
