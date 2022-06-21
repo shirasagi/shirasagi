@@ -464,17 +464,17 @@
 .fc-event-private .fc-title:before {
   @include fc_event_prefix;
   content: "秘";
-  background-color: #f2b;
+  background-color: #f0b;
 }
 .fc-event-user-attendance-unknown .fc-title:before {
   @include fc_event_prefix;
   content: "未";
-  background-color: $orange;
+  background-color: #f0b;
 }
 .fc-event-user-attendance-absence .fc-title:before {
   @include fc_event_prefix;
   content: "不";
-  background-color: $orange;
+  background-color: #f0b;
 }
 .fc-event-approval-request .fc-title:before {
   @include fc_event_prefix;
