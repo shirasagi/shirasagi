@@ -4,7 +4,7 @@ opts = {}
 
 if params[:s][:start].present? && params[:s][:end].present?
   opts[:holiday] = [params[:s][:start].to_date, params[:s][:end].to_date]
-  opts[:user] = params[:user]
+  opts[:user] = params[:user] || @cur_user.id
 end
 
 %><%== calendar_format(@items, opts).to_json %>

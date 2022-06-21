@@ -72,8 +72,9 @@ module Gws::Schedule::CalendarFormat
   def set_attendance_classes(data, cur_user, attendance_user_id)
     return data if !attendance_check_plan?
 
-    if contains_unknown_attendance?
-      data[:className] += ' fc-event-unknown-attendance'
+    if attendance_absence_all?
+      data[:className] += " fc-event-user-attendance-absence"
+      return data
     end
 
     attendance = attendances.where(user_id: attendance_user_id).order_by(created: 1).first
