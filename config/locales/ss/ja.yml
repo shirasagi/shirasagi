@@ -113,8 +113,10 @@ ja:
       parent_directory: 上の階層へ
       preview: プレビュー
       pc_preview: PCプレビュー
+      sp_preview: スマホプレビュー
       mobile_preview: 携帯プレビュー
       pc: PC
+      sp: スマホ
       mobile: 携帯
       view_site: 公開画面を見る
       open: 開く
