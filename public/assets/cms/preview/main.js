@@ -8,6 +8,7 @@
 
 
 
+
 this.Cms_Form = (function () {
   function Cms_Form() {};
 
@@ -34,6 +35,7 @@ this.Cms_Form = (function () {
       Form_Alert.addAsyncValidation(Form_Alert.asyncValidateSyntaxCheck);
     }
     Form_Alert.addAsyncValidation(Mobile_Size_Checker.asyncValidateHtml);
+    Form_Alert.addAsyncValidation(Backlink_Checker.asyncCheck);
     Form_Alert.render();
 
     // handle Form_Preview
@@ -221,7 +223,7 @@ this.Form_Alert = (function () {
       var resolved = function(html) {
         var promise = Form_Alert.asyncValidate(form, submit, { html: html });
         promise.done(function() {
-          if (!SS.isEmptyObject(Form_Alert.alerts) || !SS.isEmptyObject(Form_Alert.staticAlerts)) {
+          if (!SS.isEmptyObject(Form_Alert.alerts)) {
             Form_Alert.showAlert(form, submit);
             return;
           }
@@ -268,18 +270,6 @@ this.Form_Alert = (function () {
     });
   };
 
-  Form_Alert.staticAlerts = {};
-
-  Form_Alert.addStaticAlerts = function(key, messages) {
-    if (! Form_Alert.staticAlerts[key]) {
-      Form_Alert.staticAlerts[key] = []
-    }
-
-    for (var i = 0; i < messages.length; i++) {
-      Form_Alert.staticAlerts[key].push({ msg: messages[i] });
-    }
-  };
-
   Form_Alert.showAlert = function (form, submit) {
     var $div = $('<div/>', { id: "alertExplanation", class: "errorExplanation" });
     $div.append("<h2>警告</h2>");
@@ -299,12 +289,11 @@ this.Form_Alert = (function () {
       }
     }
     appendAlerts(Form_Alert.alerts);
-    appendAlerts(Form_Alert.staticAlerts);
 
     // caution: below IE8, you must use document.createElement() method to create <footer>
     var $footer = $(document.createElement("footer")).addClass('send');
     
-    if (SS.isEmptyObject(Form_Alert.staticAlerts)) {
+    if (SS.isEmptyObject(Form_Alert.alerts["被リンクチェック"])) {
       $footer.append('<button name="button" type="button" class="btn-primary save">警告を無視する</button>');
     }
     $footer.append('<button name="button" type="button" class="btn-default cancel">キャンセル</button>');
@@ -1549,6 +1538,46 @@ this.Link_Checker = (function () {
   return Link_Checker;
 
 })();
+this.Backlink_Checker = (function () {
+  function Backlink_Checker() {
+  }
+
+  Backlink_Checker.enabled = false;
+
+  Backlink_Checker.url = null;
+
+  Backlink_Checker.itemId = null;
+
+  Backlink_Checker.asyncCheck = function(form, submit, opts) {
+    var defer = $.Deferred();
+    if (!Backlink_Checker.enabled || !Backlink_Checker.url || !Backlink_Checker.itemId) {
+      defer.resolve();
+      return defer.promise();
+    }
+
+    $.ajax({
+      url: Backlink_Checker.url,
+      method: "post",
+      data: { item: { id: Backlink_Checker.itemId, submit: submit.name } },
+      cache: false,
+      success: function(data) {
+        if (data["errors"] && data["errors"].length > 0) {
+          Form_Alert.add(data["addon"], null, data["errors"]);
+        }
+      },
+      error: function (_xhr, _status, _error) {
+        Form_Alert.add("backlink_check", null, [ "Server Error" ]);
+      },
+      complete: function(_xhr, _status) {
+        defer.resolve();
+      }
+    });
+
+    return defer.promise();
+  };
+
+  return Backlink_Checker;
+})();
 Cms_TemplateForm = function(options) {
   this.options = options;
   this.$formChangeBtn = $('#addon-basic .btn-form-change');
@@ -2624,7 +2653,7 @@ SS_WorkflowApprover.prototype.onClickSave = function () {
   var self = this;
 
   self.addOrUpdateInput("item[state]", "closed");
-  self.addOrUpdateInput("item[workflow_reset]", null);
+  self.removeInput("item[workflow_reset]");
 };
 
 SS_WorkflowApprover.prototype.onPublishSaveClicked = function () {
@@ -2645,6 +2674,10 @@ SS_WorkflowApprover.prototype.addOrUpdateInput = function (name, value) {
     .attr("name", name)
     .attr("value", value)
     .appendTo("#item-form");
+};
+
+SS_WorkflowApprover.prototype.removeInput = function (name) {
+  $("#item-form").find("input[name='" + name + "']").remove();
 };
 this.SS_Addon_TempFile = (function () {
   function SS_Addon_TempFile(selector, userId, options) {

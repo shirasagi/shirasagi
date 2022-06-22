@@ -32715,16 +32715,18 @@ this.Facility_Search = (function () {
       $.each(Googlemaps_Map.markers, function (i, m) {
         var column;
         if (dataID === m["id"]) {
-          var cluster = Googlemaps_Map.markerClusterer.clusters_.find(function(cluster) {
-            if (cluster.getMarkers().length === 1) return false;
-            return cluster.getMarkers().find(function(marker) {
-              return marker.position === m.marker.position;
+          if (Googlemaps_Map.markerClusterer) {
+            var cluster = Googlemaps_Map.markerClusterer.clusters_.find(function(cluster) {
+              if (cluster.getMarkers().length === 1) return false;
+              return cluster.getMarkers().find(function(marker) {
+                return marker.position === m.marker.position;
+              });
             });
-          });
-          if (cluster) {
-            m["window"].setPosition(cluster.getMarkers()[0].position);
-            m["window"].pixelOffset = new google.maps.Size(0, -15);
-            console.log(cluster)
+            if (cluster) {
+              m["window"].setPosition(cluster.getMarkers()[0].position);
+              m["window"].pixelOffset = new google.maps.Size(0, -15);
+              console.log(cluster)
+            }
           }
 
           if (Googlemaps_Map.openedInfo) {
@@ -33163,7 +33165,7 @@ this.Openlayers_Map = (function () {
   Openlayers_Map.prototype.createMarkerStyle = function (iconSrc) {
     return new ol.style.Style({
       image: new ol.style.Icon({
-        anchor: [0.5, 1],
+        anchor: [0.5, 0],
         anchorXUnits: 'fraction',
         anchorYUnits: 'fraction',
         src: iconSrc
@@ -33251,14 +33253,11 @@ this.Openlayers_Map = (function () {
 
     for (id = 0; id < markers.length; id++) {
       marker = markers[id];
-      iconSrc = this.markerIcon;
-      if (marker['image']) {
-        iconSrc = marker['image'];
-      }
+      iconSrc = marker['image'] || this.markerIcon || '/assets/img/openlayers/marker1.png';
       style = this.createMarkerStyle(iconSrc);
 
       name = marker['name'];
-      text = marker['text'];
+      text = marker['html'] || marker['text'];
       pos = [marker['loc'][0], marker['loc'][1]];
 
       markerHtml = "";
@@ -33282,6 +33281,7 @@ this.Openlayers_Map = (function () {
         geometry: new ol.geom.Point(ol.proj.transform(pos, "EPSG:4326", "EPSG:3857")),
         markerId: marker['id'],
         markerHtml: markerHtml,
+        iconSrc: iconSrc,
         category: marker['category']
       });
       feature.setStyle(style);

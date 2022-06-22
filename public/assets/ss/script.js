@@ -41289,7 +41289,7 @@ SS_WorkflowApprover.prototype.onClickSave = function () {
   var self = this;
 
   self.addOrUpdateInput("item[state]", "closed");
-  self.addOrUpdateInput("item[workflow_reset]", null);
+  self.removeInput("item[workflow_reset]");
 };
 
 SS_WorkflowApprover.prototype.onPublishSaveClicked = function () {
@@ -41310,6 +41310,10 @@ SS_WorkflowApprover.prototype.addOrUpdateInput = function (name, value) {
     .attr("name", name)
     .attr("value", value)
     .appendTo("#item-form");
+};
+
+SS_WorkflowApprover.prototype.removeInput = function (name) {
+  $("#item-form").find("input[name='" + name + "']").remove();
 };
 function SS_SortableForm(selector, opts) {
   this.opts  = opts || {}
@@ -43079,6 +43083,7 @@ this.Cms_Editor_TinyMCE = (function () {
 
 
 
+
 this.Cms_Form = (function () {
   function Cms_Form() {};
 
@@ -43105,6 +43110,7 @@ this.Cms_Form = (function () {
       Form_Alert.addAsyncValidation(Form_Alert.asyncValidateSyntaxCheck);
     }
     Form_Alert.addAsyncValidation(Mobile_Size_Checker.asyncValidateHtml);
+    Form_Alert.addAsyncValidation(Backlink_Checker.asyncCheck);
     Form_Alert.render();
 
     // handle Form_Preview
@@ -43292,7 +43298,7 @@ this.Form_Alert = (function () {
       var resolved = function(html) {
         var promise = Form_Alert.asyncValidate(form, submit, { html: html });
         promise.done(function() {
-          if (!SS.isEmptyObject(Form_Alert.alerts) || !SS.isEmptyObject(Form_Alert.staticAlerts)) {
+          if (!SS.isEmptyObject(Form_Alert.alerts)) {
             Form_Alert.showAlert(form, submit);
             return;
           }
@@ -43339,18 +43345,6 @@ this.Form_Alert = (function () {
     });
   };
 
-  Form_Alert.staticAlerts = {};
-
-  Form_Alert.addStaticAlerts = function(key, messages) {
-    if (! Form_Alert.staticAlerts[key]) {
-      Form_Alert.staticAlerts[key] = []
-    }
-
-    for (var i = 0; i < messages.length; i++) {
-      Form_Alert.staticAlerts[key].push({ msg: messages[i] });
-    }
-  };
-
   Form_Alert.showAlert = function (form, submit) {
     var $div = $('<div/>', { id: "alertExplanation", class: "errorExplanation" });
     $div.append("<h2>警告</h2>");
@@ -43370,12 +43364,11 @@ this.Form_Alert = (function () {
       }
     }
     appendAlerts(Form_Alert.alerts);
-    appendAlerts(Form_Alert.staticAlerts);
 
     // caution: below IE8, you must use document.createElement() method to create <footer>
     var $footer = $(document.createElement("footer")).addClass('send');
     
-    if (SS.isEmptyObject(Form_Alert.staticAlerts)) {
+    if (SS.isEmptyObject(Form_Alert.alerts["被リンクチェック"])) {
       $footer.append('<button name="button" type="button" class="btn-primary save">警告を無視する</button>');
     }
     $footer.append('<button name="button" type="button" class="btn-default cancel">キャンセル</button>');
@@ -44619,6 +44612,46 @@ this.Link_Checker = (function () {
 
   return Link_Checker;
 
+})();
+this.Backlink_Checker = (function () {
+  function Backlink_Checker() {
+  }
+
+  Backlink_Checker.enabled = false;
+
+  Backlink_Checker.url = null;
+
+  Backlink_Checker.itemId = null;
+
+  Backlink_Checker.asyncCheck = function(form, submit, opts) {
+    var defer = $.Deferred();
+    if (!Backlink_Checker.enabled || !Backlink_Checker.url || !Backlink_Checker.itemId) {
+      defer.resolve();
+      return defer.promise();
+    }
+
+    $.ajax({
+      url: Backlink_Checker.url,
+      method: "post",
+      data: { item: { id: Backlink_Checker.itemId, submit: submit.name } },
+      cache: false,
+      success: function(data) {
+        if (data["errors"] && data["errors"].length > 0) {
+          Form_Alert.add(data["addon"], null, data["errors"]);
+        }
+      },
+      error: function (_xhr, _status, _error) {
+        Form_Alert.add("backlink_check", null, [ "Server Error" ]);
+      },
+      complete: function(_xhr, _status) {
+        defer.resolve();
+      }
+    });
+
+    return defer.promise();
+  };
+
+  return Backlink_Checker;
 })();
 var extend = function (child, parent) {
     for (var key in parent) {
@@ -47719,16 +47752,18 @@ this.Facility_Search = (function () {
       $.each(Googlemaps_Map.markers, function (i, m) {
         var column;
         if (dataID === m["id"]) {
-          var cluster = Googlemaps_Map.markerClusterer.clusters_.find(function(cluster) {
-            if (cluster.getMarkers().length === 1) return false;
-            return cluster.getMarkers().find(function(marker) {
-              return marker.position === m.marker.position;
+          if (Googlemaps_Map.markerClusterer) {
+            var cluster = Googlemaps_Map.markerClusterer.clusters_.find(function(cluster) {
+              if (cluster.getMarkers().length === 1) return false;
+              return cluster.getMarkers().find(function(marker) {
+                return marker.position === m.marker.position;
+              });
             });
-          });
-          if (cluster) {
-            m["window"].setPosition(cluster.getMarkers()[0].position);
-            m["window"].pixelOffset = new google.maps.Size(0, -15);
-            console.log(cluster)
+            if (cluster) {
+              m["window"].setPosition(cluster.getMarkers()[0].position);
+              m["window"].pixelOffset = new google.maps.Size(0, -15);
+              console.log(cluster)
+            }
           }
 
           if (Googlemaps_Map.openedInfo) {
@@ -48167,7 +48202,7 @@ this.Openlayers_Map = (function () {
   Openlayers_Map.prototype.createMarkerStyle = function (iconSrc) {
     return new ol.style.Style({
       image: new ol.style.Icon({
-        anchor: [0.5, 1],
+        anchor: [0.5, 0],
         anchorXUnits: 'fraction',
         anchorYUnits: 'fraction',
         src: iconSrc
@@ -48255,14 +48290,11 @@ this.Openlayers_Map = (function () {
 
     for (id = 0; id < markers.length; id++) {
       marker = markers[id];
-      iconSrc = this.markerIcon;
-      if (marker['image']) {
-        iconSrc = marker['image'];
-      }
+      iconSrc = marker['image'] || this.markerIcon || '/assets/img/openlayers/marker1.png';
       style = this.createMarkerStyle(iconSrc);
 
       name = marker['name'];
-      text = marker['text'];
+      text = marker['html'] || marker['text'];
       pos = [marker['loc'][0], marker['loc'][1]];
 
       markerHtml = "";
@@ -48286,6 +48318,7 @@ this.Openlayers_Map = (function () {
         geometry: new ol.geom.Point(ol.proj.transform(pos, "EPSG:4326", "EPSG:3857")),
         markerId: marker['id'],
         markerHtml: markerHtml,
+        iconSrc: iconSrc,
         category: marker['category']
       });
       feature.setStyle(style);
