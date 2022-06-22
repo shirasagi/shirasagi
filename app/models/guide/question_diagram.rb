@@ -50,11 +50,11 @@ class Guide::QuestionDiagram
   end
 
   def procedures
-    @procedures.values.sort_by { |item| item.order }
+    @procedures.values.sort_by { |item| item.order.to_i }
   end
 
   def all_procedures
-    @all_procedures.values.sort_by { |item| item.order }
+    @all_procedures.values.sort_by { |item| item.order.to_i }
   end
 
   def evaluated_length
