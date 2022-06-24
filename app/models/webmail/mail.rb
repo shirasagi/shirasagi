@@ -102,6 +102,7 @@ class Webmail::Mail
     return errors.blank? if emails.blank?
 
     begin
+      emails = [emails] if emails.is_a?(String)
       emails = emails.map { |to| Webmail::Converter.extract_address(to) }
       emails.each { |email| raise "invalid address" unless email =~ EmailValidator::REGEXP }
     rescue => e

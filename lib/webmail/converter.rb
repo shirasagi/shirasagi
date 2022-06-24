@@ -1,7 +1,12 @@
 class Webmail::Converter
   class << self
     def extract_address(address)
-      Mail::Address.new(address.encode('ascii-8bit', :invalid => :replace, :undef => :replace)).address rescue address
+      begin
+        Mail::Address.new(address.encode('ascii-8bit', :invalid => :replace, :undef => :replace)).address
+      rescue
+        email = address[/<[^@\s]+@(?:[-a-z0-9]+\.)+[a-z]{2,}>/]
+        email ? email.delete('<>') : address
+      end
     end
 
     def extract_display_name(address)
