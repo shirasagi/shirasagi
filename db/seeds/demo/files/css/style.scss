@@ -4,119 +4,85 @@
 // -----------------------------------------------------------------------------
 // element
 @include mb {
-
-  input[type="submit"],
-  button,
-  select,
-  textarea {
+  input[type="submit"], button, select, textarea {
     -webkit-appearance: none;
   }
-
-  input[type="text"],
-  input[type="email"] {
+  input[type="text"], input[type="email"] {
     border: $border-hgry;
   }
 }
-
 html {
   height: 100%;
   font-family: $font-base;
 }
-
 body {
   margin: 0 auto;
   font-family: $font-base;
   font-size: 100%;
   color: $text;
 }
-
-h1,
-h2,
-h3,
-h4,
-h5 {
+h1, h2, h3, h4, h5 {
   margin: 0;
   font-size: 100%;
   font-weight: normal;
 }
-
 a {
   color: $link;
-
-  &:hover,
-  &:focus {
+  &:hover, &:focus {
     color: $hover;
     text-decoration: none;
   }
-
   &:visited {
     color: $visited;
   }
 }
-
-rp,
-rt {
+rp, rt {
   background: #fff;
   color: $text;
   font-size: $px12;
   font-weight: normal;
 }
-
 rp {
   margin: 0;
 }
-
 img {
   vertical-align: middle;
-
   @include mb {
     max-width: 100% !important;
     height: auto !important;
   }
 }
-
 // -----------------------------------------------------------------------------
 // layout
 #page {
   margin: 0 auto;
   font-size: 87.5%;
 }
-
 // -----------------------------------------------------------------------------
 // tool
 #tool {
   border-bottom: 3px solid $orange;
-
   nav {
     position: relative;
     @include clear;
     width: $page-width;
     margin: 0 auto;
     padding: 5px 10px;
-
     #nocssread {
       float: left;
       padding-right: 10px;
       border-right: $border-hgry;
       @include u-arrow;
     }
-
     .tools {
       float: right;
     }
-
-    #size,
-    #theme,
-    #ss-voice,
-    #ss-kana,
-    #info {
+    #size, #theme, #ss-voice, #ss-kana, #info {
       float: left;
       border-left: $border-hgry;
     }
-
     #size {
       padding-left: 10px;
-
       span a {
         margin-left: 5px;
         padding: 3px;
@@ -124,19 +90,15 @@ img {
         @include border-radius(3px);
         color: $text;
         text-decoration: none;
-
-        &:hover,
-        &:focus {
+        &:hover, &:focus {
           @include grd-blue;
           color: $t-white;
         }
       }
     }
-
     #theme {
       padding: 0 10px;
     }
-
     #ss-theme {
       a {
         margin-left: 5px;
@@ -145,57 +107,44 @@ img {
         @include border-radius(3px);
         color: $t-white;
         text-decoration: none;
-
-        &:hover,
-        &:focus {
-          opacity: .7;
-        }
+        &:hover, &:focus { opacity: .7; }
       }
-
       .white {
         background: $t-white;
         color: $text;
       }
-
       .blue {
         border-color: #06c;
         background: #06c;
       }
-
       .black {
         border-color: #000;
         background: #000;
       }
     }
-
     #ss-voice {
       position: relative;
       padding: 0 10px 0 35px;
       background: url(../img/voice.png) no-repeat 10px center;
     }
-
     #ss-voice-controller {
       position: absolute;
       top: 2.5em;
       right: 0;
       z-index: 999;
     }
-
     #ss-kana {
       padding: 0 10px;
       background: url(../img/kana.png) no-repeat 10px center;
-
       a {
         padding-left: 23px;
       }
     }
-
     #info {
       padding: 0 10px;
     }
   }
 }
-
 // -----------------------------------------------------------------------------
 // translate
 .translate-wrap {
@@ -204,7 +153,6 @@ img {
   padding: 0 10px;
   text-align: right;
 }
-
 .translate-box {
   position: relative;
   width: 200px;
@@ -212,7 +160,6 @@ img {
   overflow: hidden;
   text-align: center;
   background: #ffffff;
-
   select {
     width: 100%;
     padding: 4px 38px 4px 8px;
@@ -230,7 +177,6 @@ img {
     -webkit-appearance: none;
     appearance: none;
   }
-
   &:before {
     position: absolute;
     top: 0.8em;
@@ -245,20 +191,16 @@ img {
     pointer-events: none;
   }
 }
-
 .translate-box select::-ms-expand {
   display: none;
 }
-
 #ss-translate-error {
   padding: 19px 10px 0;
   font-size: $px15;
-
   p {
     padding: 5px 0 0 10px;
   }
 }
-
 // -----------------------------------------------------------------------------
 // head
 #head {
@@ -266,97 +208,80 @@ img {
   margin: 0 auto;
   padding: 0 10px;
   @include clear;
-
   .logo {
     float: left;
     padding: 0px 0 0 17px;
-
     @include mb {
       float: none;
       display: block;
       padding: 10px;
-
       img {
         width: 180px;
         height: auto;
       }
     }
   }
-
   .menu {
     @include float(right);
     margin-bottom: 5px;
-
     @include mb {
       float: none;
       display: block;
       padding: 0 10px;
     }
-
     .u-menu {
       @include float(right);
       padding: 12px 0;
-
       .smart {
         padding-left: 15px;
         background: url(../img/smart.png) no-repeat left center;
       }
-
       .inquiry {
         margin-left: 12px;
         padding-left: 20px;
         background: url(../img/inquiry.png) no-repeat left center;
       }
-
       .sitemap {
         margin-left: 12px;
         padding-left: 20px;
         background: url(../img/sitemap.png) no-repeat left center;
       }
     }
-
     .l-menu {
       clear: both;
       text-align: right;
       padding-bottom: 10px;
       line-height: 0;
-
       @include mb {
         width: 100%;
         @include box-sizing(border-box);
         text-align: left;
       }
-
       form {
         float: right;
         border: $border-hgry;
-
         @include mb {
           float: none;
           position: relative;
           @include border-radius(0);
         }
       }
-
       #search-box {
         margin-right: -10px;
         padding: 5px;
         border: 0;
         color: $text;
-
         @include mb {
           width: 80%;
           @include border-radius(0);
         }
       }
-
       #search-button {
         padding: 5px 10px;
         margin: 0;
         border: 0;
         background: #333;
         color: $t-white;
-
         @include mb {
           position: absolute;
           top: 0;
@@ -367,16 +292,13 @@ img {
           -webkit-appearance: none;
         }
       }
-
-      _::-webkit-full-page-media,
-      _:future,
+      _::-webkit-full-page-media, _:future,
       #search-button {
         padding: 7px 10px;
       }
     }
   }
 }
-
 // -----------------------------------------------------------------------------
 // navi
 #navi {
@@ -384,34 +306,28 @@ img {
   @include clear;
   min-width: 1100px;
   border-bottom: 3px solid $orange;
-
   @include mb {
     min-width: 100%;
   }
-
   .wrap {
     @include clear;
     width: 1078px;
     margin: 0 auto;
     border-left: $border-lblue;
     border-right: $border-hblue;
-
     @include mb {
       border-top: $border-lblue;
       border-bottom: $border-hblue;
       @include box-sizing(border-box);
     }
-
-    >ul li {
+    > ul li {
       position: relative;
       float: left;
       color: #202020;
-
       @include mb {
         width: 50%;
       }
     }
-
     >ul li a {
       @include inline-block;
       width: 178px;
@@ -422,7 +338,6 @@ img {
       font-size: $px16;
       text-decoration: none;
       text-align: center;
-
       @include mb {
         width: auto;
         display: block;
@@ -432,37 +347,27 @@ img {
         font-size: 100%;
       }
     }
-
-    .current,
-    >ul li:hover a,
-    li.focus a {
+    .current, > ul li:hover a, li.focus a {
       background-color: $hblue;
       color: #202020;
     }
-
-    .sangyo a,
-    .shsiei a {
+    .sangyo a, .shsiei a {
       width: 176px;
-
       @include mb {
         width: auto;
       }
     }
-
     .current a {
       background: $hblue;
       color: #202020;
     }
   }
 }
-
-#navi .wrap li:hover>ul,
-#navi .wrap .focus>ul {
+#navi .wrap li:hover > ul,
+#navi .wrap .focus > ul {
   height: auto;
 }
-
-#navi .wrap li ul,
-#navi .wrap .current ul {
+#navi .wrap li ul, #navi .wrap .current ul {
   position: absolute;
   left: -1px;
   width: 180px;
@@ -473,22 +378,16 @@ img {
   border-bottom: 2px solid $orange;
   background: $hblue;
   z-index: 100;
-
-  @include mb {
-    display: none;
-  }
-
+  @include mb { display: none; }
   &.current {
     display: block;
   }
-
   li {
     float: none;
     border: 0;
     border-left: $border-hblue;
     border-right: $border-lblue;
     padding: 0;
-
     a {
       display: block;
       @include li;
@@ -499,9 +398,7 @@ img {
       color: $link;
       font-size: $px14;
       text-align: left;
-
-      &:hover,
-      &:focus {
+      &:hover, &:focus {
         @include li;
         padding: 5px 10px 3px 25px;
         color: $link;
@@ -512,11 +409,8 @@ img {
     }
   }
 }
-
-#navi .wrap .sangyo ul,
-#navi .wrap .shsiei ul {
+#navi .wrap .sangyo ul, #navi .wrap .shsiei ul {
   width: 178px;
-
   li a {
     width: auto;
   }
@@ -537,24 +431,18 @@ img {
   float: left;
   width: 712px;
 }
-
 .one #main {
   width: 100%;
 }
-
-#main .left,
-#addition .left,
-#main .center,
-#addition .center {
+#main .left, #addition .left,
+#main .center, #addition .center {
   float: left;
   width: 344px;
   margin-right: $box-margin;
 }
-
 #main .center {
   margin: 0;
 }
-
 #addition {
   @include clear;
   width: $page-width;
@@ -562,12 +450,10 @@ img {
   padding: 24px 10px 0;
   border-top: $border-hgry;
 }
-
 #addition .right {
   float: right;
   width: 344px;
 }
-
 // -----------------------------------------------------------------------------
 // side
 #side {
@@ -580,20 +466,17 @@ img {
 #foot {
   margin-top: $box-margin;
 }
-
 #address {
   @include clear;
   min-width: 1100px;
   padding: 6px 0;
   border-top: 2px solid $orange;
   background: #ededed;
-
   dl {
     @include clear;
     width: $page-width;
     margin: 0 auto;
     padding: 0 10px;
-
     dt {
       float: left;
       clear: both;
@@ -601,11 +484,9 @@ img {
       margin-right: 12px;
       font-weight: bold;
     }
-
     dd {
       float: left;
       width: 920px;
-
       a {
         @include inline-block;
         margin-left: 12px;
@@ -619,18 +500,15 @@ img {
     }
   }
 }
-
 #footer-navi {
   width: $page-width;
   margin: 0 auto;
   padding: 6px 10px;
-
   a {
     margin-right: 12px;
     @include r-arrow;
   }
 }
-
 #copyright {
   min-width: 1100px;
   padding: 6px 0;
@@ -638,10 +516,8 @@ img {
   color: $t-white;
   text-align: center;
 }
-
 #sp-view {
   padding: 10px;
-
   a {
     @include box-sizing(border-box);
     display: block;
@@ -658,20 +534,9 @@ img {
 
 // -----------------------------------------------------------------------------
 // guide about safety oline propose useful population relations ranking topics
-#guide,
-#about,
-#safety,
-#online,
-#propose,
-#useful,
-#population,
-#relations,
-#ranking,
-#topics,
-#announce,
-#emergency {
+#guide, #about, #safety, #online, #propose, #useful, #population, #relations, #ranking, #topics,
+#announce, #emergency {
   margin-bottom: $box-margin;
-
   h2 {
     margin-bottom: 6px;
     padding: 3px 6px 0;
@@ -680,185 +545,123 @@ img {
     color: $t-white;
   }
 }
-
 #announce {
   margin-top: $box-margin;
 }
-
-#safety h2,
-#announce h2,
-#emergency h2 {
+#safety h2, #announce h2, #emergency h2 {
   @include grd-red;
 }
-
 #emergency {
   margin-top: $box-margin;
-
   h2 {
     margin-bottom: 0;
   }
-
   article {
     padding: $item-margin $item-margin 0;
     border-left: 2px solid #c42c00;
     border-right: 2px solid #c42c00;
     background: #ffffa4;
-
     &:last-child {
       padding-bottom: $item-margin;
       border-bottom: 2px solid #c42c00;
     }
   }
 }
-
-$guidelist: marriage,
-pregnancy,
-child,
-education,
-house,
-work,
-welfare,
-death;
-
+$guidelist: marriage, pregnancy, child, education, house, work, welfare, death;
 #guide {
-  @include mb {
-    margin: 0;
-  }
-
+  @include mb {margin: 0;}
   h2 {
     margin: 0;
   }
-
   ul {
     @include clear;
   }
-
   @each $guide in $guidelist {
     li.#{$guide} a {
       background: url(../img/ic-#{$guide}.png) no-repeat 5px center;
-
       @include mb {
         background-size: auto 24px;
       }
     }
   }
-
-  li.pregnancy a,
-  li.child a,
-  li.welfare a,
-  li.death a {
+  li.pregnancy a, li.child a, li.welfare a, li.death a {
     background-position: 9px center;
   }
-
   li {
     float: left;
     width: 166px;
     padding: 4px 0;
     border-bottom: $border-hgry;
-
     &:nth-child(2n+1) {
       margin-right: $item-margin;
     }
-
     a {
       display: block;
       padding: 8px 0 5px 45px;
       color: $text;
       text-decoration: none;
-
-      &:hover,
-      &:focus {
+      &:hover, &:focus {
         background-color: $hblue;
       }
     }
   }
 }
-
-$aboutlist: about,
-event,
-mayor,
-assembly,
-institution,
-sight,
-consultation,
-qa;
-
+$aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
 #about {
-  @include mb {
-    margin: 0;
-  }
-
+  @include mb {margin: 0;}
   h2 {
     margin: 0;
   }
-
   ul {
     @include clear;
   }
-
   @each $about in $aboutlist {
     li.#{$about} a {
       background: url(../img/ic-#{$about}.png) no-repeat 5px center;
-
       @include mb {
         background-size: auto 24px;
       }
     }
   }
-
   li {
     float: left;
     width: 166px;
     padding: 4px 0;
     border-bottom: $border-hgry;
-
     &:nth-child(2n+1) {
       margin-right: $item-margin;
     }
-
     a {
       display: block;
       padding: 8px 0 5px 45px;
       color: $text;
       text-decoration: none;
-
-      &:hover,
-      &:focus {
+      &:hover, &:focus {
         background-color: $hblue;
       }
     }
   }
 }
-
 @include mb {
-
-  #guide,
-  #about {
+  #guide, #about {
     margin: 0;
   }
-
-  #guide ul,
-  #about ul {
+  #guide ul, #about ul {
     padding: 10px 10px 0;
-
     li {
       width: 50%;
       margin-bottom: $smart-margin;
       padding: 0;
       border: 0;
-
       &:nth-child(2n+1) {
         margin: 0;
       }
-
       &:nth-child(2n+1) a {
         margin-right: 5px;
       }
-
       &:nth-child(2n) a {
         margin-left: 5px;
       }
-
       a {
         border: $border-hgry;
         padding: 5px 0 2px 40px;
@@ -866,57 +669,38 @@ qa;
     }
   }
 }
-
 #safety {
   ul {
     @include clear;
   }
-
   li {
     float: left;
     width: 166px;
-
     &:nth-child(2n+1) {
       margin-right: $item-margin;
     }
   }
 }
-
-#safety li a,
-#online li a,
-#propose li a,
-#attention li a,
-#useful li a,
-#relations li a,
-#ranking li a {
+#safety li a, #online li a, #propose li a, #attention li a, #useful li a, #relations li a, #ranking li a {
   @include r-arrow;
 }
-
 #ranking li a {
   padding-left: 22px;
   background: url(../img/ic-ranking.png) no-repeat left 5px;
 }
-
-#online nav,
-#propose nav {
+#online nav, #propose nav {
   padding-left: 132px;
 }
-
 #online nav {
   background: url(../img/online.gif) no-repeat left top;
 }
-
 #propose nav {
   padding-bottom: 40px;
   background: url(../img/comment.gif) no-repeat left top;
 }
-
-#useful,
-#relations,
-#topics {
+#useful, #relations, #topics {
   min-height: 165px;
 }
-
 #population {
   dt {
     float: left;
@@ -924,55 +708,44 @@ qa;
     margin: 0 12px 3px 0;
     padding: 0 3px;
     background: #ffeacc;
-
     &:nth-child(4) {
       clear: both;
     }
   }
-
   dd {
     float: left;
     width: 90px;
     margin: 0 0 3px;
     padding: 0 3px;
     background: #fff;
-
     &:nth-child(2n) {
       margin-right: 0;
     }
   }
-
   p {
     float: right;
   }
 }
-
 #topics {
   @include clear;
-
   .thumb {
     float: left;
     margin-right: $item-margin;
   }
-
   h2 {
     margin-bottom: $item-margin;
   }
-
   .more {
     float: right;
-
     a {
       @include r-arrow;
     }
   }
 }
-
 #connect a {
   float: left;
   display: block;
   margin-bottom: $item-margin;
-
   &:nth-child(2n+1) {
     margin-right: $item-margin;
   }
@@ -982,34 +755,28 @@ qa;
 // attention
 #attention {
   margin: $box-margin 0;
-
   h2 {
     padding: 3px 6px 0;
     border-left: 5px solid $orange;
     @include grd-org;
     color: #282828;
   }
-
   article {
     padding: 6px 0 3px;
     border-bottom: $border-hgry;
-
     a {
       @include r-arrow;
     }
   }
 }
-
 // -----------------------------------------------------------------------------
 // cms-tabs
 .cms-tabs {
   margin-bottom: $box-margin;
   border-bottom: 2px solid $orange;
-
   .names {
     padding: 0;
     border-bottom: 2px solid $orange;
-
     .name {
       @include inline-block;
       width: 109px;
@@ -1020,20 +787,15 @@ qa;
       text-align: center;
       text-decoration: none;
     }
-
-    .name:hover,
-    .name:focus,
-    .current {
+    .name:hover, .name:focus, .current {
       border-left: 5px solid $orange;
       @include grd-blue;
       color: $t-white;
     }
-
     .name:last-child {
       width: 111px;
     }
   }
-
   h2 {
     padding: 3px 6px 0;
     border-left: 5px solid $orange;
@@ -1041,42 +803,34 @@ qa;
     @include grd-blue;
     color: $t-white;
   }
-
   .pages header {
     padding: 3px 0;
     border-bottom: $border-hgry;
   }
-
   time {
     display: block;
   }
-
   h2 {
     display: inline;
   }
-
   .new h2:after {
     content: "NEW";
     margin-left: 5px;
     color: #e03300;
   }
-
   nav {
     @include clear;
     padding: 3px 0;
-
     @include mb {
       padding: 0;
       background: #ccc;
     }
   }
-
   .rss {
     float: left;
     @include inline-block;
     padding-left: 20px;
     background: url(../img/ic-rss.png) no-repeat left center;
-
     @include mb {
       width: 30%;
       @include inline-block;
@@ -1085,11 +839,9 @@ qa;
       @include box-sizing(border-box);
     }
   }
-
   .more {
     float: right;
     @include r-arrow;
-
     @include mb {
       width: 70%;
       padding: 3px 0 3px 15px;
@@ -1107,66 +859,51 @@ qa;
   width: $page-width;
   margin: 20px auto 0;
   padding: 0 10px;
-
   h2 {
     margin-bottom: 10px;
     padding: 3px 12px 0;
     background: $hgry;
     color: #444;
   }
-
   .info {
     position: absolute;
     top: 3px;
     right: 22px;
-
     a {
       @include r-arrow;
     }
   }
 }
-
 .ss-image-box {
   @include clear;
-
   .ss-image-box-item {
     display: block;
     float: left;
     margin-right: 12px;
-
     @include mb {
       margin: 0 0 10px 10px;
     }
-
     &:last-child {
       margin: 0;
-
-      @include mb {
-        margin: 0 0 10px 10px;
-      }
+      @include mb { margin: 0 0 10px 10px; }
     }
   }
 }
-
 // -----------------------------------------------------------------------------
 // sns
 .cms-sns_share {
   @include clear;
-
   .site {
     float: left;
     margin-right: 15px;
   }
-
   .fb {
     margin-top: -5px;
   }
-
   .fb-like {
     margin: 0;
   }
 }
-
 // -----------------------------------------------------------------------------
 // pageg-top
 .pagetop {
@@ -1177,21 +914,18 @@ qa;
   z-index: 100;
   @include border-radius(5px 0 0 0);
   background: rgba(0, 0, 0, .6);
-
   a {
     display: block;
     padding: 8px 15px 5px 30px;
     background: url(../img/t-arrow-w.png) no-repeat 15px 18px;
     color: #fff;
     text-decoration: none;
-
     span {
       display: block;
       font-size: $px11;
     }
   }
 }
-
 // -----------------------------------------------------------------------------
 // ss-page-name
 #ss-page-name {
@@ -1202,7 +936,6 @@ qa;
   font-size: $px18;
   font-weight: bold;
   color: $t-white;
-
   @include mb {
     margin: $item-margin 0;
   }
@@ -1212,63 +945,52 @@ qa;
 // crumbs
 .crumbs {
   padding: 12px 0 10px;
-
   .separator {
     padding: 0 3px;
   }
 }
-
 // -----------------------------------------------------------------------------
 // recent-oshirase
 #recent-oshirase {
   margin-bottom: $box-margin;
   border-bottom: 2px solid $orange;
-
-  >header h2 {
+  > header h2 {
     padding: 0 0 0 40px;
     border-bottom: 2px solid $orange;
     background: url(../img/ic-info.png) no-repeat left 1px;
     font-size: $px16;
   }
-
   article header {
     padding: 6px 0 3px;
     border-bottom: $border-hgry;
   }
-
   time {
     @include inline-block;
     width: 120px;
   }
-
   article h2 {
     display: inline;
     margin-left: 10px;
   }
-
   .new h2:after {
     content: "NEW";
     margin-left: 5px;
     color: #e03300;
   }
 }
-
 // -----------------------------------------------------------------------------
 // feed
 .feed {
   padding: 6px 0 3px;
-
   @include mb {
     @include clear;
     padding: 0;
     background: $hgry;
   }
-
   .rss {
     @include inline-block;
     padding-left: 20px;
     background: url(../img/ic-rss.png) no-repeat left center;
-
     @include mb {
       float: left;
       width: 30%;
@@ -1277,11 +999,9 @@ qa;
       background: $hblue url(../img/ic-rss.png) no-repeat 10px center;
     }
   }
-
   .more {
     float: right;
     @include r-arrow;
-
     @include mb {
       float: left;
       width: 70%;
@@ -1293,33 +1013,21 @@ qa;
 
 // -----------------------------------------------------------------------------
 // links-life, side-menu, #month
-#links-life,
-#side-menu,
-#recent-photo,
-#side-blog,
-#month,
-#calendar {
+#links-life, #side-menu, #recent-photo, #side-blog, #month, #calendar {
   margin-bottom: $box-margin;
-
   h2 {
     padding: 3px 6px 0;
     border-left: 5px solid $orange;
     @include grd-blue;
     color: $t-white;
   }
-
-  li,
-  p {
+  li, p {
     padding: 3px 0;
     border-bottom: $border-hgry;
-
-    a,
-    span {
+    a, span {
       display: block;
       padding: 0 6px;
-
-      &:hover,
-      &:focus {
+      &:hover, &:focus {
         background: $hblue;
       }
     }
@@ -1328,10 +1036,8 @@ qa;
 
 // -----------------------------------------------------------------------------
 // category-nodes
-#main .category-nodes,
-#main .cms-nodes {
+#main .category-nodes, #main .cms-nodes {
   margin-bottom: $box-margin;
-
   article {
     float: left;
     width: 325px;
@@ -1340,13 +1046,10 @@ qa;
     border: $border-hgry;
     border-left: 5px solid $blue;
     cursor: pointer;
-
     &:nth-child(2n) {
       margin-right: 0;
     }
-
-    &:hover,
-    &:focus {
+    &:hover, &:focus {
       background: $hblue;
     }
   }
@@ -1354,25 +1057,17 @@ qa;
 
 // -----------------------------------------------------------------------------
 // category-pages .article-pages cms-pages faq-search calendar-serach
-.category-pages,
-.article-pages,
-.cms-pages,
-.cms-group-pages,
-.faq-search,
-.event-pages {
+.category-pages, .article-pages, .cms-pages, .cms-group-pages, .faq-search, .event-pages {
   margin-bottom: $box-margin;
-
   a {
     @include r-arrow;
   }
-
   .new h2:after {
     content: "NEW";
     margin-left: 5px;
     color: #e03300;
   }
 }
-
 .page .category-pages article,
 .page .article-pages article,
 .page .cms-pages article,
@@ -1380,26 +1075,21 @@ qa;
 .page .event-pages.pages article {
   padding: 12px 0 9px;
   border-bottom: $border-hgry;
-
   time {
     @include inline-block;
     width: 120px;
   }
-
   .event-dates {
     display: inline-block;
     width: 240px;
-
     @include mb {
       display: block;
       width: auto;
     }
-
     time {
       width: auto;
     }
   }
-
   h2 {
     display: inline;
     margin: 0 0 0 10px;
@@ -1408,14 +1098,12 @@ qa;
     background: none;
     font-size: $px14;
     font-weight: normal;
-
     a {
       padding: 0;
       background: none;
     }
   }
 }
-
 .page .event-pages {
   article h2 {
     margin: 0;
@@ -1424,41 +1112,33 @@ qa;
     font-size: $px14;
   }
 }
-
 // -----------------------------------------------------------------------------
 // category-list
 #category-list {
   margin-bottom: $box-margin;
-
   h2 {
     padding: 3px 6px 0;
     border-left: 5px solid $orange;
     @include grd-blue;
     color: $t-white;
   }
-
   h3 {
     padding: 3px 0;
     border-bottom: $border-hgry;
-
     a {
       display: block;
       padding: 0 6px;
       background: none;
-
-      &:hover,
-      &:focus {
+      &:hover, &:focus {
         background: $hblue;
       }
     }
   }
-
   .current a {
     background: $hblue;
     text-decoration: none;
   }
 }
-
 // -----------------------------------------------------------------------------
 // categories
 .categories {
@@ -1466,16 +1146,13 @@ qa;
   border-top: $border-hgry;
   text-align: right;
   clear: both;
-
   header {
     @include inline-block;
     margin: 5px 0;
   }
-
   .nodes {
     @include inline-block;
     margin: 5px 0;
-
     li {
       @include inline-block;
       margin: 0;
@@ -1488,26 +1165,21 @@ qa;
     }
   }
 }
-
 // -----------------------------------------------------------------------------
 //  pagination
 .pagination {
   margin-bottom: $box-margin;
   text-align: center;
-
   a {
     @include inline-block;
     padding: 4px 10px;
     background: #ededed;
     color: $text;
     text-decoration: none;
-
-    &:hover,
-    &:focus {
+    &:hover, &:focus {
       background: $hblue;
     }
   }
-
   .current {
     @include inline-block;
     padding: 4px 10px;
@@ -1517,44 +1189,27 @@ qa;
 
 // -----------------------------------------------------------------------------
 //  page sitemap
-.page header.released,
-.one header.released,
-.faq header.released,
-.body--anpi-ezine-anpi header.released,
-.body--anpi-ezine-event header.released {
+.page header.released, .one header.released, .faq header.released,
+.body--anpi-ezine-anpi header.released, .body--anpi-ezine-event header.released {
   margin-bottom: $item-margin;
   text-align: right;
 }
-
 .map-page {
   margin-bottom: $box-margin;
 }
-
 article.body {
   clear: both;
 }
-
-.page article,
-.one article.body,
-.page .related-pages,
-.page footer.contact,
-#history,
-#similarity,
+.page article, .one article.body,
+.page .related-pages, .page footer.contact,
+#history, #similarity,
 .page #feedback,
-.inquiry-html,
-.inquiry-form,
-.faq-question,
-.faq .body,
-.map-page,
-.inquiry-nodes,
-.columns,
-.blog-center .blog,
-.mypage-show article,
+.inquiry-html, .inquiry-form,
+.faq-question, .faq .body,
+.map-page, .inquiry-nodes, .columns,
+.blog-center .blog, .mypage-show article,
 .cke_editable,
-.body--anpi-ezine-anpi article.body,
-.body--anpi-ezine-event article.body,
-.tourist-spot,
-body[class*="body--institution-shisetsu-"] article.body {
+.body--anpi-ezine-anpi article.body, .body--anpi-ezine-event article.body, .tourist-spot, body[class*="body--institution-shisetsu-"] article.body {
   article {
     h2 {
       padding: 0;
@@ -1563,20 +1218,16 @@ body[class*="body--institution-shisetsu-"] article.body {
       font-weight: normal;
     }
   }
-
-  h1,
-  h2 {
+  h1, h2 {
     margin: $item-margin 0 6px;
     padding: 3px 10px 0;
     background: $hblue;
     font-size: $px16;
     font-weight: bold;
-
     &:first-child {
       margin-top: 0;
     }
   }
-
   h3 {
     margin-bottom: 6px;
     padding: 0 10px;
@@ -1585,7 +1236,6 @@ body[class*="body--institution-shisetsu-"] article.body {
     font-size: $px16;
     font-weight: bold;
   }
-
   h4 {
     margin-bottom: 6px;
     padding: 0 10px;
@@ -1593,173 +1243,131 @@ body[class*="body--institution-shisetsu-"] article.body {
     color: $blue;
     font-weight: bold;
   }
-
   h5 {
     color: $blue;
     font-weight: bold;
   }
-
   h6 {
     font-weight: bold;
   }
-
   p {
     margin-bottom: $item-margin;
   }
-
   ul {
     margin-bottom: $item-margin;
     list-style: none;
-
     li {
       @include li;
     }
   }
-
   ol {
     margin-bottom: $item-margin;
     padding-left: 23px;
   }
-
-  dl,
-  fieldset {
+  dl, fieldset {
     margin-bottom: 10px;
     padding-bottom: 5px;
     border-bottom: $border-hgry;
-
-    dt,
-    legend {
+    dt, legend {
       float: left;
       min-width: 15%;
       font-weight: bold;
     }
   }
-
   table {
     width: 100%;
     margin-bottom: $box-margin;
-
     caption {
       padding: 0 10px;
       color: $blue;
       text-align: left;
     }
-
     th {
       padding: 3px 8px 0;
       border: $border-hgry;
       background: #ffefbb;
       text-align: left;
     }
-
     td {
       padding: 3px 8px 0;
       border: $border-hgry;
     }
   }
-
-  video,
-  p img,
-  iframe {
+  video, p img, iframe {
     max-width: 100%;
   }
-
-  .float-left,
-  .ss-alignment-left {
+  .float-left, .ss-alignment-left {
     float: left;
     margin: 0 $item-margin $item-margin 0;
-
     @include mb {
       margin: 0;
       float: none;
     }
   }
-
-  .float-right,
-  .ss-alignment-right {
+  .float-right, .ss-alignment-right {
     float: right;
     margin: 0 0 $item-margin $item-margin;
-
     @include mb {
       margin: 0;
       float: none;
     }
   }
-
-  .clear,
-  .ss-alignment-center {
+  .clear, .ss-alignment-center {
     clear: both;
   }
-
   .two-photo {
     @include display-flex;
     margin: 0 -6px 12px;
-
     li {
       margin: 0 6px;
       padding: 0;
       background: none;
     }
-
     img {
       max-width: 100%;
       height: auto;
     }
   }
-
   .magazine {
     @include display-flex;
     @include justify-content(space-between);
     margin-bottom: 2em;
-
     @include mb {
       @include flex-wrap(wrap);
       @include justify-content(center);
     }
-
     .img {
       width: 320px;
       margin-bottom: 1em;
-
       img {
         max-width: 100%;
         height: auto;
       }
     }
-
     .files {
       width: calc(100% - 335px);
       margin-bottom: 1em;
-
       @include mb {
         width: 100%;
       }
     }
   }
 }
-
 .tourist-spot {
   .photos {
     @include display-flex;
     @include flex-wrap(wrap);
     @include justify-content(center);
     margin: 0 -10px 30px;
-
     a {
       margin: 0 10px 20px;
     }
-
-    &:before,
-    &:after {
-      display: none;
-    }
+    &:before, &:after { display: none; }
   }
 }
-
 #sitemap ul {
   @include clear;
 }
-
 .sitemap-body h2 {
   clear: both;
   margin: $item-margin 0 6px;
@@ -1767,14 +1375,11 @@ body[class*="body--institution-shisetsu-"] article.body {
   background: $hblue;
   font-size: $px16;
   font-weight: bold;
-
   &:first-child {
     margin-top: 0;
   }
 }
-
-#sitemap li,
-.sitemap-body h3 {
+#sitemap li, .sitemap-body h3 {
   float: left;
   margin-bottom: 10px;
   padding: 0 10px;
@@ -1782,43 +1387,35 @@ body[class*="body--institution-shisetsu-"] article.body {
   background: none;
   list-style: none;
 }
-
 .page footer.contact {
   .group {
     margin-bottom: 0;
     font-weight: bold;
   }
-
   dl {
     display: inline-block;
     border: 0;
     margin: 0 $item-margin 0 0;
     padding: 0;
-
-    dt,
-    dd {
+    dt, dd {
       float: none;
       display: inline;
       font-weight: normal;
     }
   }
 }
-
 .page-navi {
   @include clear;
   margin-top: 2em;
   text-align: center;
-
   li {
     display: block;
     width: 33%;
     float: left;
     list-style: none;
-
     &.return {
       width: 34%;
     }
-
     a {
       padding: 0;
       background: none;
@@ -1828,7 +1425,6 @@ body[class*="body--institution-shisetsu-"] article.body {
     }
   }
 }
-
 // -----------------------------------------------------------------------------
 //  ss-adobe-reader
 .ss-adobe-reader {
@@ -1836,83 +1432,64 @@ body[class*="body--institution-shisetsu-"] article.body {
   padding: $item-margin;
   border: $border-hgry;
 }
-
 // -----------------------------------------------------------------------------
 //  related-pages
-.page .related-pages,
-footer.contact {
+.page .related-pages, footer.contact {
   margin-bottom: $box-margin;
 }
-
 // -----------------------------------------------------------------------------
 // calendar
 #wrap .one {
   width: 100%;
 }
-
 .event-date {
   position: relative;
-
   h2 {
     margin-bottom: $item-margin;
     padding: 7px 0 4px 50px;
     border-bottom: 2px solid $orange;
     font-size: $px16;
   }
-
   h2.jan {
     background: url(../img/ic-january.png) no-repeat 10px bottom;
   }
-
   h2.feb {
     background: url(../img/ic-february.png) no-repeat left bottom;
   }
-
   h2.may {
     background: url(../img/ic-may.png) no-repeat left bottom;
   }
-
   h2.apr {
     background: url(../img/ic-april.png) no-repeat left bottom;
   }
-
   h2.mar {
     background: url(../img/ic-march.png) no-repeat left bottom;
   }
-
   h2.jun {
     background: url(../img/ic-june.png) no-repeat 10px bottom;
   }
-
   h2.jul {
     background: url(../img/ic-july.png) no-repeat left bottom;
   }
-
   h2.aug {
     background: url(../img/ic-august.png) no-repeat 5px bottom;
   }
-
   h2.sep {
     background: url(../img/ic-september.png) no-repeat 9px bottom;
   }
-
   h2.oct {
     background: url(../img/ic-october.png) no-repeat 10px bottom;
   }
-
   h2.nov {
     background: url(../img/ic-november.png) no-repeat 8px bottom;
   }
-
   h2.dec {
     background: url(../img/ic-december.png) no-repeat 10px bottom;
   }
-
   ul {
     position: absolute;
     top: 9px;
     right: 0;
-
     .prev {
       @include l-arrow;
       @include inline-block;
@@ -1920,7 +1497,6 @@ footer.contact {
       padding: 0 15px;
       border-right: $border-hgry;
     }
-
     .next {
       @include inline-block;
       padding-right: 13px;
@@ -1928,11 +1504,9 @@ footer.contact {
     }
   }
 }
-
 .event-pages-filter {
   @include clear;
   margin-bottom: $item-margin;
-
   li a {
     display: block;
     @include float(left);
@@ -1942,33 +1516,27 @@ footer.contact {
     background: $hblue;
     color: $text;
     text-decoration: none;
-
-    &:hover,
-    &:focus {
+    &:hover, &:focus {
       background-color: $blue;
       color: $t-white;
     }
   }
 }
-
 #event-list {
   clear: both;
   margin-bottom: 2em;
   border-top: 1px solid #ccc;
-
   dl {
     margin: 0;
     padding: 6px 10px 3px;
     border-bottom: 1px solid #ccc;
     zoom: 1;
-
     &:before {
       content: "\0020";
       display: block;
       height: 0;
       overflow: hidden;
     }
-
     &:after {
       content: "\0020";
       clear: both;
@@ -1976,37 +1544,29 @@ footer.contact {
       height: 0;
       overflow: hidden;
     }
-
     .page {
       margin-bottom: 0;
       padding-bottom: 6px;
       border: 0;
-
       &:last-child {
         padding-bottom: 3px;
       }
     }
   }
-
   dl.sat {
     background: #e1ebf1;
     color: #039;
   }
-
-  dl.sun,
-  dl.holiday {
+  dl.sun, dl.holiday {
     background: #fee;
     color: $red;
   }
-
   dt {
     float: left;
     width: 20%;
   }
-
   dd {
     margin-left: 20%;
-
     h2 {
       margin: 0;
       padding: 0;
@@ -2014,12 +1574,10 @@ footer.contact {
       font-size: 100%;
       font-weight: normal;
     }
-
     div {
       @include float(left);
       min-width: 85px;
       margin-right: $item-margin;
-
       a {
         display: block;
         min-width: 85px;
@@ -2031,11 +1589,9 @@ footer.contact {
       }
     }
   }
-
   .page {
     margin-bottom: 10px;
     border-bottom: $border-hgry;
-
     h2 {
       margin: 0;
       padding: 0;
@@ -2044,20 +1600,16 @@ footer.contact {
       font-size: 100%;
       font-weight: normal;
     }
-
     p {
       margin-bottom: $item-margin;
     }
-
     .categories {
       @include clear;
       margin-bottom: 0;
       border: 0;
-
       li {
         padding-left: 0;
       }
-
       li a {
         display: block;
         @include float(left);
@@ -2067,39 +1619,30 @@ footer.contact {
         background: $hblue;
         color: $text;
         text-decoration: none;
-
-        &:hover,
-        &:focus {
+        &:hover, &:focus {
           background-color: $blue;
           color: $t-white;
         }
       }
     }
   }
-
   abbr {
     border: 0;
     text-decoration: none;
   }
 }
-
-#event-list,
-#event-table {
+#event-list, #event-table {
   .sat {
     background: #e1ebf1;
     color: #039;
   }
-
-  .sun,
-  .holiday {
+  .sun, .holiday {
     background: #fee;
     color: $red;
   }
 }
-
 .event .see {
   @include clear;
-
   dt {
     clear: both;
     @include float(left);
@@ -2109,7 +1652,6 @@ footer.contact {
     @include border-radius(3px);
     background: $hblue;
   }
-
   dd {
     @include float(left);
     width: 528px;
@@ -2118,160 +1660,121 @@ footer.contact {
     word-break: break-all;
   }
 }
-
 #calendar {
   header.title {
     color: $blue;
     border-top: 2px solid $blue;
   }
-
   .calendar-nav {
     text-align: center;
-
     li {
       display: inline-block;
       font-size: $px12;
-
       a {
         padding: 0;
         background: none;
       }
     }
-
     .current {
       margin: 0 5px;
     }
   }
-
   .calendar {
     margin: 0 auto;
-
     tbody {
       background: $t-white;
     }
-
     caption {
       font-size: $px16;
     }
-
-    th,
-    td {
+    th, td {
       width: 40px;
       border: $border-hgry;
       text-align: center;
     }
-
     th {
       background: $blue;
       color: $t-white;
     }
-
     .unit {
       display: none;
     }
-
     td.sun {
       color: $red;
     }
-
     td.sat {
       color: #03c;
     }
-
     .today {
       background: #ffeacc;
     }
-
-    td.prev-month,
-    td.next-month {
+    td.prev-month, td.next-month {
       color: $hgry;
-
       a {
         color: $hgry;
       }
     }
   }
-
   .content-body {
     background: #f8f8f8;
   }
 }
-
 .event-date {
   @include clear;
   margin-bottom: 10px;
-
-  span.list,
-  span.table {
+  span.list, span.table {
     float: right;
     margin-left: 10px;
-
     a {
       display: inline-block;
       color: #000;
       text-decoration: none;
       @include btn-gry;
-
       @include mb {
         margin-left: 0;
         margin-right: 10px;
       }
     }
-
     &.current a {
       @include btn-org;
     }
   }
 }
-
 #calendar-search {
   margin-bottom: $box-margin;
 }
-
 .one #calendar-search form {
   h2 {
     border: 0;
     min-width: 160px;
     font-size: $px14;
     color: $text;
-
     @include mb {
       width: 100%;
     }
   }
-
   input#search_keyword {
     width: 469px;
-
     @include mb {
       display: block;
       width: 100%;
     }
   }
-
-  input[type="checkbox"],
-  .dates.location input {
+  input[type="checkbox"], .dates.location input {
     @include mb {
       display: inline-block;
     }
   }
-
   fieldset {
     border: 0;
-
-    label,
-    input,
-    legend {
+    label, input, legend {
       @include clear;
       display: inline-block;
-
       @include mb {
         float: none;
       }
     }
-
-    label,
-    legend {
+    label, legend {
       width: auto;
       min-width: 160px;
       border: 0;
@@ -2279,108 +1782,81 @@ footer.contact {
       font-weight: normal;
       color: $text;
     }
-
     &.keyword input {
       margin-top: 5px;
     }
   }
-
-  label,
-  legend {
+  label, legend {
     float: left;
   }
-
   .dates.location {
     input {
       float: none;
       line-height: 1;
-
-      @include mb {
-        width: 47%;
-      }
+      @include mb { width: 47%; }
     }
   }
-
   .send {
     clear: both;
   }
 }
-
 .content-box .content-body.search {
   border: 0;
   padding: 0;
-
   form {
     padding: 10px;
     border: 1px solid #cdcdcd;
     margin-bottom: 24px;
   }
-
   .event-pages {
     float: none;
   }
-
   footer.send a {
     vertical-align: middle;
   }
-
   .event-pages {
     article header {
       @include display-flex;
       @include flex-wrap(wrap);
-
       h2 a {
         background: none;
       }
     }
   }
 }
-
 #event-table {
   @include mb {
     margin-bottom: 24px;
     overflow-x: scroll;
   }
-
   .calendar {
     width: 100%;
-
     @include mb {
       width: 1080px;
     }
   }
-
-  th,
-  td {
+  th, td {
     border: solid 1px #cdcdcd;
   }
-
   th {
     background: #f8f8f8;
-
     &:first-child {
       background: #fee;
     }
-
     &:last-child {
       background: #e1ebf1;
     }
   }
-
   .date {
     padding: 5px;
-
     .page {
       margin-bottom: 1rem;
       line-height: 1.5;
     }
-
-    .data,
-    .event {
+    .data, .event {
       display: inline-block;
       vertical-align: middle;
     }
-
     .data {
       width: 1rem;
       height: 1rem;
@@ -2391,7 +1867,6 @@ footer.contact {
       background: $hblue;
       text-align: center;
       white-space: nowrap;
-
       a {
         display: block;
         width: .9rem;
@@ -2401,16 +1876,13 @@ footer.contact {
         text-decoration: none;
       }
     }
-
     .event {
       display: inline;
     }
   }
 }
-
 #ss-mb {
   padding: 10px;
-
   a {
     @include box-sizing(border-box);
     display: block;
@@ -2424,14 +1896,9 @@ footer.contact {
     text-decoration: none;
   }
 }
-
-.body--calendar-search form,
-#calendar-search form {
+.body--calendar-search form, #calendar-search form {
   @include clear;
-
-  h2,
-  legend,
-  .keyword label {
+  h2, legend, .keyword label {
     clear: both;
     display: block;
     width: 100%;
@@ -2444,53 +1911,35 @@ footer.contact {
     box-sizing: border-box;
 
   }
-
-  .keyword,
-  .category,
-  .service,
-  .location {
+  .keyword, .category, .service, .location {
     @include clear;
     margin-bottom: $item-margin;
-
     div {
       @include float(left);
       min-width: 177px;
       min-height: 20px;
       margin-bottom: 3px;
-
       &.three {
         margin-right: $item-margin;
       }
     }
   }
-
-  .categories {
-    text-align: left;
-  }
-
+  .categories { text-align: left; }
   .send {
     text-align: center;
-
     input {
       @include btn-org;
     }
-
     a {
       @include btn-gry;
       color: $text;
       text-decoration: none;
-
-      &:hover {
-        color: text;
-      }
+      &:hover { color: text; }
     }
   }
 }
-
 .body--calendar-search #main form .keyword input {
-  @include mb {
-    width: auto;
-  }
+  @include mb { width: auto; }
 }
 
 .event-format {
@@ -2526,7 +1975,6 @@ footer.contact {
 // content-box
 .content-box {
   margin-bottom: 20px;
-
   .content-head {
     position: relative;
     padding: 3px 10px;
@@ -2535,7 +1983,6 @@ footer.contact {
     border: 1px solid #cdcdcd;
     border-top: solid 2px $blue;
     border-bottom: 0;
-
     &:after {
       content: "";
       position: absolute;
@@ -2547,20 +1994,16 @@ footer.contact {
       border-bottom: 1px solid #cdcdcd;
       color: $blue;
     }
-
     h2 {
       font-weight: bold;
     }
   }
-
   .content-body {
     padding: 10px;
     border: 1px solid #cdcdcd;
     border-top: 0;
-
     ul {
       list-style: none;
-
       &.li-icon {
         li {
           a {
@@ -2569,11 +2012,9 @@ footer.contact {
         }
       }
     }
-
     .content-foot {
       @include clear;
       padding: 4px 0 0;
-
       @include mb {
         padding: 0;
       }
@@ -2583,19 +2024,13 @@ footer.contact {
 
 // -----------------------------------------------------------------------------
 // inquiry login
-.inquiry-form,
-.columns,
-.form-login {
-
-  dl,
-  fieldset {
+.inquiry-form, .columns, .form-login {
+  dl, fieldset {
     @include clear;
     clear: both;
     width: 100%;
     margin-bottom: $box-margin;
-
-    dt,
-    legend {
+    dt, legend {
       clear: both;
       float: left;
       width: 200px;
@@ -2603,60 +2038,45 @@ footer.contact {
       font-weight: bold;
       background: $hblue;
       @include border-radius(3px);
-
       .required {
         display: block;
         color: $red;
         font-weight: normal;
       }
     }
-
-    dd,
-    .fields {
+    dd, .fields {
       float: left;
       width: 832px;
       padding: 0 $item-margin;
-
       p {
         margin-bottom: 0;
       }
-
       input[type="text"] {
         width: 250px;
       }
-
       input[type="email"] {
         width: 350px;
       }
-
       textarea {
         width: 800px;
         min-height: 200px;
       }
-
       label {
         margin-right: $item-margin;
       }
     }
-
-    .graph {
-      margin-left: 200px;
-    }
+    .graph {margin-left: 200px;}
   }
-
   .send {
     padding-left: 236px;
-
     input {
       margin-right: $item-margin;
       @include btn-org;
     }
-
     input[name="cancel"] {
       @include btn-gry;
     }
   }
-
   #errorExplanation {
     margin-bottom: $box-margin;
     padding: $item-margin $item-margin 0;
@@ -2664,51 +2084,42 @@ footer.contact {
     @include border-radius(5px);
     background: #ffffa4;
   }
-
   .inquiry-confirm-message {
     margin-bottom: $box-margin;
-
     ~dd {
       padding-bottom: 2em;
     }
   }
-
   .simple-captcha {
     padding-left: 236px;
     margin-bottom: $box-margin;
   }
 }
-
 #feedback .inquiry-form {
   dl {
     margin-bottom: 1em;
     padding: 0;
     border: 0;
   }
-
   dl dt {
     width: 100%;
     float: none;
     padding: 0;
     background: none;
     font-weight: bold;
-
     .required {
       display: inline;
     }
   }
-
   dl dd {
     float: none;
     width: 100%;
     padding: 0;
   }
-
   .fields {
     width: auto;
   }
 }
-
 .back-to-ref a {
   @include btn-gry;
   display: inline-block;
@@ -2716,14 +2127,12 @@ footer.contact {
   color: $text;
   text-decoration: none;
 }
-
 // -----------------------------------------------------------------------------
 // faq
 .faq-question {
   position: relative;
   padding: $item-margin $item-margin 0 50px;
   border: 2px solid $hblue;
-
   &:before {
     content: "Q:";
     position: absolute;
@@ -2734,11 +2143,9 @@ footer.contact {
     font-weight: bold;
   }
 }
-
 .faq .body {
   position: relative;
   padding: $item-margin $item-margin 0 50px;
-
   &:before {
     content: "A:";
     position: absolute;
@@ -2749,49 +2156,39 @@ footer.contact {
     font-weight: bold;
   }
 }
-
 .faq-search form {
   @include clear;
   margin-bottom: $box-margin;
   padding: $item-margin;
   background: $hblue;
-
   .category {
     float: left;
     margin-right: $box-margin;
     margin-bottom: $item-margin;
-
     select {
       padding: 5px;
     }
   }
-
   .keyword {
     float: left;
     margin-bottom: $item-margin;
-
     input {
       width: 300px;
       padding: 5px;
     }
   }
-
   .submitters {
     clear: both;
     text-align: center;
-
     input {
       @include btn-gry;
     }
   }
 }
-
 // -----------------------------------------------------------------------------
 // map
 .map {
-
-  h2,
-  legend {
+  h2, legend {
     clear: both;
     display: block;
     width: 100%;
@@ -2803,43 +2200,30 @@ footer.contact {
     font-weight: bold;
     box-sizing: border-box;
   }
-
   .cms-nodes h2 {
     margin: 0;
     border: 0;
   }
-
   #side-menu h2 {
     margin-bottom: 0;
   }
-
   .keyword {
     input {
       width: 469px;
     }
   }
-
-  .keyword,
-  .category,
-  .service,
-  .location {
+  .keyword, .category, .service, .location {
     @include clear;
     margin-bottom: $item-margin;
-
     div {
       @include float(left);
       min-width: 177px;
       min-height: 20px;
       margin-bottom: 3px;
-
       &.three {
         margin-right: $item-margin;
       }
-
-      &.keyword,
-      &.category,
-      &.service,
-      &.location {
+      &.keyword, &.category, &.service, &.location {
         @include mb {
           padding: 0 10px;
           box-sizing: border-box;
@@ -2847,19 +2231,15 @@ footer.contact {
       }
     }
   }
-
   .send {
     margin-bottom: $box-margin;
     text-align: center;
-
     input {
       @include btn-org;
     }
   }
-
   .condition {
     @include clear;
-
     dt {
       clear: both;
       width: 160px;
@@ -2869,17 +2249,14 @@ footer.contact {
       @include border-radius(3px);
       background: $hblue;
     }
-
     dd {
       @include float(left);
       margin-bottom: 6px;
       padding: 3px 0;
     }
   }
-
   .settings {
     @include clear;
-
     .ajax-box {
       display: block;
       @include float(right);
@@ -2889,28 +2266,22 @@ footer.contact {
       text-decoration: none;
     }
   }
-
   .result {
     @include float(left);
-
     h2 {
       border: 0;
       font-size: $px14;
       font-weight: normal;
     }
   }
-
   .tabs {
     @include clear;
     border-bottom: 2px solid $orange;
-
     ul {
       @include clear;
       @include float(right);
-
       li {
         @include float(left);
-
         a {
           display: block;
           margin-left: $item-margin;
@@ -2922,14 +2293,12 @@ footer.contact {
           text-decoration: none;
         }
       }
-
       .current a {
         @include grd-blue;
         color: $t-white;
       }
     }
   }
-
   #map-sidebar {
     float: left;
     width: 180px;
@@ -2937,37 +2306,30 @@ footer.contact {
     padding: 9px;
     border: $border-hgry;
     overflow-y: scroll;
-
     .column {
       margin-bottom: 5px;
       padding-bottom: 5px;
       border-bottom: $border-hgry;
-
       &:last-child {
         margin-bottom: 0;
         border-bottom: 0;
       }
     }
   }
-
   #map-canvas {
     position: relative;
     width: 100% !important;
     height: 500px !important;
     overflow: hidden;
     margin-bottom: $item-margin;
-
     .marker-info {
       width: 300px;
     }
   }
-
   .filters {
     @include clear;
-
     li {
       @include float(left);
-
       a {
         display: block;
         margin: 0 $item-margin $item-margin 0;
@@ -2976,36 +2338,26 @@ footer.contact {
         background-color: $hgry;
         color: $text;
         text-decoration: none;
-
-        &:hover,
-        &:focus {
+        &:hover, &:focus {
           background-color: $hblue;
         }
-
         &.clicked {
           background-color: $blue;
           color: $t-white;
-
-          &:hover,
-          &:focus {
+          &:hover, &:focus {
             background-color: $hblue;
             color: $text;
           }
         }
       }
     }
-
-    .area-list li a {
-      padding: 3px 10px;
-    }
+    .area-list li a { padding: 3px 10px; }
   }
-
   .columns {
     .column {
       clear: both;
       padding: 6px 0;
       border-bottom: $border-hgry;
-
       h2 {
         margin: 0;
         padding: 0;
@@ -3013,21 +2365,17 @@ footer.contact {
         font-size: $px14;
         font-weight: normal;
       }
-
       .categories {
         margin-bottom: 0;
         border: 0;
         text-align: left;
-
         ul {
           @include clear;
         }
-
         li {
           @include float(left);
           list-style: none;
           background: url(../img/ic-li.png) no-repeat center left 2px;
-
           a {
             display: block;
             //margin: 0 6px 6px 0;
@@ -3037,9 +2385,7 @@ footer.contact {
             background-color: $hgry;
             color: $text;
             text-decoration: none;
-
-            &:hover,
-            &:focus {
+            &:hover, &:focus {
               background-color: $hblue;
             }
           }
@@ -3047,25 +2393,20 @@ footer.contact {
       }
     }
   }
-
   .summary-image {
     @include float(right);
     padding: 4px;
     border: $border-hgry;
   }
-
   .body {
     @include float(left);
     width: 528px;
-
     dd {
       width: 344px;
     }
   }
-
   .see {
     @include clear;
-
     dt {
       clear: both;
       @include float(left);
@@ -3075,52 +2416,42 @@ footer.contact {
       @include border-radius(3px);
       background: $hblue;
     }
-
     dd {
       @include float(left);
       margin-bottom: $item-margin;
       padding: 3px 0;
     }
-
-    +p {
+    + p {
       border: $border-hgry;
       padding: 4px;
     }
   }
-
   .additional-info {
     margin-bottom: $box-margin;
   }
-
   .images {
     @include clear;
     margin-bottom: $box-margin;
-
     .image {
       @include float(left);
       margin: 0 10px 10px 0;
       padding: 4px;
       border: $border-hgry;
-
       &:nth-child(4n) {
         margin-right: 0;
       }
     }
   }
-
   .facility-nodes {
     width: 100%;
     margin-bottom: $item-margin;
-
     caption {
       text-align: left;
     }
-
     table {
       width: 100%;
       margin-bottom: $box-margin;
     }
-
     caption {
       margin-bottom: 6px;
       padding: 0 10px;
@@ -3129,28 +2460,22 @@ footer.contact {
       font-size: $px16;
       font-weight: bold;
     }
-
     th {
       padding: 3px 8px 0;
       border: $border-hgry;
       background: $hblue;
     }
-
     td {
       padding: 3px 8px 0;
       border: $border-hgry;
     }
   }
 }
-
-.map #map-sidebar+#map-canvas {
+.map #map-sidebar + #map-canvas {
   width: 512px !important;
 }
-
 #colorbox {
-
-  h2,
-  legend {
+  h2, legend {
     clear: both;
     width: 100%;
     margin-bottom: 6px;
@@ -3161,33 +2486,26 @@ footer.contact {
     font-weight: bold;
     box-sizing: border-box;
   }
-
-  .category,
-  .service,
-  .location {
+  .category, .service, .location {
     div {
       @include float(left);
       min-width: 177px;
     }
   }
-
   .send {
     clear: both;
     margin-top: 1em;
     text-align: center;
-
     input {
       @include btn-org;
     }
   }
 }
-
 // -----------------------------------------------------------------------------
 // ezine
 .ezine-pages {
   margin-bottom: $box-margin;
   list-style: none;
-
   li {
     float: left;
     width: 325px;
@@ -3196,18 +2514,14 @@ footer.contact {
     border: $border-hgry;
     border-left: 5px solid $blue;
     cursor: pointer;
-
     &:nth-child(2n) {
       margin-right: 0;
     }
-
-    &:hover,
-    &:focus {
+    &:hover, &:focus {
       background: $hblue;
     }
   }
 }
-
 .ezine {
   .ezine-html {
     margin-bottom: 6px;
@@ -3217,13 +2531,11 @@ footer.contact {
     font-size: $px16;
     font-weight: bold;
   }
-
   dl {
     @include clear;
     clear: both;
     width: 100%;
     margin-bottom: $box-margin;
-
     dt {
       clear: both;
       float: left;
@@ -3233,65 +2545,51 @@ footer.contact {
       font-weight: bold;
       background: $hblue;
       @include border-radius(3px);
-
       .required {
         display: block;
         color: $red;
         font-weight: normal;
       }
     }
-
     dd {
       float: left;
       width: 464px;
       margin-bottom: $item-margin;
       padding: 0 $item-margin;
-
       p {
         margin-bottom: 0;
       }
     }
   }
-
   .send {
     padding-left: 236px;
-
     input {
       margin-right: $item-margin;
       @include btn-org;
     }
-
     input[name="cancel"] {
       @include btn-gry;
     }
   }
-
   #errorExplanation {
     margin-bottom: $box-margin;
     padding: $item-margin $item-margin 0;
     border: 2px solid $red;
     @include border-radius(5px);
     background: #ffffa4;
-
-    ul {
-      padding-left: $box-margin;
-    }
+    ul {padding-left: $box-margin;}
   }
-
   .inquiry-confirm-message {
     margin-bottom: $box-margin;
-
     ~dd {
       padding-bottom: 2em;
     }
   }
-
   .simple-captcha {
     padding-left: 236px;
     margin-bottom: $box-margin;
   }
 }
-
 // -----------------------------------------------------------------------------
 // board
 .body--board #main {
@@ -3302,13 +2600,11 @@ footer.contact {
     color: $text;
     text-decoration: none;
   }
-
   .post {
     margin-bottom: $item-margin;
     padding: $item-margin;
     border: $border-hgry;
   }
-
   .children {
     .post {
       margin: $item-margin 0 0;
@@ -3317,68 +2613,48 @@ footer.contact {
       border-top: $border-hgry;
     }
   }
-
   .admin-user {
     border: $border-hblue;
   }
-
-  .date,
-  .poster,
-  .name,
-  .email,
-  .url,
-  .action {
+  .date, .poster, .name, .email, .url, .action {
     display: inline-block;
     margin-right: $item-margin;
   }
-
   .send {
     text-align: center;
-
     input {
       @include btn-org;
     }
-
     button {
       @include btn-gry;
     }
   }
-
   .toggle {
     @include u-arrow;
   }
-
   #errorExplanation {
     margin-bottom: $box-margin;
     padding: $item-margin $item-margin 0;
     border: 2px solid $red;
     @include border-radius(5px);
     background: #ffffa4;
-
-    ul {
-      padding-left: $box-margin;
-    }
+    ul {padding-left: $box-margin;}
   }
 }
-
 // -----------------------------------------------------------------------------
 // gravator
 .gravatar {
   margin-bottom: 1em;
   text-align: right;
-
-  .gravatar-icon,
-  .gravatar-screen-name {
+  .gravatar-icon, .gravatar-screen-name {
     display: inline-block;
     vertical-align: middle;
   }
-
   .gravatar-icon img {
     width: auto;
     height: 32px;
   }
 }
-
 // -----------------------------------------------------------------------------
 // photo blog
 #recent-photo {
@@ -3390,122 +2666,93 @@ footer.contact {
     border: 0;
     text-align: center;
   }
-
   .more {
     text-align: right;
-
     a {
       @include r-arrow;
     }
   }
 }
-
 #side-blog {
   li {
     list-style: none;
     padding: 12px 0 0;
-
     span {
       display: block;
       width: 120px;
       min-height: 70px;
       float: left;
-
       img {
         max-width: 100%;
         height: auto;
       }
     }
-
-    a:hover,
-    a:focus {
-      background: none;
-    }
+    a:hover, a:focus { background: none; }
   }
-
   .more {
     text-align: right;
-
     a {
       @include r-arrow;
     }
   }
 }
-
 .photos {
   @include clear;
   @include display-flex;
   @include flex-direction(row);
   @include flex-wrap(wrap);
   margin-bottom: $box-margin;
-
   .photo {
     width: 166px;
     float: left;
     padding: 0 6px 12px;
     text-align: center;
-
     @include mb {
       max-width: 50%;
       @include box-sizing(border-box);
     }
-
     a {
       display: block;
       height: 100%;
       padding: 6px;
-
-      &:hover,
-      &:focus {
-        background: $hblue;
-      }
+      &:hover, &:focus { background: $hblue; }
     }
-
     img {
       max-width: 100%;
       height: auto;
     }
-
     span {
       display: block;
     }
   }
 }
-
 .member-photo-search-part {
   margin-bottom: 1em;
-
   @include mb {
     margin: 10px;
-
     .keyword {
       position: relative;
     }
   }
-
   form {
     display: inline-block;
     margin-right: 1em;
     border: $border-hgry;
   }
-
   #keyword {
     width: 24em;
     padding: 5px;
     border: 0;
     color: $text;
-
     @include mb {
       width: 100%;
     }
   }
-
   input[type="submit"] {
     padding: 5px 10px;
     border: 0;
     background: #333;
     color: $t-white;
-
     @include mb {
       position: absolute;
       top: 0;
@@ -3513,15 +2760,12 @@ footer.contact {
     }
   }
 }
-
 .kanko-info {
   .condition {
     @include clear;
-
     @include mb {
       padding: 10px 10px 0;
     }
-
     dt {
       clear: both;
       width: 160px;
@@ -3531,17 +2775,13 @@ footer.contact {
       @include border-radius(3px);
       background: $hblue;
     }
-
     dd {
       @include float(left);
       margin-bottom: 6px;
       padding: 3px 0;
     }
-
     @include mb {
-
-      dt,
-      dd {
+      dt, dd {
         float: none;
         display: block;
         width: 100%;
@@ -3550,51 +2790,39 @@ footer.contact {
       }
     }
   }
-
-  .condition+.ajax-box {
+  .condition + .ajax-box {
     display: block;
     @include float(right);
     @include btn-org;
     margin-bottom: $box-margin;
     color: $text;
     text-decoration: none;
-
     @include mb {
       margin-right: 10px;
     }
   }
-
   .result {
     clear: right;
     @include float(left);
-
     @include mb {
       clear: both;
       padding: 0 10px;
     }
-
     h2 {
       border: 0;
       font-size: $px14;
       font-weight: normal;
     }
   }
-
   .tabs {
     @include clear;
     border-bottom: 2px solid $orange;
-
-    @include mb {
-      padding: 0 10px;
-    }
-
+    @include mb {padding: 0 10px;}
     ul {
       @include clear;
       @include float(right);
-
       li {
         @include float(left);
-
         a {
           display: block;
           margin-left: $item-margin;
@@ -3606,7 +2834,6 @@ footer.contact {
           text-decoration: none;
         }
       }
-
       .current a {
         @include grd-blue;
         color: $t-white;
@@ -3614,63 +2841,42 @@ footer.contact {
     }
   }
 }
-
 .photo-body {
   @include mb {
     padding: 10px;
   }
-
   .ajax-box img {
     margin-bottom: 1em;
   }
-
-  time,
-  .contributor {
+  time, .contributor {
     display: inline-block;
     margin: 0 1em 2em 0;
   }
-
   .contributor {
     font-weight: bold;
   }
-
   .caption {
     margin-bottom: 2em;
   }
-
   .license {
     margin-bottom: 2em;
     padding: 12px;
     border: $border-hgry;
-
-    h2 {
-      font-weight: bold;
-    }
+    h2 { font-weight: bold; }
   }
 }
-
-.photo-categories,
-.photo-locations {
+.photo-categories, .photo-locations {
   display: inline-block;
   margin-bottom: 2em;
-
   @include mb {
     display: block;
     padding: 0 10px;
   }
-
-  h2 {
-    display: none;
-  }
-
-  ul {
-    @include clear;
-  }
-
+  h2 { display: none; }
+  ul { @include clear; }
   li {
     display: inline-block;
     list-style: none;
-
     a {
       display: inline-block;
       @include btn-gry;
@@ -3679,47 +2885,38 @@ footer.contact {
     }
   }
 }
-
 .member-blogs {
   .blog {
     margin-bottom: 1em;
     padding: 12px;
     border: $border-hgry;
-
     img {
       float: left;
     }
-
     header {
       margin-left: 132px;
     }
-
     .description {
       margin-left: 132px;
     }
   }
 }
-
 .blog #main {
   @include clear;
 }
-
 .blog-center {
   float: right;
   width: 500px;
-
   .blog {
     margin-bottom: 12px;
     padding-bottom: 12px;
     border-bottom: $border-hgry;
-
     .genres {
       li {
         display: inline-block;
         padding: 0;
         background: none;
       }
-
       a {
         display: block;
         @include btn-gry;
@@ -3729,91 +2926,71 @@ footer.contact {
       }
     }
   }
-
   img {
     max-width: 100%;
     height: auto;
   }
 }
-
 .blog-left {
   float: left;
   width: 198px;
   border: $border-hgry;
 }
-
 .blog-profile {
   margin-bottom: 1em;
   padding: 12px;
   text-align: center;
-
   img {
     margin-bottom: .5em;
   }
-
-  header,
-  .contributor,
-  .description {
+  header, .contributor, .description {
     text-align: left;
   }
-
   .contributor {
     font-weight: bold;
   }
 }
-
 .blog-left .blog-genres {
   padding: 12px;
-
   li {
     list-style: none;
     @include li;
   }
 }
-
 @include mb {
   .map-page img {
     max-width: none !important;
   }
-
   .body--kanko-info-photo #map-canvas {
     height: 300px !important;
   }
-
   .member-blogs {
     padding: 10px;
   }
-
-  .blog-center,
-  .blog-left {
+  .blog-center, .blog-left {
     float: none;
     width: auto;
     margin: 10px;
   }
 }
-
 // -----------------------------------------------------------------------------
 // login
-#side .login,
-#side .registration {
+#side .login, #side .registration {
   display: block;
   @include btn-org;
   margin-bottom: 2em;
   color: $text;
   text-align: center;
   text-decoration: none;
-
   @include mb {
     margin: 0 10px 1em;
   }
 }
-
 @include mb {
   #side .member {
     margin-left: 10px;
   }
 }
-
 #side .logout {
   display: inline-block;
   @include btn-org;
@@ -3821,67 +2998,51 @@ footer.contact {
   padding: 0 6px;
   color: $text;
   text-decoration: none;
-
   @include mb {
     margin: 0 10px 1em 0;
   }
 }
-
 .form-login {
-
-  dt,
-  dd {
+  dt, dd {
     margin-bottom: 1em;
   }
 }
-
 .reset_password {
   margin: 1em 0;
-
   @include mb {
     padding: 10px;
   }
 }
-
 .member-registration-form,
-.mypage-form,
-.member-my-group {
+.mypage-form, .member-my-group {
   .send {
     margin-bottom: 2em;
     padding: 0;
     text-align: center;
-
-    input,
-    button {
+    input, button {
       display: inline-block;
       @include btn-org;
       vertical-align: middle;
     }
-
-    input[name="back"],
-    button[type="reset"] {
+    input[name="back"], button[type="reset"] {
       @include btn-gry;
     }
   }
 }
-
 #errorExplanation {
   margin-bottom: $box-margin;
   padding: $item-margin $item-margin 0;
   border: 2px solid $red;
   @include border-radius(5px);
   background: #ffffa4;
-
   ul {
     margin-bottom: $item-margin;
     list-style: none;
-
     li {
       @include li;
     }
   }
 }
-
 #ss-notice {
   margin-bottom: 1em;
   padding: $item-margin;
@@ -3889,19 +3050,16 @@ footer.contact {
   @include border-radius(5px);
   color: $red;
 }
-
 // -----------------------------------------------------------------------------
 // mypage
 #mypage-tabs {
   @include clear;
   margin-bottom: 1em;
   border-bottom: 2px solid $orange;
-
   @include mb {
     padding: 10px 10px 0;
     border: 0;
   }
-
   a {
     display: block;
     float: left;
@@ -3912,102 +3070,82 @@ footer.contact {
     @include grd-gry;
     color: $text;
     text-decoration: none;
-
     @include mb {
       margin: 0 10px 10px 0;
       padding: 3px 10px;
       @include border-radius(3px);
     }
   }
-
   a.current {
     @include grd-blue;
     color: $t-white;
   }
 }
-
 .mypage-nav {
   margin-bottom: 1em;
-
   @include mb {
     padding: 0 10px;
   }
-
   a {
     display: inline-block;
     @include btn-gry;
     margin-bottom: 1em;
     color: $text;
     text-decoration: none;
-
     @include mb {
       margin-bottom: .5em;
       font-size: $px12;
     }
   }
 }
-
-table.mypage-index,
-.member-my-group .index,
-table.member-invited-group {
+table.mypage-index, .member-my-group .index, table.member-invited-group {
   width: 100%;
   margin-bottom: $box-margin;
-
   @include mb {
     display: block;
     @include border-radius(0);
-
     thead {
       display: block;
       float: left;
     }
-
     tbody {
       display: block;
       width: auto;
       overflow-x: scroll;
       white-space: nowrap;
-
       tr {
         display: inline-block;
       }
     }
   }
-
   caption {
     padding: 0 10px;
     color: $blue;
     text-align: left;
   }
-
   th {
     padding: 3px 8px 0;
     border: $border-hgry;
     background: #ffefbb;
     text-align: left;
-
     @include mb {
       display: block;
       width: auto;
     }
   }
-
   td {
     padding: 3px 8px 0;
     border: $border-hgry;
-
     @include mb {
       display: block;
     }
   }
 }
-
 @include mb {
   .invited-groups {
     margin: 0 10px;
   }
 }
-
 .body--mypage {
   .ajax-box {
     display: inline-block;
@@ -4015,15 +3153,12 @@ table.member-invited-group {
     color: $text;
     text-decoration: none;
   }
-
   #selected-files {
     margin-top: 12px;
   }
-
   .file-view {
     float: left;
     margin: 0 12px 12px 0;
-
     .thumb {
       display: block;
       width: 120px;
@@ -4037,19 +3172,12 @@ table.member-invited-group {
       text-decoration: none;
       text-align: center;
       line-height: 90px;
-
-      &:hover,
-      &:focus {
+      &:hover, &:focus {
         background: $hblue;
       }
     }
-
-    .name {
-      margin-bottom: 7px;
-    }
-
-    .action a,
-    .menu a {
+    .name { margin-bottom: 7px; }
+    .action a, .menu a {
       display: inline-block;
       @include btn-gry;
       margin-bottom: 12px;
@@ -4059,96 +3187,75 @@ table.member-invited-group {
       letter-spacing: 0;
     }
   }
-
   .clear-marker {
     @include btn-gry;
     margin-top: 6px;
   }
 }
-
 .body--mypage-anpi {
   form.search {
     float: left;
     margin-bottom: 10px;
-
     @include mb {
       float: none;
       padding: 0 10px;
     }
-
     select {
       padding: 7px 10px;
     }
-
     .btn {
       @include btn-gry;
     }
   }
 }
-
 .member-anpi-map {
   float: right;
   margin-bottom: 10px;
-
   @include mb {
     float: none;
     padding: 0 10px;
   }
-
   a {
     @include btn-org;
     color: $text;
     text-decoration: none;
   }
 }
-
 .body--anpi .search-settings form {
   margin-bottom: 10px;
-
   @include mb {
     padding: 0 10px;
   }
-
   h2 {
     display: inline-block;
     margin-right: 10px;
   }
-
   #keyword {
     padding: 7px 10px;
-
-    @include mb {
-      margin-bottom: 10px;
-    }
+    @include mb { margin-bottom: 10px; }
   }
-
   input[type="submit"] {
     @include btn-gry;
   }
 }
-
 .anpi-post {
   margin-bottom: $item-margin;
   padding: $item-margin;
   border: $border-hgry;
-
   h2 {
     font-size: $px16;
     font-weight: bold;
   }
-
   .body {
     margin-bottom: $item-margin;
     padding-bottom: $item-margin;
     border-bottom: $border-hgry;
   }
-
   .poster span {
     display: inline-block;
     margin-right: 20px;
   }
 }
-
 // -----------------------------------------------------------------------------
 // garbage
 .garbage {
@@ -4157,17 +3264,12 @@ table.member-invited-group {
       padding: 10px 10px 30px;
     }
   }
-
-  .name,
-  .category,
-  .condition {
+  .name, .category, .condition {
     @include clear;
     clear: both;
     width: 100%;
     margin-bottom: $box-margin;
-
-    h2,
-    dt {
+    h2, dt {
       clear: both;
       float: left;
       width: 100px;
@@ -4175,7 +3277,6 @@ table.member-invited-group {
       font-weight: bold;
       background: $hblue;
       @include border-radius(3px);
-
       @include mb {
         @include box-sizing(border-box);
         float: none;
@@ -4183,14 +3284,10 @@ table.member-invited-group {
         margin-bottom: $item-margin;
       }
     }
-
-    input,
-    select,
-    dd {
+    input, select, dd {
       float: left;
       min-width: 400px;
       margin: 8px $item-margin;
-
       @include mb {
         @include box-sizing(border-box);
         float: none;
@@ -4201,70 +3298,55 @@ table.member-invited-group {
       }
     }
   }
-
   .condition {
     margin-bottom: 0;
-
     @include mb {
       @include box-sizing(border-box);
       padding: 10px;
     }
   }
-
   .send {
     text-align: center;
-
     input {
       margin-right: $item-margin;
       @include btn-org;
     }
   }
-
   .setting {
     text-align: right;
-
     @include mb {
       padding: 10px;
     }
-
-    a,
-    a:hover {
+    a, a:hover {
       @include btn-org;
       color: #000;
       text-decoration: none;
     }
   }
-
   .result {
     margin: $item-margin 0;
-
     @include mb {
       padding: 0 10px;
     }
   }
-
   table.columns {
     width: 100%;
     margin-bottom: $box-margin;
-
     @include mb {
       width: calc(100% - 20px);
       margin: 0 10px 30px;
     }
-
     caption {
       padding: 0 10px;
       color: $blue;
       text-align: left;
     }
-
     th {
       padding: 3px 8px 0;
       border: $border-hgry;
       background: #ffefbb;
       text-align: left;
     }
-
     td {
       padding: 3px 8px 0;
       border: $border-hgry;
@@ -4274,129 +3356,77 @@ table.member-invited-group {
 
 // -----------------------------------------------------------------------------
 @include mb {
-
-  #head,
-  #navi .wrap,
-  #wrap,
-  #main,
-  #side,
-  #addition,
-  #ad,
-  #main .left,
-  #addition .left,
-  #main .center,
-  #addition .center,
-  #addition .right,
-  #address dl,
-  #address dl dt,
-  #address dl dd,
-  #footer-navi,
-  #main .category-nodes article,
-  #main .cms-nodes article {
+  #head, #navi .wrap, #wrap, #main, #side, #addition, #ad,
+  #main .left, #addition .left, #main .center, #addition .center, #addition .right,
+  #address dl, #address dl dt, #address dl dd, #footer-navi,
+  #main .category-nodes article, #main .cms-nodes article {
     float: none;
     width: 100%;
     padding: 0;
   }
-
-  #tool,
-  #head .menu .u-menu,
-  #slideshow #slide-controll #pause-play,
-  #population,
-  #ad .info,
-  .crumbs {
+  #tool, #head .menu .u-menu, #slideshow #slide-controll #pause-play,
+  #population, #ad .info, .crumbs {
     display: none;
   }
 
   // -----------------------------------------------------------------------------
   //  safety online propose attention recent useful relations ranking topics connect add links-life
-  #safety,
-  #online,
-  #propose,
-  #attention,
-  #recent,
-  #useful,
-  #connect #relations,
-  #ranking,
-  #topics,
-  #recent-oshirase,
-  #links-life,
-  #category-list,
-  #month {
+  #safety, #online, #propose, #attention, #recent, #useful, #connect
+  #relations, #ranking, #topics, #recent-oshirase, #links-life, #category-list, #month {
     margin-bottom: $smart-margin;
     margin-top: 0;
-
     header h2 {
       margin-bottom: 0;
     }
   }
-
   #recent-oshirase {
     margin-top: 10px;
     margin-bottom: 0;
-
     h2 {
       margin-left: 0 !important;
     }
-
     .new h2:after {
       display: none;
     }
   }
-
   #announce p {
     padding: 0 10px;
   }
-
   #safety li {
     width: 50%;
-
     &:nth-child(2n+1) {
       margin: 0;
-
       a {
         border-right: $border-hgry;
       }
     }
-
     a {
       display: block;
       @include r-arrow-s;
       border-bottom: $border-hgry;
     }
   }
-
-  #online nav,
-  #propose nav {
+  #online nav, #propose nav {
     background: none;
     padding: 0;
   }
-
-  #online li a,
-  #propose li a,
-  #useful li a,
-  #relations li a,
-  #ranking li a {
+  #online li a, #propose li a, #useful li a,
+  #relations li a, #ranking li a {
     display: block;
     @include r-arrow-s;
     border-bottom: $border-hgry;
   }
-
   #ranking li a {
     padding-left: 32px;
     background: url(../img/ic-ranking.png) no-repeat 10px 8px;
   }
-
   #recent-oshirase article header {
     padding: 0;
   }
-
-  #attention h3,
-  #recent h3,
-  #recent-oshirase h3 {
+  #attention h3, #recent h3, #recent-oshirase h3 {
     display: block;
     margin: 0;
     padding: 0;
-
     a {
       display: block;
       @include ic-doc;
@@ -4405,72 +3435,50 @@ table.member-invited-group {
       text-overflow: ellipsis;
     }
   }
-
-  #attention time,
-  #recent time,
-  #recent-oshirase time,
-  .cms-tabs time {
+  #attention time, #recent time, #recent-oshirase time, .cms-tabs time {
     display: none;
   }
-
   #topics article {
     padding: 10px 10px 0;
   }
-
-  #useful,
-  #relations,
-  #topics {
+  #useful, #relations, #topics {
     min-height: 0;
   }
-
-  #connect nav,
-  #ad nav {
+  #connect nav, #ad nav {
     padding: 0 10px;
-
     a {
       @include box-sizing(border-box);
       width: 50%;
       margin: 0 0 10px;
-
       &:nth-child(2n+1) {
         margin-right: 0;
         padding-right: 5px;
       }
-
       &:nth-child(2n) {
         padding-left: 5px;
       }
     }
   }
-
   #ad nav {
     padding: 10px 10px 0;
     border: 0;
   }
-
-  #links-life li,
-  #category-list h2,
-  #month h2 {
+  #links-life li, #category-list h2, #month h2 {
     padding: 0;
-
     a {
       padding: 3px 10px;
     }
   }
-
   .cms-tabs {
     padding: 0;
-
     .names {
       @include clear;
-
       .name {
         display: block;
         float: left;
         width: 33%;
         @include box-sizing(border-box);
       }
-
       .name:last-child {
         width: 34%;
         white-space: nowrap;
@@ -4479,11 +3487,9 @@ table.member-invited-group {
         @include box-sizing(border-box);
       }
     }
-
     .pages header {
       padding: 3px 10px;
     }
-
     nav {
       padding: 3px 10px;
     }
@@ -4494,18 +3500,15 @@ table.member-invited-group {
   #foot {
     margin-top: 0;
   }
-
   #address {
     width: 100%;
     min-width: 50%;
     padding: 10px;
     @include box-sizing(border-box);
-
     dl dt {
       font-weight: normal;
       color: $blue;
     }
-
     dl dd a {
       display: block;
       margin: 0;
@@ -4514,11 +3517,9 @@ table.member-invited-group {
       background-position: 28% center;
     }
   }
-
   #footer-navi nav {
     @include clear;
     border-top: 1px solid #999;
-
     a {
       float: left;
       display: block;
@@ -4533,30 +3534,23 @@ table.member-invited-group {
       background-position: 9px 10px;
       color: $text;
       text-decoration: none;
-
       &:nth-child(2n+1) {
         border-right: 0;
       }
-
       &:last-child {
         border-right: 1px solid #999;
       }
-
       &:nth-child(4) {
         display: none;
       }
     }
   }
-
   #copyright {
     min-width: 100%;
     font-size: $px12;
   }
-
-  #ss-pc,
-  #ss-mb {
+  #ss-pc, #ss-mb {
     padding: 10px;
-
     a {
       @include box-sizing(border-box);
       display: block;
@@ -4569,7 +3563,6 @@ table.member-invited-group {
       text-decoration: none;
     }
   }
-
   // -----------------------------------------------------------------------------
   //  pagetop
   .pagetop {
@@ -4578,7 +3571,6 @@ table.member-invited-group {
     width: 50px;
     height: 50px;
     @include border-radius(10px);
-
     a {
       position: relative;
       width: 50px;
@@ -4589,28 +3581,21 @@ table.member-invited-group {
       text-indent: -9999px;
     }
   }
-
   // -----------------------------------------------------------------------------
   //  category-nodes
-  #main .category-nodes,
-  #main .cms-nodes {
+  #main .category-nodes, #main .cms-nodes {
     margin: $smart-margin 0 0;
     padding: 0 10px;
-
     article {
       @include box-sizing(border-box);
       margin: 0 0 10px;
       padding: 5px;
     }
   }
-
   // -----------------------------------------------------------------------------
   //  category-pages article-pages faq-search
-  .category-pages,
-  .article-pages,
-  .faq-search {
+  .category-pages, .article-pages, .faq-search {
     margin-bottom: $smart-margin;
-
     a {
       display: block;
       width: 100%;
@@ -4620,17 +3605,13 @@ table.member-invited-group {
       white-space: nowrap;
       text-overflow: ellipsis;
     }
-
     .new h2:after {
       display: none;
     }
   }
-
-  .page .category-pages,
-  .page .article-pages {
+  .page .category-pages, .page .article-pages {
     article {
       padding: 3px 10px;
-
       h2 {
         display: block;
         margin: 0;
@@ -4638,174 +3619,125 @@ table.member-invited-group {
       }
     }
   }
-
   .one .page .category-pages,
   .one .page .article-pages {
     article {
       padding: 3px 10px;
       border-bottom: $border-hgry;
-
       time {
         float: none;
       }
-
       h2 {
         padding: 0;
         border: 0;
-
         a {
           border: 0;
         }
       }
     }
   }
-
   // -----------------------------------------------------------------------------
   //  page sitemap
-  .page article,
-  .one article.body,
-  .related-pages,
-  .page footer.contact {
+  .page article, .one article.body, .related-pages, .page footer.contact {
     padding: 10px 10px 0;
   }
-
   .page header.released {
     margin: 3px 0;
   }
-
-  .page article dl dt,
-  .one article.body dl dt {
+  .page article dl dt, .one article.body dl dt {
     float: none;
   }
-
   .related-pages article {
     padding: 0;
   }
-
   // -----------------------------------------------------------------------------
   //  event
   .event-pages-filter {
     padding: 10px 10px 0;
   }
-
   .event-date ul {
     padding: 0 10px;
   }
-
   #event-list {
     dt {
       float: none;
       width: 100%;
       @include box-sizing(border-box);
     }
-
     dd {
       margin: 0;
-
       article {
         padding: 0;
       }
     }
   }
-
   #event-list dd div a {
     min-width: 0;
   }
-
   .event .see {
     padding: 10px;
-
-    dt,
-    dd {
+    dt, dd {
       display: block;
       @include box-sizing(border-box);
       width: 100%;
       float: none;
     }
-
     dt {
       margin: 0 0 $smart-margin;
     }
-
     dd {
       padding: 0;
     }
   }
-
   // -----------------------------------------------------------------------------
   // inquiry
   .inquiry-html {
     margin-bottom: $box-margin;
     padding: 0 $smart-margin;
   }
-
-  .inquiry-form,
-  .columns,
-  .form-login {
+  .inquiry-form, .columns, .form-login {
     margin-bottom: $box-margin;
     padding: 0 $smart-margin;
-
-    dl,
-    fieldset {
-
-      dt,
-      legend {
+    dl, fieldset {
+      dt, legend {
         width: 100%;
         margin-bottom: $smart-margin;
         @include box-sizing(border-box);
-
         .required {
           display: inline;
         }
       }
-
-      dd,
-      .fields {
+      dd, .fields {
         width: 100%;
         @include box-sizing(border-box);
-
-        input[type="text"],
-        input[type="email"],
-        textarea {
+        input[type="text"], input[type="email"], textarea {
           width: 100%;
           @include box-sizing(border-box);
         }
       }
-
-      .graph {
-        margin: 0;
-      }
+      .graph {margin: 0;}
     }
-
-    .send,
-    .simple-captcha {
+    .send, .simple-captcha {
       padding: 0;
       text-align: center;
     }
   }
-
-  .columns,
-  .form-login {
+  .columns, .form-login {
     margin-top: $smart-margin;
   }
-
   // -----------------------------------------------------------------------------
   // faq
-  .faq-question,
-  .faq .body {
+  .faq-question, .faq .body {
     padding: $smart-margin;
-
     &:before {
       position: static;
     }
   }
-
   .faq-search form {
     .keyword input {
       width: 200px;
     }
   }
-
   // -----------------------------------------------------------------------------
   // map
   .map {
@@ -4813,24 +3745,19 @@ table.member-invited-group {
       width: 100%;
       @include box-sizing(border-box);
     }
-
     form .location {
       width: 100%;
       min-height: 0;
       @include box-sizing(border-box);
       background: none;
-
       div {
         position: static;
         min-width: 150px;
       }
     }
-
     .condition {
       padding: 10px 10px 0;
-
-      dt,
-      dd {
+      dt, dd {
         float: none;
         display: block;
         width: 100%;
@@ -4838,53 +3765,42 @@ table.member-invited-group {
         @include box-sizing(border-box);
       }
     }
-
     .settings {
       padding: 0 10px;
     }
-
     .tabs {
       padding: 0 10px;
     }
-
     #map-sidebar {
       width: 100%;
       height: 300px !important;
       overflow-y: scroll;
     }
-
     #map-canvas {
       width: 100% !important;
       height: 300px !important;
     }
-
     .filters {
       padding: 0 10px;
     }
-
     .columns .column {
       padding: 10px;
     }
-
     .body {
       float: none;
       width: 100%;
     }
-
     .summary-image {
       display: inline-block;
       float: none;
       margin-bottom: 10px;
     }
-
     .see {
       display: block;
       width: 100%;
       padding: 0 10px;
       @include box-sizing(border-box);
-
-      dt,
-      dd {
+      dt, dd {
         float: none;
         display: block;
         width: 100%;
@@ -4892,60 +3808,45 @@ table.member-invited-group {
         @include box-sizing(border-box);
       }
     }
-
     .facility-nodes {
       width: 100%;
-
-      th,
-      td {
+      th, td {
         display: block;
         padding: 0;
         border: 0;
       }
-
       th {
         @include float(left);
         background: none;
-
         &:after {
           content: " / ";
         }
       }
-
       td:first-child {
         margin-top: 10px;
       }
-
       td:last-child {
         margin-bottom: 10px;
       }
-
       tr {
         border-bottom: $border-hgry;
       }
     }
   }
-
   .summary-image {
     margin: 10px;
   }
-
   .images {
     padding: 0 10px;
   }
-
-  #colorbox .category div,
-  #colorbox .service div,
-  #colorbox .location div {
+  #colorbox .category div, #colorbox .service div, #colorbox .location div {
     float: none;
     display: block;
     width: 100%;
   }
-
   #colorbox .send input {
     margin-bottom: 10px;
   }
-
   #body--institution-map .map #map-canvas {
     width: 100% !important;
   }
@@ -4956,7 +3857,6 @@ table.member-invited-group {
     @include clear;
     margin: $smart-margin 0 0;
     padding: 0 10px;
-
     li {
       @include box-sizing(border-box);
       width: 100%;
@@ -4964,50 +3864,39 @@ table.member-invited-group {
       padding: 5px;
     }
   }
-
   .ezine {
     margin-bottom: $box-margin;
     padding: 0 $smart-margin;
-
     dl {
       dt {
         width: 100%;
         margin-bottom: $smart-margin;
         @include box-sizing(border-box);
-
         .required {
           display: inline;
         }
       }
-
       dd {
         width: 100%;
         @include box-sizing(border-box);
-
-        input[type="text"],
-        input[type="email"],
-        textarea {
+        input[type="text"], input[type="email"], textarea {
           width: 100%;
           @include box-sizing(border-box);
         }
       }
     }
-
-    .send,
-    .simple-captcha {
+    .send, .simple-captcha {
       margin-bottom: $smart-margin;
       padding: 0;
       text-align: center;
     }
   }
-
   // -----------------------------------------------------------------------------
   // board
   .body--board {
     .menu {
       margin: $smart-margin;
     }
-
     .post {
       margin: 0 $smart-margin $smart-margin;
     }
@@ -5022,22 +3911,18 @@ table.member-invited-group {
   right: 0;
   bottom: 120px;
   z-index: 9999;
-
   @include mb {
     bottom: 0;
   }
-
   .chat-close {
     padding: 10px 15px 10px 55px;
     background: #333 url(../img/ic-chat.png) no-repeat 10px center;
     color: #fff;
     font-size: $px18;
-
     @include mb {
       font-size: $px12;
     }
   }
-
   .chat-open {
     position: relative;
     @include box-sizing(border-box);
@@ -5047,18 +3932,15 @@ table.member-invited-group {
     border: 3px solid #333;
     background: #ccc;
     overflow: hidden;
-
     @include mb {
       width: 100%;
       height: 100vh;
     }
-
     header {
       @include display-flex;
       @include justify-content(space-between);
       padding: 10px 15px;
       background: #333;
-
       h2 {
         padding-left: 40px;
         background: url(../img/ic-chat.png) no-repeat left center;
@@ -5066,29 +3948,24 @@ table.member-invited-group {
         font-size: $px18;
       }
     }
-
     .chat-items {
       height: calc(480px - 8.2em);
       overflow: scroll;
       padding: 10px;
-
       @include mb {
         height: calc(100vh - 8.2em);
       }
     }
-
     .chat-item {
       clear: both;
       margin-bottom: 15px;
       padding: 10px;
       border-radius: 6px;
     }
-
     .chat-item.sys {
       position: relative;
       margin-left: 70px;
       background: #fff;
-
       &:before {
         content: "";
         position: absolute;
@@ -5098,7 +3975,6 @@ table.member-invited-group {
         height: 60px;
         background: url(../img/chat-man.jpg) no-repeat center center;
       }
-
       &:after {
         content: "";
         position: absolute;
@@ -5109,18 +3985,15 @@ table.member-invited-group {
         border-bottom: 6px solid transparent;
       }
     }
-
     .chat-item.suggest {
       margin: 0 0 10px 70px;
       padding: 0;
-
       a {
         position: relative;
         display: block;
         padding: 5px 10px 5px 25px;
         border-radius: 0;
         background: #fff;
-
         &:before {
           content: "";
           position: absolute;
@@ -5132,25 +4005,20 @@ table.member-invited-group {
         }
       }
     }
-
     .chat-item.user {
       display: inline-block;
       float: right;
       margin-left: 90px;
       background: #e9ffff;
     }
-
     .chat-item.sys {
       ul {
         padding-left: 1.5em;
       }
-
-      p:last-child:not(:first-child),
-      .search-result-btn {
+      p:last-child:not(:first-child), .search-result-btn {
         margin-top: 10px;
         padding-top: 10px;
         border-top: 1px solid #ccc;
-
         a {
           padding: 5px 10px;
           border-radius: 6px;
@@ -5158,14 +4026,12 @@ table.member-invited-group {
           color: #000;
           text-align: center;
           text-decoration: none;
-
           &:hover {
             opacity: .7;
           }
         }
       }
     }
-
     .chat-form {
       position: absolute;
       right: 0;
@@ -5175,12 +4041,10 @@ table.member-invited-group {
       @include justify-content(space-between);
       padding: 5px;
       background: #efefef;
-
       input[type="text"] {
         width: 62%;
         padding: 5px 10px;
       }
-
       button {
         width: 30%;
         padding: 5px 0;
@@ -5188,18 +4052,15 @@ table.member-invited-group {
         background: #333;
         color: #fff;
         text-align: center;
-
         &:hover {
           opacity: .7;
         }
       }
     }
-
     .chat-finish {
       margin-top: 10px;
       padding-top: 10px;
       border-top: 1px solid #ccc;
-
       button {
         width: 40%;
         margin-right: .5em;
@@ -5209,15 +4070,12 @@ table.member-invited-group {
         background: #333;
         color: #fff;
         text-align: center;
-
         &:hover {
           opacity: .7;
         }
-
         &.chat-success {
           background: #155724;
         }
-
         &.chat-retry {
           background: #721c24;
         }
@@ -5232,10 +4090,8 @@ table.member-invited-group {
 .yield-wrap {
   padding: 0 20px 32px;
   border-radius: 18px;
-
   #doc-header {
     padding: 20px 0 0;
-
     .dhead {
       margin-bottom: 12px;
       padding-bottom: 10px;
@@ -5243,7 +4099,6 @@ table.member-invited-group {
     }
   }
 }
-
 .guide-node-form {
   .question {
     margin: 16px 0;
@@ -5253,27 +4108,22 @@ table.member-invited-group {
     font-size: $px16;
     font-weight: bold;
   }
-
   ul li {
     margin: 0 10px 16px 0;
     padding-left: 1.25em;
     text-indent: -1.6em;
   }
-
   footer.send {
     text-align: center;
-
     input[type="submit"] {
       min-width: 137px;
     }
   }
 }
-
 .guide-nodes {
   padding: 16px 0;
   font-weight: normal;
 }
-
 .other-procedures {
   margin: 64px 0 16px;
   padding-top: 16px;
@@ -5283,7 +4133,6 @@ table.member-invited-group {
   font-weight: normal;
   color: $text;
 }
-
 .guide-node-form {
   .procedure-count {
     padding: 12px 0;
@@ -5291,32 +4140,26 @@ table.member-invited-group {
     border-bottom: none;
     color: $text;
   }
-
   .all-procedure {
     padding-top: 12px;
     border-top: none;
     border-bottom: none;
   }
-
   .guide-lists {
     margin-bottom: 10px;
     padding-bottom: 10px;
     border-top: none;
     border-bottom: 1px solid rgba(10, 89, 45, 0.5);
     color: $text;
-
     h2 {
       position: relative;
       padding: 0 15px 0 10px;
       font-size: $px18;
       cursor: pointer;
       @include transition(0.3s);
-
-      &:hover,
-      &:focus {
+      &:hover, &:focus {
         opacity: 0.7;
       }
-
       &:after {
         content: "";
         position: absolute;
@@ -5330,50 +4173,40 @@ table.member-invited-group {
         border-right: 2px solid #000;
         transform: rotate(135deg);
       }
-
       &.toggle-arrow:after {
         content: "";
         transform: rotate(315deg);
       }
     }
   }
-
   .procedure-wrap {
     display: none;
     border-top: none;
     border-bottom: none;
     color: $text;
   }
-
   dl.procedure {
     margin: 10px 0;
     padding: 12px 10px;
     @include border-radius(6px);
-
     &.active {
       display: block;
     }
-
     dt {
       font-weight: bold;
       word-break: break-word;
     }
-
     dd {
       padding-bottom: 10px;
       font-weight: normal;
-
       &:last-of-type {
         padding-bottom: 0;
       }
     }
   }
-
-  .show-answer,
-  .show-procedure {
+  .show-answer, .show-procedure {
     margin-bottom: 20px;
     text-align: center;
-
     a {
       display: inline-block;
       min-width: 200px;
@@ -5383,12 +4216,10 @@ table.member-invited-group {
       color: #000;
     }
   }
-
   .back-to-index,
   .back-to-first {
     padding: 8px 0;
     text-align: center;
-
     a {
       position: relative;
       display: inline-block;
@@ -5401,7 +4232,6 @@ table.member-invited-group {
       text-decoration: none;
       transition-duration: 0.3s;
       box-sizing: border-box;
-
       &:before {
         content: "";
         position: absolute;
@@ -5411,7 +4241,6 @@ table.member-invited-group {
         height: 100%;
         background: url(../img/ic-arrow-g-fback.svg) no-repeat left center;
       }
-
       &:hover {
         &:before {
           content: "";
@@ -5420,7 +4249,6 @@ table.member-invited-group {
       }
     }
   }
-
   .back-to-first {
     a {
       @include btn-org;
@@ -5428,11 +4256,9 @@ table.member-invited-group {
       font-weight: normal;
     }
   }
-
   footer.send {
     padding-top: 20px;
   }
-
   .close-btn {
     width: 180px;
     margin: 0 auto;
@@ -5443,7 +4269,6 @@ table.member-invited-group {
     box-sizing: border-box;
     @include transition(0.3s);
     cursor: pointer;
-
     span {
       padding-right: 5px;
       font-size: $px25;
@@ -5451,7 +4276,6 @@ table.member-invited-group {
       vertical-align: -0.05em;
     }
   }
-
   .print-btn {
     display: block;
     width: 100%;
@@ -5465,11 +4289,9 @@ table.member-invited-group {
     background: #dadada;
     box-sizing: border-box;
   }
-
   .your-answers {
     padding-bottom: 12px;
   }
-
   .answer-state {
     float: left;
     display: inline-block;
@@ -5478,64 +4300,53 @@ table.member-invited-group {
     padding: 5px 10px;
     border-radius: 10px;
     text-align: center;
-
     &.not-applicable {
       background: #b2b2b2;
     }
-
     &.applicable {
       background: -webkit-linear-gradient(top, #007acd, #0069cc);
       color: $t-white;
     }
   }
-
   .guide-nodes ul li {
     margin: 0 10px 24px 0;
     padding-left: 0;
     text-indent: 0;
-
     .value {
       display: inline-block;
       margin-top: 5px;
       font-weight: normal;
     }
   }
-
   .send input {
     @include btn-org;
   }
-
   ul li {
     list-style: none !important;
 
   }
 }
-
 .guide-node-header {
   .links {
     @include display-flex;
     @include justify-content(space-between);
     margin-bottom: 10px;
-
     a {
       @include btn-org;
       text-decoration: none;
       color: #000;
     }
   }
-
   .progress {
     font-size: $px18;
     text-align: center;
     font-weight: bold;
-
     .evaluated-length:after {
       content: "/";
       margin-left: 5px;
     }
   }
 }
-
 .body--purpose-guide #main {
   @include mb {
     padding: 0 15px 15px;
@@ -5618,7 +4429,6 @@ table.member-invited-group {
     }
   }
 }
-
 body#body--index {
   #wrap {
     #main {
@@ -5628,7 +4438,6 @@ body#body--index {
     }
   }
 }
-
 body#body--kanko-info-index {
   #wrap {
     #main {
@@ -5639,35 +4448,29 @@ body#body--kanko-info-index {
   }
 }
 
-.body--institution-shisetsu #main>article[class*="item-"] {
+.body--institution-shisetsu #main > article[class*="item-"] {
   &:last-child {
     margin-bottom: 20px;
   }
-
   header {
     border-bottom: 1px solid #ccc;
     padding: 9px 12px;
-
     time {
       display: inline-block;
     }
-
     h2 {
       display: inline;
       border-bottom: none;
     }
   }
 }
-
 body[class*="body--institution-shisetsu-"] .map .body {
   width: 100%;
-
   h2 {
     color: $text;
     border-bottom: none;
   }
 }
-
 body.body--search {
   #main {
     form.search-form {
