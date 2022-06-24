@@ -46,6 +46,6 @@ module SS::Model::Address
 
   def email_address
     return nil if email.blank?
-    %(#{name.delete('"<>')} <#{email}>)
+    %(#{name} <#{email}>)
   end
 end
