@@ -90,30 +90,46 @@ class Webmail::Mail
       return errors.blank?
     end
 
-    msg.from = validate_email_address(msg, :from)
-    msg.sender = validate_email_address(msg, :sender).first
-    msg.to = validate_email_address(msg, :to)
-    msg.cc = validate_email_address(msg, :cc)
-    msg.bcc = validate_email_address(msg, :bcc)
+    # msg.from = validate_email_address(msg, :from)
+    # msg.sender = validate_email_address(msg, :sender).first
+    # msg.to = validate_email_address(msg, :to)
+    # msg.cc = validate_email_address(msg, :cc)
+    # msg.bcc = validate_email_address(msg, :bcc)
+
+    validate_email_address(msg, :to)
+    validate_email_address(msg, :cc)
+    validate_email_address(msg, :bcc)
     validate_email_size
     errors.blank?
   end
 
   def validate_email_address(msg, field)
-    return [] if msg.header[field].blank?
+    # return [] if msg.header[field].blank?
 
-    error = false
-    emails = msg.header[field].value
-    emails = [emails] if emails.is_a?(String)
-    emails = emails.map do |email|
-      email = Webmail::Converter.quote_address(email)
-      address = Webmail::Converter.extract_address(email)
-      error = true unless address =~ EmailValidator::REGEXP
-      email
+    # error = false
+    # emails = msg.header[field].value
+    # emails = [emails] if emails.is_a?(String)
+    # emails = emails.map do |email|
+    #   email = Webmail::Converter.quote_address(email)
+    #   address = Webmail::Converter.extract_address(email)
+    #   error = true unless address =~ EmailValidator::REGEXP
+    #   email
+    # end
+
+    # errors.add field, :invalid_email_included if error
+    # return emails
+
+    emails = msg.send(field)
+    return errors.blank? if emails.blank?
+
+    begin
+      emails = [emails] if emails.is_a?(String)
+      emails = emails.map { |to| Webmail::Converter.extract_address(to) }
+      emails.each { |email| raise "invalid address" unless email =~ EmailValidator::REGEXP }
+    rescue => e
+      errors.add field, :invalid_email_included
     end
-
-    errors.add field, :invalid_email_included if error
-    return emails
+    errors.blank?
   end
 
   def validate_email_size
