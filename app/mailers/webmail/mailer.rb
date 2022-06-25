@@ -6,9 +6,9 @@ class Webmail::Mailer < ApplicationMailer
   end
 
   def new_message(item)
-    # %i(from to cc bcc reply_to).each do |field|
-    #   item[field] = item[field].map { |email| Webmail::Converter.quote_address(email).presence }.compact
-    # end
+    %i(from to cc bcc reply_to).each do |field|
+      item[field] = item[field].map { |email| Webmail::Converter.quote_address(email).presence }.compact
+    end
     @item = item
 
     @item.size = 0
