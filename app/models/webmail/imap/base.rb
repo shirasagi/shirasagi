@@ -144,6 +144,10 @@ module Webmail::Imap
       (name =~ /^INBOX(\.|$)/).present?
     end
 
+    def quote_email_address
+      Webmail::Converter.quote_address(email_address)
+    end
+
     def mails
       Webmail::Imap::Mail.new(self)
     end

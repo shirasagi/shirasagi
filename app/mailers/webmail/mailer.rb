@@ -9,8 +9,8 @@ class Webmail::Mailer < ApplicationMailer
     %i(from to cc bcc reply_to).each do |field|
       item[field] = item[field].map { |email| Webmail::Converter.quote_address(email).presence }.compact
     end
-    @item = item
 
+    @item = item
     @item.size = 0
     @item.ref_files_with_data.each do |file|
       add_attachment_file(file)
@@ -52,7 +52,7 @@ class Webmail::Mailer < ApplicationMailer
 
     msg = mail(
       to: item.disposition_notification_to,
-      from: item.imap.email_address,
+      from: item.imap.quote_email_address,
       body: ''
     )
     msg.content_type = 'multipart/report; report-type=disposition-notification'
