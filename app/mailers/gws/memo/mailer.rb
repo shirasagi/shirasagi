@@ -71,7 +71,7 @@ class Gws::Memo::Mailer < ApplicationMailer
 
   def format_email(name, email)
     if name.present? && email.present?
-      "#{name} <#{email}>"
+      Webmail::Converter.quote_address("#{name} <#{email}>")
     elsif name.present?
       name.to_s
     else

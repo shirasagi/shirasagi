@@ -9,7 +9,7 @@ class Webmail::Converter
     end
 
     def quote_address(address)
-      m = address.strip.match(/(.+)(<.*?>)\z/)
+      m = address.strip.match(/\A(.+)(<.*?>)\z/)
       m ? %("#{m[1].delete(%('")).strip}" #{m[2]}) : address
     end
   end

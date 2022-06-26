@@ -37,13 +37,10 @@ describe Webmail::UserExtension, type: :model, dbscope: :example do
       it do
         expect(subject).to be_present
         expect(subject.address).to eq user.imap_default_settings[:address]
-        expect(subject.email_address).to eq "#{user.name} <#{user.imap_default_settings[:address]}>"
+        expect(subject.email_address).to eq %("#{user.name}" <#{user.imap_default_settings[:address]}>)
         expect(subject.sent_box).to eq "INBOX.Sent"
         expect(subject.draft_box).to eq "INBOX.Draft"
         expect(subject.trash_box).to eq "INBOX.Trash"
-
-        subject.email_address = %(#{user.name}'" <#{user.imap_default_settings[:address]}>)
-        expect(subject.quote_email_address).to eq %("#{user.name}" <#{user.imap_default_settings[:address]}>)
       end
     end
 

@@ -52,7 +52,7 @@ class Webmail::Mailer < ApplicationMailer
 
     msg = mail(
       to: item.disposition_notification_to,
-      from: item.imap.quote_email_address,
+      from: item.imap.email_address,
       body: ''
     )
     msg.content_type = 'multipart/report; report-type=disposition-notification'
