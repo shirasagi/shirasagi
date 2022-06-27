@@ -7,5 +7,10 @@ class Webmail::Converter
     def extract_display_name(address)
       address.gsub(/<?#{extract_address(address)}>?/, "").strip
     end
+
+    def quote_address(address)
+      m = address.strip.match(/\A(.+)(<.*?>)\z/)
+      m ? %("#{m[1].delete(%('")).strip}" #{m[2]}) : address
+    end
   end
 end

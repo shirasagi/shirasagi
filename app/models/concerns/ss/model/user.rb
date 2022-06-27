@@ -217,7 +217,7 @@ module SS::Model::User
   end
 
   def email_address
-    %(#{name} <#{email}>)
+    %(#{name.delete(%('"))} <#{email}>)
   end
 
   # detail, descriptive name

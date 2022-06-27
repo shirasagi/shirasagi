@@ -67,7 +67,7 @@ module Webmail::Imap
 
       def format_email_addree(name, address)
         if name.present?
-          %(#{name} <#{address}>)
+          Webmail::Converter.quote_address(%(#{name} <#{address}>))
         else
           address
         end
