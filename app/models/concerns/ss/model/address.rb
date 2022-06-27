@@ -46,6 +46,9 @@ module SS::Model::Address
 
   def email_address
     return nil if email.blank?
-    %(#{name} <#{email}>)
+    addr = ::Mail::Address.new
+    addr.display_name = name
+    addr.address = email
+    addr.to_s
   end
 end

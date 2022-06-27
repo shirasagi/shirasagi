@@ -67,7 +67,10 @@ module Webmail::Imap
 
       def format_email_addree(name, address)
         if name.present?
-          %(#{name} <#{address}>)
+          addr = ::Mail::Address.new
+          addr.display_name = name
+          addr.address = address
+          addr.to_s
         else
           address
         end

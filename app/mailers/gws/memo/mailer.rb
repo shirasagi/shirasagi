@@ -71,7 +71,10 @@ class Gws::Memo::Mailer < ApplicationMailer
 
   def format_email(name, email)
     if name.present? && email.present?
-      "#{name} <#{email}>"
+      addr = ::Mail::Address.new
+      addr.display_name = name
+      addr.address = email
+      addr.to_s
     elsif name.present?
       name.to_s
     else
