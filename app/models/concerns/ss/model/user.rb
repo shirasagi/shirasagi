@@ -217,10 +217,7 @@ module SS::Model::User
   end
 
   def email_address
-    addr = ::Mail::Address.new
-    addr.display_name = name
-    addr.address = email
-    addr.to_s
+    %(#{name} <#{email}>)
   end
 
   # detail, descriptive name
