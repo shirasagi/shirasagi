@@ -10,7 +10,7 @@
 #ss-preview {
   box-sizing: border-box;
   width: 100%;
-  padding: 15px;
+  padding: 5px 0;
   background-color: #323232;
   color: #fff;
   font-family: $font-base;
@@ -28,7 +28,6 @@
     width: auto;
     height: auto;
     min-height: 2.6em;
-    margin: 0;
     @include mb {
       padding: 6px 8px;
     }
@@ -105,21 +104,16 @@
       @include mb {
         display: block;
       }
-      &:first-child {
-        .ss-preview-btn-group {
-          margin-bottom: 10px;
-        }
-      }
     }
     .ss-preview-btn-group:nth-child(2) {
-      margin-left: 30px;
+      margin-left: 10px;
       @include mb {
         margin-left: 0;
       }
     }
   }
-  #ss-preview-date, .ss-preview-btn-pc, .ss-preview-btn-mobile {
-    margin-bottom: 10px;
+  .ss-preview-btn-group > * {
+    margin-top: 10px;
   }
   #ss-preview-date {
     border-right: 0;
@@ -139,9 +133,11 @@
     border: 1px solid #bbb;
     border-radius: 0 3px 3px 0;
   }
+  .ss-preview-wrap-column {
+    padding: 0 12px 10px;
+  }
   .ss-preview-wrap-column ~ .ss-preview-wrap-column {
-    padding-left: 10px;
-    border-left: 1px solid $gray2;
+    border-left: 1px solid #666;
     .ss-preview-wrap-row:nth-child(2) .ss-preview-btn-group:nth-child(3) {
       margin-right: 0;
     }
@@ -151,20 +147,16 @@
   }
   .ss-preview-btn-group {
     display: inline-block;
-    @include mb {
-      margin-bottom: 10px;
-    }
     &.ss-preview-wrap-row {
       @include display-flex;
       @include justify-content(flex-end);
       @include align-items(center);
       @include flex-wrap(wrap);
-      padding-bottom: 10px;
       @include mb {
         @include justify-content(flex-start);
       }
       label {
-        margin: 0 10px 9px 0;
+        margin: 6px 10px 0 0;
         @include mb {
           width: 100%;
         }
@@ -262,7 +254,7 @@
     display: inline-block;
   }
   .ss-preview-overlay-name {
-    margin-right: 1rem;
+    margin: 0 .75rem;
     color: #fff;
     font-size: .8em;
   }

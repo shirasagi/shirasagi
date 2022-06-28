@@ -39,14 +39,14 @@
         <td class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
         <% if selected_layout?(item) %>
           <td><%= t 'urgency.selected_layout' %></td>
-        <% elsif @cur_site.mobile_enabled? %>
+        <% else %>
           <td>
             <%= link_to t('ss.links.pc'), cms_preview_path(path: preview_path), target: "_blank", rel: "noopener" %>
-            |
-            <%= link_to t('ss.links.mobile'), cms_preview_path(path: mobile_preview_path), target: "_blank", rel: "noopener" %>
+            | <%= link_to t('ss.links.sp'), cms_preview_path(path: preview_path), class: 'cms-preview-sp', target: "_blank", rel: "noopener" %>
+            <% if @cur_site.mobile_enabled? %>
+            | <%= link_to t('ss.links.mobile'), cms_preview_path(path: mobile_preview_path), class: 'cms-preview-mb', target: "_blank", rel: "noopener" %>
+            <% end %>
           </td>
-        <% else %>
-          <td><%= link_to t('ss.links.pc'), cms_preview_path(path: preview_path), target: "_blank", rel: "noopener" %></td>
         <% end %>
       </tr>
       <% end %>

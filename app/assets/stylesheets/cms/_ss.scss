@@ -210,3 +210,10 @@
     }
   }
 }
+
+// Preview links
+.cms-preview-links {
+  color: #aaa;
+  a { margin: 0 5px; }
+  a:first-of-type { margin-left: 0; }
+}

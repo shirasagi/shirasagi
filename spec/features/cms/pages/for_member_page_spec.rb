@@ -30,7 +30,7 @@ describe "cms/pages", type: :feature, dbscope: :example do
       visit show_path
       expect(status_code).to eq 200
 
-      click_link I18n.t("cms.preview_pc_page")
+      click_link I18n.t("ss.links.pc_preview")
       expect(status_code).to eq 200
       expect(current_path).to eq cms_preview_path(site.id, path: item.preview_path)
     end
@@ -48,7 +48,7 @@ describe "cms/pages", type: :feature, dbscope: :example do
       visit sub_show_path
       expect(status_code).to eq 200
 
-      click_link I18n.t("cms.preview_pc_page")
+      click_link I18n.t("ss.links.pc_preview")
       expect(status_code).to eq 200
       expect(current_path).to eq cms_preview_path(site.id, path: sub_item.preview_path)
     end

@@ -7,20 +7,11 @@
 
   <dt><%= @model.t :basename %></dt>
   <dd><%= @item.send :basename %></dd>
-  <dd>
-    <%= @item.public? ? link_to(@item.full_url, @item.full_url, target: "_blank", rel: "noopener") : @item.full_url %>
-    <% if @item.redirect_link.blank? %>
-    (
-    <% if @cur_site.mobile_enabled? %>
-      <%= link_to t("cms.preview_pc_page"), cms_preview_path(path: @item.preview_path), target: "_blank", rel: "noopener" %>
-      |
-      <%= link_to t("cms.preview_mobile_page"), cms_preview_path(path: @item.mobile_preview_path), target: "_blank", rel: "noopener" %>
-    <% else %>
-      <%= link_to t("cms.preview_page"), cms_preview_path(path: @item.preview_path), target: "_blank", rel: "noopener" %>
-    <% end %>
-    )
-    <% end %>
-  </dd>
+  <dd><%= @item.public? ? link_to(@item.full_url, @item.full_url, target: "_blank", rel: "noopener") : @item.full_url %></dd>
+
+  <% if @item.redirect_link.blank? %>
+    <dd><div class="cms-preview-links"><%= safe_join cms_preview_links(@item), '|' %></div></dd>
+  <% end %>
 
   <% if @item.send(:layout_id).present? %>
   <dt><%= @model.t :layout_id %></dt>
