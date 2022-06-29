@@ -16,6 +16,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
   let(:success_url1) { ss_file1.url }
   let(:success_url2) { ::File.join(site.full_url, ss_file2.url) }
   let(:success_url3) { "https://success.example.jp" }
+  let(:success_url4) { "https://success.example.jp/?キー=値" }
 
   let(:failed_url1) { "/fs/1/_/failed.txt" }
   let(:failed_url2) { ::File.join(site.full_url, "/fs/2/_/2.pdf") }
@@ -38,6 +39,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
 
   before do
     stub_request(:get, success_url3).to_return(body: "", status: 200, headers: { 'Content-Type' => 'text/html' })
+    stub_request(:get, success_url4).to_return(body: "", status: 200, headers: { 'Content-Type' => 'text/html' })
     stub_request(:get, failed_url3).to_return(body: "", status: 404, headers: { 'Content-Type' => 'text/html' })
 
     stub_request(:get, redirection_url0).to_return(body: "", status: 200, headers: { 'Content-Type' => 'text/html' })
@@ -61,6 +63,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
         h << "<a class=\"icon-png\" href=\"#{success_url1}\">#{success_url1}</a>"
         h << "<a href=\"#{success_url2}\">#{success_url2}</a>"
         h << "<a href=\"#{success_url3}\">#{success_url3}</a>"
+        h << "<a href=\"#{success_url4}\">#{success_url4}</a>"
         h << "<a class=\"icon-png\" href=\"#{failed_url1}\">#{failed_url1}</a>"
         h << "<a href=\"#{failed_url2}\">#{failed_url2}</a>"
         h << "<a href=\"#{failed_url3}\">#{failed_url3}</a>"
@@ -91,6 +94,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_full_url1}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url2}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url3}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url4}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_full_url1}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url2}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url3}")
@@ -124,6 +128,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_full_url1}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url2}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url3}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url4}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_full_url1}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url2}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url3}")
@@ -139,6 +144,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
         h << "<a class=\"icon-png\" href=\"#{success_url1}\">#{success_url1}</a>"
         h << "<a href=\"#{success_url2}\">#{success_url2}</a>"
         h << "<a href=\"#{success_url3}\">#{success_url3}</a>"
+        h << "<a href=\"#{success_url4}\">#{success_url4}</a>"
         h << "<a class=\"icon-png\" href=\"#{failed_url1}\">#{failed_url1}</a>"
         h << "<a href=\"#{failed_url2}\">#{failed_url2}</a>"
         h << "<a href=\"#{failed_url3}\">#{failed_url3}</a>"
@@ -176,6 +182,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_full_url1}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url2}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url3}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url4}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_full_url1}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url2}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url3}")
@@ -216,6 +223,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_full_url1}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url2}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url3}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url4}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_full_url1}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url2}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url3}")
