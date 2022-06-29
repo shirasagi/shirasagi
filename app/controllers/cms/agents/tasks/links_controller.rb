@@ -67,9 +67,9 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       ref = File.join(@base_url, ref) if ref[0] == "/"
       msg << ref
       msg << urls.map do |url|
-        meta = @meta.present? ? url.meta : ""
+        meta = @meta.present? ? " #{url.meta}" : ""
         url = File.join(@base_url, url) if url[0] == "/"
-        "  - #{url} #{meta}"
+        "  - #{url}#{meta}"
       end
     end
     msg = msg.join("\n")
@@ -176,7 +176,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
         internal = (next_url[0] != "/" && next_url !~ /^https?:/)
         next_url = File.expand_path next_url, url.sub(/[^\/]*?$/, "") if internal
-        next_url = URI.encode(next_url) if next_url.match?(/[^-_.!~*'()\w;\/?:@&=+$,%#]/)
+        next_url = Addressable::URI.encode(next_url) if next_url.match?(/[^-_.!~*'()\w;\/?:@&=+$,%#]/)
 
         next_url = @ref_string.new(next_url, offset: offset, inner_yield: inner_yield)
 
@@ -189,14 +189,15 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
           @urls[next_url] << url
         end
       end
-    rescue
+    rescue => e
+      Rails.logger.error(e.message)
       add_invalid_url(url, refs)
     end
   end
 
   def valid_url(url)
     return false if url.blank?
-    return false if url.match?(/\.(css|js|json)$/)
+    return false if url.match?(/\.(css|js|json)(\?\d+)?$/)
     return false if url.match?(/\.p\d+\.html$/)
     return false if url.match?(/\/2\d{7}\.html$/) # calendar
     return false if url =~ /^\w+:/ && url !~ /^http/ # other scheme
