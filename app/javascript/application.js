@@ -1,1 +1,4 @@
-// Entry point for the build script in your package.json
+import Initializer from "./ss/initializer"
+
+Initializer.load(require.context("./initializers", true, /\.js$/i))
+Initializer.ready(() => console.log("application.js is ready"))

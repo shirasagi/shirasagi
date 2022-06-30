@@ -9,8 +9,8 @@
 <% controller.stylesheets.each do |path| %>
   <%= stylesheet_link_tag path, media: "all" %>
 <% end %>
-<% controller.javascripts.each do |path| %>
-  <%= javascript_include_tag path %>
+<% controller.javascripts.each do |path, options| %>
+  <%= javascript_include_tag path, options || {} %>
 <% end %>
 <%= javascript_tag do %>
   SS.config = <%= raw controller.javascript_configs.to_json %>;
