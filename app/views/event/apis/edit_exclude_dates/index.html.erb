@@ -1,0 +1,20 @@
+<%
+  from_month = @item.start_date.beginning_of_month
+  to = @item.until_on || from_month + Event::Extensions::Recurrence::TERM_LIMIT - 1.day
+%>
+
+<div class="event-recurrence-exclude-dates">
+  <div class="event-recurrence-exclude-dates-calendars">
+    <% month = from_month %>
+    <% loop do %>
+      <%= render "event/apis/edit_exclude_dates/calendar", month: month %>
+      <% month += 1.month %>
+      <% break if to < month %>
+    <% end %>
+  </div>
+
+  <footer class="send">
+    <%= button_tag t("ss.buttons.save"), type: "button", class: "btn save event-recurrence-exlude-dates-commit-btn" %>
+    <%= button_tag t("ss.buttons.close"), type: "button", class: "btn btn-default event-recurrence-exlude-dates-close-btn" %>
+  </footer>
+</div>

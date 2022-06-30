@@ -4,7 +4,10 @@ FactoryBot.define do
     route { "event/page" }
 
     event_name { unique_id }
-    event_dates { [Time.zone.now.beginning_of_day + rand(1..10).days] }
+    event_recurrences do
+      event_date = Time.zone.today + rand(1..10).days
+      [ { kind: "date", start_at: event_date, frequency: "daily", until_on: event_date } ]
+    end
 
     schedule { "schedule-#{unique_id}" }
     venue { "venue-#{unique_id}" }
@@ -12,6 +15,8 @@ FactoryBot.define do
     related_url { "http://#{unique_id}.example.jp/#{unique_id}/" }
     cost { "cost-#{unique_id}" }
     contact { "contact-#{unique_id}" }
+
+    ical_link { unique_url }
 
     factory :event_page_basename_invalid do
       basename { "pa/ge.html" }

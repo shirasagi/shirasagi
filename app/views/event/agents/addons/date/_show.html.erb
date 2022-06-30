@@ -1,12 +1,61 @@
-<% return "" if @item.event_dates.blank? %>
+<%
+  return "" if @item.event_dates.blank?
+
+  week_days = I18n.t("date.abbr_day_names")
+%>
+
+<% render_recurr = proc do |recurr| %>
+  <div class="event-recurrence">
+    <div class="event-recurrence-row">
+      <div class="event-recurrence-date">
+        <%= recurr.start_date.try { |time| I18n.l(time.to_date, format: :picker) } %>
+        <%= t("ss.wave_dash") %>
+        <%= recurr.until_on.try { |time| I18n.l(time.to_date, format: :picker) } %>
+      </div>
+      <% if recurr.kind == "date" %>
+        <div class="event-recurrence-time"><%= t("event.all_day") %></div>
+      <% else %>
+        <div class="event-recurrence-time">
+          <%= recurr.start_datetime.try { |time| I18n.l(time, format: :hh_mm) } %>
+          <%= t("ss.wave_dash") %>
+          <%= recurr.end_datetime.try { |time| I18n.l(time, format: :hh_mm) } %>
+        </div>
+      <% end %>
+      <% if recurr.exclude_dates.present? %>
+        <div class="event-recurrence-excludes">(<%= t("event.exclude_dates") %>:
+          <%= recurr.exclude_dates.try { |dates| dates.map { |date| I18n.l(date.to_date, format: :picker) }.join(",") } %>)
+        </div>
+      <% end %>
+      <% if recurr.frequency == "weekly" && recurr.by_days.present? %>
+        <div class="event-recurrence-wdays">
+          <%
+            wdays = recurr.by_days.map { |by_day| week_days[by_day] }
+            if recurr.includes_holiday
+              wdays << t("event.holiday")
+            end
+          %>
+          <%= wdays.join(",") %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
 
 <dl class="see mod-event">
   <dt><%= @model.t :event_name %></dt>
   <dd class="event-name"><%= @item.send :event_name %></dd>
 
-  <dt><%= @model.t :event_dates %></dt>
-  <dd class="event-dates"><%= raw @item.dates_to_html(:long) %></dd>
+  <dt><%= @model.t :event_recurrences %></dt>
+  <dd>
+    <% @item.event_recurrences.each do |recurr| %>
+      <% render_recurr.call(recurr) %>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :event_deadline %></dt>
   <dd><%= tryb { I18n.l(@item.event_deadline) } %></dd>
 </dl>
+
+<%= jquery do %>
+  SS_Popup.render();
+<% end %>

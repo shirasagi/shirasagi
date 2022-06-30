@@ -473,11 +473,12 @@ page2 = save_page route: "article/page", filename: "docs/3.html", name: "○○�
   layout_id: layouts["portal-general"].id, contact_group_id: contact_group_id, contact_charge: contact_charge, \
   contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
   contact_link_url: contact_link_url, contact_link_name: contact_link_name
+recurrence = { kind: "date", start_at: Time.zone.today + 7, frequency: "daily", until_on: Time.zone.today + 18 }
 event0 = save_page route: "event/page", filename: "event/4.html", name: "オープンデータイベント", \
   layout_id: layouts["portal-event"].id,
   schedule: "#{7.days.since.strftime("%m").sub(/^0+/, '')}月#{7.days.since.strftime("%d").sub(/^0+/, '')}日", \
   venue: "シラサギ市図書館", related_url: link_url, \
-  event_dates: 7.upto(18).map { |d| d.days.since.strftime("%Y/%m/%d") }.join("\r\n")
+  event_recurrences: [ recurrence ]
 page0.related_page_ids = [ page2.id, event0.id ]
 page0.save!
 

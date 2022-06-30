@@ -577,9 +577,9 @@ article4.html = article4.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 article4.update
 
 puts "# event"
-dates = (Time.zone.today..(Time.zone.today + 20)).map { |d| d.mongoize }
+recurrence = { kind: "date", start_at: Time.zone.today, frequency: "daily", until_on: Time.zone.today + 20 }
 save_page route: "event/page", filename: "event/page1.html", name: "イベントタイトルが入ります。",
-  layout_id: layouts["event-page"].id, event_dates: dates,
+  layout_id: layouts["event-page"].id, event_recurrences: [ recurrence ],
   category_ids: [categories["event/info"].id, categories["event/play"].id, categories["event/study"].id],
   map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
   related_page_ids: [article1.id, article2.id, article3.id],
@@ -587,7 +587,7 @@ save_page route: "event/page", filename: "event/page1.html", name: "イベント
   content: "イベントを開催します。", related_url: link_url
 
 save_page route: "event/page", filename: "event/2.html", name: "イベントタイトルが入ります。",
-  layout_id: layouts["event-page"].id, event_dates: dates,
+  layout_id: layouts["event-page"].id, event_recurrences: [ recurrence ],
   category_ids: [categories["event/info"].id, categories["event/play"].id, categories["event/study"].id],
   map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
   related_page_ids: [article1.id, article2.id, article3.id],

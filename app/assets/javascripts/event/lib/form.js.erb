@@ -1,210 +1,163 @@
 this.Event_Form = (function () {
-  function Event_Form() {
-  }
+  function Event_Form(el, options) {
+    this.$el = $(el);
+    this.options = options;
 
-  Event_Form.maxTermForm = 10;
+    this.render();
+  }
 
   Event_Form.deleteMessage = <%= I18n.t('event.confirm.delete_date').to_json %>;
 
-  Event_Form.render = function () {
-    if ($("form .mod-event").length) {
-      $(".mod-event button:button.add-date").on("click", function () {
-        if ($(".mod-event dd.dates").length < Event_Form.maxTermForm) {
-          Event_Form.cloneTermForm();
-        }
-      });
-      $(".mod-event button:button.clear").on("click", function () {
-        var close, start;
-        start = $(this).parent("dd").find(".start").val();
-        close = $(this).parent("dd").find(".close").val();
-        if (start !== "" || close !== "") {
-          if (confirm(Event_Form.deleteMessage)) {
-            Event_Form.clearTermForm($(this).parent("dd"));
-          }
-        } else {
-//      $(".mod-event input.date").datepicker
-//        dateFormat: "yy/mm/dd",
-//        yearRange: "-10:+10"
-          Event_Form.clearTermForm($(this).parent("dd"));
-        }
-      });
-      $("form").submit(function () {
-        var add, dates, k, len, term, terms;
-        terms = $(".mod-event .dates");
-        dates = [];
-        for (k = 0, len = terms.length; k < len; k++) {
-          term = terms[k];
-          add = Event_Form.termToDates($(term).find(".start").val(), $(term).find(".close").val());
-          dates = dates.concat(add);
-        }
-        $(".mod-event .event-dates").val(Event_Form.datesToString(dates));
-      });
-      Event_Form.setStoredDates();
-      if ($(".mod-event dd.dates").length >= this.maxTermForm) {
-        $(".mod-event .setting-dates").hide();
-      }
-    }
-  };
+  Event_Form.prototype.render = function() {
+    var self = this;
 
-  Event_Form.dateToString = function (date) {
-    var dd, mm, yy;
-    yy = date.getYear();
-    mm = date.getMonth() + 1;
-    dd = date.getDate();
-    if (yy < 2000) {
-      yy += 1900;
-    }
-    if (mm < 10) {
-      mm = "0" + mm;
-    }
-    if (dd < 10) {
-      dd = "0" + dd;
-    }
-    return yy + "/" + mm + "/" + dd;
-  };
-
-  Event_Form.datesToString = function (dates) {
-    var d, j, k, l, len, len1, setstr, tmp;
-    tmp = [];
-    for (k = 0, len = dates.length; k < len; k++) {
-      d = dates[k];
-      j = 0;
-      while (j < tmp.length) {
-        if (this.dateToString(d) === this.dateToString(tmp[j])) {
-          break;
-        }
-        j++;
-      }
-      if (j === tmp.length) {
-        tmp.push(d);
-      }
-    }
-    dates = tmp;
-    dates.sort(function (a, b) {
-      return a - b;
+    self.$el.on("click", ".event-recurrence-add-btn", function() {
+      self.addRecurrence(this);
     });
-    setstr = "";
-    for (l = 0, len1 = dates.length; l < len1; l++) {
-      d = dates[l];
-      setstr += this.dateToString(d);
-      setstr += "\r\n";
-    }
-    return setstr;
+    self.$el.on("click", ".event-recurrence-delete-btn", function() {
+      self.deleteRecurrence(this);
+    });
+    self.$el.on("click", ".event-recurrence-exclude-dates-btn", function() {
+      self.openExcludeDates(this);
+    });
+    self.$el.on("change", ".event-recurrence-all-day-radio", function() {
+      self.changeAllDay(this);
+    });
+
+    self.resetIndex();
   };
 
-  Event_Form.isValidDate = function (date) {
-    if (Object.prototype.toString.call(date) !== "[object Date]") {
-      return false;
+  Event_Form.prototype.resetIndex = function() {
+    var self = this;
+
+    var index = 0;
+    self.$el.find('[name="item[event_recurrences][][in_update_from_view]"]').each(function() {
+      var $eventRecurrence = $(this).closest(".event-recurrence");
+      $eventRecurrence.attr("data-index", index);
+      $eventRecurrence.find(".event-recurrence-all-day-radio").attr("name", "all_day_" + index);
+
+      index += 1;
+    });
+  }
+
+  Event_Form.prototype.addRecurrence = function(buttonEl) {
+    var self = this;
+    var $button = $(buttonEl);
+
+    var templateEl = document.getElementById($button.data("template"));
+    var $template = $(templateEl);
+    var $html = $($template.html());
+
+    // $template.before($template.html());
+    $button.closest(".event-recurrence").before($html);
+    self.resetIndex();
+    SS.renderDateTimePicker($html);
+  };
+
+  Event_Form.prototype.deleteRecurrence = function(buttonEl) {
+    var self = this;
+    var $button = $(buttonEl);
+
+    if (confirm(Event_Form.deleteMessage)) {
+      $button.closest(".event-recurrence").remove();
+      self.resetIndex();
     }
-    if (!isNaN(date.getTime()) && date.getYear() > 0) {
-      return true;
+  };
+
+  Event_Form.prototype.openExcludeDates = function(buttonEl) {
+    var self = this;
+    var $button = $(buttonEl);
+    var $eventRecurrence = $button.closest(".event-recurrence");
+    var index = $eventRecurrence.data("index");
+
+    var $form = self.$el.closest("form");
+    var data = new FormData($form[0]);
+    data.delete("_method");
+    data.append("index", index);
+
+    $.ajax({
+      method: "POST",
+      url: $button.data("url"),
+      data: data,
+      contentType: false,
+      processData: false,
+      cache: false,
+      success: function(data) {
+        self.showExcludeDates(data, function(excludeDates) { self.commitExcludeDates($eventRecurrence, excludeDates) });
+      },
+      error: function(xhr, status, error) {
+        self.showExcludeDatesError(xhr, status, error, $eventRecurrence);
+      }
+    });
+  };
+
+  Event_Form.prototype.showExcludeDates = function(html, commitCallback) {
+    var self = this;
+
+    $.colorbox({
+      html: html, width: "90%", height: "90%", fixed: true, open: true,
+      onComplete: function() {
+        new Event_ExcludeDatesForm(self, document.querySelector(".event-recurrence-exclude-dates"), commitCallback);
+      }
+    });
+  };
+
+  Event_Form.prototype.showExcludeDatesError = function(xhr, _status, _error, $eventRecurrence) {
+    var errorMessage;
+    if (xhr.responseJSON) {
+      errorMessage = xhr.responseJSON.join("\n");
     } else {
-      return false;
+      errorMessage = "Error"
     }
+    $eventRecurrence.find('.event-recurrence-excludes-summary').text(errorMessage).attr("title", "");
   };
 
-  Event_Form.termToDates = function (start, close) {
-    var closeDate, d, dates, startDate;
-    startDate = new Date(start);
-    closeDate = new Date(close);
-    dates = [];
-    if (this.isValidDate(startDate) && this.isValidDate(closeDate)) {
-      d = new Date(startDate);
-      while (d <= closeDate) {
-        dates.push(new Date(d));
-        d.setDate(d.getDate() + 1);
-      }
-    } else if (this.isValidDate(startDate)) {
-      dates.push(new Date(startDate));
-    } else if (this.isValidDate(closeDate)) {
-      dates.push(new Date(closeDate));
-    }
-    return dates;
+  Event_Form.prototype.commitExcludeDates = function($eventRecurrence, excludeDates) {
+    var serialized = excludeDates.join(",");
+    $eventRecurrence.find('[name="item[event_recurrences][][in_exclude_dates]"]').val(serialized);
+    $eventRecurrence.find('.event-recurrence-excludes-summary').text(serialized).attr("title", serialized);
   };
 
-  Event_Form.datesToTerm = function (dates) {
-    var d, i, k, len, term, terms, tommorow;
-    terms = [];
-    term = [];
-    for (i = k = 0, len = dates.length; k < len; i = ++k) {
-      d = dates[i];
-      term.push(d);
-      tommorow = new Date(d);
-      tommorow.setDate(tommorow.getDate() + 1);
-      if (i + 1 < dates.length && this.dateToString(dates[i + 1]) !== this.dateToString(tommorow)) {
-        terms.push([term[0], term[term.length - 1]]);
-        term = [];
-      }
-    }
-    if (term.length >= 1) {
-      terms.push([term[0], term[term.length - 1]]);
-    }
-    return terms;
+  Event_Form.prototype.changeAllDay = function(el) {
+    var $el = $(el);
+    $el.closest(".event-recurrence").find('[name="item[event_recurrences][][in_all_day]"]').val($el.val());
+  }
+
+  Event_ExcludeDatesForm = function(container, el, commitCallback) {
+    this.container = container;
+    this.$el = $(el);
+    this.commitCallback = commitCallback;
+    this.render();
   };
 
-  Event_Form.setStoredDates = function () {
-    var d, date, dates, i, k, l, len, len1, results, stored, term, terms;
-    stored = $(".mod-event .event-dates").val().split(/\r\n|\n/);
-    dates = [];
-    for (k = 0, len = stored.length; k < len; k++) {
-      d = stored[k];
-      date = new Date(d);
-      if (this.isValidDate(date)) {
-        dates.push(date);
-      }
-    }
-    terms = this.datesToTerm(dates);
-    results = [];
-    for (i = l = 0, len1 = terms.length; l < len1; i = ++l) {
-      term = terms[i];
-      if (i !== 0) {
-        this.cloneTermForm();
-      }
-      $(".mod-event dd.dates:last").find(".start").val(this.dateToString(term[0]));
-      results.push($(".mod-event dd.dates:last").find(".close").val(this.dateToString(term[1])));
-    }
-    return results;
-  };
+  Event_ExcludeDatesForm.prototype.render = function() {
+    var self = this;
 
-  Event_Form.cloneTermForm = function () {
-    var cln;
-    cln = $(".mod-event dd.dates:last").clone(false).insertAfter($(".mod-event dd.dates:last"));
-    cln.find(".start").val("");
-    cln.find(".close").val("");
-    cln.find(".clear").on("click", function () {
-      var close, start;
-      start = $(this).parent("dd").find(".start").val();
-      close = $(this).parent("dd").find(".close").val();
-      if (start !== "" || close !== "") {
-        if (confirm(Event_Form.deleteMessage)) {
-          Event_Form.clearTermForm($(this).parent("dd"));
-        }
+    self.$el.on("click", ".toggle-btn", function() {
+      if (this.getAttribute("aria-pressed") === "true") {
+        this.setAttribute("aria-pressed", false);
       } else {
-        Event_Form.clearTermForm($(this).parent("dd"));
+        this.setAttribute("aria-pressed", true);
       }
     });
-    $(".mod-event .date").attr("id", "").datetimepicker({
-      lang: "ja",
-      timepicker: false,
-      format: "Y/m/d"
+    self.$el.on("click", ".event-recurrence-exlude-dates-commit-btn", function() {
+      self.commit();
+      $.colorbox.close();
     });
-    if ($(".mod-event dd.dates").length >= this.maxTermForm) {
-      return $(".mod-event .setting-dates").hide();
-    }
+    self.$el.on("click", ".event-recurrence-exlude-dates-close-btn", function() {
+      $.colorbox.close();
+    });
   };
-//$(".mod-event button:button.add-date").attr "disabled", true
-  Event_Form.clearTermForm = function (ele) {
-    ele.find(".start").val("");
-    ele.find(".close").val("");
-    if ($(".mod-event dd.dates").length > 1) {
-      ele.remove();
-    }
-//yearRange: "-10:+10"
 
+  Event_ExcludeDatesForm.prototype.commit = function() {
+    var self = this;
 
-    if ($(".mod-event dd.dates").length < this.maxTermForm) {
-      return $(".mod-event .setting-dates").show();
-    }
+    var excludedDates = [];
+    self.$el.find('[aria-pressed="false"]').each(function() {
+      excludedDates.push(this.dataset.date);
+    });
+
+    self.commitCallback(excludedDates);
   };
 
   return Event_Form;

@@ -2,21 +2,25 @@ ja:
   event:
     page: イベントページ
     add_date: 日付フォームを追加する
-    add_repeat_dates: 一括設定
     calendar: イベントカレンダー
     category_filter: カテゴリーフィルター
     category_of_the_event: イベントカテゴリー
     date_of_the_event: イベント日
-    del_date: 削除
     ics_file: icsファイル
     next_month: 次の月へ
     prev_month: 前の月へ
     next_day: 次の日へ
     prev_day: 前の日へ
     current_month: 今月
+    prev_next_navi: カレンダーメニュー
     filter_all: 全て
     date_range_delimiter: ～
     keyword: キーワード
+    weekly: 毎週
+    holiday: 祝日
+    holiday_short: 祝
+    all_day: 終日
+    exclude_dates: 除外日
     dates:
       setting: 開催期間
       start_date: 開始
@@ -145,9 +149,6 @@ ja:
           malformed_ical: 未サポートのiCal形式のファイルです。正しいiCal形式のファイルを選択してください。
     attributes:
       cms/model/page:
-        event_name: イベントタイトル
-        event_dates: イベント日
-        event_deadline: 申込締切
         schedule: 日時
         venue: 開催場所
         content: 内容
@@ -157,6 +158,11 @@ ja:
         value: 内容
         contact: お問い合わせ
         event_keyword: イベント検索ワード
+      event/addon/date:
+        event_name: イベントタイトル
+        event_dates: イベント日
+        event_recurrences: 定期開催
+        event_deadline: 申込締切
       event/addon/calendar_list:
         event_display: 表示形式
       event/addon/ical_import:
@@ -201,6 +207,8 @@ ja:
       event_dates:
         - イベントページにリンクを表示する場合はイベントの期間を入力します。
         - 「日付フォームを追加する」を選択することで複数の期間を設定することが可能です。
+      event_recurrences:
+        - 定期開催イベントを入力します。
       event_deadline:
         - イベントの申し込み締切日を入力します。
     event/addon/body:

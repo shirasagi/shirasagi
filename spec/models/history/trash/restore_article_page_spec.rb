@@ -355,17 +355,24 @@ describe History::Trash, type: :model, dbscope: :example do
     context "with event/date" do
       let!(:event_name) { "event_name-#{unique_id}" }
       let!(:event_dates) { %w(2022/01/12 2022/01/13 2022/01/19 2022/01/20).map { |d| Date.parse(d) } }
+      let!(:event_recurr1) do
+        { kind: "date", start_at: "2022/01/12", frequency: "daily", until_on: "2022/01/13" }
+      end
+      let!(:event_recurr2) do
+        { kind: "date", start_at: "2022/01/19", frequency: "daily", until_on: "2022/01/20" }
+      end
       let!(:event_deadline) { Time.zone.parse("2021/12/15 17:30") }
       let!(:item) do
         create(
           :article_page, cur_user: user, cur_site: site, cur_node: node,
-          event_name: event_name, event_dates: event_dates, event_deadline: event_deadline
+          event_name: event_name, event_recurrences: [ event_recurr1, event_recurr2 ], event_deadline: event_deadline
         )
       end
 
       it do
         expect(item.event_name).to eq event_name
         expect(item.event_dates).to eq event_dates
+        expect(item.event_recurrences).to have(2).items
         expect(item.event_deadline).to eq event_deadline
       end
     end

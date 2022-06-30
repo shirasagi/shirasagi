@@ -126,7 +126,7 @@ class Event::Page::IcalImporter
       return
     end
 
-    Rails.logger.debug("#{calendar_name}: there are #{@events.length} events in the calendar")
+    Rails.logger.debug { "#{calendar_name}: there are #{@events.length} events in the calendar" }
     import_ical_events
   ensure
     Time.zone = save_time_zone if save_time_zone
@@ -168,34 +168,11 @@ class Event::Page::IcalImporter
   end
 
   def build_event_page(event)
-    uid = extract_text(event.uid)
-    return if uid.blank?
+    item = find_or_build(event)
+    return unless item
+    return if user && !item.allowed?(:import, user, site: site, node: node)
 
-    last_modified = extract_time(event.last_modified)
-
-    item = model.site(site).node(node).where(ical_uid: uid).first || model.new
-
-    if user && !item.allowed?(:import, user, site: site, node: node)
-      return
-    end
-
-    return item if item.persisted? && last_modified && item.updated >= last_modified
-
-    event_dates = generate_event_dates(event)
-    return if event_dates.blank?
-
-    item.cur_site = site
-    item.cur_node = node
-    item.cur_user = user
-    item.layout_id = node.page_layout_id
-    item.state = node.ical_page_state if node.ical_page_state.present?
-    item.category_ids = Array.new(node.ical_category_ids)
-    item.permission_level = node.permission_level if item.permission_level.blank?
-    item.group_ids = Array.new(node.group_ids) if item.group_ids.blank?
-
-    item.ical_uid = uid
-    item.event_dates = event_dates
-    item.ical_link = extract_text(event.url)
+    item.ical_link ||= extract_text(event.url)
     item.name = item.event_name = extract_text(event.summary)
     item.summary_html = item.content = extract_text(event.description)
     item.venue = extract_text(event.location)
@@ -205,59 +182,150 @@ class Event::Page::IcalImporter
     item.cost = extract_text(event.x_shirasagi_cost)
     item.released = extract_time(event.x_shirasagi_released)
 
+    add_event_recurrences(item, event)
+
     item
   end
 
-  def generate_event_dates(event)
-    from = extract_time(event.dtstart)
-    to = extract_time(event.dtend)
+  def find_or_build(event)
+    uid = extract_text(event.uid)
+    return if uid.blank?
+    return if event.dtstart.blank?
 
-    if to
-      event_dates = day_range([], from, to)
+    item = find_or_new(event)
+
+    item.cur_site = site
+    item.cur_node = node
+    item.cur_user = user
+    item.layout_id ||= node.page_layout_id
+    item.state ||= node.ical_page_state if node.ical_page_state.present?
+    item.category_ids = Array.new(node.ical_category_ids) if item.category_ids.blank?
+    item.permission_level = node.permission_level if item.permission_level.blank?
+    item.group_ids = Array.new(node.group_ids) if item.group_ids.blank?
+    item.ical_uid ||= extract_text(event.x_shirasagi_parent_uid).presence || uid
+
+    item
+  end
+
+  def find_or_new(event)
+    uid = extract_text(event.uid)
+    parent_uid = extract_text(event.x_shirasagi_parent_uid)
+    if parent_uid.present?
+      item = model.site(site).node(node).where(ical_uid: parent_uid).first
+      item.event_recurrences = nil if item
+    end
+    item ||= model.site(site).node(node).where(ical_uid: uid).first
+    item ||= model.new
+    item
+  end
+
+  def add_event_recurrences(item, event)
+    recurrences = Array(item.event_recurrences)
+    if event.rrule.present? || event.rdate.present?
+      recurrences_with_rrule(recurrences, item, event) if event.rrule.present?
+      recurrences_with_rdate(recurrences, item, event) if event.rdate.present?
     else
-      event_dates = day_range([], from, from + 1.day)
+      recurrences_without_recur(recurrences, item, event)
     end
 
-    evaluate_rrule(event_dates, event.rrule, dtstart: from)
-    evaluate_rdate(event_dates, event.rdate)
-    evaluate_exdate(event_dates, event.exdate)
-
-    event_dates.uniq!
-    event_dates.sort!
-    event_dates.select! { |d| @min_day <= d && d <= @max_day }
-    event_dates.map! { |d| d.strftime("%Y/%m/%d") }
-    event_dates = event_dates.take(@max_dates_size) if event_dates.length > @max_dates_size
-    event_dates.join("\r\n")
+    item.event_recurrences = recurrences
   end
 
-  def evaluate_rrule(event_dates, rrule, dtstart:)
-    return event_dates if rrule.blank? || event_dates.length > @max_dates_size
+  def recurrences_with_rrule(recurrences, item, event)
+    return recurrences if event.rrule.blank?
 
-    case rrule
-    when Array
-      rrule.each { |v| evaluate_rrule(event_dates, v, dtstart: dtstart) }
-      event_dates.uniq!
-    when Icalendar::Values::Recur
-      evaluate_recur(event_dates, rrule, dtstart: dtstart)
+    kind = event.dtstart.is_a?(Icalendar::Values::Date) ? "date" : "datetime"
+    exclude_dates = Array(event.exdate).map { |v| extract_time(v) }.map(&:to_date)
+    start_at = extract_time(event.dtstart)
+    end_at = extract_time(event.dtend) if event.dtend
+
+    Array(event.rrule).each do |rrule|
+      case rrule
+      when Icalendar::Values::Recur
+        items = evaluate_recur(rrule, kind: kind, start_at: start_at, end_at: end_at, excludes: exclude_dates)
+        if items.present?
+          recurrences.append(*items) # don't use `+=` to append
+        end
+      end
     end
 
-    event_dates
+    recurrences
   end
 
-  def evaluate_recur(event_dates, recur, dtstart:)
+  def recurrences_with_rdate(recurrences, item, event)
+    return recurrences if event.rdate.blank?
+
+    exclude_dates = Array(event.exdate).map { |v| extract_time(v) }.map(&:to_date)
+    recurrence_dates = evaluate_rdate(event.rdate)
+    start_at = extract_time(event.dtstart)
+    end_at = extract_time(event.dtend) if event.dtend
+    # don't use `+=` to append
+    recurrences.append(*recurrences_from_dates(recurrence_dates, start_at: start_at, end_at: end_at, excludes: exclude_dates))
+    recurrences
+  end
+
+  def recurrences_without_recur(recurrences, item, event)
+    exclude_dates = Array(event.exdate).map { |v| extract_time(v) }.map(&:to_date)
+    from = extract_time(event.dtstart)
+    to = extract_time(event.dtend) if event.dtend
+
+    if from.hour == 0 && from.min == 0 && from.sec == 0
+      kind = "date"
+    else
+      kind = "datetime"
+    end
+    start_at = from
+
+    if kind == "datetime"
+      end_at = Event.make_time(start_at, to) if to
+      end_at ||= start_at.tomorrow.beginning_of_day
+    else
+      end_at = start_at + 1.day
+    end
+
+    until_on = (to - 1.second).to_date if to
+    until_on ||= (end_at - 1.second).to_date
+
+    recurrences << {
+      kind: kind, start_at: start_at, end_at: end_at, frequency: "daily", until_on: until_on,
+      exclude_dates: exclude_dates
+    }
+    recurrences
+  end
+
+  def recurrences_from_dates(recurrence_dates, start_at:, end_at: nil, excludes: nil)
+    if start_at.hour == 0 && start_at.min == 0 && start_at.sec == 0
+      kind = "date"
+    else
+      kind = "datetime"
+    end
+
+    clustered_dates = Event.cluster_dates(recurrence_dates)
+    clustered_dates.map do |dates|
+      if kind == "date"
+        e = dates.first.tomorrow
+      else
+        e = Event.make_time(dates.first, end_at) if end_at
+        e ||= dates.first.tomorrow.to_date
+      end
+
+      { kind: kind, start_at: Event.make_time(dates.first, start_at), end_at: e,
+        frequency: "daily", until_on: dates.last.to_date, exclude_dates: excludes }
+    end
+  end
+
+  def evaluate_recur(recur, kind:, start_at:, end_at:, excludes:)
     case recur.frequency.to_s.upcase
     when "DAILY"
-      evaluate_recur_daily(event_dates, recur, dtstart: dtstart)
+      evaluate_recur_daily(recur, kind: kind, start_at: start_at, end_at: end_at, excludes: excludes)
     when "WEEKLY"
-      evaluate_recur_weekly(event_dates, recur, dtstart: dtstart)
+      evaluate_recur_weekly(recur, kind: kind, start_at: start_at, end_at: end_at, excludes: excludes)
     when "MONTHLY"
-      evaluate_recur_monthly(event_dates, recur, dtstart: dtstart)
+      evaluate_recur_monthly(recur, kind: kind, start_at: start_at, end_at: end_at, excludes: excludes)
     end
-
-    event_dates
   end
 
-  def evaluate_recur_daily(event_dates, recur, dtstart:)
+  def evaluate_recur_daily(recur, kind:, start_at:, end_at:, excludes:)
     to = @max_day
     options = { interval: recur.interval || 1 }
 
@@ -269,15 +337,16 @@ class Event::Page::IcalImporter
       options[:count] = recur.count
     end
 
-    day_range(event_dates, dtstart, to, **options)
+    recurrence_dates = day_range(start_at, to, **options)
+    recurrences_from_dates(recurrence_dates, start_at: start_at, end_at: end_at, excludes: excludes)
   end
 
-  def evaluate_recur_weekly(event_dates, recur, dtstart:)
+  def evaluate_recur_weekly(recur, kind:, start_at:, end_at:, excludes:)
     wdays = recur.by_day
-    return event_dates if wdays.blank?
+    return [] if wdays.blank?
 
     wdays.map! { |wday| ICAL_WEEKDAY_MAP[wday.to_s.upcase] }.compact
-    return event_dates if wdays.blank?
+    return [] if wdays.blank?
 
     to = @max_day
     options = { wdays: wdays, interval: recur.interval || 1 }
@@ -290,10 +359,11 @@ class Event::Page::IcalImporter
       options[:count] = recur.count
     end
 
-    week_range(event_dates, dtstart, to, options)
+    recurrence_dates = week_range(start_at, to, options)
+    recurrences_from_dates(recurrence_dates, start_at: start_at, end_at: end_at, excludes: excludes)
   end
 
-  def evaluate_recur_monthly(event_dates, recur, dtstart:)
+  def evaluate_recur_monthly(recur, kind:, start_at:, end_at:, excludes:)
     to = @max_day
     options = { interval: recur.interval || 1 }
 
@@ -313,33 +383,35 @@ class Event::Page::IcalImporter
       options[:days_of_month] = recur.by_month_day.map(&:to_i)
     end
 
-    month_range(event_dates, dtstart, to, options)
+    recurrence_dates = month_range(start_at, to, options)
+    recurrences_from_dates(recurrence_dates, start_at: start_at, end_at: end_at, excludes: excludes)
   end
 
-  def evaluate_rdate(event_dates, rdate)
-    return event_dates if rdate.blank? || event_dates.length > @max_dates_size
+  def evaluate_rdate(rdate)
+    rdate = Array(rdate)
+    return [] if rdate.blank?
 
-    case rdate
-    when Array
-      rdate.each { |v| evaluate_rdate(event_dates, v) }
-      event_dates.uniq!
-    when Icalendar::Values::Period
-      evaluate_period(event_dates, rdate)
-    else
-      val = extract_time(rdate)
-      if val && !event_dates.include?(val)
-        event_dates << val
+    ret = rdate.map do |v|
+      case v
+      when Icalendar::Values::Period
+        evaluate_period(v)
+      else
+        extract_time(v)
       end
     end
 
-    event_dates
+    ret.flatten!
+    ret.compact!
+    ret.uniq!
+    ret.sort!
+    ret
   end
 
-  def evaluate_period(event_dates, period)
+  def evaluate_period(period)
     period_start = extract_time(period.period_start)
     if period.explicit_end.present?
       explicit_end = extract_time(period.explicit_end)
-      day_range(event_dates, period_start.beginning_of_day, explicit_end.end_of_day)
+      day_range(period_start.beginning_of_day, explicit_end.end_of_day)
     elsif period.duration.present?
       duration = period.duration
       implicit_end = period_start
@@ -349,26 +421,8 @@ class Event::Page::IcalImporter
       implicit_end += duration.minutes.minutes
       implicit_end += duration.seconds.seconds
 
-      day_range(event_dates, period_start.beginning_of_day, implicit_end.end_of_day)
+      day_range(period_start.beginning_of_day, implicit_end.end_of_day)
     end
-
-    event_dates
-  end
-
-  def evaluate_exdate(event_dates, exdate)
-    return event_dates if exdate.blank?
-
-    case exdate
-    when Array
-      exdate.each { |v| evaluate_exdate(event_dates, v) }
-    else
-      val = extract_time(exdate)
-      if val
-        event_dates.delete(val)
-      end
-    end
-
-    event_dates
   end
 
   def extract_text(ical_value)
@@ -398,10 +452,11 @@ class Event::Page::IcalImporter
     end
   end
 
-  def day_range(dates, from, to, interval: 1, count: nil)
+  def day_range(from, to, interval: 1, count: nil)
     from = @min_day if from < @min_day
     to = @max_day if to > @max_day
 
+    dates = []
     i = from
     c = 0
     while i < to
@@ -418,7 +473,8 @@ class Event::Page::IcalImporter
     dates
   end
 
-  def week_range(dates, from, to, options)
+  def week_range(from, to, options)
+    dates = []
     from = @min_day if from < @min_day
     to = @max_day if to > @max_day
     interval = options[:interval]
@@ -429,7 +485,7 @@ class Event::Page::IcalImporter
     while from < to
       week_end = from + 7.days
       week_end = to if week_end > to
-      days = day_range([], from, week_end)
+      days = day_range(from, week_end)
       days.select! { |d| wdays.include?(d.wday) }
 
       days.each do |d|
@@ -451,7 +507,8 @@ class Event::Page::IcalImporter
     dates
   end
 
-  def month_range(dates, from, to, options)
+  def month_range(from, to, options)
+    dates = []
     from = @min_day if from < @min_day
     to = @max_day if to > @max_day
     interval = options[:interval]
@@ -532,8 +589,8 @@ class Event::Page::IcalImporter
 
     if user
       raise "403" unless page.allowed?(:edit, user)
-      if page.state == "public"
-        raise "403" unless page.allowed?(:release, user)
+      if page.state == "public" && !page.allowed?(:release, user)
+        raise "403"
       end
     end
 
@@ -573,11 +630,9 @@ class Event::Page::IcalImporter
     log.site_id      = site.id if site
     log.action       = action
 
-    if page && page.respond_to?(:new_record?)
-      if !page.new_record?
-        log.target_id    = page.id
-        log.target_class = page.class
-      end
+    if page && page.respond_to?(:new_record?) && !page.new_record?
+      log.target_id    = page.id
+      log.target_class = page.class
     end
 
     log.save

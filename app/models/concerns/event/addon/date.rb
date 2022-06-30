@@ -3,73 +3,29 @@ module Event::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
-    MAX_EVENT_DATES_SIZE = 180
+    MAX_EVENT_DATES_SIZE = 500
 
     included do
       field :event_name, type: String
       field :event_dates, type: Event::Extensions::EventDates
+      field :event_recurrences, type: Event::Extensions::Recurrences
       field :event_deadline, type: DateTime
-      permit_params :event_name, :event_dates, :event_deadline
 
+      permit_params :event_name, :event_deadline
+      permit_params event_recurrences: [
+        :in_update_from_view, :in_start_on, :in_until_on, :in_all_day, :in_start_time, :in_end_time, :in_exclude_dates,
+        in_by_days: []
+      ]
+
+      before_validation :set_event_dates_from_recurrences
       validate :validate_event
 
       if respond_to?(:template_variable_handler)
-        template_variable_handler('event_dates') do |name, issuer|
-          template_variable_handler_event_dates(name, issuer)
-        end
-        template_variable_handler('event_dates.default') do |name, issuer|
-          template_variable_handler_event_dates(name, issuer, :default)
-        end
-        template_variable_handler('event_dates.default_full') do |name, issuer|
-          template_variable_handler_event_dates(name, issuer, :default_full)
-        end
-        template_variable_handler('event_dates.iso') do |name, issuer|
-          template_variable_handler_event_dates(name, issuer, :iso)
-        end
-        template_variable_handler('event_dates.iso_full') do |name, issuer|
-          template_variable_handler_event_dates(name, issuer, :iso_full)
-        end
-        template_variable_handler('event_dates.long') do |name, issuer|
-          template_variable_handler_event_dates(name, issuer, :long)
-        end
-        template_variable_handler('event_dates.full') do |name, issuer|
-          template_variable_handler_event_dates(name, issuer, :full)
-        end
-        template_variable_handler('event_deadline') do |name, issuer|
-          template_variable_handler_event_deadline(name, issuer)
-        end
-        template_variable_handler('event_deadline.default') do |name, issuer|
-          template_variable_handler_event_deadline(name, issuer, :default)
-        end
-        template_variable_handler('event_deadline.iso') do |name, issuer|
-          template_variable_handler_event_deadline(name, issuer, :iso)
-        end
-        template_variable_handler('event_deadline.long') do |name, issuer|
-          template_variable_handler_event_deadline(name, issuer, :long)
-        end
-        template_variable_handler('event_deadline.full') do |name, issuer|
-          template_variable_handler_event_deadline(name, issuer, :full)
-        end
-        template_variable_handler('event_deadline.short') do |name, issuer|
-          template_variable_handler_event_deadline(name, issuer, :short)
-        end
+        include Event::TemplateVariableHandlers
       end
 
       if respond_to? :liquidize
-        liquidize do
-          export :event_name
-          export as: :event_dates do
-            if event_dates.blank?
-              []
-            else
-              event_dates.clustered.map do |array|
-                # probably, Time object is more convenient than Date object
-                array.map(&:in_time_zone)
-              end
-            end
-          end
-          export :event_deadline
-        end
+        include Event::LiquidHandlers
       end
     end
 
@@ -126,6 +82,10 @@ module Event::Addon
     end
 
     private
+
+    def set_event_dates_from_recurrences
+      self.event_dates = event_recurrences.collect_event_dates
+    end
 
     def validate_event
       errors.add :event_dates, :blank if event_name.present? && event_dates.blank?
