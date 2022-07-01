@@ -95,6 +95,7 @@ Rails.application.routes.draw do
         post "discovery", controller: "open_id_connects/discovery", action: :create, on: :collection
       end
       resources :environments, concerns: :deletion
+      resources :oauth2_applications, concerns: :deletion
     end
   end
 

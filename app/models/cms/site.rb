@@ -7,9 +7,11 @@ class Cms::Site
   include SS::Addon::MobileSetting
   include SS::Addon::MapSetting
   include SS::Addon::KanaSetting
+  include SS::Addon::OpenGraphSetting
   include SS::Addon::FacebookSetting
   include SS::Addon::TwitterSetting
   include SS::Addon::LineSetting
+  include SS::Addon::KintoneSetting
   include SS::Addon::FileSetting
   include SS::Addon::MailSetting
   include SS::Addon::ApproveSetting

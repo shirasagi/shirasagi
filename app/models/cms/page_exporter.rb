@@ -139,14 +139,37 @@ class Cms::PageExporter
 
   def draw_event_date(drawer)
     drawer.column :event_name
-    drawer.column :event_dates do
-      drawer.body do |item|
-        if item.event_dates.present?
-          item.event_dates.map { |d| I18n.l(d, format: :picker) }.join("\n")
-        end
-      end
+    Event::MAX_RECURRENCES_TO_IMPORT_EXPORT.times do |i|
+      draw_event_recurrence(drawer, i)
     end
     drawer.column :event_deadline
+  end
+
+  def draw_event_recurrence(drawer, index)
+    drawer.column "event_recurrences_#{index}_start_on" do
+      drawer.head { "#{Cms::Page.t(:event_recurrences)}_#{index + 1}_開始日" }
+      drawer.body { |item| format_event_recurrence_start_on(item, index) }
+    end
+    drawer.column "event_recurrences_#{index}_until_on" do
+      drawer.head { "#{Cms::Page.t(:event_recurrences)}_#{index + 1}_終了日" }
+      drawer.body { |item| format_event_recurrence_until_on(item, index) }
+    end
+    drawer.column "event_recurrences_#{index}_start_time" do
+      drawer.head { "#{Cms::Page.t(:event_recurrences)}_#{index + 1}_開始時刻" }
+      drawer.body { |item| format_event_recurrence_start_time(item, index) }
+    end
+    drawer.column "event_recurrences_#{index}_end_time" do
+      drawer.head { "#{Cms::Page.t(:event_recurrences)}_#{index + 1}_終了時刻" }
+      drawer.body { |item| format_event_recurrence_end_time(item, index) }
+    end
+    drawer.column "event_recurrences_#{index}_by_days" do
+      drawer.head { "#{Cms::Page.t(:event_recurrences)}_#{index + 1}_曜日" }
+      drawer.body { |item| format_event_recurrence_by_days(item, index) }
+    end
+    drawer.column "event_recurrences_#{index}_exclude_dates" do
+      drawer.head { "#{Cms::Page.t(:event_recurrences)}_#{index + 1}_除外日" }
+      drawer.body { |item| format_event_recurrence_exclude_dates(item, index) }
+    end
   end
 
   def draw_related_pages(drawer)
@@ -375,5 +398,57 @@ class Cms::PageExporter
   def find_column_value(item, form, column)
     return if item.form_id != form.id
     item.column_values.where(column_id: column.id).first
+  end
+
+  def format_event_recurrence_start_on(item, index)
+    event_recurrence = item.event_recurrences[index]
+    return unless event_recurrence
+
+    event_recurrence.start_date.try { |time| I18n.l(time.to_date, format: :picker) }
+  end
+
+  def format_event_recurrence_until_on(item, index)
+    event_recurrence = item.event_recurrences[index]
+    return unless event_recurrence
+
+    event_recurrence.until_on.try { |time| I18n.l(time.to_date, format: :picker) }
+  end
+
+  def format_event_recurrence_start_time(item, index)
+    event_recurrence = item.event_recurrences[index]
+    return if event_recurrence.blank? || event_recurrence.kind != "datetime"
+
+    event_recurrence.start_datetime.try { |time| I18n.l(time, format: :hh_mm) }
+  end
+
+  def format_event_recurrence_end_time(item, index)
+    event_recurrence = item.event_recurrences[index]
+    return if event_recurrence.blank? || event_recurrence.kind != "datetime"
+
+    event_recurrence.end_datetime.try { |time| I18n.l(time, format: :hh_mm) }
+  end
+
+  def format_event_recurrence_by_days(item, index)
+    event_recurrence = item.event_recurrences[index]
+    return unless event_recurrence
+
+    if event_recurrence.by_days.present?
+      abbr_day_names = I18n.t("date.abbr_day_names")
+      wdays = event_recurrence.by_days.map { |wday| abbr_day_names[wday] }
+      if event_recurrence.includes_holiday
+        wdays << "祝日"
+      end
+      wdays.join(",")
+    elsif event_recurrence.includes_holiday
+      "祝日"
+    else
+      "毎日"
+    end
+  end
+
+  def format_event_recurrence_exclude_dates(item, index)
+    event_recurrence = item.event_recurrences[index]
+    return if event_recurrence.blank? || event_recurrence.exclude_dates.blank?
+    event_recurrence.exclude_dates.map { |date| I18n.l(date.to_date, format: :picker) }.join("\n")
   end
 end

@@ -172,4 +172,15 @@ module SS::LiquidFilters
     criteria = criteria.where(filename: /\A#{filename}\//) if filename.present?
     criteria.where(name: page.name).nin(id: page.id).to_a
   end
+
+  def event_active_recurrences(input)
+    recurrences = Array(input)
+    date = Time.zone.today
+
+    recurrences.select { |recurrence| recurrence.collect_event_dates.any? { |event_date| date <= event_date } }
+  end
+
+  def event_recurrence_summary(input)
+    Event.recurrence_summary(input)
+  end
 end

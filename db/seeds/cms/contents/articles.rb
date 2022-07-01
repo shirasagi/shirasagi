@@ -194,9 +194,9 @@ html << '<p>'
   html << '</a>'
 end
 html << '</p>'
-dates = (Time.zone.tomorrow..(Time.zone.tomorrow + 10)).map { |d| d.mongoize }
+recurrence = { kind: "date", start_at: Time.zone.tomorrow, frequency: "daily", until_on: Time.zone.tomorrow + 10 }
 save_page route: "article/page", filename: "docs/page27.html", name: "ふれあいフェスティバル",
-  layout_id: @layouts["oshirase"].id, event_dates: dates,
+  layout_id: @layouts["oshirase"].id, event_recurrences: [ recurrence ],
   category_ids: [@categories["oshirase"].id,
                  @categories["oshirase/event"].id,
                  @categories["shisei/soshiki"].id,
@@ -206,9 +206,9 @@ save_page route: "article/page", filename: "docs/page27.html", name: "ふれあ�
   contact_group_id: @contact_group_id, contact_email: @contact_email, contact_tel: @contact_tel,
   contact_fax: @contact_fax, contact_link_url: @contact_link_url, contact_link_name: @contact_link_name,
   group_ids: [@g_seisaku.id, @g_koho.id]
-dates = (Time.zone.today..(Time.zone.today + 20)).map { |d| d.mongoize }
+recurrence = { kind: "date", start_at: Time.zone.today, frequency: "daily", until_on: Time.zone.today + 20 }
 save_page route: "event/page", filename: "calendar/page28.html", name: "住民相談会を開催します。",
-  layout_id: @layouts["event"].id, category_ids: [@categories["calendar/kohen"].id], event_dates: dates,
+  layout_id: @layouts["event"].id, category_ids: [@categories["calendar/kohen"].id], event_recurrences: [ recurrence ],
   schedule: "〇〇年○月〇日", venue: "○○○○○○○○○○", cost: "○○○○○○○○○○",
   content: "○○○○○○○○○○○○○○○○○○○○", related_url: @link_url,
   group_ids: [@g_seisaku.id]

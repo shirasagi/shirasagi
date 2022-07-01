@@ -55,27 +55,8 @@ module Cms::PageFilter
   end
 
   def set_contains_urls_items
-    @contains_urls = []
-    return if !@item.class.include?(Cms::Model::Page) || @item.try(:branch?)
-
-    cond = []
-    if @item.respond_to?(:url) && @item.respond_to?(:full_url)
-      cond << { contains_urls: { '$in' => [ @item.url, @item.full_url ] } }
-      cond << { form_contains_urls: { '$in' => [ @item.url, @item.full_url ] } }
-    end
-
-    if @item.respond_to?(:files) && @item.files.present?
-      cond << { contains_urls: { '$in' => @item.files.map(&:url) } }
-    end
-
-    if @item.respond_to?(:related_page_ids)
-      cond << { related_page_ids: { '$in' => [ @item.id ] } }
-    end
-
-    if cond.present?
-      @contains_urls = Cms::Page.site(@cur_site).where(:id.ne => @item.id).where("$or" => cond).
-        page(params[:page]).per(50)
-    end
+    return Cms::Page.none if !@item.is_a?(Cms::Model::Page) || @item.try(:branch?)
+    @contains_urls = Cms::Page.all.site(@cur_site).and_linking_pages(@item).page(params[:page]).per(50)
   end
 
   def deny_update_with_contains_urls

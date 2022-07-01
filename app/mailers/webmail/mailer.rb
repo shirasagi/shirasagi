@@ -6,8 +6,11 @@ class Webmail::Mailer < ApplicationMailer
   end
 
   def new_message(item)
-    @item = item
+    %i(from to cc bcc reply_to).each do |field|
+      item[field] = item[field].map { |email| Webmail::Converter.quote_address(email).presence }.compact
+    end
 
+    @item = item
     @item.size = 0
     @item.ref_files_with_data.each do |file|
       add_attachment_file(file)

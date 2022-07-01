@@ -4,7 +4,10 @@ describe Event::Page, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create :event_node_page, cur_site: site }
   let(:event_date) { Time.zone.now.beginning_of_day + rand(1..10).days }
-  subject { create :event_page, cur_site: site, cur_node: node, event_dates: [ event_date ] }
+  let(:event_recurrence) do
+    { kind: "date", start_at: event_date, frequency: "daily", until_on: event_date }
+  end
+  subject { create :event_page, cur_site: site, cur_node: node, event_recurrences: [ event_recurrence ] }
   let(:show_path) { Rails.application.routes.url_helpers.event_page_path(site: subject.site, cid: subject.parent, id: subject) }
 
   describe "#attributes" do

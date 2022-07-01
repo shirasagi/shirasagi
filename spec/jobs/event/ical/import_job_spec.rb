@@ -186,7 +186,7 @@ describe Event::Ical::ImportJob, dbscope: :example do
             expect(doc.event_name).to eq doc.name
             event_dates = doc.event_dates.map { |d| I18n.l(d, format: :picker) }
             expect(event_dates.first).to eq "2018/08/27"
-            expect(event_dates.last).to eq "2019/02/22"
+            expect(event_dates.last).to eq "2019/08/31"
           end
         end
       end
@@ -211,7 +211,7 @@ describe Event::Ical::ImportJob, dbscope: :example do
             expect(doc.name).to eq "event 2"
             expect(doc.event_name).to eq doc.name
             event_dates = doc.event_dates.map { |d| I18n.l(d, format: :picker) }
-            expect(event_dates).to eq %w(2018/08/27 2018/08/28 2018/08/29)
+            expect(event_dates).to eq %w(2018/08/28 2018/08/29)
           end
 
           expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-3')).to be_present
@@ -220,7 +220,7 @@ describe Event::Ical::ImportJob, dbscope: :example do
             expect(doc.event_name).to eq doc.name
             event_dates = doc.event_dates.map { |d| I18n.l(d, format: :picker) }
             expect(event_dates.first).to eq "2018/08/27"
-            expect(event_dates.last).to eq "2019/02/22"
+            expect(event_dates.last).to eq "2019/08/31"
           end
         end
       end
@@ -237,7 +237,7 @@ describe Event::Ical::ImportJob, dbscope: :example do
             expect(doc.name).to eq "event 1"
             expect(doc.event_name).to eq doc.name
             event_dates = doc.event_dates.map { |d| I18n.l(d, format: :picker) }
-            dates = %w(2018/09/15 2018/10/01 2018/10/02 2018/10/03 2018/10/04 2018/10/05 2018/10/06 2018/10/07)
+            dates = %w(2018/10/01 2018/10/02 2018/10/03 2018/10/04 2018/10/05 2018/10/06 2018/10/07)
             expect(event_dates).to eq dates
           end
 
@@ -246,7 +246,7 @@ describe Event::Ical::ImportJob, dbscope: :example do
             expect(doc.name).to eq "event 2"
             expect(doc.event_name).to eq doc.name
             event_dates = doc.event_dates.map { |d| I18n.l(d, format: :picker) }
-            expect(event_dates).to eq %w(2018/09/15 2018/09/29 2018/09/30)
+            expect(event_dates).to eq %w(2018/09/29 2018/09/30)
           end
 
           expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-3')).to be_present
@@ -263,7 +263,7 @@ describe Event::Ical::ImportJob, dbscope: :example do
             expect(doc.name).to eq "event 4"
             expect(doc.event_name).to eq doc.name
             event_dates = doc.event_dates.map { |d| I18n.l(d, format: :picker) }
-            dates = %w(2018/09/15 2018/09/24 2018/09/25 2018/09/26 2018/09/27 2018/09/28 2018/09/29 2018/09/30)
+            dates = %w(2018/09/24 2018/09/25 2018/09/26 2018/09/27 2018/09/28 2018/09/29 2018/09/30)
             expect(event_dates).to eq dates
           end
 
@@ -273,7 +273,7 @@ describe Event::Ical::ImportJob, dbscope: :example do
             expect(doc.name).to eq "event 5"
             expect(doc.event_name).to eq doc.name
             event_dates = doc.event_dates.map { |d| I18n.l(d, format: :picker) }
-            expect(event_dates).to eq %w(2018/09/15 2019/01/31 2019/03/31 2019/05/31 2019/07/31)
+            expect(event_dates).to eq %w(2019/01/31 2019/03/31 2019/05/31 2019/07/31)
           end
 
           expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-6')).to be_present
@@ -281,7 +281,7 @@ describe Event::Ical::ImportJob, dbscope: :example do
             expect(doc.name).to eq "event 6"
             expect(doc.event_name).to eq doc.name
             event_dates = doc.event_dates.map { |d| I18n.l(d, format: :picker) }
-            dates = %w(2018/09/15 2018/09/30 2018/10/31 2018/11/30 2018/12/31 2019/01/31 2019/02/28 2019/03/31
+            dates = %w(2018/09/30 2018/10/31 2018/11/30 2018/12/31 2019/01/31 2019/02/28 2019/03/31
                        2019/04/30 2019/05/31 2019/06/30 2019/07/31 2019/08/31)
             expect(event_dates).to eq dates
           end

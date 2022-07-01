@@ -11,7 +11,7 @@ class Sys::Auth::OpenIdConnect::ImplicitFlowResponse
   validates :session_nonce, presence: true
 
   validate :validate_state
-  validates_with Sys::Auth::OpenIdConnect::JwtValidator
+  validates_with Sys::Auth::OpenIdConnect::JWTValidator
 
   def id
     claim = (cur_item.claims.presence || cur_item.default_claims).find { |claim| jwt[claim].present? }

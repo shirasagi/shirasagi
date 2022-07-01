@@ -83,6 +83,10 @@ Rails.application.routes.draw do
 
       # Environment
       get "env/:id/login" => "environment#login", as: :env
+
+      # OAuth2
+      get "oauth2/authorize" => "oauth2#authorize"
+      post "oauth2/token" => "oauth2#token"
     end
   end
 end

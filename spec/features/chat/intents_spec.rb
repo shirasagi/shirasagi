@@ -96,5 +96,25 @@ describe "chat_intents", type: :feature, js: true do
         expect(find('td.expandable', text: item.phrase)).not_to be_visible
       end
     end
+
+    context 'when suggest is partial match' do
+      let(:suggest) { ["#{first_suggest.first}#{unique_id}"] }
+      let!(:item1) { create :chat_intent, node_id: node.id, phrase: first_suggest, suggest: suggest }
+      let!(:item2) { create :chat_intent, node_id: node.id, phrase: suggest }
+
+      it "#index" do
+        visit index_path
+        expect(current_path).not_to eq sns_login_path
+        expect(page).to have_css('td.expandable', count: 5)
+        expect(page).to have_css('a', text: I18n.t('chat.links.add_or_edit'), count: 3)
+        expect(page).to have_css('td.expandable', text: first_suggest.first, count: 3)
+        expect(page).to have_css('td', text: I18n.t('chat.not_found_intent'), count: 0)
+        expect(page).to have_css('td', text: I18n.t('chat.loop_intent'), count: 0)
+        expect(page).to have_css('td.expandable', text: I18n.t('chat.first_suggest'), visible: true)
+        expect(page).to have_css('td.expandable', text: first_suggest.first, visible: false)
+        expect(page).to have_css('td.expandable', text: item.name, visible: true)
+        expect(page).to have_css('td.expandable', text: suggest.first, visible: false)
+      end
+    end
   end
 end

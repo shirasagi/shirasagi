@@ -77,22 +77,9 @@ module SS::BaseFilter
       return @cur_user
     end
 
-    @cur_user, login_path, logout_path = get_user_by_access_token
-    SS.current_user = @cur_user
-    if @cur_user
-      set_user(@cur_user, session: true, login_path: login_path, logout_path: logout_path)
-
-      # persistent session to database by redirecting to self path
-      redirect = SS::AccessToken.remove_access_token_from_query(request.fullpath)
-      redirect_to redirect
-      return
-    end
-
-    @cur_user = SS.current_user = get_user_by_session
-    if @cur_user
-      set_last_logged_in
-      return @cur_user
-    end
+    return if login_by_access_token
+    return if login_by_oauth2_token
+    return if login_by_session
 
     unset_user
 
@@ -114,6 +101,45 @@ module SS::BaseFilter
       end
       format.any { render json: :error, status: :unauthorized }
     end
+  end
+
+  def login_by_access_token
+    @cur_user, login_path, logout_path = get_user_by_access_token
+    SS.current_user = @cur_user
+    SS.current_token = nil
+    return false if !@cur_user
+
+    set_locale_and_timezone
+    set_user(@cur_user, session: true, login_path: login_path, logout_path: logout_path)
+
+    # persistent session to database by redirecting to self path
+    redirect = SS::AccessToken.remove_access_token_from_query(request.fullpath)
+    redirect = ::Addressable::URI.parse(redirect)
+    # redirect_to [ redirect.path, redirect.query.presence ].compact.join("?")
+    redirect_to redirect.request_uri
+    true
+  end
+
+  def login_by_oauth2_token
+    @cur_user, token = get_user_by_oauth2_token
+    SS.current_user = @cur_user
+    SS.current_token = token
+    return false if !@cur_user
+
+    set_locale_and_timezone
+    # no need to keep sessions with token auth
+    request.session_options[:skip] = true
+    return true
+  end
+
+  def login_by_session
+    @cur_user = SS.current_user = get_user_by_session
+    SS.current_token = nil
+    return false if !@cur_user
+
+    set_locale_and_timezone
+    set_last_logged_in
+    return true
   end
 
   def set_user(user, opts = {})
@@ -140,6 +166,7 @@ module SS::BaseFilter
     session[:user] = nil
     redirect_to login_path_by_cookie if opt[:redirect]
     @cur_user = SS.current_user = nil
+    SS.current_token = nil
   end
 
   def check_api_user

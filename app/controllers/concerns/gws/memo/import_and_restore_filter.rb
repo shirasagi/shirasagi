@@ -32,12 +32,12 @@ module Gws::Memo::ImportAndRestoreFilter
     file = params.dig(:item, :in_file)
     if file.nil?
       @item.errors.add :in_file, :blank
-      render file: :index
+      render action: :index
       return
     end
     if ::File.extname(file.original_filename) != ".zip"
       @item.errors.add :in_file, :invalid_file_type
-      render file: :index
+      render action: :index
       return
     end
 

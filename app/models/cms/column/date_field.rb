@@ -19,4 +19,8 @@ class Cms::Column::DateField < Cms::Column::Base
     options['class'] = %w(date js-date)
     options
   end
+
+  def exact_match_to_value(value)
+    { date: value }
+  end
 end

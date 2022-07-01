@@ -1,30 +1,84 @@
 <%
   addon ||= local_assigns.fetch(:addon, {})
-  addon[:display_body] = "hide"
+  addon[:display_body] = @item.event_dates.blank? ? "hide" : "show"
 
-  max_term_form = SS.config.event.max_term_form.to_i
+  week_days = I18n.t("date.abbr_day_names")
 %>
-<%= jquery do%>
-  Event_Form.maxTermForm = <%= (max_term_form > 0) ? max_term_form : 1 %>;
-  Event_Form.render();
+
+<% render_recurrence = proc do |recurr, index| %>
+  <div class="event-recurrence">
+    <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_update_from_view]", "1" %>
+    <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_all_day]", "1", id: nil %>
+
+    <div class="event-recurrence-row">
+      <%= button_tag t("ss.buttons.delete"), type: "button", class: "btn event-recurrence-delete-btn" %>
+      <div class="event-recurrence-date">
+        <%= text_field_tag "#{f.object_name}[event_recurrences][][in_start_on]", recurr.start_date.try { |time| I18n.l(time.to_date, format: :picker) }, class: "date js-date", id: nil %>
+        <%= t("ss.wave_dash") %>
+        <%= text_field_tag "#{f.object_name}[event_recurrences][][in_until_on]", recurr.until_on.try { |time| I18n.l(time.to_date, format: :picker) }, class: "date js-date", id: nil %>
+      </div>
+
+      <% if false %>
+      <div class="event-recurrence-time">
+        <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_all_day]", recurr.kind == "date" ? "1" : "0", id: nil %>
+        <div class="event-recurrence-time-row">
+          <label><%= radio_button_tag "all_day_#{index}", "1", recurr.kind == "date", id: nil, class: "event-recurrence-all-day-radio" %> 終日</label>
+        </div>
+        <div class="event-recurrence-time-row">
+          <label><%= radio_button_tag "all_day_#{index}", "0", recurr.kind != "date", id: nil, class: "event-recurrence-all-day-radio" %></label>
+          <%= time_field_tag "#{f.object_name}[event_recurrences][][in_start_time]", recurr.start_datetime.try { |time| I18n.l(time, format: :hh_mm) } %>
+          <%= t("ss.wave_dash") %>
+          <%= time_field_tag "#{f.object_name}[event_recurrences][][in_end_time]", recurr.end_datetime.try { |time| I18n.l(time, format: :hh_mm) } %>
+        </div>
+      </div>
+      <% end %>
+
+      <div class="event-recurrence-excludes">
+        <% disp = recurr.exclude_dates.try { |dates| dates.map { |date| I18n.l(date.to_date, format: :picker) }.join(",") } %>
+        <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_exclude_dates]", disp %>
+        <%= button_tag t("event.exclude_dates"), type: "button", class: "btn event-recurrence-exclude-dates-btn", data: { url: event_apis_edit_exclude_dates_path } %>
+        <div class="event-recurrence-excludes-summary" title="<%= disp %>"><%= disp %></div>
+      </div>
+    </div>
+
+    <div class="event-recurrence-row">
+      <div class="event-recurrence-wdays">
+        <% week_days.each_with_index do |wday, index| %>
+          <label><%= check_box_tag "#{f.object_name}[event_recurrences][][in_by_days][]", index, recurr.by_days && recurr.by_days.include?(index) %><%= wday %></label>
+        <% end %>
+        <label><%= check_box_tag "#{f.object_name}[event_recurrences][][in_by_days][]", "holiday", recurr.includes_holiday %><%= "祝日" %></label>
+      </div>
+    </div>
+  </div>
 <% end %>
 
 <dl class="see mod-event">
   <dt><%= @model.t :event_name %><%= @model.tt :event_name %></dt>
   <dd><%= f.text_field :event_name %></dd>
 
-  <dt><%= @model.t :event_dates %><%= @model.tt :event_dates %></dt>
-  <dd class="dates">
-    <%= text_field_tag "event[][start_date]", nil, { id: nil, class: "date js-date start" } %>
-    - <%= text_field_tag "event[][close_date]", nil, { id: nil, class: "date js-date close" } %>
-    <%= button_tag t("event.del_date"), { type: :button, class: "clear btn" } %>
+  <dt><%= @model.t :event_recurrences %><%= @model.tt :event_recurrences %></dt>
+  <dd>
+    <% @item.event_recurrences.each_with_index do |recurr, index| %>
+      <% render_recurrence.call recurr, index %>
+    <% end %>
+
+    <%# for new record %>
+    <% render_recurrence.call OpenStruct.new, @item.event_recurrences.length  %>
+
+    <div class="event-recurrence">
+      <div class="event-recurrence-row">
+        <%= button_tag t("event.add_date"), type: "button", class: "btn event-recurrence-add-btn", data: { template: "event-recurrence-template" } %>
+      </div>
+    </div>
+    <script type="text/html" id="event-recurrence-template">
+      <% render_recurrence.call OpenStruct.new, @item.event_recurrences.length + 1 %>
+    </script>
   </dd>
-  <dd class="setting-dates">
-    <%= button_tag t("event.add_date"), { type: :button, class: "add-date btn" } %>
-    <%= link_to t("event.add_repeat_dates"), event_apis_repeat_dates_path, class: "ajax-box btn" %>
-  </dd>
-  <dd style="display: none;"><%= f.text_area :event_dates, value: @item.event_dates.try { |dates| dates.map { |d| d.strftime("%Y/%m/%d") }.join("\n") }, class: "event-dates btn" %></dd>
 
   <dt><%= @model.t :event_deadline %><%= @model.tt :event_deadline %></dt>
   <dd><%= f.text_field :event_deadline, class: "datetime js-datetime", value: tryb { @item.event_deadline.strftime("%Y/%m/%d %H:%M") } %></dd>
 </dl>
+
+<%= jquery do%>
+  new Event_Form(<%== "##{addon[:id]}".to_json %>);
+<% end %>

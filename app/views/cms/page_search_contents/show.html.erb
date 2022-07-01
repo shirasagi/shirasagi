@@ -49,8 +49,8 @@
             <%= colored_state_label(item) %>
             <%
               term = []
-              term << "開始:" + item.release_date.strftime("%Y/%m/%d %H:%M") if item.release_date
-              term << "終了:" + item.close_date.strftime("%Y/%m/%d %H:%M") if item.close_date
+              term << "開始:" + item.release_date.strftime("%Y/%m/%d %H:%M") if item.try(:release_date)
+              term << "終了:" + item.close_date.strftime("%Y/%m/%d %H:%M") if item.try(:close_date)
             %>
             <%= "( #{term.join(", ")} )" if term.present? %>
             </span>

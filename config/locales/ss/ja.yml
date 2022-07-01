@@ -52,6 +52,8 @@ ja:
     resize_image_auto: 画像リサイズ(自動)
     input_example: 記入例
     csv_file: CSVファイル
+    large_file_upload: 大容量アップロード
+    upload_status: アップロード状況
     under_maintenance_mode: 現在メンテナンス中です。
 
     views:
@@ -66,6 +68,16 @@ ja:
         reserved: "予約日時：%{time}"
         delivered: "配信日時：%{time}"
         term: "期間：%{term}"
+      oauth2/application:
+        header:
+          name: アプリケーション種別
+          text: 説明
+        confidential:
+          name: クライアント
+          text: OAuth 2.0 クライアントを作成します。ユーザーのデータにアクセスするために使用します。
+        service:
+          name: サービス
+          text: OAuth 2.0 サービス・アプリケーションを作成します。サーバー間での認証を有効にします。
     navi:
       readable: 閲覧一覧
       editable: 管理一覧
@@ -101,8 +113,10 @@ ja:
       parent_directory: 上の階層へ
       preview: プレビュー
       pc_preview: PCプレビュー
+      sp_preview: スマホプレビュー
       mobile_preview: 携帯プレビュー
       pc: PC
+      sp: スマホ
       mobile: 携帯
       view_site: 公開画面を見る
       open: 開く
@@ -123,6 +137,7 @@ ja:
       set_tag: タグ設定
       reset_tags: タグ解除
       upload: アップロード
+      large_file_upload: 大容量アップロード
       decode: デコードする
       print: 印刷する
       initialize: 初期化する
@@ -239,6 +254,8 @@ ja:
       saved: 保存しました。
       deleted: 削除しました。
       unable_to_delete: '%{items} を削除できませんでした。'
+      changed: 変更しました。
+      unable_to_change: '%{items} を変更できませんでした。'
       copied: 複製しました。
       imported: インポートしました。
       started_import: インポートを開始しました。
@@ -286,6 +303,7 @@ ja:
       soft_delete_locked: 削除状態が削除不可になっている為、削除できません。
       history_is_blank: 履歴はありません。
       branch_pages_history_is_blank: 差し替えページのため、履歴はありません。
+      ie_browser: ご利用のブラウザ（IE）では大容量アップロードを実行できません。他のブラウザ（Google Chrome等）をご利用ください。
     warning:
       initial_password: 初期パスワードを変更してください。
       session_timeout: セッションの有効期限が切れました。
@@ -494,6 +512,8 @@ ja:
           none_of: が次と一致しない
           start_with: が次から始まる
           end_with: が次で終わる
+          include_any_of: が次を含む
+          include_none_of: が次を含まない
 
     tasks:
       started: 開始しました。
@@ -523,9 +543,11 @@ ja:
       ss/user_group_history: 異動履歴
       ss/map_setting: 地図設定
       ss/kana_setting: かな設定
+      ss/open_graph_setting: OpenGraph設定
       ss/facebook_setting: Facebook設定
       ss/twitter_setting: Twitter設定
       ss/line_setting: LINE設定
+      ss/kintone_setting: kintone設定
       ss/approve_setting: 承認設定
       ss/editor_setting: エディタ設定
       ss/mail_setting: メール設定
@@ -542,6 +564,10 @@ ja:
       ss/partner_site: 提携サイト設定
       ss/inquiry_setting: お問い合わせフォーム設定
       ss/maintenance_mode: メンテナンスモード
+      ss/oauth2/sys_permission: システム権限
+      ss/oauth2/cms_permission: CMS権限
+      ss/oauth2/gws_permission: グループウェア権限
+      ss/oauth2/webmail_permission: メール権限
 
   activemodel:
     attributes:
@@ -575,6 +601,9 @@ ja:
       ss/migration: DBマイグレーション
       ss/access_token: アクセストークン
       ss/notification: 通知
+      ss/oauth2/application/base: OAuthアプリ
+      ss/oauth2/application/confidential: クライアント
+      ss/oauth2/application/service: サービス
     errors:
       models:
         ss/model/group:
@@ -771,11 +800,12 @@ ja:
         map_max_number_of_markers: 最大地点数
       ss/addon/kana_setting:
         kana_format: ふりがなの形式
-      ss/addon/facebook_setting:
-        facebook_app_id: App ID
-        facebook_page_url: ページURL
+      ss/addon/open_graph_setting:
+        facebook_page_url: 発行元URL
         opengraph_type: OpenGraph
         opengraph_defaul_image_url: 既定の画像URL
+      ss/addon/facebook_setting:
+        facebook_app_id: App ID
       ss/addon/twitter_setting:
         twitter_poster_state: ページ連携
         twitter_card: カード形式
@@ -789,6 +819,10 @@ ja:
         line_poster_state: ページ連携
         line_channel_secret: チャネルシークレット
         line_channel_access_token: チャネルアクセストークン
+      ss/addon/kintone_setting:
+        kintone_domain: kintone ドメイン
+        kintone_user: Basic認証ユーザー
+        kintone_password: Basic認証パスワード
       ss/addon/site_auto_post_setting:
         site_twitter_auto_post: Twitter自動投稿
         site_edit_auto_post: 編集時に自動投稿
@@ -937,6 +971,18 @@ ja:
         partner_site_ids: 提携サイト
       ss/addon/inquiry_setting:
         inquiry_form_id: お問い合わせフォーム
+      ss/oauth2/application/base:
+        name: 名前
+        state: ステータス
+        permissions: 権限
+        client_id: クライアントID
+      ss/oauth2/application/confidential:
+        client_secret: クライアントシークレット
+        redirect_uris: リダイレクトURL
+      ss/oauth2/application/service:
+        public_key_type: 公開鍵種別
+        public_key: 公開鍵
+        public_key_encrypted: 公開鍵
 
   tooltip:
     ss/model/site:
@@ -1226,7 +1272,10 @@ ja:
         - 設定するとシェアされた記事を見た別のユーザーが「いいね！」をすることができます。
       opengraph_type:
         - Open Graph 形式を選択します。
-        - Facebook でどのような見え方をするかは「Facebook Sharing Debugger（https://developers.facebook.com/tools/debug/sharing/）」で確認することができます。
+        - それぞれのSNSでシェアした場合の表示確認を以下のURLからできます。
+        - Facebook share debugger：https://developers.facebook.com/tools/debug/sharing/
+        - Twitter Card Validator：https://cards-dev.twitter.com/validator/
+        - LINE Page Poker：https://poker.line.naver.jp/
       opengraph_defaul_image_url:
         - 既定の画像のURL を設定します。
         - ページに画像が含まれていない場合、ここで設定した URL が og:image として使用されます。
@@ -1388,6 +1437,24 @@ ja:
       contrast_ratio:
         - 7以上でAAA、4.5以上でAA
         - （22ポイント以上の文字、または、18ポイント以上の太字の場合は4.5以上でAAA、3以上でAA）
+
+    ss/oauth2/application/base:
+      name:
+        - 名前を入力します。
+      state:
+        - アプリケーションが有効か無効かを選択します。
+    ss/oauth2/application/confidential:
+      redirect_uris:
+        - リダイレクトURLを入力します。複数のリダイレクトURLを入力することが可能で、複数入力する場合は URL を改行で区切ってください。
+    ss/oauth2/application/service:
+      public_key:
+        - 公開鍵をペーストしてください。サポートしているのは RSA 公開鍵のみで、DSA や楕円曲線を用いたものはサポートしていません。
+        - openssl コマンドがインストールされていれば、次のコマンドを実行することで公開鍵を作成することができます。
+        -
+        - $ openssl genrsa 2048 > private_key.pem
+        - $ openssl rsa -in private_key.pem -pubout -out public_key.pem
+        -
+        - public_key.pem が公開鍵ですので、この中身をペーストしてください。
 
   job:
     models:

@@ -160,6 +160,7 @@ Rails.application.routes.draw do
       get :resize, on: :member
       post :resize, on: :member
       get :contrast_ratio, on: :collection
+      get :large_file_upload, on: :collection
     end
 
     resources :page_searches, concerns: :deletion do
@@ -296,6 +297,11 @@ Rails.application.routes.draw do
       match "forms/:id/html" => "forms#html", as: :form_html, via: %i[post put]
       match "forms/:id/link_check" => "forms#link_check", as: :form_link_check, via: %i[post put]
       post "validation" => "validation#validate"
+      post "initialize" => "large_file_upload#init_files"
+      post "upload" => "large_file_upload#create"
+      put "finalize" => "large_file_upload#finalize"
+      post "run" => "large_file_upload#run"
+      delete "delete_init_files" => "large_file_upload#delete_init_files"
 
       resources :files, path: ":cid/files", concerns: [:deletion, :file_api] do
         get :contrast_ratio, on: :collection
@@ -386,6 +392,7 @@ Rails.application.routes.draw do
       match "mobile_size_check/check" => "mobile_size_check#check", via: [:post, :options], as: "mobile_size_check"
       post "syntax_check/check" => "syntax_check#check", as: "check_syntax_check"
       post "syntax_check/correct" => "syntax_check#correct", as: "correct_syntax_check"
+      post "backlink_check/check" => "backlink_check#check", as: "backlink_check"
     end
   end
 
@@ -423,6 +430,7 @@ Rails.application.routes.draw do
     resources :archives, only: [:index]
     resources :photo_albums, only: [:index]
     resources :site_searches, only: [:index]
+    resources :form_searches, only: [:index]
     get "search_contents/:id" => "page_search_contents#show", as: "page_search_contents"
     get "search_contents/:id/download" => "page_search_contents#download", as: "download_page_search_contents"
     resources :line_hubs, only: [:index]
@@ -444,6 +452,7 @@ Rails.application.routes.draw do
     post "line_hub/line" => "public#index", cell: "nodes/line_hub"
     get "line_hub/image-map/:id/:size" => "public#image_map", cell: "nodes/line_hub"
     get "site_search/categories(.:format)" => "public#categories", cell: "nodes/site_search"
+    get "form_search/(index.:format)" => "public#index", cell: "nodes/form_search"
   end
 
   part "cms" do

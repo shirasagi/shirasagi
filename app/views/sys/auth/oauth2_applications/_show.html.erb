@@ -1,0 +1,9 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:head] = @model.model_name.human
+%>
+<% if @item.is_a?(SS::OAuth2::Application::Confidential) %>
+  <%= render "show_confidential", local_assigns %>
+<% else %>
+  <%= render "show_service", local_assigns %>
+<% end %>

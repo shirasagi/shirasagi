@@ -1,4 +1,4 @@
-class Sys::Auth::OpenIdConnect::JwtValidator < ActiveModel::Validator
+class Sys::Auth::OpenIdConnect::JWTValidator < ActiveModel::Validator
   def validate(item)
     validate_jwt_header(item)
     validate_jwt_claims(item)

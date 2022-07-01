@@ -141,4 +141,10 @@ module SS::FileFilter
 
     render json: { contrast_ratio: ret, contrast_ratio_human: ret.round(2).to_s }
   end
+
+  def large_file_upload
+    raise "403" unless @model.allowed?(:use, @cur_user, site: @cur_site, node: @cur_node)
+
+    @is_ie = browser.ie?("<= 11")
+  end
 end

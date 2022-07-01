@@ -1,0 +1,87 @@
+.event-recurrence ~ .event-recurrence {
+  border-top: $border-gray1;
+}
+.event-recurrence-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 3px 0;
+  padding: 0 5px;
+
+  > * ~ * {
+    margin-left: 5px;
+  }
+}
+.event-recurrence-time {
+  display: flex;
+  flex-direction: column;
+}
+.event-recurrence-excludes {
+  display: flex;
+  align-items: center;
+}
+.event-recurrence-excludes-summary {
+  max-width: 20em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.event-recurrence-delete-btn {
+  width: 50px;
+}
+.event-recurrence-wdays {
+  margin-left: 55px;
+}
+
+dl.see > dd .event-recurrence input {
+  margin: 2px 0;
+}
+
+.event-recurrence-exclude-dates {
+  .send {
+    position: sticky;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+}
+
+.event-recurrence-exclude-dates-calendars {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 5px;
+
+  .prev-month .day, .next-month .day {
+    visibility: hidden;
+  }
+
+  .event-recurrence-exclude-dates-calendar {
+    width: 270px;
+    margin: 10px;
+    padding: 5px;
+
+    th {
+      width: 14%;
+      text-align: center;
+    }
+  }
+
+  .toggle-btn {
+    display: block;
+    width: 2.5em;
+    height: 2.5em;
+    margin: auto;
+    border: 0;
+    border-radius: 50%;
+    background-color: #cfd8dc;
+    &:hover {
+      background-color: #90a4a3;
+    }
+
+    &[aria-pressed="true"] {
+      background-color: #b3e5fc;
+      &:hover {
+        background-color: #4fc3f7;
+      }
+    }
+  }
+}

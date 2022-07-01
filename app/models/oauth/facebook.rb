@@ -1,3 +1,3 @@
-class Oauth::Facebook < OmniAuth::Strategies::Facebook
-  include Oauth::Base
+class OAuth::Facebook < OmniAuth::Strategies::Facebook
+  include OAuth::Base
 end

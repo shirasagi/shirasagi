@@ -9,21 +9,21 @@ if SS.config.oauth.prefix_path
   end
 
   Rails.application.config.middleware.use OmniAuth::Builder do
-    provider ::Oauth::Twitter
-    provider ::Oauth::Facebook
-    provider ::Oauth::YahooJp, {
+    provider ::OAuth::Twitter
+    provider ::OAuth::Facebook
+    provider ::OAuth::YahooJp, {
       name: "yahoojp_v2",
       scope: "openid profile email address"
     }
-    provider ::Oauth::YahooJp, {
+    provider ::OAuth::YahooJp, {
       scope: "openid profile email address",
       client_options: {
         authorize_url: '/yconnect/v1/authorization',
         token_url: '/yconnect/v1/token'
       }
     }
-    provider ::Oauth::GoogleOauth2, { scope: "userinfo.email, userinfo.profile, plus.me" }
-    provider ::Oauth::Github
-    provider ::Oauth::Line
+    provider ::OAuth::GoogleOAuth2, { scope: "userinfo.email, userinfo.profile, plus.me" }
+    provider ::OAuth::Github
+    provider ::OAuth::Line
   end
 end

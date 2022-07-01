@@ -372,6 +372,14 @@ SS_Preview = (function () {
     if (opts.notice) {
       this.notice.show(opts.notice);
     }
+
+    // sets relative on the wrapper
+    $('body').children().each(function() {
+      $el = $(this);
+      if ($el.css('position') === 'static') {
+        $el.css('position', 'relative');
+      }
+    });
   };
 
   SS_Preview.prototype.initializeLayout = function() {

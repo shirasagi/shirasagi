@@ -1,7 +1,7 @@
 require 'oauth'
 
-class Oauth::Twitter < OmniAuth::Strategies::Twitter
-  include Oauth::Base
+class OAuth::Twitter < OmniAuth::Strategies::Twitter
+  include OAuth::Base
 
   # override OmniAuth::Strategies::OAuth#consumer
   def consumer

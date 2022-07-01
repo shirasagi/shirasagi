@@ -1,3 +1,5 @@
+<% kintone_app_enabled = tryb { @cur_node.becomes_with_route.kintone_app_enabled? } %>
+
 <div class="main-box">
   <table class="index">
     <thead class="list-head">
@@ -9,6 +11,9 @@
           <% end %>
         </th>
         <th><%= @model.t :name %></th>
+        <% if kintone_app_enabled %>
+          <th><%= @model.t :kintone_field_code %></th>
+        <% end %>
         <th><%= @model.t :order %></th>
         <th class="datetime"><%= @model.t :updated %></th>
       </tr>
@@ -26,6 +31,9 @@
           </nav>
         </td>
         <td><%= link_to item.name, action: :show, id: item %></td>
+        <% if kintone_app_enabled %>
+          <td><%= item.kintone_field_code %></td>
+        <% end %>
         <td><%= item.order %></td>
         <td><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
       </tr>

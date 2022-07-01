@@ -1,0 +1,11 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+<dl class="see">
+  <dt class="wide"></dt>
+  <dd class="wide role-permissions">
+    <%= hidden_field_tag "item[permissions][]", "", id: nil %>
+    <%= render "ss/roles/form_permissions", f: f, model: Sys::Role %>
+  </dd>
+</dl>

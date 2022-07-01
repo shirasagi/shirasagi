@@ -97,4 +97,18 @@ module Cms::NodeHelper
 
     check
   end
+
+  def cms_preview_links(item)
+    path = cms_preview_path(path: item.preview_path)
+    h = []
+    h << link_to(t("ss.links.pc_preview"), path, target: "_blank", rel: "noopener")
+    h << link_to(t("ss.links.sp_preview"), path, class: 'cms-preview-sp', target: "_blank", rel: "noopener")
+
+    if @cur_site.mobile_enabled?
+      path = cms_preview_path(path: item.mobile_preview_path)
+      h << link_to(t("ss.links.mobile_preview"), path, class: 'cms-preview-mb', target: "_blank", rel: "noopener")
+    end
+
+    h.map { |c| c.html_safe }
+  end
 end

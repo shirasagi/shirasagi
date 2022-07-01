@@ -71,13 +71,25 @@ class Chat::Intent
     def intents(string)
       return if string.blank?
 
-      all.select do |intent|
+      items = all.entries.select do |intent|
+        intent.phrase.push(intent.name).any? { |phrase| string == phrase }
+      end
+
+      return items if items.present?
+
+      all.entries.select do |intent|
         intent.phrase.push(intent.name).any? { |phrase| string.include?(phrase) }
       end
     end
 
     def find_intent(string)
       return if string.blank?
+
+      item = all.entries.find do |intent|
+        intent.phrase.push(intent.name).any? { |phrase| string == phrase }
+      end
+
+      return item if item
 
       all.entries.find do |intent|
         intent.phrase.push(intent.name).any? { |phrase| string.include?(phrase) }

@@ -1,6 +1,6 @@
 require 'oauth2'
 
-module Oauth::Base
+module OAuth::Base
   def site
     @site ||= begin
       request.env["ss.site"] ||= begin
@@ -22,7 +22,7 @@ module Oauth::Base
           main_path = path.dup
         end
 
-        Member::Node::Login.site(site).in_path(main_path).sort(depth: -1).first
+        Member::Node::Login.site(site).in_path(main_path).reorder(depth: -1).first
       end
     end
   end

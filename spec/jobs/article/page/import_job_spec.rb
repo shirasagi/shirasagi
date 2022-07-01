@@ -155,11 +155,15 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       context "event section fields is given" do
         let(:event_dates) { %w(2019/02/02 2019/02/03 2019/02/09 2019/02/10 2019/02/16 2019/02/17) }
+        let(:event_recurrence1) { { kind: "date", start_at: "2019/02/02", frequency: "daily", until_on: "2019/02/03" } }
+        let(:event_recurrence2) { { kind: "date", start_at: "2019/02/09", frequency: "daily", until_on: "2019/02/10" } }
+        let(:event_recurrence3) { { kind: "date", start_at: "2019/02/16", frequency: "daily", until_on: "2019/02/17" } }
+        let(:event_recurrences) { [ event_recurrence1, event_recurrence2, event_recurrence3 ] }
         let!(:source_page) do
           Article::Page.create!(
             cur_site: site, cur_node: source_node, cur_user: cms_user,
             name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
-            event_name: unique_id, event_dates: event_dates.join("\n"), event_deadline: "2018/12/25 13:21"
+            event_name: unique_id, event_recurrences: event_recurrences, event_deadline: "2018/12/25 13:21"
           )
         end
 
@@ -403,7 +407,9 @@ describe Article::Page::ImportJob, dbscope: :example do
         page6 = Article::Page.site(site).find_by(name: "page6")
 
         expect(page1.category_ids).to match_array [cate1_depth3.id, cate2_depth3.id]
-        expect(page2.category_ids).to match_array [cate1_depth3.id, cate2_depth3.id, cate1_depth2.id, cate2_depth2.id, cate1_depth1.id, cate2_depth1.id]
+        [cate1_depth3.id, cate2_depth3.id, cate1_depth2.id, cate2_depth2.id, cate1_depth1.id, cate2_depth1.id].tap do |ary|
+          expect(page2.category_ids).to match_array ary
+        end
         expect(page3.category_ids).to match_array [cate3_depth3.id]
         expect(page4.category_ids).to match_array [cate3_depth2.id, cate2_depth4.id]
         expect(page5.category_ids).to match_array []

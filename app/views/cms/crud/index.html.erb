@@ -22,22 +22,9 @@
             <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
             <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 
-            <% if @model.collection_name == :cms_nodes %>
+            <% if %i(cms_nodes cms_pages).include?(@model.collection_name) %>
               <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank, rel: "noopener" if item.public? %>
-              <% if @cur_site.mobile_enabled? %>
-                <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank, rel: "noopener" %>
-                <%= link_to(t('ss.links.mobile_preview'), cms_preview_path(path: item.mobile_preview_path), target: :_blank, rel: "noopener") %>
-              <% else %>
-                <%= link_to t('ss.links.preview'), cms_preview_path(path: item.preview_path), target: :_blank, rel: "noopener" %>
-              <% end %>
-            <% elsif @model.collection_name == :cms_pages %>
-              <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank, rel: "noopener" if item.public? %>
-              <% if @cur_site.mobile_enabled? %>
-                <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank, rel: "noopener"%>
-                <%= link_to(t('ss.links.mobile_preview'), cms_preview_path(path: item.mobile_preview_path), target: :_blank, rel: "noopener") %>
-              <% else %>
-                <%= link_to t('ss.links.preview'), cms_preview_path(path: item.preview_path), target: :_blank, rel: "noopener" %>
-              <% end %>
+              <%= safe_join cms_preview_links(item) %>
             <% end %>
 
             <% if item.try(:image) %>

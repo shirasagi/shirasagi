@@ -13,7 +13,7 @@ class Gws::Memo::ImportMessagesController < ApplicationController
   public
 
   def import
-    set_item
+    return unless set_item
     @item.import_messages
 
     render_create true, location: { action: :import }, notice: I18n.t("gws/memo/message.notice.start_import")

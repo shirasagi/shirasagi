@@ -620,10 +620,17 @@ describe Article::Page, dbscope: :example do
           term2_start_at = Time.zone.now.beginning_of_day + 1.month
           Array.new(5) { |i| term2_start_at + i.days }
         end
+        let!(:recurr1) do
+          { kind: "date", start_at: term1.first, frequency: "daily", until_on: term1.last }
+        end
+        let!(:recurr2) do
+          { kind: "date", start_at: term2.first, frequency: "daily", until_on: term2.last }
+        end
         let!(:event_deadline) { Time.zone.now.change(min: rand(0..59)) }
         let!(:page) do
           create(
-            :article_page, cur_node: node, event_name: unique_id, event_dates: term1 + term2, event_deadline: event_deadline
+            :article_page, cur_node: node,
+            event_name: unique_id, event_recurrences: [ recurr1, recurr2 ], event_deadline: event_deadline
           )
         end
 

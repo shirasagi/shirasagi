@@ -18,6 +18,6 @@ class Cms::Form::DbsController < ApplicationController
   def set_items
     @items = @model.site(@cur_site)
       .allow(:read, @cur_user, site: @cur_site)
-      .order(order: 1)
+      .order_by(order: 1, name: 1)
   end
 end

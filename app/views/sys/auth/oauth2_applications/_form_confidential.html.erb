@@ -1,0 +1,16 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :state %><%= @model.tt :state %></dt>
+  <dd><%= f.select :state, @item.state_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :client_id %><%= @model.tt :client_id %></dt>
+  <dd><%= @item.client_id %> <%= f.hidden_field :client_id %></dd>
+
+  <dt><%= @model.t :client_secret %><%= @model.tt :client_secret %></dt>
+  <dd><%= @item.client_secret %> <%= f.hidden_field :client_secret %></dd>
+
+  <dt><%= @model.t :redirect_uris %><%= @model.tt :redirect_uris %></dt>
+  <dd><%= f.text_area :redirect_uris %></dd>
+</dl>

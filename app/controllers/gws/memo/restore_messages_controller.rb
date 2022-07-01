@@ -19,7 +19,7 @@ class Gws::Memo::RestoreMessagesController < ApplicationController
   public
 
   def restore
-    set_item
+    return unless set_item
     @item.restore_messages
 
     render_create true, location: { action: :restore }, notice: I18n.t("gws/memo/message.notice.start_restore")

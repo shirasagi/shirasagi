@@ -29,7 +29,7 @@ $(document).on("click", ".mod-inquiry-input-setting tr.keywords button.clear", f
   <dt><%= @model.t :required %><%= @model.tt :required %></dt>
   <dd><%= f.select :required, @item.required_options %></dd>
 
-  <% form_select = @item.node.columns.where(input_type: 'form_select').first if @item.node.present? %>
+  <% form_select = @item.node.columns.where(input_type: 'form_select').first if @item.node.present? && @item.node.respond_to?(:columns) %>
   <% if form_select.present? %>
   <dt><%= @model.t :required_in_select_form %><%= @model.tt :required_in_select_form %></dt>
   <dd>

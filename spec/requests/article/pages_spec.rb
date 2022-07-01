@@ -160,7 +160,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
           category_ids: [cate_node.id],
           parent_crumb_urls: 'test1_parent_crumb_urls',
           event_name: 'test1_event_name',
-          event_dates: "2016/7/6",
+          event_recurrences: [{ kind: "date", start_at: "2016/07/06", frequency: "daily", until_on: "2016/07/06" }],
           contact_state: 'show',
           contact_group: group.id,
           contact_charge: 'test1_contact_charge',

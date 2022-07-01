@@ -3,6 +3,7 @@
   <h3><%= link_to t("sys.auth/saml"), sys_auth_samls_path %></h3>
   <h3><%= link_to t("sys.auth/open_id_connect"), sys_auth_open_id_connects_path %></h3>
   <h3><%= link_to t("sys.auth/environment"), sys_auth_environments_path %></h3>
+  <h3><%= link_to SS::OAuth2::Application::Base.model_name.human, sys_auth_oauth2_applications_path %></h3>
 </nav>
 
 <%= render partial: "sys/main/navi" %>

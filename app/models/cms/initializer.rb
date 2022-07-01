@@ -8,6 +8,7 @@ module Cms
     Cms::Node.plugin "cms/group_page"
     Cms::Node.plugin "cms/site_search"
     Cms::Node.plugin "cms/line_hub"
+    Cms::Node.plugin "cms/form_search"
     Cms::Part.plugin "cms/site_search_history"
     Cms::Part.plugin "cms/history_list"
     Cms::Part.plugin "cms/free"
@@ -49,6 +50,7 @@ module Cms
     Cms::Role.permission :use_cms_commands
     Cms::Role.permission :use_cms_tools
     Cms::Role.permission :use_cms_editor_extensions
+    Cms::Role.permission :use_other_cms_files
     Cms::Role.permission :read_cms_generate_lock
     Cms::Role.permission :edit_cms_generate_lock
     Cms::Role.permission :read_other_cms_nodes

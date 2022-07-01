@@ -9,7 +9,10 @@ describe "event_agents_parts_calendar", type: :feature, dbscope: :example do
   context "public" do
     let(:today) { Time.zone.today }
     let(:event_date) { today.day > 15 ? today - rand(1..7).days : today + rand(1..7).days }
-    let!(:item) { create :event_page, filename: "node/item", event_dates: [ event_date ] }
+    let(:event_recurrence) do
+      { kind: "date", start_at: event_date, frequency: "daily", until_on: event_date }
+    end
+    let!(:item) { create :event_page, filename: "node/item", event_recurrences: [ event_recurrence ] }
 
     before do
       Capybara.app_host = "http://#{site.domain}"
