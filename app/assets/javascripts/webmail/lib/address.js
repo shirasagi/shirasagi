@@ -1,18 +1,18 @@
 function Webmail_Address_Autocomplete() {}
 
 Webmail_Address_Autocomplete.createSelectedElement = function(name, email, label) {
-  var icon = $("<i class=\"material-icons md-18 md-inactive deselect\">close</i>");
-  icon.on("click", function() {
+  var $icon = $("<i />", { class: "material-icons md-18 md-inactive deselect" }).text("close");
+  $icon.on("click", function() {
     return $(this).closest("span").remove();
   });
-  var input = $("<input type=\"hidden\" name=\"" + name + "\" value=\"" + label + "\">");
-  var span = $("<span></span>").text(label);
+  var $input = $("<input />", { type: "hidden", name: name, value: label });
+  var $span = $("<span />").text(label);
   if (!Webmail_Address_Autocomplete.validateEmail(email)) {
-    span.addClass("invalid-address");
+    $span.addClass("invalid-address");
   }
-  span.append(icon);
-  span.append(input);
-  return span;
+  $span.append($icon);
+  $span.append($input);
+  return $span;
 };
 
 // ref: https://stackoverflow.com/questions/46155/how-to-validate-email-address-in-javascript
