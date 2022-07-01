@@ -55,7 +55,7 @@ class Gws::Compressor
           end
         end
         filenames << filename
-        zip.add(NKF::nkf('-sx --cp932', filename), item.path) if ::File.exist?(item.path)
+        zip.add(::Fs.zip_safe_name(filename), item.path) if ::File.exist?(item.path)
       end
     end
 

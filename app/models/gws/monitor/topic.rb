@@ -178,13 +178,13 @@ class Gws::Monitor::Topic
     Zip::File.open(zipfile, Zip::File::CREATE) do |zip_file|
       group_items.each do |groupssfile|
         if File.exist?(groupssfile[1].path)
-          zip_file.add(NKF::nkf('-sx --cp932', groupssfile[0] + "_" + groupssfile[1].name), groupssfile[1].path)
+          zip_file.add(::Fs.zip_safe_name(groupssfile[0] + "_" + groupssfile[1].name), groupssfile[1].path)
         end
       end
 
       owner_items.each do |ownerssfile|
         if File.exist?(ownerssfile[1].path)
-          zip_file.add(NKF::nkf('-sx --cp932', "own_" + ownerssfile[0] + "_" + ownerssfile[1].name), ownerssfile[1].path)
+          zip_file.add(::Fs.zip_safe_name("own_" + ownerssfile[0] + "_" + ownerssfile[1].name), ownerssfile[1].path)
         end
       end
     end
@@ -244,3 +244,4 @@ class Gws::Monitor::Topic
     end
   end
 end
+

@@ -153,6 +153,7 @@ class Sys::HistoryArchiveJob < SS::ApplicationJob
           ::Zip::File.open("#{week_dir}.zip", ::Zip::File::CREATE) do |zip|
             ::Dir["#{week_dir}/*.csv"].each do |file|
               name = ::File.basename(file)
+              name = ::Fs.zip_safe_name(name)
               zip.add(name, file)
             end
           end

@@ -86,8 +86,8 @@ class Opendata::App
     if appfiles.present?
       Zip::File.open(zip_filename, Zip::File::CREATE) do |archive|
         appfiles.each do |appfile|
-          cp932_name = appfile.filename.encode('cp932', invalid: :replace, undef: :replace, replace: '_')
-          archive.add(cp932_name, appfile.file.path)
+          name = ::Fs.zip_safe_path(appfile.filename)
+          archive.add(name, appfile.file.path)
         end
       end
     end

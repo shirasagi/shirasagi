@@ -89,7 +89,7 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
 
       Zip::File.open(t.path, Zip::File::CREATE) do |zip|
         @items.each do |item|
-          zip.add("#{item.name}-#{item.id}.zip".encode('cp932', invalid: :replace, undef: :replace), item.zip_path)
+          zip.add(::Fs.zip_safe_name("#{item.name}-#{item.id}.zip"), item.zip_path)
           item.resources.each do |resource|
             if !preview_path?
               resource.dataset.inc downloaded: 1

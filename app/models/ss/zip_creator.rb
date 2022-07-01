@@ -21,7 +21,8 @@ class SS::ZipCreator
   end
 
   def create_entry(entry_name, &block)
-    zip.get_output_stream(sjis_clean(entry_name), &block)
+    entry_name = ::Fs.zip_safe_path(entry_name)
+    zip.get_output_stream(entry_name, &block)
   end
 
   def close
@@ -42,11 +43,5 @@ class SS::ZipCreator
       ::FileUtils.rm_rf(@tmp_path)
       ::Zip::File.open(@tmp_path, Zip::File::CREATE)
     end
-  end
-
-  def sjis_clean(name)
-    return name if name.blank?
-
-    name.encode('cp932', invalid: :replace, undef: :replace, replace: "_").encode("UTF-8")
   end
 end
