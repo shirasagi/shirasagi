@@ -231,6 +231,7 @@ test:
     max_notice_mail_address_count: 3
     max_foward_mail_address_count: 3
   readable_setting:
+    requires_read_permission: true
 
 development:
   <<: *production
