@@ -125,7 +125,7 @@ GEM
     debase-ruby_core_source (0.10.14)
     debug_inspector (1.1.0)
     diff-lcs (1.4.4)
-    diffy (3.4.0)
+    diffy (3.4.1)
     docile (1.4.0)
     docker-api (2.2.0)
       excon (>= 0.47.0)
