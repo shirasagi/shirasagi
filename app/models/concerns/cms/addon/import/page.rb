@@ -91,7 +91,9 @@ module Cms::Addon::Import
 
       Zip::File.open(in_file.path) do |archive|
         archive.each do |entry|
-          fname = entry.name.toutf8.split(/\//)
+          name = entry.name
+          name = NKF.nkf('-w', name)
+          fname = name.split(/\//)
           fname.shift unless root_files
           fname = fname.join('/')
           next if fname.blank?
