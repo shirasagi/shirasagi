@@ -193,11 +193,11 @@ module Cms::Addon::FormDb::Import
   end
 
   def import_row_events(item, row)
-    if row['開始日'].present?
-      event_dates = format_event_date(row['開始日'], row['終了日'])
-      event_dates.uniq!
-      item.event_dates = event_dates.map { |d| d.strftime("%Y/%m/%d") }.join("\r\n")
-      item.close_date = item.event_dates.present? ? item.event_dates.last + 1.month : []
+    if row['開始日'].present? && (event_range = format_event_date(row['開始日'], row['終了日'])).present?
+      recurrence = { kind: "date", start_at: event_range.first, frequency: "daily" }
+      recurrence[:until_on] = event_range.last
+      item.event_recurrences = [ recurrence ]
+      item.close_date = event_range.last + 1.month
     else
       item.event_dates = []
       item.close_date = nil
@@ -212,10 +212,14 @@ module Cms::Addon::FormDb::Import
     end
   end
 
+  # returns:
+  #   ("2022/06/01", "2022/06/30") => Date(2022/06/01)..Date(2022/06/30)
+  #   ("2022/06/01", nil) => [ Date(2022/06/01) ]
+  #   ("foo", "bar") => []
   def format_event_date(start_date, end_date)
     d1 = Date.parse(start_date) rescue nil
     d2 = Date.parse(end_date) rescue nil
-    (d1 && d2) ? (d1..d2).to_a : [d1, d2].compact
+    (d1 && d2) ? (d1..d2) : [d1, d2].compact
   end
 
   def import_row_map_points(item, row)
