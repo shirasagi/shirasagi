@@ -22,9 +22,8 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
     end
 
     it "#events" do
-      today = Time.zone.today
-      sdate = today - today.day + 1.day
-      edate = sdate + 1.month
+      sdate = item.start_at.to_date.beginning_of_month
+      edate = item.end_at.to_date.beginning_of_month + 1.month
       visit "#{index_path}/events.json?s[start]=#{sdate}&s[end]=#{edate}"
       expect(page.body).to have_content(item.name)
     end
@@ -87,9 +86,8 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       end
 
       it "#events" do
-        today = Time.zone.today
-        sdate = today - today.day + 1.day
-        edate = sdate + 1.month
+        sdate = item.start_on
+        edate = item.end_on
         visit "#{index_path}/events.json?s[start]=#{sdate}&s[end]=#{edate}"
         expect(page.body).to have_content(item.name)
       end
