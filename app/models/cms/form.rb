@@ -112,7 +112,7 @@ class Cms::Form
       form ||= Cms::Form.new(form_data.filter { |c| fields.include?(c) })
       form.cur_site = @cur_site
       form.cur_user = @cur_user
-      form.group_ids = Cms::Group.where(name: { '$in': form_data[:groups] }).pluck(:id)
+      form.group_ids |= Cms::Group.where(name: { '$in': form_data[:groups] }).pluck(:id) # uniq
       next unless form.save
 
       form_data[:columns].each do |col_data|
