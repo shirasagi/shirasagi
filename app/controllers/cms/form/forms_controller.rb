@@ -98,4 +98,25 @@ class Cms::Form::FormsController < ApplicationController
 
     render json: { column_names: column_names }
   end
+
+  def download
+    set_items
+
+    if params[:ids].present?
+      @items = @items.where(id: { '$in': params[:ids].to_s.split(',') })
+    end
+
+    json = JSON.pretty_generate(@model.export_json(@items))
+    send_data json, type: :json, filename: "cms_forms_#{Time.zone.now.to_i}.json"
+  end
+
+  def import
+    @item = @model.new fix_params
+    return unless request.post?
+
+    in_params = params.require(:item).permit(:in_file)
+    return unless @item.import_json(file: in_params[:in_file])
+
+    redirect_to({ action: :index }, { notice: I18n.t("ss.notice.imported") })
+  end
 end

@@ -126,7 +126,7 @@ Rails.application.routes.draw do
     resources :word_dictionaries, concerns: [:deletion, :template]
 
     scope module: "form" do
-      resources :forms, concerns: [:deletion, :change_state] do
+      resources :forms, concerns: [:deletion, :download, :import, :change_state] do
         resources :init_columns, concerns: [:deletion]
         resources :columns, concerns: [:deletion]
 
