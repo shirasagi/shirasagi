@@ -30,7 +30,6 @@ class Uploader::FilesController < ApplicationController
       url = ::File.join(url, name)
       @crumbs << [name, url]
     end
-    @crumbs.pop if params[:do].present?
   end
 
   def create_folder
