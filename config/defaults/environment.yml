@@ -65,3 +65,11 @@ deley_download:
   # Delay when it greater than or equal to the file size. (Bytes)
   #   104857600 = 100MB(1024*1024*100)
   min_filesize: 104857600
+
+zip:
+  # creates 64-bit zip or not. 64-bit zip can support over 4GB zip-file.
+  zip64: true
+  # use Unicode encoding or use SJIS encoding for name in zip.
+  #   true: use Unicode encoding
+  #  false: use SJIS encoding
+  unicode_names: true
