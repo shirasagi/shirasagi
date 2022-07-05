@@ -79,7 +79,7 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
 
     bulk_download_size = @items.sum(&:zip_size)
     if bulk_download_size > SS.config.opendata.bulk_download_max_filesize
-      head 422
+      head :unprocessable_entity
       return
     end
 

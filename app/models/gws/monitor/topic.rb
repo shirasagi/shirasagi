@@ -26,13 +26,14 @@ class Gws::Monitor::Topic
   before_validation :set_notice_at
 
   validates :article_state, inclusion: { in: %w(open closed) }
+  #validates :category_ids, presence: true
+
+  after_validation :set_descendants_updated_with_released, if: -> { released.present? && released_changed? }
 
   # indexing to elasticsearch via companion object
   around_save ::Gws::Elasticsearch::Indexer::MonitorTopicJob.callback
-  around_destroy ::Gws::Elasticsearch::Indexer::MonitorTopicJob.callback
 
-  #validates :category_ids, presence: true
-  after_validation :set_descendants_updated_with_released, if: -> { released.present? && released_changed? }
+  around_destroy ::Gws::Elasticsearch::Indexer::MonitorTopicJob.callback
   after_destroy :remove_zip
 
   scope :custom_order, ->(key) {
@@ -135,15 +136,15 @@ class Gws::Monitor::Topic
 
   def answer_count(cur_group)
     if attend_group_ids.include?(cur_group.id)
-      if spec_config != 'my_group'
-        answered = answer_state_hash.count{ |k, v| v.match(/answered|question_not_applicable/) }
-        return "(#{answered}/#{attend_group_ids.count})"
-      else
+      if spec_config == 'my_group'
         answered = answer_state_hash[cur_group.id.to_s].match(/answered|question_not_applicable/)
         return "(#{answered ? 1 : 0}/1)"
+      else
+        answered = answer_state_hash.count{ |k, v| v.match(/answered|question_not_applicable/) }
+        return "(#{answered}/#{attend_group_ids.count})"
       end
     end
-    return "(0/0)"
+    "(0/0)"
   end
 
   def to_csv
