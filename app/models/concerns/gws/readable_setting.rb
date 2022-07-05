@@ -3,7 +3,7 @@ module Gws::ReadableSetting
 
   included do
     class_variable_set(:@@_readable_setting_include_custom_groups, nil)
-    class_variable_set(:@@_requires_read_permission_to_read, true)
+    class_variable_set(:@@_requires_read_permission_to_read, SS.config.gws.readable_setting.fetch("requires_read_permission", true))
 
     field :readable_setting_range, type: String, default: 'select'
     field :readable_groups_hash, type: Hash

@@ -212,6 +212,15 @@ production: &production
   readable_setting:
     setting_range: 'select'
     group_ids: [ "cur_group" ]
+    # 閲覧権限を考慮する際に、権限「閲覧（所有）」や権限「閲覧（全て）」も考慮するかどうかの設定
+    #
+    #  true（v1.17 以前と互換）:
+    #     閲覧権限を考慮する際に、権限「閲覧（所有）」や権限「閲覧（全て）」も考慮する。
+    #     閲覧権限を「全公開」にしても、権限「閲覧（所有）」や権限「閲覧（全て）」を持っていない場合は、閲覧することはできない。
+    # false:
+    #     閲覧権限を考慮する際に、権限「閲覧（所有）」や権限「閲覧（全て）」は考慮しない
+    #     閲覧権限を「全公開」にすると閲覧できる。
+    requires_read_permission: true
 
 test:
   <<: *production
@@ -222,6 +231,7 @@ test:
     max_notice_mail_address_count: 3
     max_foward_mail_address_count: 3
   readable_setting:
+    requires_read_permission: true
 
 development:
   <<: *production
