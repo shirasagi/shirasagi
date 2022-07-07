@@ -13,21 +13,18 @@ jobs:
         with:
           ruby-version: 2.7
           bundler-cache: true
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
-          node-version: '16'
-      - name: Install stylelint and dependencies
-        run: |
-          npm install -g stylelint stylelint-scss stylelint-config-recommended-scss stylelint-config-property-sort-order-smacss
-          echo stylelint -v
-          stylelint -v
-      - name: Install eslint and dependencies
-        run: |
-          npm install -g eslint eslint-plugin-ignore-erb
-          echo eslint -v
-          eslint -v
-      - name: Download eslint formatter
-        run: mkdir -p tmp && curl -sfL https://raw.githubusercontent.com/reviewdog/action-eslint/master/eslint-formatter-rdjson/index.js > tmp/eslint-formatter-rdjson.js
+          node-version: 18
+          cache: npm
+      - name: Install yarn
+        run: npm install -g yarn
+      - name: Install node modules
+        run: yarn install
+      - name: stylelint -v
+        run: npx stylelint -v
+      - name: eslint -v
+        run: npx eslint -v
       - uses: reviewdog/action-setup@v1
       - name: Run reviewdog
         env:

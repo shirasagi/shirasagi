@@ -6,9 +6,8 @@ runner:
     cmd: bundle exec brakeman --quiet --format tabs
     format: brakeman
   stylelint:
-    cmd: .github/workflows/stylelint.sh
-    errorformat:
-      - "%f:%l:%c:%t%*[^:]: %m"
+    cmd: npx stylelint --no-color '{app,db}/**/*.{css,scss,sass}'
+    format: stylelint
   eslint:
-    cmd: .github/workflows/eslint.sh
-    format: rdjson
+    cmd: npx eslint --no-color -f stylish 'app/**/*.{js,js.erb}' 'db/**/*.{js,js.erb}'
+    format: eslint
