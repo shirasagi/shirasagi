@@ -195,6 +195,7 @@ ja:
         kintone_app_activation: 連携
         kintone_app_api_token: APIトークン
         kintone_app_key: アプリID
+        kintone_app_guest_space_id: ゲストスペースID
 
       inquiry/addon/kintone_app/column:
         kintone_field_code: フィールドコード
@@ -341,6 +342,9 @@ ja:
         - kintone アプリのAPIトークンを入力します。
       kintone_app_key:
         - kintone アプリのIDを入力します。
+      kintone_app_guest_space_id:
+        - kintone アプリのゲストスペースIDを入力します。
+        - ゲストスペースのアプリとの連携に必要です。
 
     inquiry/addon/kintone_app/column:
       kintone_field_code: kintone アプリのフィールドコードを入力します。
