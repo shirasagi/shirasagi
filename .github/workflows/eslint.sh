@@ -4,4 +4,4 @@ if [ ! -f tmp/eslint-formatter-rdjson.js ]; then
   exit 1
 fi
 
-eslint --resolve-plugins-relative-to=$(npm root -g) -f tmp/eslint-formatter-rdjson.js 'app/assets/**/*.{js,js.erb}'
+npx eslint --resolve-plugins-relative-to=$(npm root -g) -f tmp/eslint-formatter-rdjson.js 'app/assets/**/*.{js,js.erb}'
