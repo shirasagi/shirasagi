@@ -9,3 +9,6 @@ runner:
     cmd: .github/workflows/stylelint.sh
     errorformat:
       - "%f:%l:%c:%t%*[^:]: %m"
+  eslint:
+    cmd: npx eslint 'app/assets/**/*.{js,js.erb}' 'app/javascript/**/*.js'
+    format: eslint
