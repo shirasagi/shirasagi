@@ -25,8 +25,6 @@ jobs:
         run: npx stylelint -v
       - name: eslint -v
         run: npx eslint -v
-      - name: Download eslint formatter
-        run: mkdir -p tmp && curl -sfL https://raw.githubusercontent.com/reviewdog/action-eslint/master/eslint-formatter-rdjson/index.js > tmp/eslint-formatter-rdjson.js
       - uses: reviewdog/action-setup@v1
       - name: Run reviewdog
         env:
