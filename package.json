@@ -13,7 +13,6 @@
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.7.1",
     "eslint": "^8.19.0",
-    "eslint-formatter-rdjson": "^1.0.5",
     "eslint-plugin-ignore-erb": "^0.1.1",
     "mini-css-extract-plugin": "^2.6.0",
     "postcss": "^8.4.13",
