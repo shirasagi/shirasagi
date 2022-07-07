@@ -10,5 +10,5 @@ runner:
     errorformat:
       - "%f:%l:%c:%t%*[^:]: %m"
   eslint:
-    cmd: .github/workflows/eslint.sh
+    cmd: npx eslint -f rdjson 'app/assets/**/*.{js,js.erb}' 'app/javascript/**/*.js'
     format: rdjson
