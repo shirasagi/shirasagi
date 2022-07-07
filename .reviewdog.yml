@@ -10,5 +10,5 @@ runner:
     errorformat:
       - "%f:%l:%c:%t%*[^:]: %m"
   eslint:
-    cmd: npx eslint 'app/assets/**/*.{js,js.erb}' 'app/javascript/**/*.js'
+    cmd: npx eslint -f stylish 'app/assets/**/*.{js,js.erb}' 'app/javascript/**/*.js'
     format: eslint
