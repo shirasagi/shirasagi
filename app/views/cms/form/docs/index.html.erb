@@ -16,9 +16,9 @@
         <div class="text-truncate" style="width: 100px;"><%= Article::Page.t :name %></div>
       </th>
 
-      <% @column_names.each do |col_name| %>
+      <% @form.columns.each do |col| %>
       <th scope="row">
-        <div class="text-truncate" style="width: 100px;"><%= col_name %></div>
+        <div class="text-truncate" style="width: 100px;"><%= col.name %></div>
       </th>
       <% end %>
     </tr>
@@ -37,8 +37,8 @@
           </div>
         </td>
 
-        <% @column_names.each do |col_name| %>
-          <% values = @db.collect_values(item, col_name) %>
+        <% @form.columns.each do |col| %>
+          <% values = @db.collect_values(item, col) %>
 
           <td class="text-nowrap" title="<%= values[:tips] %>">
             <div class="text-truncate" style="width: 100px;"><%= values[:cell] %></div>

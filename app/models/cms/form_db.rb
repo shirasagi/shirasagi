@@ -52,9 +52,8 @@ class Cms::FormDb
     node ? pages.node(node) : pages
   end
 
-  def collect_values(item, name)
-    column = form.columns_hash[name]
-    col_val = item.column_values.to_a.find { |col| col['name'] == name }
+  def collect_values(item, column)
+    col_val = item.column_values.to_a.find { |col| col['column_id'] == column.id }
     value = col_val.try(:export_csv_cell).to_s
     width = value.length + value.chars.count { |c| !c.ascii_only? }
 
@@ -77,9 +76,10 @@ class Cms::FormDb
     form.columns.order_by(order: 1).each do |col|
       next unless params.key?(col.name)
 
-      col_val = item.column_values.to_a.find { |cv| cv.name == col.name }
+      col_val = item.column_values.to_a.find { |cv| cv.column_id == col.id }
+      col_val ||= item.column_values.to_a.find { |cv| cv.name == col.name }
       col_val ||= col.value_type.new(column: col)
-
+      col_val.attributes = { column_id: col.id, name: col.name }
       col_val.attributes = { cur_user: @cur_user, cur_site: @cur_site }
       col_val.import_csv_cell(params[col.name])
 

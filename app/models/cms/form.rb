@@ -66,7 +66,7 @@ class Cms::Form
   end
 
   def columns_hash
-    @columns_hash ||= columns.order_by(order: 1).map { |col| [col['name'], col] }.to_h
+    @columns_hash ||= columns.order_by(order: 1).map { |col| [col['_id'], col] }.to_h
   end
 
   def state_options
