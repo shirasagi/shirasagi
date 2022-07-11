@@ -35,127 +35,150 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example, js:
     clear_downloads
   end
 
-  it do
-    # create cached file at
-    login_user user0
-    visit gws_monitor_management_admin_path(site: site, id: topic1)
-    click_on I18n.t("gws/monitor.links.file_download")
+  context "ss-4573" do
+    it do
+      # create cached file at
+      login_user user0
+      visit gws_monitor_management_admin_path(site: site, id: topic1)
+      click_on I18n.t("gws/monitor.links.file_download")
 
-    wait_for_download
+      wait_for_download
 
-    exported = []
-    Zip::File.open(downloads.first) do |zip_file|
-      zip_file.each do |entry|
-        exported << NKF.nkf("-w", entry.name)
+      exported = []
+      Zip::File.open(downloads.first) do |zip_file|
+        zip_file.each do |entry|
+          exported << NKF.nkf("-w", entry.name)
+        end
       end
-    end
 
-    expect(exported).to have(1).items
-    expect(exported).to include("own_#{g0.order}_#{g0.trailing_name}_shirasagi-user0-file1.pdf")
-    "#{Gws::Monitor::Topic.download_root_path}/#{topic1.id}/_/#{topic1.id}".tap do |zip_path|
-      expect(::File.size(zip_path)).to be > 0
-    end
-    clear_downloads
-
-    #
-    # 回答する
-    #
-    login_user user1
-    visit gws_monitor_topic_path(site: site, id: topic1)
-    page.accept_confirm(I18n.t("gws/monitor.confirm.public")) do
-      click_on I18n.t("gws/monitor.links.public")
-    end
-    wait_for_notice I18n.t("ss.notice.saved")
-
-    click_on I18n.t("gws/monitor.links.comment")
-    within "form#item-form" do
-      fill_in "item[text]", with: unique_id
-      wait_cbox_open do
-        click_on I18n.t("ss.buttons.upload")
+      expect(exported).to have(1).items
+      expect(exported).to include("own_#{g0.order}_#{g0.trailing_name}_shirasagi-user0-file1.pdf")
+      "#{Gws::Monitor::Topic.download_root_path}/#{topic1.id}/_/#{topic1.id}".tap do |zip_path|
+        expect(::File.size(zip_path)).to be > 0
       end
-    end
-    wait_for_cbox do
-      wait_cbox_close do
-        click_on "shirasagi-user1-file1.pdf"
+      clear_downloads
+
+      expect(Gws::Task.all.count).to eq 1
+      Gws::Task.all.first.tap do |task|
+        expect(task.name).to eq "#{Gws::Monitor::Topic.collection_name}:#{topic1.id}"
+        expect(task.state).to eq "completed"
+        expect(task.site_id).to be_nil
+        expect(task.group_id).to eq site.id
       end
-    end
-    within "form#item-form" do
-      expect(page).to have_css(".file-view", text: "shirasagi-user1-file1.pdf")
-      page.accept_confirm(I18n.t("gws/monitor.confirm.comment_answer")) do
-        click_on I18n.t("gws/monitor.links.comment")
+
+      #
+      # 回答する
+      #
+      login_user user1
+      visit gws_monitor_topic_path(site: site, id: topic1)
+      page.accept_confirm(I18n.t("gws/monitor.confirm.public")) do
+        click_on I18n.t("gws/monitor.links.public")
       end
-    end
-    wait_for_notice I18n.t("ss.notice.saved")
+      wait_for_notice I18n.t("ss.notice.saved")
 
-    #
-    # 回答で追加されたファイルがダウンロードできるか（キャッシュが更新されるか）確認
-    #
-    login_user user0
-    visit gws_monitor_management_admin_path(site: site, id: topic1)
-    click_on I18n.t("gws/monitor.links.file_download")
-
-    wait_for_download
-
-    exported = []
-    Zip::File.open(downloads.first) do |zip_file|
-      zip_file.each do |entry|
-        exported << NKF.nkf("-w", entry.name)
+      click_on I18n.t("gws/monitor.links.comment")
+      within "form#item-form" do
+        fill_in "item[text]", with: unique_id
+        wait_cbox_open do
+          click_on I18n.t("ss.buttons.upload")
+        end
       end
-    end
-
-    expect(exported).to have(2).items
-    expect(exported).to include("own_#{g0.order}_#{g0.trailing_name}_shirasagi-user0-file1.pdf")
-    expect(exported).to include("#{g1.order}_#{g1.trailing_name}_shirasagi-user1-file1.pdf")
-    "#{Gws::Monitor::Topic.download_root_path}/#{topic1.id}/_/#{topic1.id}".tap do |zip_path|
-      expect(::File.size(zip_path)).to be > 0
-    end
-    clear_downloads
-
-    #
-    # 回答を編集する
-    #
-    login_user user1
-    visit gws_monitor_answer_path(site: site, id: topic1)
-    click_on I18n.t("ss.links.edit")
-    within "form#item-form" do
-      wait_cbox_open do
-        click_on I18n.t("ss.buttons.upload")
+      wait_for_cbox do
+        wait_cbox_close do
+          click_on "shirasagi-user1-file1.pdf"
+        end
       end
-    end
-    wait_for_cbox do
-      wait_cbox_close do
-        click_on "shirasagi-user1-file2.pdf"
+      within "form#item-form" do
+        expect(page).to have_css(".file-view", text: "shirasagi-user1-file1.pdf")
+        page.accept_confirm(I18n.t("gws/monitor.confirm.comment_answer")) do
+          click_on I18n.t("gws/monitor.links.comment")
+        end
       end
-    end
-    within "form#item-form" do
-      expect(page).to have_css(".file-view", text: "shirasagi-user1-file2.pdf")
-      click_on I18n.t("ss.buttons.save")
-    end
-    wait_for_notice I18n.t("ss.notice.saved")
+      wait_for_notice I18n.t("ss.notice.saved")
 
-    #
-    # 回答の編集で追加されたファイルがダウンロードできるか（キャッシュが更新されるか）確認
-    #
-    login_user user0
-    visit gws_monitor_management_admin_path(site: site, id: topic1)
-    click_on I18n.t("gws/monitor.links.file_download")
+      #
+      # 回答で追加されたファイルがダウンロードできるか（キャッシュが更新されるか）確認
+      #
+      login_user user0
+      visit gws_monitor_management_admin_path(site: site, id: topic1)
+      click_on I18n.t("gws/monitor.links.file_download")
 
-    wait_for_download
+      wait_for_download
 
-    exported = []
-    Zip::File.open(downloads.first) do |zip_file|
-      zip_file.each do |entry|
-        exported << NKF.nkf("-w", entry.name)
+      exported = []
+      Zip::File.open(downloads.first) do |zip_file|
+        zip_file.each do |entry|
+          exported << NKF.nkf("-w", entry.name)
+        end
       end
+
+      expect(exported).to have(2).items
+      expect(exported).to include("own_#{g0.order}_#{g0.trailing_name}_shirasagi-user0-file1.pdf")
+      expect(exported).to include("#{g1.order}_#{g1.trailing_name}_shirasagi-user1-file1.pdf")
+      "#{Gws::Monitor::Topic.download_root_path}/#{topic1.id}/_/#{topic1.id}".tap do |zip_path|
+        expect(::File.size(zip_path)).to be > 0
+      end
+      clear_downloads
+
+      #
+      # 回答を編集する
+      #
+      login_user user1
+      visit gws_monitor_answer_path(site: site, id: topic1)
+      click_on I18n.t("ss.links.edit")
+      within "form#item-form" do
+        wait_cbox_open do
+          click_on I18n.t("ss.buttons.upload")
+        end
+      end
+      wait_for_cbox do
+        wait_cbox_close do
+          click_on "shirasagi-user1-file2.pdf"
+        end
+      end
+      within "form#item-form" do
+        expect(page).to have_css(".file-view", text: "shirasagi-user1-file2.pdf")
+        click_on I18n.t("ss.buttons.save")
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
+
+      #
+      # 回答の編集で追加されたファイルがダウンロードできるか（キャッシュが更新されるか）確認
+      #
+      login_user user0
+      visit gws_monitor_management_admin_path(site: site, id: topic1)
+      click_on I18n.t("gws/monitor.links.file_download")
+
+      wait_for_download
+
+      exported = []
+      Zip::File.open(downloads.first) do |zip_file|
+        zip_file.each do |entry|
+          exported << NKF.nkf("-w", entry.name)
+        end
+      end
+
+      expect(exported).to have(3).items
+      expect(exported).to include("own_#{g0.order}_#{g0.trailing_name}_shirasagi-user0-file1.pdf")
+      expect(exported).to include("#{g1.order}_#{g1.trailing_name}_shirasagi-user1-file1.pdf")
+      expect(exported).to include("#{g1.order}_#{g1.trailing_name}_shirasagi-user1-file2.pdf")
+      "#{Gws::Monitor::Topic.download_root_path}/#{topic1.id}/_/#{topic1.id}".tap do |zip_path|
+        expect(::File.size(zip_path)).to be > 0
+      end
+      clear_downloads
+    end
+  end
+
+  context "when others generating/downloading zip" do
+    before do
+      Gws::Task.create(name: "#{Gws::Monitor::Topic.collection_name}:#{topic1.id}", group_id: site.id, state: "running")
     end
 
-    expect(exported).to have(3).items
-    expect(exported).to include("own_#{g0.order}_#{g0.trailing_name}_shirasagi-user0-file1.pdf")
-    expect(exported).to include("#{g1.order}_#{g1.trailing_name}_shirasagi-user1-file1.pdf")
-    expect(exported).to include("#{g1.order}_#{g1.trailing_name}_shirasagi-user1-file2.pdf")
-    "#{Gws::Monitor::Topic.download_root_path}/#{topic1.id}/_/#{topic1.id}".tap do |zip_path|
-      expect(::File.size(zip_path)).to be > 0
+    it do
+      login_user user0
+      visit gws_monitor_management_admin_path(site: site, id: topic1)
+      click_on I18n.t("gws/monitor.links.file_download")
+      wait_for_notice I18n.t("errors.messages.other_task_is_running")
     end
-    clear_downloads
   end
 end

@@ -3,15 +3,10 @@ class Gws::Monitor::TopicZipCreator
 
   attr_accessor :cur_site, :cur_user, :cur_group, :topic
 
-  def send_file(vc)
-    vc.controller.send_file zip_path, type: 'application/zip', filename: "#{topic.name}.zip",
-                            disposition: 'attachment', x_sendfile: true
-  end
+  delegate :zip_path, to: :topic
 
-  private
-
-  def zip_path
-    cache do
+  def create_zip
+    synchronized do
       topic.attend_groups.each do |group|
         order = group.order || 0
         basename = "#{order}_#{group.trailing_name}"
@@ -31,18 +26,30 @@ class Gws::Monitor::TopicZipCreator
         @zip_file.add ::Fs.zip_safe_name("#{basename}_#{file.name}"), file.path rescue nil
       end
     end
+
+    self.errors.blank?
   end
 
-  def cache(&block)
-    zip_path = topic.zip_path
-    ::File.dirname(zip_path).tap do |zip_dir|
-      ::FileUtils.mkdir_p(zip_dir) unless ::Dir.exist?(zip_dir)
-    end
+  private
 
-    ::FileUtils.rm_f zip_path
-    Zip::File.open(zip_path, Zip::File::CREATE) do |zip_file|
-      @zip_file = zip_file
-      yield
+  def synchronized(&block)
+    zip_path = topic.zip_path
+
+    Gws::Task.find_or_create_for_model(topic, site: cur_site).tap do |task|
+      rejected = -> { self.errors.add :base, :other_task_is_running }
+      task.run_with(rejected: rejected) do
+        ::File.dirname(zip_path).tap do |zip_dir|
+          ::FileUtils.mkdir_p(zip_dir) unless ::Dir.exist?(zip_dir)
+        end
+
+        ::FileUtils.rm_f zip_path
+        Zip::File.open(zip_path, Zip::File::CREATE) do |zip_file|
+          @zip_file = zip_file
+          yield
+        ensure
+          @zip_file = nil
+        end
+      end
     end
 
     zip_path

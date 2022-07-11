@@ -154,7 +154,12 @@ module Gws::Monitor::TopicFilter
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
     component = Gws::Monitor::TopicZipCreator.new(cur_site: @cur_site, cur_user: @cur_user, cur_group: @cur_group, topic: @item)
-    component.send_file view_context
+    if component.create_zip
+      send_file component.zip_path, type: 'application/zip', filename: "#{@item.name}.zip",
+               disposition: 'attachment', x_sendfile: true
+    else
+      redirect_to url_for(action: :show), notice: component.errors.full_messages.join("\n")
+    end
   end
 
   # ファイル一括ダンロード（トピック）
