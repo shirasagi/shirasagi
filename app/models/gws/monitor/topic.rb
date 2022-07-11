@@ -90,12 +90,12 @@ class Gws::Monitor::Topic
     end
   end
 
-  def download_root_path
+  def self.download_root_path
     "#{SS::File.root}/gws_monitors/"
   end
 
   def zip_path
-    self.download_root_path + id.to_s.chars.join("/") + "/_/#{id}"
+    self.class.download_root_path + id.to_s.chars.join("/") + "/_/#{id}"
   end
 
   def active?

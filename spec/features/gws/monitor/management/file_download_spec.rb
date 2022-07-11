@@ -52,7 +52,7 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example, js:
 
     expect(exported).to have(1).items
     expect(exported).to include("own_#{g0.order}_#{g0.trailing_name}_shirasagi-user0-file1.pdf")
-    "#{Gws::Monitor::Topic.new.download_root_path}/#{topic1.id}/_/#{topic1.id}".tap do |zip_path|
+    "#{Gws::Monitor::Topic.download_root_path}/#{topic1.id}/_/#{topic1.id}".tap do |zip_path|
       expect(::File.size(zip_path)).to be > 0
     end
     clear_downloads
@@ -106,7 +106,7 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example, js:
     expect(exported).to have(2).items
     expect(exported).to include("own_#{g0.order}_#{g0.trailing_name}_shirasagi-user0-file1.pdf")
     expect(exported).to include("#{g1.order}_#{g1.trailing_name}_shirasagi-user1-file1.pdf")
-    "#{Gws::Monitor::Topic.new.download_root_path}/#{topic1.id}/_/#{topic1.id}".tap do |zip_path|
+    "#{Gws::Monitor::Topic.download_root_path}/#{topic1.id}/_/#{topic1.id}".tap do |zip_path|
       expect(::File.size(zip_path)).to be > 0
     end
     clear_downloads
@@ -153,7 +153,7 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example, js:
     expect(exported).to include("own_#{g0.order}_#{g0.trailing_name}_shirasagi-user0-file1.pdf")
     expect(exported).to include("#{g1.order}_#{g1.trailing_name}_shirasagi-user1-file1.pdf")
     expect(exported).to include("#{g1.order}_#{g1.trailing_name}_shirasagi-user1-file2.pdf")
-    "#{Gws::Monitor::Topic.new.download_root_path}/#{topic1.id}/_/#{topic1.id}".tap do |zip_path|
+    "#{Gws::Monitor::Topic.download_root_path}/#{topic1.id}/_/#{topic1.id}".tap do |zip_path|
       expect(::File.size(zip_path)).to be > 0
     end
     clear_downloads

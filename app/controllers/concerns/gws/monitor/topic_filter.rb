@@ -27,10 +27,8 @@ module Gws::Monitor::TopicFilter
 
   def set_category
     @categories = Gws::Monitor::Category.site(@cur_site).readable(@cur_user, site: @cur_site).tree_sort
-    if category_id = params[:category].presence
-      if category_id != '-'
-        @category ||= Gws::Monitor::Category.site(@cur_site).readable(@cur_user, site: @cur_site).where(id: category_id).first
-      end
+    if (category_id = params[:category].presence) && category_id != '-'
+      @category ||= Gws::Monitor::Category.site(@cur_site).readable(@cur_user, site: @cur_site).where(id: category_id).first
     end
   end
 
@@ -154,37 +152,6 @@ module Gws::Monitor::TopicFilter
   # 添付ファイル一括ダウンロード
   def file_download
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-
-    # @download_file_group_ssfile_ids = []
-    # @item.attend_groups.each do |group|
-    #   next if @item.comment(group.id).blank?
-    #
-    #   download_file_ids = @item.comment(group.id)[0]
-    #   order = group.order || 0
-    #   filename = "#{order}_#{File.basename(download_file_ids.user_group_name)}"
-    #   @download_file_group_ssfile_ids << [filename, download_file_ids.file_ids]
-    # end
-    #
-    # download_file_group_ssfile_ids_hash = @download_file_group_ssfile_ids.to_h
-    # @group_ssfile = []
-    # download_file_group_ssfile_ids_hash.each do |group_fileids|
-    #   group_fileids[1].each do |fileids|
-    #     @group_ssfile << [group_fileids[0], SS::File.find_by(id: fileids)]
-    #   end
-    # end
-    #
-    # @owner_ssfile = []
-    # @item.file_ids.each do |fileids|
-    #   order = @cur_group.order || 0
-    #   filename = "#{order}_#{File.basename(@cur_group.name)}"
-    #   @owner_ssfile << [filename, SS::File.find_by(id: fileids)]
-    # end
-    #
-    # zipfile = @item.name + ".zip"
-    #
-    # @item.create_download_directory(File.dirname(@item.zip_path))
-    # @item.create_zip(@item.zip_path, @group_ssfile, @owner_ssfile)
-    # send_file(@item.zip_path, type: 'application/zip', filename: zipfile, disposition: 'attachment', x_sendfile: true)
 
     component = Gws::Monitor::TopicZipCreator.new(cur_site: @cur_site, cur_user: @cur_user, cur_group: @cur_group, topic: @item)
     component.send_file view_context
