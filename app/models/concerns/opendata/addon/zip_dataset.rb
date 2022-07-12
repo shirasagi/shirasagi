@@ -42,7 +42,8 @@ module Opendata::Addon::ZipDataset
         ::FileUtils.mkdir_p(::File.dirname(zip_path))
         Zip::File.open(zip_path, Zip::File::CREATE) do |zip|
           files.each do |name, file|
-            zip.add(name.encode('cp932', invalid: :replace, undef: :replace), file.path)
+            name = ::Fs.zip_safe_path(name)
+            zip.add(name, file.path)
           end
         end
       end

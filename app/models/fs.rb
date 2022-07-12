@@ -146,4 +146,19 @@ module Fs
     Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
     ""
   end
+
+  def zip_safe_name(name)
+    return name if name.blank?
+
+    if Zip.unicode_names
+      SS::FilenameUtils.convert_to_url_safe_japanese(name)
+    else
+      name.encode('cp932', invalid: :replace, undef: :replace, replace: "_")
+    end
+  end
+
+  def zip_safe_path(name)
+    return name if name.blank?
+    name.split("/").map { |part| Fs.zip_safe_name(part) }.join("/")
+  end
 end
