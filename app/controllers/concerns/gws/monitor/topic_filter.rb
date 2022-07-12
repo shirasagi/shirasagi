@@ -155,7 +155,8 @@ module Gws::Monitor::TopicFilter
 
     component = Gws::Monitor::TopicZipCreator.new(cur_site: @cur_site, cur_user: @cur_user, cur_group: @cur_group, topic: @item)
     if component.create_zip
-      send_file component.zip_path, type: 'application/zip', filename: "#{@item.name}.zip",
+      filename = SS::FilenameUtils.convert_to_url_safe_japanese("#{@item.name}.zip")
+      send_file component.zip_path, type: 'application/zip', filename: filename,
                disposition: 'attachment', x_sendfile: true
     else
       redirect_to url_for(action: :show), notice: component.errors.full_messages.join("\n")
