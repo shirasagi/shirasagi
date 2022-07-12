@@ -30,7 +30,11 @@ class Uploader::FilesController < ApplicationController
       url = ::File.join(url, name)
       @crumbs << [name, url]
     end
-    @crumbs.pop if params[:do].present?
+    if %w(show edit delete check).include?(params[:do])
+      # do=show などの場合、@crumbs の末尾にはファイル名が入っている。
+      # pop することで、ぱんクズにファイル名を表示しないようにする。
+      @crumbs.pop
+    end
   end
 
   def create_folder
