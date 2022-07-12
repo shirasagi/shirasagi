@@ -20,7 +20,7 @@ class Gws::Workflow::WizardController < ApplicationController
 
   def set_route
     @route_id = params[:route_id]
-    if "my_group" == @route_id || "restart" == @route_id
+    if @route_id == "my_group" || @route_id == "restart"
       @route = nil
     else
       @route = Gws::Workflow::Route.find(params[:route_id])
@@ -49,7 +49,7 @@ class Gws::Workflow::WizardController < ApplicationController
     @item.workflow_user_id = nil
     @item.workflow_state = nil
     @item.workflow_comment = nil
-    if "restart" != @route_id
+    if @route_id != "restart"
       @item.workflow_approvers = nil
       @item.workflow_required_counts = nil
     end
@@ -60,9 +60,9 @@ class Gws::Workflow::WizardController < ApplicationController
       else
         render json: @item.errors.full_messages, status: :bad_request
       end
-    elsif "my_group" == @route_id
+    elsif @route_id == "my_group"
       render template: "approver_setting", layout: false
-    elsif "restart" == @route_id
+    elsif @route_id == "restart"
       render template: "approver_setting_restart", layout: false
     else
       raise "404"
