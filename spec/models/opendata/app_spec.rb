@@ -124,7 +124,7 @@ describe Opendata::App, dbscope: :example do
 
     context "when there is one invalid shift_jis japanese filename" do
       let!(:tmp_dir) { Dir.mktmpdir }
-      let!(:tmp_file) { "#{tmp_dir}/\u222D日本語ファイル名.csv" }
+      let!(:tmp_file) { "#{tmp_dir}/😛日本語ファイル名.csv" }
 
       before do
         FileUtils.cp(Rails.root.join("spec", "fixtures", "opendata", "utf-8.csv"), tmp_file)
