@@ -74,7 +74,7 @@ describe Opendata::App, dbscope: :example do
       names = []
       Zip::File.open(zip_filename) do |archive|
         archive.each do |entry|
-          name = entry.name.encode('utf-8', 'cp932')
+          name = NKF.nkf("-w", entry.name)
           names << name
         end
       end
@@ -141,7 +141,7 @@ describe Opendata::App, dbscope: :example do
         expect(File.exist?(zip_filename)).to be_truthy
 
         names = entry_names(zip_filename)
-        expect(names).to include('_日本語ファイル名.csv')
+        expect(names).to eq %w(＿日本語ファイル名.csv)
       end
     end
   end
