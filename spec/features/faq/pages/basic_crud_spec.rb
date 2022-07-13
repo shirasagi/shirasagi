@@ -123,16 +123,20 @@ describe "faq_pages", type: :feature, js: true do
 
     it "permited and contains_urls" do
       visit edit_path2
-      within "form" do
-        click_on I18n.t("ss.buttons.withdraw")
+      wait_event_to_fire("ss:formAlertFinish") do
+        within "form" do
+          click_on I18n.t("ss.buttons.withdraw")
+        end
       end
       expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
     end
 
     it "permited and not contains_urls" do
       visit edit_path
-      within "form" do
-        click_on I18n.t("ss.buttons.withdraw")
+      wait_event_to_fire("ss:formAlertFinish") do
+        within "form" do
+          click_on I18n.t("ss.buttons.withdraw")
+        end
       end
       expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
     end
@@ -142,8 +146,10 @@ describe "faq_pages", type: :feature, js: true do
       role.update(permissions: %w(edit_private_faq_pages edit_other_faq_pages
                                   release_private_faq_pages release_other_faq_pages))
       visit edit_path2
-      within "form" do
-        click_on I18n.t("ss.buttons.withdraw")
+      wait_event_to_fire("ss:formAlertFinish") do
+        within "form" do
+          click_on I18n.t("ss.buttons.withdraw")
+        end
       end
       expect(page).not_to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
       expect(page).to have_css(".errorExplanation", text: I18n.t('ss.confirm.contains_url_expect'))
@@ -154,8 +160,10 @@ describe "faq_pages", type: :feature, js: true do
       role.update(permissions: %w(edit_private_faq_pages edit_other_faq_pages
                                   release_private_faq_pages release_other_faq_pages))
       visit edit_path
-      within "form" do
-        click_on I18n.t("ss.buttons.withdraw")
+      wait_event_to_fire("ss:formAlertFinish") do
+        within "form" do
+          click_on I18n.t("ss.buttons.withdraw")
+        end
       end
       expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
     end
