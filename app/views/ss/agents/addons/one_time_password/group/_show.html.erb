@@ -1,0 +1,12 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+
+<dl class="see mod-ss-one_time_password-group">
+  <dt><%= @model.t :otpw_state %></dt>
+  <dd><%= @item.label(:otpw_state) || t('ss.options.otpw_state.default') %></dd>
+
+  <dt><%= @model.t :otpw_allowlist %></dt>
+  <dd><%=br @item.otpw_allowlist.join("\n") %></dd>
+</dl>
