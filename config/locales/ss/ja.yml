@@ -18,6 +18,7 @@ ja:
     login: ログイン
     logout: ログアウト
     module: モジュール
+    one_time_password: ワンタイムパスワード
     operation: 操作
     regexp: 正規表現
     resize_image: 画像リサイズ
@@ -121,6 +122,7 @@ ja:
       view_site: 公開画面を見る
       open: 開く
       change: 変更する
+      change_account: アカウントを変更する
       more: もっと見る
       more_all: 全て見る
       select: 選択する
@@ -161,6 +163,7 @@ ja:
       withdraw: 取り下げ保存
       ignore_alert: 警告を無視する
       cancel: キャンセル
+      certificate: 認証
       edit: 編集
       delete: 削除
       deleting: 削除中
@@ -171,6 +174,7 @@ ja:
       clear: クリア
       send: 送信
       sending: 送信中
+      resend: 再送信
       run: 実行
       running: 実行中
       stop: 停止
@@ -304,6 +308,8 @@ ja:
       history_is_blank: 履歴はありません。
       branch_pages_history_is_blank: 差し替えページのため、履歴はありません。
       ie_browser: ご利用のブラウザ（IE）では大容量アップロードを実行できません。他のブラウザ（Google Chrome等）をご利用ください。
+      recieve_authentication_code: 認証コードを送信してください。
+      input_authentication_code: 認証コードを入力してください。
     warning:
       initial_password: 初期パスワードを変更してください。
       session_timeout: セッションの有効期限が切れました。
@@ -313,6 +319,9 @@ ja:
       import:
         blank_file: ファイルを入力してください。
         invalid_file_type: 不正なファイル形式です。
+      otpw:
+        invalid_authentication_code: 認証コードが間違っています。
+        authentication_code_expired: 認証コードの有効期限が切れています。
     apis:
       groups:
         index: グループを選択する
@@ -514,6 +523,8 @@ ja:
           end_with: が次で終わる
           include_any_of: が次を含む
           include_none_of: が次を含まない
+      otpw_state:
+        default: ユーザー別（標準）
 
     tasks:
       started: 開始しました。
@@ -568,6 +579,8 @@ ja:
       ss/oauth2/cms_permission: CMS権限
       ss/oauth2/gws_permission: グループウェア権限
       ss/oauth2/webmail_permission: メール権限
+      ss/one_time_password/group: ワンタイムパスワード設定
+      ss/one_time_password/user: ワンタイムパスワード
 
   activemodel:
     attributes:
@@ -983,6 +996,12 @@ ja:
         public_key_type: 公開鍵種別
         public_key: 公開鍵
         public_key_encrypted: 公開鍵
+      ss/addon/one_time_password/group:
+        otpw_state: ログインの制限
+        otpw_whitelist: IPホワイトリスト
+      ss/addon/one_time_password/user:
+        otpw_emails: 受信メールアドレス
+        otpw_password: 認証コード
 
   tooltip:
     ss/model/site:
@@ -1432,6 +1451,24 @@ ja:
     ss/addon/inquiry_setting:
       inquiry_form_id:
         - グループ共通のお問い合わせフォームを設定します。
+
+    ss/addon/one_time_password/group:
+      otpw_state:
+        - ワンタイムパスワードによる制限方法を選択します。
+        - ・ユーザー別：受信メールアドレスを設定しているユーザーのみ制限が有効になります。
+        - ・有効：すべてのユーザーに対して制限が有効になります。
+        - ・無効：すべてのユーザーに対して制限が無効になります。
+      otpw_whitelist:
+        - ワンタイムパスワードで制限しないIPアドレスを入力します。
+        - 複数の IP アドレスを設定する場合は、改行で区切って設定します。
+        - "\"192.168.10.0/24\" や \"192.168.10.0/255.255.255.0\" のようなネットワークアドレスも設定することができます。"
+
+    ss/addon/one_time_password/user:
+      otpw_emails:
+        - ワンタイムパスワードに利用するメールアドレスを入力します。
+        - 複数の場合は改行区切りで入力します。
+        - メールアドレスを登録するとログイン時にワンタイムパスワードの確認が必要になります。
+        - メールアドレスを間違えているとログインできなくなるためご注意ください。
 
     ss:
       contrast_ratio:
