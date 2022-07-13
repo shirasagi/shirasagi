@@ -2,7 +2,7 @@ require 'spec_helper'
 require Rails.root.join("lib/migrations/gws/20220705000000_purge_monitor_zip.rb")
 
 RSpec.describe SS::Migration20220705000000, dbscope: :example do
-  let(:root_path) { Gws::Monitor::Topic.new.download_root_path }
+  let(:root_path) { Gws::Monitor::Topic.download_root_path }
   let(:file_path1) { "#{root_path}/1/4/9/_/149" }
 
   before do
