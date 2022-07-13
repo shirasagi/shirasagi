@@ -5,7 +5,7 @@ describe "sns_login_with_one_time_password", type: :feature, dbscope: :example, 
   let!(:email) { 'user@example.jp' }
   let!(:organization) { user.organization.gws_group }
 
-  context "with cms user" do
+  context "with user settings" do
     before do
       user.set otpw_emails: [email]
     end
@@ -77,6 +77,92 @@ describe "sns_login_with_one_time_password", type: :feature, dbscope: :example, 
       end
       expect(current_path).to eq sns_mypage_path
       expect(page).to have_no_css(".login-box")
+    end
+  end
+
+  context "with state settings" do
+    it do
+      # restricted
+      user.set otpw_emails: [email]
+      organization.set otpw_state: nil
+
+      visit sns_login_path
+      within ".login-form" do
+        fill_in "item[email]", with: user.email
+        fill_in "item[password]", with: "pass"
+        click_button I18n.t("ss.login")
+      end
+      expect(page).to have_css(".otpw-email-form")
+
+      # restricted
+      user.set otpw_emails: []
+      organization.set otpw_state: 'enabled'
+
+      visit sns_login_path
+      within ".login-form" do
+        fill_in "item[email]", with: user.email
+        fill_in "item[password]", with: "pass"
+        click_button I18n.t("ss.login")
+      end
+      expect(page).to have_css(".otpw-email-form")
+
+      # unrestricted
+      user.set otpw_emails: [email]
+      organization.set otpw_state: 'disabled'
+
+      visit sns_login_path
+      within ".login-form" do
+        fill_in "item[email]", with: user.email
+        fill_in "item[password]", with: "pass"
+        click_button I18n.t("ss.login")
+      end
+      expect(current_path).to eq sns_mypage_path
+    end
+  end
+
+  context "with allowlist settings" do
+    it do
+      # restricted
+      user.set otpw_emails: [email]
+      organization.set otpw_state: nil
+      organization.set otpw_allowlist: ['127.0.0.0']
+
+      visit sns_login_path
+      within ".login-form" do
+        fill_in "item[email]", with: user.email
+        fill_in "item[password]", with: "pass"
+        click_button I18n.t("ss.login")
+      end
+      expect(page).to have_css(".otpw-email-form")
+
+      # unrestricted
+      user.set otpw_emails: [email]
+      organization.set otpw_state: nil
+      organization.set otpw_allowlist: ['127.0.0.1']
+
+      visit sns_login_path
+      within ".login-form" do
+        fill_in "item[email]", with: user.email
+        fill_in "item[password]", with: "pass"
+        click_button I18n.t("ss.login")
+      end
+      expect(current_path).to eq sns_mypage_path
+
+      # logout
+      visit sns_login_path
+
+      # unrestricted
+      user.set otpw_emails: []
+      organization.set otpw_state: 'enabled'
+      organization.set otpw_allowlist: ['127.0.0.0/24']
+
+      visit sns_login_path
+      within ".login-form" do
+        fill_in "item[email]", with: user.email
+        fill_in "item[password]", with: "pass"
+        click_button I18n.t("ss.login")
+      end
+      expect(current_path).to eq sns_mypage_path
     end
   end
 end
