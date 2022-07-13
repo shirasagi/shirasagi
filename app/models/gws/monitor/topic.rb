@@ -90,12 +90,12 @@ class Gws::Monitor::Topic
     end
   end
 
-  def download_root_path
+  def self.download_root_path
     "#{SS::File.root}/gws_monitors/"
   end
 
   def zip_path
-    self.download_root_path + id.to_s.chars.join("/") + "/_/#{id}"
+    self.class.download_root_path + id.to_s.chars.join("/") + "/_/#{id}"
   end
 
   def active?
@@ -162,31 +162,6 @@ class Gws::Monitor::Topic
             post.try(:text),
             post.try(:updated) ? post.updated.strftime('%Y/%m/%d %H:%M') : ''
         ]
-      end
-    end
-  end
-
-  def create_download_directory(download_dir)
-    FileUtils.mkdir_p(download_dir) unless Dir.exist?(download_dir)
-  end
-
-  def create_zip(zipfile, group_items, owner_items)
-    if File.exist?(zipfile)
-      return if self.updated < File.stat(zipfile).mtime
-      File.unlink(zipfile) if self.updated > File.stat(zipfile).mtime
-    end
-
-    Zip::File.open(zipfile, Zip::File::CREATE) do |zip_file|
-      group_items.each do |groupssfile|
-        if File.exist?(groupssfile[1].path)
-          zip_file.add(::Fs.zip_safe_name(groupssfile[0] + "_" + groupssfile[1].name), groupssfile[1].path)
-        end
-      end
-
-      owner_items.each do |ownerssfile|
-        if File.exist?(ownerssfile[1].path)
-          zip_file.add(::Fs.zip_safe_name("own_" + ownerssfile[0] + "_" + ownerssfile[1].name), ownerssfile[1].path)
-        end
       end
     end
   end

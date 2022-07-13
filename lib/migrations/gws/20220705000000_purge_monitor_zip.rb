@@ -9,7 +9,7 @@ class SS::Migration20220705000000
   depends_on "20220510000000"
 
   def change
-    root_path = Gws::Monitor::Topic.new.download_root_path
+    root_path = Gws::Monitor::Topic.download_root_path
     ::FileUtils.rm_rf(root_path)
   end
 end
