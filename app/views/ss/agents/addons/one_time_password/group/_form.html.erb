@@ -7,6 +7,6 @@
   <dt><%= @model.t :otpw_state %><%= @model.tt :otpw_state %></dt>
   <dd><%= f.select :otpw_state, @item.otpw_state_options, include_blank: t('ss.options.otpw_state.default') %></dd>
 
-  <dt><%= @model.t :otpw_whitelist %><%= @model.tt :otpw_whitelist %></dt>
-  <dd><%= f.text_area :otpw_whitelist, style: "height: 100px" %></dd>
+  <dt><%= @model.t :otpw_allowlist %><%= @model.tt :otpw_allowlist %></dt>
+  <dd><%= f.text_area :otpw_allowlist, style: "height: 100px" %></dd>
 </dl>

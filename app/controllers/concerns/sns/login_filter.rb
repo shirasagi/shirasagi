@@ -49,7 +49,7 @@ module Sns::LoginFilter
 
   def render_one_time_password(user)
     return unless user.otpw_enabled? # organization exists
-    return if user.organization.gws_group.otpw_whitelist_request?(remote_addr)
+    return if user.organization.gws_group.otpw_allowlist_request?(remote_addr)
 
     @otpw_view = :password
     safe_params = get_params

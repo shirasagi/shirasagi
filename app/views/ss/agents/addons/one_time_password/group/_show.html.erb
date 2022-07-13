@@ -7,6 +7,6 @@
   <dt><%= @model.t :otpw_state %></dt>
   <dd><%= @item.label(:otpw_state) || t('ss.options.otpw_state.default') %></dd>
 
-  <dt><%= @model.t :otpw_whitelist %></dt>
-  <dd><%=br @item.otpw_whitelist.join("\n") %></dd>
+  <dt><%= @model.t :otpw_allowlist %></dt>
+  <dd><%=br @item.otpw_allowlist.join("\n") %></dd>
 </dl>

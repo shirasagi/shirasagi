@@ -6,9 +6,9 @@ module SS::Addon::OneTimePassword::Group
 
   included do
     field :otpw_state, type: String
-    field :otpw_whitelist, type: SS::Extensions::Lines
+    field :otpw_allowlist, type: SS::Extensions::Lines
 
-    permit_params :otpw_state, :otpw_whitelist
+    permit_params :otpw_state, :otpw_allowlist
 
     validates :otpw_state, inclusion: { in: %w(enabled disabled) }, if: ->{ otpw_state.present? }
   end
@@ -17,8 +17,8 @@ module SS::Addon::OneTimePassword::Group
     %w(enabled disabled).map { |k| [I18n.t("ss.options.state.#{k}"), k] }
   end
 
-  def otpw_whitelist_request?(remote_addr)
-    otpw_whitelist.any? do |value|
+  def otpw_allowlist_request?(remote_addr)
+    otpw_allowlist.any? do |value|
       IPAddr.new(value).include?(remote_addr) rescue false
     end
   end

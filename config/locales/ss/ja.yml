@@ -998,7 +998,7 @@ ja:
         public_key_encrypted: 公開鍵
       ss/addon/one_time_password/group:
         otpw_state: ログインの制限
-        otpw_whitelist: IPホワイトリスト
+        otpw_allowlist: IPアドレス許可リスト
       ss/addon/one_time_password/user:
         otpw_emails: 受信メールアドレス
         otpw_password: 認証コード
@@ -1458,7 +1458,7 @@ ja:
         - ・ユーザー別：受信メールアドレスを設定しているユーザーのみ制限が有効になります。
         - ・有効：すべてのユーザーに対して制限が有効になります。
         - ・無効：すべてのユーザーに対して制限が無効になります。
-      otpw_whitelist:
+      otpw_allowlist:
         - ワンタイムパスワードで制限しないIPアドレスを入力します。
         - 複数の IP アドレスを設定する場合は、改行で区切って設定します。
         - "\"192.168.10.0/24\" や \"192.168.10.0/255.255.255.0\" のようなネットワークアドレスも設定することができます。"
