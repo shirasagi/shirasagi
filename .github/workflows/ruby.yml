@@ -102,7 +102,7 @@ jobs:
           if [ $? -ne 0 ]; then
             exit 1
           fi
-          echo $file_list | xargs bundle exec rspec
+          echo $file_list | xargs bundle exec rspec --profile 10
         env:
           allow_open_jtalk: 1
           LDAP_TEST: enable
