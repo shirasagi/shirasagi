@@ -16,12 +16,12 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 50
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:
-        parallelism: [ 5 ]
-        id: [ 0,1,2,3,4 ]
+        parallelism: [ 6 ]
+        id: [ 0,1,2,3,4,5 ]
     steps:
       - uses: actions/checkout@v2
       - name: Generate ja_JP.UTF-8
