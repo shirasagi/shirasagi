@@ -1,8 +1,6 @@
 module Cms::Line::TaskFilter
   extend ActiveSupport::Concern
 
-  MAX_MEMBERS_TO = 400.freeze
-
   def deliver_message(item)
     @task.log("start deliver #{item.name}")
     raise "message not published! (#{item.name})" if !item.public?
@@ -52,7 +50,7 @@ module Cms::Line::TaskFilter
   def multicast_to_members(item, members, opts = {})
     deliver_mode = (opts[:deliver_mode].to_s == "test") ? "test" : "main"
 
-    members.each_slice(MAX_MEMBERS_TO).with_index do |members_to, idx|
+    members.each_slice(Cms::Line.max_members_to).with_index do |members_to, seq|
       names = members_to.map(&:name)
       user_ids = members_to.map(&:oauth_id)
 
@@ -63,7 +61,8 @@ module Cms::Line::TaskFilter
           log.deliver_mode = deliver_mode
           log.in_members = members_to
 
-          @task.log("multicast to members #{idx * user_ids.size}..#{(idx * user_ids.size) + user_ids.size}")
+          user_index = seq * Cms::Line.max_members_to
+          @task.log("multicast to members #{user_index}..#{user_index + user_ids.size - 1}")
           names.each_with_index { |name, idx| @task.log("- #{user_ids[idx]} #{name}") }
           res = @site.line_client.multicast(user_ids, item.line_messages)
 

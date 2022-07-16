@@ -1,12 +1,11 @@
 class Cms::Agents::Tasks::Line::RichmenusController < ApplicationController
   #https://github.com/line/line-bot-sdk-ruby/blob/master/lib/line/bot/client.rb
-  MAX_MEMBERS_TO = 400.freeze
 
   def with_subscribable_members(line_richmenu_id)
     criteria = Cms::Member.site(@site).and_enabled
     criteria = criteria.where(:oauth_id.exists => true, oauth_type: "line")
     criteria = criteria.ne(subscribe_richmenu_id: line_richmenu_id)
-    criteria.to_a.each_slice(MAX_MEMBERS_TO).with_index do |members_to, idx|
+    criteria.to_a.each_slice(Cms::Line.max_members_to).with_index do |members_to, idx|
       yield(members_to, idx)
     end
   end
@@ -15,7 +14,7 @@ class Cms::Agents::Tasks::Line::RichmenusController < ApplicationController
     criteria = Cms::Member.site(@site).and_enabled
     criteria = criteria.where(:oauth_id.exists => true, oauth_type: "line")
     criteria = criteria.where(subscribe_richmenu_id: line_richmenu_id)
-    criteria.to_a.each_slice(MAX_MEMBERS_TO).with_index do |members_to, idx|
+    criteria.to_a.each_slice(Cms::Line.max_members_to).with_index do |members_to, idx|
       yield(members_to, idx)
     end
   end
@@ -60,7 +59,7 @@ class Cms::Agents::Tasks::Line::RichmenusController < ApplicationController
     return if unlink_user_ids.blank?
 
     @task.log("unlink members richmenu")
-    unlink_user_ids.to_a.each_slice(MAX_MEMBERS_TO).with_index do |user_ids, idx|
+    unlink_user_ids.to_a.each_slice(Cms::Line.max_members_to).with_index do |user_ids, idx|
       @task.log("- unlink members #{idx * user_ids.size}..#{(idx * user_ids.size) + user_ids.size}")
       @site.line_client.bulk_unlink_rich_menus(user_ids)
     end
