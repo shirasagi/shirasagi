@@ -9,8 +9,7 @@
     "webpack-cli": "^4.9.2"
   },
   "scripts": {
-    "build": "webpack --config webpack.config.js",
-    "locale": "bundle exec rake ss:locale RAILS_ENV=production"
+    "build": "webpack --config webpack.config.js"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.7",
