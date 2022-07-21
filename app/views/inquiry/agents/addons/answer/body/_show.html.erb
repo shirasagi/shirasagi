@@ -4,7 +4,7 @@
     <% if data.column && data.column.input_type =~ /upload_file/ %>
       <dd><%= link_to data.value, { action: :download_afile, fid: data.values[0] } %></dd>
     <% else %>
-      <dd><%= br sanitize(data.value, tags: []) %></dd>
+      <dd><%= br data.value %></dd>
     <% end %>
   <% end %>
 
