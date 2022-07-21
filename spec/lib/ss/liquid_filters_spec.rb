@@ -140,6 +140,21 @@ describe SS::LiquidFilters, dbscope: :example do
       let(:value) { -2_756 }
       it { is_expected.to eq "-2,756" }
     end
+
+    context "with integer string" do
+      let(:value) { "2756" }
+      it { is_expected.to eq "2,756" }
+    end
+
+    context "with float string" do
+      let(:value) { "2756.98" }
+      it { is_expected.to eq "2,756.98" }
+    end
+
+    context "with non-numeric string" do
+      let(:value) { "hello" }
+      it { is_expected.to eq "hello" }
+    end
   end
 
   describe "human_size" do

@@ -2,6 +2,13 @@ module SS::LiquidFilters
   AVAILABLE_DATE_FORMATS = I18n.t("date.formats").keys.freeze
   AVAILABLE_TIME_FORMATS = I18n.t("time.formats").keys.freeze
 
+  module Utils
+    def self.stringify_number(input, format)
+      return input unless input.numeric?
+      ::Liquid::Utils.to_number(input).to_s(format)
+    end
+  end
+
   def ss_date(input, format = nil)
     date = Liquid::Utils.to_date(input)
     return input unless date
@@ -69,31 +76,31 @@ module SS::LiquidFilters
   end
 
   def phone(input)
-    input.to_s(:phone)
+    Utils.stringify_number(input, :phone)
   end
 
   def currency(input)
-    input.to_s(:currency)
+    Utils.stringify_number(input, :currency)
   end
 
   def percentage(input)
-    input.to_s(:percentage)
+    Utils.stringify_number(input, :percentage)
   end
 
   def delimited(input)
-    input.to_s(:delimited)
+    Utils.stringify_number(input, :delimited)
   end
 
   def rounded(input)
-    input.to_s(:rounded)
+    Utils.stringify_number(input, :rounded)
   end
 
   def human(input)
-    input.to_s(:human)
+    Utils.stringify_number(input, :human)
   end
 
   def human_size(input)
-    input.to_s(:human_size)
+    Utils.stringify_number(input, :human_size)
   end
 
   def ss_append(input, string)
