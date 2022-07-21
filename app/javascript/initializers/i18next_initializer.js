@@ -1,23 +1,31 @@
 import Initializer from "../ss/initializer"
 import i18next from 'i18next'
-import Multiload from 'i18next-multiload-backend-adapter'
+import MultiLoad from 'i18next-multiload-backend-adapter'
 import Http from 'i18next-http-backend'
+import Chained from 'i18next-chained-backend'
+import LocalStorage from 'i18next-localstorage-backend'
 
 export default class extends Initializer {
   initialize() {
     return new Promise((resolve, reject) => {
       i18next
-        .use(Multiload)
+        .use(Chained)
         .init({
           backend: {
-            backend: Http,
-            backendOption: {
-              loadPath: '/.mypage/locales/default/{{lng}}/{{ns}}.json',
-              //addPath: '/.mypage/locales/fallback/{{lng}}/{{ns}}.json',
-              allowMultiLoading: true
-            }
+            backends: [ LocalStorage, MultiLoad ],
+            backendOptions: [ {
+              // LocalStorage options
+            }, {
+              // MultiLoad options
+              backend: Http,
+              backendOption: {
+                loadPath: '/.mypage/locales/default/{{lng}}/{{ns}}.json',
+                //addPath: '/.mypage/locales/fallback/{{lng}}/{{ns}}.json',
+                allowMultiLoading: true
+              }
+            } ]
           },
-          fallbackLng: ['en', 'ja']
+          fallbackLng: [ 'en', 'ja' ]
         }, (err, t) => {
           if (err) {
             reject(err)
