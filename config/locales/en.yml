@@ -31,9 +31,20 @@ en:
       - Friday
       - Saturday
     formats:
-      default: ! '%Y-%m-%d'
-      long: ! '%B %d, %Y'
-      short: ! '%b %d'
+      default: ! '%1m/%1d/%Y'
+      iso: ! '%m-%d-%Y'
+      long: ! '%1m/%1d/%Y'
+      full: ! '%a, %1m/%1d/%Y'
+      short: ! '%1m/%1d'
+      default_full: ! '%a, %1m/%1d/%Y'
+      iso_full: ! '%a, %m-%d-%Y'
+      month: ! '%1m/%Y'
+      iso_month: ! '%m-%Y'
+      long_month: ! '%a %Y'
+      picker: ! '%m/%d/%Y'
+      m_d_a: "%a, %1m/%1d"
+      d_a: "%a, %1d"
+      csv: ! '%Y/%m/%d'
     month_names:
       -
       - January
@@ -55,36 +66,45 @@ en:
   datetime:
     distance_in_words:
       about_x_hours:
-        one: about 1 hour
-        other: about %{count} hours
+        one: About 1 hour
+        other: About %{count} hours
       about_x_months:
-        one: about 1 month
-        other: about %{count} months
+        one: About 1 month
+        other: About %{count} months
       about_x_years:
-        one: about 1 year
-        other: about %{count} years
+        one: About 1 year
+        other: About %{count} years
       almost_x_years:
-        one: almost 1 year
-        other: almost %{count} years
-      half_a_minute: half a minute
+        one: Less than 1 year
+        other: Less than %{count} years
+      half_a_minute: Around 30 seconds
       less_than_x_minutes:
-        one: less than a minute
-        other: less than %{count} minutes
+        one: Within 1 minute
+        other: Less than %{count} minutes
       less_than_x_seconds:
-        one: less than 1 second
-        other: less than %{count} seconds
+        one: Within 1 second
+        other: Less than %{count} seconds
       over_x_years:
-        one: over 1 year
-        other: over %{count} years
-      x_days:
-        one: 1 day
-        other: ! '%{count} days'
-      x_minutes:
-        one: 1 minute
-        other: ! '%{count} minutes'
+        one: 1 year
+        other: ! '%{count} years'
+      x_years:
+        one: 1 year
+        other: ! '%{count} years'
       x_months:
         one: 1 month
         other: ! '%{count} months'
+      x_weeks:
+        one: 1 week
+        other: ! '%{count} weeks'
+      x_days:
+        one: 1 day
+        other: ! '%{count} days'
+      x_hours:
+        one: 1 hour
+        other: ! '%{count} hours'
+      x_minutes:
+        one: 1 minute
+        other: ! '%{count} minutes'
       x_seconds:
         one: 1 second
         other: ! '%{count} seconds'
@@ -93,66 +113,121 @@ en:
       hour: Hour
       minute: Minute
       month: Month
-      second: Seconds
+      second: Second
       year: Year
+      milli_second: Millisecond
   errors: &errors
-    format: ! '%{attribute} %{message}'
+    format: ! '%{attribute} : %{message}'
     messages:
-      accepted: must be accepted
-      blank: can't be blank
-      present: must be blank
-      confirmation: ! "doesn't match %{attribute}"
-      empty: can't be empty
-      equal_to: must be equal to %{count}
-      even: must be even
-      exclusion: is reserved
-      greater_than: must be greater than %{count}
-      greater_than_or_equal_to: must be greater than or equal to %{count}
-      inclusion: is not included in the list
-      invalid: is invalid
-      less_than: must be less than %{count}
-      less_than_or_equal_to: must be less than or equal to %{count}
-      not_a_number: is not a number
-      not_an_integer: must be an integer
-      odd: must be odd
-      record_invalid: ! 'Validation failed: %{errors}'
-      restrict_dependent_destroy:
-        one: "Cannot delete record because a dependent %{record} exists"
-        many: "Cannot delete record because dependent %{record} exist"
-      taken: has already been taken
-      too_long:
-        one: is too long (maximum is 1 character)
-        other: is too long (maximum is %{count} characters)
-      too_short:
-        one: is too short (minimum is 1 character)
-        other: is too short (minimum is %{count} characters)
-      wrong_length:
-        one: is the wrong length (should be 1 character)
-        other: is the wrong length (should be %{count} characters)
-      other_than: "must be other than %{count}"
-      malformed_kana_dictionary: "format error: %{line}(%{no})"
+      accepted: Please accept.
+      auth_error: You do not have permission.
+      blank: Must be filled in.
+      present: Must be left blank.
+      mismatch: Does not match.
+      confirmation: Does not match %{attribute}.
+      empty: Must be filled in.
+      equal_to: Must be set to %{count}.
+      even: Must be an even number.
+      exclusion: Already reserved.
+      greater_than: Must be a value greater than %{count}.
+      greater_than_or_equal_to: Must be a value equal to or greater than %{count}.
+      inclusion: Not in the list.
+      invalid: Invalid value.
+      invalid_file_type: Invalid file format.
+      invalid_filename: Only alphanumeric characters, underscores, and hyphens can be used.
+      invalid_csv: Select a file in CSV format.
+      invalid_zip: Select a file in ZIP format.
+      incorrectly: Enter the correct information.
+      malformed_csv: The CSV format is incorrect. Select a CSV file in the correct format.
+      invalid_new_line_included: Cannot contain line breaks.
+      invalid_email_included: Contains an invalid e-mail address.
+      too_large_mail_size: "The e-mail’s attachment file size is too large. Total: %{size} (Limit: %{limit})"
+      smtp_delivery_error: "The e-mail could not be sent. STMP error message: %{message}"
+      duplicate: A duplicate exists.
+      less_than: Must be less than %{count}.
+      less_than_or_equal_to: Must be less than or equal to %{count}.
+      not_a_number: Must be entered as a number.
+      not_an_integer: Must be entered as an integer.
+      odd: Must be an odd number.
+      record_invalid: Validation failed. %{errors}
+      restrict_dependent_destroy: Cannot be deleted because there is a %{record}.
+      taken: Already exists.
+      too_long: Must be no longer than %{count} characters.
+      too_large: Must be no more than %{count}.
+      too_short: Must be at least %{count} characters.
+      too_long_with_line_title: Must be no longer than %{count} characters. (If there is a LINE post)
+      wrong_length: Must be %{count} characters.
+      other_than: Must be a value other than %{count}.
+      email: Must be a valid e-mail address.
+      domain: Must be a valid domain.
+      image: Must be an image file.
+      invalid_updated: You are trying to save multiple times on the same screen. Since the content being entered on this screen may not have been saved, please save the changes separately and redo the edits.
+      too_large_file: "The size of %{filename} (%{size}) is too large (limit: %{limit})."
+      file_count: "The number of files (%{size}) is too large (limit: %{limit})."
+      malformed_kana_dictionary: "Invalid format: %{line} (%{no})"
+      self_user: You cannot delete a logged-in user.
+      locked: Cannot be edited, deleted, or moved because it is being edited by User “%{user}”.
+      invalid_word: Contains an invalid phrase “%{word}”.
+      file_scan_exception: Virus scan failed.
+      not_exist: Does not exist.
+      not_found_parent_nodes: Parent folder “%{name}” does not exist.
+      root_node_save_error: Root folder could not be created.
+      request_entity_too_large: Data size is too large.
+      contact_system_administrator: Please contact the system administrator.
+      try_again_later: Please try again later.
+      malformed_liquid_template: Incorrect format. %{error}
+      include_not_general_sys_roles: Sys role “%{name}” cannot be set because it contains administrative permissions.
+      not_found_group: Group “%{name}” cannot be found.
+      not_found_sys_role: System permission “%{name}” cannot be found.
+      not_found_gws_role: Groupware permission “%{name}” cannot be found.
+      not_found_webmail_role: Webmail permission “%{name}” cannot be found.
+      not_found_main_group: Group (main) “%{name}” cannot be found.
+      not_found_user_title: Job position code “%{code}” cannot be found.
+      not_found_user_occupation: "Job title code “%{code}” cannot be found."
+      upload_restricted: You cannot upload files in your environment.
+      sanitizer_waiting: Sanitization is being performed. Please wait for a while.
+      url: Must be a valid URL.
+      invalid_latlon: |-
+        Enter the correct coordinates, separating them with commas (,). 
+        Example: 133.6806607,33.8957612
+      invalid_zoom_level: |-
+        Must be within a range between 1 and 21.
+      trusted_url: Must be a trusted URL.
+      other_task_is_running: Cannot be executed because other operations are running. Please wait a while before running.
+      denied_with_upload_policy: File postings are restricted (%{policy}), so you cannot post.
+      unify_before_blank: The integration source has not been entered.
+      unify_after_blank: The integration destination has not been entered.
+      move_before_blank: The source has not been entered.
+      move_after_blank: The destination has not been entered.
+      division_before_blank: The split source has not been entered.
+      division_after_blank: The first split destination has not been entered.
+      add_after_blank: The new destination has not been entered.
+      malformed_duration: Mulformed period.
     template:
-      body: ! 'There were problems with the following fields:'
+      body: Please check the following items.
       header:
-        one: 1 error prohibited this %{model} from being saved
-        other: ! '%{count} errors prohibited this %{model} from being saved'
+        #one: An error has occurred in %{model}.
+        #other: ! '%{count} errors have occurred in %{model}.'
+        one: Please check the registration details.
+        other: Please check the registration details.
   helpers:
     select:
-      prompt: Please select
+      prompt: Please select.
     submit:
-      create: Create %{model}
-      submit: Save %{model}
-      update: Update %{model}
+      create: Register
+      submit: Save
+      update: Update
+      upload: Upload
   number:
     currency:
       format:
         delimiter: ! ','
-        format: ! '%u%n'
-        precision: 2
+        format: ! '%n%u'
+        precision: 0
         separator: .
         significant: false
         strip_insignificant_zeros: false
-        unit: $
+        unit: Yen
     format:
       delimiter: ! ','
       precision: 3
@@ -175,11 +250,9 @@ en:
         significant: true
         strip_insignificant_zeros: true
       storage_units:
-        format: ! '%n %u'
+        format: ! '%n%u'
         units:
-          byte:
-            one: Byte
-            other: Bytes
+          byte: Bytes
           gb: GB
           kb: KB
           mb: MB
@@ -197,12 +270,17 @@ en:
       two_words_connector: ! ' and '
       words_connector: ! ', '
   time:
-    am: am
+    am: AM
     formats:
-      default: ! '%a, %d %b %Y %H:%M:%S %z'
-      long: ! '%B %d, %Y %H:%M'
-      short: ! '%d %b %H:%M'
-    pm: pm
+      default: ! '%1m/%1d/%Y %H:%M'
+      iso: ! '%m-%d-%Y %H:%M'
+      long: ! '%1m-%1d-%Y %H:%M'
+      short: ! '%m/%d/%y %H:%M'
+      picker: ! '%m/%d/%Y %H:%M'
+      hh_mm: ! '%H:%M'
+      h_mm: ! '%1H:%M'
+      csv: ! '%Y/%m/%d %H:%M'
+    pm: PM
   # remove these aliases after 'activemodel' and 'activerecord' namespaces are removed from Rails repository
   activemodel:
     errors:
@@ -210,3 +288,17 @@ en:
   activerecord:
     errors:
       <<: *errors
+
+  # https://github.com/mongodb/mongoid/blob/master/lib/config/locales/en.yml
+  mongoid:
+    errors:
+      messages:
+        taken: Already exists.
+
+  views:
+    pagination:
+      first: "«"
+      previous: Previous page # "&lsaquo; Prev"
+      next: Next page # "Next &rsaquo;"
+      last: "»"
+      truncate: "..."
