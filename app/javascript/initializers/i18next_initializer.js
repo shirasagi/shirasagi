@@ -26,7 +26,7 @@ export default class extends Initializer {
             } ]
           },
           fallbackLng: [ 'en', 'ja' ]
-        }, (err, t) => {
+        }, (err, _t) => {
           if (err) {
             reject(err)
           } else {
