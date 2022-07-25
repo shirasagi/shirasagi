@@ -1,0 +1,201 @@
+en:
+  gws/facility:
+    facility: Facilities
+    category: Category
+    manage_columns: Manage additional inputs
+    prompts:
+      minutes: Minute
+      days: Days in advance
+    navi:
+      item: Facility settings
+      usage: Facility utilization rate
+      state: Facility usage status
+      category: Facility category
+    usage:
+      type: Type
+      usage_month: Month of use
+      usage_day: Date of use
+      hours: Hours
+      times: Number of times
+    state:
+      facility: Facility name
+      start_at: Reservation start date and time
+      end_at: Reservation end date and time
+      section: Division using
+      user: Person reserving
+      purpose: Purpose of use
+    errors:
+      require_approver: Reservation approval requires the registration of an administrative user.
+  gws/facility/item:
+    csv:
+      id: ID
+      name: Facility name
+      order: Order
+      category_id: Category
+      activation_date: Validity period (start)
+      expiration_date: Validity period (end)
+      minutes_limit: Time limit
+      min_minutes_limit: Time limit (minimum)
+      max_minutes_limit: Time limit (maximum)
+      html: Content body
+      type: Content format
+      max_days_limit: Reservable period
+      reservation_start_date: Reservable period (start)
+      reservation_end_date: Reservable period (end)
+      approval_check_state: Reservation approval
+      reservable_group_names: Reservable groups
+      reservable_member_names: Reservable users
+      readable_setting_range: Publication range
+      readable_group_names: Viewing group
+      readable_member_names: Viewing users
+      group_names: Administrative group
+      user_names: Administrative users
+      permission_level: Permission level
+
+      approval_check_state_datas:
+        enabled: Valid
+        disabled: Invalid
+      readable_setting_range_datas:
+        select: Selection range
+        public: Fully public
+        private: Private
+      type_datas:
+        plain: Text format
+        markdown: Markdown format
+
+      columns:
+        id: "Additional input %{n} ID"
+        type: "Additional input %{n} Input items"
+        name: "Additional input %{n} Name"
+        order: "Additional input %{n} Order"
+        required: "Additional input %{n} Required field"
+        tooltips: "Additional input %{n} Tooltips"
+        prefix_label: "Additional input %{n} Pre-label"
+        postfix_label: "Additional input %{n} Post-label"
+        max_length: "Additional input %{n} Maximum length"
+        place_holder: "Additional input %{n} Placeholders"
+        additional_attr: "Additional input %{n} Additional attributes"
+        input_type: "Additional input %{n} Type"
+        min_decimal: "Additional input %{n} Minimum value"
+        max_decimal: "Additional input %{n} Maximum value"
+        initial_decimal: "Additional input %{n} Initial value"
+        scale: "Additional input %{n} Number of decimal places"
+        minus_type: "Additional input %{n} How negative numbers are displayed"
+        select_options: "Additional input %{n} Choices"
+        upload_file_count: "Additional input %{n} Number of file uploads"
+
+        input_type_datas:
+          text: Text
+          email: E-mail address
+          tel: Phone number
+          date: Date only
+          datetime: Date & time
+
+        required_datas:
+          required: Required
+          optional: Optional
+
+        minus_type_datas:
+          normal: "-"
+          triangle: △
+          filled_triangle: ▲
+
+  gws_role:
+    read_other_gws_facility_items: View facilities (all)
+    read_private_gws_facility_items: View facilities (own)
+    edit_other_gws_facility_items: Edit facilities (all)
+    edit_private_gws_facility_items: Edit facilities (own)
+    delete_other_gws_facility_items: Delete facilities (all)
+    delete_private_gws_facility_items: Delete facilities (own)
+    read_other_gws_facility_categories: View categories (all)
+    read_private_gws_facility_categories: View categories (own)
+    edit_other_gws_facility_categories: Edit categories (all)
+    edit_private_gws_facility_categories: Edit categories (own)
+    delete_other_gws_facility_categories: Delete categories (all)
+    delete_private_gws_facility_categories: Delete categories (own)
+    use_private_gws_facility_plans: Use of facility reservations
+
+  modules:
+    gws/facility: Facilities management
+    addons:
+      gws/facility/group_setting: Facilities management
+      gws/facility/reservable_setting: Reservation permission
+      gws/facility/column_setting: Additional input
+
+  mongoid:
+    models:
+      gws/facility/item: Facilities
+      gws/facility/category: Category
+      gws/facility/custom_field: Additional input
+    attributes:
+      gws/facility/item:
+        name: Facility name
+        order: Order
+        category_id: Category
+        activation_date: Validity period (start)
+        expiration_date: Validity period (end)
+        minutes_limit: Time limit
+        min_minutes_limit: Time limit (minimum)
+        max_minutes_limit: Time limit (maximum)
+        max_days_limit: Reservable period
+        reservation_start_date: Reservable period (start)
+        reservation_end_date: Reservable period (end)
+        approval_check_state: Reservation approval
+        html: Facilities overview
+      gws/facility/category:
+        name: Category name
+        order: Order
+      gws/addon/facility/group_setting:
+        facility_hours: Available time
+        facility_min_hour: Available time (start)
+        facility_max_hour: Available time (end)
+      gws/addon/facility/reservable_setting:
+        reservable_group_ids: Reservable groups
+        reservable_groups_hash: Reservable groups (hash)
+        reservable_member_ids: Reservable users
+        reservable_members_hash: Reservable users (hash)
+      gws/addon/facility/column_setting:
+        columns: Additional input
+      gws/facility/custom_field:
+        name: Name
+        order: Order
+
+  tooltip:
+    gws/facility/item:
+      name:
+        - Enter a facility name.
+      order:
+        - Enter the order.
+        - "The lower the number, the higher the position."
+      category_id:
+        - Select a category.
+      activation_date:
+        - Enter the validity period (start).
+        - "If there is no validity period, leave it blank."
+      expiration_date:
+        - Enter the validity period (end).
+        - "If there is no validity period, leave it blank."
+      minutes_limit:
+        - Enter the maximum amount of time that the facility can be used continuously.
+      max_days_limit:
+        - Enter how many days in advance the facility can be reserved.
+      reservation_start_date:
+        - Enter the reservable period (start).
+        - "If no reservable period is specified, leave it blank."
+      reservation_end_date:
+        - Enter the reservable period (end).
+        - "If no reservable period is specified, leave it blank."
+      approval_check_state:
+        - The reservation requires administrative user approval.
+    gws/facility/category:
+      name:
+        - Enter a category name.
+      order:
+        - Enter the order.
+        - "The lower the number, the higher the position."
+    gws/facility/custom_field:
+      name:
+        - Enter a name for the item.
+      order:
+        - Specify the question order.
+        - "The lower the number, the higher the position."

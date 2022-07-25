@@ -1,0 +1,28 @@
+en:
+  gws/personal_address:
+    navi:
+      group: Group settings
+
+  modules:
+    gws/personal_address: Personal address book
+
+  mongoid:
+    models:
+      gws/personal_address/address: Address
+      gws/personal_address/group: Group
+    attributes:
+      gws/personal_address/address:
+        address_group_id: Group name
+      gws/personal_address/group:
+        name: Group name
+        order: Order
+
+  tooltip:
+    gws/personal_address/address:
+      address_group_id:
+        - Enter the group name.
+    gws/personal_address/group:
+      name:
+        - Enter the group name.
+      order:
+        - Enter the order.

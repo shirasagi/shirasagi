@@ -1,0 +1,312 @@
+en:
+  modules:
+    sys: System
+    addons:
+      sys/role: Role
+      sys/saml_setting: SAML settings
+      sys/open_id_connect_setting: OpenID Connect settings
+      sys/environment_setting: Environment variable settings
+      sys/body: Notification body
+
+  sys:
+    conf: System settings
+    notice: System announcements
+    login:
+      ad: Advertisement
+    ad: Login screen advertisement
+    server_name: Server name
+    server_addr: Server IP address
+    remote_addr: Connection source IP address
+    user_agent: User agent
+    site: Site
+    user: User
+    group: Group
+    diag: Diagnosis
+    db_tool: DB tools
+    role: Permissions/Roles
+    menu_settings: Menu settings
+    password_policy: Password policy
+    max_file_size: Maximum file size
+    image_resize: Resize image
+    site_copy: Duplicate site
+    site_copy/description: "* Folders, fixed pages, layouts, and parts are duplicated as required."
+    site_copy/started_job: Site duplication started.
+    site_copy/task_status: Execution status
+    roles:
+      admin: Administrator
+      user: General user
+    auth: Authentication
+    auth/saml: SAML
+    auth/open_id_connect: OpenID Connect
+    auth/environment: Environment variables
+    options:
+      auth_state:
+        enabled: Enabled
+        disabled: Disabled
+      copy_contents:
+        pages: Articles and other pages
+        files: Shared files
+        editor_templates: Templates
+        dictionaries: Kana dictionary
+      force_authn_state:
+        enabled: Require
+        disabled: Do not require
+    links:
+      new_from_metadata: Import metadata
+      new_from_discovery: Create from Discovery
+      back_to_contents: Back to My Page
+    apis:
+      sites:
+        index: Select site
+        search: Search site
+        select: Set site
+      postal_codes:
+        index: Select postal code
+      prefecture_codes:
+        index: Select city code
+    postal_code: Postal code
+    postal_code_normalize_city: If it is not listed below
+    import_official_japan_postal_service_csv: Import Japan Post CSV
+    prefecture_code: City code
+    password_effective_period: Password validity period
+    password_constraint: Password constraints
+    password_change_constraint: Password change constraints
+    password_constraint_detail: Character types
+    password_login: Login
+    prompts:
+      char: characters
+      count: times
+    notices:
+      saml_metadata_uri_md: By accessing this URL, the metadata on the Shirasagi side can be downloaded. Please import the downloaded metadata to the authentication infrastructure side.
+      saml_init_uri_md:
+        - "When you access “init uri”, single sign-on process by SAML starts on the Shirasagi side. Set init uri for business terminals and other systems."
+        - "By attaching the `?ref=` parameter, you can set the screen to be displayed after logging in. For example, you can display groupware after logging in by attaching `?ref=/.g1`."
+      open_id_init_uri_md:
+        - "When you access “init uri”, single sign-on process by OpenID Connect starts on the Shirasagi side. Set init uri for business terminals and other systems."
+        - "By attaching the `?ref=` parameter, you can set the screen to be displayed after logging in. For example, you can display groupware after logging in by attaching `?ref=/.g1`."
+      open_id_redirect_uri_md: Set “redirect uri” to the callback URL on the authentication infrastructure side.
+
+  sys_role:
+    edit_sys_sites: Manage site
+    edit_sys_notices: System notification management
+    edit_sys_groups: Manage groups
+    edit_sys_users: Manage users
+    edit_sys_roles: Manage permissions/roles
+    edit_sys_settings: Manage system settings
+    edit_sys_mail_logs: Manage mail logs
+    use_cms: Use of CMS
+    use_gws: Use of GWS
+    use_webmail: Use of e-mail
+
+  mongoid:
+    models:
+      sys/setting: System settings
+      sys/site: Site
+      sys/user: User
+      sys/role: Role
+      sys/site_copy_task: Site duplication task
+      sys/notice: System announcements
+      sys/postal_code: Postal code
+      sys/mail_log: Mail log
+      sys/prefecture_code: City code
+    errors:
+      models:
+        sys/setting:
+          password_min_length_short: is set to a number of characters that is less than the sum of the capital letters and symbols. Please set it with a length of %{count} or more.
+    attributes:
+      sys/setting:
+        menu_file_state: File
+        menu_connection_state: Connection information
+      sys/notice:
+        name: Announcement headlines
+        notice_severity: Classification
+        notice_target: Display location
+      sys/addon/body:
+        html: Body
+        markdown: Text (markdown)
+      sys/addon/role:
+        sys_role_ids: Role
+      sys/model/auth:
+        name: Name
+        filename: File name
+        text: Explanation
+        order: Sort by
+        state: Status
+      sys/addon/saml_setting:
+        entity_id: Entity ID
+        name_id_format: Name ID Format
+        sso_url: SSO Url
+        slo_url: SLO Url
+        x509_cert: X509 Public Key Certificate
+        identifier: Identifier
+        metadata: Metadata
+        force_authn_state: Reauthentication
+      sys/addon/open_id_connect_setting:
+        client_id: Client ID
+        client_secret: Client Secret
+        issuer: Issuer
+        auth_url: Auth URL
+        token_url: Token URL
+        response_type: Response Type
+        scopes: Scope
+        max_age: Max Age
+        claims: Claim
+        response_mode: Response Mode
+        jwks_uri: JWKS Uri
+        in_discovery_file: Discovery File
+      sys/addon/environment_setting:
+        keys: Key
+      sys/site_copy_task:
+        target_host_name: Site name
+        target_host_host: Host name
+        target_host_domains: Domain
+        target_host_subdir: Subdirectory
+        target_host_parent_id: Parent site
+        target_host_domains_with_subdir: Domain with subdirectory
+        source_site_id: Sites to duplicate
+        copy_contents: Items to duplicate
+      sys/mail_log:
+        subject: Subject
+        from: Sender
+        to: Address
+        bcc: Bcc
+        cc: Cc
+        mail: Content
+        error: Error
+      sys/password_policy:
+        password_limit_use: Use of effective days
+        password_limit_days: Effective days
+        password_warning_use: Use of expired warnings
+        password_warning_days: Expired warnings
+        password_min_use: Use of minimum number of characters
+        password_min_length: Minimum number of characters
+        password_min_upcase_use: Use of minimum number of capital letters
+        password_min_upcase_length: Capital letters
+        password_min_downcase_use: Use of minimum number of lowercase letters
+        password_min_downcase_length: Lowercase letters
+        password_min_digit_use: Use of minimum number of numbers
+        password_min_digit_length: Numbers
+        password_min_symbol_use: Use of minimum number of symbols
+        password_min_symbol_length: Symbols
+        password_prohibited_char_use: Use of prohibited characters
+        password_prohibited_char: Prohibited characters
+        password_min_change_char_use: Use of number of differences
+        password_min_change_char_count: No. of differences
+        password_max_failure_use: Use of maximum number of failures
+        password_max_failure_count: Maximum number of failures
+      sys/ad:
+        time: Image switch time
+        width: Width
+
+  errors:
+    messages:
+      not_found_postal_code: Postal code not found.
+
+  tooltip:
+    sys/addon/role:
+      sys_role_ids:
+        - Specifies the role/permissions of the user.
+
+    sys/model/auth:
+      name:
+        - Set the name of the authentication.
+      text:
+        - You can include a description of the authentication.
+
+    sys/addon/environment_setting:
+      keys:
+        - Set the key name of the environment variables that set user information authenticated by the HTTP server.
+
+    sys/site_copy_task:
+      target_host_name:
+        - Enter the name of the site that you want to duplicate.
+      target_host_host:
+        - Enter the host name of the site that you want to duplicate.
+      target_host_domains:
+        - Enter the domain of the site that you want to duplicate.
+      target_host_subdir:
+        - Enter the subdirectory of the site that you want to duplicate.
+      target_host_parent_id:
+        - Select the parent site of the site that you want to duplicate.
+      source_site_id:
+        - Select the site from which you want to duplicate.
+      copy_contents:
+        - Select the items to duplicate from the site from which you want to duplicate.
+    sys/role:
+      name:
+        - Enter a name for the role.
+      permissions:
+        - Set the permissions you have.
+    sys/auth/saml:
+      name:
+        - Set the name of the authentication.
+      filename:
+        - The file name is used for the URL.
+        - Enter using half-width alphanumeric characters.
+        - Adding extensions such as .html is unnecessary.
+      text:
+        - You can include a description of the authentication.
+      order:
+        - Used when “Specified order” is specified as the folder sorting order.
+        - The lower the number, the higher the position of the link on the list page.
+      state:
+        -  Set whether to enable this system setting.
+
+    sys/password_policy:
+      password_limit_days:
+        - Set the number of effective days for the password.
+        - Your password must be changed within the period specified here.
+      password_warning_days:
+        - Set the number of days that warnings are displayed before the password expires.
+        - For example, to display a warning 3 days before expiration, set the value to “3”.
+      password_min_length:
+        - Set the minimum number of characters for the password.
+        - The password must be equal to or longer than the number of characters specified here.
+        - For example, if it is set to “8”, the password must be at least 8 characters long.
+      password_min_upcase_length:
+        - Set the minimum number of English-language capital letters (A-Z).
+        - For example, if it is set to “2”, the password must contain at least two capital letters.
+      password_min_downcase_length:
+        - Set the minimum number of English-language lowercase letters (a-z).
+        - For example, if it is set to “2”, the password must contain at least two lowercase letters.
+      password_min_digit_length:
+        - Set the minimum number of numbers (0-9).
+        - For example, if it is set to “2”, the password must contain at least two numbers.
+      password_min_symbol_length:
+        - Set the minimum number of symbols.
+        - For example, if it is set to “2”, the password must contain at least two symbols.
+      password_prohibited_char:
+        - Set the characters that cannot be used in the password.
+        - For example, if it is set to “xyz”, the characters x, y, and z cannot be used in the password.
+      password_min_change_char_count:
+        - Set the number of characters that must be different from the previous password when changing the password.
+      password_max_failure_count:
+        - Set the maximum number of login failures.
+        - If the number of login failures exceeds this number, the user will be suspended.
+
+    sys/addon/saml_setting:
+      force_authn_state:
+        - Select whether to require reauthentication.
+        - If “Require” is selected, IdP always authenticates the user.
+        - If “Do not require” is selected, IdP responds with identity information from the session if it exists, and authenticates the user if a session does not exist.
+
+    sys/notice:
+      name:
+        - Enter the notification heading.
+      notice_severity:
+        - Check the box if it is an “Important notification”.
+        - If “Important notification” is checked, it will appear at the top of the content in a color that stands out.
+      notice_target:
+        - Select where to post notifications. Multiple locations can be selected.
+        - If “Login Screen” is selected, notifications will also be displayed on the login screen.
+        - If “CMS management screen” is selected, notifications will be displayed on the CMS management screen.
+        - If “Groupware” is selected, notifications will be displayed when using groupware.
+        - If “Webmail” is selected, notifications will be displayed when using webmail.
+        - If “System management screen” is selected, notifications will be displayed on the system management screen.
+
+  job:
+    models:
+      sys/site_copy_job: Duplicate site
+      sys/postal_code/import_job: Import postal code
+      sys/postal_code/official_csv_import_job: Import Japan Post CSV
+      sys/prefecture_code/import_job: Import city code

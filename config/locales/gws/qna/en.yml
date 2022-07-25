@@ -1,0 +1,183 @@
+en:
+  gws/qna:
+    user: User
+    #descendants_num: No. of comments
+    #descendants_updated: Time and date updated
+    no_authority: You do not have permission.
+    topic:
+      comment: Comments
+      new: Create new
+      edit: Edit
+      submit: Post
+      update: Update
+      delete: Delete
+      browsing_state: Notification destination
+      browsed: View
+      list: To topic list
+      confirm: Do you want to delete this?
+      notice:
+        create: The topic has been created.
+        update: The topic has been updated.
+        delete: The topic has been deleted.
+    comment:
+      comment: Leave a comment
+      created: Date posted
+      updated: Last updated
+      submit: Post
+      update: Update
+      edit: Edit
+      delete: Delete
+      confirm: Do you want to delete this?
+      notice:
+        create: You have posted a comment.
+        update: The comment has been updated.
+        delete: The comment has been deleted.
+    options:
+      mode:
+        thread: Thread
+        tree: Tree
+      permit_comment:
+        allow: Allow
+        deny: Do not allow
+      browsed_state:
+        read: Read
+        unread: Unread
+      severity:
+        normal: Normal
+        important: Important
+      question_state:
+        open: Waiting for answer
+        resolved: Resolved
+    links:
+      back_to_thread: Go back
+      comment: Reply
+      categories: Category
+      resolve: Mark as resolved
+      unresolve: Revert to unresolved
+    confirm:
+      resolve: Are you sure you want to mark it as resolved?
+      unresolve: Are you sure you want to revert it to unresolved?
+    errors:
+      denied_comment: You are not allowed to post comments.
+
+  modules:
+    gws/qna: Q&A
+    addons:
+      gws/qna/group_setting: Q&A
+      gws/qna/category: Category
+
+  gws_role:
+    use_gws_qna: Use of Q&A
+    read_other_gws_qna_posts: View posts (all)
+    read_private_gws_qna_posts: View posts (own)
+    edit_other_gws_qna_posts: Edit posts (all)
+    edit_private_gws_qna_posts: Edit posts (own)
+    delete_other_gws_qna_posts: Delete posts (all)
+    delete_private_gws_qna_posts: Delete posts (own)
+    trash_other_gws_qna_posts: Manage post trash (all)
+    trash_private_gws_qna_posts: Manage post trash (own)
+    read_other_gws_qna_categories: View categories (all)
+    read_private_gws_qna_categories: View categories (own)
+    edit_other_gws_qna_categories: Edit categories (all)
+    edit_private_gws_qna_categories: Edit categories (own)
+    delete_other_gws_qna_categories: Delete categories (all)
+    delete_private_gws_qna_categories: Delete categories (own)
+
+  gws_notification:
+    gws/qna/topic:
+      subject: "[Q&A] “%{name}” has arrived."
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+    gws/qna/post:
+      subject: "There is a new post in [Q&A] “%{name}”."
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+    gws/qna/topic/destroy:
+      subject: "[Q&A] “%{name}” has been deleted."
+      text: ""
+
+    gws/qna/post/destroy:
+      subject: "A post for [Q&A] “%{name} has been deleted."
+      text: "%{text}"
+
+  mongoid:
+    models:
+      gws/qna/topic: Topic
+      gws/qna/post: Post
+      gws/qna/category: Category
+    errors:
+      models:
+        gws/qna/category:
+          too_deep: "The hierarchy is too deep and should be below %{max}."
+          not_found_parent: Parent category does not exist.
+          found_children: A child category exists.
+        gws/qna/postable:
+          file_size_exceeds_post_limit: "The size of the attachment (%{size}) has exceeded the maximum size of the post (%{limit})."
+          file_size_exceeds_topic_limit: "The total size of the attachments (%{size}) has exceeded the maximum size of the topic (%{limit})."
+    attributes:
+      gws/qna/postable:
+        name: Title
+        created: Date posted
+        updated: Last updated
+        mode: Display format
+        permit_comment: Comments
+        severity: Importance
+        topic_id: Topic
+        parent_id: Parent post
+        browsed_users_hash: Read users
+        descendants_updated: Date and time updated in topic
+        descendants_files_count: Number of attachments in the topic
+        descendants_total_file_size: Attachment capacity within the topic
+      gws/qna/topic:
+        name: Question title
+        question_state: Response status
+      gws/qna/post:
+        name: Answer title
+      gws/addon/qna/group_setting:
+        qna_new_days: Display period for new items
+        qna_file_size: Maximum attachment size
+        qna_file_size_per_topic: Maximum attachment size/topic unit
+        qna_file_size_per_post: Maximum attachment size/post unit
+        qna_browsed_delay: Seconds until marked as read
+        qna_files_break: File display order
+      gws/qna/category:
+        name: Category name
+      gws/addon/qna/category:
+        category_ids: Category
+
+  tooltip:
+    gws/qna/postable:
+      name:
+        - Enter a title.
+      mode:
+        - Select the display format.
+      permit_comment:
+        - Select whether to allow comments.
+      severity:
+        - Select the importance level.
+    gws/addon/qna/group_setting:
+      qna_new_days:
+        - Enter the display period for new items.
+      qna_file_size_per_topic:
+        - Enter the maximum attachment size per topic.
+      qna_file_size_per_post:
+        - Enter the maximum attachment size per post.
+      qna_browsed_delay:
+        - Enter the number of seconds until the Q&A is marked as read.
+      qna_files_break:
+        - Select the display order of attachments.
+    gws/qna/category:
+      name:
+        - Enter a category name.
+
+  job:
+    models:
+      gws/qna/trash_purge_job: Empty Q&A/post trash

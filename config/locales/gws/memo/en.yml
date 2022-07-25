@@ -1,0 +1,422 @@
+en:
+  gws/memo:
+    setting: Message settings
+    no_subjects: 'No title'
+    no_senders: 'No name'
+    unseen: Unread
+    options:
+      priority:
+        '1': Highest
+        '2': High
+        '3': Standard
+        '4': Low
+        '5': Lowest
+      state:
+        closed: Draft
+        public: Sent
+      export_filter:
+        all: All messages
+        selected: Selected messages
+      backup_filter:
+        all: All messages
+        selected: Selected messages
+    links:
+      show_messages: See messages
+      publish: Send
+    buttons:
+      seen: Sender list
+    confirm:
+      publish: Are you sure you want to send it?
+    notice:
+      capacity_over_members: Message capacity has been exceeded for the following recipients. The following recipients will not receive the message.
+  gws/memo/message:
+    folder: Folder
+    child_folder: Child folder
+    folder_name: Folder name
+    message: Message
+    format: Format
+    select_check: messages selected
+    commit_params_check: Send
+    export_messages: Export
+    backup_messages: Backup
+    import_messages: Import
+    restore_messages: Restore
+    restore_messages: Restore
+    unsend: Delete the sent message (cancel sending)
+    export_filter: Target
+    backup_filter: Target
+    links:
+      move: Move
+      etc: Other
+      set_seen: Mark as read
+      unset_seen: Mark as unread
+      set_star: Add star
+      unset_star: Remove star
+      trash: Move to trash
+      reply: Reply
+      reply_all: Reply all
+      forward: Forward
+      ref: Edit as new message
+      deleted: Deleted
+      sort: Sort by
+      print: Print
+      unseens: Unread only
+      seens: Include read
+    confirm:
+      trash_all: Do you want to move it to the trash?
+      set_seen_all: Do you want to mark it as read?
+      unset_seen_all: Do you want to mark it as unread?
+      set_star_all: Do you want to add a star?
+      unset_star_all: Do you want to remove the star?
+      move: Do you want to move it?
+      send: Are you sure you want to send it?
+      move_drop:
+        head: Move the selected messages from
+        to: to
+        tail: "?"
+    notice:
+      send_mdn: You have sent a read confirmation message.
+      ignore_mdn: You have ignored a read confirmation.
+      start_export: Export started.
+      start_import: Imported.
+      start_backup: Backup started.
+      start_restore: Restored.
+      no_recents: No new messages
+    export:
+      subject: '[Message] Export complete.'
+      notify_message: "The download is ready. Please download from the following URL. %{link}"
+      start_message: "The export process has started. You will be notified of the download link when the export process is complete."
+    backup:
+      subject: '[Message] Backup complete.'
+      notify_message: "The download is ready. Please download from the following URL. %{link}"
+      start_message: "The backup process has started. You will be notified of the download link when the backup process is complete."
+    backup_failed:
+      subject: '[Message] Backup failed.'
+      notify_message: "Backup failed. The cause of the failure can be seen using the task manager."
+      empty_messages: The messages to be backed up could not be found.
+    import:
+      caution: "*User information such as the sender, recipients, etc. will be restored only if the ID and name match the exported data."
+    restore:
+      caution: "*User information such as the sender, recipients, etc. will be restored only if the ID and name match the backed up data."
+    mdn:
+      subject: '[Read confirmations] %{subject}'
+      confirmed: "The message has been opened. %{name} %{date}"
+    errors:
+      blank_message: Select a message.
+  gws/memo/folder:
+    inbox: Inbox
+    inbox_trash: Trash
+    inbox_draft: Draft
+    inbox_sent: Sent tray
+  gws/memo/forward:
+    subject: Sender
+  gws/memo/filter:
+    options:
+      action:
+        move: Move
+        trash: Move to trash
+    errors:
+      blank_conditions: Please enter the conditions.
+      blank_apply_mailbox: Select a folder to apply.
+  gws/memo/group_setting:
+    options:
+      reminder:
+        - Do not show
+        - Show only on the day it was sent
+        - Show only for 2 days after sending
+        - Show only for 3 days after sending
+        - Show only for 4 days after sending
+        - Show only for 5 days after sending
+  gws/memo/notice_user_settings:
+    options:
+      email:
+        notify: Forward
+        silence: Do not forward
+    send_mail_setting: Forward e-mail
+    send_mail_address: Forwarding e-mail address
+
+  modules:
+    gws/memo: Message
+    gws/memo/message: Message
+    gws/memo/notice_mail: E-mail notification
+    addons:
+      gws/memo/group_setting: Message
+      gws/memo/body: Content
+      gws/memo/member: Address
+      gws/memo/priority: Importance
+      gws/memo/notify_setting: Notification
+      gws/memo/message_sort: Message order
+  gws_role:
+    edit_private_gws_memo_messages: Use of messages
+    read_other_gws_memo_lists: View lists (all)
+    read_private_gws_memo_lists: View lists (own)
+    edit_other_gws_memo_lists: Edit lists (all)
+    edit_private_gws_memo_lists: Edit lists (own)
+    delete_other_gws_memo_lists: Delete lists (all)
+    delete_private_gws_memo_lists: Delete lists (own)
+    read_other_gws_memo_list_messages: View list messages (all)
+    read_private_gws_memo_list_messages: View list messages (own)
+    edit_other_gws_memo_list_messages: Edit list messages (all)
+    edit_private_gws_memo_list_messages: Edit list messages (own)
+    delete_other_gws_memo_list_messages: Delete list messages (all)
+    delete_private_gws_memo_list_messages: Delete list messages (own)
+    send_other_gws_memo_list_messages: Send list messages (all)
+    send_private_gws_memo_list_messages: Send list messages (own)
+    read_other_gws_memo_categories: View categories (all)
+    read_private_gws_memo_categories: View categories (own)
+    edit_other_gws_memo_categories: Edit categories (all)
+    edit_private_gws_memo_categories: Edit categories (own)
+    delete_other_gws_memo_categories: Delete categories (all)
+    delete_private_gws_memo_categories: Delete categories (own)
+    read_other_gws_memo_templates: View phone notes (all)
+    read_private_gws_memo_templates: View phone notes (own)
+    edit_other_gws_memo_templates: Edit phone notes (all)
+    edit_private_gws_memo_templates: Edit phone notes (own)
+    delete_other_gws_memo_templates: Delete phone notes (all)
+    delete_private_gws_memo_templates: Delete phone notes (own)
+    restore_gws_memo_messages: Message recovery
+    backup_gws_memo_messages: Message backup
+  mongoid:
+    models:
+      gws/memo/message: Message
+      gws/memo/folder: Folder
+      gws/memo/filter: Filter
+      gws/memo/signature: Signature
+      gws/memo/template: Phone memos
+      gws/memo/forward: Forward e-mail
+      gws/memo/group_setting: Message settings
+      gws/memo/list: List
+      gws/memo/category: Category
+    errors:
+      models:
+        gws/memo/message:
+          file_size_limit: "The size of the attachment (%{size}) has exceeded the maximum size (%{limit})."
+          input_message: Please enter the body text.
+          self_quota_over: "Message capacity has exceeded the limit and %{action} could not be performed."
+          member_quota_over: "Could not send message to %{member} because their message capacity has been exceeded."
+        gws/memo/folder:
+          included_memo: You cannot delete a folder that contains messages.
+          used_folder: You cannot delete a folder that is using a filter.
+          not_found_parent: The parent folder does not exist.
+          found_children: A child folder exists.
+          found_messages: "Mail exists in %{name}."
+          attributes:
+            in_basename:
+              invalid_chars_as_name: "The following characters cannot be used: \\ / : * ? \" < > |"
+        gws/memo/category:
+          too_deep: "The hierarchy is too deep and should be below %{max}."
+          not_found_parent: Parent category does not exist.
+          found_children: A child category exists.
+    attributes:
+      gws/model/memo/message:
+        type: Name of type
+        name: Subject
+        subject: Subject
+        body: Body
+        text: Body text
+        html: Body HTML
+        seen: Date and time read
+        star: Flag
+        flags: Flag
+        unseen: Unread
+        flagged: Starred
+        filtered: Apply filters
+        deleted: Deletion status
+        format: Format
+        path: Save path
+        size: Size
+        member_ids: Participants
+        from: Sender
+        from_member_name: Sender name
+        to: Address
+        to_member_name: Recipient name
+        to_member_ids: Address
+        to_webmail_address_group_ids: Address (personal address book)
+        to_shared_address_group_ids: Address (shared address book)
+        cc_member_ids: CC
+        cc_webmail_address_group_ids: CC (personal address book)
+        cc_shared_address_group_ids: CC (shared address book)
+        bcc_member_ids: BCC
+        bcc_webmail_address_group_ids: BCC (personal address book)
+        bcc_shared_address_group_ids: BCC (shared address book)
+        member_custom_group_ids: Custom group members
+        send_date: Sent date and time
+        display_send_date: Sent date and time
+        request_mdn_ids: Read confirmation
+      gws/memo/folder:
+        name: Folder name
+        path: Path
+        in_parent: Parent folder
+        order: Order
+      gws/memo/filter:
+        name: Filter name
+        from_member_ids: Condition/From
+        to_member_ids: Condition/To
+        subject: Condition/Subject
+        body: Condition/Body
+        action: Action
+        folder: Folder
+        folder_id: Folder
+        state: Status
+        order: Order
+      gws/memo/signature:
+        name: Name
+        text: Body
+        default: Default signature
+      gws/memo/template:
+        name: Name
+        text: Body
+        order: Order
+      gws/memo/forward:
+        emails: E-mail address
+        default: E-mail forwarding settings
+      gws/addon/memo/group_setting:
+        memo_quota: Message capacity limit
+        memo_filesize_limit: Attachment size limit
+        memo_reminder: Reminder display settings
+      gws/addon/memo/priority:
+        priority: Importance
+      gws/memo/list:
+        name: Title
+        sender_name: Sender name
+        signature: Signature
+        category_ids: Category
+      gws/addon/memo/notify_setting:
+        notify_state: Notification settings
+      gws/addon/memo/message_sort:
+        gws_memo_message_sort: Message order
+      gws/memo/notice_user_setting:
+        notice_schedule_user_setting: Schedule
+        notice_todo_user_setting: ToDo
+        notice_presence_user_setting: Presence status
+        notice_workflow_user_setting: Workflows
+        notice_circular_user_setting: Circular boards
+        notice_monitor_user_setting: Inquiries and responses
+        notice_survey_user_setting: Questionnaires
+        notice_board_user_setting: Bulletin board
+        notice_faq_user_setting: FAQ
+        notice_qna_user_setting: Q&A
+        notice_discussion_user_setting: Electronic conference rooms
+        notice_report_user_setting: Reports
+        notice_announcement_user_setting: Announcements
+        notice_schedule_email_user_setting: Schedule notification e-mail forwarding
+        notice_todo_email_user_setting: To-do notification e-mail forwarding
+        notice_presence_email_user_setting: Presence status notification e-mail forwarding
+        notice_workflow_email_user_setting: Workflow notification e-mail forwarding
+        notice_circular_email_user_setting: Circular board notification e-mail forwarding
+        notice_monitor_email_user_setting: Inquiry and response notification e-mail forwarding
+        notice_survey_email_user_setting: Questionnaire notification e-mail forwarding
+        notice_board_email_user_setting: Bulletin board notification e-mail forwarding
+        notice_faq_email_user_setting: FAQ notification e-mail forwarding
+        notice_qna_email_user_setting: Q&A notification e-mail forwarding
+        notice_discussion_email_user_setting: Electronic meeting room notification e-mail forwarding
+        notice_report_email_user_setting: Report notification e-mail forwarding
+        notice_announcement_email_user_setting: Information notification e-mail forwarding
+        send_notice_mail_addresses: Forwarding e-mail address
+
+  activemodel:
+    models:
+      gws/memo/message_importer: Import
+      gws/memo/message_restorer: Restore
+    attributes:
+      gws/memo/message_importer:
+        in_file: File
+      gws/memo/message_restorer:
+        in_file: File
+  tooltip:
+    gws/memo/message:
+      member_ids:
+        - Select the address for the message.
+    gws/memo/folder:
+      name: Enter a name for the folder.
+      order:
+        - Enter the order of the folder as a number.
+        - The folders appear in order of the lowest number.
+      in_parent:
+        - Select the parent folder.
+    gws/memo/filter:
+      name:
+        - Enter a name for the filter.
+        - The filter you created evaluates each condition only once when you receive the message.
+      from_member_ids:
+        - Select the sender to use as a filter condition.
+      to_member_ids:
+        - Select the destination address (including CCs) to use as a filter condition.
+      subject:
+        - Enter the subject to use as a filter condition.
+        - The subject line is evaluated as a partial match.
+      body:
+        - Enter the body text to use as a filter condition.
+        - The subject line is evaluated as a partial match.
+      action:
+        - Select what to do with messages that meet the conditions.
+        - "Move: Move messages to a specified folder"
+        - "Move to trash: Move messages to trash"
+      folder:
+        - Specify the destination folder that the send action will use.
+      state:
+        - Select the filter status.
+        - "Enable: Activates this filter"
+        - "Disable: Disables this filter"
+      order:
+        - Enter the filter rating order as a number.
+        - Filters are evaluated in order from the lowest number.
+    gws/memo/signature:
+      name:
+        - Enter the name that appears in the signature list.
+      text:
+        - Enter the signature text.
+      default:
+        - Select the signature to be automatically filled in when you create a new message.
+        - "Enable: Enters this signature automatically"
+        - "Disable: Does not enter this signature automatically"
+    gws/memo/template:
+      name:
+        - Enter the name that appears in the phone memo list.
+      text:
+        - Enter the text for the phone memo.
+      order:
+        - Enter the order.
+        - "The lower the number, the higher the position."
+    gws/memo/forward:
+      emails:
+        - Enter the message forwarding e-mail address.
+        - You can forward e-mail to multiple addresses by separating the each address with a comma.
+      default:
+        - Set message forwarding.
+        - "Enable: Forwards messages to a registered e-mail address"
+        - "Disable: Does not forward"
+    gws/addon/memo/group_setting:
+      memo_quota:
+        - Enter the maximum total capacity of the message.
+        - Users who exceed the total capacity cannot send or receive messages.
+        - "This applies to messages in the Incoming, Sent and Draft folders."
+        - "If unspecified, the capacity is not restricted."
+        - The initial value is unconfigured.
+      memo_filesize_limit:
+        - Enter the maximum total capacity for files attached to the message.
+        - "If unspecified, the capacity is not restricted."
+        - The initial value is unconfigured.
+      memo_reminder:
+        - Select the number of days that a reminder appears for each recipient be shown after a message is sent.
+        - Reminders are not registered at the time a message is drafted.
+        - Reminders are registered at the time a message is sent.
+    gws/addon/memo/priority:
+      priority:
+        - Select the importance of the message.
+    gws/memo/list:
+      name:
+        - Enter a title.
+      sender_name:
+        - "Enter the sender. If omitted, the sender’s name is used as the title."
+      signature:
+        - Enter a signature.
+      category_ids:
+        - Select a category.
+    gws/addon/memo/notify_setting:
+      notify_state:
+        - Set whether participants are notified.
+
+  job:
+    models:
+      gws/memo/message_export_job: Message/Export

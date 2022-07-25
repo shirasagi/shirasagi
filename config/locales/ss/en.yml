@@ -1,0 +1,1259 @@
+en:
+  ss:
+    backup: Backup
+    basic_info: Basic information
+    config: Settings
+    management: Management
+    download: Download
+    file: File
+    function: Function
+    page: Page
+    node: Folder
+    group_users: Group users
+    image: Image
+    import: Import
+    log: Log
+    export: Export
+    export_log: Export log
+    login: Login
+    logout: Logout
+    module: Module
+    operation: Operation
+    regexp: Regular expression
+    resize_image: Resize image
+    role: Role
+    role_setting: Role batch settings
+    required: Required field
+    required_field: "*Required field"
+    restore: Restore
+    search_operation: Operation target
+    search_operator: Operator
+    search_result: Search results
+    url: URL
+    login_url: Login URL
+    all: All
+    keyword: Keyword
+    quota: Size
+    encoding: Character encoding
+    text_zoom: Character size
+    default_here_label: "Click here for details⇒"
+    dash: ー
+    wave_dash: ～
+    color: Display color
+    bg_color: Background color
+    contrast_ratio: Contrast ratio
+    search_on: Search in %{name}
+    replace: Replace
+    before_replace: Before replacement
+    after_replace: After replacement
+    broken_link: Broken link
+    auto_reload: Automatic updates
+    quality: Quality
+    resize_image_auto: Resize image (automatic)
+
+    views:
+      login/login:
+        id: User ID or e-mail address
+        password: Password
+        organization_uid: Staff number or e-mail address
+      index:
+        updated: "Updated: %{updated}"
+        released: "Published: %{released}"
+        approved: "Approved: %{approved}"
+    navi:
+      readable: Browse list
+      editable: Management list
+      unseen: Unread list
+      seen: Read list
+      trash: Trash
+    links:
+      add: Add
+      cms: Site management
+      gws: Group
+      new: Create new
+      post: Post
+      new_post: New post
+      show: See details
+      edit: Edit
+      move: Move
+      copy: Duplicate
+      command: Command
+      input: Enter
+      delete: Delete
+      import: Import
+      reply: Reply
+      back: Go back
+      back_to_show: Back to details
+      back_to_index: Back to list
+      back_to_administration: Back to management screen
+      parent_directory: Go up one level
+      preview: Preview
+      pc_preview: PC preview
+      mobile_preview: Mobile preview
+      pc: PC
+      mobile: Mobile phone
+      view_site: See public screen
+      open: Open
+      change: Change
+      more: See more
+      more_all: See all
+      select: Select
+      delete_all: Delete all
+      markdown_help: Markdown help
+      split: Split
+      integrate: Integrate
+      download: Download
+      download_template: Download template
+      download_sample_csv: Download sample CSV
+      export: Export
+      resize: Resize
+      set_tag: Tag settings
+      reset_tags: Untag
+      upload: Upload
+      decode: Decode
+      print: Print
+      initialize: Initialize
+      lock_user: Stop using
+      unlock_user: Cancel suspension of use
+      trash: Trash
+      restore: Undo
+      send_email: Create an e-mail
+      send_message: Create a message
+      copy_email_address: Copy e-mail address
+      closed_save: Make private
+      edit_password: Change password
+    buttons:
+      save: Save
+      saving: Saving
+      new: Create new
+      draft_save: Save draft
+      closed_save: Save as private
+      publish: Publish
+      publish_save: Publish and save
+      withdraw: Withdraw and save
+      ignore_alert: Ignore warnings
+      cancel: Cancel
+      edit: Edit
+      delete: Delete
+      deleting: Deleting
+      search: Search
+      replace: Replace
+      replace_all: Replace all
+      reset: Reset
+      clear: Clear
+      send: Send
+      sending: Sending
+      run: Run
+      running: Running
+      stop: Stop
+      toggle: Collapsed view
+      move: Move
+      moving: Moving
+      import: Import
+      restore_message: Restore
+      importing: Importing
+      restoring_message: Restoring
+      convert: Convert
+      unlock_and_edit_forcibly: Unlock forcibly and edit
+      random_gen: Random generation
+      copy: Copy
+      paste: Paste
+      attach: Attach
+      confirm: Confirm
+      setting: Settings
+      request: Publishing application
+      split: Split
+      integrate: Integration
+      upload: Upload
+      uploading: Uploading
+      download: Download
+      add: Add
+      print: Print
+      select_all: Select all
+      deselect_all: Remove all
+      change: Change
+      initialize: Initialization
+      restore: Undo
+      close: Close
+      csv: CSV
+      ignore_alerts_and_save: Ignore warnings and save
+      zoom_out: Reduction
+      zoom_in: Enlarge
+      calculate: Calculate
+      reload: Reload
+      replace_file: Replace
+      file_histories: File history
+      translate: Translate
+      replace_save: Replace and save
+    confirm:
+      delete: Are you sure you want to delete it?
+      soft_delete: Are you sure you want to delete it?
+      hard_delete: Are you sure you want to permanently delete it?
+      convert: Are you sure you want to convert it?
+      unload: The data you enter has not been saved.
+      clone: Are you sure you want to duplicate it?
+      redirect_head: Are you sure you want to access it?
+      redirect: You are trying to access an external site.
+      export: Are you sure you want to start exporting?
+      import: Are you sure you want to start importing?
+      download: Are you sure you want to download it?
+      set_tag: Are you sure you want to tag it?
+      reset_tag: Are you sure you want to remove the tag?
+      in_use: Are you sure you want to delete the files you are using?
+      initialize: Are you sure you want to initialize?
+      restore: Are you sure you want to undo it?
+      move: Are you sure you want to move it?
+      send: Are you sure you want to send it?
+      publish: Are you sure you want to publish it?
+      depublish: Are you sure you want to make it private?
+      restore_file: Are you sure you want to restore your files?
+      delete_file_histories: Are you sure you want to delete your file history?
+      contains_url_expect: "There is a page linking to this page, so the process will be suspended. Remove all the links you have added before continuing."
+      contains_links_in_file: This page cannot be deleted because there are other pages linking to it.
+      contains_links_in_file_ignoring_alert: "After confirming the backlinks, click the checkbox to delete it."
+      not_contains_links_in_file: "There are no backlinks, so you can delete it."
+      target_to_delete: Check what to delete
+    notice:
+      saved: Saved.
+      deleted: Deleted.
+      unable_to_delete: ! '%{items} could not be deleted.'
+      copied: Duplicated.
+      started_import: Importing started.
+      sent: Sent.
+      posted: Posted.
+      initialized: Initialized.
+      file_droppable: You can upload a file by dropping.
+      uploading: Uploading.
+      lock_user_all: Usage suspended.
+      unlock_user_all: Suspension of use has been canceled.
+      text_zoomed: Text size set to %{count}.
+      restored: Restored.
+      run: Executed.
+      already_job_started: It is either preparing to run or currently running.
+      clipboard_copied: Copied.
+      clipboard_copy_failed: Could not be copied. Clipboard is not supported.
+      published: Published.
+      depublished: Made it private.
+      moved: Moved.
+      hit: results found.
+      first_to_last: items shown.
+      set_seen: Marked as read.
+      unset_seen: Marked as unread.
+      set_star: Star added.
+      unset_star: Star removed.
+      move_all: Moved.
+      set_seen_all: Marked as read.
+      unset_seen_all: Marked as unread.
+      set_star_all: Star added.
+      unset_star_all: Star removed.
+      replace_saved: Replacement saved.
+      max_file_size_hard_limit_short_notice: "(up to %{human_size})"
+      max_file_size_hard_limit_long_notices:
+        - The maximum file upload size is set to %{human_size} in the server settings.
+        - Setting a size limit that exceeds it will not affect it.
+        - If you would like to change the server settings, please contact your system administrator.
+
+    info:
+      soft_delete: The data will not be completely deleted, but will instead be saved in an invalid state.
+      hard_delete: The data will be deleted completely.
+      soft_delete_locked: Since the deletion status is set to “Cannot be deleted”, it cannot be deleted.
+      history_is_blank: There is no history.
+      branch_pages_history_is_blank: There is no history because it is a replacement page.
+    warning:
+      initial_password: Please change your initial password.
+      session_timeout: Your session has expired.
+      password_expired: Your password has expired. Please change your password.
+      password_neary_expired: Your password will expire soon. Please change your password.
+    errors:
+      import:
+        blank_file: A file must be entered.
+        invalid_file_type: Invalid file format.
+    apis:
+      groups:
+        index: Select a group
+        search: Find groups
+        select: Set groups
+      users:
+        index: Select a user
+        search: Find users
+        select: Set users
+      organizations:
+        index: Select an organization
+        search: Find organizations
+        select: Set organizations
+        label: Organization name
+    wareki:
+      seireki:
+        name: AD
+        min: 0001/1/1
+        max: 2100/1/1
+      meiji:
+        name: Meiji
+        min: 1868/1/25
+        max: 1912/7/30
+      taisho:
+        name: Taisho
+        min: 1912/7/30
+        max: 1926/12/25
+      showa:
+        name: Showa
+        min: 1926/12/25
+        max: 1989/1/8
+      heisei:
+        name: Heisei
+        min: 1989/1/8
+        max: 2019/5/1
+      reiwa:
+        name: Reiwa
+        min: 2019/5/1
+        max: 2100/1/1
+    state:
+      public: Public
+      closed: Private
+      edit: Editing
+      draft: Draft
+      ready: Ready to be published
+      request: Applying
+      approve: Approve
+      remand: Remand
+    options:
+      state:
+        show: Show
+        hide: Hide
+        enabled: Enabled
+        disabled: Disabled
+        public: Publish
+        closed: Private
+        closing: Awaiting end of publication
+        draft: Draft
+        ready: Ready to be published
+        active: Enabled
+        expired: Disabled
+        all: All
+        request: Apply
+        approve: Approve
+        pending: Pending sub-approval
+        remand: Remand
+        start: Select
+        cancel: Cancel
+        allow: Allow
+        deny: Do not allow
+        required: Required
+        optional: Optional
+        notify: Notify
+        silence: Do not notify
+        force_silence: Do not notify (overall management)
+        deleted: Deleted
+      resizing:
+        320x240: 320x240 (QVGA landscape)
+        240x320: 240x320 (QVGA portrait)
+        640x480: 640x480 (VGA landscape)
+        480x640: 480x640 (VGA portrait)
+        800x600: 800x600 (SVGA landscape)
+        600x800: 600x800 (SVGA portrait)
+        1024x768: 1024x768 (XGA landscape)
+        768x1024: 768x1024 (XGA portrait)
+        1280x720: 1280x720 (HD landscape)
+        720x1280: 720x1280 (HD portrait)
+      text_type:
+        plain: Text
+        markdown: Markdown
+        cke: Formatted
+      wareki:
+        seireki: AD
+        meiji: Meiji
+        taisho: Taisho
+        showa: Showa
+        heisei: Heisei
+        reiwa: Reiwa
+      map_api:
+        googlemaps: Google Maps
+        openlayers: OpenLayers
+      kana_format:
+        hiragana: Hiragana
+        katakana: Katakana
+        romaji: Romaji
+      opengraph_type:
+        none: None
+        article: Article
+      twitter_card:
+        none: None
+        summary: Summary format
+        summary_large_image: Large image format
+      first_released:
+        published: Published
+        draft: Unpublished
+      session_lifetime:
+        5min: 5 minutes
+        15min: 15 minutes
+        30min: 30 minutes
+        60min: 60 minutes
+      sort:
+        created_asc: Creation date and time (by date)
+        created_desc: Creation date and time (newest)
+        updated_asc: Date of update (by date)
+        updated_desc: Date of update (newest)
+        released_asc: Publication date (by date)
+        released_desc: Publication date (newest)
+        order_asc: Specified value (ascending)
+        order_desc: Specified value (descending)
+        filename: File name
+        filename_asc: File name (ascending)
+        filename_desc: File name (descending)
+      restriction:
+        none: No restrictions
+        api_only: API usage only
+      multibyte_filename_state:
+        enabled: Uploadable
+        disabled: Cannot be uploaded
+      csv_encoding:
+        Shift_JIS: Shift JIS (before Excel 2016)
+        UTF-8: UTF-8 (Excel 2016 and later)
+      user_lock_state:
+        unlocked: Available
+        locked: Suspend use
+      user_deletion_lock_state:
+        unlocked: Deletable
+        locked: Cannot be deleted
+      text_zoom:
+        zoom_in: '+'
+        zoom_out: '-'
+        reset: Standard
+      datetime_unit:
+        day: Days
+        week: Weeks
+        month: Months
+        year: Years
+      gws_use:
+        disabled: Do not use
+        enabled: Use
+      upload_policy:
+        default_none: Default (unrestricted)
+        default_sanitizer: Default (sanitization)
+        default_restricted: Default (upload denied)
+        sanitizer: Sanitization
+        restricted: Upload denied
+      sanitizer_state:
+        wait: Sanitizing
+        complete: Sanitized
+        error: Failed to Sanitize
+      duration:
+        "1_day": 1 day
+        "1_week": 1 week
+        "2_weeks": 2 weeks
+        "1_month": 1 month
+        "2_months": 2 months
+        "3_months": 3 months
+        "6_months": 6 months
+        "1_year": 1 year
+      image_resizes_disabled:
+        enabled: Auto-resize enabled
+        disabled: Auto-resize disabled
+
+    tasks:
+      started: Started.
+      interrupted: Suspension order sent.
+      confirm_start: Do you want to start the process?
+      confirm_reset: "If the process is not complete, it will be executed multiple times. \\n Are you sure you want to delete the task?"
+    units:
+      count: items
+      mega_byte: MB
+      days_after: Days after
+      days_before: Days ago
+      days_progress: Days passed
+      mobile_size: KB (kilobytes)
+      during: During
+
+    rescues:
+      default:
+        head: Page cannot be found
+        body: "The page you are looking for cannot be found.<br>It may be temporarily unavailable, or the URL may have been changed or deleted."
+
+  modules:
+    addons:
+      ss/body: Body
+      ss/markdown: Content
+      ss/mobile_setting: Mobile settings
+      ss/file_setting: File settings
+      ss/user_group_history: Change history
+      ss/map_setting: Map settings
+      ss/kana_setting: Kana settings
+      ss/facebook_setting: Facebook settings
+      ss/twitter_setting: Twitter settings
+      ss/line_setting: LINE settings
+      ss/approve_setting: Approval settings
+      ss/editor_setting: Editor settings
+      ss/mail_setting: E-mail settings
+      ss/trash_setting: Trash settings
+      ss/link_file: File
+      ss/notification/reply:
+        discussion: Electronic meeting room
+      ss/elasticsearch/site_setting: Site search settings
+      ss/translate/site_setting: Automatic translation
+      ss/site_usage: Usage amount
+      ss/logo_setting: Logo settings
+      ss/release: Publishing settings
+      ss/generate_lock: Stop exporting
+      ss/partner_site: Partner site settings
+      ss/inquiry_setting: Inquiry form settings
+      ss/oauth2/sys_permission: System permissions
+      ss/oauth2/cms_permission: CMS permissions
+      ss/oauth2/gws_permission: Groupware permissions
+      ss/oauth2/webmail_permission: Mail permissions
+
+  activemodel:
+    attributes:
+      ss/download_param:
+        encoding: Character encoding
+      ss/import_param:
+        in_file: File
+      ss/password_update_service:
+        new_password: New Password
+        new_password_again: New Password (Confirm)
+        old_password: Current Password
+
+  mongoid:
+    models:
+      session: Session
+      simple_captcha/simple_captcha_data: Image authentication
+      ss/site: Site
+      ss/user: User
+      ss/user_title: Job title
+      ss/group: Group
+      ss/user_group_history: Change history
+      ss/file: File
+      ss/temp_file: Temporary file
+      ss/user_file: User file
+      ss/group_file: Group file
+      ss/task: Task
+      ss/max_file_size: Maximum file size
+      ss/image_resize: Resize image
+      ss/thumb_file: Thumbnail file
+      ss/migration: DB migration
+      ss/access_token: Access token
+      ss/notification: Notification
+    errors:
+      models:
+        ss/model/group:
+          not_found: "Line %{line_no}: The group with the ID “%{id}” does not exist."
+        ss/model/user:
+          not_found: "Line %{line_no}: The user with the ID “%{id}” does not exist."
+        ss/model/role:
+          not_found: "Line %{line_no}: The role with the ID “%{id}” does not exist."
+        ss/model/prefecture_code:
+          invalid_code: Invalid.
+        ss/addon/generate_lock:
+          disallow_datetime_by_system: Date and time are not allowed by the system. Please enter a shorter date and time.
+    attributes:
+      ss/document:
+        id: id
+        created: Date and time created
+        updated: Date and time updated
+        deleted: Date and time deleted
+        state: Status
+        filepath: File path
+        filename: File name
+        basename: File name
+        sort: Sort by
+        limit: No. of items displayed
+        layout_id: Layout
+        shortcut: Shortcut
+        view_state: Status
+        text_index: Full-text search index (unused)
+      ss/model/site:
+        name: Site name
+        host: Host name
+        domains: Domain
+        subdir: Subdirectory
+        parent_id: Parent site
+        https: HTTPS
+        mypage_scheme: My Page scheme
+        mypage_domain: My Page domain
+        group_ids: Group
+        domains_with_subdir: Domain with subdirectory
+        upload_policy: Upload restrictions
+      ss/model/user:
+        name: Name
+        kana: Kana
+        uid: User ID
+        email: E-mail address
+        password: Password
+        in_password: Password
+        tel: Phone number
+        tel_ext: Extension number
+        tel_ext_short: Ext.
+        in_title_id: Job title
+        group_ids: Group
+        groups: Group
+        cms_roles: CMS role
+        cms_role_ids: CMS role
+        gws_roles: GWS role
+        gws_role_ids: GWS role
+        sys_roles: SYS role
+        sys_role_ids: SYS role
+        webmail_roles: WEBMAIL role
+        webmail_role_ids: WEBMAIL role
+        type: User type
+        sns: SNS user
+        ldap: LDAP user
+        account_start_date: Validity period (start)
+        account_expiration_date: Validity period (end)
+        initial_password_warning: Initial password warning
+        session_lifetime: Session life
+        restriction: Usage restrictions
+        lock_state: Usage status
+        deletion_lock_state: Deletion status
+        remark: Remarks
+        organization_id: Affiliation
+        organization_uid: Staff number
+        switch_user_id: Switch user
+        login_roles: Login type
+        last_loggedin: Last login date and time
+      ss/model/user_title:
+        code: Job title code
+        name: Job title
+        remark: Remarks
+        order: Sort by
+        group_id: Group
+        activation_date: Validity period (start)
+        expiration_date: Validity period (end)
+      ss/model/reference/user_titles:
+        title_ids: Job title
+        title_orders: Job title order
+      ss/model/group:
+        name: Group name
+        order: Display order
+        activation_date: Validity period (start)
+        expiration_date: Validity period (end)
+        domains: Domain
+        gws_use: Use of groupware
+        upload_policy: Upload restrictions
+      ss/user_group_history:
+        created: Move date and time
+        cms_site_id: CMS site
+        gws_site_id: GWS site
+        group_ids: Group
+        user_id: User
+      ss/reference/user:
+        user_id: User
+      ss/reference/site:
+        site_id: Site
+      ss/model/task:
+        site_id: Site
+        name: Task name
+        started: Started
+        closed: Completed
+        interrupt: Abort order
+        total_count: Total count
+        current_count: No. of actions
+        logs: Log
+      ss/model/file:
+        in_file: File
+        in_files: File
+        image: Image
+        download: Download
+        model: Model
+        state: Status
+        name: File name
+        filename: File name (alphanumeric)
+        size: File size
+        content_type: Content type
+        resizing: Resize
+        geo_location: Latitude and longitude
+        owner_item_id: Owner ID
+        owner_item_type: Owner
+        site_id: Site
+      ss/model/role:
+        name: Role name
+        permission_level: Permission level
+        permissions: Permission settings
+      ss/model/address:
+        member_id: User
+        name: Name
+        kana: Kana
+        company: Company
+        title: Job title
+        tel: Mobile phone number
+        email: E-mail address
+        home_postal_code: Postal code (Home)
+        home_prefecture: Prefecture (Home)
+        home_city: Municipality (Home)
+        home_street_address: Street address (home)
+        home_tel: Phone number (home)
+        home_fax: Fax number (home)
+        office_postal_code: Postal code (Work)
+        office_prefecture: Prefecture (Work)
+        office_city: Municipality (Work)
+        office_street_address: Street address (work)
+        office_tel: Phone number (work)
+        office_fax: Fax number (work)
+        personal_webpage: Webpage
+        memo: Memo
+      ss/addon/body:
+        html: Body
+      ss/addon/markdown:
+        text_type: Body format
+        text: Content
+        html: Content
+      ss/addon/mobile_setting:
+        mobile_state: Status
+        mobile_size: Maximum size per page
+        mobile_location: Location
+        mobile_css: CSS
+      ss/addon/map_setting:
+        map_api: Map API
+        map_api_key: API key
+        map_api_layer: Map layer
+        show_google_maps_search: Link to Google Maps
+      ss/addon/kana_setting:
+        kana_format: Phonetic format
+      ss/addon/facebook_setting:
+        facebook_app_id: App ID
+      ss/addon/twitter_setting:
+        twitter_card: Card format
+        twitter_username: User name
+        twitter_default_image_url: Default image URL
+        twitter_consumer_key: Consumer key
+        twitter_consumer_secret: Consumer secret
+        twitter_access_token: Access token
+        twitter_access_token_secret: Token secret
+      ss/addon/line_setting:
+        line_channel_secret: Channel secret
+        line_channel_access_token: Channel access token
+      ss/addon/site_auto_post_setting:
+        site_twitter_auto_post: Twitter auto-post
+        site_edit_auto_post: Auto-post when editing
+      ss/addon/file_setting:
+        file_resizing: Resize attached file
+        file_resizing_width: Width
+        file_resizing_height: Height
+        file_resizing_label: ! '%{size} (Site settings)'
+        multibyte_filename_state: Japanese-language file name
+      ss/addon/trash_setting:
+        trash_threshold: Trash retention period
+        trash_threshold_unit: Trash retention unit
+      ss/addon/approve_setting:
+        forced_update: E-mail address attention settings
+        close_confirmation: Private save warning display settings
+      ss/addon/generate_lock:
+        generate_lock_until: Export stop deadline
+        generate_lock: Stop exporting
+        generate_unlock: Cancel export stop
+        generate_locked: Exporting has been stopped.
+        generate_unlocked: Exporting has not been stopped.
+      ss/model/max_file_size:
+        name: Name
+        extensions: Extension
+        size: Size limit
+        order: Sort by
+        state: Status
+      ss/model/image_resize:
+        max_width: Width
+        max_height: Height
+        quality: Quality
+      ss/model/postal_code:
+        code: Postal code
+        prefecture: Prefecture
+        prefecture_kana: Prefecture (Kana)
+        prefecture_code: Prefecture code
+        city: Municipality
+        city_kana: Municipality (Kana)
+        town: Town
+        town_kana: Town (Kana)
+      ss/model/prefecture_code:
+        code: City code
+        prefecture: Prefecture (Kanji)
+        prefecture_kana: Prefecture (Kana)
+        city: Municipality (Kanji)
+        city_kana: Municipality (Kana)
+      ss/thumb_file:
+        original_id: Original image ID
+        image_size: Image size
+        image_size_name: Image size name
+        thumb_width: Width
+        thumb_height: Height
+      ss/model/job_log:
+        job_id: Job ID
+        hostname: Host name
+        ip_address: IP address
+        process_id: Process ID
+        class_name: Job name
+        started: Started
+        closed: Completed
+        state: Status
+        args: Parameter
+        logs: Log
+        save_term: Save term
+      ss/model/editor_setting:
+        color_button: Text color change button
+        editor_css_path: Stylesheet path
+        syntax_check: Accessibility check
+      ss/model/mail_setting:
+        sender_name: Sender name
+        sender_email: Sender e-mail address
+        sender_user_id: Sender user
+        mail_signature: Signature
+      ss/model/notification:
+        group_id: Group
+        member_ids: Participant
+        subject: Subject
+        text: Body text
+        html: Body HTML
+        format: Format
+        send_date: Sent date and time
+        export: Export
+        url: URL
+      ss/addon/notification/reply:
+        reply_module: Reply module name
+        reply_model: Reply model name
+        reply_item_id: Reply ID
+      ss/addon/elasticsearch/site_setting:
+        elasticsearch_hosts: Full-text search server
+        elasticsearch_deny: Exclusion path
+        elasticsearch_site_ids: Site
+        elasticsearch_indexes: Index
+        elasticsearch_outside: External site search
+      ss/addon/translate/site_setting:
+        translate_state: Status
+        translate_source_id: Source language code
+        translate_target_ids: Target language code
+        translate_api: API
+        translate_mock_api_request_count: No. of API requests
+        translate_mock_api_request_word_count: API request character count
+        translate_microsoft_api_key: Subscription key
+        translate_microsoft_api_request_count: No. of API requests
+        translate_microsoft_api_request_word_count: API request character count
+        translate_microsoft_api_request_metered_usage: x-metered-usage
+        translate_google_api_project_id: Project ID
+        translate_google_api_credential_file_id: Service account private key
+        translate_google_api_request_count: No. of API requests
+        translate_google_api_request_word_count: API request character count
+        translate_api_request_word_limit: Character limit
+        translate_api_limit_exceeded_html: Display HTML when limit is exceeded
+      ss/addon/source_cleaner/site_setting:
+        source_cleaner_unwrap_tag_state: Remove unnecessary tags
+        source_cleaner_remove_tag_state: Remove empty tags
+        source_cleaner_remove_class_state: Remove unnecessary classes
+      ss/addon/site_usage:
+        usage_node_count: No. of folders
+        usage_page_count: No. of pages
+        usage_file_count: No. of files
+        usage_db_size: DB usage
+        usage_group_count: No. of groups
+        usage_user_count: No. of users
+        usage_calculated_at: Usage calculation date and time
+      ss/model/logo_setting:
+        logo_application_name: Application name
+        logo_application_image_id: Logo image
+        logo_application_template: Logo HTML
+      ss/addon/release:
+        released: Publishing date
+        release_date: Publishing start date and time (reservation)
+        close_date: Publication end date and time (reserved)
+      ss/lockable:
+        lock_until: Lock deadline date and time
+      ss/user_settings:
+        user_settings: Settings by user
+      ss/addon/partner_setting:
+        partner_site_ids: Partner sites
+      ss/addon/inquiry_setting:
+        inquiry_form_id: Inquiry form
+
+  tooltip:
+    ss/model/site:
+      upload_policy:
+        - Set behavior when uploading files.
+    ss/model/user:
+      name:
+        - Enter a name for the user.
+      kana:
+        - Enter the kana for the user's name.
+      uid:
+        - Set the user ID.
+        - When logging in, use your user ID or e-mail address.
+      email:
+        - Set the user's e-mail address.
+        - When logging in, use your user ID or e-mail address.
+        - The e-mail address will also be used for page approval applications, etc.
+      in_password:
+        - Enter the password to use when logging in.
+      tel:
+        - Set the user’s phone number.
+      tel_ext:
+        - Set the user’s extension number.
+      group:
+        - Select the group to which the user belongs.
+      group_ids:
+        - Select the group to which the user belongs.
+      type:
+        - Select a user type.
+        - Usually, you select an SNS user.
+        - When using LDAP, select the LDAP users.
+      title_ids:
+        - Select a job title.
+      account_start_date:
+        - Enter the start date of the validity period.
+      account_expiration_date:
+        - Enter the end date of the validity period.
+      initial_password_warning:
+        - Select whether to enable the initial password warning.
+      session_lifetime:
+        - Specifies the life of the session in seconds.
+        - Maximum of 3600 (1 hour).
+        - If left blank, the system default values are used.
+      restriction:
+        - Select restrictions.
+      lock_state:
+        - Select usage status.
+      deletion_lock_state:
+        - Select deletion status.
+      remark:
+        - Enter remarks.
+      organization_id: Select the organization you belong to.
+      organization_uid:
+        - Enter the staff number.
+        - This is used on the site and group-only login screen.
+      switch_user_id:
+        - Select the switch user.
+        - The user switches after logging in.
+        - This is used, for example, to use a common account.
+    ss/model/group:
+      name:
+        - Enter a name for the group.
+      order:
+        - Specify the order in which the list screen is displayed.
+        - The lower the number, the higher the position of the link on the list page.
+      activation_date:
+        - Specifies the start date of the validity period.
+      expiration_date:
+        - Specifies the end date of the validity period.
+      gws_use:
+        - Specifies whether groupware is used.
+        - Groupware is used by default.
+      upload_policy:
+        - Set behavior when uploading files.
+    ss/document:
+      title:
+        - Used for the page title and displayed in the title bar of the browser.
+        - |-
+          "It is possible to output to the page by entering the following in the layout: "
+          &lt;h1 id="ss-page-name">Page Name&lt;/h1>
+      title_for_index:
+        - Used for the title of the list. If not set, the title is diverted.
+      filename:
+        - The file name is used for the URL.
+        - Enter using half-width alphanumeric characters.
+        - Including extensions such as .html is unnecessary.
+      state:
+        - Select public or private.
+        - Selecting “Private” allows it to be saved in a draft state.
+        - You can also unpublish content after it has been published by changing it to “Private”.
+      layout_id:
+        - Select the layout of the page.
+      body_layout_id:
+        - Select the body layout of the page.
+        - If you use only the normal layout, setting is unnecessary.
+      order:
+        - Used when “Specified order” is specified as the folder sorting order.
+        - The lower the number, the higher the position of the link on the list page.
+      keywords:
+        - Used to set keywords for search engines.
+        - Multiple keywords can be set by separating with a comma.
+      description:
+        - Used to set page summaries for search engines.
+      summary_html:
+        - Used for the summary of the page to be displayed on the list page.
+        - |-
+          "Displayed in the location as follows in the loop HTML settings of the list folder: "
+          #{summary}
+      name:
+        - Enter the site name.
+      host:
+        - Set the host.
+      domains:
+        - Set the domain.
+      subdir:
+        - Set the subdirectory.
+      parent_id:
+        - Set the parent site.
+        - You can match the path of a static file to the parent site.
+      https:
+        - Enable or disable HTTPS.
+      released:
+        - Set to change the update date to a specific date and time.
+        - If omitted, the update date is displayed.
+      release_date:
+        - Specify the date and time to start publishing.
+        - It will be published at the specified date and time.
+        - To publish immediately, you do not need to specify a date and time.
+      close_date:
+        - Specify the date and time to end publishing.
+        - Publishing will cease at the specified date and time.
+      permission_level:
+        - Specify the permission level at which edits are allowed.
+      group_ids:
+        - Select the groups that are allowed to edit.
+      user_ids:
+        - Select the users that are allowed to edit.
+      import:
+        - If the facility type, region, use, or management group listed in the CSV file have not been created in advance, the facility will not be registered.
+    ss/model/file:
+      in_file:
+        - Select a file.
+      name:
+        - Enter the file name.
+      filename:
+        - Enter the file name (alphanumeric).
+      geo_location:
+        - Enter latitude and longitude in decimals.
+      image_resizes_disabled:
+        - Auto-resize settings are set by the administrator.
+        -
+        - The image is automatically resized under the following conditions.
+        - Size of %{size} or more
+        - Width of %{width} or more pixels
+        - Height of %{height} or more pixels
+        -
+        - If the size is exceeded, the image quality of the file will be changed to the value set in advance.
+        - If the width or height is exceeded, the size will be reduced to fit.
+        - If you do not want to auto-resize, after you have the administrator grant you permission, click “Auto-resize enabled” on the left and set it to “Auto-resize disabled”.
+    ss/model/user_title:
+      code: Enter the job title code.
+      name: Enter the job title.
+      activation_date: Enter the start date and time of the validity period.
+      expiration_date: Enter the end date and time of the validity period.
+      remark: Enter remarks.
+      order:
+        - Enter the order.
+        - The higher the number, the higher the position it will be displayed in.
+    ss/addon/mobile_setting:
+      mobile_state:
+        - Enable or disable the mobile page.
+      mobile_size:
+        - Set the maximum size of the mobile page.
+        - It can be set to a value between 100KB and 1000KB.
+      mobile_location:
+        - Set the path for the mobile page.
+      mobile_css:
+        - You can set the CSS path to use for the mobile page.
+        - If there is more than one, separate them with line breaks.
+        - If left blank, the default CSS
+        - (/css/mobile.css)
+        - is set.
+    ss/model/address:
+      member_id:
+        - Set the user.
+      name:
+        - Enter your name.
+      kana:
+        - Enter the kana for your name.
+      company:
+        - Enter your company.
+      title:
+        - Enter your job title.
+      tel:
+        - Enter your mobile phone number.
+      email:
+        - Enter your e-mail address.
+      home_postal_code:
+        - Enter the postal code of your home address.
+      home_prefecture:
+        - Enter the prefecture of your home address.
+      home_city:
+        - Enter the municipality of your home address.
+      home_street_address:
+        - Enter your home street address.
+      home_tel:
+        - Enter your home phone number.
+      home_fax:
+        - Enter your home fax number.
+      office_postal_code:
+        - Enter the postal code of your work address.
+      office_prefecture:
+        - Enter the prefecture of your work address.
+      office_city:
+        - Enter the municipality of your work address.
+      office_street_address:
+        - Enter your work street address.
+      office_tel:
+        - Enter your work phone number.
+      office_fax:
+        - Enter your work fax number.
+      personal_webpage:
+        - Enter your website address.
+      memo:
+        - Enter a note.
+      address_group_id:
+        - Enter your group name.
+    ss/model/role:
+      name:
+        - Enter your role name.
+      permissions:
+        - Set permissions.
+        - “All” gives all users permission, and “Ownership” gives permission to those in the group to which the login account that created belongs.
+      in_file:
+        - Specify a CSV file and import permissions.
+        - Lines without id are created as new lines.
+    gws/shared_address/group:
+      name:
+        - Enter your group name.
+      order:
+        - Enter the order.
+    ss/addon/map_setting:
+      map_api:
+        - Select the map API you want to use on the site.
+      map_api_key:
+        - Enter the API key to use in the Map API.
+        - The API key for Google Maps is set in this field.
+      map_api_layer:
+        - Select the OpenLayers layer to use on the site.
+      show_google_maps_search:
+        - When enabled, the map marker will display a “View on Google Maps” link.
+    ss/addon/kana_setting:
+      kana_format:
+        - Set the notation format when adding furigana to the public screen with kana function.
+    ss/addon/facebook_setting:
+      facebook_app_id:
+        - Set your Facebook App ID.
+        - Once set, Facebook Insights will allow you to analyze access.
+      opengraph_type:
+        - Select the Open Graph format.
+        - "You can see what it looks like on Facebook with “Facebook Sharing Debugger”: https://developers.facebook.com/tools/debug/sharing/."
+      opengraph_defaul_image_url:
+        - Set the default image URL.
+        - If the page does not contain an image, the URL will be set to “og:image”.
+        - If the page contains an image, the URL you set here is not used.
+    ss/addon/twitter_setting:
+      twitter_card:
+        - Select the Twitter card format.
+        - "You can see what it looks like on Twitter with “Twitter Card Validator”: https://cards-dev.twitter.com/validator ."
+      twitter_username:
+        - Set your Twitter username.
+        - Once set, you can analyze access with Twitter Card Analytics.
+      twitter_default_image_url:
+        - Set the default image URL.
+        - If the page does not contain an image, the URL will be set to “twitter:image”.
+        - If the page contains an image, the URL you set here is not used.
+      twitter_consumer_key:
+        - Set the consumer key (API key, Consumer Key, API Key).
+        - Required for automatic posting on Twitter.
+      twitter_consumer_secret:
+        - Set the consumer secret (API secret, Consumer Secret, API Secret).
+        - Required for automatic posting on Twitter.
+      twitter_access_token:
+        - Set the access token.
+        - Required for automatic posting on Twitter.
+      twitter_access_token_secret:
+        - Set the access token secret.
+        - Required for automatic posting on Twitter.
+    ss/addon/line_setting:
+      line_channel_secret:
+        - Set the Line channel secret.
+        - Required for linking with Line.
+      line_channel_access_token:
+        - Set Line channel access token.
+        - Required for linking with Line.
+    ss/addon/file_setting:
+      file_resizing:
+        - The default size can be set by resizing the attached file (upload) of the page.
+        - 200 is the minimum value for both width and height.
+      multibyte_filename_state:
+        - You can set uploads of Japanese-language files.
+        -
+        - "Uploadable: Japanese-language files can be uploaded, but the portions in Japanese are replaced with underscores. This is the default action."
+        - "Cannot be uploaded: Japanese-language files can no longer be uploaded, and only files consisting only of alphanumeric characters, hyphens, and underscores can be uploaded."
+    ss/addon/trash_setting:
+      trash_threshold:
+        - The retention period of the Trash can be set.
+    ss/addon/approve_setting:
+      forced_update:
+        - Set approvals when no e-mail address has been set.
+        - Disabling ignores runtime attention messages.
+      close_confirmation:
+        - Set the warning display settings when saving drafts.
+    ss/model/max_file_size:
+      name:
+        - Enter a setting name.
+      extensions:
+        - Enter the extension of the file type that you want to restrict.
+        - If there is more than one, separate them with spaces.
+        - Extensions are not case-sensitive and both capital and lowercase characters are subject to restrictions.
+      size:
+        - Maximum file size can be set per MB.
+      order:
+        - Set the order.
+      state:
+        - Enable or disable restrictions.
+    ss/model/image_resize:
+      max_width:
+        - The width of the image file can be set.
+      max_height:
+        - The height of the image file can be set.
+      quality:
+        - Image file quality can be set between 0 and 100.
+        - Compresses images based on image quality if the maximum file size is exceeded.
+        - The higher the image quality, the less degraded it is.
+    ss/model/editor_setting:
+      color_button:
+        - Set the display of the text color change button.
+      editor_css_path:
+        - Set the path of the editor stylesheet.
+      syntax_check:
+        - Enable or disable the accessibility checker.
+
+    ss/model/mail_setting:
+      sender_name:
+        - Enter the default sender name for e-mails sent from the system.
+      sender_email:
+        - Enter the default sender e-mail address for e-mails sent from the system.
+        - If left blank, the system settings e-mail address (e.g. noreply@example.jp) is used.
+      mail_signature:
+        - Enter the default signature for e-mails sent from the system.
+
+    ss/addon/elasticsearch/site_setting:
+      elasticsearch_deny:
+        - Enter the path of the pages that you want to exclude from searches.
+        - Separate them with line breaks.
+      elasticsearch_site_ids:
+        - Set the site to be searched.
+        - This will allow you to see the pages for the site you set.
+      elasticsearch_indexes:
+        - Set the index to be searched.
+        - This will allow you to see the pages of the index you set.
+      elasticsearch_outside:
+        - Set external site searches.
+        - A pull-down list appears in the search form, allowing you to search external sites.
+
+    ss/addon/source_cleaner/site_setting:
+      source_cleaner_unwrap_tag_state:
+        - Enable or disable the deletion of div and span tags without attributes.
+      source_cleaner_remove_tag_state:
+        - Enable or disable the deletion of empty p, div, and span tags.
+      source_cleaner_remove_class_state:
+        - Enable or disable the deletion of classes starting with “mso”.
+
+    ss/model/prefecture_code:
+      code:
+        - Set the 6-digit municipality code (national local government code).
+      prefecture:
+        - Set the prefecture (Kanji).
+      prefecture_kana:
+        - Set the prefecture (Kana).
+      city:
+        - Set the municipality (Kanji).
+      city_kana:
+        - Set the municipality (Kana).
+
+    ss/addon/inquiry_setting:
+      inquiry_form_id:
+        - Set a group-wide inquiry form.
+
+    ss:
+      contrast_ratio:
+        - AAA at 7 or more, AA at 4.5 or more
+        - (For 22 point or higher and 18 point or higher in bold, AAA at 4.5 or more and AA at 3 or more)
+
+  job:
+    models:
+      ss/public_file_remover_job: Published file deletion job
+      ss/task_sweep_job: Task deletion job

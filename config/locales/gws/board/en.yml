@@ -1,0 +1,188 @@
+en:
+  gws/board:
+    user: User
+    #descendants_num: No. of comments
+    #descendants_updated: Time and date updated
+    no_authority: You do not have permission.
+    topic:
+      comment: Comments
+      new: Create new
+      edit: Edit
+      submit: Post
+      update: Update
+      delete: Delete
+      browsing_state: Notification destination
+      browsed_state: Status
+      browsed: View
+      list: To topic list
+      confirm: Do you want to delete this?
+      browsed_user_info:
+        title: Number of readers
+        format: ! '{count}/%{total} people'
+        more: See details
+      notice:
+        create: The topic has been created.
+        update: The topic has been updated.
+        delete: The topic has been deleted.
+    comment:
+      comment: Leave a comment
+      created: Date posted
+      updated: Last updated
+      submit: Post
+      update: Update
+      edit: Edit
+      delete: Delete
+      confirm: Do you want to delete this?
+      notice:
+        create: You have posted a comment.
+        update: The comment has been updated.
+        delete: The comment has been deleted.
+    options:
+      mode:
+        thread: Thread
+        tree: Tree
+      permit_comment:
+        allow: Allow
+        deny: Do not allow
+      browsed_state:
+        read: Read
+        unread: Unread
+        both: Both
+      severity:
+        normal: Normal
+        important: Important
+      subscribed_users_readable_state:
+        admin: Administrative permission only
+        subscriber: All subscribers
+    links:
+      back_to_thread: Go back
+      comment: Reply
+      categories: Category
+    errors:
+      denied_comment: You are not allowed to post comments.
+
+  modules:
+    gws/board: Bulletin board
+    addons:
+      gws/board/group_setting: Bulletin board
+      gws/board/category: Category
+      gws/board/notify_setting: Notification
+
+  gws_role:
+    use_gws_board: Use of bulletin boards
+    read_other_gws_board_topics: View bulletin boards (all)
+    read_private_gws_board_topics: View bulletin boards (own)
+    edit_other_gws_board_topics: Edit bulletin boards (all)
+    edit_private_gws_board_topics: Edit bulletin boards (own)
+    delete_other_gws_board_topics: Delete bulletin boards (all)
+    delete_private_gws_board_topics: Delete bulletin boards (own)
+    trash_other_gws_board_topics: Manage bulletin board trash (all)
+    trash_private_gws_board_topics: Manage bulletin board trash (own)
+    read_other_gws_board_categories: View categories (all)
+    read_private_gws_board_categories: View categories (own)
+    edit_other_gws_board_categories: Edit categories (all)
+    edit_private_gws_board_categories: Edit categories (own)
+    delete_other_gws_board_categories: Delete categories (all)
+    delete_private_gws_board_categories: Delete categories (own)
+
+  gws_notification:
+    gws/board/topic:
+      subject: "[Bulletin Board] “%{name}” has been registered or updated."
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+        
+        %{text}
+
+    gws/board/post:
+      subject: "There is a new post in [Bulletin Board] “%{name}”."
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+    gws/board/topic/destroy:
+      subject: "[Bulletin Board] “%{name}” has been deleted."
+      text: ""
+
+    gws/board/post/destroy:
+      subject: "A post in [Bulletin Board] “%{name}” has been deleted."
+      text: "%{text}"
+
+  mongoid:
+    models:
+      gws/board/topic: Topic
+      gws/board/post: Post
+      gws/board/category: Category
+    errors:
+      models:
+        gws/board/category:
+          too_deep: "The hierarchy is too deep and should be below %{max}."
+          not_found_parent: Parent category does not exist.
+          found_children: A child category exists.
+        gws/board/postable:
+          file_size_exceeds_post_limit: "The size of the attachment (%{size}) has exceeded the maximum size of the post (%{limit})."
+          file_size_exceeds_topic_limit: "The total size of the attachments (%{size}) has exceeded the maximum size of the topic (%{limit})."
+    attributes:
+      gws/board/postable:
+        name: Title
+        created: Date posted
+        updated: Last updated
+        mode: Display format
+        permit_comment: Comments
+        severity: Importance
+        topic_id: Topic
+        parent_id: Parent post
+        descendants_updated: Date and time updated in topic
+        descendants_files_count: Number of attachments in the topic
+        descendants_total_file_size: Attachment capacity within the topic
+      gws/addon/board/group_setting:
+        board_new_days: Display period for new items
+        board_file_size: Maximum attachment size
+        board_file_size_per_topic: Maximum attachment size/topic unit
+        board_file_size_per_post: Maximum attachment size/post unit
+        board_browsed_delay: Seconds until marked as read
+        board_files_break: File display order
+        board_links_break: Link display order
+      gws/board/category:
+        name: Category name
+      gws/addon/board/category:
+        category_ids: Category
+      gws/addon/board/notify_setting:
+        notify_state: Notification settings
+        subscribed_users_readable_state: Show notification destination
+      gws/board/browsing_state:
+        browsed_users_hash: Read users
+
+  tooltip:
+    gws/board/postable:
+      name:
+        - Enter a title.
+      mode:
+        - Select the display format.
+      permit_comment:
+        - Select whether to allow comments.
+      severity:
+        - Select the importance level.
+    gws/addon/board/group_setting:
+      board_new_days:
+        - Enter the display period for new items.
+      board_file_size_per_topic:
+        - Enter the maximum attachment size per topic.
+      board_file_size_per_post:
+        - Enter the maximum attachment size per post.
+      board_browsed_delay:
+        - Enter the number of seconds until the bulletin board is marked as read.
+      board_files_break:
+        - Select the display order of attachments.
+      board_links_break:
+        - Select the display order of posted links.
+    gws/board/category:
+      name:
+        - Enter a category name.
+
+  job:
+    models:
+      gws/board/trash_purge_job: Empty bulletin board/post trash
+      gws/board/notification_job: Bulletin board/notifications

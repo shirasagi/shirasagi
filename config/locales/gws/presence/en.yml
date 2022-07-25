@@ -1,0 +1,63 @@
+en:
+  gws/presence:
+    group: Group
+    sync_state: Automatic status updates
+    buttons:
+      register_reminder: Register reminders
+    links:
+      all_groups: All users
+    operations:
+      expand_all: Expand all
+      collapse_all: Close all
+
+  modules:
+    gws/presence: Presence management
+    gws/presence/users: Presence status
+    gws/presence/management/users: Management
+    addons:
+      gws/presence/delegator_setting: Presence management
+
+  gws_role:
+    use_gws_user_presences: Use of presence status
+    manage_private_gws_user_presences: Manage presence status (own group)
+    manage_all_gws_user_presences: Manage presence status (all)
+    manage_custom_group_gws_user_presences: Manage presence status (affiliated custom group)
+
+  mongoid:
+    models:
+      gws/presence: Presence management
+    attributes:
+      gws/user_presence:
+        state: Status
+        plan: Situation
+        memo: Remarks
+        send_message: Message
+        sync_available_state: Present
+        sync_unavailable_state: Away
+        sync_timecard_state: Timecard status
+      gws/addon/presence/delegator_setting:
+        presence_editable_title_ids: Editable job titles
+
+  tooltip:
+    gws/user_presence:
+      state:
+        - Enter a status.
+      plan:
+        - Enter a situation.
+      memo:
+        - Enter remarks.
+      sync_available_state:
+        - "By enabling this setting, if your status is Away when you log in, you will be updated to Present."
+      sync_unavailable_state:
+        - "By enabling this setting, if your status is Present when you log out, it will be updated to Away."
+      sync_timecard_state:
+        - "By enabling this setting, your status is updated when your timecard is punched."
+        - ""
+        - "Clock in: Update status to clocked in"
+        - "Clock out: Update status to clocked out"
+    gws/addon/presence/group_setting:
+      presence_notification_state:
+        - Set up a notification to check presence status.
+    gws/addon/presence/delegator_setting:
+      presence_editable_title_ids:
+        - "By setting a different job title, you can update the status of users with that job title."

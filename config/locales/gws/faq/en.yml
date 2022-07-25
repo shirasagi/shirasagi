@@ -1,0 +1,174 @@
+en:
+  gws/faq:
+    user: User
+    #descendants_num: No. of comments
+    #descendants_updated: Time and date updated
+    no_authority: You do not have permission.
+    topic:
+      comment: Comments
+      new: Create new
+      edit: Edit
+      submit: Post
+      update: Update
+      delete: Delete
+      browsing_state: Notification destination
+      browsed: View
+      list: To topic list
+      confirm: Do you want to delete this?
+      notice:
+        create: The topic has been created.
+        update: The topic has been updated.
+        delete: The topic has been deleted.
+    comment:
+      comment: Leave a comment
+      created: Date posted
+      updated: Last updated
+      submit: Post
+      update: Update
+      edit: Edit
+      delete: Delete
+      confirm: Do you want to delete this?
+      notice:
+        create: You have posted a comment.
+        update: The comment has been updated.
+        delete: The comment has been deleted.
+    options:
+      mode:
+        thread: Thread
+        tree: Tree
+      permit_comment:
+        allow: Allow
+        deny: Do not allow
+      browsed_state:
+        read: Read
+        unread: Unread
+      severity:
+        normal: Normal
+        important: Important
+    links:
+      back_to_thread: Go back
+      comment: Reply
+      categories: Category
+    errors:
+      denied_comment: You are not allowed to post comments.
+
+  modules:
+    gws/faq: FAQ
+    addons:
+      gws/faq/group_setting: FAQ
+      gws/faq/category: Category
+
+  gws_role:
+    use_gws_faq: Use of FAQ
+    read_other_gws_faq_posts: View posts (all)
+    read_private_gws_faq_posts: View posts (own)
+    edit_other_gws_faq_posts: Edit posts (all)
+    edit_private_gws_faq_posts: Edit posts (own)
+    delete_other_gws_faq_posts: Delete posts (all)
+    delete_private_gws_faq_posts: Delete posts (own)
+    trash_other_gws_faq_posts: Manage post trash (all)
+    trash_private_gws_faq_posts: Manage post trash (own)
+    read_other_gws_faq_categories: View categories (all)
+    read_private_gws_faq_categories: View categories (own)
+    edit_other_gws_faq_categories: Edit categories (all)
+    edit_private_gws_faq_categories: Edit categories (own)
+    delete_other_gws_faq_categories: Delete categories (all)
+    delete_private_gws_faq_categories: Delete categories (own)
+
+  gws_notification:
+    gws/faq/topic:
+      subject: "[FAQ] “%{name}” has been registered or updated."
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+    gws/faq/post:
+      subject: "There is a new post in [FAQ] “%{name}”."
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+    gws/faq/topic/destroy:
+      subject: "[FAQ] “%{name}” has been removed."
+      text: ""
+
+    gws/faq/post/destroy:
+      subject: "The post [FAQ] “%{name}” has been deleted."
+      text: ""
+
+  mongoid:
+    models:
+      gws/faq/topic: Topic
+      gws/faq/post: Post
+      gws/faq/category: Category
+    errors:
+      models:
+        gws/faq/category:
+          too_deep: "The hierarchy is too deep and should be below %{max}."
+          not_found_parent: Parent category does not exist.
+          found_children: A child category exists.
+        gws/faq/postable:
+          file_size_exceeds_post_limit: "The size of the attachment (%{size}) has exceeded the maximum size of the post (%{limit})."
+          file_size_exceeds_topic_limit: "The total size of the attachments (%{size}) has exceeded the maximum size of the topic (%{limit})."
+    attributes:
+      gws/faq/postable:
+        name: Title
+        created: Date posted
+        updated: Last updated
+        mode: Display format
+        permit_comment: Comments
+        severity: Importance
+        topic_id: Topic
+        parent_id: Parent post
+        browsed_users_hash: Read users
+        descendants_updated: Date and time updated in topic
+        descendants_files_count: Number of attachments in the topic
+        descendants_total_file_size: Attachment capacity within the topic
+      gws/faq/topic:
+        name: Question title
+      gws/faq/post:
+        name: Answer title
+      gws/addon/faq/group_setting:
+        faq_new_days: Display period for new items
+        faq_file_size: Maximum attachment size
+        faq_file_size_per_topic: Maximum attachment size/topic unit
+        faq_file_size_per_post: Maximum attachment size/post unit
+        faq_browsed_delay: Seconds until marked as read
+        faq_files_break: File display order
+      gws/faq/category:
+        name: Category name
+      gws/addon/faq/category:
+        category_ids: Category
+
+  tooltip:
+    gws/faq/postable:
+      name:
+        - Enter a title.
+      mode:
+        - Select the display format.
+      permit_comment:
+        - Select whether to allow comments.
+      severity:
+        - Select the importance level.
+    gws/addon/faq/group_setting:
+      faq_new_days:
+        - Enter the display period for new items.
+      faq_file_size_per_topic:
+        - Enter the maximum attachment size per topic.
+      faq_file_size_per_post:
+        - Enter the maximum attachment size per post.
+      faq_browsed_delay:
+        - Enter the number of seconds until the FAQ is marked as read.
+      faq_files_break:
+        - Select the display order of attachments.
+    gws/faq/category:
+      name:
+        - Enter a category name.
+
+  job:
+    models:
+      gws/faq/trash_purge_job: Empty FAQ/post trash

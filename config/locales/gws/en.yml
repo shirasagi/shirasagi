@@ -1,0 +1,615 @@
+en:
+  gws:
+    group: Group
+    category: Category
+    portal: Portal
+    site_config: Settings
+    site_info: Organization information
+    user_setting: Portal settings
+    organization_addresses: Organization address book
+    question_management: Question management
+    default_contrast: Default contrast
+    roles:
+      admin: Administrator
+      user: General user
+    history:
+      mode:
+        create: Register
+        update: Change
+        delete: Delete
+        login: Log in
+      user:
+        create: Author
+        update: Updater
+        delete: Deleter
+      severity:
+        error: Error
+        warn: Warning
+        info: Important information
+        notice: General information
+        none: Do not output
+      days:
+        next_day: Next day
+        prev_day: Previous day
+        today: Today
+      system_default_save_days: System defaults
+      system_default_severity: System defaults
+    member_log:
+      copy_users: users copied.
+      paste_users: users added.
+      copy_groups: groups copied.
+      paste_groups: groups added.
+    notice_setting:
+      functions: To be notified
+    apis:
+      facilities:
+        index: Select a facility
+      categories:
+        index: Select a category
+        parent_id: Parent category
+      custom_groups:
+        index: Select a custom group
+      user_titles:
+        index: Select a job title
+    options:
+      severity:
+        high: Important announcements
+      input_type:
+        text_field: Text box
+        text_area: Text area
+        email_field: E-mail address
+        date_field: Date
+        radio_button: Radio button selection
+        select: Pull-down selection
+        check_box: Checkbox selection
+        upload_file: Post file
+      user_form_state:
+        closed: Do not use
+        public: Use
+      readable_setting_range:
+        public: Fully public
+        select: Selection range
+        private: Private
+      notification:
+        disabled: Do not notify me
+        enabled: Notify me
+      break:
+        vertically: Vertical
+        horizontal: Horizontal
+      user_public_profiles:
+        uid: UID
+        updated: Date updated
+        main_group: Group
+        user_title: Job title
+        email: E-mail address
+        tel: Phone number
+
+    links:
+      back_to_portal: Back to portal
+      webmail_user_import: Import with webmail permissions
+      switch_group: Change group
+    buttons:
+      unset: Cancel
+      add_item: Add a new element
+    confirm:
+      readable_setting:
+        empty: "No viewer has been entered. \\n Are you sure you want everyone to see it?"
+    notice:
+      delay_download_with_message: |-
+        Prepare files in the background because of the large number of files or the large file size. 
+        You will be informed when the download is ready.
+      contrast_changed: 'Changed the contrast to %{name}.'
+      webmail_user_import: "In addition to groupware settings, you can set webmail permissions."
+    errors:
+      allowed_domains_only_root: can only be set to root groups.
+
+  date:
+    formats:
+      gws_long: ! '%a, %m/%d/%Y'
+  time:
+    formats:
+      gws_long: ! '%a, %m/%d/%Y %H:%M'
+      gws_time: ! '%H:%M'
+
+  gws_role:
+    edit_gws_groups: Manage groups
+    edit_gws_users: Manage users
+    edit_gws_user_titles: Manage job titles
+    edit_gws_roles: Manage permissions/roles
+    edit_gws_user_forms: Manage user extensions
+    read_gws_histories: View operation history
+    delete_gws_histories: Delete operation history
+    read_other_gws_custom_groups: View custom groups (all)
+    read_private_gws_custom_groups: View custom groups (own)
+    edit_other_gws_custom_groups: Edit custom groups (all)
+    edit_private_gws_custom_groups: Edit custom groups (own)
+    delete_other_gws_custom_groups: Delete custom groups (all)
+    delete_private_gws_custom_groups: Delete custom groups (own)
+    read_other_gws_links: View links (all)
+    read_private_gws_links: View links (own)
+    edit_other_gws_links: Edit links (all)
+    edit_private_gws_links: Edit links (own)
+    delete_other_gws_links: Delete links (all)
+    delete_private_gws_links: Delete links (own)
+    read_gws_organization: View organization information
+    edit_gws_contrasts: Manage contrast
+    edit_gws_bookmarks: Use of favorites
+    edit_gws_personal_addresses: Use of personal address books
+
+  modules:
+    gws: Standard
+    addons:
+      gws/role: Permissions/Roles
+      gws/group_permission: Administrative permissions
+      gws/file: File
+      gws/history: History of changes
+      gws/share/history: History of changes
+      gws/readable_setting: Viewing permission
+      gws/member: Participants
+      gws/subscription_setting: Subscriptions
+      gws/contributor: Contributors
+      gws/custom_field: Input items
+      gws/edit_lock: Exclusive control
+      gws/schedules: Schedule
+      gws/system/file_setting: File settings
+      gws/system/group_setting: System settings
+      gws/system/user_setting: User settings
+      gws/system/menu_setting: Menu settings
+      gws/system/notice_setting: Notification settings
+      gws/system/logo_setting: Logo settings
+      gws/system/log_setting: Log settings
+      gws/system/desktop_setting: Desktop app settings
+      gws/user/custom_form: Extensions
+      gws/user/public_duty: Office duties
+      gws/link: Link
+      gws/site_usage: Usage amount
+      gws/circular/browsing_authority: Viewing permission
+
+  mongoid:
+    models:
+      gws/category: Generic categories
+      gws/group: Group
+      gws/custom_group: Custom groups
+      gws/custom_group_member: Custom group members
+      gws/user: User
+      gws/user_title: Job title
+      gws/role: Permissions/Roles
+      gws/link: Links
+      gws/share: Shared files
+      gws/history: Operation history
+      gws/history_archive_file: Archive
+      gws/user_setting: User settings
+      gws/user_form: Extensions
+      gws/user_form_data: Extended data
+      gws/contrast: Contrast
+    errors:
+      models:
+        gws/contrast:
+          load_error: Failed to load.
+          no_contrasts: Nothing has been defined.
+        gws/model/folder:
+          not_found_parent: The parent folder does not exist.
+          found_children: A child folder exists.
+          not_move_to_parent: It cannot be changed to a top-level folder.
+          not_move_to_under_other_parent: You cannot move folders across top-level folders.
+          not_create_same_folder: "The folder already exists, or there is a folder of the same name that you do not have permission to view."
+          not_move_to_same_name_folder: "The folder already exists at the destination, or there is a folder of the same name that you do not have permission to view."
+          invalid_chars_as_name: "The following characters cannot be used: \\ / : * ? \" &lt; > |"
+        gws/facility/item:
+          not_found: "%{line_no}: ID %{id} facility does not exist."
+        gws/column/base:
+          not_found: " %{id} does not exist."
+    attributes:
+      gws/model/category:
+        model: Model
+        state: Status
+        name: Type name
+        color: Display color
+        order: Order
+        bg_color: Background color
+        text_color: Text color
+      gws/model/file:
+        in_file: File
+        in_files: File
+        image: Image
+        download: Download
+        model: Model
+        state: Status
+        name: File name
+        filename: File name (alphanumeric)
+        size: File size
+        content_type: Content type
+        resizing: Resize
+        geo_location: Latitude and longitude
+        memo: Supplemental information
+      gws/model/folder:
+        name: Folder name
+        depth: Hierarchy
+        order: Order
+        state: Status
+        in_basename: Folder name
+        in_parent: Parent folder
+      gws/model/memo/folder:
+        in_basename: Folder name
+      gws/user:
+        gws_main_group_ids: Group (main)
+        gws_default_group_ids: Group (default)
+      gws/custom_group:
+        name: Group name
+        order: Display order
+      gws/link:
+        name: Title
+      gws/history:
+        session_id: Session ID
+        request_id: Request ID
+        severity: Importance
+        name: Name
+        mode: Category
+        model: Model
+        controller: Controller
+        job: Job
+        mode_name: Category name
+        model_name: Model name
+        controller_name: Controller name
+        job_name: Job name
+        item_id: Item ID
+        path: URL
+        action: Action
+        message: Message
+        updated_fields: Changed location
+        updated_field_names: Changed location
+        user_name: User
+        user_tel: Phone number
+        created: Change date and time
+      gws/share/history:
+        created: Change date and time
+        mode: Category
+        user_name: User
+        user_tel: Phone number
+        updated_fields: Changed content
+        uploadfile_name: File name
+        uploadfile_size: Size
+        upload: Attachment
+      gws/reference/user:
+        user_id: Author
+        user_uid: Author (UID)
+        user_name: Author (full name)
+        user_tel: Phone number
+        user_group_id: Author (group)
+        user_group_name: Author (group name)
+      gws/reference/site:
+        site_id: Organization
+      gws/export:
+        in_file: File
+        in_csv_encoding: Character encoding
+      gws/addon/file:
+        file_ids: File
+      gws/addon/role:
+        gws_role_ids: Role
+      gws/addon/permission:
+        group_ids: Administrative group
+        permission_level: Permission level
+      gws/group_permission:
+        group_ids: Administrative group
+        groups_hash: Administrative group (hash)
+        user_ids: Administrative users
+        users_hash: Administrative users (hash)
+        custom_group_ids: Administrative custom group
+        custom_groups_hash: Administrative custom group (hash)
+        permission_level: Permission level
+      gws/addon/readable_setting:
+        readable_setting_range: Publication range
+        readable_group_ids: Viewing group
+        readable_groups_hash: Viewing group (hash)
+        readable_member_ids: Viewing users
+        readable_members_hash: Viewing users (hash)
+        readable_custom_group_ids: Viewing custom group
+        readable_custom_groups_hash: Viewing custom group (hash)
+      gws/member:
+        member_ids: Participating users
+        member_group_ids: Participating groups
+        member_custom_group_ids: Participating custom group
+      gws/addon/link/feature:
+        links/name: Display name
+        links/url: URL
+      gws/addon/system/file_setting:
+        multibyte_filename_state: Japanese-language file name
+      gws/addon/system/group_setting:
+        sendmail_domains: Mail sending authorization domain
+        canonical_scheme: Groupware scheme
+        canonical_domain: Groupware domain
+        trash_threshold: Trash retention period
+        trash_threshold_unit: Trash retention period unit
+      gws/addon/system/user_setting:
+        user_public_profiles: Public profile
+      gws/addon/system/menu_setting:
+        menu_portal_label: Display portal
+        menu_portal_state: Display portal
+        menu_notice_label: Display announcements
+        menu_notice_state: Display announcements
+        menu_schedule_label: Display schedules
+        menu_schedule_state: Display schedules
+        menu_todo_label: Display to-do tasks
+        menu_todo_state: Display to-do tasks
+        menu_reminder_label: Display reminders
+        menu_reminder_state: Display reminders
+        menu_attendance_label: Display attendance
+        menu_attendance_state: Display attendance
+        menu_bookmark_label: Display favorites
+        menu_bookmark_state: Display favorites
+        menu_memo_label: Display messages
+        menu_memo_state: Display messages
+        menu_board_label: Display discussions
+        menu_board_state: Display discussions
+        menu_faq_label: Display FAQ
+        menu_faq_state: Display FAQ
+        menu_qna_label: Display Q&A
+        menu_qna_state: Display Q&A
+        menu_workflow_label: Display workflows
+        menu_workflow_state: Display workflows
+        menu_report_label: Display reports
+        menu_report_state: Display reports
+        menu_circular_label: Display circular boards
+        menu_circular_state: Display circular boards
+        menu_monitor_label: Display inquiries and responses
+        menu_monitor_state: Display inquiries and responses
+        menu_survey_label: Display questionnaires
+        menu_survey_state: Display questionnaires
+        menu_share_label: Display shared files
+        menu_share_state: Display shared files
+        menu_shared_address_label: Display shared address books
+        menu_shared_address_state: Display shared address books
+        menu_personal_address_label: Display personal address book
+        menu_personal_address_state: Display personal address book
+        menu_staff_record_label: Display electronic staff records
+        menu_staff_record_state: Display electronic staff records
+        menu_links_label: Display links
+        menu_links_state: Display links
+        menu_elasticsearch_label: Display full-text search
+        menu_elasticsearch_state: Display full-text search
+        menu_discussion_label: Electronic conference rooms
+        menu_discussion_state: Electronic conference rooms
+        menu_contrast_label: Contrast
+        menu_contrast_state: Contrast
+        menu_presence_label: Display presence management
+        menu_presence_state: Display presence management
+      gws/addon/system/notice_setting:
+        notice_schedule_state: Schedule
+        notice_todo_state: ToDo
+        notice_workflow_state: Workflows
+        notice_circular_state: Circular boards
+        notice_monitor_state: Inquiries and responses
+        notice_survey_state: Questionnaires
+        notice_board_state: Bulletin board
+        notice_faq_state: FAQ
+        notice_qna_state: Q&A
+        notice_discussion_state: Electronic conference rooms
+        notice_report_state: Reports
+        notice_announcement_state: Announcements
+        send_notice_email_state: Personal e-mail forwarding
+      gws/addon/system/log_setting:
+        log_save_days: Log retention days
+        log_main_severity: Standard function logging
+        log_board_severity: Bulletin board log
+        log_circular_severity: Circular board log
+        log_elasticsearch_severity: Full-text search log
+        log_facility_severity: Facility management log
+        log_faq_severity: FAQ log
+        log_file_severity: Shared file log
+        log_memo_severity: Message log
+        log_monitor_severity: Inquiry and response log
+        log_personal_address_severity: Personal address book log
+        log_portal_severity: Portal log
+        log_qna_severity: Q&A log
+        log_report_severity: Reports log
+        log_schedule_severity: Schedule log
+        log_share_severity: Shared file log
+        log_shared_address_severity: Shared address book log
+        log_staff_record_severity: Electronic staff records log
+        log_workflow_severity: Workflow log
+        log_chorg_severity: Organizational changes log
+        log_discussion_severity: Electronic conference room log
+      gws/addon/system/desktop_setting:
+        desktop_mailstore: Mail store functions
+        desktop_chat: Chat functions
+      gws/addon/subscription_setting:
+        subscribed_group_ids: Subscribed group
+        subscribed_groups_hash: Subscribed group (hash)
+        subscribed_member_ids: Subscribed users
+        subscribed_members_hash: Subscribed users (hash)
+        subscribed_custom_group_ids: Subscribed custom group
+        subscribed_custom_groups_hash: Subscribed custom group (hash)
+      gws/addon/contributor:
+        contributor_model: Contributor (model)
+        contributor_id: Contributor (data ID)
+        contributor_name: Contributor name
+      gws/addon/custom_field:
+        tooltips: Tooltips
+        input_type: Input format
+        select_options: Choices
+        required: Required field
+        max_length: Maximum number of characters
+        place_holder: Initial display
+        additional_attr: Additional attributes
+        input_confirm: Input confirmation
+        upload_file_count: Number of uploaded files
+        max_upload_file_size: Maximum file size setting
+        resizing: Resize image
+        resizing_width: Resize image (width)
+        resizing_height: Resize image (height)
+      gws/addon/edit_lock:
+        lock_owner: Owner
+        lock_owner_id: Lock owner
+        lock_until: Lock deadline
+      gws/addon/schedules:
+        schedule_ids: Schedule
+      gws/addon/import/user:
+        in_file: File
+      gws/user_form:
+        state: Use
+        memo: Memo
+      gws/user_form_data:
+        form_id: Extensions
+        column_values: Extended data
+      gws/addon/user/public_duty:
+        charge_name: Name of person responsible
+        charge_tel: Phone number of person responsible
+        charge_address: Address of person responsible
+        divide_duties: Divided duties
+      gws/contrast:
+        name: Name
+        order: Order
+        status: Status
+        text_color: Text color
+        color: Background color
+      gws/addon/import/group:
+        in_file: File
+      gws/addon/import/facility/item:
+        in_file: File
+      gws/addon/import/role:
+        in_file: File
+      gws/addon/link:
+        links: Link
+      gws/addon/site_usage:
+        usage_file_count: File count
+        usage_db_size: DB usage
+        usage_group_count: Group count
+        usage_user_count: User count
+        usage_calculated_at: Usage calculation date and time
+
+  tooltip:
+    gws/model/category:
+      name:
+        - Enter the type name.
+      color:
+        - Enter the display color.
+        -
+        - "Enter the display color in an \"#RRGGBB\" format (RR, GG, BB stand for red, green, and blue components in hexadecimal colors)."
+      order:
+        - Enter the order.
+        - "The lower the number, the higher the position."
+    gws/model/file:
+      in_file:
+        - Select a file.
+      name:
+        - Enter the file name.
+      filename:
+        - Enter the file name (alphanumeric).
+      geo_location:
+        - Enter the latitude and longitude in decimals.
+      memo:
+        - Enter additional information.
+    gws/user:
+      gws_main_group_ids:
+        - Select the primary group to which the user belongs.
+    gws/custom_group:
+      name:
+        - Enter the group name.
+      order:
+        - Enter the order in which items are displayed.
+        - "The lower the number, the higher the position."
+      member_ids:
+        - Select the participants.
+    gws/addon/role:
+      gws_role_ids:
+        - Select a role.
+    gws/link:
+      name:
+        - Enter a title.
+    gws/addon/system/group_setting:
+      sender_user_id:
+        - Select the sending user.
+        - The sending user is the person whose name is on new posts/notifications on bulletin boards.
+        - "In addition, if both the sending user and the sending user’s e-mail address are set, the sending user’s name will be used preferentially."
+      sendmail_domains:
+        - Enter the mail sending authorization domain.
+      canonical_scheme:
+        - Select a groupware scheme.
+        - "When sending an e-mail from the system, the URL in the e-mail will be the scheme set here."
+      canonical_domain:
+        - Enter the groupware domain.
+        - "When sending an e-mail from the system, the URL in the e-mail will be the domain set here."
+      trash_threshold:
+        - You can set the retention period for the trash can.
+    gws/addon/group_permission:
+      custom_group_ids:
+        - Select the custom group allowed to edit.
+    gws/addon/readable_setting:
+      readable_setting_range:
+        - <b>Fully public</b> - Anyone can view it.
+        - <b>Selection range</b> - Only selected targets can view.
+        - <b>Private</b> - Only available to the author.
+      readable_custom_group_ids:
+        - Select the custom group allowed to view.
+      readable_group_ids:
+        - Select the group allowed to view.
+      readable_member_ids:
+        - Select the users allowed to view.
+    gws/addon/subscription_setting:
+      subscribed_custom_group_ids:
+        - Select the custom group subscribed to this page.
+      subscribed_group_ids:
+        - Select the group subscribed to this page.
+      subscribed_member_ids:
+        - Select the users subscribed to this page.
+    gws/addon/contributor:
+      contributor_name:
+        - Select the contributor name.
+    gws/addon/schedules:
+      schedule_ids:
+        - Select a schedule.
+    gws/addon/import/user:
+      in_file:
+        - Specify a CSV file and import users.
+        - Lines without an ID will be a new entry.
+    gws/user_form:
+      state:
+        - Select whether or not to use user extensions.
+      memo:
+        - Enter remarks.
+        - "Remarks are not shown elsewhere, so enter notes for administrative purposes."
+    gws/addon/user/public_duty:
+      charge_name: Enter the person responsible.
+      charge_tel: Enter the phone number of the person responsible.
+      charge_address: Enter the address and phone number of the person responsible.
+      divide_duties: Enter the office duties.
+    gws/contrast:
+      name:
+        - Enter the names.
+      order:
+        - Enter the order.
+        - "The lower the number, the higher the position."
+      state:
+        - Select Public or Private.
+      text_color:
+        - Select a text color.
+      color:
+        - Select a background color.
+    gws/model/folder:
+      name:
+        - Enter the folder name.
+        - 'The following characters cannot be used for folder names: \ / : * ? " &lt; > |'
+      order:
+        - Enter the order.
+      in_parent:
+        - Select the parent folder.
+    gws/role:
+      permission_level:
+        - Sets the permission level.
+
+  activemodel:
+    models:
+      gws/user_csv/importer: Import user CSV
+    attributes:
+      gws/user_csv/importer:
+        in_file: File
+    errors:
+      models:
+        gws/user_csv/importer:
+          not_found: "%{line_no}: The user with the ID “%{id}” does not exist."
+
+  job:
+    models:
+      gws/history_archive_job: Create an operation history archive
+      gws/compress_job: File/Compressed download
+      gws/user_title_import_job: Import job title

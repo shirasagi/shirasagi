@@ -1,0 +1,142 @@
+en:
+  gws/workflow:
+    columns:
+      index: Manage input settings
+    forms:
+      default: Standard application form
+      more: See more
+    options:
+      file_state:
+        all: All
+        approve: Person asked for approval
+        request: Person who applied for approval
+      agent_state:
+        disabled: Proxy application not allowed
+        enabled: Proxy application allowed
+    links:
+      publish: Publish
+      depublish: Make private
+      download_comment: Approval/circular comment CSV
+      download_attachment: Download attached file
+    notice:
+      no_files: "There are no attached files."
+    labels:
+      user: Author
+      form: Report
+    search_delegatees:
+      index: Select a delegate
+      select: Set a delegate
+      search: Search
+    agent_type:
+      myself: Apply for oneself
+      agent: Apply as a proxy
+
+  gws_notification:
+    gws/workflow/file:
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+      request: "An approval request for [Workflow] “%{name}” has arrived."
+      approve: "Final approval of [Workflow] “%{name}” has been completed."
+      remand: "The approval request for [Workflow] “%{name}” has been referred back."
+      circular: "[Workflow] “%{name}” has arrived."
+      comment: "There is a comment in [Workflow] “%{name}”."
+
+  modules:
+    gws/workflow: Workflows
+    addons:
+      gws/workflow/column_setting: Input settings
+      gws/workflow/custom_form: Input details
+      gws/workflow/approver_print: Approve
+      gws/workflow/group_setting: Workflows
+
+  gws_role:
+    use_gws_workflow: Use of workflows
+
+    read_other_gws_workflow_routes: View approval routes (all)
+    read_private_gws_workflow_routes: View approval routes (own)
+    edit_other_gws_workflow_routes: Edit approval routes (all)
+    edit_private_gws_workflow_routes: Edit approval routes (own)
+    delete_other_gws_workflow_routes: Delete approval routes (all)
+    delete_private_gws_workflow_routes: Delete approval routes (own)
+
+    read_other_gws_workflow_files: View applications (all)
+    read_private_gws_workflow_files: View applications (own)
+    edit_other_gws_workflow_files: Edit applications (all)
+    edit_private_gws_workflow_files: Edit applications (own)
+    delete_other_gws_workflow_files: Delete applications (all)
+    delete_private_gws_workflow_files: Delete applications (own)
+    approve_other_gws_workflow_files: Approve applications (all)
+    approve_private_gws_workflow_files: Approve applications (own)
+    reroute_other_gws_workflow_files: Reroute applications (all)
+    reroute_private_gws_workflow_files: Reroute applications (own)
+    trash_other_gws_workflow_files: Manage application trash (all)
+    trash_private_gws_workflow_files: Manage application trash (own)
+    agent_all_gws_workflow_files: Proxy applications (all)
+    agent_private_gws_workflow_files: Proxy applications (own group)
+
+    read_other_gws_workflow_forms: View application forms (all)
+    read_private_gws_workflow_forms: View application forms (own)
+    edit_other_gws_workflow_forms: Edit application forms (all)
+    edit_private_gws_workflow_forms: Edit application forms (own)
+    delete_other_gws_workflow_forms: Delete application forms (all)
+    delete_private_gws_workflow_forms: Delete application forms (own)
+
+  mongoid:
+    models:
+      gws/workflow/route: Approval route
+      gws/workflow/file: Application
+      gws/workflow/form: Application form
+      gws/workflow/category: Workflow type
+      gws/workflow/column: Input items
+    attributes:
+      gws/workflow/file:
+        name: Title
+        form_id: Form
+        workflow_member_id: Approver
+      gws/workflow/form:
+        name: Title
+        order: Order
+        state: Publishing status
+        agent_state: Proxy application
+        memo: Remarks
+      gws/addon/workflow/column_setting:
+        columns: Input settings
+      gws/workflow/column:
+        name: Item name
+        order: Order
+      gws/addon/workflow/group_setting:
+        workflow_new_days: Display period for new items
+
+  tooltip:
+    gws/workflow/file:
+      name:
+        - Enter a title.
+    gws/workflow/form:
+      name:
+        - Enter a title.
+      order:
+        - Enter the order.
+        - "The lower the number, the higher the position."
+      state:
+        - Select whether to publish the application form.
+      agent_state:
+        - Select whether to allow proxy applications.
+      memo:
+        - Enter remarks.
+        - "Remarks are not shown elsewhere, so enter notes for administrative purposes."
+    gws/workflow/column:
+      name:
+        - Enter an item.
+      order:
+        - Enter the order.
+        - "The lower the number, the higher the position."
+    gws/addon/workflow/group_setting:
+      workflow_new_days:
+        - Enter the display period for new items.
+
+  job:
+    models:
+      gws/workflow/trash_purge_job: Empty workflow/application trash

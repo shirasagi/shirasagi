@@ -1,0 +1,137 @@
+en:
+  gws/share:
+    file: Shared files
+    category: Shared file category
+    all: All files
+    url_copy: Copy to clipboard
+    folder: Folder list
+    folder_info: "Information for %{folder}"
+    child_folder: Child folder
+    folder_download: Bulk download files in folder
+    files:
+      disabled_items: Deleted
+    links:
+      categories: Category
+      file_download: Download
+      confirm:
+        download_all: Do you want to download the selected items?
+    mailers:
+      compressed:
+        subject: Your download is now ready
+    navi:
+      folder: Folder
+      category: Category
+    apis:
+      folders:
+        index: Select a folder
+    quota:
+      total_usage: "Total usage: %{usage}"
+      total_count: "Total number of files: %{usage}"
+
+  modules:
+    gws/share: Shared files
+    addons:
+      gws/share/category: Category
+      gws/share/group_setting: Shared files
+      gws/share/resource_limitation: Capacity limit
+
+  gws_role:
+    use_gws_share: Use of shared files
+    read_other_gws_share_files: View files (all)
+    read_private_gws_share_files: View files (own)
+    edit_other_gws_share_files: Edit files (all)
+    unlock_other_gws_share_files: Unlock pages (all)
+    edit_private_gws_share_files: Edit files (own)
+    delete_other_gws_share_files: Delete files (all)
+    delete_private_gws_share_files: Delete files (own)
+    write_other_gws_share_files: Upload files (all)
+    write_private_gws_share_files: Upload files (own)
+    trash_other_gws_share_files: Manage file trash (all)
+    trash_private_gws_share_files: Manage file trash (own)
+    read_other_gws_share_categories: View categories (all)
+    read_private_gws_share_categories: View categories (own)
+    edit_other_gws_share_categories: Edit categories (all)
+    edit_private_gws_share_categories: Edit categories (own)
+    delete_other_gws_share_categories: Delete categories (all)
+    delete_private_gws_share_categories: Delete categories (own)
+    read_other_gws_share_folders: View folders (all)
+    read_private_gws_share_folders: View folders (own)
+    edit_other_gws_share_folders: Edit folders (all)
+    edit_private_gws_share_folders: Edit folders (own)
+    delete_other_gws_share_folders: Delete folders (all)
+    delete_private_gws_share_folders: Delete folders (own)
+    download_other_gws_share_folders: Bulk download (all)
+    download_private_gws_share_folders: Bulk download (own)
+
+  mongoid:
+    models:
+      gws/share/file: File
+      gws/share/folder: Folder
+      gws/share/category: Category
+      gws/share/file_uploader: File uploader
+    errors:
+      models:
+        gws/share/file:
+          file_size_exceeds_limit: "The file size (%{size}) exceeded the maximum file size (%{limit})."
+          file_size_exceeds_folder_limit: "The folder size including the deleted files (%{size}) has exceeded the total folder capacity limit (%{limit})."
+          file_size_exceeds_capacity: "The file size including the deleted files (%{size}) exceeded the total capacity (%{limit})."
+        gws/share/category:
+          too_deep: "The hierarchy is too deep and should be below %{max}."
+          not_found_parent: Parent category does not exist.
+        gws/share/folder:
+          found_files: The file exists in a folder or in a deleted folder.
+          file_size_exceeds_folder_limit: "The folder size including the deleted files (%{size}) has exceeded the total folder capacity limit (%{limit})."
+    attributes:
+      gws/addon/share/category:
+        category_ids: Category
+      gws/addon/share/group_setting:
+        share_max_file_size: Maximum file size
+        share_files_capacity: Total capacity limit
+        share_default_sort: Order by specified value
+        share_new_days: Display period for new items
+      gws/addon/share/resource_limitation:
+        share_max_file_size: Maximum file size
+        share_max_folder_size: Total capacity limit
+      gws/share/category:
+        name: Category name
+      gws/share/file:
+        file_size: File size
+        folder: Folder
+        folder_id: Folder name
+        url_copy: Copy URL
+        memo: Supplemental information
+      gws/share/folder:
+        file_ids: File
+      gws/share/file_uploader:
+        in_file_ids: File
+      gws/share/descendants_file_info:
+        descendants_files_count: Total number of files
+        descendants_total_file_size: Total file size
+
+  tooltip:
+    gws/share/category:
+      name:
+        - Enter a category name.
+    gws/share/file:
+      folder: Select a folder name.
+      url_copy: Copy the file URL to the clipboard.
+    gws/addon/share/group_setting:
+      share_max_file_size:
+        - Enter the maximum file size.
+      share_files_capacity:
+        - Enter the total capacity.
+      share_default_sort:
+        - Select the specified value in order of the file list.
+      share_new_days:
+        - Enter the display period for new items.
+    gws/addon/share/resource_limitation:
+      share_max_file_size:
+        - Enter the maximum file size.
+        - Top-level folder settings apply to all lower folders.
+      share_max_folder_size:
+        - Enter the total capacity limit for the folder.
+        - Top-level folder settings apply to all lower folders.
+
+  job:
+    models:
+      gws/share/trash_purge_job: Empty shared files/trash

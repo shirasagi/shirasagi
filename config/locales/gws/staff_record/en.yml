@@ -1,0 +1,161 @@
+en:
+  modules:
+    gws/staff_record: Electronic Staff Records and Table of Office Duties
+    addons:
+      gws/staff_record/group_setting: Electronic staff records
+
+  gws/staff_record:
+    staff_records: Electronic staff records
+    divide_duties: Electronic Table of Office Duties
+    user_histories: Transfer history
+    no_charge_name: '(None)'
+    links:
+      copy_situation: Create affiliations and staff from the current situation
+    confirm:
+      copy_situation: Are you sure you want to create affiliations and staff from the current situation?
+    notice:
+      copy_situation_started: The process of creating affiliations and staff from the current situation has started.
+    search:
+      section: Select affiliation
+    options:
+      multi_section:
+        regular: Main duty
+        plural: Concurrent duty
+    errors:
+      no_data: No published information is available.
+
+  gws_role:
+    use_gws_staff_record: Use of electronic staff records
+
+    read_other_gws_staff_record_years: Fiscal year-end view (all)
+    read_private_gws_staff_record_years: Fiscal year-end view (own)
+    edit_other_gws_staff_record_years: Edit fiscal year (all)
+    edit_private_gws_staff_record_years: Edit fiscal year (own)
+    delete_other_gws_staff_record_years: Delete fiscal year (all)
+    delete_private_gws_staff_record_years: Delete fiscal year (own)
+
+    read_other_gws_staff_record_groups: View affiliations (all)
+    read_private_gws_staff_record_groups: View affiliations (own)
+    edit_other_gws_staff_record_groups: Edit affiliations (all)
+    edit_private_gws_staff_record_groups: Edit affiliations (own)
+    delete_other_gws_staff_record_groups: Deletion affiliations (all)
+    delete_private_gws_staff_record_groups: Delete affiliations (own)
+
+    read_other_gws_staff_record_users: View staff (all)
+    read_private_gws_staff_record_users: View staff (own)
+    edit_other_gws_staff_record_users: Edit staff (all)
+    edit_private_gws_staff_record_users: Edit staff (own)
+    delete_other_gws_staff_record_users: Remove staff (all)
+    delete_private_gws_staff_record_users: Remove staff (own)
+
+    read_other_gws_staff_record_seatings: View seating chart (all)
+    read_private_gws_staff_record_seatings: View seating chart (own)
+    edit_other_gws_staff_record_seatings: Edit seating chart (all)
+    edit_private_gws_staff_record_seatings: Edit seating chart (own)
+    delete_other_gws_staff_record_seatings: Delete seating chart (all)
+    delete_private_gws_staff_record_seatings: Delete seating chart (own)
+
+    read_other_gws_staff_record_user_titles: View job titles (all)
+    read_private_gws_staff_record_user_titles: View job titles (own)
+    edit_other_gws_staff_record_user_titles: Edit job titles (all)
+    edit_private_gws_staff_record_user_titles: Edit job titles (own)
+    delete_other_gws_staff_record_user_titles: Delete job titles (all)
+    delete_private_gws_staff_record_user_titles: Delete job titles (own)
+
+    edit_other_gws_staff_record_charges: Edit responsibilities (all)
+    edit_private_gws_staff_record_charges: Edit responsibilities (own)
+
+  mongoid:
+    models:
+      gws/staff_record/year: Fiscal year
+      gws/staff_record/group: Affiliation
+      gws/staff_record/user: Staff member
+      gws/staff_record/seating: Seating chart
+      gws/staff_record/title_ids: Job title
+    attributes:
+      gws/addon/staff_record/group_setting:
+        staff_records_limit: Electronic staff records/No. of items displayed
+        divide_duties_limit: Electronic table of office duties/No. of items displayed
+      gws/staff_record/yearly:
+        year_id: Fiscal year
+        year_code: Western calendar year
+        year_name: Fiscal year name
+      gws/staff_record/year:
+        code: Western calendar year
+        name: Fiscal year name
+        start_date: Start date
+        close_date: End date
+      gws/staff_record/group:
+        name: Affiliation name
+        order: Order
+        seating_chart_url: Seating chart URL
+      gws/staff_record/user:
+        name: Staff member name
+        code: Staff member number
+        kana: Staff member name (kana)
+        multi_section: Main and concurrent responsibilities
+        section_name: Affiliation
+        title_ids: Job title
+        tel_ext: Personal extension
+        charge_name: Name of person responsible
+        charge_tel: Phone number of person responsible
+        charge_address: Address of person responsible
+        divide_duties: Divided duties
+        remark: Remarks
+        staff_records_view: Show in electronic staff records
+        divide_duties_view: Show in table of office duties
+        order: Order
+        section_order: Order of affiliation
+      gws/staff_record/seating:
+        name: Title
+        order: Order
+        url: Seating chart URL
+        remark: Remarks
+
+  tooltip:
+    gws/addon/staff_record/seating:
+      name: Enter a title.
+      url: Enter the seating chart URL.
+      order: Enter the order.
+      remark: Enter remarks.
+      in_file:
+        - Specify a CSV file and import it.
+        - Lines without an ID will be a new entry.
+    gws/staff_record/year:
+      name: "Enter the fiscal year name. (Ex.: FY 20xx)"
+      code: "Enter the Western calendar year. (Ex.: 2017)"
+      start_date: "Enter the start date of the fiscal year. (Ex.: 2017/04/01)"
+      close_date: "Enter the end date of the fiscal year. (Ex.: 2018/03/31)"
+    gws/staff_record/yearly:
+      year_id: Select the fiscal year.
+    gws/staff_record/group:
+      name: Enter the affiliation name.
+      code: Enter the affiliation code.
+      seating_chart_url: Enter the seating chart URL.
+      order: Enter the order.
+      in_file:
+        - Specify a CSV file and import it.
+        - Lines without an ID will be a new entry.
+    gws/staff_record/user:
+      name: Enter the full name of the staff member.
+      code: Enter the staff member’s telephone number.
+      kana: Enter the staff member’s name (kana).
+      multi_section: Select main and concurrent duties.
+      section_name: Select an affiliation.
+      title_ids: Select a job title.
+      tel_ext: Enter a personal extension.
+      charge_name: Enter the person responsible.
+      charge_tel: Enter the phone number of the person responsible.
+      charge_address: Enter the address and phone number of the person responsible.
+      divide_duties: Enter the office duties.
+      remark: Enter remarks.
+      staff_records_view: Select whether or not to display the information in the electronic staff record.
+      divide_duties_view: Select whether or not to display the information in the table of office duties.
+      order: Enter the order.
+      in_file:
+        - Specify a CSV file and import it.
+        - Lines without an ID will be a new entry.
+
+  job:
+    models:
+      gws/staff_record/copy_situation_job: Copy job for electronic employee record current status

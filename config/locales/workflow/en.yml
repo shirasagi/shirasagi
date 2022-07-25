@@ -1,0 +1,214 @@
+en:
+  workflow:
+    name: Workflow
+    request: Application for approval
+    request_to: Application destination
+    selectable_users: Selection candidates
+    pages: Approve
+    user_deleted: Deleted user
+    master_message: The following replacement page has been created.
+    master_page: Replacement source page
+    branch_message: This page is a replacement page.
+    branch_page: Replacement page
+    create_branch: Create replacement page
+    cloned_name_prefix: Duplicate
+    member: Login members
+    empty_route_options: No approval route has been set up.
+    request_cancelled_message: The application for approval has been cancelled by the applicant.
+    restart_workflow: Reapply
+    circulation_step: Circulation
+    circulation_comment: Comments
+    comment: Comments
+    state:
+      request: Applying
+      approve: Approve
+      pending: Pending sub-approval
+      remand: Remand
+      cancelled: Cancel application
+      other_approved: Approved by others
+      other_remanded: Remand others
+      other_pulled_up: Pull-up
+    circulation_state:
+      seen: Confirmed
+      unseen: Being circulated
+      pending: Pending sub-approval
+    links:
+      set_seen: Set to “Confirmed”
+      unset_seen: Revert to “Being circulated”
+      approver_file_upload: Add file
+      edit_branch: Edit replacement page
+      continue_to_edit_master: Edit as-is
+    buttons:
+      select: Select
+      cancel: Cancel
+      request: Apply
+      approve: Approve
+      remand: Remand
+      pull_up: Pull-up approval
+      restart: Reapply
+    mail:
+      subject:
+        request: Application for approval
+        approve: Final approval complete
+        remand: Approval remanded
+    page:
+      ready: Ready to be published
+      closed: Private
+      wait_close: Near end of publication
+      approve: What was requested
+      request: What you applied for
+      remand: What was remanded
+    route: Approval route
+    options:
+      required_count:
+        all: Everyone
+        minimum: ! '%{required_count} person(s)'
+      posted_by:
+        member: My Page post
+        admin: Administrative posts
+      on_remand:
+        back_to_init: Back to start
+        back_to_previous: Previous
+    required_count_label:
+      all: Requires approval from everyone
+      minimum: Requires approval by %{required_count} people
+    search_approvers:
+      index: Select an approver
+      select: Set approvers
+      search: Search
+    search_circulations:
+      index: Select a circulator
+      select: Set a circulator
+      search: Search
+    confirm:
+      request_cancel: Are you sure you want to cancel your application?
+      set_seen: Are you sure you want to mark it as read?
+      unset_seen: Are you sure you want to mark it as unread?
+      would_you_edit_branch: Do you want to edit the replacement page?
+      unable_to_delete_master_page: The process will be cancelled because a replacement page has been created.
+    notice:
+      request_cancelled: Your application has been cancelled.
+      approver_file_droppable: Click the “Add file” button or drop the file here.
+      created_branch_page: You have created a replacement page.
+    dialogue:
+      edit_branch_html: |-
+        A replacement page has been created. Go to <a href="%{show_path}">Replacement page</a> and edit it.
+        To delete the replacement page you are editing, delete it from the upper menu of <a href="%{show_path}">“Replacement page”.</a>
+    csv:
+      approvers_or_circulations: Approvers and circulators
+    agent_name: "(Surrogate: %{long_name})"
+    agent_name_with_email: "(Surrogate: %{long_name} (%{email}))"
+
+  modules:
+    workflow: Workflow
+    addons:
+      workflow/approver: Approve
+      workflow/branch: Replacement page
+      workflow/approver_view: Approval route
+      workflow/circulation_view: Circulation route
+
+  cms_role:
+    read_other_workflow_routes: View approval routes (all)
+    read_private_workflow_routes: View approval routes (own)
+    edit_other_workflow_routes: Edit approval routes (all)
+    edit_private_workflow_routes: Edit approval route (own)
+    delete_other_workflow_routes: Delete approval routes (all)
+    delete_private_workflow_routes: Delete approval routes (own)
+
+  mongoid:
+    models:
+      workflow/route: Approval route
+    attributes:
+      workflow/addon/approver:
+        workflow_user_id: Applicant
+        workflow_member_id: Application members
+        workflow_state: Approval status
+        workflow_comment: Application comments
+        workflow_pull_up: Pull-up approval
+        workflow_on_remand: On remand
+        workflow_approvers: Approver
+        workflow_required_counts: No. of approvals required
+        workflow_approver_attachment_uses: Add files by approver
+        workflow_current_circulation_level: Current circulation step
+        workflow_circulations: Circulator
+        workflow_circulation_attachment_uses: Add files by circulator
+        approved: Approved
+        comment: Remand comment
+        approver_comment: Approver comment
+      workflow/model/route:
+        name: Name
+        pull_up: Pull-up approval
+        on_remand: On remand
+        approvers: Approver
+        circulations: Circulator
+        required_counts: No. of approvals required
+        group_ids: Group
+        level: Level %{level}
+        my_group: Own group
+        approver_at: Level %{level} approver
+        required_count_at: No. of approvals required in level %{level}.
+        approvers_level: Level
+        approvers_user_id: Applicant
+        approver_attachment_uses: Add files by approver
+        circulation_attachment_uses: Add files by circulator
+
+  errors:
+    messages:
+      not_select: is not selected.
+      level_blank: Level is not set.
+      user_id_blank: User is not set.
+      state_blank: Status is not set.
+      not_read: setting does not give %{name} permission to view.
+      not_approve: setting does not give %{name} permission to approve.
+      approvers_level_blank: Level is not set.
+      approvers_level_missing: Level %{level} approver must be set.
+      approvers_user_id_blank: The user has not been set.
+      approvers_user_missing: A deleted user exists.
+      required_count_greater_than_approvers: The number of approvers set in level %{level} is fewer than required %{required_count} approvals.
+      route_approver_unable_to_read: The user “%{user}” set to the approval route “%{route}” does not have permission to view the article.
+      route_approver_unable_to_approve: The user “%{user}” set to the approval route “%{route}” does not have permission to approve the article.
+      cloned_name: The title contains “Duplicate”.
+      invalid_approve_name: Change the title after duplication and apply for approval.
+      user_email_blank: It was not executed because the following users did not set an e-mail address. To do this, select “Run even if an e-mail address is not set”.
+      forced_update: Run even if an e-mail address is not set.
+      no_approvers: No approver found.
+      branch_is_already_existed: A replacement page has been created.
+
+  tooltip:
+    workflow/addon/approver:
+      workflow_comment:
+        - Describe the reason for the application and other comments to the approver.
+      workflow_approvers:
+        - Select an approver.
+      workflow_circulations:
+        - Select a circulator.
+        - The circulator will be notified of the circulation request after approval.
+      approve_remand:
+        - You have received an approval request. Enter a comment for the applicant (optional) and select “Approve” or “Remand”.
+      workflow_routes:
+        - To request approval, select the approval route, then click the “Select” button.
+      circulation_step:
+        - You have received a confirmation request. Enter a comment for the applicant (optional) and click “Set to ‘Confirmed’”.
+    workflow/model/route:
+      name:
+        - Enter a name for the approval route.
+      pull_up:
+        - Enable or disable pull-up approval.
+      on_remand:
+        - Select the action at the time of remand.
+        - “Back to start” takes you back to the start of approval when you remand it. This is the default action.
+        - “Previous” takes you back one level when you remand it.
+      approvers:
+        - Select an approver.
+      required_counts:
+        - Enter the number of approvals that are required.
+        - If Everyone” is selected, all approvers will need to approve it.
+        - If “n people” is selected, at least n of the approvers will need to approve it.
+      circulations:
+        - Select a circulator.
+      group_ids:
+        - Select the groups that can use this approval route.
+      approver_attachment_uses:
+        - Select “Enable” to allow approvers to add files, or “Disable” for others.
+      circulation_attachment_uses:
+        - Select “Enable” to allow circulators to add files, or “Disable” for others.

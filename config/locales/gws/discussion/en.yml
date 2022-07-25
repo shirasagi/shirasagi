@@ -1,0 +1,199 @@
+en:
+  gws/discussion:
+    admin: Management
+    topics: Thread
+    members: Participants
+    navi:
+      forum:
+        readable: Conference room list
+      topic:
+        portal: Meeting room portal
+        readable: Thread list
+      todo:
+        readable: To-do list
+    links:
+      forum:
+        back_to_index: Back to meeting room list
+        edit: Edit meeting room
+      topic:
+        new: Create new thread
+        edit: Edit thread
+        copy: Duplicate thread
+        delete: Delete thread
+        index: See threads list
+        show: See all posts
+        reply: Post a comment
+      todo:
+        index: See the to-do list
+      member:
+        index: Participant list
+    main_topic:
+      name: Main thread
+      text: ! '%{name} is the main thread.'
+    options:
+      discussion_unseen_interval:
+        none: Do not check
+        5min: 5 mins
+        1min: 1 min
+        30sec: 30 sec
+        10sec: 10 sec
+      permit_comment:
+        allow: Allow
+        deny: Do not allow
+    notice:
+      reload: "*There are new posts. Click to redraw."
+      forum_copy: "*After duplication, it will become private. The to-do task is not duplicated."
+      comment_limit: 'The number of comments exceeded %{limit}. Please create a new thread.'
+      no_topics: There are no threads.
+      no_recents: No new threads.
+      no_todos: Not registered
+    notify_message:
+      topic:
+        subject: 'A “%{topic_name}” thread has been created in [Electronic Conference Room] %{forum_name}.'
+        text: "%{text}"
+      post:
+        subject: 'There is a new post in [Electronic Conference Room] %{forum_name} (%{topic_name}).'
+        text: "%{text}"
+
+  gws_notification:
+    gws/discussion/topic:
+        mail_text: |
+          %{subject}
+
+          %{text}
+    gws/discussion/post:
+         mail_text: |
+          %{subject}
+
+          %{text}
+
+  modules:
+    gws/discussion: Electronic conference rooms
+    addons:
+      gws/discussion/todo: Electronic conference rooms
+      gws/discussion/release: Publishing settings
+      gws/discussion/group_setting: Electronic conference rooms
+      gws/discussion/quota: Capacity limit
+
+  mongoid:
+    models:
+      gws/discussion/forum: Electronic conference rooms
+      gws/discussion/topic: Thread
+      gws/discussion/post: Comments
+    errors:
+      models:
+        gws/addon/discussion/quota:
+          file_size_limit: "The size of the attachment (%{size}) has exceeded the maximum size (%{limit})."
+          total_quota_over: "The total capacity limit of the electronic conference room has been exceeded and could not be saved."
+          forum_quota_over: "The electronic conference room capacity limit has been exceeded and could not be saved."
+          topic_quota_over: "The thread capacity limit has been exceeded and could not be saved."
+    attributes:
+      gws/discussion/postable:
+        name: Title
+        depth: Layer
+        descendants_updated: Date and time updated in-thread
+        main_topic: Main thread
+        permit_comment: Comment post
+        permanently: Editing prohibited
+        forum_quota: Electronic conference room capacity limit
+        topic_quota: Thread capacity limit
+        order: Order
+        forum_id: Electronic conference rooms
+        topic_id: Thread
+        parent_id: Parent post
+      gws/addon/discussion/quota:
+        size: Usage amount
+      gws/addon/discussion/group_permission:
+        group_ids: Administrative group
+        groups_hash: Administrative group
+        user_ids: Administrative users
+        users_hash: Administrative users
+        custom_group_ids: Administrative custom group
+        custom_groups_hash: Administrative custom group
+        permission_level: Permission level
+      gws/addon/discussion/release:
+        released: Publishing date
+      gws/addon/discussion/readable_setting:
+        readable_group_ids: Viewing group
+        readable_member_ids: Viewing users
+        readable_custom_group_ids: Viewing custom group
+      gws/addon/discussion/group_setting:
+        discussion_quota: Total capacity limit
+        discussion_filesize_limit: Attachment size limit
+        discussion_new_days: Display period for new items
+        discussion_unseen_interval: Interval for new confirmations
+        discussion_recent_limit: Number of new items displayed
+        discussion_todo_limit: Number of to-do tasks displayed
+        discussion_comment_limit: Comment limit
+
+  gws_role:
+    use_gws_discussion: Use of electronic conference rooms
+    read_other_gws_discussion_forums: View electronic conference rooms (all)
+    read_private_gws_discussion_forums: View electronic conference rooms (own)
+    edit_other_gws_discussion_forums: Edit electronic conference rooms (all)
+    edit_private_gws_discussion_forums: Edit electronic conference rooms (own)
+    delete_other_gws_discussion_forums: Delete electronic conference rooms (all)
+    delete_private_gws_discussion_forums: Delete electronic conference rooms (own)
+    trash_other_gws_discussion_forums: Manage electronic conference room trash (all)
+    trash_private_gws_discussion_forums: Manage electronic conference room trash (own)
+    read_other_gws_discussion_topics: View threads (all)
+    read_private_gws_discussion_topics: View threads (own)
+    edit_other_gws_discussion_topics: Edit threads (all)
+    edit_private_gws_discussion_topics: Edit threads (own)
+    delete_other_gws_discussion_topics: Delete threads (all)
+    delete_private_gws_discussion_topics: Delete threads (own)
+    edit_other_gws_discussion_posts: Edit posts (all)
+    edit_private_gws_discussion_posts: Edit posts (own)
+    delete_other_gws_discussion_posts: Delete posts (all)
+    delete_private_gws_discussion_posts: Delete posts (own)
+
+  tooltip:
+    gws/discussion/forum:
+      name:
+        - Enter a title.
+      forum_quota:
+        - Enter the electronic conference room capacity limit.
+        - If the capacity is exceeded, posts cannot be made.
+        - If unspecified, the capacity is not restricted.
+        - The initial value is unconfigured.
+    gws/discussion/topic:
+      name:
+        - Enter a title.
+      order:
+        - Set the order. The lower the number, the higher the position.
+      permit_comment:
+        - Select whether to allow comments.
+      permanently:
+        - When enabled, comments can no longer be posted, edited, or deleted.
+      topic_quota:
+        - Enter the maximum amount of space used for the thread.
+        - If the capacity is exceeded, posts cannot be made.
+        - If unspecified, the capacity is not restricted.
+        - The initial value is unconfigured.
+    gws/addon/discussion/release:
+      state:
+        - Select public or private for the publish screen.
+    gws/addon/discussion/group_setting:
+      discussion_quota:
+        - Enter the maximum total capacity for the electronic conference room.
+        - If the total capacity is exceeded, posts cannot be made.
+        - If unspecified, the capacity is not restricted.
+        - The initial value is unconfigured.
+      discussion_filesize_limit:
+        - Enter the maximum total capacity for files attached to a conversation or post.
+        - If unspecified, the capacity is not restricted.
+        - The initial value is unconfigured.
+      discussion_new_days:
+        - Set the period that new items are displayed.
+      discussion_unseen_interval:
+        - Set the interval between new confirmations.
+      discussion_recent_limit:
+        - Set the number of new list items displayed.
+      discussion_todo_limit:
+        - Set the number of to-do tasks displayed.
+      discussion_comment_limit:
+        - Set a limit on comments for a single thread.
+
+  job:
+    models:
+      gws/discussion/trash_purge_job: Empty electronic conference room trash

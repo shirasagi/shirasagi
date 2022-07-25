@@ -1,0 +1,47 @@
+en:
+  gws/shared_address:
+    navi:
+      address: Address settings
+      group: Group settings
+
+  modules:
+    gws/shared_address: Shared address book
+
+  gws_role:
+    use_gws_shared_address: Use of shared address books
+    read_other_gws_shared_address_addresses: View address books (all)
+    read_private_gws_shared_address_addresses: View address book (own)
+    edit_other_gws_shared_address_addresses: Edit address books (all)
+    edit_private_gws_shared_address_addresses: Edit address book (own)
+    delete_other_gws_shared_address_addresses: Delete address books (all)
+    delete_private_gws_shared_address_addresses: Delete address book (own)
+    trash_other_gws_shared_address_addresses: Manage address book trash can (all)
+    trash_private_gws_shared_address_addresses: Manage address book trash can (own)
+    read_other_gws_shared_address_groups: View groups (all)
+    read_private_gws_shared_address_groups: View groups (own)
+    edit_other_gws_shared_address_groups: Edit groups (all)
+    edit_private_gws_shared_address_groups: Edit groups (own)
+    delete_other_gws_shared_address_groups: Delete groups (all)
+    delete_private_gws_shared_address_groups: Delete groups (own)
+
+  mongoid:
+    models:
+      gws/shared_address/address: Address
+      gws/shared_address/group: Group
+    attributes:
+      gws/shared_address/address:
+        address_group_id: Group name
+      gws/shared_address/group:
+        name: Group name
+        order: Order
+
+  tooltip:
+    gws/shared_address/group:
+      name:
+        - Enter the group name.
+      order:
+        - Enter the order.
+
+  job:
+    models:
+      gws/shared_address/trash_purge_job: Empty shared addresses/trash

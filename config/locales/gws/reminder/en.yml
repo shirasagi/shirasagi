@@ -1,0 +1,89 @@
+en:
+  gws/reminder:
+    notification:
+      subject: "[Reminders] %{model} - %{name}"
+      created: Registered.
+      updated: Updated.
+    notfound:
+      summary: The plan does not exist. It has been changed or deleted.
+      same_name_items: Plans with the same subject name
+      same_repeat_items: Same recurring plan
+    options:
+      notify_state:
+        disabled: Do not notify me
+        enabled: Notify me
+        mail: E-mail notification
+      interval_type:
+        minutes: minutes ago
+        hours: hours ago
+        days: days before
+        weeks: weeks before
+      interval_type_allday:
+        days: days before
+        weeks: weeks before
+      base_time:
+        "8:00": "8:00 AM"
+        "8:30": "8:30 AM"
+        "9:00": "9:00 AM"
+        "9:30": "9:30 AM"
+        "10:00": "10:00 AM"
+        "10:30": "10:30 AM"
+        "11:00": "11:00 AM"
+        "11:30": "11:30 AM"
+        "12:00": "12:00 AM"
+        "12:30": "12:30 AM"
+        "13:00": "1:00 PM"
+        "13:30": "1:30 PM"
+        "14:00": "2:00 PM"
+        "14:30": "2:30 PM"
+        "15:00": "3:00 PM"
+        "15:30": "3:30 PM"
+        "16:00": "4:00 PM"
+        "16:30": "4:30 PM"
+        "17:00": "5:00 PM"
+        "17:30": "5:30 PM"
+        "18:00": "6:00 PM"
+        "18:30": "6:30 PM"
+        "19:00": "7:00 PM"
+        "19:30": "7:30 PM"
+        "20:00": "8:00 PM"
+    links:
+      restore_reminder: Undo
+    buttons:
+      register_reminder: Register reminders
+
+  modules:
+    gws/reminder: Reminders
+    addons:
+      gws/reminder: Reminder settings
+
+  mongoid:
+    models:
+      gws/reminder: Reminders
+    attributes:
+      gws/reminder:
+        name: Title
+        date: Date and time
+        url: URL
+        updated_fields: Changed content
+        updated_user_id: Updater ID
+        updated_user_uid: Updater UID
+        updated_user_name: Updater
+        updated_date: Date updated
+      gws/addon/reminder:
+        reminder_url: Reminder URL
+        reminder_name: Reminder name
+        reminder_date: Reminder date and time
+
+  tooltip:
+    gws/addon/reminder:
+      reminder_date:
+        - You can register or unsubscribe from the reminder date and time.
+        -
+        - "To register a reminder date and time, set it to “Notify me” after entering the date and time, and click the Register button."
+        -
+        - "To unsubscribe from the reminder date and time, set it to “Do not notify me” and click the Register button."
+
+  job:
+    models:
+      gws/reminder/notification_job: Reminder notifications
