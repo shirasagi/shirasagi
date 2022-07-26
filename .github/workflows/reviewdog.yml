@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     # uncomment blow line if you don't want to run reviewdog on your repository
     # if: ${{ github.repository == 'shirasagi/shirasagi' }}
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v2
       - uses: ruby/setup-ruby@v1
