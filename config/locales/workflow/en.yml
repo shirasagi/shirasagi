@@ -19,6 +19,7 @@ en:
     circulation_step: Circulation
     circulation_comment: Comments
     comment: Comments
+    state_remind_suffix: "(Demand)"
     state:
       request: Applying
       approve: Approve
@@ -90,6 +91,28 @@ en:
       request_cancelled: Your application has been cancelled.
       approver_file_droppable: Click the “Add file” button or drop the file here.
       created_branch_page: You have created a replacement page.
+      remind:
+        subject: "[Approval Request Remind]%{page_name} - %{site_name}"
+        text: |-
+          %{from_name} sent a request for approval for the following article.
+          Please go through the approval process.
+          
+          - Title
+          %{page_name}
+          
+          - Applicant
+          %{from_name}
+          
+          - Applicant's comment
+          %{workflow_comment}
+          
+          - Article URL
+          %{show_path}
+      content_remind:
+        head: Approve
+        body:
+          - More than %{duration} have passed since the approval request was received.
+          - Please check the article content and exectue "Approve" or "Revert".
     dialogue:
       edit_branch_html: |-
         A replacement page has been created. Go to <a href="%{show_path}">Replacement page</a> and edit it.
@@ -212,3 +235,7 @@ en:
         - Select “Enable” to allow approvers to add files, or “Disable” for others.
       circulation_attachment_uses:
         - Select “Enable” to allow circulators to add files, or “Disable” for others.
+
+  job:
+    models:
+      workflow/reminder_job: Approval Reminder
