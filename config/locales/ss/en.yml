@@ -50,6 +50,11 @@ en:
     auto_reload: Automatic updates
     quality: Quality
     resize_image_auto: Resize image (automatic)
+    input_example: Entry Example
+    csv_file: CSV File
+    large_file_upload: Large File Upload
+    upload_status: Upload Status
+    under_maintenance_mode: Currently under maintenance.
 
     views:
       login/login:
@@ -60,6 +65,19 @@ en:
         updated: "Updated: %{updated}"
         released: "Published: %{released}"
         approved: "Approved: %{approved}"
+        reserved: "Reserved：%{time}"
+        delivered: "Delivered：%{time}"
+        term: "Term：%{term}"
+      oauth2/application:
+        header:
+          name: Application Type
+          text: Description
+        confidential:
+          name: Client
+          text: Creates an OAuth 2.0 Client to access user data.
+        service:
+          name: Service
+          text: Creates an OAuth 2.0 Service-Application to enable server to server authentication.
     navi:
       readable: Browse list
       editable: Management list
@@ -79,18 +97,26 @@ en:
       copy: Duplicate
       command: Command
       input: Enter
+      make_them_public: Make it public
+      make_them_close: Make it closed
       delete: Delete
       import: Import
+      import_csv: Import CSV
+      import_url: Import with URL
       reply: Reply
       back: Go back
+      deliver: Deliver
+      test_deliver: Test Deliver
       back_to_show: Back to details
       back_to_index: Back to list
       back_to_administration: Back to management screen
       parent_directory: Go up one level
       preview: Preview
       pc_preview: PC preview
+      sp_preview: Smartphone preview
       mobile_preview: Mobile preview
       pc: PC
+      sp: Smartphone
       mobile: Mobile phone
       view_site: See public screen
       open: Open
@@ -103,6 +129,7 @@ en:
       split: Split
       integrate: Integrate
       download: Download
+      download_csv: CSV Download
       download_template: Download template
       download_sample_csv: Download sample CSV
       export: Export
@@ -110,6 +137,7 @@ en:
       set_tag: Tag settings
       reset_tags: Untag
       upload: Upload
+      large_file_upload: Large file upload
       decode: Decode
       print: Print
       initialize: Initialize
@@ -185,7 +213,14 @@ en:
       file_histories: File history
       translate: Translate
       replace_save: Replace and save
+      copy_url: Copy URL
+      make_them_public: Make it public
+      make_them_close: Make it closed
+      file_name_order: Filename order
+      file_upload_order: File upload order
+      make_them_closed: Make it closed
     confirm:
+      change_state: Are you sure you want to change your publication status?
       delete: Are you sure you want to delete it?
       soft_delete: Are you sure you want to delete it?
       hard_delete: Are you sure you want to permanently delete it?
@@ -213,12 +248,21 @@ en:
       contains_links_in_file_ignoring_alert: "After confirming the backlinks, click the checkbox to delete it."
       not_contains_links_in_file: "There are no backlinks, so you can delete it."
       target_to_delete: Check what to delete
+      target_to_public: Check what to make public
+      target_to_closed: Check what to make closed
     notice:
       saved: Saved.
       deleted: Deleted.
       unable_to_delete: ! '%{items} could not be deleted.'
+      changed: Changed.
+      unable_to_change: '%{items} could not be changed.'
       copied: Duplicated.
+      imported: Imported.
       started_import: Importing started.
+      started_upload: Upload started.
+      started_deliver: Delivery started.
+      started_test_deliver: Test delivery started.
+      started_apply: Applying process started.
       sent: Sent.
       posted: Posted.
       initialized: Initialized.
@@ -259,6 +303,7 @@ en:
       soft_delete_locked: Since the deletion status is set to “Cannot be deleted”, it cannot be deleted.
       history_is_blank: There is no history.
       branch_pages_history_is_blank: There is no history because it is a replacement page.
+      ie_browser: The browser you are using (IE) cannot perform large file uploads. Please use another browser (e.g. Google Chrome).
     warning:
       initial_password: Please change your initial password.
       session_timeout: Your session has expired.
@@ -400,6 +445,9 @@ en:
         filename: File name
         filename_asc: File name (ascending)
         filename_desc: File name (descending)
+      sort_direction:
+        asc: Ascending
+        desc: Descending
       restriction:
         none: No restrictions
         api_only: API usage only
@@ -449,6 +497,23 @@ en:
       image_resizes_disabled:
         enabled: Auto-resize enabled
         disabled: Auto-resize disabled
+      approve_remind_later:
+        "1_day": 1 day later
+        "2_days": 2 days later
+        "3_days": 3 days later
+        "4_days": 4 days later
+        "5_days": 5 days later
+        "6_days": 6 days later
+        "1_week": 1 week later
+        "2_weeks": 2 weeks later
+      search:
+        kind:
+          any_of: matches the following
+          none_of: does not match the following
+          start_with: starts with
+          end_with: starts with
+          include_any_of: includes any of
+          include_none_of: includes none of
 
     tasks:
       started: Started.
@@ -478,9 +543,11 @@ en:
       ss/user_group_history: Change history
       ss/map_setting: Map settings
       ss/kana_setting: Kana settings
+      ss/open_graph_setting: OpenGraph settings
       ss/facebook_setting: Facebook settings
       ss/twitter_setting: Twitter settings
       ss/line_setting: LINE settings
+      ss/kintone_setting: Kintone settings
       ss/approve_setting: Approval settings
       ss/editor_setting: Editor settings
       ss/mail_setting: E-mail settings
@@ -496,6 +563,7 @@ en:
       ss/generate_lock: Stop exporting
       ss/partner_site: Partner site settings
       ss/inquiry_setting: Inquiry form settings
+      ss/maintenance_mode: Maintenance mode
       ss/oauth2/sys_permission: System permissions
       ss/oauth2/cms_permission: CMS permissions
       ss/oauth2/gws_permission: Groupware permissions
@@ -519,6 +587,7 @@ en:
       ss/site: Site
       ss/user: User
       ss/user_title: Job title
+      ss/user_occupation: Occupation
       ss/group: Group
       ss/user_group_history: Change history
       ss/file: File
@@ -532,6 +601,9 @@ en:
       ss/migration: DB migration
       ss/access_token: Access token
       ss/notification: Notification
+      ss/oauth2/application/base: OAuth Application
+      ss/oauth2/application/confidential: Client
+      ss/oauth2/application/service: Service
     errors:
       models:
         ss/model/group:
@@ -544,6 +616,8 @@ en:
           invalid_code: Invalid.
         ss/addon/generate_lock:
           disallow_datetime_by_system: Date and time are not allowed by the system. Please enter a shorter date and time.
+      messages:
+        not_selected: Must be selected.
     attributes:
       ss/document:
         id: id
@@ -572,6 +646,9 @@ en:
         group_ids: Group
         domains_with_subdir: Domain with subdirectory
         upload_policy: Upload restrictions
+        maintenance_mode: Maintenance mode
+        maint_remark: Remarks in maintenance mode
+        maint_excluded_user_ids: Excluded users
       ss/model/user:
         name: Name
         kana: Kana
@@ -583,6 +660,7 @@ en:
         tel_ext: Extension number
         tel_ext_short: Ext.
         in_title_id: Job title
+        in_occupation_id: Occupation
         group_ids: Group
         groups: Group
         cms_roles: CMS role
@@ -617,9 +695,20 @@ en:
         group_id: Group
         activation_date: Validity period (start)
         expiration_date: Validity period (end)
+      ss/model/user_occupation:
+        code: Occupation code
+        name: Occupation name
+        remark: Remarks
+        order: Sort by
+        group_id: Group
+        activation_date: Validity period (start)
+        expiration_date: Validity period (end)
       ss/model/reference/user_titles:
         title_ids: Job title
         title_orders: Job title order
+      ss/model/reference/user_occupations:
+        occupation_ids: Occupation
+        occupation_orders: Occupation order
       ss/model/group:
         name: Group name
         order: Display order
@@ -647,6 +736,7 @@ en:
         total_count: Total count
         current_count: No. of actions
         logs: Log
+        segment: Segment
       ss/model/file:
         in_file: File
         in_files: File
@@ -705,11 +795,19 @@ en:
         map_api_key: API key
         map_api_layer: Map layer
         show_google_maps_search: Link to Google Maps
+        map_api_mypage: Map type on the admin screen
+        map_center: Map center
+        map_max_number_of_markers: Maximum number of markers
       ss/addon/kana_setting:
         kana_format: Phonetic format
+      ss/addon/open_graph_setting:
+        facebook_page_url: Page URL
+        opengraph_type: OpenGraph
+        opengraph_defaul_image_url: Default image URL
       ss/addon/facebook_setting:
         facebook_app_id: App ID
       ss/addon/twitter_setting:
+        twitter_poster_state: Posting to twitter
         twitter_card: Card format
         twitter_username: User name
         twitter_default_image_url: Default image URL
@@ -718,8 +816,13 @@ en:
         twitter_access_token: Access token
         twitter_access_token_secret: Token secret
       ss/addon/line_setting:
+        line_poster_state: Posting to line
         line_channel_secret: Channel secret
         line_channel_access_token: Channel access token
+      ss/addon/kintone_setting:
+        kintone_domain: Kintone domain
+        kintone_user: Basic auth user
+        kintone_password: Basic auth password
       ss/addon/site_auto_post_setting:
         site_twitter_auto_post: Twitter auto-post
         site_edit_auto_post: Auto-post when editing
@@ -729,12 +832,22 @@ en:
         file_resizing_height: Height
         file_resizing_label: ! '%{size} (Site settings)'
         multibyte_filename_state: Japanese-language file name
+        file_fs_access_restriction_state: /fs access restrictions
+        file_fs_access_restriction_allowed_ip_addresses: Allowed IP addresses
+        file_fs_access_restriction_basic_auth: Basic Auth
+        file_fs_access_restriction_basic_auth_id: Basic Auth (ID)
+        file_fs_access_restriction_basic_auth_password: Basic Auth (Password)
+        file_fs_access_restriction_env: Environment Variables
+        file_fs_access_restriction_env_key: Environment Variable (Key)
+        file_fs_access_restriction_env_value: Environment Variable (Value)
       ss/addon/trash_setting:
         trash_threshold: Trash retention period
         trash_threshold_unit: Trash retention unit
       ss/addon/approve_setting:
         forced_update: E-mail address attention settings
         close_confirmation: Private save warning display settings
+        approve_remind_state: Approval reminder
+        approve_remind_later: Approval reminder period
       ss/addon/generate_lock:
         generate_lock_until: Export stop deadline
         generate_lock: Stop exporting
@@ -858,6 +971,18 @@ en:
         partner_site_ids: Partner sites
       ss/addon/inquiry_setting:
         inquiry_form_id: Inquiry form
+      ss/oauth2/application/base:
+        name: Name
+        state: Status
+        permissions: Permissions
+        client_id: Client ID
+      ss/oauth2/application/confidential:
+        client_secret: クライアントシークレット
+        redirect_uris: リダイレクトURL
+      ss/oauth2/application/service:
+        public_key_type: Public-key type
+        public_key: Public-key
+        public_key_encrypted: Public-key (Encrypted)
 
   tooltip:
     ss/model/site:
@@ -891,6 +1016,8 @@ en:
         - When using LDAP, select the LDAP users.
       title_ids:
         - Select a job title.
+      occupation_ids:
+        - Select a occupation.
       account_start_date:
         - Enter the start date of the validity period.
       account_expiration_date:
@@ -997,6 +1124,14 @@ en:
         - Select the users that are allowed to edit.
       import:
         - If the facility type, region, use, or management group listed in the CSV file have not been created in advance, the facility will not be registered.
+      file_order:
+        - Change the order of files on the administration screen in real time to make it easier to find files.
+        - However, the sort order is not saved.
+      maintenance_mode:
+        - Only excluded users will be able to operate.
+        - No other user operation is allowed.
+      maint_excluded_user_ids:
+        - Select the user who can operate in maintenance mode.
     ss/model/file:
       in_file:
         - Select a file.
@@ -1020,6 +1155,15 @@ en:
     ss/model/user_title:
       code: Enter the job title code.
       name: Enter the job title.
+      activation_date: Enter the start date and time of the validity period.
+      expiration_date: Enter the end date and time of the validity period.
+      remark: Enter remarks.
+      order:
+        - Enter the order.
+        - The higher the number, the higher the position it will be displayed in.
+    ss/model/user_occupation:
+      code: Enter the occupation code.
+      name: Enter the occupation.
       activation_date: Enter the start date and time of the validity period.
       expiration_date: Enter the end date and time of the validity period.
       remark: Enter remarks.
@@ -1109,6 +1253,13 @@ en:
         - Select the OpenLayers layer to use on the site.
       show_google_maps_search:
         - When enabled, the map marker will display a “View on Google Maps” link.
+      map_api_mypage:
+        - Set whether to display the map on the administration screen.
+      map_center:
+        - Enter the coordinates of the center of the map in the order of longitude and latitude.
+        - Note that Google Maps displays latitude and longitude in that order, but the order is reversed.
+      map_max_number_of_markers:
+        - Enter the maximum number of markers per page.
     ss/addon/kana_setting:
       kana_format:
         - Set the notation format when adding furigana to the public screen with kana function.
@@ -1116,6 +1267,9 @@ en:
       facebook_app_id:
         - Set your Facebook App ID.
         - Once set, Facebook Insights will allow you to analyze access.
+      facebook_page_url:
+        - Set the URL of the Facebook page.
+        - If set, another user who sees the shared article can "Like" it. to the shared article.
       opengraph_type:
         - Select the Open Graph format.
         - "You can see what it looks like on Facebook with “Facebook Sharing Debugger”: https://developers.facebook.com/tools/debug/sharing/."
@@ -1124,6 +1278,9 @@ en:
         - If the page does not contain an image, the URL will be set to “og:image”.
         - If the page contains an image, the URL you set here is not used.
     ss/addon/twitter_setting:
+      twitter_poster_state:
+        - If enabled, Twitter integration will appear when editing pages.
+        - A consumer key and an access token, each with its own secret key, must be set.
       twitter_card:
         - Select the Twitter card format.
         - "You can see what it looks like on Twitter with “Twitter Card Validator”: https://cards-dev.twitter.com/validator ."
@@ -1147,6 +1304,9 @@ en:
         - Set the access token secret.
         - Required for automatic posting on Twitter.
     ss/addon/line_setting:
+      line_poster_state:
+        - If enabled, LINE linkage will appear when editing pages.
+        - The channel secret and channel access token must be set.
       line_channel_secret:
         - Set the Line channel secret.
         - Required for linking with Line.
@@ -1162,6 +1322,30 @@ en:
         -
         - "Uploadable: Japanese-language files can be uploaded, but the portions in Japanese are replaced with underscores. This is the default action."
         - "Cannot be uploaded: Japanese-language files can no longer be uploaded, and only files consisting only of alphanumeric characters, hyphens, and underscores can be uploaded."
+      file_fs_access_restriction_state:
+        - Select "Enable" to restrict access under /fs.
+        - Then, to enable, enter the appropriate settings in the "Allowed IP Addresses", "Basic Authentication", or "Environment Variables" fields.
+        -
+        - This configuration works with nginx to enforce access restrictions on subdirectory subsites.
+        - This setting alone does not activate access restrictions.
+      file_fs_access_restriction_allowed_ip_addresses:
+        - Set the IP addresses to which access is allowed.
+        - To set multiple IP addresses, separate them with a new line.
+        - "Network addresses such as \"192.168.10.0/24\" or \"192.168.10.0/255.255.255.0\" can also be set."
+      file_fs_access_restriction_env:
+        - Sets environment variables to allow.
+        -
+        - "The use case we're envisioning is:"
+        - "1. it sets the authenticated Subject DN to $ssl_client_s_dn and the Issuer DN to $ssl_client_i_dn when nginx authenticates the client certificate."
+        - "2. These are propagated through nginx's \"proxy_set_header\" directive to Shirasagi."
+        - "3. Shirasagi confirms passed values."
+        -
+        - "nginx configuration example:"
+        - proxy_set_header X-SSL_CLIENT_S_DN \$ssl_client_s_dn
+        -
+        - "Example of Shirasagi setting:"
+        - "  Environment variable (Key): X-SSL_CLIENT_S_DN"
+        - "  Environment variable (Value): Certificate's Subject DN"
     ss/addon/trash_setting:
       trash_threshold:
         - The retention period of the Trash can be set.
@@ -1252,6 +1436,24 @@ en:
       contrast_ratio:
         - AAA at 7 or more, AA at 4.5 or more
         - (For 22 point or higher and 18 point or higher in bold, AAA at 4.5 or more and AA at 3 or more)
+
+    ss/oauth2/application/base:
+      name:
+        - Enter the name
+      state:
+        - Select whether the application is enabled or disabled.
+    ss/oauth2/application/confidential:
+      redirect_uris:
+        - Enter the redirect URL. Multiple redirect URLs can be entered. When entering multiple redirect URLs, separate the URLs with a new line.
+    ss/oauth2/application/service:
+      public_key:
+        - Paste your public key. Only RSA public keys are supported; DSA and elliptic curve-based keys are not supported.
+        - If the openssl command is installed, you can create a public key by executing the following command
+        -
+        - $ openssl genrsa 2048 > private_key.pem
+        - $ openssl rsa -in private_key.pem -pubout -out public_key.pem
+        -
+        - Paste the contents of public_key.pem, which is your public key.
 
   job:
     models:
