@@ -1,5 +1,7 @@
 name: reviewdog
 on: [pull_request]
+env:
+  DISABLE_SPRING: 1
 jobs:
   reviewdog:
     name: reviewdog

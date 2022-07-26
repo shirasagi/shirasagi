@@ -13,6 +13,9 @@ on:
   pull_request:
     branches: [ master, main ]
 
+env:
+  DISABLE_SPRING: 1
+
 jobs:
   test:
     runs-on: ubuntu-latest
