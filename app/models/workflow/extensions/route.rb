@@ -96,7 +96,7 @@ module Workflow::Extensions::Route
 
       def convert_from_item(item)
         begin
-          if "false" == item
+          if item == "false"
             false
           elsif item.kind_of? FalseClass
             false

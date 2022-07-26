@@ -82,12 +82,12 @@ module Cms::Addon::List
 
     def limit
       value = self[:limit].to_i
-      (value < 1 || 1000 < value) ? 100 : value
+      (value < 1 || value > 1000) ? 100 : value
     end
 
     def new_days
       value = self[:new_days].to_i
-      (value < 0 || 30 < value) ? 30 : value
+      (value < 0 || value > 30) ? 30 : value
     end
 
     def in_new_days?(date)

@@ -970,25 +970,6 @@ Style/RedundantCapitalW:
   Exclude:
     - 'db/seeds/demo/load.rb'
 
-# Offense count: 16
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: all_comparison_operators, equality_operators_only
-Style/YodaCondition:
-  Exclude:
-    - 'app/controllers/gws/workflow/wizard_controller.rb'
-    - 'app/controllers/opendata/workflow/idea_comments_controller.rb'
-    - 'app/controllers/workflow/wizard_controller.rb'
-    - 'app/models/concerns/board/addon/list.rb'
-    - 'app/models/concerns/cms/addon/list.rb'
-    - 'app/models/concerns/cms/addon/tabs.rb'
-    - 'app/models/concerns/cms/child_list.rb'
-    - 'app/models/concerns/recommend/addon/content_list.rb'
-    - 'app/models/concerns/sitemap/addon/body.rb'
-    - 'app/models/concerns/webmail/mail/parser.rb'
-    - 'app/models/member/birth_validator.rb'
-    - 'app/models/workflow/extensions/route.rb'
-
 Layout/ArgumentAlignment:
   EnforcedStyle: with_fixed_indentation
 

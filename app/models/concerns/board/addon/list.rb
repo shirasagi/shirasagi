@@ -11,7 +11,7 @@ module Board::Addon
 
     def limit
       value = self[:limit].to_i
-      (value < 1 || 1000 < value) ? 10 : value
+      (value < 1 || value > 1000) ? 10 : value
     end
 
     def mode_options

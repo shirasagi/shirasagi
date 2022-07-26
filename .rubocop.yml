@@ -149,3 +149,9 @@ Style/WordArray:
   MinSize: 0
   # The regular expression `WordRegex` decides what is considered a word.
   WordRegex: !ruby/regexp '/\A[\p{Word}\n\t]+\z/'
+
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle.
+# SupportedStyles: forbid_for_all_comparison_operators, forbid_for_equality_operators_only, require_for_all_comparison_operators, require_for_equality_operators_only
+Style/YodaCondition:
+  EnforcedStyle: forbid_for_all_comparison_operators
