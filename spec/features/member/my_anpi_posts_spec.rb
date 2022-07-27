@@ -33,20 +33,25 @@ describe "member_my_anpi_posts", type: :feature, dbscope: :example, js: true do
       expect(current_path).to eq index_path
 
       click_on I18n.t('ss.links.new')
-      fill_in 'item[name]', with: member.name
-      fill_in 'item[kana]', with: member.kana
-      fill_in 'item[addr]', with: member.addr
-      select I18n.t("member.options.sex.#{member.sex}"), from: 'item[sex]'
-      fill_in 'item[age]', with: member.age
-      fill_in 'item[email]', with: member.email
-      fill_in 'item[text]', with: text0
-      click_on 'メンバーを選択する'
-      wait_for_cbox do
-        click_link member.name
+      within "form#item-form" do
+        fill_in 'item[name]', with: member.name
+        fill_in 'item[kana]', with: member.kana
+        fill_in 'item[addr]', with: member.addr
+        select I18n.t("member.options.sex.#{member.sex}"), from: 'item[sex]'
+        fill_in 'item[age]', with: member.age
+        fill_in 'item[email]', with: member.email
+        fill_in 'item[text]', with: text0
+        wait_cbox_open { click_on 'メンバーを選択する' }
       end
-      click_on I18n.t("ss.buttons.save")
+      wait_for_cbox do
+        wait_cbox_close { click_link member.name }
+      end
+      within "form#item-form" do
+        expect(page).to have_css(".ajax-selected", text: member.name)
+        click_on I18n.t("ss.buttons.save")
+      end
+      wait_for_notice I18n.t('ss.notice.saved')
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
       expect(Board::AnpiPost.count).to eq 1
       Board::AnpiPost.first.tap do |anpi|
         expect(anpi.member_id).to eq member.id
@@ -60,10 +65,12 @@ describe "member_my_anpi_posts", type: :feature, dbscope: :example, js: true do
 
       click_on member.name
       click_on I18n.t('ss.links.edit')
-      fill_in 'item[text]', with: text1
-      click_on I18n.t("ss.buttons.save")
+      within "form#item-form" do
+        fill_in 'item[text]', with: text1
+        click_on I18n.t("ss.buttons.save")
+      end
+      wait_for_notice I18n.t('ss.notice.saved')
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
       expect(Board::AnpiPost.count).to eq 1
       Board::AnpiPost.first.tap do |anpi|
         expect(anpi.member_id).to eq member.id
@@ -75,8 +82,7 @@ describe "member_my_anpi_posts", type: :feature, dbscope: :example, js: true do
       click_on member.name
       click_on I18n.t('ss.links.delete')
       click_on I18n.t("ss.buttons.delete")
-
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
     end
   end
 

@@ -20,8 +20,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        parallelism: [ 5 ]
-        id: [ 0,1,2,3,4 ]
+        parallelism: [ 6 ]
+        id: [ 0,1,2,3,4,5 ]
     steps:
       - uses: actions/checkout@v2
       - name: Generate ja_JP.UTF-8
@@ -89,7 +89,7 @@ jobs:
           if [ $? -ne 0 ]; then
             exit 1
           fi
-          echo $file_list | xargs bundle exec rspec
+          echo $file_list | xargs bundle exec rspec --profile 10
         env:
           allow_open_jtalk: 1
           LDAP_TEST: enable

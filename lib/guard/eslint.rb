@@ -27,7 +27,7 @@ module Guard
       Guard::Compat::UI.info 'Running Eslint for all .js files'
       files = Dir.glob("**/*.js")
       files += Dir.glob("**/*.js.erb")
-      paths   = Guard::Compat.matching_files(self, files)
+      paths = Guard::Compat.matching_files(self, files)
       run_on_changes paths
     end
 
@@ -61,7 +61,7 @@ module Guard
     end
 
     def run(paths = [])
-      pid = spawn({}, "npx", "eslint", "--resolve-plugins-relative-to", `npm root -g`, *paths)
+      pid = spawn({}, "npx", "eslint", *paths)
       Process.waitpid2(pid)
     end
   end
