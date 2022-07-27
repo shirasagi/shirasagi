@@ -112,6 +112,7 @@ en:
     messages:
       no_portlets: Create a portlet.
       closed_portlet: This portlet cannot be viewed.
+      no_portals: Create a portal.
 
   gws_role:
     use_gws_portal_user_settings: Use of personal portals
