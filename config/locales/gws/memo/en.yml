@@ -86,6 +86,10 @@ en:
       subject: '[Message] Export complete.'
       notify_message: "The download is ready. Please download from the following URL. %{link}"
       start_message: "The export process has started. You will be notified of the download link when the export process is complete."
+    export_failed:
+      subject: '[Message] Export failed.'
+      notify_message: "Export failed. The cause of the failure can be found in the Task Manager."
+      empty_mails: Messages to be exported could not be found.
     backup:
       subject: '[Message] Backup complete.'
       notify_message: "The download is ready. Please download from the following URL. %{link}"
