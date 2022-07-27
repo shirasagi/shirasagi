@@ -101,8 +101,11 @@ en:
       collapse_all: Close all
     facility_reservation:
       index: Check reservation status
+      state: Reservation status
+      duplicate_register_message: Duplicate reservations are possible.
       free: Reservable
       exist: Cannot be reserved
+      registered: Registered
     import:
       result: Results
       entry: Can be registered
