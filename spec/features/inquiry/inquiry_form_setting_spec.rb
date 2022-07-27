@@ -66,13 +66,18 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
       expect(page).to have_no_content I18n.t("contact.view.inquiry_form")
 
       visit edit_site_path
-      find("#addon-ss-agents-addons-inquiry_setting").click
-      select node.name, from: "item_inquiry_form_id"
-      click_button I18n.t('ss.buttons.save')
+      within "form#item-form" do
+        ensure_addon_opened "#addon-ss-agents-addons-inquiry_setting"
+        select node.name, from: "item_inquiry_form_id"
+        click_on I18n.t('ss.buttons.save')
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       visit edit_article_path
-      click_on I18n.t("ss.buttons.publish_save")
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      within "form#item-form" do
+        click_on I18n.t("ss.buttons.publish_save")
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       visit article.url
       expect(page).to have_content I18n.t("contact.view.inquiry_form")
@@ -87,22 +92,31 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
     it do
       visit edit_group_path
-      fill_in "item_contact_email", with: "#{unique_id}@example.jp"
-      click_on I18n.t('ss.buttons.save')
+      within "form#item-form" do
+        fill_in "item_contact_email", with: "#{unique_id}@example.jp"
+        click_on I18n.t('ss.buttons.save')
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(page).to have_content cms_group.contact_email
 
       visit new_article_node_path
-      find("#addon-contact-agents-addons-page").click
-      expect(find("#item_contact_email").value).to eq cms_group.contact_email
+      within "form#item-form" do
+        ensure_addon_opened "#addon-contact-agents-addons-page"
+        expect(find("#item_contact_email").value).to eq cms_group.contact_email
+      end
 
       visit edit_article_path
-      find("#addon-contact-agents-addons-page").click
+      within "form#item-form" do
+        ensure_addon_opened "#addon-contact-agents-addons-page"
 
-      click_link I18n.t("contact.search_groups.index")
-      wait_for_cbox do
-        click_on cms_group.name
+        wait_cbox_open { click_link I18n.t("contact.search_groups.index") }
       end
-      expect(find("#item_contact_email").value).to eq cms_group.contact_email
+      wait_for_cbox do
+        wait_cbox_close { click_on cms_group.name }
+      end
+      within "form#item-form" do
+        expect(find("#item_contact_email").value).to eq cms_group.contact_email
+      end
     end
   end
 
@@ -111,30 +125,42 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
     it do
       visit edit_group_path
-      fill_in "item_contact_email", with: "#{unique_id}@example.jp"
-      click_on I18n.t('ss.buttons.save')
+      within "form#item-form" do
+        fill_in "item_contact_email", with: "#{unique_id}@example.jp"
+        click_on I18n.t('ss.buttons.save')
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(page).to have_content cms_group.contact_email
 
       visit edit_site_path
-      find("#addon-ss-agents-addons-inquiry_setting").click
-      select node.name, from: "item_inquiry_form_id"
-      click_button I18n.t('ss.buttons.save')
+      within "form#item-form" do
+        ensure_addon_opened "#addon-ss-agents-addons-inquiry_setting"
+        select node.name, from: "item_inquiry_form_id"
+        click_on I18n.t('ss.buttons.save')
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       site.reload
       expect(site.inquiry_form_id).to eq node.id
 
       visit new_article_node_path
-      find("#addon-contact-agents-addons-page").click
-      expect(find("#item_contact_email").value).not_to eq cms_group.contact_email
+      within "form#item-form" do
+        ensure_addon_opened "#addon-contact-agents-addons-page"
+        expect(find("#item_contact_email").value).not_to eq cms_group.contact_email
+      end
 
       visit edit_article_path
-      find("#addon-contact-agents-addons-page").click
+      within "form#item-form" do
+        ensure_addon_opened "#addon-contact-agents-addons-page"
 
-      click_link I18n.t("contact.search_groups.index")
-      wait_for_cbox do
-        click_on cms_group.name
+        wait_cbox_open { click_on I18n.t("contact.search_groups.index") }
       end
-      expect(find("#item_contact_email").value).not_to eq cms_group.contact_email
+      wait_for_cbox do
+        wait_cbox_close { click_on cms_group.name }
+      end
+      within "form#item-form" do
+        expect(find("#item_contact_email").value).not_to eq cms_group.contact_email
+      end
     end
   end
 end

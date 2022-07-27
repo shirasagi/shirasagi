@@ -1,23 +1,18 @@
 class Cms::Agents::Tasks::Line::RichmenusController < ApplicationController
   #https://github.com/line/line-bot-sdk-ruby/blob/master/lib/line/bot/client.rb
-  MAX_MEMBERS_TO = 400.freeze
 
-  def with_subscribable_members(line_richmenu_id)
+  def with_subscribable_members(line_richmenu_id, &block)
     criteria = Cms::Member.site(@site).and_enabled
     criteria = criteria.where(:oauth_id.exists => true, oauth_type: "line")
     criteria = criteria.ne(subscribe_richmenu_id: line_richmenu_id)
-    criteria.to_a.each_slice(MAX_MEMBERS_TO).with_index do |members_to, idx|
-      yield(members_to, idx)
-    end
+    criteria.to_a.each_slice(Cms::Line.max_members_to).with_index(&block)
   end
 
-  def with_subscribed_members(line_richmenu_id)
+  def with_subscribed_members(line_richmenu_id, &block)
     criteria = Cms::Member.site(@site).and_enabled
     criteria = criteria.where(:oauth_id.exists => true, oauth_type: "line")
     criteria = criteria.where(subscribe_richmenu_id: line_richmenu_id)
-    criteria.to_a.each_slice(MAX_MEMBERS_TO).with_index do |members_to, idx|
-      yield(members_to, idx)
-    end
+    criteria.to_a.each_slice(Cms::Line.max_members_to).with_index(&block)
   end
 
   def ineffective_user_ids(registration)
@@ -32,7 +27,7 @@ class Cms::Agents::Tasks::Line::RichmenusController < ApplicationController
 
     @task.log("link default richmenu #{menu.name}:#{registration.line_richmenu_id}")
     res = @site.line_client.set_default_rich_menu(registration.line_richmenu_id)
-    raise "#{res.code} #{res.body}" if res.code !~ /^2\d\d$/
+    raise "#{res.code} #{res.body}" if !res.code.start_with?("2")
   end
 
   def link_member_menu(menu, registration)
@@ -46,7 +41,7 @@ class Cms::Agents::Tasks::Line::RichmenusController < ApplicationController
       user_ids = members_to.map(&:oauth_id)
       @task.log("- link members #{idx * user_ids.size}..#{(idx * user_ids.size) + user_ids.size}")
       res = @site.line_client.bulk_link_rich_menus(user_ids, line_richmenu_id)
-      raise "#{res.code} #{res.body}" if res.code !~ /^2\d\d$/
+      raise "#{res.code} #{res.body}" if !res.code.start_with?("2")
 
       # set linked line_richmenu_id
       members_to.each { |member| member.set(subscribe_richmenu_id: line_richmenu_id) }
@@ -60,7 +55,7 @@ class Cms::Agents::Tasks::Line::RichmenusController < ApplicationController
     return if unlink_user_ids.blank?
 
     @task.log("unlink members richmenu")
-    unlink_user_ids.to_a.each_slice(MAX_MEMBERS_TO).with_index do |user_ids, idx|
+    unlink_user_ids.to_a.each_slice(Cms::Line.max_members_to).with_index do |user_ids, idx|
       @task.log("- unlink members #{idx * user_ids.size}..#{(idx * user_ids.size) + user_ids.size}")
       @site.line_client.bulk_unlink_rich_menus(user_ids)
     end
@@ -102,7 +97,7 @@ class Cms::Agents::Tasks::Line::RichmenusController < ApplicationController
       # create richmenu object
       @task.log("-- create #{menu.name}")
       res = @site.line_client.create_rich_menu(menu.richmenu_object)
-      raise "#{res.code} #{res.body}" if res.code !~ /^2\d\d$/
+      raise "#{res.code} #{res.body}" if !res.code.start_with?("2")
       line_richmenu_id = (JSON.parse(res.body))['richMenuId']
 
       # upload richmenu image
@@ -113,7 +108,7 @@ class Cms::Agents::Tasks::Line::RichmenusController < ApplicationController
         instance_variable_get("@_content_type")
       end
       res = @site.line_client.create_rich_menu_image(line_richmenu_id, file)
-      raise "#{res.code} #{res.body}" if res.code !~ /^2\d\d$/
+      raise "#{res.code} #{res.body}" if !res.code.start_with?("2")
 
       registration.line_richmenu_id = line_richmenu_id
       registration.line_richmenu_alias_id = menu.richmenu_alias
@@ -128,7 +123,7 @@ class Cms::Agents::Tasks::Line::RichmenusController < ApplicationController
 
       # get already registered alias
       res = @site.line_client.get_rich_menus_alias_list
-      raise "#{res.code} #{res.body}" if res.code !~ /^2\d\d$/
+      raise "#{res.code} #{res.body}" if !res.code.start_with?("2")
       registered_aliases = JSON.parse(res.body)["aliases"].map { |h| [h["richMenuAliasId"], h["richMenuId"]] }.to_h
       created_aliases = {}
 
@@ -149,7 +144,7 @@ class Cms::Agents::Tasks::Line::RichmenusController < ApplicationController
             res = @site.line_client.set_rich_menus_alias(line_richmenu_id, line_richmenu_alias_id)
             created_aliases[line_richmenu_alias_id] = line_richmenu_id
           end
-          raise "#{res.code} #{res.body}" if res.code !~ /^2\d\d$/
+          raise "#{res.code} #{res.body}" if !res.code.start_with?("2")
         end
       end
     end
