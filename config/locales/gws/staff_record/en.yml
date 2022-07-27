@@ -62,6 +62,13 @@ en:
     delete_other_gws_staff_record_user_titles: Delete job titles (all)
     delete_private_gws_staff_record_user_titles: Delete job titles (own)
 
+    read_other_gws_staff_record_user_occupations: View occupations (all)
+    read_private_gws_staff_record_user_occupations: View occupations (own)
+    edit_other_gws_staff_record_user_occupations: Edit occupations (all)
+    edit_private_gws_staff_record_user_occupations: Edit occupations (own)
+    delete_other_gws_staff_record_user_occupations: Delete occupations (all)
+    delete_private_gws_staff_record_user_occupations: Delete occupations (own)
+
     edit_other_gws_staff_record_charges: Edit responsibilities (all)
     edit_private_gws_staff_record_charges: Edit responsibilities (own)
 
@@ -72,6 +79,7 @@ en:
       gws/staff_record/user: Staff member
       gws/staff_record/seating: Seating chart
       gws/staff_record/title_ids: Job title
+      gws/staff_record/occupation_ids: Occupation
     attributes:
       gws/addon/staff_record/group_setting:
         staff_records_limit: Electronic staff records/No. of items displayed
@@ -96,6 +104,7 @@ en:
         multi_section: Main and concurrent responsibilities
         section_name: Affiliation
         title_ids: Job title
+        occupation_ids: Occupation
         tel_ext: Personal extension
         charge_name: Name of person responsible
         charge_tel: Phone number of person responsible
@@ -143,6 +152,7 @@ en:
       multi_section: Select main and concurrent duties.
       section_name: Select an affiliation.
       title_ids: Select a job title.
+      occupation_ids: Select a occupation.
       tel_ext: Enter a personal extension.
       charge_name: Enter the person responsible.
       charge_tel: Enter the phone number of the person responsible.
