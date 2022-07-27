@@ -51,6 +51,8 @@ en:
         index: Select a custom group
       user_titles:
         index: Select a job title
+      user_occupations:
+        index: Select a occupation
     options:
       severity:
         high: Important announcements
@@ -81,6 +83,7 @@ en:
         updated: Date updated
         main_group: Group
         user_title: Job title
+        user_occupation: Occupation
         email: E-mail address
         tel: Phone number
 
@@ -115,6 +118,7 @@ en:
     edit_gws_groups: Manage groups
     edit_gws_users: Manage users
     edit_gws_user_titles: Manage job titles
+    edit_gws_user_occupations: Manage occupations
     edit_gws_roles: Manage permissions/roles
     edit_gws_user_forms: Manage user extensions
     read_gws_histories: View operation history
@@ -173,6 +177,7 @@ en:
       gws/custom_group_member: Custom group members
       gws/user: User
       gws/user_title: Job title
+      gws/user_occupation: Occupation
       gws/role: Permissions/Roles
       gws/link: Links
       gws/share: Shared files
@@ -199,6 +204,10 @@ en:
           not_found: "%{line_no}: ID %{id} facility does not exist."
         gws/column/base:
           not_found: " %{id} does not exist."
+        gws/custom_group:
+          not_found: "%{line_no}: Id %{id} custom group does not exist."
+          not_found_group: "%{line_no}: Participating group \"%{name}\" is not found."
+          not_found_user: "%{line_no}: Participating user \"%{uid}\" is not found."
     attributes:
       gws/model/category:
         model: Model
@@ -237,6 +246,8 @@ en:
       gws/custom_group:
         name: Group name
         order: Display order
+        member_group_ids: Participating groups
+        member_ids: Participating users
       gws/link:
         name: Title
       gws/history:
@@ -464,6 +475,8 @@ en:
         color: Background color
       gws/addon/import/group:
         in_file: File
+      gws/addon/import/custom_group:
+        in_file: File
       gws/addon/import/facility/item:
         in_file: File
       gws/addon/import/role:
@@ -613,3 +626,5 @@ en:
       gws/history_archive_job: Create an operation history archive
       gws/compress_job: File/Compressed download
       gws/user_title_import_job: Import job title
+      gws/user_occupation_import_job: Occupation import
+      gws/cache_rebuild_job: Rebuild cache
