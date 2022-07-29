@@ -67,8 +67,9 @@ describe "cms_node_pages", type: :feature, dbscope: :example do
           expect(page).to have_link item.name
           click_on item.name
         end
-        click_on I18n.t('cms.confirm.check_linked_url_list')
-        expect(page).to have_content I18n.t("cms.confirm.contains_urls_not_found")
+        # click_on I18n.t('cms.confirm.check_linked_url_list')
+        # expect(page).not_to have_content I18n.t("cms.confirm.contains_urls_not_found")
+        expect(page).not_to have_content I18n.t("cms.confirm.check_linked_url_list")
       end
     end
   end
