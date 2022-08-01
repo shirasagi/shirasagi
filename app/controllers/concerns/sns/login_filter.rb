@@ -27,6 +27,8 @@ module Sns::LoginFilter
     alert = opts.delete(:alert).presence || t("sns.errors.invalid_login")
 
     if user
+      return if render_one_time_password(user)
+
       opts[:session] ||= true
       set_user user, opts
 
@@ -37,12 +39,41 @@ module Sns::LoginFilter
     else
       @item = user_class.new
       @item.email = email_or_uid if email_or_uid.present?
+      @alert = alert
       respond_to do |format|
-        flash[:alert] = alert
         format.html { render template: "login" }
         format.json { render json: alert, status: :unprocessable_entity }
       end
     end
+  end
+
+  def render_one_time_password(user)
+    return unless user.otpw_enabled? # organization exists
+    return if user.organization.gws_group.otpw_allowlist_request?(remote_addr)
+
+    @otpw_view = :password
+    safe_params = get_params
+
+    if safe_params[:in_otpw_password].present?
+      @otpw_view = :password
+      valid = user.otpw_authenticate_password(safe_params[:in_otpw_password])
+      return if valid
+
+      @alert = user.errors.full_messages.first
+      user.errors.clear
+      return render template: "login"
+    end
+
+    if safe_params[:in_otpw_email].present?
+      password = user.otpw_set_new_password
+      email = user.otpw_find_email(safe_params[:in_otpw_email])
+
+      SS::Mailer.one_time_password_mail(user, email).deliver_now if email
+      return render template: "login"
+    end
+
+    @otpw_view = :email
+    render template: "login"
   end
 
   def set_organization

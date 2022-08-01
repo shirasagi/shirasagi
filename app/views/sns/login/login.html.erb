@@ -15,27 +15,96 @@
       <div class="version">ver. <%= tryb{SS.version} %></div>
     </header>
 
-    <%= form_tag action: params[:action] do |f| %>
-      <% if flash[:alert] %>
-      <div class="error-message"><%= flash[:alert] %></div>
+    <% if flash[:alert] %>
+    <div class="error-message"><%= flash[:alert] %></div>
+    <% end %>
+
+    <% if @alert %>
+    <div class="error-message"><%= @alert %></div>
+    <% end %>
+
+    <%= error_messages_for :item %>
+
+    <% if @otpw_view.nil? %>
+
+      <%= form_tag({ action: params[:action] }, { class: 'login-form' }) do |f| %>
+        <%= hidden_field_tag :ref, params[:ref] %>
+
+        <div class="form-group">
+          <label><%== t("ss.views.login/login.id") %></label>
+          <%= email_field :item, :email, class: "alnum", autofocus: pc_browser? %>
+        </div>
+        <div class="form-group">
+          <label><%= t("ss.views.login/login.password") %></label>
+          <%= password_field :item, :password %>
+        </div>
+        <footer class="send">
+          <%= submit_tag t("ss.login"), class: "btn-primary" %>
+        </footer>
       <% end %>
 
-      <%= error_messages_for :item %>
-      <%= hidden_field_tag :ref, params[:ref] %>
+    <% elsif @otpw_view == :email %>
 
-      <div class="form-group">
-        <label><%== t("ss.views.login/login.id") %></label>
-        <%= email_field :item, :email, class: "alnum", autofocus: pc_browser? %>
+      <%= form_tag({ action: params[:action] }, { class: 'otpw-email-form' }) do |f| %>
+        <%= hidden_field_tag :ref, params[:ref] %>
+        <%= hidden_field_tag 'item[email]', params[:item][:email], id: nil %>
+        <%= hidden_field_tag 'item[password]', params[:item][:password], id: nil %>
+
+        <div class="form-message">
+          <%= t('ss.info.recieve_authentication_code') %>
+        </div>
+        <div class="form-group">
+          <label><%= SS::User.t :email %></label>
+          <%= email_field :item, :in_otpw_email, class: "alnum", required: true, autofocus: pc_browser? %>
+        </div>
+        <footer class="send">
+          <%= submit_tag t("ss.buttons.send"), class: "btn-primary" %>
+        </footer>
+      <% end %>
+
+    <% elsif @otpw_view == :password %>
+
+      <%= form_tag({ action: params[:action] }, { class: 'otpw-password-form' }) do |f| %>
+        <%= hidden_field_tag :ref, params[:ref] %>
+        <%= hidden_field_tag 'item[email]', params[:item][:email], id: nil %>
+        <%= hidden_field_tag 'item[password]', params[:item][:password], id: nil %>
+        <%= hidden_field_tag 'item[in_otpw_email]', params[:item][:in_otpw_email], id: nil %>
+
+        <div class="form-message">
+          <%= t('ss.info.input_authentication_code') %>
+        </div>
+        <div class="form-group">
+          <label><%= SS::User.t :otpw_password %></label>
+          <%= text_field :item, :in_otpw_password, class: "alnum", required: true, autofocus: pc_browser? %>
+        </div>
+        <footer class="send">
+          <%= submit_tag t("ss.buttons.certificate"), class: "btn-primary" %>
+        </footer>
+      <% end %>
+
+      <%= form_tag({ action: params[:action] }, { class: 'otpw-email-form' }) do |f| %>
+        <%= hidden_field_tag :ref, params[:ref] %>
+        <%= hidden_field_tag 'item[email]', params[:item][:email], id: nil, class: 'item-email' %>
+        <%= hidden_field_tag 'item[password]', params[:item][:password], id: nil, class: 'item-password' %>
+
+        <div class="form-message">
+          <%= t('ss.info.recieve_authentication_code') %>
+        </div>
+        <div class="form-group">
+          <label><%= SS::User.t :email %></label>
+          <%= email_field :item, :in_otpw_email, class: "alnum", required: true, value: params[:item][:in_otpw_email] %>
+        </div>
+        <footer class="send">
+          <%= submit_tag t("ss.buttons.resend"), class: "btn-primary" %>
+        </footer>
+      <% end %>
+
+    <% end %>
+
+    <% if @otpw_view == :email || @otpw_view == :password %>
+      <div style="text-align: center;">
+        <%= link_to t('ss.links.change_account'), { ref: params[:ref] } %>
       </div>
-
-      <div class="form-group">
-        <label><%= t("ss.views.login/login.password") %></label>
-        <%= password_field :item, :password %>
-      </div>
-
-      <footer class="send">
-        <%= submit_tag t("ss.login"), class: "btn-primary" %>
-      </footer>
     <% end %>
 
     <% ssos = Sys::Auth::Base.where(state: "enabled").order_by(order: 1).to_a %>

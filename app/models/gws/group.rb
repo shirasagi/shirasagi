@@ -24,6 +24,7 @@ class Gws::Group
   include Gws::Addon::System::MenuSetting
   include Gws::Addon::System::NoticeSetting
   include Gws::Addon::System::LogoSetting
+  include SS::Addon::OneTimePassword::Group
   include Gws::Addon::System::LogSetting
   include Gws::Addon::System::GroupSetting
   include Gws::Addon::System::UserSetting
