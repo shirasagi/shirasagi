@@ -75,4 +75,18 @@ describe "ads_banners", type: :feature, dbscope: :example, js: true do
       wait_for_notice I18n.t("ss.notice.deleted")
     end
   end
+
+  context "when workflow settings are enabled" do
+    let!(:item) { create :ads_banner, filename: "ads/item" }
+
+    it do
+      site.update_attributes(
+        approve_remind_state: 'enabled',
+        approve_remind_later: '1.day'
+      )
+
+      visit ads_banner_path(site.id, node, item)
+      expect(page).to have_content(item.name)
+    end
+  end
 end
