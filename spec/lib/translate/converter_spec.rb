@@ -19,24 +19,24 @@ describe Translate::Converter, dbscope: :example do
     WebMock.disable_net_connect!
     WebMock.reset!
 
-    stub_request(:any, "https://oauth2.googleapis.com/token").to_return do |request|
+    stub_request(:any, "https://www.googleapis.com/oauth2/v4/token").to_return do |request|
       requests << request
 
       response = {
         "access_token": unique_id,
         "expires_in": 3920,
         "token_type": "Bearer",
-        "scope": "https://www.googleapis.com/#{unique_id}",
+        "scope": "https://www.googleapis.com/auth/cloud-translation",
         "refresh_token": unique_id
       }
       { status: 200, body: response.to_json, headers: { 'Content-Type' => 'application/json' } }
     end
-    stub_request(:any, "https://translate.googleapis.com/language/translate/v2").to_return do |request|
+    stub_request(:any, "https://translation.googleapis.com/language/translate/v2").to_return do |request|
       requests << request
 
       body = JSON.parse(request.body)
       translations = body["q"].map do |text|
-        { "translatedText" => "[#{target.code}:#{text}]", "detectedSourceLanguage" => source.code }
+        { "translatedText" => "[#{target.code}:#{text}]", "model" => "nmt" }
       end
       response = { "data" => { "translations" => translations } }
       { status: 200, body: response.to_json, headers: {'Content-Type' => 'application/json'} }
