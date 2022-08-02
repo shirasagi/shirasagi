@@ -68,7 +68,7 @@ describe "cms_node_pages", type: :feature, dbscope: :example do
           click_on item.name
         end
         wait_for_ajax
-        expect(page).not_to have_content I18n.t("cms.confirm.check_linked_url_list")
+        expect(page).to have_no_content I18n.t("cms.confirm.check_linked_url_list")
       end
     end
   end
