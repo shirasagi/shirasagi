@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Translate::Converter, dbscope: :example do
-  let(:ss_proj1) { ::File.read("spec/fixtures/translate/ss_proj1.html") }
+  let(:ss_proj1) { ::File.read("#{Rails.root}/spec/fixtures/translate/ss_proj1.html") }
   let(:site) { cms_site }
 
   let!(:lang_ja) { create :translate_lang_ja }
@@ -12,17 +12,50 @@ describe Translate::Converter, dbscope: :example do
 
   let(:source) { Translate::Lang.site(site).find_by(code: "ja") }
   let(:target) { Translate::Lang.site(site).find_by(code: "en") }
+  let(:requests) { [] }
 
   before do
-    mock = SS.config.translate.mock
-    mock["processor"] = "develop"
-    SS.config.replace_value_at(:translate, 'mock', mock)
+    @net_connect_allowed = WebMock.net_connect_allowed?
+    WebMock.disable_net_connect!
+    WebMock.reset!
+
+    stub_request(:any, "https://oauth2.googleapis.com/token").to_return do |request|
+      requests << request
+
+      response = {
+        "access_token": unique_id,
+        "expires_in": 3920,
+        "token_type": "Bearer",
+        "scope": "https://www.googleapis.com/#{unique_id}",
+        "refresh_token": unique_id
+      }
+      { status: 200, body: response.to_json, headers: { 'Content-Type' => 'application/json' } }
+    end
+    stub_request(:any, "https://translate.googleapis.com/language/translate/v2").to_return do |request|
+      requests << request
+
+      body = JSON.parse(request.body)
+      translations = body["q"].map do |text|
+        { "translatedText" => "[#{target.code}:#{text}]", "detectedSourceLanguage" => source.code }
+      end
+      response = { "data" => { "translations" => translations } }
+      { status: 200, body: response.to_json, headers: {'Content-Type' => 'application/json'} }
+    end
 
     site.translate_state = "enabled"
-    site.translate_api = "mock"
     site.translate_source = lang_ja
     site.translate_target_ids = [lang_en, lang_ko, lang_zh_CN, lang_zh_TW].map(&:id)
-    site.update!
+
+    site.translate_api = "google_translation"
+    site.translate_google_api_project_id = "shirasagi-dev"
+    site.translate_google_api_credential_file = tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/translate/gcp_credential.json")
+
+    site.save!
+  end
+
+  after do
+    WebMock.reset!
+    WebMock.allow_net_connect! if @net_connect_allowed
   end
 
   it do

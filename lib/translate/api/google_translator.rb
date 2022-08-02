@@ -24,9 +24,7 @@ class Translate::Api::GoogleTranslator
     @credentials = opts[:credentials] if opts[:credentials]
     @location_id = opts[:location_id] if opts[:location_id]
 
-    # @client = Google::Cloud.translate(credentials: @credentials)
     @client = Google::Cloud::Translate::V2.new(project_id: @project_id, credentials: @credentials)
-    # @parent = @client.class.location_path(@project_id, @location_id)
   end
 
   def request_word_limit
@@ -49,7 +47,6 @@ class Translate::Api::GoogleTranslator
       raise Translate::RequestLimitExceededError, "request word limit exceeded"
     end
 
-    # response = @client.translate_text(contents, target_language, @parent, source_language_code: source_language)
     translations = @client.translate(*contents, to: target_language, from: source_language)
     translated = translations.map { |translation| ::CGI.unescapeHTML(translation.text) }
     @count = count
