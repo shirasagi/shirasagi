@@ -1,12 +1,10 @@
 # ref : https://googleapis.dev/ruby/google-cloud-translate/latest/Google/Cloud.html
+require "google/cloud/translate/v2"
 
 class Translate::Api::GoogleTranslator
   attr_reader :site, :key, :url, :count
 
   def initialize(site, opts = {})
-    require "google/cloud"
-    require "google/cloud/translate"
-
     @site = site
     @count = 0
 
@@ -26,8 +24,9 @@ class Translate::Api::GoogleTranslator
     @credentials = opts[:credentials] if opts[:credentials]
     @location_id = opts[:location_id] if opts[:location_id]
 
-    @client = Google::Cloud.translate(credentials: @credentials)
-    @parent = @client.class.location_path(@project_id, @location_id)
+    # @client = Google::Cloud.translate(credentials: @credentials)
+    @client = Google::Cloud::Translate::V2.new(project_id: @project_id, credentials: @credentials)
+    # @parent = @client.class.location_path(@project_id, @location_id)
   end
 
   def request_word_limit
@@ -50,8 +49,9 @@ class Translate::Api::GoogleTranslator
       raise Translate::RequestLimitExceededError, "request word limit exceeded"
     end
 
-    response = @client.translate_text(contents, target_language, @parent, source_language_code: source_language)
-    translated = response.translations.map { |translation| ::CGI.unescapeHTML(translation.translated_text) }
+    # response = @client.translate_text(contents, target_language, @parent, source_language_code: source_language)
+    translations = @client.translate(*contents, to: target_language, from: source_language)
+    translated = translations.map { |translation| ::CGI.unescapeHTML(translation.text) }
     @count = count
 
     @site.translate_google_api_request_count += 1
