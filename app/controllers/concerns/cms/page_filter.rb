@@ -55,7 +55,7 @@ module Cms::PageFilter
   end
 
   def set_contains_urls_items
-    @contains_urls = Cms::Page.none if !@item.is_a?(Cms::Model::Page) || @item.try(:branch?)
+    @contains_urls = Cms::Page.none if !@item.is_a?(Cms::Model::Page) || @item.try(:branch?) || params[:branch_save].present?
     @contains_urls ||= Cms::Page.all.site(@cur_site).and_linking_pages(@item).page(params[:page]).per(50)
   end
 
