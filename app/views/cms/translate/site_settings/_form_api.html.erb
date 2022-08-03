@@ -15,14 +15,6 @@ chageApi($(".translate-api .select-api"));
   <dd><%= f.select :translate_api, @item.translate_api_options, { include_blank: true }, { class: "select-api" } %></dd>
 </dl>
 
-<dl class="see translate-api api mock">
-  <dt><%= @model.t :translate_mock_api_request_count %><%= @model.tt :translate_mock_request_count %></dt>
-  <dd><%= f.number_field :translate_mock_api_request_count, min: 0 %></dd>
-
-  <dt><%= @model.t :translate_mock_api_request_word_count %><%= @model.tt :translate_mock_request_word_count %></dt>
-  <dd><%= f.number_field :translate_mock_api_request_word_count, min: 0 %></dd>
-</dl>
-
 <dl class="see translate-api api microsoft_translator_text">
   <dt><%= @model.t :translate_microsoft_api_key %></dt>
   <dd><%= f.text_field :translate_microsoft_api_key %></dd>

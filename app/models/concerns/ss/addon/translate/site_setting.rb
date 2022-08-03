@@ -20,10 +20,6 @@ module SS::Addon
       field :translate_api_request_word_limit, type: Integer, default: 0
       field :translate_api_limit_exceeded_html, type: String
 
-      # mock
-      field :translate_mock_api_request_count, type: Integer, default: 0
-      field :translate_mock_api_request_word_count, type: Integer, default: 0
-
       # microsoft translator text api
       field :translate_microsoft_api_key, type: String
       field :translate_microsoft_api_request_count, type: Integer, default: 0
@@ -91,9 +87,6 @@ module SS::Addon
     public
 
     def reset_translate_api_count!
-      # mock
-      self.translate_mock_api_request_count = 0
-      self.translate_mock_api_request_word_count = 0
       # microsoft translator text api
       self.translate_microsoft_api_request_count = 0
       self.translate_microsoft_api_request_word_count = 0
@@ -119,16 +112,8 @@ module SS::Addon
       translate_state == "enabled"
     end
 
-    def translate_path(target)
-      ::File.join(path, "translate", target)
-    end
-
     def translate_location
       @translate_location ||= SS.config.translate.location
-    end
-
-    def translate_path
-      ::File.join(url, translate_location)
     end
 
     def translate_url

@@ -2,15 +2,7 @@
   <dt><%= @model.t :translate_api %></dt>
   <dd><%= @item.label :translate_api %></dd>
 
-  <% if @item.translate_api == "mock" %>
-
-  <dt><%= @model.t :translate_mock_api_request_count %><%= @model.tt :translate_mock_api_request_count %></dt>
-  <dd><%= @item.translate_mock_api_request_count %></dd>
-
-  <dt><%= @model.t :translate_mock_api_request_word_count %><%= @model.tt :translate_mock_api_request_word_count %></dt>
-  <dd><%= @item.translate_mock_api_request_word_count %></dd>
-
-  <% elsif @item.translate_api == "microsoft_translator_text" %>
+  <% if @item.translate_api == "microsoft_translator_text" %>
 
   <dt><%= @model.t :translate_microsoft_api_key %></dt>
   <dd><%= @item.translate_microsoft_api_key %></dd>
