@@ -3,7 +3,7 @@ module TranslateSupport
 
   def self.extended(obj)
     obj.class_eval do
-      delegate :translate_requests, :install_google_stubs, to: ::TranslateSupport
+      delegate :translate_requests, :install_google_stubs, :install_azure_stubs, to: ::TranslateSupport
     end
 
     obj.after(:example) do
@@ -37,6 +37,22 @@ module TranslateSupport
       end
       response = { "data" => { "translations" => translations } }
       { status: 200, body: response.to_json, headers: {'Content-Type' => 'application/json'} }
+    end
+  end
+
+  def install_azure_stubs
+    api_endpoint = "https://api.cognitive.microsofttranslator.com/translate"
+    WebMock.stub_request(:any, /^#{Regexp.escape(api_endpoint)}/).to_return do |request|
+      TranslateSupport.translate_requests << request
+
+      # source = request.uri.query_values["from"]
+      target = request.uri.query_values["to"]
+
+      body = JSON.parse(request.body)
+      response = body.map do |text|
+        { "translations" => [{ "text" => "[#{target}:#{text["Text"]}]", "to" => target }] }
+      end
+      { status: 200, body: response.to_json, headers: { 'Content-Type' => 'application/json', "x-metered-usage" => 1 } }
     end
   end
 end
