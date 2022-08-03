@@ -17,29 +17,38 @@ describe "gws_elasticsearch_search", type: :feature, dbscope: :example, js: true
     create(:gws_share_category, name: 'Category')
 
     stub_request(:any, /#{::Regexp.escape(site.elasticsearch_hosts.first)}/).to_return do |request|
-      requests << request.as_json.dup
-      {
-        body: {
-          took: 20,
-          hits: {
-            total: 1,
-            hits: [{
-              _index: site.id.to_s,
-              _type: '_doc',
-              _id: "gws_board_posts-post-1",
-              _source: {
-                collection_name: 'gws_board_posts',
-                name: name,
-                url: "http://example.jp/#{name}",
-                updated: Time.zone.now,
-                categories: %w(Category)
-              }
-            }]
-          }
-        }.to_json,
-        status: 200,
-        headers: { 'Content-Type' => 'application/json; charset=UTF-8' }
-      }
+      if request.uri.path == "/"
+        # always respond success for ping request
+        {
+          status: 200,
+          headers: { 'Content-Type' => 'application/json; charset=UTF-8', 'X-elastic-product' => "Elasticsearch" },
+          body: ::File.read("#{Rails.root}/spec/fixtures/gws/elasticsearch/ping.json")
+        }
+      else
+        requests << request.as_json.dup
+        {
+          body: {
+            took: 20,
+            hits: {
+              total: 1,
+              hits: [{
+                _index: site.id.to_s,
+                _type: '_doc',
+                _id: "gws_board_posts-post-1",
+                _source: {
+                  collection_name: 'gws_board_posts',
+                  name: name,
+                  url: "http://example.jp/#{name}",
+                  updated: Time.zone.now,
+                  categories: %w(Category)
+                }
+              }]
+            }
+          }.to_json,
+          status: 200,
+          headers: { 'Content-Type' => 'application/json; charset=UTF-8' }
+        }
+      end
     end
   end
 

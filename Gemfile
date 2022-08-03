@@ -43,7 +43,7 @@ gem 'fast_blank'
 gem 'fastimage'
 gem 'fullcalendar.io-rails', '~> 2.6.0'
 gem 'geocoder'
-gem 'google-cloud-translate', '2.0.0'
+gem 'google-api-client'
 gem 'holiday_japan'
 gem 'http_accept_language'
 gem 'icalendar'
@@ -103,7 +103,7 @@ gem 'unf'
 
 # elasticsearch
 gem 'faraday'
-gem 'elasticsearch'
+gem 'elasticsearch', '~> 7'
 
 # line
 gem 'line-bot-api'

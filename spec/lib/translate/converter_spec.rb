@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Translate::Converter, dbscope: :example do
-  let(:ss_proj1) { ::File.read("spec/fixtures/translate/ss_proj1.html") }
+describe Translate::Converter, dbscope: :example, translate: true do
+  let(:ss_proj1) { ::File.read("#{Rails.root}/spec/fixtures/translate/ss_proj1.html") }
   let(:site) { cms_site }
 
   let!(:lang_ja) { create :translate_lang_ja }
@@ -13,31 +13,86 @@ describe Translate::Converter, dbscope: :example do
   let(:source) { Translate::Lang.site(site).find_by(code: "ja") }
   let(:target) { Translate::Lang.site(site).find_by(code: "en") }
 
-  before do
-    mock = SS.config.translate.mock
-    mock["processor"] = "develop"
-    SS.config.replace_value_at(:translate, 'mock', mock)
+  context "with google" do
+    before do
+      @net_connect_allowed = WebMock.net_connect_allowed?
+      WebMock.disable_net_connect!
+      WebMock.reset!
 
-    site.translate_state = "enabled"
-    site.translate_api = "mock"
-    site.translate_source = lang_ja
-    site.translate_target_ids = [lang_en, lang_ko, lang_zh_CN, lang_zh_TW].map(&:id)
-    site.update!
+      install_google_stubs
+
+      site.translate_state = "enabled"
+      site.translate_source = lang_ja
+      site.translate_target_ids = [lang_en, lang_ko, lang_zh_CN, lang_zh_TW].map(&:id)
+
+      site.translate_api = "google_translation"
+      site.translate_google_api_project_id = "shirasagi-dev"
+      "#{Rails.root}/spec/fixtures/translate/gcp_credential.json".tap do |path|
+        site.translate_google_api_credential_file = tmp_ss_file(contents: path)
+      end
+
+      site.save!
+    end
+
+    after do
+      WebMock.reset!
+      WebMock.allow_net_connect! if @net_connect_allowed
+    end
+
+    it do
+      item = Translate::Converter.new(site, source, target)
+      html = item.convert(ss_proj1)
+
+      doc = Nokogiri.parse(html)
+      texts = doc.search('//text()').map do |node|
+        next if node.node_type != 3
+        next if node.blank?
+        node.content
+      end.compact
+
+      texts.each do |text|
+        expect(text).to match(/^\[#{target.code}:.+?\]/)
+      end
+    end
   end
 
-  it do
-    item = Translate::Converter.new(site, source, target)
-    html = item.convert(ss_proj1)
+  context "with azure(microsoft)" do
+    before do
+      @net_connect_allowed = WebMock.net_connect_allowed?
+      WebMock.disable_net_connect!
+      WebMock.reset!
 
-    doc = Nokogiri.parse(html)
-    texts = doc.search('//text()').map do |node|
-      next if node.node_type != 3
-      next if node.blank?
-      node.content
-    end.compact
+      install_azure_stubs
 
-    texts.each do |text|
-      expect(text).to match(/^\[#{target.code}:.+?\]/)
+      site.translate_state = "enabled"
+      site.translate_source = lang_ja
+      site.translate_target_ids = [lang_en, lang_ko, lang_zh_CN, lang_zh_TW].map(&:id)
+
+      site.translate_api = "microsoft_translator_text"
+      site.translate_microsoft_api_key = unique_id
+
+      site.save!
+    end
+
+    after do
+      WebMock.reset!
+      WebMock.allow_net_connect! if @net_connect_allowed
+    end
+
+    it do
+      item = Translate::Converter.new(site, source, target)
+      html = item.convert(ss_proj1)
+
+      doc = Nokogiri.parse(html)
+      texts = doc.search('//text()').map do |node|
+        next if node.node_type != 3
+        next if node.blank?
+        node.content
+      end.compact
+
+      texts.each do |text|
+        expect(text).to match(/^\[#{target.code}:.+?\]/)
+      end
     end
   end
 end

@@ -19,43 +19,52 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
   before do
     site_search_node.set(layout_id: layout.id)
     stub_request(:any, /#{::Regexp.escape(site.elasticsearch_hosts.first)}/).to_return do |request|
-      requests << request.as_json.dup
-      {
-        body: {
-          took: 20,
-          hits: {
-            total: 2,
-            hits: [
-              {
-                _index: site.id.to_s,
-                _type: 'cms_pages',
-                _id: "post-1",
-                _source: {
-                  name: name1,
-                  url: "http://example.jp/#{name1}",
-                  created: Time.zone.now,
-                  updated: Time.zone.now,
-                  released: Time.zone.now
+      if request.uri.path == "/"
+        # always respond success for ping request
+        {
+          status: 200,
+          headers: { 'Content-Type' => 'application/json; charset=UTF-8', 'X-elastic-product' => "Elasticsearch" },
+          body: ::File.read("#{Rails.root}/spec/fixtures/gws/elasticsearch/ping.json")
+        }
+      else
+        requests << request.as_json.dup
+        {
+          body: {
+            took: 20,
+            hits: {
+              total: 2,
+              hits: [
+                {
+                  _index: site.id.to_s,
+                  _type: 'cms_pages',
+                  _id: "post-1",
+                  _source: {
+                    name: name1,
+                    url: "http://example.jp/#{name1}",
+                    created: Time.zone.now,
+                    updated: Time.zone.now,
+                    released: Time.zone.now
+                  }
+                },
+                {
+                  _index: site.id.to_s,
+                  _type: 'cms_pages',
+                  _id: "post-2",
+                  _source: {
+                    name: name2,
+                    url: "http://example.jp/#{name2}",
+                    created: Time.zone.now,
+                    updated: Time.zone.now,
+                    released: Time.zone.now
+                  }
                 }
-              },
-              {
-                _index: site.id.to_s,
-                _type: 'cms_pages',
-                _id: "post-2",
-                _source: {
-                  name: name2,
-                  url: "http://example.jp/#{name2}",
-                  created: Time.zone.now,
-                  updated: Time.zone.now,
-                  released: Time.zone.now
-                }
-              }
-            ]
-          }
-        }.to_json,
-        status: 200,
-        headers: { 'Content-Type' => 'application/json; charset=UTF-8' }
-      }
+              ]
+            }
+          }.to_json,
+          status: 200,
+          headers: { 'Content-Type' => 'application/json; charset=UTF-8' }
+        }
+      end
     end
   end
 
