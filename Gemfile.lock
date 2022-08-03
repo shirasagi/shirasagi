@@ -144,13 +144,13 @@ GEM
       scanf (~> 1.0)
       sxp (~> 1.1)
       unicode-types (~> 1.6)
-    elastic-transport (8.0.1)
-      faraday (~> 1)
+    elasticsearch (7.17.1)
+      elasticsearch-api (= 7.17.1)
+      elasticsearch-transport (= 7.17.1)
+    elasticsearch-api (7.17.1)
       multi_json
-    elasticsearch (8.3.0)
-      elastic-transport (~> 8)
-      elasticsearch-api (= 8.3.0)
-    elasticsearch-api (8.3.0)
+    elasticsearch-transport (7.17.1)
+      faraday (~> 1)
       multi_json
     equalizer (0.0.11)
     erubi (1.10.0)
@@ -742,7 +742,7 @@ DEPENDENCIES
   diffy
   docker-api
   dotenv-rails
-  elasticsearch
+  elasticsearch (~> 7)
   factory_bot_rails
   faraday
   fast_blank
