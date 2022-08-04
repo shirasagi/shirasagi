@@ -1,0 +1,130 @@
+en:
+  gws/column:
+    options:
+      column_input_type:
+        text: Text
+        email: E-mail address
+        tel: Phone number
+      date_input_type:
+        date: Date only
+        datetime: Date & time
+      minus_type:
+        normal: "-"
+        filled_triangle: "▲"
+        triangle: "△"
+
+  gws:
+    columns:
+      gws/text_field: Text
+      gws/date_field: Date
+      gws/number_field: Number
+      gws/url_field: URL
+      gws/text_area: Text Area
+      gws/select: Dropdown
+      gws/radio_button: Radio Button
+      gws/check_box: Checkbox
+      gws/file_upload: File Upload
+
+  modules:
+    addons:
+      gws/column/text_like: Constraints
+      gws/column/select_like: Selection
+
+  mongoid:
+    models:
+      gws/column/base: Input items
+      gws/column/text_field: Enter one line
+      gws/column/date_field: Enter date
+      gws/column/number_field: Enter number
+      gws/column/url_field: Enter URL
+      gws/column/text_area: Enter multiple lines
+      gws/column/select: Dropdown
+      gws/column/radio_button: Radio button
+      gws/column/check_box: Checkbox
+      gws/column/file_upload: Upload file
+    attributes:
+      gws/column/base:
+        _type: Type
+        class_name: Class name
+        route: Attributes
+        name: Name
+        order: Order
+        form_id: Form
+        form_type: By form type
+        required: Required field
+        tooltips: Tooltips
+        prefix_label: Pre-label
+        postfix_label: Post-label
+        # common attributes
+        place_holder: Placeholder
+      gws/column/text_field:
+        input_type: Type
+      gws/column/date_field:
+        input_type: Type
+      gws/column/file_upload:
+        upload_file_count: Number of uploaded files
+      gws/column/number_field:
+        min_decimal: Minimum value
+        max_decimal: Maximum value
+        initial_decimal: Initial value
+        scale: Number of decimal places
+        minus_type: How negative numbers are displayed
+      gws/addon/column/text_like:
+        max_length: Maximum length
+        additional_attr: Additional attributes
+      gws/addon/column/select_like:
+        select_options: Choices
+
+  tooltip:
+    gws/column/base:
+      name:
+        - Enter the name of the input item.
+      required:
+        - Select whether the item is required or optional.
+      order:
+        - Enter the order in which items are displayed.
+        - The lower the number, the higher the position.
+      tooltips:
+        - Enter the tooltip for the item.
+      prefix_label:
+        - Enter the label that you want to display before the item.
+      postfix_label:
+        - Enter the label that you want to display after the item.
+      place_holder:
+        - Enter a placeholder.
+
+    gws/column/text_field:
+      input_type:
+        - Select a type.
+        - Some types are only supported by the latest browsers.
+
+    gws/column/date_field:
+      input_type:
+        - Select a type.
+
+    gws/column/number_field:
+      min_decimal:
+        - Enter the minimum value.
+      max_decimal:
+        - Enter the maximum value.
+      initial_decimal:
+        - Enter the initial value.
+      scale:
+        - Enter the number of decimal places.
+      minus_type:
+        - Select how negative numbers are displayed.
+
+    gws/column/file_upload:
+      upload_file_count:
+        - Select the number of files that can be uploaded.
+
+    gws/addon/column/text_like:
+      max_length:
+        - Enter the maximum number of characters allowed.
+      additional_attr:
+        - It is possible to add attributes to the output of the input format HTML.
+
+    gws/addon/column/select_like:
+      select_options:
+        - Enter your answer choices.
+        - You can enter multiple answer choices by separating the text for each answer with a line break.

@@ -1,0 +1,44 @@
+en:
+  gws/chorg:
+    options:
+      staff_record_state:
+        create: Create
+
+  modules:
+    gws/chorg: Organizational change
+
+  gws_role:
+    edit_gws_chorg_revisions: Manage organizational changes
+
+  mongoid:
+    models:
+      gws/chorg/revision: Revision
+      gws/chorg/changeset: Changed content
+      gws/chorg/run_params: Organization change execution options
+    attributes:
+      gws/chorg/run_params:
+        reservation: Reservation for execution
+        staff_record_state: Electronic staff records
+        staff_record_name: Electronic staff records (fiscal year)
+        staff_record_code: Electronic staff records (calendar year)
+      gws/chorg/changeset:
+        revision_id: Revision
+
+  tooltip:
+    gws/chorg/run_params:
+      reservation:
+        - You can reserve a time to run.
+      staff_record_state:
+        - Select whether to create an electronic staff record.
+        - If you select to create an electronic staff record, it will be created based on the current state before the organization change is performed.
+      staff_record_name:
+        - "Enter the fiscal year name for the electronic staff record you want to create. (Ex.: FY 20xx)"
+        - This is required if you choose to create an electronic staff record.
+      staff_record_code:
+        - "Enter the calendar year for the electronic staff record you want to create. (Ex.: 2017)"
+        - This is required if you choose to create an electronic staff record.
+
+  job:
+    models:
+      gws/chorg/test_runner: Organizational changes/Test run
+      gws/chorg/main_runner: Organizational changes/Execute changes

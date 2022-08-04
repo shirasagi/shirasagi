@@ -1,0 +1,131 @@
+en:
+  gws/attendance:
+    prev_month: Last month
+    next_month: Next month
+    enter_leave: Attendance
+    break: Break
+    no_time_cards: There is no timecard.
+    no_target_users: There is no target person.
+    already_locked: The timecard has been locked.
+    confirm:
+      download: Are you sure you want to download the timecard?
+      lock: Are you sure you want to lock the timecard?
+      unlock: Are you sure you want to unlock the timecard?
+      punch: Are you sure you want to punch the timecard?
+    notice:
+      punched: The timecard has been punched.
+    formats:
+      time_card_name: '%{month}’s timecard'
+      time_card_full_name: '%{month}’s timecard for %{user_name}'
+      break_enter: Start break %{count}
+      break_leave: End break %{count}
+    buttons:
+      close: Close
+      lock: Lock
+      unlock: Unlock
+      punch: Punch
+    links:
+      lock: Lock
+      unlock: Unlock
+      punch: Punch timecard
+    edit_cell:
+      time: Time
+      reason: Reason for correction
+    tooltips:
+      encoding:
+        - Select a character code.
+        - Select UTF-8 if a special kanji character is assigned for an uncommon name.
+        - For commonly used kanji characters, you can select Shift JIS.
+    hour: '%{count}'
+    minute: '%{count}'
+
+  date:
+    formats:
+      attendance_year_month: ! '%Y-%1m'
+      attendance_month_day: ! '%1m-%1d (%a)'
+
+  modules:
+    gws/attendance: Attendance
+    gws/attendance/time_card: Timecard
+    gws/attendance/management/time_card: Management
+    addons:
+      gws/attendance/group_setting: Attendance
+
+  gws_role:
+    use_gws_attendance_time_cards: Use clock-in and clock-out time
+    edit_gws_attendance_time_cards: Change clock-in and clock-out time
+    manage_private_gws_attendance_time_cards: Manage attendance (own group)
+    manage_all_gws_attendance_time_cards: Manage attendance (all)
+
+  mongoid:
+    models:
+      gws/attendance/time_card: Timecard
+      gws/attendance/record: Record
+      gws/attendance/history: History
+    attributes:
+      gws/attendance/time_card:
+        name: Name
+        date: Date
+        record: Record
+        histories: History
+        lock_state: Lock state
+      gws/attendance/record:
+        date: Date
+        enter: Clock in
+        leave: Clock out
+        break_enter1: Break 1 start
+        break_leave1: Break 1 end
+        break_enter2: Break 2 start
+        break_leave2: Break 2 end
+        break_enter3: Break 3 start
+        break_leave3: Break 3 end
+        memo: Remarks
+      gws/attendance/history:
+        date: Date
+        field_name: Field name
+        action: Action
+        reason: Reason for correction
+        created: Corrected time
+      gws/addon/attendance/group_setting:
+        attendance_enter_label: Clock-in display
+        attendance_leave_label: Clock-out display
+        attendance_management_year: Years administered
+        attendance_year_changed_month: Fiscal year changeover month
+        attendance_time_changed_minute: Workday changeover time
+        attendance_break_time1_state: Display Break 1
+        attendance_break_enter1_label: Break 1 start label
+        attendance_break_leave1_label: Break 1 end label
+        attendance_break_time2_state: Display Break 2
+        attendance_break_enter2_label: Break 2 start label
+        attendance_break_leave2_label: Break 2 end label
+        attendance_break_time3_state: Display Break 3
+        attendance_break_enter3_label: Break 3 start label
+        attendance_break_leave3_label: Break 3 end label
+    errors:
+      models:
+        gws/attendance/time_card:
+          already_punched: The timecard has already been punched.
+
+  activemodel:
+    attributes:
+      gws/attendance/time_edit:
+        in_hour: Hour
+        in_minute: Minute
+        in_reason: Reason for correction
+      gws/attendance/download_param:
+        term: Period
+        from_date: Start date
+        to_date: End date
+        user_ids: User
+        encoding: Character encoding
+
+  tooltip:
+    gws/attendance/download_param:
+      term:
+        - Please set the download period.
+      user_ids:
+        - Select the user to download.
+      encoding:
+        - Select a character code.
+        - Select UTF-8 if a special kanji character is assigned for an uncommon name.
+        - For commonly used kanji characters, you can select Shift JIS.

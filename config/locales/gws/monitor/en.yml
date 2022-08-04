@@ -1,0 +1,340 @@
+en:
+  gws/monitor:
+    user: User
+    #descendants_num: No. of comments
+    #descendants_updated: Time and date updated
+    no_authority: You do not have permission.
+    due_date_over: Overdue responses
+    portal_notice_format: "There are %{count} unanswered inquiries. Please determine who in the group is the person responsible and respond."
+    topic:
+      comment: Comments
+      new: Create new
+      edit: Edit
+      submit: Post
+      update: Update
+      delete: Delete
+      disabled_items: Deleted
+      browsing_state: Participating groups
+      browsed: View
+      type: Status
+      mark_at: Date and time confirmed
+      update_at: Change date and time
+      group: Group
+      user: Respondent
+      contents: Response
+      answer_state: Response status
+      file: Attachment
+      list: To topic list
+      export_csv: CSV output
+      file_download: Bulk file download
+      confirm: Do you want to delete this?
+      notice:
+        create: The topic has been created.
+        update: The topic has been updated.
+        delete: The topic has been deleted.
+    comment:
+      comment: Leave a comment
+      created: Date and time created
+      updated: Date and time updated
+      submit: Post
+      update: Update
+      edit: Edit
+      delete: Delete
+      confirm: Do you want to delete this?
+      notice:
+        create: You have posted a comment.
+        update: The comment has been updated.
+        delete: The comment has been deleted.
+    csv:
+      - Inquiry and response ID
+      - Title
+      - Status
+      - Affiliation name
+      - Respondent name
+      - Response field
+      - Date and time of response
+    options:
+      sort:
+        created_asc:  Date and time created (in chronological order)
+        created_desc: Date and time created (by newest)
+        updated_asc:  Date and time updated (in chronological order)
+        updated_desc: Date and time updated (by newest)
+        released_asc:  Published date and time (in chronological order)
+        released_desc: Published date and time (by newest)
+        due_date_asc:  Response deadline (in chronological order)
+        due_date_desc: Response deadline (by newest)
+      spec_config:
+        my_group: Show only respondents
+        other_groups: Show other respondent names
+        other_groups_and_contents: Show other respondent names and content
+      notice_state:
+        from_now: Show immediately after delivery
+        1_day_from_released: Show 1 day after delivery
+        2_days_from_released: Show 2 days after delivery
+        3_days_from_released: Show 3 days after delivery
+        4_days_from_released: Show 4 days after delivery
+        5_days_from_released: Show 5 days after delivery
+        1_day_before_due_date: Show from 1 day before the response deadline
+        2_days_before_due_date: Show from 2 days before the response deadline
+        3_days_before_due_date: Show from 3 days before the response deadline
+        4_days_before_due_date: Show from 4 days before the response deadline
+        5_days_before_due_date: Show from 5 days before the response deadline
+        none: Do not show
+      mode:
+        thread: Thread
+        tree: Tree
+      permit_comment:
+        allow: Allow
+        deny: Do not allow
+      article_state:
+        open: Call for submissions for a response
+        closed: Submission deadline
+      browsed_state:
+        read: Read
+        unread: Unread
+      severity:
+        normal: Normal
+        important: Important
+      state:
+        draft: Draft
+        public: Delivered
+        closed: Deadline
+      answer_state:
+        preparation: Waiting to be received
+        public: Received
+        answered: Answered
+        question_not_applicable: N/A
+        no_state: No status
+      monitor_delete_threshold:
+        '1.day': 1 day
+        '1.month': 1 month
+        '3.months': 3 months
+        '6.months': 6 months
+        '9.months': 9 months
+        '12.months': 12 months
+        '15.months': 15 months
+        '18.months': 18 months
+        '24.months': 24 months
+    links:
+      back_to_thread: Go back
+      comment: Respond
+      reply: Reply
+      categories: Category
+      public: Mark as received
+      preparation: Revert to waiting to be received
+      question_not_applicable: Mark as N/A
+      answered: Mark as answered
+      closed: Close
+      open: Reopen
+      export_csv: Answer list CSV
+      file_download: Bulk attachment file download
+      forward: Forward
+      publish: Deliver
+    confirm:
+      public: Do you want to mark it as received?
+      preparation: Do you want to revert to waiting to be received?
+      question_not_applicable: Do you want to mark it as N/A?
+      answer: Do you want to mark it as answered?
+      close: Do you want to close the response?
+      open: Are you sure you want to re-open the response?
+      public_all: Do you want to mark the checked items as received?
+      preparation_all: Do you want to mark the checked items as waiting to be received?
+      question_not_applicable_all: Do you want to mark the checked items as N/A?
+      comment_answer: I will answer as an affiliated person. Is this OK?
+      publish: Are you sure you want to deliver it?
+    buttons:
+      publish: Delivery
+    errors:
+      denied_comment: You are not allowed to post comments.
+    tabs:
+      unanswer: Unanswered
+      answer: Answered
+      admin: Created inquiries
+      article_management: Inquiry (management)
+      management_admin: Inquiry (management)
+    management:
+      links:
+        back_to_topic: Go back
+    notice:
+      close: Answer closed
+      open: Answer re-opened
+      published: Published
+      public: Marked as received
+      preparation: Reverted to waiting to be received
+      question_not_applicable: Marked as N/A
+
+  modules:
+    gws/monitor: Inquiries and responses
+    addons:
+      gws/monitor/category: Category
+      gws/monitor/contributor: Contributors
+      gws/monitor/group: Participating groups
+      gws/monitor/release: Publishing settings
+      gws/monitor/group_setting: Inquiries and responses
+
+  gws_role:
+    use_gws_monitor: Use of inquiries and responses
+
+    read_other_gws_monitor_posts: View posts (all)
+    read_private_gws_monitor_posts: View posts (own)
+    edit_other_gws_monitor_posts: Edit posts (all)
+    edit_private_gws_monitor_posts: Edit posts (own)
+    delete_other_gws_monitor_posts: Delete posts (all)
+    delete_private_gws_monitor_posts: Delete posts (own)
+    trash_other_gws_monitor_posts: Manage post trash (all)
+    trash_private_gws_monitor_posts: Manage post trash (own)
+    read_other_gws_monitor_categories: View categories (all)
+    read_private_gws_monitor_categories: View categories (own)
+    edit_other_gws_monitor_categories: Edit categories (all)
+    edit_private_gws_monitor_categories: Edit categories (own)
+    delete_other_gws_monitor_categories: Delete categories (all)
+    delete_private_gws_monitor_categories: Delete categories (own)
+    read_other_gws_monitor_topics: View articles (all)
+    read_private_gws_monitor_topics: View articles (own)
+    edit_other_gws_monitor_topics: Edit articles (all)
+    edit_private_gws_monitor_topics: Edit articles (own)
+    delete_other_gws_monitor_topics: Delete articles (all)
+    delete_private_gws_monitor_topics: Delete articles (own)
+
+  gws_notification:
+    gws/monitor/topic:
+      subject: "[Inquiries and Responses] “%{name}” has arrived."
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+    gws/monitor/post:
+      subject: "There is a new post in [Inquiries and Responses] “%{name}”."
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+    gws/monitor/topic/destroy:
+      subject: "[Inquiries and Responses] “%{name}” has been removed."
+      text: ""
+
+    gws/monitor/post/destroy:
+      subject: "A post in [Inquiries and Responses] “%{name}” has been deleted."
+      text: "%{text}"
+
+  mongoid:
+    models:
+      gws/monitor/topic: Topic
+      gws/monitor/post: Post
+      gws/monitor/category: Category
+    errors:
+      models:
+        gws/monitor/category:
+          too_deep: "The hierarchy is too deep and should be below %{max}."
+          not_found_parent: Parent category does not exist.
+          found_children: A child category exists.
+        gws/monitor/postable:
+          file_size_exceeds_post_limit: "The size of the attachment (%{size}) has exceeded the maximum size of the post (%{limit})."
+          file_size_exceeds_topic_limit: "The total size of the attachments (%{size}) has exceeded the maximum size of the topic (%{limit})."
+    attributes:
+      gws/addon/monitor/group_setting:
+        monitor_new_days: Display period for new items
+        monitor_file_size: Maximum attachment size
+        monitor_file_size_per_topic: Maximum attachment size/topic unit
+        monitor_file_size_per_post: Maximum attachment size/post unit
+        monitor_delete_threshold: Subject to deletion
+        default_notice_state: Announcement display settings
+        monitor_files_break: File display order
+      gws/addon/monitor/release:
+        released: Publishing date
+        release_date: Publishing start date and time (reservation)
+        close_date: Publishing end date and time (reservation)
+      gws/addon/monitor/group:
+        attend_group_ids: Participating groups
+      gws/monitor/postable:
+        name: Title
+        created: Date and time created
+        updated: Date and time updated
+        mode: Display format
+        permit_comment: Comments
+        severity: Importance
+        topic_id: Topic
+        parent_id: Parent post
+        descendants_updated: Date and time updated in topic
+        descendants_files_count: Number of attachments in the topic
+        descendants_total_file_size: Attachment capacity within the topic
+        spec_config: Response display settings
+        due_date: Response deadline
+        answer_state: Response status
+        article_state: Status of call for responses
+        deleted: Deletion date and time
+        notice_at: Notification date and time
+      gws/monitor/topic:
+        name: Question title
+        due_date: Response deadline
+        admin_setting: Article management settings
+        notice_state: Announcement display settings
+        answer_state_hash: Circular status
+      gws/monitor/post:
+        name: Answer title
+      gws/monitor/category:
+        name: Category name
+      gws/addon/monitor/category:
+        category_ids: Category
+      gws/addon/monitor/contributor:
+        contributor_name: Contributor name
+
+  tooltip:
+      gws/addon/monitor/group_setting:
+        monitor_new_days:
+          - Enter the display period for new items.
+        monitor_file_size_per_topic:
+          - Enter the maximum attachment size per topic.
+        monitor_file_size_per_post:
+          - Enter the maximum attachment size per post.
+        monitor_delete_threshold:
+          - Enter the deadline before the inquiry and response are permanently deleted. The criterion is the date it was move to the Trash.
+        default_notice_state:
+          - Select the default values for announcement display criteria.
+        monitor_files_break:
+        - Select the display order of attachments.
+      gws/addon/monitor/contributor:
+        contributor_name:
+          - Select the contributor name.
+      gws/addon/monitor/group:
+        group_name:
+          - Select the participating groups.
+          - "You can edit it by changing to Draft status in \"Publishing settings.”"
+      gws/monitor/postable:
+        name:
+          - Enter a title.
+        mode:
+          - Select the display format.
+        permit_comment:
+          - Select whether to allow comments.
+        severity:
+          - Select the importance level.
+        draft_alert:
+          - Now in draft status.
+          - Please check the content before sending.
+      gws/monitor/category:
+        name:
+          - Enter a category name.
+      gws/monitor/topic:
+        name:
+          - Enter a title.
+        due_date:
+          - Select a response deadline.
+        admin_setting:
+          - Select the range of the article administrator.
+        spec_config:
+          - Choose how responses are displayed.
+        notice_state:
+          - Select the notification display criteria.
+        state:
+          - Select the settings that can be seen by users.
+          - <b>Draft</b> - Is in a deliverable state.
+          - <b>Delivered</b> - Is in an answerable and deliverable state.
+          - <b>Closed</b> - Puts the inquiry in a closed state.
+  job:
+    models:
+      gws/monitor/trash_purge_job: Empty inquiry and response/post trash

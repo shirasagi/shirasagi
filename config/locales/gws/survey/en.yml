@@ -1,0 +1,162 @@
+en:
+  gws/survey:
+    file_name: "Responses for %{form}"
+    view_files: To response list
+    send_notification_to_unanswered_users: Send notification to those yet to respond
+    over_limit: Overdue
+    tabs:
+      personal: My responses
+      others: Others’ responses
+      files: Response list
+      summary: Aggregate total
+    options:
+      answered_state:
+        answered: Responded
+        unanswered: Unanswered
+        both: Both
+      file_edit_state:
+        disabled: Invalid
+        enabled: Valid
+        enabled_until_due_date: Valid until deadline
+      sort:
+        due_date: Response deadline
+        updated: Newest
+    notices:
+      anonymous:
+        head: Anonymous questionnaire
+        body: Responses to this questionnaire are registered anonymously. Questionnaire administrators are not able to determine who the respondents are.
+      count_limit: "Showing the %{count} latest responses"
+      notification_job_started: Notification processing has started.
+      no_files: "There are no attached files."
+      anonymous_state: Anonymous responses can only be set when a questionnaire is initially created. It cannot be changed later.
+      file_state: Response results can only be set when a questionnaire is initially created. It cannot be changed later.
+    confirm:
+      download: Are you sure you want to download it?
+      notification_to_unanswered_users: Are you sure you want to send notifications to those yet to respond?
+    buttons:
+      zip_all_files: Attached file
+    navi:
+      readable: Inbox
+
+  gws_role:
+    use_gws_survey: Use of questionnaires
+    read_other_gws_survey_forms: View questionnaires (all)
+    read_private_gws_survey_forms: View questionnaires (own)
+    edit_other_gws_survey_forms: Edit questionnaires (all)
+    edit_private_gws_survey_forms: Edit questionnaires (own)
+    delete_other_gws_survey_forms: Delete questionnaires (all)
+    delete_private_gws_survey_forms: Delete questionnaires (own)
+    trash_other_gws_survey_forms: Manage questionnaire trash (all)
+    trash_private_gws_survey_forms: Manage questionnaire trash (own)
+
+    read_other_gws_survey_categories: View categories (all)
+    read_private_gws_survey_categories: View categories (own)
+    edit_other_gws_survey_categories: Edit categories (all)
+    edit_private_gws_survey_categories: Edit categories (own)
+    delete_other_gws_survey_categories: Delete categories (all)
+    delete_private_gws_survey_categories: Delete categories (own)
+
+  modules:
+    gws/survey: Questionnaires
+    addons:
+      gws/survey/column_setting: Input settings
+      gws/survey/category: Category
+      gws/survey/custom_form: Questionnaires
+      gws/survey/files_ref: Response list
+      gws/survey/group_setting: Questionnaires
+
+  mongoid:
+    models:
+      gws/survey/form: Questionnaires
+      gws/survey/file: Response
+      gws/survey/category: Category
+
+    attributes:
+      gws/survey/form:
+        name: Title
+        description: Explanation
+        order: Order
+        state: Publishing status
+        due_date: Response deadline
+        release_date: Publication deadline (start)
+        close_date: Publication deadline (end)
+        anonymous_state: Anonymous response
+        file_state: Response results
+        file_edit_state: Edit response
+        memo: Remarks
+      gws/addon/survey/files_ref:
+        files: Response list
+      gws/addon/survey/category:
+        category_ids: Category
+      gws/survey/file:
+        name: Response name
+        updated: Response date
+        created: First response date
+      gws/reference/survey/form:
+        form_id: Questionnaires
+      gws/survey/notification:
+        notification_notice_state: Notification
+        notification_noticed_at: Notification date and time
+      gws/addon/survey/group_setting:
+        survey_default_due_date: Initial value for response deadline date
+        survey_new_days: Display period for new items
+      gws/survey/answer_state:
+        answered_users_hash: Response status
+
+  tooltip:
+    gws/survey/form:
+      name:
+        - Enter a title.
+      description:
+        - Enter a description.
+      order:
+        - Enter the order.
+        - "The lower the number, the higher the position."
+      state:
+        - Select whether to publish the form.
+      due_date:
+        - Specify the response deadline.
+      release_date:
+        - Specify the publishing start date.
+        - The questionnaire becomes public on the specified date.
+        - "If the start date is omitted, the questionnaire is published immediately."
+      close_date:
+        - Specify the publishing end date.
+        - The questionnaire becomes private on the specified date.
+        - "If the end date is omitted, the questionnaire will remain published indefinitely."
+      anonymous_state:
+        - "When anonymous responding is enabled, no information about respondents is recorded."
+        - Anonymous responding is disabled by default and respondents will be recorded.
+      file_state:
+        - Select whether to publish response results.
+        - "If you select ”Publish”, you can view anyone’s answer as long as you are set to be the viewer of the form."
+        - "If you select “Private”, you can view only your own responses."
+      file_edit_state:
+        - Select whether to enable or disable response editing.
+        - "If you select “Disable”, you will not be able to edit your responses."
+        - Edit your responses at any time by selecting “Enabled”.
+        - "If you select “Enable until deadline”, responses can be edited until the deadline."
+      memo:
+        - Enter remarks.
+        - "Remarks are not shown elsewhere, so enter notes for administrative purposes."
+
+    gws/addon/survey/group_setting:
+      survey_default_due_date:
+        - "For the initial value of the response due date and time, enter a date within a few days of today."
+        - The initial value is 7 days.
+      survey_new_days:
+        - Enter the display period for new items.
+
+  gws_notification:
+    gws/survey/form:
+      subject: "A request for response to [Questionnaire] “%{name}” has arrived."
+      text: "%{path}"
+      mail_text: |
+        %{subject} 
+
+        %{text}
+
+  job:
+    models:
+      gws/survey/notification_job: Questionnaire notifications
+      gws/survey/trash_purge_job: Empty questionnaire trash

@@ -44,6 +44,7 @@ ja:
       picker: ! '%Y/%m/%d'
       m_d_a: "%1m月%1d日 (%a)"
       d_a: "%1d日 (%a)"
+      csv: ! '%Y/%m/%d'
     month_names:
     -
     - 1月
@@ -278,6 +279,7 @@ ja:
       picker: ! '%Y/%m/%d %H:%M'
       hh_mm: ! '%H:%M'
       h_mm: ! '%1H:%M'
+      csv: ! '%Y/%m/%d %H:%M'
     pm: 午後
   # remove these aliases after 'activemodel' and 'activerecord' namespaces are removed from Rails repository
   activemodel:

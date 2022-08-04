@@ -1,0 +1,76 @@
+en:
+  gws/elasticsearch:
+    tabs:
+      all: All
+
+    format:
+      search_results_count:
+        zero: No documents matched the search format.
+        one: 'Of %{count} results, showing results %{from} through %{to} (%{took} seconds)'
+        other: 'Of %{count} results, showing results %{from} through %{to} (%{took} seconds)'
+
+  modules:
+    gws/elasticsearch: Full-text search
+    addons:
+      gws/elasticsearch/group_setting: Full-text search
+
+  gws_role:
+    use_gws_elasticsearch: Use full-text search
+
+  mongoid:
+    attributes:
+      gws/addon/elasticsearch/group_setting:
+        elasticsearch_state: Full-text search
+        elasticsearch_hosts: Full-text search server
+
+  tooltip:
+    gws/addon/elasticsearch/group_setting:
+      elasticsearch_state:
+        - Select whether to enable or disable full-text search.
+      elasticsearch_hosts:
+        - Enter the full-text search server.
+    gws/elasticsearch:
+      tabs:
+        all:
+          - Enter your search terms and click the search button. You can search for documents.
+          - You can enter multiple search keywords by separating each word with a half-width space.
+          - "　"
+          - "Other useful functions:"
+          - "To perform an “OR” search, enter the keywords separated by OR. Make sure there is a space before and after the OR."
+          - "　Example: Search for documents that contain minutes or reports"
+          - "　　minutes OR report"
+          - "　"
+          - "To search by author, type user_name: followed the user name without a space after the colon."
+          - "　Example: Search for documents created by Taro Shirasagi"
+          - "　　user_name:Taro Shirasagi"
+          - "　"
+          - "To search by creation date, enter the date after created: without a space after the colon."
+          - "　Example: Search for documents created on November 21, 2017"
+          - "　　created:2017-11-21"
+          - "　"
+          - "To search a range of creation dates, use the following example as a reference:"
+          - "　Example: Search for documents created between October 1, 2017 and October 31, 2017"
+          - "　　created:[2017-10-01 TO 2017-10-31]"
+          - "　"
+          - "If you want to search by date updated, change created: to updated:"
+          - "　"
+          - "Enter *:* to search for all documents."
+          - "　"
+          - "This allows you to search for all published documents. To search for private documents, open individual tabs and search."
+
+  job:
+    models:
+      gws/elasticsearch/indexer/share_file_job: Shared file indexer
+      gws/elasticsearch/indexer/board_topic_job: Bulletin board indexer
+      gws/elasticsearch/indexer/board_post_job: Bulletin board post indexer
+      gws/elasticsearch/indexer/faq_topic_job: FAQ indexer
+      gws/elasticsearch/indexer/faq_post_job: FAQ indexer
+      gws/elasticsearch/indexer/qna_topic_job: Q&A indexer
+      gws/elasticsearch/indexer/qna_post_job: Q&A indexer
+      gws/elasticsearch/indexer/circular_post_job: Circular notice indexer
+      gws/elasticsearch/indexer/circular_comment_job: Circular notice indexer
+      gws/elasticsearch/indexer/monitor_topic_job: Inquiry and response indexer
+      gws/elasticsearch/indexer/monitor_post_job: Inquiry and response indexer
+      gws/elasticsearch/indexer/memo_message_job: Contact memo indexer
+      gws/elasticsearch/indexer/report_file_job: Report indexer
+      gws/elasticsearch/indexer/workflow_file_job: Workflow indexer

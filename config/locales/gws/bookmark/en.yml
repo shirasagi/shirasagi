@@ -1,0 +1,28 @@
+en:
+  gws/bookmark:
+    notice:
+      save: Saved in Favorites
+    options:
+      bookmark_model:
+        other: Other
+
+  modules:
+    gws/bookmark: Favorites
+
+  mongoid:
+    models:
+      gws/bookmark: Favorites
+    attributes:
+      gws/bookmark:
+        name: Title
+        url: URL
+        bookmark_model: Functions
+
+  tooltip:
+    gws/bookmark:
+      name:
+        - Enter a title.
+      url:
+        - Enter the URL.
+      bookmark_model:
+        - Select the function you want to link to.

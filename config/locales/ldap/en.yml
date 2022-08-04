@@ -1,0 +1,92 @@
+en:
+  ldap:
+    server: Server information
+    import: Import
+    result: Syncing results
+    links:
+      ldap: LDAP
+      sync: Synchronize
+    buttons:
+      import: Import
+      sync: Syncing
+    confirm:
+      import: Are you sure you want to import it?
+      import_description: Import information from the LDAP server and create intermediate information.
+      sync: Are you sure you want to sync?
+    views:
+      import/sync:
+        header: Syncing results
+        group: Group
+        user: User
+        success: Updated
+        delete: Delete
+        fail: Failed
+        error: Error
+        warning: Warning
+        no_results: There are no results.
+        task_info: Task
+      server/index:
+        group:
+          root: Route
+          group: Group
+          name: Name
+        user:
+          user: User
+          name: Name
+          email: E-mail
+    messages:
+      no_groups: The group cannot be found.
+      no_users: The user cannot be found.
+      import_started: The import process has started.
+      sync_started: The synchronization process has started.
+      sync_already_started: Synchronization is in process.
+      sync_success: "Synchronization successful. Number of groups: %{group_count}, Number of users: %{user_count}"
+      group_moved: ! '%{user_name} has been moved to the group “%{group_name}”.'
+    errors:
+      has_multiple_root_groups: "Site: %{site} has multiple route groups set."
+      connection_setting_not_found: LDAP connection information is not set.
+      connection_refused: Unable to connect to LDAP server.
+
+  modules:
+    ldap: LDAP
+    addons:
+      ldap/user: LDAP
+      ldap/group: LDAP
+
+  mongoid:
+    models:
+      ldap/addon/group: Group
+      ldap/addon/user: User
+      ldap/import: Import
+    attributes:
+      ldap/addon/group:
+        ldap_host: Host
+        ldap_dn: DN
+        ldap_auth_method: Authentication method
+      ldap/addon/user:
+        ldap_dn: DN
+      ldap/import:
+        group_count: Number of groups
+        user_count: Number of users
+        ldap: LDAP import results
+
+  views:
+    ldap/server:
+      index: Server information
+    ldap/import:
+      index: Import
+    ldap/result:
+      index: Syncing results
+
+  tooltip:
+    ldap/addon/group:
+      ldap_dn:
+      - Enter the DN (identifier) of the group if you are using LDAP.
+    ldap/addon/user:
+      ldap_dn:
+      - Enter the user's DN (identifier) if you are using LDAP.
+
+  job:
+    models:
+      ldap/import_job: LDAP import
+      ldap/sync_job: LDAP synchronization

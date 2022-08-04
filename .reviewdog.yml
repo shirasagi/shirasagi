@@ -11,3 +11,7 @@ runner:
   eslint:
     cmd: npx eslint --no-color -f stylish 'app/**/*.{js,js.erb}' 'db/**/*.{js,js.erb}'
     format: eslint
+  locale:
+    cmd: bundle exec rails runner .github/scripts/locale_key_comp.rb
+    errorformat:
+      - "%f:%l:%c: %m"
