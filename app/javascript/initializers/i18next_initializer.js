@@ -5,34 +5,62 @@ import Http from 'i18next-http-backend'
 import Chained from 'i18next-chained-backend'
 import LocalStorage from 'i18next-localstorage-backend'
 
+const LOAD_PATH = '/.mypage/locales/default/{{lng}}/{{ns}}.json'
+
+function initializeI18next(resolve, reject) {
+  i18next
+    .use(MultiLoad)
+    .init({
+      backend: {
+        backend: Http,
+        backendOption: {
+          loadPath: LOAD_PATH,
+          //addPath: '/.mypage/locales/fallback/{{lng}}/{{ns}}.json',
+          allowMultiLoading: true
+        }
+      },
+      fallbackLng: ['en', 'ja']
+    }, (err, t) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve()
+      }
+    })
+}
+
+function initializeI18nextWithCache(resolve, reject) {
+  i18next
+    .use(Chained)
+    .init({
+      backend: {
+        backends: [ LocalStorage, MultiLoad ],
+        backendOptions: [ {
+          // LocalStorage options
+        }, {
+          // MultiLoad options
+          backend: Http,
+          backendOption: {
+            loadPath: LOAD_PATH,
+            //addPath: '/.mypage/locales/fallback/{{lng}}/{{ns}}.json',
+            allowMultiLoading: true
+          }
+        } ]
+      },
+      fallbackLng: [ 'en', 'ja' ]
+    }, (err, _t) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve()
+      }
+    })
+}
+
 export default class extends Initializer {
   initialize() {
     return new Promise((resolve, reject) => {
-      i18next
-        .use(Chained)
-        .init({
-          backend: {
-            backends: [ LocalStorage, MultiLoad ],
-            backendOptions: [ {
-              // LocalStorage options
-            }, {
-              // MultiLoad options
-              backend: Http,
-              backendOption: {
-                loadPath: '/.mypage/locales/default/{{lng}}/{{ns}}.json',
-                //addPath: '/.mypage/locales/fallback/{{lng}}/{{ns}}.json',
-                allowMultiLoading: true
-              }
-            } ]
-          },
-          fallbackLng: [ 'en', 'ja' ]
-        }, (err, _t) => {
-          if (err) {
-            reject(err)
-          } else {
-            resolve()
-          }
-        })
+      initializeI18next(resolve, reject)
     })
   }
 
