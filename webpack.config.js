@@ -4,6 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const Config = require("./webpack/config")
+const i18nextResourceGen = require("./webpack/i18next_resource_generator")
 
 module.exports = {
   mode: Config.environment.RAILS_ENV === "production" ? "production" : "development",
@@ -32,7 +33,8 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      RAILS_ENV: JSON.stringify(Config.environment.RAILS_ENV)
+      RAILS_ENV: JSON.stringify(Config.environment.RAILS_ENV),
+      I18NEXT_RESOURCES: JSON.stringify(Config.environment.RAILS_ENV === "production" ? i18nextResourceGen.generate() : {})
     }),
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1
