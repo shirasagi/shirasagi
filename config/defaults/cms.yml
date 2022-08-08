@@ -189,6 +189,8 @@ production: &production
 
   default_released_type: "fixed"
 
+  allow_escape_column_name: true
+
 test:
   <<: *production
 
