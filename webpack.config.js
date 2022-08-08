@@ -1,11 +1,12 @@
 const path = require("path")
 const webpack = require("webpack")
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const Config = require("./webpack/config")
 
 module.exports = {
-  mode: "production",
+  mode: Config.environment.RAILS_ENV === "production" ? "production" : "development",
   devtool: "source-map",
   entry: {
     application: "./app/javascript/application.js",
@@ -30,6 +31,9 @@ module.exports = {
     path: path.resolve(__dirname, "public/assets/builds"),
   },
   plugins: [
+    new webpack.DefinePlugin({
+      RAILS_ENV: JSON.stringify(Config.environment.RAILS_ENV)
+    }),
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1
     }),
