@@ -116,9 +116,17 @@ SS_FileView.open = function(ev, options) {
 
 SS_FileView.getContent = function() {
   if ((typeof tinymce) != "undefined") {
-    return tinymce.get(Cms_Form.editorId).getContent();
+    var editor = tinymce.get(Cms_Form.editorId);
+    if (editor) {
+      return editor.getContent();
+    }
   } else if ((typeof CKEDITOR) != "undefined") {
-    return CKEDITOR.instances[Cms_Form.editorId].getData();
+    if (Cms_Form.editorId) {
+      var editor = CKEDITOR.instances[Cms_Form.editorId];
+      if (editor) {
+        return CKEDITOR.instances[Cms_Form.editorId].getData();
+      }
+    }
   }
 
   return null;
