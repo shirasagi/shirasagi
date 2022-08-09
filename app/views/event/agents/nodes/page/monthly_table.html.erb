@@ -47,7 +47,7 @@
             <% end %>
 
             <% events.each do |event, categories| %>
-              <div class="page <%= event.long_term?(date) ? 'long-term' : 'short-term' %>" data-id="<%= categories.pluck(:id).join(" ") %>">
+              <div class="page <%= event.event_dates.multiple_days?(date) ? 'multiple-days' : 'single-day' %>" data-id="<%= categories.pluck(:id).join(" ") %>">
                 <% if categories.present? %>
                   <% cate = categories.entries.sort_by{ |c| c.order }.first %>
                   <div class="data <%= cate.basename %>"><%= link_to cate.name, cate.url %></div>

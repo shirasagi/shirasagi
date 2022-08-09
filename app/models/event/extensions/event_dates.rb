@@ -45,4 +45,14 @@ class Event::Extensions::EventDates < Array
   def clustered
     Event.cluster_dates(self)
   end
+
+  def multiple_days?(date)
+    i = self.index(date)
+
+    return false unless i
+    return true if self[i - 1] == (date - 1.day)
+    return true if self[i + 1] == (date + 1.day)
+
+    false
+  end
 end
