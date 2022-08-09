@@ -81,6 +81,16 @@ module Event::Addon
       html.join("<br>")
     end
 
+    def long_term?(date)
+      i = event_dates.index(date)
+
+      return false unless i
+      return true if event_dates[i - 1] == (date - 1.day)
+      return true if event_dates[i + 1] == (date + 1.day)
+
+      false
+    end
+
     private
 
     def set_event_dates_from_recurrences
