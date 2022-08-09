@@ -153,7 +153,7 @@ module Gws::CrudFilter
       item.try(:cur_site=, @cur_site)
       item.try(:cur_user=, @cur_user)
       if item.allowed?(:delete, @cur_user, site: @cur_site)
-        @item.record_timestamps = false
+        item.record_timestamps = false
         item.deleted = Time.zone.now
         next if item.save
       else
