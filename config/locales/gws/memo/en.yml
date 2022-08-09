@@ -41,7 +41,6 @@ en:
     backup_messages: Backup
     import_messages: Import
     restore_messages: Restore
-    restore_messages: Restore
     unsend: Delete the sent message (cancel sending)
     export_filter: Target
     backup_filter: Target
