@@ -189,7 +189,11 @@ production: &production
 
   default_released_type: "fixed"
 
-  allow_escape_column_name: true
+  # column name validation type
+  #
+  # restricted: restrict reserved characters.
+  # unrestricted: not to restrict characters.
+  column_name_type: "unrestricted"
 
 test:
   <<: *production

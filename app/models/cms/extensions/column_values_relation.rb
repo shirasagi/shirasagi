@@ -19,7 +19,7 @@ module Cms::Extensions::ColumnValuesRelation
     end
 
     def escape(name)
-      return name if !name.is_a?(String) || !SS.config.cms.allow_escape_column_name
+      return name if !name.is_a?(String)
 
       name.tr('{}"\'[]/', '_')
     end
