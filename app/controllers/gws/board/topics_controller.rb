@@ -25,9 +25,10 @@ class Gws::Board::TopicsController < ApplicationController
 
   def items
     base_criteria = @model.site(@cur_site).topic
-    if @mode == 'editable'
+    case @mode
+    when 'editable'
       base_criteria.allow(:read, @cur_user, site: @cur_site).without_deleted
-    elsif @mode == 'trash'
+    when 'trash'
       base_criteria.allow(:trash, @cur_user, site: @cur_site).only_deleted
     else
       conditions = @model.member_conditions(@cur_user)
@@ -38,9 +39,10 @@ class Gws::Board::TopicsController < ApplicationController
   end
 
   def readable?
-    if @mode == 'editable'
+    case @mode
+    when 'editable'
       @item.allowed?(:read, @cur_user, site: @cur_site) && @item.deleted.blank?
-    elsif @mode == 'trash'
+    when 'trash'
       @item.allowed?(:trash, @cur_user, site: @cur_site) && @item.deleted.present?
     else
       return false if @item.deleted.present?
