@@ -18,7 +18,7 @@ function initializeI18nextViaRemote(resolve, reject) {
         }
       },
       fallbackLng: ['en', 'ja']
-    }, (err, t) => {
+    }, (err, _t) => {
       if (err) {
         reject(err)
       } else {
@@ -31,7 +31,7 @@ function initializeI18nextViaLocal(resolve, reject) {
   i18next.init({
     resources: I18NEXT_RESOURCES,
     fallbackLng: ['en', 'ja']
-  }, (err, t) => {
+  }, (err, _t) => {
     if (err) {
       reject(err)
     } else {
