@@ -117,6 +117,7 @@ class Gws::Board::TopicsController < ApplicationController
       return
     end
 
+    @item.record_timestamps = false
     @item.notification_noticed_at = nil
     @item.deleted = Time.zone.now
     render_destroy @item.save
@@ -131,6 +132,7 @@ class Gws::Board::TopicsController < ApplicationController
       return
     end
 
+    @item.record_timestamps = false
     @item.notification_noticed_at = nil
     @item.deleted = nil
 
