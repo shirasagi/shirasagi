@@ -115,16 +115,18 @@ SS_FileView.open = function(ev, options) {
 };
 
 SS_FileView.getContent = function() {
+  var editor = null;
+
   if ((typeof tinymce) != "undefined") {
-    var editor = tinymce.get(Cms_Form.editorId);
+    editor = tinymce.get(Cms_Form.editorId);
     if (editor) {
       return editor.getContent();
     }
   } else if ((typeof CKEDITOR) != "undefined") {
     if (Cms_Form.editorId) {
-      var editor = CKEDITOR.instances[Cms_Form.editorId];
+      editor = CKEDITOR.instances[Cms_Form.editorId];
       if (editor) {
-        return CKEDITOR.instances[Cms_Form.editorId].getData();
+        return editor.getData();
       }
     }
   }
