@@ -57,7 +57,7 @@ class Sns::NotificationsController < ApplicationController
   end
 
   def show
-    @item.set_seen(@cur_user).update if @item.state == "public"
+    @item.set_seen!(@cur_user) if @item.state == "public"
 
     if @item.url.present?
       redirect_to @item.url

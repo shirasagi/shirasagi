@@ -113,21 +113,22 @@ module Gws::Circular::PostFilter
     raise '404' if !@item.public? || !@item.active?
     raise '403' unless @item.member?(@cur_user)
 
-    render_update @item.set_seen(@cur_user).save, notice: t("ss.notice.set_seen")
+    render_update @item.set_seen!(@cur_user), notice: t("ss.notice.set_seen")
   end
 
   def unset_seen
     raise '404' if !@item.public? || !@item.active?
     raise '403' unless @item.member?(@cur_user)
 
-    render_update @item.unset_seen(@cur_user).save, notice: t("ss.notice.unset_seen")
+    render_update @item.unset_seen!(@cur_user), notice: t("ss.notice.unset_seen")
   end
 
   def set_seen_all
     @items.each do |item|
       if item.unseen?(@cur_user)
         item.attributes = fix_params
-        item.set_seen(@cur_user).save
+        result = item.save
+        item.set_seen!(@cur_user) if result
       end
     end
     render_confirmed_all(true, notice: t("ss.notice.set_seen"))
@@ -137,7 +138,8 @@ module Gws::Circular::PostFilter
     @items.each do |item|
       if item.seen?(@cur_user)
         item.attributes = fix_params
-        item.unset_seen(@cur_user).save
+        result = item.save
+        item.unset_seen!(@cur_user) if result
       end
     end
     render_confirmed_all(true, notice: t("ss.notice.unset_seen"))

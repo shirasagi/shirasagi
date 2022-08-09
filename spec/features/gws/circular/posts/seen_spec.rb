@@ -9,6 +9,10 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
     let!(:item) { create :gws_circular_post, :gws_circular_posts }
 
     it do
+      item.reload
+      save_updated = item.updated
+      save_created = item.created
+
       expect(item.seen?(gws_user)).to be_falsey
 
       visit gws_circular_main_path(site: site)
@@ -24,6 +28,8 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
 
       item.reload
       expect(item.seen?(gws_user)).to be_truthy
+      expect(item.updated).to eq save_updated
+      expect(item.created).to eq save_created
 
       visit gws_circular_main_path(site: site)
       within ".list-items" do
@@ -36,6 +42,10 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
     let!(:item) { create :gws_circular_post, :gws_circular_posts, see_type: "simple" }
 
     it do
+      item.reload
+      save_updated = item.updated
+      save_created = item.created
+
       expect(item.seen?(gws_user)).to be_falsey
 
       visit gws_circular_main_path(site: site)
@@ -47,6 +57,8 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
 
       item.reload
       expect(item.seen?(gws_user)).to be_truthy
+      expect(item.updated).to eq save_updated
+      expect(item.created).to eq save_created
 
       visit gws_circular_main_path(site: site)
       within ".list-items" do
@@ -59,6 +71,10 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
     let!(:item2) { create :gws_circular_post, :gws_circular_posts_item2 }
 
     it do
+      item2.reload
+      save_updated = item2.updated
+      save_created = item2.created
+
       expect(item2.seen?(gws_user)).to be_truthy
 
       visit gws_circular_posts_path(site: site)
@@ -74,6 +90,8 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
 
       item2.reload
       expect(item2.unseen?(gws_user)).to be_truthy
+      expect(item2.updated).to eq save_updated
+      expect(item2.created).to eq save_created
 
       visit gws_circular_posts_path(site: site)
       within ".list-items" do
@@ -86,6 +104,10 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
     let!(:item2) { create :gws_circular_post, :gws_circular_posts_item2, see_type: "simple" }
 
     it do
+      item2.reload
+      save_updated = item2.updated
+      save_created = item2.created
+
       expect(item2.seen?(gws_user)).to be_truthy
 
       visit gws_circular_posts_path(site: site)
@@ -100,6 +122,8 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
       end
 
       expect(item2.seen?(gws_user)).to be_truthy
+      expect(item2.updated).to eq save_updated
+      expect(item2.created).to eq save_created
     end
   end
 
@@ -107,6 +131,10 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
     let!(:item) { create :gws_circular_post, :gws_circular_posts }
 
     it do
+      item.reload
+      save_updated = item.updated
+      save_created = item.created
+
       expect(item.seen?(gws_user)).to be_falsey
 
       visit gws_circular_posts_path(site: site)
@@ -124,6 +152,8 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
 
       item.reload
       expect(item.seen?(gws_user)).to be_truthy
+      expect(item.updated).to eq save_updated
+      expect(item.created).to eq save_created
 
       visit gws_circular_posts_path(site: site)
       within ".list-items" do
@@ -136,6 +166,10 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
     let!(:item) { create :gws_circular_post, :gws_circular_posts, see_type: "simple" }
 
     it do
+      item.reload
+      save_updated = item.updated
+      save_created = item.created
+
       expect(item.seen?(gws_user)).to be_falsey
 
       visit gws_circular_posts_path(site: site)
@@ -153,6 +187,8 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
 
       item.reload
       expect(item.seen?(gws_user)).to be_truthy
+      expect(item.updated).to eq save_updated
+      expect(item.created).to eq save_created
 
       visit gws_circular_posts_path(site: site)
       within ".list-items" do
@@ -165,6 +201,10 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
     let!(:item2) { create :gws_circular_post, :gws_circular_posts_item2 }
 
     it do
+      item2.reload
+      save_updated = item2.updated
+      save_created = item2.created
+
       expect(item2.seen?(gws_user)).to be_truthy
 
       visit gws_circular_posts_path(site: site)
@@ -182,6 +222,8 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
 
       item2.reload
       expect(item2.unseen?(gws_user)).to be_truthy
+      expect(item2.updated).to eq save_updated
+      expect(item2.created).to eq save_created
 
       visit gws_circular_posts_path(site: site)
       within ".list-items" do
@@ -194,6 +236,10 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
     let!(:item2) { create :gws_circular_post, :gws_circular_posts_item2, see_type: "simple" }
 
     it do
+      item2.reload
+      save_updated = item2.updated
+      save_created = item2.created
+
       expect(item2.seen?(gws_user)).to be_truthy
 
       visit gws_circular_posts_path(site: site)
@@ -211,6 +257,8 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
 
       item2.reload
       expect(item2.unseen?(gws_user)).to be_truthy
+      expect(item2.updated).to eq save_updated
+      expect(item2.created).to eq save_created
 
       visit gws_circular_posts_path(site: site)
       within ".list-items" do

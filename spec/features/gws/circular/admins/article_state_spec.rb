@@ -13,8 +13,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
   end
 
   before do
-    post1.set_seen(user1)
-    post1.save!
+    post1.set_seen!(user1)
     post1.reload
   end
 
