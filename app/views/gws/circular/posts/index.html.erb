@@ -16,6 +16,11 @@
   <%= render template: '_list_head' %>
   <ul class="list-items">
     <% @items.each do |item| %>
+      <%
+        comments = item.browsable_comments
+        last_updated = comments.max(:updated).try { |time| time.in_time_zone } || item.updated
+        last_updated = item.updated if last_updated < item.updated
+      %>
       <li class="list-item <%= 'unread' if (item.member?(@cur_user) && item.unseen?(@cur_user)) %>">
         <nav class="tap-menu">
           <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
@@ -36,7 +41,7 @@
           <div class="meta">
             <span class="id">#<%= item.id %></span>
             <span class="datetime"><%= @model.t(:due_date) %>: <%= tryb { item.due_date.strftime('%Y/%m/%d') } %></span>
-            <span class="datetime"><%= @model.t(:updated) %>: <%= item.updated.strftime('%Y/%m/%d %H:%M') %></span>
+            <span class="datetime"><%= @model.t(:updated) %>: <%= last_updated.strftime('%Y/%m/%d %H:%M') %></span>
             <span class="datetime"><%= @model.t(:created) %>: <%= item.created.strftime('%Y/%m/%d %H:%M') %></span>
             <span class="seen"><%= item.seen?(@cur_user) ? t('gws/circular.post.seen') : t('gws/circular.post.unseen') if item.member?(@cur_user) %></span>
             <span><%= gws_public_user_long_name(item.user_long_name) %></span>
