@@ -289,7 +289,7 @@ class Gws::Memo::MessagesController < ApplicationController
     @items.each do |item|
       raise "404" unless item.readable?(@cur_user, site: @cur_site)
 
-      item.set_seen!(@cur_user)
+      item.set_seen(@cur_user).update
     end
     render_change_all
   end
@@ -298,7 +298,7 @@ class Gws::Memo::MessagesController < ApplicationController
     @items.each do |item|
       raise "404" unless item.readable?(@cur_user, site: @cur_site)
 
-      item.unset_seen!(@cur_user)
+      item.unset_seen(@cur_user).update
     end
     render_change_all
   end
