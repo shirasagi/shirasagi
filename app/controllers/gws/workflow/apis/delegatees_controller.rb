@@ -15,7 +15,7 @@ class Gws::Workflow::Apis::DelegateesController < ApplicationController
     @all_group = @cur_user.gws_role_permit_any?(@cur_site, :agent_all_gws_workflow_files)
     @only_private_group = @private_group && !@all_group
 
-    @groups = @cur_site.descendants.active
+    @groups = @cur_site.descendants_and_self.active
     if @only_private_group
       @groups = @groups.in(id: @cur_user.group_ids)
     end
