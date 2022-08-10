@@ -65,6 +65,8 @@ Rails.application.routes.draw do
     get   "auth_token" => "auth_token#index", as: :auth_token
     get   "cms" => "mypage#cms"
     get   "gws" => "mypage#gws"
+    get   "locales/default/:languages/:namespace" => "locales#default", as: :locale_default
+    post  "locales/fallback/:languages/:namespace" => "locales#fallback", as: :locale_fallback
 
     namespace "login" do
       # SAML SSO
