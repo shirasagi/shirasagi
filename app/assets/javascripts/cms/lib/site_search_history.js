@@ -1,11 +1,10 @@
 this.Cms_Site_Search_History = (function () {
   function Cms_Site_Search_History(selector, url) {
-    this.selector = selector;
+    this.form = $(selector);
     this.url = url;
 
-    this.form = $(selector);
-    this.keyword = $(selector).find('[name="s[keyword]"]');
-    this.history = $(selector).find('.site-search-history');
+    this.keyword = this.form.find('[name="s[keyword]"]');
+    this.history = this.form.find('.site-search-history');
     this.histories = [];
 
     this.maxHistoryLength = 6;
@@ -14,6 +13,21 @@ this.Cms_Site_Search_History = (function () {
     if (this.keyword.length > 0 && this.history.length > 0) {
       this.render();
     }
+  }
+
+  var DATA_KEY = "cms-site-search-history";
+
+  Cms_Site_Search_History.render = function(selector, url) {
+    $(selector).each(function() {
+      var $this = $(this);
+      var instance = $this.data(DATA_KEY);
+      if (instance) {
+        return;
+      }
+
+      instance = new Cms_Site_Search_History(this, url);
+      $this.data(DATA_KEY, instance);
+    });
   };
 
   Cms_Site_Search_History.prototype.storageKey = function (key) {

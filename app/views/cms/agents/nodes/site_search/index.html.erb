@@ -35,7 +35,7 @@
 <%= stylesheet_link_tag "/assets/css/colorbox/colorbox.css", media: 'all' %>
 <%= jquery do %>
 Cms_Site_Search.render();
-new Cms_Site_Search_History("<%= ".cms-site-search .search-form" %>", "<%= @cur_node.full_url %>");
+Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.full_url %>");
 <% end %>
 <div class="cms-site-search">
   <%= form_for :s, url: @cur_node.url, html: { method: :get, class: 'search-form' }, "aria-label" => t("cms.search_form") do |f| %>
