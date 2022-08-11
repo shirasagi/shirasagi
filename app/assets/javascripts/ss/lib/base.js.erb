@@ -34,6 +34,38 @@ this.SS = (function () {
 
   SS.KEY_ENTER = 13;
 
+  SS.isReady = false;
+  SS.readyCallbacks = []
+
+  SS.ready = function(callback) {
+    if (SS.isReady) {
+      callback();
+      return;
+    }
+
+    SS.readyCallbacks.push(callback);
+  };
+
+  SS.doneReady = function() {
+    if (SS.isReady) {
+      return;
+    }
+
+    SS.isReady = true;
+    if (SS.readyTimeout) {
+      clearTimeout(SS.readyTimeout)
+      SS.readyTimeout = null
+    }
+
+    $.each(SS.readyCallbacks, function() {
+      this();
+    });
+    SS.readyCallbacks.length = 0;
+  }
+
+  // 5秒以内に doneReady が呼ばれない場合、強制的に呼ぶ
+  SS.readyTimeout = setTimeout(SS.doneReady, 5000);
+
   // $.isEmptyObject には IE11 で非互換がある。
   //
   //                            | Chrome 84 | IE 11  |
