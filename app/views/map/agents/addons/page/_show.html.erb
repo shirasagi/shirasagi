@@ -4,8 +4,6 @@
 
 <% if map_enabled?(mypage: true, site: @cur_site) %>
 
-<%= render_map "##{addon[:id]} .map-canvas", site: @cur_site, map: @item.map_options, markers: @item.map_points, preview: @preview %>
-
 <div class="mod-map">
   <dl class="see">
     <dt><%= @model.t :map_reference_method %></dt>
@@ -42,6 +40,8 @@
   <% @item.map_points.each do |map_point| %>
     <p><%= "#{map_point[:name]} #{map_point[:loc]}" %></p>
   <% end %>
+
+  <%= render_map "##{addon[:id]} .map-canvas", site: @cur_site, map: @item.map_options, markers: @item.map_points, preview: @preview %>
 <% end %>
 
 <% else %>
