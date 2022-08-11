@@ -39,7 +39,7 @@ this.SS = (function () {
 
   SS.ready = function(callback) {
     if (SS.isReady) {
-      callback();
+      setTimeout(function() { callback(); }, 0);
       return;
     }
 
