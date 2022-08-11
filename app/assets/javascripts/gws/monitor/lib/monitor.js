@@ -51,7 +51,7 @@ this.Gws_Monitor_Topic = (function () {
         action: id + "/question_not_applicable",
         method: "post",
         data: {
-          confirm: <%= I18n.t('gws/monitor.confirm.question_not_applicable').to_json %>
+          confirm: i18next.t('gws/monitor.confirm.question_not_applicable')
         }
       });
       form.append($("<input/>", {
@@ -69,7 +69,7 @@ this.Gws_Monitor_Topic = (function () {
         action: id + "/answered",
         method: "post",
         data: {
-          confirm: <%= I18n.t('gws/monitor.confirm.answer').to_json %>
+          confirm: i18next.t('gws/monitor.confirm.answer')
         }
       });
       form.append($("<input/>", {

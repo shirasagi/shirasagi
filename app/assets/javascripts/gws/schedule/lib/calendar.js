@@ -3,7 +3,7 @@ this.Gws_Schedule_Calendar = (function ($) {
   }
 
   Gws_Schedule_Calendar.messages = {
-    noPlan: <%= I18n.t("gws/schedule.no_plan").to_json %>
+    noPlan: i18next.t("gws/schedule.no_plan")
   };
 
   Gws_Schedule_Calendar.render = function (selector, opts, init) {
@@ -63,7 +63,7 @@ this.Gws_Schedule_Calendar = (function ($) {
   Gws_Schedule_Calendar.defaultParams = function (selector, opts) {
     return {
       buttonText: {
-        listMonth: <%= I18n.t('gws/schedule.calendar.buttonText.listMonth').to_json %>
+        listMonth: i18next.t('gws/schedule.calendar.buttonText.listMonth')
       },
       columnFormat: {
         month: "ddd",
@@ -72,7 +72,7 @@ this.Gws_Schedule_Calendar = (function ($) {
       },
       customButtons: {
         withTodo: {
-          text: <%= I18n.t('gws/schedule.calendar.buttonText.withTodo').to_json %>,
+          text: i18next.t('gws/schedule.calendar.buttonText.withTodo'),
           click: function (e) {
             $('.fc-event-todo').toggle(!$(this).hasClass('fc-state-active'));
             $(this).toggleClass("fc-state-active");
@@ -80,7 +80,7 @@ this.Gws_Schedule_Calendar = (function ($) {
           }
         },
         withAbsence: {
-          text: <%= I18n.t('gws/schedule.calendar.buttonText.withAbsence').to_json %>,
+          text: i18next.t('gws/schedule.calendar.buttonText.withAbsence'),
           click: function (e) {
             $(".fc-event-user-attendance-absence").each(function() {
               $(this).toggleClass("hide");
@@ -91,7 +91,7 @@ this.Gws_Schedule_Calendar = (function ($) {
           }
         },
         withListView: {
-          text: <%= I18n.t('gws/schedule.calendar.buttonText.listMonth').to_json %>,
+          text: i18next.t('gws/schedule.calendar.buttonText.listMonth'),
           click: function (e) {
             $.fullCalendar.toggleListFormat(selector);
             $(selector).fullCalendar('refetchEvents');
@@ -101,7 +101,7 @@ this.Gws_Schedule_Calendar = (function ($) {
           }
         },
         reload: {
-          text: <%= I18n.t('ss.buttons.reload').to_json %>,
+          text: i18next.t('ss.buttons.reload'),
           icon: "gws-schedule-calendar-reload",
           click: function (e) {
             $(selector).fullCalendar('refetchEvents');
@@ -126,16 +126,16 @@ this.Gws_Schedule_Calendar = (function ($) {
       startParam: 's[start]',
       timeFormat: 'HH:mm',
       titleFormat: {
-        month: <%= I18n.t('gws/schedule.calendar.titleFormat.month').to_json %>,
-        week: <%= I18n.t('gws/schedule.calendar.titleFormat.week').to_json %>,
-        day: <%= I18n.t('gws/schedule.calendar.titleFormat.day').to_json %>
+        month: i18next.t('gws/schedule.calendar.titleFormat.month'),
+        week: i18next.t('gws/schedule.calendar.titleFormat.week'),
+        day: i18next.t('gws/schedule.calendar.titleFormat.day')
       },
       loading: function (isLoading, view) {
         if (isLoading) {
           if ($(selector).hasClass("fc-list-format")) {
-            return $(this).find('.fc-view').prepend('<span class="fc-loading"><%= I18n.t("gws/schedule.loading") %></span>');
+            return $(this).find('.fc-view').prepend($('<span />', { class: "fc-loading" }).text(i18next.t("gws/schedule.loading")));
           } else {
-            return $(this).find('.fc-widget-content').eq(0).prepend('<span class="fc-loading"><%= I18n.t("gws/schedule.loading") %></span>');
+            return $(this).find('.fc-widget-content').eq(0).prepend($('<span />', { class: "fc-loading" }).text(i18next.t("gws/schedule.loading")));
           }
         } else {
           return $(this).find('.fc-loading').remove();
@@ -210,19 +210,23 @@ this.Gws_Schedule_Calendar = (function ($) {
           now = new Date;
           start = (date.format()) + "T" + (now.getHours()) + ":00:00";
           state = ("calendar[date]=" + (date.format()) + "&") + Gws_Schedule_Calendar.viewStateQuery(view);
-          links = "<a href='" + url + "/new?start=" + start + "&" + state + "' class='add-plan'><%= I18n.t 'gws/schedule.links.add_plan' %></a>";
+          links = ejs.render(
+            "<a href='<%= url %>/new?start=<%= start %>&<%= state %>' class='add-plan'><%= text %></a>",
+            { url: url, start: start, state: state, text: i18next('gws/schedule.links.add_plan') });
           todo = url.replace(/schedule\/.*/, 'schedule/todo/-/readables');
-          links += "<a href='" + todo + "/new?start=" + start + "&" + state + "' class='add-plan'><%= I18n.t 'gws/schedule.links.add_todo' %></a>";
+          links += ejs.render(
+            "<a href='<%= todo %>/new?start=<%= start %>&<%= state %>' class='add-plan'><%= text %></a>",
+            { todo: todo, state: state, text: i18next('gws/schedule.links.add_todo') });
         }
         if ($('#calendar-controller').length === 0) {
           if (view.name !== 'month') {
-            links += '<a href="" data-view="month"><%= I18n.t "gws/schedule.links.show_month" %></a>';
+            links += $('<a href="" data-view="month"/>').text(i18next.t("gws/schedule.links.show_month")).prop("outerHTML");
           }
           if (view.name !== 'basicWeek') {
-            links += '<a href="" data-view="basicWeek"><%= I18n.t "gws/schedule.links.show_week" %></a>';
+            links += $('<a href="" data-view="basicWeek"/>').text(i18next.t("gws/schedule.links.show_week")).prop("outerHTML");
           }
           if (view.name !== 'agendaDay') {
-            links += '<a href="" data-view="agendaDay"><%= I18n.t "gws/schedule.links.show_day" %></a>';
+            links += $('<a href="" data-view="agendaDay"/>').text(i18next.t("gws/schedule.links.show_day")).prop("outerHTML");
           }
         }
         if (links) {
@@ -268,7 +272,10 @@ this.Gws_Schedule_Calendar = (function ($) {
           return;
         }
         var target = $(this);
-        Gws_Popup.render(target, "<div class='fc-popup'><span class='fc-loading'><%= I18n.t('gws/schedule.loading') %></span></div>");
+        var popupContent = ejs.render(
+          "<div class='fc-popup'><span class='fc-loading'><%= text %></span></div>",
+          { text: i18next.t('gws/schedule.loading') });
+        Gws_Popup.render(target, popupContent);
 
         return $.ajax({
           url: popup_url + "/" + event.id + "/popup",

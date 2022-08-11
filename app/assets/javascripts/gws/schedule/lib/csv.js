@@ -20,7 +20,7 @@ Gws_Schedule_Csv.prototype.render = function () {
   });
   this.$el.find('#import_form').ajaxForm({
     beforeSubmit: function() {
-      self.$importLog.html('<span class="import-loading"><%= I18n.t("ss.notice.uploading") %></span>');
+      self.$importLog.html($('<span />', { class: "import-loading" }).text(i18next.t("ss.notice.uploading")));
       SS_AddonTabs.show('#import-result');
     },
     success: function(data, status) {
@@ -48,12 +48,21 @@ Gws_Schedule_Csv.prototype.renderResult = function(data) {
   }
   if (data.items) {
     var count = { exist: 0, entry: 0, saved: 0, error: 0 };
-    var html = '<table class="index mt-1"><thead><tr>' +
-      '<th style="width: 150px"><%= Gws::Schedule::Plan.t :start_at %></th>' +
-      '<th style="width: 150px"><%= Gws::Schedule::Plan.t :end_at %></th>' +
-      '<th style="width: 30%"><%= Gws::Schedule::Plan.t :name %></th>' +
-      '<th><%= I18n.t('gws/schedule.import.result') %></th>' +
-      '</tr></thead><tbody>';
+    var template = '\
+      <table class="index mt-1"><thead><tr> \
+        <th style="width: 150px"><%= start_at %></th> \
+        <th style="width: 150px"><%= end_at %></th> \
+        <th style="width: 30%"><%= name %></th> \
+        <th><%= result %></th> \
+      </tr></thead><tbody>';
+    var html = ejs.render(
+      template,
+      {
+        start_at: i18next.t("mongoid.attributes.gws/schedule/planable.start_at"),
+        end_at: i18next.t("mongoid.attributes.gws/schedule/planable.end_at"),
+        name: i18next.t("mongoid.attributes.gws/schedule/planable.name"),
+        result: i18next.t('gws/schedule.import.result')
+      });
 
     $.each(data.items, function(i, item){
       if (item.result == 'exist') count.exist += 1;
@@ -71,10 +80,10 @@ Gws_Schedule_Csv.prototype.renderResult = function(data) {
     html += '</tbody></table>';
 
     var tabs = '<div class="mb-1">';
-    if (count.exist) tabs += '<span class="ml-2 import-exist"><%= I18n.t('gws/schedule.import.exist') %>(' + count.exist + ')</span>';
-    if (count.entry) tabs += '<span class="ml-2 import-entry"><%= I18n.t('gws/schedule.import.entry') %>(' + count.entry + ')</span>';
-    if (count.saved) tabs += '<span class="ml-2 import-saved"><%= I18n.t('gws/schedule.import.saved') %>(' + count.saved + ')</span>';
-    if (count.error) tabs += '<span class="ml-2 import-error"><%= I18n.t('gws/schedule.import.error') %>(' + count.error + ')</span>';
+    if (count.exist) tabs += ejs.render('<span class="ml-2 import-exist"><%= text %>(<%= count.exist %>)</span>', { text: i18next.t('gws/schedule.import.exist'), count: count });
+    if (count.entry) tabs += ejs.render('<span class="ml-2 import-entry"><%= text %>(<%= count.entry %>)</span>', { text: i18next.t('gws/schedule.import.entry'), count: count });
+    if (count.saved) tabs += ejs.render('<span class="ml-2 import-saved"><%= text %>(<%= count.saved %>)</span>', { text: i18next.t('gws/schedule.import.saved'), count: count });
+    if (count.error) tabs += ejs.render('<span class="ml-2 import-error"><%= text %>(<%= count.error %>)</span>', { text: i18next.t('gws/schedule.import.error'), count: count });
     tabs += '</div>'
 
     log.append(tabs + html);

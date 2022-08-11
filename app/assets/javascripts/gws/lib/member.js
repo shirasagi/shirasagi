@@ -33,34 +33,34 @@ this.Gws_Member = (function () {
     return $('.save').on('click', function () {
 //$(submit).trigger("click")
       if ($('.gws-addon-readable-setting tbody tr').length === 0) {
-        return confirm(<%= I18n.t("gws.confirm.readable_setting.empty").to_json %>);
+        return confirm(i18next.t("gws.confirm.readable_setting.empty"));
       }
     });
   };
 
   Gws_Member.copyGroups = function (el) {
     this.groups = el.closest('dl').find('tbody tr').clone(true);
-    this.showLog(el, this.groups.length + <%= I18n.t('gws.member_log.copy_groups').to_json %>);
+    this.showLog(el, this.groups.length + i18next.t('gws.member_log.copy_groups'));
     return false;
   };
 
   Gws_Member.pasteGroups = function (el) {
     var num;
     num = this.pasteItems(el, this.groups);
-    this.showLog(el, num + <%= I18n.t('gws.member_log.paste_groups').to_json %>);
+    this.showLog(el, num + i18next.t('gws.member_log.paste_groups'));
     return false;
   };
 
   Gws_Member.copyUsers = function (el) {
     this.users = el.closest('dl').find('tbody tr').clone(true);
-    this.showLog(el, this.users.length + <%= I18n.t('gws.member_log.copy_users').to_json %>);
+    this.showLog(el, this.users.length + i18next.t('gws.member_log.copy_users'));
     return false;
   };
 
   Gws_Member.pasteUsers = function (el) {
     var num;
     num = this.pasteItems(el, this.users);
-    this.showLog(el, num + <%= I18n.t('gws.member_log.paste_users').to_json %>);
+    this.showLog(el, num + i18next.t('gws.member_log.paste_users'));
     return false;
   };
 
