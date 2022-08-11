@@ -160,6 +160,12 @@ module SS
       })(arguments[0], arguments[1]);
     SCRIPT
 
+    WAIT_FOR_JS_READY_SCRIPT = <<~SCRIPT.freeze
+      (function(resolve) {
+        SS.ready(function() { resolve(true); });
+      })(arguments[0]);
+    SCRIPT
+
     def wait_timeout
       Capybara.default_max_wait_time
     end
@@ -401,6 +407,10 @@ module SS
       expect(result[:error]).to be_blank
 
       result
+    end
+
+    def wait_for_js_ready
+      page.evaluate_async_script(WAIT_FOR_JS_READY_SCRIPT)
     end
   end
 end
