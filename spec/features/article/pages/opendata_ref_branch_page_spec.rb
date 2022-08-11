@@ -202,8 +202,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         select I18n.t("cms.options.opendata_resource.same"), from: "item_opendata_resources_#{article_page.file_ids.first}_state"
         click_button I18n.t('ss.buttons.save')
       end
-
       wait_for_ajax
+      within '#addon-cms-agents-addons-opendata_ref-resource' do
+        expect(page).to have_css(".od-resource-file-save-status", text: I18n.t("ss.notice.saved"))
+      end
 
       expect(Job::Log.count).to eq 9
       expect(Opendata::Dataset.site(od_site).count).to eq 1
