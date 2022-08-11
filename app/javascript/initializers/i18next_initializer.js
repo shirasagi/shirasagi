@@ -53,7 +53,6 @@ export default class extends Initializer {
 
   afterInitialize() {
     i18next.changeLanguage(document.documentElement.lang)
-    console.log(`i18next is ready: ss.basic_info=${i18next.t("ss.basic_info")}`)
     return Promise.resolve()
   }
 }
