@@ -7,8 +7,8 @@
 //= require jquery.datetimepicker
 //= require crypto-js/3.2.0/crypto-js.min.js
 //= require gmaps-marker-clusterer/src/markerclusterer.js
-//= require_self
 //= require ss/lib/base
+//= require_self
 //= require ss/lib/font
 //= require ss/lib/module
 //= require ss/lib/mobile
@@ -41,7 +41,7 @@
 //= require chartjs-plugin-colorschemes.min.js
 //= require jplayer/jquery.jplayer
 
-$(function () {
+SS.ready(function () {
   SS_Kana.render();
   SS_Translate.render();
   SS_Font.render();

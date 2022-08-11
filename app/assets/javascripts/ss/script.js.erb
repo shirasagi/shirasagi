@@ -35,9 +35,9 @@
 //= require tippy.js/dist/tippy-bundle.iife.js
 //= require crypto-js/3.2.0/crypto-js.min.js
 //= require ejs/ejs.min.js
+//= require ss/lib/base
 //= require_self
 //= require ss/chart
-//= require ss/lib/base
 //= require ss/lib/form
 //= require ss/lib/font
 //= require ss/lib/module
@@ -114,7 +114,7 @@
 //#
 //  $(".js-date").datetimepicker { lang: "ja", timepicker: false, format: "Y/m/d" }
 //#
-$(function () {
+SS.ready(function () {
   $.ajaxSetup({
     // prevent caching ajax response. see #596.
     cache: false,

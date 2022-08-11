@@ -3,8 +3,8 @@
 <% end %>
 
 <% if selected.present? %>
-  <%= javascript_tag(defer: true) do %>
-    $(function() {
+  <%= javascript_tag do %>
+    SS.ready(function() {
       var $select = $("[name='s[section_name]']");
       var $option = $select.find("option[value='<%== selected %>']");
       if ($option[0]) {

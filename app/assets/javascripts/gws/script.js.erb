@@ -28,7 +28,7 @@
 //= require gws/presence/user
 //= require gws/share/folder_toolbar
 
-$(function () {
+SS.ready(function () {
   // external link
   $('a[href^=http]').not('[href*="' + location.hostname + '"]').attr({ target: '_blank', rel: "noopener" });
 
