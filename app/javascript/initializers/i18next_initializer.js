@@ -22,7 +22,6 @@ function initializeI18nextViaRemote(resolve, reject) {
       if (err) {
         reject(err)
       } else {
-        window.i18next = i18next
         resolve()
       }
     })
@@ -36,7 +35,6 @@ function initializeI18nextViaLocal(resolve, reject) {
     if (err) {
       reject(err)
     } else {
-      window.i18next = i18next
       resolve()
     }
   })
@@ -55,6 +53,7 @@ export default class extends Initializer {
 
   afterInitialize() {
     i18next.changeLanguage(document.documentElement.lang)
+    window.i18next = i18next
     return Promise.resolve()
   }
 }
