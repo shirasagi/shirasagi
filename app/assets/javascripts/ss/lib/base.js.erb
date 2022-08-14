@@ -35,36 +35,26 @@ this.SS = (function () {
   SS.KEY_ENTER = 13;
 
   SS.isReady = false;
-  SS.readyCallbacks = []
+  var readyPromise = new Promise(function(resolve, _reject) {
+    // 5秒以内に doneReady が呼ばれない場合、強制的に呼ぶ
+    SS.readyTimeout = setTimeout(resolve, 5000);
 
-  SS.ready = function(callback) {
-    if (SS.isReady) {
-      setTimeout(function() { callback(); }, 0);
-      return;
+    SS.doneReady = function() {
+      if (SS.isReady) {
+        return;
+      }
+
+      SS.isReady = true;
+      if (SS.readyTimeout) {
+        clearTimeout(SS.readyTimeout);
+        SS.readyTimeout = null;
+      }
+
+      resolve();
     }
+  });
 
-    SS.readyCallbacks.push(callback);
-  };
-
-  SS.doneReady = function() {
-    if (SS.isReady) {
-      return;
-    }
-
-    SS.isReady = true;
-    if (SS.readyTimeout) {
-      clearTimeout(SS.readyTimeout)
-      SS.readyTimeout = null
-    }
-
-    $.each(SS.readyCallbacks, function() {
-      this();
-    });
-    SS.readyCallbacks.length = 0;
-  }
-
-  // 5秒以内に doneReady が呼ばれない場合、強制的に呼ぶ
-  SS.readyTimeout = setTimeout(SS.doneReady, 5000);
+  SS.ready = readyPromise.then.bind(readyPromise);
 
   // $.isEmptyObject には IE11 で非互換がある。
   //
