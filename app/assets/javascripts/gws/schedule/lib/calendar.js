@@ -61,7 +61,7 @@ SS.ready(function() {
       });
     };
 
-    Gws_Schedule_Calendar.defaultParams = function (selector, opts) {
+    Gws_Schedule_Calendar.defaultParams = function (selector, _opts) {
       return {
         buttonText: {
           listMonth: i18next.t('gws/schedule.calendar.buttonText.listMonth')
@@ -74,7 +74,7 @@ SS.ready(function() {
         customButtons: {
           withTodo: {
             text: i18next.t('gws/schedule.calendar.buttonText.withTodo'),
-            click: function (e) {
+            click: function (_ev) {
               $('.fc-event-todo').toggle(!$(this).hasClass('fc-state-active'));
               $(this).toggleClass("fc-state-active");
               return Gws_Schedule_Calendar.updateNoPlanVisibility($(this).closest(".fc"));
@@ -82,7 +82,7 @@ SS.ready(function() {
           },
           withAbsence: {
             text: i18next.t('gws/schedule.calendar.buttonText.withAbsence'),
-            click: function (e) {
+            click: function (_ev) {
               $(".fc-event-user-attendance-absence").each(function() {
                 $(this).toggleClass("hide");
               });
@@ -93,7 +93,7 @@ SS.ready(function() {
           },
           withListView: {
             text: i18next.t('gws/schedule.calendar.buttonText.listMonth'),
-            click: function (e) {
+            click: function (_ev) {
               $.fullCalendar.toggleListFormat(selector);
               $(selector).fullCalendar('refetchEvents');
               $(window).trigger('resize'); //for AgendaView
@@ -104,7 +104,7 @@ SS.ready(function() {
           reload: {
             text: i18next.t('ss.buttons.reload'),
             icon: "gws-schedule-calendar-reload",
-            click: function (e) {
+            click: function (_ev) {
               $(selector).fullCalendar('refetchEvents');
             }
           }

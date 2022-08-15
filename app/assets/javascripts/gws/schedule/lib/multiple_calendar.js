@@ -46,7 +46,7 @@ SS.ready(function() {
       Gws_Schedule_Multiple_Calendar.onceRendered = true;
     };
 
-    Gws_Schedule_Multiple_Calendar.defaultParams = function (selector, opts) {
+    Gws_Schedule_Multiple_Calendar.defaultParams = function (_selector, _opts) {
       return {
         defaultView: 'basicWeek',
         header: {
@@ -70,7 +70,7 @@ SS.ready(function() {
       };
     };
 
-    Gws_Schedule_Multiple_Calendar.controllerParams = function (selector, opts) {
+    Gws_Schedule_Multiple_Calendar.controllerParams = function (_selector, _opts) {
       return {
         header: {
           left: 'today prev next title reload',
@@ -85,7 +85,7 @@ SS.ready(function() {
       };
     };
 
-    Gws_Schedule_Multiple_Calendar.contentParams = function (selector, opts) {
+    Gws_Schedule_Multiple_Calendar.contentParams = function (_selector, _opts) {
       return {
         eventRender: function (event, element, view) {
           if (event.className.includes('fc-event-range')) {
