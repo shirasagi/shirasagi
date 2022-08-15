@@ -86,11 +86,11 @@ SS.ready(function() {
           defaultDate: date.format('YYYY-MM-DD'),
           defaultSelect: false,
           todayButton: false,
-          onGenerate: function (time, el) {
+          onGenerate: function (_time, _el) {
             $(this).find('.xdsoft_today').removeClass('xdsoft_today');
             return $(this).find('.xdsoft_current').removeClass('xdsoft_current');
           },
-          onSelectDate: function (ct, i) {
+          onSelectDate: function (ct, _i) {
             date = sprintf("%d-%02d-%02d", ct.getFullYear(), ct.getMonth() + 1, ct.getDate());
             return $jQuery1('.calendar').fullCalendar('gotoDate', date);
           }

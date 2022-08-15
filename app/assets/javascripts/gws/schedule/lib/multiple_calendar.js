@@ -103,22 +103,22 @@ SS.ready(function() {
             if (event.start.format(format) === end.format(format)) {
               content = end.format(format);
             }
-            var span = $('<span></span>').addClass(fcClass).append(content);
-            element.find('span.fc-title').before(span);
+            var spanBefore = $('<span></span>').addClass(fcClass).append(content);
+            element.find('span.fc-title').before(spanBefore);
           }
           if (event.category) {
-            var span = $('<span class="fc-category"></span>').append(event.category);
-            element.find('span.fc-title').prepend(span);
+            var spanPrepend = $('<span class="fc-category"></span>').append(event.category);
+            element.find('span.fc-title').prepend(spanPrepend);
           }
           if (event.facility) {
-            var span = $('<span class="fc-facility"></span>').append(event.facility);
-            element.find('span.fc-title').after(span);
+            var spanAfter = $('<span class="fc-facility"></span>').append(event.facility);
+            element.find('span.fc-title').after(spanAfter);
           }
           if (view.name === 'basicHour') {
             return BasicHourView.eventRender(event, element, view);
           }
         },
-        eventAfterAllRender: function (view) {
+        eventAfterAllRender: function (_view) {
           $(window).trigger('resize');
         }
       };
