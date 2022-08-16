@@ -2,7 +2,7 @@
 <div class="question"><%= @question.name %></div>
 
 <% @question.edges.each do |edge| %>
-  <%= hidden_field_tag "answers[#{@no}][]", edge.transition %>
+  <%= hidden_field_tag "answers[#{@no}][]", edge.transition, id: nil %>
 <% end %>
 
 <footer class="send">
