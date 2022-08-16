@@ -9,7 +9,7 @@
   <%= sanitize(@item.html) %>
 </body>
 
-<%= javascript_tag(defer: true) do %>
+<%= javascript_tag do %>
   var linkTemplate = <%== sns_redirect_path(ref: "_ref_").to_json %>
   var viaSnsRedirect = function(ev) {
     var href = encodeURIComponent(this.href);
