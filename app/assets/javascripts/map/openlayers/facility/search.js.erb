@@ -72,10 +72,14 @@ this.Openlayers_Facility_Search = (function () {
         if (visible) {
           iconSrc = this.get("iconSrc");
           style = map.createMarkerStyle(iconSrc);
-          return this.setStyle(style);
+          this.setStyle(style);
+          column.show();
+          return
         } else {
           style = new ol.style.Style({});
-          return this.setStyle(style);
+          this.setStyle(style);
+          column.hide();
+          return
         }
       });
       return false;
