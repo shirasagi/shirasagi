@@ -22,6 +22,7 @@ module Webmail::BaseFilter
 
   def set_webmail_mode
     @ss_mode = :webmail
+    SS.reset_locale_and_timezone # cms and webmail are currently not supported.
     @webmail_mode = params[:webmail_mode].try(:to_sym) || :account
     raise "404" unless %i[account group].include?(@webmail_mode)
   end

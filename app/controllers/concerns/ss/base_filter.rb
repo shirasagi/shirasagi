@@ -107,6 +107,7 @@ module SS::BaseFilter
     @cur_user, login_path, logout_path = get_user_by_access_token
     SS.current_user = @cur_user
     SS.current_token = nil
+    SS.change_locale_and_timezone(SS.current_user)
     return false if !@cur_user
 
     set_user(@cur_user, session: true, login_path: login_path, logout_path: logout_path)
@@ -123,6 +124,7 @@ module SS::BaseFilter
     @cur_user, token = get_user_by_oauth2_token
     SS.current_user = @cur_user
     SS.current_token = token
+    SS.change_locale_and_timezone(SS.current_user)
     return false if !@cur_user
 
     # no need to keep sessions with token auth
@@ -133,6 +135,7 @@ module SS::BaseFilter
   def login_by_session
     @cur_user = SS.current_user = get_user_by_session
     SS.current_token = nil
+    SS.change_locale_and_timezone(SS.current_user)
     return false if !@cur_user
 
     set_last_logged_in
@@ -157,6 +160,7 @@ module SS::BaseFilter
     session[:logout_path] = opts[:logout_path]
     redirect_to sns_mypage_path if opts[:redirect]
     @cur_user = SS.current_user = user
+    SS.change_locale_and_timezone(SS.current_user)
   end
 
   def unset_user(opt = {})
@@ -164,6 +168,7 @@ module SS::BaseFilter
     redirect_to login_path_by_cookie if opt[:redirect]
     @cur_user = SS.current_user = nil
     SS.current_token = nil
+    SS.change_locale_and_timezone(SS.current_user)
   end
 
   def check_api_user

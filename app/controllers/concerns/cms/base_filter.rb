@@ -32,6 +32,7 @@ module Cms::BaseFilter
 
   def set_site
     @ss_mode = :cms
+    SS.reset_locale_and_timezone # cms and webmail are currently not supported.
     @cur_site = SS.current_site = Cms::Site.find params[:site]
 
     if @cur_site.maintenance_mode? && !@cur_site.allowed_maint_user?(@cur_user.id)

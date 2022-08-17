@@ -1,4 +1,5 @@
 class Sns::LoginController < ApplicationController
+  include HttpAcceptLanguage::AutoLocale
   include Sns::BaseFilter
   include Sns::LoginFilter
 
@@ -55,6 +56,7 @@ class Sns::LoginController < ApplicationController
 
   def status
     if @cur_user = SS.current_user = get_user_by_session
+      SS.change_locale_and_timezone(SS.current_user)
       render plain: 'OK'
     else
       # to suppress error level log directly responds "forbidden"

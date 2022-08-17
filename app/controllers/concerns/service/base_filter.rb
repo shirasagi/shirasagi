@@ -64,6 +64,7 @@ module Service::BaseFilter
     end
 
     @cur_user = SS.current_user = get_user_by_session
+    SS.change_locale_and_timezone(SS.current_user)
     if @cur_user
       set_last_logged_in
       return @cur_user
@@ -92,6 +93,7 @@ module Service::BaseFilter
     end
     redirect_to service_main_path if opts[:redirect]
     @cur_user = SS.current_user = user
+    SS.change_locale_and_timezone(SS.current_user)
   end
 
   def rescue_action(exception)
