@@ -85,7 +85,12 @@ module SS
       Thread.current["ss.env"] = args.first
       Thread.current["ss.request"] = nil
       self.class.request_interceptor.call(*args) if self.class.request_interceptor
-      super
+
+      I18n.with_locale(I18n.locale) do
+        Time.use_zone(Time.zone) do
+          super
+        end
+      end
     ensure
       THREAD_LOCAL_VARIABLES.each do |variable_name|
         Thread.current[variable_name] = save_context[variable_name]
