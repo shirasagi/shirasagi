@@ -17,7 +17,7 @@ function initializeI18nextViaRemote(resolve, reject) {
           allowMultiLoading: true
         }
       },
-      fallbackLng: ['en', 'ja']
+      fallbackLng: AVAILABLE_LOCALES
     }, (err, _t) => {
       if (err) {
         reject(err)
@@ -30,7 +30,7 @@ function initializeI18nextViaRemote(resolve, reject) {
 function initializeI18nextViaLocal(resolve, reject) {
   i18next.init({
     resources: I18NEXT_RESOURCES,
-    fallbackLng: ['en', 'ja']
+    fallbackLng: AVAILABLE_LOCALES
   }, (err, _t) => {
     if (err) {
       reject(err)
