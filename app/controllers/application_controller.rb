@@ -121,12 +121,10 @@ class ApplicationController < ActionController::Base
         ss_send_file_grid_fs(*args)
       end
     end
+  elsif Fs.mode == :file
+    alias ss_send_file ss_send_file_file
   else
-    if Fs.mode == :file
-      alias ss_send_file ss_send_file_file
-    else
-      alias ss_send_file ss_send_file_grid_fs
-    end
+    alias ss_send_file ss_send_file_grid_fs
   end
 
   def json_content_type
