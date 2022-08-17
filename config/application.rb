@@ -15,12 +15,19 @@ require "action_view/railtie"
 require "sprockets/railtie"
 # require "rails/test_unit/railtie"
 
+require_relative "../app/models/ss"
+require_relative "../app/models/ss/config"
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
 module SS
   mattr_reader(:version) { "1.16.0" }
+
+  def self.config
+    @_ss_config ||= SS::Config.setup
+  end
 
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
@@ -42,6 +49,7 @@ module SS
     config.autoload_paths << "#{config.root}/app/jobs/concerns"
 
     I18n.enforce_available_locales = true
+    I18n.available_locales = SS.config.env.available_locales.map(&:to_sym) if SS.config.env.available_locales.present?
     config.time_zone = 'Tokyo'
     config.i18n.default_locale = :ja
     config.i18n.fallbacks = [ :en ]
@@ -148,11 +156,6 @@ module SS
     ensure
       udp.close rescue nil
     end
-  end
-
-  def self.config
-    # lazy loading
-    @_ss_config ||= "SS::Config".constantize.setup
   end
 
   def self.current_site
