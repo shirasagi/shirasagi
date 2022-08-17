@@ -109,7 +109,6 @@ module SS::BaseFilter
     SS.current_token = nil
     return false if !@cur_user
 
-    set_locale_and_timezone
     set_user(@cur_user, session: true, login_path: login_path, logout_path: logout_path)
 
     # persistent session to database by redirecting to self path
@@ -126,7 +125,6 @@ module SS::BaseFilter
     SS.current_token = token
     return false if !@cur_user
 
-    set_locale_and_timezone
     # no need to keep sessions with token auth
     request.session_options[:skip] = true
     return true
@@ -137,7 +135,6 @@ module SS::BaseFilter
     SS.current_token = nil
     return false if !@cur_user
 
-    set_locale_and_timezone
     set_last_logged_in
     return true
   end

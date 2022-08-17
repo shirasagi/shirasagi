@@ -73,11 +73,6 @@ module SS::AuthFilter
     end
   end
 
-  def set_locale_and_timezone
-    # I18n.locale = @cur_user.lang.to_sym if @cur_user.try(:lang).present?
-    # Time.zone = Time.find_zone(@cur_user.timezone) if @cur_user.try(:timezone).present?
-  end
-
   def set_last_logged_in(timestamp = Time.zone.now.to_i)
     session[:user]["last_logged_in"] = timestamp if session[:user]
   end

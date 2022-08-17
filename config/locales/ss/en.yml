@@ -514,6 +514,9 @@ en:
           end_with: starts with
           include_any_of: includes any of
           include_none_of: includes none of
+      lang:
+        ja: 日本語
+        en: English
 
     tasks:
       started: Started.
@@ -568,6 +571,7 @@ en:
       ss/oauth2/cms_permission: CMS permissions
       ss/oauth2/gws_permission: Groupware permissions
       ss/oauth2/webmail_permission: Mail permissions
+      ss/locale_setting: Locale settings
 
   activemodel:
     attributes:
@@ -983,6 +987,9 @@ en:
         public_key_type: Public-key type
         public_key: Public-key
         public_key_encrypted: Public-key (Encrypted)
+      ss/addon/locale_setting:
+        lang: Language
+        timezone: Timezone
 
   tooltip:
     ss/model/site:
@@ -1454,6 +1461,12 @@ en:
         - $ openssl rsa -in private_key.pem -pubout -out public_key.pem
         -
         - Paste the contents of public_key.pem, which is your public key.
+
+    ss/addon/locale_setting:
+      lang:
+        - Select language
+      timezone:
+        - Select Timezone
 
   job:
     models:

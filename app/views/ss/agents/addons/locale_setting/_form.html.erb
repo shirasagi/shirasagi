@@ -1,0 +1,12 @@
+<%
+  # cms and webmail are currently not supported.
+  return if %i[cms webmail].include?(@ss_mode)
+%>
+
+<dl class="see">
+  <dt><%= @model.t :lang %><%= @model.tt :lang %></dt>
+  <dd><%= f.select :lang, @item.lang_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :timezone %><%= @model.tt :timezone %></dt>
+  <dd><%= f.select :timezone, @item.timezone_options, include_blank: true %></dd>
+</dl>
