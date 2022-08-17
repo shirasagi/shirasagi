@@ -10,7 +10,7 @@ this.SS_SearchUI = (function () {
         <input type=\"<%%= attr.type %>\" name=\"<%%= attr.name %>\" value=\"<%%= data.id %>\" class=\"<%%= attr.class %>\"> \
         <%%= data.name %> \
       </td> \
-      <td><a class=\"deselect btn\" href=\"#\"><%= I18n.t "ss.buttons.delete" %></a></td> \
+      <td><a class=\"deselect btn\" href=\"#\"><%%= label.delete %></a></td> \
     </tr>";
 
   SS_SearchUI.defaultSelector = function ($item) {
@@ -35,7 +35,7 @@ this.SS_SearchUI = (function () {
       data.name = $data.find(".select-item").text() || $item.text() || $data.text();
     }
 
-    var tr = ejs.render(template, { data: data, attr: attr });
+    var tr = ejs.render(template, { data: data, attr: attr, label: { delete: i18next.t("ss.buttons.delete") } });
 
     var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
     $ajaxSelected.find("tbody").prepend(tr);

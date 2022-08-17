@@ -226,7 +226,7 @@ this.SS_AjaxFile = (function () {
   };
 
   SS_AjaxFile.prototype.deleteFile = function(el) {
-    if (!confirm(SS.confirm.delete)) {
+    if (!confirm(i18next.t('ss.confirm.delete'))) {
       return false;
     }
 

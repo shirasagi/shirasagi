@@ -28,7 +28,7 @@ this.SS_Color = (function () {
       }
 
       if (self.data('clear')) {
-        var btn = $("<input type='button' class='btn' value='" + <%= I18n.t('ss.buttons.clear').to_json %> + "' />");
+        var btn = $("<input />", { type: 'button', class: 'btn', value: i18next.t('ss.buttons.clear') });
         self.after(btn).after(' ');
         btn.on("click", function () {
           self.minicolors('value', { color: 'transparent' });
@@ -37,7 +37,7 @@ this.SS_Color = (function () {
       if (self.data('random')) {
         var randomColor = self.data('random').split(' ');
         var randomIndex = 0;
-        var btn = $("<input type='button' class='btn' value='" + <%= I18n.t('ss.buttons.random_gen').to_json %> + "' />");
+        var btn = $("<input />", { type: 'button', class: 'btn', value: i18next.t('ss.buttons.random_gen') });
         self.after(btn).after(' ');
         btn.on("click", function () {
           var nextColor = randomColor[randomIndex];

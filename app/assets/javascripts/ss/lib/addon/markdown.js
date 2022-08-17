@@ -21,13 +21,9 @@ this.SS_Addon_Markdown = (function () {
 
   SS_Addon_Markdown.previewUrl = '/.u/addons/markdown';
 
-  SS_Addon_Markdown.previewLabel = <%= I18n.t("ss.links.preview").to_json %>;
-
   SS_Addon_Markdown.previewButton = 'ss-addon-markdown-preview-button';
 
   SS_Addon_Markdown.helpUrl = 'https://help.github.com/articles/basic-writing-and-formatting-syntax/';
-
-  SS_Addon_Markdown.helpLabel = <%= I18n.t("ss.links.markdown_help").to_json %>;
 
   SS_Addon_Markdown.helpButton = 'ss-addon-markdown-help-button';
 
@@ -38,8 +34,8 @@ this.SS_Addon_Markdown = (function () {
     $el.find("." + this.toolbar).append("<span class='" + this.options + "'></span>");
     $el.append("<div class='" + this.preview + " markdown-body'></div>");
     $el.find("." + this.options)
-      .append("<input type='button' class='btn " + this.previewButton + "' value='" + this.previewLabel + "' />")
-      .append("<a href='" + this.helpUrl + "' class='" + this.helpButton + "' target='_blank'>" + this.helpLabel + "</a>");
+      .append($("<input />", { type: 'button', class: 'btn ' + this.previewButton, value: i18next.t("ss.links.preview") }))
+      .append($("<a />", { href: this.helpUrl, class: this.helpButton, target: '_blank', rel: 'noopener' }).text(i18next.t("ss.links.markdown_help")));
 
     return new SS_Addon_Markdown("." + SS_Addon_Markdown.container, options);
   };

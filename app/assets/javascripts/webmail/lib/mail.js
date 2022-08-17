@@ -147,7 +147,7 @@ this.Webmail_Mail_List = (function () {
       return false;
     });
     $(".list-head .delete-all").on("click", function () {
-      if (!confirm(<%= I18n.t("webmail.confirm.empty_mailbox").to_json %>)) {
+      if (!confirm(i18next.t("webmail.confirm.empty_mailbox"))) {
         return false;
       }
       $('.dropdown-menu').removeClass('active');

@@ -43,7 +43,7 @@
 //= require ss/lib/module
 //= require ss/lib/login
 //= require ss/lib/addon_tabs
-//= require ss/lib/addon/markdown
+//= require lib/addon/markdown
 //= require ss/lib/addon/temp_file
 //= require ss/lib/edit_lock
 //= require ss/lib/image_editor
