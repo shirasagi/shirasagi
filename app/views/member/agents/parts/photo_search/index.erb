@@ -6,7 +6,7 @@
 
 <div class="hide" style="display: none;">
   <div class="colorbox-dialog-part-<%= @cur_part.id %>">
-    <%= render(file: "member/agents/nodes/photo_search/_modal.html.erb", locals: { search_path: search_path }) %>
+    <%= render("member/agents/nodes/photo_search/modal", search_path: search_path) %>
   </div>
 </div>
 
