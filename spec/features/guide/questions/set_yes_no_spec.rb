@@ -70,6 +70,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
         end
         find('.list-head .checkbox input').set(true)
         within ".search-ui-select" do
+          wait_for_js_ready
           click_on I18n.t("ss.links.select")
         end
       end
