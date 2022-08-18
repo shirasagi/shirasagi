@@ -47,7 +47,9 @@ Rails.application.routes.draw do
     resources :groups, concerns: [:deletion, :import] do
       match :download_all, on: :collection, via: %i[get post]
     end
-    resources :custom_groups, concerns: [:deletion, :download, :import]
+    resources :custom_groups, concerns: [:deletion, :import] do
+      match :download_all, on: :collection, via: %i[get post]
+    end
     resources :users, concerns: [:deletion, :download, :import, :webmail_import, :lock_and_unlock]
     resources :user_titles, concerns: [:deletion] do
       match :download_all, on: :collection, via: %i[get post]
