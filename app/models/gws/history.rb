@@ -49,12 +49,21 @@ class Gws::History
   }
 
   class << self
-    def search(params)
-      criteria = all
-      return criteria if params.blank?
+    # rubocop:disable Rails::WhereExists
+    def updated?
+      where(mode: 'update').exists?
+    end
+    # rubocop:enable Rails::WhereExists
 
-      criteria = criteria.search_keyword(params)
-      criteria = criteria.search_ymd(params)
+    SEARCH_HANDLERS = %i[search_keyword search_ymd].freeze
+
+    def search(params)
+      return all if params.blank?
+
+      criteria = all
+      SEARCH_HANDLERS.each do |handler|
+        criteria = criteria.send(handler, params)
+      end
       criteria
     end
 
@@ -103,24 +112,73 @@ class Gws::History
       )
       item.attributes = attributes
 
+      # rubocop:disable Style::SoleNestedConditional
       if allowed_severity = cur_site.allowed_log_severity_for(item.module_key)
         if severity_to_num(severity) >= severity_to_num(allowed_severity)
           item.save!(context: context.to_sym)
         end
       end
+      # rubocop:enable Style::SoleNestedConditional
 
       try_invoke_archive(cur_user, cur_site)
     end
 
-    def create_controller_log!(request, response, options)
-      return if request.format != 'text/html'
+    # syslog 連携用として操作履歴を production.log へ出力する
+    # production.log へ出力された操作履歴は、ログファイルの tail 監視などを通じて syslog サーバーへ送られる
+    def write_to_app_log(item)
+      Rails.logger.unknown do
+        # LTSV format
+        terms = [ "oplog:true" ]
 
-      if !request.get? && response.code =~ /^3/
-        severity = 'info'
-      else
-        return if SS.config.gws.history['severity_notice'] != 'enabled'
-        severity = 'notice'
+        I18n.with_locale(I18n.default_locale) do
+          terms << "log_class:#{item.class.name}"
+          if item.model.present?
+            title = "#{item.model_name} / #{item.name}"
+          elsif item.controller.present?
+            title = "#{item.controller_name}##{item.action}"
+          elsif item.job.present?
+            title = item.job_name
+          end
+          terms << "title:#{title}"
+          terms << "module:#{I18n.t("modules.#{item.module_key}")}"
+          if item.message
+            terms << "message:#{item.message}"
+          end
+          terms << "severity:#{item.severity}"
+          terms << "created:#{item.created.iso8601}"
+          if item.mode.present?
+            terms << "mode:#{item.mode}"
+          end
+          if item.path.present?
+            terms << "path:#{item.path}"
+          end
+          if item.respond_to?(:user_id)
+            terms << "user_id:#{item.user_id}"
+            if item.try(:user)
+              terms << "user_email:#{item.user.email}"
+            end
+          end
+          if item.respond_to?(:updated_field_names) && (names = item.updated_field_names).present?
+            terms << "updated_field_names:#{names.join(',')}"
+          end
+          if item.session_id
+            terms << "session_id:#{item.session_id}"
+          end
+          if item.request_id
+            terms << "request_id:#{item.request_id}"
+          end
+        rescue => e
+          terms << "exception_class:#{e.class}"
+          terms << "exception_message:#{e.message}"
+        end
+
+        terms.join("\t")
       end
+    end
+
+    def create_controller_log!(request, response, options)
+      severity = history_severity(request, response, options)
+      return if severity.blank?
 
       write!(
         severity, :controller, options[:cur_user], options[:cur_site],
@@ -130,9 +188,18 @@ class Gws::History
 
     private
 
-    # def encode_sjis(str)
-    #   str.encode("SJIS", invalid: :replace, undef: :replace)
-    # end
+    def history_severity(request, response, _options)
+      return if (request.get? || request.head?) && SS.config.gws.history['severity_notice'] != 'enabled'
+
+      # 302 や 304 の場合、データベースに変更が発生したはずなので、操作履歴に記録する
+      return 'info' if response.code.start_with?("3")
+      # ダウンロードの場合、監査目的で、操作履歴に記録する（インシデントが発生した場合に誰がダウンロードしたのかを追跡できるようにする）
+      return 'info' if History::DOWNLOAD_MIME_TYPES.include?(response.media_type)
+      # severity_notice が有効な場合、種々雑多な記録を、操作履歴として記録する。
+      return 'notice' if SS.config.gws.history['severity_notice'] == 'enabled'
+
+      nil
+    end
 
     def severity_to_num(severity)
       case severity.to_sym
@@ -211,11 +278,5 @@ class Gws::History
     self.model_name ||= I18n.t("mongoid.models.#{model}") if model.present?
     self.job_name ||= I18n.t("job.models.#{job}") if job.present?
     self.updated_field_names = updated_field_names unless self[:updated_field_names]
-  end
-
-  class << self
-    def updated?
-      where(mode: 'update').exists?
-    end
   end
 end
