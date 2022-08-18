@@ -5,12 +5,12 @@ this.SS_SearchUI = (function () {
   SS_SearchUI.anchorAjaxBox;
 
   SS_SearchUI.defaultTemplate = " \
-    <tr data-id=\"<%%= data.id %>\"> \
+    <tr data-id=\"<%= data.id %>\"> \
       <td> \
-        <input type=\"<%%= attr.type %>\" name=\"<%%= attr.name %>\" value=\"<%%= data.id %>\" class=\"<%%= attr.class %>\"> \
-        <%%= data.name %> \
+        <input type=\"<%= attr.type %>\" name=\"<%= attr.name %>\" value=\"<%= data.id %>\" class=\"<%= attr.class %>\"> \
+        <%= data.name %> \
       </td> \
-      <td><a class=\"deselect btn\" href=\"#\"><%%= label.delete %></a></td> \
+      <td><a class=\"deselect btn\" href=\"#\"><%= label.delete %></a></td> \
     </tr>";
 
   SS_SearchUI.defaultSelector = function ($item) {
