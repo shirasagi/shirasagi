@@ -19,7 +19,7 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 2
     strategy:
       fail-fast: false
       matrix:
@@ -49,6 +49,16 @@ jobs:
         run: docker pull shirasagi/michecker
       - name: Prepare Elasticsearch
         run: docker pull shirasagi/elasticsearch
+      - name: Launch Elasticsearch
+        id: elasticsearch
+        run: |
+          container_id=$(docker run -d --name elasticsearch -p 9200:9200 -e discovery.type=single-node shirasagi/elasticsearch)
+          if [ $? -ne 0 ]; then
+            exit $?
+          fi
+          echo "::set-output name=container_id::$container_id"
+      - name: Elasticsearch Container ID
+        run: echo ${{ steps.elasticsearch.outputs.container_id }}
       - name: Install pre requisites
         run: |
           sudo apt-get update
@@ -114,6 +124,7 @@ jobs:
           LANG: ja_JP.UTF-8
           LC_ALL: ja_JP.UTF-8
           RUBYOPT: "-W:deprecated"
+          ES_CONTAINER_ID: ${{ steps.elasticsearch.outputs.container_id }}
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@master
         with:
