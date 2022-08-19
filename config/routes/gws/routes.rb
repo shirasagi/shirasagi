@@ -6,11 +6,6 @@ Rails.application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
-  concern :download do
-    get :download, on: :collection
-    get :download_template, on: :collection
-  end
-
   concern :import do
     get :import, on: :collection
     post :import, on: :collection
@@ -62,7 +57,9 @@ Rails.application.routes.draw do
       match :download_all, on: :collection, via: %i[get post]
       match :import, on: :collection, via: %i[get post]
     end
-    resources :roles, concerns: [:deletion, :download, :import]
+    resources :roles, concerns: [:deletion, :import] do
+      match :download_all, on: :collection, via: %i[get post]
+    end
     resources :sys_notices, only: [:index, :show] do
       get :frame_content, on: :member
     end

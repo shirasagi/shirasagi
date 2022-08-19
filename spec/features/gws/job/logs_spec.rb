@@ -12,7 +12,7 @@ describe "gws_job_logs", type: :feature, dbscope: :example, js: true do
     end
   end
   let!(:log2) do
-    Timecop.freeze(now.ago(1.days)) do
+    Timecop.freeze(now.ago(1.day)) do
       job2 = Gws::Notice::NotificationJob.new.bind("site_id" => site.id, "user_id" => user.id)
       create(:gws_job_log, :gws_job_log_completed, job: job2)
     end
