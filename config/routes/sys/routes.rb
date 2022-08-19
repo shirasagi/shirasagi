@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   end
 
   concern :export do
-    get :download, on: :collection
+    post :download, on: :collection
     get :import, on: :collection
     post :import, on: :collection
   end
