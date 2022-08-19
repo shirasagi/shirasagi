@@ -36,6 +36,14 @@ describe "gws_user_titles", type: :feature, dbscope: :example do
       expect(csv[0][Gws::UserTitle.t(:name)]).to eq item.name
       expect(csv[0][Gws::UserTitle.t(:remark)]).to eq item.remark
       expect(csv[0][Gws::UserTitle.t(:order)]).to eq item.order.to_s
+
+      expect(Gws::History.all.count).to be > 1
+      Gws::History.all.reorder(created: -1).first.tap do |history|
+        expect(history.severity).to eq "info"
+        expect(history.controller).to eq "gws/user_titles"
+        expect(history.path).to eq download_all_gws_user_titles_path(site: site)
+        expect(history.action).to eq "download_all"
+      end
     end
   end
 

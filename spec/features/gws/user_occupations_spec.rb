@@ -38,6 +38,14 @@ describe "gws_user_occupations", type: :feature, dbscope: :example do
         expect(table[0][Gws::UserOccupation.t(:remark)]).to eq item.remark
         expect(table[0][Gws::UserOccupation.t(:order)]).to eq item.order.to_s
       end
+
+      expect(Gws::History.all.count).to be > 1
+      Gws::History.all.reorder(created: -1).first.tap do |history|
+        expect(history.severity).to eq "info"
+        expect(history.controller).to eq "gws/user_occupations"
+        expect(history.path).to eq download_all_gws_user_occupations_path(site: site)
+        expect(history.action).to eq "download_all"
+      end
     end
   end
 
