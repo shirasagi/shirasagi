@@ -1,7 +1,7 @@
 class Gws::UserCsv::Exporter
   include ActiveModel::Model
 
-  attr_accessor :site, :form, :criteria, :webmail_support
+  attr_accessor :site, :form, :criteria, :encoding, :webmail_support
 
   PREFIX = 'A:'.freeze
 
@@ -56,9 +56,23 @@ class Gws::UserCsv::Exporter
     end
 
     Enumerator.new do |y|
-      y << encode_sjis(csv_headers.to_csv)
+      csv_headers.to_csv.tap do |csv|
+        case encoding
+        when "Shift_JIS"
+          y << encode_sjis(csv)
+        when "UTF-8"
+          y << SS::Csv::UTF8_BOM + csv
+        end
+      end
       @criteria.each do |item|
-        y << encode_sjis(item_to_csv(item).to_csv)
+        item_to_csv(item).to_csv.tap do |csv|
+          case encoding
+          when "Shift_JIS"
+            y << encode_sjis(csv)
+          when "UTF-8"
+            y << csv
+          end
+        end
       end
     end
   end
