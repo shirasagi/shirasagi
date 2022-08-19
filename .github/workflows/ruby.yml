@@ -19,7 +19,7 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:
@@ -56,9 +56,8 @@ jobs:
           if [ $? -ne 0 ]; then
             exit $?
           fi
+          echo $container_id
           echo "::set-output name=container_id::$container_id"
-      - name: Elasticsearch Container ID
-        run: echo ${{ steps.elasticsearch.outputs.container_id }}
       - name: Install pre requisites
         run: |
           sudo apt-get update
@@ -117,14 +116,13 @@ jobs:
           fi
           echo $file_list | xargs bundle exec rspec --profile 10
         env:
-          allow_open_jtalk: 1
-          LDAP_TEST: enable
-          ANALYZE_COVERAGE: disabled
           TZ: "Asia/Tokyo"
           LANG: ja_JP.UTF-8
           LC_ALL: ja_JP.UTF-8
-          RUBYOPT: "-W:deprecated"
+          allow_open_jtalk: 1
+          LDAP_TEST: enable
           ES_CONTAINER_ID: ${{ steps.elasticsearch.outputs.container_id }}
+          RUBYOPT: "-W:deprecated"
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@master
         with:
