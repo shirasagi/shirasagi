@@ -13,7 +13,7 @@ describe "facility_agents_nodes_page", type: :feature, dbscope: :example do
     create :facility_map, filename: "node/item/#{unique_id}",
            map_points: [{"name" => item.name, "loc" => [34.067035, 134.589971], "text" => unique_id}]
   end
-  let!(:file) {create :ss_file}
+  let!(:file) { create :ss_file }
   let!(:image) do
     create :facility_image, filename: "node/item/#{unique_id}", image_id: file.id
   end

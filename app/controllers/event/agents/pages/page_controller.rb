@@ -11,19 +11,23 @@ class Event::Agents::Pages::PageController < ApplicationController
   end
 
   def map_points
-    if @cur_page.map_points.blank? && @cur_page.facility_ids.present?
-      map_points = []
-      @cur_page.facility_ids.each do |facility_id|
-        facility = Facility::Node::Page.site(@cur_site).and_public.where(id: facility_id).first
-        items = Facility::Map.site(@cur_site).and_public.
-          where(filename: /^#{::Regexp.escape(facility.filename)}\//, depth: facility.depth + 1).order_by(order: 1).first.map_points
-        items.each do |item|
-          marker_info = view_context.render_facility_info(facility, item[:loc])
-          item[:html] = marker_info
-          map_points << item
-        end
+    return if @cur_page.map_points.present? || @cur_page.facility_ids.blank?
+
+    map_points = []
+    @cur_page.facility_ids.each do |facility_id|
+      facility = Facility::Node::Page.site(@cur_site).and_public.where(id: facility_id).first
+      items = Facility::Map.site(@cur_site).
+        and_public.
+        where(filename: /^#{::Regexp.escape(facility.filename)}\//, depth: facility.depth + 1).
+        order_by(order: 1).
+        first.
+        map_points
+      items.each do |item|
+        marker_info = view_context.render_facility_info(facility, item[:loc])
+        item[:html] = marker_info
+        map_points << item
       end
-      @cur_page.map_points = map_points
     end
+    @cur_page.map_points = map_points
   end
 end

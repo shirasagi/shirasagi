@@ -160,7 +160,6 @@ this.Googlemaps_Map = (function () {
       } else if (value["name"] || value["text"]) {
         name = value["name"];
         text = value["text"];
-        var url = "https://www.google.co.jp/maps/search/" + value["loc"];
         markerHtml = '<div class="marker-info">';
         if (name && name !== "") {
           markerHtml += '<p>' + name + '</p>';
@@ -173,9 +172,6 @@ this.Googlemaps_Map = (function () {
               }
             });
           }
-        }
-        if (url) {
-          markerHtml += '<p><a href="' + url + '">' + "<%= I18n.t('map.googlemap_url') %>" + '</a></p>';
         }
         markerHtml += '</div>';
       }

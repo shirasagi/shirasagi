@@ -5,20 +5,21 @@ module Event::Addon::Search
     include Cms::Addon::List::Model
 
     def sort_options
-      [
-        [I18n.t('event.options.sort.name'), 'name'],
-        [I18n.t('event.options.sort.filename'), 'filename'],
-        [I18n.t('event.options.sort.created'), 'created'],
-        [I18n.t('event.options.sort.updated_1'), 'updated -1'],
-        [I18n.t('event.options.sort.released_1'), 'released -1'],
-        [I18n.t('event.options.sort.order'), 'order'],
-        [I18n.t('event.options.sort.event_dates'), 'event_dates']
-      ]
+      %w(
+        name filename created updated_desc released_desc order order_desc event_dates
+      ).map do |k|
+        description = I18n.t("event.sort_options.#{k}.description", default: [ "cms.sort_options.#{k}.description".to_sym, nil ])
+
+        [
+          I18n.t("event.sort_options.#{k}.title".to_sym, default: "cms.sort_options.#{k}.title".to_sym),
+          k.sub("_desc", " -1"),
+          "data-description" => description
+        ]
+      end
     end
 
     def condition_hash(opts = {})
       h = super
-      today = Time.zone.today
       case sort
       when "event_dates"
         { "$and" => [ h, { "event_dates.0" => { "$exists" => true } } ] }
@@ -29,7 +30,7 @@ module Event::Addon::Search
     def sort_hash
       return { released: -1 } if sort.blank?
 
-      if sort =~ /event_dates/
+      if sort.match?(/event_dates/)
         event_dates_sort_hash
       else
         { sort.sub(/ .*/, "") => (/-1$/.match?(sort) ? -1 : 1) }

@@ -216,11 +216,9 @@ this.Openlayers_Map_Form = (function () {
     }
     markerHtml = "";
     $('dd[data-id = "' + markerId + '"]').each(function () {
-      var name, text, loc, url;
+      var name, text;
       name = $(this).find(".marker-name").val();
       text = $(this).find(".marker-text").val();
-      loc = $(this).find(".marker-loc").val();
-      url = "https://www.google.co.jp/maps/search/" + loc;
       if (name) {
         markerHtml += '<p>' + name + '</p>';
       }
@@ -232,9 +230,6 @@ this.Openlayers_Map_Form = (function () {
             markerHtml += '<p>' + this + '</p>';
           }
         });
-      }
-      if (loc) {
-        return markerHtml += '<p><a href="' + url + '">' + "<%= I18n.t('map.googlemap_url') %>" + '</a></p>';
       }
     });
     if (this.showGoogleMapsSearch) {
@@ -251,7 +246,7 @@ this.Openlayers_Map_Form = (function () {
   };
 
   Openlayers_Map_Form.prototype.setMarker = function (loc, opts, num) {
-    var feature, iconSrc, pos, ref, ref1, ref2, src, style, number;
+    var feature, iconSrc, pos, style, number;
     if (opts == null) {
       opts = {};
     }
@@ -508,8 +503,8 @@ this.Openlayers_Map_Form = (function () {
   };
 
   Openlayers_Map_Form.prototype.clickSetMarker = function (ele) {
-    var dataId, loc, num;
-    loc = null;
+    var loc;
+
     if ($(".mod-map .clicked").val() !== "") {
       loc = $(".mod-map .clicked").val();
       this.removeClickMarker();

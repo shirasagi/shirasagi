@@ -209,46 +209,6 @@ module Map::MapHelper
     jquery { s.join("\n").html_safe }
   end
 
-  def render_marker_info(item)
-    h = []
-    h << %(<div class="maker-info" data-id="#{item.id}">)
-    h << %(<p class="name">#{item.name}</p>)
-    h << %(<p class="address">#{item.address}</p>)
-    h << %(<p class="show">#{link_to t('ss.links.show'), item.url}</p>)
-    h << %(</div>)
-  end
-
-  def map_point_info(event, map_point)
-    url = "https://www.google.co.jp/maps/search/" + map_point[:loc].join(',')
-    h = []
-    h << %(<div class="maker-info">)
-    h << %(<p class="name">#{map_point[:name]}</p>)
-    h << %(<p class="text">#{map_point[:text]}</p>)
-    h << %(<p class="map-url"><a href="#{url}">#{I18n.t('map.googlemap_url')}</a></p>)
-    h << %(</div>)
-    h << %(<div class="event-info">イベント情報(1#{t("event.count")}))
-    h << %(<div class="event-list">)
-    h << %(<div>)
-    h << %(<p class="event-name">#{link_to event.name, event.url}</p>)
-    h << %(<p class="event-dates">#{raw event.dates_to_html(:long)}</p>)
-    h << %(</div>)
-    h << %(</div>)
-    h << %(</div>)
-    h.join("\n")
-  end
-
-  def render_map_point_info(event, map_point)
-    if event_end_date(event).present?
-      if @items.present?
-        if event_end_date(event) >= Time.zone.today || @items.where(id: event.id).present?
-          map_point_info(event, map_point)
-        end
-      elsif event_end_date(event) >= Time.zone.today
-        map_point_info(event, map_point)
-      end
-    end
-  end
-
   def map_marker_address(item)
     if item.respond_to?(:column_values)
       item.column_values.each do |col|
@@ -282,6 +242,35 @@ module Map::MapHelper
     h << %(</div>)
 
     h.join("\n")
+  end
+
+  def map_point_info(event, map_point)
+    h = []
+    h << %(<div class="maker-info">)
+    h << %(<p class="name">#{map_point[:name]}</p>)
+    h << %(<p class="text">#{map_point[:text]}</p>)
+    h << %(</div>)
+    h << %(<div class="event-info">イベント情報(1#{t("event.count")}))
+    h << %(<div class="event-list">)
+    h << %(<div>)
+    h << %(<p class="event-name">#{link_to event.name, event.url}</p>)
+    h << %(<p class="event-dates">#{raw event.dates_to_html(:long)}</p>)
+    h << %(</div>)
+    h << %(</div>)
+    h << %(</div>)
+    h.join("\n")
+  end
+
+  def render_map_point_info(event, map_point)
+    if event_end_date(event).present?
+      if @items.present?
+        if event_end_date(event) >= Time.zone.today || @items.where(id: event.id).present?
+          map_point_info(event, map_point)
+        end
+      elsif event_end_date(event) >= Time.zone.today
+        map_point_info(event, map_point)
+      end
+    end
   end
 
   def render_map_sidebar(item)
@@ -324,65 +313,37 @@ module Map::MapHelper
       h << "<div class=\"image\">#{image_tag(url)}</div>"
     end
     h << %(</div>)
-    event_info(h, item)
-
     h.join("\n")
   end
 
-  def render_map_point_info(event, map_point)
-    if event_end_date(event).present?
-      if event_end_date(event) >= Time.zone.today
-        h = []
-        h << %(<div class="maker-info">)
-        h << %(<p class="name">#{map_point[:name]}</p>)
-        h << %(<p class="name">#{map_point[:text]}</p>)
-        h << %(</div>)
-        h << %(<div class="event-info">イベント情報(1#{t("event.count")}))
-        h << %(<div class="event-list">)
-        h << %(<div>)
-        h << %(<p class="event-name">#{link_to event.name, event.url}</p>)
-        h << %(<p class="event-dates">#{raw event.dates_to_html(:long)}</p>)
-        h << %(</div>)
-        h << %(</div>)
-        h << %(</div>)
-      end
-    end
-  end
-
   def render_facility_info(item, map_point)
-    h = render_marker_info(item)
-    url = "https://www.google.co.jp/maps/search/" + map_point.join(',')
-    h << %(<p class="map-url"><a href="#{url}">#{I18n.t('map.googlemap_url')}</a></p>)
+    h = []
+    h << render_marker_info(item)
     events = Event::Page.site(@cur_site).and_public.where(facility_ids: item.id).order(event_dates: "ASC")
     if events.present?
       event_count = 0
       events.each do |event|
-        if event_end_date(event).present?
-          if @items.present?
-            next if event_end_date(event) <= Time.zone.today && @items.where(id: event.id).blank?
-          elsif event_end_date(event) <= Time.zone.today
-            next
-          end
-          next if event.map_points.present? && event.facility_ids.present?
-          event_count += 1
+        next unless event_end_date(event).present?
+        if @items.present?
+          next if event_end_date(event) <= Time.zone.today && @items.where(id: event.id).blank?
+        elsif event_end_date(event) <= Time.zone.today
+          next
         end
+        next if event.map_points.present? && event.facility_ids.present?
+        event_count += 1
       end
       if event_count != 0
         h << %(<div class="event-info">イベント情報(#{event_count}#{t("event.count")}))
         h << %(<div class="event-list">)
         events.each do |event|
           next if event.map_points.present? && event.facility_ids.present?
-          if event_end_date(event).present?
-            if @items.present?
-              next if event_end_date(event) <= Time.zone.today && @items.where(id: event.id).blank?
-            elsif event_end_date(event) <= Time.zone.today
-              next
-            end
-            h << %(<div>)
-            h << %(<p class="event-name">#{link_to event.name, event.url}</p>)
-            h << %(<p class="event-dates">#{raw event.dates_to_html(:long)}</p>)
-            h << %(</div>)
-          end
+          next unless event_end_date(event).present?
+          next if @items.present? && event_end_date(event) <= Time.zone.today && @items.where(id: event.id).blank?
+          next if @items.blank? && event_end_date(event) <= Time.zone.today
+          h << %(<div>)
+          h << %(<p class="event-name">#{link_to event.name, event.url}</p>)
+          h << %(<p class="event-dates">#{raw event.dates_to_html(:long)}</p>)
+          h << %(</div>)
         end
         h << %(</div>)
         h << %(</div>)
@@ -396,9 +357,8 @@ module Map::MapHelper
   end
 
   def monthly_facility_info(item, dates, map_point)
-    h = render_marker_info(item)
-    url = "https://www.google.co.jp/maps/search/" + map_point.join(',')
-    h << %(<p class="map-url"><a href="#{url}">#{I18n.t('map.googlemap_url')}</a></p>)
+    h = []
+    h << render_marker_info(item)
     events = Event::Page.site(@cur_site).and_public.where(facility_ids: item.id)
     if events.present?
       events = events.where(:event_dates.in => dates).
@@ -428,36 +388,32 @@ module Map::MapHelper
 
   def render_event_info(item, map_point)
     h = []
-    url = "https://www.google.co.jp/maps/search/" + map_point[:loc].join(',')
     if map_point[:name].present? || map_point[:text].present?
       h << %(<div class="maker-info">)
       h << %(<p class="name">#{map_point[:name]}</p>)
       h << %(<p class="text">#{map_point[:text]}</p>)
-      h << %(<p class="map-url"><a href="#{url}">#{I18n.t('map.googlemap_url')}</a></p>)
       h << %(</div>)
     end
     events = Event::Page.site(@cur_site).and_public.where(facility_ids: item.id).order(event_dates: "ASC")
     if events.present?
       event_count = 0
       events.each do |event|
-        if event_end_date(event).present?
-          next if event_end_date(event) <= Time.zone.today
-          next if event.map_points.present? && event.facility_ids.present?
-          event_count += 1
-        end
+        next unless event_end_date(event).present?
+        next if event_end_date(event) <= Time.zone.today
+        next if event.map_points.present? && event.facility_ids.present?
+        event_count += 1
       end
       if event_count != 0
         h << %(<div class="event-info">イベント情報(#{event_count}#{t("event.count")}))
         h << %(<div class="event-list">)
         events.each do |event|
           next if event.map_points.present? && event.facility_ids.present?
-          if event_end_date(event).present?
-            next if event_end_date(event) <= Time.zone.today
-            h << %(<div>)
-            h << %(<p class="event-name">#{link_to event.name, event.url}</p>)
-            h << %(<p class="event-dates">#{raw event.dates_to_html(:long)}</p>)
-            h << %(</div>)
-          end
+          next if event_end_date(event).blank?
+          next if event_end_date(event) <= Time.zone.today
+          h << %(<div>)
+          h << %(<p class="event-name">#{link_to event.name, event.url}</p>)
+          h << %(<p class="event-dates">#{raw event.dates_to_html(:long)}</p>)
+          h << %(</div>)
         end
         h << %(</div>)
         h << %(</div>)
@@ -467,18 +423,14 @@ module Map::MapHelper
   end
 
   def event_end_date(event)
-    event_dates = event.get_event_dates
+    event_dates = event.event_dates.clustered
     return if event_dates.blank?
 
     event_range = event_dates.first
-
-    if event_dates.length == 1
-      end_date = ::Icalendar::Values::Date.new(event_range.last.tomorrow.to_date)
-    else # event_dates.length > 1
+    if event_dates.length > 1
       dates = event_dates.flatten.uniq.sort
       event_range = ::Icalendar::Values::Array.new(dates, ::Icalendar::Values::Date, {}, { delimiter: "," })
-      end_date = ::Icalendar::Values::Date.new(event_range.last.tomorrow.to_date)
     end
-    end_date
+    ::Icalendar::Values::Date.new(event_range.last.tomorrow.to_date)
   end
 end

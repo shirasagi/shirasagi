@@ -67,24 +67,4 @@ class Facility::Agents::Nodes::PageController < ApplicationController
 
     render_rss @cur_node, @items
   end
-
-  def dates_to_html(format)
-    html = []
-
-    get_event_dates.each do |range|
-      cls = "event-dates"
-
-      if range.size != 1
-        range = [range.first, range.last]
-        cls = "event-dates range"
-      end
-
-      range = range.map do |d|
-        "<time datetime=\"#{I18n.l d.to_date, format: :iso}\">#{I18n.l d.to_date, format: format.to_sym}</time>"
-      end.join("<span>#{I18n.t "event.date_range_delimiter"}</span>")
-
-      html << "<span class=\"#{cls}\">#{range}</span>"
-    end
-    html.join("<br>")
-  end
 end

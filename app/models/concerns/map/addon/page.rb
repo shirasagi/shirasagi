@@ -97,28 +97,28 @@ module Map::Addon
     end
 
     def set_map_url
-      if self.map_points.present?
-        url = "https://www.google.co.jp/maps/dir/"
-        if self.map_route.present?
-          self.map_route.split(',').each do |route|
-            map_points.each do |map_point|
-              url += map_point[:loc].join(',') + "/" if route == map_point[:number]
-            end
-          end
-        else
-          map_points = self.map_points.sort_by! { |map_point| map_point[:number].to_i }
+      return if self.map_points.blank?
+
+      url = SS.config.map.googlemaps_route_search_end_point
+      if self.map_route.present?
+        self.map_route.split(',').each do |route|
           map_points.each do |map_point|
-            next if map_point[:number].blank?
-            url += map_point[:loc].join(',') + "/"
-          end
-          if self.map_goal.present?
-            map_points.each do |map_point|
-              url += map_point[:loc].join(',') + "/" if map_point[:number] == self.map_goal.to_s
-            end
+            url += map_point[:loc].reverse.join(',') + "/" if route == map_point[:number]
           end
         end
-        url
+      else
+        map_points = self.map_points.sort_by! { |map_point| map_point[:number].to_i }
+        map_points.each do |map_point|
+          next if map_point[:number].blank?
+          url += map_point[:loc].reverse.join(',') + "/"
+        end
+        if self.map_goal.present?
+          map_points.each do |map_point|
+            url += map_point[:loc].reverse.join(',') + "/" if map_point[:number] == self.map_goal.to_s
+          end
+        end
       end
+      url
     end
 
     def validate_number
@@ -138,10 +138,8 @@ module Map::Addon
     end
 
     def validate_map_goal
-      if self.map_goal.present?
-        if self.map_points.select { |x| x[:number].include?(self.map_goal.to_s) }.blank?
-          return self.errors.add :map_goal, :invalid
-        end
+      if self.map_goal.present? && self.map_points.select { |x| x[:number].include?(self.map_goal.to_s) }.blank?
+        return self.errors.add :map_goal, :invalid
       end
     end
 

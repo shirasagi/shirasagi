@@ -34,6 +34,7 @@ ja:
       find_exif: 画像に位置情報が含まれています。位置情報を地図に設定しますか？
     links:
       google_maps_search: Googleマップで見る
+      google_maps_route_search: Googleマップでルートを見る
     coordinate:
       delimiters:
         degree: "°度"
@@ -45,8 +46,6 @@ ja:
         page: 定型フォームで選択されたページの地点を参照する
     hide: 非表示
     show: 表示
-    googlemap_url: Googleマップで見る
-    googlemap_route_url: Googleマップでルートを見る
 
   modules:
     map: 地図

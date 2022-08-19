@@ -130,20 +130,23 @@ class Event::Agents::Nodes::PageController < ApplicationController
         end
       end
 
-      if event.try(:map_points).blank? && event.try(:facility_ids).present?
-        event.facility_ids.each do |facility_id|
-          if @facility_ids.present?
-            next if !@facility_ids.include?(facility_id)
-          end
-          facility = Facility::Node::Page.site(@cur_site).and_public.where(id: facility_id).first
-          items = Facility::Map.site(@cur_site).and_public.
-            where(filename: /^#{::Regexp.escape(facility.filename)}\//, depth: facility.depth + 1).order_by(order: 1).first.map_points
-          items.each do |item|
-            marker_info = view_context.monthly_facility_info(facility, dates, item[:loc])
-            item[:html] = marker_info
-            item[:number] = ""
-            @markers << item
-          end
+      next if event.try(:map_points).present? || event.try(:facility_ids).blank?
+
+      event.facility_ids.each do |facility_id|
+        next if @facility_ids.present? && !@facility_ids.include?(facility_id)
+
+        facility = Facility::Node::Page.site(@cur_site).and_public.where(id: facility_id).first
+        items = Facility::Map.site(@cur_site).
+          and_public.
+          where(filename: /^#{::Regexp.escape(facility.filename)}\//, depth: facility.depth + 1).
+          order_by(order: 1).
+          first.
+          map_points
+        items.each do |item|
+          marker_info = view_context.monthly_facility_info(facility, dates, item[:loc])
+          item[:html] = marker_info
+          item[:number] = ""
+          @markers << item
         end
       end
     end

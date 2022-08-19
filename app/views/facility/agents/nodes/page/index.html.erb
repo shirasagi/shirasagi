@@ -2,17 +2,17 @@
 <%= stylesheet_link_tag "/assets/css/colorbox/colorbox.css", media: 'all' %>
 
 <%= jquery do %>
-  $(window).on("load", function() {
+$(window).on("load", function() {
   $(".ajax-box").colorbox({
-  rel: "facility-images",
-  current: "",
-  html: function() {
-  return $(this).closest("div.image").find(".inside").html();
-  },
-  maxWidth:"100%",
-  maxHeight:"100%"
+    rel: "facility-images",
+    current: "",
+    html: function() {
+      return $(this).closest("div.image").find(".inside").html();
+    },
+    maxWidth:"100%",
+    maxHeight:"100%"
   });
-  });
+});
 <% end %>
 
 <% if @summary_image.present? %>
