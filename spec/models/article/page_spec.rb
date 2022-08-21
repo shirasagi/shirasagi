@@ -655,13 +655,16 @@ describe Article::Page, dbscope: :example do
         it do
           # Map::Addon::Page
           expect(subject.map_points.length).to eq 2
-          expect(subject.map_points[0]["name"]).to eq map_point1["name"]
-          expect(subject.map_points[0]["loc"]).to eq map_point1["loc"]
-          expect(subject.map_points[0]["text"]).to eq map_point1["text"]
-          expect(subject.map_points[1]["name"]).to eq map_point2["name"]
-          expect(subject.map_points[1]["loc"]).to eq map_point2["loc"]
-          expect(subject.map_points[1]["text"]).to eq map_point2["text"]
-          expect(subject.map_zoom_level).to eq page.map_zoom_level
+          expect(subject.map_points[0].name).to eq map_point1["name"]
+          expect(subject.map_points[0].loc).to eq map_point1["loc"]
+          expect(subject.map_points[0].text).to eq map_point1["text"]
+          expect(subject.map_points[1].name).to eq map_point2["name"]
+          expect(subject.map_points[1].loc).to eq map_point2["loc"]
+          expect(subject.map_points[1].text).to eq map_point2["text"]
+          expect(subject.map_zoom_level).not_to eq page.map_zoom_level
+          expect(subject.map_zoom_level).to eq SS.config.map.googlemaps_zoom_level
+          expect(subject.map_center.lat).to eq Map.center(page.cur_site).lat
+          expect(subject.map_center.lng).to eq Map.center(page.cur_site).lng
         end
       end
 
