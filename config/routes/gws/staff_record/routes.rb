@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   end
 
   concern :export do
-    match :download, on: :collection, via: %i[get post]
+    match :download_all, on: :collection, via: %i[get post]
     match :import, on: :collection, via: %i[get post]
   end
 

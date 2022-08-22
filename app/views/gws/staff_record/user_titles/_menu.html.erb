@@ -2,10 +2,10 @@
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.new'), action: :new %>
-      <%= link_to t('ss.links.download'), action: :download %>
+      <%= link_to t('ss.links.download'), action: :download_all %>
       <%= link_to t('ss.links.import'), action: :import %>
     <% end %>
-  <% elsif params[:action] =~ /new|create|import|download|destroy_all/ %>
+  <% elsif params[:action] =~ /new|create|import|destroy_all|download_all/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /edit|update|delete/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>

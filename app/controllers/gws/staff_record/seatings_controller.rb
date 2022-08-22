@@ -25,12 +25,25 @@ class Gws::StaffRecord::SeatingsController < ApplicationController
       page(params[:page]).per(50)
   end
 
-  def download
+  def download_all
+    if request.get?
+      @item = SS::DownloadParam.new
+      render
+      return
+    end
+
+    @item = SS::DownloadParam.new params.require(:item).permit(:encoding)
+    if @item.invalid?
+      render
+      return
+    end
+
     items = @cur_year.yearly_seatings.site(@cur_site).
       allow(:read, @cur_user, site: @cur_site)
 
-    @item = @model.new(fix_params)
-    send_data @item.export_csv(items), filename: "staff_record_#{@cur_year.code}_seatings_#{Time.zone.now.to_i}.csv"
+    item = @model.new(fix_params)
+    item.in_csv_encoding = @item.encoding
+    send_data item.export_csv(items), filename: "staff_record_#{@cur_year.code}_seatings_#{Time.zone.now.to_i}.csv"
   end
 
   def import
