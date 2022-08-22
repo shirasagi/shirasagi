@@ -287,3 +287,25 @@ def webmail_reload_mailboxes(user, account: 0)
   imap.login
   imap.mailboxes.reload
 end
+
+def webmail_create_folder(user, folder_name, account: 0)
+  imap_setting = user.imap_settings[account]
+  imap = Webmail::Imap::Base.new_by_user(user, imap_setting)
+  imap.login
+  imap.borrow_imap do |conn|
+    conn.create Net::IMAP.encode_utf7(folder_name)
+  end
+rescue => e
+  Rails.logger.debug("#{e.class} (#{e.message})}")
+end
+
+def webmail_delete_folder(user, folder_name, account: 0)
+  imap_setting = user.imap_settings[account]
+  imap = Webmail::Imap::Base.new_by_user(user, imap_setting)
+  imap.login
+  imap.borrow_imap do |conn|
+    conn.delete Net::IMAP.encode_utf7(folder_name)
+  end
+rescue => e
+  Rails.logger.debug("#{e.class} (#{e.message})}")
+end
