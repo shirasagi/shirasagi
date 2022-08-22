@@ -35,7 +35,7 @@
         </span>
       <% end %>
       <span id="file-all" class="d-block">
-        <%= link_to({ action: 'all_topic_files' }, target: '_blank', rel: "noopener") do %>
+        <%= link_to(url_for(action: :all_topic_files), target: '_blank', rel: "noopener", method: :post) do %>
           <i class="material-icons">file_download</i>
           <%= t('gws/monitor.topic.file_download') %>
         <% end rescue nil %>
