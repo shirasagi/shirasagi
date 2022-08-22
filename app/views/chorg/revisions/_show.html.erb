@@ -3,7 +3,7 @@
   <dd><%= @item.name %></dd>
 
   <dt><%= @model.t :revision_csv_file_id %></dt>
-  <dd><%= link_to t('ss.links.download'), action: :download, id: @item %></dd>
+  <dd><%= link_to t('ss.links.download'), url_for(action: :download, id: @item), method: :post %></dd>
 
   <dt><%= @model.t :user_csv_file_id %></dt>
   <dd><%= tryb { @item.user_csv_file.humanized_name } %></dd>
