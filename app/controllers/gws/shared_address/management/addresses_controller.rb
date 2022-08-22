@@ -45,7 +45,19 @@ class Gws::SharedAddress::Management::AddressesController < ApplicationControlle
       page(params[:page]).per(50)
   end
 
-  def download
+  def download_all
+    if request.get?
+      @item = SS::DownloadParam.new
+      render
+      return
+    end
+
+    @item = SS::DownloadParam.new params.require(:item).permit(:encoding)
+    if @item.invalid?
+      render
+      return
+    end
+
     s_params = params[:s] || {}
     s_params[:address_group_id] = @address_group.id if @address_group.present?
 
@@ -53,8 +65,9 @@ class Gws::SharedAddress::Management::AddressesController < ApplicationControlle
       allow(:read, @cur_user, site: @cur_site).
       search(s_params)
 
-    @item = @model.new(fix_params)
-    send_data @item.export_csv(items), filename: "shared_addresses_#{Time.zone.now.to_i}.csv"
+    item = @model.new(fix_params)
+    item.in_csv_encoding = @item.encoding
+    send_data item.export_csv(items), filename: "shared_addresses_#{Time.zone.now.to_i}.csv"
   end
 
   def download_template
