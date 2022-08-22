@@ -25,7 +25,7 @@
       </div>
       <div class="mt-2">
         <%= link_to t('gws/share.links.file_download'), download_folder_gws_share_folder_path,
-          class: 'btn file_download', 'data-confirm' => t('ss.confirm.download')  %>
+          class: 'btn file_download', method: :post, 'data-confirm' => t('ss.confirm.download')  %>
       </div>
     </dd>
   <% end %>
