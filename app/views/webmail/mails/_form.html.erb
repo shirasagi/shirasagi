@@ -2,7 +2,7 @@
 <%= javascript_tag do %>
   SS_SearchUI.select = Webmail_Mail_Form_Address.select;
 
-  $(function() {
+  SS.ready(function() {
     SS_Form.disableEnterKey('#item_subject');
     Webmail_Mail_Form.render();
     Webmail_Address_Autocomplete.render(

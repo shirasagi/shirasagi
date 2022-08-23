@@ -72,8 +72,8 @@ module ApplicationHelper
   end
 
   def jquery(&block)
-    javascript_tag(defer: true) do
-      "$(function() {\n#{capture(&block)}\n});".html_safe
+    javascript_tag do
+      "SS.ready(function() {\n#{capture(&block)}\n});".html_safe
     end
   end
 

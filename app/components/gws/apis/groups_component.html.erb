@@ -34,8 +34,8 @@
   </div>
 <% end %>
 
-<%= javascript_tag(defer: true) do %>
-  $(function() {
+<%= javascript_tag do %>
+  SS.ready(function() {
     <% if multi %>
       $("#ajax-box .only-single").remove();
     <% else %>

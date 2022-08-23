@@ -34,6 +34,28 @@ this.SS = (function () {
 
   SS.KEY_ENTER = 13;
 
+  SS.isReady = false;
+  var readyPromise = new Promise(function(resolve, _reject) {
+    // 5秒以内に doneReady が呼ばれない場合、強制的に呼ぶ
+    SS.readyTimeout = setTimeout(resolve, 5000);
+
+    SS.doneReady = function() {
+      if (SS.isReady) {
+        return;
+      }
+
+      SS.isReady = true;
+      if (SS.readyTimeout) {
+        clearTimeout(SS.readyTimeout);
+        SS.readyTimeout = null;
+      }
+
+      resolve();
+    }
+  });
+
+  SS.ready = readyPromise.then.bind(readyPromise);
+
   // $.isEmptyObject には IE11 で非互換がある。
   //
   //                            | Chrome 84 | IE 11  |

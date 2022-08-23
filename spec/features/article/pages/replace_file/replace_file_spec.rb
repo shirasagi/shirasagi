@@ -33,6 +33,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         # original file upload
+        wait_for_js_ready
         within "form#item-form" do
           within "#addon-cms-agents-addons-file" do
             wait_cbox_open do
@@ -42,6 +43,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         wait_for_cbox do
+          wait_for_js_ready
           attach_file "item[in_files][]", before_csv
           wait_cbox_close do
             click_button I18n.t("ss.buttons.attach")
@@ -56,6 +58,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         file = item.class.find(item.id).attached_files.first
 
         # open replace file dialog
+        wait_for_js_ready
         within "#addon-cms-agents-addons-file" do
           expect(page).to have_css('.file-view', text: file.name)
           wait_cbox_open do
@@ -66,6 +69,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_cbox do
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.replace_file"))
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.file_histories"))
+          wait_for_js_ready
 
           expect(SS::ReplaceTempFile.count).to eq 0
 
@@ -136,6 +140,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       it "replace" do
         visit edit_path
 
+        wait_for_js_ready
         within 'form#item-form' do
           wait_event_to_fire("ss:formActivated") do
             page.accept_confirm(I18n.t("cms.confirm.change_form")) do
@@ -156,6 +161,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
         wait_for_cbox do
+          wait_for_js_ready
           attach_file "item[in_files][]", before_csv
           wait_cbox_close do
             click_button I18n.t("ss.buttons.attach")
@@ -170,6 +176,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         file = item.class.find(item.id).attached_files.first
 
         # open replace file dialog
+        wait_for_js_ready
         within ".column-value-cms-column-free" do
           expect(page).to have_css('.file-view', text: file.name)
           wait_cbox_open do
@@ -180,6 +187,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_cbox do
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.replace_file"))
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.file_histories"))
+          wait_for_js_ready
 
           expect(SS::ReplaceTempFile.count).to eq 0
 
@@ -250,6 +258,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       it "replace" do
         visit edit_path
 
+        wait_for_js_ready
         within 'form#item-form' do
           wait_event_to_fire("ss:formActivated") do
             page.accept_confirm(I18n.t("cms.confirm.change_form")) do
@@ -271,6 +280,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
         wait_for_cbox do
+          wait_for_js_ready
           attach_file "item[in_files][]", before_csv
           wait_cbox_close do
             click_button I18n.t("ss.buttons.attach")
@@ -285,6 +295,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         file = item.class.find(item.id).attached_files.first
 
         # open replace file dialog
+        wait_for_js_ready
         within ".column-value-cms-column-fileupload" do
           expect(page).to have_css('.file-view', text: file.name)
           wait_cbox_open do
@@ -295,6 +306,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_cbox do
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.replace_file"))
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.file_histories"))
+          wait_for_js_ready
 
           expect(SS::ReplaceTempFile.count).to eq 0
 
@@ -366,6 +378,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       it "replace" do
         visit edit_path
 
+        wait_for_js_ready
         within 'form#item-form' do
           wait_event_to_fire("ss:formActivated") do
             page.accept_confirm(I18n.t("cms.confirm.change_form")) do
@@ -387,6 +400,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
         wait_for_cbox do
+          wait_for_js_ready
           attach_file "item[in_files][]", before_image
           wait_cbox_close do
             click_button I18n.t("ss.buttons.attach")
@@ -405,6 +419,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(file.thumb.image_dimension).to eq [ 120, 35 ]
 
         # open replace file dialog
+        wait_for_js_ready
         within ".column-value-cms-column-fileupload" do
           expect(page).to have_css('.file-view', text: file.name)
           wait_cbox_open do
@@ -415,6 +430,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_cbox do
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.replace_file"))
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.file_histories"))
+          wait_for_js_ready
 
           expect(SS::ReplaceTempFile.count).to eq 0
 
