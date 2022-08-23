@@ -62,6 +62,9 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       expect(topic.state).to eq "public"
       expect(topic.deleted).to be_blank
 
+      save_updated = topic.updated
+      save_created = topic.created
+
       expect(SS::Notification.all.count).to eq 1
       SS::Notification.all.reorder(id: -1).first.tap do |notice|
         expect(notice.group_id).to eq site.id
@@ -94,17 +97,53 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
 
       topic.reload
       expect(topic.deleted).to be_present
+      expect(topic.updated).to eq save_updated
+      expect(topic.created).to eq save_created
 
       # no notifications are send on deleting circular
       expect(SS::Notification.all.count).to eq 1
 
       #
-      # Delete (hard delete)
+      # Restore (Undo delete)
       #
       visit gws_circular_admins_path(site)
       click_on I18n.t("ss.links.trash")
       click_on topic.name
-      click_on I18n.t("ss.links.delete")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.restore")
+      end
+      within "form" do
+        click_on I18n.t("ss.buttons.restore")
+      end
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.restored'))
+
+      topic.reload
+      expect(topic.deleted).to be_blank
+      expect(topic.updated).to eq save_updated
+      expect(topic.created).to eq save_created
+
+      # no notifications are send on deleting circular
+      expect(SS::Notification.all.count).to eq 1
+
+      #
+      # Delete (sort delete --> hard delete)
+      #
+      visit gws_circular_admins_path(site)
+      click_on topic.name
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
+      within "form" do
+        click_on I18n.t("ss.buttons.delete")
+      end
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+
+      visit gws_circular_admins_path(site)
+      click_on I18n.t("gws/circular.tabs.trash")
+      click_on topic.name
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end

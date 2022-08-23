@@ -146,6 +146,7 @@ module Gws::Schedule::PlanFilter
       return
     end
 
+    @item.record_timestamps = false
     @item.deleted = Time.zone.now
     @item.edit_range = params.dig(:item, :edit_range)
     render_destroy @item.save, location: redirection_url
@@ -160,6 +161,7 @@ module Gws::Schedule::PlanFilter
       return
     end
 
+    @item.record_timestamps = false
     @item.deleted = nil
     @item.edit_range = params.dig(:item, :edit_range)
     @item.reset_approvals

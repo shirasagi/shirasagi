@@ -125,6 +125,7 @@ module Gws::Schedule::TodoFilter
       return
     end
 
+    @item.record_timestamps = false
     @item.edit_range = params.dig(:item, :edit_range)
     @item.todo_action = params[:action]
     @item.deleted = Time.zone.now

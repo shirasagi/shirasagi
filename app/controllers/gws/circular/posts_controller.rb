@@ -29,7 +29,7 @@ class Gws::Circular::PostsController < ApplicationController
     raise '403' unless @item.member?(@cur_user)
 
     if @item.see_type == 'simple' && @item.unseen?(@cur_user)
-      @item.set_seen(@cur_user).save
+      @item.set_seen!(@cur_user)
     end
     render
   end
