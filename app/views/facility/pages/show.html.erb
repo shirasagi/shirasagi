@@ -76,7 +76,7 @@
     <table class="index" style="margin-bottom: 5px;">
       <% @items.each do |item| %>
         <tr>
-          <th><%= I18n.l item.date, format: :long %></th>
+          <th scope="row"><%= I18n.l item.date, format: :long %></th>
           <td>
             <% if item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
               <%= link_to item.name, item.private_show_path %>
