@@ -149,7 +149,7 @@ class Gws::UsersController < ApplicationController
   end
 
   def download_all
-    if request.get?
+    if request.get? || request.head?
       @item = SS::DownloadParam.new
       render
       return

@@ -44,7 +44,7 @@ class Gws::CustomGroupsController < ApplicationController
 
     @model = SS::DownloadParam
 
-    if request.get?
+    if request.get? || request.head?
       @item = SS::DownloadParam.new
       render
       return

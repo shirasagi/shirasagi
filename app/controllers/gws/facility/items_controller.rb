@@ -31,7 +31,7 @@ class Gws::Facility::ItemsController < ApplicationController
   def download_all
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
-    if request.get?
+    if request.get? || request.head?
       @model = SS::DownloadParam
       @item = SS::DownloadParam.new
       render
