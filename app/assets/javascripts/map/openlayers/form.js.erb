@@ -187,8 +187,9 @@ this.Openlayers_Map_Form = (function () {
   Openlayers_Map_Form.prototype.renderMarkers = function () {
     $(".mod-map dd.marker").each((function (_this) {
       return function (i, e) {
-        var loc, image, opts, num;
-        num = $(e).find(".marker-number").val();
+        var loc, image, opts, number;
+        number = $(e).find(".marker-number").val();
+
         $(e).attr("data-id", _this.dataID);
         if ($(e).find(".marker-loc").val()) {
           loc = _this.getMapLoc($(e).find(".marker-loc"));
@@ -199,7 +200,10 @@ this.Openlayers_Map_Form = (function () {
           if (image) {
             opts["image"] = image;
           }
-          _this.setMarker(loc, opts, num);
+          if (number) {
+            opts["number"] = number;
+          }
+          _this.setMarker(loc, opts);
         }
         //Map_Form.attachMessage(Map_Form.dataID)
         _this.dataID += 1;
@@ -245,35 +249,37 @@ this.Openlayers_Map_Form = (function () {
     this.popupOverlay.setPosition(e.coordinate);
   };
 
-  Openlayers_Map_Form.prototype.setMarker = function (loc, opts, num) {
-    var feature, iconSrc, pos, style, number;
+  Openlayers_Map_Form.prototype.setMarker = function (loc, opts) {
+    var feature, iconSrc, pos, style, styleOpts, number;
     if (opts == null) {
       opts = {};
     }
-    number = num;
     iconSrc = this.markerIcon;
     if (opts['image']) {
       iconSrc = opts['image'];
     }
-    style = new ol.style.Style({
-      image: new ol.style.Icon({
-        anchor: [0.5, 1],
-        anchorXUnits: 'fraction',
-        anchorYUnits: 'fraction',
-        src: iconSrc
-      }),
-      text: new ol.style.Text({
+    styleOpts = {};
+    styleOpts["image"] = new ol.style.Icon({
+      anchor: [0.5, 1],
+      anchorXUnits: 'fraction',
+      anchorYUnits: 'fraction',
+      src: iconSrc
+    });
+
+    number = opts["number"]
+    if (number) {
+      styleOpts["text"] = new ol.style.Text({
         fill: new ol.style.Fill({color: "#333"}),
         stroke: new ol.style.Stroke({color: "#333", width: 1}),
         scale: 1.3,
         textAlign: "center",
         textBaseline: "center",
-        offsetY: -17,
-        text: number,
-      })
-    });
+        offsetY: -25,
+        text: number
+      });
+    }
+    style = new ol.style.Style(styleOpts);
     pos = [loc[0], loc[1]];
-
     feature = new ol.Feature({
       geometry: new ol.geom.Point(ol.proj.transform(pos, "EPSG:4326", "EPSG:3857")),
       markerId: opts['id'],
@@ -517,7 +523,7 @@ this.Openlayers_Map_Form = (function () {
   };
 
   Openlayers_Map_Form.prototype.createMarker = function (ele, loc) {
-    var dataId, opts, image, num;
+    var dataId, opts, image, number;
 
     if (!Openlayers_Map_Form.validateLoc(loc)) {
       alert(<%= Array(I18n.t('map.alert.invalid_location')).join('\n').to_json %>);
@@ -529,14 +535,19 @@ this.Openlayers_Map_Form = (function () {
     ele.addClass("active");
     dataId = parseInt(ele.attr("data-id"));
     this.removeMarker(dataId);
-    num = ele.find(".marker-number").val();
+
+    number = ele.find(".marker-number").val();
+
     opts = {}
     opts["id"] = dataId;
     image = ele.find('[name="item[map_points][][image]"]').val();
     if (image) {
       opts["image"] = image;
     }
-    this.setMarker(this.getMapLoc(ele.find(".marker-loc")), opts, num);
+    if (number) {
+      opts["number"] = number;
+    }
+    this.setMarker(this.getMapLoc(ele.find(".marker-loc")), opts);
   };
 
   Openlayers_Map_Form.prototype.clearPointForm = function (ele) {
