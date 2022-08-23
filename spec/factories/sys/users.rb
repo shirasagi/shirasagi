@@ -7,6 +7,8 @@ FactoryBot.define do
     login_roles { [ SS::Model::User::LOGIN_ROLE_DBPASSWD ] }
     deletion_lock_state { "locked" }
     #sys_role_ids
+
+    lang { SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s }
   end
 
   factory :sys_user_sample, class: SS::User do
@@ -16,5 +18,7 @@ FactoryBot.define do
     type { SS::Model::User::TYPE_SNS }
     login_roles { [ SS::Model::User::LOGIN_ROLE_DBPASSWD ] }
     #sys_role_ids
+
+    lang { SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s }
   end
 end
