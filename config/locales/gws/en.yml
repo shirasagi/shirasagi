@@ -9,6 +9,7 @@ en:
     organization_addresses: Organization address book
     question_management: Question management
     default_contrast: Default contrast
+    include_webmail_role: Include web mail roles
     roles:
       admin: Administrator
       user: General user
