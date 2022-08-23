@@ -123,59 +123,6 @@ class Gws::History
       try_invoke_archive(cur_user, cur_site)
     end
 
-    # syslog 連携用として操作履歴を production.log へ出力する
-    # production.log へ出力された操作履歴は、ログファイルの tail 監視などを通じて syslog サーバーへ送られる
-    def write_to_app_log(item)
-      Rails.logger.unknown do
-        # LTSV format
-        terms = [ "oplog:true" ]
-
-        I18n.with_locale(I18n.default_locale) do
-          terms << "log_class:#{item.class.name}"
-          if item.model.present?
-            title = "#{item.model_name} / #{item.name}"
-          elsif item.controller.present?
-            title = "#{item.controller_name}##{item.action}"
-          elsif item.job.present?
-            title = item.job_name
-          end
-          terms << "title:#{title}"
-          terms << "module:#{I18n.t("modules.#{item.module_key}")}"
-          if item.message
-            terms << "message:#{item.message}"
-          end
-          terms << "severity:#{item.severity}"
-          terms << "created:#{item.created.iso8601}"
-          if item.mode.present?
-            terms << "mode:#{item.mode}"
-          end
-          if item.path.present?
-            terms << "path:#{item.path}"
-          end
-          if item.respond_to?(:user_id)
-            terms << "user_id:#{item.user_id}"
-            if item.try(:user)
-              terms << "user_email:#{item.user.email}"
-            end
-          end
-          if item.respond_to?(:updated_field_names) && (names = item.updated_field_names).present?
-            terms << "updated_field_names:#{names.join(',')}"
-          end
-          if item.session_id
-            terms << "session_id:#{item.session_id}"
-          end
-          if item.request_id
-            terms << "request_id:#{item.request_id}"
-          end
-        rescue => e
-          terms << "exception_class:#{e.class}"
-          terms << "exception_message:#{e.message}"
-        end
-
-        terms.join("\t")
-      end
-    end
-
     def create_controller_log!(request, response, options)
       severity = history_severity(request, response, options)
       return if severity.blank?

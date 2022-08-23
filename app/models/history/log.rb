@@ -50,14 +50,18 @@ class History::Log
 
   class << self
     def create_controller_log!(request, response, options)
-      return if request.get? || request.head?
-
-      if response.code.start_with?("3") || History::DOWNLOAD_MIME_TYPES.include?(response.media_type)
-        create_log!(request, response, options)
-      end
+      create_log!(request, response, options) if create_log?(request, response, options)
     end
 
-    def create_log!(request, response, options)
+    def create_log?(request, response, _options)
+      return true if !request.get? && !request.head? && response.code.start_with?("3")
+      return true if History::DOWNLOAD_MIME_TYPES.include?(response.media_type)
+      return true if response["Content-Disposition"].to_s.include?("attachment")
+
+      false
+    end
+
+    def create_log!(request, _response, options)
       item             = options[:item]
 
       log              = new
