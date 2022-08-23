@@ -21,7 +21,7 @@
 <dl class="see mod-rss-anpi-mail-setting-regions">
   <dt><%= @model.t :target_regions %><%= @model.tt :target_regions %></dt>
   <dd>
-    <%= f.hidden_field "target_region_ids[]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "target_region_ids[]", value: "", id: nil, class: "hidden-ids" %>
     <%= link_to t("jmaxml.apis.quake_regions.index"), jmaxml_apis_quake_regions_path, class: "ajax-box" %>
   </dd>
   <dd>
@@ -35,7 +35,7 @@
       <tbody>
       <% @item.target_regions.each do |region| %>
         <tr data-id="<%= region.id %>">
-          <td><%= f.hidden_field "target_region_ids[]", value: region.id %> <%= region.name %></td>
+          <td><%= f.hidden_field "target_region_ids[]", value: region.id, id: nil %> <%= region.name %></td>
           <td style="width: 20%;"><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>
@@ -47,7 +47,7 @@
 <dl class="see mod-rss-anpi-mail-setting-my-anpi-post">
   <dt><%= @model.t :my_anpi_post %><%= @model.tt :my_anpi_post %></dt>
   <dd>
-    <%= f.hidden_field "my_anpi_post_id", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "my_anpi_post_id", value: "", id: nil, class: "hidden-ids" %>
     <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path(single: 1, model: 'Member::Node::MyAnpiPost'), class: "ajax-box" %>
   </dd>
   <dd>
@@ -61,7 +61,7 @@
       <tbody>
       <% if @item.my_anpi_post.present? %>
         <tr data-id="<%= @item.my_anpi_post.id %>">
-          <td><%= f.hidden_field "my_anpi_post_id", value: @item.my_anpi_post.id %> <%= @item.my_anpi_post.name %></td>
+          <td><%= f.hidden_field "my_anpi_post_id", value: @item.my_anpi_post.id, id: nil %> <%= @item.my_anpi_post.name %></td>
           <td style="width: 20%;"><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>
@@ -73,7 +73,7 @@
 <dl class="see mod-rss-anpi-mail-setting-anpi-mail">
   <dt><%= @model.t :anpi_mail %><%= @model.tt :anpi_mail %></dt>
   <dd>
-    <%= f.hidden_field "anpi_mail_id", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "anpi_mail_id", value: "", id: nil, class: "hidden-ids" %>
     <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path(single: 1, model: 'Ezine::Node::MemberPage'), class: "ajax-box" %>
   </dd>
   <dd>
@@ -87,7 +87,7 @@
       <tbody>
       <% if @item.anpi_mail.present? %>
         <tr data-id="<%= @item.anpi_mail.id %>">
-          <td><%= f.hidden_field "anpi_mail_id", value: @item.anpi_mail.id %> <%= @item.anpi_mail.name %></td>
+          <td><%= f.hidden_field "anpi_mail_id", value: @item.anpi_mail.id, id: nil %> <%= @item.anpi_mail.name %></td>
           <td style="width: 20%;"><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>

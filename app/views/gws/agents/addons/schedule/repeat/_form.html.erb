@@ -34,7 +34,7 @@ model = Gws::Schedule::RepeatPlan
   <dt class="repeat-weekly"><%= model.t :wdays %><%= model.tt :wdays %></dt>
   <dd class="repeat-weekly">
     <div class="<%= 'checks_with_errors' if @item.errors[:wdays].size > 0 %>">
-      <%= f.hidden_field "wdays[]", value: "" %>
+      <%= f.hidden_field "wdays[]", value: "", id: nil %>
       <% (0..6).each do |i| %>
       <label><%= f.check_box "wdays[]", { checked: @item.wdays.include?(i) }, i.to_s %> <%= t("date.abbr_day_names")[i] %></label>
       <% end %>

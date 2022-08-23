@@ -26,7 +26,7 @@
   <% end %>
   <div class="name">
     <label>
-      <%= hidden_field_tag("item[column_values][][in_wrap][file_id]", item.id, class: "file-id") %>
+      <%= hidden_field_tag("item[column_values][][in_wrap][file_id]", item.id, id: nil, class: "file-id") %>
       <%= item.name %>
     </label><br />
     <% if params[:file_size] %>

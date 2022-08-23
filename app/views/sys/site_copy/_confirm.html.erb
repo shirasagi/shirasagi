@@ -33,19 +33,19 @@
   <dd>
     <% if @item.copy_contents.include?('pages') %>
       <%= t("sys.options.copy_contents.pages") %><br />
-      <%= hidden_field_tag "item[copy_contents][]", "pages" %>
+      <%= hidden_field_tag "item[copy_contents][]", "pages", id: nil %>
     <% end %>
     <% if @item.copy_contents.include?('files') %>
       <%= t("sys.options.copy_contents.files") %><br />
-      <%= hidden_field_tag "item[copy_contents][]", "files" %>
+      <%= hidden_field_tag "item[copy_contents][]", "files", id: nil %>
     <% end %>
     <% if @item.copy_contents.include?('editor_templates') %>
       <%= t("sys.options.copy_contents.editor_templates") %><br />
-      <%= hidden_field_tag "item[copy_contents][]", "editor_templates" %>
+      <%= hidden_field_tag "item[copy_contents][]", "editor_templates", id: nil %>
     <% end %>
     <% if @item.copy_contents.include?('dictionaries') %>
       <%= t("sys.options.copy_contents.dictionaries") %><br />
-      <%= hidden_field_tag "item[copy_contents][]", "dictionaries" %>
+      <%= hidden_field_tag "item[copy_contents][]", "dictionaries", id: nil %>
     <% end %>
   </dd>
 </dl>

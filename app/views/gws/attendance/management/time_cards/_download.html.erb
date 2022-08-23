@@ -8,7 +8,7 @@
 
   <dt><%= @model.t :user_ids %><%= @model.tt :user_ids %></dt>
   <dd>
-    <%= f.hidden_field 'user_ids[]', value: '', class: 'hidden-ids' %>
+    <%= f.hidden_field 'user_ids[]', value: '', id: nil, class: 'hidden-ids' %>
     <%= link_to t('ss.apis.users.index'), gws_attendance_apis_management_users_path, class: 'ajax-box' %>
   </dd>
   <dd>

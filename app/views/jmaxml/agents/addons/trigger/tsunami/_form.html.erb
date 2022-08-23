@@ -1,7 +1,7 @@
 <dl class="see mod-jmaxml-trigger-tsunami">
   <dt><%= @model.t :sub_types %><%= @model.tt :sub_types %></dt>
   <dd>
-    <%= hidden_field_tag "#{f.object_name}[sub_types][]", '' %>
+    <%= hidden_field_tag "#{f.object_name}[sub_types][]", '', id: nil %>
     <% %w(special_alert alert warning forecast).each do |sub_type| %>
       <label>
         <%= check_box_tag "#{f.object_name}[sub_types][]", sub_type, @item.sub_types.include?(sub_type), id: "#{f.object_name}_sub_type_#{sub_type}" %>
@@ -12,7 +12,7 @@
 
   <dt><%= @model.t :target_region_ids %><%= @model.tt :target_region_ids %></dt>
   <dd>
-    <%= f.hidden_field "target_region_ids[]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "target_region_ids[]", value: "", id: nil, class: "hidden-ids" %>
     <%= link_to t("jmaxml.apis.tsunami_regions.index"), jmaxml_apis_tsunami_regions_path, class: "ajax-box" %>
   </dd>
   <dd>
@@ -26,7 +26,7 @@
       <tbody>
       <% @item.target_regions.each do |region| %>
         <tr data-id="<%= region.id %>">
-          <td><%= f.hidden_field "target_region_ids[]", value: region.id %> <%= region.name %></td>
+          <td><%= f.hidden_field "target_region_ids[]", value: region.id, id: nil %> <%= region.name %></td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>

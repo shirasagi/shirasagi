@@ -15,7 +15,7 @@
   </label>
   <div class="info">
     <% if is_changeable %>
-      <%= f.hidden_field_tag 'ids[]', item.id.to_s %>
+      <%= f.hidden_field_tag 'ids[]', item.id.to_s, id: nil %>
     <% end %>
     <% if item.is_a?(Uploader::File)%>
       <% filename = item.path.sub("#{@cur_site.path}/", "") %>

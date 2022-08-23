@@ -9,7 +9,7 @@
 
   <dt><%= @model.t :permissions %><%= @model.tt :permissions %></dt>
   <dd class="role-permissions">
-    <%= hidden_field_tag "item[permissions][]" %>
+    <%= hidden_field_tag "item[permissions][]", id: nil %>
     <%= render "ss/roles/form_permissions", f: f, model: @model %>
   </dd>
 </dl>

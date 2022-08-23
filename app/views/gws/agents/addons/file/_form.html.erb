@@ -7,7 +7,7 @@
   <% if @item.in_clone_file %>
     <%= f.hidden_field "in_clone_file", value: @item.in_clone_file %>
   <% end %>
-  <%= f.hidden_field "file_ids[]", value: "" %>
+  <%= f.hidden_field "file_ids[]", value: "", id: nil %>
   <span class="upload-menu-new">
     <%= link_to t('ss.links.upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn" %>
   </span>

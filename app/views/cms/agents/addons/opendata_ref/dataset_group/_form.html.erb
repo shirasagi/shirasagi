@@ -9,7 +9,7 @@
 <dl class="see mod-cms-opendata-dataset-group category-form">
   <dt class="wide"><%= @model.t :opendata_dataset_group_ids %><%= @model.tt :opendata_dataset_group_ids %></dt>
   <dd class="wide">
-    <%= f.hidden_field 'opendata_dataset_group_ids[]', value: '' %>
+    <%= f.hidden_field 'opendata_dataset_group_ids[]', value: '', id: nil %>
     <% dataset_groups.each do |cate| %>
       <div class="parent">
         <%= label_tag do %>

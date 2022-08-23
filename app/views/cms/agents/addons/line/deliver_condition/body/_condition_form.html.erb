@@ -2,7 +2,7 @@
   new Cms_Line_Deliver_Condition
 <% end %>
 
-<%= hidden_field_tag "#{f.object_name}[deliver_category_ids][]", nil %>
+<%= hidden_field_tag "#{f.object_name}[deliver_category_ids][]", nil, id: nil %>
 <% Cms::Line::DeliverCategory::Category.site(@cur_site).each_public do |root, children| %>
   <% next unless root.condition_enabled? %>
   <dl class="see deliver-category" <%== root.data_required_html %> style="padding-bottom: 10px;">

@@ -5,9 +5,9 @@
     <span class="no"><%= no %></span>
   </dt>
   <dd>
-    <%= hidden_field_tag "item[in_edges][][question_type]", "choices" %>
+    <%= hidden_field_tag "item[in_edges][][question_type]", "choices", id: nil %>
     <%= text_field_tag "item[in_edges][][value]", edge.value, placeholder: t("guide.views.input_choices_question"), style: "width: 60%;" %>
-    <%= hidden_field_tag "item[in_edges][][point_ids][]", "", class: "hidden-ids" %>
+    <%= hidden_field_tag "item[in_edges][][point_ids][]", "", id: nil, class: "hidden-ids" %>
     <%= link_to t("ss.links.select"), guide_apis_procedures_path(nid: @cur_node.id, id: @item.id), class: "ajax-box" %>
     <%= link_to t("ss.buttons.delete"), "#", class: "deselect-edge btn" %>
   </dd>
@@ -16,7 +16,7 @@
       <tbody>
         <% edge.points.each do |point| %>
           <tr data-id="<%= point.id %>">
-            <td><%= hidden_field_tag "item[in_edges][][point_ids][]", point.id %> <%= point.name_with_type %></td>
+            <td><%= hidden_field_tag "item[in_edges][][point_ids][]", point.id, id: nil %> <%= point.name_with_type %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
         <% end %>

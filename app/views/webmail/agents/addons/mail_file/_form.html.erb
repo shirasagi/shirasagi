@@ -27,7 +27,7 @@ SS_FileView.renderFileView($el);
 <%= hidden_field_tag 'file_size', 'true', { id: 'show-file-size' } %>
 <dl class="see webmail-addon-mail-file">
   <dd class="wide">
-    <%= f.hidden_field "file_ids[]", value: "" %>
+    <%= f.hidden_field "file_ids[]", value: "", id: nil %>
     <span class="upload-menu-new">
       <%= link_to t('ss.links.upload'), sns_apis_temp_files_path(@cur_user, file_size: true), class: "ajax-box btn" %>
     </span>

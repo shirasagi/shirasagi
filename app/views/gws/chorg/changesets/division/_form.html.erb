@@ -3,7 +3,7 @@
   <dd></dd>
   <dt><%= t "chorg.views.#{params[:type]}_changesets.name" %><%= tt "chorg.views.#{params[:type]}_changesets.before_name" %></dt>
   <dd>
-    <%= f.hidden_field "sources[][id]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "sources[][id]", value: "", id: nil, class: "hidden-ids" %>
     <%= link_to t("chorg.views.#{params[:type]}_changesets.select_group"), gws_apis_groups_path(single: 1), class: "ajax-box" %>
   </dd>
   <dd>

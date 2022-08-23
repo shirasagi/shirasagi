@@ -22,7 +22,7 @@
     </dd>
     <dd>
       <div class="wdays-field">
-        <%= f.hidden_field "wdays[]", value: "" %>
+        <%= f.hidden_field "wdays[]", value: "", id: nil %>
         <% (0..6).each do |i| %>
         <label><%= f.check_box "wdays[]", {}, i.to_s %> <%= t("date.abbr_day_names")[i] %></label>
         <% end %>
@@ -30,7 +30,7 @@
     </dd>
 
     <dt>
-      <%= f.hidden_field "member_ids[]", value: "", class: "hidden-ids" %>
+      <%= f.hidden_field "member_ids[]", value: "", id: nil, class: "hidden-ids" %>
       <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "ajax-box btn" %>
     </dt>
     <dd>
@@ -57,7 +57,7 @@
 
   <dl class="see gws-schedule-search-field">
     <dt>
-      <%= f.hidden_field "facility_ids[]", value: "", class: "hidden-ids" %>
+      <%= f.hidden_field "facility_ids[]", value: "", id: nil, class: "hidden-ids" %>
       <%= link_to t("gws.apis.facilities.index"), gws_apis_facilities_path, class: "ajax-box btn" %>
     </dt>
     <dd>

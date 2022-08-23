@@ -48,7 +48,7 @@
 <dl class="column">
   <dt><%= I18n.t 'member.view.mail_subscription' %></dt>
   <dd>
-    <%= f.hidden_field "subscription_ids[]", value: "" %>
+    <%= f.hidden_field "subscription_ids[]", value: "", id: nil %>
     <% @categories.each do |cate| %>
       <div class="parent">
         <%= cate_form(cate) %>

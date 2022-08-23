@@ -49,7 +49,7 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
               <article class="selected-item" data-name="<%= category_name %>">
                 <header>
                   <span class="category-name"><%= category_name %></span>
-                  <%= f.hidden_field('category_names[]', value: category_name) %>
+                  <%= f.hidden_field('category_names[]', value: category_name, id: nil) %>
                   <%= button_tag t('ss.buttons.delete'), type: 'button', class: %w(btn deselect) %>
                 </header>
               </article>

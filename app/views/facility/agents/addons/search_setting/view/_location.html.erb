@@ -1,5 +1,5 @@
 <div class="location">
-  <%= hidden_field_tag 'location_ids[]', "" %>
+  <%= hidden_field_tag 'location_ids[]', "", id: nil %>
   <% @cur_node.st_locations.and_public(@cur_date).order_by(order: 1).each do |cate| %>
     <div class="<%= cate.basename %>">
       <%= check_box_tag 'location_ids[]', cate.id, @location_ids.index(cate.id),

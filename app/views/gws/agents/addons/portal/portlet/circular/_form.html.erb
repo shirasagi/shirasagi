@@ -1,7 +1,7 @@
 <dl class="see">
   <dt><%= @model.t :circular_category_ids %></dt>
   <dd>
-    <%= f.hidden_field "circular_category_ids[]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "circular_category_ids[]", value: "", id: nil, class: "hidden-ids" %>
     <%= link_to t("gws.apis.categories.index"), gws_circular_apis_categories_path(single: true), class: "ajax-box" %>
   </dd>
   <dd>

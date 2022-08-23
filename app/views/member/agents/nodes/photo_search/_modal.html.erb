@@ -21,7 +21,7 @@
 
   <h2><%= t('member.view.location') %></h2>
   <div class="location">
-    <%= hidden_field_tag 'location_ids[]', "" %>
+    <%= hidden_field_tag 'location_ids[]', "", id: nil %>
     <% @locations.order_by(order: 1).each do |item| %>
       <div class="<%= item.basename %>">
         <%= check_box_tag 'location_ids[]', item.id, @query[:location_ids].index(item.id),
@@ -33,7 +33,7 @@
 
   <h2><%= t('member.view.category') %></h2>
   <div class="category">
-    <%= hidden_field_tag 'category_ids[]', "" %>
+    <%= hidden_field_tag 'category_ids[]', "", id: nil %>
     <% @categories.order_by(order: 1).each do |item| %>
       <div class="<%= item.basename %>">
         <%= check_box_tag 'category_ids[]', item.id, @query[:category_ids].index(item.id),

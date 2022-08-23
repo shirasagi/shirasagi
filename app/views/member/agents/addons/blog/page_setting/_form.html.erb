@@ -22,7 +22,7 @@
 
   <dt><%= @model.t :blog_page_locations %><%= @model.tt :blog_page_locations %></dt>
   <dd class="wide" style="line-height: 2.5">
-    <%= f.hidden_field "blog_page_location_ids[]", value: "" %>
+    <%= f.hidden_field "blog_page_location_ids[]", value: "", id: nil %>
     <% @locations.each do |loc| %>
       <label>
         <%= f.check_box("blog_page_location_ids[]", {}, loc.id) %>

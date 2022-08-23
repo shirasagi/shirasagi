@@ -23,7 +23,7 @@
 
         <dt><%= "対象" %></dt>
         <dd>
-          <%= f.hidden_field "item[test_member_ids]", value: "" %>
+          <%= f.hidden_field "item[test_member_ids]", value: "", id: nil %>
           <% test_members.each do |member| %>
             <% checked = @test_member_ids ? @test_member_ids.include?(member.id) : true %>
             <label>

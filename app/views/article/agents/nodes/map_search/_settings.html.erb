@@ -7,7 +7,7 @@
 </fieldset>
 
 <fieldset class="category">
-  <%= hidden_field_tag "categories[]", '' %>
+  <%= hidden_field_tag "categories[]", '', id: nil %>
   <legend><%= t("facility.category.name") %></legend>
 
   <div class="category">
@@ -25,7 +25,7 @@
 
 <% @cur_node.map_search_options.each_with_index do |options, idx| %>
   <fieldset class="category columns">
-    <%= hidden_field_tag "columns[#{idx}][]", '' %>
+    <%= hidden_field_tag "columns[#{idx}][]", '', id: nil %>
     <legend><%= options['name'] %></legend>
 
     <div class="category">

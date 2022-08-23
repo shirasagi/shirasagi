@@ -115,7 +115,7 @@
 
         <!-- files -->
         <div class="comment-files">
-          <%= f.hidden_field "file_ids[]", value: "" %>
+          <%= f.hidden_field "file_ids[]", value: "", id: nil %>
           <span class="upload-menu-new">
             <%= link_to t('ss.links.upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn" %>
           </span>
@@ -147,7 +147,7 @@
         </div>
 
         <!-- user_ids -->
-        <%= hidden_field_tag "item[user_ids][]", @cur_user.id %>
+        <%= hidden_field_tag "item[user_ids][]", @cur_user.id, id: nil %>
 
         <!-- menu -->
         <div class="menu">
