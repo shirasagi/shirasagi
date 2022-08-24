@@ -6,5 +6,5 @@
   <dd><%= @item.label :state %></dd>
 
   <dt><%= @model.t :layout_id %></dt>
-  <dd><%= @item.layout.name %></dd>
+  <dd><%= link_to @item.layout.try(:name), cms_layout_path(id: @item.layout_id) %></dd>
 </dl>
