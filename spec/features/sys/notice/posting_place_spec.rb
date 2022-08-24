@@ -84,7 +84,7 @@ describe "sys_notice", type: :feature, dbscope: :example, js: true do
     it do
       visit gws_portal_path(site: site)
 
-      within ".index" do
+      within ".sys-notices" do
         expect(page).to have_css(".list-item .notice-severity-high", text: notice0.name)
         expect(page).to have_no_css(".list-item", text: notice1.name)
         expect(page).to have_no_css(".list-item", text: notice2.name)
