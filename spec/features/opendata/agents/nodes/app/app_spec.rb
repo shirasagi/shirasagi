@@ -84,6 +84,7 @@ describe "opendata_agents_nodes_app", type: :feature, dbscope: :example, js: tru
       within "article.tab-released" do
         click_on app.name
       end
+      expect(page).to have_css("#executed", text: "1 #{I18n.t("opendata.labels.time")}")
       click_on I18n.t("opendata.search_datasets.bluk_download")
 
       wait_for_download
@@ -158,6 +159,7 @@ describe "opendata_agents_nodes_app", type: :feature, dbscope: :example, js: tru
       within "article.tab-released" do
         click_on app.name
       end
+      expect(page).to have_css("#executed", text: "1 #{I18n.t("opendata.labels.time")}")
       expect(page).to have_css(".count .number", text: "0")
       within "div.like" do
         click_on "いいね！"
@@ -179,6 +181,7 @@ describe "opendata_agents_nodes_app", type: :feature, dbscope: :example, js: tru
       within "article.tab-released" do
         click_on app.name
       end
+      expect(page).to have_css("#executed", text: "1 #{I18n.t("opendata.labels.time")}")
 
       within "nav.names" do
         click_link "関連アイデア"
