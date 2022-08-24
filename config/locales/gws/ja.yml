@@ -9,6 +9,7 @@ ja:
     organization_addresses: 組織アドレス帳
     question_management: 質問管理
     default_contrast: 既定のコントラスト
+    include_webmail_role: ウェブメール権限を含む
     roles:
       admin: 管理者
       user: 一般ユーザー

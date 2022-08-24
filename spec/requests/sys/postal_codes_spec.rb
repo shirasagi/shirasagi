@@ -43,7 +43,7 @@ describe Sys::PostalCodesController, type: :request, dbscope: :example do
   describe 'GET #download' do
     context 'When #download' do
       before do
-        get download_sys_postal_codes_path
+        post download_sys_postal_codes_path
       end
       it { expect(assigns[:model]).to eq Sys::PostalCode }
       it { expect(assigns[:cur_user]).to eq user }

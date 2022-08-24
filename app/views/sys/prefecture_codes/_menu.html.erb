@@ -2,7 +2,7 @@
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to t('ss.links.new'), { action: :new }, class: :new %>
-      <%= link_to t('ss.links.download'), { action: :download }, class: :download %>
+      <%= link_to t('ss.links.download'), { action: :download }, method: :post, class: :download %>
       <%= link_to t('ss.links.import'), { action: :import }, class: :import %>
     <% end %>
   <% elsif params[:action] =~ /new|create|lock|import|download|destroy_all/ %>

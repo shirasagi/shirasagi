@@ -446,6 +446,14 @@ class SS::Csv
         io.pos = pos if !utf8_bom?(bom)
       end
 
+      if io.is_a?(StringIO) && io.pos > 0
+        # gem "csv" 内で StringIO#string を呼び出している箇所がある。
+        # StringIO#string は BOM 付きの文字列を返すので、うまく動作しない。
+        # そこで、BOM無しにしてやる
+        source = io.read
+        io = StringIO.new(source)
+      end
+
       csv = CSV.new(io, headers: headers)
       yield csv
     end

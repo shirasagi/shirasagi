@@ -12,10 +12,9 @@ Rails.application.routes.draw do
   end
 
   concern :export do
-    get :download, on: :collection
+    match :download_all, on: :collection, via: %i[get post]
     get :download_template, on: :collection
-    get :import, on: :collection
-    post :import, on: :collection
+    match :import, on: :collection, via: %i[get post]
   end
 
   gws "shared_address" do
@@ -28,7 +27,7 @@ Rails.application.routes.draw do
     namespace "management" do
       resources :groups, concerns: [:deletion]
       resources :addresses, concerns: [:soft_deletion, :export], except: [:destroy]
-      resources :trashes, concerns: [:deletion, :export], except: [:new, :create, :edit, :update] do
+      resources :trashes, concerns: [:deletion], except: [:new, :create, :edit, :update] do
         match :undo_delete, on: :member, via: [:get, :post]
       end
 

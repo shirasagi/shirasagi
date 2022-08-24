@@ -32,7 +32,7 @@ Rails.application.routes.draw do
         resources :columns, concerns: :deletion
         resources :files, controller: 'editable_files', only: [:index] do
           match :download_all, on: :collection, via: [:get, :post]
-          match :zip_all_files, on: :collection, via: [:get, :post]
+          post :zip_all_files, on: :collection
           match :notification, on: :collection, via: [:get, :post]
           get :summary, on: :collection
         end

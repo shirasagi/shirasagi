@@ -63,8 +63,6 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       expect(current_path).to eq index_path
 
       #download
-      visit index_path
-      click_link I18n.t('ss.links.download')
       visit "#{index_path}/download_template"
 
       #import
@@ -81,6 +79,32 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         end
       end
       expect(current_path).to eq index_path
+    end
+
+    it "download all" do
+      visit index_path
+      click_on I18n.t("ss.links.download")
+      within "form#item-form" do
+        click_on I18n.t("ss.buttons.download")
+      end
+
+      wait_for_download
+
+      SS::Csv.open(downloads.first) do |csv|
+        csv_table = csv.read
+        expect(csv_table.length).to be > 1
+        expect(csv_table[0][Gws::User.t(:id)]).to be_present
+        expect(csv_table[0][Gws::User.t(:name)]).to be_present
+        expect(csv_table[0][Gws::User.t(:uid)]).to be_present
+      end
+
+      expect(Gws::History.all.count).to be > 1
+      Gws::History.all.reorder(created: -1).first.tap do |history|
+        expect(history.severity).to eq "info"
+        expect(history.controller).to eq "gws/users"
+        expect(history.path).to eq download_all_gws_users_path(site: site)
+        expect(history.action).to eq "download_all"
+      end
     end
 
     it "delete_all disabled user" do

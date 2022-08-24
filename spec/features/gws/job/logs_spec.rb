@@ -12,7 +12,7 @@ describe "gws_job_logs", type: :feature, dbscope: :example, js: true do
     end
   end
   let!(:log2) do
-    Timecop.freeze(now.ago(1.days)) do
+    Timecop.freeze(now.ago(1.day)) do
       job2 = Gws::Notice::NotificationJob.new.bind("site_id" => site.id, "user_id" => user.id)
       create(:gws_job_log, :gws_job_log_completed, job: job2)
     end
@@ -62,6 +62,40 @@ describe "gws_job_logs", type: :feature, dbscope: :example, js: true do
       expect(page).to have_content(log3.started.strftime("%Y/%m/%d %H:%M"))
       expect(page).to have_content(log3.closed.strftime("%Y/%m/%d %H:%M"))
       expect(page).to have_content(log3.logs.first.strip)
+    end
+  end
+
+  context "download all" do
+    it do
+      visit gws_job_logs_path(site: site)
+      click_on I18n.t("ss.links.download")
+      within "form" do
+        click_on I18n.t("ss.buttons.download")
+      end
+
+      wait_for_download
+
+      SS::Csv.open(downloads.first) do |csv|
+        csv_table = csv.read
+        expect(csv_table.length).to eq 1
+        expect(csv_table.headers).to include(*%w(ClassName Started Closed State Args Logs))
+        csv_table[0].tap do |row|
+          expect(row["ClassName"]).to eq I18n.t(log3.class_name.underscore, scope: "job.models")
+          expect(row["Started"]).to eq log3.start_label
+          expect(row["Closed"]).to eq log3.closed_label
+          expect(row["State"]).to eq I18n.t(log3.state, scope: "job.state")
+          expect(row["Args"]).to be_blank
+          expect(row["Logs"]).to be_present
+        end
+      end
+
+      expect(Gws::History.all.count).to be > 1
+      Gws::History.all.reorder(created: -1).first.tap do |history|
+        expect(history.severity).to eq "info"
+        expect(history.controller).to eq "gws/job/logs"
+        expect(history.path).to eq download_all_gws_job_logs_path(site: site)
+        expect(history.action).to eq "download_all"
+      end
     end
   end
 end

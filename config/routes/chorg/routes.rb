@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   end
 
   concern :download do
-    get :download, on: :member
+    post :download, on: :member
     get :download_sample_csv, on: :collection
   end
 
@@ -25,7 +25,7 @@ Rails.application.routes.draw do
       get :show_models, on: :collection, path: 'show_models/:entity_site'
       get :show_entities, on: :collection, path: 'show_entities/:entity_site/:entity_model'
       get :show_entity, on: :collection, path: 'show_entity/:entity_site/:entity_model/:entity_index'
-      get :download, on: :collection
+      post :download, on: :collection
     end
     get 'revisions/:rid/:type/run' => 'run#confirmation', as: :run_confirmation
     post 'revisions/:rid/:type/run' => 'run#run', as: :run

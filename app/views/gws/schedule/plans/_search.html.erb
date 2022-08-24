@@ -1,9 +1,5 @@
 <%= jquery do %>
   (function ($) {
-    $('.gws-schedule-box header .operations .btn-csv').on('click', function() {
-      location.href = '<%= @download_url %>';
-    });
-
     $('.gws-schedule-box header .operations .btn-print').on('click', function() {
       var viewName = $('#calendar').fullCalendar('getView').name;
       var curDate = $('#calendar').fullCalendar('getDate');
@@ -48,7 +44,7 @@
 
 <div class="operations">
   <% if @download_url %>
-    <input type="button" value="CSV" class="btn btn-csv ss-dc-guard" />
+    <%= ss_button_to t("ss.buttons.csv"), @download_url, class: "btn btn-csv ss-dc-guard", method: 'post' %>
   <% end %>
   <input type="button" value="<%= t('ss.buttons.print') %>" class="btn btn-print" />
 </div>
