@@ -1,4 +1,14 @@
 class Map::Extensions::Point < Hash
+  include SS::Liquidization
+
+  liquidize do
+    export :name
+    export :loc
+    export :text
+    export :zoom_level
+    export :image
+  end
+
   # convert to mongoid native type
   def mongoize
     loc = self.loc
@@ -7,6 +17,10 @@ class Map::Extensions::Point < Hash
     ret = { "loc" => loc.mongoize }
     ret["zoom_level"] = zoom_level if zoom_level.present?
     ret
+  end
+
+  def name
+    self["name"].presence || self[:name]
   end
 
   def loc
@@ -19,8 +33,16 @@ class Map::Extensions::Point < Hash
     value
   end
 
+  def text
+    self["text"].presence || self[:text]
+  end
+
   def zoom_level
     self["zoom_level"].presence || self[:zoom_level]
+  end
+
+  def image
+    self["image"].presence || self[:image]
   end
 
   def empty?
