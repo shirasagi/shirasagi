@@ -143,7 +143,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
           first.
           map_points
         items.each do |item|
-          marker_info = view_context.monthly_facility_info(facility, dates, item[:loc])
+          marker_info = view_context.monthly_facility_info(facility, dates)
           item[:html] = marker_info
           item[:number] = ""
           @markers << item

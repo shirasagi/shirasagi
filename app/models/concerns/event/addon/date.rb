@@ -36,7 +36,7 @@ module Event::Addon
 
         if params[:dates].present?
           dates = (params[:dates].first..params[:dates].last).map { |d| d.mongoize }
-          criteria = criteria.where(:event_dates.in => dates)
+          criteria = criteria.in(event_dates: dates)
         end
 
         if params[:start_date].present?

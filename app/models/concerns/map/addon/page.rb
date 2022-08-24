@@ -20,9 +20,9 @@ module Map::Addon
       permit_params :map_zoom_level, :center_setting, :set_center_position, :zoom_setting, :set_zoom_level
       permit_params :map_reference_method, :map_reference_column_name, :map_link, :map_goal, :map_route
 
-      validate :validate_number
-      validate :validate_map_goal
-      validate :validate_map_route
+      validate :validate_number, if: ->{ map_points.present? }
+      validate :validate_map_goal, if: ->{ map_goal.present? }
+      validate :validate_map_route, if: ->{ map_route.present? }
 
       after_save :save_geolocation, if: ->{ map_points.present? }
       after_destroy :remove_geolocation
@@ -122,33 +122,29 @@ module Map::Addon
     end
 
     def validate_number
-      if self.map_points.present?
-        self.map_points.group_by { |e| e[:number] }.map do |n, m|
-          if n.present?
-            if !n.numeric?
-              return self.errors.add :map_points, :invalid_number
-            elsif n.to_i < 1 || n.to_i > 99
-              return self.errors.add :map_points, :invalid_number_range
-            elsif m.length > 1
-              return self.errors.add :map_points, :uniq_number
-            end
-          end
+      self.map_points.group_by { |e| e[:number] }.map do |n, m|
+        next if n.blank?
+
+        if !n.numeric?
+          return self.errors.add :map_points, :invalid_number
+        elsif n.to_i < 1 || n.to_i > 99
+          return self.errors.add :map_points, :invalid_number_range
+        elsif m.length > 1
+          return self.errors.add :map_points, :uniq_number
         end
       end
     end
 
     def validate_map_goal
-      if self.map_goal.present? && self.map_points.select { |x| x[:number].include?(self.map_goal.to_s) }.blank?
-        return self.errors.add :map_goal, :invalid
-      end
+      return if self.map_points.select { |x| x[:number].include?(self.map_goal.to_s) }.present?
+
+      self.errors.add :map_goal, :invalid
     end
 
     def validate_map_route
-      if self.map_route.present?
-        self.map_route.split(',').each do |n|
-          return self.errors.add :map_route, :invalid if !n.numeric?
-          return self.errors.add :map_route, :invalid if self.map_points.find_all { |x| x[:number].include?(n) }.blank?
-        end
+      self.map_route.split(',').each do |n|
+        return self.errors.add :map_route, :invalid if !n.numeric?
+        return self.errors.add :map_route, :invalid if self.map_points.find_all { |x| x[:number].include?(n) }.blank?
       end
     end
   end

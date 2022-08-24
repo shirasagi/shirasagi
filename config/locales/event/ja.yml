@@ -22,6 +22,7 @@ ja:
     all_day: 終日
     exclude_dates: 除外日
     count: 件
+    info: イベント情報
     dates:
       setting: 開催期間
       start_date: 開始
