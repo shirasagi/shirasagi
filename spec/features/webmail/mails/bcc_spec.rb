@@ -24,6 +24,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         visit index_path
         new_window = window_opened_by { click_on I18n.t('ss.links.new') }
         within_window new_window do
+          wait_for_js_ready
           within "form#item-form" do
             click_on I18n.t("webmail.links.show_cc_bcc")
 
@@ -56,6 +57,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         click_on item_subject
         new_window = window_opened_by { click_on I18n.t("ss.links.edit") }
         within_window new_window do
+          wait_for_js_ready
           within "form#item-form" do
             click_on I18n.t('ss.buttons.send')
           end
@@ -106,6 +108,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           end
         end
         within_window new_window do
+          wait_for_js_ready
           expect(page).to have_css(".webmail-mail-form-address.to", text: user2.email)
           expect(page).to have_css(".webmail-mail-form-address.cc", text: user3.email)
           expect(page).to have_no_css(".webmail-mail-form-address.bcc", text: user4.email)

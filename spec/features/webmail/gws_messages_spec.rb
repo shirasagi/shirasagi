@@ -28,6 +28,7 @@ describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true, 
         visit index_path
         new_window = window_opened_by { click_on I18n.t('ss.links.new') }
         within_window new_window do
+          wait_for_js_ready
           within "form#item-form" do
             fill_in "to", with: user.email + "\n"
             fill_in "item[subject]", with: item_title
@@ -53,11 +54,12 @@ describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true, 
         # forward
         new_window = window_opened_by { click_link I18n.t('webmail.links.forward_gws_message') }
         within_window new_window do
+          wait_for_js_ready
           first('.gws-addon-memo-member .ajax-box').click
           wait_for_cbox do
             click_on user.name
           end
-          page.accept_alert do
+          page.accept_alert I18n.t("ss.confirm.send") do
             click_on I18n.t('ss.buttons.send')
           end
         end
