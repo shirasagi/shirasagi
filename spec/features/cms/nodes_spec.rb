@@ -15,7 +15,7 @@ describe "cms_nodes", type: :feature, js: true do
     it "#crud" do
       visit index_path
 
-      #new
+      # new
       visit new_path
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
@@ -25,7 +25,7 @@ describe "cms_nodes", type: :feature, js: true do
       expect(current_path).not_to eq new_path
       expect(page).to have_no_css("form#item-form")
 
-      #show
+      # show
       visit show_path
       expect(current_path).not_to eq sns_login_path
 
@@ -37,7 +37,7 @@ describe "cms_nodes", type: :feature, js: true do
       current_window.close
       switch_to_window(windows.last)
 
-      #edit
+      # edit
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
@@ -46,7 +46,7 @@ describe "cms_nodes", type: :feature, js: true do
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_no_css("form#item-form")
 
-      #delete
+      # delete
       visit delete_path
       within "form" do
         click_button I18n.t('ss.buttons.delete')

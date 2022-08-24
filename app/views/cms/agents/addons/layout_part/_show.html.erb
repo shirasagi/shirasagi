@@ -1,0 +1,11 @@
+<% if @item.html.present? %>
+<dl class="see">
+  <dt><%= t 'mongoid.models.cms/part' %></dt>
+
+  <% @item.parse_parts.each do |path, part| %>
+  <dd>
+    <%= path.sub(/\.part\.html\z/, '') %> : <%= link_to_part(part) if part %>
+  </dd>
+  <% end %>
+</dl>
+<% end %>
