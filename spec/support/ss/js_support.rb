@@ -415,5 +415,23 @@ module SS
   end
 end
 
+# monkey patch to capybara/session
+module Capybara
+  class Session
+    include ActiveSupport::Callbacks
+
+    define_callbacks :visit
+
+    def visit_with_shirasagi(*args, **options)
+      run_callbacks :visit do
+        visit_without_shirasagi(*args, **options)
+      end
+    end
+
+    alias visit_without_shirasagi visit
+    alias visit visit_with_shirasagi
+  end
+end
+
 RSpec.configuration.extend(SS::JsSupport::Hooks, js: true)
 RSpec.configuration.include(SS::JsSupport, js: true)
