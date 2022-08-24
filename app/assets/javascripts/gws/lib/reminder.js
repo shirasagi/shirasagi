@@ -9,7 +9,9 @@ this.Gws_Reminder = (function () {
     }
     el = $(opts['el'] || document);
     el.find('.list-item').each(function () {
-      return $(this).find('.links').prepend('<a class="restore" href="#" style="display: none;"><%= I18n.t("gws/reminder.links.restore_reminder") %></a>');
+      var $a = $('<a />', { class: "restore", href: "#", style: "display: none;" })
+        .text(i18next.t("gws/reminder.links.restore_reminder"));
+      return $(this).find('.links').prepend($a);
     });
     el.find('.list-item.deleted').each(function () {
       $(this).find('.check, .meta, .delete, .updated, .more-btn').hide();

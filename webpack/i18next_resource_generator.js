@@ -34,7 +34,7 @@ function loadLocale(lang) {
     locale = merge(locale, single)
   }
 
-  return locale
+  return locale[lang]
 }
 
 module.exports = {

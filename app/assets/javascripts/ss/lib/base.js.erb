@@ -26,10 +26,6 @@ this.SS = (function () {
 
   SS.debug = false;
 
-  SS.confirm = {
-    delete: <%= I18n.t('ss.confirm.delete').to_json %>
-  };
-
   SS.defaultTimeoutMillis = 2000;
 
   SS.KEY_ENTER = 13;
@@ -312,7 +308,7 @@ this.SS = (function () {
 
     $(elem).on("click", selector, function (e) {
       var defaults, self;
-      if (!confirm(SS.confirm.delete)) {
+      if (!confirm(i18next.t('ss.confirm.delete'))) {
         return false;
       }
       self = $(this);
@@ -392,7 +388,7 @@ this.SS = (function () {
     });
     $(window).on("beforeunload", function () {
       if (SS.formChanged && !SS.disableConfirmUnloading) {
-        return <%= I18n.t('ss.confirm.unload').to_json %>;
+        return i18next.t('ss.confirm.unload');
       }
     });
     $("input[type=submit]").on("click", function () {
@@ -703,7 +699,7 @@ this.SS = (function () {
         }, function (xhr, textStatus, errorThrown) {
           // error
           if (xhr.status === 413) {
-            alert([ "== Error ==" ].concat(<%= I18n.t('errors.messages.request_entity_too_large').to_json %>).join("\n"));
+            alert([ "== Error ==" ].concat(i18next.t('errors.messages.request_entity_too_large')).join("\n"));
           } else if (xhr.responseJSON && Array.isArray(xhr.responseJSON)) {
             alert([ "== Error ==" ].concat(xhr.responseJSON).join("\n"));
           } else {

@@ -53,6 +53,7 @@ export default class extends Initializer {
 
   afterInitialize() {
     i18next.changeLanguage(document.documentElement.lang)
+    window.i18next = i18next
     return Promise.resolve()
   }
 }

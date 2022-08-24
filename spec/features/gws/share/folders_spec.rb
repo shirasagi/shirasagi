@@ -100,15 +100,19 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
         #
         within 'form#item-form' do
           fill_in 'item[in_basename]', with: subfolder_name1
-          click_on I18n.t('gws/share.apis.folders.index')
+          wait_cbox_open do
+            click_on I18n.t('gws/share.apis.folders.index')
+          end
         end
 
         wait_for_cbox do
-          expect(page).to have_content(item.name)
-          click_on item.name
+          wait_cbox_close do
+            click_on item.name
+          end
         end
 
         within 'form#item-form' do
+          expect(page).to have_css(".ajax-selected", text: item.name)
           click_on I18n.t('ss.buttons.save')
         end
         wait_for_notice I18n.t('ss.notice.saved')

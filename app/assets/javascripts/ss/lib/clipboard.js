@@ -17,13 +17,13 @@ this.SS_Clipboard = (function () {
         rett = document.execCommand('copy');
         copy.remove();
         if (opts["success_alert"]) {
-          alert(<%= I18n.t("ss.notice.clipboard_copied").to_json %>);
+          alert(i18next.t("ss.notice.clipboard_copied"));
         }
         return true;
       } catch (_error) {
         e = _error;
         console.warn(e);
-        alert(<%= I18n.t("ss.notice.clipboard_copy_failed").to_json %>);
+        alert(i18next.t("ss.notice.clipboard_copy_failed"));
         return false;
       }
     }
@@ -36,7 +36,7 @@ this.SS_Clipboard = (function () {
       if (!text) {
         return true;
       }
-      label = <%= I18n.t("ss.buttons.copy").to_json %>;
+      label = i18next.t("ss.buttons.copy");
       return $(this).append("<a href='#' class='clipboard-copy-button' data-text='" + text + "'>" + label + "</a>");
     });
     return $('.clipboard-copy-button').on("click", function () {

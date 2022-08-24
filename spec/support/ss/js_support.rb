@@ -223,6 +223,7 @@ module SS
     end
 
     def wait_for_cbox(&block)
+      wait_for_js_ready
       have_css("#cboxClose", text: "close")
       within("#cboxContent", &block) if block
     end
@@ -242,13 +243,16 @@ module SS
         current_path
         true
       end
+      wait_for_js_ready
     end
 
     def wait_for_notice(text)
+      wait_for_js_ready
       expect(page).to have_css('#notice', text: text)
     end
 
     def wait_for_error(text)
+      wait_for_js_ready
       expect(page).to have_css('#errorExplanation', text: text)
     end
 
@@ -293,6 +297,8 @@ module SS
     end
 
     def wait_event_to_fire(event_name, selector = nil)
+      wait_for_js_ready
+
       promise_id = "promise_#{unique_id}"
       page.execute_script(HOOK_EVENT_COMPLETION, promise_id, event_name, selector)
 
@@ -313,6 +319,7 @@ module SS
     #   end
     #
     def wait_cbox_open(&block)
+      wait_for_js_ready
       wait_event_to_fire("cbox_complete", &block)
     end
 
@@ -324,6 +331,7 @@ module SS
     #   end
     #
     def wait_cbox_close(&block)
+      wait_for_js_ready
       wait_event_to_fire("cbox_closed", &block)
     end
 
@@ -332,6 +340,7 @@ module SS
     #   ensure_addon_opened("#addon-contact-agents-addons-page")
     #
     def ensure_addon_opened(addon_id)
+      wait_for_js_ready
       result = page.evaluate_async_script(ENSURE_ADDON_OPENED, addon_id)
       expect(result).to be_truthy
       true
@@ -339,9 +348,10 @@ module SS
 
     #
     # Usage
-    #   wait_for_ckeditor_event find(:fillable_field, "item[html]")
+    #   wait_ckeditor_ready find(:fillable_field, "item[html]")
     #
     def wait_ckeditor_ready(element)
+      wait_for_js_ready
       page.evaluate_async_script(WAIT_CKEDITOR_READY_SCRIPT, element)
     end
 
@@ -350,6 +360,7 @@ module SS
     #   wait_all_ckeditors_ready
     #
     def wait_all_ckeditors_ready
+      wait_for_js_ready
       page.evaluate_async_script(WAIT_ALL_CKEDITORS_READY_SCRIPT)
     end
 

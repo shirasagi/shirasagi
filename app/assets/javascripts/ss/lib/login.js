@@ -36,7 +36,7 @@ this.SS_Login = (function () {
           if (SS_Login.intervalID) {
             clearInterval(SS_Login.intervalID);
           }
-          return alert(<%= I18n.t("ss.warning.session_timeout").to_json %>);
+          return alert(i18next.t("ss.warning.session_timeout"));
         }
       }
     });

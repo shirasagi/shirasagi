@@ -53,7 +53,7 @@ this.SS_ListUI = (function () {
       // for backward compatibility
       this.dataset.ssButtonToAction = "";
       this.dataset.ssButtonToMethod = "delete";
-      this.dataset.ssConfirmation = <%= I18n.t('ss.confirm.delete').to_json %>;
+      this.dataset.ssConfirmation = i18next.t('ss.confirm.delete');
       this.classList.add("btn-list-head-action");
     });
     $el.find(".list-head [data-ss-list-head-method]").each(function() {

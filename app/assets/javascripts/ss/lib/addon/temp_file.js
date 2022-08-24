@@ -136,7 +136,7 @@ this.SS_Addon_TempFile = (function () {
           var files = JSON.parse(request.response);
           _this.select(files, _this.$selector);
         } else if (request.status === 413) {
-          alert(["== Error =="].concat(<%= I18n.t('errors.messages.request_entity_too_large').to_json %>).join("\n"));
+          alert(["== Error =="].concat(i18next.t('errors.messages.request_entity_too_large')).join("\n"));
         } else {
           try {
             var json = $.parseJSON(request.response);
