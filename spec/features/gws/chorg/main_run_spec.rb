@@ -44,7 +44,7 @@ describe "gws_chorg", type: :feature, dbscope: :example, js: true do
 
       expectation = expect do
         within "form#item-form" do
-          fill_in "item[reservation]", with: I18n.l(reservation_at, format: :picker) + "\n"
+          fill_in "item[reservation]", with: I18n.l(reservation_at, format: :picker, locale: I18n.default_locale) + "\n"
           click_on I18n.t("chorg.views.run/confirmation.main.run_button")
         end
       end

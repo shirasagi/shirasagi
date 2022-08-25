@@ -40,7 +40,9 @@ describe "postal_codes", type: :feature, dbscope: :example, js: true do
         expect(item.code).to eq "code"
 
         visit index_path
-        click_on item.code
+        within ".list-item" do
+          click_on item.code
+        end
         click_on I18n.t("ss.links.edit")
         within "form#item-form" do
           fill_in "item[code]", with: "modify"

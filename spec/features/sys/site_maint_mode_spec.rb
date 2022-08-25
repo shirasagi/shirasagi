@@ -27,7 +27,7 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
       find("#item_maintenance_mode").find("option[value='enabled']").select_option
       fill_in "item[maint_remark]", with: "今日から明日までメンテナンスになります。"
       within ".maint-mode" do
-        click_on "ユーザーを選択する"
+        click_on I18n.t("ss.apis.users.index")
       end
     end
     wait_for_cbox do
@@ -52,7 +52,7 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
     within "form" do
       fill_in "item[email]", with: user2.email
       fill_in "item[password]", with: "pass"
-      click_button I18n.t("ss.login")
+      click_button I18n.t("ss.login", locale: I18n.default_locale)
     end
     expect(page).to have_text(I18n.t("ss.under_maintenance_mode"))
     expect(page).not_to have_link(site1.name, href: "/.s#{site1.id}/cms/contents")

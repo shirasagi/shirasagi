@@ -93,7 +93,7 @@ describe "sns_job_logs", type: :feature, dbscope: :example, js: true do
       visit job_sns_logs_path(site: site)
 
       within ".list-head" do
-        fill_in "ymd", with: I18n.l(now.ago(3.days).to_date, format: :picker) + "\n"
+        fill_in "ymd", with: I18n.l(now.ago(3.days).to_date, format: :picker, locale: I18n.default_locale) + "\n"
       end
 
       expect(page).to have_content(I18n.t(log1.class_name.underscore, scope: "job.models"))

@@ -52,11 +52,12 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         select I18n.t("ss.options.state.#{notify_state}"), from: "item_notify_state" rescue nil
       end
 
-      if select_target == :group
+      case select_target
+      when :group
         gws_select_member_group(member_group)
-      elsif select_target == :cg_by_user
+      when :cg_by_user
         gws_select_member_custom_group(member_cg_by_user)
-      elsif select_target == :cg_by_group
+      when :cg_by_group
         gws_select_member_custom_group(member_cg_by_group)
       else # select_target == :user
         gws_select_member(member_user)
@@ -388,7 +389,9 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       visit gws_schedule_main_path(site: site)
       click_on I18n.t("ss.links.trash")
       click_on item.name
-      click_on I18n.t("ss.links.delete")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
       within "form" do
         click_button I18n.t("ss.buttons.delete")
       end

@@ -69,7 +69,9 @@ describe "gws_chorg", type: :feature, dbscope: :example, js: true do
       visit gws_chorg_main_path(site: site)
       click_on revision.name
       click_on changeset0.add_description
-      click_on I18n.t("ss.links.delete")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
 
       within "form" do
         click_on I18n.t("ss.buttons.delete")

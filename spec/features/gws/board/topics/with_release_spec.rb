@@ -44,8 +44,8 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
         within "#addon-ss-agents-addons-release" do
           first(".addon-head h2").click
 
-          fill_in "item[release_date]", with: I18n.l(release_date, format: :picker) + "\n"
-          fill_in "item[close_date]", with: I18n.l(close_date, format: :picker) + "\n"
+          fill_in "item[release_date]", with: I18n.l(release_date, format: :picker, locale: I18n.default_locale) + "\n"
+          fill_in "item[close_date]", with: I18n.l(close_date, format: :picker, locale: I18n.default_locale) + "\n"
         end
 
         click_on I18n.t("ss.buttons.save")

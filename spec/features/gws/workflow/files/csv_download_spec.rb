@@ -35,10 +35,12 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
 
         wait_for_download
 
-        csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
-        expect(csv.length).to eq 1
-        expect(csv[0][Gws::Workflow::File.t(:name)]).to eq item1.name
-        expect(csv[0][Gws::Workflow::File.t(:html)]).to eq item1.html
+        I18n.with_locale(I18n.default_locale) do
+          csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+          expect(csv.length).to eq 1
+          expect(csv[0][Gws::Workflow::File.t(:name)]).to eq item1.name
+          expect(csv[0][Gws::Workflow::File.t(:html)]).to eq item1.html
+        end
 
         # wait workflow route shown to avoid causing exceptions
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
@@ -56,11 +58,13 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
 
         wait_for_download
 
-        csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
-        expect(csv.length).to eq 1
-        expect(csv[0][Gws::Workflow::File.t(:name)]).to eq item2.name
-        expect(csv[0]["#{form.name}/#{column1.name}"]).to eq column1_value
-        expect(csv[0]["#{form.name}/#{column2.name}"]).to eq file2.name
+        I18n.with_locale(I18n.default_locale) do
+          csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+          expect(csv.length).to eq 1
+          expect(csv[0][Gws::Workflow::File.t(:name)]).to eq item2.name
+          expect(csv[0]["#{form.name}/#{column1.name}"]).to eq column1_value
+          expect(csv[0]["#{form.name}/#{column2.name}"]).to eq file2.name
+        end
 
         # wait workflow route shown to avoid causing exceptions
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
@@ -78,13 +82,15 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
 
         wait_for_download
 
-        csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
-        expect(csv.length).to eq 2
-        expect(csv[0][Gws::Workflow::File.t(:name)]).to eq item2.name
-        expect(csv[0]["#{form.name}/#{column1.name}"]).to eq column1_value
-        expect(csv[0]["#{form.name}/#{column2.name}"]).to eq file2.name
-        expect(csv[1][Gws::Workflow::File.t(:name)]).to eq item1.name
-        expect(csv[1][Gws::Workflow::File.t(:html)]).to eq item1.html
+        I18n.with_locale(I18n.default_locale) do
+          csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+          expect(csv.length).to eq 2
+          expect(csv[0][Gws::Workflow::File.t(:name)]).to eq item2.name
+          expect(csv[0]["#{form.name}/#{column1.name}"]).to eq column1_value
+          expect(csv[0]["#{form.name}/#{column2.name}"]).to eq file2.name
+          expect(csv[1][Gws::Workflow::File.t(:name)]).to eq item1.name
+          expect(csv[1][Gws::Workflow::File.t(:html)]).to eq item1.html
+        end
       end
     end
   end

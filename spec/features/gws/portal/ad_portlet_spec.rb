@@ -85,7 +85,9 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       visit gws_portal_user_path(site: site, user: user)
       click_on I18n.t('gws/portal.links.manage_portlets')
       click_on portlet.name
-      click_on I18n.t("ss.links.delete")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
       within 'form' do
         click_on I18n.t("ss.buttons.delete")
       end

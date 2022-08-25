@@ -228,7 +228,9 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
       within ".addon-view.my-todo" do
         click_on item.name
       end
-      click_on I18n.t("ss.links.delete")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
       within "form" do
         click_on I18n.t('ss.buttons.delete')
       end

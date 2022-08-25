@@ -26,14 +26,14 @@ describe "gws_monitor_topics", type: :feature, dbscope: :example do
       item1
       visit gws_monitor_topics_path(site)
       expect(page).to have_content(item1.name)
-      expect(page).to have_content('回答状況(0/1)')
+      expect(page).to have_content("#{I18n.t('gws/monitor.topic.answer_state')}(0/1)")
     end
 
     it "#index display all groups" do
       item2
       visit gws_monitor_topics_path(site)
       expect(page).to have_content(item2.name)
-      expect(page).to have_content('回答状況(0/2)')
+      expect(page).to have_content("#{I18n.t('gws/monitor.topic.answer_state')}(0/2)")
     end
   end
 end

@@ -71,7 +71,9 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
       #
       visit gws_notice_folders_path(site: site)
       click_on name2
-      click_on I18n.t("ss.links.delete")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end
@@ -163,7 +165,9 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
         #
         visit gws_notice_folders_path(site: site)
         click_on "#{folder0.name}/#{name2}"
-        click_on I18n.t("ss.links.delete")
+        within ".nav-menu" do
+          click_on I18n.t("ss.links.delete")
+        end
         within "form" do
           click_on I18n.t("ss.buttons.delete")
         end

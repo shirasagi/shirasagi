@@ -79,24 +79,26 @@ describe "gws_facility_usage", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.download")
       wait_for_download
 
-      csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
-      expect(csv.length).to eq 4
-      expect(csv[0][Gws::Facility::Item.t(:name)]).to eq facility1.name
-      expect(csv[0][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.hours')
-      expect(csv[0]["16#{I18n.t('datetime.prompts.day')}"]).to eq "5.0"
-      expect(csv[1][Gws::Facility::Item.t(:name)]).to eq facility1.name
-      expect(csv[1][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.times')
-      expect(csv[1]["16#{I18n.t('datetime.prompts.day')}"]).to eq "2"
-      expect(csv[2][Gws::Facility::Item.t(:name)]).to eq facility2.name
-      expect(csv[2][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.hours')
-      expect(csv[2]["9#{I18n.t('datetime.prompts.day')}"]).to eq "24.0"
-      expect(csv[2]["10#{I18n.t('datetime.prompts.day')}"]).to eq "24.0"
-      expect(csv[2]["11#{I18n.t('datetime.prompts.day')}"]).to eq "24.0"
-      expect(csv[3][Gws::Facility::Item.t(:name)]).to eq facility2.name
-      expect(csv[3][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.times')
-      expect(csv[3]["9#{I18n.t('datetime.prompts.day')}"]).to eq "1"
-      expect(csv[3]["10#{I18n.t('datetime.prompts.day')}"]).to eq "1"
-      expect(csv[3]["11#{I18n.t('datetime.prompts.day')}"]).to eq "1"
+      I18n.with_locale(I18n.default_locale) do
+        csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+        expect(csv.length).to eq 4
+        expect(csv[0][Gws::Facility::Item.t(:name)]).to eq facility1.name
+        expect(csv[0][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.hours')
+        expect(csv[0]["16#{I18n.t('datetime.prompts.day')}"]).to eq "5.0"
+        expect(csv[1][Gws::Facility::Item.t(:name)]).to eq facility1.name
+        expect(csv[1][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.times')
+        expect(csv[1]["16#{I18n.t('datetime.prompts.day')}"]).to eq "2"
+        expect(csv[2][Gws::Facility::Item.t(:name)]).to eq facility2.name
+        expect(csv[2][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.hours')
+        expect(csv[2]["9#{I18n.t('datetime.prompts.day')}"]).to eq "24.0"
+        expect(csv[2]["10#{I18n.t('datetime.prompts.day')}"]).to eq "24.0"
+        expect(csv[2]["11#{I18n.t('datetime.prompts.day')}"]).to eq "24.0"
+        expect(csv[3][Gws::Facility::Item.t(:name)]).to eq facility2.name
+        expect(csv[3][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.times')
+        expect(csv[3]["9#{I18n.t('datetime.prompts.day')}"]).to eq "1"
+        expect(csv[3]["10#{I18n.t('datetime.prompts.day')}"]).to eq "1"
+        expect(csv[3]["11#{I18n.t('datetime.prompts.day')}"]).to eq "1"
+      end
     end
   end
 

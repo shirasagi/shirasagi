@@ -26,16 +26,18 @@ describe "gws_user_titles", type: :feature, dbscope: :example do
         click_on I18n.t("ss.buttons.download")
       end
 
-      csv = ::SS::ChunkReader.new(page.html).to_a.join
-      csv = NKF.nkf("-Ww", csv)
-      csv = ::CSV.parse(csv, headers: true)
-
-      expect(csv.length).to eq 1
-      expect(csv.headers).to include(Gws::UserTitle.t(:code), Gws::UserTitle.t(:name))
-      expect(csv[0][Gws::UserTitle.t(:code)]).to eq item.code
-      expect(csv[0][Gws::UserTitle.t(:name)]).to eq item.name
-      expect(csv[0][Gws::UserTitle.t(:remark)]).to eq item.remark
-      expect(csv[0][Gws::UserTitle.t(:order)]).to eq item.order.to_s
+      I18n.with_locale(I18n.default_locale) do
+        csv_source = ::SS::ChunkReader.new(page.html).to_a.join
+        SS::Csv.open(StringIO.new(csv_source)) do |csv|
+          csv_table = csv.read
+          expect(csv_table.length).to eq 1
+          expect(csv_table.headers).to include(Gws::UserTitle.t(:code), Gws::UserTitle.t(:name))
+          expect(csv_table[0][Gws::UserTitle.t(:code)]).to eq item.code
+          expect(csv_table[0][Gws::UserTitle.t(:name)]).to eq item.name
+          expect(csv_table[0][Gws::UserTitle.t(:remark)]).to eq item.remark
+          expect(csv_table[0][Gws::UserTitle.t(:order)]).to eq item.order.to_s
+        end
+      end
 
       expect(Gws::History.all.count).to be > 1
       Gws::History.all.reorder(created: -1).first.tap do |history|

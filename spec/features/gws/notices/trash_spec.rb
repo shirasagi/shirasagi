@@ -32,7 +32,9 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       visit gws_notice_main_path(site: site)
       click_on I18n.t("ss.navi.trash")
       click_on item.name
-      click_on I18n.t("ss.links.delete")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end

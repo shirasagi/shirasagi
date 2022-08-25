@@ -88,8 +88,9 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       #
       visit gws_circular_admins_path(site)
       click_on topic.name
-      click_on I18n.t("ss.links.delete")
-
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end

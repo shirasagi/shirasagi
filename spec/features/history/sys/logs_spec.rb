@@ -29,16 +29,18 @@ describe "history_sys_logs", type: :feature, dbscope: :example do
       click_on I18n.t("ss.buttons.download")
 
       csv_source = ::SS::ChunkReader.new(page.html).to_a.join
-      SS::Csv.open(StringIO.new(csv_source)) do |csv|
-        table = csv.read
-        expect(table.length).to eq 7
-        expect(table.headers).to include(*csv_header)
-        table[0].tap do |row|
-          expect(row[History::Log.t(:created)]).to be_present
-          expect(row[History::Log.t(:user_name)]).to eq "#{user.name}(#{user.id})"
-          expect(row[History::Log.t(:model_name)]).to eq "#{user.class.model_name.human}(#{user.id})"
-          expect(row[History::Log.t(:action)]).to eq "login"
-          expect(row[History::Log.t(:path)]).to eq "/.mypage/login"
+      I18n.with_locale(I18n.default_locale) do
+        SS::Csv.open(StringIO.new(csv_source)) do |csv|
+          table = csv.read
+          expect(table.length).to eq 7
+          expect(table.headers).to include(*csv_header)
+          table[0].tap do |row|
+            expect(row[History::Log.t(:created)]).to be_present
+            expect(row[History::Log.t(:user_name)]).to eq "#{user.name}(#{user.id})"
+            expect(row[History::Log.t(:model_name)]).to eq "#{user.class.model_name.human}(#{user.id})"
+            expect(row[History::Log.t(:action)]).to eq "login"
+            expect(row[History::Log.t(:path)]).to eq "/.mypage/login"
+          end
         end
       end
 

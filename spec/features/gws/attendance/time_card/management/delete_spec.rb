@@ -48,7 +48,9 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       title = I18n.t('gws/attendance.formats.time_card_full_name', user_name: user1.name, month: month)
       click_on title
 
-      click_on I18n.t("ss.links.delete")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end
