@@ -43,6 +43,11 @@ module SS
         ensure
           SS::LocaleSupport.current_lang = nil
         end
+        # rubocop:disable Rails/I18nLocaleAssignment
+        obj.after(:each) do
+          I18n.locale = I18n.default_locale if I18n.locale != I18n.default_locale
+        end
+        # rubocop:enable Rails/I18nLocaleAssignment
       end
     end
   end
