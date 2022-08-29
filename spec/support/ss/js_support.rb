@@ -2,6 +2,12 @@ module SS
   module JsSupport
     module Hooks
       def self.extended(obj)
+        Capybara::Session.set_callback :visit, :after do |session|
+          SS::JsSupport.wait_for_js_ready(session)
+        rescue => _e
+          # csv や pdf などに遷移した場合、WAIT_FOR_JS_READY_SCRIPT は失敗し例外を発生させるが、無視する
+        end
+
         show_warning = ENV.fetch("JQMIGRATE_WARNING", nil)
         return unless show_warning
 
@@ -23,6 +29,8 @@ module SS
         end
       end
     end
+
+    module_function
 
     HOOK_EVENT_COMPLETION = <<~SCRIPT.freeze
       (function(promiseId, eventName, selector) {
@@ -420,9 +428,28 @@ module SS
       result
     end
 
-    def wait_for_js_ready
-      page.evaluate_async_script(WAIT_FOR_JS_READY_SCRIPT)
+    def wait_for_js_ready(session = nil)
+      session ||= page
+      session.evaluate_async_script(WAIT_FOR_JS_READY_SCRIPT)
     end
+  end
+end
+
+# monkey patch to capybara/session
+module Capybara
+  class Session
+    include ActiveSupport::Callbacks
+
+    define_callbacks :visit
+
+    def visit_with_shirasagi(*args, **options)
+      run_callbacks :visit do
+        visit_without_shirasagi(*args, **options)
+      end
+    end
+
+    alias visit_without_shirasagi visit
+    alias visit visit_with_shirasagi
   end
 end
 

@@ -25,6 +25,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         visit index_path
         new_window = window_opened_by { click_on I18n.t('ss.links.new') }
         within_window new_window do
+          wait_for_js_ready
           within "form#item-form" do
             fill_in "to", with: user2.email + "\n"
             fill_in "to", with: user3.email + "\n"
@@ -50,6 +51,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         # remove all addresses within to
         new_window = window_opened_by { click_on I18n.t("ss.links.edit") }
         within_window new_window do
+          wait_for_js_ready
           within "form#item-form" do
             within "dl.webmail-mail-form-address.to" do
               3.times do
@@ -83,6 +85,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         visit index_path
         new_window = window_opened_by { click_on I18n.t('ss.links.new') }
         within_window new_window do
+          wait_for_js_ready
           within "form#item-form" do
             click_on I18n.t("webmail.links.show_cc_bcc")
 
@@ -110,6 +113,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         # remove all addresses within to
         new_window = window_opened_by { click_on I18n.t("ss.links.edit") }
         within_window new_window do
+          wait_for_js_ready
           within "form#item-form" do
             within "dl.webmail-mail-form-address.cc" do
               3.times do
@@ -143,6 +147,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         visit index_path
         new_window = window_opened_by { click_on I18n.t('ss.links.new') }
         within_window new_window do
+          wait_for_js_ready
           within "form#item-form" do
             click_on I18n.t("webmail.links.show_cc_bcc")
 
@@ -170,6 +175,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         # remove all addresses within to
         new_window = window_opened_by { click_on I18n.t("ss.links.edit") }
         within_window new_window do
+          wait_for_js_ready
           within "form#item-form" do
             within "dl.webmail-mail-form-address.bcc" do
               3.times do

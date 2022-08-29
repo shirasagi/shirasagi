@@ -18,8 +18,14 @@ describe "cms_import", type: :feature, dbscope: :example, js: true do
 
   it do
     visit cms_nodes_path(site: site)
-    click_on name
-    click_on I18n.t("cms.node_config")
+    expect(page).to have_css(".tree-navi", text: "refresh")
+    within ".list-items" do
+      click_on name
+    end
+    expect(page).to have_css(".tree-navi", text: "refresh")
+    within "#navi" do
+      click_on I18n.t("cms.node_config")
+    end
 
     within "#addon-basic" do
       click_on I18n.t("ss.links.pc_preview")

@@ -79,7 +79,10 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
       # Check Facility::Node::Page
       #
       visit facility_pages_path(site: site, cid: facility_node)
-      click_on node.name
+      expect(page).to have_css(".tree-navi", text: "refresh")
+      within ".list-items" do
+        click_on node.name
+      end
       within "#facility-info" do
         expect(page).to have_css(".summary.image img[alt='#{image_page.image_alt}']")
 
@@ -99,7 +102,9 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
       # Edit
       #
       visit facility_images_path(site: site, cid: node)
-      click_on name
+      within ".list-items" do
+        click_on name
+      end
       click_on I18n.t("ss.links.edit")
       expect(page.all("form .addon-head h2").map(&:text).sort).to eq expected_addon_titles
       within "form#item-form" do
@@ -116,7 +121,9 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
       # Delete
       #
       visit facility_images_path(site: site, cid: node)
-      click_on name2
+      within ".list-items" do
+        click_on name2
+      end
       click_on I18n.t("ss.links.delete")
       within "form" do
         click_on I18n.t("ss.buttons.delete")
