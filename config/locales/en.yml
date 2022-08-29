@@ -203,6 +203,18 @@ en:
       division_after_blank: The first split destination has not been entered.
       add_after_blank: The new destination has not been entered.
       malformed_duration: Mulformed period.
+      password_short: must be at least 10 characters long
+      password_short_upcase: must be at least 10 uppercase alphabetical characters (A-Z).
+      password_short_downcase: must be at least 10 lowercase alphabetical characters (A-Z).
+      password_short_digit: must be at least 10 numbers (0-9) characters.
+      password_short_symbol: must be at least 10 symbols.
+      password_contains_prohibited_chars: contains prohibited characters.
+      password_min_change_chars: must contain at least 10 characters different from the previous one.
+      password_alphabet_only: only consists with alphabet characters.
+      password_numeric_only: only consists with number characters.
+      password_include_email: contains email address.
+      password_include_name: contains your name.
+      password_include_kana: contains your reading.
     template:
       body: Please check the following items.
       header:
