@@ -13,55 +13,66 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
 
   before { login_cms_user }
 
-  it "disabled" do
-    visit index_path
-    expect(page).to have_no_css(".maint-mode-text")
+  context "maintenance_mode is disabled" do
+    it do
+      visit index_path
+      expect(page).to have_no_css(".maint-mode-text")
+    end
   end
 
-  it "enabled" do
-    visit index_path
-    click_on I18n.t("ss.links.edit")
-    find("#addon-ss-agents-addons-maintenance_mode").click
-    within "form#item-form" do
-      find("#item_maintenance_mode").find("option[value='enabled']").select_option
-      fill_in "item[maint_remark]", with: "今日から明日までメンテナンスになります。"
-      wait_cbox_open do
-        within ".maint-mode" do
-          click_on "ユーザーを選択する"
+  context "maintenance_mode is enabled" do
+    let(:maint_remark) { "今日から明日までメンテナンスになります。" }
+    it do
+      visit index_path
+      click_on I18n.t("ss.links.edit")
+      find("#addon-ss-agents-addons-maintenance_mode").click
+      within "form#item-form" do
+        find("#item_maintenance_mode").find("option[value='enabled']").select_option
+        fill_in "item[maint_remark]", with: maint_remark
+
+        wait_cbox_open do
+          within ".maint-mode" do
+            click_on I18n.t("ss.apis.users.index")
+          end
         end
       end
-    end
-    wait_for_cbox do
-      within ".items" do
-        save_full_screenshot
-        click_on cms_user.name
+      wait_for_cbox do
+        within ".items" do
+          wait_cbox_close do
+            click_on cms_user.name
+          end
+        end
+      end
+      within "#item-form" do
+        click_on I18n.t("ss.buttons.save")
+      end
+      site1.reload
+      expect(site1.maintenance_mode).to eq "enabled"
+
+      visit sns_mypage_path
+      expect(page).to have_text(I18n.t("ss.under_maintenance_mode"))
+      expect(page).to have_link(site1.name, href: "/.s#{site1.id}/cms/contents")
+      click_on site1.name
+      expect(page).to have_no_css(".maint-mode-text")
+      visit sns_logout_path
+
+      # 除外ユーザーではないユーザーでログイン
+      within "form" do
+        fill_in "item[email]", with: user2.email
+        fill_in "item[password]", with: "pass"
+        click_button I18n.t("ss.login")
+      end
+      I18n.with_locale(user2.lang.try(:to_sym) || I18n.default_locale) do
+        visit sns_mypage_path
+        expect(page).to have_text(I18n.t("ss.under_maintenance_mode"))
+        expect(page).to have_no_link(site1.name, href: "/.s#{site1.id}/cms/contents")
+
+        visit cms_contents_path(site: site1)
+        expect(page).to have_text(site1.maint_remark)
+
+        visit cms_contents_path(site: site2)
+        expect(page).to have_no_text(site1.maint_remark)
       end
     end
-    within "#item-form" do
-      click_on I18n.t("ss.buttons.save")
-    end
-    site1.reload
-    expect(site1.maintenance_mode).to eq "enabled"
-
-    visit sns_mypage_path
-    expect(page).to have_text(I18n.t("ss.under_maintenance_mode"))
-    expect(page).to have_link(site1.name, href: "/.s#{site1.id}/cms/contents")
-    click_on site1.name
-    expect(page).to have_no_css(".maint-mode-text")
-    visit sns_logout_path
-
-    # 除外ユーザーではないユーザーでログイン
-    within "form" do
-      fill_in "item[email]", with: user2.email
-      fill_in "item[password]", with: "pass"
-      click_button I18n.t("ss.login")
-    end
-    expect(page).to have_text(I18n.t("ss.under_maintenance_mode"))
-    expect(page).not_to have_link(site1.name, href: "/.s#{site1.id}/cms/contents")
-    visit cms_contents_path(site: site1)
-    expect(page).to have_text(site1.maint_remark)
-
-    visit cms_contents_path(site: site2)
-    expect(page).not_to have_text(site1.maint_remark)
   end
 end
