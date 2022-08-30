@@ -109,6 +109,16 @@ module Cms::NodeHelper
     h.map { |c| c.html_safe }
   end
 
+  def link_to_layout(item)
+    url = item.parent ? node_layout_path(cid: item.parent, id: item) : cms_layout_path(id: item)
+    link_to(item.name, url)
+  end
+
+  def link_to_part(item)
+    url = item.parent ? node_part_path(cid: item.parent, id: item) : cms_part_path(id: item)
+    link_to(item.name, url)
+  end
+
   private
 
   def page_approval_request_expired?(item)

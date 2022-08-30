@@ -18,8 +18,10 @@
   <dd><%= @item.public? ? link_to(@item.full_url, @item.full_url, target: "_blank", rel: "noopener") : @item.full_url %></dd>
   <dd><div class="cms-preview-links"><%= safe_join cms_preview_links(@item), '|' %></div></dd>
 
+  <% if @item.layout %>
   <dt><%= @model.t :layout_id %></dt>
-  <dd><%= tryb { @item.layout.name }%></dd>
+  <dd><%= link_to_layout(@item.layout) %></dd>
+  <% end %>
 </dl>
 
 <%= render template: template_path if File.exist?(file_path) %>

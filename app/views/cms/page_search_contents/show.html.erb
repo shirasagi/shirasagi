@@ -19,13 +19,8 @@
         <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>"/></label>
         <nav class="tap-menu">
           <%= link_to t("cms.content"), item.private_show_path %>
-          <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank, rel: "noopener" %>
-          <% if @cur_site.mobile_enabled? %>
-            <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank, rel: "noopener" %>
-            <%= link_to(t('ss.links.mobile_preview'), cms_preview_path(path: item.mobile_preview_path), target: :_blank, rel: "noopener") %>
-          <% else %>
-            <%= link_to t('ss.links.preview'), cms_preview_path(path: item.preview_path), target: :_blank, rel: "noopener" %>
-          <% end %>
+          <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank, rel: "noopener" if item.public? %>
+          <%= safe_join cms_preview_links(item) %>
         </nav>
         <div class="info">
           <%= link_to item.name, item.private_show_path, class: "title" %>

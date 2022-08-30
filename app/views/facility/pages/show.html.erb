@@ -1,5 +1,9 @@
 <%= render "ss/crud/addon", addon: { head: t("modules.addons.facility/body"), id: "facility-info" } do %>
   <dl class="see body">
+    <dt><%= @model.t :basename %></dt>
+    <dd><%= @item.public? ? link_to(@item.full_url, @item.full_url, target: "_blank", rel: "noopener") : @item.full_url %></dd>
+    <dd><div class="cms-preview-links"><%= safe_join cms_preview_links(@item), '|' %></div></dd>
+
     <dt><%= @item.class.t :name %></dt>
     <dd><%= @item.name %></dd>
 

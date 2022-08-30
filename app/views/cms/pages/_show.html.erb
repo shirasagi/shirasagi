@@ -13,9 +13,9 @@
     <dd><div class="cms-preview-links"><%= safe_join cms_preview_links(@item), '|' %></div></dd>
   <% end %>
 
-  <% if @item.send(:layout_id).present? %>
+  <% if @item.layout %>
   <dt><%= @model.t :layout_id %></dt>
-  <dd><%= tryb{@item.layout.name} %></dd>
+  <dd><%= link_to_layout(@item.layout) %></dd>
   <% end %>
 
   <% if @item.try(:form) %>

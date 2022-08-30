@@ -744,6 +744,7 @@ ja:
       cms/tag_setting: タグ設定
       cms/tag: タグ
       cms/layout_html: レイアウト
+      cms/layout_part: 使用中パーツ
       cms/for_member_node: 会員向け設定
       cms/child_list: 子リスト表示
       cms/form/node: 定型フォーム
