@@ -141,7 +141,7 @@ class Cms::PageExporter
     drawer.column :event_name
     drawer.column :event_dates do
       drawer.body do |item|
-        if item.event_dates.present?
+        if item.respond_to?(:event_dates) && item.event_dates.present?
           item.event_dates.map { |d| I18n.l(d, format: :picker) }.join("\n")
         end
       end
