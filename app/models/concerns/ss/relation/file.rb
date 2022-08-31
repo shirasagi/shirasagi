@@ -12,6 +12,7 @@ module SS::Relation::File
       belongs_to name.to_sym, class_name: class_name.to_s
 
       attr_accessor "in_#{name}", "rm_#{name}", "in_#{name}_resizing"
+
       permit_params "#{name}_id", "in_#{name}", "rm_#{name}"
       permit_params "in_#{name}_resizing" => []
 
@@ -28,6 +29,9 @@ module SS::Relation::File
         Changes.save_relation_changes(self, name, class_name: class_name, default_resizing: resizing)
       end
       after_destroy { Changes.destroy_relation(self, name, send(name)) }
+      if respond_to?(:after_merge_branch)
+        after_merge_branch { Changes.transfer_owner_from_branch(self, name, send(name)) }
+      end
 
       expose_public_methods(name, static_state: static_state)
     end
@@ -149,6 +153,17 @@ module SS::Relation::File
       item.send("#{name}=", nil)
     end
 
+    def transfer_owner_from_branch(item, name, file)
+      return if file.blank?
+
+      branch = item.in_branch
+      return if branch.blank? || !SS::File.file_owned?(file, SS::Model.container_of(branch))
+
+      owner_item = SS::Model.container_of(item)
+      file.update(owner_item: owner_item)
+      branch.send("#{name}=", nil)
+    end
+
     def destroy_relation(item, name, file)
       return if file.blank?
 
@@ -171,7 +186,7 @@ module SS::Relation::File
       new_file.site_id = owner_item.site_id if owner_item.respond_to?(:site_id)
       new_file.user_id = cur_user.id if cur_user
       new_file.model ||= begin
-        if class_name == DEFAULT_FILE_CLASS_NAME || class_name == "Cms::Line::File"
+        if [ DEFAULT_FILE_CLASS_NAME, "Cms::Line::File" ].include?(class_name)
           owner_item.class.name.underscore
         else
           default_model(class_name)
