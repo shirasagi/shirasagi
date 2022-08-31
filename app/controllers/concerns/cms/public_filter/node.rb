@@ -20,7 +20,11 @@ module Cms::PublicFilter::Node
   end
 
   def render_node(node)
-    rest = @cur_main_path.sub(/^\/#{::Regexp.escape(node.filename)}/, "").sub(/\/index\.html$/, "")
+    action = @cur_main_path.sub(/^\/#{::Regexp.escape(node.filename)}/, "")
+
+    rest = action.delete_suffix("index.html")
+    rest = action if ::File.extname(rest).present?
+
     path = "/.s#{@cur_site.id}/nodes/#{node.route}#{rest}"
     spec = recognize_agent path
     return unless spec
