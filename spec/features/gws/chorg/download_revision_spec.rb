@@ -49,8 +49,8 @@ describe "gws_chorg_download_revision", type: :feature, dbscope: :example do
         sources = add_changesets.map { |changeset| changeset[I18n.t("chorg.import.changeset.source")] }.uniq
         destinations = add_changesets.map { |changeset| changeset[I18n.t("chorg.import.changeset.destination")] }.uniq
 
-        expect(sources).to match_array [nil]
-        expect(destinations).to match_array changeset0.destinations.map { |item| item["name"] }
+        expect(sources).to match_array([nil])
+        expect(destinations).to match_array(changeset0.destinations.map { |item| item["name"] })
 
         # move
         move_changesets = changesets[I18n.t("chorg.options.changeset_type.move")]
@@ -60,8 +60,8 @@ describe "gws_chorg_download_revision", type: :feature, dbscope: :example do
         sources = move_changesets.map { |changeset| changeset[I18n.t("chorg.import.changeset.source")] }.uniq
         destinations = move_changesets.map { |changeset| changeset[I18n.t("chorg.import.changeset.destination")] }.uniq
 
-        expect(sources).to match_array changeset1.sources.map { |item| item["name"] }
-        expect(destinations).to match_array changeset1.destinations.map { |item| item["name"] }
+        expect(sources).to match_array(changeset1.sources.map { |item| item["name"] })
+        expect(destinations).to match_array(changeset1.destinations.map { |item| item["name"] })
 
         # unify
         unify_changesets = changesets[I18n.t("chorg.options.changeset_type.unify")]
@@ -71,8 +71,8 @@ describe "gws_chorg_download_revision", type: :feature, dbscope: :example do
         sources = unify_changesets.map { |changeset| changeset[I18n.t("chorg.import.changeset.source")] }.uniq
         destinations = unify_changesets.map { |changeset| changeset[I18n.t("chorg.import.changeset.destination")] }.uniq
 
-        expect(sources).to match_array changeset2.sources.map { |item| item["name"] }
-        expect(destinations).to match_array changeset2.destinations.map { |item| item["name"] }
+        expect(sources).to match_array(changeset2.sources.map { |item| item["name"] })
+        expect(destinations).to match_array(changeset2.destinations.map { |item| item["name"] })
 
         # division
         division_changesets = changesets[I18n.t("chorg.options.changeset_type.division")]
@@ -82,8 +82,8 @@ describe "gws_chorg_download_revision", type: :feature, dbscope: :example do
         sources = division_changesets.map { |changeset| changeset[I18n.t("chorg.import.changeset.source")] }.uniq
         destinations = division_changesets.map { |changeset| changeset[I18n.t("chorg.import.changeset.destination")] }.uniq
 
-        expect(sources).to match_array changeset3.sources.map { |item| item["name"] }
-        expect(destinations).to match_array changeset3.destinations.map { |item| item["name"] }
+        expect(sources).to match_array(changeset3.sources.map { |item| item["name"] })
+        expect(destinations).to match_array(changeset3.destinations.map { |item| item["name"] })
 
         # delete
         delete_changesets = changesets[I18n.t("chorg.options.changeset_type.delete")]
@@ -93,8 +93,8 @@ describe "gws_chorg_download_revision", type: :feature, dbscope: :example do
         sources = delete_changesets.map { |changeset| changeset[I18n.t("chorg.import.changeset.source")] }.uniq
         destinations = delete_changesets.map { |changeset| changeset[I18n.t("chorg.import.changeset.destination")] }.uniq
 
-        expect(sources).to match_array changeset4.sources.map { |item| item["name"] }
-        expect(destinations).to match_array [nil]
+        expect(sources).to match_array(changeset4.sources.map { |item| item["name"] })
+        expect(destinations).to match_array([nil])
       end
     end
   end

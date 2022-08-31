@@ -59,11 +59,10 @@ describe "gws_shared_address_management_addresses", type: :feature, dbscope: :ex
 
         I18n.with_locale(I18n.default_locale) do
           SS::Csv.open(downloads.first) do |csv|
-          csv = ::CSV.open(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
             csv_table = csv.read
             expect(csv_table.length).to eq 0
             %i[id member_id address_group_id name kana company title tel email memo].each do |k|
-              expect(csv.headers).to include(Gws::SharedAddress::Address.t(k))
+              expect(csv_table.headers).to include(Gws::SharedAddress::Address.t(k))
             end
           end
         end
