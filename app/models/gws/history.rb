@@ -7,6 +7,7 @@ class Gws::History
   if client = Mongoid::Config.clients[:gws_history]
     store_in client: :gws_history, database: client[:database]
   end
+  index(site_id: 1, created: 1)
 
   seqid :id
   field :session_id, type: String
