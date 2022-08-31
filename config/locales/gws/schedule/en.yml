@@ -150,6 +150,7 @@ en:
     achievement_rate_unit: "%"
     category_not_assigined: No project or process
     discussion_forum_not_assigined: No electronic conference room
+    member: Person in charge
     buttons:
       finish: Complete
       revert: Revert to incomplete
