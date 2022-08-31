@@ -19,16 +19,18 @@ module Gws::Addon::Import
       def to_csv
         groups = SS::Group.active.pluck(:_id, :name).uniq.to_h
         users = SS::User.active.pluck(:_id, :uid).uniq.to_h
-        CSV.generate do |data|
-          data << csv_headers.map { |k| t k }
-          criteria.each do |item|
-            line = []
-            line << item.id
-            line << item.name
-            line << item.order
-            line << item.member_group_ids.map { |m| groups[m] }.join("\n")
-            line << item.member_ids.map { |m| users[m] }.join("\n")
-            data << line
+        I18n.with_locale(I18n.default_locale) do
+          CSV.generate do |data|
+            data << csv_headers.map { |k| t k }
+            criteria.each do |item|
+              line = []
+              line << item.id
+              line << item.name
+              line << item.order
+              line << item.member_group_ids.map { |m| groups[m] }.join("\n")
+              line << item.member_ids.map { |m| users[m] }.join("\n")
+              data << line
+            end
           end
         end
       end
@@ -44,8 +46,10 @@ module Gws::Addon::Import
       @groups = Gws::Group.site(cur_site).pluck(:name, :_id).uniq.to_h
       @users = Gws::User.site(cur_site).pluck(:uid, :_id).uniq.to_h
 
-      table.each_with_index do |row, i|
-        update_row(row, i + 2)
+      I18n.with_locale(I18n.default_locale) do
+        table.each_with_index do |row, i|
+          update_row(row, i + 2)
+        end
       end
       return errors.empty?
     end

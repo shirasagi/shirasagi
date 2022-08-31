@@ -177,19 +177,21 @@ class Opendata::Harvest::Importer
 
     class << self
       def to_csv
-        CSV.generate do |data|
-          data << %w(id order category_name category_filename type value operator).map { |k| t(k) }
-          criteria.each do |item|
-            item.conditions.each do |cond|
-              line = []
-              line << item.id
-              line << item.order
-              line << item.category.name
-              line << item.category.filename
-              line << I18n.t("opendata.type_condition_options.#{cond["type"]}")
-              line << cond["value"]
-              line << I18n.t("opendata.operator_condition_options.#{cond["operator"]}")
-              data << line
+        I18n.with_locale(I18n.default_locale) do
+          CSV.generate do |data|
+            data << %w(id order category_name category_filename type value operator).map { |k| t(k) }
+            criteria.each do |item|
+              item.conditions.each do |cond|
+                line = []
+                line << item.id
+                line << item.order
+                line << item.category.name
+                line << item.category.filename
+                line << I18n.t("opendata.type_condition_options.#{cond["type"]}")
+                line << cond["value"]
+                line << I18n.t("opendata.operator_condition_options.#{cond["operator"]}")
+                data << line
+              end
             end
           end
         end

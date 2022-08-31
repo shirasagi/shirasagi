@@ -59,27 +59,29 @@ class Gws::Facility::State::DailyController < ApplicationController
 
   def download
     filename = "facility_#{@target_time.strftime('%Y%m%d')}_state_#{Time.zone.now.to_i}.csv"
-    fields = %w(facility start_at end_at section user purpose)
-    field_names = fields.map { |m| I18n.t("gws/facility.state.#{m}") }
 
     enum = Enumerator.new do |y|
-      y << encode_sjis(field_names.to_csv)
+      I18n.with_locale(I18n.default_locale) do
+        fields = %w(facility start_at end_at section user purpose)
+        field_names = fields.map { |m| I18n.t("gws/facility.state.#{m}") }
+        y << encode_sjis(field_names.to_csv)
 
-      @items.each do |item|
-        item.plans.each do |plan|
-          cols = []
-          cols << item.name
-          cols << I18n.l(plan.start_at, format: :gws_long)
-          cols << I18n.l(plan.end_at, format: :gws_long)
-          cols << plan.section_name
-          cols << plan.user.try(:name)
+        @items.each do |item|
+          item.plans.each do |plan|
+            cols = []
+            cols << item.name
+            cols << I18n.l(plan.start_at, format: :gws_long)
+            cols << I18n.l(plan.end_at, format: :gws_long)
+            cols << plan.section_name
+            cols << plan.user.try(:name)
 
-          if plan.readable?(@cur_user, site: @cur_site)
-            cols << plan.name
-          else
-            cols << I18n.t("gws/schedule.private_plan")
+            if plan.readable?(@cur_user, site: @cur_site)
+              cols << plan.name
+            else
+              cols << I18n.t("gws/schedule.private_plan")
+            end
+            y << encode_sjis(cols.to_csv)
           end
-          y << encode_sjis(cols.to_csv)
         end
       end
     end

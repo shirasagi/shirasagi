@@ -22,15 +22,17 @@ class Webmail::Role
     end
 
     def to_csv
-      CSV.generate do |data|
-        data << csv_headers.map { |k| t k }
-        criteria.each do |item|
-          line = []
-          line << item.id
-          line << item.name
-          line << item.localized_permissions.join("\n")
-          line << item.permission_level
-          data << line
+      I18n.with_locale(I18n.default_locale) do
+        CSV.generate do |data|
+          data << csv_headers.map { |k| t k }
+          criteria.each do |item|
+            line = []
+            line << item.id
+            line << item.name
+            line << item.localized_permissions.join("\n")
+            line << item.permission_level
+            data << line
+          end
         end
       end
     end

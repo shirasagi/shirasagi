@@ -19,22 +19,24 @@ class Board::AnpiPost
     public
 
     def to_csv
-      CSV.generate do |data|
-        data << %w(name kana tel addr sex age email text member_id public_scope point).map { |k| t k }
-        criteria.each do |item|
-          line = []
-          line << item.name
-          line << item.kana
-          line << item.tel
-          line << item.addr
-          line << item.label(:sex)
-          line << item.age
-          line << item.email
-          line << item.text
-          line << item.member.name
-          line << item.label(:public_scope)
-          line << "#{item.point.loc.lat},#{item.point.loc.lng}"
-          data << line
+      I18n.with_locale(I18n.default_locale) do
+        CSV.generate do |data|
+          data << %w(name kana tel addr sex age email text member_id public_scope point).map { |k| t k }
+          criteria.each do |item|
+            line = []
+            line << item.name
+            line << item.kana
+            line << item.tel
+            line << item.addr
+            line << item.label(:sex)
+            line << item.age
+            line << item.email
+            line << item.text
+            line << item.member.name
+            line << item.label(:public_scope)
+            line << "#{item.point.loc.lat},#{item.point.loc.lng}"
+            data << line
+          end
         end
       end
     end

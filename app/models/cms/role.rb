@@ -17,9 +17,11 @@ class Cms::Role
 
   class << self
     def to_csv(site, encode = nil)
-      CSV.generate do |data|
-        data << header
-        Cms::Role.site(site).each { |item| data << row(item) }
+      I18n.with_locale(I18n.default_locale) do
+        CSV.generate do |data|
+          data << header
+          Cms::Role.site(site).each { |item| data << row(item) }
+        end
       end
     end
 

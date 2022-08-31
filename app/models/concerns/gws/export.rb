@@ -11,11 +11,13 @@ module Gws::Export
   def export_csv(items)
     fields = export_fields
 
-    csv = CSV.generate do |data|
-      data << export_field_names
-      items.each do |item|
-        line = fields.map { |k| item.send(k) }
-        data << export_convert_item(item, line)
+    csv = I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << export_field_names
+        items.each do |item|
+          line = fields.map { |k| item.send(k) }
+          data << export_convert_item(item, line)
+        end
       end
     end
 
@@ -32,20 +34,22 @@ module Gws::Export
     validate_import_file
     return false unless errors.empty?
 
-    field_keys = export_fields
-    field_vals = export_field_names
+    I18n.with_locale(I18n.default_locale) do
+      field_keys = export_fields
+      field_vals = export_field_names
 
-    each_csv do |row, no|
-      no += 1
-      data = {}
-      row.each do |k, v|
-        idx = field_vals.index(k)
-        data[field_keys[idx]] = v if idx
+      each_csv do |row, no|
+        no += 1
+        data = {}
+        row.each do |k, v|
+          idx = field_vals.index(k)
+          data[field_keys[idx]] = v if idx
+        end
+
+        next if data.blank?
+        item = import_data(data.with_indifferent_access)
+        errors.add :base, "##{no} " + item.errors.full_messages.join("\n") if item.errors.present?
       end
-
-      next if data.blank?
-      item = import_data(data.with_indifferent_access)
-      errors.add :base, "##{no} " + item.errors.full_messages.join("\n") if item.errors.present?
     end
 
     errors.empty?

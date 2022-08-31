@@ -41,19 +41,21 @@ class Inquiry::ResultsController < ApplicationController
   end
 
   def download
-    csv = CSV.generate do |data|
-      data << [t("inquiry.total_count"), @answer_count]
-      @columns.each do |column|
-        data << []
-        data << [column.name]
-        if /(select|radio_button|check_box)/.match?(column.input_type)
-          column.select_options.each do |opts|
-            data << [opts, @aggregation[{ "column_id" => column.id, "value" => opts }]]
-          end
-        else
-          column.answer_data(@answer_data_opts).each do |item|
-            if item.value.present?
-              data << [item.value]
+    csv = I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << [t("inquiry.total_count"), @answer_count]
+        @columns.each do |column|
+          data << []
+          data << [column.name]
+          if /(select|radio_button|check_box)/.match?(column.input_type)
+            column.select_options.each do |opts|
+              data << [opts, @aggregation[{ "column_id" => column.id, "value" => opts }]]
+            end
+          else
+            column.answer_data(@answer_data_opts).each do |item|
+              if item.value.present?
+                data << [item.value]
+              end
             end
           end
         end

@@ -43,30 +43,32 @@ class Chorg::EntityLog::Exporter
   private
 
   def items_to_csv(entity_site, entity_model, items)
-    csv = CSV.generate do |line|
-      line << I18n.t("chorg.entity_log.headers")
-      items.each do |entity_index, item|
-        url = ::File.join(@base_url, @task.entity_log_url(entity_site, entity_model, entity_index))
-        mypage_url = (item["mypage_url"].present? ? ::File.join(@base_url, item["mypage_url"]) : "")
+    csv = I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |line|
+        line << I18n.t("chorg.entity_log.headers")
+        items.each do |entity_index, item|
+          url = ::File.join(@base_url, @task.entity_log_url(entity_site, entity_model, entity_index))
+          mypage_url = (item["mypage_url"].present? ? ::File.join(@base_url, item["mypage_url"]) : "")
 
-        change_label = ""
-        if item['creates']
-          change_label = I18n.t('chorg.views.chorg/entity_log.options.operation.creates')
-        elsif item['changes']
-          change_label = I18n.t('chorg.views.chorg/entity_log.options.operation.changes')
-        elsif item['deletes']
-          change_label = I18n.t('chorg.views.chorg/entity_log.options.operation.deletes')
+          change_label = ""
+          if item['creates']
+            change_label = I18n.t('chorg.views.chorg/entity_log.options.operation.creates')
+          elsif item['changes']
+            change_label = I18n.t('chorg.views.chorg/entity_log.options.operation.changes')
+          elsif item['deletes']
+            change_label = I18n.t('chorg.views.chorg/entity_log.options.operation.deletes')
+          end
+
+          row = []
+          row << item["model_label"]
+          row << item["class_label"]
+          row << item["name"]
+          row << item["id"]
+          row << change_label
+          row << url
+          row << mypage_url
+          line << row
         end
-
-        row = []
-        row << item["model_label"]
-        row << item["class_label"]
-        row << item["name"]
-        row << item["id"]
-        row << change_label
-        row << url
-        row << mypage_url
-        line << row
       end
     end
     csv = "\uFEFF".freeze + csv

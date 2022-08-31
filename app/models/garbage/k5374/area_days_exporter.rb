@@ -70,20 +70,24 @@ class Garbage::K5374::AreaDaysExporter < Garbage::K5374::BaseExporter
   end
 
   def area_days_csv
-    csv = CSV.generate do |data|
-      data << area_days_headers
-      @area_days.each do |row|
-        data << row
+    csv = I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << area_days_headers
+        @area_days.each do |row|
+          data << row
+        end
       end
     end
     ("\uFEFF" + csv).encode("UTF-8", invalid: :replace, undef: :replace)
   end
 
   def remarks_csv
-    csv = CSV.generate do |data|
-      data << remarks_headers
-      @remarks.each do |row|
-        data << row
+    csv = I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << remarks_headers
+        @remarks.each do |row|
+          data << row
+        end
       end
     end
     ("\uFEFF" + csv).encode("UTF-8", invalid: :replace, undef: :replace)

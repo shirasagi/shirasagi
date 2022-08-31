@@ -72,14 +72,16 @@ module Voice::FilesFilter
   def send_csv(items)
     require "csv"
 
-    csv = CSV.generate do |data|
-      data << %w(URL Error Updated)
-      items.each do |item|
-        line = []
-        line << item.url
-        line << item.error
-        line << item.updated.strftime("%Y-%m-%d %H:%M")
-        data << line
+    csv = I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << %w(URL Error Updated)
+        items.each do |item|
+          line = []
+          line << item.url
+          line << item.error
+          line << item.updated.strftime("%Y-%m-%d %H:%M")
+          data << line
+        end
       end
     end
 
