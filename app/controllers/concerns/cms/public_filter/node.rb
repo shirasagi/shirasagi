@@ -103,7 +103,7 @@ module Cms::PublicFilter::Node
       end
     end
 
-    max = opts[:max] || 9999
+    max = opts[:max] || 1000
     num = max
 
     2.upto(max) do |i|
