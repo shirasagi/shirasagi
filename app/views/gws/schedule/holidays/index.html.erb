@@ -1,9 +1,11 @@
 <%= jquery do %>
-Gws_Schedule_Calendar.render('#calendar', {
-  tapMenu: <%= @model.allowed?(:create, @cur_user, site: @cur_site) %>,
-  restUrl: '<%= url_for action: :index %>',
-  eventSources: [{ url: '<%= url_for action: :events, format: :json %>?<%= search_query %>' }]
-}, <%== (params[:calendar] || {}).to_json %>);
+  $(document).on("gws:calendarInitialized", function() {
+    Gws_Schedule_Calendar.render('#calendar', {
+      tapMenu: <%= @model.allowed?(:create, @cur_user, site: @cur_site) %>,
+      restUrl: '<%= url_for action: :index %>',
+      eventSources: [{ url: '<%= url_for action: :events, format: :json %>?<%= search_query %>' }]
+    }, <%== (params[:calendar] || {}).to_json %>);
+  });
 <% end %>
 
 <section class="main-box gws-schedule-box">
