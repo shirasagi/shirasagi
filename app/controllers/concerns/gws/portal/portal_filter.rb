@@ -11,7 +11,7 @@ module Gws::Portal::PortalFilter
   # override Gws::BaseFilter#set_gws_assets
   def set_gws_assets
     super
-    javascript("gws/calendar")
+    javascript("gws/calendar", defer: true)
   end
 
   def fix_params
