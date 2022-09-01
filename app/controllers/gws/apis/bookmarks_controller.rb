@@ -25,15 +25,8 @@ class Gws::Apis::BookmarksController < ApplicationController
   def create
     @item = @model.new(get_params)
     return render_create(false) unless @item.allowed?(:edit, @cur_user, site: @cur_site, strict: true)
-    model = params.dig(:item, :model).sub(/gws\/(?<model>[^\/]*)\/?.*/) do
-      ::Regexp.last_match[:model]
-    end
-    if @model::BOOKMARK_MODEL_TYPES.include?(model)
-      @item.bookmark_model = model
-    else
-      @item.bookmark_model = 'other'
-    end
 
+    @item.bookmark_model = @model.detect_model(params.dig(:item, :model).to_s, @item.url)
     @item.save
     render json: { bookmark_id: @item.id, notice: I18n.t('gws/bookmark.notice.save') }
   end

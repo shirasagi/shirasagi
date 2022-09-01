@@ -6,6 +6,10 @@ class Gws::BookmarksController < ApplicationController
 
   private
 
+  def pre_params
+    { bookmark_model: Gws::Bookmark::FALLBACK_BOOKMARK_MODEL_TYPE }
+  end
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
   end
