@@ -30,7 +30,6 @@ gem 'jquery-minicolors-rails'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'marked-rails'
-gem 'momentjs-rails'
 
 # Additional (alphabetical order)
 gem 'addressable', require: 'addressable/uri'

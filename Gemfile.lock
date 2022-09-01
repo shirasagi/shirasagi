@@ -780,7 +780,6 @@ DEPENDENCIES
   marcel
   marked-rails
   mini_magick
-  momentjs-rails
   mongo_session_store
   mongoid!
   mongoid-geospatial
