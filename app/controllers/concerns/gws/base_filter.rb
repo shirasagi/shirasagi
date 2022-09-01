@@ -30,8 +30,8 @@ module Gws::BaseFilter
   end
 
   def set_gws_assets
-    SS.config.gws.stylesheets.each { |m| stylesheet(m) }
-    SS.config.gws.javascripts.each { |m| javascript(m) }
+    SS.config.gws.stylesheets.each { |path, options| options ? stylesheet(path, **options.symbolize_keys) : stylesheet(path) }
+    SS.config.gws.javascripts.each { |path, options| options ? javascript(path, **options.symbolize_keys) : javascript(path) }
   end
 
   def set_current_site

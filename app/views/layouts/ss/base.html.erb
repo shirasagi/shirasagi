@@ -17,7 +17,7 @@
   end
 %>
 <title><%= title %></title>
-<%= safe_join controller.stylesheets.map { |path| stylesheet_link_tag(path, media: "all") }, "\n" %>
+<%= safe_join controller.stylesheets.map { |path, options| stylesheet_link_tag(path, options || { media: "all" }) }, "\n" %>
 <%= safe_join controller.javascripts.map { |path, options| javascript_include_tag(path, options || {}) }, "\n" %>
 <!--[if lt IE 9]>
 <script src="/assets/js/html5.js"></script>
