@@ -57,7 +57,7 @@ module Gws::Portal::PortalFilter
         when 'read'
           @notices = @notices.and_read(@cur_user)
         when 'both'
-          @notices = @notices
+          # nothing to do
         else # unread
           @notices = @notices.and_unread(@cur_user)
         end
