@@ -131,13 +131,13 @@ RSpec.configure do |config|
     Capybara.app_host = nil
   end
 
-  config.after(:example) do |example|
-    Rails.cache.clear if Rails.cache
-  end
-
   config.before(:example, type: :feature) do |example|
     page.reset!
     # puts '# ' + example.metadata[:full_description]
+  end
+
+  config.after(:example) do |example|
+    Rails.cache.clear if Rails.cache
   end
 
   config.after(:example, type: :feature) do

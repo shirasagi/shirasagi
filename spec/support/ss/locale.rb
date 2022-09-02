@@ -2,18 +2,8 @@ module SS
   module LocaleSupport
     module_function
 
-    def sample_lang(example)
-      type = example.metadata[:type]
-      return I18n.default_locale if type.blank?
-
-      type = type.to_sym
-      return I18n.default_locale unless %i[feature].include?(type)
-
-      languages = Array(example.metadata[:locale].presence).map(&:to_sym)
-      if languages.blank?
-        languages = I18n.available_locales
-      end
-
+    def sample_lang
+      languages = I18n.available_locales
       if ENV["RSPEC_LOCALE"].present?
         languages &= ENV["RSPEC_LOCALE"].split(",").map(&:to_sym)
       end
@@ -26,23 +16,21 @@ module SS
     end
 
     def current_lang
-      @current_lang
-    end
-
-    def current_lang=(lang)
-      @current_lang = lang
+      @current_lang ||= begin
+        lang = SS::LocaleSupport.sample_lang
+        puts "run specs with lang=#{lang}"
+        lang
+      end
     end
 
     module Hooks
       def self.extended(obj)
         obj.around(:all) do |example|
-          lang = SS::LocaleSupport.current_lang = SS::LocaleSupport.sample_lang(example)
-          Rails.logger.tagged(lang.to_s) do
+          Rails.logger.tagged(SS::LocaleSupport.current_lang.to_s) do
             example.run
           end
-        ensure
-          SS::LocaleSupport.current_lang = nil
         end
+
         # rubocop:disable Rails/I18nLocaleAssignment
         obj.after(:each) do
           I18n.locale = I18n.default_locale if I18n.locale != I18n.default_locale
