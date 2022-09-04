@@ -236,6 +236,38 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
         end
       end
     end
+
+    context "when page has ready branch page" do
+      let!(:item1_branch) { create :cms_page, cur_node: node, master: item1, state: "ready", group_ids: [group.id] }
+      let(:edit_ready_branch_path) { edit_node_page_path site.id, node, item1_branch }
+
+      before do
+        item1.branch_ids = [ item1_branch.id ]
+        item1.save!
+      end
+
+      context "with admin" do
+        before { login_cms_user }
+
+        it do
+          visit edit_ready_branch_path
+          expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.withdraw")}']")
+          expect(page).to have_no_css(".branch_save")
+          expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
+        end
+      end
+
+      context "with user1" do
+        before { login_user user1 }
+
+        it do
+          visit edit_ready_branch_path
+          expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.withdraw")}']")
+          expect(page).to have_no_css(".branch_save")
+          expect(page).to have_no_css(".publish_save")
+        end
+      end
+    end
   end
 
   context "with event/page" do
