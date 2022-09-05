@@ -5,6 +5,7 @@ module SS::Model::Group
   include SS::Scope::ActivationDate
   include Ldap::Addon::Group
   include SS::Fields::DependantNaming
+  include SS::Liquidization
 
   attr_accessor :in_password
 
@@ -47,6 +48,19 @@ module SS::Model::Group
       ]
       where("$and" => [{ "$or" => conditions }])
     }
+
+    liquidize do
+      export as: :to_s do
+        name
+      end
+      export :name
+      export :full_name
+      export :section_name
+      export :trailing_name
+      export :last_name do
+        name.split("/").last
+      end
+    end
   end
 
   module ClassMethods
