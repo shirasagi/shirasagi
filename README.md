@@ -81,8 +81,8 @@ gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
 # \curl -sSL https://rvm.io/mpapis.asc | gpg --import -
 # \curl -sSL https://get.rvm.io | sudo bash -s stable
 # source /etc/profile
-# rvm install 2.7.5 --disable-binary
-# rvm use 2.7.5 --default
+# rvm install 3.0.4 --disable-binary
+# rvm use 3.0.4 --default
 # gem install bundler
 ```
 
