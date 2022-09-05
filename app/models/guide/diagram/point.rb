@@ -9,10 +9,12 @@ class Guide::Diagram::Point
 
   field :name, type: String
   field :id_name, type: String
+  field :explanation, type: String
   field :order, type: Integer, default: 0
 
   permit_params :name
   permit_params :id_name
+  permit_params :explanation
   permit_params :order
 
   validates :name, presence: true

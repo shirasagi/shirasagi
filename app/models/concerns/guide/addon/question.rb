@@ -14,7 +14,9 @@ module Guide::Addon
 
       permit_params :question_type
       permit_params :check_type
-      permit_params in_edges: [ :value, :question_type, point_ids: [] ]
+      permit_params in_edges: [
+        :value, :question_type, :explanation, point_ids: []
+      ]
 
       before_validation :set_check_type, if: ->{ question_type == "yes_no" }
 

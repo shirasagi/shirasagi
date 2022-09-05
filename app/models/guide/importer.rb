@@ -42,6 +42,14 @@ class Guide::Importer
     end
   end
 
+  def explanation_headers
+    @explanation_headers ||= begin
+      headers = @row.headers.map { |v| v.scan(/^(#{I18n.t("guide.explanation")}(\d+))$/) }.flatten(1)
+      headers = headers.map { |v, idx| (idx.to_i > 0) ? [v, (idx.to_i - 1)] : nil }.compact
+      headers
+    end
+  end
+
   def encode_sjis(str)
     str.encode("SJIS", invalid: :replace, undef: :replace)
   end
