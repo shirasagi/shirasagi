@@ -129,4 +129,18 @@ describe Gws::Notice::Post, type: :model, dbscope: :example do
       end
     end
   end
+
+  describe ".search" do
+    context "with keyword" do
+      subject! do
+        create(:gws_notice_post, cur_site: site, cur_user: user, folder: folder1, name: name, text: text1)
+      end
+
+      it do
+        expect(described_class.search(keyword: name)).to have(1).items
+        expect(described_class.search(keyword: text1)).to have(1).items
+        expect(described_class.search(keyword: unique_id)).to be_blank
+      end
+    end
+  end
 end
