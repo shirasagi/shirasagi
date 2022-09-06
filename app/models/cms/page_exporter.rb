@@ -59,8 +59,8 @@ class Cms::PageExporter
 
   private
 
-  def mode_default?
-    mode.nil? || mode == "default"
+  def mode_article?
+    mode.nil? || mode == "article"
   end
 
   def mode_faq?
@@ -80,7 +80,7 @@ class Cms::PageExporter
     drawer.column :layout do
       drawer.body { |item| Cms::Layout.where(id: item.layout_id).pluck(:name).first }
     end
-    if mode_default?
+    if mode_article?
       drawer.column :body_layout_id do
         drawer.body { |item| Cms::BodyLayout.where(id: item.body_layout_id).pluck(:name).first }
       end
@@ -112,7 +112,7 @@ class Cms::PageExporter
 
   def draw_body(drawer)
     drawer.column :html
-    if mode_default?
+    if mode_article?
       drawer.column :body_part do
         drawer.body do |item|
           next if !item.respond_to?(:body_parts) || item.body_parts.blank?

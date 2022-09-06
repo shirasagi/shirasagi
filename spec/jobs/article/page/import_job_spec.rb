@@ -66,7 +66,7 @@ describe Article::Page::ImportJob, dbscope: :example do
         filename = "#{unique_id}.csv"
         csv_file = SS::TempFile.create_empty!(name: filename, filename: filename, content_type: 'text/csv') do |file|
           ::File.open(file.path, "wb") do |f|
-            exporter = Cms::PageExporter.new(site: site, criteria: Article::Page.site(site).node(source_node))
+            exporter = Cms::PageExporter.new(mode: "article", site: site, criteria: Article::Page.site(site).node(source_node))
             exporter.enum_csv(encoding: "UTF-8").each do |csv_row|
               f.write(csv_row)
             end
