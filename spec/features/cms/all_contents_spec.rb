@@ -26,10 +26,25 @@ describe "cms_all_contents", type: :feature, dbscope: :example do
       expect(page.response_headers["Transfer-Encoding"]).to eq "chunked"
       csv = ::SS::ChunkReader.new(page.html).to_a.join
       csv = csv.encode("UTF-8", "SJIS")
-      csv = ::CSV.parse(csv)
+      csv = ::CSV.parse(csv, headers: true)
 
-      expect(csv.length).to eq 4
-      expect(csv[0]).to eq Cms::AllContent.header
+      expect(csv.length).to eq 3
+      expect(csv.headers).to include(I18n.t("all_content.page_id"), I18n.t("all_content.node_id"), I18n.t("all_content.route"))
+      csv[0].tap do |row|
+        expect(row[I18n.t("all_content.page_id")]).to be_present
+        expect(row[I18n.t("all_content.node_id")]).to be_blank
+        expect(row[I18n.t("all_content.route")]).to be_present
+      end
+      csv[1].tap do |row|
+        expect(row[I18n.t("all_content.page_id")]).to be_blank
+        expect(row[I18n.t("all_content.node_id")]).to be_present
+        expect(row[I18n.t("all_content.route")]).to be_present
+      end
+      csv[2].tap do |row|
+        expect(row[I18n.t("all_content.page_id")]).to be_blank
+        expect(row[I18n.t("all_content.node_id")]).to be_present
+        expect(row[I18n.t("all_content.route")]).to be_present
+      end
     end
   end
 

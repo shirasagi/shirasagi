@@ -4,10 +4,10 @@ class Cms::PageExporter
   attr_accessor :mode, :site, :criteria
 
   class << self
-    def category_name_tree(item)
-      return [] unless item.respond_to?(:categories)
+    def category_name_tree(_item, categories)
+      return [] if categories.blank?
 
-      triplets = Cms::Node.in(id: item.category_ids).pluck(:id, :site_id, :filename)
+      triplets = categories.pluck(:id, :site_id, :filename)
       triplets.map do |id, site_id, filename|
         filename_parts = filename.split('/')
         filenames = Array.new(filename_parts.length) do |i|
@@ -26,15 +26,21 @@ class Cms::PageExporter
     drawer = SS::Csv.draw(:export, context: self) do |drawer|
       draw_basic(drawer)
       draw_meta(drawer)
+      if mode_all?
+        draw_list(drawer)
+      end
       draw_faq(drawer) if mode_faq?
       if has_form
         draw_form(drawer, options[:form])
       else
         draw_body(drawer)
       end
+      draw_files(drawer)
       draw_event_body(drawer) if mode_event?
+      draw_st_category(drawer) if mode_all?
       draw_category(drawer)
       draw_event_date(drawer)
+      draw_map(drawer) unless mode_faq?
       draw_related_pages(drawer)
       draw_crumb(drawer) unless mode_event?
       draw_contact(drawer) unless mode_event?
@@ -71,9 +77,27 @@ class Cms::PageExporter
     mode == "event"
   end
 
+  def mode_all?
+    mode == "all"
+  end
+
   def draw_basic(drawer)
+    if mode_all?
+      drawer.column :page_id do
+        drawer.head { I18n.t("all_content.page_id") }
+        drawer.body { |item| item.is_a?(Cms::Model::Page) ? item.id : nil }
+      end
+      drawer.column :node_id do
+        drawer.head { I18n.t("all_content.node_id") }
+        drawer.body { |item| item.is_a?(Cms::Model::Node) ? item.id : nil }
+      end
+      drawer.column :route do
+        drawer.head { I18n.t("all_content.route") }
+        drawer.body { |item| item.route }
+      end
+    end
     drawer.column :filename do
-      drawer.body { |item| item.basename }
+      drawer.body { |item| item.try(:basename) }
     end
     drawer.column :name
     drawer.column :index_name
@@ -106,6 +130,57 @@ class Cms::PageExporter
     drawer.column :summary_html
   end
 
+  def draw_list(drawer)
+    drawer.column :conditions do
+      drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.conditions") }
+    end
+    # drawer.column :condition_forms
+    drawer.column :sort, type: :label do
+      drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.sort") }
+    end
+    drawer.column :limit do
+      drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.limit") }
+    end
+    drawer.column :new_days do
+      drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.new_days") }
+    end
+    drawer.column :loop_format, type: :label do
+      drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.loop_format") }
+    end
+    drawer.column :upper_html do
+      drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.upper_html") }
+    end
+    drawer.column :loop_setting_id do
+      drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.loop_setting_id") }
+      drawer.body do |item|
+        if item.respond_to?(:loop_setting)
+          item.loop_setting.try(:name)
+        end
+      end
+    end
+    drawer.column :loop_html do
+      drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.loop_html") }
+    end
+    drawer.column :lower_html do
+      drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.lower_html") }
+    end
+    drawer.column :loop_liquid do
+      drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.loop_liquid") }
+    end
+    drawer.column :no_items_display_state do
+      drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.no_items_display_state") }
+    end
+    drawer.column :substitute_html do
+      drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.substitute_html") }
+    end
+    drawer.column :sort_column_name do
+      drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.sort_column_name") }
+    end
+    drawer.column :sort_column_direction do
+      drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.sort_column_direction") }
+    end
+  end
+
   def draw_faq(drawer)
     drawer.column :question
   end
@@ -122,6 +197,33 @@ class Cms::PageExporter
     end
   end
 
+  def draw_files(drawer)
+    drawer.column :files do
+      drawer.body do |item|
+        names = []
+        if item.try(:file_ids)
+          SS::File.each_file(item.file_ids) do |file|
+            names << file.name
+          end
+        end
+        names.compact.join("\n")
+      end
+    end
+
+    drawer.column :file_urls do
+      drawer.head { I18n.t("all_content.file_urls") }
+      drawer.body do |item|
+        urls = []
+        if item.try(:file_ids)
+          SS::File.each_file(item.file_ids) do |file|
+            urls << file.try(:url)
+          end
+        end
+        urls.compact.join("\n")
+      end
+    end
+  end
+
   def draw_event_body(drawer)
     drawer.column :schedule
     drawer.column :venue
@@ -131,9 +233,18 @@ class Cms::PageExporter
     drawer.column :contact
   end
 
+  def draw_st_category(drawer)
+    drawer.column :st_categories do
+      drawer.head { I18n.t("category.setting") }
+      drawer.body do |item|
+        self.class.category_name_tree(item, item.try(:st_categories)).join("\n")
+      end
+    end
+  end
+
   def draw_category(drawer)
     drawer.column :categories do
-      drawer.body { |item| self.class.category_name_tree(item).join("\n") }
+      drawer.body { |item| self.class.category_name_tree(item, item.try(:categories)).join("\n") }
     end
   end
 
@@ -170,6 +281,21 @@ class Cms::PageExporter
       drawer.head { "#{Cms::Page.t(:event_recurrences)}_#{index + 1}_除外日" }
       drawer.body { |item| format_event_recurrence_exclude_dates(item, index) }
     end
+  end
+
+  def draw_map(drawer)
+    drawer.column :map_points do
+      drawer.body do |item|
+        item.try(:map_points).try { |points| points.map { |point| point[:loc].join(",") }.join("\n") }
+      end
+    end
+    drawer.column :map_reference_method, type: :label
+    drawer.column :map_reference_column_name
+    drawer.column :center_setting, type: :label
+    drawer.column :set_center_position
+    drawer.column :zoom_setting, type: :label
+    drawer.column :set_zoom_level
+    drawer.column :map_zoom_level
   end
 
   def draw_related_pages(drawer)
@@ -223,6 +349,14 @@ class Cms::PageExporter
 
   def draw_state(drawer)
     drawer.column :state, type: :label
+    drawer.column :created
+    drawer.column :updated
+    drawer.column :file_size do
+      drawer.head { I18n.t("all_content.file_size") }
+      drawer.body do |item|
+        calc_file_size(item)
+      end
+    end
   end
 
   def draw_form(drawer, form)
@@ -401,6 +535,8 @@ class Cms::PageExporter
   end
 
   def format_event_recurrence_start_on(item, index)
+    return unless item.respond_to?(:event_recurrences)
+
     event_recurrence = item.event_recurrences[index]
     return unless event_recurrence
 
@@ -408,6 +544,8 @@ class Cms::PageExporter
   end
 
   def format_event_recurrence_until_on(item, index)
+    return unless item.respond_to?(:event_recurrences)
+
     event_recurrence = item.event_recurrences[index]
     return unless event_recurrence
 
@@ -415,6 +553,8 @@ class Cms::PageExporter
   end
 
   def format_event_recurrence_start_time(item, index)
+    return unless item.respond_to?(:event_recurrences)
+
     event_recurrence = item.event_recurrences[index]
     return if event_recurrence.blank? || event_recurrence.kind != "datetime"
 
@@ -422,6 +562,8 @@ class Cms::PageExporter
   end
 
   def format_event_recurrence_end_time(item, index)
+    return unless item.respond_to?(:event_recurrences)
+
     event_recurrence = item.event_recurrences[index]
     return if event_recurrence.blank? || event_recurrence.kind != "datetime"
 
@@ -429,6 +571,8 @@ class Cms::PageExporter
   end
 
   def format_event_recurrence_by_days(item, index)
+    return unless item.respond_to?(:event_recurrences)
+
     event_recurrence = item.event_recurrences[index]
     return unless event_recurrence
 
@@ -447,8 +591,28 @@ class Cms::PageExporter
   end
 
   def format_event_recurrence_exclude_dates(item, index)
+    return unless item.respond_to?(:event_recurrences)
+
     event_recurrence = item.event_recurrences[index]
     return if event_recurrence.blank? || event_recurrence.exclude_dates.blank?
     event_recurrence.exclude_dates.map { |date| I18n.l(date.to_date, format: :picker) }.join("\n")
+  end
+
+  def calc_file_size(content)
+    size = 0
+
+    content.path.tap do |path|
+      if File.exist?(path)
+        size += File.stat(path).size
+      end
+    end
+
+    if content.respond_to?(:file_ids) && content.file_ids.present?
+      SS::File.each_file(content.file_ids) do |file|
+        size += file.size
+      end
+    end
+
+    size
   end
 end

@@ -28,10 +28,14 @@ class Cms::AllContentsController < ApplicationController
     respond_to do |format|
       format.html
       format.csv do
+        # exporter = Cms::PageExporter.new(mode: "all", site: @cur_site, criteria: Cms::Page.all.site(@cur_site))
+        exporter = Cms::AllContent.new(site: @cur_site)
+        enumerable = exporter.enum_csv(encoding: "Shift_JIS")
+
+        filename = "all_contents_#{Time.zone.now.to_i}.csv"
+
         response.status = 200
-        send_enum Cms::AllContent.enum_csv(@cur_site),
-          type: 'text/csv; charset=Shift_JIS',
-          filename: "all_contents_#{Time.zone.now.to_i}.csv"
+        send_enum enumerable, type: enumerable.content_type, filename: filename
       end
     end
   end
@@ -50,7 +54,7 @@ class Cms::AllContentsController < ApplicationController
       return
     end
 
-    if !Cms::AllContent.valid_header?(file)
+    if !Cms::AllContentsImportJob.valid_header?(file)
       @errors = [ t("errors.messages.malformed_csv") ]
       render({ action: :import })
       return

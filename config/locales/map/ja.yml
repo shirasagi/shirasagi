@@ -52,6 +52,7 @@ ja:
   mongoid:
     attributes:
       map/addon/page:
+        map_points: マーカー設定
         map_loc: 緯度,経度
         map_zoom: 縮尺
         marker_name: マーカー名
@@ -59,9 +60,12 @@ ja:
         marker_loc: 座標
         marker_link: リンク
         set_center_position: 中心位置
-        set_zoom_level: ズームレベル
-        map_reference_method: 指定方法
-        map_reference_column_name: 項目名
+        set_zoom_level: 指定ズームレベル
+        map_reference_method: マーカー指定方法
+        map_reference_column_name: マーカー項目名
+        center_setting: 中心位置指定方法
+        zoom_setting: ズーム指定方法
+        map_zoom_level: 地図の縮尺（自動ズームレベル）
 
   tooltip:
     map/addon/page:

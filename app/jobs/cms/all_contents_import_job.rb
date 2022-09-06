@@ -8,6 +8,28 @@ class Cms::AllContentsImportJob < Cms::ApplicationJob
   before_perform :load_keys
 
   SKIP_FIELDS = %w(page_id node_id route url files file_urls use_map created updated file_size).freeze
+  REQUIRED_HEADERS = %w(page_id node_id route name).freeze
+
+  class << self
+    def valid_header?(path)
+      path = path.path if path.respond_to?(:path)
+
+      match_count = 0
+      SS::Csv.foreach_row(path, headers: true) do |row|
+        REQUIRED_HEADERS.each do |e|
+          if row.key?(I18n.t("all_content.#{e}"))
+            match_count += 1
+          end
+        end
+        break
+      end
+
+      # if 80% of headers are matched, we considered it is valid
+      match_count >= REQUIRED_HEADERS.length * 0.8
+    rescue
+      false
+    end
+  end
 
   private
 

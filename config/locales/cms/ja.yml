@@ -991,10 +991,13 @@ ja:
         conditions: 検索条件(URL)
         condition_forms: 検索条件(定型フォーム)
         condition_form_ids: 検索条件(定型フォーム)
+        sort: 並び順
+        limit: 表示件数
         loop_html: ループHTML
         upper_html: 上部HTML
         lower_html: 下部HTML
         new_days: NEWマーク期間
+        loop_setting_id: 定義済みループHTML
         loop_format: ループHTML形式
         loop_liquid: ループHTML
         no_items_display_state: ページ未検出時表示
