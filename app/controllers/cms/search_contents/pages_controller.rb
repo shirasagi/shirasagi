@@ -74,7 +74,7 @@ class Cms::SearchContents::PagesController < ApplicationController
     end
   end
 
-  def destroy_all_pages
+  def destroy_all
     set_selected_items
 
     entries = @items.entries
@@ -88,6 +88,6 @@ class Cms::SearchContents::PagesController < ApplicationController
       end
       @items << item
     end
-    render_destroy_all(entries.size != @items.size, location: cms_page_search_contents_path)
+    render_destroy_all(entries.size != @items.size)
   end
 end
