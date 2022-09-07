@@ -36,14 +36,15 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
       #
       # Now back to SHIRASAGI
       #
+      I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
+        # confirm a user has been logged-in
+        expect(page).to have_css(".main-navi", text: I18n.t("sns.account"))
 
-      # confirm a user has been logged-in
-      expect(page).to have_css(".main-navi", text: I18n.t("sns.account"))
-
-      # do logout
-      within "nav.user" do
-        find("span.name").click
-        click_on I18n.t("ss.logout")
+        # do logout
+        within "nav.user" do
+          find("span.name").click
+          click_on I18n.t("ss.logout")
+        end
       end
 
       # confirm a login form has been shown
@@ -78,14 +79,15 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
       #
       # Now back to SHIRASAGI
       #
+      I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
+        # confirm a user has been logged-in
+        expect(page).to have_css(".main-navi", text: I18n.t("sns.account"))
 
-      # confirm a user has been logged-in
-      expect(page).to have_css(".main-navi", text: I18n.t("sns.account"))
-
-      # do logout
-      within "nav.user" do
-        find("span.name").click
-        click_on I18n.t("ss.logout")
+        # do logout
+        within "nav.user" do
+          find("span.name").click
+          click_on I18n.t("ss.logout")
+        end
       end
 
       # confirm a login form has been shown
@@ -206,11 +208,12 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
       #
       # Now back to SHIRASAGI
       #
-
-      # confirm a user has been logged-in
-      expect(page).to have_css("nav.user .name", text: sys_user.name)
-      # confirm gws_portal is shown to user
-      expect(page).to have_css("#head .application-menu .gws .current", text: I18n.t('ss.links.gws'))
+      I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
+        # confirm a user has been logged-in
+        expect(page).to have_css("nav.user .name", text: sys_user.name)
+        # confirm gws_portal is shown to user
+        expect(page).to have_css("#head .application-menu .gws .current", text: I18n.t('ss.links.gws'))
+      end
     end
   end
 end

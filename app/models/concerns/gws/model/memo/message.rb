@@ -228,7 +228,7 @@ module Gws::Model
     end
 
     def display_send_date
-      send_date ? send_date.strftime('%Y/%m/%d %H:%M') : I18n.t('gws/memo/folder.inbox_draft')
+      send_date ? I18n.l(send_date, format: :picker) : I18n.t('gws/memo/folder.inbox_draft')
     end
 
     def to_members?

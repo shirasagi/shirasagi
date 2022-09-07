@@ -100,21 +100,23 @@ describe "gws_facility_usage", type: :feature, dbscope: :example, js: true do
     click_on I18n.t("ss.links.download")
     wait_for_download
 
-    csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
-    expect(csv.length).to eq 4
-    expect(csv[0][Gws::Facility::Item.t(:name)]).to eq facility1.name
-    expect(csv[0][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.hours')
-    expect(csv[0]["#{prev_month.month}#{I18n.t('datetime.prompts.month')}"]).to eq "5.0"
-    expect(csv[1][Gws::Facility::Item.t(:name)]).to eq facility1.name
-    expect(csv[1][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.times')
-    expect(csv[1]["#{prev_month.month}#{I18n.t('datetime.prompts.month')}"]).to eq "2"
-    expect(csv[2][Gws::Facility::Item.t(:name)]).to eq facility2.name
-    expect(csv[2][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.hours')
-    expect(csv[2]["#{prev_month.month}#{I18n.t('datetime.prompts.month')}"]).to eq "24.0"
-    expect(csv[2]["#{now.month}#{I18n.t('datetime.prompts.month')}"]).to eq "48.0"
-    expect(csv[3][Gws::Facility::Item.t(:name)]).to eq facility2.name
-    expect(csv[3][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.times')
-    expect(csv[3]["#{prev_month.month}#{I18n.t('datetime.prompts.month')}"]).to eq "1"
-    expect(csv[3]["#{now.month}#{I18n.t('datetime.prompts.month')}"]).to eq "1"
+    I18n.with_locale(I18n.default_locale) do
+      csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+      expect(csv.length).to eq 4
+      expect(csv[0][Gws::Facility::Item.t(:name)]).to eq facility1.name
+      expect(csv[0][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.hours')
+      expect(csv[0]["#{prev_month.month}#{I18n.t('datetime.prompts.month')}"]).to eq "5.0"
+      expect(csv[1][Gws::Facility::Item.t(:name)]).to eq facility1.name
+      expect(csv[1][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.times')
+      expect(csv[1]["#{prev_month.month}#{I18n.t('datetime.prompts.month')}"]).to eq "2"
+      expect(csv[2][Gws::Facility::Item.t(:name)]).to eq facility2.name
+      expect(csv[2][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.hours')
+      expect(csv[2]["#{prev_month.month}#{I18n.t('datetime.prompts.month')}"]).to eq "24.0"
+      expect(csv[2]["#{now.month}#{I18n.t('datetime.prompts.month')}"]).to eq "48.0"
+      expect(csv[3][Gws::Facility::Item.t(:name)]).to eq facility2.name
+      expect(csv[3][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.times')
+      expect(csv[3]["#{prev_month.month}#{I18n.t('datetime.prompts.month')}"]).to eq "1"
+      expect(csv[3]["#{now.month}#{I18n.t('datetime.prompts.month')}"]).to eq "1"
+    end
   end
 end

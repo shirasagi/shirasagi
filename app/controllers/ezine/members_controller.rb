@@ -42,17 +42,19 @@ class Ezine::MembersController < ApplicationController
       where(node_id: @cur_node.id).
       order_by(updated: -1)
 
-    csv = CSV.generate do |data|
-      data << %w(email email_type created) + @columns.map(&:name)
-      items.each do |item|
-        row = []
-        row << item.email
-        row << item.email_type
-        row << item.created.strftime("%Y-%m-%d %H:%M")
-        @columns.each_with_index do |column, i|
-          row << item.data.where(column_id: column.id).first.try(:value)
+    csv = I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << %w(email email_type created) + @columns.map(&:name)
+        items.each do |item|
+          row = []
+          row << item.email
+          row << item.email_type
+          row << item.created.strftime("%Y-%m-%d %H:%M")
+          @columns.each_with_index do |column, i|
+            row << item.data.where(column_id: column.id).first.try(:value)
+          end
+          data << row
         end
-        data << row
       end
     end
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace),

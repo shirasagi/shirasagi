@@ -110,10 +110,12 @@ describe "facility_item", type: :feature, dbscope: :example do
         expect(page.response_headers['Content-Disposition']).to eq disposition
       end
 
-      SS::Csv.open(StringIO.new(page.html)) do |csv|
-        table = csv.read
-        required_headers = %w(id name category_id).map { |k| I18n.t("gws/facility/item.csv.#{k}") }
-        expect(table.headers).to include(*required_headers)
+      I18n.with_locale(I18n.default_locale) do
+        SS::Csv.open(StringIO.new(page.html)) do |csv|
+          table = csv.read
+          required_headers = %w(id name category_id).map { |k| I18n.t("gws/facility/item.csv.#{k}") }
+          expect(table.headers).to include(*required_headers)
+        end
       end
 
       expect(Gws::History.all.count).to be > 1

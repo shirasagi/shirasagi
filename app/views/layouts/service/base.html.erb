@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ja">
+<html lang="<%= I18n.locale %>">
 <head>
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -40,10 +40,6 @@
 <aside id="notice">
   <div class="wrap"><%= notice %></div>
 </aside>
-
-<% if notice %>
-<script> SS.notice('<%= br notice %>', <%== flash[:notice_options].to_json %>); </script>
-<% end %>
 
 <div id="wrap">
   <div class="wrap">
@@ -93,5 +89,11 @@
 
 <!-- /#page --></div>
 
+<%= javascript_tag do %>
+  SS.timezone = <%== Time.zone.name.to_json %>;
+  <% if notice %>
+    SS.ready(function() { SS.notice('<%= br notice %>', <%== flash[:notice_options].to_json %>) });
+  <% end %>
+<% end %>
 </body>
 </html>

@@ -73,3 +73,7 @@ zip:
   #   true: use Unicode encoding
   #  false: use SJIS encoding
   unicode_names: true
+
+available_locales:
+  - "en"
+  - "ja"

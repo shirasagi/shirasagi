@@ -59,14 +59,16 @@ class Webmail::UserExport
   permit_params :in_file
 
   def export_csv(items)
-    csv = CSV.generate do |data|
-      data << EXPORT_DEF.map { |export_def| export_def[:label] }
-      items.each do |item|
-        item.imap_settings.each_with_index do |setting, i|
-          line = EXPORT_DEF.map do |export_def|
-            export_field(item, i, setting, export_def)
+    csv = I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << EXPORT_DEF.map { |export_def| export_def[:label] }
+        items.each do |item|
+          item.imap_settings.each_with_index do |setting, i|
+            line = EXPORT_DEF.map do |export_def|
+              export_field(item, i, setting, export_def)
+            end
+            data << line
           end
-          data << line
         end
       end
     end
@@ -74,14 +76,16 @@ class Webmail::UserExport
   end
 
   def export_template_csv(items)
-    csv = CSV.generate do |data|
-      data << EXPORT_DEF.map { |export_def| export_def[:label] }
-      items.each do |item|
-        setting = Webmail::ImapSetting.default
-        line = EXPORT_DEF.map do |export_def|
-          export_field(item, 0, setting, export_def)
+    csv = I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << EXPORT_DEF.map { |export_def| export_def[:label] }
+        items.each do |item|
+          setting = Webmail::ImapSetting.default
+          line = EXPORT_DEF.map do |export_def|
+            export_field(item, 0, setting, export_def)
+          end
+          data << line
         end
-        data << line
       end
     end
     csv.encode("SJIS", invalid: :replace, undef: :replace)

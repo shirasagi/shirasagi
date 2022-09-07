@@ -22,8 +22,14 @@ def login_user(user, pass: nil)
     fill_in "item[email]", with: user.email
     fill_in "item[password]", with: pass.presence || user.in_password.presence || "pass"
     set_value_to_hidden_input('input#ref', '/robots.txt')
-    click_button "ログイン"
+    click_button I18n.t("ss.login", locale: I18n.default_locale)
   end
+
+  # rubocop:disable Rails/I18nLocaleAssignment
+  if user.lang.present?
+    I18n.locale = user.lang.to_sym
+  end
+  # rubocop:enable Rails/I18nLocaleAssignment
 end
 
 # set value to hidden input

@@ -47,12 +47,14 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
 
       wait_for_download
 
-      csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
-      expect(csv.length).to eq 1
-      expect(csv[0][I18n.t("gws/circular.csv")[0]]).to eq post3.id.to_s
-      expect(csv[0][I18n.t("gws/circular.csv")[1]]).to eq post3.name
-      expect(csv[0][I18n.t("gws/circular.csv")[2]]).to eq post3_comment1.id.to_s
-      expect(csv[0][I18n.t("gws/circular.csv")[3]]).to eq I18n.t('gws/circular.post.unseen')
+      I18n.with_locale(I18n.default_locale) do
+        csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+        expect(csv.length).to eq 1
+        expect(csv[0][I18n.t("gws/circular.csv")[0]]).to eq post3.id.to_s
+        expect(csv[0][I18n.t("gws/circular.csv")[1]]).to eq post3.name
+        expect(csv[0][I18n.t("gws/circular.csv")[2]]).to eq post3_comment1.id.to_s
+        expect(csv[0][I18n.t("gws/circular.csv")[3]]).to eq I18n.t('gws/circular.post.unseen')
+      end
     end
   end
 end

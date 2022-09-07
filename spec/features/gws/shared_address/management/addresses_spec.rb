@@ -23,18 +23,20 @@ describe "gws_shared_address_management_addresses", type: :feature, dbscope: :ex
 
         wait_for_download
 
-        SS::Csv.open(downloads.first) do |csv|
-          csv_table = csv.read
-          expect(csv_table.length).to eq 1
-          expect(csv_table[0][Gws::SharedAddress::Address.t(:member_id)]).to eq item.member.uid
-          expect(csv_table[0][Gws::SharedAddress::Address.t(:address_group_id)]).to eq item.address_group.name
-          expect(csv_table[0][Gws::SharedAddress::Address.t(:name)]).to eq item.name
-          expect(csv_table[0][Gws::SharedAddress::Address.t(:kana)]).to eq item.kana
-          expect(csv_table[0][Gws::SharedAddress::Address.t(:company)]).to eq item.company
-          expect(csv_table[0][Gws::SharedAddress::Address.t(:title)]).to eq item.title
-          expect(csv_table[0][Gws::SharedAddress::Address.t(:tel)]).to eq item.tel
-          expect(csv_table[0][Gws::SharedAddress::Address.t(:email)]).to eq item.email
-          expect(csv_table[0][Gws::SharedAddress::Address.t(:memo)]).to eq item.memo
+        I18n.with_locale(I18n.default_locale) do
+          SS::Csv.open(downloads.first) do |csv|
+            csv_table = csv.read
+            expect(csv_table.length).to eq 1
+            expect(csv_table[0][Gws::SharedAddress::Address.t(:member_id)]).to eq item.member.uid
+            expect(csv_table[0][Gws::SharedAddress::Address.t(:address_group_id)]).to eq item.address_group.name
+            expect(csv_table[0][Gws::SharedAddress::Address.t(:name)]).to eq item.name
+            expect(csv_table[0][Gws::SharedAddress::Address.t(:kana)]).to eq item.kana
+            expect(csv_table[0][Gws::SharedAddress::Address.t(:company)]).to eq item.company
+            expect(csv_table[0][Gws::SharedAddress::Address.t(:title)]).to eq item.title
+            expect(csv_table[0][Gws::SharedAddress::Address.t(:tel)]).to eq item.tel
+            expect(csv_table[0][Gws::SharedAddress::Address.t(:email)]).to eq item.email
+            expect(csv_table[0][Gws::SharedAddress::Address.t(:memo)]).to eq item.memo
+          end
         end
 
         expect(Gws::History.all.count).to be > 1
@@ -55,11 +57,13 @@ describe "gws_shared_address_management_addresses", type: :feature, dbscope: :ex
 
         wait_for_download
 
-        SS::Csv.open(downloads.first) do |csv|
-          csv_table = csv.read
-          expect(csv_table.length).to eq 0
-          %i[id member_id address_group_id name kana company title tel email memo].each do |k|
-            expect(csv.headers).to include(Gws::SharedAddress::Address.t(k))
+        I18n.with_locale(I18n.default_locale) do
+          SS::Csv.open(downloads.first) do |csv|
+            csv_table = csv.read
+            expect(csv_table.length).to eq 0
+            %i[id member_id address_group_id name kana company title tel email memo].each do |k|
+              expect(csv_table.headers).to include(Gws::SharedAddress::Address.t(k))
+            end
           end
         end
       end
@@ -75,20 +79,22 @@ describe "gws_shared_address_management_addresses", type: :feature, dbscope: :ex
     let(:email) { "#{unique_id}@#{unique_id}.example.jp" }
     let(:memo) { unique_id }
     let(:csv) do
-      ::CSV.generate do |data|
-        data << Gws::SharedAddress::Address.new.send(:export_field_names)
-        data << [
-          nil,
-          member.uid,
-          address_group.name,
-          name,
-          kana,
-          company,
-          title,
-          tel,
-          email,
-          memo
-        ]
+      I18n.with_locale(I18n.default_locale) do
+        ::CSV.generate do |data|
+          data << Gws::SharedAddress::Address.new.send(:export_field_names)
+          data << [
+            nil,
+            member.uid,
+            address_group.name,
+            name,
+            kana,
+            company,
+            title,
+            tel,
+            email,
+            memo
+          ]
+        end
       end
     end
     let(:csv_file) do

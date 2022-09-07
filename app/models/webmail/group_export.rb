@@ -45,12 +45,14 @@ class Webmail::GroupExport
   permit_params :in_file
 
   def export_csv(items)
-    csv = CSV.generate do |data|
-      data << EXPORT_DEF.map { |export_def| export_def[:label] }
-      items.each do |item|
-        setting = item.imap_settings.first
-        data << EXPORT_DEF.map do |export_def|
-          export_field(item, 0, setting, export_def)
+    csv = I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << EXPORT_DEF.map { |export_def| export_def[:label] }
+        items.each do |item|
+          setting = item.imap_settings.first
+          data << EXPORT_DEF.map do |export_def|
+            export_field(item, 0, setting, export_def)
+          end
         end
       end
     end
@@ -58,11 +60,13 @@ class Webmail::GroupExport
   end
 
   def export_template_csv(items)
-    csv = CSV.generate do |data|
-      data << EXPORT_DEF.map { |export_def| export_def[:label] }
-      items.each do |item|
-        data << EXPORT_DEF.map do |export_def|
-          export_field(item, 0, nil, export_def)
+    csv = I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << EXPORT_DEF.map { |export_def| export_def[:label] }
+        items.each do |item|
+          data << EXPORT_DEF.map do |export_def|
+            export_field(item, 0, nil, export_def)
+          end
         end
       end
     end

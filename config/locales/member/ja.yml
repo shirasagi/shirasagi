@@ -419,18 +419,6 @@ ja:
       input_again: をもう一度入力してください。
       not_registerd: は登録されていません。
       already_registerd: は、確認済みです。
-      password_short: "は%{count}文字以上にしてください。"
-      password_short_upcase: "は英大文字（A-Z）を%{count}文字以上含むようにしてください。"
-      password_short_downcase: "は英小文字（a-z）を%{count}文字以上含むようにしてください。"
-      password_short_digit: "は数字（0-9）を%{count}文字以上含むようにしてください。"
-      password_short_symbol: "は記号を%{count}文字以上含むようにしてください。"
-      password_contains_prohibited_chars: "に使用禁止文字（%{prohibited_chars}）が含まれています。"
-      password_min_change_chars: "は以前のものから%{count}文字以上違う文字を含むようにしてください。"
-      password_alphabet_only: に英字のみの文字は使用できません。
-      password_numeric_only: に数字のみの文字は使用できません。
-      password_include_email: にメールアドレスが含まれています。
-      password_include_name: に氏名が含まれています。
-      password_include_kana: によみがなが含まれています。
       please_confirm_personal_data_protection: 個人情報の保護に同意してください。
 
   tooltip:

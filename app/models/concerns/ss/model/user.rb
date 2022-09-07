@@ -6,6 +6,7 @@ module SS::Model::User
   include SS::Password
   include SS::Reference::UserExpiration
   include SS::UserImportValidator
+  include SS::Addon::LocaleSetting
   include Ldap::Addon::User
 
   TYPE_SNS = "sns".freeze

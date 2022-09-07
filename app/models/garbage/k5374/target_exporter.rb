@@ -40,10 +40,12 @@ class Garbage::K5374::TargetExporter < Garbage::K5374::BaseExporter
   end
 
   def target_csv
-    csv = CSV.generate do |data|
-      data << headers
-      @targets.each do |row|
-        data << row
+    csv = I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << headers
+        @targets.each do |row|
+          data << row
+        end
       end
     end
     ("\uFEFF" + csv).encode("UTF-8", invalid: :replace, undef: :replace)

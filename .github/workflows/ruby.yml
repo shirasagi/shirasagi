@@ -123,6 +123,7 @@ jobs:
           LDAP_TEST: enable
           ES_CONTAINER_ID: ${{ steps.elasticsearch.outputs.container_id }}
           RUBYOPT: "-W:deprecated"
+          # RSPEC_LOCALE: en
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@master
         with:

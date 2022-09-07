@@ -19,23 +19,25 @@ class Chat::HistoriesController < ApplicationController
   def send_csv(items)
     headers = %w(id session_id request_id text question result suggest click_suggest node_id prev_intent_id intent_id)
     headers.map! { |key| @model.t(key) }
-    csv = CSV.generate do |data|
-      data << headers
-      items.each do |item|
-        row = []
-        row << item.id
-        row << item.session_id
-        row << item.request_id
-        row << item.text
-        row << item.question
-        row << item.result
-        row << item.suggest
-        row << item.click_suggest
-        row << item.node.try(:name)
-        row << item.prev_intent.try(:name)
-        row << item.intent.try(:name)
+    csv = I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << headers
+        items.each do |item|
+          row = []
+          row << item.id
+          row << item.session_id
+          row << item.request_id
+          row << item.text
+          row << item.question
+          row << item.result
+          row << item.suggest
+          row << item.click_suggest
+          row << item.node.try(:name)
+          row << item.prev_intent.try(:name)
+          row << item.intent.try(:name)
 
-        data << row
+          data << row
+        end
       end
     end
 

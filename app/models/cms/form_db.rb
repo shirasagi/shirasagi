@@ -103,15 +103,17 @@ class Cms::FormDb
     headers = [Article::Page.t(:name), *column_names]
 
     require "csv"
-    csv = CSV.generate do |data|
-      data << headers
-      items.each do |item|
-        row = [item.name]
-        column_names.each do |col_name|
-          col_val = item.column_values.to_a.find { |cv| cv.name == col_name }
-          row << col_val.try(:export_csv_cell)
+    csv = I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << headers
+        items.each do |item|
+          row = [item.name]
+          column_names.each do |col_name|
+            col_val = item.column_values.to_a.find { |cv| cv.name == col_name }
+            row << col_val.try(:export_csv_cell)
+          end
+          data << row
         end
-        data << row
       end
     end
     encoding = options['encoding'] || 'Shift_JIS'

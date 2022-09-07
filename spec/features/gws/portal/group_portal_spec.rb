@@ -58,12 +58,15 @@ describe 'gws_portal_group_portal', type: :feature, dbscope: :example do
   context 'with governance mode: only allowed use_gws_portal_organization_settings permission' do
     let(:role) { create(:gws_role_portal_organization_use, permissions: %w(use_gws_board read_private_gws_board_posts)) }
     let!(:user) { create(:gws_user, group_ids: [ site.id ], gws_role_ids: [ role.id ]) }
-
-    before do
+    let!(:portal) do
       portal = site.find_portal_setting(cur_user: user, cur_site: site)
       portal.save!
       portal.save_default_portlets([{ "model" => "board" }])
+      portal
+    end
+    let(:portlet) { portal.portlets.where(portlet_model: "board").first }
 
+    before do
       login_user user
     end
 
@@ -74,7 +77,7 @@ describe 'gws_portal_group_portal', type: :feature, dbscope: :example do
         expect(page).to have_no_css("a.icon-portal", text: I18n.t('gws/portal.self_portal'))
         expect(page).to have_no_css("a.icon-portal", text: I18n.t('gws/portal.tabs.root_portal'))
       end
-      expect(page).to have_css(".gws-portlets .portlet-model-board", text: I18n.t("gws/portal.portlets.board.name"))
+      expect(page).to have_css(".gws-portlets .portlet-model-board", text: portlet.name)
 
       visit gws_portal_group_path(site: site, group: site)
       within ".main-navi" do
@@ -82,7 +85,7 @@ describe 'gws_portal_group_portal', type: :feature, dbscope: :example do
         expect(page).to have_no_css("a.icon-portal", text: I18n.t('gws/portal.self_portal'))
         expect(page).to have_no_css("a.icon-portal", text: I18n.t('gws/portal.tabs.root_portal'))
       end
-      expect(page).to have_css(".gws-portlets .portlet-model-board", text: I18n.t("gws/portal.portlets.board.name"))
+      expect(page).to have_css(".gws-portlets .portlet-model-board", text: portlet.name)
     end
   end
 end

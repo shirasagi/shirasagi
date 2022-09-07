@@ -17,15 +17,17 @@ module Gws::Addon::Import
       end
 
       def to_csv
-        CSV.generate do |data|
-          data << csv_headers.map { |k| t k }
-          criteria.each do |item|
-            line = []
-            line << item.id
-            line << item.name
-            line << item.localized_permissions.join("\n")
-            line << item.permission_level
-            data << line
+        I18n.with_locale(I18n.default_locale) do
+          CSV.generate do |data|
+            data << csv_headers.map { |k| t k }
+            criteria.each do |item|
+              line = []
+              line << item.id
+              line << item.name
+              line << item.localized_permissions.join("\n")
+              line << item.permission_level
+              data << line
+            end
           end
         end
       end
@@ -36,8 +38,10 @@ module Gws::Addon::Import
       validate_import
       return false unless errors.empty?
 
-      SS::Csv.foreach_row(in_file, headers: true) do |row, i|
-        update_row(row, i + 2)
+      I18n.with_locale(I18n.default_locale) do
+        SS::Csv.foreach_row(in_file, headers: true) do |row, i|
+          update_row(row, i + 2)
+        end
       end
       return errors.empty?
     end

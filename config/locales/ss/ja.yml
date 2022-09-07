@@ -514,6 +514,9 @@ ja:
           end_with: が次で終わる
           include_any_of: が次を含む
           include_none_of: が次を含まない
+      lang:
+        ja: 日本語
+        en: English
 
     tasks:
       started: 開始しました。
@@ -568,6 +571,7 @@ ja:
       ss/oauth2/cms_permission: CMS権限
       ss/oauth2/gws_permission: グループウェア権限
       ss/oauth2/webmail_permission: メール権限
+      ss/locale_setting: 言語設定
 
   activemodel:
     attributes:
@@ -983,6 +987,9 @@ ja:
         public_key_type: 公開鍵種別
         public_key: 公開鍵
         public_key_encrypted: 公開鍵
+      ss/addon/locale_setting:
+        lang: 言語
+        timezone: タイムゾーン
 
   tooltip:
     ss/model/site:
@@ -1455,6 +1462,12 @@ ja:
         - $ openssl rsa -in private_key.pem -pubout -out public_key.pem
         -
         - public_key.pem が公開鍵ですので、この中身をペーストしてください。
+
+    ss/addon/locale_setting:
+      lang:
+        - 言語を選択してください。
+      timezone:
+        - タイムゾーンを選択してください。
 
   job:
     models:

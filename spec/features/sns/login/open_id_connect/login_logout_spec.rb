@@ -24,9 +24,11 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
       visit sns_mypage_path
       click_on auth.name
 
-      # confirm a user has been logged-in
-      expect(page).to have_css("nav.user .name", text: sys_user.name)
-      expect(page).to have_css(".main-navi", text: I18n.t("sns.account"))
+      I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
+        # confirm a user has been logged-in
+        expect(page).to have_css("nav.user .name", text: sys_user.name)
+        expect(page).to have_css(".main-navi", text: I18n.t("sns.account"))
+      end
     end
   end
 
@@ -46,10 +48,12 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
       visit sns_mypage_path
       click_on auth.name
 
-      # confirm a user has been logged-in
-      expect(page).to have_css("nav.user .name", text: sys_user.name)
-      # confirm sns_mypage is shown to user
-      expect(page).to have_css(".main-navi", text: I18n.t("sns.account"))
+      I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
+        # confirm a user has been logged-in
+        expect(page).to have_css("nav.user .name", text: sys_user.name)
+        # confirm sns_mypage is shown to user
+        expect(page).to have_css(".main-navi", text: I18n.t("sns.account"))
+      end
     end
   end
 
@@ -70,10 +74,12 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css("#page-login")
       click_on auth.name
 
-      # confirm a user has been logged-in
-      expect(page).to have_css("nav.user .name", text: sys_user.name)
-      # confirm gws_portal is shown to user
-      expect(page).to have_css("#head .application-menu .gws .current", text: I18n.t('ss.links.gws'))
+      I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
+        # confirm a user has been logged-in
+        expect(page).to have_css("nav.user .name", text: sys_user.name)
+        # confirm gws_portal is shown to user
+        expect(page).to have_css("#head .application-menu .gws .current", text: I18n.t('ss.links.gws'))
+      end
     end
   end
 end

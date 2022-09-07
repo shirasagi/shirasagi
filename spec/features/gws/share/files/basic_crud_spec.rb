@@ -121,7 +121,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       visit gws_share_files_path(site)
       click_on folder.name
       click_on file.name
-      click_on I18n.t("ss.links.delete")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end
@@ -158,7 +160,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.trash")
       click_on folder.name
       click_on file.name
-      click_on I18n.t("ss.links.delete")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end

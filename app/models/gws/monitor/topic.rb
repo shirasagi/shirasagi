@@ -148,20 +148,22 @@ class Gws::Monitor::Topic
   end
 
   def to_csv
-    CSV.generate do |data|
-      data << I18n.t('gws/monitor.csv')
+    I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << I18n.t('gws/monitor.csv')
 
-      attend_groups.each do |group|
-        post = comment(group.id).last
-        data << [
-            id,
-            name,
-            answer_state_name(group),
-            group.name,
-            post.try(:contributor_name),
-            post.try(:text),
-            post.try(:updated) ? post.updated.strftime('%Y/%m/%d %H:%M') : ''
-        ]
+        attend_groups.each do |group|
+          post = comment(group.id).last
+          data << [
+              id,
+              name,
+              answer_state_name(group),
+              group.name,
+              post.try(:contributor_name),
+              post.try(:text),
+              post.try(:updated) ? post.updated.strftime('%Y/%m/%d %H:%M') : ''
+          ]
+        end
       end
     end
   end

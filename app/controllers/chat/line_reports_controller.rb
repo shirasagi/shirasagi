@@ -67,13 +67,15 @@ class Chat::LineReportsController < ApplicationController
       I18n.t('chat.line_report.phrase/name'),
       I18n.t('chat.line_report.phrase/frequency')
     ]
-    csv = CSV.generate do |data|
-      data << headers
-      items.each do |item|
-        row = []
-        row << item.name
-        row << item.frequency
-        data << row
+    csv = I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << headers
+        items.each do |item|
+          row = []
+          row << item.name
+          row << item.frequency
+          data << row
+        end
       end
     end
 
@@ -90,17 +92,19 @@ class Chat::LineReportsController < ApplicationController
       I18n.t('chat.line_report.phrase/reply_count'),
       I18n.t('chat.line_report.phrase/reply_rate')
     ]
-    csv = CSV.generate do |data|
-      data << headers
-      items.each do |item|
-        row = []
-        row << item.name
-        row << item.frequency
-        row << item.confirm_yes
-        row << item.confirm_no
-        row << item.confirm_yes + item.confirm_no
-        row << "#{((item.confirm_yes + item.confirm_no).fdiv(item.frequency) * 100).floor}%"
-        data << row
+    csv = I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << headers
+        items.each do |item|
+          row = []
+          row << item.name
+          row << item.frequency
+          row << item.confirm_yes
+          row << item.confirm_no
+          row << item.confirm_yes + item.confirm_no
+          row << "#{((item.confirm_yes + item.confirm_no).fdiv(item.frequency) * 100).floor}%"
+          data << row
+        end
       end
     end
 
@@ -113,18 +117,20 @@ class Chat::LineReportsController < ApplicationController
       I18n.t('chat.line_report.date'),
       I18n.t('chat.line_report.session/users')
     ]
-    csv = CSV.generate do |data|
-      data << headers
-      items.zip(dates).each do |item, date|
+    csv = I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << headers
+        items.zip(dates).each do |item, date|
+          row = []
+          row << date
+          row << item
+          data << row
+        end
         row = []
-        row << date
-        row << item
+        row << I18n.t('chat.line_report.total')
+        row << items.sum(&:to_i)
         data << row
       end
-      row = []
-      row << I18n.t('chat.line_report.total')
-      row << items.sum(&:to_i)
-      data << row
     end
 
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
@@ -136,18 +142,20 @@ class Chat::LineReportsController < ApplicationController
       I18n.t('chat.line_report.hour'),
       I18n.t('chat.line_report.session')
     ]
-    csv = CSV.generate do |data|
-      data << headers
-      items.zip(hours).each do |item, hour|
+    csv = I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << headers
+        items.zip(hours).each do |item, hour|
+          row = []
+          row << hour + "時"
+          row << item
+          data << row
+        end
         row = []
-        row << hour + "時"
-        row << item
+        row << I18n.t('chat.line_report.total')
+        row << items.sum(&:to_i)
         data << row
       end
-      row = []
-      row << I18n.t('chat.line_report.total')
-      row << items.sum(&:to_i)
-      data << row
     end
 
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace),

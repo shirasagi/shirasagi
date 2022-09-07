@@ -20,22 +20,24 @@ module Cms::Addon::Import
       end
 
       def to_csv
-        CSV.generate do |data|
-          data << csv_headers.map { |k| t k }
-          criteria.each do |item|
-            line = []
-            line << item.id
-            line << item.name
-            line << item.order
-            line << item.ldap_dn
-            line << item.contact_tel
-            line << item.contact_fax
-            line << item.contact_email
-            line << item.contact_link_url
-            line << item.contact_link_name
-            line << (item.activation_date.present? ? I18n.l(item.activation_date) : nil)
-            line << (item.expiration_date.present? ? I18n.l(item.expiration_date) : nil)
-            data << line
+        I18n.with_locale(I18n.default_locale) do
+          CSV.generate do |data|
+            data << csv_headers.map { |k| t k }
+            criteria.each do |item|
+              line = []
+              line << item.id
+              line << item.name
+              line << item.order
+              line << item.ldap_dn
+              line << item.contact_tel
+              line << item.contact_fax
+              line << item.contact_email
+              line << item.contact_link_url
+              line << item.contact_link_name
+              line << (item.activation_date.present? ? I18n.l(item.activation_date) : nil)
+              line << (item.expiration_date.present? ? I18n.l(item.expiration_date) : nil)
+              data << line
+            end
           end
         end
       end

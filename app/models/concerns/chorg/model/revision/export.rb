@@ -15,53 +15,57 @@ module Chorg::Model::Revision
     end
 
     def changesets_to_csv
-      CSV.generate do |data|
-        data << %w(
-          id type source destination order
-          contact_tel contact_fax contact_email contact_link_url contact_link_name
-          ldap_dn
-        ).map { |k| I18n.t("chorg.import.changeset.#{k}") }
+      I18n.with_locale(I18n.default_locale) do
+        CSV.generate do |data|
+          data << %w(
+            id type source destination order
+            contact_tel contact_fax contact_email contact_link_url contact_link_name
+            ldap_dn
+          ).map { |k| I18n.t("chorg.import.changeset.#{k}") }
 
-        type_order = changeset_class::TYPES.each_with_index.map { |type, i| [type, i] }.to_h
-        export_sets = changesets.sort do |a, b|
-          order = type_order[a.type] <=> type_order[b.type]
-          (order == 0) ? (a.id <=> b.id ) : order
-        end
-        export_sets.each do |item|
-          case item.type
-          when changeset_class::TYPE_UNIFY
+          type_order = changeset_class::TYPES.each_with_index.map { |type, i| [type, i] }.to_h
+          export_sets = changesets.sort do |a, b|
+            order = type_order[a.type] <=> type_order[b.type]
+            (order == 0) ? (a.id <=> b.id ) : order
+          end
+          export_sets.each do |item|
+            case item.type
+            when changeset_class::TYPE_UNIFY
 
-            # N sources, 1 destination
-            destination = item.destinations.to_a.first || {}
-            item.sources.to_a.each do |source|
+              # N sources, 1 destination
+              destination = item.destinations.to_a.first || {}
+              item.sources.to_a.each do |source|
+                data << changeset_to_csv_line(item, source, destination)
+              end
+            when changeset_class::TYPE_DIVISION
+
+              # 1 source, N destinations
+              source = item.sources.to_a.first || {}
+              item.destinations.to_a.each do |destination|
+                data << changeset_to_csv_line(item, source, destination)
+              end
+            else
+
+              # 1 source, 1 destination
+              source = item.sources.to_a.first || {}
+              destination = item.destinations.to_a.first || {}
               data << changeset_to_csv_line(item, source, destination)
             end
-          when changeset_class::TYPE_DIVISION
-
-            # 1 source, N destinations
-            source = item.sources.to_a.first || {}
-            item.destinations.to_a.each do |destination|
-              data << changeset_to_csv_line(item, source, destination)
-            end
-          else
-
-            # 1 source, 1 destination
-            source = item.sources.to_a.first || {}
-            destination = item.destinations.to_a.first || {}
-            data << changeset_to_csv_line(item, source, destination)
           end
         end
       end
     end
 
     def changesets_sample_csv
-      CSV.generate do |data|
-        data << %w(
-          id type source destination order
-          contact_tel contact_fax contact_email contact_link_url contact_link_name
-          ldap_dn
-        ).map { |k| I18n.t("chorg.import.changeset.#{k}") }
-        SS.config.chorg.changeset_sample_csv.each { |line| data << line }
+      I18n.with_locale(I18n.default_locale) do
+        CSV.generate do |data|
+          data << %w(
+            id type source destination order
+            contact_tel contact_fax contact_email contact_link_url contact_link_name
+            ldap_dn
+          ).map { |k| I18n.t("chorg.import.changeset.#{k}") }
+          SS.config.chorg.changeset_sample_csv.each { |line| data << line }
+        end
       end
     end
 

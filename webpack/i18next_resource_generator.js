@@ -2,6 +2,7 @@ const fs = require("fs");
 const merge = require("deepmerge");
 const path = require("path");
 const yaml = require('js-yaml')
+const Config = require("../webpack/config")
 
 const LOCALE_DIR = path.resolve(__dirname, "../config/locales")
 
@@ -41,7 +42,7 @@ module.exports = {
   generate: function() {
     const locales = {};
 
-    [ "ja", "en" ].forEach((lang) => {
+    Config.environment.available_locales.forEach((lang) => {
       locales[lang] = { translation: loadLocale(lang) }
     })
 

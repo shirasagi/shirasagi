@@ -1,0 +1,20 @@
+<% message.subject = I18n.t("workflow.notice.remind.subject", page_name: @page.name, site_name: @site.name) %>
+<%= @from_user.name %> <% if @page.workflow_agent.present? %>（Proxy：<%= @page.workflow_agent.name %>）<% end %> sent a request for approval of the following article.
+Please go through the approval process.
+
+- Title
+  <%= @page.name %>
+
+<% if @page.workflow_user.present? %>
+- Applicant
+  <%= @page.workflow_user.name %>
+  <% if @page.workflow_agent %>
+  （Proxy: <%= @page.workflow_agent.name %>）
+  <% end %>
+<% end %>
+
+- Applicant Comments
+  <%= @page.workflow_comment %>
+
+- Article URL
+  <%= URI.join(@site.mypage_full_url, @page.private_show_path).to_s %>

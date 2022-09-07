@@ -35,6 +35,7 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       RAILS_ENV: JSON.stringify(RAILS_ENV),
+      AVAILABLE_LOCALES: JSON.stringify(Config.environment.available_locales),
       I18NEXT_RESOURCES: JSON.stringify(RAILS_ENV === "production" ? i18nextResourceGen.generate() : {})
     }),
     new webpack.optimize.LimitChunkCountPlugin({

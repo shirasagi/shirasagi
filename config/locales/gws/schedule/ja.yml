@@ -150,6 +150,7 @@ ja:
     achievement_rate_unit: "%"
     category_not_assigined: プロジェクト・工程なし
     discussion_forum_not_assigined: 電子会議室なし
+    member: 担当者
     buttons:
       finish: 完了する
       revert: 未完了に戻す

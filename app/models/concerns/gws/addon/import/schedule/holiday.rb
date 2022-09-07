@@ -13,23 +13,25 @@ module Gws::Addon::Import::Schedule
 
     module ClassMethods
       def to_csv
-        CSV.generate do |data|
-          data << csv_headers.map { |k| header_value_to_text k }
-          items = criteria.asc(:repeat_plan_id).group_by { |holiday| holiday[:repeat_plan_id] }
-          items.each do |key, values|
-            if key.nil?
-              values.each do |item|
+        I18n.with_locale(I18n.default_locale) do
+          CSV.generate do |data|
+            data << csv_headers.map { |k| header_value_to_text k }
+            items = criteria.asc(:repeat_plan_id).group_by { |holiday| holiday[:repeat_plan_id] }
+            items.each do |key, values|
+              if key.nil?
+                values.each do |item|
+                  line = []
+                  line << item[:id]
+                  line += add_line(item)
+                  data << line
+                end
+              else
+                item = values.first
                 line = []
-                line << item[:id]
+                line << item[:repeat_plan_id]
                 line += add_line(item)
                 data << line
               end
-            else
-              item = values.first
-              line = []
-              line << item[:repeat_plan_id]
-              line += add_line(item)
-              data << line
             end
           end
         end
@@ -100,8 +102,10 @@ module Gws::Addon::Import::Schedule
       @imported = 0
       validate_import
 
-      SS::Csv.foreach_row(in_file, headers: true) do |row, i|
-        update_row(row, i + 2)
+      I18n.with_locale(I18n.default_locale) do
+        SS::Csv.foreach_row(in_file, headers: true) do |row, i|
+          update_row(row, i + 2)
+        end
       end
       errors.blank?
     end

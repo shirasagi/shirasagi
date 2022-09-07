@@ -22,10 +22,12 @@ class Cms::PageSearch
     self.cur_site = site
     self.cur_user = user
 
-    CSV.generate do |data|
-      data << csv_headers.map { |k| t k }
-      search.each do |item|
-        data << csv_line(item)
+    I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << csv_headers.map { |k| t k }
+        search.each do |item|
+          data << csv_line(item)
+        end
       end
     end
   end

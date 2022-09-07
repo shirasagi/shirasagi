@@ -52,29 +52,31 @@ class Cms::Member
     end
 
     def to_csv
-      CSV.generate do |data|
-        data << %w(
-          id state name email kana organization_name job tel
-          postal_code addr sex birthday updated created
-        ).map { |k| t(k) }
+      I18n.with_locale(I18n.default_locale) do
+        CSV.generate do |data|
+          data << %w(
+            id state name email kana organization_name job tel
+            postal_code addr sex birthday updated created
+          ).map { |k| t(k) }
 
-        criteria.each do |item|
-          line = []
-          line << item.id
-          line << (item.state.present? ? I18n.t("cms.options.member_state.#{item.state}") : '')
-          line << item.name
-          line << item.email
-          line << item.kana
-          line << item.organization_name
-          line << item.job
-          line << item.tel
-          line << item.postal_code
-          line << item.addr
-          line << (item.sex.present? ? I18n.t("member.options.sex.#{item.sex}") : '')
-          line << item.birthday.try(:strftime, "%Y/%m/%d")
-          line << item.updated.strftime("%Y/%m/%d %H:%M")
-          line << item.created.strftime("%Y/%m/%d %H:%M")
-          data << line
+          criteria.each do |item|
+            line = []
+            line << item.id
+            line << (item.state.present? ? I18n.t("cms.options.member_state.#{item.state}") : '')
+            line << item.name
+            line << item.email
+            line << item.kana
+            line << item.organization_name
+            line << item.job
+            line << item.tel
+            line << item.postal_code
+            line << item.addr
+            line << (item.sex.present? ? I18n.t("member.options.sex.#{item.sex}") : '')
+            line << item.birthday.try(:strftime, "%Y/%m/%d")
+            line << item.updated.strftime("%Y/%m/%d %H:%M")
+            line << item.created.strftime("%Y/%m/%d %H:%M")
+            data << line
+          end
         end
       end
     end

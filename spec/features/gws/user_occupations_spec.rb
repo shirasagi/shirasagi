@@ -26,17 +26,19 @@ describe "gws_user_occupations", type: :feature, dbscope: :example do
         click_on I18n.t("ss.buttons.download")
       end
 
-      csv = ::SS::ChunkReader.new(page.html).to_a.join
-      csv.force_encoding("UTF-8")
-      csv = csv[1..-1]
-      SS::Csv.open(StringIO.new(csv)) do |csv|
-        table = csv.read
-        expect(table.length).to eq 1
-        expect(table.headers).to include(Gws::UserOccupation.t(:code), Gws::UserOccupation.t(:name))
-        expect(table[0][Gws::UserOccupation.t(:code)]).to eq item.code
-        expect(table[0][Gws::UserOccupation.t(:name)]).to eq item.name
-        expect(table[0][Gws::UserOccupation.t(:remark)]).to eq item.remark
-        expect(table[0][Gws::UserOccupation.t(:order)]).to eq item.order.to_s
+      I18n.with_locale(I18n.default_locale) do
+        csv = ::SS::ChunkReader.new(page.html).to_a.join
+        csv.force_encoding("UTF-8")
+        csv = csv[1..-1]
+        SS::Csv.open(StringIO.new(csv)) do |csv|
+          table = csv.read
+          expect(table.length).to eq 1
+          expect(table.headers).to include(Gws::UserOccupation.t(:code), Gws::UserOccupation.t(:name))
+          expect(table[0][Gws::UserOccupation.t(:code)]).to eq item.code
+          expect(table[0][Gws::UserOccupation.t(:name)]).to eq item.name
+          expect(table[0][Gws::UserOccupation.t(:remark)]).to eq item.remark
+          expect(table[0][Gws::UserOccupation.t(:order)]).to eq item.order.to_s
+        end
       end
 
       expect(Gws::History.all.count).to be > 1

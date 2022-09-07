@@ -1,4 +1,5 @@
 class Gws::LoginController < ApplicationController
+  include HttpAcceptLanguage::AutoLocale
   include Gws::BaseFilter
   include Sns::LoginFilter
 

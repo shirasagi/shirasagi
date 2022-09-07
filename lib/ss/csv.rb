@@ -19,12 +19,14 @@ class SS::Csv
     attr_reader :cur_site, :cur_user, :encoding, :columns
 
     def each
-      yield draw_header
-      @criteria.each do |item|
-        item.cur_site = @cur_site if item.respond_to?(:cur_site=)
-        item.cur_user = @cur_user if item.respond_to?(:cur_user=)
-        item.cur_node = @cur_node if item.respond_to?(:cur_node=)
-        yield draw_data(item)
+      I18n.with_locale(I18n.default_locale) do
+        yield draw_header
+        @criteria.each do |item|
+          item.cur_site = @cur_site if item.respond_to?(:cur_site=)
+          item.cur_user = @cur_user if item.respond_to?(:cur_user=)
+          item.cur_node = @cur_node if item.respond_to?(:cur_node=)
+          yield draw_data(item)
+        end
       end
     end
 
@@ -323,7 +325,11 @@ class SS::Csv
       else
         ret = DSLImporter.new(options)
       end
-      ret.draw(&block) if block
+      if block
+        I18n.with_locale(I18n.default_locale) do
+          ret.draw(&block)
+        end
+      end
       ret
     end
 
