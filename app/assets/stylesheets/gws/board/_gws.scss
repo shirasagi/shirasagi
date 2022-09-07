@@ -57,8 +57,12 @@
   }
   .meta {
     .user {
+      display: block;
       margin-right: 5px;
       font-weight: bold;
+    }
+    .datetime {
+      display: block;
     }
   }
   .menu {

@@ -130,6 +130,7 @@ ja:
       file_download: 添付ファイル一括ダウンロード
       forward: 転送する
       publish: 配信する
+      print: 印刷
     confirm:
       public: 受取済みにしますか？
       preparation: 受取待ちに戻しますか？

@@ -7,7 +7,7 @@ module Gws::Monitor::TopicFilter
 
     before_action :set_item, only: %i[
       show edit update delete destroy public preparation question_not_applicable answered disable active publish
-      close open download file_download all_topic_files
+      close open download file_download all_topic_files print
     ]
 
     before_action :set_selected_items, only: %i[
@@ -244,4 +244,10 @@ module Gws::Monitor::TopicFilter
   #   end
   #   render_destroy_all(@items.blank?, notice: t("gws/monitor.notice.active"))
   # end
+
+  def print
+    raise "403" unless @item.attended?(@cur_group) || @item.allowed?(:read, @cur_user, site: @cur_site)
+
+    render template: "print_#{@item.mode}", layout: 'ss/print'
+  end
 end

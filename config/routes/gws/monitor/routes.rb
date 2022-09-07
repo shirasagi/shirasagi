@@ -35,9 +35,13 @@ Rails.application.routes.draw do
 
     scope(path: ':category', defaults: { category: '-' }) do
       resources :topics, concerns: [:state_change, :topic_comment, :topic_files],
-                except: [:new, :create, :edit, :update, :destroy]
+                except: [:new, :create, :edit, :update, :destroy] do
+                  get :print, on: :member
+                end
       resources :answers, concerns: [:state_change, :topic_comment, :topic_files],
-                except: [:new, :create, :edit, :update, :destroy]
+                except: [:new, :create, :edit, :update, :destroy] do
+                  get :print, on: :member
+                end
 
       resources :admins, concerns: [:soft_deletion, :state_change, :topic_comment, :topic_files], except: [:destroy] do
         get :forward, on: :member
