@@ -13,15 +13,18 @@ describe Sys::PostalCodesController, type: :request, dbscope: :example do
       }
     }
   end
+
   before do
     post login_path, params: correct_login_params
     SS.config.replace_value_at(:env, :json_datetime_format, "%Y/%m/%d %H:%M:%S")
   end
+
   describe 'GET #index' do
     context 'When postal_code is nothing' do
       before do
         get sys_postal_codes_path
       end
+
       it { expect(assigns[:model]).to eq Sys::PostalCode }
       it { expect(assigns[:cur_user]).to eq user }
       it { expect(response.status).to eq 200 }
@@ -33,6 +36,7 @@ describe Sys::PostalCodesController, type: :request, dbscope: :example do
         Sys::PostalCode::OfficialCsvImportJob.import_from_zip("#{::Rails.root}/spec/fixtures/sys/postal_code.zip")
         get sys_postal_codes_path
       end
+
       it { expect(assigns[:model]).to eq Sys::PostalCode }
       it { expect(assigns[:cur_user]).to eq user }
       it { expect(response.status).to eq 200 }
@@ -40,16 +44,19 @@ describe Sys::PostalCodesController, type: :request, dbscope: :example do
       it { expect(response.body).to include '<span class="prefecture">東京都</span>' }
     end
   end
+
   describe 'GET #download' do
     context 'When #download' do
       before do
         post download_sys_postal_codes_path
       end
+
       it { expect(assigns[:model]).to eq Sys::PostalCode }
       it { expect(assigns[:cur_user]).to eq user }
       it { expect(response.status).to eq 200 }
     end
   end
+
   describe 'POST #import' do
     context 'When item[:in_official_csv] is 0' do
       before do
@@ -60,12 +67,16 @@ describe Sys::PostalCodesController, type: :request, dbscope: :example do
           }
         }
       end
+
       it { expect(response).to redirect_to sys_postal_codes_path }
       it do
         get sys_postal_codes_path
-        expect(response.body).to include I18n.t("ss.notice.started_import")
+        I18n.with_locale(user.lang.presence.try(:to_sym) || I18n.default_locale) do
+          expect(response.body).to include I18n.t("ss.notice.started_import")
+        end
       end
     end
+
     context 'When item[:in_official_csv] is 1' do
       before do
         post import_sys_postal_codes_path, params: {
@@ -75,10 +86,13 @@ describe Sys::PostalCodesController, type: :request, dbscope: :example do
           }
         }
       end
+
       it { expect(response).to redirect_to sys_postal_codes_path }
       it do
         get sys_postal_codes_path
-        expect(response.body).to include I18n.t("ss.notice.started_import")
+        I18n.with_locale(user.lang.presence.try(:to_sym) || I18n.default_locale) do
+          expect(response.body).to include I18n.t("ss.notice.started_import")
+        end
       end
     end
   end

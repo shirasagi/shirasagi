@@ -26,7 +26,7 @@ describe "gws_chorg", type: :feature, dbscope: :example, js: true do
     let(:reservation_at) { Time.zone.now.beginning_of_minute + 7.days }
 
     before do
-      @save_config = SS.config.job.default
+      @save_config = SS.config.job.default.dup
 
       config = @save_config.dup
       config["mode"] = "service"
