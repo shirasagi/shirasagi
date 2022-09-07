@@ -1,6 +1,5 @@
-module Webmail::Addon::MessageSort
+module Webmail::MessageSort
   extend ActiveSupport::Concern
-  extend SS::Addon
 
   included do
     field :webmail_message_sort, type: Hash, default: {}
@@ -25,7 +24,10 @@ module Webmail::Addon::MessageSort
     self.webmail_message_sort[k1][k2] ||= {}
     if self.webmail_message_sort[k1][k2][k3] != @sort_hash
       self.webmail_message_sort[k1][k2][k3] = @sort_hash
-      save
+
+      without_record_timestamps do
+        save
+      end
     end
 
     @sort_hash

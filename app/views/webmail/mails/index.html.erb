@@ -3,25 +3,25 @@
 
   <% if @imap.sent_box?(@mailbox) || @imap.draft_box?(@mailbox) %>
   $(".list-item-head .to").on("click", function() {
-    location.href = "<%== webmail_mails_path(mailbox: @mailbox) + "?" + @cur_user.webmail_message_sort_query(@sort_hash, "to").to_query %>";
+    location.href = "<%== webmail_mails_path(@cur_user.webmail_message_sort_query(@sort_hash, "to").merge(mailbox: @mailbox)) %>";
     return false;
   });
   <% else %>
   $(".list-item-head .from").on("click", function() {
-    location.href = "<%== webmail_mails_path(mailbox: @mailbox) + "?" +  @cur_user.webmail_message_sort_query(@sort_hash, "from").to_query %>";
+    location.href = "<%== webmail_mails_path(@cur_user.webmail_message_sort_query(@sort_hash, "from").merge(mailbox: @mailbox)) %>";
     return false;
   });
   <% end %>
   $(".list-item-head .title").on("click", function() {
-    location.href = "<%== webmail_mails_path(mailbox: @mailbox) + "?" +  @cur_user.webmail_message_sort_query(@sort_hash, "subject").to_query %>";
+    location.href = "<%== webmail_mails_path(@cur_user.webmail_message_sort_query(@sort_hash, "subject").merge(mailbox: @mailbox)) %>";
     return false;
   });
   $(".list-item-head .datetime").on("click", function() {
-    location.href = "<%== webmail_mails_path(mailbox: @mailbox) + "?" +  @cur_user.webmail_message_sort_query(@sort_hash, "internal_date").to_query %>";
+    location.href = "<%== webmail_mails_path(@cur_user.webmail_message_sort_query(@sort_hash, "internal_date").merge(mailbox: @mailbox)) %>";
     return false;
   });
   $(".list-item-head .size").on("click", function() {
-    location.href = "<%== webmail_mails_path(mailbox: @mailbox) + "?" +  @cur_user.webmail_message_sort_query(@sort_hash, "size").to_query %>";
+    location.href = "<%== webmail_mails_path(@cur_user.webmail_message_sort_query(@sort_hash, "size").merge(mailbox: @mailbox)) %>";
     return false;
   });
 <% end %>
