@@ -5,6 +5,7 @@ class Webmail::User
   include SS::Reference::UserOccupations
   include Webmail::Addon::UserExtension
   include Webmail::Addon::Role
+  include Webmail::Addon::MessageSort
   include Webmail::Permission
   include Sys::Reference::Role
 
