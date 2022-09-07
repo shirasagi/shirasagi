@@ -16,7 +16,6 @@ en:
       reclaim_total_size: Recalculate usage
       create_my_folder: Create your own group folder
       move_to_my_folder: Open your own group folder
-      print: Print
     confirm:
       set_seen: Are you sure you want to mark it as read?
       unset_seen: Are you sure you want to mark it as unread?

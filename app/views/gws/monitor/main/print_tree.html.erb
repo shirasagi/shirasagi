@@ -1,6 +1,6 @@
 <%= render 'ss/crud/print_preview_head', links: [[ I18n.t('ss.links.back'), { action: :show } ]] %>
 
-<section class="main-box sheet">
+<section class="sheet">
   <%= jquery do %>
     Gws_Monitor_Topic.render();
   <% end %>

@@ -130,7 +130,6 @@ en:
       file_download: Bulk attachment file download
       forward: Forward
       publish: Deliver
-      print: Print
     confirm:
       public: Do you want to mark it as received?
       preparation: Do you want to revert to waiting to be received?

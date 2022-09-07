@@ -16,7 +16,6 @@ ja:
       reclaim_total_size: 使用量を再計算する
       create_my_folder: 自所属を作成する
       move_to_my_folder: 自所属フォルダーを開く
-      print: 印刷
     confirm:
       set_seen: 既読にしてもよろしいですか？
       unset_seen: 未読にしてもよろしいですか？
