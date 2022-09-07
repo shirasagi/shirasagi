@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_page_search_contents", type: :feature, dbscope: :example do
+describe "cms_page_search_contents", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:name) { unique_id }
   let(:page_search) { create :cms_page_search, name: name, search_name: "A" }
@@ -38,6 +38,26 @@ describe "cms_page_search_contents", type: :feature, dbscope: :example do
       it do
         visit index_path
         expect(page).to have_css(".search-count", text: "1 件の検索結果")
+      end
+    end
+
+    context "destroy_all" do
+      before do
+        create(:cms_page, cur_site: site, name: "[TEST]A", filename: "A.html", state: "public")
+      end
+
+      it do
+        visit index_path
+        expect(page).to have_css(".search-count", text: "1 件の検索結果")
+
+        within '.list-head' do
+          check(nil)
+          page.accept_confirm do
+            click_button I18n.t('ss.links.delete')
+          end
+        end
+
+        expect(page).to have_css(".search-count", text: "0 件の検索結果")
       end
     end
   end
