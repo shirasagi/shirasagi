@@ -79,6 +79,25 @@ describe "garbage_agents_nodes_search", type: :feature, dbscope: :example, js: t
       expect(page).to have_css("table.columns td a", text: item3.name)
       expect(page).to have_css("table.columns td", text: category3.name)
       expect(page).to have_css("table.columns td", text: item3.remark)
+
+      click_link I18n.t('garbage.submit.change')
+      wait_for_cbox do
+        click_button I18n.t('garbage.submit.search')
+      end
+
+      expect(page).to have_css(".result .number", text: 3)
+
+      expect(page).to have_css("table.columns td a", text: item1.name)
+      expect(page).to have_css("table.columns td", text: category1.name)
+      expect(page).to have_css("table.columns td", text: item1.remark)
+
+      expect(page).to have_css("table.columns td a", text: item2.name)
+      expect(page).to have_css("table.columns td", text: category2.name)
+      expect(page).to have_css("table.columns td", text: item2.remark)
+
+      expect(page).to have_css("table.columns td a", text: item3.name)
+      expect(page).to have_css("table.columns td", text: category3.name)
+      expect(page).to have_css("table.columns td", text: item3.remark)
     end
 
     it "#index search with keyword" do
@@ -102,6 +121,25 @@ describe "garbage_agents_nodes_search", type: :feature, dbscope: :example, js: t
       expect(page).to have_no_css("table.columns td a", text: item3.name)
       expect(page).to have_no_css("table.columns td", text: category3.name)
       expect(page).to have_no_css("table.columns td", text: item3.remark)
+
+      click_link I18n.t('garbage.submit.change')
+      wait_for_cbox do
+        click_button I18n.t('garbage.submit.search')
+      end
+
+      expect(page).to have_css(".result .number", text: 1)
+
+      expect(page).to have_css("table.columns td a", text: item1.name)
+      expect(page).to have_css("table.columns td", text: category1.name)
+      expect(page).to have_css("table.columns td", text: item1.remark)
+
+      expect(page).to have_no_css("table.columns td a", text: item2.name)
+      expect(page).to have_no_css("table.columns td", text: category2.name)
+      expect(page).to have_no_css("table.columns td", text: item2.remark)
+
+      expect(page).to have_no_css("table.columns td a", text: item3.name)
+      expect(page).to have_no_css("table.columns td", text: category3.name)
+      expect(page).to have_no_css("table.columns td", text: item3.remark)
     end
 
     it "#index search with category" do
@@ -111,6 +149,25 @@ describe "garbage_agents_nodes_search", type: :feature, dbscope: :example, js: t
         select category1.name, from: "category_ids[]"
       end
       click_on I18n.t("garbage.submit.search")
+
+      expect(page).to have_css(".result .number", text: 1)
+
+      expect(page).to have_css("table.columns td a", text: item1.name)
+      expect(page).to have_css("table.columns td", text: category1.name)
+      expect(page).to have_css("table.columns td", text: item1.remark)
+
+      expect(page).to have_no_css("table.columns td a", text: item2.name)
+      expect(page).to have_no_css("table.columns td", text: category2.name)
+      expect(page).to have_no_css("table.columns td", text: item2.remark)
+
+      expect(page).to have_no_css("table.columns td a", text: item3.name)
+      expect(page).to have_no_css("table.columns td", text: category3.name)
+      expect(page).to have_no_css("table.columns td", text: item3.remark)
+
+      click_link I18n.t('garbage.submit.change')
+      wait_for_cbox do
+        click_button I18n.t('garbage.submit.search')
+      end
 
       expect(page).to have_css(".result .number", text: 1)
 
