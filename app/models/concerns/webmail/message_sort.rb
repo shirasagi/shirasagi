@@ -42,9 +42,10 @@ module Webmail::MessageSort
   end
 
   def webmail_message_sort_icon(sort_hash, name)
-    if sort_hash[name] == -1
+    case sort_hash[name]
+    when -1
       '<i class="material-icons md-18">&#xE313;</i>'
-    elsif sort_hash[name] == 1
+    when 1
       '<i class="material-icons md-18">&#xE316;</i>'
     else
       '<i class="material-icons md-18" style="visibility: hidden;">&#xE313;</i>'
