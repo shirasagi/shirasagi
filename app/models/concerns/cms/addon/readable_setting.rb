@@ -6,9 +6,6 @@ module Cms::Addon::ReadableSetting
     class_variable_set(:@@_requires_read_permission_to_read, true)
 
     field :readable_setting_range, type: String, default: 'public'
-    field :readable_groups_hash, type: Hash
-    field :readable_members_hash, type: Hash
-
     embeds_ids :readable_groups, class_name: "Cms::Group"
     embeds_ids :readable_members, class_name: "Cms::User"
 
@@ -16,8 +13,6 @@ module Cms::Addon::ReadableSetting
     permit_params readable_group_ids: [], readable_member_ids: []
 
     before_validation :apply_readable_setting_range, if: ->{ readable_setting_range_changed? && readable_setting_range }
-    before_validation :set_readable_groups_hash
-    before_validation :set_readable_members_hash
 
     # Allow readable settings and readable permissions.
     scope :readable, ->(user, opts = {}) {
@@ -47,22 +42,6 @@ module Cms::Addon::ReadableSetting
     return true if readable_group_ids.any? { |m| user.group_ids.include?(m) }
     return true if readable_member_ids.include?(user.id)
     false
-  end
-
-  def readable_groups_hash
-    self[:readable_groups_hash].presence || readable_groups.map { |m| [m.id, m.name] }.to_h
-  end
-
-  def readable_group_names
-    readable_groups_hash.values
-  end
-
-  def readable_members_hash
-    self[:readable_members_hash].presence || readable_members.map { |m| [m.id, m.long_name] }.to_h
-  end
-
-  def readable_member_names
-    readable_members_hash.values
   end
 
   def readable_setting_range_options
@@ -100,14 +79,6 @@ module Cms::Addon::ReadableSetting
       self.readable_group_ids = []
       self.readable_member_ids = []
     end
-  end
-
-  def set_readable_groups_hash
-    self.readable_groups_hash = readable_groups.map { |m| [m.id, m.name] }.to_h
-  end
-
-  def set_readable_members_hash
-    self.readable_members_hash = readable_members.map { |m| [m.id, m.long_name] }.to_h
   end
 
   module ClassMethods
