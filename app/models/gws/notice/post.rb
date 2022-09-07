@@ -55,7 +55,7 @@ class Gws::Notice::Post
     def search_keyword(params)
       return all if params.blank? || params[:keyword].blank?
 
-      all.keyword_in(params[:keyword], :name, :html)
+      all.keyword_in(params[:keyword], :name, :text)
     end
 
     def search_severity(params)
