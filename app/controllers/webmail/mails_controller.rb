@@ -76,7 +76,8 @@ class Webmail::MailsController < ApplicationController
   def index
     @sys_notices = Sys::Notice.and_public.webmail_admin_notice.reorder(notice_severity: 1, released: -1).page(1).per(5)
 
-    @sort_hash = @cur_user.webmail_message_sort_hash(params[:webmail_mode], params[:account], @mailbox, params[:sort], params[:order])
+    @sort_hash = @cur_user.webmail_message_sort_hash(
+      params[:webmail_mode], params[:account], @mailbox, params[:sort], params[:order])
     @items = @imap.mails.
       mailbox(@mailbox).
       search(params[:s]).
