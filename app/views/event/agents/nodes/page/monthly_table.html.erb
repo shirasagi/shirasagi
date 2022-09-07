@@ -43,7 +43,7 @@
             <% end %>
 
             <% if events.blank? && @cur_node.substitute_html.present? %>
-              <dd class="no-event"><%= sanitize @cur_node.substitute_html.html_safe %></dd>
+              <div class="no-event"><%= sanitize @cur_node.substitute_html.html_safe %></div>
             <% end %>
 
             <% events.each do |event, categories| %>
