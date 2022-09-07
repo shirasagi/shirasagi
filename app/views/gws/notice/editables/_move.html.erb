@@ -4,7 +4,7 @@
 
   <dt><%= @model.t :folder_id %><%= @model.tt :folder_id %></dt>
   <dd>
-    <%= f.hidden_field :folder_id, value: '', class: 'hidden-ids' %>
+    <%= f.hidden_field :folder_id, value: '', id: nil, class: 'hidden-ids' %>
     <%= link_to t('gws/share.apis.folders.index'), gws_notice_apis_folders_path(mode: 'editable', except: @item.folder_id, single: true), class: 'ajax-box' %>
   </dd>
   <dd>

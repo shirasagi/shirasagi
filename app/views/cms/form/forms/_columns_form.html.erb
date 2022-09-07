@@ -9,7 +9,7 @@
   end
 %>
 
-<%= hidden_field_tag "#{f.object_name}[column_values][]", ""  %>
+<%= hidden_field_tag "#{f.object_name}[column_values][]", "", id: nil  %>
 
 <% if form.sub_type_static? %>
   <%= render 'cms/form/forms/columns_form_static', local_assigns %>

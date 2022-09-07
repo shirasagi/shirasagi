@@ -1,11 +1,11 @@
 <div class="question"><%= @question.name %></div>
 
-<%= hidden_field_tag "answers[#{@no}][]", "0" %>
+<%= hidden_field_tag "answers[#{@no}][]", "0", id: nil %>
 <ul>
 <% @question.edges.each do |edge| %>
   <li>
     <label>
-      <%= check_box_tag "answers[#{@no}][]", edge.transition %>
+      <%= check_box_tag "answers[#{@no}][]", edge.transition, false, id: nil %>
       <%= edge.value %>
     </label>
   </li>

@@ -1,7 +1,7 @@
 <div class="search-ui-form">
   <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
     <% @inherit_keys.each do |key| %>
-      <%= hidden_field_tag key, params[key] %>
+      <%= hidden_field_tag key, params[key], id: nil %>
     <% end %>
     <%= hidden_field_tag 'fragment', '#gws-memo-persona-address-personal' %>
 

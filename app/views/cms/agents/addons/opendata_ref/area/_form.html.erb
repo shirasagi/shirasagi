@@ -9,7 +9,7 @@
 <dl class="see mod-cms-opendata-area category-form">
   <dt class="wide"><%= @model.t :opendata_area_ids %><%= @model.tt :opendata_area_ids %></dt>
   <dd class="wide">
-    <%= f.hidden_field('opendata_area_ids[]', value: '') %>
+    <%= f.hidden_field('opendata_area_ids[]', value: '', id: nil) %>
     <% areas.each do |cate| %>
       <div class="parent">
         <%= label_tag do %>

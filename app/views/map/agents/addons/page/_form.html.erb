@@ -60,7 +60,7 @@
       <dd class="marker">
         <p>
           <%= link_to t("map.buttons.select_image"), "", class: "btn select-marker-image" %>
-          <%= hidden_field_tag "item[map_points][][image]", "" %>
+          <%= hidden_field_tag "item[map_points][][image]", "", id: nil %>
           <span class="marker-thumb"></span>
         </p>
         <%== render_marker_picker(site: @cur_site) %>
@@ -75,7 +75,7 @@
         </p>
         <p>
           <%= button_tag t("map.buttons.set_marker"), { type: :button, class: "set-marker btn" } %>
-          <%= hidden_field_tag "item[map_points][][loc]", nil, class: "loc marker-loc" %>
+          <%= hidden_field_tag "item[map_points][][loc]", nil, id: nil, class: "loc marker-loc" %>
           <%= button_tag t("map.buttons.clear_marker"), { type: :button, class: "clear-marker btn" } %>
         </p>
       </dd>
@@ -84,7 +84,7 @@
       <dd class="marker active">
         <p>
           <%= link_to t("map.buttons.select_image"), "", class: "btn select-marker-image" %>
-          <%= hidden_field_tag "item[map_points][][image]", point[:image] %>
+          <%= hidden_field_tag "item[map_points][][image]", point[:image], id: nil %>
           <span class="marker-thumb"></span>
         </p>
         <%== render_marker_picker(site: @cur_site) %>
@@ -99,7 +99,7 @@
         </p>
         <p>
           <%= button_tag t("map.buttons.set_marker"), { type: :button, class: "set-marker btn" } %>
-          <%= hidden_field_tag "item[map_points][][loc]", point[:loc].join(","), class: "loc marker-loc" %>
+          <%= hidden_field_tag "item[map_points][][loc]", point[:loc].join(","), id: nil, class: "loc marker-loc" %>
           <%= button_tag t("map.buttons.clear_marker"), { type: :button, class: "clear-marker btn" } %>
         </p>
       </dd>

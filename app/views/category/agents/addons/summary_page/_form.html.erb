@@ -1,7 +1,7 @@
 <dl class="see mod-category-summary_page">
   <dt><%= @model.t :summary_page_id %><%= @model.tt :summary_page_ids %></dt>
   <dd>
-    <%= f.hidden_field "summary_page_id", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "summary_page_id", value: "", id: nil, class: "hidden-ids" %>
     <%= link_to t("cms.apis.pages.index"), cms_apis_pages_path(single: 1), class: "ajax-box" %>
   </dd>
   <dd>
@@ -15,7 +15,7 @@
       <tbody>
         <% if @item.summary_page %>
         <tr data-id="<%= @item.summary_page_id %>">
-          <td><%= f.hidden_field "summary_page_id", value: @item.summary_page_id %> <%= @item.summary_page.name %></td>
+          <td><%= f.hidden_field "summary_page_id", value: @item.summary_page_id, id: nil %> <%= @item.summary_page.name %></td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
         <% end %>

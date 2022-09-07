@@ -9,7 +9,7 @@
     <% end %>
   </dd>
   <dd>
-    <%= f.hidden_field "schedule_member_ids[]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "schedule_member_ids[]", value: "", id: nil, class: "hidden-ids" %>
     <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "btn ajax-box" %>
   </dd>
   <dd>

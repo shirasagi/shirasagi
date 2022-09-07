@@ -23,13 +23,13 @@
         <td class="text-break"><%= col_name %></td>
         <td class="text-break"><%= values[:type] %></td>
         <td class="text-break">
-          <%= hidden_field_tag "item[column_values][#{idx}][name]", col_name %>
+          <%= hidden_field_tag "item[column_values][#{idx}][name]", col_name, id: nil %>
 
           <% case values[:form][:type] %>
           <% when 'input' %>
-            <%= text_field_tag "item[column_values][#{idx}][value]", values[:full] %>
+            <%= text_field_tag "item[column_values][#{idx}][value]", values[:full], id: nil %>
           <% when 'textarea' %>
-            <%= text_area_tag "item[column_values][#{idx}][value]", values[:full], rows: values[:form][:rows], style: "height: auto;" %>
+            <%= text_area_tag "item[column_values][#{idx}][value]", values[:full], rows: values[:form][:rows], id: nil, style: "height: auto;" %>
           <% else %>
             <%= values[:full] %>
           <% end %>

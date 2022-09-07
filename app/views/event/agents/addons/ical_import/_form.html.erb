@@ -30,7 +30,7 @@
 
   <dt><%= @model.t :ical_category_ids %><%= @model.tt :ical_category_ids %></dt>
   <dd>
-    <%= hidden_field_tag "#{f.object_name}[ical_category_ids][]", nil, class: "hidden-ids" %>
+    <%= hidden_field_tag "#{f.object_name}[ical_category_ids][]", nil, id: nil, class: "hidden-ids" %>
     <%= link_to t("cms.apis.categories.index"), cms_apis_categories_path(single: 1), class: "btn ajax-box" %>
   </dd>
   <dd>
@@ -44,7 +44,7 @@
       <tbody>
       <% @item.ical_categories.each do |item| %>
         <tr data-id="<%= item.id %>">
-          <td><%= hidden_field_tag "#{f.object_name}[ical_category_ids][]", item.id %> <%= item.name %></td>
+          <td><%= hidden_field_tag "#{f.object_name}[ical_category_ids][]", item.id, id: nil %> <%= item.name %></td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>

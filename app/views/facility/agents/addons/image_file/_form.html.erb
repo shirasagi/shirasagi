@@ -5,7 +5,7 @@
     <%= link_to t('ss.links.upload'), facility_apis_temp_files_path(@cur_user), class: "ajax-box" %>
 
     <div id="selected-files">
-      <%= f.hidden_field "image_id", value: "", class: "hidden-ids" %>
+      <%= f.hidden_field "image_id", value: "", id: nil, class: "hidden-ids" %>
       <% if @item.image.present? %>
         <div class="file-view" data-file-id="<%= @item.image.id %>">
           <%= sanitizer_status(@item.image) %>

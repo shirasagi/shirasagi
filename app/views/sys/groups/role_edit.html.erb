@@ -9,7 +9,7 @@
     <dd><%= @item.users.map(&:name).join(", ") %></dd>
     <dt><%= t("ss.role") %></dt>
     <dd>
-      <%= f.hidden_field "sys_role_ids[]", value: "" %>
+      <%= f.hidden_field "sys_role_ids[]", value: "", id: nil %>
       <% Sys::Role.order_by(name: 1).each do |role| %>
       <label><%= f.check_box("sys_role_ids[]", {}, role.id) %> <%= role.name %></label><br />
       <% end %>

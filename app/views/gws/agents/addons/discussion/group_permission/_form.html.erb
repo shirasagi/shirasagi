@@ -3,7 +3,7 @@
   <dl class="see mod-gws-owner_permission-custom-groups">
     <dt><%= @model.t :custom_group_ids %><%= @model.tt :custom_group_ids %></dt>
     <dd>
-      <%= f.hidden_field "custom_group_ids[]", value: "", class: "hidden-ids" %>
+      <%= f.hidden_field "custom_group_ids[]", value: "", id: nil, class: "hidden-ids" %>
       <%= link_to t("gws.apis.custom_groups.index"), gws_apis_custom_groups_path, class: "btn ajax-box" %>
     </dd>
     <dd>
@@ -12,7 +12,7 @@
         <tbody>
         <% @item.custom_groups.each do |group| %>
           <tr data-id="<%= group.id %>">
-            <td><%= f.hidden_field "custom_group_ids[]", value: group.id %> <%= group.name %></td>
+            <td><%= f.hidden_field "custom_group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
         <% end %>
@@ -25,7 +25,7 @@
   <dl class="see mod-gws-owner_permission-groups">
     <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
     <dd>
-      <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>
+      <%= f.hidden_field "group_ids[]", value: "", id: nil, class: "hidden-ids" %>
       <%= link_to t("ss.apis.groups.index"), gws_apis_groups_path, class: "btn ajax-box" %>
       <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-groups" %>
       <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-groups" %>
@@ -36,14 +36,14 @@
         <tbody>
           <% if params[:action] =~ /new/ && !@skip_default_group %>
           <tr data-id="<%= @cur_group.id %>">
-            <td><%= f.hidden_field "group_ids[]", value: @cur_group.id %> <%= @cur_group.name %></td>
+            <td><%= f.hidden_field "group_ids[]", value: @cur_group.id, id: nil %> <%= @cur_group.name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
           <% end %>
 
           <% @item.groups.each do |group| %>
           <tr data-id="<%= group.id %>">
-            <td><%= f.hidden_field "group_ids[]", value: group.id %> <%= group.name %></td>
+            <td><%= f.hidden_field "group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
           <% end %>
@@ -55,7 +55,7 @@
   <dl class="see mod-gws-owner_permission-users">
     <dt><%= @model.t :user_ids %><%= @model.tt :user_ids %></dt>
     <dd>
-      <%= f.hidden_field "user_ids[]", value: "", class: "hidden-ids" %>
+      <%= f.hidden_field "user_ids[]", value: "", id: nil, class: "hidden-ids" %>
       <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "btn ajax-box" %>
       <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-users" %>
       <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
@@ -66,14 +66,14 @@
         <tbody>
           <% if params[:action] =~ /new/ %>
           <tr data-id="<%= @cur_user.id %>">
-            <td><%= f.hidden_field "user_ids[]", value: @cur_user.id %> <%= gws_public_user_long_name(@cur_user.long_name) %></td>
+            <td><%= f.hidden_field "user_ids[]", value: @cur_user.id, id: nil %> <%= gws_public_user_long_name(@cur_user.long_name) %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
           <% end %>
 
           <% @item.users.order_by_title(@cur_site).each do |user| %>
           <tr data-id="<%= user.id %>">
-            <td><%= f.hidden_field "user_ids[]", value: user.id %> <%= gws_public_user_long_name(user.long_name) %></td>
+            <td><%= f.hidden_field "user_ids[]", value: user.id, id: nil %> <%= gws_public_user_long_name(user.long_name) %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
           <% end %>

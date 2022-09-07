@@ -16,7 +16,7 @@
 
   <dt><%= @model.t :organization_ids %><%= @model.tt :organization_ids %></dt>
   <dd>
-    <%= f.hidden_field "organization_ids[]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "organization_ids[]", value: "", id: nil, class: "hidden-ids" %>
     <%= link_to t("ss.apis.organizations.index"), service_apis_organizations_path, class: "ajax-box" %>
   </dd>
   <dd>
@@ -25,7 +25,7 @@
       <tbody>
         <% @item.organizations.each do |group| %>
           <tr data-id="<%= group.id %>">
-            <td><%= f.hidden_field "organization_ids[]", value: group.id %> <%= group.name %></td>
+            <td><%= f.hidden_field "organization_ids[]", value: group.id, id: nil %> <%= group.name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
         <% end %>

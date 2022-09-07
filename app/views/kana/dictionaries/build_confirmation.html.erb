@@ -7,7 +7,7 @@
     <p><%= t "kana.views.dictionaries/build_confirmation.build_description" %></p>
 
     <% @items.each do |item| %>
-      <%= f.hidden_field "ids[]", value: item.id %>
+      <%= f.hidden_field "ids[]", value: item.id, id: nil %>
     <% end %>
 
     <dl class="see">

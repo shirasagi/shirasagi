@@ -9,7 +9,7 @@
   <dl class="see">
     <dt><%= @model.t :member_custom_group_ids %><%= @model.tt :member_custom_group_ids %></dt>
     <dd>
-      <%= f.hidden_field "member_custom_group_ids[]", value: "", class: "hidden-ids" %>
+      <%= f.hidden_field "member_custom_group_ids[]", value: "", id: nil, class: "hidden-ids" %>
       <%= link_to t("gws.apis.custom_groups.index"), gws_apis_custom_groups_path, class: "btn ajax-box" %>
     </dd>
     <dd>
@@ -31,7 +31,7 @@
   <dl class="see">
     <dt><%= @model.t :member_group_ids %><%= @model.tt :member_group_ids %></dt>
     <dd>
-      <%= f.hidden_field "member_group_ids[]", value: "", class: "hidden-ids" %>
+      <%= f.hidden_field "member_group_ids[]", value: "", id: nil, class: "hidden-ids" %>
       <%= link_to t("ss.apis.groups.index"), gws_apis_groups_path, class: "btn ajax-box" %>
     </dd>
     <dd>
@@ -57,7 +57,7 @@
   <dl class="see">
     <dt><%= @model.t :member_ids %><%= @model.tt :member_ids %></dt>
     <dd>
-      <%= f.hidden_field "member_ids[]", value: "", class: "hidden-ids" %>
+      <%= f.hidden_field "member_ids[]", value: "", id: nil, class: "hidden-ids" %>
       <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "btn ajax-box" %>
       <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-users" %>
       <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>

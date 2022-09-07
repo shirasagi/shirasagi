@@ -1,7 +1,7 @@
 <dl class="see gws-schedule-facility" data-plan-id="<%= @item.persisted? ? @item.id : "" %>">
   <dt><%= @model.t :facility_ids %><%= @model.tt :facility_ids %></dt>
   <dd>
-    <%= f.hidden_field('facility_ids[]', value: '', class: 'hidden-ids') %>
+    <%= f.hidden_field('facility_ids[]', value: '', id: nil, class: 'hidden-ids') %>
     <%= link_to(t('gws.apis.facilities.index'), gws_apis_facilities_path, class: 'ajax-box btn btn-select-facility') %>
     <%= button_tag(I18n.t('gws/schedule.facility_reservation.index'), type: 'button', class: %w(btn btn-confirm-facility-reservation), style: 'display: none;') %>
   </dd>

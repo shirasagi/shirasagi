@@ -12,7 +12,7 @@
 
   <dt><%= @model.t :sender_user_id %><%= @model.tt :sender_user_id %></dt>
   <dd>
-    <%= f.hidden_field 'sender_user_id', value: '', class: 'hidden-ids' %>
+    <%= f.hidden_field 'sender_user_id', value: '', id: nil, class: 'hidden-ids' %>
     <%= link_to t('ss.apis.users.index'), gws_apis_users_path(single: true), class: 'ajax-box' %>
   </dd>
   <dd>

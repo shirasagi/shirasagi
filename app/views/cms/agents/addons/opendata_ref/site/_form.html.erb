@@ -8,7 +8,7 @@
 <dl class="see mod-cms-opendata-site">
   <dt><%= @model.t :opendata_site_ids %><%= @model.tt :opendata_site_ids %></dt>
   <dd>
-    <%= f.hidden_field "opendata_site_ids[]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "opendata_site_ids[]", value: "", id: nil, class: "hidden-ids" %>
     <%= link_to t("cms.apis.sites.index"), cms_apis_sites_path, class: "ajax-box" %>
   </dd>
   <dd>
@@ -22,7 +22,7 @@
       <tbody>
         <% @item.opendata_sites.each do |site| %>
         <tr data-id="<%= site.id %>">
-          <td><%= f.hidden_field "opendata_site_ids[]", value: site.id %> <%= site.host %></td>
+          <td><%= f.hidden_field "opendata_site_ids[]", value: site.id, id: nil %> <%= site.host %></td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
         <% end %>

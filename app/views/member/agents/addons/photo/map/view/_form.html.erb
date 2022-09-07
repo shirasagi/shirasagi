@@ -41,12 +41,12 @@
         </div>
       </div>
       <% if @item.map_points.blank? %>
-        <%= hidden_field_tag "item[map_points][][loc]", nil, class: "loc marker-loc" %>
-        <%#= text_field_tag "item[map_points][][loc]", nil, class: "loc marker-loc" %>
+        <%= hidden_field_tag "item[map_points][][loc]", nil, id: nil, class: "loc marker-loc" %>
+        <%#= text_field_tag "item[map_points][][loc]", nil, id: nil, class: "loc marker-loc" %>
       <% else %>
         <% @item.map_points.each do |point| %>
-          <%= hidden_field_tag "item[map_points][][loc]", point[:loc].join(","), class: "loc marker-loc" %>
-          <%#= text_field_tag "item[map_points][][loc]", point[:loc].join(","), class: "loc marker-loc" %>
+          <%= hidden_field_tag "item[map_points][][loc]", point[:loc].join(","), id: nil, class: "loc marker-loc" %>
+          <%#= text_field_tag "item[map_points][][loc]", point[:loc].join(","), id: nil, class: "loc marker-loc" %>
         <% end %>
       <% end %>
       <div id="map-canvas" style="width: 100%; height: 320px"></div>

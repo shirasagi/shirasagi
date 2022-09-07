@@ -24,7 +24,7 @@
           </p>
           <p>
             <%= button_tag t("map.buttons.set_marker"), { type: :button, class: "set-marker btn" } %>
-            <%= hidden_field_tag "item[map_points][][loc]", nil, class: "loc marker-loc" %>
+            <%= hidden_field_tag "item[map_points][][loc]", nil, id: nil, class: "loc marker-loc" %>
             <%= button_tag t("map.buttons.clear_marker"), { type: :button, class: "clear-marker btn" } %>
           </p>
         </dd>
@@ -42,7 +42,7 @@
           </p>
           <p>
             <%= button_tag t("map.buttons.set_marker"), { type: :button, class: "set-marker btn" } %>
-            <%= hidden_field_tag "item[map_points][][loc]", point[:loc].join(","), class: "loc marker-loc" %>
+            <%= hidden_field_tag "item[map_points][][loc]", point[:loc].join(","), id: nil, class: "loc marker-loc" %>
             <%= button_tag t("map.buttons.clear_marker"), { type: :button, class: "clear-marker btn" } %>
           </p>
         </dd>

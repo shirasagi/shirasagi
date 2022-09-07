@@ -13,7 +13,7 @@
   <%= hidden_field_tag("unique_id", params[:unique_id]) %>
   <%= hidden_field_tag("dropdown", params[:dropdown]) %>
   <% @parent_nodes.each do |node| %>
-    <%= hidden_field_tag("parent_nodes[]", node.id) %>
+    <%= hidden_field_tag("parent_nodes[]", node.id, id: nil) %>
   <% end %>
   <dl class="see">
     <% if @dropdown == "tree"%>

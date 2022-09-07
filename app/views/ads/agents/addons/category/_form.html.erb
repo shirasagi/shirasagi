@@ -8,7 +8,7 @@ cate_options = { root_and_descendants: true, item_name: "ads_category_ids" }
 <dl class="see mod-category-category category-form">
   <dt class="wide"><%= @model.t :ads_categories %><%= @model.tt :ads_categories %></dt>
   <dd class="wide">
-    <%= f.hidden_field "ads_category_ids[]", value: "" %>
+    <%= f.hidden_field "ads_category_ids[]", value: "", id: nil %>
     <% render_cate_form categories.tree_sort.to_a, cate_options %>
   </dd>
 </dl>

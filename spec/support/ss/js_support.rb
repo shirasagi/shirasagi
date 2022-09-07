@@ -2,6 +2,10 @@ module SS
   module JsSupport
     module Hooks
       def self.extended(obj)
+        # callback は登録の逆順に呼ばれるので、先に non_unique_id! を登録する
+        Capybara::Session.set_callback :visit, :after do |session|
+          SS::JsSupport.non_unique_id!(session)
+        end
         Capybara::Session.set_callback :visit, :after do |session|
           SS::JsSupport.wait_for_js_ready(session)
         rescue => _e
@@ -279,8 +283,9 @@ module SS
       page.execute_script("jQuery.migrateReset();")
     end
 
-    def capture_console_logs
-      page.driver.browser.manage.logs.get(:browser).collect(&:message)
+    def capture_console_logs(session = nil)
+      session ||= page
+      session.driver.browser.manage.logs.get(:browser).collect(&:message)
     rescue => _e
     end
 
@@ -302,6 +307,14 @@ module SS
     def disable_js_debug
       page.execute_script("SS.debug = false;")
     rescue => _e
+    end
+
+    def non_unique_id!(session = nil)
+      session ||= page
+      console_messages = capture_console_logs(session)
+      if console_messages && console_messages.any? { |message| message.include?("non-unique id") }
+        raise "there are non-unique elements"
+      end
     end
 
     def wait_event_to_fire(event_name, selector = nil)
