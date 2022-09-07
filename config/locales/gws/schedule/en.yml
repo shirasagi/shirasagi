@@ -28,9 +28,13 @@ en:
         withTodo: ToDo
         withAbsence: Absence
       titleFormat:
-        month: "MMM/YYYY"
-        week: "(ddd, MM/DD/YYYY)"
-        day: "ddd, MM/DD/YYYY"
+        month: "%m/%Y"
+        week: "(%a, %m/%d/%Y)"
+        day: "%a, %m/%d/%Y"
+      columnFormat:
+        month: "%a"
+        week: "%a, %m/%d"
+        day: "%a, %m/%d"
     links:
       add_plan: Create a plan
       download: Download

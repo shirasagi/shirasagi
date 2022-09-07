@@ -12,7 +12,9 @@
   init_options = params[:calendar] || {}
 %>
 <%= jquery do %>
-  Gws_Schedule_Calendar.render('#calendar', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
+  $(document).on("gws:calendarInitialized", function() {
+    Gws_Schedule_Calendar.render('#calendar', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
+  });
 <% end %>
 
 <section class="main-box gws-schedule-box">

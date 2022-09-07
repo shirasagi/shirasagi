@@ -34,18 +34,30 @@ module SS::BaseFilter
     @stylesheets || []
   end
 
-  def stylesheet(path)
+  def stylesheet(path, **options)
     @stylesheets ||= []
-    @stylesheets << path unless @stylesheets.include?(path)
+    unless @stylesheets.any? { |css_path, css_options| css_path == path }
+      if options.present?
+        @stylesheets << [ path, options ]
+      else
+        @stylesheets << path
+      end
+    end
   end
 
   def javascripts
     @javascripts || []
   end
 
-  def javascript(path)
+  def javascript(path, **options)
     @javascripts ||= []
-    @javascripts << path unless @javascripts.include?(path)
+    unless @javascripts.any? { |js_path, js_options| js_path == path }
+      if options.present?
+        @javascripts << [ path, options ]
+      else
+        @javascripts << path
+      end
+    end
   end
 
   private
@@ -59,8 +71,12 @@ module SS::BaseFilter
   end
 
   def set_ss_assets
-    SS.config.ss.stylesheets.each { |m| stylesheet(m) } if SS.config.ss.stylesheets.present?
-    SS.config.ss.javascripts.each { |m| javascript(m) } if SS.config.ss.javascripts.present?
+    if SS.config.ss.stylesheets.present?
+      SS.config.ss.stylesheets.each { |m, options| options ? stylesheet(m, **options.symbolize_keys) : stylesheet(m) }
+    end
+    if SS.config.ss.javascripts.present?
+      SS.config.ss.javascripts.each { |m, options| options ? javascript(m, **options.symbolize_keys) : javascript(m) }
+    end
     stylesheet("/assets/css/colorbox/colorbox.css")
   end
 

@@ -20,10 +20,6 @@ this.SS = (function () {
 
   SS.siteName = null;
 
-  SS.timeFormatter = {
-    default: "YYYY/M/D HH:mm"
-  };
-
   SS.debug = false;
 
   SS.defaultTimeoutMillis = 2000;
@@ -498,6 +494,37 @@ this.SS = (function () {
 
   // datetimepicker
 
+  SS.rubyToMomenFormatMap = [
+    [ "%Y", "YYYY" ],
+    [ "%y", "YY" ],
+    [ "%m", "MM" ],
+    [ "%1m", "M" ],
+    [ "%B", "MMMM" ],
+    [ "%b", "MMM" ],
+    [ "%d", "DD" ],
+    [ "%1d", "D" ],
+    [ "%H", "HH" ],
+    [ "%1H", "H" ],
+    [ "%I", "hh" ],
+    [ "%1I", "h" ],
+    [ "%P", "a" ],
+    [ "%p", "A" ],
+    [ "%M", "mm" ],
+    [ "%A", "dddd" ],
+    [ "%a", "ddd" ],
+  ];
+
+  SS.convertDateTimeFormat = function(format) {
+    $.each(SS.rubyToMomenFormatMap, function() {
+      var from = this[0];
+      var to = this[1];
+
+      from = new RegExp(from, "g");
+      format = format.replace(from, to);
+    });
+    return format;
+  };
+
   // 注意:
   // datetimepicker にはバグがある。
   // このコントールの次の要素が disabled の場合、コントロール内で Enter キーを押しても、入力した日時が確定しない。
@@ -578,14 +605,29 @@ this.SS = (function () {
   // SS.formatTime(new Date())
   // SS.formatTime(moment())
   SS.formatTime = function (time, format) {
+    if (!time) {
+      return time;
+    }
     if (!format) {
       format = "default"
     }
-    if (SS.timeFormatter[format]) {
-      format = SS.timeFormatter[format];
-    }
+    format = i18next.t("time.formats." + format, format);
+    format = SS.convertDateTimeFormat(format);
 
     return moment(time).format(format);
+  };
+
+  SS.formatDate = function (date, format) {
+    if (!date) {
+      return date;
+    }
+    if (!format) {
+      format = "default"
+    }
+    format = i18next.t("date.formats." + format, format);
+    format = SS.convertDateTimeFormat(format);
+
+    return moment(date).format(format);
   };
 
   SS.renderFileUploadInitialized = false;

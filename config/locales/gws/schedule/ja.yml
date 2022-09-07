@@ -28,9 +28,13 @@ ja:
         withTodo: ToDo表示
         withAbsence: 欠席表示
       titleFormat:
-        month: YYYY年 M月
-        week: (YYYY年 M月 D日（ddd）)
-        day: YYYY年 M月 D日（ddd）
+        month: "%Y年 %1m月"
+        week: "(%Y年 %1m月 %1d日（%a）)"
+        day: "%Y年 %1m月 %1d日（%a）"
+      columnFormat:
+        month: "%a"
+        week: "%1m/%1d (%a)"
+        day: "%1m/%1d (%a)"
     links:
       add_plan: 予定を作成
       download: ダウンロード

@@ -12,3 +12,9 @@
 //= require gws/schedule/lib/calendar_transition
 //= require gws/schedule/lib/multiple_calendar
 //= require gws/schedule/lib/view
+
+SS.ready(function() {
+  setTimeout(function() {
+    $(document).trigger("gws:calendarInitialized");
+  }, 0)
+});

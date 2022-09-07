@@ -1,7 +1,9 @@
 <% return if params[:action] =~ /index/ %>
 
 <%= jquery do %>
-  (new Gws_Schedule_CalendarTransition(<%== params[:calendar].to_json %>)).renderLinks('.nav-menu a')
+  $(document).on("gws:calendarInitialized", function() {
+    (new Gws_Schedule_CalendarTransition(<%== params[:calendar].to_json %>)).renderLinks('.nav-menu a')
+  });
 <% end %>
 
 <nav class="nav-menu">

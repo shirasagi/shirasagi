@@ -30,7 +30,6 @@
 //= require mdn-polyfills/String.prototype.repeat.js
 //= require mdn-polyfills/String.prototype.startsWith.js
 //= require mdn-polyfills/String.prototype.trim.js
-//= require moment
 //= require popper.js/dist/umd/popper.js
 //= require tippy.js/dist/tippy-bundle.iife.js
 //= require crypto-js/3.2.0/crypto-js.min.js

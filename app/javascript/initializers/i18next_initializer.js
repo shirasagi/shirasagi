@@ -2,6 +2,7 @@ import Initializer from "../ss/initializer"
 import i18next from 'i18next'
 import MultiLoad from 'i18next-multiload-backend-adapter'
 import Http from 'i18next-http-backend'
+import moment from "moment/moment"
 
 const LOAD_PATH = '/.mypage/locales/default/{{lng}}/{{ns}}.json'
 
@@ -52,8 +53,12 @@ export default class extends Initializer {
   }
 
   afterInitialize() {
-    i18next.changeLanguage(document.documentElement.lang)
+    i18next.changeLanguage(document.documentElement.lang || 'ja')
+    moment.locale(document.documentElement.lang || 'ja');
+
     window.i18next = i18next
+    window.moment = moment
+
     return Promise.resolve()
   }
 }

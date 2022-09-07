@@ -11,7 +11,7 @@ module Gws::Portal::PortalFilter
   # override Gws::BaseFilter#set_gws_assets
   def set_gws_assets
     super
-    javascript("gws/calendar")
+    javascript("gws/calendar", defer: true)
   end
 
   def fix_params
@@ -57,7 +57,7 @@ module Gws::Portal::PortalFilter
         when 'read'
           @notices = @notices.and_read(@cur_user)
         when 'both'
-          @notices = @notices
+          # nothing to do
         else # unread
           @notices = @notices.and_unread(@cur_user)
         end

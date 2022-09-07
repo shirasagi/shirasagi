@@ -67,9 +67,9 @@ SS.ready(function() {
           listMonth: i18next.t('gws/schedule.calendar.buttonText.listMonth')
         },
         columnFormat: {
-          month: "ddd",
-          week: "M/D [(]ddd[)]",
-          day: "M/D [(]ddd[)]"
+          month: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.columnFormat.month')),
+          week: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.columnFormat.week')),
+          day: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.columnFormat.day'))
         },
         customButtons: {
           withTodo: {
@@ -127,9 +127,9 @@ SS.ready(function() {
         startParam: 's[start]',
         timeFormat: 'HH:mm',
         titleFormat: {
-          month: i18next.t('gws/schedule.calendar.titleFormat.month'),
-          week: i18next.t('gws/schedule.calendar.titleFormat.week'),
-          day: i18next.t('gws/schedule.calendar.titleFormat.day')
+          month: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.month')),
+          week: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.week')),
+          day: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.day'))
         },
         loading: function (isLoading, view) {
           if (isLoading) {
