@@ -69,6 +69,10 @@ describe "article_node_map_search", type: :feature, dbscope: :example, js: true 
       expect(page).to have_css("#map-sidebar")
       expect(page).to have_css("#map-canvas")
       expect(page).to have_css(".filters")
+
+      # result
+      find('.tab.list a').click
+      expect(page).to have_css(".columns")
     end
   end
 end

@@ -92,6 +92,7 @@ Rails.application.routes.draw do
     get "form_export/:filename.:format" => "public#index", cell: "nodes/form_export"
     get "map_search/(index.:format)" => "public#index", cell: "nodes/map_search"
     get "map_search/(map.:format)" => "public#map", cell: "nodes/map_search"
+    get "map_search/(result.:format)" => "public#result", cell: "nodes/map_search"
     get "search/(index.:format)" => "public#index", cell: "nodes/search"
   end
 
