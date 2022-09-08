@@ -15,20 +15,17 @@ class Cms::PageSearchContentsController < ApplicationController
   end
 
   def destroy_all
-    set_selected_items
+    raise "400" if @selected_items.blank?
 
-    entries = @items.entries
-    @items = []
-
-    entries.each do |item|
-      if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
-        next if item.destroy
-      else
-        item.errors.add :base, :auth_error
-      end
-      @items << item
+    if params[:destroy_all]
+      render_confirmed_all(destroy_items, location: { action: :show })
+      return
     end
-    render_destroy_all(entries.size != @items.size, location: { action: :show })
+
+    respond_to do |format|
+      format.html { render "destroy_all" }
+      format.json { head json: errors }
+    end
   end
 
   private
@@ -46,7 +43,7 @@ class Cms::PageSearchContentsController < ApplicationController
     ids = params[:ids]
     raise "400" unless ids
     ids = ids.split(",") if ids.is_a?(String)
-    @items = Cms::Page.in(id: ids)
-    raise "400" unless @items.present?
+    @selected_items = Cms::Page.in(id: ids)
+    raise "400" unless @selected_items.present?
   end
 end

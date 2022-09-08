@@ -73,13 +73,12 @@ describe "cms_page_search", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css("div.info a.title", text: "[TEST]C")
         expect(page).to have_css("div.info a.title", text: "[TEST]D")
 
-        within '.list-head' do
-          check(nil)
-          page.accept_confirm do
-            click_button I18n.t('ss.links.delete')
-          end
+        wait_for_js_ready
+        within ".list-head" do
+          find('input[type="checkbox"]').set(true)
+          click_button I18n.t('ss.buttons.delete')
         end
-
+        click_button I18n.t('ss.buttons.delete')
         click_on I18n.t('ss.buttons.search')
 
         expect(page).to have_css(".search-count", text: "0 件の検索結果")
