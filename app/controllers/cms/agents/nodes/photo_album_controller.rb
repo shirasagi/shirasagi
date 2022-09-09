@@ -3,52 +3,35 @@ class Cms::Agents::Nodes::PhotoAlbumController < ApplicationController
   include Cms::ForMemberFilter::Node
   helper Cms::ListHelper
 
-  before_action :becomes_with_route_node
-  ALLOWED_EXTS = %w(gif png jpg jpeg bmp).freeze
-
-  private
-
-  def becomes_with_route_node
-    @cur_parent = @cur_node.parent
-  end
-
-  def file_id_name_url
-    if @cur_node.conditions.present?
-      condition_hash = @cur_node.condition_hash
-    else
-      condition_hash = @cur_parent.try(:condition_hash)
-      condition_hash ||= @cur_node.condition_hash
-    end
-    box=[]
-    Cms::Page.site(@cur_site).
-      and_public(@cur_date).
-      where(condition_hash).
-      order_by(@cur_node.sort_hash).
-      excludes(:file_ids => []).
-      map{ |i| [i.file_ids, i.name, i.url] }.
-      each { |j| j[0].each{ |k| box << [k, j[1], j[2]] } }
-    box
-  end
-
-  public
+  #ALLOWED_EXTS = %w(gif png jpg jpeg bmp).freeze
 
   def index
-    box = []
-    file_id_name_url.each do |i|
-      if SS::File.any_in(filename: ALLOWED_EXTS.map{ |ext| %r{#{ext}$}i }, id: i[0]).present?
-        box << [SS::File.find(i[0]), i[1], i[2]]
+    condition_hash = @cur_node.condition_hash
+    if @cur_node.conditions.blank? && @cur_node.parent.respond_to?(:condition_hash)
+      condition_hash = @cur_node.parent.condition_hash
+    end
+
+    pages = Cms::Page.site(@cur_site).
+      and_public(@cur_date).
+      where(condition_hash)
+
+    file_ids = pages.pluck(:file_ids).flatten.compact
+    images = SS::File.in(id: file_ids).where(content_type: /^image\//).to_a
+    images = images.index_by(&:id)
+
+    items = []
+    pages.each do |page|
+      page.file_ids.each do |file_id|
+        image = images[file_id]
+        next unless image
+        items << [page, image]
       end
     end
 
-    @items = Kaminari.paginate_array(box).page(params[:page]).per(@cur_node.limit)
+    @items = Kaminari.paginate_array(items).
+      page(params[:page]).
+      per(@cur_node.limit)
+
     render_with_pagination @items
   end
-
-  # def rss
-  #   @items = pages.
-  #     order_by(publushed: -1).
-  #     per(@cur_node.limit)
-  #
-  #   render_rss @cur_node, @items
-  # end
 end
