@@ -467,6 +467,8 @@ ja:
         zoom_in: '+'
         zoom_out: '-'
         reset: 標準
+        smaller: 小さく
+        larger: 大きく
       datetime_unit:
         day: 日
         week: 週

@@ -467,6 +467,8 @@ en:
         zoom_in: '+'
         zoom_out: '-'
         reset: Standard
+        smaller: Smaller
+        larger: Larger
       datetime_unit:
         day: Days
         week: Weeks

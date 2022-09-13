@@ -17,6 +17,7 @@ Rails.application.routes.draw do
     scope path: ':folder_id/:category_id' do
       resources :readables, only: [:index, :show] do
         post :toggle_browsed, on: :member
+        get :print, on: :member
       end
       resources :editables, concerns: [:soft_deletion], except: [:destroy] do
         match :move, on: :member, via: [:get, :post]

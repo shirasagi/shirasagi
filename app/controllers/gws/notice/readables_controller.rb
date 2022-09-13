@@ -8,7 +8,7 @@ class Gws::Notice::ReadablesController < ApplicationController
   before_action :set_category
   before_action :set_search_params
   before_action :set_items
-  before_action :set_item, only: [:show, :toggle_browsed]
+  before_action :set_item, only: [:show, :toggle_browsed, :print]
 
   model Gws::Notice::Post
 
@@ -99,5 +99,9 @@ class Gws::Notice::ReadablesController < ApplicationController
     render_update true
   rescue => e
     render_update false
+  end
+
+  def print
+    render :print, layout: 'ss/print'
   end
 end

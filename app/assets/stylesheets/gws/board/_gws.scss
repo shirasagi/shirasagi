@@ -39,6 +39,10 @@
     }
     .body {
       @include box-body;
+
+      .meta {
+        text-align: right;
+      }
     }
     .files, .links {
       margin: 10px;
@@ -48,8 +52,8 @@
     }
     .files a, .link-item {
       line-height: 1.5;
-      word-break: normal;
       word-wrap: normal;
+      word-break: normal;
     }
     .status {
       padding: 15px;
