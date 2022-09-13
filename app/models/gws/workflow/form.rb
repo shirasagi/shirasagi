@@ -24,6 +24,13 @@ class Gws::Workflow::Form
   validates :state, presence: true, inclusion: { in: %w(public closed), allow_blank: true }
   validates :agent_state, presence: true, inclusion: { in: %w(disabled enabled), allow_blank: true }
 
+  # indexing to elasticsearch via companion object
+  around_save ::Gws::Elasticsearch::Indexer::WorkflowFormJob.callback
+  around_destroy ::Gws::Elasticsearch::Indexer::WorkflowFormJob.callback
+  update_form do |form|
+    ::Gws::Elasticsearch::Indexer::WorkflowFormJob.around_save(form) { true }
+  end
+
   scope :and_public, ->(_date = nil){
     where(state: 'public')
   }
