@@ -198,7 +198,10 @@ li.webmail-accounts {
       position: relative;
       height: 1.2em;
       margin-left: 82px;
-      .field { display: inline-block; }
+      .field {
+         display: inline-block;
+         cursor: pointer;
+       }
       .from, .to { width: 194px; }
       .title { width: calc(100% - 425px); }
       .datetime { width: 10em; }

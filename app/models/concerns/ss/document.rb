@@ -154,6 +154,14 @@ module SS::Document
     @record_timestamps = val
   end
 
+  def without_record_timestamps
+    save_record_timestamps = record_timestamps
+    self.record_timestamps = false
+    yield
+  ensure
+    self.record_timestamps = save_record_timestamps
+  end
+
   def becomes_with(klass)
     item = klass.new
     item.instance_variable_set(:@new_record, nil) unless new_record?
