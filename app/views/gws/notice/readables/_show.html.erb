@@ -26,7 +26,7 @@
       </span>
     </div>
   </div>
-  <div class="addon-body">
+  <div class="addon-body" id="post-<%= @item.id %>">
     <div class="main <%= @item.text_type != 'cke' ? "markdown-body" : nil %>" id="gws-notice-text">
       <%= @item.html %>
     </div>
@@ -59,3 +59,8 @@
   </div>
   <div id="pdf-viewer-warp"></div>
 </div>
+
+<%= jquery do %>
+  var highlighter = new Gws_Elasticsearch_Highlighter();
+  highlighter.render();
+<% end %>
