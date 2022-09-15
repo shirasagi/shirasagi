@@ -76,6 +76,10 @@ namespace :gws do
     #  ::Tasks::Gws::Es.feed_all_workloads
     #end
 
+    task feed_all_notices: :environment do
+      ::Tasks::Gws::Es.feed_all_notices
+    end
+
     namespace :ingest do
       task drop: :environment do
         ::Tasks::Gws::Es::Ingest.drop
