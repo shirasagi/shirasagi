@@ -11,6 +11,9 @@
       <%= radio_button_tag "answers[#{@no}][]", edge.transition, (i == 0) %>
       <%= edge.value %>
     </label>
+    <% if edge.explanation.present? %>
+      <div class="explanation"><%= br edge.explanation %></div>
+    <% end %>
   </li>
 <% end %>
 </ul>
