@@ -91,6 +91,11 @@ class Guide::QuestionDiagram
   end
 
   def calc_longest_length(point)
+    if point.longest_length
+      return point.longest_length
+    end
+
+    length = 0
     if point.question?
       if point.question_type == "choices" && point.check_type == "multiple"
         # 複数選択の場合は全ての遷移を結合して、各遷移のコストを合計する
@@ -101,11 +106,10 @@ class Guide::QuestionDiagram
           end
         end
 
-        length = 0
         multiple_points.each do |_, next_point|
           length += calc_longest_length(next_point)
         end
-        length + 1
+        length += 1
       else
         # 単数選択の場合は全ての遷移の中から最も大きいもの選ぶ
         lengths = []
@@ -116,14 +120,21 @@ class Guide::QuestionDiagram
           end
           lengths << length
         end
-        lengths.max.to_i + 1
+        length = lengths.max.to_i + 1
       end
     else
-      0
+      length = 0
     end
+    point.longest_length = length
+    length
   end
 
   def calc_shortest_length(point)
+    if point.shortest_length
+      return point.shortest_length
+    end
+
+    length = 0
     if point.question?
       lengths = []
 
@@ -142,10 +153,10 @@ class Guide::QuestionDiagram
         # 単数選択の場合は全ての遷移の中から最も小さいもの選ぶ
         length = lengths.min.to_i + 1
       end
-
-      length
     else
-      0
+      length = 0
     end
+    point.shortest_length = length
+    length
   end
 end

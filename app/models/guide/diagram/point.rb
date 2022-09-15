@@ -5,7 +5,7 @@ class Guide::Diagram::Point
   include SS::Reference::Site
   include Cms::Reference::Node
 
-  attr_accessor :transitions, :weight
+  attr_accessor :transitions, :longest_length, :shortest_length
 
   field :name, type: String
   field :id_name, type: String
