@@ -296,7 +296,8 @@ class SS::Csv
       if config[:callback]
         @dsl.context.instance_exec(row, item, head, value, &config[:callback])
       else
-        item.send("#{config[:key]}=", value)
+        setter = "#{config[:key]}="
+        item.send(setter, value) if item.respond_to?(setter)
       end
     end
 

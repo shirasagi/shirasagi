@@ -54,7 +54,7 @@ class Cms::AllContentsController < ApplicationController
       return
     end
 
-    if !Cms::AllContentsImportJob.valid_header?(file)
+    if !Cms::AllContentsImporter.valid_csv?(file)
       @errors = [ t("errors.messages.malformed_csv") ]
       render({ action: :import })
       return

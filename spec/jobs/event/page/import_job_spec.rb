@@ -3,7 +3,9 @@ require 'spec_helper'
 describe Event::Page::ImportJob, dbscope: :example do
   let!(:site) { cms_site }
   let!(:group) do
-    name = 'シラサギ市/企画政策部/政策課'
+    cms_group.update!(name: "シラサギ市")
+
+    name = "シラサギ市/企画政策部/政策課"
     Cms::Group.where(name: name).first_or_create!(attributes_for(:cms_group, name: name))
   end
   let!(:layout) { create(:cms_layout, site: site, name: "イベントカレンダー") }

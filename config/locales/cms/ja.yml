@@ -159,7 +159,23 @@ ja:
       download_description: サイト内の全コンテンツを出力します。
       import_tab: 一括設定
       import_head: 全コンテンツ一括設定
-      import_description: サイト内の全コンテンツを一括して設定します。一括して設定できるのはフォルダーとページで、かつ設定可能な属性はタイトル、レイアウト、キーワード、概要、サマリー、カテゴリー、検索条件URL、並び順、表示件数、上部HTML、ループHTML、下部HTML、NEWマーク期間、管理グループです。
+      import_description_html: |-
+        サイト内の全コンテンツを一括して設定します。ただし、次の属性は一括設定の対象外で、これらは一括して設定することはできません。
+        <ul>
+          <li>ページID</li>
+          <li>フォルダーID</li>
+          <li>登録種別 (ページ属性等)</li>
+          <li>ファイル名</li>
+          <li>容量</li>
+          <li>記事URL</li>
+          <li>並び順（項目名）</li>
+          <li>並び順（方向）</li>
+          <li>ファイル</li>
+          <li>添付ファイルURL</li>
+          <li>作成日時</li>
+          <li>更新日時</li>
+          <li>静的ファイル容量</li>
+        </ul>
     roles:
       admin: 管理者
       user: 編集者
@@ -1002,8 +1018,8 @@ ja:
         loop_liquid: ループHTML
         no_items_display_state: ページ未検出時表示
         substitute_html: 代替HTML
-        sort_column_name: 並び順
-        sort_column_direction: 並び順(方向)
+        sort_column_name: 並び順（項目名）
+        sort_column_direction: 並び順（方向）
       cms/addon/page_group_list:
         condition_groups: 検索条件(グループ)
       cms/addon/tabs:
@@ -1631,6 +1647,7 @@ ja:
       unable_to_delete_in_use_column_without_confirmation: 同意がないため削除できません。
       unable_to_delete_all_columns_if_form_is_in_use: 定型フォームが使用中のため一括削除することはできません。
       unable_to_close_form_if_form_is_in_use: 定型フォームが使用中のため非公開にすることはできません。
+      both_of_page_id_and_node_id_is_blank: ページIDかノードIDのどちらかを設定してください。
 
     template:
       no_errors: エラーは見つかりませんでした。
@@ -2948,7 +2965,7 @@ ja:
     loop_html: ループHTML
     lower_html: 下部HTML
     new_days: NEWマーク期間
-    category_ids: カテゴリ
+    category_ids: カテゴリー
     files: 添付ファイル
     file_urls: 添付ファイルURL
     use_map: 地図のマーカー座標

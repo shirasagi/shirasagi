@@ -3,8 +3,8 @@ require 'spec_helper'
 describe Faq::Page::ImportJob, dbscope: :example do
   let!(:site) { cms_site }
   let!(:group1) do
-    name = 'シラサギ市'
-    Cms::Group.where(name: name).first_or_create!(attributes_for(:cms_group, name: name))
+    cms_group.update!(name: "シラサギ市")
+    cms_group
   end
   let!(:group2) do
     name = 'シラサギ市/企画政策部/政策課'

@@ -102,11 +102,11 @@ class Cms::PageExporter
     drawer.column :name
     drawer.column :index_name
     drawer.column :layout do
-      drawer.body { |item| Cms::Layout.where(id: item.layout_id).pluck(:name).first }
+      drawer.body { |item| Cms::Layout.where(id: item.layout_id).pick(:name) }
     end
     if mode_article?
       drawer.column :body_layout_id do
-        drawer.body { |item| Cms::BodyLayout.where(id: item.body_layout_id).pluck(:name).first }
+        drawer.body { |item| Cms::BodyLayout.where(id: item.body_layout_id).pick(:name) }
       end
       drawer.column :form_id do
         drawer.body do |item|
@@ -152,11 +152,7 @@ class Cms::PageExporter
     end
     drawer.column :loop_setting_id do
       drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.loop_setting_id") }
-      drawer.body do |item|
-        if item.respond_to?(:loop_setting)
-          item.loop_setting.try(:name)
-        end
-      end
+      drawer.body { |item| item.try(:loop_setting).try(:name) }
     end
     drawer.column :loop_html do
       drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.loop_html") }
@@ -167,7 +163,7 @@ class Cms::PageExporter
     drawer.column :loop_liquid do
       drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.loop_liquid") }
     end
-    drawer.column :no_items_display_state do
+    drawer.column :no_items_display_state, type: :label do
       drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.no_items_display_state") }
     end
     drawer.column :substitute_html do
@@ -286,7 +282,12 @@ class Cms::PageExporter
   def draw_map(drawer)
     drawer.column :map_points do
       drawer.body do |item|
-        item.try(:map_points).try { |points| points.map { |point| point[:loc].join(",") }.join("\n") }
+        points = item.try(:map_points)
+        if points.present?
+          points.map do |point|
+            [ point[:name], point[:loc].join(","), point[:text], point[:image] ].to_csv.strip
+          end.join("\n")
+        end
       end
     end
     drawer.column :map_reference_method, type: :label

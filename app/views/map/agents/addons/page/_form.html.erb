@@ -20,27 +20,23 @@
     </dd>
     <dt><%= t("map.center_position") %><%= @item.tt :center_setting %></dt>
     <dd>
-      <label>
-        <%= f.radio_button :center_setting, :auto, checked: "checked" %>
-        <%= t('map.auto') %>
-      </label>
-      <label>
-        <%= f.radio_button :center_setting, :designated_location %>
-        <%= t('map.designated_location') %>
-      </label>
+      <% @item.center_setting_options.each do |label, value| %>
+        <label>
+          <%= f.radio_button :center_setting, value %>
+          <%= label %>
+        </label>
+      <% end %>
       <%= f.text_field :set_center_position, class: "center-input" %>
       <%= button_tag t("map.buttons.add_center"), { type: :button, class: "set-center-position btn" } %>
     </dd>
     <dt><%= t("map.zoom") %><%= @item.tt :zoom_setting %></dt>
     <dd>
-      <label>
-        <%= f.radio_button :zoom_setting, :auto, checked: "checked" %>
-        <%= t('map.auto') %>
-      </label>
-      <label>
-        <%= f.radio_button :zoom_setting, :designated_level %>
-        <%= t('map.designated_level') %>
-      </label>
+      <% @item.zoom_setting_options.each do |label, value| %>
+        <label>
+          <%= f.radio_button :zoom_setting, value %>
+          <%= label %>
+        </label>
+      <% end %>
       <%= f.number_field  :set_zoom_level, min: 1, max: 21, class: "zoom-input" %>
       <%= button_tag t("map.buttons.add_zoom"), { type: :button, class: "set-zoom-level btn" } %>
     </dd>
