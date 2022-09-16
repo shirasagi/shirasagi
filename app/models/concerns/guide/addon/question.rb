@@ -64,7 +64,7 @@ module Guide::Addon
       Guide::Question.site(@cur_site || site).node(node).each do |question|
         ids = question.referenced_question_ids.to_a
         next if !ids.include?(id)
-        ids = ids - [id]
+        ids -= [id]
         question.set(referenced_question_ids: ids)
       end
 
