@@ -15,7 +15,7 @@
       <tbody>
         <% @item.st_categories.each do |cate| %>
         <tr data-id="<%= cate.id %>">
-          <td><%= f.hidden_field "st_category_ids[]", value: cate.id, id: nil %> <%= cate.name %></td>
+          <td><%= f.hidden_field "st_category_ids[]", value: cate.id, id: nil %><%= cate.name %> (<%= cate.filename %>)</td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: 'btn deselect' %></td>
         </tr>
         <% end %>

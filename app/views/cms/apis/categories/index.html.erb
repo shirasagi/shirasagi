@@ -21,7 +21,7 @@
   </thead>
   <tbody class="items">
     <% @items.each do |item| %>
-      <tr data-id="<%= item.id %>" class="list-item">
+      <tr data-id="<%= item.id %>" data-name="<%= %(#{item.name} (#{item.filename})) %>" class="list-item">
         <% if @multi %>
         <td class="checkbox">
           <input type="checkbox" name="ids[]" value="<%= item.id %>" />
