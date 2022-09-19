@@ -126,14 +126,14 @@ module ApplicationHelper
     ss_tooltip_tag(msg)
   end
 
-  TOOLTIP_POPUP_OPTIONS = { inline: true, href: ".tooltip-content", theme: "light-border ss-tooltip" }.freeze
+  TOOLTIP_POPUP_OPTIONS = {}.freeze
   TOOLTIP_HTML_OPTIONS = { class: 'tooltip' }.freeze
   TOOLTIP_DEFAULT_MARK = "?".freeze
 
   def ss_tooltip_tag(content, mark: nil, **options)
     mark ||= TOOLTIP_DEFAULT_MARK
     html_options = options.blank? ? TOOLTIP_HTML_OPTIONS : TOOLTIP_HTML_OPTIONS.merge(options)
-    ss_stimulus_tag({ "ss/popup" => TOOLTIP_POPUP_OPTIONS }, html_options) do
+    ss_stimulus_tag({ "ss/tooltip" => TOOLTIP_POPUP_OPTIONS }, html_options) do
       output_buffer << mark
       output_buffer << tag.ul(class: "tooltip-content") do
         Array(content).each do |d|
