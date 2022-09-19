@@ -30,8 +30,6 @@
 //= require mdn-polyfills/String.prototype.repeat.js
 //= require mdn-polyfills/String.prototype.startsWith.js
 //= require mdn-polyfills/String.prototype.trim.js
-//= require popper.js/dist/umd/popper.js
-//= require tippy.js/dist/tippy-bundle.iife.js
 //= require crypto-js/3.2.0/crypto-js.min.js
 //= require ejs/ejs.min.js
 //= require ss/lib/base
@@ -51,7 +49,6 @@
 //= require ss/lib/tree_navi
 //= require ss/lib/mobile
 //= require ss/lib/search_ui
-//= require ss/lib/popup
 //= require ss/lib/dropdown
 //= require ss/lib/clipboard
 //= require ss/lib/color
@@ -208,7 +205,6 @@ SS.ready(function () {
   SS_Mobile.render();
   SS_AddonTabs.render();
   SS_Form.render();
-  SS_Popup.render(".tooltip", { "ss-popup-inline": true, "ss-popup-href": ".tooltip-content", "tippy-theme": "light-border ss-tooltip" });
   SS_SearchUI.render();
   SS_Color.render();
   SS_TextZoom.render();

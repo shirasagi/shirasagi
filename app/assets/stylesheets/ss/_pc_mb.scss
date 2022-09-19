@@ -1824,25 +1824,6 @@ dl.mod-cms-parent_crumbs {
     display: none;
   }
 }
-.tippy-tooltip {
-  &.ss-tooltip-theme {
-    font-size: 90%;
-    font-weight: normal;
-    text-align: left;
-    .tippy-content {
-      max-height: 300px;
-      padding: 15px;
-      overflow-y: auto;
-    }
-    ul {
-      margin: 0;
-      padding: 0;
-    }
-    li {
-      white-space: pre-wrap;
-    }
-  }
-}
 #cboxLoadedContent .tooltip ul {
   left: -80px;
   &:before {
