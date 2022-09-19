@@ -28,8 +28,6 @@ module.exports = {
     ]
   },
   output: {
-    filename: "[name].js",
-    sourceMapFilename: "[name].js.map",
     path: path.resolve(__dirname, "public/assets/builds"),
   },
   plugins: [
