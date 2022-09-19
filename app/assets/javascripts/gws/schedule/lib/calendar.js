@@ -213,11 +213,11 @@ SS.ready(function() {
             state = ("calendar[date]=" + (date.format()) + "&") + Gws_Schedule_Calendar.viewStateQuery(view);
             links = ejs.render(
               "<a href='<%= url %>/new?start=<%= start %>&<%= state %>' class='add-plan'><%= text %></a>",
-              { url: url, start: start, state: state, text: i18next('gws/schedule.links.add_plan') });
+              { url: url, start: start, state: state, text: i18next.t('gws/schedule.links.add_plan') });
             todo = url.replace(/schedule\/.*/, 'schedule/todo/-/readables');
             links += ejs.render(
               "<a href='<%= todo %>/new?start=<%= start %>&<%= state %>' class='add-plan'><%= text %></a>",
-              { todo: todo, state: state, text: i18next('gws/schedule.links.add_todo') });
+              { todo: todo, start: start, state: state, text: i18next.t('gws/schedule.links.add_todo') });
           }
           if ($('#calendar-controller').length === 0) {
             if (view.name !== 'month') {
