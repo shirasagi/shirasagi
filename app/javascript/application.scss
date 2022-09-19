@@ -1,3 +1,27 @@
+@import 'tippy.js/dist/tippy.css';
+@import 'tippy.js/themes/light.css';
+@import 'tippy.js/themes/light-border.css';
+
 //.d-flex {
 //  display: flex
 //}
+
+.tippy-box {
+  &[data-theme~=ss-tooltip] {
+    font-size: 90%;
+    font-weight: normal;
+    text-align: left;
+    .tippy-content {
+      max-height: 300px;
+      padding: 15px;
+      overflow-y: auto;
+    }
+    ul {
+      margin: 0;
+      padding: 0;
+    }
+    li {
+      white-space: pre-wrap;
+    }
+  }
+}
