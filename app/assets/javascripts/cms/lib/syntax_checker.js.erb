@@ -109,7 +109,7 @@ this.Syntax_Checker = (function () {
           li = ul.find('> ul:last li:last');
           message = $('<span class="message detail">' + error["msg"] + '</span>');
           if (error["detail"]) {
-            var tooltip = $('<div class="tooltip">!</div>').appendTo(message);
+            var tooltip = $('<div class="tooltip" data-controller="ss--popup" data-ss--popup-inline-value="true" data-ss--popup-href-value=".tooltip-content" data-ss--popup-theme-value="light-border ss-tooltip">!</div>').appendTo(message);
             var detail = $('<ul class="tooltip-content">').appendTo(tooltip);
             $.each(error["detail"], function () {
               detail.append("<li>" + this + "<br></li>");

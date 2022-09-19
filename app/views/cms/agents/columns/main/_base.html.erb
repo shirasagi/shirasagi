@@ -21,13 +21,7 @@
         <%= column.name %>
       </label>
       <% if !show && column.tooltips.present? %>
-        <div class="tooltip">?
-          <ul class="tooltip-content">
-            <% column.tooltips.each do |tooltip| %>
-              <li><%= tooltip %><br></li>
-            <% end %>
-          </ul>
-        </div>
+        <%= ss_tooltip_tag column.tooltips %>
       <% end %>
       <%= required_label if column.required? %>
     </div>

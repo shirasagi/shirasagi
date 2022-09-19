@@ -33,13 +33,7 @@
           <%= f.select :image_resizes_disabled, @model.image_resizes_disabled_options %>
         <% end %>
         <% if min_size %>
-          <div class="tooltip">?
-            <ul class="tooltip-content">
-              <% t('tooltip.ss/model/file.image_resizes_disabled', size: min_size.to_s(:human_size), width: min_width, height: min_height).each do |tooltip| %>
-                <li><%= tooltip %><br></li>
-              <% end %>
-            </ul>
-          </div>
+          <%= ss_tooltip_tag t('tooltip.ss/model/file.image_resizes_disabled', size: min_size.to_s(:human_size), width: min_width, height: min_height) %>
         <% end %>
         <%= f.submit t("ss.buttons.attach"), class: "save btn", style: "margin-left: 10px;", data: { submitted: "attach" } %>
         <%= f.submit t("ss.buttons.save"), class: "save btn", style: "margin-left: 10px;", data: { submitted: "save", disable_with: t("ss.buttons.saving") } %>

@@ -8,7 +8,7 @@
       @item.value_setting_for(:sort).try do |setting|
         description = setting[2].try { |hash| hash["data-description"] }
         if description.present?
-          content_tag(:span, setting[0], class: "ss-popup", title: description, "data-ss-popup-inline" => true, "data-ss-popup-html" => description, role: "button")
+          ss_stimulus_tag({ "ss/popup" => { inline: true, html: description } }, { type: :span, class: 'ss-popup', title: description, role: "button" }) { setting[0] }
         else
           setting[0]
         end
@@ -21,7 +21,3 @@
     <dd><%= @item.new_days %> <%= t "datetime.prompts.day" %></dd>
   <% end %>
 </dl>
-
-<%= jquery do %>
-  SS_Popup.render();
-<% end %>

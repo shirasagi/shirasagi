@@ -55,7 +55,3 @@
   <dt><%= @model.t :event_deadline %></dt>
   <dd><%= tryb { I18n.l(@item.event_deadline) } %></dd>
 </dl>
-
-<%= jquery do %>
-  SS_Popup.render();
-<% end %>

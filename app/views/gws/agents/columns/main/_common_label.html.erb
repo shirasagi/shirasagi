@@ -2,12 +2,6 @@
 <dt>
   <%= column.name %>
   <% if !show && column.tooltips.present? %>
-  <div class="tooltip">?
-    <ul class="tooltip-content">
-      <% column.tooltips.each do |tooltip| %>
-        <li><%= tooltip %><br></li>
-      <% end %>
-    </ul>
-  </div>
+    <%= ss_tooltip_tag column.tooltips %>
   <% end %>
 </dt>

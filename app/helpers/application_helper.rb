@@ -122,16 +122,25 @@ module ApplicationHelper
     end
     msg = I18n.t(key, default: '', scope: 'tooltip') if msg.blank?
     return msg if msg.blank? || !html_wrap
-    msg = [msg] if msg.class.to_s == "String"
-    list = msg.map { |d| "<li>" + d.gsub(/\r\n|\n/, "<br />") + "</li>" }
 
-    h = []
-    h << %(<div class="tooltip">?)
-    h << %(<ul class="tooltip-content">)
-    h << list
-    h << %(</ul>)
-    h << %(</div>)
-    h.join("\n").html_safe
+    ss_tooltip_tag(msg)
+  end
+
+  TOOLTIP_POPUP_OPTIONS = { inline: true, href: ".tooltip-content", theme: "light-border ss-tooltip" }.freeze
+  TOOLTIP_HTML_OPTIONS = { class: 'tooltip' }.freeze
+  TOOLTIP_DEFAULT_MARK = "?".freeze
+
+  def ss_tooltip_tag(content, mark: nil, **options)
+    mark ||= TOOLTIP_DEFAULT_MARK
+    html_options = options.blank? ? TOOLTIP_HTML_OPTIONS : TOOLTIP_HTML_OPTIONS.merge(options)
+    ss_stimulus_tag({ "ss/popup" => TOOLTIP_POPUP_OPTIONS }, html_options) do
+      output_buffer << mark
+      output_buffer << tag.ul(class: "tooltip-content") do
+        Array(content).each do |d|
+          output_buffer << tag.li(br(d, html_escape: false).html_safe)
+        end
+      end
+    end
   end
 
   def render_agent(controller_name, action)

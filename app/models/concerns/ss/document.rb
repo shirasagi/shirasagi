@@ -41,16 +41,8 @@ module SS::Document
         break if msg.present?
       end
       return msg if msg.blank? || !html_wrap
-      msg = [msg] if msg.class.to_s == "String"
-      list = msg.map { |d| "<li>" + d.to_s.gsub(/\r\n|\n/, "<br />") + "<br /></li>" }
 
-      h = []
-      h << %(<div class="tooltip">?)
-      h << %(<ul class="tooltip-content">)
-      h << list
-      h << %(</ul>)
-      h << %(</div>)
-      h.join("\n").html_safe
+      ApplicationController.helpers.ss_tooltip_tag(msg)
     end
 
     def seqid(name = :id)
