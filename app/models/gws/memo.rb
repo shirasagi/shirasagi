@@ -21,7 +21,7 @@ module Gws::Memo
       # - シラサギのユーザーはメールアドレスを省略することができる。このようなユーザーに対して仮初めのメールアドレスが適用される。
       # - メッセージでは、共有アドレスグループや個人アドレスグループを指定することができる。このようなグループに対して仮初めのメールアドレスが適用される。
       # - メッセージにはメーリングリスト機能がある。メーリングリストを用いたメッセージに対しても仮初めのメールアドレスが適用される。
-      local_part = ::Addressable::IDNA.to_ascii(name)
+      local_part = Base64.strict_encode64(name).gsub(/=+$/, "")
       domain = site.canonical_domain.presence || SS.config.gws.canonical_domain.presence || "localhost.local"
       domain = "#{sub}.#{domain}" if sub.present?
       email = "#{local_part}@#{domain}"
