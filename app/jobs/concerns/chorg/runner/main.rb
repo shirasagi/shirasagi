@@ -108,7 +108,7 @@ module Chorg::Runner::Main
     # result = user.import
 
     task.log("==コンテンツインポート==")
-    Cms::AllContentsImportJob.bind(site_id: site).perform_now(@item.content_csv_file_id)
+    Cms::AllContentsImportJob.bind(site_id: site, user_id: user).perform_now(@item.content_csv_file_id)
   end
 
   def import_user_csv_gws
