@@ -28,7 +28,6 @@ class Cms::AllContentsController < ApplicationController
     respond_to do |format|
       format.html
       format.csv do
-        # exporter = Cms::PageExporter.new(mode: "all", site: @cur_site, criteria: Cms::Page.all.site(@cur_site))
         exporter = Cms::AllContent.new(site: @cur_site)
         enumerable = exporter.enum_csv(encoding: "Shift_JIS")
 
