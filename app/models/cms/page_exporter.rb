@@ -25,6 +25,7 @@ class Cms::PageExporter
     has_form = options[:form].present?
     drawer = SS::Csv.draw(:export, context: self) do |drawer|
       draw_basic(drawer)
+      draw_node_setting(drawer) if mode_all?
       draw_meta(drawer)
       if mode_all?
         draw_list(drawer)
@@ -130,13 +131,28 @@ class Cms::PageExporter
     drawer.column :summary_html
   end
 
+  def draw_node_setting(drawer)
+    drawer.column :page_layout_id do
+      drawer.head { I18n.t("mongoid.attributes.cms/reference/page_layout.page_layout_id") }
+      drawer.body do |item|
+        if item.respond_to?(:page_layout_id)
+          Cms::Layout.where(id: item.page_layout_id).pick(:name)
+        end
+      end
+    end
+    drawer.column :shortcut, type: :label
+    drawer.column :view_route, type: :label do
+      drawer.head { I18n.t("mongoid.attributes.cms/model/node.view_route") }
+    end
+  end
+
   def draw_list(drawer)
     drawer.column :conditions do
       drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.conditions") }
     end
     # drawer.column :condition_forms
     drawer.column :sort, type: :label do
-      drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.sort") }
+      drawer.head { I18n.t("all_content.sort") }
     end
     drawer.column :limit do
       drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.limit") }
@@ -155,13 +171,13 @@ class Cms::PageExporter
       drawer.body { |item| item.try(:loop_setting).try(:name) }
     end
     drawer.column :loop_html do
-      drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.loop_html") }
+      drawer.head { I18n.t("all_content.loop_html") }
     end
     drawer.column :lower_html do
       drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.lower_html") }
     end
     drawer.column :loop_liquid do
-      drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.loop_liquid") }
+      drawer.head { I18n.t("all_content.loop_liquid") }
     end
     drawer.column :no_items_display_state, type: :label do
       drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.no_items_display_state") }

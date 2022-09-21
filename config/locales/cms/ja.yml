@@ -2958,11 +2958,11 @@ ja:
     description: 概要
     summary_html: サマリー
     conditions: 検索条件(URL)
-    sort: 並び順
+    sort: リスト並び順
     limit: 表示件数
     upper_html: 上部HTML
     loop_setting_id: 定義済みループHTML
-    loop_html: ループHTML
+    loop_html: ループHTML（SHIRASAGI形式）
     lower_html: 下部HTML
     new_days: NEWマーク期間
     category_ids: カテゴリー
@@ -2978,6 +2978,7 @@ ja:
     status: 公開状態
     file_size: 静的ファイル容量
     size: 容量
+    loop_liquid: ループHTML（Liquid形式）
 
   folder_size:
     name: タイトル

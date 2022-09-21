@@ -7,14 +7,35 @@ class Cms::AllContentsImporter
 
   def define_importers(importer)
     super
+    define_importer_node_setting(importer)
     define_importer_list(importer)
     define_importer_st_category(importer)
+  end
+
+  def define_importer_node_setting(importer)
+    importer.simple_column :page_layout_id, name: I18n.t("mongoid.attributes.cms/reference/page_layout.page_layout_id") do |row, item, head, value|
+      if item.respond_to?(:page_layout_id=)
+        item.page_layout = value.present? ? Cms::Layout.site(site).where(name: value).first : nil
+      end
+    end
+    importer.simple_column :shortcut, name: I18n.t("mongoid.attributes.ss/document.shortcut") do |row, item, head, value|
+      if item.respond_to?(:shortcut=)
+        shortcut = from_label(value, item.shortcut_options)
+        item.shortcut = shortcut.presence
+      end
+    end
+    importer.simple_column :view_route, name: I18n.t("mongoid.attributes.cms/model/node.view_route") do |row, item, head, value|
+      if item.respond_to?(:view_route=)
+        view_route = from_label(value, item.view_route_options)
+        item.view_route = view_route.presence
+      end
+    end
   end
 
   def define_importer_list(importer)
     scope = "mongoid.attributes.cms/addon/list/model"
     importer.simple_column :conditions, name: I18n.t("conditions", scope: scope)
-    importer.simple_column :sort, name: I18n.t("sort", scope: scope) do |row, item, head, value|
+    importer.simple_column :sort, name: I18n.t("all_content.sort") do |row, item, head, value|
       if item.respond_to?(:sort=)
         sort = from_label(value, item.sort_options)
         item.sort = sort.presence
@@ -34,9 +55,9 @@ class Cms::AllContentsImporter
         item.loop_setting = value.present? ? Cms::LoopSetting.site(site).where(name: value).first : nil
       end
     end
-    importer.simple_column :loop_html, name: I18n.t("loop_html", scope: scope)
+    importer.simple_column :loop_html, name: I18n.t("all_content.loop_html")
     importer.simple_column :lower_html, name: I18n.t("lower_html", scope: scope)
-    importer.simple_column :loop_liquid, name: I18n.t("loop_liquid", scope: scope)
+    importer.simple_column :loop_liquid, name: I18n.t("all_content.loop_liquid")
     importer.simple_column :no_items_display_state, name: I18n.t("no_items_display_state", scope: scope) do |_r, item, _h, value|
       if item.respond_to?(:no_items_display_state=)
         no_items_display_state = from_label(value, item.no_items_display_state_options)
