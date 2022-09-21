@@ -3,9 +3,14 @@ class Cms::AllContentsController < ApplicationController
 
   navi_view "cms/main/navi"
 
+  before_action :check_permission
   before_action :set_task, only: [:import]
 
   private
+
+  def check_permission
+    raise '403' unless @cur_user.cms_role_permit_any?(@cur_site, :use_cms_all_contents)
+  end
 
   def set_crumbs
     @crumbs << [t("cms.all_contents"), cms_all_contents_path]
