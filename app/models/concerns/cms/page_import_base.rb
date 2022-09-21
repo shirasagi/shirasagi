@@ -10,6 +10,29 @@ module Cms::PageImportBase
     attr_reader :site, :node, :user
   end
 
+  module ClassMethods
+    def parse_name_and_filename(name_and_filename)
+      Array(name_and_filename).map do |line|
+        next if line.blank?
+
+        if line =~ /(\S+)[\s#{Cms::SyntaxChecker::FULL_WIDTH_SPACE}]+[(（](\S+)[)）]/
+          [ $1, $2 ]
+        else
+          [ nil, line ]
+        end
+      end.compact
+    end
+
+    def find_with_name_filename_pair(name_and_filename, criteria)
+      filenames = []
+      parse_name_and_filename(name_and_filename).each do |_name, filename|
+        next if filename.blank?
+        filenames << filename
+      end
+      criteria.in(filename: filenames).to_a
+    end
+  end
+
   def initialize(site, node, user)
     @site = site
     @node = node
@@ -76,29 +99,6 @@ module Cms::PageImportBase
 
   delegate :to_array, :from_label, to: SS::Csv::CsvImporter
 
-  def category_name_tree_to_ids(name_trees)
-    category_ids = []
-    name_trees.each do |cate|
-      names = cate.split("/")
-
-      last_index = names.size - 1
-      last_name = names[last_index]
-
-      parent_names = names.slice(0...(names.size - 1))
-
-      cond = { name: last_name, depth: last_index + 1, route: /^category\// }
-      node_ids = Cms::Node.site(site).where(cond).pluck(:id)
-      node_ids.each do |node_id|
-        cate = Cms::Node.find(node_id)
-
-        if parent_names == cate.parents.pluck(:name)
-          category_ids << cate.id
-        end
-      end
-    end
-    category_ids
-  end
-
   def set_page_attributes(row, item)
     create_importer
     @importer.import_row(row, item)
@@ -131,7 +131,7 @@ module Cms::PageImportBase
     importer.simple_column :index_name
     importer.simple_column :layout do |row, item, head, value|
       if item.respond_to?(:layout=)
-        item.layout = value.present? ? Cms::Layout.site(site).where(name: value).first : nil
+        item.layout = value.present? ? self.class.find_with_name_filename_pair(value, Cms::Layout.site(site)).first : nil
       end
     end
     importer.simple_column :body_layout_id do |row, item, head, value|
@@ -166,14 +166,8 @@ module Cms::PageImportBase
   def define_importer_category(importer)
     importer.simple_column :categories do |row, item, head, value|
       if item.respond_to?(:category_ids=)
-        category_ids = category_name_tree_to_ids(to_array(value))
-        categories = Category::Node::Base.site(site).in(id: category_ids)
-        #if node.st_categories.present?
-        #  filenames = node.st_categories.pluck(:filename)
-        #  filenames += node.st_categories.map { |c| /^#{c.filename}\// }
-        #  categories = categories.in(filename: filenames)
-        #end
-        item.category_ids = categories.pluck(:id)
+        categories = self.class.find_with_name_filename_pair(to_array(value), Cms::Node.site(site))
+        item.category_ids = categories.map(&:id)
       end
     end
   end
@@ -231,8 +225,8 @@ module Cms::PageImportBase
   def define_importer_related_pages(importer)
     importer.simple_column :related_pages do |row, item, head, value|
       if item.respond_to?(:related_page_ids=)
-        page_names = to_array(value)
-        item.related_page_ids = Cms::Page.site(site).in(filename: page_names).pluck(:id)
+        pages = self.class.find_with_name_filename_pair(to_array(value), Cms::Page.site(site))
+        item.related_page_ids = pages.map(&:id)
       end
     end
     column_name = "#{self.class.model.t(:related_pages)}#{self.class.model.t(:related_page_sort)}"

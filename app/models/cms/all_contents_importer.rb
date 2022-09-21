@@ -13,9 +13,10 @@ class Cms::AllContentsImporter
   end
 
   def define_importer_node_setting(importer)
-    importer.simple_column :page_layout_id, name: I18n.t("mongoid.attributes.cms/reference/page_layout.page_layout_id") do |row, item, head, value|
+    scope = "mongoid.attributes.cms/reference/page_layout"
+    importer.simple_column :page_layout_id, name: I18n.t("page_layout_id", scope: scope) do |row, item, head, value|
       if item.respond_to?(:page_layout_id=)
-        item.page_layout = value.present? ? Cms::Layout.site(site).where(name: value).first : nil
+        item.page_layout = value.present? ? self.class.find_with_name_filename_pair(value, Cms::Layout.site(site)).first : nil
       end
     end
     importer.simple_column :shortcut, name: I18n.t("mongoid.attributes.ss/document.shortcut") do |row, item, head, value|
@@ -70,9 +71,8 @@ class Cms::AllContentsImporter
   def define_importer_st_category(importer)
     importer.simple_column :st_categories, name: I18n.t("category.setting") do |row, item, head, value|
       if item.respond_to?(:st_category_ids=)
-        category_ids = category_name_tree_to_ids(to_array(value))
-        categories = Category::Node::Base.site(site).in(id: category_ids)
-        item.st_category_ids = categories.pluck(:id)
+        categories = self.class.find_with_name_filename_pair(to_array(value), Cms::Node.site(site))
+        item.st_category_ids = categories.map(&:id)
       end
     end
   end

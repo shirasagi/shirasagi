@@ -4,20 +4,10 @@ class Cms::PageExporter
   attr_accessor :mode, :site, :criteria
 
   class << self
-    def category_name_tree(_item, categories)
-      return [] if categories.blank?
-
-      triplets = categories.pluck(:id, :site_id, :filename)
-      triplets.map do |id, site_id, filename|
-        filename_parts = filename.split('/')
-        filenames = Array.new(filename_parts.length) do |i|
-          filename_parts[0..i].join('/')
-        end
-
-        Cms::Node.where(site_id: site_id).in(filename: filenames).pluck(:depth, :name)
-                 .sort_by { |depth, name| depth }
-                 .map { |depth, name| name }.join("/")
-      end
+    def name_and_filename(_item, criteria)
+      criteria.pluck(:name, :filename, :depth).
+        sort_by { |name, filename, depth| [ depth, filename ] }.
+        map { |name, filename, _depth| "#{name} (#{filename})" }
     end
   end
 
@@ -103,7 +93,7 @@ class Cms::PageExporter
     drawer.column :name
     drawer.column :index_name
     drawer.column :layout do
-      drawer.body { |item| Cms::Layout.where(id: item.layout_id).pick(:name) }
+      drawer.body { |item| self.class.name_and_filename(item, Cms::Layout.where(id: item.layout_id)).join("\n") }
     end
     if mode_article?
       drawer.column :body_layout_id do
@@ -136,7 +126,7 @@ class Cms::PageExporter
       drawer.head { I18n.t("mongoid.attributes.cms/reference/page_layout.page_layout_id") }
       drawer.body do |item|
         if item.respond_to?(:page_layout_id)
-          Cms::Layout.where(id: item.page_layout_id).pick(:name)
+          self.class.name_and_filename(item, Cms::Layout.where(id: item.page_layout_id)).join("\n")
         end
       end
     end
@@ -249,14 +239,22 @@ class Cms::PageExporter
     drawer.column :st_categories do
       drawer.head { I18n.t("category.setting") }
       drawer.body do |item|
-        self.class.category_name_tree(item, item.try(:st_categories)).join("\n")
+        categories = item.try(:st_categories)
+        if categories
+          self.class.name_and_filename(item, categories).join("\n")
+        end
       end
     end
   end
 
   def draw_category(drawer)
     drawer.column :categories do
-      drawer.body { |item| self.class.category_name_tree(item, item.try(:categories)).join("\n") }
+      drawer.body do |item|
+        categories = item.try(:categories)
+        if categories
+          self.class.name_and_filename(item, categories).join("\n")
+        end
+      end
     end
   end
 
@@ -319,7 +317,7 @@ class Cms::PageExporter
     drawer.column :related_pages do
       drawer.body do |item|
         if item.respond_to?(:related_pages)
-          item.related_pages.pluck(:filename).join("\n")
+          self.class.name_and_filename(item, item.related_pages).join("\n")
         end
       end
     end
