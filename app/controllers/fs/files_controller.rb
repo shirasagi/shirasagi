@@ -156,6 +156,9 @@ class Fs::FilesController < ApplicationController
     content_type = content_type.presence || SS::MimeType::DEFAULT_MIME_TYPE
     download_filename = cur_variant ? cur_variant.download_filename : cur_item.download_filename
     ss_send_file cur_variant || cur_item, type: content_type, filename: download_filename, disposition: disposition
+  rescue MiniMagick::Error => e
+    Rails.logger.info("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    head :not_found
   end
 
   public
