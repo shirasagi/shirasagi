@@ -23,6 +23,7 @@ class Cms::Agents::Nodes::PhotoAlbumController < ApplicationController
     Cms::Page.site(@cur_site).
       and_public(@cur_date).
       where(condition_hash).
+      exists(file_ids: true).
       order_by(@cur_node.sort_hash).
       excludes(:file_ids => []).
       map{ |i| [i.file_ids, i.name, i.url] }.
