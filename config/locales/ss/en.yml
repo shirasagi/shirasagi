@@ -296,6 +296,7 @@ en:
         - The maximum file upload size is set to %{human_size} in the server settings.
         - Setting a size limit that exceeds it will not affect it.
         - If you would like to change the server settings, please contact your system administrator.
+      downloaded: Download completed.
 
     info:
       soft_delete: The data will not be completely deleted, but will instead be saved in an invalid state.

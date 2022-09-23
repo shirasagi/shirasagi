@@ -1,3 +1,5 @@
+import i18next from 'i18next'
+
 function documentReady() {
   if (document.readyState === "complete") {
     return Promise.resolve()
@@ -5,6 +7,36 @@ function documentReady() {
 
   return new Promise((resolve, _reject) => {
     window.addEventListener('DOMContentLoaded', () => {
+      resolve()
+    })
+  })
+}
+
+const FILENAME_REGEX = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+
+function parseContentDisposition(disposition) {
+  var matches = FILENAME_REGEX.exec(disposition);
+  if (matches != null && matches[1]) {
+    return matches[1].replace(/['"]/g, '');
+  }
+}
+
+
+function downloadFile(response) {
+  const filename = parseContentDisposition(response.headers.get('content-disposition'))
+
+  return new Promise((resolve, _reject) => {
+    response.blob().then((blob) => {
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.classList.add("hide")
+      a.href = url
+      if (filename) {
+        a.download = filename
+      }
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => { a.remove() }, 250)
       resolve()
     })
   })
@@ -76,6 +108,15 @@ export default class Dialog {
     })
     this.element.addEventListener("turbo:before-fetch-request", (ev) => {
       ev.detail.fetchOptions.headers["X-SS-DIALOG"] = "normal"
+    })
+    this.element.addEventListener("turbo:submit-end", async (ev) => {
+      const response = ev.detail.fetchResponse.response
+      if (response.ok && response.headers.get('content-disposition')) {
+        await downloadFile(response)
+        this.close()
+        SS.notice(i18next.t("ss.notice.downloaded"))
+        return
+      }
     })
   }
 
