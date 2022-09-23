@@ -2,7 +2,7 @@
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.new'), url_for(action: :new) %>
-      <%= link_to t('ss.links.download'), url_for(action: :download_all) %>
+      <%= ss_stimulus_tag({ "ss/dialog" => { through_by_modifier: 'shift' } }, { type: :a, href: url_for(action: :download_all) }) do %><%= t('ss.links.download') %><% end %>
       <%= link_to t('ss.links.import'), url_for(action: :import) %>
     <% end %>
   <% elsif params[:action] =~ /new|create|lock|import|download_all/ %>

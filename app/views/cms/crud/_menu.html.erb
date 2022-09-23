@@ -6,7 +6,7 @@
     <% if @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
       <% download_url = url_for(action: :download_all) rescue (url_for(action: :download) rescue nil) %>
       <% if download_url %>
-        <%= link_to(t('ss.links.download'), download_url, class: :download) %>
+        <%= ss_stimulus_tag({ "ss/dialog" => { through_by_modifier: 'shift' } }, { type: :a, href: download_url, class: :download }) do %><%= t('ss.links.download') %><% end %>
       <% end %>
     <% end %>
     <% if @model.allowed?(:import, @cur_user, site: @cur_site, owned: true) %>
