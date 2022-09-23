@@ -21,24 +21,42 @@ function parseContentDisposition(disposition) {
   }
 }
 
+async function downloadFileWithRegularWay(response) {
+  const filename = parseContentDisposition(response.headers.get('content-disposition'))
+  const blob = await response.blob()
+  const url = window.URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.classList.add("hide")
+  a.href = url
+  if (filename) {
+    a.download = filename
+  }
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { a.remove() }, 250)
+}
+
+async function downloadFileWithFileSystemApi(response) {
+  const filename = parseContentDisposition(response.headers.get('content-disposition'))
+  const pickerOptions = filename ? { suggestedName: filename } : undefined
+  const fileHandle = await window.showSaveFilePicker(pickerOptions)
+  const stream = await fileHandle.createWritable()
+  const blob = await response.blob()
+  await stream.write(blob)
+  await stream.close()
+}
 
 function downloadFile(response) {
-  const filename = parseContentDisposition(response.headers.get('content-disposition'))
-
-  return new Promise((resolve, _reject) => {
-    response.blob().then((blob) => {
-      const url = window.URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.classList.add("hide")
-      a.href = url
-      if (filename) {
-        a.download = filename
-      }
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(() => { a.remove() }, 250)
-      resolve()
-    })
+  return new Promise((resolve, reject) => {
+    if (window.FileSystemWritableFileStream) {
+      downloadFileWithFileSystemApi(response)
+        .then(() => resolve())
+        .catch(() => reject())
+    } else {
+      downloadFileWithRegularWay(response)
+        .then(() => resolve())
+        .catch(() => reject())
+    }
   })
 }
 
@@ -112,10 +130,13 @@ export default class Dialog {
     this.element.addEventListener("turbo:submit-end", async (ev) => {
       const response = ev.detail.fetchResponse.response
       if (response.ok && response.headers.get('content-disposition')) {
-        await downloadFile(response)
-        this.close()
-        SS.notice(i18next.t("ss.notice.downloaded"))
-        return
+        try {
+          await downloadFile(response)
+          this.close()
+          SS.notice(i18next.t("ss.notice.downloaded"))
+        } catch (err) {
+          // console.log("canceled or some errors")
+        }
       }
     })
   }
