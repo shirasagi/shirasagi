@@ -52,7 +52,7 @@ class Gws::CustomGroupsController < ApplicationController
 
     @item = SS::DownloadParam.new params.require(:item).permit(:encoding)
     if @item.invalid?
-      render
+      render template: "download_all", status: :unprocessable_entity
       return
     end
 

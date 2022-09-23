@@ -74,6 +74,9 @@ export default class Dialog {
         }
       }
     })
+    this.element.addEventListener("turbo:before-fetch-request", (ev) => {
+      ev.detail.fetchOptions.headers["X-SS-DIALOG"] = "normal"
+    })
   }
 
   loadHtml(html) {

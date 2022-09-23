@@ -1,7 +1,7 @@
 <% if ss_dialog %>
-  <div class="ss-dialog-content">
+  <turbo-frame id="ss-dialog-content">
     <%= yield %>
-  </div>
+  </turbo-frame>
 <% else %>
   <div id="ajax-box">
     <%= yield %>
