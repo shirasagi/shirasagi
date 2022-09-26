@@ -5,9 +5,22 @@ RSpec.describe Gws::Memo, type: :model do
 
   describe '.rfc2822_mailbox' do
     context 'with blank email' do
-      it do
-        expect(described_class.rfc2822_mailbox(site: site, name: "鈴木　茂", email: "", sub: "users")).to \
-          eq "\"鈴木 茂\" <6Yi05pyoIOiMgg@users.replace-me.example.jp>"
+      context 'with atext' do
+        let(:name) { "name-h40182e34dd" }
+
+        it do
+          expect(described_class.rfc2822_mailbox(site: site, name: name, email: "", sub: "users")).to \
+            eq "#{name} <#{name}@users.replace-me.example.jp>"
+        end
+      end
+
+      context 'with non-atext' do
+        let(:name) { "鈴木#{Cms::SyntaxChecker::FULL_WIDTH_SPACE}茂" }
+
+        it do
+          expect(described_class.rfc2822_mailbox(site: site, name: name, email: "", sub: "users")).to \
+            eq "\"#{name}\" <6Yi05pyo44CA6IyC@users.replace-me.example.jp>"
+        end
       end
     end
   end
