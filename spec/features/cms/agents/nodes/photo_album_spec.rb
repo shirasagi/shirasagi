@@ -33,4 +33,16 @@ describe 'cms_agents_nodes_photo_album', type: :feature, dbscope: :example, js: 
       expect(page).to have_no_text(article_page.name)
     end
   end
+
+  context 'with page "ads/banner"' do
+    let!(:banner_page) { create(:ads_banner, cur_site: site, cur_node: node) }
+
+    before { visit photo_album_node.url }
+
+    it "is not displayed" do
+      expect(page).to have_css('#main > div.member-photos')
+      expect(page).to have_no_css('#main > div.member-photos > div.photo')
+      expect(page).to have_no_text(banner_page.name)
+    end
+  end
 end
