@@ -41,8 +41,8 @@
           <% if item.try(:route) %>
             <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
           <% end %>
-          <% if item.try(:status) %>
-            <span class="state"><%= t "ss.state.#{item.status}" %></span>
+          <% if item.try(:state) %>
+            <span class="state"><%= t "ss.state.#{item.state}" %></span>
           <% end %>
           <% if item.try(:tags) %>
             <span class="tags"><%= item.tags.join(",") %></span>

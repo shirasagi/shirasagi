@@ -193,7 +193,7 @@ SS.renderClipboardCopy();
             </div>
           <% end %>
 
-          <% @cur_page.resources.order(name: 1).each do |rs| %>
+          <% @cur_page.resources.and_public.order(name: 1).each do |rs| %>
             <% render_rs.call(rs) %>
           <% end %>
 
