@@ -6,42 +6,63 @@ class Cms::Agents::Nodes::PhotoAlbumController < ApplicationController
   before_action :becomes_with_route_node
   ALLOWED_EXTS = %w(gif png jpg jpeg bmp).freeze
 
+  class PhotoAlbumSearchService < Cms::FileSearchService
+    attr_accessor :cur_date, :condition_hash, :sort
+
+    private
+
+    # override Cms::FileSearchService#stage_search
+    def stage_search
+      @stages << { "$match" => { filename: { "$in" => ALLOWED_EXTS.map{ |ext| %r{#{ext}$}i } } } }
+
+      page_condition = Cms::Page.and_public_selector(cur_date)
+      page_condition[:site_id] = cur_site.id
+      page_condition.merge(condition_hash) if condition_hash.present?
+
+      @stages << { "$match" => { page: { "$elemMatch" => page_condition } } }
+    end
+
+    # override Cms::FileSearchService#stage_permissions
+    def stage_permissions
+      # nothing
+    end
+
+    # override Cms::FileSearchService#stage_pagination
+    def stage_pagination
+      @stages << { "$sort" => sort_hash }
+      super
+    end
+
+    def sort_hash
+      return { "page.released" => -1 } if sort.blank?
+      { "page.#{sort.sub(/ .*/, "")}" => (/-1$/.match?(sort) ? -1 : 1), name: 1 }
+    end
+  end
+
   private
 
   def becomes_with_route_node
     @cur_parent = @cur_node.parent
   end
 
-  def file_id_name_url
+  public
+
+  def index
     if @cur_node.conditions.present?
       condition_hash = @cur_node.condition_hash
     else
       condition_hash = @cur_parent.try(:condition_hash)
       condition_hash ||= @cur_node.condition_hash
     end
-    box=[]
-    Cms::Page.site(@cur_site).
-      and_public(@cur_date).
-      where(condition_hash).
-      exists(file_ids: true).
-      order_by(@cur_node.sort_hash).
-      excludes(:file_ids => []).
-      map{ |i| [i.file_ids, i.name, i.url] }.
-      each { |j| j[0].each{ |k| box << [k, j[1], j[2]] } }
-    box
-  end
 
-  public
+    service = PhotoAlbumSearchService.new(cur_site: @cur_site, cur_user: @cur_user)
+    service.cur_date = @cur_date
+    service.condition_hash = condition_hash
+    service.page = params[:page].try { |page| page.to_s.numeric? ? page.to_s.to_i - 1 : nil } || 0
+    service.limit = @cur_node.limit if @cur_node.limit > 0
+    service.sort = @cur_node.sort
 
-  def index
-    box = []
-    file_id_name_url.each do |i|
-      if SS::File.any_in(filename: ALLOWED_EXTS.map{ |ext| %r{#{ext}$}i }, id: i[0]).present?
-        box << [SS::File.find(i[0]), i[1], i[2]]
-      end
-    end
-
-    @items = Kaminari.paginate_array(box).page(params[:page]).per(@cur_node.limit)
+    @items = service.call
     render_with_pagination @items
   end
 
