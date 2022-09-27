@@ -7,6 +7,15 @@
   <dt><%= @model.t :schedule_max_date %></dt>
   <dd><%= I18n.l @item.schedule_max_at.to_date, format: :gws_long %></dd>
 
+  <dt><%= @model.t :schedule_hours %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= @model.t :schedule_min_hour %></dt>
+  <dd><%= @item.schedule_min_hour %> <%= t("datetime.prompts.hour") %></dd>
+
+  <dt class="depth-2"><%= @model.t :schedule_max_hour %></dt>
+  <dd><%= @item.schedule_max_hour %> <%= t("datetime.prompts.hour") %></dd>
+
   <dt><%= @model.t :schedule_attachment_state %></dt>
   <dd><%= @item.label :schedule_attachment_state %></dd>
 
