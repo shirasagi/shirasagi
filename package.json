@@ -17,7 +17,7 @@
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.7.1",
     "deepmerge": "^4.2.2",
-    "eslint": "^8.19.0",
+    "eslint": "^8.23.1",
     "eslint-plugin-ignore-erb": "^0.1.1",
     "js-yaml": "^4.1.0",
     "mini-css-extract-plugin": "^2.6.0",
@@ -25,9 +25,9 @@
     "postcss-loader": "^6.2.1",
     "sass": "^1.51.0",
     "sass-loader": "^12.6.0",
-    "stylelint": "^14.9.1",
+    "stylelint": "^14.11.0",
     "stylelint-config-property-sort-order-smacss": "^9.0.0",
-    "stylelint-config-recommended-scss": "^6.0.0",
+    "stylelint-config-recommended-scss": "^7.0.0",
     "stylelint-scss": "^4.2.0",
     "webpack-remove-empty-scripts": "^0.8.1"
   }
