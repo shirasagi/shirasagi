@@ -444,7 +444,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
           address = Mail::Address.new(rfc2822_address)
           expect(address.display_name).to eq list.sender_name
 
-          local_part = ::Addressable::IDNA.to_ascii(list.sender_name)
+          local_part = Base64.strict_encode64(list.sender_name)
           expect(address.address).to eq "#{local_part}@lists.#{canonical_domain}"
         end
         mail[:to].to_s.tap do |rfc2822_address|
