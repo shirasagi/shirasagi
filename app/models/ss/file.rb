@@ -86,7 +86,30 @@ class SS::File
       end
 
       scrubber = Loofah::Scrubber.new do |node|
-        node.remove if node.name == "script"
+        if node.name == "script"
+          node.remove
+          next
+        end
+        if node.attributes.present? && node.attributes["onclick"].present?
+          node.remove_attribute("onclick")
+        end
+        if node.attributes.present? && node.attributes["href"].present?
+          url = ::Addressable::URI.parse(node.attributes["href"].value) rescue nil
+          safe_href = true
+          if safe_href && url.blank?
+            safe_href = false
+          end
+          if safe_href && url && url.scheme && !UrlValidator::ALLOWED_SCHEMES.include?(url.scheme)
+            safe_href = false
+          end
+          if safe_href && url && !Sys::TrustedUrlValidator.valid_url?(url)
+            safe_href = false
+          end
+
+          unless safe_href
+            node.remove_attribute("href")
+          end
+        end
       end
       safe_content = sanitizer.scrub!(scrubber).to_s
 
