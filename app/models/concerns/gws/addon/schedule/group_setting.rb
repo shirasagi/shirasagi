@@ -22,6 +22,8 @@ module Gws::Addon::Schedule::GroupSetting
 
     field :schedule_max_month, type: Integer
     field :schedule_max_years, type: Integer
+    field :schedule_min_hour, type: Integer, default: 0
+    field :schedule_max_hour, type: Integer, default: 24
     field :schedule_max_file_size, type: Integer, default: 0
     field :todo_delete_threshold, type: Integer, default: 3
     field :schedule_attachment_state, type: String, default: 'allow'
@@ -29,6 +31,7 @@ module Gws::Addon::Schedule::GroupSetting
     field :schedule_custom_group_extra_state, type: String
 
     permit_params :schedule_max_month, :schedule_max_years
+    permit_params :schedule_min_hour, :schedule_max_hour
     permit_params :schedule_max_file_size, :in_schedule_max_file_size_mb
     permit_params :todo_delete_threshold
     permit_params :schedule_attachment_state, :schedule_drag_drop_state
@@ -40,6 +43,7 @@ module Gws::Addon::Schedule::GroupSetting
     validates :schedule_attachment_state, inclusion: { in: %w(allow deny), allow_blank: true }
     validates :schedule_drag_drop_state, inclusion: { in: %w(allow deny), allow_blank: true }
     validates :schedule_custom_group_extra_state, inclusion: { in: %w(creator_name), allow_blank: true }
+    validate :validate_schedule_hours, if: ->{ schedule_min_hour.present? && schedule_max_hour.present? }
   end
 
   def schedule_max_month
@@ -55,12 +59,30 @@ module Gws::Addon::Schedule::GroupSetting
     Date.new year, schedule_max_month, -1
   end
 
+  def schedule_min_time
+    hour = self[:schedule_min_hour].presence || 0
+    "#{hour}:00"
+  end
+
+  def schedule_max_time
+    hour = self[:schedule_max_hour].presence || 24
+    "#{hour}:00"
+  end
+
   def schedule_max_month_options
     1..12
   end
 
   def schedule_max_years_options
     (0..10).map { |m| ["+#{m}", m] }
+  end
+
+  def schedule_min_hour_options
+    (0..24).map { |m| [m, m] }
+  end
+
+  def schedule_max_hour_options
+    schedule_min_hour_options
   end
 
   def todo_delete_threshold_options
@@ -133,5 +155,11 @@ module Gws::Addon::Schedule::GroupSetting
   def set_schedule_max_file_size
     return if in_schedule_max_file_size_mb.blank?
     self.schedule_max_file_size = Integer(in_schedule_max_file_size_mb) * 1_024 * 1_024
+  end
+
+  def validate_schedule_hours
+    if schedule_min_hour >= schedule_max_hour
+      errors.add :schedule_max_hour, :greater_than, count: t(:schedule_min_hour)
+    end
   end
 end
