@@ -428,6 +428,8 @@ module SS::Model::File
     end
     self.size = Fs.size(path)
 
+    SS::File.sanitize_svg(self)
+
     update_variants if respond_to?(:update_variants)
     sanitizer_save_file
   end

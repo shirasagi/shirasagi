@@ -43,6 +43,7 @@ module SS::FileFactory
         yield item
         item.sync_stats
       end
+      SS::File.sanitize_svg(item)
 
       item.update_variants if item.respond_to?(:update_variants)
 
