@@ -1,7 +1,7 @@
 class Cms::FileSearchService
   include ActiveModel::Model
 
-  attr_accessor :cur_site, :cur_user, :s, :page, :limit
+  attr_accessor :cur_site, :cur_user, :keyword, :page, :limit
 
   STAGE_BUILDERS = %i[
     stage_files_attached_to_page stage_lookup_pages stage_search stage_permissions stage_projection stage_pagination
@@ -54,9 +54,9 @@ class Cms::FileSearchService
   end
 
   def stage_search
-    return if s.blank? || s[:keyword].blank?
+    return if keyword.blank?
 
-    words = s[:keyword].to_s.split(/[\s　]+/).uniq.select(&:present?)
+    words = keyword.to_s.split(/[\s　]+/).uniq.select(&:present?)
     return if words.blank?
 
     words = words.take(4).map { |w| /#{::Regexp.escape(w)}/i }
