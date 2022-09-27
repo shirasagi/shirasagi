@@ -66,7 +66,7 @@ describe Article::Page::ImportJob, dbscope: :example do
         filename = "#{unique_id}.csv"
         csv_file = SS::TempFile.create_empty!(name: filename, filename: filename, content_type: 'text/csv') do |file|
           ::File.open(file.path, "wb") do |f|
-            exporter = Cms::PageExporter.new(site: site, criteria: Article::Page.site(site).node(source_node))
+            exporter = Cms::PageExporter.new(mode: "article", site: site, criteria: Article::Page.site(site).node(source_node))
             exporter.enum_csv(encoding: "UTF-8").each do |csv_row|
               f.write(csv_row)
             end
@@ -172,6 +172,41 @@ describe Article::Page::ImportJob, dbscope: :example do
             expect(page.event_name).to eq source_page.event_name
             expect(page.event_dates).to eq source_page.event_dates
             expect(page.event_deadline).to eq source_page.event_deadline
+          end
+        end
+      end
+
+      context "map section fields is given" do
+        let(:map_point) do
+          {
+            name: unique_id, loc: [ 138.235266, 36.244941 ], text: Array.new(2) { unique_id }.join("\n"),
+            image: "/assets/img/openlayers/marker3.png"
+          }
+        end
+        let(:map_zoom_level) { rand(5..12) }
+        let(:center_setting) { %w(auto designated_location).sample }
+        let(:set_center_position) { "138.252924,36.204824" }
+        let(:zoom_setting) { %w(auto designated_level).sample }
+        let(:set_zoom_level) { rand(5..12) }
+        let(:map_reference_method) { "direct" }
+        let!(:source_page) do
+          Article::Page.create!(
+            cur_site: site, cur_node: source_node, cur_user: cms_user,
+            name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
+            map_points: [ map_point ], map_zoom_level: map_zoom_level, center_setting: center_setting,
+            set_center_position: set_center_position, zoom_setting: zoom_setting, set_zoom_level: set_zoom_level,
+            map_reference_method: map_reference_method
+          )
+        end
+
+        it do
+          Article::Page.site(site).node(dest_node).first.tap do |page|
+            expect(page.map_points).to eq source_page.map_points
+            expect(page.center_setting).to eq source_page.center_setting
+            expect(page.set_center_position).to eq source_page.set_center_position
+            expect(page.zoom_setting).to eq source_page.zoom_setting
+            expect(page.set_zoom_level).to eq source_page.set_zoom_level
+            expect(page.map_reference_method).to eq source_page.map_reference_method
           end
         end
       end

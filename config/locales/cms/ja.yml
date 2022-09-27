@@ -159,7 +159,28 @@ ja:
       download_description: サイト内の全コンテンツを出力します。
       import_tab: 一括設定
       import_head: 全コンテンツ一括設定
-      import_description: サイト内の全コンテンツを一括して設定します。一括して設定できるのはフォルダーとページで、かつ設定可能な属性はタイトル、レイアウト、キーワード、概要、サマリー、カテゴリー、検索条件URL、並び順、表示件数、上部HTML、ループHTML、下部HTML、NEWマーク期間、管理グループです。
+      import_description_html: |-
+        <p class="my-1">サイト内の全コンテンツを一括して設定します。</p>
+        
+        <p class="my-1">全コンテンツ一括設定では、フォルダーやページを一括して非公開にすることが可能ですが、フォルダーやページを一括して非公開にするとリンク切れが発生する可能性があります。
+        一括して非公開にした後は<a href="/.s%{site_id}/cms/check_links" target="_blank" rel="noopener">リンクチェック</a>を実行し、想定外のリンク切れが発生していないか確認するようにしてください。</p>
+        
+        <p class="my-1">次の属性は一括設定の対象外で、これらは一括して設定することはできません。
+        <ul>
+          <li>ページID</li>
+          <li>フォルダーID</li>
+          <li>登録種別 (ページ属性等)</li>
+          <li>ファイル名</li>
+          <li>容量</li>
+          <li>記事URL</li>
+          <li>並び順（項目名）</li>
+          <li>並び順（方向）</li>
+          <li>ファイル</li>
+          <li>添付ファイルURL</li>
+          <li>作成日時</li>
+          <li>更新日時</li>
+          <li>静的ファイル容量</li>
+        </ul></p>
     roles:
       admin: 管理者
       user: 編集者
@@ -691,6 +712,7 @@ ja:
     use_private_cms_line_messages: LINEメッセージの利用（所有）
     use_cms_line_deliver_categories: LINE配信カテゴリーの管理
     use_cms_line_services: LINEサービスの管理
+    use_cms_all_contents: 全コンテンツの利用
 
   modules:
     cms: 標準機能
@@ -991,16 +1013,19 @@ ja:
         conditions: 検索条件(URL)
         condition_forms: 検索条件(定型フォーム)
         condition_form_ids: 検索条件(定型フォーム)
+        sort: 並び順
+        limit: 表示件数
         loop_html: ループHTML
         upper_html: 上部HTML
         lower_html: 下部HTML
         new_days: NEWマーク期間
+        loop_setting_id: 定義済みループHTML
         loop_format: ループHTML形式
         loop_liquid: ループHTML
         no_items_display_state: ページ未検出時表示
         substitute_html: 代替HTML
-        sort_column_name: 並び順
-        sort_column_direction: 並び順(方向)
+        sort_column_name: 並び順（項目名）
+        sort_column_direction: 並び順（方向）
       cms/addon/page_group_list:
         condition_groups: 検索条件(グループ)
       cms/addon/tabs:
@@ -1628,6 +1653,7 @@ ja:
       unable_to_delete_in_use_column_without_confirmation: 同意がないため削除できません。
       unable_to_delete_all_columns_if_form_is_in_use: 定型フォームが使用中のため一括削除することはできません。
       unable_to_close_form_if_form_is_in_use: 定型フォームが使用中のため非公開にすることはできません。
+      both_of_page_id_and_node_id_is_blank: ページIDかノードIDのどちらかを設定してください。
 
     template:
       no_errors: エラーは見つかりませんでした。
@@ -2938,14 +2964,14 @@ ja:
     description: 概要
     summary_html: サマリー
     conditions: 検索条件(URL)
-    sort: 並び順
+    sort: リスト並び順
     limit: 表示件数
     upper_html: 上部HTML
     loop_setting_id: 定義済みループHTML
-    loop_html: ループHTML
+    loop_html: ループHTML（SHIRASAGI形式）
     lower_html: 下部HTML
     new_days: NEWマーク期間
-    category_ids: カテゴリ
+    category_ids: カテゴリー
     files: 添付ファイル
     file_urls: 添付ファイルURL
     use_map: 地図のマーカー座標
@@ -2958,6 +2984,7 @@ ja:
     status: 公開状態
     file_size: 静的ファイル容量
     size: 容量
+    loop_liquid: ループHTML（Liquid形式）
 
   folder_size:
     name: タイトル

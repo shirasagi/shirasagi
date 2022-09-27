@@ -411,7 +411,7 @@ module Cms::Addon
     end
 
     def enum_csv
-      exporter = Cms::PageExporter.new(site: @cur_site, criteria: search)
+      exporter = Cms::PageExporter.new(mode: "article", site: @cur_site, criteria: search)
       exporter.enum_csv(encoding: "Shift_JIS")
     end
 

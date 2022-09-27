@@ -120,6 +120,7 @@ module Cms
     Cms::Role.permission :use_private_cms_line_messages
     Cms::Role.permission :use_cms_line_deliver_categories
     Cms::Role.permission :use_cms_line_services
+    Cms::Role.permission :use_cms_all_contents
 
     if SS.config.michecker && SS.config.michecker['disable'].blank?
       Cms::Role.permission :use_cms_michecker

@@ -127,7 +127,7 @@ module SS::Document
 
     opts  = send("#{name}_options")
     opts += send("#{name}_private_options") if respond_to?("#{name}_private_options")
-    value = options.key?(:value) ? options[:value] : send(name)
+    value = options.key?(:value) ? options[:value] : try(name)
 
     if value.blank?
       opts.each { |m| return m if m[1].blank? }

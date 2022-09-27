@@ -41,6 +41,8 @@ module Cms::Model::Node
       where :filename.in => paths
     }
 
+    alias_method :view_route_options, :route_options
+
     template_variable_handler('pages.count', :template_variable_handler_pages_count)
 
     liquidize do

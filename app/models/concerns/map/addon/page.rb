@@ -53,6 +53,18 @@ module Map::Addon
       options
     end
 
+    def center_setting_options
+      %w(auto designated_location).map do |v|
+        [ I18n.t("map.#{v}"), v ]
+      end
+    end
+
+    def zoom_setting_options
+      %w(auto designated_level).map do |v|
+        [ I18n.t("map.#{v}"), v ]
+      end
+    end
+
     def save_geolocation
       if public?
         Map::Geolocation.update_with(self)
