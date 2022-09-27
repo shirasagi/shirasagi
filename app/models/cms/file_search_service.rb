@@ -4,7 +4,7 @@ class Cms::FileSearchService
   attr_accessor :cur_site, :cur_user, :keyword, :page, :limit
 
   STAGE_BUILDERS = %i[
-    stage_files_attached_to_page stage_lookup_pages stage_search stage_permissions stage_projection stage_pagination
+    stage_files_attached_to_page stage_lookup_pages stage_search stage_permissions stage_pagination
   ].freeze
 
   class << self
@@ -79,10 +79,6 @@ class Cms::FileSearchService
     end
   end
 
-  def stage_projection
-    @stages << { "$project" => SS::File.fields.keys.index_with { 1 } }
-  end
-
   def stage_pagination
     # pagination: see https://stackoverflow.com/questions/20348093/mongodb-aggregation-how-to-get-total-records-count
     @stages << {
@@ -97,7 +93,12 @@ class Cms::FileSearchService
     results = data["paginatedResults"]
     return [] if results.blank?
 
-    results.map { |data| SS::File.new(data) }
+    results.map do |data|
+      [
+        Mongoid::Factory.from_db(SS::File, data.except("page")),
+        Mongoid::Factory.from_db(Cms::Page, data["page"].first)
+      ]
+    end
   end
 
   def parse_total_count(data)
