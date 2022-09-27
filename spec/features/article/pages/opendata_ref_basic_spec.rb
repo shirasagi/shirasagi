@@ -85,6 +85,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(dataset.resources.count).to eq 1
         dataset.resources.first.tap do |resource|
           file = article_page.files.first
+          expect(resource.state).to eq 'public'
           expect(resource.name).to eq file.name
           expect(resource.content_type).to eq file.content_type
           expect(resource.file_id).not_to eq file.id
@@ -128,7 +129,20 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(dataset.assoc_site_id).to eq article_page.site.id
         expect(dataset.assoc_node_id).to eq article_page.parent.id
         expect(dataset.assoc_page_id).to eq article_page.id
-        expect(dataset.resources.count).to eq 0
+        expect(dataset.resources.count).to eq 1
+        dataset.resources.first.tap do |resource|
+          file = article_page.files.first
+          expect(resource.state).to eq 'closed'
+          expect(resource.name).to eq file.name
+          expect(resource.content_type).to eq file.content_type
+          expect(resource.file_id).not_to eq file.id
+          expect(resource.license_id).not_to be_nil
+          expect(resource.assoc_site_id).to eq article_page.site.id
+          expect(resource.assoc_node_id).to eq article_page.parent.id
+          expect(resource.assoc_page_id).to eq article_page.id
+          expect(resource.assoc_filename).to eq file.filename
+          expect(resource.assoc_method).to eq 'auto'
+        end
       end
     end
 
@@ -177,6 +191,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(dataset.resources.count).to eq 1
         dataset.resources.first.tap do |resource|
           file = article_page.files.first
+          expect(resource.state).to eq 'public'
           expect(resource.name).to eq file.name
           expect(resource.content_type).to eq file.content_type
           expect(resource.file_id).not_to eq file.id
@@ -220,7 +235,20 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(dataset.assoc_site_id).to eq article_page.site.id
         expect(dataset.assoc_node_id).to eq article_page.parent.id
         expect(dataset.assoc_page_id).to eq article_page.id
-        expect(dataset.resources.count).to eq 0
+        expect(dataset.resources.count).to eq 1
+        dataset.resources.first.tap do |resource|
+          file = article_page.files.first
+          expect(resource.state).to eq 'closed'
+          expect(resource.name).to eq file.name
+          expect(resource.content_type).to eq file.content_type
+          expect(resource.file_id).not_to eq file.id
+          expect(resource.license_id).not_to be_nil
+          expect(resource.assoc_site_id).to eq article_page.site.id
+          expect(resource.assoc_node_id).to eq article_page.parent.id
+          expect(resource.assoc_page_id).to eq article_page.id
+          expect(resource.assoc_filename).to eq file.filename
+          expect(resource.assoc_method).to eq 'auto'
+        end
       end
     end
 
@@ -269,6 +297,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(dataset.resources.count).to eq 1
         dataset.resources.first.tap do |resource|
           file = article_page.files.first
+          expect(resource.state).to eq 'public'
           expect(resource.name).to eq file.name
           expect(resource.content_type).to eq file.content_type
           expect(resource.file_id).not_to eq file.id
@@ -321,6 +350,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(dataset.resources.count).to eq 1
         dataset.resources.first.tap do |resource|
           file = article_page.files.first
+          expect(resource.state).to eq 'public'
           expect(resource.name).to eq file.name
           expect(resource.content_type).to eq file.content_type
           expect(resource.file_id).not_to eq file.id
@@ -364,7 +394,20 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(dataset.assoc_site_id).to eq article_page.site.id
         expect(dataset.assoc_node_id).to eq article_page.parent.id
         expect(dataset.assoc_page_id).to eq article_page.id
-        expect(dataset.resources.count).to eq 0
+        expect(dataset.resources.count).to eq 1
+        dataset.resources.first.tap do |resource|
+          file = article_page.files.first
+          expect(resource.state).to eq 'closed'
+          expect(resource.name).to eq file.name
+          expect(resource.content_type).to eq file.content_type
+          expect(resource.file_id).not_to eq file.id
+          expect(resource.license_id).not_to be_nil
+          expect(resource.assoc_site_id).to eq article_page.site.id
+          expect(resource.assoc_node_id).to eq article_page.parent.id
+          expect(resource.assoc_page_id).to eq article_page.id
+          expect(resource.assoc_filename).to eq file.filename
+          expect(resource.assoc_method).to eq 'auto'
+        end
       end
     end
   end

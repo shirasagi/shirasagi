@@ -185,13 +185,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(Opendata::Dataset.site(od_site).count).to eq 1
       Opendata::Dataset.site(od_site).first.tap do |dataset|
         expect(dataset.name).to eq article_page.name
-        expect(dataset.state).to eq 'closed'
+        expect(dataset.state).to eq 'public'
         expect(dataset.parent.id).to eq dataset_node.id
         expect(dataset.assoc_site_id).to eq article_page.site.id
         expect(dataset.assoc_node_id).to eq article_page.parent.id
         expect(dataset.assoc_page_id).to eq article_page.id
         expect(dataset.assoc_method).to eq 'auto'
-        expect(dataset.resources.count).to eq 0
+        expect(dataset.resources.count).to eq 1
+        expect(dataset.resources.and_public.count).to eq 0
       end
 
       visit article_pages_path(site, article_node)
@@ -217,8 +218,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(dataset.assoc_node_id).to eq article_page.parent.id
         expect(dataset.assoc_page_id).to eq article_page.id
         expect(dataset.assoc_method).to eq 'auto'
-        expect(dataset.resources.count).to eq 1
-        dataset.resources.first.tap do |resource|
+        expect(dataset.resources.count).to eq 2
+        expect(dataset.resources.and_public.count).to eq 1
+        dataset.resources.and_public.first.tap do |resource|
           file = article_page.files.first
           expect(resource.name).to eq ::File.basename(file.name, ".*")
           expect(resource.content_type).to eq file.content_type
