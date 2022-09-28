@@ -250,6 +250,19 @@ module SS
       opacity.nil? ? true : opacity.to_f.zero?
     end
 
+    def datetimepicker_value(locator, **options)
+      date = options.delete(:date)
+      options[:visible] = :all
+
+      element = find(:fillable_field, locator, **options)
+      value = page.evaluate_script("$(arguments[0]).data('xdsoft_datetimepicker').getValue()", element)
+      if date
+        Time.zone.parse(value).strftime("%Y/%m/%d")
+      else
+        Time.zone.parse(value).strftime("%Y/%m/%d %H:%M")
+      end
+    end
+
     def wait_for_page_load
       page.document.synchronize do
         current_path
