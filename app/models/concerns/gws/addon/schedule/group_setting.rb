@@ -22,8 +22,8 @@ module Gws::Addon::Schedule::GroupSetting
 
     field :schedule_max_month, type: Integer
     field :schedule_max_years, type: Integer
-    field :schedule_min_hour, type: Integer, default: 0
-    field :schedule_max_hour, type: Integer, default: 24
+    field :schedule_min_hour, type: Integer, default: 8
+    field :schedule_max_hour, type: Integer, default: 22
     field :schedule_max_file_size, type: Integer, default: 0
     field :todo_delete_threshold, type: Integer, default: 3
     field :schedule_attachment_state, type: String, default: 'allow'
@@ -60,12 +60,12 @@ module Gws::Addon::Schedule::GroupSetting
   end
 
   def schedule_min_time
-    hour = self[:schedule_min_hour].presence || 0
+    hour = self[:schedule_min_hour].presence || 8
     "#{hour}:00"
   end
 
   def schedule_max_time
-    hour = self[:schedule_max_hour].presence || 24
+    hour = self[:schedule_max_hour].presence || 22
     "#{hour}:00"
   end
 
