@@ -12,5 +12,16 @@ class SS::MimeType
       end
       ret.presence || default || DEFAULT_MIME_TYPE
     end
+
+    def safe_for_inline?(content_type)
+      return true if content_type.start_with?("text/") || content_type == "application/javascript"
+
+      if content_type.start_with?("image/")
+        sub_type = content_type.split("/", 2)
+        return SS::SAFE_IMAGE_SUB_TYPES.include?(sub_type)
+      end
+
+      false
+    end
   end
 end

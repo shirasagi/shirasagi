@@ -155,7 +155,7 @@ class Fs::FilesController < ApplicationController
     content_type = cur_variant ? cur_variant.content_type : cur_item.content_type
     content_type = content_type.presence || SS::MimeType::DEFAULT_MIME_TYPE
 
-    disposition = :attachment unless safe_for_inline?(content_type)
+    disposition = :attachment unless SS::MimeType.safe_for_inline?(content_type)
     disposition ||= :inline
 
     download_filename = cur_variant ? cur_variant.download_filename : cur_item.download_filename
@@ -163,10 +163,6 @@ class Fs::FilesController < ApplicationController
   rescue MiniMagick::Error => e
     Rails.logger.info("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     head :not_found
-  end
-
-  def safe_for_inline?(content_type)
-    SS::ImageConverter.image_mime_type?(content_type)
   end
 
   public
