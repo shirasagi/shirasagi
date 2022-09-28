@@ -25,7 +25,7 @@ SS.ready(function() {
       $.extend(true, params, opts);
       $(selector).fullCalendar(params);
       this.renderInitialize(selector, init);
-      return this.overrideAddLink(selector);
+      this.overrideAddLink(selector);
     };
 
     Gws_Schedule_Calendar.renderInitialize = function (selector, init) {
@@ -357,7 +357,7 @@ SS.ready(function() {
     };
 
     Gws_Schedule_Calendar.overrideAddLink = function (selector) {
-      return $('.add-plan').on("click", function (ev) {
+      $('.add-plan').on("click", function (ev) {
         var date, href, now, start, state, view;
         now = new Date;
         date = $(selector).fullCalendar('getDate');
@@ -367,8 +367,10 @@ SS.ready(function() {
           start = (date.format('YYYY-MM-DD')) + "T" + (now.getHours()) + ":00:00";
           state = ("calendar[date]=" + (date.format()) + "&") + Gws_Schedule_Calendar.viewStateQuery(view);
           href = href + ("?start=" + start + "&" + state);
+        } else {
+          href = href + "?" + Gws_Schedule_Calendar.viewStateQuery(view);
         }
-        return $(this).attr('href', href);
+        $(this).attr('href', href);
       });
     };
 
