@@ -2,7 +2,9 @@
 
 <%= jquery do %>
   $(document).on("gws:calendarInitialized", function() {
-    (new Gws_Schedule_CalendarTransition(<%== params[:calendar].to_json %>)).renderLinks('.nav-menu a')
+    var transition = new Gws_Schedule_CalendarTransition(<%== params[:calendar].to_json %>);
+    transition.renderLinks('.nav-menu a');
+    transition.renderCancelButton('footer button[type="reset"]', '.nav-menu a.back-to-index');
   });
 <% end %>
 
@@ -12,12 +14,12 @@
       <%= link_to t('ss.links.new'), action: :new %>
     <% end %>
   <% elsif params[:action] =~ /new|create|copy|import|destroy_all/ %>
-    <%= link_to t('ss.links.back_to_index'), action: :index, controller: 'gws/schedule/main' %>
+    <%= link_to t('ss.links.back_to_index'), { action: :index, controller: 'gws/schedule/main' }, { class: "back-to-index" } %>
   <% elsif params[:action] =~ /edit|update|delete|move/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
+      <%= link_to t('ss.links.back_to_show'), { action: :show, id: @item }, { class: "back-to-show" } %>
     <% end %>
-    <%= link_to t('ss.links.back_to_index'), controller: 'gws/schedule/main', action: :index %>
+    <%= link_to t('ss.links.back_to_index'), { controller: 'gws/schedule/main', action: :index }, { class: "back-to-index" } %>
   <% else %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
@@ -53,6 +55,6 @@
         <% end %>
       <% end %>
     <% end %>
-    <%= link_to t('ss.links.back_to_index'), controller: 'gws/schedule/main', action: :index %>
+    <%= link_to t('ss.links.back_to_index'), { action: :index, controller: 'gws/schedule/main' }, { class: "back-to-index" } %>
   <% end %>
 </nav>
