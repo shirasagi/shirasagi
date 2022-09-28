@@ -17,7 +17,7 @@ RSpec.describe SS::Migration20220928000000, dbscope: :example do
           </svg>
         SVG
       end
-      file.set(content_type: SS::File::SVG_MIME_TYPE, size: ::File.size(file.path))
+      file.set(content_type: SS::SvgSanitizer::SVG_MIME_TYPE, size: ::File.size(file.path))
     end
   end
 

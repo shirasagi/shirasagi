@@ -3,8 +3,6 @@ class SS::File
   include SS::Relation::FileHistory
   include SS::Liquidization
 
-  SVG_MIME_TYPE = "image/svg+xml".freeze
-
   cattr_accessor(:models, instance_accessor: false) { [] }
 
   liquidize do
@@ -71,50 +69,6 @@ class SS::File
     # check file owner without any database accesses
     def file_owned?(file, item)
       file.owner_item_type == item.class.name && file.owner_item_id == item.id
-    end
-
-    def sanitize_svg(file)
-      return if file.content_type.casecmp(SVG_MIME_TYPE) != 0 || !::Fs.exist?(file.path)
-
-      unsafe_content = ::File.read(file.path)
-      return if unsafe_content.blank?
-
-      if unsafe_content.include?("<?xml") || unsafe_content.include?("<!DOCTYPE")
-        sanitizer = Loofah.xml_document(unsafe_content)
-      else
-        sanitizer = Loofah.xml_fragment(unsafe_content)
-      end
-
-      scrubber = Loofah::Scrubber.new do |node|
-        if node.name == "script"
-          node.remove
-          next
-        end
-        if node.attributes.present? && node.attributes["onclick"].present?
-          node.remove_attribute("onclick")
-        end
-        if node.attributes.present? && node.attributes["href"].present?
-          url = ::Addressable::URI.parse(node.attributes["href"].value) rescue nil
-          safe_href = true
-          if safe_href && url.blank?
-            safe_href = false
-          end
-          if safe_href && url && url.scheme && !UrlValidator::ALLOWED_SCHEMES.include?(url.scheme)
-            safe_href = false
-          end
-          if safe_href && url && !Sys::TrustedUrlValidator.valid_url?(url)
-            safe_href = false
-          end
-
-          unless safe_href
-            node.remove_attribute("href")
-          end
-        end
-      end
-      safe_content = sanitizer.scrub!(scrubber).to_s
-
-      Fs.safe_create(file.path) { |f| f.write safe_content }
-      file.size = ::Fs.size(file.path)
     end
   end
 end
