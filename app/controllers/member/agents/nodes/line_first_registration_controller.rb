@@ -25,7 +25,7 @@ class Member::Agents::Nodes::LineFirstRegistrationController < ApplicationContro
   public
 
   def index
-    return if request.get?
+    return if request.get? || request.head?
     return if @mypage_node.nil?
 
     @item.attributes = get_params
