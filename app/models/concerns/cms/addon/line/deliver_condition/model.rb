@@ -2,8 +2,6 @@ module Cms::Addon
   module Line::DeliverCondition::Model
     extend ActiveSupport::Concern
 
-    CHILD_CONDITION_MAX_SIZE = 5
-
     included do
       embeds_ids :deliver_categories, class_name: "Cms::Line::DeliverCategory::Base"
       permit_params deliver_category_ids: []

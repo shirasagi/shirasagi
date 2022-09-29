@@ -3,8 +3,6 @@ module Member::Addon
     extend SS::Addon
     extend ActiveSupport::Concern
 
-    CHILD_MAX_SIZE = 5
-
     included do
       field :first_registered, type: DateTime
       field :subscribe_line_message, type: String, default: "active"

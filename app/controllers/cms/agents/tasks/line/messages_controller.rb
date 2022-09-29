@@ -10,6 +10,7 @@ class Cms::Agents::Tasks::Line::MessagesController < ApplicationController
 
     now = Time.zone.now
     begin
+      pull_private_files(@message)
       deliver_message(@message)
     rescue => e
       @task.log("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
@@ -28,6 +29,7 @@ class Cms::Agents::Tasks::Line::MessagesController < ApplicationController
 
     now = Time.zone.now
     begin
+      pull_private_files(@message)
       deliver_test_message(@message, @test_members)
     rescue => e
       @task.log("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
@@ -49,6 +51,7 @@ class Cms::Agents::Tasks::Line::MessagesController < ApplicationController
 
     messages.each do |message|
       begin
+        pull_private_files(message)
         message.publish
         deliver_message(message)
       rescue => e
@@ -58,5 +61,10 @@ class Cms::Agents::Tasks::Line::MessagesController < ApplicationController
       end
     end
     head :ok
+  end
+
+  def pull_private_files(message)
+    return unless SS::Lgwan.enabled?
+    message.templates.each { |template| SS::Lgwan.pull_private_files(template) }
   end
 end

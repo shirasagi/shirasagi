@@ -1457,6 +1457,7 @@ ja:
         height: 高さ
         area_size: タップ領域数
         chat_bar_text: メニューテキスト
+        selected: デフォルト表示
         state: ステータス
         areas: タップ領域
       cms/line/area:
@@ -1957,6 +1958,8 @@ ja:
         - タップ領域数を入力します。
       chat_bar_text:
         - トーク画面下部のメニューバーのテキストを入力します。
+      selected:
+        - トーク画面を開いた際に、メニューを最初から表示するか選択します。
 
     cms/site:
       name:
