@@ -8,6 +8,7 @@ class Cms::Page
   include Cms::Addon::LinePoster
   include Gravatar::Addon::Gravatar
   include Cms::Addon::Thumb
+  include Cms::Addon::RedirectLink
   include Cms::Addon::Body
   include Cms::Addon::BodyPart
   include Cms::Addon::File
