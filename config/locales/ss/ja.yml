@@ -135,6 +135,7 @@ ja:
       copy_email_address: メールアドレスをコピー
       closed_save: 非公開にする
       edit_password: パスワード変更
+      registration: 登録する
     buttons:
       save: 保存
       saving: 保存中

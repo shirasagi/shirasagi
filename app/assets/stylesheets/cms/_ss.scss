@@ -86,7 +86,7 @@
     @include border-radius(3px);
     font-size: 90%;
     font-weight: normal;
-    &.state-public, &.state-public-expired, &.state-closed, &.state-ready, &.state-request, &.state-request-remind, &.state-edit, &.state-remand, &.state-deletion-locked {
+    &.state-public, &.state-public-expired, &.state-completed, &.state-closed, &.state-draft, &.state-ready, &.state-request, &.state-request-remind, &.state-edit, &.state-remand, &.state-deletion-locked {
       color: #fff;
     }
     &.state-public, &.state-completed {
@@ -95,7 +95,7 @@
     &.state-public-expired {
       background-color: #2f7e42;
     }
-    &.state-closed {
+    &.state-closed, &.state-draft {
       background-color: #6c757d;
     }
     &.state-ready {

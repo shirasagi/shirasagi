@@ -34,6 +34,7 @@ module Member
 
     # line
     Cms::Node.plugin "member/my_line_profile"
+    Cms::Node.plugin "member/line_first_registration"
 
     Cms::Role.permission :read_other_member_blogs
     Cms::Role.permission :read_private_member_blogs

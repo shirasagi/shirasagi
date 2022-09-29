@@ -181,6 +181,7 @@ ja:
       member/photo_search: フォトサーチ
       member/photo_spot: フォトスポット
       member/my_line_profile: LINEプロフィール
+      member/line_first_registration: LINE初回登録
 
     parts:
       member/blog_page: ブログページ一覧

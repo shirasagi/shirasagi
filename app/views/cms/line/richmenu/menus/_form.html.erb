@@ -47,4 +47,7 @@ $('[name="item[in_image]"]').on("change", function(){
 
   <dt><%= @model.t :chat_bar_text %><%= @model.tt :chat_bar_text %></dt>
   <dd><%= f.text_field :chat_bar_text %></dd>
+
+  <dt><%= @model.t :selected %><%= @model.tt :selected %></dt>
+  <dd><%= f.select :selected, @item.selected_options %></dd>
 </dl>
