@@ -29,7 +29,10 @@ this.SS = (function () {
   SS.isReady = false;
   var readyPromise = new Promise(function(resolve, _reject) {
     // 5秒以内に doneReady が呼ばれない場合、強制的に呼ぶ
-    SS.readyTimeout = setTimeout(resolve, 5000);
+    SS.readyTimeout = setTimeout(function() {
+      console.error("'application.js' wasn't loaded within 5 secs. please check your 'config/ss.yml'.");
+      resolve();
+    }, 5000);
 
     SS.doneReady = function() {
       if (SS.isReady) {
