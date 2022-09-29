@@ -256,11 +256,8 @@ module SS
 
       element = find(:fillable_field, locator, **options)
       value = page.evaluate_script("$(arguments[0]).data('xdsoft_datetimepicker').getValue()", element)
-      if date
-        Time.zone.parse(value).strftime("%Y/%m/%d")
-      else
-        Time.zone.parse(value).strftime("%Y/%m/%d %H:%M")
-      end
+      format = date ? I18n.t("date.formats.picker") : I18n.t("time.formats.picker")
+      Time.zone.parse(value).strftime(format)
     end
 
     def wait_for_page_load

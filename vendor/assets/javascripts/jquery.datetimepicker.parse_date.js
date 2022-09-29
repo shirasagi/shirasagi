@@ -34,10 +34,6 @@ DateFormatter.prototype.parseDate = function (vDate, vFormat) {
 
   vDateParts = vDate.replace(self.separators, '\0').split('\0');
 
-  // フォーマットのParts数と実際のParts数が異なっていれば不正とみなす
-  if (vDateParts.length != vFormatParts.length) {
-    return false;
-  }
   // Partsの中に数字以外の文字があれば不正とみなす
   for (i = 0; i < vDateParts.length; i++) {
     if (!vDateParts[i].match(/^\d+$/)) {
@@ -129,6 +125,10 @@ DateFormatter.prototype.parseDate = function (vDate, vFormat) {
     out.date = new Date(out.year, out.month - 1, out.day, out.hour, out.min, out.sec, 0);
   } else {
     if (vTimeFlag !== true) {
+      return false;
+    }
+    // date形式の場合、time形式で解析せずに失敗とみなす
+    if (vDateFlag === true) {
       return false;
     }
     out.date = new Date(0, 0, 0, out.hour, out.min, out.sec, 0);
