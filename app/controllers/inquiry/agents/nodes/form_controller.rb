@@ -29,12 +29,8 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   end
 
   def set_columns
-    disable_upload_file = {}
-    disable_upload_file = { :input_type.ne => 'upload_file' } if SS::Lgwan.enabled?
-
     @columns = Inquiry::Column.site(@cur_site).
       where(node_id: @cur_node.id, state: "public").
-      where(disable_upload_file).
       order_by(order: 1)
   end
 
@@ -70,7 +66,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     @answer = Inquiry::Answer.new(cur_site: @cur_site, cur_node: @cur_node)
     @answer.remote_addr = remote_addr
     @answer.user_agent = request.user_agent
-    @answer.member = get_member_by_session
+    @answer.member = @cur_member
     @answer.source_url = params[:item].try(:[], :source_url)
     @answer.set_data(@data)
   end

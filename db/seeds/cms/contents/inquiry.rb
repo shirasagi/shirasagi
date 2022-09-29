@@ -96,24 +96,23 @@ save_inquiry_answer node_id: @feedback_node.id, site_id: @site._id,
     column_feedback3.id => "どちらともいえない"
   }
 
-if !SS::Lgwan.enabled?
-  ## member
-  save_node route: "member/login", filename: "login", name: "ログイン", layout_id: @layouts["login"].id,
-    form_auth: "enabled", redirect_url: "/mypage/"
-  save_node route: "member/registration", filename: "registration", name: "会員登録", layout_id: @layouts["one"].id,
-    sender_email: "info@example.jp", sender_name: "送信者名", kana_required: "required", postal_code_required: "required",
-    addr_required: "required", sex_required: "required", birthday_required: "required"
-  save_node route: "member/mypage", filename: "mypage", name: "マイページ", layout_id: @layouts["mypage"].id
-  save_node route: "member/my_profile", filename: "mypage/profile", name: "プロフィール", layout_id: @layouts["mypage"].id, order: 10,
-    kana_required: "required", postal_code_required: "required", addr_required: "required", sex_required: "required",
-    birthday_required: "required"
-  save_node route: "member/my_blog", filename: "mypage/blog", name: "ブログ", layout_id: @layouts["mypage"].id, order: 20
-  save_node route: "member/my_photo", filename: "mypage/photo", name: "フォト", layout_id: @layouts["mypage"].id, order: 30
-  @anpi_node = save_node route: "member/my_anpi_post", filename: "mypage/anpi", name: "安否",
-    layout_id: @layouts["mypage"].id, order: 40, map_state: "enabled", map_view_state: "enabled",
-    text_size_limit: 400
-  save_node route: "member/my_group", filename: "mypage/group", name: "グループ", layout_id: @layouts["mypage"].id, order: 50,
-    sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp"
+## member
+save_node route: "member/login", filename: "login", name: "ログイン", layout_id: @layouts["login"].id,
+  form_auth: "enabled", redirect_url: "/mypage/"
+save_node route: "member/registration", filename: "registration", name: "会員登録", layout_id: @layouts["one"].id,
+  sender_email: "info@example.jp", sender_name: "送信者名", kana_required: "required", postal_code_required: "required",
+  addr_required: "required", sex_required: "required", birthday_required: "required"
+save_node route: "member/mypage", filename: "mypage", name: "マイページ", layout_id: @layouts["mypage"].id
+save_node route: "member/my_profile", filename: "mypage/profile", name: "プロフィール", layout_id: @layouts["mypage"].id, order: 10,
+  kana_required: "required", postal_code_required: "required", addr_required: "required", sex_required: "required",
+  birthday_required: "required"
+save_node route: "member/my_blog", filename: "mypage/blog", name: "ブログ", layout_id: @layouts["mypage"].id, order: 20
+save_node route: "member/my_photo", filename: "mypage/photo", name: "フォト", layout_id: @layouts["mypage"].id, order: 30
+@anpi_node = save_node route: "member/my_anpi_post", filename: "mypage/anpi", name: "安否",
+  layout_id: @layouts["mypage"].id, order: 40, map_state: "enabled", map_view_state: "enabled",
+  text_size_limit: 400
+save_node route: "member/my_group", filename: "mypage/group", name: "グループ", layout_id: @layouts["mypage"].id, order: 50,
+  sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp"
 
   ## member blog
   save_node route: "cms/node", filename: "kanko-info", name: "観光情報", layout_id: @layouts["kanko-info-top"].id
@@ -165,7 +164,6 @@ if !SS::Lgwan.enabled?
 
   save_node route: "member/photo_search", filename: "kanko-info/photo/search", name: "検索結果", layout_id: @layouts["kanko-info"].id
   save_node route: "member/photo_spot", filename: "kanko-info/photo/spot", name: "おすすめスポット", layout_id: @layouts["kanko-info"].id
-end
 
 ## layout
 Cms::Node.where(site_id: @site._id, route: /^article\//).update_all(layout_id: @layouts["pages"].id)

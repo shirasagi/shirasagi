@@ -19,7 +19,6 @@ ja:
     from: から
     confirm_input: "%{name}確認用"
     confirm_input_description: "もう一度、同じ%{name}を入力してください。"
-    cannot_use: "（使用不可）"
     default_reply_content_static: |-
       このメールは、お問い合わせいただきました方に自動的に送信しております。
       もしお心当たりがない場合は、破棄していただきますようお願い申し上げます。
@@ -349,7 +348,6 @@ ja:
     messages:
       invalid_input_type_for_input_confirm: "は、入力形式に「%{input_type}」が選択されている場合、「する」にできません。"
       input_confirm_not_match: "が一致しません。"
-      cannot_use_upload_file: "（ファイル投稿）は使用できません。"
       blank_keyword: "通知メールアドレスに転送するキーワードを入力してください。"
       blank_email: "キーワードが含まれる場合の通知メールアドレスを入力してください。"
       exist_form_select: "「%{input_type}」の項目はすでに存在しています。"

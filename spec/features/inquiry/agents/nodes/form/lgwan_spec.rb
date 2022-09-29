@@ -54,7 +54,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
     it do
       visit index_url
       expect(status_code).to eq 200
-      expect(page).to have_no_selector('input#item_8')
+      expect(page).to have_selector('input#item_8')
       within 'div.inquiry-form' do
         within 'div.columns' do
           fill_in "item[1]", with: "シラサギ太郎"
@@ -79,7 +79,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           expect(find('#item_5')['value']).to eq '男性'
           expect(find('#item_6')['value']).to eq '50代'
           expect(find('#item_7_2')['value']).to eq '申請について'
-          expect(page).to have_no_selector('input#item_8')
+          expect(page).to have_selector('input#item_8')
         end
         within 'div.simple-captcha' do
           fill_in "answer[captcha_answer]", with: SS::Captcha.first.captcha_text
@@ -95,7 +95,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       expect(Inquiry::Answer.site(site).count).to eq 1
       answer = Inquiry::Answer.first
       expect(answer.node_id).to eq node.id
-      expect(answer.data.count).to eq 7
+      expect(answer.data.count).to eq 8
       expect(answer.data[0].value).to eq 'シラサギ太郎'
       expect(answer.data[0].confirm).to be_nil
       expect(answer.data[1].value).to eq '株式会社シラサギ'

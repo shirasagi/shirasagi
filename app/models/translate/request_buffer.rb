@@ -118,9 +118,8 @@ class Translate::RequestBuffer
       sleep @interval
     end
 
-    if !SS::Lgwan.enabled?
-      @site.update!
-    end
+    # update translate api count
+    @site.update
 
     @caches.each do |cache|
       if cache.text.blank?
