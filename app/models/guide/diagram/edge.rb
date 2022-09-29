@@ -6,6 +6,7 @@ class Guide::Diagram::Edge
   field :value, type: String
   field :transition, type: String
   field :question_type, type: String
+  field :explanation, type: String
 
   validates :value, presence: true
   validates :transition, presence: true
