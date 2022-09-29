@@ -10,6 +10,7 @@
     <%= hidden_field_tag "item[in_edges][][point_ids][]", "", id: nil, class: "hidden-ids" %>
     <%= link_to t("ss.links.select"), guide_apis_procedures_path(nid: @cur_node.id, id: @item.id), class: "ajax-box" %>
     <%= link_to t("ss.buttons.delete"), "#", class: "deselect-edge btn" %>
+    <%= text_area_tag "item[in_edges][][explanation]", edge.explanation, placeholder: t("guide.views.input_explanation"), style: "width: 60%;" %>
   </dd>
   <dd>
     <table class="index ajax-selected">

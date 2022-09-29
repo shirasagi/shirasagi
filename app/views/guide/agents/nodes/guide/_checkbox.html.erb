@@ -1,4 +1,7 @@
 <div class="question"><%= @question.name %></div>
+<% if @question.explanation.present? %>
+  <div class="explanation"><%= br @question.explanation %></div>
+<% end %>
 
 <%= hidden_field_tag "answers[#{@no}][]", "0", id: nil %>
 <ul>
@@ -8,6 +11,9 @@
       <%= check_box_tag "answers[#{@no}][]", edge.transition, false, id: nil %>
       <%= edge.value %>
     </label>
+    <% if edge.explanation.present? %>
+      <div class="explanation"><%= br edge.explanation %></div>
+    <% end %>
   </li>
 <% end %>
 </ul>

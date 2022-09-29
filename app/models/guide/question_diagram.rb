@@ -3,11 +3,13 @@ class Guide::QuestionDiagram
 
   def initialize(node)
     @node = node
+    @all_build_points = {}
     @all_procedures = {}
     @roots = Guide::Question.node(node).
       select { |point| point.referenced_questions.blank? }.
       map { |point| build_diagram(point) }
 
+    @evaluated = {}
     @procedures = {}
     @questions = []
 
@@ -17,6 +19,7 @@ class Guide::QuestionDiagram
   end
 
   def input_answers(answers)
+    @evaluated = {}
     @procedures = {}
     @questions = []
 
@@ -29,17 +32,16 @@ class Guide::QuestionDiagram
 
       transitions = answer.is_a?(Array) ? answer : [answer]
       transitions.each do |transition|
-        next_points = point.transitions[transition].to_a
-
-        next_points = next_points.map do |point|
-          if point.question?
-            point
-          else
-            @procedures[point.id] = point
-            nil
+        next_points = []
+        point.transitions[transition].to_a.each do |point|
+          if point.question? && @evaluated[point.id].nil?
+            next_points << point
+            @evaluated[point.id] = point
           end
-        end.compact
-
+          if point.procedure?
+            @procedures[point.id] = point
+          end
+        end
         points = next_points + points if next_points.present?
       end
     end
@@ -68,8 +70,11 @@ class Guide::QuestionDiagram
   private
 
   def build_diagram(point)
-    point.transitions = {}
+    if @all_build_points[point.id]
+      return @all_build_points[point.id]
+    end
 
+    point.transitions = {}
     if point.question?
       point.edges.each do |edge|
         point.transitions[edge.transition] = []
@@ -80,34 +85,56 @@ class Guide::QuestionDiagram
     else
       @all_procedures[point.id] = point
     end
+
+    @all_build_points[point.id] = point
     point
   end
 
   def calc_longest_length(point)
-    if point.question?
-      lengths = []
+    if point.longest_length
+      return point.longest_length
+    end
 
-      point.transitions.each do |transition, next_points|
-        length = 0
-        next_points.each do |next_point|
+    length = 0
+    if point.question?
+      if point.question_type == "choices" && point.check_type == "multiple"
+        # 複数選択の場合は全ての遷移を結合して、各遷移のコストを合計する
+        multiple_points = {}
+        point.transitions.each do |transition, next_points|
+          next_points.each do |next_point|
+            multiple_points[next_point.id] = next_point
+          end
+        end
+
+        multiple_points.each do |_, next_point|
           length += calc_longest_length(next_point)
         end
-        lengths << length
-      end
-
-      if point.question_type == "choices" && point.check_type == "multiple"
-        length = lengths.sum.to_i + 1
+        length += 1
       else
+        # 単数選択の場合は全ての遷移の中から最も大きいもの選ぶ
+        lengths = []
+        point.transitions.each do |transition, next_points|
+          length = 0
+          next_points.each do |next_point|
+            length += calc_longest_length(next_point)
+          end
+          lengths << length
+        end
         length = lengths.max.to_i + 1
       end
-
-      length
     else
-      0
+      length = 0
     end
+    point.longest_length = length
+    length
   end
 
   def calc_shortest_length(point)
+    if point.shortest_length
+      return point.shortest_length
+    end
+
+    length = 0
     if point.question?
       lengths = []
 
@@ -120,14 +147,16 @@ class Guide::QuestionDiagram
       end
 
       if point.question_type == "choices" && point.check_type == "multiple"
+        # 複数選択の場合は何も選ばない（コスト1が最小）
         length = 1
       else
+        # 単数選択の場合は全ての遷移の中から最も小さいもの選ぶ
         length = lengths.min.to_i + 1
       end
-
-      length
     else
-      0
+      length = 0
     end
+    point.shortest_length = length
+    length
   end
 end
