@@ -1,10 +1,8 @@
 class SS::SvgSanitizer
-  SVG_MIME_TYPE = "image/svg+xml".freeze
-
   class << self
     def sanitize(file_path, content_type:)
       content_type = SS::MimeType.find(file_path) if content_type.blank?
-      return false if content_type.casecmp(SVG_MIME_TYPE) != 0 || !::Fs.exist?(file_path)
+      return false if content_type.casecmp(SS::MimeType::SVG_MIME_TYPE) != 0 || !::Fs.exist?(file_path)
 
       unsafe_content = ::File.read(file_path)
       return false if unsafe_content.blank?
