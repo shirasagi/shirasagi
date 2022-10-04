@@ -120,7 +120,7 @@ ja:
     errors:
       empty_plan_days: 予定を登録できる日が存在しません。
       less_than_years: は%{count}年間以内の範囲にしてください。
-      less_than_max_date: は%{date}までの日時を入力してください。
+      less_than_max_date: は%{date}までの日付を入力してください。
       faciliy_time_gte: 予約時間は%{count}分以上の値にしてください。
       faciliy_time_lte: 予約時間は%{count}分以下の値にしてください。
       invalid_faciliy_reservate_member: '%{name}を予約する権限がありません。'
