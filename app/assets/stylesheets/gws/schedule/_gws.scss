@@ -381,7 +381,7 @@
     color: $black;
   }
   .fc-content {
-    word-wrap: normal;
+    word-wrap: break-word;
     word-break: normal;
     white-space: normal;
     .fc-category {
