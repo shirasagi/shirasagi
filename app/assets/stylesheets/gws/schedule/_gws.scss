@@ -612,6 +612,17 @@
     border-left: 1px solid #555;
   }
 }
+.fc-list-format {
+  .fc-content {
+    .fc-title {
+      display: inline-block;
+    }
+    .fc-facility {
+      display: inline-block;
+      padding-left: 10px;
+    }
+  }
+}
 // Print View
 .print-preview {
   .fc-listMonth-view-table {

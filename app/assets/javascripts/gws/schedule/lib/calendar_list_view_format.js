@@ -42,9 +42,24 @@ SS.ready(function() {
         }
         duplicateCheck.push(uniqueKey);
 
-        var cont = $('<span class="fc-content"></span>').text(event.title);
-        var evEl = $('<a class="fc-event fc-event-point"></a>').append(cont);
+        var cont = $('<span class="fc-content"></span>');
+        var title = $('<span class="fc-title"></span>');
+        var evEl = $('<a class="fc-event fc-event-point"></a>');
 
+        if (event.category) {
+          var category = $('<span class="fc-category"></span>');
+          category.text(event.category);
+          title.append(category);
+        }
+        title.append(" " + event.title);
+        cont.append(title);
+
+        if (event.facility) {
+          var facility = $('<span class="fc-facility"></span>');
+          facility.text(event.facility);
+          cont.append(facility);
+        }
+        evEl.append(cont);
         evEl.addClass(event.className.join(' '));
         evEl.css({'color': event.textColor, 'background-color': event.backgroundColor});
 
