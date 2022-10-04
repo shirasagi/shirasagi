@@ -40,6 +40,7 @@ module Gws::Schedule::Planable
     validates :end_on, datetime: true
 
     validate :validate_datetimes_at
+    validate :validate_date_at
     validate :validate_max_date
 
     default_scope ->{
@@ -128,7 +129,7 @@ module Gws::Schedule::Planable
     if allday?
       self.start_on = Time.zone.today if start_on.blank?
       self.end_on   = start_on if end_on.blank?
-      self.end_on   = start_on if start_on > end_on
+      #self.end_on   = start_on if start_on > end_on
       self.start_at = Time.zone.local start_on.year, start_on.month, start_on.day, 0, 0, 0
       self.end_at   = Time.zone.local end_on.year, end_on.month, end_on.day, 23, 59, 59
     else
@@ -144,7 +145,15 @@ module Gws::Schedule::Planable
   end
 
   def validate_datetimes_at
+    return if allday?
     errors.add :end_at, :greater_than, count: t(:start_at) if start_at > end_at
+  end
+
+  def validate_date_at
+    return if !allday?
+    if start_on && end_on && start_on > end_on
+      errors.add :end_on, :greater_than, count: t(:start_on)
+    end
   end
 
   def validate_max_date
