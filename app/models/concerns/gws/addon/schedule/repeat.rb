@@ -13,6 +13,7 @@ module Gws::Addon::Schedule::Repeat
     validates :end_at, presence: true, if: -> { !repeat? }
     validate :validate_repeat_params, if: -> { repeat? }
     validate :validate_repeat_plan, if: -> { repeat? }
+    validate :validate_repeat_plan_max_date, if: -> { repeat? }
 
     before_save :save_repeat_plan, if: -> { repeat? }
     before_save :remove_repeat_plan, if: -> { repeat_type == '' }
@@ -89,6 +90,21 @@ module Gws::Addon::Schedule::Repeat
 
     @repeat_plan.errors.to_hash.each do |key, messages|
       messages.each { |m| errors.add key, m }
+    end
+  end
+
+  def validate_repeat_plan_max_date
+    site = @cur_site || self.site
+    return unless site
+    return unless site.schedule_max_at
+
+    max  = site.schedule_max_at.in_time_zone + 1.day
+    disp = I18n.l(site.schedule_max_at, format: :long)
+
+    if repeat_start && repeat_start >= max
+      errors.add :repeat_start, I18n.t('gws/schedule.errors.less_than_max_date', date: disp)
+    elsif repeat_end && repeat_end >= max
+      errors.add :repeat_end, I18n.t('gws/schedule.errors.less_than_max_date', date: disp)
     end
   end
 
