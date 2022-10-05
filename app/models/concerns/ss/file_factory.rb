@@ -44,6 +44,10 @@ module SS::FileFactory
         item.sync_stats
       end
 
+      if SS::SvgSanitizer.sanitize(item.path, content_type: item.content_type)
+        item.sync_stats
+      end
+
       item.update_variants if item.respond_to?(:update_variants)
 
       item
