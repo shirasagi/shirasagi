@@ -267,7 +267,8 @@ SS.ready(function() {
           }
           var popup_url = event.restUrl ? event.restUrl : url;
           var state = ("calendar[date]=" + (event.start.format('YYYY-MM-DD')) + "&") + Gws_Schedule_Calendar.viewStateQuery(view);
-          if (event.className.includes('fc-event-point') && !event.className.includes('fc-event-private')) {
+
+          if (!event.className.includes('fc-event-private')) {
             jsEvent.preventDefault();
             event.url = popup_url + "/" + event.id + "?" + state;
             location.href = event.url;
@@ -279,7 +280,7 @@ SS.ready(function() {
             { text: i18next.t('gws/schedule.loading') });
           Gws_Popup.render(target, popupContent);
 
-          return $.ajax({
+          $.ajax({
             url: popup_url + "/" + event.id + "/popup",
             success: function (data) {
               $('.fc-popup').html(data);
