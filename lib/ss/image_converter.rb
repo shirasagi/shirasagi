@@ -41,7 +41,12 @@ class SS::ImageConverter
 
     def image_mime_type?(mime_type)
       return false if mime_type.blank?
-      mime_type.start_with?('image/')
+      return false unless mime_type.start_with?('image/')
+      sub_type = mime_type.split("/", 2).last
+      return false if sub_type.blank?
+
+      sub_type = sub_type.downcase
+      SS::SAFE_IMAGE_SUB_TYPES.include?(sub_type)
     end
 
     def exif_image_mime_type?(mime_type)

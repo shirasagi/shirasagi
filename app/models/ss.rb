@@ -1,6 +1,8 @@
 module SS
   module_function
 
+  SAFE_IMAGE_SUB_TYPES = %w(gif jpeg png webp).freeze
+
   def change_locale_and_timezone(user)
     if user.nil?
       SS.reset_locale_and_timezone
