@@ -4,6 +4,8 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
   context "add plan" do
     let(:site) { gws_site }
     let(:index_path) { gws_schedule_plans_path site }
+    let!(:item1) { create :gws_schedule_plan }
+    let!(:item2) { create :gws_schedule_plan, allday: 'allday' }
 
     before { login_gws_user }
 
@@ -35,6 +37,18 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.cancel")
       end
       expect(current_path).to eq index_path
+    end
+
+    it "click event" do
+      visit index_path
+      first(".fc-content", text: item1.name).click
+      expect(current_path).to eq gws_schedule_plan_path(site, item1)
+    end
+
+    it "click allday event" do
+      visit index_path
+      first(".fc-content", text: item2.name).click
+      expect(current_path).to eq gws_schedule_plan_path(site, item2)
     end
   end
 end

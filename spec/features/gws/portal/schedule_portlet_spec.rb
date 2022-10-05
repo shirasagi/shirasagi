@@ -6,6 +6,8 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
   let(:group) { gws_user.groups.first }
   let(:user_portal_path) { gws_portal_user_path(site: site, user: user) }
   let(:group_portal_path) { gws_portal_group_path(site: site, group: group) }
+  let!(:item1) { create :gws_schedule_plan }
+  let!(:item2) { create :gws_schedule_plan, allday: 'allday' }
 
   before do
     login_gws_user
@@ -34,6 +36,18 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         end
         expect(current_path).to eq user_portal_path
       end
+
+      it "click event" do
+        visit user_portal_path
+        first(".fc-content", text: item1.name).click
+        expect(current_path).to eq gws_schedule_user_plan_path(site, gws_user, item1)
+      end
+
+      it "click allday event" do
+        visit user_portal_path
+        first(".fc-content", text: item2.name).click
+        expect(current_path).to eq gws_schedule_user_plan_path(site, gws_user, item2)
+      end
     end
 
     context "group portal" do
@@ -57,6 +71,18 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.cancel")
         end
         expect(current_path).to eq group_portal_path
+      end
+
+      it "click event" do
+        visit group_portal_path
+        first(".fc-content", text: item1.name).click
+        expect(current_path).to eq gws_schedule_user_plan_path(site, gws_user, item1)
+      end
+
+      it "click allday event" do
+        visit group_portal_path
+        first(".fc-content", text: item2.name).click
+        expect(current_path).to eq gws_schedule_user_plan_path(site, gws_user, item2)
       end
     end
   end

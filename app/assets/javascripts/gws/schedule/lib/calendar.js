@@ -267,28 +267,34 @@ SS.ready(function() {
           }
           var popup_url = event.restUrl ? event.restUrl : url;
           var state = ("calendar[date]=" + (event.start.format('YYYY-MM-DD')) + "&") + Gws_Schedule_Calendar.viewStateQuery(view);
-          if (event.className.includes('fc-event-point') && !event.className.includes('fc-event-private')) {
-            jsEvent.preventDefault();
-            event.url = popup_url + "/" + event.id + "?" + state;
-            location.href = event.url;
-            return;
-          }
-          var target = $(this);
-          var popupContent = ejs.render(
-            "<div class='fc-popup'><span class='fc-loading'><%= text %></span></div>",
-            { text: i18next.t('gws/schedule.loading') });
-          Gws_Popup.render(target, popupContent);
 
-          return $.ajax({
-            url: popup_url + "/" + event.id + "/popup",
-            success: function (data) {
-              $('.fc-popup').html(data);
-              $('.fc-popup').find('a').each(function () {
-                return $(this).attr('href', $(this).attr('href') + ("?" + state));
-              });
-              return Gws_Popup.renderPopup(target);
-            }
-          });
+          jsEvent.preventDefault();
+          event.url = popup_url + "/" + event.id + "?" + state;
+          location.href = event.url;
+          return;
+
+          //if (event.className.includes('fc-event-point') && !event.className.includes('fc-event-private')) {
+          //  jsEvent.preventDefault();
+          //  event.url = popup_url + "/" + event.id + "?" + state;
+          //  location.href = event.url;
+          //  return;
+          //}
+          //var target = $(this);
+          //var popupContent = ejs.render(
+          //  "<div class='fc-popup'><span class='fc-loading'><%= text %></span></div>",
+          //  { text: i18next.t('gws/schedule.loading') });
+          //Gws_Popup.render(target, popupContent);
+          //
+          //return $.ajax({
+          //  url: popup_url + "/" + event.id + "/popup",
+          //  success: function (data) {
+          //    $('.fc-popup').html(data);
+          //    $('.fc-popup').find('a').each(function () {
+          //      return $(this).attr('href', $(this).attr('href') + ("?" + state));
+          //  });
+          //  return Gws_Popup.renderPopup(target);
+          //}
+          //});
         },
         eventDrop: function (event, delta, revertFunc, jsEvent, ui, view) {
           var drop_url, end;
