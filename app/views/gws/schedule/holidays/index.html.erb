@@ -1,10 +1,18 @@
+<%
+  calendar_options = {
+    tapMenu: @model.allowed?(:create, @cur_user, site: @cur_site),
+    restUrl: url_for(action: :index),
+    firstDay: @cur_site.schedule_first_wday,
+    minTime: @cur_site.schedule_min_time,
+    maxTime: @cur_site.schedule_max_time,
+    eventSources: [{ url: "#{url_for(action: :events, format: :json)}?#{search_query}" }]
+  }
+  init_options = params[:calendar] || {}
+%>
+
 <%= jquery do %>
   $(document).on("gws:calendarInitialized", function() {
-    Gws_Schedule_Calendar.render('#calendar', {
-      tapMenu: <%= @model.allowed?(:create, @cur_user, site: @cur_site) %>,
-      restUrl: '<%= url_for action: :index %>',
-      eventSources: [{ url: '<%= url_for action: :events, format: :json %>?<%= search_query %>' }]
-    }, <%== (params[:calendar] || {}).to_json %>);
+    Gws_Schedule_Calendar.render('#calendar', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
   });
 <% end %>
 
