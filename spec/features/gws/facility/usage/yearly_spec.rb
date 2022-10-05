@@ -40,7 +40,7 @@ describe "gws_facility_usage", type: :feature, dbscope: :example, js: true do
   it do
     visit gws_facility_usage_main_path(site: site)
     within ".gws-facility-usage-monthly form.search" do
-      select I18n.t("ads.yearly"), from: "s[month]"
+      select I18n.t("gws/facility.usage.yearly"), from: "s[month]"
       click_on I18n.t("ss.buttons.search")
     end
 
@@ -68,7 +68,7 @@ describe "gws_facility_usage", type: :feature, dbscope: :example, js: true do
     # change year
     within ".gws-facility-usage-yearly form.search" do
       select I18n.t('gws/facility.facility'), from: "s[category]"
-      select "#{now.year - 1}#{I18n.t('datetime.prompts.year')}", from: "s[year]"
+      select I18n.t('gws/facility.formats.year', count: now.year - 1), from: "s[year]"
       click_on I18n.t("ss.buttons.search")
     end
     within ".gws-facility-usage-yearly .index" do
@@ -81,7 +81,7 @@ describe "gws_facility_usage", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.buttons.reset")
     end
     within ".gws-facility-usage-monthly form.search" do
-      select I18n.t("ads.yearly"), from: "s[month]"
+      select I18n.t("gws/facility.usage.yearly"), from: "s[month]"
       click_on I18n.t("ss.buttons.search")
     end
 
@@ -97,7 +97,9 @@ describe "gws_facility_usage", type: :feature, dbscope: :example, js: true do
     end
 
     # download
-    click_on I18n.t("ss.links.download")
+    within ".nav-menu" do
+      click_on I18n.t("ss.links.download")
+    end
     wait_for_download
 
     I18n.with_locale(I18n.default_locale) do
@@ -105,18 +107,18 @@ describe "gws_facility_usage", type: :feature, dbscope: :example, js: true do
       expect(csv.length).to eq 4
       expect(csv[0][Gws::Facility::Item.t(:name)]).to eq facility1.name
       expect(csv[0][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.hours')
-      expect(csv[0]["#{prev_month.month}#{I18n.t('datetime.prompts.month')}"]).to eq "5.0"
+      expect(csv[0][I18n.t("date.abbr_month_names")[prev_month.month]]).to eq "5.0"
       expect(csv[1][Gws::Facility::Item.t(:name)]).to eq facility1.name
       expect(csv[1][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.times')
-      expect(csv[1]["#{prev_month.month}#{I18n.t('datetime.prompts.month')}"]).to eq "2"
+      expect(csv[1][I18n.t("date.abbr_month_names")[prev_month.month]]).to eq "2"
       expect(csv[2][Gws::Facility::Item.t(:name)]).to eq facility2.name
       expect(csv[2][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.hours')
-      expect(csv[2]["#{prev_month.month}#{I18n.t('datetime.prompts.month')}"]).to eq "24.0"
-      expect(csv[2]["#{now.month}#{I18n.t('datetime.prompts.month')}"]).to eq "48.0"
+      expect(csv[2][I18n.t("date.abbr_month_names")[prev_month.month]]).to eq "24.0"
+      expect(csv[2][I18n.t("date.abbr_month_names")[now.month]]).to eq "48.0"
       expect(csv[3][Gws::Facility::Item.t(:name)]).to eq facility2.name
       expect(csv[3][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.times')
-      expect(csv[3]["#{prev_month.month}#{I18n.t('datetime.prompts.month')}"]).to eq "1"
-      expect(csv[3]["#{now.month}#{I18n.t('datetime.prompts.month')}"]).to eq "1"
+      expect(csv[3][I18n.t("date.abbr_month_names")[prev_month.month]]).to eq "1"
+      expect(csv[3][I18n.t("date.abbr_month_names")[now.month]]).to eq "1"
     end
   end
 end

@@ -10,8 +10,12 @@ module Chorg::Model::Revision
 
       permit_params :in_revision_csv_file
 
-      validate :validate_in_revision_csv_file, if: -> { in_revision_csv_file.present? }
-      before_save :import_revision_csv_file
+      validate if: -> { in_revision_csv_file.present? } do
+        I18n.with_locale(I18n.default_locale) { validate_in_revision_csv_file }
+      end
+      before_save do
+        I18n.with_locale(I18n.default_locale) { import_revision_csv_file }
+      end
     end
 
     def changesets_to_csv

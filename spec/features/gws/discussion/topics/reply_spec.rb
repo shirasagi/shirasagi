@@ -25,8 +25,9 @@ describe "gws_discussion_topics", type: :feature, dbscope: :example do
       expect(page).to have_text(text)
 
       # edit
-      click_on I18n.t('ss.links.edit')
-
+      within ".nav-menu" do
+        click_on I18n.t('ss.links.edit')
+      end
       text = "text-#{unique_id}"
       within "form#item-form" do
         fill_in "item[text]", with: text
@@ -35,7 +36,9 @@ describe "gws_discussion_topics", type: :feature, dbscope: :example do
       expect(page).to have_text(text)
 
       # delete
-      click_on I18n.t('ss.links.delete')
+      within ".nav-menu" do
+        click_on I18n.t('ss.links.delete')
+      end
       expect(page).to have_text(text)
 
       within "form" do

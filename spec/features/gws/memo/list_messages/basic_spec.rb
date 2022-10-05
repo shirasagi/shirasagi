@@ -21,8 +21,9 @@ describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true d
     it do
       # create
       visit gws_memo_list_messages_path(site: site, list_id: list)
-      click_on I18n.t('ss.links.new')
-
+      within ".nav-menu" do
+        click_on I18n.t('ss.links.new')
+      end
       within 'form#item-form' do
         fill_in 'item[subject]', with: subject1
         fill_in 'item[text]', with: text1
@@ -50,7 +51,9 @@ describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true d
       # update
       visit gws_memo_list_messages_path(site: site, list_id: list)
       click_on subject1
-      click_on I18n.t('ss.links.edit')
+      within ".nav-menu" do
+        click_on I18n.t('ss.links.edit')
+      end
       within 'form#item-form' do
         fill_in 'item[subject]', with: subject2
         fill_in 'item[text]', with: text2
@@ -62,7 +65,9 @@ describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true d
       # send
       visit gws_memo_list_messages_path(site: site, list_id: list)
       click_on subject2
-      click_on I18n.t('gws/memo.links.publish')
+      within ".nav-menu" do
+        click_on I18n.t('gws/memo.links.publish')
+      end
       within 'form#item-form' do
         click_on I18n.t('ss.buttons.send')
       end
@@ -89,7 +94,9 @@ describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true d
       # delete
       visit gws_memo_list_messages_path(site: site, list_id: list)
       click_on subject2
-      click_on I18n.t('ss.links.delete')
+      within ".nav-menu" do
+        click_on I18n.t('ss.links.delete')
+      end
       within 'form' do
         click_on I18n.t('ss.buttons.delete')
       end

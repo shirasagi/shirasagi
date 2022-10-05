@@ -17,7 +17,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
     before { login_gws_user }
 
     context 'punch and clear at 8th day' do
-      let(:the_day) { now.day != 8 ? 8 : 7 }
+      let(:the_day) { now.day == 8 ? 7 : 8 }
 
       it do
         visit gws_attendance_main_path(site)
@@ -29,8 +29,8 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           click_on I18n.t('ss.links.edit')
         end
         wait_for_cbox do
-          select '25時', from: 'cell[in_hour]'
-          select '48分', from: 'cell[in_minute]'
+          select I18n.t("gws/attendance.hour", count: 25), from: 'cell[in_hour]'
+          select I18n.t("gws/attendance.minute", count: 48), from: 'cell[in_minute]'
           fill_in 'cell[in_reason]', with: reason
           click_on I18n.t('ss.buttons.save')
         end
@@ -67,7 +67,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
     end
 
     context 'edit memo at 23th day' do
-      let(:the_day) { now.day != 23 ? 23 : 22 }
+      let(:the_day) { now.day == 23 ? 22 : 23 }
 
       it do
         visit gws_attendance_main_path(site)

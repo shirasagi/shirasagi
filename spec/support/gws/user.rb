@@ -53,7 +53,8 @@ def create_gws_users
     type: SS::Model::User::TYPE_SNS, login_roles: [ SS::Model::User::LOGIN_ROLE_DBPASSWD ],
     group_ids: [g11.id], gws_role_ids: [role.id],
     organization_id: g00.id, organization_uid: "org-admin",
-    deletion_lock_state: "locked"
+    deletion_lock_state: "locked",
+    lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s
   if user.invalid?
     user = Gws::User.find_by(email: "admin@example.jp")
     user.add_to_set(group_ids: g11.id, gws_role_ids: role.id)
@@ -63,7 +64,8 @@ def create_gws_users
 
   sys = Gws::User.create name: "gws-sys", uid: "sys", email: "sys@example.jp", in_password: "pass",
     type: SS::Model::User::TYPE_SNS, login_roles: [ SS::Model::User::LOGIN_ROLE_DBPASSWD ],
-    group_ids: [g11.id], gws_role_ids: [role.id]
+    group_ids: [g11.id], gws_role_ids: [role.id],
+    lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s
   if sys.invalid?
     sys = Gws::User.find_by(email: "sys@example.jp")
     sys.add_to_set(group_ids: g11.id, gws_role_ids: role.id)

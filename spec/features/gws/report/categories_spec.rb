@@ -17,8 +17,9 @@ describe "gws_report_categories", type: :feature, dbscope: :example do
       #
       # create
       #
-      click_on I18n.t('ss.links.new')
-
+      within ".nav-menu" do
+        click_on I18n.t('ss.links.new')
+      end
       within "form#item-form" do
         fill_in "item[name]", with: name
         fill_in "item[color]", with: color + "\n"
@@ -36,8 +37,9 @@ describe "gws_report_categories", type: :feature, dbscope: :example do
       #
       # edit
       #
-      click_link I18n.t('ss.links.edit')
-
+      within ".nav-menu" do
+        click_link I18n.t('ss.links.edit')
+      end
       within "form#item-form" do
         fill_in "item[name]", with: name2
         click_on I18n.t('ss.buttons.save')
@@ -53,7 +55,9 @@ describe "gws_report_categories", type: :feature, dbscope: :example do
       #
       # index
       #
-      click_link I18n.t('ss.links.back_to_index')
+      within ".nav-menu" do
+        click_link I18n.t('ss.links.back_to_index')
+      end
       within "div.info" do
         expect(page).to have_css("a.title", text: name2)
         click_link name2
@@ -62,7 +66,9 @@ describe "gws_report_categories", type: :feature, dbscope: :example do
       #
       # delete
       #
-      click_link I18n.t('ss.links.delete')
+      within ".nav-menu" do
+        click_link I18n.t('ss.links.delete')
+      end
       click_button I18n.t('ss.buttons.delete')
 
       category = Gws::Report::Category.site(site).where(name: name).first

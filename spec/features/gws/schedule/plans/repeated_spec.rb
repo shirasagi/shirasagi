@@ -24,7 +24,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
 
       it do
         visit index_path
-        click_on "予定を作成"
+        click_on I18n.t("gws/schedule.links.add_plan")
 
         within "form#item-form" do
           fill_in "item[name]", with: name
@@ -93,7 +93,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
 
       it do
         visit index_path
-        click_on "予定を作成"
+        click_on I18n.t("gws/schedule.links.add_plan")
 
         within "form#item-form" do
           fill_in "item[name]", with: name

@@ -47,12 +47,12 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example do
       topic1
       visit gws_monitor_management_admins_path(site)
       expect(page).to have_content(topic1.name)
-      expect(page).to have_content('回答状況(1/2)')
+      expect(page).to have_content("#{I18n.t('gws/monitor.topic.answer_state')}(1/2)")
     end
 
     it "#edit" do
       visit edit_gws_monitor_management_admin_path(site, topic1)
-      expect(page).to have_content('基本情報')
+      expect(page).to have_content(I18n.t("ss.basic_info"))
     end
 
     it "#show" do

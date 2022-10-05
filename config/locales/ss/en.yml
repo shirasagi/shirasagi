@@ -219,6 +219,7 @@ en:
       file_name_order: Filename order
       file_upload_order: File upload order
       make_them_closed: Make it closed
+      update: Update
     confirm:
       change_state: Are you sure you want to change your publication status?
       delete: Are you sure you want to delete it?

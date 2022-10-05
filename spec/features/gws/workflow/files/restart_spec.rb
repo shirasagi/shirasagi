@@ -51,7 +51,6 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       end
       expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
 
-
       item.reload
       expect(item.workflow_user_id).to eq admin.id
       expect(item.workflow_state).to eq "request"
@@ -132,7 +131,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         click_on I18n.t("workflow.buttons.select")
 
         fill_in "workflow[comment]", with: workflow_comment2
-        click_on I18n.t("workflow.buttons.request")
+        click_on I18n.t("workflow.buttons.restart")
       end
       expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
 

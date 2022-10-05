@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'gws_schedule_plans', type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:now) { Time.zone.now }
-  let(:title) { now.strftime('%Y年 %1m月') }
+  let(:title) { I18n.l(now, format: I18n.t("gws/schedule.calendar.titleFormat.month")) }
 
   before { login_gws_user }
 

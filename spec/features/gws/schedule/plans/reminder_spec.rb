@@ -2,13 +2,8 @@ require 'spec_helper'
 
 describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
-  let(:plan) do
-    create(
-      :gws_schedule_plan,
-      start_at: 1.hour.from_now.strftime('%Y/%m/%d %H:%M'),
-      end_at: 2.hours.from_now.strftime('%Y/%m/%d %H:%M')
-    )
-  end
+  let(:now) { Time.zone.now.change(sec: 0) }
+  let(:plan) { create(:gws_schedule_plan, start_at: now + 1.hour, end_at: now + 2.hours) }
   let(:show_path) { gws_schedule_plan_path site, plan }
 
   before do
@@ -121,13 +116,15 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
       expect(SS::Notification.all.count).to eq 1
       SS::Notification.all.first.tap do |notice|
-        subject = I18n.t(
-          "gws/reminder.notification.subject",
-          model: I18n.t("mongoid.models.#{reminder.model}"), name: reminder.name
-        )
-        expect(notice.subject).to eq subject
-        expect(notice.member_ids.length).to eq 1
-        expect(notice.member_ids).to include(reminder.user_id)
+        I18n.with_locale(I18n.default_locale) do
+          subject = I18n.t(
+            "gws/reminder.notification.subject",
+            model: I18n.t("mongoid.models.#{reminder.model}"), name: reminder.name
+          )
+          expect(notice.subject).to eq subject
+          expect(notice.member_ids.length).to eq 1
+          expect(notice.member_ids).to include(reminder.user_id)
+        end
       end
 
       # スケジュールの通知転送設定を有効にしても、リマインダーには効果なし
@@ -194,17 +191,19 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       # メールが送られたはず
       expect(ActionMailer::Base.deliveries.length).to eq 1
       ActionMailer::Base.deliveries.first.tap do |mail|
-        subject = I18n.t(
-          "gws/reminder.notification.subject",
-          model: I18n.t("mongoid.models.#{reminder.model}"), name: reminder.name
-        )
-        expect(mail.subject).to eq subject
-        expect(mail.to.length).to eq 1
-        expect(mail.to).to include reminder.user.email
-        expect(mail.body.multipart?).to be_falsey
-        expect(mail.body.raw_source).to include "[#{reminder.item.class.t :name}] #{reminder.item.name}"
-        expect(mail.body.raw_source).to include "[#{reminder.item.class.t :term}] #{term(reminder.item)}"
-        expect(mail.body.raw_source).to include reminder.user.long_name
+        I18n.with_locale(I18n.default_locale) do
+          subject = I18n.t(
+            "gws/reminder.notification.subject",
+            model: I18n.t("mongoid.models.#{reminder.model}"), name: reminder.name
+          )
+          expect(mail.subject).to eq subject
+          expect(mail.to.length).to eq 1
+          expect(mail.to).to include reminder.user.email
+          expect(mail.body.multipart?).to be_falsey
+          expect(mail.body.raw_source).to include "[#{reminder.item.class.t :name}] #{reminder.item.name}"
+          expect(mail.body.raw_source).to include "[#{reminder.item.class.t :term}] #{term(reminder.item)}"
+          expect(mail.body.raw_source).to include reminder.user.long_name
+        end
       end
     end
   end

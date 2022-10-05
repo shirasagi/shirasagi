@@ -55,7 +55,11 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           click_on I18n.t("ss.buttons.download")
         end
 
-        msg = Gws::Attendance::DownloadParam.t(:user_ids) + I18n.t("errors.messages.blank")
+        msg = I18n.t(
+          "errors.format",
+          attribute: Gws::Attendance::DownloadParam.t(:user_ids),
+          message: I18n.t("errors.messages.blank")
+        )
         expect(page).to have_css("#errorExplanation", text: msg)
       end
     end

@@ -7,9 +7,9 @@ module Gws::Facility::UsageFilter
     navi_view "gws/main/conf_navi"
     menu_view 'gws/facility/usage/main/menu'
 
-    helper_method :format_usage_count, :format_usage_hours
+    helper_method :format_usage_count, :format_usage_hours, :years, :months, :days
 
-    before_action :set_target_time, :set_search_params, :set_years_and_months, :set_items
+    before_action :set_target_time, :set_search_params, :set_items
   end
 
   private
@@ -73,14 +73,27 @@ module Gws::Facility::UsageFilter
     data['total_usage_hours'].to_s
   end
 
-  def set_years_and_months
-    sy = Time.zone.today.year - 10 + 1
-    ey = @cur_site.schedule_max_at.year
-    @years = (sy..ey).to_a.reverse.map { |d| ["#{d}#{t('datetime.prompts.year')}", d] }
-    @months = (1..12).to_a.map { |d| ["#{d}#{t('datetime.prompts.month')}", d] }
-    sd = @target_time.day
-    ed = @target_time.end_of_month.day
-    @days = (sd..ed).lazy.map { |d| ["#{d}#{t('datetime.prompts.day')}", d] }
+  def years
+    @years ||= begin
+      sy = Time.zone.today.year - 10 + 1
+      ey = @cur_site.schedule_max_at.year
+      (sy..ey).to_a.reverse.map { |d| [ t("gws/facility.formats.year", count: d), d ] }
+    end
+  end
+
+  def months
+    @months ||= begin
+      abbr_month_names = I18n.t("date.abbr_month_names")
+      (1..12).to_a.map { |d| [ abbr_month_names[d], d ] }
+    end
+  end
+
+  def days
+    @days ||= begin
+      sd = @target_time.day
+      ed = @target_time.end_of_month.day
+      (sd..ed).to_a.map { |d| [ t("gws/facility.formats.day", count: d), d ] }
+    end
   end
 
   def set_items

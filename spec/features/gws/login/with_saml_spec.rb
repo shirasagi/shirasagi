@@ -42,16 +42,16 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
       # confirm a user has been logged-in
       expect(page).to have_css("nav.user .name", text: user.name)
       # confirm gws_portal is shown to user
-      expect(page).to have_css("#head .application-menu .gws .current", text: I18n.t('ss.links.gws'))
+      expect(page).to have_css("#head .application-menu .gws .current", text: I18n.t('ss.links.gws', locale: user.lang))
 
       # do logout
       within "nav.user" do
         find("span.name").click
-        click_on I18n.t("ss.logout")
+        click_on I18n.t("ss.logout", locale: user.lang)
       end
 
       # confirm a login form has been shown
-      expect(page).to have_css(".login-box", text: I18n.t("ss.login"))
+      expect(page).to have_css(".login-box", text: I18n.t("ss.login", locale: I18n.default_locale))
       expect(page).to have_css("li", text: name)
       # and confirm browser back to gws_login
       expect(current_path).to eq gws_login_path(site: site)

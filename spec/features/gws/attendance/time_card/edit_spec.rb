@@ -49,8 +49,8 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           click_on I18n.t('ss.buttons.edit')
         end
         wait_for_cbox do
-          select '8時', from: 'cell[in_hour]'
-          select '32分', from: 'cell[in_minute]'
+          select I18n.t("gws/attendance.hour", count: 8), from: 'cell[in_hour]'
+          select I18n.t("gws/attendance.minute", count: 32), from: 'cell[in_minute]'
           fill_in 'cell[in_reason]', with: reason
           click_on I18n.t('ss.buttons.save')
         end
@@ -99,8 +99,8 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           click_on I18n.t('ss.buttons.edit')
         end
         wait_for_cbox do
-          select '8時', from: 'cell[in_hour]'
-          select '32分', from: 'cell[in_minute]'
+          select I18n.t("gws/attendance.hour", count: 8), from: 'cell[in_hour]'
+          select I18n.t("gws/attendance.minute", count: 32), from: 'cell[in_minute]'
           fill_in 'cell[in_reason]', with: reason
           click_on I18n.t('ss.buttons.save')
         end
@@ -158,13 +158,17 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           click_on I18n.t('ss.buttons.edit')
         end
         wait_for_cbox do
-          select '8時', from: 'cell[in_hour]'
-          select '32分', from: 'cell[in_minute]'
+          select I18n.t("gws/attendance.hour", count: 8), from: 'cell[in_hour]'
+          select I18n.t("gws/attendance.minute", count: 32), from: 'cell[in_minute]'
           click_on I18n.t('ss.buttons.save')
         end
 
         within "#cboxLoadedContent form.cell-edit" do
-          error = "#{I18n.t("activemodel.attributes.gws/attendance/time_edit.in_reason")}#{I18n.t("errors.messages.blank")}"
+          error = I18n.t(
+            "errors.format",
+            attribute: I18n.t("activemodel.attributes.gws/attendance/time_edit.in_reason"),
+            message: I18n.t("errors.messages.blank")
+          )
           expect(page).to have_css("#errorExplanation", text: error)
         end
       end
