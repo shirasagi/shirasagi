@@ -441,7 +441,7 @@ ja:
       schedule_max_hour:
         - 終了時間を入力します。
       schedule_first_wday:
-        - 開始曜日
+        - 開始曜日を入力します。
       schedule_max_file_size:
         - 添付ファイルの最大サイズを入力します。
         - 0 は無制限を意味します。

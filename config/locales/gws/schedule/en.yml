@@ -436,6 +436,12 @@ en:
         - Enter the number of years.
       schedule_max_month:
         - Enter the month when the period ends.
+      schedule_min_hour:
+        - Enter the start hour
+      schedule_max_hour:
+        - Enter the end hour
+      schedule_first_wday:
+        - Enter the start day of week
       schedule_max_file_size:
         - Enter the maximum attached file size.
         - 0 means unlimited.
