@@ -61,7 +61,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
     end
   end
 
-  context "day hours" do
+  context "schedule hours" do
     context "user portal" do
       context "default 8 - 22" do
         it do
@@ -137,6 +137,100 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
               expect(page).to have_css(".fc-widget-header[data-date*=\"18:00:00\"]")
               expect(page).to have_css(".fc-widget-header[data-date*=\"23:00:00\"]")
             end
+          end
+        end
+      end
+    end
+  end
+
+  context "schedule wday" do
+    def first_wday_header
+      all("th.fc-day-header").first[:class]
+    end
+
+    def last_wday_header
+      all("th.fc-day-header").last[:class]
+    end
+
+    context "user portal" do
+      context "settting sunday" do
+        it "#index" do
+          visit user_portal_path
+          within "#calendar-controller" do
+            expect(first_wday_header).to include("fc-sun")
+            expect(last_wday_header).to include("fc-sat")
+          end
+        end
+      end
+
+      context "settting monday" do
+        before do
+          site.schedule_first_wday = 1
+          site.update
+        end
+
+        it "#index" do
+          visit user_portal_path
+          within "#calendar-controller" do
+            expect(first_wday_header).to include("fc-mon")
+            expect(last_wday_header).to include("fc-sun")
+          end
+        end
+      end
+
+      context "settting saturday" do
+        before do
+          site.schedule_first_wday = 6
+          site.update
+        end
+
+        it "#index" do
+          visit user_portal_path
+          within "#calendar-controller" do
+            expect(first_wday_header).to include("fc-sat")
+            expect(last_wday_header).to include("fc-fri")
+          end
+        end
+      end
+    end
+
+    context "group portal" do
+      context "settting sunday" do
+        it "#index" do
+          visit group_portal_path
+          within "#calendar-controller" do
+            expect(first_wday_header).to include("fc-sun")
+            expect(last_wday_header).to include("fc-sat")
+          end
+        end
+      end
+
+      context "settting monday" do
+        before do
+          site.schedule_first_wday = 1
+          site.update
+        end
+
+        it "#index" do
+          visit group_portal_path
+          within "#calendar-controller" do
+            expect(first_wday_header).to include("fc-mon")
+            expect(last_wday_header).to include("fc-sun")
+          end
+        end
+      end
+
+      context "settting saturday" do
+        before do
+          site.schedule_first_wday = 6
+          site.update
+        end
+
+        it "#index" do
+          visit group_portal_path
+          within "#calendar-controller" do
+            expect(first_wday_header).to include("fc-sat")
+            expect(last_wday_header).to include("fc-fri")
           end
         end
       end

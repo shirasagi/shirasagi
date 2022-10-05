@@ -4,6 +4,7 @@
     restUrl: url_for(action: :index),
     eventSources: [{ url: "#{url_for(action: :events, format: :json)}?#{search_query}" }],
     customButtons: { withTodo: false, withAbsence: false },
+    firstDay: @cur_site.schedule_first_wday,
     minTime: @cur_site.schedule_min_time,
     maxTime: @cur_site.schedule_max_time
   }

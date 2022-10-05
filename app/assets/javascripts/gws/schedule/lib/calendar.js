@@ -63,6 +63,7 @@ SS.ready(function() {
 
     Gws_Schedule_Calendar.defaultParams = function (selector, _opts) {
       return {
+        firstDay: 0,
         buttonText: {
           listMonth: i18next.t('gws/schedule.calendar.buttonText.listMonth')
         },

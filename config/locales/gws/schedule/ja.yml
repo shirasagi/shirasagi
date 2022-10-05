@@ -330,6 +330,7 @@ ja:
         schedule_hours: スケジュール表示時間
         schedule_min_hour: 開始時間
         schedule_max_hour: 終了時間
+        schedule_first_wday: 開始曜日
         schedule_max_file_size: 添付最大サイズ
         todo_delete_threshold: ToDo復旧可能期間
         schedule_attachment_state: ファイル添付

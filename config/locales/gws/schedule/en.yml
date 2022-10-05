@@ -330,6 +330,7 @@ en:
         schedule_hours: Display hours
         schedule_min_hour: Start hour
         schedule_max_hour: End hour
+        schedule_first_wday: Start day of week
         schedule_max_file_size: Maximum attachment size
         todo_delete_threshold: Period that to-do can be restored
         schedule_attachment_state: File attachment

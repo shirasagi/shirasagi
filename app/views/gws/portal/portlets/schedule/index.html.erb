@@ -1,5 +1,6 @@
 <%
   calendar_options = {
+    firstDay: @cur_site.schedule_first_wday,
     views: {
       timelineDay: {
         minTime: @cur_site.schedule_min_time,
@@ -41,6 +42,7 @@
         tapMenu: item.id == @cur_user.id,
         restUrl: gws_schedule_user_plans_path(user: item.id),
         eventSources: [{ url: "#{events_gws_schedule_user_plans_path(user: item.id, format: :json)}?#{search_query}" }],
+        firstDay: @cur_site.schedule_first_wday,
         views: {
           timelineDay: {
             minTime: @cur_site.schedule_min_time,

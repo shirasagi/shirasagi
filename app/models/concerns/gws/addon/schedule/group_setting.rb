@@ -24,6 +24,7 @@ module Gws::Addon::Schedule::GroupSetting
     field :schedule_max_years, type: Integer
     field :schedule_min_hour, type: Integer, default: 8
     field :schedule_max_hour, type: Integer, default: 22
+    field :schedule_first_wday, type: Integer, default: 0
     field :schedule_max_file_size, type: Integer, default: 0
     field :todo_delete_threshold, type: Integer, default: 3
     field :schedule_attachment_state, type: String, default: 'allow'
@@ -31,7 +32,7 @@ module Gws::Addon::Schedule::GroupSetting
     field :schedule_custom_group_extra_state, type: String
 
     permit_params :schedule_max_month, :schedule_max_years
-    permit_params :schedule_min_hour, :schedule_max_hour
+    permit_params :schedule_min_hour, :schedule_max_hour, :schedule_first_wday
     permit_params :schedule_max_file_size, :in_schedule_max_file_size_mb
     permit_params :todo_delete_threshold
     permit_params :schedule_attachment_state, :schedule_drag_drop_state
@@ -79,6 +80,10 @@ module Gws::Addon::Schedule::GroupSetting
 
   def schedule_min_hour_options
     (0..24).map { |m| [m, m] }
+  end
+
+  def schedule_first_wday_options
+    I18n.t("date.day_names").map.with_index { |v, idx| [v, idx] }
   end
 
   def schedule_max_hour_options
