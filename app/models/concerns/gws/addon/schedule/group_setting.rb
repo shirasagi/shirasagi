@@ -83,7 +83,13 @@ module Gws::Addon::Schedule::GroupSetting
   end
 
   def schedule_first_wday_options
-    I18n.t("date.day_names").map.with_index { |v, idx| [v, idx] }
+    options = I18n.t("date.day_names").map.with_index { |v, idx| [v, idx] }
+    options << [I18n.t("gws/schedule.today_wday"), -1]
+    options
+  end
+
+  def schedule_first_day
+    (schedule_first_wday >= 0) ? schedule_first_wday: Time.zone.today.wday
   end
 
   def schedule_max_hour_options

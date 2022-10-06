@@ -2,7 +2,7 @@
   calendar_options = {
     tapMenu: @model.allowed?(:create, @cur_user, site: @cur_site),
     restUrl: url_for(action: :index),
-    firstDay: @cur_site.schedule_first_wday,
+    firstDay: @cur_site.schedule_first_day,
     minTime: @cur_site.schedule_min_time,
     maxTime: @cur_site.schedule_max_time,
     eventSources: [{ url: "#{url_for(action: :events, format: :json)}?#{search_query}" }]

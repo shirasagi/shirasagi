@@ -65,7 +65,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       all("th.fc-day-header").last[:class]
     end
 
-    context "settting sunday" do
+    context "default sunday" do
       it "#index" do
         visit index_path
         within ".fc-head-container" do
@@ -122,6 +122,32 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         within ".fc-head-container" do
           expect(first_wday_header).to include("fc-sat")
           expect(last_wday_header).to include("fc-fri")
+        end
+      end
+    end
+
+    context "settting today" do
+      before do
+        site.schedule_first_wday = -1
+        site.update
+      end
+
+      it "#index" do
+        today = Time.zone.today
+        fc_first = "fc-" + today.strftime("%a").downcase
+        fc_last = "fc-" + today.advance(days: 6).strftime("%a").downcase
+
+        visit index_path
+        within ".fc-head-container" do
+          expect(first_wday_header).to include(fc_first)
+          expect(last_wday_header).to include(fc_last)
+        end
+        within "#calendar" do
+          click_on I18n.t("gws/schedule.options.interval.weekly")
+        end
+        within ".fc-head-container" do
+          expect(first_wday_header).to include(fc_first)
+          expect(last_wday_header).to include(fc_last)
         end
       end
     end

@@ -179,7 +179,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
     end
 
     context "user portal" do
-      context "settting sunday" do
+      context "default sunday" do
         it "#index" do
           visit user_portal_path
           within "#calendar-controller" do
@@ -215,13 +215,32 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
           within "#calendar-controller" do
             expect(first_wday_header).to include("fc-sat")
             expect(last_wday_header).to include("fc-fri")
+          end
+        end
+      end
+
+      context "settting today" do
+        before do
+          site.schedule_first_wday = -1
+          site.update
+        end
+
+        it "#index" do
+          today = Time.zone.today
+          fc_first = "fc-" + today.strftime("%a").downcase
+          fc_last = "fc-" + today.advance(days: 6).strftime("%a").downcase
+
+          visit user_portal_path
+          within "#calendar-controller" do
+            expect(first_wday_header).to include(fc_first)
+            expect(last_wday_header).to include(fc_last)
           end
         end
       end
     end
 
     context "group portal" do
-      context "settting sunday" do
+      context "default sunday" do
         it "#index" do
           visit group_portal_path
           within "#calendar-controller" do
@@ -257,6 +276,25 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
           within "#calendar-controller" do
             expect(first_wday_header).to include("fc-sat")
             expect(last_wday_header).to include("fc-fri")
+          end
+        end
+      end
+
+      context "settting today" do
+        before do
+          site.schedule_first_wday = -1
+          site.update
+        end
+
+        it "#index" do
+          today = Time.zone.today
+          fc_first = "fc-" + today.strftime("%a").downcase
+          fc_last = "fc-" + today.advance(days: 6).strftime("%a").downcase
+
+          visit group_portal_path
+          within "#calendar-controller" do
+            expect(first_wday_header).to include(fc_first)
+            expect(last_wday_header).to include(fc_last)
           end
         end
       end

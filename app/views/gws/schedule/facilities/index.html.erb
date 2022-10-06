@@ -2,7 +2,7 @@
   calendar_options = {
     defaultView: 'timelineDay',
     header: { left: 'today prev next title reload', right: 'withAbsence basicWeek timelineDay' },
-    firstDay: @cur_site.schedule_first_wday,
+    firstDay: @cur_site.schedule_first_day,
     views: {
       timelineDay: {
         minTime: @cur_site.facility_min_time,
@@ -52,7 +52,7 @@
         header: { left: 'today prev next title reload', right: 'basicWeek timelineDay' },
         restUrl: gws_schedule_facility_plans_path(facility: item.id),
         eventSources: [{ url: "#{events_gws_schedule_facility_plans_path(facility: item.id, format: :json)}?#{search_query}" }],
-        firstDay: @cur_site.schedule_first_wday,
+        firstDay: @cur_site.schedule_first_day,
         views: {
           timelineDay: {
             minTime: @cur_site.facility_min_time,

@@ -7,6 +7,7 @@ en:
     search_plans: Search plans
     search_users: Search users
     search_times: Search available times
+    today_wday: Today's week day
     navi:
       holiday: Holiday settings
       category: Type settings
