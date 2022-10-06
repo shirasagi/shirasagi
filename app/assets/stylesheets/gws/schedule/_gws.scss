@@ -442,12 +442,13 @@
   background-image: url(/assets/img/gws/bg-plan.png);
   color: #000;
   &:hover { color: #000; text-decoration: underline; }
-  //.fc-content {
-  //  @include ellipsis;
-  //  .fc-title,.fc-facility {
-  //     display: inline;
-  //  }
-  //}
+  .fc-content {
+    //@include ellipsis;
+    .fc-title,.fc-facility {
+       display: inline;
+       padding-left: 5px;
+    }
+  }
 }
 .fc-agenda-view .fc-day-grid .fc-event-point {
   background-color: #bdf;
