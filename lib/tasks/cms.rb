@@ -146,11 +146,10 @@ module Tasks
       end
 
       def each_sites(&block)
-        name = ENV['site']
-        if name
-          all_ids = ::Cms::Site.where(host: name).pluck(:id)
-        elsif ENV.key?('include_sites')
-          names = ENV['include_sites'].split(/[, 　、\r\n]+/)
+        names = []
+        names += ENV['site'].split(/[, 　、\r\n]+/) if ENV.key?('site')
+        names += ENV['include_sites'].split(/[, 　、\r\n]+/) if ENV.key?('include_sites')
+        if names.present?
           all_ids = ::Cms::Site.in(host: names).pluck(:id)
         else
           all_ids = ::Cms::Site.all.pluck(:id)
@@ -160,6 +159,11 @@ module Tasks
           names = ENV['exclude_sites'].split(/[, 　、\r\n]+/)
           exclude_ids = ::Cms::Site.in(host: names).pluck(:id)
           all_ids -= exclude_ids
+        end
+
+        if all_ids.blank?
+          puts "There are no sites on which task executes"
+          return
         end
 
         all_ids.each_slice(20) do |ids|
