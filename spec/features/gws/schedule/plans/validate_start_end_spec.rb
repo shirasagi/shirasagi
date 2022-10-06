@@ -33,9 +33,11 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         fill_in "item[end_at]", with: format_picker(now)
         click_button I18n.t('ss.buttons.save')
       end
-      expect(current_path).to eq index_path
-      expect(format_picker(start_at)).to eq format_picker(now)
-      expect(format_picker(end_at)).to eq format_picker(now)
+      expect(current_path).not_to eq index_path
+      within "#errorExplanation" do
+        expect(page).to have_text(datetime_message)
+        expect(page).to have_no_text(date_message)
+      end
     end
 
     it "# new" do

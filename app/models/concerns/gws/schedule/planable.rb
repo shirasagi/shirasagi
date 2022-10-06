@@ -146,7 +146,7 @@ module Gws::Schedule::Planable
 
   def validate_datetimes_at
     return if allday?
-    errors.add :end_at, :greater_than, count: t(:start_at) if start_at > end_at
+    errors.add :end_at, :greater_than, count: t(:start_at) if start_at >= end_at
   end
 
   def validate_date_at
