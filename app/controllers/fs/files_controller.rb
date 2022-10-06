@@ -102,8 +102,17 @@ class Fs::FilesController < ApplicationController
     end
   end
 
+  def cur_member
+    return @cur_member if instance_variable_defined?(:@cur_member)
+
+    @cur_member = begin
+      cur_site # ensure to set "@cur_site" member variable
+      get_member_by_session
+    end
+  end
+
   def deny
-    member = get_member_by_session
+    member = cur_member
 
     tags = []
     tags << "file:#{cur_item.id}(#{cur_item.filename})" if cur_item
