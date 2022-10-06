@@ -25,7 +25,7 @@ SS.ready(function() {
       $.extend(true, params, opts);
       $(selector).fullCalendar(params);
       this.renderInitialize(selector, init);
-      return this.overrideAddLink(selector);
+      this.overrideAddLink(selector);
     };
 
     Gws_Schedule_Calendar.renderInitialize = function (selector, init) {
@@ -63,6 +63,7 @@ SS.ready(function() {
 
     Gws_Schedule_Calendar.defaultParams = function (selector, _opts) {
       return {
+        firstDay: 0,
         buttonText: {
           listMonth: i18next.t('gws/schedule.calendar.buttonText.listMonth')
         },
@@ -266,7 +267,8 @@ SS.ready(function() {
           }
           var popup_url = event.restUrl ? event.restUrl : url;
           var state = ("calendar[date]=" + (event.start.format('YYYY-MM-DD')) + "&") + Gws_Schedule_Calendar.viewStateQuery(view);
-          if (event.className.includes('fc-event-point') && !event.className.includes('fc-event-private')) {
+
+          if (!event.className.includes('fc-event-private')) {
             jsEvent.preventDefault();
             event.url = popup_url + "/" + event.id + "?" + state;
             location.href = event.url;
@@ -278,7 +280,7 @@ SS.ready(function() {
             { text: i18next.t('gws/schedule.loading') });
           Gws_Popup.render(target, popupContent);
 
-          return $.ajax({
+          $.ajax({
             url: popup_url + "/" + event.id + "/popup",
             success: function (data) {
               $('.fc-popup').html(data);
@@ -357,7 +359,7 @@ SS.ready(function() {
     };
 
     Gws_Schedule_Calendar.overrideAddLink = function (selector) {
-      return $('.add-plan').on("click", function (ev) {
+      $('.add-plan').on("click", function () {
         var date, href, now, start, state, view;
         now = new Date;
         date = $(selector).fullCalendar('getDate');
@@ -367,8 +369,10 @@ SS.ready(function() {
           start = (date.format('YYYY-MM-DD')) + "T" + (now.getHours()) + ":00:00";
           state = ("calendar[date]=" + (date.format()) + "&") + Gws_Schedule_Calendar.viewStateQuery(view);
           href = href + ("?start=" + start + "&" + state);
+        } else {
+          href = href + "?" + Gws_Schedule_Calendar.viewStateQuery(view);
         }
-        return $(this).attr('href', href);
+        $(this).attr('href', href);
       });
     };
 

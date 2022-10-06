@@ -48,6 +48,7 @@ SS.ready(function() {
 
     Gws_Schedule_Multiple_Calendar.defaultParams = function (_selector, _opts) {
       return {
+        firstDay: 0,
         defaultView: 'basicWeek',
         header: {
           left: 'today prev next title reload',

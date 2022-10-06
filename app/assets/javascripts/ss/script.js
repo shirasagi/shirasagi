@@ -10,6 +10,7 @@
 //= require js.cookie
 //= require jquery.form
 //= require jquery.datetimepicker
+//= require jquery.datetimepicker.parse_date
 //= require jquery.multi-select
 //= require jquery.colorbox
 //= require jquery.minicolors

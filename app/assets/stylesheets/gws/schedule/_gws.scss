@@ -381,7 +381,7 @@
     color: $black;
   }
   .fc-content {
-    word-wrap: normal;
+    word-wrap: break-word;
     word-break: normal;
     white-space: normal;
     .fc-category {
@@ -443,9 +443,10 @@
   color: #000;
   &:hover { color: #000; text-decoration: underline; }
   .fc-content {
-    @include ellipsis;
+    //@include ellipsis;
     .fc-title,.fc-facility {
-      display: inline;
+       display: inline;
+       padding-left: 5px;
     }
   }
 }
@@ -610,6 +611,26 @@
   .fc-event {
     z-index: 0;
     border-left: 1px solid #555;
+  }
+}
+.fc-list-format {
+  .info {
+    a {
+      padding: 2px;
+      .fc-content {
+        .fc-title {
+          display: inline-block;
+        }
+        .fc-facility {
+          display: inline-block;
+          padding-left: 10px;
+        }
+      }
+    }
+    .summary {
+      margin-top: 2px;
+      padding: 2px;
+    }
   }
 }
 // Print View

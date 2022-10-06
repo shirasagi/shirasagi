@@ -41,9 +41,16 @@ model = Gws::Schedule::RepeatPlan
     </div>
   </dd>
 
+  <%
+    repeat_start = @item.repeat_start
+    repeat_start = repeat_start.strftime("%Y/%m/%d") if repeat_start.respond_to?(:strftime)
+
+    repeat_end = @item.repeat_end
+    repeat_end = repeat_end.strftime("%Y/%m/%d")if repeat_end.respond_to?(:strftime)
+  %>
   <dt><%= model.t :repeat_start %><%= model.tt :repeat_start %></dt>
-  <dd><%= f.text_field :repeat_start, class: "date repeat_start", value: tryb{@item.repeat_start.strftime("%Y/%m/%d")} %></dd>
+  <dd><%= f.text_field :repeat_start, class: "date repeat_start", value: repeat_start %></dd>
 
   <dt><%= model.t :repeat_end %><%= model.tt :repeat_end %></dt>
-  <dd><%= f.text_field :repeat_end, class: "date repeat_end", value: tryb{@item.repeat_end.strftime("%Y/%m/%d")} %></dd>
+  <dd><%= f.text_field :repeat_end, class: "date repeat_end", value: repeat_end %></dd>
 </dl>

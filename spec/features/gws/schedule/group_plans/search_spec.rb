@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
+describe "gws_schedule_group_plans", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let!(:category1) { create :gws_schedule_category, cur_site: site, name: "cate-#{unique_id}" }
   let!(:category2) { create :gws_schedule_category, cur_site: site, name: "cate-#{unique_id}" }

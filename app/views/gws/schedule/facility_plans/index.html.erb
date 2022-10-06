@@ -1,10 +1,17 @@
+<%
+  calendar_options  = {
+    tapMenu: @facility.reservable?(@cur_user),
+    restUrl: url_for(action: :index),
+    eventSources: [{ url: "#{url_for(action: :events, format: :json)}?#{search_query}" }],
+    firstDay: @cur_site.schedule_first_day,
+    minTime: @cur_site.facility_min_time,
+    maxTime: @cur_site.facility_max_time
+  }
+  init_options = params[:calendar] || {}
+%>
 <%= jquery do %>
   $(document).on("gws:calendarInitialized", function() {
-    Gws_Schedule_Calendar.render('#calendar', {
-      tapMenu: <%= @facility.reservable?(@cur_user) %>,
-      restUrl: '<%= url_for action: :index %>',
-      eventSources: [{ url: '<%= url_for action: :events, format: :json %>?<%= search_query %>' }],
-    }, <%== (params[:calendar] || {}).to_json %>);
+    Gws_Schedule_Calendar.render('#calendar', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
   });
 <% end %>
 

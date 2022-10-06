@@ -7,6 +7,7 @@ en:
     search_plans: Search plans
     search_users: Search users
     search_times: Search available times
+    today_wday: Today's week day
     navi:
       holiday: Holiday settings
       category: Type settings
@@ -327,6 +328,10 @@ en:
         schedule_max_date: Period that can be entered
         schedule_max_years: Years
         schedule_max_month: End month
+        schedule_hours: Display hours
+        schedule_min_hour: Start hour
+        schedule_max_hour: End hour
+        schedule_first_wday: Start day of week
         schedule_max_file_size: Maximum attachment size
         todo_delete_threshold: Period that to-do can be restored
         schedule_attachment_state: File attachment
@@ -432,6 +437,12 @@ en:
         - Enter the number of years.
       schedule_max_month:
         - Enter the month when the period ends.
+      schedule_min_hour:
+        - Enter the start hour
+      schedule_max_hour:
+        - Enter the end hour
+      schedule_first_wday:
+        - Enter the start day of week
       schedule_max_file_size:
         - Enter the maximum attached file size.
         - 0 means unlimited.
