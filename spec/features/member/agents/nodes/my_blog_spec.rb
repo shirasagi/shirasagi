@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'members/agents/nodes/my_blog', type: :feature, dbscope: :example do
+describe 'members/agents/nodes/my_blog', type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:layout) { create_cms_layout }
   let!(:node_blog) { create :member_node_blog, cur_site: site, layout: layout }
@@ -111,6 +111,15 @@ describe 'members/agents/nodes/my_blog', type: :feature, dbscope: :example do
         visit node_blog.full_url
         within ".member-blogs" do
           expect(page).to have_css(".blog", count: 0)
+        end
+
+        # able to view a attachment file on closed blog page.
+        # 非公開のブログページの添付ファイルが閲覧できることを確認
+        visit node_my_blog.full_url
+        click_on I18n.t("member.links.blog_setting")
+        image_element_info(first(".member-blog img")).tap do |info|
+          expect(info[:width]).to eq 90
+          expect(info[:height]).to eq 90
         end
       end
     end
