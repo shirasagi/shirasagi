@@ -21,7 +21,7 @@ module Sys::SiteImport::File
       end
 
       if item.save
-        src = SS::File.new(id: id, filename: item.filename)
+        src = SS::File.new(id: id, name: item.name, filename: item.filename)
         src = src.becomes_with_model
         @ss_files_map[id] = item.id
         @ss_files_url[src.url] = item.url
