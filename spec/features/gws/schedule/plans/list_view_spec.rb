@@ -42,7 +42,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         expect(page).to have_text(item3.name)
         expect(page).to have_text(category3.name)
         expect(page).to have_text(facility3.name)
-        click_on I18n.t("gws/schedule.options.interval.weekly")
+        click_on I18n.t("gws/schedule.options.interval.weekly", locale: I18n.default_locale)
       end
       within ".fc-list-format" do
         expect(page).to have_text(item1.name)
@@ -56,7 +56,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         expect(page).to have_no_text(item3.name)
         expect(page).to have_no_text(category3.name)
         expect(page).to have_no_text(facility3.name)
-        click_on I18n.t("gws/schedule.options.interval.daily")
+        click_on I18n.t("gws/schedule.options.interval.daily", locale: I18n.default_locale)
       end
       within ".fc-list-format" do
         expect(page).to have_text(item1.name)

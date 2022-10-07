@@ -7,8 +7,14 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
   let(:edit_path) { edit_gws_schedule_plan_path site, item }
 
   let(:model) { Gws::Schedule::Plan }
-  let(:datetime_message) { model.t(:end_at) + I18n.t("errors.messages.greater_than", count: model.t(:start_at)) }
-  let(:date_message) { model.t(:end_on) + I18n.t("errors.messages.greater_than", count: model.t(:start_on)) }
+  let(:datetime_message) do
+    message = I18n.t("errors.messages.greater_than", count: model.t(:start_at))
+    I18n.t("errors.format", attribute: model.t(:end_at), message: message)
+  end
+  let(:date_message) do
+    message = I18n.t("errors.messages.greater_than", count: model.t(:start_on))
+    I18n.t("errors.format", attribute: model.t(:end_on), message: message)
+  end
 
   def format_picker(datetime)
     datetime.strftime(format)

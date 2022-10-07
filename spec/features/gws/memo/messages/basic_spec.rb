@@ -20,7 +20,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       wait_for_ajax
 
       within '.gws-memo-folder' do
-        expect(page).to have_css('.title', text: '受信トレイ')
+        expect(page).to have_css('.title', text: I18n.t("gws/memo/folder.inbox"))
       end
 
       # popup
@@ -73,7 +73,9 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         click_on I18n.t('ss.buttons.draft_save')
       end
-      wait_for_error Gws::Memo::Message.t(:subject) + I18n.t('errors.messages.blank')
+      message = I18n.t('errors.messages.blank')
+      message = I18n.t("errors.format", attribute: Gws::Memo::Message.t(:subject), message: message)
+      wait_for_error message
 
       within 'form#item-form' do
         fill_in 'item[subject]', with: subject
@@ -91,7 +93,9 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         fill_in 'item[subject]', with: ''
         click_on I18n.t('ss.buttons.draft_save')
       end
-      wait_for_error Gws::Memo::Message.t(:subject) + I18n.t('errors.messages.blank')
+      message = I18n.t('errors.messages.blank')
+      message = I18n.t("errors.format", attribute: Gws::Memo::Message.t(:subject), message: message)
+      wait_for_error message
 
       within 'form#item-form' do
         fill_in 'item[subject]', with: subject
@@ -204,7 +208,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
     it '#trash' do
       visit trash_gws_memo_message_path(site: site, folder: 'INBOX', id: memo.id)
-      expect(page).to have_content('ゴミ箱')
+      expect(page).to have_content(I18n.t("gws/memo/folder.inbox_trash"))
     end
 
     it '#trash_all' do
@@ -241,7 +245,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       visit gws_memo_messages_path(site)
       find('.list-head label.check input').set(true)
       page.accept_confirm do
-        click_button "その他"
+        click_button I18n.t("gws/memo/message.links.etc")
         find('.set-seen-all').click
       end
       wait_for_ajax
@@ -250,7 +254,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
       find('.list-head label.check input').set(true)
       page.accept_confirm do
-        click_button "その他"
+        click_button I18n.t("gws/memo/message.links.etc")
         find('.unset-seen-all').click
       end
       wait_for_ajax
@@ -261,20 +265,20 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
     it '#set_star_all and #unset_star_all' do
       visit gws_memo_messages_path(site)
       find('.list-head label.check input').set(true)
-      click_button "その他"
+      click_button I18n.t("gws/memo/message.links.etc")
       wait_for_ajax
       page.accept_confirm do
-        click_link 'スターをつける'
+        click_link I18n.t("gws/memo/message.links.set_star")
       end
       wait_for_ajax
       expect(page).to have_css(".icon.icon-star.on")
       expect(page).to have_no_css(".icon.icon-star.off")
 
       find('.list-head label.check input').set(true)
-      click_button "その他"
+      click_button I18n.t("gws/memo/message.links.etc")
       wait_for_ajax
       page.accept_confirm do
-        click_link 'スターをはずす'
+        click_link I18n.t("gws/memo/message.links.unset_star")
       end
       wait_for_ajax
       expect(page).to have_css(".icon.icon-star.off")
@@ -284,18 +288,18 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
     it '#move_all' do
       visit gws_memo_messages_path(site)
       wait_for_ajax
-      expect(page).to have_content('受信トレイ')
-      expect(page).to have_content('ゴミ箱')
+      expect(page).to have_content(I18n.t("gws/memo/folder.inbox"))
+      expect(page).to have_content(I18n.t("gws/memo/folder.inbox_trash"))
       find('.list-head label.check input').set(true)
       page.accept_confirm do
-        click_button "移動する"
         within ".move-menu" do
+          click_button I18n.t("ss.links.move")
           click_link folder.name
         end
       end
       wait_for_ajax
-      expect(page).to have_content('受信トレイ')
-      expect(page).to have_content('ゴミ箱')
+      expect(page).to have_content(I18n.t("gws/memo/folder.inbox"))
+      expect(page).to have_content(I18n.t("gws/memo/folder.inbox_trash"))
     end
 
     it '#latest' do

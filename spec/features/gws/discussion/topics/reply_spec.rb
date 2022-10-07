@@ -16,16 +16,16 @@ describe "gws_discussion_topics", type: :feature, dbscope: :example do
       visit index_path
       #expect(page).to have_link I18n.t("gws/discussion.main_topic.name")
 
-      click_on "コメントを投稿する"
+      click_on I18n.t("gws/discussion.links.topic.reply")
       text = "text-#{unique_id}"
       within "form" do
         fill_in "item[text]", with: text
-        click_button "返信する"
+        click_button I18n.t("ss.links.reply")
       end
       expect(page).to have_text(text)
 
       # edit
-      within ".nav-menu" do
+      within "#topic-#{item.id}" do
         click_on I18n.t('ss.links.edit')
       end
       text = "text-#{unique_id}"
@@ -36,7 +36,7 @@ describe "gws_discussion_topics", type: :feature, dbscope: :example do
       expect(page).to have_text(text)
 
       # delete
-      within ".nav-menu" do
+      within "#topic-#{item.id}" do
         click_on I18n.t('ss.links.delete')
       end
       expect(page).to have_text(text)
