@@ -116,13 +116,11 @@ module Cms::Addon::FormDb::Import
 
     # if @task
     #   @task.log("[Sync] delete before '#{I18n.l(delete_limit)}'")
-
     #   criteria = Article::Page.site(site).node(node).where(form_id: form_id).where(imported: { '$lt': delete_limit })
     #   count = criteria.destroy_all
     #   @task.log("deleted: #{count} pages")
-
-    #   self.set(import_url_hash: csv_hash)
     # end
+    self.set(import_url_hash: csv_hash)
 
     errors.blank?
   end
