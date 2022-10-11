@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "gws_schedule_holidays", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
-  let(:path) { gws_schedule_holidays_path site }
+  let(:index_path) { gws_schedule_holidays_path site }
   let(:item) { create :gws_schedule_holiday }
 
   context "with auth" do
@@ -10,13 +10,13 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example, js: true do
 
     it "#index" do
       item
-      visit path
+      visit index_path
       wait_for_ajax
       expect(page).to have_content(item.name)
     end
 
     it "#new" do
-      visit "#{path}/new"
+      visit "#{index_path}/new"
       within "form#item-form" do
         fill_in "item[name]", with: "name"
         fill_in "item[start_on]", with: "2016/01/01"
@@ -25,37 +25,40 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example, js: true do
       end
       wait_for_ajax
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(current_path).to eq index_path
     end
 
     it "#show" do
-      visit "#{path}/#{item.id}"
+      visit "#{index_path}/#{item.id}"
       expect(page).to have_content(item.name)
     end
 
     it "#edit" do
-      visit "#{path}/#{item.id}/edit"
+      visit "#{index_path}/#{item.id}/edit"
       within "form#item-form" do
         fill_in "item[name]", with: "name2"
         click_button I18n.t('ss.buttons.save')
       end
       wait_for_ajax
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(current_path).to eq index_path
     end
 
     it "#delete" do
-      visit "#{path}/#{item.id}/delete"
+      visit "#{index_path}/#{item.id}/delete"
       within "form" do
         click_button I18n.t('ss.buttons.delete')
       end
       wait_for_ajax
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      expect(current_path).to eq index_path
     end
   end
 end
 
 describe "gws_schedule_holidays", type: :feature, dbscope: :example do
   let(:site) { gws_site }
-  let(:path) { gws_schedule_holidays_path site }
+  let(:index_path) { gws_schedule_holidays_path site }
   let(:item) { create :gws_schedule_holiday }
   let(:import_path) { import_gws_schedule_holidays_path site.id }
   let(:download_path) { download_gws_schedule_holidays_path site.id }
@@ -71,7 +74,7 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example do
           click_button I18n.t('ss.links.import')
         end
         expect(status_code).to eq 200
-        expect(current_path).to eq path
+        expect(current_path).to eq index_path
         not_repeat = Gws::Schedule::Holiday.site(site).where(name: "not_repeat").first
         repeat = Gws::Schedule::Holiday.site(site).where(name: "repeat").first
 
@@ -113,7 +116,7 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example do
   describe "#download" do
     before do
       item
-      visit path
+      visit index_path
     end
     let(:time){ Time.zone.now }
     it "downloads CSVfile" do

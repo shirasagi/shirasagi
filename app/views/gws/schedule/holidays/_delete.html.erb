@@ -1,0 +1,5 @@
+<%= hidden_field_tag 'calendar[path]', params.dig(:calendar, :path) %>
+<%= hidden_field_tag 'calendar[view]', params.dig(:calendar, :view) %>
+<%= hidden_field_tag 'calendar[viewFormat]', params.dig(:calendar, :viewFormat) %>
+
+<%= render "ss/crud/delete" %>

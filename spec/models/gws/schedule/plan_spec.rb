@@ -17,7 +17,7 @@ RSpec.describe Gws::Schedule::Plan, type: :model, dbscope: :example do
     context "time" do
       subject { create :gws_schedule_plan, start_at: start_at, end_at: end_at }
       let(:start_at) { Time.zone.local 2010, 1, 1, 0, 0, 0 }
-      let(:end_at) { Time.zone.local 2010, 1, 1, 0, 0, 0 }
+      let(:end_at) { Time.zone.local 2010, 1, 1, 1, 0, 0 }
 
       it do
         expect(subject.errors.size).to eq 0

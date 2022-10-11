@@ -33,7 +33,7 @@ class Gws::Facility::Item
   permit_params :reservation_start_date, :reservation_end_date
   permit_params :approval_check_state
 
-  validates :name, presence: true
+  validates :name, presence: true, length: { maximum: 80 }
   validates :activation_date, datetime: true
   validates :expiration_date, datetime: true
   validates :min_minutes_limit, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }

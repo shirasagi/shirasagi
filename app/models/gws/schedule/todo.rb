@@ -122,6 +122,11 @@ class Gws::Schedule::Todo
     end
   end
 
+  def validate_datetimes_at
+    return if allday?
+    errors.add :end_at, :greater_than, count: t(:start_at) if start_at > end_at
+  end
+
   class << self
     def search(params)
       criteria = all.search_keyword(params)
