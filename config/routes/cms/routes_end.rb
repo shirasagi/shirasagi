@@ -466,6 +466,7 @@ Rails.application.routes.draw do
     get "monthly_nav" => "public#index", cell: "parts/monthly_nav"
     get "site_search_history" => "public#index", cell: "parts/site_search_history"
     get "history_list" => "public#index", cell: "parts/history_list"
+    get "site_search_keyword" => "public#index", cell: "parts/site_search_keyword"
   end
 
   page "cms" do
