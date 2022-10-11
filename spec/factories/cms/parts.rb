@@ -50,4 +50,8 @@ FactoryBot.define do
   factory :cms_part_monthly_nav, class: Cms::Part::MonthlyNav, traits: [:cms_part] do
     route { "cms/monthly_nav" }
   end
+
+  factory :cms_part_site_search_keyword, class: Cms::Part::SiteSearchKeyword, traits: [:cms_part] do
+    route { "cms/site_search_keyword" }
+  end
 end
