@@ -13,7 +13,7 @@
       <% if @item.respond_to?(:released_type) %>
         <%= f.select :released_type, @item.released_type_options %>
       <% end %>
-      <%= f.text_field :released, class: "datetime js-datetime", value: @item.released.try { |time| I18n.l(time, format: :picker) } %>
+      <%= f.ss_datetime_field :released %>
     </dd>
   <% end %>
 </dl>

@@ -15,7 +15,7 @@
       <td><%= gws_public_user_long_name(item.long_name) %></td>
       <td>
         <% if seen_at %>
-          <%= seen_at.in_time_zone.strftime('%Y/%m/%d %H:%M') %>
+          <%= ss_time_tag seen_at.in_time_zone %>
         <% else %>
           <%= t('gws/memo.unseen') %>
         <% end %>

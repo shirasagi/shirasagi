@@ -21,7 +21,7 @@ class Gws::Schedule::HolidaysController < ApplicationController
   end
 
   def pre_params
-    { start_on: params[:start] || Time.zone.now.strftime('%Y/%m/%d') }
+    { start_on: params[:start] || I18n.l(Time.zone.today, format: :picker) }
   end
 
   def crud_redirect_url

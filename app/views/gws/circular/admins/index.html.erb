@@ -42,9 +42,9 @@
 
           <div class="meta">
             <span class="id">#<%= item.id %></span>
-            <span class="datetime"><%= @model.t(:due_date) %>: <%= tryb { item.due_date.strftime('%Y/%m/%d') } %></span>
-            <span class="datetime"><%= @model.t(:updated) %>: <%= last_updated.strftime('%Y/%m/%d %H:%M') %></span>
-            <span class="datetime"><%= @model.t(:created) %>: <%= item.created.strftime('%Y/%m/%d %H:%M') %></span>
+            <span class="datetime"><%= @model.t(:due_date) %>: <%= tryb { ss_time_tag item.due_date, type: :date } %></span>
+            <span class="datetime"><%= @model.t(:updated) %>: <%= ss_time_tag last_updated %></span>
+            <span class="datetime"><%= @model.t(:created) %>: <%= ss_time_tag item.created %></span>
             <span><%= gws_public_user_long_name(item.user_long_name) %></span>
             <span class="state"><%= item.label(:state) %></span>
             <span class="gws-share-categories">

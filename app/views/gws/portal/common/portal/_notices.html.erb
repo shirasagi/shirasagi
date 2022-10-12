@@ -8,7 +8,7 @@
         <%= link_to item.name, gws_sys_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %>
       </div>
       <div class="meta">
-        <span class="datetime"><%= tryb { item.released.strftime("%Y/%m/%d %H:%M") } %></span>
+        <span class="datetime"><%= tryb { ss_time_tag item.released } %></span>
       </div>
     </li>
     <% end %>
@@ -44,7 +44,7 @@
               <%= link_to category.trailing_name, gws_notice_readables_path(folder_id: '-', category_id: category.id), class: "gws-category-label", style: category_label_css(category) %>
             <% end %>
           <% end %>
-          <span class="datetime"><%= tryb { item.released.strftime("%Y/%m/%d %H:%M") } %></span>
+          <span class="datetime"><%= tryb { ss_time_tag item.released } %></span>
         </div>
       </li>
       <% end %>

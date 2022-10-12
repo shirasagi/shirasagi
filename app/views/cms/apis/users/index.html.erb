@@ -22,7 +22,7 @@
           <input type="checkbox" name="ids[]" value="<%= item.id %>" />
         </td>
         <td class="name"><%= link_to item.name, "#", class: "select-item" %></td>
-        <td class="updated"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
+        <td class="updated"><%= ss_time_tag(item.updated) %></td>
       </tr>
     <% end %>
   </tbody>

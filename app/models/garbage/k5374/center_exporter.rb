@@ -28,8 +28,8 @@ class Garbage::K5374::CenterExporter < Garbage::K5374::BaseExporter
         nodes.each do |node|
           row = []
           row << node.name
-          row << (node.rest_start.strftime('%Y/%m/%d') rescue nil)
-          row << (node.rest_end.strftime('%Y/%m/%d') rescue nil)
+          row << (I18n.l(node.rest_start, format: :picker) rescue nil)
+          row << (I18n.l(node.rest_end, format: :picker) rescue nil)
           data << row
         end
       end

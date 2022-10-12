@@ -59,8 +59,8 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
         fill_in "custom[#{column1_text1.id}]", with: column_value1_text1
         fill_in "custom[#{column1_text2.id}]", with: column_value1_text2
         fill_in "custom[#{column1_text3.id}]", with: column_value1_text3
-        fill_in "custom[#{column2_date1.id}]", with: column_value2_date1.strftime("%Y/%m/%d")
-        fill_in "custom[#{column2_date2.id}]", with: column_value2_date2.strftime("%Y/%m/%d %H:%M")
+        fill_in_date "custom[#{column2_date1.id}]", with: column_value2_date1
+        fill_in_datetime "custom[#{column2_date2.id}]", with: column_value2_date2
         fill_in "custom[#{column3.id}]", with: column_value3
         fill_in "custom[#{column4.id}]", with: column_value4
         fill_in "custom[#{column5.id}]", with: column_value5

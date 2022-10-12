@@ -49,5 +49,5 @@
   <% end %>
 
   <dt><%= @model.t(:created) %></dt>
-  <dd><%= @item.created.strftime("%Y/%m/%d %H:%M") %></dd>
+  <dd><%= ss_time_tag @item.created %></dd>
 </dl>

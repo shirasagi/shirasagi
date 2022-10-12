@@ -30,7 +30,7 @@ Rails.application.routes.draw do
     get 'search' => redirect { |p, req| "#{req.path}/users" }, as: :search
     get 'search/users' => 'search/users#index', as: :search_users
     get 'search/times' => 'search/times#index', as: :search_times
-    get 'search/reservations' => 'search/reservations#index', as: :search_reservations
+    match 'search/reservations' => 'search/reservations#index', via: %i[get post], as: :search_reservations
     get 'csv' => 'csv#index', as: :csv
     post 'csv/import' => 'csv#import', as: :import_csv
     get 'csv/download_template' => 'csv#download_template', as: :download_csv_template

@@ -12,7 +12,7 @@
           <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
 
           <div class="meta">
-            <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
+            <span class="datetime"><%= ss_time_tag item.descendants_updated %></span>
             <span>
               <% item.categories.compact.each do |category| %>
                 <%= link_to category.trailing_name, gws_faq_topics_path(mode: '-', category: category.id),

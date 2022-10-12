@@ -178,6 +178,14 @@ module SS
       })(arguments[0]);
     SCRIPT
 
+    FILL_DATETIME_SCRIPT = <<~SCRIPT.freeze
+      (function(element, value) {
+        var picker = SS_DateTimePicker.instance(element);
+        picker.momentValue(value ? moment(value) : null);
+        picker.$el.datetimepicker("validate");
+      })(...arguments)
+    SCRIPT
+
     def wait_timeout
       Capybara.default_max_wait_time
     end
@@ -414,6 +422,16 @@ module SS
       ret = page.evaluate_async_script(FILL_CKEDITOR_SCRIPT, element, with)
       expect(ret).to be_truthy
     end
+
+    def fill_in_datetime(locator, **options)
+      element = page.current_scope.find_xpath("//input[@id='#{locator}' or @name='#{locator}']").first
+      with = options.delete(:with)
+      with = with.in_time_zone.iso8601 if with.present?
+
+      page.execute_script(FILL_DATETIME_SCRIPT, element, with)
+    end
+
+    alias fill_in_date fill_in_datetime
 
     #
     # Usage:

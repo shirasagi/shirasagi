@@ -11,19 +11,19 @@ this.Gws_Schedule_Repeat_Plan = (function () {
   };
 
   Gws_Schedule_Repeat_Plan.changeRepeatForm = function () {
-    var repeat_type;
-    repeat_type = $('#item_repeat_type').val();
-    if (repeat_type === '') {
-      return $('.gws-schedule-repeat').addClass("hide");
-    } else {
-      $('.gws-schedule-repeat').removeClass("hide");
-      $(".repeat-daily, .repeat-weekly, .repeat-monthly").hide();
-      return $(".repeat-" + repeat_type).show();
+    var repeatType = $('#item_repeat_type').val();
+    if (!repeatType) {
+      $('.gws-schedule-repeat').addClass("hide");
+      return;
     }
+
+    $('.gws-schedule-repeat').removeClass("hide");
+    $(".repeat-daily, .repeat-weekly, .repeat-monthly").hide();
+    $(".repeat-" + repeatType).show();
   };
 
   Gws_Schedule_Repeat_Plan.relateDateForm = function () {
-    return Gws_Schedule_Plan.relateDateForm('.date.repeat_start', '.date.repeat_end');
+    new Gws_Schedule_StartEndSynchronizer('.date.repeat_start', '.date.repeat_end');
   };
 
   Gws_Schedule_Repeat_Plan.renderSubmitButtons = function () {
@@ -58,4 +58,3 @@ this.Gws_Schedule_Repeat_Plan = (function () {
   return Gws_Schedule_Repeat_Plan;
 
 })();
-

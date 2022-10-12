@@ -28,7 +28,7 @@ SS_TreeUI.render(".index.groups", { descendants_check: true });
             <span class="title title--disabled"><%= name %></span>
           <% end %>
         </td>
-        <td><%= item.updated.strftime("%Y/%m/%d") %></td>
+        <td><%= ss_time_tag item.updated, type: :date %></td>
       </tr>
       <% end %>
     </tbody>

@@ -14,7 +14,7 @@
 <% end %>
 <% @index_meta = proc do |item| %>
   <span class="filename"><%= item.id %></span>
-  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="datetime"><%= ss_time_tag item.updated %></span>
   <span class="count"><%= item.count %><%= t "ss.units.count" %></span>
 <% end %>
 

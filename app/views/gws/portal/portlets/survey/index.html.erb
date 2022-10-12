@@ -36,7 +36,7 @@
           <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
 
           <div class="meta">
-            <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+            <span class="datetime"><%= ss_time_tag item.updated %></span>
             <span class="user"><%= gws_public_user_long_name(item.contributor_name.presence || item.user_long_name) %></span>
 
             <% answered = item.answered_at(@cur_user) %>

@@ -17,7 +17,7 @@
               <div class="usage " style="width: <%= item.achievement_rate || 0 %>%"></div>
             </span>
             <span class="datetime">
-              <%= Gws::Schedule::Todo.t(:term) %>: <%= item.end_at.strftime('%Y/%m/%d %H:%M') %>
+              <%= Gws::Schedule::Todo.t(:term) %>: <%= ss_time_tag item.end_at %>
               <% if item.todo_state == 'unfinished' && item.end_at < Time.zone.now %>
                 <span class="todo-over"><%= t('gws/schedule/todo.todo_over') %></span>
               <% end %>

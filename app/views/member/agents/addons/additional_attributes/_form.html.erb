@@ -20,10 +20,5 @@
     <% end %>
   </dd>
   <dt><%= @model.t :birthday %><%= @model.tt :birthday %></dt>
-  <dd><%= f.text_field :birthday, class: "datetime", value: tryb { @item.birthday.strftime('%Y/%m/%d') } %></dd>
+  <dd><%= f.ss_date_field :birthday %></dd>
 </dl>
-
-<%= jquery do %>
-  $(".mod-member-additional-attributes .datetime").
-  datetimepicker({ lang: "ja", timepicker: false, format: "Y/m/d" });
-<% end %>

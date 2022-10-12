@@ -4,7 +4,7 @@
   <%= link_to t('ss.links.delete'), action: :delete, id: item if @cur_form.allowed?(:delete, @cur_user, site: @cur_site) %>
 <% end %>
 <% @index_meta = proc do |item| %>
-  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="datetime"><%= ss_time_tag item.updated %></span>
   <span class="order"><%= item.order %></span>
   <span class="class"><%= item.class.model_name.human %></span>
   <span class="required"><%= item.label :required %></span>

@@ -6,7 +6,7 @@
 <% @index_meta = proc do |item| %>
   <span class="id"><%= item.channel_user_id %></span>
   <span class="hook"><%= item.hook.try(:name) %></span>
-  <span class="datetime"><%= tryb { item.locked_at.strftime("%Y/%m/%d %H:%M") } %></span>
+  <span class="datetime"><%= tryb { ss_time_tag item.locked_at } %></span>
 <% end %>
 
 <%= render template: "cms/crud/index" %>

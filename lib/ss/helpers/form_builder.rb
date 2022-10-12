@@ -2,6 +2,7 @@ module SS::Helpers
   class FormBuilder < ActionView::Helpers::FormBuilder
     include SS::Helpers::FileFormBuilder
     include SS::Helpers::ColorPickerBuilder
+    include SS::Helpers::DateTimePickerBuilder
 
     def hidden_field(method, options = {})
       method = method.to_s

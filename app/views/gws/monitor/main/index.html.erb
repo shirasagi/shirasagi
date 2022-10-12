@@ -24,13 +24,13 @@
   <span class="id">#<%= item.id %></span>
   <% sort_key = params.dig(:s, :sort).to_s.presence || 'due_date_desc' %>
   <% if sort_key.start_with?('updated') %>
-    <span class="datetime"><%= @model.t(:updated) %><%= tryb { item.descendants_updated.strftime("%Y/%m/%d %H:%M") } %></span>
+    <span class="datetime"><%= @model.t(:updated) %><%= tryb { ss_time_tag item.descendants_updated } %></span>
   <% elsif sort_key.start_with?('created') %>
-    <span class="datetime"><%= @model.t(:created) %><%= tryb { item.created.strftime("%Y/%m/%d %H:%M") } %></span>
+    <span class="datetime"><%= @model.t(:created) %><%= tryb { ss_time_tag item.created } %></span>
   <% elsif sort_key.start_with?('released') %>
-    <span class="datetime"><%= @model.t(:released) %><%= tryb { item.released.strftime("%Y/%m/%d %H:%M") } %></span>
+    <span class="datetime"><%= @model.t(:released) %><%= tryb { ss_time_tag item.released } %></span>
   <% else %>
-    <span class="datetime"><%= @model.t(:due_date) %><%= tryb { item.due_date.strftime("%Y/%m/%d %H:%M") } %></span>
+    <span class="datetime"><%= @model.t(:due_date) %><%= tryb { ss_time_tag item.due_date } %></span>
   <% end %>
   <span class="answer-state"><%= item.answer_state_name(@cur_group) %></span>
   <span class="user"><%= gws_public_user_long_name(item.contributor_name.presence || item.user_long_name) %></span>

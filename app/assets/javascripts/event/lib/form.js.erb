@@ -51,7 +51,7 @@ this.Event_Form = (function () {
     // $template.before($template.html());
     $button.closest(".event-recurrence").before($html);
     self.resetIndex();
-    SS.renderDateTimePicker($html);
+    SS_DateTimePicker.render($html);
   };
 
   Event_Form.prototype.deleteRecurrence = function(buttonEl) {

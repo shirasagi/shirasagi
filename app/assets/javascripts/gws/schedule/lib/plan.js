@@ -1,125 +1,102 @@
 this.Gws_Schedule_Plan = (function () {
-  function Gws_Schedule_Plan() {
+  var convertToTime = function(date, templateTime) {
+    if (templateTime) {
+      return date.millisecond(templateTime.millisecond())
+        .second(templateTime.second())
+        .minute(templateTime.minute())
+        .hour(templateTime.hour());
+    } else {
+      return date.millisecond(0).second(0).minute(0).hour(9);
+    }
   }
 
-  Gws_Schedule_Plan.diffOn = 3600000;
+  function Gws_Schedule_Plan(el) {
+    this.$el = $(el);
 
-  Gws_Schedule_Plan.renderForm = function (opts) {
-    if (opts == null) {
-      opts = {};
+    this.$datetimeStartEl = this.$el.find(".datetime.start");
+    this.$datetimeEndEl = this.$el.find(".datetime.end");
+    this.$dateStartEl = this.$el.find(".date.start");
+    this.$dateEndEl = this.$el.find(".date.end");
+    this.$allday = this.$el.find('#item_allday');
+
+    this.context = {
+      startAt: SS_DateTimePicker.momentValue(this.$datetimeStartEl) || SS_DateTimePicker.momentValue(this.$dateStartEl),
+      endAt: SS_DateTimePicker.momentValue(this.$datetimeEndEl) || SS_DateTimePicker.momentValue(this.$dateEndEl)
     }
-    $("input.date").datetimepicker({
-      lang: "ja",
-      timepicker: false,
-      format: 'Y/m/d',
-      closeOnDateSelect: true,
-      scrollInput: false,
-      maxDate: opts["maxDate"]
-    });
-    $("input.datetime").datetimepicker({
-      lang: "ja",
-      roundTime: 'ceil',
-      step: 30,
-      maxDate: opts["maxDate"]
-    });
-    this.relateDateForm();
-    return this.relateDateTimeForm();
+    this.context.difference = Gws_Schedule_StartEndSynchronizer.calcDifference(this.context.startAt, this.context.endAt);
+    // console.log({ startAt: this.context.startAt.format(), endAt: this.context.endAt.format(), difference: this.context.difference });
+
+    this.render();
+  }
+
+  Gws_Schedule_Plan.renderForm = function () {
+    $(".gws-schedule-start-end-combo").each(function() { new Gws_Schedule_Plan(this) });
   };
 
-  Gws_Schedule_Plan.renderAlldayForm = function () {
-    this.changeDateForm();
-    return $('#item_allday').on("change", function () {
-      Gws_Schedule_Plan.changeDateValue();
-      return Gws_Schedule_Plan.changeDateForm();
-    });
+  Gws_Schedule_Plan.prototype.isAllDay = function() {
+    return this.$allday.prop('checked');
   };
-  // @example
-  //   2015/09/29 00:00 => 2015/09/29
-  //   2015/09/29 => 2015/09/29 00:00
 
-  Gws_Schedule_Plan.changeDateValue = function () {
-    var etime, stime;
-    if ($('#item_allday').prop('checked')) {
-      $('#item_start_on').val($('#item_start_at').val().replace(/ .*/, ''));
-      return $('#item_end_on').val($('#item_end_at').val().replace(/ .*/, ''));
+  Gws_Schedule_Plan.prototype.render = function() {
+    var self = this;
+
+    self.$datetimeStartEl.on("ss:changeDateTime", function() {
+      self.context.startAt = SS_DateTimePicker.momentValue(self.$datetimeStartEl);
+      if (self.context.startAt) {
+        self.context.endAt = moment(self.context.startAt).add(self.context.difference, "milliseconds");
+      }
+      // update $datetimeEndEl, $dateStartEl, $dateEndEl
+      SS_DateTimePicker.momentValue(self.$datetimeEndEl, self.context.endAt);
+      SS_DateTimePicker.momentValue(self.$dateStartEl, self.context.startAt);
+      SS_DateTimePicker.momentValue(self.$dateEndEl, self.context.endAt);
+    });
+    self.$datetimeEndEl.on("ss:changeDateTime", function() {
+      self.context.endAt = SS_DateTimePicker.momentValue(self.$datetimeEndEl);
+      if (self.context.endAt) {
+        self.context.difference = Gws_Schedule_StartEndSynchronizer.calcDifference(self.context.startAt, self.context.endAt);
+      }
+      // update $dateEndEl
+      SS_DateTimePicker.momentValue(self.$dateEndEl, self.context.endAt);
+    });
+    self.$dateStartEl.on("ss:changeDateTime", function() {
+      var startDate = SS_DateTimePicker.momentValue(self.$dateStartEl);
+      if (startDate) {
+        self.context.startAt = convertToTime(startDate, self.context.startAt);
+        self.context.endAt = moment(self.context.startAt).add(self.context.difference, "milliseconds");
+      } else {
+        self.context.startAt = null;
+      }
+      // update $datetimeStartEl, $datetimeEndEl, $dateEndEl
+      SS_DateTimePicker.momentValue(self.$datetimeStartEl, self.context.startAt);
+      SS_DateTimePicker.momentValue(self.$datetimeEndEl, self.context.endAt);
+      SS_DateTimePicker.momentValue(self.$dateEndEl, self.context.endAt);
+    });
+    self.$dateEndEl.on("ss:changeDateTime", function() {
+      var endDate = SS_DateTimePicker.momentValue(self.$dateEndEl);
+      if (endDate) {
+        self.context.endAt = convertToTime(endDate, self.context.endAt);
+        self.context.difference = Gws_Schedule_StartEndSynchronizer.calcDifference(self.context.startAt, self.context.endAt);
+      } else {
+        self.context.endAt = null;
+      }
+      // update $datetimeEndEl
+      SS_DateTimePicker.momentValue(self.$datetimeEndEl, self.context.endAt);
+    });
+
+    self.$allday.on("change", function () {
+      self.changeDateForm();
+    });
+    self.changeDateForm();
+    self.$el.trigger("ss:initialized");
+  };
+
+  Gws_Schedule_Plan.prototype.changeDateForm = function () {
+    if (this.isAllDay()) {
+      this.$el.find('.dates-field').removeClass("hide");
+      this.$el.find('.datetimes-field').addClass("hide");
     } else {
-      stime = $('#item_start_at').val().replace(/.* /, '');
-      etime = $('#item_end_at').val().replace(/.* /, '');
-      if (stime === '' && $('#item_start_on').val() !== '') {
-        stime = '00:00';
-      }
-      if (etime === '' && $('#item_end_on').val() !== '') {
-        etime = '00:00';
-      }
-      $('#item_start_at').val($('#item_start_on').val() + (" " + stime));
-      return $('#item_end_at').val($('#item_end_on').val() + (" " + etime));
-    }
-  };
-
-  Gws_Schedule_Plan.changeDateForm = function () {
-    if ($('#item_allday').prop('checked')) {
-      $('.dates-field').show();
-      return $('.datetimes-field').hide();
-    } else {
-      $('.dates-field').hide();
-      return $('.datetimes-field').show();
-    }
-  };
-
-  Gws_Schedule_Plan.relateDateForm = function (start_sel, end_sel) {
-    if (start_sel == null) {
-      start_sel = '.date.start';
-    }
-    if (end_sel == null) {
-      end_sel = '.date.end';
-    }
-    $(start_sel + ", " + end_sel).on("click", function () {
-      return Gws_Schedule_Plan.diffOn = Gws_Schedule_Plan.diffDates($(start_sel).val(), $(end_sel).val());
-    });
-    $(start_sel).on("change", function () {
-      var date, format, start;
-      start = $(start_sel).val();
-      if (!start) {
-        return;
-      }
-      start = (new Date(start)).getTime();
-      if (isNaN(start)) {
-        return;
-      }
-      date = new Date();
-      date.setTime(start + Gws_Schedule_Plan.diffOn);
-      format = '%d/%02d/%02d';
-      if ($(start_sel).hasClass('datetime')) {
-        format = '%d/%02d/%02d %02d:%02d';
-      }
-      return $(end_sel).val(sprintf(format, date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes()));
-    });
-    if ($(end_sel).val() === "") {
-      return $(start_sel).trigger("change");
-    }
-  };
-
-  Gws_Schedule_Plan.relateDateTimeForm = function () {
-    return this.relateDateForm('.datetime.start', '.datetime.end');
-  };
-
-  Gws_Schedule_Plan.diffDates = function (src, dst) {
-    var diff;
-    if (!src || !dst) {
-      return 1000 * 60 * 60;
-    }
-    diff = (new Date(dst)).getTime() - (new Date(src)).getTime();
-    if (diff < 0) {
-      return 0;
-    }
-    return diff;
-  };
-
-  Gws_Schedule_Plan.transferEnd2Start = function () {
-    if ($('#item_allday').prop('checked')) {
-      return $('#item_start_on').val($('#item_end_on').val());
-    } else {
-      return $('#item_start_at').val($('#item_end_at').val());
+      this.$el.find('.dates-field').addClass("hide");
+      this.$el.find('.datetimes-field').removeClass("hide");
     }
   };
 

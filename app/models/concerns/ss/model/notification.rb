@@ -62,7 +62,7 @@ module SS::Model::Notification
   end
 
   def display_send_date
-    send_date ? send_date.strftime('%Y/%m/%d %H:%M') : ''
+    send_date ? I18n.l(send_date, format: :picker) : ''
   end
 
   def member?(user)

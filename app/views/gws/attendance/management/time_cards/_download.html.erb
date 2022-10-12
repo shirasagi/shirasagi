@@ -1,9 +1,9 @@
 <dl class="see">
   <dt><%= @model.t :term %><%= @model.tt :term %></dt>
   <dd>
-    <%= f.text_field :from_date, class: 'date js-date', value: @cur_month.to_date.strftime('%Y/%m/%d') %>
+    <%= f.ss_date_field :from_date, value: @cur_month.to_date %>
     -
-    <%= f.text_field :to_date, class: 'date js-date', value: @cur_month.end_of_month.to_date.strftime('%Y/%m/%d') %>
+    <%= f.ss_date_field :to_date, value: @cur_month.end_of_month.to_date %>
   </dd>
 
   <dt><%= @model.t :user_ids %><%= @model.tt :user_ids %></dt>

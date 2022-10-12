@@ -22,7 +22,7 @@
       <% pressed = now.to_date == origin.to_date %>
       <%= ss_button_to(t('gws.history.days.today'), url_for(action: :index, ymd: now.strftime('%Y%m%d')), method: "GET", class: "btn", style: 'margin-right: 12px;', aria: { pressed: pressed }, disabled: pressed) %>
       <%= ss_button_to(t('gws.history.days.prev_day'), url_for(action: :index, ymd: prev_day.strftime('%Y%m%d')), method: "GET", class: "btn") %>
-      <%= text_field_tag(:ymd, origin.strftime('%Y/%m/%d'), class: 'datetime js-date', data: { min_date: Webmail::HistoryArchiveJob.threshold_day(now, SS.config.webmail.history['save_days'].days).strftime('%Y/%m/%d'), max_date: 0}) %>
+      <%= ss_date_field_tag(:ymd, origin, min_date: Webmail::HistoryArchiveJob.threshold_day(now, SS.config.webmail.history['save_days'].days), max_date: 0) %>
       <%= ss_button_to(t('gws.history.days.next_day'), url_for(action: :index, ymd: next_day.strftime('%Y%m%d')), method: "GET", class: "btn", disabled: now < next_day) %>
     </div>
 
@@ -55,7 +55,7 @@
 
         <div class="meta">
           <span class="label"><%= t("gws.history.severity.#{item.severity}") %></span>
-          <span class="datetime"><%= item.created.strftime("%Y/%m/%d %H:%M") %></span>
+          <span class="datetime"><%= ss_time_tag item.created %></span>
           <% if item.mode.present? %>
           <span class="label"><%= item.mode_name %></span>
           <% end %>
@@ -85,18 +85,16 @@
 <%= paginate @items if @items.try(:current_page) %>
 
 <%= jquery do %>
-  $('.list-head input[name=ymd]').datetimepicker({
-    onChangeDateTime: function(dp, $input) {
-      var ymd = $input.val();
-      if (!ymd) {
-        return;
-      }
-      ymd = ymd.replace(/\//g, '');
-
-      var url = '<%= webmail_daily_histories_path(ymd: ':ymd') %>';
-      url = url.replace(':ymd', ymd);
-
-      location.href = url;
+  $('.list-head input[name=ymd]').on('ss:changeDateTime', function(ev, dp, $input) {
+    var ymd = SS_DateTimePicker.momentValue($input);
+    if (!ymd) {
+      return;
     }
+    ymd = ymd.format("YYYYMMDD");
+
+    var url = '<%= webmail_daily_histories_path(ymd: ':ymd') %>';
+    url = url.replace(':ymd', ymd);
+
+    location.href = url;
   });
 <% end %>

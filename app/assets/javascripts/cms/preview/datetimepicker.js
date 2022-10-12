@@ -1,2 +1,1 @@
-//= require jquery.datetimepicker
-//= require jquery.datetimepicker.parse_date
+//= require jquery-datetimepicker/build/jquery.datetimepicker.full.js

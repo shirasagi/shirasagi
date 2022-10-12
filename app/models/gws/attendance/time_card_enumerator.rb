@@ -54,7 +54,7 @@ class Gws::Attendance::TimeCardEnumerator < Enumerator
 
     put_history_p = proc do |history|
       if history.present? && history.reason.present?
-        terms << history.created.try(:strftime, '%Y/%m/%d %H:%M')
+        terms << history.created.try { |time| I18n.l(time, format: :picker) }
         terms << history.reason
       else
         terms << nil

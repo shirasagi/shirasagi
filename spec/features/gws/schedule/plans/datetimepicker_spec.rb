@@ -3,7 +3,11 @@ require 'spec_helper'
 describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:new_path) { new_gws_schedule_plan_path site }
-  before { login_gws_user }
+
+  before do
+    gws_user.update(lang: "ja")
+    login_gws_user
+  end
 
   context "datetime" do
     let(:format) { I18n.t("time.formats.picker") }

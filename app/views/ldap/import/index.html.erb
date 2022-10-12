@@ -18,7 +18,7 @@
             <%= link_to t('ss.links.show'), action: :show, id: item %>
           </nav>
         </td>
-        <td><%= link_to item.created.strftime("%Y/%m/%d %H:%M"), action: :show, id: item %></td>
+        <td><%= link_to action: :show, id: item do %><%= ss_time_tag item.created %><% end %></td>
         <td><%= item.group_count %></td>
         <td><%= item.user_count %></td>
       </tr>

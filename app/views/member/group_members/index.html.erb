@@ -25,7 +25,7 @@
 
         <div class="meta">
           <span class="id">#<%= item.id %></span>
-          <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+          <span class="datetime"><%= ss_time_tag item.updated %></span>
           <span class="state"><%= item.label :state %></span>
         </div>
       </div>
