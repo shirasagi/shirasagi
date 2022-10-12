@@ -55,6 +55,7 @@ en:
     large_file_upload: Large File Upload
     upload_status: Upload Status
     under_maintenance_mode: Currently under maintenance.
+    pagination: Pagination
 
     views:
       login/login:

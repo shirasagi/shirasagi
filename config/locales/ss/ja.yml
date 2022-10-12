@@ -55,6 +55,7 @@ ja:
     large_file_upload: 大容量アップロード
     upload_status: アップロード状況
     under_maintenance_mode: 現在メンテナンス中です。
+    pagination: ページネーション
 
     views:
       login/login:
