@@ -213,7 +213,9 @@ describe Cms::Page, type: :model, dbscope: :example do
 
   describe ".and_public_selector: able to use with aggregate" do
     let(:now) { Time.zone.now.change(usec: 0) }
-    let!(:page1) { create :cms_page, state: "public" }
+    let!(:page1) do
+      create :cms_page, state: "public", released_type: "fixed", released: now, release_date: nil, close_date: nil
+    end
 
     context "date is nil" do
       it do
