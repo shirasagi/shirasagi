@@ -317,6 +317,14 @@ location /private_files/ {
     internal;
     alias ${SS_DIR}/;
 }
+# download .svg files instead of showing inline in browser for protecting from xss
+location ~* \.svg$ {
+    expires 1h;
+    access_log off;
+    log_not_found off;
+    add_header Content-Disposition "attachment";
+    try_files $uri @app;
+}
 EOF
 
 sudo systemctl restart nginx.service
