@@ -162,4 +162,22 @@ module Fs
     return name if name.blank?
     name.split("/").map { |part| Fs.zip_safe_name(part) }.join("/")
   end
+
+  def safe_create(path, binary: false, &block)
+    path = ::File.expand_path(path, Rails.root)
+
+    basename = ::File.basename(path)
+    dirname = ::File.dirname(path)
+    ::FileUtils.mkdir_p(dirname) unless ::Dir.exist?(dirname)
+
+    tmp_path = "#{dirname}/.#{basename}.tmp"
+    options = binary ? "wb" : "w"
+    ::File.open(tmp_path, options, &block)
+
+    ::FileUtils.mv(tmp_path, path, force: true)
+  ensure
+    if tmp_path
+      ::FileUtils.rm_f(tmp_path) rescue nil
+    end
+  end
 end
