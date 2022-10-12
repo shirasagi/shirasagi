@@ -16,7 +16,7 @@
     <% end %>
   </label>
   <div class="info">
-    <% item_url = url_for({ action: :show, id: item }) rescue nil %>
+    <% item_url = item.private_show_path rescue nil %>
     <% if item_url %>
       <%= link_to item.name, item_url, class: "title", target: "_blank", rel: "noopener" %>
     <% else %>

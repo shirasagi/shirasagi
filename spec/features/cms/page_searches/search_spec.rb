@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_page_search", type: :feature, dbscope: :example do
+describe "cms_page_search", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:index_path) { cms_page_searches_path site.id }
 
@@ -52,6 +52,36 @@ describe "cms_page_search", type: :feature, dbscope: :example do
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
         expect(page).to have_css("div.info a.title", text: "[TEST]C")
         expect(page).to have_css("div.info a.title", text: "[TEST]D")
+      end
+    end
+
+    context "destroy_all_pages" do
+      it do
+        visit index_path
+        click_on I18n.t('ss.links.new')
+
+        within "form#item-form" do
+          fill_in "item[name]", with: name
+          click_on I18n.t('ss.buttons.save')
+        end
+
+        click_on I18n.t('ss.buttons.search')
+
+        expect(page).to have_css(".search-count", text: "4 件の検索結果")
+        expect(page).to have_css("div.info a.title", text: "[TEST]A")
+        expect(page).to have_css("div.info a.title", text: "[TEST]B")
+        expect(page).to have_css("div.info a.title", text: "[TEST]C")
+        expect(page).to have_css("div.info a.title", text: "[TEST]D")
+
+        wait_for_js_ready
+        within ".list-head" do
+          find('input[type="checkbox"]').set(true)
+          click_button I18n.t('ss.buttons.delete')
+        end
+        click_button I18n.t('ss.buttons.delete')
+        click_on I18n.t('ss.buttons.search')
+
+        expect(page).to have_css(".search-count", text: "0 件の検索結果")
       end
     end
   end
