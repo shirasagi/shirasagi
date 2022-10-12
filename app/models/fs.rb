@@ -3,6 +3,7 @@ module Fs
   DEFAULT_BUFFER_SIZE = 4 * 1_024
   DEFAULT_HEAD_LOGS = SS.config.job.head_logs || 1_000
   DEFAULT_TAIL_BYTES = 16 * 1_024
+  SAFE_IMAGE_SUB_TYPES = %w(gif jpeg png webp).freeze
 
   if SS.config.env.storage == "grid_fs"
     include ::Fs::GridFs

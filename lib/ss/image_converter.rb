@@ -46,7 +46,7 @@ class SS::ImageConverter
       return false if sub_type.blank?
 
       sub_type = sub_type.downcase
-      SS::SAFE_IMAGE_SUB_TYPES.include?(sub_type)
+      Fs::SAFE_IMAGE_SUB_TYPES.include?(sub_type)
     end
 
     def exif_image_mime_type?(mime_type)
