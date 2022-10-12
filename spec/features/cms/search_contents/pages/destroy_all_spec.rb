@@ -52,7 +52,6 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
           expect(page).to have_css(".list-item", count: 1)
         end
 
-        wait_for_js_ready
         within ".list-head" do
           find('input[type="checkbox"]').set(true)
           click_button I18n.t('ss.buttons.delete')
@@ -97,7 +96,6 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
           expect(page).to have_css(".list-item", count: 1)
         end
 
-        wait_for_js_ready
         within ".list-head" do
           find('input[type="checkbox"]').set(true)
           click_button I18n.t('ss.buttons.delete')
