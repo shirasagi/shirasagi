@@ -2,7 +2,9 @@ module Cms::Page::SequencedFilename
   extend ActiveSupport::Concern
 
   included do
-    validate :validate_seq_filename, if: ->{ filename_changed? && basename =~ /^\d+(\.html)?$/ }
+    attr_accessor :skip_validate_seq_filename
+
+    validate :validate_seq_filename, if: ->{ filename_changed? && basename =~ /^\d+(\.html)?$/ && !@skip_validate_seq_filename }
     before_save :seq_filename, if: ->{ basename.blank? }
   end
 
