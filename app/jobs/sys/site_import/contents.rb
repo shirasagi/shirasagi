@@ -23,6 +23,7 @@ module Sys::SiteImport::Contents
   def import_cms_pages
     @cms_pages_map = import_documents "cms_pages", Cms::Page, %w(site_id filename) do |item|
       def item.generate_file; end
+      item.skip_validate_seq_filename = true if item.is_a?(Cms::Page::SequencedFilename)
 
       item[:lock_owner_id] = nil
       item[:lock_until] = nil
