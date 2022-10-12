@@ -84,7 +84,7 @@ Rails.application.routes.draw do
 
   namespace "cms", path: ".s:site" do
     get "/" => "main#index", as: :main
-    match "logout" => "login#logout", as: :logout, via: [:get]
+    get "logout" => "login#logout", as: :logout
     match "login" => "login#login", as: :login, via: [:get, :post]
     get "preview(:preview_date)/(*path)" => "preview#index", as: :preview
     post "preview(:preview_date)/(*path)" => "preview#form_preview", as: :form_preview, format: false
@@ -384,8 +384,10 @@ Rails.application.routes.draw do
       end
 
       namespace "line" do
-        get "deliver_members/:model/:id" => "deliver_members#index", model: /message|deliver_condition|line_deliver/, as: :deliver_members
-        get "deliver_members/:model/:id/download" => "deliver_members#download", model: /message|deliver_condition|line_deliver/
+        get "deliver_members/:model/:id" => "deliver_members#index",
+          model: /message|deliver_condition|line_deliver/, as: :deliver_members
+        get "deliver_members/:model/:id/download" => "deliver_members#download",
+          model: /message|deliver_condition|line_deliver/
         get "temp_files/:id" => "temp_files#select", as: :select_temp_file
       end
 
@@ -466,6 +468,7 @@ Rails.application.routes.draw do
     get "monthly_nav" => "public#index", cell: "parts/monthly_nav"
     get "site_search_history" => "public#index", cell: "parts/site_search_history"
     get "history_list" => "public#index", cell: "parts/history_list"
+    get "site_search_keyword" => "public#index", cell: "parts/site_search_keyword"
   end
 
   page "cms" do
