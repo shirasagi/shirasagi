@@ -37,7 +37,7 @@ describe "gws_histories", type: :feature, dbscope: :example, js: true do
       Gws::History.all.reorder(created: -1).first.tap do |history|
         expect(history.severity).to eq "info"
         expect(history.controller).to eq "gws/histories"
-        expect(history.path).to eq download_gws_daily_histories_path(site: site, ymd: now.strftime("%Y%m%d"))
+        expect(history.path).to eq download_gws_daily_histories_path(site: site, ymd: "-")
         expect(history.action).to eq "download"
       end
     end
