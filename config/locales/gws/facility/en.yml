@@ -17,6 +17,7 @@ en:
       usage_day: Date of use
       hours: Hours
       times: Number of times
+      yearly: Yearly
     state:
       facility: Facility name
       start_at: Reservation start date and time
@@ -24,6 +25,9 @@ en:
       section: Division using
       user: Person reserving
       purpose: Purpose of use
+    formats:
+      year: "%{count}"
+      day: "%{count}"
     errors:
       require_approver: Reservation approval requires the registration of an administrative user.
   gws/facility/item:

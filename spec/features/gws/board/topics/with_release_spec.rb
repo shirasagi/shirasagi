@@ -29,7 +29,9 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
 
     it do
       visit gws_board_topics_path(site: site, mode: '-', category: '-')
-      click_on I18n.t("ss.links.new")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.new")
+      end
       click_on I18n.t("gws.apis.categories.index")
       wait_for_cbox do
         click_on category.name
@@ -90,7 +92,9 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
         expect(notice.group_id).to eq site.id
         expect(notice.member_ids).to eq [ user1.id ]
         expect(notice.user_id).to be_nil
-        expect(notice.subject).to eq I18n.t("gws_notification.gws/board/topic.subject", name: item.name)
+        I18n.t("gws_notification.gws/board/topic.subject", name: item.name, locale: I18n.default_locale).tap do |subject|
+          expect(notice.subject).to eq subject
+        end
         expect(notice.text).to be_blank
         expect(notice.html).to be_blank
         expect(notice.format).to eq "text"

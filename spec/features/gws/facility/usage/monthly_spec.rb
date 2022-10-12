@@ -51,8 +51,8 @@ describe "gws_facility_usage", type: :feature, dbscope: :example, js: true do
       # change category, year and month
       within ".gws-facility-usage-monthly form.search" do
         select cate1.name, from: "s[category]"
-        select "#{now.year - 1}#{I18n.t('datetime.prompts.year')}", from: "s[year]"
-        select "#{now.month}#{I18n.t('datetime.prompts.month')}", from: "s[month]"
+        select I18n.t('gws/facility.formats.year', count: now.year - 1), from: "s[year]"
+        select I18n.t("date.abbr_month_names")[now.month], from: "s[month]"
         click_on I18n.t("ss.buttons.search")
       end
 
@@ -84,20 +84,20 @@ describe "gws_facility_usage", type: :feature, dbscope: :example, js: true do
         expect(csv.length).to eq 4
         expect(csv[0][Gws::Facility::Item.t(:name)]).to eq facility1.name
         expect(csv[0][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.hours')
-        expect(csv[0]["16#{I18n.t('datetime.prompts.day')}"]).to eq "5.0"
+        expect(csv[0][I18n.t('gws/facility.formats.day', count: 16)]).to eq "5.0"
         expect(csv[1][Gws::Facility::Item.t(:name)]).to eq facility1.name
         expect(csv[1][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.times')
-        expect(csv[1]["16#{I18n.t('datetime.prompts.day')}"]).to eq "2"
+        expect(csv[1][I18n.t('gws/facility.formats.day', count: 16)]).to eq "2"
         expect(csv[2][Gws::Facility::Item.t(:name)]).to eq facility2.name
         expect(csv[2][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.hours')
-        expect(csv[2]["9#{I18n.t('datetime.prompts.day')}"]).to eq "24.0"
-        expect(csv[2]["10#{I18n.t('datetime.prompts.day')}"]).to eq "24.0"
-        expect(csv[2]["11#{I18n.t('datetime.prompts.day')}"]).to eq "24.0"
+        expect(csv[2][I18n.t('gws/facility.formats.day', count: 9)]).to eq "24.0"
+        expect(csv[2][I18n.t('gws/facility.formats.day', count: 10)]).to eq "24.0"
+        expect(csv[2][I18n.t('gws/facility.formats.day', count: 11)]).to eq "24.0"
         expect(csv[3][Gws::Facility::Item.t(:name)]).to eq facility2.name
         expect(csv[3][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.times')
-        expect(csv[3]["9#{I18n.t('datetime.prompts.day')}"]).to eq "1"
-        expect(csv[3]["10#{I18n.t('datetime.prompts.day')}"]).to eq "1"
-        expect(csv[3]["11#{I18n.t('datetime.prompts.day')}"]).to eq "1"
+        expect(csv[3][I18n.t('gws/facility.formats.day', count: 9)]).to eq "1"
+        expect(csv[3][I18n.t('gws/facility.formats.day', count: 10)]).to eq "1"
+        expect(csv[3][I18n.t('gws/facility.formats.day', count: 11)]).to eq "1"
       end
     end
   end

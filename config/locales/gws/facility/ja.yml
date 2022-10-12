@@ -17,6 +17,7 @@ ja:
       usage_day: 利用日
       hours: 時間
       times: 回数
+      yearly: 年間
     state:
       facility: 設備名
       start_at: 予約開始日時
@@ -24,6 +25,9 @@ ja:
       section: 利用課
       user: 予約者
       purpose: 利用目的
+    formats:
+      year: "%{count}年"
+      day: "%{count}日"
     errors:
       require_approver: 予約承認には管理ユーザーの登録が必要です。
   gws/facility/item:

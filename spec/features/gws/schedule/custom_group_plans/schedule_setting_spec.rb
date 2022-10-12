@@ -12,7 +12,7 @@ describe "gws_schedule_custom_group_plans", type: :feature, dbscope: :example, j
       it "#index" do
         visit index_path
         within "#calendar-controller" do
-          click_on I18n.t("datetime.prompts.day")
+          click_on I18n.t("datetime.prompts.day", locale: I18n.default_locale)
           expect(page).to have_no_css(".fc-widget-header[data-date*=\"00:00:00\"]")
           expect(page).to have_no_css(".fc-widget-header[data-date*=\"06:00:00\"]")
           expect(page).to have_css(".fc-widget-header[data-date*=\"12:00:00\"]")
@@ -22,7 +22,7 @@ describe "gws_schedule_custom_group_plans", type: :feature, dbscope: :example, j
       end
     end
 
-    context "settting 6 - 24" do
+    context "setting 6 - 24" do
       before do
         site.schedule_min_hour = 6
         site.schedule_max_hour = 24
@@ -32,7 +32,7 @@ describe "gws_schedule_custom_group_plans", type: :feature, dbscope: :example, j
       it "#index" do
         visit index_path
         within "#calendar-controller" do
-          click_on I18n.t("datetime.prompts.day")
+          click_on I18n.t("datetime.prompts.day", locale: I18n.default_locale)
           expect(page).to have_no_css(".fc-widget-header[data-date*=\"00:00:00\"]")
           expect(page).to have_css(".fc-widget-header[data-date*=\"06:00:00\"]")
           expect(page).to have_css(".fc-widget-header[data-date*=\"12:00:00\"]")
@@ -62,7 +62,7 @@ describe "gws_schedule_custom_group_plans", type: :feature, dbscope: :example, j
       end
     end
 
-    context "settting monday" do
+    context "setting monday" do
       before do
         site.schedule_first_wday = 1
         site.update
@@ -77,7 +77,7 @@ describe "gws_schedule_custom_group_plans", type: :feature, dbscope: :example, j
       end
     end
 
-    context "settting saturday" do
+    context "setting saturday" do
       before do
         site.schedule_first_wday = 6
         site.update
@@ -92,7 +92,7 @@ describe "gws_schedule_custom_group_plans", type: :feature, dbscope: :example, j
       end
     end
 
-    context "settting today" do
+    context "setting today" do
       before do
         site.schedule_first_wday = -1
         site.update

@@ -68,8 +68,9 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
       #
       # Edit
       #
-      click_on I18n.t("ss.links.edit")
-
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.edit")
+      end
       within "form#item-form" do
         fill_in "item[name]", with: name2
         click_on I18n.t("ss.buttons.save")

@@ -22,7 +22,7 @@ describe "gws_faq_topics", type: :feature, dbscope: :example do
       now = Time.zone.at(Time.zone.now.to_i)
       Timecop.freeze(now) do
         visit new_path
-        click_on "カテゴリーを選択する"
+        click_on I18n.t("gws.apis.categories.index")
         wait_for_cbox do
           click_on category.name
         end
@@ -52,7 +52,7 @@ describe "gws_faq_topics", type: :feature, dbscope: :example do
 
     it "#edit" do
       visit edit_path
-      click_on "カテゴリーを選択する"
+      click_on I18n.t("gws.apis.categories.index")
       wait_for_cbox do
         click_on category.name
       end

@@ -3,9 +3,9 @@
     <span style="margin-right: 10px;">
       <% cate = Gws::Facility::Category.site(@cur_site).readable(@cur_user, site: @cur_site).order_by(order: 1, id: 1) %>
       <%= f.select :category, cate.pluck(:name, :id), include_blank: t('gws/facility.facility') %>
-      <%= f.select :year, @years %>
-      <%= f.select :month, @months %>
-      <%= f.select :day, (1..31).to_a.map { |d| ["#{d}#{t('datetime.prompts.day')}", d] } %>
+      <%= f.select :year, years %>
+      <%= f.select :month, months %>
+      <%= f.select :day, (1..31).to_a.map { |d| [ t("gws/facility.formats.year", count: d), d ] } %>
     </span>
     <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
     <%= link_to t('ss.buttons.reset'), gws_facility_state_main_path, class: 'btn' %>

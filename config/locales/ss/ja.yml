@@ -220,6 +220,7 @@ ja:
       file_name_order: 名前順
       file_upload_order: アップロード順
       make_them_closed: 非公開にする
+      update: 更新
     confirm:
       change_state: 公開状態を変更してよろしいですか？
       delete: 削除してよろしいですか？

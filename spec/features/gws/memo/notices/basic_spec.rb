@@ -53,7 +53,9 @@ describe 'gws/memo/notices', type: :feature, dbscope: :example, js: true do
 
       first("input[value='#{item_new.id}']").click
       page.accept_confirm do
-        click_button I18n.t('ss.links.delete')
+        within ".list-head" do
+          click_button I18n.t('ss.links.delete')
+        end
       end
       expect(page).to have_css('li.list-item', count: 1)
 

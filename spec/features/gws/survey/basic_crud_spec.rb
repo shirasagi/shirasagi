@@ -32,7 +32,9 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
 
       visit gws_survey_main_path(site: site)
       click_on I18n.t("ss.navi.editable")
-      click_on I18n.t("ss.links.new")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.new")
+      end
 
       within "form#item-form" do
         fill_in "item[name]", with: form_name
@@ -52,8 +54,12 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
 
       click_on(I18n.t('gws/workflow.columns.index'))
 
-      click_on(I18n.t("ss.links.new"))
-      click_on(I18n.t("mongoid.models.gws/column/radio_button"))
+      within ".nav-menu" do
+        click_on(I18n.t("ss.links.new"))
+      end
+      within ".gws-dropdown-menu" do
+        click_on(I18n.t("gws.columns.gws/radio_button"))
+      end
       within "form#item-form" do
         fill_in "item[name]", with: column_name
         fill_in "item[select_options]", with: column_options.join("\n")
@@ -87,7 +93,10 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
 
       expect(SS::Notification.all.count).to eq 1
       SS::Notification.all.first.tap do |notice|
-        subject = I18n.t("gws_notification.#{Gws::Survey::Form.model_name.i18n_key}.subject", name: form.name, default: form.name)
+        subject = I18n.t(
+          "gws_notification.#{Gws::Survey::Form.model_name.i18n_key}.subject",
+          name: form.name, default: form.name, locale: I18n.default_locale
+        )
         expect(notice.subject).to eq subject
         expect(notice.member_ids).to include(user1.id, user2.id)
       end
@@ -178,7 +187,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       # delete_all
       #
       within ".current-navi" do
-        click_on "管理一覧"
+        click_on I18n.t("ss.navi.editable")
       end
 
       within ".list-items" do
@@ -188,7 +197,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
 
       within '.list-head' do
         page.accept_confirm do
-          click_button I18n.t('ss.links.delete')
+          click_button I18n.t('ss.buttons.delete')
         end
       end
       expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))

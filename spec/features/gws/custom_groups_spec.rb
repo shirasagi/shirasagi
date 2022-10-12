@@ -14,7 +14,9 @@ describe "gws_custom_groups", type: :feature, dbscope: :example, js: true do
       # Create
       #
       visit gws_custom_groups_path(site: site)
-      click_on I18n.t("ss.links.new")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.new")
+      end
       within "form#item-form" do
         within '#addon-gws-agents-addons-member' do
           wait_cbox_open do
@@ -46,7 +48,9 @@ describe "gws_custom_groups", type: :feature, dbscope: :example, js: true do
 
       visit gws_custom_groups_path(site: site)
       click_on item.name
-      click_on I18n.t("ss.links.edit")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.edit")
+      end
       page.accept_confirm I18n.t("gws.confirm.readable_setting.empty") do
         within "form#item-form" do
           fill_in "item[name]", with: name2
@@ -63,7 +67,9 @@ describe "gws_custom_groups", type: :feature, dbscope: :example, js: true do
       #
       visit gws_custom_groups_path(site: site)
       click_on item.name
-      click_on I18n.t("ss.links.delete")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
       within "form" do
         click_button I18n.t('ss.buttons.delete')
       end
@@ -78,18 +84,22 @@ describe "gws_custom_groups", type: :feature, dbscope: :example, js: true do
 
     it do
       visit gws_custom_groups_path(site: site)
-      click_on I18n.t("ss.links.download")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.download")
+      end
       within "form#item-form" do
         click_on I18n.t("ss.buttons.download")
       end
 
       wait_for_download
 
-      SS::Csv.open(downloads.first) do |csv|
-        csv_table = csv.read
-        expect(csv_table.length).to eq 1
-        expect(csv_table[0][Gws::CustomGroup.t(:id)]).to be_present
-        expect(csv_table[0][Gws::CustomGroup.t(:name)]).to be_present
+      I18n.with_locale(I18n.default_locale) do
+        SS::Csv.open(downloads.first) do |csv|
+          csv_table = csv.read
+          expect(csv_table.length).to eq 1
+          expect(csv_table[0][Gws::CustomGroup.t(:id)]).to be_present
+          expect(csv_table[0][Gws::CustomGroup.t(:name)]).to be_present
+        end
       end
 
       expect(Gws::History.all.count).to be > 1

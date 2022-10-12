@@ -41,7 +41,7 @@ en:
       month: ! '%1m/%Y'
       iso_month: ! '%m-%Y'
       long_month: ! '%a %Y'
-      picker: ! '%m/%d/%Y'
+      picker: ! '%Y/%m/%d'
       m_d_a: "%a, %1m/%1d"
       d_a: "%a, %1d"
       csv: ! '%Y/%m/%d'
@@ -288,7 +288,7 @@ en:
       iso: ! '%m-%d-%Y %H:%M'
       long: ! '%1m-%1d-%Y %H:%M'
       short: ! '%m/%d/%y %H:%M'
-      picker: ! '%m/%d/%Y %H:%M'
+      picker: ! '%Y/%m/%d %H:%M'
       hh_mm: ! '%H:%M'
       h_mm: ! '%1H:%M'
       csv: ! '%Y/%m/%d %H:%M'

@@ -29,8 +29,9 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
 
     it do
       visit index_path
-      click_on I18n.t('ss.links.new')
-
+      within ".nav-menu" do
+        click_on I18n.t('ss.links.new')
+      end
       within 'form#item-form' do
         fill_in 'item[name]', with: name
         fill_in 'item[text]', with: text
@@ -73,7 +74,9 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
 
         expect(SS::Notification.count).to eq 1
         SS::Notification.first.tap do |message|
-          expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
+          I18n.t('gws_notification.gws/notice/post.subject', name: notice.name, locale: I18n.default_locale).tap do |subject|
+            expect(message.subject).to eq subject
+          end
           expect(message.url).to eq "/.g#{site.id}/notice/-/-/readables/#{notice.id}"
         end
       end

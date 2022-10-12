@@ -54,7 +54,9 @@ describe "gws_schedule_user_plans", type: :feature, dbscope: :example do
       visit index_path
       first('span.fc-title', text: item.name).click
       expect(current_path).to eq show_path
-      click_link I18n.t('ss.links.delete')
+      within ".nav-menu" do
+        click_link I18n.t('ss.links.delete')
+      end
       within "form" do
         click_button I18n.t('ss.buttons.delete')
       end
@@ -108,7 +110,9 @@ describe "gws_schedule_user_plans", type: :feature, dbscope: :example do
         visit index_path
         first('span.fc-title', text: item.name).click
         expect(current_path).to eq show_path
-        click_link I18n.t('ss.links.delete')
+        within ".nav-menu" do
+          click_link I18n.t('ss.links.delete')
+        end
         within "form" do
           click_button I18n.t('ss.buttons.delete')
         end

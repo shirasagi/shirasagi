@@ -3,8 +3,8 @@
     <span style="margin-right: 10px;">
       <% cate = Gws::Facility::Category.site(@cur_site).readable(@cur_user, site: @cur_site).order_by(order: 1, id: 1) %>
       <%= f.select :category, cate.pluck(:name, :id), include_blank: t('gws/facility.facility') %>
-      <%= f.select :year, @years %>
-      <%= f.select :month, @months, include_blank: t("ads.yearly") %>
+      <%= f.select :year, years %>
+      <%= f.select :month, months, include_blank: t("gws/facility.usage.yearly") %>
     </span>
     <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
     <%= link_to t('ss.buttons.reset'), gws_facility_usage_main_path, class: 'btn' %>

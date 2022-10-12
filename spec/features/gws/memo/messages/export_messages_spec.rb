@@ -45,12 +45,13 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         first(".gws-memo-notice.popup-notice-container a").click
 
         within ".popup-notice-items .list-item.unseen" do
-          click_on I18n.t("gws/memo/message.export.subject")
+          click_on I18n.t("gws/memo/message.export.subject", locale: I18n.default_locale)
         end
       end
 
       within ".gws-memo-notices .body" do
-        expect(page).to have_content(I18n.t("gws/memo/message.export.notify_message", link: "").split("\n").first)
+        message = I18n.t("gws/memo/message.export.notify_message", link: "", locale: I18n.default_locale).split("\n").first
+        expect(page).to have_content(message)
         expect(page).to have_link(href: /\.zip$/)
         first("a").click
       end
@@ -368,12 +369,13 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         first(".gws-memo-notice.popup-notice-container a").click
 
         within ".popup-notice-items .list-item.unseen" do
-          click_on I18n.t("gws/memo/message.export.subject")
+          click_on I18n.t("gws/memo/message.export.subject", locale: I18n.default_locale)
         end
       end
 
       within ".gws-memo-notices .body" do
-        expect(page).to have_content(I18n.t("gws/memo/message.export.notify_message", link: "").split("\n").first)
+        message = I18n.t("gws/memo/message.export.notify_message", link: "", locale: I18n.default_locale).split("\n").first
+        expect(page).to have_content(message)
         expect(page).to have_link(href: /\.zip$/)
         first("a").click
       end
@@ -442,12 +444,13 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         first(".gws-memo-notice.popup-notice-container a").click
 
         within ".popup-notice-items .list-item.unseen" do
-          click_on I18n.t("gws/memo/message.export.subject")
+          click_on I18n.t("gws/memo/message.export.subject", locale: I18n.default_locale)
         end
       end
 
       within ".gws-memo-notices .body" do
-        expect(page).to have_content(I18n.t("gws/memo/message.export.notify_message", link: "").split("\n").first)
+        message = I18n.t("gws/memo/message.export.notify_message", link: "", locale: I18n.default_locale).split("\n").first
+        expect(page).to have_content(message)
         expect(page).to have_link(href: /\.zip$/)
         first("a").click
       end
