@@ -95,7 +95,7 @@ describe 'members/agents/nodes/login', type: :feature, dbscope: :example, js: tr
         line_oauth: "enabled", line_client_id: "client-#{unique_id}", line_client_secret: "secret-#{unique_id}"
       )
     end
-    let!(:member) { create :cms_member, cur_site: site, oauth_type: "line", oauth_id: "oauth-#{unique_id}", oauth_token: "token-#{unique_id}" }
+    let!(:member) { create :cms_member, cur_site: site, oauth_type: "line", oauth_id: "oauth-#{unique_id}" }
 
     before do
       @save_test_mode = OmniAuth.config.test_mode
