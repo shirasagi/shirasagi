@@ -1,9 +1,9 @@
 <dl class="see">
   <dt><%= @model.t :name %></dt>
-  <dd><%= @item.send :name %></dd>
+  <dd><%= @item.name %></dd>
 
   <dt><%= @model.t :email %></dt>
-  <dd><%= @item.send :email %></dd>
+  <dd><%= @item.email %></dd>
 
   <dt><%= @model.t :state %></dt>
   <dd><%= @item.label :state %></dd>
@@ -17,13 +17,16 @@
   <% end %>
 
   <dt><%= @model.t :oauth_type %></dt>
-  <dd><%= @item.send :oauth_type %></dd>
+  <dd><%= @item.oauth_type %></dd>
 
   <dt><%= @model.t :oauth_id %></dt>
-  <dd><%= @item.send :oauth_id %></dd>
+  <dd><%= @item.oauth_id %></dd>
 
   <dt><%= @model.t :oauth_token %></dt>
-  <dd><%= @item.send :oauth_token %></dd>
+  <dd><%= @item.oauth_token %></dd>
+
+  <dt><%= @model.t :last_loggedin %></dt>
+  <dd><%= @item.last_loggedin.try { |time| I18n.l(time, format: :picker) } %></dd>
 </dl>
 
 <% activity_logs = Member::ActivityLog.site(@cur_site).where(member_id: @item).order_by(updated: -1).limit(8) %>

@@ -941,6 +941,7 @@ ja:
         oauth_type: OAuth Type
         oauth_id: OAuth ID
         oauth_token: OAuth トークン
+        last_loggedin: 最終ログイン日時
       cms/editor_template:
         name: 名前
         description: 説明
