@@ -19,6 +19,7 @@ class Member::Agents::Nodes::LoginController < ApplicationController
     flash.discard(:ref)
 
     set_member member
+    member.update(last_loggedin: Time.zone.now)
     Member::ActivityLog.create(
       cur_site: @cur_site,
       cur_member: member,

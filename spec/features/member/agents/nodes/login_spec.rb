@@ -44,6 +44,9 @@ describe 'members/agents/nodes/login', type: :feature, dbscope: :example, js: tr
 
       visit site2_my_profile.full_url
       expect(page).to have_css(".form-login")
+
+      site1_member.reload
+      expect(site1_member.last_loggedin).to be_present
     end
   end
 
@@ -69,6 +72,16 @@ describe 'members/agents/nodes/login', type: :feature, dbscope: :example, js: tr
       end
 
       expect(page).to have_css(".body", text: "you've been logged in")
+
+      expect(Member::ActivityLog.all.member(member).count).to eq 1
+      Member::ActivityLog.all.member(member).first.tap do |activity_log|
+        expect(activity_log.activity_type).to eq "login"
+        expect(activity_log.remote_addr).to eq "127.0.0.1"
+        expect(activity_log.user_agent).to be_present
+      end
+
+      member.reload
+      expect(member.last_loggedin).to be_present
     end
   end
 end
