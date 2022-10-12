@@ -7,6 +7,7 @@ class Gws::HistoriesController < ApplicationController
   navi_view 'gws/histories/navi'
 
   before_action :set_ymd
+  helper_method :today, :origin, :next_day, :prev_day
 
   private
 
@@ -16,16 +17,47 @@ class Gws::HistoriesController < ApplicationController
 
   def set_ymd
     if params[:ymd].blank?
-      redirect_to gws_daily_histories_path(ymd: Time.zone.now.strftime('%Y%m%d'))
+      redirect_to gws_daily_histories_path(ymd: "-")
       return
     end
 
+    ymd = params[:ymd].to_s
+
     @s = OpenStruct.new(params[:s])
-    @s.ymd = params[:ymd]
+    @s.ymd = ymd if ymd != "-"
   end
 
   def set_items
     @items = @model.site(@cur_site).search(@s)
+  end
+
+  def today
+    @today ||= Time.zone.today
+  end
+
+  def origin
+    return @origin if instance_variable_defined?(:@origin)
+
+    @origin = begin
+      ymd = params[:ymd].to_s if params[:ymd].present?
+      if ymd
+        year = ymd[0..3]
+        month = ymd[4..5]
+        day = ymd[6..7]
+      end
+
+      if year.numeric? && month.numeric? && day.numeric?
+        Time.zone.local(ymd[0..3].to_i, ymd[4..5].to_i, ymd[6..7].to_i)
+      end
+    end
+  end
+
+  def next_day
+    @next_day ||= (origin || today) + 1.day
+  end
+
+  def prev_day
+    @prev_day ||= (origin || today) - 1.day
   end
 
   public
