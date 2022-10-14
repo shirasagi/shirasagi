@@ -9,7 +9,6 @@ describe "cms_node_pages", type: :feature, dbscope: :example do
   let(:show_path)   { "#{index_path}/#{item.id}" }
   let(:edit_path)   { "#{index_path}/#{item.id}/edit" }
   let(:delete_path) { "#{index_path}/#{item.id}/delete" }
-  let(:contains_urls_path) { contains_urls_node_page_path site.id, node, item }
 
   context "with auth" do
     before { login_cms_user }
@@ -56,8 +55,21 @@ describe "cms_node_pages", type: :feature, dbscope: :example do
     end
 
     it "#contains_urls" do
-      visit contains_urls_path
+      visit contains_urls_node_page_path(site.id, node, item)
       expect(status_code).to eq 200
+    end
+
+    context "with branch", js: true do
+      it "#contains_urls" do
+        visit show_path
+        within '#addon-workflow-agents-addons-branch' do
+          click_on I18n.t("workflow.create_branch")
+          expect(page).to have_link item.name
+          click_on item.name
+        end
+        wait_for_ajax
+        expect(page).not_to have_content I18n.t("cms.confirm.check_linked_url_list")
+      end
     end
   end
 end

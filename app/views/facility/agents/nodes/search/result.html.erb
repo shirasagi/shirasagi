@@ -1,6 +1,5 @@
 <%= javascript_include_tag "/assets/js/jquery.colorbox.js" %>
 <%= stylesheet_link_tag "/assets/css/colorbox/colorbox.css", media: 'all' %>
-
 <%= render template: "facility/agents/addons/search_result/view/upper" %>
 
 <div class="columns">
@@ -25,13 +24,21 @@
 
 <%= paginate @items if @items.try(:current_page) %>
 
+<div class="hide" style="display: none;">
+  <div class="colorbox-dialog">
+    <%= render(partial: "modal", locals: { search_path: "./result.html" }) %>
+  </div>
+</div>
+
 <%= jquery do %>
-
-  $(".ajax-box").on("click", function () {
-    $.colorbox({
-      html: '<%=j render(partial: "modal", locals: { search_path: "./result.html" }) %>'
-    });
-    return false;
+var $dialog = $(".colorbox-dialog");
+$(".ajax-box").on("click", function () {
+  $.colorbox({
+    inline: true,
+    href: $dialog,
+    maxWidth: "80%",
+    maxHeight: "80%"
   });
-
+  return false;
+});
 <% end %>

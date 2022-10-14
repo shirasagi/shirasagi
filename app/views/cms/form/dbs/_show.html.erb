@@ -1,6 +1,11 @@
 <dl class="see">
   <dt><%= @model.t :name %></dt>
-  <dd><%= @item.send :name %></dd>
+  <dd>
+    <%= @item.send :name %>
+    <span class="ml-2">
+      <%= link_to t('cms.buttons.manage_db'), cms_form_db_docs_path(db_id: @item.id), target: '_blank', class: 'btn' %>
+    </span>
+  </dd>
 
   <dt><%= @model.t :order %></dt>
   <dd><%= @item.send :order %></dd>

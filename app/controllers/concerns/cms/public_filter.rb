@@ -13,7 +13,7 @@ module Cms::PublicFilter
     before_action :parse_path
     before_action :set_preview_params
     before_action :compile_scss
-    before_action :x_sendfile, unless: ->{ filter_include?(:mobile) || filter_include?(:kana) || filter_include?(:translate) || @preview }
+    before_action :x_sendfile, unless: ->{ filter_include_any?(:mobile, :kana, :translate) || @preview }
   end
 
   def index
@@ -132,7 +132,9 @@ module Cms::PublicFilter
     response.headers["Expires"] = 1.day.from_now.httpdate if file.to_s.downcase.end_with?(*%w(.css .js .gif .jpg .jpeg .png))
     response.headers["Last-Modified"] = CGI::rfc1123_date(Fs.stat(file).mtime)
 
-    ss_send_file(file, type: Fs.content_type(file), disposition: :inline)
+    content_type = Fs.content_type(file)
+    disposition = SS::MimeType.safe_for_inline?(content_type) ? :inline : :attachment
+    ss_send_file(file, type: content_type, disposition: disposition)
   end
 
   def enum_contents

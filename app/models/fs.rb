@@ -3,6 +3,7 @@ module Fs
   DEFAULT_BUFFER_SIZE = 4 * 1_024
   DEFAULT_HEAD_LOGS = SS.config.job.head_logs || 1_000
   DEFAULT_TAIL_BYTES = 16 * 1_024
+  SAFE_IMAGE_SUB_TYPES = %w(gif jpeg png webp).freeze
 
   if SS.config.env.storage == "grid_fs"
     include ::Fs::GridFs
@@ -145,5 +146,38 @@ module Fs
   rescue => e
     Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
     ""
+  end
+
+  def zip_safe_name(name)
+    return name if name.blank?
+
+    if Zip.unicode_names
+      SS::FilenameUtils.convert_to_url_safe_japanese(name)
+    else
+      name.encode('cp932', invalid: :replace, undef: :replace, replace: "_")
+    end
+  end
+
+  def zip_safe_path(name)
+    return name if name.blank?
+    name.split("/").map { |part| Fs.zip_safe_name(part) }.join("/")
+  end
+
+  def safe_create(path, binary: false, &block)
+    path = ::File.expand_path(path, Rails.root)
+
+    basename = ::File.basename(path)
+    dirname = ::File.dirname(path)
+    ::FileUtils.mkdir_p(dirname) unless ::Dir.exist?(dirname)
+
+    tmp_path = "#{dirname}/.#{basename}.tmp"
+    options = binary ? "wb" : "w"
+    ::File.open(tmp_path, options, &block)
+
+    ::FileUtils.mv(tmp_path, path, force: true)
+  ensure
+    if tmp_path
+      ::FileUtils.rm_f(tmp_path) rescue nil
+    end
   end
 end

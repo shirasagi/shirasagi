@@ -39,7 +39,7 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
       in(@q_service).
       in(@q_location).
       order_by(name: 1)
-    @markers = @items.pluck(:map_points).flatten
+    @markers = @items.pluck(:map_points).flatten.compact
   end
 
   def set_filter_items

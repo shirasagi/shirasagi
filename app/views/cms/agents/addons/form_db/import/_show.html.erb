@@ -19,10 +19,15 @@
     <% end %>
   </dd>
 
+  <dt><%= @model.t :import_exclude_columns %></dt>
+  <dd><%=br @item.import_exclude_columns.join("\n") %></dd>
+
   <%
     import_options = []
     import_options << @model.t(:import_event) if @item.import_event == 1
     import_options << @model.t(:import_map) if @item.import_map == 1
+    import_options << @model.t(:generate_on_import) if @item.generate_on_import == 1
+    import_options << @model.t(:import_skip_same_file) if @item.import_skip_same_file == 1
   %>
   <dt><%= @model.t :import_misc_options %></dt>
   <dd>

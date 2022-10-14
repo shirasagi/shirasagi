@@ -333,4 +333,15 @@ module Member::Node
 
     default_scope ->{ where(route: "member/my_line_profile") }
   end
+
+  class LineFirstRegistration
+    include Cms::Model::Node
+    include Cms::Addon::NodeSetting
+    include Cms::Addon::Meta
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "member/line_first_registration") }
+  end
 end

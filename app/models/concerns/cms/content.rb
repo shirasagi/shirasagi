@@ -60,16 +60,22 @@ module Cms::Content
       end
     end
 
-    def and_public(date = nil)
+    def and_public_selector(date)
       if date.nil?
-        all.where(state: "public")
+        { state: "public" }
       else
         date = date.dup
-        all.where("$and" => [
-          { "$or" => [ { state: "public", :released.lte => date }, { :release_date.lte => date } ] },
-          { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
-        ])
+        {
+          "$and" => [
+            { "$or" => [ { state: "public", released: { "$lte" => date } }, { release_date: { "$lte" => date } } ] },
+            { "$or" => [ { close_date: nil }, { close_date: { "$gt" => date } } ] },
+          ]
+        }
       end
+    end
+
+    def and_public(date = nil)
+      all.where(and_public_selector(date))
     end
 
     def split_path(path)

@@ -691,7 +691,14 @@ describe Article::Page, dbscope: :example do
           expect(subject.contact_email).to eq page.contact_email
           expect(subject.contact_link_url).to eq page.contact_link_url
           expect(subject.contact_link_name).to eq page.contact_link_name
-          expect(subject.contact_group.name).to eq page.contact_group.name
+          subject.contact_group.to_liquid.tap do |contact_group|
+            expect(contact_group.to_s).to eq group1.name
+            expect(contact_group.name).to eq group1.name
+            expect(contact_group.full_name).to eq group1.full_name
+            expect(contact_group.section_name).to eq group1.section_name
+            expect(contact_group.trailing_name).to eq group1.trailing_name
+            expect(contact_group.last_name).to eq group1.name.split("/").last
+          end
         end
       end
 

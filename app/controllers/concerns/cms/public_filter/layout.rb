@@ -24,6 +24,10 @@ module Cms::PublicFilter::Layout
     filters.any? { |f| f == key || f.is_a?(Hash) && f.key?(key) }
   end
 
+  def filter_include_any?(*keys)
+    keys.any? { |key| filter_include?(key) }
+  end
+
   def filter_options(key)
     found = filters.find { |f| f == key || f.is_a?(Hash) && f.key?(key) }
     return if found.nil?

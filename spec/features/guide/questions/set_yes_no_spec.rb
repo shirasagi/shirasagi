@@ -29,9 +29,9 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
         within ".cms-modal-tabs" do
           expect(page).to have_css("a.current .tab-name", text: I18n.t("guide.procedure"))
         end
-        expect(page).to have_link procedure1.name
-        expect(page).to have_link procedure2.name
-        click_on procedure1.name
+        expect(page).to have_link procedure1.id_name
+        expect(page).to have_link procedure2.id_name
+        click_on procedure1.id_name
       end
 
       within "form#item-form" do
@@ -42,9 +42,9 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("guide.question")
         end
         expect(page).to have_css("a.current .tab-name", text: I18n.t("guide.procedure"))
-        expect(page).to have_link question1.name
-        expect(page).to have_link question2.name
-        click_on question1.name
+        expect(page).to have_link question1.id_name
+        expect(page).to have_link question2.id_name
+        click_on question1.id_name
       end
 
       within "form#item-form" do

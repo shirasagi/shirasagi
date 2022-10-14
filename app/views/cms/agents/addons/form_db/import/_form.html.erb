@@ -45,15 +45,22 @@
     </table>
   </dd>
 
+  <dt><%= @model.t :import_exclude_columns %><%= @model.tt :import_exclude_columns %></dt>
+  <dd><%= f.text_area :import_exclude_columns, style: 'max-width: 20rem; height: 10rem;' %></dd>
+
+  <%
+    import_options = []
+    import_options << :import_event
+    import_options << :import_map
+    import_options << :generate_on_import
+    import_options << :import_skip_same_file
+  %>
   <dt><%= @model.t :import_misc_options %></dt>
-  <dd>
-    <%= f.hidden_field :import_event, value: 0 %>
-    <label class="mr-0"><%= f.check_box :import_event, {}, 1 %> <%= @model.t :import_event %></label>
-    <%= @model.tt :import_event %>
-  </dd>
-  <dd>
-    <%= f.hidden_field :import_map, value: 0 %>
-    <label class="mr-0"><%= f.check_box :import_map, {}, 1 %> <%= @model.t :import_map %></label>
-    <%= @model.tt :import_map %>
-  </dd>
+  <% import_options.each do |name| %>
+    <dd>
+      <%= f.hidden_field name, value: 0 %>
+      <label class="mr-0"><%= f.check_box name, {}, 1 %> <%= @model.t name %></label>
+      <%= @model.tt name %>
+    </dd>
+  <% end %>
 </dl>

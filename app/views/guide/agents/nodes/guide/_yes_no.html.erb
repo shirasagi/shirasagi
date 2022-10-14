@@ -1,5 +1,8 @@
 <div class="question-nav"><%= t("guide.views.choose_yes_no") %></div>
 <div class="question"><%= @question.name %></div>
+<% if @question.explanation.present? %>
+  <div class="explanation"><%= br @question.explanation %></div>
+<% end %>
 
 <% @question.edges.each do |edge| %>
   <%= hidden_field_tag "answers[#{@no}][]", edge.transition %>

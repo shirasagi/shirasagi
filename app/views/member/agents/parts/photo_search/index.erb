@@ -4,15 +4,23 @@
   search_path = @node.url
 %>
 
+<div class="hide" style="display: none;">
+  <div class="colorbox-dialog-part-<%= @cur_part.id %>">
+    <%= render("member/agents/nodes/photo_search/modal", search_path: search_path) %>
+  </div>
+</div>
+
 <%= jquery do %>
-  $(window).on("load", function () {
-    $(".member-photo-search-part .ajax-box").on("click", function () {
-      $.colorbox({
-        html: '<%= j render("member/agents/nodes/photo_search/modal", search_path: search_path) %>'
-      });
-      return false;
-    });
+var $dialog = $(".colorbox-dialog-part-<%= @cur_part.id %>");
+$(".member-photo-search-part .ajax-box").on("click", function () {
+  $.colorbox({
+    inline: true,
+    href: $dialog,
+    maxWidth: "80%",
+    maxHeight: "80%"
   });
+  return false;
+});
 <% end %>
 
 <div class="member-photo-search-part">

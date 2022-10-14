@@ -135,6 +135,7 @@ ja:
       copy_email_address: メールアドレスをコピー
       closed_save: 非公開にする
       edit_password: パスワード変更
+      registration: 登録する
     buttons:
       save: 保存
       saving: 保存中
@@ -496,6 +497,8 @@ ja:
           none_of: が次と一致しない
           start_with: が次から始まる
           end_with: が次で終わる
+          include_any_of: が次を含む
+          include_none_of: が次を含まない
 
     tasks:
       started: 開始しました。

@@ -187,7 +187,9 @@ class Webmail::MailsController < ApplicationController
 
   def parts_batch_download
     io = ::StringIO.new('')
-    io.set_encoding(Encoding::CP932)
+    unless Zip.unicode_names
+      io.set_encoding(Encoding::CP932)
+    end
 
     buffer = Zip::OutputStream.write_buffer(io) do |out|
       @item.attachments.each do |part|
@@ -197,12 +199,12 @@ class Webmail::MailsController < ApplicationController
           file = @imap.mails.find_part params[:id], part.section
         end
 
-        out.put_next_entry(part.filename.encode('cp932', invalid: :replace, undef: :replace, replace: "_"))
+        out.put_next_entry(::Fs.zip_safe_name(part.filename))
         out.write file.decoded
       end
     end
 
-    send_data buffer.string, filename: "#{@item.subject}.zip",
+    send_data buffer.string, filename: "#{::Fs.zip_safe_name(@item.subject)}.zip",
               content_type: 'application/zip', disposition: :attachment
   end
 

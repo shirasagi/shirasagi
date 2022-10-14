@@ -55,8 +55,8 @@ module Cms::PageFilter
   end
 
   def set_contains_urls_items
-    return Cms::Page.none if !@item.is_a?(Cms::Model::Page) || @item.try(:branch?)
-    @contains_urls = Cms::Page.all.site(@cur_site).and_linking_pages(@item).page(params[:page]).per(50)
+    @contains_urls = Cms::Page.none if !@item.is_a?(Cms::Model::Page) || @item.try(:branch?) || params[:branch_save].present?
+    @contains_urls ||= Cms::Page.all.site(@cur_site).and_linking_pages(@item).page(params[:page]).per(50)
   end
 
   def deny_update_with_contains_urls
@@ -205,8 +205,12 @@ module Cms::PageFilter
     end
 
     if %w(ready public).include?(@item.state_was)
-      # 公開ページだった場合、非公開とするには公開権限が必要
-      raise "403" unless @item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node)
+      if @item.is_a?(Workflow::Addon::Branch) && @item.branch?
+        # 差し替えページは公開権限がなくても取り下げ保存が可能
+      elsif !@item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node)
+        # 公開ページだった場合、非公開とするには公開権限が必要
+        raise "403"
+      end
     end
 
     draft_save

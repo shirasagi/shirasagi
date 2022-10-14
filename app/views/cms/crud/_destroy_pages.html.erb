@@ -16,7 +16,12 @@
     <% end %>
   </label>
   <div class="info">
-    <%= link_to item.name, { action: :show, id: item }, class: "title", target: "_blank", rel: "noopener" %>
+    <% item_url = url_for({ action: :show, id: item }) rescue nil %>
+    <% if item_url %>
+      <%= link_to item.name, item_url, class: "title", target: "_blank", rel: "noopener" %>
+    <% else %>
+      <%= item.name %>
+    <% end %>
     <div class="meta">
       <%= render "cms/crud/destroy_info", item: item %>
       <% if contains_urls.present? %>

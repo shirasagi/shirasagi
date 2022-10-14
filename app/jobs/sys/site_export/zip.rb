@@ -19,6 +19,7 @@ class Sys::SiteExport::Zip
   def add_json(zip)
     Dir.glob("#{@output_dir}/*.json").each do |file|
       name = ::File.basename(file)
+      name = ::Fs.zip_safe_name(name)
       zip.add(name, file)
     end
   end
@@ -27,6 +28,7 @@ class Sys::SiteExport::Zip
     require "find"
     Find.find("#{@output_dir}/files") do |path|
       entry = path.sub(/.*\/(files\/?)/, '\\1')
+      entry = ::Fs.zip_safe_path(entry)
       if File.directory?(path)
         zip.mkdir(entry)
       else
@@ -44,10 +46,11 @@ class Sys::SiteExport::Zip
   def add_public_files(zip)
     require "find"
     Find.find(@site_dir) do |path|
-      next if path =~ /^#{site_fs_path}/
+      next if path.start_with?(site_fs_path)
       next if @exclude_public_files.include?(path)
 
       entry = path.sub(/^#{@site_dir}/, 'public')
+      entry = ::Fs.zip_safe_path(entry)
       if File.directory?(path)
         zip.mkdir(entry)
       else

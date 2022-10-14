@@ -74,7 +74,7 @@ describe Opendata::App, dbscope: :example do
       names = []
       Zip::File.open(zip_filename) do |archive|
         archive.each do |entry|
-          name = entry.name.encode('utf-8', 'cp932')
+          name = NKF.nkf("-w", entry.name)
           names << name
         end
       end
@@ -124,7 +124,7 @@ describe Opendata::App, dbscope: :example do
 
     context "when there is one invalid shift_jis japanese filename" do
       let!(:tmp_dir) { Dir.mktmpdir }
-      let!(:tmp_file) { "#{tmp_dir}/\u222D日本語ファイル名.csv" }
+      let!(:tmp_file) { "#{tmp_dir}/😛日本語ファイル名.csv" }
 
       before do
         FileUtils.cp(Rails.root.join("spec", "fixtures", "opendata", "utf-8.csv"), tmp_file)
@@ -141,7 +141,7 @@ describe Opendata::App, dbscope: :example do
         expect(File.exist?(zip_filename)).to be_truthy
 
         names = entry_names(zip_filename)
-        expect(names).to include('_日本語ファイル名.csv')
+        expect(names).to eq %w(＿日本語ファイル名.csv)
       end
     end
   end

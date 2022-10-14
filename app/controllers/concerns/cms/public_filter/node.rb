@@ -20,7 +20,11 @@ module Cms::PublicFilter::Node
   end
 
   def render_node(node)
-    rest = @cur_main_path.sub(/^\/#{::Regexp.escape(node.filename)}/, "").sub(/\/index\.html$/, "")
+    action = @cur_main_path.sub(/^\/#{::Regexp.escape(node.filename)}/, "")
+
+    rest = action.delete_suffix("index.html")
+    rest = action if ::File.extname(rest).present?
+
     path = "/.s#{@cur_site.id}/nodes/#{node.route}#{rest}"
     spec = recognize_agent path
     return unless spec
@@ -103,7 +107,7 @@ module Cms::PublicFilter::Node
       end
     end
 
-    max = opts[:max] || 9999
+    max = opts[:max] || 1000
     num = max
 
     2.upto(max) do |i|

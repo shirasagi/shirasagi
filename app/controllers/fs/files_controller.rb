@@ -101,8 +101,17 @@ class Fs::FilesController < ApplicationController
     end
   end
 
+  def cur_member
+    return @cur_member if instance_variable_defined?(:@cur_member)
+
+    @cur_member = begin
+      cur_site # ensure to set "@cur_site" member variable
+      get_member_by_session
+    end
+  end
+
   def deny
-    member = get_member_by_session
+    member = cur_member
 
     tags = []
     tags << "file:#{cur_item.id}(#{cur_item.filename})" if cur_item
@@ -144,7 +153,7 @@ class Fs::FilesController < ApplicationController
     Fs.exist?(file) ? file : "#{Rails.public_path}/.error_pages/500.html"
   end
 
-  def send_item(disposition = :inline)
+  def send_item(disposition = nil)
     path = cur_variant ? cur_variant.path : cur_item.path
     cur_variant.create! if cur_variant
     raise "404" unless Fs.file?(path)
@@ -153,8 +162,15 @@ class Fs::FilesController < ApplicationController
 
     content_type = cur_variant ? cur_variant.content_type : cur_item.content_type
     content_type = content_type.presence || SS::MimeType::DEFAULT_MIME_TYPE
+
+    disposition = :attachment unless SS::MimeType.safe_for_inline?(content_type)
+    disposition ||= :inline
+
     download_filename = cur_variant ? cur_variant.download_filename : cur_item.download_filename
     ss_send_file cur_variant || cur_item, type: content_type, filename: download_filename, disposition: disposition
+  rescue MiniMagick::Error => e
+    Rails.logger.info("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    head :not_found
   end
 
   public

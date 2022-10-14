@@ -19,7 +19,7 @@ class Webmail::MailPart
   end
 
   def image?
-    part.media_type == 'IMAGE'
+    part.media_type == 'IMAGE' && Fs::SAFE_IMAGE_SUB_TYPES.include?(part.subtype.try(:downcase))
   end
 
   def link_target

@@ -428,6 +428,10 @@ module SS::Model::File
     end
     self.size = Fs.size(path)
 
+    if SS::SvgSanitizer.sanitize(self.path, content_type: self.content_type)
+      self.size = ::Fs.size(self.path)
+    end
+
     update_variants if respond_to?(:update_variants)
     sanitizer_save_file
   end
