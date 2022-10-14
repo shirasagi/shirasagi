@@ -20014,10 +20014,20 @@ SS_FileView.open = function(ev, options) {
 };
 
 SS_FileView.getContent = function() {
+  var editor = null;
+
   if ((typeof tinymce) != "undefined") {
-    return tinymce.get(Cms_Form.editorId).getContent();
+    editor = tinymce.get(Cms_Form.editorId);
+    if (editor) {
+      return editor.getContent();
+    }
   } else if ((typeof CKEDITOR) != "undefined") {
-    return CKEDITOR.instances[Cms_Form.editorId].getData();
+    if (Cms_Form.editorId) {
+      editor = CKEDITOR.instances[Cms_Form.editorId];
+      if (editor) {
+        return editor.getData();
+      }
+    }
   }
 
   return null;
@@ -33469,10 +33479,14 @@ this.Openlayers_Facility_Search = (function () {
         if (visible) {
           iconSrc = this.get("iconSrc");
           style = map.createMarkerStyle(iconSrc);
-          return this.setStyle(style);
+          this.setStyle(style);
+          column.show();
+          return
         } else {
           style = new ol.style.Style({});
-          return this.setStyle(style);
+          this.setStyle(style);
+          column.hide();
+          return
         }
       });
       return false;

@@ -41691,10 +41691,20 @@ SS_FileView.open = function(ev, options) {
 };
 
 SS_FileView.getContent = function() {
+  var editor = null;
+
   if ((typeof tinymce) != "undefined") {
-    return tinymce.get(Cms_Form.editorId).getContent();
+    editor = tinymce.get(Cms_Form.editorId);
+    if (editor) {
+      return editor.getContent();
+    }
   } else if ((typeof CKEDITOR) != "undefined") {
-    return CKEDITOR.instances[Cms_Form.editorId].getData();
+    if (Cms_Form.editorId) {
+      editor = CKEDITOR.instances[Cms_Form.editorId];
+      if (editor) {
+        return editor.getData();
+      }
+    }
   }
 
   return null;
@@ -43293,26 +43303,31 @@ this.Form_Alert = (function () {
   Form_Alert.render = function () {
     $("input:submit").on("click.form_alert", function (e) {
       var submit = this;
-      var form = $(submit).closest("form");
+      var $submit = $(submit);
+      var form = $submit.closest("form");
 
       var resolved = function(html) {
         var promise = Form_Alert.asyncValidate(form, submit, { html: html });
         promise.done(function() {
           if (!SS.isEmptyObject(Form_Alert.alerts)) {
             Form_Alert.showAlert(form, submit);
+            $submit.trigger("ss:formAlertFinish");
             return;
           }
 
-          $(submit).off(".form_alert");
+          $submit.off(".form_alert");
+          $submit.trigger("ss:formAlertFinish");
           // To protected from bubbling events within a event wraps trigger "click" with setTimeout
-          setTimeout(function() { $(submit).trigger("click"); }, 0);
+          setTimeout(function() { $submit.trigger("click"); }, 0);
         });
       };
 
       var rejected = function(xhr, status, error) {
         alert(error);
+        $submit.trigger("ss:formAlertFinish");
       };
 
+      $submit.trigger("ss:formAlertStart");
       Cms_Form.getHtml(resolved, rejected);
 
       e.preventDefault();
@@ -49161,10 +49176,14 @@ this.Openlayers_Facility_Search = (function () {
         if (visible) {
           iconSrc = this.get("iconSrc");
           style = map.createMarkerStyle(iconSrc);
-          return this.setStyle(style);
+          this.setStyle(style);
+          column.show();
+          return
         } else {
           style = new ol.style.Style({});
-          return this.setStyle(style);
+          this.setStyle(style);
+          column.hide();
+          return
         }
       });
       return false;
