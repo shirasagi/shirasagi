@@ -11,13 +11,12 @@ class Opendata::Graph::Base
   end
 
   def extract_csv_lines
-    csv_lines = SS::Csv.foreach_row(resource.file, headers: false).map do |line|
-      if line.select { |v| v.present? }.present?
-        line
-      else
-        nil
+    csv_lines = []
+    SS::Csv.foreach_row(resource.file, headers: false) do |line|
+      if line.select(&:present?).present?
+        csv_lines << line
       end
-    end.compact
+    end
 
     @csv_lines = []
     csv_lines.each do |line|

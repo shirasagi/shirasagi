@@ -53,6 +53,9 @@ Opendata_Graph.prototype.drawBar = function() {
   this.resizeContainer(this.datasetsMinWidth());
   this.chart = new Chart(this.$canvas, {
     type: 'bar',
+    plugins: [Chart.ColorSchemesPlugin],
+    responsive: true,
+    maintainAspectRatio: false,
     data: {
       labels: this.labels,
       datasets: this.datasets,
@@ -74,22 +77,20 @@ Opendata_Graph.prototype.drawBar = function() {
         }
       },
       scales: {
-        xAxes: [{
+        x: {
           ticks: {
             autoSkip: false
           }
-        }],
-        yAxes: [{
+        },
+        y: {
           ticks: {
             beginAtZero: true,
             callback: function (label, index, labels) {
               return label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             }
           }
-        }]
+        }
       },
-      responsive: true,
-      maintainAspectRatio: false,
       //animation: {
       //  onComplete: function () {}
       //}
@@ -101,6 +102,9 @@ Opendata_Graph.prototype.drawLine = function() {
   this.resizeContainer(this.datasetsMinWidth());
   this.chart = new Chart(this.$canvas, {
     type: 'line',
+    plugins: [Chart.ColorSchemesPlugin],
+    responsive: true,
+    maintainAspectRatio: false,
     data: {
       labels: this.labels,
       datasets: this.datasets,
@@ -122,22 +126,20 @@ Opendata_Graph.prototype.drawLine = function() {
         }
       },
       scales: {
-        xAxes: [{
+        x: {
           ticks: {
             autoSkip: false
           }
-        }],
-        yAxes: [{
+        },
+        y: {
           ticks: {
             beginAtZero: true,
             callback: function(label, index, labels) {
               return label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             }
           }
-        }]
+        }
       },
-      responsive: true,
-      maintainAspectRatio: false,
       //animation: {
       //  onComplete: function () {}
       //}
@@ -149,6 +151,9 @@ Opendata_Graph.prototype.drawPie = function() {
   this.resizeContainer(0);
   this.chart = new Chart(this.$canvas, {
     type: 'pie',
+    plugins: [Chart.ColorSchemesPlugin],
+    responsive: true,
+    maintainAspectRatio: false,
     data: {
       labels: this.labels,
       datasets: this.datasets,
@@ -163,6 +168,11 @@ Opendata_Graph.prototype.drawPie = function() {
         display: true,
         position: 'bottom',
         onClick: function () { return false; }
+      },
+      plugins: {
+        colorschemes: {
+          scheme: 'brewer.Paired12'
+        }
       },
       tooltips: {
         callbacks: {
@@ -178,17 +188,10 @@ Opendata_Graph.prototype.drawPie = function() {
           }
         }
       },
-      plugins: {
-        colorschemes: {
-          scheme: 'brewer.Paired12'
-        }
-      },
       scales: {
-        xAxes: [{ display: false }],
-        yAxes: [{ display: false }]
+        x: { display: false },
+        y: { display: false }
       },
-      responsive: true,
-      maintainAspectRatio: false,
       //animation: {
       //  onComplete: function () {}
       //}
