@@ -102,9 +102,8 @@ class Cms::Form::FormsController < ApplicationController
   def download
     set_items
 
-    if params[:ids].present?
-      @items = @items.where(id: { '$in': params[:ids].to_s.split(',') })
-    end
+    @items = @items.where(:id.in => params[:ids]) if params[:ids].present?
+    @items = @items.allow(:read, @cur_user, site: @cur_site, node: @cur_node)
 
     json = JSON.pretty_generate(@model.export_json(@items))
     send_data json, type: :json, filename: "cms_forms_#{Time.zone.now.to_i}.json"

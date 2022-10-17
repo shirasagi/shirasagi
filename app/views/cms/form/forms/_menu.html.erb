@@ -1,14 +1,3 @@
-<%= jquery do %>
-  $(".download").on("click", function(ev) {
-    var ids = $("#main .list-item input:checkbox:checked").map(function() {
-      return $(this).val();
-    }).toArray();
-
-    var baseUrl = $(this).attr('href').replace(/\?.*/, '')
-    $(this).attr('href', baseUrl + '?ids=' + ids.join(','));
-  });
-<% end %>
-
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>

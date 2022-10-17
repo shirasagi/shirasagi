@@ -66,16 +66,27 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         page.accept_confirm { click_on I18n.t("ss.buttons.import") }
       end
       expect(page).to have_content I18n.t("ss.notice.imported")
-      expect(Cms::Form.site(site).all.size).to eq 1
+      expect(Cms::Form.site(site).all.size).to eq 2
       expect(Cms::Column::Base.site(site).all.size).to eq 12
 
-      # download
+      # download 1 form
+      visit cms_forms_path(site: site.id)
+      within "#main .index" do
+        find("input[name='ids[]']", match: :first).set(true) #choose
+        find(".btn-list-head-action.download").click
+      end
+      wait_for_download
+
+      json = JSON.parse(File.read(downloads.first))
+      expect(json.size).to eq 1
+      expect(json.present?).to be_truthy
+
+      # download all forms
       visit download_cms_forms_path(site: site.id)
       wait_for_download
 
-      data = File.read(downloads.first)
-      json = JSON.parse(data)
-
+      json = JSON.parse(File.read(downloads.first))
+      expect(json.size).to eq 2
       expect(json.present?).to be_truthy
     end
   end

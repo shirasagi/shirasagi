@@ -125,5 +125,15 @@
         "form_type": "Cms::Form"
       }
     ]
+  },
+  {
+    "permission_level": 1,
+    "order": 50,
+    "name": "ブロック入力2",
+    "sub_type": "entry",
+    "state": "public",
+    "groups": [
+      "シラサギ市/企画政策部/政策課"
+    ]
   }
 ]
