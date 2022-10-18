@@ -9,7 +9,7 @@
         <%= link_to(t('ss.links.download'), download_url, class: :download) %>
       <% end %>
     <% end %>
-    <% if @model.allowed?(:import, @cur_user, site: @cur_site, owned: true) %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site, owned: true) %>
       <%= link_to(t('ss.links.import'), { action: :import }, { class: :import }) rescue nil %>
     <% end %>
   <% elsif params[:action] =~ /new|create|lock|download|import|destroy_all|change_state_all/ %>

@@ -254,6 +254,7 @@ ja:
       target_to_closed: 非公開対象の確認
     notice:
       saved: 保存しました。
+      not_saved_successfully: 正常に保存できませんでした。
       deleted: 削除しました。
       unable_to_delete: '%{items} を削除できませんでした。'
       changed: 変更しました。
