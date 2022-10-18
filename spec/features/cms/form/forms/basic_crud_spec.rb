@@ -81,6 +81,8 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
       expect(json.size).to eq 1
       expect(json.present?).to be_truthy
 
+      File.delete(downloads.first)
+
       # download all forms
       visit download_cms_forms_path(site: site.id)
       wait_for_download
