@@ -150,7 +150,7 @@ describe 'board_agents_nodes_anpi_post', type: :feature, dbscope: :example do
       expect(page).to have_content I18n.t("ss.notice.deleted")
     end
 
-    it "faild to delete with blank at required" do
+    it "failed to delete with blank at required" do
       visit index_url
       expect(status_code).to eq 200
       within 'div.board-post-form' do
