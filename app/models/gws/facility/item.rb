@@ -36,8 +36,12 @@ class Gws::Facility::Item
   validates :name, presence: true, length: { maximum: 80 }
   validates :activation_date, datetime: true
   validates :expiration_date, datetime: true
-  validates :min_minutes_limit, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
-  validates :max_minutes_limit, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
+  validates :min_minutes_limit, numericality: {
+    only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 0x7fffffff, allow_blank: true
+  }
+  validates :max_minutes_limit, numericality: {
+    only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 0x7fffffff, allow_blank: true
+  }
   validates :max_days_limit, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
   validates :reservation_start_date, datetime: true
   validates :reservation_end_date, datetime: true

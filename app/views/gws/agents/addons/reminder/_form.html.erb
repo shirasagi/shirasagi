@@ -71,7 +71,7 @@
             'class' => 'state', 'data-name' => 'item[in_reminder_conditions][][state]' %>
         </td>
         <td>
-          <%= number_field_tag 'item[in_reminder_conditions][][interval]', 10, step: 10, min: 0,
+          <%= number_field_tag 'item[in_reminder_conditions][][interval]', 10, step: 10, min: 0, max: 0x7fffffff,
             'class' => 'interval', 'data-name' => 'item[in_reminder_conditions][][interval]' %>
         </td>
         <td>
@@ -90,7 +90,7 @@
             'class' => 'state', 'data-name' => 'item[in_reminder_conditions][][state]' %>
         </td>
         <td>
-          <%= number_field_tag 'item[in_reminder_conditions][][interval]', 1, step: 1, min: 0,
+          <%= number_field_tag 'item[in_reminder_conditions][][interval]', 1, step: 1, min: 0, max: 0x7fffffff,
             'class' => 'interval', 'data-name' => 'item[in_reminder_conditions][][interval]' %>
         </td>
         <td>

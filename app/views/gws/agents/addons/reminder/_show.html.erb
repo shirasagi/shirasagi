@@ -18,6 +18,12 @@
   }});
   sort.renderItems(<%== @item.reminder_conditions(@cur_user).to_json %>);
 
+  $("#gws-addon-reminder-set").on("click", function() {
+    $(".reminder-conditions tr .interval").attr("step", 1);
+    setTimeout(function () {
+      $(".reminder-conditions tr").each(function() { changeIntervalStep(this); });
+    }, SS.defaultTimeoutMillis);
+  });
   SS.ajaxForm("#ajax-form", {
     beforeSend: function(xhr, settings) {
       SS.clearNotice();
@@ -51,7 +57,7 @@
       <tbody>
       <tr data-base="true">
         <td><%= select_tag 'item[in_reminder_conditions][][state]', options_for_select(@item.reminder_notify_state_options), class: "state" %></td>
-        <td><%= number_field_tag 'item[in_reminder_conditions][][interval]', 1, step: 1, min: 0, class: "interval" %></td>
+        <td><%= number_field_tag 'item[in_reminder_conditions][][interval]', 1, step: 1, min: 0, max: 0x7fffffff, class: "interval" %></td>
         <td><%= select_tag 'item[in_reminder_conditions][][interval_type]', options_for_select(@item.reminder_interval_type_allday_options), class: "interval_type" %></td>
         <td><%= select_tag 'item[in_reminder_conditions][][base_time]', options_for_select(@item.reminder_base_time_options), class: "base_time" %></td>
       </tr>
@@ -62,13 +68,13 @@
       <tbody>
       <tr data-base="true">
         <td><%= select_tag 'item[in_reminder_conditions][][state]', options_for_select(@item.reminder_notify_state_options), class: "state" %></td>
-        <td><%= number_field_tag 'item[in_reminder_conditions][][interval]', 10, step: 10, min: 0, class: "interval" %></td>
+        <td><%= number_field_tag 'item[in_reminder_conditions][][interval]', 10, step: 10, min: 0, max: 0x7fffffff, class: "interval" %></td>
         <td><%= select_tag 'item[in_reminder_conditions][][interval_type]', options_for_select(@item.reminder_interval_type_options), class: "interval_type" %></td>
       </tr>
       </tbody>
     </table>
     <% end %>
-    <%= button_tag t("gws/reminder.buttons.register_reminder"), id: "gws-addon-reminder-set", class: :btn %>
+    <%= button_tag t("gws/reminder.buttons.register_reminder"), id: "gws-addon-reminder-set", class: "btn ss-dc-guard" %>
   </dd>
 </dl>
 

@@ -79,6 +79,11 @@ module Gws::Addon
         end
 
         cond["interval"] = cond["interval"].to_i
+        if cond["interval"] < 0
+          cond["interval"] = 0
+        elsif cond["interval"] > 0x7fffffff
+          cond["interval"] = 0x7fffffff
+        end
         cond["notify_at"] = base_at - (cond["interval"].send cond["interval_type"])
         cond
       end
