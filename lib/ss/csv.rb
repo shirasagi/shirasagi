@@ -114,7 +114,10 @@ class SS::Csv
       UTF8_BOM + _draw_header
     end
 
-    alias draw_data _draw_data
+    # public #draw_data is required
+    def draw_data(item)
+      _draw_data(item)
+    end
   end
 
   class DSLExporter
