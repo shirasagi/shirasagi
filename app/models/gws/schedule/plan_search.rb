@@ -84,6 +84,7 @@ class Gws::Schedule::PlanSearch
         end
       else
         self.hours.each do |i|
+          hours << i unless plan_times.key?("#{ymd} #{i}")
           datetime = (date + i.hours).to_datetime
           @facilities.each do |facility|
             if plan_times.key?("#{ymd} #{i}") && plan_times["#{ymd} #{i}"].index(facility.id)

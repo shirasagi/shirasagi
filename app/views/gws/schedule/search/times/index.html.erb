@@ -32,22 +32,25 @@ $(".gws-schedule-search-times-result .hour-wrap").on({
   <div class="gws-schedule-search-times-result">
     <% @items.each do |date, hours| %>
 
-      <% if @time_search.facilities.blank? %>
-      <%# next if hours[0].blank? %>
-      <div class="date <%= date.strftime('%a').downcase %>">
-        <p class="label"><%= l date, format: :full %></p>
+      <% if @time_search.members.present? %>
+        <div class="date <%= date.strftime('%a').downcase %>">
+          <p class="label"><%= l date, format: :full %></p>
+          <p class="member"><%= @cur_user.model_name.human %></p>
 
-        <% @time_search.hours.each do |hour| %>
+          <% @time_search.hours.each do |hour| %>
           <span class="hour-wrap">
           <% if hours[0].index(hour) %>
             <% link_params = @time_search.link_params(start: date.strftime("%Y-%m-%dT#{hour}:00")) %>
-            <%= link_to hour, new_gws_schedule_plan_path(link_params), class: "hour free" %>
+              <%= link_to hour, new_gws_schedule_plan_path(link_params), class: "hour free" %>
+          <% elsif @cur_user.gws_role_permit_any?(@cur_site, :duplicate_private_gws_facility_plans) %>
+            <% link_params = @time_search.link_params(start: date.strftime("%Y-%m-%dT#{hour}:00")) %>
+              <%= link_to hour, new_gws_schedule_plan_path(link_params), class: "hour registered" %>
           <% else %>
-            <span class="hour"><%= hour %></span>
+            <span class="hour exist"><%= hour %></span>
           <% end %>
           </span>
-        <% end %>
-      </div>
+          <% end %>
+        </div>
       <% end %>
 
       <% @time_search.facilities.each do |facility| %>
