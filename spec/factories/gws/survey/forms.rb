@@ -7,6 +7,6 @@ FactoryBot.define do
     anonymous_state { %w(disabled enabled).sample }
     file_state { %w(closed public).sample }
     file_edit_state { %w(disabled enabled enabled_until_due_date).sample }
-    due_date { I18n.l(Time.zone.now.beginning_of_day + rand(7).days) }
+    due_date { Time.zone.now.beginning_of_day + rand(7).days }
   end
 end
