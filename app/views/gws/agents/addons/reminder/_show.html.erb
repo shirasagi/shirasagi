@@ -25,7 +25,7 @@
     $(".reminder-conditions tr .interval").attr("step", 1);
     setTimeout(function () {
       $(".reminder-conditions tr").each(function() { changeIntervalStep(this); });
-    }, SS.defaultTimeoutMillis);
+    }, 0);
   });
   SS.ajaxForm("#ajax-form", {
     beforeSend: function(xhr, settings) {
@@ -80,7 +80,7 @@
       </tbody>
     </table>
     <% end %>
-    <%= button_tag t("gws/reminder.buttons.register_reminder"), id: "gws-addon-reminder-set", class: "btn ss-dc-guard" %>
+    <%= button_tag t("gws/reminder.buttons.register_reminder"), id: "gws-addon-reminder-set", class: "btn" %>
   </dd>
 </dl>
 
