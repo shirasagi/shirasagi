@@ -246,7 +246,6 @@ ja:
     gws/affair/overtime_file/management/aggregate/capital: 費目別
     gws/affair/overtime_file/management/aggregate/search_groups: グループ検索
     gws/affair/overtime_file/management/aggregate/search_users: ユーザー検索
-    gws/affair/overtime_file/management/aggregate/rkk: 会計システム連携
     gws/affair/attendance/management/time_card: タイムカードの管理
     gws/affair/duty_hour: 勤務体系
     gws/affair/duty_calendar: 勤務カレンダー
@@ -410,7 +409,7 @@ ja:
         threshold_hour: 上限時間
         body: 警告文
       gws/addon/affair/file_target:
-        target_group_id:  グループ
+        target_group_id: グループ
         target_user_id: ユーザー
         target_group_code: 申請対象ユーザーの所属コード
         target_user_staff_address_uid: 申請対象ユーザーの宛名番号
@@ -484,7 +483,6 @@ ja:
     use_gws_affair_shift_calendars: シフト勤務の利用
     manage_private_gws_affair_shift_calendars: シフト勤務の管理（自所属）
     manage_all_gws_affair_shift_calendars: シフト勤務の管理（全て）
-    use_gws_rkk: 会計システム連携機能の利用
     read_gws_affair_special_leaves: 特別休暇区分の閲覧
     edit_gws_affair_special_leaves: 特別休暇区分の編集
     delete_gws_affair_special_leaves: 特別休暇区分の削除
