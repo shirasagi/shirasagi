@@ -56,7 +56,7 @@ class Cms::Member
         CSV.generate do |data|
           data << %w(
             id state name email kana organization_name job tel
-            postal_code addr sex birthday updated created
+            postal_code addr sex birthday last_loggedin updated created
           ).map { |k| t(k) }
 
           criteria.each do |item|
@@ -73,6 +73,7 @@ class Cms::Member
             line << item.addr
             line << (item.sex.present? ? I18n.t("member.options.sex.#{item.sex}") : '')
             line << item.birthday.try(:strftime, "%Y/%m/%d")
+            line << item.last_loggedin.try { |time| time.strftime("%Y/%m/%d %H:%M") }
             line << item.updated.strftime("%Y/%m/%d %H:%M")
             line << item.created.strftime("%Y/%m/%d %H:%M")
             data << line
