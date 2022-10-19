@@ -8,6 +8,7 @@
 
 <% @s = OpenStruct.new params[:s] %>
 <%= form_for :s, url: gws_schedule_search_times_path, html: { method: :get, class: :search } do |f| %>
+  <%= error_messages_for :time_search %>
   <dl class="see gws-schedule-search-field">
     <dt><%= Gws::Schedule::Plan.t :term %></dt>
     <dd>
@@ -16,8 +17,8 @@
         - <%= f.text_field :end_on, class: "date end", value: tryb { @time_search.end_on.strftime("%Y/%m/%d") } %>
 
         <% range = (@cur_site.facility_min_hour..@cur_site.facility_max_hour).to_a.map { |i| ["#{i}:00", i] } %>
-        &nbsp; <%= f.select :min_hour, range, selected: @s[:min_hour] %>
-        - <%= f.select :max_hour, range, selected: (@s[:max_hour] || @cur_site.facility_max_hour) %>
+        &nbsp; <%= f.select :min_hour, range, selected: @time_search.min_hour %>
+        - <%= f.select :max_hour, range, selected: (@time_search.max_hour || @cur_site.facility_max_hour) %>
       </div>
     </dd>
     <dd>

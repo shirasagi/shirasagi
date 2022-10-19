@@ -59,7 +59,7 @@ class Gws::Apis::FacilitiesController < ApplicationController
 
   def set_time_search
     @time_search = Gws::Schedule::PlanSearch.new(
-      params.require(:s).permit(Gws::Schedule::PlanSearch.permitted_fields).merge(pre_params).merge(fix_params)
+      pre_params.merge(params.require(:s).permit(Gws::Schedule::PlanSearch.permitted_fields).merge(fix_params))
     )
     @time_search.facility_ids = @model.site(@cur_site).
       readable(@cur_user, site: @cur_site).

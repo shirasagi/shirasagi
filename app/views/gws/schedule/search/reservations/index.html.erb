@@ -60,7 +60,7 @@ $(".gws-schedule-search-times-result .hour-wrap").on({
         <% overall_exist = 'free' %>
         <% @time_search.hours.each do |hour| %>
           <% wrap_classes = %w(hour-wrap) %>
-          <% wrap_classes << 'active' if @hour_range[date].include?(hour) %>
+          <% wrap_classes << 'active' if @hour_range[date].present? && @hour_range[date].include?(hour) %>
           <% css_classes = %w(hour) %>
 
           <% if hours[1][facility.id].present? %>

@@ -16,8 +16,8 @@ class Gws::Schedule::Search::ReservationsController < ApplicationController
   end
 
   def get_params
-    return pre_params.merge(fix_params) if params[:s].blank?
-    params.require(:s).permit(Gws::Schedule::PlanSearch.permitted_fields).merge(pre_params).merge(fix_params)
+    return fix_params if params[:s].blank?
+    params.require(:s).permit(Gws::Schedule::PlanSearch.permitted_fields).merge(fix_params)
   end
 
   def set_plan
@@ -47,7 +47,7 @@ class Gws::Schedule::Search::ReservationsController < ApplicationController
     @submit = params[:submit].present?
 
     @s = get_params
-    @time_search = Gws::Schedule::PlanSearch.new(@s)
+    @time_search = Gws::Schedule::PlanSearch.new(pre_params.merge(@s))
     @time_search.valid?
 
     @start_on = Time.zone.parse(@s[:start_on]) rescue nil
