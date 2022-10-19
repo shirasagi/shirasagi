@@ -67,8 +67,8 @@ module Cms::Content
         date = date.dup
         {
           "$and" => [
-            { "$or" => [ { state: "public", :released.lte => date }, { :release_date.lte => date } ] },
-            { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
+            { "$or" => [ { state: "public", released: { "$lte" => date } }, { release_date: { "$lte" => date } } ] },
+            { "$or" => [ { close_date: nil }, { close_date: { "$gt" => date } } ] },
           ]
         }
       end
