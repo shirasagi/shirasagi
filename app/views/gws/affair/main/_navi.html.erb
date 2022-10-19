@@ -1,5 +1,5 @@
 <nav class="mod-navi current-navi">
-  <h2><%= link_to @cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path, class: "icon-attendance" %></h2>
+  <h2><%= link_to @cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path, class: "icon-affair" %></h2>
   <h3><%= link_to t('modules.gws/affair/attendance/time_card'), gws_affair_attendance_time_card_main_path %></h3>
 
   <% if %i[aggregate_private aggregate_all].find { |priv| Gws::Attendance::TimeCard.allowed?(priv, @cur_user, site: @cur_site) } %>
@@ -73,10 +73,6 @@
       <li><%= link_to t("modules.gws/affair/overtime_file/management/aggregate/capital"), gws_affair_overtime_management_aggregate_capitals_main_path, class: "management" %></li>
       <li><%= link_to t("modules.gws/affair/overtime_file/management/aggregate/search_groups"), gws_affair_overtime_management_aggregate_search_groups_main_path, class: "management" %></li>
       <li><%= link_to t("modules.gws/affair/overtime_file/management/aggregate/search_users"), gws_affair_overtime_management_aggregate_search_users_main_path, class: "management" %></li>
-
-      <% if Gws::Rkk.allowed?(:use, @cur_user, site: @cur_site) %>
-        <li><%= link_to t("modules.gws/affair/overtime_file/management/aggregate/rkk"), gws_affair_overtime_management_aggregate_rkk_main_path, class: "management" %></li>
-      <% end %>
     </ul>
 
     <h3><%= link_to t("modules.gws/affair/working_time/management/aggregate"), gws_affair_working_time_management_aggregate_main_path, class: "management" %></h3>

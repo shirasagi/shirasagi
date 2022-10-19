@@ -118,11 +118,6 @@ Rails.application.routes.draw do
           get "search_users/results/f:fiscal_year/:month" => "search_users#results", as: :search_users_results
           get "search_users/download/f:fiscal_year/:month" => "search_users#download", as: :search_users_download
           post "search_users/download/f:fiscal_year/:month" => "search_users#download"
-
-          # aggregate/rkk
-          get "rkk" => "rkk#index", as: :rkk_main
-          get "rkk/download/f:fiscal_year/:month" => "rkk#download", as: :rkk_download
-          post "rkk/download/f:fiscal_year/:month" => "rkk#download"
         end
       end
 
