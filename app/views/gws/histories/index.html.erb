@@ -1,18 +1,11 @@
-<%
-  now = Time.zone.now
-  ymd = params[:ymd]
-  origin = Time.zone.local(ymd[0..3].to_i, ymd[4..5].to_i, ymd[6..7].to_i)
-  next_day = origin + 1.day
-  prev_day = origin - 1.day
-%>
 <div class="index">
   <div class="list-head">
     <div class="list-head-action">
-      <% pressed = now.to_date == origin.to_date %>
-      <%= ss_button_to(t('gws.history.days.today'), url_for(action: :index, ymd: now.strftime('%Y%m%d')), method: "GET", class: "btn", style: 'margin-right: 12px;', aria: { pressed: pressed }, disabled: pressed) %>
+      <% pressed = origin && today.to_date == origin.to_date %>
+      <%= ss_button_to(t('gws.history.days.today'), url_for(action: :index, ymd: today.strftime('%Y%m%d')), method: "GET", class: "btn", style: 'margin-right: 12px;', aria: { pressed: pressed }, disabled: pressed) %>
       <%= ss_button_to(t('gws.history.days.prev_day'), url_for(action: :index, ymd: prev_day.strftime('%Y%m%d')), method: "GET", class: "btn") %>
-      <%= text_field_tag(:ymd, origin.strftime('%Y/%m/%d'), class: 'datetime js-date', data: { min_date: Gws::HistoryArchiveJob.threshold_day(now, @cur_site.effective_log_save_days.days).strftime('%Y/%m/%d'), max_date: 0}) %>
-      <%= ss_button_to(t('gws.history.days.next_day'), url_for(action: :index, ymd: next_day.strftime('%Y%m%d')), method: "GET", class: "btn", disabled: now < next_day) %>
+      <%= text_field_tag(:ymd, origin.try { |date| date.strftime('%Y/%m/%d') }, class: 'datetime js-date', data: { min_date: Gws::HistoryArchiveJob.threshold_day(today, @cur_site.effective_log_save_days.days).strftime('%Y/%m/%d'), max_date: 0}) %>
+      <%= ss_button_to(t('gws.history.days.next_day'), url_for(action: :index, ymd: next_day.strftime('%Y%m%d')), method: "GET", class: "btn", disabled: today < next_day) %>
     </div>
 
     <%= render template: "_search" %>

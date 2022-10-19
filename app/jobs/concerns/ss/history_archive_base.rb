@@ -82,11 +82,19 @@ module SS::HistoryArchiveBase
       @last_open_file_handle.sync = true
 
       if ::File.size(file) == 0
-        @last_open_file_handle.write(@csv_generator.csv_headers.to_csv.encode('SJIS', invalid: :replace, undef: :replace))
+        @last_open_file_handle.write(csv_header)
       end
     end
 
-    @last_open_file_handle.write(@csv_generator.to_csv(history).encode('SJIS', invalid: :replace, undef: :replace))
+    @last_open_file_handle.write(csv_row(history))
+  end
+
+  def csv_header
+    @csv_generator.csv_headers.to_csv.encode('SJIS', invalid: :replace, undef: :replace)
+  end
+
+  def csv_row(history)
+    @csv_generator.to_csv(history).encode('SJIS', invalid: :replace, undef: :replace)
   end
 
   def create_archives
