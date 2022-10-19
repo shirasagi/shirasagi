@@ -46,6 +46,7 @@ class Gws::Facility::Item
   validates :reservation_start_date, datetime: true
   validates :reservation_end_date, datetime: true
   validates :approval_check_state, inclusion: { in: %w(enabled disabled), allow_blank: true }
+  validate :validate_minutes_limit
   validate :validate_approval_check_state, if: ->{ approval_check_state == 'enabled' }
 
   default_scope -> { order_by order: 1, name: 1 }
@@ -83,6 +84,14 @@ class Gws::Facility::Item
   end
 
   private
+
+  def validate_minutes_limit
+    return if min_minutes_limit.blank?
+    return if max_minutes_limit.blank?
+    return if min_minutes_limit <= max_minutes_limit
+
+    errors.add(:base, "#{t(:minutes_limit)}#{I18n.t('errors.messages.invalid')}")
+  end
 
   def validate_approval_check_state
     errors.add(:base, I18n.t('gws/facility.errors.require_approver')) if user_ids.blank?
