@@ -23,7 +23,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
     context "user_presence already created" do
       let!(:user_presence) { create :gws_user_presence, user: user, site: site, state: "" }
 
-      xit do
+      it do
         visit gws_attendance_main_path(site)
         within '.today .action .enter' do
           page.accept_confirm do
@@ -45,7 +45,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
     end
 
     context "user_presence not exists" do
-      xit do
+      it do
         visit gws_attendance_main_path(site)
         within '.today .action .enter' do
           page.accept_confirm do

@@ -1,7 +1,7 @@
 class Gws::Affair::Attendance::TimeCard::GroupsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
-  include Gws::Attendance::TimeCardFilter
+  include Gws::Affair::Attendance::TimeCardFilter
 
   menu_view nil
   navi_view "gws/affair/main/navi"

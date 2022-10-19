@@ -1,7 +1,7 @@
 class Gws::Affair::Attendance::TimeCardsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
-  include Gws::Attendance::TimeCardFilter
+  include Gws::Affair::Attendance::TimeCardFilter
 
   before_action :set_active_year_range
   before_action :set_cur_month, except: %i[main]

@@ -12,7 +12,7 @@ describe Gws::Attendance::TimeEdit, type: :model, dbscope: :example do
       let(:item) do
         described_class.new(cur_site: site, cur_user: user, in_hour: hour.to_s, in_minute: '0', in_reason: unique_id)
       end
-      xit do
+      it do
         expect(item.valid?).to be_truthy
       end
     end
@@ -24,7 +24,7 @@ describe Gws::Attendance::TimeEdit, type: :model, dbscope: :example do
       let(:item) do
         described_class.new(cur_site: site, cur_user: user, in_hour: hour.to_s, in_minute: '0', in_reason: unique_id)
       end
-      xit do
+      it do
         expect(item.valid?).to be_truthy
       end
     end
@@ -36,7 +36,7 @@ describe Gws::Attendance::TimeEdit, type: :model, dbscope: :example do
       let(:item) do
         described_class.new(cur_site: site, cur_user: user, in_hour: hour.to_s, in_minute: '0', in_reason: unique_id)
       end
-      xit do
+      it do
         expect(item.valid?).to be_falsey
       end
     end
@@ -48,7 +48,7 @@ describe Gws::Attendance::TimeEdit, type: :model, dbscope: :example do
       let(:item) do
         described_class.new(cur_site: site, cur_user: user, in_hour: hour.to_s, in_minute: '0', in_reason: unique_id)
       end
-      xit do
+      it do
         expect(item.valid?).to be_falsey
       end
     end
@@ -63,7 +63,7 @@ describe Gws::Attendance::TimeEdit, type: :model, dbscope: :example do
         Time.zone.now.beginning_of_day
       end
 
-      xit do
+      it do
         expect(item.calc_time(time)).to eq time + 9.hours + 13.minutes
       end
     end
@@ -76,7 +76,7 @@ describe Gws::Attendance::TimeEdit, type: :model, dbscope: :example do
         Time.zone.now.beginning_of_day
       end
 
-      xit do
+      it do
         expect(item.calc_time(time)).to eq time + 25.hours + 13.minutes
       end
     end

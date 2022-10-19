@@ -1,7 +1,7 @@
 class Gws::Affair::ShiftWork::CalendarController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
-  include Gws::Attendance::TimeCardFilter
+  include Gws::Affair::Attendance::TimeCardFilter
 
   model Gws::Affair::ShiftRecord
 

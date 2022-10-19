@@ -27,7 +27,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       let(:min_label) { I18n.t('gws/attendance.minute', count: record_time.min) }
       let(:reason) { "reason-#{unique_id}" }
 
-      xit do
+      it do
         visit gws_attendance_main_path(site)
         within first(".mod-navi") do
           click_on I18n.t('modules.gws/attendance/management/time_card')
@@ -68,7 +68,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       let(:min_label) { I18n.t('gws/attendance.minute', count: record_time.min) }
       let(:reason) { "reason-#{unique_id}" }
 
-      xit do
+      it do
         visit gws_attendance_main_path(site)
         within first(".mod-navi") do
           click_on I18n.t('modules.gws/attendance/management/time_card')

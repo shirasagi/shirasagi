@@ -1,0 +1,45 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to(t('ss.links.show'), action: :show, id: item) %>
+  <%= link_to(t('ss.links.delete'), action: :delete, id: item) %>
+<% end %>
+
+<% @index_title = proc do |item| %>
+  <% title = I18n.t('gws/attendance.formats.time_card_full_name', user_name: item.user.name, month: I18n.l(item.date.to_date, format: :attendance_year_month)) %>
+  <%= link_to({ action: :show, id: item }, class: 'title') do %>
+    <% if item.locked? %>
+      <i class="material-icons md-18">&#xE897;</i>
+    <% else %>
+      <i class="material-icons md-18">&#xE898;</i>
+    <% end %>
+    <%= title %>
+  <% end %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <% user = item.user %>
+  <% user.cur_site = @cur_site if user %>
+  <span class="datetime"><%= item.updated.strftime('%Y/%m/%d %H:%M') %></span>
+  <span class="date"><%= I18n.l(item.date.to_date, format: :attendance_year_month) %></span>
+  <span class="group"><% if user %><%= user.gws_default_group.try { |group| group.section_name } %><% end %></span>
+  <span class="user"><% if user %><%= user.long_name.try { |long_name| gws_public_user_long_name(long_name) } %><% end %></span>
+<% end %>
+
+<div class="gws-category-navi gws-attendance-year-month-navi">
+  <%= select_tag(:year_month, options_for_select(year_month_options, params[:year_month])) %>
+  <% if @cur_month.last_month >= @active_year_range.first %>
+  <%= link_to(t('gws/attendance.prev_month'), { action: :index, year_month: @cur_month.last_month.strftime('%Y%m') }, class: :btn) %>
+  <% end %>
+  <% if @cur_month.next_month <= @active_year_range.last %>
+  <%= link_to(t('gws/attendance.next_month'), { action: :index, year_month: @cur_month.next_month.strftime('%Y%m') }, class: :btn) %>
+  <% end %>
+</div>
+
+<%= render template: 'gws/crud/index' %>
+
+<%= jquery do %>
+  var baseUrl = <%== url_for({ action: :index, year_month: ':YEAR_MONTH' }).to_json %>;
+  $('.gws-attendance-year-month-navi select[name=year_month]').on('change', function() {
+    var val = $(this).val();
+    location.href = baseUrl.replace(':YEAR_MONTH', val);
+  });
+<% end %>

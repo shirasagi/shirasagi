@@ -1,15 +1,9 @@
 module Gws::Affair
   class Initializer
-    Gws::Role.permission :use_gws_attendance_time_cards, module_name: 'gws/attendance'
-    Gws::Role.permission :edit_gws_attendance_time_cards, module_name: 'gws/attendance'
-    Gws::Role.permission :manage_private_gws_attendance_time_cards, module_name: 'gws/attendance'
-    Gws::Role.permission :manage_all_gws_attendance_time_cards, module_name: 'gws/attendance'
-    Gws::Role.permission :aggregate_private_gws_attendance_time_cards, module_name: 'gws/attendance'
-    Gws::Role.permission :aggregate_all_gws_attendance_time_cards, module_name: 'gws/attendance'
-
-    Gws.module_usable :attendance do |site, user|
-      Gws::Attendance.allowed?(:use, user, site: site)
-    end
+    Gws::Role.permission :use_gws_affair_attendance_time_cards, module_name: 'gws/affair'
+    Gws::Role.permission :edit_gws_affair_attendance_time_cards, module_name: 'gws/affair'
+    Gws::Role.permission :manage_private_affair_gws_attendance_time_cards, module_name: 'gws/affair'
+    Gws::Role.permission :manage_all_gws_affair_attendance_time_cards, module_name: 'gws/affair'
 
     Gws::Role.permission :read_gws_affair_duty_hours, module_name: 'gws/affair'
     Gws::Role.permission :edit_gws_affair_duty_hours, module_name: 'gws/affair'
@@ -41,8 +35,6 @@ module Gws::Affair
     Gws::Role.permission :manage_private_gws_affair_shift_calendars, module_name: 'gws/affair'
     Gws::Role.permission :manage_all_gws_affair_shift_calendars, module_name: 'gws/affair'
 
-    Gws::Role.permission :use_gws_rkk, module_name: 'gws/affair'
-
     Gws::Role.permission :read_gws_affair_special_leaves, module_name: 'gws/affair'
     Gws::Role.permission :edit_gws_affair_special_leaves, module_name: 'gws/affair'
     Gws::Role.permission :delete_gws_affair_special_leaves, module_name: 'gws/affair'
@@ -65,5 +57,9 @@ module Gws::Affair
     Gws::Role.permission :use_gws_affair_leave_aggregate, module_name: 'gws/affair'
     Gws::Role.permission :manage_gws_affair_leave_aggregate, module_name: 'gws/affair'
     Gws::Role.permission :all_gws_affair_leave_aggregate, module_name: 'gws/affair'
+
+    #Gws.module_usable :affair do |site, user|
+    #  Gws::Attendance.allowed?(:use, user, site: site)
+    #end
   end
 end

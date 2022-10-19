@@ -1,0 +1,8 @@
+<% @s = OpenStruct.new params[:s] %>
+<div class="list-head-search">
+  <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
+    <%= f.select :group_id, group_options, include_blank: Gws::Group.model_name.human %>
+    <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+    <%= link_to(t('ss.buttons.clear'), { action: :index }, { class: 'btn', style: 'font-weight: normal;' }) %>
+  <% end %>
+</div>

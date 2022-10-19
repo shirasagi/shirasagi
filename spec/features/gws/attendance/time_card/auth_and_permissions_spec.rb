@@ -14,7 +14,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
   end
 
   context 'without login' do
-    xit do
+    it do
       visit gws_attendance_main_path(site)
       expect(page).to have_css(".login-box", text: I18n.t("ss.login"))
     end
@@ -27,7 +27,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       login_user user
     end
 
-    xit do
+    it do
       visit gws_attendance_main_path(site)
       within ".main-navi" do
         expect(page).to have_no_css("a", text: I18n.t('modules.gws/attendance'))
@@ -49,7 +49,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
     shared_examples "time cell is only punchable" do
       context "cell in today row" do
-        xit do
+        it do
           visit gws_attendance_main_path(site)
           expect(page).to have_css(".today .info .#{cell_type}", text: '--:--')
           expect(page).to have_css("tr.current td.#{cell_type}", text: '--:--')
@@ -90,7 +90,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       end
 
       context "cell in monthly table" do
-        xit do
+        it do
           visit gws_attendance_main_path(site)
           expect(page).to have_css(".today .info .#{cell_type}", text: '--:--')
           expect(page).to have_css("tr.current td.#{cell_type}", text: '--:--')
@@ -160,7 +160,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       let(:memo) { unique_id }
 
       context "cell in today row" do
-        xit do
+        it do
           visit gws_attendance_main_path(site)
           expect(page).to have_css(".today .info .memo", text: '')
           expect(page).to have_css("tr.current td.memo", text: '')
@@ -205,7 +205,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       end
 
       context "cell in monthly table" do
-        xit do
+        it do
           visit gws_attendance_main_path(site)
           expect(page).to have_css(".today .info .memo", text: '')
           expect(page).to have_css("tr.current td.memo", text: '')
@@ -272,7 +272,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
     shared_examples "time cell is punchable and editable" do
       context "cell in today row" do
-        xit do
+        it do
           visit gws_attendance_main_path(site)
           expect(page).to have_css(".today .info .#{cell_type}", text: '--:--')
           expect(page).to have_css("tr.current td.#{cell_type}", text: '--:--')
@@ -305,7 +305,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
       context "cell in monthly table" do
         context "cell in current row" do
-          xit do
+          it do
             visit gws_attendance_main_path(site)
             expect(page).to have_css(".today .info .#{cell_type}", text: '--:--')
             expect(page).to have_css("tr.current td.#{cell_type}", text: '--:--')
@@ -347,7 +347,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         end
 
         context "cell in non-current row" do
-          xit do
+          it do
             visit gws_attendance_main_path(site)
             expect(page).to have_css("tr.day-#{other_day} td.#{cell_type}", text: '--:--')
 
@@ -416,7 +416,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       let(:memo2) { unique_id }
 
       context "cell in today row" do
-        xit do
+        it do
           visit gws_attendance_main_path(site)
           expect(page).to have_css(".today .info .memo", text: '')
           expect(page).to have_css("tr.current td.memo", text: '')
@@ -449,7 +449,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
       context "cell in monthly table" do
         context "cell in current row" do
-          xit do
+          it do
             visit gws_attendance_main_path(site)
             expect(page).to have_css(".today .info .memo", text: '')
             expect(page).to have_css("tr.current td.memo", text: '')
@@ -491,7 +491,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         end
 
         context "cell in non-current row" do
-          xit do
+          it do
             visit gws_attendance_main_path(site)
             expect(page).to have_css("tr.day-#{other_day} td.memo", text: '')
 

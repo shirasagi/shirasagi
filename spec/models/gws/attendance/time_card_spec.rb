@@ -17,50 +17,50 @@ describe Gws::Attendance::TimeCard, type: :model, dbscope: :example do
 
   describe ".search" do
     describe "with empty" do
-      xit do
+      it do
         expect(Gws::Attendance::TimeCard.search).to have(1).items
       end
     end
 
     describe "with name" do
-      xit do
+      it do
         expect(Gws::Attendance::TimeCard.search(name: subject.name)).to have(1).items
       end
     end
 
     describe "with keyword" do
-      xit do
+      it do
         expect(Gws::Attendance::TimeCard.search(keyword: subject.name)).to have(1).items
       end
     end
 
     describe "with group" do
-      xit do
+      it do
         expect(Gws::Attendance::TimeCard.search(group: user.groups.first)).to have(1).items
       end
     end
   end
 
   describe ".in_groups" do
-    xit do
+    it do
       expect(Gws::Attendance::TimeCard.in_groups(user.groups)).to have(1).items
     end
   end
 
   describe ".and_unlocked" do
-    xit do
+    it do
       expect(Gws::Attendance::TimeCard.and_unlocked).to have(1).items
     end
   end
 
   describe ".and_locked" do
-    xit do
+    it do
       expect(Gws::Attendance::TimeCard.and_locked).to have(0).items
     end
   end
 
   describe ".lock_all" do
-    xit do
+    it do
       Gws::Attendance::TimeCard.lock_all
       subject.reload
       expect(subject.locked?).to be_truthy
@@ -74,7 +74,7 @@ describe Gws::Attendance::TimeCard, type: :model, dbscope: :example do
       expect(subject.locked?).to be_truthy
     end
 
-    xit do
+    it do
       Gws::Attendance::TimeCard.unlock_all
       subject.reload
       expect(subject.unlocked?).to be_truthy
@@ -107,7 +107,7 @@ describe Gws::Attendance::TimeCard, type: :model, dbscope: :example do
     describe ".enum_csv" do
       describe "with Shift_JIS encoding" do
         let!(:csv) { Gws::Attendance::TimeCard.enum_csv(site, OpenStruct.new({ encoding: 'Shift_JIS'})).to_a }
-        xit do
+        it do
           expect(csv).to have(subject.date.in_time_zone.end_of_month.day + 1).items
           expect(csv[0].encode("UTF-8")).to include(*headers)
           expect(csv[1].encode("UTF-8")).to include(user.uid, user.name, subject.date.in_time_zone.to_date.iso8601)
@@ -116,7 +116,7 @@ describe Gws::Attendance::TimeCard, type: :model, dbscope: :example do
 
       describe "with UTF-8 encoding" do
         let!(:csv) { Gws::Attendance::TimeCard.enum_csv(site, OpenStruct.new({ encoding: 'UTF-8'})).to_a }
-        xit do
+        it do
           expect(csv).to have(subject.date.in_time_zone.end_of_month.day + 1).items
           expect(csv[0]).to include(*headers)
           expect(csv[1]).to include(user.uid, user.name, subject.date.in_time_zone.to_date.iso8601)
@@ -127,7 +127,7 @@ describe Gws::Attendance::TimeCard, type: :model, dbscope: :example do
     describe "#enum_csv" do
       describe "with Shift_JIS encoding" do
         let!(:csv) { subject.enum_csv(OpenStruct.new({ encoding: 'Shift_JIS'})).to_a }
-        xit do
+        it do
           expect(csv).to have(subject.date.in_time_zone.end_of_month.day + 1).items
           expect(csv[0].encode("UTF-8")).to include(*headers)
           expect(csv[1].encode("UTF-8")).to include(user.uid, user.name, subject.date.in_time_zone.to_date.iso8601)
@@ -136,7 +136,7 @@ describe Gws::Attendance::TimeCard, type: :model, dbscope: :example do
 
       describe "with UTF-8 encoding" do
         let!(:csv) { subject.enum_csv(OpenStruct.new({ encoding: 'UTF-8'})).to_a }
-        xit do
+        it do
           expect(csv).to have(subject.date.in_time_zone.end_of_month.day + 1).items
           expect(csv[0]).to include(*headers)
           expect(csv[1]).to include(user.uid, user.name, subject.date.in_time_zone.to_date.iso8601)

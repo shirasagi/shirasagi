@@ -1,6 +1,6 @@
 <%
   @today ||= @cur_site.calc_attendance_date(Time.zone.now).beginning_of_day
-  @today_time_card ||= Gws::Attendance::TimeCard.site(@cur_site).user(@cur_user).where(date: @today.beginning_of_month).first
+  @today_time_card ||= Gws::Affair::Attendance::TimeCard.site(@cur_site).user(@cur_user).where(date: @today.beginning_of_month).first
   @today_record ||= @today_time_card ? @today_time_card.records.where(date: @today).first : nil
   year_month = "#{@today.year}#{format('%02d', @today.month)}"
   day02 = format('%02d', @today.day)

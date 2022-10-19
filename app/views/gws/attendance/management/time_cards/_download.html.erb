@@ -1,0 +1,31 @@
+<dl class="see">
+  <dt><%= @model.t :term %><%= @model.tt :term %></dt>
+  <dd>
+    <%= f.text_field :from_date, class: 'date js-date', value: @cur_month.to_date.strftime('%Y/%m/%d') %>
+    -
+    <%= f.text_field :to_date, class: 'date js-date', value: @cur_month.end_of_month.to_date.strftime('%Y/%m/%d') %>
+  </dd>
+
+  <dt><%= @model.t :user_ids %><%= @model.tt :user_ids %></dt>
+  <dd>
+    <%= f.hidden_field 'user_ids[]', value: '', id: nil, class: 'hidden-ids' %>
+    <%= link_to t('ss.apis.users.index'), gws_attendance_apis_management_users_path, class: 'ajax-box' %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+      </tbody>
+    </table>
+  </dd>
+
+  <dt><%= @model.t :encoding %><%= @model.tt :encoding %></dt>
+  <dd>
+    <% %w(UTF-8 Shift_JIS).each do |encoding| %>
+      <label>
+        <%= radio_button_tag "#{f.object_name}[encoding]", encoding, encoding == 'UTF-8', { id: nil } %>
+        <%= t("ss.options.csv_encoding.#{encoding}") %>
+      </label>
+    <% end %>
+  </dd>
+</dl>

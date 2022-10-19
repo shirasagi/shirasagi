@@ -1,9 +1,9 @@
 class Gws::Affair::Attendance::Management::TimeCardsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
-  include Gws::Attendance::TimeCardFilter
+  include Gws::Affair::Attendance::TimeCardFilter
 
-  model Gws::Attendance::TimeCard
+  model Gws::Affair::Attendance::TimeCard
 
   before_action :check_model_permission
   before_action :set_groups

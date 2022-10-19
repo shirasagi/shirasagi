@@ -134,7 +134,7 @@ ja:
 
   activemodel:
     attributes:
-      gws/attendance/time_edit:
+      gws/model/attendance/time_edit:
         in_hour: 時
         in_minute: 分
         in_reason: 修正理由
