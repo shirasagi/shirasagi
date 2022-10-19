@@ -100,7 +100,7 @@ this.SS_SearchUI = (function () {
     var self = this;
 
     $(".ajax-selected").each(function () {
-      $(this).on("click", ".deselect", self.deselect);
+      $(this).on("click", "a.deselect", self.deselect);
       if ($(this).find("a.deselect").size() === 0) {
         $(this).hide();
       }
