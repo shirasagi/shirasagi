@@ -48,6 +48,11 @@
   var sort1 = new SS_SortableForm('#reminder-conditions', { limit: 5, onInsert: changeIntervalStep });
   var sort2 = new SS_SortableForm('#reminder-conditions-allday', { limit: 5, onInsert: changeIntervalStep });
 
+  if (<%== reminder_conditions.to_json %>.length) {
+    sort1.body.find('tr').remove();
+    sort2.body.find('tr').remove();
+  }
+
   <% if @item.allday == "allday" %>
   sort2.renderItems(<%== reminder_conditions.to_json %>);
   <% else %>

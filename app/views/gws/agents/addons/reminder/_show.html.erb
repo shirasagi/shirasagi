@@ -16,6 +16,9 @@
   var sort = new SS_SortableForm('.reminder-conditions', { limit: 5, onInsert: function(newItem) {
     changeIntervalStep(newItem);
   }});
+  if (<%== @item.reminder_conditions(@cur_user).to_json %>.length) {
+    sort.body.find('tr').remove();
+  }
   sort.renderItems(<%== @item.reminder_conditions(@cur_user).to_json %>);
 
   $("#gws-addon-reminder-set").on("click", function() {
@@ -30,6 +33,9 @@
     },
     success: function(data) {
       sort.resetItems();
+      if (data["reminder_conditions"].length) {
+        sort.body.find('tr').remove();
+      }
       sort.renderItems(data["reminder_conditions"]);
       $(".reminder-conditions tr").each(function() { changeIntervalStep(this); });
       $(".reminder-conditions tr .interval_type").each(function() { setIntervalStep(this) });
