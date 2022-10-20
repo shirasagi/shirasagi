@@ -101,7 +101,7 @@ this.SS_AjaxFile = (function () {
           self.submitError(xhr);
         },
         complete: function (xhr, status) {
-          $.rails.enableFormElements($form);
+          SS.enableFormElementsOnTimeoutSubmit();;
         }
       };
 
@@ -170,6 +170,8 @@ this.SS_AjaxFile = (function () {
 
       if (submitted === "attach") {
         self.attachFiles(data);
+      } else {
+        $.rails.enableFormElements(self.$el.find('form.user-file'));
       }
     });
   };
@@ -200,6 +202,8 @@ this.SS_AjaxFile = (function () {
         alert(["== Error =="].concat(xhr.statusText).join("\n"));
       }
     }
+
+    $.rails.enableFormElements(self.$el.find('form.user-file'));
   };
 
   SS_AjaxFile.prototype.selectFiles = function() {
