@@ -29,7 +29,7 @@ module Event::IcalHelper
       parent_uid = nil
       item.event_recurrences.each_with_index do |recurrence, index|
         calendar.event do |event|
-          if index == 0 && item.ical_uid.present?
+          if index == 0 && item.respond_to?(:ical_uid) && item.ical_uid.present?
             uid = item.ical_uid
           else
             # BE CAREFUL: uid specification is updated in RFC-7986
