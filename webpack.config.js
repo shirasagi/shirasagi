@@ -26,6 +26,15 @@ module.exports = {
           'postcss-loader',
           'sass-loader'
         ]
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
+        type: "asset",
+        parser: {
+          dataUrlCondition: {
+            maxSize: 16 * 1024 // 16kb
+          }
+        }
       }
     ]
   },
