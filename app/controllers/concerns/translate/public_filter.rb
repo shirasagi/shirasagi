@@ -41,15 +41,19 @@ module Translate::PublicFilter
     limit_exceeded = @cur_site.request_word_limit_exceeded
     exceeded_html = @cur_site.translate_api_limit_exceeded_html
     if limit_exceeded && exceeded_html.present? && body =~ /<body data-translate=".+?"/
-      h = []
-      h << '<script src="/assets/js/jquery.colorbox.js"></script>'
-      h << '<link rel="stylesheet" media="screen" href="/assets/css/colorbox/colorbox.css">'
-      h << '<div id="ss-translate-error">'
-      h << ApplicationController.helpers.sanitize(@cur_site.translate_api_limit_exceeded_html)
-      h << '</div>'
-      h << '<script>$.colorbox({open: true, html: $("#ss-translate-error")});</script>'
-      h << '</html>'
-      body.sub!('</html>', h.join)
+      h = <<~HTML
+        #{ApplicationController.helpers.stylesheet_link_tag("colorbox", media: "all")}
+        #{ApplicationController.helpers.javascript_include_tag("colorbox", defer: true)}
+        <div id="ss-translate-error">
+          #{ApplicationController.helpers.sanitize(@cur_site.translate_api_limit_exceeded_html)}
+        </div>
+        <script>
+          SS.ready(function() {
+            $.colorbox({open: true, html: $("#ss-translate-error")});
+          });
+        </script>
+      HTML
+      body.sub!('</html>', h + '</html>')
     end
 
     if params[:format] == "json"
