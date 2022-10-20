@@ -12,7 +12,9 @@ module.exports = {
   devtool: "source-map",
   entry: {
     application: "./app/javascript/application.js",
-    "application.css": "./app/javascript/application.scss"
+    "application.css": "./app/javascript/application.scss",
+    "colorbox": "./app/javascript/colorbox.js",
+    "colorbox.css": "./app/javascript/colorbox.scss"
   },
   module: {
     rules: [
