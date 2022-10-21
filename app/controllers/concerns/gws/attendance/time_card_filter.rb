@@ -95,7 +95,10 @@ module Gws::Attendance::TimeCardFilter
     result = false
     if @cell.valid?
       time = @cell.calc_time(@cur_date)
-      @item.histories.create(date: @cur_date, field_name: @type, action: 'modify', time: time, reason: @cell.in_reason)
+      @item.histories.create(
+        date: @cur_date, field_name: @type, action: 'modify',
+        time: time, reason_type: @cell.in_reason_type, reason: @cell.in_reason
+      )
       @record.send("#{@type}=", time)
       result = @record.save
     end
@@ -105,10 +108,22 @@ module Gws::Attendance::TimeCardFilter
       location = url_for(location) if location.is_a?(Hash)
       notice = t('ss.notice.saved')
 
-      flash[:notice] = notice
-      render json: { location: location }, status: :ok, content_type: json_content_type
+      respond_to do |format|
+        flash[:notice] = notice
+        format.html do
+          if request.xhr?
+            render json: { location: location }, status: :ok, content_type: json_content_type
+          else
+            redirect_to location
+          end
+        end
+        format.json { render json: { location: location }, status: :ok, content_type: json_content_type }
+      end
     else
-      render template: 'time', layout: false, status: :unprocessable_entity
+      respond_to do |format|
+        format.html { render template: 'time', layout: false, status: :unprocessable_entity }
+        format.json { render json: @cell.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type }
+      end
     end
   end
 

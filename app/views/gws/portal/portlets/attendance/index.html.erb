@@ -19,9 +19,8 @@
     <th><%= @cur_site.send("attendance_#{field_name}_label").presence || Gws::Attendance::Record.t(field_name) %></th>
     <td class="time"><%= @portlet.format_attendance_time(date, time) %></td>
     <td class="reason">
-      <% if history.present? && history.reason_type.present? %>
-        <%= t("gws/attendance.options.reason_type.#{history.reason_type}") %>
-        <%=br "\n#{history.reason}" if history.reason.present? %>
+      <% if history.present? && history.reason.present? %>
+        <%= history.reason %>
       <% end %>
     </td>
     <% if time_card.unlocked? %>

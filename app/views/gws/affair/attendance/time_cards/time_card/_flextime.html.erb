@@ -14,14 +14,11 @@
 <% end %>
 
 <% render_reason = proc do |history| %>
-  <% if history.present? && history.reason_type.present? %>
+  <% if history.present? && history.reason.present? %>
     <div class="reason-tooltip">
       <i class="material-icons md-13">&#xE0C9;</i>
       <div class="reason">
-        <div>
-          <%= t("gws/attendance.options.reason_type.#{history.reason_type}") %>
-          <%= history.reason if history.reason.present? %>
-        </div>
+        <div><%= history.reason %></div>
         <time datetime="<%= history.created.iso8601 %>"><%= history.created.strftime('%Y/%m/%d %H:%M') %></time>
       </div>
     </div>

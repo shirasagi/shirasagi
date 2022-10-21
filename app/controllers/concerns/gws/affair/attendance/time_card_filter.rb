@@ -3,7 +3,7 @@ module Gws::Affair::Attendance::TimeCardFilter
   include Gws::Attendance::TimeCardFilter
 
   included do
-    model Gws::Affair::Attendance::TimeCard
+    model Gws::Attendance::TimeCard
 
     helper_method :holiday?, :leave_day?, :weekly_leave_day?
     helper_method :reason_type_options, :day_options
@@ -79,56 +79,6 @@ module Gws::Affair::Attendance::TimeCardFilter
   end
 
   public
-
-  def time
-    index = well_known_types.find_index(params[:type])
-    raise '404' if index.blank?
-
-    @type = well_known_types[index]
-    @model = Gws::Affair::Attendance::TimeEdit
-
-    if request.get? || request.head?
-      @cell = @model.new
-      render template: 'time', layout: false
-      return
-    end
-
-    @cell = @model.new params.require(:cell).permit(@model.permitted_fields).merge(fix_params)
-    result = false
-    if @cell.valid?
-      time = @cell.calc_time(@cur_date)
-      @item.histories.create(
-        date: @cur_date, field_name: @type, action: 'modify',
-        time: time, reason_type: @cell.in_reason_type, reason: @cell.in_reason
-      )
-      @record.duty_calendar = @duty_calendar
-      @record.send("#{@type}=", time)
-      result = @record.save
-    end
-
-    if result
-      location = crud_redirect_url || { action: :index }
-      location = url_for(location) if location.is_a?(Hash)
-      notice = t('ss.notice.saved')
-
-      respond_to do |format|
-        flash[:notice] = notice
-        format.html do
-          if request.xhr?
-            render json: { location: location }, status: :ok, content_type: json_content_type
-          else
-            redirect_to location
-          end
-        end
-        format.json { render json: { location: location }, status: :ok, content_type: json_content_type }
-      end
-    else
-      respond_to do |format|
-        format.html { render template: 'time', layout: false, status: :unprocessable_entity }
-        format.json { render json: @cell.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type }
-      end
-    end
-  end
 
   def working_time
     if request.get?

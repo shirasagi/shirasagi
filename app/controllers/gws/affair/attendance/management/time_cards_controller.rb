@@ -3,7 +3,7 @@ class Gws::Affair::Attendance::Management::TimeCardsController < ApplicationCont
   include Gws::CrudFilter
   include Gws::Affair::Attendance::TimeCardFilter
 
-  model Gws::Affair::Attendance::TimeCard
+  model Gws::Attendance::TimeCard
 
   before_action :check_model_permission
   before_action :set_groups

@@ -1,6 +1,6 @@
 <%
   @today ||= @cur_site.calc_attendance_date(Time.zone.now).beginning_of_day
-  @today_time_card ||= Gws::Affair::Attendance::TimeCard.site(@cur_site).user(@cur_user).where(date: @today.beginning_of_month).first
+  @today_time_card ||= Gws::Attendance::TimeCard.site(@cur_site).user(@cur_user).where(date: @today.beginning_of_month).first
   @today_record ||= @today_time_card ? @today_time_card.records.where(date: @today).first : nil
   year_month = "#{@today.year}#{format('%02d', @today.month)}"
   day02 = format('%02d', @today.day)
@@ -13,14 +13,11 @@
 %>
 
 <% render_reason = proc do |history| %>
-  <% if history.present? && history.reason_type.present? %>
+  <% if history.present? && history.reason.present? %>
     <div class="reason-tooltip">
       <i class="material-icons md-13">&#xE0C9;</i>
       <div class="reason">
-        <div>
-          <%= t("gws/attendance.options.reason_type.#{history.reason_type}") %>
-          <%= history.reason if history.reason.present? %>
-        </div>
+        <div><%= history.reason %></div>
         <time datetime="<%= history.created.iso8601 %>"><%= history.created.strftime('%Y/%m/%d %H:%M') %></time>
       </div>
     </div>
