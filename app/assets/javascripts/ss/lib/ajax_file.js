@@ -101,7 +101,7 @@ this.SS_AjaxFile = (function () {
           self.submitError(xhr);
         },
         complete: function (xhr, status) {
-          SS.enableFormElementsOnTimeoutSubmit();;
+          SS.enableFormElementsOnTimeoutSubmit();
         }
       };
 
