@@ -7,7 +7,8 @@ module Gws::Schedule::CalendarFormat
     data = { id: id.to_s, start: start_at, end: end_at, allDay: allday? }
 
     #data[:readable] = allowed?(:read, user, site: site)
-    data[:readable] = readable?(user, site: site)
+    data[:readable] = readable?(user, site: site, only: :private) ||
+      (readable_setting_range == 'private' && readable?(user, site: site, only: :other))
     data[:editable] = allowed?(:edit, user, site: site)
 
     data[:title] = I18n.t("gws/schedule.private_plan")
@@ -48,7 +49,7 @@ module Gws::Schedule::CalendarFormat
       data[:className] += ' fc-event-repeat'
     end
 
-    if (data[:readable] && private_plan?(user)) || data[:title] == I18n.t("gws/schedule.private_plan")
+    if readable_setting_range == 'private'
       data[:className] += ' fc-event-private'
     end
 
