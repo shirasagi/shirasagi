@@ -19,7 +19,7 @@
     '.gws-attendance',
     {
       now: <%== Time.zone.now.rfc2822.to_json %>,
-      editable: <%== (@model.allowed?(:edit, @cur_user, site: @cur_site) && @item && @item.unlocked?).to_json %>,
+      editable: <%== (@model.allowed?(:edit, @cur_user, site: @cur_site, permission_name: attendance_permission_name) && @item && @item.unlocked?).to_json %>,
       indexUrl: <%== url_for(action: :index, year_month: ':year_month').to_json %>,
       punchUrl: <%== "#{url_for(action: :index)}/:type".to_json %>,
       timeUrl: <%== url_for(action: :time, day: ':day', type: ':type').to_json %>,

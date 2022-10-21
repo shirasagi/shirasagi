@@ -1,6 +1,7 @@
 class Gws::Affair::Overtime::FilesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
+  include Gws::Affair::PermissionFilter
   include Gws::Affair::FileFilter
   include Gws::Affair::WorkflowFilter
 

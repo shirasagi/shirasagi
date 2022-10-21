@@ -14,9 +14,9 @@ class Gws::Affair::Attendance::Apis::Management::UsersController < ApplicationCo
 
   def set_manageable_groups
     @manageable_groups ||= begin
-      if Gws::Attendance::TimeCard.allowed?(:manage_all, @cur_user, site: @cur_site)
+      if Gws::Attendance::TimeCard.allowed?(:manage_all, @cur_user, site: @cur_site, permission_name: attendance_permission_name)
         Gws::Group.in_group(@cur_site).active
-      elsif Gws::Attendance::TimeCard.allowed?(:manage_private, @cur_user, site: @cur_site)
+      elsif Gws::Attendance::TimeCard.allowed?(:manage_private, @cur_user, site: @cur_site, permission_name: attendance_permission_name)
         available_groups_for_user = @cur_user.groups.in_group(@cur_site).active
         Gws::Group.in_group(available_groups_for_user).active
       else

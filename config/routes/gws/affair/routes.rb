@@ -52,7 +52,8 @@ Rails.application.routes.draw do
   end
 
   gws "affair" do
-    get '/' => redirect { |p, req| "#{req.path}/attendance/time_cards/#{Time.zone.now.strftime('%Y%m')}" }, as: :main
+    get "/" => "main#index", as: :main
+    #get '/' => redirect { |p, req| "#{req.path}/attendance/time_cards/#{Time.zone.now.strftime('%Y%m')}" }, as: :main
     resources :duty_calendars, concerns: :deletion
     resources :duty_notices, concerns: :deletion
     resources :special_leaves, concerns: [:deletion, :export]

@@ -1,5 +1,6 @@
 class Gws::Affair::Leave::WizardController < ApplicationController
   include Gws::ApiFilter
+  include Gws::Affair::PermissionFilter
   include Gws::Affair::WizardFilter
 
   private

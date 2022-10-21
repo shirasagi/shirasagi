@@ -100,7 +100,7 @@ en:
         empty: "No viewer has been entered. \\n Are you sure you want everyone to see it?"
     notice:
       delay_download_with_message: |-
-        Prepare files in the background because of the large number of files or the large file size. 
+        Prepare files in the background because of the large number of files or the large file size.
         You will be informed when the download is ready.
       contrast_changed: 'Changed the contrast to %{name}.'
       webmail_user_import: "In addition to groupware settings, you can set webmail permissions."

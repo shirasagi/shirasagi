@@ -1,6 +1,7 @@
 class Gws::Affair::Attendance::TimeCard::GroupsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
+  include Gws::Affair::PermissionFilter
   include Gws::Affair::Attendance::TimeCardFilter
 
   menu_view nil
@@ -109,9 +110,9 @@ class Gws::Affair::Attendance::TimeCard::GroupsController < ApplicationControlle
   end
 
   def set_groups
-    if @model.allowed?(:aggregate_all, @cur_user, site: @cur_site)
+    if @model.allowed?(:aggregate_all, @cur_user, site: @cur_site, permission_name: attendance_permission_name)
       @groups = Gws::Group.in_group(@cur_site).active
-    elsif @model.allowed?(:aggregate_private, @cur_user, site: @cur_site)
+    elsif @model.allowed?(:aggregate_private, @cur_user, site: @cur_site, permission_name: attendance_permission_name)
       @groups = Gws::Group.in_group(@cur_group).active
     else
       @groups = Gws::Group.none
@@ -143,12 +144,12 @@ class Gws::Affair::Attendance::TimeCard::GroupsController < ApplicationControlle
   end
 
   def check_model_permission
-    raise "403" unless %i[aggregate_private aggregate_all].any? { |priv| @model.allowed?(priv, @cur_user, site: @cur_site) }
+    raise "403" unless %i[aggregate_private aggregate_all].any? { |priv| @model.allowed?(priv, @cur_user, site: @cur_site, permission_name: attendance_permission_name) }
   end
 
   def manageable_time_card?
     @_manageable_time_card ||= %i[manage_private manage_all].any? do |priv|
-      @model.allowed?(priv, @cur_user, site: @cur_site)
+      @model.allowed?(priv, @cur_user, site: @cur_site, permission_name: attendance_permission_name)
     end
   end
 

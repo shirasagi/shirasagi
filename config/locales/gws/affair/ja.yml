@@ -457,6 +457,7 @@ ja:
         in_file: ファイル
 
   gws_role:
+    use_gws_affair: 庶務事務機能の利用
     use_gws_affair_attendance_time_cards: 出退勤時刻の利用
     edit_gws_affair_attendance_time_cards: 出退勤時刻の変更
     manage_private_affair_gws_attendance_time_cards: 出退勤の管理（自所属）

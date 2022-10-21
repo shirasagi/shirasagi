@@ -349,6 +349,8 @@ ja:
         menu_todo_state: ToDoの表示
         menu_reminder_label: リマインダーの表示
         menu_reminder_state: リマインダーの表示
+        menu_attendance_label: 出退勤の表示
+        menu_attendance_state: 出退勤の表示
         menu_affair_label: 庶務事務の表示
         menu_affair_state: 庶務事務の表示
         menu_bookmark_label: お気に入りの表示

@@ -1,3 +1,5 @@
+<% return if params["controller"] == "gws/affair/main" %>
+
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>

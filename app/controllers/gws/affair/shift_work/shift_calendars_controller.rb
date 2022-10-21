@@ -1,6 +1,7 @@
 class Gws::Affair::ShiftWork::ShiftCalendarsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
+  include Gws::Affair::PermissionFilter
 
   model Gws::Affair::ShiftCalendar
 

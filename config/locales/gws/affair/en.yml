@@ -444,6 +444,7 @@ ja:
         in_file: File
 
   gws_role:
+    use_gws_affair: Use affair features
     use_gws_affair_attendance_time_cards: Use clock-in and clock-out time
     edit_gws_affair_attendance_time_cards: Change clock-in and clock-out time
     manage_private_gws_affair_attendance_time_cards: Manage attendance (own group)

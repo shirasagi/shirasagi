@@ -1,6 +1,7 @@
 class Gws::Affair::Overtime::Management::Aggregate::SearchUsersController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
+  include Gws::Affair::PermissionFilter
   include Gws::Affair::Overtime::AggregateFilter
 
   model Gws::Affair::OvertimeDayResult

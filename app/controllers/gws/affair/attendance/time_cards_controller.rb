@@ -1,6 +1,7 @@
 class Gws::Affair::Attendance::TimeCardsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
+  include Gws::Affair::PermissionFilter
   include Gws::Affair::Attendance::TimeCardFilter
 
   before_action :set_active_year_range
@@ -48,7 +49,7 @@ class Gws::Affair::Attendance::TimeCardsController < ApplicationController
   def set_items
     @items ||= @model.site(@cur_site).
       user(@cur_user).
-      allow(:use, @cur_user, site: @cur_site).
+      allow(:use, @cur_user, site: @cur_site, permission_name: attendance_permission_name).
       where(:date.gte => @active_year_range.first).
       search(params[:s])
   end
@@ -69,7 +70,7 @@ class Gws::Affair::Attendance::TimeCardsController < ApplicationController
 
   def check_time_editable
     # 時刻の編集には、編集権限が必要。なお、現在日の打刻には編集権限は不要。
-    raise '403' unless @model.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' unless @model.allowed?(:edit, @cur_user, site: @cur_site, permission_name: attendance_permission_name)
 
     if @item.locked?
       redirect_to({ action: :index }, { notice: t('gws/attendance.already_locked') })
@@ -87,7 +88,7 @@ class Gws::Affair::Attendance::TimeCardsController < ApplicationController
       # 備考には打刻という概念がないので、備考の編集 = 打刻とみなす。よって、現在日もしくは前日なら何度でも編集可能。
       editable = true
     end
-    if @model.allowed?(:edit, @cur_user, site: @cur_site)
+    if @model.allowed?(:edit, @cur_user, site: @cur_site, permission_name: attendance_permission_name)
       # 現在日と前日以外の備考の編集には、編集権限が必要。
       editable = true
     end
@@ -105,7 +106,7 @@ class Gws::Affair::Attendance::TimeCardsController < ApplicationController
       # 就業時間には打刻という概念がないので、就業時間の編集 = 打刻とみなす。よって、現在日なら何度でも編集可能。
       editable = true
     end
-    if @model.allowed?(:edit, @cur_user, site: @cur_site)
+    if @model.allowed?(:edit, @cur_user, site: @cur_site, permission_name: attendance_permission_name)
       # 現在日以外の就業時間の編集には、編集権限が必要。
       editable = true
     end
@@ -152,7 +153,7 @@ class Gws::Affair::Attendance::TimeCardsController < ApplicationController
   end
 
   def enter
-    raise '403' if !@model.allowed?(:use, @cur_user, site: @cur_site)
+    raise '403' if !@model.allowed?(:use, @cur_user, site: @cur_site, permission_name: attendance_permission_name)
 
     location = params[:ref].presence || { action: :index }
     if @item.locked?

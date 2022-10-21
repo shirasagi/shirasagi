@@ -1,6 +1,7 @@
 class Gws::Affair::Overtime::ResultsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
+  include Gws::Affair::PermissionFilter
   include SS::AjaxFilter
 
   model Gws::Affair::OvertimeFile

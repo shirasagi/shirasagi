@@ -1,5 +1,6 @@
 class Gws::Affair::Leave::AggregateController < ApplicationController
   include Gws::BaseFilter
+  include Gws::Affair::PermissionFilter
   include Gws::Affair::Aggregate::UsersFilter
 
   model Gws::Affair::LeaveFile

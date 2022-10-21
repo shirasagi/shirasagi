@@ -1,6 +1,7 @@
 class Gws::Affair::DutyHoursController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
+  include Gws::Affair::PermissionFilter
   helper Gws::Schedule::PlanHelper
 
   model Gws::Affair::DutyHour

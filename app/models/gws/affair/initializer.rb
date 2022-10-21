@@ -1,5 +1,7 @@
 module Gws::Affair
   class Initializer
+    Gws::Role.permission :use_gws_affair, module_name: 'gws/affair'
+
     Gws::Role.permission :use_gws_affair_attendance_time_cards, module_name: 'gws/affair'
     Gws::Role.permission :edit_gws_affair_attendance_time_cards, module_name: 'gws/affair'
     Gws::Role.permission :manage_private_affair_gws_attendance_time_cards, module_name: 'gws/affair'
@@ -58,8 +60,8 @@ module Gws::Affair
     Gws::Role.permission :manage_gws_affair_leave_aggregate, module_name: 'gws/affair'
     Gws::Role.permission :all_gws_affair_leave_aggregate, module_name: 'gws/affair'
 
-    #Gws.module_usable :affair do |site, user|
-    #  Gws::Attendance.allowed?(:use, user, site: site)
-    #end
+    Gws.module_usable :affair do |site, user|
+      Gws::Affair.allowed?(:use, user, site: site)
+    end
   end
 end

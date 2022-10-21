@@ -1,5 +1,6 @@
 class Gws::Affair::Overtime::WizardController < ApplicationController
   include Gws::ApiFilter
+  include Gws::Affair::PermissionFilter
   include Gws::Affair::WizardFilter
 
   private

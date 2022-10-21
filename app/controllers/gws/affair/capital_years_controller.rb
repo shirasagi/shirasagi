@@ -1,6 +1,7 @@
 class Gws::Affair::CapitalYearsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
+  include Gws::Affair::PermissionFilter
 
   model Gws::Affair::CapitalYear
 

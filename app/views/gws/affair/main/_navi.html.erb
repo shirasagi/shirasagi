@@ -1,13 +1,18 @@
 <nav class="mod-navi current-navi">
   <h2><%= link_to @cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path, class: "icon-affair" %></h2>
-  <h3><%= link_to t('modules.gws/affair/attendance/time_card'), gws_affair_attendance_time_card_main_path %></h3>
 
-  <% if %i[aggregate_private aggregate_all].find { |priv| Gws::Attendance::TimeCard.allowed?(priv, @cur_user, site: @cur_site) } %>
+  <!-- 庶務事務/出退勤 -->
+  <% if Gws::Attendance::TimeCard.allowed?(:use, @cur_user, site: @cur_site, permission_name: attendance_permission_name) %>
+    <h3><%= link_to t('modules.gws/affair/attendance/time_card'), gws_affair_attendance_time_card_main_path %></h3>
+  <% end %>
+
+  <% if %i[aggregate_private aggregate_all].find { |priv| Gws::Attendance::TimeCard.allowed?(priv, @cur_user, site: @cur_site, permission_name: attendance_permission_name) } %>
   <ul class="narrow-page">
     <li><%= link_to t('modules.gws/affair/attendance/time_card/group'), gws_affair_attendance_time_card_groups_main_path %></li>
   </ul>
   <% end %>
 
+  <!-- 庶務事務/残業申請 -->
   <% if Gws::Affair::OvertimeFile.allowed?(:read, @cur_user, site: @cur_site) %>
     <% narrow_down_menus = [] %>
     <%
@@ -31,6 +36,7 @@
     <% end %>
   <% end %>
 
+  <!-- 庶務事務/休暇申請 -->
   <% if Gws::Affair::LeaveFile.allowed?(:read, @cur_user, site: @cur_site) %>
     <% narrow_down_menus = [] %>
     <%
@@ -54,6 +60,7 @@
     <% end %>
   <% end %>
 
+  <!-- 庶務事務/シフト勤務 -->
   <% if %i[use manage_private manage_all].find { |priv| Gws::Affair::ShiftRecord.allowed?(priv, @cur_user, site: @cur_site) } %>
     <h3><%= link_to t('modules.gws/affair/shift_work'), gws_affair_shift_work_main_path %></h3>
     <ul class="narrow-page">
@@ -62,10 +69,12 @@
     </ul>
   <% end %>
 
-  <% if %i[manage_private manage_all].find { |priv| Gws::Attendance::TimeCard.allowed?(priv, @cur_user, site: @cur_site) } %>
+  <!-- 庶務事務/出退勤 -->
+  <% if %i[manage_private manage_all].find { |priv| Gws::Attendance::TimeCard.allowed?(priv, @cur_user, site: @cur_site, permission_name: attendance_permission_name) } %>
     <h3><%= link_to t("modules.gws/affair/attendance/management/time_card"), gws_affair_attendance_management_main_path, class: "management" %></h3>
   <% end %>
 
+  <!-- 庶務事務/時間外集計 -->
   <% if Gws::Affair::DutyHour.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t("modules.gws/affair/overtime_file/management/aggregate"), gws_affair_overtime_management_aggregate_path, class: "management" %></h3>
     <ul class="narrow-page">
@@ -74,9 +83,15 @@
       <li><%= link_to t("modules.gws/affair/overtime_file/management/aggregate/search_groups"), gws_affair_overtime_management_aggregate_search_groups_main_path, class: "management" %></li>
       <li><%= link_to t("modules.gws/affair/overtime_file/management/aggregate/search_users"), gws_affair_overtime_management_aggregate_search_users_main_path, class: "management" %></li>
     </ul>
+  <% end %>
 
+  <!-- 庶務事務/勤務時間集計 -->
+  <% if Gws::Affair::DutyHour.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t("modules.gws/affair/working_time/management/aggregate"), gws_affair_working_time_management_aggregate_main_path, class: "management" %></h3>
+  <% end %>
 
+  <!-- 庶務事務/勤務カレンダー -->
+  <% if Gws::Affair::DutyHour.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t("modules.gws/affair/duty_calendar"), gws_affair_duty_calendars_path, class: "management" %></h3>
     <ul class="narrow-page">
       <li><%= link_to t("modules.gws/affair/duty_hour"), gws_affair_duty_hours_path, class: "management" %></li>
@@ -85,10 +100,12 @@
     </ul>
   <% end %>
 
+  <!-- 庶務事務/年度設定 -->
   <% if Gws::Affair::Capital.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t("modules.gws/affair/capital_years"), gws_affair_capital_years_path, class: "management" %></h3>
   <% end %>
 
+  <!-- 庶務事務/特別休暇区分 -->
   <% if Gws::Affair::SpecialLeave.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t("modules.gws/affair/special_leave"), gws_affair_special_leaves_path, class: "management" %></h3>
   <% end %>

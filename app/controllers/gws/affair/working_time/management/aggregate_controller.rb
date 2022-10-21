@@ -1,6 +1,7 @@
 class Gws::Affair::WorkingTime::Management::AggregateController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
+  include Gws::Affair::PermissionFilter
 
   model Gws::User
 
