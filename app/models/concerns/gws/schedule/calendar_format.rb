@@ -8,7 +8,7 @@ module Gws::Schedule::CalendarFormat
 
     #data[:readable] = allowed?(:read, user, site: site)
     data[:readable] = readable?(user, site: site, only: :private) ||
-      (readable_setting_range == 'private' && readable?(user, site: site, only: :other))
+                      (readable_setting_range == 'private' && readable?(user, site: site, only: :other))
     data[:editable] = allowed?(:edit, user, site: site)
 
     data[:title] = I18n.t("gws/schedule.private_plan")
