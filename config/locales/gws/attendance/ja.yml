@@ -74,8 +74,6 @@ ja:
     edit_gws_attendance_time_cards: 出退勤時刻の変更
     manage_private_gws_attendance_time_cards: 出退勤の管理（自所属）
     manage_all_gws_attendance_time_cards: 出退勤の管理（全て）
-    aggregate_private_gws_attendance_time_cards: グループの利用（自所属）
-    aggregate_all_gws_attendance_time_cards: グループの利用（全て）
 
   mongoid:
     models:

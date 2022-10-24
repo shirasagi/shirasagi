@@ -4,8 +4,10 @@ module Gws::Affair
 
     Gws::Role.permission :use_gws_affair_attendance_time_cards, module_name: 'gws/affair'
     Gws::Role.permission :edit_gws_affair_attendance_time_cards, module_name: 'gws/affair'
-    Gws::Role.permission :manage_private_affair_gws_attendance_time_cards, module_name: 'gws/affair'
+    Gws::Role.permission :manage_private_gws_affair_attendance_time_cards, module_name: 'gws/affair'
     Gws::Role.permission :manage_all_gws_affair_attendance_time_cards, module_name: 'gws/affair'
+    Gws::Role.permission :aggregate_private_gws_affair_attendance_time_cards, module_name: 'gws/affair'
+    Gws::Role.permission :aggregate_all_gws_affair_attendance_time_cards, module_name: 'gws/affair'
 
     Gws::Role.permission :read_gws_affair_duty_hours, module_name: 'gws/affair'
     Gws::Role.permission :edit_gws_affair_duty_hours, module_name: 'gws/affair'

@@ -450,6 +450,8 @@ ja:
     edit_gws_affair_attendance_time_cards: Change clock-in and clock-out time
     manage_private_gws_affair_attendance_time_cards: Manage attendance (own group)
     manage_all_gws_affair_attendance_time_cards: Manage attendance (all)
+    aggregate_private_gws_affair_attendance_time_cards: Aggregate group attendance（own group）
+    aggregate_all_gws_affair_attendance_time_cards: Aggregate group attendance（all）
     read_gws_affair_duty_hours: Read duty hours
     edit_gws_affair_duty_hours: Edit duty hours
     delete_gws_affair_duty_hours: Delete duty hours
