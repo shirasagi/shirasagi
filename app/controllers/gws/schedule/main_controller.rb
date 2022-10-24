@@ -3,10 +3,11 @@ class Gws::Schedule::MainController < ApplicationController
   include Gws::Schedule::CalendarFilter::Transition
 
   def index
-    if params.dig(:calendar, :path).present?
-      uri = URI(params.dig(:calendar, :path))
+    path = params.dig(:calendar, :path)
+    if path.present? && trusted_url?(path)
+      uri = ::Addressable::URI.parse(path)
       uri.query = { calendar: redirection_calendar_params }.to_param
-      redirect_to uri.to_s
+      redirect_to uri.request_uri
       return
     end
 
