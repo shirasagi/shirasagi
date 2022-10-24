@@ -34,6 +34,10 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           select "#{end_at.hour}時", from: 'item[end_at_hour]'
           select "#{end_at.min}分", from: 'item[end_at_minute]'
 
+          within "#addon-gws-agents-addons-file .toggle-head" do
+            find('h2', text: I18n.t("modules.addons.gws/file")).click
+          end
+
           fill_in "item[reason]", with: reason
           select "特別休暇", from: 'item[leave_type]'
 
