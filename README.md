@@ -74,16 +74,22 @@ gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
 # systemctl enable mongod
 ```
 
-### Ruby(RVM) のインストール
+### ASDFのインストール
 
 ```
-# \curl -sSL https://rvm.io/pkuczynski.asc | gpg --import -
-# \curl -sSL https://rvm.io/mpapis.asc | gpg --import -
-# \curl -sSL https://get.rvm.io | sudo bash -s stable
-# source /etc/profile
-# rvm install 3.0.4 --disable-binary
-# rvm use 3.0.4 --default
-# gem install bundler
+# git clone https://github.com/asdf-vm/asdf.git ~/.asdf 
+# vi ~/.bashrc
+---(追記)
+. $HOME/.asdf/asdf.sh
+. $HOME/.asdf/completions/asdf.bash
+---
+```
+
+### Rubyのインストール
+```
+# asdf plugin add ruby
+# asdf install ruby 3.0.4
+# asdf global ruby 3.0.4
 ```
 
 ### SHIRASAGI のインストール
