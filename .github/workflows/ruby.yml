@@ -57,7 +57,7 @@ jobs:
             exit $?
           fi
           echo $container_id
-          echo "::set-output name=container_id::$container_id"
+          echo "CONTAINER_ID=$container_id" >> $GITHUB_OUTPUT
       - name: Install pre requisites
         run: |
           sudo apt-get update
@@ -121,7 +121,7 @@ jobs:
           LC_ALL: ja_JP.UTF-8
           allow_open_jtalk: 1
           LDAP_TEST: enable
-          ES_CONTAINER_ID: ${{ steps.elasticsearch.outputs.container_id }}
+          ES_CONTAINER_ID: ${{ steps.elasticsearch.outputs.CONTAINER_ID }}
           RUBYOPT: "-W:deprecated"
           # RSPEC_LOCALE: en
       - name: Coveralls Parallel
