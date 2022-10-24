@@ -86,6 +86,7 @@ ja:
       not_found_leave_files: Not found leave files
       not_found_shift_work: Not found shift calendar
       not_created_time_card: "Not created %{year}/%{month} timecard（%{user}）"
+      not_registered_result_group: Not registered overtime groups
     caution:
       leave_setting_import_member:
         - "%{year}'s leave setting import"

@@ -13,4 +13,8 @@ class Gws::Affair::MainController < ApplicationController
       render
     end
   end
+
+  def not_registered
+    render
+  end
 end

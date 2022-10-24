@@ -86,6 +86,7 @@ ja:
       not_found_leave_files: 申請はありません。
       not_found_shift_work: シフト勤務カレンダーが登録されていません。
       not_created_time_card: "%{year}年%{month}月のタイムカードが作成されていません。（%{user}）"
+      not_registered_result_group: 時間外集計グループが登録されていません。
     caution:
       leave_setting_import_member:
         - "%{year} の休暇設定をユーザー毎に一括設定する画面です。"

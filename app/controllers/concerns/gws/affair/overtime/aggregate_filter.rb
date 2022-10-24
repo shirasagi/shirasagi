@@ -2,12 +2,19 @@ module Gws::Affair::Overtime::AggregateFilter
   extend ActiveSupport::Concern
 
   included do
+    before_action :necessary_result_groups
     before_action :set_cur_fiscal_year_month
     before_action :set_fiscal_year_month, except: :index
   end
 
   def append_view_paths
     append_view_path "app/views/gws/affair/overtime/management/aggregate/main"
+  end
+
+  def necessary_result_groups
+    if ::Gws::Affair::OvertimeDayResult::Group.count == 0
+      redirect_to gws_affair_result_groups_not_registered_path
+    end
   end
 
   def set_cur_fiscal_year_month
