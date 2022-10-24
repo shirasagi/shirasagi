@@ -60,10 +60,10 @@ module Gws::Schedule::TodoFilter
 
   def crud_redirect_url
     path = params.dig(:calendar, :path)
-    if path.present?
-      uri = URI(path)
+    if path.present? && trusted_url?(path)
+      uri = ::Addressable::URI.parse(path)
       uri.query = redirection_calendar_params.to_param
-      uri.to_s
+      uri.request_uri
     else
       nil
     end
