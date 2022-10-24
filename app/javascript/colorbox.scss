@@ -1,1 +1,11 @@
 @import "jquery-colorbox/example1/colorbox.css";
+
+#cboxClose {
+  top: 0;
+  bottom: unset;
+}
+
+#cboxLoadedContent {
+  margin-top: 28px;
+  margin-bottom: unset;
+}
