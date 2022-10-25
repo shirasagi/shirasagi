@@ -1,6 +1,6 @@
 <%= javascript_include_tag "opendata/opendata" %>
-<link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
-<script src="/assets/js/jquery.colorbox.js"></script>
+<%= stylesheet_link_tag "colorbox", media: 'all' %>
+<%= javascript_include_tag "colorbox", defer: true %>
 <%= jquery do %>
 
   $("a.ajax-box").colorbox({

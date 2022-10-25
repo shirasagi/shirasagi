@@ -12,7 +12,9 @@ module.exports = {
   devtool: "source-map",
   entry: {
     application: "./app/javascript/application.js",
-    "application.css": "./app/javascript/application.scss"
+    "application.css": "./app/javascript/application.scss",
+    "colorbox": "./app/javascript/colorbox.js",
+    "colorbox.css": "./app/javascript/colorbox.scss"
   },
   module: {
     rules: [
@@ -24,6 +26,15 @@ module.exports = {
           'postcss-loader',
           'sass-loader'
         ]
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
+        type: "asset",
+        parser: {
+          dataUrlCondition: {
+            maxSize: 16 * 1024 // 16kb
+          }
+        }
       }
     ]
   },
