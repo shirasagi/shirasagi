@@ -3,25 +3,25 @@
 
   <% if @imap.sent_box?(@mailbox) || @imap.draft_box?(@mailbox) %>
   $(".list-item-head .to").on("click", function() {
-    location.href = "<%== webmail_mails_path(@cur_user.webmail_message_sort_query(@sort_hash, "to").merge(mailbox: @mailbox)) %>";
+    location.href = "<%== webmail_mails_path(@cur_user.webmail_message_sort_query(@sort_hash, "to").merge(webmail_mode: @webmail_mode, account: params[:account], mailbox: @mailbox)) %>";
     return false;
   });
   <% else %>
   $(".list-item-head .from").on("click", function() {
-    location.href = "<%== webmail_mails_path(@cur_user.webmail_message_sort_query(@sort_hash, "from").merge(mailbox: @mailbox)) %>";
+    location.href = "<%== webmail_mails_path(@cur_user.webmail_message_sort_query(@sort_hash, "from").merge(webmail_mode: @webmail_mode, account: params[:account], mailbox: @mailbox)) %>";
     return false;
   });
   <% end %>
   $(".list-item-head .title").on("click", function() {
-    location.href = "<%== webmail_mails_path(@cur_user.webmail_message_sort_query(@sort_hash, "subject").merge(mailbox: @mailbox)) %>";
+    location.href = "<%== webmail_mails_path(@cur_user.webmail_message_sort_query(@sort_hash, "subject").merge(webmail_mode: @webmail_mode, account: params[:account], mailbox: @mailbox)) %>";
     return false;
   });
   $(".list-item-head .datetime").on("click", function() {
-    location.href = "<%== webmail_mails_path(@cur_user.webmail_message_sort_query(@sort_hash, "internal_date").merge(mailbox: @mailbox)) %>";
+    location.href = "<%== webmail_mails_path(@cur_user.webmail_message_sort_query(@sort_hash, "internal_date").merge(webmail_mode: @webmail_mode, account: params[:account], mailbox: @mailbox)) %>";
     return false;
   });
   $(".list-item-head .size").on("click", function() {
-    location.href = "<%== webmail_mails_path(@cur_user.webmail_message_sort_query(@sort_hash, "size").merge(mailbox: @mailbox)) %>";
+    location.href = "<%== webmail_mails_path(@cur_user.webmail_message_sort_query(@sort_hash, "size").merge(webmail_mode: @webmail_mode, account: params[:account], mailbox: @mailbox)) %>";
     return false;
   });
 <% end %>
