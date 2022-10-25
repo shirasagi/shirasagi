@@ -38,6 +38,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       visit show_path
       expect(Gws::Reminder.count).to eq 1
       within ".gws-addon-reminder" do
+        expect(page).to have_css('.reminder-conditions tr', count: 1)
         within first('.reminder-conditions tr') do
           selected = I18n.t('gws/reminder.options.notify_state.mail')
           expect(page).to have_select("item[in_reminder_conditions][][state]", selected: selected)
@@ -57,6 +58,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       # 解除できたか確認
       # リマインダーは非同期で解除される。
       expect(page).to have_css('#notice', text: I18n.t('gws/reminder.notification.created'))
+      expect(page).to have_css('.reminder-conditions tr', count: 1)
 
       # 解除できたら、ドキュメントは存在しないはず
       expect(Gws::Reminder.count).to eq 0
@@ -70,6 +72,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       #
       visit show_path
       within ".gws-addon-reminder" do
+        expect(page).to have_css('.reminder-conditions tr', count: 1)
         within first('.reminder-conditions tr') do
           select I18n.t('gws/reminder.options.notify_state.enabled'), from: 'item[in_reminder_conditions][][state]'
         end
@@ -80,6 +83,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       # リマインダーは非同期で登録される。
       # capybara は element が存在しない場合、しばらく待機するので、以下の確認は登録を待機する意味もある
       expect(page).to have_css('#notice', text: I18n.t('gws/reminder.notification.created'))
+      expect(page).to have_css('.reminder-conditions tr', count: 1)
 
       expect(Gws::Reminder.count).to eq 1
       reminder = Gws::Reminder.first
@@ -141,6 +145,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       #
       visit show_path
       within ".gws-addon-reminder" do
+        expect(page).to have_css('.reminder-conditions tr', count: 1)
         within first('.reminder-conditions tr') do
           select I18n.t('gws/reminder.options.notify_state.mail'), from: 'item[in_reminder_conditions][][state]'
         end
@@ -151,6 +156,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       # リマインダーは非同期で登録される。
       # capybara は element が存在しない場合、しばらく待機するので、以下の確認は登録を待機する意味もある
       expect(page).to have_css('#notice', text: I18n.t('gws/reminder.notification.created'))
+      expect(page).to have_css('.reminder-conditions tr', count: 1)
 
       expect(Gws::Reminder.count).to eq 1
       reminder = Gws::Reminder.first
