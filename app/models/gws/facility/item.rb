@@ -92,7 +92,7 @@ class Gws::Facility::Item
     return if max_minutes_limit.blank?
     return if min_minutes_limit <= max_minutes_limit
 
-    errors.add(:base, "#{t(:minutes_limit)}#{I18n.t('errors.messages.invalid')}")
+    errors.add :max_minutes_limit, :greater_than, count: t(:min_minutes_limit)
   end
 
   def validate_approval_check_state
