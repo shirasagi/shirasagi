@@ -12,6 +12,8 @@ class Gws::Facility::Item
   include Gws::Addon::History
   include Gws::Addon::Import::Facility::Item
 
+  MINUTES_LIMIT_MAX_BASE = 10_080 * 100
+
   store_in collection: "gws_facilities"
 
   seqid :id
@@ -37,10 +39,10 @@ class Gws::Facility::Item
   validates :activation_date, datetime: true
   validates :expiration_date, datetime: true
   validates :min_minutes_limit, numericality: {
-    only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 0x7fffffff, allow_blank: true
+    only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: MINUTES_LIMIT_MAX_BASE, allow_blank: true
   }
   validates :max_minutes_limit, numericality: {
-    only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 0x7fffffff, allow_blank: true
+    only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: MINUTES_LIMIT_MAX_BASE, allow_blank: true
   }
   validates :max_days_limit, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
   validates :reservation_start_date, datetime: true

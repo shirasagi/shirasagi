@@ -13,8 +13,27 @@
     });
   };
 
+  var setIntervalMax = function(ele) {
+    var max = <%= @model::INTERVAL_MAX_BASE %>;
+    switch ($(ele).val()) {
+      case 'weeks':
+        max /= 7;
+      case 'days':
+        max /= 24;
+      case 'hours':
+        max /= 60;
+    }
+    $(ele).closest("tr").find(".interval").attr("max", max);
+  };
+  var changeIntervalMax = function(newItem) {
+    $(newItem).find(".interval_type").on("change", function() {
+      setIntervalMax(this);
+    });
+  };
+
   var sort = new SS_SortableForm('.reminder-conditions', { limit: 5, onInsert: function(newItem) {
     changeIntervalStep(newItem);
+    changeIntervalMax(newItem);
   }});
   if (<%== @item.reminder_conditions(@cur_user).to_json %>.length) {
     sort.body.find('tr').remove();
@@ -38,13 +57,17 @@
       }
       sort.renderItems(data["reminder_conditions"]);
       $(".reminder-conditions tr").each(function() { changeIntervalStep(this); });
+      $(".reminder-conditions tr").each(function() { changeIntervalMax(this); });
       $(".reminder-conditions tr .interval_type").each(function() { setIntervalStep(this) });
+      $(".reminder-conditions tr .interval_type").each(function() { setIntervalMax(this) });
       SS.notice('<%= t('gws/reminder.notification.created') %>');
     },
     error: function(data) { alert("Error"); }
   });
   $(".reminder-conditions tr").each(function() { changeIntervalStep(this); });
+  $(".reminder-conditions tr").each(function() { changeIntervalMax(this); });
   $(".reminder-conditions tr .interval_type").each(function() { setIntervalStep(this) });
+  $(".reminder-conditions tr .interval_type").each(function() { setIntervalMax(this) });
 <% end %>
 
 <%= form_for :item, url: gws_apis_reminders_path, html: { id: "ajax-form", multipart: true, autocomplete: :off } do %>
@@ -63,7 +86,7 @@
       <tbody>
       <tr data-base="true">
         <td><%= select_tag 'item[in_reminder_conditions][][state]', options_for_select(@item.reminder_notify_state_options), class: "state" %></td>
-        <td><%= number_field_tag 'item[in_reminder_conditions][][interval]', 1, step: 1, min: 0, max: 0x7fffffff, class: "interval" %></td>
+        <td><%= number_field_tag 'item[in_reminder_conditions][][interval]', 1, step: 1, min: 0, max: @model::INTERVAL_MAX_BASE, class: "interval" %></td>
         <td><%= select_tag 'item[in_reminder_conditions][][interval_type]', options_for_select(@item.reminder_interval_type_allday_options), class: "interval_type" %></td>
         <td><%= select_tag 'item[in_reminder_conditions][][base_time]', options_for_select(@item.reminder_base_time_options), class: "base_time" %></td>
       </tr>
@@ -74,7 +97,7 @@
       <tbody>
       <tr data-base="true">
         <td><%= select_tag 'item[in_reminder_conditions][][state]', options_for_select(@item.reminder_notify_state_options), class: "state" %></td>
-        <td><%= number_field_tag 'item[in_reminder_conditions][][interval]', 10, step: 10, min: 0, max: 0x7fffffff, class: "interval" %></td>
+        <td><%= number_field_tag 'item[in_reminder_conditions][][interval]', 10, step: 10, min: 0, max: @model::INTERVAL_MAX_BASE, class: "interval" %></td>
         <td><%= select_tag 'item[in_reminder_conditions][][interval_type]', options_for_select(@item.reminder_interval_type_options), class: "interval_type" %></td>
       </tr>
       </tbody>

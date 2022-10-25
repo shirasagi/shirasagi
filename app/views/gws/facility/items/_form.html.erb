@@ -10,9 +10,9 @@
 
   <dt><%= @model.t :minutes_limit %><%= @model.tt :minutes_limit %></dt>
   <dd>
-    <%= f.number_field :min_minutes_limit, step: 1, min: 0, max: 0x7fffffff %><%= I18n.t('gws/facility.prompts.minutes') %>
+    <%= f.number_field :min_minutes_limit, step: 1, min: 0, max: @model::MINUTES_LIMIT_MAX_BASE %><%= I18n.t('gws/facility.prompts.minutes') %>
     <%= t("ss.wave_dash") %>
-    <%= f.number_field :max_minutes_limit, step: 1, min: 0, max: 0x7fffffff %><%= I18n.t('gws/facility.prompts.minutes') %>
+    <%= f.number_field :max_minutes_limit, step: 1, min: 0, max: @model::MINUTES_LIMIT_MAX_BASE %><%= I18n.t('gws/facility.prompts.minutes') %>
   </dd>
 
   <dt><%= @model.t :max_days_limit %><%= @model.tt :max_days_limit %></dt>
