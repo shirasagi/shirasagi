@@ -213,4 +213,25 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       end
     end
   end
+
+  context "when interval is invalid" do
+    include Gws::Schedule::PlanHelper
+
+    it do
+      visit show_path
+      within ".gws-addon-reminder" do
+        expect(page).to have_css('.reminder-conditions tr', count: 1)
+        within first('.reminder-conditions tr') do
+          select I18n.t('gws/reminder.options.notify_state.mail'), from: 'item[in_reminder_conditions][][state]'
+          fill_in 'item[in_reminder_conditions][][interval]', with: -1
+        end
+        click_on I18n.t('gws/reminder.buttons.register_reminder')
+      end
+
+      expect(page).to have_no_css('#notice', text: I18n.t('gws/reminder.notification.created'))
+      expect(page).to have_css('.reminder-conditions tr', count: 1)
+
+      expect(Gws::Reminder.count).to eq 0
+    end
+  end
 end
