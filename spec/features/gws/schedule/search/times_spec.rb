@@ -16,8 +16,13 @@ describe "gws_schedule_search_times", type: :feature, dbscope: :example, js: tru
         click_on facility.name
       end
       within "form.search" do
+        fill_in 's[start_on]', with: Time.zone.today.advance(days: 1).strftime("%Y/%m/%d")
+        fill_in 's[end_on]', with: Time.zone.today.strftime("%Y/%m/%d")
+        select '22:00', from: 's[min_hour]'
+        select '8:00', from: 's[max_hour]'
         first('input[type=submit]').click
       end
+      expect(page).to have_no_css('#errorExplanation')
       expect(page).to have_content(gws_user.name)
       expect(page).to have_content(facility.name)
       expect(page).to have_content(gws_user.model_name.human)
