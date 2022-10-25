@@ -27,7 +27,7 @@
     <tr class="list-item" data-id="<%= item.id %>" data-name="<%= item.name %>">
       <td><%= item.code %></td>
       <td><%= link_to item.name, "#", class: "select-single-item" %></td>
-      <td><%= item.staff_category %></td>
+      <td><%= item.label :staff_category %></td>
     </tr>
   <% end %>
   </tbody>

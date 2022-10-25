@@ -13,12 +13,16 @@ class Gws::Affair::SpecialLeave
   field :code, type: String
   field :name, type: String
   field :order, type: Integer, default: 0
-  field :staff_category, type: String
+  field :staff_category, type: String, default: "regular_staff"
 
   permit_params :code, :name, :order, :staff_category
 
   validates :name, presence: true, length: { maximum: 80 }
   validates :staff_category, presence: true
+
+  def staff_category_options
+    I18n.t("gws/affair.options.staff_category").map { |k, v| [v, k] }
+  end
 
   class << self
     def search(params)

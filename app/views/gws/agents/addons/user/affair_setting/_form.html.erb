@@ -1,7 +1,6 @@
-<% staff_category_options = SS.config.gws.user["staff_category"] || [] %>
 <dl class="see mod-gws-user-affair_setting">
   <dt><%= @model.t :staff_category %><%= @model.tt :staff_category %></dt>
-  <dd><%= f.select :staff_category, staff_category_options, include_blank: "" %></dd>
+  <dd><%= f.select :staff_category, @item.staff_category_options %></dd>
 
   <dt><%= @model.t :staff_address_uid %><%= @model.tt :staff_address_uid %></dt>
   <dd><%= f.text_field :staff_address_uid %></dd>

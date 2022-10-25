@@ -8,6 +8,8 @@ class Gws::Affair::SpecialLeavesController < ApplicationController
   navi_view "gws/affair/main/navi"
   menu_view "gws/affair/main/menu"
 
+  before_action :set_staff_category
+
   private
 
   def set_crumbs
@@ -25,19 +27,23 @@ class Gws::Affair::SpecialLeavesController < ApplicationController
       order_by(id: 1)
   end
 
+  def set_staff_category
+    @staff_category_options = @model.new.staff_category_options
+    @staff_category = params[:staff_category]
+  end
+
   public
 
   def index
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
 
-    @tabs = SS.config.gws.user["staff_category"] || []
     @items = @model.site(@cur_site).
       allow(:read, @cur_user, site: @cur_site).
       search(params[:s]).
       order_by(order: 1)
 
-    if params[:staff_category].present?
-      @items = @items.where(staff_category: params[:staff_category])
+    if @staff_category_options.map { |_, k| k.to_s }.include?(@staff_category)
+      @items = @items.where(staff_category: @staff_category)
     end
     @items = @items.page(params[:page]).per(50)
   end

@@ -4,11 +4,11 @@ class Gws::Affair::Leave::Apis::SpecialLeavesController < ApplicationController
   model Gws::Affair::SpecialLeave
 
   def index
-    s = params[:s].presence || {}
-    s[:staff_category] ||= @cur_user.staff_category
+    @user = Gws::User.active.find_by(id: params[:uid])
 
     @items = @model.site(@cur_site).
-      search(s).
+      where(staff_category: @user.staff_category).
+      search(params[:s]).
       order_by(order: 1).
       page(params[:page]).per(50)
   end

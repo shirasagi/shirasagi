@@ -72,6 +72,9 @@ ja:
       target_users:
         users: グループ所属のユーザー
         descendants: グループ配下の全ユーザー
+      staff_category:
+        regular_staff: "正規職員"
+        fiscal_year_staff: "会計年度任用職員"
       time_remaining: "(残り%{total_time}時間)"
     notice:
       select_target_user: "申請対象のユーザーを選択してください。"

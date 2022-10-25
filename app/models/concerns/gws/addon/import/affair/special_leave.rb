@@ -24,7 +24,7 @@ module Gws::Addon::Import::Affair
             line << item.code
             line << item.name
             line << item.order
-            line << item.staff_category
+            line << item.label(:staff_category)
             line << item.group_names.join("\n")
             line << item.user_names.join("\n")
             line << item.permission_level
@@ -67,14 +67,14 @@ module Gws::Addon::Import::Affair
     end
 
     def update_row(row, index)
-      id                = row[t("id")].to_s.strip
-      code              = row[t("code")].to_s.strip
-      name              = row[t("name")].to_s.strip
-      order             = row[t("order")].to_s.strip
-      staff_category = row[t("staff_category")].to_s.strip
-      group_names       = row[t("group_ids")].to_s.strip.split("\n")
-      user_names        = row[t("user_ids")].to_s.strip.split("\n")
-      permission_level  = row[t("permission_level")].to_s.strip
+      id               = row[t("id")].to_s.strip
+      code             = row[t("code")].to_s.strip
+      name             = row[t("name")].to_s.strip
+      order            = row[t("order")].to_s.strip
+      staff_category   = row[t("staff_category")].to_s.strip
+      group_names      = row[t("group_ids")].to_s.strip.split("\n")
+      user_names       = row[t("user_ids")].to_s.strip.split("\n")
+      permission_level = row[t("permission_level")].to_s.strip
 
       if id.present?
         item = self.class.unscoped.site(cur_site).where(id: id).first
@@ -92,15 +92,17 @@ module Gws::Addon::Import::Affair
         item = self.class.new
       end
 
-      item.site              = @cur_site
-      item.user              = @cur_user
-      item.code              = code
-      item.name              = name
-      item.order             = order
-      item.staff_category = staff_category
-      item.group_ids         = group_names_to_ids(group_names)
-      item.user_ids          = user_names_to_ids(user_names)
-      item.permission_level  = permission_level
+      staff_category_h = staff_category_options.to_h
+
+      item.site             = @cur_site
+      item.user             = @cur_user
+      item.code             = code
+      item.name             = name
+      item.order            = order
+      item.staff_category   = staff_category_h[staff_category]
+      item.group_ids        = group_names_to_ids(group_names)
+      item.user_ids         = user_names_to_ids(user_names)
+      item.permission_level = permission_level
 
       if item.save
         @imported += 1

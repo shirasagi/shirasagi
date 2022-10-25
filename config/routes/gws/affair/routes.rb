@@ -56,7 +56,7 @@ Rails.application.routes.draw do
     #get '/' => redirect { |p, req| "#{req.path}/attendance/time_cards/#{Time.zone.now.strftime('%Y%m')}" }, as: :main
     resources :duty_calendars, concerns: :deletion
     resources :duty_notices, concerns: :deletion
-    resources :special_leaves, concerns: [:deletion, :export]
+    resources :special_leaves, path: 'special_leaves/:staff_category', defaults: { staff_category: 'all' }, concerns: [:deletion, :export]
     resources :capital_years, concerns: :deletion
     scope 'year/:year' do
       resources :capitals, concerns: [:deletion, :export, :import_member, :import_group], as: :capitals

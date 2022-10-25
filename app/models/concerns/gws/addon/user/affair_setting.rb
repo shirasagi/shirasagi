@@ -3,7 +3,7 @@ module Gws::Addon::User::AffairSetting
   extend SS::Addon
 
   included do
-    field :staff_category, type: String
+    field :staff_category, type: String, default: "regular_staff"
     permit_params :staff_category
 
     field :staff_address_uid, type: String
@@ -14,6 +14,10 @@ module Gws::Addon::User::AffairSetting
 
     permit_params superior_group_ids: []
     permit_params superior_user_ids: []
+  end
+
+  def staff_category_options
+    I18n.t("gws/affair.options.staff_category").map { |k, v| [v, k] }
   end
 
   def group_code(site)

@@ -13,7 +13,7 @@ module Gws::Addon::Import
 
     module ClassMethods
       def csv_headers
-        %w(id name domains order ldap_dn group_code activation_date expiration_date superior_group_ids)
+        %w(id name domains order ldap_dn group_code activation_date expiration_date)
       end
 
       def to_csv
@@ -30,7 +30,6 @@ module Gws::Addon::Import
               line << item.group_code
               line << (item.activation_date.present? ? I18n.l(item.activation_date) : nil)
               line << (item.expiration_date.present? ? I18n.l(item.expiration_date) : nil)
-              line << item.superior_groups.pluck(:name).join("\n")
               data << line
             end
           end
@@ -76,8 +75,6 @@ module Gws::Addon::Import
       group_code      = row[t("group_code")].to_s.strip
       activation_date = row[t("activation_date")].to_s.strip
       expiration_date = row[t("expiration_date")].to_s.strip
-      superior_groups = row[t("superior_group_ids")].to_s.strip.split(/\r\n|\n/)
-      superior_groups = Gws::Group.active.in(name: superior_groups).to_a
 
       if id.present?
         item = self.class.unscoped.site(cur_site).where(id: id).first
@@ -102,7 +99,6 @@ module Gws::Addon::Import
       item.group_code         = group_code
       item.activation_date    = activation_date
       item.expiration_date    = expiration_date
-      item.superior_group_ids = superior_groups.map(&:id)
 
       if item.save
         @imported += 1

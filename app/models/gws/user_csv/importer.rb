@@ -77,6 +77,12 @@ class Gws::UserCsv::Importer
     v.strip.presence
   end
 
+  def label_value(key)
+    v = @row[Gws::User.t(key)].presence
+    label_h = Gws::User.new.send("#{key}_options").to_h
+    label_h[v]
+  end
+
   def build_item
     item, fatal_error = find_item
     return if fatal_error
@@ -86,10 +92,13 @@ class Gws::UserCsv::Importer
 
     %w(
       name kana uid organization_uid email tel tel_ext
-      account_start_date account_expiration_date session_lifetime remark ldap_dn staff_category staff_address_uid
+      account_start_date account_expiration_date session_lifetime remark ldap_dn
     ).each do |k|
       item[k] = row_value(k)
     end
+
+    item["staff_category"] = label_value("staff_category")
+    item["staff_address_uid"] = row_value("staff_address_uid")
 
     keys = %i[
       set_password set_title set_occupation set_type set_initial_password_warning set_organization_id set_group_ids

@@ -72,6 +72,9 @@ en:
       target_users:
         users: Group users
         descendants: Descendant users
+      staff_category:
+        regular_staff: Regular staff
+        fiscal_year_staff: Fiscal year staff
       time_remaining: "(%{total_time} hours left)"
     notice:
       select_target_user: Select target user

@@ -106,7 +106,7 @@ class Gws::UserCsv::Exporter
     terms << (switch_user ? "#{switch_user.id},#{switch_user.name}" : nil)
     terms << item.remark
     terms << item.ldap_dn
-    terms << item.staff_category
+    terms << item.label(:staff_category)
     terms << item.staff_address_uid
     terms << (site ? item.group_code(site) : nil)
     terms << item_roles(item).map(&:name).join("\n")
