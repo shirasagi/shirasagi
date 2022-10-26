@@ -8,6 +8,7 @@ class Gws::Group
   include Gws::Addon::Schedule::GroupSetting
   include Gws::Addon::Facility::GroupSetting
   include Gws::Addon::Attendance::GroupSetting
+  include Gws::Addon::Affair::GroupSetting
   include Gws::Addon::Memo::GroupSetting
   include Gws::Addon::Report::GroupSetting
   include Gws::Addon::Workflow::GroupSetting

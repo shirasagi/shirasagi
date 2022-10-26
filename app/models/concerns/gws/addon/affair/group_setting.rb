@@ -1,15 +1,13 @@
-module Gws::Addon::Attendance::GroupSetting
+module Gws::Addon::Affair::GroupSetting
   extend ActiveSupport::Concern
   extend SS::Addon
+  include Gws::Affair::DutyHourSetting
 
   set_addon_type :organization
 
   included do
-    attr_accessor :in_attendance_time_change_hour
-
     field :attendance_year_changed_month, type: Integer, default: 4
     field :attendance_management_year, type: Integer, default: 3
-    field :attendance_time_changed_minute, type: Integer, default: 3 * 60
     field :attendance_enter_label, type: String
     field :attendance_leave_label, type: String
     SS.config.gws.attendance['max_break'].times do |i|
@@ -22,11 +20,21 @@ module Gws::Addon::Attendance::GroupSetting
       permit_params "attendance_break_leave#{i + 1}_label"
     end
 
-    permit_params :in_attendance_time_change_hour
+    #field :affair_rounding_time_minute, type: Integer, default: 15
+    field :week_out_compensatory_file_start_limit, type: Integer, default: 4
+    field :week_out_compensatory_file_start_limit_unit, type: String, default: 'week'
+    field :week_out_compensatory_file_end_limit, type: Integer, default: 8
+    field :week_out_compensatory_file_end_limit_unit, type: String, default: 'week'
+    field :week_out_compensatory_file_notify_day, type: Integer, default: 7
+
     permit_params :attendance_year_changed_month, :attendance_management_year
     permit_params :attendance_enter_label, :attendance_leave_label
-
-    before_validation :set_attendance_time_changed_minute
+    #permit_params :affair_rounding_time_minute
+    permit_params :week_out_compensatory_file_start_limit
+    permit_params :week_out_compensatory_file_start_limit_unit
+    permit_params :week_out_compensatory_file_end_limit
+    permit_params :week_out_compensatory_file_end_limit_unit
+    permit_params :week_out_compensatory_file_notify_day
 
     validates :attendance_year_changed_month, presence: true,
               numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 12, allow_blank: true }
@@ -46,27 +54,32 @@ module Gws::Addon::Attendance::GroupSetting
     end
   end
 
-  def attendance_time_changed_options
-    (0..23).map do |h|
-      [ "#{h}#{I18n.t('datetime.prompts.hour')}", h.to_s ]
-    end
-  end
-
   def attendance_break_time_options
     %w(hide show).map { |k| [I18n.t("ss.options.state.#{k}"), k] }
   end
 
-  def calc_attendance_date(time = Time.zone.now)
-    Time.zone.at(time.to_i - attendance_time_changed_minute * 60).beginning_of_day
+  #def affair_rounding_time_minute_options
+  #  %w(0 1 5 10 15).map { |k| [I18n.t("gws/affair.options.affair_rounding_time_minute.#{k}"), k] }
+  #end
+
+  def attendance_year_range(now = nil)
+    now ||= Time.zone.now
+
+    if now.month < attendance_year_changed_month
+      now -= 1.year
+    end
+    start_at = now.change(month: attendance_year_changed_month, day: 1, hour: 0, min: 0, sec: 0)
+
+    end_at = start_at + 1.year - 1.day
+    end_at = end_at.end_of_day
+    [ start_at, end_at ]
   end
 
-  private
-
-  def set_attendance_time_changed_minute
-    if in_attendance_time_change_hour.blank?
-      self.attendance_time_changed_minute = 3 * 60
-    else
-      self.attendance_time_changed_minute = Integer(in_attendance_time_change_hour) * 60
+  def week_out_compensatory_file_start_limit_unit_options
+    %w(day week month year).collect do |unit|
+      [I18n.t("ss.options.datetime_unit.#{unit}"), unit]
     end
   end
+
+  alias week_out_compensatory_file_end_limit_unit_options week_out_compensatory_file_start_limit_unit_options
 end

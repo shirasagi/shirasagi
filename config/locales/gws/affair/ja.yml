@@ -50,12 +50,12 @@ ja:
         0: ""
         240: "4.0時間"
         465: "7.75時間"
-      affair_rounding_time_minute:
-        "0": なし
-        "1": 1分単位
-        "5": 5分単位
-        "10": 10分単
-        "15": 15分単位
+      #affair_rounding_time_minute:
+      #  "0": なし
+      #  "1": 1分単位
+      #  "5": 5分単位
+      #  "10": 10分単
+      #  "15": 15分単位
       holiday_type:
         system: 標準の休日カレンダー
         own: 勤務体系独自
@@ -273,6 +273,7 @@ ja:
       gws/affair/file_target: 申請対象
       gws/affair/annual_leave_setting: 年次有給休暇
       gws/affair/paid_leave_setting: 特別休暇
+      gws/affair/group_setting: 庶務事務
 
   mongoid:
     models:

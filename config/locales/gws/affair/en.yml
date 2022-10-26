@@ -50,12 +50,12 @@ en:
         0: ""
         240: "4.0 hours"
         465: "7.75 hours"
-      affair_rounding_time_minute:
-        "0": none
-        "1": 1 minutes
-        "5": 5 minutes
-        "10": 10 minutes
-        "15": 15 minutes
+      #affair_rounding_time_minute:
+      #  "0": none
+      #  "1": 1 minutes
+      #  "5": 5 minutes
+      #  "10": 10 minutes
+      #  "15": 15 minutes
       holiday_type:
         system: Default holiday calendar
         own: Work pattern
@@ -260,6 +260,7 @@ en:
       gws/affair/file_target: Target
       gws/affair/annual_leave_setting: Annual leave
       gws/affair/paid_leave_setting: Paid leave
+      gws/affair/group_setting: affair
 
   mongoid:
     models:

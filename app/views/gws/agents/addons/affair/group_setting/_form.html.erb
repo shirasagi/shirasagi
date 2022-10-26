@@ -1,0 +1,21 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+
+<dl class="see addon-gws-attendance-group-setting">
+  <dt><%= @model.t :week_out_compensatory_file_limit %><%= @model.tt :week_out_compensatory_file_limit %></dt>
+  <dd style="padding-bottom: 10px;">
+    <span><%= t("ss.before") %></span>
+    <%= number_field_with_datetime_unit(:item, :week_out_compensatory_file_start_limit, @item.week_out_compensatory_file_start_limit_unit_options, min: 1) %>
+  </dd>
+  <dd>
+    <span><%= t("ss.after") %></span>
+    <%= number_field_with_datetime_unit(:item, :week_out_compensatory_file_end_limit, @item.week_out_compensatory_file_end_limit_unit_options, min: 1) %>
+  </dd>
+
+  <dt><%= @model.t :week_out_compensatory_file_notify_day %><%= @model.tt :week_out_compensatory_file_notify_day %></dt>
+  <dd><%= f.number_field :week_out_compensatory_file_notify_day, min: 0 %><%= t("datetime.prompts.day") %></dd>
+
+  <%= render "gws/affair/duty_hours/duty_hour_setting_form", f: f %>
+</dl>

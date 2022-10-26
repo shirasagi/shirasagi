@@ -67,7 +67,7 @@ ja:
     gws/attendance/time_card: タイムカード
     gws/attendance/management/time_card: 管理
     addons:
-      gws/attendance/group_setting: 庶務事務
+      gws/attendance/group_setting: 出退勤
 
   gws_role:
     use_gws_attendance_time_cards: 出退勤時刻の利用
@@ -120,7 +120,7 @@ ja:
         attendance_break_time3_state: 休憩3表示
         attendance_break_enter3_label: 休憩3開始ラベル
         attendance_break_leave3_label: 休憩3終了ラベル
-        affair_rounding_time_minute: 丸め
+        #affair_rounding_time_minute: 丸め
         week_out_compensatory_file_limit: 同一週外振替有効期限
         week_out_compensatory_file_notify_day: 同一週外振替通知日
     errors:
@@ -155,9 +155,9 @@ ja:
         - 通常の利用の場合ですと「シフトJIS」を選択して問題ありません。
 
     gws/addon/attendance/group_setting:
-      affair_rounding_time_minute:
-        - 出勤の切り上げおよび退勤の切り捨てに関する設定です。
-        - 休憩時間は丸めの対象とはなりません。
+      #affair_rounding_time_minute:
+      #  - 出勤の切り上げおよび退勤の切り捨てに関する設定です。
+      #  - 休憩時間は丸めの対象とはなりません。
       week_out_compensatory_file_limit:
         - 同一週外振替の有効期限を設定できます。
         - 有効期限を過ぎたものは休暇申請で利用できなくなります。
