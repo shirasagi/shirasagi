@@ -49,7 +49,7 @@ class Ezine::MembersController < ApplicationController
           row = []
           row << item.email
           row << item.email_type
-          row << item.created.strftime("%Y-%m-%d %H:%M")
+          row << I18n.l(item.created, format: :picker)
           @columns.each_with_index do |column, i|
             row << item.data.where(column_id: column.id).first.try(:value)
           end

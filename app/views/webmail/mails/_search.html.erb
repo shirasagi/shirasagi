@@ -23,8 +23,8 @@
       <dd><%= f.text_field :text, style: "width: 300px;" %></dd>
       <dt><%= @model.t :date %></dt>
       <dd>
-        <%= f.text_field :since, class: "date js-date" %>
-        - <%= f.text_field :before, class: "date js-date" %>
+        <%= f.ss_date_field :since %>
+        - <%= f.ss_date_field :before %>
       </dd>
       <dt><%= @model.t :flags %></dt>
       <dd>

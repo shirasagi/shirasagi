@@ -16,7 +16,7 @@ class Opendata::Harvest::Importer
     default_scope ->{ order_by created: -1 }
 
     def name
-      "#{created.try("strftime", "%Y/%m/%d %H:%M")} (#{number_to_human_size(size)})"
+      "#{created.try { |time| I18n.l(time, format: :picker) }} (#{number_to_human_size(size)})"
     end
 
     def set_size

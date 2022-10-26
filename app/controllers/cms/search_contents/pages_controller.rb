@@ -43,9 +43,9 @@ class Cms::SearchContents::PagesController < ApplicationController
       next unless v.present?
 
       if f.type == DateTime
-        attr[n.to_s] = v.strftime("%Y/%m/%d %H:%M")
+        attr[n.to_s] = I18n.l(v, format: :picker)
       elsif f.type == Date
-        attr[n.to_s] = v.strftime("%Y/%m/%d")
+        attr[n.to_s] = I18n.l(v.to_date, format: :picker)
       end
     end
     attr

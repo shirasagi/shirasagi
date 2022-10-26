@@ -24,8 +24,8 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
 
       within "form#item-form" do
         fill_in "item[name]", with: name
-        fill_in "item[start_at]", with: I18n.l(start_at, format: :picker, locale: I18n.default_locale) + "\n"
-        fill_in "item[end_at]", with: I18n.l(end_at, format: :picker, locale: I18n.default_locale) + "\n"
+        fill_in_datetime "item[start_at]", with: start_at
+        fill_in_datetime "item[end_at]", with: end_at
         fill_in "item[facility_column_values][#{column1.id}]", with: column_value1
         click_on I18n.t("ss.buttons.save")
       end

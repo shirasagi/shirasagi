@@ -40,8 +40,8 @@ class Cms::PageSearch
     line << item.name
     line << Cms::Layout.where(_id: item.layout_id).pluck(:name).first
     line << item.label(:state)
-    line << item.created.try(:strftime, "%Y/%m/%d %H:%M")
-    line << item.updated.try(:strftime, "%Y/%m/%d %H:%M")
+    line << I18n.l(item.created, format: :picker)
+    line << I18n.l(item.updated, format: :picker)
     line
   end
 

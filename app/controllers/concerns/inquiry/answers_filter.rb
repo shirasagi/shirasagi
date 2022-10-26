@@ -46,8 +46,8 @@ module Inquiry::AnswersFilter
           row << item.source_name
           row << item.inquiry_page_full_url
           row << item.inquiry_page_name
-          row << item.created.strftime("%Y/%m/%d %H:%M")
-          row << item.updated.strftime("%Y/%m/%d %H:%M")
+          row << I18n.l(item.created, format: :picker)
+          row << I18n.l(item.updated, format: :picker)
 
           data << row
         end

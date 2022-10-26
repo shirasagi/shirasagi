@@ -61,7 +61,7 @@ describe Opendata::Dataset::ResourcePreviewHistoriesController, type: :feature, 
       expect(page).to have_no_css(".list-item .resource", text: history3.resource_name)
 
       within ".list-head-action" do
-        fill_in "ymd", with: (now - 1.day).strftime("%Y/%m/%d") + "\n"
+        fill_in_date "ymd", with: now - 1.day
       end
       expect(page).to have_no_css(".list-item .dataset", text: history1.dataset_name)
       expect(page).to have_no_css(".list-item .resource", text: history1.resource_name)

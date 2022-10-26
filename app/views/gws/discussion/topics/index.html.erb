@@ -60,7 +60,7 @@
             <%= link_to item.name, gws_discussion_forum_topic_comments_path(forum_id: @forum.id, topic_id: item.id) %><br />
             <div class="meta">
               <% item.descendants_updated.try do |updated| %>
-                <span class="datetime"><%= updated.strftime("%Y/%m/%d %H:%M") %></span>
+                <span class="datetime"><%= ss_time_tag updated %></span>
               <% end %>
             </div>
           </div>

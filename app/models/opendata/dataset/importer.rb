@@ -170,7 +170,7 @@ class Opendata::Dataset::Importer
 
     # released
     released = value(row, item, :released)
-    item.released = Time.zone.strptime(released, "%Y/%m/%d %H:%M") if released.present?
+    item.released = released.in_time_zone if released.present?
 
     # contact
     item.contact_state = value(row, item, :contact_state)

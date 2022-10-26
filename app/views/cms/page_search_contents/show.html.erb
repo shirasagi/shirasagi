@@ -28,13 +28,13 @@
           <div class="meta">
             <span class="id">#<%= item.id %></span>
             <% if item.try(:updated) %>
-              <span class="datetime"><%= t("ss.views.index.updated", updated: item.updated.strftime("%Y/%m/%d %H:%M")) %></span>
+              <span class="datetime"><%= t("ss.views.index.updated", updated: I18n.l(item.updated, format: :picker)) %></span>
             <% end %>
             <% if item.try(:released) %>
-              <span class="datetime"><%= t("ss.views.index.released", released: item.released.strftime("%Y/%m/%d %H:%M")) %></span>
+              <span class="datetime"><%= t("ss.views.index.released", released: I18n.l(item.released, format: :picker)) %></span>
             <% end %>
             <% if item.try(:approved) %>
-              <span class="datetime"><%= t("ss.views.index.approved", approved: item.approved.strftime("%Y/%m/%d %H:%M")) %></span>
+              <span class="datetime"><%= t("ss.views.index.approved", approved: I18n.l(item.approved, format: :picker)) %></span>
             <% end %>
             <span class="filename"><%= item.filename %></span>
             <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
@@ -44,8 +44,8 @@
             <%= colored_state_label(item) %>
             <%
               term = []
-              term << "開始:" + item.release_date.strftime("%Y/%m/%d %H:%M") if item.try(:release_date)
-              term << "終了:" + item.close_date.strftime("%Y/%m/%d %H:%M") if item.try(:close_date)
+              term << "開始:" + I18n.l(item.release_date, format: :picker) if item.try(:release_date)
+              term << "終了:" + I18n.l(item.close_date, format: :picker) if item.try(:close_date)
             %>
             <%= "( #{term.join(", ")} )" if term.present? %>
             </span>

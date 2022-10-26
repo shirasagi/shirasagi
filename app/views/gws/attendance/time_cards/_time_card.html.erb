@@ -4,7 +4,7 @@
       <i class="material-icons md-13">&#xE0C9;</i>
       <div class="reason">
         <div><%= history.reason %></div>
-        <time datetime="<%= history.created.iso8601 %>"><%= history.created.strftime('%Y/%m/%d %H:%M') %></time>
+        <%= ss_time_tag history.created %>
       </div>
     </div>
   <% end %>

@@ -37,7 +37,7 @@
           <span><%= t("webmail.no_senders") %></span>
         <% end %>
       </div>
-      <div class="date"><%= tryb { @item.internal_date.strftime("%Y/%m/%d %H:%M") } %></div>
+      <div class="date"><%= tryb { ss_time_tag @item.internal_date } %></div>
     </div>
 
     <% if (@item.to + @item.cc + @item.bcc).present? %>

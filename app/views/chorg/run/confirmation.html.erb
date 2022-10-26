@@ -33,7 +33,7 @@
       </dd>
       <% if params[:type] == 'main' || !Rails.env.production? %>
       <dt><%= @model.t :reservation %><%= @model.tt :reservation %></dt>
-      <dd><%= f.text_field :reservation, class: 'datetime js-datetime' %></dd>
+      <dd><%= f.ss_datetime_field :reservation %></dd>
       <% end %>
     </dl>
   </section>

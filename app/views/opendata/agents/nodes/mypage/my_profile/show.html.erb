@@ -25,7 +25,7 @@
         <% Member::ActivityLog.site(@cur_site).where(member_id: @item, activity_type: 'login').order_by(updated: -1).limit(8).each do |activity_log| %>
         <% browser = Browser.new(activity_log.user_agent, accept_language: request.accept_language) %>
         <li>
-          <time class="time" datetime="<%= activity_log.created.utc.iso8601 %>"><%= activity_log.created.strftime("%Y/%m/%d %H:%M") %></time>
+          <%= ss_time_tag activity_log.created, class: "time" %>
           <span class="browser"><%= "#{browser.name} #{browser.version}" %></span>
           <span class="platform"><%= browser.platform.version == "0" ? "#{browser.platform.name}" : "#{browser.platform.name} #{browser.platform.version}" %></span>
         </li>

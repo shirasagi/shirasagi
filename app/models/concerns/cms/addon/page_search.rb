@@ -91,8 +91,8 @@ module Cms::Addon
     def search_released_info
       if search_released_condition == 'absolute'
         if search_released_start.present? || search_released_close.present?
-          start = search_released_start.try(:strftime, "%Y/%m/%d %H:%M")
-          close = search_released_close.try(:strftime, "%Y/%m/%d %H:%M")
+          start = search_released_start.try { |time| I18n.l(time, format: :picker) }
+          close = search_released_close.try { |time| I18n.l(time, format: :picker) }
           "#{Cms::Page.t(:released)}: #{start}-#{close}"
         end
       elsif search_released_condition == 'relative' && search_released_after.present?
@@ -103,8 +103,8 @@ module Cms::Addon
     def search_updated_info
       if search_updated_condition == 'absolute'
         if search_updated_start.present? || search_updated_close.present?
-          start = search_updated_start.try(:strftime, "%Y/%m/%d %H:%M")
-          close = search_updated_close.try(:strftime, "%Y/%m/%d %H:%M")
+          start = search_updated_start.try { |time| I18n.l(time, format: :picker) }
+          close = search_updated_close.try { |time| I18n.l(time, format: :picker) }
           "#{Cms::Page.t(:updated)}: #{start}-#{close}"
         end
       elsif search_updated_condition == 'relative' && search_updated_after.present?
@@ -115,8 +115,8 @@ module Cms::Addon
     def search_approved_info
       if search_approved_condition == 'absolute'
         if search_approved_start.present? || search_approved_close.present?
-          start = search_approved_start.try(:strftime, "%Y/%m/%d %H:%M")
-          close = search_approved_close.try(:strftime, "%Y/%m/%d %H:%M")
+          start = search_approved_start.try { |time| I18n.l(time, format: :picker) }
+          close = search_approved_close.try{ |time| I18n.l(time, format: :picker) }
           "#{Cms::Page.t(:approved)}: #{start}-#{close}"
         end
       elsif search_approved_condition == 'relative' && search_approved_after.present?

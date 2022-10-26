@@ -11,7 +11,7 @@
         <div class="info">
           <%= link_to item.name, item.url, class: 'title' %>
           <div class="meta">
-            <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+            <span class="datetime"><%= ss_time_tag item.updated %></span>
             <% if @portlet.bookmark_model.blank? %>
               <span class="bookmark_model"><%= item.label(:bookmark_model) %></span>
             <% end %>

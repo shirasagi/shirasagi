@@ -179,34 +179,22 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
       expect(current_path).not_to eq sns_login_path
       start = Time.zone.now
       close = start.advance(days: 6)
-      start = start.strftime("%Y/%m/%d %H:%M")
-      close = close.strftime("%Y/%m/%d %H:%M")
 
-      # disable datetimepicker because I can't find the way to work with datetimepicker
-      page.execute_script("$('#item_search_released_start').datetimepicker('destroy');")
-      page.execute_script("$('#item_search_released_close').datetimepicker('destroy');")
-      page.execute_script("$('#item_search_updated_start').datetimepicker('destroy');")
-      page.execute_script("$('#item_search_updated_close').datetimepicker('destroy');")
       within "form.search-pages" do
-        fill_in "item[search_released_start]", with: start
-        fill_in "item[search_released_close]", with: close
-        fill_in "item[search_updated_start]", with: ""
-        fill_in "item[search_updated_close]", with: ""
+        fill_in_datetime "item[search_released_start]", with: start
+        fill_in_datetime "item[search_released_close]", with: close
+        fill_in_datetime "item[search_updated_start]", with: ""
+        fill_in_datetime "item[search_updated_close]", with: ""
         click_button I18n.t('ss.buttons.search')
       end
       expect(page).to have_css(".search-count", text: I18n.t("cms.search_contents_count", count: 1))
       expect(page).to have_css("div.info a.title", text: "[TEST]D")
 
-      # disable datetimepicker because I can't find the way to work with datetimepicker
-      page.execute_script("$('#item_search_released_start').datetimepicker('destroy');")
-      page.execute_script("$('#item_search_released_close').datetimepicker('destroy');")
-      page.execute_script("$('#item_search_updated_start').datetimepicker('destroy');")
-      page.execute_script("$('#item_search_updated_close').datetimepicker('destroy');")
       within "form.search-pages" do
-        fill_in "item[search_released_start]", with: ""
-        fill_in "item[search_released_close]", with: ""
-        fill_in "item[search_updated_start]", with: start
-        fill_in "item[search_updated_close]", with: close
+        fill_in_datetime "item[search_released_start]", with: ""
+        fill_in_datetime "item[search_released_close]", with: ""
+        fill_in_datetime "item[search_updated_start]", with: start
+        fill_in_datetime "item[search_updated_close]", with: close
         click_button I18n.t('ss.buttons.search')
       end
       expect(page).to have_css(".search-count", text: "2 件の検索結果")

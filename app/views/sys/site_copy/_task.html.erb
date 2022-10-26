@@ -3,10 +3,10 @@
   <dd><span class="state"><%= @item.send :state %></span></dd>
 
   <dt><%= @item.t :started %></dt>
-  <dd class="started"><%= tryb { @item.started.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
+  <dd class="started"><%= tryb { ss_time_tag @item.started } %></dd>
 
   <dt><%= @item.t :closed %></dt>
-  <dd class="closed"><%= tryb { @item.closed.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
+  <dd class="closed"><%= tryb { ss_time_tag @item.closed } %></dd>
 </dl>
 
 <div class="logs">

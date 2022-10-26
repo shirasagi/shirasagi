@@ -161,7 +161,7 @@ class Gws::Monitor::Topic
               group.name,
               post.try(:contributor_name),
               post.try(:text),
-              post.try(:updated) ? post.updated.strftime('%Y/%m/%d %H:%M') : ''
+              post.try(:updated) ? I18n.l(post.updated, format: :picker) : ''
           ]
         end
       end

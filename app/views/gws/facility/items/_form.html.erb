@@ -19,16 +19,16 @@
   <dd><%= f.number_field :max_days_limit %><%= I18n.t('gws/facility.prompts.days') %></dd>
 
   <dt><%= @model.t :reservation_start_date %><%= @model.tt :reservation_start_date %></dt>
-  <dd><%= f.text_field :reservation_start_date, class: 'datetime js-datetime', value: tryb { I18n.l(@item.reservation_start_date) } %></dd>
+  <dd><%= f.ss_datetime_field :reservation_start_date %></dd>
 
   <dt><%= @model.t :reservation_end_date %><%= @model.tt :reservation_end_date %></dt>
-  <dd><%= f.text_field :reservation_end_date, class: 'datetime js-datetime', value: tryb { I18n.l(@item.reservation_end_date) } %></dd>
+  <dd><%= f.ss_datetime_field :reservation_end_date %></dd>
 
   <dt><%= @model.t :activation_date %><%= @model.tt :activation_date %></dt>
-  <dd><%= f.text_field :activation_date, class: 'datetime js-datetime', value: tryb { @item.activation_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <dd><%= f.ss_datetime_field :activation_date %></dd>
 
   <dt><%= @model.t :expiration_date %><%= @model.tt :expiration_date %></dt>
-  <dd><%= f.text_field :expiration_date, class: 'datetime js-datetime', value: tryb { @item.expiration_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <dd><%= f.ss_datetime_field :expiration_date %></dd>
 
   <dt><%= @model.t :approval_check_state %><%= @model.tt :approval_check_state %></dt>
   <dd><%= f.select :approval_check_state, @item.approval_check_state_options, include_blank: true %></dd>

@@ -52,7 +52,7 @@
         <td class="remote-addr"><%= activity_log.remote_addr %></td>
         <td class="browser"><%= browser.name %> <%= browser.full_version %></td>
         <td class="platform"><%= browser.platform.name %></td>
-        <td class="datetime created"><%= activity_log.created.strftime("%Y/%m/%d %H:%M") %></td>
+        <td class="datetime created"><%= ss_time_tag activity_log.created %></td>
       </tr>
       <% end %>
       </tbody>

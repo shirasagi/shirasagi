@@ -9,7 +9,7 @@
 <% end %>
 
 <% @index_meta = proc do |item| %>
-  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="datetime"><%= ss_time_tag item.updated %></span>
   <span class="filename"><%= item.data['filename'] %></span>
   <% if item.data['route'].present? %>
     <span class="route"><%= t "modules.#{item.data['route'].sub(/\/.*/, '')}" %></span>

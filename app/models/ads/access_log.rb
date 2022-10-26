@@ -22,7 +22,7 @@ class Ads::AccessLog
           data << %w(date link_url count).map { |k| t(k) }
           criteria.each do |item|
             line = []
-            line << item.date.strftime("%Y-%m-%d")
+            line << I18n.l(item.date.to_date, format: :picker)
             line << item.link_url
             line << item.count
             data << line

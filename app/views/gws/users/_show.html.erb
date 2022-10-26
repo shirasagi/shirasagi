@@ -37,12 +37,12 @@ SS_Clipboard.renderCopy();
 
   <% if @item.account_start_date.present? %>
   <dt><%= @model.t :account_start_date %></dt>
-  <dd><%= tryb{@item.account_start_date.strftime("%Y/%m/%d %H:%M")} %></dd>
+  <dd><%= tryb { ss_time_tag @item.account_start_date } %></dd>
   <% end %>
 
   <% if @item.account_expiration_date.present? %>
   <dt><%= @model.t :account_expiration_date %></dt>
-  <dd><%= tryb{@item.account_expiration_date.strftime("%Y/%m/%d %H:%M")} %></dd>
+  <dd><%= tryb { ss_time_tag @item.account_expiration_date } %></dd>
   <% end %>
 
   <% if @item.initial_password_warning.present? %>

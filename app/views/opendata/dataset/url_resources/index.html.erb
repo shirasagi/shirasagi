@@ -23,7 +23,7 @@
       <td><%= link_to item.name, { action: :show, id: item } %></td>
       <td class="original_url"><%= Addressable::URI.unencode(item.original_url).truncate(60) %></td>
       <% if item.original_updated.present? %>
-        <td class="original_updated"><%= item.original_updated.strftime("%Y/%m/%d %H:%M") %></td>
+        <td class="original_updated"><%= ss_time_tag item.original_updated %></td>
       <% end %>
     </tr>
     <% end %>
