@@ -3,11 +3,9 @@ class Gws::Affair::CapitalYear
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
-  include Gws::Addon::GroupPermission
   include Gws::SitePermission
-  include Gws::Addon::History
 
-  set_permission_name 'gws_affair_capitals'
+  set_permission_name 'gws_affair_capital_years', :edit
 
   seqid :id
   field :name, type: String

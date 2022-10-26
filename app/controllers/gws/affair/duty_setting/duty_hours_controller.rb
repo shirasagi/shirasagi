@@ -1,4 +1,4 @@
-class Gws::Affair::DutyHoursController < ApplicationController
+class Gws::Affair::DutySetting::DutyHoursController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Affair::PermissionFilter
@@ -10,6 +10,11 @@ class Gws::Affair::DutyHoursController < ApplicationController
 
   before_action :check_deletable_item, only: %i[delete destroy]
 
+  def destroy_all
+    @selected_items.destroy_all if @selected_items.present?
+    render_destroy_all true
+  end
+
   private
 
   def fix_params
@@ -19,14 +24,6 @@ class Gws::Affair::DutyHoursController < ApplicationController
   def set_crumbs
     @crumbs << [ @cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path ]
     @crumbs << [ t("modules.gws/affair/duty_hour"), action: :index ]
-  end
-
-  def permit_fields
-    ret = super
-    if @item && @item.is_a?(Gws::Affair::DefaultDutyHour)
-      ret.delete(:name)
-    end
-    ret
   end
 
   def set_item
@@ -42,6 +39,13 @@ class Gws::Affair::DutyHoursController < ApplicationController
   rescue Mongoid::Errors::DocumentNotFound => e
     return render_destroy(true) if params[:action] == 'destroy'
     raise e
+  end
+
+  def set_selected_items
+    ids = params[:ids]
+    raise "400" unless ids
+    ids = ids.split(",") if ids.is_a?(String)
+    @selected_items = @items = @model.in(id: ids)
   end
 
   def check_deletable_item

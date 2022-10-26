@@ -4,14 +4,13 @@ module Gws::Affair::AggregatePermission
 
   module ClassMethods
     def allowed_aggregate?(action, user, site)
-      name = permission_name.sub("files", "aggregate")
-
+      name = permission_name
       if action.to_s == "use"
-        user.gws_role_permit_any?(site, "use_#{name}", "manage_#{name}", "all_#{name}")
+        user.gws_role_permit_any?(site, "use_aggregate_#{name}", "manage_aggregate_#{name}", "all_aggregate_#{name}")
       elsif action.to_s == "manage"
-        user.gws_role_permit_any?(site, "manage_#{name}", "all_#{name}")
+        user.gws_role_permit_any?(site, "manage_aggregate_#{name}", "all_aggregate_#{name}")
       elsif action.to_s == "all"
-        user.gws_role_permit_any?(site, "all_#{name}")
+        user.gws_role_permit_any?(site, "all_aggregate_#{name}")
       else
         false
       end

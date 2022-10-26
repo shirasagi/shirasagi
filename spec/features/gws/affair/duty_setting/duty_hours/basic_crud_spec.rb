@@ -14,7 +14,7 @@ describe "gws_affair_duty_hours", type: :feature, dbscope: :example, js: true do
       #
       # Create
       #
-      visit gws_affair_duty_hours_path(site: site)
+      visit gws_affair_duty_setting_duty_hours_path(site: site)
       click_on I18n.t("ss.links.new")
 
       within "form#item-form" do
@@ -31,7 +31,7 @@ describe "gws_affair_duty_hours", type: :feature, dbscope: :example, js: true do
       #
       # Update
       #
-      visit gws_affair_duty_hours_path(site: site)
+      visit gws_affair_duty_setting_duty_hours_path(site: site)
       click_on name
       click_on I18n.t("ss.links.edit")
       within "form#item-form" do
@@ -47,7 +47,7 @@ describe "gws_affair_duty_hours", type: :feature, dbscope: :example, js: true do
       #
       # Delete
       #
-      visit gws_affair_duty_hours_path(site: site)
+      visit gws_affair_duty_setting_duty_hours_path(site: site)
       click_on name2
       click_on I18n.t("ss.links.delete")
       within "form" do

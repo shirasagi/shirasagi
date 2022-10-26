@@ -4,11 +4,11 @@ describe "gws_affair_duty_notices", type: :feature, dbscope: :example do
   context "basic crud", js: true do
     let(:site) { gws_site }
     let(:item) { create(:gws_affair_duty_notice) }
-    let(:index_path) { gws_affair_duty_notices_path site.id }
-    let(:new_path) { new_gws_affair_duty_notice_path site.id }
-    let(:show_path) { gws_affair_duty_notice_path site.id, item }
-    let(:edit_path) { edit_gws_affair_duty_notice_path site.id, item }
-    let(:delete_path) { delete_gws_affair_duty_notice_path site.id, item }
+    let(:index_path) { gws_affair_duty_setting_duty_notices_path site.id }
+    let(:new_path) { new_gws_affair_duty_setting_duty_notice_path site.id }
+    let(:show_path) { gws_affair_duty_setting_duty_notice_path site.id, item }
+    let(:edit_path) { edit_gws_affair_duty_setting_duty_notice_path site.id, item }
+    let(:delete_path) { delete_gws_affair_duty_setting_duty_notice_path site.id, item }
 
     context "basic crud" do
       before { login_gws_user }

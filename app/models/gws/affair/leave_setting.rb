@@ -7,7 +7,9 @@ class Gws::Affair::LeaveSetting
   include Gws::Addon::Affair::AnnualLeaveSetting
   include Gws::Addon::Affair::PaidLeaveSetting
   include Gws::Addon::Import::Affair::LeaveSetting
-  include Gws::Addon::GroupPermission
+  include Gws::SitePermission
+
+  set_permission_name 'gws_affair_capital_years', :edit
 
   seqid :id
   field :name, type: String

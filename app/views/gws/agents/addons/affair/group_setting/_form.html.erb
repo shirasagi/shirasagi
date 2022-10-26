@@ -17,5 +17,5 @@
   <dt><%= @model.t :week_out_compensatory_file_notify_day %><%= @model.tt :week_out_compensatory_file_notify_day %></dt>
   <dd><%= f.number_field :week_out_compensatory_file_notify_day, min: 0 %><%= t("datetime.prompts.day") %></dd>
 
-  <%= render "gws/affair/duty_hours/duty_hour_setting_form", f: f %>
+  <%= render "gws/affair/duty_setting/duty_hours/duty_hour_setting_form", f: f %>
 </dl>

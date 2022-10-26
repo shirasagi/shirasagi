@@ -58,7 +58,7 @@ class Gws::Affair::CapitalsController < ApplicationController
     @item = @model.new get_params
     result = @item.import
     flash.now[:notice] = t("ss.notice.saved") if !result && @item.imported > 0
-    render_create result, location: { action: :index }, render: { file: :import }
+    render_create result, location: { action: :index }, render: { template: :import }
   end
 
   def import_member
@@ -68,7 +68,7 @@ class Gws::Affair::CapitalsController < ApplicationController
     @item = @model.new get_params
     result = @item.import_member
     flash.now[:notice] = t("ss.notice.saved") if !result && @item.imported > 0
-    render_create result, location: { action: :import_member }, render: { file: :import_member }
+    render_create result, location: { action: :import_member }, render: { template: :import_member }
   end
 
   def download_member
@@ -87,7 +87,7 @@ class Gws::Affair::CapitalsController < ApplicationController
     @item = @model.new get_params
     result = @item.import_group
     flash.now[:notice] = t("ss.notice.saved") if !result && @item.imported > 0
-    render_create result, location: { action: :import_group }, render: { file: :import_group }
+    render_create result, location: { action: :import_group }, render: { template: :import_group }
   end
 
   def download_group

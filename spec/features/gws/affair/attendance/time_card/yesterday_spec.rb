@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true do
-  # 勤務体系は 8:30 - 17:15 | 3:00
+  # 勤務時間は 8:30 - 17:15 | 3:00
 
   let(:site) { gws_site }
   let(:day_0830) { Time.zone.parse("2020/8/30") } #平日

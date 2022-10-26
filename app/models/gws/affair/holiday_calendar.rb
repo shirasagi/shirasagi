@@ -4,7 +4,7 @@ class Gws::Affair::HolidayCalendar
   include Gws::Reference::Site
   include Gws::SitePermission
 
-  set_permission_name 'gws_affair_duty_hours'
+  set_permission_name "gws_affair_duty_settings", :edit
 
   field :name, type: String
   has_many :holidays, class_name: 'Gws::Schedule::Holiday', dependent: :destroy, inverse_of: :holiday_calendar

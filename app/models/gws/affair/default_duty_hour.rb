@@ -2,7 +2,7 @@ class Gws::Affair::DefaultDutyHour
   include ActiveModel::Model
   include Gws::SitePermission
 
-  set_permission_name "gws_affair_duty_hours"
+  set_permission_name "gws_affair_duty_settings", :edit
 
   attr_accessor :cur_site
 

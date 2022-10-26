@@ -107,7 +107,6 @@ class Gws::Affair::CapitalYear::Importer::Member < Gws::Affair::CapitalYear::Imp
     item.year = year
     item.target_user = target_user
     item.count = count.to_i
-    item.user_ids = [cur_user.id]
 
     if item.save
       @imported += 1

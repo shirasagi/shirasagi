@@ -9,7 +9,8 @@ class Gws::Affair::DutyCalendar
   include Gws::Addon::Member
   include Gws::SitePermission
 
-  set_permission_name 'gws_affair_duty_hours'
+  set_permission_name "gws_affair_duty_settings", :edit
+
   member_ids_optional
 
   seqid :id

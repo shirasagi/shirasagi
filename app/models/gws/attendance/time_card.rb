@@ -125,7 +125,7 @@ class Gws::Attendance::TimeCard
     Gws::Attendance::TimeCardEnumerator.new(@cur_site || site, [ self ], params)
   end
 
-  # 勤務体系
+  # 勤務カレンダー
   def duty_calendar
     @_duty_calendar ||= begin
       user.effective_duty_calendar(site)

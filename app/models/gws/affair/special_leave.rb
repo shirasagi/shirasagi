@@ -3,11 +3,10 @@ class Gws::Affair::SpecialLeave
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
-  include Gws::Addon::GroupPermission
   include Gws::SitePermission
   include Gws::Addon::Import::Affair::SpecialLeave
 
-  set_permission_name "gws_affair_special_leaves"
+  set_permission_name "gws_affair_special_leaves", :edit
 
   seqid :id
   field :code, type: String

@@ -1,4 +1,4 @@
-class Gws::Affair::HolidaysController < ApplicationController
+class Gws::Affair::DutySetting::HolidaysController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Affair::PermissionFilter
@@ -44,8 +44,8 @@ class Gws::Affair::HolidaysController < ApplicationController
   def set_crumbs
     set_holiday_calendar
     @crumbs << [ @cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path ]
-    @crumbs << [ t("mongoid.models.gws/affair/holiday_calendar"), gws_affair_holiday_calendars_path ]
-    @crumbs << [ @holiday_calendar.name, gws_affair_holiday_calendar_path(id: @holiday_calendar) ]
+    @crumbs << [ t("mongoid.models.gws/affair/holiday_calendar"), gws_affair_duty_setting_holiday_calendars_path ]
+    @crumbs << [ @holiday_calendar.name, gws_affair_duty_setting_holiday_calendar_path(id: @holiday_calendar) ]
   end
 
   def set_items
@@ -131,9 +131,9 @@ class Gws::Affair::HolidaysController < ApplicationController
     @item = @model.new get_params
     @item.cur_site = @cur_site
     @item.cur_user = @cur_user
-    @item.cur_holiday_calendar = @holiday_calendar
+    @item.holiday_calendar = @holiday_calendar
     result = @item.import
     flash.now[:notice] = t("ss.notice.saved") if !result && @item.imported > 0
-    render_create result, location: { action: :index }, render: { file: :import }
+    render_create result, location: { action: :index }, render: { template: :import }
   end
 end

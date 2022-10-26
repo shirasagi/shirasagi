@@ -16,7 +16,7 @@ describe "gws_affair_duty_hours", type: :feature, dbscope: :example, js: true do
 
   context 'crud for default item' do
     it do
-      visit gws_affair_duty_hours_path(site: site)
+      visit gws_affair_duty_setting_duty_hours_path(site: site)
       click_on I18n.t("gws/affair.default_duty_hour")
 
       expect(page).to have_css("#addon-basic dd", text: "8時 30分 ～ 17時 0分 （休憩 12時 15分 ～ 13時 0分 ）")

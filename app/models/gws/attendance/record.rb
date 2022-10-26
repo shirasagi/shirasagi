@@ -40,7 +40,7 @@ class Gws::Attendance::Record
     lower_bound...upper_bound
   end
 
-  # 勤務体系
+  # 勤務カレンダー
   def duty_calendar
     return if time_card.nil?
     time_card.duty_calendar

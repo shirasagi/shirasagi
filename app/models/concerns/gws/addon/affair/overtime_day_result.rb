@@ -20,7 +20,7 @@ module Gws::Addon::Affair::OvertimeDayResult
     return if result.blank?
     return if result_closed?
 
-    # 申請対象の勤務カレンダー、勤務体系
+    # 申請対象の勤務カレンダー、勤務時間
     duty_calendar = target_user.effective_duty_calendar(site)
     duty_hour = duty_calendar.effective_duty_hour(result.date)
 

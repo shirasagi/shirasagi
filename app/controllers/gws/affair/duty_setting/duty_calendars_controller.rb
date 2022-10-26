@@ -1,4 +1,4 @@
-class Gws::Affair::DutyCalendarsController < ApplicationController
+class Gws::Affair::DutySetting::DutyCalendarsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Affair::PermissionFilter
@@ -16,6 +16,6 @@ class Gws::Affair::DutyCalendarsController < ApplicationController
 
   def set_crumbs
     @crumbs << [ @cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path ]
-    @crumbs << [ t("modules.gws/affair/duty_calendar"), gws_affair_duty_calendars_path ]
+    @crumbs << [ t("modules.gws/affair/duty_calendar"), gws_affair_duty_setting_duty_calendars_path ]
   end
 end

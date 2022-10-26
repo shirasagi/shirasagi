@@ -75,7 +75,7 @@
   <% end %>
 
   <!-- 庶務事務/時間外集計 -->
-  <% if Gws::Affair::DutyHour.allowed?(:read, @cur_user, site: @cur_site) %>
+  <% if Gws::Affair::DutySetting.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h3><%= link_to t("modules.gws/affair/overtime_file/management/aggregate"), gws_affair_overtime_management_aggregate_path, class: "management" %></h3>
     <ul class="narrow-page">
       <li><%= link_to t("modules.gws/affair/overtime_file/management/aggregate/user"), gws_affair_overtime_management_aggregate_users_main_path, class: "management" %></li>
@@ -86,22 +86,23 @@
   <% end %>
 
   <!-- 庶務事務/勤務時間集計 -->
-  <% if Gws::Affair::DutyHour.allowed?(:read, @cur_user, site: @cur_site) %>
+  <% if Gws::Affair::DutySetting.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h3><%= link_to t("modules.gws/affair/working_time/management/aggregate"), gws_affair_working_time_management_aggregate_main_path, class: "management" %></h3>
   <% end %>
 
-  <!-- 庶務事務/勤務カレンダー -->
-  <% if Gws::Affair::DutyHour.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t("modules.gws/affair/duty_calendar"), gws_affair_duty_calendars_path, class: "management" %></h3>
+  <!-- 庶務事務/勤務体系 -->
+  <% if Gws::Affair::DutySetting.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t("modules.gws/affair/duty_setting"), gws_affair_duty_setting_path, class: "management" %></h3>
     <ul class="narrow-page">
-      <li><%= link_to t("modules.gws/affair/duty_hour"), gws_affair_duty_hours_path, class: "management" %></li>
-      <li><%= link_to t("modules.gws/affair/holiday_calendar"), gws_affair_holiday_calendars_path, class: "management" %></li>
-      <li><%= link_to t("modules.gws/affair/duty_notice"), gws_affair_duty_notices_path, class: "management" %></li>
+      <li><%= link_to t("modules.gws/affair/duty_calendar"), gws_affair_duty_setting_duty_calendars_path, class: "management" %></li>
+      <li><%= link_to t("modules.gws/affair/duty_hour"), gws_affair_duty_setting_duty_hours_path, class: "management" %></li>
+      <li><%= link_to t("modules.gws/affair/holiday_calendar"), gws_affair_duty_setting_holiday_calendars_path, class: "management" %></li>
+      <li><%= link_to t("modules.gws/affair/duty_notice"), gws_affair_duty_setting_duty_notices_path, class: "management" %></li>
     </ul>
   <% end %>
 
   <!-- 庶務事務/年度設定 -->
-  <% if Gws::Affair::Capital.allowed?(:read, @cur_user, site: @cur_site) %>
+  <% if Gws::Affair::CapitalYear.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h3><%= link_to t("modules.gws/affair/capital_years"), gws_affair_capital_years_path, class: "management" %></h3>
   <% end %>
 

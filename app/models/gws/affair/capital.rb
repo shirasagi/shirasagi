@@ -5,14 +5,14 @@ class Gws::Affair::Capital
   include Gws::Reference::Site
   include Gws::Affair::CapitalYearly
   include Gws::Addon::Member
-  include Gws::SitePermission
   include Gws::Addon::Import::Affair::Capital
   include Gws::Addon::Import::Affair::Capital::Member
   include Gws::Addon::Import::Affair::Capital::Group
+  include Gws::SitePermission
 
   class_variable_set(:@@_member_ids_required, false)
 
-  set_permission_name 'gws_affair_capitals'
+  set_permission_name 'gws_affair_capital_years', :edit
 
   seqid :id
   field :article_code, type: Integer    # 款

@@ -39,5 +39,5 @@ describe "gws_affair_users", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css("dd", text: staff_address_uid2)
       end
     end
-  end∂
+  end
 end

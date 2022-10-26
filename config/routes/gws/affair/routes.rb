@@ -54,15 +54,6 @@ Rails.application.routes.draw do
   gws "affair" do
     get "/" => "main#index", as: :main
     #get '/' => redirect { |p, req| "#{req.path}/attendance/time_cards/#{Time.zone.now.strftime('%Y%m')}" }, as: :main
-    resources :duty_calendars, concerns: :deletion
-    resources :duty_notices, concerns: :deletion
-    resources :special_leaves, path: 'special_leaves/:staff_category', defaults: { staff_category: 'all' }, concerns: [:deletion, :export]
-    resources :capital_years, concerns: :deletion
-    scope 'year/:year' do
-      resources :capitals, concerns: [:deletion, :export, :import_member, :import_group], as: :capitals
-      resources :leave_settings, concerns: [:deletion, :export, :export_yearly, :import_member]
-    end
-    get "/result_groups/not_registered" => "main#not_registered", as: :result_groups_not_registered
 
     namespace "overtime" do
       resources :files, path: 'files/:state', concerns: [:deletion, :workflow, :approve_all]
@@ -178,13 +169,26 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :duty_hours, concerns: :deletion
-    resources :holiday_calendars, concerns: :deletion do
-      resources :holidays, concerns: :deletion, path: "holidays/:year" do
-        get :download, on: :collection
-        match :import, on: :collection, via: %i[get post]
+    # affair settings
+    get "duty_setting" => "duty_setting#index", as: :duty_setting
+    namespace "duty_setting" do
+      resources :duty_calendars, concerns: :deletion
+      resources :duty_notices, concerns: :deletion
+      resources :duty_hours, concerns: :deletion
+      resources :holiday_calendars, concerns: :deletion do
+        resources :holidays, concerns: :deletion, path: "holidays/:year" do
+          get :download, on: :collection
+          match :import, on: :collection, via: %i[get post]
+        end
       end
     end
+    resources :special_leaves, path: 'special_leaves/:staff_category', defaults: { staff_category: 'all' }, concerns: [:deletion, :export]
+    resources :capital_years, concerns: :deletion
+    scope 'year/:year' do
+      resources :capitals, concerns: [:deletion, :export, :import_member, :import_group], as: :capitals
+      resources :leave_settings, concerns: [:deletion, :export, :export_yearly, :import_member]
+    end
+    get "/result_groups/not_registered" => "main#not_registered", as: :result_groups_not_registered
 
     namespace "apis" do
       namespace "overtime" do

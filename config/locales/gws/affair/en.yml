@@ -452,13 +452,12 @@ en:
     use_gws_affair: Use affair features
     use_gws_affair_attendance_time_cards: Use clock-in and clock-out time
     edit_gws_affair_attendance_time_cards: Change clock-in and clock-out time
+    # timecard
     manage_private_gws_affair_attendance_time_cards: Manage attendance (own group)
     manage_all_gws_affair_attendance_time_cards: Manage attendance (all)
     aggregate_private_gws_affair_attendance_time_cards: Aggregate group attendance（own group）
     aggregate_all_gws_affair_attendance_time_cards: Aggregate group attendance（all）
-    read_gws_affair_duty_hours: Read duty hours
-    edit_gws_affair_duty_hours: Edit duty hours
-    delete_gws_affair_duty_hours: Delete duty hours
+    # overtime file
     read_other_gws_affair_overtime_files: Read overtime files（all）
     read_private_gws_affair_overtime_files: Read overtime files（own）
     edit_other_gws_affair_overtime_files: Edit overtime files（all）
@@ -469,6 +468,11 @@ en:
     approve_private_gws_affair_overtime_files: Approve overtime files（all）
     reroute_other_gws_affair_overtime_files: Reroute overtime files（own）
     reroute_private_gws_affair_overtime_files: Reroute overtime files（all）
+    # overtime aggregate
+    use_aggregate_gws_affair_overtime_files: Use overtime aggregation（own）
+    manage_aggregate_gws_affair_overtime_files: Use overtime aggregation（group）
+    all_aggregate_gws_affair_overtime_files: Use overtime aggregation（all）
+    # leave file
     read_other_gws_affair_leave_files: Read leave files（all）
     read_private_gws_affair_leave_files: Read leave files（own）
     edit_other_gws_affair_leave_files: Edit leave files（all）
@@ -479,30 +483,18 @@ en:
     approve_private_gws_affair_leave_files: Approve leave files（own）
     reroute_other_gws_affair_leave_files: Reroute leave files（all）
     reroute_private_gws_affair_leave_files: Reroute leave files（own）
+    # leave aggregate
+    use_aggregate_gws_affair_leave_files: Use leave aggregation（own）
+    manage_aggregate_gws_affair_leave_files: Use leave aggregation（group）
+    all_aggregate_gws_affair_leave_files: Use leave aggregation（all）
+    # shift_calendar
     use_gws_affair_shift_calendars: Use shift calendars
     manage_private_gws_affair_shift_calendars: Manage shift calendars（own）
     manage_all_gws_affair_shift_calendars: Manage shift calendars（all）
-    read_gws_affair_special_leaves: Read special leaves
+    # affair setting
+    edit_gws_affair_duty_settings: Edit affair duty settings
     edit_gws_affair_special_leaves: Edit special leaves
-    delete_gws_affair_special_leaves: Delete special leaves
-    read_gws_affair_capitals: Read capitals
-    edit_gws_affair_capitals: Edit capitals
-    delete_gws_affair_capitals: Delete capitals
-    read_gws_affair_capital_years: Read years
     edit_gws_affair_capital_years: Edit years
-    delete_gws_affair_capital_years: Delete years
-    use_gws_affair_overtime_aggregate: Use overtime aggregation（own）
-    manage_gws_affair_overtime_aggregate: Use overtime aggregation（group）
-    all_gws_affair_overtime_aggregate: Use overtime aggregation（all）
-    read_other_gws_affair_leave_settings: Read leave settings（all）
-    read_private_gws_affair_leave_settings: Read leave settings（own）
-    edit_other_gws_affair_leave_settings: Edit leave settings（all）
-    edit_private_gws_affair_leave_settings: Edit leave settings（own）
-    delete_other_gws_affair_leave_settings: Delete leave settings（all）
-    delete_private_gws_affair_leave_settings: Delete leave settings（own）
-    use_gws_affair_leave_aggregate: Use leave aggregation（own）
-    manage_gws_affair_leave_aggregate: Use leave aggregation（group）
-    all_gws_affair_leave_aggregate: Use leave aggregation（all）
 
   gws_notification:
     gws/affair/overtime_file:

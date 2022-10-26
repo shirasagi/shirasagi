@@ -6,6 +6,8 @@ class Gws::Affair::DutyHour
   include Gws::Affair::DutyHourSetting
   include Gws::SitePermission
 
+  set_permission_name "gws_affair_duty_settings", :edit
+
   field :name, type: String
 
   permit_params :name

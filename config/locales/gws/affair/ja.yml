@@ -2,7 +2,7 @@ ja:
   gws/affair:
     aggregate: 集計結果
     capital: 原資区分
-    default_duty_hour: 標準の勤務体系
+    default_duty_hour: 標準の勤務時間
     top_holidays_on_year: "%{year}年度の休日を最大%{count}件を表示しています。"
     year_id: 年度
     all_year_id: 全年度
@@ -57,8 +57,8 @@ ja:
       #  "10": 10分単
       #  "15": 15分単位
       holiday_type:
-        system: 標準の休日カレンダー
-        own: 勤務体系独自
+        system: 標準の休日カレンダーを使用する
+        own: 休日カレンダーを設定する
       wday_type:
         workday: 勤務日
         holiday: 休日
@@ -220,7 +220,7 @@ ja:
         effective_count: 残日数
     apis:
       duty_hours:
-        index: 勤務体系を選択する
+        index: 勤務時間を選択する
       holiday_calendars:
         index: 休日カレンダーを選択する
       duty_notices:
@@ -251,7 +251,8 @@ ja:
     gws/affair/overtime_file/management/aggregate/search_groups: グループ検索
     gws/affair/overtime_file/management/aggregate/search_users: ユーザー検索
     gws/affair/attendance/management/time_card: タイムカードの管理
-    gws/affair/duty_hour: 勤務体系
+    gws/affair/duty_setting: 勤務体系
+    gws/affair/duty_hour: 勤務時間
     gws/affair/duty_calendar: 勤務カレンダー
     gws/affair/holiday_calendar: 休日カレンダー
     gws/affair/capital: 原資区分
@@ -266,7 +267,7 @@ ja:
       gws/affair/overtime_result: 結果
       gws/affair/approver: 承認
       gws/affair/leave_file: 休暇申請書
-      gws/affair/duty_hour: 勤務体系
+      gws/affair/duty_hour: 勤務時間
       gws/affair/holiday: 休日
       gws/affair/flextime: 自由時間勤務
       gws/affair/duty_notice: タイムカード警告
@@ -279,7 +280,7 @@ ja:
     models:
       gws/affair/capital: 原資区分
       gws/affair/duty_calendar: 勤務カレンダー
-      gws/affair/duty_hour: 勤務体系
+      gws/affair/duty_hour: 勤務時間
       gws/affair/holiday_calendar: 休日カレンダー
       gws/affair/capital_year: 年度設定
     attributes:
@@ -301,7 +302,7 @@ ja:
         year_code: 西暦
         year_name: 年度名
       gws/affair/duty_calendar:
-        name: タイトル
+        name: 勤務カレンダー名
         code: 職種区分コード
       gws/affair/shift_record:
         duty_calendar_id: 勤務カレンダー
@@ -313,7 +314,7 @@ ja:
         in_file: ファイル
         affair_time: 勤務時間
       gws/affair/duty_hour:
-        name: 勤務体系名
+        name: 勤務時間名
         start_at: 開始時間
         end_at: 終了時間
         break_enter1_start_at: 休憩1開始時間
@@ -387,14 +388,14 @@ ja:
         affair_overtime: 休憩時間設定（勤務時間外）
         overtime_in_work: 標準勤務時間内での残業
       gws/addon/affair/duty_hour:
-        duty_hour_ids: 勤務体系
+        duty_hour_ids: 勤務時間
       gws/addon/affair/holiday:
-        holiday_type: 休日種別
+        holiday_type: 休日設定
         holiday_calendar_ids: 休日カレンダー
       gws/addon/affair/duty_notice:
         duty_notice_ids: タイムカード警告
       gws/affair/holiday_calendar:
-        name: タイトル
+        name: 休日カレンダー名
         wday_settings: 休日設定
         sunday_type: 日曜日
         monday_type: 月曜日
@@ -408,7 +409,7 @@ ja:
       gws/addon/affair/flextime:
         flextime_state: 自由時間勤務
       gws/affair/duty_notice:
-        name: タイトル
+        name: 警告名
         notice_type: 種別
         period_type: 期間
         threshold_hour: 上限時間
@@ -465,13 +466,12 @@ ja:
     use_gws_affair: 庶務事務機能の利用
     use_gws_affair_attendance_time_cards: 出退勤時刻の利用
     edit_gws_affair_attendance_time_cards: 出退勤時刻の変更
+    # timecard
     manage_private_gws_affair_attendance_time_cards: 出退勤の管理（自所属）
     manage_all_gws_affair_attendance_time_cards: 出退勤の管理（全て）
     aggregate_private_gws_affair_attendance_time_cards: 出退勤グループの利用（自所属）
     aggregate_all_gws_affair_attendance_time_cards: 出退勤グループの利用（全て）
-    read_gws_affair_duty_hours: 勤務体系の閲覧
-    edit_gws_affair_duty_hours: 勤務体系の編集
-    delete_gws_affair_duty_hours: 勤務体系の削除
+    # overtime file
     read_other_gws_affair_overtime_files: 時間外申請の閲覧（全て）
     read_private_gws_affair_overtime_files: 時間外申請の閲覧（所有）
     edit_other_gws_affair_overtime_files: 時間外申請の編集（全て）
@@ -482,6 +482,11 @@ ja:
     approve_private_gws_affair_overtime_files: 時間外申請の承認（全て）
     reroute_other_gws_affair_overtime_files: 時間外申請の経路変更（所有）
     reroute_private_gws_affair_overtime_files: 時間外申請の経路変更（全て）
+    # overtime file aggregate
+    use_aggregate_gws_affair_overtime_files: 時間外申請の累計閲覧（自身）
+    manage_aggregate_gws_affair_overtime_files: 時間外申請の累計閲覧（所属下）
+    all_aggregate_gws_affair_overtime_files: 時間外申請の累計閲覧（すべて）
+    # leave file
     read_other_gws_affair_leave_files: 休暇申請の閲覧（全て）
     read_private_gws_affair_leave_files: 休暇申請の閲覧（所有）
     edit_other_gws_affair_leave_files: 休暇申請の編集（全て）
@@ -492,30 +497,18 @@ ja:
     approve_private_gws_affair_leave_files: 休暇申請の承認（所有）
     reroute_other_gws_affair_leave_files: 休暇申請の経路変更（全て）
     reroute_private_gws_affair_leave_files: 休暇申請の経路変更（所有）
+    # leave aggregate
+    use_aggregate_gws_affair_leave_files: 休暇申請の累計閲覧（自身）
+    manage_aggregate_gws_affair_leave_files: 休暇申請の累計閲覧（所属下）
+    all_aggregate_gws_affair_leave_files: 休暇申請の累計閲覧（すべて）
+    # shift_calendar
     use_gws_affair_shift_calendars: シフト勤務の利用
     manage_private_gws_affair_shift_calendars: シフト勤務の管理（自所属）
     manage_all_gws_affair_shift_calendars: シフト勤務の管理（全て）
-    read_gws_affair_special_leaves: 特別休暇区分の閲覧
-    edit_gws_affair_special_leaves: 特別休暇区分の編集
-    delete_gws_affair_special_leaves: 特別休暇区分の削除
-    read_gws_affair_capitals: 原資区分の閲覧
-    edit_gws_affair_capitals: 原資区分の編集
-    delete_gws_affair_capitals: 原資区分の削除
-    read_gws_affair_capital_years: 年度設定の閲覧
-    edit_gws_affair_capital_years: 年度設定の編集
-    delete_gws_affair_capital_years: 年度設定の削除
-    use_gws_affair_overtime_aggregate: 時間外累計の閲覧（自身）
-    manage_gws_affair_overtime_aggregate: 時間外累計の閲覧（所属下）
-    all_gws_affair_overtime_aggregate: 時間外累計の閲覧（すべて）
-    read_other_gws_affair_leave_settings: 休暇設定の閲覧（全て）
-    read_private_gws_affair_leave_settings: 休暇設定の閲覧（所有）
-    edit_other_gws_affair_leave_settings: 休暇設定の編集（全て）
-    edit_private_gws_affair_leave_settings: 休暇設定の編集（所有）
-    delete_other_gws_affair_leave_settings: 休暇設定の削除（全て）
-    delete_private_gws_affair_leave_settings: 休暇設定の削除（所有）
-    use_gws_affair_leave_aggregate: 休暇取得累計の閲覧（自身）
-    manage_gws_affair_leave_aggregate: 休暇取得累計の閲覧（所属下）
-    all_gws_affair_leave_aggregate: 休暇取得累計の閲覧（すべて）
+    # affair setting
+    edit_gws_affair_duty_settings: 勤務体系の設定
+    edit_gws_affair_special_leaves: 特別休暇区分の設定
+    edit_gws_affair_capital_years: 年度の設定
 
   gws_notification:
     gws/affair/overtime_file:
@@ -626,7 +619,7 @@ ja:
         - 職種区分コードを入力します。
     gws/affair/duty_hour:
       name:
-        - 勤務体系名を入力します。
+        - 勤務時間名を入力します。
     gws/affair/duty_notice:
       name:
         - タイトルを入力します。
