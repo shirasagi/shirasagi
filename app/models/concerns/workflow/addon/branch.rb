@@ -8,7 +8,7 @@ module Workflow::Addon
 
       define_model_callbacks :merge_branch
 
-      belongs_to :master, foreign_key: "master_id", class_name: self.to_s
+      belongs_to :master, class_name: self.to_s
       has_many :branches, foreign_key: "master_id", class_name: self.to_s, dependent: :destroy
 
       permit_params :master_id
