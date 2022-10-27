@@ -36,6 +36,7 @@ Rails.application.routes.draw do
 
       get :download_template, on: :collection
     end
+    resource :diagnostic, only: %i[show]
   end
 
   node "guide" do
