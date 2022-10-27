@@ -1,8 +1,6 @@
 <script src="https://unpkg.com/mermaid@8.8.0/dist/mermaid.js"></script>
 
-<div class="mermaid">
-  <%= render Guide::MermaidComponent.new(site: @cur_site, node: @cur_node) %>
-</div>
+<%= render Guide::MermaidComponent.new(site: @cur_site, node: @cur_node) %>
 
 <%= jquery do %>
   mermaid.initialize({ startOnLoad:true });

@@ -6,8 +6,9 @@ class Guide::MermaidComponent < ApplicationComponent
   def call
     @rendered_point_map = {}
     @rendered_edge_map = {}
+    @additional_info = {}
 
-    capture do
+    output_buffer << tag.div(class: "mermaid") do
       output_buffer << "graph LR\n".html_safe
       all_questions = all_points.select { |point| point.is_a?(Guide::Question) }
       all_questions.each do |question|
@@ -26,6 +27,10 @@ class Guide::MermaidComponent < ApplicationComponent
           output_buffer << "ID_UNREACHABLE ---> ID#{procedure.id}\n".html_safe
         end
       end
+    end
+
+    output_buffer << tag.script(type: "application/json") do
+      output_buffer << @additional_info.to_json.html_safe
     end
   end
 
@@ -53,8 +58,10 @@ class Guide::MermaidComponent < ApplicationComponent
 
     begin
       if point.is_a?(Guide::Question)
+        @additional_info["ID#{point.id}"] = { url: guide_question_path(site: point.site_id, cid: point.node_id, id: point.id) }
         "ID#{point.id}{{\"#{escape(point.name_with_type)}\"}}\n".html_safe
       else
+        @additional_info["ID#{point.id}"] = { url: guide_procedure_path(site: point.site_id, cid: point.node_id, id: point.id) }
         "ID#{point.id}[[\"#{escape(point.name_with_type)}\"]]\n".html_safe
       end
     ensure
@@ -63,6 +70,11 @@ class Guide::MermaidComponent < ApplicationComponent
   end
 
   def build_edge(from_point, to_point, edge)
+    @additional_info["L-L-ID#{from_point.id}-ID#{to_point.id}"] = {
+      url: guide_procedure_path(site: from_point.site_id, cid: from_point.node_id, id: from_point.id),
+      edge_id: edge.id.to_s, point_id: to_point.id
+    }
+
     "ID#{from_point.id} -- \"#{escape(edge.value)}\" --> ID#{to_point.id}\n".html_safe
   end
 
