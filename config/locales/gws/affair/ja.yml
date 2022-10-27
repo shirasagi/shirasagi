@@ -378,6 +378,7 @@ ja:
         workflow_approvers: 承認者
         workflow_required_counts: 必要承認数
         workflow_circulations: 回覧者
+        requested: 申請日時
         approved: 承認日時
         comment: 差し戻しコメント
         approver_comment: 承認者コメント

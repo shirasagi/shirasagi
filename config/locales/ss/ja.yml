@@ -155,6 +155,7 @@ ja:
       closed_save: 非公開にする
       edit_password: パスワード変更
       registration: 登録する
+      approve: 承認する
     buttons:
       save: 保存
       saving: 保存中
