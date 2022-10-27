@@ -76,11 +76,12 @@ describe "gws_affair_leave_settings", type: :feature, dbscope: :example, js: tru
         year1.reload
         year2.reload
 
-        expect(find_leave_setting(year1, "162167").count).to eq 100
-        expect(find_leave_setting(year1, "697761").count).to eq 114
-        expect(find_leave_setting(year1, "1867830").count).to eq 141
-        expect(find_leave_setting(year1, "1108514").count).to eq 209
-        expect(find_leave_setting(year1, "1911651").count).to eq 228
+        expect(find_leave_setting(year1, "162167").count).to eq 110
+        expect(find_leave_setting(year1, "32018").count).to eq 111
+        expect(find_leave_setting(year1, "1289012").count).to eq 112
+        expect(find_leave_setting(year1, "1609661").count).to eq 138
+        expect(find_leave_setting(year1, "1730169").count).to eq 139
+        expect(find_leave_setting(year1, "836001").count).to eq 140
       end
 
       it do
@@ -99,14 +100,15 @@ describe "gws_affair_leave_settings", type: :feature, dbscope: :example, js: tru
         year1.reload
         year2.reload
 
-        expect(year1.yearly_leave_settings.count).to eq 129
+        expect(year1.yearly_leave_settings.count).to eq 31
         expect(year2.yearly_leave_settings.count).to eq 0
 
         expect(find_leave_setting(year1, "162167").count).to eq 10
-        expect(find_leave_setting(year1, "697761").count).to eq 24
-        expect(find_leave_setting(year1, "1867830").count).to eq 51
-        expect(find_leave_setting(year1, "1108514").count).to eq 119
-        expect(find_leave_setting(year1, "1911651").count).to eq 138
+        expect(find_leave_setting(year1, "32018").count).to eq 11
+        expect(find_leave_setting(year1, "1289012").count).to eq 12
+        expect(find_leave_setting(year1, "1609661").count).to eq 38
+        expect(find_leave_setting(year1, "1730169").count).to eq 39
+        expect(find_leave_setting(year1, "836001").count).to eq 40
 
         # import leave_settings_member
         visit import_member_path
@@ -123,11 +125,12 @@ describe "gws_affair_leave_settings", type: :feature, dbscope: :example, js: tru
         year1.reload
         year2.reload
 
-        expect(find_leave_setting(year1, "162167").count).to eq 100
-        expect(find_leave_setting(year1, "697761").count).to eq 114
-        expect(find_leave_setting(year1, "1867830").count).to eq 141
-        expect(find_leave_setting(year1, "1108514").count).to eq 209
-        expect(find_leave_setting(year1, "1911651").count).to eq 228
+        expect(find_leave_setting(year1, "162167").count).to eq 110
+        expect(find_leave_setting(year1, "32018").count).to eq 111
+        expect(find_leave_setting(year1, "1289012").count).to eq 112
+        expect(find_leave_setting(year1, "1609661").count).to eq 138
+        expect(find_leave_setting(year1, "1730169").count).to eq 139
+        expect(find_leave_setting(year1, "836001").count).to eq 140
 
         # import leave_settings2
         visit import_path
@@ -144,14 +147,15 @@ describe "gws_affair_leave_settings", type: :feature, dbscope: :example, js: tru
         year1.reload
         year2.reload
 
-        expect(year1.yearly_leave_settings.count).to eq 129
+        expect(year1.yearly_leave_settings.count).to eq 31
         expect(year2.yearly_leave_settings.count).to eq 0
 
         expect(find_leave_setting(year1, "162167").count).to eq 10
-        expect(find_leave_setting(year1, "697761").count).to eq 24
-        expect(find_leave_setting(year1, "1867830").count).to eq 51
-        expect(find_leave_setting(year1, "1108514").count).to eq 119
-        expect(find_leave_setting(year1, "1911651").count).to eq 138
+        expect(find_leave_setting(year1, "32018").count).to eq 11
+        expect(find_leave_setting(year1, "1289012").count).to eq 12
+        expect(find_leave_setting(year1, "1609661").count).to eq 38
+        expect(find_leave_setting(year1, "1730169").count).to eq 39
+        expect(find_leave_setting(year1, "836001").count).to eq 40
       end
     end
   end

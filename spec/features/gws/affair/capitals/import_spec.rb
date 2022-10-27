@@ -74,7 +74,7 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
       year1.reload
       year2.reload
 
-      expect(year1.yearly_capitals.count).to eq 97
+      expect(year1.yearly_capitals.count).to eq 14
       expect(year2.yearly_capitals.count).to eq 0
 
       # import members 1
@@ -95,10 +95,10 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
       expect(year1.yearly_capitals.pluck(:member_ids).select(&:present?).count).to eq 3
       expect(year1.yearly_capitals.pluck(:member_group_ids).select(&:present?).count).to eq 0
       expect(find_capital(year1, 1, 17).member_ids).to match_array [user1.id]
-      expect(find_capital(year1, 693,78).member_ids).to match_array [user2.id]
-      expect(find_capital(year1, 2596,23134).member_ids).to match_array [user3.id]
-      expect(find_capital(year1, 20, 19034).member_ids).to match_array []
-      expect(find_capital(year1, 21,19164).member_ids).to match_array []
+      expect(find_capital(year1, 693, 78).member_ids).to match_array [user2.id]
+      expect(find_capital(year1, 669, 1044).member_ids).to match_array [user3.id]
+      expect(find_capital(year1, 1441, 12269).member_ids).to match_array []
+      expect(find_capital(year1, 2607, 23141).member_ids).to match_array []
 
       # import members 2
       visit import_member_path
@@ -118,10 +118,10 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
       expect(year1.yearly_capitals.pluck(:member_ids).select(&:present?).count).to eq 3
       expect(year1.yearly_capitals.pluck(:member_group_ids).select(&:present?).count).to eq 0
       expect(find_capital(year1, 1, 17).member_ids).to match_array [user1.id]
-      expect(find_capital(year1, 693,78).member_ids).to match_array []
-      expect(find_capital(year1, 2596,23134).member_ids).to match_array []
-      expect(find_capital(year1, 20, 19034).member_ids).to match_array [user2.id]
-      expect(find_capital(year1, 21,19164).member_ids).to match_array [user3.id]
+      expect(find_capital(year1, 693, 78).member_ids).to match_array [user2.id]
+      expect(find_capital(year1, 669, 1044).member_ids).to match_array []
+      expect(find_capital(year1, 1441, 12269).member_ids).to match_array []
+      expect(find_capital(year1, 2607, 23141).member_ids).to match_array [user3.id]
 
       # import group 1
       visit import_group_path
@@ -141,10 +141,10 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
       expect(year1.yearly_capitals.pluck(:member_ids).select(&:present?).count).to eq 3
       expect(year1.yearly_capitals.pluck(:member_group_ids).select(&:present?).count).to eq 3
       expect(find_capital(year1, 1, 17).member_group_ids).to match_array [group1.id]
-      expect(find_capital(year1, 1441, 12269).member_group_ids).to match_array [group2.id]
-      expect(find_capital(year1, 1812,17994).member_group_ids).to match_array [group3.id]
-      expect(find_capital(year1, 2627,23533).member_group_ids).to match_array []
-      expect(find_capital(year1, 1014,7502).member_group_ids).to match_array []
+      expect(find_capital(year1, 693, 78).member_group_ids).to match_array [group2.id]
+      expect(find_capital(year1, 669, 1044).member_group_ids).to match_array [group3.id]
+      expect(find_capital(year1, 1441, 12269).member_group_ids).to match_array []
+      expect(find_capital(year1, 2607, 23141).member_group_ids).to match_array []
 
       # import group 2
       visit import_group_path
@@ -164,10 +164,10 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
       expect(year1.yearly_capitals.pluck(:member_ids).select(&:present?).count).to eq 3
       expect(year1.yearly_capitals.pluck(:member_group_ids).select(&:present?).count).to eq 3
       expect(find_capital(year1, 1, 17).member_group_ids).to match_array [group1.id]
+      expect(find_capital(year1, 693, 78).member_group_ids).to match_array [group2.id]
+      expect(find_capital(year1, 669, 1044).member_group_ids).to match_array []
       expect(find_capital(year1, 1441, 12269).member_group_ids).to match_array []
-      expect(find_capital(year1, 1812,17994).member_group_ids).to match_array []
-      expect(find_capital(year1, 2627,23533).member_group_ids).to match_array [group2.id]
-      expect(find_capital(year1, 1014,7502).member_group_ids).to match_array [group3.id]
+      expect(find_capital(year1, 2607, 23141).member_group_ids).to match_array [group3.id]
     end
   end
 end
