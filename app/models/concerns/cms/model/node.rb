@@ -161,7 +161,7 @@ module Cms::Model::Node
   end
 
   def route_options
-    Cms::Node.plugins.select { |name, path, enabled| enabled }.map { |name, path, enabled| [name, path] }
+    Cms::Node.plugins.select { |plugin| plugin.enabled? }.map { |plugin| [plugin.name, plugin.path] }
   end
 
   def shortcut_options

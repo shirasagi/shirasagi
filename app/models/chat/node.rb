@@ -1,6 +1,6 @@
 class Chat::Node
   include Cms::Model::Node
-  include Cms::PluginRepository
+  include SS::PluginRepository
   include Cms::Addon::NodeSetting
   include Cms::Addon::EditorSetting
   include Cms::Addon::GroupPermission
