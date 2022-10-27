@@ -3,7 +3,11 @@ require 'spec_helper'
 describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:new_path) { new_gws_schedule_plan_path site }
-  before { login_gws_user }
+
+  before do
+    gws_user.update(lang: "ja")
+    login_gws_user
+  end
 
   context "datetime" do
     let(:format) { I18n.t("time.formats.picker") }
@@ -125,14 +129,16 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
       context "2022/1/2012:00" do
         let(:start_at) { "2022/1/2012:00" }
-        let(:datetime) { Time.zone.now.strftime(format) }
+        let(:datetime) { "2022/01/20 12:00" }
 
         it "#new" do
           visit new_path
           within "form#item-form" do
             fill_in "item[start_at]", with: start_at
             fill_in "item[name]", with: unique_id
-            expect(datetimepicker_value("item[start_at]")).to eq datetime
+            datetimepicker_value("item[start_at]").try do |value|
+              expect(value).to eq datetime
+            end
           end
         end
       end

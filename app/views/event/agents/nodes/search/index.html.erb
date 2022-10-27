@@ -18,8 +18,8 @@
   <fieldset class="event-date-range">
     <legend><%= t("event.dates.setting") %></legend>
     <div class="dates location">
-      <%= text_field_tag "event[][start_date]", @start_date.present? ? I18n.l(@start_date) : nil, { id: nil, class: "date js-date start", title: t("event.dates.start_date") } %>
-      - <%= text_field_tag "event[][close_date]", @close_date.present? ? I18n.l(@close_date) : nil, { id: nil, class: "date js-date close", title: t("event.dates.close_date") } %>
+      <%= ss_date_field_tag "event[][start_date]", @start_date, {}, { id: nil, class: "start", title: t("event.dates.start_date") } %>
+      - <%= ss_date_field_tag "event[][close_date]", @close_date, {}, { id: nil, class: "close", title: t("event.dates.close_date") } %>
     </div>
   </fieldset>
 

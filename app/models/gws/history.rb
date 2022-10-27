@@ -57,6 +57,9 @@ class Gws::History
     # rubocop:enable Rails::WhereExists
 
     SEARCH_HANDLERS = %i[search_keyword search_ymd].freeze
+    SEARCH_FIELDS = %i[
+      session_id request_id user_name severity mode model module controller job item_id path action message
+    ].freeze
 
     def search(params)
       return all if params.blank?
@@ -70,7 +73,7 @@ class Gws::History
 
     def search_keyword(params)
       return all if params[:keyword].blank?
-      all.keyword_in(params[:keyword], :session_id, :request_id, :name, :model_name, :user_name, :user_group_name)
+      all.keyword_in(params[:keyword], *SEARCH_FIELDS)
     end
 
     def search_ymd(params)

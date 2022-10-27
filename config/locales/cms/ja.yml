@@ -70,7 +70,6 @@ ja:
     node_config: フォルダー設定
     notice: お知らせ
     page: 固定ページ
-    pagination: ページネーション
     page_search: ページ検索
     part: パーツ
     preview: プレビュー
@@ -552,6 +551,7 @@ ja:
       cms/monthly_nav: アーカイブナビ（月次）
       cms/site_search_history: サイト内検索(検索履歴)
       cms/history_list: 閲覧履歴
+      cms/site_search_keyword: サイト内検索(注目ワード)
     columns:
       cms/text_field: 一行入力
       cms/date_field: 日付入力
@@ -940,6 +940,7 @@ ja:
         oauth_type: OAuth Type
         oauth_id: OAuth ID
         oauth_token: OAuth トークン
+        last_loggedin: 最終ログイン日時
       cms/editor_template:
         name: 名前
         description: 説明
@@ -1176,6 +1177,10 @@ ja:
         upper_html: 上部HTML
         lower_html: 下部HTML
         placeholder: プレースホルダー
+      cms/addon/site_search/keyword:
+        site_search_keywords: 注目ワード
+        upper_html: 上部HTML
+        lower_html: 下部HTML
       cms/form:
         name: 名前
         order: 並び順
@@ -2732,6 +2737,7 @@ ja:
         ファイルの内容が前回と同じ時はインポートを終了します。
         データの更新、同期のための削除も実行されません。
         速度向上や負荷低減のためにご利用ください。
+        ※定期実行時のみ有効な設定です。
       generate_on_import: |-
         インポートした際に記事ページを書き出します。
 
@@ -2839,6 +2845,14 @@ ja:
         - 下部HTMLを入力します。
       placeholder:
         - プレースホルダーを入力します。
+
+    cms/addon/site_search/keyword:
+      site_search_keywords:
+        - 注目ワードを改行区切りで入力してください。
+      upper_html:
+        - 上部HTMLを入力します。
+      lower_html:
+        - 下部HTMLを入力します。
 
     cms/line/facility_search/category:
       name:

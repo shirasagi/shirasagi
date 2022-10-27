@@ -4,7 +4,7 @@
 
 <dl class="see mod-line-member-additional-attributes">
   <dt><%= @item.t(:first_registered) %></dt>
-  <dd><%= f.text_field :first_registered, class: 'datetime js-datetime', value: tryb{ @item.first_registered.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <dd><%= f.ss_datetime_field :first_registered %></dd>
 
   <dt><%= @item.t(:subscribe_richmenu_id) %></dt>
   <dd><%= f.text_field :subscribe_richmenu_id %></dd>

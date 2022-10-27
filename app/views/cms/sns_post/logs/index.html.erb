@@ -6,7 +6,7 @@
 <% @index_meta = proc do |item| %>
   <span class="action"><%= item.action %></span>
   <span class="state"><%= item.label(:state) %></span>
-  <span class="datetime"><%= item.created.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="datetime"><%= ss_time_tag item.created %></span>
 <% end %>
 
 <%= render template: "cms/crud/index" %>

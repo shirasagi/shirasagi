@@ -37,7 +37,7 @@
 
     <div class="btn-group">
       <%= button_tag(t('gws.history.days.prev_day'), btn_prev_attr) %>
-      <%= text_field_tag(:ymd, @cur_ymd.strftime('%Y/%m/%d'), class: 'datetime js-date', data: { min_date: threshold.strftime('%Y/%m/%d'), max_date: 0}) %>
+      <%= ss_date_field_tag(:ymd, @cur_ymd, { min_date: threshold, max_date: 0 }) %>
       <%= button_tag(t('gws.history.days.next_day'), btn_next_attr) %>
     </div>
 
@@ -50,16 +50,17 @@
 </div>
 
 <%= jquery do %>
-  $('.list-head input[name=ymd]').datetimepicker({
-    onChangeDateTime: function(dp, $input) {
-      var ymd = $input.val();
-      ymd = ymd.replace(/\//g, '');
-
-      var url = '<%= url_for(action: :index, ymd: ':ymd') %>';
-      url = url.replace(':ymd', ymd);
-
-      location.href = url;
+  $('.list-head input[name=ymd]').on('ss:changeDateTime', function(ev, dp, $input) {
+    var ymd = SS_DateTimePicker.momentValue($input);
+    if (!ymd) {
+      return;
     }
+    ymd = ymd.format("YYYYMMDD");
+
+    var url = '<%= url_for(action: :index, ymd: ':ymd') %>';
+    url = url.replace(':ymd', ymd);
+
+    location.href = url;
   });
   $('.list-head button[data-href]').on("click", function() {
     location.href = $(this).data("href");

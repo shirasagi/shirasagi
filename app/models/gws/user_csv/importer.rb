@@ -11,7 +11,9 @@ class Gws::UserCsv::Importer
 
   validates :in_file, presence: true
   validates :cur_site, presence: true
-  validate :validate_import
+  validate do
+    I18n.with_locale(I18n.default_locale) { validate_import }
+  end
 
   def initialize(*args, &block)
     super
@@ -19,6 +21,12 @@ class Gws::UserCsv::Importer
   end
 
   def import
+    I18n.with_locale(I18n.default_locale) { _import }
+  end
+
+  private
+
+  def _import
     return if invalid?
 
     @imported = 0
@@ -40,8 +48,6 @@ class Gws::UserCsv::Importer
     @row_index = nil
     @row = nil
   end
-
-  private
 
   def validate_import
     if in_file.blank?

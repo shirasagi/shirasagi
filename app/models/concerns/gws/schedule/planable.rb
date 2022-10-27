@@ -139,14 +139,14 @@ module Gws::Schedule::Planable
   end
 
   def set_datetimes_at
-    self.start_at = Time.zone.now.strftime('%Y/%m/%d %H:00') if start_at.blank?
+    self.start_at = Time.zone.now.change(min: 0) if start_at.blank?
     self.end_at   = start_at if end_at.blank?
     #self.end_at   = start_at if start_at > end_at
   end
 
   def validate_datetimes_at
     return if allday?
-    errors.add :end_at, :greater_than, count: t(:start_at) if start_at > end_at
+    errors.add :end_at, :greater_than, count: t(:start_at) if start_at >= end_at
   end
 
   def validate_date_at

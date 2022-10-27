@@ -2,6 +2,7 @@ class Gws::Schedule::HolidaysController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Schedule::CalendarFilter
+  include Gws::Schedule::CalendarFilter::Transition
 
   navi_view "gws/schedule/main/navi"
   menu_view "gws/schedule/holidays/menu"
@@ -20,11 +21,18 @@ class Gws::Schedule::HolidaysController < ApplicationController
   end
 
   def pre_params
-    { start_on: params[:start] || Time.zone.now.strftime('%Y/%m/%d') }
+    { start_on: params[:start] || I18n.l(Time.zone.today, format: :picker) }
   end
 
-  def redirection_view
-    'month'
+  def crud_redirect_url
+    path = params.dig(:calendar, :path)
+    if path.present?
+      uri = URI(path)
+      uri.query = { calendar: redirection_calendar_params }.to_param
+      uri.to_s
+    else
+      { action: :index }
+    end
   end
 
   def set_item

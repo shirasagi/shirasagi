@@ -270,12 +270,16 @@ def webmail_load_mail(name)
   item
 end
 
-def webmail_import_mail(user, mail_or_msg, account: 0, date: Time.zone.now, mailbox: 'INBOX')
+def webmail_import_mail(user_or_group, mail_or_msg, account: 0, date: Time.zone.now, mailbox: 'INBOX')
   msg = mail_or_msg.is_a?(String) ? mail_or_msg : mail_or_msg.to_s
 
   # Use IMAP api directly to import none-sanitized eml message.
-  imap_setting = user.imap_settings[account]
-  imap = Webmail::Imap::Base.new_by_user(user, imap_setting)
+  imap_setting = user_or_group.imap_settings[account]
+  if user_or_group.is_a?(Webmail::Addon::GroupExtension)
+    imap = Webmail::Imap::Base.new_by_group(user_or_group, imap_setting)
+  else
+    imap = Webmail::Imap::Base.new_by_user(user_or_group, imap_setting)
+  end
   imap.login
   imap.examine(mailbox)
   imap.conn.append(mailbox, msg, [:Seen], date)

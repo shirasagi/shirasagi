@@ -1,50 +1,41 @@
 class Gws::HistoryCsv
   include ActiveModel::Model
 
-  attr_accessor :cur_site, :items
+  attr_accessor :site, :criteria
 
-  CSV_HEADERS = %i[
-    id session_id request_id severity name mode model controller job item_id
-    path action updated_field_names message created
-  ].freeze
-
-  class << self
-    def enum_csv(cur_site, items)
-      new(cur_site: cur_site, items: items).enum_csv
-    end
-  end
-
-  def csv_headers
-    CSV_HEADERS.map { |k| Gws::History.t(k) }
-  end
-
-  def enum_csv(opts = {})
-    Enumerator.new do |y|
-      y << encode_sjis(csv_headers.to_csv)
-      items.each do |item|
-        y << encode_sjis(to_csv(item))
+  def enum_csv(options = {})
+    drawer = SS::Csv.draw(:export, context: self) do |drawer|
+      drawer.column :id
+      drawer.column :session_id
+      drawer.column :request_id
+      drawer.column :user_name do
+        drawer.body do |item|
+          Gws::HistoriesController.helpers.gws_public_user_long_name(item.user_long_name, cur_site: site)
+        end
       end
-    end
-  end
-
-  def to_csv(item)
-    terms = []
-    CSV_HEADERS.each do |k|
-      if k == :created
-        terms << I18n.l(item.created)
-      elsif k == :updated_field_names
-        names = item.updated_field_names
-        terms << names.join(',')
-      else
-        terms << item.send(k)
+      drawer.column :uid do
+        drawer.head { Gws::User.t(:uid) }
+        drawer.body { |item| item.user.try(:uid) }
       end
+      drawer.column :severity do
+        drawer.body { |item| I18n.t("gws.history.severity.#{item.severity}") }
+      end
+      drawer.column :mode
+      drawer.column :model
+      drawer.column :module do
+        drawer.head { I18n.t("ss.module") }
+        drawer.body { |item| I18n.t("modules.#{item.module_key}") }
+      end
+      drawer.column :controller
+      drawer.column :job
+      drawer.column :item_id
+      drawer.column :path
+      drawer.column :action
+      drawer.column :updated_field_names
+      drawer.column :message
+      drawer.column :created
     end
-    terms.to_csv
-  end
 
-  private
-
-  def encode_sjis(str)
-    str.encode("SJIS", invalid: :replace, undef: :replace)
+    drawer.enum(criteria, options)
   end
 end

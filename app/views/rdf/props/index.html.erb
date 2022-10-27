@@ -14,7 +14,7 @@
 
 <% @index_meta = proc do |item| %>
     <span class="id">#<%= item.id %></span>
-    <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+    <span class="datetime"><%= ss_time_tag item.updated %></span>
     <% if item.range.present? %>
     <span class="range"><%= link_to(item.range.try(:preferred_label), controller: :classes, action: :show, vocab_id: item.range.vocab, id: item.range) %></span>
     <% end %>

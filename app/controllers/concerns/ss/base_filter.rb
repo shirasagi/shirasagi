@@ -77,7 +77,8 @@ module SS::BaseFilter
     if SS.config.ss.javascripts.present?
       SS.config.ss.javascripts.each { |m, options| options ? javascript(m, **options.symbolize_keys) : javascript(m) }
     end
-    stylesheet("/assets/css/colorbox/colorbox.css")
+    stylesheet("colorbox")
+    javascript("colorbox", defer: true)
   end
 
   def login_path_by_cookie

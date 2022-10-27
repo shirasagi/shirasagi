@@ -1,5 +1,5 @@
 <%= jquery do %>
-  Gws_Schedule_Plan.renderForm({ maxDate: "<%= @cur_site.schedule_max_at.strftime('%Y/%m/%d') %>" });
+  Gws_Schedule_Plan.renderForm();
 <% end %>
 
 <header>
@@ -12,8 +12,8 @@
     <dt><%= Gws::Schedule::Plan.t :term %></dt>
     <dd>
       <div class="dates-field">
-        <%= f.text_field :start_on, class: "date start", value: tryb { @time_search.start_on.strftime("%Y/%m/%d") } %>
-        - <%= f.text_field :end_on, class: "date end", value: tryb { @time_search.end_on.strftime("%Y/%m/%d") } %>
+        <%= f.ss_date_field :start_on, { value: @time_search.start_on, max_date: @cur_site.schedule_max_at }, { class: "start" } %>
+        - <%= f.ss_date_field :end_on, { value: @time_search.end_on, max_date: @cur_site.schedule_max_at }, { class: "date end" } %>
 
         <% range = (@cur_site.facility_min_hour..@cur_site.facility_max_hour).to_a.map { |i| ["#{i}:00", i] } %>
         &nbsp; <%= f.select :min_hour, range, selected: @s[:min_hour] %>

@@ -86,7 +86,7 @@ module Opendata::Addon
           item.dataset_groups.pluck(:name).join("\n"),
 
           # released
-          item.released.try(:strftime, "%Y/%m/%d %H:%M"),
+          item.released.try { |time| I18n.l(time, format: :picker) },
 
           # contact
           item.contact_state,

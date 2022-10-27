@@ -39,7 +39,7 @@ class Cms::Line::DeliverPlan
 
   def set_name
     return if deliver_date.blank?
-    self.name = "#{deliver_date.strftime("%Y/%m/%d %H:%M")} (#{I18n.t("date.abbr_day_names")[deliver_date.wday]})"
+    self.name = "#{I18n.l(deliver_date, format: :picker)} (#{I18n.t("date.abbr_day_names")[deliver_date.wday]})"
   end
 
   def set_state

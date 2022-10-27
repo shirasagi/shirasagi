@@ -24,10 +24,10 @@
       <td class="text"><%= link_to item.text, { action: :show, id: item } %></td>
       <td class="member_name"><%= item.get_member_name %></td>
       <td class="member_name"><%= item.label :status %></td>
-      <td class="datetime"><%= item.created.strftime("%Y/%m/%d %H:%M") %></td>
+      <td class="datetime"><%= ss_time_tag item.created %></td>
       <td class="datetime">
         <% if item.comment_deleted.present? %>
-        <%= item.comment_deleted.strftime("%Y/%m/%d %H:%M") %>
+        <%= ss_time_tag item.comment_deleted %>
         <% end %>
       </td>
     </tr>

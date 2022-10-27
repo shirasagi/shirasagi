@@ -40,8 +40,8 @@
   </dd>
 
   <dt><%= @model.t :repeat_start %><%= @model.tt :repeat_start %></dt>
-  <dd><%= f.text_field :repeat_start, class: "js-date date repeat_start", value: tryb{@item.repeat_start.strftime("%Y/%m/%d")} %></dd>
+  <dd><%= f.ss_date_field :repeat_start, {}, { class: "repeat_start" } %></dd>
 
   <dt><%= @model.t :repeat_end %><%= @model.tt :repeat_end %></dt>
-  <dd><%= f.text_field :repeat_end, class: "js-date date repeat_end", value: tryb{@item.repeat_end.strftime("%Y/%m/%d")} %></dd>
+  <dd><%= f.ss_date_field :repeat_end, {}, { class: "repeat_end" } %></dd>
 </dl>

@@ -47,9 +47,12 @@ module Gws::Schedule::TodoFilter
   end
 
   def pre_params
+    now = Time.zone.now.change(min: 0)
     super.keep_if { |key| %i[facility_ids].exclude?(key) }.merge(
-      start_at: params[:start] || Time.zone.now.strftime('%Y/%m/%d %H:00'),
-      end_at: params[:start] || Time.zone.now.strftime('%Y/%m/%d %H:00'),
+      start_at: params[:start] || now,
+      end_at: params[:start] || now,
+      start_on: params[:start] || now.to_date,
+      end_on: params[:start] || now.to_date,
       member_ids: [@cur_user.id]
     )
   end
@@ -60,10 +63,10 @@ module Gws::Schedule::TodoFilter
 
   def crud_redirect_url
     path = params.dig(:calendar, :path)
-    if path.present?
-      uri = URI(path)
+    if path.present? && trusted_url?(path)
+      uri = ::Addressable::URI.parse(path)
       uri.query = redirection_calendar_params.to_param
-      uri.to_s
+      uri.request_uri
     else
       nil
     end

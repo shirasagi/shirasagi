@@ -29,11 +29,8 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
 
           within "#item-form" do
             fill_in "item[name]", with: plan_name
-            fill_in "item[start_at]", with: I18n.l(start_at, format: :picker, locale: I18n.default_locale)
-            # !!!be cafeful!!!
-            # it is required to input twice
-            fill_in "item[end_at]", with: I18n.l(end_at, format: :picker, locale: I18n.default_locale)
-            fill_in "item[end_at]", with: I18n.l(end_at, format: :picker, locale: I18n.default_locale)
+            fill_in_datetime "item[start_at]", with: start_at
+            fill_in_datetime "item[end_at]", with: end_at
             click_on I18n.t("ss.buttons.save")
           end
           expect(page).to have_css(css_class, text: message)

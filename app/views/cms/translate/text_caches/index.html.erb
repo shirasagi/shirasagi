@@ -26,7 +26,7 @@
             <td><%= item.text %></td>
             <td><%= item.target %></td>
             <td><%= item.label :update_state %></td>
-            <td><%= item.updated.strftime('%Y/%m/%d %H:%M') %></td>
+            <td><%= ss_time_tag item.updated %></td>
           </tr>
         <% end %>
         </tbody>

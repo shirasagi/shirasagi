@@ -114,7 +114,7 @@ this.SS = (function () {
       return $(this).addClass("external");
     });
     this.renderAjaxBox();
-    this.renderDateTimePicker();
+    SS_DateTimePicker.render();
     this.renderFileUpload();
   };
 
@@ -528,77 +528,7 @@ this.SS = (function () {
     return format;
   };
 
-  // 注意:
-  // datetimepicker にはバグがある。
-  // このコントールの次の要素が disabled の場合、コントロール内で Enter キーを押しても、入力した日時が確定しない。
-  //
-  // datetimepicker では、コントロール内で Enter キーを押すと次の要素にフォーカスを移動させる。
-  // フォーカスを移動させることでイベント "blur" が発生し、入力が確定 → onChangeDateTime イベント発生という順で処理が進む。
-  //
-  // しかし、次の要素が disabled の場合、フォーカスを移動させれず、イベント "blur" が発生しない。
-  // このため、入力が確定せず、onChangeDateTime イベントも発生しない。
-  //
-  // 問題となるソースコードは https://github.com/xdan/datetimepicker/blob/master/jquery.datetimepicker.js#L2591
-  // 要素セレクターに ":enabled" の条件がない。
-  //
-  // そこで、Enter キーが押されたら、イベント "blur" を発生させ、入力が確定 → onChangeDateTime イベント発生という順で処理が進むようにする。
-  // また、念の為 Enter キーでフォーカスを移動させないようにするため enterLikeTab を false にする。
-  SS.renderDateTimePicker = function (rooElement) {
-    $.datetimepicker.setLocale('ja');
-    $.each($(rooElement || document).find(".js-date"), function () {
-      var $this = $(this);
-      var opts = {
-        timepicker: false,
-        format: 'Y/m/d',
-        closeOnDateSelect: true,
-        scrollInput: false,
-        enterLikeTab: false
-      };
-      var data = $this.data();
-      if ("minDate" in data) {
-        opts.minDate = data.minDate;
-      }
-      if ("maxDate" in data) {
-        opts.maxDate = data.maxDate;
-      }
-      $this.attr('autocomplete', 'off')
-        .datetimepicker(opts)
-        .on("keydown", function(ev) {
-          var key = ev.which;
-          if (key === SS.KEY_ENTER) {
-            $this.trigger("blur.xdsoft")
-          }
-          return true;
-        });
-    });
-    $.each($(rooElement || document).find(".js-datetime"), function () {
-      var $this = $(this);
-      var opts = {
-        roundTime: 'ceil',
-        step: 30,
-        enterLikeTab: false
-      };
-      var data = $this.data();
-      if ("minDate" in data) {
-        opts.minDate = data.minDate;
-      }
-      if ("maxDate" in data) {
-        opts.maxDate = data.maxDate;
-      }
-      if ("step" in data) {
-        opts.step = data.step;
-      }
-      $this.attr('autocomplete', 'off')
-        .datetimepicker(opts)
-        .on("keydown", function(ev) {
-          var key = ev.which;
-          if (key === SS.KEY_ENTER) {
-            $this.trigger("blur.xdsoft")
-          }
-          return true;
-        });
-    });
-  };
+  SS.renderDateTimePicker = function (rooElement) { SS_DateTimePicker.render(rooElement) }
 
   // SS.formatTime("2019-07-09T14:33:38+0900") = "2019/7/9 14:33"
   // SS.formatTime("2019-07-09T14:33:38+0900", "default") = "2019/7/9 14:33"

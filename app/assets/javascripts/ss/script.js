@@ -9,10 +9,8 @@
 //= require jquery-ui/widgets/tooltip
 //= require js.cookie
 //= require jquery.form
-//= require jquery.datetimepicker
-//= require jquery.datetimepicker.parse_date
+//= require jquery-datetimepicker/build/jquery.datetimepicker.full.js
 //= require jquery.multi-select
-//= require jquery.colorbox
 //= require jquery.minicolors
 //= require jquery.autosize
 //= require marked
@@ -70,6 +68,7 @@
 //= require ss/lib/open_in_new_window
 //= require ss/lib/emoji
 //= require ss/lib/role
+//= require ss/lib/date_time_picker
 //= require chat/lib/chart
 //= require cms/lib/base
 //= require cms/lib/editor

@@ -459,9 +459,7 @@ module SS::Model::File
   end
 
   def rename_file
-    return unless @db_changes["filename"]
-    return unless @db_changes["filename"][0]
-
+    return if !filename_changed? && !name_changed?
     remove_public_file if site
   end
 

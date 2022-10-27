@@ -14,7 +14,9 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
       # Create
       #
       visit gws_share_folders_path(site: site)
-      click_on I18n.t("ss.links.new")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.new")
+      end
       within "form#item-form" do
         fill_in "item[in_basename]", with: name
         click_on I18n.t("ss.buttons.save")
@@ -43,7 +45,9 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
       #
       visit gws_share_folders_path(site: site)
       click_on name
-      click_on I18n.t("ss.links.edit")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.edit")
+      end
       within "form#item-form" do
         fill_in "item[in_basename]", with: name2
         click_on I18n.t("ss.buttons.save")
@@ -95,7 +99,9 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
     context 'basic crud' do
       it do
         visit gws_share_folders_path(site: site)
-        click_on I18n.t('ss.links.new')
+        within ".nav-menu" do
+          click_on I18n.t('ss.links.new')
+        end
 
         #
         # Create
@@ -133,8 +139,9 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
         #
         visit gws_share_folders_path(site: site)
         click_on "#{item.name}/#{subfolder_name1}"
-        click_on I18n.t('ss.links.edit')
-
+        within ".nav-menu" do
+          click_on I18n.t('ss.links.edit')
+        end
         within 'form#item-form' do
           fill_in 'item[in_basename]', with: subfolder_name2
           click_on I18n.t('ss.buttons.save')
@@ -149,8 +156,9 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
         #
         visit gws_share_folders_path(site: site)
         click_on "#{item.name}/#{subfolder_name2}"
-        click_on I18n.t('ss.links.delete')
-
+        within ".nav-menu" do
+          click_on I18n.t('ss.links.delete')
+        end
         within 'form' do
           click_on I18n.t('ss.buttons.delete')
         end
@@ -167,8 +175,9 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
       it do
         visit gws_share_folders_path(site: site)
         click_on "#{item.name}/#{subfolder_name1}"
-        click_on I18n.t('ss.links.move')
-
+        within ".nav-menu" do
+          click_on I18n.t('ss.links.move')
+        end
         within 'form#item-form' do
           click_on I18n.t('gws/share.apis.folders.index')
         end
@@ -192,8 +201,9 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
       it do
         visit gws_share_folders_path(site: site)
         find("a.title[href=\"#{gws_share_folder_path(site, item)}\"]").click
-        click_on I18n.t('ss.links.move')
-
+        within ".nav-menu" do
+          click_on I18n.t('ss.links.move')
+        end
         within 'form#item-form' do
           click_on I18n.t('gws/share.apis.folders.index')
         end

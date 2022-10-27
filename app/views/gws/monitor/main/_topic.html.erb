@@ -14,8 +14,8 @@
   <div class="body markdown-body">
     <div class="meta">
       <div class="user"><%= gws_public_user_long_name(@item.contributor_name.presence || @item.user_long_name) %></div>
-      <div class="datetime"><%= @model.t(:due_date) %>: <%= tryb { @item.due_date.strftime("%Y/%m/%d %H:%M") } %></div>
-      <div class="datetime"><%= @model.t(:released) %>: <%= tryb { @item.released.strftime("%Y/%m/%d %H:%M") } %></div>
+      <div class="datetime"><%= @model.t(:due_date) %>: <%= tryb { ss_time_tag @item.due_date } %></div>
+      <div class="datetime"><%= @model.t(:released) %>: <%= tryb { ss_time_tag @item.released } %></div>
     </div>
 
     <%= @item.html %>

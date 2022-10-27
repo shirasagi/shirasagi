@@ -9,10 +9,10 @@
   <dd><%= f.password_field :in_password, style: "width: 200px" %></dd>
 
   <dt><%= @model.t :account_start_date %><%= @model.tt :account_start_date %></dt>
-  <dd><%= f.text_field :account_start_date, class: "datetime js-datetime", value: tryb { @item.account_start_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <dd><%= f.ss_datetime_field :account_start_date %></dd>
 
   <dt><%= @model.t :account_expiration_date %><%= @model.tt :account_expiration_date %></dt>
-  <dd><%= f.text_field :account_expiration_date, class: "datetime js-datetime", value: tryb { @item.account_expiration_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <dd><%= f.ss_datetime_field :account_expiration_date %></dd>
 
   <dt><%= @model.t :organization_ids %><%= @model.tt :organization_ids %></dt>
   <dd>

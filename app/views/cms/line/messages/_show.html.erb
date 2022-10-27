@@ -7,6 +7,6 @@
 
   <% if @item.completed.present? %>
     <dt><%= @item.t :completed %></dt>
-    <dd><%= tryb{ @item.completed.strftime("%Y/%m/%d %H:%M") } %></dd>
+    <dd><%= tryb{ ss_time_tag @item.completed } %></dd>
   <% end %>
 </dl>

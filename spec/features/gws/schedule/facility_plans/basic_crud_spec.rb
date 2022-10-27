@@ -32,8 +32,8 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       visit new_path
       within "form#item-form" do
         fill_in "item[name]", with: "name"
-        fill_in "item[start_at]", with: "2016/04/01 12:00"
-        fill_in "item[end_at]", with: "2016/04/01 13:00"
+        fill_in_datetime "item[start_at]", with: "2016/04/01 12:00"
+        fill_in_datetime "item[end_at]", with: "2016/04/01 13:00"
         click_button I18n.t('gws/schedule.facility_reservation.index')
       end
       wait_for_cbox do
@@ -66,7 +66,9 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       visit index_path
       first('span.fc-title', text: item.name).click
       expect(current_path).to eq show_path
-      click_link I18n.t('ss.links.delete')
+      within ".nav-menu" do
+        click_link I18n.t('ss.links.delete')
+      end
       within "form" do
         click_button I18n.t('ss.buttons.delete')
       end
@@ -96,8 +98,8 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         visit new_path
         within "form#item-form" do
           fill_in "item[name]", with: "name"
-          fill_in "item[start_at]", with: "2016/04/01 12:00"
-          fill_in "item[end_at]", with: "2016/04/01 13:00"
+          fill_in_datetime "item[start_at]", with: "2016/04/01 12:00"
+          fill_in_datetime "item[end_at]", with: "2016/04/01 13:00"
           click_button I18n.t('gws/schedule.facility_reservation.index')
         end
         wait_for_cbox do
@@ -130,7 +132,9 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         visit index_path
         first('span.fc-title', text: item.name).click
         expect(current_path).to eq show_path
-        click_link I18n.t('ss.links.delete')
+        within ".nav-menu" do
+          click_link I18n.t('ss.links.delete')
+        end
         within "form" do
           click_button I18n.t('ss.buttons.delete')
         end

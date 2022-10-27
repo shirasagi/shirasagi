@@ -84,7 +84,7 @@ Rails.application.routes.draw do
 
   namespace "cms", path: ".s:site" do
     get "/" => "main#index", as: :main
-    match "logout" => "login#logout", as: :logout, via: [:get]
+    get "logout" => "login#logout", as: :logout
     match "login" => "login#login", as: :login, via: [:get, :post]
     get "preview(:preview_date)/(*path)" => "preview#index", as: :preview
     post "preview(:preview_date)/(*path)" => "preview#form_preview", as: :form_preview, format: false
@@ -126,7 +126,7 @@ Rails.application.routes.draw do
     resources :word_dictionaries, concerns: [:deletion, :template]
 
     scope module: "form" do
-      resources :forms, concerns: [:deletion, :change_state] do
+      resources :forms, concerns: [:deletion, :download, :import, :change_state] do
         resources :init_columns, concerns: [:deletion]
         resources :columns, concerns: [:deletion]
 
@@ -253,13 +253,13 @@ Rails.application.routes.draw do
     get "search_contents/html" => "search_contents/html#index"
     post "search_contents/html" => "search_contents/html#update"
     match "search_contents/pages" => "search_contents/pages#index", via: [:get, :post]
+    delete "search_contents/pages" => "search_contents/pages#destroy_all"
     get "search_contents/files" => "search_contents/files#index"
     get "search_contents/sitemap" => "search_contents/sitemap#index"
     get "search_contents/sitemap/download_all(.:format)" => "search_contents/sitemap#download_all", as: "folder_csv_download"
     get "search_contents/:id" => "page_search_contents#show", as: "page_search_contents"
-    delete "search_contents/pages" => "search_contents/pages#destroy_all"
     get "search_contents/:id/download" => "page_search_contents#download", as: "download_page_search_contents"
-    delete "search_contents/:id" => "search_contents/pages#destroy_all_pages"
+    delete "search_contents/:id" => "page_search_contents#destroy_all"
     resource :generate_lock
 
     namespace "check_links" do
@@ -384,8 +384,10 @@ Rails.application.routes.draw do
       end
 
       namespace "line" do
-        get "deliver_members/:model/:id" => "deliver_members#index", model: /message|deliver_condition|line_deliver/, as: :deliver_members
-        get "deliver_members/:model/:id/download" => "deliver_members#download", model: /message|deliver_condition|line_deliver/
+        get "deliver_members/:model/:id" => "deliver_members#index",
+          model: /message|deliver_condition|line_deliver/, as: :deliver_members
+        get "deliver_members/:model/:id/download" => "deliver_members#download",
+          model: /message|deliver_condition|line_deliver/
         get "temp_files/:id" => "temp_files#select", as: :select_temp_file
       end
 
@@ -433,6 +435,7 @@ Rails.application.routes.draw do
     resources :form_searches, only: [:index]
     get "search_contents/:id" => "page_search_contents#show", as: "page_search_contents"
     get "search_contents/:id/download" => "page_search_contents#download", as: "download_page_search_contents"
+    delete "search_contents/:id" => "page_search_contents#destroy_all"
     resources :line_hubs, only: [:index]
   end
 
@@ -466,6 +469,7 @@ Rails.application.routes.draw do
     get "monthly_nav" => "public#index", cell: "parts/monthly_nav"
     get "site_search_history" => "public#index", cell: "parts/site_search_history"
     get "history_list" => "public#index", cell: "parts/history_list"
+    get "site_search_keyword" => "public#index", cell: "parts/site_search_keyword"
   end
 
   page "cms" do

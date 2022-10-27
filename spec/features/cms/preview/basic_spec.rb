@@ -166,8 +166,8 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".heading", text: "見出し2")
 
         within ".ss-preview-wrap" do
-          # fill_in "#ss-preview-date", with: I18n.l(preview_time, format: :picker)
-          first("#ss-preview-date").set(I18n.l(preview_time, format: :picker))
+          fill_in_datetime "ss-preview-date", with: preview_time
+          # first("#ss-preview-date").set(I18n.l(preview_time, format: :picker))
           click_on "PC"
         end
 

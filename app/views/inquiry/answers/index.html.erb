@@ -9,10 +9,10 @@
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
   <% if item.try(:created) %>
-    <span class="datetime"><%= t("inquiry.views.index.created", created: item.created.strftime("%Y/%m/%d %H:%M")) %></span>
+    <span class="datetime"><%= t("inquiry.views.index.created", created: I18n.l(item.created)) %></span>
   <% end %>
   <% if item.try(:updated) %>
-    <span class="datetime"><%= t("inquiry.views.index.updated", updated: item.updated.strftime("%Y/%m/%d %H:%M")) %></span>
+    <span class="datetime"><%= t("inquiry.views.index.updated", updated: I18n.l(item.updated)) %></span>
   <% end %>
   <% if item.source_url.present? %>
     <span class="url"><%= item.source_url %></span>

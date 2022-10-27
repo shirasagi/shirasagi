@@ -139,6 +139,7 @@ en:
       invalid_zip: Select a file in ZIP format.
       incorrectly: Enter the correct information.
       malformed_csv: The CSV format is incorrect. Select a CSV file in the correct format.
+      malformed_json: The JSON format is incorrect. Select a JSON file in the correct format.
       invalid_new_line_included: Cannot contain line breaks.
       invalid_email_included: Contains an invalid e-mail address.
       too_large_mail_size: "The e-mail’s attachment file size is too large. Total: %{size} (Limit: %{limit})"
@@ -188,7 +189,7 @@ en:
       sanitizer_waiting: Sanitization is being performed. Please wait for a while.
       url: Must be a valid URL.
       invalid_latlon: |-
-        Enter the correct coordinates, separating them with commas (,). 
+        Enter the correct coordinates, separating them with commas (,).
         Example: 133.6806607,33.8957612
       invalid_zoom_level: |-
         Must be within a range between 1 and 21.

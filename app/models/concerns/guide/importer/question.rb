@@ -71,7 +71,7 @@ module Guide::Importer::Question
 
     if item.invalid?
       message = item.errors.full_messages.join("\n")
-      errors.add :base, "#{@row_index}: #{I18n.t("guide.errors.save_faild", message: message)}"
+      errors.add :base, "#{@row_index}: #{I18n.t("guide.errors.save_failed", message: message)}"
       return false
     end
 
@@ -124,7 +124,7 @@ module Guide::Importer::Question
       true
     else
       message = item.errors.full_messages.join("\n")
-      errors.add :base, "#{@row_index}: #{I18n.t("guide.errors.save_faild", message: message)}"
+      errors.add :base, "#{@row_index}: #{I18n.t("guide.errors.save_failed", message: message)}"
       false
     end
   end

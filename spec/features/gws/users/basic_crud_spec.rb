@@ -10,7 +10,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
   let(:edit_path) { "#{index_path}/#{item.id}/edit" }
   let(:delete_path) { "#{index_path}/#{item.id}/delete" }
   let(:name) { unique_id }
-  let(:sys_role1) { create(:sys_role_general, name: I18n.t("sys.roles.user")) }
+  let(:sys_role1) { create(:sys_role_general, name: I18n.t("sys.roles.user", locale: I18n.default_locale)) }
   let(:title1) { create(:gws_user_title, code: "E100") }
   let(:occupation1) { create(:gws_user_occupation, code: "B133") }
 
@@ -90,12 +90,14 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
 
       wait_for_download
 
-      SS::Csv.open(downloads.first) do |csv|
-        csv_table = csv.read
-        expect(csv_table.length).to be > 1
-        expect(csv_table[0][Gws::User.t(:id)]).to be_present
-        expect(csv_table[0][Gws::User.t(:name)]).to be_present
-        expect(csv_table[0][Gws::User.t(:uid)]).to be_present
+      I18n.with_locale(I18n.default_locale) do
+        SS::Csv.open(downloads.first) do |csv|
+          csv_table = csv.read
+          expect(csv_table.length).to be > 1
+          expect(csv_table[0][Gws::User.t(:id)]).to be_present
+          expect(csv_table[0][Gws::User.t(:name)]).to be_present
+          expect(csv_table[0][Gws::User.t(:uid)]).to be_present
+        end
       end
 
       expect(Gws::History.all.count).to be > 1
@@ -140,8 +142,10 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       end
       expect(page).to have_css(".list-items", count: 1)
 
-      find('.list-head label.check input').set(true)
-      click_button I18n.t("ss.links.delete")
+      within ".list-head" do
+        find('label.check input').set(true)
+        click_button I18n.t("ss.links.delete")
+      end
       page.accept_alert
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
 
@@ -190,7 +194,9 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css('dl.see dd', text: name)
 
       #edit
-      click_on I18n.t('ss.links.edit')
+      within ".nav-menu" do
+        click_on I18n.t('ss.links.edit')
+      end
       within 'form#item-form' do
         fill_in 'item[name]', with: new_name
         click_button I18n.t('ss.buttons.save')
@@ -200,7 +206,9 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       expect { Gws::User.all.active.find_by(name: new_name) }.not_to raise_error
 
       #delete
-      click_on I18n.t('ss.links.delete')
+      within ".nav-menu" do
+        click_on I18n.t('ss.links.delete')
+      end
       within 'form' do
         click_button I18n.t('ss.buttons.delete')
       end

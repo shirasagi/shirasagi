@@ -31,8 +31,8 @@
     )
   end
 %>
-<%= javascript_include_tag "/assets/js/jquery.colorbox.js" %>
-<%= stylesheet_link_tag "/assets/css/colorbox/colorbox.css", media: 'all' %>
+<%= javascript_include_tag "colorbox", defer: true %>
+<%= stylesheet_link_tag "colorbox", media: 'all' %>
 <%= jquery do %>
 Cms_Site_Search.render();
 Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.full_url %>");

@@ -1,0 +1,139 @@
+[
+  {
+    "permission_level": 1,
+    "order": 40,
+    "name": "ブロック入力",
+    "sub_type": "entry",
+    "state": "public",
+    "groups": [
+      "シラサギ市/企画政策部/政策課"
+    ],
+    "columns": [
+      {
+        "required": "optional",
+        "_type": "Cms::Column::TextField",
+        "additional_attr": "",
+        "name": "一行入力",
+        "order": 10,
+        "input_type": "text",
+        "layout": "{% if value.value %}\n  <p>{{ value.value }}</p>\n{% endif %}",
+        "form_type": "Cms::Form"
+      },
+      {
+        "required": "optional",
+        "_type": "Cms::Column::TextArea",
+        "additional_attr": "",
+        "name": "複数行入力",
+        "order": 20,
+        "layout": "{% if value.value %}\n  <p>{{ value.value | newline_to_br }}</p>\n{% endif %}",
+        "form_type": "Cms::Form"
+      },
+      {
+        "required": "optional",
+        "_type": "Cms::Column::Headline",
+        "additional_attr": "",
+        "name": "見出し",
+        "order": 30,
+        "form_type": "Cms::Form"
+      },
+      {
+        "required": "optional",
+        "_type": "Cms::Column::UrlField2",
+        "html_additional_attr": "",
+        "name": "リンク",
+        "order": 40,
+        "layout": "{% if value.link_url %}\n  <p><a href=\"{{ value.link_url }}\" target=\"{{ value.link_target | default: \"_self\" }}\">{{ value.link_label | default: value.link_url }}</a></p>\n{% endif %}",
+        "form_type": "Cms::Form"
+      },
+      {
+        "required": "optional",
+        "_type": "Cms::Column::FileUpload",
+        "html_additional_attr": "",
+        "name": "イメージ",
+        "order": 50,
+        "file_type": "image",
+        "layout": "<p>{{ value.html }}</p>",
+        "form_type": "Cms::Form"
+      },
+      {
+        "required": "optional",
+        "_type": "Cms::Column::FileUpload",
+        "html_additional_attr": "",
+        "name": "添付ファイル",
+        "order": 60,
+        "file_type": "attachment",
+        "layout": "{% if value.file %}\n  <p>{{ value.html }}</p>\n{% endif %}",
+        "form_type": "Cms::Form"
+      },
+      {
+        "required": "optional",
+        "_type": "Cms::Column::List",
+        "additional_attr": "",
+        "name": "番号付きリスト",
+        "order": 70,
+        "list_type": "ol",
+        "form_type": "Cms::Form"
+      },
+      {
+        "required": "optional",
+        "_type": "Cms::Column::List",
+        "additional_attr": "",
+        "name": "番号なしリスト",
+        "order": 80,
+        "list_type": "ul",
+        "form_type": "Cms::Form"
+      },
+      {
+        "required": "optional",
+        "_type": "Cms::Column::Table",
+        "additional_attr": "",
+        "name": "表",
+        "order": 90,
+        "form_type": "Cms::Form"
+      },
+      {
+        "required": "optional",
+        "_type": "Cms::Column::Youtube",
+        "additional_attr": "",
+        "name": "YouTube埋め込み",
+        "order": 100,
+        "form_type": "Cms::Form"
+      },
+      {
+        "required": "optional",
+        "_type": "Cms::Column::FileUpload",
+        "html_additional_attr": "",
+        "name": "動画埋め込み",
+        "order": 110,
+        "file_type": "video",
+        "form_type": "Cms::Form"
+      },
+      {
+        "required": "optional",
+        "_type": "Cms::Column::Free",
+        "additional_attr": "",
+        "name": "自由入力",
+        "order": 120,
+        "form_type": "Cms::Form"
+      }
+    ],
+    "init_columns": [
+      {
+        "column_id": {
+          "$oid": "603d00dc686c825b8533d0e7"
+        },
+        "form_type": "Cms::Form"
+      }
+    ]
+  },
+  {
+    "permission_level": 1,
+    "order": 50,
+    "name": "ブロック入力2",
+    "sub_type": "entry",
+    "state": "public",
+    "groups": [
+      "シラサギ市/企画政策部/政策課"
+    ]
+  }
+]

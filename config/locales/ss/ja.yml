@@ -59,6 +59,7 @@ ja:
     remark: 備考
     before: 前
     after: 後
+    pagination: ページネーション
 
     views:
       login/login:
@@ -225,6 +226,7 @@ ja:
       file_name_order: 名前順
       file_upload_order: アップロード順
       make_them_closed: 非公開にする
+      update: 更新
     confirm:
       change_state: 公開状態を変更してよろしいですか？
       delete: 削除してよろしいですか？
@@ -259,6 +261,7 @@ ja:
       approve: 承認してよろしいですか？
     notice:
       saved: 保存しました。
+      not_saved_successfully: 正常に保存できませんでした。
       deleted: 削除しました。
       unable_to_delete: '%{items} を削除できませんでした。'
       changed: 変更しました。

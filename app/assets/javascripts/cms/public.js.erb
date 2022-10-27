@@ -4,8 +4,7 @@
 //= require jquery_ujs
 //= require js.cookie
 //= require jquery.form
-//= require jquery.datetimepicker
-//= require jquery.datetimepicker.parse_date
+//= require jquery-datetimepicker/build/jquery.datetimepicker.full.js
 //= require crypto-js/3.2.0/crypto-js.min.js
 //= require gmaps-marker-clusterer/src/markerclusterer.js
 //= require ss/lib/base
@@ -15,6 +14,7 @@
 //= require ss/lib/mobile
 //= require ss/lib/clipboard
 //= require ss/lib/file_view
+//= require ss/lib/date_time_picker
 //= require cms/lib/site_search
 //= require cms/lib/site_search_history
 //= require cms/lib/line
@@ -58,7 +58,7 @@ SS.ready(function () {
   $(".ss-part").each(function () {
     SS.renderPart($(this));
   });
-  SS.renderDateTimePicker();
+  SS_DateTimePicker.render();
   SS_SearchUI.render();
   SS.enableDoubleClickGuard();
 });

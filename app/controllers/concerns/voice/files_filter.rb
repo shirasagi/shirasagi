@@ -79,7 +79,7 @@ module Voice::FilesFilter
           line = []
           line << item.url
           line << item.error
-          line << item.updated.strftime("%Y-%m-%d %H:%M")
+          line << I18n.l(item.updated, format: :picker)
           data << line
         end
       end

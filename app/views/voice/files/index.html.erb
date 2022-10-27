@@ -21,7 +21,7 @@
             <%= link_to t('ss.links.view_site'), item.url, target: :_blank, rel: "noopener" %>
           </nav>
           <%= link_to item.url, action: :show, id: item %></td>
-        <td><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
+        <td><%= ss_time_tag item.updated %></td>
       </tr>
       <% end %>
       <% if @items.blank? %>

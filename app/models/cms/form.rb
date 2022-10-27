@@ -43,6 +43,22 @@ class Cms::Form
       end
       criteria
     end
+
+    def export_json(items)
+      items.map do |form|
+        form_data = form.attributes.reject { |c| %(_id site_id group_ids created updated).include?(c) }
+        form_data[:groups] = form.groups.map(&:name)
+
+        form_data[:columns] = form.columns.map do |col|
+          col.attributes.reject { |c| %(_id site_id form_id created updated).include?(c) }
+        end
+        form_data[:init_columns] = form.init_columns.map do |col|
+          col.attributes.reject { |c| %(_id site_id form_id created updated).include?(c) }
+        end
+
+        form_data
+      end
+    end
   end
 
   def column_names
@@ -50,7 +66,7 @@ class Cms::Form
   end
 
   def columns_hash
-    @columns_hash ||= columns.order_by(order: 1).map { |col| [col['name'], col] }.to_h
+    @columns_hash ||= columns.order_by(order: 1).index_by { |col| col['_id'] }
   end
 
   def state_options
@@ -82,5 +98,56 @@ class Cms::Form
     template = ::Cms.parse_liquid(layout, registers)
     assigns = { "values" => page.column_values.to_liquid, "page" => page.to_liquid }
     template.render(assigns).html_safe
+  end
+
+  def import_json(options = {})
+    json_file = options[:file].presence || in_file
+    json_data = json_file.read
+    json_data = JSON.parse(json_data) rescue nil
+    errors.add(:base, :malformed_json) unless json_data.instance_of?(Array)
+    return false if errors.any?
+
+    json_data.each_with_index do |form_data, idx|
+      form_data = form_data.with_indifferent_access
+      form_data.delete(:_id)
+      unless import_json_row(form_data)
+        errors.add(:base, "[#{idx + 1}] #{form_data[:name]} - #{I18n.t('ss.notice.not_saved_successfully')}")
+      end
+    end
+
+    errors.empty?
+  end
+
+  def import_json_row(form_data)
+    fields = Cms::Form.fields.keys
+
+    form = Cms::Form.site(@cur_site).where(name: form_data[:name]).first
+    form ||= Cms::Form.new(form_data.filter { |c| fields.include?(c) })
+    return unless form.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+
+    form.cur_site = @cur_site
+    form.cur_user = @cur_user
+    form.group_ids |= Cms::Group.where(:name.in => form_data[:groups]).pluck(:id) # uniq
+    return unless form.save
+
+    result = true
+
+    form_data[:columns].to_a.each do |col_data|
+      col_class = col_data[:_type].constantize
+      col = col_class.site(@cur_site).form(form).where(name: col_data[:name]).first || col_class.new
+
+      col_data.delete(:_id)
+      col.attributes = col_data
+      col.cur_site = @cur_site
+      col.form_id = form.id
+      if col.changed?
+        result = false unless col.save
+      end
+    end
+
+    result
+  rescue => e
+    Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    false
   end
 end

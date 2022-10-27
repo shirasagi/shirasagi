@@ -210,4 +210,33 @@ describe Cms::Page, type: :model, dbscope: :example do
       end
     end
   end
+
+  describe ".and_public_selector: able to use with aggregate" do
+    let(:now) { Time.zone.now.change(usec: 0) }
+    let!(:page1) do
+      create :cms_page, state: "public", released_type: "fixed", released: now, release_date: nil, close_date: nil
+    end
+
+    context "date is nil" do
+      it do
+        selector = Cms::Page.and_public_selector(nil)
+
+        expect(Cms::Page.all.where(selector).count).to eq 1
+        Cms::Page.collection.aggregate([{ "$match" => selector }]).tap do |result|
+          expect(result.count).to eq 1
+        end
+      end
+    end
+
+    context "date is given" do
+      it do
+        selector = Cms::Page.and_public_selector(now)
+
+        expect(Cms::Page.all.where(selector).count).to eq 1
+        Cms::Page.collection.aggregate([{ "$match" => selector }]).tap do |result|
+          expect(result.count).to eq 1
+        end
+      end
+    end
+  end
 end

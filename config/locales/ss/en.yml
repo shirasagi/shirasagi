@@ -55,6 +55,7 @@ en:
     large_file_upload: Large File Upload
     upload_status: Upload Status
     under_maintenance_mode: Currently under maintenance.
+    pagination: Pagination
 
     views:
       login/login:
@@ -220,6 +221,7 @@ en:
       file_name_order: Filename order
       file_upload_order: File upload order
       make_them_closed: Make it closed
+      update: Update
     confirm:
       change_state: Are you sure you want to change your publication status?
       delete: Are you sure you want to delete it?
@@ -253,6 +255,7 @@ en:
       target_to_closed: Check what to make closed
     notice:
       saved: Saved.
+      not_saved_successfully: Not saved successfully.
       deleted: Deleted.
       unable_to_delete: ! '%{items} could not be deleted.'
       changed: Changed.

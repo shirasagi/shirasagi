@@ -237,7 +237,7 @@ class Gws::Memo::MessagesController < ApplicationController
     item_mdn = @model.new fix_params
     item_mdn.in_to_members = [@item.user_id]
     item_mdn.subject = I18n.t("gws/memo/message.mdn.subject", subject: @item.subject)
-    date = Time.zone.now.strftime("%Y/%m/%d %H:%M")
+    date = I18n.l(Time.zone.now, format: :picker)
     item_mdn.text = I18n.t("gws/memo/message.mdn.confirmed", name: @cur_user.long_name, date: date)
     item_mdn.format = "text"
     item_mdn.state = "public"

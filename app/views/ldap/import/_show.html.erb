@@ -1,6 +1,6 @@
 <dl class="see ldap-import-basic">
   <dt><%= @model.t :created %></dt>
-  <dd><%= @item.created.strftime("%Y/%m/%d %H:%M") %></dd>
+  <dd><%= ss_time_tag @item.created %></dd>
   <dt><%= @model.t :group_count %></dt>
   <dd><%= @item.group_count %></dd>
   <dt><%= @model.t :user_count %></dt>

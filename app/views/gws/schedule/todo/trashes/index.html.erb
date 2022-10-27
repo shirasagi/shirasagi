@@ -28,8 +28,8 @@
     <span class="todo-over"><%= t('gws/schedule/todo.todo_over') %></span>
     <% end %>
   </span>
-  <span class="datetime"><%= @model.t(:updated) %>: <%= item.updated.strftime('%Y/%m/%d %H:%M') %></span>
-  <span class="datetime"><%= @model.t(:created) %>: <%= item.created.strftime('%Y/%m/%d %H:%M') %></span>
+  <span class="datetime"><%= @model.t(:updated) %>: <%= ss_time_tag item.updated %></span>
+  <span class="datetime"><%= @model.t(:created) %>: <%= ss_time_tag item.created %></span>
 <% end %>
 
 <%= render template: 'gws/crud/index' %>

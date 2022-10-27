@@ -42,6 +42,8 @@ class Cms::Elasticsearch::Searcher
   end
 
   def search
+    return unless client
+
     query = {}
     query[:bool] = {}
     query[:bool][:must] = []

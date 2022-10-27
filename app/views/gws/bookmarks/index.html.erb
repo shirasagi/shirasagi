@@ -1,7 +1,7 @@
 <% @index_meta = proc do |item| %>
   <% item.cur_site ||= @cur_site %>
   <span class="id">#<%= item.id %></span>
-  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="datetime"><%= ss_time_tag item.updated %></span>
   <span class="url"><%= link_to item.url.truncate(80), sns_redirect_path(ref: item.url) %></span>
   <span class="bookmark_model"><%= item.label(:bookmark_model) %></span>
 <% end %>

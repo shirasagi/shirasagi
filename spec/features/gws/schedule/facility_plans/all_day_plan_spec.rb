@@ -17,8 +17,8 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       within "form#item-form" do
         fill_in "item[name]", with: name
         check "item_allday"
-        fill_in "item[start_on]", with: I18n.l(start_on, format: :picker, locale: I18n.default_locale) + "\n"
-        fill_in "item[end_on]", with: I18n.l(end_on, format: :picker, locale: I18n.default_locale) + "\n"
+        fill_in_date "item[start_on]", with: start_on
+        fill_in_date "item[end_on]", with: end_on
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))

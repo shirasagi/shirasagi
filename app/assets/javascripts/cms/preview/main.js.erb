@@ -202,12 +202,7 @@ SS_Preview = (function () {
   SS_Preview.prototype.initialize = function(opts) {
     this.$el = $(this.el);
     this.$datePicker = this.$el.find(".ss-preview-date");
-    this.$datePicker.datetimepicker({
-      lang: "ja",
-      roundTime: "ceil",
-      step: 30,
-      closeOnDateSelect: true
-    });
+    new SS_DateTimePicker(this.$datePicker, "datetime");
 
     var self = this;
 
@@ -985,7 +980,7 @@ SS_Preview = (function () {
   };
 
   SS_Preview.prototype.dateForPreview = function() {
-    var date = this.$datePicker.val();
+    var date = SS_DateTimePicker.instance(this.$datePicker).valueForExchange();
     if (!date) {
       return;
     }

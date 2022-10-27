@@ -14,6 +14,11 @@ class SS::FilenameUtils
     # space(' ') is not on url safe, but it is worth to support
     codes << ' '
 
+    # "&" -> "&amp;" のように変化する文字を除外する。
+    # HTML 内にリンクURLとしてセットされると、"&" -> "&amp;" のように変化してしまう。
+    # このように変化したのを知らずリンクURLを置換しようとして、マッチせず、置換に失敗してしまう場合がある。
+    codes.select! { |code| CGI.escapeHTML(code) == code }
+
     codes.sort!
     codes.map!(&:freeze)
     codes

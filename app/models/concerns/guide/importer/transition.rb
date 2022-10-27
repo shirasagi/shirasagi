@@ -90,7 +90,7 @@ module Guide::Importer::Transition
       true
     else
       message = item.errors.full_messages.join("\n")
-      errors.add :base, "#{@row_index}: #{I18n.t("guide.errors.save_faild", message: message)}"
+      errors.add :base, "#{@row_index}: #{I18n.t("guide.errors.save_failed", message: message)}"
       false
     end
   end

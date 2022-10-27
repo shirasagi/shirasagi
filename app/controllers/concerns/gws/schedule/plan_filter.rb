@@ -25,8 +25,12 @@ module Gws::Schedule::PlanFilter
   end
 
   def pre_params
+    now = Time.zone.now.change(min: 0)
     {
-      start_at: params[:start] || Time.zone.now.strftime('%Y/%m/%d %H:00'),
+      start_at: params[:start] || now,
+      end_at: params[:end] || (now + 1.hour),
+      start_on: params[:start] || now.to_date,
+      end_on: params[:end] || now.to_date,
       member_ids: params[:member_ids].presence || [@cur_user.id],
       facility_ids: params[:facility_ids].presence
     }
@@ -59,10 +63,10 @@ module Gws::Schedule::PlanFilter
 
   def redirection_url
     path = params.dig(:calendar, :path)
-    if path.present?
-      uri = URI(path)
+    if path.present? && trusted_url?(path)
+      uri = ::Addressable::URI.parse(path)
       uri.query = { calendar: redirection_calendar_params }.to_param
-      uri.to_s
+      uri.request_uri
     else
       url_for(controller: 'gws/schedule/main', action: :index, calendar: redirection_calendar_params)
     end
