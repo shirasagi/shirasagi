@@ -32,6 +32,18 @@ class Cms::Part
     default_scope ->{ where(route: "cms/node") }
   end
 
+  class Node2
+    include Cms::Model::Part
+    include Cms::Addon::NodeList
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    self.use_conditions = false
+
+    default_scope ->{ where(route: "cms/node2") }
+  end
+
   class Page
     include Cms::Model::Part
     include Event::Addon::PageList

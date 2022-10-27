@@ -461,6 +461,7 @@ Rails.application.routes.draw do
   part "cms" do
     get "free" => "public#index", cell: "parts/free"
     get "node" => "public#index", cell: "parts/node"
+    get "node2" => "public#index", cell: "parts/node2"
     get "page" => "public#index", cell: "parts/page"
     get "tabs" => "public#index", cell: "parts/tabs"
     get "crumb" => "public#index", cell: "parts/crumb"
