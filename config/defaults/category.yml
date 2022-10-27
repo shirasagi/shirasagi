@@ -1,0 +1,10 @@
+production: &production
+  part:
+    node:
+      disable: true
+
+test:
+  <<: *production
+
+development:
+  <<: *production
