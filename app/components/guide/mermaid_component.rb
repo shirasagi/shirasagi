@@ -16,10 +16,19 @@ class Guide::MermaidComponent < ApplicationComponent
         render_question(question)
       end
 
+      if node.procedures.present?
+        output_buffer << "ID_NODE{{そのほか}}\n".html_safe
+        node.procedures.each do |procedure|
+          output_buffer << "\n"
+          output_buffer << build_point(procedure)
+          output_buffer << "ID_NODE ---> ID#{procedure.id}\n".html_safe
+        end
+      end
+
       all_procedures = all_points.reject { |point| point.is_a?(Guide::Question) }
       unreachable_procedures = all_procedures.reject { |procedure| @rendered_point_map.key?(procedure.id) }
       if unreachable_procedures.present?
-        output_buffer << "ID_UNREACHABLE{{UNREACHABLE}}\n".html_safe
+        output_buffer << "ID_UNREACHABLE{{\"#{escape("")}\"}}\n".html_safe
 
         unreachable_procedures.each do |procedure|
           output_buffer << "\n"
