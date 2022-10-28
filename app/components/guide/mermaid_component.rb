@@ -8,7 +8,7 @@ class Guide::MermaidComponent < ApplicationComponent
     @rendered_edge_map = {}
     @additional_info = {}
 
-    output_buffer << tag.div(class: "mermaid") do
+    output_buffer << tag.div(class: "mermaid guide-diagnostic-chart") do
       output_buffer << "graph LR\n".html_safe
       all_questions = all_points.select { |point| point.is_a?(Guide::Question) }
       all_questions.each do |question|
@@ -29,7 +29,7 @@ class Guide::MermaidComponent < ApplicationComponent
       end
     end
 
-    output_buffer << tag.script(type: "application/json") do
+    output_buffer << tag.script(type: "application/json", class: "guide-diagnostic-data") do
       output_buffer << @additional_info.to_json.html_safe
     end
   end
@@ -71,7 +71,7 @@ class Guide::MermaidComponent < ApplicationComponent
 
   def build_edge(from_point, to_point, edge)
     @additional_info["L-L-ID#{from_point.id}-ID#{to_point.id}"] = {
-      url: guide_procedure_path(site: from_point.site_id, cid: from_point.node_id, id: from_point.id),
+      url: guide_question_path(site: from_point.site_id, cid: from_point.node_id, id: from_point.id),
       edge_id: edge.id.to_s, point_id: to_point.id
     }
 

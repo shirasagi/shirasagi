@@ -1,7 +1,10 @@
 <script src="https://unpkg.com/mermaid@8.8.0/dist/mermaid.js"></script>
 
-<%= render Guide::MermaidComponent.new(site: @cur_site, node: @cur_node) %>
+<div class="guide-diagnostic">
+  <%= render Guide::MermaidComponent.new(site: @cur_site, node: @cur_node) %>
+</div>
 
 <%= jquery do %>
   mermaid.initialize({ startOnLoad:true });
+  new Guide_Diagnostic(".guide-diagnostic");
 <% end %>
