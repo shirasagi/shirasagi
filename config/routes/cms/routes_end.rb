@@ -126,6 +126,7 @@ Rails.application.routes.draw do
     namespace 'syntax_checker' do
       get "/" => redirect { |p, req| "#{req.path}/word_dictionaries" }, as: :main
       resources :word_dictionaries, concerns: [:deletion, :template]
+      resource :setting, only: %i[show edit update]
       resource :url_scheme, only: %i[show edit update]
     end
 

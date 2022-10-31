@@ -1514,6 +1514,8 @@ ja:
         summary: メッセージ
         thumb_state: サムネイル画像
         json_body: JSON
+      cms/syntax_checker/main_setting:
+        syntax_check: アクセシビリティチェック
       cms/syntax_checker/url_scheme_setting:
         syntax_checker_url_scheme_attributes: 属性
         syntax_checker_url_scheme_schemes: スキーム
@@ -2971,6 +2973,10 @@ ja:
       st_categories:
         - サイト内検索で使用するカテゴリーを設定します。
         - 設定されていない場合は全カテゴリーが対象となります。
+
+    cms/syntax_checker/main_setting:
+      syntax_check:
+        - アクセシビリティチェックの有効無効を設定します。
 
     cms/syntax_checker/url_scheme_setting:
       syntax_checker_url_scheme_attributes:

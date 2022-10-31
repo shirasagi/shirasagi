@@ -27,6 +27,7 @@ class Cms::Site
   include SS::Addon::SiteUsage
   include SS::Addon::GenerateLock
   include SS::Addon::MaintenanceMode
+  include Cms::SyntaxChecker::MainSetting
   include Cms::SyntaxChecker::UrlSchemeSetting
 
   set_permission_name "cms_sites", :edit
