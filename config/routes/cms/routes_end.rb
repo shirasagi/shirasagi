@@ -123,7 +123,10 @@ Rails.application.routes.draw do
     end
     resources :theme_templates, concerns: [:deletion, :template]
     resources :source_cleaner_templates, concerns: [:deletion, :template]
-    resources :word_dictionaries, concerns: [:deletion, :template]
+    namespace 'syntax_checker' do
+      get "/" => redirect { |p, req| "#{req.path}/word_dictionaries" }, as: :main
+      resources :word_dictionaries, concerns: [:deletion, :template]
+    end
 
     scope module: "form" do
       resources :forms, concerns: [:deletion, :download, :import, :change_state] do

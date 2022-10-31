@@ -1,9 +1,9 @@
-class Cms::WordDictionariesController < ApplicationController
+class Cms::SyntaxChecker::WordDictionariesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
   model Cms::WordDictionary
-  navi_view "cms/main/conf_navi"
+  navi_view "cms/syntax_checker/main/conf_navi"
 
   private
 
