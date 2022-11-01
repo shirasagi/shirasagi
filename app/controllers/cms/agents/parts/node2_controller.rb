@@ -3,10 +3,20 @@ class Cms::Agents::Parts::Node2Controller < ApplicationController
   helper Cms::ListHelper
 
   def index
-    node = @cur_node = @cur_part.parent
-    if node
-      filename = ::File.dirname(node.filename)
-      cond = { filename: /^#{::Regexp.escape(filename)}\//, depth: node.depth }
+    case @cur_part.list_origin
+    when "content"
+      if @cur_page
+        origin_content = @cur_page
+      else
+        origin_content = @cur_node
+      end
+    else # "deployment"
+      origin_content = @cur_node = @cur_part.parent
+    end
+
+    origin_parent = origin_content.parent if origin_content
+    if origin_parent
+      cond = { filename: /^#{::Regexp.escape(origin_parent.filename)}\//, depth: origin_content.depth }
     else
       cond = { depth: 1 }
     end

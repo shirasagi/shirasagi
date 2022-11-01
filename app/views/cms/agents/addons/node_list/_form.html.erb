@@ -27,5 +27,8 @@
         </tbody>
       </table>
     </dd>
+
+    <dt><%= @model.t :list_origin %><%= @model.tt :list_origin %></dt>
+    <dd><%= f.select :list_origin, @item.list_origin_options, include_blank: true %></dd>
   </dl>
 <% end %>

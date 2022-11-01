@@ -11,5 +11,8 @@
           map { |name, _path| name }
       %>
     </dd>
+
+    <dt><%= @model.t :list_origin %></dt>
+    <dd><%= @item.label(:list_origin) || t("cms.options.list_origin.deployment") %></dd>
   </dl>
 <% end %>

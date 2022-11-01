@@ -499,6 +499,9 @@ ja:
         1_year: 1年
         2_years: 2年
         3_years: 3年
+      list_origin:
+        deployment: 配備された階層に応じてリストを作成
+        content: アクセスされたページ/フォルダーに応じてリストを作成
 
     sns_share:
       fb_like: Facebook いいね！
@@ -1034,6 +1037,7 @@ ja:
         sort_column_direction: 並び順（方向）
       cms/addon/node_list:
         node_routes: フォルダー属性
+        list_origin: 起点
       cms/addon/page_group_list:
         condition_groups: 検索条件(グループ)
       cms/addon/tabs:
