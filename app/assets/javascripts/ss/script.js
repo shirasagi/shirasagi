@@ -87,6 +87,7 @@
 //= require cms/lib/line
 //= require cms/lib/upload_file_order
 //= require event/lib/form
+//= require guide/lib/diagnostic
 //= require map/googlemaps/map
 //= require map/googlemaps/form
 //= require map/googlemaps/facility/search

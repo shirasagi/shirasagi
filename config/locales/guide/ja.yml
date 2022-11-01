@@ -6,6 +6,7 @@ ja:
     transition: 選択肢
     importer: インポート
     explanation: 説明
+    diagnostic: 診断
     apis:
       questions:
         index: 質問項目を選択する
