@@ -1,6 +1,6 @@
 class Cms::Part
   include Cms::Model::Part
-  include Cms::PluginRepository
+  include SS::PluginRepository
 
   index({ site_id: 1, filename: 1 }, { unique: true })
 
@@ -30,6 +30,19 @@ class Cms::Part
     include History::Addon::Backup
 
     default_scope ->{ where(route: "cms/node") }
+  end
+
+  class Node2
+    include Cms::Model::Part
+    include Cms::Addon::NodeList
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    self.use_conditions = false
+    self.use_node_routes = true
+
+    default_scope ->{ where(route: "cms/node2") }
   end
 
   class Page

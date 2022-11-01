@@ -1,2 +1,34 @@
 <% addon ||= local_assigns.fetch(:addon, {}) %>
 <%= render "cms/agents/addons/page_list/form", f: f, addon: addon %>
+
+<% if @model.use_node_routes %>
+  <dl class="see">
+    <dt><%= @model.t :node_routes %><%= @model.tt :node_routes %></dt>
+    <dd>
+      <%= hidden_field_tag "#{f.object_name}[node_routes][]", nil, id: nil, class: "hidden-ids" %>
+      <%= link_to t("cms.apis.nodes_routes.index"), cms_apis_nodes_routes_path, class: "btn ajax-box" %>
+    </dd>
+    <dd>
+      <table class="index ajax-selected">
+        <thead>
+        <tr>
+          <th class="name"><%= @model.t :node_routes %></th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @item.node_routes.each do |item| %>
+          <% next if item.blank? %>
+          <tr data-id="<%= item %>">
+            <td><%= hidden_field_tag "#{f.object_name}[node_routes][]", item, id: nil %> <%= item %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </dd>
+
+    <dt><%= @model.t :list_origin %><%= @model.tt :list_origin %></dt>
+    <dd><%= f.select :list_origin, @item.list_origin_options, include_blank: true %></dd>
+  </dl>
+<% end %>

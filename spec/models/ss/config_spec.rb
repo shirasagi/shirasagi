@@ -13,4 +13,12 @@ describe SS::Config do
       expect { SS.config.send(method_name) }.not_to raise_error
     end
   end
+
+  describe "#respond_to?" do
+    it do
+      expect(SS.config.respond_to?("cms")).to be_truthy
+      expect(SS.config.respond_to?(:cms)).to be_truthy
+      expect(SS.config.respond_to?("cms-#{unique_id}")).to be_falsey
+    end
+  end
 end

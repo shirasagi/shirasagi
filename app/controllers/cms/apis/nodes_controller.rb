@@ -36,4 +36,11 @@ class Cms::Apis::NodesController < ApplicationController
       render layout: "ss/ajax_in_iframe"
     end
   end
+
+  def routes
+    @single = params[:single].present?
+    @multi = !@single
+
+    @items = Cms::Node.new.route_options
+  end
 end

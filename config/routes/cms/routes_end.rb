@@ -277,6 +277,7 @@ Rails.application.routes.draw do
     namespace "apis" do
       get "groups" => "groups#index"
       get "nodes" => "nodes#index"
+      get "nodes/routes" => "nodes#routes"
       get "pages" => "pages#index"
       get "pages/children" => "pages/children#index"
       get "pages/categorized" => "pages/categorized#index"
@@ -461,6 +462,7 @@ Rails.application.routes.draw do
   part "cms" do
     get "free" => "public#index", cell: "parts/free"
     get "node" => "public#index", cell: "parts/node"
+    get "node2" => "public#index", cell: "parts/node2"
     get "page" => "public#index", cell: "parts/page"
     get "tabs" => "public#index", cell: "parts/tabs"
     get "crumb" => "public#index", cell: "parts/crumb"

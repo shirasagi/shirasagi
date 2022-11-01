@@ -27,6 +27,10 @@ FactoryBot.define do
     route { "cms/node" }
   end
 
+  factory :cms_part_node2, class: Cms::Part::Node2, traits: [:cms_part] do
+    route { "cms/node2" }
+  end
+
   factory :cms_part_page, class: Cms::Part::Page, traits: [:cms_part] do
     route { "cms/page" }
   end

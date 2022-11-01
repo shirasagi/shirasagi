@@ -35,7 +35,7 @@ module SS::Config
     end
 
     def respond_to?(name, *args)
-      @@config.key?(name)
+      @@config.key?(name.to_sym)
     end
 
     def respond_to_missing?(*args)

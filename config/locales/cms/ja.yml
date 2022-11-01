@@ -270,6 +270,10 @@ ja:
         index: フォルダーを選択する
         search: フォルダーを検索
         select: フォルダーを設定する
+      nodes_routes:
+        index: フォルダー属性を選択する
+        search: フォルダー属性を検索
+        select: フォルダー属性を設定する
       pages:
         index: ページを選択する
         search: ページを検索
@@ -495,6 +499,9 @@ ja:
         1_year: 1年
         2_years: 2年
         3_years: 3年
+      list_origin:
+        deployment: 配備された階層に応じてリストを作成
+        content: アクセスされたページ/フォルダーに応じてリストを作成
 
     sns_share:
       fb_like: Facebook いいね！
@@ -542,7 +549,8 @@ ja:
       cms/form_search: 定型フォーム絞込
     parts:
       cms/free: HTML記述
-      cms/node: フォルダーリスト
+      cms/node: フォルダーリスト（旧）
+      cms/node2: フォルダーリスト
       cms/page: ページリスト
       cms/tabs: 新着タブ
       cms/crumb: パンくずリスト
@@ -1027,6 +1035,9 @@ ja:
         substitute_html: 代替HTML
         sort_column_name: 並び順（項目名）
         sort_column_direction: 並び順（方向）
+      cms/addon/node_list:
+        node_routes: フォルダー属性
+        list_origin: 起点
       cms/addon/page_group_list:
         condition_groups: 検索条件(グループ)
       cms/addon/tabs:

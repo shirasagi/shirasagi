@@ -1,6 +1,7 @@
 class Gws::Column
-  include Gws::PluginRepository
+  include SS::PluginRepository
 
+  plugin_class Gws::Plugin
   plugin_type "column"
 
   def self.route_options

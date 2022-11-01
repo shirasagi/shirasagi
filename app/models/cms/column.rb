@@ -1,5 +1,5 @@
 class Cms::Column
-  include Cms::PluginRepository
+  include SS::PluginRepository
 
   plugin_type 'column'
 
@@ -12,6 +12,6 @@ class Cms::Column
   end
 
   def self.route_options
-    plugins.select { |name, path, enabled| enabled }.map { |name, path, enabled| [name, path] }
+    plugins.select { |plugin| plugin.enabled? }.map { |plugin| [plugin.name, plugin.path] }
   end
 end
