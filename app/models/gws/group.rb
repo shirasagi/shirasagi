@@ -10,6 +10,7 @@ class Gws::Group
   include Gws::Addon::Attendance::GroupSetting
   include Gws::Addon::Affair::GroupSetting
   include Gws::Addon::Memo::GroupSetting
+  include Gws::Addon::Workload::GroupSetting
   include Gws::Addon::Report::GroupSetting
   include Gws::Addon::Workflow::GroupSetting
   include Gws::Addon::Circular::GroupSetting

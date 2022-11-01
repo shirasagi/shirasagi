@@ -39,6 +39,10 @@
     <h2><%= link_to @cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path, class: "icon-affair" %></h2>
   <% end %>
 
+  <% if @cur_site.menu_workload_visible? && Gws.module_usable?(:workload, @cur_site, @cur_user) %>
+    <h2><%= link_to @cur_site.menu_workload_label || t('modules.gws/workload'), gws_workload_main_path, class: "icon-todo" %></h2>
+  <% end %>
+
   <% if @cur_site.menu_report_visible? && Gws.module_usable?(:report, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_report_label || t('modules.gws/report'), gws_report_files_main_path, class: "icon-report" %></h2>
   <% end %>

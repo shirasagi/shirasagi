@@ -1,0 +1,23 @@
+<%= render partial: 'gws/workload/main/year_navi' %>
+
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.restore'), action: :undo_delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= @model.t(:due_date) %>: <%= tryb { item.due_date.strftime('%Y/%m/%d') } %></span>
+  <span><%= gws_public_user_long_name(item.user_long_name) %></span>
+  <span class="gws-share-categories">
+    <span class="gws-category-label" style="background-color: gray; color: #ffffff;"><%= t('gws/workload.work.disabled') %></span>
+    <% if category = item.category %>
+      <%= link_to category.name, gws_workload_trashes_path(category: category.id),
+                  class: 'gws-category-label', style: category_label_css(category) %>
+    <% end %>
+    </span>
+<% end %>
+
+<%#= render "gws/workload/main/tabs" %>
+<%= render template: 'gws/crud/index' %>

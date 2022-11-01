@@ -1,0 +1,160 @@
+ja:
+  gws/workload:
+    year: 年度
+    setting: 業務見える化設定
+    tabs:
+      work: 担当業務
+      admin: 全業務
+      trash: ゴミ箱
+    links:
+      back_to_admin: 作成した回覧へ戻る
+    confirm:
+      set_seen_all: 選択した項目を全て既読にしますか？
+      unset_seen_all: 選択した項目を全て未読に戻しますか？
+      download: 選択した項目を全てCSVに出力しますか？
+    work:
+      disabled: 削除済み
+      seen: 既読
+      unseen: 未読
+      set_seen: 既読にする
+      unset_seen: 未読にする
+      seen_at: 既読日時
+      download: CSVに出力する
+      member: 参加者
+      type: 区分
+      update_at: 変更日時
+      user: ユーザー
+      replay: 返信内容
+
+    csv:
+      - ID
+      - 調査・作業の件名
+      - 年度
+      - 業務カテゴリー
+      - 依頼元
+      - 頻度
+      - 業務負荷
+    seen_user_info:
+      title: 既読者数
+      format: "%{count} 人 / %{total} 人中"
+      more: 詳しく見る
+    options:
+      see_type:
+        normal: 通常回覧
+        simple: 簡易回覧
+      article_state:
+        both: 全表示
+        unseen: 未読
+      workload_delete_threshold:
+        - 6ヶ月
+        - 1年
+        - 1年6ヶ月
+        - 2年
+        - 2年6ヶ月
+        - 3年
+        - 3年6ヶ月
+      sort:
+        created_asc:  投稿日(日付順)
+        created_desc: 投稿日(新着順)
+        updated_asc:  最終更新日(日付順)
+        updated_desc: 最終更新日(新着順)
+        due_date_asc:  期限日時(昇順)
+        due_date_desc: 期限日時(降順)
+      browsing_authority:
+        all: 全ての回覧者に閲覧可
+        author_or_commenter: 回覧作成者と自分のみ閲覧可
+  modules:
+    gws/workload: 業務見える化
+    addons:
+      gws/workload/group_setting: 業務見える化
+      gws/workload/category: 業務カテゴリー
+  gws_role:
+    use_gws_workload: 業務見える化の利用
+    read_other_gws_workload_works: 担当業務の閲覧（全て）
+    read_private_gws_workload_works: 担当業務の閲覧（所有）
+    edit_other_gws_workload_works: 担当業務の編集（全て）
+    edit_private_gws_workload_works: 担当業務の編集（所有）
+    delete_other_gws_workload_works: 担当業務の削除（全て）
+    delete_private_gws_workload_works: 担当業務の削除（所有）
+    trash_other_gws_workload_works: 担当業務ゴミ箱の管理（全て）
+    trash_private_gws_workload_works: 担当業務ゴミ箱の管理（所有）
+    edit_gws_workload_settings: 設定の管理
+
+  gws_notification:
+    gws/workload/work:
+      subject: "[業務見える化] 「%{name}」が届きました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+    gws/workload/work/remove:
+      subject: "[業務見える化] 「%{name}」が取り下げられました。"
+      text: ""
+      mail_text: |
+        %{subject}
+
+  mongoid:
+    models:
+      gws/workload/work: 担当業務
+      gws/workload/category: 業務カテゴリー
+      gws/workload/client: 調査関連リスト
+      gws/workload/cycle: 頻度
+      gws/workload/load: 業務負荷
+
+    errors:
+      models:
+        gws/workload/work:
+          member_length: 参加者は%{max}人以下にしてください。
+          file_size_limit: 添付ファイルのサイズ（%{size}）が 最大サイズ（%{limit}）を超えました。
+        gws/workload/category:
+          too_deep: は%{max}階層以下にしてください。
+          not_found_parent: 親カテゴリーが存在しません。
+          found_children: 子カテゴリーが存在します。
+    attributes:
+      gws/workload/work:
+        name: 調査・作業の件名
+        year: 年度
+        category_id: 業務カテゴリー
+        client_id: 依頼元
+        cycle_id: 頻度
+        load_id: 業務負荷
+        created: 投稿日
+        updated: 最終更新日
+        due_date: 期限日時
+        see_type: 既読にする形式
+        deleted: 削除日時
+        seen: 既読
+      gws/workload/category:
+        name: カテゴリー名
+        order: 並び順
+        year: 年度
+      gws/workload/client:
+        name: 依頼元
+        order: 並び順
+        year: 年度
+      gws/workload/cycle:
+        name: 名称
+        order: 並び順
+        year: 年度
+      gws/workload/load:
+        name: 名称
+        order: 並び順
+        year: 年度
+        coefficient: 負荷係数
+  tooltip:
+    gws/workload/work:
+    gws/workload/category:
+      name: カテゴリー名を入力します
+      year: 年度を入力します
+    gws/workload/client:
+      name: 依頼元を入力します
+      year: 年度を入力します
+    gws/workload/cycle:
+      name: 名称を入力します
+      year: 年度を入力します
+    gws/workload/load:
+      name: 名称を入力します
+      year: 年度を入力します
+      coefficient: 負荷係数を入力します

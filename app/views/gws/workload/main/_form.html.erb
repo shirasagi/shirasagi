@@ -1,0 +1,22 @@
+<dl class="see">
+  <dt class="required"><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name, autofocus: pc_browser? %></dd>
+
+  <dt class="required"><%= @model.t :year %><%= @model.tt :year %></dt>
+  <dd><%= f.number_field :year %></dd>
+
+  <dt><%= @model.t :category_id %><%= @model.tt :category_id %></dt>
+  <dd><%= f.select :category_id, @item.category_options, include_blank: ' ' %></dd>
+
+  <dt><%= @model.t :client_id %><%= @model.tt :client_id %></dt>
+  <dd><%= f.select :client_id, @item.client_options, include_blank: ' ' %></dd>
+
+  <dt><%= @model.t :cycle_id %><%= @model.tt :cycle_id %></dt>
+  <dd><%= f.select :cycle_id, @item.cycle_options, include_blank: ' ' %></dd>
+
+  <dt><%= @model.t :load_id %><%= @model.tt :load_id %></dt>
+  <dd><%= f.select :load_id, @item.load_options, include_blank: ' ' %></dd>
+
+  <dt><%= @model.t :due_date %><%= @model.tt :due_date %></dt>
+  <dd><%= f.text_field :due_date, class: 'date js-date', value: tryb { @item.due_date.strftime('%Y/%m/%d') }, data: { min_date: '+1970/01/01' } %></dd>
+</dl>

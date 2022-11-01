@@ -1,0 +1,46 @@
+<%= render partial: 'gws/workload/main/year_navi' %>
+
+<div class="index gws-boards">
+  <%= render template: '_list_head' %>
+  <ul class="list-items">
+    <% @items.each do |item| %>
+      <li class="list-item">
+        <nav class="tap-menu">
+          <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= link_to t('ss.links.delete'), action: :soft_delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+
+          <% if item.try(:image) %>
+            <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank", rel: "noopener" } %>
+          <% elsif item.try(:image?) %>
+            <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb", target: "_blank", rel: "noopener" } %>
+          <% end %>
+        </nav>
+
+        <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>"/></label>
+        <div class="info">
+          <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
+          <%= link_to title, { action: :show, id: item }, class: "title" %>
+
+          <div class="meta">
+            <span class="id">#<%= item.id %></span>
+            <span class="datetime"><%= @model.t(:due_date) %>: <%= tryb { item.due_date.strftime('%Y/%m/%d') } %></span>
+            <span class="datetime"><%= @model.t(:updated) %>: <%= item.updated.strftime('%Y/%m/%d %H:%M') %></span>
+            <span><%= gws_public_user_long_name(item.user_long_name) %></span>
+            <span class="state"><%= item.label(:state) %></span>
+            <% if !@year %><span><%= item.year %></span><% end %>
+            <span class="gws-share-categories">
+              <% if category = item.category %>
+                <%= link_to category.name, gws_workload_works_path(category: category.id),
+                            class: 'gws-category-label', style: category_label_css(category) %>
+              <% end %>
+            </span>
+          </div>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>
+

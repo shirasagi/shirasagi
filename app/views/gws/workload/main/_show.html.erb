@@ -1,0 +1,22 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :year %></dt>
+  <dd><%= @item.year %></dd>
+
+  <dt><%= @model.t :category_id %></dt>
+  <dd><%= tryb { @item.category.name } %></dd>
+
+  <dt><%= @model.t :client_id %></dt>
+  <dd><%= tryb { @item.client.name } %></dd>
+
+  <dt><%= @model.t :cycle_id %></dt>
+  <dd><%= tryb { @item.cycle.name } %></dd>
+
+  <dt><%= @model.t :load_id %></dt>
+  <dd><%= tryb { @item.load.name } %></dd>
+
+  <dt><%= @model.t :due_date %></dt>
+  <dd><%= tryb { @item.due_date.strftime('%Y/%m/%d') } %></dd>
+</dl>

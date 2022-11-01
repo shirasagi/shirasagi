@@ -1,0 +1,10 @@
+<% @s = OpenStruct.new params[:s] %>
+<% search_item = @model.new(cur_site: @cur_site) %>
+
+<%= form_for :s, url: '', html: { method: :get, class: :search } do |f| %>
+  <%= f.select :sort, @model.new.sort_options %>
+  <%= f.select :category_id, search_item.category_options, include_blank: '// ' + @model.t(:category_id) %>
+  <%= f.select :client_id, search_item.client_options, include_blank: '// ' + @model.t(:client_id) %>
+  <%= f.text_field :keyword, style: 'width: 140px;' %>
+  <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+<% end %>

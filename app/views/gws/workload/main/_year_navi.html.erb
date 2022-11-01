@@ -1,0 +1,13 @@
+<%= jquery do %>
+  var navi = new Gws_Category_Navi('.gws-category-navi');
+  navi.setBaseUrl('<%= url_for(action: :index, year: 'ID') %>');
+  navi.render(<%== @years.to_json %>);
+<% end %>
+
+<div class="gws-category-navi dropdown">
+  <%= link_to({ action: :index, year: '-', category: '-' }, { class: 'btn dropdown-toggle' }) do %>
+    <%= @year_name || t('gws/workload.year') %>
+    <i class="material-icons md-13">&#xE313;</i>
+  <% end %>
+  <div class="dropdown-menu dropdown-menu--white"></div>
+</div>

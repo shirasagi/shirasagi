@@ -367,6 +367,8 @@ ja:
         menu_qna_state: Ｑ＆Ａの表示
         menu_workflow_label: ワークフローの表示
         menu_workflow_state: ワークフローの表示
+        menu_workload_label: 業務見える化の表示
+        menu_workload_state: 業務見える化の表示
         menu_report_label: レポートの表示
         menu_report_state: レポートの表示
         menu_circular_label: 回覧板の表示
