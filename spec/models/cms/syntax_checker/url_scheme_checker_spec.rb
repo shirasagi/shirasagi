@@ -69,6 +69,21 @@ describe Cms::SyntaxChecker::UrlSchemeChecker, type: :model, dbscope: :example d
             end
           end
         end
+
+        context "when tel and mailto is allowed" do
+          let(:html1) { "<a href=\"#{%w(tel mailto).sample}:xxxx-yyyy\">logo</a>" }
+
+          before do
+            context.cur_site.tap do |site|
+              site.update(syntax_checker_url_scheme_schemes: %w(http https tel mailto))
+            end
+          end
+
+          it do
+            described_class.new.check(context, id, idx, raw_html, fragment)
+            expect(context.errors).to be_blank
+          end
+        end
       end
 
       context "when img tag is given" do

@@ -909,7 +909,6 @@ en:
       ss/model/editor_setting:
         color_button: Text color change button
         editor_css_path: Stylesheet path
-        syntax_check: Accessibility check
       ss/model/mail_setting:
         sender_name: Sender name
         sender_email: Sender e-mail address
@@ -1394,8 +1393,6 @@ en:
         - Set the display of the text color change button.
       editor_css_path:
         - Set the path of the editor stylesheet.
-      syntax_check:
-        - Enable or disable the accessibility checker.
 
     ss/model/mail_setting:
       sender_name:

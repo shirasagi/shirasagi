@@ -97,6 +97,7 @@ ja:
     source_cleaner: ソースクリーニング
     source_cleaner_template: ソースクリーニング
     syntax_check: アクセシビリティチェック
+    url_scheme: URLスキーム設定
     backlink_check: 被リンクチェック
     sns_post: SNS投稿連携
     sns_post_log: 投稿履歴
@@ -1524,6 +1525,11 @@ ja:
         summary: メッセージ
         thumb_state: サムネイル画像
         json_body: JSON
+      cms/syntax_checker/main_setting:
+        syntax_check: アクセシビリティチェック
+      cms/syntax_checker/url_scheme_setting:
+        syntax_checker_url_scheme_attributes: 属性
+        syntax_checker_url_scheme_schemes: スキーム
 
   activemodel:
     attributes:
@@ -1606,7 +1612,7 @@ ja:
       cms_form_db_required_node: データの登録には記事フォルダーの設定が必要です。
       richmenu_target_taken: は既にリッチメニューグループ内に登録されています。
       syntax_check_server_error: アクセシビリティチェック中にサーバーエラーが発生しました。
-      invalid_url_scheme: 「http://」や 「https://」で始まるURLのみにしてください。
+      invalid_url_scheme: 「http://」や 「https://」などの安全なURLのみにしてください。
       internal_link_shouldnt_contain_domains: 内部リンクにはドメインを含めないようにしてください。
       internal_link_should_be_absolute_path: 内部リンクは "/" で始めてください。
       internal_link_shouldnt_be_preview_path: プレビュー用のパスを指定しないようにしてください。
@@ -1649,7 +1655,7 @@ ja:
           - 一般的にファイル名をそのまま代替テキストに設定するのは好ましくないと考えられます。
           - 設定している代替テキストが妥当かどうか確認してください。
         invalid_url_scheme:
-          - 「http://」や 「https://」で始まるURLのみにしてください
+          - 「http://」や 「https://」などの安全なURLのみにしてください
           - "参照: 『安全なウェブサイトの作り方 5-(ii)』"
         internal_link_shouldnt_contain_domains:
           - 内部リンクにはドメインを含めないようにしてください。
@@ -2978,6 +2984,19 @@ ja:
       st_categories:
         - サイト内検索で使用するカテゴリーを設定します。
         - 設定されていない場合は全カテゴリーが対象となります。
+
+    cms/syntax_checker/main_setting:
+      syntax_check:
+        - アクセシビリティチェックの有効無効を設定します。
+
+    cms/syntax_checker/url_scheme_setting:
+      syntax_checker_url_scheme_attributes:
+        - チェック対象の属性を設定します。
+        - 既定値は "href, src" です。
+      syntax_checker_url_scheme_schemes:
+        - 使用を許可するスキームを設定します。
+        - 既定値は "http, https" です。
+        - 安全なウェブサイトの作り方では、http, https 以外のスキームにリンクを設定することは非推奨となっています。危険を承知の上、設定してください。
 
   all_content:
     page_id: ページID
