@@ -41,9 +41,9 @@ module Webmail::Imap
       elsif sort_hash["subject"] == -1
         @sort = %w(REVERSE SUBJECT REVERSE ARRIVAL)
       elsif sort_hash["internal_date"] == 1
-        @sort = %w(DATE REVERSE ARRIVAL)
+        @sort = %w(ARRIVAL)
       elsif sort_hash["internal_date"] == -1
-        @sort = %w(REVERSE DATE REVERSE ARRIVAL)
+        @sort = %w(REVERSE ARRIVAL)
       elsif sort_hash["size"] == 1
         @sort = %w(SIZE REVERSE ARRIVAL)
       elsif sort_hash["size"] == -1
