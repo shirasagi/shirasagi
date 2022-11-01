@@ -51,18 +51,11 @@
 
     Cms_Form.options.check.syntax = <%= syntax_check %>;
     Cms_Form.render();
-    Cms_Form.addSyntaxCheck("addon-cms-agents-addons-body", {
-      resolve: "html",
-      name: "<%= t("modules.addons.cms/body") %>",
-      getContent: function () { return Cms_Form.getEditorHtml(); },
-      setContent: function (content) { Cms_Form.setEditorHtml(content); },
-    });
-    Cms_Form.activateSyntaxChecks();
 
   <% end %>
 
   <dl class="see mod-cms-body">
-    <dd class="wide"><%= f.text_area :html, class: "html", style: "height: 400px;" %></dd>
+    <dd class="wide"><%= f.text_area :html, class: "html", style: "height: 400px;", data: { syntax_check: 'editor', syntax_check_name: t("modules.addons.cms/body") } %></dd>
     <dd class="wide">
     <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } if syntax_check %>
     <%= button_tag t("cms.mobile_size_check"), { type: :button, class: "btn mobile-size-check" } if @cur_site.mobile_enabled? %>

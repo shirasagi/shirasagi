@@ -3,29 +3,9 @@
 <% name = "#{f.object_name}[][in_wrap][link_label]" %>
 
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
-  <div class="link-fields">
+  <div class="link-fields" data-syntax-check="link" data-syntax-check-name="<%= column.name %>">
     <%= text_field_tag(name, value.try(:link_label), column.form_options(:link_label).merge(id: nil, class: "link-field link-label")) %>
     <%= text_field_tag("#{f.object_name}[][in_wrap][link_url]", value.try(:effective_link_url), column.form_options(:link_url).merge(id: nil, class: "link-field link-url")) %>
     <%= select_tag("#{f.object_name}[][in_wrap][link_target]", options_for_select(column.link_target_options, value.try(:link_target)), include_blank: true, id: nil, class: "link-field link-target") %>
   </div>
-
-  <%= jquery do %>
-    Cms_Form.addSyntaxCheck("<%= id %>", {
-      resolve: "text",
-      name: "<%= column.name %>",
-      getContent: function () { return $('#<%= id %> [name="<%= name %>"]').val(); },
-      setContent: function (content) { return $('#<%= id %> [name="<%= name %>"]').val(content); },
-      afterCheck: function (id, content) {
-        var text;
-        text = content["content"];
-        if (text && text.length <= 3) {
-         Syntax_Checker.errors.push({
-           id: id, idx: 0, code: text,
-           msg: Syntax_Checker.message["checkLinkText"],
-           detail: Syntax_Checker.detail["checkLinkText"]
-         });
-        }
-      }
-    });
-  <% end %>
 <% end %>

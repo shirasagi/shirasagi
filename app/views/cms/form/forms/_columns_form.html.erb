@@ -30,7 +30,6 @@
   Cms_Form.addonSelector = "#addon-cms-agents-addons-form-page .addon-body";
   Cms_Form.form_html_path = <%== cms_apis_form_html_path(id: form).to_json %>;
   Cms_Form.form_link_check_path = <%== cms_apis_form_link_check_path(id: form).to_json %>;
-  Cms_Form.activateSyntaxChecks();
 
   <% if !@preview %>
   Form_Preview.page_route        = "<%= @item_route %>";
