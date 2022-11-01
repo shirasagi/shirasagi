@@ -270,6 +270,10 @@ ja:
         index: フォルダーを選択する
         search: フォルダーを検索
         select: フォルダーを設定する
+      nodes_routes:
+        index: フォルダー属性を選択する
+        search: フォルダー属性を検索
+        select: フォルダー属性を設定する
       pages:
         index: ページを選択する
         search: ページを検索
@@ -1028,6 +1032,8 @@ ja:
         substitute_html: 代替HTML
         sort_column_name: 並び順（項目名）
         sort_column_direction: 並び順（方向）
+      cms/addon/node_list:
+        node_routes: フォルダー属性
       cms/addon/page_group_list:
         condition_groups: 検索条件(グループ)
       cms/addon/tabs:

@@ -40,6 +40,7 @@ class Cms::Part
     include History::Addon::Backup
 
     self.use_conditions = false
+    self.use_node_routes = true
 
     default_scope ->{ where(route: "cms/node2") }
   end

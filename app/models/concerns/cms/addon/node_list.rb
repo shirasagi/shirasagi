@@ -6,6 +6,10 @@ module Cms::Addon
 
     included do
       self.use_new_days = false
+
+      cattr_accessor(:use_node_routes, instance_accessor: false, default: false)
+      field :node_routes, type: SS::Extensions::Words
+      permit_params node_routes: []
     end
 
     def sort_options

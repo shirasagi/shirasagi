@@ -1,3 +1,15 @@
 <% addon ||= local_assigns.fetch(:addon, {}) %>
 <%= render "cms/agents/addons/page_list/show", addon: addon %>
 
+<% if @model.use_node_routes %>
+  <dl class="see">
+    <dt><%= @model.t :node_routes %></dt>
+    <dd>
+      <%=
+        br @item.node_routes.select(&:present?).
+          map { |path| Cms::Node.new.route_options.find { |route_option| route_option[1] == path } }.
+          map { |name, _path| name }
+      %>
+    </dd>
+  </dl>
+<% end %>

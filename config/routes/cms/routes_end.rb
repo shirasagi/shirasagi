@@ -277,6 +277,7 @@ Rails.application.routes.draw do
     namespace "apis" do
       get "groups" => "groups#index"
       get "nodes" => "nodes#index"
+      get "nodes/routes" => "nodes#routes"
       get "pages" => "pages#index"
       get "pages/children" => "pages/children#index"
       get "pages/categorized" => "pages/categorized#index"
