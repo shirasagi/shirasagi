@@ -1,3 +1,5 @@
+<% return if @items.blank? %>
+
 <div class="index">
   <% @items.group_by { |item| item["_id"]["year"] }.each do |year, year_items| %>
     <%
