@@ -94,7 +94,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
           visit user_portal_path
           within ".portlets .gws-schedule-box" do
             within "#calendar-controller" do
-              click_on I18n.t("datetime.prompts.day", locale: I18n.default_locale)
+              click_on I18n.t("datetime.prompts.day").downcase
               expect(page).to have_no_css(".fc-widget-header[data-date*=\"00:00:00\"]")
               expect(page).to have_no_css(".fc-widget-header[data-date*=\"06:00:00\"]")
               expect(page).to have_css(".fc-widget-header[data-date*=\"12:00:00\"]")
@@ -116,7 +116,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
           visit user_portal_path
           within ".portlets .gws-schedule-box" do
             within "#calendar-controller" do
-              click_on I18n.t("datetime.prompts.day", locale: I18n.default_locale)
+              click_on I18n.t("datetime.prompts.day").downcase
               expect(page).to have_no_css(".fc-widget-header[data-date*=\"00:00:00\"]")
               expect(page).to have_css(".fc-widget-header[data-date*=\"06:00:00\"]")
               expect(page).to have_css(".fc-widget-header[data-date*=\"12:00:00\"]")
@@ -134,7 +134,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
           visit group_portal_path
           within ".portlets .gws-schedule-box" do
             within "#calendar-controller" do
-              click_on I18n.t("datetime.prompts.day", locale: I18n.default_locale)
+              click_on I18n.t("datetime.prompts.day").downcase
               expect(page).to have_no_css(".fc-widget-header[data-date*=\"00:00:00\"]")
               expect(page).to have_no_css(".fc-widget-header[data-date*=\"06:00:00\"]")
               expect(page).to have_css(".fc-widget-header[data-date*=\"12:00:00\"]")
@@ -156,7 +156,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
           visit group_portal_path
           within ".portlets .gws-schedule-box" do
             within "#calendar-controller" do
-              click_on I18n.t("datetime.prompts.day", locale: I18n.default_locale)
+              click_on I18n.t("datetime.prompts.day").downcase
               expect(page).to have_no_css(".fc-widget-header[data-date*=\"00:00:00\"]")
               expect(page).to have_css(".fc-widget-header[data-date*=\"06:00:00\"]")
               expect(page).to have_css(".fc-widget-header[data-date*=\"12:00:00\"]")
