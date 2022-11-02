@@ -12,7 +12,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
   let(:edit_path) { edit_article_page_path site.id, node, item }
 
   let(:approve_comment) { "approve-#{unique_id}" }
-  let(:release_date) { Time.zone.at(1.day.from_now.to_i) }
+  let(:release_date) { 1.day.from_now.beginning_of_minute }
 
   before do
     site.twitter_username = unique_id
@@ -40,7 +40,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           ensure_addon_opened("#addon-cms-agents-addons-release_plan")
           within "#addon-cms-agents-addons-release_plan" do
-            fill_in 'item[release_date]', with: release_date.strftime("%Y/%m/%d %H:%M")
+            fill_in_datetime 'item[release_date]', with: release_date
           end
 
           perform_enqueued_jobs do
@@ -97,7 +97,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           ensure_addon_opened("#addon-cms-agents-addons-release_plan")
           within "#addon-cms-agents-addons-release_plan" do
-            fill_in 'item[release_date]', with: release_date.strftime("%Y/%m/%d %H:%M")
+            fill_in_datetime 'item[release_date]', with: release_date
           end
 
           perform_enqueued_jobs do
@@ -168,7 +168,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           ensure_addon_opened("#addon-cms-agents-addons-release_plan")
           within "#addon-cms-agents-addons-release_plan" do
-            fill_in 'item[release_date]', with: release_date.strftime("%Y/%m/%d %H:%M")
+            fill_in_datetime 'item[release_date]', with: release_date
           end
           first("#addon-cms-agents-addons-release_plan").click
 
@@ -320,7 +320,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           ensure_addon_opened("#addon-cms-agents-addons-release_plan")
           within "#addon-cms-agents-addons-release_plan" do
-            fill_in 'item[release_date]', with: release_date.strftime("%Y/%m/%d %H:%M")
+            fill_in_datetime 'item[release_date]', with: release_date
           end
 
           within "form#item-form" do
@@ -400,7 +400,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           ensure_addon_opened("#addon-cms-agents-addons-release_plan")
           within "#addon-cms-agents-addons-release_plan" do
-            fill_in 'item[release_date]', with: release_date.strftime("%Y/%m/%d %H:%M")
+            fill_in_datetime 'item[release_date]', with: release_date
           end
 
           perform_enqueued_jobs do
@@ -496,7 +496,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           ensure_addon_opened("#addon-cms-agents-addons-release_plan")
           within "#addon-cms-agents-addons-release_plan" do
-            fill_in 'item[release_date]', with: release_date.strftime("%Y/%m/%d %H:%M")
+            fill_in_datetime 'item[release_date]', with: release_date
           end
           first("#addon-cms-agents-addons-release_plan").click
 
