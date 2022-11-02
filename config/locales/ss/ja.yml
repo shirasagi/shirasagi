@@ -522,7 +522,7 @@ ja:
           include_none_of: が次を含まない
       lang:
         ja: 日本語
-        en: English
+        en: English (Experimental)
 
     tasks:
       started: 開始しました。
