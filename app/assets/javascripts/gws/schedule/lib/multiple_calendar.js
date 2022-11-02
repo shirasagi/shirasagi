@@ -59,7 +59,7 @@ SS.ready(function() {
         views: {
           basicHour: {
             type: 'day',
-            buttonText: '日', //TODO: Use lang.
+            buttonText: i18next.t("gws/schedule.options.interval.daily"),
             contentHeight: 25
           },
           timelineDay: {
