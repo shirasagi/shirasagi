@@ -1,0 +1,107 @@
+// gws-workload
+
+.gws-workload-navi {
+  margin-bottom: 10px;
+  cursor: auto;
+  .dropdown-menu {
+    min-width: 220px;
+    max-height: 400px;
+    overflow: auto;
+    &.wide {
+      min-width: 480px;
+    }
+  }
+  .link-item {
+    border-bottom: 1px solid #f2f2f2;
+    display: block;
+    padding: 6px 10px;
+    color: #333;
+  }
+  .link-item:hover {
+    background-color: $gray1;
+    color: #f25a38;
+    text-decoration: none;
+  }
+  :not(a[data-id]), a[data-id="-"] {
+    color: #888888;
+  }
+  @include mb {
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+}
+
+.gws-workload-graphs {
+  @include display-flex;
+
+  .navi {
+    width: 15%;
+    margin-right: 10px;
+    border: $border-gray4;
+    @include box;
+  }
+  .main {
+    flex: 1;
+    background: #fff;
+    padding: 10px;
+    border: 1px solid #d0d0d0;
+    border-radius: 3px;
+    .head {
+      @include clear;
+      .search {
+        float: left;
+      }
+      .operations {
+        float: right;
+      }
+    }
+    .graphs .graph {
+      margin-top: 30px;
+      padding-bottom: 30px;
+      &:not(:last-child) {
+        border-bottom: solid 1px #d0d0d0;
+      }
+      h2 {
+        text-align: center;
+        padding: 10px;
+        font-size: 120%;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+    }
+  }
+}
+
+.gws-side-navi {
+  padding: 10px;
+
+  .title {
+    margin: -10px -10px 10px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #f2f2f2;
+    font-weight: bold;
+    &:before {
+      content: " ";
+      margin-right: 6px;
+      padding-left: 3px;
+      background: #f25a38;
+    }
+  }
+}
+
+.overtime.data-table {
+  thead {
+    .name {
+      width: 16%;
+    }
+    .month {
+      width: 7%;
+      text-align: center;
+    }
+  }
+  tbody {
+    .overtime {
+      text-align: right;
+    }
+  }
+}

@@ -3,15 +3,23 @@ module Gws::Workload::YearFilter
 
   included do
     before_action :set_year
+    helper_method :dropdowns
   end
 
   private
 
   def set_year
-    @year ||= params[:year].match?(/\A\d+\z/) ? params[:year].to_i : nil
-    @year_name ||= "#{@year}年度"
+    if params[:year].match?(/\A\d+\z/)
+      @cur_year = @cur_site.fiscal_year
+      @year = params[:year].to_i
+      @year_name ||= "#{@year}#{I18n.t("ss.fiscal_year")}"
+      @years ||= ((@cur_year - 10)..(@cur_year + 1)).map { |i| { _id: i, name: "#{i}#{I18n.t("ss.fiscal_year")}", trailing_name: i.to_s } }.reverse
+    else
+      redirect_to({ year: @cur_site.fiscal_year })
+    end
+  end
 
-    year = Time.zone.now.year
-    @years ||= (year-10..year).map { |i| { _id: i, name: i.to_s, trailing_name: i.to_s } }.reverse
+  def dropdowns
+    %w(year)
   end
 end

@@ -5,6 +5,7 @@ module Gws::Member
   included do
     class_variable_set(:@@_keep_members_order, nil)
     class_variable_set(:@@_member_include_custom_groups, nil)
+    class_variable_set(:@@_member_include_member_ids, true)
     class_variable_set(:@@_member_ids_required, true)
 
     embeds_ids :members, class_name: "Gws::User"
@@ -26,6 +27,7 @@ module Gws::Member
       self.and(and_conds)
     }
     scope :any_members, ->(users) {
+      return self.none if users.blank?
       or_conds = []
       users.each do |user|
         or_conds += member_conditions(user)
@@ -123,6 +125,10 @@ module Gws::Member
 
     def member_include_custom_groups?
       class_variable_get(:@@_member_include_custom_groups)
+    end
+
+    def member_include_member_ids?
+      class_variable_get(:@@_member_include_member_ids)
     end
 
     def member_ids_required?

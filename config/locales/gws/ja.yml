@@ -399,6 +399,7 @@ ja:
         notice_schedule_state: スケジュール
         notice_todo_state: ToDo
         notice_affair_state: 庶務事務
+        notice_workload_state: 業務見える化
         notice_workflow_state: ワークフロー
         notice_circular_state: 回覧板
         notice_monitor_state: 照会・回答

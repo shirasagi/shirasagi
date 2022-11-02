@@ -1,0 +1,53 @@
+<%
+  hours_options = Gws::Workload::WorkComment.new.in_worktime_hours_options
+  minutes_options = Gws::Workload::WorkComment.new.in_worktime_minutes_options
+
+  worktime_hours = nil
+  worktime_minutes = nil
+  if @item.worktime_minutes > 0
+    worktime_hours = @item.worktime_minutes / 60
+    worktime_minutes = @item.worktime_minutes % 60
+  end
+%>
+<%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
+<%= error_messages_for :item %>
+
+<%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
+<%= hidden_field_tag('redirect_to', params[:redirect_to], id: nil) %>
+
+<div class="addon-views">
+  <div id="addon-basic">
+    <div style="padding-bottom: 10px;">
+      <label for="item_commented_at"><%= Gws::Workload::WorkComment.t :commented_at %></label>:
+      <%= f.text_field :commented_at, class: 'datetime js-datetime', value: tryb { @item.commented_at.strftime("%Y/%m/%d %H:%M") } %>
+    </div>
+    <div style="padding-bottom: 10px;">
+      <label for="item_achievement_rate"><%= Gws::Workload::WorkComment.t :achievement_rate %></label>:
+      <%= f.number_field :achievement_rate %>
+      <%= t("gws/schedule/todo.achievement_rate_unit") %>
+    </div>
+    <div style="padding-bottom: 10px;">
+      <label><%= Gws::Workload::WorkComment.t :worktime_minutes %></label>:
+      <%= select_tag 'item[in_worktime_hours]', options_for_select(hours_options, worktime_hours), include_blank: true %>
+      <%= t("ss.time") %>
+      <%= select_tag 'item[in_worktime_minutes]', options_for_select(minutes_options, worktime_minutes), include_blank: true %>
+      <%= t("datetime.prompts.minute") %>
+    </div>
+    <div style="padding-bottom: 10px;">
+      <%= f.text_area :text %>
+    </div>
+  </div>
+</div>
+
+<footer class="send">
+  <% if @crud_buttons %>
+    <% @crud_buttons.call f %>
+  <% else %>
+    <%= f.submit t("ss.buttons.save"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.saving") } %>
+    <%= f.button t("ss.buttons.close"), class: 'btn-default', onclick: "$.colorbox.close(); return false;" %>
+  <% end %>
+</footer>
+
+<% end %>
+
+<%= jquery do %> SS.confirmUnloading(); <% end %>

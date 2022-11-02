@@ -31,6 +31,7 @@ module Gws::Schedule::PlanHelper
     events += calendar_holidays opts[:holiday][0], opts[:holiday][1]
     events += group_holidays opts[:holiday][0], opts[:holiday][1]
     events += calendar_todos(opts[:holiday][0], opts[:holiday][1])
+    events += calendar_works
     events
   end
 
@@ -71,5 +72,19 @@ module Gws::Schedule::PlanHelper
       result[:restUrl] = gws_schedule_todo_readables_path(category: Gws::Schedule::TodoCategory::ALL.id)
       result
     end
+  end
+
+  def calendar_works
+    return [] if @works.blank?
+
+    @works.map do |work|
+      result = work.calendar_format(@cur_user, @cur_site)
+      result[:restUrl] = gws_workload_works_path
+      result
+    end
+  end
+
+  def use_workload?
+    Gws.module_usable?(:workload, @cur_site, @cur_user) && Gws::Workload::Work.allowed?(:edit, @cur_user, site: @cur_site)
   end
 end

@@ -4,10 +4,13 @@ class Gws::Workload::Category
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::Workload::Yearly
+  include Gws::Addon::Workload::Member
   include Gws::SitePermission
   include Gws::Addon::History
 
   set_permission_name 'gws_workload_settings', :edit
+
+  class_variable_set(:@@_member_include_member_ids, false)
 
   seqid :id
   field :name, type: String
@@ -31,11 +34,15 @@ class Gws::Workload::Category
     criteria
   }
 
-  def color
-    '#eeeeee'
+  private
+
+  def validate_presence_member
+    errors.add :member_group_ids, :blank if member_group_ids.blank?
   end
 
-  def text_color
-    '#000000'
+  class << self
+    def use_member_ids?
+      false
+    end
   end
 end

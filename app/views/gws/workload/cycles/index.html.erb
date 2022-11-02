@@ -1,3 +1,5 @@
+<%= render partial: 'gws/workload/main/base_navi' %>
+
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
@@ -5,5 +7,4 @@
   <span class="order"><%= item.order %></span>
 <% end %>
 
-<%= render partial: 'gws/workload/main/year_navi' %>
 <%= render template: 'gws/crud/index' %>

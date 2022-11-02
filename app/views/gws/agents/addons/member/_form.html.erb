@@ -54,6 +54,7 @@
     </dd>
   </dl>
 
+  <% if @model.member_include_member_ids? %>
   <dl class="see">
     <dt><%= @model.t :member_ids %><%= @model.tt :member_ids %></dt>
     <dd>
@@ -76,4 +77,5 @@
       </table>
     </dd>
   </dl>
+  <% end %>
 </div>

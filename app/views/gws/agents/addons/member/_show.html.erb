@@ -10,7 +10,9 @@
   <dd><%= br @item.member_groups.active.map(&:name) %></dd>
 </dl>
 
+<% if @model.member_include_member_ids? %>
 <dl class="see">
   <dt><%= @model.t :member_ids %></dt>
   <dd><%=br gws_public_user_long_names(@item.sorted_members.map(&:long_name)) %></dd>
 </dl>
+<% end %>

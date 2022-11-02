@@ -61,6 +61,8 @@ ja:
     remark: 備考
     before: 前
     after: 後
+    time: 時間
+    fiscal_year: 年度
 
     views:
       login/login:

@@ -18,6 +18,10 @@ class Gws::Workload::LoadsController < ApplicationController
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
+  def pre_params
+    { year: @year }
+  end
+
   public
 
   def index
@@ -29,5 +33,30 @@ class Gws::Workload::LoadsController < ApplicationController
       search(params[:s]).
       allow(:read, @cur_user, site: @cur_site).
       page(params[:page]).per(50)
+  end
+
+  def download_all
+    if request.get? || request.head?
+      render
+      return
+    end
+
+    safe_params = params.require(:item).permit(:encoding)
+    encoding = safe_params[:encoding]
+
+    @item = Gws::Workload::Importer::Load.new(@cur_site, @year, @cur_user)
+    enumerable = @item.enum_csv(encoding: encoding)
+    filename = "gws_workload_loads_#{Time.zone.now.to_i}.csv"
+    send_enum(enumerable, type: "text/csv; charset=#{encoding}", filename: filename)
+  end
+
+  def import
+    return if request.get? || request.head?
+
+    @item = Gws::Workload::Importer::Load.new(@cur_site, @year, @cur_user)
+    file = params[:item].try(:[], :in_file)
+
+    result = @item.import(file)
+    render_create result, location: { action: :index }, render: { template: "import" }
   end
 end

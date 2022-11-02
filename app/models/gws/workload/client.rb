@@ -4,6 +4,7 @@ class Gws::Workload::Client
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::Workload::Yearly
+  include Gws::Addon::Workload::Graph
   include Gws::SitePermission
   include Gws::Addon::History
 

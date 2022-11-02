@@ -233,11 +233,11 @@ production: &production
     #     閲覧権限を「全公開」にすると閲覧できる。
     requires_read_permission: true
 
-  aggregation:
-    first_activation_date: "2000/1/1"
-
   link:
     default_target: _self
+
+  aggregation:
+    first_activation_date: "2000/1/1"
 
 test:
   <<: *production

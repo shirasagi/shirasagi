@@ -1,27 +1,34 @@
 <%
-
-link_params = { action: 'index', year: params[:year], category: params[:category] }
-
+  def link_params(*keys)
+    keys.map { |k| [k, (params[k] ? params[k] : "-") ] }.to_h
+  end
 %>
 <nav class="mod-navi current-navi">
   <h2><%= link_to @cur_site.menu_workload_label || t('modules.gws/workload'), gws_workload_main_path, class: 'icon-workload' %></h2>
-  <h3><%= link_to t('gws/workload.tabs.work'), link_params.merge(controller: 'works'), { class: 'work' } %></h3>
-  <h3><%= link_to t('gws/workload.tabs.admin'), link_params.merge(controller: 'admins'), { class: 'admin' } %></h3>
+  <h3><%= link_to t('gws/workload.tabs.work'), gws_workload_works_path(link_params(:year, :category, :client)), { class: 'work' } %></h3>
+  <h3><%= link_to t('gws/workload.tabs.admin'), gws_workload_admins_path(link_params(:year, :category, :group, :user, :client)), { class: 'admin' } %></h3>
+  <h3><%= link_to t('gws/workload.tabs.overtime'), gws_workload_overtimes_path(link_params(:year, :category, :group)), { class: 'overtime' } %></h3>
+  <% if Gws::Workload::Graph.allowed_self?(@cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws/workload.tabs.graph'), gws_workload_graphs_path(link_params(:year, :category, :group, :user)), { class: 'graph' } %></h3>
+  <% end %>
 
   <% if Gws::Workload::Work.allowed?(:trash, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/workload.tabs.trash'), link_params.merge(controller: 'trashes'), { class: 'trash' } %></h3>
+    <h3><%= link_to t('gws/workload.tabs.trash'), gws_workload_trashes_path(link_params(:year, :category, :group, :user, :client)), { class: 'trash' } %></h3>
   <% end %>
   <% if Gws::Workload::Category.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('mongoid.models.gws/workload/category'), link_params.merge(controller: 'categories'), class: "management" %></h3>
+    <h3><%= link_to t('mongoid.models.gws/workload/category'), gws_workload_categories_path(link_params(:year, :category, :group)), { class: "management" } %></h3>
   <% end %>
   <% if Gws::Workload::Client.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('mongoid.models.gws/workload/client'), link_params.merge(controller: 'clients'), class: "management" %></h3>
+    <h3><%= link_to t('mongoid.models.gws/workload/client'), gws_workload_clients_path(link_params(:year, :category, :group)), { class: "management" } %></h3>
   <% end %>
   <% if Gws::Workload::Cycle.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('mongoid.models.gws/workload/cycle'), link_params.merge(controller: 'cycles'), class: "management" %></h3>
+    <h3><%= link_to t('mongoid.models.gws/workload/cycle'), gws_workload_cycles_path(link_params(:year, :category, :group)), { class: "management" } %></h3>
   <% end %>
   <% if Gws::Workload::Load.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('mongoid.models.gws/workload/load'), link_params.merge(controller: 'loads'), class: "management" %></h3>
+    <h3><%= link_to t('mongoid.models.gws/workload/load'), gws_workload_loads_path(link_params(:year, :category, :group)), { class: "management" } %></h3>
+  <% end %>
+  <% if Gws::Workload::Graph::UserSetting.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('mongoid.models.gws/workload/graph/user_setting'), gws_workload_graph_user_settings_path(link_params(:year, :category, :group)), { class: "management" } %></h3>
   <% end %>
 </nav>
 

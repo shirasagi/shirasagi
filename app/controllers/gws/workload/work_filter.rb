@@ -7,77 +7,129 @@ module Gws::Workload::WorkFilter
 
     model Gws::Workload::Work
 
-    before_action :set_cur_tab
-    before_action :set_crumbs
-    before_action :set_item, only: %i[show edit update disable delete destroy set_seen unset_seen active recover]
+    #before_action :set_crumbs
+    before_action :set_clients
+    before_action :set_loads
+    before_action :set_cycles
+    before_action :set_selected_user
+    before_action :set_item, only: %i[show edit update disable delete destroy finish revert]
     before_action :set_selected_items, only: %i[active_all disable_all destroy_all set_seen_all unset_seen_all download_all]
-    before_action :set_category
+    helper_method :category_options, :load_options, :client_options, :cycle_options, :search_group?
+  end
+
+  def finish
+    @item.attributes = fix_params
+    raise '403' if !@item.allowed?(:edit, @cur_user, site: @cur_site) && !@item.member?(@cur_user)
+    @item.errors.clear
+    return if request.get? || request.head?
+
+    comment = Gws::Workload::WorkComment.new(cur_site: @cur_site, cur_user: @cur_user, cur_work: @item)
+    comment.achievement_rate = 100
+    result = comment.save
+    result = @item.update if result
+    render_update result
+  end
+
+  def revert
+    @item.attributes = fix_params
+    raise '403' if !@item.allowed?(:edit, @cur_user, site: @cur_site) && !@item.member?(@cur_user)
+    @item.errors.clear
+    return if request.get? || request.head?
+
+    comment = Gws::Workload::WorkComment.new(cur_site: @cur_site, cur_user: @cur_user, cur_work: @item)
+    comment.achievement_rate = 0
+    result = comment.save
+    result = @item.update if result
+    render_update result
   end
 
   private
+
+  def set_selected_user
+    return if params[:user] == "-"
+    @user = @users.find { |c| c.id == params[:user].to_i }
+    redirect_to(user: "-") if @user.nil?
+  end
+
+  def set_clients
+    @clients = Gws::Workload::Client.site(@cur_site).search_year(year: @year).to_a
+
+    return if params[:client] == "-"
+    @client = @clients.find { |c| c.id == params[:client].to_i }
+    redirect_to(client: "-") if @client.nil?
+  end
+
+  def set_loads
+    @loads = Gws::Workload::Load.site(@cur_site).search_year(year: @year).to_a
+  end
+
+  def set_cycles
+    @cycles = Gws::Workload::Cycle.site(@cur_site).search_year(year: @year).to_a
+  end
 
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site}
   end
 
   def pre_params
-    set_year
-    set_category
-    ret = { due_date: Time.zone.now + @cur_site.workload_default_due_date.day }
+    if @calendar_start
+      due_date = @calendar_start
+      due_start_on = @calendar_start - @cur_site.workload_default_due_date.day
+      #due_end_on = @calendar_start
+    else
+      today = Time.zone.today
+      due_date = today + @cur_site.workload_default_due_date.day
+      due_start_on = today
+      #due_end_on = today + @cur_site.workload_default_due_date.day
+    end
+
+    ret = {}
+    ret[:due_date] = due_date
+    ret[:due_start_on] = due_start_on
+    #ret[:due_end_on] = due_end_on
     ret[:year] = @year if @year
-    ret[:category_ids] = [@category.id] if @category
+    ret[:category_id] = @category.id if @category
+    ret[:member_group_id] = @cur_group.id,
+    ret[:member_ids] = [@cur_user.id]
     ret
   end
 
-  # must be overridden by sub-class
-  def set_cur_tab
+  def item_deleted?
+    @item.deleted?
   end
 
-  def set_crumbs
-    set_category
-    @crumbs << [@cur_site.menu_workload_label || I18n.t('modules.gws/workload'), gws_workload_main_path]
-    @crumbs << @cur_tab if @cur_tab
-    if @category.present?
-      @crumbs << [@category.name, { action: :index, category: @category }]
-    end
+  def item_readable?
+    @item.member?(@cur_user) || @item.readable?(@cur_user, site: @cur_site) || @item.allowed?(:read, @cur_user, site: @cur_site)
   end
 
-  def set_category
-    @categories ||= Gws::Workload::Category.site(@cur_site)
-    if category_id = params[:category].presence
-      @category ||= Gws::Workload::Category.site(@cur_site).where(id: category_id).first
-    end
+  def load_options
+    @loads.map { |l| [l.name, l.id] }
   end
 
-  # def render_destroy_all(result)
-  #   location = crud_redirect_url || { action: :index }
-  #   notice = result ? { notice: t('gws/workload.notice.disable') } : {}
-  #   errors = @items.map { |item| [item.id, item.errors.full_messages] }
-  #
-  #   respond_to do |format|
-  #     format.html { redirect_to location, notice }
-  #     format.json { head json: errors }
-  #   end
-  # end
+  def client_options
+    @clients.map { |c| [c.name, c.id] }
+  end
+
+  def cycle_options
+    @cycles.map { |c| [c.name, c.id] }
+  end
 
   public
 
   def index
-    params[:s] ||= {}
-    params[:s][:site] = @cur_site
-    params[:s][:year] = @year if @year.present?
-    params[:s][:category_id] = @category.id if @category.present?
+    @s = OpenStruct.new params[:s]
+    @s[:site] = @cur_site
+    @s[:year] = @year if @year.present?
+    @s[:category_id] = @category.id if @category.present?
+    @s[:client_id] = @client.id if @client.present?
+    @s[:work_state] ||= "except_finished"
+    @s[:sort] ||= "due_date"
 
     set_items
   end
 
   def create
     @item = @model.new get_params
-    if params[:commit] == t("ss.buttons.draft_save")
-      @item.state = 'draft'
-    elsif params[:commit] == t("ss.buttons.publish_save")
-      @item.state = 'public'
-    end
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
     render_create @item.save
@@ -86,14 +138,15 @@ module Gws::Workload::WorkFilter
   def update
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    if params[:commit] == t("ss.buttons.draft_save")
-      @item.state = 'draft'
-    elsif params[:commit] == t("ss.buttons.publish_save")
-      @item.state = 'public'
-    end
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
     render_update @item.update
+  end
+
+  def show
+    raise '404' if item_deleted?
+    raise '403' if !item_readable?
+    render
   end
 
   def download_all

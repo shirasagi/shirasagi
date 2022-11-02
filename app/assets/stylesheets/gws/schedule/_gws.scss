@@ -500,6 +500,10 @@
   &:hover { color: #000; }
 }
 
+.fc-event-work {
+  border-right: 0px;
+}
+
 // View: agendaDay
 .fc-agendaDay-view {
   .fc-time-grid-event {
@@ -859,7 +863,7 @@ dl.gws-schedule-repeat {
   }
 }
 
-.gws-schedule-todo-achievement-bar {
+.gws-achievement-bar {
   display: inline-block;
   width: 6em;
 }
@@ -904,11 +908,17 @@ dl.gws-schedule-repeat {
   }
 }
 
-#addon-gws-agents-addons-schedule-todo-comment_post {
+.gws-comment-post {
   .comment {
     margin: 5px 0;
     padding: 0 5px;
     border-bottom: $border-gray1;
+  }
+
+  .total {
+    padding: 10px;
+    border-radius: 3px;
+    background: #f2f2f2;
   }
 
   .row {
@@ -922,6 +932,14 @@ dl.gws-schedule-repeat {
   }
 
   .achievement-rate {
+    margin-right: 10px;
+  }
+
+  .worktime-minutes {
+    margin-right: 10px;
+  }
+
+  .overtime-minutes {
     margin-right: 10px;
   }
 

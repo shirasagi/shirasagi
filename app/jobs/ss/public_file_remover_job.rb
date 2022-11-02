@@ -13,17 +13,20 @@ class SS::PublicFileRemoverJob < SS::ApplicationJob
 
   def traverse_directory(path)
     count = 0
-    ::Dir.foreach(path) do |child_path|
-      next if %w(. ..).include?(child_path)
 
-      count += 1
+    if ::File.exist?(path) && ::File.directory?(path)
+      ::Dir.foreach(path) do |child_path|
+        next if %w(. ..).include?(child_path)
 
-      if child_path == "_"
-        remove_if_necessary("#{path}/#{child_path}")
-        next
+        count += 1
+
+        if child_path == "_"
+          remove_if_necessary("#{path}/#{child_path}")
+          next
+        end
+
+        count += traverse_directory("#{path}/#{child_path}")
       end
-
-      count += traverse_directory("#{path}/#{child_path}")
     end
 
     remove_directory(path) if count == 0

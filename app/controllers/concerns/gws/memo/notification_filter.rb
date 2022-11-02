@@ -107,6 +107,8 @@ module Gws::Memo::NotificationFilter
       @destroyed_item = [@item.dup, []]
     elsif @item && @item.class.name.include?("Gws::Schedule::Todo")
       @destroyed_item = [@item, @item.subscribed_users]
+    elsif @item && @item.class.name.include?("Gws::Workload::Work")
+      @destroyed_item = [@item, @item.subscribed_users]
     else
       copy = @item.dup
       # if id is BSON::ObjectID, it is needed to restore id because id is changed during duplicating object.
@@ -124,6 +126,8 @@ module Gws::Memo::NotificationFilter
         if item.class.name.include?("Gws::Monitor")
           @destroyed_items << [item.dup, []]
         elsif item.class.name.include?("Gws::Schedule::Todo")
+          @destroyed_items << [item, item.subscribed_users]
+        elsif item.class.name.include?("Gws::Workload::Work")
           @destroyed_items << [item, item.subscribed_users]
         else
           copy = item.dup

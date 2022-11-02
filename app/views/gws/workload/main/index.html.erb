@@ -1,6 +1,6 @@
-<%= render partial: 'gws/workload/main/year_navi' %>
+<%= render partial: 'gws/workload/main/base_navi' %>
 
-<div class="index gws-boards">
+<div class="index gws-workload">
   <%= render template: '_list_head' %>
   <ul class="list-items">
     <% @items.each do |item| %>
@@ -11,28 +11,33 @@
           <%= link_to t('ss.links.delete'), action: :soft_delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 
           <% if item.try(:image) %>
-            <%= link_to image_tag(item.image.thumb_url), item.image.url, {class: "thumb", target: "_blank", rel: "noopener"} %>
+            <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank", rel: "noopener" } %>
           <% elsif item.try(:image?) %>
-            <%= link_to image_tag(item.thumb_url), item.url, {class: "thumb", target: "_blank", rel: "noopener"} %>
+            <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb", target: "_blank", rel: "noopener" } %>
           <% end %>
         </nav>
 
         <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>"/></label>
         <div class="info">
           <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
-          <%= link_to title, {action: :show, id: item}, class: "title" %>
+          <%= link_to title, { action: :show, id: item }, class: "title" %>
 
           <div class="meta">
-            <span class="id">#<%= item.id %></span>
+            <span class="ss-quota-bar gws-achievement-bar">
+              <div class="label"><%= t("gws/schedule/todo.achievement_rate", count: item.achievement_rate || 0) %></div>
+              <div class="usage " style="width: <%= item.achievement_rate || 0 %>%"></div>
+            </span>
+            <span class="member_group"><%= gws_public_user_long_name(item.member_group.try(:trailing_name)) %></span>
+            <span class="members"><%= truncate(gws_public_user_long_names(item.sorted_overall_members.limit(3).map(&:long_name)).join(", ")) %></span>
             <span class="datetime"><%= @model.t(:due_date) %>: <%= tryb { item.due_date.strftime('%Y/%m/%d') } %></span>
             <span class="datetime"><%= @model.t(:updated) %>: <%= item.updated.strftime('%Y/%m/%d %H:%M') %></span>
-            <span><%= gws_public_user_long_name(item.user_long_name) %></span>
-            <span class="state"><%= item.label(:state) %></span>
             <% if !@year %><span><%= item.year %></span><% end %>
             <span class="gws-share-categories">
               <% if category = item.category %>
-                <%= link_to category.name, gws_workload_works_path(category: category.id),
-                            class: 'gws-category-label', style: category_label_css(category) %>
+                <%= link_to category.name, url_for(category: category.id), class: "gws-category-label" %>
+              <% end %>
+              <% if client = item.client %>
+                <%= link_to client.name, url_for(client: client.id), class: "gws-category-label" %>
               <% end %>
             </span>
           </div>

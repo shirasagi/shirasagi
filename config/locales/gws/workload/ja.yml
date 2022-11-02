@@ -5,9 +5,12 @@ ja:
     tabs:
       work: 担当業務
       admin: 全業務
+      overtime: 残業時間
+      graph: 集計結果
       trash: ゴミ箱
     links:
-      back_to_admin: 作成した回覧へ戻る
+      work_csv: 業務件数CSV
+      work_comment_csv: 業務負荷CSV
     confirm:
       set_seen_all: 選択した項目を全て既読にしますか？
       unset_seen_all: 選択した項目を全て未読に戻しますか？
@@ -25,26 +28,39 @@ ja:
       update_at: 変更日時
       user: ユーザー
       replay: 返信内容
-
+    graph:
+      total:
+        title: 業務負荷・依頼及び作業件数まとめ
+        label: 調査・作業件数
+        x: 月
+        y: 負荷割合
+      worktime:
+        title: 業務状況
+        x: 月
+        y: 業務時間（h）
+      overtime:
+        title: 残業状況
+        x: 月
+        y: 残業時間（h）
+      client:
+        title: 調査・作業件数
+        x: 月
+        y: 調査等依頼件数
+      load:
+        title: 業務負荷数値
+        x: 月
+        y: 業務負荷数値
     csv:
       - ID
-      - 調査・作業の件名
+      - 業務名
       - 年度
       - 業務カテゴリー
       - 依頼元
       - 頻度
       - 業務負荷
-    seen_user_info:
-      title: 既読者数
-      format: "%{count} 人 / %{total} 人中"
-      more: 詳しく見る
+    buttons:
+      comment: 更新
     options:
-      see_type:
-        normal: 通常回覧
-        simple: 簡易回覧
-      article_state:
-        both: 全表示
-        unseen: 未読
       workload_delete_threshold:
         - 6ヶ月
         - 1年
@@ -58,16 +74,22 @@ ja:
         created_desc: 投稿日(新着順)
         updated_asc:  最終更新日(日付順)
         updated_desc: 最終更新日(新着順)
-        due_date_asc:  期限日時(昇順)
-        due_date_desc: 期限日時(降順)
-      browsing_authority:
-        all: 全ての回覧者に閲覧可
-        author_or_commenter: 回覧作成者と自分のみ閲覧可
+        due_date_asc:  期限日(昇順)
+        due_date_desc: 期限日(降順)
+      work_state:
+        finished: 完了
+        except_finished: 未完了
+        all: すべて
+
   modules:
     gws/workload: 業務見える化
     addons:
       gws/workload/group_setting: 業務見える化
       gws/workload/category: 業務カテゴリー
+      gws/workload/member: 担当者
+      gws/workload/comment_post: コメント
+      gws/workload/graph: グラフ設定
+      gws/workload/overtime: 残業時間
   gws_role:
     use_gws_workload: 業務見える化の利用
     read_other_gws_workload_works: 担当業務の閲覧（全て）
@@ -79,18 +101,23 @@ ja:
     trash_other_gws_workload_works: 担当業務ゴミ箱の管理（全て）
     trash_private_gws_workload_works: 担当業務ゴミ箱の管理（所有）
     edit_gws_workload_settings: 設定の管理
+    read_other_gws_workload_graphs: 集計結果の閲覧（全て）
+    read_private_gws_workload_graphs: 集計結果の閲覧（所属）
+    use_gws_workload_overtimes: 残業時間の管理（自身）
+    manage_gws_workload_overtimes: 残業時間の管理（所属）
+    all_gws_workload_overtimes: 残業時間の管理（全て）
 
   gws_notification:
-    gws/workload/work:
-      subject: "[業務見える化] 「%{name}」が届きました。"
-      text: "%{text}"
-      mail_text: |
-        %{subject}
+    #gws/workload/work:
+    #  subject: "[業務見える化] 「%{name}」が届きました。"
+    #  text: "%{text}"
+    #  mail_text: |
+    #    %{subject}
+    #
+    #    %{text}
 
-        %{text}
-
-    gws/workload/work/remove:
-      subject: "[業務見える化] 「%{name}」が取り下げられました。"
+    gws/workload/work/destroy:
+      subject: "[業務見える化] 「%{name}」が削除されました"
       text: ""
       mail_text: |
         %{subject}
@@ -99,9 +126,10 @@ ja:
     models:
       gws/workload/work: 担当業務
       gws/workload/category: 業務カテゴリー
-      gws/workload/client: 調査関連リスト
+      gws/workload/client: 依頼元
       gws/workload/cycle: 頻度
       gws/workload/load: 業務負荷
+      gws/workload/graph/user_setting: 集計ユーザー
 
     errors:
       models:
@@ -114,18 +142,25 @@ ja:
           found_children: 子カテゴリーが存在します。
     attributes:
       gws/workload/work:
-        name: 調査・作業の件名
+        name: 業務名
         year: 年度
+        month: 月
         category_id: 業務カテゴリー
         client_id: 依頼元
         cycle_id: 頻度
         load_id: 業務負荷
         created: 投稿日
-        updated: 最終更新日
-        due_date: 期限日時
+        updated: 更新日時
+        due_date: 期限日
+        due_start_on: 開始日
+        due_end_on: 終了日
         see_type: 既読にする形式
         deleted: 削除日時
         seen: 既読
+        achievement_rate: 進捗率
+        worktime_minutes: 業務時間
+        overtime_minutes: 残業時間
+        comments_total: 進捗率・時間
       gws/workload/category:
         name: カテゴリー名
         order: 並び順
@@ -143,8 +178,67 @@ ja:
         order: 並び順
         year: 年度
         coefficient: 負荷係数
+      gws/addon/workload/member:
+        member_ids: 担当ユーザー
+        member_group_id: 担当グループ
+      gws/workload/work_comment:
+        year: 年度
+        month: 月
+        day: 日
+        work_id: 業務
+        work_name: 業務名
+        commented_at: 日時
+        achievement_rate: 進捗率
+        worktime_minutes: 業務時間
+        overtime_minutes: 残業時間
+        coefficient: 業務負荷
+      gws/addon/workload/graph:
+        graph_state: グラフ表示
+        color: 表示色
+      gws/workload/graph/user_setting:
+        name: 名称
+        state: ステータス
+      gws/workload/overtime:
+        name: 名称
+        month1_minutes: 1月の残業時間
+        month2_minutes: 2月の残業時間
+        month3_minutes: 3月の残業時間
+        month4_minutes: 4月の残業時間
+        month5_minutes: 5月の残業時間
+        month6_minutes: 6月の残業時間
+        month7_minutes: 7月の残業時間
+        month8_minutes: 8月の残業時間
+        month9_minutes: 9月の残業時間
+        month10_minutes: 10月の残業時間
+        month11_minutes: 11月の残業時間
+        month12_minutes: 12月の残業時間
+
+  activemodel:
+    models:
+      gws/workload/importer/category: 業務カテゴリーCSVインポート
+    attributes:
+      gws/workload/importer/category:
+        in_file: ファイル
+    errors:
+      models:
+        gws/workload/importer/base:
+          not_found: "%{line_no}: 年度 %{year}、ID %{id} は存在しません。"
+          not_found_group: "%{line_no}: グループ「%{name}」が見つかりません。"
+
   tooltip:
     gws/workload/work:
+      name: 業務名を入力します
+      year: 年度を入力します
+      category_id: 業務カテゴリーを選択します
+      client_id: 依頼元を選択します
+      cycle_id: 頻度を選択します
+      load_id: 業務負荷を選択します
+      due_date: 期限日を入力します
+      due_start_on: 開始日を入力します
+      due_end_on: 終了日を入力します
+      achievement_rate: 最新のコメントの進捗率になります
+      worktime_minutes: コメントの業務時間合計になります
+      overtime_minutes: コメントの残業時間合計になります
     gws/workload/category:
       name: カテゴリー名を入力します
       year: 年度を入力します
@@ -158,3 +252,7 @@ ja:
       name: 名称を入力します
       year: 年度を入力します
       coefficient: 負荷係数を入力します
+
+  job:
+    models:
+      gws/aggregation/group_job: 集計グループ更新

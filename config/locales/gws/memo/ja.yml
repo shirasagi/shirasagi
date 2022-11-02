@@ -294,6 +294,7 @@ ja:
       gws/memo/notice_user_setting:
         notice_schedule_user_setting: スケジュール
         notice_todo_user_setting: ToDo
+        notice_workload_user_setting: 業務見える化
         notice_presence_user_setting: 在席状況
         notice_affair_user_setting: 庶務事務
         notice_workflow_user_setting: ワークフロー
@@ -308,6 +309,7 @@ ja:
         notice_announcement_user_setting: お知らせ
         notice_schedule_email_user_setting: スケジュール通知メール転送
         notice_todo_email_user_setting: ToDo通知メール転送
+        notice_workload_email_user_setting: 業務見える化通知メール転送
         notice_presence_email_user_setting: 在席状況通知メール転送
         notice_workflow_email_user_setting: ワークフロー通知メール転送
         notice_circular_email_user_setting: 回覧板通知メール転送

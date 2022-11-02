@@ -1,0 +1,12 @@
+<% @item.init_minutes %>
+<dl class="see">
+  <% @cur_site.fiscal_months.each do |m| %>
+    <dt><%= "#{m}#{t("datetime.prompts.month")}" %></dt>
+    <dd>
+      <%= f.number_field "in_month#{m}_hours", min: 0, style: "width: 60px !important;" %>
+      <%= t("ss.time") %>
+      <%= f.number_field "in_month#{m}_minutes", min: 0, max: 60, style: "width: 60px !important; margin-left: 10px;" %>
+      <%= t("datetime.prompts.minute") %>
+    </dd>
+  <% end %>
+</dl>

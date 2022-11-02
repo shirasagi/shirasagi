@@ -1,4 +1,4 @@
-<%= render partial: 'gws/workload/main/year_navi' %>
+<%= render partial: 'gws/workload/main/base_navi' %>
 
 <% @tap_menu = proc do |item| %>
   <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
@@ -13,10 +13,12 @@
   <span class="gws-share-categories">
     <span class="gws-category-label" style="background-color: gray; color: #ffffff;"><%= t('gws/workload.work.disabled') %></span>
     <% if category = item.category %>
-      <%= link_to category.name, gws_workload_trashes_path(category: category.id),
-                  class: 'gws-category-label', style: category_label_css(category) %>
+      <%= link_to category.name, gws_workload_trashes_path(category: category.id), class: "gws-category-label" %>
     <% end %>
-    </span>
+      <% if client = item.client %>
+      <%= link_to client.name, url_for(client: client.id), class: "gws-category-label" %>
+    <% end %>
+  </span>
 <% end %>
 
 <%#= render "gws/workload/main/tabs" %>
