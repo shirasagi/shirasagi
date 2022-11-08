@@ -12,7 +12,7 @@ describe "gws_schedule_custom_group_plans", type: :feature, dbscope: :example, j
       it "#index" do
         visit index_path
         within "#calendar-controller" do
-          click_on I18n.t("datetime.prompts.day", locale: I18n.default_locale)
+          click_on I18n.t("datetime.prompts.day").downcase
           expect(page).to have_no_css(".fc-widget-header[data-date*=\"00:00:00\"]")
           expect(page).to have_no_css(".fc-widget-header[data-date*=\"06:00:00\"]")
           expect(page).to have_css(".fc-widget-header[data-date*=\"12:00:00\"]")
@@ -32,7 +32,7 @@ describe "gws_schedule_custom_group_plans", type: :feature, dbscope: :example, j
       it "#index" do
         visit index_path
         within "#calendar-controller" do
-          click_on I18n.t("datetime.prompts.day", locale: I18n.default_locale)
+          click_on I18n.t("datetime.prompts.day").downcase
           expect(page).to have_no_css(".fc-widget-header[data-date*=\"00:00:00\"]")
           expect(page).to have_css(".fc-widget-header[data-date*=\"06:00:00\"]")
           expect(page).to have_css(".fc-widget-header[data-date*=\"12:00:00\"]")

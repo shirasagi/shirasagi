@@ -41,8 +41,8 @@ en:
 
   date:
     formats:
-      attendance_year_month: ! '%Y-%1m'
-      attendance_month_day: ! '%1m-%1d (%a)'
+      attendance_year_month: ! '%b %Y'
+      attendance_month_day: ! '%a, %1m-%1d'
 
   modules:
     gws/attendance: Attendance

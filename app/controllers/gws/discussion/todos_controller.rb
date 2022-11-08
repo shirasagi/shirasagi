@@ -35,8 +35,14 @@ class Gws::Discussion::TodosController < ApplicationController
 
   def pre_params
     @skip_default_group = true
+
+    if params[:start].present?
+      start = params[:start].to_s.in_time_zone rescue nil
+    end
+    start ||= Time.zone.now.change(min: 0)
+
     {
-      start_at: params[:start] || I18n.l(Time.zone.now.change(min: 0), format: :picker),
+      start_at: start, end_at: start, start_on: start.to_date, end_on: start.to_date,
       member_ids: params[:member_ids].presence || [@cur_user.id]
     }
   end

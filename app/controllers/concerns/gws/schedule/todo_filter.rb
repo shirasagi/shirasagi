@@ -47,12 +47,16 @@ module Gws::Schedule::TodoFilter
   end
 
   def pre_params
-    now = Time.zone.now.change(min: 0)
+    if params[:start].present?
+      start = params[:start].to_s.in_time_zone rescue nil
+    end
+    start ||= Time.zone.now.change(min: 0)
+
     super.keep_if { |key| %i[facility_ids].exclude?(key) }.merge(
-      start_at: params[:start] || now,
-      end_at: params[:start] || now,
-      start_on: params[:start] || now.to_date,
-      end_on: params[:start] || now.to_date,
+      start_at: start,
+      end_at: start,
+      start_on: start.to_date,
+      end_on: start.to_date,
       member_ids: [@cur_user.id]
     )
   end

@@ -521,7 +521,7 @@ en:
           include_none_of: includes none of
       lang:
         ja: 日本語
-        en: English
+        en: English (Experimental)
 
     tasks:
       started: Started.

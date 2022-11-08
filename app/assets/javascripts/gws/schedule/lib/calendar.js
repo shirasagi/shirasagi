@@ -121,7 +121,7 @@ SS.ready(function() {
           left: 'today prev next title reload',
           right: 'withAbsence withTodo month,basicWeek,agendaDay withListView'
         },
-        lang: 'ja',
+        lang: document.documentElement.lang || 'ja',
         nextDayThreshold: '00:00:00', // 複数日表示の閾値
         schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
         slotLabelFormat: 'HH:mm',

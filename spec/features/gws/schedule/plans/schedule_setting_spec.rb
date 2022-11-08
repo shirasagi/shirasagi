@@ -11,7 +11,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       it "#index" do
         visit index_path
         within "#calendar" do
-          click_on I18n.t("gws/schedule.options.interval.daily", locale: I18n.default_locale)
+          click_on I18n.t("gws/schedule.options.interval.daily").downcase
         end
         within ".fc-agenda-view" do
           expect(page).to have_no_css("tr[data-time=\"00:00:00\"]")
@@ -38,7 +38,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       it "#index" do
         visit index_path
         within "#calendar" do
-          click_on I18n.t("gws/schedule.options.interval.daily", locale: I18n.default_locale)
+          click_on I18n.t("gws/schedule.options.interval.daily").downcase
         end
         within ".fc-agenda-view" do
           expect(page).to have_no_css("tr[data-time=\"00:00:00\"]")
@@ -73,7 +73,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
           expect(last_wday_header).to include("fc-sat")
         end
         within "#calendar" do
-          click_on I18n.t("gws/schedule.options.interval.weekly", locale: I18n.default_locale)
+          click_on I18n.t("gws/schedule.options.interval.weekly").downcase
         end
         within ".fc-head-container" do
           expect(first_wday_header).to include("fc-sun")
@@ -95,7 +95,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
           expect(last_wday_header).to include("fc-sun")
         end
         within "#calendar" do
-          click_on I18n.t("gws/schedule.options.interval.weekly", locale: I18n.default_locale)
+          click_on I18n.t("gws/schedule.options.interval.weekly").downcase
         end
         within ".fc-head-container" do
           expect(first_wday_header).to include("fc-mon")
@@ -117,7 +117,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
           expect(last_wday_header).to include("fc-fri")
         end
         within "#calendar" do
-          click_on I18n.t("gws/schedule.options.interval.weekly", locale: I18n.default_locale)
+          click_on I18n.t("gws/schedule.options.interval.weekly").downcase
         end
         within ".fc-head-container" do
           expect(first_wday_header).to include("fc-sat")
@@ -143,7 +143,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
           expect(last_wday_header).to include(fc_last)
         end
         within "#calendar" do
-          click_on I18n.t("gws/schedule.options.interval.weekly", locale: I18n.default_locale)
+          click_on I18n.t("gws/schedule.options.interval.weekly").downcase
         end
         within ".fc-head-container" do
           expect(first_wday_header).to include(fc_first)
