@@ -141,7 +141,6 @@ Cms_TemplateForm.prototype.activateForm = function(formId) {
   $("#item_body_layout_id").parent('dd').prev('dt').addClass('hide');
   $("#item_body_layout_id").parent('dd').addClass('hide');
   Cms_Form.addonSelector = "#addon-cms-agents-addons-form-page .addon-body";
-  Cms_Form.activateSyntaxChecks();
 
   this.$formIdInput.val(formId);
   this.$formChangeBtn.trigger("ss:formActivated");
@@ -157,7 +156,6 @@ Cms_TemplateForm.prototype.deactivateForm = function() {
   $("#item_body_layout_id").parent('dd').prev('dt').removeClass('hide');
   $("#item_body_layout_id").parent('dd').removeClass('hide');
   Cms_Form.addonSelector = ".mod-cms-body";
-  Cms_Form.activateSyntaxChecks();
 
   this.$formIdInput.val('');
   this.$formChangeBtn.trigger("ss:formDeactivated");
@@ -217,7 +215,6 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
         setTimeout(function() {
           SS.renderAjaxBox();
           SS_DateTimePicker.render();
-          Cms_Form.activateSyntaxChecks();
 
           setTimeout(function() {
             $this.trigger("ss:columnAdded", newColumnElement);
@@ -478,7 +475,6 @@ Cms_TemplateForm.prototype.remove = function($evTarget) {
     }
     $columnValue.remove();
     self.resetOrder();
-    Cms_Form.activateSyntaxChecks();
 
     self.$el.trigger("ss:columnDeleted");
   });
