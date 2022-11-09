@@ -4,6 +4,7 @@
 /.bundle
 /.project
 /.ruby-version
+/.tool-version
 /.vscode
 
 /config/*.yml
