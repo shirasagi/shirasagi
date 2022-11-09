@@ -1,19 +1,41 @@
-<dl class="see">
-  <dt><%= @model.t :contact_group_name %><%= @model.tt :contact_group_name %></dt>
-  <dd><%= f.text_field :contact_group_name %></dd>
+<div class="contact-groups-table-wrap">
+  <table class="contact-groups-table">
+    <thead>
+    <tr>
+      <th class="contact-group-name"><%= @model.t :contact_group_name %><%= @model.tt :contact_group_name %></th>
+      <th class="contact-tel"><%= @model.t :contact_tel %><%= @model.tt :contact_tel %></th>
+      <th class="contact-fax"><%= @model.t :contact_fax %><%= @model.tt :contact_fax %></th>
+      <th class="contact-email"><%= @model.t :contact_email %><%= @model.tt :contact_email %></th>
+      <th class="contact-link-url"><%= @model.t :contact_link_url %><%= @model.tt :contact_link_url %></th>
+      <th class="contact-link-name"><%= @model.t :contact_link_name %><%= @model.tt :contact_link_name %></th>
+      <td class="operations"></td>
+    </tr>
+    </thead>
+    <tbody>
+    <% @item.contact_groups.each do |contact_group| %>
+      <tr data-id="<%= contact_group.id %>">
+        <td class="contact-group-name"><%= text_field_tag "#{f.object_name}[contact_groups][][contact_group_name]", contact_group.contact_group_name %></td>
+        <td class="contact-tel"><%= tag.input type: "tel", name: "#{f.object_name}[contact_groups][][contact_tel]", value: contact_group.contact_tel %></td>
+        <td class="contact-fax"><%= text_field_tag "#{f.object_name}[contact_groups][][contact_fax]", contact_group.contact_fax %></td>
+        <td class="contact-email"><%= email_field_tag "#{f.object_name}[contact_groups][][contact_email]", contact_group.contact_email %></th>
+        <td class="contact-link-url"><%= url_field_tag "#{f.object_name}[contact_groups][][contact_link_url]", contact_group.contact_link_url %></td>
+        <td class="contact-link-name"><%= text_field_tag "#{f.object_name}[contact_groups][][contact_link_name]", contact_group.contact_link_name %></td>
+        <td class="operations"></td>
+      </tr>
+    <% end %>
+    <tr>
+      <td class="contact-group-name"><%= text_field_tag "#{f.object_name}[contact_groups][][contact_group_name]", nil, id: nil, style: "width: 100%;" %></td>
+      <td class="contact-tel"><%= tag.input type: "tel", name: "#{f.object_name}[contact_groups][][contact_tel]", style: "width: 100%;" %></td>
+      <td class="contact-fax"><%= tag.input type: "tel", name: "#{f.object_name}[contact_groups][][contact_fax]", style: "width: 100%;" %></td>
+      <td class="contact-email"><%= email_field_tag "#{f.object_name}[contact_groups][][contact_email]", nil, id: nil, style: "width: 100%;" %>
+      <td class="contact-link-url"><%= url_field_tag "#{f.object_name}[contact_groups][][contact_link_url]", nil, id: nil, style: "width: 100%;" %></td>
+      <td class="contact-link-name"><%= text_field_tag "#{f.object_name}[contact_groups][][contact_link_name]", nil, id: nil, style: "width: 100%;" %></td>
+      <td><%= button_tag t("ss.buttons.add"), name: "add", class: "btn" %></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
 
-  <dt><%= @model.t :contact_tel %><%= @model.tt :contact_tel %></dt>
-  <dd><%= f.telephone_field :contact_tel %></dd>
-
-  <dt><%= @model.t :contact_fax %><%= @model.tt :contact_fax %></dt>
-  <dd><%= f.telephone_field :contact_fax %></dd>
-
-  <dt><%= @model.t :contact_email %><%= @model.tt :contact_email %></dt>
-  <dd><%= f.email_field :contact_email %></dd>
-
-  <dt><%= @model.t :contact_link_url %><%= @model.tt :contact_link_url %></dt>
-  <dd><%= f.text_field :contact_link_url %></dd>
-
-  <dt><%= @model.t :contact_link_name %><%= @model.tt :contact_link_name %></dt>
-  <dd><%= f.text_field :contact_link_name %></dd>
-</dl>
+<%= jquery do %>
+  $(".contact-groups-table").DataTable({ info: false, ordering: false, paging: false, scrollX: true, searching: false });
+<% end %>

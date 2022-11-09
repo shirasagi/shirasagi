@@ -1,0 +1,17 @@
+.contact-groups-table-wrap {
+  position: relative;
+  width: 100%;
+  overflow: auto;
+}
+
+.contact-groups-table {
+  .contact-group-name, .contact-tel, .contact-fax, .contact-email, .contact-link-name {
+    min-width: 15em;
+  }
+  .contact-link-url {
+    min-width: 30em;
+  }
+  .operations {
+    min-width: 3em;
+  }
+}
