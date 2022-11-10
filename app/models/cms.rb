@@ -152,10 +152,12 @@ module Cms
     size = criteria.total_bsonsize + criteria.aggregate_files_used
 
     site_criteria.each do |site|
-      dir = site.root_path
+      dir = site.path
+      child_dirs = site.children.map(&:path)
       next unless ::File.exist?(dir)
       # see: https://myokoym.hatenadiary.org/entry/20100606/1275836896
       ::Dir.glob("#{dir}/**/*") do |path|
+        next if child_dirs.find { |child_dir| path.start_with?(child_dir + "/") }
         size += ::File.stat(path).size rescue 0
       end
     end
