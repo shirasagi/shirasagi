@@ -6,6 +6,8 @@ describe Cms, type: :model, dbscope: :example do
   let!(:group2) { create :cms_group, name: "#{group0.name}/#{unique_id}" }
   let!(:site) { create :cms_site_unique, group_ids: [ group0.id ] }
   let!(:other_site) { create :cms_site_unique, group_ids: [ group0.id ] }
+  let!(:sub_site) { create :cms_site_unique, domains: site.domain, subdir: "sub", parent: site }
+
   let(:png_file) do
     filename = "#{Rails.root}/spec/fixtures/ss/logo.png"
     basename = ::File.basename(filename)
@@ -14,6 +16,12 @@ describe Cms, type: :model, dbscope: :example do
     ) do |file|
       ::FileUtils.cp(filename, file.path)
     end
+  end
+
+  def upload_file(upload_site)
+    uploader = create(:uploader_node_file, cur_site: upload_site, filename: "img")
+    ::FileUtils.mkdir_p(uploader.path)
+    ::FileUtils.cp("#{Rails.root}/spec/fixtures/ss/logo.png", "#{uploader.path}/logo.png")
   end
 
   it { expect(Cms.find_cms_quota_used(Cms::Site.where(id: site.id))).to be >= 700 }
@@ -230,6 +238,59 @@ describe Cms, type: :model, dbscope: :example do
     it do
       expect { create(:kana_dictionary, cur_site: site) }.to \
         change { Cms.find_cms_quota_used(Cms::Site.where(id: site.id)) }.by_at_least(150)
+    end
+  end
+
+  context "when uploader/file is created" do
+    context "when file uploaded" do
+      it "used of site" do
+        expect { upload_file(site) }.to \
+          change { Cms.find_cms_quota_used(Cms::Site.where(id: site.id)) }.by_at_least(10_000)
+      end
+
+      it "used of other site" do
+        expect { upload_file(site) }.to \
+          change { Cms.find_cms_quota_used(Cms::Site.where(id: other_site.id)) }.by(0)
+      end
+
+      it "used of sub site" do
+        expect { upload_file(site) }.to \
+          change { Cms.find_cms_quota_used(Cms::Site.where(id: sub_site.id)) }.by(0)
+      end
+    end
+
+    context "when other site file uploaded" do
+      it "used of site" do
+        expect { upload_file(other_site) }.to \
+          change { Cms.find_cms_quota_used(Cms::Site.where(id: site.id)) }.by(0)
+      end
+
+      it "used of other site" do
+        expect { upload_file(other_site) }.to \
+          change { Cms.find_cms_quota_used(Cms::Site.where(id: other_site.id)) }.by_at_least(10_000)
+      end
+
+      it "used of sub site" do
+        expect { upload_file(other_site) }.to \
+          change { Cms.find_cms_quota_used(Cms::Site.where(id: sub_site.id)) }.by(0)
+      end
+    end
+
+    context "when sub site file uploaded" do
+      it "used of site" do
+        expect { upload_file(sub_site) }.to \
+          change { Cms.find_cms_quota_used(Cms::Site.where(id: site.id)) }.by(0)
+      end
+
+      it "used of other site" do
+        expect { upload_file(sub_site) }.to \
+          change { Cms.find_cms_quota_used(Cms::Site.where(id: other_site.id)) }.by(0)
+      end
+
+      it "used of sub site" do
+        expect { upload_file(sub_site) }.to \
+          change { Cms.find_cms_quota_used(Cms::Site.where(id: sub_site.id)) }.by_at_least(10_000)
+      end
     end
   end
 end
