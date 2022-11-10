@@ -157,7 +157,7 @@ module Cms
       next unless ::File.exist?(dir)
       # see: https://myokoym.hatenadiary.org/entry/20100606/1275836896
       ::Dir.glob("#{dir}/**/*") do |path|
-        next if child_dirs.find { |child_dir| path.start_with?(child_dir + "/") }
+        next if child_dirs.find { |child_dir| (path == child_dir) || path.start_with?(child_dir + "/") }
         size += ::File.stat(path).size rescue 0
       end
     end

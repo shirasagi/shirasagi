@@ -6,7 +6,7 @@ describe Cms, type: :model, dbscope: :example do
   let!(:group2) { create :cms_group, name: "#{group0.name}/#{unique_id}" }
   let!(:site) { create :cms_site_unique, group_ids: [ group0.id ] }
   let!(:other_site) { create :cms_site_unique, group_ids: [ group0.id ] }
-  let!(:sub_site) { create :cms_site_unique, domains: site.domain, subdir: "sub", parent: site }
+  let!(:sub_site) { create :cms_site_unique, domains: site.domain, subdir: "sub", parent: site, group_ids: [ group0.id ] }
 
   let(:png_file) do
     filename = "#{Rails.root}/spec/fixtures/ss/logo.png"
@@ -22,6 +22,11 @@ describe Cms, type: :model, dbscope: :example do
     uploader = create(:uploader_node_file, cur_site: upload_site, filename: "img")
     ::FileUtils.mkdir_p(uploader.path)
     ::FileUtils.cp("#{Rails.root}/spec/fixtures/ss/logo.png", "#{uploader.path}/logo.png")
+  end
+
+  after do
+    ::FileUtils.rm_rf(site.path) if ::File.exist?(site.path)
+    ::FileUtils.rm_rf(other_site.path) if ::File.exist?(other_site.path)
   end
 
   it { expect(Cms.find_cms_quota_used(Cms::Site.where(id: site.id))).to be >= 700 }

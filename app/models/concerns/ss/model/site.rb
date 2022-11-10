@@ -24,7 +24,7 @@ module SS::Model::Site
     embeds_ids :groups, class_name: "SS::Group"
 
     belongs_to :parent, class_name: "SS::Site", inverse_of: :children
-    has_many :children, class_name: "SS::Site", inverse_of: :parent
+    has_many :children, class_name: "SS::Site", inverse_of: :parent, dependent: nil
 
     attr_accessor :cur_domain
 
