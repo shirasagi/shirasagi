@@ -11,9 +11,11 @@ module Contact::Addon::Group
     field :contact_link_url, type: String
     field :contact_link_name, type: String
 
-    permit_params contact_groups: %i[contact_group_name contact_tel contact_fax contact_email contact_link_url contact_link_name]
+    permit_params contact_groups: %i[_id contact_group_name contact_tel contact_fax contact_email
+                                     contact_link_url contact_link_name]
 
     before_validation :sync_with_main_contact
+    before_validation :remove_empty_contact_groups
   end
 
   private
@@ -35,5 +37,21 @@ module Contact::Addon::Group
       self.contact_link_url = nil
       self.contact_link_name = nil
     end
+  end
+
+  def remove_empty_contact_groups
+    to_be_removed = []
+    contact_groups.each do |contact_group|
+      if contact_group.changed? && contact_group.all_empty?
+        to_be_removed << contact_group.id
+      end
+    end
+    return if to_be_removed.blank?
+
+    contact_groups = self.contact_groups.dup
+    to_be_removed.each do |id|
+      contact_groups.delete_if { |contact_group| contact_group.id == id }
+    end
+    self.contact_groups = contact_groups
   end
 end

@@ -16,4 +16,14 @@ class SS::Contact
 
   permit_params :contact_group_name, :contact_tel, :contact_fax, :contact_email
   permit_params :contact_link_url, :contact_link_name, :main_state
+
+  def all_empty?
+    return false if contact_group_name.present?
+    return false if contact_tel.present?
+    return false if contact_fax.present?
+    return false if contact_email.present?
+    return false if contact_link_url.present?
+    return false if contact_link_name.present?
+    true
+  end
 end

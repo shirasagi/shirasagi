@@ -11,30 +11,35 @@ export default class extends Controller {
         this.table = $table.DataTable({
           info: false, ordering: false, paging: false, scrollX: true, searching: false
         });
-
-        // .DataTable を実行すると HTML 構造が変わるので実行後に event をバインドする
-        setTimeout(() => this.bind(), 0)
       })
     }
+
+    this.bind();
   }
 
   disconnect() {
   }
 
   bind() {
-    const $table = $(this.element).find(".contact-groups-table");
-    $table.on("click", ".btn-add", (ev) => this.addRow(ev))
-    $table.on("click", ".btn-delete", (ev) => this.deleteRow(ev))
+    this.element.addEventListener("click", (ev) => {
+      if (ev.target.classList.contains("btn-add")) {
+        this.addRow(ev)
+      }
+      if (ev.target.classList.contains("btn-delete")) {
+        this.deleteRow(ev)
+      }
+    })
   }
 
   addRow(ev) {
-    const $tr = $(ev.currentTarget).closest("tr")
-    const $newRow = $($tr.prop("outerHTML"))
-    $newRow.removeClass("even")
-    $newRow.removeClass("odd")
-    $newRow.attr("data-id", "")
+    const template = this.element.querySelector("#new-contact-group-row")
+    const $newRow = $(template.innerHTML)
 
-    $tr.before($newRow)
+    const $table = $(this.element).find(".contact-groups-table")
+    $table.find("tbody").append($newRow)
+
+    // const $tr = $(ev.currentTarget).closest("tr")
+    // $tr.before($newRow)
   }
 
   deleteRow(ev) {

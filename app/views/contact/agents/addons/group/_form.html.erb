@@ -5,12 +5,11 @@
 <% render_row = proc do |contact_group| %>
   <tr data-id="<%= contact_group.try(:id) || "new" %>">
     <td class="operations">
-      <%= button_tag t("ss.buttons.delete"), type: "button", name: "add", class: "btn btn-delete" %>
-      <%= button_tag t("ss.buttons.add"), type: "button", name: "add", class: "btn btn-add" %>
+      <%= button_tag t("ss.buttons.delete"), type: "button", name: "delete", class: "btn btn-delete" %>
     </td>
     <td class="contact-group-name">
       <% if contact_group %>
-        <%= hidden_field_tag "#{f.object_name}[contact_groups][][id]", contact_group.try(:id), id: nil, style: "width: 100%;" %>
+        <%= hidden_field_tag "#{f.object_name}[contact_groups][][_id]", contact_group.try(:id), id: nil, style: "width: 100%;" %>
       <% end %>
       <%= text_field_tag "#{f.object_name}[contact_groups][][contact_group_name]", contact_group.try(:contact_group_name), id: nil, style: "width: 100%;" %>
     </td>
@@ -36,7 +35,9 @@
   <table class="contact-groups-table">
     <thead>
     <tr>
-      <td class="operations"></td>
+      <td class="operations">
+        <%= button_tag t("ss.buttons.add"), type: "button", name: "add", class: "btn btn-add" %>
+      </td>
       <th class="contact-group-name"><%= @model.t :contact_group_name %><%= @model.tt :contact_group_name %></th>
       <th class="contact-tel"><%= @model.t :contact_tel %><%= @model.tt :contact_tel %></th>
       <th class="contact-fax"><%= @model.t :contact_fax %><%= @model.tt :contact_fax %></th>
@@ -49,7 +50,9 @@
     <% @item.contact_groups.each do |contact_group| %>
       <% render_row.call(contact_group) %>
     <% end %>
-    <% render_row.call(nil) %>
     </tbody>
   </table>
+  <template id="new-contact-group-row">
+    <% render_row.call(nil) %>
+  </template>
 </div>

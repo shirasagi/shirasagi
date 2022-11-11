@@ -12,13 +12,6 @@
     min-width: 30em;
   }
   .operations {
-    min-width: 3em;
-  }
-
-  tr[data-id="new"] {
-    .btn-delete { display: none; }
-  }
-  tr:not([data-id="new"]) {
-    .btn-add { display: none; }
+    min-width: 4em;
   }
 }
