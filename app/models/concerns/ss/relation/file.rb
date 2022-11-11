@@ -8,8 +8,9 @@ module SS::Relation::File
   module ClassMethods
     def belongs_to_file(name, class_name: nil, presence: false, static_state: nil, resizing: nil)
       class_name ||= DEFAULT_FILE_CLASS_NAME
+      class_name = class_name.to_s
 
-      belongs_to name.to_sym, class_name: class_name.to_s
+      belongs_to name.to_sym, class_name: class_name
 
       attr_accessor "in_#{name}", "rm_#{name}", "in_#{name}_resizing"
 
@@ -87,7 +88,11 @@ module SS::Relation::File
       file_id = item.send("#{name}_id")
       return if file_id.blank?
 
-      item.send("#{name}=", SS::File.where(id: file_id).first)
+      file = SS::File.where(id: file_id).first
+      return if file.blank?
+
+      file = file.becomes_with_model rescue file
+      item.send("#{name}=", file)
     end
 
     def validate_relation(item, name, presence:)
@@ -109,6 +114,9 @@ module SS::Relation::File
       upload_file = item.send("in_#{name}")
       if item.changes["#{name}_id"].present? && (id_was = item.send("#{name}_id_was")).present?
         file_was = SS::File.where(id: id_was).first
+        if file_was
+          file_was = file_was.becomes_with_model rescue file_was
+        end
       end
 
       if upload_file
