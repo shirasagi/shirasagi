@@ -1,3 +1,4 @@
+import "./application.scss"
 import Initializer from "./ss/initializer"
 import moment from "moment/moment"
 
