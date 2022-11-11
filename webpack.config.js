@@ -9,12 +9,11 @@ const RAILS_ENV = process.env.RAILS_ENV || Config.environment.RAILS_ENV
 
 module.exports = {
   mode: RAILS_ENV === "production" ? "production" : "development",
-  devtool: "source-map",
+  // see: https://webpack.js.org/configuration/devtool/
+  devtool: RAILS_ENV === "production" ? "source-map" : "eval-source-map",
   entry: {
     application: "./app/javascript/application.js",
-    "application.css": "./app/javascript/application.scss",
-    "colorbox": "./app/javascript/colorbox.js",
-    "colorbox.css": "./app/javascript/colorbox.scss"
+    colorbox: "./app/javascript/colorbox.js",
   },
   module: {
     rules: [
@@ -22,9 +21,9 @@ module.exports = {
         test: /\.(sa|sc|c)ss$/i,
         use: [
           MiniCssExtractPlugin.loader,
-          'css-loader',
-          'postcss-loader',
-          'sass-loader'
+          { loader: 'css-loader', options: { sourceMap: true } },
+          { loader: 'postcss-loader', options: { sourceMap: true } },
+          { loader: 'sass-loader', options: { sourceMap: true } }
         ]
       },
       {
@@ -56,8 +55,11 @@ module.exports = {
       cleanOnceBeforeBuildPatterns: [ "**/*.js", "**/*.css" ]
     }),
     new RemoveEmptyScriptsPlugin(),
+    new webpack.SourceMapDevToolPlugin({
+      filename: '[name][ext].map'
+    }),
     new MiniCssExtractPlugin({
-      filename: '[name]'
+      filename: '[name].css'
     })
   ]
 }
