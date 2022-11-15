@@ -98,7 +98,9 @@ Rails.application.routes.draw do
       post :lock_all, on: :collection
       post :unlock_all, on: :collection
     end
-    resources :groups, concerns: [:deletion, :role, :download, :import]
+    resources :groups, concerns: [:deletion, :role, :import] do
+      match :download_all, on: :collection, via: %i[get post]
+    end
     resources :members, concerns: [:deletion, :download] do
       get :verify, on: :member
       post :verify, on: :member

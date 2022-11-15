@@ -80,9 +80,18 @@ class Cms::GroupsController < ApplicationController
     render_update true
   end
 
-  def download
-    csv = @model.unscoped.site(@cur_site).order_by(_id: 1).to_csv
-    send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "cms_groups_#{Time.zone.now.to_i}.csv"
+  def download_all
+    return if request.get? || request.head?
+
+    @item = SS::DownloadParam.new
+    @item.attributes = params.require(:item).permit(:encoding)
+    if @item.invalid?
+      render
+      return
+    end
+
+    exporter = Cms::GroupExporter.new(site: @cur_site, criteria: @model.unscoped.site(@cur_site).order_by(_id: 1))
+    send_enum exporter.enum_csv(encoding: @item.encoding), filename: "cms_groups_#{Time.zone.now.to_i}.csv"
   end
 
   def import
