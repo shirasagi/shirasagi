@@ -25,9 +25,10 @@ describe "cms_sites", type: :feature, dbscope: :example, tmpdir: true, js: true 
         end
         wait_for_cbox do
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-          click_on I18n.t("ss.buttons.attach")
+          wait_cbox_close { click_on I18n.t("ss.buttons.attach") }
         end
         within "form#item-form" do
+          expect(page).to have_css(".ss-file-field", text: "keyvisual")
           click_on I18n.t("ss.buttons.save")
         end
         wait_for_notice I18n.t('ss.notice.saved')
