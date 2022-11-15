@@ -1,56 +1,36 @@
 require 'spec_helper'
 
-describe "cms_groups", type: :feature, dbscope: :example do
-  let(:site) { cms_site }
-  let(:item) { cms_group }
-  let(:index_path) { cms_groups_path site.id }
-  let(:new_path) { new_cms_group_path site.id }
-  let(:show_path) { cms_group_path site.id, item }
-  let(:edit_path) { edit_cms_group_path site.id, item }
-  let(:delete_path) { delete_cms_group_path site.id, item }
-  let(:import_path) { import_cms_groups_path site.id }
+describe "cms_groups", type: :feature, dbscope: :example, js: true do
+  let!(:site) { cms_site }
 
-  context "with auth" do
-    before { login_cms_user }
+  before { login_cms_user }
 
-    it "#index" do
-      visit index_path
-      expect(current_path).not_to eq sns_login_path
-    end
-
-    it "#new" do
-      visit new_path
+  context "basic crud" do
+    it do
+      visit cms_groups_path(site: site)
+      click_on I18n.t("ss.links.new")
       within "form#item-form" do
         fill_in "item[name]", with: "cms_group/sample"
-        click_button I18n.t('ss.buttons.save')
+        click_on I18n.t('ss.buttons.save')
       end
-      expect(status_code).to eq 200
-      expect(current_path).not_to eq new_path
-      expect(page).to have_no_css("form#item-form")
-    end
+      wait_for_notice I18n.t("ss.notice.saved")
 
-    it "#show" do
-      visit show_path
-      expect(status_code).to eq 200
-      expect(current_path).not_to eq sns_login_path
-    end
-
-    it "#edit" do
-      visit edit_path
+      visit cms_groups_path(site: site)
+      click_on "sample"
+      click_on I18n.t("ss.links.edit")
       within "form#item-form" do
         fill_in "item[name]", with: "cms_group/modify"
-        click_button I18n.t('ss.buttons.save')
+        click_on I18n.t('ss.buttons.save')
       end
-      expect(current_path).not_to eq sns_login_path
-      expect(page).to have_no_css("form#item-form")
-    end
+      wait_for_notice I18n.t("ss.notice.saved")
 
-    it "#delete" do
-      visit delete_path
+      visit cms_groups_path(site: site)
+      click_on "modify"
+      click_on I18n.t("ss.links.delete")
       within "form" do
-        click_button I18n.t('ss.buttons.delete')
+        click_on I18n.t('ss.buttons.delete')
       end
-      expect(current_path).to eq index_path
+      wait_for_notice I18n.t("ss.notice.deleted")
     end
   end
 
@@ -61,21 +41,27 @@ describe "cms_groups", type: :feature, dbscope: :example do
       link_url = "/"
       link_name = "http://demo.ss-proj.org/"
       g1 = create(
-        :cms_group, name: "A", order: 10, contact_tel: tel, contact_fax: tel,
-        contact_email: email, contact_link_url: link_url, contact_link_name: link_name
+        :cms_group, name: "A", order: 10,
+        contact_groups: [
+          { contact_tel: tel, contact_fax: tel, contact_email: email, contact_link_url: link_url, contact_link_name: link_name }
+        ]
       )
       cms_site.add_to_set(group_ids: [g1.id])
     end
 
     it "#import" do
-      login_cms_user
-      visit import_path
-      within "form" do
-        attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/cms/group/cms_groups_1.csv"
-        click_button I18n.t('ss.buttons.import')
+      visit cms_groups_path(site: site)
+      click_on I18n.t("ss.links.import")
+
+      perform_enqueued_jobs do
+        within "form" do
+          attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/cms/group/cms_groups_1.csv"
+          page.accept_confirm(I18n.t("ss.confirm.import")) do
+            click_on I18n.t('ss.buttons.import')
+          end
+        end
+        wait_for_notice I18n.t('ss.notice.started_import')
       end
-      expect(status_code).to eq 200
-      expect(current_path).to eq index_path
 
       groups = Cms::Group.site(cms_site).ne(id: cms_group.id)
       expected_names = %w(A A/B A/B/C A/B/C/D A/E A/E/F A/E/G)
@@ -100,25 +86,23 @@ describe "cms_groups", type: :feature, dbscope: :example do
     let(:group_name) { unique_id }
     let!(:group) { create(:cms_group, name: "#{cms_group.name}/#{group_name}", order: 100) }
     let(:expiration_date) { Time.zone.now.days_ago(1).beginning_of_day }
-    let(:contact_tel) { unique_id }
-
-    before do
-      login_cms_user
-    end
+    let(:contact_tel) { unique_tel }
 
     it do
-      visit index_path
-
+      visit cms_groups_path(site: site)
       click_on group_name
       click_on I18n.t("ss.links.edit")
-
-      fill_in "item[expiration_date]", with: expiration_date.strftime("%Y/%m/%d %H:%M")
-      click_on I18n.t("ss.buttons.save")
+      wait_for_js_ready
+      within "form#item-form" do
+        fill_in_datetime "item[expiration_date]", with: expiration_date
+        click_on I18n.t("ss.buttons.save")
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       group.reload
       expect(group.expiration_date).to eq expiration_date
 
-      visit index_path
+      visit cms_groups_path(site: site)
       expect(page).to have_no_css(".expandable", text: group_name)
 
       select I18n.t("ss.options.state.all"), from: "s[state]"
@@ -128,12 +112,23 @@ describe "cms_groups", type: :feature, dbscope: :example do
 
       click_on group_name
       click_on I18n.t("ss.links.edit")
-
-      fill_in "item[contact_tel]", with: contact_tel
-      click_on I18n.t("ss.buttons.save")
+      wait_for_js_ready
+      within "form#item-form" do
+        ensure_addon_opened "#addon-contact-agents-addons-group"
+        within "#addon-contact-agents-addons-group" do
+          within "tr[data-id='#{group.contact_groups.first.id}']" do
+            first('[name="item[contact_groups][][main_state]"]').click
+            fill_in "item[contact_groups][][contact_tel]", with: contact_tel
+          end
+        end
+        click_on I18n.t("ss.buttons.save")
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       group.reload
       expect(group.contact_tel).to eq contact_tel
+      expect(group.contact_groups[0].contact_tel).to eq contact_tel
+      expect(group.contact_groups[0].main_state).to eq "main"
     end
   end
 end

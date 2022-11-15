@@ -7,6 +7,12 @@
     <td class="operations">
       <%= button_tag t("ss.buttons.delete"), type: "button", name: "delete", class: "btn btn-delete" %>
     </td>
+    <td class="contact-main-state">
+      <label>
+        <%= radio_button_tag "#{f.object_name}[contact_groups][][main_state]", "main", contact_group.try(:main_state) == "main", id: nil %>
+        <%= t("contact.options.main_state.main") %>
+      </label>
+    </td>
     <td class="contact-group-name">
       <% if contact_group %>
         <%= hidden_field_tag "#{f.object_name}[contact_groups][][_id]", contact_group.try(:id), id: nil, style: "width: 100%;" %>
@@ -38,18 +44,20 @@
       <td class="operations">
         <%= button_tag t("ss.buttons.add"), type: "button", name: "add", class: "btn btn-add" %>
       </td>
-      <th class="contact-group-name"><%= @model.t :contact_group_name %><%= @model.tt :contact_group_name %></th>
-      <th class="contact-tel"><%= @model.t :contact_tel %><%= @model.tt :contact_tel %></th>
-      <th class="contact-fax"><%= @model.t :contact_fax %><%= @model.tt :contact_fax %></th>
-      <th class="contact-email"><%= @model.t :contact_email %><%= @model.tt :contact_email %></th>
-      <th class="contact-link-url"><%= @model.t :contact_link_url %><%= @model.tt :contact_link_url %></th>
-      <th class="contact-link-name"><%= @model.t :contact_link_name %><%= @model.tt :contact_link_name %></th>
+      <th class="contact-main-state"><%= SS::Contact.t :main_state %><%= SS::Contact.tt :main_state %></th>
+      <th class="contact-group-name"><%= SS::Contact.t :contact_group_name %><%= SS::Contact.tt :contact_group_name %></th>
+      <th class="contact-tel"><%= SS::Contact.t :contact_tel %><%= SS::Contact.tt :contact_tel %></th>
+      <th class="contact-fax"><%= SS::Contact.t :contact_fax %><%= SS::Contact.tt :contact_fax %></th>
+      <th class="contact-email"><%= SS::Contact.t :contact_email %><%= SS::Contact.tt :contact_email %></th>
+      <th class="contact-link-url"><%= SS::Contact.t :contact_link_url %><%= SS::Contact.tt :contact_link_url %></th>
+      <th class="contact-link-name"><%= SS::Contact.t :contact_link_name %><%= SS::Contact.tt :contact_link_name %></th>
     </tr>
     </thead>
     <tbody>
     <% @item.contact_groups.each do |contact_group| %>
       <% render_row.call(contact_group) %>
     <% end %>
+    <% render_row.call(nil) %>
     </tbody>
   </table>
   <template id="new-contact-group-row">

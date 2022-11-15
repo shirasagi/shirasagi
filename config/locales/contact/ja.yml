@@ -83,7 +83,7 @@ ja:
         - 連絡先に表示する部署のリンクURLを記入します。
       contact_link_name:
         - 連絡先に表示する部署のリンク名を記入します。
-    contact/addon/group:
+    ss/contact:
       contact_group_name:
         - 連絡先に表示する担当部署を記入します。
       contact_tel:

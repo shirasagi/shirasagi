@@ -12,7 +12,7 @@ module Contact::Addon::Group
     field :contact_link_name, type: String
 
     permit_params contact_groups: %i[_id contact_group_name contact_tel contact_fax contact_email
-                                     contact_link_url contact_link_name]
+                                     contact_link_url contact_link_name main_state]
 
     before_validation :sync_with_main_contact
     before_validation :remove_empty_contact_groups

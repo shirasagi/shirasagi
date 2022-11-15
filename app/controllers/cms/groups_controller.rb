@@ -97,10 +97,25 @@ class Cms::GroupsController < ApplicationController
   def import
     return if request.get? || request.head?
 
-    @item = @model.new get_params
-    @item.cur_site = @cur_site
-    result = @item.import
-    flash.now[:notice] = t("ss.notice.saved") if !result && @item.imported > 0
-    render_create result, location: { action: :index }, render: { template: "import" }
+    @item = SS::ImportParam.new(cur_site: @cur_site, cur_user: @cur_user)
+    @item.attributes = params.require(:item).permit(:in_file)
+    if @item.in_file.blank? || ::File.extname(@item.in_file.original_filename).casecmp(".csv") != 0
+      @item.errors.add :base, :invalid_csv
+      render action: :import
+      return
+    end
+
+    if !Cms::GroupImportJob.valid_csv?(@item.in_file)
+      @item.errors.add :base, :malformed_csv
+      render action: :import
+      return
+    end
+
+    temp_file = SS::TempFile.create_empty!(model: 'ss/temp_file', filename: @item.in_file.original_filename) do |new_file|
+      IO.copy_stream(@item.in_file, new_file.path)
+    end
+    job = Cms::GroupImportJob.bind(site_id: @cur_site, user_id: @cur_user)
+    job.perform_later(temp_file.id)
+    redirect_to url_for(action: :index), notice: t('ss.notice.started_import')
   end
 end
