@@ -2,6 +2,8 @@ module Contact::Addon::Group
   extend ActiveSupport::Concern
   extend SS::Addon
 
+  MAX_CONTACT_COUNT = 20
+
   included do
     embeds_many :contact_groups, class_name: "SS::Contact"
     field :contact_group_name, type: String
@@ -16,6 +18,7 @@ module Contact::Addon::Group
 
     before_validation :sync_with_main_contact
     before_validation :remove_empty_contact_groups
+    validates :contact_groups, length: { maximum: MAX_CONTACT_COUNT }
   end
 
   private

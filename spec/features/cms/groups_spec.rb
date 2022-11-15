@@ -35,7 +35,7 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
   end
 
   context "import from csv" do
-    before(:each) do
+    let!(:root_group) do
       tel   = "000-000-0000"
       email = "sys@example.jp"
       link_url = "/"
@@ -47,6 +47,7 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
         ]
       )
       cms_site.add_to_set(group_ids: [g1.id])
+      g1
     end
 
     it "#import" do
@@ -63,22 +64,88 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
         wait_for_notice I18n.t('ss.notice.started_import')
       end
 
-      groups = Cms::Group.site(cms_site).ne(id: cms_group.id)
-      expected_names = %w(A A/B A/B/C A/B/C/D A/E A/E/F A/E/G)
-      expected_orders = %w(10 20 30 40 50 60 70).map(&:to_i)
-      expected_contact_tels = %w(1 2 3 4 5 6 7).fill("000-000-0000")
-      expected_contact_faxs = %w(1 2 3 4 5 6 7).fill("000-000-0000")
-      expected_contact_emails = %w(1 2 3 4 5 6 7).fill("sys@example.jp")
-      expected_contact_link_urls = %w(/ /B/ /B/C/ /B/C/D/ /E/ /E/F/ /E/G/)
-      expected_contact_link_names = %w(http://demo.ss-proj.org/ B C D E F G)
+      expect(Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        expect(log.logs).to include(/INFO -- : .* 6件のグループをインポートしました。/)
+        expect(log.state).to eq "completed"
+      end
 
-      expect(groups.map(&:name)).to eq expected_names
-      expect(groups.map(&:order)).to eq expected_orders
-      expect(groups.map(&:contact_tel)).to eq expected_contact_tels
-      expect(groups.map(&:contact_fax)).to eq expected_contact_faxs
-      expect(groups.map(&:contact_email)).to eq expected_contact_emails
-      expect(groups.map(&:contact_link_url)).to eq expected_contact_link_urls
-      expect(groups.map(&:contact_link_name)).to eq expected_contact_link_names
+      groups = Cms::Group.site(cms_site).nin(id: [ cms_group.id, root_group.id ])
+      expect(groups.count).to eq 6
+      groups.find_by(name: "A/B").tap do |g|
+        expect(g.order).to eq 20
+        expect(g.activation_date).to be_blank
+        expect(g.expiration_date).to be_blank
+        expect(g.ldap_dn).to eq "cn=Manager,dc=city,dc=shirasagi,dc=jp"
+        expect(g.contact_group_name).to eq "部署B"
+        expect(g.contact_tel).to eq "000-000-0000"
+        expect(g.contact_fax).to eq "000-000-0000"
+        expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_link_url).to eq "/B/"
+        expect(g.contact_link_name).to eq "B"
+      end
+      groups.find_by(name: "A/B/C").tap do |g|
+        expect(g.order).to eq 30
+        expect(g.activation_date).to be_blank
+        expect(g.expiration_date).to be_blank
+        expect(g.ldap_dn).to be_blank
+        expect(g.contact_group_name).to eq "部署C"
+        expect(g.contact_tel).to eq "000-000-0000"
+        expect(g.contact_fax).to eq "000-000-0000"
+        expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_link_url).to eq "/B/C/"
+        expect(g.contact_link_name).to eq "C"
+      end
+      groups.find_by(name: "A/B/C/D").tap do |g|
+        expect(g.order).to eq 40
+        expect(g.activation_date).to be_blank
+        expect(g.expiration_date).to be_blank
+        expect(g.ldap_dn).to be_blank
+        expect(g.contact_group_name).to eq "部署D"
+        expect(g.contact_tel).to eq "000-000-0000"
+        expect(g.contact_fax).to eq "000-000-0000"
+        expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_link_url).to eq "/B/C/D/"
+        expect(g.contact_link_name).to eq "D"
+      end
+      groups.find_by(name: "A/E").tap do |g|
+        expect(g.order).to eq 50
+        expect(g.activation_date).to be_blank
+        expect(g.expiration_date).to be_blank
+        expect(g.ldap_dn).to be_blank
+        expect(g.contact_group_name).to eq "部署E"
+        expect(g.contact_tel).to eq "000-000-0000"
+        expect(g.contact_fax).to eq "000-000-0000"
+        expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_link_url).to eq "/E/"
+        expect(g.contact_link_name).to eq "E"
+      end
+      groups.find_by(name: "A/E/F").tap do |g|
+        expect(g.order).to eq 60
+        expect(g.activation_date).to be_blank
+        expect(g.expiration_date).to be_blank
+        expect(g.ldap_dn).to be_blank
+        expect(g.contact_group_name).to eq "部署F"
+        expect(g.contact_tel).to eq "000-000-0000"
+        expect(g.contact_fax).to eq "000-000-0000"
+        expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_link_url).to eq "/E/F/"
+        expect(g.contact_link_name).to eq "F"
+      end
+      groups.find_by(name: "A/E/G").tap do |g|
+        expect(g.order).to eq 70
+        expect(g.activation_date).to be_blank
+        expect(g.expiration_date).to be_blank
+        expect(g.ldap_dn).to be_blank
+        expect(g.contact_group_name).to eq "部署G"
+        expect(g.contact_tel).to eq "000-000-0000"
+        expect(g.contact_fax).to eq "000-000-0000"
+        expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_link_url).to eq "/E/G/"
+        expect(g.contact_link_name).to eq "G"
+      end
     end
   end
 

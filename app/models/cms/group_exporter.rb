@@ -31,6 +31,15 @@ class Cms::GroupExporter
   def draw_contact(drawer)
     count = max_contact_count > 5 ? max_contact_count : 5
     count.times.each do |i|
+      drawer.column "main_state#{i}" do
+        drawer.head { "#{SS::Contact.t(:main_state)}#{i + 1}" }
+        drawer.body do |item|
+          state = item.contact_groups[i].try(:main_state)
+          if state.present?
+            I18n.t("contact.options.main_state.#{state}")
+          end
+        end
+      end
       drawer.column "contact_group_name#{i}" do
         drawer.head { "#{SS::Contact.t(:contact_group_name)}#{i + 1}" }
         drawer.body { |item| item.contact_groups[i].try(:contact_group_name) }
@@ -54,15 +63,6 @@ class Cms::GroupExporter
       drawer.column "contact_link_name#{i}" do
         drawer.head { "#{SS::Contact.t(:contact_link_name)}#{i + 1}" }
         drawer.body { |item| item.contact_groups[i].try(:contact_link_name) }
-      end
-      drawer.column "main_state#{i}" do
-        drawer.head { "#{SS::Contact.t(:main_state)}#{i + 1}" }
-        drawer.body do |item|
-          state = item.contact_groups[i].try(:main_state)
-          if state.present?
-            I18n.t("contact.options.main_state.#{state}")
-          end
-        end
       end
     end
   end
