@@ -19,9 +19,18 @@ describe Cms, type: :model, dbscope: :example do
   end
 
   def upload_file(upload_site)
+    # uploader
     uploader = create(:uploader_node_file, cur_site: upload_site, filename: "img")
     ::FileUtils.mkdir_p(uploader.path)
     ::FileUtils.cp("#{Rails.root}/spec/fixtures/ss/logo.png", "#{uploader.path}/logo.png")
+
+    # cms page
+    filename = "#{Rails.root}/spec/fixtures/ss/logo.png"
+    basename = ::File.basename(filename)
+    file = SS::File.create_empty!(
+      site_id: upload_site.id, cur_user: cms_user, name: basename, filename: basename, content_type: "image/png", model: 'ss/file'
+    ) { |file| ::FileUtils.cp(filename, file.path) }
+    create(:cms_page, filename: "index.html", cur_site: upload_site, file_ids: [ file.id ], group_ids: [ group1.id ])
   end
 
   after do

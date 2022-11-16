@@ -152,16 +152,44 @@ module Cms
     size = criteria.total_bsonsize + criteria.aggregate_files_used
 
     site_criteria.each do |site|
-      dir = site.path
-      child_dirs = site.children.map(&:path)
-      next unless ::File.exist?(dir)
-      # see: https://myokoym.hatenadiary.org/entry/20100606/1275836896
-      ::Dir.glob("#{dir}/**/*") do |path|
-        next if child_dirs.find { |child_dir| (path == child_dir) || path.start_with?(child_dir + "/") }
+      public_file_paths(site).each do |path|
         size += ::File.stat(path).size rescue 0
       end
     end
     size
+  end
+
+  def self.public_file_paths(site)
+    dir = site.path
+    fs_dir = ::File.join(dir, "fs")
+    child_dirs = site.children.map(&:path)
+
+    fs_paths = []
+    files = SS::File.where(site_id: site.id)
+    file_ids = files.pluck(:id)
+    file_ids.each_slice(100) do |ids|
+      files.in(id: ids).to_a.each do |item|
+        fs_paths << item.public_path
+        fs_paths << item.thumb.public_path if item.image? && item.thumb
+      end
+    end
+
+    paths = []
+    return paths unless ::File.exist?(dir)
+
+    # see: https://myokoym.hatenadiary.org/entry/20100606/1275836896
+    ::Dir.glob("#{dir}/**/*") do |path|
+      # fs
+      if (path == fs_dir) || path.start_with?(fs_dir + "/")
+        paths << path if fs_paths.include?(path)
+      # subsite
+      elsif child_dirs.find { |child_dir| (path == child_dir) || path.start_with?(child_dir + "/") }
+        next
+      else
+        paths << path
+      end
+    end
+    paths
   end
 
   DEFAULT_SENDER_ADDRESS = begin
