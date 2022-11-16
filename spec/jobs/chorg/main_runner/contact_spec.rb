@@ -15,10 +15,11 @@ describe Chorg::MainRunner, dbscope: :example do
           contact_tel: unique_tel,
           contact_fax: unique_tel,
           contact_link_url: "/#{unique_id}/",
-          contact_link_name: unique_id
+          contact_link_name: unique_id,
+          main_state: "main"
         }
       end
-      let!(:group1) { create(:revision_new_group, group_attributes) }
+      let!(:group1) { create(:revision_new_group, contact_groups: [ group_attributes ]) }
       let!(:revision) { create(:revision, site_id: site.id) }
       let(:destination) do
         {
@@ -40,7 +41,7 @@ describe Chorg::MainRunner, dbscope: :example do
       # group1 と同じ情報が連絡先にセットされているページ
       let!(:page1) do
         create(
-          :revisoin_page, cur_site: site, group: group1, filename: nil,
+          :revision_page, cur_site: site, group: group1, filename: nil,
           contact_email: group1.contact_email,
           contact_tel: group1.contact_tel,
           contact_fax: group1.contact_fax,
@@ -51,7 +52,7 @@ describe Chorg::MainRunner, dbscope: :example do
       # 連絡先が空のページ
       let!(:page2) do
         create(
-          :revisoin_page, cur_site: site, group: group1, filename: nil,
+          :revision_page, cur_site: site, group: group1, filename: nil,
           contact_email: "",
           contact_tel: "",
           contact_fax: "",
@@ -62,7 +63,7 @@ describe Chorg::MainRunner, dbscope: :example do
       # 連絡先に異なる情報がセットされているページ
       let!(:page3) do
         create(
-          :revisoin_page, cur_site: site, group: group1, filename: nil,
+          :revision_page, cur_site: site, group: group1, filename: nil,
           contact_email: unique_email,
           contact_tel: unique_tel,
           contact_fax: unique_tel,
@@ -127,10 +128,11 @@ describe Chorg::MainRunner, dbscope: :example do
           contact_tel: "",
           contact_fax: "",
           contact_link_url: "",
-          contact_link_name: ""
+          contact_link_name: "",
+          main_state: "main"
         }
       end
-      let!(:group1) { create(:revision_new_group, group_attributes) }
+      let!(:group1) { create(:revision_new_group, contact_groups: [ group_attributes ]) }
       let!(:revision) { create(:revision, site_id: site.id) }
       let(:destination) do
         {
@@ -152,7 +154,7 @@ describe Chorg::MainRunner, dbscope: :example do
       # group1 と同じ情報が連絡先にセットされているページ
       let!(:page1) do
         create(
-          :revisoin_page, cur_site: site, group: group1, filename: nil,
+          :revision_page, cur_site: site, group: group1, filename: nil,
           contact_email: group1.contact_email,
           contact_tel: group1.contact_tel,
           contact_fax: group1.contact_fax,
@@ -163,7 +165,7 @@ describe Chorg::MainRunner, dbscope: :example do
       # 連絡先に異なる情報がセットされているページ
       let!(:page2) do
         create(
-          :revisoin_page, cur_site: site, group: group1, filename: nil,
+          :revision_page, cur_site: site, group: group1, filename: nil,
           contact_email: unique_email,
           contact_tel: unique_tel,
           contact_fax: unique_tel,
@@ -223,10 +225,11 @@ describe Chorg::MainRunner, dbscope: :example do
           contact_tel: unique_tel,
           contact_fax: unique_tel,
           contact_link_url: "/#{unique_id}/",
-          contact_link_name: unique_id
+          contact_link_name: unique_id,
+          main_state: "main"
         }
       end
-      let!(:group1) { create(:revision_new_group, group_attributes) }
+      let!(:group1) { create(:revision_new_group, contact_groups: [ group_attributes ]) }
       let!(:revision) { create(:revision, site_id: site.id) }
       let(:destination) do
         {
@@ -248,7 +251,7 @@ describe Chorg::MainRunner, dbscope: :example do
       # group1 と同じ情報が連絡先にセットされているページ
       let!(:page1) do
         create(
-          :revisoin_page, cur_site: site, group: group1, filename: nil,
+          :revision_page, cur_site: site, group: group1, filename: nil,
           contact_email: group1.contact_email,
           contact_tel: group1.contact_tel,
           contact_fax: group1.contact_fax,
@@ -259,7 +262,7 @@ describe Chorg::MainRunner, dbscope: :example do
       # 連絡先が空のページ
       let!(:page2) do
         create(
-          :revisoin_page, cur_site: site, group: group1, filename: nil,
+          :revision_page, cur_site: site, group: group1, filename: nil,
           contact_email: "",
           contact_tel: "",
           contact_fax: "",
@@ -270,7 +273,7 @@ describe Chorg::MainRunner, dbscope: :example do
       # 連絡先に異なる情報がセットされているページ
       let!(:page3) do
         create(
-          :revisoin_page, cur_site: site, group: group1, filename: nil,
+          :revision_page, cur_site: site, group: group1, filename: nil,
           contact_email: unique_email,
           contact_tel: unique_tel,
           contact_fax: unique_tel,
@@ -335,10 +338,11 @@ describe Chorg::MainRunner, dbscope: :example do
           contact_tel: "",
           contact_fax: "",
           contact_link_url: "",
-          contact_link_name: ""
+          contact_link_name: "",
+          main_state: "main"
         }
       end
-      let!(:group1) { create(:revision_new_group, group_attributes) }
+      let!(:group1) { create(:revision_new_group, contact_groups: [ group_attributes ]) }
       let!(:revision) { create(:revision, site_id: site.id) }
       let(:destination) do
         {
@@ -360,7 +364,7 @@ describe Chorg::MainRunner, dbscope: :example do
       # group1 と同じ情報が連絡先にセットされているページ
       let!(:page1) do
         create(
-          :revisoin_page, cur_site: site, group: group1, filename: nil,
+          :revision_page, cur_site: site, group: group1, filename: nil,
           contact_email: group1.contact_email,
           contact_tel: group1.contact_tel,
           contact_fax: group1.contact_fax,
@@ -371,7 +375,7 @@ describe Chorg::MainRunner, dbscope: :example do
       # 連絡先に異なる情報がセットされているページ
       let!(:page2) do
         create(
-          :revisoin_page, cur_site: site, group: group1, filename: nil,
+          :revision_page, cur_site: site, group: group1, filename: nil,
           contact_email: unique_email,
           contact_tel: unique_tel,
           contact_fax: unique_tel,

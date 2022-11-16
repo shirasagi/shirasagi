@@ -123,7 +123,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
     let(:group) { create(:revision_new_group) }
 
     before(:each) do
-      create(:revisoin_page, cur_site: site, group: group)
+      create(:revision_page, cur_site: site, group: group)
     end
 
     it "replace_html with string" do

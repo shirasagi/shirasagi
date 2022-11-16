@@ -3,8 +3,16 @@ require 'spec_helper'
 describe "inquiry_form", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
   let!(:group) { cms_group }
-  let!(:group1) { create :cms_group, name: "#{group.name}/#{unique_id}", contact_email: unique_email }
-  let!(:group2) { create :cms_group, name: "#{group.name}/#{unique_id}", contact_email: unique_email }
+  let!(:group1) do
+    create(
+      :cms_group, name: "#{group.name}/#{unique_id}",
+      contact_groups: [{ contact_email: unique_email, main_state: "main" }])
+  end
+  let!(:group2) do
+    create(
+      :cms_group, name: "#{group.name}/#{unique_id}",
+      contact_groups: [{ contact_email: unique_email, main_state: "main" }])
+  end
 
   let(:layout) { create_cms_layout page_name: true }
   let!(:inquiry_form) do
@@ -23,10 +31,9 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
     site.inquiry_form = inquiry_form
     site.save!
 
-    if group.contact_email.blank?
-      group.contact_email = unique_email
-      group.save!
-    end
+    group.contact_groups = [{ contact_email: unique_email, main_state: "main" }]
+    group.save!
+    expect(group.contact_email).to be_present
 
     inquiry_form.columns.create! attributes_for(:inquiry_column_name).reverse_merge(cur_site: site)
   end
@@ -181,7 +188,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
   context "without group's contact_email" do
     before do
-      group1.contact_email = nil
+      group1.contact_groups = nil
       group1.save!
 
       article_page.contact_group = group1

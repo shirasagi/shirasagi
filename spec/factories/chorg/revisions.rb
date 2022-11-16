@@ -9,15 +9,22 @@ FactoryBot.define do
 
   factory :revision_new_group, parent: :cms_group do
     name { "組織変更/グループ#{unique_id}" }
-    contact_email { "#{unique_id}@example.jp" }
-    contact_tel { "03-4389-8714" }
-    contact_fax { "03-4389-8715" }
-    contact_link_url { /#{unique_id}/ }
-    contact_link_name { unique_id.to_s }
+    contact_groups do
+      [
+        {
+          contact_email: "#{unique_id}@example.jp",
+          contact_tel: unique_tel,
+          contact_fax: unique_tel,
+          contact_link_url: "/#{unique_id}/",
+          contact_link_name: unique_id.to_s,
+          main_state: "main"
+        }
+      ]
+    end
     ldap_dn { "ou=group,dc=example,dc=jp" }
   end
 
-  factory :revisoin_page, class: Article::Page do
+  factory :revision_page, class: Article::Page do
     transient do
       group { nil }
     end

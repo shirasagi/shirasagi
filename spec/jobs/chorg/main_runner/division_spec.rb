@@ -9,14 +9,26 @@ describe Chorg::MainRunner, dbscope: :example do
   context "with division" do
     context "with Article::Page" do
       let(:group0) { create(:revision_new_group) }
-      let(:group1) { build(:revision_new_group) }
-      let(:group2) { build(:revision_new_group) }
+      let(:group1) do
+        OpenStruct.new(
+          name: "組織変更/グループ#{unique_id}", contact_email: "#{unique_id}@example.jp", contact_tel: unique_tel,
+          contact_fax: unique_tel, contact_link_url: "/#{unique_id}/", contact_link_name: unique_id.to_s,
+          ldap_dn: "ou=group,dc=example,dc=jp"
+        )
+      end
+      let(:group2) do
+        OpenStruct.new(
+          name: "組織変更/グループ#{unique_id}", contact_email: "#{unique_id}@example.jp", contact_tel: unique_tel,
+          contact_fax: unique_tel, contact_link_url: "/#{unique_id}/", contact_link_name: unique_id.to_s,
+          ldap_dn: "ou=group,dc=example,dc=jp"
+        )
+      end
       let(:user) { create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group0.id]) }
       let(:revision) { create(:revision, site_id: site.id) }
       let(:changeset) do
         create(:division_changeset, revision_id: revision.id, source: group0, destinations: [group1, group2])
       end
-      let(:page) { create(:revisoin_page, cur_site: site, group: group0) }
+      let(:page) { create(:revision_page, cur_site: site, group: group0) }
 
       it do
         # ensure create models
@@ -59,11 +71,11 @@ describe Chorg::MainRunner, dbscope: :example do
 
         expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
         expect(task.entity_logs[0]['class']).to eq 'Cms::Group'
-        expect(task.entity_logs[0]['creates']).to include('name' => group1.name, 'contact_email' => group1.contact_email)
+        expect(task.entity_logs[0]['creates']).to include('name' => group1[:name], 'contact_email' => group1[:contact_email])
 
         expect(task.entity_logs[1]['model']).to eq 'Cms::Group'
         expect(task.entity_logs[1]['class']).to eq 'Cms::Group'
-        expect(task.entity_logs[1]['creates']).to include('name' => group2.name, 'contact_email' => group2.contact_email)
+        expect(task.entity_logs[1]['creates']).to include('name' => group2[:name], 'contact_email' => group2[:contact_email])
 
         expect(task.entity_logs[2]['model']).to eq 'Cms::Site'
         expect(task.entity_logs[2]['class']).to eq 'Cms::Site'
@@ -100,7 +112,7 @@ describe Chorg::MainRunner, dbscope: :example do
       let(:changeset) do
         create(:division_changeset, revision_id: revision.id, source: group1, destinations: [group1, group2])
       end
-      let(:page) { create(:revisoin_page, cur_site: site, group: group1) }
+      let(:page) { create(:revision_page, cur_site: site, group: group1) }
 
       it do
         # ensure create models

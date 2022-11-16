@@ -44,7 +44,7 @@ describe Chorg::TestRunner, dbscope: :example do
     let(:changeset) { create(:move_changeset, revision_id: revision.id, source: group) }
 
     context "with Article::Page" do
-      let(:page) { create(:revisoin_page, cur_site: site, group: group) }
+      let(:page) { create(:revision_page, cur_site: site, group: group) }
 
       it do
         # ensure create models
@@ -99,7 +99,7 @@ describe Chorg::TestRunner, dbscope: :example do
     let(:changeset) { create(:unify_changeset, revision_id: revision.id, sources: [group1, group2]) }
 
     context "with Article::Page" do
-      let(:page) { create(:revisoin_page, cur_site: site, group: group1) }
+      let(:page) { create(:revision_page, cur_site: site, group: group1) }
 
       it do
         # ensure create models

@@ -13,7 +13,6 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
   end
   let(:edit_article_path) { edit_article_page_path site.id, article_node, article }
   let(:new_article_node_path) { new_article_page_path site.id, article_node }
-  let(:edit_group_path) { edit_cms_group_path site.id, cms_group.id }
 
   let(:remote_addr) { "X.X.X.X" }
   let(:user_agent) { unique_id }
@@ -54,7 +53,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
     answer.save!
 
     group = article.contact_group
-    group.contact_email = unique_email
+    group.contact_groups = [{ contact_email: unique_email, main_state: "main" }]
     group.save!
   end
 
@@ -91,13 +90,8 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
     before { login_cms_user }
 
     it do
-      visit edit_group_path
-      within "form#item-form" do
-        fill_in "item_contact_email", with: "#{unique_id}@example.jp"
-        click_on I18n.t('ss.buttons.save')
-      end
-      wait_for_notice I18n.t("ss.notice.saved")
-      expect(page).to have_content cms_group.contact_email
+      cms_group.contact_groups = [{ contact_email: unique_email, main_state: "main" }]
+      cms_group.save!
 
       visit new_article_node_path
       within "form#item-form" do
@@ -124,13 +118,8 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
     before { login_cms_user }
 
     it do
-      visit edit_group_path
-      within "form#item-form" do
-        fill_in "item_contact_email", with: "#{unique_id}@example.jp"
-        click_on I18n.t('ss.buttons.save')
-      end
-      wait_for_notice I18n.t("ss.notice.saved")
-      expect(page).to have_content cms_group.contact_email
+      cms_group.contact_groups = [{ contact_email: unique_email, main_state: "main" }]
+      cms_group.save!
 
       visit edit_site_path
       within "form#item-form" do

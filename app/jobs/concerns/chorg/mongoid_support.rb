@@ -4,11 +4,18 @@ module Chorg::MongoidSupport
   include Chorg::Loggable
 
   def update(entity, hash)
-    hash.select { |k, v| v.present? }.each do |k, v|
+    presented = hash.select { |k, v| v.present? }
+
+    if entity.respond_to?(:update_chorg_attributes)
+      entity.update_chorg_attributes(presented)
+      return entity
+    end
+
+    presented.each do |k, v|
       if v.respond_to?(:update_entity)
         v.update_entity(entity)
       else
-        entity[k] = v
+        entity.send("#{k}=", v)
       end
     end
     entity
@@ -108,7 +115,7 @@ module Chorg::MongoidSupport
 
     @exclude_fields.each do |filter|
       if filter.is_a?(::Regexp)
-        return false if filter =~ key
+        return false if filter.match?(key)
       elsif key == filter
         return false
       end
