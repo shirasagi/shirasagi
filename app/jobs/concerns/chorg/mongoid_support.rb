@@ -15,7 +15,8 @@ module Chorg::MongoidSupport
       if v.respond_to?(:update_entity)
         v.update_entity(entity)
       else
-        entity.send("#{k}=", v)
+        setter = "#{k}="
+        entity.send(setter, v) if entity.respond_to?(setter)
       end
     end
     entity
