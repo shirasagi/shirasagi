@@ -111,6 +111,32 @@ class Fs::FilesController < ApplicationController
     end
   end
 
+  def find_login_path
+    return if cur_user.present?
+
+    site = cur_item.owner_item.try(:site)
+    if site.is_a?(SS::Model::Group)
+      # 安全性と利便性とを天秤にかけ、グループウェアのファイルのときのみグループウェアのログイン画面へリダイレクトする
+      #
+      # CMS: セキュリティ確保のため、ログイン URL を秘匿している可能性があるので安易にログイン画面へリダイレクトできない。
+      # Webメール: 利便性を考え、ログイン画面へリダイレクトできた方が便利だと思うが、容易にこのファイルが Web メールのファイルかどうかを判断できない。
+      # システム: ログイン画面へリダイレクトできてもよいと思うが、Webメールと同様で容易にこのファイルがシステムのファイルかどうかを判断できない。
+      ref = request.env["REQUEST_URI"].to_s
+      ref = '' if ref.present? && !trusted_url?(ref)
+
+      path = cookies[:login_path].presence
+      if path.present? && trusted_url?(path)
+        if ref.blank? || ref == path
+          return path
+        else
+          return "#{path}?#{{ ref: ref }.to_query}"
+        end
+      end
+
+      gws_login_path(site: site)
+    end
+  end
+
   def deny
     member = cur_member
 
@@ -121,7 +147,17 @@ class Fs::FilesController < ApplicationController
     tags << "member:#{member.id}(#{member.name})" if member
 
     Rails.logger.tagged(*tags) do
-      raise "404" unless cur_item.previewable?(site: cur_site, user: cur_user, member: member)
+      unless cur_item.previewable?(site: cur_site, user: cur_user, member: member)
+        login_path = find_login_path
+        if login_path
+          redirect_to login_path
+        else
+          raise "404"
+        end
+
+        return
+      end
+
       set_last_logged_in
     end
   end
