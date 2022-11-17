@@ -29,7 +29,7 @@
       <%= email_field_tag "#{f.object_name}[contact_groups][][contact_email]", contact_group.try(:contact_email), id: nil, style: "width: 100%;" %>
     </th>
     <td class="contact-link-url">
-      <%= url_field_tag "#{f.object_name}[contact_groups][][contact_link_url]", contact_group.try(:contact_link_url), id: nil, style: "width: 100%;" %>
+      <%= text_field_tag "#{f.object_name}[contact_groups][][contact_link_url]", contact_group.try(:contact_link_url), id: nil, style: "width: 100%;" %>
     </td>
     <td class="contact-link-name">
       <%= text_field_tag "#{f.object_name}[contact_groups][][contact_link_name]", contact_group.try(:contact_link_name), id: nil, style: "width: 100%;" %>
