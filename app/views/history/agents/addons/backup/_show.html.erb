@@ -22,13 +22,24 @@ before = @item.before_backup || @item.backups.last
     <% if item.action == 'replace_urls' %>
       <span style="margin-left: 0.5em;"><%= t("history.options.action.#{item.action}") %></span>
     <% else %>
-      <% if item.user %>
-        <% if group = Cms::Group.site(@cur_site).in(id: item.user.group_ids).first %>
-          <span style="margin-left: 0.5em;"><%= group.trailing_name %> <%= item.user.name %></span>
-        <% else %>
-          <span style="margin-left: 0.5em;"><%= item.user.name %></span>
-        <% end %>
-      <% end %>
+      <%=
+        if item.user_id
+          # ユーザーが作成した履歴
+          group = item.user ? Cms::Group.site(@cur_site).in(id: item.user.group_ids).first : nil
+          if group
+            id = "#{group.trailing_name} #{item.user_name || item.user.try(:name)}"
+          else
+            id = item.user_name || item.user.try(:name)
+          end
+        elsif item.member_id
+          # メンバーが作成した履歴
+          id = "#{Cms::Member.model_name.human}: #{item.member_name}"
+        end
+
+        if id
+          tag.span id, style: "margin-left: 0.5em;"
+        end
+      %>
     <% end %>
   </dd>
   <% end %>
