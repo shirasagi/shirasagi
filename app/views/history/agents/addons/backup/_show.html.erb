@@ -1,9 +1,7 @@
 <%
-
-return render(plain: "") if @item.backups.size == 0
-source = ERB::Util.url_encode(request.path)
-before = @item.before_backup || @item.backups.last
-
+  return render(plain: "") if @item.backups.size == 0
+  source = ERB::Util.url_encode(request.path)
+  before = @item.before_backup || @item.backups.last
 %>
 <dl class="see mod-history-backup">
   <% if before %>
@@ -12,35 +10,37 @@ before = @item.before_backup || @item.backups.last
     </dd>
   <% end %>
   <% @item.backups.limit(10).each do |item| %>
-  <dd>
-    <% if @item.allowed?(:edit, @cur_user) %>
-      <% source = ERB::Util.url_encode(request.path) %>
-      <%= link_to l(item.created), history_cms_backup_path(source: source, id: item.id) %>
-    <% else %>
-      <%= l(item.created) %>
-    <% end %>
-    <% if item.action == 'replace_urls' %>
-      <span style="margin-left: 0.5em;"><%= t("history.options.action.#{item.action}") %></span>
-    <% else %>
+    <dd data-id="<%= item.id %>">
       <%=
-        if item.user_id
-          # ユーザーが作成した履歴
-          group = item.user ? Cms::Group.site(@cur_site).in(id: item.user.group_ids).first : nil
-          if group
-            id = "#{group.trailing_name} #{item.user_name || item.user.try(:name)}"
-          else
-            id = item.user_name || item.user.try(:name)
+        content = ss_time_tag item.created
+        if @item.allowed?(:edit, @cur_user, site: @cur_site)
+          content = link_to content, history_cms_backup_path(source: ERB::Util.url_encode(request.path), id: item.id)
+        end
+        content
+      %>
+
+      <%=
+        if item.action == 'replace_urls'
+          id = t("history.options.action.#{item.action}")
+        else
+          if item.user_id
+            # ユーザーが作成した履歴
+            group = item.user ? Cms::Group.site(@cur_site).in(id: item.user.group_ids).first : nil
+            if group
+              id = "#{group.trailing_name} #{item.user_name || item.user.try(:name)}"
+            else
+              id = item.user_name || item.user.try(:name)
+            end
+          elsif item.member_id
+            # メンバーが作成した履歴
+            id = "#{Cms::Member.model_name.human}: #{item.member_name}"
           end
-        elsif item.member_id
-          # メンバーが作成した履歴
-          id = "#{Cms::Member.model_name.human}: #{item.member_name}"
         end
 
         if id
           tag.span id, style: "margin-left: 0.5em;"
         end
       %>
-    <% end %>
-  </dd>
+    </dd>
   <% end %>
 </dl>
