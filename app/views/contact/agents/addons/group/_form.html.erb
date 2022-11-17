@@ -41,9 +41,9 @@
   <table class="contact-groups-table">
     <thead>
     <tr>
-      <td class="operations">
+      <th class="operations">
         <%= button_tag t("ss.buttons.add"), type: "button", name: "add", class: "btn btn-add" %>
-      </td>
+      </th>
       <th class="contact-main-state"><%= SS::Contact.t :main_state %><%= SS::Contact.tt :main_state %></th>
       <th class="contact-group-name"><%= SS::Contact.t :contact_group_name %><%= SS::Contact.tt :contact_group_name %></th>
       <th class="contact-tel"><%= SS::Contact.t :contact_tel %><%= SS::Contact.tt :contact_tel %></th>

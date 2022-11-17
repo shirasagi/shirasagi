@@ -7,14 +7,8 @@ export default class extends Controller {
   connect() {
     const $table = $(this.element).find(".contact-groups-table");
     if ($table[0]) {
-      SS.ready(() => {
-        this.table = $table.DataTable({
-          info: false, ordering: false, paging: false, scrollX: true, searching: false
-        });
-      })
+      this.bind();
     }
-
-    this.bind();
   }
 
   disconnect() {
@@ -31,20 +25,22 @@ export default class extends Controller {
     })
   }
 
-  addRow(ev) {
+  addRow(_ev) {
     const template = this.element.querySelector("#new-contact-group-row")
     const $newRow = $(template.innerHTML)
 
     const $table = $(this.element).find(".contact-groups-table")
     $table.find("tbody").append($newRow)
-
-    // const $tr = $(ev.currentTarget).closest("tr")
-    // $tr.before($newRow)
   }
 
   deleteRow(ev) {
-    const $tr = $(ev.currentTarget).closest("tr")
+    const $tr = $(ev.target).closest("tr")
     if ($tr.data("id") !== "new") {
+      $tr.remove()
+      return
+    }
+
+    if ($tr.closest("table").find("[data-id='new']").length > 1) {
       $tr.remove()
     }
   }
