@@ -1,0 +1,120 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will download a prebuilt Ruby version, install dependencies and run tests with Rake
+# For more information see: https://github.com/marketplace/actions/setup-ruby-jruby-and-truffleruby
+
+name: Gws spec with ja locale
+
+on:
+  push:
+    branches: [ affair ]
+  pull_request:
+    branches: [ affair ]
+
+jobs:
+  test_ja:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        parallelism: [6]
+        id: [ 0,1,2,3,4,5 ]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Docker Login
+      run: |
+        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login --username "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        docker info
+    - name: Start MongoDB
+      uses: supercharge/mongodb-github-action@1.3.0
+      with:
+        mongodb-version: 4.2
+    - name: Prepare Ldap
+      run: docker pull osixia/openldap
+    - name: Start Shirasagi Mail
+      run: |
+        docker pull shirasagi/mail
+        docker run --name test_mail -d -p 10143:143 -p 10587:587 shirasagi/mail
+    - name: Prepare Michecker
+      run: docker pull shirasagi/michecker
+    - name: Prepare Elasticsearch
+      run: docker pull shirasagi/elasticsearch
+    - name: Launch Elasticsearch
+      id: elasticsearch
+      run: |
+        container_id=$(docker run -d --name elasticsearch -p 9200:9200 -e discovery.type=single-node shirasagi/elasticsearch)
+        if [ $? -ne 0 ]; then
+          exit $?
+        fi
+        echo $container_id
+        echo "CONTAINER_ID=$container_id" >> $GITHUB_OUTPUT
+    - name: Install pre requisites
+      run: |
+        sudo apt-get update
+        sudo apt-get -y install libmagick++-dev sox libsox-dev lame libmp3lame-dev chromium-chromedriver mecab libmecab-dev mecab-ipadic-utf8 open-jtalk open-jtalk-mecab-naist-jdic graphicsmagick
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.0'
+        bundler-cache: true
+    - name: Install MeCab Ruby
+      run: |
+        tar xzf vendor/mecab/mecab-ruby-0.996.tar.gz
+        cd mecab-ruby-0.996 && bundle exec ruby extconf.rb && make && sudo make install
+#    - name: Prepare Assets
+#      run: bash .travis.d/exec.sh before_script 05-bin-deploy
+    - name: Prepare Config
+      run: bash .travis.d/exec.sh before_script 10-copy-config
+    - name: Prepare kana.yml
+      run: |
+        cp config/defaults/kana.yml config/
+        sed -i "s#/usr/local/libexec/mecab/mecab-dict-index#/usr/lib/mecab/mecab-dict-index#" config/kana.yml
+        sed -i "s#/usr/local/lib/mecab/dic/ipadic#/usr/share/mecab/dic/ipadic#" config/kana.yml
+        diff -u config/defaults/kana.yml config/kana.yml || true
+    - name: Prepare voice.yml
+      run: |
+        cp config/defaults/voice.yml config/
+        sed -i "s#/usr/local/bin/open_jtalk#/usr/bin/open_jtalk#" config/voice.yml
+        sed -i "s#/usr/local/dic#/var/lib/mecab/dic/open-jtalk/naist-jdic#" config/voice.yml
+        sed -i "s#/usr/local/bin/sox#/usr/bin/sox#" config/voice.yml
+        sed -i "s#/usr/local/bin/lame#/usr/bin/lame#" config/voice.yml
+        diff -u config/defaults/voice.yml config/voice.yml || true
+    - name: Prepare ImageMagick-6 policy
+      run: |
+        cd /etc/ImageMagick-6
+        sudo sed -i "s#<policy domain=\"coder\" rights=\"none\" pattern=\"PDF\" />#<policy domain=\"coder\" rights=\"read\" pattern=\"PDF\" />#" policy.xml
+        echo "### /etc/ImageMagick-6/policy.xml ###"
+        cat policy.xml
+    - name: Running Docker Containers
+      run: docker ps -a
+    - name: Run tests
+      run: bundle exec ruby .travis.d/split_specs.rb -p ${{ matrix.parallelism }} -i ${{ matrix.id }} --include "/gws/" | xargs bundle exec rspec --profile 20
+      env:
+        TZ: "Asia/Tokyo"
+        allow_open_jtalk: 1
+        LDAP_TEST: enable
+        ES_CONTAINER_ID: ${{ steps.elasticsearch.outputs.CONTAINER_ID }}
+        ANALYZE_COVERAGE: disabled
+        TEST_LOG_LEVEL: error
+        MONGOID_LOGGER: suppress
+        RSPEC_LOCALE: ja
+    - name: Coveralls Parallel
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        path-to-lcov: "./coverage/lcov/lcov.info"
+        flag-name: run-${{ matrix.id }}
+        parallel: true
+
+  finish:
+    needs: test_ja
+    runs-on: ubuntu-latest
+    steps:
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true
