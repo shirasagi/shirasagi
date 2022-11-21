@@ -94,6 +94,8 @@ jobs:
       run: bundle exec ruby .travis.d/split_specs.rb -p ${{ matrix.parallelism }} -i ${{ matrix.id }} --include "/gws/" | xargs bundle exec rspec --profile 20
       env:
         TZ: "Asia/Tokyo"
+        LANG: ja_JP.UTF-8
+        LC_ALL: ja_JP.UTF-8
         allow_open_jtalk: 1
         LDAP_TEST: enable
         ES_CONTAINER_ID: ${{ steps.elasticsearch.outputs.CONTAINER_ID }}
