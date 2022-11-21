@@ -140,8 +140,13 @@ $("input:submit").on("click.form_alert", function (e) {
   }
 
   // 振替なし
-  var values = $(".select-compensatory").map(function() { return parseInt($(this).val()) }).get();
-  var minute = values.reduce(function(accumulator, currentValue) { return accumulator + currentValue; });
+  var minute = 0;
+  $(".select-compensatory").map(function() {
+    var val = parseInt($(this).val());
+    if (Number.isInteger(val)) {
+      minute += val;
+    }
+  });
   if (minute > 0) {
     return true;
   }
