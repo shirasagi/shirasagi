@@ -26,11 +26,17 @@ module Gws::Schedule::PlanFilter
 
   def pre_params
     now = Time.zone.now.change(min: 0)
+
+    start_at = params[:start].in_time_zone rescue nil
+    end_at = params[:end].in_time_zone rescue nil
+
+    start_at ||= now
+    end_at ||= start_at + 1.hour
     {
-      start_at: params[:start] || now,
-      end_at: params[:end] || (now + 1.hour),
-      start_on: params[:start] || now.to_date,
-      end_on: params[:end] || now.to_date,
+      start_at: start_at,
+      end_at: end_at,
+      start_on: start_at.to_date,
+      end_on: end_at.to_date,
       member_ids: params[:member_ids].presence || [@cur_user.id],
       facility_ids: params[:facility_ids].presence
     }
