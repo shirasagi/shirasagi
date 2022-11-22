@@ -1,0 +1,83 @@
+<%
+  form = Gws::DailyReport::Form.site(@cur_site).where(group_ids: (@user || @cur_user).gws_default_group(@cur_site).id).first
+%>
+
+<%= jquery do %>
+  var baseUrl = <%== url_for({ action: :index, year_month: ':YEAR_MONTH' }).to_json %>;
+  $('.gws-daily-report-year-month-navi select[name=year_month]').on('change', function() {
+    var val = $(this).val();
+    location.href = baseUrl.replace(':YEAR_MONTH', val);
+  });
+<% end %>
+
+<div class="gws-tabs">
+  <% Gws::User.site(@cur_site).where(group_ids: @cur_user.gws_default_group(@cur_site).id).each do |user| %>
+    <%= link_to gws_daily_report_user_reports_path(user: user.id), class: "#{'current' if user.id == (@user || @cur_user).id}" do %>
+      <span class="tab-name"><%= user.name %></span>
+    <% end %>
+  <% end %>
+</div>
+
+<section class="main-box gws-daily-report-box">
+  <header>
+    <h2>
+      <%= gws_public_user_long_name((@user || @cur_user).long_name) %>
+      <% if @user.try(:id) == @cur_user.try(:id) %>
+        <% if item = @items.where(user_id: @cur_user.id, form_id: form.try(:id), daily_report_date: Time.zone.today).first %>
+          <%= link_to t('gws/daily_report.edit_daily_report'), { action: :edit, id: item.id }, { class: 'add-plan' } %>
+        <% else %>
+          <%= link_to t('gws/daily_report.create_daily_report'), { action: :new }, { class: 'add-plan' } %>
+        <% end %>
+      <% end %>
+    </h2>
+    <nav>
+      <%= render template: '_search' %>
+    </nav>
+  </header>
+  <div class="gws-category-navi gws-daily-report-year-month-navi">
+    <%= select_tag(:year_month, options_for_select(year_month_options, params[:year_month])) %>
+    <% if @cur_month.last_month >= @active_year_range.first %>
+      <%= link_to(t('gws/attendance.prev_month'), { action: :index, year_month: @cur_month.last_month.strftime('%Y%m') }, class: :btn) %>
+    <% end %>
+    <% if @cur_month.next_month <= @active_year_range.last %>
+      <%= link_to(t('gws/attendance.next_month'), { action: :index, year_month: @cur_month.next_month.strftime('%Y%m') }, class: :btn) %>
+    <% end %>
+  </div>
+  <table class="index">
+    <thead>
+    <tr>
+      <th><%= t('gws/daily_report.date') %></th>
+      <th><%= t('gws/daily_report.wday') %></th>
+      <% if form %>
+        <th><%= @model.t(:limited_access) %></th>
+        <th><%= @model.t(:small_talk) %></th>
+        <% form.columns.each do |column| %>
+          <th><%= column.name %></th>
+        <% end %>
+      <% end %>
+    </tr>
+    </thead>
+    <tbody>
+    <% (@cur_month.beginning_of_month.to_date..@cur_month.end_of_month.to_date).each do |date| %>
+      <% report = @items.where(user_id: (@user || @cur_user), form_id: form.try(:id), daily_report_date: date).first %>
+      <tr>
+        <td><%= I18n.l(date, format: :short) %></td>
+        <td><%= t("date.abbr_day_names")[date.wday] %></td>
+        <% if report %>
+          <td><%= br report.limited_access %></td>
+          <td><%= br report.small_talk %></td>
+          <% report.column_values.each do |column_value| %>
+            <td><%= br column_value.value %></td>
+          <% end %>
+        <% elsif form %>
+          <td></td>
+          <td></td>
+          <% form.columns.each do |column| %>
+            <td></td>
+          <% end %>
+        <% end %>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</section>

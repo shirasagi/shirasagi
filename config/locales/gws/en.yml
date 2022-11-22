@@ -167,7 +167,6 @@ en:
       gws/system/fiscal_year_setting: Fiscal year settings
       gws/user/custom_form: Extensions
       gws/user/public_duty: Office duties
-      gws/user/duty_hour: Duty hour
       gws/link: Link
       gws/site_usage: Usage amount
       gws/user/affair_setting: Affair setting
@@ -355,6 +354,8 @@ en:
         menu_attendance_state: Display attendance
         menu_affair_label: Display affair
         menu_affair_state: Display affair
+        menu_daily_report_label: Display daily report
+        menu_daily_report_state: Display daily report
         menu_bookmark_label: Display favorites
         menu_bookmark_state: Display favorites
         menu_memo_label: Display messages
@@ -400,6 +401,7 @@ en:
         notice_todo_state: ToDo
         notice_affair_state: Affair
         notice_workload_state: Workloads
+        notice_daily_report_state: Daily report
         notice_workflow_state: Workflows
         notice_circular_state: Circular boards
         notice_monitor_state: Inquiries and responses
@@ -425,6 +427,7 @@ en:
         log_personal_address_severity: Personal address book log
         log_portal_severity: Portal log
         log_qna_severity: Q&A log
+        log_daily_report_severity: Daily report log
         log_report_severity: Reports log
         log_schedule_severity: Schedule log
         log_share_severity: Shared file log

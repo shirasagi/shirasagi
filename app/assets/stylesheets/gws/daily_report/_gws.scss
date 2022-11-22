@@ -1,0 +1,36 @@
+.gws-daily-report-box {
+  .add-plan {
+    margin-left: 8px;
+    padding: 2px 5px;
+    border-radius: 4px;
+    background-color: #f40;
+    color: #fff;
+    font-size: 95%;
+    font-weight: normal;
+    text-decoration: none;
+    &:hover {
+      background-color: #f60;
+    }
+  }
+  header {
+    .search {
+      margin: -5px 0 -5px 20px;
+      float: right;
+      @include mb {
+        margin: 0;
+        float: none;
+        input[type="text"] {
+          width: auto !important;
+        }
+      }
+    }
+    .operations {
+      margin: -5px 0 -5px 20px;
+      float: right;
+      @include mb {
+        margin: 0;
+        .btn-print { display: none; }
+      }
+    }
+  }
+}

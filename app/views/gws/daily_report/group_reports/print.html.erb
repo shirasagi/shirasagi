@@ -1,0 +1,53 @@
+<%
+  form = Gws::DailyReport::Form.site(@cur_site).where(group_ids: @cur_group.id).first
+%>
+
+<%= render 'ss/crud/print_preview_head', links: [[ I18n.t('ss.links.back'), { action: :index } ]] %>
+
+<div class="addon-views sheet">
+  <div class="addon-view print" id="addon-basic">
+    <div class="addon-body print">
+      <table class="index">
+    <thead>
+    <tr>
+      <th><%= Gws::User.t(:name) %></th>
+      <% if form %>
+        <th><%= @model.t(:limited_access) %></th>
+        <th><%= @model.t(:small_talk) %></th>
+        <% form.columns.each do |column| %>
+          <th><%= column.name %></th>
+        <% end %>
+      <% end %>
+    </tr>
+    </thead>
+    <tbody>
+    <% Gws::User.site(@cur_site).where(group_ids: @cur_group.id).each do |user| %>
+      <% report = @items.site(@cur_site).where(user_id: user, form_id: form.try(:id), daily_report_date: @cur_date.to_date).first %>
+      <tr>
+        <td>
+          <div><%= gws_public_user_long_name(user.long_name) %></div>
+        </td>
+        <% if report %>
+          <td><%= br report.limited_access %></td>
+          <td><%= br report.small_talk %></td>
+          <% report.column_values.each do |column_value| %>
+            <td><%= column_value.value %></td>
+          <% end %>
+        <% elsif form %>
+          <td></td>
+          <td></td>
+          <% form.columns.each do |column| %>
+            <td></td>
+          <% end %>
+        <% end %>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+    </div>
+  </div>
+</div>
+
+<%= jquery do %>
+  SS_Font.render();
+<% end %>

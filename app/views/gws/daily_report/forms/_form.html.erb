@@ -1,0 +1,13 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+
+  <dt><%= @model.t :agent_state %><%= @model.tt :agent_state %></dt>
+  <dd><%= f.select :agent_state, @item.agent_state_options %></dd>
+
+  <dt><%= @model.t :memo %><%= @model.tt :memo %></dt>
+  <dd><%= f.text_area :memo %></dd>
+</dl>

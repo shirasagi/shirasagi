@@ -1,0 +1,16 @@
+<dl class="see">
+  <% if @item.name.present? %>
+    <dt><%= @model.t :name %></dt>
+    <dd><%= @item.name %></dd>
+  <% end %>
+
+  <% if @item.daily_report_date.present? %>
+    <dt><%= @model.t :daily_report_date %></dt>
+    <dd><%= I18n.l(@item.daily_report_date.to_date, format: :long) %></dd>
+  <% end %>
+</dl>
+
+<%= jquery do %>
+  var highlighter = new Gws_Elasticsearch_Highlighter();
+  highlighter.render();
+<% end %>

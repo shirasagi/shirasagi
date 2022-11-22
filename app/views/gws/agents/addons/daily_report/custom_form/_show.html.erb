@@ -1,0 +1,42 @@
+<% return if @item.column_values.blank? %>
+
+<dl class="see mod-gws-daily-report-custom_form">
+  <dt><%= @model.t :limited_access %></dt>
+  <dd>
+    <%= br @item.limited_access %>
+  </dd>
+  <% if @item.share_limited_access.present? %>
+    <dd><%= @model.t(:share_limited_access) %></dd>
+  <% end %>
+
+  <dt><%= @model.t :small_talk %></dt>
+  <dd>
+    <%= br @item.small_talk %>
+  </dd>
+  <% if @item.share_small_talk.present? %>
+    <dd><%= @model.t(:share_small_talk) %></dd>
+  <% end %>
+
+<% @item.column_values.order_by(order: 1, name: 1).each do |value| %>
+  <% column = value.column %>
+  <% if column.present? && column.column_show_partial_path.present? %>
+    <%= render column.column_show_partial_path, column: column, value: value %>
+  <% else %>
+    <dt><%= value.name %></dt>
+    <dd>
+      <%= column.try(:prefix_label) %>
+      <%= br value.value %>
+      <%= column.try(:postfix_label) %>
+    </dd>
+  <% end %>
+  <% if @item.share_column_ids.to_a.include?(column.id.to_s) %>
+    <dd><%= @model.t(:share_column_ids) %></dd>
+  <% end %>
+<% end %>
+</dl>
+
+<%= jquery do %>
+  $('#addon-ss-agents-addons-markdown').hide();
+  $('#addon-gws-agents-addons-file').hide();
+  $('#addon-gws-agents-addons-daily-report-custom_form .addon-head h2').text(<%== @cur_form.name.to_json %>);
+<% end %>

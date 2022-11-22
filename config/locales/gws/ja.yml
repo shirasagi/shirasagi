@@ -355,6 +355,8 @@ ja:
         menu_attendance_state: 出退勤の表示
         menu_affair_label: 庶務事務の表示
         menu_affair_state: 庶務事務の表示
+        menu_daily_report_label: 日報の表示
+        menu_daily_report_state: 日報の表示
         menu_bookmark_label: お気に入りの表示
         menu_bookmark_state: お気に入りの表示
         menu_memo_label: メッセージの表示
@@ -400,6 +402,7 @@ ja:
         notice_todo_state: ToDo
         notice_affair_state: 庶務事務
         notice_workload_state: 業務見える化
+        notice_daily_report_state: 日報
         notice_workflow_state: ワークフロー
         notice_circular_state: 回覧板
         notice_monitor_state: 照会・回答
@@ -425,6 +428,7 @@ ja:
         log_personal_address_severity: 個人アドレス帳のログ
         log_portal_severity: ポータルのログ
         log_qna_severity: Ｑ＆Ａのログ
+        log_daily_report_severity: 日報のログ
         log_report_severity: レポートのログ
         log_schedule_severity: スケジュールのログ
         log_share_severity: 共有ファイルのログ
