@@ -579,6 +579,7 @@
     border-bottom: 1px solid #d8d8d8;
   }
   .fc-timeline-event {
+    min-width: calc(1em + 5px);
     background: #2eb0f2;
     color: $black;
   }
