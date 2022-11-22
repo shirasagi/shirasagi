@@ -1,4 +1,6 @@
-//= require chart.js/dist/Chart.min.js
+//= require chart.js/dist/chart.min.js
+//= require chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js
+//= require chartjs-plugin-colorschemes/dist/chartjs-plugin-colorschemes.js
 
 this.Inquiry_Chart = (function() {
   function Inquiry_Chart() {}
@@ -19,7 +21,7 @@ this.Inquiry_Chart = (function() {
       });
 
       new Chart(this, {
-        type: 'horizontalBar',
+        type: 'bar',
         data: {
           labels: labels,
           datasets: [{
@@ -30,13 +32,20 @@ this.Inquiry_Chart = (function() {
           }],
         },
         options: {
-          scales: {
-            xAxes: [{
-              ticks: { min: 0, max: 100, stepSize: 10 }
-            }],
+          indexAxis: 'y',
+          plugins: {
+            legend: {
+              display: false
+            }
           },
-          legend: {
-            display: false
+          scales: {
+            x: {
+              min: 0,
+              max: 100,
+              ticks: {
+                stepSize: 10
+              }
+            },
           }
         }
       });
