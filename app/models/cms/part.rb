@@ -142,4 +142,14 @@ class Cms::Part
 
     default_scope ->{ where(route: "cms/print") }
   end
+
+  class ClipboardCopy
+    include ::Cms::Model::Part
+    include ::Cms::Addon::ClipboardCopy
+    include ::Cms::Addon::Release
+    include ::Cms::Addon::GroupPermission
+    include ::History::Addon::Backup
+
+    default_scope ->{ where(route: "cms/clipboard_copy") }
+  end
 end

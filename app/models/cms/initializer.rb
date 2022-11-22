@@ -22,6 +22,7 @@ module Cms
     Cms::Part.plugin "cms/monthly_nav"
     Cms::Part.plugin "cms/site_search_keyword"
     Cms::Part.plugin "cms/print"
+    Cms::Part.plugin "cms/clipboard_copy"
     Cms::Column.plugin 'cms/text_field'
     Cms::Column.plugin 'cms/date_field'
     Cms::Column.plugin 'cms/url_field2'

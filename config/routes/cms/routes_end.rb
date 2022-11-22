@@ -480,6 +480,7 @@ Rails.application.routes.draw do
     get "history_list" => "public#index", cell: "parts/history_list"
     get "site_search_keyword" => "public#index", cell: "parts/site_search_keyword"
     get "print" => "public#index", cell: "parts/print"
+    get "clipboard_copy" => "public#index", cell: "parts/clipboard_copy"
   end
 
   page "cms" do

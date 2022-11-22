@@ -1,0 +1,7 @@
+<dl class="see">
+  <dt><%= @model.t :clipboard_copy_target %><%= @model.tt :clipboard_copy_target %></dt>
+  <dd><%= f.select :clipboard_copy_target, @item.clipboard_copy_target_options %></dd>
+
+  <dt><%= @model.t :clipboard_copy_selector %><%= @model.tt :clipboard_copy_selector %></dt>
+  <dd><%= f.text_field :clipboard_copy_selector %></dd>
+</dl>
