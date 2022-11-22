@@ -60,6 +60,7 @@ SS.ready(function () {
   SS_DateTimePicker.render();
   SS_SearchUI.render();
   SS.enableDoubleClickGuard();
+  SS_Print.render();
 });
 
 this.SS_Kana = (function () {
@@ -644,5 +645,28 @@ this.SS_Recommend = (function () {
   };
 
   return SS_Recommend;
+
+})();
+
+this.SS_Print = (function () {
+  function SS_Print() {
+  }
+
+  SS_Print.render = function () {
+    if (! window.print) {
+      $(".btn-ss-print").addClass("unsupported");
+    }
+
+    $(document).on("click", ".btn-ss-print", function() {
+      try {
+        window.print();
+        return false;
+      } catch (ex) {
+        console.info("print is unsupported")
+      }
+    })
+  };
+
+  return SS_Print;
 
 })();

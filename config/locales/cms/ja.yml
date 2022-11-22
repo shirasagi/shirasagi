@@ -561,6 +561,7 @@ ja:
       cms/site_search_history: サイト内検索(検索履歴)
       cms/history_list: 閲覧履歴
       cms/site_search_keyword: サイト内検索(注目ワード)
+      cms/print: 印刷
     columns:
       cms/text_field: 一行入力
       cms/date_field: 日付入力

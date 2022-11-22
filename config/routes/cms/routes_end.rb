@@ -477,6 +477,7 @@ Rails.application.routes.draw do
     get "site_search_history" => "public#index", cell: "parts/site_search_history"
     get "history_list" => "public#index", cell: "parts/history_list"
     get "site_search_keyword" => "public#index", cell: "parts/site_search_keyword"
+    get "print" => "public#index", cell: "parts/print"
   end
 
   page "cms" do
