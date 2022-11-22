@@ -110,8 +110,11 @@ module Gws::Schedule::TodoFilter
   end
 
   def show
-    raise '403' if !item_readable?
-    render
+    if item_readable?
+      render template: 'show'
+    else
+      render template: 'gws/schedule/plans/private_plan'
+    end
   end
 
   def popup
