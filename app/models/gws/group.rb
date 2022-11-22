@@ -29,6 +29,7 @@ class Gws::Group
   include Gws::Addon::System::LogSetting
   include Gws::Addon::System::GroupSetting
   include Gws::Addon::System::UserSetting
+  include Gws::Addon::System::FiscalYearSetting
   include Gws::Addon::System::DesktopSetting
   include Gws::Addon::History
   include Gws::Addon::Import::Group

@@ -164,6 +164,7 @@ ja:
       gws/system/logo_setting: ロゴ設定
       gws/system/log_setting: ログ設定
       gws/system/desktop_setting: デスクトップアプリ設定
+      gws/system/fiscal_year_setting: 年度設定
       gws/user/custom_form: 拡張情報
       gws/user/public_duty: 事務分掌
       gws/user/duty_hour: 勤務時間
@@ -431,6 +432,8 @@ ja:
       gws/addon/system/desktop_setting:
         desktop_mailstore: メールストア機能
         desktop_chat: チャット機能
+      gws/addon/system/fiscal_year_setting:
+        fiscal_year_changed_month: 年度替わり月
       gws/addon/subscription_setting:
         subscribed_group_ids: 購読グループ
         subscribed_groups_hash: 購読グループ(ハッシュ)
