@@ -10,7 +10,8 @@ class Cms::Agents::Parts::ClipboardCopyController < ApplicationController
     end
 
     data = { target: target, selector: selector }
-    html = view_context.button_tag(@cur_part.name, type: "button", name: "clipboard-copy", class: "btn-ss-clipboard-copy", data: data)
+    html = view_context.button_tag(
+      @cur_part.name, type: "button", name: "clipboard-copy", class: "btn-ss-clipboard-copy", data: data)
     render html: html
   end
 end
