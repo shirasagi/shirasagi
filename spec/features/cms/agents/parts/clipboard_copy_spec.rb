@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_agents_parts_free", type: :feature, dbscope: :example, js: true do
+describe "cms_agents_parts_clipboard_copy", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
 
   context "when clipboard_copy_target is url" do
