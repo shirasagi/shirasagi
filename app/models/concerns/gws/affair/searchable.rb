@@ -16,7 +16,7 @@ module Gws::Affair::Searchable
           workflow_approvers: { '$elemMatch' => { 'user_id' => user.id, 'state' => 'request' } }
         )
       when 'mine'
-        criteria.or([{ user_id: user.id }, { target_user_id: user.id }])
+        criteria.where( target_user_id: user.id )
       else
         none
       end
