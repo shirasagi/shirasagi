@@ -31,20 +31,20 @@ $('.gws-attendance .leave-file-tooltip').on('click', function(ev) {
         <table class="time-card">
           <tbody>
           <tr class="header">
-            <th rowspan="2"><%= "ユーザー" %></th>
-            <th colspan="4"><%= "勤務" %></th>
-            <th class="overtime time" colspan="3"><%= "時間外" %></th>
-            <th class="leave" rowspan="2"><%= "休暇" %></th>
+            <th rowspan="2"><%= t("mongoid.models.gws/user") %></th>
+            <th colspan="4"><%= t("gws/affair.timecard.in_work.title") %></th>
+            <th class="overtime time" colspan="3"><%= t("gws/affair.timecard.in_over.title") %></th>
+            <th class="leave" rowspan="2"><%= t("gws/affair.timecard.in_leave.title") %></th>
             <th class="memo" rowspan="2"><%= Gws::Attendance::Record.t(:memo) %></th>
           </tr>
           <tr class="header">
             <th class="date"><%= Gws::Attendance::Record.t(:date) %></th>
             <th class="time enter"><%= @cur_site.attendance_enter_label.presence || Gws::Attendance::Record.t(:enter) %></th>
             <th class="time leave"><%= @cur_site.attendance_leave_label.presence || Gws::Attendance::Record.t(:leave) %></th>
-            <th class="working-time"><%= "執務時間" %></th>
-            <th class="overtime time"><%= "執務時間 (時間外 | 差分)" %></th>
-            <th class="break-time"><%= "休憩等" %></th>
-            <th class="compensatory-time"><%= "振替" %></th>
+            <th class="working-time"><%= t("gws/affair.timecard.in_work.worktime") %></th>
+            <th class="overtime time"><%= t("gws/affair.timecard.in_over.difference") %></th>
+            <th class="break-time"><%= t("gws/affair.timecard.in_over.breaktime") %></th>
+            <th class="compensatory-time"><%= t("gws/affair.timecard.in_over.compensatory") %></th>
           <tr>
           <% @users.each do |user| %>
             <%
@@ -108,12 +108,12 @@ $('.gws-attendance .leave-file-tooltip').on('click', function(ev) {
                   <% if editable_day_results.present? %>
                     <% file = day_results.first.file %>
                     <% if file.allowed?(:edit, @cur_user, site: @cur_site) %>
-                      <%= link_to "#{format_minute(overtime_result_minute)} [命令]", edit_gws_affair_overtime_result_path(id: file.id, ref: request.fullpath), class: "ajax-box" %>
+                      <%= link_to "#{format_minute(overtime_result_minute)} #{t("gws/affair.timecard.label.order")}", edit_gws_affair_overtime_result_path(id: file.id, ref: request.fullpath), class: "ajax-box" %>
                     <% else %>
-                      <%= "#{format_minute(overtime_result_minute)} [命令]" %>
+                      <%= "#{format_minute(overtime_result_minute)} #{t("gws/affair.timecard.label.order")}" %>
                     <% end %>
                   <% else %>
-                    <%= "#{format_minute(overtime_result_minute)} [確認]" %>
+                    <%= "#{format_minute(overtime_result_minute)} #{t("gws/affair.timecard.label.confirmed")}" %>
                   <% end %>
 
                   <% overtime_diff = overtime_result_minute - overtime_minute %>
@@ -126,9 +126,9 @@ $('.gws-attendance .leave-file-tooltip').on('click', function(ev) {
                   <%= " (" %>
                   <% file = overtime_files.first %>
                   <% if file.allowed?(:edit, @cur_user, site: @cur_site) %>
-                    <%= link_to "結果を入力 [命令]", edit_gws_affair_overtime_result_path(id: file.id, ref: request.fullpath), class: "ajax-box" %>
+                    <%= link_to "#{t("gws/affair.timecard.label.set_results")} #{t("gws/affair.timecard.label.order")}", edit_gws_affair_overtime_result_path(id: file.id, ref: request.fullpath), class: "ajax-box" %>
                   <% else %>
-                    <%= "結果を入力 [命令]" %>
+                    <%= "#{t("gws/affair.timecard.label.set_results")} #{t("gws/affair.timecard.label.order")}" %>
                   <% end %>
                   <%= ")" %>
                 <% end %>
@@ -141,10 +141,10 @@ $('.gws-attendance .leave-file-tooltip').on('click', function(ev) {
                 if day_results.present?
                   day_results.each do |result|
                     if result.week_in_compensatory_minute > 0
-                      compensatory_minute_labels << "週内#{format_minute(result.week_in_compensatory_minute)}"
+                      compensatory_minute_labels << "#{t("gws/affair.in_week")}#{format_minute(result.week_in_compensatory_minute)}"
                     end
                     if result.week_out_compensatory_minute > 0
-                      compensatory_minute_labels << "週外#{format_minute(result.week_out_compensatory_minute)}"
+                      compensatory_minute_labels << "#{t("gws/affair.out_of_week")}#{format_minute(result.week_out_compensatory_minute)}"
                     end
                   end
                 end
