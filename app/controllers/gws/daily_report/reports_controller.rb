@@ -224,7 +224,7 @@ class Gws::DailyReport::ReportsController < ApplicationController
 
     filename = "daily_report_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.csv"
     encoding = "Shift_JIS"
-    send_enum(@item.enum_csv(encoding: encoding), type: "text/csv; charset=#{encoding}", filename: filename)
+    send_enum(@item.enum_csv(user: @cur_user, encoding: encoding), type: "text/csv; charset=#{encoding}", filename: filename)
   end
 
   def download_all_comments
@@ -232,7 +232,7 @@ class Gws::DailyReport::ReportsController < ApplicationController
 
     filename = "daily_report_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.csv"
     encoding = "Shift_JIS"
-    send_enum(@items.enum_csv(site: @cur_site, encoding: encoding), type: "text/csv; charset=#{encoding}", filename: filename)
+    send_enum(@items.enum_csv(site: @cur_site, user: @cur_user, encoding: encoding), type: "text/csv; charset=#{encoding}", filename: filename)
   end
 
   def download_attachment

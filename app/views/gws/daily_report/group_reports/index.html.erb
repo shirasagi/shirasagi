@@ -1,5 +1,5 @@
 <%
-  form = Gws::DailyReport::Form.site(@cur_site).where(group_ids: @cur_group.id).first
+  form = Gws::DailyReport::Form.site(@cur_site).where(daily_report_group_id: @group.id).first
   now = Time.zone.now
   ymd = params[:ymd]
   if ymd.present?
@@ -33,7 +33,7 @@
 
 <div class="gws-tabs">
   <% @cur_user.groups.in_group(@cur_site).each do |group| %>
-    <%= link_to gws_daily_report_group_reports_path(group: group.id), class: "#{'current' if group.id == @cur_group.id}" do %>
+    <%= link_to gws_daily_report_group_reports_path(group: group.id), class: "#{'current' if group.id == @group.id}" do %>
       <span class="tab-name"><%= group.trailing_name %></span>
     <% end %>
   <% end %>
@@ -42,7 +42,7 @@
 <section class="main-box gws-daily-report-box">
   <header>
     <h2>
-      <%= @cur_group.trailing_name %>
+      <%= @group.trailing_name %>
     </h2>
     <nav>
       <%= render template: '_search' %>
@@ -62,7 +62,9 @@
     <tr>
       <th><%= Gws::User.t(:name) %></th>
       <% if form %>
-        <th><%= @model.t(:limited_access) %></th>
+        <% if @model.allowed?(:access, @cur_user, site: @cur_site) %>
+          <th class="limited-access"><%= @model.t(:limited_access) %></th>
+        <% end %>
         <th><%= @model.t(:small_talk) %></th>
         <% form.columns.each do |column| %>
           <th><%= column.name %></th>
@@ -71,29 +73,54 @@
     </tr>
     </thead>
     <tbody>
-    <% Gws::User.site(@cur_site).where(group_ids: @cur_group.id).each do |user| %>
+    <% Gws::User.site(@cur_site).where(group_ids: @group.id).each do |user| %>
       <% report = @items.where(user_id: user, form_id: form.try(:id), daily_report_date: @cur_date.to_date).first %>
       <tr>
         <td>
           <div>
             <% if user.id == @cur_user.id %>
               <% if report %>
-                <%= link_to t('gws/daily_report.edit_daily_report'), { action: :edit, id: report.id }, { class: 'add-plan' } %>
+                <%= link_to t('gws/daily_report.edit_daily_report'), edit_gws_daily_report_group_report_path(id: report.id), { class: 'add-plan' } %>
               <% elsif form %>
-                <%= link_to t('gws/daily_report.create_daily_report'), { action: :new, form_id: form.id }, { class: 'add-plan' } %>
+                <%= link_to t('gws/daily_report.create_daily_report'), new_gws_daily_report_form_group_report_path(form_id: form.id), { class: 'add-plan' } %>
               <% end %>
             <% end %>
           </div>
           <div><%= gws_public_user_long_name(user.long_name) %></div>
         </td>
         <% if report %>
-          <td><%= br report.limited_access %></td>
-          <td><%= br report.small_talk %></td>
+          <% if @model.allowed?(:access, @cur_user, site: @cur_site) %>
+            <% if report.share_limited_access.present? %>
+              <td class="share-cell">
+                <div class="share-value"><%= t('gws/daily_report.shared') %></div>
+                <%= br report.limited_access %>
+              </td>
+            <% else %>
+              <td><%= br report.limited_access %></td>
+            <% end %>
+          <% end %>
+          <% if report.share_small_talk.present? %>
+            <td class="share-cell">
+              <div class="share-value"><%= t('gws/daily_report.shared') %></div>
+              <%= br report.small_talk %>
+            </td>
+          <% else %>
+            <td><%= br report.small_talk %></td>
+          <% end %>
           <% report.column_values.each do |column_value| %>
-            <td><%= br column_value.value %></td>
+            <% if report.share_column_ids.include?(column_value.column.id.to_s) %>
+              <td class="share-cell">
+                <div class="share-value"><%= t('gws/daily_report.shared') %></div>
+                <%= br column_value.value %>
+              </td>
+            <% else %>
+              <td><%= br column_value.value %></td>
+            <% end %>
           <% end %>
         <% elsif form %>
-          <td></td>
+          <% if @model.allowed?(:access, @cur_user, site: @cur_site) %>
+            <td></td>
+          <% end %>
           <td></td>
           <% form.columns.each do |column| %>
             <td></td>

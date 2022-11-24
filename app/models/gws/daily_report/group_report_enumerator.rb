@@ -1,6 +1,7 @@
 class Gws::DailyReport::GroupReportEnumerator < Enumerator
-  def initialize(site, group, reports, encoding: "Shift_JIS")
+  def initialize(site, user, group, reports, encoding: "Shift_JIS")
     @cur_site = site
+    @cur_user = user
     @cur_group = group
     @reports = reports.dup
     @encoding = encoding
@@ -33,7 +34,9 @@ class Gws::DailyReport::GroupReportEnumerator < Enumerator
 
   def build_term_handlers
     @handlers = []
-    @handlers << { name: Gws::DailyReport::Report.t(:limited_access), handler: method(:to_limited_access), type: :base }
+    if Gws::DailyReport::Report.allowed?(:access, @cur_user, site: @cur_site)
+      @handlers << { name: Gws::DailyReport::Report.t(:limited_access), handler: method(:to_limited_access), type: :base }
+    end
     @handlers << { name: Gws::DailyReport::Report.t(:small_talk), handler: method(:to_small_talk), type: :base }
     @forms.each do |form|
       form.columns.order_by(order: 1).each do |column|

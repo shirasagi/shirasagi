@@ -80,7 +80,12 @@ class Gws::DailyReport::UserReportsController < ApplicationController
 
   def set_items
     set_search_params
-    @items ||= @model.site(@cur_site).without_deleted.and_month(@cur_month).and_user(@user || @cur_user).search(@s)
+    @items ||= @model.site(@cur_site).
+      without_deleted.
+      and_month(@cur_month).
+      and_user(@user || @cur_user).
+      and_groups([@cur_group]).
+      search(@s)
   end
 
   def set_item
@@ -223,6 +228,6 @@ class Gws::DailyReport::UserReportsController < ApplicationController
 
     filename = "daily_report_user_report_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.csv"
     encoding = "Shift_JIS"
-    send_enum(@items.user_csv(site: @cur_site, month: @cur_month, encoding: encoding), type: "text/csv; charset=#{encoding}", filename: filename)
+    send_enum(@items.user_csv(site: @cur_site, user: @cur_user, month: @cur_month, encoding: encoding), type: "text/csv; charset=#{encoding}", filename: filename)
   end
 end

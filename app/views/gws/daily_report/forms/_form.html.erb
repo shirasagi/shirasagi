@@ -5,9 +5,28 @@
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
 
-  <dt><%= @model.t :agent_state %><%= @model.tt :agent_state %></dt>
-  <dd><%= f.select :agent_state, @item.agent_state_options %></dd>
-
   <dt><%= @model.t :memo %><%= @model.tt :memo %></dt>
   <dd><%= f.text_area :memo %></dd>
 </dl>
+
+<dl class="see">
+  <dt><%= @model.t :daily_report_group_id %><%= @model.tt :daily_report_group_id %></dt>
+  <dd>
+    <%= f.hidden_field "daily_report_group_id", value: "", class: "hidden-ids" %>
+    <%= link_to t("ss.apis.groups.index"), gws_apis_groups_path(single: true), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Sys::Group.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+      <% if @item.daily_report_group.present? %>
+        <tr data-id="<%= @item.daily_report_group.id %>">
+          <td><%= f.hidden_field "daily_report_group_id", value: @item.daily_report_group.id, id: nil %> <%= @item.daily_report_group.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+

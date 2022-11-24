@@ -8,6 +8,7 @@ class Gws::DailyReport::GroupReportsController < ApplicationController
   before_action :set_cur_form, only: %i[new create]
   before_action :set_search_params
   before_action :set_cur_date
+  before_action :set_group
   before_action :set_items
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :soft_delete]
 
@@ -18,7 +19,7 @@ class Gws::DailyReport::GroupReportsController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [@cur_site.menu_daily_report_label || t("gws/daily_report.individual"), action: :index]
+    @crumbs << [@cur_site.menu_daily_report_label || t("gws/daily_report.department"), action: :index]
   end
 
   def set_forms
@@ -54,9 +55,14 @@ class Gws::DailyReport::GroupReportsController < ApplicationController
     @cur_date = Time.zone.parse("#{year}/#{month}/#{date}")
   end
 
+  def set_group
+    @group ||= @cur_user.groups.in_group(@cur_site).find(params[:group])
+    raise '403' unless @group
+  end
+
   def set_items
     set_search_params
-    @items ||= @model.site(@cur_site).without_deleted.and_date(@cur_date).and_groups([@cur_group]).search(@s)
+    @items ||= @model.site(@cur_site).without_deleted.and_date(@cur_date).and_groups([@group]).search(@s)
   end
 
   def set_item
@@ -200,7 +206,7 @@ class Gws::DailyReport::GroupReportsController < ApplicationController
     filename = "daily_report_group_csv_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.csv"
     encoding = "Shift_JIS"
     send_enum(
-      @items.group_csv(site: @cur_site, group: @cur_group, encoding: encoding),
+      @items.group_csv(site: @cur_site, user: @cur_user, group: @group, encoding: encoding),
       type: "text/csv; charset=#{encoding}", filename: filename
     )
   end

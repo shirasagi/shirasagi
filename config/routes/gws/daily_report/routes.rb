@@ -30,7 +30,7 @@ Rails.application.routes.draw do
       resources :group_reports, path: 'groups/:group/reports', concerns: [:deletion, :export] do
         get :print, on: :collection
       end
-      resources :group_reports, path: 'groups/:user/:form_id', only: [:new, :create], as: 'form_group_reports'
+      resources :group_reports, path: 'groups/:group/:form_id', only: [:new, :create], as: 'form_group_reports'
     end
     resources :forms, concerns: :deletion do
       match :publish, on: :member, via: [:get, :post]

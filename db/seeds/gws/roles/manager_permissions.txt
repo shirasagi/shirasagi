@@ -1,3 +1,4 @@
+access_gws_daily_report_reports
 approve_private_gws_workflow_files
 delete_private_gws_board_topics
 delete_private_gws_circular_categories

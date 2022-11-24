@@ -15,9 +15,12 @@ class Gws::DailyReport::Report
   field :name, type: String
   field :daily_report_date, type: DateTime, default: Time.zone.today
 
+  belongs_to :daily_report_group, class_name: 'Gws::Group'
+
   permit_params :daily_report_date
 
   before_validation :set_name
+  before_validation :set_daily_report_group
 
   validates :name, presence: true, length: { maximum: 80 }
   validates :daily_report_date, presence: true, uniqueness: { scope: [:site_id, :user_id, :form_id] }
@@ -27,8 +30,7 @@ class Gws::DailyReport::Report
   scope :and_month, ->(month) { gte(daily_report_date: month.beginning_of_month).lte(daily_report_date: month.end_of_month) }
   scope :and_date, ->(date) { where(daily_report_date: date.to_date) }
   scope :and_user, ->(user) { where(user_id: user.id) }
-  # scope :and_group, ->(group) { where(group_ids: group.id) }
-  scope :and_groups, ->(groups) { where(group_ids: { '$in' => groups.to_a.collect(&:id) }) }
+  scope :and_groups, ->(groups) { where(daily_report_group_id: { '$in' => groups.to_a.collect(&:id) }) }
 
   default_scope -> {
     order_by updated: -1
@@ -50,15 +52,15 @@ class Gws::DailyReport::Report
     end
 
     def enum_csv(site: nil, encoding: "Shift_JIS")
-      Gws::DailyReport::ReportEnumerator.new(site, all, encoding: encoding)
+      Gws::DailyReport::ReportEnumerator.new(site, user, all, encoding: encoding)
     end
 
-    def user_csv(site: nil, month: Time.zone.today.beginning_of_month, encoding: "Shift_JIS")
-      Gws::DailyReport::UserReportEnumerator.new(site, month, all, encoding: encoding)
+    def user_csv(site: nil, user: nil, month: Time.zone.today.beginning_of_month, encoding: "Shift_JIS")
+      Gws::DailyReport::UserReportEnumerator.new(site, user, month, all, encoding: encoding)
     end
 
-    def group_csv(site: nil, group: nil, encoding: "Shift_JIS")
-      Gws::DailyReport::GroupReportEnumerator.new(site, group, all, encoding: encoding)
+    def group_csv(site: nil, user: nil, group: nil, encoding: "Shift_JIS")
+      Gws::DailyReport::GroupReportEnumerator.new(site, user, group, all, encoding: encoding)
     end
 
     def collect_attachments
@@ -112,6 +114,40 @@ class Gws::DailyReport::Report
     SS::File.in(id: attachment_ids)
   end
 
+  def shared_limited_access
+    str = []
+    reports = self.class.and_date(daily_report_date).
+      where(form_id: form_id, share_limited_access: 'true').
+      ne(user_id: (@cur_user || user).id)
+    reports.each do |report|
+      str << "#{report.limited_access}(#{report.user.try(:name)})"
+    end
+    str.join("\n")
+  end
+
+  def shared_small_talk
+    str = []
+    reports = self.class.and_date(daily_report_date).
+      where(form_id: form_id, share_small_talk: 'true').
+      ne(user_id: (@cur_user || user).id)
+    reports.each do |report|
+      str << "#{report.small_talk}(#{report.user.try(:name)})"
+    end
+    str.join("\n")
+  end
+
+  def shared_column_value(column_value)
+    str = []
+    reports = self.class.and_date(daily_report_date).
+      in(share_column_ids: column_value.column_id.to_s).
+      where(form_id: form_id).
+      ne(user_id: (@cur_user || user).id)
+    reports.each do |report|
+      str << "#{column_value.value}(#{report.user.try(:name)})"
+    end
+    str.join("\n")
+  end
+
   private
 
   def set_name
@@ -121,6 +157,14 @@ class Gws::DailyReport::Report
     rescue
       nil
     end
+  end
+
+  def set_daily_report_group
+    form = @cur_form || self.form
+    return unless form
+    return unless form.daily_report_group
+
+    self.daily_report_group_id = form.daily_report_group_id
   end
 
   def rewrite_file_ref

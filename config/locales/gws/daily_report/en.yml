@@ -6,6 +6,7 @@ en:
     department: Department
     edit_daily_report: Edit daily report
     individual: Individual
+    shared: Shared
     wday: Day of the week
     columns:
       index: Manage input settings
@@ -13,14 +14,6 @@ en:
       daily_report_full_name: '%{date}’s daily report for %{user_name}'
     forms:
       more: See more
-    options:
-      file_state:
-        all: All
-        approve: Person asked for approval
-        request: Person who applied for approval
-      agent_state:
-        disabled: Proxy application not allowed
-        enabled: Proxy application allowed
     links:
       publish: Publish
       depublish: Make private
@@ -44,21 +37,7 @@ en:
     edit_gws_daily_report_reports: Edit daily report
     manage_private_gws_daily_report_reports: Manage daily report (own group)
     manage_all_gws_daily_report_reports: Manage daily report (all)
-
-    read_other_gws_daily_report_reports: View applications (all)
-    read_private_gws_daily_report_reports: View applications (own)
-    edit_other_gws_daily_report_reports: Edit applications (all)
-    edit_private_gws_daily_report_reports: Edit applications (own)
-    delete_other_gws_daily_report_reports: Delete applications (all)
-    delete_private_gws_daily_report_reports: Delete applications (own)
-    approve_other_gws_daily_report_reports: Approve applications (all)
-    approve_private_gws_daily_report_reports: Approve applications (own)
-    reroute_other_gws_daily_report_reports: Reroute applications (all)
-    reroute_private_gws_daily_report_reports: Reroute applications (own)
-    trash_other_gws_daily_report_reports: Manage application trash (all)
-    trash_private_gws_daily_report_reports: Manage application trash (own)
-    agent_all_gws_daily_report_reports: Proxy applications (all)
-    agent_private_gws_daily_report_reports: Proxy applications (own group)
+    access_gws_daily_report_reports: Show limited access daily report
 
     read_other_gws_daily_report_forms: View application forms (all)
     read_private_gws_daily_report_forms: View application forms (own)
@@ -82,8 +61,8 @@ en:
         name: Title
         order: Order
         state: Publishing status
-        agent_state: Proxy application
         memo: Remarks
+        daily_report_group_id: Department
       gws/addon/daily_report/column_setting:
         columns: Input settings
       gws/daily_report/column:
@@ -110,8 +89,6 @@ en:
         - "The lower the number, the higher the position."
       state:
         - Select whether to publish the application form.
-      agent_state:
-        - Select whether to allow proxy applications.
       memo:
         - Enter remarks.
         - "Remarks are not shown elsewhere, so enter notes for administrative purposes."

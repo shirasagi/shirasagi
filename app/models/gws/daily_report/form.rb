@@ -11,18 +11,19 @@ class Gws::DailyReport::Form
   readable_setting_include_custom_groups
   permission_include_custom_groups
 
+  belongs_to :daily_report_group, class_name: 'Gws::Group'
+
   field :name, type: String
   field :order, type: Integer
   field :state, type: String, default: 'closed'
-  field :agent_state, type: String, default: 'disabled'
   field :memo, type: String
 
-  permit_params :name, :order, :agent_state, :memo
+  permit_params :daily_report_group_id, :name, :order, :memo
 
+  validates :daily_report_group_id, presence: true, uniqueness: { scope: :site_id }
   validates :name, presence: true, length: { maximum: 80 }
   validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
   validates :state, presence: true, inclusion: { in: %w(public closed), allow_blank: true }
-  validates :agent_state, presence: true, inclusion: { in: %w(disabled enabled), allow_blank: true }
 
   scope :and_public, ->{
     where(state: 'public')
@@ -54,15 +55,5 @@ class Gws::DailyReport::Form
 
   def public?
     state == 'public'
-  end
-
-  def agent_state_options
-    %w(disabled enabled).map do |v|
-      [ I18n.t("gws/daily_report.options.agent_state.#{v}"), v ]
-    end
-  end
-
-  def agent_enabled?
-    agent_state == 'enabled'
   end
 end
