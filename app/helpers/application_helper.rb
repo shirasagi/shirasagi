@@ -5,6 +5,7 @@ module ApplicationHelper
   include SS::ColorPickerHelper
   include SS::DateTimeHelper
   include SS::ErrorMessagesFor
+  include SS::StimulusHelper
   include Workflow::ViewHelper
 
   def tryb(&block)

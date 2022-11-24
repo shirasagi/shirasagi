@@ -3071,3 +3071,4 @@ ja:
       cms/line/test_deliver_job: LINEテスト配信
       cms/line/deliver_reserved_job: LINE予約配信
       cms/line/apply_richmenu_job: LINEリッチメニュー登録
+      cms/group_import_job: グループインポート

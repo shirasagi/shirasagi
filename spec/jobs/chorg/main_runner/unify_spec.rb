@@ -14,7 +14,7 @@ describe Chorg::MainRunner, dbscope: :example do
       let(:user2) { create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group2.id]) }
       let(:revision) { create(:revision, site_id: site.id) }
       let(:changeset) { create(:unify_changeset, revision_id: revision.id, sources: [group1, group2]) }
-      let(:page) { create(:revisoin_page, cur_site: site, group: group1) }
+      let(:page) { create(:revision_page, cur_site: site, group: group1) }
 
       it do
         # ensure create models
@@ -95,15 +95,15 @@ describe Chorg::MainRunner, dbscope: :example do
     end
 
     context "unify to existing group" do
-      let(:group1) { create(:revision_new_group, contact_email: "foobar02@example.jp") }
-      let(:group2) { create(:revision_new_group, contact_email: "foobar@example.jp") }
+      let(:group1) { create(:revision_new_group, contact_groups: [{ contact_email: "foobar02@example.jp", main_state: "main" }]) }
+      let(:group2) { create(:revision_new_group, contact_groups: [{ contact_email: "foobar@example.jp", main_state: "main" }]) }
       let(:user1) { create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group1.id]) }
       let(:user2) { create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group2.id]) }
       let(:revision) { create(:revision, site_id: site.id) }
       let(:changeset) do
         create(:unify_changeset, revision_id: revision.id, sources: [group1, group2], destination: group1)
       end
-      let(:page) { create(:revisoin_page, cur_site: site, group: group1) }
+      let(:page) { create(:revision_page, cur_site: site, group: group1) }
 
       it do
         # ensure create models

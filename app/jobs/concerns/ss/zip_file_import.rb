@@ -3,8 +3,9 @@ module SS::ZipFileImport
 
   def perform(temp_file_id)
     @cur_file = SS::File.find(temp_file_id)
-
-    import_file
+    Rails.logger.tagged(@cur_file.filename) do
+      import_file
+    end
   ensure
     if @cur_file && @cur_file.model == 'ss/temp_file'
       @cur_file.destroy

@@ -12,7 +12,7 @@ describe Chorg::MainRunner, dbscope: :example do
     let(:changeset) { create(:move_changeset, revision_id: revision.id, source: group) }
 
     context "with Article::Page" do
-      let(:page) { create(:revisoin_page, cur_site: site, group: group) }
+      let(:page) { create(:revision_page, cur_site: site, group: group) }
 
       it do
         # ensure create models
@@ -72,7 +72,7 @@ describe Chorg::MainRunner, dbscope: :example do
       let(:changeset) { create(:move_changeset_only_name, revision_id: revision.id, source: group) }
 
       context "with Article::Page" do
-        let(:page) { create(:revisoin_page, cur_site: site, group: group) }
+        let(:page) { create(:revision_page, cur_site: site, group: group) }
 
         it do
           # ensure create models
@@ -130,7 +130,7 @@ describe Chorg::MainRunner, dbscope: :example do
                group_ids: [group.id], cms_role_ids: [cms_role.id])
       end
       let(:page) do
-        page = build(:revisoin_page, cur_site: site, group: group, workflow_user_id: user1.id,
+        page = build(:revision_page, cur_site: site, group: group, workflow_user_id: user1.id,
                workflow_state: "request",
                workflow_comment: "",
                workflow_approvers: [{level: 1, user_id: user2.id, state: "request", comment: ""}],
@@ -190,7 +190,7 @@ describe Chorg::MainRunner, dbscope: :example do
     context 'with overwrite some fields' do
       context "with Article::Page" do
         let(:group) { create(:cms_group, name: "組織変更/グループ#{unique_id}") }
-        let(:page) { create(:revisoin_page, cur_site: site, group: group, filename: unique_id) }
+        let(:page) { create(:revision_page, cur_site: site, group: group, filename: unique_id) }
 
         it do
           # ensure create models

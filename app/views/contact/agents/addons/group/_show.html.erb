@@ -1,14 +1,28 @@
-<dl class="see">
-  <dt><%= @model.t :contact_group_name %></dt>
-  <dd class="contact-group-name"><%= @item.contact_group_name %></dd>
-  <dt><%= @model.t :contact_tel %></dt>
-  <dd class="contact-tel"><%= @item.contact_tel %></dd>
-  <dt><%= @model.t :contact_fax %></dt>
-  <dd class="contact-fax"><%= @item.contact_fax %></dd>
-  <dt><%= @model.t :contact_email %></dt>
-  <dd class="contact-email"><%= @item.contact_email %></dd>
-  <dt><%= @model.t :contact_link_url %></dt>
-  <dd class="contact-link-url"><%= @item.contact_link_url %></dd>
-  <dt><%= @model.t :contact_link_name %></dt>
-  <dd class="contact-link-name"><%= @item.contact_link_name %></dd>
-</dl>
+<% return if @item.contact_groups.blank? %>
+
+<table class="index">
+  <thead class="list-head">
+  <tr>
+    <th class="contact-main-state"><%= SS::Contact.t :main_state %></th>
+    <th class="contact-group-name"><%= SS::Contact.t :contact_group_name %></th>
+    <th class="contact-tel"><%= SS::Contact.t :contact_tel %></th>
+    <th class="contact-fax"><%= SS::Contact.t :contact_fax %></th>
+    <th class="contact-email"><%= SS::Contact.t :contact_email %></th>
+    <th class="contact-link-url"><%= SS::Contact.t :contact_link_url %></th>
+    <th class="contact-link-name"><%= SS::Contact.t :contact_link_name %></th>
+  </tr>
+  </thead>
+  <tbody class="items">
+  <% @item.contact_groups.each do |contact_group| %>
+    <tr class="list-item" data-id="<%= contact_group.id %>">
+      <td class="contact-main-state"><%= contact_group.main_state == "main" ? tag.span("radio_button_checked", class: "material-icons md-14", title: t("contact.options.main_state.main")) : nil %></td>
+      <td class="contact-group-name"><%= contact_group.contact_group_name %></td>
+      <td class="contact-tel"><%= contact_group.contact_tel %></td>
+      <td class="contact-fax"><%= contact_group.contact_fax %></td>
+      <td class="contact-email"><%= contact_group.contact_email %></td>
+      <td class="contact-link-url"><%= contact_group.contact_link_url %></td>
+      <td class="contact-link-name"><%= contact_group.contact_link_name %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

@@ -22,6 +22,9 @@ ja:
       link_url: リンクURL
       link_name: リンク名
       inquiry_form: お問い合わせフォーム
+    options:
+      main_state:
+        main: 主
 
   modules:
     contact: 連絡先
@@ -30,6 +33,8 @@ ja:
       contact/group: 連絡先
 
   mongoid:
+    models:
+      ss/contact: 連絡先
     attributes:
       cms/model/page: &cmspage
         contact_state: 表示設定
@@ -43,9 +48,22 @@ ja:
         contact_link_name: リンク名
         contact_group_name: 担当部署
       contact/addon/group:
-        <<: *cmspage
+        contact_group_name: 担当部署
+        contact_tel: 電話番号
+        contact_fax: ファックス番号
+        contact_email: メールアドレス
+        contact_link_url: リンクURL
+        contact_link_name: リンク名
       contact/addon/page:
         <<: *cmspage
+      ss/contact:
+        contact_group_name: 担当部署
+        contact_tel: 電話番号
+        contact_fax: ファックス番号
+        contact_email: メールアドレス
+        contact_link_url: リンクURL
+        contact_link_name: リンク名
+        main_state: 主
 
   tooltip:
     contact/addon/page:
@@ -65,7 +83,7 @@ ja:
         - 連絡先に表示する部署のリンクURLを記入します。
       contact_link_name:
         - 連絡先に表示する部署のリンク名を記入します。
-    contact/addon/group:
+    ss/contact:
       contact_group_name:
         - 連絡先に表示する担当部署を記入します。
       contact_tel:

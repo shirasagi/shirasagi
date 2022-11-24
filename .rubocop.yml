@@ -109,6 +109,9 @@ Style/EmptyElse:
     - nil
     - both
 
+Style/IfInsideElse:
+  Enabled: false
+
 # Cop supports --auto-correct.
 # Configuration parameters: PreferredDelimiters.
 Style/PercentLiteralDelimiters:
