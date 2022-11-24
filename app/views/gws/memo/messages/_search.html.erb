@@ -11,12 +11,6 @@
 </div>
 <% end %>
 
-<%= jquery do %>
-$('[name="s[priorities][]"]').on("click", function () {
-  $('[name="s[priorities][]"][value!="' + $(this).val() + '"]').prop('checked', false);
-});
-<% end %>
-
 <div class="gws-memo-search">
   <%= form_for :s, url: '', html: { method: :get } do |f| %>
     <dl class="see">
@@ -48,7 +42,7 @@ $('[name="s[priorities][]"]').on("click", function () {
       <dd>
         <% @model.new.priority_options.each do |k, v| %>
           <label class="flag">
-            <%= f.check_box_tag "s[priorities][]", v, params.dig(:s, :priorities).to_a.include?(v) %>
+            <%= f.radio_button_tag "s[priorities][]", v, params.dig(:s, :priorities).to_a.include?(v), id: nil %>
             <%= k %>
           </label>
         <% end %>
