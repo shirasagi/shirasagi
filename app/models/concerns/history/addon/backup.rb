@@ -33,7 +33,8 @@ module History::Addon
 
       # add backup
       backup = History::Backup.new
-      backup.user_id   = @cur_user.id if @cur_user
+      backup.user      = @cur_user
+      backup.member    = @cur_member
       backup.ref_coll  = collection_name
       backup.ref_class = self.class.to_s
       backup.action = history_backup_action if history_backup_action.present?
