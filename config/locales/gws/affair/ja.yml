@@ -12,6 +12,7 @@ ja:
     group_setting: グループ設定
     leave_setting: 休暇設定
     download_day_count: 日数出力
+    breaktime: 休憩
     links:
       set_results: 結果を入力する
       edit_results: 結果を編集する
@@ -26,6 +27,7 @@ ja:
       back_to_form: 入力画面に戻る
       download_member: ユーザー設定をダウンロード
       download_group: グループ設定をダウンロード
+      set_by_week_days: 曜日毎に設定する
     options:
       status:
         approve: 承認

@@ -69,13 +69,13 @@ module Gws::Affair::DutyHourSetting
 
   def affair_hour_options
     (0..23).map do |h|
-      [ "#{h}#{I18n.t('datetime.prompts.hour')}", h.to_s ]
+      [ I18n.t('gws/attendance.hour', count: h), h.to_s ]
     end
   end
 
   def affair_minute_options
-    0.step(59, 5).map do |h|
-      [ "#{h}#{I18n.t('datetime.prompts.minute')}", h.to_s ]
+    0.step(59, 5).map do |m|
+      [ I18n.t('gws/attendance.minute', count: m), m.to_s ]
     end
   end
 
@@ -138,7 +138,7 @@ module Gws::Affair::DutyHourSetting
 
   def attendance_time_changed_options
     (0..23).map do |h|
-      [ "#{h}#{I18n.t('datetime.prompts.hour')}", h.to_s ]
+      [ I18n.t('gws/attendance.hour', count: h), h.to_s ]
     end
   end
 

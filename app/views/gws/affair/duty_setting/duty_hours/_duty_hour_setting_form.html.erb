@@ -20,19 +20,20 @@ $('.toggle-affair-time-wday').on("change", toggleAffairTimeWday);
   <%= t("ss.wave_dash") %>
   <%= f.select :affair_end_at_hour, @item.affair_end_at_hour_options %>
   <%= f.select :affair_end_at_minute, @item.affair_end_at_minute_options %>
-  <%= "（休憩" %>
+  <%= "(" %>
+  <%= t("gws/affair.breaktime") %>
   <%= f.select :affair_break_start_at_hour, @item.affair_break_start_at_hour_options %>
   <%= f.select :affair_break_start_at_minute, @item.affair_break_start_at_minute_options %>
   <%= t("ss.wave_dash") %>
   <%= f.select :affair_break_end_at_hour, @item.affair_break_end_at_hour_options %>
   <%= f.select :affair_break_end_at_minute, @item.affair_break_end_at_minute_options %>
-  <%= "）" %>
+  <%= ")" %>
 </dd>
 <dd>
   <%= f.hidden_field "affair_time_wday", value: "disabled" %>
   <label>
     <%= check_box_tag "#{f.object_name}[affair_time_wday]", "enabled", (@item.affair_time_wday == "enabled"), class: "toggle-affair-time-wday" %>
-    <%= "曜日毎に設定する" %>
+    <%= t("gws/affair.links.set_by_week_days") %>
   </label>
 </dd>
 
@@ -45,13 +46,14 @@ $('.toggle-affair-time-wday').on("change", toggleAffairTimeWday);
     <%= t("ss.wave_dash") %>
     <%= f.select "affair_end_at_hour_#{wday}", @item.affair_end_at_hour_options %>
     <%= f.select "affair_end_at_minute_#{wday}", @item.affair_end_at_minute_options %>
-    <%= "（休憩" %>
+    <%= "(" %>
+    <%= t("gws/affair.breaktime") %>
     <%= f.select "affair_break_start_at_hour_#{wday}", @item.affair_break_start_at_hour_options %>
     <%= f.select "affair_break_start_at_minute_#{wday}", @item.affair_break_start_at_minute_options %>
     <%= t("ss.wave_dash") %>
     <%= f.select "affair_break_end_at_hour_#{wday}", @item.affair_break_end_at_hour_options %>
     <%= f.select "affair_break_end_at_minute_#{wday}", @item.affair_break_end_at_minute_options %>
-    <%= "）" %>
+    <%= ")" %>
   </dd>
 <% end %>
 

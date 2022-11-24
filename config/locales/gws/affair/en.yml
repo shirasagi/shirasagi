@@ -12,6 +12,7 @@ en:
     group_setting: Group setting
     leave_setting: Leave setting
     download_day_count: Days export
+    breaktime: Break time
     links:
       set_results: Input results
       edit_results: Edit resutls
@@ -26,6 +27,7 @@ en:
       back_to_form: Back to form
       download_member: Download user setting
       download_group: Download group setting
+      set_by_week_days: Setting by week days
     options:
       status:
         approve: Approve
@@ -358,7 +360,7 @@ en:
         comment: Remand comment
         approver_comment: Approver comment
       gws/affair/duty_hour_setting:
-        attendance_time_changed_minute: Changed minute
+        attendance_time_changed_minute: Affair changed hour
         affair_time: Affair time
         affair_on_duty: Affair duty
         affair_overtime: Affair overtime
@@ -570,7 +572,7 @@ en:
         - Input holiday compensatory file.
     gws/affair/duty_hour_setting:
       attendance_time_changed_minute:
-        - Input daily time.
+        - Input affair changed hour.
       affair_on_duty:
         - Input dury hours.
       affair_overtime:
