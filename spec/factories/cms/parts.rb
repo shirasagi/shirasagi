@@ -62,4 +62,8 @@ FactoryBot.define do
   factory :cms_part_print, class: Cms::Part::Print, traits: [:cms_part] do
     route { "cms/print" }
   end
+
+  factory :cms_part_clipboard_copy, class: Cms::Part::ClipboardCopy, traits: [:cms_part] do
+    route { "cms/clipboard_copy" }
+  end
 end
