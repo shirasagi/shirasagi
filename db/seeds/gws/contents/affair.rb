@@ -39,7 +39,7 @@ end
 def create_overtime_file(site, cond = {})
   cond = { site_id: @site.id }.merge(cond)
   item = Gws::Affair::OvertimeFile.find_or_initialize_by(cond)
-  item.save!
+  item.save
   puts item.name
   item
 end
@@ -53,7 +53,7 @@ def approve_overtime_file(item, approver)
   item.state = "approve"
   item.workflow_state = "approve"
   item.approved = Time.zone.now
-  item.update!
+  item.update
   item
 end
 
@@ -67,7 +67,7 @@ def create_overtime_day_result(item, start_at, end_at)
   end_at_minute = end_at.min
 
   item.in_results = {
-    "1"=> {
+    item.id => {
       "start_at_date" => start_at_date,
       "start_at_hour" => start_at_hour,
       "start_at_minute" => start_at_minute,
@@ -77,7 +77,10 @@ def create_overtime_day_result(item, start_at, end_at)
     }
   }
   item.save_results
+
+  item.reload
   item.close_result
+
   item
 end
 
@@ -180,3 +183,5 @@ overtime_file3 = create_overtime_file(@site,
   group_ids: [user2.groups.first.id])
 overtime_file3 = approve_overtime_file(overtime_file3, sys)
 overtime_file3 = create_overtime_day_result(overtime_file3, start_at, end_at)
+
+#
