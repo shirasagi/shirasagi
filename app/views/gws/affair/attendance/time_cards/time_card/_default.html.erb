@@ -64,23 +64,23 @@
       <% offset = date.day >= 16 ? 'top' : '' %>
       <% if date.day == 1 %>
         <tr class="header">
-          <th colspan="<%= 4 + @break_times.size * 2 %>"><%= "勤務（#{@duty_calendar.name}）" %></th>
-          <th class="overtime time" colspan="3"><%= "時間外" %></th>
-          <th class="leave" rowspan="2"><%= "休暇" %></th>
+          <th colspan="<%= 4 + @break_times.size * 2 %>"><%= "#{t("gws/affair.timecard.in_work.title")} (#{@duty_calendar.name})" %></th>
+          <th class="overtime time" colspan="3"><%= t("gws/affair.timecard.in_over.title") %></th>
+          <th class="leave" rowspan="2"><%= t("gws/affair.timecard.in_leave.title") %></th>
           <th class="memo" rowspan="2"><%= Gws::Attendance::Record.t(:memo) %></th>
         </tr>
         <tr class="header">
           <th class="date"><%= Gws::Attendance::Record.t(:date) %></th>
           <th class="time enter"><%= @cur_site.attendance_enter_label.presence || Gws::Attendance::Record.t(:enter) %></th>
           <th class="time leave"><%= @cur_site.attendance_leave_label.presence || Gws::Attendance::Record.t(:leave) %></th>
-          <th class="working-time"><%= "執務時間" %></th>
+          <th class="working-time"><%= t("gws/affair.timecard.in_work.worktime") %></th>
           <% @break_times.each do |i| %>
             <th class="time <%= "break_enter#{i + 1}" %>"><%= @cur_site["attendance_break_enter#{i + 1}_label"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
             <th class="time <%= "break_leave#{i + 1}" %>"><%= @cur_site["attendance_break_leave#{i + 1}_label"].presence || t('gws/attendance.formats.break_leave', count: i + 1) %></th>
           <% end %>
-          <th class="overtime time"><%= "執務時間 (時間外 | 差分)" %></th>
-          <th class="break-time"><%= "休憩等" %></th>
-          <th class="compensatory-time"><%= "振替" %></th>
+          <th class="overtime time"><%= t("gws/affair.timecard.in_over.difference") %></th>
+          <th class="break-time"><%= t("gws/affair.timecard.in_over.breaktime") %></th>
+          <th class="compensatory-time"><%= t("gws/affair.timecard.in_over.compensatory") %></th>
         <tr>
     　<% end %>
       <% if date.day == 16 %>
@@ -88,15 +88,15 @@
           <th class="date"><%= Gws::Attendance::Record.t(:date) %></th>
           <th class="time enter"><%= @cur_site.attendance_enter_label.presence || Gws::Attendance::Record.t(:enter) %></th>
           <th class="time leave"><%= @cur_site.attendance_leave_label.presence || Gws::Attendance::Record.t(:leave) %></th>
-          <th class="time leave"><%= "執務時間" %></th>
+          <th class="time leave"><%= t("gws/affair.timecard.in_work.worktime") %></th>
           <% @break_times.each do |i| %>
             <th class="time <%= "break_enter#{i + 1}" %>"><%= @cur_site["attendance_break_enter#{i + 1}_label"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
             <th class="time <%= "break_leave#{i + 1}" %>"><%= @cur_site["attendance_break_leave#{i + 1}_label"].presence || t('gws/attendance.formats.break_leave', count: i + 1) %></th>
           <% end %>
-          <th class="overtime time"><%= "執務時間 (時間外 | 差分)" %></th>
-          <th class="break-time"><%= "休憩等" %></th>
-          <th class="compensatory-time"><%= "振替" %></th>
-          <th class="leave"><%= "休暇" %></th>
+          <th class="overtime time"><%= t("gws/affair.timecard.in_over.difference") %></th>
+          <th class="break-time"><%= t("gws/affair.timecard.in_over.breaktime") %></th>
+          <th class="compensatory-time"><%= t("gws/affair.timecard.in_over.compensatory") %></th>
+          <th class="leave"><%= t("gws/affair.timecard.in_leave.title") %></th>
           <th class="memo"><%= Gws::Attendance::Record.t(:memo) %></th>
         </tr>
       <% end %>
@@ -142,16 +142,16 @@
           <%= format_minute(overtime_minute.to_i) %>
 
           <% if day_results.present? %>
-            <%= " (" %>
+            <%= "(" %>
             <% if editable_day_results.present? %>
               <% file = day_results.first.file %>
               <% if file.allowed?(:edit, @cur_user, site: @cur_site, permission_name: attendance_permission_name) %>
-                <%= link_to "#{format_minute(overtime_result_minute)} [命令]", edit_gws_affair_overtime_result_path(id: file.id, ref: request.fullpath), class: "ajax-box" %>
+                <%= link_to "#{format_minute(overtime_result_minute)} #{t("gws/affair.timecard.label.order")}", edit_gws_affair_overtime_result_path(id: file.id, ref: request.fullpath), class: "ajax-box" %>
               <% else %>
-                <%= "#{format_minute(overtime_result_minute)} [命令]" %>
+                <%= "#{format_minute(overtime_result_minute)} #{t("gws/affair.timecard.label.order")}" %>
               <% end %>
             <% else %>
-              <%= "#{format_minute(overtime_result_minute)} [確認]" %>
+              <%= "#{format_minute(overtime_result_minute)} #{t("gws/affair.timecard.label.confirmed")}" %>
             <% end %>
 
             <% overtime_diff = overtime_result_minute - overtime_minute %>
@@ -161,12 +161,12 @@
             <% end %>
             <%= ")" %>
           <% elsif overtime_files.present? %>
-            <%= " (" %>
+            <%= "(" %>
             <% file = overtime_files.first %>
             <% if file.allowed?(:edit, @cur_user, site: @cur_site, permission_name: attendance_permission_name) %>
-              <%= link_to "結果を入力 [命令]", edit_gws_affair_overtime_result_path(id: file.id, ref: request.fullpath), class: "ajax-box" %>
+              <%= link_to "#{t("gws/affair.timecard.label.set_results")} #{t("gws/affair.timecard.label.order")}", edit_gws_affair_overtime_result_path(id: file.id, ref: request.fullpath), class: "ajax-box" %>
             <% else %>
-              <%= "結果を入力 [命令]" %>
+              <%= "#{t("gws/affair.timecard.label.set_results")} #{t("gws/affair.timecard.label.order")}" %>
             <% end %>
             <%= ")" %>
           <% end %>
@@ -179,10 +179,10 @@
           if day_results.present?
             day_results.each do |result|
               if result.week_in_compensatory_minute > 0
-                compensatory_minute_labels << "週内#{format_minute(result.week_in_compensatory_minute)}"
+                compensatory_minute_labels << "#{t("gws/affair.in_week")}#{format_minute(result.week_in_compensatory_minute)}"
               end
               if result.week_out_compensatory_minute > 0
-                compensatory_minute_labels << "週外#{format_minute(result.week_out_compensatory_minute)}"
+                compensatory_minute_labels << "#{t("gws/affair.out_of_week")}#{format_minute(result.week_out_compensatory_minute)}"
               end
             end
           end

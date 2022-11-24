@@ -13,6 +13,23 @@ ja:
     leave_setting: 休暇設定
     download_day_count: 日数出力
     breaktime: 休憩
+    in_week: 週内
+    out_of_week: 週外
+    timecard:
+      in_work:
+        title: 勤務
+        worktime: 執務時間
+      in_over:
+        title: 時間外
+        difference: "執務時間 (時間外 | 差分)"
+        breaktime: 休憩等
+        compensatory: 振替
+      in_leave:
+        title: 休暇
+      label:
+        order: "[命令]"
+        confirmed: "[確認]"
+        set_results: 結果を入力
     links:
       set_results: 結果を入力する
       edit_results: 結果を編集する

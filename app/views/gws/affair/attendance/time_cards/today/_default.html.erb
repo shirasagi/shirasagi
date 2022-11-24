@@ -26,7 +26,7 @@
 
 <div class="attendance-box today-box">
   <time class="attendance-date" datetime="<%= I18n.l(@today, format: :iso) %>"></time>
-  <div class="attendance-box-title"><%= I18n.l(@today.to_date, format: :full) %></div>
+  <div class="attendance-box-title"><%= l(@today.to_date, format: :full) %></div>
 
   <div class="attendance-box-main">
     <div class="today-wrap">

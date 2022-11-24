@@ -36,7 +36,7 @@
 <div class="attendance-box yesterday-box">
   <time class="attendance-date" datetime="<%= I18n.l(@yesterday, format: :iso) %>"></time>
   <div class="attendance-box-title">
-    <%= "前日：#{I18n.l(@yesterday.to_date, format: '%1m月%1d日 (%a)')}" %>
+    <%= "#{t("gws/attendance.prev_day")}:#{l(@yesterday.to_date, format: :full)}" %>
     <%= tt(:overnight, scope: 'gws/attendance.tooltips') %>
   </div>
 

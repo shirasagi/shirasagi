@@ -13,6 +13,23 @@ en:
     leave_setting: Leave setting
     download_day_count: Days export
     breaktime: Break time
+    in_week: In week
+    out_of_week: Out of week
+    timecard:
+      in_work:
+        title: work
+        worktime: worktime
+      in_over:
+        title: over
+        difference: "worktime (overtime | difference)"
+        breaktime: break time etc
+        compensatory: compensatory leave
+      in_leave:
+        title: leave
+      label:
+        order: "[order]"
+        confirmed: "[confirmed]"
+        set_results: Input results
     links:
       set_results: Input results
       edit_results: Edit resutls
