@@ -1,7 +1,15 @@
 <%
   @s = OpenStruct.new params[:s]
-  style = @s.to_h.values.flatten.select(&:present?).present? ? '' : 'style="display:none;"'
 %>
+
+<% if label = searched_label(@s.to_h) %>
+<div class="gws-memo-search-label">
+  <%= label %>
+  <div class="gws-memo-search-label-reset">
+    <%= link_to t('ss.buttons.reset'), { action: :index }, { class: 'btn reset' } %>
+  </div>
+</div>
+<% end %>
 
 <%= jquery do %>
 $('[name="s[priorities][]"]').on("click", function () {
@@ -9,7 +17,7 @@ $('[name="s[priorities][]"]').on("click", function () {
 });
 <% end %>
 
-<div class="gws-memo-search" <%== style %>>
+<div class="gws-memo-search">
   <%= form_for :s, url: '', html: { method: :get } do |f| %>
     <dl class="see">
       <dt><%= @model.t :from_member_name %></dt>

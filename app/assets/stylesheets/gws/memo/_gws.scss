@@ -214,6 +214,7 @@ table.index.gws-memo-folder {
 }
 
 .gws-memo-search {
+  display: none;
   margin: 0 10px;
   padding: 10px 20px;
   border-bottom: 1px solid #eee;
@@ -228,6 +229,15 @@ table.index.gws-memo-folder {
   label.flag {
     width: auto;
     padding: 0 15px;
+  }
+}
+
+.gws-memo-search-label {
+  padding: 10px 20px;
+  border-bottom: 1px solid #eee;
+  .gws-memo-search-label-reset {
+    width: 100%;
+    text-align: right;
   }
 }
 
