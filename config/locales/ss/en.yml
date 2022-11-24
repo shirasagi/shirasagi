@@ -56,6 +56,10 @@ en:
     upload_status: Upload Status
     under_maintenance_mode: Currently under maintenance.
     pagination: Pagination
+    hours: hours
+    remark: Remark
+    before: Before
+    after: After
 
     views:
       login/login:
@@ -253,6 +257,7 @@ en:
       target_to_delete: Check what to delete
       target_to_public: Check what to make public
       target_to_closed: Check what to make closed
+      approve: Are you sure you want to approve it?
     notice:
       saved: Saved.
       not_saved_successfully: Not saved successfully.

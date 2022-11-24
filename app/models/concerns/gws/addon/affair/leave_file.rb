@@ -44,20 +44,15 @@ module Gws::Addon::Affair::LeaveFile
   end
 
   def start_at_hour_options
-    (0..23).map { |h| [ "#{h}#{I18n.t('datetime.prompts.hour')}", h.to_s ] }
+    (0..23).map { |h| [ I18n.t('gws/attendance.hour', count: h), h.to_s ] }
   end
 
   def start_at_minute_options
-    (0..59).select { |m| m % 5 == 0 }.map { |m| [ "#{m}#{I18n.t('datetime.prompts.minute')}", m.to_s ] }
+    (0..59).select { |m| m % 5 == 0 }.map { |m| [ I18n.t("gws/attendance", m), m.to_s ] }
   end
 
-  def end_at_hour_options
-    (0..23).map { |h| [ "#{h}#{I18n.t('datetime.prompts.hour')}", h.to_s ] }
-  end
-
-  def end_at_minute_options
-    (0..59).select { |m| m % 5 == 0 }.map { |m| [ "#{m}#{I18n.t('datetime.prompts.minute')}", m.to_s ] }
-  end
+  alias end_at_hour_options start_at_hour_options
+  alias end_at_minute_options start_at_minute_options
 
   def leave_type_options
     I18n.t("gws/affair.options.leave_type").map { |k, v| [v, k] }

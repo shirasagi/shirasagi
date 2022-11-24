@@ -6,10 +6,7 @@
   <dd><%= @item.label :notice_type %></dd>
 
   <dt><%= @item.t :threshold_hour %></dt>
-  <dd>
-    <%= @item.threshold_hour %>
-    <%= t("ss.time") %>
-  </dd>
+  <dd><%= @item.threshold_hour %><%= t("ss.hours") %></dd>
 
   <dt><%= @item.t :body %></dt>
   <dd><%= @item.body %></dd>

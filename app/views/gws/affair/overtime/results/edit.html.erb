@@ -39,8 +39,8 @@
 
   <%
     date_options = [item.date, item.date.advance(days: 1)].map { |date| [date.strftime("%Y/%m/%d"), date.strftime("%Y/%m/%d")] }
-    hour_options = (0..23).map { |h| [ "#{h}#{I18n.t('datetime.prompts.hour')}", h.to_s ] }
-    minute_options = (0..59).select { |m| m % 5 == 0 }.map { |m| [ "#{m}#{I18n.t('datetime.prompts.minute')}", m.to_s ] }
+    hour_options = (0..23).map { |h| [t("gws/attendance.hour", count: h), h.to_s] }
+    minute_options = (0..59).select { |m| m % 5 == 0 }.map { |m| [t("gws/attendance.hour", count: m), m.to_s] }
 
     if item.result
       result = item.result
@@ -96,7 +96,7 @@
     <tr class="item-head">
       <th class="break-time" colspan="2">
         <%= Gws::Affair::OvertimeResult.t("break_time_minute") %>
-        <%= "（開始〜終了）" %>
+        <%= "(#{Gws::Affair::OvertimeResult.t("start_at")}#{t("ss.wave_dash")}#{Gws::Affair::OvertimeResult.t("end_at")})" %>
       </th>
     </tr>
     <tr class="item">

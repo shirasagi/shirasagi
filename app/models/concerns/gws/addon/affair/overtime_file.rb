@@ -36,22 +36,15 @@ module Gws::Addon::Affair::OvertimeFile
   end
 
   def start_at_hour_options
-    (0..23).map { |h| [ "#{h}#{I18n.t('datetime.prompts.hour')}", h.to_s ] }
+    (0..23).map { |h| [ I18n.t("gws/attendance.hour", count: h), h.to_s ] }
   end
 
   def start_at_minute_options
-    # (0..59).select { |m| m % 5 == 0 }.map { |m| [ "#{m}#{I18n.t('datetime.prompts.minute')}", m.to_s ] }
-    0.step(59, 5).map { |m| [ "#{m}#{I18n.t('datetime.prompts.minute')}", m.to_s ] }
+    0.step(59, 5).map { |m| [ I18n.t("gws/attendance.minute", count: m), m.to_s ] }
   end
 
-  def end_at_hour_options
-    (0..23).map { |h| [ "#{h}#{I18n.t('datetime.prompts.hour')}", h.to_s ] }
-  end
-
-  def end_at_minute_options
-    # (0..59).select { |m| m % 5 == 0 }.map { |m| [ "#{m}#{I18n.t('datetime.prompts.minute')}", m.to_s ] }
-    0.step(59, 5).map { |m| [ "#{m}#{I18n.t('datetime.prompts.minute')}", m.to_s ] }
-  end
+  alias end_at_hour_options start_at_hour_options
+  alias end_at_minute_options start_at_minute_options
 
   def validate_date
     return if start_at_date.blank? || start_at_hour.blank? || start_at_minute.blank?
