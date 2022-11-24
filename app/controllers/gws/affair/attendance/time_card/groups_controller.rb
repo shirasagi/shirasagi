@@ -86,7 +86,7 @@ class Gws::Affair::Attendance::TimeCard::GroupsController < ApplicationControlle
 
     day_diff = (time.to_date - date.to_date).to_i
     if attendance_date > date.beginning_of_day
-      label = "翌"
+      label = I18n.t("gws/attendance.next_mark")
       day_diff -= 1
     end
     hour += day_diff * 24 if day_diff > 0

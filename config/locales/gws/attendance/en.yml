@@ -2,6 +2,9 @@ en:
   gws/attendance:
     prev_month: Last month
     next_month: Next month
+    prev_day: Last day
+    next_day: Next day
+    next_mark: Next
     enter_leave: Attendance
     break: Break
     no_time_cards: There is no timecard.

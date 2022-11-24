@@ -227,6 +227,7 @@ en:
     gws/affair/overtime_file/management/aggregate/search_groups: Search Groups
     gws/affair/overtime_file/management/aggregate/search_users: Search Users
     gws/affair/attendance/management/time_card: Management timecard
+    gws/affair/duty_setting: Duty setting
     gws/affair/duty_hour: Duty hour
     gws/affair/duty_calendar: Duty calendar
     gws/affair/holiday_calendar: Holiday calendar

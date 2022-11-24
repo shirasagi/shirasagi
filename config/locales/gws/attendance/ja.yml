@@ -4,6 +4,7 @@ ja:
     next_month: 翌月
     prev_day: 前日
     next_day: 翌日
+    next_mark: 翌
     enter_leave: 出退勤
     break: 休憩
     no_time_cards: タイムカードはありません。

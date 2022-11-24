@@ -47,11 +47,11 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       click_on I18n.t('ss.buttons.edit')
     end
     wait_for_cbox do
-      expect(page).to have_css('[name="cell[in_hour]"] [selected]', text: "#{before_hour}時")
-      expect(page).to have_css('[name="cell[in_minute]"] [selected]', text: "#{before_min}分")
+      expect(page).to have_css('[name="cell[in_hour]"] [selected]', text: I18n.t("gws/attendance.hour", count: before_hour))
+      expect(page).to have_css('[name="cell[in_minute]"] [selected]', text: I18n.t("gws/attendance.minute", count: before_min))
 
-      select "#{after_hour}時", from: 'cell[in_hour]'
-      select "#{after_min}分", from: 'cell[in_minute]'
+      select I18n.t("gws/attendance.hour", count: after_hour), from: 'cell[in_hour]'
+      select I18n.t("gws/attendance.minute", count: after_min), from: 'cell[in_minute]'
       select reason_type, from: 'cell[in_reason_type]'
       click_on I18n.t('ss.buttons.save')
     end
@@ -59,8 +59,8 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
   end
 
   def edit_leave(before_day, before_hour, before_min, after_day, after_hour, after_min)
-    before_label = (before_day == "翌日") ? "翌#{before_hour}:#{format('%02d', before_min)}" : "#{before_hour}:#{format('%02d', before_min)}"
-    after_label = (after_day == "翌日") ? "翌#{after_hour}:#{format('%02d', after_min)}" : "#{after_hour}:#{format('%02d', after_min)}"
+    before_label = (before_day == I18n.t("gws/attendance.next_day")) ? "#{I18n.t("gws/attendance.next_mark")}#{before_hour}:#{format('%02d', before_min)}" : "#{before_hour}:#{format('%02d', before_min)}"
+    after_label = (after_day == I18n.t("gws/attendance.next_day")) ? "#{I18n.t("gws/attendance.next_mark")}#{after_hour}:#{format('%02d', after_min)}" : "#{after_hour}:#{format('%02d', after_min)}"
 
     expect(page).to have_css('.today-box .today .info .leave', text: before_label)
     within '.today-box .today .action .leave' do
@@ -68,12 +68,12 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
     end
     wait_for_cbox do
       expect(page).to have_css('[name="cell[in_day]"] [selected]', text: before_day)
-      expect(page).to have_css('[name="cell[in_hour]"] [selected]', text: "#{before_hour}時")
-      expect(page).to have_css('[name="cell[in_minute]"] [selected]', text: "#{before_min}分")
+      expect(page).to have_css('[name="cell[in_hour]"] [selected]', text: I18n.t("gws/attendance.hour", count: before_hour))
+      expect(page).to have_css('[name="cell[in_minute]"] [selected]', text: I18n.t("gws/attendance.minute", count: before_min))
 
       select after_day, from: 'cell[in_day]'
-      select "#{after_hour}時", from: 'cell[in_hour]'
-      select "#{after_min}分", from: 'cell[in_minute]'
+      select I18n.t("gws/attendance.hour", count: after_hour), from: 'cell[in_hour]'
+      select I18n.t("gws/attendance.minute", count: after_min), from: 'cell[in_minute]'
       select reason_type, from: 'cell[in_reason_type]'
       click_on I18n.t('ss.buttons.save')
     end
@@ -230,23 +230,23 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
           punch_leave(now)
 
-          edit_leave("当日", 8, 10, "当日", 8, 32)
+          edit_leave(I18n.t("gws/attendance.options.in_day.today"), 8, 10, I18n.t("gws/attendance.options.in_day.today"), 8, 32)
           expect(Gws::Attendance::TimeCard.count).to eq 1
           check_time_card_leave(day_0831, Time.zone.parse("2020/8/31 08:32"))
 
-          edit_leave("当日", 8, 32, "当日", 13, 35)
+          edit_leave(I18n.t("gws/attendance.options.in_day.today"), 8, 32, I18n.t("gws/attendance.options.in_day.today"), 13, 35)
           expect(Gws::Attendance::TimeCard.count).to eq 1
           check_time_card_leave(day_0831, Time.zone.parse("2020/8/31 13:35"))
 
-          edit_leave("当日", 13, 35, "当日", 26, 55)
+          edit_leave(I18n.t("gws/attendance.options.in_day.today"), 13, 35, I18n.t("gws/attendance.options.in_day.today"), 26, 55)
           expect(Gws::Attendance::TimeCard.count).to eq 1
           check_time_card_leave(day_0831, Time.zone.parse("2020/9/1 2:55"))
 
-          edit_leave("当日", 26, 55, "翌日", 6, 1)
+          edit_leave(I18n.t("gws/attendance.options.in_day.today"), 26, 55, I18n.t("gws/attendance.options.in_day.tomorrow"), 6, 1)
           expect(Gws::Attendance::TimeCard.count).to eq 1
           check_time_card_leave(day_0831, Time.zone.parse("2020/9/1 6:01"))
 
-          edit_leave("翌日", 6, 1, "当日", 8, 10)
+          edit_leave(I18n.t("gws/attendance.options.in_day.tomorrow"), 6, 1, I18n.t("gws/attendance.options.in_day.today"), 8, 10)
           expect(Gws::Attendance::TimeCard.count).to eq 1
           check_time_card_leave(day_0831, Time.zone.parse("2020/8/31 8:10"))
         end
@@ -269,23 +269,23 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
           punch_leave(now)
 
-          edit_leave("当日", 26, 55, "当日", 8, 32)
+          edit_leave(I18n.t("gws/attendance.options.in_day.today"), 26, 55, I18n.t("gws/attendance.options.in_day.today"), 8, 32)
           expect(Gws::Attendance::TimeCard.count).to eq 1
           check_time_card_leave(day_0831, Time.zone.parse("2020/8/31 08:32"))
 
-          edit_leave("当日", 8, 32, "当日", 13, 35)
+          edit_leave(I18n.t("gws/attendance.options.in_day.today"), 8, 32, I18n.t("gws/attendance.options.in_day.today"), 13, 35)
           expect(Gws::Attendance::TimeCard.count).to eq 1
           check_time_card_leave(day_0831, Time.zone.parse("2020/8/31 13:35"))
 
-          edit_leave("当日", 13, 35, "当日", 26, 55)
+          edit_leave(I18n.t("gws/attendance.options.in_day.today"), 13, 35, I18n.t("gws/attendance.options.in_day.today"), 26, 55)
           expect(Gws::Attendance::TimeCard.count).to eq 1
           check_time_card_leave(day_0831, Time.zone.parse("2020/9/1 2:55"))
 
-          edit_leave("当日", 26, 55, "翌日", 6, 1)
+          edit_leave(I18n.t("gws/attendance.options.in_day.today"), 26, 55, I18n.t("gws/attendance.options.in_day.tomorrow"), 6, 1)
           expect(Gws::Attendance::TimeCard.count).to eq 1
           check_time_card_leave(day_0831, Time.zone.parse("2020/9/1 6:01"))
 
-          edit_leave("翌日", 6, 1, "当日", 8, 10)
+          edit_leave(I18n.t("gws/attendance.options.in_day.tomorrow"), 6, 1, I18n.t("gws/attendance.options.in_day.today"), 8, 10)
           expect(Gws::Attendance::TimeCard.count).to eq 1
           check_time_card_leave(day_0831, Time.zone.parse("2020/8/31 8:10"))
         end
@@ -314,23 +314,23 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
           punch_leave(now)
 
-          edit_leave("当日", 4, 20, "当日", 8, 32)
+          edit_leave(I18n.t("gws/attendance.options.in_day.today"), 4, 20, I18n.t("gws/attendance.options.in_day.today"), 8, 32)
           expect(Gws::Attendance::TimeCard.count).to eq 2
           check_time_card_leave(day_0901, Time.zone.parse("2020/9/1 08:32"))
 
-          edit_leave("当日", 8, 32, "当日", 13, 35)
+          edit_leave(I18n.t("gws/attendance.options.in_day.today"), 8, 32, I18n.t("gws/attendance.options.in_day.today"), 13, 35)
           expect(Gws::Attendance::TimeCard.count).to eq 2
           check_time_card_leave(day_0901, Time.zone.parse("2020/9/1 13:35"))
 
-          edit_leave("当日", 13, 35, "当日", 26, 55)
+          edit_leave(I18n.t("gws/attendance.options.in_day.today"), 13, 35, I18n.t("gws/attendance.options.in_day.today"), 26, 55)
           expect(Gws::Attendance::TimeCard.count).to eq 2
           check_time_card_leave(day_0901, Time.zone.parse("2020/9/2 2:55"))
 
-          edit_leave("当日", 26, 55, "翌日", 6, 1)
+          edit_leave(I18n.t("gws/attendance.options.in_day.today"), 26, 55, I18n.t("gws/attendance.options.in_day.tomorrow"), 6, 1)
           expect(Gws::Attendance::TimeCard.count).to eq 2
           check_time_card_leave(day_0901, Time.zone.parse("2020/9/2 6:01"))
 
-          edit_leave("翌日", 6, 1, "当日", 8, 10)
+          edit_leave(I18n.t("gws/attendance.options.in_day.tomorrow"), 6, 1, I18n.t("gws/attendance.options.in_day.today"), 8, 10)
           expect(Gws::Attendance::TimeCard.count).to eq 2
           check_time_card_leave(day_0901, Time.zone.parse("2020/9/1 8:10"))
         end
