@@ -73,8 +73,8 @@ namespace :ss do
       # 時間外振替の通知
       ::Tasks::SS.invoke_task("gws:affair:notification:deliver")
 
-      # 庶務事務全体集計のグループ記録
-      ::Tasks::SS.invoke_task("gws:affair:overtime:aggregate")
+      # 集計グループの更新
+      ::Tasks::SS.invoke_task("gws:aggregation:group:update")
     end
   end
 end

@@ -8,7 +8,11 @@
         <th class="capital"><%= t("gws/affair.labels.overtime.capitals.capital") %></th>
         <% @months.each do |month| %>
           <th class="time">
-            <%= link_to action: :groups, fiscal_year: @fiscal_year, month: month, group: @group.id do %>
+            <% if @group %>
+              <%= link_to action: :groups, fiscal_year: @fiscal_year, month: month, group: @group.group_id do %>
+                <%= month %><%= t("datetime.prompts.month") %>
+              <% end %>
+            <% else %>
               <%= month %><%= t("datetime.prompts.month") %>
             <% end %>
           </th>

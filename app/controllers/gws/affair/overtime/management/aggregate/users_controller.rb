@@ -34,12 +34,12 @@ class Gws::Affair::Overtime::Management::Aggregate::UsersController < Applicatio
   end
 
   def set_items
-    @group = @result_groups.select { |group| group.group_id == @group_id }.first || @result_groups.first
-    @users = @group.users
+    @group = @result_groups.find_group(@group_id) || @result_groups.first
+    @users = @group ? @group.users : []
     @items, _ = @model.site(@cur_site).and([
       { "date_fiscal_year" => @fiscal_year },
       { "date_month" => @month },
-      { "target_user_id" => { "$in" => @group.user_ids } }
+      { "target_user_id" => { "$in" => @users.map(&:id) } }
     ]).user_aggregate
   end
 

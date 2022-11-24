@@ -658,3 +658,4 @@ ja:
       gws/user_title_import_job: 役職インポート
       gws/user_occupation_import_job: 職種インポート
       gws/cache_rebuild_job: キャッシュ更新
+      gws/aggregation/group_update_job: 集計グループ更新

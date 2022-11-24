@@ -188,7 +188,6 @@ Rails.application.routes.draw do
       resources :capitals, concerns: [:deletion, :export, :import_member, :import_group], as: :capitals
       resources :leave_settings, concerns: [:deletion, :export, :export_yearly, :import_member]
     end
-    get "/result_groups/not_registered" => "main#not_registered", as: :result_groups_not_registered
 
     namespace "apis" do
       namespace "overtime" do

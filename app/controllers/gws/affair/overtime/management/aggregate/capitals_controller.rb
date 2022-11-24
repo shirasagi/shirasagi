@@ -26,8 +26,9 @@ class Gws::Affair::Overtime::Management::Aggregate::CapitalsController < Applica
 
   def yearly
     set_capitals
+    set_result_groups
 
-    @group = @cur_site
+    @group = @result_groups.find_group(@cur_site.id)
     @months = (4..12).to_a + (1..3).to_a
 
     @title = I18n.t("gws/affair.labels.overtime.capitals.title", year: @fiscal_year)
@@ -38,11 +39,16 @@ class Gws::Affair::Overtime::Management::Aggregate::CapitalsController < Applica
     set_capitals
     set_result_groups
 
-    @group = @result_groups.select { |group| group.group_id == params[:group].to_i }.first
-    @parent = @group.parent
-    @users = @group.users
-
-    @children = @group.children.presence || [@group]
+    @group = @result_groups.find_group(params[:group].to_i)
+    if @group
+      @parent = @group.parent
+      @users = @group.users
+      @children = @group.children.presence || [@group]
+    else
+      @parent = nil
+      @users = []
+      @children = []
+    end
 
     @title = I18n.t("gws/affair.labels.overtime.capitals.title_groups", year: @fiscal_year, month: @month, group: @group.name)
     @items, _ = @model.site(@cur_site).where(date_fiscal_year: @fiscal_year, date_month: @month).capital_aggregate_by_group
@@ -52,9 +58,14 @@ class Gws::Affair::Overtime::Management::Aggregate::CapitalsController < Applica
     set_capitals
     set_result_groups
 
-    @group = @result_groups.select { |group| group.group_id == params[:group].to_i }.first
-    @parent = @group.parent
-    @users = @group.users
+    @group = @result_groups.find_group(params[:group].to_i)
+    if @group
+      @parent = @group.parent
+      @users = @group.users
+    else
+      @parent = nil
+      @users = []
+    end
 
     @title = I18n.t("gws/affair.labels.overtime.capitals.title_users", year: @fiscal_year, month: @month, group: @group.name)
     @items, _ = @model.site(@cur_site).where(date_fiscal_year: @fiscal_year, date_month: @month).capital_aggregate_by_group_users
