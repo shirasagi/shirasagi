@@ -38,7 +38,10 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
       Timecop.freeze(year1.start_date) do
         login_user user1
         visit new_path
-        expect(page).to have_css('.selected-capital', text: "#{item1.name} (申請対象： #{user1.name})")
+
+        name = item1.name
+        target = user1.name
+        expect(page).to have_css('.selected-capital', text: I18n.t("gws/affair.views.capital_title", name: name, target: target))
       end
     end
 
@@ -46,7 +49,10 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
       Timecop.freeze(year2.start_date) do
         login_user user1
         visit new_path
-        expect(page).to have_css('.selected-capital', text: "原資区分が設定されていません。(申請対象： #{user1.name})")
+
+        name = I18n.t("gws/affair.views.not_set_capital")
+        target = user1.name
+        expect(page).to have_css('.selected-capital', text: I18n.t("gws/affair.views.capital_title", name: name, target: target))
       end
     end
   end
@@ -56,7 +62,10 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
       Timecop.freeze(year1.start_date) do
         login_user user2
         visit new_path
-        expect(page).to have_css('.selected-capital', text: "#{item2.name} (申請対象： #{user2.name})")
+
+        name = item2.name
+        target = user2.name
+        expect(page).to have_css('.selected-capital', text: I18n.t("gws/affair.views.capital_title", name: name, target: target))
       end
     end
 
@@ -64,7 +73,10 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
       Timecop.freeze(year2.start_date) do
         login_user user2
         visit new_path
-        expect(page).to have_css('.selected-capital', text: "原資区分が設定されていません。(申請対象： #{user2.name})")
+
+        name = I18n.t("gws/affair.views.not_set_capital")
+        target = user2.name
+        expect(page).to have_css('.selected-capital', text: I18n.t("gws/affair.views.capital_title", name: name, target: target))
       end
     end
   end
@@ -74,7 +86,10 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
       Timecop.freeze(year1.start_date) do
         login_user user3
         visit new_path
-        expect(page).to have_css('.selected-capital', text: "原資区分が設定されていません。(申請対象： #{user3.name})")
+
+        name = I18n.t("gws/affair.views.not_set_capital")
+        target = user3.name
+        expect(page).to have_css('.selected-capital', text: I18n.t("gws/affair.views.capital_title", name: name, target: target))
       end
     end
 
@@ -82,7 +97,10 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
       Timecop.freeze(year2.close_date) do
         login_user user3
         visit new_path
-        expect(page).to have_css('.selected-capital', text: "#{item3.name} (申請対象： #{user3.name})")
+
+        name = item3.name
+        target = user3.name
+        expect(page).to have_css('.selected-capital', text: I18n.t("gws/affair.views.capital_title", name: name, target: target))
       end
     end
   end

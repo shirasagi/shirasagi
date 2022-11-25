@@ -24,7 +24,7 @@ describe "gws_affair_capital_years", type: :feature, dbscope: :example, js: true
     it "#new" do
       visit new_path
       within "form#item-form" do
-        fill_in "item[name]", with: "令和2年"
+        fill_in "item[name]", with: "R2"
         fill_in "item[code]", with: 2020
         fill_in "item[start_date]", with: I18n.l(Time.zone.parse("2020/4/1"), format: :picker)
         fill_in "item[close_date]", with: I18n.l(Time.zone.parse("2021/3/31"), format: :picker)
@@ -41,8 +41,8 @@ describe "gws_affair_capital_years", type: :feature, dbscope: :example, js: true
     it "#edit" do
       visit edit_path
       within "form#item-form" do
-        fill_in "item[name]", with: "令和3年"
-        fill_in "item[code]", with: 20201
+        fill_in "item[name]", with: "R3"
+        fill_in "item[code]", with: 2021
         fill_in "item[start_date]", with: I18n.l(Time.zone.parse("2021/4/1"), format: :picker)
         fill_in "item[close_date]", with: I18n.l(Time.zone.parse("2022/3/31"), format: :picker)
         click_on I18n.t("ss.buttons.save")
