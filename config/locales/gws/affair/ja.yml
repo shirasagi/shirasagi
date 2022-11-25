@@ -378,6 +378,8 @@ ja:
         leave_type: 休暇区分
         count: 有効日数
         in_file: ファイル
+        times: 有効時間
+        time_left: 有効時間（残り）
       gws/affair/overtime_result:
         start_at: 開始時間
         end_at: 終了時間

@@ -48,7 +48,7 @@ module Gws::Addon::Affair::LeaveFile
   end
 
   def start_at_minute_options
-    (0..59).select { |m| m % 5 == 0 }.map { |m| [ I18n.t("gws/attendance", m), m.to_s ] }
+    (0..59).select { |m| m % 5 == 0 }.map { |m| [ I18n.t("gws/attendance.minute", count: m), m.to_s ] }
   end
 
   alias end_at_hour_options start_at_hour_options

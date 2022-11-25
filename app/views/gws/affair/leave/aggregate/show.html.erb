@@ -3,8 +3,8 @@
     <div class="attendance-box-main">
       <%
         current = Time.zone.now
-        year_options = ((current.year - 5)..(current.year)).map { |y| ["#{y}#{t("datetime.prompts.year")}", y] }.reverse
-        month_options = (1..12).map { |m| ["#{m}#{t("datetime.prompts.month")}", m] }
+        year_options = ((current.year - 5)..(current.year)).map { |y| [t("gws/attendance.year", count: y), y] }.reverse
+        month_options = (1..12).map { |m| [t("gws/attendance.month", count: m), m] }
       %>
       <%= form_tag({ action: :show }, { method: "GET" }) do %>
         <%= select_tag :year, options_for_select(year_options, selected: @cur_month.year) %>
@@ -31,7 +31,11 @@
     <div class="addon-view" id="annual-leave-setting">
       <% @leave_files = @item.annual_leave_files %>
       <div class="addon-head">
-        <h2><%= "年次有給休暇 設定" %>（<%= @item.year.name %>）</h2>
+        <h2>
+          <%= t("modules.addons.gws/affair/annual_leave_setting") %>
+          <%= t("ss.buttons.setting") %>
+          (<%= @item.year.name %>)
+        </h2>
         <div class="addon-body">
          <dl class="see">
            <%= render template: "gws/agents/addons/affair/annual_leave_setting/_setting" %>

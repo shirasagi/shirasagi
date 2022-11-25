@@ -33,7 +33,7 @@ class Gws::Affair::Utils
 
     def leave_minutes_label(minutes)
       label = (minutes.to_f / 60).floor(2).to_s.sub(/\.0$/, "")
-      "#{label}時間（#{minutes}分）"
+      "#{label}#{I18n.t("ss.hours")}(#{minutes}#{I18n.t("datetime.prompts.minute")})"
     end
 
     # 3時間45分（3.75Ｈ）以上は1日とする。

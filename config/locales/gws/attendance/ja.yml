@@ -54,6 +54,8 @@ ja:
         - 通常の利用の場合ですと「シフトJIS」を選択して問題ありません。
       overnight:
         - 出勤を打刻してから退勤するまでに、日付が変わってしまった場合、こちらを打刻してください。
+    year: '%{count}年'
+    month: '%{count}月'
     hour: '%{count}時'
     minute: '%{count}分'
 

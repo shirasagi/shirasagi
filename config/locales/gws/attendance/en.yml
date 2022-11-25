@@ -48,6 +48,8 @@ en:
         - Select a character code.
         - Select UTF-8 if a special kanji character is assigned for an uncommon name.
         - For commonly used kanji characters, you can select Shift JIS.
+    year: '%{count}'
+    month: '%{count}'
     hour: '%{count}'
     minute: '%{count}'
 

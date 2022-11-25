@@ -107,7 +107,7 @@ showEffectiveAnnualLeaveMinutes();
     <%= f.text_field :start_at_date, class: "date js-date" %>
     <%= f.select :start_at_hour, @item.start_at_hour_options, include_blank: true %>
     <%= f.select :start_at_minute, @item.start_at_minute_options, include_blank: true %>
-    〜
+    <%= t("ss.wave_dash") %>
     <%= f.text_field :end_at_date, class: "date js-date" %>
     <%= f.select :end_at_hour, @item.end_at_hour_options, include_blank: true %>
     <%= f.select :end_at_minute, @item.end_at_minute_options, include_blank: true %>

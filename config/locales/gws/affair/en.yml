@@ -365,6 +365,8 @@ en:
         leave_type: Leave type
         count: Effective days
         in_file: File
+        times: Times
+        time_left: Time left
       gws/affair/overtime_result:
         start_at: Start
         end_at: End

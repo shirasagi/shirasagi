@@ -27,15 +27,15 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
 
         within "form#item-form" do
           fill_in "item[start_at_date]", with: start_at.to_date
-          select "#{start_at.hour}時", from: 'item[start_at_hour]'
-          select "#{start_at.min}分", from: 'item[start_at_minute]'
+          select I18n.t("gws/attendance.hour", count: start_at.hour), from: 'item[start_at_hour]'
+          select I18n.t("gws/attendance.minute", count: start_at.min), from: 'item[start_at_minute]'
 
           fill_in "item[end_at_date]", with: end_at.to_date
-          select "#{end_at.hour}時", from: 'item[end_at_hour]'
-          select "#{end_at.min}分", from: 'item[end_at_minute]'
+          select I18n.t("gws/attendance.hour", count: end_at.hour), from: 'item[end_at_hour]'
+          select I18n.t("gws/attendance.minute", count: end_at.min), from: 'item[end_at_minute]'
 
           fill_in "item[reason]", with: reason
-          select "年次有給休暇", from: 'item[leave_type]'
+          select I18n.t("gws/affair.options.leave_type.annual_leave"), from: 'item[leave_type]'
           click_on I18n.t("ss.buttons.save")
         end
 
@@ -93,7 +93,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
         # change group
         within "form" do
           select user_638.groups.first.name, from: 'group_id'
-          click_on "検索"
+          click_on I18n.t('ss.buttons.search')
         end
 
         within "table.index" do
@@ -105,28 +105,28 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       within ".gws-attendance" do
         # change year month
         within "form" do
-          select "2021年", from: 'year'
-          select "1月", from: 'month'
-          click_on "検索"
+          select I18n.t("gws/attendance.year", count: 2021), from: 'year'
+          select I18n.t("gws/attendance.month", count: 1), from: 'month'
+          click_on I18n.t('ss.buttons.search')
         end
       end
 
       within "#annual-leave-setting" do
-        expect(page).to have_css(".leave-dates", text: "20日")
-        expect(page).to have_css(".leave-minutes", text: "155時間（9300分）")
-        expect(page).to have_css(".effective-leave-minutes", text: "147.25時間（8835分）")
+        expect(page).to have_css(".leave-dates", text: "20#{I18n.t("ss.options.datetime_unit.day")}")
+        expect(page).to have_css(".leave-minutes", text: "155#{I18n.t("ss.hours")}(9300#{I18n.t("datetime.prompts.minute")})")
+        expect(page).to have_css(".effective-leave-minutes", text: "147.25#{I18n.t("ss.hours")}(8835#{I18n.t("datetime.prompts.minute")})")
       end
 
       within "#annual-leave" do
-        expect(page).to have_css(".leave-minutes", text: "7.75時間（465分）")
+        expect(page).to have_css(".leave-minutes", text: "7.75#{I18n.t("ss.hours")}(465#{I18n.t("datetime.prompts.minute")})")
         within ".leave-files" do
           expect(page).to have_link item1.name
         end
       end
 
       within "#paid-leave" do
-        expect(page).to have_css("dd", text: "申請はありません。")
-        expect(page).to have_css(".leave-minutes", text: "0時間（0分）")
+        expect(page).to have_css("dd", text: I18n.t("gws/affair.notice.not_found_leave_files"))
+        expect(page).to have_css(".leave-minutes", text: "0#{I18n.t("ss.hours")}(0#{I18n.t("datetime.prompts.minute")})")
       end
     end
   end
