@@ -98,6 +98,21 @@ class Gws::Memo::MessagesController < ApplicationController
       search(params[:s]).
       reorder(@sort_hash).
       page(params[:page]).per(50)
+
+      id_list = []
+      @items.each do |item|
+        id_list << item.id.to_s
+      end
+      gws_memo_id_list_session = session[:gws_memo_id_list]
+      gws_memo_id_list_session ||= {}
+      gws_memo_id_list_session['id_list'] = id_list
+      if params[:s]
+        gws_memo_id_list_session['search'] = params[:s].to_unsafe_h
+      else
+        gws_memo_id_list_session['search'] = nil
+      end
+      gws_memo_id_list_session['page'] = params[:page]
+      session[:gws_memo_id_list] = gws_memo_id_list_session
   end
 
   def recent
@@ -134,7 +149,25 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def show
     @item.set_seen(@cur_user).update if @item.state == "public"
-    render
+    id_list = session[:gws_memo_id_list]['id_list']
+    id_index = id_list.index(@item.id.to_s)
+    if id_index == nil
+      @next_id = nil
+      @prev_id = nil
+    else
+      if id_index == 0
+        @next_id = nil
+      else
+        @next_id = id_list[id_index - 1]
+      end
+      if id_index == id_list.size
+        @prev_id = nil
+      else
+        @prev_id = id_list[id_index + 1]
+      end
+    end
+    @search = session[:gws_memo_id_list]['search']
+    @page = session[:gws_memo_id_list]['page']
   end
 
   def edit
