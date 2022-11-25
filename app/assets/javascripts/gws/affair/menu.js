@@ -14,11 +14,11 @@ Gws_Affair_Menu.prototype.render = function() {
 
     if ($narrow.hasClass("show")) {
       self.hideNarrow($narrow, "fast");
-      $a.addClass("down");
+      $a.removeClass("down");
       self.updateSession();
     } else {
       self.showNarrow($narrow, "fast");
-      $a.removeClass("down");
+      $a.addClass("down");
       self.updateSession();
     }
     return false;
@@ -65,10 +65,10 @@ Gws_Affair_Menu.prototype.initNarrow = function () {
 
     if (navi.includes(content) || content == "<%= current_navi %>") {
       self.showNarrow($narrow);
-      $a.removeClass("down");
+      $a.addClass("down");
     } else {
       self.hideNarrow($narrow);
-      $a.addClass("down");
+      $a.removeClass("down");
     }
   });
   self.updateSession();
