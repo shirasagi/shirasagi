@@ -69,23 +69,13 @@ module Gws::Addon::Import::Affair
       validate_import
       return false unless errors.empty?
 
-      table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
-      table.each_with_index do |row, i|
-        update_row(row, i + 2)
+      I18n.with_locale(I18n.default_locale) do
+        table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
+        table.each_with_index do |row, i|
+          update_row(row, i + 2)
+        end
       end
-      return errors.empty?
-    end
-
-    def import_member
-      @imported = 0
-      validate_import
-      return false unless errors.empty?
-
-      table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
-      table.each_with_index do |row, i|
-        update_member_row(row, i + 2)
-      end
-      return errors.empty?
+      errors.empty?
     end
 
     private
@@ -154,44 +144,6 @@ module Gws::Addon::Import::Affair
       item.year_name         = year.try(:name)
       item.year_code         = year.try(:code)
 
-      if item.save
-        @imported += 1
-      else
-        set_errors(item, index)
-      end
-      item
-    end
-
-    def update_member_row(row, index)
-      detail_code = row["明細"].to_s.strip
-      project_code = row["事業コード"].to_s.strip
-
-      detail_code = row["給料明細"].to_s.strip if detail_code.blank?
-      project_code = row["給料事業"].to_s.strip if project_code.blank?
-
-      if detail_code.present? && detail_code =~ /000$/
-        detail_code = detail_code.sub(/000$/, "")
-      end
-
-      staff_address_uid = row["宛名番号"].to_s.strip
-
-      item = self.class.unscoped.site(cur_site).where(
-        project_code: project_code,
-        detail_code: detail_code
-      ).first
-
-      if item.blank?
-        self.errors.add :base, "#{index}:原資区分が存在しません。(明細 #{detail_code}, 事業コード #{project_code})"
-        return nil
-      end
-
-      users = ::Gws::User.site(@cur_site).where(staff_address_uid: staff_address_uid).to_a
-      if users.blank?
-        self.errors.add :base, "#{index}:宛名番号に一致するユーザーが存在しません。(宛名番号 #{staff_address_uid})"
-        return nil
-      end
-
-      item.member_ids = (item.member_ids.to_a + users.map(&:id)).uniq
       if item.save
         @imported += 1
       else

@@ -42,11 +42,13 @@ module Gws::Addon::Import::Affair
         validate_import
         return false unless errors.empty?
 
-        table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
-        table.each_with_index do |row, i|
-          update_member_row(row, i + 2)
+        I18n.with_locale(I18n.default_locale) do
+          table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
+          table.each_with_index do |row, i|
+            update_member_row(row, i + 2)
+          end
         end
-        return errors.empty?
+        errors.empty?
       end
 
       def update_member_row(row, index)
