@@ -36,6 +36,25 @@ def create_capital(site, cond = {})
   item
 end
 
+def create_leave_setting(site, year, user)
+  cond = { site_id: @site.id, year_id: year.id, target_user_id: user.id }
+  item = Gws::Affair::LeaveSetting.find_or_initialize_by(cond)
+  item.cur_site = @site
+  item.cur_user = user
+  item.count = 20
+  item.save!
+  puts item.name
+  item
+end
+
+def create_special_leave(site, cond = {})
+  cond = { site_id: @site.id }.merge(cond)
+  item = Gws::Affair::SpecialLeave.find_or_initialize_by(cond)
+  item.save!
+  puts item.name
+  item
+end
+
 def create_overtime_file(site, cond = {})
   cond = { site_id: @site.id }.merge(cond)
   item = Gws::Affair::OvertimeFile.find_or_initialize_by(cond)
@@ -135,6 +154,22 @@ capital3 = create_capital(@site,
   description_name: "説明3")
 capital1.member_group_ids = Gws::Group.in_group(@site).pluck(:id)
 capital1.save!
+
+# leave setting
+create_leave_setting(@site, year, sys)
+create_leave_setting(@site, year, admin)
+create_leave_setting(@site, year, user1)
+create_leave_setting(@site, year, user2)
+create_leave_setting(@site, year, user3)
+create_leave_setting(@site, year, user4)
+create_leave_setting(@site, year, user5)
+
+# special leave
+create_special_leave(@site, name: "夏季休暇", code: 10, order: 10, staff_category: "regular_staff")
+create_special_leave(@site, name: "介護休暇", code: 20, order: 20, staff_category: "regular_staff")
+create_special_leave(@site, name: "リフレッシュ休暇", code: 30, order: 30, staff_category: "regular_staff")
+create_special_leave(@site, name: "夏季休暇", code: 40, order: 40, staff_category: "fiscal_year_staff")
+create_special_leave(@site, name: "介護休暇", code: 50, order: 50, staff_category: "fiscal_year_staff")
 
 # overtime files
 duty_hour = Gws::Affair::DefaultDutyHour.new(cur_site: @site)
