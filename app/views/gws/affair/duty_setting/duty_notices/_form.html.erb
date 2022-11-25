@@ -8,7 +8,7 @@
   <%= f.hidden_field :period_type, value: "month" %>
 
   <dt><%= @item.t :threshold_hour %><%= @item.tt :threshold_hour %></dt>
-  <dd><%= f.number_field :threshold_hour, min: 0 %><%= t("ss.hours") %></dd>
+  <dd><%= f.number_field :threshold_hour, min: 0, style: "width: 120px;" %><%= t("ss.hours") %></dd>
 
   <dt><%= @item.t :body %><%= @item.tt :body %></dt>
   <dd><%= f.text_field :body %></dd>

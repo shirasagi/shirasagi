@@ -228,18 +228,22 @@ en:
 
   modules:
     gws/affair: Affair
+    gws/affair/attendance: Attendance
     gws/affair/attendance/time_card: Timecard
     gws/affair/attendance/time_card/group: Group
     gws/affair/overtime_file: Overtime file
+    gws/affair/overtime_file/mine: Mine
     gws/affair/overtime_file/approve: Requested
     gws/affair/overtime_file/all: Management file
     gws/affair/overtime_file/aggregate: Aggregation
     gws/affair/leave_file: Leave file
+    gws/affair/leave_file/mine: Mine
     gws/affair/leave_file/approve: Requested
     gws/affair/leave_file/all: Management file
     gws/affair/leave_file/aggregate: Aggregation
     gws/affair/leave_setting: Leave setting
     gws/affair/working_time/management/aggregate: Aggregation
+    gws/affair/working_time/management/aggregate/default: Users
     gws/affair/overtime_file/management/aggregate: Aggregation
     gws/affair/overtime_file/management/aggregate/user: Users
     gws/affair/overtime_file/management/aggregate/capital: Capitals

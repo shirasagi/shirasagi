@@ -241,24 +241,28 @@ ja:
 
   modules:
     gws/affair: 庶務事務
+    gws/affair/attendance: 出退勤
     gws/affair/attendance/time_card: タイムカード
     gws/affair/attendance/time_card/group: グループ
     gws/affair/overtime_file: 時間外申請
+    gws/affair/overtime_file/mine: 自身の申請
     gws/affair/overtime_file/approve: 依頼されたもの
     gws/affair/overtime_file/all: 全ての管理
     gws/affair/overtime_file/aggregate: 時間外累計
     gws/affair/leave_file: 休暇申請
+    gws/affair/leave_file/mine: 自身の申請
     gws/affair/leave_file/approve: 依頼されたもの
     gws/affair/leave_file/all: 全ての管理
     gws/affair/leave_file/aggregate: 休暇取得累計
     gws/affair/leave_setting: 休暇設定
     gws/affair/working_time/management/aggregate: 勤務時間集計
+    gws/affair/working_time/management/aggregate/default: 職員別
     gws/affair/overtime_file/management/aggregate: 時間外集計
     gws/affair/overtime_file/management/aggregate/user: 職員別
     gws/affair/overtime_file/management/aggregate/capital: 費目別
     gws/affair/overtime_file/management/aggregate/search_groups: グループ検索
     gws/affair/overtime_file/management/aggregate/search_users: ユーザー検索
-    gws/affair/attendance/management/time_card: タイムカードの管理
+    gws/affair/attendance/management/time_card: タイムカード管理
     gws/affair/duty_setting: 勤務体系
     gws/affair/duty_hour: 勤務時間
     gws/affair/duty_calendar: 勤務カレンダー
