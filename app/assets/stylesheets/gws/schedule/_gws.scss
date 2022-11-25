@@ -582,6 +582,9 @@
     min-width: calc(1em + 5px);
     background: #2eb0f2;
     color: $black;
+    .fc-title {
+      max-height: 230px;
+    }
   }
 }
 // View: basicHour
