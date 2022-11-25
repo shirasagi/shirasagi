@@ -27,8 +27,8 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         first(".fc-event.fc-event-private").click
       end
 
-      within ".gws-popup" do
-        expect(page).to have_css(".popup-title", text: I18n.t("gws/schedule.private_plan"))
+      within "#addon-basic" do
+        expect(page).to have_css("dd", text: I18n.t("gws/schedule.private_plan"))
       end
     end
   end

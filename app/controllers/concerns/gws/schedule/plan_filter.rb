@@ -91,9 +91,11 @@ module Gws::Schedule::PlanFilter
   end
 
   def show
-    raise '403' unless @item.readable?(@cur_user, site: @cur_site)
-
-    render
+    if @item.readable?(@cur_user, site: @cur_site)
+      render template: 'show'
+    else
+      render template: 'private_plan'
+    end
   end
 
   def events
