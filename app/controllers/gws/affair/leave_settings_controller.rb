@@ -48,8 +48,7 @@ class Gws::Affair::LeaveSettingsController < ApplicationController
     enum_csv = @items.enum_csv
     send_enum(enum_csv,
       type: 'text/csv; charset=Shift_JIS',
-      filename: "leave_settings_#{Time.zone.now.to_i}.csv"
-    )
+      filename: "leave_settings_#{Time.zone.now.to_i}.csv")
   end
 
   def download_yearly
@@ -61,8 +60,7 @@ class Gws::Affair::LeaveSettingsController < ApplicationController
     enum_csv = @item.enum_csv
     send_enum(enum_csv,
       type: 'text/csv; charset=Shift_JIS',
-      filename: "leave_settings_#{Time.zone.now.to_i}.csv"
-    )
+      filename: "leave_settings_#{Time.zone.now.to_i}.csv")
   end
 
   def download_member
@@ -72,8 +70,7 @@ class Gws::Affair::LeaveSettingsController < ApplicationController
     enum_csv = @item.enum_csv
     send_enum(enum_csv,
       type: 'text/csv; charset=Shift_JIS',
-      filename: "leave_settings_#{Time.zone.now.to_i}.csv"
-    )
+      filename: "leave_settings_#{Time.zone.now.to_i}.csv")
   end
 
   def import

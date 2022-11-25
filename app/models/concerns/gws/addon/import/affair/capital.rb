@@ -37,9 +37,10 @@ module Gws::Addon::Import::Affair
         )
       end
 
-      def to_csv
-        CSV.generate do |data|
-          data << csv_headers.map { |k| I18n.t("gws/affair.export.capital.#{k}") }
+      def enum_csv
+        criteria = self.all
+        Enumerator.new do |y|
+          y << encode_sjis(csv_headers.map { |k| I18n.t("gws/affair.export.capital.#{k}") }.to_csv)
           criteria.each do |item|
             line = []
             line << item.article_code
@@ -53,12 +54,13 @@ module Gws::Addon::Import::Affair
             line << item.description_name
             line << item.item_name
             line << item.subitem_name
-            #line << item.group_names.join("\n")
-            #line << item.user_names.join("\n")
-            #line << item.permission_level
-            data << line
+            y << encode_sjis(line.to_csv)
           end
         end
+      end
+
+      def encode_sjis(str)
+        str.encode("SJIS", invalid: :replace, undef: :replace)
       end
     end
 

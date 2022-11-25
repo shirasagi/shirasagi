@@ -16,9 +16,10 @@ module Gws::Addon::Import::Affair
           )
         end
 
-        def group_to_csv(site)
-          CSV.generate do |data|
-            data << group_csv_headers.map { |k| I18n.t("gws/affair.export.capital_group.#{k}") }
+        def group_enum_csv(site)
+          criteria = self.all
+          Enumerator.new do |y|
+            y << encode_sjis(group_csv_headers.map { |k| I18n.t("gws/affair.export.capital_group.#{k}") }.to_csv)
             Gws::Group.site(site).active.order_by(_id: 1).each do |group|
               item = criteria.in(member_group_ids: group.id).first
               line = []
@@ -26,9 +27,13 @@ module Gws::Addon::Import::Affair
               line << group.group_code
               line << item.try(:project_code)
               line << item.try(:detail_code)
-              data << line
+              y << encode_sjis(line.to_csv)
             end
           end
+        end
+
+        def encode_sjis(str)
+          str.encode("SJIS", invalid: :replace, undef: :replace)
         end
       end
 

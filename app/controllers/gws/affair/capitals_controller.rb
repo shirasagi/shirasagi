@@ -47,8 +47,10 @@ class Gws::Affair::CapitalsController < ApplicationController
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
 
     set_items
-    csv = @model.in(id: @items.pluck(:id)).to_csv
-    send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "gws_affair_capitals_#{Time.zone.now.to_i}.csv"
+    enum_csv = @items.enum_csv
+    send_enum(enum_csv,
+      type: 'text/csv; charset=Shift_JIS',
+      filename: "gws_affair_capitals_#{Time.zone.now.to_i}.csv")
   end
 
   def import
@@ -75,9 +77,10 @@ class Gws::Affair::CapitalsController < ApplicationController
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
 
     set_items
-    csv = @model.in(id: @items.pluck(:id)).member_to_csv(@cur_site)
-    filename = "gws_affair_capital_members_#{Time.zone.now.to_i}.csv"
-    send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: filename
+    enum_csv = @items.member_enum_csv(@cur_site)
+    send_enum(enum_csv,
+      type: 'text/csv; charset=Shift_JIS',
+      filename: "gws_affair_capital_members_#{Time.zone.now.to_i}.csv")
   end
 
   def import_group
@@ -94,8 +97,9 @@ class Gws::Affair::CapitalsController < ApplicationController
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
 
     set_items
-    csv = @model.in(id: @items.pluck(:id)).group_to_csv(@cur_site)
-    filename = "gws_affair_capital_groups_#{Time.zone.now.to_i}.csv"
-    send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: filename
+    enum_csv = @items.group_enum_csv(@cur_site)
+    send_enum(enum_csv,
+      type: 'text/csv; charset=Shift_JIS',
+      filename: "gws_affair_capital_groups_#{Time.zone.now.to_i}.csv")
   end
 end
