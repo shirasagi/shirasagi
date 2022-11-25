@@ -33,8 +33,6 @@ Rails.application.routes.draw do
       resources :group_reports, path: 'groups/:group/:form_id', only: [:new, :create], as: 'form_group_reports'
     end
     resources :forms, concerns: :deletion do
-      match :publish, on: :member, via: [:get, :post]
-      match :depublish, on: :member, via: [:get, :post]
       resources :columns, concerns: :deletion
     end
   end

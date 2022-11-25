@@ -1,5 +1,6 @@
 <%
-  form = Gws::DailyReport::Form.site(@cur_site).where(daily_report_group_id: @group.id).first
+  users = Gws::User.site(@cur_site).where(group_ids: @group.id)
+  users = users.where(id: @cur_user.id) if @cur_site.fiscal_year(@cur_date) != @cur_site.fiscal_year
   now = Time.zone.now
   ymd = params[:ymd]
   if ymd.present?
@@ -10,7 +11,7 @@
     next_day = now.beginning_of_day + 1.day
     prev_day = now.beginning_of_day - 1.day
   end
-  min_updated = @items.first.try(:daily_report_date) || Time.zone.now
+  min_updated = @model.unscoped.site(@cur_site).without_deleted.and_groups([@group]).order_by(daily_report_date: 1).first.try(:daily_report_date) || Time.zone.now
 %>
 
 <%= jquery do %>
@@ -61,28 +62,28 @@
     <thead>
     <tr>
       <th><%= Gws::User.t(:name) %></th>
-      <% if form %>
+      <% if @forms.present? %>
         <% if @model.allowed?(:access, @cur_user, site: @cur_site) %>
           <th class="limited-access"><%= @model.t(:limited_access) %></th>
         <% end %>
         <th><%= @model.t(:small_talk) %></th>
-        <% form.columns.each do |column| %>
+        <% @forms.first.columns.each do |column| %>
           <th><%= column.name %></th>
         <% end %>
       <% end %>
     </tr>
     </thead>
     <tbody>
-    <% Gws::User.site(@cur_site).where(group_ids: @group.id).each do |user| %>
-      <% report = @items.where(user_id: user, form_id: form.try(:id), daily_report_date: @cur_date.to_date).first %>
+    <% users.each do |user| %>
+      <% report = @items.where(user_id: user, form_id: @forms.first.try(:id), daily_report_date: @cur_date.to_date).first %>
       <tr>
         <td>
           <div>
             <% if user.id == @cur_user.id %>
               <% if report %>
                 <%= link_to t('gws/daily_report.edit_daily_report'), edit_gws_daily_report_group_report_path(id: report.id), { class: 'add-plan' } %>
-              <% elsif form %>
-                <%= link_to t('gws/daily_report.create_daily_report'), new_gws_daily_report_form_group_report_path(form_id: form.id), { class: 'add-plan' } %>
+              <% elsif @forms.present? %>
+                <%= link_to t('gws/daily_report.create_daily_report'), new_gws_daily_report_form_group_report_path(form_id: @forms.first.try(:id)), { class: 'add-plan' } %>
               <% end %>
             <% end %>
           </div>
@@ -117,12 +118,12 @@
               <td><%= br column_value.value %></td>
             <% end %>
           <% end %>
-        <% elsif form %>
+        <% elsif @forms.present? %>
           <% if @model.allowed?(:access, @cur_user, site: @cur_site) %>
             <td></td>
           <% end %>
           <td></td>
-          <% form.columns.each do |column| %>
+          <% @forms.first.columns.each do |column| %>
             <td></td>
           <% end %>
         <% end %>

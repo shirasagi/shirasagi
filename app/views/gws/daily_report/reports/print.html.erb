@@ -1,7 +1,7 @@
 <% addons = @item ? @item.class.addons : [] %>
 <%
 addons = addons.select do |addon|
-  [SS::Addon::Markdown, Gws::Addon::File, Gws::Addon::DailyReport::CustomForm, Gws::Addon::DailyReport::ApproverPrint].include?(addon.klass)
+  [SS::Addon::Markdown, Gws::Addon::File, Gws::Addon::DailyReport::CustomForm].include?(addon.klass)
 end
   @gws_workflow_print = true
 %>

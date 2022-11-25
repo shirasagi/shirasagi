@@ -1,7 +1,3 @@
-<%
-  form = Gws::DailyReport::Form.site(@cur_site).in(daily_report_group_id: @cur_group.id).first
-%>
-
 <%= jquery do %>
   var baseUrl = <%== url_for({ action: :index, year_month: ':YEAR_MONTH' }).to_json %>;
   $('.gws-daily-report-year-month-navi select[name=year_month]').on('change', function() {
@@ -23,7 +19,7 @@
     <h2>
       <%= gws_public_user_long_name((@user || @cur_user).long_name) %>
       <% if @user.try(:id) == @cur_user.try(:id) %>
-        <% if item = @items.where(user_id: @cur_user.id, form_id: form.try(:id), daily_report_date: Time.zone.today).first %>
+        <% if item = @items.where(user_id: @cur_user.id, form_id: @forms.first.try(:id), daily_report_date: Time.zone.today).first %>
           <%= link_to t('gws/daily_report.edit_daily_report'), { action: :edit, id: item.id }, { class: 'add-plan' } %>
         <% else %>
           <%= link_to t('gws/daily_report.create_daily_report'), { action: :new }, { class: 'add-plan' } %>
@@ -48,12 +44,12 @@
     <tr>
       <th><%= t('gws/daily_report.date') %></th>
       <th><%= t('gws/daily_report.wday') %></th>
-      <% if form %>
+      <% if @forms.present? %>
         <% if @model.allowed?(:access, @cur_user, site: @cur_site) %>
           <th class="limited-access"><%= @model.t(:limited_access) %></th>
         <% end %>
         <th><%= @model.t(:small_talk) %></th>
-        <% form.columns.each do |column| %>
+        <% @forms.first.columns.each do |column| %>
           <th><%= column.name %></th>
         <% end %>
       <% end %>
@@ -61,7 +57,7 @@
     </thead>
     <tbody>
     <% (@cur_month.beginning_of_month.to_date..@cur_month.end_of_month.to_date).each do |date| %>
-      <% report = @items.where(form_id: form.try(:id), daily_report_date: date).first %>
+      <% report = @items.where(form_id: @forms.first.try(:id), daily_report_date: date).first %>
       <tr>
         <td><%= I18n.l(date, format: :short) %></td>
         <td><%= t("date.abbr_day_names")[date.wday] %></td>
@@ -94,12 +90,12 @@
               <td><%= br column_value.value %></td>
             <% end %>
           <% end %>
-        <% elsif form %>
+        <% elsif @forms.present? %>
           <% if @model.allowed?(:access, @cur_user, site: @cur_site) %>
             <td></td>
           <% end %>
           <td></td>
-          <% form.columns.each do |column| %>
+          <% @forms.first.columns.each do |column| %>
             <td></td>
           <% end %>
         <% end %>

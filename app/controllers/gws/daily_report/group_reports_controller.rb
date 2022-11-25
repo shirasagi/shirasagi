@@ -4,11 +4,11 @@ class Gws::DailyReport::GroupReportsController < ApplicationController
 
   model Gws::DailyReport::Report
 
+  before_action :set_group
   before_action :set_forms
   before_action :set_cur_form, only: %i[new create]
   before_action :set_search_params
   before_action :set_cur_date
-  before_action :set_group
   before_action :set_items
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :soft_delete]
 
@@ -22,10 +22,16 @@ class Gws::DailyReport::GroupReportsController < ApplicationController
     @crumbs << [@cur_site.menu_daily_report_label || t("gws/daily_report.department"), action: :index]
   end
 
+  def set_group
+    @group ||= @cur_user.groups.in_group(@cur_site).find(params[:group])
+    raise '403' unless @group
+  end
+
   def set_forms
     @forms ||= begin
       criteria = Gws::DailyReport::Form.site(@cur_site)
       criteria = criteria.readable(@cur_user, site: @cur_site)
+      criteria = criteria.where(year: @cur_site.fiscal_year, daily_report_group_id: @group.id)
       criteria = criteria.order_by(order: 1, created: 1)
       criteria
     end
@@ -55,14 +61,13 @@ class Gws::DailyReport::GroupReportsController < ApplicationController
     @cur_date = Time.zone.parse("#{year}/#{month}/#{date}")
   end
 
-  def set_group
-    @group ||= @cur_user.groups.in_group(@cur_site).find(params[:group])
-    raise '403' unless @group
-  end
-
   def set_items
     set_search_params
-    @items ||= @model.site(@cur_site).without_deleted.and_date(@cur_date).and_groups([@group]).search(@s)
+    @items ||= begin
+      items = @model.site(@cur_site).without_deleted.and_date(@cur_date).and_groups([@group]).search(@s)
+      items = items.and_user(@cur_user) if @cur_site.fiscal_year(@cur_date) != @cur_site.fiscal_year
+      items
+    end
   end
 
   def set_item
@@ -149,11 +154,9 @@ class Gws::DailyReport::GroupReportsController < ApplicationController
 
   def edit
     raise '403' unless @item.editable?(@cur_user, site: @cur_site)
-    if @item.is_a?(Cms::Addon::EditLock)
-      unless @item.acquire_lock
-        redirect_to action: :lock
-        return
-      end
+    if @item.is_a?(Cms::Addon::EditLock) && !@item.acquire_lock
+      redirect_to action: :lock
+      return
     end
     render
   end

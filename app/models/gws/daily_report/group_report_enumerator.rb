@@ -5,13 +5,17 @@ class Gws::DailyReport::GroupReportEnumerator < Enumerator
     @cur_group = group
     @reports = reports.dup
     @encoding = encoding
+    users = Gws::User.site(@cur_site).where(group_ids: @cur_group.id)
+    if @cur_site.fiscal_year(reports.first.try(:daily_report_date)) != @cur_site.fiscal_year
+      users = users.where(id: @cur_user.id)
+    end
 
     super() do |yielder|
       load_forms
       build_term_handlers
 
       yielder << bom + encode(headers.to_csv)
-      Gws::User.site(@cur_site).where(group_ids: @cur_group.id).each do |user|
+      users.each do |user|
         enum_report(yielder, user, @reports.and_user(user).first)
       end
     end

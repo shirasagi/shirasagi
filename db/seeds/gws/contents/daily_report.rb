@@ -5,10 +5,18 @@ def create_daily_report_form(data)
 end
 
 @wf_forms = [
-  create_daily_report_form(name: '政策課', order: 10, state: 'public', memo: '政策課の日報です。', daily_report_group_id: g('政策課').id),
-  create_daily_report_form(name: '広報課', order: 20, state: 'public', memo: '広報課の日報です。', daily_report_group_id: g('広報課').id),
-  create_daily_report_form(name: '管理課', order: 30, state: 'public', memo: '管理課の日報です。', daily_report_group_id: g('管理課').id),
-  create_daily_report_form(name: '防災課', order: 40, state: 'public', memo: '防災課の日報です。', daily_report_group_id: g('防災課').id)
+  create_daily_report_form(
+    name: '政策課', year: @site.fiscal_year, order: 10, memo: '政策課の日報です。', daily_report_group_id: g('政策課').id
+  ),
+  create_daily_report_form(
+    name: '広報課', year: @site.fiscal_year, order: 20, memo: '広報課の日報です。', daily_report_group_id: g('広報課').id
+  ),
+  create_daily_report_form(
+    name: '管理課', year: @site.fiscal_year, order: 30, memo: '管理課の日報です。', daily_report_group_id: g('管理課').id
+  ),
+  create_daily_report_form(
+    name: '防災課', year: @site.fiscal_year, order: 40, memo: '防災課の日報です。', daily_report_group_id: g('防災課').id
+  )
 ]
 
 @wf_form0_cols = [

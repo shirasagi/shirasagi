@@ -30,7 +30,6 @@ en:
     addons:
       gws/daily_report/column_setting: Input settings
       gws/daily_report/custom_form: Input details
-      gws/daily_report/approver_print: Approve
 
   gws_role:
     use_gws_daily_report_reports: Use daily report
@@ -59,8 +58,8 @@ en:
         daily_report_member_id: Approver
       gws/daily_report/form:
         name: Title
+        year: Year
         order: Order
-        state: Publishing status
         memo: Remarks
         daily_report_group_id: Department
       gws/addon/daily_report/column_setting:

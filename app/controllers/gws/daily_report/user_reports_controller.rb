@@ -28,6 +28,8 @@ class Gws::DailyReport::UserReportsController < ApplicationController
     @forms ||= begin
       criteria = Gws::DailyReport::Form.site(@cur_site)
       criteria = criteria.readable(@cur_user, site: @cur_site)
+      criteria = criteria.in(daily_report_group_id: @cur_group.id)
+      criteria = criteria.where(year: @cur_site.fiscal_year)
       criteria = criteria.order_by(order: 1, created: 1)
       criteria
     end
@@ -58,12 +60,9 @@ class Gws::DailyReport::UserReportsController < ApplicationController
 
   def set_active_year_range
     @active_year_range ||= begin
-      end_date = Time.zone.now.beginning_of_month
-
-      start_date = end_date
-      start_date -= 1.month while start_date.month != @cur_site.attendance_year_changed_month
-      start_date -= @cur_site.attendance_management_year.years
-
+      items = @model.unscoped.site(@cur_site).without_deleted.search(@s).order_by(daily_report_date: 1)
+      start_date = (items.first.try(:daily_report_date).presence || Time.zone.now).beginning_of_month
+      end_date = (items.last.try(:daily_report_date).presence || Time.zone.now).beginning_of_month
       [start_date, end_date]
     end
   end
@@ -172,11 +171,9 @@ class Gws::DailyReport::UserReportsController < ApplicationController
 
   def edit
     raise '403' unless @item.editable?(@cur_user, site: @cur_site)
-    if @item.is_a?(Cms::Addon::EditLock)
-      unless @item.acquire_lock
-        redirect_to action: :lock
-        return
-      end
+    if @item.is_a?(Cms::Addon::EditLock) && !@item.acquire_lock
+      redirect_to action: :lock
+      return
     end
     render
   end
@@ -228,6 +225,9 @@ class Gws::DailyReport::UserReportsController < ApplicationController
 
     filename = "daily_report_user_report_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.csv"
     encoding = "Shift_JIS"
-    send_enum(@items.user_csv(site: @cur_site, user: @cur_user, month: @cur_month, encoding: encoding), type: "text/csv; charset=#{encoding}", filename: filename)
+    send_enum(
+      @items.user_csv(site: @cur_site, user: @cur_user, month: @cur_month, encoding: encoding),
+      type: "text/csv; charset=#{encoding}", filename: filename
+    )
   end
 end

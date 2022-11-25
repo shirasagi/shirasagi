@@ -1,5 +1,6 @@
 <%
-  form = Gws::DailyReport::Form.site(@cur_site).where(daily_report_group_id: @group.id).first
+  users = Gws::User.site(@cur_site).where(group_ids: @group.id)
+  users = users.where(id: @cur_user.id) if @cur_site.fiscal_year(@cur_date) != @cur_site.fiscal_year
 %>
 
 <%= render 'ss/crud/print_preview_head', links: [[ I18n.t('ss.links.back'), { action: :index } ]] %>
@@ -11,20 +12,20 @@
     <thead>
     <tr>
       <th><%= Gws::User.t(:name) %></th>
-      <% if form %>
+      <% if @forms.present? %>
         <% if @model.allowed?(:access, @cur_user, site: @cur_site) %>
           <th class="limited-access"><%= @model.t(:limited_access) %></th>
         <% end %>
         <th><%= @model.t(:small_talk) %></th>
-        <% form.columns.each do |column| %>
+        <% @forms.first.columns.each do |column| %>
           <th><%= column.name %></th>
         <% end %>
       <% end %>
     </tr>
     </thead>
     <tbody>
-    <% Gws::User.site(@cur_site).where(group_ids: @group.id).each do |user| %>
-      <% report = @items.where(user_id: user, form_id: form.try(:id), daily_report_date: @cur_date.to_date).first %>
+    <% users.each do |user| %>
+      <% report = @items.where(user_id: user, form_id: @forms.first.try(:id), daily_report_date: @cur_date.to_date).first %>
       <tr>
         <td>
           <div><%= gws_public_user_long_name(user.long_name) %></div>
@@ -58,12 +59,12 @@
               <td><%= br column_value.value %></td>
             <% end %>
           <% end %>
-        <% elsif form %>
+        <% elsif @forms.present? %>
           <% if @model.allowed?(:access, @cur_user, site: @cur_site) %>
             <td></td>
           <% end %>
           <td></td>
-          <% form.columns.each do |column| %>
+          <% @forms.first.columns.each do |column| %>
             <td></td>
           <% end %>
         <% end %>

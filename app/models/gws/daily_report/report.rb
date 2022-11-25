@@ -41,8 +41,7 @@ class Gws::DailyReport::Report
       criteria = all
       return criteria if params.blank?
 
-      criteria = criteria.search_keyword(params)
-      criteria
+      criteria.search_keyword(params)
     end
 
     def search_keyword(params)
@@ -69,8 +68,8 @@ class Gws::DailyReport::Report
       attachment_ids += all.pluck(:file_ids).flatten.compact
 
       all.pluck(:column_values).flatten.compact.each do |bson_doc|
-        if bson_doc["_type"] == Gws::Column::Value::FileUpload.name
-          attachment_ids += bson_doc["file_ids"] if bson_doc["file_ids"].present?
+        if bson_doc["_type"] == Gws::Column::Value::FileUpload.name && bson_doc["file_ids"].present?
+          attachment_ids += bson_doc["file_ids"]
         end
       end
 
@@ -103,8 +102,8 @@ class Gws::DailyReport::Report
 
     if column_values.present?
       column_values.each do |value|
-        if value.is_a?(Gws::Column::Value::FileUpload)
-          attachment_ids += value.file_ids if value.file_ids.present?
+        if value.is_a?(Gws::Column::Value::FileUpload) && value.file_ids.present?
+          attachment_ids += value.file_ids
         end
       end
     end

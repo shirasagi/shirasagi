@@ -30,7 +30,6 @@ ja:
     addons:
       gws/daily_report/column_setting: 入力設定
       gws/daily_report/custom_form: 入力内容
-      gws/daily_report/approver_print: 承認
 
   gws_role:
     use_gws_daily_report_reports: 日報の利用
@@ -59,8 +58,8 @@ ja:
         daily_report_member_id: 承認者
       gws/daily_report/form:
         name: タイトル
+        year: 年度
         order: 並び順
-        state: 公開状態
         memo: 備考
         daily_report_group_id: 部署
       gws/addon/daily_report/column_setting:
