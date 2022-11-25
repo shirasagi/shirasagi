@@ -25,12 +25,12 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           fill_in "item[overtime_name]", with: name
 
           fill_in "item[start_at_date]", with: start_at.to_date
-          select "#{start_at.hour}時", from: 'item[start_at_hour]'
-          select "#{start_at.min}分", from: 'item[start_at_minute]'
+          select I18n.t('gws/attendance.hour', count: start_at.hour), from: 'item[start_at_hour]'
+          select I18n.t('gws/attendance.minute', count: start_at.min), from: 'item[start_at_minute]'
 
           fill_in "item[end_at_date]", with: end_at.to_date
-          select "#{end_at.hour}時", from: 'item[end_at_hour]'
-          select "#{end_at.min}分", from: 'item[end_at_minute]'
+          select I18n.t('gws/attendance.hour', count: end_at.hour), from: 'item[end_at_hour]'
+          select I18n.t('gws/attendance.minute', count: end_at.min), from: 'item[end_at_minute]'
 
           click_on I18n.t("ss.buttons.save")
         end
@@ -69,30 +69,30 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         visit index_path
         click_on name
         within "#addon-gws-agents-addons-affair-overtime_result" do
-          click_on "結果を入力する"
+          click_on I18n.t("gws/affair.links.set_results")
         end
         wait_for_cbox do
           expect(page).to have_css("#addon-gws-agents-addons-affair-overtime_file")
           within "#ajax-box" do
-            click_on "保存"
+            click_on I18n.t("ss.buttons.save")
           end
         end
-        expect(page).to have_css('#notice', text: "保存しました。")
+        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
 
         # edit results
         login_user(user_683)
         visit index_path
         click_on name
         within "#addon-gws-agents-addons-affair-overtime_result" do
-          click_on "結果を編集する"
+          click_on I18n.t("gws/affair.links.edit_results")
         end
         wait_for_cbox do
           expect(page).to have_css("#addon-gws-agents-addons-affair-overtime_file")
           within "#ajax-box" do
-            click_on "保存"
+            click_on I18n.t("ss.buttons.save")
           end
         end
-        expect(page).to have_css('#notice', text: "保存しました。")
+        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
 
         # close results
         login_user(user_545)
@@ -100,10 +100,10 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         click_on name
         within "#addon-gws-agents-addons-affair-overtime_result" do
           page.accept_confirm do
-            click_on "結果を確認済みにする"
+            click_on I18n.t("gws/affair.links.close_results")
           end
         end
-        expect(page).to have_css('#notice', text: "結果を確定しました。")
+        expect(page).to have_css('#notice', text: I18n.t("gws/affair.notice.close_results"))
       end
 
       Gws::Affair::OvertimeFile.find_by(overtime_name: name)

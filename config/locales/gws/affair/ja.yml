@@ -86,10 +86,11 @@ ja:
         fiscal_year_staff: "会計年度任用職員"
       time_remaining: "(残り%{total_time}時間)"
     notice:
-      select_target_user: "申請対象のユーザーを選択してください。"
-      select_start_at_date: "申請開始日を入力してください。"
-      not_found_overtime_file: "設定可能な時間外申請がありませんでした。"
-      not_found_leave_setting: "休暇設定がありません。"
+      close_results: 結果を確定しました。
+      select_target_user: 申請対象のユーザーを選択してください。
+      select_start_at_date: 申請開始日を入力してください。
+      not_found_overtime_file: 設定可能な時間外申請がありませんでした"
+      not_found_leave_setting: 休暇設定がありません。
       time_card_unlocked:
         h2: "%{year}年%{month}月のタイムカードが締められていません。"
         p: 以下のタイムカードが締められていません。

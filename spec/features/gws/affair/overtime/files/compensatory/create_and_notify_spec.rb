@@ -33,12 +33,12 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           fill_in "item[overtime_name]", with: name
 
           fill_in "item[start_at_date]", with: start_at.to_date
-          select "#{start_at.hour}時", from: 'item[start_at_hour]'
-          select "#{start_at.min}分", from: 'item[start_at_minute]'
+          select I18n.t('gws/attendance.hour', count: start_at.hour), from: 'item[start_at_hour]'
+          select I18n.t('gws/attendance.minute', count: start_at.min), from: 'item[start_at_minute]'
 
           fill_in "item[end_at_date]", with: end_at.to_date
-          select "#{end_at.hour}時", from: 'item[end_at_hour]'
-          select "#{end_at.min}分", from: 'item[end_at_minute]'
+          select I18n.t('gws/attendance.hour', count: end_at.hour), from: 'item[end_at_hour]'
+          select I18n.t('gws/attendance.minute', count: end_at.min), from: 'item[end_at_minute]'
 
           if week_in_compensatory.present?
             compensatory_minute = week_in_compensatory[:minute]
@@ -50,13 +50,13 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
             end
             if compensatory_start_at
               fill_in "item[week_in_start_at_date]", with: compensatory_start_at.to_date
-              select "#{compensatory_start_at.hour}時", from: 'item[week_in_start_at_hour]'
-              select "#{compensatory_start_at.min}分", from: 'item[week_in_start_at_minute]'
+              select I18n.t('gws/attendance.hour', count: compensatory_start_at.hour), from: 'item[week_in_start_at_hour]'
+              select I18n.t('gws/attendance.minute', count: compensatory_start_at.min), from: 'item[week_in_start_at_minute]'
             end
             if compensatory_end_at
               fill_in "item[week_in_end_at_date]", with: compensatory_end_at.to_date
-              select "#{compensatory_end_at.hour}時", from: 'item[week_in_end_at_hour]'
-              select "#{compensatory_end_at.min}分", from: 'item[week_in_end_at_minute]'
+              select I18n.t('gws/attendance.hour', count: compensatory_end_at.hour), from: 'item[week_in_end_at_hour]'
+              select I18n.t('gws/attendance.minute', count: compensatory_end_at.min), from: 'item[week_in_end_at_minute]'
             end
 
             week_in_leave_enable = true if compensatory_start_at && compensatory_end_at
@@ -72,13 +72,13 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
             end
             if compensatory_start_at
               fill_in "item[week_out_start_at_date]", with: compensatory_start_at.to_date
-              select "#{compensatory_start_at.hour}時", from: 'item[week_out_start_at_hour]'
-              select "#{compensatory_start_at.min}分", from: 'item[week_out_start_at_minute]'
+              select I18n.t('gws/attendance.hour', count: compensatory_start_at.hour), from: 'item[week_out_start_at_hour]'
+              select I18n.t('gws/attendance.minute', count: compensatory_start_at.min), from: 'item[week_in_start_at_minute]'
             end
             if compensatory_end_at
               fill_in "item[week_out_end_at_date]", with: compensatory_end_at.to_date
-              select "#{compensatory_end_at.hour}時", from: 'item[week_out_end_at_hour]'
-              select "#{compensatory_end_at.min}分", from: 'item[week_out_end_at_minute]'
+              select I18n.t('gws/attendance.hour', count: compensatory_end_at.hour), from: 'item[week_out_end_at_hour]'
+              select I18n.t('gws/attendance.minute', count: compensatory_end_at.min), from: 'item[week_out_end_at_minute]'
             end
 
             week_out_leave_enable = true if compensatory_start_at && compensatory_end_at
@@ -94,13 +94,13 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
             end
             if compensatory_start_at
               fill_in "item[holiday_compensatory_start_at_date]", with: compensatory_start_at.to_date
-              select "#{compensatory_start_at.hour}時", from: 'item[holiday_compensatory_start_at_hour]'
-              select "#{compensatory_start_at.min}分", from: 'item[holiday_compensatory_start_at_minute]'
+              select I18n.t('gws/attendance.hour', count: compensatory_start_at.hour), from: 'item[holiday_compensatory_start_at_hour]'
+              select I18n.t('gws/attendance.minute', count: compensatory_start_at.min), from: 'item[holiday_compensatory_start_at_minute]'
             end
             if compensatory_end_at
               fill_in "item[holiday_compensatory_end_at_date]", with: compensatory_end_at.to_date
-              select "#{compensatory_end_at.hour}時", from: 'item[holiday_compensatory_end_at_hour]'
-              select "#{compensatory_end_at.min}分", from: 'item[holiday_compensatory_end_at_minute]'
+              select I18n.t('gws/attendance.hour', count: compensatory_end_at.hour), from: 'item[holiday_compensatory_end_at_hour]'
+              select I18n.t('gws/attendance.minute', count: compensatory_end_at.min), from: 'item[holiday_compensatory_end_at_minute]'
             end
 
             holiday_compensatory_leave_enable = true if compensatory_start_at && compensatory_end_at
@@ -108,7 +108,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
 
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: "保存しました。")
+        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
 
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
@@ -140,27 +140,27 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         visit index_path
         click_on name
         within "#addon-gws-agents-addons-affair-overtime_result" do
-          click_on "結果を入力する"
+          click_on I18n.t("gws/affair.links.set_results")
         end
         wait_for_cbox do
           expect(page).to have_css("#addon-gws-agents-addons-affair-overtime_file")
           within "#ajax-box" do
-            click_on "保存"
+            click_on I18n.t("ss.buttons.save")
           end
         end
-        expect(page).to have_css('#notice', text: "保存しました。")
+        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
 
         # edit results
         within "#addon-gws-agents-addons-affair-overtime_result" do
-          click_on "結果を編集する"
+          click_on I18n.t("gws/affair.links.edit_results")
         end
         wait_for_cbox do
           expect(page).to have_css("#addon-gws-agents-addons-affair-overtime_file")
           within "#ajax-box" do
-            click_on "保存"
+            click_on I18n.t("ss.buttons.save")
           end
         end
-        expect(page).to have_css('#notice', text: "保存しました。")
+        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
 
         # close results
         login_user(user_545)
@@ -168,10 +168,10 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         click_on name
         within "#addon-gws-agents-addons-affair-overtime_result" do
           page.accept_confirm do
-            click_on "結果を確認済みにする"
+            click_on I18n.t("gws/affair.links.close_results")
           end
         end
-        expect(page).to have_css('#notice', text: "結果を確定しました。")
+        expect(page).to have_css('#notice', text: I18n.t("gws/affair.notice.close_results"))
 
         # check overtime file
         overtime_file = Gws::Affair::OvertimeFile.find_by(overtime_name: name)
@@ -210,7 +210,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         start_at,
         end_at,
         week_in_compensatory: {
-          minute: "4.0時間",
+          minute: "4.0#{I18n.t("ss.hours")}",
           start_at: Time.zone.parse("2021/1/5 8:00"),
           end_at: Time.zone.parse("2021/1/5 12:00")
         }
@@ -223,7 +223,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         start_at,
         end_at,
         week_out_compensatory: {
-          minute: "7.75時間",
+          minute: "7.75#{I18n.t("ss.hours")}",
           start_at: Time.zone.parse("2021/1/18 8:00"),
           end_at: Time.zone.parse("2021/1/18 16:00")
         }
@@ -236,7 +236,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         start_at,
         end_at,
         holiday_compensatory: {
-          minute: "7.75時間",
+          minute: "7.75#{I18n.t("ss.hours")}",
           start_at: Time.zone.parse("2021/1/19 8:00"),
           end_at: Time.zone.parse("2021/1/19 16:00")
         }
@@ -249,7 +249,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         start_at,
         end_at,
         week_in_compensatory: {
-          minute: "4.0時間"
+          minute: "4.0#{I18n.t("ss.hours")}"
         }
       )
 
@@ -260,7 +260,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         start_at,
         end_at,
         week_out_compensatory: {
-          minute: "4.0時間"
+          minute: "4.0#{I18n.t("ss.hours")}"
         }
       )
 
@@ -271,7 +271,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         start_at,
         end_at,
         holiday_compensatory: {
-          minute: "7.75時間"
+          minute: "7.75#{I18n.t("ss.hours")}"
         }
       )
 

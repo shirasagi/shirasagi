@@ -86,6 +86,7 @@ en:
         fiscal_year_staff: Fiscal year staff
       time_remaining: "(%{total_time} hours left)"
     notice:
+      close_results: Close results
       select_target_user: Select target user
       select_start_at_date: Select start at date
       not_found_overtime_file: Not found overtime file

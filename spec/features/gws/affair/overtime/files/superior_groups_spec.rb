@@ -21,7 +21,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
 
     let(:superior_group) { Gws::Group.find_by(name: "庶務事務市/市長・副市長/総務部") }
     let(:inferior_groups) { Gws::Group.where(name: /^庶務事務市\/市長・副市長\/総務部\/総務課\//).to_a }
-    let(:capital) { Gws::Affair::Capital.where(name: "1款1項1目 1-17").first }
+    let(:capital) { Gws::Affair::Capital.find_by(name: "1款1項1目 1-17") }
 
     # 市長・副市長
     let(:user_716) { affair_user(716) } # 庶務事務市/市長・副市長
@@ -55,7 +55,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         fill_in "item[overtime_name]", with: unique_id
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: "保存しました。")
+      expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
 
       within ".mod-workflow-request" do
         select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"

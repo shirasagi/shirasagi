@@ -31,6 +31,6 @@ class Gws::Affair::Overtime::ResultsController < ApplicationController
 
     url = params[:ref]
     @item.close_result
-    redirect_to url, notice: "結果を確定しました。"
+    redirect_to url, notice: I18n.t("gws/affair.notice.close_results")
   end
 end

@@ -40,7 +40,7 @@
   <%
     date_options = [item.date, item.date.advance(days: 1)].map { |date| [date.strftime("%Y/%m/%d"), date.strftime("%Y/%m/%d")] }
     hour_options = (0..23).map { |h| [t("gws/attendance.hour", count: h), h.to_s] }
-    minute_options = (0..59).select { |m| m % 5 == 0 }.map { |m| [t("gws/attendance.hour", count: m), m.to_s] }
+    minute_options = (0..59).select { |m| m % 5 == 0 }.map { |m| [t("gws/attendance.minute", count: m), m.to_s] }
 
     if item.result
       result = item.result

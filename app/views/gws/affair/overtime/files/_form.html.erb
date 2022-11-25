@@ -216,7 +216,7 @@ $("input:submit").on("click.form_alert", function (e) {
     <%= f.text_field :start_at_date, class: "date js-date" %>
     <%= f.select :start_at_hour, @item.start_at_hour_options %>
     <%= f.select :start_at_minute, @item.start_at_minute_options %>
-    〜
+    <%= t("ss.wave_dash") %>
     <%= f.text_field :end_at_date, class: "date js-date" %>
     <%= f.select :end_at_hour, @item.end_at_hour_options %>
     <%= f.select :end_at_minute, @item.end_at_minute_options %>
@@ -230,7 +230,7 @@ $("input:submit").on("click.form_alert", function (e) {
       <%= f.text_field :week_in_start_at_date, class: "date js-date" %>
       <%= f.select :week_in_start_at_hour, @item.start_at_hour_options %>
       <%= f.select :week_in_start_at_minute, @item.start_at_minute_options %>
-      〜
+      <%= t("ss.wave_dash") %>
       <%= f.text_field :week_in_end_at_date, class: "date js-date" %>
       <%= f.select :week_in_end_at_hour, @item.end_at_hour_options %>
       <%= f.select :week_in_end_at_minute, @item.end_at_minute_options %>
@@ -244,7 +244,7 @@ $("input:submit").on("click.form_alert", function (e) {
       <%= f.text_field :week_out_start_at_date, class: "date js-date" %>
       <%= f.select :week_out_start_at_hour, @item.start_at_hour_options %>
       <%= f.select :week_out_start_at_minute, @item.start_at_minute_options %>
-      〜
+      <%= t("ss.wave_dash") %>
       <%= f.text_field :week_out_end_at_date, class: "date js-date" %>
       <%= f.select :week_out_end_at_hour, @item.end_at_hour_options %>
       <%= f.select :week_out_end_at_minute, @item.end_at_minute_options %>
@@ -258,7 +258,7 @@ $("input:submit").on("click.form_alert", function (e) {
       <%= f.text_field :holiday_compensatory_start_at_date, class: "date js-date" %>
       <%= f.select :holiday_compensatory_start_at_hour, @item.start_at_hour_options %>
       <%= f.select :holiday_compensatory_start_at_minute, @item.start_at_minute_options %>
-      〜
+      <%= t("ss.wave_dash") %>
       <%= f.text_field :holiday_compensatory_end_at_date, class: "date js-date" %>
       <%= f.select :holiday_compensatory_end_at_hour, @item.end_at_hour_options %>
       <%= f.select :holiday_compensatory_end_at_minute, @item.end_at_minute_options %>
