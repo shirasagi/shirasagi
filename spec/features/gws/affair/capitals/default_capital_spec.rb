@@ -13,7 +13,7 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
 
   let!(:year1) do
     create(:gws_affair_capital_year,
-      name: "令和2年",
+      name: "R2",
       code: 2020,
       start_date: Time.zone.parse("2020/4/1"),
       close_date: Time.zone.parse("2021/3/31"),
@@ -21,7 +21,7 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
   end
   let!(:year2) do
     create(:gws_affair_capital_year,
-      name: "令和3年",
+      name: "R3",
       code: 2021,
       start_date: Time.zone.parse("2021/4/1"),
       close_date: Time.zone.parse("2022/3/31"),

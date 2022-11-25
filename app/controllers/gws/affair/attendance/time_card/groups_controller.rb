@@ -44,7 +44,7 @@ class Gws::Affair::Attendance::TimeCard::GroupsController < ApplicationControlle
 
   def day_options
     (1..@cur_month.end_of_month.day).map do |day|
-      ["#{day}#{I18n.t("datetime.prompts.day")}", day]
+      [I18n.t("gws/attendance.day", count: day), day]
     end
   end
 

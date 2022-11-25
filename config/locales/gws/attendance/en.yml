@@ -50,6 +50,7 @@ en:
         - For commonly used kanji characters, you can select Shift JIS.
     year: '%{count}'
     month: '%{count}'
+    day: '%{count}'
     hour: '%{count}'
     minute: '%{count}'
 

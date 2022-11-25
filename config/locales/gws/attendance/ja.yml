@@ -56,6 +56,7 @@ ja:
         - 出勤を打刻してから退勤するまでに、日付が変わってしまった場合、こちらを打刻してください。
     year: '%{count}年'
     month: '%{count}月'
+    day: '%{count}日'
     hour: '%{count}時'
     minute: '%{count}分'
 

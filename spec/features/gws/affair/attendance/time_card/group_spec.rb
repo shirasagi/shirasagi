@@ -105,18 +105,18 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
     # change group
     within "form" do
       select user_638_group.name, from: 'group_id'
-      click_on "検索"
+      click_on I18n.t("ss.buttons.search")
     end
 
     within ".attendance-box.daily" do
       expect(page).to have_css(".attendance-box-title", text: time_card_title(Time.zone.today, user_638_group))
 
       # change year month
-      select "2020年8月", from: 'year_month'
+      select I18n.l(Time.zone.parse("2020/8/1").to_date, format: :attendance_year_month), from: 'year_month'
       expect(page).to have_css(".attendance-box-title", text: time_card_title(Time.zone.parse("2020/8/#{Time.zone.today.day}"), user_638_group))
 
       # change day
-      select "30日", from: 'day'
+      select I18n.t("gws/attendance.day", count: 30), from: 'day'
       expect(page).to have_css(".attendance-box-title", text: time_card_title(Time.zone.parse("2020/8/30"), user_638_group))
 
       within ".time-card" do
@@ -131,18 +131,18 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
     # change group
     within "form" do
       select user_638_group.name, from: 'group_id'
-      click_on "検索"
+      click_on I18n.t("ss.buttons.search")
     end
 
     within ".attendance-box.daily" do
       expect(page).to have_css(".attendance-box-title", text: time_card_title(Time.zone.today, user_638_group))
 
       # change year month
-      select "2020年8月", from: 'year_month'
+      select I18n.l(Time.zone.parse("2020/8/1").to_date, format: :attendance_year_month), from: 'year_month'
       expect(page).to have_css(".attendance-box-title", text: time_card_title(Time.zone.parse("2020/8/#{Time.zone.today.day}"), user_638_group))
 
       # change day
-      select "30日", from: 'day'
+      select I18n.t("gws/attendance.day", count: 30), from: 'day'
       expect(page).to have_css(".attendance-box-title", text: time_card_title(Time.zone.parse("2020/8/30"), user_638_group))
 
       within ".time-card" do
@@ -155,7 +155,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
     # change group
     within "form" do
       select user_545_group.name, from: 'group_id'
-      click_on "検索"
+      click_on I18n.t("ss.buttons.search")
     end
 
     within ".attendance-box.daily" do

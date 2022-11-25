@@ -16,8 +16,8 @@
     <div class="attendance-box-main">
       <%
         current = Time.zone.now
-        year_options = ((current.year - 5)..(current.year)).map { |y| ["#{y}#{t("datetime.prompts.year")}", y] }.reverse
-        month_options = (1..12).map { |m| ["#{m}#{t("datetime.prompts.month")}", m] }
+        year_options = ((current.year - 5)..(current.year)).map { |y| [I18n.t("gws/attendance.year", count: y), y] }.reverse
+        month_options = (1..12).map { |m| [I18n.t("gws/attendance.month", count: m), m] }
       %>
       <%= form_tag({ action: :show }, { method: "GET" }) do %>
         <%= select_tag :year, options_for_select(year_options, selected: @cur_month.year) %>
