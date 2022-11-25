@@ -200,153 +200,225 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
   end
 
   context "contact" do
-    let(:group_name) { unique_id }
-    let(:contact_group_name1) { unique_id }
-    let(:contact_tel1) { unique_tel }
-    let(:contact_fax1) { unique_tel }
-    let(:contact_email1) { unique_email }
-    let(:contact_link_url1) { "/#{unique_id}/" }
-    let(:contact_link_name1) { unique_id }
-    let(:contact_group_name2) { unique_id }
-    let(:contact_tel2) { unique_tel }
-    let(:contact_fax2) { unique_tel }
-    let(:contact_email2) { unique_email }
-    let(:contact_link_url2) { "/#{unique_id}/" }
-    let(:contact_link_name2) { unique_id }
+    context "basic crud" do
+      let(:group_name) { unique_id }
+      let(:contact_group_name1) { unique_id }
+      let(:contact_tel1) { unique_tel }
+      let(:contact_fax1) { unique_tel }
+      let(:contact_email1) { unique_email }
+      let(:contact_link_url1) { "/#{unique_id}/" }
+      let(:contact_link_name1) { unique_id }
+      let(:contact_group_name2) { unique_id }
+      let(:contact_tel2) { unique_tel }
+      let(:contact_fax2) { unique_tel }
+      let(:contact_email2) { unique_email }
+      let(:contact_link_url2) { "/#{unique_id}/" }
+      let(:contact_link_name2) { unique_id }
 
-    it do
-      visit cms_groups_path(site: site)
-      click_on I18n.t("ss.links.new")
-      within "form#item-form" do
-        fill_in "item[name]", with: "#{cms_group.name}/#{group_name}"
-        click_on I18n.t("ss.buttons.save")
+      it do
+        visit cms_groups_path(site: site)
+        click_on I18n.t("ss.links.new")
+        within "form#item-form" do
+          fill_in "item[name]", with: "#{cms_group.name}/#{group_name}"
+          click_on I18n.t("ss.buttons.save")
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
+
+        item = Cms::Group.all.site(site).where(name: "#{cms_group.name}/#{group_name}").first
+        expect(item.contact_groups).to be_blank
+        expect(item.contact_group_name).to be_blank
+        expect(item.contact_tel).to be_blank
+        expect(item.contact_fax).to be_blank
+        expect(item.contact_email).to be_blank
+        expect(item.contact_link_url).to be_blank
+        expect(item.contact_link_name).to be_blank
+
+        visit cms_groups_path(site: site)
+        click_on group_name
+        click_on I18n.t("ss.links.edit")
+        within "form#item-form" do
+          ensure_addon_opened "#addon-contact-agents-addons-group"
+          within "#addon-contact-agents-addons-group" do
+            within "tr[data-id='new']" do
+              fill_in "item[contact_groups][][contact_group_name]", with: contact_group_name1
+              fill_in "item[contact_groups][][contact_tel]", with: contact_tel1
+              fill_in "item[contact_groups][][contact_fax]", with: contact_fax1
+              fill_in "item[contact_groups][][contact_email]", with: contact_email1
+              fill_in "item[contact_groups][][contact_link_url]", with: contact_link_url1
+              fill_in "item[contact_groups][][contact_link_name]", with: contact_link_name1
+            end
+          end
+          click_on I18n.t("ss.buttons.save")
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
+
+        save_contact_group_id = nil
+        item.reload
+        expect(item.contact_groups.count).to eq 1
+        item.contact_groups.first.tap do |contact_group|
+          save_contact_group_id = contact_group.id
+          expect(contact_group.contact_group_name).to eq contact_group_name1
+          expect(contact_group.contact_tel).to eq contact_tel1
+          expect(contact_group.contact_email).to eq contact_email1
+          expect(contact_group.contact_link_url).to eq contact_link_url1
+          expect(contact_group.contact_link_name).to eq contact_link_name1
+          expect(contact_group.main_state).to be_blank
+        end
+        expect(item.contact_group_name).to be_blank
+        expect(item.contact_tel).to be_blank
+        expect(item.contact_fax).to be_blank
+        expect(item.contact_email).to be_blank
+        expect(item.contact_link_url).to be_blank
+        expect(item.contact_link_name).to be_blank
+
+        click_on I18n.t("ss.links.edit")
+        within "form#item-form" do
+          ensure_addon_opened "#addon-contact-agents-addons-group"
+          within "#addon-contact-agents-addons-group" do
+            within "tr[data-id='#{save_contact_group_id}']" do
+              first('[name="item[contact_groups][][main_state]"]').click
+            end
+          end
+          click_on I18n.t("ss.buttons.save")
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
+
+        item.reload
+        expect(item.contact_groups.count).to eq 1
+        item.contact_groups.first.tap do |contact_group|
+          # ページから id で参照するので、編集のたびに変化してはいけない。一度採番する変化しない。
+          expect(contact_group.id).to eq save_contact_group_id
+          expect(contact_group.contact_group_name).to eq contact_group_name1
+          expect(contact_group.contact_tel).to eq contact_tel1
+          expect(contact_group.contact_fax).to eq contact_fax1
+          expect(contact_group.contact_email).to eq contact_email1
+          expect(contact_group.contact_link_url).to eq contact_link_url1
+          expect(contact_group.contact_link_name).to eq contact_link_name1
+          expect(contact_group.main_state).to eq "main"
+        end
+        expect(item.contact_group_name).to eq contact_group_name1
+        expect(item.contact_tel).to eq contact_tel1
+        expect(item.contact_fax).to eq contact_fax1
+        expect(item.contact_email).to eq contact_email1
+        expect(item.contact_link_url).to eq contact_link_url1
+        expect(item.contact_link_name).to eq contact_link_name1
+
+        click_on I18n.t("ss.links.edit")
+        within "form#item-form" do
+          ensure_addon_opened "#addon-contact-agents-addons-group"
+          within "#addon-contact-agents-addons-group" do
+            within "tr[data-id='new']" do
+              fill_in "item[contact_groups][][contact_group_name]", with: contact_group_name2
+              fill_in "item[contact_groups][][contact_tel]", with: contact_tel2
+              fill_in "item[contact_groups][][contact_fax]", with: contact_fax2
+              fill_in "item[contact_groups][][contact_email]", with: contact_email2
+              fill_in "item[contact_groups][][contact_link_url]", with: contact_link_url2
+              fill_in "item[contact_groups][][contact_link_name]", with: contact_link_name2
+            end
+          end
+          click_on I18n.t("ss.buttons.save")
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
+
+        item.reload
+        expect(item.contact_groups.count).to eq 2
+        item.contact_groups.first.tap do |contact_group|
+          # ページから id で参照するので、編集のたびに変化してはいけない。一度採番する変化しない。
+          expect(contact_group.id).to eq save_contact_group_id
+          expect(contact_group.contact_group_name).to eq contact_group_name1
+          expect(contact_group.contact_tel).to eq contact_tel1
+          expect(contact_group.contact_fax).to eq contact_fax1
+          expect(contact_group.contact_email).to eq contact_email1
+          expect(contact_group.contact_link_url).to eq contact_link_url1
+          expect(contact_group.contact_link_name).to eq contact_link_name1
+          expect(contact_group.main_state).to eq "main"
+        end
+        item.contact_groups.second.tap do |contact_group|
+          expect(contact_group.contact_group_name).to eq contact_group_name2
+          expect(contact_group.contact_tel).to eq contact_tel2
+          expect(contact_group.contact_fax).to eq contact_fax2
+          expect(contact_group.contact_email).to eq contact_email2
+          expect(contact_group.contact_link_url).to eq contact_link_url2
+          expect(contact_group.contact_link_name).to eq contact_link_name2
+          expect(contact_group.main_state).to be_blank
+        end
+        expect(item.contact_group_name).to eq contact_group_name1
+        expect(item.contact_tel).to eq contact_tel1
+        expect(item.contact_fax).to eq contact_fax1
+        expect(item.contact_email).to eq contact_email1
+        expect(item.contact_link_url).to eq contact_link_url1
+        expect(item.contact_link_name).to eq contact_link_name1
       end
-      wait_for_notice I18n.t("ss.notice.saved")
+    end
 
-      item = Cms::Group.all.site(site).where(name: "#{cms_group.name}/#{group_name}").first
-      expect(item.contact_groups).to be_blank
-      expect(item.contact_group_name).to be_blank
-      expect(item.contact_tel).to be_blank
-      expect(item.contact_fax).to be_blank
-      expect(item.contact_email).to be_blank
-      expect(item.contact_link_url).to be_blank
-      expect(item.contact_link_name).to be_blank
+    context "choose main contact" do
+      let!(:group) do
+        create(
+          :cms_group, name: "#{cms_group.name}/#{unique_id}",
+          contact_groups: [
+            {
+              main_state: "main", contact_group_name: unique_id, contact_tel: unique_tel, contact_fax: unique_tel,
+              contact_email: unique_email, contact_link_url: unique_url, contact_link_name: unique_id
+            },
+            {
+              main_state: nil, contact_group_name: unique_id, contact_tel: unique_tel, contact_fax: unique_tel,
+              contact_email: unique_email, contact_link_url: unique_url, contact_link_name: unique_id
+            },
+            {
+              main_state: nil, contact_group_name: unique_id, contact_tel: unique_tel, contact_fax: unique_tel,
+              contact_email: unique_email, contact_link_url: unique_url, contact_link_name: unique_id
+            }
+          ]
+        )
+      end
 
-      visit cms_groups_path(site: site)
-      click_on group_name
-      click_on I18n.t("ss.links.edit")
-      within "form#item-form" do
-        ensure_addon_opened "#addon-contact-agents-addons-group"
-        within "#addon-contact-agents-addons-group" do
-          within "tr[data-id='new']" do
-            fill_in "item[contact_groups][][contact_group_name]", with: contact_group_name1
-            fill_in "item[contact_groups][][contact_tel]", with: contact_tel1
-            fill_in "item[contact_groups][][contact_fax]", with: contact_fax1
-            fill_in "item[contact_groups][][contact_email]", with: contact_email1
-            fill_in "item[contact_groups][][contact_link_url]", with: contact_link_url1
-            fill_in "item[contact_groups][][contact_link_name]", with: contact_link_name1
+      context "second contact is selected" do
+        it do
+          visit cms_groups_path(site: site)
+          click_on group.trailing_name
+          click_on I18n.t("ss.links.edit")
+
+          within "form#item-form" do
+            within "[data-id='#{group.contact_groups.to_a[1].id}']" do
+              first("[type='radio']").click
+            end
+
+            click_on I18n.t("ss.buttons.save")
+          end
+          wait_for_notice I18n.t("ss.notice.saved")
+
+          group.reload
+          group.contact_groups.to_a.tap do |contact_groups|
+            expect(contact_groups[0].main_state).to be_blank
+            expect(contact_groups[1].main_state).to eq "main"
+            expect(contact_groups[2].main_state).to be_blank
           end
         end
-        click_on I18n.t("ss.buttons.save")
       end
-      wait_for_notice I18n.t("ss.notice.saved")
 
-      save_contact_group_id = nil
-      item.reload
-      expect(item.contact_groups.count).to eq 1
-      item.contact_groups.first.tap do |contact_group|
-        save_contact_group_id = contact_group.id
-        expect(contact_group.contact_group_name).to eq contact_group_name1
-        expect(contact_group.contact_tel).to eq contact_tel1
-        expect(contact_group.contact_email).to eq contact_email1
-        expect(contact_group.contact_link_url).to eq contact_link_url1
-        expect(contact_group.contact_link_name).to eq contact_link_name1
-        expect(contact_group.main_state).to be_blank
-      end
-      expect(item.contact_group_name).to be_blank
-      expect(item.contact_tel).to be_blank
-      expect(item.contact_fax).to be_blank
-      expect(item.contact_email).to be_blank
-      expect(item.contact_link_url).to be_blank
-      expect(item.contact_link_name).to be_blank
+      context "third contact is selected" do
+        it do
+          visit cms_groups_path(site: site)
+          click_on group.trailing_name
+          click_on I18n.t("ss.links.edit")
 
-      click_on I18n.t("ss.links.edit")
-      within "form#item-form" do
-        ensure_addon_opened "#addon-contact-agents-addons-group"
-        within "#addon-contact-agents-addons-group" do
-          within "tr[data-id='#{save_contact_group_id}']" do
-            first('[name="item[contact_groups][][main_state]"]').click
+          within "form#item-form" do
+            within "[data-id='#{group.contact_groups.to_a[2].id}']" do
+              first("[type='radio']").click
+            end
+
+            click_on I18n.t("ss.buttons.save")
+          end
+          wait_for_notice I18n.t("ss.notice.saved")
+
+          group.reload
+          group.contact_groups.to_a.tap do |contact_groups|
+            expect(contact_groups[0].main_state).to be_blank
+            expect(contact_groups[1].main_state).to be_blank
+            expect(contact_groups[2].main_state).to eq "main"
           end
         end
-        click_on I18n.t("ss.buttons.save")
       end
-      wait_for_notice I18n.t("ss.notice.saved")
-
-      item.reload
-      expect(item.contact_groups.count).to eq 1
-      item.contact_groups.first.tap do |contact_group|
-        # ページから id で参照するので、編集のたびに変化してはいけない。一度採番する変化しない。
-        expect(contact_group.id).to eq save_contact_group_id
-        expect(contact_group.contact_group_name).to eq contact_group_name1
-        expect(contact_group.contact_tel).to eq contact_tel1
-        expect(contact_group.contact_fax).to eq contact_fax1
-        expect(contact_group.contact_email).to eq contact_email1
-        expect(contact_group.contact_link_url).to eq contact_link_url1
-        expect(contact_group.contact_link_name).to eq contact_link_name1
-        expect(contact_group.main_state).to eq "main"
-      end
-      expect(item.contact_group_name).to eq contact_group_name1
-      expect(item.contact_tel).to eq contact_tel1
-      expect(item.contact_fax).to eq contact_fax1
-      expect(item.contact_email).to eq contact_email1
-      expect(item.contact_link_url).to eq contact_link_url1
-      expect(item.contact_link_name).to eq contact_link_name1
-
-      click_on I18n.t("ss.links.edit")
-      within "form#item-form" do
-        ensure_addon_opened "#addon-contact-agents-addons-group"
-        within "#addon-contact-agents-addons-group" do
-          within "tr[data-id='new']" do
-            fill_in "item[contact_groups][][contact_group_name]", with: contact_group_name2
-            fill_in "item[contact_groups][][contact_tel]", with: contact_tel2
-            fill_in "item[contact_groups][][contact_fax]", with: contact_fax2
-            fill_in "item[contact_groups][][contact_email]", with: contact_email2
-            fill_in "item[contact_groups][][contact_link_url]", with: contact_link_url2
-            fill_in "item[contact_groups][][contact_link_name]", with: contact_link_name2
-          end
-        end
-        click_on I18n.t("ss.buttons.save")
-      end
-      wait_for_notice I18n.t("ss.notice.saved")
-
-      item.reload
-      expect(item.contact_groups.count).to eq 2
-      item.contact_groups.first.tap do |contact_group|
-        # ページから id で参照するので、編集のたびに変化してはいけない。一度採番する変化しない。
-        expect(contact_group.id).to eq save_contact_group_id
-        expect(contact_group.contact_group_name).to eq contact_group_name1
-        expect(contact_group.contact_tel).to eq contact_tel1
-        expect(contact_group.contact_fax).to eq contact_fax1
-        expect(contact_group.contact_email).to eq contact_email1
-        expect(contact_group.contact_link_url).to eq contact_link_url1
-        expect(contact_group.contact_link_name).to eq contact_link_name1
-        expect(contact_group.main_state).to eq "main"
-      end
-      item.contact_groups.second.tap do |contact_group|
-        expect(contact_group.contact_group_name).to eq contact_group_name2
-        expect(contact_group.contact_tel).to eq contact_tel2
-        expect(contact_group.contact_fax).to eq contact_fax2
-        expect(contact_group.contact_email).to eq contact_email2
-        expect(contact_group.contact_link_url).to eq contact_link_url2
-        expect(contact_group.contact_link_name).to eq contact_link_name2
-        expect(contact_group.main_state).to be_blank
-      end
-      expect(item.contact_group_name).to eq contact_group_name1
-      expect(item.contact_tel).to eq contact_tel1
-      expect(item.contact_fax).to eq contact_fax1
-      expect(item.contact_email).to eq contact_email1
-      expect(item.contact_link_url).to eq contact_link_url1
-      expect(item.contact_link_name).to eq contact_link_name1
     end
   end
 end

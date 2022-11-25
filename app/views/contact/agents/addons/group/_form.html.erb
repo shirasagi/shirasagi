@@ -9,6 +9,8 @@
     </td>
     <td class="contact-main-state">
       <label>
+        <%# hidden field is required before radio button %>
+        <%= hidden_field_tag "#{f.object_name}[contact_groups][][main_state]", "", id: nil %>
         <%= radio_button_tag "#{f.object_name}[contact_groups][][main_state]", "main", contact_group.try(:main_state) == "main", id: nil %>
         <%= t("contact.options.main_state.main") %>
       </label>
