@@ -46,7 +46,7 @@
           <% if @multi %>
             <input type="checkbox" name="ids[]" value="<%= group.id %>:<%= contact.id %>" />
           <% else %>
-            <%= link_to "選択", "#", class: "btn select-single-item" %>
+            <%= link_to t("contact.buttons.select"), "#", class: "btn select-single-item" %>
           <% end %>
         </td>
         <td class="name"><%= index == 0 ? group.section_name : nil %></td>

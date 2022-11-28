@@ -184,7 +184,7 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
         ensure_addon_opened "#addon-contact-agents-addons-group"
         within "#addon-contact-agents-addons-group" do
           within "tr[data-id='#{group.contact_groups.first.id}']" do
-            first('[name="item[contact_groups][][main_state]"]').click
+            first('[type="radio"][name="item[contact_groups][][main_state]"]').click
             fill_in "item[contact_groups][][contact_tel]", with: contact_tel
           end
         end
@@ -276,7 +276,7 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
           ensure_addon_opened "#addon-contact-agents-addons-group"
           within "#addon-contact-agents-addons-group" do
             within "tr[data-id='#{save_contact_group_id}']" do
-              first('[name="item[contact_groups][][main_state]"]').click
+              first('[type="radio"][name="item[contact_groups][][main_state]"]').click
             end
           end
           click_on I18n.t("ss.buttons.save")

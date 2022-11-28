@@ -17,12 +17,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       ensure_addon_opened('#addon-contact-agents-addons-page')
       within '#addon-contact-agents-addons-page' do
         wait_cbox_open do
-          first('.ajax-box').click
+          click_on I18n.t("contact.apis.contacts.index")
         end
       end
 
       wait_for_cbox do
-        click_on "contact_group"
+        within "[data-group-id='#{contact_group.id}']" do
+          wait_cbox_close { click_on I18n.t("contact.buttons.select") }
+        end
       end
 
       within "form#item-form" do

@@ -179,6 +179,10 @@ module SS::Model::Group
   end
 
   # Cast
+  def cms_group
+    is_a?(Cms::Group) ? self : Cms::Group.find(id)
+  end
+
   def gws_group
     is_a?(Gws::Group) ? self : Gws::Group.find(id)
   end

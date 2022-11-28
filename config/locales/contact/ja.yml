@@ -23,6 +23,8 @@ ja:
     options:
       main_state:
         main: 主
+    buttons:
+      select: 選択
 
   modules:
     contact: 連絡先
