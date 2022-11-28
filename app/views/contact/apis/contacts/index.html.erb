@@ -1,0 +1,73 @@
+<%= jquery do %>
+  SS_SearchUI.modal();
+<% end %>
+
+<div class="search-ui-form">
+<%= form_for :s, url: url_for(action: :index), html: { method: "GET", class: :search } do |f| %>
+  <%= hidden_field_tag("single", params[:single], id: nil) %>
+  <%= f.text_field :keyword, value: params[:s].try(:[], :keyword), id: nil %>
+  <%= f.submit  t("contact.apis.contacts.search"), class: :btn %>
+<% end %>
+</div>
+
+<table class="index">
+  <thead class="list-head">
+    <tr>
+      <th class="checkbox">
+        <% if @multi %>
+          <input type="checkbox" />
+        <% end %>
+      </th>
+      <th class="name" colspan="2"><%= Cms::Group.t :name %></th>
+      <th class="main-state"><%= SS::Contact.t :main_state %></th>
+      <th class="contact-group-name"><%= SS::Contact.t :contact_group_name %></th>
+      <th class="contact-tel"><%= SS::Contact.t :contact_tel %></th>
+      <th class="contact-fax"><%= SS::Contact.t :contact_fax %></th>
+      <th class="contact-email"><%= SS::Contact.t :contact_email %></th>
+      <th class="contact-link-url"><%= SS::Contact.t :contact_link_url %></th>
+      <th class="contact-link-name"><%= SS::Contact.t :contact_link_name %></th>
+    </tr>
+  </thead>
+  <tbody class="items">
+    <% index = 0 %>
+    <% prev_group_id = nil %>
+    <% @items.each do |item| %>
+      <%
+        group, contact = item
+        data = {
+          id: "#{group.id}:#{contact.id}", group_id: group.id, contact_id: contact.id.to_s, section_name: group.section_name,
+          contact_group_name: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+          contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
+        }
+        index = 0 if prev_group_id != group.id
+      %>
+      <%= tag.tr data: data do %>
+        <td class="checkbox">
+          <% if @multi %>
+            <input type="checkbox" name="ids[]" value="<%= group.id %>:<%= contact.id %>" />
+          <% else %>
+            <%= link_to "選択", "#", class: "btn select-single-item" %>
+          <% end %>
+        </td>
+        <td class="name"><%= index == 0 ? group.section_name : nil %></td>
+        <td class="index">#<%= index + 1 %></td>
+        <td class="main-state"><%= contact.main_state == "main" ? tag.span("radio_button_checked", class: "material-icons md-14", title: t("contact.options.main_state.main")) : nil %></td>
+        <td class="contact-group-name"><%= contact.contact_group_name %></td>
+        <td class="contact-tel"><%= contact.contact_tel %></td>
+        <td class="contact-fax"><%= contact.contact_fax %></td>
+        <td class="contact-email"><%= contact.contact_email %></td>
+        <td class="contact-link-url"><%= contact.contact_link_url %></td>
+        <td class="contact-link-name"><%= contact.contact_link_name %></td>
+      <% end %>
+
+      <% index += 1 %>
+      <% prev_group_id = group.id %>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="search-ui-select">
+  <%= button_tag t("contact.apis.contacts.select"), { type: :button, class: "select-items btn" } %>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

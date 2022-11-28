@@ -13,6 +13,7 @@ module Contact::Addon
       field :contact_link_name, type: String
       belongs_to :contact_group, class_name: "Cms::Group"
 
+      validates :contact_state, inclusion: { in: %w(show hide), allow_blank: true }
       validates :contact_link_url, "sys/trusted_url" => true, if: ->{ Sys::TrustedUrlValidator.url_restricted? }
 
       permit_params :contact_state, :contact_group_id, :contact_charge
@@ -36,10 +37,9 @@ module Contact::Addon
     end
 
     def contact_state_options
-      [
-        [I18n.t('ss.options.state.show'), 'show'],
-        [I18n.t('ss.options.state.hide'), 'hide'],
-      ]
+      %w(show hide).map do |v|
+        [ I18n.t("ss.options.state.#{v}"), v ]
+      end
     end
 
     def contact_present?
