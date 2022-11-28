@@ -64,8 +64,14 @@
     });
   };
 
-  var sort1 = new SS_SortableForm('#reminder-conditions', { limit: 5, onInsert: changeIntervalStep; changeIntervalMax });
-  var sort2 = new SS_SortableForm('#reminder-conditions-allday', { limit: 5, onInsert: changeIntervalStep; changeIntervalMax });
+  var sort1 = new SS_SortableForm('#reminder-conditions', { limit: 5, onInsert: function(newItem) {
+    changeIntervalStep(newItem);
+    changeIntervalMax(newItem);
+  }});
+  var sort2 = new SS_SortableForm('#reminder-conditions-allday', { limit: 5, onInsert: function(newItem) {
+    changeIntervalStep(newItem);
+    changeIntervalMax(newItem);
+  }});
 
   if (<%== reminder_conditions.to_json %>.length) {
     sort1.body.find('tr').remove();
@@ -77,6 +83,12 @@
   <% else %>
   sort1.renderItems(<%== reminder_conditions.to_json %>);
   <% end %>
+
+  $(".reminder-conditions tr .interval").on('focusout', function() {
+    if ($(this).closest("tr").find(".interval_type").val() == "minutes"){
+      $(this).val(Math.round($(this).val() / 10) * 10);
+    }
+  });
 
   $(".gws-addon-reminder table tr").each(function() { changeIntervalStep(this); });
   $(".gws-addon-reminder table tr").each(function() { changeIntervalMax(this); });

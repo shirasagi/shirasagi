@@ -46,6 +46,13 @@
       $(".reminder-conditions tr").each(function() { changeIntervalStep(this); });
     }, 0);
   });
+
+  $(".reminder-conditions tr .interval").on('focusout', function() {
+    if ($(this).closest("tr").find(".interval_type").val() == "minutes"){
+      $(this).val(Math.round($(this).val() / 10) * 10);
+    }
+  });
+
   SS.ajaxForm("#ajax-form", {
     beforeSend: function(xhr, settings) {
       SS.clearNotice();
