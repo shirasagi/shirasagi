@@ -30,23 +30,21 @@ class Gws::Affair::WeekWorkingExtractor
           user_id: user_id,
           date: start_of_month
         ).first
-        time_card ? time_card : "not found"
+        time_card || "not found"
       end
       time_card = @time_cards[user_id][start_of_month]
 
       working_minutes = 0
-      if time_card.class == Gws::Attendance::TimeCard
+      if time_card.is_a?(Gws::Attendance::TimeCard)
         record = time_card.records.where(date: date).first
         working_minutes = record ? (record.working_hour.to_i * 60 + record.working_minute.to_i) : 0
       end
 
       # 年次有給は勤務したとみなす
       annual_leave = false
-      if working_minutes == 0
-        if @annual_leave_dates[user_id].include?(date)
-          working_minutes = 465 # 7.75時間とする
-          annual_leave = true
-        end
+      if working_minutes == 0 && @annual_leave_dates[user_id].include?(date)
+        working_minutes = 465 # 7.75時間とする
+        annual_leave = true
       end
 
       {

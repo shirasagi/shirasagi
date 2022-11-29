@@ -1,14 +1,12 @@
 class Gws::Affair::OvertimeResult
   include SS::Document
 
-  attr_accessor :start_at_date, :start_at_hour, :start_at_minute
-  attr_accessor :end_at_date, :end_at_hour, :end_at_minute
-
-  attr_accessor :break1_start_at_date, :break1_start_at_hour, :break1_start_at_minute
-  attr_accessor :break1_end_at_date, :break1_end_at_hour, :break1_end_at_minute
-
-  attr_accessor :break2_start_at_date, :break2_start_at_hour, :break2_start_at_minute
-  attr_accessor :break2_end_at_date, :break2_end_at_hour, :break2_end_at_minute
+  attr_accessor :start_at_date, :start_at_hour, :start_at_minute,
+    :end_at_date, :end_at_hour, :end_at_minute,
+    :break1_start_at_date, :break1_start_at_hour, :break1_start_at_minute,
+    :break1_end_at_date, :break1_end_at_hour, :break1_end_at_minute,
+    :break2_start_at_date, :break2_start_at_hour, :break2_start_at_minute,
+    :break2_end_at_date, :break2_end_at_hour, :break2_end_at_minute
 
   embedded_in :file, class_name: "Gws::Addon::Affair::OvertimeFile"
   field :date, type: DateTime

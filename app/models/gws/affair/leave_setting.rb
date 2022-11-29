@@ -35,20 +35,20 @@ class Gws::Affair::LeaveSetting
   end
 
   def leave_files(opts = {})
-    _start_at = start_at
-    _end_at = end_at
+    leave_start_at = start_at
+    leave_end_at = end_at
 
     month = opts[:month]
     if month.present?
-      _start_at = month.in_time_zone.change(day: 1, hour: 0, min: 0, sec: 0)
-      _end_at = _start_at.end_of_month
+      leave_start_at = month.in_time_zone.change(day: 1, hour: 0, min: 0, sec: 0)
+      leave_end_at = leave_start_at.end_of_month
     end
     leave_files = Gws::Affair::LeaveFile.and([
       { site_id: site_id },
       { target_user_id: target_user_id },
       { state: "approve" },
-      { "end_at" => { "$gte" => _start_at } },
-      { "start_at" => { "$lte" => _end_at } }
+      { "end_at" => { "$gte" => leave_start_at } },
+      { "start_at" => { "$lte" => leave_end_at } }
     ])
 
     types = opts[:types].presence || %w(annual_leave paidleave)
@@ -60,7 +60,9 @@ class Gws::Affair::LeaveSetting
 
     leave_files = leave_files.reorder(start_at: 1).to_a
     leave_files.each do |file|
-      file.leave_dates_in_query = file.leave_dates.select { |leave_date| leave_date.date >= _start_at && leave_date.date <= _end_at }
+      file.leave_dates_in_query = file.leave_dates.select do |leave_date|
+        leave_date.date >= leave_start_at && leave_date.date <= leave_end_at
+      end
       file.leave_minutes_in_query = file.leave_dates.map(&:minute).sum
     end
     leave_files

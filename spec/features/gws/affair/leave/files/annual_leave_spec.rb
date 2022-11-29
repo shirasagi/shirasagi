@@ -5,11 +5,11 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
     before { create_affair_users }
 
     let(:site) { affair_site }
-    let(:user_638) { affair_user(638) }
-    let(:user_545) { affair_user(545) }
+    let(:user638) { affair_user(638) }
+    let(:user545) { affair_user(545) }
 
     let(:year) { Gws::Affair::CapitalYear.first }
-    let(:leave_setting) { create(:gws_affair_leave_setting, site: site, year: year, target_user: user_638) }
+    let(:leave_setting) { create(:gws_affair_leave_setting, site: site, year: year, target_user: user638) }
 
     let(:new_path) { new_gws_affair_leave_file_path(site: site, state: "mine") }
     let(:index_path) { gws_affair_leave_files_path(site: site, state: "all") }
@@ -22,7 +22,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
 
       Timecop.freeze(start_at) do
         # request
-        login_user(user_638)
+        login_user(user638)
         visit new_path
 
         within "form#item-form" do
@@ -39,7 +39,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("ss.buttons.save")
         end
 
-        login_user(user_638)
+        login_user(user638)
         visit index_path
 
         item = Gws::Affair::LeaveFile.find_by(reason: reason)
@@ -51,8 +51,8 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("workflow.search_approvers.index")
         end
         wait_for_cbox do
-          expect(page).to have_content(user_545.long_name)
-          find("tr[data-id='1,#{user_545.id}'] input[type=checkbox]").click
+          expect(page).to have_content(user545.long_name)
+          find("tr[data-id='1,#{user545.id}'] input[type=checkbox]").click
           click_on I18n.t("workflow.search_approvers.select")
         end
         within ".mod-workflow-request" do
@@ -61,7 +61,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
         end
 
         # approve
-        login_user(user_545)
+        login_user(user545)
         visit index_path
         click_on item.name
         within ".mod-workflow-approve" do
@@ -82,23 +82,23 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       end_at = Time.zone.parse("2021/1/4 20:00")
       item1 = create_annual_leave_file(start_at, end_at)
 
-      login_user(user_545)
+      login_user(user545)
       visit aggregate_path
 
       within ".gws-attendance" do
         within "table.index" do
-          expect(page).to have_link user_545.long_name
+          expect(page).to have_link user545.long_name
         end
 
         # change group
         within "form" do
-          select user_638.groups.first.name, from: 'group_id'
+          select user638.groups.first.name, from: 'group_id'
           click_on I18n.t('ss.buttons.search')
         end
 
         within "table.index" do
-          expect(page).to have_link user_638.long_name
-          click_on user_638.long_name
+          expect(page).to have_link user638.long_name
+          click_on user638.long_name
         end
       end
 
@@ -112,21 +112,27 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       end
 
       within "#annual-leave-setting" do
-        expect(page).to have_css(".leave-dates", text: "20#{I18n.t("ss.options.datetime_unit.day")}")
-        expect(page).to have_css(".leave-minutes", text: "155#{I18n.t("ss.hours")}(9300#{I18n.t("datetime.prompts.minute")})")
-        expect(page).to have_css(".effective-leave-minutes", text: "147.25#{I18n.t("ss.hours")}(8835#{I18n.t("datetime.prompts.minute")})")
+        expect(page).to have_css(".leave-dates",
+          text: "20#{I18n.t("ss.options.datetime_unit.day")}")
+        expect(page).to have_css(".leave-minutes",
+          text: "155#{I18n.t("ss.hours")}(9300#{I18n.t("datetime.prompts.minute")})")
+        expect(page).to have_css(".effective-leave-minutes",
+          text: "147.25#{I18n.t("ss.hours")}(8835#{I18n.t("datetime.prompts.minute")})")
       end
 
       within "#annual-leave" do
-        expect(page).to have_css(".leave-minutes", text: "7.75#{I18n.t("ss.hours")}(465#{I18n.t("datetime.prompts.minute")})")
+        expect(page).to have_css(".leave-minutes",
+          text: "7.75#{I18n.t("ss.hours")}(465#{I18n.t("datetime.prompts.minute")})")
         within ".leave-files" do
           expect(page).to have_link item1.name
         end
       end
 
       within "#paid-leave" do
-        expect(page).to have_css("dd", text: I18n.t("gws/affair.notice.not_found_leave_files"))
-        expect(page).to have_css(".leave-minutes", text: "0#{I18n.t("ss.hours")}(0#{I18n.t("datetime.prompts.minute")})")
+        expect(page).to have_css("dd",
+          text: I18n.t("gws/affair.notice.not_found_leave_files"))
+        expect(page).to have_css(".leave-minutes",
+          text: "0#{I18n.t("ss.hours")}(0#{I18n.t("datetime.prompts.minute")})")
       end
     end
   end

@@ -53,7 +53,8 @@ class Gws::Affair::SpecialLeavesController < ApplicationController
 
     set_items
     csv = @items.to_csv
-    send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "gws_affair_special_leaves_#{Time.zone.now.to_i}.csv"
+    filename = "gws_affair_special_leaves_#{Time.zone.now.to_i}.csv"
+    send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: filename
   end
 
   def import

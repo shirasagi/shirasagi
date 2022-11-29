@@ -83,8 +83,12 @@ class Gws::Affair::Capital
 
   def set_basic_code
     self.basic_code = "#{article_code}/#{section_code}/#{subsection_code}"
-    self.name = "#{article_code}#{t(:article_code)}#{section_code}#{t(:section_code)}#{subsection_code}#{t(:subsection_code)} #{project_code}-#{detail_code}"
-    self.basic_code_name = "#{article_code}#{t(:article_code)}#{section_code}#{t(:section_code)}#{subsection_code}#{t(:subsection_code)}"
+
+    self.basic_code_name = "#{article_code}#{t(:article_code)}"
+    self.basic_code_name += "#{section_code}#{t(:section_code)}"
+    self.basic_code_name += "#{subsection_code}#{t(:subsection_code)}"
+
+    self.name = basic_code_name + " #{project_code}-#{detail_code}"
   end
 
   class << self

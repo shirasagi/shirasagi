@@ -5,29 +5,29 @@ describe "gws_affair_leave_settings", type: :feature, dbscope: :example, js: tru
     before { create_affair_users }
 
     let(:site) { gws_site }
-    let!(:group1) { create :gws_group, name: "#{site.name}/group1", group_code: 110000 }
-    let!(:group2) { create :gws_group, name: "#{site.name}/group2", group_code: 110001 }
-    let!(:group3) { create :gws_group, name: "#{site.name}/group3", group_code: 110002 }
+    let!(:group1) { create :gws_group, name: "#{site.name}/group1", group_code: "110000" }
+    let!(:group2) { create :gws_group, name: "#{site.name}/group2", group_code: "110001" }
+    let!(:group3) { create :gws_group, name: "#{site.name}/group3", group_code: "110002" }
 
     let!(:user1) do
       create(:gws_user,
         name: "user1",
         group_ids: [group1.id],
-        staff_address_uid: 11111
+        staff_address_uid: "11111"
       )
     end
     let!(:user2) do
       create(:gws_user,
         name: "user2",
         group_ids: [group2.id],
-        staff_address_uid: 11112
+        staff_address_uid: "11112"
       )
     end
     let!(:user3) do
       create(:gws_user,
         name: "user3",
         group_ids: [group3.id],
-        staff_address_uid: 11113
+        staff_address_uid: "11113"
       )
     end
 
@@ -36,7 +36,7 @@ describe "gws_affair_leave_settings", type: :feature, dbscope: :example, js: tru
         name: "令和2年",
         code: 2020,
         start_date: Time.zone.parse("2020/4/1"),
-        close_date: Time.zone.parse("2021/3/31"),
+        close_date: Time.zone.parse("2021/3/31")
       )
     end
     let!(:year2) do
@@ -44,7 +44,7 @@ describe "gws_affair_leave_settings", type: :feature, dbscope: :example, js: tru
         name: "令和3年",
         code: 2021,
         start_date: Time.zone.parse("2021/4/1"),
-        close_date: Time.zone.parse("2022/3/31"),
+        close_date: Time.zone.parse("2022/3/31")
       )
     end
 

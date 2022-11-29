@@ -28,11 +28,7 @@ class Gws::Affair::DutySetting::HolidaysController < ApplicationController
     end
 
     @cur_year_range ||= begin
-      if @cur_year != :all
-        @cur_site.attendance_year_range(@cur_year)
-      else
-        []
-      end
+      @cur_year == :all ? [] : @cur_site.attendance_year_range(@cur_year)
     end
   end
 

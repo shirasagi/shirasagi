@@ -14,8 +14,12 @@ class Gws::Affair::Overtime::Management::Aggregate::CapitalsController < Applica
 
   def set_crumbs
     @crumbs << [@cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path]
-    @crumbs << [t("modules.gws/affair/overtime_file/management/aggregate"), gws_affair_overtime_management_aggregate_capitals_main_path]
-    @crumbs << [t("modules.gws/affair/overtime_file/management/aggregate/capital"), gws_affair_overtime_management_aggregate_capitals_main_path]
+    @crumbs << [
+      t("modules.gws/affair/overtime_file/management/aggregate"),
+      gws_affair_overtime_management_aggregate_capitals_main_path]
+    @crumbs << [
+      t("modules.gws/affair/overtime_file/management/aggregate/capital"),
+      gws_affair_overtime_management_aggregate_capitals_main_path]
   end
 
   public
@@ -32,7 +36,7 @@ class Gws::Affair::Overtime::Management::Aggregate::CapitalsController < Applica
     @months = (4..12).to_a + (1..3).to_a
 
     @title = I18n.t("gws/affair.labels.overtime.capitals.title", year: @fiscal_year)
-    @items, _ = @model.site(@cur_site).where(date_fiscal_year: @fiscal_year).capital_aggregate_by_month
+    @items, = @model.site(@cur_site).where(date_fiscal_year: @fiscal_year).capital_aggregate_by_month
   end
 
   def groups
@@ -51,7 +55,7 @@ class Gws::Affair::Overtime::Management::Aggregate::CapitalsController < Applica
     end
 
     @title = I18n.t("gws/affair.labels.overtime.capitals.title_groups", year: @fiscal_year, month: @month, group: @group.name)
-    @items, _ = @model.site(@cur_site).where(date_fiscal_year: @fiscal_year, date_month: @month).capital_aggregate_by_group
+    @items, = @model.site(@cur_site).where(date_fiscal_year: @fiscal_year, date_month: @month).capital_aggregate_by_group
   end
 
   def users
@@ -68,11 +72,11 @@ class Gws::Affair::Overtime::Management::Aggregate::CapitalsController < Applica
     end
 
     @title = I18n.t("gws/affair.labels.overtime.capitals.title_users", year: @fiscal_year, month: @month, group: @group.name)
-    @items, _ = @model.site(@cur_site).where(date_fiscal_year: @fiscal_year, date_month: @month).capital_aggregate_by_group_users
+    @items, = @model.site(@cur_site).where(date_fiscal_year: @fiscal_year, date_month: @month).capital_aggregate_by_group_users
   end
 
   def download_yearly
-    if request.get?
+    if request.get? || request.head?
       render :download
       return
     end
@@ -92,7 +96,7 @@ class Gws::Affair::Overtime::Management::Aggregate::CapitalsController < Applica
   end
 
   def download_groups
-    if request.get?
+    if request.get? || request.head?
       render :download
       return
     end
@@ -113,7 +117,7 @@ class Gws::Affair::Overtime::Management::Aggregate::CapitalsController < Applica
   end
 
   def download_users
-    if request.get?
+    if request.get? || request.head?
       render :download
       return
     end

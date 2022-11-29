@@ -1,9 +1,7 @@
 class Gws::Affair::CapitalYear::Importer::Base
   include ActiveModel::Model
 
-  attr_accessor :cur_site, :cur_user, :year
-  attr_accessor :in_file
-  attr_reader :year, :imported
+  attr_accessor :cur_site, :cur_user, :year, :in_file, :imported
 
   def model
     Gws::Affair::LeaveSetting

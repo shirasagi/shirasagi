@@ -1,10 +1,9 @@
 class Gws::Affair::Notifier
   include ActiveModel::Model
 
-  attr_accessor :item, :site, :group, :user, :to_users
-  attr_accessor :subject, :text, :action
+  attr_accessor :item, :site, :group, :user, :to_users, :subject, :text, :action
 
-  class Mailer < ActionMailer::Base
+  class Mailer < ApplicationMailer
   end
 
   def initialize(item)

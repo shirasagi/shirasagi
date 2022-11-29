@@ -37,13 +37,13 @@ class Gws::Affair::Attendance::Management::TimeCardsController < ApplicationCont
   end
 
   def check_model_permission
-    raise "403" unless %i[manage_private manage_all].any? { |priv| @model.allowed?(priv, @cur_user, site: @cur_site, permission_name: attendance_permission_name) }
+    raise "403" unless manageable_time_card?(permission_name: module_name)
   end
 
   def set_groups
-    if @model.allowed?(:manage_all, @cur_user, site: @cur_site, permission_name: attendance_permission_name)
+    if @model.allowed?(:manage_all, @cur_user, site: @cur_site, permission_name: module_name)
       @groups = Gws::Group.in_group(@cur_site).active
-    elsif @model.allowed?(:manage_private, @cur_user, site: @cur_site, permission_name: attendance_permission_name)
+    elsif @model.allowed?(:manage_private, @cur_user, site: @cur_site, permission_name: module_name)
       @groups = Gws::Group.in_group(@cur_group).active
     else
       @groups = Gws::Group.none

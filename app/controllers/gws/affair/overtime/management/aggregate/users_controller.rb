@@ -19,8 +19,12 @@ class Gws::Affair::Overtime::Management::Aggregate::UsersController < Applicatio
 
   def set_crumbs
     @crumbs << [@cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path]
-    @crumbs << [t("modules.gws/affair/overtime_file/management/aggregate"), gws_affair_overtime_management_aggregate_users_main_path]
-    @crumbs << [t("modules.gws/affair/overtime_file/management/aggregate/user"), gws_affair_overtime_management_aggregate_users_main_path]
+    @crumbs << [
+      t("modules.gws/affair/overtime_file/management/aggregate"),
+      gws_affair_overtime_management_aggregate_users_main_path]
+    @crumbs << [
+      t("modules.gws/affair/overtime_file/management/aggregate/user"),
+      gws_affair_overtime_management_aggregate_users_main_path]
   end
 
   def set_query
@@ -36,7 +40,7 @@ class Gws::Affair::Overtime::Management::Aggregate::UsersController < Applicatio
   def set_items
     @group = @result_groups.find_group(@group_id) || @result_groups.first
     @users = @group ? @group.users : []
-    @items, _ = @model.site(@cur_site).and([
+    @items, = @model.site(@cur_site).and([
       { "date_fiscal_year" => @fiscal_year },
       { "date_month" => @month },
       { "target_user_id" => { "$in" => @users.map(&:id) } }
@@ -71,7 +75,7 @@ class Gws::Affair::Overtime::Management::Aggregate::UsersController < Applicatio
   end
 
   def download_total
-    if request.get?
+    if request.get? || request.head?
       render :download
       return
     end
@@ -91,7 +95,7 @@ class Gws::Affair::Overtime::Management::Aggregate::UsersController < Applicatio
   end
 
   def download_under
-    if request.get?
+    if request.get? || request.head?
       render :download
       return
     end
@@ -111,7 +115,7 @@ class Gws::Affair::Overtime::Management::Aggregate::UsersController < Applicatio
   end
 
   def download_over
-    if request.get?
+    if request.get? || request.head?
       render :download
       return
     end

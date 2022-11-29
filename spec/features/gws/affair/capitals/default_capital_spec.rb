@@ -16,7 +16,7 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
       name: "R2",
       code: 2020,
       start_date: Time.zone.parse("2020/4/1"),
-      close_date: Time.zone.parse("2021/3/31"),
+      close_date: Time.zone.parse("2021/3/31")
     )
   end
   let!(:year2) do
@@ -24,12 +24,18 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
       name: "R3",
       code: 2021,
       start_date: Time.zone.parse("2021/4/1"),
-      close_date: Time.zone.parse("2022/3/31"),
+      close_date: Time.zone.parse("2022/3/31")
     )
   end
-  let!(:item1) { create(:gws_affair_capital, article_code: 1111, year: year1, member_ids: [user1.id], member_group_ids: [group1.id]) }
-  let!(:item2) { create(:gws_affair_capital, article_code: 2222, year: year1, member_group_ids: [group1.id, group2.id]) }
-  let!(:item3) { create(:gws_affair_capital, article_code: 3333, year: year2, member_ids: [user3.id]) }
+  let!(:item1) do
+    create(:gws_affair_capital, article_code: 1_111, year: year1, member_ids: [user1.id], member_group_ids: [group1.id])
+  end
+  let!(:item2) do
+    create(:gws_affair_capital, article_code: 2_222, year: year1, member_group_ids: [group1.id, group2.id])
+  end
+  let!(:item3) do
+    create(:gws_affair_capital, article_code: 3_333, year: year2, member_ids: [user3.id])
+  end
 
   let(:new_path) { new_gws_affair_overtime_file_path site.id, "mine" }
 

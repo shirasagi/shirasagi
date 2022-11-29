@@ -4,9 +4,9 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
   # 勤務時間は 8:30 - 17:15 | 3:00
 
   let(:site) { gws_site }
-  let(:day_0830) { Time.zone.parse("2020/8/30") } #平日
-  let(:day_0831) { Time.zone.parse("2020/8/31") } #平日
-  let(:day_0901) { Time.zone.parse("2020/9/1") } #平日
+  let(:day0830) { Time.zone.parse("2020/8/30") } #平日
+  let(:day0831) { Time.zone.parse("2020/8/31") } #平日
+  let(:day0901) { Time.zone.parse("2020/9/1") } #平日
   let(:reason) { unique_id }
   let(:memo) { unique_id }
 
@@ -51,7 +51,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
   context 'basic today crud' do
     context 'punch at 8/31 8:10' do
-      let(:now) { day_0831.change(hour: 8, min: 10) }
+      let(:now) { day0831.change(hour: 8, min: 10) }
 
       it do
         Timecop.freeze(now) do
@@ -59,8 +59,8 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           visit gws_affair_attendance_time_card_main_path(site)
 
           expect(page).to have_css(".cur-date[datetime=\"#{I18n.l(now, format: :iso)}\"]")
-          expect(page).to have_css(".today-box .attendance-date[datetime=\"#{I18n.l(day_0831, format: :iso)}\"]")
-          expect(page).to have_css(".yesterday-box .attendance-date[datetime=\"#{I18n.l(day_0830, format: :iso)}\"]")
+          expect(page).to have_css(".today-box .attendance-date[datetime=\"#{I18n.l(day0831, format: :iso)}\"]")
+          expect(page).to have_css(".yesterday-box .attendance-date[datetime=\"#{I18n.l(day0830, format: :iso)}\"]")
 
           expect(page).to have_css(".day-31.current")
 
@@ -68,13 +68,13 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           punch_leave(now)
 
           expect(Gws::Attendance::TimeCard.count).to eq 1
-          check_time_card_record(day_0831)
+          check_time_card_record(day0831)
         end
       end
     end
 
     context 'punch at 8/31 8:30' do
-      let(:now) { day_0831.change(hour: 8, min: 30) }
+      let(:now) { day0831.change(hour: 8, min: 30) }
 
       it do
         Timecop.freeze(now) do
@@ -83,8 +83,8 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           visit gws_affair_attendance_time_card_main_path(site)
 
           expect(page).to have_css(".cur-date[datetime=\"#{I18n.l(now, format: :iso)}\"]")
-          expect(page).to have_css(".today-box .attendance-date[datetime=\"#{I18n.l(day_0831, format: :iso)}\"]")
-          expect(page).to have_css(".yesterday-box .attendance-date[datetime=\"#{I18n.l(day_0830, format: :iso)}\"]")
+          expect(page).to have_css(".today-box .attendance-date[datetime=\"#{I18n.l(day0831, format: :iso)}\"]")
+          expect(page).to have_css(".yesterday-box .attendance-date[datetime=\"#{I18n.l(day0830, format: :iso)}\"]")
 
           expect(page).to have_css(".day-31.current")
 
@@ -92,13 +92,13 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           punch_leave(now)
 
           expect(Gws::Attendance::TimeCard.count).to eq 1
-          check_time_card_record(day_0831)
+          check_time_card_record(day0831)
         end
       end
     end
 
     context 'punch at 8/31 13:00' do
-      let(:now) { day_0831.change(hour: 13, min: 00) }
+      let(:now) { day0831.change(hour: 13, min: 0) }
 
       it do
         Timecop.freeze(now) do
@@ -107,8 +107,8 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           visit gws_affair_attendance_time_card_main_path(site)
 
           expect(page).to have_css(".cur-date[datetime=\"#{I18n.l(now, format: :iso)}\"]")
-          expect(page).to have_css(".today-box .attendance-date[datetime=\"#{I18n.l(day_0831, format: :iso)}\"]")
-          expect(page).to have_css(".yesterday-box .attendance-date[datetime=\"#{I18n.l(day_0830, format: :iso)}\"]")
+          expect(page).to have_css(".today-box .attendance-date[datetime=\"#{I18n.l(day0831, format: :iso)}\"]")
+          expect(page).to have_css(".yesterday-box .attendance-date[datetime=\"#{I18n.l(day0830, format: :iso)}\"]")
 
           expect(page).to have_css(".day-31.current")
 
@@ -116,13 +116,13 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           punch_leave(now)
 
           expect(Gws::Attendance::TimeCard.count).to eq 1
-          check_time_card_record(day_0831)
+          check_time_card_record(day0831)
         end
       end
     end
 
     context 'punch at 8/31 17:15' do
-      let(:now) { day_0831.change(hour: 17, min: 15) }
+      let(:now) { day0831.change(hour: 17, min: 15) }
 
       it do
         Timecop.freeze(now) do
@@ -131,8 +131,8 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           visit gws_affair_attendance_time_card_main_path(site)
 
           expect(page).to have_css(".cur-date[datetime=\"#{I18n.l(now, format: :iso)}\"]")
-          expect(page).to have_css(".today-box .attendance-date[datetime=\"#{I18n.l(day_0831, format: :iso)}\"]")
-          expect(page).to have_css(".yesterday-box .attendance-date[datetime=\"#{I18n.l(day_0830, format: :iso)}\"]")
+          expect(page).to have_css(".today-box .attendance-date[datetime=\"#{I18n.l(day0831, format: :iso)}\"]")
+          expect(page).to have_css(".yesterday-box .attendance-date[datetime=\"#{I18n.l(day0830, format: :iso)}\"]")
 
           expect(page).to have_css(".day-31.current")
 
@@ -140,13 +140,13 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           punch_leave(now)
 
           expect(Gws::Attendance::TimeCard.count).to eq 1
-          check_time_card_record(day_0831)
+          check_time_card_record(day0831)
         end
       end
     end
 
     context 'punch at 8/31 22:30' do
-      let(:now) { day_0831.change(hour: 22, min: 30) }
+      let(:now) { day0831.change(hour: 22, min: 30) }
 
       it do
         Timecop.freeze(now) do
@@ -155,8 +155,8 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           visit gws_affair_attendance_time_card_main_path(site)
 
           expect(page).to have_css(".cur-date[datetime=\"#{I18n.l(now, format: :iso)}\"]")
-          expect(page).to have_css(".today-box .attendance-date[datetime=\"#{I18n.l(day_0831, format: :iso)}\"]")
-          expect(page).to have_css(".yesterday-box .attendance-date[datetime=\"#{I18n.l(day_0830, format: :iso)}\"]")
+          expect(page).to have_css(".today-box .attendance-date[datetime=\"#{I18n.l(day0831, format: :iso)}\"]")
+          expect(page).to have_css(".yesterday-box .attendance-date[datetime=\"#{I18n.l(day0830, format: :iso)}\"]")
 
           expect(page).to have_css(".day-31.current")
 
@@ -164,13 +164,13 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           punch_leave(now)
 
           expect(Gws::Attendance::TimeCard.count).to eq 1
-          check_time_card_record(day_0831)
+          check_time_card_record(day0831)
         end
       end
     end
 
     context 'punch at 9/1 2:50' do
-      let(:now) { day_0901.change(hour: 2, min: 50) }
+      let(:now) { day0901.change(hour: 2, min: 50) }
 
       it do
         Timecop.freeze(now) do
@@ -178,8 +178,8 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           visit gws_affair_attendance_time_card_main_path(site)
 
           expect(page).to have_css(".cur-date[datetime=\"#{I18n.l(now, format: :iso)}\"]")
-          expect(page).to have_css(".today-box .attendance-date[datetime=\"#{I18n.l(day_0831, format: :iso)}\"]")
-          expect(page).to have_css(".yesterday-box .attendance-date[datetime=\"#{I18n.l(day_0830, format: :iso)}\"]")
+          expect(page).to have_css(".today-box .attendance-date[datetime=\"#{I18n.l(day0831, format: :iso)}\"]")
+          expect(page).to have_css(".yesterday-box .attendance-date[datetime=\"#{I18n.l(day0830, format: :iso)}\"]")
 
           expect(page).to have_css(".day-31.current")
 
@@ -187,13 +187,13 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           punch_leave(now)
 
           expect(Gws::Attendance::TimeCard.count).to eq 1
-          check_time_card_record(day_0831)
+          check_time_card_record(day0831)
         end
       end
     end
 
     context 'punch at 9/1 4:00 (not punched yesterday time card)' do
-      let(:now) { day_0901.change(hour: 4, min: 00) }
+      let(:now) { day0901.change(hour: 4, min: 0) }
 
       it do
         Timecop.freeze(now) do
@@ -201,8 +201,8 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           visit gws_affair_attendance_time_card_main_path(site)
 
           expect(page).to have_css(".cur-date[datetime=\"#{I18n.l(now, format: :iso)}\"]")
-          expect(page).to have_css(".today-box .attendance-date[datetime=\"#{I18n.l(day_0901, format: :iso)}\"]")
-          expect(page).to have_no_css(".yesterday-box .attendance-date[datetime=\"#{I18n.l(day_0831, format: :iso)}\"]")
+          expect(page).to have_css(".today-box .attendance-date[datetime=\"#{I18n.l(day0901, format: :iso)}\"]")
+          expect(page).to have_no_css(".yesterday-box .attendance-date[datetime=\"#{I18n.l(day0831, format: :iso)}\"]")
 
           expect(page).to have_css(".day-1.current")
 
@@ -214,7 +214,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
     end
 
     context 'punch at 9/1 4:00' do
-      let(:now) { day_0901.change(hour: 4, min: 00) }
+      let(:now) { day0901.change(hour: 4, min: 0) }
       let(:yesterday) { now.yesterday }
 
       it do
@@ -228,8 +228,8 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           visit gws_affair_attendance_time_card_main_path(site)
 
           expect(page).to have_css(".cur-date[datetime=\"#{I18n.l(now, format: :iso)}\"]")
-          expect(page).to have_css(".today-box .attendance-date[datetime=\"#{I18n.l(day_0901, format: :iso)}\"]")
-          expect(page).to have_css(".yesterday-box .attendance-date[datetime=\"#{I18n.l(day_0831, format: :iso)}\"]")
+          expect(page).to have_css(".today-box .attendance-date[datetime=\"#{I18n.l(day0901, format: :iso)}\"]")
+          expect(page).to have_css(".yesterday-box .attendance-date[datetime=\"#{I18n.l(day0831, format: :iso)}\"]")
 
           expect(page).to have_css(".day-1.current")
 
@@ -237,7 +237,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           punch_leave(now)
 
           expect(Gws::Attendance::TimeCard.count).to eq 2
-          check_time_card_record(day_0901)
+          check_time_card_record(day0901)
         end
       end
     end

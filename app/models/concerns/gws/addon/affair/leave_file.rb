@@ -4,12 +4,9 @@ module Gws::Addon::Affair::LeaveFile
   include Gws::Affair::LeaveFile::Compensatory
 
   included do
-    attr_accessor :start_at_date, :start_at_hour, :start_at_minute
-    attr_accessor :end_at_date, :end_at_hour, :end_at_minute
-    attr_accessor :in_leave_dates
-
-    attr_accessor :leave_dates_in_query
-    attr_accessor :leave_minutes_in_query
+    attr_accessor :start_at_date, :start_at_hour, :start_at_minute,
+      :end_at_date, :end_at_hour, :end_at_minute,
+      :in_leave_dates, :leave_dates_in_query, :leave_minutes_in_query
 
     field :date, type: DateTime
     field :start_at, type: DateTime

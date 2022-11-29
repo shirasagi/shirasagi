@@ -81,7 +81,7 @@ module Gws::Affair::Attendance::TimeCardFilter
   public
 
   def working_time
-    if request.get?
+    if request.get? || request.head?
       render template: 'working_time', layout: false
       return
     end

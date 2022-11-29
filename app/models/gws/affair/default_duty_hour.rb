@@ -93,7 +93,7 @@ class Gws::Affair::DefaultDutyHour
     break_start_at = affair_break_start(time)
     break_end_at = affair_break_end(time)
 
-    minutes, _ = Gws::Affair::Utils.time_range_minutes(start_at..end_at, break_start_at..break_end_at)
+    minutes, = Gws::Affair::Utils.time_range_minutes(start_at..end_at, break_start_at..break_end_at)
     minutes
   end
 

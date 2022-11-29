@@ -45,13 +45,13 @@
           <% field_names.each do |field_name| %>
             <td class="time <%= field_name %>">
               <% if @today_record.try(:find_latest_history, field_name).present? %>
-                <% if @model.allowed?(:edit, @cur_user, site: @cur_site, permission_name: attendance_permission_name) %>
+                <% if @model.allowed?(:edit, @cur_user, site: @cur_site, permission_name: module_name) %>
                   <%= button_tag(t('ss.buttons.edit'), name: 'edit', type: 'button', class: 'btn', data: { action: time_gws_affair_attendance_time_cards_path(year_month: year_month, day: day02, type: field_name, ref: request.fullpath) }) %>
                 <% else %>
                   <%= button_tag(t('ss.buttons.edit'), name: 'punch', type: 'button', class: 'btn', disabled: "disabled") %>
                 <% end %>
               <% else %>
-                <% if @model.allowed?(:use, @cur_user, site: @cur_site, permission_name: attendance_permission_name) %>
+                <% if @model.allowed?(:use, @cur_user, site: @cur_site, permission_name: module_name) %>
                   <%= button_tag(t('gws/attendance.buttons.punch'), name: 'punch', type: 'button', class: 'btn', data: { confirm: t('gws/attendance.confirm.punch'), action: "#{gws_affair_attendance_time_cards_path(year_month: year_month)}/#{field_name}?#{ { ref: request.fullpath }.to_query }" }) %>
                 <% else %>
                   <%= button_tag(t('gws/attendance.buttons.punch'), name: 'punch', type: 'button', class: 'btn', disabled: "disabled") %>

@@ -5,8 +5,8 @@ module Gws::Addon::Affair::OvertimeFile
   include Gws::Affair::OvertimeFile::CreateCompensatory
 
   included do
-    attr_accessor :start_at_date, :start_at_hour, :start_at_minute
-    attr_accessor :end_at_date, :end_at_hour, :end_at_minute
+    attr_accessor :start_at_date, :start_at_hour, :start_at_minute,
+      :end_at_date, :end_at_hour, :end_at_minute
 
     field :overtime_name, type: String
     field :date, type: DateTime

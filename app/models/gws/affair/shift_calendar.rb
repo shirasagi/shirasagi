@@ -73,11 +73,6 @@ class Gws::Affair::ShiftCalendar
   end
 
   # with shift_record
-  def working_minute(time, enter = nil, leave = nil)
-    default_holiday_calendar.working_minute(time, enter, leave)
-  end
-
-  # with shift_record
   def effective_holiday_calendar(date)
     shift_record(date) || default_holiday_calendar
   end
@@ -97,6 +92,7 @@ class Gws::Affair::ShiftCalendar
     effective_holiday_calendar(date).holiday?(date)
   end
 
+  # with shift_record
   def working_minute(time, enter = nil, leave = nil)
     effective_duty_hour(time).working_minute(time, enter, leave)
   end

@@ -43,14 +43,16 @@ class Gws::Affair::Leave::AggregateController < ApplicationController
     @encoding = params.dig(:s, :encoding)
     @items = @model.site(@cur_site).and([
       { "target_user_id" => { "$in" => user_ids } },
-      { "leave_type" => { "$in" => ["annual_leave", "paidleave"] } },
+      { "leave_type" => { "$in" => %w(annual_leave paidleave) } },
       { "state" => "approve" },
       { "end_at" => { "$gte" => start_at } },
       { "start_at" => { "$lt" => end_at } }
     ]).reorder(start_at: 1).to_a
 
     @items.each do |file|
-      file.leave_dates_in_query = file.leave_dates.select { |leave_date| leave_date.date >= start_at && leave_date.date <= end_at }
+      file.leave_dates_in_query = file.leave_dates.select do |leave_date|
+        leave_date.date >= start_at && leave_date.date <= end_at
+      end
       file.leave_minutes_in_query = file.leave_dates.map(&:minute).sum
     end
 

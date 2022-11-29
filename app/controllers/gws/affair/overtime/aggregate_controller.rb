@@ -30,11 +30,11 @@ class Gws::Affair::Overtime::AggregateController < ApplicationController
     prefs, aggregate = Gws::Affair::OvertimeDayResult.site(@cur_site).where(
       date_year: @cur_month.year,
       date_month: @cur_month.month,
-      target_user_id: @user.id,
+      target_user_id: @user.id
     ).user_aggregate
 
     @under = prefs.dig(@user.id, "total", "under_threshold") || {}
     @over = prefs.dig(@user.id, "total", "over_threshold") || {}
-    @aggregate = aggregate.dig(@user.id) || {}
+    @aggregate = aggregate.dig[@user.id] || {}
   end
 end

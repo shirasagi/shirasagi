@@ -5,8 +5,8 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
     before { create_affair_users }
 
     let(:site) { affair_site }
-    let(:user_683) { affair_user(638) }
-    let(:user_545) { affair_user(545) }
+    let(:user683) { affair_user(638) }
+    let(:user545) { affair_user(545) }
 
     let(:new_path) { new_gws_affair_overtime_file_path(site: site, state: "mine") }
     let(:index_path) { gws_affair_overtime_files_path(site: site, state: "all") }
@@ -18,7 +18,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
 
       Timecop.freeze(start_at) do
         # request
-        login_user(user_683)
+        login_user(user683)
         visit new_path
 
         within "form#item-form" do
@@ -35,7 +35,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           click_on I18n.t("ss.buttons.save")
         end
 
-        login_user(user_683)
+        login_user(user683)
         visit index_path
         click_on name
 
@@ -45,8 +45,8 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           click_on I18n.t("workflow.search_approvers.index")
         end
         wait_for_cbox do
-          expect(page).to have_content(user_545.long_name)
-          find("tr[data-id='1,#{user_545.id}'] input[type=checkbox]").click
+          expect(page).to have_content(user545.long_name)
+          find("tr[data-id='1,#{user545.id}'] input[type=checkbox]").click
           click_on I18n.t("workflow.search_approvers.select")
         end
         within ".mod-workflow-request" do
@@ -55,7 +55,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         end
 
         # approve
-        login_user(user_545)
+        login_user(user545)
         visit index_path
         click_on name
         within ".mod-workflow-approve" do
@@ -65,7 +65,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment)}/)
 
         # input results
-        login_user(user_683)
+        login_user(user683)
         visit index_path
         click_on name
         within "#addon-gws-agents-addons-affair-overtime_result" do
@@ -80,7 +80,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
 
         # edit results
-        login_user(user_683)
+        login_user(user683)
         visit index_path
         click_on name
         within "#addon-gws-agents-addons-affair-overtime_result" do
@@ -95,7 +95,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
 
         # close results
-        login_user(user_545)
+        login_user(user545)
         visit index_path
         click_on name
         within "#addon-gws-agents-addons-affair-overtime_result" do

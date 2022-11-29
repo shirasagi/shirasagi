@@ -16,8 +16,12 @@ class Gws::Affair::Overtime::Management::Aggregate::SearchGroupsController < App
 
   def set_crumbs
     @crumbs << [@cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path]
-    @crumbs << [t("modules.gws/affair/overtime_file/management/aggregate"), gws_affair_overtime_management_aggregate_search_groups_main_path]
-    @crumbs << [t("modules.gws/affair/overtime_file/management/aggregate/search_groups"), gws_affair_overtime_management_aggregate_search_groups_main_path]
+    @crumbs << [
+      t("modules.gws/affair/overtime_file/management/aggregate"),
+      gws_affair_overtime_management_aggregate_search_groups_main_path]
+    @crumbs << [
+      t("modules.gws/affair/overtime_file/management/aggregate/search_groups"),
+      gws_affair_overtime_management_aggregate_search_groups_main_path]
   end
 
   def set_query
@@ -30,7 +34,7 @@ class Gws::Affair::Overtime::Management::Aggregate::SearchGroupsController < App
   def set_items
     @groups = @result_groups.select { |group| @group_ids.include?(group.group_id) }
     @title = I18n.t("gws/affair.labels.overtime.search.title", year: @fiscal_year, month: @month)
-    @items, _ = @model.site(@cur_site).where(date_fiscal_year: @fiscal_year, date_month: @month).capital_aggregate_by_group
+    @items, = @model.site(@cur_site).where(date_fiscal_year: @fiscal_year, date_month: @month).capital_aggregate_by_group
   end
 
   public

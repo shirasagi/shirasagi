@@ -5,8 +5,8 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
     before { create_affair_users }
 
     let(:site) { affair_site }
-    let(:user_683) { affair_user(638) }
-    let(:user_545) { affair_user(545) }
+    let(:user638) { affair_user(638) }
+    let(:user545) { affair_user(545) }
 
     let(:new_path) { new_gws_affair_overtime_file_path(site: site, state: "mine") }
     let(:index_path) { gws_affair_overtime_files_path(site: site, state: "all") }
@@ -29,7 +29,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
 
       Timecop.freeze(start_at) do
         # request
-        login_user(user_683)
+        login_user(user638)
         visit new_path
 
         within "form#item-form" do
@@ -47,7 +47,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         end
         file = Gws::Affair::OvertimeFile.find_by(overtime_name: name)
 
-        login_user(user_683)
+        login_user(user638)
         visit index_path
         click_on name
 
@@ -57,8 +57,8 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           click_on I18n.t("workflow.search_approvers.index")
         end
         wait_for_cbox do
-          expect(page).to have_content(user_545.long_name)
-          find("tr[data-id='1,#{user_545.id}'] input[type=checkbox]").click
+          expect(page).to have_content(user545.long_name)
+          find("tr[data-id='1,#{user545.id}'] input[type=checkbox]").click
           click_on I18n.t("workflow.search_approvers.select")
         end
         within ".mod-workflow-request" do
@@ -67,7 +67,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         end
 
         # approve
-        login_user(user_545)
+        login_user(user545)
         visit index_path
         click_on name
         within ".mod-workflow-approve" do
@@ -77,7 +77,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment)}/)
 
         # input results
-        login_user(user_683)
+        login_user(user638)
         visit index_path
         click_on name
         within "#addon-gws-agents-addons-affair-overtime_result" do
@@ -87,23 +87,35 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           expect(page).to have_css("#addon-gws-agents-addons-affair-overtime_file")
 
           if break1_start_at
-            select break1_start_at.strftime("%Y/%m/%d"), from: "item[in_results][#{file.id}][break1_start_at_date]"
-            select I18n.t('gws/attendance.hour', count: break1_start_at.hour), from: "item[in_results][#{file.id}][break1_start_at_hour]"
-            select I18n.t('gws/attendance.minute', count: break1_start_at.min), from: "item[in_results][#{file.id}][break1_start_at_minute]"
+            select break1_start_at.strftime("%Y/%m/%d"),
+              from: "item[in_results][#{file.id}][break1_start_at_date]"
+            select I18n.t('gws/attendance.hour', count: break1_start_at.hour),
+              from: "item[in_results][#{file.id}][break1_start_at_hour]"
+            select I18n.t('gws/attendance.minute', count: break1_start_at.min),
+              from: "item[in_results][#{file.id}][break1_start_at_minute]"
 
-            select break1_end_at.strftime("%Y/%m/%d"), from: "item[in_results][#{file.id}][break1_end_at_date]"
-            select I18n.t('gws/attendance.hour', count: break1_end_at.hour), from: "item[in_results][#{file.id}][break1_end_at_hour]"
-            select I18n.t('gws/attendance.minute', count: break1_end_at.min), from: "item[in_results][#{file.id}][break1_end_at_minute]"
+            select break1_end_at.strftime("%Y/%m/%d"),
+              from: "item[in_results][#{file.id}][break1_end_at_date]"
+            select I18n.t('gws/attendance.hour', count: break1_end_at.hour),
+              from: "item[in_results][#{file.id}][break1_end_at_hour]"
+            select I18n.t('gws/attendance.minute', count: break1_end_at.min),
+              from: "item[in_results][#{file.id}][break1_end_at_minute]"
           end
 
           if break2_start_at
-            select break2_start_at.strftime("%Y/%m/%d"), from: "item[in_results][#{file.id}][break2_start_at_date]"
-            select I18n.t('gws/attendance.hour', count: break2_start_at.hour), from: "item[in_results][#{file.id}][break2_start_at_hour]"
-            select I18n.t('gws/attendance.minute', count: break2_start_at.min), from: "item[in_results][#{file.id}][break2_start_at_minute]"
+            select break2_start_at.strftime("%Y/%m/%d"),
+              from: "item[in_results][#{file.id}][break2_start_at_date]"
+            select I18n.t('gws/attendance.hour', count: break2_start_at.hour),
+              from: "item[in_results][#{file.id}][break2_start_at_hour]"
+            select I18n.t('gws/attendance.minute', count: break2_start_at.min),
+              from: "item[in_results][#{file.id}][break2_start_at_minute]"
 
-            select break2_end_at.strftime("%Y/%m/%d"), from: "item[in_results][#{file.id}][break2_end_at_date]"
-            select I18n.t('gws/attendance.hour', count: break2_end_at.hour), from: "item[in_results][#{file.id}][break2_end_at_hour]"
-            select I18n.t('gws/attendance.minute', count: break2_end_at.min), from: "item[in_results][#{file.id}][break2_end_at_minute]"
+            select break2_end_at.strftime("%Y/%m/%d"),
+              from: "item[in_results][#{file.id}][break2_end_at_date]"
+            select I18n.t('gws/attendance.hour', count: break2_end_at.hour),
+              from: "item[in_results][#{file.id}][break2_end_at_hour]"
+            select I18n.t('gws/attendance.minute', count: break2_end_at.min),
+              from: "item[in_results][#{file.id}][break2_end_at_minute]"
           end
           within "#ajax-box" do
             click_on I18n.t("ss.buttons.save")
@@ -122,7 +134,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       end_at = Time.zone.parse("2021/2/2 00:00")
 
       item1 = create_overtime_file(start_at, end_at)
-      login_user(user_545)
+      login_user(user545)
       visit index_path
       click_on item1.name
       within "#addon-gws-agents-addons-affair-overtime_result" do
@@ -145,7 +157,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       item2 = create_overtime_file(start_at, end_at,
         break1_start_at: break1_start_at, break1_end_at: break1_end_at
       )
-      login_user(user_545)
+      login_user(user545)
       visit index_path
       click_on item2.name
       within "#addon-gws-agents-addons-affair-overtime_result" do
@@ -173,7 +185,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         break1_start_at: break1_start_at, break1_end_at: break1_end_at,
         break2_start_at: break2_start_at, break2_end_at: break2_end_at
       )
-      login_user(user_545)
+      login_user(user545)
       visit index_path
       click_on item3.name
       within "#addon-gws-agents-addons-affair-overtime_result" do

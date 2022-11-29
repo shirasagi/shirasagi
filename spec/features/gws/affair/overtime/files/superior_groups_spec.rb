@@ -24,19 +24,19 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
     let(:capital) { Gws::Affair::Capital.find_by(name: "1款1項1目 1-17") }
 
     # 市長・副市長
-    let(:user_716) { affair_user(716) } # 庶務事務市/市長・副市長
+    let(:user716) { affair_user(716) } # 庶務事務市/市長・副市長
 
     # 総務部
-    let(:user_461) { affair_user(461) } # 庶務事務市/市長・副市長/総務部
-    let(:user_545) { affair_user(545) } # 庶務事務市/市長・副市長/総務部/総務課
-    let(:user_683) { affair_user(638) } # 庶務事務市/市長・副市長/総務部/総務課/人事担当
-    let(:user_586) { affair_user(586) } # 庶務事務市/市長・副市長/総務部/総務課/秘書広報担当
+    let(:user461) { affair_user(461) } # 庶務事務市/市長・副市長/総務部
+    let(:user545) { affair_user(545) } # 庶務事務市/市長・副市長/総務部/総務課
+    let(:user638) { affair_user(638) } # 庶務事務市/市長・副市長/総務部/総務課/人事担当
+    let(:user586) { affair_user(586) } # 庶務事務市/市長・副市長/総務部/総務課/秘書広報担当
 
     # 市民生活部
-    let(:user_502) { affair_user(502) } # 庶務事務市/市長・副市長/市民生活部
-    let(:user_510) { affair_user(510) } # 庶務事務市/市長・副市長/市民生活部/税務課
-    let(:user_565) { affair_user(565) } # 庶務事務市/市長・副市長/市民生活部/税務課/市民税担当
-    let(:user_492) { affair_user(492) } # 庶務事務市/市長・副市長/市民生活部/税務課/固定資産税担当
+    let(:user502) { affair_user(502) } # 庶務事務市/市長・副市長/市民生活部
+    let(:user510) { affair_user(510) } # 庶務事務市/市長・副市長/市民生活部/税務課
+    let(:user565) { affair_user(565) } # 庶務事務市/市長・副市長/市民生活部/税務課/市民税担当
+    let(:user492) { affair_user(492) } # 庶務事務市/市長・副市長/市民生活部/税務課/固定資産税担当
 
     let(:superior_group1) { Gws::Group.find_by(name: "庶務事務市/市長・副市長") }
     let(:superior_group2) { Gws::Group.find_by(name: "庶務事務市/市長・副市長/総務部") }
@@ -74,10 +74,10 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         login_user(user_sys)
         visit import_path
 
-        check_superior(user_461, superior_group1)
-        check_superior(user_545, superior_group2)
-        check_superior(user_683, superior_group2)
-        check_superior(user_586, superior_group2)
+        check_superior(user461, superior_group1)
+        check_superior(user545, superior_group2)
+        check_superior(user638, superior_group2)
+        check_superior(user586, superior_group2)
       end
     end
   end

@@ -26,13 +26,13 @@ new Gws_Affair_Menu("<%= current_navi %>", "ss_affair_navi_site_<%= @cur_site.id
   <!-- 庶務事務/出退勤 -->
   <h3><%= link_to(t('modules.gws/affair/attendance'), "", class: "toggle-narrow-page") %></h3>
   <ul class="narrow-page" data-navi="attendance">
-    <% if Gws::Attendance::TimeCard.allowed?(:use, @cur_user, site: @cur_site, permission_name: attendance_permission_name) %>
+    <% if Gws::Attendance::TimeCard.allowed?(:use, @cur_user, site: @cur_site, permission_name: module_name) %>
       <li><%= link_to t('modules.gws/affair/attendance/time_card'), gws_affair_attendance_time_card_main_path %></li>
     <% end %>
-    <% if %i[aggregate_private aggregate_all].find { |priv| Gws::Attendance::TimeCard.allowed?(priv, @cur_user, site: @cur_site, permission_name: attendance_permission_name) } %>
+    <% if %i[aggregate_private aggregate_all].find { |priv| Gws::Attendance::TimeCard.allowed?(priv, @cur_user, site: @cur_site, permission_name: module_name) } %>
       <li><%= link_to t('modules.gws/affair/attendance/time_card/group'), gws_affair_attendance_time_card_groups_main_path %></li>
     <% end %>
-    <% if %i[manage_private manage_all].find { |priv| Gws::Attendance::TimeCard.allowed?(priv, @cur_user, site: @cur_site, permission_name: attendance_permission_name) } %>
+    <% if %i[manage_private manage_all].find { |priv| Gws::Attendance::TimeCard.allowed?(priv, @cur_user, site: @cur_site, permission_name: module_name) } %>
       <li><%= link_to t('modules.gws/affair/attendance/management/time_card'), gws_affair_attendance_management_main_path, class: "management" %></li>
     <% end %>
   </ul>

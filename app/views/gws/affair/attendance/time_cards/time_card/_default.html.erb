@@ -145,7 +145,7 @@
             <%= "(" %>
             <% if editable_day_results.present? %>
               <% file = day_results.first.file %>
-              <% if file.allowed?(:edit, @cur_user, site: @cur_site, permission_name: attendance_permission_name) %>
+              <% if file.allowed?(:edit, @cur_user, site: @cur_site, permission_name: module_name) %>
                 <%= link_to "#{format_minute(overtime_result_minute)} #{t("gws/affair.timecard.label.order")}", edit_gws_affair_overtime_result_path(id: file.id, ref: request.fullpath), class: "ajax-box" %>
               <% else %>
                 <%= "#{format_minute(overtime_result_minute)} #{t("gws/affair.timecard.label.order")}" %>
@@ -163,7 +163,7 @@
           <% elsif overtime_files.present? %>
             <%= "(" %>
             <% file = overtime_files.first %>
-            <% if file.allowed?(:edit, @cur_user, site: @cur_site, permission_name: attendance_permission_name) %>
+            <% if file.allowed?(:edit, @cur_user, site: @cur_site, permission_name: module_name) %>
               <%= link_to "#{t("gws/affair.timecard.label.set_results")} #{t("gws/affair.timecard.label.order")}", edit_gws_affair_overtime_result_path(id: file.id, ref: request.fullpath), class: "ajax-box" %>
             <% else %>
               <%= "#{t("gws/affair.timecard.label.set_results")} #{t("gws/affair.timecard.label.order")}" %>

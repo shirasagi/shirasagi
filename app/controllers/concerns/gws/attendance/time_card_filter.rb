@@ -76,6 +76,11 @@ module Gws::Attendance::TimeCardFilter
     end
   end
 
+  def manageable_time_card?(opts = {})
+    opts = { site: @cur_site }.merge(opts)
+    %i[manage_private manage_all].any? { |priv| @model.allowed?(priv, @cur_user, opts) }
+  end
+
   public
 
   def time
