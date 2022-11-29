@@ -193,6 +193,7 @@ this.SS_AjaxFile = (function () {
   };
 
   SS_AjaxFile.prototype.submitError = function(xhr) {
+    var self = this;
     if (xhr.status === 413) {
       alert(["== Error =="].concat(SS_AjaxFile.errors.entityTooLarge).join("\n"));
     } else {
