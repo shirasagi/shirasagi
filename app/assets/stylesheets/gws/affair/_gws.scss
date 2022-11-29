@@ -25,8 +25,8 @@
   height: 50px;
   .title {
     display: inline-block;
-    vertical-align: middle;
     margin-top: 6px;
+    vertical-align: middle;
   }
 }
 .aggregate-capitals {
@@ -46,8 +46,8 @@
   padding: 0 10px;
   a {
     display: block;
-    float: left;
     margin: 1px 6px -1px 0;
+    float: left;
     border: 1px solid $gray4;
     border-left: 3px solid #bbb;
     border-radius: 0 4px 0 0;
@@ -86,13 +86,13 @@ table.affair-overtime-aggregate {
 }
 
 .leave-file-tooltip {
-  position: relative;
   display: inline-block;
+  position: relative;
   width: 16px;
   height: 16px;
+  background: $orange;
   line-height: 1.1;
   @include border-radius(8px);
-  background: $orange;
   color: $white;
   text-align: center;
   cursor: pointer;
@@ -131,8 +131,8 @@ table.affair-overtime-aggregate {
     }
     .shift-record {
       .affair {
-        text-align: center;
         font-size: 80%;
+        text-align: center;
         white-space: nowrap;
       }
       &.shift {
