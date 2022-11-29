@@ -10,6 +10,8 @@ en:
     no_time_cards: There is no timecard.
     no_target_users: There is no target person.
     already_locked: The timecard has been locked.
+    views:
+      total_working_minute: Total worktime
     confirm:
       download: Are you sure you want to download the timecard?
       lock: Are you sure you want to lock the timecard?
@@ -20,6 +22,7 @@ en:
     formats:
       time_card_name: '%{month}’s timecard'
       time_card_full_name: '%{month}’s timecard for %{user_name}'
+      time_card_daily_name: '%{day}’s timecard for（%{group}）'
       break_enter: Start break %{count}
       break_leave: End break %{count}
     buttons:
@@ -34,6 +37,7 @@ en:
     edit_cell:
       time: Time
       reason: Reason for correction
+      working_time: Worktime
     options:
       in_day:
         today: today
@@ -48,6 +52,8 @@ en:
         - Select a character code.
         - Select UTF-8 if a special kanji character is assigned for an uncommon name.
         - For commonly used kanji characters, you can select Shift JIS.
+      overnight:
+        - If the date has changed, please punch in here.
     year: '%{count}'
     month: '%{count}'
     day: '%{count}'
@@ -100,6 +106,7 @@ en:
         date: Date
         field_name: Field name
         action: Action
+        reason_type: Reason type for correction
         reason: Reason for correction
         created: Corrected time
       gws/addon/attendance/group_setting:
@@ -117,10 +124,17 @@ en:
         attendance_break_time3_state: Display Break 3
         attendance_break_enter3_label: Break 3 start label
         attendance_break_leave3_label: Break 3 end label
+        compensatory_minute1: Compensatory 1
+        compensatory_minute2: Compensatory 2
+        compensatory_minute3: Compensatory 3
+        week_out_compensatory_file_limit: Week out Compensatory limit
+        week_out_compensatory_file_notify_day: Week out Compensatory notify day
     errors:
       models:
         gws/attendance/time_card:
           already_punched: The timecard has already been punched.
+        gws/attendance/record:
+          working_time: Input worktime.
 
   activemodel:
     attributes:
@@ -145,3 +159,9 @@ en:
         - Select a character code.
         - Select UTF-8 if a special kanji character is assigned for an uncommon name.
         - For commonly used kanji characters, you can select Shift JIS.
+
+    gws/addon/attendance/group_setting:
+      week_out_compensatory_file_limit:
+        - Set week out compensatory expiration.
+      week_out_compensatory_file_notify_day:
+        - Set week out compensatory notify day.

@@ -383,6 +383,7 @@ en:
         workflow_approvers: Approvers
         workflow_required_counts: Required approve counts
         workflow_circulations: Circulations
+        requested: Requested date
         approved: Approved date
         comment: Remand comment
         approver_comment: Approver comment
