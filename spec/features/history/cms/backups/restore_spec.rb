@@ -51,7 +51,7 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
       expect(basic_values.include?("second index_name")).to be_truthy
       expect(page).to have_no_css('div.file-view', text: file.name)
 
-      click_link I18n.l(backup_item.created)
+      click_link I18n.l(backup_item.created, format: :picker)
       expect(current_path).not_to eq sns_login_path
 
       click_link I18n.t("history.restore")

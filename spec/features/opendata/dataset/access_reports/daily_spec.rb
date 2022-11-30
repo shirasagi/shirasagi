@@ -89,7 +89,7 @@ describe Opendata::Dataset::AccessReportsController, type: :feature, dbscope: :e
       expect(table[3][2]).to be_blank
       expect(table[3][I18n.t("ss.url")]).to be_blank
       expect(table[3][Opendata::Dataset.t("area_ids")]).to be_blank
-      expect(table[3][Opendata::Dataset.t("state")]).to eq "削除: #{I18n.l(report2.deleted.to_date)}"
+      expect(table[3][Opendata::Dataset.t("state")]).to eq "削除: #{I18n.l(report2.deleted.to_date, format: :picker)}"
     end
   end
 end

@@ -90,7 +90,7 @@ describe Opendata::Dataset::ResourcePreviewHistoriesController, type: :feature, 
       expect(table.headers.length).to eq expected_headers.length
       expect(table.headers).to include(*expected_headers)
 
-      expect(table[0][Opendata::ResourcePreviewHistory.t(:previewed)]).to eq I18n.l(history1.previewed)
+      expect(table[0][Opendata::ResourcePreviewHistory.t(:previewed)]).to eq I18n.l(history1.previewed, format: :picker)
       expect(table[0][Opendata::ResourcePreviewHistory.t(:full_url)]).to eq history1.full_url
       expect(table[0][Opendata::ResourcePreviewHistory.t(:dataset_id)]).to eq history1.dataset_id.to_s
       expect(table[0][Opendata::ResourcePreviewHistory.t(:dataset_name)]).to eq history1.dataset_name

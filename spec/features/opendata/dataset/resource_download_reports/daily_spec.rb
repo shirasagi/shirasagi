@@ -103,7 +103,7 @@ describe Opendata::Dataset::ResourceDownloadReportsController, type: :feature, d
       expect(table[3][2]).to eq "[#{report2.resource_id}] #{report2.resource_name}"
       expect(table[3][I18n.t("ss.url")]).to be_blank
       expect(table[3][Opendata::Dataset.t("area_ids")]).to be_blank
-      expect(table[3][Opendata::Dataset.t("state")]).to eq "削除: #{I18n.l(report2.deleted.to_date)}"
+      expect(table[3][Opendata::Dataset.t("state")]).to eq "削除: #{I18n.l(report2.deleted.to_date, format: :picker)}"
     end
   end
 end

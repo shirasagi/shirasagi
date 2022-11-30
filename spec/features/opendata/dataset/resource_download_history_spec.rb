@@ -90,7 +90,7 @@ describe Opendata::Dataset::ResourceDownloadHistoriesController, type: :feature,
       expect(table.headers.length).to eq expected_headers.length
       expect(table.headers).to include(*expected_headers)
 
-      expect(table[0][Opendata::ResourceDownloadHistory.t(:downloaded)]).to eq I18n.l(history1.downloaded)
+      expect(table[0][Opendata::ResourceDownloadHistory.t(:downloaded)]).to eq I18n.l(history1.downloaded, format: :picker)
       expect(table[0][Opendata::ResourceDownloadHistory.t(:downloaded_by)]).to eq history1.label(:downloaded_by)
       expect(table[0][Opendata::ResourceDownloadHistory.t(:full_url)]).to eq history1.full_url
       expect(table[0][Opendata::ResourceDownloadHistory.t(:dataset_id)]).to eq history1.dataset_id.to_s

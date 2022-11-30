@@ -44,7 +44,7 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
 
       it do
         visit page_path
-        click_link I18n.l(backup_item.created)
+        click_link I18n.l(backup_item.created, format: :picker)
 
         click_link I18n.t("history.restore")
         click_button I18n.t("history.buttons.restore")
@@ -67,7 +67,7 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
 
       it do
         visit page_path
-        click_link I18n.l(backup_item.created)
+        click_link I18n.l(backup_item.created, format: :picker)
 
         click_link I18n.t("history.restore")
         click_button I18n.t("history.buttons.restore")

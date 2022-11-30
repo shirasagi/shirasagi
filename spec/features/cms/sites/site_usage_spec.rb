@@ -33,7 +33,7 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
 
         click_on I18n.t("ss.buttons.update")
         expect(page).to have_css(".usage-node-count", text: "1")
-        expect(page).to have_css(".usage-calculated-at", text: I18n.l(now))
+        expect(page).to have_css(".usage-calculated-at", text: I18n.l(now, format: :picker))
       end
 
       site.reload
