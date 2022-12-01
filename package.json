@@ -8,6 +8,7 @@
     "i18next-http-backend": "^1.4.1",
     "i18next-multiload-backend-adapter": "^1.0.0",
     "jquery-colorbox": "^1.6.4",
+    "material-icons": "^1.12.2",
     "moment": "^2.29.4",
     "webpack": "^5.72.0",
     "webpack-cli": "^4.9.2"
