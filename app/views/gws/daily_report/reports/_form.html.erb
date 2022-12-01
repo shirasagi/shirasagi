@@ -5,5 +5,5 @@
   <% end %>
 
   <dt><%= @model.t :daily_report_date %><%= @model.tt :daily_report_date %></dt>
-  <dd><%= f.text_field :daily_report_date, class: "date js-date", value: tryb{ @item.daily_report_date.strftime("%Y/%m/%d") } %></dd>
+  <dd><%= f.text_field :daily_report_date, class: "date js-date", value: tryb{ (@item.daily_report_date.presence || Time.zone.today).strftime("%Y/%m/%d") } %></dd>
 </dl>

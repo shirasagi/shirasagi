@@ -1,7 +1,8 @@
 class Gws::DailyReport::UserReportEnumerator < Enumerator
-  def initialize(site, user, month, reports, encoding: "Shift_JIS")
+  def initialize(site, user, group, month, reports, encoding: "Shift_JIS")
     @cur_site = site
     @cur_user = user
+    @cur_group = group
     @cur_month = month
     @reports = reports.dup
     @encoding = encoding
@@ -30,6 +31,15 @@ class Gws::DailyReport::UserReportEnumerator < Enumerator
     @forms = Gws::DailyReport::Form.site(@cur_site).in(id: form_ids.compact).order_by(order: 1, created: 1)
     # load all forms in memory for performance
     @forms = @forms.to_a
+
+    return if @forms.present?
+
+    @forms = Gws::DailyReport::Form.site(@cur_site).
+      readable(@cur_user, site: @cur_site).
+      in(daily_report_group_id: @cur_group.id).
+      where(year: @cur_site.fiscal_year).
+      order_by(order: 1, created: 1).
+      to_a
   end
 
   def build_term_handlers

@@ -34,6 +34,14 @@ class Gws::DailyReport::GroupReportEnumerator < Enumerator
     @forms = Gws::DailyReport::Form.site(@cur_site).in(id: form_ids.compact).order_by(order: 1, created: 1)
     # load all forms in memory for performance
     @forms = @forms.to_a
+
+    return if @forms.present?
+
+    @forms = Gws::DailyReport::Form.site(@cur_site).
+      readable(@cur_user, site: @cur_site).
+      where(year: @cur_site.fiscal_year, daily_report_group_id: @cur_group.id).
+      order_by(order: 1, created: 1).
+      to_a
   end
 
   def build_term_handlers
@@ -80,11 +88,11 @@ class Gws::DailyReport::GroupReportEnumerator < Enumerator
   end
 
   def to_limited_access(report)
-    report.limited_access
+    [report.limited_access, report.shared_limited_access].flatten.uniq.compact.join("\n")
   end
 
   def to_small_talk(report)
-    report.small_talk
+    [report.small_talk, report.shared_small_talk].flatten.uniq.compact.join("\n")
   end
 
   def to_column_value(form, column, report)
@@ -93,7 +101,7 @@ class Gws::DailyReport::GroupReportEnumerator < Enumerator
     column_value = report.column_values.where(column_id: column.id).first
     return nil if column_value.blank?
 
-    column_value.value
+    [column_value.value, report.shared_column_value(column_value)].flatten.uniq.compact.join("\n")
   end
 
   def encode(str)

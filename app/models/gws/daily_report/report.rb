@@ -13,7 +13,7 @@ class Gws::DailyReport::Report
 
   seqid :id
   field :name, type: String
-  field :daily_report_date, type: DateTime, default: Time.zone.today
+  field :daily_report_date, type: DateTime
 
   belongs_to :daily_report_group, class_name: 'Gws::Group'
 
@@ -54,8 +54,8 @@ class Gws::DailyReport::Report
       Gws::DailyReport::ReportEnumerator.new(site, user, all, encoding: encoding)
     end
 
-    def user_csv(site: nil, user: nil, month: Time.zone.today.beginning_of_month, encoding: "Shift_JIS")
-      Gws::DailyReport::UserReportEnumerator.new(site, user, month, all, encoding: encoding)
+    def user_csv(site: nil, user: nil, group: nil, month: Time.zone.today.beginning_of_month, encoding: "Shift_JIS")
+      Gws::DailyReport::UserReportEnumerator.new(site, user, group, month, all, encoding: encoding)
     end
 
     def group_csv(site: nil, user: nil, group: nil, encoding: "Shift_JIS")
