@@ -69,7 +69,7 @@ production: &production
 
   updates_and_reloads_nginx_conf: false
 
-  default_timeout_millis: 5000
+  dc_guard_timeout_millis: 5000
 
 test:
   <<: *production
