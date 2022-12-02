@@ -61,6 +61,7 @@ SS.ready(function () {
   SS_SearchUI.render();
   SS.enableDoubleClickGuard();
   SS_Print.render();
+  SS_ClipboardCopy.render();
 });
 
 this.SS_Kana = (function () {
@@ -668,5 +669,61 @@ this.SS_Print = (function () {
   };
 
   return SS_Print;
+
+})();
+
+this.SS_ClipboardCopy = (function () {
+  function SS_ClipboardCopy() {
+  }
+
+  var getText = function(ev) {
+    var target = ev.target.dataset.target;
+    if (!target) {
+      return;
+    }
+
+    var text;
+    if (target === "css_selector") {
+      var selector = ev.target.dataset.selector;
+      if (!selector) {
+        selector = "title"
+      }
+
+      var el = document.querySelector(selector);
+      if (el) {
+        text = el.text;
+      }
+    } else {
+      // url
+      text = location.href
+    }
+
+    return text;
+  };
+
+  SS_ClipboardCopy.render = function () {
+    if (! navigator.clipboard) {
+      $(".btn-ss-clipboard-copy").addClass("unsupported");
+    }
+
+    $(document).on("click", ".btn-ss-clipboard-copy", function(ev) {
+      try {
+        var text = getText(ev);
+        navigator.clipboard.writeText(text || '').then(function() {
+          $(".btn-ss-clipboard-copy.copied").removeClass("copied");
+          ev.target.classList.add("copied");
+        });
+        return false;
+      } catch (_ex) {
+        console.info("copy to clipboard is unsupported");
+      }
+    });
+
+    $(document).on("copy cut", function() {
+      $(".btn-ss-clipboard-copy.copied").removeClass("copied");
+    });
+  };
+
+  return SS_ClipboardCopy;
 
 })();

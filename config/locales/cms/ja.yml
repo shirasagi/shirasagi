@@ -503,6 +503,9 @@ ja:
       list_origin:
         deployment: 配備された階層に応じてリストを作成
         content: アクセスされたページ/フォルダーに応じてリストを作成
+      clipboard_copy_target:
+        url: URL
+        css_selector: CSSセレクター
 
     sns_share:
       fb_like: Facebook いいね！
@@ -562,6 +565,7 @@ ja:
       cms/history_list: 閲覧履歴
       cms/site_search_keyword: サイト内検索(注目ワード)
       cms/print: 印刷
+      cms/clipboard_copy: クリップボードへコピー
     columns:
       cms/text_field: 一行入力
       cms/date_field: 日付入力
@@ -814,6 +818,7 @@ ja:
       cms/line/richmenu/area: タップ領域
       cms/line/deliver_plan/repeat: 繰り返し
       cms/line/service/image_map: イメージマップ
+      cms/clipboard_copy: クリップボードへコピー
 
   mongoid:
     models:
@@ -1531,6 +1536,9 @@ ja:
       cms/syntax_checker/url_scheme_setting:
         syntax_checker_url_scheme_attributes: 属性
         syntax_checker_url_scheme_schemes: スキーム
+      cms/addon/clipboard_copy:
+        clipboard_copy_target: コピー対象
+        clipboard_copy_selector: CSSセレクター
 
   activemodel:
     attributes:
@@ -2998,6 +3006,26 @@ ja:
         - 使用を許可するスキームを設定します。
         - 既定値は "http, https" です。
         - 安全なウェブサイトの作り方では、http, https 以外のスキームにリンクを設定することは非推奨となっています。危険を承知の上、設定してください。
+
+    cms/addon/clipboard_copy:
+      clipboard_copy_target:
+        - コピー対象を選択してください。
+        -
+        - "URL: アクセスしているページの URL をクリップボードへコピーします。"
+        - "CSSセレクター: CSSセレクター欄に設定されている式にマッチした要素のテキストをクリップボードへコピーします。"
+      clipboard_copy_selector:
+        - コピー対象が "CSSセレクター" の場合にマッチさせる式を入力してください。
+        -
+        - "例: title"
+        - アクセスしているページのタイトルをクリップボードへコピーします。
+        -
+        - "例: #ss-page-name"
+        - id="ss-page-name" が設定されているHTML要素のテキストをクリップボードへコピーします。
+        - 通常、この設定は、ページタイトルをクリップボードへコピーすることができます。
+        -
+        - "例: .contact"
+        - class="contact" が設定されているHTML要素のテキストをクリップボードへコピーします。
+        - 通常、この設定は、お問い合わせ先をクリップボードへコピーすることができます。
 
   all_content:
     page_id: ページID
