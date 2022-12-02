@@ -17,9 +17,9 @@
 
     <% @items.each do |item| %>
       <% if @cur_folder.sent_box? || @cur_folder.draft_box? %>
-        <li class="list-item seen">
+        <li class="list-item seen" data-id="<%= item.id %>">
       <% else %>
-        <li class="list-item <%= item.unseen?(@cur_user) ? 'unseen' : 'seen' %>">
+        <li class="list-item <%= item.unseen?(@cur_user) ? 'unseen' : 'seen' %>" data-id="<%= item.id %>">
       <% end %>
 
         <label class="check">
@@ -39,9 +39,21 @@
         <div class="info">
           <% if @cur_folder.sent_box? || @cur_folder.draft_box? %>
             <% addr = item.to_members? ? gws_public_user_long_name(item.display_to.first) : nil %>
-            <span class="field to" title="<%= addr %>"><%= addr %></span>
+            <% if item.display_to.first.present? %>
+              <span class="field to" title="<%= addr %>">
+                <%= link_to gws_public_user_long_name(item.display_to.first),  { action: :index, 's[to_member_name]': gws_public_user_long_name(item.display_to.first) } %>
+              </span>
+            <% else %>
+              <span class="field to" title="<%= addr %>"><%= addr %></span>
+            <% end %>
           <% else %>
-            <span class="field from" title="<%= gws_public_user_long_name(item.from_member_name) || t('gws/memo.no_senders') %>"><%= gws_public_user_long_name(item.from_member_name) || t('gws/memo.no_senders') %></span>
+            <% if item.from_member_name.present? %>
+              <span class="field from" title="<%= gws_public_user_long_name(item.from_member_name) %>">
+                <%= link_to gws_public_user_long_name(item.from_member_name),  { action: :index, 's[from_member_name]': gws_public_user_long_name(item.from_member_name) } %>
+              </span>
+            <% else %>
+              <span class="field from" title="<%= t('gws/memo.no_senders') %>"></span>
+            <% end %>
           <% end %>
           <%= link_to item.display_subject, { action: :show, id: item.id }, class: 'field title', title: item.display_subject %>
           <span class="field priority"><%= item.label :priority %></span>

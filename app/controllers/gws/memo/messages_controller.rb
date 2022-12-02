@@ -1,6 +1,7 @@
 class Gws::Memo::MessagesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
+  helper Gws::Memo::MessageHelper
 
   model Gws::Memo::Message
 
