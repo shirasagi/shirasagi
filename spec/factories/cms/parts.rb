@@ -58,4 +58,8 @@ FactoryBot.define do
   factory :cms_part_site_search_keyword, class: Cms::Part::SiteSearchKeyword, traits: [:cms_part] do
     route { "cms/site_search_keyword" }
   end
+
+  factory :cms_part_print, class: Cms::Part::Print, traits: [:cms_part] do
+    route { "cms/print" }
+  end
 end

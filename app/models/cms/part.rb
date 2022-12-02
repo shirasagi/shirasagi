@@ -133,4 +133,13 @@ class Cms::Part
 
     default_scope ->{ where(route: "cms/history_list") }
   end
+
+  class Print
+    include Cms::Model::Part
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "cms/print") }
+  end
 end
