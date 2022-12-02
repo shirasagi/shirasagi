@@ -9,7 +9,12 @@
     next if buf.blank?
 
     if addon_options[:stimulus]
-      data = SS::StimulusHelper::Utils.convert_to_data_params(addon.klass.name.underscore)
+      case addon_options[:stimulus]
+      when Hash
+        data = SS::StimulusHelper::Utils.convert_to_data_params(addon.klass.name.underscore => addon_options[:stimulus])
+      else # true
+        data = SS::StimulusHelper::Utils.convert_to_data_params(addon.klass.name.underscore)
+      end
     end
 
     output_buffer << render("ss/crud/addon", addon: addon_options, data: data) { buf }

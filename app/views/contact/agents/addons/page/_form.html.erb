@@ -1,6 +1,7 @@
 <%
   addon ||= local_assigns.fetch(:addon, {})
   addon[:display_body] = "hide"
+  addon[:stimulus] = { inquiry_form_enabled: @cur_site.inquiry_form.present? }
 
   if params[:action] =~ /new/ && @cur_group
     @cur_group.cms_group.tap do |group|
@@ -82,29 +83,3 @@
   <dt><%= @model.t :contact_link_name %><%= @model.tt :contact_link_name %></dt>
   <dd><%= f.text_field :contact_link_name %></dd>
 </dl>
-
-<%= jquery do %>
-  var $el = $("#<%= addon[:id] %>");
-  $el.find(".ajax-box").data("on-select", function($item) {
-    SS_SearchUI.defaultSelector($item);
-
-    var $data = $item.closest("[data-id]");
-    var groupName = $data.data("contact-group-name");
-    var tel = $data.data("contact-tel");
-    var fax = $data.data("contact-fax");
-    <% if @cur_site.inquiry_form.blank? %>
-      var email = $data.data("contact-email");
-    <% end %>
-    var linkUrl = $data.data("contact-link-url");
-    var linkName = $data.data("contact-link-name");
-
-    $el.find('[name="item[contact_charge]"]').val(groupName || '');
-    $el.find('[name="item[contact_tel]"]').val(tel || '');
-    $el.find('[name="item[contact_fax]"]').val(fax || '');
-    <% if @cur_site.inquiry_form.blank? %>
-      $el.find('[name="item[contact_email]"]').val(email || '');
-    <% end %>
-    $el.find('[name="item[contact_link_url]"]').val(linkUrl || '');
-    $el.find('[name="item[contact_link_name]"]').val(linkName || '');
-  });
-<% end %>
