@@ -67,7 +67,7 @@
           <span class="browsed">
           <% if seen_at %>
             <%= I18n.t('gws/board.options.browsed_state.read') %>
-              <time datetime="<%= seen_at.iso8601 %>"><%= I18n.l(seen_at) %></time>
+              <%= ss_time_tag seen_at %>
           <% else %>
             <%= I18n.t('gws/circular.post.unseen') %>
           <% end %>
