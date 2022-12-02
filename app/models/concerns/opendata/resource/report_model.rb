@@ -311,7 +311,7 @@ module Opendata::Resource::ReportModel
       if time == UNCERTAIN_DELETED_TIME
         I18n.t("ss.options.state.deleted")
       else
-        "削除: #{I18n.l(time.to_date)}"
+        "削除: #{I18n.l(time.to_date, format: :picker)}"
       end
     end
 

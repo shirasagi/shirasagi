@@ -71,7 +71,7 @@ describe Event, dbscope: :example do
     end
 
     context "2 daily recurrences on same year" do
-      let(:start_at1) { now.change(mon: 7, day: 16, hour: 10) }
+      let(:start_at1) { now.change(month: 7, day: 16, hour: 10) }
       let(:recurrence1) do
         Event::Extensions::Recurrence.demongoize(
           kind: "datetime", start_at: start_at1, end_at: start_at1 + 45.minutes, frequency: "daily", until_on: start_at1.to_date)
