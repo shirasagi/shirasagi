@@ -24,6 +24,7 @@
   <dt><%= @model.t :contact_group_id %><%= @model.tt :contact_group_id %></dt>
   <dd>
     <%= f.hidden_field "contact_group_id", value: "", id: nil, class: "hidden-ids" %>
+    <%= f.hidden_field "contact_group_contact_id", value: "", id: nil, class: "hidden-ids" %>
     <%= link_to t("contact.apis.contacts.index"), contact_apis_contacts_path(single: true), class: "ajax-box", data: { template: "#{addon[:id]}-template" } %>
   </dd>
   <dd>
@@ -37,7 +38,11 @@
       <tbody>
         <% @item.contact_group.try do |group| %>
           <tr data-id="<%= group.id %>">
-            <td><%= f.hidden_field "contact_group_id", value: group.id, id: nil %> <%= group.section_name %></td>
+            <td>
+              <%= f.hidden_field "contact_group_id", value: group.id, id: nil %>
+              <%= f.hidden_field "contact_group_contact_id", value: @item.contact_group_contact_id, id: nil %>
+              <%= group.section_name %>
+            </td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
         <% end %>
@@ -46,11 +51,18 @@
 
     <%= tag.script id: "#{addon[:id]}-template", type: "text/ejs" do %>
       <tr data-id="<%= ejs_template("data.id") %>">
-        <td><%= f.hidden_field "contact_group_id", value: ejs_template("data.groupId"), id: nil %> <%= ejs_template("data.sectionName") %></td>
+        <td>
+          <%= f.hidden_field "contact_group_id", value: ejs_template("data.groupId"), id: nil %>
+          <%= f.hidden_field "contact_group_contact_id", value: ejs_template("data.contactId"), id: nil %>
+          <%= ejs_template("data.sectionName") %>
+        </td>
         <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
       </tr>
     <% end %>
   </dd>
+
+  <dt><%= @model.t :contact_group_relation %><%= @model.tt :contact_group_relation %></dt>
+  <dd><%= f.select :contact_group_relation, @item.contact_group_relation_options, include_blank: true %></dd>
 
   <dt><%= @model.t :contact_charge %><%= @model.tt :contact_charge %></dt>
   <dd><%= f.text_field :contact_charge %></dd>

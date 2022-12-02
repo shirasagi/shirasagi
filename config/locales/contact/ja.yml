@@ -23,6 +23,18 @@ ja:
     options:
       main_state:
         main: 主
+      relation:
+        related:
+          title: グループと連動する
+          description: |-
+            グループの連絡先が更新されたらそれに連動しページの連絡先も自動的に更新されるモードです。
+            こちらのモードがお勧めです。
+        unrelated:
+          title: グループと連動しない
+          description: |-
+            グループの連絡先が更新されてもページの連絡先は更新されません。
+            このページだけの特別な連絡先を設定する場合、このモードを選択してください。
+            通常は「グループと連動する」を選択してください。
     buttons:
       select: 選択
 
@@ -47,6 +59,7 @@ ja:
         contact_link_url: リンクURL
         contact_link_name: リンク名
         contact_group_name: 担当部署
+        contact_group_relation: 連動設定
       contact/addon/group:
         contact_group_name: 担当部署
         contact_tel: 電話番号
@@ -83,6 +96,9 @@ ja:
         - 連絡先に表示する部署のリンクURLを記入します。
       contact_link_name:
         - 連絡先に表示する部署のリンク名を記入します。
+      contact_group_relation:
+        - グループの連絡先と連動するかどうかを選択します。
+        - 未選択の場合、「グループと連動する」が選択されているものとみなします。
     ss/contact:
       contact_group_name:
         - 連絡先に表示する担当部署を記入します。
