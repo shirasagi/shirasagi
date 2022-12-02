@@ -63,7 +63,12 @@
   </dd>
 
   <dt><%= @model.t :contact_group_relation %><%= @model.tt :contact_group_relation %></dt>
-  <dd><%= f.select :contact_group_relation, @item.contact_group_relation_options, include_blank: true %></dd>
+  <dd>
+    <%= ss_stimulus_tag "ss/select_with_description" do %>
+      <%= f.select :contact_group_relation, @item.contact_group_relation_options, include_blank: true %>
+      <div class="description hide" style="margin-top: 10px;"></div>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :contact_charge %><%= @model.tt :contact_charge %></dt>
   <dd><%= f.text_field :contact_charge %></dd>

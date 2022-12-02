@@ -6,16 +6,6 @@
     Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html');
   }
 
-  var $addon = $("<%= "##{addon[:id]}" %>");
-  $addon.find("select[name='item[sort]']").on("change", function() {
-    var $selected = $(this).find("option:selected");
-    if (!$selected[0] || !$selected.data("description")) {
-      $addon.find(".sort-description").html("").addClass("hide");
-    } else {
-      $addon.find(".sort-description").html($selected.data("description")).removeClass("hide");
-    }
-  }).trigger("change");
-
   <% if @model.use_liquid %>
   var changeLoopFormat = function() {
     var format = $addon.find("select[name='item[loop_format]']").val();
@@ -66,8 +56,10 @@
   <% if @model.use_sort %>
     <dt class="sort"><%= @model.t :sort %><%= @model.tt :sort %></dt>
     <dd class="sort">
-      <%= f.select :sort, @item.sort_options, include_blank: " " %>
-      <span class="sort-description hide"></span>
+      <%= ss_stimulus_tag "ss/select_with_description" do %>
+        <%= f.select :sort, @item.sort_options, include_blank: " " %>
+        <span class="description hide"></span>
+      <% end %>
     </dd>
   <% end %>
 
