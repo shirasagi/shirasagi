@@ -50,7 +50,7 @@ class Gws::DailyReport::Report
       all.keyword_in(params[:keyword], :name, :text, 'column_values.text_index')
     end
 
-    def enum_csv(site: nil, encoding: "Shift_JIS")
+    def enum_csv(site: nil, user: nil, encoding: "Shift_JIS")
       Gws::DailyReport::ReportEnumerator.new(site, user, all, encoding: encoding)
     end
 
@@ -92,7 +92,7 @@ class Gws::DailyReport::Report
   end
 
   def enum_csv(encoding: "Shift_JIS")
-    Gws::DailyReport::ReportEnumerator.new(@cur_site || site, [ self ], encoding: encoding)
+    Gws::DailyReport::ReportEnumerator.new(@cur_site || site, @cur_user || user, [ self ], encoding: encoding)
   end
 
   def collect_attachments
