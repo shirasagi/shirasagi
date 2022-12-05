@@ -66,8 +66,8 @@ module Sns::LoginFilter
     return unless url.respond_to?(:scheme)
     return unless %w(http https).include?(url.scheme)
 
-    url.fragment = nil
-    url.query = nil
+    # url.fragment = nil
+    # url.query = nil
     url
   end
 
