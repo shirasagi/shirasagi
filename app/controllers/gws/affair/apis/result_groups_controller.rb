@@ -2,7 +2,10 @@ class Gws::Affair::Apis::ResultGroupsController < ApplicationController
   include Gws::ApiFilter
   include Gws::Affair::Overtime::AggregateFilter
 
-  before_action :set_fiscal_year_month
+  before_action :set_cur_fiscal_year
+  before_action :set_cur_month
+  before_action :set_fiscal_year
+  before_action :set_month
   before_action :set_result_groups
 
   model Gws::Group

@@ -11,8 +11,10 @@ class Gws::Affair::Overtime::Management::Aggregate::UsersController < Applicatio
   navi_view "gws/affair/main/navi"
   menu_view nil
 
-  before_action :set_cur_fiscal_year_month
-  before_action :set_fiscal_year_month, except: :index
+  before_action :set_cur_fiscal_year
+  before_action :set_cur_month
+  before_action :set_fiscal_year
+  before_action :set_month
   before_action :set_query, except: :index
 
   private

@@ -20,7 +20,7 @@ module Gws::Addon::User::AffairSetting
     I18n.t("gws/affair.options.staff_category").map { |k, v| [v, k] }
   end
 
-  def group_code(site)
+  def target_group_id(site)
     return nil if site.nil?
 
     group = gws_main_group(site)
@@ -31,14 +31,14 @@ module Gws::Addon::User::AffairSetting
     groups += group.parents.to_a.sort_by { |item| -1 * item.name.size }
     return nil if groups.blank?
 
-    groups.map { |g| g.group_code }.select(&:present?).first
+    groups.map(&:id).select(&:present?).first
   end
 
   def target_user_code(site)
     [
       id.to_s,
       staff_address_uid.to_s,
-      group_code(site).to_s
+      target_group_id(site).to_s
     ].join("_")
   end
 

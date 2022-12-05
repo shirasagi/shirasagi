@@ -10,7 +10,6 @@ module Gws::Addon::Import::Affair
         def group_csv_headers
           %w(
             group_name
-            group_code
             project_code
             detail_code
           )
@@ -24,7 +23,6 @@ module Gws::Addon::Import::Affair
               item = criteria.in(member_group_ids: group.id).first
               line = []
               line << group.name
-              line << group.group_code
               line << item.try(:project_code)
               line << item.try(:detail_code)
               y << encode_sjis(line.to_csv)
@@ -52,17 +50,17 @@ module Gws::Addon::Import::Affair
       end
 
       def update_group_row(row, index)
-        group_code = row[I18n.t("gws/affair.export.capital_group.group_code")].to_s.strip
+        group_name = row[I18n.t("gws/affair.export.capital_group.group_name")].to_s.strip
         project_code = row[I18n.t("gws/affair.export.capital_group.project_code")].to_s.strip
         detail_code = row[I18n.t("gws/affair.export.capital_group.detail_code")].to_s.strip
 
-        if group_code.blank? || project_code.blank? || detail_code.blank?
+        if group_name.blank? || project_code.blank? || detail_code.blank?
           return
         end
 
-        group = Gws::Group.active.site(cur_site).where(group_code: group_code).first
+        group = Gws::Group.active.in_group(cur_site).where(name: group_name).first
         if group.nil?
-          self.errors.add :base, "#{index}:グループが見つかりません。(所属コード #{group_code})"
+          self.errors.add :base, "#{index}:グループが見つかりません。(グループ名 #{group_name})"
           return
         end
 

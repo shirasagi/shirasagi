@@ -73,7 +73,6 @@ class Gws::Affair::OvertimeDayResult
 
     self.target_group_id = file.target_group_id
     self.target_group_name = file.target_group_name
-    self.target_group_code = file.target_group_code
 
     self.target_duty_calendar_id = file.target_duty_calendar_id
     self.target_user_code = file.target_user_code

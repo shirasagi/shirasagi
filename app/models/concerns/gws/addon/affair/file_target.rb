@@ -12,7 +12,6 @@ module Gws::Addon::Affair::FileTarget
 
     belongs_to :target_group, class_name: 'Gws::Group'
     field :target_group_name, type: String
-    field :target_group_code, type: String
 
     belongs_to :target_duty_calendar, class_name: 'Gws::Affair::DutyCalendar'
 
@@ -29,7 +28,6 @@ module Gws::Addon::Affair::FileTarget
 
     validates :target_group_id, presence: true
     validates :target_group_name, presence: true
-    validates :target_group_code, presence: true
   end
 
   def set_target_user_attributes
@@ -37,11 +35,7 @@ module Gws::Addon::Affair::FileTarget
     self.target_user_kana = target_user.kana
     self.target_user_staff_address_uid = target_user.staff_address_uid
     self.target_user_staff_category = target_user.staff_category
-
-    if target_group
-      self.target_group_name = target_group.name
-      self.target_group_code = target_group.group_code
-    end
+    self.target_group_name = target_group.name if target_group
 
     duty_calendar = target_user.default_duty_calendar(cur_site || site)
     if duty_calendar.class == Gws::Affair::DutyCalendar
@@ -49,8 +43,8 @@ module Gws::Addon::Affair::FileTarget
     end
     self.target_user_code = [
       target_user_id.to_s,
-      target_user_staff_address_uid,
-      target_group_code
+      target_user_staff_address_uid.to_s,
+      target_group_id.to_s
     ].join("_")
   end
 end

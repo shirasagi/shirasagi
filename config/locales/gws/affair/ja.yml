@@ -213,7 +213,6 @@ ja:
         subitem_name: 細節名称
       capital_group:
         group_name: グループ名
-        group_code: 所属コード
         project_code: 事業コード
         detail_code: 歳出明細番号
       capital_member:
@@ -436,7 +435,6 @@ ja:
       gws/addon/affair/file_target:
         target_group_id: グループ
         target_user_id: ユーザー
-        target_group_code: 申請対象ユーザーの所属コード
         target_user_staff_address_uid: 申請対象ユーザーの宛名番号
         target_user_staff_category: 申請対象ユーザーの職員区分
       gws/affair/overtime_day_result:

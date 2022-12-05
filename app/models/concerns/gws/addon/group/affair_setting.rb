@@ -3,9 +3,6 @@ module Gws::Addon::Group::AffairSetting
   extend SS::Addon
 
   included do
-    field :group_code, type: String
-    permit_params :group_code
-
     embeds_ids :superior_groups, class_name: "Gws::Group"
     embeds_ids :superior_users, class_name: "Gws::User"
 

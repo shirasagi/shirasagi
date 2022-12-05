@@ -7,7 +7,6 @@ module Gws::Aggregation
     attr_accessor :children
     attr_accessor :parent
     attr_accessor :descendants
-    attr_accessor :overall_group_codes
     attr_accessor :depth
     attr_accessor :trailing_name
 
@@ -18,7 +17,6 @@ module Gws::Aggregation
     embeds_ids :users, class_name: "Gws::User"
 
     field :name, type: String
-    field :group_code, type: String
     field :order, type: Integer
 
     validates :name, presence: true
@@ -104,9 +102,6 @@ module Gws::Aggregation
 
     def set_descendants(item, groups)
       item.descendants = groups.select { |group| group.name =~ /^#{item.name}\// }
-      item.overall_group_codes = [item.group_code]
-      item.overall_group_codes += item.descendants.map { |group| group.group_code }
-      item.overall_group_codes = item.overall_group_codes.select(&:present?)
     end
 
     def method_missing(name, *args, &block)

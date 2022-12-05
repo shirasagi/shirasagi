@@ -481,11 +481,9 @@ ja:
       gws/addon/user/affair_setting:
         staff_category: 職員区分
         staff_address_uid: 宛名番号
-        group_code: 所属コード
         superior_group_ids: 上位グループ
         superior_user_ids: 上位ユーザー
       gws/addon/group/affair_setting:
-        group_code: 所属コード
         superior_group_ids: 上位グループ
         superior_user_ids: 上位ユーザー
       gws/contrast:
@@ -636,7 +634,6 @@ ja:
       superior_group_ids: 上位グループを入力します。
       superior_user_ids: 上位ユーザーを入力します。
     gws/addon/group/affair_setting:
-      group_code: 所属コードを入力します。
       superior_group_ids: 上位グループを入力します。
       superior_user_ids: 上位ユーザーを入力します。
 

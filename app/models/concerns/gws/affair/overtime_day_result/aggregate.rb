@@ -2,7 +2,6 @@ module Gws::Affair::OvertimeDayResult::Aggregate
   extend ActiveSupport::Concern
   include Gws::Affair::OvertimeDayResult::UserAggregate
   include Gws::Affair::OvertimeDayResult::CapitalAggregate
-  include Gws::Affair::OvertimeDayResult::RkkAggregate
 
   module ClassMethods
     def aggregate_partition(opts = {})
@@ -20,7 +19,6 @@ module Gws::Affair::OvertimeDayResult::Aggregate
 
           # group
           group_id: "$target_group_id",
-          group_code: "$target_group_code",
 
           # date
           date: "$date",
@@ -65,7 +63,6 @@ module Gws::Affair::OvertimeDayResult::Aggregate
         user_code = i["_id"]["user_code"]
         user_staff_address_uid = i["_id"]["user_staff_address_uid"]
         group_id = i["_id"]["group_id"]
-        group_code = i["_id"]["group_code"]
         date = i["_id"]["date"]
         fiscal_year = i["_id"]["fiscal_year"]
         month = i["_id"]["month"]
@@ -139,7 +136,6 @@ module Gws::Affair::OvertimeDayResult::Aggregate
 
           # group
           group_id: group_id,
-          group_code: group_code,
 
           # date
           date: date.localtime,

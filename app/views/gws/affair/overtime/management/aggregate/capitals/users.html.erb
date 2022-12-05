@@ -33,7 +33,7 @@
           <% total = 0 %>
           <% @users.each do |user| %>
             <%
-              minute = @items.dig(user.id, @group.group_code, basic_code).to_i
+              minute = @items.dig(user.id, @group.group_id, basic_code).to_i
               total += minute
             %>
             <td class="time"><%= format_minute(minute) %></td>
@@ -46,7 +46,7 @@
         <% total = 0 %>
         <% @users.each do |user| %>
           <%
-            minute = @items.dig(user.id, @group.group_code, "total").to_i
+            minute = @items.dig(user.id, @group.group_id, "total").to_i
             total += minute
           %>
           <td class="time"><%= format_minute(minute) %></td>

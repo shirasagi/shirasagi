@@ -32,15 +32,15 @@ module Gws::Affair::OvertimeDayResult::CapitalAggregate
       aggregation.each do |user_id, files|
         files.each do |file_id, i|
           capital_code = i[:capital_code]
-          group_code = i[:group_code]
+          group_id = i[:group_id]
           overtime_minute = i[:overtime_minute]
 
-          prefs[group_code] ||= {}
-          prefs[group_code][capital_code] ||= 0
-          prefs[group_code][capital_code] += overtime_minute
+          prefs[group_id] ||= {}
+          prefs[group_id][capital_code] ||= 0
+          prefs[group_id][capital_code] += overtime_minute
 
-          prefs[group_code]["total"] ||= 0
-          prefs[group_code]["total"] += overtime_minute
+          prefs[group_id]["total"] ||= 0
+          prefs[group_id]["total"] += overtime_minute
         end
       end
       [prefs, aggregation]
@@ -53,16 +53,16 @@ module Gws::Affair::OvertimeDayResult::CapitalAggregate
       aggregation.each do |user_id, files|
         files.each do |file_id, i|
           capital_code = i[:capital_code]
-          group_code = i[:group_code]
+          group_id = i[:group_id]
           overtime_minute = i[:overtime_minute]
 
           prefs[user_id] ||= {}
-          prefs[user_id][group_code] ||= {}
-          prefs[user_id][group_code][capital_code] ||= 0
-          prefs[user_id][group_code][capital_code] += overtime_minute
+          prefs[user_id][group_id] ||= {}
+          prefs[user_id][group_id][capital_code] ||= 0
+          prefs[user_id][group_id][capital_code] += overtime_minute
 
-          prefs[user_id][group_code]["total"] ||= 0
-          prefs[user_id][group_code]["total"] += overtime_minute
+          prefs[user_id][group_id]["total"] ||= 0
+          prefs[user_id][group_id]["total"] += overtime_minute
         end
       end
       [prefs, aggregation]

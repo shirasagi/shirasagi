@@ -35,6 +35,6 @@ class Gws::Affair::Overtime::AggregateController < ApplicationController
 
     @under = prefs.dig(@user.id, "total", "under_threshold") || {}
     @over = prefs.dig(@user.id, "total", "over_threshold") || {}
-    @aggregate = aggregate.dig[@user.id] || {}
+    @aggregate = aggregate[@user.id] || {}
   end
 end

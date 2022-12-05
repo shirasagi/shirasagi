@@ -1,14 +1,5 @@
 puts "# affair"
 
-def update_group_code(name, group_code)
-  item = Gws::Group.find_by(name: name) rescue nil
-  return unless item
-  item.group_code = group_code
-  item.save!
-  puts item.name
-  item
-end
-
 def update_staff_address_uid(uid, staff_address_uid)
   item = Gws::User.find_by(uid: uid) rescue nil
   return unless item
@@ -102,15 +93,6 @@ def create_overtime_day_result(item, start_at, end_at)
 
   item
 end
-
-# group
-update_group_code(@site.name, 100)
-update_group_code("#{@site.name}/企画政策部", 110)
-update_group_code("#{@site.name}/企画政策部/政策課", 111)
-update_group_code("#{@site.name}/企画政策部/広報課", 112)
-update_group_code("#{@site.name}/危機管理部", 120)
-update_group_code("#{@site.name}/危機管理部/管理課", 121)
-update_group_code("#{@site.name}/危機管理部/防災課", 122)
 
 # users
 sys = update_staff_address_uid("sys", "9000")

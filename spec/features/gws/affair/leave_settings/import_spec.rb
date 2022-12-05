@@ -5,9 +5,9 @@ describe "gws_affair_leave_settings", type: :feature, dbscope: :example, js: tru
     before { create_affair_users }
 
     let(:site) { gws_site }
-    let!(:group1) { create :gws_group, name: "#{site.name}/group1", group_code: "110000" }
-    let!(:group2) { create :gws_group, name: "#{site.name}/group2", group_code: "110001" }
-    let!(:group3) { create :gws_group, name: "#{site.name}/group3", group_code: "110002" }
+    let!(:group1) { create :gws_group, name: "#{site.name}/group1" }
+    let!(:group2) { create :gws_group, name: "#{site.name}/group2" }
+    let!(:group3) { create :gws_group, name: "#{site.name}/group3" }
 
     let!(:user1) do
       create(:gws_user,

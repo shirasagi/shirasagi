@@ -43,7 +43,9 @@
           <% total = 0 %>
           <% @children.each do |group| %>
             <%
-              minute = group.overall_group_codes.map { |group_code| @items.dig(group_code, basic_code).to_i }.sum
+              minute = @items.dig(group.group_id, basic_code).to_i
+              minute += group.descendants.map { |g| @items.dig(g.group_id, basic_code).to_i }.sum
+
               total += minute
             %>
             <td class="time"><%= format_minute(minute) %></td>
@@ -56,7 +58,9 @@
         <% total = 0 %>
         <% @children.each do |group| %>
           <%
-            minute = group.overall_group_codes.map { |group_code| @items.dig(group_code, "total").to_i }.sum
+            minute = @items.dig(group.group_id, "total").to_i
+            minute += group.descendants.map { |g| @items.dig(g.group_id, "total").to_i }.sum
+
             total += minute
           %>
           <td class="time"><%= format_minute(minute) %></td>

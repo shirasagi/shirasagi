@@ -34,7 +34,7 @@ class Gws::Affair::Enumerator::Capital::GroupUsers < Gws::Affair::Enumerator::Ba
 
     total = 0
     @users.each do |user|
-      minute = @prefs.dig(user.id, @group.group_code, basic_code).to_i
+      minute = @prefs.dig(user.id, @group.id, basic_code).to_i
       total += minute
       line << format_minute(minute)
     end
@@ -48,7 +48,7 @@ class Gws::Affair::Enumerator::Capital::GroupUsers < Gws::Affair::Enumerator::Ba
 
     total = 0
     @users.each do |user|
-      minute = @prefs.dig(user.id, @group.group_code, "total").to_i
+      minute = @prefs.dig(user.id, @group.id, "total").to_i
       total += minute
       line << format_minute(minute)
     end

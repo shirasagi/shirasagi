@@ -200,7 +200,6 @@ en:
         subitem_name: Subitem name
       capital_group:
         group_name: Group name
-        group_code: Group code
         project_code: Project code
         detail_code: Detail code
       capital_member:
@@ -423,7 +422,6 @@ en:
       gws/addon/affair/file_target:
         target_group_id: Group
         target_user_id: User
-        target_group_code: Target group code
         target_user_staff_address_uid: Target staff address uid
         target_user_staff_category: Target staff category
       gws/affair/overtime_day_result:

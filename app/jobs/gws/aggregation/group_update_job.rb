@@ -17,7 +17,6 @@ class Gws::Aggregation::GroupUpdateJob < Gws::ApplicationJob
         last_cond = {
           name: last_group.name,
           user_ids: last_group.user_ids,
-          group_code: last_group.group_code.presence,
           expiration_date: last_group.expiration_date
         }
       end
@@ -26,7 +25,6 @@ class Gws::Aggregation::GroupUpdateJob < Gws::ApplicationJob
       current_cond = {
         name: group.name,
         user_ids: users.map(&:id),
-        group_code: group.group_code.presence,
         expiration_date: nil
       }
 

@@ -481,11 +481,9 @@ en:
       gws/addon/user/affair_setting:
         staff_category: Staff category
         staff_address_uid: Staff address uid
-        group_code: Group code
         superior_group_ids: Superior groups
         superior_user_ids: Superior users
       gws/addon/group/affair_setting:
-        group_code: Group code
         superior_group_ids: Superior groups
         superior_user_ids: Superior users
       gws/contrast:
@@ -636,7 +634,6 @@ en:
       superior_group_ids: Select superior groups
       superior_user_ids: Select superior users
     gws/addon/group/affair_setting:
-      group_code: Input group code
       superior_group_ids: Select superior groups
       superior_user_ids: Select superior users
 

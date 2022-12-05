@@ -24,7 +24,10 @@
             <tr>
               <th class="capital"><%= name %></th>
               <% @groups.each do |group| %>
-                <% minute = group.overall_group_codes.map { |group_code| @items.dig(group_code, basic_code).to_i }.sum %>
+                <%
+                  minute = @items.dig(group.group_id, basic_code).to_i
+                  minute += group.descendants.map { |g| @items.dig(g.group_id, basic_code).to_i }.sum
+                %>
                 <td class="time"><%= format_minute(minute) %></td>
               <% end %>
             </tr>
@@ -32,7 +35,10 @@
           <tr>
             <th><%= t("gws/affair.labels.overtime.capitals.total_capitals") %></th>
             <% @groups.each do |group| %>
-              <% minute = group.overall_group_codes.map { |group_code| @items.dig(group_code, "total").to_i }.sum %>
+              <%
+                minute = @items.dig(group.group_id, "total").to_i
+                minute += group.descendants.map { |g| @items.dig(g.group_id, "total").to_i }.sum
+              %>
               <td class="time"><%= format_minute(minute) %></td>
             <% end %>
           </tr>

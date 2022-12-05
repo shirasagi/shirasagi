@@ -33,7 +33,9 @@ class Gws::Affair::Enumerator::Capital::Groups < Gws::Affair::Enumerator::Base
 
     total = 0
     @groups.each do |group|
-      minute = group.overall_group_codes.map { |group_code| @prefs.dig(group_code, basic_code).to_i }.sum
+      minute = @prefs.dig(group.group_id, basic_code).to_i
+      minute += group.descendants.map { |g| @prefs.dig(g.group_id, basic_code).to_i }.sum
+
       total += minute
       line << format_minute(minute)
     end
@@ -47,7 +49,9 @@ class Gws::Affair::Enumerator::Capital::Groups < Gws::Affair::Enumerator::Base
 
     total = 0
     @groups.each do |group|
-      minute = group.overall_group_codes.map { |group_code| @prefs.dig(group_code, "total").to_i }.sum
+      minute = @prefs.dig(group.group_id, "total").to_i
+      minute += group.descendants.map { |g| @prefs.dig(g.group_id, "total").to_i }.sum
+
       total += minute
       line << format_minute(minute)
     end
