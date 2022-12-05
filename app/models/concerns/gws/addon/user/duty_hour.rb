@@ -19,8 +19,10 @@ module Gws::Addon::User::DutyHour
     Gws::Affair::DefaultDutyCalendar.new(cur_site: site, cur_user: self)
   end
 
+  # シフト勤務機能は利用停止
   def shift_calendar(site)
-    Gws::Affair::ShiftCalendar.site(site).user(self).first
+    #Gws::Affair::ShiftCalendar.site(site).user(self).first
+    nil
   end
 
   def effective_capital_year(site)

@@ -68,6 +68,7 @@ new Gws_Affair_Menu("<%= current_navi %>", "ss_affair_navi_site_<%= @cur_site.id
   <% end %>
 
   <!-- 庶務事務/シフト勤務 -->
+  <!-- 利用停止
   <% if %i[use manage_private manage_all].find { |priv| Gws::Affair::ShiftRecord.allowed?(priv, @cur_user, site: @cur_site) } %>
     <h3><%= link_to(t('modules.gws/affair/shift_work'), gws_affair_shift_work_main_path, class: "toggle-narrow-page") %></h3>
     <ul class="narrow-page" data-navi="shift-work">
@@ -75,6 +76,7 @@ new Gws_Affair_Menu("<%= current_navi %>", "ss_affair_navi_site_<%= @cur_site.id
       <li><%= link_to t('modules.gws/affair/shift_work/shift_calendar'), gws_affair_shift_work_shift_calendars_path %></li>
     </ul>
   <% end %>
+  -->
 
   <!-- 庶務事務/時間外集計 -->
   <% if Gws::Affair::DutySetting.allowed?(:edit, @cur_user, site: @cur_site) %>

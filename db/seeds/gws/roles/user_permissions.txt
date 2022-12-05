@@ -121,4 +121,3 @@ use_aggregate_gws_affair_leave_files
 use_aggregate_gws_affair_overtime_files
 use_gws_affair
 use_gws_affair_attendance_time_cards
-use_gws_affair_shift_calendars

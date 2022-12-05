@@ -43,9 +43,9 @@ module Gws::Affair
     Gws::Role.permission :all_aggregate_gws_affair_leave_files, module_name: 'gws/affair'
 
     # shift calendar
-    Gws::Role.permission :use_gws_affair_shift_calendars, module_name: 'gws/affair'
-    Gws::Role.permission :manage_private_gws_affair_shift_calendars, module_name: 'gws/affair'
-    Gws::Role.permission :manage_all_gws_affair_shift_calendars, module_name: 'gws/affair'
+    #Gws::Role.permission :use_gws_affair_shift_calendars, module_name: 'gws/affair'
+    #Gws::Role.permission :manage_private_gws_affair_shift_calendars, module_name: 'gws/affair'
+    #Gws::Role.permission :manage_all_gws_affair_shift_calendars, module_name: 'gws/affair'
 
     # affair settings
     Gws::Role.permission :edit_gws_affair_duty_settings, module_name: 'gws/affair'

@@ -7,12 +7,18 @@ class Gws::Affair::ShiftWork::ShiftCalendarsController < ApplicationController
 
   navi_view "gws/affair/main/navi"
 
+  before_action :deny
   before_action :set_groups
   before_action :set_user, except: :index
   before_action :set_item, only: [:delete, :destroy]
   helper_method :group_options, :editable_shift_record?
 
   private
+
+  # シフト勤務機能は利用停止
+  def deny
+    raise "403"
+  end
 
   def set_user
     @user = Gws::User.find(params[:user])

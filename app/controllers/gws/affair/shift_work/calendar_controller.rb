@@ -12,6 +12,7 @@ class Gws::Affair::ShiftWork::CalendarController < ApplicationController
 
   append_view_path 'app/views/gws/affair/shift_work/calendar'
 
+  before_action :deny
   before_action :set_active_year_range
   before_action :set_cur_month
   before_action :set_groups
@@ -22,6 +23,11 @@ class Gws::Affair::ShiftWork::CalendarController < ApplicationController
   helper_method :editable_shift_record?
 
   private
+
+  # シフト勤務機能は利用停止
+  def deny
+    raise "403"
+  end
 
   def fix_params
     {}
