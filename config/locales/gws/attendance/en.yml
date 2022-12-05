@@ -102,6 +102,7 @@ en:
         break_enter3: Break 3 start
         break_leave3: Break 3 end
         memo: Remarks
+        working_time: Worktime
       gws/attendance/history:
         date: Date
         field_name: Field name
