@@ -19,6 +19,7 @@
 /log
 /tmp
 /private
+/public/assets-dev
 /public/sites
 /sanitizer_input
 /sanitizer_output
