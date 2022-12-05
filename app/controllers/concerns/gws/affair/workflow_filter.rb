@@ -236,11 +236,11 @@ module Gws::Affair::WorkflowFilter
         end
       end
 
-      if item.state == "approve" && item.is_a?(Gws::Affair::OvertimeFile::CreateCompensatory)
-        item.create_week_in_compensatory
-        item.create_week_out_compensatory
-        item.create_holiday_compensatory
-      end
+      next if item.state != "approve"
+      next if !tem.is_a?(Gws::Affair::OvertimeFile::CreateCompensatory)
+      item.create_week_in_compensatory
+      item.create_week_out_compensatory
+      item.create_holiday_compensatory
     end
 
     respond_to do |format|

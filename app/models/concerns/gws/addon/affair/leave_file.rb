@@ -102,7 +102,7 @@ module Gws::Addon::Affair::LeaveFile
         affair_end_at = end_at
       end
 
-      working_minute, _ = duty_calendar.working_minute(date, affair_start_at, affair_end_at)
+      working_minute, = duty_calendar.working_minute(date, affair_start_at, affair_end_at)
       next if working_minute == 0
       minute = Gws::Affair::Utils.format_leave_minutes(working_minute)
 

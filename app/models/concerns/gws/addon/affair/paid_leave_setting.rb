@@ -3,7 +3,7 @@ module Gws::Addon::Affair::PaidLeaveSetting
   extend SS::Addon
 
   def paid_leave_files(opts = {})
-    opts.merge!(types: %w(paidleave))
+    opts[:types] = %w(paidleave)
     leave_files(opts)
   end
 end

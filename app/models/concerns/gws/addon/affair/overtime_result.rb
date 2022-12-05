@@ -4,14 +4,13 @@ module Gws::Addon::Affair::OvertimeResult
 
   included do
     attr_accessor :in_results
-    permit_params in_results: {}
 
     embeds_one :result, class_name: "Gws::Affair::OvertimeResult"
-
     field :result_created, type: DateTime
     field :result_updated, type: DateTime
     field :result_closed, type: DateTime
 
+    permit_params in_results: {}
     validate :validate_result_closed
   end
 
