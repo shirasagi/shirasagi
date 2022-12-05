@@ -1,0 +1,19 @@
+<% return if links.blank? %>
+
+<div class="links">
+  <span class='heading <%= @cur_site.board_links_break == 'horizontal' ? 'd-block' : 'd-inline-block' %>'>
+    <%= I18n.t('modules.addons.gws/link') %>
+  </span>
+  <% links.each do |item| %>
+    <% target = item[:target].presence %>
+    <% rel = target == "_blank" ? "noopener" : nil %>
+    <span class="link-item <%= @cur_site.board_links_break == 'horizontal' ? 'd-inline-block mr-1' : 'd-block' %>">
+      <i class="material-icons">link</i>
+      <% if item[:url].present? %>
+        <%= link_to item[:name].presence || item[:url], sns_redirect_path(ref: item[:url]), target: target, rel: rel %>
+      <% elsif item[:name].present? %>
+        <%= item[:name] %>
+      <% end %>
+    </span>
+  <% end %>
+</div>
