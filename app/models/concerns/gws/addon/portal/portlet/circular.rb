@@ -26,14 +26,15 @@ module Gws::Addon::Portal::Portlet
       end
       search[:user] = user
 
-      Gws::Circular::Post.site(portal.site).
-        topic.
-        without_deleted.
-        member(user).
-        search(search).
-        order(updated: -1).
-        page(1).
-        per(limit)
+      items = Gws::Circular::Post.site(portal.site)
+      items = items.topic
+      items = items.without_deleted
+      items = items.and_public
+      items = items.member(user)
+      items = items.search(search)
+      items = items.order(updated: -1)
+      items = items.page(1).per(limit)
+      items
     end
 
     def circular_article_state_options
