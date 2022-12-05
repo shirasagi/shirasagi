@@ -1,7 +1,7 @@
 function SS_TreeNavi(selector) {
   this.el = $(selector);
-  this.closeMark = '<i class="material-icons">&#xE145;</i>';
-  this.openMark = '<i class="material-icons">&#xE15B;</i>';
+  this.closeMark = '<i class="material-icons">add</i>';
+  this.openMark = '<i class="material-icons">remove</i>';
 }
 
 SS_TreeNavi.prototype.render = function(url) {
