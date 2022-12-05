@@ -14,7 +14,7 @@ module Gws::Addon::Affair::AnnualLeaveSetting
   end
 
   def annual_leave_files(opts = {})
-    opts.merge!(types: %w(annual_leave))
+    opts[:types] = %w(annual_leave)
     leave_files(opts)
   end
 
@@ -36,7 +36,7 @@ module Gws::Addon::Affair::AnnualLeaveSetting
       return false if setting.nil?
 
       leave_files = setting.annual_leave_files
-      leave_files = leave_files.select { |file| file.id != leave_file.id } if leave_file
+      leave_files = leave_files.reject { |file| file.id == leave_file.id } if leave_file
       leave_dates = leave_files.map { |item| item.leave_dates }.flatten
       minutes = leave_dates.map(&:minute).sum
 

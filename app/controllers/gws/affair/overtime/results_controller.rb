@@ -29,8 +29,10 @@ class Gws::Affair::Overtime::ResultsController < ApplicationController
   def close
     set_item
 
-    url = params[:ref]
     @item.close_result
-    redirect_to url, notice: I18n.t("gws/affair.notice.close_results")
+
+    path = params[:ref]
+    path = view_context.gws_affair_main_path if path.blank? || !trusted_url?(path)
+    redirect_to path, notice: I18n.t("gws/affair.notice.close_results")
   end
 end

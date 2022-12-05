@@ -115,7 +115,7 @@ class Gws::Affair::ShiftWork::CalendarController < ApplicationController
     @item.shift_calendar_id = @shift_calendar.id
     @item.date = @cur_date
 
-    if request.get?
+    if request.get? || request.head?
       render template: 'shift_record', layout: false
       return
     end

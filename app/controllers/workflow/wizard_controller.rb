@@ -18,7 +18,7 @@ class Workflow::WizardController < ApplicationController
 
   def set_route
     @route_id = params[:route_id]
-    if "my_group" == @route_id || "restart" == @route_id
+    if @route_id == "my_group" || @route_id == "restart"
       @route = nil
     else
       @route = Workflow::Route.site(@cur_site).find(params[:route_id])
@@ -50,9 +50,9 @@ class Workflow::WizardController < ApplicationController
       else
         render json: @item.errors.full_messages, status: :bad_request
       end
-    elsif "my_group" == @route_id
+    elsif @route_id == "my_group"
       render template: "approver_setting", layout: false
-    elsif "restart" == @route_id
+    elsif @route_id == "restart"
       render template: "approver_setting_restart", layout: false
     else
       raise "404"
@@ -66,9 +66,7 @@ class Workflow::WizardController < ApplicationController
     workflow_approvers = workflow_approvers.select do |workflow_approver|
       workflow_approver[:level] == level
     end
-    same_level_user_ids = workflow_approvers.map do |workflow_approver|
-      workflow_approver[:user_id]
-    end
+    same_level_user_ids = workflow_approvers.pluck(:user_id)
 
     criteria = @item.approver_user_class.site(@cur_site)
     criteria = criteria.search(params[:s])

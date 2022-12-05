@@ -27,7 +27,7 @@ module Gws::Addon::Affair::GroupSetting
   end
 
   def compensatory_minute1_options
-    29.times.map { |i| 60 + (i * 15) }.map do |m|
+    Array.new(29) { |i| 60 + (i * 15) }.map do |m|
       ["#{m.to_f / 60}#{I18n.t("ss.hours")}", m]
     end
   end

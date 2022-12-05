@@ -38,9 +38,8 @@ module Gws::Addon::Affair::FileTarget
     self.target_group_name = target_group.name if target_group
 
     duty_calendar = target_user.default_duty_calendar(cur_site || site)
-    if duty_calendar.class == Gws::Affair::DutyCalendar
-      self.target_duty_calendar = duty_calendar
-    end
+    self.target_duty_calendar = duty_calendar if duty_calendar.is_a?(Gws::Affair::DutyCalendar)
+
     self.target_user_code = [
       target_user_id.to_s,
       target_user_staff_address_uid.to_s,

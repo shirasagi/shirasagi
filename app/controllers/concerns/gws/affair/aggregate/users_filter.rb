@@ -66,9 +66,9 @@ module Gws::Affair::Aggregate::UsersFilter
     end
 
     # only not flextime users
-    @users = @users.select do |user|
+    @users = @users.reject do |user|
       duty_calendar = user.effective_duty_calendar(@cur_site)
-      !duty_calendar.flextime?
+      duty_calendar.flextime?
     end
   end
 end
