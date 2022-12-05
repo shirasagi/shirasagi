@@ -33,8 +33,7 @@ module Gws::Addon::Portal::Portlet
       items = items.member(user)
       items = items.search(search)
       items = items.order(updated: -1)
-      items = items.page(1).per(limit)
-      items
+      items.page(1).per(limit)
     end
 
     def circular_article_state_options
