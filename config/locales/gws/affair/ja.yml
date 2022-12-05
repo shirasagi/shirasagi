@@ -435,8 +435,8 @@ ja:
       gws/addon/affair/file_target:
         target_group_id: グループ
         target_user_id: ユーザー
-        target_user_staff_address_uid: 申請対象ユーザーの宛名番号
-        target_user_staff_category: 申請対象ユーザーの職員区分
+        target_user_staff_address_uid: ユーザー設定画面から申請対象ユーザーの宛名番号
+        target_user_staff_category: ユーザー設定画面から申請対象ユーザーの職員区分
       gws/affair/overtime_day_result:
         search_term: 期間
         search_group: グループ
