@@ -16,6 +16,9 @@ module Gws::Addon::Affair::OvertimeDayResult
     ).aggregate_partition(unclosed_file_ids: [self.id])
   end
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/PerceivedComplexity
   def save_day_results
     return if result.blank?
     return if result_closed?
@@ -60,22 +63,24 @@ module Gws::Addon::Affair::OvertimeDayResult
       # 通常 時短 深夜 休憩時間
       default_affair_start = default_duty_hour.affair_start(result.date)
       default_affair_end = default_duty_hour.affair_end(result.date)
-      day_time_minute, day_in_work_time_minute, night_time_minute, break1_time_minute, break2_time_minute = Gws::Affair::Utils.time_range_minutes(
-        (result.start_at..result.end_at),
-        (default_affair_start..default_affair_end),
-        (night_time_start..night_time_end),
-        (break1_start_at..break1_end_at),
-        (break2_start_at..break2_end_at)
-      )
+      day_time_minute, day_in_work_time_minute, night_time_minute, break1_time_minute, break2_time_minute =
+        Gws::Affair::Utils.time_range_minutes(
+          (result.start_at..result.end_at),
+          (default_affair_start..default_affair_end),
+          (night_time_start..night_time_end),
+          (break1_start_at..break1_end_at),
+          (break2_start_at..break2_end_at)
+        )
       break_time_minute = break1_time_minute + break2_time_minute
     else
       # 通常 深夜 休憩時間
-      day_time_minute, night_time_minute, break1_time_minute, break2_time_minute = Gws::Affair::Utils.time_range_minutes(
-        (result.start_at..result.end_at),
-        (night_time_start..night_time_end),
-        (break1_start_at..break1_end_at),
-        (break2_start_at..break2_end_at)
-      )
+      day_time_minute, night_time_minute, break1_time_minute, break2_time_minute =
+        Gws::Affair::Utils.time_range_minutes(
+          (result.start_at..result.end_at),
+          (night_time_start..night_time_end),
+          (break1_start_at..break1_end_at),
+          (break2_start_at..break2_end_at)
+        )
       break_time_minute = break1_time_minute + break2_time_minute
       day_in_work_time_minute = 0
     end
@@ -202,4 +207,7 @@ module Gws::Addon::Affair::OvertimeDayResult
 
     item.save
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/PerceivedComplexity
 end
