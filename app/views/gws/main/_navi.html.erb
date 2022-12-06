@@ -128,7 +128,7 @@
 
 <% if @cur_site.menu_links_visible? %>
   <% if @links.present? %>
-    <nav class="mod-navi">
+    <nav class="mod-navi gws-links">
       <h2><%= link_to @cur_site.menu_links_label || t('mongoid.models.gws/link'), gws_public_links_path %></h2>
       <% @links.each do |item| %>
         <h3><%= link_to item.name, gws_public_link_path(id: item) %></h3>
