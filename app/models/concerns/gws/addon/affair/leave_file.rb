@@ -25,19 +25,7 @@ module Gws::Addon::Affair::LeaveFile
 
     before_save :set_leave_dates, if: -> { in_leave_dates.present? }
 
-    after_initialize do
-      if start_at
-        self.start_at_date = start_at.strftime("%Y/%m/%d")
-        self.start_at_hour = start_at.hour
-        self.start_at_minute = start_at.minute
-      end
-
-      if end_at
-        self.end_at_date = end_at.strftime("%Y/%m/%d")
-        self.end_at_hour = end_at.hour
-        self.end_at_minute = end_at.minute
-      end
-    end
+    after_initialize :initialize_start_end
   end
 
   def start_at_hour_options
@@ -55,15 +43,26 @@ module Gws::Addon::Affair::LeaveFile
     I18n.t("gws/affair.options.leave_type").map { |k, v| [v, k] }
   end
 
+  def initialize_start_end
+    if start_at
+      self.start_at_date = start_at.strftime("%Y/%m/%d")
+      self.start_at_hour = start_at.hour
+      self.start_at_minute = start_at.minute
+    end
+    if end_at
+      self.end_at_date = end_at.strftime("%Y/%m/%d")
+      self.end_at_hour = end_at.hour
+      self.end_at_minute = end_at.minute
+    end
+  end
+
   def validate_date
     return if start_at_date.blank? || start_at_hour.blank? || start_at_minute.blank?
     return if end_at_date.blank? || end_at_hour.blank? || end_at_minute.blank?
 
-    site = cur_site || self.site
-
     # 作成者ではなく申請者の勤務時間を確認する
+    site = cur_site || self.site
     user = target_user
-
     return if site.blank?
     return if user.blank?
 
@@ -80,11 +79,19 @@ module Gws::Addon::Affair::LeaveFile
     end
 
     duty_calendar = user.effective_duty_calendar(site)
-
     changed_at = duty_calendar.affair_next_changed(start_at)
     self.date = changed_at.advance(days: -1).change(hour: 0, min: 0, sec: 0)
 
     # 実際に休日となった日時を保存
+    validate_in_leave_dates
+
+    # 年休の場合残り日数があるか
+    validate_annual_leave
+  end
+
+  def validate_in_leave_dates
+    duty_calendar = user.effective_duty_calendar(site)
+
     start_date = date
     end_date = end_at.change(hour: 0, min: 0, sec: 0)
 
@@ -119,14 +126,17 @@ module Gws::Addon::Affair::LeaveFile
     #if in_leave_dates.map(&:minute).sum == 0
     #  errors.add :base, "有給開始〜終了が勤務時間外です。"
     #end
+  end
 
-    # 年休の場合残り日数があるか
-    if leave_type == "annual_leave"
-      if !Gws::Affair::LeaveSetting.obtainable_annual_leave?(site, target_user, start_date, self)
-        minutes = in_leave_dates.map(&:minute).sum
-        errors.add :base, "年次有給休暇の有効時間が足りません。（取得時間：#{Gws::Affair::Utils.leave_minutes_label(minutes)}）"
-      end
-    end
+  def validate_annual_leave
+    return if leave_type != "annual_leave"
+
+    start_date = date
+    #end_date = end_at.change(hour: 0, min: 0, sec: 0)
+
+    return if Gws::Affair::LeaveSetting.obtainable_annual_leave?(site, target_user, start_date, self)
+    minutes = in_leave_dates.map(&:minute).sum
+    errors.add :base, "年次有給休暇の有効時間が足りません。（取得時間：#{Gws::Affair::Utils.leave_minutes_label(minutes)}）"
   end
 
   def set_leave_dates

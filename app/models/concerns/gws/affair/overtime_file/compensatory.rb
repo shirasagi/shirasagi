@@ -44,58 +44,65 @@ module Gws::Affair::OvertimeFile::Compensatory
     permit_params :holiday_compensatory_end_at_date, :holiday_compensatory_end_at_hour, :holiday_compensatory_end_at_minute
     permit_params :holiday_compensatory_minute
 
-    after_initialize do
-      if start_at
-        self.start_at_date = start_at.strftime("%Y/%m/%d")
-        self.start_at_hour = start_at.hour
-        self.start_at_minute = start_at.minute
-      end
-
-      if end_at
-        self.end_at_date = end_at.strftime("%Y/%m/%d")
-        self.end_at_hour = end_at.hour
-        self.end_at_minute = end_at.minute
-      end
-
-      if week_in_start_at
-        self.week_in_start_at_date = week_in_start_at.strftime("%Y/%m/%d")
-        self.week_in_start_at_hour = week_in_start_at.hour
-        self.week_in_start_at_minute = week_in_start_at.minute
-      end
-
-      if week_in_end_at
-        self.week_in_end_at_date = week_in_end_at.strftime("%Y/%m/%d")
-        self.week_in_end_at_hour = week_in_end_at.hour
-        self.week_in_end_at_minute = week_in_end_at.minute
-      end
-
-      if week_out_start_at
-        self.week_out_start_at_date = week_out_start_at.strftime("%Y/%m/%d")
-        self.week_out_start_at_hour = week_out_start_at.hour
-        self.week_out_start_at_minute = week_out_start_at.minute
-      end
-
-      if week_out_end_at
-        self.week_out_end_at_date = week_out_end_at.strftime("%Y/%m/%d")
-        self.week_out_end_at_hour = week_out_end_at.hour
-        self.week_out_end_at_minute = week_out_end_at.minute
-      end
-
-      if holiday_compensatory_start_at
-        self.holiday_compensatory_start_at_date = holiday_compensatory_start_at.strftime("%Y/%m/%d")
-        self.holiday_compensatory_start_at_hour = holiday_compensatory_start_at.hour
-        self.holiday_compensatory_start_at_minute = holiday_compensatory_start_at.minute
-      end
-
-      if holiday_compensatory_end_at
-        self.holiday_compensatory_end_at_date = holiday_compensatory_end_at.strftime("%Y/%m/%d")
-        self.holiday_compensatory_end_at_hour = holiday_compensatory_end_at.hour
-        self.holiday_compensatory_end_at_minute = holiday_compensatory_end_at.minute
-      end
-    end
+    after_initialize :initialize_start_end
+    after_initialize :initialize_week_in
+    after_initialize :initialize_week_out
+    after_initialize :initialize_week_holiday
   end
 
   private
+
+  def initialize_start_end
+    if start_at
+      self.start_at_date = start_at.strftime("%Y/%m/%d")
+      self.start_at_hour = start_at.hour
+      self.start_at_minute = start_at.minute
+    end
+    if end_at
+      self.end_at_date = end_at.strftime("%Y/%m/%d")
+      self.end_at_hour = end_at.hour
+      self.end_at_minute = end_at.minute
+    end
+  end
+
+  def initialize_week_in
+    if week_in_start_at
+      self.week_in_start_at_date = week_in_start_at.strftime("%Y/%m/%d")
+      self.week_in_start_at_hour = week_in_start_at.hour
+      self.week_in_start_at_minute = week_in_start_at.minute
+    end
+    if week_in_end_at
+      self.week_in_end_at_date = week_in_end_at.strftime("%Y/%m/%d")
+      self.week_in_end_at_hour = week_in_end_at.hour
+      self.week_in_end_at_minute = week_in_end_at.minute
+    end
+  end
+
+  def initialize_week_out
+    if week_out_start_at
+      self.week_out_start_at_date = week_out_start_at.strftime("%Y/%m/%d")
+      self.week_out_start_at_hour = week_out_start_at.hour
+      self.week_out_start_at_minute = week_out_start_at.minute
+    end
+    if week_out_end_at
+      self.week_out_end_at_date = week_out_end_at.strftime("%Y/%m/%d")
+      self.week_out_end_at_hour = week_out_end_at.hour
+      self.week_out_end_at_minute = week_out_end_at.minute
+    end
+  end
+
+  def initialize_week_holiday
+    if holiday_compensatory_start_at
+      self.holiday_compensatory_start_at_date = holiday_compensatory_start_at.strftime("%Y/%m/%d")
+      self.holiday_compensatory_start_at_hour = holiday_compensatory_start_at.hour
+      self.holiday_compensatory_start_at_minute = holiday_compensatory_start_at.minute
+    end
+    if holiday_compensatory_end_at
+      self.holiday_compensatory_end_at_date = holiday_compensatory_end_at.strftime("%Y/%m/%d")
+      self.holiday_compensatory_end_at_hour = holiday_compensatory_end_at.hour
+      self.holiday_compensatory_end_at_minute = holiday_compensatory_end_at.minute
+    end
+  end
 
   def reset_compensatory
     self.week_in_start_at = nil
@@ -111,13 +118,17 @@ module Gws::Affair::OvertimeFile::Compensatory
     self.holiday_compensatory_minute = 0
   end
 
+  def parse_dhm(date, hour, minute)
+    Time.zone.parse("#{date} #{hour}:#{minute}")
+  end
+
   def validate_compensatory_minute
     self.week_in_compensatory_minute = week_in_compensatory_minute.to_i
     self.week_out_compensatory_minute = week_out_compensatory_minute.to_i
     self.holiday_compensatory_minute = holiday_compensatory_minute.to_i
 
     # 振替は同時申請不可
-    if [week_in_compensatory_minute, week_out_compensatory_minute, holiday_compensatory_minute].select { |v| v > 0 }.size > 1
+    if [week_in_compensatory_minute, week_out_compensatory_minute, holiday_compensatory_minute].count { |v| v > 0 } > 1
       errors.add :base, :duplicate_compensatory_minute
     end
 
@@ -157,8 +168,8 @@ module Gws::Affair::OvertimeFile::Compensatory
     end
     return if errors.present?
 
-    self.week_in_start_at = Time.zone.parse("#{week_in_start_at_date} #{week_in_start_at_hour}:#{week_in_start_at_minute}")
-    self.week_in_end_at = Time.zone.parse("#{week_in_end_at_date} #{week_in_end_at_hour}:#{week_in_end_at_minute}")
+    self.week_in_start_at = parse_dhm(week_in_start_at_date, week_in_start_at_hour, week_in_start_at_minute)
+    self.week_in_end_at = parse_dhm(week_in_end_at_date, week_in_end_at_hour, week_in_end_at_minute)
 
     validate_week_in_compensatory_leave
   end
@@ -182,7 +193,8 @@ module Gws::Affair::OvertimeFile::Compensatory
     end_of_week = start_of_week.advance(days: 6)
 
     if week_in_start_at < start_of_week || week_in_start_at >= end_of_week.advance(days: 1)
-      errors.add :week_in_compensatory_minute, "：振替開始が週内になっていません。（#{start_of_week.strftime("%Y/%m/%d")}〜#{end_of_week.strftime("%Y/%m/%d")}）"
+      errors.add :week_in_compensatory_minute,
+        "：振替開始が週内になっていません。（#{start_of_week.strftime("%Y/%m/%d")}〜#{end_of_week.strftime("%Y/%m/%d")}）"
     end
   end
 
@@ -210,8 +222,8 @@ module Gws::Affair::OvertimeFile::Compensatory
     end
     return if errors.present?
 
-    self.week_out_start_at = Time.zone.parse("#{week_out_start_at_date} #{week_out_start_at_hour}:#{week_out_start_at_minute}")
-    self.week_out_end_at = Time.zone.parse("#{week_out_end_at_date} #{week_out_end_at_hour}:#{week_out_end_at_minute}")
+    self.week_out_start_at = parse_dhm(week_out_start_at_date, week_out_start_at_hour, week_out_start_at_minute)
+    self.week_out_end_at = parse_dhm(week_out_end_at_date, week_out_end_at_hour, week_out_end_at_minute)
 
     validate_week_out_compensatory_leave
   end
@@ -235,12 +247,14 @@ module Gws::Affair::OvertimeFile::Compensatory
     end_of_week = start_of_week.advance(days: 6)
 
     if week_out_start_at >= start_of_week && week_out_start_at < end_of_week.advance(days: 1)
-      errors.add :week_out_compensatory_minute, "：振替開始が週外になっていません。（#{start_of_week.strftime("%Y/%m/%d")}〜#{end_of_week.strftime("%Y/%m/%d")}）"
+      errors.add :week_out_compensatory_minute,
+        "：振替開始が週外になっていません。（#{start_of_week.strftime("%Y/%m/%d")}〜#{end_of_week.strftime("%Y/%m/%d")}）"
     end
 
     # 休暇日が有効期限内
     if !in_week_out_compensatory_expiration?(week_out_start_at.to_date)
-      errors.add :week_out_compensatory_minute, "：振替開始が有効期限内ではありません。（有効期限： #{week_out_compensatory_expiration_term}）"
+      errors.add :week_out_compensatory_minute,
+        "：振替開始が有効期限内ではありません。（有効期限： #{week_out_compensatory_expiration_term}）"
     end
   end
 
@@ -268,8 +282,14 @@ module Gws::Affair::OvertimeFile::Compensatory
     end
     return if errors.present?
 
-    self.holiday_compensatory_start_at = Time.zone.parse("#{holiday_compensatory_start_at_date} #{holiday_compensatory_start_at_hour}:#{holiday_compensatory_start_at_minute}")
-    self.holiday_compensatory_end_at = Time.zone.parse("#{holiday_compensatory_end_at_date} #{holiday_compensatory_end_at_hour}:#{holiday_compensatory_end_at_minute}")
+    self.holiday_compensatory_start_at = parse_dhm(
+      holiday_compensatory_start_at_date,
+      holiday_compensatory_start_at_hour,
+      holiday_compensatory_start_at_minute)
+    self.holiday_compensatory_end_at = parse_dhm(
+      holiday_compensatory_end_at_date,
+      holiday_compensatory_end_at_hour,
+      holiday_compensatory_end_at_minute)
 
     validate_holiday_compensatory_leave
   end
@@ -303,7 +323,7 @@ module Gws::Affair::OvertimeFile::Compensatory
     night_start_at = duty_calendar.night_time_start(start_at)
     night_end_at = duty_calendar.night_time_end(end_at)
 
-    over_minutes, _ = Gws::Affair::Utils.time_range_minutes((start_at..end_at), (night_start_at..night_end_at))
+    over_minutes, = Gws::Affair::Utils.time_range_minutes((start_at..end_at), (night_start_at..night_end_at))
     if over_minutes < minute
       label = minute.to_f / 60
       errors.add key, "：振替時間（#{label}時間）が時間外開始〜終了より長くなっています。（深夜残業時間帯を振替に含めることはできません）"
