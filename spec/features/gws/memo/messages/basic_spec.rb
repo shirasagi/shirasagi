@@ -63,14 +63,17 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         click_on I18n.t("webmail.links.show_cc_bcc")
         within 'dl.see.to' do
-          click_on I18n.t('gws.organization_addresses')
+          wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
         end
       end
       wait_for_cbox do
         expect(page).to have_content(user2.name)
-        click_on user2.name
+        wait_cbox_close { click_on user2.name }
       end
       within 'form#item-form' do
+        within 'dl.see.to' do
+          expect(page).to have_css(".index", text: user2.name)
+        end
         click_on I18n.t('ss.buttons.draft_save')
       end
       message = I18n.t('errors.messages.blank')
@@ -84,7 +87,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t('gws/memo/message.commit_params_check')
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
+      wait_for_notice I18n.t("ss.notice.sent")
     end
 
     it '#edit' do
@@ -104,7 +107,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t('gws/memo/message.commit_params_check')
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
+      wait_for_notice I18n.t("ss.notice.sent")
     end
 
     it '#reply' do
@@ -116,7 +119,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t('gws/memo/message.commit_params_check')
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
+      wait_for_notice I18n.t("ss.notice.sent")
     end
 
     it '#reply_all' do
@@ -128,7 +131,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t('gws/memo/message.commit_params_check')
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
+      wait_for_notice I18n.t("ss.notice.sent")
     end
 
     it '#forward' do
@@ -151,11 +154,14 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       end
 
       within 'form#item-form' do
+        within 'dl.see.to' do
+          expect(page).to have_css(".index", text: user2.name)
+        end
         accept_confirm do
           click_on I18n.t('gws/memo/message.commit_params_check')
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
+      wait_for_notice I18n.t("ss.notice.sent")
     end
 
     it '#ref' do
@@ -178,13 +184,16 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       end
 
       within 'form#item-form' do
+        within 'dl.see.to' do
+          expect(page).to have_css(".index", text: user2.name)
+        end
         fill_in 'item[text]', with: text
 
         accept_confirm do
           click_on I18n.t('gws/memo/message.commit_params_check')
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
+      wait_for_notice I18n.t("ss.notice.sent")
     end
 
     it '#send_mdn' do

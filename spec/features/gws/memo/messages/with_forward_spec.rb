@@ -36,17 +36,22 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         within 'form#item-form' do
           click_on I18n.t("webmail.links.show_cc_bcc")
 
-          within target do
-            click_on I18n.t('gws.organization_addresses')
+          wait_cbox_open do
+            within target do
+              click_on I18n.t('gws.organization_addresses')
+            end
           end
         end
 
         wait_for_cbox do
           expect(page).to have_content(recipient.name)
-          click_on recipient.name
+          wait_cbox_close { click_on recipient.name }
         end
 
         within 'form#item-form' do
+          within target do
+            expect(page).to have_css(".index", text: recipient.name)
+          end
           fill_in 'item[subject]', with: subject
           fill_in 'item[text]', with: text
 
@@ -69,7 +74,6 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
             click_on I18n.t("ss.buttons.send")
           end
         end
-        wait_for_ajax
         expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
 
         expect(Gws::Memo::Message.count).to eq 1

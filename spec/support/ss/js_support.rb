@@ -267,12 +267,10 @@ module SS
     end
 
     def wait_for_notice(text)
-      wait_for_js_ready
       expect(page).to have_css('#notice', text: text)
     end
 
     def wait_for_error(text)
-      wait_for_js_ready
       expect(page).to have_css('#errorExplanation', text: text)
     end
 
