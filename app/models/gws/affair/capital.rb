@@ -10,7 +10,9 @@ class Gws::Affair::Capital
   include Gws::Addon::Import::Affair::Capital::Group
   include Gws::SitePermission
 
+  # rubocop:disable Style/ClassVars
   class_variable_set(:@@_member_ids_required, false)
+  # rubocop:enable Style/ClassVars
 
   set_permission_name 'gws_affair_capital_years', :edit
 

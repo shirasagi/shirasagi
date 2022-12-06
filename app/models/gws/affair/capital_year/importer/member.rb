@@ -1,9 +1,7 @@
 class Gws::Affair::CapitalYear::Importer::Member < Gws::Affair::CapitalYear::Importer::Base
   include ActiveModel::Model
 
-  def last_year
-    year.last_year
-  end
+  delegate :last_year, to: :year
 
   def header_t(key)
     I18n.t("gws/affair.export.leave_setting.#{key}")

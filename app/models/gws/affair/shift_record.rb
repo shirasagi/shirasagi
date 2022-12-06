@@ -1,3 +1,4 @@
+# rubocop:disable Rails/Delegate
 class Gws::Affair::ShiftRecord
   include SS::Document
   include Gws::Affair::ShiftRecord::Export
@@ -161,3 +162,4 @@ class Gws::Affair::ShiftRecord
     shift_calendar.default_duty_hour.overtime_in_work?
   end
 end
+# rubocop:enable Rails/Delegate

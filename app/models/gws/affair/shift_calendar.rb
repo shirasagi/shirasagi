@@ -1,3 +1,4 @@
+# rubocop:disable Rails/Delegate
 class Gws::Affair::ShiftCalendar
   include SS::Document
   include Gws::Reference::User
@@ -109,3 +110,4 @@ class Gws::Affair::ShiftCalendar
     default_duty_calendar.notice_messages(user, time)
   end
 end
+# rubocop:enable Rails/Delegate

@@ -31,8 +31,7 @@ module Gws::Affair::Searchable
       criteria = criteria.search_date(params)
       criteria = criteria.search_status(params)
       criteria = criteria.search_capital(params)
-      criteria = criteria.search_workflow_state(params)
-      criteria
+      criteria.search_workflow_state(params)
     end
 
     def search_user(params)
