@@ -119,6 +119,7 @@ module Gws::Affair::OvertimeFile::Compensatory
   end
 
   def parse_dhm(date, hour, minute)
+    return if date.blank? || hour.blank? || minute.blank?
     Time.zone.parse("#{date} #{hour}:#{minute}")
   end
 

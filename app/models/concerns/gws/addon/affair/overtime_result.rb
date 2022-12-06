@@ -18,37 +18,28 @@ module Gws::Addon::Affair::OvertimeResult
     return if in_results.blank?
 
     now = Time.zone.now
-    in_results.each do |id, result|
-      next if result["start_at_date"].blank? || result["start_at_hour"].blank? || result["start_at_minute"].blank?
-      next if result["end_at_date"].blank? || result["end_at_hour"].blank? || result["end_at_minute"].blank?
-
-      start_at = Time.zone.parse("#{result["start_at_date"]} #{result["start_at_hour"]}:#{result["start_at_minute"]}")
-      end_at = Time.zone.parse("#{result["end_at_date"]} #{result["end_at_hour"]}:#{result["end_at_minute"]}")
+    in_results.each do |id, r|
+      start_at = parse_dhm(r["start_at_date"], r["start_at_hour"], r["start_at_minute"])
+      end_at = parse_dhm(r["end_at_date"], r["end_at_hour"], r["end_at_minute"])
+      next if start_at.nil? || end_at.nil?
 
       break_time_minute = 0
-      break1_start_at = nil
-      break1_end_at = nil
-      break2_start_at = nil
-      break2_end_at = nil
 
-      if result["break1_start_at_date"].present? && result["break1_start_at_hour"].present? && result["break1_start_at_minute"].present? &&
-         result["break1_end_at_date"].present? && result["break1_end_at_hour"].present? && result["break1_end_at_minute"].present?
-        break1_start_at = Time.zone.parse("#{result["break1_start_at_date"]} #{result["break1_start_at_hour"]}:#{result["break1_start_at_minute"]}")
-        break1_end_at = Time.zone.parse("#{result["break1_end_at_date"]} #{result["break1_end_at_hour"]}:#{result["break1_end_at_minute"]}")
+      break1_start_at = parse_dhm(r["break1_start_at_date"], r["break1_start_at_hour"], r["break1_start_at_minute"])
+      break1_end_at = parse_dhm(r["break1_end_at_date"], r["break1_end_at_hour"], r["break1_end_at_minute"])
+      if break1_start_at && break1_end_at
         _, m = Gws::Affair::Utils.time_range_minutes((start_at..end_at), (break1_start_at..break1_end_at))
         break_time_minute += m
       end
 
-      if result["break2_start_at_date"].present? && result["break2_start_at_hour"].present? && result["break2_start_at_minute"].present? &&
-          result["break2_end_at_date"].present? && result["break2_end_at_hour"].present? && result["break2_end_at_minute"].present?
-        break2_start_at = Time.zone.parse("#{result["break2_start_at_date"]} #{result["break2_start_at_hour"]}:#{result["break2_start_at_minute"]}")
-        break2_end_at = Time.zone.parse("#{result["break2_end_at_date"]} #{result["break2_end_at_hour"]}:#{result["break2_end_at_minute"]}")
+      break2_start_at = parse_dhm(r["break2_start_at_date"], r["break2_start_at_hour"], r["break2_start_at_minute"])
+      break2_end_at = parse_dhm(r["break2_end_at_date"], r["break2_end_at_hour"], r["break2_end_at_minute"])
+      if break2_start_at && break2_end_at
         _, m = Gws::Affair::Utils.time_range_minutes((start_at..end_at), (break2_start_at..break2_end_at))
         break_time_minute += m
       end
 
       file = self.class.find(id)
-
       item = Gws::Affair::OvertimeResult.new
       item.date = file.date
       item.start_at = start_at
@@ -58,7 +49,6 @@ module Gws::Addon::Affair::OvertimeResult
       item.break1_end_at = break1_end_at
       item.break2_start_at = break2_start_at
       item.break2_end_at = break2_end_at
-
       item.break_time_minute = break_time_minute
 
       file.result = item
@@ -70,6 +60,11 @@ module Gws::Addon::Affair::OvertimeResult
     save_edit_result_message
 
     true
+  end
+
+  def parse_dhm(date, hour, minute)
+    return if date.blank? || hour.blank? || minute.blank?
+    Time.zone.parse("#{date} #{hour}:#{minute}")
   end
 
   def validate_result_closed
