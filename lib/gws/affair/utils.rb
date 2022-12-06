@@ -31,6 +31,23 @@ class Gws::Affair::Utils
       end
     end
 
+    def start_end_date_label(start_at, end_at)
+      return if start_at.blank? || end_at.blank?
+      "#{start_at.strftime("%Y/%m/%d")}#{I18n.t("ss.wave_dash")}#{end_at.strftime("%Y/%m/%d")}"
+    end
+
+    def start_end_time_label(start_at, end_at)
+      return if start_at.blank? || end_at.blank?
+
+      start_time = "#{start_at.hour}:#{format('%02d', start_at.minute)}"
+      end_time = "#{end_at.hour}:#{format('%02d', end_at.minute)}"
+      if start_at.to_date == end_at.to_date
+        "#{start_at.strftime("%Y/%m/%d")} #{start_time}#{I18n.t("ss.wave_dash")}#{end_time}"
+      else
+        "#{start_at.strftime("%Y/%m/%d")} #{start_time}#{I18n.t("ss.wave_dash")}#{end_at.strftime("%Y/%m/%d")} #{end_time}"
+      end
+    end
+
     def leave_minutes_label(minutes)
       label = (minutes.to_f / 60).floor(2).to_s.sub(/\.0$/, "")
       "#{label}#{I18n.t("ss.hours")}(#{minutes}#{I18n.t("datetime.prompts.minute")})"

@@ -6,7 +6,8 @@ module Gws::Affair::OvertimeFile::Compensatory
     attr_accessor :week_in_start_at_date, :week_in_start_at_hour, :week_in_start_at_minute
     attr_accessor :week_in_end_at_date, :week_in_end_at_hour, :week_in_end_at_minute
 
-    has_one :week_in_leave_file, class_name: "Gws::Affair::LeaveFile", inverse_of: :week_in_compensatory_file
+    has_one :week_in_leave_file, class_name: "Gws::Affair::LeaveFile",
+      inverse_of: :week_in_compensatory_file, dependent: nil
 
     field :week_in_start_at, type: DateTime
     field :week_in_end_at, type: DateTime
@@ -20,7 +21,8 @@ module Gws::Affair::OvertimeFile::Compensatory
     attr_accessor :week_out_start_at_date, :week_out_start_at_hour, :week_out_start_at_minute
     attr_accessor :week_out_end_at_date, :week_out_end_at_hour, :week_out_end_at_minute
 
-    has_one :week_out_leave_file, class_name: "Gws::Affair::LeaveFile", inverse_of: :week_out_compensatory_file
+    has_one :week_out_leave_file, class_name: "Gws::Affair::LeaveFile",
+      inverse_of: :week_out_compensatory_file, dependent: nil
 
     field :week_out_start_at, type: DateTime
     field :week_out_end_at, type: DateTime
@@ -34,7 +36,8 @@ module Gws::Affair::OvertimeFile::Compensatory
     attr_accessor :holiday_compensatory_start_at_date, :holiday_compensatory_start_at_hour, :holiday_compensatory_start_at_minute
     attr_accessor :holiday_compensatory_end_at_date, :holiday_compensatory_end_at_hour, :holiday_compensatory_end_at_minute
 
-    has_one :holiday_compensatory_leave_file, class_name: "Gws::Affair::LeaveFile", inverse_of: :holiday_compensatory_file
+    has_one :holiday_compensatory_leave_file, class_name: "Gws::Affair::LeaveFile",
+      inverse_of: :holiday_compensatory_file,  dependent: nil
 
     field :holiday_compensatory_start_at, type: DateTime
     field :holiday_compensatory_end_at, type: DateTime
@@ -333,80 +336,37 @@ module Gws::Affair::OvertimeFile::Compensatory
     (cur_site || site).compensatory_minute_options
   end
 
-  def week_out_compensatory_minute_options
-    (cur_site || site).compensatory_minute_options
-  end
-
-  def holiday_compensatory_minute_options
-    (cur_site || site).compensatory_minute_options
-  end
+  alias week_out_compensatory_minute_options week_in_compensatory_minute_options
+  alias holiday_compensatory_minute_options week_in_compensatory_minute_options
 
   def week_in_compensatory_term
-    return if week_in_start_at.blank?
-    week_in_start_time = "#{week_in_start_at.hour}:#{format('%02d', week_in_start_at.minute)}"
-    week_in_end_time = "#{week_in_end_at.hour}:#{format('%02d', week_in_end_at.minute)}"
-    if week_in_start_at_date == end_at_date
-      "#{week_in_start_at.strftime("%Y/%m/%d")} #{week_in_start_time}#{I18n.t("ss.wave_dash")}#{week_in_end_time}"
-    else
-      "#{week_in_start_at.strftime("%Y/%m/%d")} #{week_in_start_time}#{I18n.t("ss.wave_dash")}#{week_in_end_at.strftime("%Y/%m/%d")} #{week_in_end_time}"
-    end
+    Gws::Affair::Utils.start_end_time_label(week_in_start_at, week_in_end_at)
   end
 
   def week_out_compensatory_term
-    return if week_out_start_at.blank?
-    week_out_start_time = "#{week_out_start_at.hour}:#{format('%02d', week_out_start_at.minute)}"
-    week_out_end_time = "#{week_out_end_at.hour}:#{format('%02d', week_out_end_at.minute)}"
-    if start_at_date == end_at_date
-      "#{week_out_start_at.strftime("%Y/%m/%d")} #{week_out_start_time}#{I18n.t("ss.wave_dash")}#{week_out_end_time}"
-    else
-      "#{week_out_start_at.strftime("%Y/%m/%d")} #{week_out_start_time}#{I18n.t("ss.wave_dash")}#{week_out_end_at.strftime("%Y/%m/%d")} #{week_out_end_time}"
-    end
+    Gws::Affair::Utils.start_end_time_label(week_out_start_at, week_out_end_at)
   end
 
   def holiday_compensatory_term
-    return if holiday_compensatory_start_at.blank?
-    return if holiday_compensatory_end_at.blank?
-
-    start_time = "#{holiday_compensatory_start_at.hour}:#{format('%02d', holiday_compensatory_start_at.minute)}"
-    end_time = "#{holiday_compensatory_end_at.hour}:#{format('%02d', holiday_compensatory_end_at.minute)}"
-
-    if holiday_compensatory_start_at.to_date == holiday_compensatory_end_at.to_date
-      "#{holiday_compensatory_start_at.strftime("%Y/%m/%d")} #{start_time}#{I18n.t("ss.wave_dash")}#{end_time}"
-    else
-      "#{holiday_compensatory_start_at.strftime("%Y/%m/%d")} #{start_time}#{I18n.t("ss.wave_dash")}#{holiday_compensatory_end_at.strftime("%Y/%m/%d")} #{end_time}"
-    end
+    Gws::Affair::Utils.start_end_time_label(holiday_compensatory_start_at, holiday_compensatory_end_at)
   end
 
   def week_out_compensatory_expiration_start_date
     number = site.week_out_compensatory_file_start_limit
     unit = site.week_out_compensatory_file_start_limit_unit
+    return unless %w(day week month year).include?(unit)
 
-    case unit
-    when 'day'
-      start_at.to_date.advance(days: -1 * number).advance(days: 1)
-    when 'week'
-      start_at.to_date.advance(weeks: -1 * number).advance(days: 1)
-    when 'month'
-      start_at.to_date.advance(months: -1 * number).advance(days: 1)
-    when 'year'
-      start_at.to_date.advance(years: -1 * number).advance(days: 1)
-    end
+    options = { unit.pluralize.to_sym => (-1 * number) }
+    start_at.to_date.advance(options).advance(days: 1)
   end
 
   def week_out_compensatory_expiration_end_date
     number = site.week_out_compensatory_file_end_limit
     unit = site.week_out_compensatory_file_end_limit_unit
+    return unless %w(day week month year).include?(unit)
 
-    case unit
-    when 'day'
-      start_at.to_date.advance(days: number).advance(days: -1)
-    when 'week'
-      start_at.to_date.advance(weeks: number).advance(days: -1)
-    when 'month'
-      start_at.to_date.advance(months: number).advance(days: -1)
-    when 'year'
-      start_at.to_date.advance(years: number).advance(days: -1)
-    end
+    options = { unit.pluralize.to_sym => number }
+    start_at.to_date.advance(options).advance(days: -1)
   end
 
   def in_week_out_compensatory_expiration?(date)
@@ -414,7 +374,9 @@ module Gws::Affair::OvertimeFile::Compensatory
   end
 
   def week_out_compensatory_expiration_term
-    "#{week_out_compensatory_expiration_start_date.strftime("%Y/%m/%d")}#{I18n.t("ss.wave_dash")}#{week_out_compensatory_expiration_end_date.strftime("%Y/%m/%d")}"
+    Gws::Affair::Utils.start_end_date_label(
+      week_out_compensatory_expiration_start_date,
+      week_out_compensatory_expiration_end_date)
   end
 
   def week_out_compensatory_notify_date
