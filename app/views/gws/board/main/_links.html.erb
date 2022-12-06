@@ -5,7 +5,7 @@
     <%= I18n.t('modules.addons.gws/link') %>
   </span>
   <% links.each do |item| %>
-    <% target = item[:target].presence %>
+    <% target = item[:target].presence || Gws::Link.default_link_target %>
     <% rel = target == "_blank" ? "noopener" : nil %>
     <span class="link-item <%= @cur_site.board_links_break == 'horizontal' ? 'd-inline-block mr-1' : 'd-block' %>">
       <i class="material-icons">link</i>

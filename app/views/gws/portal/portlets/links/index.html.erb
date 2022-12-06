@@ -3,7 +3,7 @@
 
   <ul class="list-items">
     <% (@portlet.links || []).each do |item| %>
-      <% target = item[:target].presence %>
+      <% target = item[:target].presence || Gws::Link.default_link_target %>
       <li class="list-item">
         <div class="info">
           <% if item[:url].present? %>

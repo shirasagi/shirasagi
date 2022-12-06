@@ -530,6 +530,9 @@ ja:
       lang:
         ja: 日本語
         en: English (Experimental)
+      link_target:
+        _self: 同じタブで開く
+        _blank: 新しいタブで開く
 
     tasks:
       started: 開始しました。

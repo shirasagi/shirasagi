@@ -7,16 +7,18 @@
   <table class="index form-index sortable-index">
     <thead>
       <tr>
-        <th style="width: 40%;"><%= @item.t('links/name') %></th>
+        <th style="width: 20%;"><%= @item.t('links/name') %></th>
         <th><%= @item.t('links/url') %></th>
-        <th><%= @item.t('links/target') %></th>
+        <th style="width: 12em;"><%= @item.t('links/target') %></th>
       </tr>
     </thead>
     <tbody>
       <tr data-base="true">
         <td><%= f.text_field_tag 'item[links][][name]', nil, id: nil %></td>
         <td><%= f.text_field_tag 'item[links][][url]', nil, id: nil %></td>
-        <td><%= select_tag 'item[links][][target]', options_for_select(@item.link_target_options), include_blank: '_self', id: nil %></td>
+        <td>
+          <%= select_tag 'item[links][][target]', options_for_select(@item.link_target_options), include_blank: true, id: nil %>
+        </td>
       </tr>
     </tbody>
   </table>

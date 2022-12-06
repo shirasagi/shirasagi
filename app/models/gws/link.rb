@@ -9,6 +9,9 @@ class Gws::Link
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
+  cattr_accessor :default_link_target
+  self.default_link_target = SS.config.gws.link["default_target"].presence || "_self"
+
   seqid :id
   field :name, type: String
 

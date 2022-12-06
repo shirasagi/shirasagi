@@ -4,6 +4,6 @@ FactoryBot.define do
     cur_user { gws_user }
 
     name { "name-#{unique_id}" }
-    links { [ { "name" => "SHIRASAGI", "url" => "http://ss-proj.org/", target: "" } ] }
+    links { [ { "name" => "SHIRASAGI", "url" => "http://ss-proj.org/", target: "_self" } ] }
   end
 end

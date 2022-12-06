@@ -14,7 +14,9 @@ module Gws::Addon::Link
     end
 
     def link_target_options
-      %w(_blank)
+      %w(_self _blank).map do |v|
+        [ I18n.t("ss.options.link_target.#{v}"), v ]
+      end
     end
 
     private

@@ -10,7 +10,7 @@ describe "gws_links", type: :feature, dbscope: :example, js: true do
     let(:name2) { "name-#{unique_id}" }
     let(:link_name1) { "link_name-#{unique_id}" }
     let(:link_url1) { unique_url }
-    let(:link_target1) { "" }
+    let(:link_target1) { "_self" }
     let(:link_name2) { "link_name-#{unique_id}" }
     let(:link_url2) { unique_url }
     let(:link_target2) { "_blank" }
@@ -34,7 +34,7 @@ describe "gws_links", type: :feature, dbscope: :example, js: true do
           within all("tr")[1] do
             fill_in "item[links][][name]", with: link_name1
             fill_in "item[links][][url]", with: link_url1
-            # select link_target1, from: "item[links][][target]"
+            select link_target1, from: "item[links][][target]"
 
             click_on "add"
           end
@@ -129,22 +129,31 @@ describe "gws_links", type: :feature, dbscope: :example, js: true do
   context "public side" do
     let(:link_name1) { "link_name-#{unique_id}" }
     let(:link_url1) { sys_diag_server_path(link: "link1") }
-    let(:link_target1) { "" }
+    let(:link_target1) { "_self" }
     let(:link_name2) { "link_name-#{unique_id}" }
     let(:link_url2) { sys_diag_server_path(link: "link2") }
     let(:link_target2) { "_blank" }
+    let(:link_name3) { "link_name-#{unique_id}" }
+    let(:link_url3) { sys_diag_server_path(link: "link3") }
+    let(:link_target3) { "" }
     let!(:item) do
       create(
         :gws_link, cur_site: site,
         links: [
           { name: link_name1, url: link_url1, target: link_target1 },
           { name: link_name2, url: link_url2, target: link_target2 },
+          { name: link_name3, url: link_url3, target: link_target3 },
         ])
     end
     let!(:sys_role_admin) { create :sys_role_admin }
 
     before do
+      @default_link_target = Gws::Link.default_link_target
       gws_user.sys_user.add_to_set(sys_role_ids: sys_role_admin.id)
+    end
+
+    after do
+      Gws::Link.default_link_target = @default_link_target
     end
 
     context "public links" do
@@ -152,7 +161,7 @@ describe "gws_links", type: :feature, dbscope: :example, js: true do
         visit gws_public_links_path(site: site)
         click_on item.name
 
-        expect(page).to have_css(".list-item", count: 2)
+        expect(page).to have_css(".list-item", count: 3)
         within all(".list-item")[0] do
           click_on link_name1
         end
@@ -172,6 +181,30 @@ describe "gws_links", type: :feature, dbscope: :example, js: true do
             expect(page).to have_css(".addon-body", text: "link2")
           end
         end
+
+        Gws::Link.default_link_target = "_self"
+        visit gws_public_links_path(site: site)
+        click_on item.name
+        within all(".list-item")[2] do
+          click_on link_name3
+        end
+        within "#query-parameters" do
+          expect(page).to have_css(".addon-body", text: "link3")
+        end
+
+        Gws::Link.default_link_target = "_blank"
+        visit gws_public_links_path(site: site)
+        click_on item.name
+        new_window = window_opened_by do
+          within all(".list-item")[2] do
+            click_on link_name3
+          end
+        end
+        within_window new_window do
+          within "#query-parameters" do
+            expect(page).to have_css(".addon-body", text: "link3")
+          end
+        end
       end
     end
 
@@ -182,7 +215,7 @@ describe "gws_links", type: :feature, dbscope: :example, js: true do
           click_on item.name
         end
 
-        expect(page).to have_css(".list-item", count: 2)
+        expect(page).to have_css(".list-item", count: 3)
 
         within all(".list-item")[0] do
           click_on link_name1
@@ -213,7 +246,7 @@ describe "gws_links", type: :feature, dbscope: :example, js: true do
           click_on item.name
         end
 
-        expect(page).to have_css(".list-item", count: 2)
+        expect(page).to have_css(".list-item", count: 3)
 
         within all(".list-item")[0] do
           click_on link_name1
@@ -244,7 +277,7 @@ describe "gws_links", type: :feature, dbscope: :example, js: true do
           click_on item.name
         end
 
-        expect(page).to have_css(".list-item", count: 2)
+        expect(page).to have_css(".list-item", count: 3)
 
         within all(".list-item")[0] do
           click_on link_name1

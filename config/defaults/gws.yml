@@ -233,6 +233,9 @@ production: &production
   aggregation:
     first_activation_date: "2000/1/1"
 
+  link:
+    default_target: _self
+
 test:
   <<: *production
   disable: false
