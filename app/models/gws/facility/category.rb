@@ -13,7 +13,7 @@ class Gws::Facility::Category
 
   permit_params :name, :order
 
-  validates :name, presence: true
+  validates :name, presence: true, length: { maximum: 80 }
 
   default_scope -> { order_by order: 1, name: 1 }
 
