@@ -18,7 +18,8 @@
       <tbody>
       <% if @item.urgency_node %>
         <tr data-id="<%= @item.urgency_node_id %>">
-          <td><%= f.hidden_field "urgency_node_id", value: @item.urgency_node_id, id: nil %> <%= @item.urgency_node.name %></td>
+          <td><%= f.hidden_field "urgency_node_id", value: @item.urgency_node_id, id: nil %>
+            <%= @item.urgency_node.name %> (<%= @item.urgency_node.filename %>)</td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "btn deselect" %></td>
         </tr>
       <% end %>
