@@ -17,11 +17,8 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
 
     def create_annual_leave_file(start_at, end_at)
       reason = unique_id
-      workflow_comment = unique_id
-      approve_comment = unique_id
 
       Timecop.freeze(start_at) do
-        # request
         login_user(user638)
         visit new_path
 
@@ -38,11 +35,18 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           select I18n.t("gws/affair.options.leave_type.annual_leave"), from: 'item[leave_type]'
           click_on I18n.t("ss.buttons.save")
         end
+      end
+      Gws::Affair::LeaveFile.site(site).find_by(reason: reason)
+    end
 
+    def request_file(item)
+      start_at = item.start_at
+      workflow_comment = unique_id
+
+      Timecop.freeze(start_at) do
         login_user(user638)
         visit index_path
 
-        item = Gws::Affair::LeaveFile.find_by(reason: reason)
         click_on item.name
 
         within ".mod-workflow-request" do
@@ -59,19 +63,31 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
+        within "#addon-basic" do
+          expect(page).to have_css("dd", text: I18n.t("gws/affair.options.status.request"))
+        end
+      end
+      item.reload
+      item
+    end
 
-        # approve
+    def approve_file(item)
+      start_at = item.start_at
+      approve_comment = unique_id
+
+      Timecop.freeze(start_at) do
         login_user(user545)
         visit index_path
         click_on item.name
+
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment
           click_on I18n.t("workflow.buttons.approve")
         end
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment)}/)
       end
-
-      Gws::Affair::LeaveFile.find_by(reason: reason)
+      item.reload
+      item
     end
 
     it "#new" do
@@ -81,6 +97,8 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       start_at = Time.zone.parse("2021/1/4 8:30")
       end_at = Time.zone.parse("2021/1/4 20:00")
       item1 = create_annual_leave_file(start_at, end_at)
+      item1 = request_file(item1)
+      item1 = approve_file(item1)
 
       login_user(user545)
       visit aggregate_path

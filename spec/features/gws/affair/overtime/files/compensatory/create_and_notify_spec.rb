@@ -12,20 +12,11 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
     let(:index_path) { gws_affair_overtime_files_path(site: site, state: "all") }
     let(:logout_path) { gws_logout_path(site: site) }
 
-    def create_overtime_file(start_at, end_at, opts = {})
+    def create_overtime_file(start_at, end_at, confirmation = nil)
       name = unique_id
-      workflow_comment = unique_id
-      approve_comment = unique_id
-      week_in_leave_enable = false
-      week_out_leave_enable = false
-      holiday_compensatory_leave_enable = false
+      travel_at = start_at
 
-      week_in_compensatory = opts[:week_in_compensatory]
-      week_out_compensatory = opts[:week_out_compensatory]
-      holiday_compensatory = opts[:holiday_compensatory]
-
-      Timecop.travel(start_at) do
-        # request
+      Timecop.freeze(travel_at) do
         login_user(user638)
         visit new_path
 
@@ -40,79 +31,132 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           select I18n.t('gws/attendance.hour', count: end_at.hour), from: 'item[end_at_hour]'
           select I18n.t('gws/attendance.minute', count: end_at.min), from: 'item[end_at_minute]'
 
-          if week_in_compensatory.present?
-            compensatory_minute = week_in_compensatory[:minute]
-            compensatory_start_at = week_in_compensatory[:start_at]
-            compensatory_end_at = week_in_compensatory[:end_at]
+          click_on I18n.t("ss.buttons.save")
+        end
 
-            if compensatory_minute
-              select compensatory_minute, from: 'item[week_in_compensatory_minute]'
-            end
-            if compensatory_start_at
-              fill_in "item[week_in_start_at_date]", with: compensatory_start_at.to_date
-              select I18n.t('gws/attendance.hour', count: compensatory_start_at.hour), from: 'item[week_in_start_at_hour]'
-              select I18n.t('gws/attendance.minute', count: compensatory_start_at.min), from: 'item[week_in_start_at_minute]'
-            end
-            if compensatory_end_at
-              fill_in "item[week_in_end_at_date]", with: compensatory_end_at.to_date
-              select I18n.t('gws/attendance.hour', count: compensatory_end_at.hour), from: 'item[week_in_end_at_hour]'
-              select I18n.t('gws/attendance.minute', count: compensatory_end_at.min), from: 'item[week_in_end_at_minute]'
-            end
+        if confirmation
+          wait_for_cbox do
+            expect(page).to have_css("p", text: I18n.t("gws/affair.form_alert.title.overtime_compensatory"))
+            click_on I18n.t("ss.buttons.save")
+          end
+        end
 
-            week_in_leave_enable = true if compensatory_start_at && compensatory_end_at
+        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+      end
+      Gws::Affair::OvertimeFile.find_by(overtime_name: name)
+    end
+
+    def edit_week_in_compensatory(item, minute, start_at = nil, end_at = nil)
+      travel_at = item.start_at
+
+      Timecop.travel(travel_at) do
+        login_user(user638)
+        visit index_path
+
+        click_on item.name
+        within ".nav-menu" do
+          click_on I18n.t("ss.links.edit")
+        end
+        within "form#item-form" do
+          select minute, from: 'item[week_in_compensatory_minute]'
+
+          if start_at
+            fill_in "item[week_in_start_at_date]", with: start_at.to_date
+            select I18n.t('gws/attendance.hour', count: start_at.hour), from: 'item[week_in_start_at_hour]'
+            select I18n.t('gws/attendance.minute', count: start_at.min), from: 'item[week_in_start_at_minute]'
           end
 
-          if week_out_compensatory.present?
-            compensatory_minute = week_out_compensatory[:minute]
-            compensatory_start_at = week_out_compensatory[:start_at]
-            compensatory_end_at = week_out_compensatory[:end_at]
-
-            if compensatory_minute
-              select compensatory_minute, from: 'item[week_out_compensatory_minute]'
-            end
-            if compensatory_start_at
-              fill_in "item[week_out_start_at_date]", with: compensatory_start_at.to_date
-              select I18n.t('gws/attendance.hour', count: compensatory_start_at.hour), from: 'item[week_out_start_at_hour]'
-              select I18n.t('gws/attendance.minute', count: compensatory_start_at.min), from: 'item[week_in_start_at_minute]'
-            end
-            if compensatory_end_at
-              fill_in "item[week_out_end_at_date]", with: compensatory_end_at.to_date
-              select I18n.t('gws/attendance.hour', count: compensatory_end_at.hour), from: 'item[week_out_end_at_hour]'
-              select I18n.t('gws/attendance.minute', count: compensatory_end_at.min), from: 'item[week_out_end_at_minute]'
-            end
-
-            week_out_leave_enable = true if compensatory_start_at && compensatory_end_at
-          end
-
-          if holiday_compensatory.present?
-            compensatory_minute = holiday_compensatory[:minute]
-            compensatory_start_at = holiday_compensatory[:start_at]
-            compensatory_end_at = holiday_compensatory[:end_at]
-
-            if compensatory_minute
-              select compensatory_minute, from: 'item[holiday_compensatory_minute]'
-            end
-            if compensatory_start_at
-              fill_in "item[holiday_compensatory_start_at_date]", with: compensatory_start_at.to_date
-              select I18n.t('gws/attendance.hour', count: compensatory_start_at.hour),
-                from: 'item[holiday_compensatory_start_at_hour]'
-              select I18n.t('gws/attendance.minute', count: compensatory_start_at.min),
-                from: 'item[holiday_compensatory_start_at_minute]'
-            end
-            if compensatory_end_at
-              fill_in "item[holiday_compensatory_end_at_date]", with: compensatory_end_at.to_date
-              select I18n.t('gws/attendance.hour', count: compensatory_end_at.hour),
-                from: 'item[holiday_compensatory_end_at_hour]'
-              select I18n.t('gws/attendance.minute', count: compensatory_end_at.min),
-                from: 'item[holiday_compensatory_end_at_minute]'
-            end
-
-            holiday_compensatory_leave_enable = true if compensatory_start_at && compensatory_end_at
+          if end_at
+            fill_in "item[week_in_end_at_date]", with: end_at.to_date
+            select I18n.t('gws/attendance.hour', count: end_at.hour), from: 'item[week_in_end_at_hour]'
+            select I18n.t('gws/attendance.minute', count: end_at.min), from: 'item[week_in_end_at_minute]'
           end
 
           click_on I18n.t("ss.buttons.save")
         end
         expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+      end
+      item.reload
+      item
+    end
+
+    def edit_week_out_compensatory(item, minute, start_at = nil, end_at = nil)
+      travel_at = item.start_at
+
+      Timecop.travel(travel_at) do
+        login_user(user638)
+        visit index_path
+
+        click_on item.name
+        within ".nav-menu" do
+          click_on I18n.t("ss.links.edit")
+        end
+        within "form#item-form" do
+          select minute, from: 'item[week_out_compensatory_minute]'
+
+          if start_at
+            fill_in "item[week_out_start_at_date]", with: start_at.to_date
+            select I18n.t('gws/attendance.hour', count: start_at.hour), from: 'item[week_out_start_at_hour]'
+            select I18n.t('gws/attendance.minute', count: start_at.min), from: 'item[week_in_start_at_minute]'
+          end
+
+          if end_at
+            fill_in "item[week_out_end_at_date]", with: end_at.to_date
+            select I18n.t('gws/attendance.hour', count: end_at.hour), from: 'item[week_out_end_at_hour]'
+            select I18n.t('gws/attendance.minute', count: end_at.min), from: 'item[week_out_end_at_minute]'
+          end
+
+          click_on I18n.t("ss.buttons.save")
+        end
+        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+      end
+      item.reload
+      item
+    end
+
+    def edit_holiday_compensatory(item, minute, start_at = nil, end_at = nil)
+      travel_at = item.start_at
+
+      Timecop.travel(travel_at) do
+        login_user(user638)
+        visit index_path
+
+        click_on item.name
+        within ".nav-menu" do
+          click_on I18n.t("ss.links.edit")
+        end
+        within "form#item-form" do
+          select minute, from: 'item[holiday_compensatory_minute]'
+
+          if start_at
+            fill_in "item[holiday_compensatory_start_at_date]", with: start_at.to_date
+            select I18n.t('gws/attendance.hour', count: start_at.hour), from: 'item[holiday_compensatory_start_at_hour]'
+            select I18n.t('gws/attendance.minute', count: start_at.min), from: 'item[holiday_compensatory_start_at_minute]'
+          end
+
+          if end_at
+            fill_in "item[holiday_compensatory_end_at_date]", with: end_at.to_date
+            select I18n.t('gws/attendance.hour', count: end_at.hour), from: 'item[holiday_compensatory_end_at_hour]'
+            select I18n.t('gws/attendance.minute', count: end_at.min), from: 'item[holiday_compensatory_end_at_minute]'
+          end
+
+          click_on I18n.t("ss.buttons.save")
+        end
+        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+      end
+      item.reload
+      item
+    end
+
+    def request_file(item)
+      travel_at = item.start_at
+      workflow_comment = unique_id
+
+      Timecop.freeze(travel_at) do
+        login_user(user638)
+        visit index_path
+
+        click_on item.name
 
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
@@ -128,21 +172,40 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
+        within "#addon-basic" do
+          expect(page).to have_css("dd", text: I18n.t("gws/affair.options.status.request"))
+        end
+      end
+      item.reload
+      item
+    end
 
-        # approve
+    def approve_file(item)
+      travel_at = item.start_at
+      approve_comment = unique_id
+
+      Timecop.freeze(travel_at) do
         login_user(user545)
         visit index_path
-        click_on name
+        click_on item.name
+
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment
           click_on I18n.t("workflow.buttons.approve")
         end
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment)}/)
+      end
+      item.reload
+      item
+    end
 
-        # input results
+    def input_results(item)
+      travel_at = item.start_at
+
+      Timecop.freeze(travel_at) do
         login_user(user638)
         visit index_path
-        click_on name
+        click_on item.name
         within "#addon-gws-agents-addons-affair-overtime_result" do
           click_on I18n.t("gws/affair.links.set_results")
         end
@@ -153,131 +216,134 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           end
         end
         expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+      end
+      item.reload
+      item
+    end
 
-        # edit results
-        within "#addon-gws-agents-addons-affair-overtime_result" do
-          click_on I18n.t("gws/affair.links.edit_results")
-        end
-        wait_for_cbox do
-          expect(page).to have_css("#addon-gws-agents-addons-affair-overtime_file")
-          within "#ajax-box" do
-            click_on I18n.t("ss.buttons.save")
-          end
-        end
-        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+    def close_results(item)
+      travel_at = item.start_at
 
-        # close results
+      Timecop.freeze(travel_at) do
         login_user(user545)
         visit index_path
-        click_on name
+        click_on item.name
         within "#addon-gws-agents-addons-affair-overtime_result" do
           page.accept_confirm do
             click_on I18n.t("gws/affair.links.close_results")
           end
         end
         expect(page).to have_css('#notice', text: I18n.t("gws/affair.notice.close_results"))
+      end
+      item.reload
+      item
+    end
 
-        # check overtime file
-        overtime_file = Gws::Affair::OvertimeFile.find_by(overtime_name: name)
-        if week_in_leave_enable
-          leave_file = overtime_file.week_in_leave_file
-        end
-        if week_out_leave_enable
-          leave_file = overtime_file.week_out_leave_file
-        end
-        if holiday_compensatory_leave_enable
-          leave_file = overtime_file.holiday_compensatory_leave_file
-        end
+    def check_leave_file(item, leave_file)
+      travel_at = item.start_at
 
-        if week_in_leave_enable || week_out_leave_enable || holiday_compensatory_leave_enable
-          visit index_path
-          click_on name
+      Timecop.freeze(travel_at) do
+        login_user(user545)
+        visit index_path
+        click_on item.name
 
-          within "#addon-basic" do
-            expect(page).to have_link(leave_file.name)
-            click_on leave_file.name
-
-            expect(page).to have_link(overtime_file.name)
-            #click_on overtime_file.name
-          end
+        within "#addon-basic" do
+          expect(page).to have_link(leave_file.name)
+          click_on leave_file.name
+          expect(page).to have_link(item.name)
+          click_on item.name
         end
       end
-
-      Gws::Affair::OvertimeFile.find_by(overtime_name: name)
+      item
     end
 
     it "#new" do
-      # 2021/1/4 (月) 勤務日 18:00 - 23:00 同一週内振替 休暇申請有り
+      # 2021/1/4 (月) 勤務日 18:00 - 23:00
+      # 同一週内振替 休暇申請有り
       start_at = Time.zone.parse("2021/1/4 18:00")
       end_at = Time.zone.parse("2021/1/4 23:00")
-      item1 = create_overtime_file(
-        start_at,
-        end_at,
-        week_in_compensatory: {
-          minute: "4.0#{I18n.t("ss.hours")}",
-          start_at: Time.zone.parse("2021/1/5 8:00"),
-          end_at: Time.zone.parse("2021/1/5 12:00")
-        }
-      )
+      compensatory_minute = "4.0#{I18n.t("ss.hours")}"
+      compensatory_start_at = Time.zone.parse("2021/1/5 8:00")
+      compensatory_end_at = Time.zone.parse("2021/1/5 12:00")
 
-      # 2021/1/10 (日) 週休日 8:00 - 16:00 同一週外振替 休暇申請有り
+      item1 = create_overtime_file(start_at, end_at)
+      item1 = edit_week_in_compensatory(item1, compensatory_minute, compensatory_start_at, compensatory_end_at)
+      item1 = request_file(item1)
+      item1 = approve_file(item1)
+      item1 = input_results(item1)
+      item1 = close_results(item1)
+      item1 = check_leave_file(item1, item1.week_in_leave_file)
+
+      # 2021/1/10 (日) 週休日 8:00 - 16:00
+      # 同一週外振替 休暇申請有り
       start_at = Time.zone.parse("2021/1/10 8:00")
       end_at = Time.zone.parse("2021/01/10 16:00")
-      item2 = create_overtime_file(
-        start_at,
-        end_at,
-        week_out_compensatory: {
-          minute: "7.75#{I18n.t("ss.hours")}",
-          start_at: Time.zone.parse("2021/1/18 8:00"),
-          end_at: Time.zone.parse("2021/1/18 16:00")
-        }
-      )
+      compensatory_minute = "7.75#{I18n.t("ss.hours")}"
+      compensatory_start_at = Time.zone.parse("2021/1/18 8:00")
+      compensatory_end_at = Time.zone.parse("2021/1/18 16:00")
 
-      # 2021/1/11 (金) 祝日 8:00 - 16:00 代休振替 休暇申請有り
+      item2 = create_overtime_file(start_at, end_at, true)
+      item2 = edit_week_out_compensatory(item2, compensatory_minute, compensatory_start_at, compensatory_end_at)
+      item2 = request_file(item2)
+      item2 = approve_file(item2)
+      item2 = input_results(item2)
+      item2 = close_results(item2)
+      item2 = check_leave_file(item2, item2.week_out_leave_file)
+
+      # 2021/1/11 (金) 祝日 8:00 - 16:00
+      # 代休振替 休暇申請有り
       start_at = Time.zone.parse("2021/1/11 8:00")
       end_at = Time.zone.parse("2021/01/11 21:00")
-      item3 = create_overtime_file(
-        start_at,
-        end_at,
-        holiday_compensatory: {
-          minute: "7.75#{I18n.t("ss.hours")}",
-          start_at: Time.zone.parse("2021/1/19 8:00"),
-          end_at: Time.zone.parse("2021/1/19 16:00")
-        }
-      )
+      compensatory_minute = "7.75#{I18n.t("ss.hours")}"
+      compensatory_start_at = Time.zone.parse("2021/1/19 8:00")
+      compensatory_end_at = Time.zone.parse("2021/1/19 16:00")
 
-      # 2021/1/18 (月) 勤務日 18:00 - 24:00 同一週内振替 休暇申請無し
+      item3 = create_overtime_file(start_at, end_at, true)
+      item3 = edit_holiday_compensatory(item3, compensatory_minute, compensatory_start_at, compensatory_end_at)
+      item3 = request_file(item3)
+      item3 = approve_file(item3)
+      item3 = input_results(item3)
+      item3 = close_results(item3)
+      item3 = check_leave_file(item3, item3.holiday_compensatory_leave_file)
+
+      # 2021/1/18 (月) 勤務日 18:00 - 24:00
+      # 同一週内振替 休暇申請無し
       start_at = Time.zone.parse("2021/1/18 18:00")
       end_at = Time.zone.parse("2021/1/18 24:00")
-      item4 = create_overtime_file(
-        start_at,
-        end_at,
-        week_in_compensatory: {
-          minute: "4.0#{I18n.t("ss.hours")}"
-        }
-      )
+      compensatory_minute = "4.0#{I18n.t("ss.hours")}"
 
-      # 2021/1/19 (火) 勤務日 18:00 - 24:00 同一週外振替 休暇申請無し
+      item4 = create_overtime_file(start_at, end_at)
+      item4 = edit_week_in_compensatory(item4, compensatory_minute)
+      item4 = request_file(item4)
+      item4 = approve_file(item4)
+      item4 = input_results(item4)
+      item4 = close_results(item4)
+
+      # 2021/1/19 (火) 勤務日 18:00 - 24:00
+      # 同一週外振替 休暇申請無し
       start_at = Time.zone.parse("2021/1/19 18:00")
       end_at = Time.zone.parse("2021/1/19 24:00")
-      item5 = create_overtime_file(
-        start_at,
-        end_at,
-        week_out_compensatory: {
-          minute: "4.0#{I18n.t("ss.hours")}"
-        }
-      )
+      compensatory_minute = "4.0#{I18n.t("ss.hours")}"
 
-      # 2021/2/11 (金) 祝日 8:00 - 20:00 代休振替 休暇申請無し
+      item5 = create_overtime_file(start_at, end_at)
+      item5 = edit_week_out_compensatory(item5, compensatory_minute)
+      item5 = request_file(item5)
+      item5 = approve_file(item5)
+      item5 = input_results(item5)
+      item5 = close_results(item5)
+
+      # 2021/2/11 (金) 祝日 8:00 - 20:00
+      # 代休振替 休暇申請無し
       start_at = Time.zone.parse("2021/2/11 8:00")
       end_at = Time.zone.parse("2021/2/11 21:00")
-      item6 = create_overtime_file(
-        start_at,
-        end_at,
-        holiday_compensatory: {
-          minute: "7.75#{I18n.t("ss.hours")}"
-        }
-      )
+      compensatory_minute = "7.75#{I18n.t("ss.hours")}"
+
+      item6 = create_overtime_file(start_at, end_at, true)
+      item6 = edit_holiday_compensatory(item6, compensatory_minute)
+      item6 = request_file(item6)
+      item6 = approve_file(item6)
+      item6 = input_results(item6)
+      item6 = close_results(item6)
 
       # notify
       # 週外振替、代休振替の有効期限は申請の 前4週 後8週 通知は期限日の７日前

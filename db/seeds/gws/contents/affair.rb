@@ -200,5 +200,3 @@ overtime_file3 = create_overtime_file(@site,
   group_ids: [user2.groups.first.id])
 overtime_file3 = approve_overtime_file(overtime_file3, sys)
 overtime_file3 = create_overtime_day_result(overtime_file3, start_at, end_at)
-
-#
