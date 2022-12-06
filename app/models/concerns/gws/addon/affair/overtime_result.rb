@@ -62,11 +62,6 @@ module Gws::Addon::Affair::OvertimeResult
     true
   end
 
-  def parse_dhm(date, hour, minute)
-    return if date.blank? || hour.blank? || minute.blank?
-    Time.zone.parse("#{date} #{hour}:#{minute}")
-  end
-
   def validate_result_closed
     return if !result_closed?
     errors.add :base, "時間外結果確認済みのため更新できません。"
@@ -77,12 +72,12 @@ module Gws::Addon::Affair::OvertimeResult
   end
 
   def result_closeable(user)
-    workflow_approvers.to_a.map { |approver| approver[:user_id] }.include?(user.id)
+    workflow_approvers.to_a.pluck(:user_id).include?(user.id)
   end
 
   def result_notify_member_ids
-    member_ids = workflow_approvers.to_a.map { |approver| approver[:user_id] }
-    member_ids += workflow_circulations.to_a.map { |approver| approver[:user_id] }
+    member_ids = workflow_approvers.to_a.pluck(:user_id)
+    member_ids += workflow_circulations.to_a.pluck(:user_id)
     member_ids += [target_user_id]
     member_ids
   end

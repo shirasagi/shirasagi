@@ -63,6 +63,11 @@ class Gws::Affair::LeaveFile
     url_helper.gws_affair_leave_file_path(site: site.id, id: id, state: "all")
   end
 
+  def parse_dhm(date, hour, minute)
+    return if date.blank? || hour.blank? || minute.blank?
+    Time.zone.parse("#{date} #{hour}:#{minute}")
+  end
+
   private
 
   def set_name

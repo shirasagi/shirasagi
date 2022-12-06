@@ -118,11 +118,6 @@ module Gws::Affair::OvertimeFile::Compensatory
     self.holiday_compensatory_minute = 0
   end
 
-  def parse_dhm(date, hour, minute)
-    return if date.blank? || hour.blank? || minute.blank?
-    Time.zone.parse("#{date} #{hour}:#{minute}")
-  end
-
   def validate_compensatory_minute
     self.week_in_compensatory_minute = week_in_compensatory_minute.to_i
     self.week_out_compensatory_minute = week_out_compensatory_minute.to_i

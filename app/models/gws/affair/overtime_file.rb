@@ -53,4 +53,9 @@ class Gws::Affair::OvertimeFile
     url_helper = Rails.application.routes.url_helpers
     url_helper.gws_affair_overtime_file_path(site: site.id, id: id, state: "all")
   end
+
+  def parse_dhm(date, hour, minute)
+    return if date.blank? || hour.blank? || minute.blank?
+    Time.zone.parse("#{date} #{hour}:#{minute}")
+  end
 end

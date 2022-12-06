@@ -57,21 +57,18 @@ module Gws::Addon::Affair::LeaveFile
   end
 
   def validate_date
-    return if start_at_date.blank? || start_at_hour.blank? || start_at_minute.blank?
-    return if end_at_date.blank? || end_at_hour.blank? || end_at_minute.blank?
-
-    # 作成者ではなく申請者の勤務時間を確認する
-    site = cur_site || self.site
-    user = target_user
-    return if site.blank?
-    return if user.blank?
-
-    self.start_at = Time.zone.parse("#{start_at_date} #{start_at_hour}:#{start_at_minute}")
-    self.end_at = Time.zone.parse("#{end_at_date} #{end_at_hour}:#{end_at_minute}")
+    self.start_at = parse_dhm(start_at_date, start_at_hour, start_at_minute)
+    self.end_at = parse_dhm(end_at_date, end_at_hour, end_at_minute)
+    return if start_at.blank? || end_at.blank?
 
     if start_at >= end_at
       errors.add :end_at, :greater_than, count: t(:start_at)
     end
+
+    # 作成者ではなく申請者の勤務時間を確認する
+    site = cur_site || self.site
+    user = target_user
+    return if site.blank? || user.blank?
 
     # 振替休暇（年休と特別休暇以外）は1日を超過できない
     if leave_type != "annual_leave" && leave_type != "paidleave" && end_at >= start_at.advance(days: 1)

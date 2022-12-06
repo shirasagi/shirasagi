@@ -47,26 +47,20 @@ module Gws::Addon::Affair::OvertimeFile
   alias end_at_minute_options start_at_minute_options
 
   def validate_date
-    return if start_at_date.blank? || start_at_hour.blank? || start_at_minute.blank?
-    return if end_at_date.blank? || end_at_hour.blank? || end_at_minute.blank?
-
-    site = self.site || cur_site
-
-    # 作成者ではなく申請者の勤務時間を確認する
-    user = target_user
-
-    return if site.blank?
-    return if user.blank?
-
-    self.start_at = Time.zone.parse("#{start_at_date} #{start_at_hour}:#{start_at_minute}")
-    self.end_at = Time.zone.parse("#{end_at_date} #{end_at_hour}:#{end_at_minute}")
+    self.start_at = parse_dhm(start_at_date, start_at_hour, start_at_minute)
+    self.end_at = parse_dhm(end_at_date, end_at_hour, end_at_minute)
+    return if start_at.blank? || end_at.blank?
 
     if start_at >= end_at
       errors.add :end_at, :greater_than, count: t(:start_at)
     end
 
-    duty_calendar = user.effective_duty_calendar(site)
+    # 作成者ではなく申請者の勤務時間を確認する
+    site = self.site || cur_site
+    user = target_user
+    return if site.blank? || user.blank?
 
+    duty_calendar = user.effective_duty_calendar(site)
     changed_at = duty_calendar.affair_next_changed(start_at)
     self.date = changed_at.advance(days: -1).change(hour: 0, min: 0, sec: 0)
 
