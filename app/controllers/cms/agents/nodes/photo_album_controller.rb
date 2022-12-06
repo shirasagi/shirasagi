@@ -22,6 +22,14 @@ class Cms::Agents::Nodes::PhotoAlbumController < ApplicationController
       @stages << { "$match" => { page: { "$elemMatch" => page_condition } } }
     end
 
+    # override Cms::FileSearchService#stage_lookup_pages
+    # "$facet" は 各ステージの結果を BSON Document として保存するが、この BSON Document が 16MB を超える場合、エラーが発生する。
+    # 特に画像の data url が埋め込まれている際に、BSON Document が 16MB を超過しないように html, contains_urls を除外する。
+    def stage_lookup_pages
+      super
+      @stages << { "$project" => { "page.html" => 0, "page.column_values" => 0, "page.contains_urls" => 0 } }
+    end
+
     # override Cms::FileSearchService#stage_permissions
     def stage_permissions
       # nothing
