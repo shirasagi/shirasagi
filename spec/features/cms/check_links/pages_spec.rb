@@ -11,6 +11,7 @@ describe "cms/check_links/pages", type: :feature, dbscope: :example, js: true, r
     h = []
     h << '<a href="/">index</a>'
     h << '<a href="/docs/">docs</a>'
+    h << '<a href="/docs/?キー=値">docs</a>'
     h << '<a href="/docs/index.html">docs</a>'
     h << '<a href="/docs/page1.html">page.html</a>'
     h << '<a href="/docs/notfound1.html">notfound1.html</a>'
