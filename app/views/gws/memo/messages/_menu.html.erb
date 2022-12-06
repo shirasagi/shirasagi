@@ -24,15 +24,5 @@
     <% end %>
     <%= link_to(t('gws/memo/message.links.print'), action: :print, id: @item) %>
     <%= link_to(t('ss.links.back_to_index'), { action: :index, s: @search, page: @page }) %>
-    <% if @next_id.nil? %>
-      <%= link_to t('gws/memo/message.links.next'), "#", { class: "next-link-dummy", style: "color:#c0c0c0;"} %>
-    <% else %>
-      <%= link_to t('gws/memo/message.links.next'), { action: :show, id: @next_id }, { class: "next-link"} %>
-    <% end %>
-    <% if @prev_id.nil? %>
-      <%= link_to t('gws/memo/message.links.prev'), "#", { class: "prev-link-dummy", style: "color:#c0c0c0;"} %>
-    <% else %>
-      <%= link_to t('gws/memo/message.links.prev'), { action: :show, id: @prev_id }, { class: "prev-link"} %>
-    <% end %>
   <% end %>
 </nav>

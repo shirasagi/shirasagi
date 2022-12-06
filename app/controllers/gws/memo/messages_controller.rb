@@ -14,6 +14,8 @@ class Gws::Memo::MessagesController < ApplicationController
   before_action :set_folders, only: [:index, :recent]
   before_action :set_cur_folder, only: [:index]
 
+  helper_method :move_to_prev_tag, :move_to_next_tag
+
   navi_view "gws/memo/messages/navi"
 
   private
@@ -89,6 +91,30 @@ class Gws::Memo::MessagesController < ApplicationController
     end
   end
 
+  def move_to_prev_tag
+    prev_path = @prev_id ? url_for(action: :show, id: @prev_id) : "#"
+    css_classes = %w(prev)
+    unless @prev_id
+      css_classes << "inactive"
+    end
+
+    view_context.tag.div(class: css_classes) do
+      view_context.link_to(prev_path, title: t('gws/memo/message.links.prev')) { view_context.tag.span("arrow_circle_left", class: "material-icons-outlined") }
+    end
+  end
+
+  def move_to_next_tag
+    next_path = @next_id ? url_for(action: :show, id: @next_id) : "#"
+    css_classes = %w(next)
+    unless @next_id
+      css_classes << "inactive"
+    end
+
+    view_context.tag.div(class: css_classes) do
+      view_context.link_to(next_path, title: t('gws/memo/message.links.next')) { view_context.tag.span("arrow_circle_right", class: "material-icons-outlined") }
+    end
+  end
+
   public
 
   def index
@@ -149,21 +175,21 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def show
     @item.set_seen(@cur_user).update if @item.state == "public"
-    id_list = session[:gws_memo_id_list]['id_list']
-    id_index = id_list.index(@item.id.to_s)
-    if id_index == nil
-      @next_id = nil
+    @id_list = session[:gws_memo_id_list]['id_list']
+    @id_index = @id_list.index(@item.id.to_s)
+    if @id_index == nil
       @prev_id = nil
+      @next_id = nil
     else
-      if id_index == 0
-        @next_id = nil
-      else
-        @next_id = id_list[id_index - 1]
-      end
-      if id_index == id_list.size
+      if @id_index == 0
         @prev_id = nil
       else
-        @prev_id = id_list[id_index + 1]
+        @prev_id = @id_list[@id_index - 1]
+      end
+      if @id_index == @id_list.size
+        @next_id = nil
+      else
+        @next_id = @id_list[@id_index + 1]
       end
     end
     @search = session[:gws_memo_id_list]['search']
