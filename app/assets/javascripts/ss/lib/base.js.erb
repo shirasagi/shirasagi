@@ -783,9 +783,11 @@ this.SS = (function () {
       var $form = $(ev.target);
       var timeout = $form.data("ss-timeout") || SS.defaultTimeoutMillis;
 
-      setTimeout(function () {
-        $form.trigger("ss:submitTimeout");
-      }, timeout);
+      if (timeout > -1) {
+        setTimeout(function () {
+          $form.trigger("ss:submitTimeout");
+        }, timeout);
+      }
     });
   };
 
@@ -801,9 +803,11 @@ this.SS = (function () {
     var timeout = $element.data("ss-timeout") || SS.defaultTimeoutMillis;
 
     $.rails.disableFormElement($element);
-    setTimeout(function () {
-      $element.trigger("ss:clickTimeout");
-    }, timeout);
+    if (timeout > -1) {
+      setTimeout(function () {
+        $element.trigger("ss:clickTimeout");
+      }, timeout);
+    }
   };
 
   SS.onClickTimeout = function(ev) {
