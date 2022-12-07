@@ -1,5 +1,9 @@
 import { Controller } from "@hotwired/stimulus"
 
+const CONTACT_ATTRIBUTES = [
+  "contact_charge", "contact_tel", "contact_fax", "contact_email", "contact_link_url", "contact_link_name"
+]
+
 export default class extends Controller {
   static values = { inquiryFormEnabled: Boolean }
 
@@ -9,6 +13,7 @@ export default class extends Controller {
   connect() {
     const $el = $(this.element)
     $el.find(".ajax-box").data("on-select", ($item) => this.selectItem($item))
+    $el.find("[name=\"item[contact_group_relation]\"]").on("change", (ev) => this.changeGroupRelation(ev))
   }
 
   disconnect() {
@@ -39,5 +44,14 @@ export default class extends Controller {
 
     const linkName = $data.data("contact-link-name");
     $el.find('[name="item[contact_link_name]"]').val(linkName || '');
+  }
+
+  changeGroupRelation(ev) {
+    const $el = $(this.element)
+    const disabled = ev.target.value === "related"
+
+    CONTACT_ATTRIBUTES.forEach((item) => {
+      $el.find(`[name="item[${item}]"]`).prop("disabled", disabled)
+    })
   }
 }
