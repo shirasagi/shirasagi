@@ -110,21 +110,23 @@ class Webmail::MailsController < ApplicationController
       @mailboxes = @imap.mailboxes.update_status
     end
 
-    uid_list = session[:webmail_uid_list]['uid_list']
-    uid_index = uid_list.index(@item.uid)
-    if uid_index == nil
+    @uid_list = session[:webmail_uid_list]['uid_list']
+    if @uid_list
+      @uid_index = @uid_list.index(@item.uid)
+    end
+    if @uid_index.blank?
       @next_uid = nil
       @prev_uid = nil
     else
-      if uid_index == 0
-        @next_uid = nil
-      else
-        @next_uid = uid_list[uid_index - 1]
-      end
-      if uid_index == uid_list.size
+      if @uid_index == 0
         @prev_uid = nil
       else
-        @prev_uid = uid_list[uid_index + 1]
+        @prev_uid = @uid_list[@uid_index - 1]
+      end
+      if @uid_index == @uid_list.size
+        @next_uid = nil
+      else
+        @next_uid = @uid_list[@uid_index + 1]
       end
     end
     @search = session[:webmail_uid_list]['search']

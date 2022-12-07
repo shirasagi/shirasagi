@@ -108,4 +108,32 @@ module Webmail::MailHelper
       link_to address, new_webmail_mail_path(mailbox: @mailbox, item: { to: address })
     end.html_safe
   end
+
+  def move_to_prev_tag
+    prev_path = @prev_uid ? url_for(action: :show, id: @prev_uid) : "#"
+    css_classes = %w(prev)
+    unless @prev_uid
+      css_classes << "inactive"
+    end
+
+    tag.div(class: css_classes) do
+      link_to(prev_path, title: t('ss.links.prev')) do
+        tag.span("arrow_circle_left", class: "material-icons-outlined")
+      end
+    end
+  end
+
+  def move_to_next_tag
+    next_path = @next_uid ? url_for(action: :show, id: @next_uid) : "#"
+    css_classes = %w(next)
+    unless @next_uid
+      css_classes << "inactive"
+    end
+
+    tag.div(class: css_classes) do
+      link_to(next_path, title: t('gws/memo/message.links.next')) do
+        tag.span("arrow_circle_right", class: "material-icons-outlined")
+      end
+    end
+  end
 end

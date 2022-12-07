@@ -366,6 +366,46 @@ li.webmail-accounts {
       text-align: right;
     }
   }
+  .move-tool-wrap {
+    @include display-flex;
+    position: relative;
+    z-index: 1;
+    @include align-items(center);
+    @include justify-content(flex-end);
+    padding: 15px;
+
+    .move-tool {
+      @include display-flex;
+      margin-left: 20px;
+    }
+
+    .prev, .next {
+      @include display-flex;
+      width: 20px;
+      height: 20px;
+
+      a {
+        display: block;
+        width: 100%;
+        height: 100%;
+        color: $black;
+      }
+      &:not(.inactive):hover {
+        a {
+          color: #f25a38;
+        }
+      }
+      &.inactive {
+        a {
+          color: $gray2;
+          pointer-events: none;
+        }
+      }
+    }
+    .next {
+      margin-left: 10px;
+    }
+  }
 }
 
 // form

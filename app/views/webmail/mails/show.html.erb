@@ -17,6 +17,15 @@
 
 <div class="addon-views">
   <div class="addon-view webmail-mail" id="addon-basic">
+    <% if @uid_index.present? %>
+      <div class="move-tool-wrap">
+        <div class="page-order"><span class="current"><%= @uid_index + 1 %></span> / <span class="total"><%= @uid_list.length %></span></div>
+        <div class="move-tool">
+          <%= move_to_prev_tag %>
+          <%= move_to_next_tag %>
+        </div>
+      </div>
+    <% end %>
     <div class="addon-head">
       <span class="icon-star <%= @item.star? ? 'on' : 'off' %>">
         <%= link_to action: :show do %>
