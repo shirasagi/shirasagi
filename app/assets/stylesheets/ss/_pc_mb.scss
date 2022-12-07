@@ -2513,6 +2513,39 @@ div.index {
     }
   }
 }
+.table-wrap {
+  overflow-x: auto;
+
+  table.index {
+    width: auto;
+
+    th, td {
+      overflow: visible;
+      max-width: 200px;
+      text-overflow: clip;
+      word-wrap: normal;
+      word-break: normal;
+      white-space: nowrap;
+    }
+
+    // these are for "/.sys/db"
+    td.nilclass {
+      color: #999;
+    }
+    td.blank {
+      color: #999;
+    }
+    td.time {
+      color: #080;
+    }
+    td.fixnum {
+      color: #999;
+    }
+    td.array {
+      color: #a00;
+    }
+  }
+}
 table.index {
   width: 100%;
   border: $border-gray5;
