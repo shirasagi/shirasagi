@@ -99,7 +99,9 @@ class Gws::Memo::MessagesController < ApplicationController
     end
 
     view_context.tag.div(class: css_classes) do
-      view_context.link_to(prev_path, title: t('gws/memo/message.links.prev')) { view_context.tag.span("arrow_circle_left", class: "material-icons-outlined") }
+      view_context.link_to(prev_path, title: t('gws/memo/message.links.prev')) do
+        view_context.tag.span("arrow_circle_left", class: "material-icons-outlined")
+      end
     end
   end
 
@@ -111,7 +113,9 @@ class Gws::Memo::MessagesController < ApplicationController
     end
 
     view_context.tag.div(class: css_classes) do
-      view_context.link_to(next_path, title: t('gws/memo/message.links.next')) { view_context.tag.span("arrow_circle_right", class: "material-icons-outlined") }
+      view_context.link_to(next_path, title: t('gws/memo/message.links.next')) do
+        view_context.tag.span("arrow_circle_right", class: "material-icons-outlined")
+      end
     end
   end
 
@@ -125,20 +129,20 @@ class Gws::Memo::MessagesController < ApplicationController
       reorder(@sort_hash).
       page(params[:page]).per(50)
 
-      id_list = []
-      @items.each do |item|
-        id_list << item.id.to_s
-      end
-      gws_memo_id_list_session = session[:gws_memo_id_list]
-      gws_memo_id_list_session ||= {}
-      gws_memo_id_list_session['id_list'] = id_list
-      if params[:s]
-        gws_memo_id_list_session['search'] = params[:s].to_unsafe_h
-      else
-        gws_memo_id_list_session['search'] = nil
-      end
-      gws_memo_id_list_session['page'] = params[:page]
-      session[:gws_memo_id_list] = gws_memo_id_list_session
+    id_list = []
+    @items.each do |item|
+      id_list << item.id.to_s
+    end
+    gws_memo_id_list_session = session[:gws_memo_id_list]
+    gws_memo_id_list_session ||= {}
+    gws_memo_id_list_session['id_list'] = id_list
+    if params[:s]
+      gws_memo_id_list_session['search'] = params[:s].to_unsafe_h
+    else
+      gws_memo_id_list_session['search'] = nil
+    end
+    gws_memo_id_list_session['page'] = params[:page]
+    session[:gws_memo_id_list] = gws_memo_id_list_session
   end
 
   def recent
@@ -177,7 +181,7 @@ class Gws::Memo::MessagesController < ApplicationController
     @item.set_seen(@cur_user).update if @item.state == "public"
     @id_list = session[:gws_memo_id_list]['id_list']
     @id_index = @id_list.index(@item.id.to_s)
-    if @id_index == nil
+    if @id_index.blank?
       @prev_id = nil
       @next_id = nil
     else
