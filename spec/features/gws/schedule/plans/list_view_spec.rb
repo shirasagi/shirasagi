@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
   context "list view" do
     let(:site) { gws_site }
-    let(:now) { Time.zone.now }
+    let(:now) { Time.zone.now.change(hour: 9) }
 
     let!(:item1) do
       create :gws_schedule_plan, start_at: now, category_id: category1.id, facility_ids: [facility1.id]
