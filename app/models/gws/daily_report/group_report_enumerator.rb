@@ -46,7 +46,7 @@ class Gws::DailyReport::GroupReportEnumerator < Enumerator
 
   def build_term_handlers
     @handlers = []
-    if Gws::DailyReport::Report.allowed?(:access, @cur_user, site: @cur_site)
+    if Gws::DailyReport::Report.allowed?(:access_all, @cur_user, site: @cur_site)
       @handlers << { name: Gws::DailyReport::Report.t(:limited_access), handler: method(:to_limited_access), type: :base }
     end
     @handlers << { name: Gws::DailyReport::Report.t(:small_talk), handler: method(:to_small_talk), type: :base }
@@ -88,7 +88,7 @@ class Gws::DailyReport::GroupReportEnumerator < Enumerator
   end
 
   def to_limited_access(report)
-    [report.limited_access, report.shared_limited_access].flatten.uniq.compact.join("\n")
+    report.limited_access
   end
 
   def to_small_talk(report)

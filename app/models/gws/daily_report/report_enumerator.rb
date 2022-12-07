@@ -35,7 +35,7 @@ class Gws::DailyReport::ReportEnumerator < Enumerator
     @handlers = []
 
     @handlers << { name: Gws::DailyReport::Report.t(:name), handler: method(:to_name), type: :base }
-    if Gws::DailyReport::Report.allowed?(:access, @cur_user, site: @cur_site)
+    if Gws::DailyReport::Report.allowed?(:access_all, @cur_user, site: @cur_site)
       @handlers << { name: Gws::DailyReport::Report.t(:limited_access), handler: method(:to_limited_access), type: :base }
     end
     @handlers << { name: Gws::DailyReport::Report.t(:small_talk), handler: method(:to_small_talk), type: :base }

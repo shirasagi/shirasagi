@@ -113,17 +113,6 @@ class Gws::DailyReport::Report
     SS::File.in(id: attachment_ids)
   end
 
-  def shared_limited_access
-    str = []
-    reports = self.class.and_date(daily_report_date).
-      where(form_id: form_id, share_limited_access: 'true').
-      ne(user_id: (@cur_user || user).id)
-    reports.each do |report|
-      str << "#{report.limited_access}(#{report.user.try(:name)})"
-    end
-    str.join("\n")
-  end
-
   def shared_small_talk
     str = []
     reports = self.class.and_date(daily_report_date).

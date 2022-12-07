@@ -5,13 +5,12 @@ module Gws::Addon::DailyReport::CustomForm
 
   included do
     field :limited_access, type: String
-    field :share_limited_access, type: String
     field :small_talk, type: String
     field :share_small_talk, type: String
     embeds_ids :share_columns, class_name: 'Gws::Column::Base'
     embeds_many :column_values, class_name: 'Gws::Column::Value::Base', cascade_callbacks: true
 
-    permit_params :limited_access, :share_limited_access, :small_talk, :share_small_talk, share_column_ids: []
+    permit_params :limited_access, :small_talk, :share_small_talk, share_column_ids: []
 
     validate :validate_column_values
 

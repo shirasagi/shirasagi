@@ -5,16 +5,15 @@
   <dd>
     <%= br @item.limited_access %>
   </dd>
-  <% if @item.share_limited_access.present? %>
-    <dd><%= @model.t(:share_limited_access) %></dd>
-  <% end %>
 
   <dt><%= @model.t :small_talk %></dt>
   <dd>
     <%= br @item.small_talk %>
   </dd>
   <% if @item.share_small_talk.present? %>
-    <dd><%= @model.t(:share_small_talk) %></dd>
+    <div class="share-value">
+      <%= @model.t(:share_small_talk) %>
+    </div>
   <% end %>
 
 <% @item.column_values.order_by(order: 1, name: 1).each do |value| %>
@@ -30,7 +29,9 @@
     </dd>
   <% end %>
   <% if @item.share_column_ids.to_a.include?(column.id.to_s) %>
-    <dd><%= @model.t(:share_column_ids) %></dd>
+    <div class="share-value">
+      <%= @model.t(:share_column_ids) %>
+    </div>
   <% end %>
 <% end %>
 </dl>
@@ -41,4 +42,9 @@
   <% if @cur_form.present? %>
     $('#addon-gws-agents-addons-daily-report-custom_form .addon-head h2').text(<%== @cur_form.name.to_json %>);
   <% end %>
+  $('.share-value').each(function (){
+    $(this).prev('dd').addClass('share-cell');
+    $(this).prev('dd').prev('dt').addClass('share-cell');
+    $(this).prev('dd').prev('dt').append($(this));
+  });
 <% end %>

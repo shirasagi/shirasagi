@@ -4,31 +4,25 @@
 <dl class="see mod-gws-daily-report-custom_form">
   <dt><%= @model.t :limited_access %><%= @model.tt :limited_access %></dt>
   <dd><%= f.text_area :limited_access %></dd>
-  <dd>
-    <label>
-      <%= f.check_box(:share_limited_access, {}, 'true', '') %>
-      <%= @model.t(:share_limited_access) %>
-    </label>
-  </dd>
 
   <dt><%= @model.t :small_talk %><%= @model.tt :small_talk %></dt>
   <dd><%= f.text_area :small_talk %></dd>
-  <dd>
+  <div class="share-value">
     <label>
       <%= f.check_box(:share_small_talk, {}, 'true', '') %>
       <%= @model.t(:share_small_talk) %>
     </label>
-  </dd>
+  </div>
 
   <% @cur_form.columns.order_by(order: 1, created: 1).each do |column| %>
     <%= render(column.column_form_partial_path, column: column, object_name: 'custom', value: @item.read_column_value(column)) %>
-    <dd>
+    <div class="share-value">
       <%= hidden_field_tag("#{f.object_name}[share_column_ids][]", nil, id: nil) %>
       <label>
         <%= check_box_tag("#{f.object_name}[share_column_ids][]", column.id, @item.share_column_ids.to_a.include?(column.id.to_s)) %>
         <%= @model.t(:share_column_ids) %>
       </label>
-    </dd>
+    </div>
   <% end %>
 </dl>
 
@@ -65,5 +59,9 @@
 
     e.preventDefault();
     return false;
+  });
+
+  $('.share-value').each(function (){
+    $(this).prev('dd').prev('dt').append($(this));
   });
 <% end %>

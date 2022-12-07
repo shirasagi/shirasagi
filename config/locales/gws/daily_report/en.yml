@@ -6,7 +6,7 @@ en:
     department: Department
     edit_daily_report: Edit daily report
     individual: Individual
-    shared: Shared
+    shared: Shared by department
     wday: Day of the week
     columns:
       index: Manage input settings
@@ -71,10 +71,9 @@ en:
         daily_report_new_days: Display period for new items
       gws/addon/daily_report/custom_form:
         limited_access: Limited access
-        share_limited_access: Shared information
         small_talk: Small talk
-        share_small_talk: Shared information
-        share_column_ids: Shared information
+        share_small_talk: Shared by department
+        share_column_ids: Shared by department
 
   tooltip:
     gws/daily_report/report:

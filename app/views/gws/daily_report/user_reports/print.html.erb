@@ -9,7 +9,7 @@
           <th><%= t('gws/daily_report.date') %></th>
           <th><%= t('gws/daily_report.wday') %></th>
           <% if @forms.present? %>
-            <% if @model.allowed?(:access, @cur_user, site: @cur_site) %>
+            <% if @model.allowed?(:access_all, @cur_user, site: @cur_site) %>
               <th class="limited-access"><%= @model.t(:limited_access) %></th>
             <% end %>
             <th><%= @model.t(:small_talk) %></th>
@@ -26,20 +26,13 @@
             <td><%= I18n.l(date, format: :short) %></td>
             <td><%= t("date.abbr_day_names")[date.wday] %></td>
             <% if report %>
-              <% if @model.allowed?(:access, @cur_user, site: @cur_site) %>
-                <% if report.share_limited_access.present? %>
-                  <td class="share-cell">
-                    <div class="share-value"><%= t('gws/daily_report.shared') %></div>
-                    <%= br report.limited_access %>
-                  </td>
-                <% else %>
-                  <td><%= br report.limited_access %></td>
-                <% end %>
+              <% if @model.allowed?(:access_all, @cur_user, site: @cur_site) %>
+                <td><%= br report.limited_access %></td>
               <% end %>
               <% if report.share_small_talk.present? %>
                 <td class="share-cell">
-                  <div class="share-value"><%= t('gws/daily_report.shared') %></div>
                   <%= br report.small_talk %>
+                  <div class="share-value"><%= t('gws/daily_report.shared') %></div>
                 </td>
               <% else %>
                 <td><%= br report.small_talk %></td>
@@ -47,15 +40,15 @@
               <% report.column_values.each do |column_value| %>
                 <% if report.share_column_ids.include?(column_value.column.id.to_s) %>
                   <td class="share-cell">
-                    <div class="share-value"><%= t('gws/daily_report.shared') %></div>
                     <%= br column_value.value %>
+                    <div class="share-value"><%= t('gws/daily_report.shared') %></div>
                   </td>
                 <% else %>
                   <td><%= br column_value.value %></td>
                 <% end %>
               <% end %>
             <% elsif @forms.present? %>
-              <% if @model.allowed?(:access, @cur_user, site: @cur_site) %>
+              <% if @model.allowed?(:access_all, @cur_user, site: @cur_site) %>
                 <td></td>
               <% end %>
               <td></td>
