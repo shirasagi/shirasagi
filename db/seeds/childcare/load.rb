@@ -545,13 +545,9 @@ end
 
 ## -------------------------------------
 puts "# article"
-contact_group = SS::Group.where(name: "シラサギ市/企画政策部/政策課").first
+contact_group = Cms::Group.where(name: "シラサギ市/企画政策部/政策課").first
 contact_group_id = contact_group.id rescue nil
-contact_email = contact_group_id ? "kikakuseisaku@example.jp" : nil
-contact_tel = contact_group_id ? "000-000-0000" : nil
-contact_fax = contact_group_id ? "000-000-0000" : nil
-contact_link_url = contact_group_id ? link_url : nil
-contact_link_name = contact_group_id ? link_url : nil
+contact = contact_group.contact_groups.first
 
 article1 = save_page route: "article/page", filename: "docs/page1.html", name: "お知らせ情報が入ります。",
   layout_id: layouts["docs"].id, category_ids: [categories["news"].id]
@@ -571,8 +567,9 @@ article3.update
 file = save_ss_files "ss_files/article/dummy.jpg", filename: "dummy2.jpg", model: "article/page"
 article4 = save_page route: "article/page", filename: "docs/page4.html", name: "子育てサークルにさんかしませんか？",
   layout_id: layouts["docs"].id, category_ids: [categories["topics"].id], file_ids: [file.id],
-  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
-  contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name
+  contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
+  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name
 article4.html = article4.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 article4.update
 
@@ -689,8 +686,9 @@ page1 = save_page route: "cms/page", filename: "know/pregnancy/procedure.html", 
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   related_page_ids: [article1.id, article2.id, article3.id],
   map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
-  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
-  contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
+  contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
+  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
   order: 10
 page1.html = page1.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page1.update
@@ -701,8 +699,9 @@ page2 = save_page route: "cms/page", filename: "know/pregnancy/exploration.html"
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   related_page_ids: [article1.id, article2.id, article3.id],
   map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
-  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
-  contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
+  contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
+  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
   order: 20
 page2.html = page2.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page2.update
@@ -712,8 +711,9 @@ page3 = save_page route: "cms/page", filename: "know/pregnancy/born.html", name:
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
-  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
-  contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
+  contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
+  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
   order: 30
 page3.html = page3.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page3.update
@@ -724,8 +724,9 @@ page4 = save_page route: "cms/page", filename: "know/pregnancy/birth.html", name
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   related_page_ids: [article1.id, article2.id, article3.id],
   map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
-  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
-  contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
+  contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
+  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
   order: 40
 page4.html = page4.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page4.update
@@ -736,8 +737,9 @@ page5 = save_page route: "cms/page", filename: "know/pregnancy/lump-sum.html", n
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   related_page_ids: [article1.id, article2.id, article3.id],
   map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
-  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
-  contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
+  contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
+  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
   order: 50
 page5.html = page5.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page5.update
