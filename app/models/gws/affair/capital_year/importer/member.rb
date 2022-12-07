@@ -93,7 +93,7 @@ class Gws::Affair::CapitalYear::Importer::Member < Gws::Affair::CapitalYear::Imp
 
     target_user = Gws::User.active.where(staff_address_uid: staff_address_uid).first
     if target_user.nil?
-      self.errors.add :base, "#{index}:対象ユーザーが見つかりません。(宛名番号 #{staff_address_uid})"
+      self.errors.add :base, :not_found_target_user, line_no: index, staff_address_uid: staff_address_uid
       return false
     end
 

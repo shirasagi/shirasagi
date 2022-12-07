@@ -3,7 +3,9 @@ module SS::Release
   extend SS::Translation
 
   included do
+    # rubocop:disable Style/ClassVars
     class_variable_set(:@@_hide_released_field, nil)
+    # rubocop:enable Style/ClassVars
 
     cattr_accessor :default_release_state, :public_states
     self.default_release_state = "public"
@@ -46,7 +48,9 @@ module SS::Release
     private
 
     def hide_released_field
+      # rubocop:disable Style/ClassVars
       class_variable_set(:@@_hide_released_field, true)
+      # rubocop:enable Style/ClassVars
     end
   end
 

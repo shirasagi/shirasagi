@@ -450,6 +450,8 @@ en:
           greater_than_end_at: Must be after the end date of the start time.
         gws/affair/leave_file:
           over_one_day: The start time to end time exceeds 1 day.
+          not_approved: Not approved
+          use_in_other_leave_file: Use in other leave file
         gws/affair/shift_record:
           invalid_affair_start_at: Invalid start
           invalid_affair_end_at: Invalid end
@@ -462,8 +464,12 @@ en:
 
   activemodel:
     attributes:
-      gws/affair/capital_year/importer/member:
+      gws/affair/capital_year/importer/base:
         in_file: File
+    errors:
+      models:
+        gws/affair/capital_year/importer/base:
+          not_found_target_user: "%{line_no}: not found user (%{staff_address_uid})"
 
   gws_role:
     use_gws_affair: Use affair features

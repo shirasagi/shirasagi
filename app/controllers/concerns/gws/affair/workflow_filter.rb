@@ -107,6 +107,8 @@ module Gws::Affair::WorkflowFilter
     end
   end
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def approve_update
     set_item
 
@@ -167,17 +169,17 @@ module Gws::Affair::WorkflowFilter
       end
     end
 
-    if @item.state == "approve" && @item.is_a?(Gws::Affair::OvertimeFile::CreateCompensatory)
-      @item.create_week_in_compensatory
-      @item.create_week_out_compensatory
-      @item.create_holiday_compensatory
-    end
+    create_compensatory(@item)
 
     render json: { workflow_state: workflow_state }
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   alias pull_up_update approve_update
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def approve_all
     @items = @model.in(id: params[:ids]).to_a
     @items.each do |item|
@@ -236,11 +238,7 @@ module Gws::Affair::WorkflowFilter
         end
       end
 
-      next if item.state != "approve"
-      next if !tem.is_a?(Gws::Affair::OvertimeFile::CreateCompensatory)
-      item.create_week_in_compensatory
-      item.create_week_out_compensatory
-      item.create_holiday_compensatory
+      create_compensatory(item)
     end
 
     respond_to do |format|
@@ -248,6 +246,8 @@ module Gws::Affair::WorkflowFilter
       format.json { head :no_content }
     end
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   def remand_update
     set_item
@@ -336,5 +336,14 @@ module Gws::Affair::WorkflowFilter
     end
 
     render json: { workflow_state: @item.workflow_state }
+  end
+
+  def create_compensatory(item)
+    return if !item.is_a?(Gws::Affair::OvertimeFile::CreateCompensatory)
+    return if item.state != "approve"
+
+    item.create_week_in_compensatory
+    item.create_week_out_compensatory
+    item.create_holiday_compensatory
   end
 end

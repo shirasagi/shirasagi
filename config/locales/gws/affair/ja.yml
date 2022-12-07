@@ -92,7 +92,7 @@ ja:
       close_results: 結果を確定しました。
       select_target_user: 申請対象のユーザーを選択してください。
       select_start_at_date: 申請開始日を入力してください。
-      not_found_overtime_file: 設定可能な時間外申請がありませんでした"
+      not_found_overtime_file: 設定可能な時間外申請がありませんでした
       not_found_leave_setting: 休暇設定がありません。
       time_card_unlocked:
         h2: "%{year}年%{month}月のタイムカードが締められていません。"
@@ -463,6 +463,8 @@ ja:
           greater_than_end_at: は開始時間の終了日以降にしてください。
         gws/affair/leave_file:
           over_one_day: 開始時間〜終了時間が1日を超過しています。
+          not_approved: は承認されていません。
+          use_in_other_leave_file: は他の休暇申請に設定されています。
         gws/affair/shift_record:
           invalid_affair_start_at: 開始時間が不正です。5分単位での時刻を入力してください。
           invalid_affair_end_at: 終了時間が不正です。5分単位での時刻を入力してください。
@@ -475,8 +477,12 @@ ja:
 
   activemodel:
     attributes:
-      gws/affair/capital_year/importer/member:
+      gws/affair/capital_year/importer/base:
         in_file: ファイル
+    errors:
+      models:
+        gws/affair/capital_year/importer/base:
+          not_found_target_user: "%{line_no}: ユーザーが見つかりません。(宛名番号 %{staff_address_uid})"
 
   gws_role:
     use_gws_affair: 庶務事務機能の利用

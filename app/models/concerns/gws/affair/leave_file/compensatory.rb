@@ -31,7 +31,7 @@ module Gws::Affair::LeaveFile::Compensatory
 
   def validate_week_in_compensatory_file
     if week_in_compensatory_file.workflow_state != "approve"
-      errors.add :week_in_compensatory_file_id, "は承認されていません。"
+      errors.add :week_in_compensatory_file_id, :not_approved
       return
     end
 
@@ -39,13 +39,13 @@ module Gws::Affair::LeaveFile::Compensatory
       pluck(:week_in_compensatory_file_id)
 
     if file_ids.include?(week_in_compensatory_file_id)
-      errors.add :week_in_compensatory_file_id, "は他の休暇申請に設定されています。"
+      errors.add :week_in_compensatory_file_id, :use_in_other_leave_file
     end
   end
 
   def validate_week_out_compensatory_file
     if week_out_compensatory_file.workflow_state != "approve"
-      errors.add :week_out_compensatory_file_id, "は承認されていません。"
+      errors.add :week_out_compensatory_file_id, :not_approved
       return
     end
 
@@ -53,13 +53,13 @@ module Gws::Affair::LeaveFile::Compensatory
       pluck(:week_out_compensatory_file_id)
 
     if file_ids.include?(week_out_compensatory_file_id)
-      errors.add :week_out_compensatory_file_id, "は他の休暇申請に設定されています。"
+      errors.add :week_out_compensatory_file_id, :use_in_other_leave_file
     end
   end
 
   def validate_holiday_compensatory_file
     if holiday_compensatory_file.workflow_state != "approve"
-      errors.add :holiday_compensatory_file_id, "は承認されていません。"
+      errors.add :holiday_compensatory_file_id, :not_approved
       return
     end
 
@@ -67,7 +67,7 @@ module Gws::Affair::LeaveFile::Compensatory
       pluck(:holiday_compensatory_file_id)
 
     if file_ids.include?(holiday_compensatory_file_id)
-      errors.add :holiday_compensatory_file_id, "は他の休暇申請に設定されています。"
+      errors.add :holiday_compensatory_file_id, :use_in_other_leave_file
     end
   end
 

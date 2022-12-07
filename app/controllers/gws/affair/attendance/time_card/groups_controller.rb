@@ -151,7 +151,7 @@ class Gws::Affair::Attendance::TimeCard::GroupsController < ApplicationControlle
 
   def main
     today = @cur_site.calc_attendance_date(Time.zone.now)
-    redirect_to "#{request.path}/#{today.strftime('%Y%m')}/#{today.day}"
+    redirect_to(action: :index, year_month: today.strftime('%Y%m'), day: today.day)
   end
 
   def index

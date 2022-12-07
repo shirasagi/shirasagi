@@ -27,7 +27,7 @@ module Gws::Addon::User::DutyHour
 
   def effective_capital_year(site)
     date = Time.zone.today
-    ::Gws::Affair::CapitalYear.site(site).where({ :start_date.lte => date , :close_date.gte => date }).first
+    ::Gws::Affair::CapitalYear.site(site).where(:start_date.lte => date, :close_date.gte => date).first
   end
 
   def effective_capital(site)

@@ -91,9 +91,9 @@ table.affair-overtime-aggregate {
   width: 16px;
   height: 16px;
   background: $orange;
+  color: $white;
   line-height: 1.1;
   @include border-radius(8px);
-  color: $white;
   text-align: center;
   cursor: pointer;
 }

@@ -18,7 +18,7 @@ module Gws::Workflow::WizardFilter
 
   def set_route
     @route_id = params[:route_id]
-    if "my_group" == @route_id || "restart" == @route_id
+    if @route_id == "my_group" || @route_id == "restart"
       @route = nil
     else
       @route = Gws::Workflow::Route.find(params[:route_id])
@@ -47,7 +47,7 @@ module Gws::Workflow::WizardFilter
     @item.workflow_user_id = nil
     @item.workflow_state = nil
     @item.workflow_comment = nil
-    if "restart" != @route_id
+    if @route_id != "restart"
       @item.workflow_approvers = nil
       @item.workflow_required_counts = nil
     end
@@ -58,9 +58,9 @@ module Gws::Workflow::WizardFilter
       else
         render json: @item.errors.full_messages, status: :bad_request
       end
-    elsif "my_group" == @route_id
+    elsif @route_id == "my_group"
       render template: "approver_setting", layout: false
-    elsif "restart" == @route_id
+    elsif @route_id == "restart"
       render template: "approver_setting_restart", layout: false
     else
       raise "404"
@@ -80,12 +80,8 @@ module Gws::Workflow::WizardFilter
     level = Integer(params[:level])
 
     workflow_approvers = @item.workflow_approvers
-    workflow_approvers = workflow_approvers.select do |workflow_approver|
-      workflow_approver[:level] == level
-    end
-    same_level_user_ids = workflow_approvers.map do |workflow_approver|
-      workflow_approver[:user_id]
-    end
+    workflow_approvers = workflow_approvers.to_a.pluck(:level)
+    same_level_user_ids = workflow_approvers.to_a.pluck(:user_id)
 
     group_ids = @cur_site.descendants_and_self.active.in_group(@group).pluck(:id)
     criteria = @item.approver_user_class.site(@cur_site)
