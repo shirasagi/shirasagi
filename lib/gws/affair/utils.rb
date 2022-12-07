@@ -1,6 +1,6 @@
 class Gws::Affair::Utils
 
-  DAY_LEAVE_MINUTES = 465.freeze
+  DAY_LEAVE_MINUTES = 465
 
   class << self
     def time_range_minutes(main_range, *sub_ranges)
@@ -10,7 +10,7 @@ class Gws::Affair::Utils
       diff_minutes = []
       sizes = []
 
-      sub_ranges.reverse.each do |sub_range|
+      sub_ranges.reverse_each do |sub_range|
         sub_minutes = sub_range.begin.change(sec: 0).to_i.step(sub_range.end.change(sec: 0).to_i, 60).to_a
         sub_minutes.shift
 

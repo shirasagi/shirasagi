@@ -3,9 +3,9 @@ class Gws::Attendance::TimeEdit
   include ActiveModel::Model
   include SS::PermitParams
 
-  attr_accessor :cur_site, :cur_user
-  attr_accessor :in_day, :in_hour, :in_minute
-  attr_accessor :in_reason, :in_reason_type
+  attr_accessor :cur_site, :cur_user,
+    :in_day, :in_hour, :in_minute,
+    :in_reason, :in_reason_type
 
   permit_params :in_day, :in_hour, :in_minute
   permit_params :in_reason_type, :in_reason

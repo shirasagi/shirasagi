@@ -165,7 +165,8 @@ Rails.application.routes.draw do
       resources :shift_calendars, only: [:index]
       resources :shift_calendars, concerns: :deletion, except: [:index], path: "shift_calendars/g:group_id/u:user" do
         get '/shift_records/' => redirect { |p, req| "#{req.path}/#{Time.zone.now.strftime('%Y/%m')}" }, as: :shift_record_main
-        resources :shift_records, path: 'shift_records/:year/:month', concerns: [:deletion, :export], year: /(\d{4}|ID)/, month: /(\d{2}|ID)/
+        resources :shift_records, path: 'shift_records/:year/:month',
+          concerns: [:deletion, :export], year: /(\d{4}|ID)/, month: /(\d{2}|ID)/
       end
     end
 
@@ -182,7 +183,8 @@ Rails.application.routes.draw do
         end
       end
     end
-    resources :special_leaves, path: 'special_leaves/:staff_category', defaults: { staff_category: 'all' }, concerns: [:deletion, :export]
+    resources :special_leaves, path: 'special_leaves/:staff_category',
+      defaults: { staff_category: 'all' }, concerns: [:deletion, :export]
     resources :capital_years, concerns: :deletion
     scope 'year/:year' do
       resources :capitals, concerns: [:deletion, :export, :import_member, :import_group], as: :capitals

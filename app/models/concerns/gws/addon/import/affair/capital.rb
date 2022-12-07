@@ -7,7 +7,6 @@ module Gws::Addon::Import::Affair
 
     included do
       attr_accessor :in_file, :imported
-      permit_params :in_file
 
       #field :budget_code, type: Integer             # 予算区分
       #field :budget_number, type: Integer           # 予算号数
@@ -18,6 +17,8 @@ module Gws::Addon::Import::Affair
       #field :fifth_assessment_amount, type: Integer # 五次査定額
       #field :statistics_name1, type: String         # 統計性質名称１
       #field :statistics_name2, type: String         # 統計性質名称２
+
+      permit_params :in_file
     end
 
     module ClassMethods
@@ -99,6 +100,7 @@ module Gws::Addon::Import::Affair
       end
     end
 
+    # rubocop:disable Metrics/AbcSize
     def update_row(row, index)
       article_code    = row[I18n.t("gws/affair.export.capital.article_code")].to_s.strip
       section_code    = row[I18n.t("gws/affair.export.capital.section_code")].to_s.strip
@@ -151,6 +153,7 @@ module Gws::Addon::Import::Affair
       end
       item
     end
+    # rubocop:enable Metrics/AbcSize
 
     def set_errors(item, index)
       error = ""
