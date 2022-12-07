@@ -13,13 +13,14 @@
 <table class="index">
   <thead class="list-head">
     <tr>
-      <th class="checkbox">
-        <% if @multi %>
+      <% if @multi %>
+        <th class="checkbox">
           <input type="checkbox" />
-        <% end %>
-      </th>
-      <th class="name" colspan="2"><%= Cms::Group.t :name %></th>
+        </th>
+      <% end %>
+      <th class="group-name"><%= Cms::Group.t :name %></th>
       <th class="main-state"><%= SS::Contact.t :main_state %></th>
+      <th class="contact-name"><%= SS::Contact.t :name %></th>
       <th class="contact-group-name"><%= SS::Contact.t :contact_group_name %></th>
       <th class="contact-tel"><%= SS::Contact.t :contact_tel %></th>
       <th class="contact-fax"><%= SS::Contact.t :contact_fax %></th>
@@ -42,16 +43,14 @@
         index = 0 if prev_group_id != group.id
       %>
       <%= tag.tr data: data do %>
-        <td class="checkbox">
-          <% if @multi %>
+        <% if @multi %>
+          <td class="checkbox">
             <input type="checkbox" name="ids[]" value="<%= group.id %>:<%= contact.id %>" />
-          <% else %>
-            <%= link_to t("contact.buttons.select"), "#", class: "btn select-single-item" %>
-          <% end %>
-        </td>
-        <td class="name"><%= index == 0 ? group.section_name : nil %></td>
-        <td class="index">#<%= index + 1 %></td>
+          </td>
+        <% end %>
+        <td class="group-name"><%= index == 0 ? link_to(group.section_name, "#", class: @multi ? "select-item" : "select-single-item") : nil %></td>
         <td class="main-state"><%= contact.main_state == "main" ? tag.span("radio_button_checked", class: "material-icons md-14", title: t("contact.options.main_state.main")) : nil %></td>
+        <td class="name"><%= contact.name ? link_to(contact.name, "#", class: @multi ? "select-item" : "select-single-item") : nil %></td>
         <td class="contact-group-name"><%= contact.contact_group_name %></td>
         <td class="contact-tel"><%= contact.contact_tel %></td>
         <td class="contact-fax"><%= contact.contact_fax %></td>

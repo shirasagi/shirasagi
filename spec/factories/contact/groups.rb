@@ -4,6 +4,7 @@ FactoryBot.define do
     contact_groups do
       [
         {
+          name: "name-#{unique_id}",
           contact_group_name: "contact_group_name-#{unique_id}",
           contact_tel: unique_tel,
           contact_fax: unique_tel,

@@ -30,8 +30,9 @@ puts "# contact"
 g11.cms_group.tap do |cms_g11|
   if cms_g11.contact_groups.blank?
     cms_g11.contact_groups.create(
-      main_state: "main", contact_group_name: "企画政策部 政策課", contact_tel: "000-000-0000", contact_fax: "000-000-0001",
-      contact_email: "kikakuseisaku@example.jp", contact_link_url: "/kikaku/seisaku/", contact_link_name: "企画政策部 政策課")
+      main_state: "main", name: "企画政策部 政策課", contact_group_name: "企画政策部 政策課", contact_tel: "000-000-0000",
+      contact_fax: "000-000-0001", contact_email: "kikakuseisaku@example.jp",
+      contact_link_url: "/kikaku/seisaku/", contact_link_name: "企画政策部 政策課")
   end
 end
 

@@ -11,6 +11,7 @@ describe Chorg::MainRunner, dbscope: :example do
     context "non-empty to non-empty" do
       let(:group_attributes) do
         {
+          name: unique_id,
           contact_email: unique_email,
           contact_tel: unique_tel,
           contact_fax: unique_tel,
@@ -124,6 +125,7 @@ describe Chorg::MainRunner, dbscope: :example do
     context "empty to non-empty" do
       let(:group_attributes) do
         {
+          name: unique_id,
           contact_email: "",
           contact_tel: "",
           contact_fax: "",
@@ -221,6 +223,7 @@ describe Chorg::MainRunner, dbscope: :example do
     context "non-empty to non-empty" do
       let(:group_attributes) do
         {
+          name: unique_id,
           contact_email: unique_email,
           contact_tel: unique_tel,
           contact_fax: unique_tel,
@@ -334,6 +337,7 @@ describe Chorg::MainRunner, dbscope: :example do
     context "empty to non-empty" do
       let(:group_attributes) do
         {
+          name: unique_id,
           contact_email: "",
           contact_tel: "",
           contact_fax: "",

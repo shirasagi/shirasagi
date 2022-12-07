@@ -43,7 +43,10 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
       g1 = create(
         :cms_group, name: "A", order: 10,
         contact_groups: [
-          { contact_tel: tel, contact_fax: tel, contact_email: email, contact_link_url: link_url, contact_link_name: link_name }
+          {
+            main_state: 'main', name: unique_id,
+            contact_tel: tel, contact_fax: tel, contact_email: email, contact_link_url: link_url, contact_link_name: link_name
+          }
         ]
       )
       cms_site.add_to_set(group_ids: [g1.id])
@@ -153,6 +156,7 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
     let(:group_name) { unique_id }
     let!(:group) { create(:cms_group, name: "#{cms_group.name}/#{group_name}", order: 100) }
     let(:expiration_date) { Time.zone.now.days_ago(1).beginning_of_day }
+    let(:contact_name) { unique_id }
     let(:contact_tel) { unique_tel }
 
     it do
@@ -185,6 +189,7 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
         within "#addon-contact-agents-addons-group" do
           within "tr[data-id='#{group.contact_groups.first.id}']" do
             first('[type="radio"][name="item[contact_groups][][main_state]"]').click
+            fill_in "item[contact_groups][][name]", with: contact_name
             fill_in "item[contact_groups][][contact_tel]", with: contact_tel
           end
         end
@@ -194,6 +199,7 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
 
       group.reload
       expect(group.contact_tel).to eq contact_tel
+      expect(group.contact_groups[0].name).to eq contact_name
       expect(group.contact_groups[0].contact_tel).to eq contact_tel
       expect(group.contact_groups[0].main_state).to eq "main"
     end
@@ -202,12 +208,14 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
   context "contact" do
     context "basic crud" do
       let(:group_name) { unique_id }
+      let(:contact_name1) { unique_id }
       let(:contact_group_name1) { unique_id }
       let(:contact_tel1) { unique_tel }
       let(:contact_fax1) { unique_tel }
       let(:contact_email1) { unique_email }
       let(:contact_link_url1) { "/#{unique_id}/" }
       let(:contact_link_name1) { unique_id }
+      let(:contact_name2) { unique_id }
       let(:contact_group_name2) { unique_id }
       let(:contact_tel2) { unique_tel }
       let(:contact_fax2) { unique_tel }
@@ -240,6 +248,7 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
           ensure_addon_opened "#addon-contact-agents-addons-group"
           within "#addon-contact-agents-addons-group" do
             within "tr[data-id='new']" do
+              fill_in "item[contact_groups][][name]", with: contact_name1
               fill_in "item[contact_groups][][contact_group_name]", with: contact_group_name1
               fill_in "item[contact_groups][][contact_tel]", with: contact_tel1
               fill_in "item[contact_groups][][contact_fax]", with: contact_fax1
@@ -257,6 +266,7 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
         expect(item.contact_groups.count).to eq 1
         item.contact_groups.first.tap do |contact_group|
           save_contact_group_id = contact_group.id
+          expect(contact_group.name).to eq contact_name1
           expect(contact_group.contact_group_name).to eq contact_group_name1
           expect(contact_group.contact_tel).to eq contact_tel1
           expect(contact_group.contact_email).to eq contact_email1
@@ -288,6 +298,7 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
         item.contact_groups.first.tap do |contact_group|
           # ページから id で参照するので、編集のたびに変化してはいけない。一度採番する変化しない。
           expect(contact_group.id).to eq save_contact_group_id
+          expect(contact_group.name).to eq contact_name1
           expect(contact_group.contact_group_name).to eq contact_group_name1
           expect(contact_group.contact_tel).to eq contact_tel1
           expect(contact_group.contact_fax).to eq contact_fax1
@@ -308,6 +319,7 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
           ensure_addon_opened "#addon-contact-agents-addons-group"
           within "#addon-contact-agents-addons-group" do
             within "tr[data-id='new']" do
+              fill_in "item[contact_groups][][name]", with: contact_name2
               fill_in "item[contact_groups][][contact_group_name]", with: contact_group_name2
               fill_in "item[contact_groups][][contact_tel]", with: contact_tel2
               fill_in "item[contact_groups][][contact_fax]", with: contact_fax2
@@ -325,6 +337,7 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
         item.contact_groups.first.tap do |contact_group|
           # ページから id で参照するので、編集のたびに変化してはいけない。一度採番する変化しない。
           expect(contact_group.id).to eq save_contact_group_id
+          expect(contact_group.name).to eq contact_name1
           expect(contact_group.contact_group_name).to eq contact_group_name1
           expect(contact_group.contact_tel).to eq contact_tel1
           expect(contact_group.contact_fax).to eq contact_fax1
@@ -334,6 +347,7 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
           expect(contact_group.main_state).to eq "main"
         end
         item.contact_groups.second.tap do |contact_group|
+          expect(contact_group.name).to eq contact_name2
           expect(contact_group.contact_group_name).to eq contact_group_name2
           expect(contact_group.contact_tel).to eq contact_tel2
           expect(contact_group.contact_fax).to eq contact_fax2
@@ -357,15 +371,15 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
           :cms_group, name: "#{cms_group.name}/#{unique_id}",
           contact_groups: [
             {
-              main_state: "main", contact_group_name: unique_id, contact_tel: unique_tel, contact_fax: unique_tel,
+              main_state: "main", name: unique_id, contact_group_name: unique_id, contact_tel: unique_tel,
+              contact_fax: unique_tel, contact_email: unique_email, contact_link_url: unique_url, contact_link_name: unique_id
+            },
+            {
+              main_state: nil, name: unique_id, contact_group_name: unique_id, contact_tel: unique_tel, contact_fax: unique_tel,
               contact_email: unique_email, contact_link_url: unique_url, contact_link_name: unique_id
             },
             {
-              main_state: nil, contact_group_name: unique_id, contact_tel: unique_tel, contact_fax: unique_tel,
-              contact_email: unique_email, contact_link_url: unique_url, contact_link_name: unique_id
-            },
-            {
-              main_state: nil, contact_group_name: unique_id, contact_tel: unique_tel, contact_fax: unique_tel,
+              main_state: nil, name: unique_id, contact_group_name: unique_id, contact_tel: unique_tel, contact_fax: unique_tel,
               contact_email: unique_email, contact_link_url: unique_url, contact_link_name: unique_id
             }
           ]

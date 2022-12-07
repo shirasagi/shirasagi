@@ -6,12 +6,12 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
   let!(:group1) do
     create(
       :cms_group, name: "#{group.name}/#{unique_id}",
-      contact_groups: [{ contact_email: unique_email, main_state: "main" }])
+      contact_groups: [{ name: unique_id, contact_email: unique_email, main_state: "main" }])
   end
   let!(:group2) do
     create(
       :cms_group, name: "#{group.name}/#{unique_id}",
-      contact_groups: [{ contact_email: unique_email, main_state: "main" }])
+      contact_groups: [{ name: unique_id, contact_email: unique_email, main_state: "main" }])
   end
 
   let(:layout) { create_cms_layout page_name: true }
@@ -31,7 +31,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
     site.inquiry_form = inquiry_form
     site.save!
 
-    group.contact_groups = [{ contact_email: unique_email, main_state: "main" }]
+    group.contact_groups = [{ name: unique_id, contact_email: unique_email, main_state: "main" }]
     group.save!
     expect(group.contact_email).to be_present
 

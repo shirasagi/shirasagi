@@ -70,6 +70,7 @@ ja:
       contact/addon/page:
         <<: *cmspage
       ss/contact:
+        name: 識別名
         contact_group_name: 担当部署
         contact_tel: 電話番号
         contact_fax: ファックス番号
@@ -100,6 +101,8 @@ ja:
         - グループの連絡先と連動するかどうかを選択します。
         - 未選択の場合、「グループと連動する」が選択されているものとみなします。
     ss/contact:
+      name:
+        - CSV インポート時のキーとなる名前を記入します。他の連絡先と重複しない名前を記入してください。
       contact_group_name:
         - 連絡先に表示する担当部署を記入します。
       contact_tel:

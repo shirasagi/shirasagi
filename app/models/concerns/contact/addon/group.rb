@@ -5,7 +5,7 @@ module Contact::Addon::Group
   MAX_CONTACT_COUNT = 20
 
   included do
-    embeds_many :contact_groups, class_name: "SS::Contact"
+    embeds_many :contact_groups, class_name: "SS::Contact", cascade_callbacks: true, validate: false
     field :contact_group_name, type: String
     field :contact_tel, type: String
     field :contact_fax, type: String
@@ -13,12 +13,13 @@ module Contact::Addon::Group
     field :contact_link_url, type: String
     field :contact_link_name, type: String
 
-    permit_params contact_groups: %i[_id contact_group_name contact_tel contact_fax contact_email
+    permit_params contact_groups: %i[_id name contact_group_name contact_tel contact_fax contact_email
                                      contact_link_url contact_link_name main_state]
 
     before_validation :sync_with_main_contact
     before_validation :remove_empty_contact_groups
     validates :contact_groups, length: { maximum: MAX_CONTACT_COUNT }
+    validate :validate_contact_groups
   end
 
   private
@@ -56,5 +57,28 @@ module Contact::Addon::Group
       contact_groups.delete_if { |contact_group| contact_group.id == id }
     end
     self.contact_groups = contact_groups
+  end
+
+  def validate_contact_groups
+    contact_groups.each_with_index do |contact_group, index|
+      next if contact_group.validated?
+      next if contact_group.valid?
+
+      contact_group.errors.each do |error|
+        attribute = error.attribute
+        message = error.message
+
+        name = contact_group.name.presence || "#{index + 1}番目"
+        if %i[value values].include?(attribute.to_sym)
+          new_message = name + message
+        else
+          new_message = I18n.t(
+            "cms.column_value_error_template", name: name,
+            error: contact_group.errors.full_message(attribute, message))
+        end
+
+        self.errors.add :base, new_message
+      end
+    end
   end
 end

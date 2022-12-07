@@ -95,8 +95,16 @@ describe Chorg::MainRunner, dbscope: :example do
     end
 
     context "unify to existing group" do
-      let(:group1) { create(:revision_new_group, contact_groups: [{ contact_email: "foobar02@example.jp", main_state: "main" }]) }
-      let(:group2) { create(:revision_new_group, contact_groups: [{ contact_email: "foobar@example.jp", main_state: "main" }]) }
+      let(:group1) do
+        create(
+          :revision_new_group, contact_groups: [{ name: unique_id, contact_email: "foobar02@example.jp", main_state: "main" }]
+        )
+      end
+      let(:group2) do
+        create(
+          :revision_new_group, contact_groups: [{ name: unique_id, contact_email: "foobar@example.jp", main_state: "main" }]
+        )
+      end
       let(:user1) { create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group1.id]) }
       let(:user2) { create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group2.id]) }
       let(:revision) { create(:revision, site_id: site.id) }

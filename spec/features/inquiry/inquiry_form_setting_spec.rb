@@ -53,7 +53,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
     answer.save!
 
     group = article.contact_group
-    group.contact_groups = [{ contact_email: unique_email, main_state: "main" }]
+    group.contact_groups = [{ name: unique_id, contact_email: unique_email, main_state: "main" }]
     group.save!
   end
 
@@ -90,7 +90,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
     before { login_cms_user }
 
     it do
-      cms_group.contact_groups = [{ contact_email: unique_email, main_state: "main" }]
+      cms_group.contact_groups = [{ name: unique_id, contact_email: unique_email, main_state: "main" }]
       cms_group.save!
 
       visit new_article_node_path
@@ -107,7 +107,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
       end
       wait_for_cbox do
         within "[data-group-id='#{cms_group.id}']" do
-          wait_cbox_close { click_on I18n.t("contact.buttons.select") }
+          wait_cbox_close { click_on cms_group.section_name }
         end
       end
       within "form#item-form" do
@@ -120,7 +120,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
     before { login_cms_user }
 
     it do
-      cms_group.contact_groups = [{ contact_email: unique_email, main_state: "main" }]
+      cms_group.contact_groups = [{ name: unique_id, contact_email: unique_email, main_state: "main" }]
       cms_group.save!
 
       visit edit_site_path
@@ -148,7 +148,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
       end
       wait_for_cbox do
         within "[data-group-id='#{cms_group.id}']" do
-          wait_cbox_close { click_on I18n.t("contact.buttons.select") }
+          wait_cbox_close { click_on cms_group.section_name }
         end
       end
       within "form#item-form" do
