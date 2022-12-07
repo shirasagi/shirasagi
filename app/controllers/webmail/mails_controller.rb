@@ -85,6 +85,22 @@ class Webmail::MailsController < ApplicationController
       page(params[:page]).
       per(50).
       all
+
+    uid_list = []
+    @items.each do |item|
+      uid_list << item.uid
+    end
+
+    webmail_uid_list_session = session[:webmail_uid_list]
+    webmail_uid_list_session ||= {}
+    webmail_uid_list_session['uid_list'] = uid_list
+    if params[:s]
+      webmail_uid_list_session['search'] = params[:s].to_unsafe_h
+    else
+      webmail_uid_list_session['search'] = nil
+    end
+    webmail_uid_list_session['page'] = params[:page]
+    session[:webmail_uid_list] = webmail_uid_list_session
   end
 
   def show
@@ -93,6 +109,26 @@ class Webmail::MailsController < ApplicationController
       @item.set_seen
       @mailboxes = @imap.mailboxes.update_status
     end
+
+    uid_list = session[:webmail_uid_list]['uid_list']
+    uid_index = uid_list.index(@item.uid)
+    if uid_index == nil
+      @next_uid = nil
+      @prev_uid = nil
+    else
+      if uid_index == 0
+        @next_uid = nil
+      else
+        @next_uid = uid_list[uid_index - 1]
+      end
+      if uid_index == uid_list.size
+        @prev_uid = nil
+      else
+        @prev_uid = uid_list[uid_index + 1]
+      end
+    end
+    @search = session[:webmail_uid_list]['search']
+    @page = session[:webmail_uid_list]['page']
   end
 
   def new
