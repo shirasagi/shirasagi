@@ -1,4 +1,4 @@
-class Gws::Affair::Overtime::Management::Aggregate::SearchUsersController < ApplicationController
+class Gws::Affair::Overtime::Aggregate::SearchUsersController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Affair::PermissionFilter
@@ -16,12 +16,8 @@ class Gws::Affair::Overtime::Management::Aggregate::SearchUsersController < Appl
 
   def set_crumbs
     @crumbs << [@cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path]
-    @crumbs << [
-      t("modules.gws/affair/overtime_file/management/aggregate"),
-      gws_affair_overtime_management_aggregate_search_users_main_path]
-    @crumbs << [
-      t("modules.gws/affair/overtime_file/management/aggregate/search_users"),
-      gws_affair_overtime_management_aggregate_search_users_main_path]
+    @crumbs << [t("modules.gws/affair/overtime/aggregate"), gws_affair_overtime_aggregate_search_users_main_path]
+    @crumbs << [t("modules.gws/affair/overtime/aggregate/search_users"), gws_affair_overtime_aggregate_search_users_main_path]
   end
 
   def set_query

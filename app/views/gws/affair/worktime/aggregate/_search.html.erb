@@ -23,17 +23,17 @@
       <%= f.select :month, month_options %>
 
       <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
-      <%= link_to t("ss.buttons.reset"), gws_affair_working_time_management_aggregate_path, class: "btn" %>
-      <%= link_to t("ss.links.download"), gws_affair_working_time_management_download_aggregate_path(s: @s.to_h), class: "btn", style: "float: right;" %>
+      <%= link_to t("ss.buttons.reset"), gws_affair_worktime_aggregate_path, class: "btn" %>
+      <%= link_to t("ss.links.download"), { action: :download }.merge(s: @s.to_h), class: "btn", style: "float: right;" %>
     <% end %>
   </div>
 </div>
 
 <div class="gws-schedule-tabs">
-  <%= link_to gws_affair_working_time_management_aggregate_path(duty_type: "default", s: params.permit(s: [:group_id, :year, :month]).dig(:s)), class: params[:duty_type] == "default" ? "current" : nil do %>
+  <%= link_to gws_affair_worktime_aggregate_path(duty_type: "default", s: params.permit(s: [:group_id, :year, :month]).dig(:s)), class: params[:duty_type] == "default" ? "current" : nil do %>
     <span class="tab-name">通常</span>
   <% end %>
-  <%= link_to gws_affair_working_time_management_aggregate_path(duty_type: "flextime", s: params.permit(s: [:group_id, :year, :month]).dig(:s)), class: params[:duty_type] == "flextime" ? "current" : nil do %>
+  <%= link_to gws_affair_worktime_aggregate_path(duty_type: "flextime", s: params.permit(s: [:group_id, :year, :month]).dig(:s)), class: params[:duty_type] == "flextime" ? "current" : nil do %>
     <span class="tab-name">自由時間勤務</span>
   <% end %>
 </div>

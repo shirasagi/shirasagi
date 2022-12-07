@@ -13,7 +13,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
 
     let(:new_path) { new_gws_affair_leave_file_path(site: site, state: "mine") }
     let(:index_path) { gws_affair_leave_files_path(site: site, state: "all") }
-    let(:aggregate_path) { gws_affair_leave_aggregate_path(site: site) }
+    let(:details_path) { gws_affair_leave_details_path(site: site) }
 
     def create_annual_leave_file(start_at, end_at)
       reason = unique_id
@@ -101,7 +101,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       item1 = approve_file(item1)
 
       login_user(user545)
-      visit aggregate_path
+      visit details_path
 
       within ".gws-attendance" do
         within "table.index" do

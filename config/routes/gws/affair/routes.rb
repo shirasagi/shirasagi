@@ -53,12 +53,59 @@ Rails.application.routes.draw do
 
   gws "affair" do
     get "/" => "main#index", as: :main
-    #get '/' => redirect { |p, req| "#{req.path}/attendance/time_cards/#{Time.zone.now.strftime('%Y%m')}" }, as: :main
 
+    # attendance
+    namespace "attendance" do
+      get '/' => "time_cards#main", as: :main
+
+      # time_cards
+      get '/time_cards/' => "time_cards#main", as: :time_card_main
+      resources :time_cards, path: 'time_cards/:year_month', only: %i[index] do
+        match :download, on: :collection, via: %i[get post]
+        get :print, on: :collection
+        post :enter, on: :collection
+        post :leave, on: :collection
+        post :leave, path: 'leave:date', on: :collection
+        post :break_enter, path: 'break_enter:index', on: :collection
+        post :break_leave, path: 'break_leave:index', on: :collection
+        match :memo, path: ':day/memo', on: :collection, via: %i[get post]
+        match :working_time, path: ':day/working_time', on: :collection, via: %i[get post]
+        match :time, path: ':day/:type', on: :collection, via: %i[get post]
+      end
+
+      # groups
+      get 'groups' => "groups#main", as: :group_main
+      get 'groups/:year_month/:day' => "groups#index", as: :groups
+
+      # management
+      namespace 'management' do
+        get '/' => redirect { |p, req| "#{req.path}/time_cards/#{Time.zone.now.strftime('%Y%m')}" }, as: :main
+        get '/time_cards/' => redirect { |p, req| "#{req.path}/#{Time.zone.now.strftime('%Y%m')}" }, as: :time_card_main
+        resources :time_cards, path: 'time_cards/:year_month', except: %i[new create edit update], concerns: %i[deletion] do
+          match :memo, path: ':day/memo', on: :member, via: %i[get post]
+          match :working_time, path: ':day/working_time', on: :member, via: %i[get post]
+          match :time, path: ':day/:type', on: :member, via: %i[get post]
+          match :download, on: :collection, via: %i[get post]
+          match :lock, on: :collection, via: %i[get post]
+          match :unlock, on: :collection, via: %i[get post]
+        end
+      end
+      namespace 'apis' do
+        namespace 'management' do
+          get 'users' => 'users#index'
+        end
+      end
+    end
+
+    # overtime
     namespace "overtime" do
+      get '/' => redirect { |p, req| "#{req.path}/files/mine" }, as: :main
+
+      # files
       resources :files, path: 'files/:state', concerns: [:deletion, :workflow, :approve_all]
-      get "aggregate" => "aggregate#index"
-      get "aggregate/show/:group_id/:uid" => "aggregate#show", as: :show_aggregate
+      resources :results, only: [:edit, :update] do
+        post :close, on: :member
+      end
       get "/search_approvers" => "search_approvers#index", as: :search_approvers
       match "/wizard/:id/approver_setting" => "wizard#approver_setting", via: [:get, :post], as: :approver_setting
       get "/wizard/:id/reroute" => "wizard#reroute", as: :reroute
@@ -66,52 +113,51 @@ Rails.application.routes.draw do
       get "/wizard/:id/approveByDelegatee" => "wizard#approve_by_delegatee", as: "approve_by_delegatee"
       match "/wizard/:id" => "wizard#index", via: [:get, :post], as: :wizard
 
-      resources :results, only: [:edit, :update] do
-        post :close, on: :member
-      end
+      # details
+      get "details" => "details#index"
+      get "details/:group_id/:uid" => "details#show"
 
-      namespace 'management' do
-        get "aggregate" => redirect { |p, req| "#{req.path}/users" }
+      # aggregate
+      namespace 'aggregate' do
+        get "/" => redirect { |p, req| "#{req.path}/users" }, as: :main
 
-        namespace 'aggregate' do
-          # aggregate/users
-          get "users" => "users#index", as: :users_main
-          get "users/total/f:fiscal_year/:month" => "users#total", as: :users_total
-          get "users/under/f:fiscal_year/:month" => "users#under", as: :users_under
-          get "users/over/f:fiscal_year/:month" => "users#over", as: :users_over
-          get "users/download/total/f:fiscal_year/:month" => "users#download_total", as: :users_download_total
-          get "users/download/under/f:fiscal_year/:month" => "users#download_under", as: :users_download_under
-          get "users/download/over/f:fiscal_year/:month" => "users#download_over", as: :users_download_over
-          post "users/download/total/f:fiscal_year/:month" => "users#download_total"
-          post "users/download/under/f:fiscal_year/:month" => "users#download_under"
-          post "users/download/over/f:fiscal_year/:month" => "users#download_over"
+        # aggregate/users
+        get "users" => "users#index", as: :users_main
+        get "users/total/f:fiscal_year/:month" => "users#total", as: :users_total
+        get "users/under/f:fiscal_year/:month" => "users#under", as: :users_under
+        get "users/over/f:fiscal_year/:month" => "users#over", as: :users_over
+        get "users/download/total/f:fiscal_year/:month" => "users#download_total", as: :users_download_total
+        get "users/download/under/f:fiscal_year/:month" => "users#download_under", as: :users_download_under
+        get "users/download/over/f:fiscal_year/:month" => "users#download_over", as: :users_download_over
+        post "users/download/total/f:fiscal_year/:month" => "users#download_total"
+        post "users/download/under/f:fiscal_year/:month" => "users#download_under"
+        post "users/download/over/f:fiscal_year/:month" => "users#download_over"
 
-          # aggregate/capitals
-          get "capitals" => "capitals#index", as: :capitals_main
-          get "capitals/yearly/f:fiscal_year" => "capitals#yearly", as: :capitals_yearly
-          get "capitals/groups/f:fiscal_year/:month/:group" => "capitals#groups", as: :capitals_groups
-          get "capitals/users/f:fiscal_year/:month/:group" => "capitals#users", as: :capitals_users
-          get "capitals/download/yearly/f:fiscal_year" => "capitals#download_yearly", as: :capitals_download_yearly
-          get "capitals/download/groups/f:fiscal_year/:month/:group" => "capitals#download_groups", as: :capitals_download_groups
-          get "capitals/download/users/f:fiscal_year/:month/:group" => "capitals#download_users", as: :capitals_download_users
-          post "capitals/download/yearly/f:fiscal_year" => "capitals#download_yearly"
-          post "capitals/download/groups/f:fiscal_year/:month/:group" => "capitals#download_groups"
-          post "capitals/download/users/f:fiscal_year/:month/:group" => "capitals#download_users"
+        # aggregate/capitals
+        get "capitals" => "capitals#index", as: :capitals_main
+        get "capitals/yearly/f:fiscal_year" => "capitals#yearly", as: :capitals_yearly
+        get "capitals/groups/f:fiscal_year/:month/:group" => "capitals#groups", as: :capitals_groups
+        get "capitals/users/f:fiscal_year/:month/:group" => "capitals#users", as: :capitals_users
+        get "capitals/download/yearly/f:fiscal_year" => "capitals#download_yearly", as: :capitals_download_yearly
+        get "capitals/download/groups/f:fiscal_year/:month/:group" => "capitals#download_groups", as: :capitals_download_groups
+        get "capitals/download/users/f:fiscal_year/:month/:group" => "capitals#download_users", as: :capitals_download_users
+        post "capitals/download/yearly/f:fiscal_year" => "capitals#download_yearly"
+        post "capitals/download/groups/f:fiscal_year/:month/:group" => "capitals#download_groups"
+        post "capitals/download/users/f:fiscal_year/:month/:group" => "capitals#download_users"
 
-          # aggregate/search_groups
-          get "search_groups" => "search_groups#index", as: :search_groups_main
-          get "search_groups/f:fiscal_year/:month" => "search_groups#search", as: :search_groups_search
-          get "search_groups/results/f:fiscal_year/:month" => "search_groups#results", as: :search_groups_results
-          get "search_groups/download/f:fiscal_year/:month" => "search_groups#download", as: :search_groups_download
-          post "search_groups/download/f:fiscal_year/:month" => "search_groups#download"
+        # aggregate/search_groups
+        get "search_groups" => "search_groups#index", as: :search_groups_main
+        get "search_groups/f:fiscal_year/:month" => "search_groups#search", as: :search_groups_search
+        get "search_groups/results/f:fiscal_year/:month" => "search_groups#results", as: :search_groups_results
+        get "search_groups/download/f:fiscal_year/:month" => "search_groups#download", as: :search_groups_download
+        post "search_groups/download/f:fiscal_year/:month" => "search_groups#download"
 
-          # aggregate/search_users
-          get "search_users" => "search_users#index", as: :search_users_main
-          get "search_users/f:fiscal_year/:month" => "search_users#search", as: :search_users_search
-          get "search_users/results/f:fiscal_year/:month" => "search_users#results", as: :search_users_results
-          get "search_users/download/f:fiscal_year/:month" => "search_users#download", as: :search_users_download
-          post "search_users/download/f:fiscal_year/:month" => "search_users#download"
-        end
+        # aggregate/search_users
+        get "search_users" => "search_users#index", as: :search_users_main
+        get "search_users/f:fiscal_year/:month" => "search_users#search", as: :search_users_search
+        get "search_users/results/f:fiscal_year/:month" => "search_users#results", as: :search_users_results
+        get "search_users/download/f:fiscal_year/:month" => "search_users#download", as: :search_users_download
+        post "search_users/download/f:fiscal_year/:month" => "search_users#download"
       end
 
       namespace "apis" do
@@ -126,19 +172,25 @@ Rails.application.routes.draw do
       end
     end
 
+    # leave
     namespace "leave" do
-      resources :files, path: 'files/:state', concerns: [:deletion, :workflow, :approve_all]
-      get "aggregate" => "aggregate#index"
-      get "aggregate/show/:group_id/:uid" => "aggregate#show", as: :show_aggregate
-      get "aggregate/download/:group_id" => "aggregate#download", as: :download_aggregate
-      post "aggregate/download/:group_id" => "aggregate#download"
+      get '/' => redirect { |p, req| "#{req.path}/files/mine" }, as: :main
 
+      # files
+      resources :files, path: 'files/:state', concerns: [:deletion, :workflow, :approve_all]
       get "/search_approvers" => "search_approvers#index", as: :search_approvers
       match "/wizard/:id/approver_setting" => "wizard#approver_setting", via: [:get, :post], as: :approver_setting
       get "/wizard/:id/reroute" => "wizard#reroute", as: :reroute
       post "/wizard/:id/reroute" => "wizard#do_reroute", as: :do_reroute
       get "/wizard/:id/approveByDelegatee" => "wizard#approve_by_delegatee", as: "approve_by_delegatee"
       match "/wizard/:id" => "wizard#index", via: [:get, :post], as: :wizard
+
+      # details
+      get "details" => "details#index"
+      get "details/download/:group_id" => "details#download", as: :download
+      post "details/download/:group_id" => "details#download"
+      get "details/:group_id/:uid" => "details#show"
+
       namespace "apis" do
         get "files/:id" => "files#show", as: :file
         get "special_leaves/:uid" => "special_leaves#index", as: :special_leaves
@@ -146,15 +198,17 @@ Rails.application.routes.draw do
       end
     end
 
-    namespace "working_time" do
-      namespace 'management' do
-        get "aggregate" => redirect { |p, req| "#{req.path}/default" }, as: :aggregate_main
-        get "aggregate/:duty_type" => "aggregate#index", as: :aggregate
-        get "aggregate/:duty_type/download" => "aggregate#download", as: :download_aggregate
-        post "aggregate/:duty_type/download" => "aggregate#download"
-      end
+    # worktime
+    namespace "worktime" do
+      get '/' => redirect { |p, req| "#{req.path}/files/mine" }, as: :main
+
+      # aggregate
+      get "aggregate/:duty_type" => "aggregate#index", as: :aggregate
+      get "aggregate/:duty_type/download" => "aggregate#download", as: :download
+      post "aggregate/:duty_type/download" => "aggregate#download"
     end
 
+    # shift_work (disabled)
     get '/shift_work/' => redirect { |p, req| "#{req.path}/calendar/" }, as: :shift_work_main
     namespace "shift_work" do
       get '/calendar/' => redirect { |p, req| "#{req.path}/#{Time.zone.now.strftime('%Y%m')}" }, as: :calendar_main
@@ -199,46 +253,6 @@ Rails.application.routes.draw do
       get "duty_notices" => "duty_notices#index"
       get "holiday_calendars" => "holiday_calendars#index"
       get "result_groups/f:fiscal_year/:month" => "result_groups#index", as: :result_groups
-    end
-
-    namespace "attendance" do
-      get '/time_cards/' => "time_cards#main", as: :time_card_main
-      #get '/time_cards/' => redirect { |p, req| "#{req.path}/#{Time.zone.now.strftime('%Y%m')}" }, as: :time_card_main
-      resources :time_cards, path: 'time_cards/:year_month', only: %i[index] do
-        match :download, on: :collection, via: %i[get post]
-        get :print, on: :collection
-        post :enter, on: :collection
-        post :leave, on: :collection
-        post :leave, path: 'leave:date', on: :collection
-        post :break_enter, path: 'break_enter:index', on: :collection
-        post :break_leave, path: 'break_leave:index', on: :collection
-        match :memo, path: ':day/memo', on: :collection, via: %i[get post]
-        match :working_time, path: ':day/working_time', on: :collection, via: %i[get post]
-        match :time, path: ':day/:type', on: :collection, via: %i[get post]
-      end
-      namespace "time_card" do
-        get 'groups' => "groups#main", as: :groups_main
-        get 'groups/:year_month/:day' => "groups#index", as: :groups
-      end
-
-      namespace 'management' do
-        get '/' => redirect { |p, req| "#{req.path}/time_cards/#{Time.zone.now.strftime('%Y%m')}" }, as: :main
-        get '/time_cards/' => redirect { |p, req| "#{req.path}/#{Time.zone.now.strftime('%Y%m')}" }, as: :time_card_main
-        resources :time_cards, path: 'time_cards/:year_month', except: %i[new create edit update], concerns: %i[deletion] do
-          match :memo, path: ':day/memo', on: :member, via: %i[get post]
-          match :working_time, path: ':day/working_time', on: :member, via: %i[get post]
-          match :time, path: ':day/:type', on: :member, via: %i[get post]
-          match :download, on: :collection, via: %i[get post]
-          match :lock, on: :collection, via: %i[get post]
-          match :unlock, on: :collection, via: %i[get post]
-        end
-      end
-
-      namespace 'apis' do
-        namespace 'management' do
-          get 'users' => 'users#index'
-        end
-      end
     end
   end
 end

@@ -153,7 +153,7 @@ $("input:submit").on("click.form_alert", function (e) {
 
   // show alert
   var div = $('<div id="alertExplanation" class="errorExplanation">');
-  div.append("<h2><%= I18n.t('modules.gws/affair/overtime_file') %></h2>");
+  div.append("<h2><%= I18n.t('modules.gws/affair/overtime') %></h2>");
   div.append("<p><%= I18n.t("gws/affair.form_alert.title.overtime_compensatory") %></p>")
   div.append('<ul><li style="white-space: nowrap;"><%=br I18n.t("gws/affair.form_alert.message.not_set_overtime_compensatory").join("\n") %></li></ul>');
   var footer = $(document.createElement("footer")).addClass('send');

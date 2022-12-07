@@ -25,6 +25,7 @@ class Gws::Affair::Attendance::TimeCardsController < ApplicationController
 
   def set_crumbs
     @crumbs << [@cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path]
+    @crumbs << [t('modules.gws/affair/attendance'), gws_affair_attendance_main_path]
     @crumbs << [t('modules.gws/affair/attendance/time_card'), action: :index]
   end
 

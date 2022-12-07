@@ -1,4 +1,4 @@
-module Gws::Affair::Aggregate::UsersFilter
+module Gws::Affair::DetailFilter
   extend ActiveSupport::Concern
 
   included do

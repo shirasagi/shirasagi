@@ -1,7 +1,7 @@
-class Gws::Affair::Leave::AggregateController < ApplicationController
+class Gws::Affair::Leave::DetailsController < ApplicationController
   include Gws::BaseFilter
   include Gws::Affair::PermissionFilter
-  include Gws::Affair::Aggregate::UsersFilter
+  include Gws::Affair::DetailFilter
 
   model Gws::Affair::LeaveFile
 
@@ -11,7 +11,7 @@ class Gws::Affair::Leave::AggregateController < ApplicationController
 
   def set_crumbs
     @crumbs << [@cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path]
-    @crumbs << [t('modules.gws/affair/leave_file/aggregate'), gws_affair_leave_aggregate_path]
+    @crumbs << [t('modules.gws/affair/leave/detail'), gws_affair_leave_details_path]
   end
 
   public

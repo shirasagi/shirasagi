@@ -9,7 +9,7 @@ module Gws::Affair::Overtime::AggregateFilter
   end
 
   def append_view_paths
-    append_view_path "app/views/gws/affair/overtime/management/aggregate/main"
+    append_view_path "app/views/gws/affair/overtime/aggregate/main"
   end
 
   def set_cur_fiscal_year

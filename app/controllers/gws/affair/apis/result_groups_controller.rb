@@ -13,7 +13,7 @@ class Gws::Affair::Apis::ResultGroupsController < ApplicationController
   def index
     @multi = params[:single].blank?
     @search_params = params[:s]
-    @items = @result_groups
+    @items = @result_groups.to_a
 
     if @search_params.present?
       keyword = @search_params[:keyword].to_s

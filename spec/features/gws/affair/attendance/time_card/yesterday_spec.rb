@@ -80,7 +80,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       Timecop.freeze(yesterday) do
         # create 8 month's time card
         login_gws_user
-        visit gws_affair_attendance_time_card_main_path(site)
+        visit gws_affair_attendance_main_path(site)
 
         expect(page).to have_css(".cur-date[datetime=\"#{I18n.l(yesterday, format: :iso)}\"]")
         expect(page).to have_css(".today-box .attendance-date[datetime=\"#{I18n.l(day0831, format: :iso)}\"]")
@@ -89,7 +89,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
       Timecop.freeze(now) do
         login_gws_user
-        visit gws_affair_attendance_time_card_main_path(site)
+        visit gws_affair_attendance_main_path(site)
 
         expect(page).to have_css('.yesterday-box .today .enter [name="punch"][disabled]')
         expect(page).to have_css('.yesterday-box .today .leave [name="punch"][disabled]')
@@ -104,7 +104,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
     it do
       Timecop.freeze(yesterday) do
         login_gws_user
-        visit gws_affair_attendance_time_card_main_path(site)
+        visit gws_affair_attendance_main_path(site)
 
         expect(page).to have_css(".cur-date[datetime=\"#{I18n.l(yesterday, format: :iso)}\"]")
         expect(page).to have_css(".today-box .attendance-date[datetime=\"#{I18n.l(day0831, format: :iso)}\"]")
@@ -118,7 +118,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
       Timecop.freeze(now) do
         login_gws_user
-        visit gws_affair_attendance_time_card_main_path(site)
+        visit gws_affair_attendance_main_path(site)
 
         expect(page).to have_css('.yesterday-box .today .enter [name="edit"]')
         expect(page).to have_css('.yesterday-box .today .leave [name="edit"]')
@@ -133,7 +133,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
     it do
       Timecop.freeze(yesterday) do
         login_gws_user
-        visit gws_affair_attendance_time_card_main_path(site)
+        visit gws_affair_attendance_main_path(site)
 
         expect(page).to have_css(".cur-date[datetime=\"#{I18n.l(yesterday, format: :iso)}\"]")
         expect(page).to have_css(".today-box .attendance-date[datetime=\"#{I18n.l(day0831, format: :iso)}\"]")
@@ -146,7 +146,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
       Timecop.freeze(now) do
         login_gws_user
-        visit gws_affair_attendance_time_card_main_path(site)
+        visit gws_affair_attendance_main_path(site)
 
         expect(page).to have_css('.yesterday-box .today .info .enter', text: format('%d:%02d', yesterday.hour, yesterday.min))
         expect(page).to have_no_css('.yesterday-box .today .leave [name="punch"][disabled]')

@@ -1,4 +1,4 @@
-class Gws::Affair::Overtime::Management::Aggregate::CapitalsController < ApplicationController
+class Gws::Affair::Overtime::Aggregate::CapitalsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Affair::PermissionFilter
@@ -14,12 +14,8 @@ class Gws::Affair::Overtime::Management::Aggregate::CapitalsController < Applica
 
   def set_crumbs
     @crumbs << [@cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path]
-    @crumbs << [
-      t("modules.gws/affair/overtime_file/management/aggregate"),
-      gws_affair_overtime_management_aggregate_capitals_main_path]
-    @crumbs << [
-      t("modules.gws/affair/overtime_file/management/aggregate/capital"),
-      gws_affair_overtime_management_aggregate_capitals_main_path]
+    @crumbs << [t("modules.gws/affair/overtime/aggregate"), gws_affair_overtime_aggregate_main_path]
+    @crumbs << [t("modules.gws/affair/overtime/aggregate/capital"), gws_affair_overtime_aggregate_capitals_main_path]
   end
 
   public

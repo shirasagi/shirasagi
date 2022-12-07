@@ -16,7 +16,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
   let(:user545_enter) { Time.zone.parse("2020/8/30 8:12") }
   let(:user545_leave) { Time.zone.parse("2020/8/30 20:32") }
 
-  let(:index_path) { gws_affair_attendance_time_card_groups_main_path(site: site) }
+  let(:index_path) { gws_affair_attendance_group_main_path(site: site) }
 
   def punch_enter(now)
     expect(page).to have_css('.today-box .today .info .enter', text: '--:--')
@@ -79,25 +79,25 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
   it do
     Timecop.freeze(user638_enter) do
       login_user(user638)
-      visit gws_affair_attendance_time_card_main_path(site)
+      visit gws_affair_attendance_main_path(site)
       punch_enter(user638_enter)
     end
 
     Timecop.freeze(user545_enter) do
       login_user(user545)
-      visit gws_affair_attendance_time_card_main_path(site)
+      visit gws_affair_attendance_main_path(site)
       punch_enter(user545_enter)
     end
 
     Timecop.freeze(user638_leave) do
       login_user(user638)
-      visit gws_affair_attendance_time_card_main_path(site)
+      visit gws_affair_attendance_main_path(site)
       punch_leave(user638_leave)
     end
 
     Timecop.freeze(user545_leave) do
       login_user(user545)
-      visit gws_affair_attendance_time_card_main_path(site)
+      visit gws_affair_attendance_main_path(site)
       punch_leave(user545_leave)
     end
 

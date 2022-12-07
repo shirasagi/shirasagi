@@ -1,4 +1,4 @@
-class Gws::Affair::WorkingTime::Management::AggregateController < ApplicationController
+class Gws::Affair::Worktime::AggregateController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Affair::PermissionFilter
@@ -14,7 +14,7 @@ class Gws::Affair::WorkingTime::Management::AggregateController < ApplicationCon
 
   def set_crumbs
     @crumbs << [@cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path]
-    @crumbs << [t("modules.gws/affair/working_time/management/aggregate"), gws_affair_working_time_management_aggregate_path]
+    @crumbs << [t("modules.gws/affair/worktime/aggregate"), gws_affair_worktime_aggregate_path]
   end
 
   def set_query

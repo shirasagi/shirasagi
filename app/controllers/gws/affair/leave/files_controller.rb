@@ -13,10 +13,10 @@ class Gws::Affair::Leave::FilesController < ApplicationController
 
   def set_crumbs
     @crumbs << [@cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path]
-    @crumbs << [t('modules.gws/affair/leave_file'), gws_affair_leave_files_path(state: "mine")]
-    if %w(approve all).include?(params[:state])
+    @crumbs << [t('modules.gws/affair/leave'), gws_affair_leave_main_path]
+    if %w(mine approve all).include?(params[:state])
       @crumbs << [
-        t("modules.gws/affair/overtime_file/#{params[:state]}"),
+        t("modules.gws/affair/overtime/file/#{params[:state]}"),
         gws_affair_leave_files_path(state: params[:state])
       ]
     end

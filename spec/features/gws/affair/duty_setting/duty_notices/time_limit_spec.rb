@@ -12,7 +12,7 @@ describe "gws_affair_duty_notices", type: :feature, dbscope: :example do
     #context "basic crud" do
     #  it "#index" do
     #    login_user(user)
-    #    visit gws_affair_attendance_time_card_main_path(site)
+    #    visit gws_affair_attendance_main_path(site)
     #  end
     #end
   end

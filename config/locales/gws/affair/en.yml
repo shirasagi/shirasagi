@@ -233,26 +233,28 @@ en:
     gws/affair: Affair
     gws/affair/attendance: Attendance
     gws/affair/attendance/time_card: Timecard
-    gws/affair/attendance/time_card/group: Group
-    gws/affair/overtime_file: Overtime file
-    gws/affair/overtime_file/mine: Mine
-    gws/affair/overtime_file/approve: Requested
-    gws/affair/overtime_file/all: Management file
-    gws/affair/overtime_file/aggregate: Aggregation
-    gws/affair/leave_file: Leave file
-    gws/affair/leave_file/mine: Mine
-    gws/affair/leave_file/approve: Requested
-    gws/affair/leave_file/all: Management file
-    gws/affair/leave_file/aggregate: Aggregation
-    gws/affair/leave_setting: Leave setting
-    gws/affair/working_time/management/aggregate: Aggregation
-    gws/affair/working_time/management/aggregate/default: Users
-    gws/affair/overtime_file/management/aggregate: Aggregation
-    gws/affair/overtime_file/management/aggregate/user: Users
-    gws/affair/overtime_file/management/aggregate/capital: Capitals
-    gws/affair/overtime_file/management/aggregate/search_groups: Search Groups
-    gws/affair/overtime_file/management/aggregate/search_users: Search Users
+    gws/affair/attendance/group: Group
     gws/affair/attendance/management/time_card: Management timecard
+    gws/affair/overtime: Overtime
+    gws/affair/overtime/file: Overtime file
+    gws/affair/overtime/file/mine: Mine
+    gws/affair/overtime/file/approve: Requested
+    gws/affair/overtime/file/all: Management file
+    gws/affair/overtime/detail: Details
+    gws/affair/overtime/aggregate: Aggregation
+    gws/affair/overtime/aggregate/user: Users
+    gws/affair/overtime/aggregate/capital: Capitals
+    gws/affair/overtime/aggregate/search_groups: Search Groups
+    gws/affair/overtime/aggregate/search_users: Search Users
+    gws/affair/leave: Leave
+    gws/affair/leave/file: Leave file
+    gws/affair/leave/file/mine: Mine
+    gws/affair/leave/file/approve: Requested
+    gws/affair/leave/file/all: Management file
+    gws/affair/leave/detail: Details
+    gws/affair/leave_setting: Leave setting
+    gws/affair/worktime/aggregate: Aggregation
+    gws/affair/worktime/aggregate/default: Users
     gws/affair/duty_setting: Duty setting
     gws/affair/duty_hour: Duty hour
     gws/affair/duty_calendar: Duty calendar

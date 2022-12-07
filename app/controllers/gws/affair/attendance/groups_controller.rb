@@ -1,4 +1,4 @@
-class Gws::Affair::Attendance::TimeCard::GroupsController < ApplicationController
+class Gws::Affair::Attendance::GroupsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Affair::PermissionFilter
@@ -18,8 +18,8 @@ class Gws::Affair::Attendance::TimeCard::GroupsController < ApplicationControlle
 
   def set_crumbs
     @crumbs << [@cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path]
-    @crumbs << [t('modules.gws/affair/attendance/time_card'), gws_affair_attendance_time_card_main_path]
-    @crumbs << [t('modules.gws/affair/attendance/time_card/group'), action: :index]
+    @crumbs << [t('modules.gws/affair/attendance'), gws_affair_attendance_main_path]
+    @crumbs << [t('modules.gws/affair/attendance/group'), action: :index]
   end
 
   def set_cur_day
