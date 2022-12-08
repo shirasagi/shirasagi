@@ -45,6 +45,7 @@ en:
       download_member: Download user setting
       download_group: Download group setting
       set_by_week_days: Setting by week days
+      open_compensatory: Compensatory file
     views:
       capital_title: "%{name} (target: %{target})"
       not_set_capital: Not set capital

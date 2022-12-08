@@ -1,184 +1,12 @@
+<%
+  options = {
+    holidayUrl: gws_affair_overtime_apis_check_holiday_path(uid: "UID", year_month_day: "YMD"),
+    capitalUrl: gws_affair_overtime_apis_effective_capital_path(uid: "UID")
+  }
+%>
 <%= jquery do %>
-var toggleSelectCompensatoryMinute = function() {
-  $(".select-compensatory").each(function() {
-    var val = $(this).val();
-    if (val && val > 0) {
-      $(this).closest("dd").find(".compensatory-with-date").show();
-    } else {
-      $(this).closest("dd").find(".compensatory-with-date").hide();
-    }
-  });
-};
-$(".select-compensatory").on("change", toggleSelectCompensatoryMinute);
-toggleSelectCompensatoryMinute();
-
-// 申請対象
-var loadEffectiveCapital = function($item) {
-  var data = $item.closest("[data-id]");
-  var uid = data.data("id");
-  var url = "<%= gws_affair_overtime_apis_effective_capital_path(uid: "UID") %>";
-
-  url = url.replace("UID", uid);
-  $(".selected-capital").html(SS.loading);
-  $.get(url, function(html){
-    $(".selected-capital").html(html);
-  });
-};
-var targetUser = function() {
-  var user = $(".mod-gws-affair_file_target_user .ajax-selected [data-id]:first");
-  if (user.length > 0) {
-    return user;
-  } else {
-    return null;
-  }
-};
-var deselectCapital = function(el) {
-  $(".selected-capital").html("");
-  loadEffectiveCapital(targetUser());
-  return false;
-};
-
-$(".mod-gws-affair_file_target_user .ajax-box").data("on-select", function($item) {
-  SS_SearchUI.defaultSelector($item);
-  loadEffectiveCapital($item);
-});
-if ($(".selected-capital .capital").length == 0) {
-  loadEffectiveCapital(targetUser());
-} else {
-  $(".selected-capital .deselect").on("click", deselectCapital);
-}
-
-// 緊急時はこちら
-$(".select-capital .ajax-box").data("on-select", function($item) {
-  self = SS_SearchUI;
-
-  var data = $item.closest("[data-id]");
-  var id = data.data("id");
-  var div = $('<div class="caiptal emergency" />').attr("data-id", id);
-  var name = data.data("name") || data.find(".select-item").text() || item.text() || data.text();
-  var input1 = self.anchorAjaxBox.closest("dl").find(".hidden-ids").clone(false);
-  var input2 = self.anchorAjaxBox.closest("dl").find(".capital-state").clone(false);
-  var a = $('<a class="deselect btn" href="#"><%= "取消" %></a>');
-
-  a.on("click", deselectCapital);
-  input1 = input1.val(id).removeClass("hidden-ids");
-  name += "（緊急）"
-  input2.attr("value", "emergency");
-
-  div.append(input1);
-  div.append(input2);
-  div.append(name);
-  div.append(a);
-
-  self.anchorAjaxBox.closest("dl").find(".selected-capital").html(div);
-  self.anchorAjaxBox.closest("dl").find(".selected-capital").trigger("change");
-});
-
-// 祝日は代休振替
-var toggleCompensatory = function() {
-  var url = "<%= gws_affair_overtime_apis_check_holiday_path(uid: "UID", year_month_day: "YMD") %>";
-  var ymd = $('[name="item[start_at_date]"]').val();
-  var $user = targetUser();
-
-  if ($user && ymd) {
-    var data = $user.closest("[data-id]");
-    var uid = data.data("id");
-
-    ymd = ymd.replace(/\//g, "");
-    url = url.replace("UID", uid);
-    url = url.replace("YMD", ymd);
-
-    $.get(url, function(data){
-      // class と label の追加
-      var label = [];
-      $('.overtime-date').text("");
-      $('.overtime-date').removeClass("leave-day");
-      $('.overtime-date').removeClass("weekly-leave-day");
-      $('.overtime-date').removeClass("holiday");
-      if (data["leave_day"]) {
-        $('.overtime-date').addClass("leave-day");
-      }
-      if (data["weekly_leave_day"]) {
-        $('.overtime-date').addClass("weekly-leave-day");
-        label.push('<%= I18n.t("gws/affair.labels.weekly_leave_day") %>');
-      }
-      if (data["holiday"]) {
-        $('.overtime-date').addClass("holiday");
-        label.push('<%= I18n.t("gws/affair.labels.holiday") %>');
-      }
-      if (label.length > 0) {
-        $('.overtime-date').text(" (" + label.join(",") + "）");
-      }
-
-      // 振替表示、非表示
-      if (data["holiday"] && data["weekly_leave_day"]) {
-        // 祝日かつ週休日
-        $(".default-compensatory").show();
-        $(".holiday-compensatory").show();
-      } else if (data["holiday"]) {
-        // 祝日
-        $(".default-compensatory").hide();
-        $(".holiday-compensatory").show();
-      } else {
-        $(".default-compensatory").show();
-        $(".holiday-compensatory").hide();
-      }
-    });
-  }
-};
-$('[name="item[start_at_date]"]').on("change", toggleCompensatory);
-toggleCompensatory();
-
-// 振替未設定時の警告（基本的に土日・祝日は振替として申請しなければならない）
-$("input:submit").on("click.form_alert", function (e) {
-  var submit = this;
-  var form = $(submit).closest("form");
-
-  // 土日・祝日
-  if (!$('.overtime-date').hasClass("leave-day")) {
-    return true;
-  }
-
-  // 振替なし
-  var minute = 0;
-  $(".select-compensatory").map(function() {
-    var val = parseInt($(this).val());
-    if (Number.isInteger(val)) {
-      minute += val;
-    }
-  });
-  if (minute > 0) {
-    return true;
-  }
-
-  // show alert
-  var div = $('<div id="alertExplanation" class="errorExplanation">');
-  div.append("<h2><%= I18n.t('modules.gws/affair/overtime') %></h2>");
-  div.append("<p><%= I18n.t("gws/affair.form_alert.title.overtime_compensatory") %></p>")
-  div.append('<ul><li style="white-space: nowrap;"><%=br I18n.t("gws/affair.form_alert.message.not_set_overtime_compensatory").join("\n") %></li></ul>');
-  var footer = $(document.createElement("footer")).addClass('send');
-  footer.append('<button name="button" type="button" class="btn-primary save"><%= I18n.t("gws/affair.links.ignore_and_save") %></button>');
-  footer.append('<button name="button" type="button" class="btn-default cancel"><%= I18n.t("gws/affair.links.back_to_form") %></button>');
-  $.colorbox({
-    html: div.get(0).outerHTML + footer.get(0).outerHTML,
-    maxHeight: "80%",
-    fixed: true
-  });
-  $("#cboxLoadedContent").find(".save").on("click", function () {
-    $(submit).off(".form_alert");
-    return $(submit).trigger("click");
-  });
-  $("#cboxLoadedContent").find(".cancel").on("click", function (e) {
-    $.colorbox.close();
-    return false;
-  });
-
-  e.preventDefault();
-  return false;
-});
-
+  new Gws_Affair_OvertimeFile(<%== options.to_json %>)
 <% end %>
-
 <%
   duty_calendar = @cur_user.effective_duty_calendar(@cur_site)
   duty_hour = duty_calendar.default_duty_hour
@@ -223,9 +51,12 @@ $("input:submit").on("click.form_alert", function (e) {
     <span class="overtime-date" style="padding-left: 5px;"></span>
   </dd>
 
-  <dt class="default-compensatory" style="display: none;"><%= @model.t :week_in_compensatory_minute %><%= @model.tt :week_in_compensatory_minute %></dt>
-  <dd class="default-compensatory" style="display: none;">
+  <dt class="default-compensatory week-in-compensatory" style="display: none;">
+    <%= @model.t :week_in_compensatory_minute %><%= @model.tt :week_in_compensatory_minute %>
+  </dt>
+  <dd class="default-compensatory week-in-compensatory" style="display: none;">
     <%= f.select :week_in_compensatory_minute, @item.week_in_compensatory_minute_options, { include_blank: true }, { class: "select-compensatory" } %>
+    <a class="open-compensatory btn" style="margin-left: 2px;"><%= t("gws/affair.links.open_compensatory") %></a>
     <span class="compensatory-with-date" style="display: none; margin-top: 10px;">
       <%= f.text_field :week_in_start_at_date, class: "date js-date" %>
       <%= f.select :week_in_start_at_hour, @item.start_at_hour_options %>
@@ -237,9 +68,12 @@ $("input:submit").on("click.form_alert", function (e) {
     </span>
   </dd>
 
-  <dt class="default-compensatory" style="display: none;"><%= @model.t :week_out_compensatory_minute %><%= @model.tt :week_out_compensatory_minute %></dt>
-  <dd class="default-compensatory" style="display: none;">
+  <dt class="default-compensatory week-out-compensatory" style="display: none;">
+    <%= @model.t :week_out_compensatory_minute %><%= @model.tt :week_out_compensatory_minute %>
+  </dt>
+  <dd class="default-compensatory week-out-compensatory" style="display: none;">
     <%= f.select :week_out_compensatory_minute, @item.week_out_compensatory_minute_options, { include_blank: true }, { class: "select-compensatory" } %>
+    <a class="open-compensatory btn" style="margin-left: 2px;"><%= t("gws/affair.links.open_compensatory") %></a>
     <span class="compensatory-with-date" style="display: none; margin-top: 10px;">
       <%= f.text_field :week_out_start_at_date, class: "date js-date" %>
       <%= f.select :week_out_start_at_hour, @item.start_at_hour_options %>
@@ -254,6 +88,7 @@ $("input:submit").on("click.form_alert", function (e) {
   <dt class="holiday-compensatory" style="display: none;"><%= @model.t :holiday_compensatory_minute %><%= @model.tt :holiday_compensatory_minute %></dt>
   <dd class="holiday-compensatory" style="display: none;">
     <%= f.select :holiday_compensatory_minute, @item.holiday_compensatory_minute_options, { include_blank: true }, { class: "select-compensatory" } %>
+    <a class="open-compensatory btn" style="margin-left: 2px;"><%= t("gws/affair.links.open_compensatory") %></a>
     <span class="compensatory-with-date" style="display: none; margin-top: 10px;">
       <%= f.text_field :holiday_compensatory_start_at_date, class: "date js-date" %>
       <%= f.select :holiday_compensatory_start_at_hour, @item.start_at_hour_options %>

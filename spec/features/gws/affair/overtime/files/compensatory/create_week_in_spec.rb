@@ -44,7 +44,11 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           select I18n.t('gws/attendance.minute', count: end_at.min), from: 'item[end_at_minute]'
 
           select compensatory_minute, from: 'item[week_in_compensatory_minute]'
-          select compensatory_minute, from: 'item[week_in_compensatory_minute]'
+
+          find('[name="item[overtime_name]"]').click
+          within "dd.week-in-compensatory" do
+            find("a.open-compensatory").click
+          end
 
           fill_in "item[week_in_start_at_date]", with: compensatory_start_at.to_date
           select I18n.t('gws/attendance.hour', count: compensatory_start_at.hour), from: 'item[week_in_start_at_hour]'

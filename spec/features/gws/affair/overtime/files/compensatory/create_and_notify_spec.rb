@@ -60,6 +60,11 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         within "form#item-form" do
           select minute, from: 'item[week_in_compensatory_minute]'
 
+          find('[name="item[overtime_name]"]').click
+          within "dd.week-in-compensatory" do
+            find("a.open-compensatory").click
+          end
+
           if start_at
             fill_in "item[week_in_start_at_date]", with: start_at.to_date
             select I18n.t('gws/attendance.hour', count: start_at.hour), from: 'item[week_in_start_at_hour]'
@@ -94,6 +99,11 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         within "form#item-form" do
           select minute, from: 'item[week_out_compensatory_minute]'
 
+          find('[name="item[overtime_name]"]').click
+          within "dd.week-out-compensatory" do
+            find("a.open-compensatory").click
+          end
+
           if start_at
             fill_in "item[week_out_start_at_date]", with: start_at.to_date
             select I18n.t('gws/attendance.hour', count: start_at.hour), from: 'item[week_out_start_at_hour]'
@@ -127,6 +137,11 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         end
         within "form#item-form" do
           select minute, from: 'item[holiday_compensatory_minute]'
+
+          find('[name="item[overtime_name]"]').click
+          within "dd.holiday-compensatory" do
+            find("a.open-compensatory").click
+          end
 
           if start_at
             fill_in "item[holiday_compensatory_start_at_date]", with: start_at.to_date

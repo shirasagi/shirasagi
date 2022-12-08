@@ -45,6 +45,7 @@ ja:
       download_member: ユーザー設定をダウンロード
       download_group: グループ設定をダウンロード
       set_by_week_days: 曜日毎に設定する
+      open_compensatory: 振替申請
     views:
       capital_title: "%{name} (申請対象: %{target})"
       not_set_capital: 原資区分が設定されていません。
