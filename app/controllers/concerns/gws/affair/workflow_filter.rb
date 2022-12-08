@@ -217,7 +217,7 @@ module Gws::Affair::WorkflowFilter
       workflow_state = item.workflow_state
       if workflow_state == @model::WORKFLOW_STATE_APPROVE
         # finished workflow
-        to_user_ids = [ @item.workflow_user_id, @item.workflow_agent_id ].compact - [ @cur_user.id ]
+        to_user_ids = [ item.workflow_user_id, item.workflow_agent_id ].compact - [ @cur_user.id ]
         to_users = Gws::User.and_enabled.in(id: to_user_ids).select { |user| user.use_notice?(item) }.to_a
 
         if to_users.present?
@@ -242,7 +242,7 @@ module Gws::Affair::WorkflowFilter
     end
 
     respond_to do |format|
-      format.html { redirect_to({ action: :index }, notice: I18n.t("ss.notice.approved_all")) }
+      format.html { redirect_to({ action: :index }, notice: I18n.t("ss.notice.approved")) }
       format.json { head :no_content }
     end
   end

@@ -47,7 +47,9 @@ Gws_Affair_OvertimeFile.prototype.render = function() {
   $("input:submit").on("click.form_alert", self.compensatoryFormAlert);
 
   // 緊急時はこちら
-  $(".select-capital .ajax-box").data("on-select", self.selectCapital);
+  $(".select-capital .ajax-box").data("on-select", function($item) {
+    self.selectCapital($item);
+  });
 };
 
 Gws_Affair_OvertimeFile.prototype.findTargetUser = function() {

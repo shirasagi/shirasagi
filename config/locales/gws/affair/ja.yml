@@ -31,9 +31,9 @@ ja:
         confirmed: "[確認]"
         set_results: 結果を入力
     links:
-      set_results: 結果を入力する
-      edit_results: 結果を編集する
-      close_results: 結果を確認済みにする
+      set_results: 入力する
+      edit_results: 編集する
+      close_results: 確認済みにする
       closed_results: 確認済み
       aggregate: 時間外
       aggregate_capitals: 原資区分

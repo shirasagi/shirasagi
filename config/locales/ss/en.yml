@@ -267,6 +267,7 @@ en:
       unable_to_change: '%{items} could not be changed.'
       copied: Duplicated.
       imported: Imported.
+      approved: Approved.
       started_import: Importing started.
       started_upload: Upload started.
       started_deliver: Delivery started.
