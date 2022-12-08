@@ -40,7 +40,7 @@ module Gws::Addon::Affair::OvertimeFile
   end
 
   def start_at_minute_options
-    0.step(59, 5).map { |m| [ I18n.t("gws/attendance.minute", count: m), m.to_s ] }
+    (0..59).map { |m| [ I18n.t("gws/attendance.minute", count: m), m.to_s ] }
   end
 
   alias end_at_hour_options start_at_hour_options
