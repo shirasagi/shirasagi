@@ -13,7 +13,7 @@
             <% inner_html = image_tag(file.url, alt: file.humanized_name, width: @portlet.effective_ad_width, class: "ss-swiper-slide-item-image") %>
             <div class="swiper-slide ss-swiper-slide-item" data-ss-file-id="<%= file.id %>">
               <% if file.link_url.present? %>
-                <%= link_to inner_html, sns_redirect_path(ref: file.link_url), target: "_blank", rel: "noopener" %>
+                <%= link_to inner_html, sns_redirect_path(ref: file.link_url), class: "ss-swiper-slide-item-link", target: "_blank", rel: "noopener" %>
               <% elsif file.sanitizer_state == 'wait' %>
                 <div class="mx-2 my-2">
                   <%= sanitizer_status(file) %>
