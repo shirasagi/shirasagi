@@ -31,35 +31,34 @@ describe "webmail_mails", type: :feature, dbscope: :example, js: true, imap: tru
           end
 
           click_on mail3.subject
-          wait_for_js_ready
+        end
+        wait_for_js_ready
 
-          within ".move-tool-wrap" do
-            expect(page).to have_css(".page-order .current", text: "2")
-            expect(page).to have_css(".page-order .total", text: "3")
-            click_on "arrow_circle_right"
-          end
-          wait_for_js_ready
+        within ".move-tool-wrap" do
+          expect(page).to have_css(".page-order", text: "2 / 3")
+          click_on "arrow_circle_right"
+        end
+        wait_for_js_ready
 
-          expect(page).to have_css(".subject", text: mail1.subject)
-          within ".move-tool-wrap" do
-            expect(page).to have_css(".page-order", text: "3 / 3")
-            expect(page).to have_css(".next.inactive", text: "arrow_circle_right")
-            click_on "arrow_circle_left"
-          end
-          wait_for_js_ready
+        expect(page).to have_css(".subject", text: mail1.subject)
+        within ".move-tool-wrap" do
+          expect(page).to have_css(".page-order", text: "3 / 3")
+          expect(page).to have_css(".next.inactive", text: "arrow_circle_right")
+          click_on "arrow_circle_left"
+        end
+        wait_for_js_ready
 
-          expect(page).to have_css(".subject", text: mail3.subject)
-          within ".move-tool-wrap" do
-            expect(page).to have_css(".page-order", text: "2 / 3")
-            click_on "arrow_circle_left"
-          end
-          wait_for_js_ready
+        expect(page).to have_css(".subject", text: mail3.subject)
+        within ".move-tool-wrap" do
+          expect(page).to have_css(".page-order", text: "2 / 3")
+          click_on "arrow_circle_left"
+        end
+        wait_for_js_ready
 
-          expect(page).to have_css(".subject", text: mail2.subject)
-          within ".move-tool-wrap" do
-            expect(page).to have_css(".page-order", text: "1 / 3")
-            expect(page).to have_css(".prev.inactive", text: "arrow_circle_left")
-          end
+        expect(page).to have_css(".subject", text: mail2.subject)
+        within ".move-tool-wrap" do
+          expect(page).to have_css(".page-order", text: "1 / 3")
+          expect(page).to have_css(".prev.inactive", text: "arrow_circle_left")
         end
       end
     end
@@ -96,29 +95,34 @@ describe "webmail_mails", type: :feature, dbscope: :example, js: true, imap: tru
           end
 
           click_on mail3.subject
-          within ".move-tool-wrap" do
-            expect(page).to have_css(".page-order", text: "2 / 3")
-            click_on "arrow_circle_right"
-          end
+        end
+        wait_for_js_ready
 
-          expect(page).to have_css(".subject", text: mail1.subject)
-          within ".move-tool-wrap" do
-            expect(page).to have_css(".page-order", text: "3 / 3")
-            expect(page).to have_css(".next.inactive", text: "arrow_circle_right")
-            click_on "arrow_circle_left"
-          end
+        within ".move-tool-wrap" do
+          expect(page).to have_css(".page-order", text: "2 / 3")
+          click_on "arrow_circle_right"
+        end
+        wait_for_js_ready
 
-          expect(page).to have_css(".subject", text: mail3.subject)
-          within ".move-tool-wrap" do
-            expect(page).to have_css(".page-order", text: "2 / 3")
-            click_on "arrow_circle_left"
-          end
+        expect(page).to have_css(".subject", text: mail1.subject)
+        within ".move-tool-wrap" do
+          expect(page).to have_css(".page-order", text: "3 / 3")
+          expect(page).to have_css(".next.inactive", text: "arrow_circle_right")
+          click_on "arrow_circle_left"
+        end
+        wait_for_js_ready
 
-          expect(page).to have_css(".subject", text: mail2.subject)
-          within ".move-tool-wrap" do
-            expect(page).to have_css(".page-order", text: "1 / 3")
-            expect(page).to have_css(".prev.inactive", text: "arrow_circle_left")
-          end
+        expect(page).to have_css(".subject", text: mail3.subject)
+        within ".move-tool-wrap" do
+          expect(page).to have_css(".page-order", text: "2 / 3")
+          click_on "arrow_circle_left"
+        end
+        wait_for_js_ready
+
+        expect(page).to have_css(".subject", text: mail2.subject)
+        within ".move-tool-wrap" do
+          expect(page).to have_css(".page-order", text: "1 / 3")
+          expect(page).to have_css(".prev.inactive", text: "arrow_circle_left")
         end
       end
     end
