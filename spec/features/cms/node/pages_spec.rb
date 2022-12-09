@@ -63,11 +63,13 @@ describe "cms_node_pages", type: :feature, dbscope: :example do
       it "#contains_urls" do
         visit show_path
         within '#addon-workflow-agents-addons-branch' do
-          click_on I18n.t("workflow.create_branch")
-          expect(page).to have_link item.name
+          expect do
+            click_on I18n.t("workflow.create_branch")
+            expect(page).to have_link item.name
+          end.to output(/#{I18n.t("workflow.branch_page")} #{I18n.t("ss.links.new")}/).to_stdout
           click_on item.name
         end
-        wait_for_ajax
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
         expect(page).to have_no_content I18n.t("cms.confirm.check_linked_url_list")
       end
     end
