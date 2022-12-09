@@ -3,6 +3,7 @@ require 'spec_helper'
 describe "article_pages", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:article_node) { create :article_node_page, cur_site: site }
+  let(:contact_group) { create :contact_group, name: "#{cms_group.name}/#{unique_id}" }
   let(:html) do
     html = []
     html << "<p>ああああ</p>"
@@ -13,7 +14,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   end
   let(:article_page) { create :article_page, cur_site: site, cur_node: article_node, html: html }
 
-  let(:od_site) { create :cms_site, name: unique_id, host: unique_id, domains: "#{unique_id}.example.jp" }
+  let(:od_site) do
+    create :cms_site, name: unique_id, host: unique_id, domains: "#{unique_id}.example.jp", group_ids: [ cms_group.id ]
+  end
   let!(:dataset_node) { create :opendata_node_dataset, cur_site: od_site }
   let!(:category_node) { create :opendata_node_category, cur_site: od_site }
   let!(:search_dataset) { create :opendata_node_search_dataset, cur_site: od_site }
@@ -28,6 +31,17 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
     article_page.cur_user = cms_user
     article_page.file_ids = [ file.id ]
+    article_page.contact_group = contact_group
+    contact_group.contact_groups.first.tap do |contact|
+      article_page.contact_group_contact_id = contact.id
+      article_page.contact_group_relation = "related"
+      article_page.contact_charge = contact.contact_group_name
+      article_page.contact_tel = contact.contact_tel
+      article_page.contact_fax = contact.contact_fax
+      article_page.contact_email = contact.contact_email
+      article_page.contact_link_url = contact.contact_link_url
+      article_page.contact_link_name = contact.contact_link_name
+    end
     article_page.save!
   end
 
@@ -95,6 +109,15 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(resource.assoc_filename).to eq file.filename
           expect(resource.assoc_method).to eq 'auto'
         end
+        expect(dataset.contact_group_id).to eq contact_group.id
+        expect(dataset.contact_group_contact_id).to eq contact_group.contact_groups.first.id
+        expect(dataset.contact_group_relation).to eq article_page.contact_group_relation
+        expect(dataset.contact_charge).to eq article_page.contact_charge
+        expect(dataset.contact_tel).to eq article_page.contact_tel
+        expect(dataset.contact_fax).to eq article_page.contact_fax
+        expect(dataset.contact_email).to eq article_page.contact_email
+        expect(dataset.contact_link_url).to eq article_page.contact_link_url
+        expect(dataset.contact_link_name).to eq article_page.contact_link_name
       end
 
       #
