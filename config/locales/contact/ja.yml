@@ -59,7 +59,9 @@ ja:
         contact_link_url: リンクURL
         contact_link_name: リンク名
         contact_group_name: 担当部署
-        contact_group_relation: 連動設定
+        contact_group_name_id: 担当部署
+        contact_group_contact: 連絡先
+        contact_group_relation: 連絡先連動設定
       contact/addon/group:
         contact_group_name: 担当部署
         contact_tel: 電話番号

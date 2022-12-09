@@ -337,6 +337,21 @@ class Cms::PageExporter
     drawer.column :contact_group do
       drawer.body { |item| item.try(:contact_group).try(:name) }
     end
+    drawer.column :contact_group_contact do
+      drawer.body do |item|
+        contact_id = item.try(:contact_group_contact_id)
+        next if contact_id.blank?
+
+        contact_group = item.try(:contact_group)
+        next if contact_group.blank?
+
+        contact = contact_group.contact_groups.where(id: contact_id).first
+        next if contact.blank?
+
+        contact.name.presence || contact.id.to_s
+      end
+    end
+    drawer.column :contact_group_relation, type: :label
     drawer.column :contact_charge
     drawer.column :contact_tel
     drawer.column :contact_fax

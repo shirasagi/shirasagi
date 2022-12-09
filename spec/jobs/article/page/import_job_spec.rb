@@ -249,25 +249,80 @@ describe Article::Page::ImportJob, dbscope: :example do
       context "contact section fields is given" do
         let(:contact_state) { %w(show hide).sample }
         let!(:source_page) do
+          cms_group.update(contact_groups: [
+            {
+              main_state: "main", name: "name-#{unique_id}", contact_group_name: "contact_group_name-#{unique_id}",
+              contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
+              contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
+            }
+          ])
+
           Article::Page.create!(
             cur_site: site, cur_node: source_node, cur_user: cms_user,
             name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
-            contact_state: contact_state, contact_group: cms_group, contact_charge: unique_id, contact_tel: unique_id,
+            contact_state: contact_state, contact_group: cms_group, contact_group_contact_id: cms_group.contact_groups.first.id,
+            contact_group_relation: contact_group_relation, contact_charge: unique_id, contact_tel: unique_id,
             contact_fax: unique_id, contact_email: "#{unique_id}@example.jp",
             contact_link_url: "/#{unique_id}/", contact_link_name: unique_id
           )
         end
 
-        it do
-          Article::Page.site(site).node(dest_node).first.tap do |page|
-            expect(page.contact_state).to eq source_page.contact_state
-            expect(page.contact_group_id).to eq source_page.contact_group_id
-            expect(page.contact_charge).to eq source_page.contact_charge
-            expect(page.contact_tel).to eq source_page.contact_tel
-            expect(page.contact_fax).to eq source_page.contact_fax
-            expect(page.contact_email).to eq source_page.contact_email
-            expect(page.contact_link_url).to eq source_page.contact_link_url
-            expect(page.contact_link_name).to eq source_page.contact_link_name
+        context "when contact_group_relation is blank" do
+          let(:contact_group_relation) { nil }
+
+          it do
+            Article::Page.site(site).node(dest_node).first.tap do |page|
+              expect(page.contact_state).to eq source_page.contact_state
+              expect(page.contact_group_id).to eq source_page.contact_group_id
+              expect(page.contact_group_contact_id).to eq cms_group.contact_groups.first.id
+              expect(page.contact_group_relation).to eq contact_group_relation
+              expect(page.contact_charge).to eq source_page.contact_charge
+              expect(page.contact_tel).to eq source_page.contact_tel
+              expect(page.contact_fax).to eq source_page.contact_fax
+              expect(page.contact_email).to eq source_page.contact_email
+              expect(page.contact_link_url).to eq source_page.contact_link_url
+              expect(page.contact_link_name).to eq source_page.contact_link_name
+            end
+          end
+        end
+
+        context "when contact_group_relation is related" do
+          let(:contact_group_relation) { "related" }
+
+          it do
+            Article::Page.site(site).node(dest_node).first.tap do |page|
+              expect(page.contact_state).to eq source_page.contact_state
+              expect(page.contact_group_id).to eq source_page.contact_group_id
+              expect(page.contact_group_contact_id).to eq cms_group.contact_groups.first.id
+              expect(page.contact_group_relation).to eq contact_group_relation
+              cms_group.contact_groups.first.tap do |contact|
+                expect(page.contact_charge).to eq contact.contact_group_name
+                expect(page.contact_tel).to eq contact.contact_tel
+                expect(page.contact_fax).to eq contact.contact_fax
+                expect(page.contact_email).to eq contact.contact_email
+                expect(page.contact_link_url).to eq contact.contact_link_url
+                expect(page.contact_link_name).to eq contact.contact_link_name
+              end
+            end
+          end
+        end
+
+        context "when contact_group_relation is unrelated" do
+          let(:contact_group_relation) { "unrelated" }
+
+          it do
+            Article::Page.site(site).node(dest_node).first.tap do |page|
+              expect(page.contact_state).to eq source_page.contact_state
+              expect(page.contact_group_id).to eq source_page.contact_group_id
+              expect(page.contact_group_contact_id).to eq cms_group.contact_groups.first.id
+              expect(page.contact_group_relation).to eq contact_group_relation
+              expect(page.contact_charge).to eq source_page.contact_charge
+              expect(page.contact_tel).to eq source_page.contact_tel
+              expect(page.contact_fax).to eq source_page.contact_fax
+              expect(page.contact_email).to eq source_page.contact_email
+              expect(page.contact_link_url).to eq source_page.contact_link_url
+              expect(page.contact_link_name).to eq source_page.contact_link_name
+            end
           end
         end
       end
