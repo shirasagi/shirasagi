@@ -7,7 +7,7 @@ FactoryBot.define do
       [
         { type: "group", dn: "ou=001企画政策部, dc=example, dc=jp", name: "001企画政策部" },
         { type: "group", dn: "ou=001001政策課, ou=001企画政策部, dc=example, dc=jp",
-          name: "001001政策課", parent_dn: "ou=001企画政策部, dc=example, dc=jp" },
+          name: "001001政策課", parent_dn: "ou=001企画政策部, dc=example, dc=jp", email: unique_email },
         { type: "group", dn: "ou=001002広報課, ou=001企画政策部, dc=example, dc=jp",
           name: "001002広報課", parent_dn: "ou=001企画政策部, dc=example, dc=jp" },
         { type: "user", dn: "uid=admin, ou=001001政策課, ou=001企画政策部, dc=example, dc=jp",
