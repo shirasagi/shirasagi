@@ -8,8 +8,19 @@ module SS::GroupImportBase
   included do
     cattr_accessor :mode, instance_accessor: false
     cattr_accessor :model, instance_accessor: false
+    define_callbacks :import_row
+
     self.required_headers = proc do
       REQUIRED_FIELDS.map { |attr| self.model.t(attr) }.freeze
+    end
+
+    set_callback :import_row, :before do
+      @contact_groups = @item.contact_groups.to_a.dup
+    end
+    set_callback :import_row, :after do
+      @item.contact_groups = @contact_groups.compact
+    ensure
+      @contact_groups = nil
     end
   end
 
@@ -20,15 +31,16 @@ module SS::GroupImportBase
     self.class.each_csv(@cur_file) do |row|
       i += 1
       Rails.logger.tagged("#{(i + 1).to_s(:delimited)}行目") do
-        item = find_or_initialize_item(row)
-        @contact_groups = item.contact_groups.to_a.dup
+        @item = find_or_initialize_item(row)
+        next unless @item
 
-        importer.import_row(row, item)
-        item.contact_groups = @contact_groups.compact
-        if item.save
-          Rails.logger.info("#{item.name}(#{item.id})をインポートしました。")
+        run_callbacks :import_row do
+          importer.import_row(row, @item)
+        end
+        if @item.save
+          Rails.logger.info("#{@item.name}(#{@item.id})をインポートしました。")
         else
-          Rails.logger.warn(item.errors.full_messages.join("\n"))
+          Rails.logger.warn(@item.errors.full_messages.join("\n"))
         end
       end
     end
@@ -38,14 +50,17 @@ module SS::GroupImportBase
 
   def importer
     @importer ||= SS::Csv.draw(:import, context: self, model: self.class.model) do |importer|
-      define_importer_basic(importer)
-      define_importer_ldap(importer)
-      define_importer_contact(importer)
+      define_importers(importer)
     end.create
   end
 
+  def define_importers(importer)
+    define_importer_basic(importer)
+    define_importer_ldap(importer)
+    define_importer_contact(importer)
+  end
+
   def define_importer_basic(importer)
-    # importer.simple_column :id
     importer.simple_column :name
     importer.simple_column :order
     importer.simple_column :activation_date

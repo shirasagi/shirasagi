@@ -1,7 +1,7 @@
-id,グループ名,ドメイン,表示順,有効期限（開始）,有効期限（終了）,DN,電話番号,ファックス番号,メールアドレス,リンクURL,リンク名,IMAP/アカウント名,IMAP/名前,IMAP/メールアドレス,IMAP/ホスト,IMAP/ポート,IMAP/SSL,IMAP/認証方式,IMAP/ユーザー名,IMAP/パスワード,IMAP/警告表示,IMAP/送信済みフォルダー,IMAP/下書きフォルダー,IMAP/ゴミ箱フォルダー
-100,テスト市,,100,,,,,,,,,,,,,,,,,,,,,
-101,テスト市/グループA,,101,,,,,,group-a@test.example.jp,,,テスト市・グループA,グループA,group-a@test.example.jp,imap.test.example.jp,123,使用しない,PLAIN,group-a,pass-a,987,INBOX.Sent,INBOX.Draft,INBOX.Trash
-102,テスト市/グループB,,102,,,,,,group-b@test.example.jp,,,テスト市・グループB,グループB,group-b@test.example.jp,imap.test.example.jp,321,使用する,LOGIN,group-b,pass-b,654,INBOX.Sent,INBOX.Draft,INBOX.Trash
-103,テスト市/グループC,,103,,,,,,group-c@test.example.jp,,,テスト市・グループC,グループC,group-c@test.example.jp,imap.test.example.jp,456,使用しない,CRAM-MD5,group-c,pass-c,321,INBOX.Sent,INBOX.Draft,INBOX.Trash
-104,テスト市/グループD,,104,,,,,,group-d@test.example.jp,,,テスト市・グループD,グループD,group-d@test.example.jp,imap.test.example.jp,654,使用する,DIGEST-MD5,group-d,pass-d,123,INBOX.Sent,INBOX.Draft,INBOX.Trash
-,テスト市/グループE,,105,,,,,,group-e@test.example.jp,,,テスト市・グループE,グループE,group-e@test.example.jp,imap.test.example.jp,789,使用しない,PLAIN,group-e,pass-e,456,INBOX.Sent,INBOX.Draft,INBOX.Trash
+id,グループ名,ドメイン,表示順,有効期限（開始）,有効期限（終了）,DN,主1,識別名1,電話番号1,ファックス番号1,メールアドレス1,リンクURL1,リンク名1,IMAP_アカウント名,IMAP_名前,IMAP_メールアドレス,IMAP_ホスト,IMAP_ポート,IMAP_SSL,IMAP_認証方式,IMAP_ユーザー名,IMAP_パスワード,IMAP_送信済みフォルダー,IMAP_下書きフォルダー,IMAP_ゴミ箱フォルダー,IMAP_警告表示
+100,テスト市,,100,,,,,,,,,,,,,,,,,,,,,,,
+101,テスト市/グループA,,101,,,,主,グループA,,,group-a@test.example.jp,,,テスト市・グループA,グループA,group-a@test.example.jp,imap.test.example.jp,123,使用しない,PLAIN,group-a,pass-a,INBOX.Sent,INBOX.Draft,INBOX.Trash,987
+102,テスト市/グループB,,102,,,,主,グループB,,,group-b@test.example.jp,,,テスト市・グループB,グループB,group-b@test.example.jp,imap.test.example.jp,321,使用する,LOGIN,group-b,pass-b,INBOX.Sent,INBOX.Draft,INBOX.Trash,654
+103,テスト市/グループC,,103,,,,主,グループC,,,group-c@test.example.jp,,,テスト市・グループC,グループC,group-c@test.example.jp,imap.test.example.jp,456,使用しない,CRAM-MD5,group-c,pass-c,INBOX.Sent,INBOX.Draft,INBOX.Trash,321
+104,テスト市/グループD,,104,,,,主,グループD,,,group-d@test.example.jp,,,テスト市・グループD,グループD,group-d@test.example.jp,imap.test.example.jp,654,使用する,DIGEST-MD5,group-d,pass-d,INBOX.Sent,INBOX.Draft,INBOX.Trash,123
+,テスト市/グループE,,105,,,,主,グループE,,,group-e@test.example.jp,,,テスト市・グループE,グループE,group-e@test.example.jp,imap.test.example.jp,789,使用しない,PLAIN,group-e,pass-e,INBOX.Sent,INBOX.Draft,INBOX.Trash,456

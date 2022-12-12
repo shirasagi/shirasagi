@@ -74,29 +74,57 @@ class Webmail::GroupsController < ApplicationController
   def import
     raise "403" unless @model.allowed?(:edit, @cur_user)
 
-    @item = @model.new
+    # @item = @model.new
     return if request.get? || request.head?
 
-    @item = Webmail::GroupExport.new params.require(:item).permit(Webmail::GroupExport.permitted_fields)
-    @item.cur_user = @cur_user
-    result = @item.import_csv
-    flash.now[:notice] = t("ss.notice.saved") if result
-    render_create result, location: { action: :import }, render: { template: "import" }
+    # @item = Webmail::GroupExport.new params.require(:item).permit(Webmail::GroupExport.permitted_fields)
+    # @item.cur_user = @cur_user
+    # result = @item.import_csv
+    # flash.now[:notice] = t("ss.notice.saved") if result
+    # render_create result, location: { action: :import }, render: { template: "import" }
+    @item = SS::ImportParam.new(cur_site: @cur_site, cur_user: @cur_user)
+    @item.attributes = params.require(:item).permit(:in_file)
+    if @item.in_file.blank? || ::File.extname(@item.in_file.original_filename).casecmp(".csv") != 0
+      @item.errors.add :base, :invalid_csv
+      render action: :import
+      return
+    end
+
+    if !Webmail::GroupImportJob.valid_csv?(@item.in_file)
+      @item.errors.add :base, :malformed_csv
+      render action: :import
+      return
+    end
+
+    temp_file = SS::TempFile.create_empty!(model: 'ss/temp_file', filename: @item.in_file.original_filename) do |new_file|
+      IO.copy_stream(@item.in_file, new_file.path)
+    end
+    job = Webmail::GroupImportJob.bind(site_id: @cur_site, user_id: @cur_user)
+    job.perform_later(temp_file.id)
+    redirect_to url_for(action: :index), notice: t('ss.notice.started_import')
   end
 
-  def download
+  def download_all
     raise "403" unless @model.allowed?(:edit, @cur_user)
+    return if request.get? || request.head?
+
+    @item = SS::DownloadParam.new
+    @item.attributes = params.require(:item).permit(:encoding)
+    if @item.invalid?
+      render
+      return
+    end
 
     items = @model.all.allow(:edit, @cur_user).reorder(id: 1)
-    @item = Webmail::GroupExport.new
-    send_data @item.export_csv(items), filename: "webmail_groups_#{Time.zone.now.to_i}.csv"
+    exporter = Webmail::GroupExporter.new(criteria: items)
+    send_enum exporter.enum_csv(encoding: @item.encoding), filename: "webmail_groups_#{Time.zone.now.to_i}.csv"
   end
 
   def download_template
     raise "403" unless @model.allowed?(:edit, @cur_user)
 
     items = @model.all.allow(:edit, @cur_user).reorder(id: 1)
-    @item = Webmail::GroupExport.new
-    send_data @item.export_template_csv(items), filename: "webmail_groups_template.csv"
+    exporter = Webmail::GroupExporter.new(criteria: items, template: true)
+    send_enum exporter.enum_csv(encoding: "UTF-8"), filename: "webmail_groups_#{Time.zone.now.to_i}.csv"
   end
 end

@@ -9,15 +9,19 @@ module SS::GroupExporterBase
 
   def enum_csv(options = {})
     drawer = SS::Csv.draw(:export, context: self) do |drawer|
-      draw_basic(drawer)
-      draw_ldap(drawer)
-      draw_contact(drawer)
+      draw_exporters(drawer)
     end
 
     drawer.enum(criteria, options)
   end
 
   private
+
+  def draw_exporters(drawer)
+    draw_basic(drawer)
+    draw_ldap(drawer)
+    draw_contact(drawer)
+  end
 
   def draw_basic(drawer)
     drawer.column :id

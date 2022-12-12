@@ -70,8 +70,10 @@ Rails.application.routes.draw do
     match "logout" => "login#logout", as: :logout, via: [:get]
     match "login"  => "login#login", as: :login, via: [:get, :post]
 
-    resources :groups, concerns: [:deletion, :export] do
+    resources :groups, concerns: [:deletion] do
+      match :download_all, on: :collection, via: %i[get post]
       get :download_template, on: :collection
+      match :import, on: :collection, via: %i[get post]
       resource :account, controller: "group_accounts", except: [:new, :create] do
         get :delete, on: :member
         post :test_connection, on: :collection
