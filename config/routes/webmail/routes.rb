@@ -67,8 +67,8 @@ Rails.application.routes.draw do
 
   namespace "webmail", path: ".webmail" do
     get "/" => "main#index", as: :main
-    match "logout" => "login#logout", as: :logout, via: [:get]
-    match "login"  => "login#login", as: :login, via: [:get, :post]
+    get "logout" => "login#logout", as: :logout
+    match "login" => "login#login", as: :login, via: [:get, :post]
 
     resources :groups, concerns: [:deletion] do
       match :download_all, on: :collection, via: %i[get post]
