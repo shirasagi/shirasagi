@@ -11,12 +11,15 @@ describe "gws_links", type: :feature, dbscope: :example, js: true do
     let(:link_name1) { "link_name-#{unique_id}" }
     let(:link_url1) { unique_url }
     let(:link_target1) { "_self" }
+    let(:link_target1_label) { I18n.t("ss.options.link_target.#{link_target1}") }
     let(:link_name2) { "link_name-#{unique_id}" }
     let(:link_url2) { unique_url }
     let(:link_target2) { "_blank" }
+    let(:link_target2_label) { I18n.t("ss.options.link_target.#{link_target2}") }
     let(:link_name3) { "link_name-#{unique_id}" }
     let(:link_url3) { unique_url }
     let(:link_target3) { "_blank" }
+    let(:link_target3_label) { I18n.t("ss.options.link_target.#{link_target3}") }
 
     it do
       #
@@ -34,7 +37,7 @@ describe "gws_links", type: :feature, dbscope: :example, js: true do
           within all("tr")[1] do
             fill_in "item[links][][name]", with: link_name1
             fill_in "item[links][][url]", with: link_url1
-            select link_target1, from: "item[links][][target]"
+            select link_target1_label, from: "item[links][][target]"
 
             click_on "add"
           end
@@ -43,7 +46,7 @@ describe "gws_links", type: :feature, dbscope: :example, js: true do
           within all("tr")[2] do
             fill_in "item[links][][name]", with: link_name2
             fill_in "item[links][][url]", with: link_url2
-            select link_target2, from: "item[links][][target]"
+            select link_target2_label, from: "item[links][][target]"
 
             # 最後に空レコードを作成
             click_on "add"
@@ -91,7 +94,7 @@ describe "gws_links", type: :feature, dbscope: :example, js: true do
           within all("tr")[3] do
             fill_in "item[links][][name]", with: link_name3
             fill_in "item[links][][url]", with: link_url3
-            select link_target3, from: "item[links][][target]"
+            select link_target3_label, from: "item[links][][target]"
 
             click_on "add"
           end
