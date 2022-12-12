@@ -18,7 +18,7 @@ module Cms::HistoryListHelper
 
   def default_loop_html
     ih = []
-    ih << '<li class="current"><a href="#{url}">#{name}</a></li>'
+    ih << '<li class="current"><a href="#{url}">#{index_name}</a></li>'
     ih.join("\n").freeze
   end
 
