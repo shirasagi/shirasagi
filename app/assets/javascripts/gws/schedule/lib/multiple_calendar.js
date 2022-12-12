@@ -89,6 +89,10 @@ SS.ready(function() {
     Gws_Schedule_Multiple_Calendar.contentParams = function (_selector, _opts) {
       return {
         eventRender: function (event, element, view) {
+          var name = element.find('.fc-title').text();
+          var span = $('<span class="fc-event-name"></span>').text(name);
+          element.find('.fc-title').html(span);
+
           if (event.className.includes('fc-event-range')) {
             var fcClass = 'fc-datetime';
             var format = 'MM/DD HH:mm';
@@ -105,15 +109,15 @@ SS.ready(function() {
               content = end.format(format);
             }
             var spanBefore = $('<span></span>').addClass(fcClass).append(content);
-            element.find('span.fc-title').before(spanBefore);
+            element.find('.fc-title').before(spanBefore);
           }
           if (event.category) {
             var spanPrepend = $('<span class="fc-category"></span>').append(event.category);
-            element.find('span.fc-title').prepend(spanPrepend);
+            element.find('.fc-title').prepend(spanPrepend);
           }
           if (event.facility) {
             var spanAfter = $('<span class="fc-facility"></span>').append(event.facility);
-            element.find('span.fc-title').after(spanAfter);
+            element.find('.fc-title').after(spanAfter);
           }
           if (view.name === 'basicHour') {
             return BasicHourView.eventRender(event, element, view);

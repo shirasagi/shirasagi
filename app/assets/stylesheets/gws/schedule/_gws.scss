@@ -503,10 +503,17 @@
     margin-right: 5px;
   }
   .fc-event {
-    .fc-title {
-      overflow: hidden;
-      text-overflow: ellipsis;
+    div.fc-title {
+      display: flex;
       white-space: nowrap;
+      .fc-event-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .fc-facility {
+        padding-right: 5px;
+        padding-left: 5px;
+      }
     }
   }
 }

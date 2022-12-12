@@ -144,6 +144,10 @@ SS.ready(function() {
           }
         },
         eventRender: function(event, element) {
+          var name = element.find('.fc-title').text();
+          var span = $('<span class="fc-event-name"></span>').text(name);
+          element.find('.fc-title').html(span);
+
           if (event.className.includes('fc-event-range')) {
             var fcClass = 'fc-datetime';
             var format = 'MM/DD HH:mm';
@@ -160,15 +164,15 @@ SS.ready(function() {
               content = end.format(format);
             }
             var span = $('<span></span>').addClass(fcClass).append(content);
-            element.find('span.fc-title').before(span);
+            element.find('.fc-title').before(span);
           }
           if (event.category) {
             var span = $('<span class="fc-category"></span>').append(event.category);
-            element.find('span.fc-title').prepend(span);
+            element.find('.fc-title').prepend(span);
           }
           if (event.facility) {
             var span = $('<span class="fc-facility"></span>').append(event.facility);
-            element.find('span.fc-title').after(span);
+            element.find('.fc-title').append(span);
           }
         },
         eventAfterAllRender: function (view) {

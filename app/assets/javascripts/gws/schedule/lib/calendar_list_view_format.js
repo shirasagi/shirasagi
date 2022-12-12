@@ -51,13 +51,13 @@ SS.ready(function() {
           category.text(event.category);
           title.append(category);
         }
-        title.append(" " + event.title);
+        title.append('<span class="fc-event-name">' + event.title + '</span>');
         cont.append(title);
 
         if (event.facility) {
           var facility = $('<span class="fc-facility"></span>');
           facility.text(event.facility);
-          cont.append(facility);
+          title.append(facility);
         }
         evEl.append(cont);
         evEl.addClass(event.className.join(' '));
