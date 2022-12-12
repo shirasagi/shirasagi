@@ -118,6 +118,7 @@ en:
       milli_second: Millisecond
   errors: &errors
     format: ! '%{attribute} : %{message}'
+    format2: ! '%{attribute} : %{message}'
     messages:
       accepted: Please accept.
       auth_error: You do not have permission.

@@ -108,7 +108,6 @@ ja:
     word_dictionary: 単語置換辞書
     form_not_selected: 定型フォームが選択されていません
     default_form: 既定のフォーム
-    column_value_error_template: "%{name}の%{error}"
     draft_page: 下書きページ
     inplace_edit: 編集モード
     preview_date: プレビュー日時

@@ -135,8 +135,9 @@ module SS::Model::Group
 
   # Soft delete
   def disable
-    super
+    return false unless super
     descendants.each { |item| item.disable }
+    true
   end
 
   def depth

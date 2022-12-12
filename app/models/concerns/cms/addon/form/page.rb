@@ -95,7 +95,7 @@ module Cms::Addon::Form::Page
           new_message = column_value.name + message
         else
           new_message = I18n.t(
-            "cms.column_value_error_template", name: column_value.name,
+            "errors.format2", name: column_value.name,
             error: column_value.errors.full_message(attribute, message))
         end
 

@@ -61,6 +61,7 @@ module Contact::Addon::Group
 
   def validate_contact_groups
     contact_groups.each_with_index do |contact_group, index|
+      next if contact_group.all_empty?
       next if contact_group.validated?
       next if contact_group.valid?
 
@@ -73,7 +74,7 @@ module Contact::Addon::Group
           new_message = name + message
         else
           new_message = I18n.t(
-            "cms.column_value_error_template", name: name,
+            "errors.format2", name: name,
             error: contact_group.errors.full_message(attribute, message))
         end
 
