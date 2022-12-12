@@ -1360,8 +1360,10 @@ ja:
       file_fs_access_restriction_env:
         - 許可する環境変数を設定します。
         -
-        - これが想定するユースケースですが、nginx はクライアント証明書を認証すると、認証した Subject DN を $ssl_client_s_dn に、Issuer DN を $ssl_client_i_dn にセットします。
-        - これらを nginx の proxy_set_header でシラサギへ伝播し、シラサギで設定内容を確認するというケースを想定しています。
+        - これが想定するユースケースですが、
+        - 1. nginx はクライアント証明書を認証すると、認証した Subject DN を $ssl_client_s_dn に、Issuer DN を $ssl_client_i_dn にセットします。
+        - 2. これらを nginx の proxy_set_header でシラサギへ伝播し、
+        - 3. シラサギで設定内容を確認するというケースを想定しています。
         -
         - "nginx の設定例:"
         - proxy_set_header X-SSL_CLIENT_S_DN \$ssl_client_s_dn
