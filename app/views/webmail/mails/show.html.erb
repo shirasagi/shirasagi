@@ -17,36 +17,42 @@
 
 <div class="addon-views">
   <div class="addon-view webmail-mail" id="addon-basic">
-    <% if @uid_index.present? %>
-      <div class="move-tool-wrap">
-        <div class="page-order"><span class="current"><%= @uid_index + 1 %></span> / <span class="total"><%= @uid_list.length %></span></div>
-        <div class="move-tool">
-          <%= move_to_prev_tag %>
-          <%= move_to_next_tag %>
+    <div class="addon-head">
+      <div class="d-flex">
+        <h2 class="subject">
+          <%= @item.display_subject %>
+        </h2>
+        <div class="d-flex ml-auto">
+          <% if @uid_index.present? %>
+            <div class="move-tool-wrap">
+              <div class="page-order"><span class="current"><%= @uid_index + 1 %></span> / <span class="total"><%= @uid_list.length %></span></div>
+              <div class="move-tool">
+                <%= move_to_prev_tag %>
+                <%= move_to_next_tag %>
+              </div>
+            </div>
+          <% end %>
+          <span class="icon-star <%= @item.star? ? 'on' : 'off' %>">
+            <%= link_to action: :show do %>
+              <i class="material-icons">&#xE838;</i>
+            <% end %>
+          </span>
         </div>
       </div>
-    <% end %>
-    <div class="addon-head">
-      <span class="icon-star <%= @item.star? ? 'on' : 'off' %>">
-        <%= link_to action: :show do %>
-          <i class="material-icons">&#xE838;</i>
-        <% end %>
-      </span>
-      <h2 class="subject">
-        <%= @item.display_subject %>
-      </h2>
-      <div class="from">
-        <% if @item.display_sender.present? %>
-          <span class="address-item dropdown webmail-dropdown dropdown-toggle"
-            data-name="<%= @item.display_sender.name %>" data-email="<%= @item.display_sender.email %>">
-            <%= @item.display_sender.address %>
-            <ul class="dropdown-menu webmail-dropdown-menu"></ul>
-          </span>
-        <% else %>
-          <span><%= t("webmail.no_senders") %></span>
-        <% end %>
+      <div class="d-flex">
+        <div class="from">
+          <% if @item.display_sender.present? %>
+            <span class="address-item dropdown webmail-dropdown dropdown-toggle"
+              data-name="<%= @item.display_sender.name %>" data-email="<%= @item.display_sender.email %>">
+              <%= @item.display_sender.address %>
+              <ul class="dropdown-menu webmail-dropdown-menu"></ul>
+            </span>
+          <% else %>
+            <span><%= t("webmail.no_senders") %></span>
+          <% end %>
+        </div>
+        <div class="date ml-auto"><%= tryb { ss_time_tag @item.internal_date } %></div>
       </div>
-      <div class="date"><%= tryb { ss_time_tag @item.internal_date } %></div>
     </div>
 
     <% if (@item.to + @item.cc + @item.bcc).present? %>
