@@ -1,5 +1,5 @@
 require 'spec_helper'
-require Rails.root.join("lib/migrations/contact/20221206000000_multiple_contacts.rb")
+require Rails.root.join("lib/migrations/contact/20221206000000_multi_contacts_on_page.rb")
 
 RSpec.describe SS::Migration20221206000000, dbscope: :example do
   let!(:site) { cms_site }

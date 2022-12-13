@@ -1,5 +1,5 @@
 require 'spec_helper'
-require Rails.root.join("lib/migrations/contact/20221109000000_multi_contacts.rb")
+require Rails.root.join("lib/migrations/contact/20221109000000_multi_contacts_on_group.rb")
 
 RSpec.describe SS::Migration20221109000000, dbscope: :example do
   let(:contact_group_name1) { unique_id }
