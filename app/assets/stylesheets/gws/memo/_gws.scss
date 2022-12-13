@@ -1,12 +1,13 @@
 .gws-memo {
   .addon-head {
     padding: 1px 15px 15px;
-    .icon-star {
-      margin: 12px 0 0;
-      float: right;
-      &.on    .material-icons { color: #f70; }
-      &.off   .material-icons { color: #ddd; }
-      &:hover .material-icons { opacity: .8; }
+
+    .d-flex {
+      @include display-flex;
+      @include align-items(center);
+    }
+    .ml-auto {
+      margin-left: auto;
     }
     .subject {
       display: block;
@@ -14,10 +15,13 @@
       font-size: 130%;
       line-height: 1.4;
     }
-    .from {
-      float: left;
+    .icon-star {
+      &.on    .material-icons { color: #f70; }
+      &.off   .material-icons { color: #ddd; }
+      &:hover .material-icons { opacity: .8; }
     }
     .date {
+      margin-left: auto;
       text-align: right;
     }
   }
@@ -84,9 +88,16 @@
     @include justify-content(flex-end);
     padding: 15px;
 
+    .page-order {
+      @include display-flex;
+    }
+
     .move-tool {
       @include display-flex;
       margin-left: 20px;
+      @include mb {
+        margin-left: 10px;
+      }
     }
 
     .prev, .next {
