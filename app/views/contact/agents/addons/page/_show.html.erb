@@ -1,8 +1,9 @@
 <%
   return if @item.contact_state == "hide" || !@item.contact_present?
 
-  if @item.contact_group_contact_id.present?
-    contact = @item.contact_group.contact_groups.where(id: @item.contact_group_contact_id).first
+  contact_group = @item.contact_group
+  if contact_group.present? && @item.contact_group_contact_id.present?
+    contact = contact_group.contact_groups.where(id: @item.contact_group_contact_id).first
   end
 %>
 
@@ -20,7 +21,7 @@
   <dd class="contact-charge">
     <%=
       if @item.contact_group_related?
-        contact.try(:contact_group_name) || @item.contact_charge
+        contact.try(:contact_group_name)
       else
         @item.contact_charge
       end
@@ -31,7 +32,7 @@
   <dd class="contact-tel">
     <%=
       if @item.contact_group_related?
-        contact.try(:contact_tel) || @item.contact_tel
+        contact.try(:contact_tel)
       else
         @item.contact_tel
       end
@@ -42,7 +43,7 @@
   <dd class="contact-fax">
     <%=
       if @item.contact_group_related?
-        contact.try(:contact_fax) || @item.contact_fax
+        contact.try(:contact_fax)
       else
         @item.contact_fax
       end
@@ -53,7 +54,7 @@
   <dd class="contact-email">
     <%=
       if @item.contact_group_related?
-        contact.try(:contact_email) || @item.contact_email
+        contact.try(:contact_email)
       else
         @item.contact_email
       end
@@ -64,7 +65,7 @@
   <dd class="contact-link-url">
     <%=
       if @item.contact_group_related?
-        contact.try(:contact_link_url) || @item.contact_link_url
+        contact.try(:contact_link_url)
       else
         @item.contact_link_url
       end
@@ -75,7 +76,7 @@
   <dd class="contact-link-name">
     <%=
       if @item.contact_group_related?
-        contact.try(:contact_link_name) || @item.contact_link_name
+        contact.try(:contact_link_name)
       else
         @item.contact_link_name
       end

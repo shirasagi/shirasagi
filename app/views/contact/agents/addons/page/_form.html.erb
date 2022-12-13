@@ -15,6 +15,22 @@
       @item.contact_link_url = group.contact_link_url
       @item.contact_link_name = group.contact_link_name
     end
+  elsif @item.contact_group_related?
+    contact_group = @item.contact_group
+    if contact_group && @item.contact_group_contact_id.present?
+      contact = contact_group.contact_groups.where(id: @item.contact_group_contact_id).first
+    end
+
+    @item.contact_charge = contact.try(:contact_group_name)
+    @item.contact_tel = contact.try(:contact_tel)
+    @item.contact_fax = contact.try(:contact_fax)
+    if @cur_site.inquiry_form.blank?
+      @item.contact_email = contact.try(:contact_email)
+    else
+      @item.contact_email = nil
+    end
+    @item.contact_link_url = contact.try(:contact_link_url)
+    @item.contact_link_name = contact.try(:contact_link_name)
   end
 %>
 

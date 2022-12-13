@@ -1,6 +1,6 @@
-<% return if @cur_page.contact_state == "hide" || !@cur_page.contact_present? %>
-
 <%
+  return if @cur_page.contact_state == "hide" || !@cur_page.contact_present?
+
   contact_parts = []
   contact_group = @cur_page.contact_group
 
@@ -17,7 +17,7 @@
 
 <%
   if @cur_page.contact_group_related?
-    contact_charge = contact.try(:contact_group_name) || @cur_page.contact_charge
+    contact_charge = contact.try(:contact_group_name)
   else
     contact_charge = @cur_page.contact_charge
   end
@@ -29,7 +29,7 @@
 
 <%
   if @cur_page.contact_group_related?
-    contact_tel = contact.try(:contact_tel) || @cur_page.contact_tel
+    contact_tel = contact.try(:contact_tel)
   else
     contact_tel = @cur_page.contact_tel
   end
@@ -44,7 +44,7 @@
 
 <%
   if @cur_page.contact_group_related?
-    contact_fax = contact.try(:contact_fax) || @cur_page.contact_fax
+    contact_fax = contact.try(:contact_fax)
   else
     contact_fax = @cur_page.contact_fax
   end
@@ -59,7 +59,7 @@
 
 <%
   if @cur_page.contact_group_related?
-    contact_email = contact.try(:contact_email) || @cur_page.contact_email
+    contact_email = contact.try(:contact_email)
   else
     contact_email = @cur_page.contact_email
   end
@@ -74,10 +74,10 @@
 
 <%
   if @cur_page.contact_group_related?
-    contact_link = contact.try(:contact_link) || @cur_page.contact_link.presence
-    contact_link ||= contact.try(:contact_group_name) || @cur_page.contact_charge.presence
+    contact_link = contact.try(:contact_link)
+    contact_link ||= contact.try(:contact_group_name)
     contact_link ||= contact_group.try(:section_name).presence
-    contact_link_url = contact.try(:contact_link_url) || @cur_page.contact_link_url
+    contact_link_url = contact.try(:contact_link_url)
   else
     contact_link = @cur_page.contact_link.presence
     contact_link ||= @cur_page.contact_charge.presence
