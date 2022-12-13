@@ -381,6 +381,10 @@
     word-wrap: break-word;
     word-break: normal;
     white-space: normal;
+    .fc-date + .fc-title {
+      margin-left: 0;
+      padding-left: 4px;
+    }
     .fc-category {
       @include fc_event_prefix;
       background-color: $orange;
@@ -443,7 +447,6 @@
     //@include ellipsis;
     .fc-title,.fc-facility {
        display: inline;
-       padding-left: 5px;
     }
   }
 }
