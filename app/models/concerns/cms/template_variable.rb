@@ -24,6 +24,10 @@ module Cms::TemplateVariable
     template_variable_handler(:current, :template_variable_handler_current)
   end
 
+  def name_for_index
+    try(:index_name) || name
+  end
+
   private
 
   def template_variable_handler_name(name, issuer)

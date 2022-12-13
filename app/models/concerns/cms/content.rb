@@ -150,10 +150,6 @@ module Cms::Content
     end
   end
 
-  def name_for_index
-    index_name || name
-  end
-
   def basename
     @basename.presence || filename.to_s.sub(/.*\//, "").presence
   end
