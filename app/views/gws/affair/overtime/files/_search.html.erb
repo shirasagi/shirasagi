@@ -28,6 +28,5 @@
     <%= f.select :year, year_options, include_blank: t("datetime.prompts.year") %>
     <%= f.select :month, month_options, include_blank: t("datetime.prompts.month") %>
     <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
-    <%= link_to t('ss.buttons.reset'), { action: :index }, class: "btn", style: "font-weight: normal;" %>
   <% end %>
 </div>
