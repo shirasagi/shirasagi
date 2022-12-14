@@ -39,19 +39,19 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
     let(:group1) do
       create(
         :cms_group, name: "#{site.groups.first.name}/#{unique_id}",
-        contact_groups: [{ main_state: "main", contact_email: unique_email }]
+        contact_groups: [{ main_state: "main", name: unique_id, contact_email: unique_email }]
       )
     end
     let(:group2) do
       create(
         :cms_group, name: "#{site.groups.first.name}/#{unique_id}",
-        contact_groups: [{ main_state: "main", contact_email: unique_email }]
+        contact_groups: [{ main_state: "main", name: unique_id, contact_email: unique_email }]
       )
     end
     let(:group3) do
       create(
         :cms_group, name: "#{site.groups.first.name}/#{unique_id}",
-        contact_groups: [{ main_state: "main", contact_email: unique_email }]
+        contact_groups: [{ main_state: "main", name: unique_id, contact_email: unique_email }]
       )
     end
 

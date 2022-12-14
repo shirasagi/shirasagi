@@ -4,6 +4,7 @@ FactoryBot.define do
     contact_groups do
       [
         {
+          name: "name-#{unique_id}",
           contact_email: "#{name}@example.jp",
           main_state: "main"
         }

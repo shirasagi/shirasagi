@@ -134,7 +134,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       expect(page).to have_no_css('#notice', text: I18n.t('ss.notice.saved'))
       expect(page).to have_selector('#errorExplanation ul li', count: 1)
       msg = I18n.t("mongoid.attributes.cms/column/value/file_upload.file_id") + I18n.t("errors.messages.blank")
-      msg = I18n.t("cms.column_value_error_template", name: column8.name, error: msg)
+      msg = I18n.t("errors.format2", name: column8.name, error: msg)
       expect(page).to have_selector('#errorExplanation', text: msg)
       expect(page).to have_selector('div.column-with-errors')
 

@@ -7,13 +7,11 @@ ja:
     email: メールアドレス
     link_url: リンクURL
     link_name: リンク名
-    search_groups:
-      index: 連絡先グループを選択する
-      search: 連絡先グループを検索
-      select: 連絡先グループを設定する
-    state:
-      show: 表示
-      hide: 非表示
+    apis:
+      contacts:
+        index: 連絡先グループを選択する
+        search: 連絡先グループを検索
+        select: 連絡先グループを設定する
     view:
       title: お問い合わせ
       tel: 電話
@@ -25,6 +23,20 @@ ja:
     options:
       main_state:
         main: 主
+      relation:
+        related:
+          title: グループと連動する
+          description: |-
+            グループの連絡先が更新されたらそれに連動しページの連絡先も自動的に更新されるモードです。
+            こちらのモードがお勧めです。
+        unrelated:
+          title: グループと連動しない
+          description: |-
+            グループの連絡先が更新されてもページの連絡先は更新されません。
+            このページだけの特別な連絡先を設定する場合、このモードを選択してください。
+            通常は「グループと連動する」を選択してください。
+    buttons:
+      select: 選択
 
   modules:
     contact: 連絡先
@@ -47,6 +59,9 @@ ja:
         contact_link_url: リンクURL
         contact_link_name: リンク名
         contact_group_name: 担当部署
+        contact_group_name_id: 担当部署
+        contact_group_contact: 連絡先
+        contact_group_relation: 連絡先連動設定
       contact/addon/group:
         contact_group_name: 担当部署
         contact_tel: 電話番号
@@ -57,6 +72,7 @@ ja:
       contact/addon/page:
         <<: *cmspage
       ss/contact:
+        name: 識別名
         contact_group_name: 担当部署
         contact_tel: 電話番号
         contact_fax: ファックス番号
@@ -83,7 +99,12 @@ ja:
         - 連絡先に表示する部署のリンクURLを記入します。
       contact_link_name:
         - 連絡先に表示する部署のリンク名を記入します。
+      contact_group_relation:
+        - グループの連絡先と連動するかどうかを選択します。
+        - 未選択の場合、「グループと連動する」が選択されているものとみなします。
     ss/contact:
+      name:
+        - CSV インポート時のキーとなる名前を記入します。他の連絡先と重複しない名前を記入してください。
       contact_group_name:
         - 連絡先に表示する担当部署を記入します。
       contact_tel:
@@ -101,3 +122,5 @@ ja:
       contact_link_name:
         - グループのリンク名を記入します。
         - ページ作成時に連絡先として自動で挿入されます。
+      main_state:
+        - 「主」に設定した連絡先が、メールフォームの通知、期限切れページの通知やWebメールのグループメールのログインアカウントなどとして用いられます。

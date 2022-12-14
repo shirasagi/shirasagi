@@ -118,6 +118,7 @@ ja:
       milli_second: ミリ秒
   errors: &errors
     format: ! '%{attribute}%{message}'
+    format2: "%{name}の%{error}"
     messages:
       accepted: を受諾してください。
       auth_error: 権限がありません。

@@ -12,6 +12,7 @@ class SS::Migration20221109000000
         main_contact.send("#{attr}=", group.send(attr))
       end
       main_contact.main_state = "main"
+      main_contact.name = group.section_name
 
       group.contact_groups = [ main_contact ]
       unless group.save

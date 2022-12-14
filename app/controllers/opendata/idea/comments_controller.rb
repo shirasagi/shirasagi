@@ -35,24 +35,12 @@ class Opendata::Idea::CommentsController < ApplicationController
   end
 
   def create
-    idea_id = params[:idea_id]
-    cond = { site_id: @cur_site.id, idea_id: idea_id, user_id: @cur_user.id,
-             text: params[:item][:text],
-             contact_state: params[:item][:contact_state],
-             contact_charge: params[:item][:contact_charge],
-             contact_tel: params[:item][:contact_tel],
-             contact_fax: params[:item][:contact_fax],
-             contact_email: params[:item][:contact_email],
-             contact_link_url: params[:item][:contact_link_url],
-             contact_link_name: params[:item][:contact_link_name],
-             state: params[:item][:state]}
-    contact_group_id = params[:item][:contact_group_id]
-    cond[:contact_group_id] = contact_group_id if contact_group_id.present?
+    idea = Opendata::Idea.site(@cur_site).find(params[:idea_id].to_s)
 
-    @item = Opendata::IdeaComment.new(cond)
+    @item = Opendata::IdeaComment.new(site_id: @cur_site.id, idea_id: idea.id, user_id: @cur_user.id)
+    @item.attributes = params.require(:item).permit(*@model.permit_params)
     @item.save
 
-    idea = Opendata::Idea.site(@cur_site).find(idea_id)
     idea.commented = Time.zone.now
     idea.total_comment += 1
     idea.cur_site = idea.site

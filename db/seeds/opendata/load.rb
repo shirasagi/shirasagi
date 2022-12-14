@@ -426,31 +426,29 @@ def save_page(data)
   item
 end
 
-contact_group = SS::Group.where(name: "シラサギ市/企画政策部/政策課").first
+contact_group = Cms::Group.where(name: "シラサギ市/企画政策部/政策課").first
 contact_group_id = contact_group.id rescue nil
-contact_charge = contact_group_id ? "オープンデータ担当" : nil
-contact_email = contact_group_id ? "admin@example.jp" : nil
-contact_tel = contact_group_id ? "000-000-0000" : nil
-contact_fax = contact_group_id ? "000-000-0000" : nil
-contact_link_url = contact_group_id ? link_url : nil
-contact_link_name = contact_group_id ? link_url : nil
+contact = contact_group.contact_groups.first
 
 save_page route: "cms/page", filename: "index.html", name: "トップページ", layout_id: layouts["portal-top"].id
 save_page route: "cms/page", filename: "tutorial-data.html", name: "データ登録手順", layout_id: layouts["portal-general"].id
 save_page route: "cms/page", filename: "tutorial-app.html", name: "アプリ登録手順", layout_id: layouts["portal-general"].id
 save_page route: "cms/page", filename: "tutorial-idea.html", name: "アイデア登録手順", layout_id: layouts["portal-general"].id
-page0 = save_page route: "article/page", filename: "docs/1.html", name: "○○が公開されました。", layout_id: layouts["portal-general"].id, \
-  map_points: Map::Extensions::Points.new([{loc: Map::Extensions::Loc.mongoize([34.067022, 134.589982])}]), \
-  contact_group_id: contact_group_id, contact_charge: contact_charge, contact_email: contact_email, \
-  contact_tel: contact_tel, contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name
-page1 = save_page route: "article/page", filename: "docs/2.html", name: "○○○○○○が公開されました。", \
-  layout_id: layouts["portal-general"].id, contact_group_id: contact_group_id, contact_charge: contact_charge, \
-  contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
-  contact_link_url: contact_link_url, contact_link_name: contact_link_name
-page2 = save_page route: "article/page", filename: "docs/3.html", name: "○○○○○○○○が公開されました。", \
-  layout_id: layouts["portal-general"].id, contact_group_id: contact_group_id, contact_charge: contact_charge, \
-  contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
-  contact_link_url: contact_link_url, contact_link_name: contact_link_name
+page0 = save_page route: "article/page", filename: "docs/1.html", name: "○○が公開されました。", layout_id: layouts["portal-general"].id,
+  map_points: Map::Extensions::Points.new([{loc: Map::Extensions::Loc.mongoize([34.067022, 134.589982])}]),
+  contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
+  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name
+page1 = save_page route: "article/page", filename: "docs/2.html", name: "○○○○○○が公開されました。",
+  layout_id: layouts["portal-general"].id,
+  contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
+  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name
+page2 = save_page route: "article/page", filename: "docs/3.html", name: "○○○○○○○○が公開されました。",
+  layout_id: layouts["portal-general"].id,
+  contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
+  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name
 recurrence = { kind: "date", start_at: Time.zone.today + 7, frequency: "daily", until_on: Time.zone.today + 18 }
 event0 = save_page route: "event/page", filename: "event/4.html", name: "オープンデータイベント", \
   layout_id: layouts["portal-event"].id,

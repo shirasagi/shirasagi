@@ -5,7 +5,7 @@ module SS::StimulusHelper
     module_function
 
     def normalize_controller_name(name)
-      name = name.to_s.gsub("/", "--")
+      name = name.to_s.dasherize.gsub("/", "--")
       if name.end_with?("_controller")
         name = name[0..-11]
       end

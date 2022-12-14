@@ -1,61 +1,53 @@
 require 'spec_helper'
 
-describe "sys_groups", type: :feature, dbscope: :example do
-  let(:item) { create(:sys_group) }
-  let(:index_path) { sys_groups_path }
-  let(:new_path) { new_sys_group_path }
-  let(:show_path) { sys_group_path item }
-  let(:edit_path) { edit_sys_group_path item }
-  let(:delete_path) { delete_sys_group_path item }
-
+describe "sys_groups", type: :feature, dbscope: :example, js: true do
   it "without auth" do
     login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
+    visit sys_groups_path
+    expect(current_path).to eq sys_groups_path
+    expect(page).to have_title("403")
   end
 
-  context "with auth" do
+  context "basic crud" do
     before { login_sys_user }
 
-    it "#index" do
-      visit index_path
-      expect(status_code).to eq 200
-      expect(current_path).not_to eq sns_login_path
-    end
-
-    it "#new" do
-      visit new_path
+    it do
+      visit sys_groups_path
+      click_on I18n.t("ss.links.new")
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
-        click_button I18n.t('ss.buttons.save')
+        click_on I18n.t('ss.buttons.save')
       end
-      expect(status_code).to eq 200
-      expect(current_path).not_to eq new_path
-      expect(page).to have_no_css("form#item-form")
-    end
+      wait_for_notice I18n.t("ss.notice.saved")
 
-    it "#show" do
-      visit show_path
-      expect(status_code).to eq 200
-      expect(current_path).not_to eq sns_login_path
-    end
+      expect(Sys::Group.unscoped.count).to eq 1
+      item = Sys::Group.unscoped.first
+      expect(item.name).to eq "sample"
+      expect(item.active?).to be_truthy
 
-    it "#edit" do
-      visit edit_path
+      visit sys_groups_path
+      click_on item.name
+      click_on I18n.t("ss.links.edit")
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
-        click_button I18n.t('ss.buttons.save')
+        click_on I18n.t('ss.buttons.save')
       end
-      expect(current_path).not_to eq sns_login_path
-      expect(page).to have_no_css("form#item-form")
-    end
+      wait_for_notice I18n.t("ss.notice.saved")
 
-    it "#delete" do
-      visit delete_path
+      item.reload
+      expect(item.name).to eq "modify"
+      expect(item.active?).to be_truthy
+
+      visit sys_groups_path
+      click_on item.name
+      click_on I18n.t("ss.links.delete")
       within "form" do
-        click_button I18n.t('ss.buttons.delete')
+        click_on I18n.t('ss.buttons.delete')
       end
-      expect(current_path).to eq index_path
+      wait_for_notice I18n.t("ss.notice.deleted")
+
+      item.reload
+      expect(item.active?).to be_falsey
     end
   end
 
@@ -66,7 +58,7 @@ describe "sys_groups", type: :feature, dbscope: :example do
       let(:name) { unique_id }
 
       it do
-        visit index_path
+        visit sys_groups_path
         click_on I18n.t("ss.links.new")
         within "form#item-form" do
           expect(page).to have_no_css("select[name='item[gws_use]']")
@@ -74,9 +66,9 @@ describe "sys_groups", type: :feature, dbscope: :example do
           fill_in "item[name]", with: name
           click_on I18n.t('ss.buttons.save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
-        visit index_path
+        visit sys_groups_path
         click_on name
         click_on I18n.t("ss.links.edit")
         within "form#item-form" do
@@ -85,18 +77,16 @@ describe "sys_groups", type: :feature, dbscope: :example do
           select I18n.t("ss.options.gws_use.enabled"), from: "item[gws_use]"
           click_on I18n.t('ss.buttons.save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
       end
     end
 
     context "on child group" do
+      let!(:item) { create(:sys_group) }
       let(:name) { "#{item.name}/#{unique_id}" }
 
       it do
-        # ensure that item is created
-        item
-
-        visit index_path
+        visit sys_groups_path
         click_on I18n.t("ss.links.new")
         within "form#item-form" do
           expect(page).to have_no_css("select[name='item[gws_use]']")
@@ -104,12 +94,133 @@ describe "sys_groups", type: :feature, dbscope: :example do
           fill_in "item[name]", with: name
           click_on I18n.t('ss.buttons.save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
-        visit index_path
+        visit sys_groups_path
         click_on name
         click_on I18n.t("ss.links.edit")
         expect(page).to have_no_css("select[name='item[gws_use]']")
+      end
+    end
+  end
+
+  context "import from csv" do
+    before { login_sys_user }
+
+    it "#import" do
+      visit sys_groups_path
+      click_on I18n.t("ss.links.import")
+
+      perform_enqueued_jobs do
+        within "form" do
+          attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/sys/group/sys_groups_1.csv"
+          page.accept_confirm(I18n.t("ss.confirm.import")) do
+            click_on I18n.t('ss.buttons.import')
+          end
+        end
+        wait_for_notice I18n.t('ss.notice.started_import')
+      end
+
+      expect(Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        expect(log.logs).to include(/INFO -- : .* 7件のグループをインポートしました。/)
+        expect(log.state).to eq "completed"
+      end
+
+      groups = Sys::Group.all
+      expect(groups.count).to eq 7
+      groups.find_by(name: "A").tap do |g|
+        expect(g.order).to eq 10
+        expect(g.activation_date).to be_blank
+        expect(g.expiration_date).to be_blank
+        expect(g.gws_use).to eq "enabled"
+        expect(g.ldap_dn).to eq "cn=Manager,dc=city,dc=shirasagi,dc=jp"
+        expect(g.contact_group_name).to eq "部署A"
+        expect(g.contact_tel).to eq "000-000-0000"
+        expect(g.contact_fax).to eq "000-000-0000"
+        expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_link_url).to eq "/A/"
+        expect(g.contact_link_name).to eq "A"
+      end
+      groups.find_by(name: "A/B").tap do |g|
+        expect(g.order).to eq 20
+        expect(g.activation_date).to be_blank
+        expect(g.expiration_date).to be_blank
+        expect(g.gws_use).to be_blank
+        expect(g.ldap_dn).to be_blank
+        expect(g.contact_group_name).to eq "部署B"
+        expect(g.contact_tel).to eq "000-000-0000"
+        expect(g.contact_fax).to eq "000-000-0000"
+        expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_link_url).to eq "/B/"
+        expect(g.contact_link_name).to eq "B"
+      end
+      groups.find_by(name: "A/B/C").tap do |g|
+        expect(g.order).to eq 30
+        expect(g.activation_date).to be_blank
+        expect(g.expiration_date).to be_blank
+        expect(g.gws_use).to be_blank
+        expect(g.ldap_dn).to be_blank
+        expect(g.contact_group_name).to eq "部署C"
+        expect(g.contact_tel).to eq "000-000-0000"
+        expect(g.contact_fax).to eq "000-000-0000"
+        expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_link_url).to eq "/B/C/"
+        expect(g.contact_link_name).to eq "C"
+      end
+      groups.find_by(name: "A/B/C/D").tap do |g|
+        expect(g.order).to eq 40
+        expect(g.activation_date).to be_blank
+        expect(g.expiration_date).to be_blank
+        expect(g.gws_use).to be_blank
+        expect(g.ldap_dn).to be_blank
+        expect(g.contact_group_name).to eq "部署D"
+        expect(g.contact_tel).to eq "000-000-0000"
+        expect(g.contact_fax).to eq "000-000-0000"
+        expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_link_url).to eq "/B/C/D/"
+        expect(g.contact_link_name).to eq "D"
+      end
+      groups.find_by(name: "A/E").tap do |g|
+        expect(g.order).to eq 50
+        expect(g.activation_date).to be_blank
+        expect(g.expiration_date).to be_blank
+        expect(g.gws_use).to be_blank
+        expect(g.ldap_dn).to be_blank
+        expect(g.contact_group_name).to eq "部署E"
+        expect(g.contact_tel).to eq "000-000-0000"
+        expect(g.contact_fax).to eq "000-000-0000"
+        expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_link_url).to eq "/E/"
+        expect(g.contact_link_name).to eq "E"
+      end
+      groups.find_by(name: "A/E/F").tap do |g|
+        expect(g.order).to eq 60
+        expect(g.activation_date).to be_blank
+        expect(g.expiration_date).to be_blank
+        expect(g.gws_use).to be_blank
+        expect(g.ldap_dn).to be_blank
+        expect(g.contact_group_name).to eq "部署F"
+        expect(g.contact_tel).to eq "000-000-0000"
+        expect(g.contact_fax).to eq "000-000-0000"
+        expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_link_url).to eq "/E/F/"
+        expect(g.contact_link_name).to eq "F"
+      end
+      groups.find_by(name: "A/E/G").tap do |g|
+        expect(g.order).to eq 70
+        expect(g.activation_date).to be_blank
+        expect(g.expiration_date).to be_blank
+        expect(g.gws_use).to be_blank
+        expect(g.ldap_dn).to be_blank
+        expect(g.contact_group_name).to eq "部署G"
+        expect(g.contact_tel).to eq "000-000-0000"
+        expect(g.contact_fax).to eq "000-000-0000"
+        expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_link_url).to eq "/E/G/"
+        expect(g.contact_link_name).to eq "G"
       end
     end
   end

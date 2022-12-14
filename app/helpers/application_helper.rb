@@ -294,4 +294,8 @@ module ApplicationHelper
     h = %(<div class="sanitizer-status sanitizer-#{value}">#{label}</div>)
     h.html_safe
   end
+
+  def ejs_template(str)
+    "<%= #{str} %>".html_safe
+  end
 end

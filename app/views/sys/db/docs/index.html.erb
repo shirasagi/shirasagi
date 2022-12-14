@@ -24,45 +24,6 @@
   end
 
 %>
-<style>
-    .table-wrap {
-        overflow-x: auto;
-    }
-
-    table.index {
-        width: auto;
-    }
-
-    table.index th, table.index td {
-        overflow: visible;
-        max-width: 200px;
-        text-overflow: clip;
-        word-wrap: normal;
-        word-break: normal;
-        white-space: nowrap;
-    }
-
-    table.index td.nilclass {
-        color: #999;
-    }
-
-    table.index td.blank {
-        color: #999;
-    }
-
-    table.index td.time {
-        color: #080;
-    }
-
-    table.index td.fixnum {
-        color: #999;
-    }
-
-    table.index td.array {
-        color: #a00;
-    }
-
-</style>
 
 <div class="cms-tabs">
   <% path = url_for(action: :index) %>

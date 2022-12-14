@@ -243,21 +243,48 @@ module Cms::PageImportBase
 
   def define_importer_contact_page(importer)
     importer.simple_column :contact_state do |row, item, head, value|
-      if item.respond_to?(:contact_state=)
-        item.contact_state = from_label(value, item.contact_state_options)
-      end
+      next unless item.respond_to?(:contact_state=)
+      item.contact_state = from_label(value, item.contact_state_options)
     end
     importer.simple_column :contact_group do |row, item, head, value|
-      if item.respond_to?(:contact_group=)
-        item.contact_group = Cms::Group.where(name: value).first
-      end
+      next unless item.respond_to?(:contact_group=)
+      item.contact_group = group_name_group_map[value]
     end
-    importer.simple_column :contact_charge
-    importer.simple_column :contact_tel
-    importer.simple_column :contact_fax
-    importer.simple_column :contact_email
-    importer.simple_column :contact_link_url
-    importer.simple_column :contact_link_name
+    importer.simple_column :contact_group_contact do |row, item, head, value|
+      next unless item.respond_to?(:contact_group_contact_id=)
+      contact_group = row[Cms::Page.t(:contact_group)].try(:strip).presence
+      contact = find_contact(contact_group, value)
+      item.contact_group_contact_id = contact.try(:id)
+    end
+    importer.simple_column :contact_group_relation do |row, item, head, value|
+      next unless item.respond_to?(:contact_group_relation=)
+      contact_group_relation = from_label(value, item.contact_group_relation_options)
+      item.contact_group_relation = contact_group_relation.presence
+    end
+    importer.simple_column :contact_charge do |row, item, head, value|
+      next unless item.respond_to?(:contact_charge=)
+      import_contact_attribute(row, item, value, :contact_charge, :contact_group_name)
+    end
+    importer.simple_column :contact_tel do |row, item, head, value|
+      next unless item.respond_to?(:contact_tel=)
+      import_contact_attribute(row, item, value, :contact_tel)
+    end
+    importer.simple_column :contact_fax do |row, item, head, value|
+      next unless item.respond_to?(:contact_fax=)
+      import_contact_attribute(row, item, value, :contact_fax)
+    end
+    importer.simple_column :contact_email do |row, item, head, value|
+      next unless item.respond_to?(:contact_email=)
+      import_contact_attribute(row, item, value, :contact_email)
+    end
+    importer.simple_column :contact_link_url do |row, item, head, value|
+      next unless item.respond_to?(:contact_link_url=)
+      import_contact_attribute(row, item, value, :contact_link_url)
+    end
+    importer.simple_column :contact_link_name do |row, item, head, value|
+      next unless item.respond_to?(:contact_link_name=)
+      import_contact_attribute(row, item, value, :contact_link_name)
+    end
   end
 
   def define_importer_released(importer)
@@ -276,7 +303,7 @@ module Cms::PageImportBase
     importer.simple_column :groups do |row, item, head, value|
       if item.respond_to?(:group_ids=)
         group_names = to_array(value)
-        item.group_ids = Cms::Group.all.site(site).in(name: group_names).pluck(:id)
+        item.group_ids = group_names.map { |name| group_name_group_map[name] }.compact.map(&:id)
       end
     end
     importer.simple_column :permission_level
@@ -352,5 +379,38 @@ module Cms::PageImportBase
   def parse_exclude_dates(dates)
     dates = dates.to_s.split(/\R/).map(&:strip).select(&:present?)
     dates.map(&:in_time_zone).select(&:present?).map(&:to_date)
+  end
+
+  def group_name_group_map
+    @group_name_group_map ||= Cms::Group.all.site(@site).to_a.index_by(&:name)
+  end
+
+  def find_contact(group_name, contact_name)
+    group = group_name_group_map[group_name]
+    return if group.blank?
+
+    group.contact_groups.where(name: contact_name).first
+  end
+
+  def import_contact_attribute(row, item, value, dest_attr, src_attr = nil)
+    src_attr ||= dest_attr
+
+    contact_group_relation = row[Cms::Page.t(:contact_group_relation)].try(:strip).presence
+    if contact_group_relation.present?
+      contact_group_relation = from_label(contact_group_relation, item.contact_group_relation_options)
+    end
+    if contact_group_relation != "related"
+      item.send("#{dest_attr}=", value)
+      return
+    end
+
+    contact_group = row[Cms::Page.t(:contact_group)].try(:strip).presence
+    contact = row[Cms::Page.t(:contact_group_contact)].try(:strip).presence
+    contact = find_contact(contact_group, contact)
+    if contact
+      item.send("#{dest_attr}=", contact.send(src_attr))
+    else
+      item.send("#{dest_attr}=", value)
+    end
   end
 end

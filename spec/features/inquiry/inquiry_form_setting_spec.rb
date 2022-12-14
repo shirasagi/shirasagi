@@ -53,7 +53,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
     answer.save!
 
     group = article.contact_group
-    group.contact_groups = [{ contact_email: unique_email, main_state: "main" }]
+    group.contact_groups = [{ name: unique_id, contact_email: unique_email, main_state: "main" }]
     group.save!
   end
 
@@ -90,7 +90,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
     before { login_cms_user }
 
     it do
-      cms_group.contact_groups = [{ contact_email: unique_email, main_state: "main" }]
+      cms_group.contact_groups = [{ name: unique_id, contact_email: unique_email, main_state: "main" }]
       cms_group.save!
 
       visit new_article_node_path
@@ -103,10 +103,12 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         ensure_addon_opened "#addon-contact-agents-addons-page"
 
-        wait_cbox_open { click_link I18n.t("contact.search_groups.index") }
+        wait_cbox_open { click_link I18n.t("contact.apis.contacts.index") }
       end
       wait_for_cbox do
-        wait_cbox_close { click_on cms_group.name }
+        within "[data-group-id='#{cms_group.id}']" do
+          wait_cbox_close { click_on cms_group.section_name }
+        end
       end
       within "form#item-form" do
         expect(find("#item_contact_email").value).to eq cms_group.contact_email
@@ -118,7 +120,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
     before { login_cms_user }
 
     it do
-      cms_group.contact_groups = [{ contact_email: unique_email, main_state: "main" }]
+      cms_group.contact_groups = [{ name: unique_id, contact_email: unique_email, main_state: "main" }]
       cms_group.save!
 
       visit edit_site_path
@@ -142,10 +144,12 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         ensure_addon_opened "#addon-contact-agents-addons-page"
 
-        wait_cbox_open { click_on I18n.t("contact.search_groups.index") }
+        wait_cbox_open { click_on I18n.t("contact.apis.contacts.index") }
       end
       wait_for_cbox do
-        wait_cbox_close { click_on cms_group.name }
+        within "[data-group-id='#{cms_group.id}']" do
+          wait_cbox_close { click_on cms_group.section_name }
+        end
       end
       within "form#item-form" do
         expect(find("#item_contact_email").value).not_to eq cms_group.contact_email

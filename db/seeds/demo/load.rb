@@ -17,6 +17,10 @@ if @site.translate_api_limit_exceeded_html.blank?
   @site.save
 end
 
+@contact_group = Cms::Group.where(name: "シラサギ市/企画政策部/政策課").first
+@contact_group_id = @contact_group.id rescue nil
+@contact = @contact_group.contact_groups.first
+
 load "#{Rails.root}/db/seeds/cms/workflow.rb"
 load "#{Rails.root}/db/seeds/cms/members.rb"
 load "#{Rails.root}/db/seeds/cms/contents/files.rb"

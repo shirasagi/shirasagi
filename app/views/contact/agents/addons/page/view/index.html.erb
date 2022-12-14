@@ -1,8 +1,12 @@
-<% return if @cur_page.contact_state == "hide" || !@cur_page.contact_present? %>
-
 <%
+  return if @cur_page.contact_state == "hide" || !@cur_page.contact_present?
+
   contact_parts = []
   contact_group = @cur_page.contact_group
+
+  if contact_group.present? && @cur_page.contact_group_contact_id.present?
+    contact = contact_group.contact_groups.where(id: @cur_page.contact_group_contact_id).first
+  end
 %>
 
 <%
@@ -12,43 +16,80 @@
 %>
 
 <%
-  if @cur_page.contact_charge.present?
-    contact_parts << content_tag(:p, @cur_page.contact_charge, class: "charge")
+  if @cur_page.contact_group_related?
+    contact_charge = contact.try(:contact_group_name)
+  else
+    contact_charge = @cur_page.contact_charge
+  end
+
+  if contact_charge.present?
+    contact_parts << content_tag(:p, contact_charge, class: "charge")
   end
 %>
 
 <%
-  if @cur_page.contact_tel.present?
+  if @cur_page.contact_group_related?
+    contact_tel = contact.try(:contact_tel)
+  else
+    contact_tel = @cur_page.contact_tel
+  end
+
+  if contact_tel.present?
     contact_parts << content_tag(:dl, class: "tel") do
       @output_buffer << content_tag(:dt, "#{t("contact.view.tel")}:")
-      @output_buffer << content_tag(:dd, link_to(@cur_page.contact_tel, "tel:#{@cur_page.contact_tel.delete("-")}"))
+      @output_buffer << content_tag(:dd, link_to(contact_tel, "tel:#{contact_tel.delete("-")}"))
     end
   end
 %>
 
 <%
-  if @cur_page.contact_fax.present?
+  if @cur_page.contact_group_related?
+    contact_fax = contact.try(:contact_fax)
+  else
+    contact_fax = @cur_page.contact_fax
+  end
+
+  if contact_fax.present?
     contact_parts << content_tag(:dl, class: "fax") do
       @output_buffer << content_tag(:dt, "#{t("contact.view.fax")}:")
-      @output_buffer << content_tag(:dd, @cur_page.contact_fax)
+      @output_buffer << content_tag(:dd, contact_fax)
     end
   end
 %>
 
 <%
-  if @cur_page.contact_email.present?
+  if @cur_page.contact_group_related?
+    contact_email = contact.try(:contact_email)
+  else
+    contact_email = @cur_page.contact_email
+  end
+
+  if contact_email.present?
     contact_parts << content_tag(:dl, class: "email") do
       @output_buffer << content_tag(:dt, "#{t("contact.view.email")}:")
-      @output_buffer << content_tag(:dd, mail_to_entity(@cur_page.contact_email))
+      @output_buffer << content_tag(:dd, mail_to_entity(contact_email))
     end
   end
 %>
 
 <%
-  if @cur_page.contact_link_url.present?
+  if @cur_page.contact_group_related?
+    contact_link = contact.try(:contact_link)
+    contact_link ||= contact.try(:contact_group_name)
+    contact_link ||= contact_group.try(:section_name).presence
+    contact_link_url = contact.try(:contact_link_url)
+  else
+    contact_link = @cur_page.contact_link.presence
+    contact_link ||= @cur_page.contact_charge.presence
+    contact_link ||= contact_group.try(:section_name).presence
+    contact_link_url = @cur_page.contact_link_url
+  end
+  contact_link ||= contact_link_url
+
+  if contact_link_url.present?
     contact_parts << content_tag(:dl, class: "link") do
       @output_buffer << content_tag(:dt, "#{t("contact.view.link_url")}:")
-      @output_buffer << content_tag(:dd, link_to(@cur_page.contact_link, @cur_page.contact_link_url))
+      @output_buffer << content_tag(:dd, link_to(contact_link, contact_link_url))
     end
   end
 %>
