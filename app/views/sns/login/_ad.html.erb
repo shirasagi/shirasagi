@@ -4,45 +4,9 @@
     <header>
       <h2><%= t('sys.login.ad') %></h2>
     </header>
-    <div class="ss-swiper-slide" style="width: <%= @ad.width || 360 %>px;">
-      <div class="swiper-container ss-swiper-slide-container ss-swiper-slide-main">
-        <div class="swiper-wrapper ss-swiper-slide-wrapper">
-          <% @ad.files.shuffle.each do |file| %>
-            <div class="swiper-slide ss-swiper-slide-item" data-ss-file-id="<%= file.id %>">
-              <% if file.try(:image) %>
-                <% if file.link_url.present? %>
-                  <%= link_to sns_redirect_path(ref: file.link_url, back_to: request.url), target: "_blank", rel: "noopener" do %>
-                    <%= image_tag(file.image.url, width: @ad.width.to_i, class: "ss-swiper-slide-item-image") %>
-                  <% end %>
-                <% else %>
-                  <%= link_to "#" do %>
-                    <%= image_tag(file.image.url, width: @ad.width.to_i, class: "ss-swiper-slide-item-image") %>
-                  <% end %>
-                <% end %>
-              <% elsif file.try(:image?) %>
-                <% if file.link_url.present? %>
-                  <%= link_to file.link_url, class: "ss-swiper-slide-item-link", target: "_blank", rel: "noopener" do %>
-                    <%= image_tag file.url, alt: file.humanized_name, class: "ss-swiper-slide-item-image" %>
-                  <% end %>
-                <% else %>
-                  <%= image_tag file.url, alt: file.humanized_name, class: "ss-swiper-slide-item-image" %>
-                <% end %>
-              <% end %>
-            </div>
-          <% end %>
-        </div>
-        <div class="swiper-button-next ss-swiper-slide-button-next"></div>
-        <div class="swiper-button-prev ss-swiper-slide-button-prev"></div>
-        <div class="ss-swiper-slide-controller hide">
-          <button type="button" class="ss-swiper-slide-play" aria-pressed="true"><%= t('key_visual.controls.start') %></button>
-          <button type="button" class="ss-swiper-slide-stop" aria-pressed="false"><%= t('key_visual.controls.stop') %></button>
-        </div>
-      </div>
-      <div class="swiper-pagination ss-swiper-slide-pagination"></div>
-    </div>
+    <%=
+      files = @ad.files.shuffle
+      render "ss/slides/swiper_slides", files: files, width: @ad.ad_effective_width, slide_selector: ".ss-swiper-slide", slide_options: @ad.ad_options
+    %>
   </div>
-
-  <%= jquery do %>
-    var slide = new KeyVisual_SwiperSlide(".ss-swiper-slide", { autoplay: "started", pause: <%= @ad.time.to_i * 1000 %>, speed: 500, navigation: "show", pagination_style: "disc" });
-  <% end %>
 <% end %>

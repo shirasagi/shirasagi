@@ -1,37 +1,9 @@
-<%= jquery do %>
-  var slide = new KeyVisual_SwiperSlide(".portlet-id-<%= @portlet.id.to_s %> .ss-swiper-slide", <%== @portlet.ad_options.to_json %>);
-<% end %>
-
 <div class="main-box">
   <div class="portlet-title"><%= @portlet.name %></div>
   <div class="slide-wrap">
-    <div class="ss-swiper-slide" style="width: <%= @portlet.effective_ad_width %>px;">
-      <div class="swiper-container ss-swiper-slide-container ss-swiper-slide-main">
-        <div class="swiper-wrapper ss-swiper-slide-wrapper">
-          <% @portlet.ad_files.shuffle.each do |file| %>
-            <% file = file.becomes_with(SS::LinkFile) %>
-            <% inner_html = image_tag(file.url, alt: file.humanized_name, width: @portlet.effective_ad_width, class: "ss-swiper-slide-item-image") %>
-            <div class="swiper-slide ss-swiper-slide-item" data-ss-file-id="<%= file.id %>">
-              <% if file.link_url.present? %>
-                <%= link_to inner_html, sns_redirect_path(ref: file.link_url), class: "ss-swiper-slide-item-link", target: "_blank", rel: "noopener" %>
-              <% elsif file.sanitizer_state == 'wait' %>
-                <div class="mx-2 my-2">
-                  <%= sanitizer_status(file) %>
-                </div>
-              <% else %>
-                <%= inner_html %>
-              <% end %>
-            </div>
-          <% end %>
-        </div>
-        <div class="swiper-button-next ss-swiper-slide-button-next"></div>
-        <div class="swiper-button-prev ss-swiper-slide-button-prev"></div>
-        <div class="ss-swiper-slide-controller hide">
-          <button type="button" class="ss-swiper-slide-play" aria-pressed="true"><%= t('key_visual.controls.start') %></button>
-          <button type="button" class="ss-swiper-slide-stop" aria-pressed="false"><%= t('key_visual.controls.stop') %></button>
-        </div>
-      </div>
-      <div class="swiper-pagination ss-swiper-slide-pagination"></div>
-    </div>
+    <%=
+      files = @portlet.ad_files.shuffle.map { |file| file.becomes_with(SS::LinkFile) }
+      render "ss/slides/swiper_slides", files: files, width: @portlet.effective_ad_width, slide_selector: ".portlet-id-#{@portlet.id} .ss-swiper-slide", slide_options: @portlet.ad_options
+    %>
   </div>
 </div>
