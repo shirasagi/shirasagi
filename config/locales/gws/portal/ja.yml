@@ -114,6 +114,9 @@ ja:
       closed_portlet: このポートレットは閲覧できません。
       no_portals: ポータルが見つかりません。
 
+  gws/portal/ad:
+    autoplay_disabled: 自動再生しない
+
   gws_role:
     use_gws_portal_user_settings: 個人ポータルの利用
     use_gws_portal_group_settings: 部課ポータルの利用

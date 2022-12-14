@@ -6,21 +6,14 @@
     <% end %>
   </dd>
 
-  <dt><%= @model.t :ad_speed %></dt>
-  <dd>
-    <% if @item.ad_speed && @item.ad_speed > 0 %>
-      <%= @item.ad_speed.to_s(:delimited) %> <%= t("datetime.prompts.milli_second") %>
-    <% else %>
-      <%= t('webmail.default_settings') %> / <%= Sys::Ad::DEFAULT_SLIDE_SPEED.to_s(:delimited) %> <%= t("datetime.prompts.milli_second") %>
-    <% end %>
-  </dd>
+  <% if @item.ad_speed && @item.ad_speed > 0 && @item.ad_pause && @item.ad_pause > 0 %>
+    <dt><%= @model.t :ad_speed %></dt>
+    <dd><%= @item.ad_speed.to_s(:delimited) %> <%= t("datetime.prompts.milli_second") %></dd>
 
-  <dt><%= @model.t :ad_pause %></dt>
-  <dd>
-    <% if @item.ad_pause && @item.ad_pause > 0 %>
-      <%= @item.ad_pause.to_s(:delimited) %> <%= t("datetime.prompts.milli_second") %>
-    <% else %>
-      <%= t('webmail.default_settings') %> / <%= Sys::Ad::DEFAULT_SLIDE_PAUSE.to_s(:delimited) %> <%= t("datetime.prompts.milli_second") %>
-    <% end %>
-  </dd>
+    <dt><%= @model.t :ad_pause %></dt>
+    <dd><%= @item.ad_pause.to_s(:delimited) %> <%= t("datetime.prompts.milli_second") %></dd>
+  <% else %>
+    <dt><%= @model.t :ad_speed %> / <%= @model.t :ad_pause %></dt>
+    <dd><%= t("gws/portal/ad.autoplay_disabled") %></dd>
+  <% end %>
 </dl>
