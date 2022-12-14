@@ -90,12 +90,12 @@ module Gws::Addon::Import
         item = self.class.new
       end
 
-      item.name               = name
-      item.order              = order
-      item.domains            = domains
-      item.ldap_dn            = ldap_dn
-      item.activation_date    = activation_date
-      item.expiration_date    = expiration_date
+      item.name            = name
+      item.order           = order
+      item.domains         = domains
+      item.ldap_dn         = ldap_dn
+      item.activation_date = activation_date
+      item.expiration_date = expiration_date
 
       if item.save
         @imported += 1

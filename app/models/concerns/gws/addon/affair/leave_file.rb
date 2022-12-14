@@ -133,7 +133,7 @@ module Gws::Addon::Affair::LeaveFile
 
     return if Gws::Affair::LeaveSetting.obtainable_annual_leave?(site, target_user, start_date, self)
     minutes = in_leave_dates.map(&:minute).sum
-    errors.add :base, "年次有給休暇の有効時間が足りません。（取得時間：#{Gws::Affair::Utils.leave_minutes_label(minutes)}）"
+    errors.add :base, :not_enough_annual_leave_time, label: Gws::Affair::Utils.leave_minutes_label(minutes)
   end
 
   def set_leave_dates

@@ -462,10 +462,18 @@ ja:
           duplicate_compensatory_minute: 振替申請（同一週内振替、同一週外振替、代休振替）は同時に入力できません。
           not_match_compensatory_minute_and_hour: は開始時間〜終了時間より長く設定してください。
           greater_than_end_at: は開始時間の終了日以降にしてください。
+          compensatory_only_at_holiday: "：代休振替は祝日のみ申請可能です。"
+          compensatory_start_at_greater_than: "：振替終了は振替開始より大きい値にしてください。"
+          compensatory_exceeded_one_day: "：振替開始〜終了が1日を超過しています。"
+          compensatory_minute_greater_than: "：振替開始〜終了は振替時間（%{count}時間）より長く設定してください。"
+          compensatory_not_in_week: "：振替開始が週内になっていません。（%{label}）"
+          compensatory_not_in_term: "：振替開始が有効期限内ではありません。（有効期限： %{label}）"
+          compensatory_minute_exceeded: "：振替時間（%{label}時間）が時間外開始〜終了より長くなっています。（深夜残業時間帯を振替に含めることはできません）"
         gws/affair/leave_file:
           over_one_day: 開始時間〜終了時間が1日を超過しています。
           not_approved: は承認されていません。
           use_in_other_leave_file: は他の休暇申請に設定されています。
+          not_enough_annual_leave_time: "年次有給休暇の有効時間が足りません。（取得時間：%{label}）"
         gws/affair/shift_record:
           invalid_affair_start_at: 開始時間が不正です。5分単位での時刻を入力してください。
           invalid_affair_end_at: 終了時間が不正です。5分単位での時刻を入力してください。

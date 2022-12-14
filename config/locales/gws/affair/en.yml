@@ -449,10 +449,18 @@ en:
           duplicate_compensatory_minute: Transfer requests cannot be entered at the same time.
           not_match_compensatory_minute_and_hour: Set longer than the start time and end time.
           greater_than_end_at: Must be after the end date of the start time.
+          compensatory_only_at_holiday: ": Compensatory only at holiday"
+          compensatory_start_at_greater_than: ": Compensatory start at greater than end at"
+          compensatory_exceeded_one_day: ": Exceeded one day"
+          compensatory_minute_greater_than: ": Exceeded (%{count} hours)"
+          compensatory_not_in_week: ": Not in week (%{label})"
+          compensatory_not_in_term: ": Not in term (%{label})"
+          compensatory_minute_exceeded: ": Exceeded (%{label} hours)"
         gws/affair/leave_file:
           over_one_day: The start time to end time exceeds 1 day.
           not_approved: Not approved
           use_in_other_leave_file: Use in other leave file
+          not_enough_annual_leave_time: "Not enough annual leave time (%{label})"
         gws/affair/shift_record:
           invalid_affair_start_at: Invalid start
           invalid_affair_end_at: Invalid end
@@ -461,7 +469,7 @@ en:
         gws/affair/capital:
           not_found: "%{line_no}: not found id (%{id})"
         gws/affair/leave_setting:
-          exists_setting: "Already registered（%{name}：%{term}）"
+          exists_setting: "Already registered（%{name}:%{term}）"
 
   activemodel:
     attributes:

@@ -138,7 +138,7 @@ module Gws::Affair::OvertimeFile::Compensatory
 
       duty_calendar = user.effective_duty_calendar(site)
       if !duty_calendar.holiday?(start_at)
-        errors.add :holiday_compensatory_minute, "：代休振替は祝日のみ申請可能です。"
+        errors.add :holiday_compensatory_minute, :compensatory_only_at_holiday
       end
     end
   end
@@ -176,14 +176,14 @@ module Gws::Affair::OvertimeFile::Compensatory
   # 週内振替休暇 休暇の開始〜終了
   def validate_week_in_compensatory_leave
     if week_in_start_at >= week_in_end_at
-      errors.add :week_in_compensatory_minute, "：振替終了は振替開始より大きい値にしてください。"
+      errors.add :week_in_compensatory_minute, :compensatory_start_at_greater_than
     end
     if week_in_end_at >= week_in_start_at.advance(days: 1)
-      errors.add :week_in_compensatory_minute, "：振替開始〜終了が1日を超過しています。"
+      errors.add :week_in_compensatory_minute, :compensatory_exceeded_one_day
     end
     if ((week_in_end_at - week_in_start_at) * 24 * 60).to_i < week_in_compensatory_minute
       label = week_in_compensatory_minute.to_f / 60
-      errors.add :week_in_compensatory_minute, "：振替開始〜終了は振替時間（#{label}時間）より長く設定してください。"
+      errors.add :week_in_compensatory_minute, :compensatory_minute_greater_than, count: label
     end
 
     # 休暇日は同一週内
@@ -192,8 +192,8 @@ module Gws::Affair::OvertimeFile::Compensatory
     end_of_week = start_of_week.advance(days: 6)
 
     if week_in_start_at < start_of_week || week_in_start_at >= end_of_week.advance(days: 1)
-      errors.add :week_in_compensatory_minute,
-        "：振替開始が週内になっていません。（#{start_of_week.strftime("%Y/%m/%d")}〜#{end_of_week.strftime("%Y/%m/%d")}）"
+      label = "#{start_of_week.strftime("%Y/%m/%d")}〜#{end_of_week.strftime("%Y/%m/%d")}"
+      errors.add :week_in_compensatory_minute, :compensatory_not_in_week, label: label
     end
   end
 
@@ -230,14 +230,14 @@ module Gws::Affair::OvertimeFile::Compensatory
   # 週外振替休暇 休暇の開始〜終了
   def validate_week_out_compensatory_leave
     if week_out_start_at >= week_out_end_at
-      errors.add :week_out_compensatory_minute, "：振替終了は振替開始より大きい値にしてください。"
+      errors.add :week_out_compensatory_minute, :compensatory_start_at_greater_than
     end
     if week_out_end_at >= week_out_start_at.advance(days: 1)
-      errors.add :week_out_compensatory_minute, "：振替開始〜終了が1日を超過しています。"
+      errors.add :week_out_compensatory_minute, :compensatory_exceeded_one_day
     end
     if ((week_out_end_at - week_out_start_at) * 24 * 60).to_i < week_out_compensatory_minute
       label = week_out_compensatory_minute.to_f / 60
-      errors.add :week_out_compensatory_minute, "：振替開始〜終了は振替時間（#{label}時間）より長く設定してください。"
+      errors.add :week_out_compensatory_minute, :compensatory_minute_greater_than, count: label
     end
 
     return if start_at.blank?
@@ -246,14 +246,13 @@ module Gws::Affair::OvertimeFile::Compensatory
     end_of_week = start_of_week.advance(days: 6)
 
     if week_out_start_at >= start_of_week && week_out_start_at < end_of_week.advance(days: 1)
-      errors.add :week_out_compensatory_minute,
-        "：振替開始が週外になっていません。（#{start_of_week.strftime("%Y/%m/%d")}〜#{end_of_week.strftime("%Y/%m/%d")}）"
+      label = "#{start_of_week.strftime("%Y/%m/%d")}〜#{end_of_week.strftime("%Y/%m/%d")}"
+      errors.add :week_out_compensatory_minute, :compensatory_not_in_week, label: label
     end
 
     # 休暇日が有効期限内
     if !in_week_out_compensatory_expiration?(week_out_start_at.to_date)
-      errors.add :week_out_compensatory_minute,
-        "：振替開始が有効期限内ではありません。（有効期限： #{week_out_compensatory_expiration_term}）"
+      errors.add :week_out_compensatory_minute, :compensatory_not_in_term, label: week_out_compensatory_expiration_term
     end
   end
 
@@ -296,20 +295,20 @@ module Gws::Affair::OvertimeFile::Compensatory
   # 代休振替 休暇の開始〜終了
   def validate_holiday_compensatory_leave
     if holiday_compensatory_start_at >= holiday_compensatory_end_at
-      errors.add :holiday_compensatory_minute, "：振替終了は振替開始より大きい値にしてください。"
+      errors.add :holiday_compensatory_minute, :compensatory_start_at_greater_than
     end
     if holiday_compensatory_end_at >= holiday_compensatory_start_at.advance(days: 1)
-      errors.add :holiday_compensatory_minute, "：振替開始〜終了が1日を超過しています。"
+      errors.add :holiday_compensatory_minute, :compensatory_exceeded_one_day
     end
     if ((holiday_compensatory_end_at - holiday_compensatory_start_at) * 24 * 60).to_i < holiday_compensatory_minute
       label = holiday_compensatory_minute.to_f / 60
-      errors.add :holiday_compensatory_minute, "：振替開始〜終了は振替時間（#{label}時間）より長く設定してください。"
+      errors.add :holiday_compensatory_minute, :compensatory_minute_greater_than, count: label
     end
 
     return if start_at.blank?
     # 休暇日が有効期限内
     if !in_week_out_compensatory_expiration?(holiday_compensatory_start_at.to_date)
-      errors.add :holiday_compensatory_minute, "：振替開始が有効期限内ではありません。（有効期限： #{week_out_compensatory_expiration_term}）"
+      errors.add :holiday_compensatory_minute, :compensatory_not_in_term, label: week_out_compensatory_expiration_term
     end
   end
 
@@ -325,7 +324,7 @@ module Gws::Affair::OvertimeFile::Compensatory
     over_minutes, = Gws::Affair::Utils.time_range_minutes((start_at..end_at), (night_start_at..night_end_at))
     if over_minutes < minute
       label = minute.to_f / 60
-      errors.add key, "：振替時間（#{label}時間）が時間外開始〜終了より長くなっています。（深夜残業時間帯を振替に含めることはできません）"
+      errors.add key, :compensatory_minute_exceeded, label: label
       return
     end
   end
