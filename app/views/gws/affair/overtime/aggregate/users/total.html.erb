@@ -1,0 +1,38 @@
+<div class="gws-attendance">
+  <div class="attendance-box">
+    <div class="attendance-box-main">
+      <%= render partial: "fiscal_year_month" %>
+      <%= render partial: "search" %>
+    </div>
+  </div>
+  <%= render partial: "tabs" %>
+
+  <table class="index overtime-results">
+    <thead>
+      <tr>
+        <th><%= Gws::User.t :name %></th>
+        <th><%= Gws::User.t :organization_uid %></th>
+        <th class="time"><%= t("gws/affair.labels.overtime.total.under") %></th>
+        <th class="time"><%= t("gws/affair.labels.overtime.total.over") %></th>
+        <th class="time"><%= t("gws/affair.labels.overtime.total.sum") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <%
+          basic_code = @basic_code.present? ? @basic_code : "total"
+          under_working_minute = @items.dig(user.id, basic_code, "under_threshold", "overtime_minute").to_i
+          over_working_minute = @items.dig(user.id, basic_code, "over_threshold", "overtime_minute").to_i
+          working_minute = under_working_minute + over_working_minute
+        %>
+        <tr>
+          <td><%= user.long_name %></td>
+          <td><%= user.organization_uid %></td>
+          <td class="time"><%= format_minute(under_working_minute) %></td>
+          <td class="time"><%= format_minute(over_working_minute) %></td>
+          <td class="time"><%= format_minute(working_minute) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

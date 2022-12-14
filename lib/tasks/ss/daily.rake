@@ -69,6 +69,12 @@ namespace :ss do
 
       # グループツリーなど一部の HTML はキャッシュされている。それを更新する
       ::Tasks::SS.invoke_task("gws:cache:rebuild")
+
+      # 時間外振替の通知
+      ::Tasks::SS.invoke_task("gws:affair:notification:deliver")
+
+      # 集計グループの更新
+      ::Tasks::SS.invoke_task("gws:aggregation:group:update")
     end
   end
 end

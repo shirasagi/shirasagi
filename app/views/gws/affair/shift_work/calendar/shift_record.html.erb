@@ -1,0 +1,54 @@
+<%
+  duty_calendar = @user.effective_duty_calendar(@cur_site)
+  duty_hour = duty_calendar.effective_duty_hour(@cur_date)
+
+  wday_type = duty_calendar.leave_day?(@cur_date) ? "holiday" : "workday"
+  affair_start_at_hour = duty_hour.affair_start_at_hour(@cur_date)
+  affair_start_at_minute = duty_hour.affair_start_at_minute(@cur_date)
+  affair_end_at_hour = duty_hour.affair_end_at_hour(@cur_date)
+  affair_end_at_minute = duty_hour.affair_end_at_minute(@cur_date)
+%>
+
+<%= form_for :item, url: { action: :shift_record }, html: { method: :post, multipart: true, class: 'cell-edit' } do |f| %>
+  <%= error_messages_for :item %>
+
+  <%= hidden_field_tag 'ref', params[:ref] %>
+
+  <div class="addon-views">
+    <%= render "ss/crud/addon", addon: { id: "addon-basic", head: false } do %>
+      <dl class="see">
+        <dt><%= @model.t :affair_time %><%= @model.tt :affair_time %></dt>
+        <dd>
+          <%= f.select(:affair_start_at_hour, @item.affair_start_at_hour_options, selected: affair_start_at_hour) %>
+          <%= f.select(:affair_start_at_minute, @item.affair_start_at_minute_options, selected: affair_start_at_minute) %>
+          <%= t("ss.wave_dash") %>
+          <%= f.select(:affair_end_at_hour, @item.affair_end_at_hour_options, selected: affair_end_at_hour) %>
+          <%= f.select(:affair_end_at_minute, @item.affair_end_at_minute_options, selected: affair_end_at_minute) %>
+        </dd>
+        <dt><%= @model.t :wday_type %></dt>
+        <dd><%= f.select(:wday_type, @item.wday_type_options, selected: wday_type) %></dd>
+      </dl>
+    <% end %>
+  </div>
+
+  <footer class="send">
+    <%= f.submit t("ss.buttons.save"), class: 'btn-primary save' %>
+    <%= f.button t("gws/attendance.buttons.close"), class: 'btn-default', type: :reset, onclick: "$.colorbox.close(); return false;" %>
+  </footer>
+<% end %>
+
+<%= jquery do %>
+  var $el = $('form.cell-edit');
+  $el.on('submit', function(e) {
+    e.preventDefault();
+    $(this).ajaxSubmit({
+      success: function (data) {
+        location.href = data.location;
+      },
+      error: function(xhr, status, error) {
+        var $html = $(xhr.responseText);
+        $el.html($html.html());
+      }
+    });
+  });
+<% end %>

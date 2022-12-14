@@ -100,7 +100,7 @@ en:
         empty: "No viewer has been entered. \\n Are you sure you want everyone to see it?"
     notice:
       delay_download_with_message: |-
-        Prepare files in the background because of the large number of files or the large file size. 
+        Prepare files in the background because of the large number of files or the large file size.
         You will be informed when the download is ready.
       contrast_changed: 'Changed the contrast to %{name}.'
       webmail_user_import: "In addition to groupware settings, you can set webmail permissions."
@@ -164,10 +164,15 @@ en:
       gws/system/logo_setting: Logo settings
       gws/system/log_setting: Log settings
       gws/system/desktop_setting: Desktop app settings
+      gws/system/fiscal_year_setting: Fiscal year settings
       gws/user/custom_form: Extensions
       gws/user/public_duty: Office duties
+      gws/user/duty_hour: Duty hour
       gws/link: Link
       gws/site_usage: Usage amount
+      gws/user/affair_setting: Affair setting
+      gws/group/affair_setting: Affair setting
+      gws/user/staff_category: Staff category setting
       gws/circular/browsing_authority: Viewing permission
 
   mongoid:
@@ -347,6 +352,8 @@ en:
         menu_reminder_state: Display reminders
         menu_attendance_label: Display attendance
         menu_attendance_state: Display attendance
+        menu_affair_label: Display affair
+        menu_affair_state: Display affair
         menu_bookmark_label: Display favorites
         menu_bookmark_state: Display favorites
         menu_memo_label: Display messages
@@ -388,6 +395,7 @@ en:
       gws/addon/system/notice_setting:
         notice_schedule_state: Schedule
         notice_todo_state: ToDo
+        notice_affair_state: Affair
         notice_workflow_state: Workflows
         notice_circular_state: Circular boards
         notice_monitor_state: Inquiries and responses
@@ -424,6 +432,8 @@ en:
       gws/addon/system/desktop_setting:
         desktop_mailstore: Mail store functions
         desktop_chat: Chat functions
+      gws/addon/system/fiscal_year_setting:
+        fiscal_year_changed_month: Fiscal year changed month
       gws/addon/subscription_setting:
         subscribed_group_ids: Subscribed group
         subscribed_groups_hash: Subscribed group (hash)
@@ -468,6 +478,14 @@ en:
         charge_tel: Phone number of person responsible
         charge_address: Address of person responsible
         divide_duties: Divided duties
+      gws/addon/user/affair_setting:
+        staff_category: Staff category
+        staff_address_uid: Staff address uid
+        gws_superior_group_ids: Superior groups
+        gws_superior_user_ids: Superior users
+      gws/addon/group/affair_setting:
+        gws_superior_group_ids: Superior groups
+        gws_superior_user_ids: Superior users
       gws/contrast:
         name: Name
         order: Order
@@ -610,6 +628,14 @@ en:
     gws/role:
       permission_level:
         - Sets the permission level.
+    gws/addon/user/affair_setting:
+      staff_category: Select staff category
+      staff_address_uid: Input staff address uid
+      gws_superior_group_ids: Select superior groups
+      gws_superior_user_ids: Select superior users
+    gws/addon/group/affair_setting:
+      gws_superior_group_ids: Select superior groups
+      gws_superior_user_ids: Select superior users
 
   activemodel:
     models:
@@ -629,3 +655,4 @@ en:
       gws/user_title_import_job: Import job title
       gws/user_occupation_import_job: Occupation import
       gws/cache_rebuild_job: Rebuild cache
+      gws/aggregation/group_update_job: Update aggregation group

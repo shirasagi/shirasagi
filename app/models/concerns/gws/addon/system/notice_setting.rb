@@ -5,7 +5,7 @@ module Gws::Addon::System::NoticeSetting
   set_addon_type :organization
 
   included do
-    %w(schedule todo report workflow circular monitor board faq qna survey discussion announcement).each do |name|
+    %w(schedule todo report workflow circular monitor board faq qna survey discussion announcement affair).each do |name|
       field "notice_#{name}_state", type: String, default: 'notify'
       permit_params "notice_#{name}_state"
       alias_method("notice_#{name}_state_options", "notice_state_options")
@@ -41,6 +41,7 @@ module Gws::Addon::System::NoticeSetting
                when "gws/notice/post" then 'announcement'
                when "gws/survey/form", "gws/survey/file" then 'survey'
                when "gws/monitor/topic", "gws/monitor/post" then 'monitor'
+               when "gws/affair/overtime_file", "gws/affair/leave_file" then 'gws/affair'
                end
     !force_silence?(function)
   end

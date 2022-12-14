@@ -1,0 +1,18 @@
+<% @break_times = SS.config.gws.attendance['max_break'].times.to_a.select { |i| @cur_site["attendance_break_time#{i + 1}_state"] == 'show' } %>
+
+<%= render 'ss/crud/print_preview_head', links: [[ I18n.t('ss.links.back'), { action: :index } ]] %>
+
+<div class="sheet gws-attendance">
+  <div class="attendance-box-title"><%= I18n.t('gws/attendance.formats.time_card_full_name', user_name: @item.user.name, month: I18n.l(@item.date.to_date, format: :attendance_year_month)) %></div>
+  <div class="main">
+    <% if @duty_calendar.flextime? %>
+      <%= render 'time_card/flextime' %>
+    <% else %>
+      <%= render 'time_card/default' %>
+    <% end %>
+  </div>
+</div>
+
+<%= jquery do %>
+  SS_Font.render();
+<% end %>

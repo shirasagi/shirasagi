@@ -1,0 +1,6 @@
+<% @index_title = proc do |item| %>
+  <% title = "#{item.code} #{item.name}" %>
+  <%= link_to title, { action: :show, id: item }, class: "title" %>
+<% end %>
+<%= render "gws/affair/special_leaves/tabs" %>
+<%= render template: "gws/crud/index" %>

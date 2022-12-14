@@ -25,6 +25,7 @@ en:
       gws/portal/notice_setting: Announcement settings
       gws/portal/monitor_setting: Inquiry and response settings
       gws/portal/link_setting: Links settings
+      gws/portal/attendance_setting: Attendance setting
 
   gws/portal:
     self_portal: Personal
@@ -193,6 +194,8 @@ en:
         survey_answered_state: Answered/Unanswered
         survey_sort: Order
         survey_category_ids: Category
+      gws/addon/portal/portlet/attendance:
+        timecard_module: Timecard
       gws/addon/portal/portlet/ad:
         ad_width: Width
         ad_speed: Slide time

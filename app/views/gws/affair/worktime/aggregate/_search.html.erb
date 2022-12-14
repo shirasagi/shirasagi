@@ -1,0 +1,39 @@
+<% if @unlocked_time_cards.present? %>
+  <div id="errorExplanation" class="errorExplanation">
+  <h2><%= t("gws/affair.notice.time_card_unlocked.h2", year: @year, month: @month) %></h2>
+    <p><%= t("gws/affair.notice.time_card_unlocked.p") %></p>
+    <ul>
+      <% @unlocked_time_cards.each do |title| %>
+        <li><%= title %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<div class="attendance-box">
+  <div class="attendance-box-main">
+    <%
+      group_options = @groups.map { |g| [g.name, g.id] }
+      year_options = ((@current.year - 5)..(@current.year)).map { |y| ["#{y}#{t("datetime.prompts.year")}", y] }.reverse
+      month_options = (1..12).map { |m| ["#{m}#{t("datetime.prompts.month")}", m] }
+    %>
+    <%= form_for :s, url: "", html: { method: :get } do |f| %>
+      <%= f.select :group_id, group_options %>
+      <%= f.select :year, year_options %>
+      <%= f.select :month, month_options %>
+
+      <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+      <%= link_to t("ss.buttons.reset"), gws_affair_worktime_aggregate_path, class: "btn" %>
+      <%= link_to t("ss.links.download"), { action: :download }.merge(s: @s.to_h), class: "btn", style: "float: right;" %>
+    <% end %>
+  </div>
+</div>
+
+<div class="gws-schedule-tabs">
+  <%= link_to gws_affair_worktime_aggregate_path(duty_type: "default", s: params.permit(s: [:group_id, :year, :month]).dig(:s)), class: params[:duty_type] == "default" ? "current" : nil do %>
+    <span class="tab-name">通常</span>
+  <% end %>
+  <%= link_to gws_affair_worktime_aggregate_path(duty_type: "flextime", s: params.permit(s: [:group_id, :year, :month]).dig(:s)), class: params[:duty_type] == "flextime" ? "current" : nil do %>
+    <span class="tab-name">自由時間勤務</span>
+  <% end %>
+</div>

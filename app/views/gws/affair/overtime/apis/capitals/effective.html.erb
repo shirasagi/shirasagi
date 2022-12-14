@@ -1,0 +1,10 @@
+<% return "" unless @user %>
+<%
+  id = @capital ? @capital.id : nil
+  name = @capital ? @capital.name : t("gws/affair.views.not_set_capital")
+  target = @user.name
+%>
+<div class="caiptal">
+  <%= hidden_field_tag "item[capital_id]", id %>
+  <%= t("gws/affair.views.capital_title", name: name, target: target) %>
+</div>

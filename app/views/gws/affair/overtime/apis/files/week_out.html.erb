@@ -1,0 +1,46 @@
+<%
+  if @items.blank?
+    return t("gws/affair.notice.not_found_overtime_file")
+  end
+%>
+
+<%= jquery do %>
+  SS_SearchUI.modal();
+<% end %>
+
+<table class="index">
+  <thead class="list-head">
+    <tr>
+      <% if @multi %>
+      <th class="checkbox"><input type="checkbox" /></th>
+      <% end %>
+      <th class="name"><%= t("gws/affair.labels.overtime_file") %></th>
+      <th><%= t("gws/affair.options.leave_type.week_out_compensatory_leave") %><%= t("gws/affair.options.time_remaining", total_time: @left_compensatory_minute) %></th>
+      <th><%= t("gws/affair.labels.target_user") %></th>
+      <th><%= t("gws/affair.limit") %></th>
+    </tr>
+  </thead>
+  <tbody class="items">
+    <% @items.each do |item| %>
+      <tr data-id="<%= item.id %>" class="list-item">
+        <% if @multi %>
+          <td class="checkbox">
+            <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+          </td>
+        <% end %>
+        <td><%= link_to item.term_label, "#", class: @multi ? "select-item" : "select-single-item" %></td>
+        <td><%= item.label :week_out_compensatory_minute %></td>
+        <td><%= item.target_user.try(:long_name) %></td>
+        <td><%= item.week_out_compensatory_expiration_term %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% if @multi %>
+<div class="search-ui-select">
+  <%= button_tag t("ss.links.select"), { type: :button, class: "select-items btn" } %>
+</div>
+<% end %>
+
+<%= paginate @items if @items.try(:current_page) %>

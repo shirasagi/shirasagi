@@ -1,0 +1,664 @@
+en:
+  gws/affair:
+    aggregate: Aggregate results
+    capital: Capital types
+    default_duty_hour: Default duty hour
+    default_holiday_calendar: Default holiday calendar
+    default_duty_calendar: Default duty calendar
+    top_holidays_on_year: "Show %{count} holidays in %{year}"
+    year_id: Fiscal year
+    all_year_id: All fiscal year
+    term: Term
+    shift_calendar: Shift calendar
+    user_setting: User setting
+    group_setting: Group setting
+    leave_setting: Leave setting
+    download_day_count: Days export
+    breaktime: Break time
+    in_week: In week
+    out_of_week: Out of week
+    timecard:
+      in_work:
+        title: work
+        worktime: worktime
+      in_over:
+        title: over
+        difference: "worktime (overtime | difference)"
+        breaktime: break time etc
+        compensatory: compensatory leave
+      in_leave:
+        title: leave
+      label:
+        order: "[order]"
+        confirmed: "[confirmed]"
+        set_results: Input results
+    links:
+      set_results: Input results
+      edit_results: Edit resutls
+      close_results: Close results
+      closed_results: Closed results
+      aggregate: Overtime
+      aggregate_capitals: Capital types
+      manage_holidays: Setting holidays
+      manage_shifts: Setting shift calendar
+      manage_notices: Setting notifications
+      ignore_and_save: Save
+      back_to_form: Back to form
+      download_member: Download user setting
+      download_group: Download group setting
+      set_by_week_days: Setting by week days
+      open_compensatory: Compensatory file
+    views:
+      capital_title: "%{name} (target: %{target})"
+      not_set_capital: Not set capital
+    options:
+      status:
+        approve: Approve
+        request: Request
+        draft: Draft
+        pending: Pendaing
+        remand: Remarnd
+      overtime_status:
+        approve: Apporve
+        request: Request
+        draft: Draft
+        pending: Pending
+        remand: Remand
+        result_closed: Result closed
+      leave_type:
+        annual_leave: Annual leaves
+        paidleave: Paid leaves
+        week_out_compensatory_leave: Week out compensatory leaves
+        week_in_compensatory_leave: Week in compensatory leaves
+        holiday_compensatory_leave: Holiday compensatory leave
+      wday_type:
+        workday: Work day
+        holiday: Holiday
+      notice_type:
+        month_time_limit: Month limit
+        week_time_limit: Week limit
+      period_type:
+        month: Month
+        week: Week
+        day: Day
+      target_users:
+        users: Group users
+        descendants: Descendant users
+      staff_category:
+        regular_staff: Regular staff
+        fiscal_year_staff: Fiscal year staff
+      time_remaining: "(%{total_time} hours left)"
+    notice:
+      close_results: Close results
+      select_target_user: Select target user
+      select_start_at_date: Select start at date
+      not_found_overtime_file: Not found overtime file
+      not_found_leave_setting: Not found leave setting
+      time_card_unlocked:
+        h2: "%{year}/%{month} timecard"
+        p: Not locked timecards
+      not_found_groups: Not found groups
+      not_found_users: Not found users
+      not_found_leave_files: Not found leave files
+      not_found_shift_work: Not found shift calendar
+      not_created_time_card: "Not created %{year}/%{month} timecard（%{user}）"
+    caution:
+      leave_setting_import_member:
+        - "%{year}'s leave setting import"
+      leave_setting_import_member_last_year:
+        - ""
+      leave_setting_download_yearly:
+        - "%{year}'s leave setting export"
+      capital_import_group:
+        - "%{year}'s capital setting import"
+      capital_import_member:
+        - "%{year}'s capital setting export"
+    form_alert:
+      title:
+        overtime_compensatory: Holiday's overtime
+      message:
+        not_set_overtime_compensatory:
+          - Not set overtime compensatory
+    confirm:
+      download: Are you sure you want to download it?
+      create_shift_calendar: "Are you sure you want to create %{user}'s shift calendar?"
+      delete_shift_calendar: "Are you sure you want to delete %{user}'s shift calendar?"
+    labels:
+      overtime_file: Overtime file
+      target_user: Target user
+      weekly_leave_day: Weekly leave day
+      holiday: Holiday
+      caution: caution
+      leave_setting_import_member: Leave setting (users)
+      leave_setting_download_yearly: Leave setting download
+      capital_import_member: Capital setting (users)
+      capital_import_group: Capital setting (groups)
+      leave_files: Leave files
+      leave_hours: Leave hours
+      leave_minutes: Leave minutes
+      overtime:
+        under_threshold:
+          duty_day_time:
+            name: "Overtime（workday）"
+            rate: "Normal\n125/100"
+          duty_night_time:
+            name: "Overtime（workday）"
+            rate: "Night\n150/100"
+          leave_day_time:
+            name: "Leaveday（holiday）"
+            rate: "Normal\n135/100"
+          leave_night_time:
+            name: "Leaveday（holiday）"
+            rate: "Night\n160/100"
+          duty_day_in_work_time:
+            rate: "Short\n100/100"
+          week_out_compensatory:
+            name: "Week out compensatory"
+            rate: "Week out compensatory\n25/100"
+        over_threshold:
+          duty_day_time:
+            name: "Overtime（workday）"
+            rate: "普通\n150/100"
+          duty_night_time:
+            name: "Overtime（workday）"
+            rate: "Night\n175/100"
+          leave_day_time:
+            name: "Leaveday（holiday）"
+            rate: "Normal\n150/100"
+          leave_night_time:
+            name: "Overtime（holiday）"
+            rate: "Night\n175/100"
+          week_out_compensatory:
+            name: "Week out compensatory"
+            rate: "Week out compensatory\n50/100"
+        total:
+          under: Under
+          over: Over
+          sum: Month total
+        capitals:
+          capital: Capital
+          total: Total
+          total_capitals: Total capitals
+          title: "%{year}"
+          title_groups: "Capital（%{year}/%{month}:%{group}）"
+          title_users: "Capital（%{year}/%{month}:%{group}）"
+          title_search: "%{year}/%{month}"
+        search:
+          title: "Capital（%{year}/%{month}）"
+    export:
+      capital:
+        article_code: Article code
+        section_code: Section code
+        subsection_code: Subsection code
+        item_code: Item code
+        subitem_code: Subitem code
+        project_code: Project code
+        detail_code: Detail code
+        project_name: Project name
+        description_name: Description name
+        item_name: Item name
+        subitem_name: Subitem name
+      capital_group:
+        group_name: Group name
+        project_code: Project code
+        detail_code: Detail code
+      capital_member:
+        name: User name
+        staff_address_uid: Staff address uid
+        project_code: Project code
+        detail_code: Detail code
+      leave_setting:
+        id: Id
+        name: User name
+        staff_address_uid: Staff address uid
+        start_at: Start at
+        end_at: End at
+        count: Count
+        leaved_count: Leaved count
+        effective_count: Effective cont
+    apis:
+      duty_hours:
+        index: Select duty hour
+      holiday_calendars:
+        index: Select holiday calendars
+      duty_notices:
+        index: Select duty notices
+      special_leaves:
+        index: Select special leaves
+      capitals:
+        index: Select duty capitals
+    limit: Limit
+
+  modules:
+    gws/affair: Affair
+    gws/affair/attendance: Attendance
+    gws/affair/attendance/time_card: Timecard
+    gws/affair/attendance/group: Group
+    gws/affair/attendance/management/time_card: Management timecard
+    gws/affair/overtime: Overtime
+    gws/affair/overtime/file: Overtime file
+    gws/affair/overtime/file/mine: Mine
+    gws/affair/overtime/file/approve: Requested
+    gws/affair/overtime/file/all: Management file
+    gws/affair/overtime/detail: Details
+    gws/affair/overtime/aggregate: Aggregation
+    gws/affair/overtime/aggregate/user: Users
+    gws/affair/overtime/aggregate/capital: Capitals
+    gws/affair/overtime/aggregate/search_groups: Search Groups
+    gws/affair/overtime/aggregate/search_users: Search Users
+    gws/affair/leave: Leave
+    gws/affair/leave/file: Leave file
+    gws/affair/leave/file/mine: Mine
+    gws/affair/leave/file/approve: Requested
+    gws/affair/leave/file/all: Management file
+    gws/affair/leave/detail: Details
+    gws/affair/leave_setting: Leave setting
+    gws/affair/worktime/aggregate: Aggregation
+    gws/affair/worktime/aggregate/default: Users
+    gws/affair/duty_setting: Duty setting
+    gws/affair/duty_hour: Duty hour
+    gws/affair/duty_calendar: Duty calendar
+    gws/affair/holiday_calendar: Holiday calendar
+    gws/affair/capital: Capital
+    gws/affair/capital_years: Capital years
+    gws/affair/shift_work: Shift work
+    gws/affair/shift_work/calendar: Shift calendar
+    gws/affair/shift_work/shift_calendar: Shift calendar
+    gws/affair/duty_notice: Timecard notification
+    gws/affair/special_leave: Special leave types
+    addons:
+      gws/affair/overtime_file: Overtime
+      gws/affair/overtime_result: Result
+      gws/affair/approver: Approver
+      gws/affair/leave_file: Leave
+      gws/affair/duty_hour: Duty hour
+      gws/affair/holiday: Holiday
+      gws/affair/flextime: Flextime
+      gws/affair/duty_notice: Timecard notification
+      gws/affair/file_target: Target
+      gws/affair/annual_leave_setting: Annual leave
+      gws/affair/paid_leave_setting: Paid leave
+      gws/affair/group_setting: affair
+
+  mongoid:
+    models:
+      gws/affair/capital: Capital
+      gws/affair/duty_calendar: Duty calendar
+      gws/affair/duty_hour: Duty hour
+      gws/affair/holiday_calendar: Holiday calendar
+      gws/affair/capital_year: Capital year
+    attributes:
+      gws/affair/capital:
+        name: Name
+        article_code: Article code
+        section_code: Section code
+        subsection_code: Subsection code
+        item_code: Item code
+        subitem_code: Subitem code
+        project_code: Project code
+        detail_code: Detail code
+        project_name: Project code
+        description_name: Description name
+        item_name: Item name
+        subitem_name: Subitem name
+        in_file: File
+        year_id: Fiscal year
+        year_code: Year
+        year_name: Fiscal year name
+      gws/affair/duty_calendar:
+        name: Name
+        code: Code
+      gws/affair/shift_record:
+        duty_calendar_id: Duty calendar
+        date: Date
+        wday: Week day
+        start_at: Start
+        end_at: End
+        wday_type: Week day type
+        in_file: File
+        affair_time: Worktime
+      gws/affair/duty_hour:
+        name: Name
+        start_at: Start
+        end_at: End
+        break_enter1_start_at: Break 1 start
+        break_enter1_end_at: Break 1 end
+        break_enter2_start_at: Break 2 start
+        break_enter2_end_at: Break 2 end
+        break_enter3_start_at: Break 3 start
+        break_enter3_end_at: Break 3 end
+      gws/affair/overtime_file:
+        name: Name
+        capital_id: Capital
+        status: Status
+      gws/addon/affair/overtime_file:
+        overtime_name: Overtime name
+        start_at: Start
+        end_at: End
+        week_in_compensatory_minute: Week in compensatory minute
+        week_out_compensatory_minute: Week out compensatory minute
+        holiday_compensatory_minute: Holiday compensatory minute
+        remark: Remark
+        week_in_start_at: Week in start
+        week_in_end_at: Week in end
+        week_in_start_at_date: Week in start day
+        week_in_end_at_date: Week in end day
+        week_out_start_at: Week out start
+        week_out_end_at:  Week out end
+        week_out_start_at_date:  Week out start day
+        week_out_end_at_date:  Week out end day
+        result_closed: Result closed date
+        result_updated: Result update date
+        result_created: Result input date
+      gws/affair/leave_file:
+        name: Title
+        start_at: Start
+        end_at: End
+        leave_type: Leave type
+        leave_dates: Leave dates
+        reason: Reason
+        special_leave_id: Special leave
+        week_in_compensatory_file_id: Week in compensatory file
+        week_out_compensatory_file_id: Week out compensatory file
+        holiday_compensatory_file_id: Holiday compensatory file
+        status: Status
+      gws/affair/leave_setting:
+        name: Title
+        target_user_id: Target user
+        year_id: Fiscal year setting
+        leave_type: Leave type
+        count: Effective days
+        in_file: File
+        times: Times
+        time_left: Time left
+      gws/affair/overtime_result:
+        start_at: Start
+        end_at: End
+        break_time_minute: Break time minute
+      gws/addon/affair/approver:
+        workflow_user_id: Workflow user
+        workflow_state: Workflow state
+        workflow_comment: Workflow comment
+        workflow_pull_up: Pull up setting
+        workflow_on_remand: On remand
+        workflow_approvers: Approvers
+        workflow_required_counts: Required approve counts
+        workflow_circulations: Circulations
+        requested: Requested date
+        approved: Approved date
+        comment: Remand comment
+        approver_comment: Approver comment
+      gws/affair/duty_hour_setting:
+        attendance_time_changed_minute: Affair changed hour
+        affair_time: Affair time
+        affair_on_duty: Affair duty
+        affair_overtime: Affair overtime
+        overtime_in_work: Overtime in work
+      gws/addon/affair/duty_hour:
+        duty_hour_ids: Duty hours
+      gws/addon/affair/holiday:
+        holiday_calendar_ids: Holiday calendar
+      gws/addon/affair/duty_notice:
+        duty_notice_ids: Timecard notification
+      gws/affair/holiday_calendar:
+        name: Title
+        wday_settings: Weekday settings
+        sunday_type: Sunday
+        monday_type: Monday
+        tuesday_type: Tuesday
+        wednesday_type: Wednesday
+        thursday_type: Thursday
+        friday_type: Friday
+        saturday_type: Saturday
+        national_holiday_type: National holidays
+        holidays: Other holidays
+      gws/addon/affair/flextime:
+        flextime_state: Flextime
+      gws/affair/duty_notice:
+        name: Title
+        notice_type: Notice type
+        period_type: Period type
+        threshold_hour: Threshold hour
+        body: Body
+      gws/addon/affair/file_target:
+        target_group_id: Group
+        target_user_id: User
+        target_user_staff_address_uid: Target staff address uid
+        target_user_staff_category: Target staff category
+      gws/affair/overtime_day_result:
+        search_term: Term
+        search_group: Group
+        search_user: User
+      gws/affair/special_leave:
+        code: Code
+        name: Name
+        order: Order
+        staff_category: Staff category
+        in_file: File
+      gws/affair/capital_year:
+        name: Fiscal year
+        code: Code
+        start_date: Start
+        close_date: End
+    errors:
+      models:
+        gws/affair/overtime_file:
+          over_one_day: The start time to end time exceeds 1 day.
+          over_change_hour: The start time to end time exceeds the daily time.
+          in_duty_hour: The start time and end time are within working hours.
+          duplicate_compensatory_minute: Transfer requests cannot be entered at the same time.
+          not_match_compensatory_minute_and_hour: Set longer than the start time and end time.
+          greater_than_end_at: Must be after the end date of the start time.
+          compensatory_only_at_holiday: ": Compensatory only at holiday"
+          compensatory_start_at_greater_than: ": Compensatory start at greater than end at"
+          compensatory_exceeded_one_day: ": Exceeded one day"
+          compensatory_minute_greater_than: ": Exceeded (%{count} hours)"
+          compensatory_not_in_week: ": Not in week (%{label})"
+          compensatory_not_in_term: ": Not in term (%{label})"
+          compensatory_minute_exceeded: ": Exceeded (%{label} hours)"
+        gws/affair/leave_file:
+          over_one_day: The start time to end time exceeds 1 day.
+          not_approved: Not approved
+          use_in_other_leave_file: Use in other leave file
+          not_enough_annual_leave_time: "Not enough annual leave time (%{label})"
+        gws/affair/shift_record:
+          invalid_affair_start_at: Invalid start
+          invalid_affair_end_at: Invalid end
+        gws/affair/special_leave:
+          not_found: "%{line_no}: not found id (%{id})"
+        gws/affair/capital:
+          not_found: "%{line_no}: not found id (%{id})"
+        gws/affair/leave_setting:
+          exists_setting: "Already registered（%{name}:%{term}）"
+
+  activemodel:
+    attributes:
+      gws/affair/capital_year/importer/base:
+        in_file: File
+    errors:
+      models:
+        gws/affair/capital_year/importer/base:
+          not_found_target_user: "%{line_no}: not found user (%{staff_address_uid})"
+
+  gws_role:
+    use_gws_affair: Use affair features
+    use_gws_affair_attendance_time_cards: Use clock-in and clock-out time
+    edit_gws_affair_attendance_time_cards: Change clock-in and clock-out time
+    # timecard
+    manage_private_gws_affair_attendance_time_cards: Manage attendance (own group)
+    manage_all_gws_affair_attendance_time_cards: Manage attendance (all)
+    aggregate_private_gws_affair_attendance_time_cards: Aggregate group attendance（own group）
+    aggregate_all_gws_affair_attendance_time_cards: Aggregate group attendance（all）
+    # overtime file
+    read_other_gws_affair_overtime_files: Read overtime files（all）
+    read_private_gws_affair_overtime_files: Read overtime files（own）
+    edit_other_gws_affair_overtime_files: Edit overtime files（all）
+    edit_private_gws_affair_overtime_files: Edit overtime files（own）
+    delete_other_gws_affair_overtime_files: Delete overtime files（all）
+    delete_private_gws_affair_overtime_files: Delete overtime files（own）
+    approve_other_gws_affair_overtime_files: Approve overtime files（own）
+    approve_private_gws_affair_overtime_files: Approve overtime files（all）
+    reroute_other_gws_affair_overtime_files: Reroute overtime files（own）
+    reroute_private_gws_affair_overtime_files: Reroute overtime files（all）
+    # overtime aggregate
+    use_aggregate_gws_affair_overtime_files: Use overtime aggregation（own）
+    manage_aggregate_gws_affair_overtime_files: Use overtime aggregation（group）
+    all_aggregate_gws_affair_overtime_files: Use overtime aggregation（all）
+    # leave file
+    read_other_gws_affair_leave_files: Read leave files（all）
+    read_private_gws_affair_leave_files: Read leave files（own）
+    edit_other_gws_affair_leave_files: Edit leave files（all）
+    edit_private_gws_affair_leave_files: Edit leave files（own）
+    delete_other_gws_affair_leave_files: Delete leave files（all）
+    delete_private_gws_affair_leave_files: Delete leave files（own）
+    approve_other_gws_affair_leave_files: Approve leave files（all）
+    approve_private_gws_affair_leave_files: Approve leave files（own）
+    reroute_other_gws_affair_leave_files: Reroute leave files（all）
+    reroute_private_gws_affair_leave_files: Reroute leave files（own）
+    # leave aggregate
+    use_aggregate_gws_affair_leave_files: Use leave aggregation（own）
+    manage_aggregate_gws_affair_leave_files: Use leave aggregation（group）
+    all_aggregate_gws_affair_leave_files: Use leave aggregation（all）
+    # shift_calendar
+    use_gws_affair_shift_calendars: Use shift calendars
+    manage_private_gws_affair_shift_calendars: Manage shift calendars（own）
+    manage_all_gws_affair_shift_calendars: Manage shift calendars（all）
+    # affair setting
+    edit_gws_affair_duty_settings: Edit affair duty settings
+    edit_gws_affair_special_leaves: Edit special leaves
+    edit_gws_affair_capital_years: Edit years
+
+  gws_notification:
+    gws/affair/overtime_file:
+      request: "[overtime file]「%{name}」requested"
+      approve: "[overtime file]「%{name}」completed"
+      remand: "[overtime file]「%{name}」remanded"
+      circular: "[overtime file]「%{name}」received"
+      comment: "[overtime file]「%{name}」commended"
+    gws/affair/leave_file:
+      request: "[leave file]「%{name}」requested"
+      approve: "[leave file]「%{name}」completed"
+      remand: "[leave file]「%{name}」remanded"
+      circular: "[leave file]「%{name}」received"
+      comment: "[leave file]「%{name}」commended"
+    gws/affair/compensatory_file:
+      subject: "[overtime file]「%{name}」compensatory file confirmation"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+  tooltip:
+    gws/affair/capital:
+      article_code:
+        - Input article code.
+      section_code:
+        - Input sction code.
+      subsection_code:
+        - Input subsection code.
+      item_code:
+        - Input item code.
+      subitem_code:
+        - Input subitem code.
+      project_code:
+        - Input project code.
+      detail_code:
+        - Input detail code.
+      project_name:
+        - Input project name.
+      description_name:
+        - Input description name.
+      item_name:
+        - Input item name.
+      subitem_name:
+        - Input subitem name.
+    gws/affair/overtime_file:
+      name:
+        - Input title.
+      capital_id:
+        - Select capital.
+      overtime_name:
+        - Input overtime name.
+      start_at:
+        - Input start.
+      end_at:
+        - Input end.
+      week_in_compensatory_minute:
+        - Input week in compensatory minute.
+      week_out_compensatory_minute:
+        - Input week out compensatory minute.
+      holiday_compensatory_minute:
+        - Input holiday compensatory minute.
+      remark:
+        - Input remark.
+    gws/affair/leave_file:
+      name:
+        - Input title.
+      start_at:
+        - Input start.
+      end_at:
+        - Input end.
+      leave_type:
+        - Input leave type.
+      reason:
+        - Input reason.
+      special_leave_id:
+        - Input special leave.
+      week_in_compensatory_file_id:
+        - Input week in compensatory file.
+      week_out_compensatory_file_id:
+        - Input week out compensatory file.
+      holiday_compensatory_file_id:
+        - Input holiday compensatory file.
+    gws/affair/duty_hour_setting:
+      attendance_time_changed_minute:
+        - Input affair changed hour.
+      affair_on_duty:
+        - Input dury hours.
+      affair_overtime:
+        - Input overtime hours.
+      overtime_in_work:
+        - Input overtime in work.
+    gws/affair/duty_calendar:
+      name:
+        - Input name.
+      code:
+        - Input code.
+    gws/affair/duty_hour:
+      name:
+        - Input name.
+    gws/affair/duty_notice:
+      name:
+        - Input title.
+      notice_type:
+        - Select type.
+      threshold_hour:
+        - Input threshold hour.
+      body:
+        - Input body.
+    gws/addon/affair/file_target:
+      target_group_id: Select target group.
+      target_user_id: Select target user.
+    gws/affair/overtime_day_result:
+      search_term:
+        - Search term.
+      search_group:
+        - Select group.
+      search_user:
+        - Select user.
+    gws/affair/special_leave:
+      code: Input code.
+      name: Input name.
+      order:
+        - Input order.
+      staff_category: Select staff category.
+    gws/affair/capital_year:
+      name: Input name.
+      code: Input year.
+      start_date: Input start.
+      close_date: Input end.
+
+  job:
+    models:
+      gws/affair/notify_compensatory_file_job: Notify compensatory file

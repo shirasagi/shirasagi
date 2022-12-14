@@ -1,0 +1,138 @@
+<%= form_tag({ action: :update }, { id: "ajax-form", method: :put, autocomplete: :off }) do %>
+
+<%= hidden_field_tag "ref", params[:ref] %>
+
+<% @items.each do |item| %>
+  <div class="addon-view" id="addon-gws-agents-addons-affair-overtime_file">
+    <div class="addon-head toggle-head"><h2><%= "#{item.date.strftime("%Y/%m/%d")} : #{item.name}" %></h2></div>
+    <div class="addon-body toggle-body" style="display: none;">
+      <dl class="see addon-gws-affair-overtime_file">
+        <dt><%= item.t :overtime_name %></dt>
+        <dd><%= item.overtime_name %></dd>
+
+        <dt><%= item.t :capital_id %></dt>
+        <dd><%= tryb { item.capital.name } %></dd>
+
+        <dt><%= item.t :start_at %></dt>
+        <dd><%= tryb { item.start_at.strftime("%Y/%m/%d %H:%M") } %></dd>
+
+        <dt><%= item.t :end_at %></dt>
+        <dd><%= tryb { item.end_at.strftime("%Y/%m/%d %H:%M") } %></dd>
+
+        <% if item.week_in_compensatory_minute.present?  %>
+          <dt><%= item.t :week_in_compensatory_minute %></dt>
+          <dd><%= item.label :week_in_compensatory_minute %></dd>
+        <% end %>
+
+        <% if item.week_out_compensatory_minute.present?  %>
+          <dt><%= item.t :week_out_compensatory_minute %></dt>
+          <dd><%= item.label :week_out_compensatory_minute %></dd>
+        <% end %>
+
+        <% if item.remark.present? %>
+          <dt><%= item.t :remark %></dt>
+          <dd><%=br item.remark %></dd>
+        <% end %>
+      </dl>
+    </div>
+  </div>
+
+  <%
+    date_options = [item.date, item.date.advance(days: 1)].map { |date| [date.strftime("%Y/%m/%d"), date.strftime("%Y/%m/%d")] }
+    hour_options = (0..23).map { |h| [t("gws/attendance.hour", count: h), h.to_s] }
+    minute_options = (0..59).map { |m| [t("gws/attendance.minute", count: m), m.to_s] }
+
+    if item.result
+      result = item.result
+    else
+      result = ::Gws::Affair::OvertimeResult.new
+
+      result.start_at_date = item.start_at.strftime("%Y/%m/%d")
+      result.start_at_hour = item.start_at.hour
+      result.start_at_minute = item.start_at.minute
+
+      result.end_at_date = item.end_at.strftime("%Y/%m/%d")
+      result.end_at_hour = item.end_at.hour
+      result.end_at_minute = item.end_at.minute
+    end
+
+    if result.break1_start_at.blank?
+      result.break1_start_at_date = item.start_at.strftime("%Y/%m/%d")
+      result.break1_start_at_hour = item.start_at.hour
+      result.break1_start_at_minute = item.start_at.minute
+
+      result.break1_end_at_date = item.start_at.strftime("%Y/%m/%d")
+      result.break1_end_at_hour = item.start_at.hour
+      result.break1_end_at_minute = item.start_at.minute
+    end
+
+    if result.break2_start_at.blank?
+      result.break2_start_at_date = item.start_at.strftime("%Y/%m/%d")
+      result.break2_start_at_hour = item.start_at.hour
+      result.break2_start_at_minute = item.start_at.minute
+
+      result.break2_end_at_date = item.start_at.strftime("%Y/%m/%d")
+      result.break2_end_at_hour = item.start_at.hour
+      result.break2_end_at_minute = item.start_at.minute
+    end
+  %>
+  <table class="index overtime-results" style="margin-bottom: 10px;">
+    <tr class="item-head">
+      <th class="start-at"><%= Gws::Affair::OvertimeResult.t("start_at") %></th>
+      <th class="end-at"><%= Gws::Affair::OvertimeResult.t("end_at") %></th>
+    </tr>
+    <tr class="item">
+      <td class="start-at">
+        <%= select_tag "item[in_results][#{item.id}][start_at_date]", options_for_select(date_options, result.start_at_date), include_blank: true %>
+        <%= select_tag "item[in_results][#{item.id}][start_at_hour]", options_for_select(hour_options, result.start_at_hour), include_blank: true %>
+        <%= select_tag "item[in_results][#{item.id}][start_at_minute]", options_for_select(minute_options, result.start_at_minute), include_blank: true %>
+      </td>
+      <td class="end-at">
+        <%= select_tag "item[in_results][#{item.id}][end_at_date]", options_for_select(date_options, result.end_at_date), include_blank: true %>
+        <%= select_tag "item[in_results][#{item.id}][end_at_hour]", options_for_select(hour_options, result.end_at_hour), include_blank: true %>
+        <%= select_tag "item[in_results][#{item.id}][end_at_minute]", options_for_select(minute_options, result.end_at_minute), include_blank: true %>
+      </td>
+    </tr>
+    <tr class="item-head">
+      <th class="break-time" colspan="2">
+        <%= Gws::Affair::OvertimeResult.t("break_time_minute") %>
+        <%= "(#{Gws::Affair::OvertimeResult.t("start_at")}#{t("ss.wave_dash")}#{Gws::Affair::OvertimeResult.t("end_at")})" %>
+      </th>
+    </tr>
+    <tr class="item">
+      <td class="break-time" colspan="2">
+        <div>
+          <span>1.</span>
+          <%= select_tag "item[in_results][#{item.id}][break1_start_at_date]", options_for_select(date_options, result.break1_start_at_date), include_blank: true %>
+          <%= select_tag "item[in_results][#{item.id}][break1_start_at_hour]", options_for_select(hour_options, result.break1_start_at_hour), include_blank: true %>
+          <%= select_tag "item[in_results][#{item.id}][break1_start_at_minute]", options_for_select(minute_options, result.break1_start_at_minute), include_blank: true %>
+          <%= t("ss.wave_dash") %>
+          <%= select_tag "item[in_results][#{item.id}][break1_end_at_date]", options_for_select(date_options, result.break1_end_at_date), include_blank: true %>
+          <%= select_tag "item[in_results][#{item.id}][break1_end_at_hour]", options_for_select(hour_options, result.break1_end_at_hour), include_blank: true %>
+          <%= select_tag "item[in_results][#{item.id}][break1_end_at_minute]", options_for_select(minute_options, result.break1_end_at_minute), include_blank: true %>
+        </div>
+      </td>
+    </tr>
+    <tr class="item">
+      <td class="break-time" colspan="2">
+        <div>
+          <span>2.</span>
+          <%= select_tag "item[in_results][#{item.id}][break2_start_at_date]", options_for_select(date_options, result.break2_start_at_date), include_blank: true %>
+          <%= select_tag "item[in_results][#{item.id}][break2_start_at_hour]", options_for_select(hour_options, result.break2_start_at_hour), include_blank: true %>
+          <%= select_tag "item[in_results][#{item.id}][break2_start_at_minute]", options_for_select(minute_options, result.break2_start_at_minute), include_blank: true %>
+          <%= t("ss.wave_dash") %>
+          <%= select_tag "item[in_results][#{item.id}][break2_end_at_date]", options_for_select(date_options, result.break2_end_at_date), include_blank: true %>
+          <%= select_tag "item[in_results][#{item.id}][break2_end_at_hour]", options_for_select(hour_options, result.break2_end_at_hour), include_blank: true %>
+          <%= select_tag "item[in_results][#{item.id}][break2_end_at_minute]", options_for_select(minute_options, result.break2_end_at_minute), include_blank: true %>
+        </div>
+      </td>
+    </tr>
+  </table>
+<% end %>
+
+<footer class="send">
+  <%= submit_tag t("ss.buttons.save"), class: "btn-primary save" %>
+  <%= link_to t("ss.buttons.cancel"), "", class: "btn btn-default", onclick: "$.colorbox.close(); return false;" %>
+</footer>
+
+<% end %>

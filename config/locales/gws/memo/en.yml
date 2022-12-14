@@ -292,6 +292,7 @@ en:
         notice_schedule_user_setting: Schedule
         notice_todo_user_setting: ToDo
         notice_presence_user_setting: Presence status
+        notice_affair_user_setting: Affairs
         notice_workflow_user_setting: Workflows
         notice_circular_user_setting: Circular boards
         notice_monitor_user_setting: Inquiries and responses

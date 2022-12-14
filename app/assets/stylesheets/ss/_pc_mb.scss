@@ -944,6 +944,9 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     display: block;
     padding: 5px 15px 5px 60px;
     background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
+    &.down {
+      background: url(/assets/img/ic-arrow16down-off.png) no-repeat 35px center;
+    }
     &.management {
       background: url(/assets/img/ic-setting.png) no-repeat 35px center;
     }
@@ -964,6 +967,9 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 35px center;
       color: $orange;
       text-decoration: none;
+    }
+    &.down:hover {
+      background: url(/assets/img/ic-arrow16down-on.png) no-repeat 35px center;
     }
     &.management:hover {
       background: $gray1 url(/assets/img/ic-setting.png) no-repeat 35px center;

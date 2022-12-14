@@ -20,7 +20,7 @@ class Gws::Memo::Mailer < ApplicationMailer
     mail(from: from, bcc: forward_emails, subject: subject, message_id: Gws.generate_message_id(@cur_site))
   end
 
-  def notice_mail(notice, users, item)
+  def notice_mail(notice, users, item, opts = {})
     @item = item
     @cur_site = @item.try(:site) || @item.try(:cur_group) || @item.try(:_parent).try(:site)
     return false unless @cur_site.allow_send_mail?
@@ -30,7 +30,9 @@ class Gws::Memo::Mailer < ApplicationMailer
 
     @notice = notice
     subject = @notice.subject
-    @body = I18n.t("gws_notification.#{i18n_key}.mail_text", subject: subject, text: page_url)
+
+    key = opts[:i18n_key].presence || i18n_key
+    @body = I18n.t("gws_notification.#{key}.mail_text", subject: subject, text: page_url)
     set_group_settings
     bcc = @users.map(&:send_notice_mail_addresses).flatten
     bcc = bcc.select{ |email| email.present? && @cur_site.email_domain_allowed?(email) }

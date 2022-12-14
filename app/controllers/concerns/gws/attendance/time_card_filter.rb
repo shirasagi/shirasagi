@@ -65,22 +65,29 @@ module Gws::Attendance::TimeCardFilter
       search(start: date, end: date).present?
   end
 
-  WELL_KNOWN_TYPES = begin
-    types = %w(enter leave)
-    SS.config.gws.attendance['max_break'].times do |i|
-      types << "break_enter#{i + 1}"
-      types << "break_leave#{i + 1}"
+  def well_known_types
+    @_well_known_types ||= begin
+      types = %w(enter leave)
+      SS.config.gws.attendance['max_break'].times do |i|
+        types << "break_enter#{i + 1}"
+        types << "break_leave#{i + 1}"
+      end
+      types
     end
-    types.freeze
+  end
+
+  def manageable_time_card?(opts = {})
+    opts = { site: @cur_site }.merge(opts)
+    %i[manage_private manage_all].any? { |priv| @model.allowed?(priv, @cur_user, opts) }
   end
 
   public
 
   def time
-    index = WELL_KNOWN_TYPES.find_index(params[:type])
+    index = well_known_types.find_index(params[:type])
     raise '404' if index.blank?
 
-    @type = WELL_KNOWN_TYPES[index]
+    @type = well_known_types[index]
     @model = Gws::Attendance::TimeEdit
 
     if request.get? || request.head?
@@ -93,7 +100,10 @@ module Gws::Attendance::TimeCardFilter
     result = false
     if @cell.valid?
       time = @cell.calc_time(@cur_date)
-      @item.histories.create(date: @cur_date, field_name: @type, action: 'modify', time: time, reason: @cell.in_reason)
+      @item.histories.create(
+        date: @cur_date, field_name: @type, action: 'modify',
+        time: time, reason_type: @cell.in_reason_type, reason: @cell.in_reason
+      )
       @record.send("#{@type}=", time)
       result = @record.save
     end
@@ -103,10 +113,22 @@ module Gws::Attendance::TimeCardFilter
       location = url_for(location) if location.is_a?(Hash)
       notice = t('ss.notice.saved')
 
-      flash[:notice] = notice
-      render json: { location: location }, status: :ok, content_type: json_content_type
+      respond_to do |format|
+        flash[:notice] = notice
+        format.html do
+          if request.xhr?
+            render json: { location: location }, status: :ok, content_type: json_content_type
+          else
+            redirect_to location
+          end
+        end
+        format.json { render json: { location: location }, status: :ok, content_type: json_content_type }
+      end
     else
-      render template: 'time', layout: false, status: :unprocessable_entity
+      respond_to do |format|
+        format.html { render template: 'time', layout: false, status: :unprocessable_entity }
+        format.json { render json: @cell.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type }
+      end
     end
   end
 

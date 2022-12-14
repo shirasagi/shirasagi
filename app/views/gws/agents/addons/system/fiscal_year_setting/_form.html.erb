@@ -1,0 +1,9 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+
+<dl class="see addon-gws-fiscal-year-setting">
+  <dt><%= @model.t :fiscal_year_changed_month %><%= @model.tt :fiscal_year_changed_month %></dt>
+  <dd><%= f.select :fiscal_year_changed_month, @item.fiscal_year_changed_month_options %></dd>
+</dl>

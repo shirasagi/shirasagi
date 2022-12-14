@@ -1,0 +1,30 @@
+<%= form_for :item, url: { action: :import_member }, html: { id: "item-form", method: :post, multipart: true } do |f| %>
+  <%= error_messages_for :item %>
+
+  <section class="main-box">
+    <header><h2><%= t("gws/affair.labels.leave_setting_import_member") %></h2></header>
+    <div class="main-body">
+      <dl class="see">
+        <dt><%= t("gws/affair.labels.caution") %></dt>
+        <dd>
+          <%=br t("gws/affair.caution.leave_setting_import_member", year: @cur_year.name).join("\n") %>
+          <% if @cur_year.last_year %>
+            <%=br t("gws/affair.caution.leave_setting_import_member_last_year", year: @cur_year.last_year.name).join("\n") %>
+          <% end %>
+        </dd>
+
+        <dt><%= t "ss.file" %><%= @model.tt :in_file %></dt>
+        <dd>
+          <%= f.hidden_field "item[in_file]", value: "" %>
+          <%= f.file_field :in_file %>
+        </dd>
+        <dd><%= link_to t("gws/affair.links.download_member"), download_member_gws_affair_leave_settings_path %></dd>
+      </dl>
+    </div>
+  </section>
+
+  <footer class="send">
+    <%= f.submit t("ss.import"), class: :save, data: { confirm: I18n.t("ss.confirm.import") } %>
+    <%= f.button t("ss.buttons.cancel"), onclick: "location.href='#{gws_affair_capital_years_path}'; return false;", class: "btn-default" %>
+  </footer>
+<% end %>

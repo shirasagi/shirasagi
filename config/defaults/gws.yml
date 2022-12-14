@@ -150,6 +150,14 @@ production: &production
   attendance:
     max_break: 3
 
+  affair:
+    overtime:
+      night_time:
+        start_hour: 22
+        end_hour: 29
+      aggregate:
+        threshold_hour: 60
+
   memo:
     disable_unsend: true
     disable_mail_forward: false
@@ -221,6 +229,9 @@ production: &production
     #     閲覧権限を考慮する際に、権限「閲覧（所有）」や権限「閲覧（全て）」は考慮しない
     #     閲覧権限を「全公開」にすると閲覧できる。
     requires_read_permission: true
+
+  aggregation:
+    first_activation_date: "2000/1/1"
 
 test:
   <<: *production

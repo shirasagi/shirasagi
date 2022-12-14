@@ -1,0 +1,19 @@
+<%
+  duty_calendar = @item.effective_duty_calendar(@cur_site)
+  return if duty_calendar.blank?
+
+  duty_hour = duty_calendar.default_duty_hour
+  holiday_calendar = duty_calendar.default_holiday_calendar
+%>
+<dl class="see">
+  <dt><%= t("mongoid.models.gws/affair/duty_hour") %></dt>
+  <dd>
+    <%= duty_hour.name %>
+    (<%= duty_hour.label :affair_start_at_hour %><%= duty_hour.label :affair_start_at_minute %>
+    <%= t("ss.wave_dash") %>
+    <%= duty_hour.label :affair_end_at_hour %><%= duty_hour.label :affair_end_at_minute %>)
+  </dd>
+
+  <dt><%= t("mongoid.models.gws/affair/holiday_calendar") %></dt>
+  <dd><%= holiday_calendar.name %></dd>
+</dl>

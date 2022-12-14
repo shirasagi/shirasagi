@@ -5,6 +5,18 @@ module Gws::Addon::Portal::Portlet
 
     set_addon_type :gws_portlet
 
+    included do
+      field :timecard_module, type: String, default: "attendance"
+      permit_params :timecard_module
+    end
+
+    def timecard_module_options
+      [
+        [I18n.t("modules.gws/attendance"), "attendance"],
+        [I18n.t("modules.gws/affair"), "affair"]
+      ]
+    end
+
     def find_attendance_time_card(portal, user, date = Time.zone.now)
       date = date.beginning_of_month
       time_card = Gws::Attendance::TimeCard.site(portal.site).user(user).where(date: date).first
@@ -27,6 +39,38 @@ module Gws::Addon::Portal::Portlet
         hour += 24
       end
       "#{hour}:#{format('%02d', time.min)}"
+    end
+
+    def time_card_allowed?(action, user, opts = {})
+      opts[:permission_name] = "gws_affair_attendance_time_cards" if timecard_module == "affair"
+      Gws::Attendance::TimeCard.allowed?(action, user, opts)
+    end
+
+    def punch_path(*args)
+      helper_mod = Rails.application.routes.url_helpers
+      if timecard_module == "affair"
+        helper_mod.gws_affair_attendance_time_cards_path(*args)
+      else
+        helper_mod.gws_attendance_time_cards_path(*args)
+      end
+    end
+
+    def edit_path(*args)
+      helper_mod = Rails.application.routes.url_helpers
+      if timecard_module == "affair"
+        helper_mod.time_gws_affair_attendance_time_cards_path(*args)
+      else
+        helper_mod.time_gws_attendance_time_cards_path(*args)
+      end
+    end
+
+    def download_path(*args)
+      helper_mod = Rails.application.routes.url_helpers
+      if timecard_module == "affair"
+        helper_mod.download_gws_affair_attendance_time_cards_path(*args)
+      else
+        helper_mod.download_gws_attendance_time_cards_path(*args)
+      end
     end
   end
 end

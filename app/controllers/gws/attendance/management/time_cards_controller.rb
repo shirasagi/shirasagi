@@ -29,7 +29,7 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
   end
 
   def check_model_permission
-    raise "403" unless %i[manage_private manage_all].any? { |priv| @model.allowed?(priv, @cur_user, site: @cur_site) }
+    raise "403" unless manageable_time_card?
   end
 
   def set_groups

@@ -1,0 +1,268 @@
+<%
+  def format_minute(minute)
+    (minute.to_i > 0) ? "#{minute / 60}:#{format("%02d", (minute % 60))}" : "--:--"
+  end
+
+  def format_round_minute(minute)
+    hours = minute / 60
+    minutes = minute % 60
+
+    hours += 1 if minutes >= 30
+    format_minute(hours * 60)
+  end
+%>
+<div class="gws-attendance">
+  <div class="attendance-box">
+    <div class="attendance-box-main">
+      <%
+        current = Time.zone.now
+        year_options = ((current.year - 5)..(current.year)).map { |y| [I18n.t("gws/attendance.year", count: y), y] }.reverse
+        month_options = (1..12).map { |m| [I18n.t("gws/attendance.month", count: m), m] }
+      %>
+      <%= form_tag({ action: :show }, { method: "GET" }) do %>
+        <%= select_tag :year, options_for_select(year_options, selected: @cur_month.year) %>
+        <%= select_tag :month, options_for_select(month_options, selected: @cur_month.month) %>
+        <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+        <%= link_to t("ss.buttons.reset"), { action: :show }, class: "btn" %>
+      <% end %>
+    </div>
+  </div>
+</div>
+<%
+  under_duty_day_time_minute = @under["duty_day_time_minute"].to_i
+  under_duty_night_time_minute = @under["duty_night_time_minute"].to_i
+  under_duty_day_in_work_time_minute = @under["duty_day_in_work_time_minute"].to_i
+  under_leave_day_time_minute = @under["leave_day_time_minute"].to_i
+  under_leave_night_time_minute = @under["leave_night_time_minute"].to_i
+  under_week_out_compensatory_minute = @under["week_out_compensatory_minute"].to_i
+  under_overtime_minute = @under["overtime_minute"].to_i
+
+  over_duty_day_time_minute = @over["duty_day_time_minute"].to_i
+  over_duty_night_time_minute = @over["duty_night_time_minute"].to_i
+  over_leave_day_time_minute = @over["leave_day_time_minute"].to_i
+  over_leave_night_time_minute = @over["leave_night_time_minute"].to_i
+  over_week_out_compensatory_minute = @over["week_out_compensatory_minute"].to_i
+  over_overtime_minute = @over["overtime_minute"].to_i
+
+  rate_total_025_100 = under_week_out_compensatory_minute
+  rate_total_050_100 = over_week_out_compensatory_minute
+  rate_total_100_100 = under_duty_day_in_work_time_minute
+  rate_total_125_100 = under_duty_day_time_minute
+  rate_total_135_100 = under_leave_day_time_minute
+  rate_total_150_100 = under_duty_night_time_minute + over_duty_day_time_minute + over_leave_day_time_minute
+  rate_total_160_100 = under_leave_night_time_minute
+  rate_total_175_100 = over_duty_night_time_minute + over_leave_night_time_minute
+%>
+<div class="addon-views">
+  <div class="addon-view">
+    <div class="addon-body">
+      <dl class="see">
+        <dt><%= @user.t :name %></dt>
+        <dd><%= @user.long_name %></dd>
+
+        <dt><%= @user.t :organization_uid %></dt>
+        <dd><%= @user.organization_uid %></dd>
+
+        <dt><%= "時間外（通常分）" %></dt>
+        <dd class="wide">
+          <table class="index overtime-results">
+            <thead>
+              <tr class="item-head">
+                <th class="time" colspan="3"><%= t("gws/affair.labels.overtime.under_threshold.duty_day_time.name") %></th>
+                <th class="time" colspan="2"><%= t("gws/affair.labels.overtime.under_threshold.leave_day_time.name") %></th>
+                <th class="time" rowspan="2"><%=br t("gws/affair.labels.overtime.under_threshold.week_out_compensatory.rate") %></th>
+                <th class="time" rowspan="2"><%= "計" %></th>
+              </tr>
+              <tr class="item-head">
+                <th class="time"><%=br t("gws/affair.labels.overtime.under_threshold.duty_day_time.rate") %></th>
+                <th class="time"><%=br t("gws/affair.labels.overtime.under_threshold.duty_night_time.rate") %></th>
+                <th class="time"><%=br t("gws/affair.labels.overtime.under_threshold.duty_day_in_work_time.rate") %></th>
+                <th class="time"><%=br t("gws/affair.labels.overtime.under_threshold.leave_day_time.rate") %></th>
+                <th class="time"><%=br t("gws/affair.labels.overtime.under_threshold.leave_night_time.rate") %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="item">
+                <td class="time"><%= format_minute(under_duty_day_time_minute) %></td>
+                <td class="time"><%= format_minute(under_duty_night_time_minute) %></td>
+                <td class="time"><%= format_minute(under_duty_day_in_work_time_minute) %></td>
+                <td class="time"><%= format_minute(under_leave_day_time_minute) %></td>
+                <td class="time"><%= format_minute(under_leave_night_time_minute) %></td>
+                <td class="time"><%= format_minute(under_week_out_compensatory_minute) %></td>
+                <td class="time"><%= format_minute(under_overtime_minute) %></td>
+              </tr>
+            </tbody>
+          </table>
+        </dd>
+      </dl>
+
+      <dl class="see">
+        <dt><%= "時間外（#{SS.config.gws.affair.dig("overtime", "aggregate", "threshold_hour")}時間超分）" %></dt>
+        <dd class="wide">
+          <table class="index overtime-results">
+            <thead>
+              <tr class="item-head">
+                <th class="time" colspan="2"><%= t("gws/affair.labels.overtime.under_threshold.duty_day_time.name") %></th>
+                <th class="time" colspan="2"><%= t("gws/affair.labels.overtime.under_threshold.leave_day_time.name") %></th>
+                <th class="time" rowspan="2"><%=br t("gws/affair.labels.overtime.over_threshold.week_out_compensatory.rate") %></th>
+                <th class="time" rowspan="2"><%= "計" %></th>
+              </tr>
+              <tr>
+                <th class="time"><%= "150/100" %></th>
+                <th class="time"><%= "175/100" %></th>
+                <th class="time"><%= "150/100" %></th>
+                <th class="time"><%= "175/100" %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="item">
+                <td class="time"><%= format_minute(over_duty_day_time_minute) %></td>
+                <td class="time"><%= format_minute(over_duty_night_time_minute) %></td>
+                <td class="time"><%= format_minute(over_leave_day_time_minute) %></td>
+                <td class="time"><%= format_minute(over_leave_night_time_minute) %></td>
+                <td class="time"><%= format_minute(over_week_out_compensatory_minute) %></td>
+                <td class="time"><%= format_minute(over_overtime_minute) %></td>
+              </tr>
+            </tbody>
+          </table>
+        </dd>
+      </dl>
+
+      <dl class="see">
+        <dt><%= "累計（30分未満切り捨て、30分以上切り上げ）" %></dt>
+        <table class="index overtime-results">
+          <thead>
+            <tr class="item-head">
+              <th><%= "割増率" %></th>
+              <th class="time"><%= "累計時間" %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="item">
+              <th><%= "25/100" %></th>
+              <td class="time"><%= format_round_minute(rate_total_025_100) %></td>
+            </tr>
+            <tr class="item">
+              <th><%= "50/100" %></th>
+              <td class="time"><%= format_round_minute(rate_total_050_100) %></td>
+            </tr>
+            <tr class="item">
+              <th><%= "100/100" %></th>
+              <td class="time"><%= format_round_minute(rate_total_100_100) %></td>
+            </tr>
+            <tr class="item">
+              <th><%= "125/100" %></th>
+              <td class="time"><%= format_round_minute(rate_total_125_100) %></td>
+            </tr>
+            <tr class="item">
+              <th><%= "135/100" %></th>
+              <td class="time"><%= format_round_minute(rate_total_135_100) %></td>
+            </tr>
+            <tr class="item">
+              <th><%= "150/100" %></th>
+              <td class="time"><%= format_round_minute(rate_total_150_100) %></td>
+            </tr>
+            <tr class="item">
+              <th><%= "160/100" %></th>
+              <td class="time"><%= format_round_minute(rate_total_160_100) %></td>
+            </tr>
+            <tr class="item">
+              <th><%= "175/100" %></th>
+              <td class="time"><%= format_round_minute(rate_total_175_100) %></td>
+            </tr>
+          </tbody>
+        </table>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<table class="index" style="display: none;">
+  <thead>
+    <tr>
+      <th><%= "ID" %></th>
+      <th><%= @model.t :name %></th>
+      <th><%= "時間外（通常分）" %></th>
+      <th><%= "" %></th>
+      <th><%= "時間外（60時間超分）" %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @aggregate.each do |id, value| %>
+    <%
+      file = Gws::Affair::OvertimeFile.find(id)
+      under = value[:under]
+      over = value[:over]
+    %>
+    <tr>
+      <td style="width: 80px"><%= id %></td>
+      <td style="width: 120px;">
+        <% if file.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to file.overtime_name, file.private_show_path %>
+        <% else %>
+          <%= file.overtime_name %>
+        <% end %>
+      </td>
+      <td style="width: 300px;"><%= file.start_end_term %></td>
+      <td>
+        <%
+          duty_day_time_minute = under[:duty_day_time_minute]
+          duty_night_time_minute = under[:duty_night_time_minute]
+          duty_day_in_work_time_minute = under[:duty_day_in_work_time_minute]
+          leave_day_time_minute = under[:leave_day_time_minute]
+          leave_night_time_minute = under[:leave_night_time_minute]
+          week_out_compensatory_minute = under[:week_out_compensatory_minute]
+
+          label = []
+          if duty_day_time_minute > 0
+            label << "125/100: #{format_minute(duty_day_time_minute)}"
+          end
+          if duty_night_time_minute > 0
+            label << "150/100: #{format_minute(duty_night_time_minute)}"
+          end
+          if duty_day_in_work_time_minute > 0
+            label << "100/100: #{format_minute(duty_day_in_work_time_minute)}"
+          end
+          if leave_day_time_minute > 0
+            label << "135/100: #{format_minute(leave_day_time_minute)}"
+          end
+          if leave_night_time_minute > 0
+            label << "160/100: #{format_minute(leave_night_time_minute)}"
+          end
+          if week_out_compensatory_minute > 0
+            label << "25/100: #{format_minute(week_out_compensatory_minute)}"
+          end
+        %>
+        <%=br label.join("\n") %>
+      </td>
+      <td>
+        <%
+          duty_day_time_minute = over[:duty_day_time_minute]
+          duty_night_time_minute = over[:duty_night_time_minute]
+          leave_day_time_minute = over[:leave_day_time_minute]
+          leave_night_time_minute = over[:leave_night_time_minute]
+          week_out_compensatory_minute = over[:week_out_compensatory_minute]
+
+          label = []
+          if duty_day_time_minute > 0
+            label << "150/100: #{format_minute(duty_day_time_minute)}"
+          end
+          if duty_night_time_minute > 0
+            label << "175/100: #{format_minute(duty_night_time_minute)}"
+          end
+          if leave_day_time_minute > 0
+            label << "150/100: #{format_minute(leave_day_time_minute)}"
+          end
+          if leave_night_time_minute > 0
+            label << "175/100: #{format_minute(leave_night_time_minute)}"
+          end
+          if week_out_compensatory_minute > 0
+            label << "50/100: #{format_minute(week_out_compensatory_minute)}"
+          end
+        %>
+        <%=br label.join("\n") %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
