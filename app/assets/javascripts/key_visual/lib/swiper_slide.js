@@ -41,9 +41,11 @@ this.KeyVisual_SwiperSlide = (function () {
       if (nextEl || prevEl) {
         mainSliderOption.navigation = {};
         if (nextEl) {
+          nextEl.classList.remove("hide")
           mainSliderOption.navigation.nextEl = nextEl;
         }
         if (prevEl) {
+          prevEl.classList.remove("hide")
           mainSliderOption.navigation.prevEl = prevEl;
         }
       }
@@ -52,6 +54,7 @@ this.KeyVisual_SwiperSlide = (function () {
     if (self.options.pagination_style === "disc" || self.options.pagination_style === "number") {
       var paginationEl = self.el.querySelector(".ss-swiper-slide-pagination");
       if (paginationEl) {
+        paginationEl.classList.remove("hide")
         mainSliderOption.pagination = {
           el: paginationEl,
           clickable: true

@@ -3,8 +3,8 @@
   <dd><%= f.number_field :ad_width %> px</dd>
 
   <dt><%= @model.t :ad_speed %><%= @model.tt :ad_speed %></dt>
-  <dd><%= f.number_field :ad_speed %> <%= t("datetime.prompts.milli_second") %></dd>
+  <dd><%= f.number_field :ad_speed, placeholder: "#{t('webmail.default_settings')} / #{Sys::Ad::DEFAULT_SLIDE_SPEED}" %> <%= t("datetime.prompts.milli_second") %></dd>
 
   <dt><%= @model.t :ad_pause %><%= @model.tt :ad_pause %></dt>
-  <dd><%= f.number_field :ad_pause %> <%= t("datetime.prompts.milli_second") %></dd>
+  <dd><%= f.number_field :ad_pause, placeholder: "#{t('webmail.default_settings')} / #{Sys::Ad::DEFAULT_SLIDE_PAUSE}" %> <%= t("datetime.prompts.milli_second") %></dd>
 </dl>
