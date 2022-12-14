@@ -25,7 +25,12 @@ class Gws::Affair::DefaultHolidayCalendar
 
     Gws::Schedule::Holiday.site(cur_site).
       and_public.
-      and_system.
       search(start: date, end: date).present?
+
+    # 日毎の休日設定は利用停止
+    #Gws::Schedule::Holiday.site(cur_site).
+    #  and_public.
+    #  and_system.
+    #  search(start: date, end: date).present?
   end
 end

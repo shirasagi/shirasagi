@@ -3,6 +3,8 @@ en:
     aggregate: Aggregate results
     capital: Capital types
     default_duty_hour: Default duty hour
+    default_holiday_calendar: Default holiday calendar
+    default_duty_calendar: Default duty calendar
     top_holidays_on_year: "Show %{count} holidays in %{year}"
     year_id: Fiscal year
     all_year_id: All fiscal year
@@ -69,9 +71,6 @@ en:
         week_out_compensatory_leave: Week out compensatory leaves
         week_in_compensatory_leave: Week in compensatory leaves
         holiday_compensatory_leave: Holiday compensatory leave
-      holiday_type:
-        system: Default holiday calendar
-        own: Work pattern
       wday_type:
         workday: Work day
         holiday: Holiday
@@ -398,8 +397,7 @@ en:
       gws/addon/affair/duty_hour:
         duty_hour_ids: Duty hours
       gws/addon/affair/holiday:
-        holiday_type: Holiday type
-        holiday_calendar_ids: Affair duty
+        holiday_calendar_ids: Holiday calendar
       gws/addon/affair/duty_notice:
         duty_notice_ids: Timecard notification
       gws/affair/holiday_calendar:

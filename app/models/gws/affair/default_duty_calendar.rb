@@ -4,7 +4,7 @@ class Gws::Affair::DefaultDutyCalendar
   attr_accessor :cur_site, :cur_user
 
   def name
-    I18n.t("gws/affair.default_duty_hour")
+    I18n.t("gws/affair.default_duty_calendar")
   end
 
   def default_duty_hour

@@ -3,26 +3,16 @@ module Gws::Addon::Affair::Holiday
   extend SS::Addon
 
   included do
-    field :holiday_type, type: String
     embeds_ids :holiday_calendars, class_name: 'Gws::Affair::HolidayCalendar'
-
-    permit_params :holiday_type, holiday_calendar_ids: []
-
-    validates :holiday_type, presence: true, inclusion: { in: %w(system own), allow_blank: true }
-  end
-
-  def holiday_type_options
-    %w(system own).map do |v|
-      [ I18n.t("gws/affair.options.holiday_type.#{v}"), v ]
-    end
+    permit_params holiday_calendar_ids: []
   end
 
   def holiday_type_system?
-    !holiday_type_own?
+    holiday_calendars.blank?
   end
 
   def holiday_type_own?
-    holiday_type == "own"
+    holiday_calendars.present?
   end
 
   def default_holiday_calendar

@@ -9,13 +9,33 @@ class Gws::Affair::DutySetting::HolidaysController < ApplicationController
   navi_view "gws/affair/main/navi"
   append_view_path "app/views/gws/schedule/holidays"
 
+  before_action :deny
+
   private
+
+  # 日毎の休日設定は利用停止
+  def deny
+    raise "403"
+  end
 
   def set_holiday_calendar
     @holiday_calendar ||= Gws::Affair::HolidayCalendar.site(@cur_site).find(params[:holiday_calendar_id])
   end
 
+  def set_active_year_range
+    @active_year_range ||= begin
+      end_date = Time.zone.now.beginning_of_month
+
+      start_date = end_date
+      start_date -= 1.month while start_date.month != @cur_site.attendance_year_changed_month
+      start_date -= @cur_site.attendance_management_year.years
+
+      [start_date, end_date]
+    end
+  end
+
   def set_year
+    set_active_year_range
     @cur_year ||= begin
       year = params[:year].to_s
       if year == "-"
@@ -28,7 +48,7 @@ class Gws::Affair::DutySetting::HolidaysController < ApplicationController
     end
 
     @cur_year_range ||= begin
-      @cur_year == :all ? [] : @cur_site.attendance_year_range(@cur_year)
+      @cur_year == :all ? [] : @active_year_range
     end
   end
 

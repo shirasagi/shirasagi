@@ -3,6 +3,8 @@ ja:
     aggregate: 集計結果
     capital: 原資区分
     default_duty_hour: 標準の勤務時間
+    default_holiday_calendar: 標準の休日カレンダー
+    default_duty_calendar: 標準の勤務カレンダー
     top_holidays_on_year: "%{year}年度の休日を最大%{count}件を表示しています。"
     year_id: 年度
     all_year_id: 全年度
@@ -69,9 +71,6 @@ ja:
         week_out_compensatory_leave: 同一週外の振替
         week_in_compensatory_leave: 同一週内の振替
         holiday_compensatory_leave: 代休振替
-      holiday_type:
-        system: 標準の休日カレンダーを使用する
-        own: 休日カレンダーを設定する
       wday_type:
         workday: 勤務日
         holiday: 休日
@@ -411,7 +410,6 @@ ja:
       gws/addon/affair/duty_hour:
         duty_hour_ids: 勤務時間
       gws/addon/affair/holiday:
-        holiday_type: 休日設定
         holiday_calendar_ids: 休日カレンダー
       gws/addon/affair/duty_notice:
         duty_notice_ids: タイムカード警告

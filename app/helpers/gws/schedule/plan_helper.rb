@@ -35,21 +35,26 @@ module Gws::Schedule::PlanHelper
   end
 
   def group_holidays(start_at, end_at)
-    duty_calendar = (@user || @cur_user).effective_duty_calendar(@cur_site)
+    Gws::Schedule::Holiday.site(@cur_site).and_public.
+      search(start: start_at, end: end_at).
+      map(&:calendar_format)
 
-    criteria = Gws::Schedule::Holiday.site(@cur_site).and_public
-    if duty_calendar.holiday_type_system?
-      criteria = criteria.and_system
-    else
-      calendar = duty_calendar.holiday_calendars.first
-      if calendar.present?
-        criteria = criteria.and_holiday_calendar(calendar)
-      else
-        criteria = criteria.none
-      end
-    end
-
-    criteria.search(start: start_at, end: end_at).map(&:calendar_format)
+    # 庶務事務機能の休日カレンダーをスケジュールに表示する機能（停止）
+    #duty_calendar = (@user || @cur_user).effective_duty_calendar(@cur_site)
+    #
+    #criteria = Gws::Schedule::Holiday.site(@cur_site).and_public
+    #if duty_calendar.holiday_type_system?
+    #  criteria = criteria.and_system
+    #else
+    #  calendar = duty_calendar.holiday_calendars.first
+    #  if calendar.present?
+    #    criteria = criteria.and_holiday_calendar(calendar)
+    #  else
+    #    criteria = criteria.none
+    #  end
+    #end
+    #
+    #criteria.search(start: start_at, end: end_at).map(&:calendar_format)
   end
 
   def calendar_holidays(start_at, end_at)

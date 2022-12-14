@@ -58,14 +58,17 @@ class Gws::Affair::HolidayCalendar
 
   # 祝日
   def holiday?(date)
-    #national_holiday_type == "holiday"
-
     date = date.localtime if date.respond_to?(:localtime)
     return true if HolidayJapan.check(date.to_date)
 
     Gws::Schedule::Holiday.site(@cur_site || site).
       and_public.
-      and_holiday_calendar(self).
       search(start: date, end: date).present?
+
+    # 日毎の休日設定は利用停止
+    #Gws::Schedule::Holiday.site(@cur_site || site).
+    #  and_public.
+    #  and_holiday_calendar(self).
+    #  search(start: date, end: date).present?
   end
 end

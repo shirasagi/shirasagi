@@ -76,11 +76,14 @@ class Gws::Attendance::Record
   def set_working_time
     return if duty_calendar.nil?
 
-    if enter.nil? || leave.nil? || duty_calendar.flextime?
+    if enter.nil? || leave.nil?
       self.working_hour = nil
       self.working_minute = nil
       return
     end
+
+    # 自由時間勤務の場合は自分で入力する
+    return if duty_calendar.flextime?
 
     duty_hour = duty_calendar.effective_duty_hour(date)
     minutes = duty_hour.working_minute(date, enter, leave)

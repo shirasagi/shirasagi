@@ -1,4 +1,4 @@
-<% start_at, end_at = @cur_site.attendance_year_range %>
+<% start_at, end_at = @active_year_range %>
 
 <dl class="see">
   <dt><%= @model.t :name %></dt>
@@ -14,6 +14,7 @@
     </dd>
   <% end %>
 
+  <!--
   <dt><%= @model.t :holidays %></dt>
   <% if @item.holidays.present? %>
     <dd>
@@ -47,4 +48,5 @@
   <dd>
     <%= link_to(t("gws/affair.links.manage_holidays"), gws_affair_duty_setting_holiday_calendar_holidays_path(holiday_calendar_id: @item, year: start_at.year), class: "btn") %>
   </dd>
+  -->
 </dl>

@@ -59,16 +59,25 @@ class Gws::Schedule::HolidaysController < ApplicationController
   end
 
   def events
-    @items = @model.site(@cur_site).and_system.
+    @items = @model.site(@cur_site).
       allow(:read, @cur_user, site: @cur_site).
       search(params[:s])
+
+    # 庶務事務機能の休日カレンダーをスケジュールに表示する（停止）
+    #@items = @model.site(@cur_site).and_system.
+    #  allow(:read, @cur_user, site: @cur_site).
+    #  search(params[:s])
 
     render json: @items.map { |m| m.calendar_format(editable: true) }.to_json
   end
 
   def download
-    csv = @model.unscoped.site(@cur_site).and_system.to_csv
+    csv = @model.unscoped.site(@cur_site).to_csv
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "gws_holidays_#{Time.zone.now.to_i}.csv"
+
+    # 庶務事務機能の休日カレンダーをスケジュールに表示する（停止）
+    #csv = @model.unscoped.site(@cur_site).and_system.to_csv
+    #send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "gws_holidays_#{Time.zone.now.to_i}.csv"
   end
 
   def import
