@@ -13,6 +13,7 @@ module Gws::Addon::User::AffairSetting
 
     # 上長
     attr_accessor :in_gws_superior_group_ids, :in_gws_superior_user_ids
+
     field :gws_superior_group_ids, type: Hash, default: {}
     field :gws_superior_user_ids, type: Hash, default: {}
     permit_params in_gws_superior_group_ids: []

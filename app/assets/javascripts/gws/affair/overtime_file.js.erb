@@ -129,7 +129,6 @@ Gws_Affair_OvertimeFile.prototype.toggleSelectCompensatoryMinute = function() {
 
 Gws_Affair_OvertimeFile.prototype.compensatoryFormAlert = function(e) {
   var submit = this;
-  var form = $(submit).closest("form");
 
   // 土日・祝日
   if (!$('.overtime-date').hasClass("leave-day")) {
@@ -165,7 +164,7 @@ Gws_Affair_OvertimeFile.prototype.compensatoryFormAlert = function(e) {
     $(submit).off(".form_alert");
     return $(submit).trigger("click");
   });
-  $("#cboxLoadedContent").find(".cancel").on("click", function (e) {
+  $("#cboxLoadedContent").find(".cancel").on("click", function () {
     $.colorbox.close();
     return false;
   });
