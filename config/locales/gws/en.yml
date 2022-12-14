@@ -481,11 +481,11 @@ en:
       gws/addon/user/affair_setting:
         staff_category: Staff category
         staff_address_uid: Staff address uid
-        superior_group_ids: Superior groups
-        superior_user_ids: Superior users
+        gws_superior_group_ids: Superior groups
+        gws_superior_user_ids: Superior users
       gws/addon/group/affair_setting:
-        superior_group_ids: Superior groups
-        superior_user_ids: Superior users
+        gws_superior_group_ids: Superior groups
+        gws_superior_user_ids: Superior users
       gws/contrast:
         name: Name
         order: Order
@@ -631,11 +631,11 @@ en:
     gws/addon/user/affair_setting:
       staff_category: Select staff category
       staff_address_uid: Input staff address uid
-      superior_group_ids: Select superior groups
-      superior_user_ids: Select superior users
+      gws_superior_group_ids: Select superior groups
+      gws_superior_user_ids: Select superior users
     gws/addon/group/affair_setting:
-      superior_group_ids: Select superior groups
-      superior_user_ids: Select superior users
+      gws_superior_group_ids: Select superior groups
+      gws_superior_user_ids: Select superior users
 
   activemodel:
     models:

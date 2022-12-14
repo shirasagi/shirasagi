@@ -7,9 +7,9 @@
 </dl>
 
 <dl class="see mod-gws-user-affair_setting" style="margin-top: 20px;">
-  <dt><%= @model.t :superior_group_ids %><%= @model.tt :superior_group_ids %></dt>
+  <dt><%= @model.t :gws_superior_group_ids %><%= @model.tt :gws_superior_group_ids %></dt>
   <dd>
-    <%= f.hidden_field "superior_group_ids[]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "in_gws_superior_group_ids[]", value: "", class: "hidden-ids" %>
     <%= link_to t("ss.apis.groups.index"), gws_apis_groups_path, class: "ajax-box" %>
   </dd>
   <dd>
@@ -21,9 +21,9 @@
       </tr>
       </thead>
       <tbody>
-      <% @item.superior_groups.each do |group| %>
+      <% @item.find_gws_superior_groups.each do |group| %>
         <tr data-id="<%= group.id %>">
-          <td><%= f.hidden_field "superior_group_ids[]", value: group.id %> <%= group.name %></td>
+          <td><%= f.hidden_field "in_gws_superior_group_ids[]", value: group.id %> <%= group.name %></td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>
@@ -33,9 +33,9 @@
 </dl>
 
 <dl class="see mod-gws-user-affair_setting">
-  <dt><%= @model.t :superior_user_ids %><%= @model.tt :superior_user_ids %></dt>
+  <dt><%= @model.t :gws_superior_user_ids %><%= @model.tt :gws_superior_user_ids %></dt>
   <dd>
-    <%= f.hidden_field "superior_user_ids[]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "in_gws_superior_user_ids[]", value: "", class: "hidden-ids" %>
     <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "ajax-box" %>
   </dd>
   <dd>
@@ -47,9 +47,9 @@
       </tr>
       </thead>
       <tbody>
-      <% @item.superior_users.each do |user| %>
+      <% @item.find_gws_superior_users.each do |user| %>
         <tr data-id="<%= user.id %>">
-          <td><%= f.hidden_field "superior_user_ids[]", value: user.id %> <%= user.name %></td>
+          <td><%= f.hidden_field "in_gws_superior_user_ids[]", value: user.id %> <%= user.name %></td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>

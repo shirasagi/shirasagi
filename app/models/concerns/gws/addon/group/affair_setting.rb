@@ -11,11 +11,12 @@ module Gws::Addon::Group::AffairSetting
   end
 
   def gws_superior_users
-    superior_users
+    superior_users.to_a
   end
 
   def gws_superior_groups
-    superior_groups.presence || default_superior_groups
+    return superior_groups.to_a if superior_groups.present?
+    default_superior_groups
   end
 
   def default_superior_groups

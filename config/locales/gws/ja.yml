@@ -481,11 +481,11 @@ ja:
       gws/addon/user/affair_setting:
         staff_category: 職員区分
         staff_address_uid: 宛名番号
-        superior_group_ids: 上位グループ
-        superior_user_ids: 上位ユーザー
+        gws_superior_group_ids: 上位グループ
+        gws_superior_user_ids: 上位ユーザー
       gws/addon/group/affair_setting:
-        superior_group_ids: 上位グループ
-        superior_user_ids: 上位ユーザー
+        gws_superior_group_ids: 上位グループ
+        gws_superior_user_ids: 上位ユーザー
       gws/contrast:
         name: 名前
         order: 並び順
@@ -631,11 +631,11 @@ ja:
     gws/addon/user/affair_setting:
       staff_category: 職員区分を設定します。
       staff_address_uid: 宛名番号を入力します。
-      superior_group_ids: 上位グループを入力します。
-      superior_user_ids: 上位ユーザーを入力します。
+      gws_superior_group_ids: 上位グループを入力します。
+      gws_superior_user_ids: 上位ユーザーを入力します。
     gws/addon/group/affair_setting:
-      superior_group_ids: 上位グループを入力します。
-      superior_user_ids: 上位ユーザーを入力します。
+      gws_superior_group_ids: 上位グループを入力します。
+      gws_superior_user_ids: 上位ユーザーを入力します。
 
   activemodel:
     models:
