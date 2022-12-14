@@ -36,17 +36,27 @@ this.KeyVisual_SwiperSlide = (function () {
     }
 
     if (self.options.navigation === "show") {
-      mainSliderOption.navigation = {
-        nextEl: ".ss-swiper-slide-button-next",
-        prevEl: ".ss-swiper-slide-button-prev"
-      };
+      var nextEl = self.el.querySelector(".ss-swiper-slide-button-next");
+      var prevEl = self.el.querySelector(".ss-swiper-slide-button-prev");
+      if (nextEl || prevEl) {
+        mainSliderOption.navigation = {};
+        if (nextEl) {
+          mainSliderOption.navigation.nextEl = nextEl;
+        }
+        if (prevEl) {
+          mainSliderOption.navigation.prevEl = prevEl;
+        }
+      }
     }
 
     if (self.options.pagination_style === "disc" || self.options.pagination_style === "number") {
-      mainSliderOption.pagination = {
-        el: '.ss-swiper-slide-pagination',
-        clickable: true
-      };
+      var paginationEl = self.el.querySelector(".ss-swiper-slide-pagination");
+      if (paginationEl) {
+        mainSliderOption.pagination = {
+          el: paginationEl,
+          clickable: true
+        };
+      }
     }
 
     if (self.options.pagination_style === "number") {
@@ -120,7 +130,7 @@ this.KeyVisual_SwiperSlide = (function () {
   KeyVisual_SwiperSlide.prototype.triggerEvent = function(eventName) {
     var self = this;
 
-    var ev = document.createEvent('Event');
+    var ev = document.createEvent("Event");
     ev.initEvent(eventName, true, true);
     self.el.dispatchEvent(ev);
   };
