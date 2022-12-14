@@ -51,13 +51,13 @@ module SS
       js = obj.metadata[:js]
 
       obj.before do
-        if js
+        if js && ENV.fetch('logs_on_failure', '1') == '1'
           SS::LogSupport.stdout_logger.enable
         end
       end
 
       obj.after do
-        if js
+        if js && ENV.fetch('logs_on_failure', '1') == '1'
           SS::LogSupport.stdout_logger.disable(RSpec.current_example.display_exception.present?)
         end
       end

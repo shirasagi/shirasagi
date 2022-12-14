@@ -40,7 +40,8 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         fill_in "custom[#{column1.id}]", with: unique_id
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
       #
       # admin: 代理で申請する（承認者 1 名＋回覧者 1 名）
@@ -53,27 +54,27 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         click_on I18n.t("workflow.buttons.select")
 
         choose "agent_type_agent"
-        click_on I18n.t("gws/workflow.search_delegatees.index")
+        wait_cbox_open { click_on I18n.t("gws/workflow.search_delegatees.index") }
       end
       wait_for_cbox do
-        expect(page).to have_content(user1.long_name)
-        click_on user1.long_name
+        wait_cbox_close { click_on user1.long_name }
       end
       within ".mod-workflow-request" do
-        click_on I18n.t("workflow.search_approvers.index")
+        expect(page).to have_css(".agent-type-agent", text: user1.long_name)
+        wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
       end
       wait_for_cbox do
-        expect(page).to have_content(user2.long_name)
-        click_on user2.long_name
+        wait_cbox_close { click_on user2.long_name }
       end
       within ".mod-workflow-request" do
-        click_on I18n.t("workflow.search_circulations.index")
+        expect(page).to have_css(".index.approvers", text: user2.long_name)
+        wait_cbox_open { click_on I18n.t("workflow.search_circulations.index") }
       end
       wait_for_cbox do
-        expect(page).to have_content(user3.long_name)
-        click_on user3.long_name
+        wait_cbox_close { click_on user3.long_name }
       end
       within ".mod-workflow-request" do
+        expect(page).to have_css(".index.circulations", text: user3.long_name)
         fill_in "workflow[comment]", with: workflow_comment
         click_on I18n.t("workflow.buttons.request")
       end
@@ -149,12 +150,14 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       login_user user3
       visit gws_workflow_files_path(site: site, state: "all")
       click_on file_name
+      expect(page).to have_css("#workflow_route", text: I18n.t("workflow.restart_workflow"))
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: circulation_comment2
         click_on I18n.t("workflow.links.set_seen")
       end
 
+      expect(page).to have_css("#workflow_route", text: I18n.t("workflow.restart_workflow"))
       expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(circulation_comment2)}/)
 
       Gws::Workflow::File.all.first.tap do |item|

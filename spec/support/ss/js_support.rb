@@ -225,16 +225,6 @@ module SS
       active.nil? || active.zero?
     end
 
-    def wait_for_ajax(&block)
-      Timeout.timeout(ajax_timeout) do
-        sleep 1 until finished_all_ajax_requests?
-      end
-      if block
-        sleep 1
-        yield
-      end
-    end
-
     def wait_for_selector(*args)
       Timeout.timeout(wait_timeout) do
         sleep 1 until page.has_selector?(*args)
@@ -277,12 +267,10 @@ module SS
     end
 
     def wait_for_notice(text)
-      wait_for_js_ready
       expect(page).to have_css('#notice', text: text)
     end
 
     def wait_for_error(text)
-      wait_for_js_ready
       expect(page).to have_css('#errorExplanation', text: text)
     end
 
@@ -469,10 +457,13 @@ module SS
       result
     end
 
-    def wait_for_js_ready(session = nil)
+    def wait_for_js_ready(session = nil, &block)
       session ||= page
       session.evaluate_async_script(WAIT_FOR_JS_READY_SCRIPT)
+
+      yield if block_given?
     end
+    alias wait_for_ajax wait_for_js_ready
   end
 end
 
