@@ -71,7 +71,14 @@ this.SS_Dropdown = (function () {
   };
 
   SS_Dropdown.prototype.toggleDropdown = function () {
+    this.closeOtherDropdown();
     return this.target.toggle();
+  };
+
+  SS_Dropdown.prototype.closeOtherDropdown = function () {
+    $(".dropdown-container").not(this.target.get(0)).each(function () {
+      $(this).hide();
+    });
   };
 
   SS_Dropdown.prototype.cancelEvent = function (e) {

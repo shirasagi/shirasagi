@@ -544,16 +544,13 @@ this.Webmail_Mail_Address = (function () {
       menu.append('<li><a href="#" class="addr-send ss-open-in-new-window">' + lang.send + '</a></li>');
       menu.append('<li><a href="#" class="addr-entry">' + lang.entry + '</a></li>');
       menu.append('<li><a href="#" class="addr-copy">' + lang.copy + '</a></li>');
-      $(this).find('.addr-send').on("click", function (ev) {
+      $(this).find('.addr-send').each(function () {
         var href = urls.send + "?" + $.param({
           item: {
             to: name + "<" + email + ">"
           }
         });
-        ev.target.setAttribute('href', href);
-        SS_OpenInNewWindow.openInNewWindow(ev.target);
-        ev.preventDefault();
-        return false;
+        this.setAttribute('href', href);
       });
       $(this).find('.addr-entry').on("click", function () {
         location.href = urls.add + "?" + $.param({

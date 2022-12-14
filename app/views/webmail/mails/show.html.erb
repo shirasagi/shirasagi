@@ -44,7 +44,7 @@
           <% if @item.display_sender.present? %>
             <span class="address-item dropdown webmail-dropdown dropdown-toggle"
               data-name="<%= @item.display_sender.name %>" data-email="<%= @item.display_sender.email %>">
-              <%= @item.display_sender.address %>
+              <span><%= @item.display_sender.address %></span>
               <ul class="dropdown-menu webmail-dropdown-menu"></ul>
             </span>
           <% else %>
@@ -64,7 +64,7 @@
           <% @item.display_to.each do |addr| %>
             <span class="address-item dropdown webmail-dropdown dropdown-toggle"
               data-name="<%= addr.name %>" data-email="<%= addr.email %>">
-              <%= addr.name %>
+              <span><%= addr.name %></span>
               <ul class="dropdown-menu webmail-dropdown-menu"></ul>
             </span>
           <% end %>
@@ -79,7 +79,7 @@
           <% @item.display_cc.each do |addr| %>
             <span class="address-item dropdown webmail-dropdown dropdown-toggle"
               data-name="<%= addr.name %>" data-email="<%= addr.email %>">
-              <%= addr.name %>
+              <span><%= addr.name %></span>
               <ul class="dropdown-menu webmail-dropdown-menu"></ul>
             </span>
           <% end %>
@@ -94,7 +94,7 @@
           <% @item.display_bcc.each do |addr| %>
             <span class="address-item dropdown webmail-dropdown dropdown-toggle"
               data-name="<%= addr.name %>" data-email="<%= addr.email %>">
-              <%= addr.name %>
+              <span><%= addr.name %></span>
               <ul class="dropdown-menu webmail-dropdown-menu"></ul>
             </span>
           <% end %>
