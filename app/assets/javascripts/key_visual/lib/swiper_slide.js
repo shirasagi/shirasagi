@@ -24,7 +24,8 @@ this.KeyVisual_SwiperSlide = (function () {
       speed: self.options.speed
     }
 
-    if (self.options.autoplay === "enabled" || self.options.autoplay === "started") {
+    var sliceCount = self.el.querySelectorAll(".ss-swiper-slide-item").length;
+    if ((self.options.autoplay === "enabled" || self.options.autoplay === "started") && sliceCount > 1) {
       mainSliderOption.autoplay = {
         delay: self.options.pause,
         disableOnInteraction: false,
@@ -35,7 +36,7 @@ this.KeyVisual_SwiperSlide = (function () {
       mainSliderOption.spaceBetween = self.options.space;
     }
 
-    if (self.options.navigation === "show") {
+    if (self.options.navigation === "show" && sliceCount > 1) {
       var nextEl = self.el.querySelector(".ss-swiper-slide-button-next");
       var prevEl = self.el.querySelector(".ss-swiper-slide-button-prev");
       if (nextEl || prevEl) {
@@ -51,7 +52,7 @@ this.KeyVisual_SwiperSlide = (function () {
       }
     }
 
-    if (self.options.pagination_style === "disc" || self.options.pagination_style === "number") {
+    if ((self.options.pagination_style === "disc" || self.options.pagination_style === "number") && sliceCount > 1) {
       var paginationEl = self.el.querySelector(".ss-swiper-slide-pagination");
       if (paginationEl) {
         paginationEl.classList.remove("hide")
