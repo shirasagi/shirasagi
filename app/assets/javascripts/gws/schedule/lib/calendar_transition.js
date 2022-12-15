@@ -29,7 +29,7 @@ Gws_Schedule_CalendarTransition.prototype.renderCancelButton = function(selector
   var url = $(link).attr("href");
   $(selector).each(function() {
     if (url) {
-      $(this).attr("onclick", "");
+      $(this).attr("onclick", "$(window).off('beforeunload')");
       $(this).on("click", function(){
         location.href= url;
       });

@@ -19,6 +19,7 @@ class Gws::Schedule::PlanSearch
   permit_params wdays: [], member_ids: [], facility_ids: []
   permit_params :repeat_type, :interval, :repeat_base
 
+  before_validation :validate_dates
   before_validation :validate_wdays
   before_validation :validate_hours
 
@@ -84,6 +85,7 @@ class Gws::Schedule::PlanSearch
         end
       else
         self.hours.each do |i|
+          hours << i unless plan_times.key?("#{ymd} #{i}")
           datetime = (date + i.hours).to_datetime
           @facilities.each do |facility|
             if plan_times.key?("#{ymd} #{i}") && plan_times["#{ymd} #{i}"].index(facility.id)
@@ -119,12 +121,20 @@ class Gws::Schedule::PlanSearch
 
   private
 
+  def validate_dates
+    return if start_on <= end_on
+
+    self.start_on, self.end_on = [start_on, end_on].sort
+  end
+
   def validate_wdays
     self.wdays = wdays.reject(&:blank?).map(&:to_i)
   end
 
   def validate_hours
-    self.max_hour = min_hour + 1 if min_hour > max_hour
+    return if min_hour <= max_hour
+
+    self.min_hour, self.max_hour = [min_hour, max_hour].sort
   end
 
   def set_members_condition

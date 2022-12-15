@@ -154,7 +154,7 @@
   .sun {
     color: #e00;
   }
-  .label, .facility, .hour-wrap, .reservation {
+  .label, .member, .facility, .hour-wrap, .reservation {
     display: table-cell;
   }
   .label {
@@ -162,7 +162,7 @@
     margin: 1px 0;
     padding: 5px 1px;
   }
-  .facility {
+  .member, .facility {
     min-width: 160px;
     margin: 1px 0;
     padding: 5px 1px;

@@ -3,6 +3,8 @@ module Gws::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
+    INTERVAL_MAX_BASE = 10_080 * 100
+
     attr_accessor :in_reminder_conditions
 
     included do
@@ -79,6 +81,11 @@ module Gws::Addon
         end
 
         cond["interval"] = cond["interval"].to_i
+        if cond["interval"] < 0
+          cond["interval"] = 0
+        elsif cond["interval"] > INTERVAL_MAX_BASE
+          cond["interval"] = INTERVAL_MAX_BASE
+        end
         cond["notify_at"] = base_at - (cond["interval"].send cond["interval_type"])
         cond
       end

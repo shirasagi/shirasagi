@@ -18,7 +18,7 @@
 
 <div id="ajax-file-box">
   <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-    <%= form_for :item, url: { action: :create }, html: { class: "user-file", multipart: true } do |f| %>
+    <%= form_for :item, url: { action: :create }, html: { class: "user-file", multipart: true, data: { 'ss-timeout' => -1 } } do |f| %>
       <%= error_messages_for :item %>
 
       <div class="search-ui-form">
