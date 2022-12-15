@@ -2,8 +2,9 @@ module Sys::Ad
   extend ActiveSupport::Concern
   extend SS::Translation
 
-  DEFAULT_WIDTH = 360
-  DEFAULT_PAUSE = 5000
+  DEFAULT_SLIDE_WIDTH = 360
+  DEFAULT_SLIDE_SPEED = 500
+  DEFAULT_SLIDE_PAUSE = 5000
 
   included do
     include SS::Addon::LinkFile
@@ -17,13 +18,13 @@ module Sys::Ad
     if width && width > 0
       width
     else
-      DEFAULT_WIDTH
+      DEFAULT_SLIDE_WIDTH
     end
   end
 
   def ad_options
-    options = { autoplay: "started", speed: 500, navigation: "show", pagination_style: "disc" }
-    options[:pause] = time && time > 0 ? time * 1000 : DEFAULT_PAUSE
+    options = { autoplay: "started", speed: DEFAULT_SLIDE_SPEED, navigation: "show", pagination_style: "disc" }
+    options[:pause] = time && time > 0 ? time * 1000 : DEFAULT_SLIDE_PAUSE
     options
   end
 
