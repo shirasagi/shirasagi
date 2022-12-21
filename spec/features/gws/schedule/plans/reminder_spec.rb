@@ -214,7 +214,8 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
     end
   end
 
-  context "when interval is invalid" do
+  # 通常の方法では interval に負数を入力できないので、このテストは実行できなくなった。
+  xcontext "when interval is invalid" do
     include Gws::Schedule::PlanHelper
 
     it do

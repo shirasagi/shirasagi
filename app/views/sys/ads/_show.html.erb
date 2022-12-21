@@ -1,16 +1,20 @@
 <dl class="see">
   <dt><%= @model.t :time %></dt>
   <dd>
-    <% if @item.time %>
+    <% if @item.time && @item.time > 0 %>
       <%= @item.time.to_s(:delimited) %>
-      <span><%= t("datetime.prompts.second") %></span>
+    <% else %>
+      <%= t('webmail.default_settings') %> / <%= Sys::Ad::DEFAULT_SLIDE_PAUSE.to_s(:delimited) %>
     <% end %>
+    <span><%= t("datetime.prompts.second") %></span>
   </dd>
   <dt><%= @model.t :width %></dt>
   <dd>
-    <% if @item.width %>
+    <% if @item.width && @item.width > 0 %>
       <%= @item.width.to_s(:delimited) %>
-      <span>px</span>
+    <% else %>
+      <%= t('webmail.default_settings') %> / <%= Sys::Ad::DEFAULT_SLIDE_WIDTH.to_s(:delimited) %>
     <% end %>
+    <span>px</span>
   </dd>
 </dl>

@@ -19,7 +19,7 @@
   <td class="column-url">
     <% if f %>
       <input type="text" name="item[link_urls][<%= file_id %>]" value="<%= file_link_url %>" class="link-url">
-    <% else %>
+    <% elsif file_link_url.present? %>
       <%= link_to file_link_url, sns_redirect_path(ref: file_link_url, back_to: url_for(action: :show)) %>
     <% end %>
   </td>

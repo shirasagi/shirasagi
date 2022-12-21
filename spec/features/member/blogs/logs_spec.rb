@@ -28,21 +28,21 @@ describe "member_blogs", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
       visit "#{path}/#{item.id}/edit"
-
-      wait_cbox_open do
-        click_on I18n.t("ss.buttons.upload")
+      within "form#item-form" do
+        wait_cbox_open { click_on I18n.t("ss.buttons.upload") }
       end
-
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_button I18n.t("ss.buttons.save")
-        wait_for_ajax
+        expect(page).to have_css(".file-view", text: "keyvisual.jpg")
 
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_button I18n.t("ss.buttons.attach")
-        wait_for_ajax
+        wait_cbox_close { click_button I18n.t("ss.buttons.attach") }
       end
-      click_on I18n.t("ss.buttons.publish_save")
+      within "form#item-form" do
+        expect(page).to have_css("#addon-member-agents-addons-file .file-view", text: "keyvisual.jpg")
+        click_on I18n.t("ss.buttons.publish_save")
+      end
 
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
       expect(page).to have_text('keyvisual.jpg')
