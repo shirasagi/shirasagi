@@ -490,7 +490,6 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   }
   @include mb {
     .application-menu {
-      -js-display: flex;
       @include display-flex;
       @include justify-content(space-between);
       clear: both;
@@ -521,7 +520,6 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     }
   }
   .user {
-    -js-display: flex;
     @include display-flex;
     float: right;
     @include align-items(center);
@@ -695,7 +693,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
         .caret { float: left; }
       }
       .gws-group-switch-item {
-        display: flex;
+        @include display-flex;
         align-items: center;
         padding: 8px 10px 8px 12px;
         cursor: pointer;
@@ -1565,7 +1563,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   color: #bbb;
 }
 .tree-navi .tree-item {
-  display: flex;
+  @include display-flex;
   margin: 2px 0;
 }
 .tree-navi .tree-item a {
@@ -1791,7 +1789,6 @@ dl.see {
   }
   > dd.short {
     @include mb {
-      -js-display: flex;
       @include display-flex;
       @include align-items(center);
       .prefix, .postfix {
@@ -1999,7 +1996,6 @@ footer.send {
   }
 }
 #selected-files, .user-files {
-  -js-display: flex;
   @include display-flex;
   @include flex-wrap(wrap);
   clear: both;
@@ -2378,7 +2374,6 @@ div.index {
     .index-search {
       margin: 0;
       @include mb {
-        -js-display: flex;
         @include display-flex;
         @include flex-wrap(wrap);
         @include align-items(center);
@@ -2398,7 +2393,6 @@ div.index {
 .list-head-search-full {
   @include mb {
     form {
-      -js-display: flex;
       @include display-flex;
       @include flex-wrap(wrap);
       @include align-items(center);
@@ -2417,8 +2411,7 @@ div.index {
   margin: 10px;
   padding: 0;
   .list-item {
-    -js-display: flex;
-    display: flex;
+    @include display-flex;
     align-items: center;
     padding: 8px;
     border-bottom: $border-gray1;
@@ -3823,7 +3816,7 @@ table.check-links-erros {
   border-color: #888;
   background-color: #fff;
   .actions {
-    display: flex;
+    @include display-flex;
     width: 100%;
     background-color: #dcdcdc;
     cursor: pointer;
@@ -3891,11 +3884,11 @@ table.check-links-erros {
           overflow: hidden;
         }
         .title {
-          padding: 10px 0px 0px 8px;
+          padding: 10px 0 0 8px;
           font-weight: bold;
         }
         .summary {
-          padding: 10px 0px 0px 8px;
+          padding: 10px 0 0 8px;
         }
         .footer {
           margin-top: 10px;
@@ -3925,7 +3918,7 @@ table.check-links-erros {
       display: inline-block;
     }
     .message-type {
-      display: flex;
+      @include display-flex;
       width: 232px;
       padding: 10px;
       border: solid 1px;

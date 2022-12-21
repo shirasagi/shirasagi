@@ -61,6 +61,8 @@ ja:
       print: 印刷
       unseens: 未読のみ
       seens: 既読含む
+      next: 次へ
+      prev: 前へ
     confirm:
       trash_all: ゴミ箱に移しますか？
       set_seen_all: 既読にしますか？

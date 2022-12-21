@@ -61,6 +61,8 @@ en:
       print: Print
       unseens: Unread only
       seens: Include read
+      next: Next
+      prev: Previous
     confirm:
       trash_all: Do you want to move it to the trash?
       set_seen_all: Do you want to mark it as read?
