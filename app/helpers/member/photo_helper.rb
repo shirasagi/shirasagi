@@ -6,7 +6,7 @@ module Member::PhotoHelper
     ih << '<div class="photo">'
     ih << '  <a href="#{url}">'
     ih << '     <img src="#{thumb.src}" alt="#{name}" class="thumb">'
-    ih << '     <span class="title">#{name}</span>'
+    ih << '     <span class="title">#{index_name}</span>'
     ih << '  </a>'
     ih << '</div>'
     ih.join("\n").freeze

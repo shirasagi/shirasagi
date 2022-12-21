@@ -24,6 +24,10 @@ module Cms::TemplateVariable
     template_variable_handler(:current, :template_variable_handler_current)
   end
 
+  def name_for_index
+    try(:index_name) || name
+  end
+
   private
 
   def template_variable_handler_name(name, issuer)
@@ -42,7 +46,9 @@ module Cms::TemplateVariable
 
   def template_variable_handler_class_categories(name, issuer)
     return nil if try(:categories).blank?
-    self.categories.and_public.order_by(order: 1, name: 1).map { |cate| SS.config.cms.template_variable_handler_prefix['class_categories'] + cate.basename }.join(" ")
+
+    prefix = SS.config.cms.template_variable_handler_prefix['class_categories']
+    self.categories.and_public.order_by(order: 1, name: 1).map { |cate| prefix + cate.basename }.join(" ")
   end
 
   def template_variable_handler_new(name, issuer)
