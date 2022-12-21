@@ -329,6 +329,7 @@ en:
       gws/addon/link/feature:
         links/name: Display name
         links/url: URL
+        links/target: Target
       gws/addon/system/file_setting:
         multibyte_filename_state: Japanese-language file name
       gws/addon/system/group_setting:

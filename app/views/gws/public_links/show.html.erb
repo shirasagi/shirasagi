@@ -3,15 +3,17 @@
 
   <ul class="list-items">
     <% (@item.links || []).each do |item| %>
-    <li class="list-item">
-      <div class="info">
-        <% if item[:url].present? %>
-          <%= link_to item[:name].presence || item[:url], sns_redirect_path(ref: item[:url]) %>
-        <% elsif item[:name].present? %>
-          <%= item[:name] %>
-        <% end %>
-      </div>
-    </li>
+      <% target = item[:target].presence || Gws::Link.default_link_target %>
+      <% rel = target == "_blank" ? "noopener" : nil %>
+      <li class="list-item">
+        <div class="info">
+          <% if item[:url].present? %>
+            <%= link_to item[:name].presence || item[:url], sns_redirect_path(ref: item[:url]), target: target, rel: rel %>
+          <% elsif item[:name].present? %>
+            <%= item[:name] %>
+          <% end %>
+        </div>
+      </li>
     <% end %>
   </ul>
 </section>

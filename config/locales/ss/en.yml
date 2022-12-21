@@ -155,6 +155,7 @@ en:
       copy_email_address: Copy e-mail address
       closed_save: Make private
       edit_password: Change password
+      registration: Registration
       approve: Approve
     buttons:
       save: Save
@@ -529,6 +530,9 @@ en:
       lang:
         ja: 日本語
         en: English (Experimental)
+      link_target:
+        _self: Same tab
+        _blank: New tab
 
     tasks:
       started: Started.
@@ -1290,7 +1294,10 @@ en:
         - If set, another user who sees the shared article can "Like" it. to the shared article.
       opengraph_type:
         - Select the Open Graph format.
-        - "You can see what it looks like on Facebook with “Facebook Sharing Debugger”: https://developers.facebook.com/tools/debug/sharing/."
+        - "You can see what it looks like:"
+        - Facebook share debugger：https://developers.facebook.com/tools/debug/sharing/
+        - Twitter Card Validator：https://cards-dev.twitter.com/validator/
+        - LINE Page Poker：https://poker.line.naver.jp/
       opengraph_defaul_image_url:
         - Set the default image URL.
         - If the page does not contain an image, the URL will be set to “og:image”.
