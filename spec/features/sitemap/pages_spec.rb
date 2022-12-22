@@ -29,12 +29,18 @@ describe "sitemap_pages", type: :feature, dbscope: :example, js: true do
         fill_in "item[basename]", with: "sample"
         select I18n.t('ss.options.state.show'), from: 'item[sitemap_page_state]'
         click_button I18n.t('sitemap.buttons.export_urls')
-        wait_for_ajax
+        expect(page).to have_css(".CodeMirror", text: article_page.url)
         click_button I18n.t('ss.buttons.publish_save')
       end
       wait_for_notice I18n.t('ss.notice.saved')
       expect(current_path).not_to eq new_path
       expect(page).to have_no_css("form#item-form")
+
+      item = Sitemap::Page.all.first
+      expect(item.sitemap_urls).to include(node.url)
+      expect(item.sitemap_urls).not_to include(item.url)
+      expect(item.sitemap_urls).to include(article_node.url)
+      expect(item.sitemap_urls).to include(article_page.url)
     end
 
     it "#show" do
@@ -48,7 +54,7 @@ describe "sitemap_pages", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: "modify"
         select I18n.t('ss.options.state.show'), from: 'item[sitemap_page_state]'
         click_button I18n.t('sitemap.buttons.export_urls')
-        wait_for_ajax
+        expect(page).to have_css(".CodeMirror", text: article_page.url)
         click_button I18n.t('ss.buttons.publish_save')
       end
       wait_for_notice I18n.t('ss.notice.saved')
