@@ -24,7 +24,8 @@ this.KeyVisual_SwiperSlide = (function () {
       speed: self.options.speed
     }
 
-    if (self.options.autoplay === "enabled" || self.options.autoplay === "started") {
+    var sliceCount = self.el.querySelectorAll(".ss-swiper-slide-item").length;
+    if ((self.options.autoplay === "enabled" || self.options.autoplay === "started") && sliceCount > 1) {
       mainSliderOption.autoplay = {
         delay: self.options.pause,
         disableOnInteraction: false,
@@ -35,18 +36,31 @@ this.KeyVisual_SwiperSlide = (function () {
       mainSliderOption.spaceBetween = self.options.space;
     }
 
-    if (self.options.navigation === "show") {
-      mainSliderOption.navigation = {
-        nextEl: ".ss-swiper-slide-button-next",
-        prevEl: ".ss-swiper-slide-button-prev"
-      };
+    if (self.options.navigation === "show" && sliceCount > 1) {
+      var nextEl = self.el.querySelector(".ss-swiper-slide-button-next");
+      var prevEl = self.el.querySelector(".ss-swiper-slide-button-prev");
+      if (nextEl || prevEl) {
+        mainSliderOption.navigation = {};
+        if (nextEl) {
+          nextEl.classList.remove("hide")
+          mainSliderOption.navigation.nextEl = nextEl;
+        }
+        if (prevEl) {
+          prevEl.classList.remove("hide")
+          mainSliderOption.navigation.prevEl = prevEl;
+        }
+      }
     }
 
-    if (self.options.pagination_style === "disc" || self.options.pagination_style === "number") {
-      mainSliderOption.pagination = {
-        el: '.ss-swiper-slide-pagination',
-        clickable: true
-      };
+    if ((self.options.pagination_style === "disc" || self.options.pagination_style === "number") && sliceCount > 1) {
+      var paginationEl = self.el.querySelector(".ss-swiper-slide-pagination");
+      if (paginationEl) {
+        paginationEl.classList.remove("hide")
+        mainSliderOption.pagination = {
+          el: paginationEl,
+          clickable: true
+        };
+      }
     }
 
     if (self.options.pagination_style === "number") {
@@ -120,7 +134,7 @@ this.KeyVisual_SwiperSlide = (function () {
   KeyVisual_SwiperSlide.prototype.triggerEvent = function(eventName) {
     var self = this;
 
-    var ev = document.createEvent('Event');
+    var ev = document.createEvent("Event");
     ev.initEvent(eventName, true, true);
     self.el.dispatchEvent(ev);
   };

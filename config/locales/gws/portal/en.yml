@@ -109,11 +109,13 @@ en:
       reminder_filter:
         all: Show all
         future: Future days only
-
     messages:
       no_portlets: Create a portlet.
       closed_portlet: This portlet cannot be viewed.
       no_portals: Create a portal.
+
+  gws/portal/ad:
+    autoplay_disabled: No autoplay
 
   gws_role:
     use_gws_portal_user_settings: Use of personal portals
@@ -210,7 +212,6 @@ en:
         portal_monitor_state: Show/Hide
       gws/addon/portal/link_setting:
         portal_link_state: Show/Hide
-
     errors:
       models:
         gws/addon/portal/portlet/ad_file:
