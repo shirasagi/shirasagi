@@ -80,7 +80,7 @@ describe "ads_banners", type: :feature, dbscope: :example, js: true do
     let!(:item) { create :ads_banner, filename: "ads/item" }
 
     it do
-      site.update_attributes(
+      site.update(
         approve_remind_state: 'enabled',
         approve_remind_later: '1.day'
       )

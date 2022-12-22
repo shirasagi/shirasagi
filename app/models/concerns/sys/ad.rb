@@ -31,6 +31,6 @@ module Sys::Ad
   private
 
   def file_state_update
-    files.each { |file| file.update_attributes(state: "public") }
+    files.each { |file| file.update(state: "public") }
   end
 end

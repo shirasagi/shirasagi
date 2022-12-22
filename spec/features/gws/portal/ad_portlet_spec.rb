@@ -28,14 +28,12 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         end
 
         within "#addon-gws-agents-addons-portal-portlet-ad_file" do
-          wait_cbox_open do
-            click_on I18n.t("ss.buttons.upload")
-          end
+          wait_cbox_open { click_on I18n.t("ss.buttons.upload") }
         end
       end
       wait_for_cbox do
         attach_file "item[in_files][]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
-        click_on I18n.t("ss.buttons.attach")
+        wait_cbox_close { click_on I18n.t("ss.buttons.attach") }
       end
       within 'form#item-form' do
         within "#addon-gws-agents-addons-portal-portlet-ad_file" do
@@ -46,31 +44,47 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
 
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      expect(Gws::Portal::UserPortlet.all.site(site).user(user).where(name: I18n.t('gws/portal.portlets.ad.name')).count).to eq 1
+      portlet = Gws::Portal::UserPortlet.all.site(site).user(user).where(name: I18n.t('gws/portal.portlets.ad.name')).first
+      expect(portlet.portlet_model).to eq "ad"
+      expect(portlet.ad_width).to eq ad_width
+      expect(portlet.ad_speed).to eq ad_speed
+      expect(portlet.ad_pause).to eq ad_pause
+      expect(portlet.ad_files.count).to eq 1
+      portlet.ad_files.first.becomes_with(SS::LinkFile).tap do |file|
+        expect(file.name).to eq "logo.png"
+        expect(file.filename).to eq "logo.png"
+        expect(file.site_id).to be_blank
+        expect(file.model).to eq Gws::Portal::UserPortlet.model_name.i18n_key.to_s
+        expect(file.owner_item_id).to eq portlet.id
+        expect(file.owner_item_type).to eq portlet.class.name
+        expect(file.link_url).to eq url
+      end
+
+      visit gws_portal_user_path(site: site, user: user)
+      click_on I18n.t('gws/portal.links.arrange_portlets')
+      # wait for ajax completion
+      expect(page).to have_css(".portlet-model-ad[data-id='#{portlet.id}']", text: portlet.name)
+      click_on I18n.t('gws/portal.buttons.save_layouts')
+      wait_for_notice I18n.t('ss.notice.saved')
+      portlet.reload
+      portlet.ad_files.first.becomes_with(SS::LinkFile).tap do |file|
+        expect(file.name).to eq "logo.png"
+        expect(file.filename).to eq "logo.png"
+        expect(file.site_id).to be_blank
+        expect(file.model).to eq Gws::Portal::UserPortlet.model_name.i18n_key.to_s
+        expect(file.owner_item_id).to eq portlet.id
+        expect(file.owner_item_type).to eq portlet.class.name
+        expect(file.link_url).to eq url
+      end
 
       visit gws_portal_user_path(site: site, user: user)
       expect(page).to have_css('.portlets .portlet-model-ad')
       # wait for ajax completion
       expect(page).to have_no_css('.fc-loading')
       expect(page).to have_no_css('.ss-base-loading')
-
-      expect(Gws::Portal::UserPortlet.all.site(site).user(user).where(name: I18n.t('gws/portal.portlets.ad.name')).count).to eq 1
-      Gws::Portal::UserPortlet.all.site(site).user(user).where(name: I18n.t('gws/portal.portlets.ad.name')).first.tap do |portlet|
-        expect(portlet.portlet_model).to eq "ad"
-        expect(portlet.ad_width).to eq ad_width
-        expect(portlet.ad_speed).to eq ad_speed
-        expect(portlet.ad_pause).to eq ad_pause
-        expect(portlet.ad_files.count).to eq 1
-        portlet.ad_files.first.becomes_with(SS::LinkFile).tap do |file|
-          expect(file.name).to eq "logo.png"
-          expect(file.filename).to eq "logo.png"
-          expect(file.site_id).to be_blank
-          expect(file.model).to eq Gws::Portal::UserPortlet.model_name.i18n_key.to_s
-          expect(file.owner_item_id).to eq portlet.id
-          expect(file.owner_item_type).to eq portlet.class.name
-          expect(file.link_url).to eq url
-        end
-      end
     end
   end
 

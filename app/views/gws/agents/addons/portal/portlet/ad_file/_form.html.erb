@@ -41,6 +41,7 @@
 
 <div class="see gws-addon-file">
   <%= f.hidden_field "ad_file_ids[]", value: "", id: nil %>
+  <%= f.hidden_field "link_urls[0]", value: "", id: nil %>
   <span class="upload-menu-new">
     <%= link_to t('ss.links.upload'), sns_apis_temp_files_path(user: @cur_user), class: "ajax-box btn" %>
   </span>
