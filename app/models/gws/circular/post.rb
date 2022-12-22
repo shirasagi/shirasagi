@@ -31,7 +31,7 @@ class Gws::Circular::Post
 
   permit_params :name, :due_date, :deleted
 
-  validates :name, presence: true
+  validates :name, presence: true, length: { maximum: 80 }
   validates :due_date, presence: true
   validate :validate_attached_file_size
 
