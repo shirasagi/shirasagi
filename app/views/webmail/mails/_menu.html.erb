@@ -60,7 +60,7 @@
       </ul>
     </div>
 
-    <%= link_to(t('ss.links.back_to_index'), { action: :index }, class: "back-to-index") %>
+    <%= link_to(t('ss.links.back_to_index'), { action: :index, s: @search, page: @page }, class: "back-to-index") %>
   <% end %>
 </nav>
 

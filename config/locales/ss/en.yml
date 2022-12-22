@@ -157,6 +157,8 @@ en:
       edit_password: Change password
       registration: Registration
       approve: Approve
+      prev: Previous
+      next: Next
     buttons:
       save: Save
       saving: Saving
@@ -227,6 +229,8 @@ en:
       file_upload_order: File upload order
       make_them_closed: Make it closed
       update: Update
+      prev: Previous
+      next: Next
     confirm:
       change_state: Are you sure you want to change your publication status?
       delete: Are you sure you want to delete it?

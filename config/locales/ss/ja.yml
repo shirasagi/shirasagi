@@ -157,6 +157,8 @@ ja:
       edit_password: パスワード変更
       registration: 登録する
       approve: 承認する
+      prev: 前へ
+      next: 次へ
     buttons:
       save: 保存
       saving: 保存中
@@ -227,6 +229,8 @@ ja:
       file_upload_order: アップロード順
       make_them_closed: 非公開にする
       update: 更新
+      prev: 前
+      next: 次
     confirm:
       change_state: 公開状態を変更してよろしいですか？
       delete: 削除してよろしいですか？

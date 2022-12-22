@@ -2447,6 +2447,20 @@ div.index {
       font-size: $px15;
       @include mb { font-size: $px14; }
     }
+    &.seen {
+      a.title:link {
+        color: #d00;
+      }
+      a.title:visited, .from a {
+        color: #200;
+      }
+    }
+    &.unseen {
+      .title, .from a {
+        color: #f00;
+        font-weight: bold;
+      }
+    }
     .title--disabled {
       color: #888;
     }
@@ -3067,8 +3081,10 @@ form .CodeMirror {
     font-weight: bold;
   }
   .seen {
-    border-color: #e8e8e8;
-    background-color: #f8f8f8;
+    // border-color: #e8e8e8;
+    // background-color: #f8f8f8;
+    border-color: #f0f0f0;
+    background-color: #f8fcff;
   }
   // .unseen {
   //   border-color: #f2f2f2;
