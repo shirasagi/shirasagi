@@ -278,7 +278,7 @@ describe "opendata_agents_pages_app", type: :feature, dbscope: :example, js: tru
       end
 
       it do
-        wait_ajax_html_loaded(ideas: false) do
+        wait_ajax_html_loaded(ideas: false, executed: "1") do
           visit app.full_url
         end
         expect(current_path).to eq app.url
