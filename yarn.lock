@@ -65,6 +65,11 @@
   resolved "https://registry.yarnpkg.com/@hotwired/stimulus/-/stimulus-3.1.1.tgz#652f08a8e1d5edcb407340e58818fcff463b5848"
   integrity sha512-e0JpzIaYLsRRXevRDVs0yevabiCvieIWWCwh7VqVXjXM5AOHdjb7AjaKIj34zYFmY1N6HIRRfk915WVMYlHnDA==
 
+"@hotwired/turbo@^7.2.4":
+  version "7.2.4"
+  resolved "https://registry.yarnpkg.com/@hotwired/turbo/-/turbo-7.2.4.tgz#0d35541be32cfae3b4f78c6ab9138f5b21f28a21"
+  integrity sha512-c3xlOroHp/cCZHDOuLp6uzQYEbvXBUVaal0puXoGJ9M8L/KHwZ3hQozD4dVeSN9msHWLxxtmPT1TlCN7gFhj4w==
+
 "@humanwhocodes/config-array@^0.11.6":
   version "0.11.7"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.7.tgz#38aec044c6c828f6ed51d5d7ae3d9b9faf6dbb0f"
