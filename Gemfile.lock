@@ -12,7 +12,7 @@ GIT
   branch: 7.3-stable-MONGOID-5183
   specs:
     mongoid (7.3.3.ss.pre.1)
-      activemodel (>= 5.1, < 6.2)
+      activemodel (>= 6.0, < 6.2)
       mongo (>= 2.10.5, < 3.0.0)
       ruby2_keywords (~> 0.0.5)
 
@@ -387,7 +387,7 @@ GEM
       connection_pool (~> 2.2)
     net-ldap (0.17.0)
     nio4r (2.5.8)
-    nokogiri (1.13.6)
+    nokogiri (1.13.9)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     non-stupid-digest-assets (1.0.9)
