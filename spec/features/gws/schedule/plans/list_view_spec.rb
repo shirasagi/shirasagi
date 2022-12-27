@@ -39,9 +39,15 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         expect(page).to have_text(category2.name)
         expect(page).to have_text(facility2.name)
 
-        expect(page).to have_text(item3.name)
-        expect(page).to have_text(category3.name)
-        expect(page).to have_text(facility3.name)
+        if now.month == item3.start_at.month
+          expect(page).to have_text(item3.name)
+          expect(page).to have_text(category3.name)
+          expect(page).to have_text(facility3.name)
+        else
+          expect(page).to have_no_text(item3.name)
+          expect(page).to have_no_text(category3.name)
+          expect(page).to have_no_text(facility3.name)
+        end
         click_on I18n.t("gws/schedule.options.interval.weekly").downcase
       end
       within ".fc-list-format" do
