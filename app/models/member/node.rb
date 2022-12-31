@@ -322,6 +322,23 @@ module Member::Node
     default_scope ->{ where(route: "member/my_group") }
   end
 
+  class Bookmark
+    include Cms::Model::Node
+    include Cms::Addon::NodeSetting
+    include Cms::Addon::Meta
+    include Member::Addon::BookmarkList
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    self.default_limit = 50
+    self.use_conditions = false
+    self.use_sort = false
+    self.use_new_days = false
+
+    default_scope ->{ where(route: "member/bookmark") }
+  end
+
   class MyLineProfile
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
