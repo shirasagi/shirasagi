@@ -9,6 +9,7 @@ module Chorg::Model::Changeset
   TYPE_DIVISION = 'division'.freeze
   TYPE_DELETE = 'delete'.freeze
   TYPES = [TYPE_ADD, TYPE_MOVE, TYPE_UNIFY, TYPE_DIVISION, TYPE_DELETE].freeze
+  TYPE_ORDER = TYPES.each_with_index.to_h.freeze
 
   CONTACT_GROUP_ATTRIBUTES = %i[
     _id id main_state name contact_group_name contact_tel contact_fax contact_email contact_link_url contact_link_name].freeze
@@ -41,6 +42,15 @@ module Chorg::Model::Changeset
     before_save :set_source_names
 
     scope :revision, ->(revision) { where(revision_id: revision.id) }
+  end
+
+  module ClassMethods
+    def comparer(lhs, rhs)
+      diff = TYPE_ORDER[lhs.type] <=> TYPE_ORDER[rhs.type]
+      return diff if diff != 0
+
+      lhs.id <=> rhs.id
+    end
   end
 
   def before_unify

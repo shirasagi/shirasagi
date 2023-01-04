@@ -127,6 +127,17 @@ en:
         contact_link_url: Link URL
         contact_link_name: Link name
         ldap_dn: DN
+        nth_destination_name: "Destination%{dest_seq}_Group Name"
+        nth_destination_order: "Destination%{dest_seq}_Display Order"
+        nth_destination_ldap_dn: "Destination%{dest_seq}_DN"
+        nth_destination_contact_main_state: "Destination%{dest_seq}_Contact%{contact_seq}_Main"
+        nth_destination_contact_name: "Destination%{dest_seq}_Contact%{contact_seq}_ID Name"
+        nth_destination_contact_contact_group_name: "Destination%{dest_seq}_Contact%{contact_seq}_Department in Charge"
+        nth_destination_contact_contact_tel: "Destination%{dest_seq}_Contact%{contact_seq}_Phone Number"
+        nth_destination_contact_contact_fax: "Destination%{dest_seq}_Contact%{contact_seq}_Fax Number"
+        nth_destination_contact_contact_email: "Destination%{dest_seq}_Contact%{contact_seq}_E-mail Address"
+        nth_destination_contact_contact_link_url: "Destination%{dest_seq}_Contact%{contact_seq}_Link URL"
+        nth_destination_contact_contact_link_name: "Destination%{dest_seq}_Contact%{contact_seq}_Link Name"
 
   modules:
     chorg: Organizational change

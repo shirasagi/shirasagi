@@ -86,7 +86,7 @@ describe "gws_chorg_import_revision", type: :feature, dbscope: :example do
       expect(page.response_headers['Content-Type']).to eq("text/csv")
       I18n.with_locale(I18n.default_locale) do
         header = CSV.parse(page.body.encode("UTF-8")).first
-        expect(header).to match_array I18n.t("chorg.import.changeset").values
+        expect(header).to match_array I18n.t("chorg.import.changeset").values.reject { |value| value.include?("%") }
       end
     end
 

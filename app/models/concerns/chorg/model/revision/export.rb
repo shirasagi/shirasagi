@@ -27,11 +27,7 @@ module Chorg::Model::Revision
             ldap_dn
           ).map { |k| I18n.t("chorg.import.changeset.#{k}") }
 
-          type_order = changeset_class::TYPES.each_with_index.map { |type, i| [type, i] }.to_h
-          export_sets = changesets.sort do |a, b|
-            order = type_order[a.type] <=> type_order[b.type]
-            (order == 0) ? (a.id <=> b.id ) : order
-          end
+          export_sets = changesets.sort(&changeset_class.method(:comparer))
           export_sets.each do |item|
             case item.type
             when changeset_class::TYPE_UNIFY

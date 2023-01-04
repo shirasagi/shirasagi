@@ -8,15 +8,19 @@ class Chorg::RevisionsController < ApplicationController
 
   def download
     set_item
-    csv = @item.changesets_to_csv
+    exporter = Chorg::ChangesetExporter.new(cur_site: @cur_site, cur_user: @cur_user, revision: @item)
+    enumerable = exporter.enum_csv(encoding: "UTF-8")
     filename = "revision_#{@item.name}_#{Time.zone.now.to_i}.csv"
-    send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: filename
+    response.status = 200
+    send_enum enumerable, type: enumerable.content_type, filename: filename
   end
 
   def download_sample_csv
-    csv = @model.new.changesets_sample_csv
+    exporter = Chorg::ChangesetExporter.new(cur_site: @cur_site, cur_user: @cur_user)
+    enumerable = exporter.enum_sample_csv(encoding: "UTF-8")
     filename = "revision_sample.csv"
-    send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: filename
+    response.status = 200
+    send_enum enumerable, type: enumerable.content_type, filename: filename
   end
 
   private

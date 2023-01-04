@@ -127,6 +127,17 @@ ja:
         contact_link_url: リンクURL
         contact_link_name: リンク名
         ldap_dn: DN
+        nth_destination_name: "操作先%{dest_seq}_グループ名"
+        nth_destination_order: "操作先%{dest_seq}_表示順"
+        nth_destination_ldap_dn: "操作先%{dest_seq}_DN"
+        nth_destination_contact_main_state: "操作先%{dest_seq}_連絡先%{contact_seq}_主"
+        nth_destination_contact_name: "操作先%{dest_seq}_連絡先%{contact_seq}_識別名"
+        nth_destination_contact_contact_group_name: "操作先%{dest_seq}_連絡先%{contact_seq}_担当部署"
+        nth_destination_contact_contact_tel: "操作先%{dest_seq}_連絡先%{contact_seq}_電話番号"
+        nth_destination_contact_contact_fax: "操作先%{dest_seq}_連絡先%{contact_seq}_ファックス番号"
+        nth_destination_contact_contact_email: "操作先%{dest_seq}_連絡先%{contact_seq}_メールアドレス"
+        nth_destination_contact_contact_link_url: "操作先%{dest_seq}_連絡先%{contact_seq}_リンクURL"
+        nth_destination_contact_contact_link_name: "操作先%{dest_seq}_連絡先%{contact_seq}_リンク名"
 
   modules:
     chorg: 組織変更
