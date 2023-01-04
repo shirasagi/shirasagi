@@ -33,7 +33,7 @@ describe Opendata::Idea, dbscope: :example do
     its(:comment_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/comment/show.html" }
     its(:comment_add_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/comment/add.html" }
     its(:comment_delete_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/comment/delete.html" }
-    its(:contact_present?) { is_expected.to be_falsey }
+    its(:show_contact?) { is_expected.to be_falsey }
   end
 
   describe ".sort_options" do

@@ -32,7 +32,7 @@ describe Opendata::App, dbscope: :example do
     its(:zip_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/zip" }
     its(:executed_show_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/executed/show.html" }
     its(:executed_add_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/executed/add.html" }
-    its(:contact_present?) { is_expected.to be_falsey }
+    its(:show_contact?) { is_expected.to be_falsey }
     it ".zip_dir" do
       expect(described_class.zip_dir_orig).to eq Rails.root.join('tmp', 'opendata')
     end

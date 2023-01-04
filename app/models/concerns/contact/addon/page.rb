@@ -64,6 +64,10 @@ module Contact::Addon::Page
     contact_group_relation.blank? || contact_group_relation == "related"
   end
 
+  def show_contact?
+    (contact_state != "hide") && contact_present?
+  end
+
   def contact_present?
     %i[
       contact_charge

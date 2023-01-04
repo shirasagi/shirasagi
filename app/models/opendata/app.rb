@@ -75,7 +75,7 @@ class Opendata::App
     get_url(url, "/file_index/")
   end
 
-  def contact_present?
+  def show_contact?
     return false if member_id.present?
     super
   end
