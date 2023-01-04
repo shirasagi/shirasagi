@@ -5,11 +5,11 @@ class SS::MaxFileSize
   set_permission_name "sys_users", :edit
 
   class << self
-    def nginx_client_max_body_size
+    def nginx_client_max_body_size(mod: nil)
       return @nginx_client_max_body_size if @nginx_client_max_body_size
 
       Tempfile.create('conf') do |file|
-        status_code = fetch_nginx_config(file)
+        status_code = fetch_nginx_config(file, mod: mod)
         if status_code == 0
           @nginx_client_max_body_size = load_nginx_client_max_body_size(file)
         else
@@ -29,13 +29,14 @@ class SS::MaxFileSize
 
     private
 
-    def fetch_nginx_config(file)
-      pid = spawn({}, "nginx", "-T", { in: SS::RakeRunner::NULL_DEVICE, out: file.fileno, err: SS::RakeRunner::NULL_DEVICE })
+    def fetch_nginx_config(file, mod: nil)
+      mod ||= Kernel
+      pid = mod.spawn({}, "nginx", "-T", { in: SS::RakeRunner::NULL_DEVICE, out: file.fileno, err: SS::RakeRunner::NULL_DEVICE })
       status_code, _status = Process.waitpid2(pid)
       status_code
     rescue => e
       Rails.logger.info("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-      $CHILD_STATUS.exitstatus
+      $CHILD_STATUS ? $CHILD_STATUS.exitstatus : -1
     end
 
     def load_nginx_client_max_body_size(file)
