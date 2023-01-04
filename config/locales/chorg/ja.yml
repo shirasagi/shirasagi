@@ -106,6 +106,14 @@ ja:
       delete_method:
         disable_if_possible: 無効にし、後で回復できるようにする
         always_delete: 常に物理削除する
+    buttons:
+      reset_after_move: 移動先の再設定
+      reset_after_unify: 統合先の再設定
+      reset_after_division: 分割先の再設定
+    confirm:
+      reset_after_move: 移動先を再設定してよろしいですか？
+      reset_after_unify: 統合先を再設定してよろしいですか？
+      reset_after_division: 分割先を再設定してよろしいですか？
     import:
       changeset:
         id: ID

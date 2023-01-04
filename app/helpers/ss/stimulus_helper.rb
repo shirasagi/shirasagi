@@ -62,7 +62,7 @@ module SS::StimulusHelper
     def merge_data_params(options, data)
       options = options.symbolize_keys
       if options.key?(:data)
-        options[:data].merge(data)
+        options[:data] = options[:data].merge(data)
       else
         options[:data] = data
       end

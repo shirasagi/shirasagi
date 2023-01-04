@@ -10,6 +10,10 @@ module Chorg::Model::Changeset
   TYPE_DELETE = 'delete'.freeze
   TYPES = [TYPE_ADD, TYPE_MOVE, TYPE_UNIFY, TYPE_DIVISION, TYPE_DELETE].freeze
 
+  CONTACT_GROUP_ATTRIBUTES = %i[
+    _id id main_state name contact_group_name contact_tel contact_fax contact_email contact_link_url contact_link_name].freeze
+  MAIN_CONTACT_GROUP_ATTRIBUTES = (CONTACT_GROUP_ATTRIBUTES - %i[_id id]).freeze
+
   included do
     attr_accessor :cur_revision, :cur_type
 
@@ -20,7 +24,7 @@ module Chorg::Model::Changeset
     permit_params :cur_revision, :cur_type
     permit_params :type, :sources, :destinations
     permit_params(sources: %w(id name))
-    permit_params(destinations: self::GROUP_ATTRIBUTES)
+    permit_params(destinations: [ :name, :order, :ldap_dn, contact_groups: CONTACT_GROUP_ATTRIBUTES ])
 
     validates :revision_id, presence: true
     validates :type, presence: true
@@ -74,8 +78,16 @@ module Chorg::Model::Changeset
 
   def filter_destination_blank_names
     return if destinations.blank?
-    copy = destinations.to_a.select { |s| s['name'].present? }
-    self.destinations = copy
+    normalized_destinations = destinations.to_a.select { |destination| destination['name'].present? }
+    normalized_destinations.each do |destination|
+      next if destination["contact_groups"].blank?
+
+      normalized_contact_groups = destination["contact_groups"].to_a.select do |contact_group|
+        MAIN_CONTACT_GROUP_ATTRIBUTES.any? { |attr| contact_group[attr].present? }
+      end
+      destination["contact_groups"] = normalized_contact_groups
+    end
+    self.destinations = normalized_destinations
   end
 
   def validate_type

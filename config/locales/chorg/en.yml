@@ -106,6 +106,14 @@ en:
       delete_method:
         disable_if_possible: Disable and allow recovery later
         always_delete: Always physically delete
+    buttons:
+      reset_after_move: Reset transfer-destination
+      reset_after_unify: Reset merge-destination
+      reset_after_division: Reset split-destination
+    confirm:
+      reset_after_move: Are you sure you want to reset transfer-destination?
+      reset_after_unify: Are you sure you want to reset merge-destination?
+      reset_after_division: Are you sure you want to reset split-destination?
     import:
       changeset:
         id: ID

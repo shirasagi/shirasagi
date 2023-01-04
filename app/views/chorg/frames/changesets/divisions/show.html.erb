@@ -1,0 +1,49 @@
+<div class="addon-views">
+  <h2 style="display: flex; padding: 15px 0; font-size: 150%; font-weight: bold">
+    <span class="material-icons-outlined" style="margin-right: 10px;">article</span>
+    <%= t("chorg.views.division_changesets.before_division") %>
+  </h2>
+
+  <%=
+    { id: "chorg-before", class: "chorg-before" }.then do |addon_options|
+      render "ss/crud/addon", addon: addon_options do
+        render "show_before", addon: addon_options
+      end
+    end
+  %>
+</div>
+
+<div style="display: flex; justify-content: center; font-size: 400%;">
+  <span class="material-icons-outlined" style="display: block; font-size: 100%;">arrow_circle_down</span>
+</div>
+
+<% 1.upto(SS.config.chorg.max_division) do |sequence| %>
+  <div class="addon-views">
+    <h2 style="display: flex; padding: 15px 0; font-size: 150%; font-weight: bold">
+      <span class="material-icons-outlined" style="margin-right: 10px;">article</span>
+      <%= t("chorg.views.division_changesets.after_division", count: sequence) %>
+    </h2>
+
+    <%=
+      { id: "chorg-basic#{sequence}", class: "chorg-basic", head: t("ss.basic_info") }.then do |addon_options|
+        render "ss/crud/addon", addon: addon_options do
+          render "chorg/frames/changesets/main/show_basic", addon: addon_options, index: sequence - 1
+        end
+      end
+    %>
+    <%=
+      { id: "chorg-ldap#{sequence}", class: "chorg-ldap", head: t("modules.addons.ldap/group"), toggle: true }.then do |addon_options|
+        render "ss/crud/addon", addon: addon_options do
+          render "chorg/frames/changesets/main/show_ldap", addon: addon_options, index: sequence - 1
+        end
+      end
+    %>
+    <%=
+      { id: "chorg-contact#{sequence}", class: "chorg-contact", head: t("modules.addons.contact/group"), toggle: true }.then do |addon_options|
+        render "ss/crud/addon", addon: addon_options, data: SS::StimulusHelper::Utils.convert_to_data_params("contact/addon/group") do
+          render "chorg/frames/changesets/main/show_contact", addon: addon_options, index: sequence - 1
+        end
+      end
+    %>
+  </div>
+<% end %>

@@ -1,0 +1,96 @@
+<% addon ||= local_assigns.fetch(:addon, {}) %>
+
+<% render_row = proc do |contact_group| %>
+  <tr data-id="<%= contact_group.try(:id) || "new" %>">
+    <td class="operations">
+      <%= button_tag t("ss.buttons.delete"), type: "button", name: "delete", class: "btn btn-delete" %>
+    </td>
+    <td class="contact-main-state">
+      <%= ss_stimulus_tag({ "ss/isolate_radio" => { target_name: "#{f.object_name}[destinations][][contact_groups][][main_state]", radio_name: "dummy[#{addon[:id]}][][main_state]" } }, { type: :label }) do %>
+        <%= hidden_field_tag "#{f.object_name}[destinations][][contact_groups][][main_state]", contact_group.try(:main_state), id: nil %>
+        <%= radio_button_tag "dummy[#{addon[:id]}][][main_state]", "main", contact_group.try(:main_state) == "main", id: nil %>
+        <%= t("contact.options.main_state.main") %>
+      <% end %>
+    </td>
+    <td class="name">
+      <%= text_field_tag "#{f.object_name}[destinations][][contact_groups][][name]", contact_group.try(:name), id: nil, style: "width: 100%;" %>
+    </td>
+    <td class="contact-group-name">
+      <% if contact_group %>
+        <%= hidden_field_tag "#{f.object_name}[destinations][][contact_groups][][_id]", contact_group.try(:id), id: nil, style: "width: 100%;" %>
+      <% end %>
+      <%= text_field_tag "#{f.object_name}[destinations][][contact_groups][][contact_group_name]", contact_group.try(:contact_group_name), id: nil, style: "width: 100%;" %>
+    </td>
+    <td class="contact-tel">
+      <%= tag.input type: "tel", name: "#{f.object_name}[destinations][][contact_groups][][contact_tel]", value: contact_group.try(:contact_tel), id: nil, style: "width: 100%;" %>
+    </td>
+    <td class="contact-fax">
+      <%= text_field_tag "#{f.object_name}[destinations][][contact_groups][][contact_fax]", contact_group.try(:contact_fax), id: nil, style: "width: 100%;" %>
+    </td>
+    <td class="contact-email">
+      <%= email_field_tag "#{f.object_name}[destinations][][contact_groups][][contact_email]", contact_group.try(:contact_email), id: nil, style: "width: 100%;" %>
+    </th>
+    <td class="contact-link-url">
+      <%= text_field_tag "#{f.object_name}[destinations][][contact_groups][][contact_link_url]", contact_group.try(:contact_link_url), id: nil, style: "width: 100%;" %>
+    </td>
+    <td class="contact-link-name">
+      <%= text_field_tag "#{f.object_name}[destinations][][contact_groups][][contact_link_name]", contact_group.try(:contact_link_name), id: nil, style: "width: 100%;" %>
+    </td>
+  </tr>
+<% end %>
+
+<div class="contact-groups-table-wrap">
+  <table class="contact-groups-table">
+    <thead>
+    <tr>
+      <th class="operations">
+        <%= button_tag t("ss.buttons.add"), type: "button", name: "add", class: "btn btn-add" %>
+      </th>
+      <th class="contact-main-state"><%= SS::Contact.t :main_state %><%= SS::Contact.tt :main_state %></th>
+      <th class="name"><%= SS::Contact.t :name %><%= SS::Contact.tt :name %></th>
+      <th class="contact-group-name"><%= SS::Contact.t :contact_group_name %><%= SS::Contact.tt :contact_group_name %></th>
+      <th class="contact-tel"><%= SS::Contact.t :contact_tel %><%= SS::Contact.tt :contact_tel %></th>
+      <th class="contact-fax"><%= SS::Contact.t :contact_fax %><%= SS::Contact.tt :contact_fax %></th>
+      <th class="contact-email"><%= SS::Contact.t :contact_email %><%= SS::Contact.tt :contact_email %></th>
+      <th class="contact-link-url"><%= SS::Contact.t :contact_link_url %><%= SS::Contact.tt :contact_link_url %></th>
+      <th class="contact-link-name"><%= SS::Contact.t :contact_link_name %><%= SS::Contact.tt :contact_link_name %></th>
+    </tr>
+    </thead>
+    <tbody>
+    <%
+      if @reload
+        main_exist = false
+        source_groups.each do |source_group|
+          source_group.contact_groups.each do |contact_group|
+            next if contact_group.all_empty?
+            if contact_group.main_state == "main"
+              if main_exist
+                # 最初の main を有効にするため、2 回目以降の main は nil でクリアする
+                contact_group.main_state = nil
+              else
+                main_exist = true
+              end
+            end
+            render_row.call(contact_group)
+          end
+        end
+      else
+        index ||= 0
+        destination = @item.destinations.present? ? @item.destinations[index] : nil
+        if destination && destination[:contact_groups]
+          destination[:contact_groups].each do |contact_group|
+            contact_group = ::Mongoid::Factory.build(SS::Contact, contact_group)
+            next if contact_group.all_empty?
+            render_row.call(contact_group)
+          end
+        end
+      end
+    %>
+
+    <% render_row.call(nil) %>
+    </tbody>
+  </table>
+  <template id="new-contact-group-row">
+    <% render_row.call(nil) %>
+  </template>
+</div>

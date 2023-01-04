@@ -1,0 +1,22 @@
+<%= form_with scope: :item, url: url_for(action: :update), html: { method: "put", id: "item-form", multipart: true, autocomplete: :off, data: { turbo: true } } do |f| %>
+  <%= error_messages_for :item %>
+
+  <div class="addon-views">
+    <%=
+      { id: "chorg-before", class: "chorg-before" }.then do |addon_options|
+        render "ss/crud/addon", addon: addon_options do
+          render "form_before", f: f, addon: addon_options
+        end
+      end
+    %>
+  </div>
+
+  <footer class="send">
+    <%= f.submit t("ss.buttons.save"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.saving") } %>
+    <%= link_to t("ss.buttons.cancel"), chorg_revision_path(id: cur_revision), class: 'btn-default' %>
+  </footer>
+<% end %>
+
+<%= jquery do %>
+  SS.confirmUnloading();
+<% end %>
