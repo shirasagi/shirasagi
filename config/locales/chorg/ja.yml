@@ -96,6 +96,7 @@ ja:
       job_reserved: 組織変更処理を予約しました。
       test_run: テスト実行
       import_revision_file_confirmation: 組織変更操作をCSVからインポートします。\n既に操作が登録されている場合は削除されます。\n実行してよろしいですか？
+      import_changesets_notice: CSV に含まれる変更内容は常に追加されます。CSV をインポートしても既存の変更内容は何ら変更しません。
     options:
       changeset_type:
         add: 新設
@@ -110,6 +111,7 @@ ja:
       reset_after_move: 移動先の再設定
       reset_after_unify: 統合先の再設定
       reset_after_division: 分割先の再設定
+      save_and_import_changesets: 保存して変更内容をCSVからインポート
     confirm:
       reset_after_move: 移動先を再設定してよろしいですか？
       reset_after_unify: 統合先を再設定してよろしいですか？
@@ -151,6 +153,7 @@ ja:
     models:
       chorg/test_runner: 組織変更/テスト実行
       chorg/main_runner: 組織変更/本番実行
+      chorg/changeset_import_job: 組織変更/変更内容インポート
 
   mongoid:
     models:

@@ -2,8 +2,10 @@
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.name %></dd>
 
+  <% if false %>
   <dt><%= @model.t :revision_csv_file_id %></dt>
   <dd><%= link_to t('ss.links.download'), url_for(action: :download, id: @item), method: :post %></dd>
+  <% end %>
 
   <dt><%= @model.t :user_csv_file_id %></dt>
   <dd><%= tryb { @item.user_csv_file.humanized_name } %></dd>
@@ -24,6 +26,17 @@
 
   <dt><%= @model.t :delete_method %></dt>
   <dd><%= @item.label :delete_method %></dd>
+
+  <dt class="depth-1"><%= t("mongoid.models.chorg/changeset") %></dt>
+  <dd class="depth-1">
+    <%= link_to t('ss.links.download_csv'), url_for(action: :download_changesets, id: @item), method: :post, class: "btn btn-download" %>
+    <%=
+      import_changesets_path = url_for(action: :import_changesets, id: @item) rescue nil
+      if import_changesets_path
+        link_to t('ss.links.import_csv'), import_changesets_path, class: "btn btn-import"
+      end
+    %>
+  </dd>
 
   <% Chorg::Changeset::TYPES.each do |type| %>
     <% changesets = @item.send("#{type}_changesets") %>

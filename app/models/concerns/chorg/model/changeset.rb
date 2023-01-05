@@ -27,6 +27,10 @@ module Chorg::Model::Changeset
     permit_params(sources: %w(id name))
     permit_params(destinations: [ :name, :order, :ldap_dn, contact_groups: CONTACT_GROUP_ATTRIBUTES ])
 
+    before_validation :set_revision_id, if: ->{ @cur_revision }
+    before_validation :set_type, if: ->{ @cur_type }
+    before_validation :filter_source_blank_ids
+    before_validation :filter_destination_blank_names
     validates :revision_id, presence: true
     validates :type, presence: true
     validate :validate_destinations_presence, if: -> { type != TYPE_DELETE }
@@ -35,10 +39,6 @@ module Chorg::Model::Changeset
     validate :validate_sources, if: -> { type != TYPE_ADD }
     validate :validate_destinations, if: -> { type != TYPE_DELETE }
     validate :validate_division_destinations, if: -> { type == TYPE_DIVISION }
-    before_validation :set_revision_id, if: ->{ @cur_revision }
-    before_validation :set_type, if: ->{ @cur_type }
-    before_validation :filter_source_blank_ids
-    before_validation :filter_destination_blank_names
     before_save :set_source_names
 
     scope :revision, ->(revision) { where(revision_id: revision.id) }

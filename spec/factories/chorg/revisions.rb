@@ -12,13 +12,14 @@ FactoryBot.define do
     contact_groups do
       [
         {
-          name: "name-#{unique_id}",
+          main_state: "main",
+          name: "main",
+          contact_group_name: name.split("/", 2).last,
           contact_tel: unique_tel,
           contact_fax: unique_tel,
           contact_email: "#{unique_id}@example.jp",
           contact_link_url: "/#{unique_id}/",
           contact_link_name: unique_id.to_s,
-          main_state: "main"
         }
       ]
     end

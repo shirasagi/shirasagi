@@ -1,0 +1,6 @@
+ID,操作,操作元グループ名,操作先グループ名,表示順,電話番号,ファックス番号,メールアドレス,リンクURL,リンク名,DN
+1,分割,組織変更/グループ_5,組織変更/グループ_1,1,000-0000-0000,000-0000-0000,sample1@example.jp,http://www.ss-proj.org/,link1,dn1
+1,分割,組織変更/グループ_5,組織変更/グループ_2,2,000-0000-0000,000-0000-0000,sample2@example.jp,http://www.ss-proj.org/,link2,dn2
+1,分割,組織変更/グループ_5,組織変更/グループ_3,3,000-0000-0000,000-0000-0000,sample3@example.jp,http://www.ss-proj.org/,link3,dn3
+,分割,組織変更/グループ_6,組織変更/グループ_4,4,000-0000-0000,000-0000-0000,sample4@example.jp,http://www.ss-proj.org/,link4,dn4
+,分割,組織変更/グループ_7,組織変更/グループ_4,4,000-0000-0000,000-0000-0000,sample4@example.jp,http://www.ss-proj.org/,link4,dn4
