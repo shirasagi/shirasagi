@@ -23,7 +23,7 @@ this.Gws_Schedule_Plan = (function () {
       startAt: SS_DateTimePicker.momentValue(this.$datetimeStartEl) || SS_DateTimePicker.momentValue(this.$dateStartEl),
       endAt: SS_DateTimePicker.momentValue(this.$datetimeEndEl) || SS_DateTimePicker.momentValue(this.$dateEndEl)
     }
-    this.context.difference = Gws_Schedule_StartEndSynchronizer.calcDifference(this.context.startAt, this.context.endAt);
+    this.context.difference = SS_StartEndSynchronizer.calcDifference(this.context.startAt, this.context.endAt);
     // console.log({ startAt: this.context.startAt.format(), endAt: this.context.endAt.format(), difference: this.context.difference });
 
     this.render();
@@ -53,7 +53,7 @@ this.Gws_Schedule_Plan = (function () {
     self.$datetimeEndEl.on("ss:changeDateTime", function() {
       self.context.endAt = SS_DateTimePicker.momentValue(self.$datetimeEndEl);
       if (self.context.endAt) {
-        self.context.difference = Gws_Schedule_StartEndSynchronizer.calcDifference(self.context.startAt, self.context.endAt);
+        self.context.difference = SS_StartEndSynchronizer.calcDifference(self.context.startAt, self.context.endAt);
       }
       // update $dateEndEl
       SS_DateTimePicker.momentValue(self.$dateEndEl, self.context.endAt);
@@ -75,7 +75,7 @@ this.Gws_Schedule_Plan = (function () {
       var endDate = SS_DateTimePicker.momentValue(self.$dateEndEl);
       if (endDate) {
         self.context.endAt = convertToTime(endDate, self.context.endAt);
-        self.context.difference = Gws_Schedule_StartEndSynchronizer.calcDifference(self.context.startAt, self.context.endAt);
+        self.context.difference = SS_StartEndSynchronizer.calcDifference(self.context.startAt, self.context.endAt);
       } else {
         self.context.endAt = null;
       }

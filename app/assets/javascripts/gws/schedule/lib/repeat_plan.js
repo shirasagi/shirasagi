@@ -23,7 +23,7 @@ this.Gws_Schedule_Repeat_Plan = (function () {
   };
 
   Gws_Schedule_Repeat_Plan.relateDateForm = function () {
-    new Gws_Schedule_StartEndSynchronizer('.date.repeat_start', '.date.repeat_end');
+    new SS_StartEndSynchronizer('.date.repeat_start', '.date.repeat_end');
   };
 
   Gws_Schedule_Repeat_Plan.renderSubmitButtons = function () {

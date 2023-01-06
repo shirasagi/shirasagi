@@ -56,6 +56,7 @@
 //= require ss/lib/color
 //= require ss/lib/workflow
 //= require ss/lib/sortable_form
+//= require ss/lib/start_end_synchronizer
 //= require ss/lib/text_zoom
 //= require ss/lib/popup_notice
 //= require ss/lib/cascade_menu
