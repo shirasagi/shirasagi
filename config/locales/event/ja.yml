@@ -142,6 +142,8 @@ ja:
       event/page: イベントページ
       event/search: イベント検索ページ
     errors:
+      messages:
+        blank_where_having_event_name: を入力してください（イベントタイトルが設定されている場合は必須です）。
       models:
         event/page:
           invalid_csv_or_ical: CSV形式のファイルまたはiCal形式のファイルを選択してください。

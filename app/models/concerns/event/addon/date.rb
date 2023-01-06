@@ -88,7 +88,7 @@ module Event::Addon
     end
 
     def validate_event
-      errors.add :event_dates, :blank if event_name.present? && event_dates.blank?
+      errors.add :event_dates, :blank_where_having_event_name if event_name.present? && event_dates.blank?
 
       if event_dates.present? && event_dates.size > MAX_EVENT_DATES_SIZE
         errors.add :event_dates, :too_many_event_dates, count: MAX_EVENT_DATES_SIZE
