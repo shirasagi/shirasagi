@@ -9,6 +9,9 @@ describe Time do
       expect(Time.mongoize('')).to be_nil
       expect { Time.mongoize(Object.new) }.to raise_error NoMethodError
 
+      # invalid time
+      expect(Time.mongoize('2016/1/01 30:00')).to be_nil
+
       time = "2023/01/01 07:00".in_time_zone
       while time < "2023/12/31 23:00".in_time_zone
         expect(Time.mongoize(time)).to eq time.utc
@@ -48,6 +51,9 @@ describe DateTime do
       expect(DateTime.mongoize('')).to be_nil
       expect { DateTime.mongoize(Object.new) }.to raise_error NoMethodError
 
+      # invalid time
+      expect(DateTime.mongoize('2016/1/01 30:00')).to be_nil
+
       time = "2023/01/01 07:00".in_time_zone
       while time < "2023/12/31 23:00".in_time_zone
         expect(DateTime.mongoize(time).in_time_zone).to eq time
@@ -80,12 +86,15 @@ describe DateTime do
   end
 end
 
-describe DateTime do
+describe Date do
   describe ".mongoize" do
     it do
       expect(Date.mongoize(nil)).to be_nil
       expect(Date.mongoize('')).to be_nil
       expect { Date.mongoize(Object.new) }.to raise_error NoMethodError
+
+      # invalid time
+      expect(Date.mongoize('2016/1/01 30:00')).to be_nil
 
       date = "2023/01/06 07:00".in_time_zone
       %i[ja en].each do |locale|

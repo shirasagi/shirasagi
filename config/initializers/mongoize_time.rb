@@ -10,7 +10,10 @@ class String
     time ||= begin
       date_format = I18n.t("date.formats.picker", default: nil) rescue nil
       if date_format
-        time = Time.zone.strptime(self, date_format) rescue nil
+        date_parts = Date._strptime(self, date_format) rescue nil
+        if date_parts && date_parts[:leftover].blank?
+          time = Time.zone.strptime(self, date_format) rescue nil
+        end
       end
     end
     time ||= _shirasagi___mongoize_time__
