@@ -90,13 +90,7 @@ this.SS_DateTimePicker = (function () {
       return;
     }
 
-    if (SS_DateTimePicker.hasFormDataEvent()) {
-      $.datetimepicker.setLocale(document.documentElement.lang || 'ja');
-    } else {
-      // formdata event を持たないブラウザでは、英語書式で日付を変更できない。常に日本語書式で日付をやり取りするものとする
-      // https://developer.mozilla.org/ja/docs/Web/API/HTMLFormElement/formdata_event
-      $.datetimepicker.setLocale('ja');
-    }
+    $.datetimepicker.setLocale(document.documentElement.lang || 'ja');
     // setLocale() を呼び出すと dateFormatter がリセットされるので、setLocale() の後に setDateFormatter() を呼び出さなければならない。
     $.datetimepicker.setDateFormatter(dateFormatter);
 
@@ -115,49 +109,6 @@ this.SS_DateTimePicker = (function () {
       }
 
       new SS_DateTimePicker(this, type);
-    });
-  };
-
-  SS_DateTimePicker.hasFormDataEvent = function () {
-    return !!window.FormDataEvent;
-  };
-
-  SS_DateTimePicker.replaceDateTimeValue = function (ev) {
-    // You can use some ES6 features with ES5 syntax within this method.
-    var form = ev.target;
-    var formData = ev.originalEvent.formData;
-    Array.from(new Set(formData.keys())).forEach(function (key) {
-      var elements = form.elements[key];
-      if ("forEach" in elements) {
-        if (! $(elements[0]).data("ss_datetimepicker")) {
-          return;
-        }
-
-        var values = [];
-        elements.forEach(function (el) {
-          var $el = $(el);
-          var picker = $el.data("ss_datetimepicker")
-          if (! picker) {
-            values.push("");
-            return;
-          }
-
-          values.push(picker.valueForExchange());
-        });
-
-        formData.delete(key);
-        values.forEach(function (value) {
-          formData.append(key, value)
-        });
-      } else {
-        var $el = $(elements);
-        var picker = $el.data("ss_datetimepicker");
-        if (! picker) {
-          return;
-        }
-
-        formData.set(key, picker.valueForExchange());
-      }
     });
   };
 
@@ -193,7 +144,6 @@ this.SS_DateTimePicker = (function () {
     var $form = this.$el.closest("form");
     if (!$form.data("ss-datetime-picker-installed")) {
       $form.data("ss-datetime-picker-installed", true);
-      $form.on("formdata", SS_DateTimePicker.replaceDateTimeValue);
     }
   };
 
