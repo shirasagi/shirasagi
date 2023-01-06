@@ -43,6 +43,7 @@
 
     <div class="event-recurrence-row">
       <div class="event-recurrence-wdays">
+        <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_by_days][]", nil, id: nil %>
         <% week_days.each_with_index do |wday, index| %>
           <label><%= check_box_tag "#{f.object_name}[event_recurrences][][in_by_days][]", index, recurr.by_days && recurr.by_days.include?(index) %><%= wday %></label>
         <% end %>
