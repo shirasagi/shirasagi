@@ -13,9 +13,9 @@
     <div class="event-recurrence-row">
       <%= button_tag t("ss.buttons.delete"), type: "button", class: "btn event-recurrence-delete-btn" %>
       <div class="event-recurrence-date">
-        <%= ss_date_field_tag "#{f.object_name}[event_recurrences][][in_start_on]", recurr.start_date, {}, { id: nil } %>
+        <%= ss_date_field_tag "#{f.object_name}[event_recurrences][][in_start_on]", recurr.start_date, {}, { id: nil, class: "event-recurrence-date-start-on" } %>
         <%= t("ss.wave_dash") %>
-        <%= ss_date_field_tag "#{f.object_name}[event_recurrences][][in_until_on]", recurr.until_on, {}, { id: nil } %>
+        <%= ss_date_field_tag "#{f.object_name}[event_recurrences][][in_until_on]", recurr.until_on, {}, { id: nil, class: "event-recurrence-date-until-on" } %>
       </div>
 
       <% if false %>

@@ -23,6 +23,9 @@ this.Event_Form = (function () {
     self.$el.on("change", ".event-recurrence-all-day-radio", function() {
       self.changeAllDay(this);
     });
+    self.$el.on("ss:changeDateTime", ".event-recurrence-date-start-on", function() {
+      self.setUntilOnIfUnset(this);
+    });
 
     self.resetIndex();
   };
@@ -122,6 +125,21 @@ this.Event_Form = (function () {
     var $el = $(el);
     $el.closest(".event-recurrence").find('[name="item[event_recurrences][][in_all_day]"]').val($el.val());
   }
+
+  Event_Form.prototype.setUntilOnIfUnset = function(el) {
+    var $el = $(el);
+    var $untilOnEl = $el.closest(".event-recurrence-date").find(".event-recurrence-date-until-on");
+    if ($untilOnEl.val()) {
+      return;
+    }
+
+    var value = SS_DateTimePicker.momentValue(el);
+    if (!value) {
+      return;
+    }
+
+    SS_DateTimePicker.momentValue($untilOnEl, value);
+  };
 
   Event_ExcludeDatesForm = function(container, el, commitCallback) {
     this.container = container;
