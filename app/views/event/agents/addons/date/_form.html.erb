@@ -59,6 +59,9 @@
 
   <dt><%= @model.t :event_recurrences %><%= @model.tt :event_recurrences %></dt>
   <dd>
+    <%# for removing all %>
+    <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_update_from_view]", nil, id: nil %>
+
     <% @item.event_recurrences.each_with_index do |recurr, index| %>
       <% render_recurrence.call recurr, index %>
     <% end %>
