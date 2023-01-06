@@ -28,6 +28,7 @@ this.Event_Form = (function () {
     });
 
     self.resetIndex();
+    self.activeSynchronizer();
   };
 
   Event_Form.prototype.resetIndex = function() {
@@ -41,7 +42,26 @@ this.Event_Form = (function () {
 
       index += 1;
     });
-  }
+  };
+
+  Event_Form.prototype.activeSynchronizer = function() {
+    var self = this;
+
+    self.$el.find(".event-recurrence-date").each(function() {
+      if (this.ss && this.ss.synchronizer) {
+        return;
+      }
+
+      var $this = $(this);
+
+      var synchronizer = new SS_StartEndSynchronizer(
+        $this.find(".event-recurrence-date-start-on"),
+        $this.find(".event-recurrence-date-until-on"));
+
+      this.ss ||= {}
+      this.ss.synchronizer = synchronizer
+    });
+  };
 
   Event_Form.prototype.addRecurrence = function(buttonEl) {
     var self = this;
@@ -55,6 +75,7 @@ this.Event_Form = (function () {
     $button.closest(".event-recurrence").before($html);
     self.resetIndex();
     SS_DateTimePicker.render($html);
+    self.activeSynchronizer();
   };
 
   Event_Form.prototype.deleteRecurrence = function(buttonEl) {
