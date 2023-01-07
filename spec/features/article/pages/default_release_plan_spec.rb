@@ -21,8 +21,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           visit index_path
           click_on I18n.t('ss.links.new')
 
-          expect(page).to have_field("item[release_date]", with: "2016/04/15 00:00")
-          expect(page).to have_field("item[close_date]", with: "2016/07/21 00:00")
+          expect(datetimepicker_value("item[release_date]")).to eq "2016/04/15 00:00"
+          expect(datetimepicker_value("item[close_date]")).to eq "2016/07/21 00:00"
 
           within "form#item-form" do
             fill_in "item[name]", with: "sample"
@@ -57,8 +57,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           visit index_path
           click_on I18n.t('ss.links.new')
 
-          expect(page).to have_field("item[release_date]", with: "2016/04/15 00:00")
-          expect(page).to have_field("item[close_date]", with: "2016/07/21 00:00")
+          expect(datetimepicker_value("item[release_date]")).to eq "2016/04/15 00:00"
+          expect(datetimepicker_value("item[close_date]")).to eq "2016/07/21 00:00"
 
           within "form#item-form" do
             fill_in "item[name]", with: "sample"
@@ -95,8 +95,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           visit index_path
           click_on I18n.t('ss.links.new')
 
-          expect(page).to have_field("item[release_date]", with: "2016/04/16 00:00")
-          expect(page).to have_field("item[close_date]", with: "2016/06/22 00:00")
+          expect(datetimepicker_value("item[release_date]")).to eq "2016/04/16 00:00"
+          expect(datetimepicker_value("item[close_date]")).to eq "2016/06/22 00:00"
 
           within "form#item-form" do
             fill_in "item[name]", with: "sample"
@@ -138,8 +138,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           visit index_path
           click_on I18n.t('ss.links.new')
 
-          expect(page).to have_field("item[release_date]", with: "2016/04/16 00:00")
-          expect(page).to have_field("item[close_date]", with: "2016/06/22 00:00")
+          expect(datetimepicker_value("item[release_date]")).to eq "2016/04/16 00:00"
+          expect(datetimepicker_value("item[close_date]")).to eq "2016/06/22 00:00"
 
           within "form#item-form" do
             fill_in "item[name]", with: "sample"
