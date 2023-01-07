@@ -55,12 +55,18 @@ module SS::DateTimeHelper
       html_options['value'] = Utils.format_datetime(value)
     end
 
-    text_field(object_name, method, html_options)
+    ss_stimulus_tag("ss/i18n_date_time", type: :span, class: "ss-i18n-date-time") do
+      output_buffer << hidden_field(object_name, method, id: nil)
+      output_buffer << text_field_tag("dummy", html_options['value'], html_options)
+    end
   end
 
   def ss_datetime_field_tag(name, value, options = {}, html_options = {})
     html_options = Utils.merge_options(options, html_options, %w(datetime js-datetime))
-    text_field_tag(name, Utils.format_datetime(value), html_options)
+    ss_stimulus_tag("ss/i18n_date_time", type: :span, class: "ss-i18n-date-time") do
+      output_buffer << hidden_field_tag(name, nil, id: nil)
+      output_buffer << text_field_tag("dummy", Utils.format_datetime(value), html_options)
+    end
   end
 
   def ss_date_field(object_name, method, options = {}, html_options = {})
@@ -70,12 +76,18 @@ module SS::DateTimeHelper
       html_options['value'] = Utils.format_date(value)
     end
 
-    text_field(object_name, method, html_options)
+    ss_stimulus_tag("ss/i18n_date_time", type: :span, class: "ss-i18n-date-time") do
+      output_buffer << hidden_field(object_name, method, id: nil)
+      output_buffer << text_field_tag("dummy", html_options['value'], html_options)
+    end
   end
 
   def ss_date_field_tag(name, value, options = {}, html_options = {})
     html_options = Utils.merge_options(options, html_options, %w(date js-date))
-    text_field_tag(name, Utils.format_date(value), html_options)
+    ss_stimulus_tag("ss/i18n_date_time", type: :span, class: "ss-i18n-date-time") do
+      output_buffer << hidden_field_tag(name, nil, id: nil)
+      output_buffer << text_field_tag("dummy", Utils.format_date(value), html_options)
+    end
   end
 
   def ss_time_tag(value, type: :time, **options)
