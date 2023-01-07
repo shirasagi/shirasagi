@@ -119,8 +119,19 @@ this.SS_DateTimePicker = (function () {
   // [ "on", "once", "off", "momentValue", "valueForExchange" ].forEach(function(method) {
   [ "momentValue", "valueForExchange" ].forEach(function(method) {
     SS_DateTimePicker[method] = function() {
-      var selector = Array.prototype.shift.call(arguments)
-      return SS_DateTimePicker.prototype[method].apply(SS_DateTimePicker.instance(selector), arguments);
+      var selector = Array.prototype.shift.call(arguments);
+      var instance = SS_DateTimePicker.instance(selector);
+      if (!instance) {
+        var realElement = $(selector).siblings(".js-date,.js-datetime")[0];
+        if (realElement) {
+          instance = SS_DateTimePicker.instance(realElement);
+        }
+      }
+      if (!instance) {
+        console.warn({ message: "date time picker instance is not found", selector: selector });
+        return;
+      }
+      return SS_DateTimePicker.prototype[method].apply(instance, arguments);
     };
   });
 
