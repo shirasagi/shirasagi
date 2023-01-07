@@ -181,6 +181,12 @@ module SS
     FILL_DATETIME_SCRIPT = <<~SCRIPT.freeze
       (function(element, value) {
         var picker = SS_DateTimePicker.instance(element);
+        if (!picker) {
+          var realElement = $(element).siblings(".js-date,.js-datetime")[0];
+          if (realElement) {
+            picker = SS_DateTimePicker.instance(realElement);
+          }
+        }
         picker.momentValue(value ? moment(value) : null);
         picker.$el.datetimepicker("validate");
       })(...arguments)
