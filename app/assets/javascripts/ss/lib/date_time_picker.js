@@ -233,7 +233,7 @@ this.SS_DateTimePicker = (function () {
       formatDate: SS.convertDateTimeFormat(i18next.t("date.formats.picker")),
       formatTime: "HH:mm",
       value: self.$el.val(),
-      closeOnDateSelect: true,
+      closeOnDateSelect: false,
       enterLikeTab: false,
       scrollInput: false,
       roundTime: 'ceil',
