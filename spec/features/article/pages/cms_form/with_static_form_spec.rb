@@ -98,7 +98,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           fill_in "item[column_values][][in_wrap][value]", with: column1_value
         end
         within ".column-value-cms-column-datefield" do
-          fill_in "item[column_values][][in_wrap][date]", with: column2_value
+          fill_in_date "item[column_values][][in_wrap][date]", with: column2_value
         end
         within ".column-value-cms-column-urlfield" do
           fill_in "item[column_values][][in_wrap][value]", with: column3_value
@@ -195,7 +195,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           fill_in "item[column_values][][in_wrap][value]", with: column1_value2
         end
         within ".column-value-cms-column-datefield" do
-          fill_in "item[column_values][][in_wrap][date]", with: column2_value2
+          fill_in_date "item[column_values][][in_wrap][date]", with: column2_value2
         end
         within ".column-value-cms-column-urlfield" do
           fill_in "item[column_values][][in_wrap][value]", with: column3_value2

@@ -19,8 +19,8 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example, js: true do
       visit "#{index_path}/new"
       within "form#item-form" do
         fill_in "item[name]", with: "name"
-        fill_in "item[start_on]", with: "2016/01/01"
-        fill_in "item[end_on]", with: "2016/01/02"
+        fill_in_date "item[start_on]", with: "2016/01/01"
+        fill_in_date "item[end_on]", with: "2016/01/02"
         click_button I18n.t('ss.buttons.save')
       end
       wait_for_ajax

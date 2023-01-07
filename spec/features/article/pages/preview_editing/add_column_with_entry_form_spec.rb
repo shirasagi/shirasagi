@@ -176,7 +176,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-datefield" do
-              fill_in "item[column_values][][in_wrap][date]", with: column2_value1
+              fill_in_date "item[column_values][][in_wrap][date]", with: column2_value1
             end
 
             click_on I18n.t("ss.buttons.save")

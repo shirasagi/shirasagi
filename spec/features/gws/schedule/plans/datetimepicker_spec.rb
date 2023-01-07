@@ -20,7 +20,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         it "#new" do
           visit new_path
           within "form#item-form" do
-            fill_in "item[start_at]", with: start_at
+            fill_in_datetime "item[start_at]", with: start_at
             fill_in "item[name]", with: unique_id
             expect(datetimepicker_value("item[start_at]")).to eq datetime
           end
@@ -34,7 +34,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         it "#new" do
           visit new_path
           within "form#item-form" do
-            fill_in "item[start_at]", with: start_at
+            fill_in_datetime "item[start_at]", with: start_at
             fill_in "item[name]", with: unique_id
             expect(datetimepicker_value("item[start_at]")).to eq datetime
           end
@@ -48,7 +48,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         it "#new" do
           visit new_path
           within "form#item-form" do
-            fill_in "item[start_at]", with: start_at
+            fill_in_datetime "item[start_at]", with: start_at
             fill_in "item[name]", with: unique_id
             expect(datetimepicker_value("item[start_at]")).to eq datetime
           end
@@ -64,7 +64,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         it "#new" do
           visit new_path
           within "form#item-form" do
-            fill_in "item[start_at]", with: start_at
+            fill_in_datetime "item[start_at]", with: start_at
             fill_in "item[name]", with: unique_id
             expect(datetimepicker_value("item[start_at]")).to eq datetime
           end
@@ -78,7 +78,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         it "#new" do
           visit new_path
           within "form#item-form" do
-            fill_in "item[start_at]", with: start_at
+            fill_in_datetime "item[start_at]", with: start_at
             fill_in "item[name]", with: unique_id
             expect(datetimepicker_value("item[start_at]")).to eq datetime
           end
@@ -92,7 +92,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         it "#new" do
           visit new_path
           within "form#item-form" do
-            fill_in "item[start_at]", with: start_at
+            fill_in_datetime "item[start_at]", with: start_at
             fill_in "item[name]", with: unique_id
             expect(datetimepicker_value("item[start_at]")).to eq datetime
           end
@@ -106,7 +106,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         it "#new" do
           visit new_path
           within "form#item-form" do
-            fill_in "item[start_at]", with: start_at
+            fill_in_datetime "item[start_at]", with: start_at
             fill_in "item[name]", with: unique_id
             expect(datetimepicker_value("item[start_at]")).to eq datetime
           end
@@ -120,7 +120,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         it "#new" do
           visit new_path
           within "form#item-form" do
-            fill_in "item[start_at]", with: start_at
+            fill_in_datetime "item[start_at]", with: start_at
             fill_in "item[name]", with: unique_id
             expect(datetimepicker_value("item[start_at]")).to eq datetime
           end
@@ -134,7 +134,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         it "#new" do
           visit new_path
           within "form#item-form" do
-            fill_in "item[start_at]", with: start_at
+            fill_in_datetime "item[start_at]", with: start_at
             fill_in "item[name]", with: unique_id
             datetimepicker_value("item[start_at]").try do |value|
               expect(value).to eq datetime
@@ -157,7 +157,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
           visit new_path
           within "form#item-form" do
             check "item_allday"
-            fill_in "item[start_on]", with: start_on
+            fill_in_date "item[start_on]", with: start_on
             fill_in "item[name]", with: unique_id
             expect(datetimepicker_value("item[start_on]", date: true)).to eq date
           end
@@ -172,7 +172,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
           visit new_path
           within "form#item-form" do
             check "item_allday"
-            fill_in "item[start_on]", with: start_on
+            fill_in_date "item[start_on]", with: start_on
             fill_in "item[name]", with: unique_id
             expect(datetimepicker_value("item[start_on]", date: true)).to eq date
           end
@@ -187,7 +187,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
           visit new_path
           within "form#item-form" do
             check "item_allday"
-            fill_in "item[start_on]", with: start_on
+            fill_in_date "item[start_on]", with: start_on
             fill_in "item[name]", with: unique_id
             expect(datetimepicker_value("item[start_on]", date: true)).to eq date
           end
@@ -204,7 +204,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
           visit new_path
           within "form#item-form" do
             check "item_allday"
-            fill_in "item[start_on]", with: start_on
+            fill_in_date "item[start_on]", with: start_on
             fill_in "item[name]", with: unique_id
             expect(datetimepicker_value("item[start_on]", date: true)).to eq date
           end
@@ -219,7 +219,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
           visit new_path
           within "form#item-form" do
             check "item_allday"
-            fill_in "item[start_on]", with: start_on
+            fill_in_date "item[start_on]", with: start_on
             fill_in "item[name]", with: unique_id
             expect(datetimepicker_value("item[start_on]", date: true)).to eq date
           end
@@ -234,7 +234,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
           visit new_path
           within "form#item-form" do
             check "item_allday"
-            fill_in "item[start_on]", with: start_on
+            fill_in_date "item[start_on]", with: start_on
             fill_in "item[name]", with: unique_id
             expect(datetimepicker_value("item[start_on]", date: true)).to eq date
           end

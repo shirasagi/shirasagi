@@ -26,8 +26,8 @@ describe "gws_affair_capital_years", type: :feature, dbscope: :example, js: true
       within "form#item-form" do
         fill_in "item[name]", with: "R2"
         fill_in "item[code]", with: 2020
-        fill_in "item[start_date]", with: I18n.l(Time.zone.parse("2020/4/1"), format: :picker)
-        fill_in "item[close_date]", with: I18n.l(Time.zone.parse("2021/3/31"), format: :picker)
+        fill_in_datetime "item[start_date]", with: Time.zone.parse("2020/4/1")
+        fill_in_datetime "item[close_date]", with: Time.zone.parse("2021/3/31")
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -43,8 +43,8 @@ describe "gws_affair_capital_years", type: :feature, dbscope: :example, js: true
       within "form#item-form" do
         fill_in "item[name]", with: "R3"
         fill_in "item[code]", with: 2021
-        fill_in "item[start_date]", with: I18n.l(Time.zone.parse("2021/4/1"), format: :picker)
-        fill_in "item[close_date]", with: I18n.l(Time.zone.parse("2022/3/31"), format: :picker)
+        fill_in_datetime "item[start_date]", with: Time.zone.parse("2021/4/1")
+        fill_in_datetime "item[close_date]", with: Time.zone.parse("2022/3/31")
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))

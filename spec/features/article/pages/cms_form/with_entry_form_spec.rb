@@ -162,7 +162,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             click_on column2.name
           end
           within ".column-value-cms-column-datefield" do
-            fill_in "item[column_values][][in_wrap][date]", with: column2_value1
+            fill_in_date "item[column_values][][in_wrap][date]", with: column2_value1
           end
 
           within ".column-value-palette" do
@@ -320,7 +320,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             fill_in "item[column_values][][in_wrap][value]", with: column1_value2
           end
           within ".column-value-cms-column-datefield" do
-            fill_in "item[column_values][][in_wrap][date]", with: column2_value2
+            fill_in_date "item[column_values][][in_wrap][date]", with: column2_value2
           end
           within ".column-value-cms-column-urlfield2" do
             fill_in "item[column_values][][in_wrap][link_label]", with: column3_label2
@@ -498,7 +498,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             click_on column2.name
           end
           within ".column-value-cms-column-datefield" do
-            fill_in "item[column_values][][in_wrap][date]", with: column2_value1
+            fill_in_date "item[column_values][][in_wrap][date]", with: column2_value1
           end
 
           within ".column-value-palette" do
@@ -707,7 +707,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             fill_in "item[column_values][][in_wrap][value]", with: column1_value2
           end
           within ".column-value-cms-column-datefield" do
-            fill_in "item[column_values][][in_wrap][date]", with: column2_value2
+            fill_in_date "item[column_values][][in_wrap][date]", with: column2_value2
           end
           within ".column-value-cms-column-urlfield2" do
             fill_in "item[column_values][][in_wrap][link_label]", with: column3_label2
@@ -923,7 +923,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             click_on column2.name
           end
           within ".column-value-cms-column-datefield" do
-            fill_in "item[column_values][][in_wrap][date]", with: column2_value1
+            fill_in_date "item[column_values][][in_wrap][date]", with: column2_value1
           end
           click_on I18n.t('ss.buttons.draft_save')
         end

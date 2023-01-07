@@ -35,8 +35,8 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: unique_id
-        fill_in "item[start_at]", with: format_picker(now)
-        fill_in "item[end_at]", with: format_picker(now)
+        fill_in_datetime "item[start_at]", with: format_picker(now)
+        fill_in_datetime "item[end_at]", with: format_picker(now)
         click_button I18n.t('ss.buttons.save')
       end
       expect(current_path).not_to eq index_path
@@ -50,8 +50,8 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: unique_id
-        fill_in "item[start_at]", with: format_picker(now)
-        fill_in "item[end_at]", with: format_picker(day_later)
+        fill_in_datetime "item[start_at]", with: format_picker(now)
+        fill_in_datetime "item[end_at]", with: format_picker(day_later)
         click_button I18n.t('ss.buttons.save')
       end
       expect(current_path).to eq index_path
@@ -63,8 +63,8 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: unique_id
-        fill_in "item[start_at]", with: format_picker(now)
-        fill_in "item[end_at]", with: format_picker(day_ago)
+        fill_in_datetime "item[start_at]", with: format_picker(now)
+        fill_in_datetime "item[end_at]", with: format_picker(day_ago)
         click_button I18n.t('ss.buttons.save')
       end
       expect(current_path).not_to eq index_path
@@ -91,8 +91,8 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: unique_id
         check "item_allday"
-        fill_in "item[start_on]", with: format_picker(now)
-        fill_in "item[end_on]", with: format_picker(now)
+        fill_in_date "item[start_on]", with: format_picker(now)
+        fill_in_date "item[end_on]", with: format_picker(now)
         click_button I18n.t('ss.buttons.save')
       end
       expect(current_path).to eq index_path
@@ -105,8 +105,8 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: unique_id
         check "item_allday"
-        fill_in "item[start_on]", with: format_picker(now)
-        fill_in "item[end_on]", with: format_picker(day_later)
+        fill_in_date "item[start_on]", with: format_picker(now)
+        fill_in_date "item[end_on]", with: format_picker(day_later)
         click_button I18n.t('ss.buttons.save')
       end
       expect(current_path).to eq index_path
@@ -119,8 +119,8 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: unique_id
         check "item_allday"
-        fill_in "item[start_on]", with: format_picker(now)
-        fill_in "item[end_on]", with: format_picker(day_ago)
+        fill_in_date "item[start_on]", with: format_picker(now)
+        fill_in_date "item[end_on]", with: format_picker(day_ago)
         click_button I18n.t('ss.buttons.save')
       end
       expect(current_path).not_to eq index_path
