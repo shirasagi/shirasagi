@@ -28,7 +28,7 @@ class Opendata::Resource
   before_validation :validate_in_tsv, if: ->{ in_tsv.present? }
   before_validation :set_format
 
-  after_save :save_dataset
+  # after_save :save_dataset
   after_destroy :compression_dataset
 
   class << self
@@ -153,13 +153,13 @@ class Opendata::Resource
     end
   end
 
-  def save_dataset
-    self.workflow ||= {}
-    dataset.cur_site = dataset.site
-    dataset.apply_status(status, workflow) if status.present?
-    dataset.released ||= Time.zone.now
-    dataset.save(validate: false)
-  end
+  # def save_dataset
+  #   self.workflow ||= {}
+  #   dataset.cur_site = dataset.site
+  #   dataset.apply_status(status, workflow) if status.present?
+  #   dataset.released ||= Time.zone.now
+  #   dataset.save(validate: false)
+  # end
 
   def set_source_url
     if in_file
