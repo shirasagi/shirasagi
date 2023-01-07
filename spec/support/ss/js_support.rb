@@ -178,6 +178,27 @@ module SS
       })(...arguments)
     SCRIPT
 
+    DATETIMEPICKER_VALUE_SCRIPT = <<~SCRIPT.freeze
+      (function(element, resolve) {
+        var $pickerElement, $valueElement;
+        if ($(element).attr("type") === "hidden") {
+          $valueElement = $(element);
+          $pickerElement = $($valueElement.siblings(".js-date,.js-datetime")[0]);
+        } else {
+          $pickerElement = $valueElement = $(element);
+        }
+
+        var pickerInstance = SS_DateTimePicker.instance($pickerElement);
+        if (pickerInstance && pickerInstance.initialized) {
+          resolve($pickerElement.data('xdsoft_datetimepicker').getValue());
+        } else {
+          $pickerElement.one("ss:generate", function() {
+            resolve($pickerElement.data('xdsoft_datetimepicker').getValue());
+          });
+        }
+      })(...arguments)
+    SCRIPT
+
     FILL_DATETIME_SCRIPT = <<~SCRIPT.freeze
       (function(element, value, resolve) {
         var $pickerElement, $valueElement;
@@ -209,7 +230,7 @@ module SS
             resolve(true);
           }, 0);
         }
- 
+
         var pickerInstance = SS_DateTimePicker.instance($pickerElement);
         if (pickerInstance && pickerInstance.initialized) {
           setter();
@@ -282,13 +303,12 @@ module SS
     end
 
     def datetimepicker_value(locator, **options)
-      date = options.delete(:date)
-      options[:visible] = :all
+      element = page.current_scope.find_xpath("//input[@id='#{locator}' or @name='#{locator}']").first
+      result = page.evaluate_async_script(DATETIMEPICKER_VALUE_SCRIPT, element)
+      return if result.blank?
 
-      element = find(:fillable_field, locator, **options)
-      value = page.evaluate_script("$(arguments[0]).data('xdsoft_datetimepicker').getValue()", element)
-      format = date ? I18n.t("date.formats.picker") : I18n.t("time.formats.picker")
-      Time.zone.parse(value).strftime(format)
+      format = options[:date] ? I18n.t("date.formats.picker") : I18n.t("time.formats.picker")
+      result.in_time_zone.strftime(format)
     end
 
     def wait_for_page_load
