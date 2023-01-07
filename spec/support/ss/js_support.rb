@@ -179,16 +179,42 @@ module SS
     SCRIPT
 
     FILL_DATETIME_SCRIPT = <<~SCRIPT.freeze
-      (function(element, value) {
+      (function(element, value, resolve) {
         var picker = SS_DateTimePicker.instance(element);
         if (!picker) {
           var realElement = $(element).siblings(".js-date,.js-datetime")[0];
           if (realElement) {
             picker = SS_DateTimePicker.instance(realElement);
+            if (picker) {
+              element = realElement;
+            }
           }
         }
-        picker.momentValue(value ? moment(value) : null);
-        picker.$el.datetimepicker("validate");
+        if (!picker) {
+          // picker is not found
+          console.error({ message: "picker is not found", element: element });
+          resolve(false);
+          return;
+        }
+
+        var setter = function() {
+          picker.momentValue(value ? moment(value) : null);
+          // validate を実行するとイベント "ss:changeDateTime" が発生する。
+          // イベント "ss:changeDateTime" のハンドラーのいくつかで別　URL へ遷移するものがある。
+          // そのようなもので stale element reference エラーが発生することを防ぐため、
+          // setTimeout 内で validate を実行するようにする。
+          // ※ setTimeout 内で validate を実行すると、stale element reference エラーがなぜ発生しなくなるかは不明。
+          setTimeout(function() {
+            picker.$el.datetimepicker("validate");
+            resolve(true);
+          }, 0);
+        }
+
+        if (picker.initialized) {
+          setter();
+        } else {
+          $(element).one("ss:generate", setter);
+        }
       })(...arguments)
     SCRIPT
 
@@ -422,7 +448,8 @@ module SS
       with = options.delete(:with)
       with = with.in_time_zone.iso8601 if with.present?
 
-      page.execute_script(FILL_DATETIME_SCRIPT, element, with)
+      result = page.evaluate_async_script(FILL_DATETIME_SCRIPT, element, with)
+      expect(result).to be_truthy
     end
 
     alias fill_in_date fill_in_datetime
