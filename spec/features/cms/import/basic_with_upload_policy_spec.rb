@@ -21,7 +21,7 @@ describe "cms_import_with_upload_policy", type: :feature, dbscope: :example, js:
         expectation = expect do
           within "form#task-form" do
             attach_file "item[in_file]", file
-            fill_in 'item[import_date]', with: I18n.l(now, format: :long)
+            fill_in_datetime 'item[import_date]', with: now
             click_button I18n.t('ss.buttons.import')
           end
         end

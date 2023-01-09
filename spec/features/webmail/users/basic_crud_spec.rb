@@ -97,7 +97,7 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
 
       visit edit_webmail_user_path(id: Webmail::User.all.find_by(uid: uid2).id)
       within "form#item-form" do
-        fill_in "item[account_expiration_date]", with: nil
+        fill_in_datetime "item[account_expiration_date]", with: nil
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))

@@ -73,7 +73,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
         click_on I18n.t("ss.links.new")
       end
       within "form#item-form" do
-        fill_in "item[deliver_date]", with: date
+        fill_in_datetime "item[deliver_date]", with: date
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))

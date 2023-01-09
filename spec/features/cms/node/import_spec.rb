@@ -35,7 +35,7 @@ describe "cms_node_import", type: :feature, dbscope: :example, js: true do
 
         within "form#task-form" do
           attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/cms/import/site.zip"
-          fill_in 'item[import_date]', with: I18n.l(Time.zone.now, format: :long)
+          fill_in_datetime 'item[import_date]', with: Time.zone.now
           click_button I18n.t('ss.buttons.import')
         end
 
