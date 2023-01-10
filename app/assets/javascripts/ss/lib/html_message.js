@@ -12,7 +12,7 @@ this.SS_HtmlMessage = (function () {
         $(this).css('height', $(this).attr('height') + 'px');
       });
 
-      var $a = $("<a />", { class: "show-image", href: "#" }).html(i18next.t('webmail.links.show_image'));
+      var $a = $("<a />", { class: "show-image", href: "#" }).text(i18next.t('webmail.links.show_image'));
       $a.on("click", function() {
         $(this).hide();
         self.loadImages();
