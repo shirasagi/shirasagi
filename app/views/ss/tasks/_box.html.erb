@@ -100,10 +100,10 @@
       data: { head_logs: <%= limit %> },
       cache: false,
       success: function (data) {
-        $el.find(".state").html(data["state_label"] || "").data("state", data["state"]);
-        $el.find(".count").html(formatCount(data["current_count"], data["total_count"]));
-        $el.find(".started").html(formatTime(data["started"]));
-        $el.find(".closed").html(formatTime(data["closed"]));
+        $el.find(".state").text(data["state_label"] || "").data("state", data["state"]);
+        $el.find(".count").text(formatCount(data["current_count"], data["total_count"]));
+        $el.find(".started").text(formatTime(data["started"]));
+        $el.find(".closed").text(formatTime(data["closed"]));
         $el.find(".log").val(data["head_logs"].join("\n"));
         if (data["state"] === "completed") {
           $form.find(".stop-button").hide();

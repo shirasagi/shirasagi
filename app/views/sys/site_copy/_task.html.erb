@@ -27,9 +27,9 @@
           if (! closed) {
             closed = "";
           }
-          $("#task-form .state").html(data.state);
-          $("#task-form .started").html(started.replace(/\..*/, "").replace("T", " "));
-          $("#task-form .closed").html(closed.replace(/\..*/, "").replace("T", " "));
+          $("#task-form .state").text(data.state);
+          $("#task-form .started").text(started.replace(/\..*/, "").replace("T", " "));
+          $("#task-form .closed").text(closed.replace(/\..*/, "").replace("T", " "));
           $("#task-form .log").val(data.logs.join("\n"));
           if (data["state"] === "completed") {
             $("#task-form .reset-state").hide();
