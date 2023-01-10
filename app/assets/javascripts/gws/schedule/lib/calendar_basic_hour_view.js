@@ -11,7 +11,7 @@ SS.ready(function() {
       renderEvents: function (events) {
         this.dayGrid.renderEvents(events);
 
-        head = '<tr><td class="fc-head-container fc-widget-header">'
+        var head = '<tr><td class="fc-head-container fc-widget-header">'
         head += '<div class="fc-row fc-widget-header">'
         head += '<table><thead><tr>'
         for (i in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]) {
