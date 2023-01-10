@@ -175,7 +175,7 @@
       var name = $this.find('td:first').text();
 
       optionCount += 1;
-      optionHtml += '<option value="' + id + '">' + name + '</option>';
+      optionHtml += $('<option />', { value: id }).text(name).prop('outerHTML');
     });
 
     var save = this.$select.val();
