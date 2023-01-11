@@ -62,7 +62,7 @@ module Chorg::MongoidSupport
         entity.try(:skip_assoc_opendata=, true)
         def entity.invoke_opendata_job(action); end
 
-        entity.instance_variable_set("@base_model", model)
+        entity.instance_variable_set(:@base_model, model)
         def entity.base_model
           return @base_model
         end
