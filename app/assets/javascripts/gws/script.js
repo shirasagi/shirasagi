@@ -14,7 +14,6 @@
 //= require gws/schedule/lib/todo_search
 //= require gws/schedule/lib/todo_index
 //= require gws/schedule/lib/csv
-//= require gws/schedule/lib/start_end_synchronizer
 //= require gws/schedule/lib/facility_reservation
 //= require gws/memo/message
 //= require gws/memo/folder

@@ -430,7 +430,7 @@ module SS
     end
 
     def fill_in_datetime(locator, **options)
-      element = page.current_scope.find_xpath("//input[@id='#{locator}' or @name='#{locator}']").first
+      element = find(:fillable_field, locator, visible: :all)
       with = options.delete(:with)
       with = with.in_time_zone.iso8601 if with.present?
 

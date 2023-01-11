@@ -1,7 +1,7 @@
-this.Gws_Schedule_StartEndSynchronizer = (function () {
+this.SS_StartEndSynchronizer = (function () {
   var defaultStartEndDifferenceInMillis = 1000 * 60 * 60;
 
-  var calcDifference = Gws_Schedule_StartEndSynchronizer.calcDifference = function (start, end) {
+  var calcDifference = SS_StartEndSynchronizer.calcDifference = function (start, end) {
     if (!start || !end) {
       return defaultStartEndDifferenceInMillis;
     }
@@ -13,7 +13,7 @@ this.Gws_Schedule_StartEndSynchronizer = (function () {
     return diff;
   };
 
-  function Gws_Schedule_StartEndSynchronizer(startEl, endEl, callback) {
+  function SS_StartEndSynchronizer(startEl, endEl, callback) {
     this.$startEl = $(startEl);
     this.$endEl = $(endEl);
     this.difference = defaultStartEndDifferenceInMillis;
@@ -21,7 +21,7 @@ this.Gws_Schedule_StartEndSynchronizer = (function () {
     this.render(callback);
   }
 
-  Gws_Schedule_StartEndSynchronizer.prototype.render = function(callback) {
+  SS_StartEndSynchronizer.prototype.render = function(callback) {
     var self = this;
 
     var handler = function() { self.calcDifference() };
@@ -37,7 +37,7 @@ this.Gws_Schedule_StartEndSynchronizer = (function () {
     }
   };
 
-  Gws_Schedule_StartEndSynchronizer.prototype.calcDifference = function() {
+  SS_StartEndSynchronizer.prototype.calcDifference = function() {
     var self = this;
 
     var startValue = SS_DateTimePicker.momentValue(self.$startEl);
@@ -45,7 +45,7 @@ this.Gws_Schedule_StartEndSynchronizer = (function () {
     self.difference = calcDifference(startValue, endValue);
   };
 
-  Gws_Schedule_StartEndSynchronizer.prototype.updateEndValue = function() {
+  SS_StartEndSynchronizer.prototype.updateEndValue = function() {
     var self = this;
 
     var endValue = SS_DateTimePicker.momentValue(self.$startEl);
@@ -60,5 +60,5 @@ this.Gws_Schedule_StartEndSynchronizer = (function () {
     SS_DateTimePicker.momentValue(self.$endEl, endValue);
   };
 
-  return Gws_Schedule_StartEndSynchronizer;
+  return SS_StartEndSynchronizer;
 })();
