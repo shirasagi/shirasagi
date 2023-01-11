@@ -179,10 +179,28 @@ module SS
     SCRIPT
 
     FILL_DATETIME_SCRIPT = <<~SCRIPT.freeze
-      (function(element, value) {
-        var picker = SS_DateTimePicker.instance(element);
-        picker.momentValue(value ? moment(value) : null);
-        picker.$el.datetimepicker("validate");
+      (function(element, value, resolve) {
+        var setter = function() {
+          var pickerInstance = SS_DateTimePicker.instance(element);
+          pickerInstance.momentValue(value ? moment(value) : null);
+
+          // validate を実行するとイベント "ss:changeDateTime" が発生する。
+          // イベント "ss:changeDateTime" のハンドラーのいくつかで別　URL へ遷移するものがある。
+          // そのようなもので stale element reference エラーが発生することを防ぐため、
+          // setTimeout 内で validate を実行するようにする。
+          // ※ setTimeout 内で validate を実行すると、stale element reference エラーがなぜ発生しなくなるかは不明。
+          setTimeout(function() {
+            $(element).datetimepicker("validate");
+            resolve(true);
+          }, 0);
+        }
+
+        var pickerInstance = SS_DateTimePicker.instance(element);
+        if (pickerInstance && pickerInstance.initialized) {
+          setter();
+        } else {
+          $(element).one("ss:generate", setter);
+        }
       })(...arguments)
     SCRIPT
 
@@ -416,7 +434,8 @@ module SS
       with = options.delete(:with)
       with = with.in_time_zone.iso8601 if with.present?
 
-      page.execute_script(FILL_DATETIME_SCRIPT, element, with)
+      result = page.evaluate_async_script(FILL_DATETIME_SCRIPT, element, with)
+      expect(result).to be_truthy
     end
 
     alias fill_in_date fill_in_datetime
