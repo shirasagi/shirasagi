@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Chorg::Substituter::IdSubstituter, dbscope: :example do
+describe Chorg::Substitutor::IdSubstitutor, dbscope: :example do
   let(:group) { cms_group }
   describe "#call" do
     context "with Integer" do
@@ -34,18 +34,18 @@ describe Chorg::Substituter::IdSubstituter, dbscope: :example do
 
   describe "#<=>" do
     context "normal situation" do
-      let(:substituer1) { Chorg::Substituter::IdSubstituter.new(30_016, 27_509) }
-      let(:substituer2) { Chorg::Substituter::IdSubstituter.new(44_103, 9_338) }
-      let(:substituer3) { Chorg::Substituter::IdSubstituter.new(50_123, 10_636) }
+      let(:substituer1) { Chorg::Substitutor::IdSubstitutor.new(30_016, 27_509) }
+      let(:substituer2) { Chorg::Substitutor::IdSubstitutor.new(44_103, 9_338) }
+      let(:substituer3) { Chorg::Substitutor::IdSubstitutor.new(50_123, 10_636) }
       it { expect(substituer1).to be > substituer2 }
       it { expect(substituer1).to be > substituer3 }
       it { expect(substituer2).to be > substituer3 }
     end
 
     context "edge case" do
-      let(:substituer1) { Chorg::Substituter::IdSubstituter.new(30_016, 27_509) }
-      let(:substituer2) { Chorg::Substituter::IdSubstituter.new(30_016, []) }
-      let(:substituer3) { Chorg::Substituter::IdSubstituter.new(30_016, [ 27_509 ]) }
+      let(:substituer1) { Chorg::Substitutor::IdSubstitutor.new(30_016, 27_509) }
+      let(:substituer2) { Chorg::Substitutor::IdSubstitutor.new(30_016, []) }
+      let(:substituer3) { Chorg::Substitutor::IdSubstitutor.new(30_016, [ 27_509 ]) }
       it { expect(substituer1).to be > substituer2 }
       it { expect(substituer1).to be > substituer3 }
       it { expect(substituer2).to be > substituer3 }
@@ -53,7 +53,7 @@ describe Chorg::Substituter::IdSubstituter, dbscope: :example do
   end
 end
 
-describe Chorg::Substituter::StringSubstituter do
+describe Chorg::Substitutor::StringSubstitutor do
   let(:group) { cms_group }
   describe "#call" do
     context "with String" do
@@ -82,7 +82,7 @@ describe Chorg::Substituter::StringSubstituter do
     let(:substituer2) { described_class.new("kmsrgxit7k", "tfszbhe91d") }
     let(:substituer3) { described_class.new("組織変更/企画政策部/企画政策部 長生き課", "組織変更/健康管理部/健康管理部 地域連携課") }
     let(:substituer4) { described_class.new("企画政策部 長生き課", "健康管理部 地域連携課") }
-    let(:substituer5) { Chorg::Substituter::IdSubstituter.new(30_016, []) }
+    let(:substituer5) { Chorg::Substitutor::IdSubstitutor.new(30_016, []) }
 
     it { expect(substituer1).to be < substituer2 }
     it { expect(substituer1).to be > substituer3 }
@@ -100,11 +100,11 @@ describe Chorg::Substituter::StringSubstituter do
   end
 end
 
-describe Chorg::Substituter::ChainSubstituter, dbscope: :example do
+describe Chorg::Substitutor::ChainSubstitutor, dbscope: :example do
   let(:from_url) { "http://abc.example.jp/efg/" }
   let(:to_url) { "https://xyz.example.jp/stu/" }
   subject do
-    Chorg::Substituter.collect(
+    Chorg::Substitutor.collect(
       { "contact_link_url" => from_url },
       { "contact_link_url" => to_url },
       [1],
@@ -117,7 +117,7 @@ describe Chorg::Substituter::ChainSubstituter, dbscope: :example do
   end
 end
 
-describe Chorg::Substituter do
+describe Chorg::Substitutor do
   let(:group) { cms_group }
   context "with simple substitution" do
     let(:from) do
@@ -177,8 +177,8 @@ describe Chorg::Substituter do
 
   describe "<=>" do
     subject do
-      [ Chorg::Substituter::IdSubstituter.new(6, 0),
-        Chorg::Substituter::IdSubstituter.new(6, [0, 0]) ]
+      [ Chorg::Substitutor::IdSubstitutor.new(6, 0),
+        Chorg::Substitutor::IdSubstitutor.new(6, [0, 0]) ]
     end
     it do
       expect { subject.sort! }.not_to raise_error

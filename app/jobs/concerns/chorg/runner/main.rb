@@ -34,11 +34,11 @@ module Chorg::Runner::Main
   end
 
   def move_users_group(from_id, to_id)
-    substituter = self.class.id_substituter_class.new(from_id, to_id)
+    substitutor = self.class.id_substitutor_class.new(from_id, to_id)
     with_entities([self.class.user_class]) do |user|
       old_ids = user.group_ids
       old_names = user.groups.pluck(:name).join(",")
-      new_ids = substituter.call(:group_ids, user.group_ids, to_id)
+      new_ids = substitutor.call(:group_ids, user.group_ids, to_id)
       if old_ids != new_ids
         user.group_ids = new_ids
 

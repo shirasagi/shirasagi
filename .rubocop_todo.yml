@@ -264,7 +264,7 @@ Lint/ShadowingOuterLocalVariable:
 Lint/UnifiedInteger:
   Exclude:
     - 'app/jobs/concerns/chorg/primitive_runner.rb'
-    - 'app/models/chorg/substituter.rb'
+    - 'app/models/chorg/substitutor.rb'
     - 'app/models/gws/reminder/notification.rb'
 
 # Offense count: 63

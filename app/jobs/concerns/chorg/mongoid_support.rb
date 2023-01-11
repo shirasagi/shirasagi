@@ -35,9 +35,9 @@ module Chorg::MongoidSupport
     hash
   end
 
-  def with_entity_updates(models, substituter, scope = {})
+  def with_entity_updates(models, substitutor, scope = {})
     with_entities(models, scope) do |entity|
-      with_updates(entity, substituter) do |updates|
+      with_updates(entity, substitutor) do |updates|
         yield entity, updates
       end
     end
@@ -143,13 +143,13 @@ module Chorg::MongoidSupport
     form.instance_of?(Cms::Form)
   end
 
-  def with_updates(entity, substituter)
+  def with_updates(entity, substitutor)
     updates = {}
     target_fields(entity).each do |k, _|
       next if skip_target_field?(entity, k)
 
       v = entity[k]
-      new_value = substituter.call(k, v, entity.try(:contact_group_id))
+      new_value = substitutor.call(k, v, entity.try(:contact_group_id))
       updates[k] = new_value if v != new_value
     end
     updates = updates.merge(collect_embedded_array_updates(entity))
@@ -169,7 +169,7 @@ module Chorg::MongoidSupport
         updates = {}
         target_fields(embedded_entity).each do |k, _|
           v = embedded_entity[k]
-          new_value = substituter.call(k, v, entity.try(:contact_group_id))
+          new_value = substitutor.call(k, v, entity.try(:contact_group_id))
           updates[k] = new_value if v != new_value
         end
         updates

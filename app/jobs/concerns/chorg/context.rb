@@ -3,8 +3,8 @@ module Chorg::Context
 
   included do
     cattr_accessor(:ss_mode, instance_accessor: false) { :cms }
-    cattr_accessor(:substituter_class, instance_accessor: false) { Chorg::Substituter }
-    cattr_accessor(:id_substituter_class, instance_accessor: false) { Chorg::Substituter::IdSubstituter }
+    cattr_accessor(:substitutor_class, instance_accessor: false) { Chorg::Substitutor }
+    cattr_accessor(:id_substitutor_class, instance_accessor: false) { Chorg::Substitutor::IdSubstitutor }
     cattr_accessor(:group_classes, instance_accessor: false) do
       [ SS::Group, Cms::Group, Sys::Group, Gws::Group ].freeze
     end
@@ -14,7 +14,7 @@ module Chorg::Context
     cattr_accessor(:config_p, instance_accessor: false) { ->{ SS.config.chorg } }
 
     attr_reader :cur_site, :cur_user, :adds_group_to_site, :item
-    attr_reader :results, :substituter, :validation_substituter, :delete_group_ids
+    attr_reader :results, :substitutor, :validation_substitutor, :delete_group_ids
   end
 
   def init_context(opts = {})
@@ -23,8 +23,8 @@ module Chorg::Context
                  "unify" => { "success" => 0, "failed" => 0 },
                  "division" => { "success" => 0, "failed" => 0 },
                  "delete" => { "success" => 0, "failed" => 0 } }
-    @substituter = self.class.substituter_class.new(opts)
-    @validation_substituter = self.class.substituter_class.new(opts)
+    @substitutor = self.class.substitutor_class.new(opts)
+    @validation_substitutor = self.class.substitutor_class.new(opts)
     @delete_group_ids = []
 
     task.init_entity_logs
