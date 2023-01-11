@@ -41,7 +41,7 @@ module SS
         var defer = $.Deferred();
         $(selector || document).one(eventName, function() { defer.resolve(true); });
         window.SS[promiseId] = defer.promise();
-      })(arguments[0], arguments[1], arguments[2]);
+      })(...arguments)
     SCRIPT
 
     WAIT_EVENT_COMPLETION = <<~SCRIPT.freeze
@@ -54,7 +54,7 @@ module SS
 
         delete window.SS[promiseId];
         promise.done(function(result) { resolve(result); });
-      })(arguments[0], arguments[1]);
+      })(...arguments)
     SCRIPT
 
     ENSURE_ADDON_OPENED = <<~SCRIPT.freeze
@@ -77,7 +77,7 @@ module SS
 
         $addon.one("ss:addonShown", function() { resolve(true); });
         $addon.find(".toggle-head").trigger("click");
-      })(arguments[0], arguments[1]);
+      })(...arguments)
     SCRIPT
 
     WAIT_CKEDITOR_READY_SCRIPT = <<~SCRIPT.freeze
@@ -98,7 +98,7 @@ module SS
           console.log("ckeditor gets ready");
           setTimeout(function() { resolve(true); }, 0);
         });
-      })(arguments[0], arguments[1]);
+      })(...arguments)
     SCRIPT
 
     WAIT_ALL_CKEDITORS_READY_SCRIPT = <<~SCRIPT.freeze
@@ -121,7 +121,7 @@ module SS
         });
 
         Promise.all(promises).then(function() { setTimeout(function() { resolve(true); }, 0); });
-      })(arguments[0]);
+      })(...arguments)
     SCRIPT
 
     FILL_CKEDITOR_SCRIPT = <<~SCRIPT.freeze
@@ -139,7 +139,7 @@ module SS
         };
 
         ckeditor.setData(text, { callback: callback });
-      })(arguments[0], arguments[1], arguments[2]);
+      })(...arguments)
     SCRIPT
 
     HOOK_CKEDITOR_EVENT_COMPLETION = <<~SCRIPT.freeze
@@ -148,7 +148,7 @@ module SS
         var defer = $.Deferred();
         ckeditor.once(eventName, function(ev) { defer.resolve(true); ev.removeListener(); });
         window.SS[promiseId] = defer.promise();
-      })(arguments[0], arguments[1], arguments[2]);
+      })(...arguments)
     SCRIPT
 
     IMAGE_ELEMENT_INFO = <<~SCRIPT.freeze
@@ -169,20 +169,38 @@ module SS
           resolve({ error: error.toString() });
           return true;
         });
-      })(arguments[0], arguments[1]);
+      })(...arguments)
     SCRIPT
 
     WAIT_FOR_JS_READY_SCRIPT = <<~SCRIPT.freeze
       (function(resolve) {
         SS.ready(function() { resolve(true); });
-      })(arguments[0]);
+      })(...arguments)
     SCRIPT
 
     FILL_DATETIME_SCRIPT = <<~SCRIPT.freeze
-      (function(element, value) {
-        var picker = SS_DateTimePicker.instance(element);
-        picker.momentValue(value ? moment(value) : null);
-        picker.$el.datetimepicker("validate");
+      (function(element, value, resolve) {
+        var setter = function() {
+          var pickerInstance = SS_DateTimePicker.instance(element);
+          pickerInstance.momentValue(value ? moment(value) : null);
+
+          // validate を実行するとイベント "ss:changeDateTime" が発生する。
+          // イベント "ss:changeDateTime" のハンドラーのいくつかで別　URL へ遷移するものがある。
+          // そのようなもので stale element reference エラーが発生することを防ぐため、
+          // setTimeout 内で validate を実行するようにする。
+          // ※ setTimeout 内で validate を実行すると、stale element reference エラーがなぜ発生しなくなるかは不明。
+          setTimeout(function() {
+            $(element).datetimepicker("validate");
+            resolve(true);
+          }, 0);
+        }
+
+        var pickerInstance = SS_DateTimePicker.instance(element);
+        if (pickerInstance && pickerInstance.initialized) {
+          setter();
+        } else {
+          $(element).one("ss:generate", setter);
+        }
       })(...arguments)
     SCRIPT
 
@@ -416,7 +434,8 @@ module SS
       with = options.delete(:with)
       with = with.in_time_zone.iso8601 if with.present?
 
-      page.execute_script(FILL_DATETIME_SCRIPT, element, with)
+      result = page.evaluate_async_script(FILL_DATETIME_SCRIPT, element, with)
+      expect(result).to be_truthy
     end
 
     alias fill_in_date fill_in_datetime
