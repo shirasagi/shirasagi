@@ -164,6 +164,9 @@ en:
       models:
         chorg/run_params:
           job_mode_is_not_service: Job service execution mode is not a service and cannot be reserved. Please contact a system administrator.
+        chorg/changeset:
+          blank_contact_group_name: "'s contact has blank name."
+          duplicate_contact_group_name: "'s contact has duplicated name \"%{name}\"."
     attributes:
       chorg/model/revision:
         name: Name
@@ -177,7 +180,10 @@ en:
         destinations: Transfer destination
       chorg/run_params:
         add_newly_created_group_to_site: Add a newly created group to the site
-        forced_overwrite: Overwrite contact information
+        forced_overwrite_html: |-
+          Force changes to contact information<br>
+          Normal organizational changes do not change the contact information for pages that are set to "Not Linked to Groups".<br>
+          But checking this option will change the contact information for pages that are set to "Do not work with groups".
         reservation: Reservation for execution
       chorg/revision:
         content_csv_file_id: Content CSV files

@@ -28,10 +28,15 @@ module Chorg::Context
     @delete_group_ids = []
 
     task.init_entity_logs
+
+    Chorg.new_current_context(
+      options: opts, results: @results, substitutor: @substitutor, validation_substitutor: @validation_substitutor,
+      delete_group_ids: @delete_group_ids)
   end
 
   def finalize_context
     task.finalize_entity_logs
+    Chorg.clear_current_context
   end
 
   def inc_counter(method, type)

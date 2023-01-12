@@ -57,8 +57,12 @@ module Chorg::PrimitiveRunner
   def execute_unify(changeset)
     put_log("unify #{changeset.before_unify} to #{changeset.after_unify}")
     task.log("  #{changeset.before_unify} から #{changeset.after_unify} へ")
+    # なるべく新しいグループは作成しないようにする。
+    # 操作先のグループが見つからない場合は、操作元グループを並び順で検索し、最初に見つけたものへ統合する。
+    source_groups = self.class.group_class.in(name: changeset.sources.map { |source| source["name"] })
+    source_groups.reorder(order: :asc, name: :asc)
     destination = changeset.destinations.first
-    destination_group = find_or_create_group(destination)
+    destination_group = find_or_create_group(destination, alternative_names: source_groups.pluck(:name))
     unless save_or_collect_errors(destination_group)
       inc_counter(:unify, :failed)
       return
@@ -91,12 +95,14 @@ module Chorg::PrimitiveRunner
       return
     end
 
-    destination_groups = changeset.destinations.map do |destination|
-      find_or_create_group(destination)
+    destination_groups = changeset.destinations.map.with_index do |destination, index|
+      # なるべく新しいグループは作成しないようにする。
+      # 1 番目の分割先のグループが見つからない場合は、分割元グループへ分割結果をセットする。
+      alternative_names = index == 0 ? [ source_group.name ] : nil
+      find_or_create_group(destination, alternative_names: alternative_names)
     end
 
     success = destination_groups.reduce(true) do |a, e|
-      next a if e.id == source_group.id
       if save_or_collect_errors(e)
         put_log("created group: #{e.name}")
         a

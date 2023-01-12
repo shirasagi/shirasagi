@@ -20,6 +20,10 @@ module Contact::Addon::Group
     before_validation :remove_empty_contact_groups
     validates :contact_groups, length: { maximum: MAX_CONTACT_COUNT }
     validate :validate_contact_groups
+
+    if respond_to? :before_chorg
+      before_chorg :update_chorg_attributes
+    end
   end
 
   private
@@ -81,5 +85,11 @@ module Contact::Addon::Group
         self.errors.add :base, new_message
       end
     end
+  end
+
+  def update_chorg_attributes
+    hash = Chorg.current_context.updating_attributes
+    Chorg::GroupUpdater.new(item: self, replacement_hash: hash).call
+    Chorg.current_context.updating_attributes = {}
   end
 end

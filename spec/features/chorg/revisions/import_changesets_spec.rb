@@ -293,7 +293,7 @@ describe "chorg_import_revision", type: :feature, dbscope: :example, js: true do
           destination[:contact_groups].first.tap do |contact_group|
             expect(contact_group[:_id]).to be_blank
             expect(contact_group[:main_state]).to be_blank
-            expect(contact_group[:name]).to be_blank
+            expect(contact_group[:name]).to eq "グループ 2"
             expect(contact_group[:contact_group_name]).to eq "グループ 2"
             expect(contact_group[:contact_tel]).to eq "000-0000-0000"
             expect(contact_group[:contact_fax]).to eq "000-0000-0000"
@@ -310,7 +310,7 @@ describe "chorg_import_revision", type: :feature, dbscope: :example, js: true do
           destination[:contact_groups].first.tap do |contact_group|
             expect(contact_group[:_id]).to be_blank
             expect(contact_group[:main_state]).to be_blank
-            expect(contact_group[:name]).to be_blank
+            expect(contact_group[:name]).to eq "グループ 3"
             expect(contact_group[:contact_group_name]).to eq "グループ 3"
             expect(contact_group[:contact_tel]).to eq "000-0000-0000"
             expect(contact_group[:contact_fax]).to eq "000-0000-0000"

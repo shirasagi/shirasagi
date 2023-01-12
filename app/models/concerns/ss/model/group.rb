@@ -14,6 +14,8 @@ module SS::Model::Group
     index({ name: 1 }, { unique: true })
     index({ domains: 1 }, { unique: true, sparse: true })
 
+    define_model_callbacks :chorg
+
     seqid :id
     field :name, type: String
     field :order, type: Integer

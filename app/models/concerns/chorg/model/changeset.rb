@@ -113,6 +113,28 @@ module Chorg::Model::Changeset
   def validate_destinations
     return if destinations.blank?
     errors.add :destinations, :invalid unless destinations.select { |e| e['name'].blank? }.blank?
+
+    destinations.each do |destination|
+      contact_groups = destination["contact_groups"]
+      next if contact_groups.blank?
+
+      contact_names = Set.new
+      blank_contact_group_name = false
+      contact_groups.each do |contact|
+        contact_name = contact["name"]
+        if contact_name.blank?
+          errors.add :destinations, :blank_contact_group_name unless blank_contact_group_name
+          blank_contact_group_name = true
+          next
+        end
+
+        if contact_names.include?(contact_name)
+          errors.add :destinations, :duplicate_contact_group_name, name: contact_name
+        end
+
+        contact_names.add(contact_name)
+      end
+    end
   end
 
   def validate_division_destinations

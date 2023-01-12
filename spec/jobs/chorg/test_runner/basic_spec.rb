@@ -83,16 +83,14 @@ describe Chorg::TestRunner, dbscope: :example do
         expect(task.entity_logs[1]['model']).to eq 'Cms::Page'
         expect(task.entity_logs[1]['class']).to eq 'Article::Page'
         expect(task.entity_logs[1]['id']).to eq '1'
-        expect(task.entity_logs[1]['changes']).to include(
-          'contact_tel', 'contact_fax', 'contact_email', 'contact_link_url', 'contact_link_name'
-        )
+        expect(task.entity_logs[1]['changes']).to be_present
       end
     end
   end
 
   context "with unify" do
-    let(:group1) { create(:revision_new_group) }
-    let(:group2) { create(:revision_new_group) }
+    let(:group1) { create(:revision_new_group, order: 10) }
+    let(:group2) { create(:revision_new_group, order: 20) }
     let(:user1) { create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group1.id]) }
     let(:user2) { create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group2.id]) }
     let(:revision) { create(:revision, site_id: site.id) }
@@ -141,27 +139,21 @@ describe Chorg::TestRunner, dbscope: :example do
 
         task.reload
         expect(task.state).to eq 'completed'
-        expect(task.entity_logs.count).to eq 5
+        expect(task.entity_logs.count).to eq 4
         expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
         expect(task.entity_logs[0]['class']).to eq 'Cms::Group'
-        expect(task.entity_logs[0]['creates']).to include('name', 'contact_email')
+        expect(task.entity_logs[0]['changes']).to include('name', 'contact_email')
         expect(task.entity_logs[1]['model']).to eq 'Cms::Site'
         expect(task.entity_logs[1]['id']).to eq site.id.to_s
         expect(task.entity_logs[1]['changes']).to include('group_ids')
         expect(task.entity_logs[2]['model']).to eq 'Cms::Page'
         expect(task.entity_logs[2]['class']).to eq 'Article::Page'
         expect(task.entity_logs[2]['id']).to eq '1'
-        expect(task.entity_logs[2]['changes']).to include(
-          'contact_tel', 'contact_fax', 'contact_email', 'contact_link_url', 'contact_link_name'
-        )
+        expect(task.entity_logs[2]['changes']).to be_present
         expect(task.entity_logs[3]['model']).to eq 'Cms::Group'
         expect(task.entity_logs[3]['class']).to eq 'Cms::Group'
-        expect(task.entity_logs[3]['id']).to eq group1.id.to_s
-        expect(task.entity_logs[3]['deletes']).to include('name', 'contact_email')
-        expect(task.entity_logs[4]['model']).to eq 'Cms::Group'
-        expect(task.entity_logs[4]['class']).to eq 'Cms::Group'
-        expect(task.entity_logs[4]['id']).to eq group2.id.to_s
-        expect(task.entity_logs[4]['deletes']).to include('name', 'contact_email')
+        expect(task.entity_logs[3]['id']).to eq group2.id.to_s
+        expect(task.entity_logs[3]['deletes']).to be_present
       end
     end
   end

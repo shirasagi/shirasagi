@@ -66,8 +66,8 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
   end
 
   context 'with unify' do
-    let(:group1) { create(:gws_revision_new_group) }
-    let(:group2) { create(:gws_revision_new_group) }
+    let(:group1) { create(:gws_revision_new_group, order: 10) }
+    let(:group2) { create(:gws_revision_new_group, order: 20) }
     let(:user1) { create(:gws_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group1.id]) }
     let(:user2) { create(:gws_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group2.id]) }
     let(:revision) { create(:gws_revision, site_id: site.id) }
@@ -103,15 +103,13 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
 
       task.reload
       expect(task.state).to eq 'completed'
-      expect(task.entity_logs.count).to eq 3
+      expect(task.entity_logs.count).to eq 2
       expect(task.entity_logs[0]['model']).to eq 'Gws::Group'
-      expect(task.entity_logs[0]['creates']).to include('name')
+      expect(task.entity_logs[0]['id']).to eq group1.id.to_s
+      expect(task.entity_logs[0]['changes']).to include('name')
       expect(task.entity_logs[1]['model']).to eq 'Gws::Group'
-      expect(task.entity_logs[1]['id']).to eq group1.id.to_s
+      expect(task.entity_logs[1]['id']).to eq group2.id.to_s
       expect(task.entity_logs[1]['deletes']).to include('name')
-      expect(task.entity_logs[2]['model']).to eq 'Gws::Group'
-      expect(task.entity_logs[2]['id']).to eq group2.id.to_s
-      expect(task.entity_logs[2]['deletes']).to include('name')
     end
   end
 

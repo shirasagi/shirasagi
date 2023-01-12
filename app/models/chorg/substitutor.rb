@@ -19,6 +19,7 @@ module Chorg::Substitutor
   # @private
   class IdSubstitutor < BaseSubstitutor
     def initialize(from_value, to_value, key = nil, group_ids = nil)
+      super()
       @from_value = from_value
       @to_value = to_value
       @first_to_value = @to_value.is_a?(Array) ? @to_value.first : @to_value
@@ -54,6 +55,7 @@ module Chorg::Substitutor
   # @private
   class StringSubstitutor < BaseSubstitutor
     def initialize(from_value, to_value, key = nil, group_ids = nil, opts = {})
+      super()
       @from_value = from_value
       @to_value = to_value.nil? ? "" : to_value
       @from_regex = /#{::Regexp.escape(@from_value)}/
@@ -80,7 +82,7 @@ module Chorg::Substitutor
     end
 
     def overwrite_fields
-      %w(contact_tel contact_fax contact_email contact_link_url contact_link_name)
+      %w(contact_charge contact_tel contact_fax contact_email contact_link_url contact_link_name)
     end
 
     def string_array?(array_value)
@@ -166,7 +168,6 @@ module Chorg::Substitutor
       to.each do |k, v|
         from_value = from[k] || ''
         to_value = v || ''
-        next if from_value == to_value
 
         if config.ids_fields.include?(k.to_s)
           @substitutors << IdSubstitutor.new(from_value, to_value, k, group_ids)
