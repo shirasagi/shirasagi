@@ -184,62 +184,72 @@ this.SS_Theme = (function () {
   }
 
   SS_Theme.render = function () {
-    var a, cls, css, style, theme, v;
-    if (!($("#ss-theme").length > 0)) {
+    var $theme = $("#ss-theme");
+    if ($theme.length === 0) {
       return;
     }
-    theme = SS.config["theme"];
-    css = "";
-    for (cls in theme) {
-      v = theme[cls];
-      a = $("#ss-theme a." + cls);
-      if (a) {
-        $(a).attr("data-ss-theme", cls);
-        if (v["css_path"]) {
-          $('head').append('<link rel="alternate stylesheet" type="text/css" title="' + v["name"] + '" href="' + v["css_path"] + '" class="ss-theme ' + cls + '" disabled />');
-        }
-        if (v["font_color"] && v["background_color"]) {
-          css += SS_Theme.cssTemplate(cls, v["font_color"], v["background_color"]) + "\n";
-        }
-        if (v["default_theme"]) {
-          $('#ss-theme a').removeClass('active');
-          a.addClass('active');
-          SS_Theme.switchTheme(cls);
-        }
-        a.on("click", function (e) {
-          cls = $(this).data("ss-theme");
-          $('#ss-theme a').removeClass('active');
-          $(this).addClass('active');
-          Cookies.set("ss-theme", cls, {
-            expires: 7,
-            path: '/'
-          });
-          SS_Theme.switchTheme(cls);
-          return false;
-        });
+
+    var theme = SS.config["theme"];
+    var inlineStyle = '';
+    for (var cls in theme) {
+      var $a = $theme.find("a." + $.escapeSelector(cls));
+      if (!$a[0]) {
+        continue;
       }
+
+      $a.attr("data-ss-theme", cls);
+
+      var v = theme[cls];
+      if (v["css_path"]) {
+        var $styleSheetLink = $('<link />', { rel: "alternate stylesheet", type: "text/css", title: v["name"], href: v["css_path"], class: "ss-theme " + $.escapeSelector(cls), disabled: true });
+        $('head').append($styleSheetLink);
+      }
+      if (v["font_color"] && v["background_color"]) {
+        inlineStyle += SS_Theme.cssTemplate(cls, v["font_color"], v["background_color"]) + "\n";
+      }
+      if (v["default_theme"]) {
+        $theme.find('a').removeClass('active');
+        $a.addClass('active');
+        SS_Theme.switchTheme(cls);
+      }
+      $a.on("click", function () {
+        var $this = $(this);
+        var cls = $this.data("ss-theme");
+        $theme.find('a').removeClass('active');
+        $this.addClass('active');
+        Cookies.set("ss-theme", cls, {
+          expires: 7,
+          path: '/'
+        });
+        SS_Theme.switchTheme(cls);
+        return false;
+      });
     }
-    style = $('<style type="text/css" class="ss-theme">' + css + '</style>');
-    $("head").append(style);
-    cls = Cookies.get("ss-theme");
+
+    if (inlineStyle) {
+      var $inlineStyle = $("<style />", { type: "text/css", class: "ss-theme" }).text(inlineStyle);
+      $("head").append($inlineStyle);
+    }
+
+    var cls = Cookies.get("ss-theme");
     if (!theme[cls]) {
       Cookies.remove("ss-theme");
       cls = null;
     }
     if (cls) {
-      $('#ss-theme a').removeClass('active');
-      $('#ss-theme a[data-ss-theme="'+cls+'"]').addClass('active');
-      return SS_Theme.switchTheme(cls);
+      $theme.find('a').removeClass('active');
+      $theme.find('a[data-ss-theme="' + $.escapeSelector(cls) + '"]').addClass('active');
+      SS_Theme.switchTheme(cls);
     }
   };
 
   SS_Theme.cssTemplate = function (cls, color, backgroundColor) {
-    return "body[data-ss-theme=\"" + cls + "\"] * {\n  border-color: " + color + " !important;\n  background: " + backgroundColor + " !important;\n  color: " + color + " !important;\n}";
+    return "body[data-ss-theme=\"" + $.escapeSelector(cls) + "\"] * {\n  border-color: " + color + " !important;\n  background: " + backgroundColor + " !important;\n  color: " + color + " !important;\n}";
   };
 
   SS_Theme.switchTheme = function (cls) {
     $('head link.ss-theme').prop("disabled", true);
-    $('head link.ss-theme.' + cls).prop("disabled", false);
+    $('head link.ss-theme.' + $.escapeSelector(cls)).prop("disabled", false);
     $("body").attr("data-ss-theme", "");
     $("body").attr("data-ss-theme", cls);
   };
@@ -268,51 +278,51 @@ this.SS_Tabs = (function () {
   function SS_Tabs() {
   }
 
-  SS_Tabs.render = function (elem) {
-    var box, tabs;
-    box = $(elem);
-    tabs = "";
-    box.find(".tab").each(function (i) {
-      var alt_class, base_id, bind, body_css, disp, html, name, name_id, nav, tab, tab_cls, url, view_id;
-      tab = $(this);
-      name = tab.find('header > h2').html();
-      nav = tab.find('nav');
-      url = nav.find(".more").attr("href");
-      alt_class = tab.attr('data-class');
-      base_id = tab.attr("id");
-      name_id = base_id + "-name";
-      view_id = base_id + "-view";
+  SS_Tabs.render = function (box) {
+    var $box = $(box);
+    var anchors = [];
+    $box.find(".tab").each(function (index) {
+      var $tab = $(this);
+      var name = $tab.find('> header h2').text();
+      var $nav = $tab.find('nav');
+      var url = $nav.find(".more").attr("href");
+      var altClass = $tab.attr('data-class');
+      var baseId = $tab.attr("id");
+      var nameId = baseId + "-name";
+      var viewId = baseId + "-view";
       if (!url) {
-        url = "#" + view_id;
+        url = "#" + viewId;
       }
-      tab_cls = "name";
-      if (i === 0) {
-        tab_cls = "name current";
+      var tabCls = index === 0 ? "name current" : "name";
+      if (altClass) {
+        tabCls = tabCls + " " + altClass;
       }
-      if (alt_class) {
-        tab_cls = tab_cls + " " + alt_class;
+
+      var $anchor = $("<a />", { id: nameId, class: tabCls, href: url }).text(name);
+      $anchor.on("click", function() {
+        return SS_Tabs.select(box, "#" + nameId, "#" + viewId);
+      });
+      anchors.push($anchor);
+
+      var bodyCls = 'view';
+      if (altClass) {
+        bodyCls = bodyCls + " " + altClass;
       }
-      bind = 'return SS_Tabs.select("' + elem + '", "#' + name_id + '", "#' + view_id + '")';
-      tabs += "<a id='" + name_id + "' onclick='" + bind + "' class='" + tab_cls + "' href='" + url + "'>" + name + "</a>";
-      disp = "";
-      if (i !== 0) {
-        disp = "style='display: none;'";
+
+      var $html = $("<article />", { id: viewId, class: bodyCls });
+      if (index !== 0) {
+        $html.css("display", "none")
       }
-      body_css = 'view';
-      if (alt_class) {
-        body_css = body_css + " " + alt_class;
+      $html.append($("<h2 />", { style: "display: none;" }).text(name));
+      $html.append($("<div />", { class: "pages" }).html($tab.find(".pages").html()));
+      if ($tab.find('nav').length) {
+        $html.append($("<nav />").html($tab.find('nav').html()));
       }
-      html = "<article id='" + view_id + "' class='" + body_css + "' " + disp + ">";
-      html += "<h2 style='display: none'>" + name + "</h2>";
-      html += "<div class='pages'>" + tab.find(".pages").html() + "</div>";
-      if (tab.find('nav').length) {
-        html += "<nav>" + tab.find('nav').html() + "</nav>";
-      }
-      html += "</article>";
-      box.append(html);
-      return tab.remove();
+      $box.append($html);
+      $tab.remove();
     });
-    return box.prepend("<nav class='names'>" + tabs + "</nav>");
+
+    $box.prepend($("<nav />", { class: 'names' }).html(anchors));
   };
 
   SS_Tabs.select = function (box, name, view) {

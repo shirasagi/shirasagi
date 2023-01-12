@@ -81,7 +81,7 @@
 
         var checked = $(".list-item input:checkbox:checked");
         var helper = $('<div style="background-color: lightgreen; padding: 2px 10px;"></div>');
-        helper.html(checked.length + "<%= t('gws/memo/message.select_check') %>");
+        helper.text(checked.length + "<%= t('gws/memo/message.select_check') %>");
 
         return helper;
       }

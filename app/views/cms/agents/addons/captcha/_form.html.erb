@@ -6,7 +6,7 @@
 
   var $el = $(".simple-captcha");
   $el.find("img").on("error", function() {
-  $(this).closest(".image").html('<%= I18n.t('simple_captcha.captcha_error') %>');
+  $(this).closest(".image").text('<%= I18n.t('simple_captcha.captcha_error') %>');
   });
 <% end %>
 

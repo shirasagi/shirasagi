@@ -91,7 +91,7 @@
     }
 
     time = moment(time);
-    return $("<time />", { datetime: time.toISOString() }).html(SS.formatTime(time));
+    return $("<time />", { datetime: time.toISOString() }).text(SS.formatTime(time));
   };
 
   var reload = function () {

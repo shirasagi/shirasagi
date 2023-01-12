@@ -14,7 +14,7 @@
       success: function (data) {
         SS.notice('<%= t('ss.notice.saved') %>');
         $.each(data, function(i, value) {
-          $('.group[data-id=' + value['id'] + ']').html(value['name']);
+          $('.group[data-id=' + value['id'] + ']').text(value['name']);
         });
       }
     });

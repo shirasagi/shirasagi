@@ -71,7 +71,7 @@
       },
       beforeSend: function(data) {
         btn.attr("disabled", true);
-        dl.find('.imap-test-resp').html('Connecting ...');
+        dl.find('.imap-test-resp').text('Connecting ...');
       },
       success: function(data) {
         btn.attr("disabled", false);
@@ -79,7 +79,7 @@
       },
       error: function(data) {
         btn.attr("disabled", false);
-        dl.find('.imap-test-resp').html('Error');
+        dl.find('.imap-test-resp').text('Error');
       }
     });
   });
