@@ -30,12 +30,30 @@ describe Tasks::Gws::Es, dbscope: :example, es: true do
     end
     let!(:workflow) { create(:gws_workflow_file, cur_site: site, cur_user: user, file_ids: [file.id]) }
 
+    let(:now) { Time.zone.now.change(usec: 0) }
+    let!(:deleted_workflow) { create(:gws_workflow_file, cur_site: site, cur_user: user, deleted: now) }
+
     before do
       ENV['site'] = site.name
     end
 
     it do
       expect { described_class.feed_all_workflows }.to output(include("- #{workflow.name}\n")).to_stdout
+
+      ::Gws::Elasticsearch.refresh_index(site: site)
+      site.elasticsearch_client.search(index: "g#{site.id}", size: 100, q: "*:*").tap do |es_docs|
+        expect(es_docs["hits"]["hits"].length).to eq 2
+        es_docs["hits"]["hits"][0].tap do |es_doc|
+          expect(es_doc["_id"]).to eq "gws_workflow_files-workflow-#{workflow.id}"
+          source = es_doc["_source"]
+          expect(source['url']).to eq "/.g#{site.id}/workflow/files/all/#{workflow.id}"
+        end
+        es_docs["hits"]["hits"][1].tap do |es_doc|
+          expect(es_doc["_id"]).to eq "file-#{file.id}"
+          source = es_doc["_source"]
+          expect(source['url']).to eq "/.g#{site.id}/workflow/files/all/#{workflow.id}#file-#{file.id}"
+        end
+      end
     end
   end
 end
