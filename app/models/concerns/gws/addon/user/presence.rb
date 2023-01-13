@@ -35,7 +35,7 @@ module Gws::Addon::User::Presence
 
     user_presences.each do |item|
       next if !item.sync_available_enabled?
-      next if !reset_states.include?(item.state)
+      next if item.state.present? && !reset_states.include?(item.state)
 
       item.state = enter_state
       item.save
@@ -48,7 +48,7 @@ module Gws::Addon::User::Presence
 
     user_presences.each do |item|
       next if !item.sync_unavailable_enabled?
-      next if !reset_states.include?(item.state)
+      next if item.state.present? && !reset_states.include?(item.state)
 
       item.state = leave_state
       item.save

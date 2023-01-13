@@ -178,6 +178,7 @@ module SS::BaseFilter
     redirect_to sns_mypage_path if opts[:redirect]
     @cur_user = SS.current_user = user
     SS.change_locale_and_timezone(SS.current_user)
+    @cur_user.logged_in if @cur_user
   end
 
   def unset_user(opt = {})
