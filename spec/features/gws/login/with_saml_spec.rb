@@ -16,6 +16,11 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
       saml.force_authn_state = "enabled"
       saml.save!
     end
+
+    presence = user.user_presence(site)
+    presence.sync_available_state = "enabled"
+    presence.sync_unavailable_state = "enabled"
+    presence.save!
   end
 
   context "with saml" do
@@ -44,6 +49,9 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
       # confirm gws_portal is shown to user
       expect(page).to have_css("#head .application-menu .gws .current", text: I18n.t('ss.links.gws', locale: user.lang))
 
+      presence = Gws::User.find(user.id).user_presence(site)
+      expect(presence.state).to eq "available"
+
       # do logout
       within "nav.user" do
         find("span.name").click
@@ -55,6 +63,9 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css("li", text: name)
       # and confirm browser back to gws_login
       expect(current_path).to eq gws_login_path(site: site)
+
+      presence.reload
+      expect(presence.state).to eq "unavailable"
     end
   end
 end
