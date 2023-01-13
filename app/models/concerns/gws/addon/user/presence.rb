@@ -62,10 +62,11 @@ module Gws::Addon::User::Presence
     item = user_presence(site)
     return if !item.sync_timecard_enabled?
 
-    if field_name == "enter"
+    case field_name
+    when "enter"
       item.state = enter_state
       item.save
-    elsif field_name == "leave"
+    when "leave"
       item.state = leave_state
       item.save
     end
