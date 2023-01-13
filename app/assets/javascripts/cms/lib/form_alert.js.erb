@@ -76,13 +76,13 @@ this.Form_Alert = (function () {
     var appendAlerts = function (alerts) {
       for (var addon in alerts) {
         var fields = alerts[addon];
-        $div.append('<p>' + addon + '</p>');
+        $div.append($('<p />').text(addon));
         var $ul = $("<ul>").appendTo($div);
         var i, j, len;
         for (i = j = 0, len = fields.length; j < len; i = ++j) {
           var field = fields[i];
           if (field["msg"]) {
-            $ul.append('<li>' + field["msg"] + '</li>');
+            $ul.append($('<li />').html(field["msg"]));
           }
         }
       }

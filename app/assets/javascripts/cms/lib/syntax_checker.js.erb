@@ -115,7 +115,7 @@ this.Syntax_Checker = (function () {
           var tooltip = $('<div class="tooltip">!</div>').appendTo(message);
           var detail = $('<ul class="tooltip-content">').appendTo(tooltip);
           $.each(error["detail"], function () {
-            detail.append("<li>" + this + "<br></li>");
+            detail.append($("<li/>").html(this));
           });
         }
         li.append(message);

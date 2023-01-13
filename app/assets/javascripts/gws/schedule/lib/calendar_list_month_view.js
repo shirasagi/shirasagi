@@ -53,7 +53,7 @@ SS.ready(function() {
           evEl.addClass(event.className.join(' '));
           evEl.css({'color': event.textColor, 'background-color': event.backgroundColor});
 
-          evEl.bind('click', function (ev) {
+          evEl.on('click', function (ev) {
             var eventNo = $(this).data('eventNo');
             return calendar.view.trigger('eventClick', $(this), events[eventNo], ev);
           }).data('eventNo', i);

@@ -73,13 +73,16 @@ SS.ready(function() {
     // Gws_Schedule_View.crenderSideCalendars() は fullcalendar の機能を利用しないため、jQuery3 で動作させても問題ない。
     Gws_Schedule_View.crenderSideCalendars = function (name, date) {
       var h, i, j;
-      h = ("<div class='" + name + "'>") + "<div class='xdsoft_datetimepicker controller'>" + "<button type='button' class='xdsoft_prev' />" + "<button type='button' class='xdsoft_next' />" + "</div></div>";
+      h = $("<div />", { class: name })
+        .append($("<div class='xdsoft_datetimepicker controller' />")
+          .append("<button type='button' class='xdsoft_prev' />")
+          .append("<button type='button' class='xdsoft_next' />"));
       $('#menu').before(h);
       for (i = j = 0; j <= 3; i = ++j) {
         if (i > 0) {
           date.add(1, 'months');
         }
-        $("." + name).append("<div class='" + name + "-cal" + i + "'></div>");
+        $("." + name).append($("<div />", { class: name + "-cal" + i }));
         $("." + name + "-cal" + i).datetimepicker({
           timepicker: false,
           format: 'YYYY/MM/DD',
