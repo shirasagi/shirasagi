@@ -27,7 +27,7 @@ Gws_Schedule_Csv.prototype.render = function () {
       self.renderResult(data);
     },
     error: function(xhr, status, error) {
-      self.renderError(data);
+      self.renderError(xhr, status, error);
     }
   });
 //  this.$el.find('.download-csv-template').on("click", function() {
