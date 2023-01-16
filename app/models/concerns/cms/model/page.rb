@@ -27,9 +27,11 @@ module Cms::Model::Page
 
     field :route, type: String, default: ->{ "cms/page" }
     field :size, type: Integer
+    field :syntax_check_result, type: String
 
     embeds_ids :categories, class_name: "Cms::Node"
 
+    permit_params :syntax_check_result
     permit_params category_ids: []
 
     after_save :rename_file, if: ->{ @db_changes }

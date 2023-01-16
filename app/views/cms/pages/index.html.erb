@@ -59,6 +59,9 @@
   <% if respond_to?(:colored_state_label) %>
     <%= colored_state_label(item) %>
   <% end %>
+  <% if item.try(:syntax_check_result).present? %>
+    <span class="state state-danger">アクセシビリティ警告</span>
+  <% end %>
   <% if item.try(:tags) %>
     <span class="tags"><%= item.tags.join(",") %></span>
   <% end %>
