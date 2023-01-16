@@ -6,7 +6,7 @@
       <%= button_tag t("ss.buttons.delete"), type: "button", name: "delete", class: "btn btn-delete" %>
     </td>
     <td class="contact-main-state">
-      <%= ss_stimulus_tag({ "ss/isolate_radio" => { target_name: "#{f.object_name}[destinations][][contact_groups][][main_state]", radio_name: "dummy[#{addon[:id]}][][main_state]" } }, { type: :label }) do %>
+      <%= ss_stimulus_tag({ "ss/isolate_radio" => { target_name: "#{f.object_name}[destinations][][contact_groups][][main_state]", radio_name: "dummy[#{addon[:id]}][][main_state]" } }, type: :label) do %>
         <%= hidden_field_tag "#{f.object_name}[destinations][][contact_groups][][main_state]", contact_group.try(:main_state), id: nil %>
         <%= radio_button_tag "dummy[#{addon[:id]}][][main_state]", "main", contact_group.try(:main_state) == "main", id: nil %>
         <%= t("contact.options.main_state.main") %>
