@@ -51,7 +51,7 @@ SS.ready(function() {
           category.text(event.category);
           title.append(category);
         }
-        title.append('<span class="fc-event-name">' + event.title + '</span>');
+        title.append($('<span class="fc-event-name"/>').text(event.title));
         cont.append(title);
 
         if (event.facility) {
@@ -63,14 +63,14 @@ SS.ready(function() {
         evEl.addClass(event.className.join(' '));
         evEl.css({'color': event.textColor, 'background-color': event.backgroundColor});
 
-        evEl.bind('click', function (ev) {
+        evEl.on('click', function (ev) {
           var eventNo = $(this).data('eventNo');
           return calendar.view.trigger('eventClick', $(this), segs[eventNo].event, ev);
         }).data('eventNo', i);
 
         var info = $('<div class="td info"></div>').append(evEl);
         if (event.sanitizedHtml) {
-          info.append('<p class="summary">' + event.sanitizedHtml + '</p>');
+          info.append($('<p class="summary"/>').html(event.sanitizedHtml));
         }
         if (event.allDay) {
           var startLabel = event.startDateLabel + ' ' + event.allDayLabel;

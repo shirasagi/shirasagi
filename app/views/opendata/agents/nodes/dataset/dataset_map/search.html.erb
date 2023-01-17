@@ -9,7 +9,7 @@ var cboxLoad = function() {
       $("#cboxLoadedContent").html(data);
     },
     error: function (data, status) {
-      $("#cboxLoadedContent").html("== Error ==");
+      $("#cboxLoadedContent").text("== Error ==");
     }
   });
   return false;

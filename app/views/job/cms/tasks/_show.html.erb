@@ -12,7 +12,7 @@
       type: "POST",
       url: "<%= url_for(action: :reset_state, format: :json) %>",
       success: function(data) {
-        $(".state").html(data.state)
+        $(".state").text(data.state)
         if ($(".state").html().match(/(ready|running)/)) {
           $(".reset-state").show();
         } else {

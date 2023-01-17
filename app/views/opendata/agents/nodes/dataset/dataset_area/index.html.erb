@@ -1,5 +1,5 @@
 <%= jquery do %>
-$(".crumbs .page:last").html('<%= @area_node ? @area_node.name : @cur_node.name %>');
+$(".crumbs .page:last").text('<%= @area_node ? @area_node.name : @cur_node.name %>');
 <% end %>
 
 <%= stylesheet_link_tag "colorbox", media: 'all' %>

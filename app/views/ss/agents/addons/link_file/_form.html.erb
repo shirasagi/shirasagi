@@ -61,7 +61,7 @@
     var $html = $(html);
     if (!$data.data("image?")) {
       $html.find(".column-thumb .thumb img").remove();
-      $html.find(".column-thumb .thumb").append($("<span />", { class: "ext icon-" + $data.data("extname") }).html($data.data("extname")));
+      $html.find(".column-thumb .thumb").append($("<span />", { class: "ext icon-" + $data.data("extname") }).text($data.data("extname")));
     }
     if ($data.data("sanitizer-state")) {
       $html.find(".column-thumb").prepend($data.find('.sanitizer-status'));

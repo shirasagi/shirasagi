@@ -21,47 +21,47 @@
   <% if @tab_display == "tab_html" %>
     //show executed
     $.ajax({
-    url: "<%= path_prefix %><%= @cur_page.executed_show_url %>",
-    data: {
-    tab_display: "<%= @tab_display %>"
-    },
-    type: "GET",
-    success: function(data) {
-    return $("#executed").html(data);
-    }
+      url: "<%= path_prefix %><%= @cur_page.executed_show_url %>",
+      data: {
+        tab_display: "<%= @tab_display %>"
+      },
+      type: "GET",
+      success: function(data) {
+        return $("#executed").html(data);
+      }
     });
   <% end %>
 
   <% if idea_enabled? %>
    //show ideas
     $.ajax({
-    url: "<%= path_prefix %><%= @cur_page.app_ideas_url %>",
-    success: function(data) {
-    return $(".app-ideas").html(data);
-    }
+      url: "<%= path_prefix %><%= @cur_page.app_ideas_url %>",
+      success: function(data) {
+        return $(".app-ideas").html(data);
+      }
     });
   <% end %>
 
   // hide categories
   $(".categories a[data-class=other]").on("click", function() {
-  var type;
-  type = $(this).attr("class");
-  $(".categories a." + type).show();
-  $(this).remove();
-  return false;
+    var type;
+    type = $(this).attr("class");
+    $(".categories a." + type).show();
+    $(this).remove();
+    return false;
   });
 
   //preview
   $("a.content").colorbox({
-  fixed: true,
-  width: "90%",
-  height: "90%"
+    fixed: true,
+    width: "90%",
+    height: "90%"
   });
 
   $("a.json").colorbox({
-  fixed: true,
-  width: "90%",
-  height: "90%"
+    fixed: true,
+    width: "90%",
+    height: "90%"
   });
 
 <% end %>

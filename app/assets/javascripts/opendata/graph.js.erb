@@ -17,17 +17,17 @@ Opendata_Graph.prototype.render = function(type, name, labels, datasets, opts) {
   this.headerIndex = opts["headerIndex"];
 
   this.destroy();
-  if (this.headerIndex || this.headerIndex == 0) {
+  if (this.headerIndex || this.headerIndex === 0) {
     var dataset = this.datasets[this.headerIndex];
     if (dataset) {
       this.datasets = [dataset];
     }
   }
-  if (this.type == "bar") {
+  if (this.type === "bar") {
     this.drawBar();
-  } else if(this.type == "line") {
+  } else if(this.type === "line") {
     this.drawLine();
-  } else if (this.type == "pie") {
+  } else if (this.type === "pie") {
     this.drawPie();
   }
 };
@@ -199,6 +199,8 @@ Opendata_Graph.prototype.drawPie = function() {
   });
 };
 
+Opendata_Graph.graphTypes = <%= I18n.t("opendata.graph_types").to_json %>;
+
 Opendata_Graph.prototype.renderController = function(types, headers, callback) {
   var self = this;
   this.types = types;
@@ -206,38 +208,38 @@ Opendata_Graph.prototype.renderController = function(types, headers, callback) {
   this.$controller.html("");
 
   // type bottons
-  var graphTypes = <%= I18n.t("opendata.graph_types").to_json %>;
   var divTypes = $('<div class="graph-types"></div>');
   $.each(this.types, function() {
-    var button = $('<button type="button" data-type="' + this +'">' + graphTypes[this] + '</button>');
+    var type = this;
+    var button = $('<button />', { type: "button", "data-type": type }).text(Opendata_Graph.graphTypes[type]);
 
-    if (self.type == this) {
+    if (self.type === type) {
       button.addClass("current");
     }
-    $(button).on("click", function() {
-      callback($(this).data("type"));
+    button.on("click", function() {
+      callback(type);
     })
-    $(divTypes).append(button);
+    divTypes.append(button);
   });
   this.$controller.append(divTypes);
 
   // pie controller
-  if (this.type == "pie" && this.headers && this.headers.length > 0) {
+  if (this.type === "pie" && this.headers && this.headers.length > 0) {
     var divHeader = $('<div class="graph-header-controller"></div>');
     var select = $('<select class="select-header" name="header-index"></select>');
 
     $.each(this.headers, function(i) {
-      if (self.headerIndex == i) {
-        $(select).append('<option value="' + i +'" selected="selected">' + this + '</option>');
+      if (self.headerIndex === i) {
+        select.append($('<option />', { value: i, selected: "selected" }).text(this));
       } else {
-        $(select).append('<option value="' + i +'">' + this + '</option>');
+        select.append($('<option />', { value: i }).text(this));
       }
     });
-    $(select).on("change", function() {
-      callback("pie", $(this).val());
+    select.on("change", function() {
+      callback("pie", select.val());
     });
 
-    $(divHeader).append(select);
+    divHeader.append(select);
     this.$controller.append(divHeader);
   }
 
