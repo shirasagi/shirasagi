@@ -40,7 +40,7 @@ module.exports = {
   output: {
     filename: "[name].js",
     sourceMapFilename: "[name].js.map",
-    path: path.resolve(__dirname, "public/assets/builds"),
+    path: path.resolve(__dirname, "app/assets/builds"),
   },
   plugins: [
     new webpack.DefinePlugin({
