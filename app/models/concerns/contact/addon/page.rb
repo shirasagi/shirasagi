@@ -37,6 +37,11 @@ module Contact::Addon::Page
         end
       end
     end
+
+    if respond_to? :after_chorg
+      before_chorg :remove_contact_attributes_to_update
+      after_chorg :update_contacts
+    end
   end
 
   def contact_state_options
@@ -73,5 +78,42 @@ module Contact::Addon::Page
 
   def contact_link
     contact_link_name || contact_link_url
+  end
+
+  private
+
+  CONTACT_ATTRIBUTES = %w[
+    contact_charge contact_tel contact_fax contact_email contact_link_url contact_link_name
+  ].freeze
+
+  def remove_contact_attributes_to_update
+    hash = Chorg.current_context.updating_attributes
+    CONTACT_ATTRIBUTES.each do |attr|
+      if hash.key?(attr)
+        hash.delete(attr)
+      end
+    end
+    Chorg.current_context.updating_attributes = hash
+  end
+
+  def update_contacts
+    return unless contact_group
+    return unless contact_group_contact_id
+
+    force_overwrite = Chorg.current_context.options.present? && Chorg.current_context.options['forced_overwrite']
+    return if !force_overwrite && !contact_group_related?
+
+    contact = contact_group.contact_groups.where(id: contact_group_contact_id).first
+    if contact.blank?
+      self.contact_group_contact_id = nil
+      return
+    end
+
+    self.contact_charge = contact.contact_group_name
+    self.contact_tel = contact.contact_tel
+    self.contact_fax = contact.contact_fax
+    self.contact_email = contact.contact_email
+    self.contact_link_url = contact.contact_link_url
+    self.contact_link_name = contact.contact_link_name
   end
 end

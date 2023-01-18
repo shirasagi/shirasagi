@@ -68,11 +68,11 @@ module Chorg::Runner::Base
   end
 
   def update_all
-    return if substituter.empty?
-    with_entity_updates(@models, substituter, models_scope) do |entity, updates|
-      next if updates.blank?
+    return if substitutor.empty?
+    with_entity_updates(@models, substitutor, models_scope) do |entity, updates|
+      # next if updates.blank?
 
-      put_log("#{entity_title(entity)} has some updates. module=#{entity.class}")
+      put_log("#{entity_title(entity)} has some updates. module=#{entity.class}") if updates.present?
       with_inc_depth do
         updates = updates.select { |k, v| v.present? }
         updates.each do |k, new_value|
@@ -108,7 +108,7 @@ module Chorg::Runner::Base
 
   def put_string_field_log(old_value, new_value)
     Diffy::Diff.new(old_value, new_value, diff: "-U 3").to_s.each_line do |line|
-      next if /No newline at end of file/i =~ line
+      next if /No newline at end of file/i.match?(line)
       put_log(line.chomp.to_s)
     end
   end
@@ -132,9 +132,10 @@ module Chorg::Runner::Base
   end
 
   def put_field_log(old_value, new_value)
-    if new_value.is_a?(String)
+    case new_value
+    when String
       put_string_field_log(old_value, new_value)
-    elsif new_value.is_a?(Array)
+    when Array
       put_array_field_log(old_value, new_value)
     else
       convert_to_group_names([old_value]).each do |name|
@@ -160,8 +161,8 @@ module Chorg::Runner::Base
   end
 
   def validate_all
-    return if validation_substituter.empty?
-    with_entity_updates(@models, validation_substituter, models_scope) do |entity, deletes|
+    return if validation_substitutor.empty?
+    with_entity_updates(@models, validation_substitutor, models_scope) do |entity, deletes|
       put_log("#{entity.name}(#{entity.url}) has deleted attributes: #{deletes}") if deletes.present?
     end
   end

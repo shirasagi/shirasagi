@@ -96,6 +96,7 @@ ja:
       job_reserved: 組織変更処理を予約しました。
       test_run: テスト実行
       import_revision_file_confirmation: 組織変更操作をCSVからインポートします。\n既に操作が登録されている場合は削除されます。\n実行してよろしいですか？
+      import_changesets_notice: CSV に含まれる変更内容は常に追加されます。CSV をインポートしても既存の変更内容は何ら変更しません。
     options:
       changeset_type:
         add: 新設
@@ -106,6 +107,15 @@ ja:
       delete_method:
         disable_if_possible: 無効にし、後で回復できるようにする
         always_delete: 常に物理削除する
+    buttons:
+      reset_after_move: 移動先の再設定
+      reset_after_unify: 統合先の再設定
+      reset_after_division: 分割先の再設定
+      save_and_import_changesets: 保存して変更内容をCSVからインポート
+    confirm:
+      reset_after_move: 移動先を再設定してよろしいですか？
+      reset_after_unify: 統合先を再設定してよろしいですか？
+      reset_after_division: 分割先を再設定してよろしいですか？
     import:
       changeset:
         id: ID
@@ -119,6 +129,17 @@ ja:
         contact_link_url: リンクURL
         contact_link_name: リンク名
         ldap_dn: DN
+        nth_destination_name: "操作先%{dest_seq}_グループ名"
+        nth_destination_order: "操作先%{dest_seq}_表示順"
+        nth_destination_ldap_dn: "操作先%{dest_seq}_DN"
+        nth_destination_contact_main_state: "操作先%{dest_seq}_連絡先%{contact_seq}_主"
+        nth_destination_contact_name: "操作先%{dest_seq}_連絡先%{contact_seq}_識別名"
+        nth_destination_contact_contact_group_name: "操作先%{dest_seq}_連絡先%{contact_seq}_担当部署"
+        nth_destination_contact_contact_tel: "操作先%{dest_seq}_連絡先%{contact_seq}_電話番号"
+        nth_destination_contact_contact_fax: "操作先%{dest_seq}_連絡先%{contact_seq}_ファックス番号"
+        nth_destination_contact_contact_email: "操作先%{dest_seq}_連絡先%{contact_seq}_メールアドレス"
+        nth_destination_contact_contact_link_url: "操作先%{dest_seq}_連絡先%{contact_seq}_リンクURL"
+        nth_destination_contact_contact_link_name: "操作先%{dest_seq}_連絡先%{contact_seq}_リンク名"
 
   modules:
     chorg: 組織変更
@@ -132,6 +153,7 @@ ja:
     models:
       chorg/test_runner: 組織変更/テスト実行
       chorg/main_runner: 組織変更/本番実行
+      chorg/changeset_import_job: 組織変更/変更内容インポート
 
   mongoid:
     models:
@@ -142,6 +164,9 @@ ja:
       models:
         chorg/run_params:
           job_mode_is_not_service: ジョブサービスの実行モードがserviceではないため、予約実行できません。システム管理者にお問い合わせください。
+        chorg/changeset:
+          blank_contact_group_name: の連絡先に識別名が空欄のものがあります。
+          duplicate_contact_group_name: "の連絡先に識別名 \"%{name}\" が重複しています。"
     attributes:
       chorg/model/revision:
         name: 名前
@@ -155,7 +180,10 @@ ja:
         destinations: 移動先
       chorg/run_params:
         add_newly_created_group_to_site: 新規作成グループをサイトに追加
-        forced_overwrite: 連絡先情報を上書きする
+        forced_overwrite_html: |-
+          連絡先情報を強制的に変更する<br>
+          通常の組織変更では「グループと連動しない」に設定しているページの連絡先は変更しません。<br>
+          このオプションをチェックすると、「グループと連動しない」に設定しているページの連絡先を変更します。
         reservation: 予約実行
       chorg/revision:
         content_csv_file_id: コンテンツCSVファイル

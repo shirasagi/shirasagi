@@ -1,0 +1,25 @@
+<%= form_with scope: :item, url: url_for(action: :import_changesets), method: :post, html: { id: "item-form", multipart: true } do |f| %>
+  <%= error_messages_for :item %>
+
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t("ss.import") %></h2></div>
+      <div class="addon-body">
+        <dl class="see">
+          <dt><%= t "ss.file" %><%= @model.tt :in_file %></dt>
+          <dd>
+            <%= f.hidden_field "item[in_file]", value: "" %>
+            <%= f.file_field :in_file %>
+          </dd>
+          <dd><%= link_to t("ss.links.download_sample_csv"), url_for(action: :download_sample_csv) %></dd>
+          <dd><%= t("chorg.messages.import_changesets_notice") %></dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <footer class="send">
+    <%= f.submit t("ss.buttons.import"), class: :save, data: { confirm: t("ss.confirm.import"), disable_with: t("ss.buttons.importing") } %>
+    <%= f.button t("ss.buttons.cancel"), onclick: "location.href='#{url_for(action: :index)}'; return false;", class: "btn-default" %>
+  </footer>
+<% end %>

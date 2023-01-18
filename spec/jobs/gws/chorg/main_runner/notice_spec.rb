@@ -10,17 +10,17 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
   # groups
   let!(:group) { create :gws_group, name: "root" }
 
-  let!(:group1) { create :gws_group, name: "root/group1" }
-  let!(:group1_sub1) { create :gws_group, name: "root/group1/sub_group1" }
-  let!(:group1_sub2) { create :gws_group, name: "root/group1/sub_group2" }
+  let!(:group1) { create :gws_group, name: "root/group1", order: 10 }
+  let!(:group1_sub1) { create :gws_group, name: "root/group1/sub_group1", order: 110 }
+  let!(:group1_sub2) { create :gws_group, name: "root/group1/sub_group2", order: 120 }
 
-  let!(:group2) { create :gws_group, name: "root/group2" }
-  let!(:group2_sub1) { create :gws_group, name: "root/group2/sub_group1" }
-  let!(:group2_sub2) { create :gws_group, name: "root/group2/sub_group2" }
+  let!(:group2) { create :gws_group, name: "root/group2", order: 20 }
+  let!(:group2_sub1) { create :gws_group, name: "root/group2/sub_group1", order: 210 }
+  let!(:group2_sub2) { create :gws_group, name: "root/group2/sub_group2", order: 220 }
 
-  let!(:group3) { create :gws_group, name: "root/group3" }
-  let!(:group3_sub1) { create :gws_group, name: "root/group3/sub_group1" }
-  let!(:group3_sub2) { create :gws_group, name: "root/group3/sub_group2" }
+  let!(:group3) { create :gws_group, name: "root/group3", order: 30 }
+  let!(:group3_sub1) { create :gws_group, name: "root/group3/sub_group1", order: 310 }
+  let!(:group3_sub2) { create :gws_group, name: "root/group3/sub_group2", order: 320 }
 
   # folders
   let!(:folder) { create(:gws_notice_folder, cur_site: site, name: "root", member_group_ids: [group.id], group_ids: [group.id]) }

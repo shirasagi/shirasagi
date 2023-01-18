@@ -36,11 +36,14 @@
       <% @items.each do |item| %>
         <%
           group, contact = item
-          data = {
-            id: "#{group.id}:#{contact.id}", group_id: group.id, contact_id: contact.id.to_s, section_name: group.section_name,
-            contact_group_name: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
-            contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
-          }
+          data = { id: contact ? "#{group.id}:#{contact.id}" : group.id.to_s, group_id: group.id, section_name: group.section_name }
+          if contact
+            data.merge!(
+              contact_id: contact.id.to_s, contact_name: contact.name, contact_group_name: contact.contact_group_name,
+              contact_tel: contact.contact_tel, contact_fax: contact.contact_fax, contact_email: contact.contact_email,
+              contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name
+            )
+          end
           index = 0 if prev_group_id != group.id
         %>
         <%= tag.tr data: data do %>
@@ -50,14 +53,14 @@
             </td>
           <% end %>
           <td class="group-name"><%= index == 0 ? link_to(group.section_name, "#", class: @multi ? "select-item" : "select-single-item") : nil %></td>
-          <td class="main-state"><%= contact.main_state == "main" ? tag.span("radio_button_checked", class: "material-icons md-14", title: t("contact.options.main_state.main")) : nil %></td>
-          <td class="name"><%= contact.name ? link_to(contact.name, "#", class: @multi ? "select-item" : "select-single-item") : nil %></td>
-          <td class="contact-group-name"><%= contact.contact_group_name %></td>
-          <td class="contact-tel"><%= contact.contact_tel %></td>
-          <td class="contact-fax"><%= contact.contact_fax %></td>
-          <td class="contact-email"><%= contact.contact_email %></td>
-          <td class="contact-link-url"><%= contact.contact_link_url %></td>
-          <td class="contact-link-name"><%= contact.contact_link_name %></td>
+          <td class="main-state"><%= contact.try(:main_state) == "main" ? tag.span("radio_button_checked", class: "material-icons md-14", title: t("contact.options.main_state.main")) : nil %></td>
+          <td class="name"><%= contact.try(:name) ? link_to(contact.name, "#", class: @multi ? "select-item" : "select-single-item") : nil %></td>
+          <td class="contact-group-name"><%= contact.try(:contact_group_name) %></td>
+          <td class="contact-tel"><%= contact.try(:contact_tel) %></td>
+          <td class="contact-fax"><%= contact.try(:contact_fax) %></td>
+          <td class="contact-email"><%= contact.try(:contact_email) %></td>
+          <td class="contact-link-url"><%= contact.try(:contact_link_url) %></td>
+          <td class="contact-link-name"><%= contact.try(:contact_link_name) %></td>
         <% end %>
 
         <% index += 1 %>

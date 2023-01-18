@@ -81,6 +81,72 @@ production: &production
       - ""
       - ""
       - ""
+  changeset_sample_csv2:
+    - type: "add"
+      destinations:
+        - name: "シラサギ市/新設_グループ"
+          order: 10
+          ldap_dn: ""
+          contact_groups:
+            - main_state: "main"
+              name: "main"
+              contact_group_name: "新設 グループ"
+              contact_tel: "000-000-0000"
+              contact_fax: "000-000-0000"
+              contact_email: "sample1@example.jp"
+              contact_link_url: "http://www.ss-proj.org/"
+              contact_link_name: "リンク1"
+    - type: "division"
+      sources:
+        - name: "シラサギ市/企画政策部/政策課"
+      destinations:
+        - name: "シラサギ市/企画政策部/分割_政策課"
+          order: 20
+          ldap_dn: ""
+          contact_groups:
+            - main_state: "main"
+              name: "main"
+              contact_group_name: "分割 政策課"
+              contact_tel: "000-000-0000"
+              contact_fax: "000-000-0000"
+              contact_email: "sample2@example.jp"
+              contact_link_url: "http://www.ss-proj.org/"
+              contact_link_name: "リンク2"
+    - type: "move"
+      sources:
+        - name: "シラサギ市/企画政策部/広報課"
+      destinations:
+        - name: "シラサギ市/企画政策部/移動_広報課"
+          order: 30
+          ldap_dn: ""
+          contact_groups:
+            - main_state: "main"
+              name: "main"
+              contact_group_name: "移動 広報課"
+              contact_tel: "000-000-0000"
+              contact_fax: "000-000-0000"
+              contact_email: "sample3@example.jp"
+              contact_link_url: "http://www.ss-proj.org/"
+              contact_link_name: "リンク3"
+    - type: "unify"
+      sources:
+        - name: "シラサギ市/危機管理部/管理課"
+      destinations:
+        - name: "シラサギ市/危機管理部/防災課"
+          order: "40"
+          ldap_dn: ""
+          contact_groups:
+            - main_state: "main"
+              name: "main"
+              contact_group_name: "防災課"
+              contact_tel: "000-000-0000"
+              contact_fax: "000-000-0000"
+              contact_email: "sample4@example.jp"
+              contact_link_url: "http://www.ss-proj.org/"
+              contact_link_name: "リンク4"
+    - type: "delete"
+      sources:
+        - name: "シラサギ市/危機管理部"
 
 test:
   <<: *production

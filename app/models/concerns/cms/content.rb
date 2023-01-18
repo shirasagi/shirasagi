@@ -18,6 +18,8 @@ module Cms::Content
     cattr_accessor(:default_released_type, instance_accessor: false)
     self.default_released_type = "fixed"
 
+    define_model_callbacks :chorg
+
     seqid :id
     field :state, type: String, default: "public"
     field :name, type: String

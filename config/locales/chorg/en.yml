@@ -96,6 +96,7 @@ en:
       job_reserved: You have reserved an organizational change process.
       test_run: Test run
       import_revision_file_confirmation: Import organizational change operations from a CSV. \n If an operation has already been registered, it will be deleted. \n Are you sure you want to run the operation?
+      import_changesets_notice: Changed contents contained in the CSV are always appended; importing the CSV does not change existing changed contents in any way.
     options:
       changeset_type:
         add: New
@@ -106,6 +107,15 @@ en:
       delete_method:
         disable_if_possible: Disable and allow recovery later
         always_delete: Always physically delete
+    buttons:
+      reset_after_move: Reset transfer-destination
+      reset_after_unify: Reset merge-destination
+      reset_after_division: Reset split-destination
+      save_and_import_changesets: Save and import changed content from CSV
+    confirm:
+      reset_after_move: Are you sure you want to reset transfer-destination?
+      reset_after_unify: Are you sure you want to reset merge-destination?
+      reset_after_division: Are you sure you want to reset split-destination?
     import:
       changeset:
         id: ID
@@ -119,6 +129,17 @@ en:
         contact_link_url: Link URL
         contact_link_name: Link name
         ldap_dn: DN
+        nth_destination_name: "Destination%{dest_seq}_Group Name"
+        nth_destination_order: "Destination%{dest_seq}_Display Order"
+        nth_destination_ldap_dn: "Destination%{dest_seq}_DN"
+        nth_destination_contact_main_state: "Destination%{dest_seq}_Contact%{contact_seq}_Main"
+        nth_destination_contact_name: "Destination%{dest_seq}_Contact%{contact_seq}_ID Name"
+        nth_destination_contact_contact_group_name: "Destination%{dest_seq}_Contact%{contact_seq}_Department in Charge"
+        nth_destination_contact_contact_tel: "Destination%{dest_seq}_Contact%{contact_seq}_Phone Number"
+        nth_destination_contact_contact_fax: "Destination%{dest_seq}_Contact%{contact_seq}_Fax Number"
+        nth_destination_contact_contact_email: "Destination%{dest_seq}_Contact%{contact_seq}_E-mail Address"
+        nth_destination_contact_contact_link_url: "Destination%{dest_seq}_Contact%{contact_seq}_Link URL"
+        nth_destination_contact_contact_link_name: "Destination%{dest_seq}_Contact%{contact_seq}_Link Name"
 
   modules:
     chorg: Organizational change
@@ -132,6 +153,7 @@ en:
     models:
       chorg/test_runner: Organizational changes/Test run
       chorg/main_runner: Organizational changes/Execute changes
+      chorg/changeset_import_job: Organizational changes/Changed content import
 
   mongoid:
     models:
@@ -142,6 +164,9 @@ en:
       models:
         chorg/run_params:
           job_mode_is_not_service: Job service execution mode is not a service and cannot be reserved. Please contact a system administrator.
+        chorg/changeset:
+          blank_contact_group_name: "'s contact has blank name."
+          duplicate_contact_group_name: "'s contact has duplicated name \"%{name}\"."
     attributes:
       chorg/model/revision:
         name: Name
@@ -155,7 +180,10 @@ en:
         destinations: Transfer destination
       chorg/run_params:
         add_newly_created_group_to_site: Add a newly created group to the site
-        forced_overwrite: Overwrite contact information
+        forced_overwrite_html: |-
+          Force changes to contact information<br>
+          Normal organizational changes do not change the contact information for pages that are set to "Not Linked to Groups".<br>
+          But checking this option will change the contact information for pages that are set to "Do not work with groups".
         reservation: Reservation for execution
       chorg/revision:
         content_csv_file_id: Content CSV files

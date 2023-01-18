@@ -48,7 +48,7 @@ module Chorg::PrimitiveRunner
     if save_or_collect_errors(group)
       put_log("updated group: #{group.name}(#{group.id})")
       inc_counter(:move, :success)
-      substituter.collect(source_attributes, group.attributes, [group.id])
+      substitutor.collect(source_attributes, group.attributes, [group.id])
     else
       inc_counter(:move, :failed)
     end
@@ -57,8 +57,12 @@ module Chorg::PrimitiveRunner
   def execute_unify(changeset)
     put_log("unify #{changeset.before_unify} to #{changeset.after_unify}")
     task.log("  #{changeset.before_unify} から #{changeset.after_unify} へ")
+    # なるべく新しいグループは作成しないようにする。
+    # 操作先のグループが見つからない場合は、操作元グループを並び順で検索し、最初に見つけたものへ統合する。
+    source_groups = self.class.group_class.in(name: changeset.sources.map { |source| source["name"] })
+    source_groups.reorder(order: :asc, name: :asc)
     destination = changeset.destinations.first
-    destination_group = find_or_create_group(destination)
+    destination_group = find_or_create_group(destination, alternative_names: source_groups.pluck(:name))
     unless save_or_collect_errors(destination_group)
       inc_counter(:unify, :failed)
       return
@@ -74,7 +78,7 @@ module Chorg::PrimitiveRunner
     end
     source_groups = source_groups.compact
     source_groups.each do |source_group|
-      substituter.collect(source_group.attributes, destination_group.attributes, [destination_group.id])
+      substitutor.collect(source_group.attributes, destination_group.attributes, [destination_group.id])
       next if source_group.id == destination_group.id
       move_users_group(source_group.id, destination_group.id)
       delete_group_ids << source_group.id
@@ -91,12 +95,14 @@ module Chorg::PrimitiveRunner
       return
     end
 
-    destination_groups = changeset.destinations.map do |destination|
-      find_or_create_group(destination)
+    destination_groups = changeset.destinations.map.with_index do |destination, index|
+      # なるべく新しいグループは作成しないようにする。
+      # 1 番目の分割先のグループが見つからない場合は、分割元グループへ分割結果をセットする。
+      alternative_names = index == 0 ? [ source_group.name ] : nil
+      find_or_create_group(destination, alternative_names: alternative_names)
     end
 
     success = destination_groups.reduce(true) do |a, e|
-      next a if e.id == source_group.id
       if save_or_collect_errors(e)
         put_log("created group: #{e.name}")
         a
@@ -121,7 +127,7 @@ module Chorg::PrimitiveRunner
     # be careful, user's group_ids has only first division group.
     move_users_group(source_group.id, destination_group_ids.first)
     # group of page/node/layout/part has all division groups.
-    substituter.collect(source_group.attributes, destination_attributes, destination_group_ids)
+    substitutor.collect(source_group.attributes, destination_attributes, destination_group_ids)
     delete_group_ids << source_group.id unless destination_group_ids.include?(source_group.id)
   end
 
@@ -132,7 +138,7 @@ module Chorg::PrimitiveRunner
     source_groups.compact.each do |source_group|
       empty_attributes = {}
       source_group.attributes.select { |_, v| v.is_a?(Integer) }.each { |k, v| empty_attributes[k] = v }
-      validation_substituter.collect(source_group.attributes, empty_attributes)
+      validation_substitutor.collect(source_group.attributes, empty_attributes)
       delete_group_ids << source_group.id
       inc_counter(:delete, :success)
     end

@@ -12,9 +12,11 @@ $('#item-form').submit(function(){
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt><%= @model.t :revision_csv_file_id %><%= @model.tt :revision_csv_file_id %></dt>
-  <dd><%= f.file_field :in_revision_csv_file %></dd>
-  <dd><%= link_to t("ss.links.download_sample_csv"), { action: :download_sample_csv } %></dd>
+  <% if @model == ::Gws::Chorg::Revision %>
+    <dt><%= @model.t :revision_csv_file_id %><%= @model.tt :revision_csv_file_id %></dt>
+    <dd><%= f.file_field :in_revision_csv_file %></dd>
+    <dd><%= link_to t("ss.links.download_sample_csv"), { action: :download_sample_csv } %></dd>
+  <% end %>
 
   <dt><%= @model.t :user_csv_file_id %><%= @model.tt :user_csv_file_id %></dt>
   <dd><%= f.file_field :in_user_csv_file %></dd>
@@ -57,3 +59,9 @@ $('#item-form').submit(function(){
   <dt><%= @model.t :delete_method %><%= @model.tt :delete_method %></dt>
   <dd><%= f.select :delete_method, @item.delete_method_options %></dd>
 </dl>
+
+<% @crud_buttons = proc do |f| %>
+  <%= f.submit t("ss.buttons.save"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.saving") } %>
+  <%= f.submit t("chorg.buttons.save_and_import_changesets"), name: 'save_and_import_changesets', class: 'btn-primary save', data: { disable_with: t("chorg.buttons.save_and_import_changesets") } %>
+  <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+<% end %>

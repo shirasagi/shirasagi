@@ -1,0 +1,9 @@
+<%
+  index ||= 0
+  destination = @item.destinations.present? ? @item.destinations[index] : nil
+%>
+
+<dl class="see">
+  <dt><%= t "chorg.views.#{type}_changesets.ldap_dn" %></dt>
+  <dd><%= destination ? destination[:ldap_dn] : nil %></dd>
+</dl>

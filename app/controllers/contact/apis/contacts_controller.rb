@@ -30,7 +30,7 @@ class Contact::Apis::ContactsController < ApplicationController
       items = result_doc["paginatedResults"].map do |result|
         [
           Mongoid::Factory.from_db(Cms::Group, result.except("ncontact_groups")),
-          Mongoid::Factory.from_db(SS::Contact, result["ncontact_groups"])
+          result["ncontact_groups"].blank? ? nil : Mongoid::Factory.from_db(SS::Contact, result["ncontact_groups"])
         ]
       end
       if result_doc["totalCount"].present? && result_doc["totalCount"][0].present?

@@ -14,35 +14,29 @@ class Cms::Group
 
   validate :validate_sites, if: ->{ cur_site.present? }
 
-  def users
-    Cms::User.in(group_ids: id)
+  class << self
+    SEARCH_HANDLERS = %i[search_name search_keyword].freeze
+
+    def search(params)
+      SEARCH_HANDLERS.reduce(all) { |criteria, handler| criteria.send(handler, params) }
+    end
+
+    def search_name(params)
+      return all if params.blank? || params[:name].blank?
+      all.search_text params[:name]
+    end
+
+    def search_keyword(params)
+      return all if params.blank? || params[:keyword].blank?
+      all.keyword_in(
+        params[:keyword], :name, "contact_groups.name", "contact_groups.contact_group_name",
+        "contact_groups.contact_tel", "contact_groups.contact_fax", "contact_groups.contact_email",
+        "contact_groups.contact_link_url", "contact_groups.contact_link_name")
+    end
   end
 
-  def update_chorg_attributes(attributes0)
-    item = self
-    attributes = Hash.new { |hash, key| hash[key] = item[key] }
-    attributes["contact_groups"] = self.contact_groups.map(&:attributes).map(&:to_h)
-    main_contact = attributes["contact_groups"].find { |contact_group| contact_group["main_state"] == "main" }
-
-    attributes0.each do |k, v|
-      if v.respond_to?(:update_entity)
-        v.update_entity(attributes)
-      elsif k.start_with?("contact_")
-        unless main_contact
-          main_contact = { "main_state" => "main" }
-          attributes["contact_groups"] << main_contact
-        end
-        main_contact[k] = v
-      else
-        attributes[k] = v
-      end
-    end
-    if main_contact.present? && main_contact["name"].blank?
-      main_contact["name"] = main_contact["contact_group_name"].presence
-      main_contact["name"] ||= attributes["name"]
-    end
-
-    self.attributes = attributes
+  def users
+    Cms::User.in(group_ids: id)
   end
 
   private

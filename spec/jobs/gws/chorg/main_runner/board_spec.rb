@@ -6,8 +6,8 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
   let(:job_opts) { {} }
 
   context 'with unify' do
-    let!(:group1) { create(:gws_revision_new_group) }
-    let!(:group2) { create(:gws_revision_new_group) }
+    let!(:group1) { create(:gws_revision_new_group, order: 10) }
+    let!(:group2) { create(:gws_revision_new_group, order: 20) }
     let!(:user1) { create(:gws_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group1.id]) }
     let!(:user2) { create(:gws_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group2.id]) }
     let!(:revision) { create(:gws_revision, site_id: site.id) }
@@ -49,10 +49,11 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
-      expect(Gws::Group.where(id: group1.id).first.active?).to be_falsey
+      expect(Gws::Group.where(id: group1.id).first.active?).to be_truthy
       expect(Gws::Group.where(id: group2.id).first.active?).to be_falsey
       new_group = Gws::Group.where(name: changeset.destinations.first['name']).first
       expect(new_group.active?).to be_truthy
+      expect(new_group.id).to eq group1.id
 
       topic.reload
       expect(topic.group_ids).to eq [new_group.id]
@@ -73,9 +74,9 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
   end
 
   context 'with division' do
-    let!(:group0) { create(:gws_revision_new_group) }
-    let!(:group1) { build(:gws_revision_new_group) }
-    let!(:group2) { build(:gws_revision_new_group) }
+    let!(:group0) { create(:gws_revision_new_group, order: 10) }
+    let!(:group1) { build(:gws_revision_new_group, order: 20) }
+    let!(:group2) { build(:gws_revision_new_group, order: 30) }
     let!(:user) { create(:gws_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group0.id]) }
     let!(:revision) { create(:gws_revision, site_id: site.id) }
     let!(:changeset) do
@@ -111,9 +112,10 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
       job = described_class.bind(site_id: site, user_id: user, task_id: task)
       expect { job.perform_now(revision.name, job_opts) }.to output(include("[分割] 成功: 1, 失敗: 0\n")).to_stdout
 
-      expect(Gws::Group.where(id: group0.id).first.active?).to be_falsey
+      expect(Gws::Group.where(id: group0.id).first.active?).to be_truthy
       new_group1 = Cms::Group.where(name: changeset.destinations[0]['name']).first
       expect(new_group1.active?).to be_truthy
+      expect(new_group1.id).to eq group0.id
       new_group2 = Cms::Group.where(name: changeset.destinations[1]['name']).first
       expect(new_group2.active?).to be_truthy
 

@@ -12,13 +12,14 @@ FactoryBot.define do
     contact_groups do
       [
         {
-          name: "name-#{unique_id}",
+          main_state: "main",
+          name: "main",
+          contact_group_name: name.split("/", 2).last,
           contact_tel: unique_tel,
           contact_fax: unique_tel,
           contact_email: "#{unique_id}@example.jp",
           contact_link_url: "/#{unique_id}/",
           contact_link_name: unique_id.to_s,
-          main_state: "main"
         }
       ]
     end
@@ -32,15 +33,18 @@ FactoryBot.define do
 
     cur_site { site }
     name { "自動交付機・コンビニ交付サービスについて" }
-    filename { group.contact_email.gsub(/[@.]+/, "_") }
+    filename { group.contact_email.try(:gsub, /[@.]+/, "_") }
     layout_id { 10 }
     group_ids { [ group.id ] }
     contact_group_id { group.id }
-    contact_email { group.contact_email }
-    contact_tel { group.contact_tel }
-    contact_fax { group.contact_fax }
-    contact_link_url { group.contact_link_url }
-    contact_link_name { group.contact_link_name }
+    contact_group_contact_id { group.contact_groups.where(main_state: "main").first.try(:id) }
+    contact_group_relation { group.contact_groups.where(main_state: "main").first ? "related" : nil }
+    contact_charge { group.contact_groups.where(main_state: "main").first.try(:contact_group_name) }
+    contact_tel { group.contact_groups.where(main_state: "main").first.try(:contact_tel) }
+    contact_fax { group.contact_groups.where(main_state: "main").first.try(:contact_fax) }
+    contact_email { group.contact_groups.where(main_state: "main").first.try(:contact_email) }
+    contact_link_url { group.contact_groups.where(main_state: "main").first.try(:contact_link_url) }
+    contact_link_name { group.contact_groups.where(main_state: "main").first.try(:contact_link_name) }
     state { "public" }
     order { 0 }
     category_ids { [ 83, 88, 128, 129, 135, 136 ] }

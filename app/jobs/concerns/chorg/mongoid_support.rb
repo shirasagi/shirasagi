@@ -4,13 +4,22 @@ module Chorg::MongoidSupport
   include Chorg::Loggable
 
   def update(entity, hash)
-    presented = hash.select { |k, v| v.present? }
-
-    if entity.respond_to?(:update_chorg_attributes)
-      entity.update_chorg_attributes(presented)
-      return entity
+    if entity.try(:callback_executable?, :chorg)
+      Chorg.current_context.updating_attributes = hash
+      begin
+        entity.run_callbacks(:chorg) do
+          _update(entity, Chorg.current_context.updating_attributes)
+        end
+      ensure
+        Chorg.current_context.updating_attributes = nil
+      end
+    else
+      _update(entity, hash)
     end
+  end
 
+  def _update(entity, hash)
+    presented = hash.select { |k, v| v.present? }
     presented.each do |k, v|
       if v.respond_to?(:update_entity)
         v.update_entity(entity)
@@ -35,14 +44,15 @@ module Chorg::MongoidSupport
     hash
   end
 
-  def with_entity_updates(models, substituter, scope = {})
+  def with_entity_updates(models, substitutor, scope = {})
     with_entities(models, scope) do |entity|
-      with_updates(entity, substituter) do |updates|
+      with_updates(entity, substitutor) do |updates|
         yield entity, updates
       end
     end
   end
 
+  # rubocop:disable Layout::EmptyLineBetweenDefs
   def with_entities(models, scope = {})
     models.each do |model|
       model.where(scope).each do |entity|
@@ -62,7 +72,7 @@ module Chorg::MongoidSupport
         entity.try(:skip_assoc_opendata=, true)
         def entity.invoke_opendata_job(action); end
 
-        entity.instance_variable_set("@base_model", model)
+        entity.instance_variable_set(:@base_model, model)
         def entity.base_model
           return @base_model
         end
@@ -72,9 +82,16 @@ module Chorg::MongoidSupport
       end
     end
   end
+  # rubocop:enable Layout::EmptyLineBetweenDefs
 
-  def find_or_create_group(attributes)
+  def find_or_create_group(attributes, alternative_names: nil)
     group = self.class.group_class.where(name: attributes["name"]).first
+    if group.blank? && alternative_names.present?
+      alternative_names.each do |alternative_name|
+        group = self.class.group_class.where(name: alternative_name).first
+        break if group
+      end
+    end
     group ||= self.class.group_class.create
     update(group, attributes)
   end
@@ -115,9 +132,10 @@ module Chorg::MongoidSupport
     return false if !supported_field_types.include?(field_type)
 
     @exclude_fields.each do |filter|
-      if filter.is_a?(::Regexp)
+      case filter
+      when ::Regexp
         return false if filter.match?(key)
-      elsif key == filter
+      when key
         return false
       end
     end
@@ -143,13 +161,13 @@ module Chorg::MongoidSupport
     form.instance_of?(Cms::Form)
   end
 
-  def with_updates(entity, substituter)
+  def with_updates(entity, substitutor)
     updates = {}
     target_fields(entity).each do |k, _|
       next if skip_target_field?(entity, k)
 
       v = entity[k]
-      new_value = substituter.call(k, v, entity.try(:contact_group_id))
+      new_value = substitutor.call(k, v, entity.try(:contact_group_id))
       updates[k] = new_value if v != new_value
     end
     updates = updates.merge(collect_embedded_array_updates(entity))
@@ -169,7 +187,7 @@ module Chorg::MongoidSupport
         updates = {}
         target_fields(embedded_entity).each do |k, _|
           v = embedded_entity[k]
-          new_value = substituter.call(k, v, entity.try(:contact_group_id))
+          new_value = substitutor.call(k, v, entity.try(:contact_group_id))
           updates[k] = new_value if v != new_value
         end
         updates

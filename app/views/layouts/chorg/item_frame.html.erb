@@ -1,0 +1,10 @@
+<turbo-frame id="item-frame">
+  <%= yield %>
+
+  <%= javascript_tag do %>
+    document.documentElement.addEventListener("turbo:frame-load", function() {
+      SS.render("#item-frame");
+      SS_SearchUI.render();
+    }, { once: true });
+  <% end %>
+</turbo-frame>
