@@ -15,7 +15,21 @@
   <dd class="contact-group-id"><%= tryb { @item.contact_group.name } %></dd>
 
   <dt><%= @model.t :contact_group_relation %></dt>
-  <dd><%= @item.label :contact_group_relation %></dd>
+  <dd>
+    <%=
+      relation = @item.label(:contact_group_relation)
+      if @item.contact_group_contact_id.present?
+        contact = @item.contact_group.try { |group| group.contact_groups.where(id: @item.contact_group_contact_id).first }
+      end
+      if relation.blank? && contact.present?
+        relation = t("contact.options.relation.related.title")
+      end
+      if relation.present? && contact.present?
+        relation = "#{relation} (#{contact.name})"
+      end
+      relation
+    %>
+  </dd>
 
   <dt><%= @model.t :contact_charge %></dt>
   <dd class="contact-charge">
