@@ -7,6 +7,7 @@
 /.tool-versions
 /.vscode
 
+/app/assets/builds
 /config/*.yml
 /config/after_initializers
 /config/commands
