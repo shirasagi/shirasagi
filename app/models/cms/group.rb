@@ -14,6 +14,27 @@ class Cms::Group
 
   validate :validate_sites, if: ->{ cur_site.present? }
 
+  class << self
+    SEARCH_HANDLERS = %i[search_name search_keyword].freeze
+
+    def search(params)
+      SEARCH_HANDLERS.reduce(all) { |criteria, handler| criteria.send(handler, params) }
+    end
+
+    def search_name(params)
+      return all if params.blank? || params[:name].blank?
+      all.search_text params[:name]
+    end
+
+    def search_keyword(params)
+      return all if params.blank? || params[:keyword].blank?
+      all.keyword_in(
+        params[:keyword], :name, "contact_groups.name", "contact_groups.contact_group_name",
+        "contact_groups.contact_tel", "contact_groups.contact_fax", "contact_groups.contact_email",
+        "contact_groups.contact_link_url", "contact_groups.contact_link_name")
+    end
+  end
+
   def users
     Cms::User.in(group_ids: id)
   end

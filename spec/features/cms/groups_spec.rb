@@ -434,5 +434,62 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
         end
       end
     end
+
+    context "search" do
+      let!(:group) { create :revision_new_group, name: "#{site.groups.first.name}/#{unique_id}" }
+      let(:main_contact) { group.contact_groups.where(main_state: "main").first }
+
+      it do
+        visit cms_groups_path(site: site)
+        within ".index-search" do
+          fill_in "s[keyword]", with: main_contact.contact_group_name
+          click_on I18n.t("ss.buttons.search")
+        end
+        expect(page).to have_css(".index tbody tr", count: 1)
+        expect(page).to have_css(".index tbody tr", text: group.name)
+
+        within ".index-search" do
+          fill_in "s[keyword]", with: main_contact.contact_tel
+          click_on I18n.t("ss.buttons.search")
+        end
+        expect(page).to have_css(".index tbody tr", count: 1)
+        expect(page).to have_css(".index tbody tr", text: group.name)
+
+        within ".index-search" do
+          fill_in "s[keyword]", with: main_contact.contact_fax
+          click_on I18n.t("ss.buttons.search")
+        end
+        expect(page).to have_css(".index tbody tr", count: 1)
+        expect(page).to have_css(".index tbody tr", text: group.name)
+
+        within ".index-search" do
+          fill_in "s[keyword]", with: main_contact.contact_email
+          click_on I18n.t("ss.buttons.search")
+        end
+        expect(page).to have_css(".index tbody tr", count: 1)
+        expect(page).to have_css(".index tbody tr", text: group.name)
+
+        within ".index-search" do
+          fill_in "s[keyword]", with: main_contact.contact_email.split("@", 2).first
+          click_on I18n.t("ss.buttons.search")
+        end
+        expect(page).to have_css(".index tbody tr", count: 1)
+        expect(page).to have_css(".index tbody tr", text: group.name)
+
+        within ".index-search" do
+          fill_in "s[keyword]", with: main_contact.contact_link_url
+          click_on I18n.t("ss.buttons.search")
+        end
+        expect(page).to have_css(".index tbody tr", count: 1)
+        expect(page).to have_css(".index tbody tr", text: group.name)
+
+        within ".index-search" do
+          fill_in "s[keyword]", with: main_contact.contact_link_name
+          click_on I18n.t("ss.buttons.search")
+        end
+        expect(page).to have_css(".index tbody tr", count: 1)
+        expect(page).to have_css(".index tbody tr", text: group.name)
+      end
+    end
   end
 end
