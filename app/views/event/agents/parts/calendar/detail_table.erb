@@ -2,6 +2,16 @@
 
 <div class="event-calendar">
   <nav class="calendar-nav" aria-label="<%= t("event.prev_next_navi") %>">
+    <h2>
+      <span class="calendar-year">
+        <span class="value"><%= @year %></span>
+        <span class="unit"><%= t("datetime.prompts.year") %></span>
+      </span>
+      <span class="calendar-month">
+        <span class="value"><%= @month %></span>
+        <span class="unit"><%= t("datetime.prompts.month") %></span>
+      </span>
+    </h2>
     <ul>
       <li class="prev">
         <% if within_one_year?(@prev_month_date) %>
