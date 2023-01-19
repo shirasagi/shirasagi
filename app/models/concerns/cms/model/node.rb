@@ -18,6 +18,7 @@ module Cms::Model::Node
 
     attr_accessor :window_name, :skip_remove_files_recursively
 
+    field :order, type: Integer, default: SS.config.cms.node['default_order'], overwrite: true
     field :route, type: String
     field :view_route, type: String
     field :shortcut, type: String, default: "hide"
@@ -33,6 +34,8 @@ module Cms::Model::Node
     after_update :update_page_index_queues, if: ->{ @db_changes["state"] }
     after_destroy :remove_all
     after_destroy :destroy_children
+
+    default_scope -> { order(order: 1, filename: 1) }
 
     scope :root, ->{ where depth: 1 }
     scope :in_path, ->(path) {

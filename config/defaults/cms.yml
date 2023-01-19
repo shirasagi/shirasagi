@@ -185,6 +185,9 @@ production: &production
     pointsize: 22
     gravity: Center
 
+  node:
+    default_order: 0
+
   cms_sitemap:
     disable: true
 

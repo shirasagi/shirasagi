@@ -68,6 +68,9 @@
               <% if item.try(:updated) %>
                 <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
               <% end %>
+              <% if item.is_a?(Cms::Model::Node) && item.try(:order) != SS.config.cms.node['default_order'] %>
+                <span class="order"><%= item.order %></span>
+              <% end %>
               <% if item.try(:filename) %>
                 <% if params.dig(:s, :target) == 'descendant' %>
                   <span class="filename"><%= item.filename %></span>

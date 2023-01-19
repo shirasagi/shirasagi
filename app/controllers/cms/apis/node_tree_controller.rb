@@ -50,6 +50,7 @@ class Cms::Apis::NodeTreeController < ApplicationController
         id: item.id,
         name: item.name,
         filename: item.filename,
+        order: item.order,
         depth: item.depth,
         url: item_url(item),
         tree_url: cms_apis_node_tree_path(id: item.id, type: @type),
@@ -57,7 +58,22 @@ class Cms::Apis::NodeTreeController < ApplicationController
         is_parent: (@item.present? && @item.filename.start_with?("#{item.filename}\/"))
       }
     end
-    items.compact.uniq.sort{ |a, b| a[:filename].tr('/', "\0") <=> b[:filename].tr('/', "\0") }
+    items = items.compact.uniq.sort{ |a, b| a[:filename].tr('/', "\0") <=> b[:filename].tr('/', "\0") }
+
+    values = {}
+    items = items.each do |item|
+      filename = item[:filename]
+      names = filename.split('/')
+      basename = names.pop
+      dirname = names.join('/').presence
+
+      values[filename] = dirname ? values[dirname].dup || [] : []
+      values[filename] << item[:order] || SS.config.cms.node['default_order']
+      values[filename] << basename
+      item[:order_values] = values[filename]
+    end
+
+    items.sort_by { |h| h[:order_values] }
   end
 
   def item_url(item)
