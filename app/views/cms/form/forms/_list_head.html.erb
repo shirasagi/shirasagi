@@ -2,8 +2,8 @@
   <label class="check"><input type="checkbox" /></label>
 
   <div class="list-head-action">
-    <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", model: @model, method: "delete", confirm: t('ss.confirm.delete') %>
-    <%= ss_button_to t("ss.links.download"), url_for(action: :download), class: "download btn btn-list-head-action", model: @model, method: "get" %>
+    <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.delete') %>
+    <%= ss_button_to t("ss.links.download"), url_for(action: :download), class: "download btn btn-list-head-action", method: "get" %>
   </div>
 
   <%= render template: "_search" %>

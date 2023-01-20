@@ -7,7 +7,7 @@
         <th class="checkbox" style="width: 120px;">
           <input type="checkbox" />
           <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-            <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", model: @model, method: "delete", confirm: t('ss.confirm.delete') %>
+            <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.delete') %>
           <% end %>
         </th>
         <th><%= @model.t :name %></th>

@@ -52,9 +52,9 @@
 
     <% case params[:folder] %>
     <% when 'INBOX.Sent', 'INBOX.Draft' %>
-      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", model: @model, method: "delete", confirm: t('ss.confirm.delete') %>
+      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.delete') %>
     <% when 'INBOX.Trash' %>
-      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", model: @model, method: "delete", confirm: t('ss.confirm.delete') %>
+      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.delete') %>
     <% else %>
       <button class="btn trash-all"><%= t 'gws/memo/message.links.trash' %></button>
     <% end %>
