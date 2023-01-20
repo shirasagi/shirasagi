@@ -27,12 +27,12 @@
 
   <% if @item.account_start_date.present? %>
   <dt><%= @model.t :account_start_date %></dt>
-  <dd><%= tryb { ss_time_tag @item.account_start_date } %></dd>
+  <dd><%= ss_time_tag @item.account_start_date %></dd>
   <% end %>
 
   <% if @item.account_expiration_date.present? %>
   <dt><%= @model.t :account_expiration_date %></dt>
-  <dd><%= tryb { ss_time_tag @item.account_expiration_date } %></dd>
+  <dd><%= ss_time_tag @item.account_expiration_date %></dd>
   <% end %>
 
   <% if @item.initial_password_warning.present? %>

@@ -5,8 +5,8 @@ return if @item.release_date.blank? && @item.close_date.blank?
 %>
 <dl class="see">
   <dt><%= @model.t :release_date %></dt>
-  <dd><%= tryb { ss_time_tag(@item.release_date) } %></dd>
+  <dd><%= ss_time_tag(@item.release_date) %></dd>
 
   <dt><%= @model.t :close_date %></dt>
-  <dd><%= tryb { ss_time_tag(@item.close_date) } %></dd>
+  <dd><%= ss_time_tag(@item.close_date) %></dd>
 </dl>

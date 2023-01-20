@@ -42,7 +42,7 @@
         data-attachments="<%= item.attachments? ? 1 : nil %>"
         data-from="<%= item.from[0] %>"
         data-name="<%= item.subject %>"
-        data-send_date="<%= item.internal_date.iso8601 %>"
+        data-send_date="<%= tryb { item.internal_date.iso8601 } %>"
         data-display_size="<%= item.display_size %>">
         <td class="checkbox"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></td>
         <td>
