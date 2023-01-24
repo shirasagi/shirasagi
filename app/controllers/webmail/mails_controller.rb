@@ -110,27 +110,30 @@ class Webmail::MailsController < ApplicationController
       @mailboxes = @imap.mailboxes.update_status
     end
 
-    @uid_list = session[:webmail_uid_list]['uid_list']
-    if @uid_list
-      @uid_index = @uid_list.index(@item.uid)
+    # 念の為初期化する（本アクションで設定するメンバー変数一覧を明示的に示す意図もある）
+    @uid_list = nil
+    @uid_index = nil
+    @next_uid = nil
+    @prev_uid = nil
+    @search = nil
+    @page = 1
+    webmail_uid_list_session = session[:webmail_uid_list]
+    return if webmail_uid_list_session.blank?
+
+    @uid_list = webmail_uid_list_session['uid_list']
+    @search = webmail_uid_list_session['search']
+    @page = webmail_uid_list_session['page']
+    return if @uid_list.blank?
+
+    @uid_index = @uid_list.index(@item.uid)
+    return if @uid_index.blank?
+
+    if @uid_index > 0
+      @prev_uid = @uid_list[@uid_index - 1]
     end
-    if @uid_index.blank?
-      @next_uid = nil
-      @prev_uid = nil
-    else
-      if @uid_index == 0
-        @prev_uid = nil
-      else
-        @prev_uid = @uid_list[@uid_index - 1]
-      end
-      if @uid_index == @uid_list.size
-        @next_uid = nil
-      else
-        @next_uid = @uid_list[@uid_index + 1]
-      end
+    if @uid_index < @uid_list.size
+      @next_uid = @uid_list[@uid_index + 1]
     end
-    @search = session[:webmail_uid_list]['search']
-    @page = session[:webmail_uid_list]['page']
   end
 
   def new

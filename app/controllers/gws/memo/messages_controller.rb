@@ -179,25 +179,31 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def show
     @item.set_seen(@cur_user).update if @item.state == "public"
-    @id_list = session[:gws_memo_id_list]['id_list']
+
+    # 念の為初期化する（本アクションで設定するメンバー変数一覧を明示的に示す意図もある）
+    @id_list = nil
+    @id_index = nil
+    @search = nil
+    @page = nil
+    @prev_id = nil
+    @next_id = nil
+    gws_memo_id_list_session = session[:gws_memo_id_list]
+    return if gws_memo_id_list_session.blank?
+
+    @id_list = gws_memo_id_list_session['id_list']
+    @search = gws_memo_id_list_session['search']
+    @page = gws_memo_id_list_session['page']
+    return if @id_list.blank?
+
     @id_index = @id_list.index(@item.id.to_s)
-    if @id_index.blank?
-      @prev_id = nil
-      @next_id = nil
-    else
-      if @id_index == 0
-        @prev_id = nil
-      else
-        @prev_id = @id_list[@id_index - 1]
-      end
-      if @id_index == @id_list.size
-        @next_id = nil
-      else
-        @next_id = @id_list[@id_index + 1]
-      end
+    return if @id_index.blank?
+
+    if @id_index > 0
+      @prev_id = @id_list[@id_index - 1]
     end
-    @search = session[:gws_memo_id_list]['search']
-    @page = session[:gws_memo_id_list]['page']
+    if @id_index < @id_list.size
+      @next_id = @id_list[@id_index + 1]
+    end
   end
 
   def edit
