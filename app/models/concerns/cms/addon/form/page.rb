@@ -129,6 +129,9 @@ module Cms::Addon::Form::Page
   end
 
   def cms_form_page_merge_column_values
+    # 配列を [] でリセットするだけだと古い embeds が削除されないことがあるので明示的に delete する
+    self.column_values.each(&:delete)
+
     self.column_values = []
     copy_column_values(in_branch, merge_values: true)
   end
