@@ -2,8 +2,9 @@
   <label class="check"><input type="checkbox" /></label>
 
   <div class="list-head-action">
-    <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", model: @model, method: "delete", confirm: t('ss.confirm.delete') %>
-    <%= ss_button_to t("ss.links.download"), url_for(action: :download), class: "download btn btn-list-head-action", model: @model, method: "get" %>
+    <%# CMS の一括削除では特別な削除確認画面が表示されるので confirmation は不要 %>
+    <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete" %>
+    <%= ss_button_to t("ss.links.download"), url_for(action: :download), class: "download btn btn-list-head-action", method: "get" %>
   </div>
 
   <%= render template: "_search" %>

@@ -12,7 +12,7 @@
         <%= t :"webmail.links.copy" %> <i class="material-icons md-13">&#xE313;</i>
       </button>
     </div>
-    <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", model: @model, method: "delete", confirm: t('ss.confirm.delete') %>
+    <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.delete') %>
     <button class="btn set-seen-all" data-href="<%= url_for action: :set_seen %>">
       <%= t :"webmail.links.set_seen" %>
     </button>
