@@ -1,5 +1,5 @@
 class Sns::LocalesController < ApplicationController
-  LOCALE_PATH = Rails.root.join("public/assets/builds/locales")
+  LOCALE_PATH = Rails.root.join("app/assets/builds/locales")
 
   def default
     safe_params = params.permit(:namespace, :languages)
