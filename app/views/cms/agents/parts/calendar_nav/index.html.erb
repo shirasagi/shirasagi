@@ -3,14 +3,8 @@
 <div class="event-calendar">
   <nav class="calendar-nav" aria-label="<%= t("cms.event_calendar") %>">
     <h2>
-      <span class="calendar-year">
-        <span class="value"><%= @year %></span>
-        <span class="unit"><%= t("datetime.prompts.year") %></span>
-      </span>
-      <span class="calendar-month">
-        <span class="value"><%= @month %></span>
-        <span class="unit"><%= t("datetime.prompts.month") %></span>
-      </span>
+      <span class="calendar-year"><%= @year %><%= t("datetime.prompts.year") %></span>
+      <span class="calendar-month"><%= @month %><%= t("datetime.prompts.month") %></span>
     </h2>
     <ul>
       <li class="prev">
