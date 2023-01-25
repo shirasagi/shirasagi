@@ -27,8 +27,12 @@ module Cms::Addon
       return if errors.present?
 
       if try(:state) == "public"
-        self.state = "ready" if release_date && release_date > Time.zone.now
-        self.state = "closed" if close_date && close_date <= Time.zone.now
+        now = Time.zone.now
+        self.state = "ready" if release_date && release_date > now
+        # 差し替えページのマージ処理は state == "public" の場合に動作する
+        # 「公開終了日時(予約)」が過去日に設定された差し替えページを公開保存した場合、
+        # 適切にマージ処理を実行させるため、差し替えページの場合 state を変更しないようにする。
+        self.state = "closed" if close_date && close_date <= now && !try(:branch?)
       end
     end
 
