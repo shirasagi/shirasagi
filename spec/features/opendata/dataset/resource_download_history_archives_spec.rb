@@ -63,13 +63,12 @@ describe Opendata::Dataset::ResourceDownloadHistoryArchivesController, type: :fe
       visit opendata_dataset_history_download_archives_path(site: site, cid: node)
       first(".list-head input[type='checkbox']").click
       within ".list-head-action" do
-        page.accept_alert do
-          click_on I18n.t("ss.links.delete")
-        end
+        click_on I18n.t("ss.links.delete")
       end
 
       expect(page).to have_content I18n.t('ss.confirm.target_to_delete')
       click_button I18n.t('ss.buttons.delete')
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
 
       expect { archive1.reload }.to raise_error Mongoid::Errors::DocumentNotFound
     end
