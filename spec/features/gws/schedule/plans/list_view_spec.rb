@@ -39,7 +39,8 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         expect(page).to have_text(category2.name)
         expect(page).to have_text(facility2.name)
 
-        if now.month == item3.start_at.month
+        item3_week_start_day = item3.start_at - item3.start_at.wday.days
+        if now.month == item3_week_start_day.month
           expect(page).to have_text(item3.name)
           expect(page).to have_text(category3.name)
           expect(page).to have_text(facility3.name)
