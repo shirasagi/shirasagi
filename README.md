@@ -74,7 +74,7 @@ gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
 # systemctl enable mongod
 ```
 
-### ASDFのインストール
+### asdfのインストール
 
 ```
 # git clone https://github.com/asdf-vm/asdf.git ~/.asdf 
@@ -83,6 +83,7 @@ gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
 . $HOME/.asdf/asdf.sh
 . $HOME/.asdf/completions/asdf.bash
 ---
+# source ~/.bashrc
 ```
 
 ### Rubyのインストール
@@ -91,7 +92,13 @@ gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
 # asdf install ruby 3.0.4
 # asdf global ruby 3.0.4
 ```
-
+### Nodejs等のインストール
+```
+# asdf plugin add nodejs
+# asdf install nodejs 16.19.0
+# asdf global nodejs 16.19.0 
+# npm install -g yarn
+```
 ### SHIRASAGI のインストール
 
 SHIRASAGI のダウンロード (stable)
@@ -112,7 +119,7 @@ $ bundle install --without development test
 Web サーバの起動
 
 ```
-$ rake unicorn:start
+$ bundle exec rake unicorn:start
 ```
 
 ## サイトの作成
@@ -120,20 +127,20 @@ $ rake unicorn:start
 データベース（インデックス）の作成
 
 ```
-$ rake db:drop
-$ rake db:create_indexes
+$ bundle exec rake db:drop
+$ bundle exec rake db:create_indexes
 ```
 
 新規サイトの追加
 
 ```
-$ rake ss:create_site data='{ name: "サイト名", host: "www", domains: "localhost:3000" }'
+$ bundle exec rake ss:create_site data='{ name: "サイト名", host: "www", domains: "localhost:3000" }'
 ```
 
 サンプルデータ (自治体サンプル) の投入
 
 ```
-$ rake db:seed name=demo site=www
+$ bundle exec rake db:seed name=demo site=www
 ```
 
 ## サイトの確認
