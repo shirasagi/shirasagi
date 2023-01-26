@@ -58,17 +58,17 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           # find("a[data-column-id=\"#{column2.id}\"]").click
           within first(".column-value-cms-column-fileupload") do
             fill_in "item[column_values][][in_wrap][file_label]", with: unique_id
-            click_on I18n.t("ss.links.upload")
+            wait_cbox_open { click_on I18n.t("ss.links.upload") }
           end
         end
 
         wait_for_cbox do
           attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/logo.png"
-          click_on I18n.t('ss.buttons.attach')
+          wait_cbox_close { click_on I18n.t('ss.buttons.attach') }
         end
 
         within 'form#item-form' do
-          expect(page).to have_content('logo')
+          expect(page).to have_css('.file-view', text: 'logo')
           click_on I18n.t('ss.buttons.publish_save')
         end
 

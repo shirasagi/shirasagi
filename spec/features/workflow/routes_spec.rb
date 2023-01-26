@@ -23,25 +23,32 @@ describe "workflow_routes", type: :feature, dbscope: :example do
         within "form#item-form" do
           fill_in "item[name]", with: "sample"
           select "無効", from: "item[pull_up]"
+
+          click_on "グループを選択する"
         end
 
-        click_on "グループを選択する"
         wait_for_cbox do
           within "table.index" do
-            click_on group.name
-          end
-        end
-
-        within "dl.workflow-level-1" do
-          click_on "承認者を選択する"
-        end
-        wait_for_cbox do
-          within "table.index tbody.items" do
-            click_on user.name
+            wait_cbox_close { click_on group.name }
           end
         end
 
         within "form#item-form" do
+          within "dl.workflow-level-1" do
+            click_on "承認者を選択する"
+          end
+        end
+        wait_for_cbox do
+          within "table.index tbody.items" do
+            wait_cbox_close { click_on user.name }
+          end
+        end
+
+        within "form#item-form" do
+          expect(page).to have_css("#addon-basic", text: group.name)
+          within "#addon-workflow-agents-addons-approver_view dl.workflow-level-1" do
+            expect(page).to have_css('[data-id="1,1"]', text: user.name)
+          end
           click_on I18n.t('ss.buttons.save')
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)

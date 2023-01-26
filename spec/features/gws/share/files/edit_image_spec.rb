@@ -46,6 +46,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         expect(folder.descendants_total_file_size).to eq item.size
 
         visit index_path
+        within ".tree-navi" do
+          expect(page).to have_css(".item-name", text: folder.name)
+        end
         click_on item.name
         click_on I18n.t("ss.links.edit")
 
