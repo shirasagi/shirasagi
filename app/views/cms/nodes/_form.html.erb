@@ -6,7 +6,7 @@
 <dl class="see">
   <dt><%= @model.t :route %><%= @model.tt :route %></dt>
   <dd><%= f.hidden_field :route %>
-    <%= @item.label :route %> &nbsp;
+    <%= @item.route_label %> &nbsp;
     <% case controller.action_name
       when "new", "create" %><%= link_to t('ss.links.change'), routes_cms_nodes_path(base_url: url_for(action: :new)), class: "ajax-box" %></dd>
     <% when "edit", "update" %><%= link_to t('ss.links.change'), routes_cms_nodes_path(base_url: url_for(action: :edit)), class: "ajax-box" %></dd>

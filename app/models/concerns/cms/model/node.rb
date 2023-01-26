@@ -164,6 +164,10 @@ module Cms::Model::Node
     Cms::Node.plugins.select { |plugin| plugin.enabled? }.map { |plugin| [plugin.name, plugin.path] }
   end
 
+  def route_label
+    Cms::Node.plugins.find { |plugin| plugin.path == route }.try(:name)
+  end
+
   def shortcut_options
     [
       [I18n.t('ss.options.state.show'), 'show'],
