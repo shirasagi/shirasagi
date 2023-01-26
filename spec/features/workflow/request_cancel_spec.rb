@@ -80,6 +80,7 @@ describe "request cancel", type: :feature, dbscope: :example, js: true do
         end
 
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(I18n.t("workflow.state.cancelled"))}/)
+        expect(page).to have_css("#workflow_route", text: I18n.t("workflow.restart_workflow"))
 
         item.reload
         expect(item.workflow_state).to eq "cancelled"
