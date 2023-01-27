@@ -127,6 +127,7 @@ ja:
         compensatory_minute1: 振替時間1
         compensatory_minute2: 振替時間2
         compensatory_minute3: 振替時間3
+        upper_day_leave_minute: 休暇申請の有効時間
         week_out_compensatory_file_limit: 同一週外振替有効期限
         week_out_compensatory_file_notify_day: 同一週外振替通知日
     errors:
@@ -161,9 +162,17 @@ ja:
         - 通常の利用の場合ですと「シフトJIS」を選択して問題ありません。
 
     gws/addon/attendance/group_setting:
+      compensatory_minute1:
+        - 時間外申請をする際の振替時間を設定できます。
+      compensatory_minute2:
+        - 時間外申請をする際の振替時間を設定できます。
+      compensatory_minute3:
+        - 時間外申請をする際の振替時間を設定できます。
+      upper_day_leave_minute:
+        - 休暇申請をした際の1日の有効時間の上限を設定します。
       week_out_compensatory_file_limit:
         - 同一週外振替の有効期限を設定できます。
         - 有効期限を過ぎたものは休暇申請で利用できなくなります。
       week_out_compensatory_file_notify_day:
         - 同一週外振替の有効期限が切れる前に通知する日数を設定します。
-        - 7日を設定すると、期限が切れる7日前に通知が投稿されます。
+        - 7日を設定すると、期限が切れる7日前に通知されます。

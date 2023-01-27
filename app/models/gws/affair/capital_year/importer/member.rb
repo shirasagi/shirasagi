@@ -46,8 +46,8 @@ class Gws::Affair::CapitalYear::Importer::Member < Gws::Affair::CapitalYear::Imp
           effective_minutes = (last_year_setting.annual_leave_minutes - minutes)
           effective_minutes = effective_minutes > 0 ? effective_minutes : 0
 
-          leaved_count = Gws::Affair::Utils.leave_minutes_to_day(minutes)
-          effective_count = Gws::Affair::Utils.leave_minutes_to_day(effective_minutes)
+          leaved_count = Gws::Affair::Utils.leave_minutes_to_day(cur_site, minutes)
+          effective_count = Gws::Affair::Utils.leave_minutes_to_day(cur_site, effective_minutes)
         end
 
         count = nil
