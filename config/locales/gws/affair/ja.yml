@@ -211,6 +211,8 @@ ja:
         description_name: 説明名称
         item_name: 節名称
         subitem_name: 細節名称
+        member_group_ids: 参加グループ
+        member_ids: 参加ユーザー
       capital_group:
         group_name: グループ名
         project_code: 事業コード
