@@ -35,11 +35,11 @@ class Sys::SiteImportJob < SS::ApplicationJob
     invoke :import_cms_users_roles
     invoke :import_ss_files
     invoke :import_cms_forms
-    invoke :import_cms_columns
     invoke :import_cms_loop_settings
     invoke :import_cms_layouts
     invoke :import_cms_body_layouts
     invoke :import_cms_nodes
+    invoke :import_cms_columns
     invoke :import_cms_parts
     invoke :import_cms_pages
     invoke :import_cms_page_searches
