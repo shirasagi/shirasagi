@@ -21,7 +21,7 @@ module Sys::SiteImport::Contents
   end
 
   def import_cms_pages
-    @cms_pages_map = import_documents "cms_pages", Cms::Page, %w(site_id filename) do |item|
+    @cms_pages_map = import_documents "cms_pages", Cms::Page, %w(site_id filename) do |item, data|
       def item.generate_file; end
       item.skip_validate_seq_filename = true if item.is_a?(Cms::Page::SequencedFilename)
 
@@ -49,6 +49,11 @@ module Sys::SiteImport::Contents
             end
           end
           column_value
+        end
+      end
+      if data["event_recurrences"].present?
+        item.event_recurrences = data["event_recurrences"].map do |er|
+          Event::Extensions::Recurrence.new(er["attributes"])
         end
       end
     end

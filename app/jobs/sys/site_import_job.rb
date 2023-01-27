@@ -162,6 +162,8 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
     data['loop_setting_id'] = @cms_loop_settings_map[data['loop_setting_id']] if data['loop_setting_id'].present?
 
+    data['contact_groups'] = [] if data['contact_groups'].present?
+
     data
   end
 
@@ -192,7 +194,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
       end
 
       data.each { |k, v| item[k] = v }
-      yield(item) if block
+      yield(item, data) if block
 
       if save_document(item)
         map[id] = item.id
