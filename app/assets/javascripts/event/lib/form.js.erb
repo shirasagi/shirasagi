@@ -58,7 +58,9 @@ this.Event_Form = (function () {
         $this.find(".event-recurrence-date-start-on"),
         $this.find(".event-recurrence-date-until-on"));
 
-      this.ss ||= {}
+      if (!this.ss) {
+        this.ss = {}
+      }
       this.ss.synchronizer = synchronizer
     });
   };
