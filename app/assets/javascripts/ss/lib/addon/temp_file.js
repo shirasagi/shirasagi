@@ -148,6 +148,9 @@ this.SS_Addon_TempFile = (function () {
         _this.dropEventTriggered = false;
       }
     };
+    request.onerror= function(e) {
+      _this.dropEventTriggered = false;
+    };
     request.open("POST", _this.uploadUrl());
     request.send(formData);
     return false;
