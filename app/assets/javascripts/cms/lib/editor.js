@@ -93,10 +93,8 @@ this.Cms_Editor_CKEditor = (function () {
     if (opts == null) {
       opts = {};
     }
-    var editor = $(selector).ckeditor(opts).editor;
-    editor.on("change", function() {
-      SS.formChanged = true;
-    });
+
+    $(selector).ckeditor(opts);
 
     CKEDITOR.on('dialogDefinition', function (ev) {
       var def, info, name, text;
@@ -127,6 +125,9 @@ this.Cms_Editor_CKEditor = (function () {
 
     // fix. CKEditor Paste Dialog: github.com/ckeditor/ckeditor4/issues/469
     CKEDITOR.on('instanceReady', function (ev) {
+      ev.editor.on("change", function () {
+        SS.formChanged = true;
+      });
       ev.editor.on("beforeCommandExec", function(event) {
         // Show the paste dialog for the paste buttons and right-click paste
         if (event.data.name === "paste") {
