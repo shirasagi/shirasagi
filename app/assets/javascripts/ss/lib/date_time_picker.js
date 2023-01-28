@@ -83,6 +83,22 @@ this.SS_DateTimePicker = (function () {
     }
   };
 
+  var dateFormat = function() {
+    if ("i18next" in window) {
+      return i18next.t("date.formats.picker")
+    } else {
+      return SS.DEFAULT_DATE_FORMAT;
+    }
+  }
+
+  var timeFormat = function() {
+    if ("i18next" in window) {
+      return i18next.t("time.formats.picker")
+    } else {
+      return SS.DEFAULT_TIME_FORMAT;
+    }
+  }
+
   var initialized = false;
 
   SS_DateTimePicker.renderOnce = function () {
@@ -192,8 +208,8 @@ this.SS_DateTimePicker = (function () {
   SS_DateTimePicker.prototype.buildDatePickerOptions = function () {
     var self = this;
     var opts = {
-      format: SS.convertDateTimeFormat(i18next.t("date.formats.picker")),
-      formatDate: SS.convertDateTimeFormat(i18next.t("date.formats.picker")),
+      format: SS.convertDateTimeFormat(dateFormat()),
+      formatDate: SS.convertDateTimeFormat(dateFormat()),
       formatTime: "HH:mm",
       value: self.$el.val(),
       enterLikeTab: false,
@@ -229,8 +245,8 @@ this.SS_DateTimePicker = (function () {
   SS_DateTimePicker.prototype.buildDateTimePickerOptions = function () {
     var self = this;
     var opts = {
-      format: SS.convertDateTimeFormat(i18next.t("time.formats.picker")),
-      formatDate: SS.convertDateTimeFormat(i18next.t("date.formats.picker")),
+      format: SS.convertDateTimeFormat(timeFormat()),
+      formatDate: SS.convertDateTimeFormat(dateFormat()),
       formatTime: "HH:mm",
       value: self.$el.val(),
       closeOnDateSelect: false,
