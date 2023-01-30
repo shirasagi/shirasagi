@@ -187,7 +187,6 @@ SS.ready(function () {
 
     // close other dropdown
     $(".dropdown").not($dropdown.get(0)).each(function () {
-      // $(this).removeClass('active');
       return $(this).find('.dropdown-menu').removeClass('active');
     });
 
@@ -196,7 +195,6 @@ SS.ready(function () {
 
     // open dropdown
     if ($target.parents('.dropdown-menu').length === 0) {
-      // $dropdown.toggleClass('active');
       $menu.toggleClass('active');
       e.stopPropagation();
     }
