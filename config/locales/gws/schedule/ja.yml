@@ -130,6 +130,7 @@ ja:
       unable_to_reserve_all_days: 設備の利用時間が制限されているため終日予約することができません。
       faciliy_day_lte: 予約時間は%{count}日以内の値にしてください。
       not_found_reservable_facilities: 予約可能な設備が見つかりません。
+      resource_error: 予定を取得できませんでした。
 
     csv:
       id: ID
