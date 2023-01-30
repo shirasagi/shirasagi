@@ -503,6 +503,9 @@ ja:
     release_other_opendata_datasets: データセットの公開（全て）
     release_private_opendata_datasets: データセットの公開（所有）
     release_member_opendata_datasets: データセットの公開（メンバー）
+    close_other_opendata_datasets: データセットの非公開（全て）
+    close_private_opendata_datasets: データセットの非公開（所有）
+    close_member_opendata_datasets: データセットの非公開（メンバー）
     approve_other_opendata_datasets: データセットの承認（全て）
     approve_private_opendata_datasets: データセットの承認（所有）
     approve_member_opendata_datasets: データセットの承認（メンバー）
@@ -522,6 +525,9 @@ ja:
     release_other_opendata_apps: アプリの公開（全て）
     release_private_opendata_apps: アプリの公開（所有）
     release_member_opendata_apps: アプリの公開（メンバー）
+    close_other_opendata_apps: アプリの非公開（全て）
+    close_private_opendata_apps: アプリの非公開（所有）
+    close_member_opendata_apps: アプリの非公開（メンバー）
     approve_other_opendata_apps: アプリの承認（全て）
     approve_private_opendata_apps: アプリの承認（所有）
     approve_member_opendata_apps: アプリの承認（メンバー）
@@ -541,6 +547,9 @@ ja:
     release_other_opendata_ideas: アイデアの公開（全て）
     release_private_opendata_ideas: アイデアの公開（所有）
     release_member_opendata_ideas: アイデアの公開（メンバー）
+    close_other_opendata_ideas: アイデアの非公開（全て）
+    close_private_opendata_ideas: アイデアの非公開（所有）
+    close_member_opendata_ideas: アイデアの非公開（メンバー）
     approve_other_opendata_ideas: アイデアの承認（全て）
     approve_private_opendata_ideas: アイデアの承認（所有）
     approve_member_opendata_ideas: アイデアの承認（メンバー）

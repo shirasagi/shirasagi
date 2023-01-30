@@ -629,6 +629,8 @@ ja:
     unlock_other_cms_pages: 固定ページのロック解除（全て）
     release_other_cms_pages: 固定ページの公開（全て）
     release_private_cms_pages: 固定ページの公開（所有）
+    close_other_cms_pages: 固定ページの非公開（全て）
+    close_private_cms_pages: 固定ページの非公開（所有）
     approve_other_cms_pages: 固定ページの承認（全て）
     approve_private_cms_pages: 固定ページの承認（所有）
     reroute_other_cms_pages: 固定ページの承認経路変更（全て）

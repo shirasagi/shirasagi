@@ -101,6 +101,8 @@ module Cms
     Cms::Role.permission :delete_private_cms_forms
     Cms::Role.permission :release_other_cms_pages
     Cms::Role.permission :release_private_cms_pages
+    Cms::Role.permission :close_other_cms_pages
+    Cms::Role.permission :close_private_cms_pages
     Cms::Role.permission :approve_other_cms_pages
     Cms::Role.permission :approve_private_cms_pages
     Cms::Role.permission :reroute_other_cms_pages

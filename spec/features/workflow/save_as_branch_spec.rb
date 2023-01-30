@@ -5,7 +5,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
   let(:group) { cms_group }
 
   let!(:permissions) do
-    Cms::Role.permission_names.select { |item| item =~ /_private_/ && item !~ /^release_/ }
+    Cms::Role.permission_names.select { |item| item =~ /_private_/ && item !~ /^(release_|close_)/ }
   end
   let!(:role) { create :cms_role, name: unique_id, permissions: permissions, cur_site: site }
   let!(:user1) { create :cms_user, uid: unique_id, name: unique_id, group_ids: [group.id], cms_role_ids: [role.id] }
