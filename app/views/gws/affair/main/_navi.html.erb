@@ -100,9 +100,11 @@ new Gws_Affair_Menu("<%= current_navi %>", "ss_affair_navi_site_<%= @cur_site.id
   <!-- 庶務事務/勤務体系 -->
   <% if Gws::Affair::DutySetting.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h3><%= link_to t("modules.gws/affair/duty_calendar"), gws_affair_duty_setting_duty_calendars_path, class: "management" %></h3>
-    <h3><%= link_to t("modules.gws/affair/duty_hour"), gws_affair_duty_setting_duty_hours_path, class: "management" %></h3>
-    <h3><%= link_to t("modules.gws/affair/holiday_calendar"), gws_affair_duty_setting_holiday_calendars_path, class: "management" %></h3>
-    <h3><%= link_to t("modules.gws/affair/duty_notice"), gws_affair_duty_setting_duty_notices_path, class: "management" %></h3>
+    <ul class="narrow-page">
+      <li><%= link_to t("modules.gws/affair/duty_hour"), gws_affair_duty_setting_duty_hours_path, class: "management" %></li>
+      <li><%= link_to t("modules.gws/affair/holiday_calendar"), gws_affair_duty_setting_holiday_calendars_path, class: "management" %></li>
+      <li><%= link_to t("modules.gws/affair/duty_notice"), gws_affair_duty_setting_duty_notices_path, class: "management" %></li>
+    </ul>
   <% end %>
 
   <!-- 庶務事務/年度設定 -->

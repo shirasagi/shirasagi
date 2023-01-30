@@ -53,15 +53,19 @@ class Gws::Affair::Utils
     end
 
     # 時間(分)を有給日数にする
-    # 端数については 3時間45分（3.75Ｈ）以上は1日とする。
+    # 7.75Ｈの端数については 3時間45分（3.75Ｈ）以上は1日とする。
     # 81時間÷7.75Ｈ＝10日と3.4999999時間 10日取得（消化）
     # 81.5時間÷7.75Ｈ＝10日と4時間       11日取得（消化）
     # 82時間÷7.75Ｈ＝10日と4.4999999時間 11日取得（消化）
     def leave_minutes_to_day(site, minutes)
       day = (minutes / site.upper_day_leave_minute)
       min = minutes % site.upper_day_leave_minute
-      day += 1 if min >= 225
+      day += 1 if min >= leave_minutes_to_day_threshold_hour
       day
+    end
+
+    def leave_minutes_to_day_threshold_hour
+      SS.config.gws.affair.dig("leave_setting", "download_yearly", "threshold_hour") || 225
     end
   end
 end
