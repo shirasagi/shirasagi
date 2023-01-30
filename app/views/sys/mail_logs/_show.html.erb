@@ -24,4 +24,9 @@
 
   <dt><%= @model.t :mail %></dt>
   <dd><%= text_area_tag :mail, @item.mail, readonly: true, style: "height: 400px" %></dd>
+  <dd>
+    <% if Sys::MailLog.allowed?(:edit, @cur_user) %>
+      <%= link_to(t('ss.links.decode'), { action: :decode, id: @item }, class: "btn decode") %>
+    <% end %>
+  </dd>
 </dl>
