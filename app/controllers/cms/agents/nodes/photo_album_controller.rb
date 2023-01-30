@@ -17,7 +17,7 @@ class Cms::Agents::Nodes::PhotoAlbumController < ApplicationController
 
       page_condition = Cms::Page.and_public_selector(cur_date)
       page_condition[:site_id] = cur_site.id
-      page_condition.merge(condition_hash) if condition_hash.present?
+      page_condition.merge!(condition_hash) if condition_hash.present?
 
       @stages << { "$match" => { page: { "$elemMatch" => page_condition } } }
     end
