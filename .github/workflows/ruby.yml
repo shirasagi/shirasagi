@@ -9,7 +9,7 @@ name: Ruby-3.0
 
 on:
   push:
-    branches: [ master, main, v1.16.2 ]
+    branches: [ master, main, v1.16.2, v1.16.2-role-close ]
   pull_request:
     branches: [ master, main ]
 
