@@ -198,6 +198,8 @@ en:
         description_name: Description name
         item_name: Item name
         subitem_name: Subitem name
+        member_group_ids: Member groups
+        member_ids: Members
       capital_group:
         group_name: Group name
         project_code: Project code
