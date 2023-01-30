@@ -129,7 +129,7 @@ this.SS_Addon_TempFile = (function () {
       formData.append('item[in_files][]', files[j]);
     }
     var request = new XMLHttpRequest();
-    request.onload = function (e) {
+    request.onload = function(_e) {
       if (request.readyState === XMLHttpRequest.DONE) {
         _this.$selector.removeClass('file-dragenter');
         if (request.status === 200 || request.status === 201) {
@@ -148,7 +148,7 @@ this.SS_Addon_TempFile = (function () {
         _this.dropEventTriggered = false;
       }
     };
-    request.onerror= function(e) {
+    request.onerror= function(_e) {
       _this.dropEventTriggered = false;
     };
     request.open("POST", _this.uploadUrl());
