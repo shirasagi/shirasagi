@@ -1,3 +1,39 @@
+<%= jquery do %>
+$(".item .break-time").each(function(){
+  var $breaktime = $(this);
+  var renderDiff = function() {
+    var startDate = $breaktime.find(".start-date").val();
+    var startHour = $breaktime.find(".start-hour").val();
+    var startMinute = $breaktime.find(".start-minute").val();
+
+    var endDate = $breaktime.find(".end-date").val();
+    var endHour = $breaktime.find(".end-hour").val();
+    var endMinute = $breaktime.find(".end-minute").val();
+
+    var startStr = sprintf("%s %02d:%02d", startDate, startHour, startMinute);
+    var endStr = sprintf("%s %02d:%02d", endDate, endHour, endMinute);
+
+    var m1 = moment(startStr);
+    var m2 = moment(endStr);
+    var diff = m2.diff(m1, 'minutes');
+    if (diff < 0) {
+      diff = 0;
+    }
+
+    var label = "";
+    var hour = Math.floor(diff / 60);
+    var minute = diff % 60;
+    if (hour) {
+      label += hour + "<%= t("ss.hours") %>";
+    }
+    label += minute + "<%= t("ss.minutes") %>";
+    $breaktime.find(".diff").text("(" + label + ")");
+  };
+  $breaktime.find("select").on("change", renderDiff);
+  renderDiff();
+});
+<% end %>
+
 <%= form_tag({ action: :update }, { id: "ajax-form", method: :put, autocomplete: :off }) do %>
 
 <%= hidden_field_tag "ref", params[:ref] %>
@@ -100,30 +136,32 @@
       </th>
     </tr>
     <tr class="item">
-      <td class="break-time" colspan="2">
+      <td class="break-time break-time1" colspan="2">
         <div>
           <span>1.</span>
-          <%= select_tag "item[in_results][#{item.id}][break1_start_at_date]", options_for_select(date_options, result.break1_start_at_date), include_blank: true %>
-          <%= select_tag "item[in_results][#{item.id}][break1_start_at_hour]", options_for_select(hour_options, result.break1_start_at_hour), include_blank: true %>
-          <%= select_tag "item[in_results][#{item.id}][break1_start_at_minute]", options_for_select(minute_options, result.break1_start_at_minute), include_blank: true %>
+          <%= select_tag "item[in_results][#{item.id}][break1_start_at_date]", options_for_select(date_options, result.break1_start_at_date), { include_blank: true, class: "start-date" } %>
+          <%= select_tag "item[in_results][#{item.id}][break1_start_at_hour]", options_for_select(hour_options, result.break1_start_at_hour), { include_blank: true, class: "start-hour" } %>
+          <%= select_tag "item[in_results][#{item.id}][break1_start_at_minute]", options_for_select(minute_options, result.break1_start_at_minute), { include_blank: true, class: "start-minute" } %>
           <%= t("ss.wave_dash") %>
-          <%= select_tag "item[in_results][#{item.id}][break1_end_at_date]", options_for_select(date_options, result.break1_end_at_date), include_blank: true %>
-          <%= select_tag "item[in_results][#{item.id}][break1_end_at_hour]", options_for_select(hour_options, result.break1_end_at_hour), include_blank: true %>
-          <%= select_tag "item[in_results][#{item.id}][break1_end_at_minute]", options_for_select(minute_options, result.break1_end_at_minute), include_blank: true %>
+          <%= select_tag "item[in_results][#{item.id}][break1_end_at_date]", options_for_select(date_options, result.break1_end_at_date), { include_blank: true, class: "end-date" } %>
+          <%= select_tag "item[in_results][#{item.id}][break1_end_at_hour]", options_for_select(hour_options, result.break1_end_at_hour), { include_blank: true, class: "end-hour" } %>
+          <%= select_tag "item[in_results][#{item.id}][break1_end_at_minute]", options_for_select(minute_options, result.break1_end_at_minute), { include_blank: true, class: "end-minute" } %>
+          <span class="diff"></span>
         </div>
       </td>
     </tr>
     <tr class="item">
-      <td class="break-time" colspan="2">
+      <td class="break-time break-time2" colspan="2">
         <div>
           <span>2.</span>
-          <%= select_tag "item[in_results][#{item.id}][break2_start_at_date]", options_for_select(date_options, result.break2_start_at_date), include_blank: true %>
-          <%= select_tag "item[in_results][#{item.id}][break2_start_at_hour]", options_for_select(hour_options, result.break2_start_at_hour), include_blank: true %>
-          <%= select_tag "item[in_results][#{item.id}][break2_start_at_minute]", options_for_select(minute_options, result.break2_start_at_minute), include_blank: true %>
+          <%= select_tag "item[in_results][#{item.id}][break2_start_at_date]", options_for_select(date_options, result.break2_start_at_date), { include_blank: true, class: "start-date" } %>
+          <%= select_tag "item[in_results][#{item.id}][break2_start_at_hour]", options_for_select(hour_options, result.break2_start_at_hour), { include_blank: true, class: "start-hour" } %>
+          <%= select_tag "item[in_results][#{item.id}][break2_start_at_minute]", options_for_select(minute_options, result.break2_start_at_minute), { include_blank: true, class: "start-minute" } %>
           <%= t("ss.wave_dash") %>
-          <%= select_tag "item[in_results][#{item.id}][break2_end_at_date]", options_for_select(date_options, result.break2_end_at_date), include_blank: true %>
-          <%= select_tag "item[in_results][#{item.id}][break2_end_at_hour]", options_for_select(hour_options, result.break2_end_at_hour), include_blank: true %>
-          <%= select_tag "item[in_results][#{item.id}][break2_end_at_minute]", options_for_select(minute_options, result.break2_end_at_minute), include_blank: true %>
+          <%= select_tag "item[in_results][#{item.id}][break2_end_at_date]", options_for_select(date_options, result.break2_end_at_date), { include_blank: true, class: "end-date" } %>
+          <%= select_tag "item[in_results][#{item.id}][break2_end_at_hour]", options_for_select(hour_options, result.break2_end_at_hour), { include_blank: true, class: "end-hour" } %>
+          <%= select_tag "item[in_results][#{item.id}][break2_end_at_minute]", options_for_select(minute_options, result.break2_end_at_minute), { include_blank: true, class: "end-minute" } %>
+          <span class="diff"></span>
         </div>
       </td>
     </tr>

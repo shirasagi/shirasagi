@@ -108,7 +108,7 @@ module Gws::Addon::Affair::LeaveFile
 
       working_minute, = duty_calendar.working_minute(date, affair_start_at, affair_end_at)
       next if working_minute == 0
-      minute = Gws::Affair::Utils.format_leave_minutes(working_minute)
+      minute = Gws::Affair::Utils.format_leave_minutes(site, working_minute)
 
       self.in_leave_dates << OpenStruct.new(
         date: date,

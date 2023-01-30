@@ -35,6 +35,8 @@ module Gws::Addon::Import::Affair
           description_name
           item_name
           subitem_name
+          member_group_ids
+          member_ids
         )
       end
 
@@ -55,6 +57,8 @@ module Gws::Addon::Import::Affair
             line << item.description_name
             line << item.item_name
             line << item.subitem_name
+            line << item.member_groups.pluck(:name).join("\n")
+            line << item.members.pluck(:name).join("\n")
             y << encode_sjis(line.to_csv)
           end
         end

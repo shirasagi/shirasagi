@@ -7,10 +7,10 @@ module Gws::Addon::Affair::AnnualLeaveSetting
     permit_params :count
   end
 
-  def annual_leave_minutes
+  def annual_leave_minutes(site)
     # 1日の有給に付与される有効時間は7.75時間とする
     # - 8:30 〜 17:00（休憩 12:15 〜 13:00）
-    count * Gws::Affair::Utils::DAY_LEAVE_MINUTES
+    site.upper_day_leave_minute * count
   end
 
   def annual_leave_files(opts = {})
@@ -27,7 +27,7 @@ module Gws::Addon::Affair::AnnualLeaveSetting
       leave_dates = leave_files.map { |item| item.leave_dates }.flatten
       minutes = leave_dates.map(&:minute).sum
 
-      count = (setting.annual_leave_minutes - minutes)
+      count = (setting.annual_leave_minutes(site) - minutes)
       count > 0 ? count : 0
     end
 
@@ -40,7 +40,7 @@ module Gws::Addon::Affair::AnnualLeaveSetting
       leave_dates = leave_files.map { |item| item.leave_dates }.flatten
       minutes = leave_dates.map(&:minute).sum
 
-      count = (setting.annual_leave_minutes - minutes)
+      count = (setting.annual_leave_minutes(site) - minutes)
       count -= leave_file.in_leave_dates.map(&:minute).sum
       count >= 0
     end
