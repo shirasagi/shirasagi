@@ -144,7 +144,8 @@ describe "faq_pages", type: :feature, js: true do
     it "not permited and contains_urls" do
       role = user.cms_roles[0]
       role.update(permissions: %w(edit_private_faq_pages edit_other_faq_pages
-                                  release_private_faq_pages release_other_faq_pages))
+                                  release_private_faq_pages release_other_faq_pages
+                                  close_private_faq_pages close_other_faq_pages))
       visit edit_path2
       wait_event_to_fire("ss:formAlertFinish") do
         within "form" do
@@ -158,7 +159,8 @@ describe "faq_pages", type: :feature, js: true do
     it "not permited and not contains_urls" do
       role = user.cms_roles[0]
       role.update(permissions: %w(edit_private_faq_pages edit_other_faq_pages
-                                  release_private_faq_pages release_other_faq_pages))
+                                  release_private_faq_pages release_other_faq_pages
+                                  close_private_faq_pages close_other_faq_pages))
       visit edit_path
       wait_event_to_fire("ss:formAlertFinish") do
         within "form" do

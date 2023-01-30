@@ -13,7 +13,7 @@
     js_options[:publish_save] = t("ss.buttons.publish_save")
   end
   if %w(ready public).include?(@item.state) && @item.persisted?
-    if @item.allowed?(:release, @cur_user, site: @cur_site)
+    if @item.allowed?(:close, @cur_user, site: @cur_site)
       # 警告する意味でボタンのラベルを別のものにする
       js_options[:draft_save] = t("ss.buttons.withdraw")
     elsif @item.is_a?(Workflow::Addon::Branch) && @item.branch?
