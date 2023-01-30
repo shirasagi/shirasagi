@@ -118,11 +118,7 @@ module Gws::Addon::Import::Affair
     end
 
     def set_errors(item, index)
-      error = ""
-      item.errors.each do |n, e|
-        error += "#{item.class.t(n)}#{e} "
-      end
-      self.errors.add :base, "#{index}: #{error}"
+      self.errors.add :base, "#{index}: #{item.errors.full_messages}"
     end
   end
 end
