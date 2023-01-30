@@ -7,13 +7,10 @@ RSpec.describe SS::Migration20230126000000, dbscope: :example do
   let!(:role3) do
     role = create :cms_role_admin
     permissions = role.permissions.select do |name|
-      if name.starts_with?('close')
-        false
-      elsif name.start_with?('release_') && rand(10) == 0
-        false
-      else
-        true
-      end
+      result = nil
+      result ||= false if name.starts_with?('close_')
+      result ||= false if name.start_with?('release_') && rand(10) == 0
+      result || true
     end
     role.set(permissions: permissions)
   end
