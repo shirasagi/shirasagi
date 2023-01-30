@@ -3,7 +3,7 @@ ja:
     aggregate: 集計結果
     capital: 原資区分
     default_duty_hour: 標準の勤務時間
-    default_holiday_calendar: 標準の休日カレンダー
+    default_holiday_calendar: 標準の休日
     default_duty_calendar: 標準の勤務カレンダー
     top_holidays_on_year: "%{year}年度の休日を最大%{count}件を表示しています。"
     year_id: 年度
@@ -114,6 +114,7 @@ ja:
         - "この列はインポートには影響しません。"
       leave_setting_download_yearly:
         - "%{year} の有効日数（保有日数）と残日数を出力します。"
+        - "%{upper_hour} 時間 : １日 + 端数 %{threshold_hour} 時間 : １日"
       capital_import_group:
         - "%{year} の原資区分にグループの紐付け（参加グループ）を一括設定する画面です。"
         - "原資区分を登録し、グループ設定をダウンロードしてください。"
@@ -211,6 +212,8 @@ ja:
         description_name: 説明名称
         item_name: 節名称
         subitem_name: 細節名称
+        member_group_ids: 参加グループ
+        member_ids: 参加ユーザー
       capital_group:
         group_name: グループ名
         project_code: 事業コード
@@ -233,9 +236,9 @@ ja:
       duty_hours:
         index: 勤務時間を選択する
       holiday_calendars:
-        index: 休日カレンダーを選択する
+        index: 休日を選択する
       duty_notices:
-        index: タイムカード警告を選択する
+        index: 警告を選択する
       special_leaves:
         index: 特別休暇区分を選択する
       capitals:
@@ -270,14 +273,14 @@ ja:
     gws/affair/leave_setting: 休暇設定
     gws/affair/duty_setting: 勤務体系
     gws/affair/duty_hour: 勤務時間
-    gws/affair/duty_calendar: 勤務カレンダー
-    gws/affair/holiday_calendar: 休日カレンダー
+    gws/affair/duty_calendar: タイムカード
+    gws/affair/holiday_calendar: 休日
     gws/affair/capital: 原資区分
     gws/affair/capital_years: 年度設定
     gws/affair/shift_work: シフト勤務
     gws/affair/shift_work/calendar: 勤務表
     gws/affair/shift_work/shift_calendar: 勤務カレンダー
-    gws/affair/duty_notice: タイムカード警告
+    gws/affair/duty_notice: 警告
     gws/affair/special_leave: 特別休暇区分
     addons:
       gws/affair/overtime_file: 時間外申請
@@ -287,7 +290,7 @@ ja:
       gws/affair/duty_hour: 勤務時間
       gws/affair/holiday: 休日
       gws/affair/flextime: 自由時間勤務
-      gws/affair/duty_notice: タイムカード警告
+      gws/affair/duty_notice: 警告
       gws/affair/file_target: 申請対象
       gws/affair/annual_leave_setting: 年次有給休暇
       gws/affair/paid_leave_setting: 特別休暇
@@ -298,7 +301,7 @@ ja:
       gws/affair/capital: 原資区分
       gws/affair/duty_calendar: 勤務カレンダー
       gws/affair/duty_hour: 勤務時間
-      gws/affair/holiday_calendar: 休日カレンダー
+      gws/affair/holiday_calendar: 休日
       gws/affair/capital_year: 年度設定
     attributes:
       gws/affair/capital:
@@ -319,10 +322,10 @@ ja:
         year_code: 西暦
         year_name: 年度名
       gws/affair/duty_calendar:
-        name: 勤務カレンダー名
+        name: 名称
         code: 職種区分コード
       gws/affair/shift_record:
-        duty_calendar_id: 勤務カレンダー
+        duty_calendar_id: タイムカード
         date: 日付
         wday: 曜日
         start_at: 開始時間
@@ -331,7 +334,7 @@ ja:
         in_file: ファイル
         affair_time: 勤務時間
       gws/affair/duty_hour:
-        name: 勤務時間名
+        name: 名称
         start_at: 開始時間
         end_at: 終了時間
         break_enter1_start_at: 休憩1開始時間
@@ -410,11 +413,11 @@ ja:
       gws/addon/affair/duty_hour:
         duty_hour_ids: 勤務時間
       gws/addon/affair/holiday:
-        holiday_calendar_ids: 休日カレンダー
+        holiday_calendar_ids: 休日
       gws/addon/affair/duty_notice:
-        duty_notice_ids: タイムカード警告
+        duty_notice_ids: 警告
       gws/affair/holiday_calendar:
-        name: 休日カレンダー名
+        name: 名称
         wday_settings: 休日設定
         sunday_type: 日曜日
         monday_type: 月曜日
@@ -428,7 +431,7 @@ ja:
       gws/addon/affair/flextime:
         flextime_state: 自由時間勤務
       gws/affair/duty_notice:
-        name: 警告名
+        name: 名称
         notice_type: 種別
         period_type: 期間
         threshold_hour: 上限時間
@@ -444,7 +447,7 @@ ja:
         search_user: ユーザー
       gws/affair/special_leave:
         code: コード
-        name: 名前
+        name: 名称
         order: 並び順
         staff_category: 職員区分
         in_file: ファイル
@@ -645,15 +648,22 @@ ja:
         - 標準勤務体系の勤務時間内で残業をした場合、時短（100/100）区分の残業とするかを設定します。
     gws/affair/duty_calendar:
       name:
-        - 勤務カレンダー名を入力します。
+        - 名称を入力します。
       code:
         - 職種区分コードを入力します。
     gws/affair/duty_hour:
       name:
-        - 勤務時間名を入力します。
+        - 名称を入力します。
+      affair_time:
+        - 勤務時間を入力します。
+    gws/affair/holiday_calendar:
+      name:
+        - 名称を入力します。
+      wday_settings:
+        - 休日設定を入力します。
     gws/affair/duty_notice:
       name:
-        - タイトルを入力します。
+        - 名称を入力します。
       notice_type:
         - 種別を選択します。
       threshold_hour:
@@ -673,7 +683,7 @@ ja:
         - 集計対象のユーザーを選択します。
     gws/affair/special_leave:
       code: コードを入力します。
-      name: 名前を入力します。
+      name: 名称を入力します。
       order:
         - フォルダーの並び順を数字で入力します。
         - 番号の小さい順にフォルダーが表示されます。
