@@ -21,7 +21,7 @@ module Sys::SiteImport::Contents
   end
 
   def import_cms_pages
-    @cms_pages_map = import_documents "cms_pages", Cms::Page, %w(site_id filename) do |item|
+    @cms_pages_map = import_documents "cms_pages", Cms::Page, %w(site_id filename) do |item, data|
       def item.generate_file; end
       item.skip_validate_seq_filename = true if item.is_a?(Cms::Page::SequencedFilename)
 
@@ -49,6 +49,11 @@ module Sys::SiteImport::Contents
             end
           end
           column_value
+        end
+      end
+      if data["event_recurrences"].present?
+        item.event_recurrences = data["event_recurrences"].map do |event_recurrence|
+          Event::Extensions::Recurrence.new(event_recurrence["attributes"])
         end
       end
     end
@@ -84,7 +89,11 @@ module Sys::SiteImport::Contents
   end
 
   def import_cms_columns
-    @cms_columns_map = import_documents "cms_columns", Cms::Column::Base
+    @cms_columns_map = import_documents "cms_columns", Cms::Column::Base do |item, data|
+      if item.is_a?(Cms::Column::SelectPage)
+        item[:node_ids] = convert_ids(@cms_nodes_map, item[:node_ids])
+      end
+    end
   end
 
   def import_cms_loop_settings
@@ -137,6 +146,13 @@ module Sys::SiteImport::Contents
       item[:opendata_dataset_ids] = convert_ids(@cms_pages_map, item[:opendata_dataset_ids])
       item[:opendata_dataset_group_ids] = convert_ids(@opendata_dataset_groups_map, item[:opendata_dataset_group_ids])
       item[:opendata_license_ids] = convert_ids(@opendata_licenses_map, item[:opendata_license_ids])
+      if item.respond_to?(:column_values)
+        item.column_values.each do |column_value|
+          if column_value.is_a?(Cms::Column::Value::SelectPage)
+            column_value.page_id = @cms_pages_map[column_value.page_id]
+          end
+        end
+      end
       save_document(item)
     end
   end
