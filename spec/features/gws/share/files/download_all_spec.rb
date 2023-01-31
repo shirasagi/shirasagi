@@ -16,7 +16,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
     context "when zip file is created on the fly" do
       it do
         visit index_path
-        puts index_path
+        within ".tree-navi" do
+          expect(page).to have_css(".item-name", text: folder.name)
+        end
         find('.list-head label.check input').click
         page.accept_confirm do
           find('.download-all').click
@@ -44,6 +46,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
       it do
         visit index_path
+        within ".tree-navi" do
+          expect(page).to have_css(".item-name", text: folder.name)
+        end
         find('.list-head label.check input').set(true)
         page.accept_confirm do
           find('.download-all').click

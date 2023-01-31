@@ -39,12 +39,13 @@ class Gws::Share::Apis::FolderListController < ApplicationController
   end
 
   def append_tree_items(items)
-    if @type == 'gws/share/files'
+    case @type
+    when 'gws/share/files'
       @item.parents.each do |item|
         next unless item.allowed?(:read, @cur_user, site: @cur_site)
         items = append_items(items, item.children.readable(@cur_user, site: @cur_site).limit(@limit).entries, item)
       end
-    elsif @type == 'gws/share/management/files'
+    when 'gws/share/management/files'
       @item.parents.each do |item|
         next unless item.allowed?(:read, @cur_user, site: @cur_site)
         items = append_items(items, item.children.allow(:read, @cur_user, site: @cur_site).limit(@limit).entries, item)
@@ -54,17 +55,19 @@ class Gws::Share::Apis::FolderListController < ApplicationController
   end
 
   def root_items
-    if @type == 'gws/share/files'
+    case @type
+    when 'gws/share/files'
       @model.site(@cur_site).where(depth: 1).readable(@cur_user, site: @cur_site).limit(@limit)
-    elsif @type == 'gws/share/management/files'
+    when 'gws/share/management/files'
       @model.site(@cur_site).where(depth: 1).allow(:read, @cur_user, site: @cur_site).limit(@limit)
     end
   end
 
   def child_items
-    if @type == 'gws/share/files'
+    case @type
+    when 'gws/share/files'
       @item.children.readable(@cur_user, site: @cur_site).limit(@limit)
-    elsif @type == 'gws/share/management/files'
+    when 'gws/share/management/files'
       @item.children.allow(:read, @cur_user, site: @cur_site).limit(@limit)
     end
   end
@@ -86,8 +89,13 @@ class Gws::Share::Apis::FolderListController < ApplicationController
   end
 
   def item_url(item)
-    return gws_share_folder_files_path(folder: item.id, category: params[:category]) if @type == 'gws/share/files'
-    return gws_share_management_folder_files_path(folder: item.id, category: params[:category]) if @type == 'gws/share/management/files'
-    return gws_share_folder_path(id: item.id) if @type == 'gws/share/folders'
+    case @type
+    when 'gws/share/files'
+      gws_share_folder_files_path(folder: item.id, category: params[:category])
+    when 'gws/share/management/files'
+      gws_share_management_folder_files_path(folder: item.id, category: params[:category])
+    when 'gws/share/folders'
+      gws_share_folder_path(id: item.id)
+    end
   end
 end

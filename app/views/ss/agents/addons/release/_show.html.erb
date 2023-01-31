@@ -4,16 +4,16 @@
 
   <% if @model.released_field_shown? && @item.released.present? %>
   <dt><%= @model.t :released %></dt>
-  <dd><%= tryb { ss_time_tag @item.released } %></dd>
+  <dd><%= ss_time_tag @item.released %></dd>
   <% end %>
 
   <% if @item.release_date.present? %>
   <dt><%= @model.t :release_date %></dt>
-  <dd><%= tryb { ss_time_tag @item.release_date } %></dd>
+  <dd><%= ss_time_tag @item.release_date %></dd>
   <% end %>
 
   <% if @item.close_date.present? %>
   <dt><%= @model.t :close_date %></dt>
-  <dd><%= tryb { ss_time_tag @item.close_date } %></dd>
+  <dd><%= ss_time_tag @item.close_date %></dd>
   <% end %>
 </dl>

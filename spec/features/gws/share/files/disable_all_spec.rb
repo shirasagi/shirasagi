@@ -15,6 +15,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       expect(item.histories.count).to eq 1
 
       visit index_path
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
       find('.list-head label.check input').set(true)
       within ".list-head-action" do
         page.accept_confirm do
@@ -24,8 +27,8 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       end
 
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
-      within "#gws-share-file-folder-list .tree-navi" do
-        expect(page).to have_css(".tree-item", text: folder.name)
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
       end
 
       item.reload

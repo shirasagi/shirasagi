@@ -258,7 +258,7 @@ module Tasks
             break
           end
 
-          puts 'gws/qna/topic and gws/qna/post'
+          puts 'gws/monitor/topic and gws/monitor/post'
           ::Tasks::Gws::Base.each_item(::Gws::Monitor::Topic.site(site).topic.without_deleted) do |topic|
             puts "- #{topic.name}"
             job = ::Gws::Elasticsearch::Indexer::MonitorTopicJob.bind(site_id: site)

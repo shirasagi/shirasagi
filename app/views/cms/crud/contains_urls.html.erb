@@ -51,8 +51,8 @@
               <%= t("ss.state.#{item.status}") %>
               <%
                 term = []
-                term << "開始:" + I18n.l(item.release_date, format: :picker) if item.try(:release_date)
-                term << "終了:" + I18n.l(item.close_date, format: :picker) if item.try(:close_date)
+                term << "開始:" + I18n.l(item.release_date, format: :picker) if item.release_date
+                term << "終了:" + I18n.l(item.close_date, format: :picker) if item.close_date
               %>
               <%= "( #{term.join(", ")} )" if term.present? %>
             </span>

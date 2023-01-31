@@ -29,7 +29,7 @@
         <% end %>
         <td class="host"><%= link_to item.host, "#", class: @multi ? "select-item" : "select-single-item" %></td>
         <td class="name"><%= item.name %></td>
-        <td class="updated"><%= tryb { ss_time_tag(item.updated) } %></td>
+        <td class="updated"><%= ss_time_tag(item.updated) %></td>
       </tr>
     <% end %>
   </tbody>

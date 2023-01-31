@@ -17,7 +17,7 @@
       <% @item.histories.each do |item| %>
       <tr>
         <td><%= item.mode_name %></td>
-        <td><%= tryb { ss_time_tag item.created } %></td>
+        <td><%= ss_time_tag item.created %></td>
         <td><%= item.user_long_name %></td>
         <td>
           <% if (names = item.updated_field_names).present? %>

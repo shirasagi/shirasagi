@@ -10,8 +10,8 @@
   <tbody>
   <tr>
     <td><%= @cur_node.name %></td>
-    <td><%= tryb { ss_time_tag @cur_node.rest_start, type: :date } %></td>
-    <td><%= tryb { ss_time_tag @cur_node.rest_end, type: :date } %></td>
+    <td><%= ss_time_tag(@cur_node.rest_start, type: :date) %></td>
+    <td><%= ss_time_tag(@cur_node.rest_end, type: :date) %></td>
     </tr>
     </tbody>
 </table>
