@@ -43,6 +43,10 @@ module Cms::Model::Part
     Cms::Part.plugins.select { |plugin| plugin.enabled? }.map { |plugin| [plugin.name, plugin.path] }
   end
 
+  def route_label
+    Cms::Part.plugins.find { |plugin| plugin.path == route }.try(:name)
+  end
+
   def becomes_with_route(name = nil)
     return self if name.blank?
 
