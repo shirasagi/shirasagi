@@ -66,7 +66,7 @@ describe "member_blogs", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.draft_save")}']")
       expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
 
-      # not permittedaaa
+      # not permitted
       role = cms_user.cms_roles[0]
       role.update permissions: role.permissions.reject { |k, v| k =~ /^(release_|close_)/ }
 
