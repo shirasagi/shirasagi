@@ -21,6 +21,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
     it do
       visit gws_share_folder_files_path(site, folder)
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
       click_on item.name
       within "#addon-gws-agents-addons-edit_lock" do
         expect(page).to have_content(I18n.t("errors.messages.locked", user: user2.long_name))
@@ -55,6 +58,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
     it do
       visit gws_share_folder_files_path(site, folder)
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
       click_on item.name
       within "#addon-gws-agents-addons-edit_lock" do
         expect(page).to have_content(I18n.t("errors.messages.locked", user: user2.long_name))
@@ -84,6 +90,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
     it do
       visit gws_share_folder_files_path(site, folder)
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
       click_on item.name
       click_on I18n.t("ss.buttons.edit")
 

@@ -13,10 +13,10 @@
 
   <% if false %>
     <dt><%= @model.t :activation_date %></dt>
-    <dd><%= tryb { ss_time_tag @item.activation_date } %></dd>
+    <dd><%= ss_time_tag @item.activation_date %></dd>
 
     <dt><%= @model.t :expiration_date %></dt>
-    <dd><%= tryb { ss_time_tag @item.expiration_date } %></dd>
+    <dd><%= ss_time_tag @item.expiration_date %></dd>
   <% end %>
 
   <% if @item.remark.present? %>

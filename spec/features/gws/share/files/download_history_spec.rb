@@ -18,6 +18,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       # create
       visit gws_share_files_path(site)
       click_on folder.name
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
       click_on I18n.t("ss.links.new")
       within "form#item-form" do
         within "#addon-basic" do
@@ -50,6 +53,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
       # edit
       visit gws_share_files_path(site)
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
       click_on name1
       click_on I18n.t("ss.links.edit")
       within "form#item-form" do
@@ -64,6 +70,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       # download
       item.histories.first.tap do |history|
         visit gws_share_files_path(site)
+        within ".tree-navi" do
+          expect(page).to have_css(".item-name", text: folder.name)
+        end
         click_on name1
         within "#addon-gws-agents-addons-share-history" do
           first(".addon-head h2").click

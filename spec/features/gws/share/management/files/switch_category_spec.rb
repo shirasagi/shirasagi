@@ -11,7 +11,14 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
   it do
     visit gws_share_files_path(site: site)
+    within ".tree-navi" do
+      expect(page).to have_css(".item-name", text: folder.name)
+    end
+
     click_on I18n.t('ss.navi.trash')
+    within ".tree-navi" do
+      expect(page).to have_css(".item-name", text: folder.name)
+    end
     expect(page).to have_content(item.name)
 
     # switch to category1
@@ -20,6 +27,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       click_on category1.name
     end
 
+    within ".tree-navi" do
+      expect(page).to have_css(".item-name", text: folder.name)
+    end
     expect(page).to have_content(item.name)
     within ".gws-category-navi" do
       expect(page).to have_link(category1.name)
@@ -36,8 +46,8 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       expect(page).to have_link(category2.name)
     end
 
-    within "#content-navi" do
-      expect(page).to have_css(".tree-item", text: folder.name)
+    within ".tree-navi" do
+      expect(page).to have_css(".item-name", text: folder.name)
     end
   end
 end

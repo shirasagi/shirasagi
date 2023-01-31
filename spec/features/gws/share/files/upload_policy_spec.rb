@@ -15,16 +15,26 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
     it do
       visit gws_share_files_path(site)
       click_on folder.name
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
 
       # create
-      click_on I18n.t("ss.links.new")
-      click_on I18n.t("gws.apis.categories.index")
-      wait_for_cbox do
-        click_on category.name
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.new")
       end
-      within "form#item-form #addon-basic" do
-        wait_cbox_open do
-          click_on I18n.t('ss.buttons.upload')
+      within "form#item-form" do
+        wait_cbox_open { click_on I18n.t("gws.apis.categories.index") }
+      end
+      wait_for_cbox do
+        wait_cbox_close { click_on category.name }
+      end
+      within "form#item-form" do
+        expect(page).to have_css("#addon-gws-agents-addons-share-category [data-id='#{category.id}']", text: category.name)
+        within "#addon-basic" do
+          wait_cbox_open do
+            wait_cbox_open { click_on I18n.t('ss.buttons.upload') }
+          end
         end
       end
       wait_for_cbox do
@@ -35,7 +45,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       expect(page).to have_css('.sanitizer-wait', text: I18n.t('ss.options.sanitizer_state.wait'))
 
       wait_cbox_close do
-        click_on "keyvisual.jpg"
+        wait_cbox_close { click_on "keyvisual.jpg" }
       end
       within '#selected-files' do
         expect(page).to have_css('.name', text: 'keyvisual.jpg')
@@ -98,11 +108,17 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
         click_on I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
 
       # hard delete
       visit gws_share_files_path(site)
       click_on I18n.t("ss.links.trash")
       click_on folder.name
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
       click_on file.name
       within ".nav-menu" do
         click_on I18n.t("ss.links.delete")
@@ -113,6 +129,10 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
       expect(Fs.exist?(file_path)).to be_falsey
       expect(Fs.exist?(sanitizer_input_path)).to be_falsey
+
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
     end
   end
 
@@ -129,25 +149,31 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
     it do
       visit gws_share_files_path(site)
       click_on folder.name
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
 
       # create
-      click_on I18n.t("ss.links.new")
-      click_on I18n.t("gws.apis.categories.index")
-      wait_for_cbox do
-        click_on category.name
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.new")
       end
-      within "form#item-form #addon-basic" do
-        wait_cbox_open do
-          click_on I18n.t('ss.buttons.upload')
+      within "form#item-form" do
+        wait_cbox_open { click_on I18n.t("gws.apis.categories.index") }
+      end
+      wait_for_cbox do
+        wait_cbox_close { click_on category.name }
+      end
+      within "form#item-form" do
+        expect(page).to have_css("#addon-gws-agents-addons-share-category [data-id='#{category.id}']", text: category.name)
+        within "#addon-basic" do
+          wait_cbox_open { click_on I18n.t('ss.buttons.upload') }
         end
       end
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_button I18n.t("ss.buttons.save")
       end
-      page.accept_alert do
-        expect(page).to have_no_css('.file-view')
-      end
+      expect(page).to have_no_css('.file-view')
       expect(Gws::Share::File.all.count).to eq 0
     end
   end

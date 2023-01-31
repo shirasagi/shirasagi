@@ -1,6 +1,6 @@
 <dl class="see">
   <dt><%= @model.t :deliver_date %></dt>
-  <dd><%= tryb { ss_time_tag @item.deliver_date } %></dd>
+  <dd><%= ss_time_tag @item.deliver_date %></dd>
 
   <dt><%= @model.t :state %></dt>
   <dd><%= @item.label :state %></dd>

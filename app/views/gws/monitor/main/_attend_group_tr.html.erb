@@ -3,8 +3,8 @@
 <% last_post = posts.first %>
 <tr>
   <td class="state"><%= @item.answer_state_name(group) %></td>
-  <td class="mark_at"><%= first_post.try(:created).try { |time| I18n.l(time.in_time_zone, format: :picker) } || '' %></td>
-  <td class="udpate_at"><%= last_post.try(:updated).try { |time| I18n.l(time.in_time_zone, format: :picker) } || '' %></td>
+  <td class="mark_at"><%= ss_time_tag first_post.try(:created) %></td>
+  <td class="udpate_at"><%= ss_time_tag last_post.try(:updated) %></td>
   <td class="group"><%= group.name %></td>
   <td class="user"><%= last_post.try(:contributor_name).try { |contributor_name| gws_public_user_long_name(contributor_name) } || '' %></td>
   <td class="contents"><%= br(truncate(last_post.try(:text) || '')) %></td>

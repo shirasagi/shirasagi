@@ -27,16 +27,16 @@
   <span class="id">#<%= item.id %></span>
   <% sort_key = params.dig(:s, :sort).to_s.presence || 'due_date_desc' %>
   <% if sort_key.start_with?('updated') %>
-    <span class="datetime"><%= @model.t(:updated) %><%= tryb { ss_time_tag item.descendants_updated } %></span>
+    <span class="datetime"><%= @model.t(:updated) %><%= ss_time_tag item.descendants_updated %></span>
   <% elsif sort_key.start_with?('created') %>
-    <span class="datetime"><%= @model.t(:created) %><%= tryb { ss_time_tag item.created } %></span>
+    <span class="datetime"><%= @model.t(:created) %><%= ss_time_tag item.created %></span>
   <% elsif sort_key.start_with?('released') %>
-    <span class="datetime"><%= @model.t(:released) %><%= tryb { ss_time_tag item.released } %></span>
+    <span class="datetime"><%= @model.t(:released) %><%= ss_time_tag item.released %></span>
   <% else %>
     <span class="datetime">
-    <%= @model.t(:due_date) %><%= tryb { ss_time_tag item.due_date } %>
-    <% if item.due_date_over?(@cur_group) %><span class="gws-monitor-due-date-over"><%= t('gws/monitor.due_date_over') %></span><% end %>
-  </span>
+      <%= @model.t(:due_date) %><%= ss_time_tag item.due_date %>
+      <% if item.due_date_over?(@cur_group) %><span class="gws-monitor-due-date-over"><%= t('gws/monitor.due_date_over') %></span><% end %>
+    </span>
   <% end %>
   <span class="article-state"><%= item.label(:article_state) %></span>
   <span class="user"><%= gws_public_user_long_name(item.contributor_name.presence || item.user_long_name) %></span>
